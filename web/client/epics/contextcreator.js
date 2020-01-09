@@ -9,7 +9,7 @@
 import Rx from 'rxjs';
 import axios from 'axios';
 import jsonlint from 'jsonlint-mod';
-import {omit, flatten, uniq, difference, intersection, head, tail, cloneDeep} from 'lodash';
+import {omit, flatten, uniq, intersection, head, keys, findIndex, cloneDeep} from 'lodash';
 import {push} from 'connected-react-router';
 
 import ConfigUtils from '../utils/ConfigUtils';
@@ -163,7 +163,7 @@ export const enableInitialPlugins = (action$, store) => action$
         const pluginsToEnable = initialEnabledPluginsSelector(state);
 
         return pluginsToEnable && pluginsToEnable.length > 0 ?
-            Rx.Observable.of(enablePlugins(pluginsToEnable)) :
+            Rx.Observable.of(enablePlugins(pluginsToEnable, true)) :
             Rx.Observable.empty();
     });
 
@@ -237,53 +237,80 @@ export const enableMandatoryPluginsEpic = (action$, store) => action$
     });
 
 /**
- * Handles plugin enabling
+ * Handles plugin enabling, resolving dependencies and enabling them as well
+ * Enables, along with requested plugins their dependencies, for dependencies
+ * sets forceMandatory to true and updates enabledDependentPlugins array
+ * Dependencies should be on one plugin tree level
  * @param {observable} action$ manages `ENABLE_PLUGINS`
  * @param {object} store
  */
 export const enablePluginsEpic = (action$, store) => action$
     .ofType(ENABLE_PLUGINS)
-    .switchMap(({plugins}) => {
+    .switchMap(({plugins, isInitial}) => {
         const state = store.getState();
         const pluginsState = pluginsSelector(state);
 
-        const arrangedPlugins = plugins.map(pluginName => {
-            const getDepsParents = (curPlugin) => {
-                if (curPlugin.parent && curPlugin.parent !== pluginName) {
-                    const parent = findPlugin(pluginsState, curPlugin.parent);
-                    return [parent, ...getDepsParents(parent)];
-                }
-                return [];
-            };
-            const plugin = findPlugin(pluginsState, pluginName);
-            const allDeps = plugin.dependencies.map(dep => findPlugin(pluginsState, dep));
-            const deps = allDeps.filter(dep => !dep.forcedMandatory);
-            const depsToEnable = [...deps, ...flatten(deps.map(getDepsParents).filter(parent => !parent.forcedMandatory))];
-            return {plugin, allDeps, depsToEnable};
-        });
+        let enabledDependentPlugins = {};
+        let pluginsToEnable = [];
+        let depsToForce = [];
 
-        const pluginsAndDeps = arrangedPlugins.map(({plugin, depsToEnable}) => [plugin, ...depsToEnable].map(p => p.name));
-        const pluginsToEnable = uniq(flatten(pluginsAndDeps));
-        const depsToForce = flatten(pluginsAndDeps.map(pluginArray => tail(pluginArray)));
+        const enablePlugin = (pluginName) => {
+            const processDependency = (parentName, dep) => {
+                if (!enabledDependentPlugins[dep.name]) {
+                    enabledDependentPlugins[dep.name] = dep.enabledDependentPlugins.slice();
+                }
+                enabledDependentPlugins[dep.name].push(parentName);
+
+                if (dep.forcedMandatory || depsToForce.reduce((result, cur) => result || cur === dep.name, false)) {
+                    return;
+                }
+
+                depsToForce.push(dep.name);
+
+                if (!dep.enabled && pluginsToEnable.reduce((result, cur) => result && cur !== dep.name, true)) {
+                    pluginsToEnable.push(dep.name);
+                }
+
+                dep.dependencies.forEach(depName => {
+                    processDependency(dep.name, findPlugin(pluginsState, depName));
+                });
+            };
+
+            const plugin = findPlugin(pluginsState, pluginName);
+
+            if (!plugin.enabled && pluginsToEnable.reduce((result, cur) => result && cur !== pluginName, true)) {
+                pluginsToEnable.push(pluginName);
+                plugin.dependencies.forEach(depName => {
+                    processDependency(pluginName, findPlugin(pluginsState, depName));
+                    if (!isInitial) {
+                        plugin.autoEnableChildren.forEach(childName => {
+                            enablePlugin(childName);
+                        });
+                    }
+                });
+            }
+        };
+
+        plugins.forEach(pluginName => {
+            enablePlugin(pluginName);
+        });
 
         return Rx.Observable.of(
             changePluginsKey(pluginsToEnable, 'enabled', true),
-            changePluginsKey(pluginsToEnable, 'isUserPlugin', false),
+            ...(!isInitial ? [changePluginsKey(uniq([...pluginsToEnable, ...depsToForce]), 'isUserPlugin', false)] : []),
             changePluginsKey(depsToForce, 'forcedMandatory', true),
-            ...flatten(arrangedPlugins.map(({plugin, allDeps}) =>
-                allDeps.map(dep =>
-                    changePluginsKey(
-                        [dep.name],
-                        'enabledDependentPlugins',
-                        [...dep.enabledDependentPlugins.filter(enabledDep => enabledDep !== plugin.name), plugin.name]
-                    )
-                )
-            ))
+            ...keys(enabledDependentPlugins).map(pluginName =>
+                changePluginsKey([pluginName], 'enabledDependentPlugins', uniq(enabledDependentPlugins[pluginName])))
         );
     });
 
 /**
  * Handles plugin disabling
+ * Disables requested plugins, finds dependencies, updates their enabledDependentPlugins array
+ * and disables forceMandatory flag for those dependencies that have
+ * no dependent plugins enabled
+ * Also specifically handles a case when all currently enabled plugins are requested to be disabled
+ * (i.e. when '<<' button is pressed in the configure plugins step)
  * @param {observable} action$ manages `DISABLE_PLUGINS`
  * @param {object} store
  */
@@ -298,18 +325,49 @@ export const disablePluginsEpic = (action$, store) => action$
 
         const maxCount = pluginsState.filter(plugin => plugin.enabled && !plugin.mandatory && !plugin.forcedMandatory).length;
         if (intersection(plugins, rootPlugins).length < maxCount) {
-            const forcedMandatoryPlugins = flattenedPlugins.filter(plugin => plugin.forcedMandatory);
-            const updatedMandatory = forcedMandatoryPlugins.map(plugin => ({
-                name: plugin.name,
-                enabledDependentPlugins: difference(plugin.enabledDependentPlugins, plugins)
-            }));
-            const depsToUnforceMandatory = updatedMandatory.filter(dep => dep.enabledDependentPlugins.length === 0).map(dep => dep.name);
+            let enabledDependentPlugins = {};
+            let pluginsToDisable = plugins.slice();
+            let depsToUnforceMandatory = [];
+
+            const disablePlugin = pluginName => {
+                const processDependency = (parentName, plugin) => {
+                    const enabledDependentPluginsArr = enabledDependentPlugins[plugin.name] || plugin.enabledDependentPlugins.slice();
+                    const dependentPluginIndex = findIndex(enabledDependentPluginsArr, p => p === parentName);
+                    if (dependentPluginIndex > -1) {
+                        if (!enabledDependentPlugins[plugin.name]) {
+                            enabledDependentPlugins[plugin.name] = enabledDependentPluginsArr;
+                        }
+                        enabledDependentPlugins[plugin.name].splice(dependentPluginIndex, 1);
+                    }
+
+                    if (enabledDependentPlugins[plugin.name].length === 0 &&
+                        pluginsToDisable.reduce((result, cur) => result && cur !== plugin.name, true)
+                    ) {
+                        depsToUnforceMandatory.push(plugin.name);
+                        if (!plugin.mandatory) {
+                            pluginsToDisable.push(plugin.name);
+                            plugin.dependencies.forEach(depName => {
+                                processDependency(plugin.name, findPlugin(pluginsState, depName));
+                            });
+                        }
+                    }
+                };
+
+                const plugin = findPlugin(pluginsState, pluginName);
+                plugin.dependencies.forEach(depName => {
+                    processDependency(pluginName, findPlugin(pluginsState, depName));
+                });
+            };
+
+            plugins.forEach(pluginName => {
+                disablePlugin(pluginName);
+            });
 
             return Rx.Observable.of(
-                changePluginsKey(plugins, 'enabled', false),
-                ...updatedMandatory.map(({name, enabledDependentPlugins}) =>
-                    changePluginsKey([name], 'enabledDependentPlugins', enabledDependentPlugins)),
-                changePluginsKey(depsToUnforceMandatory, 'forcedMandatory', false)
+                changePluginsKey(pluginsToDisable, 'enabled', false),
+                ...keys(enabledDependentPlugins).map(pluginName =>
+                    changePluginsKey([pluginName], 'enabledDependentPlugins', enabledDependentPlugins[pluginName])),
+                changePluginsKey(uniq(depsToUnforceMandatory), 'forcedMandatory', false)
             );
         }
 

@@ -20,7 +20,6 @@ require('./map/css/map.css');
 const Message = require('../components/I18N/Message');
 const ConfigUtils = require('../utils/ConfigUtils');
 const {errorLoadingFont, setMapResolutions} = require('../actions/map');
-const {changeMapType} = require('../actions/maptype');
 
 const {isString} = require('lodash');
 let plugins;
@@ -183,7 +182,6 @@ let plugins;
 class MapPlugin extends React.Component {
     static propTypes = {
         mapType: PropTypes.string,
-        mapTypeOverride: PropTypes.string,
         map: PropTypes.object,
         layers: PropTypes.array,
         additionalLayers: PropTypes.array,
@@ -199,7 +197,6 @@ class MapPlugin extends React.Component {
         toolsOptions: PropTypes.object,
         onFontError: PropTypes.func,
         onResolutionsChange: PropTypes.func,
-        changeMapType: PropTypes.func,
         actions: PropTypes.object,
         features: PropTypes.array,
         securityToken: PropTypes.string,
@@ -241,8 +238,7 @@ class MapPlugin extends React.Component {
         shouldLoadFont: false,
         elevationEnabled: false,
         onFontError: () => {},
-        onResolutionsChange: () => {},
-        changeMapType: () => {}
+        onResolutionsChange: () => {}
     };
     state = {
         canRender: true
@@ -268,16 +264,10 @@ class MapPlugin extends React.Component {
             });
 
         }
-        if (this.props.mapTypeOverride) {
-            this.props.changeMapType(this.props.mapTypeOverride);
-        }
         this.updatePlugins(this.props);
     }
 
     UNSAFE_componentWillReceiveProps(newProps) {
-        if (newProps.mapTypeOverride !== this.props.mapTypeOverride) {
-            this.props.changeMapType(newProps.mapTypeOverride);
-        }
         if (newProps.mapType !== this.props.mapType || newProps.actions !== this.props.actions) {
             this.updatePlugins(newProps);
         }
@@ -434,8 +424,7 @@ const selector = createSelector(
 module.exports = {
     MapPlugin: connect(selector, {
         onFontError: errorLoadingFont,
-        onResolutionsChange: setMapResolutions,
-        changeMapType
+        onResolutionsChange: setMapResolutions
     })(MapPlugin),
     reducers: {
         draw: require('../reducers/draw'),

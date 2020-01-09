@@ -2112,8 +2112,8 @@
         },
         "plugins": {
             "TOC": {
-                "title": "Elenco di livelli",
-                "description": "Fornisce un elenco di livelli con la possibilità di ordinarli"
+                "title": "Elenco dei livelli",
+                "description": "Fornisce l'elenco dei livelli con la possibilità di ordinarli"
             }
         },
         "contextCreator": {

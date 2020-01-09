@@ -187,9 +187,10 @@ export const enableMandatoryPlugins = () => ({
  * Enable specified plugins
  * @param {string[]} plugins plugins to enable
  */
-export const enablePlugins = (plugins) => ({
+export const enablePlugins = (plugins, isInitial) => ({
     type: ENABLE_PLUGINS,
-    plugins
+    plugins,
+    isInitial
 });
 
 /**

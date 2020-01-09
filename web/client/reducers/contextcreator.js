@@ -95,6 +95,7 @@ const makePluginTree = (plugins, localPluginsConfig) => {
             name: plugin.name,
             cfg: plugin.defaultConfig
         },
+        autoEnableChildren: plugin.autoEnableChildren || [],
         children: get(plugin, 'children', [])
             .map(childPluginName => head(plugins.filter(p => p.name === childPluginName)))
             .filter(childPlugin => childPlugin !== undefined)
