@@ -1,5 +1,5 @@
 # Resource Properties
-------------------------------
+*********************
 
 In order to customize the properties of a resource, the admin or a normal user with permission can access the **Edit properties** window from the **Edit properties** button <img src="../img/button/edit-icon.jpg" class="ms-docbutton"/> in [Homepage](https://mapstore.geo-solutions.it/mapstore/#/) or from the **Save**/**Save as** button inside the resource viewer.
 
@@ -51,7 +51,7 @@ With a click on the **Add new details** button <img src="../img/button/add_detai
 
 <img src="../img/resource-properties/details_panel.jpg" class="ms-docimage"/>
 
-The text can be edited and some links and images can be added through the [Text Editor Toolbar](text-editor-details.md). Once the editing is done, the map details can be saved with the **Save** button <img src="../img/button/save_large_button.jpg" class="ms-docbutton"/> and other three buttons appears:
+The text can be edited and some links and images can be added through the [Text Editor Toolbar](text-editor-toolbar.md). Once the editing is done, the map details can be saved with the **Save** button <img src="../img/button/save_large_button.jpg" class="ms-docbutton"/> and other three buttons appears:
 
 * Show the details preview <img src="../img/button/details_preview_button.jpg" class="ms-docbutton"/> 
 

@@ -1,5 +1,5 @@
 # Home Page
-*******************
+***********
 
 In order to get started, let us take a look at the portal interface and get an idea of how to navigate around it. First of all it's necessary to specify that the user can take advantage of different tools and sections according to his authentication in [MapStore](https://mapstore.geo-solutions.it/mapstore/#/). In particular, a user can access the [MapStore](https://mapstore.geo-solutions.it/mapstore/#/) application by:
 
@@ -16,6 +16,8 @@ Accessing MapStore as anonymous user, the [Homepage](https://mapstore.geo-soluti
 <img src="../img/home-page/homepage-anonym.jpg" class="ms-docimage"/>
 
 The anonymous user is allowed to:
+
+* Access [GeoSolutions website](https://www.geo-solutions.it/) with a click on the <img src="../img/button/geosolutions-link.jpg" class="ms-docbutton"/> icon
 
 * Navigate through the *Featured* and *Contents* section 
 
