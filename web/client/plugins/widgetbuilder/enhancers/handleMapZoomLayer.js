@@ -51,9 +51,9 @@ const enhancer = compose(
         setMap: map => onEditorChange('map', map)
     }),
     withHandlers({
-        isEpsgSupported: ({ selectedNodes = [], editorData = {} }) => () => {
+        isEpsgSupported: ({ editorData = {}, selectedNodes = [] }) => () => {
             const layers = editorData.map.layers;
-            const selectedLayers = selectedNodes.map(nodeId => layers.find(layer => layer.id === nodeId));
+            const selectedLayers = selectedNodes.map(nodeId => layers.find(layer => layer.id === nodeId)).filter(l => l);
             const layersBbox = selectedLayers.filter(l => l.bbox).map(l => l.bbox);
             const uniqueCRS = layersBbox.length > 0 ? layersBbox.reduce((a, b) => a.crs === b.crs ? a : { crs: 'differentCRS' }) : { crs: 'differentCRS' };
             const currentEPSG = !!head(layersBbox) && uniqueCRS.crs !== 'differentCRS' && uniqueCRS.crs;
@@ -62,7 +62,7 @@ const enhancer = compose(
         zoomTo: ({ editorData = {}, setMap = () => {} }) => (selectedNodes) => {
             const map = editorData.map;
             const layers = editorData.map.layers;
-            const selectedLayers = selectedNodes.map(nodeId => layers.find(layer => layer.id === nodeId));
+            const selectedLayers = selectedNodes.map(nodeId => layers.find(layer => layer.id === nodeId)).filter(l => l);
             const layersBbox = selectedLayers.filter(l => l.bbox).map(l => l.bbox);
             const bbox = layersBbox.length > 1 ? layersBbox.reduce((a, b) => {
                 return {

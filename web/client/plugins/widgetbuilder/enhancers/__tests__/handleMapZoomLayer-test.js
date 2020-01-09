@@ -6,8 +6,6 @@
  * LICENSE file in the root directory of this source tree.
 */
 
-// dependencies
-// dependencies
 import React from 'react';
 import ReactDOM from 'react-dom';
 import expect from 'expect';
@@ -40,10 +38,6 @@ describe('handleMapZoomLayer enhancer', function() {
     });
 
     it('test zoom map to layer', (done) => {
-        const Sink = handleMapZoomLayer(createSink(props => {
-            props.zoomTo([1]);
-            done();
-        }));
         const editorData = {map: {
             size: {
                 width: 518,
@@ -59,12 +53,46 @@ describe('handleMapZoomLayer enhancer', function() {
                 }
             }}]
         }};
-        const actions = {
-            setMap: () => {}
-        };
-        const editWidgetSpy = expect.spyOn(actions, "setMap");
-        ReactDOM.render(<Provider store={store}><Sink editorData={editorData} setMap={actions.setMap} /></Provider>, document.getElementById("container"));
-        expect(editWidgetSpy).toHaveBeenCalled();
+        const Sink = handleMapZoomLayer(createSink(props => {
+            props.zoomTo([1]);
+            expect(props.isEpsgSupported([1], editorData)).toBe(false);
+            done();
+        }));
+        ReactDOM.render(<Provider store={store}><Sink editorData={editorData} /></Provider>, document.getElementById("container"));
+    });
+
+    it('test zoom map to group', (done) => {
+        const editorData = {map: {
+            size: {
+                width: 518,
+                height: 351
+            },
+            layers: [{id: "layer.id1", bbox: {
+                crs: 'EPSG:4326',
+                bounds: {
+                    minx: -12,
+                    miny: 24,
+                    maxx: -66,
+                    maxy: 49
+                }
+            }},
+            {id: "layer.id2", bbox: {
+                crs: 'EPSG:4326',
+                bounds: {
+                    minx: -12,
+                    miny: 24,
+                    maxx: -66,
+                    maxy: 49
+                }
+            }}]
+        }};
+        const selectedNodes = ["layer.id1", "layer.id2", "Default"];
+        const Sink = handleMapZoomLayer(createSink(props => {
+            props.zoomTo(selectedNodes);
+            expect(props.isEpsgSupported()).toBe(false);
+            done();
+        }));
+        ReactDOM.render(<Provider store={store}><Sink editorData={editorData} selectedNodes={selectedNodes}  /></Provider>, document.getElementById("container"));
     });
 });
 
