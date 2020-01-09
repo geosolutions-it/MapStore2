@@ -51,15 +51,21 @@ const getCollapsedIds = createSelector(
     (collapsed = {}) => Object.keys(collapsed)
 );
 const getMapWidgets = state => (getFloatingWidgets(state) || []).filter(({ widgetType } = {}) => widgetType === "map");
+const getTableWidgets = state => (getFloatingWidgets(state) || []).filter(({ widgetType } = {}) => widgetType === "table");
 
 /**
  * Find in the state the available dependencies to connect
  */
 const availableDependenciesSelector = createSelector(
     getMapWidgets,
+    getTableWidgets,
     mapSelector,
-    (ws = [], map = []) => ({
-        availableDependencies: ws.map(({id}) => `widgets[${id}].map`).concat(castArray(map).map(() => "map"))
+    (ws = [], tableWidgets = [], map = []) => ({
+        availableDependencies:
+            ws
+                .map(({id}) => `widgets[${id}].map`)
+                .concat(castArray(map).map(() => "map"))
+                .concat(castArray(tableWidgets).map(({id}) => `widgets[${id}]`))
     })
 );
 /**

@@ -16,5 +16,11 @@ module.exports = compose(
         canConnect: editorData.geomProp,
         connected: editorData.mapSync
     })),
-    withMapConnect({viewport: "viewport", layers: "layers"})
+    withMapConnect({
+        viewport: "viewport",
+        layers: "layers",
+        filter: "filter",
+        quickFilters: "quickFilters",
+        options: "options"
+    })
 );

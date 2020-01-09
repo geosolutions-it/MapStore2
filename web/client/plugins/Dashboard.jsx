@@ -59,7 +59,7 @@ const WidgetsView = compose(
     })),
     withHandlers({
         // TODO: maybe using availableDependencies here will be better when different widgets type dependencies are supported
-        isWidgetSelectable: ({ editingWidgetId }) => ({ widgetType, id }) => widgetType === "map" && id !== editingWidgetId
+        isWidgetSelectable: ({ editingWidgetId }) => ({ widgetType, id }) => (widgetType === "map" || widgetType === "table") && id !== editingWidgetId
     })
 )(require('../components/dashboard/Dashboard'));
 

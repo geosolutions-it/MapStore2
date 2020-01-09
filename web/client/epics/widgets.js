@@ -1,5 +1,5 @@
 const Rx = require('rxjs');
-const { has, get, isEqual, omit } = require('lodash');
+const { endsWith, has, get, isEqual, omit } = require('lodash');
 const { EXPORT_CSV, EXPORT_IMAGE, INSERT, TOGGLE_CONNECTION, WIDGET_SELECTED, EDITOR_SETTING_CHANGE,
     onEditorChange, updateWidgetLayer, clearWidgets, loadDependencies, toggleDependencySelector, DEPENDENCY_SELECTOR_KEY, WIDGETS_REGEX} = require('../actions/widgets');
 const {
@@ -81,13 +81,23 @@ module.exports = {
             .distinctUntilChanged( (oldMaps = [], newMaps = []) => isEqual([...oldMaps], [...newMaps]))
         // add dependencies for all map widgets (for the moment the only ones that shares dependencies)
         // and for main "map" dependency, the "viewport" and "center"
-            .map((maps = []) => loadDependencies(maps.reduce( (deps, m) => ({
-                ...deps,
-                [m === "map" ? "viewport" : `${m}.viewport`]: `${m}.bbox`, // {viewport: "map.bbox"} or {"widgets[ID_W].viewport": "widgets[ID_W].bbox"}
-                [m === "map" ? "center" : `${m}.center`]: `${m}.center`, // {center: "map.center"} or {"widgets[ID_W].center": "widgets[ID_W].center"}
-                [m === "map" ? "zoom" : `${m}.zoom`]: `${m}.zoom`,
-                [m === "map" ? "layers" : `${m}.layers`]: m === "map" ? `layers.flat` : `${m}.layers`
-            }), {}))
+            .map((maps = []) => loadDependencies(maps.reduce( (deps, m) => {
+                if (!endsWith(m, "map")) {
+                    return {
+                        ...deps,
+                        [`${m}.filter`]: `${m}.filter`,
+                        [`${m}.quickFilters`]: `${m}.quickFilters`,
+                        [`${m}.options`]: `${m}.options`
+                    };
+                }
+                return {
+                    ...deps,
+                    [m === "map" ? "viewport" : `${m}.viewport`]: `${m}.bbox`, // {viewport: "map.bbox"} or {"widgets[ID_W].viewport": "widgets[ID_W].bbox"}
+                    [m === "map" ? "center" : `${m}.center`]: `${m}.center`, // {center: "map.center"} or {"widgets[ID_W].center": "widgets[ID_W].center"}
+                    [m === "map" ? "zoom" : `${m}.zoom`]: `${m}.zoom`,
+                    [m === "map" ? "layers" : `${m}.layers`]: m === "map" ? `layers.flat` : `${m}.layers`
+                };
+            }, {}))
             ),
     /**
      * Toggles the dependencies setup and widget selection for dependencies

@@ -23,6 +23,25 @@ const getCqlFilter = (layer, dependencies) => {
 const { read } = require('../../../utils/ogc/Filter/CQL/parser');
 const getLayerFilter = ({layerFilter} = {}) => layerFilter;
 
+const composeFilterObject = (filterObj, quickFilters, options) => {
+    const quickFiltersForVisibleProperties = quickFilters && options &&
+        Object.keys(quickFilters)
+            .filter(qf => find(options.propertyName, f => f === qf))
+            .reduce((p, c) => {
+                return {...p, [c]: quickFilters[c]};
+            }, {});
+
+    // Building new filterObj in order to and the two filters: old filterObj and quickFilter (from Table Widget)
+    const columnsFilters = reduce(quickFiltersForVisibleProperties, (cFilters, value, attribute) => {
+        return gridUpdateToQueryUpdate({attribute, ...value}, cFilters);
+    }, {});
+    if (!isEmpty(filterObj) || !isEmpty(columnsFilters)) {
+        const composedFilterFields = composeAttributeFilters([filterObj, columnsFilters]);
+        return {...filterObj, ...composedFilterFields};
+    }
+    return {};
+};
+
 /**
  * Merges filter object and dependencies map into an ogc filter
  */
@@ -31,6 +50,8 @@ module.exports = compose(
         ({mapSync, geomProp, dependencies = {}, layer, quickFilters, options } = {}, nextProps = {}, filter) =>
             mapSync !== nextProps.mapSync
             || dependencies.viewport !== (nextProps.dependencies && nextProps.dependencies.viewport)
+            || dependencies.quickFilters !== (nextProps.dependencies && nextProps.dependencies.quickFilters)
+            || dependencies.options !== (nextProps.dependencies && nextProps.dependencies.options)
             || geomProp !== nextProps.geomProp
             || filter !== nextProps.filter
             || options !== nextProps.options
@@ -43,22 +64,9 @@ module.exports = compose(
             const toFilter = fromObject(fb);
             const {filter, property, and} = fb;
             const {layerFilter} = layer || {};
-            const quickFiltersForVisibleProperties = quickFilters && options &&
-                Object.keys(quickFilters)
-                    .filter(qf => find(options.propertyName, f => f === qf))
-                    .reduce((p, c) => {
-                        return {...p, [c]: quickFilters[c]};
-                    }, {});
 
-            // Building new filterObj in order to and the two filters: old filterObj and quickFilter (from Table Widget)
-            const columnsFilters = reduce(quickFiltersForVisibleProperties, (cFilters, value, attribute) => {
-                return gridUpdateToQueryUpdate({attribute, ...value}, cFilters);
-            }, {});
-            let newFilterObj = null;
-            if (!isEmpty(filterObj) || !isEmpty(columnsFilters)) {
-                const composedFilterFields = composeAttributeFilters([filterObj, columnsFilters]);
-                newFilterObj = {...filterObj, ...composedFilterFields};
-            }
+            let newFilterObj = composeFilterObject(filterObj, quickFilters, options);
+            newFilterObj = {...newFilterObj, ...composeFilterObject(filterObj, dependencies.quickFilters, dependencies.options)};
 
             if (!mapSync || !dependencies.viewport) {
                 return {
@@ -69,21 +77,23 @@ module.exports = compose(
                 };
             }
 
-            const bounds = Object.keys(viewport.bounds).reduce((p, c) => {
-                return {...p, [c]: parseFloat(viewport.bounds[c])};
-            }, {});
-            const geom = CoordinatesUtils.getViewportGeometry(bounds, viewport.crs);
-            const cqlFilter = getCqlFilter(layer, dependencies);
-            const cqlFilterRules = cqlFilter
-                ? [toFilter(read(cqlFilter))]
-                : [];
-            return {
-                filter: filter(and(
-                    ...cqlFilterRules,
-                    ...(layerFilter ? FilterUtils.toOGCFilterParts(layerFilter, "1.1.0", "ogc") : []),
-                    ...(newFilterObj ? FilterUtils.toOGCFilterParts(newFilterObj, "1.1.0", "ogc") : []),
-                    property(geomProp).intersects(geom)))
-            };
+            if (dependencies.viewport) {
+                const bounds = Object.keys(viewport.bounds).reduce((p, c) => {
+                    return {...p, [c]: parseFloat(viewport.bounds[c])};
+                }, {});
+                const geom = CoordinatesUtils.getViewportGeometry(bounds, viewport.crs);
+                const cqlFilter = getCqlFilter(layer, dependencies);
+                const cqlFilterRules = cqlFilter
+                    ? [toFilter(read(cqlFilter))]
+                    : [];
+                return {
+                    filter: filter(and(
+                        ...cqlFilterRules,
+                        ...(layerFilter ? FilterUtils.toOGCFilterParts(layerFilter, "1.1.0", "ogc") : []),
+                        ...(newFilterObj ? FilterUtils.toOGCFilterParts(newFilterObj, "1.1.0", "ogc") : []),
+                        property(geomProp).intersects(geom)))
+                };
+            }
         }
     )
 
