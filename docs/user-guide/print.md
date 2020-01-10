@@ -46,7 +46,7 @@ From here, in particular, it is possible to:
 
 ### Legend options 
 
-The Legend can be customize through the **Legend options** menu:
+The Legend can be customized through the **Legend options** menu:
 
 <img src="../img/print/first-legend-options.jpg" class="ms-docimage"/>
 
@@ -68,7 +68,7 @@ When the print settings are chosen, it is possible to access the preview by clic
 
 <img src="../img/print/preview.jpg" class="ms-docimage"/> 
 
-In here it is possible to:
+Here it is possible to:
 
 *  Zoom in/out int the preview <img src="../img/button/zoom-in-out.jpg" class="ms-docbutton"/>
 
