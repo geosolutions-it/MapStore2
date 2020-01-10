@@ -21,7 +21,7 @@ Through these options it is possible to:
 
 * **Logout**
 
-Once logged ad *Admin*, it is possible to manage users and groups and the **Manage Accounts** button appears in [Homepage](home-page.md):
+Once logged as *Admin*, it is possible to manage users and groups and the **Manage Accounts** button appears in [Homepage](home-page.md):
 
 <img src="../img/managing-users-and-groups/manager.jpg" class="ms-docimage"/>
 
