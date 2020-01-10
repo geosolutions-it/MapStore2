@@ -82,4 +82,20 @@ describe('Metadata component', () => {
         expect(spyonChange).toHaveBeenCalled();
         expect(spyonChange.calls[0].arguments[1]).toBe('test,text,stuff');
     });
+    it('Metadata rendering Modified At label when modifiedAt prop is undefined', () => {
+        const resource = {
+            modifiedAt: undefined,
+            createdAt: new Date(),
+            metadata: {
+                name: "NAME",
+                description: "DESCRIPTION"
+            }
+        };
+        ReactDOM.render(<Metadata resource={resource} createdAtFieldText="Created" modifiedAtFieldText="Modified"/>, document.getElementById("container"));
+        const container = document.getElementById('container');
+        const labels = container.querySelectorAll('label');
+        expect(labels.length).toBe(6);
+        expect(labels[2].innerText).toBe('Created');
+        expect(labels[4].innerText).toBe('Modified');
+    });
 });
