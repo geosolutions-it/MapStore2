@@ -187,7 +187,7 @@ export const enableMandatoryPlugins = () => ({
  * Enable specified plugins
  * @param {string[]} plugins plugins to enable
  * @param {boolean} isInitial true if action is triggered on load of context
- * (when an already exisiting context is edited this action is used to enable plugins)
+ * (when an already exisiting context is edited this action is used to enable plugins, in `enableInitialPlugins` epic)
  */
 export const enablePlugins = (plugins, isInitial) => ({
     type: ENABLE_PLUGINS,

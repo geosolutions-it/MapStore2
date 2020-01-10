@@ -237,9 +237,9 @@ export const enableMandatoryPluginsEpic = (action$, store) => action$
     });
 
 /**
- * Handles plugin enabling, resolving dependencies and enabling them as well
- * Enables, along with requested plugins their dependencies, for dependencies
- * sets forceMandatory to true and updates enabledDependentPlugins array
+ * Handles plugin enabling, resolving dependencies and enabling them as well.
+ * Enables, along with requested plugins their dependencies, for dependencies.
+ * Sets `forceMandatory` to true and updates `enabledDependentPlugins` array.
  * In the case when plugin A should have plugin B as it's dependency and B is a child of C, both B and C should be listed as dependencies of A.
  * (because you need C to be enabled too as it's a parent, it won't be enabled automagically, dependency resolution doesn't
  * care if a plugin is a parent or a child or whatever, it only cares about dependency relationships)
@@ -290,6 +290,7 @@ export const enablePluginsEpic = (action$, store) => action$
                 pluginsToEnable.push(pluginName);
                 plugin.dependencies.forEach(depName => {
                     processDependency(pluginName, findPlugin(pluginsState, depName));
+                    // autoEnableChildren only applies when the action is triggered by the user from ui
                     if (!isInitial) {
                         plugin.autoEnableChildren.forEach(childName => {
                             enablePlugin(childName);
@@ -303,9 +304,11 @@ export const enablePluginsEpic = (action$, store) => action$
             enablePlugin(pluginName);
         });
 
-        // generate actions that update plugins
+       // generate actions that update plugins
         return Rx.Observable.of(
             changePluginsKey(pluginsToEnable, 'enabled', true),
+
+            // isUserPlugin value should be preserved when we set up the initial state of plugins when editing a context
             ...(!isInitial ? [changePluginsKey(uniq([...pluginsToEnable, ...depsToForce]), 'isUserPlugin', false)] : []),
             changePluginsKey(depsToForce, 'forcedMandatory', true),
             ...keys(enabledDependentPlugins).map(pluginName =>
@@ -314,9 +317,9 @@ export const enablePluginsEpic = (action$, store) => action$
     });
 
 /**
- * Handles plugin disabling
- * Disables requested plugins, finds dependencies, and disables those that don't have plugins enabled that depend on them
- * Also specifically handles a case when all currently enabled plugins are requested to be disabled
+ * Handles plugin disabling.
+ * Disables requested plugins, finds dependencies, and disables those that don't have plugins enabled that depend on them.
+ * Also specifically handles a case when all currently enabled plugins are requested to be disabled.
  * (i.e. when '<<' button is pressed in the configure plugins step)
  * @param {observable} action$ manages `DISABLE_PLUGINS`
  * @param {object} store
@@ -336,12 +339,13 @@ export const disablePluginsEpic = (action$, store) => action$
         // but it works so i didn't touch it
         const maxCount = pluginsState.filter(plugin => plugin.enabled && !plugin.mandatory && !plugin.forcedMandatory).length;
         if (intersection(plugins, rootPlugins).length < maxCount) {
-            let enabledDependentPlugins = {};
-            let pluginsToDisable = plugins.slice();
-            let depsToUnforceMandatory = [];
+            let enabledDependentPlugins = {}; // object {[pluginName]: modified enabledDependentPlugins array}
+            let pluginsToDisable = plugins.slice(); // plugins that need to be enabled after dependency resolution
+            let depsToUnforceMandatory = []; // plugins that need to have their forcedMandatory flag removed
 
             const disablePlugin = pluginName => {
                 const processDependency = (parentName, plugin) => {
+                    // update enabledDependentPlugins of plugin
                     const enabledDependentPluginsArr = enabledDependentPlugins[plugin.name] || plugin.enabledDependentPlugins.slice();
                     const dependentPluginIndex = findIndex(enabledDependentPluginsArr, p => p === parentName);
                     if (dependentPluginIndex > -1) {
@@ -351,10 +355,12 @@ export const disablePluginsEpic = (action$, store) => action$
                         enabledDependentPlugins[plugin.name].splice(dependentPluginIndex, 1);
                     }
 
+                    // if there are no more plugins that are enabled and have this plugin as a dependency, unforce it
                     if (enabledDependentPlugins[plugin.name].length === 0 &&
                         pluginsToDisable.reduce((result, cur) => result && cur !== plugin.name, true)
                     ) {
                         depsToUnforceMandatory.push(plugin.name);
+                        // if the plugin is not mandatory disable it and recursively process it's dependencies
                         if (!plugin.mandatory) {
                             pluginsToDisable.push(plugin.name);
                             plugin.dependencies.forEach(depName => {
@@ -364,6 +370,7 @@ export const disablePluginsEpic = (action$, store) => action$
                     }
                 };
 
+                // start processing dependencies
                 const plugin = findPlugin(pluginsState, pluginName);
                 plugin.dependencies.forEach(depName => {
                     processDependency(pluginName, findPlugin(pluginsState, depName));
@@ -374,6 +381,7 @@ export const disablePluginsEpic = (action$, store) => action$
                 disablePlugin(pluginName);
             });
 
+            // generate actions that update plugins
             return Rx.Observable.of(
                 changePluginsKey(pluginsToDisable, 'enabled', false),
                 ...keys(enabledDependentPlugins).map(pluginName =>
@@ -382,6 +390,7 @@ export const disablePluginsEpic = (action$, store) => action$
             );
         }
 
+        // disable everything and reenable initial mandatory plugins
         return Rx.Observable.of(
             changePluginsKey(rootPlugins, 'enabled', false),
             changePluginsKey(allPlugins, 'enabledDependentPlugins', []),
