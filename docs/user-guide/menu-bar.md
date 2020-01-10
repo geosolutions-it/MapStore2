@@ -15,7 +15,7 @@ The *Menu Bar* consist of four different parts:
 
 ## Search Bar
 
-The search bar is a tool that allows the user to query the layers in order to find a specific information. In [Mapstore](https://mapstore.geo-solutions.it/mapstore/#/) it is possible to perform the search in three different ways:
+The search bar is a tool that allows the user to query the layers in order to find a specific information. In [MapStore](https://mapstore.geo-solutions.it/mapstore/#/) it is possible to perform the search in three different ways:
 
 * By **Location name**
 
@@ -27,11 +27,9 @@ The search bar is a tool that allows the user to query the layers in order to fi
 
 ### Search by location name
 
-The *Search by location name*, set by default when a new map is created, allow the user to find polygonal, linear and points features. Typing the name of a city in the input box and selecting the desired record, for example, the map will automatically re-center on the chosen area highlighting with a polygon the border of the administrative area:
+The *Search by location name*, set by default when a new map is created, allows the user to search places asking the [OpenStreetMap Nominatim search engine](https://nominatim.openstreetmap.org/). Typing the desired place, the Nominatim seach engine is queried; selecting then the desired record in the list of results, the map is automatically re-center/zoomed to the chosen area that is also highlighted:
 
 <img src="../img/menu-bar/rome.jpg" class="ms-docimage" />
-
-A similar behavior happens when looking for a linear feature (like, for example, can be a street or a river) or a point feature (like a restaurant or the top of a mountain)
 
 ### Search by coordinates
 
@@ -51,71 +49,62 @@ Once the coordinates are set, it is possible to perform the search with the <img
 
 ### Configuring a search service
 
-[MapStore](https://mapstore.geo-solutions.it/mapstore/#/) allows the user also to extend the default OSM results with additional *WFS Search Services*. Selecting the **Configure Search Services** option, the following window opens:
+[MapStore](https://mapstore.geo-solutions.it/mapstore/#/) allows the user also to extend or replace the default OSM results with additional *WFS Search Services*. Selecting the **Configure Search Services** option, the following window opens:
 
 <img src="../img/menu-bar/create-edit-service-panel.jpg" class="ms-docimage" style="max-width:400px;"/>
 
-In order to create a new custom service, the <img src="../img/button/add_group_confirm_button.jpg" class="ms-docbutton"/> button takes the user to a page where he can set the *WFS service props*, for example:
+In order to create a new custom service, the <img src="../img/button/add_group_confirm_button.jpg" class="ms-docbutton"/> button brings the user to a page where he can set the *WFS service properties*, for example:
 
 <img src="../img/menu-bar/wfs-service-props-form.jpg" class="ms-docimage"  style="max-width:400px;"/>
 
-In particular, the information to be entered is:
+In particular, the information to be entered are:
 
 * **Name** of the service
 
-* WFS **Service url** that the user want to call
+* WFS **Service URL** the user want to call
 
 * **Layer** to be queried
 
-* Specific **Attributes** (fileds) that the user wants to query
+* Specific **Attributes** (fileds) the user wants to query
 
-When all the options are set, by clicking on the <img src="../img/button/next-txt.jpg" class="ms-docbutton"/> button a new panel opens, where it is possible to choose the properties of the displayed results:
+When all the options are set, by clicking on the <img src="../img/button/next-txt.jpg" class="ms-docbutton"/> button a new panel opens, where it is possible to choose the properties for the displayed results:
 
 <img src="../img/menu-bar/result-display-properties-form.jpg" class="ms-docimage"  style="max-width:400px;"/>
 
 In this case, the user can define the following settings:
 
-* The **Title** displayed on the top of each results row (in the previous image, for  example, the chosen title for the results is the NAME of the objects)
+* The **Title** displayed on the top of each results row (in the previous image, for  example, the chosen title for the results is the one corresponding to the attribute NAME of the feature)
 
-* The **Description** inserted in the results just below the title (in the previous image for  example, a static text was set in order to show the name of the layer in which the results are sought)
+* The **Description** to report in the results just below the title
 
 * The **Priority**, a parameter which determines the position of the records in the results list. Lower values imply a higher positions in the results list and vice versa. By default the [OpenStreetMap Nominatim search engine](https://nominatim.openstreetmap.org/) result has priority equals to 5, therefore in order to see the custom results in a higher position a lower priority value is needed 
 
-* The **Launch Info panel** allows the user to chose if and how the custom search interact with the [Identify tool](side-bar.md#identify-tool). In particular, with the *No Info* option, the Info panel doesn't show up selecting a record from the search results. Selecting *All Layers* or *Search Layer*, instead, the Info panel show up displaying respectively the information of all layers visible in the map and the data already available through the custom search
+* The **Launch Info panel** allows the user to chose if and how the custom search interact with the [Identify tool](side-bar.md#identify-tool). In particular, with the *No Info* option, the Info panel doesn't show up once a record from the search results is selected. Selecting *All Layers* the Identify tool is triggered and the related panel opens displaying the information of all layers visible in the map. With *Search Layer* instead, the Identify tool is triggered only for the layer (if it is present and visible in the map) related to the selected record in the search result list.
 
 <img src="../img/menu-bar/launch-info-panel.jpg" class="ms-docimage"  style="max-width:400px;"/>
 
 !!! note
-    Selecting *All Layers* in the Launch Info panel the result is something like the following:
-    
-    <img src="../img/menu-bar/custom-search-results-all-layers.jpg" class="ms-docimage"/>
+Note that, selecting *All Layers* or *Search Layer* options, the point used for Identify request is a point belonging to the surface of the geometry of the selected record. Moreover, using *Search Layer* the Identify request will filter results to the selected record and to its layer; it will also force the info_format to "application/json" to allow filtering features by using the ID of the selected record.
 
-    Selecting *Search Layer*, instead, is something like:
-
-    <img src="../img/menu-bar/custom-search-results-search-layer.jpg" class="ms-docimage"/>
-
-!!! warning
-    In this panel, and in the previous one, all the options are required in order to move to the next page.
-
-Once all the option are set, it is possible to move forward with the Next button <img src="../img/button/next-txt.jpg" class="ms-docbutton"/> that opens the *Optional props* panel:
+Once all the option are set, it is possible to move forward with the Next button <img src="../img/button/next-txt.jpg" class="ms-docbutton"/> that opens the *Optional properties* panel:
 
 <img src="../img/menu-bar/optional-props-form.jpg" class="ms-docimage" style="max-width:400px;"/>
 
-In here the user can choose:
+Here the user can choose:
 
-* To **Sort** the results **by** a field
+* To **Sort** the results **by** the specified attribute
 
-* The **Max** number of **features** (rows) displayed in the custom search results
+* The **Max** number of **features** (items) displayed in the custom search results
 
 After the <img src="../img/button/save-update-button.jpg" class="ms-docbutton"/> it is possible to see the custom WFS search service inside the *Available services* list:
 
 <img src="../img/menu-bar/wfs-services-list.jpg" class="ms-docimage"  style="max-width:500px;"/>
 
-Once a search service is created, it is always possible to Edit it <img src="../img/button/edit-service-icon.jpg" class="ms-docbutton"/> or Remove it <img src="../img/button/delete-service-icon.jpg" class="ms-docbutton"/> from the list. By default, the **Override default services** option is disabled, and performing a search not only the custom search service results are shown, but also the OSM ones:
+Once a search service is created, it is always possible to Edit it <img src="../img/button/edit-service-icon.jpg" class="ms-docbutton"/> or Remove it <img src="../img/button/delete-service-icon.jpg" class="ms-docbutton"/> from the list. By default the **Override default services** option is disabled, in that case performing a search not only the custom search service results are shown, but also the Nominatim ones:
 
 <img src="../img/menu-bar/override-no.jpg" class="ms-docimage" style="max-width:400px;"/>
 
-Once the **Override default services** option is enabled, instead, only the custom search service results are shown:
+Once the **Override default services** option is enabled, only the custom search service results are shown:
 
 <img src="../img/menu-bar/override-yes.jpg" class="ms-docimage" style="max-width:400px;"/>
 
@@ -137,13 +126,13 @@ In particular, with these options it is possible to:
 
 * Perform a [Measure](measure.md) on the map
 
-* **Save** the map in order to apply the changes made in an existing map (this button is not available creating a new one). Selecting this option the [Resources Properties](resources-properties.md) window opens, already filled with the map properties
+* **Save** the map in order to apply the changes made in an existing map (this button is not available creating a new one). Selecting this option the [Resources Properties](resources-properties.md) window opens, already filled with the current map properties
 
 * **Save as** when the user needs to save a copy of a map or save one for the first time. Selecting this option an empty [Resources Properties](resources-properties.md) window opens.
 
 * Create [Annotations](annotations.md) and add them to the map
 
-* Access the map **Settings** where the user can change the *Language*, select the *Identify response format* (*Text*, *html* or *Properties*) and see the application *Version* (more information about the *Identify response format* can be found in the [Identify tool](side-bar.md#identify-tool) section)
+* Access the map **Settings** where the user can change the current *Language*, select the *Identify response format* (*Text*, *html* or *Properties*) and see the application *Version* (more information about the *Identify response format* can be found in the [Identify tool](side-bar.md#identify-tool) section)
 
 <img src="../img/menu-bar/settings.jpg" class="ms-docimage" style="max-width:400px;"/>
 
@@ -151,7 +140,7 @@ In particular, with these options it is possible to:
 
 * [Share](share.md) the map
 
-* Open the [Mapstore Documentation](https://mapstore.readthedocs.io/en/latest/)
+* Open the [MapStore Documentation](https://mapstore.readthedocs.io/en/latest/)
 
 * Start the **Tutorial** 
 
