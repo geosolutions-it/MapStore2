@@ -25,6 +25,7 @@ module.exports = {
         NavMenu: require('./plugins/NavMenu'),
         // framework plugins
         AddGroupPlugin: require('../plugins/AddGroup').default,
+        AddLayerPlugin: require('../plugins/AddLayer').default,
         AnnotationsPlugin: require('../plugins/Annotations'),
         AutoMapUpdatePlugin: require('../plugins/AutoMapUpdate'),
         BackgroundSelectorPlugin: require('../plugins/BackgroundSelector'),
@@ -47,6 +48,7 @@ module.exports = {
         FeatureEditorPlugin: require('../plugins/FeatureEditor'),
         FeaturedMaps: require('../plugins/FeaturedMaps'),
         FeedbackMaskPlugin: require('../plugins/FeedbackMask'),
+        FilterLayerPlugin: require('../plugins/FilterLayer'),
         FloatingLegendPlugin: require('../plugins/FloatingLegend'),
         FullScreenPlugin: require('../plugins/FullScreen'),
         GeoStoryPlugin: require('../plugins/GeoStory').default,

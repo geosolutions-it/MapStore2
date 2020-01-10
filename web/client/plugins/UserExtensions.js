@@ -53,7 +53,7 @@ export default createPlugin('UserExtensions', {
     containers: {
         BurgerMenu: {
             name: 'userExtensions',
-            position: 50,
+            position: 999,
             text: <Message msgId="userExtensions.title" />,
             icon: <Glyphicon glyph="plug" />,
             action: setControlProperty.bind(null, "userExtensions", "enabled", true, true),

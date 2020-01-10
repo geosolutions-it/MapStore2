@@ -97,5 +97,12 @@ const AddGroupPlugin = connect((state) => ({
 })(AddGroup);
 
 export default createPlugin('AddGroup', {
-    component: AddGroupPlugin
+    component: AddGroupPlugin,
+    containers: {
+        TOC: {
+            doNotHide: true,
+            name: "AddGroup",
+            position: 1
+        }
+    }
 });

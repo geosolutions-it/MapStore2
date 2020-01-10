@@ -9,6 +9,8 @@ const PropTypes = require('prop-types');
 const React = require('react');
 const {connect} = require('react-redux');
 const {createSelector} = require('reselect');
+const { compose, branch, withPropsOnChange} = require('recompose');
+
 const {Glyphicon} = require('react-bootstrap');
 
 const {changeLayerProperties, changeGroupProperties, toggleNode, contextNode,
@@ -35,7 +37,7 @@ const assign = require('object-assign');
 
 const layersIcon = require('./toolbar/assets/img/layers.png');
 
-const {isObject, head} = require('lodash');
+const {isObject, head, find} = require('lodash');
 
 const { setControlProperties} = require('../actions/controls');
 const {createWidget} = require('../actions/widgets');
@@ -144,6 +146,7 @@ const DefaultLayerOrGroup = require('../components/TOC/DefaultLayerOrGroup');
 class LayerTree extends React.Component {
     static propTypes = {
         id: PropTypes.number,
+        items: PropTypes.array,
         buttonContent: PropTypes.node,
         groups: PropTypes.array,
         settings: PropTypes.object,
@@ -227,6 +230,7 @@ class LayerTree extends React.Component {
     };
 
     static defaultProps = {
+        items: [],
         groupPropertiesChangeHandler: () => {},
         layerPropertiesChangeHandler: () => {},
         retrieveLayerData: () => {},
@@ -258,7 +262,7 @@ class LayerTree extends React.Component {
         activateQueryTool: true,
         activateDownloadTool: false,
         activateWidgetTool: false,
-        activateLayerFilterTool: true,
+        activateLayerFilterTool: false,
         maxDepth: 3,
         visibilityCheckType: "glyph",
         settingsOptions: {
@@ -502,6 +506,23 @@ const securityEnhancer = (Component) => (props) => {
     return <Component {...other} {...activateProps}/>;
 };
 
+const checkPluginsEnhancer = branch(
+    ({ checkPlugins = true }) => checkPlugins,
+    withPropsOnChange(
+        ["items", "activateAddLayerButton", "activateAddGroupButton", "activateLayerFilterTool"],
+        ({
+            items = [],
+            activateAddLayerButton,
+            activateAddGroupButton,
+            activateLayerFilterTool = true
+        }) => ({
+            activateAddLayerButton: activateAddLayerButton && find(items, { name: "AddLayer" }) || false, // requires MetadataExplorer (Catalog)
+            activateAddGroupButton: activateAddGroupButton && find(items, { name: "AddGroup" }) || false,
+            activateLayerFilterTool: activateLayerFilterTool && find(items, {name: "FilterLayer"}) || false// requires QueryPanel
+        })
+    )
+);
+
 
 /**
  * Provides Table Of Content visualization.
@@ -520,8 +541,9 @@ const securityEnhancer = (Component) => (props) => {
  * @prop {boolean} cfg.activateQueryTool: activate query tool options, default `false`
  * @prop {boolean} cfg.activateDownloadTool: activate a button to download layer data through wfs, default `false`
  * @prop {boolean} cfg.activateSortLayer: activate drag and drop to sort layers, default `true`
- * @prop {boolean} cfg.activateAddLayerButton: activate a button to open the catalog, default `false`
- * @prop {boolean} cfg.activateAddGroupButton: activate a button to add a new group, default `false`
+ * @prop {boolean} cfg.checkPlugins if true, check if AddLayer, AddGroup ... plugins are present to auto-configure the toolbar
+ * @prop {boolean} cfg.activateAddLayerButton: activate a button to open the catalog, default `true`
+ * @prop {boolean} cfg.activateAddGroupButton: activate a button to add a new group, default `true`
  * @prop {boolean} cfg.showFullTitleOnExpand shows full length title in the legend. default `false`.
  * @prop {boolean} cfg.hideOpacityTooltip hide toolip on opacity sliders
  * @prop {string[]|string|object|function} cfg.metadataTemplate custom template for displaying metadata
@@ -644,7 +666,10 @@ const TOCPlugin = connect(tocSelector, {
     hideLayerMetadata,
     onNewWidget: () => createWidget(),
     refreshLayerVersion
-})(securityEnhancer(LayerTree));
+})(compose(
+    securityEnhancer,
+    checkPluginsEnhancer
+)(LayerTree));
 
 const API = {
     csw: require('../api/CSW'),

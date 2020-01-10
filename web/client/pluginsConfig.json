@@ -56,12 +56,16 @@
       "children": [
         "TOCItemsSettings",
         "FeatureEditor",
-        "AddGroup"
+        "FilterLayer",
+        "AddGroup",
+        "AddLayer"
       ],
       "autoEnableChildren": [
         "TOCItemsSettings",
         "FeatureEditor",
-        "AddGroup"
+        "FilterLayer",
+        "AddGroup",
+        "AddLayer"
       ],
       "dependencies": [
         "DrawerMenu"
@@ -181,6 +185,12 @@
     },
     {
       "name": "AddGroup"
+    },{
+      "name": "AddLayer",
+      "dependencies": ["MetadataExplorer"]
+    }, {
+      "name": "FilterLayer",
+      "dependencies": ["QueryPanel"]
     },
     {
       "name": "Tutorial"
