@@ -29,7 +29,7 @@ As soon as the *New Group* window opens, the *Group ID* section is displayed:
 
 <img src="../img/managing-groups/popup-group.jpg" class="ms-docimage"/>
 
-In this section the Amin is allowed to:
+In this section the Admin is allowed to:
 
 * Set the Group Name
 
