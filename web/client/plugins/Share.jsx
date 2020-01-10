@@ -78,6 +78,9 @@ const Share = connect(createSelector([
     version,
     bbox: isVisible && map && map.bbox && getExtentFromViewport(map.bbox),
     showAPI: !context,
+    embedOptions: {
+        showTOCToggle: !context
+    },
     settings
 })), {
     onClose: toggleControl.bind(null, 'share', null),

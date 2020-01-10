@@ -731,7 +731,12 @@
               "confirmMessage": "contextCreator.undo"
             }
           },
-          "ContextCreator",
+          {
+              "name": "ContextCreator",
+              "cfg": {
+                  "documentationBaseURL": "https://mapstore.geo-solutions.it/mapstore/docs/api/plugins"
+              }
+          },
           "Notifications",
           {
             "name": "FeedbackMask",
