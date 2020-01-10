@@ -54,7 +54,7 @@ describe('DrawerMenu Plugin', () => {
         document.body.innerHTML = '';
         setTimeout(done);
     });
-    it('does\'t render if empty', () => {
+    it('doesn\'t render if empty', () => {
         const { Plugin } = getPluginForTest(DrawerMenuPlugin, {
             controls: {
                 drawer: {}
