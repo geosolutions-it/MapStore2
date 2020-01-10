@@ -304,7 +304,7 @@ export const enablePluginsEpic = (action$, store) => action$
             enablePlugin(pluginName);
         });
 
-       // generate actions that update plugins
+        // generate actions that update plugins
         return Rx.Observable.of(
             changePluginsKey(pluginsToEnable, 'enabled', true),
 
