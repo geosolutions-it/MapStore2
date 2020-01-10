@@ -97,7 +97,7 @@ class Metadata extends React.Component {
                 </FormGroup>
             }
             {
-                this.props.resource && this.props.resource.modifiedAt && this.props.resource.createdAt && <FormGroup>
+                this.props.resource && this.props.resource.createdAt && <FormGroup>
                     <ControlLabel>{this.props.modifiedAtFieldText}</ControlLabel>
                     <ControlLabel>{this.props.resource && this.renderDate(this.props.resource.modifiedAt || this.props.resource.createdAt) || ""}</ControlLabel>
                 </FormGroup>
