@@ -2081,7 +2081,9 @@
                 "confirmExitContent": "Ausstehende Änderungen verwerfen?"
             },
             "mapForm": {
-                "thumbnailMessage": "Die Größe der Bilder sollte ein Quadrat von 98 x 98 Pixel sein, maximal 100 KB"
+                "thumbnailMessage": "Die Größe der Bilder sollte ein Quadrat von 98 x 98 Pixel sein, maximal 100 KB",
+                "confirmMapSaveTitle": "Kartenupdate",
+                "confirmMapSaveContent": "Durch das Aktualisieren dieser Karte werden alle abhängigen Karten in der Story zurückgesetzt, die zuvor über den Inline-Editor angepasst wurden. Bestätigen Sie?"
             }
         },
         "backgroundDialog": {

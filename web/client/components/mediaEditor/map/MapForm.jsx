@@ -14,11 +14,23 @@ import {isEqual} from 'lodash';
 
 import {show} from '../../../actions/mapEditor';
 import LocaleUtils from '../../../utils/LocaleUtils';
+import {MediaTypes} from '../../../utils/GeoStoryUtils';
 import Message from '../../I18N/Message';
 import BorderLayout from '../../layout/BorderLayout';
 import Toolbar from '../../misc/toolbar/Toolbar';
+import ToolbarButton from '../../misc/toolbar/ToolbarButton';
+
+import {isMediaResourceUsed} from '../../../selectors/geostory';
 import Thumbnail from '../../maps/forms/Thumbnail';
 import withConfirm from '../../misc/withConfirm';
+
+const SaveButton = withConfirm(ToolbarButton);
+const SaveButtonWithConfirm = (props) => {
+    console.log(props);
+    return (<SaveButton
+        confirmTitle={<Message msgId = "mediaEditor.mapForm.confirmMapSaveTitle"/>}
+        confirmContent={<Message msgId = "mediaEditor.mapForm.confirmMapSaveContent"/>} {...props}/>);
+};
 
 const form = [
     {
@@ -41,9 +53,15 @@ const form = [
 ];
 
 const enhance = compose(
-    connect(null, {
-        openMapEditor: show
-    }),
+    connect(
+        (state, ownProps) => {
+            const {selectedItem: {id, type} = {}} = ownProps || {};
+            return {
+                isResourceUsed: type === MediaTypes.MAP && isMediaResourceUsed(state, id)
+            };
+        }, {
+            openMapEditor: show
+        }),
     defaultProps({
         confirmTitle: <Message msgId = "mediaEditor.mediaform.confirmExitTitle"/>,
         confirmContent: <Message msgId = "mediaEditor.mediaform.confirmExitContent"/>
@@ -65,7 +83,8 @@ const enhance = compose(
             editing && setEditingMedia(false) || setAddingMedia(false);
         }
     }),
-    withPropsOnChange(["selectedItem", "initialResource", "properties"], ({initialResource, selectedItem: {data = {}} = {}, properties}) => {
+    withPropsOnChange(["selectedItem", "initialResource", "properties"], ({initialResource, selectedItem: {data = {}} = {}, properties, ...rest}) => {
+        console.log(rest);
         return {confirmPredicate: !isEqual(initialResource, {...data, ...properties})};
     }),
     withConfirm,
@@ -90,7 +109,9 @@ export const MapForm = ({
     setErrors,
     thumbnailErrors = [],
     errorMessages,
-    onClick = () => {}
+    onClick = () => {},
+    confirmPredicate: saveEnabled,
+    isResourceUsed = false
 }) => (
     <BorderLayout
         className="ms-mapForm"
@@ -117,10 +138,15 @@ export const MapForm = ({
                         tooltipId: "mediaEditor.mediaPicker.back",
                         onClick
                     }, {
-                        glyph: "floppy-disk",
-                        tooltipId: "mediaEditor.mediaPicker.save",
-                        disabled: !properties.name,
-                        onClick: onSave
+                        renderButton: <SaveButtonWithConfirm
+                            glyph="floppy-disk"
+                            tooltipId="mediaEditor.mediaPicker.save"
+                            disabled={!properties.name || !saveEnabled}
+                            onClick={onSave}
+                            bsStyle="primary"
+                            className="square-button-md"
+                            confirmPredicate={saveEnabled && isResourceUsed}
+                        />
                     },
                     {
                         glyph: 'pencil',
