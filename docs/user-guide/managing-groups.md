@@ -5,7 +5,7 @@ The Groups Manager section displays like the following:
 
 <img src="../img/managing-groups/groups-man.jpg" class="ms-docimage"  style="max-width:500px;"/>
 
-Similar to what happens for users manager, in this page the *Admin* can:
+Similar to what happens for the users manager, in this page the *Admin* can:
 
 * Perform a search among the existing groups
 
@@ -17,7 +17,7 @@ Similar to what happens for users manager, in this page the *Admin* can:
 
 <img src="../img/managing-groups/edit-group.jpg" class="ms-docimage"/>
 
-Both the **New Group** <img src="../img/button/new-group.jpg" class="ms-docbutton"/> and the **Edit group** <img src="../img/button/edit-icon.jpg" class="ms-docbutton"/> buttons, open the *Group editor* window, composed of two sections:
+Both the **New Group** <img src="../img/button/new-group.jpg" class="ms-docbutton"/> and the **Edit group** <img src="../img/button/edit-icon.jpg" class="ms-docbutton"/> buttons, open the *Group editor* window that is composed of two sections:
 
 * *Group ID*
 
