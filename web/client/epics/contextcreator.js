@@ -240,7 +240,9 @@ export const enableMandatoryPluginsEpic = (action$, store) => action$
  * Handles plugin enabling, resolving dependencies and enabling them as well
  * Enables, along with requested plugins their dependencies, for dependencies
  * sets forceMandatory to true and updates enabledDependentPlugins array
- * Dependencies should be on one plugin tree level
+ * In the case when plugin A should have plugin B as it's dependency and B is a child of C, both B and C should be listed as dependencies of A.
+ * (because you need C to be enabled too as it's a parent, it won't be enabled automagically, dependency resolution doesn't
+ * care if a plugin is a parent or a child or whatever, it only cares about dependency relationships)
  * @param {observable} action$ manages `ENABLE_PLUGINS`
  * @param {object} store
  */
@@ -250,27 +252,32 @@ export const enablePluginsEpic = (action$, store) => action$
         const state = store.getState();
         const pluginsState = pluginsSelector(state);
 
-        let enabledDependentPlugins = {};
-        let pluginsToEnable = [];
-        let depsToForce = [];
+        let enabledDependentPlugins = {}; // object {[pluginName]: modified enabledDependentPlugins array}
+        let pluginsToEnable = []; // plugins that need to be enabled after dependency resolution
+        let depsToForce = []; // plugins that need to be temporarily flagged as mandatory
 
         const enablePlugin = (pluginName) => {
             const processDependency = (parentName, dep) => {
+                // add the plugin where we came from to enabledDependentPlugins of dep
                 if (!enabledDependentPlugins[dep.name]) {
                     enabledDependentPlugins[dep.name] = dep.enabledDependentPlugins.slice();
                 }
                 enabledDependentPlugins[dep.name].push(parentName);
 
+                // if dep is flagged as forcedMandatory we've already been here
                 if (dep.forcedMandatory || depsToForce.reduce((result, cur) => result || cur === dep.name, false)) {
                     return;
                 }
 
+                // flag dep to have forcedMandatory enabled
                 depsToForce.push(dep.name);
 
+                // enable it if not already enabled
                 if (!dep.enabled && pluginsToEnable.reduce((result, cur) => result && cur !== dep.name, true)) {
                     pluginsToEnable.push(dep.name);
                 }
 
+                // recursively process the dependencies of dep
                 dep.dependencies.forEach(depName => {
                     processDependency(dep.name, findPlugin(pluginsState, depName));
                 });
@@ -278,6 +285,7 @@ export const enablePluginsEpic = (action$, store) => action$
 
             const plugin = findPlugin(pluginsState, pluginName);
 
+            // enable the plugin only if it hasn't been enabled already
             if (!plugin.enabled && pluginsToEnable.reduce((result, cur) => result && cur !== pluginName, true)) {
                 pluginsToEnable.push(pluginName);
                 plugin.dependencies.forEach(depName => {
@@ -295,6 +303,7 @@ export const enablePluginsEpic = (action$, store) => action$
             enablePlugin(pluginName);
         });
 
+        // generate actions that update plugins
         return Rx.Observable.of(
             changePluginsKey(pluginsToEnable, 'enabled', true),
             ...(!isInitial ? [changePluginsKey(uniq([...pluginsToEnable, ...depsToForce]), 'isUserPlugin', false)] : []),
@@ -306,9 +315,7 @@ export const enablePluginsEpic = (action$, store) => action$
 
 /**
  * Handles plugin disabling
- * Disables requested plugins, finds dependencies, updates their enabledDependentPlugins array
- * and disables forceMandatory flag for those dependencies that have
- * no dependent plugins enabled
+ * Disables requested plugins, finds dependencies, and disables those that don't have plugins enabled that depend on them
  * Also specifically handles a case when all currently enabled plugins are requested to be disabled
  * (i.e. when '<<' button is pressed in the configure plugins step)
  * @param {observable} action$ manages `DISABLE_PLUGINS`
@@ -323,6 +330,10 @@ export const disablePluginsEpic = (action$, store) => action$
         const allPlugins = flattenedPlugins.map(plugin => plugin.name);
         const rootPlugins = pluginsState.map(plugin => plugin.name);
 
+        // max count of plugins in enabled column that can actually be selected
+        // used to determine if everything should be disabled and mandatory plugins reenabled
+        // since now disabling plugins disables their dependencies maybe is no longer needed
+        // but it works so i didn't touch it
         const maxCount = pluginsState.filter(plugin => plugin.enabled && !plugin.mandatory && !plugin.forcedMandatory).length;
         if (intersection(plugins, rootPlugins).length < maxCount) {
             let enabledDependentPlugins = {};

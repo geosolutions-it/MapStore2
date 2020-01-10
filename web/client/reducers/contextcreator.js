@@ -83,8 +83,8 @@ const makePluginTree = (plugins, localPluginsConfig) => {
         symbol: plugin.symbol,
         parent,
         mandatory: !!plugin.mandatory,
-        forcedMandatory: false,
-        enabledDependentPlugins: [],
+        forcedMandatory: false, // true if plugin is forced to be mandatory(if some plugin that has this plugin as a dependency is enabled)
+        enabledDependentPlugins: [], // names of plugins that are enabled and have this plugin as a dependency
         hidden: !!plugin.hidden,
         dependencies: plugin.dependencies || [],
         enabled: false,
