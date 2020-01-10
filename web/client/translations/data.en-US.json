@@ -2134,7 +2134,7 @@
             },
             "contextNameErrorNotification": {
                 "title": "Bad context name",
-                "unknownError": "Unexpected error occured"
+                "unknownError": "Unexpected error occurred"
             },
             "undo": "Are you sure you want to abandon the context editing session?"
         },

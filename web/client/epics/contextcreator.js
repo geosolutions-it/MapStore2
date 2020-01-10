@@ -14,10 +14,10 @@ import ConfigUtils from '../utils/ConfigUtils';
 import MapUtils from '../utils/MapUtils';
 
 import {SAVE_CONTEXT, LOAD_CONTEXT, SET_CREATION_STEP, MAP_VIEWER_LOAD, MAP_VIEWER_RELOAD, CHANGE_ATTRIBUTE, contextSaved, setResource,
-    startResourceLoad, loadFinished, isValidContextName, setCreationStep, contextLoadError, loading, mapViewerLoad,
+    startResourceLoad, loadFinished, isValidContextName, contextNameChecked, setCreationStep, contextLoadError, loading, mapViewerLoad,
     mapViewerLoaded} from '../actions/contextcreator';
 import {newContextSelector, resourceSelector, creationStepSelector,
-    mapConfigSelector, mapViewerLoadedSelector, isValidContextNameSelector} from '../selectors/contextcreator';
+    mapConfigSelector, mapViewerLoadedSelector, contextNameCheckedSelector} from '../selectors/contextcreator';
 import {wrapStartStop} from '../observables/epics';
 import {isLoggedIn} from '../selectors/security';
 import {show, error} from '../actions/notifications';
@@ -122,22 +122,22 @@ export const invalidateContextName = (action$, store) => action$
     .filter(({key}) => key === 'name')
     .switchMap(() => {
         const state = store.getState();
-        const isValid = isValidContextNameSelector(state);
+        const isChecked = contextNameCheckedSelector(state);
 
-        return isValid ? Rx.Observable.of(isValidContextName(false)) : Rx.Observable.empty();
+        return isChecked || isChecked === undefined ? Rx.Observable.of(contextNameChecked(false)) : Rx.Observable.empty();
     });
 
 export const checkIfContextExists = (action$, store) => action$
     .ofType(CHANGE_ATTRIBUTE)
     .filter(({key}) => key === 'name')
-    .debounceTime(300)
+    .debounceTime(500)
     .switchMap(() => {
         const state = store.getState();
         const resource = resourceSelector(state);
 
         const contextName = resource && resource.name;
 
-        return contextName ?
+        return (contextName ?
             getResourceIdByName('CONTEXT', contextName)
                 .switchMap(id => id !== get(resource, 'id') ?
                     Rx.Observable.of(error({
@@ -161,7 +161,7 @@ export const checkIfContextExists = (action$, store) => action$
                             }));
                     }
                 )) :
-            Rx.Observable.empty();
+            Rx.Observable.empty()).concat(Rx.Observable.of(contextNameChecked(true)));
     });
 
 export const loadMapViewerOnStepChange = (action$) => action$

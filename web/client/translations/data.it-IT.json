@@ -2129,6 +2129,10 @@
                 "conflict": "Una risorsa con questo nome esiste già",
                 "defaultMessage": "Errore sconosciuto"
             },
+            "contextNameErrorNotification": {
+                "title": "Nome di contesto errato",
+                "unknownError": "Si è verificato un errore imprevisto"
+            },
             "undo": "Sei sicuro di voler abbandonare la sessione di modifica del contesto?"
         },
         "contextManager": {

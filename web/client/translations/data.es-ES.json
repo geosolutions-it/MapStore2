@@ -2128,6 +2128,10 @@
                 "conflict": "Ya existe un recurso con este nombre",
                 "defaultMessage": "Error desconocido"
             },
+            "contextNameErrorNotification": {
+                "title": "Nombre de contexto incorrecto",
+                "unknownError": "Ocurrió un error inesperado"
+            },
             "undo": "¿Seguro que quieres abandonar la sesión de edición de contexto?"
         },
         "contextManager": {
