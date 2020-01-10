@@ -13,6 +13,19 @@ import ReactTestUtils from 'react-dom/test-utils';
 import DrawerMenuPlugin from '../DrawerMenu';
 import { getPluginForTest } from './pluginsTestUtils';
 
+const SAMPLE_ITEM = {
+    plugin: "TEST",
+    name: 'toc',
+    position: 1,
+    glyph: "1-layer",
+    icon: <div></div>,
+    buttonConfig: {
+        buttonClassName: "square-button no-border",
+        tooltip: "toc.layers"
+    },
+    priority: 2
+};
+
 const mouseMove = (x, y, node) => {
     const doc = node ? node.ownerDocument : document;
     const evt = doc.createEvent('MouseEvents');
@@ -41,12 +54,23 @@ describe('DrawerMenu Plugin', () => {
         document.body.innerHTML = '';
         setTimeout(done);
     });
+    it('does\'t render if empty', () => {
+        const { Plugin } = getPluginForTest(DrawerMenuPlugin, {
+            controls: {
+                drawer: {}
+            }
+        });
+        ReactDOM.render(<Plugin menuOptions={{ resizable: true }} />, document.getElementById("container"));
+        expect(document.getElementById('mapstore-drawermenu')).toNotExist();
 
+        ReactDOM.render(<Plugin items={[SAMPLE_ITEM]} menuOptions={{ resizable: true }} />, document.getElementById("container"));
+        expect(document.getElementById('mapstore-drawermenu')).toExist();
+    });
     it('creates a resizable DrawerMenu plugin', () => {
         const { Plugin, store } = getPluginForTest(DrawerMenuPlugin, { controls: {
             drawer: {}
         } });
-        ReactDOM.render(<Plugin menuOptions={{resizable: true}} />, document.getElementById("container"));
+        ReactDOM.render(<Plugin items={[SAMPLE_ITEM]} menuOptions={{resizable: true}} />, document.getElementById("container"));
         expect(document.getElementById('mapstore-drawermenu')).toExist();
 
         const drag = document.getElementsByClassName('react-resizable-handle')[0];

@@ -161,14 +161,14 @@ class DrawerMenu extends React.Component {
     };
 
     render() {
-        return (
+        return this.getTools().length > 0 ? (
             <div id={this.props.id}>
                 <DrawerButton {...this.props} id="drawer-menu-button"/>
                 <Menu single={this.props.singleSection} {...this.props.menuOptions} title={<Message msgId="menu" />} alignment="left">
                     {this.renderItems()}
                 </Menu>
             </div>
-        );
+        ) : null;
     }
 }
 
