@@ -8,10 +8,11 @@
 
 import React from 'react';
 import * as PropTypes from 'prop-types';
-import { keys, isObject, find } from 'lodash';
+import { keys, isObject, find, get } from 'lodash';
 
 import Stepper from '../misc/Stepper';
 import GeneralSettings from './GeneralSettingsStep';
+import ConfigurePlugins from './ConfigurePluginsStep';
 import ConfigureMap from './ConfigureMapStep';
 
 /**
@@ -84,11 +85,27 @@ export default class ContextCreator extends React.Component {
         pluginsConfig: PropTypes.object,
         viewerPlugins: PropTypes.array,
         ignoreViewerPlugins: PropTypes.bool,
+        allAvailablePlugins: PropTypes.array,
+        editedPlugin: PropTypes.string,
+        editedCfg: PropTypes.string,
+        isCfgValidated: PropTypes.bool,
+        cfgError: PropTypes.object,
+        availablePluginsFilterText: PropTypes.string,
+        enabledPluginsFilterText: PropTypes.string,
+        documentationBaseURL: PropTypes.string,
+        onFilterAvailablePlugins: PropTypes.func,
+        onFilterEnabledPlugins: PropTypes.func,
+        setSelectedPlugins: PropTypes.func,
+        changePluginsKey: PropTypes.func,
         mapType: PropTypes.string,
         showReloadConfirm: PropTypes.bool,
         onSetStep: PropTypes.func,
         onChangeAttribute: PropTypes.func,
         onSave: PropTypes.func,
+        onEditPlugin: PropTypes.func,
+        onEnablePlugins: PropTypes.func,
+        onDisablePlugins: PropTypes.func,
+        onUpdateCfg: PropTypes.func,
         onMapViewerReload: PropTypes.func,
         onReloadConfirm: PropTypes.func,
         saveDestLocation: PropTypes.string
@@ -96,7 +113,7 @@ export default class ContextCreator extends React.Component {
 
     static contextTypes = {
         messages: PropTypes.object,
-        plugins: PropTypes.array
+        plugins: PropTypes.object
     };
 
     static defaultProps = {
@@ -139,6 +156,8 @@ export default class ContextCreator extends React.Component {
             "MapImport"
         ],
         ignoreViewerPlugins: false,
+        allAvailablePlugins: [],
+        isCfgValidated: false,
         curStepId: 'general-settings',
         saveDestLocation: '/context-manager',
         onSetStep: () => { },
@@ -167,6 +186,30 @@ export default class ContextCreator extends React.Component {
                             loading={this.props.loading && this.props.loadFlags.contextNameCheck}
                             context={this.context}
                             onChange={this.props.onChangeAttribute} />
+                }, {
+                    id: 'configure-plugins',
+                    label: 'contextCreator.configurePlugins.label',
+                    disableNext: !this.props.allAvailablePlugins.filter(
+                        plugin => plugin.enabled && get(plugin, 'pluginConfig.cfg.containerPosition') === undefined).length ||
+                        !!this.props.cfgError ||
+                        !this.props.isCfgValidated,
+                    component:
+                        <ConfigurePlugins
+                            allPlugins={this.props.allAvailablePlugins}
+                            editedPlugin={this.props.editedPlugin}
+                            editedCfg={this.props.editedCfg}
+                            cfgError={this.props.cfgError}
+                            availablePluginsFilterText={this.props.availablePluginsFilterText}
+                            enabledPluginsFilterText={this.props.enabledPluginsFilterText}
+                            documentationBaseURL={this.props.documentationBaseURL}
+                            onFilterAvailablePlugins={this.props.onFilterAvailablePlugins}
+                            onFilterEnabledPlugins={this.props.onFilterEnabledPlugins}
+                            onEditPlugin={this.props.onEditPlugin}
+                            onEnablePlugins={this.props.onEnablePlugins}
+                            onDisablePlugins={this.props.onDisablePlugins}
+                            onUpdateCfg={this.props.onUpdateCfg}
+                            setSelectedPlugins={this.props.setSelectedPlugins}
+                            changePluginsKey={this.props.changePluginsKey}/>
                 }, {
                     id: 'configure-map',
                     label: 'contextCreator.configureMap.label',

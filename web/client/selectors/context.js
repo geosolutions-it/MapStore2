@@ -40,7 +40,14 @@ export const defaultPluginsSelector = createSelector(
 );
 export const loadingPluginsSelector = state => defaultPluginsSelector(state);
 export const errorPluginsSelector = state => loadingPluginsSelector(state);
-export const currentPluginsSelector = state => get(currentContextSelector(state), "plugins");
+export const userPluginsSelector = state => get(currentContextSelector(state), "userPlugins");
+export const contextPluginsSelector = state => get(currentContextSelector(state), "plugins");
+export const currentPluginsSelector = createSelector(
+    contextPluginsSelector,
+    userPluginsSelector,
+    (plugins, userPlugins = []) =>
+        plugins && ({ desktop: [...get(plugins, 'desktop', []), ...userPlugins.filter(plugin => plugin.active)] })
+);
 
 /**
  * Selects the plugins configuration depending on the current state.

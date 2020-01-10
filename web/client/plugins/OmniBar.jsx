@@ -66,7 +66,7 @@ module.exports = {
     OmniBarPlugin: assign(
         OmniBar,
         {
-            disablePluginIf: "{state('featuregridmode') === 'EDIT' || (state('router').includes('/geostory/shared') && state('geostorymode') !== 'edit')}"
+            disablePluginIf: "{state('featuregridmode') === 'EDIT' || (state('router') && state('router').includes('/geostory/shared') && state('geostorymode') !== 'edit')}"
         }
     ),
     reducers: {}

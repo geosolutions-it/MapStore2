@@ -7,6 +7,7 @@
  */
 
 import {createSelector} from 'reselect';
+import {get} from 'lodash';
 
 export const newContextSelector = state => state.contextcreator && state.contextcreator.newContext;
 export const mapConfigSelector = createSelector(newContextSelector, context => context && context.mapConfig);
@@ -18,3 +19,13 @@ export const isLoadingSelector = state => state.contextcreator && state.contextc
 export const loadFlagsSelector = state => state.contextcreator && state.contextcreator.loadFlags;
 export const isValidContextNameSelector = state => state.contextcreator && state.contextcreator.isValidContextName;
 export const contextNameCheckedSelector = state => state.contextcreator && state.contextcreator.contextNameChecked;
+export const pluginsSelector = state => state.contextcreator && state.contextcreator.plugins;
+export const initialEnabledPluginsSelector = state => state.contextcreator && state.contextcreator.initialEnabledPlugins;
+export const editedPluginSelector = state => state.contextcreator && state.contextcreator.editedPlugin;
+export const editedCfgSelector = state => state.contextcreator && state.contextcreator.editedCfg;
+export const parsedCfgSelector = state => state.contextcreator && state.contextcreator.parsedCfg;
+export const cfgErrorSelector = state => state.contextcreator && state.contextcreator.cfgError;
+export const validationStatusSelector = state => get(state, 'contextcreator.validationStatus', true);
+export const filterTextSelector = state => state.contextcreator && state.contextcreator.filterText;
+export const availablePluginsFilterTextSelector = createSelector(filterTextSelector, filterText => get(filterText, 'availablePlugins'));
+export const enabledPluginsFilterTextSelector = createSelector(filterTextSelector, filterText => get(filterText, 'enabledPlugins'));
