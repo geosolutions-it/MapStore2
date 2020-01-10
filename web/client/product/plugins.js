@@ -112,6 +112,7 @@ module.exports = {
         TutorialPlugin: require('../plugins/Tutorial'),
         UndoPlugin: require('../plugins/History'),
         UserManagerPlugin: require('../plugins/manager/UserManager'),
+        UserExtensionsPlugin: require('../plugins/UserExtensions').default,
         VersionPlugin: require('../plugins/Version'),
         WFSDownloadPlugin: require('../plugins/WFSDownload'),
         WidgetsBuilderPlugin: require('../plugins/WidgetsBuilder'),

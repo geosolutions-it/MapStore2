@@ -1,0 +1,385 @@
+{
+  "plugins": [
+    {
+      "name": "Map",
+      "mandatory": true,
+      "defaultConfig": {
+        "mapTypeOverride": "openlayers",
+        "mapOptions": {
+          "openlayers": {
+            "interactions": {
+              "pinchRotate": false,
+              "altShiftDragRotate": false
+            },
+            "attribution": {
+              "container": "#mapstore-map-footer-container"
+            }
+          },
+          "leaflet": {
+            "attribution": {
+              "container": "#mapstore-map-footer-container"
+            }
+          }
+        },
+        "toolsOptions": {
+          "scalebar": {
+            "container": "#mapstore-map-footer-container"
+          }
+        }
+      }
+    },
+    {
+      "name": "Notifications",
+      "mandatory": true,
+      "hidden": true
+    },
+    {
+      "name": "DrawerMenu",
+      "hidden": true
+    },
+    {
+      "name": "TOC",
+      "symbol": "layers",
+      "title": "Table of contents",
+      "description": "plugins.TOC.description",
+      "defaultConfig": {
+        "activateQueryTool": true,
+        "activateAddLayerButton": true,
+        "activateAddGroupButton": true,
+        "activateMetedataTool": false,
+        "addLayersPermissions": true,
+        "removeLayersPermissions": true,
+        "sortingPermissions": true,
+        "addGroupsPermissions": true,
+        "removeGroupsPermissions": true
+      },
+      "children": [
+        "TOCItemsSettings",
+        "FeatureEditor",
+        "AddGroup"
+      ],
+      "autoEnableChildren": [
+        "TOCItemsSettings",
+        "FeatureEditor",
+        "AddGroup"
+      ],
+      "dependencies": [
+        "DrawerMenu"
+      ]
+    },
+    {
+      "name": "FeatureEditor",
+      "defaultConfig": {}
+    },
+    {
+      "name": "TOCItemsSettings"
+    },
+    {
+      "name": "MapFooter",
+      "hidden": true
+    },
+    {
+      "name": "Widgets",
+      "children": [
+        "WidgetsTray"
+      ],
+      "dependencies": [
+        "WidgetsBuilder"
+      ]
+    },
+    {
+      "name": "WidgetsTray"
+    },
+    {
+      "name": "WidgetsBuilder",
+      "hidden": false
+    },
+    {
+      "name": "Details"
+    },
+    {
+      "name": "AutoMapUpdate"
+    },
+    {
+      "name": "HelpLink"
+    },
+    {
+      "name": "Share",
+      "dependencies": [
+        "BurgerMenu"
+      ]
+    },
+    {
+      "name": "Version"
+    },
+    {
+      "name": "BackgroundSelector"
+    },
+    {
+      "name": "Annotations",
+      "dependencies": [
+        "BurgerMenu"
+      ]
+    },
+    {
+      "name": "Identify",
+      "defaultConfig": {
+        "showHighlightFeatureButton": true,
+        "viewerOptions": {
+          "container": "{context.ReactSwipe}"
+        }
+      }
+    },
+    {
+      "name": "Locate",
+      "dependencies": ["Toolbar"]
+    },
+    {
+      "name": "Home",
+      "dependencies": ["OmniBar"]
+    },
+    {
+      "name": "WFSDownload"
+    },
+    {
+      "name": "QueryPanel",
+      "defaultConfig": {
+        "activateQueryTool": true,
+        "spatialOperations": [
+          {
+            "id": "INTERSECTS",
+            "name": "queryform.spatialfilter.operations.intersects"
+          },
+          {
+            "id": "CONTAINS",
+            "name": "queryform.spatialfilter.operations.contains"
+          },
+          {
+            "id": "WITHIN",
+            "name": "queryform.spatialfilter.operations.within"
+          }
+        ],
+        "spatialMethodOptions": [
+          {
+            "id": "Viewport",
+            "name": "queryform.spatialfilter.methods.viewport"
+          },
+          {
+            "id": "BBOX",
+            "name": "queryform.spatialfilter.methods.box"
+          },
+          {
+            "id": "Circle",
+            "name": "queryform.spatialfilter.methods.circle"
+          },
+          {
+            "id": "Polygon",
+            "name": "queryform.spatialfilter.methods.poly"
+          }
+        ]
+      }
+    },
+    {
+      "name": "AddGroup"
+    },
+    {
+      "name": "Tutorial"
+    },
+    {
+      "name": "Measure",
+      "dependencies": [
+        "BurgerMenu"
+      ]
+    },
+    {
+      "name": "Print",
+      "dependencies": [
+        "BurgerMenu"
+      ]
+    },
+    {
+      "name": "MapImport",
+      "dependencies": [
+        "BurgerMenu"
+      ]
+    },
+    {
+      "name": "MapExport",
+      "dependencies": [
+        "BurgerMenu"
+      ]
+    },
+    {
+      "name": "Settings",
+      "dependencies": [
+        "BurgerMenu"
+      ],
+      "defaultConfig": {
+        "wrap": true
+      }
+    },
+    {
+      "name": "MetadataExplorer",
+      "title": "Catalog",
+      "defaultConfig": {
+        "wrap": true
+      }
+    },
+    {
+      "name": "About",
+      "dependencies": ["BurgerMenu"]
+    },
+    {
+      "name": "MousePosition",
+      "dependencies": ["MapFooter"],
+      "defaultConfig": {
+        "editCRS": true,
+        "showLabels": true,
+        "showToggle": true,
+        "filterAllowedCRS": [
+          "EPSG:4326",
+          "EPSG:3857"
+        ],
+        "additionalCRS": {}
+      }
+    },
+    {
+      "name": "CRSSelector",
+      "dependencies": ["MapFooter"],
+      "defaultConfig": {
+        "additionalCRS": {},
+        "filterAllowedCRS": [
+          "EPSG:4326",
+          "EPSG:3857"
+        ],
+        "allowedRoles": [
+          "ADMIN"
+        ]
+      }
+    },
+    {
+      "name": "Search",
+      "dependencies": [
+        "OmniBar",
+        "SearchServicesConfig"
+      ],
+      "defaultConfig": {
+        "withToggle": [
+          "max-width: 768px",
+          "min-width: 768px"
+        ]
+      }
+    },
+    {
+      "name": "Cookie",
+      "mandatory": true,
+      "hidden": true,
+      "defaultConfig": {
+        "externalCookieUrl": "",
+        "declineUrl": "http://www.google.com"
+      }
+    },
+    {
+      "name": "Toolbar",
+      "hidden": true
+    },
+    {
+      "name": "ScaleBox",
+      "dependencies": ["MapFooter"]
+    },
+    {
+      "name": "ZoomAll",
+      "dependencies": [
+        "Toolbar"
+      ]
+    },
+    {
+      "name": "ZoomIn",
+      "dependencies": [
+        "Toolbar"
+      ]
+    },
+    {
+      "name": "ZoomOut",
+      "dependencies": [
+        "Toolbar"
+      ]
+    },
+    {
+      "name": "OmniBar"
+    },
+    {
+      "name": "Login"
+    },
+    {
+      "name": "Save",
+      "dependencies": [
+        "BurgerMenu"
+      ]
+    },
+    {
+      "name": "SaveAs",
+      "dependencies": [
+        "BurgerMenu"
+      ]
+    },
+    {
+      "name": "BurgerMenu",
+      "hidden": true,
+      "dependencies": [
+        "OmniBar"
+      ]
+    },
+    {
+      "name": "Expander"
+    },
+    {
+      "name": "Undo",
+      "dependencies": [
+        "Toolbar"
+      ]
+    },
+    {
+      "name": "Redo",
+      "dependencies": [
+        "Toolbar"
+      ]
+    },
+    {
+      "name": "FullScreen",
+      "dependencies": [
+        "Toolbar"
+      ]
+    },
+    {
+      "name": "GlobeViewSwitcher",
+      "dependencies": [
+        "Toolbar"
+      ]
+    },
+    {
+      "name": "SearchServicesConfig"
+    },
+    {
+      "name": "Timeline"
+    },
+    {
+      "name": "Playback"
+    },
+    {
+      "name": "FeedbackMask"
+    },
+    {
+      "name": "StyleEditor"
+    },
+    {
+      "name": "MapLoading",
+      "dependencies": [
+        "Toolbar"
+      ]
+    }, {
+      "name": "UserExtensions"
+    }
+  ]
+
+}

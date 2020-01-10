@@ -2136,6 +2136,14 @@
             "newContext": "New Context",
             "editContextTooltip": "Edit context"
         },
+        "userExtensions": {
+          "title": "User Extensions",
+          "emptyTitle": "No Result",
+          "emptyDescription": "Entered filter does not match name or description of any of extensions",
+          "filterPlaceholder": "Filter layers",
+          "addExtension": "Add Extension",
+          "removeExtension": "Remove Extension"
+        },
         "tutorial": {
             "title": "Tutorial",
             "back": "Back",
