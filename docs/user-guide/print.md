@@ -1,72 +1,81 @@
 # Printing a Map 
 ****************
 
-For **print** the map just created or an already existing map must open the **Burger Menu** inside the [Menu Bar](menu-bar.md) and the dropdown menu shows this option:  <img src="../img/button/print.jpg" class="ms-docbutton"  style="max-height:20px;"/> 
+In [MapStore](https://mapstore.geo-solutions.it/mapstore/#/) it is possible to print a map by selecting the <img src="../img/button/print.jpg" class="ms-docbutton"  style="max-height:20px;"/> option from [Burger Menu](menu-bar.md#burger-menu). The print process is composed by two main steps:
 
-The window that opens allows the user to custumize the sheet print.
+* Define the *Print Settings*
+
+* Check the result in *Preview* before download the printed file
+
+## Print settings
+
+As soon as the <img src="../img/button/print.jpg" class="ms-docbutton"  style="max-height:20px;"/> option is chosen, the following window opens:
 
 <img src="../img/print/print-page.jpg" class="ms-docimage"/>
 
-## Setting the print
+Through this window it is possible to:
 
-* It is possible enter a **Title** and a **Description**, shown at the print page.
+* Enter a **Title** and a **Description**, that will be shown on the print page
 
-<img src="../img/print/print-title-descr.jpg" class="ms-docimage"/>
+* Change the **Resolution** of the print (choosing between 96, 150 and 300 dpi)
 
-* it is possible change the **Resolution** of the print 
+* Accessing **Layout** settings
 
-<img src="../img/print/resolution.jpg" class="ms-docimage"/>
+* Accessing **Legend options**
 
-## Layout 
+!!!note
+    In *Print settings* preview there's the map portion that will be displayed on the print sheet. In order to center the map the user can pan the map until the preview displays the desired extension
 
-Opening the **Layout** section allow you to: 
+    <img src="../img/print/print.gif" class="ms-docimage"/>
+
+### Layout 
+
+Opening the **Layout** settings menu, the following menu appears:
 
 <img src="../img/print/first-layout-print.jpg" class="ms-docimage"/>
 
-* Select the *sheet size* between A3 and A4 format
+From here, in particular, it is possible to:
 
-* Enable the flag to include the *Legend* in the layout
+* Select the *Sheet size* (choosing between A3 and A4 format)
 
-* Enable the flag to insert the *legend* on a distinct page
+* Choose to *Include legend*
 
-<img src="../img/print/layout-print.jpg" class="ms-docimage"/> 
+* Choose to place the *Legend on distinct page*
 
-If the legend is on a distinct page it is possible insert the map choosing between: 
+* Select the page orientation between *Landscape* and *Portrait*
 
-* *Landscape* layout 
+### Legend options 
 
-<img src="../img/print/landscape.jpg" class="ms-docimage"/>
-
-* *Portrait* layout
-
-<img src="../img/print/portrait.jpg" class="ms-docimage"/>
-
-## Legend options 
-
-Opening the **Legend options** section allow you to:
+The Legend can be customize through the **Legend options** menu:
 
 <img src="../img/print/first-legend-options.jpg" class="ms-docimage"/>
 
-* Set the labels inserting the font type, the font size and choosing between bold or italic style
+Through this menu the user is allowed to:
 
-* Select the icons size
+* Configure labels by choosing font type and size, and by adding *Bold* and *Italic* style
 
-* Select the resolution of the legend 
+* Enable the *Force Labels* option, that force the display of labels even if only one rule is present (by default, if only one rule is present, the label is not displayed)
 
-<img src="../img/print/legend-options.jpg" class="ms-docimage"/>
+* Enable the *Font Anti Aliasing* (when Anti Aliasing is on, the borders of the labels font are smoothed)
 
-## Print
+* Set the *Icons size*
 
-When the print is ready it is possible print the map clicking on the <img src="../img/button/print-button.jpg" class="ms-docbutton"/> button. You will be addressed to the print preview allow you to:
+* Set the *Dpi* resolution of the legend 
+
+## Preview
+
+When the print settings are chosen, it is possible to access the preview by clicking on the <img src="../img/button/print-button.jpg" class="ms-docbutton"/> button. A window similar to the following appears:
 
 <img src="../img/print/preview.jpg" class="ms-docimage"/> 
 
-* <img src="../img/button/zoom-in-out.jpg" class="ms-docbutton"/> zoom in/out int the preview
+In here it is possible to:
 
-* <img src="../img/print/page-print.jpg" class="ms-docbutton"/> change page if there is more than one page
+*  Zoom in/out int the preview <img src="../img/button/zoom-in-out.jpg" class="ms-docbutton"/>
 
-* <img src="../img/button/download-layout.jpg" class="ms-docbutton"/> download the layout in *PDF*
+* Navigate between pages (when more than one page is present) <img src="../img/button/navigate-preview.jpg" class="ms-docbutton"/>
 
-Now you have the map printed: 
+* Download the file in .pdf format <img src="../img/button/download-layout.jpg" class="ms-docbutton"/>
+
+A simple printed map could be, for example, like the following:
 
 <img src="../img/print/print.jpg" class="ms-docimage"/>
