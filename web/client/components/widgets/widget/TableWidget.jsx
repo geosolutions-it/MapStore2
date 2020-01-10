@@ -12,12 +12,13 @@ const LoadingSpinner = require('../../misc/LoadingSpinner');
 const EmptyRowsView = require('../../data/featuregrid/EmptyRowsView');
 const loadingState = require('../../misc/enhancers/loadingState');
 const errorChartState = require('../enhancers/errorChartState');
+const {getWidgetFilterRenderers} = require('../../../plugins/widgets/getWidgetFilterRenderers');
 
 const FeatureGrid = errorChartState(loadingState(({ describeFeatureType }) => !describeFeatureType)(require('../../data/featuregrid/FeatureGrid')));
 
 const WidgetContainer = require('./WidgetContainer');
 
-module.exports = ({
+module.exports = getWidgetFilterRenderers(({
     id,
     title,
     loading,
@@ -32,6 +33,7 @@ module.exports = ({
         moreFeatures: () => {}
     },
     describeFeatureType,
+    filterRenderers,
     columnSettings,
     features,
     size,
@@ -67,6 +69,8 @@ module.exports = ({
                 columnSettings={columnSettings}
                 pageEvents={pageEvents}
                 virtualScroll={virtualScroll}
+                enableColumnFilters
+                filterRenderers={filterRenderers}
                 features={features}
                 pages={pages}
                 error={error}
@@ -77,4 +81,4 @@ module.exports = ({
         </BorderLayout>
     </WidgetContainer>
 
-    );
+    ));

@@ -39,6 +39,7 @@
     "monitorState": [
       {"name": "router", "path": "router.location.pathname"},
       {"name": "browser", "path": "browser"},
+      {"name": "geostorymode", "path": "geostory.mode"},
       {"name": "featuregridmode", "path": "featuregrid.mode"}],
     "projectionDefs": [],
     "initialState": {
@@ -290,7 +291,15 @@
                 }
               }
             }
-          }, "AutoMapUpdate", "HelpLink", "Share", "DrawerMenu", "Version", "Notifications", "BackgroundSelector", "Annotations",
+          }, "AutoMapUpdate", "HelpLink", "DrawerMenu", "Version", "Notifications", "BackgroundSelector", "Annotations",
+            {
+              "name": "Share",
+              "cfg": {
+                "advancedSettings": {
+                  "bbox": true
+                }
+              }
+            },
             {
                 "name": "Identify",
                 "cfg": {
@@ -691,6 +700,15 @@
             "cfg": {
               "containerPosition": "header"
             }
+          },
+          {
+            "name": "Share",
+            "cfg": {
+              "embedPanel": false,
+              "advancedSettings": {
+                "homeButton": true
+              }
+            }
           }
         ],
         "context-creator": [
@@ -713,7 +731,12 @@
               "confirmMessage": "contextCreator.undo"
             }
           },
-          "ContextCreator",
+          {
+              "name": "ContextCreator",
+              "cfg": {
+                  "documentationBaseURL": "https://mapstore.geo-solutions.it/mapstore/docs/api/plugins"
+              }
+          },
           "Notifications",
           {
             "name": "FeedbackMask",

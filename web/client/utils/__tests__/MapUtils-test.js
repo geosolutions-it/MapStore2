@@ -29,7 +29,10 @@ var {
     getIdFromUri,
     getSimpleGeomType,
     isSimpleGeomType,
-    parseLayoutValue
+    parseLayoutValue,
+    prepareMapObjectToCompare,
+    updateObjectFieldKey,
+    compareMapChanges
 } = require('../MapUtils');
 
 const POINT = "Point";
@@ -443,7 +446,7 @@ describe('Test the MapUtils', () => {
                 mapOptions: {},
                 maxExtent: [-20037508.34, -20037508.34, 20037508.34, 20037508.34],
                 projection: 'EPSG:900913',
-                text_serch_config: '',
+                text_search_config: '',
                 units: 'm',
                 zoom: 10
             },
@@ -873,7 +876,7 @@ describe('Test the MapUtils', () => {
                 mapOptions: {},
                 maxExtent: [-20037508.34, -20037508.34, 20037508.34, 20037508.34],
                 projection: 'EPSG:900913',
-                text_serch_config: '',
+                text_search_config: '',
                 units: 'm',
                 zoom: 10
             },
@@ -1165,7 +1168,7 @@ describe('Test the MapUtils', () => {
                 },
                 maxExtent: [-20037508.34, -20037508.34, 20037508.34, 20037508.34],
                 projection: 'EPSG:900913',
-                text_serch_config: '',
+                text_search_config: '',
                 units: 'm',
                 zoom: 10
             },
@@ -1421,7 +1424,7 @@ describe('Test the MapUtils', () => {
                 mapOptions: {},
                 maxExtent: [-20037508.34, -20037508.34, 20037508.34, 20037508.34],
                 projection: 'EPSG:900913',
-                text_serch_config: '',
+                text_search_config: '',
                 units: 'm',
                 zoom: 10,
                 sources: {
@@ -1606,7 +1609,7 @@ describe('Test the MapUtils', () => {
                 }, {
                     id: 'custom.nested001', title: 'nested001', expanded: true
                 } ],
-                text_serch_config: '' }
+                text_search_config: '' }
         });
     });
 
@@ -1728,7 +1731,7 @@ describe('Test the MapUtils', () => {
                 mapOptions: {},
                 maxExtent: [-20037508.34, -20037508.34, 20037508.34, 20037508.34],
                 projection: 'EPSG:900913',
-                text_serch_config: '',
+                text_search_config: '',
                 units: 'm',
                 zoom: 10,
                 sources: {
@@ -1871,7 +1874,7 @@ describe('Test the MapUtils', () => {
                 mapOptions: {},
                 maxExtent: [-20037508.34, -20037508.34, 20037508.34, 20037508.34],
                 projection: 'EPSG:900913',
-                text_serch_config: '',
+                text_search_config: '',
                 units: 'm',
                 zoom: 10,
                 sources: {
@@ -1949,4 +1952,209 @@ describe('Test the MapUtils', () => {
         expect(getSimpleGeomType("Other")).toBe("Other");
     });
 
+    it('test compareMapChanges returns false (maps aren\'t equal)', () => {
+        const map1 = {
+            "version": 2,
+            "map": {
+                "mapOptions": {},
+                "layers": [
+                    {
+                        "id": "layer001",
+                        "thumbURL": "THUMB_URL",
+                        "search": {},
+                        "name": "layer001",
+                        "title": "layer001",
+                        "type": "wms",
+                        "url": "",
+                        "bbox": {},
+                        "visibility": true,
+                        "singleTile": false,
+                        "allowedSRS": {},
+                        "dimensions": [],
+                        "hideLoading": false,
+                        "handleClickOnLayer": false,
+                        "catalogURL": "url",
+                        "useForElevation": false,
+                        "hidden": false,
+                        "params": {
+
+                        }
+                    }
+                ],
+                "groups": [],
+                "backgrounds": [
+                    {
+                        "id": "layer005",
+                        "thumbnail": "data"
+                    }
+                ]
+            },
+            "catalogServices": {},
+            "widgetsConfig": {},
+            "mapInfoConfiguration": {}
+        };
+        const map2 = {
+            "version": 2,
+            "map": {
+                "mapOptions": {},
+                "layers": [
+                    {
+                        "id": "layer002",
+                        "thumbURL": "THUMB_URL",
+                        "search": {},
+                        "name": "layer001",
+                        "title": "layer001",
+                        "type": "wms",
+                        "url": "",
+                        "bbox": {},
+                        "visibility": true,
+                        "singleTile": false,
+                        "allowedSRS": {},
+                        "dimensions": [],
+                        "hideLoading": false,
+                        "handleClickOnLayer": false,
+                        "catalogURL": "url",
+                        "useForElevation": false,
+                        "hidden": false,
+                        "params": {
+                        }
+                    }
+                ],
+                "groups": [],
+                "backgrounds": [
+                    {
+                        "id": "layer005",
+                        "thumbnail": "data"
+                    }
+                ]
+            },
+            "catalogServices": {},
+            "widgetsConfig": {},
+            "mapInfoConfiguration": {}
+        };
+        expect(compareMapChanges(map1, map2)).toBeFalsy();
+    });
+    it('test compareMapChanges returns true (maps are equal)', () => {
+        const map1 = {
+            "version": 2,
+            "map": {
+                "mapOptions": {},
+                "layers": [
+                    {
+                        "id": "layer001",
+                        "thumbURL": "THUMB_URL",
+                        "search": {},
+                        "name": "layer001",
+                        "title": "layer001",
+                        "type": "wms",
+                        "url": "",
+                        "bbox": {},
+                        "visibility": true,
+                        "singleTile": false,
+                        "allowedSRS": {},
+                        "dimensions": [],
+                        "hideLoading": false,
+                        "handleClickOnLayer": false,
+                        "catalogURL": "url",
+                        "useForElevation": false,
+                        "hidden": false,
+                        "params": { },
+                        "apiKey": "some api key"
+                    }
+                ],
+                "groups": [],
+                "backgrounds": [
+                    {
+                        "id": "layer005",
+                        "thumbnail": "data"
+                    }
+                ]
+            },
+            "catalogServices": {},
+            "widgetsConfig": {},
+            "mapInfoConfiguration": {}
+        };
+        const map2 = {
+            "version": 2,
+            "map": {
+                "mapOptions": {},
+                "layers": [
+                    {
+                        "id": "layer001",
+                        "thumbURL": "THUMB_URL",
+                        "search": {},
+                        "name": "layer001",
+                        "title": "layer001",
+                        "type": "wms",
+                        "url": "",
+                        "bbox": {},
+                        "visibility": true,
+                        "singleTile": false,
+                        "allowedSRS": {},
+                        "dimensions": [],
+                        "hideLoading": false,
+                        "handleClickOnLayer": false,
+                        "catalogURL": "url",
+                        "useForElevation": false,
+                        "hidden": false,
+                        "params": {}
+                    }
+                ],
+                "groups": [],
+                "backgrounds": [
+                    {
+                        "id": "layer005",
+                        "thumbnail": "data"
+                    }
+                ]
+            },
+            "catalogServices": {},
+            "widgetsConfig": {},
+            "mapInfoConfiguration": {}
+        };
+        expect(compareMapChanges(map1, map2)).toBeTruthy();
+    });
+
+    it('test prepareMapObjectToCompare', () => {
+        const obj1 = { time: new Date().toISOString() };
+        const obj2 = { apiKey: 'some api key' };
+        const obj3 = { test: undefined };
+        const obj4 = { test: null };
+        const obj5 = { test: false };
+        const obj6 = { test: {} };
+        const obj7 = { fixed: false };
+        const obj8 = { args: 'some api key' };
+        prepareMapObjectToCompare(obj1);
+        prepareMapObjectToCompare(obj2);
+        prepareMapObjectToCompare(obj3);
+        prepareMapObjectToCompare(obj4);
+        prepareMapObjectToCompare(obj5);
+        prepareMapObjectToCompare(obj6);
+        prepareMapObjectToCompare(obj7);
+        prepareMapObjectToCompare(obj8);
+        expect(Object.keys(obj1).indexOf('time')).toBe(-1);
+        expect(Object.keys(obj2).indexOf('apiKey')).toBe(-1);
+        expect(Object.keys(obj3).indexOf('test')).toBe(-1);
+        expect(Object.keys(obj4).indexOf('test')).toBe(-1);
+        expect(Object.keys(obj5).indexOf('test')).toBe(-1);
+        expect(Object.keys(obj6).indexOf('test')).toBe(-1);
+        expect(Object.keys(obj7).indexOf('fixed')).toBe(-1);
+        expect(Object.keys(obj8).indexOf('args')).toBe(-1);
+    });
+
+    it('test updateObjectFieldKey', () => {
+        const origin = { test1: 'test', test2: 'test' };
+        const clone = JSON.parse(JSON.stringify(origin));
+        const clone2 = JSON.parse(JSON.stringify(origin));
+        const clone3 = JSON.parse(JSON.stringify(origin));
+        updateObjectFieldKey(clone);
+        updateObjectFieldKey(clone2, 'test1', 'test3');
+        updateObjectFieldKey(clone3, 'test3', 'test4');
+        expect(clone.test1).toBe(origin.test1);
+        expect(clone.test2).toBe(origin.test2);
+        expect(clone2.test1).toNotExist();
+        expect(clone2.test3).toExist();
+        expect(clone3.test3).toNotExist();
+        expect(clone3.test4).toNotExist();
+    });
 });

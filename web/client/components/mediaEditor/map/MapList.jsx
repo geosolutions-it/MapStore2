@@ -43,6 +43,7 @@ const MapCatalog = compose(
                                     id: i.map.id,
                                     type: "map",
                                     ...i.map,
+                                    // this decode is for backward compatibility with old linked resources`rest%2Fgeostore%2Fdata%2F2%2Fraw%3Fdecode%3Ddatauri` not needed for new ones `rest/geostore/data/2/raw?decode=datauri`
                                     thumbnail: decodeURIComponent(i.map.thumbnail || "")
                                 }))
                             }

@@ -16,6 +16,7 @@ function dashboard(state = {}, action) {
     case ATTRIBUTE_UPDATED: {
         return set("latestResource", {
             resourceId: action.resourceId,
+            // this decode is for backward compatibility with old linked resources`rest%2Fgeostore%2Fdata%2F2%2Fraw%3Fdecode%3Ddatauri` not needed for new ones `rest/geostore/data/2/raw?decode=datauri`
             [action.name]: decodeURIComponent(action.value)
         }, state);
     }

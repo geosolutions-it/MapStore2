@@ -61,7 +61,7 @@ const getExtentFromViewport = ({ bounds, crs } = {}, dest = 'EPSG:4326') => {
  * @prop {boolean} [showAPI] default true, if false, hides the API entry of embed.
  * @prop {function} [onClose] function to call on close window event.
  * @prop {function} [getCount] function used to get the count for social links.
- * @prop {boolean} [hideAdvancedSettings] hide advanced settings (bbox param)
+ * @prop {object} [advancedSettings] show advanced settings (bbox param or home button) f.e {bbox: true, homeButton: true}
  */
 
 const Share = connect(createSelector([
@@ -78,6 +78,9 @@ const Share = connect(createSelector([
     version,
     bbox: isVisible && map && map.bbox && getExtentFromViewport(map.bbox),
     showAPI: !context,
+    embedOptions: {
+        showTOCToggle: !context
+    },
     settings
 })), {
     onClose: toggleControl.bind(null, 'share', null),
@@ -85,7 +88,7 @@ const Share = connect(createSelector([
 })(SharePanel);
 
 export const SharePlugin = assign(Share, {
-    disablePluginIf: "{state('router') && state('router').endsWith('new')}",
+    disablePluginIf: "{state('router') && (state('router').endsWith('new') || state('router').includes('newgeostory'))}",
     BurgerMenu: {
         name: 'share',
         position: 1000,

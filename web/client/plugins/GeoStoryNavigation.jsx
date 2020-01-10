@@ -21,6 +21,10 @@ import {
     settingsSelector,
     totalItemsSelector
 } from '../selectors/geostory';
+import {
+    pathnameSelector,
+    searchSelector
+} from '../selectors/router';
 import geostory from '../reducers/geostory';
 import Navigation from '../components/geostory/navigation/Navigation';
 
@@ -32,7 +36,9 @@ const GeoStoryNavigation = ({
     totalItems,
     settings,
     setEditingMode = () => { },
-    navigableItems = []
+    navigableItems = [],
+    pathname,
+    search
 }) => (mode === Modes.VIEW ? <div
     key="geostory-navigation"
     className="ms-geostory-navigation"
@@ -47,6 +53,7 @@ const GeoStoryNavigation = ({
             scrollToContent(id, options);
         }}
         navigableItems={navigableItems}
+        router={{ pathname, search }}
         setEditing={setEditingMode} />
 </div> : null);
 /**
@@ -63,7 +70,9 @@ export default createPlugin('GeoStoryNavigation', {
             currentPosition: currentPositionSelector,
             isEditAllowed: isEditAllowedSelector,
             totalItems: totalItemsSelector,
-            navigableItems: navigableItemsSelectorCreator({includeAlways: false})
+            navigableItems: navigableItemsSelectorCreator({includeAlways: false}),
+            pathname: pathnameSelector,
+            search: searchSelector
         }), {
             setEditingMode: setEditing
         }

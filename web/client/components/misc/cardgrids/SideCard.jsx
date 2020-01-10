@@ -52,7 +52,7 @@ module.exports = ({
 } = {}) =>
     <div
         className={`mapstore-side-card${selected ? ' selected' : ''}${size ? ' ms-' + size : ''}${className ? ` ${className}` : ''}${fullText ? ' full-text' : ''}`}
-        onClick={() => onClick({title, preview, description, caption, tools, ...props})}
+        onClick={(event) => onClick({title, preview, description, caption, tools, ...props}, event)}
         onMouseEnter={onMouseEnter}
         onMouseLeave={onMouseLeave}
         style={style}>

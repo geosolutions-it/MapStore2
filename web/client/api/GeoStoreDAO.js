@@ -170,10 +170,15 @@ const Api = {
     },
     updateResourceAttribute: function(resourceId, name, value, type, options) {
         return axios.put(
-            "resources/resource/" + resourceId + "/attributes/" + name + "/" + value, null,
+            "resources/resource/" + resourceId + "/attributes/", {
+                "restAttribute": {
+                    name,
+                    value
+                }
+            },
             this.addBaseUrl(merge({
                 headers: {
-                    'Content-Type': "application/xml"
+                    'Content-Type': "application/json"
                 }
             }, options)));
     },

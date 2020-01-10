@@ -14,8 +14,10 @@ import { getResource, getResourceIdByName, getResourceDataByName } from '../api/
 import { pluginsSelectorCreator } from '../selectors/localConfig';
 import { isLoggedIn } from '../selectors/security';
 
-import { LOAD_CONTEXT, LOAD_FINISHED, loadContext, loading, setContext, setResource, contextLoadError, loadFinished, CONTEXT_LOAD_ERROR } from '../actions/context';
+import { LOAD_CONTEXT, LOAD_FINISHED, loadContext, loading, setContext, setResource, contextLoadError, loadFinished,
+    SET_CURRENT_CONTEXT, CONTEXT_LOAD_ERROR } from '../actions/context';
 import { loadMapConfig, MAP_CONFIG_LOADED, MAP_CONFIG_LOAD_ERROR } from '../actions/config';
+import { changeMapType } from '../actions/maptype';
 import { LOGIN_SUCCESS, LOGOUT } from '../actions/security';
 
 
@@ -104,6 +106,14 @@ export const loadContextAndMap = (action$, { getState = () => { } } = {}) =>
                 )
             )
     );
+
+/**
+ * Handles map type change when context changes
+ * @param {observable} action$ stream of actions
+ */
+export const setMapTypeOnContextChange = action$ => action$
+    .ofType(SET_CURRENT_CONTEXT)
+    .switchMap(({context}) => Observable.of(changeMapType(context && context.mapType || 'openlayers')));
 
 /**
  * Handles the reload of the context and map.

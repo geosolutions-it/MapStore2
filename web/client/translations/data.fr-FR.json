@@ -312,7 +312,11 @@
             "maps": {
                 "title": "Cartes ({count})",
                 "noMapAvailable": "Aucune carte disponible",
-                "createNewOne": "Créer un nouveau"
+                "createNewOne": "Créer un nouveau",
+                "unsavedMapConfirmTitle": "Modifications non enregistrées",
+                "unsavedMapConfirmMessage": "Êtes-vous sûr de vouloir laisser des modifications non enregistrées?",
+                "unsavedMapConfirmButtonText": "Laisser",
+                "unsavedMapCancelButtonText": "Fermer"
             },
             "geostories": {
                 "newGeostory": "Nouveau Story",
@@ -1071,7 +1075,8 @@
             "advancedOptions": "Options avancées",
             "addBboxParam": "Ajouter un paramètre bbox au lien de partage",
             "wrongBboxParamTitle": "Param bbox invalide",
-            "wrongBboxParamMessage": "Les paramètres bbox doivent être en EPSG:4326 et écrit comme bbox=minx,miny,maxx,maxy"
+            "wrongBboxParamMessage": "Les paramètres bbox doivent être en EPSG:4326 et écrit comme bbox=minx,miny,maxx,maxy",
+            "showHomeButton": "Lien vers l'accueil MapStore"
         },
         "snapshot": {
             "title": "Prévisualisation de la capture de la carte",
@@ -1104,10 +1109,10 @@
         "mapImport": {
             "title": "Importer",
             "dropZone": {
-                "heading": "<p> <h4> Déposez votre configuration ou vos fichiers vectoriels ici </h4> <small> ou </small> </p>",
+                "heading": "<p> <h4> Déposez votre contextes cartographiques ou vos fichiers vectoriels ici </h4> <small> ou </small> </p>",
                 "selectFiles": "Sélectionnez les fichiers...",
-                "infoSupported": "<p> <small> Fichiers de configuration pris en charge: format hérité MapStore<br /> Fichiers vectoriels pris en charge: shapefile (doivent être contenus dans des archives zip), KML / KMZ, GPX ou GeoJSON </small> </p>",
-                "note": "<p> <small> <i> <strong> note </strong>: la carte actuelle sera remplacée dans le cas des fichiers de configuration </i> </small> </p>"
+                "infoSupported": "<p> <small> Fichiers de contextes cartographiques pris en charge: format hérité MapStore<br /> Fichiers vectoriels pris en charge: shapefile (doivent être contenus dans des archives zip), KML / KMZ, GPX ou GeoJSON </small> </p>",
+                "note": "<p> <small> <i> <strong> note </strong>: la carte actuelle sera remplacée dans le cas des fichiers de contextes cartographiques </i> </small> </p>"
             },
             "errors": {
                 "fileNotSupported": "Fichier non pris en charge",
@@ -2104,6 +2109,12 @@
             "back": "Retour",
             "next": "Suivant"
         },
+        "plugins": {
+            "TOC": {
+                "title": "Liste des couches",
+                "description": "Fournit une liste de couches avec une possibilité de les trier"
+            }
+        },
         "contextCreator": {
             "generalSettings": {
                 "label": "Réglages Généraux",
@@ -2112,6 +2123,31 @@
                 "namePlaceholder": "Entrez le nom du contexte de l'application...",
                 "windowTitle": "Titre de la fenêtre",
                 "windowTitlePlaceholder": "Entrez le titre de la fenêtre..."
+            },
+            "configurePlugins": {
+                "label": "Configurer les plugins",
+                "pluginsFilterPlaceholder": "Filtrer les plugins par nom...",
+                "availablePlugins": "Plugins disponibles",
+                "enabledPlugins": "Plugins activés",
+                "availablePluginsEmpty": "Activé tous les plugins disponibles",
+                "enabledPluginsEmpty": "Ajouter des plugins à la configuration à partir de la liste des plugins disponibles",
+                "searchResultsEmpty": "Aucun plugin trouvé répondant aux critères de recherche",
+                "cfgParsingError": {
+                    "title": "Erreur de configuration",
+                    "body": "Échec de l'analyse JSON de la configuration.\nL'erreur suivante s'est produite:\n\"{error}\""
+                },
+                "tooltips": {
+                    "enableUserPlugin": "Activer la sélection du plugin actuel pour l'utilisateur",
+                    "disableUserPlugin": "Désactiver la sélection du plugin actuel pour l'utilisateur",
+                    "activatePlugin": "Désactiver la sélection du plugin actuel pour l'utilisateur",
+                    "deactivatePlugin": "Désactiver le chargement de ce plugin au démarrage",
+                    "editConfiguration": "Modifier la configuration du plugin",
+                    "pluginDocumentation": "Ouvrir la documentation de configuration du plugin"
+                },
+                "saveCfgErrorNotification":  {
+                    "title": "Erreur de syntaxe dans la configuration du plugin",
+                    "message": "Le plugin \"{pluginName}\" contient une erreur de configuration. Veuillez corriger avant de continuer"
+                }
             },
             "configureMap": {
                 "label": "Configurer la carte",

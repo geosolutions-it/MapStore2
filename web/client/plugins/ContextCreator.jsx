@@ -11,10 +11,12 @@ import {createStructuredSelector} from 'reselect';
 
 import ConfigUtils from '../utils/ConfigUtils';
 import {createPlugin} from '../utils/PluginsUtils';
-import {newContextSelector, resourceSelector, creationStepSelector, reloadConfirmSelector} from '../selectors/contextcreator';
+import {newContextSelector, resourceSelector, creationStepSelector, reloadConfirmSelector, pluginsSelector, editedPluginSelector,
+    editedCfgSelector, validationStatusSelector, cfgErrorSelector, availablePluginsFilterTextSelector,
+    enabledPluginsFilterTextSelector} from '../selectors/contextcreator';
 import {mapTypeSelector} from '../selectors/maptype';
-import {setCreationStep, changeAttribute, saveNewContext, mapViewerReload,
-    showMapViewerReloadConfirm} from '../actions/contextcreator';
+import {setCreationStep, changeAttribute, saveNewContext, mapViewerReload, showMapViewerReloadConfirm, setFilterText,
+    setSelectedPlugins, editPlugin, updateEditedCfg, changePluginsKey, enablePlugins, disablePlugins} from '../actions/contextcreator';
 import contextcreator from '../reducers/contextcreator';
 import * as epics from '../epics/contextcreator';
 import ContextCreator from '../components/contextcreator/ContextCreator';
@@ -32,10 +34,25 @@ export default createPlugin('ContextCreator', {
         curStepId: creationStepSelector,
         newContext: newContextSelector,
         resource: resourceSelector,
+        allAvailablePlugins: pluginsSelector,
+        editedPlugin: editedPluginSelector,
+        editedCfg: editedCfgSelector,
+        isCfgValidated: validationStatusSelector,
+        cfgError: cfgErrorSelector,
+        availablePluginsFilterText: availablePluginsFilterTextSelector,
+        enabledPluginsFilterText: enabledPluginsFilterTextSelector,
         mapType: mapTypeSelector,
         showReloadConfirm: reloadConfirmSelector,
         pluginsConfig: () => ConfigUtils.getConfigProp('plugins')
     }), {
+        onFilterAvailablePlugins: setFilterText.bind(null, 'availablePlugins'),
+        onFilterEnabledPlugins: setFilterText.bind(null, 'enabledPlugins'),
+        setSelectedPlugins,
+        onEditPlugin: editPlugin,
+        onUpdateCfg: updateEditedCfg,
+        changePluginsKey,
+        onEnablePlugins: enablePlugins,
+        onDisablePlugins: disablePlugins,
         onSetStep: setCreationStep,
         onChangeAttribute: changeAttribute,
         onSave: saveNewContext,

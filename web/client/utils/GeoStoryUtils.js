@@ -384,12 +384,14 @@ export const findSectionIdFromColumnId = (immSections, columnId) => {
  */
 export const isWebPageSection = (element) =>
     element.type === SectionTypes.PARAGRAPH &&
+    element.editURL !== false &&
     element &&
     isArray(element.contents) &&
     element.contents.length &&
     isArray(element.contents[0].contents) &&
     element.contents[0].contents.length &&
-    element.contents[0].contents[0].type === ContentTypes.WEBPAGE;
+    element.contents[0].contents[0].type === ContentTypes.WEBPAGE &&
+    element.contents[0].contents[0].editURL !== false;
 
 /**
 * computes container height based on object size

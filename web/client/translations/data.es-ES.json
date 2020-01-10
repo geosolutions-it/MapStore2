@@ -312,7 +312,11 @@
             "maps": {
                 "title": "Mapas ({count})",
                 "noMapAvailable": "No hay mapa disponible",
-                "createNewOne": "Crea uno nuevo"
+                "createNewOne": "Crea uno nuevo",
+                "unsavedMapConfirmTitle": "Cambios no guardados",
+                "unsavedMapConfirmMessage": "¿Seguro que quieres dejar los cambios sin guardar?",
+                "unsavedMapConfirmButtonText": "Salir",
+                "unsavedMapCancelButtonText": "Cerrar"
             },
             "geostories": {
                 "newGeostory": "Nuevo Story",
@@ -1071,7 +1075,8 @@
             "advancedOptions": "Opciones avanzadas",
             "addBboxParam": "Añadir bbox param al enlace de compartir",
             "wrongBboxParamTitle": "Bbox no válido",
-            "wrongBboxParamMessage": "bbox params debe estar en EPSG:4326 y escrito como bbox=minx,miny,maxx,maxy"
+            "wrongBboxParamMessage": "bbox params debe estar en EPSG:4326 y escrito como bbox=minx,miny,maxx,maxy",
+            "showHomeButton": "Enlace al inicio de MapStore"
         },
         "snapshot": {
             "title": "Previsualización de la captura del mapa",
@@ -1104,10 +1109,10 @@
         "mapImport": {
             "title": "Importar",
             "dropZone": {
-                "heading": "<p> <h4> Elimine aquí sus archivos de configuración o vector </h4> <small> o </small> </p>",
+                "heading": "<p> <h4> Suelta contextos de mapas o archivos vectoriales aquí </h4> <small> o </small> </p>",
                 "selectFiles": "Selecciona archivos...",
-                "infoSupported": "<p> <small> Archivos de configuración admitidos: formato heredado MapStore<br /> Archivos de capa vectorial soportados: shapefiles (deben estar en archivos comprimidos), KML / KMZ, GPX o GeoJSON </small> </p>",
-                "note": "<p> <small> <i> <strong> nota </strong>: el mapa actual se anulará en el caso de los archivos de configuración </i> </small> </p>"
+                "infoSupported": "<p> <small> Archivos de contexto de mapas admitidos: formato heredado MapStore<br /> Archivos de capa vectorial soportados: shapefiles (deben estar en archivos comprimidos), KML / KMZ, GPX o GeoJSON </small> </p>",
+                "note": "<p> <small> <i> <strong> nota </strong>: el mapa actual se sobrescribe en el caso de nuevos contextos de mapa </i> </small> </p>"
             },
             "errors": {
                 "fileNotSupported": "Archivo no compatible",
@@ -2104,6 +2109,12 @@
             "back": "Atrás",
             "next": "Siguiente"
         },
+        "plugins": {
+            "TOC": {
+                "title": "Lista de capas",
+                "description": "Proporciona una lista de capas con la capacidad de ordenarlas"
+            }
+        },
         "contextCreator": {
             "generalSettings": {
                 "label": "Configuración general",
@@ -2112,6 +2123,31 @@
                 "namePlaceholder": "Ingrese el nombre del contexto de la aplicación...",
                 "windowTitle": "Título de la ventana",
                 "windowTitlePlaceholder": "Ingrese el título de la ventana..."
+            },
+            "configurePlugins": {
+                "label": "Configurar complementos",
+                "pluginsFilterPlaceholder": "Filtrar complementos por nombre...",
+                "availablePlugins": "Complementos disponibles",
+                "enabledPlugins": "Complementos habilitados",
+                "availablePluginsEmpty": "Habilitado todos los complementos disponibles",
+                "enabledPluginsEmpty": "Agregue complementos a la configuración desde la lista de complementos disponibles",
+                "searchResultsEmpty": "No se encontraron complementos que satisfagan los criterios de búsqueda.",
+                "cfgParsingError": {
+                    "title": "Error de configuración",
+                    "body": "Error en el análisis de la configuración JSON.\nEl siguiente error ha ocurrido:\n\"{error}\""
+                },
+                "tooltips": {
+                    "enableUserPlugin": "Habilitar la selección del complemento actual para el usuario",
+                    "disableUserPlugin": "Desactiva la selección del complemento actual para el usuario",
+                    "activatePlugin": "Habilite la carga de este complemento al inicio",
+                    "deactivatePlugin": "Desactivar la carga de este complemento al inicio",
+                    "editConfiguration": "Editar configuración del complemento",
+                    "pluginDocumentation": "Abrir la documentación de configuración del complemento"
+                },
+                "saveCfgErrorNotification":  {
+                    "title": "Error de sintaxis en la configuración del complemento",
+                    "message": "El complemento \"{pluginName}\" contiene un error en la configuración. Por favor arregle antes de continuar"
+                }
             },
             "configureMap": {
                 "label": "Configurar mapa",

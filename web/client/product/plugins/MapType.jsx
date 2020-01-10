@@ -56,10 +56,10 @@ const MapTypePlugin = connect((state) => ({
 
 module.exports = {
     MapTypePlugin: assign(MapTypePlugin, {
-        GridContainer: {
+        OmniBar: {
             name: 'MapType',
             tool: true,
-            position: 1,
+            position: 6,
             priority: 1
         }
     }),

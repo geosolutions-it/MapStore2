@@ -83,7 +83,16 @@ class ResourceCard extends React.Component {
     getCardStyle = () => {
         if (this.props.resource.thumbnail) {
             return assign({}, this.props.style, {
-                backgroundImage: 'linear-gradient(rgba(0, 0, 0, ' + this.props.backgroundOpacityStart + '), rgba(0, 0, 0, ' + this.props.backgroundOpacityEnd + ') ), url(' + (this.props.resource.thumbnail === null || this.props.resource.thumbnail === "NODATA" ? thumbUrl : decodeURIComponent(this.props.resource.thumbnail)) + ')'
+                backgroundImage: 'linear-gradient(rgba(0, 0, 0, '
+                    + this.props.backgroundOpacityStart + '), rgba(0, 0, 0, '
+                    + this.props.backgroundOpacityEnd
+                    + ') ), url('
+                    + (this.props.resource.thumbnail === null || this.props.resource.thumbnail === "NODATA"
+                        ? thumbUrl
+                        // this decode is for old thumbnails `rest%2Fgeostore%2Fdata%2F2%2Fraw%3Fdecode%3Ddatauri` new are `rest/geostore/data/2/raw?decode=datauri`, so not needed
+                        : decodeURIComponent(this.props.resource.thumbnail)
+                    )
+                    + ')'
             });
         }
         return this.props.style;

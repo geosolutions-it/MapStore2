@@ -37,7 +37,7 @@ describe('context selectors', () => {
         expect(isLoadingSelector(stateMocker(loading(true)))).toBe(true);
     });
     it('pluginsSelector', () => {
-        expect(pluginsSelector(stateMocker(setContext(CONTEXT_DATA)))).toBe(CONTEXT_DATA.plugins);
+        expect(pluginsSelector(stateMocker(setContext(CONTEXT_DATA)))).toEqual(CONTEXT_DATA.plugins);
         // when loading, use default plugins
         const DUMMY_PLUGINS = { desktop: ["TEST"] };
         const OLD_PLUGINS = ConfigUtils.getConfigProp('plugins');

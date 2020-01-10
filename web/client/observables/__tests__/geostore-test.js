@@ -6,11 +6,14 @@
  * LICENSE file in the root directory of this source tree.
  */
 const expect = require('expect');
+
+const geoStoreMock = require('./geoStoreMock').default;
 const {createResource, deleteResource, getResourceIdByName} = require('../geostore');
 const testAndResolve = (test = () => {}, value) => (...args) => {
     test(...args);
     return Promise.resolve(value);
 };
+
 describe('geostore observables for resources management', () => {
     it('createResource', done => {
         const DummyAPI = {
@@ -83,5 +86,51 @@ describe('geostore observables for resources management', () => {
                 done();
             }
         );
+    });
+    describe('linked resources', () => {
+
+        const RES_1 = {
+            data: {},
+            category: "TEST",
+            metadata: {
+                name: "RES2"
+            },
+            linkedResources: {
+                thumbnail: {
+                    tail: '/raw?decode=datauri', // for thumbnails, this will be appended to the resource URL in the main resource
+                    data: "something"
+                }
+            }
+        };
+
+        it('update linked resources', done => {
+            let mockAxios;
+
+            const { mock } = geoStoreMock({
+                callbacks: {
+                    onUpdateAttribute: ({data}) => {
+                        expect(data).toEqual(JSON.stringify({
+                            restAttribute: {
+                                name: 'thumbnail',
+                                value: 'rest/geostore/data/2/raw?decode=datauri' // the URL is encoded
+                            }
+                        }));
+
+                    }
+                }
+            });
+            mockAxios = mock;
+            createResource(RES_1).subscribe(
+                v => {
+                    expect(v).toBe(0);
+                    mockAxios.restore();
+                    done();
+                },
+                e => {
+                    mockAxios.restore();
+                    done(e);
+
+                });
+        });
     });
 });
