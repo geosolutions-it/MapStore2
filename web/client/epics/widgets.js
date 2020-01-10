@@ -87,6 +87,7 @@ module.exports = {
                         ...deps,
                         [`${m}.filter`]: `${m}.filter`,
                         [`${m}.quickFilters`]: `${m}.quickFilters`,
+                        [`${m}.layer`]: `${m}.layer`,
                         [`${m}.options`]: `${m}.options`
                     };
                 }

@@ -26,6 +26,7 @@ module.exports = compose(
         layers: "layers",
         filter: "filter",
         quickFilters: "quickFilters",
+        layer: "layer",
         options: "options"
     })
 );

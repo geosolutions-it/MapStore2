@@ -68,6 +68,7 @@ module.exports = compose(
             let cqlFilterRules = {};
             let newFilterObj = composeFilterObject(filterObj, quickFilters, options);
 
+            // TODO ask lorenzo why was there the next commented part
             if (!mapSync /* || !dependencies.viewport*/) {
                 return {
                     filter: newFilterObj || layerFilter ? filter(and(

@@ -7,7 +7,7 @@
  */
 
 const React = require('react');
-const { get } = require('lodash');
+// const { get } = require('lodash');
 const { connect } = require('react-redux');
 const { compose, withProps, withHandlers } = require('recompose');
 const { createSelector } = require('reselect');
@@ -60,26 +60,17 @@ const WidgetsView = compose(
     withHandlers({
         // TODO: maybe using availableDependencies here will be better when different widgets type dependencies are supported
         isWidgetSelectable: ({ editingWidget }) =>
-            ({ widgetType, id, layer = {}, dependenciesMap, mapSync }) =>
-                (widgetType === "map" ||
+            (target) =>
+                (target.widgetType === "map" && !target.mapSync ||
                     /*
                      * when the target is a table widget then check among its dependencies
                      * if it has other connection that are for sure map or table
                      * then make it non selectable
                     */
-                    widgetType === "table" && layer.name === editingWidget.layer.name &&
-                    ( !dependenciesMap || (dependenciesMap && !mapSync)
-                    /* ||
-                        dependenciesMap &&
-                        Object.keys(dependenciesMap)
-                            .map(d => dependenciesMap[d] && (WIDGETS_REGEX.exec(dependenciesMap[d]) || [])[1])
-                            .filter(widgetsId => {
-                                let widget = find(widgets, {id: wId});
-
-                            })*/
-
-                    )
-                ) && id !== editingWidget.id
+                    target.widgetType === "table" &&
+                        (editingWidget.widgetType !== "map" && (target.layer && editingWidget.layer && target.layer.name === editingWidget.layer.name) && !target.mapSync
+                        || editingWidget.widgetType === "map")
+                ) && target.id !== editingWidget.id
     })
 )(require('../components/dashboard/Dashboard'));
 

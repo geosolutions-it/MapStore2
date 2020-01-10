@@ -20,5 +20,12 @@ module.exports = compose(
         canConnect: true,
         connected: !!editorData.mapSync
     })),
-    withMapConnect({center: "center", "zoom": "zoom"})
+    withMapConnect({
+        center: "center",
+        "zoom": "zoom",
+        filter: "filter",
+        quickFilters: "quickFilters",
+        layer: "layer",
+        options: "options"
+    })
 );
