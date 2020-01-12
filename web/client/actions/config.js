@@ -87,9 +87,9 @@ const mapPopupUpdate = (id, position) => ({
 });
 
 const mapPopupRemove = (id) => ({
-    type: MAP_POPUP_UPDATE,
+    type: MAP_POPUP_REMOVE,
     id
-})
+});
 
 module.exports = {
     LOAD_MAP_CONFIG,

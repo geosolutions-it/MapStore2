@@ -91,7 +91,7 @@ module.exports = props => {
                 fluid={fluid}
                 position={position}
                 draggable={draggable}
-                onClose={onClose}
+                onClose={!showInMapPopup && onClose}
                 dock={dock}
                 style={dockStyle}
                 showFullscreen={showFullscreen}

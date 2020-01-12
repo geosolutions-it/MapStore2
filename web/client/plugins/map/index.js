@@ -14,6 +14,7 @@ const {changeMousePosition} = require('../../actions/mousePosition');
 const {changeMeasurementState, changeGeometry, resetGeometry, updateMeasures} = require('../../actions/measurement');
 const {measurementSelector} = require('../../selectors/measurement');
 const {changeSelectionState} = require('../../actions/selection');
+const {mapPopupRemove} = require('../../actions/config');
 const {changeLocateState, onLocateError} = require('../../actions/locate');
 const {changeDrawingStatus, endDrawing, setCurrentStyle, geometryChanged, drawStopped, selectFeatures, drawingFeatures} = require('../../actions/draw');
 const {updateHighlighted} = require('../../actions/highlight');
@@ -21,6 +22,7 @@ const {warning} = require('../../actions/notifications');
 const {connect} = require('react-redux');
 const assign = require('object-assign');
 const {projectionDefsSelector} = require('../../selectors/map');
+const Popup = require('./openlayers/Popup');
 
 const Empty = () => { return <span/>; };
 
@@ -93,15 +95,23 @@ module.exports = (mapType, actions) => {
     require('../../components/map/' + mapType + '/plugins/index');
     const LLayer = connect(null, {onWarning: warning})( components.Layer || Empty);
 
+    const getPopupContentComponent = ({ id, ...rest }) => {
+        switch (id) {
+        case 'identify':
+            return { id, ...rest, content: require('../Identify').IdentifyPlugin};
+        case 'test':
+            return { id, ...rest, content: Popup.default };
+        default:
+            return { id, ...rest };
+        }
+    };
 
-    // TODO:
-    // * dodać selector/funkcje wyłapującą element po jakimś kluczu
-    // * napisać obsługę pobierania koordynatów i przekazywania do store'a gdzie trzymane sa info o popupach (lista obiektów: position, content, id)
-    // * po stronie supportu dopisać style (strzałka i takie tam)
-
-    const PopupSupport = connect((state) => ({
-        popups: state.mapPopups || []
-    }))(components.PopupSupport || Empty);
+    const PopupSupport = connect(
+        (state) => {
+            const popups = (state.mapPopups || []).map(getPopupContentComponent);
+            return { popups };
+        }
+    )(components.PopupSupport || Empty);
 
     return {
         Map: LMap,

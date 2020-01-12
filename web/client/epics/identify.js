@@ -26,7 +26,7 @@ const { SET_CONTROL_PROPERTIES } = require('../actions/controls');
 const { closeFeatureGrid } = require('../actions/featuregrid');
 const { CHANGE_MOUSE_POINTER, CLICK_ON_MAP, zoomToPoint } = require('../actions/map');
 const { closeAnnotations } = require('../actions/annotations');
-const { MAP_CONFIG_LOADED } = require('../actions/config');
+const { MAP_CONFIG_LOADED, mapPopupUpdate } = require('../actions/config');
 
 const { stopGetFeatureInfoSelector, identifyOptionsSelector, clickPointSelector, clickLayerSelector } = require('../selectors/mapInfo');
 const { centerToMarkerSelector, queryableLayersSelector } = require('../selectors/layers');
@@ -174,7 +174,7 @@ module.exports = {
             const {disableAlwaysOn = false} = (store.getState()).mapInfo;
             return disableAlwaysOn || !stopFeatureInfo(store.getState() || {});
         })
-            .map(({point, layer}) => featureInfoClick(point, layer)),
+            .switchMap(({point, layer}) => Rx.Observable.of(featureInfoClick(point, layer), mapPopupUpdate('identify', { coordinates: point.rawPos }))),
     /**
      * triggers click again when highlight feature is enabled, to download the feature.
      */

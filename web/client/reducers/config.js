@@ -120,6 +120,9 @@ function mapConfig(state = null, action) {
         return assign({}, state, {map: map});
     case MAP_POPUP_UPDATE:
         const popups = cloneDeep(state && state.mapPopups || []);
+        if (!popups.find(p => p.id === action.popup.id)) {
+            popups.push(action.popup);
+        }
         return assign({}, state, {
             mapPopups: popups.map(popup => {
                 if (popup.id === action.popup.id) {

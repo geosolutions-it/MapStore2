@@ -1,0 +1,57 @@
+.map-popup-ol {
+  padding-top:  11px;
+  text-align: left;
+
+  > div {
+    position: relative;
+    border: 1px solid #ccc;
+    background-color: white;
+    border-radius: 10px;
+    padding: 25px 15px 15px 15px;
+  }
+
+  * {
+    user-select: text !important;
+  }
+}
+
+
+.map-popup-ol:after, .map-popup-ol:before {
+
+  border: solid transparent;
+  content: " ";
+  height: 0;
+  width: 0;
+  position: absolute;
+  pointer-events: none;
+}
+.map-popup-ol:after {
+  border-bottom-color: white;
+  border-width: 10px;
+  left: 50%;
+  margin-left: -11px;
+  top: -8px;
+}
+.map-popup-ol:before {
+  border-bottom-color: #ccc;
+  border-width: 11px;
+  left: 50%;
+  margin-left: -12px;
+  top: -10px;
+}
+
+.ol-popup-closer {
+  text-decoration: none;
+  position: absolute;
+  top: 2px;
+  right: 8px;
+}
+.ol-popup-closer:after {
+  content: "✖";
+}
+
+#identify-container.identify-popup {
+  * {
+    position: unset !important;
+  }
+}
