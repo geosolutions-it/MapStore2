@@ -289,8 +289,7 @@
                 "scalebar": {
                   "container" : "#mapstore-map-footer-container"
                 }
-              },
-              "tools": ["popup"]
+              }
             }
           }, "AutoMapUpdate", "HelpLink", "DrawerMenu", "Version", "Notifications", "BackgroundSelector", "Annotations",
             {

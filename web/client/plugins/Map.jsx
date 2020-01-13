@@ -210,7 +210,7 @@ class MapPlugin extends React.Component {
         zoomControl: false,
         mapLoadingMessage: "map.loading",
         loadingSpinner: true,
-        tools: ["measurement", "locate", "scalebar", "draw", "highlight", "popup"],
+        tools: ["measurement", "locate", "scalebar", "draw", "highlight"],
         options: {},
         mapOptions: {},
         fonts: ['FontAwesome'],

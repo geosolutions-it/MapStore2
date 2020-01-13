@@ -22,7 +22,6 @@ const {warning} = require('../../actions/notifications');
 const {connect} = require('react-redux');
 const assign = require('object-assign');
 const {projectionDefsSelector} = require('../../selectors/map');
-const Popup = require('./openlayers/Popup');
 
 const Empty = () => { return <span/>; };
 
@@ -99,8 +98,6 @@ module.exports = (mapType, actions) => {
         switch (id) {
         case 'identify':
             return { id, ...rest, content: require('../Identify').IdentifyPlugin};
-        case 'test':
-            return { id, ...rest, content: Popup.default };
         default:
             return { id, ...rest };
         }
