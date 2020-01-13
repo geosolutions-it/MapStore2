@@ -68,8 +68,8 @@ const WidgetsView = compose(
                      * then make it non selectable
                     */
                     target.widgetType === "table" &&
-                        (editingWidget.widgetType !== "map" && (target.layer && editingWidget.layer && target.layer.name === editingWidget.layer.name) && !target.mapSync
-                        || editingWidget.widgetType === "map")
+                        (editingWidget.widgetType !== "map" && (target.layer && editingWidget.layer && target.layer.name === editingWidget.layer.name)
+                        || editingWidget.widgetType === "map") && !target.mapSync
                 ) && target.id !== editingWidget.id
     })
 )(require('../components/dashboard/Dashboard'));
