@@ -5,25 +5,28 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const React = require('react');
-const {connect} = require('react-redux');
-const {createSelector, createStructuredSelector} = require('reselect');
-const {bindActionCreators} = require('redux');
-const { get, pick } = require('lodash');
+import React from 'react';
+import {connect} from 'react-redux';
+import {createSelector, createStructuredSelector} from 'reselect';
+import {bindActionCreators} from 'redux';
+import { get, pick } from 'lodash';
 
-const {compose, lifecycle} = require('recompose');
-const Grid = require('../components/data/featuregrid/FeatureGrid');
-const {paginationInfo, describeSelector, wfsURLSelector, typeNameSelector} = require('../selectors/query');
-const {modeSelector, changesSelector, newFeaturesSelector, hasChangesSelector, selectedFeaturesSelector, getDockSize} = require('../selectors/featuregrid');
-const { toChangesMap} = require('../utils/FeatureGridUtils');
-const {getPanels, getHeader, getFooter, getDialogs, getEmptyRowsView, getFilterRenderers} = require('./featuregrid/panels/index');
-const BorderLayout = require('../components/layout/BorderLayout');
+import {compose, lifecycle} from 'recompose';
+
+import { createPlugin } from '../utils/PluginsUtils';
+
+import Grid from '../components/data/featuregrid/FeatureGrid';
+import {paginationInfo, describeSelector, wfsURLSelector, typeNameSelector} from '../selectors/query';
+import {modeSelector, changesSelector, newFeaturesSelector, hasChangesSelector, selectedFeaturesSelector, getDockSize} from '../selectors/featuregrid';
+import { toChangesMap} from '../utils/FeatureGridUtils';
+import {getPanels, getHeader, getFooter, getDialogs, getEmptyRowsView, getFilterRenderers} from './featuregrid/panels/index';
+import BorderLayout from '../components/layout/BorderLayout';
 const EMPTY_ARR = [];
 const EMPTY_OBJ = {};
-const {gridTools, gridEvents, pageEvents, toolbarEvents} = require('./featuregrid/index');
-const { initPlugin, sizeChange, setUp} = require('../actions/featuregrid');
-const ContainerDimensions = require('react-container-dimensions').default;
-const {mapLayoutValuesSelector} = require('../selectors/maplayout');
+import {gridTools, gridEvents, pageEvents, toolbarEvents} from './featuregrid/index';
+import { initPlugin, sizeChange, setUp} from '../actions/featuregrid';
+import ContainerDimensions from 'react-container-dimensions';
+import {mapLayoutValuesSelector} from '../selectors/maplayout';
 const Dock = connect(createSelector(
     getDockSize,
     state => mapLayoutValuesSelector(state, {transform: true}),
@@ -242,11 +245,13 @@ const EditorPlugin = compose(
     })
 )(FeatureDock);
 
-
-module.exports = {
-    FeatureEditorPlugin: EditorPlugin,
-    epics: require('../epics/featuregrid'),
-    reducers: {
-        featuregrid: require('../reducers/featuregrid')
+export default createPlugin('FeatureEditor', {
+    component: EditorPlugin,
+    containers: {
+        TOC: {
+            doNotHide: true,
+            name: "FeatureEditor"
+        }
     }
-};
+});
+

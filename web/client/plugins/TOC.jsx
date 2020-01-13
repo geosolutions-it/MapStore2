@@ -509,15 +509,17 @@ const securityEnhancer = (Component) => (props) => {
 const checkPluginsEnhancer = branch(
     ({ checkPlugins = true }) => checkPlugins,
     withPropsOnChange(
-        ["items", "activateAddLayerButton", "activateAddGroupButton", "activateLayerFilterTool"],
+        ["items", "activateAddLayerButton", "activateAddGroupButton", "activateLayerFilterTool", "activateSettingsTool"],
         ({
             items = [],
             activateAddLayerButton,
             activateAddGroupButton,
+            activateSettingsTool = true,
             activateLayerFilterTool = true
         }) => ({
             activateAddLayerButton: activateAddLayerButton && find(items, { name: "AddLayer" }) || false, // requires MetadataExplorer (Catalog)
             activateAddGroupButton: activateAddGroupButton && find(items, { name: "AddGroup" }) || false,
+            activateSettingsTool: activateSettingsTool && find(items, { name: "TOCItemsSettings"}) || false,
             activateLayerFilterTool: activateLayerFilterTool && find(items, {name: "FilterLayer"}) || false// requires QueryPanel
         })
     )

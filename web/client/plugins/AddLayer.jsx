@@ -12,15 +12,18 @@ const AddLayer = () => null;
 
 /**
  * Plugin that activate the AddLayer button in the TOC.
- * Requires the MetadataExplorer Plugin To Work
+ * Requires the MetadataExplorer Plugin To Work.
+ * TODO: inject the button directly from this button
+ * @memberof plugins
+ * @requires plugins.MetadataExplorer
+ * @requires plugins.TOC
  */
 export default createPlugin('AddLayer',
     {
         component: AddLayer,
         containers: {
             TOC: {
-                name: "AddLayer",
-                position: 1
+                name: "AddLayer"
             }
         }
     }

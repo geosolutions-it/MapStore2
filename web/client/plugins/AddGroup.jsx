@@ -96,13 +96,17 @@ const AddGroupPlugin = connect((state) => ({
     onAdd: addGroup
 })(AddGroup);
 
+/**
+ * AddGrouo. Add to the TOC the possibility to add layer group.
+ * @memberof plugins
+ * @requires plugins.TOC
+ */
 export default createPlugin('AddGroup', {
     component: AddGroupPlugin,
     containers: {
         TOC: {
             doNotHide: true,
-            name: "AddGroup",
-            position: 1
+            name: "AddGroup"
         }
     }
 });
