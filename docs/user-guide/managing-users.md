@@ -17,7 +17,7 @@ In this page the *Admin* can:
 
 <img src="../img/managing-users/edit-user.jpg" class="ms-docimage"/>
 
-Both the **New User** <img src="../img/button/new-user.jpg" class="ms-docbutton"/> and the **Edit user** <img src="../img/button/edit-icon.jpg" class="ms-docbutton"/> buttons, open the *User editor* window, composed of three sections:
+Both the **New User** <img src="../img/button/new-user.jpg" class="ms-docbutton"/> and the **Edit user** <img src="../img/button/edit-icon.jpg" class="ms-docbutton"/> buttons, open the *User editor* window that is composed of three sections:
 
 * *User ID*
 
@@ -37,7 +37,7 @@ In this section the Amin is allowed to:
 
 * Set the Password
 
-* Select the User type (User or Admin)
+* Select the User role (User or Admin)
 
 * Choose if an User is *Enabled* or not. Enabled users will have a green status icon under their profile otherwise will have a red status and will not be able to log in.
 
@@ -48,7 +48,7 @@ In this section the Amin is allowed to:
 
 ## Other information
 
-Changing to *Other information* section, it display the following:
+Switching to *Other information* section, it display the following:
 
 <img src="../img/managing-users/other-info.jpg" class="ms-docimage"/>
 
@@ -62,7 +62,7 @@ Here the *Admin* can set:
 
 ## Group membership
 
-Through the last section of the window it is possible to manage the groups in which the user is aggregated:
+Through the last section of the window it is possible to manage the groups in which the user belongs to:
 
 <img src="../img/managing-users/sel-groups.gif" class="ms-docimage"/>
 

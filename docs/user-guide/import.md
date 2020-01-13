@@ -16,7 +16,7 @@ Here the user, in order to import a file, can drag and drop it inside the import
 
 ## Import map context files
 
-A map context is, for example, the file that an user download selecting the <img src="../img/button/export.jpg" class="ms-docbutton"/> option in [Burger menu](menu-bar.md#burger-menu). This type of files, in `json` format contains all the settings about projections, coordinates, zoom, extent and layers present in the map (more information can be found in the [Maps Configuration](../developer-guide/maps-configuration.md) section of the [Developer Guide](https://mapstore.readthedocs.io/en/latest/developer-guide/). Adding a map configuration file the behavior is similar to the following:
+A map context is, for example, the file that an user download selecting the <img src="../img/button/export.jpg" class="ms-docbutton"/> option in [Burger menu](menu-bar.md#burger-menu). This type of files, in `json` format contains all map context information, that means the settings about projections, coordinates, zoom, extent and layers present in the map (more information can be found in the [Maps Configuration](../developer-guide/maps-configuration.md) section of the [Developer Guide](https://mapstore.readthedocs.io/en/latest/developer-guide/). Adding a map configuration file the behavior is similar to the following:
 
 <img src="../img/import/export-import.gif" class="ms-docimage"/>
 
@@ -42,4 +42,4 @@ Once the settings are done, the files can be added with the <img src="../img/but
 <img src="../img/import/local-files-added.jpg" class="ms-docimage" style="max-width:300px;"/>
 
 !!! warning
-    Currently is not possible to read the Attribute Table of the imported vector files and for this reason the [Layer Filter](filtering-layers.md), the [Attribute Table](attributes-table.md) investigation and the creation of [Widgets](widgets.md) is forbidden for those layers.
+    Currently is not possible to read the Attribute Table of the imported vector files and for this reason the [Layer Filter](filtering-layers.md), the [Attribute Table](attributes-table.md) and the creation of [Widgets](widgets.md) is not allowed for those layers.

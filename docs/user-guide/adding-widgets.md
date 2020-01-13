@@ -68,7 +68,7 @@ Once the <img src="../img/button/next.jpg" class="ms-docbutton"/> button is clic
 
 <img src="../img/adding-widgets/map-wid-info.jpg" class="ms-docimage" style="max-width:400px;"/>
 
-In here the user has the possibility to insert a **Title** and a **Description** for the widget (not mandatory fields) and to complete its creation by clicking on the <img src="../img/button/save-icon.jpg" class="ms-docbutton"/> button. After that the widget is added to the viewer space:
+Here the user has the possibility to insert a **Title** and a **Description** for the widget (not mandatory fields) and to complete its creation by clicking on the <img src="../img/button/save-icon.jpg" class="ms-docbutton"/> button. After that the widget is added to the viewer space:
 
 <img src="../img/adding-widgets/viewer-map.jpg" class="ms-docimage" style="max-width:600px;"/>
 
@@ -82,11 +82,11 @@ Selecting the Legend widget, the user can to choose the Map widget to which the 
 
 <img src="../img/adding-widgets/select-map-connection.jpg" class="ms-docimage" style="max-width:600px;"/>
 
-Once a Map widget is connected the preview panel is similar to the following:
+Once a Map widget is connected, the preview panel is similar to the following:
 
 <img src="../img/adding-widgets/legend-preview.jpg" class="ms-docimage" style="max-width:400px;"/>
 
-In here the user can go back <img src="../img/button/back.jpg" class="ms-docbutton"/> to the widget types section, connect <img src="../img/button/connect-widget.jpg" class="ms-docbutton"/> or disconnect <img src="../img/button/connection-icon.jpg" class="ms-docbutton"/>the legend to a map and move forward <img src="../img/button/next.jpg" class="ms-docbutton"/> to widget options. <br>
+Here the user can go back <img src="../img/button/back.jpg" class="ms-docbutton"/> to the widget types section, connect <img src="../img/button/connect-widget.jpg" class="ms-docbutton"/> or disconnect <img src="../img/button/connection-icon.jpg" class="ms-docbutton"/>the legend to a map and move forward <img src="../img/button/next.jpg" class="ms-docbutton"/> to widget options. <br>
 If the last option is selected, a configuration panel similar to the [Map widgets](adding-widgets.md#map-widget) one gives the possibility, before save, to set the *Title* and the *Description* for the Legend widget. <br>
 An example of a Map widgets and a Legend widget is the following:
 

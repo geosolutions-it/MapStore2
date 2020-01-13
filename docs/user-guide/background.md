@@ -1,19 +1,19 @@
-# Background selector
+# Background Selector
 *********************
 
-The *Background Selector*, located in the bottom left corner of the *Data Frame*, allows the user to add, manage and remove map backgrounds
+The *Background Selector*, located in the bottom left corner of the *Viewer*, allows the user to add, manage and remove map backgrounds
 
 <img src="../img/background/background.jpg" class="ms-docimage"/>
 
-By clicking on the background selector will be displayed several miniatures that can be chosen in order to change the map background, such as *Open Street Map*, *NASAGIBS*, *OpenTopoMap*, *Sentinel 2* and the *Empty Background*. 
+By clicking on the background selector several miniatures will be displayed. Those miniatures can be selected in order to switch from a background to another (the map background set by default in MapStore are *Open Street Map*, *NASAGIBS*, *OpenTopoMap*, *Sentinel 2* and the *Empty Background*). 
 
 <img src="../img/background/bck-available.jpg" class="ms-docimage" style="max-width:500px;"/>
 
-For example, by choosing the *OpenTopoMap* basemap, will change consequently like in the following image:
+For example choosing *OpenTopoMap*, the map background will change like in the following image:
 
 <img src="../img/background/back-selector.jpg" class="ms-docimage"/>
 
-Logged as admin or as normal user with editing permissions (see Resource Properties section for more information about permissions), it is possible to add, edit or remove backgrounds.
+If the user has editing permissions on the map (independently on the role, see [Resource Properties](resources-properties.md) section for more information about permissions), it is also possible to add, edit or remove backgrounds.
 
 ## Add background
 
@@ -22,7 +22,7 @@ A new background can be added through the <img src="../img/button/+++.jpg" class
 <img src="../img/background/bck-catalog.jpg" class="ms-docimage" style="max-width:500px;"/>
 
 !!! warning
-    *Default Backgrounds* service is available only accessing the [Catalog](catalog.md) from the Background selector, but if you add a new Remote Service from there, that Remote Service is available in any case.
+    *Default Backgrounds* service is available only accessing the [Catalog](catalog.md) from the Background Selector, but if you add a new Remote Service from there, that Remote Service is available in any case. *Default Backgrounds* represent a list of backgrounds that can be configured from MapStore's configuration file.
 
 From the [Catalog](catalog.md) the user can choose the layers to add to the list of backgrounds:
 
@@ -34,7 +34,7 @@ As soon as a layer is selected, the **Add New Background** window opens:
 
 In particular, from this window, the user can perform the following operations:
 
-* Add a **Thumbnail** choosing the desired file from your folder by clicking on image preview area, or simply with the drag and drop function 
+* Add a **Thumbnail** choosing the desired local file by clicking on image preview area, or simply with the drag and drop function 
 
 * Set the **Title**
 
@@ -56,17 +56,17 @@ It is possible to edit backgrounds by clicking on settings icon on top of each b
 <img src="../img/background/edit-back-window.jpg" class="ms-docimage" style="max-width:600px;"/>
 
 !!! warning
-    *Default Backgrounds* Service's layers can't be edited, with an exception for *Sentinel 2*.
+    *Default Backgrounds* layers can't be edited, with an exception for *Sentinel 2: only WMS Layers can be edited&/configured through the Background Selector*.
 
 The **Edit Current Background** window opens, allowing the user to customize the same set of information when adding a new background (see [previous section](#add-background)).
 
 ## Remove background
 
-It is possible to remove a background from Background selector by clicking on remove icon on top-right of each card
+It is possible to remove a background from the Background Selector by clicking on remove icon on top-right of each card
 
 <img src="../img/background/bck-delete.jpg" class="ms-docimage" style="max-width:500px;"/>
 
 !!! note
-    By default, when creating a new map, all backgrounds from *Default Backgrounds* Service are added to the Barckground selector, and in [Catalog](catalog.md) they appear unselectable (it's not allowed to add the same default background twice). As soon as you remove one from the Background selector, it becomes selectable from the [Catalog](catalog.md).
+    By default, for new maps, all backgrounds from *Default Backgrounds* Service are added to the Barckground Selector, and in [Catalog](catalog.md) they appear grayed (it's not allowed to add the same default background twice): as soon as you remove one from the Background Selector, it becomes selectable from the [Catalog](catalog.md).
 
     <img src="../img/background/bck-unselectable.jpg" class="ms-docimage" style="max-width:500px;"/>

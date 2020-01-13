@@ -19,7 +19,7 @@ In particular:
 
 * The [Table of Contents (TOC)](toc.md) show the layers and the layers groups on the map and allow to remove or edit them, and add some new ones
 
-* The [Menu Bar](menu-bar.md) includes the [Search bar](menu-bar.md#search-bar), the connection to the [Homepage](https://mapstore.geo-solutions.it/mapstore/#/), the login window and the [Burger Menu](search-bar.md#burger-menu), an important list of options that contains several functions and information
+* The [Menu Bar](menu-bar.md) includes the [Search bar](menu-bar.md#search-bar), the connection to the [Homepage](https://mapstore.geo-solutions.it/mapstore/#/), the login window and the [Burger Menu](menu-bar.md#burger-menu), an important list of options that contains several functions and information
 
 * The [Sidebar](side-bar.md) is mainly a navigation panel
 

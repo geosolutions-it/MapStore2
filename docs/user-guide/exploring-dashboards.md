@@ -1,15 +1,15 @@
 # Exploring Dashboards
 **********************
 
-In [MapStore](https://mapstore.geo-solutions.it/mapstore/#/), a *Dashboard* is a space where the user can add many miniature items, such as charts, maps, tables, texts and counters, and can create connections between them in order to:
+In [MapStore](https://mapstore.geo-solutions.it/mapstore/#/), a *Dashboard* is a space where the user can add many [Widgets](widgets.md), such as charts, maps, tables, texts and counters, and can create connections between them in order to:
 
-1. Provide an overview for a better data visualization
+1. Provide an overview for a better visualize a specific data context
 
 2. Interact spatially and analytically with the data by creating connections between widgets
 
-3. Perform analysis for better decisions
+3. Perform analysis on involved data/layers
 
-In order to create a new dashboard, the **New Dashboard** button <img src="../img/button/dash-icon.jpg" class="ms-docbutton"/> appears in [MapStore](https://mapstore.geo-solutions.it/mapstore/#/) Homepage once logged as *Administrator* or *Normal user*. With a click on it, an empty dashboard workspace appears. This page is composed of a *Topbar*, a *Sidebar* and a *Viewer*:
+In order to create a new dashboard, the **New Dashboard** button <img src="../img/button/dash-icon.jpg" class="ms-docbutton"/> appears in [MapStore](https://mapstore.geo-solutions.it/mapstore/#/) Homepage once logged as *Administrator* or *Normal user*. With a click on it, an empty dashboard workspace appears. This page is composed of a *Topbar*, a *Sidebar* and a *Canvas*:
 
 <img src="../img/exploring-dashboards/dashboard-1.jpg" class="ms-docimage"/>
 
