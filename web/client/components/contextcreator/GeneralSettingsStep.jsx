@@ -7,20 +7,22 @@
 */
 
 import React from 'react';
+import Spinner from 'react-spinkit';
 import Message from '../I18N/Message';
 import {FormGroup, ControlLabel, FormControl, Glyphicon} from 'react-bootstrap';
 import * as LocaleUtils from '../../utils/LocaleUtils';
 
-export default ({contextName = "", windowTitle = "", onChange = () => {}, context = {}}) => (
+export default ({contextName = "", windowTitle = "", isValidContextName = true, contextNameChecked = true, loading = false, onChange = () => {}, context = {}}) => (
     <div className="general-settings-step">
         <div style={{ margin: 'auto' }}>
             <div className="text-center">
                 <Glyphicon glyph="wrench" style={{ fontSize: 128 }}/>
             </div>
             <h1 className="text-center"><Message msgId="contextCreator.generalSettings.title"/></h1>
-            <FormGroup>
+            <FormGroup validationState={contextName.length > 0 && contextNameChecked ? (isValidContextName ? 'success' : 'error') : null}>
                 <ControlLabel>
                     <Message msgId="contextCreator.generalSettings.name"/>
+                    {loading ? <Spinner spinnerName="circle" noFadeIn overrideSpinnerClassName="spinner"/> : null}
                 </ControlLabel>
                 <FormControl
                     type="text"
@@ -28,7 +30,7 @@ export default ({contextName = "", windowTitle = "", onChange = () => {}, contex
                     placeholder={LocaleUtils.getMessageById(context.messages, "contextCreator.generalSettings.namePlaceholder")}
                     onChange={e => onChange('name', e.target.value && e.target.value.replace(/[^a-zA-Z0-9\-_]/, ''))}/>
             </FormGroup>
-            <FormGroup>
+            <FormGroup validationState={windowTitle.length > 0 ? 'success' : null}>
                 <ControlLabel>
                     <Message msgId="contextCreator.generalSettings.windowTitle"/>
                 </ControlLabel>

@@ -2159,6 +2159,10 @@
                 "conflict": "Eine Ressource mit diesem Namen ist bereits vorhanden",
                 "defaultMessage": "Unbekannter Fehler"
             },
+            "contextNameErrorNotification": {
+                "title": "Falscher Kontextname",
+                "unknownError": "Ein unerwarteter Fehler ist aufgetreten"
+            },
             "undo": "Möchten Sie die Kontextbearbeitungssitzung wirklich abbrechen?"
         },
         "contextManager": {

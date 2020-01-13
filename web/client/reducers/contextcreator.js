@@ -9,8 +9,8 @@ import {get, omit, isObject, head} from 'lodash';
 
 import ConfigUtils from '../utils/ConfigUtils';
 
-import {SET_CREATION_STEP, MAP_VIEWER_LOADED, SHOW_MAP_VIEWER_RELOAD_CONFIRM, SET_RESOURCE, CLEAR_CONTEXT_CREATOR,
-    SET_FILTER_TEXT, SET_SELECTED_PLUGINS, SET_EDITED_PLUGIN, CHANGE_PLUGINS_KEY, CHANGE_ATTRIBUTE, LOADING,
+import {SET_CREATION_STEP, MAP_VIEWER_LOADED, SHOW_MAP_VIEWER_RELOAD_CONFIRM, SET_RESOURCE, IS_VALID_CONTEXT_NAME, CONTEXT_NAME_CHECKED,
+    CLEAR_CONTEXT_CREATOR, SET_FILTER_TEXT, SET_SELECTED_PLUGINS, SET_EDITED_PLUGIN, CHANGE_PLUGINS_KEY, CHANGE_ATTRIBUTE, LOADING,
     SET_EDITED_CFG, UPDATE_EDITED_CFG, SET_VALIDATION_STATUS, SET_PARSED_CFG, SET_CFG_ERROR} from "../actions/contextcreator";
 import {set} from '../utils/ImmutableUtils';
 
@@ -153,6 +153,12 @@ export default (state = {}, action) => {
 
         return set('initialEnabledPlugins', pluginsToEnable,
             set('newContext', otherData, set('plugins', convertPlugins(allPlugins), set('resource', resource, state))));
+    }
+    case IS_VALID_CONTEXT_NAME: {
+        return set('isValidContextName', action.valid, state);
+    }
+    case CONTEXT_NAME_CHECKED: {
+        return set('contextNameChecked', action.checked, state);
     }
     case CLEAR_CONTEXT_CREATOR: {
         return {};

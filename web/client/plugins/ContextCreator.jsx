@@ -11,9 +11,9 @@ import {createStructuredSelector} from 'reselect';
 
 import ConfigUtils from '../utils/ConfigUtils';
 import {createPlugin} from '../utils/PluginsUtils';
-import {newContextSelector, resourceSelector, creationStepSelector, reloadConfirmSelector, pluginsSelector, editedPluginSelector,
-    editedCfgSelector, validationStatusSelector, cfgErrorSelector, availablePluginsFilterTextSelector,
-    enabledPluginsFilterTextSelector} from '../selectors/contextcreator';
+import {newContextSelector, resourceSelector, creationStepSelector, reloadConfirmSelector, isLoadingSelector, loadFlagsSelector,
+    isValidContextNameSelector, contextNameCheckedSelector, pluginsSelector, editedPluginSelector, editedCfgSelector, validationStatusSelector,
+    cfgErrorSelector, availablePluginsFilterTextSelector, enabledPluginsFilterTextSelector} from '../selectors/contextcreator';
 import {mapTypeSelector} from '../selectors/maptype';
 import {setCreationStep, changeAttribute, saveNewContext, mapViewerReload, showMapViewerReloadConfirm, setFilterText,
     setSelectedPlugins, editPlugin, updateEditedCfg, changePluginsKey, enablePlugins, disablePlugins} from '../actions/contextcreator';
@@ -43,6 +43,10 @@ export default createPlugin('ContextCreator', {
         enabledPluginsFilterText: enabledPluginsFilterTextSelector,
         mapType: mapTypeSelector,
         showReloadConfirm: reloadConfirmSelector,
+        loading: isLoadingSelector,
+        loadFlags: loadFlagsSelector,
+        isValidContextName: isValidContextNameSelector,
+        contextNameChecked: contextNameCheckedSelector,
         pluginsConfig: () => ConfigUtils.getConfigProp('plugins')
     }), {
         onFilterAvailablePlugins: setFilterText.bind(null, 'availablePlugins'),

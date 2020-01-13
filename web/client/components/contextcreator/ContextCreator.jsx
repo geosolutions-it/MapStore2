@@ -75,10 +75,13 @@ export const pluginsFilterOverride = (pluginsConfigs, viewerPlugins) => {
 
 export default class ContextCreator extends React.Component {
     static propTypes = {
+        loading: PropTypes.bool,
+        loadFlags: PropTypes.object,
+        isValidContextName: PropTypes.bool,
+        contextNameChecked: PropTypes.bool,
         curStepId: PropTypes.string,
         newContext: PropTypes.object,
         resource: PropTypes.object,
-        plugins: PropTypes.object,
         pluginsConfig: PropTypes.object,
         viewerPlugins: PropTypes.array,
         ignoreViewerPlugins: PropTypes.bool,
@@ -114,6 +117,10 @@ export default class ContextCreator extends React.Component {
     };
 
     static defaultProps = {
+        loading: false,
+        loadFlags: {},
+        isValidContextName: true,
+        contextNameChecked: true,
         newContext: {},
         resource: {},
         viewerPlugins: [
@@ -168,11 +175,15 @@ export default class ContextCreator extends React.Component {
                     id: 'general-settings',
                     label: 'contextCreator.generalSettings.label',
                     disableNext: !this.props.resource.name || !this.props.resource.name.length ||
-                        !this.props.newContext.windowTitle || !this.props.newContext.windowTitle.length,
+                        !this.props.newContext.windowTitle || !this.props.newContext.windowTitle.length ||
+                        this.props.loading || !this.props.isValidContextName || !this.props.contextNameChecked,
                     component:
                         <GeneralSettings
                             contextName={this.props.resource.name}
                             windowTitle={this.props.newContext.windowTitle}
+                            isValidContextName={this.props.isValidContextName}
+                            contextNameChecked={this.props.contextNameChecked}
+                            loading={this.props.loading && this.props.loadFlags.contextNameCheck}
                             context={this.context}
                             onChange={this.props.onChangeAttribute} />
                 }, {

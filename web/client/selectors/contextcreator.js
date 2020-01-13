@@ -16,6 +16,9 @@ export const resourceSelector = state => state.contextcreator && state.contextcr
 export const mapViewerLoadedSelector = state => state.contextcreator && state.contextcreator.mapViewerLoaded;
 export const reloadConfirmSelector = state => state.contextcreator && state.contextcreator.showReloadConfirm;
 export const isLoadingSelector = state => state.contextcreator && state.contextcreator.loading;
+export const loadFlagsSelector = state => state.contextcreator && state.contextcreator.loadFlags;
+export const isValidContextNameSelector = state => state.contextcreator && state.contextcreator.isValidContextName;
+export const contextNameCheckedSelector = state => state.contextcreator && state.contextcreator.contextNameChecked;
 export const pluginsSelector = state => state.contextcreator && state.contextcreator.plugins;
 export const initialEnabledPluginsSelector = state => state.contextcreator && state.contextcreator.initialEnabledPlugins;
 export const editedPluginSelector = state => state.contextcreator && state.contextcreator.editedPlugin;
