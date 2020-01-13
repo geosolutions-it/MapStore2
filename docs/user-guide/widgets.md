@@ -193,7 +193,7 @@ The *Widgets Tray*, otherwise, allows the user to expand/collapse each single wi
 
 ### Access widgets info
 
-As soon as a Description is provided for la widget the info button <img src="../img/button/info.jpg" class="ms-docbutton"/> appears, allowing the user to take a look at the widget's *Title* and *Description*:
+As soon as a Description is provided for a widget the info button <img src="../img/button/info.jpg" class="ms-docbutton"/> appears, allowing the user to take a look at the widget's *Title* and *Description*:
 
 <img src="../img/widgets/wid-description.jpg" class="ms-docimage"/>
 
