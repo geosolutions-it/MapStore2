@@ -1,7 +1,7 @@
 # Widgets
 *********
 
-In [MapStore](https://mapstore.geo-solutions.it/mapstore/#/) it is possible to create widgets from layers added to the map. Widgets are graphical elements such as charts, texts, tables and counters, useful to describe and visualize qualitatively and quantitatively layers data and provide the user with the opportunity to analyze the information more effectively.
+In [MapStore](https://mapstore.geo-solutions.it/mapstore/#/) it is possible to create widgets from layers added to the map. Widgets are components such as charts, texts, tables and counters, useful to describe and visualize qualitatively and quantitatively layers data and provide to the user the opportunity to analyze the information more effectively.
 
 ## Add a Widget
 
@@ -26,7 +26,7 @@ Selecting *Chart* option the following window opens:
 <img src="../img/widgets/chart-types.jpg" class="ms-docimage"  style="max-width:450px;"/>
 
 From here it is possible to choose between *Bar Chart*, *Pie Chart* or *Line Chart*, or simply go back to widget type selection through the <img src="../img/button/back.jpg" class="ms-docbutton"/> button. <br>
-If a chart type is selected, it displays like the following (in this case *Bar Chart* was selected):
+If a chart type is selected, it displays like the following (in this case a *Bar Chart*):
 
 <img src="../img/widgets/configure-chart.jpg" class="ms-docimage"  style="max-width:450px;"/>
 
@@ -34,13 +34,13 @@ From the toolbar of this panel <img src="../img/widgets/widget-options.jpg" clas
 
 * Go back to the chart type selection with the <img src="../img/button/back.jpg" class="ms-docbutton"/> button
 
-* Connect <img src="../img/button/connect-widget.jpg" class="ms-docbutton"/> or disconnect <img src="../img/button/disconnect-widget.jpg" class="ms-docbutton"/> the widget to the map. When a widget is connected, the displayed fields matches with the map portion displayed in that moment. When a widget is not connected, otherwise, it shows all the fields of that layer no matter the content displayed in the map.
+* Connect <img src="../img/button/connect-widget.jpg" class="ms-docbutton"/> or disconnect <img src="../img/button/disconnect-widget.jpg" class="ms-docbutton"/> the widget to the map. When a widget is connected to the map, displayed information in the widget are automatically filtered with the map viewport. When a widget is not linked, otherwise it shows all the elements of that level regardless of the map viewport.
 
 * Configure a filter <img src="../img/button/filter-icon.jpg" class="ms-docbutton"/> for the widget data (more information on how to configure a filter can be found in [Filtering Layers](filtering-layers.md) section)
 
 * Move forward <img src="../img/button/next.jpg" class="ms-docbutton"/> to the next step when the settings are completed
 
-Just below the preview, the following operations can be performed:
+Just below the chart's preview, the following operations can be performed:
 
 * Define **X Attribute** of the chart (or **Group by** for *Pie Charts*) choosing between the layer fields
 
@@ -56,7 +56,7 @@ In addition, only for *Bar Charts* and *Line Charts*, it is possible to access t
 
 * Keep the grid visible or **Hide Grid**
 
-* Keep Y axis visible ot **Hide Y axis**
+* Keep Y axis visible or **Hide Y axis**
 
 * Define the **X Axis Labels rotation angle**
 
@@ -65,7 +65,7 @@ In addition, only for *Bar Charts* and *Line Charts*, it is possible to access t
 !!! warning
     In order to move forward to the next step, only **X Attribute**, **Y Attribute** and **Operation** are considered as mandatory fields.
 
-Once the changes are done, the next step displays, for example, similar to the following:
+Once the settings are done, the next step displays, for example, similar to the following:
 
 <img src="../img/widgets/widget-info.jpg" class="ms-docimage"  style="max-width:450px;"/>
 
@@ -77,7 +77,7 @@ In this panel, through the toolbar, it is possible to:
 
 * Add the widget to the map with the <img src="../img/button/save-icon.jpg" class="ms-docbutton"/> button
 
-Just below the preview, the user is allowed to set:
+Just below the chart's preview, the user is allowed to set:
 
 * The widget **Title**
 
@@ -102,7 +102,7 @@ Through the toolbar it is possible to:
 
 * Add the widget to the map with the <img src="../img/button/save-icon.jpg" class="ms-docbutton"/> button
 
-In here the user can:
+Here the user can:
 
 * Write the title of the widget
 
@@ -123,7 +123,7 @@ Adding a Table widget to the map, a panel like the following opens:
 
 <img src="../img/widgets/table-panel.jpg" class="ms-docimage"  style="max-width:450px;"/>
 
-The toolbar on the top of this panel is similar to the one present in [Chart section](widgets.md#chart). In here the user is allowed to select the fields that will be displayed in the widget.
+The toolbar on the top of this panel is similar to the one present in [Chart section](widgets.md#chart). Here the user is allowed to select the fields that will be displayed in the widget.
 
 !!!warning
     At least one field must be selected in order to move to the next configuration step.
@@ -132,7 +132,7 @@ Once the desired fields are selected, a click on the <img src="../img/button/nex
 
 <img src="../img/widgets/table-info.jpg" class="ms-docimage"  style="max-width:450px;"/>
 
-In this last step of the widget creation, the toolbar and the information to be inserted are similar to the ones in [Chart section](widgets.md#chart). <br>
+In this last step of the widget creation, the toolbar and the information to be inserted are similar to the ones in [Chart section](widgets.md#chart). <br><br>
 An example of Table widget could be:
 
 <img src="../img/widgets/table-ex.jpg" class="ms-docimage"/>
@@ -143,7 +143,7 @@ Selecting the Counter option, the following window opens:
 
 <img src="../img/widgets/counter-panel.jpg" class="ms-docimage"  style="max-width:450px;"/>
 
-Also in here the toolbar is similar to the one present in [Chart section](widgets.md#chart). The user, in this case, is allowed to:
+Also in this case the toolbar is similar to the one present in [Chart section](widgets.md#chart). The user is allowed to:
 
 * Select the attribute to **Use**
 
@@ -165,7 +165,7 @@ An example of Counter widget could be:
 
 ## Manage existing widgets
 
-Creating widgets, they will be placed on the bottom right of the map with three buttons available on their top (**Pin**, **Collapse** and **Menu**) and the *Widgets Tray* appears:
+Once widgets have been created, they will be placed on the bottom right of the map with three buttons available on their top (**Pin**, **Collapse** and **Menu**) and the *Widgets Tray* appears:
 
 <img src="../img/widgets/widgets-tray.jpg" class="ms-docimage"/>
 
@@ -179,7 +179,7 @@ The user is now allowed to menage widgets performing the following operations:
 
 ### Move and resize a widget
 
-In order to move a widget you can simply drag and drop it inside the Data Frame, and in order to resize it you can click in the lower right corner and drag it to the desired size:
+In order to move a widget you can simply drag and drop it inside the viewport, and in order to resize it you can click in the lower right corner and drag it to the desired size:
 
 <img src="../img/widgets/ded-widgets.gif" class="ms-docimage" style="max-width:500px;"/>
 
@@ -193,7 +193,7 @@ The *Widgets Tray*, otherwise, allows the user to expand/collapse each single wi
 
 ### Access widgets info
 
-As soon as a Description is provided for la widget the info button <img src="../img/button/info.jpg" class="ms-docbutton"/> appears, allowing the user to take a look at the widget *Title* and *Description*:
+As soon as a Description is provided for la widget the info button <img src="../img/button/info.jpg" class="ms-docbutton"/> appears, allowing the user to take a look at the widget's *Title* and *Description*:
 
 <img src="../img/widgets/wid-description.jpg" class="ms-docimage"/>
 
