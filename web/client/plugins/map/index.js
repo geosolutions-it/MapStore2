@@ -110,6 +110,8 @@ module.exports = (mapType, actions) => {
         (state) => {
             const popups = (state.mapPopups || []).map(getPopupContentComponent);
             return { popups };
+        }, {
+            onPopupClose: mapPopupRemove
         }
     )(components.PopupSupport || Empty);
 

@@ -1,5 +1,5 @@
 .map-popup-ol {
-  padding-top:  11px;
+  padding: 10px 0;
   text-align: left;
 
   > div {
@@ -15,29 +15,26 @@
   }
 }
 
-
 .map-popup-ol:after, .map-popup-ol:before {
-
   border: solid transparent;
   content: " ";
   height: 0;
   width: 0;
   position: absolute;
   pointer-events: none;
+  bottom: -9px;
 }
 .map-popup-ol:after {
-  border-bottom-color: white;
+  border-top-color: white;
   border-width: 10px;
   left: 50%;
   margin-left: -11px;
-  top: -8px;
 }
 .map-popup-ol:before {
-  border-bottom-color: #ccc;
+  border-top-color: #ccc;
   border-width: 11px;
   left: 50%;
   margin-left: -12px;
-  top: -10px;
 }
 
 .ol-popup-closer {
@@ -51,6 +48,8 @@
 }
 
 #identify-container.identify-popup {
+  width: 660px;
+
   * {
     position: unset !important;
   }

@@ -1,4 +1,12 @@
+/*
+ * Copyright 2020, GeoSolutions Sas.
+ * All rights reserved.
+ *
+ * This source code is licensed under the BSD-style license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
 import React from 'react';
+import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 import L from 'leaflet';
 import {isEqual} from 'lodash';
@@ -12,6 +20,11 @@ export default class PopupSupport extends React.Component {
 
     static defaultProps = {
         popups: []
+    }
+
+    constructor(props) {
+        super(props);
+        this.preparePopups(props.popups, props.map);
     }
 
     state = {
@@ -31,18 +44,20 @@ export default class PopupSupport extends React.Component {
         }
     }
 
+    componentDidUpdate() {
+        this.state.popups.map(p => p.update());
+    }
+
     renderPopups() {
         const { popups } = this.props;
         return popups.map(({ id, content: PopupContent }) => {
-            if (!PopupContent) {
-                this.popupWrapperRefs[id] = document.getElementById(id);
-                return null;
-            }
-            return (
-                <div key={id} ref={(ref) => { this.popupWrapperRefs[id] = ref; return true; }}>
-                    <PopupContent />
-                </div>
-            );
+            const context = document.getElementById(id);
+            return context ? ReactDOM.createPortal(
+                <div key={id}>
+                    <PopupContent showInMapPopup/>
+                </div>,
+                context
+            ) : null;
         });
     }
 
@@ -50,22 +65,23 @@ export default class PopupSupport extends React.Component {
         return <div>{this.renderPopups()}</div>;
     }
 
-
-    popupWrapperRefs = {};
-
     preparePopups = (popups, map) => {
+        const popupList = [];
         popups.map(({ id, position: { coordinates }}) => {
-            const element = this.popupWrapperRefs[id];
-            const popup = L.popup({ keepInView: true, className: 'test' }).setContent(element);
+            const element = document.createElement('div');
+            element.id = id;
+            const popup = L.popup({ keepInView: true, maxWidth: window.innerWidth }).setContent(element);
+            popup.on('remove', () => {
+                this.props.onPopupClose(id);
+            });
             popup.setLatLng(coordinates).openOn(map);
-            this.setState((state) => ({ popups: [...state.popups, popup]}));
+            popupList.push(popup);
         });
+
+        this.setState({ popups: popupList });
     }
 
     rerenderPopups = (popups, map) => {
-        // this.state && this.state.popups && this.state.popups.map((popup) => {
-        //     popup.closePopup();
-        // });
         this.setState({ popups: [] }, () => this.preparePopups(popups, map));
     }
 }

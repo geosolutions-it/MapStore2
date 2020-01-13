@@ -1,9 +1,18 @@
+/*
+ * Copyright 2020, GeoSolutions Sas.
+ * All rights reserved.
+ *
+ * This source code is licensed under the BSD-style license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
 import React from 'react';
+import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 import { Overlay } from 'ol';
 import {isEqual} from 'lodash';
 
 export default class PopupSupport extends React.Component {
+
     static propTypes = {
         map: PropTypes.object,
         popups: PropTypes.arrayOf(PropTypes.object),
@@ -15,6 +24,11 @@ export default class PopupSupport extends React.Component {
         onPopupClose: () => {}
     }
 
+    constructor(props) {
+        super(props);
+        this.preparePopups(props.popups, props.map);
+    }
+
     state = {
         popups: []
     }
@@ -24,16 +38,12 @@ export default class PopupSupport extends React.Component {
         this.preparePopups(popups, map);
     }
 
-    UNSAFE_componentWillReceiveProps(nextProps) {
+    UNSAFE_componentWillUpdate(nextProps) {
         const newPopups = nextProps.popups.map(({id, position}) => ({id, position}));
         const currentPopups = this.props.popups.map(({id, position}) => ({id, position}));
         if (!isEqual(currentPopups, newPopups)) {
-            this.rerenderPopups(nextProps.popups, nextProps.map);
+            this.preparePopups(nextProps.popups, nextProps.map);
         }
-    }
-
-    componentWillUnmount() {
-        this.popupWrapperRefs = {};
     }
 
     onPopupClose = (id) => {
@@ -44,26 +54,22 @@ export default class PopupSupport extends React.Component {
     }
 
     renderPopups() {
-
         const { popups } = this.props;
         return popups.map(({ id, content: PopupContent }) => {
-            if (!PopupContent) {
-                this.popupWrapperRefs[id] = document.getElementById(id);
-                return null;
-            }
-            return (
-                <div className="map-popup-ol" ref={(ref) => { this.popupWrapperRefs[id] = ref; return true; }} key={id} onMouseUp={this.convertToClick}>
+            return ReactDOM.createPortal(
+                <div className="map-popup-ol" key={id} onMouseUp={this.convertToClick}>
                     <div>
                         <div className="ol-popup-closer" onClick={() => this.onPopupClose(id)}></div>
                         <PopupContent showInMapPopup />
                     </div>
-                </div>
+                </div>,
+                document.getElementById(id)
             );
         });
     }
 
     render() {
-        return <div className="popup-wrapper" ref={(ref) => { this.globalWrapperRef = ref; }}>{this.renderPopups()}</div>;
+        return <div className="popup-wrapper">{this.renderPopups()}</div>;
     }
 
     convertToClick = (e) => {
@@ -72,11 +78,11 @@ export default class PopupSupport extends React.Component {
         e.target.dispatchEvent(evt);
     }
 
-    popupWrapperRefs = {};
-
     preparePopups = (popups, map) => {
+        let overlays = [];
         popups.map(({ id, position: { coordinates } }) => {
-            const element = this.popupWrapperRefs[id];
+            const element = document.createElement('div');
+            element.id = id;
             const overlay = new Overlay({
                 id,
                 element,
@@ -84,20 +90,14 @@ export default class PopupSupport extends React.Component {
                 autoPanAnimation: {
                     duration: 200
                 },
-                positioning: 'top-center',
+                positioning: 'bottom-center',
                 className: 'ol-overlay-container ol-unselectable'
             });
 
             map.addOverlay(overlay);
             overlay.setPosition(coordinates);
-            this.setState((state) => ({ popups: [...state.popups, overlay] }));
+            overlays.push(overlay);
         });
-    }
-
-    rerenderPopups = (popups, map) => {
-        this.state && this.state.popups && this.state.popups.map((popup) => {
-            map.removeOverlay(popup);
-        });
-        this.setState({ popups: [] }, () => this.preparePopups(popups, map));
+        this.setState({ popups: overlays });
     }
 }

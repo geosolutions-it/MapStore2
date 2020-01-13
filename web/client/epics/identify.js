@@ -26,7 +26,7 @@ const { SET_CONTROL_PROPERTIES } = require('../actions/controls');
 const { closeFeatureGrid } = require('../actions/featuregrid');
 const { CHANGE_MOUSE_POINTER, CLICK_ON_MAP, zoomToPoint } = require('../actions/map');
 const { closeAnnotations } = require('../actions/annotations');
-const { MAP_CONFIG_LOADED, mapPopupUpdate } = require('../actions/config');
+const { MAP_CONFIG_LOADED, MAP_POPUP_REMOVE, mapPopupUpdate } = require('../actions/config');
 
 const { stopGetFeatureInfoSelector, identifyOptionsSelector, clickPointSelector, clickLayerSelector } = require('../selectors/mapInfo');
 const { centerToMarkerSelector, queryableLayersSelector } = require('../selectors/layers');
@@ -233,5 +233,11 @@ module.exports = {
             .filter((action) => action.control === "metadataexplorer" && action.properties && action.properties.enabled)
             .switchMap(() => {
                 return Rx.Observable.of(purgeMapInfoResults(), hideMapinfoMarker());
-            })
+            }),
+
+    hideFeatureInfoOnMapPopupClose: (action$) =>
+        action$
+            .ofType(MAP_POPUP_REMOVE)
+            .filter(({ id }) => id === 'identify')
+            .switchMap(() => Rx.Observable.of(purgeMapInfoResults(), hideMapinfoMarker()))
 };
