@@ -10,11 +10,12 @@ const expect = require('expect');
 
 const { ZOOM_TO_POINT, clickOnMap } = require('../../actions/map');
 const { FEATURE_INFO_CLICK, UPDATE_CENTER_TO_MARKER, PURGE_MAPINFO_RESULTS, NEW_MAPINFO_REQUEST, LOAD_FEATURE_INFO, NO_QUERYABLE_LAYERS, ERROR_FEATURE_INFO, EXCEPTIONS_FEATURE_INFO, SHOW_MAPINFO_MARKER, HIDE_MAPINFO_MARKER, GET_VECTOR_INFO, loadFeatureInfo, featureInfoClick, closeIdentify, toggleHighlightFeature } = require('../../actions/mapInfo');
-const { getFeatureInfoOnFeatureInfoClick, zoomToVisibleAreaEpic, onMapClick, closeFeatureAndAnnotationEditing, handleMapInfoMarker, featureInfoClickOnHighligh, closeFeatureInfoOnCatalogOpenEpic } = require('../identify');
+const { getFeatureInfoOnFeatureInfoClick, zoomToVisibleAreaEpic, onMapClick, closeFeatureAndAnnotationEditing, handleMapInfoMarker, featureInfoClickOnHighligh, closeFeatureInfoOnCatalogOpenEpic, hideFeatureInfoOnMapPopupClose } = require('../identify');
 const { CLOSE_ANNOTATIONS } = require('../../actions/annotations');
 const { testEpic, TEST_TIMEOUT, addTimeoutEpic } = require('./epicTestUtils');
 const { registerHook } = require('../../utils/MapUtils');
 const { setControlProperties } = require('../../actions/controls');
+const { mapPopupRemove } = require('../../actions/config');
 
 const TEST_MAP_STATE = {
     present: {
@@ -610,4 +611,22 @@ describe('identify Epics', () => {
             state);
     });
 
+    it('hideFeatureInfoOnMapPopupClose should hide marker and identify tools on close', (done) => {
+        const state = { mapPopups: [{ id: 'identify' }] };
+        const NUMBER_OF_ACTIONS = 2;
+        const callback = (actions) => {
+            expect(actions.length).toBe(NUMBER_OF_ACTIONS);
+            expect(actions[0].type).toBe(PURGE_MAPINFO_RESULTS);
+            expect(actions[1].type).toBe(HIDE_MAPINFO_MARKER);
+            done();
+        };
+
+        testEpic(
+            hideFeatureInfoOnMapPopupClose,
+            NUMBER_OF_ACTIONS,
+            mapPopupRemove('identify'),
+            callback,
+            state
+        );
+    });
 });

@@ -19,12 +19,13 @@ export default class PopupSupport extends React.Component {
     }
 
     static defaultProps = {
-        popups: []
+        popups: [],
+        onPopupClose: () => {}
     }
 
     constructor(props) {
         super(props);
-        this.preparePopups(props.popups, props.map);
+        this.preparePopups(props.popups, props.map, true);
     }
 
     state = {
@@ -65,20 +66,21 @@ export default class PopupSupport extends React.Component {
         return <div>{this.renderPopups()}</div>;
     }
 
-    preparePopups = (popups, map) => {
+    preparePopups = (popups, map, onInit) => {
         const popupList = [];
         popups.map(({ id, position: { coordinates }}) => {
             const element = document.createElement('div');
             element.id = id;
-            const popup = L.popup({ keepInView: true, maxWidth: window.innerWidth }).setContent(element);
+            const popup = L.popup({ maxWidth: window.innerWidth }).setContent(element);
             popup.on('remove', () => {
                 this.props.onPopupClose(id);
             });
             popup.setLatLng(coordinates).openOn(map);
             popupList.push(popup);
         });
-
-        this.setState({ popups: popupList });
+        onInit
+            ? this.state.popups = popupList
+            : this.setState({ popups: popupList });
     }
 
     rerenderPopups = (popups, map) => {

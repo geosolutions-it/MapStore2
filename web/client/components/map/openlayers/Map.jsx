@@ -437,8 +437,7 @@ class OpenlayersMap extends React.Component {
             }) : null;
         }) : null;
         return (
-            <div>
-                <div id={this.props.id} style={this.props.style}></div>
+            <div id={this.props.id} style={this.props.style}>
                 {children}
             </div>
         );

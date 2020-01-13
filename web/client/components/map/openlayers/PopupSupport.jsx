@@ -29,10 +29,6 @@ export default class PopupSupport extends React.Component {
         this.preparePopups(props.popups, props.map);
     }
 
-    state = {
-        popups: []
-    }
-
     componentDidMount() {
         const { popups, map } = this.props;
         this.preparePopups(popups, map);
@@ -47,15 +43,14 @@ export default class PopupSupport extends React.Component {
     }
 
     onPopupClose = (id) => {
-        this.state.popups.map(p => {
-            if (p.getId() === id) p.setPosition(undefined, undefined);
-        });
+        this.props.map.getOverlayById(id).setPosition(undefined);
         this.props.onPopupClose(id);
     }
 
-    renderPopups() {
-        const { popups } = this.props;
+    renderPopups = () => {
+        const { popups, map } = this.props;
         return popups.map(({ id, content: PopupContent }) => {
+            const context = map.getOverlayById(id).getElement();
             return ReactDOM.createPortal(
                 <div className="map-popup-ol" key={id} onMouseUp={this.convertToClick}>
                     <div>
@@ -63,7 +58,7 @@ export default class PopupSupport extends React.Component {
                         <PopupContent showInMapPopup />
                     </div>
                 </div>,
-                document.getElementById(id)
+                context
             );
         });
     }
@@ -80,24 +75,23 @@ export default class PopupSupport extends React.Component {
 
     preparePopups = (popups, map) => {
         let overlays = [];
-        popups.map(({ id, position: { coordinates } }) => {
+        popups.map(({ id, position: { coordinates }, autoPan = true }) => {
             const element = document.createElement('div');
             element.id = id;
             const overlay = new Overlay({
                 id,
                 element,
-                autoPan: true,
+                autoPan,
                 autoPanAnimation: {
                     duration: 200
                 },
                 positioning: 'bottom-center',
                 className: 'ol-overlay-container ol-unselectable'
             });
-
+            map.removeOverlay(map.getOverlayById(id));
             map.addOverlay(overlay);
             overlay.setPosition(coordinates);
             overlays.push(overlay);
         });
-        this.setState({ popups: overlays });
     }
 }

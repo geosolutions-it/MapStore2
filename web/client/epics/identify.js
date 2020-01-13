@@ -174,7 +174,7 @@ module.exports = {
             const {disableAlwaysOn = false} = (store.getState()).mapInfo;
             return disableAlwaysOn || !stopFeatureInfo(store.getState() || {});
         })
-            .switchMap(({point, layer}) => Rx.Observable.of(featureInfoClick(point, layer), mapPopupUpdate('identify', { coordinates: point.rawPos }))),
+            .switchMap(({point, layer}) => Rx.Observable.of(featureInfoClick(point, layer), mapPopupUpdate('identify', { coordinates: point ? point.rawPos : [] }))),
     /**
      * triggers click again when highlight feature is enabled, to download the feature.
      */
