@@ -1,7 +1,7 @@
 # Immersive Section
 **********************
 
-The immersive section is composed of two elements: the background and the immersive content. As soon as you add an immersive section to your story, an empty background with an empty text content will be displayed.
+The Immersive Section is composed of two elements: the background and the immersive content. As soon as you add an immersive section to your story, an empty background with an empty text content will be displayed.
 
 <img src="../img/immersive-section/immersive-section-fd.jpg" class="ms-docimage"/>
 
@@ -13,11 +13,11 @@ Inside an Immersive Section the user can customize the content area through the 
 
 In particular, it possible to:
 
-* **Change size** (*Small*, *Medium*, *Large* or *Full*)
+* **Change size** <img src="../img/button/change-size-sm.jpg" class="ms-docbutton"/> (*Small*, *Medium*, *Large* or *Full*)
 
-* **Align content** (*Left*, *Center* or *Right*)
+* **Align content** <img src="../img/button/align-left.jpg" class="ms-docbutton"/> (*Left*, *Center* or *Right*)
 
-* **Change field theme** (*Bright*, *Bright text*, *Dark* or *Dark text*)
+* **Change field theme** <img src="../img/button/change-field-theme-1.jpg" class="ms-docbutton"/> (*Bright*, *Bright text*, *Dark* or *Dark text*)
 
 An example of an Immersive Content with *Small* size, aligned to the *Right* and with *Dark* field theme can be like the following:
 

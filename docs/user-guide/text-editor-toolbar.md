@@ -1,7 +1,7 @@
 # Text Editor Toolbar
 **********************
 
-With the text editor toolbar it is possible to customize the text by modifying the following aspects:
+With the *text editor toolbar* it is possible to customize the text by modifying the following aspects:
 
 <img src="../img/text-editor-toolbar/text-editor-toolbar.jpg" class="ms-docimage"/>
 
@@ -17,7 +17,7 @@ With the text editor toolbar it is possible to customize the text by modifying t
 
 <img src="../img/text-editor-toolbar/typo-emphasis.jpg" class="ms-docimage"/>
 
-* **Alignment** (*Left*, *Center*, *Right* or *Justify*)
+* **Alignment** inside the text window (*Left*, *Center*, *Right* or *Justify*)
 
 <img src="../img/text-editor-toolbar/alignment.jpg" class="ms-docimage"/>
 

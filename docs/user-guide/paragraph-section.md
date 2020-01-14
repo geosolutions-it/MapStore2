@@ -11,7 +11,7 @@ The Paragraph Section allow the user to edit the content, inserting textual elem
 
 * **Web Page Content** <img src="../img/button/web-page-button.jpg" class="ms-docbutton"/> to add a wab page 
 
-## Text Content
+## Text
 
 By default, as soon as you add a Paragraph Section, an empty text content is already inside it:
 
@@ -23,7 +23,7 @@ With a click on the text window, it is possible to write the text and customize 
 
 The user can delete the text content with the Remove button  <img src="../img/button/remove2.jpg" class="ms-docbutton"/>.
 
-## Media Content
+## Media
 
 Adding a media content, the [Media Editor Window](media-editor-window.md) opens, allowing the user to add an Image or a Map. 
 

@@ -1,21 +1,15 @@
 # Media Editor Window
 **********************
 
-The **Change media source** button allows to access the Media Editor Window:
+The **Change media source** <img src="../img/button/change-media2.jpg" class="ms-docbutton"/> button allows to access the Media Editor Window:
 
 <img src="../img/media-editor-window/media-editor-window.jpg" class="ms-docimage"/>
 
-Through this window, you can add or edit three different types of media:
-
-* Images
-
-* Videos 
-
-* Maps
+Through this window, you can add to the story or edit the properties of three different types of media: images, videos and maps.
 
 ## Images
 
-In order to add an image, the user can click on the **Images** button <img src="../img/button/images.jpg" class="ms-docbutton"/> for switch to the images section. In this section of the media editor window, with a click on the **Add** button <img src="../img/button/+++.jpg" class="ms-docbutton"/>, it is possible to define the image settings.
+In order to add an image, the user can click on the **Images** button <img src="../img/button/images.jpg" class="ms-docbutton"/> for switch to the images section. In this section of the *media editor window*, with a click on the **Add** button <img src="../img/button/+++.jpg" class="ms-docbutton"/>, it is possible to define the new image settings.
 
 <img src="../img/media-editor-window/img-settings.jpg" class="ms-docimage"/>
 
@@ -32,14 +26,11 @@ In particular, it is possible to insert the following parameters:
 * The **Credits**, displayed on the bottom-right of the image
 
 !!! warning
-    **Source** and **Title** are mandatory fields.
+    The only mandatory fields are **Source** and **Title**.
 
-With a click on **Save** <img src="../img/button/save-icon.jpg" class="ms-docbutton"/>, the image is insert in images list and immediately available on preview.
+Set the properties, with a click on **Save** <img src="../img/button/save-icon.jpg" class="ms-docbutton"/>, the image is insert in the list and immediately available on preview. Once an image is added in the preview list, it will be available every time the user opens the Media editor window.
 
 <img src="../img/media-editor-window/img-preview.jpg" class="ms-docimage"/>
-
-!!! note
-    It's always possible to change an image's settings through the **Edit** button <img src="../img/button/editing-button.jpg" class="ms-docbutton"/>.
 
 Finally, the image is inserted into the story by clicking on the **Apply** button <img src="../img/button/apply-button.jpg" class="ms-docbutton"/>.
 
@@ -76,18 +67,3 @@ With a click on the **Save** button <img src="../img/button/save_button.jpg" cla
 En example of a *Map background* in the Title Section can be like the following:
 
 <img src="../img/media-editor-window/map-backg-ex.jpg" class="ms-docimage"/>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
