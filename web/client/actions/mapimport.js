@@ -13,6 +13,7 @@ const ON_LAYER_ADDED = 'IMPORT::ON_LAYER_ADDED';
 const UPDATE_BBOX = 'IMPORT::UPDATE_BBOX';
 const ON_SUCCESS = 'IMPORT::ON_SUCCESS';
 const ON_SHAPE_ERROR = 'ON_SHAPE_ERROR';
+const ON_LAYER_SKIPPED = 'IMPORT::ON_LAYER_SKIPPED';
 
 function setLayers(layers, errors) {
     return {
@@ -63,6 +64,12 @@ function onShapeError(message) {
         message
     };
 }
+function onLayerSkipped(layer) {
+    return {
+        type: ON_LAYER_SKIPPED,
+        layer
+    };
+}
 
 module.exports = {
     SET_LAYERS,
@@ -73,6 +80,7 @@ module.exports = {
     UPDATE_BBOX,
     ON_SUCCESS,
     ON_SHAPE_ERROR,
+    ON_LAYER_SKIPPED,
     onShapeError,
     setLayers,
     onError,
@@ -80,5 +88,6 @@ module.exports = {
     onSelectLayer,
     onLayerAdded,
     updateBBox,
-    onSuccess
+    onSuccess,
+    onLayerSkipped
 };

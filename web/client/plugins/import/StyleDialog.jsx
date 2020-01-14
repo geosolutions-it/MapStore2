@@ -79,7 +79,9 @@ class StyleDialog extends React.Component {
             stylers={stylers}
             uploadMessage={<Message msgId={this.props.uploadMessage}/>}
             cancelMessage={<Message msgId="shapefile.cancel"/>}
-            addMessage={<Message msgId="shapefile.add"/>}
+            nextMessage={<Message msgId="shapefile.next"/>}
+            finishMessage={<Message msgId="shapefile.finish"/>}
+            skipMessage={<Message msgId="shapefile.skip"/>}
         />);
 
 
