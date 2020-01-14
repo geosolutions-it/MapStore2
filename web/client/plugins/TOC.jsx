@@ -483,44 +483,75 @@ class LayerTree extends React.Component {
     }
 }
 
-const securityEnhancer = (Component) => (props) => {
-    const { addLayersPermissions = true,
-        removeLayersPermissions = true,
-        sortingPermissions = true,
-        addGroupsPermissions = true,
-        removeGroupsPermissions = true, user, ...other} = props;
+/**
+ * enhances the TOC to check `Permissions` properties and enable/disable
+ * the proper tools.
+ * @memberof plugins.TOC
+ */
+const securityEnhancer = withPropsOnChange(
+    [
+        "user",
+        "addLayersPermissions", "activateAddLayerButton",
+        "removeLayersPermissions", "activateRemoveLayer",
+        "sortingPermission", "activateRemoveLayer",
+        "addGroupsPermissions", "activateAddGroupButton",
+        "removeGroupsPermissions", "activateRemoveGroup"
+    ],
+    (props) => {
+        const {
+            addLayersPermissions = true,
+            removeLayersPermissions = true,
+            sortingPermissions = true,
+            addGroupsPermissions = true,
+            removeGroupsPermissions = true,
+            activateAddLayerButton,
+            activateRemoveLayer,
+            activateSortLayer,
+            activateAddGroupButton,
+            activateRemoveGroup,
+            user
+        } = props;
 
-    const activateParameter = (allow, activate) => {
-        const isUserAdmin = user && user.role === 'ADMIN' || false;
-        return (allow || isUserAdmin) ? activate : false;
-    };
+        const activateParameter = (allow, activate) => {
+            const isUserAdmin = user && user.role === 'ADMIN' || false;
+            return (allow || isUserAdmin) ? activate : false;
+        };
 
-    const activateProps = {
-        activateAddLayerButton: activateParameter(addLayersPermissions, props.activateAddLayerButton),
-        activateRemoveLayer: activateParameter(removeLayersPermissions, props.activateRemoveLayer),
-        activateSortLayer: activateParameter(sortingPermissions, props.activateSortLayer),
-        activateAddGroupButton: activateParameter(addGroupsPermissions, props.activateAddGroupButton),
-        activateRemoveGroup: activateParameter(removeGroupsPermissions, props.activateRemoveGroup)
-    };
+        return {
+            activateAddLayerButton: activateParameter(addLayersPermissions, activateAddLayerButton),
+            activateRemoveLayer: activateParameter(removeLayersPermissions, activateRemoveLayer),
+            activateSortLayer: activateParameter(sortingPermissions, activateSortLayer),
+            activateAddGroupButton: activateParameter(addGroupsPermissions, activateAddGroupButton),
+            activateRemoveGroup: activateParameter(removeGroupsPermissions, activateRemoveGroup)
+        };
+    });
 
-    return <Component {...other} {...activateProps}/>;
-};
 
+/**
+ * enhances the TOC to check the presence of TOC plugins to display/add buttons to the toolbar.
+ * NOTE: the flags are required because of old configurations about permissions.
+ * TODO: delegate button rendering and actions to the plugins (now this is only a check and some plugins are dummy, only to allow plug/unplug). Also permissions should be delegated to the related plugins
+ * @memberof plugins.TOC
+ */
 const checkPluginsEnhancer = branch(
     ({ checkPlugins = true }) => checkPlugins,
     withPropsOnChange(
-        ["items", "activateAddLayerButton", "activateAddGroupButton", "activateLayerFilterTool", "activateSettingsTool"],
+        ["items", "activateAddLayerButton", "activateAddGroupButton", "activateLayerFilterTool", "activateSettingsTool", "FeatureEditor"],
         ({
             items = [],
             activateAddLayerButton,
             activateAddGroupButton,
+            activateQueryTool = true,
             activateSettingsTool = true,
-            activateLayerFilterTool = true
+            activateLayerFilterTool = true,
+            activateWidgetTool = true
         }) => ({
             activateAddLayerButton: activateAddLayerButton && find(items, { name: "AddLayer" }) || false, // requires MetadataExplorer (Catalog)
             activateAddGroupButton: activateAddGroupButton && find(items, { name: "AddGroup" }) || false,
             activateSettingsTool: activateSettingsTool && find(items, { name: "TOCItemsSettings"}) || false,
-            activateLayerFilterTool: activateLayerFilterTool && find(items, {name: "FilterLayer"}) || false// requires QueryPanel
+            activateQueryTool: activateQueryTool && find(items, {name: "FeatureEditor"}) || false,
+            activateLayerFilterTool: activateLayerFilterTool && find(items, {name: "FilterLayer"}) || false,
+            activateWidgetTool: activateWidgetTool && find(items, { name: "WidgetBuilder" }) // NOTE: activateWidgetTool is already controlled by a selector. TODO: Simplify investigating on the best approch
         })
     )
 );

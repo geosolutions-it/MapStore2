@@ -342,17 +342,11 @@
             }, {
                 "name": "TOC",
                 "cfg": {
-                    "activateQueryTool": true,
-                    "activateAddLayerButton": true,
-                    "activateAddGroupButton": true,
-                    "activateMetedataTool": false,
-                    "addLayersPermissions": true,
-                    "removeLayersPermissions": true,
-                    "sortingPermissions": true,
-                    "addGroupsPermissions": true,
-                    "removeGroupsPermissions": true
+                    "activateMetedataTool": false
                 }
             },
+            "AddLayer",
+            "FilterLayer",
             "AddGroup",
             "TOCItemsSettings",
             "Tutorial", "MapFooter", {
@@ -632,7 +626,7 @@
         }, "Login", "Language", "NavMenu", "DashboardSave", "DashboardSaveAs", "Attribution", "Home", {
           "name": "DashboardEditor",
           "cfg": {
-             "catalog": {
+            "catalog": {
               "url": "https://gs-stable.geo-solutions.it/geoserver/csw",
               "type": "csw",
               "title": "GeoSolutions GeoServer CSW",

@@ -10,10 +10,13 @@ import {connect} from 'react-redux';
 import {createSelector, createStructuredSelector} from 'reselect';
 import {bindActionCreators} from 'redux';
 import { get, pick } from 'lodash';
-
 import {compose, lifecycle} from 'recompose';
+import ReactDock from 'react-dock';
 
 import { createPlugin } from '../utils/PluginsUtils';
+
+import * as epics from '../epics/featuregrid';
+import * as featuregrid from '../reducers/featuregrid';
 
 import Grid from '../components/data/featuregrid/FeatureGrid';
 import {paginationInfo, describeSelector, wfsURLSelector, typeNameSelector} from '../selectors/query';
@@ -27,6 +30,8 @@ import {gridTools, gridEvents, pageEvents, toolbarEvents} from './featuregrid/in
 import { initPlugin, sizeChange, setUp} from '../actions/featuregrid';
 import ContainerDimensions from 'react-container-dimensions';
 import {mapLayoutValuesSelector} from '../selectors/maplayout';
+
+
 const Dock = connect(createSelector(
     getDockSize,
     state => mapLayoutValuesSelector(state, {transform: true}),
@@ -35,7 +40,7 @@ const Dock = connect(createSelector(
         dockStyle
     })
 )
-)(require('react-dock').default);
+)(ReactDock);
 /**
   * @name FeatureEditor
   * @memberof plugins
@@ -247,6 +252,10 @@ const EditorPlugin = compose(
 
 export default createPlugin('FeatureEditor', {
     component: EditorPlugin,
+    epics,
+    reducers: {
+        featuregrid
+    },
     containers: {
         TOC: {
             doNotHide: true,
