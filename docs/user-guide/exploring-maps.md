@@ -13,7 +13,7 @@ Once a map is created and saved, it will be available in [Homepage](https://maps
 
 The Mapstore WebGIS Portal interface is composed by the following main blocks:
 
-<img src="../img/exploring-maps/gui.jpg" class="ms-docimage" tyle="max-width:700px;"/>
+<img src="../img/exploring-maps/gui.jpg" class="ms-docimage"/>
 
 In particular:
 
