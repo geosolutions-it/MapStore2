@@ -1104,7 +1104,11 @@
             },
             "add": "Añadir",
             "cancel": "Cancelar",
-            "success": " Importación correcta"
+            "success": " Importación correcta",
+            "next": "Siguiente",
+            "skip": "Saltar",
+            "finish": "Terminar",
+            "layerOf": "Capa {count} de {total}:"
         },
         "mapImport": {
             "title": "Importar",

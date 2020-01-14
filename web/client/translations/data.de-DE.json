@@ -1104,7 +1104,11 @@
             },
             "add": "Hinzufügen",
             "cancel": "Abbrechen",
-            "success": " erfolgreich importiert"
+            "success": " erfolgreich importiert",
+            "next": "Nächster",
+            "skip": "springen",
+            "finish": "Fertig",
+            "layerOf": "Schicht {count} von {total}:"
         },
         "mapImport": {
                 "title": "Einführen",
