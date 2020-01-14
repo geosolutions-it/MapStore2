@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 const { compose, withPropsOnChange } = require('recompose');
-const { find, isEmpty} = require('lodash');
+const { find, isEmpty, isEqual} = require('lodash');
 
 const FilterUtils = require('../../../utils/FilterUtils');
 const { composeAttributeFilters } = require('../../../utils/FilterUtils');
@@ -23,15 +23,18 @@ module.exports = compose(
     withPropsOnChange(
         ({mapSync, dependencies = {} } = {}, nextProps = {}, filter) =>
             mapSync !== nextProps.mapSync
-            || dependencies !== nextProps.dependencies
+            || !isEqual(dependencies, nextProps.dependencies)
             || filter !== nextProps.filter,
         ({ mapSync, dependencies = {}, filter: filterObj, map} = {}) => {
 
             const targetLayerName = dependencies && dependencies.layer && dependencies.layer.name;
-            const layerInCommon = find(map.layers, {name: targetLayerName});
-            let filterObjCollection = {};
+            const layerInCommon = find(map.layers, {name: targetLayerName}) || {};
 
-            if (mapSync && layerInCommon) {
+            let filterObjCollection = {};
+            let layersUpdatedWithCql = {};
+            let cqlFilter = undefined;
+
+            if (mapSync && !isEmpty(layerInCommon)) {
                 if (dependencies.quickFilters) {
                     filterObjCollection = {...filterObjCollection, ...composeFilterObject(filterObj, dependencies.quickFilters, dependencies.options)};
                 }
@@ -40,8 +43,8 @@ module.exports = compose(
                 }
 
                 if (!isEmpty(filterObjCollection) && FilterUtils.toCQLFilter(filterObjCollection)) {
-                    const cqlFilter = FilterUtils.toCQLFilter(filterObjCollection);
-                    const layersUpdatedWithCql = arrayUpdate(false, {...layerInCommon, params: optionsToVendorParams({ ...layerInCommon, params: {CQL_FILTER: cqlFilter}})}, {name: targetLayerName}, map.layers);
+                    cqlFilter = FilterUtils.toCQLFilter(filterObjCollection);
+                    layersUpdatedWithCql = arrayUpdate(false, {...layerInCommon, params: optionsToVendorParams({ ...layerInCommon, params: {CQL_FILTER: cqlFilter}})}, {name: targetLayerName}, map.layers);
                     return {
                         map: {
                             ...map,
@@ -50,8 +53,12 @@ module.exports = compose(
                     };
                 }
             }
+            layersUpdatedWithCql = map.layers.map(l => ({...l, params: {...l.params, CQL_FILTER: null}}));
             return {
-                map
+                map: {
+                    ...map,
+                    layers: layersUpdatedWithCql
+                }
             };
         }
     )

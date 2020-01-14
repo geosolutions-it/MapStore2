@@ -1,5 +1,5 @@
 const Rx = require('rxjs');
-const { endsWith, has, get, isEqual, omit } = require('lodash');
+const { endsWith, has, get, includes, isEqual, omit, omitBy} = require('lodash');
 const { EXPORT_CSV, EXPORT_IMAGE, INSERT, TOGGLE_CONNECTION, WIDGET_SELECTED, EDITOR_SETTING_CHANGE,
     onEditorChange, updateWidgetLayer, clearWidgets, loadDependencies, toggleDependencySelector, DEPENDENCY_SELECTOR_KEY, WIDGETS_REGEX} = require('../actions/widgets');
 const {
@@ -16,14 +16,39 @@ const {saveAs} = require('file-saver');
 const FileUtils = require('../utils/FileUtils');
 const converter = require('json-2-csv');
 const canvg = require('canvg-browser');
-const updateDependencyMap = (active, id, { dependenciesMap, mappings}) => {
-    const overrides = Object.keys(mappings).filter(k => mappings[k] !== undefined).reduce( (ov, k) => ({
-        ...ov,
-        [k]: id === "map" ? mappings[k] : `${id}.${mappings[k]}`
-    }), {});
+const updateDependencyMap = (active, targetId, { dependenciesMap, mappings}) => {
+    const tableDependencies = ["layer", "filter", "quickFilters", "options"];
+    const mapDependencies = ["layers", "viewport", "zoom", "center"];
+
+    const id = (WIDGETS_REGEX.exec(targetId) || [])[1];
+    const cleanDependenciesMap = omitBy(dependenciesMap, i => i.indexOf(id) === -1);
+
+
+    const overrides = Object.keys(mappings).filter(k => mappings[k] !== undefined).reduce( (ov, k) => {
+        if (!endsWith(targetId, "map") && includes(tableDependencies, k)) {
+            return {
+                ...ov,
+                [k]: `${targetId}.${mappings[k]}`
+            };
+        }
+        if (endsWith(targetId, "map")) {
+            if (includes(mapDependencies, k)) {
+                return {
+                    ...ov,
+                    [k]: targetId === "map" ? mappings[k] : `${targetId}.${mappings[k]}`
+                };
+            }
+            return {
+                ...ov,
+                [k]: `${targetId.replace(".map", "")}.${mappings[k]}`
+            };
+        }
+        return ov;
+    }, {});
+
     return active
-        ? { ...dependenciesMap, ...overrides}
-        : omit(dependenciesMap, [Object.keys(mappings)]);
+        ? { ...cleanDependenciesMap, ...overrides, ["dependenciesMap"]: `${targetId.replace(".map", "")}.dependenciesMap`, ["mapSync"]: `${targetId.replace(".map", "")}.mapSync`}
+        : omit(cleanDependenciesMap, [Object.keys(mappings)]);
 };
 
 const outerHTML = (node) => {
@@ -55,11 +80,11 @@ const getValidLocationChange = action$ =>
  * @param {string} dependency the dependency element id to add
  * @param {object} options dependency mapping options. Must contain `mappings` object
  */
-const configureDependency = (active, dependency, options) =>
+const configureDependency = (active, dependency, options, targetDependenciesMap) =>
     Rx.Observable.of(
         onEditorChange("mapSync", active),
         onEditorChange('dependenciesMap',
-            updateDependencyMap(active, dependency, options)
+            updateDependencyMap(active, dependency, options, targetDependenciesMap)
         )
     );
 module.exports = {
@@ -82,17 +107,22 @@ module.exports = {
         // add dependencies for all map widgets (for the moment the only ones that shares dependencies)
         // and for main "map" dependency, the "viewport" and "center"
             .map((maps = []) => loadDependencies(maps.reduce( (deps, m) => {
+                const depToTheWidget = m.replace(".map", "");
                 if (!endsWith(m, "map")) {
                     return {
                         ...deps,
                         [`${m}.filter`]: `${m}.filter`,
                         [`${m}.quickFilters`]: `${m}.quickFilters`,
+                        [`${depToTheWidget}.dependenciesMap`]: `${depToTheWidget}.dependenciesMap`,
+                        [`${depToTheWidget}.mapSync`]: `${depToTheWidget}.mapSync`,
                         [`${m}.layer`]: `${m}.layer`,
                         [`${m}.options`]: `${m}.options`
                     };
                 }
                 return {
                     ...deps,
+                    [`${depToTheWidget}.dependenciesMap`]: `${depToTheWidget}.dependenciesMap`,
+                    [`${depToTheWidget}.mapSync`]: `${depToTheWidget}.mapSync`,
                     [m === "map" ? "viewport" : `${m}.viewport`]: `${m}.bbox`, // {viewport: "map.bbox"} or {"widgets[ID_W].viewport": "widgets[ID_W].bbox"}
                     [m === "map" ? "center" : `${m}.center`]: `${m}.center`, // {center: "map.center"} or {"widgets[ID_W].center": "widgets[ID_W].center"}
                     [m === "map" ? "zoom" : `${m}.zoom`]: `${m}.zoom`,
@@ -123,7 +153,7 @@ module.exports = {
                             .switchMap(({ widget }) => {
                                 const ad = get(getDependencySelectorConfig(getState()), 'availableDependencies');
                                 const deps = ad.filter(d => (WIDGETS_REGEX.exec(d) || [])[1] === widget.id);
-                                return configureDependency(active, deps[0], options).concat(Rx.Observable.of(toggleDependencySelector(false, {})));
+                                return configureDependency(active, deps[0], options, widget.dependeciesMap).concat(Rx.Observable.of(toggleDependencySelector(false, {})));
                             }).takeUntil(
                                 action$.ofType(LOCATION_CHANGE)
                                     .merge(action$.filter(({ type, key } = {}) => type === EDITOR_SETTING_CHANGE && key === DEPENDENCY_SELECTOR_KEY))

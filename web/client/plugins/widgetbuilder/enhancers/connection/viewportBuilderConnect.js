@@ -7,6 +7,9 @@
  */
 const {withProps, compose} = require('recompose');
 const withMapConnect = require('./withMapConnect');
+
+const isTargetForOtherWidgets = (allDependenciesMap, widgetType, editorData) => widgetType === "table" && allDependenciesMap.filter(depMap => Object.keys(depMap).filter(d => depMap[d] && depMap[d].indexOf(editorData.id) !== -1).length > 0 ).length === 0;
+
 /**
  * Viewport connection configuration support (for widget builders of charts, table, counter)
  *
@@ -15,9 +18,7 @@ module.exports = compose(
     withProps(({ editorData = {}, widgets }) => {
         const allDependenciesMap = widgets.filter(({mapSync, dependenciesMap}) => mapSync && dependenciesMap).map(({dependenciesMap}) => dependenciesMap);
         return {
-            canConnect:
-                editorData.geomProp && editorData.widgetType !== "table" ||
-                editorData.widgetType === "table" && allDependenciesMap.filter(depMap => Object.keys(depMap).filter(d => depMap[d] && depMap[d].indexOf(editorData.id) !== -1).length > 0 ).length === 0,
+            canConnect: editorData.geomProp && editorData.widgetType !== "table" || isTargetForOtherWidgets(allDependenciesMap, editorData.widgetType, editorData),
             connected: editorData.mapSync
         };
     }),
@@ -27,6 +28,8 @@ module.exports = compose(
         filter: "filter",
         quickFilters: "quickFilters",
         layer: "layer",
-        options: "options"
+        options: "options",
+        mapSync: "mapSync",
+        dependenciesMap: "dependenciesMap"
     })
 );

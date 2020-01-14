@@ -26,6 +26,8 @@ module.exports = compose(
         filter: "filter",
         quickFilters: "quickFilters",
         layer: "layer",
-        options: "options"
+        options: "options",
+        mapSync: "mapSync",
+        dependenciesMap: "dependenciesMap"
     })
 );

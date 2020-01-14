@@ -61,7 +61,7 @@ const WidgetsView = compose(
         // TODO: maybe using availableDependencies here will be better when different widgets type dependencies are supported
         isWidgetSelectable: ({ editingWidget }) =>
             (target) =>
-                (target.widgetType === "map" && !target.mapSync ||
+                (target.widgetType === "map" ||
                     /*
                      * when the target is a table widget then check among its dependencies
                      * if it has other connection that are for sure map or table
