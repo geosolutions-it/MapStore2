@@ -73,6 +73,9 @@
     },
     {
       "name": "FeatureEditor",
+      "dependencies": [
+        "QueryPanel"
+      ],
       "defaultConfig": {}
     },
     {
@@ -96,6 +99,9 @@
     },
     {
       "name": "WidgetsBuilder",
+      "dependencies": [
+        "QueryPanel"
+      ],
       "hidden": false
     },
     {

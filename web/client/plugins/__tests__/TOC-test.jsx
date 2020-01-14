@@ -185,4 +185,171 @@ describe('TOCPlugin Plugin', () => {
         expect(layerNode02.innerHTML).toBe('title_02');
         expect(layerNodeDummy.innerHTML).toBe('dummy');
     });
+    describe('render items from other plugins', () => {
+        const TOOL_BUTTON_SELECTOR = '.btn-group button';
+        const SELECTED_LAYER_STATE = {
+            layers: {
+                flat: [
+                    {
+                        id: 'topp:states__6',
+                        format: 'image/png8',
+                        search: {
+                            url: 'https://something/geoserver/wfs',
+                            type: 'wfs'
+                        },
+                        name: 'topp:states',
+                        type: 'wms',
+                        url: 'https://something/geoserver/wms',
+                        bbox: {
+                            crs: 'EPSG:4326',
+                            bounds: {
+                                minx: -124.73142200000001,
+                                miny: 24.955967,
+                                maxx: -66.969849,
+                                maxy: 49.371735
+                            }
+                        },
+                        visibility: true
+                    }
+                ],
+                groups: [
+                    {
+                        id: 'Default',
+                        title: 'Default',
+                        name: 'Default',
+                        nodes: [
+                            'topp:states__6'
+                        ],
+                        expanded: true
+                    }
+                ],
+                selected: [
+                    'topp:states__6'
+                ],
+                settings: {
+                    expanded: false,
+                    node: null,
+                    nodeType: null,
+                    options: {}
+                },
+                layerMetadata: {
+                    expanded: false,
+                    metadataRecord: {},
+                    maskLoading: false
+                }
+            }
+        };
+        it('AddLayer and AddGroup do not show without proper plugins', () => {
+            const { Plugin } = getPluginForTest(TOCPlugin, {
+                layers: {
+                    groups: [{ id: 'default', title: 'Default', nodes: [] }],
+                    flat: []
+                },
+                maptype: {
+                    mapType: 'openlayers'
+                }
+            });
+            const WrappedPlugin = dndContext(Plugin);
+            ReactDOM.render(<WrappedPlugin />, document.getElementById("container"));
+            expect(document.querySelectorAll(TOOL_BUTTON_SELECTOR).length).toBe(0);
+        });
+        it('render AddLayer', () => {
+            const { Plugin } = getPluginForTest(TOCPlugin, {
+                layers: {
+                    groups: [{ id: 'default', title: 'Default', nodes: [] }],
+                    flat: []
+                },
+                maptype: {
+                    mapType: 'openlayers'
+                }
+            });
+            const WrappedPlugin = dndContext(Plugin);
+            ReactDOM.render(<WrappedPlugin items={[{
+                name: "AddLayer"
+            }]} />, document.getElementById("container"));
+            expect(document.querySelectorAll(TOOL_BUTTON_SELECTOR).length).toBe(1);
+            expect(document.querySelector(`${TOOL_BUTTON_SELECTOR} .glyphicon-add-layer`)).toExist();
+        });
+        it('render AddGroup', () => {
+            const { Plugin } = getPluginForTest(TOCPlugin, {
+                layers: {
+                    groups: [{ id: 'default', title: 'Default', nodes: [] }],
+                    flat: []
+                },
+                maptype: {
+                    mapType: 'openlayers'
+                }
+            });
+            const WrappedPlugin = dndContext(Plugin);
+            ReactDOM.render(<WrappedPlugin items={[{
+                name: "AddGroup"
+            }]} />, document.getElementById("container"));
+            expect(document.querySelectorAll(TOOL_BUTTON_SELECTOR).length).toBe(1);
+            expect(document.querySelector(`${TOOL_BUTTON_SELECTOR} .glyphicon-add-folder`)).toExist();
+        });
+        const ZOOM_TO_SELECTOR = `${TOOL_BUTTON_SELECTOR} .glyphicon-zoom-to`;
+        const FEATURES_GRID_SELECTOR = `${TOOL_BUTTON_SELECTOR} .glyphicon-features-grid`;
+        const REMOVE_SELECTOR = `${TOOL_BUTTON_SELECTOR } .glyphicon-trash`;
+        const SETTINGS_SELECTOR = `${TOOL_BUTTON_SELECTOR} .glyphicon-wrench`;
+        const FILTER_LAYER_SELECTOR = `${TOOL_BUTTON_SELECTOR} .glyphicon-filter-layer`;
+        const WIDGET_BUILDER_SELECTOR = `${TOOL_BUTTON_SELECTOR} .glyphicon-stats`;
+        it('render default tools (zoomToLayer and remove layer, for selected layer', () => {
+            const { Plugin } = getPluginForTest(TOCPlugin, SELECTED_LAYER_STATE);
+            const WrappedPlugin = dndContext(Plugin);
+            ReactDOM.render(<WrappedPlugin />, document.getElementById("container"));
+            // check zoom and remove selector
+            expect(document.querySelectorAll(TOOL_BUTTON_SELECTOR).length).toBe(2);
+            expect(document.querySelector(ZOOM_TO_SELECTOR)).toExist();
+            expect(document.querySelector(REMOVE_SELECTOR)).toExist();
+
+        });
+        it('render FeatureEditor', () => {
+            const { Plugin } = getPluginForTest(TOCPlugin, SELECTED_LAYER_STATE);
+            const WrappedPlugin = dndContext(Plugin);
+            ReactDOM.render(<WrappedPlugin items={[{
+                name: "FeatureEditor"
+            }]} />, document.getElementById("container"));
+            // check tools
+            expect(document.querySelectorAll(TOOL_BUTTON_SELECTOR).length).toBe(3);
+            expect(document.querySelector(ZOOM_TO_SELECTOR)).toExist();
+            expect(document.querySelector(FEATURES_GRID_SELECTOR)).toExist();
+            expect(document.querySelector(REMOVE_SELECTOR)).toExist();
+        });
+        it('render TOCItemsSettings', () => {
+            const { Plugin } = getPluginForTest(TOCPlugin, SELECTED_LAYER_STATE);
+            const WrappedPlugin = dndContext(Plugin);
+            ReactDOM.render(<WrappedPlugin items={[{
+                name: "TOCItemsSettings"
+            }]} />, document.getElementById("container"));
+            // check tools
+            expect(document.querySelectorAll(TOOL_BUTTON_SELECTOR).length).toBe(3);
+            expect(document.querySelector(ZOOM_TO_SELECTOR)).toExist();
+            expect(document.querySelector(SETTINGS_SELECTOR)).toExist();
+            expect(document.querySelector(REMOVE_SELECTOR)).toExist();
+        });
+        it('render FilterLayer', () => {
+            const { Plugin } = getPluginForTest(TOCPlugin, SELECTED_LAYER_STATE);
+            const WrappedPlugin = dndContext(Plugin);
+            ReactDOM.render(<WrappedPlugin items={[{
+                name: "FilterLayer"
+            }]} />, document.getElementById("container"));
+            // check tools
+            expect(document.querySelectorAll(TOOL_BUTTON_SELECTOR).length).toBe(3);
+            expect(document.querySelector(ZOOM_TO_SELECTOR)).toExist();
+            expect(document.querySelector(FILTER_LAYER_SELECTOR)).toExist();
+            expect(document.querySelector(REMOVE_SELECTOR)).toExist();
+        });
+        it('render WidgetBuilder', () => {
+            const { Plugin } = getPluginForTest(TOCPlugin, { ...SELECTED_LAYER_STATE, controls: { widgetBuilder: {available: true}}});
+            const WrappedPlugin = dndContext(Plugin);
+            ReactDOM.render(<WrappedPlugin items={[{
+                name: "WidgetBuilder"
+            }]} />, document.getElementById("container"));
+            // check tools
+            expect(document.querySelectorAll(TOOL_BUTTON_SELECTOR).length).toBe(3);
+            expect(document.querySelector(ZOOM_TO_SELECTOR)).toExist();
+            expect(document.querySelector(WIDGET_BUILDER_SELECTOR)).toExist();
+            expect(document.querySelector(REMOVE_SELECTOR)).toExist();
+        });
+    });
 });

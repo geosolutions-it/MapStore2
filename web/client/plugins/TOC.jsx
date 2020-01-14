@@ -539,19 +539,19 @@ const checkPluginsEnhancer = branch(
         ["items", "activateAddLayerButton", "activateAddGroupButton", "activateLayerFilterTool", "activateSettingsTool", "FeatureEditor"],
         ({
             items = [],
-            activateAddLayerButton,
-            activateAddGroupButton,
+            activateAddLayerButton = true,
+            activateAddGroupButton = true,
             activateQueryTool = true,
             activateSettingsTool = true,
             activateLayerFilterTool = true,
             activateWidgetTool = true
         }) => ({
-            activateAddLayerButton: activateAddLayerButton && find(items, { name: "AddLayer" }) || false, // requires MetadataExplorer (Catalog)
-            activateAddGroupButton: activateAddGroupButton && find(items, { name: "AddGroup" }) || false,
-            activateSettingsTool: activateSettingsTool && find(items, { name: "TOCItemsSettings"}) || false,
-            activateQueryTool: activateQueryTool && find(items, {name: "FeatureEditor"}) || false,
-            activateLayerFilterTool: activateLayerFilterTool && find(items, {name: "FilterLayer"}) || false,
-            activateWidgetTool: activateWidgetTool && find(items, { name: "WidgetBuilder" }) // NOTE: activateWidgetTool is already controlled by a selector. TODO: Simplify investigating on the best approch
+            activateAddLayerButton: activateAddLayerButton && !!find(items, { name: "AddLayer" }) || false, // requires MetadataExplorer (Catalog)
+            activateAddGroupButton: activateAddGroupButton && !!find(items, { name: "AddGroup" }) || false,
+            activateSettingsTool: activateSettingsTool && !!find(items, { name: "TOCItemsSettings"}) || false,
+            activateQueryTool: activateQueryTool && !!find(items, {name: "FeatureEditor"}) || false,
+            activateLayerFilterTool: activateLayerFilterTool && !!find(items, {name: "FilterLayer"}) || false,
+            activateWidgetTool: activateWidgetTool && !!find(items, { name: "WidgetBuilder" }) // NOTE: activateWidgetTool is already controlled by a selector. TODO: Simplify investigating on the best approch
         })
     )
 );
