@@ -23,7 +23,7 @@ const {MAP_CONFIG_LOADED, MAP_CONFIG_LOAD_ERROR, MAP_INFO_LOAD_ERROR} = require(
 
 const {mapSelector} = require('../selectors/map');
 const { isLoggedIn } = require('../selectors/security');
-const { unsavedMapSelector } = require('../selectors/controls');
+const {pathnameSelector} = require('../selectors/router');
 
 
 /**
@@ -181,10 +181,7 @@ const feedbackMaskPromptLogin = (action$, store) => // TODO: separate login requ
     action$.ofType(MAP_CONFIG_LOAD_ERROR, DASHBOARD_LOAD_ERROR, LOAD_GEOSTORY_ERROR, CONTEXT_LOAD_ERROR, CONTEXT_LOAD_ERROR_CONTEXTCREATOR)
         .filter((action) => action.error &&
             action.error.status === 403 &&
-            (action.type === MAP_CONFIG_LOAD_ERROR
-                ? !unsavedMapSelector(store.getState())
-                : true
-            ))
+            pathnameSelector(store.getState()).indexOf("new") === -1)
         .filter(() => !isLoggedIn(store.getState()))
         .exhaustMap(
             () =>
