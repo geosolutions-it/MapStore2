@@ -6,15 +6,14 @@
  * LICENSE file in the root directory of this source tree.
  */
 const { compose, withPropsOnChange } = require('recompose');
-const { find, reduce, isEmpty} = require('lodash');
+const { find} = require('lodash');
 
 const CoordinatesUtils = require('../../../utils/CoordinatesUtils');
 const FilterUtils = require('../../../utils/FilterUtils');
 const filterBuilder = require('../../../utils/ogc/Filter/FilterBuilder');
 const fromObject = require('../../../utils/ogc/Filter/fromObject');
-const { getDependencyLayerParams } = require('./utils');
+const { getDependencyLayerParams, composeFilterObject } = require('./utils');
 const { composeAttributeFilters } = require('../../../utils/FilterUtils');
-const { gridUpdateToQueryUpdate } = require('../../../utils/FeatureGridUtils');
 const getCqlFilter = (layer, dependencies) => {
     const params = getDependencyLayerParams(layer, dependencies);
     const cqlFilterKey = find(Object.keys(params || {}), (k = "") => k.toLowerCase() === "cql_filter");
@@ -22,25 +21,6 @@ const getCqlFilter = (layer, dependencies) => {
 };
 const { read } = require('../../../utils/ogc/Filter/CQL/parser');
 const getLayerFilter = ({layerFilter} = {}) => layerFilter;
-
-const composeFilterObject = (filterObj, quickFilters, options) => {
-    const quickFiltersForVisibleProperties = quickFilters && options &&
-        Object.keys(quickFilters)
-            .filter(qf => find(options.propertyName, f => f === qf))
-            .reduce((p, c) => {
-                return {...p, [c]: quickFilters[c]};
-            }, {});
-
-    // Building new filterObj in order to and the two filters: old filterObj and quickFilter (from Table Widget)
-    const columnsFilters = reduce(quickFiltersForVisibleProperties, (cFilters, value, attribute) => {
-        return gridUpdateToQueryUpdate({attribute, ...value}, cFilters);
-    }, {});
-    if (!isEmpty(filterObj) || !isEmpty(columnsFilters)) {
-        const composedFilterFields = composeAttributeFilters([filterObj, columnsFilters]);
-        return {...filterObj, ...composedFilterFields};
-    }
-    return {};
-};
 
 /**
  * Merges filter object and dependencies map into an ogc filter

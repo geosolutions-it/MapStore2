@@ -26,6 +26,7 @@ const wfsTable = require('../enhancers/wfsTable');
 const dependenciesToFilter = require('../enhancers/dependenciesToFilter');
 const dependenciesToOptions = require('../enhancers/dependenciesToOptions');
 const dependenciesToWidget = require('../enhancers/dependenciesToWidget');
+const dependenciesToExtent = require('../enhancers/dependenciesToExtent');
 const dependenciesToCqlFilter = require('../enhancers/dependenciesToCqlFilter');
 const dependenciesToMapProp = require('../enhancers/dependenciesToMapProp');
 //
@@ -48,6 +49,7 @@ const MapWidget = compose(
     dependenciesToCqlFilter,
     dependenciesToMapProp('center'),
     dependenciesToMapProp('zoom'),
+    dependenciesToExtent,
     mapWidget
 )(require('./MapWidget'));
 

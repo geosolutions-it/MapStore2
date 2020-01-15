@@ -1,11 +1,18 @@
 const Rx = require('rxjs');
-const { endsWith, has, get, includes, isEqual, omit, omitBy} = require('lodash');
+const { startsWith, endsWith, has, get, includes, isEqual, omit, omitBy} = require('lodash');
 const { EXPORT_CSV, EXPORT_IMAGE, INSERT, TOGGLE_CONNECTION, WIDGET_SELECTED, EDITOR_SETTING_CHANGE,
-    onEditorChange, updateWidgetLayer, clearWidgets, loadDependencies, toggleDependencySelector, DEPENDENCY_SELECTOR_KEY, WIDGETS_REGEX} = require('../actions/widgets');
+    onEditorChange, updateWidgetLayer, clearWidgets, loadDependencies, toggleDependencySelector, DEPENDENCY_SELECTOR_KEY, WIDGETS_REGEX,
+    UPDATE_PROPERTY
+} = require('../actions/widgets');
+const wpsBounds = require('../observables/wps/bounds');
+
 const {
     MAP_CONFIG_LOADED
 } = require('../actions/config');
-const { availableDependenciesSelector, isWidgetSelectionActive, getDependencySelectorConfig } = require('../selectors/widgets');
+const {composeFilterObject} = require('../components/widgets/enhancers/utils');
+const {toOGCFilter} = require('../utils/FilterUtils');
+
+const { availableDependenciesSelector, isWidgetSelectionActive, getDependencySelectorConfig, getWidgetById } = require('../selectors/widgets');
 const { CHANGE_LAYER_PROPERTIES, LAYER_LOAD, LAYER_ERROR } = require('../actions/layers');
 const { getLayerFromId } = require('../selectors/layers');
 const { pathnameSelector } = require('../selectors/router');
@@ -238,5 +245,23 @@ module.exports = {
                             [])
                     );
                 })
-            ).mergeAll()
+            ).mergeAll()/* ,
+    /**
+     * Triggers updates of the layer property of widgets on loading error state change
+     * @memberof epics.widgets
+     * @param {external:Observable} action$ manages `LAYER_LOAD, LAYER_ERROR`
+     * @return {external:Observable}
+
+    updateExtentOnFilterChange: (action$, store) =>
+        action$.ofType(UPDATE_PROPERTY)
+            .filter(({key}) => startsWith(key, "quickFilters"))
+            .switchMap(({id}) => {
+                const state = store.getState();
+                const widget = getWidgetById(id)(state);
+                let filterObj = composeFilterObject(widget.filter, widget.quickFilters, widget.options);
+                const featureTypeName = "mapstore:states";
+                const wfsGetFeature = toOGCFilter(featureTypeName, filterObj, filterObj.ogcVersion, filterObj.sortOptions);
+                const getLayerUrl = l => l && l.wpsUrl || (l.search && l.search.url) || l.url;
+                return wpsBounds(getLayerUrl(widget.layer), {wfsGetFeature});
+            })*/
 };

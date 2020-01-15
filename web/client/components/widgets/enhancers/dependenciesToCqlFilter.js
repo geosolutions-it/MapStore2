@@ -9,7 +9,6 @@ const { compose, withPropsOnChange } = require('recompose');
 const { find, isEmpty, isEqual} = require('lodash');
 
 const FilterUtils = require('../../../utils/FilterUtils');
-const { composeAttributeFilters } = require('../../../utils/FilterUtils');
 const { optionsToVendorParams } = require('../../../utils/VendorParamsUtils');
 const { arrayUpdate } = require('../../../utils/ImmutableUtils');
 
@@ -39,7 +38,7 @@ module.exports = compose(
                     filterObjCollection = {...filterObjCollection, ...composeFilterObject(filterObj, dependencies.quickFilters, dependencies.options)};
                 }
                 if (dependencies.filter) {
-                    filterObjCollection = {...filterObjCollection, ...composeAttributeFilters([filterObjCollection, dependencies.filter])};
+                    filterObjCollection = {...filterObjCollection, ...FilterUtils.composeAttributeFilters([filterObjCollection, dependencies.filter])};
                 }
 
                 if (!isEmpty(filterObjCollection) && FilterUtils.toCQLFilter(filterObjCollection)) {

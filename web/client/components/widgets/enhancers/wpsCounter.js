@@ -19,8 +19,7 @@ const sameOptions = (o1 = {}, o2 = {}) =>
     o1.aggregateFunction === o2.aggregateFunction
     && o1.aggregationAttribute === o2.aggregationAttribute
     && o1.viewParams === o2.viewParams;
-
-const getLayerUrl = l => l && l.wpsUrl || (l.search && l.search.url) || l.url;
+const {getLayerUrl} = require('../../../utils/LayersUtils');
 
 /**
  * Stream of props -> props to retrieve data from WPS aggregate process on params changes.

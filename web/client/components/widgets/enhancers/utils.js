@@ -40,5 +40,10 @@ module.exports = {
             return {...filterObj, ...composedFilterFields};
         }
         return {};
+    },
+    getLayerInCommon: ({map, dependencies}) => {
+        const targetLayerName = dependencies && dependencies.layer && dependencies.layer.name;
+        const layerInCommon = find(map.layers, {name: targetLayerName}) || {};
+        return layerInCommon;
     }
 };
