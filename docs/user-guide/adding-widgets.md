@@ -1,7 +1,7 @@
 # Adding Widgets
 ****************
 
-With a click on the <img src="../img/button/+++.jpg" class="ms-docbutton"/> button in [Sidebar](exploring-dashboards.md#sidebar) the *Widget* panel opens, showing the list of the available widgets types that can be added to the dashboard:
+With a click on the <img src="../img/button/+++.jpg" class="ms-docbutton"/> button in [Sidebar](exploring-dashboards.md#sidebar) the *Widget* panel opens, showing the list of the available widget types that can be added to the dashboard:
 
 <img src="../img/adding-widgets/widgets-panel.jpg" class="ms-docimage"  style="max-width:400px;"/>
 
@@ -53,7 +53,7 @@ Once a layer is added to the map widget, it will be displayed in preview and in 
 
 <img src="../img/adding-widgets/wid-layers-list.jpg" class="ms-docimage"  style="max-width:400px;"/>
 
-It's now possible to toggle the layer visibility, and set layers transparency. Furthermore, by selecting it, new buttons are added to the toolbar allowing to:
+It's now possible to toggle the layer visibility, and set layers transparency (more information in [Display options](toc.md#display-options-in-panel) section). Furthermore, by selecting it, new buttons are added to the toolbar allowing to:
 
 * Zoom to layers <img src="../img/button/zoom-layer.jpg" class="ms-docbutton"/>
 
@@ -64,11 +64,11 @@ It's now possible to toggle the layer visibility, and set layers transparency. F
 !!!note
     Adding layers is not mandatory, it is possible to create a widget map using an empty map.
 
-Once the <img src="../img/button/next.jpg" class="ms-docbutton"/> button is clicked the last step of the process is displayed like the following:
+Once the <img src="../img/button/next.jpg" class="ms-docbutton"/> button is clicked, the last step of the process is displayed like the following:
 
 <img src="../img/adding-widgets/map-wid-info.jpg" class="ms-docimage" style="max-width:400px;"/>
 
-Here the user has the possibility to insert a **Title** and a **Description** for the widget (not mandatory fields) and to complete its creation by clicking on the <img src="../img/button/save-icon.jpg" class="ms-docbutton"/> button. After that the widget is added to the viewer space:
+Here the user has the possibility to insert a **Title** and a **Description** for the widget (optional fields) and to complete its creation by clicking on the <img src="../img/button/save-icon.jpg" class="ms-docbutton"/> button. After that, the widget is added to the viewer space:
 
 <img src="../img/adding-widgets/viewer-map.jpg" class="ms-docimage" style="max-width:600px;"/>
 
@@ -78,7 +78,7 @@ When at least one Map widget is created and added to the dashboard, there's the 
 
 <img src="../img/adding-widgets/list-legend.jpg" class="ms-docimage" style="max-width:400px;"/>
 
-Selecting the Legend widget, the user can to choose the Map widget to which the legend will be connected (when only a Map widget is present this step is skipped):
+Selecting the Legend widget, the user can choose the Map widget to which the legend will be connected (when only a Map widget is present in the dashboard this step is skipped):
 
 <img src="../img/adding-widgets/select-map-connection.jpg" class="ms-docimage" style="max-width:600px;"/>
 

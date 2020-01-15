@@ -38,7 +38,7 @@ Once the name of the group is typed, with the <img src="../img/button/add_group_
 
 <img src="../img/toc/group-added.jpg" class="ms-docimage"  style="max-width:300px;"/>
 
-In order to add a layer to a specific group, it is possible to select that group and click on **Add layer to selected group** <img src="../img/button/add_layer_button.jpg" class="ms-docbutton"/>:
+In order to add a new layer to a specific group, it is possible to select that group and click on **Add layer to selected group** <img src="../img/button/add_layer_button.jpg" class="ms-docbutton"/>:
 
 <img src="../img/toc/add-layer-to-group.jpg" class="ms-docimage"  style="max-width:300px;"/>
 
@@ -49,7 +49,7 @@ In order to add a subgroup inside a specific group selected, the user can click 
 Layers and groups can be removed selecting them and clicking on the **Remove** button <img src="../img/button/delete.jpg" class="ms-docbutton"/> present in the toolbar of each selected layer and group.
 
 !!! warning
-    When a group is removed, also all the layers and subgroups associated with that group will be removed.
+    When a group is removed, also all the layers and subgroups associated with it will be removed.
 
 ## Search for layers
 
@@ -68,9 +68,9 @@ Groups and sub-groups, no matter their level, can be nested inside other groups 
 <img src="../img/toc/ded-groups.gif" class="ms-docimage"  style="max-width:300px;"/>
 
 !!! warning
-    The only constraints applied to the groups manager refer to the *Default* group (each layer added to the map the first time is included in that group on top of each other). Drag and Drop operations are not allowed for the *Default*, but it's allowed to rename it or to nest groups or sub-groups inside it.  
+    The only constraints applied to the groups manager refer to the *Default* group (each layer added to the map the first time is included in that group). Drag and Drop operations are not allowed for the *Default*, but it's allowed to rename it or to nest groups or sub-groups inside it.  
 
-Layers position can also be determined through the **Selected layer settings** button <img src="../img/button/properties.jpg" class="ms-docbutton"/> available in the toolbar that appears once a layer is selected. This button open a panel where the user can choose the destination group (or subgroup):
+Layers position can also be determined through the **Selected layer settings** button <img src="../img/button/properties.jpg" class="ms-docbutton"/> available in the toolbar that appears once a layer is selected. This button opens a panel where the user can choose the destination group (or subgroup):
 
 <img src="../img/toc/settings-group.jpg" class="ms-docimage"  style="max-width:350px;"/>
 
@@ -112,13 +112,13 @@ Through this toolbar it is possible to:
 
 * Access the selected [Layer Settings](layer-settings.md) <img src="../img/button/properties.jpg" class="ms-docbutton"/>
 
-* [Filter layer](filtering-layers.md) <img src="../img/button/filter-layer.jpg" class="ms-docbutton"/>
+* [Set a Filter](filtering-layers.md) for that layer <img src="../img/button/filter-layer.jpg" class="ms-docbutton"/>
 
-* Access the [Attribute table](attributes-table.md) <img src="../img/button/attributes-table.jpg" class="ms-docbutton"/>
+* Access the [Attribute Table](attributes-table.md) <img src="../img/button/attributes-table.jpg" class="ms-docbutton"/>
 
 * **Remove** the selected layer <img src="../img/button/delete.jpg" class="ms-docbutton"/>
 
-* [Create widgets](widgets.md) for the selected layer <img src="../img/button/widgets.jpg" class="ms-docbutton"/>
+* [Create Widgets](widgets.md) for the selected layer <img src="../img/button/widgets.jpg" class="ms-docbutton"/>
 
 Selecting a group the toolbar is the following:
 

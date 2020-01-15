@@ -1,7 +1,7 @@
 # Widgets
 *********
 
-In [MapStore](https://mapstore.geo-solutions.it/mapstore/#/) it is possible to create widgets from layers added to the map. Widgets are components such as charts, texts, tables and counters, useful to describe and visualize qualitatively and quantitatively layers data and provide to the user the opportunity to analyze the information more effectively.
+In [MapStore](https://mapstore.geo-solutions.it/mapstore/#/) it is possible to create widgets from the layers added to the map. Widgets are components such as charts, texts, tables and counters, useful to describe and visualize qualitatively and quantitatively layers data and provide the user the opportunity to analyze information more effectively.
 
 ## Add a Widget
 
@@ -11,13 +11,13 @@ Once at least one layer is present in the map (see [Catalog](catalog.md) section
 
 From here the user can choose between four different types of widget:
 
-* **Chart**
+* *Chart*
 
-* **Text**
+* *Text*
 
-* **Table**
+* *Table*
 
-* **Counter**
+* *Counter*
 
 ### Chart
 
@@ -26,7 +26,7 @@ Selecting *Chart* option the following window opens:
 <img src="../img/widgets/chart-types.jpg" class="ms-docimage"  style="max-width:450px;"/>
 
 From here it is possible to choose between *Bar Chart*, *Pie Chart* or *Line Chart*, or simply go back to widget type selection through the <img src="../img/button/back.jpg" class="ms-docbutton"/> button. <br>
-If a chart type is selected, it displays like the following (in this case a *Bar Chart*):
+If a chart type is selected, it can display similar the following (in this case a *Bar Chart*):
 
 <img src="../img/widgets/configure-chart.jpg" class="ms-docimage"  style="max-width:450px;"/>
 
@@ -34,7 +34,7 @@ From the toolbar of this panel <img src="../img/widgets/widget-options.jpg" clas
 
 * Go back to the chart type selection with the <img src="../img/button/back.jpg" class="ms-docbutton"/> button
 
-* Connect <img src="../img/button/connect-widget.jpg" class="ms-docbutton"/> or disconnect <img src="../img/button/disconnect-widget.jpg" class="ms-docbutton"/> the widget to the map. When a widget is connected to the map, displayed information in the widget are automatically filtered with the map viewport. When a widget is not linked, otherwise it shows all the elements of that level regardless of the map viewport.
+* Connect <img src="../img/button/connect-widget.jpg" class="ms-docbutton"/> or disconnect <img src="../img/button/disconnect-widget.jpg" class="ms-docbutton"/> the widget to the map. When a widget is connected to the map, the information displayed in the widget are automatically filtered with the map viewport. When a widget is not linked, it otherwise shows all the elements of that level regardless of the map viewport
 
 * Configure a filter <img src="../img/button/filter-icon.jpg" class="ms-docbutton"/> for the widget data (more information on how to configure a filter can be found in [Filtering Layers](filtering-layers.md) section)
 
@@ -42,15 +42,15 @@ From the toolbar of this panel <img src="../img/widgets/widget-options.jpg" clas
 
 Just below the chart's preview, the following operations can be performed:
 
-* Define **X Attribute** of the chart (or **Group by** for *Pie Charts*) choosing between the layer fields
+* Define the **X Attribute** of the chart (or **Group by** for *Pie Charts*) choosing between layer fields
 
-* Define **Y Attribute** of the chart (or **Use** for *Pie Charts*) choosing between the layer fields
+* Define the **Y Attribute** of the chart (or **Use** for *Pie Charts*) choosing between layer fields
 
-* Define **Operation** with which the attributes will be related
+* Define the **Operation** with which the attributes will be related
 
 * Choose the **Color** of the chart (or the **Color Ramp** for *Pie Charts*)
 
-* Choose to keep the legend hidden, or **Display Legend**
+* Choose to keep the legend hidden, or to **Display Legend**
 
 In addition, only for *Bar Charts* and *Line Charts*, it is possible to access the *Advanced Options* section, where the user can:
 
@@ -86,13 +86,13 @@ Just below the chart's preview, the user is allowed to set:
 !!! note
     None of these options are mandatory, you can add the widget to the map without filling in these fields.
 
-An example of Chart widget could be:
+An example of chart widget could be:
 
 <img src="../img/widgets/chart-ex.jpg" class="ms-docimage"/>
 
 ### Text
 
-Creating a new Text widget the following window opens:
+Creating a new text widget the following window opens:
 
 <img src="../img/widgets/text-panel.jpg" class="ms-docimage"  style="max-width:450px;"/>
 
@@ -108,22 +108,22 @@ Here the user can:
 
 * Write the text of the widget
 
-* Format the text through the [Text editor toolbar](text-editor-toolbar.md)
+* Format the text through the [Text Editor Toolbar](text-editor-toolbar.md)
 
 !!! note
     None of these options are mandatory, you can add the widget to the map without filling in these fields.
 
-An example of Text widget could be:
+An example of text widget could be:
 
 <img src="../img/widgets/text-ex.jpg" class="ms-docimage"/>
 
 ### Table
 
-Adding a Table widget to the map, a panel like the following opens:
+Adding a table widget to the map, a panel like the following opens:
 
 <img src="../img/widgets/table-panel.jpg" class="ms-docimage"  style="max-width:450px;"/>
 
-The toolbar on the top of this panel is similar to the one present in [Chart section](widgets.md#chart). Here the user is allowed to select the fields that will be displayed in the widget.
+The toolbar on the top of this panel is similar to the one present in [Chart section](widgets.md#chart). Here the user is allowed to select the layer fields that will be displayed in the widget.
 
 !!!warning
     At least one field must be selected in order to move to the next configuration step.
@@ -132,14 +132,14 @@ Once the desired fields are selected, a click on the <img src="../img/button/nex
 
 <img src="../img/widgets/table-info.jpg" class="ms-docimage"  style="max-width:450px;"/>
 
-In this last step of the widget creation, the toolbar and the information to be inserted are similar to the ones in [Chart section](widgets.md#chart). <br><br>
-An example of Table widget could be:
+In this last step of the widget creation, the toolbar and the information to be inserted are similar to the ones in [Chart section](widgets.md#chart). <br>
+An example of table widget could be:
 
 <img src="../img/widgets/table-ex.jpg" class="ms-docimage"/>
 
 ### Counter
 
-Selecting the Counter option, the following window opens:
+Selecting the counter option, the following window opens:
 
 <img src="../img/widgets/counter-panel.jpg" class="ms-docimage"  style="max-width:450px;"/>
 
@@ -158,8 +158,8 @@ Once the <img src="../img/button/next.jpg" class="ms-docbutton"/> button is clic
 
 <img src="../img/widgets/counter-info.jpg" class="ms-docimage"  style="max-width:450px;"/>
 
-Also in this case the toolbar and the information to be inserted are similar to the ones in [Chart section](widgets.md#chart), with the only exception that the <img src="../img/button/filter-icon.jpg" class="ms-docbutton"/> button is missing. <br>
-An example of Counter widget could be:
+Also in this case the toolbar and the information to be inserted are similar to the ones in [Chart section](widgets.md#chart), with the only exception that the **Filtering** button <img src="../img/button/filter-icon.jpg" class="ms-docbutton"/> is missing. <br>
+An example of counter widget could be:
 
 <img src="../img/widgets/counter-ex.jpg" class="ms-docimage" style="max-width:600px;"/>
 
@@ -186,20 +186,20 @@ In order to move a widget you can simply drag and drop it inside the viewport, a
 ### Fix and expand/collapse a widget
 
 The position and the dimension of a widget can be fixed with a click on the **Pin** button <img src="../img/button/pin.jpg" class="ms-docbutton"/>. <br>
-The *Widgets Tray*, otherwise, allows the user to expand/collapse each single widget individually <img src="../img/button/wid-tray-single.jpg" class="ms-docbutton"/> or all of them at the same time <img src="../img/button/wid-tray-all.jpg" class="ms-docbutton"/>. Each single widget can be also collapsed through the **Collapse** button <img src="../img/button/collapse2.jpg" class="ms-docbutton"/>.
+The *Widgets Tray*, otherwise, allows the user to expand/collapse each single widget individually <img src="../img/button/wid-tray-single.jpg" class="ms-docbutton"/> or all of them at the same time <img src="../img/button/wid-tray-all.jpg" class="ms-docbutton"/>. A single widget can be also collapsed through the **Collapse** button <img src="../img/button/collapse2.jpg" class="ms-docbutton"/>.
 
 !!!note
     When both **[Timeline](timeline.md)** and widgets are present in a map, the *Timeline* button appears in the *Widgets Tray* <img src="../img/button/w-tray-timeline.jpg" class="ms-docbutton"/> allowing the user to expand and collapse it (widgets and *Timeline* can't anyhow be expanded at the same time).
 
 ### Access widgets info
 
-As soon as a Description is provided for a widget the info button <img src="../img/button/info.jpg" class="ms-docbutton"/> appears, allowing the user to take a look at the widget's *Title* and *Description*:
+As soon as a description is provided for a widget the info button <img src="../img/button/info.jpg" class="ms-docbutton"/> appears, allowing the user to take a look at the widget's *Title* and *Description*:
 
 <img src="../img/widgets/wid-description.jpg" class="ms-docimage"/>
 
 ### Access widgets menu
 
-Once a widget is added to the map, it is possible to access its menu through the **Menu** <img src="../img/button/menu.jpg" class="ms-docbutton"/> button. For *Text*, *Table* and *Counter* widgets, the following menu appears:
+Once a widget is added to the map, it is possible to access its **Menu** through the <img src="../img/button/menu.jpg" class="ms-docbutton"/> button. For *Text*, *Table* and *Counter* widgets, the following menu appears:
 
 <img src="../img/widgets/widgets-menu.jpg" class="ms-docimage" style="max-width:200px;"/>
 
@@ -215,7 +215,7 @@ Only for *Charts*, the menu is like the following:
 
 In particular, the user can also:
 
-* **Show chart data**
+* **Show chart data** in tabular representation
 
 * **Download data** in .csv format
 
