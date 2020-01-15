@@ -1,7 +1,7 @@
 # Managing Users and Groups
 ****************************
 
-Accessing [Mapstore](https://mapstore.geo-solutions.it/mapstore/#/) as anonymous user the *Login* button in [Homepage](https://mapstore.geo-solutions.it/mapstore/#/) is blue <img src="../img/button/login-b.jpg" class="ms-docbutton"/>. With a click on it, it displays the following: 
+Accessing [MapStore](https://mapstore.geo-solutions.it/mapstore/#/) as anonymous user the **Login** button in [Homepage](https://mapstore.geo-solutions.it/mapstore/#/) is blue <img src="../img/button/login-b.jpg" class="ms-docbutton"/>. With a click on it, the following window appears: 
 
 <img src="../img/managing-users-and-groups/login.jpg" class="ms-docimage" style="max-width:450px"/>
 
@@ -21,11 +21,11 @@ Through these options it is possible to:
 
 * **Logout**
 
-Once logged as *Admin*, it is possible to manage users and groups and the **Manage Accounts** button appears in [Homepage](home-page.md):
+Once logged as Admin, become possible to manage users and groups and the **Manage Accounts** option appears in [Homepage](home-page.md):
 
 <img src="../img/managing-users-and-groups/manager.jpg" class="ms-docimage"/>
 
-With a click on the **Manage Accounts** button, the *Account Manager* opens:
+Selecting **Manage Accounts** options, the *Account Manager* opens:
 
 <img src="../img/managing-users-and-groups/manager-page.jpg" class="ms-docimage"/>
 

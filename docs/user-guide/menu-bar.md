@@ -136,7 +136,7 @@ In particular, with these options it is possible to:
 
 <img src="../img/menu-bar/settings.jpg" class="ms-docimage" style="max-width:400px;"/>
 
-* See the **About this map** panel, when [details](resources-properties.md#details) are present
+* See the **About this map** panel, when [Details](resources-properties.md#details) are present
 
 * [Share](share.md) the map
 

@@ -3,9 +3,9 @@
 
 In [MapStore](https://mapstore.geo-solutions.it/mapstore/#/) it is possible to print a map by selecting the <img src="../img/button/print.jpg" class="ms-docbutton"  style="max-height:20px;"/> option from [Burger Menu](menu-bar.md#burger-menu). The print process is composed by two main steps:
 
-* Define the *Print Settings*
+* *Print Settings* definition
 
-* Check the result in *Preview* before download the printed file
+* Result checking in *Preview* before download the printed file
 
 ## Print settings
 
@@ -24,7 +24,7 @@ Through this window it is possible to:
 * Accessing **Legend options**
 
 !!!note
-    In *Print settings* preview there's the map portion that will be displayed on the print sheet. In order to center the map the user can pan the map until the preview displays the desired extension
+    In *Print settings* preview there's the map portion that will be displayed on the print sheet. In order to center the map the user can pan it until the preview displays the desired extension
 
     <img src="../img/print/print.gif" class="ms-docimage"/>
 
@@ -40,7 +40,7 @@ From here, in particular, it is possible to:
 
 * Choose to *Include legend*
 
-* Choose to place the *Legend on distinct page*
+* Choose to place the *Legend on distinct page* from the map
 
 * Select the page orientation between *Landscape* and *Portrait*
 
@@ -56,7 +56,7 @@ Through this menu the user is allowed to:
 
 * Enable the *Force Labels* option, that force the display of labels even if only one rule is present (by default, if only one rule is present, the label is not displayed)
 
-* Enable the *Font Anti Aliasing* (when Anti Aliasing is on, the borders of the labels font are smoothed)
+* Enable the *Font Anti Aliasing* (when Anti Aliasing is on, the borders of the labels font are smoothed improving the image quality)
 
 * Set the *Icons size*
 

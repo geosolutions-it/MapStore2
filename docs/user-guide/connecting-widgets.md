@@ -1,17 +1,17 @@
 # Connecting Widgets
 ********************
 
-In dashboards it is possible to connect *Map* widgets with:
+In dashboards it is possible to connect Map widgets with:
 
-* Other *Map* widgets
+* Other Map widgets
 
-* *Chart* widgets
+* Chart widgets
 
-* *Table* widgets
+* Table widgets
 
-* *Counter* widgets
+* Counter widgets
 
-* *Legend* widgets 
+* Legend widgets 
 
 ## Maps with other Maps
 
@@ -33,21 +33,21 @@ Since at least one connection is set, the **Show connections** button <img src="
 
 ## Maps with Charts, Tables and Counters
 
-In order to connect *Charts*, *Tables* or *Counters* widget with *Maps* widget, the procedure is similar to that seen in the [previous section](connecting-widgets.md#maps-with-other-maps). The result is that the information displayed in the *Chart*, *Table* or *Counter* changes accordingly with the map portion displayed in the connected *Map* widget. For example the result could be:
+In order to connect Charts, Tables or Counters widget with Maps widget, the procedure is similar to that seen in the [previous section](connecting-widgets.md#maps-with-other-maps). The result is that the information displayed in the Chart, Table or Counter changes accordingly with the map portion displayed in the connected Map widget. For example the result could be:
 
-* Connecting *Charts* with *Maps*:
+* Connecting Charts with Maps:
 
 <img src="../img/connecting-widgets/chart-map.jpg" class="ms-docimage"/>
 
-* Connecting *Tables* with *Maps*:
+* Connecting Tables with Maps:
 
 <img src="../img/connecting-widgets/table-map.jpg" class="ms-docimage"/>
 
-* Connecting *Counters* with *Maps*:
+* Connecting Counters with Maps:
 
 <img src="../img/connecting-widgets/counter-map.jpg" class="ms-docimage"/>
 
-When a pan or zoom operation is performed in the Map widget, other connected widgets are spatially filtered according to the Map viewport.
+When a pan or zoom operation is performed in the Map widget, the other connected widgets are spatially filtered according to the Map viewport.
 
 ## Maps with Legends
 

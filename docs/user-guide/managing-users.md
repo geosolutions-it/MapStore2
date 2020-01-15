@@ -1,11 +1,11 @@
 # Managing Users
 ****************
 
-Switching to Users Manager, the page displayed is the following:
+Switching to *Users Manager*, the page displayed is the following:
 
 <img src="../img/managing-users/manager-page.jpg" class="ms-docimage"/>
 
-In this page the *Admin* can:
+In this page the Admin can:
 
 * Perform a search among the existing users
 
@@ -33,18 +33,18 @@ As soon as the *New User* window opens, the *User ID* section is displayed:
 
 In this section the Amin is allowed to:
 
-* Set the Username
+* Set the *Username*
 
-* Set the Password
+* Set the *Password*
 
-* Select the User role (User or Admin)
+* Select the *User role* (Normal user or Admin)
 
-* Choose if an User is *Enabled* or not. Enabled users will have a green status icon under their profile otherwise will have a red status and will not be able to log in.
+* Choose if an user is *Enabled* or not. Enabled users will have a green status icon under their profile, otherwise disabled users will have a red status and will not be able to log in.
 
 <img src="../img/managing-users/user-status.jpg" class="ms-docimage"/>
 
 !!! warning
-    Username and Password are the only mandatory fields. The password must contain at least 6 characters.
+    *Username* and *Password* are the only mandatory fields. The password must contain at least 6 characters.
 
 ## Other information
 
@@ -52,13 +52,13 @@ Switching to *Other information* section, it display the following:
 
 <img src="../img/managing-users/other-info.jpg" class="ms-docimage"/>
 
-Here the *Admin* can set:
+Here the Admin can set:
 
-* Email
+* *Email*
 
-* Company
+* *Company*
 
-* Notes
+* *Notes*
 
 ## Group membership
 

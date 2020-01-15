@@ -1,11 +1,11 @@
 # Managing Groups
 *****************
 
-The Groups Manager section displays like the following:
+The *Groups Manager* section displays like the following:
 
 <img src="../img/managing-groups/groups-man.jpg" class="ms-docimage"  style="max-width:500px;"/>
 
-Similar to what happens for the users manager, in this page the *Admin* can:
+Similar to what happens for the [Users Manager](managing-users.md), in this page the Admin can:
 
 * Perform a search among the existing groups
 
@@ -13,7 +13,7 @@ Similar to what happens for the users manager, in this page the *Admin* can:
 
 * Create a new group with the **New Group** button <img src="../img/button/new-group.jpg" class="ms-docbutton"/>
 
-* Edit or remove an existing one, through the **Edit group** <img src="../img/button/edit-icon.jpg" class="ms-docbutton"/> and **Delete group** <img src="../img/button/delete-icon.jpg" class="ms-docbutton" /> buttons on each user card:
+* Edit or remove an existing one, through the **Edit group** <img src="../img/button/edit-icon.jpg" class="ms-docbutton"/> and **Delete group** <img src="../img/button/delete-icon.jpg" class="ms-docbutton" /> buttons on each group card:
 
 <img src="../img/managing-groups/edit-group.jpg" class="ms-docimage"/>
 
@@ -31,12 +31,12 @@ As soon as the *New Group* window opens, the *Group ID* section is displayed:
 
 In this section the Admin is allowed to:
 
-* Set the Group Name
+* Set the *Group Name*
 
-* Set the Description
+* Set the group *Description*
 
 !!! warning
-    The Group Name is the only mandatory field.
+    The *Group Name* is the only mandatory field.
 
 ## Members manager
 
