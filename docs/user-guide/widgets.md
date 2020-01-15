@@ -1,116 +1,222 @@
-# Creating Widgets
-******************
+# Widgets
+*********
 
-In addition to adding layers to the map, in [MapStore](https://mapstore.geo-solutions.it/mapstore/#/) the user can create widgets from the added layers. Widgets are graphical elements created by the user that describe and visualize qualitatively and quantitatively the data of the layer such as charts, texts, tables and counters.
+In [MapStore](https://mapstore.geo-solutions.it/mapstore/#/) it is possible to create widgets from the layers added to the map. Widgets are components such as charts, texts, tables and counters, useful to describe and visualize qualitatively and quantitatively layers data and provide the user the opportunity to analyze information more effectively.
 
-* **Open** a new map.
+## Add a Widget
 
-* **Add** a layer (e.g. USA Population).
+Once at least one layer is present in the map (see [Catalog](catalog.md) section for more information about adding layers), it is possible to create a widget by selecting that layer in the [TOC](toc.md) and by clicking on the <img src="../img/button/widgets.jpg" class="ms-docbutton"/> button in the [layer toolbar](toc.md#toolbar-options). Performing these operations the *Widget* panel appears:
 
-* **Select** the layer from the TOC.
+<img src="../img/widgets/map-widgets-panel.jpg" class="ms-docimage" style="max-width:450px;"/>
 
-* **Click** on the widget icon <img src="../img/button/widgets.jpg" class="ms-docbutton"/>.
+From here the user can choose between four different types of widget:
 
-The Widget page will open showing the various widget types to create.
+* *Chart*
 
-<img src="../img/widgets/widget-list.jpg" class="ms-docimage" style="max-width:400px;"/>
+* *Text*
 
-Widgets Tray
-------------
+* *Table*
 
-When created, the widgets will be placed on the map (or in the dashboard, depending on the context). In the header of each widget window there are some options:
+* *Counter*
+
+### Chart
+
+Selecting *Chart* option the following window opens:
+
+<img src="../img/widgets/chart-types.jpg" class="ms-docimage"  style="max-width:450px;"/>
+
+From here it is possible to choose between *Bar Chart*, *Pie Chart* or *Line Chart*, or simply go back to widget type selection through the <img src="../img/button/back.jpg" class="ms-docbutton"/> button. <br>
+If a chart type is selected, it can display similar the following (in this case a *Bar Chart*):
+
+<img src="../img/widgets/configure-chart.jpg" class="ms-docimage"  style="max-width:450px;"/>
+
+From the toolbar of this panel <img src="../img/widgets/widget-options.jpg" class="ms-docbutton"/> the user is allowed to:
+
+* Go back to the chart type selection with the <img src="../img/button/back.jpg" class="ms-docbutton"/> button
+
+* Connect <img src="../img/button/connect-widget.jpg" class="ms-docbutton"/> or disconnect <img src="../img/button/disconnect-widget.jpg" class="ms-docbutton"/> the widget to the map. When a widget is connected to the map, the information displayed in the widget are automatically filtered with the map viewport. When a widget is not linked, it otherwise shows all the elements of that level regardless of the map viewport
+
+* Configure a filter <img src="../img/button/filter-icon.jpg" class="ms-docbutton"/> for the widget data (more information on how to configure a filter can be found in [Filtering Layers](filtering-layers.md) section)
+
+* Move forward <img src="../img/button/next.jpg" class="ms-docbutton"/> to the next step when the settings are completed
+
+Just below the chart's preview, the following operations can be performed:
+
+* Define the **X Attribute** of the chart (or **Group by** for *Pie Charts*) choosing between layer fields
+
+* Define the **Y Attribute** of the chart (or **Use** for *Pie Charts*) choosing between layer fields
+
+* Define the **Operation** with which the attributes will be related
+
+* Choose the **Color** of the chart (or the **Color Ramp** for *Pie Charts*)
+
+* Choose to keep the legend hidden, or to **Display Legend**
+
+In addition, only for *Bar Charts* and *Line Charts*, it is possible to access the *Advanced Options* section, where the user can:
+
+* Keep the grid visible or **Hide Grid**
+
+* Keep Y axis visible or **Hide Y axis**
+
+* Define the **X Axis Labels rotation angle**
+
+* Set the **Legend Label** name
+
+!!! warning
+    In order to move forward to the next step, only **X Attribute**, **Y Attribute** and **Operation** are considered as mandatory fields.
+
+Once the settings are done, the next step displays, for example, similar to the following:
+
+<img src="../img/widgets/widget-info.jpg" class="ms-docimage"  style="max-width:450px;"/>
+
+In this panel, through the toolbar, it is possible to:
+
+* Go back to the chart option with the <img src="../img/button/back.jpg" class="ms-docbutton"/> button
+
+* Configure a filter <img src="../img/button/filter-icon.jpg" class="ms-docbutton"/> for the widget data (more information on how to configure a filter can be found in [Filtering Layers](filtering-layers.md) section)
+
+* Add the widget to the map with the <img src="../img/button/save-icon.jpg" class="ms-docbutton"/> button
+
+Just below the chart's preview, the user is allowed to set:
+
+* The widget **Title**
+
+* The widget **Description**
+
+!!! note
+    None of these options are mandatory, you can add the widget to the map without filling in these fields.
+
+An example of chart widget could be:
+
+<img src="../img/widgets/chart-ex.jpg" class="ms-docimage"/>
+
+### Text
+
+Creating a new text widget the following window opens:
+
+<img src="../img/widgets/text-panel.jpg" class="ms-docimage"  style="max-width:450px;"/>
+
+Through the toolbar it is possible to:
+
+* Go back to the widget type selection with the <img src="../img/button/back.jpg" class="ms-docbutton"/> button
+
+* Add the widget to the map with the <img src="../img/button/save-icon.jpg" class="ms-docbutton"/> button
+
+Here the user can:
+
+* Write the title of the widget
+
+* Write the text of the widget
+
+* Format the text through the [Text Editor Toolbar](text-editor-toolbar.md)
+
+!!! note
+    None of these options are mandatory, you can add the widget to the map without filling in these fields.
+
+An example of text widget could be:
+
+<img src="../img/widgets/text-ex.jpg" class="ms-docimage"/>
+
+### Table
+
+Adding a table widget to the map, a panel like the following opens:
+
+<img src="../img/widgets/table-panel.jpg" class="ms-docimage"  style="max-width:450px;"/>
+
+The toolbar on the top of this panel is similar to the one present in [Chart section](widgets.md#chart). Here the user is allowed to select the layer fields that will be displayed in the widget.
+
+!!!warning
+    At least one field must be selected in order to move to the next configuration step.
+
+Once the desired fields are selected, a click on the <img src="../img/button/next.jpg" class="ms-docbutton"/> button opens the following panel:
+
+<img src="../img/widgets/table-info.jpg" class="ms-docimage"  style="max-width:450px;"/>
+
+In this last step of the widget creation, the toolbar and the information to be inserted are similar to the ones in [Chart section](widgets.md#chart). <br>
+An example of table widget could be:
+
+<img src="../img/widgets/table-ex.jpg" class="ms-docimage"/>
+
+### Counter
+
+Selecting the counter option, the following window opens:
+
+<img src="../img/widgets/counter-panel.jpg" class="ms-docimage"  style="max-width:450px;"/>
+
+Also in this case the toolbar is similar to the one present in [Chart section](widgets.md#chart). The user is allowed to:
+
+* Select the attribute to **Use**
+
+* Select the **Operation** to perform
+
+* Set the **Unit of measure** that will be displayed
+
+!!! warning
+    In order to move forward to the next step, only the **Use** and the **Count** are considered as mandatory fields.
+
+Once the <img src="../img/button/next.jpg" class="ms-docbutton"/> button is clicked, the panel of the last step appears:
+
+<img src="../img/widgets/counter-info.jpg" class="ms-docimage"  style="max-width:450px;"/>
+
+Also in this case the toolbar and the information to be inserted are similar to the ones in [Chart section](widgets.md#chart), with the only exception that the **Filtering** button <img src="../img/button/filter-icon.jpg" class="ms-docbutton"/> is missing. <br>
+An example of counter widget could be:
+
+<img src="../img/widgets/counter-ex.jpg" class="ms-docimage" style="max-width:600px;"/>
+
+## Manage existing widgets
+
+Once widgets have been created, they will be placed on the bottom right of the map with three buttons available on their top (**Pin**, **Collapse** and **Menu**) and the *Widgets Tray* appears:
 
 <img src="../img/widgets/widgets-tray.jpg" class="ms-docimage"/>
 
-* **Pin** the pin tool allow to lock the widget position
+The user is now allowed to menage widgets performing the following operations:
 
-* **Collapse** the collapse tool allow to collapse the widgets in the *Widgets Tray*
+* Move and resize them
 
-* **Menu** a set of tools (depending of the widget). Contains the controls to "Remove" or Edit the widget
+* Fix and expand/collapse them
 
-The **Widget Tray** is a plugin that allow to expand/collapse widgets one by one. In this tray you can see one item for each widget. You can click on these items to collapse or expand the single widgets. A **Collapse All** button allow to collapse or expand all widgets at once.
+* Access their menu
 
-Widgets and **[Timeline](timeline.md#timeline)** cannot be expanded on the same map at the same time.<br>
-If a layer with a time dimension is added to the map, the *Timeline* will be shown on the screen and not-pinned widgets will collapse in the tray automatically.<br>
-When a widget is added to the map, the *Timeline* will collapse in the tray and all the widgets will expand. A tooltip will highlight the *Timeline* icon <img src="../img/button/timeline-collapse-icon.jpg" class="ms-docbutton"/> in the tray.<br>
-When those events occur a **notification** explains what happened and how to manage the widgets and the *Timeline*.
+### Move and resize a widget
 
-<img src="../img/widgets/timeline-collapse.jpg"class="ms-docimage"/>
+In order to move a widget you can simply drag and drop it inside the viewport, and in order to resize it you can click in the lower right corner and drag it to the desired size:
 
-Creating Chart Widget
----------------------
+<img src="../img/widgets/ded-widgets.gif" class="ms-docimage" style="max-width:500px;"/>
 
-* **Click** on *Chart* from the list. Another page will open showing the Chart types (Bar Chart, Pie Chart and Line Chart).
+### Fix and expand/collapse a widget
 
-<img src="../img/widgets/chart-types.jpg" class="ms-docimage"  style="max-width:400px;"/>
+The position and the dimension of a widget can be fixed with a click on the **Pin** button <img src="../img/button/pin.jpg" class="ms-docbutton"/>. <br>
+The *Widgets Tray*, otherwise, allows the user to expand/collapse each single widget individually <img src="../img/button/wid-tray-single.jpg" class="ms-docbutton"/> or all of them at the same time <img src="../img/button/wid-tray-all.jpg" class="ms-docbutton"/>. A single widget can be also collapsed through the **Collapse** button <img src="../img/button/collapse2.jpg" class="ms-docbutton"/>.
 
-* **Select** for example the *Bar Chart*. You will be addressed to the configuration page to configure the data.
+!!!note
+    When both **[Timeline](timeline.md)** and widgets are present in a map, the *Timeline* button appears in the *Widgets Tray* <img src="../img/button/w-tray-timeline.jpg" class="ms-docbutton"/> allowing the user to expand and collapse it (widgets and *Timeline* can't anyhow be expanded at the same time).
 
-<img src="../img/widgets/bar-chart.jpg" class="ms-docimage"  style="max-width:400px;"/>
+### Access widgets info
 
-On the top of the page, you can find: a set of options <img src="../img/widgets/widget-options.jpg" class="ms-docbutton"/> that allow you to switch back and forward the pages of the form; a connection button (highlighted in green because it is active by default) that connects the chart to the viewport; an advanced filter that allows you to plot only the filtered data.
+As soon as a description is provided for a widget the info button <img src="../img/button/info.jpg" class="ms-docbutton"/> appears, allowing the user to take a look at the widget's *Title* and *Description*:
 
-* **Configure** the data you want to plot and the operation. Activating the *Advanced Options* you can customize the shape of the chart.
+<img src="../img/widgets/wid-description.jpg" class="ms-docimage"/>
 
-<img src="../img/widgets/configure-chart.jpg" class="ms-docimage"  style="max-width:400px;"/>
+### Access widgets menu
 
-* **Click** on *Configure widget options*  <img src="../img/button/next.jpg" class="ms-docbutton"/>.
-    * **Set** a *Title* and a *Description*.
-    * **Click** on *Save*.
+Once a widget is added to the map, it is possible to access its **Menu** through the <img src="../img/button/menu.jpg" class="ms-docbutton"/> button. For *Text*, *Table* and *Counter* widgets, the following menu appears:
 
-<img src="../img/widgets/widget-info.jpg" class="ms-docimage"  style="max-width:400px;"/>
+<img src="../img/widgets/widgets-menu.jpg" class="ms-docimage" style="max-width:200px;"/>
 
-The widget will be added to the map.
+From here the user can:
 
-<img src="../img/widgets/widget-map.jpg" class="ms-docimage"/>
+* **Edit** the widget
 
-Expanding the options menu of the widget you can show the plotted data, edit the widget or delete it, download the data as a CSV file or save the image of the graph.
+* **Delete** the widget
 
-<img src="../img/widgets/widget-menu.jpg" class="ms-docimage"  style="max-width:500px;"/>
+Only for *Charts*, the menu is like the following:
 
-Similarly, you can add to the map Pie and Line Charts.
+<img src="../img/widgets/widgets-menu2.jpg" class="ms-docimage" style="max-width:200px;"/>
 
-Creating Text Widget
---------------------
+In particular, the user can also:
 
-* **Select** the Text widget from the list. The Text widget form will open where you can add a Title and the desired descriptive text.
+* **Show chart data** in tabular representation
 
-<img src="../img/widgets/text-widget.jpg" class="ms-docimage"  style="max-width:500px;"/>
+* **Download data** in .csv format
 
-* **Click** on the save button to add the widget to the map.
-
-<img src="../img/widgets/text-map.jpg" class="ms-docimage"/>
-
-Creating Table widget
----------------------
-
-* **Select** the Table widget from the list. You will be addressed to the configuration page.
-
-<img src="../img/widgets/table-widget.jpg" class="ms-docimage"  style="max-width:400px;"/>
-
-* **Choose** the fields you want to include in the table.
-    
-    * **click** on the next button <img src="../img/button/next.jpg" class="ms-docbutton"/>.
-
-    * **Set** a Title and a Description.
-
-    * **Add** the widget to the map.
-
-<img src="../img/widgets/table-map.jpg" class="ms-docimage"/>
-
-Creating Counter Widget
------------------------
-
- * **Select** the Counter widget from the list. You will be addressed to the configuration page.
-  
-  * **Configure** the data you want to count.
-
-<img src="../img/widgets/counter-widget.jpg" class="ms-docimage"  style="max-width:400px;"/>
-
-  * **click** on the next button <img src="../img/button/next.jpg" class="ms-docbutton"/>.
-
-  * **Set** a Title and a Description.
-
-  * **Add** the widget to the map.
-
-<img src="../img/widgets/counter-map.jpg" class="ms-docimage"/>
+* **Export Image** in .jpg format
