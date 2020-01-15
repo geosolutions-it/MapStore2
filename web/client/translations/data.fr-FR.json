@@ -2168,6 +2168,14 @@
             "newContext": "Nouveau contexte",
             "editContextTooltip": "Modifier le contexte"
         },
+        "userExtensions": {
+          "title": "Extensions de l'utilisateur",
+          "emptyTitle": "Pas de résultat",
+          "emptyDescription": "Filtre...",
+          "filterPlaceholder": "des couches de filtre",
+          "addExtension": "Ajouter une extension",
+          "removeExtension": "Supprimer l'extension"
+        },
         "tutorial": {
             "title": "Tutoriel",
             "back": "Retour",

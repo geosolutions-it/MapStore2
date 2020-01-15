@@ -2176,7 +2176,7 @@
           "title": "User Extensions",
           "emptyTitle": "No Result",
           "emptyDescription": "Entered filter does not match name or description of any of extensions",
-          "filterPlaceholder": "Filter layers",
+          "filterPlaceholder": "Filter...",
           "addExtension": "Add Extension",
           "removeExtension": "Remove Extension"
         },
