@@ -345,7 +345,6 @@
                     "activateMetedataTool": false
                 }
             },
-            "AddLayer",
             "FilterLayer",
             "AddGroup",
             "TOCItemsSettings",

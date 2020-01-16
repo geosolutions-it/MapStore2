@@ -57,15 +57,13 @@
         "TOCItemsSettings",
         "FeatureEditor",
         "FilterLayer",
-        "AddGroup",
-        "AddLayer"
+        "AddGroup"
       ],
       "autoEnableChildren": [
         "TOCItemsSettings",
         "FeatureEditor",
         "FilterLayer",
-        "AddGroup",
-        "AddLayer"
+        "AddGroup"
       ],
       "dependencies": [
         "DrawerMenu"
@@ -83,6 +81,7 @@
     },
     {
       "name": "MapFooter",
+      "mandatory": true,
       "hidden": true
     },
     {
@@ -191,9 +190,6 @@
     },
     {
       "name": "AddGroup"
-    },{
-      "name": "AddLayer",
-      "dependencies": ["MetadataExplorer"]
     }, {
       "name": "FilterLayer",
       "dependencies": ["QueryPanel"]
@@ -394,7 +390,8 @@
         "Toolbar"
       ]
     }, {
-      "name": "UserExtensions"
+      "name": "UserExtensions",
+      "dependencies": "BurgerMenu"
     }
   ]
 }

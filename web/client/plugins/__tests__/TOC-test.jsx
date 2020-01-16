@@ -265,7 +265,7 @@ describe('TOCPlugin Plugin', () => {
             });
             const WrappedPlugin = dndContext(Plugin);
             ReactDOM.render(<WrappedPlugin items={[{
-                name: "AddLayer"
+                name: "MetadataExplorer"
             }]} />, document.getElementById("container"));
             expect(document.querySelectorAll(TOOL_BUTTON_SELECTOR).length).toBe(1);
             expect(document.querySelector(`${TOOL_BUTTON_SELECTOR} .glyphicon-add-layer`)).toExist();

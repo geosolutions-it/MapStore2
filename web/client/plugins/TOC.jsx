@@ -546,7 +546,7 @@ const checkPluginsEnhancer = branch(
             activateLayerFilterTool = true,
             activateWidgetTool = true
         }) => ({
-            activateAddLayerButton: activateAddLayerButton && !!find(items, { name: "AddLayer" }) || false, // requires MetadataExplorer (Catalog)
+            activateAddLayerButton: activateAddLayerButton && !!find(items, { name: "MetadataExplorer" }) || false, // requires MetadataExplorer (Catalog)
             activateAddGroupButton: activateAddGroupButton && !!find(items, { name: "AddGroup" }) || false,
             activateSettingsTool: activateSettingsTool && !!find(items, { name: "TOCItemsSettings"}) || false,
             activateQueryTool: activateQueryTool && !!find(items, {name: "FeatureEditor"}) || false,

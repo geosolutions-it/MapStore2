@@ -25,7 +25,6 @@ module.exports = {
         NavMenu: require('./plugins/NavMenu'),
         // framework plugins
         AddGroupPlugin: require('../plugins/AddGroup').default,
-        AddLayerPlugin: require('../plugins/AddLayer').default,
         AnnotationsPlugin: require('../plugins/Annotations'),
         AutoMapUpdatePlugin: require('../plugins/AutoMapUpdate'),
         BackgroundSelectorPlugin: require('../plugins/BackgroundSelector'),
