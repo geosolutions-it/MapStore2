@@ -5,7 +5,9 @@ Media Section are similar to [Paragraph Sections](paragraph-section.md) but the 
 
 <img src="../img/media-section/media-s.jpg" class="ms-docimage"/>
 
-Once the first media is added to the Media Section it is possible to add new media, text content or web page content or remove the existing ones, just like in the [Paragraph Sections](paragraph-section.md). 
+The content of the Media Section can be an image, customized through the [Content Image Toolbar](content-image-toolbar.md), or a map, customized through the [Content Map Toolbar](content-map-toolbar.md).
+
+Once the first media is added to the Media Section it's possible to add new media, text content or web page content or remove the existing ones, just like in the [Paragraph Sections](paragraph-section.md). 
 
 <img src="../img/media-section/add-content.jpg" class="ms-docimage" width="700px"/>
 

@@ -1,4 +1,4 @@
-# Configure the map
+# Map configuration
 **********************
 
 With the **Edit map configuration** button <img src="../img/button/configure-map-button.jpg" class="ms-docbutton"/>  the **Configure map** opens on the builder giving the user the opportunity to change the background map.

@@ -79,10 +79,5 @@ In this case, adding a map as background, the result will be like this:
 
 <img src="../img/title-section/map-background.jpg" class="ms-docimage"/>
 
-The background toolbar, in case of the map, has a new button: 
-
-<img src="../img/title-section/map-toolbar.jpg" class="ms-docimage" style="width:300px"/>
-
-* the **Edit map configuration** through which is possible [Configure the Map](configure-map.md)
-
+The background toolbar, in case of the map, also has the **Edit map configuration** button <img src="../img/button/configure-map-button.jpg" class="ms-docbutton"/>, which allows the user to control different aspects of the background map as explained in the [Map Configuration](configure-map.md).
 

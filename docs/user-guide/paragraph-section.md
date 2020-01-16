@@ -1,7 +1,7 @@
 # Paragraph Section
 **********************
 
-The Paragraph Section allow the user to edit the content, inserting textual elements and/or media. In order to add a new content, the user can click on the <img src="../img/button/++++.jpg" class="ms-docbutton"/> button present just below each content. As said, it is possible chooseing between:
+The Paragraph Section allow the user to edit the content, inserting textual elements and/or media. In order to add a new content, the user can click on the <img src="../img/button/++++.jpg" class="ms-docbutton"/> button present just below each content. As said, it is possible to choose between:
 
 <img src="../img/paragraph-section/add-paragraph.jpg" class="ms-docimage"/>
 

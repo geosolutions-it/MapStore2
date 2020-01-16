@@ -5,7 +5,7 @@ The Web Page Section is similar to the Paragraph Section and the Media Section b
  
 <img src="../img/web-section/web-window.jpg" class="ms-docimage"/>
 
-An example of a new Web Page Section with a web page added can be like the following:
+The web page content can be customized through the [Content Web Page Toolbar](content-web-toolbar.md). An example of a new Web Page Section with a web page added can be like the following:
 
 <img src="../img/web-section/web-page.jpg" class="ms-docimage"/>
 

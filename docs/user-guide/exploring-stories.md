@@ -29,16 +29,14 @@ The information flux of the Story is organized in Sections, that can be added fr
 
 ## View Mode
 
-The *View Mode* it is a way of approaching a story useful in cases where you would like to present the content of your work to someone, or simply every time you need to check up the progress of your work. <br>
+The *View Mode* it's a way of approaching a story useful in cases where you would like to present the content of your work to someone, or simply every time you need to check up the progress of your project. <br>
 The user can access the *View Mode* through the **Show preview** button <img src="../img/button/show-preview-button.jpg" class="ms-docbutton"/> in Builder's toolbar, and the first display is organized like the following:
 
 <img src="../img/exploring-stories/view-mode-page.jpg" class="ms-docimage"/>
 
-On the top of the page there is a **Top bar** in which the story's informations are displayed. 
+On the top of the page there is a **Top bar**, with the following tools, which allow the user to interact with the story:
 
 <img src="../img/exploring-stories/top-bar.jpg" class="ms-docimage"/>
-
-Which are from left to right:
 
 * **Edit Story** button <img src="../img/button/edit-icon-1.jpg" class="ms-docbutton"/> that allows to switching back to the *Edit Mode*
 * **Navigation bar** allows to navigating to the different sections of the story 

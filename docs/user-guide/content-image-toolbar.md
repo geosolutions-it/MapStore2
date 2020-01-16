@@ -18,3 +18,6 @@ In particular, through this toolbar, the user is able to perform the following o
 !!! warning
     The **Align content** button is enabled only when the size of the image is not full screen.
 
+An example of a content image with *large* size and *right* alignment can be like the following:
+
+<img src="../img/content-image-toolbar/c-image-setted.jpg" class="ms-docimage"/>
