@@ -347,9 +347,9 @@ describe('TOCPlugin Plugin', () => {
             }]} />, document.getElementById("container"));
             // check tools
 
-            expect(document.querySelector(ZOOM_TO_SELECTOR)).toExist();
-            expect(document.querySelector(WIDGET_BUILDER_SELECTOR)).toExist();
-            expect(document.querySelector(REMOVE_SELECTOR)).toExist();
+            expect(document.querySelector(ZOOM_TO_SELECTOR)).toExist("zoom doesn't exist");
+            expect(document.querySelector(WIDGET_BUILDER_SELECTOR)).toExist("widget doesn't exist");
+            expect(document.querySelector(REMOVE_SELECTOR)).toExist("remove doesn't exist");
         });
     });
 });
