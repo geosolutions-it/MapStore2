@@ -254,8 +254,9 @@ const findMediaResourceInContent = (rId, {contents, background, resourceId}) => 
         return true;
     }
     if (contents) {
-        return find(contents, e => findMediaResourceInContent(rId, e));
+        return !!find(contents, e => findMediaResourceInContent(rId, e));
     }
+    return false;
 };
 
 /**
