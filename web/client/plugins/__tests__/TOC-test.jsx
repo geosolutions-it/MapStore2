@@ -346,7 +346,7 @@ describe('TOCPlugin Plugin', () => {
                 name: "WidgetBuilder"
             }]} />, document.getElementById("container"));
             // check tools
-            expect(document.querySelectorAll(TOOL_BUTTON_SELECTOR).length).toBe(3);
+
             expect(document.querySelector(ZOOM_TO_SELECTOR)).toExist();
             expect(document.querySelector(WIDGET_BUILDER_SELECTOR)).toExist();
             expect(document.querySelector(REMOVE_SELECTOR)).toExist();
