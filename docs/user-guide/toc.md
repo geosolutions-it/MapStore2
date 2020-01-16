@@ -1,142 +1,145 @@
 # Table of Contents (TOC)
-************************
+**************************
 
-The Table of Contents, briefly TOC from now on, is a place where all layers on the map are kept. It shows what the features in each layer represent and it allows you to manage the order and the visibility of the added layers. Moreover, it contains several tools in order to make edits and analysis on the layers.
+The Table of Contents, briefly TOC from now on, is a space where all the layers and the layers groups are listed. Through this panel it is also possible to carry out the following operations:
 
-Adding Layers
--------------
+* Add and remove layers and groups
 
-* **Click** on the *Show Layers* icon <img src="../img/button/show-layers.jpg" class="ms-docbutton" /> on the top-left corner of the map viewer. The TOC will open.
+* Perform a search between layers
+
+* Change the position (and consequently the display order in map) of layers and groups
+
+* Set some display options directly from the panel
+
+* Manage layers and groups and query layers through the toolbar actions
+
+## Add and remove layers and groups
+
+The user can access the TOC with the **Layers** button <img src="../img/button/show-layers.jpg" class="ms-docbutton"/> on the top-left corner of the map viewer. For example, in a new map, the following panel appears:
 
 <img src="../img/toc/toc.jpg" class="ms-docimage"  style="max-width:300px;" />
 
-* **Click** on the *Add Layer* icon <img src="../img/button/add_layer_button.jpg" class="ms-docbutton"/>. The *Catalog* page will open on the right. You will learn more about the *Catalog Services* in the [Menu Bar](menu-bar.md) section.
+The **Add Layer** button <img src="../img/button/add_layer_button.jpg" class="ms-docbutton"/> opens the [Catalog](catalog.md), a panel  where it is possible to choose the desired layer and add it to the map with the **Add to Map** button <img src="../img/button/add_to_map_button.jpg" class="ms-docbutton"/>:
 
 <img src="../img/toc/catalog.jpg" class="ms-docimage"  style="max-width:500px;" />
 
-* From the search bar highlighted in the figure above. **Search** for *USA POPULATION* layer then **Click** on  <img src="../img/button/add_to_map_button.jpg" class="ms-docbutton"/>. The layer will be added to the TOC under the Default *Layer Group* and displayed on the map.
+Once the layer is added to the map, the result should be like the following:
 
 <img src="../img/toc/layer-usa.jpg" class="ms-docimage"/>
 
-* You can toggle the layer visibility by switching off <img src="../img/button/eyeoff.jpg" class="ms-docbutton"/> and on <img src="../img/button/eyeon.jpg" class="ms-docbutton"/> the "eye" icon.
+!!! note
+    When a layer is added for the first time to the TOC, without any group present, the *Default* group is created. This group host all the layers that don't belong to a specific group and can also host sub-groups within it.
 
-* You can expand the layer legend by clicking on the arrow icon <img src="../img/button/legend-icon.jpg" class="ms-docbutton"/>.
+In order to add a new group, clicking on the **Add Group** button <img src="../img/button/add_group_button.jpg" class="ms-docbutton"/> the following window opens:
 
-<img src="../img/toc/layer-legend.jpg" class="ms-docimage"  style="max-width:500px;"/>
+<img src="../img/toc/new_group_name.jpg" class="ms-docimage"  style="max-width:350px;"/>
 
-* You can control the layer transparency by scrolling left and right the transparency bar <img src="../img/toc/transparency-bar.jpg" class="ms-docbutton" style="max-height:20px"/>.
+Once the name of the group is typed, with the <img src="../img/button/add_group_confirm_button.jpg" class="ms-docbutton"/> button the new group is added to the TOC.
 
-Managing Layer Groups
----------------------
+<img src="../img/toc/group-added.jpg" class="ms-docimage"  style="max-width:300px;"/>
 
-From the TOC, **Click** on the <span style="color:blue">*Default* </span> Layer Group. The layer group card will be highlighted and a <span style="color:red">set of options </span> will be shown.
+In order to add a new layer to a specific group, it is possible to select that group and click on **Add layer to selected group** <img src="../img/button/add_layer_button.jpg" class="ms-docbutton"/>:
 
-<img src="../img/toc/layer_group.jpg" class="ms-docimage"  style="max-width:300px;"/>
+<img src="../img/toc/add-layer-to-group.jpg" class="ms-docimage"  style="max-width:300px;"/>
 
- * <img src="../img/button/add_layer_button.jpg" class="ms-docbutton"/> allows the user to add layers to the selected group.
+In order to add a subgroup inside a specific group selected, the user can click on the **Add sub group to the selected group** button <img src="../img/button/add_group_button.jpg" class="ms-docbutton"/> (maximum 4 subgroup levels are allowed):
 
- * <img src="../img/button/add_group_button.jpg" class="ms-docbutton"/> allows the user to create groups and subgroups.
+<img src="../img/toc/add-sub-group.jpg" class="ms-docimage"  style="max-width:300px;"/>
 
- * <img src="../img/button/zoom-layer.jpg" class="ms-docbutton"/> allows the user to zoom on the existing layers in the group.
-
- * <img src="../img/button/properties.jpg" class="ms-docbutton"/> allows the user to manage the properties of the layer group.
-
- * <img src="../img/button/delete.jpg" class="ms-docbutton"/> allows the user to delete the layer group and its content.
-
-**Click** on <img src="../img/button/properties.jpg" class="ms-docbutton"/>, you will be addressed to a new page.
-
-<img src="../img/toc/group-settings.jpg" class="ms-docimage"  style="max-width:500px;"/>
-
-Here you can change the Title of the layer group, its translations in several languages and the description.
-
-* **Change** the *Title* from Default to USA.
-
-* Then **Click** on the save icon <img src="../img/button/save-icon.jpg" class="ms-docbutton"/>. You will be redirected to the TOC.
-
-Now let us suppose that we want to add new layers and arrange them in new groups:
-
-* **Click** on *USA* layer group to deselect it then **Click** on <img src="../img/button/add_layer_button.jpg" class="ms-docbutton"/> to add another layer to the map.
-
-<img src="../img/toc/usa_group.jpg" class="ms-docimage"  style="max-width:300px;"/>
-
-As before, the catalog will open on the right side of the portal.
-
-* **Search** the layer *North America sample imagery* then **Add** it to the map.
-
-<img src="../img/toc/second-layer.jpg" class="ms-docimage"  style="max-width:500px;"/>
-
-The order of the layers in the TOC determines the drawing order in the data frame.
-
-*  **Drag** and **Drop** the *USA Population* layer over the  *North America sample imagery* layer in order to get a right drawing order.
-
-<img src="../img/toc/order-layers.jpg" class="ms-docimage"  style="max-width:500px;"/>
-
-* Deselect all the layers and groups, then **Click** on <img src="../img/button/add_group_button.jpg" class="ms-docbutton"/> to add a new group.
-
-<img src="../img/toc/new_group_name.jpg" class="ms-docimage"  style="max-width:300px;"/>
-
-* **Type** the name of the group and click <img src="../img/button/add_group_confirm_button.jpg" class="ms-docbutton"/>, the new group should be visible under the existing ones.
-
-<img src="../img/toc/new_group.jpg" class="ms-docimage"  style="max-width:300px;"/>
-
-In order to change a layer's group, you can simply drag and drop that layer inside the desidered group.
-
-* **Drag** and **Drop** the *North America sample imagery* inside the new *Imagery* group.
-
-<img src="../img/toc/layer-in-group.jpg" class="ms-docimage"  style="max-width:300px;"/>
-
-In addition to creating a new main group (at the same level of *USA*), you can also create or set new sub-groups (maximum 4 sub-group levels are allowed). 
-
-* Select for example the *USA* group and **Click** the <img src="../img/button/add_group_button.jpg" class="ms-docbutton"/> icon in the toolbar.
-
-<img src="../img/toc/north_america_subgroup.jpg" class="ms-docimage"  style="max-width:300px;"/>
-
-* **Type** the subgroup name and **Click** on <img src="../img/button/add_group_confirm_button.jpg" class="ms-docbutton"/>.
-
-<img src="../img/toc/new-subgroup.jpg" class="ms-docimage"  style="max-width:300px;"/>
-
-Groups and sub-groups, no matter their level, can be nested inside other groups and sub-groups, or can be separated from their mother-level to form new main groups. These operation can be performed, again, with the drag and drop function.
+Layers and groups can be removed selecting them and clicking on the **Remove** button <img src="../img/button/delete.jpg" class="ms-docbutton"/> present in the toolbar of each selected layer and group.
 
 !!! warning
-    The only constraints applied to the groups manager refer to the default group, created when the first layer is added to the Table of Content. At the moment is impossible to change the position or nest the default group inside another group or sub-group, but it's allowed to rename it or to nest groups or sub-groups inside it.  
+    When a group is removed, also all the layers and subgroups associated with it will be removed.
 
-* **Drag** and **Drop** the *North America* sub-group inside the *Imagery* group.
+## Search for layers
 
-<img src="../img/toc/subgroup-in-group.jpg" class="ms-docimage"  style="max-width:300px;"/>
+With the TOC it is also possible to perform a search between the added layers. This operation can be done simply by typing the name (o part of it) of the layer in the search bar:
 
-It is also possible to change the group of a specific layer from the selected layer's settings button. 
+<img src="../img/toc/search.jpg" class="ms-docimage"  style="max-width:300px;"/>
 
-* Now, **Click** on *North America sample imagery* to select it. A set of options will be shown, it will be addressed in details shortly. For now **Click** the settings icon of the layer. 
+## Choose layers and groups position
 
-<img src="../img/toc/layer-settings.jpg" class="ms-docimage"  style="max-width:300px;"/>
+With the drag and drop it is possible to change layers position inside the same group, but also moving them between different groups. Once the *Default* group is created, all the layers without a specific group are automatically added to this one. Changing layers position with the drag and drop, for example, it can display like the following:
 
-* You will be addressed to a new page. Under the Group field, **Open** the dropdown menu and you will see all the groups and sub-groups where it's possible to nest the layer. **Click** on the *Imagery/North America* option in order to nest the layer inside the *North America* sub-group.
+<img src="../img/toc/ded-layers.gif" class="ms-docimage"  style="max-width:300px;"/>
 
-<img src="../img/toc/layer-to-subgroup.jpg" class="ms-docimage"  style="max-width:300px;"/>
+Groups and sub-groups, no matter their level, can be nested inside other groups and sub-groups, or can be separated from their parent-level to create new main groups. These operation can be performed, again, with the drag and drop function.
 
-* **Save** the edits and take a look at the TOC to see the results.
+<img src="../img/toc/ded-groups.gif" class="ms-docimage"  style="max-width:300px;"/>
 
-<img src="../img/toc/layer-moved.jpg" class="ms-docimage"  style="max-width:300px;"/>
+!!! warning
+    The only constraints applied to the groups manager refer to the *Default* group (each layer added to the map the first time is included in that group). Drag and Drop operations are not allowed for the *Default*, but it's allowed to rename it or to nest groups or sub-groups inside it.  
 
-Managing Layers
----------------
+Layers position can also be determined through the **Selected layer settings** button <img src="../img/button/properties.jpg" class="ms-docbutton"/> available in the toolbar that appears once a layer is selected. This button opens a panel where the user can choose the destination group (or subgroup):
 
-After adding a layer, several options can be accessed from the TOC allowing you to manage the layer and to make analysis on it.
+<img src="../img/toc/settings-group.jpg" class="ms-docimage"  style="max-width:350px;"/>
 
-**Click** on the *USA Population* layer, added in the previous section, to select it. A set of tools will be ready to be applied on the selected layer.
+## Display options in panel
 
-<img src="../img/toc/layer-tools.jpg" class="ms-docimage"  style="max-width:300px;" />
+Directly from the TOC panel, it is possible to set different types of display options. In particular, for layers, it is possible to:
 
-* <img src="../img/button/zoom-layer.jpg" class="ms-docbutton"/> allows you to zoom on the selected layer.
+<img src="../img/toc/layer-legend.jpg" class="ms-docimage"/>
 
-* <img src="../img/button/delete.jpg" class="ms-docbutton"/> allows you to delete the selected layer.
+* Toggle layers visibility by switching on <img src="../img/button/eyeon.jpg" class="ms-docbutton"/> and off <img src="../img/button/eyeoff.jpg" class="ms-docbutton"/> the "eye" icon to the left of the layer name
 
-The remaining tools will be faced in detail in separate sections:
+* Expand or collapse the legend by clicking on the <img src="../img/button/legend-icon.jpg" class="ms-docbutton"/> icon
 
-*  <img src="../img/button/properties.jpg" class="ms-docbutton"/> [Layer Settings](layer-settings.md): allows you to manage the layers in groups, to set the display mode and the style of the layers, and to set the format of the feature info.
+* Control the transparency in map by scrolling the opacity slider
 
-*  <img src="../img/button/filter-layer.jpg" class="ms-docbutton"/> [Filter Layer](filtering-layers.md): acts directly on a layer and filter its content upfront (this works only on layers with WFS available).
+!!! note
+    When the user switch off the visibility of a layer, also the group where that layer is nested change the "eye" icon in <img src="../img/button/eyeoff.jpg" class="ms-docbutton"/> (no matter if other visible layers are present in that group)
 
-*  <img src="../img/button/attributes-table.jpg" class="ms-docbutton" /> [Attribute Table](attributes-table.md): allows you to visualize, query, edit and analyze tabular data related to the layer.
+With groups there's the possibility to:
 
-* <img src="../img/button/widgets.jpg" class="ms-docbutton"/> [Widgets](widgets.md): allows you to create charts, texts, tables widgets and add them to the map.
+<img src="../img/toc/group.jpg" class="ms-docimage"/>
+
+* Expand <img src="../img/button/group-open.jpg" class="ms-docbutton"/> or collapse <img src="../img/button/group-close.jpg" class="ms-docbutton"/> the list of layers or subgroups nested inside it
+
+* Toggle groups visibility by switching on <img src="../img/button/eyeon.jpg" class="ms-docbutton"/> and off <img src="../img/button/eyeoff.jpg" class="ms-docbutton"/> the "eye" icon to the left of the group name
+
+!!! note
+    When the user switch off the visibility of a group, also the visibility of all the layers and subgroups nested inside it will be automatically switched off.
+
+## Toolbar options
+
+Once a layer is selected the following toolbar appears: 
+
+<img src="../img/toc/layer-toolbar.jpg" class="ms-docimage"/>
+
+Through this toolbar it is possible to:
+
+* **Zoom to selected layer extent** <img src="../img/button/zoom-layer.jpg" class="ms-docbutton"/>
+
+* Access the selected [Layer Settings](layer-settings.md) <img src="../img/button/properties.jpg" class="ms-docbutton"/>
+
+* [Set a Filter](filtering-layers.md) for that layer <img src="../img/button/filter-layer.jpg" class="ms-docbutton"/>
+
+* Access the [Attribute Table](attributes-table.md) <img src="../img/button/attributes-table.jpg" class="ms-docbutton"/>
+
+* **Remove** the selected layer <img src="../img/button/delete.jpg" class="ms-docbutton"/>
+
+* [Create Widgets](widgets.md) for the selected layer <img src="../img/button/widgets.jpg" class="ms-docbutton"/>
+
+Selecting a group the toolbar is the following:
+
+<img src="../img/toc/group-toolbar.jpg" class="ms-docimage"/>
+
+In this case the user is allowed to:
+
+* **Add layer to selected group** <img src="../img/button/add_layer_button.jpg" class="ms-docbutton"/>
+
+* **Add sub group to the selected group** <img src="../img/button/add_group_button.jpg" class="ms-docbutton"/>
+
+* **Zoom to selected layers extent** <img src="../img/button/zoom-layer.jpg" class="ms-docbutton"/> (in order to zoom the map to all layers belonging to the group)
+
+* Access the **Selected group settings** <img src="../img/button/properties.jpg" class="ms-docbutton"/> where it is possible to set the group title and the translations, take a look at the group ID name, add a description and customize the Tooltips visualization (more information can be found in [Layer Settings](layer-settings.md) section)
+
+<img src="../img/toc/group-settings.jpg" class="ms-docimage" style="max-width:400px;"/>
+
+* **Remove selected group** <img src="../img/button/delete.jpg" class="ms-docbutton"/> and its content
+
+Once the changes have been made, it's possible to save them through the **Save** button <img src="../img/button/save-icon.jpg" class="ms-docbutton"/>.
+
+!!! note
+    Information such modified will be persisted only within the current user session. In order to make thiese kind of changes persistent also for other user session, the whole map context needs to be saved.
+
