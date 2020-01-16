@@ -43,10 +43,7 @@
       "title": "Table of contents",
       "description": "plugins.TOC.description",
       "defaultConfig": {
-        "activateQueryTool": true,
         "activateAddLayerButton": true,
-        "activateAddGroupButton": true,
-        "activateMetedataTool": false,
         "addLayersPermissions": true,
         "removeLayersPermissions": true,
         "sortingPermissions": true,
@@ -337,7 +334,7 @@
     },
     {
       "name": "BurgerMenu",
-      "hidden": true,
+      "active": true,
       "dependencies": [
         "OmniBar"
       ]
@@ -391,7 +388,7 @@
       ]
     }, {
       "name": "UserExtensions",
-      "dependencies": "BurgerMenu"
+      "dependencies": ["BurgerMenu"]
     }
   ]
 }
