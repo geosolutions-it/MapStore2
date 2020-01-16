@@ -1,13 +1,15 @@
 # Paragraph Section
 **********************
 
-The Paragraph Section allow the user to edit the content, inserting textual elements and/or media. In order to add a new content, the user can click on the <img src="../img/button/++++.jpg" class="ms-docbutton"/> button present just below each content. As said, it is possible to choose between text content or media content:
+The Paragraph Section allow the user to edit the content, inserting textual elements and/or media. In order to add a new content, the user can click on the <img src="../img/button/++++.jpg" class="ms-docbutton"/> button present just below each content. As said, it is possible to choose between:
 
-<img src="../img/paragraph-section/p-add-content.jpg" class="ms-docimage"/>
+<img src="../img/paragraph-section/add-paragraph.jpg" class="ms-docimage"/>
 
-* Choosing **Add Text Content** <img src="../img/button/add-text-content.jpg" class="ms-docbutton"/>, another text content is added just below the current one
+* **Text Content** <img src="../img/button/add-text-content.jpg" class="ms-docbutton"/> to add another text content just below the current one
 
-* Choosing **Add Media Content** <img src="../img/button/add-media-content.jpg" class="ms-docbutton"/>, the Media Editor Window opens, allowing the user to add a new media
+* **Media Content** <img src="../img/button/add-media-content.jpg" class="ms-docbutton"/> to open the Media Editor Window, allowing the user to add a new image or a map
+
+* **Web Page Content** <img src="../img/button/web-page-button.jpg" class="ms-docbutton"/> to add a wab page 
 
 ## Text
 
@@ -23,10 +25,23 @@ The user can delete the text content with the Remove button  <img src="../img/bu
 
 ## Media
 
-Adding a media content, the [Media Editor Window](media-editor-window.md) opens, allowing the user to add an Image, a Video or a Map. 
+Adding a media content, the [Media Editor Window](media-editor-window.md) opens, allowing the user to add an Image or a Map. 
 
 ### Images
 
-An image added inside the paragraph section can be customized through the [Content Image Toolbar](content-image-toolbar.md). An example of an image with *medium size* and *left alignment* set, added just below a text content, can be the following:
+An image added inside the paragraph section can be customized through the [Content Image Toolbar](content-image-toolbar.md). An example of an image with *small size* and *center alignment* set, added just below a text content, can be the following:
 
-<img src="../img/paragraph-section/parag-section.jpg" class="ms-docimage"/>
+<img src="../img/paragraph-section/text-image.jpg" class="ms-docimage"/>
+
+### Maps
+
+A map added inside the paragraph section can be customized through the [Content Map Toolbar](content-map-toolbar.md). An example of a map with *large size* and *center alignment* set, added just below an image content, can be the following:
+
+<img src="../img/paragraph-section/image-map.jpg" class="ms-docimage"/>
+
+## Web Page Content 
+
+Adding a web page content, the Web Page Windows opens, allowing the user to add an URL. A web page added inside the paragraph section can be customized through the [Content Web Page Toolbar](content-web-toolbar.md). An example of a web page with *medium size* and *center alignment* set, added just below a map content, can be the following:
+
+<img src="../img/paragraph-section/map-web.jpg" class="ms-docimage"/>
+

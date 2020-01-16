@@ -11,11 +11,11 @@ By default, the content of a *Title Section* is a text window:
 
 With a click inside the text window, it expands and the [Text Editor Toolbar](text-editor-toolbar.md) appears, allowing the user to write and edit his text:
 
-<img src="../img/title-section/text-editor.jpg" class="ms-docimage" style="width:600px"/>
+<img src="../img/title-section/rich-text.jpg" class="ms-docimage"/>
 
 Once the text has been written and customized, it is possible to change the text window settings from the *text window toolbar*: 
 
-<img src="../img/title-section/textwin-toolbar.jpg" class="ms-docimage" style="width:600px"/>
+<img src="../img/title-section/textwin-toolbar.jpg" class="ms-docimage"/>
 
 The text window toolbar allows the user to change the following settings:
 
@@ -29,13 +29,13 @@ The text window toolbar allows the user to change the following settings:
 
 Setting a title with *Large* size, aligned on the *Center* of the Container and with a *Bright* theme, the result is something like: 
 
-<img src="../img/title-section/title-text.jpg" class="ms-docimage" style="width:600px"/>
+<img src="../img/title-section/title-text.jpg" class="ms-docimage"/>
 
 ## Background
 
 For Title sections, it is possible to customize the background through the background editor toolbar:
 
-<img src="../img/title-section/bck-editor-toolbar.jpg" class="ms-docimage" style="width:600px"/>
+<img src="../img/title-section/bck-editor-toolbar.jpg" class="ms-docimage"/>
 
 The background editor toolbar, when no media are applied, allows the user to:
 
@@ -52,7 +52,7 @@ As background, it is possible to add three types of media: images, videos or map
 
 Once an image is added as background of an expanded title section, the result is something like this:
 
-<img src="../img/title-section/img-applied.jpg" class="ms-docimage" style="width:600px"/>
+<img src="../img/title-section/img-applied.jpg" class="ms-docimage"/>
 
 In this case the background editor toolbar allow the user to customize the image background through the following settings:
 
@@ -71,4 +71,14 @@ In this case the background editor toolbar allow the user to customize the image
 * **Change field theme** <img src="../img/button/change-field-theme.jpg" class="ms-docbutton"/> to set the colour of the empty background between *Bright* and *Dark*
 
 !!! warning
-    The *Align content* and the *Change field theme* buttons are disabled if the image size is full screen.
+    The *Align content* and the *Change field theme* buttons are disabled if the image size is full screen
+
+### Maps
+
+In this case, adding a map as background, the result will be like this:
+
+<img src="../img/title-section/map-background.jpg" class="ms-docimage"/>
+
+The background toolbar, in case of the map, also has the **Edit map configuration** button <img src="../img/button/configure-map-button.jpg" class="ms-docbutton"/>, which allows the user to control different aspects of the background map as explained in the [Map Configuration](configure-map.md).
+
+
