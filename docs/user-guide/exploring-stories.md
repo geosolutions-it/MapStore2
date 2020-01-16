@@ -1,14 +1,14 @@
 # Exploring Story 
 **********************
 
-In [MapStore](https://mapstore.geo-solutions.it/mapstore/#/), the Story is a tool that allows you to express in a simple and dynamic way a concept, combining and connecting text, maps, images, video and other media as desired. The final result is an interactive flux of information that reflects user customizations.
+In [MapStore](https://mapstore.geo-solutions.it/mapstore/#/), the Story is a tool that allows the user to express in a simple and dynamic way a concept combining and connecting text, maps, images, videos and other media as desired. The final result is an interactive flux of information customized according to user defined styles.
 
 <img src="../img/exploring-stories/story.gif" class="ms-docimage"/>
 
-The user can approach with a story in two different ways:
+It is possible to approach a story in two different ways:
 
 * Creating a new story or editing an existing one through the *Edit Mode*
-* Enjoy the story and interact with it, through the *View Mode*
+* Present or simply enjoy a story and interact with it, through the *View Mode*
 
 ## Edit Mode
 
@@ -56,7 +56,9 @@ Both in edit mode and new mode, the user can save your story, through the Option
 
 <img src="../img/exploring-stories/save-page.jpg" class="ms-docimage" width="400px"/>
 
-* **Name** (it's the only mandatory field)
+In here the user can set the following properties:
+
+* **Name** (the only mandatory field)
 
 * **Thumbnail** with an image with max 500 kb and with not more of 180 px of hight and 300 px of width
 
@@ -79,6 +81,8 @@ In the **Social** section there are Facebook, Twitter and LinkedIn icons through
 If the **Advanced Options** are enable, the story link opens in *View mode* with the possibility to back to the home page with the *Home Page* button.
 
 <img src="../img/exploring-stories/share-page.jpg" class="ms-docimage"/>
+
+
 
 
 

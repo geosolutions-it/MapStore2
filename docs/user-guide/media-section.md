@@ -10,4 +10,3 @@ The content of the Media Section can be an image, customized through the [Conten
 Once the first media is added to the Media Section it's possible to add new media, text content or web page content or remove the existing ones, just like in the [Paragraph Sections](paragraph-section.md). 
 
 <img src="../img/media-section/add-content.jpg" class="ms-docimage" width="700px"/>
-
