@@ -22,7 +22,7 @@ const fix = lifecycle({
     },
     shouldComponentUpdate() { return false; },
     componentWillUnmount() {
-        fixedElements[this.props.id] = document.getElementById(this.props.id)
+        fixedElements[this.props.id] = document.getElementById(this.props.id);
     }
 });
 const FixedContainer = fix(({ id }) => <div id={id}></div>);
