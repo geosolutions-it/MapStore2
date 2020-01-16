@@ -1,18 +1,14 @@
 const Rx = require('rxjs');
-const { startsWith, endsWith, has, get, includes, isEqual, omit, omitBy} = require('lodash');
+const { endsWith, has, get, includes, isEqual, omit, omitBy} = require('lodash');
 const { EXPORT_CSV, EXPORT_IMAGE, INSERT, TOGGLE_CONNECTION, WIDGET_SELECTED, EDITOR_SETTING_CHANGE,
-    onEditorChange, updateWidgetLayer, clearWidgets, loadDependencies, toggleDependencySelector, DEPENDENCY_SELECTOR_KEY, WIDGETS_REGEX,
-    UPDATE_PROPERTY
+    onEditorChange, updateWidgetLayer, clearWidgets, loadDependencies, toggleDependencySelector, DEPENDENCY_SELECTOR_KEY, WIDGETS_REGEX
 } = require('../actions/widgets');
-const wpsBounds = require('../observables/wps/bounds');
 
 const {
     MAP_CONFIG_LOADED
 } = require('../actions/config');
-const {composeFilterObject} = require('../components/widgets/enhancers/utils');
-const {toOGCFilter} = require('../utils/FilterUtils');
 
-const { availableDependenciesSelector, isWidgetSelectionActive, getDependencySelectorConfig, getWidgetById } = require('../selectors/widgets');
+const { availableDependenciesSelector, isWidgetSelectionActive, getDependencySelectorConfig } = require('../selectors/widgets');
 const { CHANGE_LAYER_PROPERTIES, LAYER_LOAD, LAYER_ERROR } = require('../actions/layers');
 const { getLayerFromId } = require('../selectors/layers');
 const { pathnameSelector } = require('../selectors/router');

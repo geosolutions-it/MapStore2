@@ -9,6 +9,7 @@
 const { find, get, castArray} = require('lodash');
 const {mapSelector} = require('./map');
 const {getSelectedLayer} = require('./layers');
+const {pathnameSelector} = require('./router');
 const {DEFAULT_TARGET, DEPENDENCY_SELECTOR_KEY, WIDGETS_REGEX} = require('../actions/widgets');
 const { getWidgetsGroups, getWidgetDependency} = require('../utils/WidgetsUtils');
 
@@ -67,12 +68,13 @@ const availableDependenciesSelector = createSelector(
     getMapWidgets,
     getTableWidgets,
     mapSelector,
-    (ws = [], tableWidgets = [], map = []) => ({
+    pathnameSelector,
+    (ws = [], tableWidgets = [], map = [], pathname) => ({
         availableDependencies:
             ws
                 .map(({id}) => `widgets[${id}].map`)
                 .concat(castArray(map).map(() => "map"))
-                .concat(castArray(tableWidgets).map(({id}) => `widgets[${id}]`))
+                .concat(castArray(tableWidgets).filter(() => pathname.indexOf("viewer") === -1).map(({id}) => `widgets[${id}]`))
     })
 );
 /**

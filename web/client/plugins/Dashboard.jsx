@@ -7,7 +7,6 @@
  */
 
 const React = require('react');
-// const { get } = require('lodash');
 const { connect } = require('react-redux');
 const { compose, withProps, withHandlers } = require('recompose');
 const { createSelector } = require('reselect');

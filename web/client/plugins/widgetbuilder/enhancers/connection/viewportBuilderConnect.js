@@ -15,7 +15,7 @@ const isTargetForOtherWidgets = (allDependenciesMap, widgetType, editorData) => 
  *
  */
 module.exports = compose(
-    withProps(({ editorData = {}, widgets }) => {
+    withProps(({ editorData = {}, widgets = [] }) => {
         const allDependenciesMap = widgets.filter(({mapSync, dependenciesMap}) => mapSync && dependenciesMap).map(({dependenciesMap}) => dependenciesMap);
         return {
             canConnect: editorData.geomProp && editorData.widgetType !== "table" || isTargetForOtherWidgets(allDependenciesMap, editorData.widgetType, editorData),

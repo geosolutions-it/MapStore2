@@ -36,8 +36,8 @@ const buildDependencies = (map, deps) => {
 /**
  * re-map widget `dependencies` based on `dependenciesMap` property (if `dependenciesMap` is present).
  * @example
- * const dependenciesMap={layers: "layers"};
- * const dependencies={layers: "value.layers"};
+ * const dependenciesMap={x: "a"};
+ * const dependencies={a: "b"};
  * return <EnhancedCmp dependenciesMap={dependenciesMap} dependencies={dependencies} />
  * // the enhancer will pass to the component dependencies={x: "b"}
  */
