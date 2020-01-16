@@ -41,9 +41,9 @@ module.exports = {
         }
         return {};
     },
-    getLayerInCommon: ({map, dependencies}) => {
+    getLayerInCommon: ({map = {}, dependencies} = {}) => {
         const targetLayerName = dependencies && dependencies.layer && dependencies.layer.name;
-        const layerInCommon = find(map.layers, {name: targetLayerName}) || {};
+        const layerInCommon = !isEmpty(map) && !isEmpty(map.layers) && find(map.layers, {name: targetLayerName}) || {};
         return layerInCommon;
     }
 };

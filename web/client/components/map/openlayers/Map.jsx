@@ -28,7 +28,7 @@ import mapUtils from '../../../utils/MapUtils';
 import projUtils from '../../../utils/openlayers/projUtils';
 import { DEFAULT_INTERACTION_OPTIONS } from '../../../utils/openlayers/DrawUtils';
 
-import {isEqual, find, throttle, isArray, isNil} from 'lodash';
+import {isEqual, find, throttle, isArray, isNil, isEmpty} from 'lodash';
 
 
 import 'ol/ol.css';
@@ -59,6 +59,7 @@ class OpenlayersMap extends React.Component {
         measurement: PropTypes.object,
         changeMeasurementState: PropTypes.func,
         registerHooks: PropTypes.bool,
+        zoomToExtent: PropTypes.bool,
         interactive: PropTypes.bool,
         onCreationError: PropTypes.func,
         bbox: PropTypes.object,
@@ -82,6 +83,7 @@ class OpenlayersMap extends React.Component {
         onLayerError: () => { },
         resize: 0,
         registerHooks: true,
+        zoomToExtent: false,
         interactive: true
     };
 
@@ -242,6 +244,21 @@ class OpenlayersMap extends React.Component {
                 this.map.removeControl(this.map.getControls().getArray().filter((ctl) => ctl instanceof Zoom)[0]);
             }
         }
+
+        if (!isEqual(newProps.bbox, this.props.bbox) && newProps.bbox && !isEmpty(newProps.bbox) && newProps.zoomToExtent) {
+            //
+            const extent = newProps && newProps.bbox && newProps.bbox.bounds;
+            let bounds = CoordinatesUtils.reprojectBbox(extent, newProps.bbox.crs, newProps.projection);
+            // if EPSG:4326 with max extent (-180, -90, 180, 90) bounds are 0,0,0,0. In this case zoom to max extent
+            // TODO: improve this to manage all degenerated bounding boxes.
+            if (bounds && bounds[0] === bounds[2] && bounds[1] === bounds[3] &&
+                newProps.bbox.crs === "EPSG:4326" && isArray(extent) && extent[0] === -180 && extent[1] === -90) {
+                bounds = this.map.getView().getProjection().getExtent();
+            }
+            this.map.getView().fit(bounds, { maxZoom: 21 });
+        }
+
+
         /*
          * Manage interactions programmatically.
          * map interactions may change, i.e. becoming enabled or disabled
