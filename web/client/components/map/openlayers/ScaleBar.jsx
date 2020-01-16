@@ -38,7 +38,12 @@ export default class ScaleBar extends React.Component {
 
     componentWillUnmount() {
         if (this.props.container && document.querySelector('.ol-scale-line')) {
-            document.querySelector(this.props.container).removeChild(document.querySelector('.ol-scale-line'));
+            try {
+                document.querySelector(this.props.container).removeChild(document.querySelector('.ol-scale-line'));
+            } catch (e) {
+                // do nothing... probably an old configuration
+            }
+
         }
     }
 
