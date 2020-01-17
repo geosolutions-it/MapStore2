@@ -13,6 +13,8 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.function.Predicate;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
@@ -44,33 +46,50 @@ public class UploadPluginController {
         ZipEntry entry = zip.getNextEntry();
         String pluginName = null;;
         String bundleName = null;
-        File tempBundle = null;
+        Map<File, String> tempFiles = new HashMap<File, String>();
         JSONObject plugin = null;
         while(entry != null) {
-            if (entry.getName().toLowerCase().endsWith(".js")) {
-                bundleName = entry.getName();
-                tempBundle = File.createTempFile("mapstore-bundle", ".js");
-                storeJsBundle(zip, tempBundle);
-            }
-            if (entry.getName().toLowerCase().endsWith(".json")) {
-                JSONObject json = readJSON(zip);
-                JSONArray plugins = json.getJSONArray("plugins");
-                // TODO: add support for many plugins in one single extension
-                plugin = plugins.getJSONObject(0);
-                plugin.accumulate("extension", true);
-                pluginName = plugin.getString("name");
-                addPluginConfiguration(plugin);
+            if (!entry.isDirectory()) {
+                if (entry.getName().toLowerCase().endsWith(".js")) {
+                    bundleName = entry.getName();
+                    File tempBundle = File.createTempFile("mapstore-bundle", ".js");
+                    storeAsset(zip, tempBundle);
+                    tempFiles.put(tempBundle, "js");
+                }
+                if ("index.json".equals(entry.getName().toLowerCase())) {
+                    JSONObject json = readJSON(zip);
+                    JSONArray plugins = json.getJSONArray("plugins");
+                    // TODO: add support for many plugins in one single extension
+                    plugin = plugins.getJSONObject(0);
+                    plugin.accumulate("extension", true);
+                    pluginName = plugin.getString("name");
+                    addPluginConfiguration(plugin);
+                }
+                if(entry.getName().toLowerCase().startsWith("translations/")) {
+                    File tempAsset = File.createTempFile("mapstore-asset-translations", ".json");
+                    storeAsset(zip, tempAsset);
+                    tempFiles.put(tempAsset, "asset/" + entry.getName());
+                }
             }
             entry = zip.getNextEntry();
         }
         String pluginBundle = bundlesPath + "/" + pluginName + "/" + bundleName;
         addExtension(pluginName + "Plugin", pluginBundle);
-        moveJsBundle(tempBundle, pluginBundle);
-        
+        for(File tempFile : tempFiles.keySet()) {
+            String type = tempFiles.get(tempFile);
+            if ("js".equals(type)) {
+                moveAsset(tempFile, context.getRealPath(pluginBundle));
+            }
+            if(type.indexOf("asset/") == 0) {
+                String assetPath = bundlesPath + "/" + pluginName + "/" + type.substring(type.indexOf("/") + 1);
+                moveAsset(tempFile, context.getRealPath(assetPath));
+            }
+        }
+       
         zip.close();
         return plugin.toString();
     }
-    
+
     public void setBundlesPath(String bundlesPath) {
         this.bundlesPath = bundlesPath;
     }
@@ -85,12 +104,12 @@ public class UploadPluginController {
 
 
 
-    private void moveJsBundle(File tempBundle, String pluginBundle) throws FileNotFoundException, IOException {
-        new File(pluginBundle).getParentFile().mkdirs();
-        try (FileInputStream input = new FileInputStream(tempBundle); FileOutputStream output = new FileOutputStream(pluginBundle)) {
+    private void moveAsset(File tempAsset, String finalAsset) throws FileNotFoundException, IOException {
+        new File(finalAsset).getParentFile().mkdirs();
+        try (FileInputStream input = new FileInputStream(tempAsset); FileOutputStream output = new FileOutputStream(finalAsset)) {
             IOUtils.copy(input, output);
         }
-        tempBundle.delete();
+        tempAsset.delete();
     }
 
     private void addPluginConfiguration(JSONObject json) throws IOException {
@@ -152,7 +171,7 @@ public class UploadPluginController {
         return JSONObject.fromObject(json.toString());
     }
 
-    private void storeJsBundle(ZipInputStream zip, File file) throws FileNotFoundException, IOException {
+    private void storeAsset(ZipInputStream zip, File file) throws FileNotFoundException, IOException {
         try(FileOutputStream outFile = new FileOutputStream(file)) {
             byte[] buffer = new byte[1024];
             int read = 0;

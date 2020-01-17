@@ -4,6 +4,7 @@ import Extension from "../components/Extension";
 import Rx from "rxjs";
 
 export default {
+    name: "My",
     component: connect(state => ({
         value: state.extension && state.extension.value
     }), {onIncrease: () => {
@@ -31,7 +32,7 @@ export default {
         Toolbar: {
             name: "Dummy",
             position: 10,
-            tooltip: "zoombuttons.zoomInTooltip",
+            tooltip: "",
             help: "",
             tool: true,
             priority: 1

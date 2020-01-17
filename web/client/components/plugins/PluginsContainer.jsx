@@ -45,7 +45,8 @@ class PluginsContainer extends React.Component {
         pluginsState: PropTypes.object,
         monitoredState: PropTypes.object,
         defaultMode: PropTypes.string,
-        onPluginLoaded: PropTypes.func
+        onPluginLoaded: PropTypes.func,
+        appendLocale: PropTypes.func
     };
 
     static contextTypes = {
@@ -73,7 +74,8 @@ class PluginsContainer extends React.Component {
         style: {},
         pluginsState: {},
         monitoredState: {},
-        onPluginLoaded: () => {}
+        onPluginLoaded: () => {},
+        appendLocale: () => {}
     };
 
     state = {
@@ -227,6 +229,9 @@ class PluginsContainer extends React.Component {
                     });
                 }
             });
+            if (plugins[pluginName].translations) {
+                this.props.appendLocale(plugins[pluginName].translations);
+            }
         });
     };
     loadPlugin = (plugin, impl) => {

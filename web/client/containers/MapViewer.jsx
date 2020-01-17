@@ -16,6 +16,7 @@ const urlQuery = url.parse(window.location.href, true).query;
 
 const ConfigUtils = require('../utils/ConfigUtils');
 const PluginsUtils = require('../utils/PluginsUtils');
+const {appendLocale} = require('../actions/locale');
 
 const PluginsContainer = connect((state) => ({
     statePluginsConfig: state.plugins,
@@ -25,7 +26,9 @@ const PluginsContainer = connect((state) => ({
         layerSettings: state.layers.settings
     }),
     monitoredState: PluginsUtils.getMonitoredState(state, ConfigUtils.getConfigProp('monitorState'))
-}))(require('../components/plugins/PluginsContainer'));
+}), {
+    appendLocale
+})(require('../components/plugins/PluginsContainer'));
 
 class MapViewer extends React.Component {
     static propTypes = {

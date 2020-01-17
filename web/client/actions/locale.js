@@ -34,6 +34,34 @@ function localeError(e) {
     };
 }
 
+function appendLocale(folder) {
+    debugger;
+    return (dispatch, getState) => {
+        axios.get(folder + `/data.${getState().locale.current}.json`)
+            .then((response) => {
+                if (typeof response.data === "string") {
+                    try {
+                        JSON.parse(response.data);
+                    } catch (e) {
+                        dispatch(localeError('Locale file broken  for (' + getState().locale.current + '): ' + e.message));
+                    }
+                }
+                dispatch(changeLocale({ locale: getState().locale.current, messages: merge(getState().locale.messages, response.data.messages)}));
+            }).catch((e) => {
+                dispatch(localeError(e));
+                dispatch(error({
+                    title: "notification.warning",
+                    message: e.status === 404 ? "localeErrors.404" : "Error loading locale",
+                    action: {
+                        label: "notification.warning"
+                    },
+                    position: "tc"
+                }));
+
+            });
+    };
+}
+
 function loadLocale(translationFolder, language) {
     return (dispatch) => {
         let locale = language;
@@ -70,4 +98,4 @@ function loadLocale(translationFolder, language) {
     };
 }
 
-module.exports = {CHANGE_LOCALE, LOCALE_LOAD_ERROR, loadLocale};
+module.exports = { CHANGE_LOCALE, LOCALE_LOAD_ERROR, loadLocale, appendLocale};
