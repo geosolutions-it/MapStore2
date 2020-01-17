@@ -2146,11 +2146,35 @@
                     "activatePlugin": "Désactiver la sélection du plugin actuel pour l'utilisateur",
                     "deactivatePlugin": "Désactiver le chargement de ce plugin au démarrage",
                     "editConfiguration": "Modifier la configuration du plugin",
-                    "pluginDocumentation": "Ouvrir la documentation de configuration du plugin"
+                    "pluginDocumentation": "Ouvrir la documentation de configuration du plugin",
+                    "mapTemplatesConfig": "Configurer le modèles"
                 },
                 "saveCfgErrorNotification":  {
                     "title": "Erreur de syntaxe dans la configuration du plugin",
                     "message": "Le plugin \"{pluginName}\" contient une erreur de configuration. Veuillez corriger avant de continuer"
+                }
+            },
+            "configureTemplates": {
+                "title": "Configurer le modèles",
+                "availableTemplates": "Modèles disponibles",
+                "enabledTemplates": "Modèles activés",
+                "templatesFilterPlaceholder": "Modèles de filtres",
+                "availableTemplatesEmpty": "Activé tous les modèles disponibles",
+                "enabledTemplatesEmpty": "Ajouter des modèles à la configuration à partir de la liste des modèles disponibles",
+                "searchResultsEmpty": "Aucun modèle trouvé répondant aux critères de recherche",
+                "fileDrop": {
+                    "label": "Modèle",
+                    "clear": "Déposez ou cliquez pour sélectionner un fichier de modèle de carte (les cartes JSON MapStore exportées ou les fichiers WMC sont pris en charge)"
+                },
+                "uploadDialog": {
+                    "title": "Télécharger un modèle de carte",
+                    "save": "Télécharger",
+                    "jsonParsingError": "Échec de l'analyse JSON: \"{error}\"",
+                    "fileReadError": "Une erreur de lecture de fichier inattendue s'est produite"
+                },
+                "tooltips": {
+                    "uploadTool": "Télécharger un nouveau modèle",
+                    "editTemplate": "Modifier les propriétés du modèle"
                 }
             },
             "configureMap": {
@@ -2159,7 +2183,8 @@
                 "confirm": "Cela va annuler toutes les modifications actuelles de la carte. Procéder?"
             },
             "saveErrorNotification": {
-                "title": "L'enregistrement de contexte a échoué",
+                "titleContext": "L'enregistrement de contexte a échoué",
+                "titleTemplate": "Échec de l'enregistrement du modèle",
                 "conflict": "Une ressource portant ce nom existe déjà",
                 "defaultMessage": "Erreur inconnue"
             },

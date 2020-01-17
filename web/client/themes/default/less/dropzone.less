@@ -2,7 +2,7 @@
 	cursor: pointer;
 }
 
-.dropzone-thumbnail-container .alert {
+.dropzone-thumbnail-container .alert, .dropzone-filedrop-container .alert {
 	overflow: hidden;
 	position: relative;
 	height: 180px;
@@ -13,6 +13,59 @@
 
 .dropzone-thumbnail-container div.dropzone-content-image-added {
 	transition: all 0.2s ease-in;
+}
+
+.dropzone-filedrop-container {
+    label {
+        width: 50%;
+        float: left;
+        font-weight: normal;
+    }
+
+    .dropzone:hover .dropzone-filedrop-remove span {
+        color: red;
+    }
+
+    .dropzone {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        overflow: hidden;
+        float: left;
+        width: 50%;
+        height: 141px;
+
+        .dropzone-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .glyphicon {
+            font-size: 48px;
+        }
+
+        span {
+            font-size: small;
+            text-align: center;
+        }
+
+
+        .dropzone-filedrop-remove {
+            position: absolute;
+            top: 0;
+            right: 0;
+            color: transparent;
+        }
+
+        .dropzone-filedrop-remove .glyphicon {
+            font-size: 16px;
+        }
+
+        .dropzone-filedrop-remove span:hover {
+            color: #f45353;
+        }
+    }
 }
 
 .dropzone .dropzone-content-image-added {

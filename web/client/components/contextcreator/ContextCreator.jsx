@@ -90,24 +90,39 @@ export default class ContextCreator extends React.Component {
         editedCfg: PropTypes.string,
         isCfgValidated: PropTypes.bool,
         cfgError: PropTypes.object,
+        parsedTemplate: PropTypes.object,
+        editedTemplate: PropTypes.object,
+        fileDropStatus: PropTypes.string,
         availablePluginsFilterText: PropTypes.string,
         enabledPluginsFilterText: PropTypes.string,
+        availableTemplatesFilterText: PropTypes.string,
+        enabledTemplatesFilterText: PropTypes.string,
         documentationBaseURL: PropTypes.string,
         onFilterAvailablePlugins: PropTypes.func,
         onFilterEnabledPlugins: PropTypes.func,
+        onFilterAvailableTemplates: PropTypes.func,
+        onFilterEnabledTemplates: PropTypes.func,
         setSelectedPlugins: PropTypes.func,
+        setSelectedTemplates: PropTypes.func,
+        setParsedTemplate: PropTypes.func,
+        setFileDropStatus: PropTypes.func,
         changePluginsKey: PropTypes.func,
+        changeTemplatesKey: PropTypes.func,
         mapType: PropTypes.string,
         showReloadConfirm: PropTypes.bool,
+        showDialog: PropTypes.object,
         onSetStep: PropTypes.func,
         onChangeAttribute: PropTypes.func,
         onSave: PropTypes.func,
+        onSaveTemplate: PropTypes.func,
+        onEditTemplate: PropTypes.func,
         onEditPlugin: PropTypes.func,
         onEnablePlugins: PropTypes.func,
         onDisablePlugins: PropTypes.func,
         onUpdateCfg: PropTypes.func,
         onMapViewerReload: PropTypes.func,
         onReloadConfirm: PropTypes.func,
+        onShowDialog: PropTypes.func,
         saveDestLocation: PropTypes.string
     };
 
@@ -195,6 +210,8 @@ export default class ContextCreator extends React.Component {
                         !this.props.isCfgValidated,
                     component:
                         <ConfigurePlugins
+                            loading={this.props.loading}
+                            loadFlags={this.props.loadFlags}
                             allPlugins={this.props.allAvailablePlugins}
                             editedPlugin={this.props.editedPlugin}
                             editedCfg={this.props.editedCfg}
@@ -202,6 +219,13 @@ export default class ContextCreator extends React.Component {
                             availablePluginsFilterText={this.props.availablePluginsFilterText}
                             enabledPluginsFilterText={this.props.enabledPluginsFilterText}
                             documentationBaseURL={this.props.documentationBaseURL}
+                            showDialog={this.props.showDialog}
+                            mapTemplates={this.props.newContext.templates}
+                            parsedTemplate={this.props.parsedTemplate}
+                            editedTemplate={this.props.editedTemplate}
+                            fileDropStatus={this.props.fileDropStatus}
+                            availableTemplatesFilterText={this.props.availableTemplatesFilterText}
+                            enabledTemplatesFilterText={this.props.enabledTemplatesFilterText}
                             onFilterAvailablePlugins={this.props.onFilterAvailablePlugins}
                             onFilterEnabledPlugins={this.props.onFilterEnabledPlugins}
                             onEditPlugin={this.props.onEditPlugin}
@@ -209,7 +233,16 @@ export default class ContextCreator extends React.Component {
                             onDisablePlugins={this.props.onDisablePlugins}
                             onUpdateCfg={this.props.onUpdateCfg}
                             setSelectedPlugins={this.props.setSelectedPlugins}
-                            changePluginsKey={this.props.changePluginsKey}/>
+                            changePluginsKey={this.props.changePluginsKey}
+                            changeTemplatesKey={this.props.changeTemplatesKey}
+                            setSelectedTemplates={this.props.setSelectedTemplates}
+                            setParsedTemplate={this.props.setParsedTemplate}
+                            setFileDropStatus={this.props.setFileDropStatus}
+                            onShowDialog={this.props.onShowDialog}
+                            onSaveTemplate={this.props.onSaveTemplate}
+                            onEditTemplate={this.props.onEditTemplate}
+                            onFilterAvailableTemplates={this.props.onFilterAvailableTemplates}
+                            onFilterEnabledTemplates={this.props.onFilterEnabledTemplates}/>
                 }, {
                     id: 'configure-map',
                     label: 'contextCreator.configureMap.label',

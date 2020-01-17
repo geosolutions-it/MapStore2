@@ -37,6 +37,7 @@ const testContextResource = {
     data: {
         windowTitle: 'title',
         mapConfig: {},
+        templates: [{id: 2}],
         plugins: {
             desktop: [{
                 name: 'Catalog',
@@ -83,6 +84,13 @@ const defaultPlugins = [{
 
 const pluginsConfig = {plugins: defaultPlugins};
 
+const allTemplates = [{
+    id: 1,
+    thumbnail: 'data'
+}, {
+    id: 2
+}];
+
 const findPlugins = (plugins = [], predicate = () => {}) =>
     [...plugins.filter(plugin => predicate(plugin)).map(plugin => omit(plugin, 'children')),
         ...flatten(plugins.filter(plugin => plugin.children !== undefined).map(plugin => findPlugins(plugin.children, predicate)))];
@@ -109,12 +117,20 @@ describe('contextcreator reducer', () => {
         expect(enabledPluginsFilterTextSelector(state)).toBe('filtertext');
     });
     it('setResource', () => {
-        const state = stateMocker(setResource(testContextResource, pluginsConfig));
+        const state = stateMocker(setResource(testContextResource, pluginsConfig, allTemplates));
         const {data, ...resource} = testContextResource;
         const newContext = newContextSelector(state);
         const plugins = pluginsSelector(state);
         expect(newContext).toExist();
         expect(newContext.windowTitle).toBe(data.windowTitle);
+        expect(newContext.templates).toExist();
+        expect(newContext.templates.length).toBe(2);
+        expect(newContext.templates[0].id).toBe(1);
+        expect(newContext.templates[0].enabled).toBe(false);
+        expect(newContext.templates[0].selected).toBe(false);
+        expect(newContext.templates[1].id).toBe(2);
+        expect(newContext.templates[1].enabled).toBe(true);
+        expect(newContext.templates[1].selected).toBe(false);
         expect(newContext.plugins).toNotExist();
         expect(newContext.userPlugins).toNotExist();
         expect(mapConfigSelector(state)).toEqual(data.mapConfig);

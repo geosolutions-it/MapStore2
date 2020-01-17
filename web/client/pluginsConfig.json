@@ -386,6 +386,10 @@
       "dependencies": [
         "Toolbar"
       ]
+    },
+    {
+      "name": "MapTemplates",
+      "title": "Map Templates"
     }, {
       "name": "UserExtensions",
       "dependencies": ["BurgerMenu"]

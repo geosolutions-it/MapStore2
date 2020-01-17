@@ -2146,11 +2146,35 @@
                     "activatePlugin": "Habilite la carga de este complemento al inicio",
                     "deactivatePlugin": "Desactivar la carga de este complemento al inicio",
                     "editConfiguration": "Editar configuración del complemento",
-                    "pluginDocumentation": "Abrir la documentación de configuración del complemento"
+                    "pluginDocumentation": "Abrir la documentación de configuración del complemento",
+                    "mapTemplatesConfig": "Configurar plantillas"
                 },
                 "saveCfgErrorNotification":  {
                     "title": "Error de sintaxis en la configuración del complemento",
                     "message": "El complemento \"{pluginName}\" contiene un error en la configuración. Por favor arregle antes de continuar"
+                }
+            },
+            "configureTemplates": {
+                "title": "Configurar plantillas",
+                "availableTemplates": "Plantillas Disponibles",
+                "enabledTemplates": "Plantillas habilitadas",
+                "templatesFilterPlaceholder": "Filtrar plantillas",
+                "availableTemplatesEmpty": "Habilitado todas las plantillas disponibles.",
+                "enabledTemplatesEmpty": "Agregar plantillas a la configuración de la lista de plantillas disponibles",
+                "searchResultsEmpty": "No se encontraron plantillas que satisfagan los criterios de búsqueda.",
+                "fileDrop": {
+                    "label": "Modelo",
+                    "clear": "Suelte o haga clic para seleccionar un archivo de plantilla de mapa (se admiten mapas JSON MapStore exportados o archivos WMC)"
+                },
+                "uploadDialog": {
+                    "title": "Subir plantilla de mapa",
+                    "save": "Subir",
+                    "jsonParsingError": "El análisis JSON falló: \"{error}\"",
+                    "fileReadError": "Se produjo un error inesperado en la lectura del archivo"
+                },
+                "tooltips": {
+                    "uploadTool": "Subir nueva plantilla",
+                    "editTemplate": "Editar propiedades de plantilla"
                 }
             },
             "configureMap": {
@@ -2159,7 +2183,8 @@
                 "confirm": "Esto va a descartar todos los cambios actuales del mapa. ¿Proceder?"
             },
             "saveErrorNotification": {
-                "title": "Error al guardar el contextod",
+                "titleContext": "Error al guardar el contextod",
+                "titleTemplate": "Error al guardar la plantilla",
                 "conflict": "Ya existe un recurso con este nombre",
                 "defaultMessage": "Error desconocido"
             },

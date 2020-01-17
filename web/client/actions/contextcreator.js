@@ -13,6 +13,16 @@ export const MAP_VIEWER_RELOAD = 'CONTEXTCREATOR:MAP_VIEWER_RELOAD';
 export const SHOW_MAP_VIEWER_RELOAD_CONFIRM = 'CONTEXTCREATOR:SHOW_MAP_VIEWER_RELOAD_CONFIRM';
 export const CLEAR_CONTEXT_CREATOR = 'CONTEXTCREATOR:CLEAR_CONTEXT_CREATOR';
 export const CHANGE_ATTRIBUTE = 'CONTEXTCREATOR:CHANGE_ATTRIBUTE';
+export const SHOW_DIALOG = 'CONTEXTCREATOR:SHOW_DIALOG';
+export const CHANGE_TEMPLATES_KEY = 'CONTEXTCREATOR:CHANGE_TEMPLATES_KEY';
+export const SET_SELECTED_TEMPLATES = 'CONTEXTCREATOR:SET_SELECTED_TEMPLATES';
+export const SET_PARSED_TEMPLATE = 'CONTEXTCREATOR:SET_PARSED_TEMPLATE';
+export const SET_FILE_DROP_STATUS = 'CONTEXTCREATOR:SET_FILE_DROP_STATUS';
+export const SAVE_TEMPLATE = 'CONTEXTCREATOR:SAVE_TEMPLATE';
+export const LOAD_TEMPLATE = 'CONTEXTCREATOR:LOAD_TEMPLATE';
+export const UPDATE_TEMPLATE = 'CONTEXTCREATOR:UPDATE_TEMPLATE';
+export const SET_EDITED_TEMPLATE = 'CONTEXTCREATOR:SET_EDITED_TEMPLATE';
+export const EDIT_TEMPLATE = 'CONTEXTCREATOR:EDIT_TEMPLATE';
 export const SET_FILTER_TEXT = 'CONTEXTCREATOR:SET_FILTER_TEXT';
 export const SET_SELECTED_PLUGINS = 'CONTEXTCREATOR:SET_SELECTED_PLUGINS';
 export const SAVE_PLUGIN_CFG = 'CONTEXTCREATOR:SAVE_PLUGIN_CFG';
@@ -66,6 +76,99 @@ export const changeAttribute = (key, value) => ({
     type: CHANGE_ATTRIBUTE,
     key,
     value
+});
+
+export const showDialog = (dialogName, show) => ({
+    type: SHOW_DIALOG,
+    dialogName,
+    show
+});
+
+/**
+ * Set a property of specified templates to a specified value
+ * @param {number[]} ids template ids
+ * @param {string} key the key to alter
+ * @param {any} value new value
+ */
+export const changeTemplatesKey = (ids, key, value) => ({
+    type: CHANGE_TEMPLATES_KEY,
+    ids,
+    key,
+    value
+});
+
+/**
+ * Sets currently selected templates
+ * @param {number[]} ids template ids
+ */
+export const setSelectedTemplates = (ids) => ({
+    type: SET_SELECTED_TEMPLATES,
+    ids
+});
+
+/**
+ * Sets the template data to upload
+ * @param {string} fileName file name to display
+ * @param {any} data template data
+ */
+export const setParsedTemplate = (fileName, data) => ({
+    type: SET_PARSED_TEMPLATE,
+    fileName,
+    data
+});
+
+/**
+ * Sets file drop status of template editing dialog
+ * @param {string} status status string
+ */
+export const setFileDropStatus = (status) => ({
+    type: SET_FILE_DROP_STATUS,
+    status
+});
+
+/**
+ * Trigger template upload to a server
+ * @param {object} resource resource object
+ */
+export const saveTemplate = (resource) => ({
+    type: SAVE_TEMPLATE,
+    resource
+});
+
+/**
+ * Load a template from server and add it to the current list
+ * @param {number} id template id
+ */
+export const loadTemplate = (id) => ({
+    type: LOAD_TEMPLATE,
+    id
+});
+
+/**
+ * Update a template resource in the current list
+ * @param {object} resource resource object
+ */
+export const updateTemplate = (resource) => ({
+    type: UPDATE_TEMPLATE,
+    resource
+});
+
+/**
+ * Set edited template
+ * @param {number} id template id
+ */
+export const setEditedTemplate = (id) => ({
+    type: SET_EDITED_TEMPLATE,
+    id
+});
+
+/**
+ * Trigger template editing dialog
+ * @param {number} id template id
+ */
+export const editTemplate = (id) => ({
+    type: EDIT_TEMPLATE,
+    id
 });
 
 /**
@@ -206,10 +309,11 @@ export const disablePlugins = (plugins) => ({
     plugins
 });
 
-export const setResource = (resource, pluginsConfig) => ({
+export const setResource = (resource, pluginsConfig, allTemplates) => ({
     type: SET_RESOURCE,
     resource,
-    pluginsConfig
+    pluginsConfig,
+    allTemplates
 });
 
 export const loadContext = (id) => ({
