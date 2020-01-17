@@ -258,13 +258,8 @@ class OpenlayersMap extends React.Component {
                 newProps.bbox.crs === "EPSG:4326" && isArray(extent) && extent[0] === -180 && extent[1] === -90) {
                 bounds = this.map.getView().getProjection().getExtent();
             }
-            try {
-                this.map.getView().fit(bounds, { maxZoom: 21 });
-            } catch (error) {
-                console.log(error);
-            }
+            this.map.getView().fit(bounds, { maxZoom: 21 });
         }
-
 
         /*
          * Manage interactions programmatically.

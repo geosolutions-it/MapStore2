@@ -17,7 +17,7 @@ module.exports =
         pure,
         defaultProps({
             breakpoints: { md: 480, xxs: 0 },
-            cols: { lg: 8, md: 6, xxs: 1 }
+            cols: { md: 6, xxs: 1 }
         }),
         widthProvider({ overrideWidthProvider: true}),
         emptyState(
