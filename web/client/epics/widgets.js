@@ -241,23 +241,5 @@ module.exports = {
                             [])
                     );
                 })
-            ).mergeAll()/* ,
-    /**
-     * Triggers updates of the layer property of widgets on loading error state change
-     * @memberof epics.widgets
-     * @param {external:Observable} action$ manages `LAYER_LOAD, LAYER_ERROR`
-     * @return {external:Observable}
-
-    updateExtentOnFilterChange: (action$, store) =>
-        action$.ofType(UPDATE_PROPERTY)
-            .filter(({key}) => startsWith(key, "quickFilters"))
-            .switchMap(({id}) => {
-                const state = store.getState();
-                const widget = getWidgetById(id)(state);
-                let filterObj = composeFilterObject(widget.filter, widget.quickFilters, widget.options);
-                const featureTypeName = "mapstore:states";
-                const wfsGetFeature = toOGCFilter(featureTypeName, filterObj, filterObj.ogcVersion, filterObj.sortOptions);
-                const getLayerUrl = l => l && l.wpsUrl || (l.search && l.search.url) || l.url;
-                return wpsBounds(getLayerUrl(widget.layer), {wfsGetFeature});
-            })*/
+            ).mergeAll()
 };

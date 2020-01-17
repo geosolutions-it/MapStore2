@@ -47,13 +47,6 @@ const getWidgetAttributeFilter = (id, attributeName) => createSelector(
         return widget && widget.quickFilters && widget.options && find(widget.options.propertyName, f => f === attributeName) && widget.quickFilters[attributeName] || {};
     });
 
-const getWidgetById = (id) => createSelector(
-    getVisibleFloatingWidgets,
-    (widgets) => {
-        const widget = find(widgets, {id});
-        return widget;
-    });
-
 const getCollapsedIds = createSelector(
     getCollapsedState,
     (collapsed = {}) => Object.keys(collapsed)
@@ -116,7 +109,6 @@ module.exports = {
     getEditingWidgetFilter: state => get(getEditingWidget(state), "filter"),
     getEditorSettings,
     getWidgetLayer,
-    getWidgetById,
     getMapWidgets,
     getWidgetAttributeFilter,
     availableDependenciesSelector,

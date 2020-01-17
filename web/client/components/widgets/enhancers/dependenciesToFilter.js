@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 const { compose, withPropsOnChange } = require('recompose');
-const { find} = require('lodash');
+const { find, isEmpty} = require('lodash');
 
 const CoordinatesUtils = require('../../../utils/CoordinatesUtils');
 const FilterUtils = require('../../../utils/FilterUtils');
@@ -51,7 +51,7 @@ module.exports = compose(
             // TODO ask lorenzo why was there the next commented part
             if (!mapSync /* || !dependencies.viewport*/) {
                 return {
-                    filter: newFilterObj || layerFilter ? filter(and(
+                    filter: !isEmpty(newFilterObj) || layerFilter ? filter(and(
                         ...(layerFilter ? FilterUtils.toOGCFilterParts(layerFilter, "1.1.0", "ogc") : []),
                         ...(newFilterObj ? FilterUtils.toOGCFilterParts(newFilterObj, "1.1.0", "ogc") : [])
                     )) : undefined
