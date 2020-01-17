@@ -49,10 +49,19 @@ class SaveModal extends React.Component {
     static propTypes = {
         show: PropTypes.bool,
         loading: PropTypes.bool,
+        title: PropTypes.string,
+        clickOutEnabled: PropTypes.bool,
         canSave: PropTypes.bool, // check if resource can be saved
         errors: PropTypes.array,
         rules: PropTypes.array,
+        enableFileDrop: PropTypes.bool,
+        saveButtonLabel: PropTypes.string,
         onSave: PropTypes.func,
+        acceptedDropFileName: PropTypes.string,
+        fileDropLabel: PropTypes.string,
+        fileDropStatus: PropTypes.string,
+        fileDropErrorMessage: PropTypes.element,
+        fileDropClearMessage: PropTypes.element,
         onUpdateRules: PropTypes.func,
         nameFieldFilter: PropTypes.func,
         resource: PropTypes.object,
@@ -64,6 +73,8 @@ class SaveModal extends React.Component {
         onUpdate: PropTypes.func,
         onUpdateLinkedResource: PropTypes.func,
         onClose: PropTypes.func,
+        onFileDrop: PropTypes.func,
+        onFileDropClear: PropTypes.func,
         metadataChanged: PropTypes.func,
         availablePermissions: PropTypes.arrayOf(PropTypes.string),
         availableGroups: PropTypes.arrayOf(PropTypes.object),
@@ -76,6 +87,8 @@ class SaveModal extends React.Component {
 
     static defaultProps = {
         id: "MetadataModal",
+        title: "saveDialog.title",
+        saveButtonLabel: "save",
         modalSize: "",
         resource: {},
         linkedResources: {},
@@ -113,16 +126,16 @@ class SaveModal extends React.Component {
         return (<Portal key="saveDialog">
             {<ResizableModal
                 loading={this.props.loading}
-                title={<Message msgId="saveDialog.title"/>}
+                title={<Message msgId={this.props.title}/>}
                 show={this.props.show}
-                clickOutEnabled
+                clickOutEnabled={this.props.clickOutEnabled}
                 bodyClassName="ms-flex modal-properties-container"
                 buttons={[{
                     text: <Message msgId="close"/>,
                     onClick: this.onCloseMapPropertiesModal,
                     disabled: this.props.resource.loading
                 }, {
-                    text: <span><Message msgId="save"/></span>,
+                    text: <span><Message msgId={this.props.saveButtonLabel}/></span>,
                     onClick: () => { this.onSave(); },
                     disabled: !this.isValidForm() || this.props.loading || !this.props.canSave
                 }]}
@@ -135,7 +148,15 @@ class SaveModal extends React.Component {
                             resource={this.props.resource}
                             onUpdateLinkedResource={this.props.onUpdateLinkedResource}
                             linkedResources={this.props.linkedResources}
+                            enableFileDrop={this.props.enableFileDrop}
+                            acceptedDropFileName={this.props.acceptedDropFileName}
+                            fileDropLabel={this.props.fileDropLabel}
+                            fileDropStatus={this.props.fileDropStatus}
+                            fileDropErrorMessage={this.props.fileDropErrorMessage}
+                            fileDropClearMessage={this.props.fileDropClearMessage}
                             onMetadataChanged={this.props.metadataChanged}
+                            onFileDrop={this.props.onFileDrop}
+                            onFileDropClear={this.props.onFileDropClear}
                             onError={this.props.onError}
                             nameFieldFilter={this.props.nameFieldFilter}
                             onUpdate={this.props.onUpdate} />

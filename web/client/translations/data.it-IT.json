@@ -2143,11 +2143,35 @@
                     "activatePlugin": "Abilita il caricamento di questo plugin all'avvio",
                     "deactivatePlugin": "Disabilita il caricamento di questo plugin all'avvio",
                     "editConfiguration": "Modifica la configurazione del plugin",
-                    "pluginDocumentation": "Apri la documentazione di configurazione del plugin"
+                    "pluginDocumentation": "Apri la documentazione di configurazione del plugin",
+                    "mapTemplatesConfig": "Configura modelli"
                 },
                 "saveCfgErrorNotification":  {
                     "title": "Errore di sintassi nella configurazione del plug-in",
                     "message": "Il plugin \"{pluginName}\" contiene un errore nella configurazione. Correggi prima di procedere"
+                }
+            },
+            "configureTemplates": {
+                "title": "Configura modelli",
+                "availableTemplates": "Modelli disponibili",
+                "enabledTemplates": "Modelli abilitati",
+                "templatesFilterPlaceholder": "Modelli di filtro...",
+                "availableTemplatesEmpty": "Abilitato tutti i modelli disponibili",
+                "enabledTemplatesEmpty": "Aggiungi modelli alla configurazione dall'elenco dei modelli disponibili",
+                "searchResultsEmpty": "Nessun modello trovato che soddisfa i criteri di ricerca",
+                "fileDrop": {
+                    "label": "Modello",
+                    "clear": "Trascina o fai clic per selezionare un file modello mappa (sono supportate le mappe JSON MapStore esportate oi file WMC)"
+                },
+                "uploadDialog": {
+                    "title": "Carica modello mappa",
+                    "save": "Caricare",
+                    "jsonParsingError": "Analisi JSON non riuscita: \"{error}\"",
+                    "fileReadError": "Si è verificato un errore di lettura del file imprevisto"
+                },
+                "tooltips": {
+                    "uploadTool": "Carica un nuovo modello",
+                    "editTemplate": "Modifica le proprietà del modello"
                 }
             },
             "configureMap": {
@@ -2156,7 +2180,8 @@
                 "confirm": "Questo annullerà tutte le attuali modifiche della mappa. Procedere?"
             },
             "saveErrorNotification": {
-                "title": "Salvataggio del contesto non riuscito",
+                "titleContext": "Salvataggio del contesto non riuscito",
+                "titleTemplate": "Salvataggio del modello non riuscito",
                 "conflict": "Una risorsa con questo nome esiste già",
                 "defaultMessage": "Errore sconosciuto"
             },

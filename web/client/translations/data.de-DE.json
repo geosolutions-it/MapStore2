@@ -2142,11 +2142,35 @@
                     "activatePlugin": "Aktivieren Sie das Laden dieses Plugins beim Start",
                     "deactivatePlugin": "Deaktivieren Sie das Laden dieses Plugins beim Start",
                     "editConfiguration": "Plugin Konfiguration bearbeiten",
-                    "pluginDocumentation": "Öffnen Sie die Dokumentation zur Plugin-Konfiguration"
+                    "pluginDocumentation": "Öffnen Sie die Dokumentation zur Plugin-Konfiguration",
+                    "mapTemplatesConfig": "Vorlagen konfigurieren"
                 },
                 "saveCfgErrorNotification":  {
                     "title": "Syntaxfehler in der Plugin-Konfiguration",
                     "message": "Plugin \"{pluginName}\" enthält einen Konfigurationsfehler. Bitte korrigieren, bevor Sie fortfahren"
+                }
+            },
+            "configureTemplates": {
+                "title": "Vorlagen konfigurieren",
+                "availableTemplates": "Verfügbare Vorlagen",
+                "enabledTemplates": "Aktivierte Vorlagen",
+                "templatesFilterPlaceholder": "Vorlagen filtern",
+                "availableTemplatesEmpty": "Aktiviert alle verfügbaren Vorlagen",
+                "enabledTemplatesEmpty": "Fügen Sie der Konfiguration Vorlagen aus der Liste der verfügbaren Vorlagen hinzu",
+                "searchResultsEmpty": "Es wurden keine Vorlagen gefunden, die den Suchkriterien entsprechen",
+                "fileDrop": {
+                    "label": "Vorlage",
+                    "clear": "Löschen oder klicken Sie, um eine Kartenvorlagendatei auszuwählen (exportierte JSON MapStore-Karten oder WMC-Dateien werden unterstützt)."
+                },
+                "uploadDialog": {
+                    "title": "Kartenvorlage hochladen",
+                    "save": "Hochladen",
+                    "jsonParsingError": "JSON-Analyse fehlgeschlagen: \"{error}\"",
+                    "fileReadError": "Beim Lesen der Datei ist ein unerwarteter Fehler aufgetreten"
+                },
+                "tooltips": {
+                    "uploadTool": "Neue Vorlage hochladen",
+                    "editTemplate": "Vorlageneigenschaften bearbeiten"
                 }
             },
             "configureMap": {
@@ -2155,7 +2179,8 @@
                 "confirm": "Dadurch werden alle aktuellen Kartenänderungen verworfen. Vorgehen?"
             },
             "saveErrorNotification": {
-                "title": "Das Speichern des Kontexts ist fehlgeschlagen",
+                "titleContext": "Das Speichern des Kontexts ist fehlgeschlagen",
+                "titleTemplate": "Das Speichern der Vorlage ist fehlgeschlagen",
                 "conflict": "Eine Ressource mit diesem Namen ist bereits vorhanden",
                 "defaultMessage": "Unbekannter Fehler"
             },

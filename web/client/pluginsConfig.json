@@ -377,6 +377,10 @@
       "dependencies": [
         "Toolbar"
       ]
+    },
+    {
+      "name": "MapTemplates",
+      "title": "Map Templates"
     }
   ]
 }

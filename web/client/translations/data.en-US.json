@@ -2146,11 +2146,35 @@
                     "activatePlugin": "Enable loading this plugin on startup",
                     "deactivatePlugin": "Disable loading this plugin on startup",
                     "editConfiguration": "Edit plugin configuration",
-                    "pluginDocumentation": "Open plugin configuration documentation"
+                    "pluginDocumentation": "Open plugin configuration documentation",
+                    "mapTemplatesConfig": "Configure templates"
                 },
                 "saveCfgErrorNotification":  {
                     "title": "Syntax error in plugin configuration",
                     "message": "Plugin \"{pluginName}\" contains an error in configuration. Please fix before proceeding"
+                }
+            },
+            "configureTemplates": {
+                "title": "Configure Templates",
+                "availableTemplates": "Available Templates",
+                "enabledTemplates": "Enabled Templates",
+                "templatesFilterPlaceholder": "Filter templates...",
+                "availableTemplatesEmpty": "Enabled all available templates",
+                "enabledTemplatesEmpty": "Add templates to configuration from list of available templates",
+                "searchResultsEmpty": "No templates found that satisfy the search criteria",
+                "fileDrop": {
+                    "label": "Template",
+                    "clear": "Drop or click to select a map template file (exported JSON MapStore maps or WMC files are supported)"
+                },
+                "uploadDialog": {
+                    "title": "Upload Map Template",
+                    "save": "Upload",
+                    "jsonParsingError": "JSON parsing failed: \"{error}\"",
+                    "fileReadError": "Unexpected file reading error occurred"
+                },
+                "tooltips": {
+                    "uploadTool": "Upload new template",
+                    "editTemplate": "Edit template properties"
                 }
             },
             "configureMap": {
@@ -2159,7 +2183,8 @@
                 "confirm": "This is going to discard all current map changes. Proceed?"
             },
             "saveErrorNotification": {
-                "title": "Context saving failed",
+                "titleContext": "Context saving failed",
+                "titleTemplate": "Template saving failed",
                 "conflict": "A resource with this name already exists",
                 "defaultMessage": "Unknown error"
             },
