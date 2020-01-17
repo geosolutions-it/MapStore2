@@ -73,21 +73,31 @@ const WidgetsView = compose(
     })
 )(require('../components/dashboard/Dashboard'));
 
-
-class Widgets extends React.Component {
+/**
+ * Dashboard Plugin
+ * @memberof plugins
+ * @name Dashboard
+ * @class
+ * @prop {boolean} enabled if true, render the plugin
+ * @prop {number} rowHeight Rows have a static height
+ * @prop {object} cols Number of columns in this layout. default { lg: 6, md: 6, sm: 4, xs: 2, xxs: 1 }
+ * for more info about rowHeight and cols, see https://github.com/STRML/react-grid-layout#grid-layout-props
+ */
+class DashboardPlugin extends React.Component {
     static propTypes = {
-        enabled: PropTypes.bool
+        enabled: PropTypes.bool,
+        rowHeight: PropTypes.number,
+        cols: PropTypes.object
     };
     static defaultProps = {
-        enabled: true
+        enabled: true,
+        cols: { lg: 6, md: 6, sm: 4, xs: 2, xxs: 1 }
     };
     render() {
-        return this.props.enabled ? (<ContainerDimensions>{({ width, height }) => <WidgetsView width={width} height={height} />}</ContainerDimensions>) : null;
+        return this.props.enabled ? (<ContainerDimensions>{({ width, height }) => <WidgetsView width={width} height={height} rowHeight={this.props.rowHeight} cols={this.props.cols} />}</ContainerDimensions>) : null;
 
     }
 }
-
-const DashboardPlugin = Widgets;
 
 module.exports = {
     DashboardPlugin,

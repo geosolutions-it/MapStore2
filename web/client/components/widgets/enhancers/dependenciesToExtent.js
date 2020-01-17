@@ -35,7 +35,7 @@ module.exports = compose(
                     isEqual(props.dependencies.filter, nextProps.dependencies.filter) &&
                     isEqual(props.dependencies.layer, nextProps.dependencies.layer)
                 )
-                .debounceTime(1000)
+                .debounceTime(500)
                 .switchMap(({mapSync, dependencies = {}, map, filter: filterObj}) => {
                     const layerInCommon = getLayerInCommon({dependencies, map});
                     if (!mapSync || isEmpty(layerInCommon)) {
