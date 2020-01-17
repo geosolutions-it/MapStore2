@@ -13,6 +13,12 @@ Then, move into the folder that has just been created, containing MapStore2:
 cd MapStore2
 ```
 
+Install dependencies for MapStore:
+
+```
+npm install
+```
+
 Finally, to create the project, use the following command:
 
 ```sh
