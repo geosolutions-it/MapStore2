@@ -46,10 +46,11 @@ const renderMoveButtons = (messages, moveButtons) => (
     </ButtonGroup>
 );
 
-const localizeItem = (messages, {title, description, ...other}) => ({
+const localizeItem = (messages, { title, description, children, ...other}) => ({
     ...other,
     title: title && LocaleUtils.getMessageById(messages, title),
-    description: description && LocaleUtils.getMessageById(messages, description)
+    description: description && LocaleUtils.getMessageById(messages, description),
+    children: children && children.map(i => localizeItem(messages, i))
 });
 
 const renderColumn = (

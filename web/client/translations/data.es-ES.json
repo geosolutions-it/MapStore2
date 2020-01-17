@@ -2114,10 +2114,174 @@
             "next": "Siguiente"
         },
         "plugins": {
-            "TOC": {
-                "title": "Lista de capas",
-                "description": "Proporciona una lista de capas con la capacidad de ordenarlas"
-            }
+          "About": {
+            "description": "Herramienta que muestra la ventana Acerca de",
+            "title": "About"
+          },
+          "AddGroup": {
+            "description": "Permite a los usuarios crear nuevos grupos de capas en la tabla de contenido",
+            "title": "Agregar grupo de capas"
+          },
+          "Annotations": {
+            "description": "Herramienta para dibujar anotaciones en el mapa",
+            "title": "Anotaciones"
+          },
+          "AutoMapUpdate": {
+            "description": "Permite al usuario actualizar el mapa (versión antigua del almacén de mapas)",
+            "title": "Actualización automática de mapas"
+          },
+          "BackgroundSelector": {
+            "description": "Permite seleccionar el fondo del mapa",
+            "title": "Selector de fondo"
+          },
+          "BurgerMenu": {
+            "description": "Menú en la parte superior derecha del mapa que contiene otros complementos",
+            "title": "Burger Menu"
+          },
+          "CRSSelector": {
+            "description": "Permite cambiar la proyección del mapa",
+            "title": "Selector de CRS"
+          },
+          "Details": {
+            "description": "Permitir mostrar tarjeta de detalle para un mapa, si hay",
+            "title": "Detalles del mapa"
+          },
+          "Expander": {
+            "description": "Utilidad para barra lateral (navegación) que permite ocultar algunos botones",
+            "title": "Expander"
+          },
+          "FeatureEditor": {
+            "description": "Examinar atributos en una tabla",
+            "title": "Tabla de atributos"
+          },
+          "FilterLayer": {
+            "description": "Permite agregar un filtro a una capa",
+            "title": "Capa de filtro"
+          },
+          "HelpLink": {
+            "description": "Un botón para acceder a la documentación de MapStore",
+            "title": "Enlace de documentación"
+          },
+          "Home": {
+            "description": "Enlace a la página de inicio",
+            "title": "Home"
+          },
+          "Identify": {
+            "description": "Consulta los objetos en el mapa",
+            "title": "Identificar"
+          },
+          "Locate": {
+            "description": "Encuentra y sigue la posición del usuario en el mapa",
+            "title": "localizar"
+          },
+          "Login": {
+            "description": "Login Tool",
+            "title": "Login"
+          },
+          "MapExport": {
+            "description": "Permite exportar el mapa en un archivo",
+            "title": "Exportación de mapas"
+          },
+          "MapImport": {
+            "description": "Permite importar datos (SHP, KML / KMZ, GeoJSON, GPX) o recargar mapas exportados.",
+            "title": "Importar"
+          },
+          "MapLoading": {
+            "description": "Una ruleta en la barra lateral que indica si el mapa se está cargando",
+            "title": "Indicador de carga del mapa"
+          },
+          "Measure": {
+            "description": "Permite medir distancias y áreas en el mapa",
+            "title": "Medida"
+          },
+          "MetadataExplorer": {
+            "description": "Examinar servicios (WMS / WMTS / CSW) para agregar capas al mapa",
+            "title": "Catálogo"
+          },
+          "MousePosition": {
+            "description": "Muestra las coordenadas del puntero con el cursor del mouse.",
+            "title": "Posición del mouse"
+          },
+          "Print": {
+            "description": "Permite imprimir el mapa actual con leyenda",
+            "title": "Herramienta de impresión"
+          },
+          "Save": {
+            "description": "Permite guardar cambios en el mapa",
+            "title": "Salvar"
+          },
+          "SaveAs": {
+            "description": "Permite crear o clonar mapas en el servidor",
+            "title": "Guardar como..."
+          },
+          "ScaleBox": {
+            "description": "Un indicador y un selector de la escala actual del mapa.",
+            "title": "Selector de escala"
+          },
+          "Search": {
+            "description": "Herramienta de búsqueda textual (GeoCoder)",
+            "title": "Barra de búsqueda"
+          },
+          "Settings": {
+            "description": "Permite editar algunas configuraciones para el mapa (idioma, formato de información predeterminado ...)",
+            "title": "Ajustes"
+          },
+          "Share": {
+            "description": "Permite compartir el mapa de varias maneras (enlace, código QR, incrustar, redes sociales ...)",
+            "title": "Compartir herramienta"
+          },
+          "StyleEditor": {
+            "description": "Editor de estilo de capa",
+            "title": "Editor de estilo"
+          },
+          "TOC": {
+            "description": "Proporciona una lista de capas con la capacidad de ordenarlas",
+            "title": "Lista de capas"
+          },
+          "TOCItemsSettings": {
+            "description": "Permitir editar la configuración de la capa",
+            "title": "Configuraciones de capa"
+          },
+          "Timeline": {
+            "description": "Permite el viaje en el tiempo para datos con dimensión de tiempo",
+            "title": "Timeline"
+          },
+          "Tutorial": {
+            "description": "Agrega un tutorial para explicar las diversas funcionalidades.",
+            "title": "Tutorial"
+          },
+          "UserExtensions": {
+            "description": "Permite al usuario habilitar / deshabilitar extensiones de usuario",
+            "title": "User Extensions"
+          },
+          "Version": {
+            "description": "Muestra la versión de MapStore en la herramienta de configuración de mapas",
+            "title": "Versión"
+          },
+          "WFSDownload": {
+            "description": "Permite descargar datos de la tabla de atributos",
+            "title": "Descargar Datos"
+          },
+          "Widgets": {
+            "description": "Permite mostrar widgets en el mapa",
+            "title": "Widgets"
+          },
+          "WidgetsTray": {
+            "description": "Una bandeja para colapsar, expandir widgets en el mapa.",
+            "title": "Bandeja de widgets"
+          },
+          "ZoomAll": {
+            "description": "Botón de barra lateral para acercar a la extensión del mapa",
+            "title": "Zoom a la extensión máxima"
+          },
+          "ZoomIn": {
+            "description": "Botón que aumenta el nivel de zoom del mapa",
+            "title": "Zoom In"
+          },
+          "ZoomOut": {
+            "description": "Botón que disminuye el nivel de zoom del mapa",
+            "title": "Zoom Out"
+          }
         },
         "contextCreator": {
             "generalSettings": {

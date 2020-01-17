@@ -80,7 +80,7 @@ const makePluginTree = (plugins, localPluginsConfig) => {
         name: plugin.name,
         title: plugin.title,
         description: plugin.description,
-        symbol: plugin.symbol,
+        glyph: plugin.glyph,
         parent,
         mandatory: !!plugin.mandatory,
 
