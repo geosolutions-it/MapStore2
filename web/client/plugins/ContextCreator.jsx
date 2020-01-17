@@ -16,7 +16,8 @@ import {newContextSelector, resourceSelector, creationStepSelector, reloadConfir
     cfgErrorSelector, availablePluginsFilterTextSelector, enabledPluginsFilterTextSelector} from '../selectors/contextcreator';
 import {mapTypeSelector} from '../selectors/maptype';
 import {setCreationStep, changeAttribute, saveNewContext, mapViewerReload, showMapViewerReloadConfirm, setFilterText,
-    setSelectedPlugins, editPlugin, updateEditedCfg, changePluginsKey, enablePlugins, disablePlugins} from '../actions/contextcreator';
+    setSelectedPlugins, editPlugin, updateEditedCfg, changePluginsKey, enablePlugins, disablePlugins, enableUploadPlugin,
+    uploadPlugin} from '../actions/contextcreator';
 import contextcreator from '../reducers/contextcreator';
 import * as epics from '../epics/contextcreator';
 import ContextCreator from '../components/contextcreator/ContextCreator';
@@ -27,7 +28,6 @@ import ContextCreator from '../components/contextcreator/ContextCreator';
  * @name ContextCreator
  * @class
  * @prop {string} cfg.saveDestLocation router path when the application is redirected when a context is saved
- *
  */
 export default createPlugin('ContextCreator', {
     component: connect(createStructuredSelector({
@@ -47,6 +47,8 @@ export default createPlugin('ContextCreator', {
         loadFlags: loadFlagsSelector,
         isValidContextName: isValidContextNameSelector,
         contextNameChecked: contextNameCheckedSelector,
+        uploadEnabled: state => state.contextcreator && state.contextcreator.uploadPluginEnabled,
+        uploading: state => state.contextcreator && state.contextcreator.uploadingPlugin,
         pluginsConfig: () => ConfigUtils.getConfigProp('plugins')
     }), {
         onFilterAvailablePlugins: setFilterText.bind(null, 'availablePlugins'),
@@ -61,7 +63,9 @@ export default createPlugin('ContextCreator', {
         onChangeAttribute: changeAttribute,
         onSave: saveNewContext,
         onMapViewerReload: mapViewerReload,
-        onReloadConfirm: showMapViewerReloadConfirm
+        onReloadConfirm: showMapViewerReloadConfirm,
+        onEnableUploadPlugin: enableUploadPlugin,
+        onUploadPlugin: uploadPlugin
     })(ContextCreator),
     reducers: {
         contextcreator

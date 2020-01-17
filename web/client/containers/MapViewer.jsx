@@ -35,7 +35,8 @@ class MapViewer extends React.Component {
         pluginsConfig: PropTypes.object,
         loadMapConfig: PropTypes.func,
         loadPluginsRegistry: PropTypes.func,
-        plugins: PropTypes.object
+        plugins: PropTypes.object,
+        registrySource: PropTypes.string
     };
 
     static defaultProps = {
@@ -47,7 +48,7 @@ class MapViewer extends React.Component {
 
     UNSAFE_componentWillMount() {
         this.props.loadMapConfig();
-        this.props.loadPluginsRegistry();
+        this.props.loadPluginsRegistry(this.props.registrySource);
     }
 
     render() {

@@ -2136,13 +2136,15 @@
                     "title": "Erreur de configuration",
                     "body": "Échec de l'analyse JSON de la configuration.\nL'erreur suivante s'est produite:\n\"{error}\""
                 },
+                "uploadLabel": "Cliquez pour choisir un package d'extension à ajouter à MapStore, ou faites glisser le package directement sur la page",
                 "tooltips": {
                     "enableUserPlugin": "Activer la sélection du plugin actuel pour l'utilisateur",
                     "disableUserPlugin": "Désactiver la sélection du plugin actuel pour l'utilisateur",
                     "activatePlugin": "Désactiver la sélection du plugin actuel pour l'utilisateur",
                     "deactivatePlugin": "Désactiver le chargement de ce plugin au démarrage",
                     "editConfiguration": "Modifier la configuration du plugin",
-                    "pluginDocumentation": "Ouvrir la documentation de configuration du plugin"
+                    "pluginDocumentation": "Ouvrir la documentation de configuration du plugin",
+                    "uploadPlugin": "Ajouter une extension à MapStore"
                 },
                 "saveCfgErrorNotification":  {
                     "title": "Erreur de syntaxe dans la configuration du plugin",

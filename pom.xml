@@ -28,6 +28,7 @@
         <activeByDefault>true</activeByDefault>
       </activation>
       <modules>
+        <module>backend</module>
         <module>web</module>
       </modules>
 
@@ -40,6 +41,7 @@
         </property>
       </activation>
       <modules>
+        <module>backend</module>
         <module>web</module>
         <module>release</module>
       </modules>

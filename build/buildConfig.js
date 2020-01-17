@@ -187,7 +187,7 @@ module.exports = (bundles, themeEntries, paths, extractThemesPlugin, prod, publi
     },
     devServer: {
         proxy: proxy || {
-            '/rest/geostore': {
+            '/rest': {
                 target: "https://dev.mapstore.geo-solutions.it/mapstore",
                 secure: false,
                 headers: {

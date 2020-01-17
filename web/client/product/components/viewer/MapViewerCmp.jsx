@@ -22,7 +22,8 @@ class MapViewerComponent extends React.Component {
         plugins: PropTypes.object,
         pluginsConfig: PropTypes.object,
         wrappedContainer: PropTypes.oneOfType([PropTypes.object, PropTypes.func]),
-        location: PropTypes.object
+        location: PropTypes.object,
+        registrySource: PropTypes.string
     };
     static defaultProps = {
         mode: 'desktop',
@@ -50,6 +51,7 @@ class MapViewerComponent extends React.Component {
         const WrappedContainer = this.props.wrappedContainer;
         return (<WrappedContainer
             loadPluginsRegistry={this.props.loadPluginsRegistry}
+            registrySource={this.props.registrySource}
             pluginsConfig={this.props.pluginsConfig}
             plugins={this.props.plugins}
             params={this.props.match.params}

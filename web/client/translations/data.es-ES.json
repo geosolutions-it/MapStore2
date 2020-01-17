@@ -2136,13 +2136,15 @@
                     "title": "Error de configuración",
                     "body": "Error en el análisis de la configuración JSON.\nEl siguiente error ha ocurrido:\n\"{error}\""
                 },
+                "uploadLabel": "Haga clic para elegir un paquete de extensión para agregar a MapStore, o arrastre el paquete directamente a la página",
                 "tooltips": {
                     "enableUserPlugin": "Habilitar la selección del complemento actual para el usuario",
                     "disableUserPlugin": "Desactiva la selección del complemento actual para el usuario",
                     "activatePlugin": "Habilite la carga de este complemento al inicio",
                     "deactivatePlugin": "Desactivar la carga de este complemento al inicio",
                     "editConfiguration": "Editar configuración del complemento",
-                    "pluginDocumentation": "Abrir la documentación de configuración del complemento"
+                    "pluginDocumentation": "Abrir la documentación de configuración del complemento",
+                    "uploadPlugin": "Agregar una extensión a MapStore"
                 },
                 "saveCfgErrorNotification":  {
                     "title": "Error de sintaxis en la configuración del complemento",

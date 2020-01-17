@@ -11,7 +11,8 @@ import ConfigUtils from '../utils/ConfigUtils';
 
 import {SET_CREATION_STEP, MAP_VIEWER_LOADED, SHOW_MAP_VIEWER_RELOAD_CONFIRM, SET_RESOURCE, IS_VALID_CONTEXT_NAME, CONTEXT_NAME_CHECKED,
     CLEAR_CONTEXT_CREATOR, SET_FILTER_TEXT, SET_SELECTED_PLUGINS, SET_EDITED_PLUGIN, CHANGE_PLUGINS_KEY, CHANGE_ATTRIBUTE, LOADING,
-    SET_EDITED_CFG, UPDATE_EDITED_CFG, SET_VALIDATION_STATUS, SET_PARSED_CFG, SET_CFG_ERROR} from "../actions/contextcreator";
+    SET_EDITED_CFG, UPDATE_EDITED_CFG, SET_VALIDATION_STATUS, SET_PARSED_CFG, SET_CFG_ERROR, ENABLE_UPLOAD_PLUGIN, UPLOADING_PLUGIN,
+    PLUGIN_UPLOADED} from "../actions/contextcreator";
 import {set} from '../utils/ImmutableUtils';
 
 const defaultPlugins = [
@@ -65,6 +66,35 @@ const findPlugin = (plugins, pluginName) =>
     plugins && plugins.reduce((result, plugin) =>
         result || pluginName === getPluginName(plugin) && plugin || findPlugin(plugin.children, pluginName), null);
 
+const makeNode = (plugin, parent = null, plugins = [], localPlugins = []) => ({
+    name: plugin.name,
+    title: plugin.title,
+    description: plugin.description,
+    symbol: plugin.symbol,
+    parent,
+    mandatory: !!plugin.mandatory,
+
+    // true if plugin is forced to be mandatory so that it cannot be disabled (if some plugin that has this plugin as a dependency is enabled)
+    forcedMandatory: false,
+
+    enabledDependentPlugins: [], // names of plugins that are enabled and have this plugin as a dependency
+    hidden: !!plugin.hidden,
+    dependencies: plugin.dependencies || [],
+    enabled: false,
+    active: false,
+    isUserPlugin: false,
+    pluginConfig: {
+        ...omit(head(localPlugins.filter(localPlugin => localPlugin.name === plugin.name)) || {}, 'cfg'),
+        name: plugin.name,
+        cfg: plugin.defaultConfig
+    },
+    autoEnableChildren: plugin.autoEnableChildren || [],
+    children: get(plugin, 'children', [])
+        .map(childPluginName => head(plugins.filter(p => p.name === childPluginName)))
+        .filter(childPlugin => childPlugin !== undefined)
+        .map(childPlugin => makeNode(childPlugin, plugin.name, plugins, localPlugins))
+});
+
 const makePluginTree = (plugins, localPluginsConfig) => {
     const localPlugins = get(localPluginsConfig, 'desktop', []).map(plugin => isObject(plugin) ? plugin : {name: plugin});
 
@@ -75,37 +105,7 @@ const makePluginTree = (plugins, localPluginsConfig) => {
     const rootPlugins = plugins.reduce((curRootPlugins, plugin) =>
         get(plugin, 'children', []).reduce((newRootPlugins, childPlugin) =>
             newRootPlugins.filter(rootPlugin => rootPlugin.name !== childPlugin), curRootPlugins), plugins);
-
-    const makeNode = (parent, plugin) => ({
-        name: plugin.name,
-        title: plugin.title,
-        description: plugin.description,
-        symbol: plugin.symbol,
-        parent,
-        mandatory: !!plugin.mandatory,
-
-        // true if plugin is forced to be mandatory so that it cannot be disabled (if some plugin that has this plugin as a dependency is enabled)
-        forcedMandatory: false,
-
-        enabledDependentPlugins: [], // names of plugins that are enabled and have this plugin as a dependency
-        hidden: !!plugin.hidden,
-        dependencies: plugin.dependencies || [],
-        enabled: false,
-        active: false,
-        isUserPlugin: false,
-        pluginConfig: {
-            ...omit(head(localPlugins.filter(localPlugin => localPlugin.name === plugin.name)) || {}, 'cfg'),
-            name: plugin.name,
-            cfg: plugin.defaultConfig
-        },
-        autoEnableChildren: plugin.autoEnableChildren || [],
-        children: get(plugin, 'children', [])
-            .map(childPluginName => head(plugins.filter(p => p.name === childPluginName)))
-            .filter(childPlugin => childPlugin !== undefined)
-            .map(childPlugin => makeNode(plugin.name, childPlugin))
-    });
-
-    return rootPlugins.map(rootPlugin => makeNode(null, rootPlugin));
+    return rootPlugins.map(rootPlugin => makeNode(rootPlugin, null, plugins, localPlugins));
 };
 
 export default (state = {}, action) => {
@@ -118,6 +118,19 @@ export default (state = {}, action) => {
     }
     case SHOW_MAP_VIEWER_RELOAD_CONFIRM: {
         return set('showReloadConfirm', action.show, state);
+    }
+    case ENABLE_UPLOAD_PLUGIN: {
+        return set('uploadPluginEnabled', action.enable, state);
+    }
+    case UPLOADING_PLUGIN: {
+        return set('uploadingPlugin', action.status, state);
+    }
+    case PLUGIN_UPLOADED: {
+        const plugins = action.plugins.map(makeNode);
+        return {
+            ...state,
+            plugins: [...state.plugins, ...plugins]
+        };
     }
     case SET_RESOURCE: {
         const {data = {plugins: {desktop: []}}, ...resource} = action.resource || {};

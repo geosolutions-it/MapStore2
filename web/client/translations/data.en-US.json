@@ -2140,13 +2140,15 @@
                     "title": "Configuration Error",
                     "body": "Configuration JSON parsing failed.\nThe following error occurred:\n\"{error}\""
                 },
+                "uploadLabel": "Click to choose an extension package to add to MapStore, or drag the package directly on the page",
                 "tooltips": {
                     "enableUserPlugin": "Enable selection of current plugin for user",
                     "disableUserPlugin": "Disable selection of current plugin for user",
                     "activatePlugin": "Enable loading this plugin on startup",
                     "deactivatePlugin": "Disable loading this plugin on startup",
                     "editConfiguration": "Edit plugin configuration",
-                    "pluginDocumentation": "Open plugin configuration documentation"
+                    "pluginDocumentation": "Open plugin configuration documentation",
+                    "uploadPlugin": "Add an extension to MapStore"
                 },
                 "saveCfgErrorNotification":  {
                     "title": "Syntax error in plugin configuration",

@@ -15,7 +15,7 @@ import { loadContext, clearContext, loadPluginsRegistry } from '../../actions/co
 import MapViewerContainer from '../../containers/MapViewer';
 import { createStructuredSelector } from 'reselect';
 import { contextMonitoredStateSelector, pluginsSelector, currentTitleSelector } from '../../selectors/context';
-
+import ConfigUtils from '../../utils/ConfigUtils';
 /**
   * @name Context
   * @memberof pages
@@ -59,6 +59,7 @@ class Context extends React.Component {
         match: PropTypes.object,
         onInit: PropTypes.func,
         loadPluginsRegistry: PropTypes.func,
+        registrySource: PropTypes.string,
         plugins: PropTypes.object,
         pluginsConfig: PropTypes.object,
         windowTitle: PropTypes.string,
@@ -74,6 +75,7 @@ class Context extends React.Component {
         loadContext: () => {},
         reset: () => {},
         loadPluginsRegistry: () => {},
+        registrySource: ConfigUtils.getConfigProp('extensionsRegistry'),
         plugins: {},
         match: {
             params: {}
