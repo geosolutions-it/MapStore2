@@ -6,22 +6,23 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const {connect} = require('react-redux');
-const {createSelector} = require('reselect');
-const {compose, defaultProps} = require('recompose');
-const {hideSettings, updateSettings, updateNode, updateSettingsParams} = require('../actions/layers');
-const {getLayerCapabilities} = require('../actions/layerCapabilities');
-const {updateSettingsLifecycle} = require("../components/TOC/enhancers/tocItemsSettings");
-const TOCItemsSettings = require('../components/TOC/TOCItemsSettings');
-const defaultSettingsTabs = require('./tocitemssettings/defaultSettingsTabs');
-const LayersUtils = require('../utils/LayersUtils');
-const { initialSettingsSelector, originalSettingsSelector, activeTabSettingsSelector } = require('../selectors/controls');
-const {layerSettingSelector, layersSelector, groupsSelector, elementSelector} = require('../selectors/layers');
-const {mapLayoutValuesSelector} = require('../selectors/maplayout');
-const {currentLocaleSelector} = require('../selectors/locale');
-const {isAdminUserSelector} = require('../selectors/security');
-const {setControlProperty} = require('../actions/controls');
-const {toggleStyleEditor} = require('../actions/styleeditor');
+import {connect} from 'react-redux';
+import {createSelector} from 'reselect';
+import {compose, defaultProps} from 'recompose';
+import { createPlugin } from '../utils/PluginsUtils';
+import LayersUtils from '../utils/LayersUtils';
+import {hideSettings, updateSettings, updateNode, updateSettingsParams} from '../actions/layers';
+import {getLayerCapabilities} from '../actions/layerCapabilities';
+import {updateSettingsLifecycle} from "../components/TOC/enhancers/tocItemsSettings";
+import TOCItemsSettings from '../components/TOC/TOCItemsSettings';
+import defaultSettingsTabs from './tocitemssettings/defaultSettingsTabs';
+import { initialSettingsSelector, originalSettingsSelector, activeTabSettingsSelector } from '../selectors/controls';
+import {layerSettingSelector, layersSelector, groupsSelector, elementSelector} from '../selectors/layers';
+import {mapLayoutValuesSelector} from '../selectors/maplayout';
+import {currentLocaleSelector} from '../selectors/locale';
+import {isAdminUserSelector} from '../selectors/security';
+import {setControlProperty} from '../actions/controls';
+import {toggleStyleEditor} from '../actions/styleeditor';
 
 const tocItemsSettingsSelector = createSelector([
     layerSettingSelector,
@@ -89,6 +90,19 @@ const TOCItemsSettingsPlugin = compose(
     })
 )(TOCItemsSettings);
 
-module.exports = {
-    TOCItemsSettingsPlugin
-};
+/**
+ * TOCItemsSettings. Add to the TOC the possibility to edit layers.
+ * @memberof plugins
+ * @requires plugins.TOC
+ */
+export default createPlugin('TOCItemsSettings', {
+    component: TOCItemsSettingsPlugin,
+    containers: {
+        TOC: {
+            doNotHide: true,
+            name: "TOCItemsSettings"
+        }
+    }
+});
+
+

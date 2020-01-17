@@ -2176,6 +2176,14 @@
             "newContext": "Neuer Kontext",
             "editContextTooltip": "Kontext bearbeiten"
         },
+        "userExtensions": {
+          "title": "Benutzererweiterungen",
+          "emptyTitle": "Kein Ergebnis",
+          "emptyDescription": "Eingegebenen Filter Namen oder die Beschreibung von jedem nicht von Erweiterungen entsprechen",
+          "filterPlaceholder": "Filterschichten",
+          "addExtension": "Erweiterung hinzufügen",
+          "removeExtension": "Erweiterung entfernen"
+        },
         "tutorial": {
             "title": "Anleitung",
             "back": "zurück",
