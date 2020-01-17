@@ -49,10 +49,9 @@ const createAssociatedResource = ({attribute, permissions, mapId, metadata, valu
             // update permissions
             let actions = [];
             actions.push(updatePermissions(resourceId, permissions));
-            const attibuteUri = ConfigUtils.getDefaults().geoStoreUrl + "data/" + resourceId + "/raw?decode=datauri";
-            const encodedResourceUri = encodeURIComponent(encodeURIComponent(attibuteUri));
+            const attributeUri = ConfigUtils.getDefaults().geoStoreUrl + "data/" + resourceId + "/raw?decode=datauri";
             // UPDATE resource map with new attribute
-            actions.push(updateAttribute(mapId, attribute, encodedResourceUri, type, optionsAttr));
+            actions.push(updateAttribute(mapId, attribute, attributeUri, type, optionsAttr));
             // display a success message
             actions.push(basicSuccess({message: "maps.feedback." + attribute + ".savedSuccesfully" }));
             return Rx.Observable.from(actions);

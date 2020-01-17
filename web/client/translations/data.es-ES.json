@@ -1104,7 +1104,11 @@
             },
             "add": "Añadir",
             "cancel": "Cancelar",
-            "success": " Importación correcta"
+            "success": " Importación correcta",
+            "next": "Siguiente",
+            "skip": "Saltar",
+            "finish": "Terminar",
+            "layerOf": "Capa {count} de {total}:"
         },
         "mapImport": {
             "title": "Importar",
@@ -2196,6 +2200,14 @@
             "searchPlaceholder": "buscar...",
             "newContext": "Nuevo contexto",
             "editContextTooltip": "Editar contexto"
+        },
+        "userExtensions": {
+          "title": "Extensiones de usuarios",
+          "emptyTitle": "Sin resultados",
+          "emptyDescription": "Filtro introducido no coincide con el nombre o descripción de cualquiera de las extensiones",
+          "filterPlaceholder": "Filtrar...",
+          "addExtension": "Añadir Extensión",
+          "removeExtension": "Retire Extensión"
         },
         "tutorial": {
             "title": "Tutorial",

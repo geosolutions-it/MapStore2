@@ -276,18 +276,18 @@
                     "altShiftDragRotate": false
                   },
                   "attribution": {
-                    "container": "#mapstore-map-footer-container"
+                    "container": "#footer-attribution-container"
                   }
                 },
                 "leaflet": {
                   "attribution": {
-                    "container": "#mapstore-map-footer-container"
+                    "container": "#footer-attribution-container"
                   }
                 }
               },
               "toolsOptions": {
                 "scalebar": {
-                  "container" : "#mapstore-map-footer-container"
+                  "container" : "#footer-scalebar-container"
                 }
               }
             }
@@ -342,17 +342,10 @@
             }, {
                 "name": "TOC",
                 "cfg": {
-                    "activateQueryTool": true,
-                    "activateAddLayerButton": true,
-                    "activateAddGroupButton": true,
-                    "activateMetedataTool": false,
-                    "addLayersPermissions": true,
-                    "removeLayersPermissions": true,
-                    "sortingPermissions": true,
-                    "addGroupsPermissions": true,
-                    "removeGroupsPermissions": true
+                    "activateMetedataTool": false
                 }
             },
+            "FilterLayer",
             "AddGroup",
             "TOCItemsSettings",
             "Tutorial", "MapFooter", {
@@ -464,18 +457,18 @@
                         "altShiftDragRotate": false
                       },
                       "attribution": {
-                        "container": "#mapstore-map-footer-container"
+                        "container": "#footer-attribution-container"
                       }
                     },
                     "leaflet": {
                       "attribution": {
-                        "container": "#mapstore-map-footer-container"
+                        "container": "#footer-attribution-container"
                       }
                     }
                   },
                   "toolsOptions": {
                     "scalebar": {
-                      "container" : "#mapstore-map-footer-container"
+                      "container" : "#footer-scalebar-container"
                     }
                   }
                 }
@@ -632,7 +625,7 @@
         }, "Login", "Language", "NavMenu", "DashboardSave", "DashboardSaveAs", "Attribution", "Home", {
           "name": "DashboardEditor",
           "cfg": {
-             "catalog": {
+            "catalog": {
               "url": "https://gs-stable.geo-solutions.it/geoserver/csw",
               "type": "csw",
               "title": "GeoSolutions GeoServer CSW",

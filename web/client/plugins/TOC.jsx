@@ -9,6 +9,8 @@ const PropTypes = require('prop-types');
 const React = require('react');
 const {connect} = require('react-redux');
 const {createSelector} = require('reselect');
+const { compose, branch, withPropsOnChange} = require('recompose');
+
 const {Glyphicon} = require('react-bootstrap');
 
 const {changeLayerProperties, changeGroupProperties, toggleNode, contextNode,
@@ -35,7 +37,7 @@ const assign = require('object-assign');
 
 const layersIcon = require('./toolbar/assets/img/layers.png');
 
-const {isObject, head} = require('lodash');
+const {isObject, head, find} = require('lodash');
 
 const { setControlProperties} = require('../actions/controls');
 const {createWidget} = require('../actions/widgets');
@@ -144,6 +146,7 @@ const DefaultLayerOrGroup = require('../components/TOC/DefaultLayerOrGroup');
 class LayerTree extends React.Component {
     static propTypes = {
         id: PropTypes.number,
+        items: PropTypes.array,
         buttonContent: PropTypes.node,
         groups: PropTypes.array,
         settings: PropTypes.object,
@@ -227,6 +230,7 @@ class LayerTree extends React.Component {
     };
 
     static defaultProps = {
+        items: [],
         groupPropertiesChangeHandler: () => {},
         layerPropertiesChangeHandler: () => {},
         retrieveLayerData: () => {},
@@ -258,7 +262,7 @@ class LayerTree extends React.Component {
         activateQueryTool: true,
         activateDownloadTool: false,
         activateWidgetTool: false,
-        activateLayerFilterTool: true,
+        activateLayerFilterTool: false,
         maxDepth: 3,
         visibilityCheckType: "glyph",
         settingsOptions: {
@@ -479,28 +483,78 @@ class LayerTree extends React.Component {
     }
 }
 
-const securityEnhancer = (Component) => (props) => {
-    const { addLayersPermissions = true,
-        removeLayersPermissions = true,
-        sortingPermissions = true,
-        addGroupsPermissions = true,
-        removeGroupsPermissions = true, user, ...other} = props;
+/**
+ * enhances the TOC to check `Permissions` properties and enable/disable
+ * the proper tools.
+ * @memberof plugins.TOC
+ */
+const securityEnhancer = withPropsOnChange(
+    [
+        "user",
+        "addLayersPermissions", "activateAddLayerButton",
+        "removeLayersPermissions", "activateRemoveLayer",
+        "sortingPermission", "activateRemoveLayer",
+        "addGroupsPermissions", "activateAddGroupButton",
+        "removeGroupsPermissions", "activateRemoveGroup"
+    ],
+    (props) => {
+        const {
+            addLayersPermissions = true,
+            removeLayersPermissions = true,
+            sortingPermissions = true,
+            addGroupsPermissions = true,
+            removeGroupsPermissions = true,
+            activateAddLayerButton,
+            activateRemoveLayer,
+            activateSortLayer,
+            activateAddGroupButton,
+            activateRemoveGroup,
+            user
+        } = props;
 
-    const activateParameter = (allow, activate) => {
-        const isUserAdmin = user && user.role === 'ADMIN' || false;
-        return (allow || isUserAdmin) ? activate : false;
-    };
+        const activateParameter = (allow, activate) => {
+            const isUserAdmin = user && user.role === 'ADMIN' || false;
+            return (allow || isUserAdmin) ? activate : false;
+        };
 
-    const activateProps = {
-        activateAddLayerButton: activateParameter(addLayersPermissions, props.activateAddLayerButton),
-        activateRemoveLayer: activateParameter(removeLayersPermissions, props.activateRemoveLayer),
-        activateSortLayer: activateParameter(sortingPermissions, props.activateSortLayer),
-        activateAddGroupButton: activateParameter(addGroupsPermissions, props.activateAddGroupButton),
-        activateRemoveGroup: activateParameter(removeGroupsPermissions, props.activateRemoveGroup)
-    };
+        return {
+            activateAddLayerButton: activateParameter(addLayersPermissions, activateAddLayerButton),
+            activateRemoveLayer: activateParameter(removeLayersPermissions, activateRemoveLayer),
+            activateSortLayer: activateParameter(sortingPermissions, activateSortLayer),
+            activateAddGroupButton: activateParameter(addGroupsPermissions, activateAddGroupButton),
+            activateRemoveGroup: activateParameter(removeGroupsPermissions, activateRemoveGroup)
+        };
+    });
 
-    return <Component {...other} {...activateProps}/>;
-};
+
+/**
+ * enhances the TOC to check the presence of TOC plugins to display/add buttons to the toolbar.
+ * NOTE: the flags are required because of old configurations about permissions.
+ * TODO: delegate button rendering and actions to the plugins (now this is only a check and some plugins are dummy, only to allow plug/unplug). Also permissions should be delegated to the related plugins
+ * @memberof plugins.TOC
+ */
+const checkPluginsEnhancer = branch(
+    ({ checkPlugins = true }) => checkPlugins,
+    withPropsOnChange(
+        ["items", "activateAddLayerButton", "activateAddGroupButton", "activateLayerFilterTool", "activateSettingsTool", "FeatureEditor"],
+        ({
+            items = [],
+            activateAddLayerButton = true,
+            activateAddGroupButton = true,
+            activateQueryTool = true,
+            activateSettingsTool = true,
+            activateLayerFilterTool = true,
+            activateWidgetTool = true
+        }) => ({
+            activateAddLayerButton: activateAddLayerButton && !!find(items, { name: "MetadataExplorer" }) || false, // requires MetadataExplorer (Catalog)
+            activateAddGroupButton: activateAddGroupButton && !!find(items, { name: "AddGroup" }) || false,
+            activateSettingsTool: activateSettingsTool && !!find(items, { name: "TOCItemsSettings"}) || false,
+            activateQueryTool: activateQueryTool && !!find(items, {name: "FeatureEditor"}) || false,
+            activateLayerFilterTool: activateLayerFilterTool && !!find(items, {name: "FilterLayer"}) || false,
+            activateWidgetTool: activateWidgetTool && !!find(items, { name: "WidgetBuilder" }) // NOTE: activateWidgetTool is already controlled by a selector. TODO: Simplify investigating on the best approch
+        })
+    )
+);
 
 
 /**
@@ -520,8 +574,9 @@ const securityEnhancer = (Component) => (props) => {
  * @prop {boolean} cfg.activateQueryTool: activate query tool options, default `false`
  * @prop {boolean} cfg.activateDownloadTool: activate a button to download layer data through wfs, default `false`
  * @prop {boolean} cfg.activateSortLayer: activate drag and drop to sort layers, default `true`
- * @prop {boolean} cfg.activateAddLayerButton: activate a button to open the catalog, default `false`
- * @prop {boolean} cfg.activateAddGroupButton: activate a button to add a new group, default `false`
+ * @prop {boolean} cfg.checkPlugins if true, check if AddLayer, AddGroup ... plugins are present to auto-configure the toolbar
+ * @prop {boolean} cfg.activateAddLayerButton: activate a button to open the catalog, default `true`
+ * @prop {boolean} cfg.activateAddGroupButton: activate a button to add a new group, default `true`
  * @prop {boolean} cfg.showFullTitleOnExpand shows full length title in the legend. default `false`.
  * @prop {boolean} cfg.hideOpacityTooltip hide toolip on opacity sliders
  * @prop {string[]|string|object|function} cfg.metadataTemplate custom template for displaying metadata
@@ -644,7 +699,10 @@ const TOCPlugin = connect(tocSelector, {
     hideLayerMetadata,
     onNewWidget: () => createWidget(),
     refreshLayerVersion
-})(securityEnhancer(LayerTree));
+})(compose(
+    securityEnhancer,
+    checkPluginsEnhancer
+)(LayerTree));
 
 const API = {
     csw: require('../api/CSW'),

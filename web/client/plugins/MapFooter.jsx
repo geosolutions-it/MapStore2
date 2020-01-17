@@ -8,6 +8,31 @@
 const React = require('react');
 const PropTypes = require('prop-types');
 const ToolsContainer = require('./containers/ToolsContainer');
+const { lifecycle } = require('recompose');
+
+let fixedElements = {};
+const fix = lifecycle({
+    componentDidMount() {
+        if (fixedElements[this.props.id]) {
+            const el = document.getElementById(this.props.id);
+            if (el && el.parentNode && !el.hasChildNodes()) {
+                el.parentNode.replaceChild(fixedElements[this.props.id], el);
+            }
+        }
+    },
+    shouldComponentUpdate() { return false; },
+    componentWillUnmount() {
+        fixedElements[this.props.id] = document.getElementById(this.props.id);
+    }
+});
+const FixedContainer = fix(({ id }) => <div id={id}></div>);
+
+// these two elements are retained in fixedElementObject and reused when unmount/re-mount
+// this prevents the div to be re-rendered so the component can be connected with map attribution tool.
+const fixedTools = [
+    {element: <FixedContainer key="attribution" id="footer-attribution-container" />},
+    {element: <FixedContainer key="scalebar" id="footer-scalebar-container" />}
+];
 
 class MapFooter extends React.Component {
     static propTypes = {
@@ -26,10 +51,6 @@ class MapFooter extends React.Component {
         mapType: "leaflet"
     };
 
-    shouldComponentUpdate() {
-        return false;
-    }
-
     getPanels = () => {
         return this.props.items.filter((item) => item.tools).reduce((previous, current) => {
             return previous.concat(
@@ -44,7 +65,7 @@ class MapFooter extends React.Component {
     };
 
     getTools = () => {
-        return this.props.items.sort((a, b) => b.position - a.position);
+        return [fixedTools[0], ...this.props.items.sort((a, b) => b.position - a.position), fixedTools[1]];
     };
 
     render() {

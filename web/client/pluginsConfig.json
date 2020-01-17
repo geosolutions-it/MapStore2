@@ -12,18 +12,18 @@
               "altShiftDragRotate": false
             },
             "attribution": {
-              "container": "#mapstore-map-footer-container"
+              "container": "#footer-attribution-container"
             }
           },
           "leaflet": {
             "attribution": {
-              "container": "#mapstore-map-footer-container"
+              "container": "#footer-attribution-container"
             }
           }
         },
         "toolsOptions": {
           "scalebar": {
-            "container": "#mapstore-map-footer-container"
+            "container": "#footer-scalebar-container"
           }
         }
       }
@@ -43,10 +43,7 @@
       "title": "Table of contents",
       "description": "plugins.TOC.description",
       "defaultConfig": {
-        "activateQueryTool": true,
         "activateAddLayerButton": true,
-        "activateAddGroupButton": true,
-        "activateMetedataTool": false,
         "addLayersPermissions": true,
         "removeLayersPermissions": true,
         "sortingPermissions": true,
@@ -56,11 +53,13 @@
       "children": [
         "TOCItemsSettings",
         "FeatureEditor",
+        "FilterLayer",
         "AddGroup"
       ],
       "autoEnableChildren": [
         "TOCItemsSettings",
         "FeatureEditor",
+        "FilterLayer",
         "AddGroup"
       ],
       "dependencies": [
@@ -69,6 +68,9 @@
     },
     {
       "name": "FeatureEditor",
+      "dependencies": [
+        "QueryPanel"
+      ],
       "defaultConfig": {}
     },
     {
@@ -76,6 +78,7 @@
     },
     {
       "name": "MapFooter",
+      "mandatory": true,
       "hidden": true
     },
     {
@@ -92,6 +95,9 @@
     },
     {
       "name": "WidgetsBuilder",
+      "dependencies": [
+        "QueryPanel"
+      ],
       "hidden": false
     },
     {
@@ -181,6 +187,9 @@
     },
     {
       "name": "AddGroup"
+    }, {
+      "name": "FilterLayer",
+      "dependencies": ["QueryPanel"]
     },
     {
       "name": "Tutorial"
@@ -325,7 +334,7 @@
     },
     {
       "name": "BurgerMenu",
-      "hidden": true,
+      "active": true,
       "dependencies": [
         "OmniBar"
       ]
@@ -381,6 +390,9 @@
     {
       "name": "MapTemplates",
       "title": "Map Templates"
+    }, {
+      "name": "UserExtensions",
+      "dependencies": ["BurgerMenu"]
     }
   ]
 }

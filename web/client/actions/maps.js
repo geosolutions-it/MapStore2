@@ -591,8 +591,7 @@ function createThumbnail(map, metadataMap, nameThumbnail, dataThumbnail, categor
             };
             dispatch(updatePermissions(response.data, groupPermission, group, userPermission, user, options)); // UPDATE resource permissions
             const thumbnailUrl = ConfigUtils.getDefaults().geoStoreUrl + "data/" + response.data + "/raw?decode=datauri";
-            const encodedThumbnailUrl = encodeURIComponent(encodeURIComponent(thumbnailUrl));
-            dispatch(updateAttribute(resourceIdMap, "thumbnail", encodedThumbnailUrl, "STRING", options)); // UPDATE resource map with new attribute
+            dispatch(updateAttribute(resourceIdMap, "thumbnail", thumbnailUrl, "STRING", options)); // UPDATE resource map with new attribute
             if (onSuccess) {
                 dispatch(onSuccess);
             }
