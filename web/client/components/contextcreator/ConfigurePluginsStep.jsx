@@ -112,17 +112,22 @@ const pluginsToItems = (editedPlugin, editedCfg, cfgError, setEditor, documentat
                         </div>
                     </div>}
                 </div> : null,
-            preview: !isRoot && parentIsEnabled && !isMandatory &&
-                <Button
-                    className="square-button-md no-border"
-                    onClick={(event) => {
-                        event.stopPropagation();
-                        if (!isMandatory) {
-                            (plugin.enabled ? onDisablePlugins : onEnablePlugins)([plugin.name]);
-                        }
-                    }}>
-                    <Glyphicon glyph={plugin.enabled ? 'check' : 'unchecked'}/>
-                </Button> || null,
+            preview:
+                (<React.Fragment>
+                    {!isRoot && parentIsEnabled && !isMandatory && <Button
+                        style={{left: '-4px', position: 'relative'}}
+                        key="checkbox"
+                        className="square-button-md no-border"
+                        onClick={(event) => {
+                            event.stopPropagation();
+                            if (!isMandatory) {
+                                (plugin.enabled ? onDisablePlugins : onEnablePlugins)([plugin.name]);
+                            }
+                        }}>
+                        <Glyphicon glyph={plugin.enabled ? 'check' : 'unchecked'} />
+                    </Button>}
+                    {plugin.glyph ? <Glyphicon key="icon" glyph={plugin.glyph} /> : <Glyphicon key="icon" glyph="plug" />}
+                </React.Fragment>),
             children: processChildren &&
                 pluginsToItems(editedPlugin, editedCfg, cfgError, setEditor, documentationBaseURL, onEditPlugin,
                     onEnablePlugins, onDisablePlugins, onUpdateCfg, onShowDialog, changePluginsKey, false, plugin.children,
