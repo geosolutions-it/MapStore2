@@ -1121,7 +1121,8 @@
             },
             "errors": {
                 "fileNotSupported": "File not supported",
-                "unknownError": "there was an unknown error during import"
+                "unknownError": "there was an unknown error during import",
+                "projectionNotSupported": "The projection of the file(s) you're trying to import is not supported"
             }
         },
         "mapExport": {
