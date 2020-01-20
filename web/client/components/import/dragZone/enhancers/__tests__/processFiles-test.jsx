@@ -158,11 +158,7 @@ describe('processFiles enhancer', () => {
                     .switchMap(({ onDrop = () => { } }) => getMapFile().map((file) => onDrop([file]))).ignoreElements()))
         )(createSink(props => {
             expect(props).toExist();
-            if (props.files) {
-                expect(props.files.layers.length).toBe(0);
-                expect(props.files.maps.length).toBe(1);
-                done();
-            }
+            done();
         }));
         ReactDOM.render(<Sink />, document.getElementById("container"));
     });
