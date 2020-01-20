@@ -8,6 +8,10 @@
 
 var expect = require('expect');
 const assign = require('object-assign');
+
+const axios = require("../../libs/ajax");
+const MockAdapter = require("axios-mock-adapter");
+
 const {
     toggleDetailsSheet, TOGGLE_DETAILS_SHEET,
     toggleGroupProperties, TOGGLE_GROUP_PROPERTIES,
@@ -52,14 +56,19 @@ const { SHOW_NOTIFICATION } = require('../notifications');
 let GeoStoreDAO = require('../../api/GeoStoreDAO');
 let oldAddBaseUri = GeoStoreDAO.addBaseUrl;
 
+const BASE_URL = 'base/web/client/test-resources/geostore/';
+
 describe('Test correctness of the maps actions', () => {
+    let mockAxios;
     beforeEach(() => {
+        mockAxios = new MockAdapter(axios);
         GeoStoreDAO.addBaseUrl = (options) => {
-            return assign(options, {baseURL: 'base/web/client/test-resources/geostore/'});
+            return assign(options, { baseURL: BASE_URL});
         };
     });
     afterEach(() => {
         GeoStoreDAO.addBaseUrl = oldAddBaseUri;
+        mockAxios.restore();
     });
     it('updateAttribute with error', (done) => {
         const value = "asdSADs";
@@ -80,6 +89,12 @@ describe('Test correctness of the maps actions', () => {
         const name = "thumbnail";
         const resourceId = 1;
         const type = "STRING";
+
+        mockAxios.onPut().reply(({ url }) => {
+            expect(url).toBe(`${BASE_URL}resources/resource/${resourceId}/attributes/${name}/${encodeURIComponent(encodeURIComponent(value))}`);
+            return [200];
+        });
+
         const retFun = updateAttribute(resourceId, name, value, type, {});
         expect(retFun).toExist();
         let count = 0;
