@@ -85,7 +85,7 @@ class MapCard extends React.Component {
     };
 
     getCardStyle = () => {
-        if (this.props.map.thumbnail) {
+        if (this.props.map.thumbnail && this.props.map.thumbnail !== "NODATA") {
             return assign({}, this.props.style, {
                 backgroundImage: 'linear-gradient(rgba(0, 0, 0, ' + this.props.backgroundOpacityStart + '), rgba(0, 0, 0, ' + this.props.backgroundOpacityEnd + ') ), url(' + (this.props.map.thumbnail === null || this.props.map.thumbnail === "NODATA" ? thumbUrl : decodeURIComponent(this.props.map.thumbnail)) + ')'
             });
