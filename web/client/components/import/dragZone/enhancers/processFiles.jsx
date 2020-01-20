@@ -80,7 +80,7 @@ const readFile = (onWarnings) => (file) => {
                     if (areProjectionsValid) {
                         return geoJsonArr;
                     }
-                    throw new Error("FILE_NOT_SUPPORTED");
+                    throw new Error("PROJECTION_NOT_SUPPORTED");
                 }
                 return geoJsonArr;
             });
@@ -93,7 +93,7 @@ const readFile = (onWarnings) => (file) => {
                 if (supportedProjections.includes(projection)) {
                     return [{...f, "fileName": file.name}];
                 }
-                throw new Error("FILE_NOT_SUPPORTED");
+                throw new Error("PROJECTION_NOT_SUPPORTED");
             }
             return [{...f, "fileName": file.name}];
         });
