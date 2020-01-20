@@ -12,7 +12,7 @@ const React = require('react');
 const Message = require('../../I18N/Message');
 const LocaleUtils = require('../../../utils/LocaleUtils');
 let StyleUtils;
-const { Grid, Row, Col, Button, Alert} = require('react-bootstrap');
+const { Grid, Row, Col, Button, Alert, ButtonToolbar} = require('react-bootstrap');
 
 const {Promise} = require('es6-promise');
 
@@ -166,9 +166,11 @@ class StylePanel extends React.Component {
                     </Col>
                 </Row>
                 <Row>
-                    <Col xsOffset={6} xs={2}> <Button bsSize={this.props.buttonSize} disabled={!this.props.selected} onClick={() => { this.props.setLayers(null); }}>{this.props.cancelMessage}</Button></Col>
-                    <Col xs={2}> <Button bsStyle="primary" bsSize={this.props.buttonSize} disabled={!this.props.selected} onClick={() => this.props.onLayerSkipped(this.props.selected)}>{this.props.skipMessage}</Button></Col>
-                    <Col xs={2} style={{paddingLeft: 0}}> <Button bsStyle="primary" bsSize={this.props.buttonSize} disabled={!this.props.selected} onClick={this.addToMap}>{this.props.layers.length === 1 ? this.props.finishMessage : this.props.nextMessage}</Button></Col>
+                    <ButtonToolbar style={{display: 'flex', justifyContent: 'flex-end'}}>
+                        <Button bsSize={this.props.buttonSize} disabled={!this.props.selected} onClick={() => { this.props.setLayers(null); }}>{this.props.cancelMessage}</Button>
+                        <Button bsStyle="primary" bsSize={this.props.buttonSize} disabled={!this.props.selected} onClick={() => this.props.onLayerSkipped(this.props.selected)}>{this.props.skipMessage}</Button>
+                        <Button bsStyle="primary" bsSize={this.props.buttonSize} disabled={!this.props.selected} onClick={this.addToMap}>{this.props.layers.length === 1 ? this.props.finishMessage : this.props.nextMessage}</Button>
+                    </ButtonToolbar>
                 </Row>
             </Grid>
         );
