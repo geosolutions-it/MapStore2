@@ -497,7 +497,7 @@ function updateMapMetadata(resourceId, newName, newDescription, onReset, options
     return (dispatch) => {
         GeoStoreApi.putResourceMetadata(resourceId, newName, newDescription, options).then(() => {
             dispatch(mapMetadataUpdated(resourceId, newName, newDescription, "success"));
-            dispatch(() => success({ title: "success", message: "resources.successSaved" })());
+            dispatch(success({ title: "success", message: "resources.successSaved" }));
             if (onReset) {
                 dispatch(onReset);
                 dispatch(onDisplayMetadataEdit(false));

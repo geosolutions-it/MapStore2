@@ -8,6 +8,10 @@
 
 var expect = require('expect');
 const assign = require('object-assign');
+
+const axios = require("../../libs/ajax");
+const MockAdapter = require("axios-mock-adapter");
+
 const {
     toggleDetailsSheet, TOGGLE_DETAILS_SHEET,
     toggleGroupProperties, TOGGLE_GROUP_PROPERTIES,
@@ -43,20 +47,28 @@ const {
     setShowMapDetails, SHOW_DETAILS,
     updateAttribute, saveAll,
     SAVE_MAP_RESOURCE, saveMapResource,
-    FEATURED_MAPS_SET_LATEST_RESOURCE, setFeaturedMapsLatestResource
+    FEATURED_MAPS_SET_LATEST_RESOURCE, setFeaturedMapsLatestResource,
+    updateMapMetadata, RESET_CURRENT_MAP
 } = require('../maps');
+
+const { SHOW_NOTIFICATION } = require('../notifications');
 
 let GeoStoreDAO = require('../../api/GeoStoreDAO');
 let oldAddBaseUri = GeoStoreDAO.addBaseUrl;
 
+const BASE_URL = 'base/web/client/test-resources/geostore/';
+
 describe('Test correctness of the maps actions', () => {
+    let mockAxios;
     beforeEach(() => {
+        mockAxios = new MockAdapter(axios);
         GeoStoreDAO.addBaseUrl = (options) => {
-            return assign(options, {baseURL: 'base/web/client/test-resources/geostore/'});
+            return assign(options, { baseURL: BASE_URL});
         };
     });
     afterEach(() => {
         GeoStoreDAO.addBaseUrl = oldAddBaseUri;
+        mockAxios.restore();
     });
     it('updateAttribute with error', (done) => {
         const value = "asdSADs";
@@ -77,6 +89,12 @@ describe('Test correctness of the maps actions', () => {
         const name = "thumbnail";
         const resourceId = 1;
         const type = "STRING";
+
+        mockAxios.onPut().reply(({ url }) => {
+            expect(url).toBe(`${BASE_URL}resources/resource/${resourceId}/attributes/${name}/${encodeURIComponent(encodeURIComponent(value))}`);
+            return [200];
+        });
+
         const retFun = updateAttribute(resourceId, name, value, type, {});
         expect(retFun).toExist();
         let count = 0;
@@ -392,6 +410,21 @@ describe('Test correctness of the maps actions', () => {
         const a = saveMapResource(resource);
         expect(a.type).toBe(SAVE_MAP_RESOURCE);
         expect(a.resource).toBe(resource);
+    });
+    it('updateMapMetadata', (done) => {
+        mockAxios.onPut().reply(200);
+        let actions = [];
+        const dispatch = a => {
+            actions.push(a);
+            // when finished, check and done
+            if (a.type === RESET_CURRENT_MAP) {
+                expect(actions[0].type).toBe(MAP_METADATA_UPDATED);
+                expect(actions[1].type).toBe(SHOW_NOTIFICATION);
+                done();
+
+            }
+        };
+        updateMapMetadata(2, "test", "desc", () => {}, {})(dispatch);
     });
     it('setFeaturedMapsLatestResource', () => {
         const resource = {
