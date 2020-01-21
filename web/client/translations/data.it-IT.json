@@ -2087,6 +2087,9 @@
             },
             "mapForm": {
                 "thumbnailMessage": "Le dimensioni delle immagini devono essere di un quadrato di 98 px x 98 px, max 100 KB"
+            },
+            "mapList": {
+                "emptyList": "Premer il pulsante più per creare una mappa o selezionare un altro servizio di mappe."
             }
         },
         "backgroundDialog": {

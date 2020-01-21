@@ -2086,6 +2086,9 @@
             },
             "mapForm": {
                 "thumbnailMessage": "La taille des images doit être un carré de 98px x 98px, maximum 100 Ko."
+            },
+            "mapList": {
+                "emptyList": "Cliquez sur le bouton plus pour créer une carte ou sélectionnez un autre service de carte."
             }
         },
         "backgroundDialog": {

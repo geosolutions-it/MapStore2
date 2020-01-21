@@ -2090,6 +2090,9 @@
             },
             "mapForm": {
                 "thumbnailMessage": "Size of images should be a square of 98px x 98px, max 100kb"
+            },
+            "mapList": {
+                "emptyList": "Click on the plus button to create a map or select a different map service."
             }
         },
         "backgroundDialog": {
