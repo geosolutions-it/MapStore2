@@ -54,7 +54,7 @@ const SearchBar = connect((state) => ({
         let searchText = text && text !== "" ? text : ConfigUtils.getDefaults().initialMapFilter || "*";
         return loadMaps(ConfigUtils.getDefaults().geoStoreUrl, searchText, options);
     },
-    onSearchReset: loadMaps.bind(null, ConfigUtils.getDefaults().geoStoreUrl, ConfigUtils.getDefaults().initialMapFilter || "*")
+    onSearchReset: (...params) => loadMaps(ConfigUtils.getDefaults().geoStoreUrl, ConfigUtils.getDefaults().initialMapFilter || "*", ...params)
 }, (stateProps, dispatchProps, ownProps) => {
 
     return {
