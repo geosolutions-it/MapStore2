@@ -56,6 +56,9 @@ const getTableWidgets = state => (getFloatingWidgets(state) || []).filter(({ wid
 
 /**
  * Find in the state the available dependencies to connect
+ *
+ * Note: table widgets are excluded from selection when viewer is present,
+ * because there were conflict between map and other widgets.
  */
 const availableDependenciesSelector = createSelector(
     getMapWidgets,

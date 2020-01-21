@@ -21,6 +21,7 @@ module.exports = ({
     id, title,
     map,
     icons,
+    hookRegister,
     mapStateSource,
     topRightItems,
     confirmDelete = false,
@@ -43,6 +44,7 @@ module.exports = ({
                 id={id}
                 map={omit(map, 'mapStateSource')}
                 mapStateSource={mapStateSource}
+                hookRegister={hookRegister}
                 layers={map && map.layers}
                 options={{ style: { margin: 10, height: 'calc(100% - 20px)' }}}
             />

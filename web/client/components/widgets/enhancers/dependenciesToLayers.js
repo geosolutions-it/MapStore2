@@ -43,7 +43,7 @@ module.exports = compose(
 
                 if (!isEmpty(filterObjCollection) && FilterUtils.toCQLFilter(filterObjCollection)) {
                     cqlFilter = FilterUtils.toCQLFilter(filterObjCollection);
-                    layersUpdatedWithCql = arrayUpdate(false, {...layerInCommon, params: optionsToVendorParams({ ...layerInCommon, params: {CQL_FILTER: cqlFilter}})}, {name: targetLayerName}, map.layers);
+                    layersUpdatedWithCql = arrayUpdate(false, {...layerInCommon, params: optionsToVendorParams({ params: {CQL_FILTER: cqlFilter}})}, {name: targetLayerName}, map.layers);
                     return {
                         map: {
                             ...map,

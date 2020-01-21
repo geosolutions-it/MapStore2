@@ -22,7 +22,12 @@ const getLayer = (layerName, allLayers) => {
 const getLayersId = (groupId, allLayers) => {
     return allLayers.filter((layer) => (layer.group || 'Default') === groupId).map((layer) => layer.id).reverse();
 };
-const getLayerUrl = l => l && l.wpsUrl || (l.search && l.search.url) || l.url;
+/**
+ * utility to check
+ * @param {object} l layer data
+ * @returns wps url or fallback to other layer urls
+ */
+const getWpsUrl = l => l && l.wpsUrl || (l.search && l.search.url) || l.url;
 const initialReorderLayers = (groups, allLayers) => {
     return groups.slice(0).reverse().reduce((previous, group) => {
         return previous.concat(
@@ -627,7 +632,7 @@ const LayersUtils = {
             }
             : {};
     },
-    getLayerUrl
+    getWpsUrl
 };
 
 module.exports = LayersUtils;

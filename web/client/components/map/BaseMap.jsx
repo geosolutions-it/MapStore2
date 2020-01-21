@@ -37,6 +37,7 @@ class BaseMap extends React.Component {
         eventHandlers: PropTypes.object,
         styleMap: PropTypes.object,
         layers: PropTypes.array,
+        hookRegister: PropTypes.object,
         projectionDefs: PropTypes.array,
         plugins: PropTypes.any,
         tools: PropTypes.array,
@@ -138,6 +139,7 @@ class BaseMap extends React.Component {
                     zoomControl={false}
                     center={{ x: 0, y: 0 }}
                     zoom={1}
+                    hookRegister={this.props.hookRegister}
                     mapStateSource={this.props.mapStateSource || this.props.id}
                     {...this.props.options}
                     {...this.props.map}

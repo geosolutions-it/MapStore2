@@ -46,10 +46,10 @@ module.exports = compose(
             const {layerFilter} = layer || {};
             let geom = {};
             let cqlFilterRules = {};
+            // merging attribute filter and quickFilters of the current widget into a single filterObj
             let newFilterObj = composeFilterObject(filterObj, quickFilters, options);
 
-            // TODO ask lorenzo why was there the next commented part
-            if (!mapSync /* || !dependencies.viewport*/) {
+            if (!mapSync) {
                 return {
                     filter: !isEmpty(newFilterObj) || layerFilter ? filter(and(
                         ...(layerFilter ? FilterUtils.toOGCFilterParts(layerFilter, "1.1.0", "ogc") : []),
@@ -57,12 +57,15 @@ module.exports = compose(
                     )) : undefined
                 };
             }
+            // merging filterObj with quickFilters coming from dependencies
             if (dependencies.quickFilters) {
                 newFilterObj = {...newFilterObj, ...composeFilterObject(newFilterObj, dependencies.quickFilters, dependencies.options)};
             }
+            // merging filterObj with attribute filter coming from dependencies
             if (dependencies.filter) {
                 newFilterObj = {...newFilterObj, ...composeAttributeFilters([newFilterObj, dependencies.filter])};
             }
+            // generating a cqlFilter based viewport coming from dependencies
             if (dependencies.viewport) {
                 const bounds = Object.keys(viewport.bounds).reduce((p, c) => {
                     return {...p, [c]: parseFloat(viewport.bounds[c])};
@@ -72,6 +75,7 @@ module.exports = compose(
                 cqlFilterRules = cqlFilter
                     ? [toFilter(read(cqlFilter))]
                     : [];
+                // this will contain an ogc filter based on current and other filters (cql included)
                 return {
                     filter: filter(and(
                         ...cqlFilterRules,
@@ -80,6 +84,7 @@ module.exports = compose(
                         property(geomProp).intersects(geom)))
                 };
             }
+            // this will contain only an ogc filter based on current and other filters (cql excluded)
             return {
                 filter: filter(and(
                     ...(layerFilter ? FilterUtils.toOGCFilterParts(layerFilter, "1.1.0", "ogc") : []),
