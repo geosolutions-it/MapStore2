@@ -51,6 +51,42 @@ describe('This test for ResourceCard', () => {
         expect(headings.length).toBe(1);
         expect(headings[0].innerHTML).toBe(testName);
     });
+    describe('thumbnail', () => {
+        const THUMB_SELECTOR = '.map-thumb';
+        const DEFAULT_IMAGE = require('../../maps/style/default.jpg');
+        const DEFAULT_BACKGROUND_IMAGE = `url("${DEFAULT_IMAGE}")`;
+        it('no thumbnail', () => {
+            const resource = {
+                name: "test",
+                description: "testDescription"
+            };
+
+            ReactDOM.render(<ResourceCard resource={resource} />, document.getElementById("container"));
+            const thumb = document.querySelector(THUMB_SELECTOR);
+            expect(thumb.style.backgroundImage).toBe(DEFAULT_BACKGROUND_IMAGE);
+        });
+        it('test thumbnail with NODATA value', () => {
+            const resource = {
+                name: "test",
+                description: "testDescription",
+                thumbnail: "NODATA"
+            };
+
+            ReactDOM.render(<ResourceCard resource={resource} />, document.getElementById("container"));
+            const thumb = document.querySelector(THUMB_SELECTOR);
+            expect(thumb.style.backgroundImage).toBe(DEFAULT_BACKGROUND_IMAGE);
+        });
+        it('test thumbnail with normal thumb', () => {
+            const resource = {
+                name: "test",
+                description: "testDescription",
+                thumbnail: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg=="
+            };
+            ReactDOM.render(<ResourceCard resource={resource} />, document.getElementById("container"));
+            const thumb = document.querySelector(THUMB_SELECTOR);
+            expect(thumb.style.backgroundImage).toBe(`linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.3)), url("${resource.thumbnail}")`);
+        });
+    })
 
     it('test edit/delete/share', () => {
         const testName = "test";
