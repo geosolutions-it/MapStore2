@@ -8,6 +8,7 @@
 import expect from 'expect';
 
 import mediaEditor, {DEFAULT_STATE} from '../mediaEditor';
+import { LOCATION_CHANGE } from 'connected-react-router';
 
 const {
     chooseMedia,
@@ -137,5 +138,15 @@ describe('Test the mediaEditor reducer', () => {
             }
         }, updateItem(map));
         expect(state.data.map.geostoreMap.resultData.resources[0]).toEqual(map);
+    });
+    it("LOCATION_CHANGE", () => {
+        const adding = true;
+        let state = mediaEditor(undefined, setAddingMedia(adding));
+        expect(state.saveState.addingMedia).toEqual(adding);
+        expect(state.selected).toEqual("");
+        expect(state).toNotEqual(DEFAULT_STATE);
+        state = mediaEditor(state, {type: LOCATION_CHANGE});
+        expect(state).toEqual(DEFAULT_STATE);
+
     });
 });
