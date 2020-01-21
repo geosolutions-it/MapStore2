@@ -20,8 +20,6 @@ import {mapsSearchTextChanged, MAPS_LOAD_MAP} from '../../actions/maps';
 import ReactTestUtils from 'react-dom/test-utils';
 import ConfigUtils from '../../utils/ConfigUtils';
 
-
-
 describe('MapSearch Plugin', () => {
     const stateMocker = createStateMocker({ maps: maps });
     beforeEach((done) => {
