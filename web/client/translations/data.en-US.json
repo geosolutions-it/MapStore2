@@ -344,7 +344,7 @@
             "message": "Drop or click to import an image",
             "suggestion": "(best 300px X 180px, max 500kb)",
             "errorFormat": "Supported formats: png/jpg",
-            "errorSize": "Max allowed size: maxFileSize",
+            "errorSize": "Max allowed size: 500kb",
             "errorCustomSize": "Max allowed size: {maxFileSize}",
             "error": "The provided image is invalid",
             "savedMapTitle": "Saved Map",
