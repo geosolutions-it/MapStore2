@@ -86,7 +86,7 @@ describe('This test for ResourceCard', () => {
             const thumb = document.querySelector(THUMB_SELECTOR);
             expect(thumb.style.backgroundImage).toBe(`linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.3)), url("${resource.thumbnail}")`);
         });
-    })
+    });
 
     it('test edit/delete/share', () => {
         const testName = "test";
