@@ -27,7 +27,7 @@ const withMapEditing = compose(
             setAddingMedia(adding);
         },
         editRemoteMap: ({openMapEditor, selectedItem: {id, ...map} = {}} = {}) => () => {
-            openMapEditor("mediaEditorEditRemote", {data: map});
+            openMapEditor("mediaEditorEditRemote", {data: map, id});
         }
     })
 );
