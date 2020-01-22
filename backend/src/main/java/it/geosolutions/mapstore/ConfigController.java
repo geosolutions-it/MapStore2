@@ -33,6 +33,20 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import net.sf.json.JSONObject;
 
+/**
+ * REST service for configuration files usage.
+ * Allows loading configuration files from an external source (a folder outside of the webserver).
+ * Can be configured using the following properties:
+ *  - datadir.location absolute path of a folder where configuration files are fetched from (default: empty)
+ *  - allowed.resources comma delimited list of configuration files that can be loaded using this service (whitelist),
+ *    (default: localConfig, pluginsConfig, extensions) - do not specify the json extension
+ *  - overrides.config: optional properties file path where overrides for the base config file are stored (default: empty)
+ *  - overrides.mappings: optional list of mappings from the override configuration files, to the configuration files properties (default: empty)
+ *    format: <json_path>=<propertyName>,...,<json_path>=<propertyName>
+ *    example: header.height=headerHeight,header.url=headerUrl
+ *
+ * The overrides technique allows to take some values to insert in the config json from a simple Java properties file.
+ */
 @Controller
 public class ConfigController {
     @ResponseStatus(value = HttpStatus.NOT_FOUND)
@@ -57,6 +71,13 @@ public class ConfigController {
     @Autowired
     ServletContext context;
     
+    /**
+     * Loads the resource, from the configured location (datadir or web root).
+     * Both locations are tested and the resource is returned from the first location found.
+     * The resource name should be in the allowed.resources list.
+     * @param {String} resourceName name of the resource to load (e.g. localConfig)
+     * @param {boolean} overrides apply overrides from the configured properties file (if any)
+     */
     @RequestMapping(value="/load/{resource}", method = RequestMethod.GET)
     public @ResponseBody String loadResource(@PathVariable("resource") String resourceName, @RequestParam(value="overrides", defaultValue="true") boolean applyOverrides) throws IOException {
         if (isAllowed(resourceName)) {

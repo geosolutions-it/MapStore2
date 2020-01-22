@@ -30,6 +30,13 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
+/**
+ * REST service used to upload an extension.
+ * Can be configured using the following properties:
+ *  - extensions.folder: base folder where the extension will be stored (default: dist/extensions)
+ *  - extensions.registry: json file where uploaded extensions are registered (default: extensions.json)
+ *  - context.plugins.config: json file where context creator plugins are configured (default: pluginsConfig.json)
+ */
 @Controller
 public class UploadPluginController {
     @Value("${extensions.folder:dist/extensions}") private String bundlesPath;
@@ -39,6 +46,15 @@ public class UploadPluginController {
     @Autowired
     ServletContext context;
     
+    /**
+     * Stores and uploaded plugin zip bundle.
+     * The zip bundle must be POSTed as the body of the request.
+     * The content of the bundle will be handled as follows:
+     *  - javascript files (compiled bundles) will be stored in extensions.folder (in a subfolder with the extension name)
+     *  - assets files (translations) will be stored in extensions.folder (in the translations folder of a subfolder with the extension name)
+     *  - the extensions registry file will be updated with data read from the zip index.json file
+     *  - the context creator plugins file will be updated with data read from the zip index.json file
+     */
     @Secured({ "ROLE_ADMIN" })
     @RequestMapping(value="/uploadPlugin", method = RequestMethod.POST, headers = "Accept=application/json")
     public @ResponseBody String uploadPlugin(InputStream dataStream) throws IOException {
