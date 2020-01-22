@@ -13,6 +13,7 @@ const RecordItem = require('./RecordItem').default;
 
 class RecordGrid extends React.Component {
     static propTypes = {
+        crs: PropTypes.string,
         recordItem: PropTypes.element,
         catalogURL: PropTypes.string,
         catalogType: PropTypes.string,
@@ -52,7 +53,8 @@ class RecordGrid extends React.Component {
         onError: () => {},
         records: [],
         zoomToLayer: true,
-        layerBaseConfig: {}
+        layerBaseConfig: {},
+        crs: "EPSG:3857"
     };
 
     renderRecordItem = (record) => {
@@ -60,6 +62,7 @@ class RecordGrid extends React.Component {
         return (
             <Col {...this.props.column} key={record.identifier}>
                 <Item
+                    crs={this.props.crs}
                     clearModal={this.props.clearModal}
                     layers={this.props.layers}
                     modalParams={this.props.modalParams}
