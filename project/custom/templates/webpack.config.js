@@ -4,7 +4,6 @@ var LoaderOptionsPlugin = require("webpack/lib/LoaderOptionsPlugin");
 var NormalModuleReplacementPlugin = require("webpack/lib/NormalModuleReplacementPlugin");
 var NoEmitOnErrorsPlugin = require("webpack/lib/NoEmitOnErrorsPlugin");
 var CopyWebpackPlugin = require('copy-webpack-plugin');
-const TerserPlugin = require('terser-webpack-plugin');
 
 
 const assign = require('object-assign');
@@ -20,9 +19,8 @@ module.exports = (env) => {
             'webpack': 'webpack/hot/only-dev-server', // "only" prevents reload on syntax errors
             '__PROJECTNAME__': path.join(__dirname, "js", "app")
         }, themeEntries),
-        mode: prod ? "production" : "development",
+        mode: isProduction ? "production" : "development",
         optimization: {
-            minimizer: [new TerserPlugin()],
             minimize: true
         },
         output: {

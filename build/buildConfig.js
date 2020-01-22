@@ -6,7 +6,6 @@ const NoEmitOnErrorsPlugin = require("webpack/lib/NoEmitOnErrorsPlugin");
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const path = require('path');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
-const TerserPlugin = require('terser-webpack-plugin');
 
 /**
  * Webpack configuration builder.
@@ -38,7 +37,6 @@ module.exports = (bundles, themeEntries, paths, extractThemesPlugin, prod, publi
     }, bundles, themeEntries),
     mode: prod ? "production" : "development",
     optimization: {
-        minimizer: [new TerserPlugin()],
         minimize: true
     },
     output: {

@@ -71,7 +71,6 @@
     "rimraf": "2.5.2",
     "simple-git": "1.33.1",
     "style-loader": "0.12.4",
-    "terser-webpack-plugin": "2.3.2",
     "url-loader": "0.5.7",
     "vusion-webfonts-generator": "0.4.1",
     "webpack": "4.41.5",
