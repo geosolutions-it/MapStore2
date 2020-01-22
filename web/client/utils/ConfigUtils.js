@@ -28,6 +28,7 @@ const isMobile = require('ismobilejs');
 let localConfigFile = 'localConfig.json';
 
 let defaultConfig = {
+    // TODO: these should be changed tp relative paths, without /mapstore/ or / (to avoid the needing of overriding in default cases)
     proxyUrl: "/mapstore/proxy/?url=",
     geoStoreUrl: "/rest/geostore/",
     printUrl: "/mapstore/print/info.json",

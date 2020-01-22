@@ -66,8 +66,14 @@ class FeaturedMaps extends React.Component {
             };
         }
 
+        if (res.category && res.category.name === 'MAP') {
+            return {
+                embedPanel: true
+            };
+        }
+
         return {
-            embedPanel: true
+            embedPanel: false
         };
     }
 

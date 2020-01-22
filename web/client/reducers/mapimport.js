@@ -14,7 +14,8 @@ const {
     ON_LAYER_ADDED,
     UPDATE_BBOX,
     ON_SUCCESS,
-    ON_SHAPE_ERROR
+    ON_SHAPE_ERROR,
+    ON_LAYER_SKIPPED
 } = require('../actions/mapimport');
 const {uniqWith} = require('lodash');
 const {TOGGLE_CONTROL} = require('../actions/controls');
@@ -73,6 +74,13 @@ function mapimport(state = initialState, action) {
             return assign({}, state, {errors: null, success: null});
         }
         return state;
+    }
+    case ON_LAYER_SKIPPED: {
+        const newLayers = state.layers.filter((l) => {
+            return action.layer.name !== l.name;
+        }, this);
+        const selected = newLayers && newLayers[0] ? newLayers[0] : null;
+        return assign({}, state, {layers: newLayers, selected, success: null});
     }
     default:
         return state;

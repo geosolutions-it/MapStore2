@@ -497,7 +497,7 @@ function updateMapMetadata(resourceId, newName, newDescription, onReset, options
     return (dispatch) => {
         GeoStoreApi.putResourceMetadata(resourceId, newName, newDescription, options).then(() => {
             dispatch(mapMetadataUpdated(resourceId, newName, newDescription, "success"));
-            dispatch(() => success({ title: "success", message: "resources.successSaved" })());
+            dispatch(success({ title: "success", message: "resources.successSaved" }));
             if (onReset) {
                 dispatch(onReset);
                 dispatch(onDisplayMetadataEdit(false));
@@ -591,8 +591,7 @@ function createThumbnail(map, metadataMap, nameThumbnail, dataThumbnail, categor
             };
             dispatch(updatePermissions(response.data, groupPermission, group, userPermission, user, options)); // UPDATE resource permissions
             const thumbnailUrl = ConfigUtils.getDefaults().geoStoreUrl + "data/" + response.data + "/raw?decode=datauri";
-            const encodedThumbnailUrl = encodeURIComponent(encodeURIComponent(thumbnailUrl));
-            dispatch(updateAttribute(resourceIdMap, "thumbnail", encodedThumbnailUrl, "STRING", options)); // UPDATE resource map with new attribute
+            dispatch(updateAttribute(resourceIdMap, "thumbnail", thumbnailUrl, "STRING", options)); // UPDATE resource map with new attribute
             if (onSuccess) {
                 dispatch(onSuccess);
             }

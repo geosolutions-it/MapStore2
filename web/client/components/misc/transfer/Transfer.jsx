@@ -13,31 +13,25 @@ import {Button, ButtonGroup} from 'react-bootstrap';
 import LocaleUtils from '../../../utils/LocaleUtils';
 import Message from '../../I18N/Message';
 import Filter from '../Filter';
+import Toolbar from '../../misc/toolbar/Toolbar';
 import CardList from './TransferColumnCardList';
 
-const renderTools = (messages, tools) => (
-    <ButtonGroup>
-        {tools.map(({id, label, onClick = () => {}, tooltipId = ''}, idx) =>
-            <Button
-                key={id || idx}
-                bsStyle="primary"
-                className="square-button-md"
-                tooltip={LocaleUtils.getMessageById(messages, tooltipId)}
-                onClick={onClick}>
-                {label}
-            </Button>
-        )}
-    </ButtonGroup>
+const renderTools = (tools) => (
+    <Toolbar
+        btnDefaultProps={{
+            className: 'square-button-md',
+            bsStyle: 'primary'
+        }}
+        buttons={tools}/>
 );
 
-const renderMoveButtons = (messages, moveButtons) => (
+const renderMoveButtons = (moveButtons) => (
     <ButtonGroup vertical>
-        {moveButtons.map(({id, label, onClick = () => {}, disabled, tooltipId = ''}, idx) =>
+        {moveButtons.map(({id, label, onClick = () => {}, disabled}, idx) =>
             <Button
                 key={id || idx}
                 bsStyle="primary"
                 className="square-button-md"
-                tooltip={LocaleUtils.getMessageById(messages, tooltipId)}
                 disabled={disabled}
                 onClick={onClick}>
                 {label}
@@ -46,10 +40,11 @@ const renderMoveButtons = (messages, moveButtons) => (
     </ButtonGroup>
 );
 
-const localizeItem = (messages, {title, description, ...other}) => ({
+const localizeItem = (messages, { title, description, children, ...other}) => ({
     ...other,
     title: title && LocaleUtils.getMessageById(messages, title),
-    description: description && LocaleUtils.getMessageById(messages, description)
+    description: description && LocaleUtils.getMessageById(messages, description),
+    children: children && children.map(i => localizeItem(messages, i))
 });
 
 const renderColumn = (
@@ -77,7 +72,7 @@ const renderColumn = (
             <div className="ms2-transfer-title-area">
                 <h4>
                     <Message msgId={title}/>
-                    {renderTools(messages, tools)}
+                    {renderTools(tools)}
                 </h4>
             </div>
             <Filter
@@ -171,7 +166,7 @@ const Transfer = ({
 }, context) => (
     <div className={`ms2-transfer${className ? ' ' + className : ''}`}>
         {renderColumn(context.messages, 'left', leftColumn, allowCtrlMultiSelect, selectedItems, selectedSide, onSelect, sortStrategy, filter)}
-        {renderMoveButtons(context.messages, moveButtons)}
+        {renderMoveButtons(moveButtons)}
         {renderColumn(context.messages, 'right', rightColumn, allowCtrlMultiSelect, selectedItems, selectedSide, onSelect, sortStrategy, filter)}
     </div>
 );

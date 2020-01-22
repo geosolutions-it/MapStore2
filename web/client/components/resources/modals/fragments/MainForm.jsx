@@ -11,6 +11,7 @@ const Message = require('../../../I18N/Message');
 const {Row, Col} = require('react-bootstrap');
 const Metadata = require('../../forms/Metadata');
 const Thumbnail = require('../../forms/Thumbnail');
+const FileDrop = require('../../forms/FileDrop').default;
 const uuid = require('uuid/v1');
 
 module.exports = class MainForm extends React.Component {
@@ -18,12 +19,31 @@ module.exports = class MainForm extends React.Component {
         const {
             resource,
             linkedResources = {},
+            enableFileDrop = false,
+            acceptedDropFileName,
+            fileDropLabel,
+            fileDropStatus,
+            fileDropErrorMessage,
+            fileDropClearMessage,
+            onFileDrop = () => { },
+            onFileDropClear = () => { },
             onError = () => { },
             onUpdate = () => { },
             nameFieldFilter = () => { },
             onUpdateLinkedResource = () => { }
         } = this.props;
         return (<Row>
+            {enableFileDrop && <Col xs={12}>
+                <FileDrop
+                    acceptedFileName={acceptedDropFileName}
+                    label={fileDropLabel}
+                    status={fileDropStatus}
+                    errorMessage={fileDropErrorMessage}
+                    clearMessage={fileDropClearMessage}
+                    onDrop={onFileDrop}
+                    onClear={onFileDropClear}
+                    onError={onError}/>
+            </Col>}
             <Col xs={12}>
                 <Thumbnail
                     resource={resource}

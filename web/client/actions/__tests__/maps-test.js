@@ -45,8 +45,11 @@ const {
     setShowMapDetails, SHOW_DETAILS,
     updateAttribute, saveAll,
     SAVE_MAP_RESOURCE, saveMapResource,
-    FEATURED_MAPS_SET_LATEST_RESOURCE, setFeaturedMapsLatestResource
+    FEATURED_MAPS_SET_LATEST_RESOURCE, setFeaturedMapsLatestResource,
+    updateMapMetadata, RESET_CURRENT_MAP
 } = require('../maps');
+
+const { SHOW_NOTIFICATION } = require('../notifications');
 
 let GeoStoreDAO = require('../../api/GeoStoreDAO');
 let oldAddBaseUri = GeoStoreDAO.addBaseUrl;
@@ -411,6 +414,21 @@ describe('Test correctness of the maps actions', () => {
         const a = saveMapResource(resource);
         expect(a.type).toBe(SAVE_MAP_RESOURCE);
         expect(a.resource).toBe(resource);
+    });
+    it('updateMapMetadata', (done) => {
+        mockAxios.onPut().reply(200);
+        let actions = [];
+        const dispatch = a => {
+            actions.push(a);
+            // when finished, check and done
+            if (a.type === RESET_CURRENT_MAP) {
+                expect(actions[0].type).toBe(MAP_METADATA_UPDATED);
+                expect(actions[1].type).toBe(SHOW_NOTIFICATION);
+                done();
+
+            }
+        };
+        updateMapMetadata(2, "test", "desc", () => {}, {})(dispatch);
     });
     it('setFeaturedMapsLatestResource', () => {
         const resource = {

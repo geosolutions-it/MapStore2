@@ -252,25 +252,16 @@ const API = {
  */
 module.exports = {
     MetadataExplorerPlugin: assign(MetadataExplorerPlugin, {
-        Toolbar: {
-            name: 'metadataexplorer',
-            position: 10,
-            exclusive: true,
-            panel: true,
-            tooltip: "catalog.tooltip",
-            wrap: true,
-            title: 'catalog.title',
-            help: <Message msgId="helptexts.metadataexplorer"/>,
-            icon: <Glyphicon glyph="folder-open" />,
-            priority: 1
-        },
         BurgerMenu: {
             name: 'metadataexplorer',
             position: 5,
             text: <Message msgId="catalog.title"/>,
             icon: <Glyphicon glyph="folder-open"/>,
             action: setControlProperty.bind(null, "metadataexplorer", "enabled", true, true),
-            priority: 2,
+            doNotHide: true
+        },
+        TOC: {
+            name: 'MetadataExplorer',
             doNotHide: true
         }
     }),

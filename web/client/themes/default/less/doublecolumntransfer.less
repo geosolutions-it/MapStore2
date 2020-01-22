@@ -10,6 +10,20 @@
         flex: 0.5;
         overflow: hidden;
 
+        .ms2-transfer-header {
+            padding: 8px;
+
+            .ms2-transfer-title-area h4 {
+                display: flex;
+                overflow-wrap: anywhere;
+                min-height: @square-btn-medium-size;
+
+                span {
+                    flex: 1;
+                }
+            }
+        }
+
         .empty-state-container {
             margin: auto;
 
@@ -24,14 +38,6 @@
                     overflow-wrap: break-word;
                 }
             }
-        }
-    }
-
-    .ms2-transfer-header {
-        padding: 8px;
-
-        .ms2-transfer-title-area h4 {
-            overflow-wrap: anywhere;
         }
     }
 

@@ -86,3 +86,14 @@ export const CLEAR_CONTEXT = 'CONTEXT:CLEAR_CONTEXT';
  * Clears current context state
  */
 export const clearContext = () => ({ type: CLEAR_CONTEXT });
+
+export const UPDATE_USER_PLUGIN = "CONTEXT:UPDATE_USER_PLUGIN";
+/**
+ * Updates a value for a user plugin. It can be used to activate/deactivate user plugins, or to set specific
+ * properties.
+ * @param {string} name the name of the plugin
+ * @param {object} values key-values map to update.
+ * @example
+ * updateUserPlugin("Annotations", {active: true})
+ */
+export const updateUserPlugin = (name, values) => ({ type: UPDATE_USER_PLUGIN, name, values});

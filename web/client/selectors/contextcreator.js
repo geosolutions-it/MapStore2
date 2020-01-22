@@ -15,6 +15,7 @@ export const creationStepSelector = state => state.contextcreator && state.conte
 export const resourceSelector = state => state.contextcreator && state.contextcreator.resource;
 export const mapViewerLoadedSelector = state => state.contextcreator && state.contextcreator.mapViewerLoaded;
 export const reloadConfirmSelector = state => state.contextcreator && state.contextcreator.showReloadConfirm;
+export const showDialogSelector = state => state.contextcreator && state.contextcreator.showDialog;
 export const isLoadingSelector = state => state.contextcreator && state.contextcreator.loading;
 export const loadFlagsSelector = state => state.contextcreator && state.contextcreator.loadFlags;
 export const isValidContextNameSelector = state => state.contextcreator && state.contextcreator.isValidContextName;
@@ -26,6 +27,11 @@ export const editedCfgSelector = state => state.contextcreator && state.contextc
 export const parsedCfgSelector = state => state.contextcreator && state.contextcreator.parsedCfg;
 export const cfgErrorSelector = state => state.contextcreator && state.contextcreator.cfgError;
 export const validationStatusSelector = state => get(state, 'contextcreator.validationStatus', true);
+export const parsedTemplateSelector = state => state.contextcreator && state.contextcreator.parsedTemplate;
+export const fileDropStatusSelector = state => state.contextcreator && state.contextcreator.fileDropStatus;
+export const editedTemplateSelector = state => state.contextcreator && state.contextcreator.editedTemplate;
 export const filterTextSelector = state => state.contextcreator && state.contextcreator.filterText;
 export const availablePluginsFilterTextSelector = createSelector(filterTextSelector, filterText => get(filterText, 'availablePlugins'));
 export const enabledPluginsFilterTextSelector = createSelector(filterTextSelector, filterText => get(filterText, 'enabledPlugins'));
+export const availableTemplatesFilterTextSelector = createSelector(filterTextSelector, filterText => get(filterText, 'availableTemplates'));
+export const enabledTemplatesFilterTextSelector = createSelector(filterTextSelector, filterText => get(filterText, 'enabledTemplates'));

@@ -27,7 +27,7 @@ const TransferColumnCardList = ({
             return (<SideCard
                 {...item}
                 key={item.id || idx}
-                size="sm"
+                size={item.cardSize}
                 className={(item.className ? `${item.className} ` : ' ') + (idx === items.length - 1 ? 'ms2-transfer-lastcard' : '')}
                 selected={isSelected}
                 onClick={(_, event) => isRoot ? onSelect(isSelected ?

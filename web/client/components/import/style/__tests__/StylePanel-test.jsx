@@ -29,7 +29,7 @@ describe('StylePanel component', () => {
     it('StylePanel rendering with layers', () => {
         ReactDOM.render(<StylePanel layers={[L1, L2]} selected={L1} stylers={{"Point": <div></div>}}/>, document.getElementById("container"));
         const container = document.getElementById('container');
-        expect(container.querySelector('.rw-dropdownlist')).toExist();
+        expect(container.querySelector('h4')).toExist();
         const checkBoxes = Array.slice(container.querySelectorAll('input[type=checkbox]'));
         expect(checkBoxes.length).toBe(2);
         expect(checkBoxes.filter(e => e.checked).length).toBe(1);
@@ -44,7 +44,7 @@ describe('StylePanel component', () => {
         const container = document.getElementById('container');
         expect(container.querySelector('.alert')).toExist();
     });
-    it('Test StylePanel onSuccess to have been called on add button click', (done) => {
+    it('Test StylePanel onSuccess to have been called on NEXT / FINISH button click', (done) => {
         const actions = {
             onSuccess: () => {
             }
@@ -58,7 +58,7 @@ describe('StylePanel component', () => {
 
         const cmp = ReactDOM.render(<StylePanel shapeStyle={{marker: true}} errors={[W1]} layers={[L1, L2]} selected={L1} stylers={{ "Point": <div></div> }} onLayerAdded={onLayerAdded} onSuccess={actions.onSuccess} />, document.getElementById("container"));
         expect(cmp).toExist();
-        const btn = document.querySelectorAll('button')[1];
+        const btn = document.querySelectorAll('button')[2];
         ReactTestUtils.Simulate.click(btn); // <-- trigger event callback
     });
     it('Test StylePanel onError to have been called on error during add', (done) => {
@@ -82,7 +82,7 @@ describe('StylePanel component', () => {
             onLayerAdded={actions.onLayerAdded}
             onSuccess={actions.onSuccess} />, document.getElementById("container"));
         expect(cmp).toExist();
-        const btn = document.querySelectorAll('button')[1];
+        const btn = document.querySelectorAll('button')[2];
         ReactTestUtils.Simulate.click(btn); // <-- trigger event callback
     });
 });

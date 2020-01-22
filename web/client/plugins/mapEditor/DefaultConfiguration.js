@@ -10,18 +10,18 @@ export default {
                             "altShiftDragRotate": false
                         },
                         "attribution": {
-                            "container": "#mapstore-map-footer-container"
+                            "container": "#footer-attribution-container"
                         }
                     },
                     "leaflet": {
                         "attribution": {
-                            "container": "#mapstore-map-footer-container"
+                            "container": "#footer-attribution-container"
                         }
                     }
                 },
                 "toolsOptions": {
                     "scalebar": {
-                        "container": "#mapstore-map-footer-container"
+                        "container": "#footer-scalebar-container"
                     }
                 }
             }

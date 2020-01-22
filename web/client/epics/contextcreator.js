@@ -9,18 +9,19 @@
 import Rx from 'rxjs';
 import axios from 'axios';
 import jsonlint from 'jsonlint-mod';
-import {omit, get, flatten, uniq, intersection, head, keys, findIndex, cloneDeep} from 'lodash';
+import {omit, pick, get, flatten, uniq, intersection, head, keys, values, findIndex, cloneDeep} from 'lodash';
 import {push} from 'connected-react-router';
 
 import ConfigUtils from '../utils/ConfigUtils';
 import MapUtils from '../utils/MapUtils';
 
-import {SAVE_CONTEXT, LOAD_CONTEXT, SET_CREATION_STEP, MAP_VIEWER_LOAD, MAP_VIEWER_RELOAD, CHANGE_ATTRIBUTE, ENABLE_MANDATORY_PLUGINS,
-    ENABLE_PLUGINS, DISABLE_PLUGINS, SAVE_PLUGIN_CFG, EDIT_PLUGIN, CHANGE_PLUGINS_KEY, UPDATE_EDITED_CFG, VALIDATE_EDITED_CFG, SET_RESOURCE,
-    UPLOAD_PLUGIN,
-    contextSaved, setResource, startResourceLoad, loadFinished, isValidContextName, contextNameChecked, setCreationStep, contextLoadError,
-    loading, mapViewerLoad, mapViewerLoaded, setEditedPlugin, setEditedCfg, setParsedCfg, validateEditedCfg, setValidationStatus, savePluginCfg,
-    enableMandatoryPlugins, enablePlugins, setCfgError, changePluginsKey, pluginUploaded, pluginUploading, enableUploadPlugin} from '../actions/contextcreator';
+import {SAVE_CONTEXT, SAVE_TEMPLATE, LOAD_CONTEXT, LOAD_TEMPLATE, EDIT_TEMPLATE, SHOW_DIALOG, SET_CREATION_STEP, MAP_VIEWER_LOAD,
+    MAP_VIEWER_RELOAD, CHANGE_ATTRIBUTE, ENABLE_MANDATORY_PLUGINS, ENABLE_PLUGINS, DISABLE_PLUGINS, SAVE_PLUGIN_CFG,
+    EDIT_PLUGIN, CHANGE_PLUGINS_KEY, UPDATE_EDITED_CFG, VALIDATE_EDITED_CFG, SET_RESOURCE, UPLOAD_PLUGIN, contextSaved, setResource,
+    startResourceLoad, loadFinished, loadTemplate, showDialog, setFileDropStatus, updateTemplate, isValidContextName,
+    contextNameChecked, setCreationStep, contextLoadError, loading, mapViewerLoad, mapViewerLoaded, setEditedPlugin,
+    setEditedCfg, setParsedCfg, validateEditedCfg, setValidationStatus, savePluginCfg, enableMandatoryPlugins,
+    enablePlugins, setCfgError, changePluginsKey, changeTemplatesKey, setEditedTemplate, pluginUploaded, pluginUploading, enableUploadPlugin} from '../actions/contextcreator';
 import {newContextSelector, resourceSelector, creationStepSelector, mapConfigSelector, mapViewerLoadedSelector, contextNameCheckedSelector,
     editedPluginSelector, editedCfgSelector, validationStatusSelector, parsedCfgSelector, cfgErrorSelector,
     pluginsSelector, initialEnabledPluginsSelector} from '../selectors/contextcreator';
@@ -34,7 +35,7 @@ import {backgroundListSelector} from '../selectors/backgroundselector';
 import {textSearchConfigSelector} from '../selectors/searchconfig';
 import {mapOptionsToSaveSelector} from '../selectors/mapsave';
 import {loadMapConfig} from '../actions/config';
-import {createResource, updateResource, getResource, getResourceIdByName} from '../api/persistence';
+import {createResource, updateResource, getResource, getResources, getResourceIdByName} from '../api/persistence';
 import { upload } from '../api/plugins';
 
 const saveContextErrorStatusToMessage = (status) => {
@@ -82,7 +83,13 @@ export const saveContextResource = (action$, store) => action$
         const unselectablePlugins = makePlugins(pluginsArray.filter(plugin => !plugin.isUserPlugin));
         const userPlugins = makePlugins(pluginsArray.filter(plugin => plugin.isUserPlugin));
 
-        const newContext = {...context, mapConfig, plugins: {desktop: unselectablePlugins}, userPlugins};
+        const newContext = {
+            ...context,
+            mapConfig,
+            plugins: {desktop: unselectablePlugins},
+            userPlugins,
+            templates: get(context, 'templates', []).filter(template => template.enabled).map(template => pick(template, 'id'))
+        };
         const newResource = resource && resource.id ? {
             ...omit(resource, 'name', 'description'),
             data: newContext,
@@ -108,7 +115,7 @@ export const saveContextResource = (action$, store) => action$
                 })
             ))
             .catch(({status, data}) => Rx.Observable.of(error({
-                title: 'contextCreator.saveErrorNotification.title',
+                title: 'contextCreator.saveErrorNotification.titleContext',
                 message: saveContextErrorStatusToMessage(status),
                 position: "tc",
                 autoDismiss: 5,
@@ -116,6 +123,77 @@ export const saveContextResource = (action$, store) => action$
                     data
                 }
             })));
+    });
+
+/**
+ * Save a template resource
+ * @memberof epics.contextcreator
+ * @param {observable} action$ manages `SAVE_TEMPLATE`
+ */
+export const saveTemplateEpic = (action$) => action$
+    .ofType(SAVE_TEMPLATE)
+    .switchMap(({resource}) => (resource && resource.id ? updateResource : createResource)(resource)
+        .switchMap(rid => Rx.Observable.of(
+            loadTemplate(rid),
+            showDialog('uploadTemplate', false),
+            show({
+                title: 'saveDialog.saveSuccessTitle',
+                message: 'saveDialog.saveSuccessMessage'
+            })
+        ))
+        .let(wrapStartStop(
+            loading(true, 'templateSaving'),
+            loading(false, 'templateSaving'),
+            ({status, data}) => Rx.Observable.of(error({
+                title: 'contextCreator.saveErrorNotification.titleTemplate',
+                message: saveContextErrorStatusToMessage(status),
+                position: "tc",
+                autoDismiss: 5,
+                values: {
+                    data
+                }
+            }))
+        )));
+
+/**
+ * Load a template from server and add it to the current list
+ * @param {observable} action$ manages `LOAD_TEMPLATE`
+ */
+export const loadTemplateEpic = (action$) => action$
+    .ofType(LOAD_TEMPLATE)
+    .switchMap(({id}) => getResource(id, {includeAttributes: true, withData: false, withPermissions: false})
+        .switchMap(resource => Rx.Observable.of(updateTemplate({
+            ...resource,
+            thumbnail: get(resource, 'attributes.thumbnail')
+        })))
+        .let(wrapStartStop(
+            loading(true, 'templateLoading'),
+            loading(false, 'templateLoading')
+        )));
+
+/**
+ * Trigger template metadata editor
+ * @param {observable} action$ manages `EDIT_TEMPLATE`
+ */
+export const editTemplateEpic = (action$) => action$
+    .ofType(EDIT_TEMPLATE)
+    .switchMap(({id}) => Rx.Observable.of(setEditedTemplate(id), showDialog('uploadTemplate', true)));
+
+/**
+ * Reset stuff when dialog is shown
+ * @param {observable} action$ manages `SHOW_DIALOG`
+ */
+export const resetOnShowDialog = (action$, store) => action$
+    .ofType(SHOW_DIALOG)
+    .flatMap(({dialogName, show: showDialogBool}) => {
+        const state = store.getState();
+        const context = newContextSelector(state) || {};
+        const templates = context.templates || [];
+
+        return showDialogBool ?
+            Rx.Observable.of(...(dialogName === 'uploadTemplate' ? [setFileDropStatus()] : []),
+                ...(dialogName === 'mapTemplatesConfig' ? [changeTemplatesKey(templates.map(template => template.id), 'selected', false)] : [])) :
+            Rx.Observable.empty();
     });
 
 /**
@@ -127,10 +205,21 @@ export const saveContextResource = (action$, store) => action$
 export const contextCreatorLoadContext = (action$, store) => action$
     .ofType(LOAD_CONTEXT)
     .switchMap(({id, pluginsConfig = ConfigUtils.getConfigProp('contextPluginsConfiguration')}) => Rx.Observable.of(startResourceLoad()).concat(
-        Rx.Observable.defer(() => axios.get(pluginsConfig).then(result => result.data)).switchMap(config => (id === 'new' ?
-            Rx.Observable.of(setResource(null, config)) :
-            getResource(id).switchMap(resource => Rx.Observable.of(setResource(resource, config))))
-            .concat(Rx.Observable.of(enableMandatoryPlugins(), loadFinished(), setCreationStep('general-settings')))
+        Rx.Observable.forkJoin(
+            Rx.Observable.defer(() => axios.get(pluginsConfig).then(result => result.data)),
+            getResources({
+                category: 'TEMPLATE',
+                options: {
+                    params: {
+                        start: 0,
+                        limit: 10000
+                    }
+                }
+            }).map(response => response.totalCount === 1 ? [response.results] : values(response.results)),
+            id === 'new' ? Rx.Observable.of(null) : getResource(id)
+        ).switchMap(([config, templates, resource]) =>
+            Rx.Observable.of(setResource(resource, config, templates))
+                .concat(Rx.Observable.of(enableMandatoryPlugins(), loadFinished(), setCreationStep('general-settings')))
         ))
         .let(
             wrapStartStop(

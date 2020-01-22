@@ -11,13 +11,15 @@ import {createStructuredSelector} from 'reselect';
 
 import ConfigUtils from '../utils/ConfigUtils';
 import {createPlugin} from '../utils/PluginsUtils';
-import {newContextSelector, resourceSelector, creationStepSelector, reloadConfirmSelector, isLoadingSelector, loadFlagsSelector,
-    isValidContextNameSelector, contextNameCheckedSelector, pluginsSelector, editedPluginSelector, editedCfgSelector, validationStatusSelector,
-    cfgErrorSelector, availablePluginsFilterTextSelector, enabledPluginsFilterTextSelector} from '../selectors/contextcreator';
+import {newContextSelector, resourceSelector, creationStepSelector, reloadConfirmSelector, showDialogSelector, isLoadingSelector,
+    loadFlagsSelector, isValidContextNameSelector, contextNameCheckedSelector, pluginsSelector, editedPluginSelector, editedCfgSelector,
+    validationStatusSelector, cfgErrorSelector, parsedTemplateSelector, fileDropStatusSelector, editedTemplateSelector,
+    availablePluginsFilterTextSelector, availableTemplatesFilterTextSelector, enabledPluginsFilterTextSelector,
+    enabledTemplatesFilterTextSelector} from '../selectors/contextcreator';
 import {mapTypeSelector} from '../selectors/maptype';
-import {setCreationStep, changeAttribute, saveNewContext, mapViewerReload, showMapViewerReloadConfirm, setFilterText,
-    setSelectedPlugins, editPlugin, updateEditedCfg, changePluginsKey, enablePlugins, disablePlugins, enableUploadPlugin,
-    uploadPlugin} from '../actions/contextcreator';
+import {setCreationStep, changeAttribute, saveNewContext, saveTemplate, mapViewerReload, showMapViewerReloadConfirm, showDialog, setFilterText,
+    setSelectedPlugins, setSelectedTemplates, setParsedTemplate, setFileDropStatus, editPlugin, editTemplate, updateEditedCfg,
+    changePluginsKey, changeTemplatesKey, enablePlugins, disablePlugins, enableUploadPlugin, uploadPlugin} from '../actions/contextcreator';
 import contextcreator from '../reducers/contextcreator';
 import * as epics from '../epics/contextcreator';
 import ContextCreator from '../components/contextcreator/ContextCreator';
@@ -39,10 +41,16 @@ export default createPlugin('ContextCreator', {
         editedCfg: editedCfgSelector,
         isCfgValidated: validationStatusSelector,
         cfgError: cfgErrorSelector,
+        parsedTemplate: parsedTemplateSelector,
+        editedTemplate: editedTemplateSelector,
+        fileDropStatus: fileDropStatusSelector,
         availablePluginsFilterText: availablePluginsFilterTextSelector,
         enabledPluginsFilterText: enabledPluginsFilterTextSelector,
+        availableTemplatesFilterText: availableTemplatesFilterTextSelector,
+        enabledTemplatesFilterText: enabledTemplatesFilterTextSelector,
         mapType: mapTypeSelector,
         showReloadConfirm: reloadConfirmSelector,
+        showDialog: showDialogSelector,
         loading: isLoadingSelector,
         loadFlags: loadFlagsSelector,
         isValidContextName: isValidContextNameSelector,
@@ -53,19 +61,28 @@ export default createPlugin('ContextCreator', {
     }), {
         onFilterAvailablePlugins: setFilterText.bind(null, 'availablePlugins'),
         onFilterEnabledPlugins: setFilterText.bind(null, 'enabledPlugins'),
+        onFilterAvailableTemplates: setFilterText.bind(null, 'availableTemplates'),
+        onFilterEnabledTemplates: setFilterText.bind(null, 'enabledTemplates'),
         setSelectedPlugins,
+        setSelectedTemplates,
+        setParsedTemplate,
+        setFileDropStatus,
         onEditPlugin: editPlugin,
+        onEditTemplate: editTemplate,
         onUpdateCfg: updateEditedCfg,
         changePluginsKey,
+        changeTemplatesKey,
         onEnablePlugins: enablePlugins,
         onDisablePlugins: disablePlugins,
         onSetStep: setCreationStep,
         onChangeAttribute: changeAttribute,
         onSave: saveNewContext,
+        onSaveTemplate: saveTemplate,
         onMapViewerReload: mapViewerReload,
         onReloadConfirm: showMapViewerReloadConfirm,
         onEnableUploadPlugin: enableUploadPlugin,
-        onUploadPlugin: uploadPlugin
+        onUploadPlugin: uploadPlugin,
+        onShowDialog: showDialog
     })(ContextCreator),
     reducers: {
         contextcreator

@@ -5,13 +5,15 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import {get, omit, isObject, head} from 'lodash';
+import {get, omit, isObject, head, find, pick} from 'lodash';
 
 import ConfigUtils from '../utils/ConfigUtils';
 
-import {SET_CREATION_STEP, MAP_VIEWER_LOADED, SHOW_MAP_VIEWER_RELOAD_CONFIRM, SET_RESOURCE, IS_VALID_CONTEXT_NAME, CONTEXT_NAME_CHECKED,
-    CLEAR_CONTEXT_CREATOR, SET_FILTER_TEXT, SET_SELECTED_PLUGINS, SET_EDITED_PLUGIN, CHANGE_PLUGINS_KEY, CHANGE_ATTRIBUTE, LOADING,
-    SET_EDITED_CFG, UPDATE_EDITED_CFG, SET_VALIDATION_STATUS, SET_PARSED_CFG, SET_CFG_ERROR, ENABLE_UPLOAD_PLUGIN, UPLOADING_PLUGIN,
+import {SET_CREATION_STEP, MAP_VIEWER_LOADED, SHOW_MAP_VIEWER_RELOAD_CONFIRM, SET_RESOURCE, UPDATE_TEMPLATE, IS_VALID_CONTEXT_NAME,
+    CONTEXT_NAME_CHECKED, CLEAR_CONTEXT_CREATOR, SET_FILTER_TEXT, SET_SELECTED_PLUGINS, SET_SELECTED_TEMPLATES, SET_PARSED_TEMPLATE,
+    SET_FILE_DROP_STATUS, SET_EDITED_TEMPLATE, SET_EDITED_PLUGIN, CHANGE_PLUGINS_KEY, CHANGE_TEMPLATES_KEY, CHANGE_ATTRIBUTE,
+    LOADING, SHOW_DIALOG, SET_EDITED_CFG, UPDATE_EDITED_CFG, SET_VALIDATION_STATUS, SET_PARSED_CFG,
+    SET_CFG_ERROR, ENABLE_UPLOAD_PLUGIN, UPLOADING_PLUGIN,
     PLUGIN_UPLOADED} from "../actions/contextcreator";
 import {set} from '../utils/ImmutableUtils';
 
@@ -32,8 +34,7 @@ const defaultPlugins = [
     },
     {
         name: 'MapTemplates',
-        label: 'Map Templates',
-        enableMapTemplates: true
+        label: 'Map Templates'
     },
     {
         name: 'MetadataExplorer',
@@ -70,7 +71,7 @@ const makeNode = (plugin, parent = null, plugins = [], localPlugins = []) => ({
     name: plugin.name,
     title: plugin.title,
     description: plugin.description,
-    symbol: plugin.symbol,
+    glyph: plugin.glyph,
     parent,
     mandatory: !!plugin.mandatory,
 
@@ -134,7 +135,7 @@ export default (state = {}, action) => {
     }
     case SET_RESOURCE: {
         const {data = {plugins: {desktop: []}}, ...resource} = action.resource || {};
-        const {plugins = {desktop: []}, userPlugins = [], ...otherData} = data;
+        const {plugins = {desktop: []}, userPlugins = [], templates = [], ...otherData} = data;
         const contextPlugins = get(plugins, 'desktop', []);
 
         const allPlugins = makePluginTree(get(action.pluginsConfig, 'plugins'), ConfigUtils.getConfigProp('plugins'));
@@ -165,7 +166,25 @@ export default (state = {}, action) => {
         });
 
         return set('initialEnabledPlugins', pluginsToEnable,
-            set('newContext', otherData, set('plugins', convertPlugins(allPlugins), set('resource', resource, state))));
+            set('newContext', {
+                templates: (action.allTemplates || []).map(template => ({
+                    ...template,
+                    attributes: template.thumbnail ? {
+                        thumbnail: template.thumbnail
+                    } : undefined,
+                    enabled: templates.reduce((result, cur) => result || cur.id === template.id, false),
+                    selected: false
+                })),
+                ...otherData
+            }, set('plugins', convertPlugins(allPlugins), set('resource', resource, state))));
+    }
+    case UPDATE_TEMPLATE: {
+        const newResource = action.resource || {};
+        const templates = get(state, 'newContext.templates', []);
+        const oldResource = find(templates, template => template.id === newResource.id);
+        return action.resource ? set('newContext.templates',
+            [...templates.filter(template => template.id !== newResource.id), {...newResource, ...pick(oldResource, 'enabled', 'selected')}],
+            state) : state;
     }
     case IS_VALID_CONTEXT_NAME: {
         return set('isValidContextName', action.valid, state);
@@ -186,11 +205,38 @@ export default (state = {}, action) => {
             selected: selectedPlugins.reduce((result, selectedPluginName) => result || selectedPluginName === plugin.name, false)
         })), state);
     }
+    case SET_SELECTED_TEMPLATES: {
+        const selectedTemplates = action.ids || [];
+        return set('newContext.templates', get(state, 'newContext.templates', []).map(template => ({
+            ...template,
+            selected: selectedTemplates.reduce((result, selectedTemplateId) => result || selectedTemplateId === template.id, false)
+        })), state);
+    }
+    case SET_PARSED_TEMPLATE: {
+        return set('parsedTemplate', {fileName: action.fileName, data: action.data}, state);
+    }
+    case SET_FILE_DROP_STATUS: {
+        return set('fileDropStatus', action.status, state);
+    }
+    case SET_EDITED_TEMPLATE: {
+        return set('editedTemplate', find(get(state, 'newContext.templates', []), template => template.id === action.id), state);
+    }
     case SET_EDITED_PLUGIN: {
         return set('editedPlugin', action.pluginName, state);
     }
     case CHANGE_PLUGINS_KEY: {
         return set('plugins', changePlugins(get(state, 'plugins', []), action.ids || [], action.key, action.value), state);
+    }
+    case CHANGE_TEMPLATES_KEY: {
+        return set('newContext.templates',
+            get(state, 'newContext.templates', []).map(
+                template => ({
+                    ...template,
+                    [action.key]: (action.ids || []).reduce((result, cur) => result || cur === template.id, false) ?
+                        action.value :
+                        template[action.key]
+                })
+            ), state);
     }
     case SET_EDITED_CFG: {
         return action.pluginName ?
@@ -213,6 +259,9 @@ export default (state = {}, action) => {
         return action.key === 'name' ?
             set('resource.name', action.value, state) :
             set(`newContext.${action.key}`, action.value, state);
+    }
+    case SHOW_DIALOG: {
+        return set('parsedTemplate', undefined, set(`showDialog.${action.dialogName}`, action.show, state));
     }
     case LOADING: {
         // anyway sets loading to true

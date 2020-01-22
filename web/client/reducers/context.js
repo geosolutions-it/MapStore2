@@ -5,8 +5,9 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import { SET_CURRENT_CONTEXT, LOADING, SET_RESOURCE, CLEAR_CONTEXT, PLUGINS_REGISTRY_LOADED, PLUGINS_REGISTRY_LOAD_ERROR } from "../actions/context";
-import {set} from '../utils/ImmutableUtils';
+import { SET_CURRENT_CONTEXT, LOADING, SET_RESOURCE, CLEAR_CONTEXT, UPDATE_USER_PLUGIN, PLUGINS_REGISTRY_LOADED, PLUGINS_REGISTRY_LOAD_ERROR } from "../actions/context";
+import { find, get } from 'lodash';
+import {set, arrayUpdate} from '../utils/ImmutableUtils';
 
 /**
  * Reducers for context page and configs.
@@ -50,6 +51,13 @@ export default (state = {}, action) => {
     }
     case PLUGINS_REGISTRY_LOAD_ERROR: {
         return set('pluginsRegistryError', action.error, state);
+    }
+    case UPDATE_USER_PLUGIN: {
+        const plugin = find(get(state, 'currentContext.userPlugins', []), {name: action.name});
+        if (plugin) {
+            return arrayUpdate('currentContext.userPlugins', { ...plugin, ...action.values}, {name: action.name}, state);
+        }
+        return state;
     }
     default:
         return state;

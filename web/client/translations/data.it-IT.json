@@ -1104,7 +1104,11 @@
             },
             "add": "Importa",
             "cancel": "Annulla",
-            "success": " correttamente importato"
+            "success": " correttamente importato",
+            "next": "Avanti",
+            "skip": "Salta",
+            "finish": "Fine",
+            "layerOf": "Strato {count} dei {total}:"
         },
         "mapImport": {
             "title": "Importa",
@@ -2111,10 +2115,174 @@
             "next": "Avanti"
         },
         "plugins": {
-            "TOC": {
-                "title": "Elenco dei livelli",
-                "description": "Fornisce l'elenco dei livelli con la possibilità di ordinarli"
-            }
+          "About": {
+            "description": "Strumento che mostra la finestra Informazioni",
+            "title": "About"
+          },
+          "AddGroup": {
+            "description": "Consente agli utenti di creare nuovi gruppi di livelli alla TOC",
+            "title": "Aggiungi gruppo di livelli"
+          },
+          "Annotations": {
+            "description": "Strumento per disegnare annotazioni sulla mappa",
+            "title": "Annotazioni"
+          },
+          "AutoMapUpdate": {
+            "description": "Consente all'utente di aggiornare la mappa (vecchia versione di mapstore)",
+            "title": "Aggiornamento automatico della mappa"
+          },
+          "BackgroundSelector": {
+            "description": "Permette di selezionare lo sfondo della mappa",
+            "title": "Selettore di sfondo"
+          },
+          "BurgerMenu": {
+            "description": "Menu in alto a destra che contiene altri plug-in",
+            "title": "Burger Menu"
+          },
+          "CRSSelector": {
+            "description": "Permette di cambiare la proiezione della mappa",
+            "title": "Selettore CRS"
+          },
+          "Details": {
+            "description": "Consentire di mostrare la scheda dettagli per una mappa, se presente",
+            "title": "Dettagli mappa"
+          },
+          "Expander": {
+            "description": "Utilità per la Sidebar (navigazione) per nasconere alcuni pulsanti",
+            "title": "Expander"
+          },
+          "FeatureEditor": {
+            "description": "Esplora gli attributi in una tabella",
+            "title": "Tabella degli attributi"
+          },
+          "FilterLayer": {
+            "description": "Consente di aggiungere un filtro a un livello",
+            "title": "Filtra Livello"
+          },
+          "HelpLink": {
+            "description": "Un pulsante per accedere alla documentazione di MapStore",
+            "title": "Link alla documentazione"
+          },
+          "Home": {
+            "description": "Link alla home page",
+            "title": "Home"
+          },
+          "Identify": {
+            "description": "Interroga gli oggetti sulla mappa",
+            "title": "Identificare"
+          },
+          "Locate": {
+            "description": "Trova e segue la posizione dell'utente sulla mappa",
+            "title": "Strumento di localizzazione"
+          },
+          "Login": {
+            "description": "Login Tool",
+            "title": "Login"
+          },
+          "MapExport": {
+            "description": "Permette di esportare la mappa in un file",
+            "title": "Esporta Mappa"
+          },
+          "MapImport": {
+            "description": "Permette di importare dati (SHP, KML / KMZ, GeoJSON, GPX) o ricaricare mappe esportate.",
+            "title": "Importare"
+          },
+          "MapLoading": {
+            "description": "Uno spinner nella barra laterale che indica quando la mappa sta caricando",
+            "title": "Indicatore di caricamento mappa"
+          },
+          "Measure": {
+            "description": "Permette di misurare distanze e aree sulla mappa",
+            "title": "Misura"
+          },
+          "MetadataExplorer": {
+            "description": "Sfoglia i servizi (WMS / WMTS / CSW) per aggiungere livelli alla mappa",
+            "title": "Catalogo"
+          },
+          "MousePosition": {
+            "description": "Mostra le coordinate della punta del cursore del mouse",
+            "title": "Posizione del mouse"
+          },
+          "Print": {
+            "description": "Permette di stampare la mappa corrente con la legenda",
+            "title": "Strumento di stampa"
+          },
+          "Save": {
+            "description": "Permette di salvare le modifiche alla mappa sul server",
+            "title": "Salva"
+          },
+          "SaveAs": {
+            "description": "Permette di salvare o clonare mappe sul server",
+            "title": "Salva come..."
+          },
+          "ScaleBox": {
+            "description": "Un indicatore e un selettore della scala corrente della mappa",
+            "title": "Selettore di Scala"
+          },
+          "Search": {
+            "description": "Strumento di ricerca testuale (GeoCoder)",
+            "title": "Barra di ricerca"
+          },
+          "Settings": {
+            "description": "Permette di modificare alcune impostazioni per la mappa (lingua, formato info predefinito ...)",
+            "title": "Impostazioni"
+          },
+          "Share": {
+            "description": "Permette di condividere la mappa in diversi modi (link, QR-Code, embed, social network ...)",
+            "title": "Strumento di condivisione"
+          },
+          "StyleEditor": {
+            "description": "Editor degli stili dei layer",
+            "title": "Editor degli Stili"
+          },
+          "TOC": {
+            "description": "Fornisce l'elenco dei livelli con la possibilità di ordinarli",
+            "title": "Elenco dei livelli"
+          },
+          "TOCItemsSettings": {
+            "description": "Consenti di modificare le impostazioni dei livelli",
+            "title": "Impostazioni livello"
+          },
+          "Timeline": {
+            "description": "Permette di viaggiare nel tempo con i dati con dimensione temporale",
+            "title": "Timeline"
+          },
+          "Tutorial": {
+            "description": "Aggiunge un tutorial per spiegare le varie funzionalità",
+            "title": "Tutorial"
+          },
+          "UserExtensions": {
+            "description": "Consente all'utente di abilitare / disabilitare le estensioni utente",
+            "title": "Estensioni Utente"
+          },
+          "Version": {
+            "description": "Mostra la versione di MapStore nellla finestra di settings",
+            "title": "Versione"
+          },
+          "WFSDownload": {
+            "description": "Consente di scaricare dati dalla tabella degli attributi",
+            "title": "Scarica dati"
+          },
+          "Widgets": {
+            "description": "Permette di aggiungere e mostrare widget sulla mappa",
+            "title": "Widgets"
+          },
+          "WidgetsTray": {
+            "description": "Un vassoio per comprimere ed espandere i widget sulla mappa.",
+            "title": "Vassoio widget"
+          },
+          "ZoomAll": {
+            "description": "Pulsante della barra laterale per ingrandire l'estensione della mappa della mappa",
+            "title": "Zoom al massima Estensione"
+          },
+          "ZoomIn": {
+            "description": "Pulsante che aumenta il livello di zoom della mappa",
+            "title": "Zoom in"
+          },
+          "ZoomOut": {
+            "description": "Pulsante che diminuisce il livello di zoom della mappa",
+            "title": "Zoom Out"
+          }
         },
         "contextCreator": {
             "generalSettings": {
@@ -2145,11 +2313,35 @@
                     "deactivatePlugin": "Disabilita il caricamento di questo plugin all'avvio",
                     "editConfiguration": "Modifica la configurazione del plugin",
                     "pluginDocumentation": "Apri la documentazione di configurazione del plugin",
-                    "uploadPlugin": "Aggiungi una estensione a MapStore"
+                    "uploadPlugin": "Aggiungi una estensione a MapStore",
+                    "mapTemplatesConfig": "Configura modelli"
                 },
                 "saveCfgErrorNotification":  {
                     "title": "Errore di sintassi nella configurazione del plug-in",
                     "message": "Il plugin \"{pluginName}\" contiene un errore nella configurazione. Correggi prima di procedere"
+                }
+            },
+            "configureTemplates": {
+                "title": "Configura modelli",
+                "availableTemplates": "Modelli disponibili",
+                "enabledTemplates": "Modelli abilitati",
+                "templatesFilterPlaceholder": "Modelli di filtro...",
+                "availableTemplatesEmpty": "Abilitato tutti i modelli disponibili",
+                "enabledTemplatesEmpty": "Aggiungi modelli alla configurazione dall'elenco dei modelli disponibili",
+                "searchResultsEmpty": "Nessun modello trovato che soddisfa i criteri di ricerca",
+                "fileDrop": {
+                    "label": "Modello",
+                    "clear": "Trascina o fai clic per selezionare un file modello mappa (sono supportate le mappe JSON MapStore esportate oi file WMC)"
+                },
+                "uploadDialog": {
+                    "title": "Carica modello mappa",
+                    "save": "Caricare",
+                    "jsonParsingError": "Analisi JSON non riuscita: \"{error}\"",
+                    "fileReadError": "Si è verificato un errore di lettura del file imprevisto"
+                },
+                "tooltips": {
+                    "uploadTool": "Carica un nuovo modello",
+                    "editTemplate": "Modifica le proprietà del modello"
                 }
             },
             "configureMap": {
@@ -2158,7 +2350,8 @@
                 "confirm": "Questo annullerà tutte le attuali modifiche della mappa. Procedere?"
             },
             "saveErrorNotification": {
-                "title": "Salvataggio del contesto non riuscito",
+                "titleContext": "Salvataggio del contesto non riuscito",
+                "titleTemplate": "Salvataggio del modello non riuscito",
                 "conflict": "Una risorsa con questo nome esiste già",
                 "defaultMessage": "Errore sconosciuto"
             },
@@ -2174,6 +2367,14 @@
             "searchPlaceholder": "cerca...",
             "newContext": "Nuovo contesto",
             "editContextTooltip": "Modifica contesto"
+        },
+        "userExtensions": {
+          "title": "Estensioni utente",
+          "emptyTitle": "Nessun risultato",
+          "emptyDescription": "Il filtro inserito non ha prodotto risultati",
+          "filterPlaceholder": "filtro...",
+          "addExtension": "Aggiungi estensione",
+          "removeExtension": "Rimuovi Estensione"
         },
         "tutorial": {
             "title": "Tutorial",

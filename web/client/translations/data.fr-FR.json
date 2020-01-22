@@ -1104,7 +1104,11 @@
             },
             "add": "Ajouter",
             "cancel": "Annuler",
-            "success": " Import correct"
+            "success": " Import correct",
+            "next": "Suivant",
+            "skip": "Passer",
+            "finish": "Terminer",
+            "layerOf": "Couchez {count} des {total}:"
         },
         "mapImport": {
             "title": "Importer",
@@ -2110,10 +2114,174 @@
             "next": "Suivant"
         },
         "plugins": {
-            "TOC": {
-                "title": "Liste des couches",
-                "description": "Fournit une liste de couches avec une possibilité de les trier"
-            }
+          "About": {
+            "description": "Outil qui affiche la fenêtre À propos",
+            "title": "About"
+          },
+          "AddGroup": {
+            "description": "Permet aux utilisateurs de créer de nouveaux groupes de couches dans la table des matières",
+            "title": "Ajouter un groupe de calques"
+          },
+          "Annotations": {
+            "description": "Outil pour dessiner des annotations sur la carte",
+            "title": "annotations"
+          },
+          "AutoMapUpdate": {
+            "description": "Permet à l'utilisateur de mettre à jour la carte (ancienne version de mapstore)",
+            "title": "Mise à jour automatique de la carte"
+          },
+          "BackgroundSelector": {
+            "description": "Permet de sélectionner l'arrière-plan de la carte",
+            "title": "Sélecteur d'arrière-plan"
+          },
+          "BurgerMenu": {
+            "description": "Menu en haut à droite de la carte qui contient d'autres plug-ins",
+            "title": "Burger Menu"
+          },
+          "CRSSelector": {
+            "description": "Permet de changer de projection cartographique",
+            "title": "Sélecteur CRS"
+          },
+          "Details": {
+            "description": "Permettre d'afficher la carte de détail d'une carte, le cas échéant",
+            "title": "Détails de la carte"
+          },
+          "Expander": {
+            "description": "Utilitaire pour la barre latérale (navigation) qui permet de masquer certains boutons",
+            "title": "Expander"
+          },
+          "FeatureEditor": {
+            "description": "Parcourir les attributs dans une table",
+            "title": "Tableau d'attributs"
+          },
+          "FilterLayer": {
+            "description": "Permet d'ajouter un filtre à un calque",
+            "title": "Couche de filtre"
+          },
+          "HelpLink": {
+            "description": "Un bouton pour accéder à la documentation MapStore",
+            "title": "Lien vers la documentation"
+          },
+          "Home": {
+            "description": "Lien vers la page d'accueil",
+            "title": "Home"
+          },
+          "Identify": {
+            "description": "Recherchez les objets sur la carte",
+            "title": "Identifier"
+          },
+          "Locate": {
+            "description": "Trouvez et suivez la position de l'utilisateur sur la carte",
+            "title": "Outil de localisation"
+          },
+          "Login": {
+            "description": "Login Tool",
+            "title": "Login"
+          },
+          "MapExport": {
+            "description": "Permet d'exporter la carte dans un fichier",
+            "title": "Exportation de carte"
+          },
+          "MapImport": {
+            "description": "Permet d'importer des données (SHP, KML / KMZ, GeoJSON, GPX) ou de recharger des cartes exportées.",
+            "title": "Importation"
+          },
+          "MapLoading": {
+            "description": "Une flèche dans la barre latérale qui indique si la carte est en cours de chargement",
+            "title": "Indicateur de chargement de carte"
+          },
+          "Measure": {
+            "description": "Permet de mesurer les distances et les zones sur la carte",
+            "title": "Mesure"
+          },
+          "MetadataExplorer": {
+            "description": "Parcourir les services (WMS / WMTS / CSW) pour ajouter des couches à la carte",
+            "title": "Catalogue"
+          },
+          "MousePosition": {
+            "description": "Affiche les coordonnées du pointé par le curseur de la souris",
+            "title": "Position de la souris"
+          },
+          "Print": {
+            "description": "Permet d'imprimer la carte actuelle avec légende",
+            "title": "Outil d'impression"
+          },
+          "Save": {
+            "description": "Permet d'enregistrer les modifications de la carte",
+            "title": "Sauvegarder"
+          },
+          "SaveAs": {
+            "description": "Permet de créer ou cloner des cartes sur le serveur",
+            "title": "Enregistrer sous..."
+          },
+          "ScaleBox": {
+            "description": "Un indicateur et un sélecteur de l'échelle actuelle de la carte",
+            "title": "Sélecteur d'échelle"
+          },
+          "Search": {
+            "description": "Outil de recherche textuelle (GeoCoder)",
+            "title": "Barre de recherche"
+          },
+          "Settings": {
+            "description": "Permet de modifier certains paramètres de la carte (langue, format d'information par défaut ...)",
+            "title": "Réglages"
+          },
+          "Share": {
+            "description": "Permet de partager la carte de manière variopus (lien, QR-Code, embed, réseaux sociaux ...)",
+            "title": "Outil de partage"
+          },
+          "StyleEditor": {
+            "description": "Éditeur de style de calque",
+            "title": "Éditeur de style"
+          },
+          "TOC": {
+            "description": "Fournit une liste de couches avec une possibilité de les trier",
+            "title": "Liste des couches"
+          },
+          "TOCItemsSettings": {
+            "description": "Autoriser la modification des paramètres du calque",
+            "title": "Paramètres de calque"
+          },
+          "Timeline": {
+            "description": "Permet un voyage dans le temps pour les données avec dimension temporelle",
+            "title": "Timeline"
+          },
+          "Tutorial": {
+            "description": "Ajoute un tutoriel pour expliquer les différentes fonctionnalités",
+            "title": "Tutorial"
+          },
+          "UserExtensions": {
+            "description": "Permet à l'utilisateur d'activer / désactiver les extensions utilisateur",
+            "title": "User Extensions"
+          },
+          "Version": {
+            "description": "Affiche la version de MapStore dans l'outil de paramètres de carte",
+            "title": "Version"
+          },
+          "WFSDownload": {
+            "description": "Permet de télécharger des données de la table d'attributs",
+            "title": "Télécharger les données"
+          },
+          "Widgets": {
+            "description": "Permet d'ajouter et d'afficher des widgets sur la carte",
+            "title": "Widgets"
+          },
+          "WidgetsTray": {
+            "description": "Un plateau pour réduire et développer les widgets sur la carte.",
+            "title": "Plateau des widgets"
+          },
+          "ZoomAll": {
+            "description": "Bouton de la barre latérale pour zoomer sur l'étendue de la carte",
+            "title": "Zoom jusqu'à l'étendue maximale"
+          },
+          "ZoomIn": {
+            "description": "Bouton qui augmente le niveau de zoom de la carte",
+            "title": "Zoom In"
+          },
+          "ZoomOut": {
+            "description": "Bouton qui diminue le niveau de zoom de la carte",
+            "title": "Zoom Out"
+          }
         },
         "contextCreator": {
             "generalSettings": {
@@ -2144,11 +2312,35 @@
                     "deactivatePlugin": "Désactiver le chargement de ce plugin au démarrage",
                     "editConfiguration": "Modifier la configuration du plugin",
                     "pluginDocumentation": "Ouvrir la documentation de configuration du plugin",
-                    "uploadPlugin": "Ajouter une extension à MapStore"
+                    "uploadPlugin": "Ajouter une extension à MapStore",
+                    "mapTemplatesConfig": "Configurer le modèles"
                 },
                 "saveCfgErrorNotification":  {
                     "title": "Erreur de syntaxe dans la configuration du plugin",
                     "message": "Le plugin \"{pluginName}\" contient une erreur de configuration. Veuillez corriger avant de continuer"
+                }
+            },
+            "configureTemplates": {
+                "title": "Configurer le modèles",
+                "availableTemplates": "Modèles disponibles",
+                "enabledTemplates": "Modèles activés",
+                "templatesFilterPlaceholder": "Modèles de filtres",
+                "availableTemplatesEmpty": "Activé tous les modèles disponibles",
+                "enabledTemplatesEmpty": "Ajouter des modèles à la configuration à partir de la liste des modèles disponibles",
+                "searchResultsEmpty": "Aucun modèle trouvé répondant aux critères de recherche",
+                "fileDrop": {
+                    "label": "Modèle",
+                    "clear": "Déposez ou cliquez pour sélectionner un fichier de modèle de carte (les cartes JSON MapStore exportées ou les fichiers WMC sont pris en charge)"
+                },
+                "uploadDialog": {
+                    "title": "Télécharger un modèle de carte",
+                    "save": "Télécharger",
+                    "jsonParsingError": "Échec de l'analyse JSON: \"{error}\"",
+                    "fileReadError": "Une erreur de lecture de fichier inattendue s'est produite"
+                },
+                "tooltips": {
+                    "uploadTool": "Télécharger un nouveau modèle",
+                    "editTemplate": "Modifier les propriétés du modèle"
                 }
             },
             "configureMap": {
@@ -2157,7 +2349,8 @@
                 "confirm": "Cela va annuler toutes les modifications actuelles de la carte. Procéder?"
             },
             "saveErrorNotification": {
-                "title": "L'enregistrement de contexte a échoué",
+                "titleContext": "L'enregistrement de contexte a échoué",
+                "titleTemplate": "Échec de l'enregistrement du modèle",
                 "conflict": "Une ressource portant ce nom existe déjà",
                 "defaultMessage": "Erreur inconnue"
             },
@@ -2173,6 +2366,14 @@
             "searchPlaceholder": "rechercher...",
             "newContext": "Nouveau contexte",
             "editContextTooltip": "Modifier le contexte"
+        },
+        "userExtensions": {
+          "title": "Extensions de l'utilisateur",
+          "emptyTitle": "Pas de résultat",
+          "emptyDescription": "Filtre...",
+          "filterPlaceholder": "des couches de filtre",
+          "addExtension": "Ajouter une extension",
+          "removeExtension": "Supprimer l'extension"
         },
         "tutorial": {
             "title": "Tutoriel",
