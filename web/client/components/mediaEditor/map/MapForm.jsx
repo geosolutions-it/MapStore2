@@ -26,7 +26,6 @@ import withConfirm from '../../misc/withConfirm';
 
 const SaveButton = withConfirm(ToolbarButton);
 const SaveButtonWithConfirm = (props) => {
-    console.log(props);
     return (<SaveButton
         confirmTitle={<Message msgId = "mediaEditor.mapForm.confirmMapSaveTitle"/>}
         confirmContent={<Message msgId = "mediaEditor.mapForm.confirmMapSaveContent"/>} {...props}/>);
@@ -83,8 +82,7 @@ const enhance = compose(
             editing && setEditingMedia(false) || setAddingMedia(false);
         }
     }),
-    withPropsOnChange(["selectedItem", "initialResource", "properties"], ({initialResource, selectedItem: {data = {}} = {}, properties, ...rest}) => {
-        console.log(rest);
+    withPropsOnChange(["selectedItem", "initialResource", "properties"], ({initialResource, selectedItem: {data = {}} = {}, properties}) => {
         return {confirmPredicate: !isEqual(initialResource, {...data, ...properties})};
     }),
     withConfirm,

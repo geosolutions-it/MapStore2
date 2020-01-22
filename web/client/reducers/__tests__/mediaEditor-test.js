@@ -138,4 +138,30 @@ describe('Test the mediaEditor reducer', () => {
         }, updateItem(map));
         expect(state.data.map.geostoreMap.resultData.resources[0]).toEqual(map);
     });
+    it('UPDATE_ITEM with mode replace', () => {
+        const map = {
+            id: "resId",
+            layers: [{id: "layerId"}]
+        };
+
+        let state = mediaEditor({
+            settings: {
+                mediaType: "map",
+                sourceId: "geostoreMap"
+            },
+            data: {
+                map: {
+                    geostoreMap: {
+                        resultData: {
+                            resources: [{
+                                id: "resId",
+                                test: "has to disappear"
+                            }]
+                        }
+                    }
+                }
+            }
+        }, updateItem(map, "replace"));
+        expect(state.data.map.geostoreMap.resultData.resources[0]).toBe(map);
+    });
 });

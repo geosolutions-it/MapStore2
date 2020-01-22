@@ -49,6 +49,7 @@ import {
     settingsSelector
 } from '../../selectors/geostory';
 import TEST_STORY from "../../test-resources/geostory/sampleStory_1.json";
+import TEST_STORY_1 from "../../test-resources/geostory/story_state.json";
 import { Controls, Modes, getDefaultSectionTemplate, lists } from '../../utils/GeoStoryUtils';
 
 describe('geostory reducer', () => {
@@ -354,5 +355,27 @@ describe('geostory reducer', () => {
                 expect(controlState).toBeTruthy();
             });
         });
+    });
+    it('On EDIT_RESOURCE of type map, customized maps are reset', () => {
+        const state = geostory(undefined, setCurrentStory(TEST_STORY_1));
+        let contA = state.currentStory.sections[0].contents[0].contents[0];
+        let contB = state.currentStory.sections[0].contents[0].contents[1];
+        let contC = state.currentStory.sections[0].contents[0].contents[2];
+        expect(contA).toExist();
+        expect(contA.map).toNotExist();
+        expect(contB).toExist();
+        expect(contB.map).toExist();
+        expect(contC).toExist();
+        expect(contC.map).toExist();
+        const newState = geostory(state, editResource('4ef233d3-6612-4b7c-9b3c-0b15b024ce76', 'map', {}));
+        contA = newState.currentStory.sections[0].contents[0].contents[0];
+        contB = newState.currentStory.sections[0].contents[0].contents[1];
+        contC = newState.currentStory.sections[0].contents[0].contents[2];
+        expect(contA).toExist();
+        expect(contA.map).toNotExist();
+        expect(contB).toExist();
+        expect(contB.map).toNotExist();
+        expect(contC).toExist();
+        expect(contC.map).toNotExist();
     });
 });
