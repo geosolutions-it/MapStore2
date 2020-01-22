@@ -7,7 +7,7 @@
  */
 const Rx = require('rxjs');
 const { compose, mapPropsStream, createEventHandler} = require('recompose');
-const { get } = require('lodash');
+const { get, some, every } = require('lodash');
 const FileUtils = require('../../../../utils/FileUtils');
 const LayersUtils = require('../../../../utils/LayersUtils');
 const ConfigUtils = require('../../../../utils/ConfigUtils');
@@ -49,7 +49,7 @@ const checkFileType = (file) => {
 const readFile = (onWarnings) => (file) => {
     const ext = FileUtils.recognizeExt(file.name);
     const type = file.type || FileUtils.MIME_LOOKUPS[ext];
-    const supportedProjections = ConfigUtils.getConfigProp('projectionDefs');
+    const supportedProjections = ConfigUtils.getConfigProp('projectionDefs') || [];
     if (type === 'application/vnd.google-earth.kml+xml') {
         return FileUtils.readKml(file).then((xml) => {
             return FileUtils.kmlToGeoJSON(xml);
@@ -73,10 +73,10 @@ const readFile = (onWarnings) => (file) => {
                     onWarnings({type: 'warning', filename: file.name, message: 'shapefile.error.missingPrj'});
                 }
                 const geoJsonArr = FileUtils.shpToGeoJSON(buffer).map(json => ({ ...json, filename: file.name }));
-                const areProjectionsPresented = geoJsonArr.some(geoJson => !!get(geoJson, 'map.projection'));
-                if (areProjectionsPresented) {
+                const areProjectionsPresent = some(geoJsonArr, geoJson => !!get(geoJson, 'map.projection'));
+                if (areProjectionsPresent) {
                     const filteredGeoJsonArr = geoJsonArr.filter(item => !!get(item, 'map.projection'));
-                    const areProjectionsValid = filteredGeoJsonArr.every(geoJson => supportedProjections.includes(geoJson.map.projection));
+                    const areProjectionsValid = every(filteredGeoJsonArr, geoJson => supportedProjections.includes(geoJson.map.projection));
                     if (areProjectionsValid) {
                         return geoJsonArr;
                     }
