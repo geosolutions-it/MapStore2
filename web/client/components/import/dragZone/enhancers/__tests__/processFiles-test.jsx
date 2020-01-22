@@ -149,7 +149,7 @@ describe('processFiles enhancer', () => {
         }));
         ReactDOM.render(<Sink />, document.getElementById("container"));
     });
-    it('processFiles read map file', (done) => {
+    it('an error was thrown while processFiles read map file that contains a projection field in it', (done) => {
         const Sink = compose(
             processFiles,
             mapPropsStream(props$ => props$.merge(
@@ -158,7 +158,9 @@ describe('processFiles enhancer', () => {
                     .switchMap(({ onDrop = () => { } }) => getMapFile().map((file) => onDrop([file]))).ignoreElements()))
         )(createSink(props => {
             expect(props).toExist();
-            done();
+            if (props.error) {
+                done();
+            }
         }));
         ReactDOM.render(<Sink />, document.getElementById("container"));
     });
