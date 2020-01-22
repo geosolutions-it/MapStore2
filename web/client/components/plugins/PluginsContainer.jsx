@@ -15,7 +15,6 @@ const assign = require('object-assign');
 const { get, isEqual, isObject, isArray } = require('lodash');
 const {componentFromProp} = require('recompose');
 const Component = componentFromProp('component');
-const { augmentStore } = require('../../utils/StateUtils');
 
 /**
  * Container for plugins. Get's the plugin definitions (`plugins`) and configuration (`pluginsConfig`)
@@ -36,7 +35,6 @@ class PluginsContainer extends React.Component {
         mode: PropTypes.string,
         params: PropTypes.object,
         plugins: PropTypes.object,
-        pluginsRegistry: PropTypes.object,
         pluginsConfig: PropTypes.oneOfType([PropTypes.object, PropTypes.array]),
         id: PropTypes.string,
         className: PropTypes.string,
@@ -45,8 +43,7 @@ class PluginsContainer extends React.Component {
         pluginsState: PropTypes.object,
         monitoredState: PropTypes.object,
         defaultMode: PropTypes.string,
-        onPluginLoaded: PropTypes.func,
-        appendLocale: PropTypes.func
+        onPluginLoaded: PropTypes.func
     };
 
     static contextTypes = {
@@ -67,20 +64,17 @@ class PluginsContainer extends React.Component {
         component: "div",
         params: {},
         plugins: {},
-        pluginsRegistry: {},
         pluginsConfig: {},
         id: "plugins-container",
         className: "plugins-container",
         style: {},
         pluginsState: {},
         monitoredState: {},
-        onPluginLoaded: () => {},
-        appendLocale: () => {}
+        onPluginLoaded: () => {}
     };
 
     state = {
-        loadedPlugins: {},
-        plugins: null
+        loadedPlugins: {}
     };
 
     getChildContext() {
@@ -93,16 +87,10 @@ class PluginsContainer extends React.Component {
 
     UNSAFE_componentWillMount() {
         this.loadPlugins(this.props.pluginsState, this.props);
-        if (Object.keys(this.props.pluginsRegistry).length) {
-            this.loadPluginsFromRegistry(this.props.pluginsRegistry);
-        }
     }
 
     UNSAFE_componentWillReceiveProps(newProps) {
         this.loadPlugins(newProps.pluginsState, newProps);
-        if (Object.keys(newProps.pluginsRegistry).length && Object.keys(newProps.pluginsRegistry).length !== Object.keys(this.props.pluginsRegistry).length) {
-            this.loadPluginsFromRegistry(newProps.pluginsRegistry);
-        }
     }
 
     shouldComponentUpdate(nextProps, nextState) {
@@ -115,8 +103,7 @@ class PluginsContainer extends React.Component {
             || nextProps.style !== this.props.style
             || nextProps.defaultMode !== this.props.defaultMode
             || !isEqual(nextProps.pluginsState, this.props.pluginsState)
-            || !isEqual(nextState.loadedPlugins, this.state.loadedPlugins)
-            || nextState.plugins !== this.state.plugins;
+            || !isEqual(nextState.loadedPlugins, this.state.loadedPlugins);
     }
 
     getState = (path, newProps) => {
@@ -125,7 +112,7 @@ class PluginsContainer extends React.Component {
     };
 
     getPluginDescriptor = (plugin) => {
-        return PluginsUtils.getPluginDescriptor(this.getState, (this.state.plugins || this.props.plugins),
+        return PluginsUtils.getPluginDescriptor(this.getState, (this.props.plugins),
             this.getPluginsConfig(this.props), plugin, this.state.loadedPlugins);
     };
 
@@ -153,7 +140,7 @@ class PluginsContainer extends React.Component {
             .filter(this.filterLoaded)
             // renders only root plugins (children of other plugins are skipped)
             .filter(this.filterRoot)
-            .map((Plugin) => <Plugin.impl key={Plugin.id} ref={Plugin.cfg.withGlobalRef ? PluginsUtils.setRefToWrappedComponent(Plugin.name) : null}
+            .map((Plugin) => <Plugin.impl key={Plugin.id} ref={Plugin.cfg.withGlobalRef ? PluginsUtils.setRefToWrdComponent(Plugin.name) : null}
                 {...this.props.params} {...Plugin.cfg} pluginCfg={Plugin.cfg} items={Plugin.items}/>);
     };
 
@@ -200,7 +187,7 @@ class PluginsContainer extends React.Component {
     loadPlugins = (state, newProps) => {
         const getState = (path) => this.getState(path, newProps);
         (newProps.pluginsConfig && this.getPluginsConfig(newProps) || [])
-            .map((plugin) => PluginsUtils.getPluginDescriptor(getState, (this.state.plugins || newProps.plugins),
+            .map((plugin) => PluginsUtils.getPluginDescriptor(getState, (newProps.plugins),
                 this.getPluginsConfig(newProps), plugin, this.state.loadedPlugins))
             .filter(plugin => PluginsUtils.filterDisabledPlugins({ plugin: plugin && plugin.impl || plugin, cfg: plugin && plugin.cfg || {}}, getState))
             .filter((plugin) => plugin && plugin.impl.loadPlugin).forEach((plugin) => {
@@ -210,32 +197,6 @@ class PluginsContainer extends React.Component {
                     }
                 }
             });
-    };
-    loadPluginsFromRegistry = (plugins) => {
-        Object.keys(plugins).forEach((pluginName) => {
-            PluginsUtils.loadPlugin(plugins[pluginName].bundle).then((loaded) => {
-                if (!this.state.loadedPlugins[loaded.name]) {
-                    loaded.plugin.loadPlugin((impl) => {
-                        augmentStore({reducers: impl.reducers || {}, epics: impl.epics || {}});
-                        this.setState({
-                            plugins: {
-                                ...(this.state.plugins || this.props.plugins), [pluginName]: {
-                                    loadPlugin: () => {}
-                                }
-                            },
-                            loadedPlugins: assign({}, this.state.loadedPlugins, { [loaded.name]: impl })
-                        });
-                        /*
-                        setTimeout(() => {
-                            if (plugins[pluginName].translations) {
-                                this.props.appendLocale(plugins[pluginName].translations);
-                            }
-                        }, 1000);*/
-                        this.props.onPluginLoaded(loaded.name, impl);
-                    });
-                }
-            });
-        });
     };
     loadPlugin = (plugin, impl) => {
         this.setState({

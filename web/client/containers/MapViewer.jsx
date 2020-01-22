@@ -16,19 +16,15 @@ const urlQuery = url.parse(window.location.href, true).query;
 
 const ConfigUtils = require('../utils/ConfigUtils');
 const PluginsUtils = require('../utils/PluginsUtils');
-const {appendLocale} = require('../actions/locale');
 
 const PluginsContainer = connect((state) => ({
     statePluginsConfig: state.plugins,
-    pluginsRegistry: state.context && state.context.pluginsRegistry || {},
     mode: urlQuery.mode || state.mode || (state.browser && state.browser.mobile ? 'mobile' : 'desktop'),
     pluginsState: assign({}, state && state.controls, state && state.layers && state.layers.settings && {
         layerSettings: state.layers.settings
     }),
     monitoredState: PluginsUtils.getMonitoredState(state, ConfigUtils.getConfigProp('monitorState'))
-}), {
-    appendLocale
-})(require('../components/plugins/PluginsContainer'));
+}))(require('../components/plugins/PluginsContainer'));
 
 class MapViewer extends React.Component {
     static propTypes = {
@@ -37,21 +33,17 @@ class MapViewer extends React.Component {
         statePluginsConfig: PropTypes.object,
         pluginsConfig: PropTypes.object,
         loadMapConfig: PropTypes.func,
-        loadPluginsRegistry: PropTypes.func,
-        plugins: PropTypes.object,
-        registrySource: PropTypes.string
+        plugins: PropTypes.object
     };
 
     static defaultProps = {
         mode: 'desktop',
         className: 'viewer',
-        loadMapConfig: () => {},
-        loadPluginsRegistry: () => { }
+        loadMapConfig: () => {}
     };
 
     UNSAFE_componentWillMount() {
         this.props.loadMapConfig();
-        this.props.loadPluginsRegistry(this.props.registrySource);
     }
 
     render() {

@@ -8,30 +8,6 @@
 
 
 export const LOAD_CONTEXT = "CONTEXT:LOAD";
-export const LOAD_PLUGINS_REGISTRY = "CONTEXT:LOAD_PLUGINS_REGISTRY";
-export const PLUGINS_REGISTRY_LOADED = "CONTEXT:PLUGINS_REGISTRY_LOADED";
-export const PLUGINS_REGISTRY_LOAD_ERROR = "CONTEXT:PLUGINS_REGISTRY_LOAD_ERROR";
-
-/**
- * Triggers plugins registry loading flow
- * @param {string} path path of the JSON file / service to fetch the plugins registry from
- */
-export const loadPluginsRegistry = (path = "plugins.json") => ({ type: LOAD_PLUGINS_REGISTRY, path });
-
-
-export const configurePluginsRegistry = (plugins) => {
-    return {
-        type: PLUGINS_REGISTRY_LOADED,
-        plugins
-    };
-};
-
-export const pluginsRegistryError = (e) => {
-    return {
-        type: PLUGINS_REGISTRY_LOAD_ERROR,
-        error: e
-    };
-};
 
 /**
  * Triggers context loading flow

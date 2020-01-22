@@ -240,7 +240,7 @@ const configurePluginsStep = ({
                     },
                     onFilter: onFilterAvailablePlugins,
                     tools: [{
-                        id: "upload", label: <Glyphicon glyph="upload" />, onClick: () => onEnableUpload(true), tooltipId: 'contextCreator.configurePlugins.tooltips.upload'
+                        id: "upload", glyph: "upload", onClick: () => onEnableUpload(true), tooltipId: 'contextCreator.configurePlugins.tooltips.uploadPlugin'
                     }]
                 }}
                 rightColumn={{

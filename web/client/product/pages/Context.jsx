@@ -11,11 +11,10 @@ import { connect } from 'react-redux';
 import { isEqual } from 'lodash';
 import { compose } from 'recompose';
 import MapViewerCmp from '../components/viewer/MapViewerCmp';
-import { loadContext, clearContext, loadPluginsRegistry } from '../../actions/context';
+import { loadContext, clearContext } from '../../actions/context';
 import MapViewerContainer from '../../containers/MapViewer';
 import { createStructuredSelector } from 'reselect';
 import { contextMonitoredStateSelector, pluginsSelector, currentTitleSelector } from '../../selectors/context';
-import ConfigUtils from '../../utils/ConfigUtils';
 /**
   * @name Context
   * @memberof pages
@@ -58,8 +57,6 @@ class Context extends React.Component {
         mode: PropTypes.string,
         match: PropTypes.object,
         onInit: PropTypes.func,
-        loadPluginsRegistry: PropTypes.func,
-        registrySource: PropTypes.string,
         plugins: PropTypes.object,
         pluginsConfig: PropTypes.object,
         windowTitle: PropTypes.string,
@@ -74,8 +71,6 @@ class Context extends React.Component {
         mode: 'desktop',
         loadContext: () => {},
         reset: () => {},
-        loadPluginsRegistry: () => {},
-        registrySource: ConfigUtils.getConfigProp('extensionsRegistry'),
         plugins: {},
         match: {
             params: {}
@@ -118,7 +113,6 @@ export default compose(
         }),
         {
             loadContext,
-            reset: clearContext,
-            loadPluginsRegistry
+            reset: clearContext
         })
 )(Context);

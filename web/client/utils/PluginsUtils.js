@@ -308,7 +308,13 @@ export const importPlugin = (source, callback) => {
         const pluginDef = exported.default || exported;
         // return the plugin as a lazy loaded one
         const plugin = {
-            loadPlugin: (loaded) => loaded(pluginDef)
+            loadPlugin: (loaded) => {
+                if (loaded) {
+                    loaded(pluginDef)
+                } else {
+                    return Promise.resolve(pluginDef)
+                }
+            }
         }
         callback(pluginDef.name, plugin);
     });
