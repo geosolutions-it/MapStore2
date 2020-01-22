@@ -225,13 +225,16 @@ class PluginsContainer extends React.Component {
                             },
                             loadedPlugins: assign({}, this.state.loadedPlugins, { [loaded.name]: impl })
                         });
+                        /*
+                        setTimeout(() => {
+                            if (plugins[pluginName].translations) {
+                                this.props.appendLocale(plugins[pluginName].translations);
+                            }
+                        }, 1000);*/
                         this.props.onPluginLoaded(loaded.name, impl);
                     });
                 }
             });
-            if (plugins[pluginName].translations) {
-                this.props.appendLocale(plugins[pluginName].translations);
-            }
         });
     };
     loadPlugin = (plugin, impl) => {
