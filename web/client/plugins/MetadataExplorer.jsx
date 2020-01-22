@@ -29,6 +29,7 @@ const {resultSelector, serviceListOpenSelector, newServiceSelector,
     modeSelector, layerErrorSelector, activeSelector, savingSelector, authkeyParamNameSelector,
     searchTextSelector, groupSelector, pageSizeSelector, loadingSelector
 } = require("../selectors/catalog");
+const {projectionSelector} = require('../selectors/map');
 
 const {mapLayoutValuesSelector} = require('../selectors/maplayout');
 const {metadataSourceSelector, modalParamsSelector} = require('../selectors/backgroundselector');
@@ -51,8 +52,9 @@ const catalogSelector = createSelector([
     (state) => currentLocaleSelector(state),
     (state) => currentMessagesSelector(state),
     (state) => pageSizeSelector(state),
-    (state) => loadingSelector(state)
-], (layers, modalParams, authkeyParamNames, result, saving, openCatalogServiceList, newService, newformat, selectedFormat, options, currentLocale, locales, pageSize, loading) => ({
+    (state) => loadingSelector(state),
+    (state) => projectionSelector(state)
+], (layers, modalParams, authkeyParamNames, result, saving, openCatalogServiceList, newService, newformat, selectedFormat, options, currentLocale, locales, pageSize, loading, crs) => ({
     layers,
     modalParams,
     authkeyParamNames,
@@ -63,6 +65,7 @@ const catalogSelector = createSelector([
     currentLocale,
     pageSize,
     loading,
+    crs,
     records: result && CatalogUtils.getCatalogRecords(selectedFormat, result, options, locales) || []
 }));
 
