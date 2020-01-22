@@ -5,8 +5,8 @@ const NormalModuleReplacementPlugin = require("webpack/lib/NormalModuleReplaceme
 const NoEmitOnErrorsPlugin = require("webpack/lib/NoEmitOnErrorsPlugin");
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const path = require('path');
-const ParallelUglifyPlugin = require("webpack-parallel-uglify-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const TerserPlugin = require('terser-webpack-plugin');
 
 /**
  * Webpack configuration builder.
@@ -38,7 +38,8 @@ module.exports = (bundles, themeEntries, paths, extractThemesPlugin, prod, publi
     }, bundles, themeEntries),
     mode: prod ? "production" : "development",
     optimization: {
-        minimize: false
+        minimizer: [new TerserPlugin()],
+        minimize: true
     },
     output: {
         path: paths.dist,
@@ -71,12 +72,7 @@ module.exports = (bundles, themeEntries, paths, extractThemesPlugin, prod, publi
         new NormalModuleReplacementPlugin(/proj4$/, path.join(paths.framework, "libs", "proj4")),
         new NoEmitOnErrorsPlugin(),
         extractThemesPlugin
-    ].concat(prod && prodPlugins || []).concat(prod ? [new ParallelUglifyPlugin({
-        uglifyJS: {
-            sourceMap: false,
-            mangle: true
-        }
-    })] : []),
+    ].concat(prod && prodPlugins || []),
     resolve: {
         extensions: [".js", ".jsx"],
         alias: assign({}, {

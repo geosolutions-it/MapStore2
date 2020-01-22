@@ -71,13 +71,13 @@
     "rimraf": "2.5.2",
     "simple-git": "1.33.1",
     "style-loader": "0.12.4",
+    "terser-webpack-plugin": "2.3.2",
     "url-loader": "0.5.7",
     "vusion-webfonts-generator": "0.4.1",
-    "webpack": "4.36.0",
+    "webpack": "4.41.5",
     "webpack-bundle-size-analyzer": "2.0.2",
     "webpack-cli": "3.3.6",
-    "webpack-dev-server": "3.7.2",
-    "webpack-parallel-uglify-plugin": "1.1.2"
+    "webpack-dev-server": "3.7.2"
   },
   "//": "replace react-sortable-items with official on npm when it will support React 15",
   "dependencies": {
