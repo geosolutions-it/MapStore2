@@ -29,7 +29,8 @@ const sampleRecord = {
     references: [{
         type: "OGC:WMS",
         url: "http://wms.sample.service:80/geoserver/wms?SERVICE=WMS&",
-        params: {name: "workspace:layername"}
+        params: {name: "workspace:layername"},
+        SRS: ["EPSG:4326"]
     }]
 };
 
@@ -98,4 +99,37 @@ describe('This test for Record Grid', () => {
         expect(itemDom).toNotExist();
     });
 
+    it('creates the component with not allowed custom crs', () => {
+        let actions = {
+            onError: () => {
+            }
+        };
+        let actionsSpy = expect.spyOn(actions, "onError");
+        const item = ReactDOM.render(<RecordGrid records={[sampleRecord]}
+            catalogURL={sampleCatalogURL} crs="EPSG:3857" onError={actions.onError}/>, document.getElementById("container"));
+        expect(item).toExist();
+        let button = TestUtils.findRenderedDOMComponentWithTag(
+            item, 'button'
+        );
+        expect(button).toExist();
+        button.click();
+        expect(actionsSpy.calls.length).toBe(1);
+    });
+
+    it('creates the component with allowed custom crs', () => {
+        let actions = {
+            onLayerAdd: () => {
+            }
+        };
+        let actionsSpy = expect.spyOn(actions, "onLayerAdd");
+        const item = ReactDOM.render(<RecordGrid records={[sampleRecord]}
+            catalogURL={sampleCatalogURL} crs="EPSG:4326" onLayerAdd={actions.onLayerAdd} />, document.getElementById("container"));
+        expect(item).toExist();
+        let button = TestUtils.findRenderedDOMComponentWithTag(
+            item, 'button'
+        );
+        expect(button).toExist();
+        button.click();
+        expect(actionsSpy.calls.length).toBe(1);
+    });
 });
