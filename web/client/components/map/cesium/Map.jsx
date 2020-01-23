@@ -35,6 +35,7 @@ class CesiumMap extends React.Component {
         mousePointer: PropTypes.string,
         zoomToHeight: PropTypes.number,
         registerHooks: PropTypes.bool,
+        hookRegister: PropTypes.object,
         viewerOptions: PropTypes.object
     };
 
@@ -49,6 +50,7 @@ class CesiumMap extends React.Component {
         standardHeight: 512,
         zoomToHeight: 80000000,
         registerHooks: true,
+        hookRegister: mapUtils,
         viewerOptions: {
             orientation: {
                 heading: 0,
@@ -326,7 +328,7 @@ class CesiumMap extends React.Component {
         this.pauserStream$ = pauserStream$;
     };
     registerHooks = () => {
-        mapUtils.registerHook(mapUtils.ZOOM_TO_EXTENT_HOOK, (extent, { crs, duration } = {}) => {
+        this.props.hookRegister.registerHook(mapUtils.ZOOM_TO_EXTENT_HOOK, (extent, { crs, duration } = {}) => {
             // TODO: manage padding and maxZoom
             const bounds = CoordinatesUtils.reprojectBbox(extent, crs, 'EPSG:4326');
             if (this.map.camera.flyTo) {

@@ -60,7 +60,6 @@ class OpenlayersMap extends React.Component {
         changeMeasurementState: PropTypes.func,
         registerHooks: PropTypes.bool,
         hookRegister: PropTypes.object,
-        zoomToExtent: PropTypes.bool,
         interactive: PropTypes.bool,
         onCreationError: PropTypes.func,
         bbox: PropTypes.object,
@@ -86,7 +85,6 @@ class OpenlayersMap extends React.Component {
         resize: 0,
         registerHooks: true,
         hookRegister: mapUtils,
-        zoomToExtent: false,
         interactive: true
     };
 
@@ -246,21 +244,6 @@ class OpenlayersMap extends React.Component {
             } else {
                 this.map.removeControl(this.map.getControls().getArray().filter((ctl) => ctl instanceof Zoom)[0]);
             }
-        }
-
-        if (!isEqual(newProps.wpsBounds, this.props.wpsBounds) && newProps.wpsBounds && !isEmpty(newProps.wpsBounds) && newProps.zoomToExtent) {
-            const extent = newProps && newProps.wpsBounds && newProps.wpsBounds || this.map.getView().getProjection().getExtent();
-            let bounds = extent;
-            if (isObject(extent)) {
-                bounds = [extent.minx, extent.miny, extent.maxx, extent.maxy];
-            }
-            // if EPSG:4326 with max extent (-180, -90, 180, 90) bounds are 0,0,0,0. In this case zoom to max extent
-            // TODO: improve this to manage all degenerated bounding boxes.
-            if (bounds && bounds[0] === bounds[2] && bounds[1] === bounds[3] &&
-                newProps.bbox.crs === "EPSG:4326" && isArray(extent) && extent[0] === -180 && extent[1] === -90) {
-                bounds = this.map.getView().getProjection().getExtent();
-            }
-            this.map.getView().fit(bounds, { maxZoom: 21 });
         }
 
         /*

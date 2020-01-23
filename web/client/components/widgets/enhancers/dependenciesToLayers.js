@@ -20,9 +20,10 @@ const {composeFilterObject} = require('./utils');
  */
 module.exports = compose(
     withPropsOnChange(
-        ({mapSync, dependencies = {} } = {}, nextProps = {}, filter) =>
+        ({mapSync, dependencies = {}, map } = {}, nextProps = {}, filter) =>
             mapSync !== nextProps.mapSync
             || !isEqual(dependencies, nextProps.dependencies)
+            || !isEqual(map, nextProps.map)
             || filter !== nextProps.filter,
         ({ mapSync, dependencies = {}, filter: filterObj, map} = {}) => {
 
