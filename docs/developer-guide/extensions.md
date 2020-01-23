@@ -70,7 +70,12 @@ This is needed so that all the imported dependencies paths are correct.
 To build an extension a specific npm run task can be used:
 
 ```javascript
-name=myextension version=abc source=extension_source_path npm run build-extension
+name=extension_name version=extension_version source=extension_source_path npm run build-extension
+```
+
+**example**
+```javascript
+name=myextension version=abc source=web/client/extensions/MyExtension npm run build-extension
 ```
 
 The parameters that are needed are:
