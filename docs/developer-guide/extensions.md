@@ -92,13 +92,13 @@ To build an extension a specific npm run task can be used:
 npm run build-extension
 ```
 
-You will find the built javascript in build/extensions/dist/extension.<hash>.js
+You will find the built javascript in build/extensions/dist/extension.js
 
 ### Distributing your extension as an uploadable module
 
 To distribute your extension so that it can be uploaded to a running MapStore instance and included in a context, you have to create a zip file with the following content:
 
- * the js bundle built above, renamed to a convenient file name (e.g. extension.js)
+ * the js bundle built above, renamed to a convenient file name (e.g. my-wornderful-extension.js)
  * an index.json file that describes the extension, an example follows
  * optionally, a translations folder with localized message files used by the extension (in one or more languages of your choice)
 

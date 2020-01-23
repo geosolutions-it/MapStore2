@@ -2,6 +2,7 @@ import {connect} from "react-redux";
 
 import Extension from "../components/Extension";
 import Rx from "rxjs";
+import { changeZoomLevel } from "../../../web/client/actions/map";
 
 export default {
     name: "Extension",
@@ -11,7 +12,7 @@ export default {
         return {
             type: 'INCREASE_COUNTER'
         };
-    }})(Extension),
+    }, changeZoomLevel})(Extension),
     reducers: {
         extension: (state = {value: 1}, action) => {
             if (action.type === 'INCREASE_COUNTER') {

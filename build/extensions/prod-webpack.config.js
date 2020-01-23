@@ -2,8 +2,9 @@ const themeEntries = require('../themes.js').themeEntries;
 const extractThemesPlugin = require('../themes.js').extractThemesPlugin;
 
 const path = require("path");
+const assign = require('object-assign');
 
-module.exports = require('../buildConfig')(
+module.exports = assign(require('../buildConfig')(
     {
         extensions: path.join(__dirname, "app")
     },
@@ -17,4 +18,11 @@ module.exports = require('../buildConfig')(
     extractThemesPlugin,
     true,
     "/dist/"
-);
+), {
+    output: {
+        path: path.join(__dirname, "dist"),
+        publicPath: "/dist/",
+        filename: "[name].js",
+        chunkFilename: "[name].js"
+    }
+});
