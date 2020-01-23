@@ -28,7 +28,7 @@ import mapUtils from '../../../utils/MapUtils';
 import projUtils from '../../../utils/openlayers/projUtils';
 import { DEFAULT_INTERACTION_OPTIONS } from '../../../utils/openlayers/DrawUtils';
 
-import {isEqual, isObject, find, throttle, isArray, isNil, isEmpty} from 'lodash';
+import {isEqual, find, throttle, isArray, isNil} from 'lodash';
 
 
 import 'ol/ol.css';
