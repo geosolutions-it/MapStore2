@@ -259,7 +259,8 @@
     "lint": "eslint web/client --ext .jsx,.js",
     "travis": "eslint web/client --ext .jsx,.js && npm run i18n && karma start ./build/karma.conf.single-run.js --browsers FirefoxHeadless --reporters dots,junit,coverage,coveralls && docma -c build/docma-config.json --dest web/docs",
     "generate-icons": "node ./build/generateIcons.js",
-    "build-extension": "node --max_old_space_size=2048 ./node_modules/webpack/bin/webpack.js --progress  --colors --config build/extensionBuildConfig.js"
+    "build-extension": "rimraf ./build/extensions/dist && mkdirp ./build/extensions/dist && webpack --progress  --colors --config build/extensions/prod-webpack.config.js",
+    "run-extension": "webpack-dev-server --progress --colors --port 8081 --hot --inline --config build/extensions/webpack.config.js --content-base build/extensions"
   },
   "author": "GeoSolutions",
   "license": "BSD-2-Clause"
