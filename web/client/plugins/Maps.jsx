@@ -60,6 +60,12 @@ const PaginationToolbar = connect((state) => {
     };
 })(require('../components/misc/PaginationToolbar'));
 
+/**
+ * Plugin for Maps resources
+ * @name Maps
+ * @memberof plugins
+ * @prop {boolean} cfg.showCreateButton default true, use to render create a new one button
+ */
 class Maps extends React.Component {
     static propTypes = {
         mapType: PropTypes.string,
@@ -132,10 +138,10 @@ const MapsPlugin = compose(
     }),
     emptyState(
         ({maps = [], loading}) => !loading && maps.length === 0,
-        () => ({
+        ({showCreateButton = true}) => ({
             glyph: "1-map",
             title: <Message msgId="resources.maps.noMapAvailable" />,
-            content: <EmptyMaps />
+            content: <EmptyMaps showCreateButton={showCreateButton} />
         })
     )
 )(Maps);

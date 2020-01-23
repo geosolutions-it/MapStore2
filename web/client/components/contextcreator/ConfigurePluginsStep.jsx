@@ -15,8 +15,10 @@ import 'codemirror/lib/codemirror.css';
 import 'codemirror/mode/javascript/javascript';
 
 import Transfer from '../misc/transfer/Transfer';
+import ResizableModal from '../misc/ResizableModal';
 import ToolbarButton from '../misc/toolbar/ToolbarButton';
 import Message from '../I18N/Message';
+import ConfigureMapTemplates from './ConfigureMapTemplates';
 
 /**
  * Converts plugin objects to Transform items
@@ -25,28 +27,37 @@ import Message from '../I18N/Message';
  * @param {object} cfgError object describing current cfg editing error
  * @param {function} setEditor editor instance setter
  * @param {string} documentationBaseURL base url for plugin documentation
+ * @param {boolean} showMapTemplatesConfig
  * @param {function} onEditPlugin edit plugin configuration callback
  * @param {function} onEnablePlugins enable plugins callback
  * @param {function} onDisablePlugins disable plugins callback
  * @param {function} onUpdateCfg update currently edited configuration callback
+ * @param {function} onShowMapTemplatesConfig
  * @param {function} changePluginsKey callback to change properties of plugin objects
  * @param {boolean} isRoot true if plugin objects in plugins argument are at the root level of a tree hierarchy
  * @param {object[]} plugins plugin objects to convert
  * @param {boolean} processChildren if true this function will recursively convert the children
  * @param {boolean} parentIsEnabled true if 'enabled' property of parent plugin object is true
  */
-const pluginsToItems = (editedPlugin, editedCfg, cfgError, setEditor, documentationBaseURL, onEditPlugin, onEnablePlugins,
-    onDisablePlugins, onUpdateCfg, changePluginsKey, isRoot, plugins = [], processChildren, parentIsEnabled) =>
+const pluginsToItems = (editedPlugin, editedCfg, cfgError, setEditor, documentationBaseURL, onEditPlugin,
+    onEnablePlugins, onDisablePlugins, onUpdateCfg, onShowDialog, changePluginsKey, isRoot, plugins = [],
+    processChildren, parentIsEnabled) =>
     plugins.filter(plugin => !plugin.hidden).map(plugin => {
         const enableTools = (isRoot || parentIsEnabled) && plugin.enabled;
         const isMandatory = plugin.forcedMandatory || plugin.mandatory;
         return {
             id: plugin.name,
             title: plugin.title || plugin.label || plugin.name,
+            cardSize: 'sm',
             description: plugin.description || 'plugin name: ' + plugin.name,
             mandatory: isMandatory,
             className: !isRoot && parentIsEnabled && !plugin.enabled ? 'plugin-card-disabled' : '',
             tools: enableTools ? [{
+                visible: plugin.name === 'MapTemplates',
+                glyph: '1-map',
+                tooltipId: 'contextCreator.configurePlugins.tooltips.mapTemplatesConfig',
+                onClick: () => onShowDialog('mapTemplatesConfig', true)
+            }, {
                 visible: !isMandatory,
                 glyph: '1-user-mod',
                 tooltipId: plugin.isUserPlugin ?
@@ -101,20 +112,26 @@ const pluginsToItems = (editedPlugin, editedCfg, cfgError, setEditor, documentat
                         </div>
                     </div>}
                 </div> : null,
-            preview: !isRoot && parentIsEnabled && !isMandatory &&
-                <Button
-                    className="square-button-md no-border"
-                    onClick={(event) => {
-                        event.stopPropagation();
-                        if (!isMandatory) {
-                            (plugin.enabled ? onDisablePlugins : onEnablePlugins)([plugin.name]);
-                        }
-                    }}>
-                    <Glyphicon glyph={plugin.enabled ? 'check' : 'unchecked'}/>
-                </Button> || null,
+            preview:
+                (<React.Fragment>
+                    {!isRoot && parentIsEnabled && !isMandatory && <Button
+                        style={{left: '-4px', position: 'relative'}}
+                        key="checkbox"
+                        className="square-button-md no-border"
+                        onClick={(event) => {
+                            event.stopPropagation();
+                            if (!isMandatory) {
+                                (plugin.enabled ? onDisablePlugins : onEnablePlugins)([plugin.name]);
+                            }
+                        }}>
+                        <Glyphicon glyph={plugin.enabled ? 'check' : 'unchecked'} />
+                    </Button>}
+                    {plugin.glyph ? <Glyphicon key="icon" glyph={plugin.glyph} /> : <Glyphicon key="icon" glyph="plug" />}
+                </React.Fragment>),
             children: processChildren &&
                 pluginsToItems(editedPlugin, editedCfg, cfgError, setEditor, documentationBaseURL, onEditPlugin,
-                    onEnablePlugins, onDisablePlugins, onUpdateCfg, changePluginsKey, false, plugin.children, true, plugin.enabled) || []
+                    onEnablePlugins, onDisablePlugins, onUpdateCfg, onShowDialog, changePluginsKey, false, plugin.children,
+                    true, plugin.enabled) || []
         };
     });
 
@@ -122,15 +139,26 @@ const pickIds = items => items && items.map(item => item.id);
 const ignoreMandatory = items => items && items.filter(item => !item.mandatory);
 
 const configurePluginsStep = ({
+    loading,
+    loadFlags,
     allPlugins = [],
     editedPlugin,
     editedCfg,
     cfgError,
+    parsedTemplate,
+    editedTemplate,
+    fileDropStatus,
     availablePluginsFilterText = "",
     enabledPluginsFilterText = "",
     availablePluginsFilterPlaceholder = "contextCreator.configurePlugins.pluginsFilterPlaceholder",
     enabledPluginsFilterPlaceholder = "contextCreator.configurePlugins.pluginsFilterPlaceholder",
     documentationBaseURL,
+    showDialog = {},
+    mapTemplates,
+    availableTemplatesFilterText,
+    enabledTemplatesFilterText,
+    availableTemplatesFilterPlaceholder,
+    enabledTemplatesFilterPlaceholder,
     onFilterAvailablePlugins = () => {},
     onFilterEnabledPlugins = () => {},
     onEditPlugin = () => {},
@@ -139,14 +167,23 @@ const configurePluginsStep = ({
     onUpdateCfg = () => {},
     setSelectedPlugins = () => {},
     changePluginsKey = () => {},
-    setEditor = () => {}
+    setEditor = () => {},
+    onShowDialog = () => {},
+    onSaveTemplate,
+    onEditTemplate,
+    onFilterAvailableTemplates,
+    onFilterEnabledTemplates,
+    changeTemplatesKey,
+    setSelectedTemplates,
+    setParsedTemplate,
+    setFileDropStatus
 }) => {
     const selectedPlugins = allPlugins.filter(plugin => plugin.selected);
     const availablePlugins = allPlugins.filter(plugin => !plugin.enabled);
     const enabledPlugins = allPlugins.filter(plugin => plugin.enabled);
 
     const pluginsToItemsFunc = pluginsToItems.bind(null, editedPlugin, editedCfg, cfgError, setEditor, documentationBaseURL,
-        onEditPlugin, onEnablePlugins, onDisablePlugins, onUpdateCfg, changePluginsKey, true);
+        onEditPlugin, onEnablePlugins, onDisablePlugins, onUpdateCfg, onShowDialog, changePluginsKey, true);
 
     const selectedItems = pluginsToItemsFunc(selectedPlugins, false);
     const availableItems = pluginsToItemsFunc(availablePlugins, true);
@@ -175,7 +212,7 @@ const configurePluginsStep = ({
                     title: 'contextCreator.configurePlugins.enabledPlugins',
                     filterText: enabledPluginsFilterText,
                     filterPlaceholder: enabledPluginsFilterPlaceholder,
-                    emptyStateProps: {
+                    mptyStateProps: {
                         glyph: 'wrench',
                         title: 'contextCreator.configurePlugins.enabledPluginsEmpty'
                     },
@@ -206,6 +243,36 @@ const configurePluginsStep = ({
                 }}
                 onSelect={items => setSelectedPlugins(pickIds(ignoreMandatory(items)))}
                 onTransfer={(items, direction) => (direction === 'right' ? onEnablePlugins : onDisablePlugins)(pickIds(ignoreMandatory(items)))}/>
+            <ResizableModal
+                showFullscreen
+                title={<Message msgId="contextCreator.configureTemplates.title"/>}
+                show={showDialog.mapTemplatesConfig}
+                fullscreenType="vertical"
+                clickOutEnabled={false}
+                size="lg"
+                onClose={() => onShowDialog('mapTemplatesConfig', false)}>
+                <ConfigureMapTemplates
+                    loading={loading}
+                    loadFlags={loadFlags}
+                    mapTemplates={mapTemplates}
+                    parsedTemplate={parsedTemplate}
+                    editedTemplate={editedTemplate}
+                    fileDropStatus={fileDropStatus}
+                    availableTemplatesFilterText={availableTemplatesFilterText}
+                    enabledTemplatesFilterText={enabledTemplatesFilterText}
+                    availableTemplatesFilterPlaceholder={availableTemplatesFilterPlaceholder}
+                    enabledTemplatesFilterPlaceholder={enabledTemplatesFilterPlaceholder}
+                    showUploadDialog={showDialog.uploadTemplate}
+                    changeTemplatesKey={changeTemplatesKey}
+                    setSelectedTemplates={setSelectedTemplates}
+                    setParsedTemplate={setParsedTemplate}
+                    setFileDropStatus={setFileDropStatus}
+                    onSave={onSaveTemplate}
+                    onEditTemplate={onEditTemplate}
+                    onFilterAvailableTemplates={onFilterAvailableTemplates}
+                    onFilterEnabledTemplates={onFilterEnabledTemplates}
+                    onShowUploadDialog={onShowDialog.bind(null, 'uploadTemplate')}/>
+            </ResizableModal>
         </div>
     );
 };

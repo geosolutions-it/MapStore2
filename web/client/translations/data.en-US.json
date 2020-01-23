@@ -344,7 +344,7 @@
             "message": "Drop or click to import an image",
             "suggestion": "(best 300px X 180px, max 500kb)",
             "errorFormat": "Supported formats: png/jpg",
-            "errorSize": "Max allowed size: maxFileSize",
+            "errorSize": "Max allowed size: 500kb",
             "errorCustomSize": "Max allowed size: {maxFileSize}",
             "error": "The provided image is invalid",
             "savedMapTitle": "Saved Map",
@@ -1121,7 +1121,8 @@
             },
             "errors": {
                 "fileNotSupported": "File not supported",
-                "unknownError": "there was an unknown error during import"
+                "unknownError": "there was an unknown error during import",
+                "projectionNotSupported": "The projection of the file(s) you're trying to import is not supported"
             }
         },
         "mapExport": {
@@ -2089,7 +2090,9 @@
                 "confirmExitContent": "Discard pending changes?"
             },
             "mapForm": {
-                "thumbnailMessage": "Size of images should be a square of 98px x 98px, max 100kb"
+                "thumbnailMessage": "Size of images should be a square of 98px x 98px, max 100kb",
+                "confirmMapSaveTitle": "Map Update",
+                "confirmMapSaveContent": "Updating this map will reset all dependent maps in the story previously customized through the inline editor, confirm?"
             }
         },
         "backgroundDialog": {
@@ -2118,10 +2121,174 @@
             "next": "Next"
         },
         "plugins": {
-            "TOC": {
-                "title": "List of layers",
-                "description": "Provides a list of layers with an ability to sort them"
-            }
+          "About": {
+            "description": "Tool that shows the About window",
+            "title": "About"
+          },
+          "AddGroup": {
+            "description": "Allows users to create new layer groups in the TOC",
+            "title": "Add Layer Group"
+          },
+          "Annotations": {
+            "description": "Tool to draw annotations on map",
+            "title": "Annotations"
+          },
+          "AutoMapUpdate": {
+            "description": "Allows the user to update the map (old mapstore version)",
+            "title": "Auto Map Update"
+          },
+          "BackgroundSelector": {
+            "description": "Allows to select map background",
+            "title": "Background Selector"
+          },
+          "BurgerMenu": {
+            "description": "Menu on top right of the map that contains other plug-ins",
+            "title": "Burger Menu"
+          },
+          "CRSSelector": {
+            "description": "Allows to switch map projection",
+            "title": "CRS Selector"
+          },
+          "Details": {
+            "description": "Allow to show detail card for a map, if any",
+            "title": "Map Details"
+          },
+          "Expander": {
+            "description": "Utility for Sidebar (navigation) that allows to hide some buttons",
+            "title": "Expander"
+          },
+          "FeatureEditor": {
+            "description": "Browse attributes in a table",
+            "title": "Attribute Table"
+          },
+          "FilterLayer": {
+            "description": "Allows to add a filter to a layer",
+            "title": "Filter Layer"
+          },
+          "HelpLink": {
+            "description": "A button to access to MapStore documentation",
+            "title": "Documentation Link"
+          },
+          "Home": {
+            "description": "Link to the home page",
+            "title": "Home"
+          },
+          "Identify": {
+            "description": "Query the objects on map",
+            "title": "Identify"
+          },
+          "Locate": {
+            "description": "Find and follow the position of the user on the map",
+            "title": "Location tool"
+          },
+          "Login": {
+            "description": "Login tool",
+            "title": "Login"
+          },
+          "MapExport": {
+            "description": "Allows to export map in a file",
+            "title": "Map Export"
+          },
+          "MapImport": {
+            "description": "Allows to import data (SHP, KML/KMZ, GeoJSON, GPX) or reload exported maps.",
+            "title": "Import"
+          },
+          "MapLoading": {
+            "description": "A spinner in the sidebar that indicates if the map is loading",
+            "title": "Map Loading Indicator"
+          },
+          "Measure": {
+            "description": "Allows to measure distances and areas on the map",
+            "title": "Measure"
+          },
+          "MetadataExplorer": {
+            "description": "Browse services (WMS/WMTS/CSW) to add layers to the map",
+            "title": "Catalog"
+          },
+          "MousePosition": {
+            "description": "Shows the coordinates of the pointed by the mouse cursor",
+            "title": "Mouse Position"
+          },
+          "Print": {
+            "description": "Allows to print the current map with legend",
+            "title": "Print Tool"
+          },
+          "Save": {
+            "description": "Allows to save the changes to the map on the server",
+            "title": "Save"
+          },
+          "SaveAs": {
+            "description": "Allows to create or clone maps on the server",
+            "title": "Save As"
+          },
+          "ScaleBox": {
+            "description": "An indicator and a selector of the current scale of the map",
+            "title": "Scale Selector"
+          },
+          "Search": {
+            "description": "Textual search tool (GeoCoder)",
+            "title": "Search Bar"
+          },
+          "Settings": {
+            "description": "Allows to edit some settings for the map (language, default info format...)",
+            "title": "Settings"
+          },
+          "Share": {
+            "description": "Allows to share the map in variopus ways (link, QR-Code, embed, social networks...)",
+            "title": "Share Tool"
+          },
+          "StyleEditor": {
+            "description": "Layer's style editor",
+            "title": "Style Editor"
+          },
+          "TOC": {
+            "description": "Provides a list of layers with an ability to sort them",
+            "title": "List of layers"
+          },
+          "TOCItemsSettings": {
+            "description": "Allow to edit layer's settings",
+            "title": "Layer Settings"
+          },
+          "Timeline": {
+            "description": "Allows time travel for data with time dimension",
+            "title": "Timeline"
+          },
+          "Tutorial": {
+            "description": "Adds a tutorial to explain the various functionalities",
+            "title": "Tutorial"
+          },
+          "UserExtensions": {
+            "description": "Allows the user to enable/disable user extensions",
+            "title": "User Extensions"
+          },
+          "Version": {
+            "description": "Shows the version of MapStore in map settings tool",
+            "title": "Version"
+          },
+          "WFSDownload": {
+            "description": "Allows to download data from the Attribute Table",
+            "title": "Download Data"
+          },
+          "Widgets": {
+            "description": "Allows to add and show widgets on map",
+            "title": "Widgets"
+          },
+          "WidgetsTray": {
+            "description": "A tray to collapse and expand widgets on map. ",
+            "title": "Widgets Tray"
+          },
+          "ZoomAll": {
+            "description": "Sidebar button to zoom to the map extent of the map",
+            "title": "Zoom To Max Extent"
+          },
+          "ZoomIn": {
+            "description": "Button that increase zoom level of the map",
+            "title": "Zoom In"
+          },
+          "ZoomOut": {
+            "description": "Button that decrease zoom level of the map",
+            "title": "Zoom Out"
+          }
         },
         "contextCreator": {
             "generalSettings": {
@@ -2150,11 +2317,35 @@
                     "activatePlugin": "Enable loading this plugin on startup",
                     "deactivatePlugin": "Disable loading this plugin on startup",
                     "editConfiguration": "Edit plugin configuration",
-                    "pluginDocumentation": "Open plugin configuration documentation"
+                    "pluginDocumentation": "Open plugin configuration documentation",
+                    "mapTemplatesConfig": "Configure templates"
                 },
                 "saveCfgErrorNotification":  {
                     "title": "Syntax error in plugin configuration",
                     "message": "Plugin \"{pluginName}\" contains an error in configuration. Please fix before proceeding"
+                }
+            },
+            "configureTemplates": {
+                "title": "Configure Templates",
+                "availableTemplates": "Available Templates",
+                "enabledTemplates": "Enabled Templates",
+                "templatesFilterPlaceholder": "Filter templates...",
+                "availableTemplatesEmpty": "Enabled all available templates",
+                "enabledTemplatesEmpty": "Add templates to configuration from list of available templates",
+                "searchResultsEmpty": "No templates found that satisfy the search criteria",
+                "fileDrop": {
+                    "label": "Template",
+                    "clear": "Drop or click to select a map template file (exported JSON MapStore maps or WMC files are supported)"
+                },
+                "uploadDialog": {
+                    "title": "Upload Map Template",
+                    "save": "Upload",
+                    "jsonParsingError": "JSON parsing failed: \"{error}\"",
+                    "fileReadError": "Unexpected file reading error occurred"
+                },
+                "tooltips": {
+                    "uploadTool": "Upload new template",
+                    "editTemplate": "Edit template properties"
                 }
             },
             "configureMap": {
@@ -2163,7 +2354,8 @@
                 "confirm": "This is going to discard all current map changes. Proceed?"
             },
             "saveErrorNotification": {
-                "title": "Context saving failed",
+                "titleContext": "Context saving failed",
+                "titleTemplate": "Template saving failed",
                 "conflict": "A resource with this name already exists",
                 "defaultMessage": "Unknown error"
             },

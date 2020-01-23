@@ -17,7 +17,13 @@ To create the final war, you have several options:
 
 * fast build (will use the last compiled version of submodules and compiled frontend)
 
-`mvn clean install` -Dmapstore2.version=[version_identifier]
+`mvn clean install -Dmapstore2.version=[version_identifier]`
+
+* release build (produces also the binary)
+
+`mvn clean install -Dmapstore2.version=[version_identifier] -Prelease`
+
+Where `[version_identifier]` is the version you want to export (e.g. 2020.01.00). This version name will appear in "Settings --> version information" and used to create handle bundles version (i.e. caching).
 
 ## Building the documentation
 

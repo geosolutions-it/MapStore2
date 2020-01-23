@@ -29,7 +29,8 @@ describe('ContextCreator component', () => {
     it('default', () => {
         const { Plugin, actions } = getPluginForTest(ContextCreator, {
             contextcreator: {
-                stepId: 'configure-map'
+                stepId: 'configure-map',
+                newContext: {}
             },
             map: {}
         });
