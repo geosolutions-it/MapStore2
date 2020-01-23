@@ -1,3 +1,0 @@
-# Application Modes
-
-TDB
