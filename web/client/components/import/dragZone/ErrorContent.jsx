@@ -11,7 +11,8 @@ const { Glyphicon, Alert } = require('react-bootstrap');
 const DropText = require('./DropText');
 const Message = require('../../I18N/Message');
 const errorMessages = {
-    "FILE_NOT_SUPPORTED": <Message msgId="mapImport.errors.fileNotSupported" />
+    "FILE_NOT_SUPPORTED": <Message msgId="mapImport.errors.fileNotSupported" />,
+    "PROJECTION_NOT_SUPPORTED": <Message msgId="mapImport.errors.projectionNotSupported" />
 };
 const toErrorMessage = error =>
     error
