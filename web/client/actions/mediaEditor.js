@@ -84,7 +84,7 @@ export const selectItem = (id) => ({ type: SELECT_ITEM, id});
  * update item in media editor list
  * @param {object} param.item
  */
-export const updateItem = (item) => ({ type: UPDATE_ITEM, item});
+export const updateItem = (item, mode = 'merge') => ({ type: UPDATE_ITEM, item, mode});
 /**
  * adding media
  * @param {boolean} adding

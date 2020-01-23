@@ -239,3 +239,30 @@ export const settingsItemsSelector = state => {
         return [...p, {label: c.title || "", value: c.id}];
     }, []);
 };
+
+
+/**
+ * Traverse story elements tree checking if passed resource is used.
+ * @param {*} rId Media resource id
+ * @param {object} story content
+ */
+const findMediaResourceInContent = (rId, {contents, background, resourceId}) => {
+    if (resourceId === rId) {
+        return true;
+    }
+    if (background && background.resourceId === rId) {
+        return true;
+    }
+    if (contents) {
+        return !!find(contents, e => findMediaResourceInContent(rId, e));
+    }
+    return false;
+};
+
+/**
+ * Return true if passed resource is used somewhere in the current story tree
+ * @param {object*} state Application state
+ * @param {*} resId Media resource id
+ */
+export const isMediaResourceUsed = (state, resId) => !!find(sectionsSelector(state), section => findMediaResourceInContent(resId, section));
+

@@ -129,7 +129,7 @@ export const mediaEditorEditMap = (action$, {getState}) =>
         .switchMap(() => action$.ofType(SAVE)
             .switchMap(({map: editedMap}) => {
                 const selectedItems = selectedItemSelector(getState());
-                return Observable.from([updateItem({...selectedItems, data: {...editedMap}}), hideMapEditor()]);
+                return Observable.from([updateItem({...selectedItems, data: {...editedMap}}, "replace"), hideMapEditor()]);
             })
             .takeUntil(action$.ofType(HIDE))
         );

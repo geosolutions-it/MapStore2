@@ -2086,7 +2086,9 @@
                 "confirmExitContent": "Annuallare le modifiche ed uscire?"
             },
             "mapForm": {
-                "thumbnailMessage": "Le dimensioni delle immagini devono essere di un quadrato di 98 px x 98 px, max 100 KB"
+                "thumbnailMessage": "Le dimensioni delle immagini devono essere di un quadrato di 98 px x 98 px, max 100 KB",
+                "confirmMapSaveTitle": "Aggiornare la mappa",
+                "confirmMapSaveContent": "L'aggiornamento di questa mappa ripristinerà tutte le mappe dipendenti nella storia precedentemente personalizzate tramite l'editor in linea, conferma?"
             }
         },
         "backgroundDialog": {
