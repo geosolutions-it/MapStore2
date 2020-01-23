@@ -78,7 +78,9 @@ Clone the repository:
 
 `git clone https://github.com/geosolutions-it/MapStore2.git`
 
-Install latest NodeJS, if needed, from [here](https://nodejs.org/en/download/releases/).( minimal versions: NodeJS >= 8, npm >= 5 )
+Install latest NodeJS, if needed, from [here](https://nodejs.org/en/download/releases/).( recommended versions: NodeJS >= 12 npm >= 6, minimal versions: NodeJS >= 10, npm >= 5 )
+If you are using Node >= 12 you can remove the -max_old_space_size=2048 config for the compile *script*
+
 
 Install docma to build the documentation
 

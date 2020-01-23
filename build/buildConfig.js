@@ -37,7 +37,7 @@ module.exports = (bundles, themeEntries, paths, extractThemesPlugin, prod, publi
     }, bundles, themeEntries),
     mode: prod ? "production" : "development",
     optimization: {
-        minimize: true
+        minimize: !!prod
     },
     output: {
         path: paths.dist,
