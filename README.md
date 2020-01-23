@@ -81,7 +81,7 @@ Clone the repository:
 Install latest NodeJS, if needed, from [here](https://nodejs.org/en/download/releases/).
 - recommended versions: NodeJS >= 12 npm >= 6
 - minimal versions: NodeJS >= 10, npm >= 5 )
-- deprecated versions: NodeJS 8
+- deprecated versions: NodeJS <10
 
 If you are using Node >= 12 you can remove the -max_old_space_size=2048 config for the compile *script*
 
