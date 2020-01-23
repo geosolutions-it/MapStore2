@@ -9,7 +9,7 @@ import expect from 'expect';
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-import GeostoriesPlugin from '../Geostories';
+import GeostoriesPlugin from '../GeoStories';
 import { getPluginForTest } from './pluginsTestUtils';
 import security from '../../reducers/security';
 
