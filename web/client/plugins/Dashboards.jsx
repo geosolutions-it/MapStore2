@@ -107,7 +107,7 @@ const DashboardsPlugin = compose(
         ({showCreateButton = true}) => ({
             glyph: "dashboard",
             title: <Message msgId="resources.dashboards.noDashboardAvailable" />,
-            description: <EmptyDashboardsView enabled={showCreateButton}/>
+            description: <EmptyDashboardsView showCreateButton={showCreateButton}/>
         })
 
     )
