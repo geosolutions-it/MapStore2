@@ -18,14 +18,19 @@ const Preview = ({
     selectedItem
 }) => {
     const { layers = [], mapOptions, ...m} = selectedItem.data ? selectedItem.data : selectedItem; // remove mapOptions to not override options
+    /**
+     * On map change, we have to force the remount of the map to prevent Ol to add display: none to canvas
+     *  this will also recreate a correct ol mapView with current map extent.
+     */
     return (
-        <MapView
+        [<MapView
+            key={m.id || m.mapId}
             styleMap={{height: "100%"}}
             map={{...m, id: "map" + m.id}}
             id={"preview" + selectedItem.id}
             layers={layers || [defaultLayerMapPreview]}
             options={applyDefaults({})}
-        />
+        />]
     );
 };
 
