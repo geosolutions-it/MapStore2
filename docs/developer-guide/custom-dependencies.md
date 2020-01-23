@@ -15,6 +15,7 @@ Here is a list of customizations:
 
 ## Aliases
 Only proj4 and react-joyride are using aliases in order to maintain original webpack requires like:
+
 - const proj4 = require("proj4");
 - const joyride = require('react-joyride').default;
 
@@ -22,4 +23,3 @@ see [this](https://github.com/geosolutions-it/MapStore2/blob/master/build/buildC
 
 ## More info
 [Here](https://github.com/geosolutions-it/MapStore2/issues/4569) you can find more information about customization
-

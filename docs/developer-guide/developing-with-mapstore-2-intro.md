@@ -1,39 +1,27 @@
 # Developing with MapStore
 
-This section is about developing your own application using the MapStore framework.
+MapStore is both an application and a framework. This guide is both for developers who want to extend MapStore and for those who want to create their custom application using MapStore as a framework.
 
- * [Project Structure](../project-structure)
- * [Front-end Technologies](../reactjs-and-redux-introduction)
- * [Developing and Debugging](../developing)
- * [Building and Deploying](../building-and-deploying)
- * [How-to](../dev-how-to)
- * [Code Conventions](../code-conventions)
- * [Developers FAQ](../dev-faq)
- * [Internationalization](../internationalization)
- * [Custom dependencies](../custom-dependencies)
- 
-## Developing using plugins
+## MapStore as an application
 
- * [Plugins architecture](../plugins-architecture)
- * [Plugins documentation](../plugins-documentation)
+MapStore is 99% client side, and uses some Java back-end services
 
-## Documentation guidelines
+Back-end mainly consists in services included from external projects (GeoStore, MapFish Print, HTTP-Proxy...) plus some small service owned by MapStore, all written in Java.
 
-Each new feature/tool in MapStore should be documented in the [User Guide](https://mapstore.readthedocs.io/en/latest/user-guide/home-page/) in order to explain the involved functionalities and illustrate how it works.
+Developing with MapStore as an application means to develop directly on the project. You can add plugins or improve the existing code base and, hopefully, send pull requests on GitHub to include your improvements in the main project.
 
-All new front-end technologies, development procedures, best practices and guidelines on the involved components in MapStore should be properly documented too: the [Developers Guide](https://mapstore.readthedocs.io/en/latest/developer-guide/) must be kept up-to-date for this.
+## MapStore as a Framework
 
-Both for Developer and User guides, the documentation is built on the [Read the Docs](https://docs.readthedocs.io/en/latest/index.html#) documentation hosting platform. The MapStore's documentation files are available in the [docs/](https://github.com/geosolutions-it/MapStore2/tree/master/docs) section of this repository; [Mkdocs](https://docs.readthedocs.io/en/latest/intro/getting-started-with-mkdocs.html) is used in MapStore as documentation generator, you can look at the available [online documentation](https://docs.readthedocs.io/en/latest/intro/getting-started-with-mkdocs.html#getting-started-with-mkdocs) for more information on how to use it (MapStore uses his own customized [MkDocs Material theme](https://squidfunk.github.io/mkdocs-material/) for both User and Developer documentations).
+The recommended way to use MapStore as a framework is to create a project that includes MapStore as a sub-folder. For this purpose we created a script that generates the main folder structure and the necessary files [Project Creation Script](../project-creation-script).
 
-## Useful references
+This setup allows to create your application or customizations inside the `js` directory and/or add custom back-end services (the set-up allows to create a project that builds a Java WAR package).
+Keeping your customization separated and MapStore as a git sub-modules has the followind advantages:
 
-If you want to create an application based on MapStore you can use the [Project Creation Script](../project-creation-script).
+- **Clear separation between the framework and your customization**
+- **Easy framework update**: updating the git sub-module.
+- **Easy customization of MapStore**: You can fork the project, if you need hard customization. If your customization can be included in MapStore, you can do a pull request to the main project and work on a branch while waiting the pull request merge.
 
-If you want to learn how to develop a simple MapStore based application you can follow the [tutorial](../application-tutorial)
+### Build application using examples
 
-If you want to learn how to develop a plug-in based MapStore based application you can follow the [plugins tutorial](../plugins-architecture#building-an-application-using-plugins)
-
-## Other references
-
-* [How to use a CDN](../how-to-use-a-cdn)
-* [How to add a custom search service](../custom-search-service)
+Another way to do your application is to create your custom files in a folder (like mapstore examples).
+If you want to learn how to develop a simple MapStore based application in this way you can follow the [tutorial](../application-tutorial)

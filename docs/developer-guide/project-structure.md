@@ -1,8 +1,8 @@
-## Folders structure
+# Folders structure
 
 This is the overall framework folder structure:
 
-```
+```txt
 +-- package.json
 +-- pom.xml
 +-- build.sh
