@@ -4,7 +4,7 @@ var LoaderOptionsPlugin = require("webpack/lib/LoaderOptionsPlugin");
 var NormalModuleReplacementPlugin = require("webpack/lib/NormalModuleReplacementPlugin");
 var NoEmitOnErrorsPlugin = require("webpack/lib/NoEmitOnErrorsPlugin");
 var CopyWebpackPlugin = require('copy-webpack-plugin');
-var ParallelUglifyPlugin = require("webpack-parallel-uglify-plugin");
+
 
 const assign = require('object-assign');
 const themeEntries = require('./MapStore2/build/themes.js').themeEntries;
@@ -19,6 +19,10 @@ module.exports = (env) => {
             'webpack': 'webpack/hot/only-dev-server', // "only" prevents reload on syntax errors
             '__PROJECTNAME__': path.join(__dirname, "js", "app")
         }, themeEntries),
+        mode: isProduction ? "production" : "development",
+        optimization: {
+            minimize: true
+        },
         output: {
             path: path.join(__dirname, "dist"),
             publicPath: "dist/",
@@ -47,13 +51,7 @@ module.exports = (env) => {
             new NormalModuleReplacementPlugin(/proj4$/, path.join(__dirname, "MapStore2", "web", "client", "libs", "proj4")),
             new NoEmitOnErrorsPlugin(),
             extractThemesPlugin
-        ].concat(isProduction ? [new ParallelUglifyPlugin({
-            uglifyJS: {
-                sourceMap: false,
-                compress: { warnings: false },
-                mangle: true
-            }
-        })] : []),
+        ],
         resolve: {
             extensions: [".js", ".jsx"],
             alias: {

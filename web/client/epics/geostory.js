@@ -70,7 +70,7 @@ import { resourceIdSelectorCreator, createPathSelector, currentStorySelector, re
 import { currentMediaTypeSelector, sourceIdSelector} from '../selectors/mediaEditor';
 
 import { wrapStartStop } from '../observables/epics';
-import { scrollToContent, ContentTypes, isMediaSection, Controls, getEffectivePath, getFlatPath, isWebPageSection } from '../utils/GeoStoryUtils';
+import { scrollToContent, ContentTypes, isMediaSection, Controls, getEffectivePath, getFlatPath, isWebPageSection, MediaTypes } from '../utils/GeoStoryUtils';
 
 import { SourceTypes } from './../utils/MediaEditorUtils';
 
@@ -96,8 +96,8 @@ const updateMediaSection = (store, path) => action$ =>
                 resourceId = uuid();
                 actions = [...actions, addResource(resourceId, mediaType, resource)];
             }
-
-            actions = [...actions, update(`${path}`, {resourceId, type: mediaType}, "merge" )];
+            let media = mediaType === MediaTypes.MAP ? {resourceId, type: mediaType, map: undefined} : {resourceId, type: mediaType};
+            actions = [...actions, update(`${path}`, media, "merge" )];
             return Observable.from(actions);
         });
 

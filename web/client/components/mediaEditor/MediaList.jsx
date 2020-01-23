@@ -27,8 +27,7 @@ export default withMapEditing(({
     loadItems = () => {},
     setAddingMedia = () => {},
     setEditingMedia = () => {},
-    importInLocal = () => {},
-    localSource = SourceTypes.GEOSTORY,
+    editRemoteMap = () => {},
     buttons = [
         {
             glyph: 'plus',
@@ -43,10 +42,10 @@ export default withMapEditing(({
             onClick: () => setEditingMedia(true)
         },
         {
-            glyph: 'upload',
-            tooltipId: 'mediaEditor.mediaPicker.import',
+            glyph: 'pencil',
+            tooltipId: 'mediaEditor.mediaPicker.edit',
             visible: selectedSource.type === SourceTypes.GEOSTORE && mediaType === MediaTypes.MAP && !isNil(selectedItem),
-            onClick: () => importInLocal({resource: selectedItem, mediaType: localSource})
+            onClick: editRemoteMap
         }
 
     ]

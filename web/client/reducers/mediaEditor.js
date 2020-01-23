@@ -100,13 +100,13 @@ export default (state = DEFAULT_STATE, action) => {
         return set(`data["${mediaType}"]["${sourceId}"]`, { params, resultData }, state);
     }
     case UPDATE_ITEM: {
-        const {item} = action;
+        const {item, mode} = action;
         const sourceId = sourceIdSelector({mediaEditor: state});
         const mediaType = currentMediaTypeSelector({mediaEditor: state});
         const resources = resultDataSelector({mediaEditor: state}).resources;
         const indexItem = findIndex(resources, {id: item.id});
         const resource = find(resources, {id: item.id});
-        const newResource = merge({}, merge({}, resource), merge({}, item));
+        const newResource = mode === "merge" ? merge({}, merge({}, resource), merge({}, item)) : item;
         return set(`data["${mediaType}"]["${sourceId}"].resultData.resources[${indexItem}]`, newResource, state);
     }
     case SELECT_ITEM: {

@@ -29,7 +29,8 @@ import {
     settingsChangedSelector,
     settingsItemsSelector,
     totalItemsSelector,
-    visibleItemsSelector
+    visibleItemsSelector,
+    isMediaResourceUsed
 } from "../geostory";
 import TEST_STORY from "../../test-resources/geostory/sampleStory_1.json";
 
@@ -109,4 +110,7 @@ describe('geostory selectors', () => { // TODO: check default
     }} } })).toEqual({checked: [ 'col2' ], expanded: [ 'SomeID2' ] }));
     it('visibleItemsSelector ', () => expect(visibleItemsSelector({ geostory: { currentStory: {settings: {checked: ["id"]}} } })).toEqual({"id": true}));
     it('settingsChangedSelector ', () => expect(settingsChangedSelector({ geostory: { currentStory: {settings: {checked: ["id"]}}, oldSettings: {checked: ["id", "otherid"]} } })).toBe(true));
+    it('isMediaResourceUsed ', () => expect(isMediaResourceUsed({ geostory: { currentStory: TEST_STORY} }, "resId")).toBe(false));
+
+
 });

@@ -147,6 +147,31 @@ describe('Test the mediaEditor reducer', () => {
         expect(state).toNotEqual(DEFAULT_STATE);
         state = mediaEditor(state, {type: LOCATION_CHANGE});
         expect(state).toEqual(DEFAULT_STATE);
+    });
+    it('UPDATE_ITEM with mode replace', () => {
+        const map = {
+            id: "resId",
+            layers: [{id: "layerId"}]
+        };
 
+        let state = mediaEditor({
+            settings: {
+                mediaType: "map",
+                sourceId: "geostoreMap"
+            },
+            data: {
+                map: {
+                    geostoreMap: {
+                        resultData: {
+                            resources: [{
+                                id: "resId",
+                                test: "has to disappear"
+                            }]
+                        }
+                    }
+                }
+            }
+        }, updateItem(map, "replace"));
+        expect(state.data.map.geostoreMap.resultData.resources[0]).toBe(map);
     });
 });

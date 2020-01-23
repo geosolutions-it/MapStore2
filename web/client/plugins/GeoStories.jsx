@@ -29,7 +29,12 @@ const geostoriesCountSelector = createSelector(
     count => ({ count })
 );
 
-
+/**
+ * Plugin for Geostories resources
+ * @name Geostories
+ * @memberof plugins
+ * @prop {boolean} cfg.showCreateButton default true, use to render create a new one button
+ */
 class Geostories extends React.Component {
     static propTypes = {
         mapType: PropTypes.string,
@@ -99,10 +104,10 @@ const GeoStoriesPlugin = compose(
     }),
     emptyState(
         ({resources = [], loading}) => !loading && resources.length === 0,
-        () => ({
+        ({showCreateButton = true}) => ({
             glyph: "geostory",
             title: <Message msgId="resources.geostories.noGeostoryAvailable" />,
-            description: <EmptyGeostoriesView />
+            description: <EmptyGeostoriesView showCreateButton={showCreateButton}/>
         })
 
     )
