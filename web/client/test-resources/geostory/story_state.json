@@ -1,0 +1,78 @@
+{
+    "type": "cascade",
+    "resources": [
+        {
+            "id": "4ef233d3-6612-4b7c-9b3c-0b15b024ce76",
+            "type": "map",
+            "data": {
+                "type": "map"
+            }
+        },
+        {
+            "id": "3025f52e-8d57-48df-9a56-8e21ac252282",
+            "type": "image",
+            "data": {
+                "src": "https://images.unsplash.com/photo-1566305828756-cacc74d3dd20?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60",
+                "title": "Lorem ipsum dolor sit amet, consectetur adipiscing elit",
+                "credits": "Lorem Ipsum and Internation Spatial Agency",
+                "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+                "altText": "Lorem ipsum dolor sit amet, consectetur adipiscing elit"
+            }
+        }
+    ],
+    "sections": [
+        {
+            "id": "e4a68a35-52c2-4c20-b149-a165a494dd96",
+            "type": "paragraph",
+            "title": "Media Section",
+            "contents": [
+                {
+                    "id": "bee14408-9273-4297-b2c7-5406358744d7",
+                    "type": "column",
+                    "contents": [
+                        {
+                            "id": "e645c579-b314-4d58-991f-1a4e33ee8dc4",
+                            "type": "map",
+                            "size": "full",
+                            "align": "center",
+                            "resourceId": "4ef233d3-6612-4b7c-9b3c-0b15b024ce76",
+                            "editMap": false
+                        },
+                        {
+                            "id": "eb239b54-558b-4391-8ba3-375272b62fe4",
+                            "type": "map",
+                            "title": "UNKNOWN",
+                            "size": "full",
+                            "align": "center",
+                            "resourceId": "4ef233d3-6612-4b7c-9b3c-0b15b024ce76",
+                            "editMap": false,
+                            "map": {
+                                "center": {
+                                    "x": -73.85459295410156,
+                                    "y": 40.7731406109544,
+                                    "crs": "EPSG:4326"
+                                }
+                            }
+                        },
+                        {
+                            "id": "37c0fcae-8393-4f4b-acb7-de7567934859",
+                            "type": "map",
+                            "title": "UNKNOWN",
+                            "size": "full",
+                            "align": "center",
+                            "resourceId": "4ef233d3-6612-4b7c-9b3c-0b15b024ce76",
+                            "editMap": false,
+                            "map": {
+                                "layers": [
+                                ]
+                            }
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "settings": {
+        "storyTitle": "Another test story"
+    }
+}

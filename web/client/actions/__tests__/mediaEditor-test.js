@@ -95,9 +95,14 @@ describe('mediaEditor actions', () => {
     });
     it('updateItem', () => {
         const map = {id: "val"};
-        const action = updateItem(map);
+        let action = updateItem(map);
         expect(action.item).toEqual(map);
         expect(action.type).toEqual(UPDATE_ITEM);
+        expect(action.mode).toEqual("merge");
+        action = updateItem(map, "replace");
+        expect(action.item).toEqual(map);
+        expect(action.type).toEqual(UPDATE_ITEM);
+        expect(action.mode).toEqual("replace");
     });
     it('setAddingMedia', () => {
         const adding = true;

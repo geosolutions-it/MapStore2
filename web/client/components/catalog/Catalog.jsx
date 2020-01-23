@@ -34,6 +34,7 @@ class Catalog extends React.Component {
         currentLocale: PropTypes.string,
         formats: PropTypes.array,
         format: PropTypes.string,
+        crs: PropTypes.string,
         gridOptions: PropTypes.object,
         includeSearchButton: PropTypes.bool,
         includeResetButton: PropTypes.bool,
@@ -154,7 +155,8 @@ class Catalog extends React.Component {
             label: 'image/gif',
             value: 'image/gif'
         }],
-        layerBaseConfig: {}
+        layerBaseConfig: {},
+        crs: "EPSG:3857"
     };
 
     state = {
@@ -272,6 +274,7 @@ class Catalog extends React.Component {
         return (<div className="catalog-results">
             <RecordGrid
                 {...this.props.gridOptions}
+                crs={this.props.crs}
                 key="records"
                 hideThumbnail={hideThumbnail}
                 records={this.props.records.map(

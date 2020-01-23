@@ -18,14 +18,18 @@ import Message from '../../components/I18N/Message';
 class EmptyMaps extends React.Component {
     static propTypes = {
         loggedIn: PropTypes.bool,
+        showCreateButton: PropTypes.bool,
         mapType: PropTypes.string
     }
     static contextTypes = {
         router: PropTypes.object
     };
+    static defaultProps = {
+        showCreateButton: true
+    }
 
     render() {
-        return (<div style={{ width: "100%", textAlign: "center", marginBottom: '20px' }}>{this.props.loggedIn
+        return (<div style={{ width: "100%", textAlign: "center", marginBottom: '20px' }}>{this.props.loggedIn && this.props.showCreateButton
             ? (<Button bsStyle="primary" onClick={() => { this.context.router.history.push("/viewer/" + this.props.mapType + "/new"); }}>
                 <Message msgId="resources.maps.createNewOne" />
             </Button>)

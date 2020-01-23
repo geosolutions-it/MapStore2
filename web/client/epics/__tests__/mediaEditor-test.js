@@ -16,7 +16,8 @@ import {
     mediaEditorNewMap,
     mediaEditorEditMap,
     reloadMediaResources,
-    importInLocalSource
+    importInLocalSource,
+    editRemoteMap
 } from '../mediaEditor';
 import {
     show as showMapEditor,
@@ -305,6 +306,58 @@ describe('MediaEditor Epics', () => {
                     break;
                 case SELECT_ITEM:
                     expect(a.id).toExist();
+                    break;
+                default: expect(true).toEqual(false);
+                    break;
+                }
+            });
+            done();
+        }, {
+            geostory: {
+                resources: [{
+                    id: "102cbcf6-ff39-4b7f-83e4-78841ee13bb9",
+                    data: {
+                        src: "ht",
+                        title: "ti"
+                    }
+                }]
+            },
+            mediaEditor: {
+                saveState: {
+                    editing: false,
+                    adding: true
+                },
+                selected: "102cbcf6-ff39-4b7f-83e4-78841ee13bb9",
+                settings: {
+                    sourceId: "geostory",
+                    sources: {
+                        geostory: {
+                            name: "Current story",
+                            type: "geostory"
+                        }
+                    }
+                }
+            }
+        });
+    });
+    it('editRemoteMap epic handle new map creation save stream', (done) => {
+        const NUM_ACTIONS = 5;
+        testEpic(editRemoteMap, NUM_ACTIONS, [showMapEditor("mediaEditorEditRemote", {data: {id: 'testId', type: 'map'}}), save({}, "mediaEditor")], (actions) => {
+            expect(actions.length).toEqual(NUM_ACTIONS);
+            actions.map((a) => {
+                switch (a.type) {
+                case SET_MEDIA_SERVICE:
+                    expect(a.id).toEqual('geostory');
+                    break;
+                case SAVE_MEDIA_SUCCESS:
+                    expect(a.data.id).toExist();
+                    break;
+                case LOAD_MEDIA:
+                    break;
+                case SELECT_ITEM:
+                    expect(a.id).toExist();
+                    break;
+                case HIDE:
                     break;
                 default: expect(true).toEqual(false);
                     break;

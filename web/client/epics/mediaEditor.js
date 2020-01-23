@@ -129,7 +129,7 @@ export const mediaEditorEditMap = (action$, {getState}) =>
         .switchMap(() => action$.ofType(SAVE)
             .switchMap(({map: editedMap}) => {
                 const selectedItems = selectedItemSelector(getState());
-                return Observable.from([updateItem({...selectedItems, data: {...editedMap}}), hideMapEditor()]);
+                return Observable.from([updateItem({...selectedItems, data: {...editedMap}}, "replace"), hideMapEditor()]);
             })
             .takeUntil(action$.ofType(HIDE))
         );
@@ -168,4 +168,29 @@ export const importInLocalSource = (action$, store) =>
                         selectItem(id)
                     );
                 });
+        });
+
+/**
+ * It handles the edit of a remote map (GOSTORE). On mapEditor save the map is saved in local store, the media service switched to local,
+ * the local media reloaded, the saved map selected and the mapEditor hidden.
+ * @memberof epics.mediaEditor
+ * @param {Observable} action$  actions stream
+ * @param {*} application store
+ */
+export const editRemoteMap = (action$, store) =>
+    action$.ofType(MAP_EDITOR_SHOW).filter(({owner, map}) => owner === 'mediaEditorEditRemote' && !!map)
+        .switchMap(({map: {data: resource} = {}} = {}) => {
+            return action$.ofType(SAVE).switchMap(({map}) => {
+                const sources = sourcesSelector(store.getState());
+                const sourceId = findKey(sources, ({type}) => SourceTypes.GEOSTORY === type);
+                const handler = mediaAPI(sourceId).save(resource.type, sources[sourceId], { ...resource, ...map}, store);
+                return handler.switchMap(({id}) =>
+                    Observable.of(
+                        setMediaService(sourceId),
+                        saveMediaSuccess({mediaType: resource.type, source: sources[sourceId], data: resource, id}),
+                        loadMedia(undefined, resource.type, sources[sourceId]),
+                        selectItem(id),
+                        hideMapEditor()
+                    ));
+            }).takeUntil(action$.ofType(HIDE));
         });

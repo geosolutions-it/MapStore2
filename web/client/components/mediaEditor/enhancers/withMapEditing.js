@@ -20,11 +20,14 @@ import {MediaTypes} from '../../../utils/GeoStoryUtils';
 const withMapEditing = compose(
     connect(null, {openMapEditor: show, importInLocal}),
     withHandlers({
-        setAddingMedia: ({setAddingMedia, openMapEditor, mediaType}) => adding => {
+        setAddingMedia: ({setAddingMedia, openMapEditor, mediaType}) => (adding, map) => {
             if (mediaType === MediaTypes.MAP) {
-                openMapEditor("mediaEditor");
+                openMapEditor("mediaEditor", map);
             }
             setAddingMedia(adding);
+        },
+        editRemoteMap: ({openMapEditor, selectedItem: {id, ...map} = {}} = {}) => () => {
+            openMapEditor("mediaEditorEditRemote", {data: map, id});
         }
     })
 );

@@ -1120,7 +1120,8 @@
             },
             "errors": {
                 "fileNotSupported": "Archivo no compatible",
-                "unknownError": "hubo un error desconocido durante la importación"
+                "unknownError": "hubo un error desconocido durante la importación",
+                "projectionNotSupported": "La proyección del archivo que está intentando importar no es compatible"
             }
         },
         "mapExport": {
@@ -2085,7 +2086,9 @@
                 "confirmExitContent": "¿Descartar cambios pendientes?"
             },
             "mapForm": {
-                "thumbnailMessage": "El tamaño de las imágenes debe ser un cuadrado de 98 px x 98 px, máximo 100 kb"
+                "thumbnailMessage": "El tamaño de las imágenes debe ser un cuadrado de 98 px x 98 px, máximo 100 kb",
+                "confirmMapSaveTitle": "Actualización de mapa",
+                "confirmMapSaveContent": "La actualización de este mapa restablecerá todos los mapas dependientes en la historia previamente personalizada a través del editor en línea, ¿confirma?"
             }
         },
         "backgroundDialog": {

@@ -1120,7 +1120,8 @@
                 },
                 "errors": {
                     "fileNotSupported": "Datei wird nicht unterstützt",
-                    "unknownError": "Beim Import ist ein unbekannter Fehler aufgetreten"
+                    "unknownError": "Beim Import ist ein unbekannter Fehler aufgetreten",
+                    "projectionNotSupported": "Die Projektion der Datei, die Sie importieren möchten, wird nicht unterstützt"
                 }
             },
         "mapExport": {
@@ -2085,7 +2086,9 @@
                 "confirmExitContent": "Ausstehende Änderungen verwerfen?"
             },
             "mapForm": {
-                "thumbnailMessage": "Die Größe der Bilder sollte ein Quadrat von 98 x 98 Pixel sein, maximal 100 KB"
+                "thumbnailMessage": "Die Größe der Bilder sollte ein Quadrat von 98 x 98 Pixel sein, maximal 100 KB",
+                "confirmMapSaveTitle": "Kartenupdate",
+                "confirmMapSaveContent": "Durch das Aktualisieren dieser Karte werden alle abhängigen Karten in der Story zurückgesetzt, die zuvor über den Inline-Editor angepasst wurden. Bestätigen Sie?"
             }
         },
         "backgroundDialog": {
