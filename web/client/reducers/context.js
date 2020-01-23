@@ -5,7 +5,7 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import { SET_CURRENT_CONTEXT, LOADING, SET_RESOURCE, CLEAR_CONTEXT, UPDATE_USER_PLUGIN } from "../actions/context";
+import { SET_CURRENT_CONTEXT, LOADING, SET_RESOURCE, CLEAR_CONTEXT, UPDATE_USER_PLUGIN, TOGGLE_FAVOURITE_TEMPLATE } from "../actions/context";
 import { find, get } from 'lodash';
 import {set, arrayUpdate} from '../utils/ImmutableUtils';
 
@@ -52,6 +52,11 @@ export default (state = {}, action) => {
             return arrayUpdate('currentContext.userPlugins', { ...plugin, ...action.values}, {name: action.name}, state);
         }
         return state;
+    }
+    case TOGGLE_FAVOURITE_TEMPLATE: {
+        const templates = get(state, 'currentContext.templates', [])
+            .map(template => template.id === action.id ? {...template, favourite: !template.favourite} : template);
+        return set('currentContext.templates', templates, state);
     }
     default:
         return state;

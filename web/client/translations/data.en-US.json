@@ -2377,6 +2377,21 @@
           "addExtension": "Add Extension",
           "removeExtension": "Remove Extension"
         },
+        "mapTemplates": {
+            "title": "Map Templates",
+            "favouritesTitle": "Favourites",
+            "allTitle": "All",
+            "filterPlaceholder": "Filter map templates...",
+            "transfer": "Replace map with this template",
+            "merge": "Add this template to map",
+            "favouriteAdd": "Add to favourites",
+            "favouriteRemove": "Remove from favourites",
+            "emptyTitle": "No Result",
+            "emptyDescription": "Entered filter does not match name or description of any of templates",
+            "confirmReplaceTitle": "Replace map content",
+            "confirmReplaceMessage": "You will replace all layers and map configuration with the selected template by clicking on replace button",
+            "confirmReplaceConfirmButton": "Replace"
+        },
         "tutorial": {
             "title": "Tutorial",
             "back": "Back",

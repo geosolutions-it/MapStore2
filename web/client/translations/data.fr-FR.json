@@ -2373,6 +2373,21 @@
           "addExtension": "Ajouter une extension",
           "removeExtension": "Supprimer l'extension"
         },
+        "mapTemplates": {
+            "title": "Modèles de carte",
+            "favouritesTitle": "Favoris",
+            "allTitle": "Tout",
+            "filterPlaceholder": "Filtrer les modèles de carte...",
+            "transfer": "Remplacer la carte par ce modèle",
+            "merge": "Ajouter ce modèle à la carte",
+            "favouriteAdd": "Ajouter aux Favoris",
+            "favouriteRemove": "Supprimer des favoris",
+            "emptyTitle": "Pas de résultat",
+            "emptyDescription": "Le filtre entré ne correspond au nom ou à la description d'aucun des modèles",
+            "confirmReplaceTitle": "Remplacer le contenu de la carte",
+            "confirmReplaceMessage": "Vous allez remplacer toutes les couches et la configuration de la carte par le modèle sélectionné en cliquant sur le bouton remplacer",
+            "confirmReplaceConfirmButton": "Remplacer"
+        },
         "tutorial": {
             "title": "Tutoriel",
             "back": "Retour",

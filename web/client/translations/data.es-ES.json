@@ -2373,6 +2373,21 @@
           "addExtension": "Añadir Extensión",
           "removeExtension": "Retire Extensión"
         },
+        "mapTemplates": {
+            "title": "Plantillas de mapas",
+            "favouritesTitle": "Favoritos",
+            "allTitle": "Todos",
+            "filterPlaceholder": "Filtrar plantillas de mapa...",
+            "transfer": "Reemplazar mapa con esta plantilla",
+            "merge": "Agregue esta plantilla al mapa",
+            "favouriteAdd": "Agregar a favoritos",
+            "favouriteRemove": "Quitar de favoritos",
+            "emptyTitle": "Sin resultados",
+            "emptyDescription": "El filtro introducido no coincide con el nombre o la descripción de ninguna de las plantillas",
+            "confirmReplaceTitle": "Reemplazar contenido del mapa",
+            "confirmReplaceMessage": "Reemplazará todas las capas y la configuración del mapa con la plantilla seleccionada haciendo clic en el botón Reemplazar",
+            "confirmReplaceConfirmButton": "Reemplazar"
+        },
         "tutorial": {
             "title": "Tutorial",
             "back": "Atrás",

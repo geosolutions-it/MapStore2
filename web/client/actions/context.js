@@ -73,3 +73,12 @@ export const UPDATE_USER_PLUGIN = "CONTEXT:UPDATE_USER_PLUGIN";
  * updateUserPlugin("Annotations", {active: true})
  */
 export const updateUserPlugin = (name, values) => ({ type: UPDATE_USER_PLUGIN, name, values});
+
+export const MERGE_TEMPLATE = 'CONTEXT:MERGE_TEMPLATE';
+export const mergeTemplate = (id, data) => ({ type: MERGE_TEMPLATE, id, data });
+
+export const REPLACE_TEMPLATE = 'CONTEXT:REPLACE_TEMPLATE';
+export const replaceTemplate = (id, data) => ({ type: REPLACE_TEMPLATE, id, data });
+
+export const TOGGLE_FAVOURITE_TEMPLATE = 'CONTEXT:TOGGLE_FAVOURITE_TEMPLATE';
+export const toggleFavouriteTemplate  = (id) => ({ type: TOGGLE_FAVOURITE_TEMPLATE, id });

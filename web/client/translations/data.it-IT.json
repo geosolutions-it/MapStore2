@@ -2374,6 +2374,21 @@
           "addExtension": "Aggiungi estensione",
           "removeExtension": "Rimuovi Estensione"
         },
+        "mapTemplates": {
+            "title": "Modelli di mappe",
+            "favouritesTitle": "Preferiti",
+            "allTitle": "Tutti",
+            "filterPlaceholder": "Filtra i modelli di mappe...",
+            "transfer": "Sostituisci mappa con questo modello",
+            "merge": "Aggiungi questo modello alla mappa",
+            "favouriteAdd": "Aggiungi ai preferiti",
+            "favouriteRemove": "Rimuovi dai preferiti",
+            "emptyTitle": "Nessun risultato",
+            "emptyDescription": "Il filtro inserito non corrisponde al nome o alla descrizione di nessuno dei modelli",
+            "confirmReplaceTitle": "Sostituisci il contenuto della mappa",
+            "confirmReplaceMessage": "Sostituirai tutti i livelli e la configurazione della mappa con il modello selezionato facendo clic sul pulsante Sostituisci",
+            "confirmReplaceConfirmButton": "Sostituire"
+        },
         "tutorial": {
             "title": "Tutorial",
             "back": "Indietro",

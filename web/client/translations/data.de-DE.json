@@ -2373,6 +2373,21 @@
           "addExtension": "Erweiterung hinzufügen",
           "removeExtension": "Erweiterung entfernen"
         },
+        "mapTemplates": {
+            "title": "Kartenvorlagen",
+            "favouritesTitle": "Favoriten",
+            "allTitle": "Alle",
+            "filterPlaceholder": "Kartenvorlagen filtern...",
+            "transfer": "Ersetzen Sie die Karte durch diese Vorlage",
+            "merge": "Diese Vorlage zur Karte hinzufügen",
+            "favouriteAdd": "Zu Favoriten hinzufügen",
+            "favouriteRemove": "Von den Favoriten entfernen",
+            "emptyTitle": "Kein Ergebnis",
+            "emptyDescription": "Der eingegebene Filter stimmt nicht mit dem Namen oder der Beschreibung einer der Vorlagen überein",
+            "confirmReplaceTitle": "Ersetzen Sie den Karteninhalt",
+            "confirmReplaceMessage": "Sie ersetzen alle Layer und die Kartenkonfiguration durch die ausgewählte Vorlage, indem Sie auf die Schaltfläche Ersetzen klicken",
+            "confirmReplaceConfirmButton": "Ersetzen"
+        },
         "tutorial": {
             "title": "Anleitung",
             "back": "zurück",

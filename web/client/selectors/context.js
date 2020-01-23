@@ -49,6 +49,11 @@ export const currentPluginsSelector = createSelector(
         plugins && ({ desktop: [...get(plugins, 'desktop', []), ...userPlugins.filter(plugin => plugin.active)] })
 );
 
+export const templatesSelector = createSelector(
+    currentContextSelector,
+    (context = {}) => context.templates
+);
+
 /**
  * Selects the plugins configuration depending on the current state.
  * It loads the defaultPlugins, the loadingPlugins, the errorPlugins or the contextPlugins.
