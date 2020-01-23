@@ -38,7 +38,7 @@ function mapimport(state = initialState, action) {
     case SET_LAYERS: {
         let selected = action.layers && action.layers[0] ? action.layers[0] : null;
         const errors = action.layers ? action.errors : null;
-        return assign({}, state, {layers: action.layers, selected: selected, bbox: [190, 190, -190, -190], errors});
+        return assign({}, state, {layers: action.layers, selected: selected, bbox: [190, 190, -190, -190], errors}, selected ? {} : {success: null});
     }
     case ON_ERROR: {
         return assign({}, state, {
