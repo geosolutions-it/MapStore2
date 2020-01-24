@@ -20,12 +20,12 @@ const {composeFilterObject} = require('./utils');
  */
 module.exports = compose(
     withPropsOnChange(
-        ({mapSync, dependencies = {}, map } = {}, nextProps = {}, filter) =>
+        ({mapSync, dependencies = {}, map = {} } = {}, nextProps = {}, filter) =>
             mapSync !== nextProps.mapSync
             || !isEqual(dependencies, nextProps.dependencies)
             || !isEqual(map, nextProps.map)
             || filter !== nextProps.filter,
-        ({ mapSync, dependencies = {}, filter: filterObj, map} = {}) => {
+        ({ mapSync, dependencies = {}, filter: filterObj = {}, map = {layers: []}} = {}) => {
 
             const targetLayerName = dependencies && dependencies.layer && dependencies.layer.name;
             const layerInCommon = find(map.layers, {name: targetLayerName}) || {};
@@ -44,7 +44,7 @@ module.exports = compose(
 
                 if (!isEmpty(filterObjCollection) && FilterUtils.toCQLFilter(filterObjCollection)) {
                     cqlFilter = FilterUtils.toCQLFilter(filterObjCollection);
-                    layersUpdatedWithCql = arrayUpdate(false, {...layerInCommon, params: optionsToVendorParams({ params: {CQL_FILTER: cqlFilter}})}, {name: targetLayerName}, map.layers);
+                    layersUpdatedWithCql = arrayUpdate(false, {...layerInCommon, params: optionsToVendorParams({ params: {CQL_FILTER: cqlFilter}}, layerInCommon && layerInCommon.params && layerInCommon.params.CQL_FILTER)}, {name: targetLayerName}, map.layers);
                     return {
                         map: {
                             ...map,

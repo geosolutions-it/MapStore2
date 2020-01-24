@@ -18,46 +18,20 @@ const { set } = require('../../../utils/ImmutableUtils');
 const MapUtils = require('../../../utils/MapUtils');
 
 /**
- * creates utilities for registering, fetching, executing hooks
- * used to override default ones in order to have a local hooks object
- * one for each map widget
- */
-const registerHooks = () => {
-    let hooks = {};
-    return {
-        registerHook: (name, hook) => {
-            hooks[name] = hook;
-        },
-        getHook: (name) => hooks[name],
-        executeHook: (hookName, existCallback, dontExistCallback) => {
-            const hook = hooks[hookName];
-            if (hook) {
-                return existCallback(hook);
-            }
-            if (dontExistCallback) {
-                return dontExistCallback();
-            }
-            return null;
-        }
-    };
-};
-
-
-/**
  * fetches the bounds from an ogc filter based on dependencies
  * @returns {object} the map with center and zoom updated
  */
 module.exports = compose(
 
     branch(
-        ({mapSync, dependencies, map}) => {
+        ({mapSync, dependencies, map} = {}) => {
             const layerInCommon = getLayerInCommon({dependencies, map});
             return mapSync && !isEmpty(layerInCommon);
         },
         compose(
             withPropsOnChange(["id"],
-                () => ({
-                    hookRegister: registerHooks()
+                ({hookRegister = null}) => ({
+                    hookRegister: hookRegister || MapUtils.createRegisterHooks()
                 })),
             mapPropsStream(props$ => {
                 return props$
