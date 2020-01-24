@@ -23,9 +23,9 @@ describe('Test correctness of the layout actions', () => {
         expect(action.property).toBe('type');
         expect(action.value).toBe(VALUE);
     });
-    it('resizeLayoutPanel thunk', () => {
+    it('resizeLayoutPanel thunk with menu id', () => {
         const DATA = { width: 300, height: '100%' };
-        const MENU_ID = 'menu_id';
+        const MENU_ID = 'menu-id';
         const getState = () => ({
             controls: {
                 layout: {
@@ -35,13 +35,43 @@ describe('Test correctness of the layout actions', () => {
                 }
             }
         });
-        resizeLayoutPanel(DATA, MENU_ID)((action) => {
+        resizeLayoutPanel(MENU_ID, DATA)((action) => {
             expect(action.type).toBe(SET_CONTROL_PROPERTY);
             expect(action.control).toBe('layout');
             expect(action.property).toBe('panelSizes');
             expect(action.value).toEqual({
                 previousId: { width: 0, height: 0 },
                 [MENU_ID]: DATA
+            });
+        }, getState);
+    });
+    it('resizeLayoutPanel thunk with name param layout structure', () => {
+        const DATA = { width: 300, height: '100%' };
+        const NAME = 'name';
+        const MENU_ID = 'menu-id';
+        const getState = () => ({
+            controls: {
+                layout: {
+                    structure: {
+                        [MENU_ID]: [ NAME, 'otherName' ]
+                    },
+                    panelSizes: {
+                        [MENU_ID]: {
+                            otherName: { width: 0, height: 0 }
+                        }
+                    }
+                }
+            }
+        });
+        resizeLayoutPanel(NAME, DATA)((action) => {
+            expect(action.type).toBe(SET_CONTROL_PROPERTY);
+            expect(action.control).toBe('layout');
+            expect(action.property).toBe('panelSizes');
+            expect(action.value).toEqual({
+                [MENU_ID]: {
+                    otherName: { width: 0, height: 0 },
+                    [NAME]: DATA
+                }
             });
         }, getState);
     });

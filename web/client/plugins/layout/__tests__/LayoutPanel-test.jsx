@@ -43,6 +43,7 @@ describe('LayoutPanel Component', () => {
     it('should drag from custom handler mouse', () => {
         const TEST_CHILD_CLASS = 'test-child';
         ReactDOM.render(<LayoutPanel
+            active
             defaultWidth={100}
             defaultHeight={500}>
             <div className={TEST_CHILD_CLASS}></div>
@@ -51,11 +52,12 @@ describe('LayoutPanel Component', () => {
         expect(layoutPanelNode).toExist();
         const layoutPanelBody = layoutPanelNode.querySelector(`.${TEST_CHILD_CLASS}`);
         expect(layoutPanelBody.clientWidth).toBe(100);
-        const dragHandlerNode = layoutPanelNode.querySelector('.ms-layout-panel-handle');
+        const dragHandlerNode = document.querySelector('.ms-layout-panel-handle');
         expect(dragHandlerNode).toExist();
+
         ReactTestUtils.Simulate.mouseDown(dragHandlerNode, { button: 0, clientX: 100, clientY: 0 });
         ReactTestUtils.Simulate.mouseUp(dragHandlerNode, { button: 0, clientX: 200, clientY: 0 });
-        expect(layoutPanelBody.clientWidth).toBe(200);
+        expect(layoutPanelNode.querySelector(`.${TEST_CHILD_CLASS}`).clientWidth).toBe(200);
     });
 
     it('should drag from custom handler touch', () => {

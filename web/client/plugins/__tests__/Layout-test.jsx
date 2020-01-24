@@ -120,7 +120,7 @@ describe('Layout Plugin', () => {
                 name: 'Bottom',
                 container: 'bottom',
                 cfg: {},
-                plugin: () => () => <div className={BOTTOM_ITEM_CLASS} style={{ width: 500, height: 500 }} />,
+                plugin: () => () => <div className={BOTTOM_ITEM_CLASS} />,
                 items: []
             },
             {
@@ -222,7 +222,7 @@ describe('Layout Plugin', () => {
                 done(e);
             }
             done();
-        });
+        }, 100);
     });
 
 });

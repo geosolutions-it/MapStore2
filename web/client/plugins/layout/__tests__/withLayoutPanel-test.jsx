@@ -32,6 +32,19 @@ describe('withLayoutPanel HOC', () => {
         });
         ReactDOM.render(<TestComponent title={TITLE}/>, document.getElementById('container'));
         const layoutPanel = document.querySelector('.ms-layout-panel');
+        expect(layoutPanel).toBe(null);
+        const testComponentNode = document.querySelector(`.${TEST_COMPONENT_CLASS}`);
+        expect(testComponentNode).toExist();
+        expect(testComponentNode.innerHTML).toBe(TITLE);
+    });
+    it('render component with layoutPanelProps empty', () => {
+        const TITLE = 'title';
+        const TEST_COMPONENT_CLASS = 'test-component';
+        const TestComponent = withLayoutPanel(({ title }) => {
+            return <div className={TEST_COMPONENT_CLASS}>{title}</div>;
+        });
+        ReactDOM.render(<TestComponent layoutPanelProps={{}} title={TITLE}/>, document.getElementById('container'));
+        const layoutPanel = document.querySelector('.ms-layout-panel');
         expect(layoutPanel).toExist();
         const testComponentNode = layoutPanel.querySelector(`.${TEST_COMPONENT_CLASS}`);
         expect(testComponentNode).toExist();

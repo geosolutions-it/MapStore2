@@ -117,11 +117,14 @@ function LayoutPanel({
         return `chevron-${dragDirection}`;
     }
 
-    const [keyId, setKeyId] = useState(uuidv1());
+    const panelKey = active && !resizeDisabled
+        ? 'panel-enabled'
+        : 'panel-disabled';
+    const [keyId, setKeyId] = useState(panelKey);
     const [width, setWidth] = useState(defaultWidth);
     const [height, setHeight] = useState(defaultHeight);
 
-    const resetInitialSize = (isFirstRender) => {
+    const resetInitialSize = (isFirstRender, newId) => {
         if (active && !resizeDisabled) {
             const initialStep = !isNil(defaultStepIndex) && steps && !isNil(steps[defaultStepIndex])
                 ? steps[defaultStepIndex]
@@ -136,7 +139,7 @@ function LayoutPanel({
             setWidth(updatedWidth);
             setHeight(updatedHeight);
         }
-        setKeyId(uuidv1());
+        setKeyId(newId);
     };
 
     useEffect(() => {
@@ -147,8 +150,8 @@ function LayoutPanel({
         }
     }, [ defaultWidth, defaultHeight ]);
 
-    useEffect(() => resetInitialSize(true), [ defaultStepIndex ]);
-    useEffect(() => resetInitialSize(firstRender), [ active ]);
+    useEffect(() => resetInitialSize(true, uuidv1()), [ defaultStepIndex ]);
+    useEffect(() => resetInitialSize(firstRender, panelKey), [ active ]);
 
     const activePluginsStr = JSON.stringify(activePlugins);
     const sizeStr = JSON.stringify(size);
