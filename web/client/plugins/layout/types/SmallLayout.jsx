@@ -14,6 +14,8 @@ import isNil from 'lodash/isNil';
 import BorderLayout from '../../../components/layout/BorderLayout';
 import SideMenu from '../SideMenu';
 
+const BOTTOM_MENU_ID = 'bottom-menu';
+
 const SmallLayout = forwardRef(({
     bodyItems = [],
     backgroundItems = [],
@@ -37,7 +39,9 @@ const SmallLayout = forwardRef(({
     resizeDisabled,
     initialStepIndex,
     steps,
-    maxDragThreshold
+    maxDragThreshold,
+    connectDragSize,
+    tabsOrder
 }, ref) => {
     const backgroundRef = useRef();
     const layoutBodyRef = useRef();
@@ -51,7 +55,7 @@ const SmallLayout = forwardRef(({
     const sideMenuItems = [ ...leftMenuItems, ...rightMenuItems ];
     useEffect(() => {
         const layoutStructure = {
-            bottomMenuItems: sideMenuItems.map(({ name }) => name)
+            [BOTTOM_MENU_ID]: sideMenuItems.map(({ name }) => name)
         };
         onUpdateStructure(layoutStructure);
     }, []);
@@ -128,8 +132,8 @@ const SmallLayout = forwardRef(({
                 <div
                     className="ms-layout-bottom">
                     {sideMenuItems.length > 0 ? <SideMenu
-                        menuId="bottom-menu"
-                        key="bottom-menu"
+                        menuId={BOTTOM_MENU_ID}
+                        key={BOTTOM_MENU_ID}
                         resizeHandle="n"
                         resizeHandleAxis="y"
                         direction="horizontal"
@@ -154,7 +158,9 @@ const SmallLayout = forwardRef(({
                         resizeDisabled={resizeDisabled}
                         initialStepIndex={initialStepIndex}
                         steps={steps}
-                        maxDragThreshold={maxDragThreshold}/> : null}
+                        maxDragThreshold={maxDragThreshold}
+                        connectDragSize={connectDragSize}
+                        tabsOrder={tabsOrder}/> : null}
                     {bottomItems.map(({ Component }, key) => Component && <Component key={key}/>)}
                 </div>
             </div>
@@ -185,7 +191,9 @@ SmallLayout.propTypes = {
     resizeDisabled: PropTypes.bool,
     steps: PropTypes.array,
     maxDragThreshold: PropTypes.number,
-    initialStepIndex: PropTypes.number
+    initialStepIndex: PropTypes.number,
+    connectDragSize: PropTypes.bool,
+    tabsOrder: PropTypes.array
 };
 
 SmallLayout.defaultProps = {

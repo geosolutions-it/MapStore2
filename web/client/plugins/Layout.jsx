@@ -9,6 +9,7 @@
 import { connect } from 'react-redux';
 import get from 'lodash/get';
 import isNil from 'lodash/isNil';
+import isObject from 'lodash/isObject';
 import { createSelector } from 'reselect';
 import { createPlugin } from '../utils/PluginsUtils';
 import { createShallowSelectorCreator } from '../utils/ReselectUtils';
@@ -31,8 +32,15 @@ const activePluginsSelector = createShallowSelectorCreator((a, b) => a === b)(
 );
 
 const panelSizesSelector = createShallowSelectorCreator(
-    (a, b) => a === b
-        || !isNil(a) && !isNil(b) && a.width === b.width && a.height === b.height
+    (a, b) => {
+        if (isObject(a) && isObject(b)) {
+            const aStr = JSON.stringify(a);
+            const bStr = JSON.stringify(b);
+            return aStr === bStr;
+        }
+        return a === b
+        || !isNil(a) && !isNil(b) && a.width === b.width && a.height === b.height;
+    }
 )(
     state => get(state, 'controls.layout.panelSizes') || {},
     panelSizes => panelSizes

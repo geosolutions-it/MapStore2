@@ -22,6 +22,9 @@ const withLayoutPanel = (
         layoutPanelProps,
         ...props
     }) => {
+        if (!layoutPanelProps) {
+            return <Component { ...props } />;
+        }
         const {
             name,
             resizeDisabled,
@@ -34,11 +37,11 @@ const withLayoutPanel = (
             activePlugins,
             size,
             onResize,
-            initialStepIndex,
+            defaultStepIndex,
             steps,
             onClose,
             maxDragThreshold
-        } = layoutPanelProps || {};
+        } = layoutPanelProps;
         return (
             <LayoutPanel
                 active={props.active}
@@ -54,7 +57,7 @@ const withLayoutPanel = (
                 calculateAvailableContainerSize={calculateAvailableContainerSize}
                 size={size}
                 onResize={onResize}
-                initialStepIndex={initialStepIndex}
+                defaultStepIndex={defaultStepIndex}
                 steps={steps}
                 onClose={onClose}
                 maxDragThreshold={maxDragThreshold}

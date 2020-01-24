@@ -14,6 +14,8 @@ import isNil from 'lodash/isNil';
 import BorderLayout from '../../../components/layout/BorderLayout';
 import SideMenu from '../SideMenu';
 
+const LEFT_MENU_ID = 'left-menu';
+
 const MediumLayout = forwardRef(({
     bodyItems = [],
     backgroundItems = [],
@@ -37,7 +39,9 @@ const MediumLayout = forwardRef(({
     resizeDisabled,
     initialStepIndex,
     steps,
-    maxDragThreshold
+    maxDragThreshold,
+    connectDragSize,
+    tabsOrder
 }, ref) => {
 
     const backgroundRef = useRef();
@@ -53,7 +57,7 @@ const MediumLayout = forwardRef(({
     const sideMenuItems = [ ...leftMenuItems, ...rightMenuItems ];
     useEffect(() => {
         const layoutStructure = {
-            leftMenuItems: sideMenuItems.map(({ name }) => name)
+            [LEFT_MENU_ID]: sideMenuItems.map(({ name }) => name)
         };
         onUpdateStructure(layoutStructure);
     }, []);
@@ -115,8 +119,8 @@ const MediumLayout = forwardRef(({
                 </div>,
                 sideMenuItems.length > 0 ? <SideMenu
                     overlay
-                    menuId="left-menu"
-                    key="left-menu"
+                    menuId={LEFT_MENU_ID}
+                    key={LEFT_MENU_ID}
                     resizeHandle="e"
                     resizeHandleAxis="x"
                     calculateMaxAvailableSize={calculateMaxAvailableSize}
@@ -143,7 +147,9 @@ const MediumLayout = forwardRef(({
                     panelSizes={panelSizes}
                     initialStepIndex={initialStepIndex}
                     steps={steps}
-                    maxDragThreshold={maxDragThreshold}/> : null,
+                    maxDragThreshold={maxDragThreshold}
+                    connectDragSize={connectDragSize}
+                    tabsOrder={tabsOrder}/> : null,
                 ...columnItems.map(({ Component }, key) => Component && <Component key={key}/>)
             ]}>
             <div
@@ -190,7 +196,9 @@ MediumLayout.propTypes = {
     resizeDisabled: PropTypes.bool,
     steps: PropTypes.array,
     maxDragThreshold: PropTypes.number,
-    initialStepIndex: PropTypes.number
+    initialStepIndex: PropTypes.number,
+    connectDragSize: PropTypes.bool,
+    tabsOrder: PropTypes.array
 };
 
 MediumLayout.defaultProps = {

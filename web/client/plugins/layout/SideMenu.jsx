@@ -9,6 +9,8 @@
 import React, { forwardRef } from 'react';
 import PropTypes from 'prop-types';
 import head from 'lodash/head';
+import isObject from 'lodash/isObject';
+import isNumber from 'lodash/isNumber';
 import Menu from '../../components/layout/Menu';
 import BorderLayout from '../../components/layout/BorderLayout';
 
@@ -37,12 +39,13 @@ const SideMenu = forwardRef(({
     iconComponent,
     initialStepIndex,
     steps,
-    maxDragThreshold
+    maxDragThreshold,
+    connectDragSize,
+    tabsOrder
 }, ref) => {
-
-    const panelSize = panelSizes && panelSizes[menuId] || {};
-    const sortedItems = [...(items || [])]
-        .sort((a, b) => a.position > b.position ? 1 : -1);
+    const sortedItems = tabsOrder
+        ? [...(items || [])].sort((a, b) => tabsOrder.indexOf(a.name) - tabsOrder.indexOf(b.name))
+        : [...(items || [])].sort((a, b) => a.position > b.position ? 1 : -1);
 
     const itemNames = sortedItems.map(({ name }) => name);
 
@@ -65,32 +68,39 @@ const SideMenu = forwardRef(({
 
     const availableItems = sortedItems
         .filter(({ alwaysRendered, name }) => alwaysRendered || name === selectedName)
-        .map(({ name, Component }) => (
-            <div
-                key={name}
-                style={name !== selectedName ? { display: 'none' } : { position: 'relative', width: '100%', height: '100%' }}>
-                {Component && <Component
-                    active={name === selectedName}
-                    layoutPanelProps={{
-                        name,
-                        resizeHandle,
-                        resizeHandleAxis,
-                        containerWidth: panelSize.width || containerWidth,
-                        containerHeight: panelSize.height || containerHeight,
-                        resizeDisabled,
-                        calculateMaxAvailableSize,
-                        calculateAvailableContainerSize,
-                        activePlugins,
-                        size,
-                        initialStepIndex,
-                        steps,
-                        maxDragThreshold,
-                        onResize: data => onResizePanel(data, menuId),
-                        onClose: () => onSelect(name, false)
-                    }}
-                />}
-            </div>
-        ));
+        .map(({ name, Component }) => {
+            const panelSize = panelSizes && panelSizes[menuId] && panelSizes[menuId][name]
+                || panelSizes && panelSizes[menuId]
+                || {};
+            const initialIndex = isObject(initialStepIndex) && initialStepIndex[name]
+                || isNumber(initialStepIndex) && initialStepIndex;
+            return (
+                <div
+                    key={name}
+                    style={name !== selectedName ? { display: 'none' } : { position: 'relative', width: '100%', height: '100%' }}>
+                    {Component && <Component
+                        active={name === selectedName}
+                        layoutPanelProps={{
+                            name,
+                            resizeHandle,
+                            resizeHandleAxis,
+                            containerWidth: panelSize.width || containerWidth,
+                            containerHeight: panelSize.height || containerHeight,
+                            resizeDisabled,
+                            calculateMaxAvailableSize,
+                            calculateAvailableContainerSize,
+                            activePlugins,
+                            size,
+                            defaultStepIndex: panelSize.stepIndex || initialIndex,
+                            steps,
+                            maxDragThreshold,
+                            onResize: data => onResizePanel(connectDragSize ? menuId : name, data),
+                            onClose: () => onSelect(name, false)
+                        }}
+                    />}
+                </div>
+            );
+        });
 
     const closedClass = availableItems && availableItems.length === 0 ? ' ms-menu-closed' : '';
     return (
@@ -142,7 +152,9 @@ SideMenu.propTypes = {
     iconComponent: PropTypes.func,
     steps: PropTypes.array,
     maxDragThreshold: PropTypes.number,
-    initialStepIndex: PropTypes.number
+    initialStepIndex: PropTypes.oneOfType([PropTypes.number, PropTypes.object]),
+    connectDragSize: PropTypes.bool,
+    tabsOrder: PropTypes.array
 };
 
 SideMenu.defaultProps = {

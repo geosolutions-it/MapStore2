@@ -14,6 +14,9 @@ import isNil from 'lodash/isNil';
 import BorderLayout from '../../../components/layout/BorderLayout';
 import SideMenu from '../SideMenu';
 
+const LEFT_MENU_ID = 'left-menu';
+const RIGHT_MENU_ID = 'right-menu';
+
 const LargeLayout = forwardRef(({
     bodyItems = [],
     backgroundItems = [],
@@ -37,7 +40,9 @@ const LargeLayout = forwardRef(({
     resizeDisabled,
     steps,
     maxDragThreshold,
-    initialStepIndex
+    initialStepIndex,
+    connectDragSize,
+    tabsOrder
 }, ref) => {
 
     const backgroundRef = useRef();
@@ -54,8 +59,8 @@ const LargeLayout = forwardRef(({
 
     useEffect(() => {
         const layoutStructure = {
-            leftMenuItems: leftMenuItems.map(({ name }) => name),
-            rightMenuItems: rightMenuItems.map(({ name }) => name)
+            [LEFT_MENU_ID]: leftMenuItems.map(({ name }) => name),
+            [RIGHT_MENU_ID]: rightMenuItems.map(({ name }) => name)
         };
         onUpdateStructure(layoutStructure);
     }, []);
@@ -124,8 +129,8 @@ const LargeLayout = forwardRef(({
                 </div>,
                 leftMenuItems.length > 0 ? <SideMenu
                     ref={leftMenuRef}
-                    key="left-menu"
-                    menuId="left-menu"
+                    key={LEFT_MENU_ID}
+                    menuId={LEFT_MENU_ID}
                     items={leftMenuItems}
                     activePlugins={activePlugins}
                     tabsProps={({ tooltipId }) => ({
@@ -153,11 +158,13 @@ const LargeLayout = forwardRef(({
                     initialStepIndex={initialStepIndex}
                     steps={steps}
                     maxDragThreshold={maxDragThreshold}
-                    panelSizes={panelSizes}/> : null,
+                    panelSizes={panelSizes}
+                    connectDragSize={connectDragSize}
+                    tabsOrder={tabsOrder}/> : null,
                 rightMenuItems.length > 0 ? <SideMenu
                     ref={rightMenuRef}
-                    key="right-menu"
-                    menuId="right-menu"
+                    key={RIGHT_MENU_ID}
+                    menuId={RIGHT_MENU_ID}
                     mirror
                     overlay
                     resizeHandle="w"
@@ -185,7 +192,9 @@ const LargeLayout = forwardRef(({
                     initialStepIndex={initialStepIndex}
                     steps={steps}
                     maxDragThreshold={maxDragThreshold}
-                    panelSizes={panelSizes}/> : null,
+                    panelSizes={panelSizes}
+                    connectDragSize={connectDragSize}
+                    tabsOrder={tabsOrder}/> : null,
                 ...columnItems.map(({ Component }, key) => Component && <Component key={key}/>)
             ]}>
             <div
@@ -232,7 +241,9 @@ LargeLayout.propTypes = {
     resizeDisabled: PropTypes.bool,
     steps: PropTypes.array,
     maxDragThreshold: PropTypes.number,
-    initialStepIndex: PropTypes.number
+    initialStepIndex: PropTypes.number,
+    connectDragSize: PropTypes.bool,
+    tabsOrder: PropTypes.array
 };
 
 LargeLayout.defaultProps = {

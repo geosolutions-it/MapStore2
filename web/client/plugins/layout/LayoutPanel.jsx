@@ -16,6 +16,7 @@ import isNaN from 'lodash/isNaN';
 import minBy from 'lodash/minBy';
 import isNumber from 'lodash/isNumber';
 import isString from 'lodash/isString';
+import uuidv1 from 'uuid/v1';
 
 function computeCurrentStep({
     currentValue,
@@ -91,7 +92,7 @@ function LayoutPanel({
     calculateMaxAvailableSize = () => [undefined, undefined],
     calculateAvailableContainerSize = () => [Infinity, Infinity],
     size = [],
-    initialStepIndex,
+    defaultStepIndex,
     steps,
     onClose,
     maxDragThreshold = 0.1,
@@ -99,17 +100,12 @@ function LayoutPanel({
     children
 }) {
 
-    const [width, setWidth] = useState(defaultWidth);
-    const [height, setHeight] = useState(defaultHeight);
-
     const [left, setLeft] = useState(0);
     const [top, setTop] = useState(0);
-
-    const [handlePlaceholder, setHandlePlaceholder] = useState(false);
-
     const [minConstraints, setMinConstraints] = useState(defaultMinConstraints);
     const [maxConstraints, setMaxConstraints] = useState(defaultMaxConstraints);
 
+    const [handlePlaceholder, setHandlePlaceholder] = useState(false);
     const [dragDirection, setDragDirection] = useState('both');
 
     function getHandleGlyph() {
@@ -121,25 +117,41 @@ function LayoutPanel({
         return `chevron-${dragDirection}`;
     }
 
-    const activePluginsStr = JSON.stringify(activePlugins);
-    const sizeStr = JSON.stringify(size);
+    const [keyId, setKeyId] = useState(uuidv1());
+    const [width, setWidth] = useState(defaultWidth);
+    const [height, setHeight] = useState(defaultHeight);
 
-    useEffect(() => {
-        const initialStep = !isNil(initialStepIndex) && steps && !isNil(steps[initialStepIndex])
-            ? steps[initialStepIndex]
-            : undefined;
+    const resetInitialSize = (isFirstRender) => {
         if (active && !resizeDisabled) {
+            const initialStep = !isNil(defaultStepIndex) && steps && !isNil(steps[defaultStepIndex])
+                ? steps[defaultStepIndex]
+                : undefined;
             const [maxWidth, maxHeight] = !isNil(initialStep) && calculateMaxAvailableSize({ width, height }) || [];
-            const updatedWidth = !isString(defaultWidth) && firstRender && maxWidth
+            const updatedWidth = !isString(defaultWidth) && isFirstRender && maxWidth
                 ? initialStep * maxWidth
                 : defaultWidth;
-            const updatedHeight = !isString(defaultHeight) && firstRender && maxHeight
+            const updatedHeight = !isString(defaultHeight) && isFirstRender && maxHeight
                 ? initialStep * maxHeight
                 : defaultHeight;
             setWidth(updatedWidth);
             setHeight(updatedHeight);
         }
-    }, [ active ]);
+        setKeyId(uuidv1());
+    };
+
+    useEffect(() => {
+        if (active && (defaultWidth !== width || defaultHeight !== height) && !resizeDisabled) {
+            setWidth(defaultWidth);
+            setHeight(defaultHeight);
+            setKeyId(uuidv1());
+        }
+    }, [ defaultWidth, defaultHeight ]);
+
+    useEffect(() => resetInitialSize(true), [ defaultStepIndex ]);
+    useEffect(() => resetInitialSize(firstRender), [ active ]);
+
+    const activePluginsStr = JSON.stringify(activePlugins);
+    const sizeStr = JSON.stringify(size);
 
     useEffect(() => {
         if (active && !resizeDisabled) {
@@ -155,28 +167,27 @@ function LayoutPanel({
                 setWidth(comparedMaxWidth);
                 onResize({
                     width: comparedMaxWidth,
-                    height
+                    height,
+                    stepIndex: defaultStepIndex
                 });
             }
             if (height > comparedMaxHeight) {
                 setHeight(comparedMaxHeight);
                 onResize({
                     width,
-                    height: comparedMaxHeight
+                    height: comparedMaxHeight,
+                    stepIndex: defaultStepIndex
                 });
             }
         }
     }, [ activePluginsStr, sizeStr ]);
 
-    const key = active && !resizeDisabled
-        ? 'panel-enabled'
-        : 'panel-disabled';
     return (
         <div
-            key={key}
             className={`ms-layout-panel${resizeHandle && !resizeDisabled ? ` axis-${resizeHandle}` : ''}${className && ` ${className}` || ''}`}>
             {!resizeDisabled
                 ? <Resizable
+                    key={keyId}
                     axis={axis}
                     width={width}
                     height={height}
@@ -272,7 +283,8 @@ function LayoutPanel({
                         setHeight(newHeight);
                         return onResize({
                             width: newWidth,
-                            height: newHeight
+                            height: newHeight,
+                            stepIndex: defaultStepIndex
                         });
                     }}>
                     <div
@@ -312,7 +324,7 @@ LayoutPanel.propTypes = {
     steps: PropTypes.array,
     onClose: PropTypes.func,
     maxDragThreshold: PropTypes.number,
-    initialStepIndex: PropTypes.number
+    defaultStepIndex: PropTypes.number
 };
 
 LayoutPanel.defaultProps = {
