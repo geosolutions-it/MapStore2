@@ -11,7 +11,7 @@ const {connect} = require('react-redux');
 
 const Message = require('./locale/Message');
 
-const { onError, setLoading, setLayers, onSelectLayer, onLayerAdded, updateBBox, onSuccess} = require('../actions/mapimport');
+const { onError, setLoading, setLayers, onSelectLayer, onLayerAdded, onLayerSkipped, updateBBox, onSuccess} = require('../actions/mapimport');
 const {zoomToExtent} = require('../actions/map');
 const {addLayer} = require('../actions/layers');
 const {toggleControl} = require('../actions/controls');
@@ -39,6 +39,7 @@ module.exports = {
             ), {
                 setLayers,
                 onLayerAdded,
+                onLayerSkipped,
                 onSelectLayer,
                 onError,
                 onSuccess,

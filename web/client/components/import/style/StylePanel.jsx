@@ -12,9 +12,7 @@ const React = require('react');
 const Message = require('../../I18N/Message');
 const LocaleUtils = require('../../../utils/LocaleUtils');
 let StyleUtils;
-const { Grid, Row, Col, Button, Alert} = require('react-bootstrap');
-
-const Combo = require('react-widgets').DropdownList;
+const { Grid, Row, Col, Button, Alert, ButtonToolbar} = require('react-bootstrap');
 
 const {Promise} = require('es6-promise');
 
@@ -31,6 +29,7 @@ class StylePanel extends React.Component {
         addLayer: PropTypes.func,
         onSelectLayer: PropTypes.func,
         onLayerAdded: PropTypes.func,
+        onLayerSkipped: PropTypes.func,
         onZoomSelected: PropTypes.func,
         updateBBox: PropTypes.func,
         errors: PropTypes.array,
@@ -39,7 +38,10 @@ class StylePanel extends React.Component {
         buttonSize: PropTypes.string,
         cancelMessage: PropTypes.object,
         addMessage: PropTypes.object,
-        stylers: PropTypes.object
+        stylers: PropTypes.object,
+        nextMessage: PropTypes.object,
+        finishMessage: PropTypes.object,
+        skipMessage: PropTypes.object
     };
 
     static contextTypes = {
@@ -59,11 +61,16 @@ class StylePanel extends React.Component {
 
     state = {
         useDefaultStyle: false,
-        zoomOnShapefiles: true
+        zoomOnShapefiles: true,
+        initialLayers: []
     };
 
     UNSAFE_componentWillMount() {
         StyleUtils = require('../../../utils/StyleUtils')(this.props.mapType);
+    }
+
+    componentDidMount() {
+        this.setState({initialLayers: [...this.props.layers]});
     }
 
     getGeometryType = (geometry) => {
@@ -132,11 +139,13 @@ class StylePanel extends React.Component {
 
     render() {
         return (
-            <Grid role="body" style={{width: "300px"}} fluid>
+            <Grid role="body" style={{width: "400px"}} fluid>
                 {this.props.errors ? this.renderError() : null}
                 {this.props.success ? this.renderSuccess() : null}
-                <Row key="select" style={{textAlign: "center"}}>
-                    <Combo data={this.props.layers} value={this.props.selected} onSelect={(value)=> this.props.onSelectLayer(value)} valueField={"id"} textField={"name"} />
+                <Row>
+                    <h4>
+                        <span style={{fontWeight: 'bold'}}><Message msgId="shapefile.layerOf" msgParams={{ count: this.findLayerSerialNumber(this.props.selected), total: this.state.initialLayers.length}} /></span> {this.props.selected.name}
+                    </h4>
                 </Row>
                 <Row key="styler" style={{marginBottom: 10}}>
                     {this.state.useDefaultStyle ? null : this.props.stylers[this.getGeomType(this.props.selected)]}
@@ -157,11 +166,20 @@ class StylePanel extends React.Component {
                     </Col>
                 </Row>
                 <Row>
-                    <Col xsOffset={6} xs={3}> <Button bsSize={this.props.buttonSize} disabled={!this.props.selected} onClick={() => { this.props.setLayers(null); }}>{this.props.cancelMessage}</Button></Col>
-                    <Col xs={3}> <Button bsStyle="primary" bsSize={this.props.buttonSize} disabled={!this.props.selected} onClick={this.addToMap}>{this.props.addMessage}</Button></Col>
+                    <ButtonToolbar style={{display: 'flex', justifyContent: 'flex-end'}}>
+                        <Button bsSize={this.props.buttonSize} disabled={!this.props.selected} onClick={() => { this.props.setLayers(null); }}>{this.props.cancelMessage}</Button>
+                        <Button bsStyle="primary" bsSize={this.props.buttonSize} disabled={!this.props.selected} onClick={() => this.props.onLayerSkipped(this.props.selected)}>{this.props.skipMessage}</Button>
+                        <Button bsStyle="primary" bsSize={this.props.buttonSize} disabled={!this.props.selected} onClick={this.addToMap}>{this.props.layers.length === 1 ? this.props.finishMessage : this.props.nextMessage}</Button>
+                    </ButtonToolbar>
                 </Row>
             </Grid>
         );
+    }
+
+    findLayerSerialNumber = ({name}) => {
+        const {initialLayers} = this.state;
+        const serialNumber = initialLayers.findIndex(initLayer => initLayer.name === name) + 1;
+        return serialNumber;
     }
 
     addToMap = () => {

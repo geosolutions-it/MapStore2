@@ -1099,7 +1099,11 @@
             },
             "add": "Ajouter",
             "cancel": "Annuler",
-            "success": " Import correct"
+            "success": " Import correct",
+            "next": "Suivant",
+            "skip": "Passer",
+            "finish": "Terminer",
+            "layerOf": "Couchez {count} des {total}:"
         },
         "mapImport": {
             "title": "Importer",
