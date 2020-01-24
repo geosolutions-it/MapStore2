@@ -38,6 +38,7 @@ export default emptyState(
     ( {mediaType, selectedItem}) => mediaType === MediaTypes.MAP && (!selectedItem || isEmpty(selectedItem)),
     {
         iconFit: true,
-        glyph: "1-map"
+        glyph: "1-map",
+        imageStyle: {display: "flex", flexDirection: "column", justifyContent: "center"}
     }
 )(Preview);

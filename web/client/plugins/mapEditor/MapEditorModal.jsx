@@ -39,6 +39,7 @@ const MapModal = ({ open = false, pluginsConfig = DefaultConfig, hide = () => {}
                 onClose={hide}
                 size="lg"
                 showFullscreen
+                showClose={false}
                 bodyClassName="map-editor-modal-body"
                 initialFullscreenState="expanded"
                 modalClassName="map-editor-modal"

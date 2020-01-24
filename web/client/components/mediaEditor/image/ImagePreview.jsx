@@ -28,6 +28,7 @@ export default emptyState(
     {
         style: { width: '100%', height: '100%', boxShadow: "inset 0px 0px 30px -5px rgba(0,0,0,0.16)" },
         iconFit: true,
-        glyph: "picture"
+        glyph: "picture",
+        imageStyle: {display: "flex", flexDirection: "column", justifyContent: "center"}
     }
 )(Preview);

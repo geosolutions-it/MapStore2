@@ -2089,6 +2089,9 @@
                 "thumbnailMessage": "La taille des images doit être un carré de 98px x 98px, maximum 100 Ko.",
                 "confirmMapSaveTitle": "Mise à jour de la carte",
                 "confirmMapSaveContent": "La mise à jour de cette carte réinitialisera toutes les cartes dépendantes de l'histoire précédemment personnalisées via l'éditeur en ligne, confirmez?"
+            },
+            "mapList": {
+                "emptyList": "Cliquez sur le bouton plus pour créer une carte ou sélectionnez un autre service de carte."
             }
         },
         "backgroundDialog": {

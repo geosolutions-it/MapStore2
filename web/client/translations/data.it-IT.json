@@ -2090,6 +2090,9 @@
                 "thumbnailMessage": "Le dimensioni delle immagini devono essere di un quadrato di 98 px x 98 px, max 100 KB",
                 "confirmMapSaveTitle": "Aggiornare la mappa",
                 "confirmMapSaveContent": "L'aggiornamento di questa mappa ripristinerà tutte le mappe dipendenti nella storia precedentemente personalizzate tramite l'editor in linea, conferma?"
+            },
+            "mapList": {
+                "emptyList": "Premere il pulsante più per creare una mappa o selezionare un altro servizio di mappe."
             }
         },
         "backgroundDialog": {

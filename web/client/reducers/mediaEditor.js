@@ -21,6 +21,7 @@ import {
     SET_MEDIA_TYPE,
     SHOW
 } from '../actions/mediaEditor';
+import {LOCATION_CHANGE} from 'connected-react-router';
 import { compose, set } from '../utils/ImmutableUtils';
 import {
     sourceIdSelector,
@@ -129,6 +130,8 @@ export default (state = DEFAULT_STATE, action) => {
             // set('settings', action.settings || state.settings), // TODO: allow fine customization
             // set('stashedSettings', state.settings) // This should allow to use default config or customize for a different usage
         )(state);
+    case LOCATION_CHANGE:
+        return DEFAULT_STATE;
     default:
         return state;
     }

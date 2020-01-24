@@ -2093,6 +2093,9 @@
                 "thumbnailMessage": "Size of images should be a square of 98px x 98px, max 100kb",
                 "confirmMapSaveTitle": "Map Update",
                 "confirmMapSaveContent": "Updating this map will reset all dependent maps in the story previously customized through the inline editor, confirm?"
+            },
+            "mapList": {
+                "emptyList": "Click on the plus button to create a map or select a different map service."
             }
         },
         "backgroundDialog": {
