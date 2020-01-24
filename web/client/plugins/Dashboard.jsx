@@ -7,7 +7,6 @@
  */
 
 const React = require('react');
-const { get } = require('lodash');
 const { connect } = require('react-redux');
 const { compose, withProps, withHandlers } = require('recompose');
 const { createSelector } = require('reselect');
@@ -25,19 +24,19 @@ const WidgetsView = compose(
             getDashboardWidgetsLayout,
             dependenciesSelector,
             isWidgetSelectionActive,
-            (state) => get(getEditingWidget(state), "id"),
+            (state) => getEditingWidget(state),
             getWidgetsDependenciesGroups,
             showConnectionsSelector,
             isDashboardLoading,
-            (resource, widgets, layouts, dependencies, selectionActive, editingWidgetId, groups, showGroupColor, loading) => ({
+            (resource, widgets, layouts, dependencies, selectionActive, editingWidget, groups, showGroupColor, loading) => ({
                 resource,
                 loading,
                 canEdit: (resource ? !!resource.canEdit : true),
-                widgets,
                 layouts,
                 dependencies,
                 selectionActive,
-                editingWidgetId,
+                editingWidget,
+                widgets,
                 groups,
                 showGroupColor
             })
@@ -59,25 +58,46 @@ const WidgetsView = compose(
     })),
     withHandlers({
         // TODO: maybe using availableDependencies here will be better when different widgets type dependencies are supported
-        isWidgetSelectable: ({ editingWidgetId }) => ({ widgetType, id }) => widgetType === "map" && id !== editingWidgetId
+        isWidgetSelectable: ({ editingWidget }) =>
+            (target) =>
+                (target.widgetType === "map" ||
+                    /*
+                     * when the target is a table widget then check among its dependencies
+                     * if it has other connection that are for sure map or table
+                     * then make it non selectable
+                    */
+                    target.widgetType === "table" &&
+                        (editingWidget.widgetType !== "map" && (target.layer && editingWidget.layer && target.layer.name === editingWidget.layer.name)
+                        || editingWidget.widgetType === "map") && !target.mapSync
+                ) && target.id !== editingWidget.id
     })
 )(require('../components/dashboard/Dashboard'));
 
-
-class Widgets extends React.Component {
+/**
+ * Dashboard Plugin
+ * @memberof plugins
+ * @name Dashboard
+ * @class
+ * @prop {boolean} enabled if true, render the plugin
+ * @prop {number} rowHeight Rows have a static height
+ * @prop {object} cols Number of columns in this layout. default { lg: 6, md: 6, sm: 4, xs: 2, xxs: 1 }
+ * for more info about rowHeight and cols, see https://github.com/STRML/react-grid-layout#grid-layout-props
+ */
+class DashboardPlugin extends React.Component {
     static propTypes = {
-        enabled: PropTypes.bool
+        enabled: PropTypes.bool,
+        rowHeight: PropTypes.number,
+        cols: PropTypes.object
     };
     static defaultProps = {
-        enabled: true
+        enabled: true,
+        cols: { lg: 6, md: 6, sm: 4, xs: 2, xxs: 1 }
     };
     render() {
-        return this.props.enabled ? (<ContainerDimensions>{({ width, height }) => <WidgetsView width={width} height={height} />}</ContainerDimensions>) : null;
+        return this.props.enabled ? (<ContainerDimensions>{({ width, height }) => <WidgetsView width={width} height={height} rowHeight={this.props.rowHeight} cols={this.props.cols} />}</ContainerDimensions>) : null;
 
     }
 }
-
-const DashboardPlugin = Widgets;
 
 module.exports = {
     DashboardPlugin,

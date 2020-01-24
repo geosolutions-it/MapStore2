@@ -26,6 +26,8 @@ const wfsTable = require('../enhancers/wfsTable');
 const dependenciesToFilter = require('../enhancers/dependenciesToFilter');
 const dependenciesToOptions = require('../enhancers/dependenciesToOptions');
 const dependenciesToWidget = require('../enhancers/dependenciesToWidget');
+const dependenciesToExtent = require('../enhancers/dependenciesToExtent');
+const dependenciesToLayers = require('../enhancers/dependenciesToLayers');
 const dependenciesToMapProp = require('../enhancers/dependenciesToMapProp');
 //
 // connect widgets to dependencies, remote services and add base icons/tools
@@ -44,8 +46,10 @@ const TextWidget = compose(
 
 const MapWidget = compose(
     dependenciesToWidget,
+    dependenciesToLayers,
     dependenciesToMapProp('center'),
     dependenciesToMapProp('zoom'),
+    dependenciesToExtent,
     mapWidget
 )(require('./MapWidget'));
 

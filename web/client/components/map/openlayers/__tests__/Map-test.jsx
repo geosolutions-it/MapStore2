@@ -1217,4 +1217,19 @@ describe('OpenlayersMap', () => {
             expect(mouseWheelPresent.getActive()).toBe(true);
         });
     });
+    describe("hookRegister", () => {
+        it("default", () => {
+            const map = ReactDOM.render(<OpenlayersMap id="mymap" center={{y: 43.9, x: 10.3}} zoom={11}/>, document.getElementById("map"));
+            expect(map).toExist();
+            expect(ReactDOM.findDOMNode(map).id).toBe('mymap');
+            expect(MapUtils.getHook(MapUtils.ZOOM_TO_EXTENT_HOOK)).toExist();
+        });
+        it("with custom hookRegister", () => {
+            const customHooRegister = MapUtils.createRegisterHooks();
+            const map = ReactDOM.render(<OpenlayersMap hookRegister={customHooRegister} id="mymap" center={{y: 43.9, x: 10.3}} zoom={11}/>, document.getElementById("map"));
+            expect(map).toExist();
+            expect(ReactDOM.findDOMNode(map).id).toBe('mymap');
+            expect(customHooRegister.getHook(MapUtils.ZOOM_TO_EXTENT_HOOK)).toExist();
+        });
+    });
 });

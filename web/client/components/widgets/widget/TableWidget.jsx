@@ -1,3 +1,4 @@
+
 /*
  * Copyright 2017, GeoSolutions Sas.
  * All rights reserved.
@@ -12,16 +13,18 @@ const LoadingSpinner = require('../../misc/LoadingSpinner');
 const EmptyRowsView = require('../../data/featuregrid/EmptyRowsView');
 const loadingState = require('../../misc/enhancers/loadingState');
 const errorChartState = require('../enhancers/errorChartState');
+const {getWidgetFilterRenderers} = require('../../../plugins/widgets/getWidgetFilterRenderers');
 
 const FeatureGrid = errorChartState(loadingState(({ describeFeatureType }) => !describeFeatureType)(require('../../data/featuregrid/FeatureGrid')));
 
 const WidgetContainer = require('./WidgetContainer');
 
-module.exports = ({
+module.exports = getWidgetFilterRenderers(({
     id,
     title,
     loading,
     confirmDelete = false,
+    enableColumnFilters = false,
     headerStyle,
     icons,
     topRightItems,
@@ -32,6 +35,7 @@ module.exports = ({
         moreFeatures: () => {}
     },
     describeFeatureType,
+    filterRenderers,
     columnSettings,
     features,
     size,
@@ -67,6 +71,8 @@ module.exports = ({
                 columnSettings={columnSettings}
                 pageEvents={pageEvents}
                 virtualScroll={virtualScroll}
+                enableColumnFilters={enableColumnFilters}
+                filterRenderers={filterRenderers}
                 features={features}
                 pages={pages}
                 error={error}
@@ -76,5 +82,4 @@ module.exports = ({
                 pagination={pagination} />
         </BorderLayout>
     </WidgetContainer>
-
-    );
+    ));

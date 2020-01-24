@@ -51,8 +51,12 @@ module.exports = pure(({
     editWidget = () => { },
     onLayoutChange = () => { },
     ...actions
-} = {}) =>
-    (<ResponsiveReactGridLayout
+} = {}) => {
+    // checking if this widget appears among other dependenciesMap of other widgets (i.e. it is a parent table)
+    const allDependenciesMap = widgets.filter(({mapSync, dependenciesMap}) => mapSync && dependenciesMap).map(({dependenciesMap}) => dependenciesMap);
+    const getEnableColumnFilters = w => w.widgetType  === "table" && allDependenciesMap.filter(depMap => Object.keys(depMap).filter(d => depMap[d] && depMap[d].indexOf(w.id) !== -1).length > 0 ).length > 0;
+
+    return (<ResponsiveReactGridLayout
         key={id || "widgets-view"}
         useDefaultWidthProvider={useDefaultWidthProvider}
         measureBeforeMount={measureBeforeMount}
@@ -100,14 +104,17 @@ module.exports = pure(({
                 data-grid={w.dataGrid}
                 {...actions}
                 {...w}
+                quickFilters={getEnableColumnFilters(w) ? w.quickFilters : undefined}
                 toolsOptions={toolsOptions}
                 groups={getWidgetGroups(groups, w)}
                 showGroupColor={showGroupColor}
                 dependencies={dependencies}
+                enableColumnFilters={getEnableColumnFilters(w)}
                 canEdit={canEdit}
                 updateProperty={(...args) => updateWidgetProperty(w.id, ...args)}
                 toggleCollapse= {() => toggleCollapse(w)}
                 onDelete={() => deleteWidget(w)}
                 onEdit={() => editWidget(w)} /></div>))
         }
-    </ResponsiveReactGridLayout>));
+    </ResponsiveReactGridLayout>);
+});

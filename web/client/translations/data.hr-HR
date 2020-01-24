@@ -1445,9 +1445,9 @@
                     "preview": "Pregled",
                     "addLayer": "Dodaj sloj na kartu",
                     "useTheSelectedLayer": "Koristi odabrani sloj",
-                    "connectToAMap": "Poveži s kartom",
-                    "connectToTheMap": "Poveži s kartom",
-                    "selectMapToConnect": "Odaberi kartu za povezivanje",
+                    "connectToAMap": "Povežite se s drugim widgetom",
+                    "connectToTheMap": "Spojite se na drugi widget",
+                    "selectMapToConnect": "Odaberite widget za povezivanje",
                     "clearConnection": "Izbriši vezu"
                 },
                 "errors": {

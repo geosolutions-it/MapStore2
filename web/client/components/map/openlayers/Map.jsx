@@ -59,9 +59,11 @@ class OpenlayersMap extends React.Component {
         measurement: PropTypes.object,
         changeMeasurementState: PropTypes.func,
         registerHooks: PropTypes.bool,
+        hookRegister: PropTypes.object,
         interactive: PropTypes.bool,
         onCreationError: PropTypes.func,
         bbox: PropTypes.object,
+        wpsBounds: PropTypes.object,
         onWarning: PropTypes.func,
         maxExtent: PropTypes.array,
         limits: PropTypes.object
@@ -82,6 +84,7 @@ class OpenlayersMap extends React.Component {
         onLayerError: () => { },
         resize: 0,
         registerHooks: true,
+        hookRegister: mapUtils,
         interactive: true
     };
 
@@ -242,6 +245,7 @@ class OpenlayersMap extends React.Component {
                 this.map.removeControl(this.map.getControls().getArray().filter((ctl) => ctl instanceof Zoom)[0]);
             }
         }
+
         /*
          * Manage interactions programmatically.
          * map interactions may change, i.e. becoming enabled or disabled
@@ -551,13 +555,13 @@ class OpenlayersMap extends React.Component {
     };
 
     registerHooks = () => {
-        mapUtils.registerHook(mapUtils.RESOLUTIONS_HOOK, () => {
+        this.props.hookRegister.registerHook(mapUtils.RESOLUTIONS_HOOK, () => {
             return this.getResolutions();
         });
-        mapUtils.registerHook(mapUtils.RESOLUTION_HOOK, () => {
+        this.props.hookRegister.registerHook(mapUtils.RESOLUTION_HOOK, () => {
             return this.map.getView().getResolution();
         });
-        mapUtils.registerHook(mapUtils.COMPUTE_BBOX_HOOK, (center, zoom) => {
+        this.props.hookRegister.registerHook(mapUtils.COMPUTE_BBOX_HOOK, (center, zoom) => {
             var olCenter = CoordinatesUtils.reproject([center.x, center.y], 'EPSG:4326', this.props.projection);
             let view = this.createView(olCenter, zoom, this.props.projection, this.props.mapOptions && this.props.mapOptions.view, this.props.limits);
             let size = this.map.getSize();
@@ -573,13 +577,13 @@ class OpenlayersMap extends React.Component {
                 rotation: this.map.getView().getRotation()
             };
         });
-        mapUtils.registerHook(mapUtils.GET_PIXEL_FROM_COORDINATES_HOOK, (pos) => {
+        this.props.hookRegister.registerHook(mapUtils.GET_PIXEL_FROM_COORDINATES_HOOK, (pos) => {
             return this.map.getPixelFromCoordinate(pos);
         });
-        mapUtils.registerHook(mapUtils.GET_COORDINATES_FROM_PIXEL_HOOK, (pixel) => {
+        this.props.hookRegister.registerHook(mapUtils.GET_COORDINATES_FROM_PIXEL_HOOK, (pixel) => {
             return this.map.getCoordinateFromPixel(pixel);
         });
-        mapUtils.registerHook(mapUtils.ZOOM_TO_EXTENT_HOOK, (extent, { padding, crs, maxZoom: zoomLevel, duration } = {}) => {
+        this.props.hookRegister.registerHook(mapUtils.ZOOM_TO_EXTENT_HOOK, (extent, { padding, crs, maxZoom: zoomLevel, duration } = {}) => {
             let bounds = CoordinatesUtils.reprojectBbox(extent, crs, this.props.projection);
             // if EPSG:4326 with max extent (-180, -90, 180, 90) bounds are 0,0,0,0. In this case zoom to max extent
             // TODO: improve this to manage all degenerated bounding boxes.
