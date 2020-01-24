@@ -37,18 +37,21 @@ Use your favorite editor / IDE to develop and debug on the browser as needed.
 
 We suggest to use one of the following:
 
+* [Visual Studio Code](https://code.visualstudio.com/) with the following plugins:
+  * [ESLint](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint) `dbaeumer.vscode-eslint`
+  * [EditorConfig for VSCode](https://marketplace.visualstudio.com/items?itemName=EditorConfig.EditorConfig) `editorconfig.editorconfig`
 * [Atom](https://atom.io/) with the following plugins:
   * editorconfig
-    linter
-    linter-eslint
-    react
-    lcovinfo
-    minimap & minimap-highlight-selected
-    highlight-line & highlight-selected
+  * linter
+  * linter-eslint
+  * react
+  * lcovinfo
+  * minimap & minimap-highlight-selected
+  * highlight-line & highlight-selected
 * [Sublime Text Editor](http://www.sublimetext.com/) with the following plugins:
-    Babel
-    Babel snippets
-    Emmet
+  * Babel
+  * Babel snippets
+  * Emmet
 
 ### Redux Dev Tools
 
