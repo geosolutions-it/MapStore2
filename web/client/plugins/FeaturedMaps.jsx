@@ -56,6 +56,27 @@ class FeaturedMaps extends React.Component {
         this.props.enableFeaturedMaps(true);
     }
 
+    getShareOptions = (res) => {
+        if (res.category && res.category.name === 'GEOSTORY') {
+            return {
+                embedPanel: false,
+                advancedSettings: {
+                    homeButton: true
+                }
+            };
+        }
+
+        if (res.category && res.category.name === 'MAP') {
+            return {
+                embedPanel: true
+            };
+        }
+
+        return {
+            embedPanel: false
+        };
+    }
+
     render() {
         const items = this.props.items.length > 0 && this.props.items || this.props.previousItems || [];
         return (
@@ -68,7 +89,7 @@ class FeaturedMaps extends React.Component {
                 colProps={this.props.colProps}
                 viewerUrl={(res) => this.context.router.history.push('/' + this.makeShareUrl(res).url)}
                 getShareUrl={this.makeShareUrl}
-                shareOptions={{ embedPanel: false }} // embed is not enabled for featured maps. TODO: share options depending on the content type
+                shareOptions={this.getShareOptions} // TODO: share options depending on the content type
                 metadataModal={MetadataModal}
                 bottom={this.props.bottom}
                 style={items.length === 0 ? {display: 'none'} : {}}/>
