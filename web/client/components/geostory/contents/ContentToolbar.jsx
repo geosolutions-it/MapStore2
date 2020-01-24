@@ -96,7 +96,8 @@ export default function ContentToolbar({
         <div className="ms-content-toolbar">
             <Toolbar
                 btnDefaultProps={{
-                    className: BUTTON_CLASSES
+                    className: BUTTON_CLASSES,
+                    noTooltipWhenDisabled: true
                 }}
                 buttons={tools
                     .filter((id) => toolButtons[id])

@@ -87,7 +87,8 @@ const MapEditor = ({
                         }}
                         btnDefaultProps={{
                             className: "square-button-md no-border",
-                            bsStyle: "primary"
+                            bsStyle: "primary",
+                            noTooltipWhenDisabled: true
                         }}
                         buttons={buttons}/>
                 </div>
