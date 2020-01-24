@@ -49,7 +49,8 @@ const checkFileType = (file) => {
 const readFile = (onWarnings) => (file) => {
     const ext = FileUtils.recognizeExt(file.name);
     const type = file.type || FileUtils.MIME_LOOKUPS[ext];
-    const supportedProjections = ConfigUtils.getConfigProp('projectionDefs') || [];
+    const projectionDefs = ConfigUtils.getConfigProp('projectionDefs') || [];
+    const supportedProjections = (projectionDefs.length && projectionDefs.map(({code})  => code) || []).concat(["EPSG:4326", "EPSG:3857", "EPSG:900913"]);
     if (type === 'application/vnd.google-earth.kml+xml') {
         return FileUtils.readKml(file).then((xml) => {
             return FileUtils.kmlToGeoJSON(xml);
