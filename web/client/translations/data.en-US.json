@@ -1474,9 +1474,9 @@
                     "preview": "Preview",
                     "addLayer": "Add a layer to the map",
                     "useTheSelectedLayer": "Use the selected layer",
-                    "connectToAMap": "Connect to a map",
-                    "connectToTheMap": "Connect to the map",
-                    "selectMapToConnect": "Select the map to connect",
+                    "connectToAMap": "Connect to another widget",
+                    "connectToTheMap": "Connect to the other widget",
+                    "selectMapToConnect": "Select the widget to connect",
                     "clearConnection": "Clear connection"
                 },
                 "errors": {

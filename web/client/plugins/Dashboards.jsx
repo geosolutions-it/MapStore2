@@ -63,7 +63,7 @@ class Dashboards extends React.Component {
             xs: 12,
             sm: 6,
             lg: 3,
-            md: 4,
+            md: 2,
             className: 'ms-map-card-col'
         },
         maps: []

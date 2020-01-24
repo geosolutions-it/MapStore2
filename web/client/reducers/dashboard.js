@@ -10,7 +10,9 @@ const { SET_EDITING, SET_EDITOR_AVAILABLE, SHOW_CONNECTIONS, TRIGGER_SAVE_MODAL,
 const {INSERT, UPDATE, DELETE} = require('../actions/widgets');
 const {set} = require('../utils/ImmutableUtils');
 const {castArray} = require('lodash');
-function dashboard(state = {}, action) {
+function dashboard(state = {
+    showConnections: true
+}, action) {
     switch (action.type) {
     case SET_EDITOR_AVAILABLE: {
         return set("editor.available", action.available, state);

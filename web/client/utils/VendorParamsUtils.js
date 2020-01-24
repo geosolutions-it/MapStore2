@@ -18,12 +18,13 @@ module.exports = {
      * @param {object} options layer options
      * @returns params for the layer's request, properly manipulated
      */
-    optionsToVendorParams: (options = {}) => {
+    optionsToVendorParams: (options = {}, extraCQLFilter = null) => {
         const {layerFilter, filterObj: featureGridFilter} = options;
         let cqlFilters = [
             FilterUtils.isFilterValid(layerFilter) && !layerFilter.disabled && FilterUtils.toCQLFilter(layerFilter),
             FilterUtils.isFilterValid(featureGridFilter) && FilterUtils.toCQLFilter(featureGridFilter),
-            options && options.params && options.params.CQL_FILTER];
+            options && options.params && options.params.CQL_FILTER,
+            extraCQLFilter];
         let CQL_FILTER;
 
         cqlFilters = cqlFilters.filter( f => !!f);

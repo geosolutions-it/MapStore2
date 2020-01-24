@@ -23,6 +23,7 @@ module.exports = getWidgetFilterRenderers(({
     title,
     loading,
     confirmDelete = false,
+    enableColumnFilters = false,
     headerStyle,
     icons,
     topRightItems,
@@ -69,7 +70,7 @@ module.exports = getWidgetFilterRenderers(({
                 columnSettings={columnSettings}
                 pageEvents={pageEvents}
                 virtualScroll={virtualScroll}
-                enableColumnFilters
+                enableColumnFilters={enableColumnFilters}
                 filterRenderers={filterRenderers}
                 features={features}
                 pages={pages}

@@ -1473,9 +1473,9 @@
                     "preview": "Anteprima",
                     "addLayer": "Aggiungi un livello alla mappa",
                     "useTheSelectedLayer": "Usa il livello selezionato",
-                    "connectToAMap": "Connetti a una mappa",
-                    "connectToTheMap": "Connetti alla mappa",
-                    "selectMapToConnect": "Seleziona la mappa da connettere",
+                    "connectToAMap": "Connetti ad un altro widget",
+                    "connectToTheMap": "Connetti all'altro widget",
+                    "selectMapToConnect": "Seleziona il widget da connettere",
                     "clearConnection": "Disconnetti"
                 },
                 "errors": {

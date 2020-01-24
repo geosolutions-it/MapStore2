@@ -1473,9 +1473,9 @@
                     "preview": "Vista previa",
                     "addLayer": "Agregar una capa al mapa",
                     "useTheSelectedLayer": "Usar la capa seleccionada",
-                    "connectToAMap": "Conectar a un mapa",
-                    "connectToTheMap": "Conectarse al mapa",
-                    "selectMapToConnect": "Seleccione el mapa para conectarse",
+                    "connectToAMap": "Conectarse a otro widget",
+                    "connectToTheMap": "Conéctese al otro widget",
+                    "selectMapToConnect": "Seleccione el widget para conectarse",
                     "clearConnection": "Borrar conexión"
                 },
                 "errors": {

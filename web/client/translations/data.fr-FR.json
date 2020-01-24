@@ -1473,9 +1473,9 @@
                     "preview": "Aperçu",
                     "addLayer": "Ajouter une couche à la carte",
                     "useTheSelectedLayer": "Utiliser le calque sélectionné",
-                    "connectToAMap": "Se connecter à une carte",
-                    "connectToTheMap": "Se connecter à la carte",
-                    "selectMapToConnect": "Sélectionnez la carte à connecter",
+                    "connectToAMap": "Se connecter à un autre widget",
+                    "connectToTheMap": "Connectez-vous à l'autre widget",
+                    "selectMapToConnect": "Sélectionnez le widget pour vous connecter",
                     "clearConnection": "Effacer la connexion"
                 },
                 "errors": {

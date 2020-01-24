@@ -12,6 +12,7 @@ const LeafLetLayer = require('../Layer.jsx');
 const expect = require('expect');
 const mapUtils = require('../../../../utils/MapUtils');
 const {isNumber} = require('lodash');
+const MapUtils = require('../../../../utils/MapUtils');
 
 require('leaflet-draw');
 
@@ -632,5 +633,20 @@ describe('LeafletMap', () => {
         event.layer.layerErrorStream$.next({ target: { layerId: 2 }});
         event.layer.layerLoadStream$.next();
         expect(spyLayerError).toHaveBeenCalled();
+    });
+    describe("hookRegister", () => {
+        it("default", () => {
+            const map = ReactDOM.render(<LeafletMap id="mymap" center={{y: 43.9, x: 10.3}} zoom={11} mapOptions={{zoomAnimation: false}}/>, document.getElementById("container"));
+            expect(map).toExist();
+            expect(ReactDOM.findDOMNode(map).id).toBe('mymap');
+            expect(MapUtils.getHook(MapUtils.ZOOM_TO_EXTENT_HOOK)).toExist();
+        });
+        it("with custom hookRegister", () => {
+            const customHooRegister = MapUtils.createRegisterHooks();
+            const map = ReactDOM.render(<LeafletMap hookRegister={customHooRegister} id="mymap" center={{y: 43.9, x: 10.3}} zoom={11} mapOptions={{zoomAnimation: false}}/>, document.getElementById("container"));
+            expect(map).toExist();
+            expect(ReactDOM.findDOMNode(map).id).toBe('mymap');
+            expect(customHooRegister.getHook(MapUtils.ZOOM_TO_EXTENT_HOOK)).toExist();
+        });
     });
 });
