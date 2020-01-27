@@ -170,6 +170,8 @@ class StandardApp extends React.Component {
                     callback(loaded.reduce((previous, current) => {
                         return { ...previous, ...current.plugin };
                     }, {}), loaded.map(p => p.translations).filter(p => p !== ""));
+                }).catch(() => {
+                    callback({}, []);
                 });
             }).catch(() => {
                 callback({}, []);
