@@ -39,9 +39,9 @@ import net.sf.json.JSONObject;
  */
 @Controller
 public class UploadPluginController {
-    @Value("${extensions.folder:dist/extensions}") private String bundlesPath;
-    @Value("${extensions.registry:extensions.json}") private String extensionsConfig;
-    @Value("${context.plugins.config:pluginsConfig.json}") private String pluginsConfig;
+    @Value("${extensions.folder:dist/extensions}") private String bundlesPath = "dist/extensions";
+    @Value("${extensions.registry:extensions.json}") private String extensionsConfig = "extensions.json";
+    @Value("${context.plugins.config:pluginsConfig.json}") private String pluginsConfig = "pluginsConfig.json";
     
     @Autowired
     ServletContext context;
@@ -103,6 +103,9 @@ public class UploadPluginController {
         }
        
         zip.close();
+        if (plugin == null) {
+            throw new IOException("Invalid bundle: index.json missing");
+        }
         return plugin.toString();
     }
 
@@ -166,7 +169,11 @@ public class UploadPluginController {
         if (config != null) {
             JSONObject extension = new JSONObject();
             extension.accumulate("bundle", pluginBundle);
-            config.replace(pluginName,extension);
+            if (config.containsKey(pluginName)) {
+                config.replace(pluginName,extension);
+            } else {
+                config.accumulate(pluginName,extension);
+            }
             storeExtensionsConfig(config);
         }
     }
@@ -195,6 +202,11 @@ public class UploadPluginController {
                 outFile.write(buffer, 0, read);
            }
         }
-        
     }
+
+    public void setContext(ServletContext context) {
+        this.context = context;
+    }
+    
+    
 }

@@ -6,12 +6,16 @@ import { getPlugins, getReducers, getEpics } from "../../web/client/utils/Plugin
 import { createStore, updateStore } from "../../web/client/utils/StateUtils";
 
 import Theme from "../../web/client/components/theme/Theme";
+import Localized from "../../web/client/components/I18N/Localized";
 
 import plugins from "./plugins";
+import rootTranslations from "../../web/client/translations/data.en-US.json";
+import bundleTranslations from "./bundle/translations/data.en-US.json";
 
 const pluginsConfig = ["Map", "Toolbar", "ZoomIn", "ZoomOut", "Extension"];
+const LOCALE = "en-US";
 
-const startApp = () => {
+const startApp = (messages) => {
     const initialState = {
         map: {
             center: {
@@ -45,14 +49,15 @@ const startApp = () => {
 
         const App = ({ mergedPlugins }) => {
             return (<Provider store={store}>
-                <Theme version="noversion" path="../../dist/themes">
-                    <Container plugins={mergedPlugins} onPluginLoaded={updatePlugins}/>
-                </Theme>
+                <Localized messages={messages} locale={LOCALE}>
+                    <Theme version="noversion" path="../../dist/themes">
+                        <Container plugins={mergedPlugins} onPluginLoaded={updatePlugins}/>
+                    </Theme>
+                </Localized>
             </Provider>);
         };
         const merged = getPlugins({ ...plugins, ...extensions.default });
         ReactDOM.render(<App mergedPlugins={merged} />, document.getElementById("container"));
     });
 };
-
-startApp();
+startApp({...rootTranslations.messages, ...bundleTranslations.messages});

@@ -63,13 +63,13 @@ public class ConfigController {
         }
     }
     
-    @Value("${datadir.location:}") private String dataDir;
-    @Value("${allowed.resources:localConfig,pluginsConfig,extensions}") private String allowedResources;
+    @Value("${datadir.location:}") private String dataDir = "";
+    @Value("${allowed.resources:localConfig,pluginsConfig,extensions}") private String allowedResources = "localConfig,pluginsConfig,extensions";
     @Value("${overrides.mappings:}") private String mappings;
-    @Value("${overrides.config:}") private String overrides;
+    @Value("${overrides.config:}") private String overrides = "";
     
     @Autowired
-    ServletContext context;
+    private ServletContext context;
     
     /**
      * Loads the resource, from the configured location (datadir or web root).
@@ -91,7 +91,7 @@ public class ConfigController {
         .filter(new Predicate<String>() {
             @Override
             public boolean test(String path) {
-                return new File(path).exists();
+                return path != null && new File(path).exists();
             }
             
         })
@@ -210,5 +210,21 @@ public class ConfigController {
             }
             
         });
+    }
+
+    public void setContext(ServletContext context) {
+        this.context = context;
+    }
+
+    public void setDataDir(String dataDir) {
+        this.dataDir = dataDir;
+    }
+
+    public void setMappings(String mappings) {
+        this.mappings = mappings;
+    }
+
+    public void setOverrides(String overrides) {
+        this.overrides = overrides;
     }
 }
