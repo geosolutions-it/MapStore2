@@ -1,0 +1,7 @@
+# Documentation guidelines
+
+Each new feature/tool in MapStore should be documented in the [User Guide](https://mapstore.readthedocs.io/en/latest/user-guide/home-page/) in order to explain the involved functionalities and illustrate how it works.
+
+All new front-end technologies, development procedures, best practices and guidelines on the involved components in MapStore should be properly documented too: the [Developers Guide](https://mapstore.readthedocs.io/en/latest/developer-guide/) must be kept up-to-date for this.
+
+Both for Developer and User guides, the documentation is built on the [Read the Docs](https://docs.readthedocs.io/en/latest/index.html#) documentation hosting platform. The MapStore's documentation files are available in the [docs/](https://github.com/geosolutions-it/MapStore2/tree/master/docs) section of this repository; [Mkdocs](https://docs.readthedocs.io/en/latest/intro/getting-started-with-mkdocs.html) is used in MapStore as documentation generator, you can look at the available [online documentation](https://docs.readthedocs.io/en/latest/intro/getting-started-with-mkdocs.html#getting-started-with-mkdocs) for more information on how to use it (MapStore uses his own customized [MkDocs Material theme](https://squidfunk.github.io/mkdocs-material/) for both User and Developer documentations).

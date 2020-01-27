@@ -1,5 +1,7 @@
 # Custom Dependencies
-Mapstore has some custom dependencies in order to fix bugs not integrated in the official libraries yet
+
+Mapstore has some custom dependencies in order to fix bugs not integrated in the official libraries yet.
+All these customized libraries are available on npm registry.
 
 Here is a list of customizations:
 
@@ -12,14 +14,15 @@ Here is a list of customizations:
 | jsdoc | 3.4.3 | #1978 | ES6 syntax not parsed by Docma, so we published "@geosolutions/jsdoc 3.4.4" with other related dependencies also on our npm, like acorn-jsx, espree and tv4 | https://github.com/geosolutions-it/jsdoc/tree/release |
 | acorn-jsx | 4.0.1 | #1978 | Added support for instance properties (e.g. state), we published "@geosolutions/acorn-jsx 4.0.2" | https://github.com/geosolutions-it/acorn-jsx/tree/release |
 
-
 ## Aliases
+
 Only proj4 and react-joyride are using aliases in order to maintain original webpack requires like:
+
 - const proj4 = require("proj4");
 - const joyride = require('react-joyride').default;
 
 see [this](https://github.com/geosolutions-it/MapStore2/blob/master/build/buildConfig.js#L82) for current status of aliases
 
 ## More info
-[Here](https://github.com/geosolutions-it/MapStore2/issues/4569) you can find more information about customization
 
+[Here](https://github.com/geosolutions-it/MapStore2/issues/4569) you can find more information about customization

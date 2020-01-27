@@ -78,4 +78,13 @@ describe('mapimport reducer', () => {
         expect(state).toExist();
         expect(state.success).toBe(MESSAGE);
     });
+    it('state change on setLayers when import is canceled', () => {
+        const action = setLayers(null);
+        const state = mapimport( undefined, action);
+        expect(state).toExist();
+        expect(state.layers).toBe(null);
+        expect(state.errors).toBe(null);
+        expect(state.selected).toBe(null);
+        expect(state.success).toBe(null);
+    });
 });

@@ -96,9 +96,9 @@ It is strongly recommended that you run
 before every commit.  This will catch many problems quickly, and it is much
 faster than waiting for the Travis CI integration tests to run.
 
-The `test` build target runs a number of quick tests on your code.  
+The `test` build target runs a number of quick tests on your code.
 
-The `lint` build target runs ESLint checks on your code.  
+The `lint` build target runs ESLint checks on your code.
 
 
 ### File Naming Conventions
@@ -125,8 +125,8 @@ In addition, take care of adding the standard file header in each javascript / c
 
 This is the standard file header:
 
-```
-/**
+```javascript
+/*
  * Copyright <year>, GeoSolutions Sas.
  * All rights reserved.
  *
@@ -208,7 +208,7 @@ your branch so that it can be merged automatically.
 
 ## Improving Documentation
 
-All MapStore objects (i.e. components, plugins, actions, reducers etc) should be properly documented in their JS documentation, please follow the required **JSDoc** syntax looking at the online documentation available in the [JSDoc web site](http://usejsdoc.org/index.html) for more details. 
+All MapStore objects (i.e. components, plugins, actions, reducers etc) should be properly documented in their JS documentation, please follow the required **JSDoc** syntax looking at the online documentation available in the [JSDoc web site](http://usejsdoc.org/index.html) for more details.
 
 Thank you for every contribution that helps to keep updated the MapStore's documentation.
 
