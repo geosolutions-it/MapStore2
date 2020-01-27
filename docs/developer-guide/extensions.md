@@ -102,10 +102,12 @@ To distribute your extension so that it can be uploaded to a running MapStore in
  * an index.json file that describes the extension, an example follows
  * optionally, a translations folder with localized message files used by the extension (in one or more languages of your choice)
 
+You will find both the index.json file and a sample translation folder in build/extensions/bundle.
+
 #### index.json example
 ```javascript
 {
-    plugins: [
+    "plugins": [
         {
             "name": "Extension",
             "dependencies": [
