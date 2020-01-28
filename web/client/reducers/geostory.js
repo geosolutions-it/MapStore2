@@ -6,7 +6,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 import { get, isString, isNumber, findIndex, find, isObject, isArray, castArray } from "lodash";
-import { set, unset, arrayUpdate, compose } from '../utils/ImmutableUtils';
+import { set, unset, arrayUpdate, compose,
+    arrayDelete } from '../utils/ImmutableUtils';
 import { getEffectivePath, MediaTypes } from '../utils/GeoStoryUtils';
 
 import {
@@ -29,7 +30,8 @@ import {
     TOGGLE_SETTINGS_PANEL,
     UPDATE,
     UPDATE_CURRENT_PAGE,
-    UPDATE_SETTING
+    UPDATE_SETTING,
+    REMOVE_RESOURCE
 } from '../actions/geostory';
 
 /**
@@ -192,6 +194,22 @@ export default (state = INITIAL_STATE, action) => {
                     newState = set(path, undefined, newState);
                 });
         }
+        return newState;
+    }
+    case REMOVE_RESOURCE: {
+        const {id, mediaType} = action;
+
+        let newState = arrayDelete("currentStory.resources", { id }, state);        
+        state.currentStory.sections.reduce((acc, section) =>  ([...acc, ...getContentsByResourceId(id, "sections[", section)])
+            , [])
+            .map(rawPath => {
+                const resIdPath = getEffectivePath(`currentStory.${rawPath}.resourceId`, state);
+                newState = unset(resIdPath, newState);
+                if (mediaType === MediaTypes.MAP) {
+                    const customMapPath = getEffectivePath(`currentStory.${rawPath}.map`, state);
+                    newState = unset(customMapPath, newState);
+                }
+            });
         return newState;
     }
     case LOADING_GEOSTORY: {

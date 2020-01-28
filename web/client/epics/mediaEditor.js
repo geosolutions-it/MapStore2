@@ -7,7 +7,7 @@
  */
 import {Observable} from 'rxjs';
 import uuid from 'uuid';
-import {findKey} from 'lodash';
+import {findKey, get} from 'lodash';
 
 import {
     loadMedia,
@@ -23,7 +23,8 @@ import {
     SHOW,
     ADDING_MEDIA,
     EDITING_MEDIA,
-    IMPORT_IN_LOCAL
+    IMPORT_IN_LOCAL,
+    REMOVE_MEDIA
 } from '../actions/mediaEditor';
 
 import { HIDE, SAVE, hide as hideMapEditor, SHOW as MAP_EDITOR_SHOW} from '../actions/mapEditor';
@@ -41,15 +42,26 @@ export const loadMediaEditorDataEpic = (action$, store) =>
     action$.ofType(SHOW, LOAD_MEDIA)
         .switchMap(() => {
             return mediaAPI("geostory").load(store) // store is required for local data (e.g. local geostory data)
-                .switchMap(results =>
-                    results && Observable.from(
-                        results.map(r => loadMediaSuccess({
-                            mediaType: r.mediaType,
-                            sourceId: r.sourceId,
-                            params: {mediaType: r.mediaType},
-                            resultData: {resources: r.resources, totalCount: r.totalCount}
-                        }))
-                    ) || Observable.empty()
+                .switchMap(results => {
+                    const sId = sourceIdSelector(store.getState());
+                    const oldResources = Object.keys(get(store.getState(), "mediaEditor.data", {}));
+                    const updateActions = oldResources.reduce((acc, type) =>
+                        ({...acc, [type]: loadMediaSuccess({
+                            mediaType: type,
+                            sourceId: sId,
+                            params: {type},
+                            resultData: {resources: [], totalCount: 0}})})
+                    , {});
+                    return (Object.keys(updateActions).length > 0 || results) && Observable.from(
+                        Object.values(results.reduce((acc, r) =>
+                            ({...acc, [r.mediaType]: loadMediaSuccess({
+                                mediaType: r.mediaType,
+                                sourceId: r.sourceId,
+                                params: {mediaType: r.mediaType},
+                                resultData: {resources: r.resources, totalCount: r.totalCount}
+                            })}), {...updateActions})
+                        )) || Observable.empty();
+                }
                 );
         });
 
@@ -193,4 +205,25 @@ export const editRemoteMap = (action$, store) =>
                         hideMapEditor()
                     ));
             }).takeUntil(action$.ofType(HIDE));
+        });
+
+/**
+ * Handles delete media events:
+ * - API callback
+ * - reload data of the updated source
+ * @memberof epics.mediaEditor
+ * @param {Observable} action$ stream of actions
+ * @param {object} store redux store
+ */
+export const removeMediaEpic = (action$, store) =>
+    action$.ofType(REMOVE_MEDIA)
+        .switchMap(({mediaType}) => {
+            const sourceId = sourceIdSelector(store.getState());
+            const handler = mediaAPI(sourceId).remove(mediaType, store);
+            return handler // store is required both for some custom auth, or to dispatch actions in case of local
+            // TODO: saving state (for loading spinners), errors
+                .switchMap(() => {
+                    return Observable.of(
+                        loadMedia(undefined, currentMediaTypeSelector(store.getState()), SourceTypes.GEOSTORY));
+                });
         });

@@ -17,7 +17,8 @@ import {
     mediaEditorEditMap,
     reloadMediaResources,
     importInLocalSource,
-    editRemoteMap
+    editRemoteMap,
+    removeMediaEpic
 } from '../mediaEditor';
 import {
     show as showMapEditor,
@@ -30,6 +31,7 @@ import {
     show,
     setEditingMedia,
     importInLocal,
+    removeMedia,
     ADDING_MEDIA,
     EDITING_MEDIA,
     LOAD_MEDIA_SUCCESS,
@@ -391,5 +393,40 @@ describe('MediaEditor Epics', () => {
                 }
             }
         });
+    });
+    it('removeMedia epic handle the remove media  stream', (done) => {
+        const NUM_ACTIONS = 1;
+        const sourceId = "geostory";
+        testEpic(removeMediaEpic, NUM_ACTIONS, removeMedia({type: "image"}), (actions) => {
+            expect(actions.length).toEqual(NUM_ACTIONS);
+            actions.map((a) => {
+                switch (a.type) {
+                case LOAD_MEDIA:
+                    expect(a.params).toEqual(undefined);
+                    expect(a.mediaType).toEqual("image");
+                    expect(a.sourceId).toEqual(sourceId);
+                    break;
+                default: expect(true).toEqual(false);
+                    break;
+                }
+            });
+            done();
+        }, {
+            geostory: {
+                currentStory: {
+                    resources: [{
+                        id: "resId",
+                        type: "image"
+                    }]}
+            },
+            mediaEditor: {
+                settings: {
+                    sourceId,
+                    mediaType: "image"
+                },
+                selected: "resId"
+            }
+        });
+
     });
 });
