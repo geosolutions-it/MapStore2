@@ -1652,6 +1652,13 @@
                     "unknownError": "Es gab einen Fehler den Kontext geladen. Bitte kontaktieren Sie den Administrator",
                     "notFound": "Der Kontext Sie zugreifen möchten, existiert nicht"
                 },
+                "template": {
+                    "title": "Fehler beim Laden der Vorlage",
+                    "notAccessible": "Sie haben keine Berechtigung, auf diese Vorlage zuzugreifen. Bitte wenden Sie sich an den Eigentümer der Ressource",
+                    "pleaseLogin": "Diese Vorlage ist nicht öffentlich. Bitte versuchen Sie sich einzuloggen",
+                    "unknownError": "Beim Laden der Vorlage ist ein Fehler aufgetreten. Bitte wenden Sie sich an den Administrator",
+                    "notFound": "Die Vorlage, auf die Sie zugreifen möchten, ist nicht vorhanden"
+                },
                 "map": {
                     "notAccessible": "Sie haben nicht das Recht, die Erlaubnis zu dieser Karte zuzugreifen. Bitte kontaktieren Sie den Administrator-Zugriff zu erhalten",
                     "pleaseLogin": "Diese Karte oder die Karte ist nicht öffentlich. Bitte versuchen Sie sich einloggen",

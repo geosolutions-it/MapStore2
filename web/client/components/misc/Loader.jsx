@@ -15,9 +15,9 @@ const sizeToClass = size => size > 100
         ? 'medium'
         : 'small';
 
-const Loader = ({ size, style = {}, className}) => (<div className={className}
+const Loader = ({ size, style = {}, className, hidden }) => (<div className={className}
     style={{ width: size, height: size, overflow: "hidden", ...style }}>
-    <div className={`mapstore-${sizeToClass(size)}-size-loader`}></div>
+    {!hidden && <div className={`mapstore-${sizeToClass(size)}-size-loader`}></div>}
 </div>);
 
 Loader.propTypes = {

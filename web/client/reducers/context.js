@@ -5,7 +5,8 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import { SET_CURRENT_CONTEXT, LOADING, SET_RESOURCE, CLEAR_CONTEXT, UPDATE_USER_PLUGIN, TOGGLE_FAVOURITE_TEMPLATE } from "../actions/context";
+import { SET_CURRENT_CONTEXT, LOADING, SET_RESOURCE, CLEAR_CONTEXT, UPDATE_USER_PLUGIN, TOGGLE_FAVOURITE_TEMPLATE, SET_TEMPLATE_DATA,
+    SET_TEMPLATE_LOADING, SET_MAP_TEMPLATES_LOADED } from "../actions/context";
 import { find, get } from 'lodash';
 import {set, arrayUpdate} from '../utils/ImmutableUtils';
 
@@ -57,6 +58,19 @@ export default (state = {}, action) => {
         const templates = get(state, 'currentContext.templates', [])
             .map(template => template.id === action.id ? {...template, favourite: !template.favourite} : template);
         return set('currentContext.templates', templates, state);
+    }
+    case SET_TEMPLATE_DATA: {
+        const templates = get(state, 'currentContext.templates', [])
+            .map(template => template.id === action.id ? {...template, data: action.data, dataLoaded: true} : template);
+        return set('currentContext.templates', templates, state);
+    }
+    case SET_TEMPLATE_LOADING: {
+        const templates = get(state, 'currentContext.templates', [])
+            .map(template => template.id === action.id ? {...template, loading: action.loadingValue} : template);
+        return set('currentContext.templates', templates, state);
+    }
+    case SET_MAP_TEMPLATES_LOADED: {
+        return set('mapTeplatesLoadError', action.error, set('mapTemplatesLoaded', action.loaded, state));
     }
     default:
         return state;

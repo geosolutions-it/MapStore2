@@ -13,17 +13,19 @@ import { Glyphicon } from 'react-bootstrap';
 import { createSelector } from 'reselect';
 import { createPlugin } from '../utils/PluginsUtils';
 
-import { setControlProperty, toggleControl } from '../actions/controls';
-import { templatesSelector } from '../selectors/context';
-import { mergeTemplate, replaceTemplate, toggleFavouriteTemplate } from '../actions/context';
+import { toggleControl } from '../actions/controls';
+import { templatesSelector, mapTemplatesLoadedSelector } from '../selectors/context';
+import { openMapTemplatesPanel, mergeTemplate, replaceTemplate, toggleFavouriteTemplate } from '../actions/context';
 
 import Message from '../components/I18N/Message';
+import Loader from '../components/misc/Loader';
 import DockPanel from '../components/misc/panels/DockPanel';
 import MapTemplatesPanel from '../components/maptemplates/MapTemplatesPanel';
 
 const mapTemplates = ({
     active,
     templates = [],
+    templatesLoaded,
     onToggleControl = () => {},
     onMergeTemplate = () => {},
     onReplaceTemplate = () => {},
@@ -38,11 +40,12 @@ const mapTemplates = ({
             title={<Message msgId="mapTemplates.title"/>}
             style={{ height: 'calc(100% - 30px)' }}
             onClose={onToggleControl}>
-            <MapTemplatesPanel
+            {!templatesLoaded && <div className="map-templates-loader"><Loader size={352}/></div>}
+            {templatesLoaded && <MapTemplatesPanel
                 templates={templates}
                 onMergeTemplate={onMergeTemplate}
                 onReplaceTemplate={onReplaceTemplate}
-                onToggleFavourite={onToggleFavourite}/>
+                onToggleFavourite={onToggleFavourite}/>}
         </DockPanel>
     );
 };
@@ -50,9 +53,11 @@ const mapTemplates = ({
 const MapTemplatesPlugin = connect(createSelector(
     state => get(state, 'controls.mapTemplates.enabled'),
     templatesSelector,
-    (active, templates) => ({
+    mapTemplatesLoadedSelector,
+    (active, templates, templatesLoaded) => ({
         active,
-        templates
+        templates,
+        templatesLoaded
     })
 ), {
     onToggleControl: toggleControl.bind(null, 'mapTemplates', 'enabled'),
@@ -69,7 +74,7 @@ export default createPlugin('MapTemplates', {
             position: 998,
             text: <Message msgId="mapTemplates.title" />,
             icon: <Glyphicon glyph="1-map" />,
-            action: setControlProperty.bind(null, "mapTemplates", "enabled", true, true),
+            action: openMapTemplatesPanel,
             priority: 2,
             doNotHide: true
         }

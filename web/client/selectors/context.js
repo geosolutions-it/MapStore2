@@ -29,6 +29,7 @@ export const currentTitleSelector = state => state.context && state.context.curr
 const monitoredStateSelector = state => getMonitoredState(state, monitorStateSelector(state));
 
 export const isLoadingSelector = state => get(state, 'context.loading');
+export const loadFlagsSelector = state => get(state, 'context.loadFlags');
 
 /**
  * returns the default plugins for context. By default always adds the Context plugin
@@ -53,6 +54,8 @@ export const templatesSelector = createSelector(
     currentContextSelector,
     (context = {}) => context.templates
 );
+export const mapTemplatesLoadedSelector = state => state.context && state.context.mapTemplatesLoaded;
+export const mapTemplatesLoadErrorSelector = state => state.context && state.context.mapTemplatesLoadError;
 
 /**
  * Selects the plugins configuration depending on the current state.

@@ -464,8 +464,7 @@ const Api = {
      *      .catch(error => error);
      *
      */
-    searchListByAttributes: (filter, options) => {
-        const url = "/extjs/search/list";
+    searchListByAttributes: (filter, options, url = "/extjs/search/list") => {
         const xmlFilter = xmlBuilder.buildObject(filter);
         return axios.post(
             url,

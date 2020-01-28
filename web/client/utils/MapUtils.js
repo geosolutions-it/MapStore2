@@ -385,7 +385,8 @@ const generateNewUUIDs = (mapConfig = {}) => {
 
     return set('map.backgrounds', get(mapConfig, 'map.backgrounds', []).map(background => ({...background, id: oldIdToNew[background.id]})),
         set('widgetsConfig', {
-            collapsed: mapKeys(get(mapConfig, 'widgetsConfig.collapsed', {}), (value, key) => oldIdToNew[key]),
+            collapsed: mapValues(mapKeys(get(mapConfig, 'widgetsConfig.collapsed', {}), (value, key) => oldIdToNew[key]), (value) =>
+                ({...value, layouts: mapValues(value.layouts, (layout) => ({...layout, i: oldIdToNew[layout.i]}))})),
             layouts: mapValues(get(mapConfig, 'widgetsConfig.layouts', {}), (value) =>
                 value.map(layout => ({...layout, i: oldIdToNew[layout.i]}))),
             widgets: get(mapConfig, 'widgetsConfig.widgets', [])

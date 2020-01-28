@@ -1652,6 +1652,13 @@
                     "unknownError": "Hubo un error al cargar el contexto. Por favor, póngase en contacto con el administrador",
                     "notFound": "El contexto que está intentando acceder no existe"
                 },
+                "template": {
+                    "title": "Error al cargar la plantilla",
+                    "notAccessible": "No tienes permiso para acceder a esta plantilla. Por favor, póngase en contacto con el propietario del recurso",
+                    "pleaseLogin": "Esta plantilla no es pública. Por favor intente iniciar sesión",
+                    "unknownError": "Se produjo un error al cargar la plantilla. Por favor contacte al administrador",
+                    "notFound": "La plantilla a la que intentas acceder no existe"
+                },
                 "map": {
                     "notAccessible": "Usted no tiene permiso derecho de acceso a este mapa. Por favor, póngase en contacto con el administrador para obtener acceso",
                     "pleaseLogin": "Este mapa o el mapa no es público. Por favor, intente iniciar la sesión",

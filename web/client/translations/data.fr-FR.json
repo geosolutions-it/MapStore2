@@ -1652,6 +1652,13 @@
                     "unknownError": "Il y avait une erreur de chargement du contexte. S'il vous plaît contacter l'administrateur",
                     "notFound": "Le contexte que vous essayez d'accéder n'existe pas"
                 },
+                "template": {
+                    "title": "Erreur lors du chargement du modèle",
+                    "notAccessible": "Vous n'êtes pas autorisé à accéder à ce modèle. Veuillez contacter le propriétaire de la ressource",
+                    "pleaseLogin": "Ce modèle n'est pas public. Veuillez essayer de vous connecter",
+                    "unknownError": "This template is not public. Please try to login",
+                    "notFound": "Le modèle auquel vous essayez d'accéder n'existe pas"
+                },
                 "map": {
                     "notAccessible": "Vous ne disposez pas de l'autorisation droit d'accès à cette carte. S'il vous plaît contacter l'administrateur pour obtenir l'accès",
                     "pleaseLogin": "Cette carte ou la carte ne sont pas publiques. S'il vous plaît essayer de vous connecter",

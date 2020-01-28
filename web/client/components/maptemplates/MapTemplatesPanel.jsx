@@ -72,6 +72,7 @@ export default ({
         template,
         title: template.name,
         description: template.description,
+        loading: template.loading,
         preview:
             <div className="map-templates-preview">
                 {template.thumbnail && template.thumbnail !== 'NODATA' ?

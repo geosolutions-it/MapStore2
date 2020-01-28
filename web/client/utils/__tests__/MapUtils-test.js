@@ -6,6 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 var expect = require('expect');
+const { keys } = require('lodash');
 
 var {
     RESOLUTIONS_HOOK,
@@ -32,7 +33,8 @@ var {
     parseLayoutValue,
     prepareMapObjectToCompare,
     updateObjectFieldKey,
-    compareMapChanges
+    compareMapChanges,
+    mergeMapConfigs
 } = require('../MapUtils');
 
 const POINT = "Point";
@@ -2156,5 +2158,214 @@ describe('Test the MapUtils', () => {
         expect(clone2.test3).toExist();
         expect(clone3.test3).toNotExist();
         expect(clone3.test4).toNotExist();
+    });
+
+    it('mergeMapConfigs', () => {
+        const cfg1 = {
+            catalogServices: {
+                services: {
+                    "Demo CSW Service": {
+                        autoload: true,
+                        title: "Demo CSW Service",
+                        type: "csw",
+                        url: "url"
+                    }
+                }
+            },
+            map: {
+                backgrounds: [],
+                center: {
+                    x: 20.942519296828383,
+                    y: 40.953969320283846,
+                    crs: "EPSG:4326"
+                },
+                groups: [{
+                    id: "Default",
+                    title: "Default",
+                    expanded: true
+                }, {
+                    id: "group",
+                    title: "group"
+                }],
+                layers: [{
+                    id: "layer1",
+                    group: undefined
+                }, {
+                    id: "layer2",
+                    group: undefined
+                }, {
+                    id: "layer3",
+                    group: "group"
+                }, {
+                    id: "annotations"
+                }],
+                projection: "EPSG:4326",
+                units: "m"
+            },
+            widgetsConfig: {}
+        };
+        const cfg2 = {
+            catalogServices: {
+                services: {
+                    "Demo WMS Service": {
+                        title: "Demo WMS Service",
+                        type: "wms",
+                        url: "url"
+                    }
+                }
+            },
+            map: {
+                backgrounds: [{
+                    id: "layer1",
+                    thumbnail: "data"
+                }],
+                center: {
+                    x: 14.889337569475176,
+                    y: 48.08183013677853,
+                    crs: "EPSG:4326"
+                },
+                groups: [{
+                    id: "Default",
+                    title: "Default",
+                    expanded: true
+                }, {
+                    id: "group2",
+                    title: "group"
+                }],
+                layers: [{
+                    id: "layer1",
+                    group: "background"
+                }, {
+                    id: "layer2",
+                    group: "group2"
+                }, {
+                    id: "layer3",
+                    group: undefined
+                }],
+                projection: "EPSG:900913",
+                units: "m"
+            },
+            widgetsConfig: {
+                collapsed: {
+                    "widget1": {
+                        layouts: {
+                            lg: {
+                                w: 2,
+                                h: 1,
+                                x: 4,
+                                y: 3,
+                                i: "widget1",
+                                moved: false,
+                                "static": false
+                            },
+                            xxs: {
+                                w: 1,
+                                h: 1,
+                                x: 0,
+                                y: 3,
+                                i: "widget1",
+                                moved: false,
+                                "static": false
+                            }
+                        }
+                    }
+                },
+                layouts: {
+                    lg: [{
+                        w: 2,
+                        h: 1,
+                        x: 4,
+                        y: 3,
+                        i: "widget1",
+                        moved: false,
+                        "static": false
+                    }],
+                    xxs: [{
+                        w: 1,
+                        h: 1,
+                        x: 0,
+                        y: 3,
+                        i: "widget1",
+                        moved: false,
+                        "static": false
+                    }]
+                },
+                widgets: [{
+                    id: "widget1",
+                    layer: {
+                        id: "layer2",
+                        group: "group2"
+                    }
+                }]
+            }
+        };
+
+        const cfg = mergeMapConfigs(cfg1, cfg2);
+
+        expect(cfg).toExist();
+        expect(cfg.catalogServices).toExist();
+        expect(cfg.catalogServices.services).toExist();
+
+        const servicesKeys = keys(cfg.catalogServices.services).sort();
+        expect(servicesKeys).toEqual(["Demo CSW Service", "Demo WMS Service"]);
+        expect(cfg.catalogServices.services["Demo CSW Service"]).toEqual(cfg1.catalogServices.services["Demo CSW Service"]);
+        expect(cfg.catalogServices.services["Demo WMS Service"]).toEqual(cfg2.catalogServices.services["Demo WMS Service"]);
+
+        expect(cfg.map).toExist();
+        expect(cfg.map.backgrounds.length).toBe(1);
+        expect(cfg.map.backgrounds[0].id).toNotBe(cfg2.map.backgrounds[0].id);
+        expect(cfg.map.backgrounds[0].id.length).toBe(36);
+        expect(cfg.map.backgrounds[0].thumbnail).toBe("data");
+        expect(cfg.map.center).toEqual({
+            x: 20.942519296828383,
+            y: 40.953969320283846,
+            crs: "EPSG:4326"
+        });
+        expect(cfg.map.groups.length).toBe(3);
+        expect(cfg.map.groups[0].id).toBe("Default");
+        expect(cfg.map.groups[1].id).toBe("group");
+        expect(cfg.map.groups[2].id).toBe("group2");
+        expect(cfg.map.layers.length).toBe(7);
+        expect(cfg.map.layers[0].id).toBe(cfg.map.backgrounds[0].id);
+        expect(cfg.map.layers[0].group).toBe("background");
+        expect(cfg.map.layers[1].id).toBe("layer3");
+        expect(cfg.map.layers[1].group).toBe("group");
+        expect(cfg.map.layers[2].id).toNotBe("layer2");
+        expect(cfg.map.layers[2].id.length).toBe(36);
+        expect(cfg.map.layers[2].group).toBe("group2");
+        expect(cfg.map.layers[3].id).toBe("layer1");
+        expect(cfg.map.layers[3].group).toNotExist();
+        expect(cfg.map.layers[4].id).toBe("layer2");
+        expect(cfg.map.layers[4].group).toNotExist();
+        expect(cfg.map.layers[5].id).toNotBe("layer3");
+        expect(cfg.map.layers[5].id.length).toBe(36);
+        expect(cfg.map.layers[5].group).toNotExist();
+        expect(cfg.map.layers[6].id).toBe("annotations");
+        expect(cfg.map.projection).toBe(cfg1.map.projection);
+        expect(cfg.map.units).toBe("m");
+        expect(cfg.widgetsConfig).toExist();
+        expect(cfg.widgetsConfig.widgets.length).toBe(1);
+        expect(cfg.widgetsConfig.widgets[0].id).toNotBe("widget1");
+        expect(cfg.widgetsConfig.widgets[0].id.length).toBe(36);
+        expect(cfg.widgetsConfig.widgets[0].layer).toExist();
+        expect(cfg.widgetsConfig.widgets[0].layer.id).toBe(cfg.map.layers[2].id);
+        expect(cfg.widgetsConfig.widgets[0].layer.group).toBe("group2");
+        expect(cfg.widgetsConfig.collapsed).toExist();
+
+        const collapsedKeys = keys(cfg.widgetsConfig.collapsed);
+
+        expect(collapsedKeys.length).toBe(1);
+        expect(collapsedKeys[0]).toBe(cfg.widgetsConfig.widgets[0].id);
+        expect(cfg.widgetsConfig.collapsed[collapsedKeys[0]].layouts).toExist();
+        expect(cfg.widgetsConfig.collapsed[collapsedKeys[0]].layouts.lg).toExist();
+        expect(cfg.widgetsConfig.collapsed[collapsedKeys[0]].layouts.xxs).toExist();
+        expect(cfg.widgetsConfig.collapsed[collapsedKeys[0]].layouts.lg.i).toBe(cfg.widgetsConfig.widgets[0].id);
+        expect(cfg.widgetsConfig.collapsed[collapsedKeys[0]].layouts.xxs.i).toBe(cfg.widgetsConfig.widgets[0].id);
+
+        expect(cfg.widgetsConfig.layouts).toExist();
+        expect(cfg.widgetsConfig.layouts.lg).toExist();
+        expect(cfg.widgetsConfig.layouts.xxs).toExist();
+        expect(cfg.widgetsConfig.layouts.lg[0].i).toBe(cfg.widgetsConfig.widgets[0].id);
+        expect(cfg.widgetsConfig.layouts.xxs[0].i).toBe(cfg.widgetsConfig.widgets[0].id);
     });
 });

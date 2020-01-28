@@ -1652,6 +1652,13 @@
                     "unknownError": "Si è verificato un errore durante il caricamento del contesto. Si prega di contattare l'amministratore",
                     "notFound": "Il contesto che si sta tentando di accedere non esiste"
                 },
+                "template": {
+                    "title": "Errore durante il caricamento del modello",
+                    "notAccessible": "Non sei autorizzato ad accedere a questo modello. Si prega di contattare il proprietario della risorsa",
+                    "pleaseLogin": "Questo modello non è pubblico. Prova ad accedere",
+                    "unknownError": "Si è verificato un errore durante il caricamento del modello. Si prega di contattare l'amministratore",
+                    "notFound": "Il modello a cui stai tentando di accedere non esiste"
+                },
                 "map": {
                     "notAccessible": "Non si hanno i permessi di accesso a questa mappa. Si prega di contattare l'amministratore per ottenere l'accesso",
                     "pleaseLogin": "Questa mappa mappa non è pubblica. Si prega di provare ad effettuare il login",
