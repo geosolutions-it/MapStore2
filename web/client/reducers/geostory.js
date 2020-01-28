@@ -199,7 +199,7 @@ export default (state = INITIAL_STATE, action) => {
     case REMOVE_RESOURCE: {
         const {id, mediaType} = action;
 
-        let newState = arrayDelete("currentStory.resources", { id }, state);        
+        let newState = arrayDelete("currentStory.resources", { id }, state);
         state.currentStory.sections.reduce((acc, section) =>  ([...acc, ...getContentsByResourceId(id, "sections[", section)])
             , [])
             .map(rawPath => {
