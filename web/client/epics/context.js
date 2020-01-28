@@ -166,6 +166,10 @@ export const openMapTemplatesPanelEpic = (action$, store) => action$
 
         const extractThumbnail = (resource) => {
             const attribute = get(resource, 'Attributes.attribute');
+            if (!attribute) {
+                return;
+            }
+
             const attributes = isArray(attribute) ? attribute : [attribute];
             return get(find(attributes, ({name}) => name === 'thumbnail'), 'value');
         };
