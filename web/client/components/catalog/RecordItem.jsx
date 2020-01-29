@@ -94,7 +94,8 @@ class RecordItem extends React.Component {
         onAdd: () => {},
         source: 'metadataExplorer',
         showTemplate: false,
-        changeLayerProperties: () => {}
+        changeLayerProperties: () => {},
+        defaultFormat: "image/png"
     };
     state = {
         visibleExpand: false
@@ -176,7 +177,7 @@ class RecordItem extends React.Component {
                     bsStyle="primary"
                     bsSize={this.props.buttonSize}
                     onClick={() => {
-                        const layer = this.makeLayer(type, wms || wmts);
+                        const layer = this.makeLayer(type, wms || wmts, record.format && [record.format] || record.formats);
                         if (layer) {
                             if (this.props.source === 'backgroundSelector') {
                                 this.props.onAddBackgroundProperties({
@@ -317,19 +318,46 @@ class RecordItem extends React.Component {
         this.setState({[key]: status});
     };
 
-    makeLayer = (type, ogcReferences) => {
+    getLayerFormat = (formats) => {
+        if (formats.length === 0 || formats.filter(f => f === this.props.defaultFormat).length > 0) {
+            return this.props.defaultFormat;
+        }
+        return formats[0];
+    };
+
+    makeLayer = (type, ogcReferences, formats = [this.props.defaultFormat]) => {
         const allowedSRS = buildSRSMap(ogcReferences.SRS);
         if (ogcReferences.SRS.length > 0 && !CoordinatesUtils.isAllowedSRS(this.props.crs, allowedSRS)) {
             this.props.onError('catalog.srs_not_allowed');
             return null;
         }
 
-        return recordToLayer(this.props.record, type, {
-            removeParams: this.props.authkeyParamNames,
-            ...(type === 'wms' ? {catalogURL: this.props.catalogType === 'csw' && this.props.catalogURL ?
-                this.props.catalogURL + "?request=GetRecordById&service=CSW&version=2.0.2&elementSetName=full&id=" +
-                this.props.record.identifier : null, format: this.props.defaultFormat} : {format: this.props.defaultFormat})
-        }, this.props.layerBaseConfig);
+        return recordToLayer(
+            this.props.record,
+            type,
+            {
+                removeParams: this.props.authkeyParamNames,
+                ...(type === "wms"
+                    ? {
+                        catalogURL:
+                            this.props.catalogType === "csw" &&
+                            this.props.catalogURL
+                                ? this.props.catalogURL +
+                                "?request=GetRecordById&service=CSW&version=2.0.2&elementSetName=full&id=" +
+                                this.props.record.identifier
+                                : null,
+                        format: this.getLayerFormat(
+                            formats.filter(f => f.indexOf("image/") === 0)
+                        )
+                    }
+                    : {
+                        format: this.getLayerFormat(
+                            formats.filter(f => f.indexOf("image/") === 0)
+                        )
+                    })
+            },
+            this.props.layerBaseConfig
+        );
     }
 
     addLayer = (layer) => {
