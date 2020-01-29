@@ -14,13 +14,16 @@ import { createSelector } from 'reselect';
 import { createPlugin } from '../utils/PluginsUtils';
 
 import { toggleControl } from '../actions/controls';
-import { templatesSelector, mapTemplatesLoadedSelector } from '../selectors/context';
-import { openMapTemplatesPanel, mergeTemplate, replaceTemplate, toggleFavouriteTemplate } from '../actions/context';
+import { templatesSelector, mapTemplatesLoadedSelector } from '../selectors/maptemplates';
+import { openMapTemplatesPanel, mergeTemplate, replaceTemplate, toggleFavouriteTemplate } from '../actions/maptemplates';
 
 import Message from '../components/I18N/Message';
 import Loader from '../components/misc/Loader';
 import DockPanel from '../components/misc/panels/DockPanel';
 import MapTemplatesPanel from '../components/maptemplates/MapTemplatesPanel';
+
+import maptemplates from '../reducers/maptemplates';
+import * as epics from '../epics/maptemplates';
 
 const mapTemplates = ({
     active,
@@ -78,5 +81,9 @@ export default createPlugin('MapTemplates', {
             priority: 2,
             doNotHide: true
         }
-    }
+    },
+    reducers: {
+        maptemplates
+    },
+    epics
 });

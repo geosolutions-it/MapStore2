@@ -437,7 +437,9 @@ const mergeMapConfigs = (cfg1 = {}, cfg2 = {}) => {
     const backgroundLayers = layers.filter(layer => layer.group === 'background');
     const firstVisible = findIndex(backgroundLayers, layer => layer.visibility);
 
-    const sources = LayersUtils.extractSourcesFromLayers(layers);
+    const sources1 = get(cfg1, 'map.sources', {});
+    const sources2 = get(cfg2Fixed, 'map.sources', {});
+    const sources = {...sources1, ...sources2};
 
     const widgetsConfig1 = get(cfg1, 'widgetsConfig', {});
     const widgetsConfig2 = get(cfg2Fixed, 'widgetsConfig', {});

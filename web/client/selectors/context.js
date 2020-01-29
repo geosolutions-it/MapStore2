@@ -54,8 +54,6 @@ export const templatesSelector = createSelector(
     currentContextSelector,
     (context = {}) => context.templates
 );
-export const mapTemplatesLoadedSelector = state => state.context && state.context.mapTemplatesLoaded;
-export const mapTemplatesLoadErrorSelector = state => state.context && state.context.mapTemplatesLoadError;
 
 /**
  * Selects the plugins configuration depending on the current state.

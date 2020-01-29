@@ -73,24 +73,3 @@ export const UPDATE_USER_PLUGIN = "CONTEXT:UPDATE_USER_PLUGIN";
  * updateUserPlugin("Annotations", {active: true})
  */
 export const updateUserPlugin = (name, values) => ({ type: UPDATE_USER_PLUGIN, name, values});
-
-export const OPEN_MAP_TEMPLATES_PANEL = 'CONTEXT:OPEN_MAP_TEMPLATES_PANEL';
-export const openMapTemplatesPanel = () => ({ type: OPEN_MAP_TEMPLATES_PANEL });
-
-export const SET_MAP_TEMPLATES_LOADED = 'CONTEXT:SET_MAP_TEMPLATES_LOADED';
-export const setMapTemplatesLoaded = (loaded, error) => ({ type: SET_MAP_TEMPLATES_LOADED, loaded, error });
-
-export const SET_TEMPLATE_DATA = 'CONTEXT:SET_TEMPLATE_DATA';
-export const setTemplateData = (id, data) => ({ type: SET_TEMPLATE_DATA, id, data });
-
-export const SET_TEMPLATE_LOADING = 'CONTEXT_SET_TEMPLATE_LOADING';
-export const setTemplateLoading = (id, loadingValue) => ({ type: SET_TEMPLATE_LOADING, id, loadingValue });
-
-export const MERGE_TEMPLATE = 'CONTEXT:MERGE_TEMPLATE';
-export const mergeTemplate = (id) => ({ type: MERGE_TEMPLATE, id });
-
-export const REPLACE_TEMPLATE = 'CONTEXT:REPLACE_TEMPLATE';
-export const replaceTemplate = (id) => ({ type: REPLACE_TEMPLATE, id });
-
-export const TOGGLE_FAVOURITE_TEMPLATE = 'CONTEXT:TOGGLE_FAVOURITE_TEMPLATE';
-export const toggleFavouriteTemplate  = (id) => ({ type: TOGGLE_FAVOURITE_TEMPLATE, id });

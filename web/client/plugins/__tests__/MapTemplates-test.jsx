@@ -42,7 +42,7 @@ describe('MapTemplates Plugins', () => {
                     enabled: true
                 }
             },
-            context: {
+            maptemplates: {
                 mapTemplatesLoaded: true
             }
         });
