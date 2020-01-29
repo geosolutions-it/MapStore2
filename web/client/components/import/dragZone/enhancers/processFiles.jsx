@@ -7,8 +7,10 @@
  */
 const Rx = require('rxjs');
 const { compose, mapPropsStream, createEventHandler} = require('recompose');
+const { get, some, every } = require('lodash');
 const FileUtils = require('../../../../utils/FileUtils');
 const LayersUtils = require('../../../../utils/LayersUtils');
+const ConfigUtils = require('../../../../utils/ConfigUtils');
 
 const JSZip = require('jszip');
 
@@ -47,6 +49,8 @@ const checkFileType = (file) => {
 const readFile = (onWarnings) => (file) => {
     const ext = FileUtils.recognizeExt(file.name);
     const type = file.type || FileUtils.MIME_LOOKUPS[ext];
+    const projectionDefs = ConfigUtils.getConfigProp('projectionDefs') || [];
+    const supportedProjections = (projectionDefs.length && projectionDefs.map(({code})  => code) || []).concat(["EPSG:4326", "EPSG:3857", "EPSG:900913"]);
     if (type === 'application/vnd.google-earth.kml+xml') {
         return FileUtils.readKml(file).then((xml) => {
             return FileUtils.kmlToGeoJSON(xml);
@@ -69,12 +73,31 @@ const readFile = (onWarnings) => (file) => {
                 if (warnings.length > 0) {
                     onWarnings({type: 'warning', filename: file.name, message: 'shapefile.error.missingPrj'});
                 }
-                return FileUtils.shpToGeoJSON(buffer).map(json => ({ ...json, filename: file.name }));
+                const geoJsonArr = FileUtils.shpToGeoJSON(buffer).map(json => ({ ...json, filename: file.name }));
+                const areProjectionsPresent = some(geoJsonArr, geoJson => !!get(geoJson, 'map.projection'));
+                if (areProjectionsPresent) {
+                    const filteredGeoJsonArr = geoJsonArr.filter(item => !!get(item, 'map.projection'));
+                    const areProjectionsValid = every(filteredGeoJsonArr, geoJson => supportedProjections.includes(geoJson.map.projection));
+                    if (areProjectionsValid) {
+                        return geoJsonArr;
+                    }
+                    throw new Error("PROJECTION_NOT_SUPPORTED");
+                }
+                return geoJsonArr;
             });
         });
     }
     if (type === 'application/json') {
-        return FileUtils.readJson(file).then(f => [{...f, "fileName": file.name}]);
+        return FileUtils.readJson(file).then(f => {
+            const projection = get(f, 'map.projection');
+            if (projection) {
+                if (supportedProjections.includes(projection)) {
+                    return [{...f, "fileName": file.name}];
+                }
+                throw new Error("PROJECTION_NOT_SUPPORTED");
+            }
+            return [{...f, "fileName": file.name}];
+        });
     }
     return null;
 };
