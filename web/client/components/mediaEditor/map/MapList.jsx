@@ -18,7 +18,7 @@ import SideGrid from '../../misc/cardgrids/SideGrid';
 import { filterResources } from '../../../utils/GeoStoryUtils';
 import { SourceTypes } from '../../../utils/MediaEditorUtils';
 import withFilter from '../enhancers/withFilter';
-
+import  withSelectedMapReload from '../enhancers/withSelectedMapReload';
 
 const Icon = require('../../misc/FitIcon');
 
@@ -126,5 +126,6 @@ export default compose(
     withProps(() => ({
         includeMapId: true
     })),
-    handleMapSelect
+    handleMapSelect,
+    withSelectedMapReload
 )(MapList);
