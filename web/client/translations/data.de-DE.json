@@ -2310,6 +2310,7 @@
                     "title": "Konfigurationsfehler",
                     "body": "Konfigurations-JSON-Analyse fehlgeschlagen.\nDer folgende Fehler ist aufgetreten:\n\"{error}\""
                 },
+                "uploadLabel": "Klicken Sie, um ein Erweiterungspaket zum Hinzufügen zu MapStore auszuwählen, oder ziehen Sie das Paket direkt auf die Seite",
                 "tooltips": {
                     "enableUserPlugin": "Aktiviert die Auswahl des aktuellen Plugins für den Benutzer",
                     "disableUserPlugin": "Deaktivieren Sie die Auswahl des aktuellen Plugins für den Benutzer",
@@ -2317,6 +2318,7 @@
                     "deactivatePlugin": "Deaktivieren Sie das Laden dieses Plugins beim Start",
                     "editConfiguration": "Plugin Konfiguration bearbeiten",
                     "pluginDocumentation": "Öffnen Sie die Dokumentation zur Plugin-Konfiguration",
+                    "uploadPlugin": "Fügen Sie MapStore eine Erweiterung hinzu",
                     "mapTemplatesConfig": "Vorlagen konfigurieren"
                 },
                 "saveCfgErrorNotification":  {

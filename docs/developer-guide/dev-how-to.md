@@ -9,3 +9,7 @@ Still to do:
 * Writing enhancers
 * Writing components
 * Using JS API
+
+Work in progress: 
+
+* [Extensions](../extensions)

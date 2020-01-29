@@ -15,7 +15,6 @@ import { loadContext, clearContext } from '../../actions/context';
 import MapViewerContainer from '../../containers/MapViewer';
 import { createStructuredSelector } from 'reselect';
 import { contextMonitoredStateSelector, pluginsSelector, currentTitleSelector } from '../../selectors/context';
-
 /**
   * @name Context
   * @memberof pages

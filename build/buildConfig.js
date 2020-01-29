@@ -37,7 +37,9 @@ module.exports = (bundles, themeEntries, paths, extractThemesPlugin, prod, publi
     }, bundles, themeEntries),
     mode: prod ? "production" : "development",
     optimization: {
-        minimize: !!prod
+        minimize: !!prod,
+        moduleIds: "named",
+        chunkIds: "named"
     },
     output: {
         path: paths.dist,
@@ -162,6 +164,7 @@ module.exports = (bundles, themeEntries, paths, extractThemesPlugin, prod, publi
                 }],
                 include: [
                     paths.code,
+                    paths.framework,
                     path.join(paths.base, "node_modules", "query-string"),
                     path.join(paths.base, "node_modules", "strict-uri-encode"),
                     path.join(paths.base, "node_modules", "react-draft-wysiwyg"), // added for issue #4602
@@ -175,7 +178,7 @@ module.exports = (bundles, themeEntries, paths, extractThemesPlugin, prod, publi
     },
     devServer: {
         proxy: proxy || {
-            '/rest/geostore': {
+            '/rest': {
                 target: "https://dev.mapstore.geo-solutions.it/mapstore",
                 secure: false,
                 headers: {

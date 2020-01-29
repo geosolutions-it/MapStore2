@@ -14,14 +14,13 @@ const map = mapConfigHistory(require('../reducers/map'));
 const layers = require('../reducers/layers');
 const mapConfig = require('../reducers/config');
 
-const DebugUtils = require('../utils/DebugUtils');
-const {combineReducers, combineEpics} = require('../utils/PluginsUtils');
+const DebugUtils = require('../utils/DebugUtils').default;
+const {combineEpics, combineReducers} = require('../utils/PluginsUtils');
 
 const LayersUtils = require('../utils/LayersUtils');
 const {CHANGE_BROWSER_PROPERTIES} = require('../actions/browser');
 const {createEpicMiddleware} = require('redux-observable');
 
-const SecurityUtils = require('../utils/SecurityUtils');
 const ListenerEnhancer = require('@carnesen/redux-add-action-listener-enhancer').default;
 
 const { routerMiddleware, connectRouter } = require('connected-react-router');
@@ -30,6 +29,7 @@ const layersEpics = require('../epics/layers');
 const controlsEpics = require('../epics/controls');
 const configEpics = require('../epics/config');
 const timeManagerEpics = require('../epics/dimension');
+const {persistMiddleware, persistEpic} = require('../utils/StateUtils');
 
 const standardEpics = {
     ...layersEpics,
@@ -55,11 +55,11 @@ module.exports = (initialState = {defaultState: {}, mobile: {}}, appReducers = {
         layers: () => {return null; },
         router: storeOpts.noRouter ? undefined : connectRouter(history)
     });
-    const rootEpic = combineEpics(plugins, {...appEpics, ...standardEpics});
+    const rootEpic = persistEpic(combineEpics(plugins, {...appEpics, ...standardEpics}));
     const optsState = storeOpts.initialState || {defaultState: {}, mobile: {}};
     const defaultState = assign({}, initialState.defaultState, optsState.defaultState);
     const mobileOverride = assign({}, initialState.mobile, optsState.mobile);
-    const epicMiddleware = createEpicMiddleware(rootEpic);
+    const epicMiddleware = persistMiddleware(createEpicMiddleware(rootEpic));
     const rootReducer = (state, action) => {
         let mapState = createHistory(LayersUtils.splitMapAndLayers(mapConfig(state, action)));
         let newState = {
@@ -115,6 +115,5 @@ module.exports = (initialState = {defaultState: {}, mobile: {}}, appReducers = {
             });
         });
     }
-    SecurityUtils.setStore(store);
     return store;
 };

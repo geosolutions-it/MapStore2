@@ -10,8 +10,8 @@ const axios = require('axios');
 const combineURLs = require('axios/lib/helpers/combineURLs');
 const url = require('url');
 const ConfigUtils = require('../utils/ConfigUtils');
-
 const SecurityUtils = require('../utils/SecurityUtils');
+
 const assign = require('object-assign');
 const {isObject, omitBy, isNil} = require('lodash');
 const urlUtil = require('url');

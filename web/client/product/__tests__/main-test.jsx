@@ -40,17 +40,14 @@ describe('standard application runner', () => {
     it('allows overriding appConfig', (done) => {
         const overrideCfg = (config) => {
             return assign({}, config, {
-                appComponent: AppComponent,
-                onStoreInit: () => {
-                    setTimeout(() => {
-                        expect(document.body.innerHTML).toContain("TEST");
-                        expect(config.printingEnabled).toBe(true);
-                        done();
-                    }, 0);
-                }
+                appComponent: AppComponent
             });
         };
         mainApp({}, {plugins: {}}, overrideCfg);
+        setTimeout(() => {
+            expect(document.body.innerHTML).toContain("TEST");
+            done();
+        }, 200);
     });
 
     it('check printingEnabled set to false', (done) => {

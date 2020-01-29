@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 const {combineReducers, combineEpics} = require('../../utils/PluginsUtils');
-const {createDebugStore} = require('../../utils/DebugUtils');
+const {createDebugStore} = require('../../utils/DebugUtils').default;
 const LayersUtils = require('../../utils/LayersUtils');
 
 const {createEpicMiddleware} = require('redux-observable');
