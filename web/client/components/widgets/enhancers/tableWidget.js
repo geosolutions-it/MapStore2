@@ -13,9 +13,10 @@ const {editableWidget, withHeaderTools, defaultIcons} = require('./tools');
  * Moreover enhances it to allow delete.
 */
 module.exports = compose(
-    withPropsOnChange(["gridEvents"], ({ gridEvents = {}, updateProperty = () => { } } = {}) => ({
+    withPropsOnChange(["gridEvents"], ({ gridEvents = {}, updateProperty = () => {} } = {}) => ({
         gridEvents: {
             ...gridEvents,
+            onAddFilter: (widgetFilter) => updateProperty(`quickFilters.${widgetFilter.attribute}`, widgetFilter),
             onColumnResize:
                 (colIdx, width, rg, d, a, columns) =>
                     updateProperty(`options.columnSettings["${get(columns.filter(c => !c.hide)[colIdx], "name")}"].width`, width)
