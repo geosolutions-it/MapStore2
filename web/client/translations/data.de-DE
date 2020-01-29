@@ -1111,7 +1111,8 @@
                 },
                 "errors": {
                     "fileNotSupported": "Datei wird nicht unterstützt",
-                    "unknownError": "Beim Import ist ein unbekannter Fehler aufgetreten"
+                    "unknownError": "Beim Import ist ein unbekannter Fehler aufgetreten",
+                    "projectionNotSupported": "Die Projektion der Datei, die Sie importieren möchten, wird nicht unterstützt"
                 }
             },
         "mapExport": {
