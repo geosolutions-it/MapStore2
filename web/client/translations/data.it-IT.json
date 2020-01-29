@@ -2095,7 +2095,7 @@
             "mediaList" : {
                 "removeResourceTitle": "Sei sicuro?",
                 "confirmRemoveResource": "Vuoi rimuovere questa risorsa multimediale dalla storia?",
-                "confirmRemoveUsedResource": "Questa risorsa sarà rimossa anche da tutte le sezioni/contenuti dovìè utilizzata che rimarrano vuote. La vuoi rimuovere dalla storia?"
+                "confirmRemoveUsedResource": "Questa risorsa sarà rimossa anche da tutte le sezioni/contenuti che rimarrano vuoti. La vuoi rimuovere dalla storia?"
             },
             "mapList": {
                 "emptyList": "Premere il pulsante più per creare una mappa o selezionare un altro servizio di mappe."

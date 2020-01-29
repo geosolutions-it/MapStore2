@@ -20,7 +20,8 @@ import Message from '../../I18N/Message';
 
 
 /**
- * Allow map creation with mapEditorPlugins
+ * It adds confirm dialog to remove resource button
+ * The message shown changed if the resource is used in the story or not
  */
 export default compose(
     connect((state) => ({

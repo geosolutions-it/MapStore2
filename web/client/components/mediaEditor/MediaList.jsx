@@ -54,7 +54,7 @@ export default compose(withMapEditing, withRemoveResource)(({
             glyph: 'trash',
             tooltipId: 'mediaEditor.mediaPicker.trash',
             visible: selectedSource.type === SourceTypes.GEOSTORY && !isNil(selectedItem),
-            onClick: () => removeMedia({type: selectedItem.type})
+            onClick: () => removeMedia(selectedItem.type)
         }
     ]
 }) => (

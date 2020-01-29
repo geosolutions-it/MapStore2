@@ -138,7 +138,7 @@ describe('mediaEditor actions', () => {
     it('removeMedia', () => {
         const owner = "geostory";
         const type = "map";
-        const action = removeMedia({type, owner});
+        const action = removeMedia(type, owner);
         expect(action.type).toEqual(REMOVE_MEDIA);
         expect(action.mediaType).toEqual(type);
         expect(action.owner).toEqual(owner);

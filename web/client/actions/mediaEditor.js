@@ -136,4 +136,4 @@ export const importInLocal = ({resource, sourceType = SourceTypes.GEOSTORY, owne
     owner
 });
 
-export const removeMedia = ({type: mediaType, owner = "geostory"}) => ({type: REMOVE_MEDIA, mediaType, owner});
+export const removeMedia = (mediaType, owner = "geostory") => ({type: REMOVE_MEDIA, mediaType, owner});

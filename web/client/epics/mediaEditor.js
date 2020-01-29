@@ -44,6 +44,10 @@ export const loadMediaEditorDataEpic = (action$, store) =>
             return mediaAPI("geostory").load(store) // store is required for local data (e.g. local geostory data)
                 .switchMap(results => {
                     const sId = sourceIdSelector(store.getState());
+                    // We need to create the actions to remove the resource for a media type presents in the state
+                    // when the api responds nothing for that type.
+                    // So first of all we create empty result foreach mediaType preset in mediaEditor state.
+                    // After we override this with the data from the api response.
                     const oldResources = Object.keys(get(store.getState(), "mediaEditor.data", {}));
                     const updateActions = oldResources.reduce((acc, type) =>
                         ({...acc, [type]: loadMediaSuccess({
@@ -53,7 +57,7 @@ export const loadMediaEditorDataEpic = (action$, store) =>
                             resultData: {resources: [], totalCount: 0}})})
                     , {});
                     return (Object.keys(updateActions).length > 0 || results) && Observable.from(
-                        Object.values(results.reduce((acc, r) =>
+                        Object.values((results || []).reduce((acc, r) =>
                             ({...acc, [r.mediaType]: loadMediaSuccess({
                                 mediaType: r.mediaType,
                                 sourceId: r.sourceId,
@@ -220,8 +224,7 @@ export const removeMediaEpic = (action$, store) =>
         .switchMap(({mediaType}) => {
             const sourceId = sourceIdSelector(store.getState());
             const handler = mediaAPI(sourceId).remove(mediaType, store);
-            return handler // store is required both for some custom auth, or to dispatch actions in case of local
-            // TODO: saving state (for loading spinners), errors
+            return handler
                 .switchMap(() => {
                     return Observable.of(
                         loadMedia(undefined, currentMediaTypeSelector(store.getState()), SourceTypes.GEOSTORY));

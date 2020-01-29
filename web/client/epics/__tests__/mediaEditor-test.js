@@ -397,7 +397,7 @@ describe('MediaEditor Epics', () => {
     it('removeMedia epic handle the remove media  stream', (done) => {
         const NUM_ACTIONS = 1;
         const sourceId = "geostory";
-        testEpic(removeMediaEpic, NUM_ACTIONS, removeMedia({type: "image"}), (actions) => {
+        testEpic(removeMediaEpic, NUM_ACTIONS, removeMedia("image"), (actions) => {
             expect(actions.length).toEqual(NUM_ACTIONS);
             actions.map((a) => {
                 switch (a.type) {
@@ -428,5 +428,95 @@ describe('MediaEditor Epics', () => {
             }
         });
 
+    });
+    it('loadMediaEditorDataEpic with loadMedia is able to empty e mediaType', (done) => {
+        const NUM_ACTIONS = 2;
+        const params = {mediaType: "map"};
+        const mediaType = "map";
+        const sourceId = "geostory";
+        testEpic(loadMediaEditorDataEpic, NUM_ACTIONS, loadMedia(params, mediaType, sourceId), (actions) => {
+            expect(actions.length).toEqual(NUM_ACTIONS);
+            actions.map((a) => {
+                switch (a.type) {
+                case LOAD_MEDIA_SUCCESS:
+                    expect(a.sourceId).toEqual(sourceId);
+                    expect(a.resultData.totalCount).toEqual(0);
+                    break;
+                default: expect(true).toEqual(false);
+                    break;
+                }
+            });
+            done();
+        }, {
+            geostory: {
+                currentStory: {
+                    resources: []}
+            },
+            mediaEditor: {
+                data: {
+                    map: {
+                        geostory: {
+                            params: {
+                                mediaType: 'map'
+                            },
+                            resultData: {
+                                resources: [
+                                    {
+                                        id: '71ecdd95-efc8-4639-ac1e-6ba292dc84d1',
+                                        type: 'map',
+                                        data: {}
+                                    }
+                                ],
+                                totalCount: 1
+                            }
+                        }
+                    },
+                    image: {
+                        geostory: {
+                            params: {
+                                mediaType: 'image'
+                            },
+                            resultData: {
+                                resources: [{id: '41456'}],
+                                totalCount: 1
+                            }
+                        }
+                    }
+                },
+                selected: '71ecdd95-efc8-4639-ac1e-6ba292dc84d1',
+                owner: "geostory",
+                settings: {
+                    mediaType: 'map',
+                    sourceId: 'geostory',
+                    mediaTypes: {
+                        image: {
+                            defaultSource: 'geostory',
+                            sources: [
+                                'geostory'
+                            ]
+                        },
+                        map: {
+                            defaultSource: 'geostory',
+                            sources: [
+                                'geostory',
+                                'geostoreMap'
+                            ]
+                        }
+                    },
+                    sources: {
+                        geostory: {
+                            name: 'Current story',
+                            type: 'geostory'
+                        },
+                        geostoreMap: {
+                            name: 'Geostore Dev',
+                            type: 'geostore',
+                            baseURL: 'rest/geostore/',
+                            category: 'MAP'
+                        }
+                    }
+                }
+            }
+        });
     });
 });
