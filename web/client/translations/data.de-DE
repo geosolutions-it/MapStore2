@@ -1468,9 +1468,9 @@
                     "preview": "Vorschau",
                     "addLayer": "Fügt der Karte eine Ebene hinzu",
                     "useTheSelectedLayer": "Verwende die ausgewählte Ebene",
-                    "connectToAMap": "Mit einer Karte verbinden",
-                    "connectToTheMap": "Verbinden mit der Karte",
-                    "selectMapToConnect": "Wählen Sie die zu verbindende Karte aus",
+                    "connectToAMap": "Stellen Sie eine Verbindung zu einem anderen Widget her",
+                    "connectToTheMap": "Stellen Sie eine Verbindung mit dem anderen Widget her",
+                    "selectMapToConnect": "Wählen Sie das zu verbindende Widget aus",
                     "clearConnection": "Verbindung löschen"
                 },
                 "errors": {

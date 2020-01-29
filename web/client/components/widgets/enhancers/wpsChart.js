@@ -34,19 +34,19 @@ const sameOptions = (o1 = {}, o2 = {}) =>
     && o1.groupByAttributes === o2.groupByAttributes
     && o1.viewParams === o2.viewParams;
 
-const getLayerUrl = l => l && l.wpsUrl || (l.search && l.search.url) || l.url;
+const {getWpsUrl} = require('../../../utils/LayersUtils');
+
 const dataStreamFactory = ($props) =>
     $props
-        .filter(({layer = {}, options}) => layer.name && getLayerUrl(layer) && options && options.aggregateFunction && options.aggregationAttribute && options.groupByAttributes)
+        .filter(({layer = {}, options}) => layer.name && getWpsUrl(layer) && options && options.aggregateFunction && options.aggregationAttribute && options.groupByAttributes)
         .distinctUntilChanged(
             ({layer = {}, options = {}, filter}, newProps) =>
-                /* getLayerUrl(layer) === getLayerUrl(layer) && */
                 (newProps.layer && layer.name === newProps.layer.name && layer.loadingError === newProps.layer.loadingError)
                 && sameOptions(options, newProps.options)
                 && sameFilter(filter, newProps.filter))
         .switchMap(
             ({layer = {}, options, filter, onLoad = () => {}, onLoadError = () => {}}) =>
-                wpsAggregate(getLayerUrl(layer), {featureType: layer.name, ...options, filter}, {
+                wpsAggregate(getWpsUrl(layer), {featureType: layer.name, ...options, filter}, {
                     timeout: 15000
                 }).map((response) => ({
                     loading: false,

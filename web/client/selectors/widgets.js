@@ -1,6 +1,15 @@
-const { get, castArray} = require('lodash');
+/*
+ * Copyright 2019, GeoSolutions Sas.
+ * All rights reserved.
+ *
+ * This source code is licensed under the BSD-style license found in the
+ * LICENSE file in the root directory of this source tree.
+*/
+
+const { find, get, castArray} = require('lodash');
 const {mapSelector} = require('./map');
 const {getSelectedLayer} = require('./layers');
+const {pathnameSelector} = require('./router');
 const {DEFAULT_TARGET, DEPENDENCY_SELECTOR_KEY, WIDGETS_REGEX} = require('../actions/widgets');
 const { getWidgetsGroups, getWidgetDependency} = require('../utils/WidgetsUtils');
 
@@ -31,20 +40,36 @@ const getVisibleFloatingWidgets = createSelector(
         return widgets;
     }
 );
+const getWidgetAttributeFilter = (id, attributeName) => createSelector(
+    getVisibleFloatingWidgets,
+    (widgets) => {
+        const widget = find(widgets, {id});
+        return widget && widget.quickFilters && widget.options && find(widget.options.propertyName, f => f === attributeName) && widget.quickFilters[attributeName] || {};
+    });
 const getCollapsedIds = createSelector(
     getCollapsedState,
     (collapsed = {}) => Object.keys(collapsed)
 );
 const getMapWidgets = state => (getFloatingWidgets(state) || []).filter(({ widgetType } = {}) => widgetType === "map");
+const getTableWidgets = state => (getFloatingWidgets(state) || []).filter(({ widgetType } = {}) => widgetType === "table");
 
 /**
  * Find in the state the available dependencies to connect
+ *
+ * Note: table widgets are excluded from selection when viewer is present,
+ * because there were conflict between map and other widgets.
  */
 const availableDependenciesSelector = createSelector(
     getMapWidgets,
+    getTableWidgets,
     mapSelector,
-    (ws = [], map = []) => ({
-        availableDependencies: ws.map(({id}) => `widgets[${id}].map`).concat(castArray(map).map(() => "map"))
+    pathnameSelector,
+    (ws = [], tableWidgets = [], map = [], pathname) => ({
+        availableDependencies:
+            ws
+                .map(({id}) => `widgets[${id}].map`)
+                .concat(castArray(map).map(() => "map"))
+                .concat(castArray(tableWidgets).filter(() => pathname.indexOf("viewer") === -1).map(({id}) => `widgets[${id}]`))
     })
 );
 /**
@@ -87,6 +112,7 @@ module.exports = {
     getEditorSettings,
     getWidgetLayer,
     getMapWidgets,
+    getWidgetAttributeFilter,
     availableDependenciesSelector,
     dashBoardDependenciesSelector: () => ({}), // TODO dashboard dependencies
     /**
