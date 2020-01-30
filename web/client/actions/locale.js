@@ -35,7 +35,6 @@ function localeError(e) {
 }
 
 function appendLocale(folder) {
-    debugger;
     return (dispatch, getState) => {
         axios.get(folder + `/data.${getState().locale.current}.json`)
             .then((response) => {
