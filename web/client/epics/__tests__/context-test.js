@@ -11,6 +11,7 @@ import { testEpic } from './epicTestUtils';
 import ajax from '../../libs/ajax';
 
 import { configureMap, configureError, LOAD_MAP_CONFIG } from "../../actions/config";
+import { CLEAR_MAP_TEMPLATES } from '../../actions/maptemplates';
 import {
     loadContext,
     LOAD_CONTEXT,
@@ -76,10 +77,10 @@ describe('context epics', () => {
                 loadContext({ mapId, contextName }),
                 configureMap() // THIS ACTION FAKES MAP LOAD FLOW END
             ];
-            testEpic(loadContextAndMap, 6, act, ([loadingAction, loadMapAction, setResourceAction, setContextAction, loadFinishedAction, loadEndAction]) => {
-
+            testEpic(loadContextAndMap, 7, act, ([loadingAction, clearMapTemplatesAction, loadMapAction, setResourceAction, setContextAction, loadFinishedAction, loadEndAction]) => {
                 expect(loadingAction.type).toBe(LOADING);
                 expect(loadingAction.value).toBe(true);
+                expect(clearMapTemplatesAction.type).toBe(CLEAR_MAP_TEMPLATES);
                 expect(loadMapAction.type).toBe(LOAD_MAP_CONFIG);
                 expect(setResourceAction.type).toBe(SET_RESOURCE);
                 expect(setResourceAction.resource.canDelete).toBe(true); // check one random content of the resource
@@ -96,9 +97,10 @@ describe('context epics', () => {
          * check error actions
          */
         const checkLoadErrors = (startActions, initialState, messageId, done) => {
-            testEpic(loadContextAndMap, 4, startActions, ([loadingAction, loadMapAction, errorAction, loadEndAction]) => {
+            testEpic(loadContextAndMap, 5, startActions, ([loadingAction, clearMapTemplatesAction, loadMapAction, errorAction, loadEndAction]) => {
                 expect(loadingAction.type).toBe(LOADING);
                 expect(loadingAction.value).toBe(true);
+                expect(clearMapTemplatesAction.type).toBe(CLEAR_MAP_TEMPLATES);
                 expect(loadMapAction.type).toBe(LOAD_MAP_CONFIG);
                 expect(errorAction.type).toBe(CONTEXT_LOAD_ERROR);
                 expect(errorAction.error.status).toBe(403);

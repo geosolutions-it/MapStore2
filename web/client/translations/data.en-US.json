@@ -1656,6 +1656,13 @@
                     "notFound": "The context you are trying to access doesn't exist",
 	                "notAccessible": "You don't have the right permission to access to this context. Please contact the administrator to get access"
                 },
+                "template": {
+                    "title": "Error loading template",
+                    "notAccessible": "You don't have permission to access this template. Please contact the resource owner",
+                    "pleaseLogin": "This template is not public. Please try to login",
+                    "unknownError": "There was an error loading the template. Please contact the administrator",
+                    "notFound": "The template you are trying to access doesn't exist"
+                },
                 "map": {
                     "notAccessible": "You don't have permission to access this map. Please contact the resource owner",
                     "pleaseLogin": "This map or the map is not public. Please try to login",
@@ -2384,6 +2391,21 @@
           "filterPlaceholder": "Filter...",
           "addExtension": "Add Extension",
           "removeExtension": "Remove Extension"
+        },
+        "mapTemplates": {
+            "title": "Map Templates",
+            "favouritesTitle": "Favourites",
+            "allTitle": "All",
+            "filterPlaceholder": "Filter map templates...",
+            "transfer": "Replace map with this template",
+            "merge": "Add this template to map",
+            "favouriteAdd": "Add to favourites",
+            "favouriteRemove": "Remove from favourites",
+            "emptyTitle": "No Result",
+            "emptyDescription": "Entered filter does not match name or description of any of templates",
+            "confirmReplaceTitle": "Replace map content",
+            "confirmReplaceMessage": "You will replace all layers and map configuration with the selected template by clicking on replace button",
+            "confirmReplaceConfirmButton": "Replace"
         },
         "tutorial": {
             "title": "Tutorial",

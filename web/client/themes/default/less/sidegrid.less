@@ -42,6 +42,24 @@
         display: flex;
         height: @square-btn-size * 2;
     }
+    .mapstore-side-card-container {
+        display: flex;
+        flex-direction: column;
+        flex-grow: 1;
+
+        .mapstore-side-card-inner {
+            display: flex;
+            flex: 1;
+        }
+
+        .mapstore-side-card-loading {
+            padding: 4px;
+        }
+
+        .mapstore-side-card-loader {
+            float: right;
+        }
+    }
     .mapstore-side-preview {
         display: flex;
         margin: 0;
@@ -71,6 +89,7 @@
         flex-direction: column;
         overflow: hidden;
         padding: 8px 16px 8px 8px;
+        width: 100px;
         & > div {
             display: flex;
             margin-bottom: 0;
@@ -111,7 +130,7 @@
         display: flex;
         width: auto;
         > * {
-            margin: auto 10px;
+            margin: auto 10px 15px;
         }
     }
 

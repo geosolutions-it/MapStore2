@@ -1653,6 +1653,13 @@
                     "unknownError": "Si è verificato un errore durante il caricamento del contesto. Si prega di contattare l'amministratore",
                     "notFound": "Il contesto che si sta tentando di accedere non esiste"
                 },
+                "template": {
+                    "title": "Errore durante il caricamento del modello",
+                    "notAccessible": "Non sei autorizzato ad accedere a questo modello. Si prega di contattare il proprietario della risorsa",
+                    "pleaseLogin": "Questo modello non è pubblico. Prova ad accedere",
+                    "unknownError": "Si è verificato un errore durante il caricamento del modello. Si prega di contattare l'amministratore",
+                    "notFound": "Il modello a cui stai tentando di accedere non esiste"
+                },
                 "map": {
                     "notAccessible": "Non si hanno i permessi di accesso a questa mappa. Si prega di contattare l'amministratore per ottenere l'accesso",
                     "pleaseLogin": "Questa mappa mappa non è pubblica. Si prega di provare ad effettuare il login",
@@ -2381,6 +2388,21 @@
           "filterPlaceholder": "filtro...",
           "addExtension": "Aggiungi estensione",
           "removeExtension": "Rimuovi Estensione"
+        },
+        "mapTemplates": {
+            "title": "Modelli di mappe",
+            "favouritesTitle": "Preferiti",
+            "allTitle": "Tutti",
+            "filterPlaceholder": "Filtra i modelli di mappe...",
+            "transfer": "Sostituisci mappa con questo modello",
+            "merge": "Aggiungi questo modello alla mappa",
+            "favouriteAdd": "Aggiungi ai preferiti",
+            "favouriteRemove": "Rimuovi dai preferiti",
+            "emptyTitle": "Nessun risultato",
+            "emptyDescription": "Il filtro inserito non corrisponde al nome o alla descrizione di nessuno dei modelli",
+            "confirmReplaceTitle": "Sostituisci il contenuto della mappa",
+            "confirmReplaceMessage": "Sostituirai tutti i livelli e la configurazione della mappa con il modello selezionato facendo clic sul pulsante Sostituisci",
+            "confirmReplaceConfirmButton": "Sostituire"
         },
         "tutorial": {
             "title": "Tutorial",

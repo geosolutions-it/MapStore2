@@ -29,6 +29,7 @@ export const currentTitleSelector = state => state.context && state.context.curr
 const monitoredStateSelector = state => getMonitoredState(state, monitorStateSelector(state));
 
 export const isLoadingSelector = state => get(state, 'context.loading');
+export const loadFlagsSelector = state => get(state, 'context.loadFlags');
 
 /**
  * returns the default plugins for context. By default always adds the Context plugin
@@ -47,6 +48,11 @@ export const currentPluginsSelector = createSelector(
     userPluginsSelector,
     (plugins, userPlugins = []) =>
         plugins && ({ desktop: [...get(plugins, 'desktop', []), ...userPlugins.filter(plugin => plugin.active)] })
+);
+
+export const templatesSelector = createSelector(
+    currentContextSelector,
+    (context = {}) => context.templates
 );
 
 /**

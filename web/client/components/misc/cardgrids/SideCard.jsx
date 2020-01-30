@@ -8,6 +8,9 @@
 
 
 const React = require('react');
+
+const Loader = require('../Loader');
+
 /**
  * Component for rendering a rectangular card with preview, title, description and caption.
  * @memberof components.misc.cardgrids
@@ -27,6 +30,7 @@ const React = require('react');
  * @prop {string}       size            size of card, 'sm' for small
  * @prop {object}       style           inline style
  * @prop {node|string}  title           text for title
+ * @prop {bool}         loading         loading spinner
  * @prop {node}         tools           add a node to the right of card
  */
 
@@ -46,6 +50,7 @@ module.exports = ({
     stylePreview = {},
     styleTools = {},
     title,
+    loading,
     dragSymbol = "+",
     tools,
     ...props
@@ -65,19 +70,26 @@ module.exports = ({
             {preview && <div className="mapstore-side-preview" style={stylePreview}>
                 {preview}
             </div>}
-            <div className="mapstore-side-card-info">
-                {title && <div className="mapstore-side-card-title">
-                    <span>{title}</span>
+            <div className="mapstore-side-card-container">
+                <div className="mapstore-side-card-inner">
+                    <div className="mapstore-side-card-info">
+                        {title && <div className="mapstore-side-card-title">
+                            <span>{title}</span>
+                        </div>}
+                        {description && <div className="mapstore-side-card-desc">
+                            <span>{description}</span>
+                        </div>}
+                        {caption && <div className="mapstore-side-card-caption">
+                            <span>{caption}</span>
+                        </div>}
+                    </div>
+                    <div className="mapstore-side-card-tool text-center" style={styleTools}>
+                        {tools}
+                    </div>
+                </div>
+                {size !== 'sm' && <div className="mapstore-side-card-loading">
+                    <Loader className="mapstore-side-card-loader" size={12} hidden={!loading}/>
                 </div>}
-                {description && <div className="mapstore-side-card-desc">
-                    <span>{description}</span>
-                </div>}
-                {caption && <div className="mapstore-side-card-caption">
-                    <span>{caption}</span>
-                </div>}
-            </div>
-            <div className="mapstore-side-card-tool text-center" style={styleTools}>
-                {tools}
             </div>
         </div>
         {body && <div className="ms-body">
