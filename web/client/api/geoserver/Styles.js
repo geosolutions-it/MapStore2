@@ -58,7 +58,7 @@ const formatRequestData = ({options = {}, format, baseUrl, name, workspace, lang
     };
 };
 
-const getStyleBaseUrl = ({geoserverBaseUrl, workspace, name, fileName}) => `${geoserverBaseUrl}rest/${workspace && `workspaces/${workspace}/` || ''}styles/${ fileName ? fileName : `${encodeURIComponent(name)}.json`}`;
+export const getStyleBaseUrl = ({geoserverBaseUrl, workspace, name}) => `${geoserverBaseUrl}rest/${workspace && `workspaces/${workspace}/` || ''}styles/${ `${encodeURIComponent(name)}.json`}`;
 
 /**
 * Api for GeoServer styles via rest

@@ -64,7 +64,7 @@ const Api = {
         return axios.get(url, options)
             .then(({data}) => {
                 const layer = data.layer || {};
-                const currentAvailableStyle = layer.styles && layer.styles.style || {};
+                const currentAvailableStyle = layer.styles && layer.styles.style || [];
                 const layerObj = {
                     'layer': {
                         ...layer,
