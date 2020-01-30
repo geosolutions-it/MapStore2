@@ -5,8 +5,7 @@ import expect from 'expect';
 import withPluginDefinition from '../withPluginsDefinition';
 import MockAdapter from 'axios-mock-adapter';
 import axios from '../../../libs/ajax';
-// this have to be imported at least once in the application
-// and/or once in the test to bind rxjs to recompose ES6 Observables.
+
 import '../../../libs/bindings/rxjsRecompose';
 
 let mockAxios;

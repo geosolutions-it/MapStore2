@@ -21,6 +21,7 @@ import { setObservableConfig } from 'recompose';
  * Please import this wherever you use mapPropsStream or componentFromStream (or import once in StandardApp)
  * This file have to be imported once in the application (initial bindings, like initialization of other libs)
  * and/or once in the test environment.
+ * TODO: import it in StandardApp or where needed
  *
  */
 setObservableConfig(rxjsConfig);
