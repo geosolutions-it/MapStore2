@@ -73,6 +73,7 @@ export default ({
         title: template.name,
         description: template.description,
         loading: template.loading,
+        style: {pointerEvents: 'none'},
         preview:
             <div className="map-templates-preview">
                 {template.thumbnail && template.thumbnail !== 'NODATA' ?
@@ -109,10 +110,6 @@ export default ({
                     onToggleFavourite(template.id);
                 }
             }]}/>,
-        onClick: () => {
-            setTemplateToReplace(template);
-            onShowConfirm(true);
-        }
     });
 
     const sortedTemplates = templates.slice().sort((t1, t2) => t1.name > t2.name ? 1 : t1.name === t2.name ? 0 : -1);
