@@ -60,7 +60,8 @@ import {
     SELECT_ITEM,
     hide,
     chooseMedia,
-    editMedia
+    editMedia,
+    SET_MEDIA_TYPE
 } from '../../actions/mediaEditor';
 import { SHOW_NOTIFICATION } from '../../actions/notifications';
 import {testEpic, addTimeoutEpic, TEST_TIMEOUT } from './epicTestUtils';
@@ -699,6 +700,7 @@ describe('Geostory Epics', () => {
                 currentStory: {
                     resources: [{
                         id: "resourceId",
+                        type: "image",
                         data: {
                             id: "resource_id"
                         }
@@ -719,6 +721,55 @@ describe('Geostory Epics', () => {
                 }
             }
         });
+    });
+    it('test that edit media switches the media type when needed', (done) => {
+        const NUM_ACTIONS = 3;
+        testEpic(addTimeoutEpic(editMediaForBackgroundEpic), NUM_ACTIONS,
+            editMedia({path: `sections[{"id": "section_id"}].contents[{"id": "content_id"}]`, owner: "geostore"}),
+            (actions) => {
+                expect(actions.length).toBe(NUM_ACTIONS);
+                actions.map(a => {
+                    switch (a.type) {
+                    case SET_MEDIA_TYPE:
+                        expect(a.mediaType).toBe("map");
+                        break;
+                    case SHOW:
+                        expect(a.owner).toEqual("geostore");
+                        break;
+                    case SELECT_ITEM:
+                        expect(a.id).toEqual("resourceId");
+                        break;
+                    default: expect(true).toBe(false);
+                        break;
+                    }
+                });
+                done();
+            }, {
+                geostory: {
+                    currentStory: {
+                        resources: [{
+                            id: "resourceId",
+                            type: "map",
+                            data: {
+                                id: "resource_id"
+                            }
+                        }],
+                        sections: [{
+                            id: "section_id",
+                            contents: [{
+                                id: "content_id",
+                                resourceId: "resourceId"
+                            }]
+                        }]
+                    }
+                },
+                mediaEditor: {
+                    settings: {
+                        mediaType: "image",
+                        sourceId: "geostory"
+                    }
+                }
+            });
     });
 
     it('update story with a new map resource (geostore) from external service', (done) => {
