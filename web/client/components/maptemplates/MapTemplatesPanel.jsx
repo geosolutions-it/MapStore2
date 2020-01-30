@@ -109,7 +109,7 @@ export default ({
                     e.stopPropagation();
                     onToggleFavourite(template.id);
                 }
-            }]}/>,
+            }]}/>
     });
 
     const sortedTemplates = templates.slice().sort((t1, t2) => t1.name > t2.name ? 1 : t1.name === t2.name ? 0 : -1);
