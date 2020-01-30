@@ -1,4 +1,3 @@
-import { withPropsOnChange } from "recompose";
 
 /*
  * Copyright 2018, GeoSolutions Sas.
@@ -8,7 +7,7 @@ import { withPropsOnChange } from "recompose";
  * LICENSE file in the root directory of this source tree.
  */
 const React = require("react");
-const {compose, withProps, withStateHandlers} = require("recompose");
+const {compose, withProps, withStateHandlers, withPropsOnChange} = require("recompose");
 const {connect} = require("react-redux");
 const { onEditRule, delRules, onCacheClean} = require('../../actions/rulesmanager');
 const {rulesEditorToolbarSelector} = require('../../selectors/rulesmanager');
@@ -141,4 +140,4 @@ const EditorToolbar = compose(
     })
 )( ToolbarWithModal);
 
-export default EditorToolbar;
+module.exports = EditorToolbar;
