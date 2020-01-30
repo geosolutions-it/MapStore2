@@ -2311,6 +2311,7 @@
                     "title": "Errore di configurazione",
                     "body": "Analisi JSON di configurazione non riuscita.\nSi è verificato il seguente errore:\n\"{error}\""
                 },
+                "uploadLabel": "Clicca per selezionare un pacchetto di estensione da aggiungere a MapStore, o trascina il pacchetto direttamente sulla pagina",
                 "tooltips": {
                     "enableUserPlugin": "Abilita la selezione del plug-in corrente per l'utente",
                     "disableUserPlugin": "Disabilita la selezione del plug-in corrente per l'utente",
@@ -2318,6 +2319,7 @@
                     "deactivatePlugin": "Disabilita il caricamento di questo plugin all'avvio",
                     "editConfiguration": "Modifica la configurazione del plugin",
                     "pluginDocumentation": "Apri la documentazione di configurazione del plugin",
+                    "uploadPlugin": "Aggiungi una estensione a MapStore",
                     "mapTemplatesConfig": "Configura modelli"
                 },
                 "saveCfgErrorNotification":  {

@@ -8,6 +8,7 @@
 
 
 export const LOAD_CONTEXT = "CONTEXT:LOAD";
+
 /**
  * Triggers context loading flow
  * @param {object} params params of the context page
@@ -15,7 +16,6 @@ export const LOAD_CONTEXT = "CONTEXT:LOAD";
  * @param {string|number} mapId id of the map to load in the context
  */
 export const loadContext = ({ mapId, contextName }) => ({ type: LOAD_CONTEXT, mapId, contextName });
-
 
 export const SET_CURRENT_CONTEXT = "CONTEXT:SET_CURRENT_CONTEXT";
 /**

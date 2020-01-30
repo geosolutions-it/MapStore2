@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-var DebugUtils = require('../../../utils/DebugUtils');
+var DebugUtils = require('../../../utils/DebugUtils').default;
 
 const {combineReducers} = require('redux');
 

@@ -16,11 +16,11 @@ import MapUtils from '../utils/MapUtils';
 
 import {SAVE_CONTEXT, SAVE_TEMPLATE, LOAD_CONTEXT, LOAD_TEMPLATE, EDIT_TEMPLATE, SHOW_DIALOG, SET_CREATION_STEP, MAP_VIEWER_LOAD,
     MAP_VIEWER_RELOAD, CHANGE_ATTRIBUTE, ENABLE_MANDATORY_PLUGINS, ENABLE_PLUGINS, DISABLE_PLUGINS, SAVE_PLUGIN_CFG,
-    EDIT_PLUGIN, CHANGE_PLUGINS_KEY, UPDATE_EDITED_CFG, VALIDATE_EDITED_CFG, SET_RESOURCE, contextSaved, setResource,
+    EDIT_PLUGIN, CHANGE_PLUGINS_KEY, UPDATE_EDITED_CFG, VALIDATE_EDITED_CFG, SET_RESOURCE, UPLOAD_PLUGIN, contextSaved, setResource,
     startResourceLoad, loadFinished, loadTemplate, showDialog, setFileDropStatus, updateTemplate, isValidContextName,
     contextNameChecked, setCreationStep, contextLoadError, loading, mapViewerLoad, mapViewerLoaded, setEditedPlugin,
     setEditedCfg, setParsedCfg, validateEditedCfg, setValidationStatus, savePluginCfg, enableMandatoryPlugins,
-    enablePlugins, setCfgError, changePluginsKey, changeTemplatesKey, setEditedTemplate} from '../actions/contextcreator';
+    enablePlugins, setCfgError, changePluginsKey, changeTemplatesKey, setEditedTemplate, pluginUploaded, pluginUploading, enableUploadPlugin} from '../actions/contextcreator';
 import {newContextSelector, resourceSelector, creationStepSelector, mapConfigSelector, mapViewerLoadedSelector, contextNameCheckedSelector,
     editedPluginSelector, editedCfgSelector, validationStatusSelector, parsedCfgSelector, cfgErrorSelector,
     pluginsSelector, initialEnabledPluginsSelector} from '../selectors/contextcreator';
@@ -36,6 +36,7 @@ import {mapOptionsToSaveSelector} from '../selectors/mapsave';
 import {loadMapConfig} from '../actions/config';
 import {createResource, updateResource, getResource, getResources, getResourceIdByName} from '../api/persistence';
 import getPluginsConfig from '../observables/config/getPluginsConfig';
+import { upload } from '../api/plugins';
 
 const saveContextErrorStatusToMessage = (status) => {
     switch (status) {
@@ -239,6 +240,23 @@ export const contextCreatorLoadContext = (action$, store) => action$
                 }
             )
         )
+    );
+
+export const uploadPlugin = (action$) => action$
+    .ofType(UPLOAD_PLUGIN)
+    .switchMap(({files}) =>
+        Rx.Observable.defer(() => upload(files))
+            .switchMap(result => Rx.Observable.from([pluginUploaded(result), enableUploadPlugin(false)]))
+            .let(wrapStartStop(
+                pluginUploading(true),
+                pluginUploading(false),
+                () => Rx.Observable.of(error({
+                    title: "notification.error",
+                    message: "resources.contexts.errorUploadingPlugin",
+                    autoDismiss: 6,
+                    position: "tc"
+                }))
+            ))
     );
 
 export const invalidateContextName = (action$, store) => action$

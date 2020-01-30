@@ -24,7 +24,7 @@ const testConfig = {
     configUrl: 'base/web/client/test-resources/geostore/data/1#',
     originalUrl: 'base/web/client/test-resources/geostore/extjs/search/category/MAP/1.json#'
 };
-describe('MapStore2 API', () => {
+describe.skip('MapStore2 API', () => {
     beforeEach((done) => {
         document.body.innerHTML = '<div id="container"></div>';
         ConfigUtils.setLocalConfigurationFile('base/web/client/test-resources/localConfig.json');

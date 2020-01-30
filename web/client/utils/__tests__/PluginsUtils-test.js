@@ -5,15 +5,16 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const React = require('react');
-const ReactDOM = require('react-dom');
-const {Provider} = require('react-redux');
-const expect = require('expect');
-const PluginsUtils = require('../PluginsUtils');
-const assign = require('object-assign');
-const MapSearchPlugin = require('../../plugins/MapSearch');
-const Rx = require('rxjs');
-const { ActionsObservable } = require('redux-observable');
+import React from 'react';
+import ReactDOM from 'react-dom';
+import {Provider} from 'react-redux';
+import expect from 'expect';
+import PluginsUtils from '../PluginsUtils';
+import assign from 'object-assign';
+import axios from '../../libs/ajax';
+import Rx from 'rxjs';
+import { ActionsObservable } from 'redux-observable';
+import MapSearchPlugin from '../../plugins/MapSearch';
 
 const epicTest = (epic, count, action, callback, state = {}) => {
     const actions = new Rx.Subject();
@@ -45,31 +46,7 @@ describe('PluginsUtils', () => {
         document.body.innerHTML = '';
         setTimeout(done);
     });
-    it('combineReducers', () => {
-        const P1 = {
-            reducers: {
-                reducer1: () => {}
-            }
-        };
 
-        const P2 = {
-            reducers: {
-                reducer1: (state = {}) => assign({}, state, { A: "A"}),
-                reducer2: (state = {}) => state
-            }
-        };
-        const reducers = {
-            reducer3: (state = {}) => state
-        };
-        const spyNo = expect.spyOn(P1.reducers, "reducer1");
-        const finalReducer = PluginsUtils.combineReducers([P1, P2], reducers);
-        const state = finalReducer();
-        expect(state.reducer1).toExist();
-        expect(state.reducer1.A).toBe("A");
-
-        // test overriding
-        expect(spyNo.calls.length).toBe(0);
-    });
     it('getPluginDescriptor', () => {
         const P1 = assign( () => {}, {
             reducers: {
@@ -110,37 +87,6 @@ describe('PluginsUtils', () => {
         expect(desc1.id).toBe("P1");
         expect(desc1.name).toBe("P1");
         expect(desc1.impl).toBe(Component);
-    });
-    it('combineEpics', () => {
-        const plugins = {MapSearchPlugin: MapSearchPlugin};
-        const appEpics = {appEpics: (actions$) => actions$.ofType('TEST_ACTION').map(() => ({type: "NEW_ACTION_TEST"}))};
-        const epics = PluginsUtils.combineEpics(plugins, appEpics);
-        expect(typeof epics ).toEqual('function');
-    });
-    it('combineEpics with defaultEpicWrapper', (done) => {
-        const plugins = {MapSearchPlugin: MapSearchPlugin};
-        const appEpics = {
-            appEpics: (actions$) => actions$.filter( a => a.type === 'TEST_ACTION').map(() => ({type: "RESPONSE"})),
-            appEpics2: (actions$) => actions$.filter( a => a.type === 'TEST_ACTION1').map(() => {throw new Error(); })};
-        const epics = PluginsUtils.combineEpics(plugins, appEpics);
-        expect(typeof epics ).toEqual('function');
-        epicTest(epics, 1, [{type: 'TEST_ACTION1'}, {type: 'TEST_ACTION'}], actions => {
-            expect(actions.length).toBe(1);
-            expect(actions[0].type).toBe("RESPONSE");
-            done();
-        });
-    });
-
-    it('combineEpics with custom wrapper', (done) => {
-        const plugins = {MapSearchPlugin: MapSearchPlugin};
-        let counter = 0;
-        const appEpics = {
-            appEpics: (actions$) => actions$.filter( a => a.type === 'TEST_ACTION').map(() => ({type: "RESPONSE"}))};
-        const epics = PluginsUtils.combineEpics(plugins, appEpics, epic => (...args) => {counter++; return epic(...args); });
-        epicTest( epics, 1, [{type: 'TEST_ACTION1'}, {type: 'TEST_ACTION'}], () => {
-            expect(counter).toBe(1);
-            done();
-        });
     });
 
     it('connect', () => {
@@ -421,6 +367,90 @@ describe('PluginsUtils', () => {
             expect(resp).toExist();
             expect(resp.myproperty).toBe(true);
             expect(resp.isMapStorePlugin).toBe(true);
+            done();
+        });
+    });
+
+    it('importPlugin', (done) => {
+        axios.get('base/web/client/test-resources/lazy/dummy.js').then(source => {
+            PluginsUtils.importPlugin(source.data, (name, plugin) => {
+                expect(name).toBe('Dummy');
+                plugin.loadPlugin((pluginDef) => {
+                    expect(pluginDef).toExist();
+                    expect(pluginDef.component).toExist();
+                    done();
+                });
+            });
+        });
+    });
+
+    it('loadPlugin', (done) => {
+        PluginsUtils.loadPlugin('base/web/client/test-resources/lazy/dummy.js').then(({name, plugin}) => {
+            expect(name).toBe('Dummy');
+            plugin.loadPlugin((pluginDef) => {
+                expect(pluginDef).toExist();
+                expect(pluginDef.component).toExist();
+                done();
+            });
+        });
+    });
+
+    it('combineReducers', () => {
+        const P1 = {
+            reducers: {
+                reducer1: () => { }
+            }
+        };
+
+        const P2 = {
+            reducers: {
+                reducer1: (state = {}) => ({...state, A: "A" }),
+                reducer2: (state = {}) => state
+            }
+        };
+        const reducers = {
+            reducer3: (state = {}) => state
+        };
+        const spyNo = expect.spyOn(P1.reducers, "reducer1");
+        const finalReducer = PluginsUtils.combineReducers([P1, P2], reducers);
+        const state = finalReducer();
+        expect(state.reducer1).toExist();
+        expect(state.reducer1.A).toBe("A");
+
+        // test overriding
+        expect(spyNo.calls.length).toBe(0);
+    });
+
+    it('combineEpics', () => {
+        const plugins = { MapSearchPlugin: MapSearchPlugin };
+        const appEpics = { appEpics: (actions$) => actions$.ofType('TEST_ACTION').map(() => ({ type: "NEW_ACTION_TEST" })) };
+        const epics = PluginsUtils.combineEpics(plugins, appEpics);
+        expect(typeof epics).toEqual('function');
+    });
+    it('combineEpics with defaultEpicWrapper', (done) => {
+        const plugins = { MapSearchPlugin: MapSearchPlugin };
+        const appEpics = {
+            appEpics: (actions$) => actions$.filter(a => a.type === 'TEST_ACTION').map(() => ({ type: "RESPONSE" })),
+            appEpics2: (actions$) => actions$.filter(a => a.type === 'TEST_ACTION1').map(() => { throw new Error(); })
+        };
+        const epics = PluginsUtils.combineEpics(plugins, appEpics);
+        expect(typeof epics).toEqual('function');
+        epicTest(epics, 1, [{ type: 'TEST_ACTION1' }, { type: 'TEST_ACTION' }], actions => {
+            expect(actions.length).toBe(1);
+            expect(actions[0].type).toBe("RESPONSE");
+            done();
+        });
+    });
+
+    it('combineEpics with custom wrapper', (done) => {
+        const plugins = { MapSearchPlugin: MapSearchPlugin };
+        let counter = 0;
+        const appEpics = {
+            appEpics: (actions$) => actions$.filter(a => a.type === 'TEST_ACTION').map(() => ({ type: "RESPONSE" }))
+        };
+        const epics = PluginsUtils.combineEpics(plugins, appEpics, epic => (...args) => { counter++; return epic(...args); });
+        epicTest(epics, 1, [{ type: 'TEST_ACTION1' }, { type: 'TEST_ACTION' }], () => {
+            expect(counter).toBe(1);
             done();
         });
     });

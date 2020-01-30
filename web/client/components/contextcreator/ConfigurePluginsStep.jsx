@@ -20,6 +20,9 @@ import ToolbarButton from '../misc/toolbar/ToolbarButton';
 import Message from '../I18N/Message';
 import ConfigureMapTemplates from './ConfigureMapTemplates';
 
+import Dropzone from 'react-dropzone';
+import Spinner from "react-spinkit";
+
 /**
  * Converts plugin objects to Transform items
  * @param {string} editedPlugin currently edited plugin
@@ -153,6 +156,8 @@ const configurePluginsStep = ({
     availablePluginsFilterPlaceholder = "contextCreator.configurePlugins.pluginsFilterPlaceholder",
     enabledPluginsFilterPlaceholder = "contextCreator.configurePlugins.pluginsFilterPlaceholder",
     documentationBaseURL,
+    uploadEnabled = false,
+    uploading = false,
     showDialog = {},
     mapTemplates,
     availableTemplatesFilterText,
@@ -168,6 +173,8 @@ const configurePluginsStep = ({
     setSelectedPlugins = () => {},
     changePluginsKey = () => {},
     setEditor = () => {},
+    onEnableUpload = () => {},
+    onUpload = () => {},
     onShowDialog = () => {},
     onSaveTemplate,
     onEditTemplate,
@@ -188,7 +195,33 @@ const configurePluginsStep = ({
     const selectedItems = pluginsToItemsFunc(selectedPlugins, false);
     const availableItems = pluginsToItemsFunc(availablePlugins, true);
     const enabledItems = pluginsToItemsFunc(enabledPlugins, true);
-
+    if (uploadEnabled) {
+        return (<div className="configure-plugins-step-upload"><Dropzone
+            key="dropzone"
+            rejectClassName="alert-danger"
+            className="alert alert-info"
+            onDrop={onUpload}>
+            <div style={{
+                display: "flex",
+                alignItems: "center",
+                width: "100%",
+                height: "100%",
+                justifyContent: "center"
+            }}>
+                <span style={{
+                    textAlign: "center"
+                }}>
+                    <Glyphicon glyph="upload" />
+                    <Message msgId="contextCreator.configurePlugins.uploadLabel"/>
+                    <Glyphicon glyph="1-close" style={{cursor: "pointer"}} onClick={(e) => {
+                        e.stopPropagation();
+                        onEnableUpload(false);
+                    }}/>
+                    {uploading && <Spinner spinnerName="circle" noFadeIn overrideSpinnerClassName="spinner" />}
+                </span>
+            </div>
+        </Dropzone></div>);
+    }
     return (
         <div className="configure-plugins-step">
             <Transfer
@@ -205,7 +238,10 @@ const configurePluginsStep = ({
                         glyph: 'info-sign',
                         title: 'contextCreator.configurePlugins.searchResultsEmpty'
                     },
-                    onFilter: onFilterAvailablePlugins
+                    onFilter: onFilterAvailablePlugins,
+                    tools: [{
+                        id: "upload", glyph: "upload", onClick: () => onEnableUpload(true), tooltipId: 'contextCreator.configurePlugins.tooltips.uploadPlugin'
+                    }]
                 }}
                 rightColumn={{
                     items: enabledItems,
