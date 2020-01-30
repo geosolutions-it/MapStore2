@@ -105,7 +105,7 @@ export const remove = (mediaType, store) => {
     const id = selectedIdSelector(state);
     return Observable.of(id).do(
         () => {
-            return store.dispatch(removeResource(id));
+            return store.dispatch(removeResource(id, mediaType));
         }
     ).map(() => ({id, type: mediaType}));
 };

@@ -9,7 +9,8 @@ import React from 'react';
 import {
     compose,
     renameProp,
-    withProps
+    withProps,
+    withHandlers
 } from 'recompose';
 import {removeMedia} from '../../../actions/mediaEditor';
 import {isMediaResourceUsed} from '../../../selectors/geostory';
@@ -24,9 +25,16 @@ import Message from '../../I18N/Message';
  * The message shown changed if the resource is used in the story or not
  */
 export default compose(
-    connect((state) => ({
-        isUsed: isMediaResourceUsed(state, selectedIdSelector(state))})
-    , {onClick: removeMedia}),
+    connect(
+        (state) => ({
+            isUsed: isMediaResourceUsed(state, selectedIdSelector(state))})
+        , {removeMedia}
+    ),
+    withHandlers({
+        onClick: ({removeMedia: remove, mediaType}) => () => {
+            remove(mediaType);
+        }
+    }),
     withProps(({isUsed}) => ({
         confirmTitle: <Message msgId="mediaEditor.mediaList.removeResourceTitle"/>,
         confirmContent: <Message msgId={!isUsed ? "mediaEditor.mediaList.confirmRemoveResource" : "mediaEditor.mediaList.confirmRemoveUsedResource"}/>
