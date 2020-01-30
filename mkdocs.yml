@@ -64,34 +64,48 @@ pages:
       - Background Selector: 'user-guide/background.md'
       - Timeline: 'user-guide/timeline.md'
       - Footer: 'user-guide/footer.md'
-    - Exploring Dashboards: 
+    - Exploring Dashboards:
       - Overview: 'user-guide/exploring-dashboards.md'
       - Adding widgets: 'user-guide/adding-widgets.md'
       - Connecting widgets: 'user-guide/connecting-widgets.md'
   - Developer Guide:
-    - Dev Setup and Run: 'developer-guide/index.md'
-    - Database Setup: 'developer-guide/database-setup.md'
+    - Quick Setup and Run: 'developer-guide/index.md'
     - Infrastructure: 'developer-guide/infrastructure-and-general-architecture.md'
-    - Developing with MapStore: 'developer-guide/developing-with-mapstore-2-intro.md'
+    - Developing with MapStore:
+      - Introduction: 'developer-guide/developing-with-mapstore-2-intro.md'
+      - Folders Structure: 'developer-guide/project-structure.md'
+      - Developing and Debugging: 'developer-guide/developing.md'
+      - Building and Deploying: 'developer-guide/building-and-deploying.md'
+      - Front End Technologies: 'developer-guide/reactjs-and-redux-introduction.md'
+      - Plugins architecture: 'developer-guide/plugins-architecture.md'
+
+      - Internationalization: 'developer-guide/internationalization.md'
+      - Custom dependencies: 'developer-guide/custom-dependencies.md'
+      - Styling and theming: 'developer-guide/customize-theme.md'
+      - FAQ: 'developer-guide/dev-faq.md'
+    - Guidelines:
+      - Code Conventions: 'developer-guide/code-conventions.md'
+      - Documentation: 'developer-guide/documentation-guidelines.md'
+      - Migration: 'developer-guide/mapstore-migration-guide.md'
+      - Release: 'developer-guide/release.md'
     - How to:
       - Dev How To: 'developer-guide/dev-how-to.md'
       - Writing Plugins: 'developer-guide/plugins-howto.md'
       - Writing Epics: 'developer-guide/writing-epics.md'
       - Writing Actions and Reducers: 'developer-guide/writing-actions-reducers.md'
-      - Styling and theming: 'developer-guide/customize-theme.md'
-    - Configuration: 'developer-guide/configuration-files.md'
+    - Configuration:
+      - Configuration Files: 'developer-guide/configuration-files.md'
+      - Application Configuration: 'developer-guide/local-config.md'
+      - Configuring plugins: 'developer-guide/plugins-documentation.md'
+      - Map Configuration: 'developer-guide/maps-configuration.md'
+    - Database Setup: 'developer-guide/database-setup.md'
     - Integrations:
       - users:
         - GeoServer: 'developer-guide/integrations/users/geoserver.md'
         - LDAP: 'developer-guide/integrations/users/ldap.md'
-    - Migration: 'developer-guide/mapstore-migration-guide.md'
-    - How to Release: 'developer-guide/release.md'
     - Projects:
       - MapStore Projects: 'developer-guide/mapstore-projects.md'
       - Project Creation Script: 'developer-guide/project-creation-script.md'
-    - Plugins:
-      - Plugins Architecture: 'developer-guide/plugins-architecture.md'
-      - Configuring Plugins: 'developer-guide/plugins-documentation.md'
     - Communicating with MapStore:
       - API usage: 'developer-guide/API-usage.md'
       - MapViewer query paramaters: 'developer-guide/map-query-parameters.md'

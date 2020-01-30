@@ -18,7 +18,8 @@ const {
     getKmzFile,
     getGpxFile,
     getGeoJsonFile,
-    getMapFile
+    getMapFile,
+    getUnsupportedMapFile
 } = require('./testData');
 
 const rxjsConfig = require('recompose/rxjsObservableConfig').default;
@@ -161,6 +162,21 @@ describe('processFiles enhancer', () => {
             if (props.files) {
                 expect(props.files.layers.length).toBe(0);
                 expect(props.files.maps.length).toBe(1);
+                done();
+            }
+        }));
+        ReactDOM.render(<Sink />, document.getElementById("container"));
+    });
+    it('an error was thrown while processFiles read map file that has an unsupported projection', (done) => {
+        const Sink = compose(
+            processFiles,
+            mapPropsStream(props$ => props$.merge(
+                props$
+                    .take(1)
+                    .switchMap(({ onDrop = () => { } }) => getUnsupportedMapFile().map((file) => onDrop([file]))).ignoreElements()))
+        )(createSink(props => {
+            expect(props).toExist();
+            if (props.error) {
                 done();
             }
         }));

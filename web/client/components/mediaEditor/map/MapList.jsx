@@ -9,6 +9,7 @@ import React from "react";
 import {compose, withProps, withHandlers, mapPropsStream} from 'recompose';
 
 import MapCatalogComp from '../../maps/MapCatalog';
+import Message from '../../I18N/Message';
 import mapCatalog from '../../maps/enhancers/mapCatalog';
 import handleMapSelect from '../../widgets/builder/wizard/map/enhancers/handleMapSelect';
 import Filter from '../../misc/Filter';
@@ -17,7 +18,7 @@ import SideGrid from '../../misc/cardgrids/SideGrid';
 import { filterResources } from '../../../utils/GeoStoryUtils';
 import { SourceTypes } from '../../../utils/MediaEditorUtils';
 import withFilter from '../enhancers/withFilter';
-
+import  withSelectedMapReload from '../enhancers/withSelectedMapReload';
 
 const Icon = require('../../misc/FitIcon');
 
@@ -71,21 +72,28 @@ const MapList = ({
     selectItem = () => {}
 }) => {
     if (selectedSource.type === SourceTypes.GEOSTORY) {
+        const maps = filterResources(resources, filterText);
+
         return (<div className="ms-mapList">
             <FilterLocalized
                 filterPlaceholder="mediaEditor.mediaPicker.mapFilter"
                 filterText={filterText}
                 onFilter={onFilter}
             />
-            <SideGrid
-                items={filterResources(resources, filterText).map(({ id, data}) => ({
-                    preview: data.thumbnail ? <img src={data.thumbnail}/> : defaultPreview,
-                    title: data.name || data.title,
-                    onClick: () => selectItem(id),
-                    selected: selectedItem && selectedItem.id && id === selectedItem.id,
-                    description: data.description
-                }))}
-            />
+            {maps.length > 0 && (
+                <SideGrid
+                    items={maps.map(({ id, data}) => ({
+                        preview: data.thumbnail ? <img src={data.thumbnail}/> : defaultPreview,
+                        title: data.name || data.title,
+                        onClick: () => selectItem(id),
+                        selected: selectedItem && selectedItem.id && id === selectedItem.id,
+                        description: data.description
+                    }))}
+                />) || (
+                <div className="msSideGrid">
+                    <Message msgId="mediaEditor.mapList.emptyList"/>
+                </div>)
+            }
         </div>);
     }
     if (selectedSource.type === SourceTypes.GEOSTORE) {
@@ -118,5 +126,6 @@ export default compose(
     withProps(() => ({
         includeMapId: true
     })),
-    handleMapSelect
+    handleMapSelect,
+    withSelectedMapReload
 )(MapList);

@@ -1120,7 +1120,8 @@
             },
             "errors": {
                 "fileNotSupported": "Archivo no compatible",
-                "unknownError": "hubo un error desconocido durante la importación"
+                "unknownError": "hubo un error desconocido durante la importación",
+                "projectionNotSupported": "La proyección del archivo que está intentando importar no es compatible"
             }
         },
         "mapExport": {
@@ -1472,9 +1473,9 @@
                     "preview": "Vista previa",
                     "addLayer": "Agregar una capa al mapa",
                     "useTheSelectedLayer": "Usar la capa seleccionada",
-                    "connectToAMap": "Conectar a un mapa",
-                    "connectToTheMap": "Conectarse al mapa",
-                    "selectMapToConnect": "Seleccione el mapa para conectarse",
+                    "connectToAMap": "Conectarse a otro widget",
+                    "connectToTheMap": "Conéctese al otro widget",
+                    "selectMapToConnect": "Seleccione el widget para conectarse",
                     "clearConnection": "Borrar conexión"
                 },
                 "errors": {
@@ -2092,7 +2093,12 @@
                 "confirmExitContent": "¿Descartar cambios pendientes?"
             },
             "mapForm": {
-                "thumbnailMessage": "El tamaño de las imágenes debe ser un cuadrado de 98 px x 98 px, máximo 100 kb"
+                "thumbnailMessage": "El tamaño de las imágenes debe ser un cuadrado de 98 px x 98 px, máximo 100 kb",
+                "confirmMapSaveTitle": "Actualización de mapa",
+                "confirmMapSaveContent": "La actualización de este mapa restablecerá todos los mapas dependientes en la historia previamente personalizada a través del editor en línea, ¿confirma?"
+            },
+            "mapList": {
+                "emptyList": "Haga clic en el botón más para crear un mapa o seleccione un servicio de mapas diferente."
             }
         },
         "backgroundDialog": {
@@ -2311,6 +2317,7 @@
                     "title": "Error de configuración",
                     "body": "Error en el análisis de la configuración JSON.\nEl siguiente error ha ocurrido:\n\"{error}\""
                 },
+                "uploadLabel": "Haga clic para elegir un paquete de extensión para agregar a MapStore, o arrastre el paquete directamente a la página",
                 "tooltips": {
                     "enableUserPlugin": "Habilitar la selección del complemento actual para el usuario",
                     "disableUserPlugin": "Desactiva la selección del complemento actual para el usuario",
@@ -2318,6 +2325,7 @@
                     "deactivatePlugin": "Desactivar la carga de este complemento al inicio",
                     "editConfiguration": "Editar configuración del complemento",
                     "pluginDocumentation": "Abrir la documentación de configuración del complemento",
+                    "uploadPlugin": "Agregar una extensión a MapStore",
                     "mapTemplatesConfig": "Configurar plantillas"
                 },
                 "saveCfgErrorNotification":  {

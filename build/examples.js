@@ -9,5 +9,6 @@ module.exports = {
     login: path.join(__dirname, "..", "web", "client", "examples", "login", "app"),
     plugins: path.join(__dirname, "..", "web", "client", "examples", "plugins", "app"),
     api: path.join(__dirname, "..", "web", "client", "examples", "api", "app"),
-    hooks: path.join(__dirname, "..", "web", "client", "examples", "hooks", "app")
+    hooks: path.join(__dirname, "..", "web", "client", "examples", "hooks", "app"),
+    lazyplugins: path.join(__dirname, "..", "web", "client", "examples", "lazyplugins", "app")
 };

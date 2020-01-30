@@ -587,7 +587,32 @@ const compareMapChanges = (map1 = {}, map2 = {}) => {
     return isEqual(filteredMap1, filteredMap2);
 };
 
+/**
+ * creates utilities for registering, fetching, executing hooks
+ * used to override default ones in order to have a local hooks object
+ * one for each map widget
+ */
+const createRegisterHooks = () => {
+    let hooksCustom = {};
+    return {
+        registerHook: (name, hook) => {
+            hooksCustom[name] = hook;
+        },
+        getHook: (name) => hooksCustom[name],
+        executeHook: (hookName, existCallback, dontExistCallback) => {
+            const hook = hooksCustom[hookName];
+            if (hook) {
+                return existCallback(hook);
+            }
+            if (dontExistCallback) {
+                return dontExistCallback();
+            }
+            return null;
+        }
+    };
+};
 module.exports = {
+    createRegisterHooks,
     EXTENT_TO_ZOOM_HOOK,
     RESOLUTIONS_HOOK,
     RESOLUTION_HOOK,

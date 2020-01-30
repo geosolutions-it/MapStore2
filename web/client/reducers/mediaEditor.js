@@ -21,6 +21,7 @@ import {
     SET_MEDIA_TYPE,
     SHOW
 } from '../actions/mediaEditor';
+import {LOCATION_CHANGE} from 'connected-react-router';
 import { compose, set } from '../utils/ImmutableUtils';
 import {
     sourceIdSelector,
@@ -99,13 +100,13 @@ export default (state = DEFAULT_STATE, action) => {
         return set(`data["${mediaType}"]["${sourceId}"]`, { params, resultData }, state);
     }
     case UPDATE_ITEM: {
-        const {item} = action;
+        const {item, mode} = action;
         const sourceId = sourceIdSelector({mediaEditor: state});
         const mediaType = currentMediaTypeSelector({mediaEditor: state});
         const resources = resultDataSelector({mediaEditor: state}).resources;
         const indexItem = findIndex(resources, {id: item.id});
         const resource = find(resources, {id: item.id});
-        const newResource = merge({}, merge({}, resource), merge({}, item));
+        const newResource = mode === "merge" ? merge({}, merge({}, resource), merge({}, item)) : item;
         return set(`data["${mediaType}"]["${sourceId}"].resultData.resources[${indexItem}]`, newResource, state);
     }
     case SELECT_ITEM: {
@@ -129,6 +130,8 @@ export default (state = DEFAULT_STATE, action) => {
             // set('settings', action.settings || state.settings), // TODO: allow fine customization
             // set('stashedSettings', state.settings) // This should allow to use default config or customize for a different usage
         )(state);
+    case LOCATION_CHANGE:
+        return DEFAULT_STATE;
     default:
         return state;
     }

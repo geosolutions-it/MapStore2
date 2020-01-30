@@ -32,6 +32,10 @@
         "urlPattern": ".*geostore.*",
         "method": "bearer"
       }, {
+        "urlPattern": ".*rest/config.*",
+        "method": "bearer"
+      },
+      {
         "urlPattern": "http(s)?\\:\\/\\/gs-stable\\.geo-solutions\\.it\\/geoserver/.*",
         "authkeyParamName": "authkey",
         "method": "authkey"

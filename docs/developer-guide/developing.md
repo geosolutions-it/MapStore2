@@ -7,7 +7,7 @@ Due to the dual nature of the project (Java backend and JavaScript frontend) bui
 
 A basic knowledge of both tools is required.
 
-# Developing and debugging the framework
+## Frontend
 
 To start developing the MapStore framework you have to:
 
@@ -29,71 +29,95 @@ Then point your preferred browser to [http://localhost:8081](http://localhost:80
 
 The HomePage contains links to the available demo applications.
 
-## Frontend debugging
+### Debugging the frontend
 
 The development instance uses file watching and live reload, so each time a MapStore file is changed, the browser will reload the updated application.
 
-Use your favourite editor / IDE to develop and debug on the browser as needed.
+Use your favorite editor / IDE to develop and debug on the browser as needed.
 
 We suggest to use one of the following:
 
+* [Visual Studio Code](https://code.visualstudio.com/) with the following plugins:
+  * [ESLint](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint) `dbaeumer.vscode-eslint`
+  * [EditorConfig for VSCode](https://marketplace.visualstudio.com/items?itemName=EditorConfig.EditorConfig) `editorconfig.editorconfig`
 * [Atom](https://atom.io/) with the following plugins:
   * editorconfig
-    linter
-    linter-eslint
-    react
-    lcovinfo
-    minimap & minimap-highlight-selected
-    highlight-line & highlight-selected
+  * linter
+  * linter-eslint
+  * react
+  * lcovinfo
+  * minimap & minimap-highlight-selected
+  * highlight-line & highlight-selected
 * [Sublime Text Editor](http://www.sublimetext.com/) with the following plugins:
-    Babel
-    Babel snippets
-    Emmet
+  * Babel
+  * Babel snippets
+  * Emmet
 
 ### Redux Dev Tools
 
 When you are running the application locally using `npm start` you can debug the application with [redux dev tools](https://github.com/gaearon/redux-devtools) using the flag ?debug=true
 
-```
-http://localhost:8081/?debug=true#/?_k=c51bb5
+```url
+http://localhost:8081/?debug=true#/
 ```
 
 It also integrates with the [browser's extension](https://github.com/zalmoxisus/redux-devtools-extension), if installed.
 
 This way you can monitor the application's state evolution and the action triggered by your application.
 
-## Back-end services debugging
+## Frontend unit tests
 
-By default `npm start` runs a dev server connected to the mapstore 2 online demo as back-end.
+To run the MapStore frontend test suite you can use:
+
+`npm test`
+
+You can also have a continuously running watching test runner, that will execute the complete suite each time a file is changed, launching:
+
+`npm run continuoustest`
+
+To run ESLint checks launch:
+
+`npm run lint`
+
+To run the same tests Travis will check (before a pull request):
+`npm run travis`
+
+More information on frontend building tools and configuration is available [here](frontend-building-tools-and-configuration)
+
+## Back-end
+
+By default `npm start` runs a dev server connected to the mapstore online demo as back-end.
+
+### Using local backend
 
 If you want to use your own local test back-end you have to:
 
-1. run `mvn jetty:run` - it makes run the mapstore back-end locally (port 8080), ìn memory db - By default 2 users
-    * `admin` password `admin`
-    * `user` with password `user`
+* run `mvn jetty:run` - it makes run the mapstore back-end locally (port 8080), ìn memory db - By default 2 users
+  * `admin` password `admin`
+  * `user` with password `user`
 
-2. Setup client to use the local back-end, apply this changes to `buildConfig.js` (at the devServer configuration)
+* Setup client to use the local back-end, apply this changes to `buildConfig.js` (at the devServer configuration)
 
-    ```Javascript
-    devServer: {
-            proxy: {
-                '/rest/': {
-                    target: "http://localhost:8080"
-                },
-                '/proxy': {
-                    target: "http://localhost:8080",
-                    secure: false
-                },
-                '/docs': { // this can be used when you run npm run doctest
-                    target: "http://localhost:8081",
-                    pathRewrite: { '/docs': '/mapstore/docs' }
-                }
+```javascript
+devServer: {
+        proxy: {
+            '/rest/': {
+                target: "http://localhost:8080"
+            },
+            '/proxy': {
+                target: "http://localhost:8080",
+                secure: false
+            },
+            '/docs': { // this can be used when you run npm run doctest
+                target: "http://localhost:8081",
+                pathRewrite: { '/docs': '/mapstore/docs' }
             }
-        },
-        // ...
-    ```
+        }
+    },
+    // ...
+```
 
-3. You have to run npm start to run mapstore client on port 8081, that is now connected to the local test back-end
+* You have to run npm start to run mapstore client on port 8081, that is now connected to the local test back-end
 
 You can even run geostore and http-proxy separately and debug them with your own IDE. See the documentation about them in their own repositories.
 
@@ -121,21 +145,66 @@ if you want to change the default port for mapstore back-end you have to edit `p
 </plugin>
 ```
 
-## Frontend testing
+## Debug backend using mvn and eclipse
 
-To run the MapStore frontend test suite you can use:
+To run or debug the server side part of MapStore we suggest to use jetty:run plugin.
+This guide explains how to do it with Eclipse. This procedure is tested with Eclipse Luna.
 
-`npm test`
+### Simply Run the server side part
 
-You can also have a continuously running watching test runner, that will execute the complete suite each time a file is changed, launching:
+you can simply run the server side part using `mvn jetty:run` command. To run the server side part only, run:
 
-`npm run continuoustest`
+```bash
+mvn jetty:run -Pserveronly
+```
 
-To run ESLint checks launch:
+This will skip the javascript building phase, you can now connect the webpack proxy to the server side proxy and debug client side part using:
 
-`npm run lint`
+```bash
+npm start
+```
 
-To run the same tests Travis will check (before a pull request):
-`npm run travis`
+### Enable Remote Debugging with jetty:run
 
-More information on frontend building tools and configuration is available [here](frontend-building-tools-and-configuration)
+Set the maven options as following :
+
+```bash
+# Linux
+MAVEN_OPTS="-Xdebug -Xnoagent -Djava.compiler=NONE -Xrunjdwp:transport=dt_socket,address=4000,server=y,suspend=n"
+```
+
+```bash
+# Windows
+set MAVEN_OPTS=-Xdebug -Xnoagent -Djava.compiler=NONE -Xrunjdwp:transport=dt_socket,address=4000,server=y,suspend=n
+```
+
+then run jetty
+
+```bash
+mvn jetty:run -Pserveronly
+```
+
+### Setup eclipse project
+
+* Run eclipse plugin
+
+```bash
+mvn eclipse:eclipse
+```
+
+* Import the project in eclipse from **File --> Import**
+* Then select Existing project into the Workspace
+* Select root directory as "web" (to avoid eclipse to iterate over all node_modules directories looking for eclipse project)
+* import the project
+
+### Start Debugging with eclipse
+
+* Start Eclipse and open **Run --> Debug Configurations**
+* Create a new Remote Java Application selecting the project "mapstore-web" setting:
+  * host localhost
+  * port 4000
+  * Click on *Debug*
+Remote debugging is now available.
+
+> **NOTE** With some version of eclipse you will have to set `suspend=y` in mvn options to make it work. In this case
+the server will wait for the debug connection at port 4000 (`address=4000`)

@@ -9,7 +9,7 @@
 
 import React from "react";
 import { DropdownButton as DropdownButtonRB, Glyphicon, MenuItem } from 'react-bootstrap';
-import tooltip from '../../misc/enhancers/tooltip';
+import tooltip from '../../misc/enhancers/buttonTooltip';
 import find from 'lodash/find';
 
 const DropdownButton = tooltip(DropdownButtonRB);
@@ -25,12 +25,14 @@ export default function ToolbarDropdownButton({
     tooltipId,
     pullRight = false,
     className = 'square-button-md no-border',
-    disabled
+    disabled,
+    noTooltipWhenDisabled = false
 }) {
     const glyphOption = (find(options, (option) => option.value === value) || { }).glyph;
     return (
         <DropdownButton
             noCaret
+            noTooltipWhenDisabled={noTooltipWhenDisabled}
             tooltipId={tooltipId}
             pullRight={pullRight}
             className={className}

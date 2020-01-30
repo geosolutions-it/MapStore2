@@ -40,27 +40,32 @@ export default updateTitle(({
             <h4><Message msgId="geostory.builder.settings.headerTitle"/></h4>
         </div>
         <FormGroup>
-            <ControlLabel><Message msgId="geostory.builder.settings.title"/></ControlLabel>
-            <SwitchButton
-                onChange={() => onToggleSettings("isTitleEnabled")}
-                className="ms-geostory-settings-switch"
-                checked={settings.isTitleEnabled}
-            />
+            <div style={{ marginBottom: "10px"}}>
+                <ControlLabel><Message msgId="geostory.builder.settings.title"/></ControlLabel>
+                <SwitchButton
+                    onChange={() => onToggleSettings("isTitleEnabled")}
+                    className="ms-geostory-settings-switch"
+                    checked={settings.isTitleEnabled}
+                />
+            </div>
             <InputLocalized
                 disabled={!settings.isTitleEnabled}
                 value={storyTitle}
                 onChange={evt => setStoryTitle(evt.target.value) }
                 onBlur={evt => onUpdateSettings("storyTitle", evt.target.value) }
                 placeholder="geostory.builder.settings.titlePlaceholder"
+                style = {{ marginTop: "10px"}}
             />
         </FormGroup>
         <FormGroup>
-            <ControlLabel><Message msgId="geostory.builder.settings.logo"/></ControlLabel>
-            <SwitchButton
-                onChange={() => onToggleSettings("isLogoEnabled")}
-                className="ms-geostory-settings-switch"
-                checked={settings.isLogoEnabled}
-            />
+            <div style={{ marginBottom: "10px"}}>
+                <ControlLabel><Message msgId="geostory.builder.settings.logo"/></ControlLabel>
+                <SwitchButton
+                    onChange={() => onToggleSettings("isLogoEnabled")}
+                    className="ms-geostory-settings-switch"
+                    checked={settings.isLogoEnabled}
+                />
+            </div>
             {   settings.isLogoEnabled && (<Thumbnail
                 className="ms-geostory-settings-logo"
                 withLabel={false}
@@ -76,12 +81,14 @@ export default updateTitle(({
             }
         </FormGroup>
         <FormGroup>
-            <ControlLabel><Message msgId="geostory.builder.settings.navbar"/></ControlLabel>
-            <SwitchButton
-                onChange={() => onToggleSettings("isNavbarEnabled")}
-                className="ms-geostory-settings-switch"
-                checked={settings.isNavbarEnabled}
-            />
+            <div style={{ marginBottom: "10px"}}>
+                <ControlLabel><Message msgId="geostory.builder.settings.navbar"/></ControlLabel>
+                <SwitchButton
+                    onChange={() => onToggleSettings("isNavbarEnabled")}
+                    className="ms-geostory-settings-switch"
+                    checked={settings.isNavbarEnabled}
+                />
+            </div>
             {   settings.isNavbarEnabled && (<CheckboxTree
                 showNodeIcon={false}
                 nativeCheckboxes

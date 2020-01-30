@@ -344,7 +344,7 @@
             "message": "Drop or click to import an image",
             "suggestion": "(best 300px X 180px, max 500kb)",
             "errorFormat": "Supported formats: png/jpg",
-            "errorSize": "Max allowed size: maxFileSize",
+            "errorSize": "Max allowed size: 500kb",
             "errorCustomSize": "Max allowed size: {maxFileSize}",
             "error": "The provided image is invalid",
             "savedMapTitle": "Saved Map",
@@ -1121,7 +1121,8 @@
             },
             "errors": {
                 "fileNotSupported": "File not supported",
-                "unknownError": "there was an unknown error during import"
+                "unknownError": "there was an unknown error during import",
+                "projectionNotSupported": "The projection of the file(s) you're trying to import is not supported"
             }
         },
         "mapExport": {
@@ -1473,9 +1474,9 @@
                     "preview": "Preview",
                     "addLayer": "Add a layer to the map",
                     "useTheSelectedLayer": "Use the selected layer",
-                    "connectToAMap": "Connect to a map",
-                    "connectToTheMap": "Connect to the map",
-                    "selectMapToConnect": "Select the map to connect",
+                    "connectToAMap": "Connect to another widget",
+                    "connectToTheMap": "Connect to the other widget",
+                    "selectMapToConnect": "Select the widget to connect",
                     "clearConnection": "Clear connection"
                 },
                 "errors": {
@@ -2096,7 +2097,12 @@
                 "confirmExitContent": "Discard pending changes?"
             },
             "mapForm": {
-                "thumbnailMessage": "Size of images should be a square of 98px x 98px, max 100kb"
+                "thumbnailMessage": "Size of images should be a square of 98px x 98px, max 100kb",
+                "confirmMapSaveTitle": "Map Update",
+                "confirmMapSaveContent": "Updating this map will reset all dependent maps in the story previously customized through the inline editor, confirm?"
+            },
+            "mapList": {
+                "emptyList": "Click on the plus button to create a map or select a different map service."
             }
         },
         "backgroundDialog": {
@@ -2315,6 +2321,7 @@
                     "title": "Configuration Error",
                     "body": "Configuration JSON parsing failed.\nThe following error occurred:\n\"{error}\""
                 },
+                "uploadLabel": "Click to choose an extension package to add to MapStore, or drag the package directly on the page",
                 "tooltips": {
                     "enableUserPlugin": "Enable selection of current plugin for user",
                     "disableUserPlugin": "Disable selection of current plugin for user",
@@ -2322,6 +2329,7 @@
                     "deactivatePlugin": "Disable loading this plugin on startup",
                     "editConfiguration": "Edit plugin configuration",
                     "pluginDocumentation": "Open plugin configuration documentation",
+                    "uploadPlugin": "Add an extension to MapStore",
                     "mapTemplatesConfig": "Configure templates"
                 },
                 "saveCfgErrorNotification":  {

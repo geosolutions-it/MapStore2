@@ -67,15 +67,15 @@ let plugins;
  *  - develop a tool Component, in JSX (e.g. TestSupport), for each supported mapping library
  * ```
  * const React = require('react');
- *    const TestSupport = React.createClass({
- *     propTypes: {
+ *    class TestSupport extends React.Component {
+ *     static propTypes = {
  *            label: PropTypes.string
- *        },
+ *        }
  *        render() {
  *            alert(this.props.label);
  *            return null;
  *        }
- *    });
+ *    }
  *    module.exports = TestSupport;
  * ```
  *  - include the tool(s) in the requires section of plugins.js amd give it a name:
@@ -427,6 +427,8 @@ module.exports = {
         onResolutionsChange: setMapResolutions
     })(MapPlugin),
     reducers: {
+        map: require('../reducers/map'),
+        layers: require('../reducers/layers'),
         draw: require('../reducers/draw'),
         highlight: require('../reducers/highlight'),
         maptype: require('../reducers/maptype'),
