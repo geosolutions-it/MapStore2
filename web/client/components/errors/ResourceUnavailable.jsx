@@ -30,7 +30,7 @@ const HTML = require('../I18N/HTML');
  */
 
 const ResourceUnavailable = emptyState(
-    ({enabled, login, status, alwaysVisible}) => enabled && alwaysVisible || enabled && login || enabled && status !== 403,
+    ({enabled, login, status, alwaysVisible, isSharedStory}) => enabled && alwaysVisible || enabled && login || enabled && status !== 403 || enabled && status === 403 && isSharedStory,
     ({status, mode = 'map', glyphs = {map: '1-map', dashboard: 'dashboard'}, errorMessage, errorMessageParams, showHomeButton, homeButton}) => ({
         glyph: glyphs[mode] || '1-map',
         title: status === 403 && <Message msgId={`${mode}.errors.loading.notAccessible`} />
