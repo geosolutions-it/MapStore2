@@ -31,7 +31,8 @@ export default ({
     editMedia = () => {},
     editWebPage = () => {},
     update = () => {},
-    remove = () => {}
+    remove = () => {},
+    bubblingTextEditing = () => {}
 }) => (
     <Contents
         className="ms-column-contents"
@@ -45,6 +46,7 @@ export default ({
         remove={remove}
         viewWidth={viewWidth}
         viewHeight={viewHeight}
+        bubblingTextEditing={bubblingTextEditing}
         tools={{
             [ContentTypes.TEXT]: ['remove'],
             [MediaTypes.IMAGE]: ['editMedia', 'size', 'align', 'remove'],
