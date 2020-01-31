@@ -2087,7 +2087,8 @@
                 "mapFilter": "Filtra mappe",
                 "videoFilter": "Filtra video",
                 "imageFilter": "Filtra immagini",
-                "import": "Importa la risorsa localmente"
+                "import": "Importa la risorsa localmente",
+                "trash": "Elimina la risorsa"
             },
             "mediaform": {
                 "confirmExitTitle": "Chiudi Media From",
@@ -2097,6 +2098,11 @@
                 "thumbnailMessage": "Le dimensioni delle immagini devono essere di un quadrato di 98 px x 98 px, max 100 KB",
                 "confirmMapSaveTitle": "Aggiornare la mappa",
                 "confirmMapSaveContent": "L'aggiornamento di questa mappa ripristinerà tutte le mappe dipendenti nella storia precedentemente personalizzate tramite l'editor in linea, conferma?"
+            },
+            "mediaList" : {
+                "removeResourceTitle": "Sei sicuro?",
+                "confirmRemoveResource": "Vuoi rimuovere questa risorsa multimediale dalla storia?",
+                "confirmRemoveUsedResource": "Questa risorsa sarà rimossa anche da tutte le sezioni/contenuti che rimarrano vuoti. La vuoi rimuovere dalla storia?"
             },
             "mapList": {
                 "emptyList": "Premere il pulsante più per creare una mappa o selezionare un altro servizio di mappe."
