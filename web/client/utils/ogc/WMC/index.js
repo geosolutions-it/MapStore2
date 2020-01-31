@@ -64,7 +64,7 @@ const extractTag = (xmlNameSpace, xmlObj, tagName) => head(extractTags(xmlNameSp
  * @param {string} attrName attribute name
  */
 const extractAttributeValue = (xmlNameSpace, tagObj, attrName) => values(get(tagObj, 'params', {})).reduce(
-    (result, attribute) => result || attribute.local === attrName && attribute.uri === xmlNameSpace && attribute.value, null);
+    (result, attribute) => result || attribute.local === attrName && attribute.uri === xmlNameSpace && attribute.value, undefined);
 
 /**
  * Make an object out of attribute values: {[attrName]: attrValue}
@@ -94,7 +94,7 @@ const serviceToLayerType = (service) => {
 
 const parseBoolean = (string = '') => {
     const lowered = string.toLowerCase();
-    return lowered === 'true' ? true : false;
+    return lowered === 'true' || lowered === '1' ? true : false;
 };
 
 const removeEmptyProps = (obj) => keys(obj).filter(key => obj[key] !== undefined).reduce((result, key) => ({...result, [key]: obj[key]}), {});
@@ -159,7 +159,7 @@ export const toMapConfig = (wmcString, generateLayersGroup = false) => {
                 const layerExtensions = rootTagExtractor(layer, 'Extension');
                 const server = rootTagExtractor(layer, 'Server');
                 const styleTag = head(rootTagsExtractor(rootTagExtractor(layer, 'StyleList'), 'Style')
-                    .filter(style => attrExtractor(style, 'current') === '1'));
+                    .filter(style => parseBoolean(attrExtractor(style, 'current'))));
                 const transparentValue = get(olTagExtractor(layerExtensions, 'transparent'), 'charContent');
 
                 const olParameters = {
@@ -174,13 +174,13 @@ export const toMapConfig = (wmcString, generateLayersGroup = false) => {
                 // constructed ms layer object
                 const msLayerBase = {
                     id: uuidv1(),
-                    visibility: attrExtractor(layer, 'hidden') === '0' ? true : false,
+                    visibility: !parseBoolean(attrExtractor(layer, 'hidden')),
                     type: serviceToLayerType(attrExtractor(server, 'service')),
                     url: extractAttributeValue(xlinkNamespace, rootTagExtractor(server, 'OnlineResource'), 'href'),
                     name: get(rootTagExtractor(layer, 'Name'), 'charContent'),
                     title: get(rootTagExtractor(layer, 'Title'), 'charContent'),
                     format: get(head(rootTagsExtractor(rootTagExtractor(layer, 'FormatList'), 'Format')
-                        .filter(format => attrExtractor(format, 'current') !== '0')), 'charContent'),
+                        .filter(format => parseBoolean(attrExtractor(format, 'current')))), 'charContent'),
                     style: get(rootTagExtractor(styleTag, 'Name'), 'charContent'),
                     bbox: olParameters.maxExtent !== {} ? {
                         bounds: olParameters.maxExtent
