@@ -28,7 +28,7 @@ export default compose(
     visibilityHandler({ threshold: DEFAULT_THRESHOLD}),
     withStateHandlers({textEditorActive: false}, {
         bubblingTextEditing: () => (editing) => {
-            return  {textEditorActiveClass: editing ? 'ms-text-editor-active' : ''};
+            return  {textEditorActiveClass: editing ? ' ms-text-editor-active' : ''};
         }
     }),
     wrap(ContentWrapper),
