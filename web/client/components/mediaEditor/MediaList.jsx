@@ -7,6 +7,7 @@
 */
 import React from "react";
 import {isNil} from 'lodash';
+import {compose} from 'recompose';
 
 import { MediaTypes } from '../../utils/GeoStoryUtils';
 import { SourceTypes } from '../../utils/MediaEditorUtils';
@@ -14,8 +15,9 @@ import Toolbar from '../misc/toolbar/Toolbar';
 import MapList from './map/MapList';
 import ImageList from './image/ImageList';
 import withMapEditing from  './enhancers/withMapEditing';
+import withRemoveResource from  './enhancers/withRemoveResource';
 
-export default withMapEditing(({
+export default compose(withMapEditing, withRemoveResource)(({
     resources = [],
     selectedItem,
     selectedSource = {},
@@ -28,6 +30,7 @@ export default withMapEditing(({
     setAddingMedia = () => {},
     setEditingMedia = () => {},
     editRemoteMap = () => {},
+    removeMedia = () => {},
     buttons = [
         {
             glyph: 'plus',
@@ -46,8 +49,13 @@ export default withMapEditing(({
             tooltipId: 'mediaEditor.mediaPicker.edit',
             visible: selectedSource.type === SourceTypes.GEOSTORE && mediaType === MediaTypes.MAP && !isNil(selectedItem),
             onClick: editRemoteMap
+        },
+        {
+            glyph: 'trash',
+            tooltipId: 'mediaEditor.mediaPicker.trash',
+            visible: selectedSource.type === SourceTypes.GEOSTORY && !isNil(selectedItem),
+            onClick: removeMedia
         }
-
     ]
 }) => (
     <div style={{position: 'relative'}} className="ms-mediaList">

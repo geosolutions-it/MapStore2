@@ -90,7 +90,7 @@ const MapList = ({
                         description: data.description
                     }))}
                 />) || (
-                <div className="msSideGrid">
+                <div className="msEmptyListMessage">
                     <Message msgId="mediaEditor.mapList.emptyList"/>
                 </div>)
             }

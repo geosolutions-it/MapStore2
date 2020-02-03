@@ -24,7 +24,7 @@ const {MAP_CONFIG_LOADED, MAP_CONFIG_LOAD_ERROR, MAP_INFO_LOAD_ERROR} = require(
 const {mapSelector} = require('../selectors/map');
 const { isLoggedIn } = require('../selectors/security');
 const { unsavedMapSelector } = require('../selectors/controls');
-
+const {isSharedStory} = require('../selectors/geostory');
 
 /**
  * Enabled/disabled mask based on map load feedback, in case of error enable feedbackMask.
@@ -185,7 +185,7 @@ const feedbackMaskPromptLogin = (action$, store) => // TODO: separate login requ
                 ? !unsavedMapSelector(store.getState())
                 : true
             ))
-        .filter(() => !isLoggedIn(store.getState()))
+        .filter(() => !isLoggedIn(store.getState()) && !isSharedStory(store.getState()))
         .exhaustMap(
             () =>
                 Rx.Observable.of(loginRequired()) // prompt login

@@ -18,12 +18,14 @@ const {isLoggedIn} = require('../selectors/security');
 const Message = require('../components/I18N/Message');
 const ResourceUnavailable = require('../components/errors/ResourceUnavailable');
 const {feedbackMaskSelector} = require('../selectors/feedbackmask');
+const {isSharedStory} = require('../selectors/geostory');
 
 const feedbackMaskPluginSelector = createSelector([
     feedbackMaskSelector,
     isLoggedIn,
-    state => !get(state, 'security')
-], ({loading, enabled, status, mode, errorMessage, errorMessageParams}, login, alwaysVisible) => ({
+    state => !get(state, 'security'),
+    isSharedStory
+], ({loading, enabled, status, mode, errorMessage, errorMessageParams}, login, alwaysVisible, shared) => ({
     loading,
     enabled,
     status,
@@ -32,7 +34,8 @@ const feedbackMaskPluginSelector = createSelector([
     errorMessageParams,
     login,
     alwaysVisible,
-    showHomeButton: !alwaysVisible
+    showHomeButton: !alwaysVisible,
+    isSharedStory: shared
 }));
 
 const HomeButton = connect(() => ({}), {

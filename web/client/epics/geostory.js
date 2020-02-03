@@ -67,7 +67,7 @@ import { LOGIN_SUCCESS, LOGOUT } from '../actions/security';
 
 
 import { isLoggedIn, isAdminUserSelector } from '../selectors/security';
-import { resourceIdSelectorCreator, resourceByIdSelectorCreator, createPathSelector, currentStorySelector, resourcesSelector, getFocusedContentSelector} from '../selectors/geostory';
+import { resourceIdSelectorCreator, createPathSelector, currentStorySelector, resourcesSelector, getFocusedContentSelector, isSharedStory, resourceByIdSelectorCreator} from '../selectors/geostory';
 import { currentMediaTypeSelector, sourceIdSelector} from '../selectors/mediaEditor';
 
 import { wrapStartStop } from '../observables/epics';
@@ -295,7 +295,7 @@ export const loadGeostoryEpic = (action$, {getState = () => {}}) => action$
                     let message = "geostory.errors.loading.unknownError";
                     if (e.status === 403 ) {
                         message = "geostory.errors.loading.pleaseLogin";
-                        if (isLoggedIn(getState())) {
+                        if (isLoggedIn(getState()) || isSharedStory(getState())) {
                             // TODO only in view mode
                             message = "geostory.errors.loading.geostoryNotAccessible";
                         }
