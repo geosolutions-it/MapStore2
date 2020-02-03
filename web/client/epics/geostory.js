@@ -49,7 +49,8 @@ import {
     UPDATE,
     CHANGE_MODE,
     SET_WEBPAGE_URL,
-    EDIT_WEBPAGE
+    EDIT_WEBPAGE,
+    UPDATE_CURRENT_PAGE
 } from '../actions/geostory';
 import { setControlProperty } from '../actions/controls';
 
@@ -66,7 +67,7 @@ import { LOGIN_SUCCESS, LOGOUT } from '../actions/security';
 
 
 import { isLoggedIn, isAdminUserSelector } from '../selectors/security';
-import { resourceIdSelectorCreator, createPathSelector, currentStorySelector, resourcesSelector, getFocusedContentSelector, isSharedStory} from '../selectors/geostory';
+import { resourceIdSelectorCreator, createPathSelector, currentStorySelector, resourcesSelector, getFocusedContentSelector, isSharedStory, modeSelector} from '../selectors/geostory';
 import { currentMediaTypeSelector, sourceIdSelector} from '../selectors/mediaEditor';
 
 import { wrapStartStop } from '../observables/epics';
@@ -404,3 +405,21 @@ export const inlineEditorEditMap = (action$, {getState}) =>
 export const closeShareOnGeostoryChangeMode = action$ =>
     action$.ofType(CHANGE_MODE)
         .switchMap(() => Observable.of(setControlProperty('share', 'enabled', false)));
+
+/**
+ * Handle the scroll of section preview in the sidebar
+ * @memberof epics.mediaEditor
+ * @param {Observable} action$ stream of actions
+ * @param {object} store redux store
+ */
+export const scrollSideBar = (action$, {getState}) =>
+    action$.ofType(UPDATE_CURRENT_PAGE)
+        .filter(({columnId, sectionId}) => modeSelector(getState()) === 'edit' && ((columnId && columnId !== "EMPTY") || sectionId))
+        .debounceTime(100)
+        .do(({columnId, sectionId}) => {
+            const id = `sd_${columnId || sectionId}`;
+            let el = document.getElementById(id);
+            if (el) {
+                el.scrollIntoView({behavior: "smooth", block: "nearest"});
+            }
+        }).ignoreElements();
