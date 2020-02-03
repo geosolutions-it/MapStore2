@@ -58,7 +58,8 @@ import {
     HIDE,
     EDIT_MEDIA,
     CHOOSE_MEDIA,
-    selectItem
+    selectItem,
+    setMediaType
 } from '../actions/mediaEditor';
 import { show, error } from '../actions/notifications';
 
@@ -66,7 +67,7 @@ import { LOGIN_SUCCESS, LOGOUT } from '../actions/security';
 
 
 import { isLoggedIn, isAdminUserSelector } from '../selectors/security';
-import { resourceIdSelectorCreator, createPathSelector, currentStorySelector, resourcesSelector, getFocusedContentSelector, isSharedStory} from '../selectors/geostory';
+import { resourceIdSelectorCreator, createPathSelector, currentStorySelector, resourcesSelector, getFocusedContentSelector, isSharedStory, resourceByIdSelectorCreator} from '../selectors/geostory';
 import { currentMediaTypeSelector, sourceIdSelector} from '../selectors/mediaEditor';
 
 import { wrapStartStop } from '../observables/epics';
@@ -75,6 +76,7 @@ import { scrollToContent, ContentTypes, isMediaSection, Controls, getEffectivePa
 import { SourceTypes } from './../utils/MediaEditorUtils';
 
 import { HIDE as HIDE_MAP_EDITOR, SAVE as SAVE_MAP_EDITOR, hide as hideMapEditor, SHOW as MAP_EDITOR_SHOW} from '../actions/mapEditor';
+
 
 const updateMediaSection = (store, path) => action$ =>
     action$.ofType(CHOOSE_MEDIA)
@@ -230,15 +232,21 @@ export const editMediaForBackgroundEpic = (action$, store) =>
     action$.ofType(EDIT_MEDIA)
         .switchMap(({path, owner}) => {
             const selectedResource = resourceIdSelectorCreator(path)(store.getState());
-            return Observable.of(
-                showMediaEditor(owner),
-                selectItem(selectedResource)
-            )
+            const resource = resourceByIdSelectorCreator(selectedResource)(store.getState());
+            return Observable.of(currentMediaTypeSelector(store.getState()))
+            .filter((mediaType) => {
+                return resource && resource.type !== mediaType;
+            })
+            .map(() => setMediaType(resource.type)).merge(
+                Observable.of(
+                    showMediaEditor(owner),
+                    selectItem(selectedResource)
+                )
                           .merge(
                     action$.let(updateMediaSection(store, path))
                         .takeUntil(action$.ofType(HIDE, ADD)
                         )
-                );
+                ));
         });
 /**
  * Load a story configuration from local files
