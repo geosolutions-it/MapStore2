@@ -28,9 +28,10 @@ export default compose(
     withState('contentEditing', 'setContentEditing', false),
     withState('editorState', 'onEditorStateChange'),
     withHandlers({
-        toggleEditing: ({ sectionType, onEditorStateChange = () => {}, setContentEditing = () => {} }) => (editing, html) => {
+        toggleEditing: ({ bubblingTextEditing = () => {}, sectionType, onEditorStateChange = () => {}, setContentEditing = () => {} }) => (editing, html) => {
             if (!editing) {
                 setContentEditing(false);
+                bubblingTextEditing(false);
             } else {
                 const contentBlock = htmlToDraft(html);
                 let contentState = ContentState.createFromBlockArray(contentBlock.contentBlocks);
@@ -42,6 +43,7 @@ export default compose(
                 }
                 onEditorStateChange(editorState);
                 setContentEditing(true);
+                bubblingTextEditing(true);
             }
         }
     }),

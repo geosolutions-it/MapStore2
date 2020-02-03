@@ -15,12 +15,12 @@ import { Modes, getClassNameFromProps } from "../../../utils/GeoStoryUtils";
  *  - center the content accordingly.
  *  - Add inViewRef property, to apply IntersectionObserver
  */
-export default ({ id, inViewRef, children, type, contentWrapperStyle, mode, ...props }) =>
+export default ({ id, inViewRef, children, type, contentWrapperStyle, mode, textEditorActiveClass = "", ...props }) =>
     (<div
         id={id}
         ref={inViewRef}
         style={contentWrapperStyle}
-        className={`ms-content ms-content-${type}${getClassNameFromProps(props)}`}>
+        className={`ms-content ms-content-${type}${getClassNameFromProps(props)}${textEditorActiveClass}`}>
         <div className="ms-content-body">
             {mode === Modes.EDIT
                 && <ContentToolbar

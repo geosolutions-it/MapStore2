@@ -49,7 +49,8 @@ export default ({
     editWebPage = () => {},
     add = () => {},
     update = () => {},
-    remove = () => {}
+    remove = () => {},
+    bubblingTextEditing = () => {}
 }) =>
     (<div className={className}>
         {contents.reduce(( rendered = [], { id, ...props }) => {
@@ -69,6 +70,7 @@ export default ({
                     remove={(path, ...args) => remove(`contents[{"id": "${id}"}]` + (path ? "." + path : ""), ...args)}
                     {...contentProps}
                     {...props}
+                    bubblingTextEditing={bubblingTextEditing}
                     tools={tools && tools[props.type]} />)];
             if (mode === Modes.EDIT && addButtons.length > 0) {
                 content.push(
