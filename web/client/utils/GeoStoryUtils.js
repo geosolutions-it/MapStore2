@@ -154,7 +154,7 @@ export const testRegex = (title, filterText, regex = RegExp(filterText, "i")) =>
  * @return {object[]} filtered resources
  */
 export const filterResources = (resources = [], filterText, regex = RegExp(filterText, "i") ) => {
-    return filter(resources, r => testRegex(r.data && r.data.title, filterText, regex));
+    return filter(resources, r => testRegex(r.data && (r.data.title || r.data.name), filterText, regex));
 };
 /**
  * Creates a default template for the given type
