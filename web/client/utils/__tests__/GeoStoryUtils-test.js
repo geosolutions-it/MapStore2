@@ -317,7 +317,12 @@ describe("GeoStory Utils", () => {
         expect(filterResources(resources, "e").length).toBe(3);
     });
     it('test filterResources without title but name', () => {
-        const resources = [{data: {name: "res1"}}, {data: {name: "res2"}}, {data: {name: "not matching title"}}];
+        const resources = [{data: {name: "res1"}}, {data: {name: "res2"}}, {data: {title: "not matching title"}}];
+        expect(filterResources(resources, "re").length).toBe(2);
+        expect(filterResources(resources, "e").length).toBe(3);
+    });
+    it('test filterResources with title and description', () => {
+        const resources = [{data: {title: "res1"}}, {data: {description: "res2"}}, {data: {title: "not matching title"}}];
         expect(filterResources(resources, "re").length).toBe(2);
         expect(filterResources(resources, "e").length).toBe(3);
     });
