@@ -30,7 +30,7 @@ export const inputQuickFiltersStateAbbr = {
         attribute: "state_abbr"
     }
 };
-export const inputLayerFilterStateAbbr = {
+export const inputLayerFilterSTATENAME = {
     featureTypeName: 'topp:states',
     groupFields: [
         {
@@ -109,7 +109,8 @@ export const resultMergeFilterCQLRes =
     + '</ogc:And></ogc:Filter>';
 export const resultFilterOnly = `<ogc:Filter><ogc:And><ogc:And><ogc:Or><ogc:PropertyIsLike matchCase="false" wildCard="*" singleChar="." escapeChar="!"><ogc:PropertyName>STATE_NAME</ogc:PropertyName><ogc:Literal>*i*</ogc:Literal></ogc:PropertyIsLike></ogc:Or><ogc:And><ogc:PropertyIsLike matchCase="false" wildCard="*" singleChar="." escapeChar="!"><ogc:PropertyName>state_abbr</ogc:PropertyName><ogc:Literal>*I*</ogc:Literal></ogc:PropertyIsLike></ogc:And></ogc:And></ogc:And></ogc:Filter>`;
 export const resultQuickFilters = `<ogc:Filter><ogc:And><ogc:And><ogc:And><ogc:PropertyIsLike matchCase="false" wildCard="*" singleChar="." escapeChar="!"><ogc:PropertyName>state_abbr</ogc:PropertyName><ogc:Literal>*I*</ogc:Literal></ogc:PropertyIsLike></ogc:And></ogc:And></ogc:And></ogc:Filter>`;
-export const resultQuickFiltersAndDependenciesQF = `<ogc:Filter><ogc:And><ogc:And><ogc:And><ogc:And><ogc:PropertyIsLike matchCase="false" wildCard="*" singleChar="." escapeChar="!"><ogc:PropertyName>state_abbr</ogc:PropertyName><ogc:Literal>*I*</ogc:Literal></ogc:PropertyIsLike></ogc:And></ogc:And></ogc:And></ogc:And></ogc:Filter>`;
-export const resultQuickFiltersAndDependenciesFilter = `<ogc:Filter><ogc:And><ogc:And><ogc:And><ogc:And><ogc:PropertyIsLike matchCase="false" wildCard="*" singleChar="." escapeChar="!"><ogc:PropertyName>state_abbr</ogc:PropertyName><ogc:Literal>*I*</ogc:Literal></ogc:PropertyIsLike></ogc:And></ogc:And><ogc:Or><ogc:PropertyIsLike matchCase="false" wildCard="*" singleChar="." escapeChar="!"><ogc:PropertyName>STATE_NAME</ogc:PropertyName><ogc:Literal>*i*</ogc:Literal></ogc:PropertyIsLike></ogc:Or></ogc:And></ogc:And></ogc:Filter>`;
+export const resultQuickFiltersAndDependenciesQF = `<ogc:Filter><ogc:And><ogc:And><ogc:And><ogc:PropertyIsLike matchCase="false" wildCard="*" singleChar="." escapeChar="!"><ogc:PropertyName>state_abbr</ogc:PropertyName><ogc:Literal>*I*</ogc:Literal></ogc:PropertyIsLike></ogc:And></ogc:And></ogc:And></ogc:Filter>`;
+export const resultQuickFiltersAndDependenciesFilter = `<ogc:Filter><ogc:And><ogc:And><ogc:And><ogc:PropertyIsLike matchCase="false" wildCard="*" singleChar="." escapeChar="!"><ogc:PropertyName>state_abbr</ogc:PropertyName><ogc:Literal>*I*</ogc:Literal></ogc:PropertyIsLike></ogc:And></ogc:And></ogc:And></ogc:Filter>`;
+
 export const resultSpatialAndQuickFilters = `<ogc:Filter><ogc:And><ogc:And><ogc:And><ogc:PropertyIsLike matchCase="false" wildCard="*" singleChar="." escapeChar="!"><ogc:PropertyName>state_abbr</ogc:PropertyName><ogc:Literal>*I*</ogc:Literal></ogc:PropertyIsLike></ogc:And></ogc:And><ogc:Intersects><ogc:PropertyName>geometry</ogc:PropertyName><gml:Polygon srsName="EPSG:4326"><gml:exterior><gml:LinearRing><gml:posList>1 1 1 2 2 2 2 1 1 1</gml:posList></gml:LinearRing></gml:exterior></gml:Polygon></ogc:Intersects></ogc:And></ogc:Filter>`;
 

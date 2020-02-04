@@ -184,18 +184,22 @@ const SecurityUtils = {
             return parameters;
         }
     },
-    addAuthenticationToSLD: function(layerOptions, options) {
-        if (layerOptions.SLD) {
-            const parsed = URL.parse(layerOptions.SLD, true);
-            const params = SecurityUtils.addAuthenticationParameter(layerOptions.SLD, parsed.query, options.securityToken);
-            return assign({}, layerOptions, {
+    addAuthenticationToSLD: function(layerParams, options) {
+        // excluding null values for CQL_FILTER that are causing point 3_
+        // here https://github.com/geosolutions-it/MapStore2/issues/4674#issuecomment-580300446
+        const {CQL_FILTER, ...layerPrms} = layerParams;
+        const cleanLayerParams = !!CQL_FILTER ? layerParams : layerPrms;
+        if (cleanLayerParams.SLD) {
+            const parsed = URL.parse(cleanLayerParams.SLD, true);
+            const params = SecurityUtils.addAuthenticationParameter(cleanLayerParams.SLD, parsed.query, options.securityToken);
+            return assign({}, cleanLayerParams, {
                 SLD: URL.format(assign({}, parsed, {
                     query: params,
                     search: undefined
                 }))
             });
         }
-        return layerOptions;
+        return cleanLayerParams;
     },
     getAuthKeyParameter: function(url) {
         const foundRule = this.getAuthenticationRule(url);

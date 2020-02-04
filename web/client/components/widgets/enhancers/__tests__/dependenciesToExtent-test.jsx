@@ -72,5 +72,35 @@ describe('widgets dependenciesToExtent enhancer', () => {
 
     });
 
+    it('dependenciesToExtent fetching bounds and triggering zoom to extent, even if layers does not match', (done) => {
+        const Sink = dependenciesToExtent(createSink( props => {
+            expect(props).toExist();
+            expect(props.hookRegister).toExist();
+            const hook = props.hookRegister.getHook(MapUtils.ZOOM_TO_EXTENT_HOOK);
+            expect(hook).toExist();
+            done();
+        }));
+        mockAxios.onPost().reply(
+            200,
+            '<?xml version="1.0" encoding="UTF-8"?><ows:BoundingBox xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ows="http://www.opengis.net/ows/1.1" crs="EPSG:4326"><ows:LowerCorner>-124.731422 24.955967</ows:LowerCorner><ows:UpperCorner>-66.969849 49.371735</ows:UpperCorner></ows:BoundingBox>'
+        );
+
+        const hookRegister = MapUtils.createRegisterHooks();
+        hookRegister.registerHook(MapUtils.ZOOM_TO_EXTENT_HOOK, {hookName: MapUtils.ZOOM_TO_EXTENT_HOOK});
+        ReactDOM.render(<Sink
+            id="id"
+            hookRegister={hookRegister}
+            mapSync
+            dependencies={inputDependenciesQuickFiltersAndFilter}
+            map={{
+                layers: [{
+                    name: "topp:states",
+                    url: "/testWPSUrl"
+                }]
+            }}
+        />, document.getElementById("container"));
+
+    });
+
 
 });

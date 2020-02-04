@@ -17,6 +17,7 @@ import {
     inputMapStatesCenterChanged,
     inputMapStatesWithCQL,
     inputDependenciesQuickFilters,
+    inputMapStatesCenterChangedAndQuickFilters,
     inputDependenciesQuickFiltersAndFilter,
     resultMapStatesNoCQL,
     resultMapStatesCQL,
@@ -61,6 +62,18 @@ describe('widgets dependenciesToLayers enhancer', () => {
         }));
         ReactDOM.render(<Sink
             map={inputMapStatesCenterChanged}
+            dependencies={inputDependenciesQuickFilters}
+            mapSync
+        />, document.getElementById("container"));
+    });
+    it('dependenciesToLayers with layer in common with dependencies, with quickFilters updated once', (done) => {
+        const Sink = dependenciesToLayers(createSink( props => {
+            expect(props).toExist();
+            expect(props.map).toEqual(resultMapStatesCQL);
+            done();
+        }));
+        ReactDOM.render(<Sink
+            map={inputMapStatesCenterChangedAndQuickFilters}
             dependencies={inputDependenciesQuickFilters}
             mapSync
         />, document.getElementById("container"));
