@@ -59,10 +59,5 @@ export default compose(
 
 export const withResizeMap = compose(
     connect(null, {onResize: resizeMap}),
-    lifecycle({
-        componentDidMount() {
-            this.props.onResize();
-        }
-    }),
     withResizeSpy({debounceTime: 150})
 );
