@@ -8,11 +8,8 @@
 
 import { connect } from 'react-redux';
 import get from 'lodash/get';
-import isNil from 'lodash/isNil';
-import isObject from 'lodash/isObject';
 import { createSelector } from 'reselect';
 import { createPlugin } from '../utils/PluginsUtils';
-import { createShallowSelectorCreator } from '../utils/ReselectUtils';
 import { mapSelector } from '../selectors/map';
 import { updateMapLayout } from '../actions/maplayout';
 import maplayout from '../reducers/maplayout';
@@ -25,31 +22,16 @@ import {
     updateLayoutStructure
 } from '../actions/layout';
 import LayoutPlugin from './layout/Layout';
-
-const activePluginsSelector = createShallowSelectorCreator((a, b) => a === b)(
-    state => get(state, 'controls.layout.activePlugins') || [],
-    activePlugins => activePlugins
-);
-
-const panelSizesSelector = createShallowSelectorCreator(
-    (a, b) => {
-        if (isObject(a) && isObject(b)) {
-            const aStr = JSON.stringify(a);
-            const bStr = JSON.stringify(b);
-            return aStr === bStr;
-        }
-        return a === b
-        || !isNil(a) && !isNil(b) && a.width === b.width && a.height === b.height;
-    }
-)(
-    state => get(state, 'controls.layout.panelSizes') || {},
-    panelSizes => panelSizes
-);
+import {
+    activePluginsSelector,
+    panelSizesSelector,
+    layoutTypeSelector
+} from '../selectors/layout';
 
 const selector = createSelector(
     [
         activePluginsSelector,
-        state => get(state, 'controls.layout.type'),
+        layoutTypeSelector,
         state => get(state, 'mapInitialConfig.loadingError'),
         mapSelector,
         userSelector,

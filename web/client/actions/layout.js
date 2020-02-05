@@ -7,71 +7,34 @@
  */
 
 import { setControlProperty } from './controls';
-import get from 'lodash/get';
-import find from 'lodash/find';
+import {
+    updateActivePlugins,
+    updatePanelSizes
+} from '../utils/LayoutUtils';
+import {
+    activePluginsSelector,
+    panelSizesSelector,
+    layoutStructureSelector
+} from '../selectors/layout';
 
 export const updateLayoutType = setControlProperty.bind(null, 'layout', 'type');
 
 export const resizeLayoutPanel = (name, data) => {
     return (dispatch, getState) => {
         const state = getState();
-        const panelSizes = get(state, 'controls.layout.panelSizes') || {};
-        const layoutStructure = get(state, 'controls.layout.structure') || [];
-        const layoutSectionKey = find(
-            Object.keys(layoutStructure),
-            key => find(layoutStructure[key], pluginName => pluginName === name)
-        );
-        dispatch(
-            setControlProperty('layout', 'panelSizes',
-                layoutSectionKey === undefined
-                    ? {
-                        ...panelSizes,
-                        [name]: {
-                            ...(panelSizes[name] || {}),
-                            ...data
-                        }
-                    }
-                    : {
-                        ...panelSizes,
-                        [layoutSectionKey]: {
-                            ...(panelSizes[layoutSectionKey] || {}),
-                            [name]: {
-                                ...(panelSizes[layoutSectionKey] && panelSizes[layoutSectionKey][name] || {}),
-                                ...data
-                            }
-                        }
-                    }
-            )
-        );
+        const panelSizes = panelSizesSelector(state);
+        const layoutStructure = layoutStructureSelector(state);
+        const newPanelSizes = updatePanelSizes({ panelSizes, layoutStructure, name, data });
+        dispatch(setControlProperty('layout', 'panelSizes', newPanelSizes));
     };
 };
 
 export const setActivePlugin = (name, enable) => {
     return (dispatch, getState) => {
         const state = getState();
-        const activePlugins = get(state, 'controls.layout.activePlugins') || [];
-        const layoutStructure = get(state, 'controls.layout.structure') || [];
-        const layoutSectionKey = find(
-            Object.keys(layoutStructure),
-            key => find(layoutStructure[key], pluginName => pluginName === name)
-        );
-        const layoutSectionItemsName = layoutStructure[layoutSectionKey] || [];
-
-        const isActive = enable === undefined
-            ? !!find(activePlugins, (activePlugin) => activePlugin === name)
-            : !enable;
-
-        const filteredActivePlugins = activePlugins
-            .filter(
-                (activePlugin) => !find(layoutSectionItemsName, (pluginName) => pluginName === activePlugin)
-            );
-
-        const newActivePlugins = [
-            ...(isActive
-                ? []
-                : [name]),
-            ...filteredActivePlugins
-        ];
+        const activePlugins = activePluginsSelector(state);
+        const layoutStructure =  layoutStructureSelector(state);
+        const newActivePlugins = updateActivePlugins({ activePlugins, layoutStructure, name, enable });
         dispatch(setControlProperty('layout', 'activePlugins', newActivePlugins));
     };
 };
