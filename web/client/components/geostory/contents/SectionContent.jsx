@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import { compose, nest, setDisplayName, branch, renderComponent, withStateHandlers } from "recompose";
+import { compose, nest, setDisplayName, branch, renderComponent} from "recompose";
 import visibilityHandler from './enhancers/visibilityHandler';
 import ContentWrapper from './ContentWrapper';
 import Content from './Content';
@@ -26,11 +26,6 @@ export default compose(
     // make maths for contents relative to their scope for edit methods
     // so inside the content you can simply call update('html', value) or add update('contents[{id: "some-sub-content-id"}])
     visibilityHandler({ threshold: DEFAULT_THRESHOLD}),
-    withStateHandlers({textEditorActive: false}, {
-        bubblingTextEditing: () => (editing) => {
-            return  {textEditorActiveClass: editing ? ' ms-text-editor-active' : ''};
-        }
-    }),
     wrap(ContentWrapper),
     setDisplayName("SectionContent"),
     branch(
