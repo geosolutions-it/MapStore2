@@ -424,10 +424,10 @@ export const scrollSideBar = (action$, {getState}) =>
     action$.ofType(UPDATE_CURRENT_PAGE)
         .filter(({columnId, sectionId}) => modeSelector(getState()) === 'edit' && ((columnId && columnId !== "EMPTY") || sectionId))
         .debounceTime(100)
-        .do(({columnId, sectionId}) => {
-            const id = `sd_${columnId || sectionId}`;
-            let el = document.getElementById(id);
+        .switchMap(() => {
+            const el = Array.from(document.querySelectorAll(".ms-geostory-builder .mapstore-side-card.ms-highlight")).pop();
             if (el) {
-                el.scrollIntoView({behavior: "smooth", block: "nearest"});
+                el.scrollIntoView({block: "center", inline: "nearest", behavior: "smooth"});
             }
-        }).ignoreElements();
+            return Observable.empty();
+        });
