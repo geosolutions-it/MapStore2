@@ -7,7 +7,6 @@
  */
 
 import Rx from 'rxjs';
-import axios from 'axios';
 import jsonlint from 'jsonlint-mod';
 import {omit, pick, get, flatten, uniq, intersection, head, keys, values, findIndex, cloneDeep} from 'lodash';
 import {push} from 'connected-react-router';
@@ -36,6 +35,7 @@ import {textSearchConfigSelector} from '../selectors/searchconfig';
 import {mapOptionsToSaveSelector} from '../selectors/mapsave';
 import {loadMapConfig} from '../actions/config';
 import {createResource, updateResource, getResource, getResources, getResourceIdByName} from '../api/persistence';
+import getPluginsConfig from '../observables/config/getPluginsConfig';
 import { upload } from '../api/plugins';
 
 const saveContextErrorStatusToMessage = (status) => {
@@ -204,9 +204,9 @@ export const resetOnShowDialog = (action$, store) => action$
  */
 export const contextCreatorLoadContext = (action$, store) => action$
     .ofType(LOAD_CONTEXT)
-    .switchMap(({id, pluginsConfig = ConfigUtils.getConfigProp('contextPluginsConfiguration')}) => Rx.Observable.of(startResourceLoad()).concat(
+    .switchMap(({id, pluginsConfig}) => Rx.Observable.of(startResourceLoad()).concat(
         Rx.Observable.forkJoin(
-            Rx.Observable.defer(() => axios.get(pluginsConfig).then(result => result.data)),
+            Rx.Observable.defer(() => getPluginsConfig(pluginsConfig)),
             getResources({
                 category: 'TEMPLATE',
                 options: {

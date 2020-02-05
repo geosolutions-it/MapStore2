@@ -19,7 +19,7 @@ const getMessage = (messages, path, defaultProp = "label") => {
     if (isArray(path)) {
         return path.map((item) => {
             const msg = getMessageById(messages, item[defaultProp] || isString(item) && item || "");
-            return {...item, label: !isNil(msg) ? msg : path};
+            return {...item, [defaultProp]: !isNil(msg) ? msg : path};
         });
     }
     const msg = getMessageById(messages, path);
