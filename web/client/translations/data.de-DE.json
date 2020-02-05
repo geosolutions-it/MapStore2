@@ -2323,7 +2323,8 @@
                     "title": "Konfigurationsfehler",
                     "body": "Konfigurations-JSON-Analyse fehlgeschlagen.\nDer folgende Fehler ist aufgetreten:\n\"{error}\""
                 },
-                "uploadLabel": "Klicken Sie, um ein Erweiterungspaket zum Hinzufügen zu MapStore auszuwählen, oder ziehen Sie das Paket direkt auf die Seite",
+                "uploadLabel": "Ziehen Sie ein Erweiterungspaket oder klicken Sie, um es zu durchsuchen und hochzuladen",
+                "uploadTitle": "Installieren Sie ein MapStore-Plugin",
                 "tooltips": {
                     "enableUserPlugin": "Aktiviert die Auswahl des aktuellen Plugins für den Benutzer",
                     "disableUserPlugin": "Deaktivieren Sie die Auswahl des aktuellen Plugins für den Benutzer",

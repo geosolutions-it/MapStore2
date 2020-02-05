@@ -13,7 +13,12 @@ const {
     clearContextCreator, CLEAR_CONTEXT_CREATOR,
     changeAttribute, CHANGE_ATTRIBUTE,
     contextSaved, CONTEXT_SAVED,
-    saveNewContext, SAVE_CONTEXT
+    saveNewContext, SAVE_CONTEXT,
+    enableUploadPlugin, ENABLE_UPLOAD_PLUGIN,
+    uploadPlugin, UPLOAD_PLUGIN,
+    uploadPluginError, UPLOAD_PLUGIN_ERROR,
+    pluginUploaded, PLUGIN_UPLOADED,
+    pluginUploading, UPLOADING_PLUGIN
 } = require('../contextcreator');
 
 describe('contextcreator actions', () => {
@@ -44,5 +49,36 @@ describe('contextcreator actions', () => {
         const retval = saveNewContext();
         expect(retval).toExist();
         expect(retval.type).toBe(SAVE_CONTEXT);
+    });
+    it('enableUploadPlugin', () => {
+        const retval = enableUploadPlugin(true);
+        expect(retval).toExist();
+        expect(retval.type).toBe(ENABLE_UPLOAD_PLUGIN);
+        expect(retval.enable).toBe(true);
+    });
+    it('uploadPlugin', () => {
+        const retval = uploadPlugin([{}]);
+        expect(retval).toExist();
+        expect(retval.type).toBe(UPLOAD_PLUGIN);
+        expect(retval.files.length).toBe(1);
+    });
+    it('uploadPluginError', () => {
+        const retval = uploadPluginError([{}]);
+        expect(retval).toExist();
+        expect(retval.type).toBe(UPLOAD_PLUGIN_ERROR);
+        expect(retval.files.length).toBe(1);
+    });
+    it('pluginUploading', () => {
+        const retval = pluginUploading(true, [{}]);
+        expect(retval).toExist();
+        expect(retval.type).toBe(UPLOADING_PLUGIN);
+        expect(retval.status).toBe(true);
+        expect(retval.plugins.length).toBe(1);
+    });
+    it('pluginUploaded', () => {
+        const retval = pluginUploaded([{}]);
+        expect(retval).toExist();
+        expect(retval.type).toBe(PLUGIN_UPLOADED);
+        expect(retval.plugins.length).toBe(1);
     });
 });

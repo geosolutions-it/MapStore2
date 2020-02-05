@@ -17,10 +17,52 @@
 
 .configure-plugins-step-upload {
     .alert-info {
-        border-style: dashed;
-        border-width: 3px;
-        transition: all 0.3s ease-in-out 0s;
-        height: 100%;
+        border-width: 1px;
+        height: 200px;
+        width: 800px;
+        margin: auto;
+        border-color: #ccc;
+        border-radius: 3px;
+        background-color: white;
+        cursor: pointer;
+        font-size: 16px;
+    }
+    .title-header {
+        background-color: #078aa3;
+        color: white;
+        font-weight: bold;
+        height: 50px;
+        width: 800px;
+        margin: auto;
+        font-size: 18px;
+        padding: 10px;
+        .glyphicon {
+            float: right;
+        }
+    }
+    .uploading-file {
+        width: 800px;
+        margin: auto;
+        height: 60px;
+        padding: 20px;
+        border: solid;
+        border-color: #ccc;
+        border-radius: 2px;
+        border-width: 1px;
+        margin-top: 5px;
+        .plugin-name {
+            padding-left: 10px;
+        }
+        .glyphicon-ok {
+            color: green;
+        }
+
+        .glyphicon-remove {
+            color: red;
+        }
+        .upload-error {
+            float: right;
+        }
     }
     height: 100%;
 }

@@ -12,21 +12,35 @@ import {
     resetConfigOnPluginKeyChange,
     editPluginEpic,
     enablePluginsEpic,
-    disablePluginsEpic
+    disablePluginsEpic,
+    uploadPluginEpic
 } from '../contextcreator';
 import {
     editPlugin,
     enablePlugins,
     disablePlugins,
     changePluginsKey,
+    uploadPlugin,
     SET_EDITED_PLUGIN,
     SET_EDITED_CFG,
     SET_CFG_ERROR,
     CHANGE_PLUGINS_KEY,
-    ENABLE_MANDATORY_PLUGINS
+    ENABLE_MANDATORY_PLUGINS,
+    PLUGIN_UPLOADED,
+    UPLOADING_PLUGIN
 } from '../../actions/contextcreator';
 
+import axios from "../../libs/ajax";
+import MockAdapter from "axios-mock-adapter";
+
 describe('contextcreator epics', () => {
+    let mockAxios;
+    beforeEach(() => {
+        mockAxios = new MockAdapter(axios);
+    });
+    afterEach(() => {
+        mockAxios.restore();
+    });
     it('resetConfigOnPluginKeyChange', (done) => {
         const startActions = [changePluginsKey(['plugin', 'editedPlugin'], 'enabled', false)];
         testEpic(resetConfigOnPluginKeyChange, 2, startActions, actions => {
@@ -556,6 +570,27 @@ describe('contextcreator epics', () => {
                     active: false
                 }]
             }
+        });
+    });
+    it('upload plugin bundle', (done) => {
+        mockAxios.onPost().reply(200, { "myplugin": {}});
+        const startActions = [uploadPlugin([{name: "myplugin.zip", file: new Blob([""], {type: "text/plain"})}])];
+        testEpic(uploadPluginEpic, 3, startActions, actions => {
+            expect(actions.length).toBe(3);
+            expect(actions[0].type).toBe(UPLOADING_PLUGIN);
+            expect(actions[0].status).toBe(true);
+            expect(actions[0].plugins.length).toBe(1);
+            expect(actions[0].plugins[0]).toBe("myplugin.zip");
+            expect(actions[1].type).toBe(PLUGIN_UPLOADED);
+            expect(actions[1].plugins.length).toBe(1);
+            expect(actions[1].plugins[0].myplugin).toExist();
+            expect(actions[2].type).toBe(UPLOADING_PLUGIN);
+            expect(actions[2].status).toBe(false);
+            expect(actions[2].plugins.length).toBe(1);
+            expect(actions[2].plugins[0]).toBe("myplugin.zip");
+            done();
+        }, {
+            contextcreator: {}
         });
     });
 });

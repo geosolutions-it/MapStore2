@@ -30,7 +30,11 @@ import {
     changePluginsKey,
     setCreationStep,
     clearContextCreator,
-    changeAttribute
+    changeAttribute,
+    enableUploadPlugin,
+    uploadPluginError,
+    pluginUploaded,
+    pluginUploading
 } from '../../actions/contextcreator';
 
 const testContextResource = {
@@ -199,5 +203,46 @@ describe('contextcreator reducer', () => {
     it('updateEditedCfg', () => {
         const state = stateMocker(updateEditedCfg('cfgtext'));
         expect(editedCfgSelector(state)).toBe('cfgtext');
+    });
+    it('updateEditedCfg', () => {
+        const state = stateMocker(updateEditedCfg('cfgtext'));
+        expect(editedCfgSelector(state)).toBe('cfgtext');
+    });
+    it('enableUploadPlugin', () => {
+        const state = contextcreator(undefined, enableUploadPlugin(true));
+        expect(state).toExist();
+        expect(state.uploadPluginEnabled).toBe(true);
+        expect(state.uploadingPlugin.length).toBe(0);
+    });
+    it('uploadingPlugin', () => {
+        const state = contextcreator(undefined, pluginUploading(true, ['myplugin']));
+        expect(state).toExist();
+        expect(state.uploadingPlugin.length).toBe(1);
+        expect(state.uploadingPlugin[0].name).toBe("myplugin");
+        expect(state.uploadingPlugin[0].uploading).toBe(true);
+    });
+    it('uploadingPluginError', () => {
+        const state = contextcreator(undefined, uploadPluginError([{ file: {name: 'myplugin'}, error: "myerror"}]));
+        expect(state).toExist();
+        expect(state.uploadingPlugin.length).toBe(1);
+        expect(state.uploadingPlugin[0].name).toBe("myplugin");
+        expect(state.uploadingPlugin[0].uploading).toBe(false);
+        expect(state.uploadingPlugin[0].error).toBe("myerror");
+    });
+    it('disableUploadPlugin', () => {
+        const state = contextcreator({ uploadingPlugin: [{}] }, enableUploadPlugin(false));
+        expect(state).toExist();
+        expect(state.uploadPluginEnabled).toBe(false);
+        expect(state.uploadingPlugin.length).toBe(0);
+    });
+    it('pluginUploaded', () => {
+        const state = contextcreator(undefined, pluginUploaded([{ name: 'myplugin' }]));
+        expect(state).toExist();
+        expect(state.plugins.length).toBe(1);
+    });
+    it('pluginUploaded no duplicates', () => {
+        const state = contextcreator({plugins: [{name: "myplugin"}]}, pluginUploaded([{ name: 'myplugin', error: "myerror" }]));
+        expect(state).toExist();
+        expect(state.plugins.length).toBe(1);
     });
 });
