@@ -8,6 +8,7 @@
 import React from 'react';
 import endsWith from 'lodash/endsWith';
 import {Provider} from 'react-redux';
+import thunkMiddleware from 'redux-thunk';
 
 import { createStore, combineReducers, applyMiddleware } from 'redux';
 import { combineEpics, createEpicMiddleware } from 'redux-observable';
@@ -67,7 +68,7 @@ export const getPluginForTest = (pluginDef, storeState, plugins) => {
     const rootEpic = combineEpics.apply(null, Object.keys(pluginDef.epics || {}).map(key => pluginDef.epics[key]) || []);
     const epicMiddleware = createEpicMiddleware(rootEpic);
     const actions = [];
-    const store = applyMiddleware(epicMiddleware, createRegisterActionsMiddleware(actions))(createStore)(reducer, storeState);
+    const store = applyMiddleware(epicMiddleware, createRegisterActionsMiddleware(actions), thunkMiddleware)(createStore)(reducer, storeState);
     return {
         Plugin: (props) => <Provider store={store}><PluginImpl {...props} /></Provider>,
         store,
