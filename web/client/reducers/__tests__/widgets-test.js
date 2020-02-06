@@ -277,7 +277,7 @@ describe('Test the widgets reducer', () => {
         const id = "a7122cc0-f7a9-11e8-8602-03b7e0c9537b";
         const state = widgets({
             ...initialState
-        }, updateWidgetProperty(id, "key", "value", "floating", "replace"));
+        }, updateWidgetProperty(id, "key", "value", "replace"));
         const widget = find(get(state, `containers.floating.widgets`), {
             id
         });
@@ -289,7 +289,7 @@ describe('Test the widgets reducer', () => {
         const id = "a7122cc0-f7a9-11e8-8602-03b7e0c9537b";
         const state = widgets({
             ...initialStateWithLayers
-        }, updateWidgetProperty(id, "map", {zoom: 4}, "floating", "merge"));
+        }, updateWidgetProperty(id, "map", {zoom: 4}, "merge"));
         const widget = find(get(state, `containers.floating.widgets`), {
             id
         });
