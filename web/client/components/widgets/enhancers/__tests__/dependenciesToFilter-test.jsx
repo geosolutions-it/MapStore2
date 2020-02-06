@@ -15,7 +15,7 @@ import dependenciesToFilter from '../dependenciesToFilter';
 import {
     inputFilterObjSpatial,
     inputQuickFiltersStateAbbr,
-    inputLayerFilterStateAbbr,
+    inputLayerFilterSTATENAME,
     resultFilterOnly,
     resultFilterObjRes1,
     resultMergeFilterRes,
@@ -79,7 +79,7 @@ describe('widgets dependenciesToFilter enhancer', () => {
         }));
         ReactDOM.render(<Sink
             quickFilters={inputQuickFiltersStateAbbr}
-            filter={inputLayerFilterStateAbbr}
+            filter={inputLayerFilterSTATENAME}
             options={{
                 propertyName: ["state_abbr"]
             }}/>, document.getElementById("container"));
@@ -94,7 +94,7 @@ describe('widgets dependenciesToFilter enhancer', () => {
             quickFilters={inputQuickFiltersStateAbbr}
             mapSync
             dependencies={{
-                filter: inputLayerFilterStateAbbr
+                filter: inputLayerFilterSTATENAME
             }}
             options={{
                 propertyName: ["state_abbr"]

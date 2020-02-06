@@ -21,7 +21,7 @@ import {setControlProperty} from '../actions/controls';
 
 import {mapLayoutValuesSelector} from '../selectors/maplayout';
 import {widgetBuilderSelector} from '../selectors/controls';
-import { dependenciesSelector, availableDependenciesSelector} from '../selectors/widgets';
+import { dependenciesSelector, availableDependenciesForEditingWidgetSelector} from '../selectors/widgets';
 import { toggleConnection } from '../actions/widgets';
 import withMapExitButton from './widgetbuilder/enhancers/withMapExitButton';
 import WidgetTypeBuilder from './widgetbuilder/WidgetTypeBuilder';
@@ -29,7 +29,7 @@ const Builder = compose(
     connect(
         createSelector(
             dependenciesSelector,
-            availableDependenciesSelector,
+            availableDependenciesForEditingWidgetSelector,
             (dependencies, availableDependenciesProps) => ({ dependencies, ...availableDependenciesProps }))
         , { toggleConnection }),
     withMapExitButton
