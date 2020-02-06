@@ -91,26 +91,16 @@ function widgetsReducer(state = emptyState, action) {
 
         return tempState;
     case UPDATE_PROPERTY:
+        // if "merge" update map by merging a partial map object coming from
+        // onMapViewChanges handler for MapWidget
+        // if "replace" update the widget setting the value to the existing object
         const oldWidget = find(get(state, `containers[${action.target}].widgets`), {
             id: action.id
         });
-        if (action.mode === "merge" && action.key === "map") {
-            // update map by merging a partial map object coming from
-            // onMapViewChanges handler for MapWidget
-            return arrayUpsert(`containers[${action.target}].widgets`,
-                {
-                    ...oldWidget,
-                    map: merge(oldWidget.map, action.value)
-                },
-                {
-                    id: action.id
-                }, state);
-        }
         return arrayUpsert(`containers[${action.target}].widgets`,
-            // update the widget setting the value to the existing object
             set(
                 action.key,
-                action.value,
+                action.mode === "merge" ? merge(oldWidget[action.key], action.value) : action.value,
                 oldWidget,
             ), {
                 id: action.id
