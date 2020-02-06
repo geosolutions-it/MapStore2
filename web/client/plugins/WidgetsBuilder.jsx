@@ -19,14 +19,15 @@ const {setControlProperty} = require('../actions/controls');
 
 const {mapLayoutValuesSelector} = require('../selectors/maplayout');
 const {widgetBuilderSelector} = require('../selectors/controls');
-const { dependenciesSelector, availableDependenciesSelector} = require('../selectors/widgets');
+const { dependenciesSelector, availableDependenciesForEditingWidgetSelector} = require('../selectors/widgets');
 const { toggleConnection } = require('../actions/widgets');
 const withMapExitButton = require('./widgetbuilder/enhancers/withMapExitButton');
+
 const Builder = compose(
     connect(
         createSelector(
             dependenciesSelector,
-            availableDependenciesSelector,
+            availableDependenciesForEditingWidgetSelector,
             (dependencies, availableDependenciesProps) => ({ dependencies, ...availableDependenciesProps }))
         , { toggleConnection }),
     withMapExitButton

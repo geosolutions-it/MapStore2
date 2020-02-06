@@ -84,14 +84,17 @@ const updateWidget = (widget, target = DEFAULT_TARGET) => ({
  * @param  {string} id The widget id to update
  * @param  {string} key The widget property name or path to update
  * @param {any} value the widget value to update
+ * @param {string} [mode="replace"] replace or merge, replace is default and it replace the value for the key,
+ * merge only merges new props coming from the value
  * @return {object}  action with type `WIDGETS:UPDATE_PROPERTY`, the widget and the target
  */
-const updateWidgetProperty = (id, key, value, target = DEFAULT_TARGET) => ({
+const updateWidgetProperty = (id, key, value, mode = "replace", target = DEFAULT_TARGET) => ({
     type: UPDATE_PROPERTY,
     id,
     target,
     key,
-    value
+    value,
+    mode
 });
 /**
  * Update a layer property of all widgets with that layer

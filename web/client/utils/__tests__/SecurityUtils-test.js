@@ -210,4 +210,23 @@ describe('Test security utils methods', () => {
         expect.spyOn(SecurityUtils, 'getSecurityInfo').andReturn(securityInfoC);
         expect(SecurityUtils.cleanAuthParamsFromURL('http://www.some-site.com/geoserver?parameter1=value1&parameter2=value2&authkey=SOME_AUTH_KEY').indexOf('authkey')).toBe(-1);
     });
+    it('clearNilValuesForParams', () => {
+        const emptyParams = {};
+        const nullUndefinedParams = {
+            "NULL": null,
+            "UNDEF": undefined
+        };
+        const validAndInvalidParams = {
+            ...nullUndefinedParams,
+            "param1": "some val"
+        };
+        let cleanParams = SecurityUtils.clearNilValuesForParams(emptyParams);
+        expect(cleanParams).toEqual(emptyParams);
+
+        cleanParams = SecurityUtils.clearNilValuesForParams(nullUndefinedParams);
+        expect(cleanParams).toEqual(emptyParams);
+
+        cleanParams = SecurityUtils.clearNilValuesForParams(validAndInvalidParams);
+        expect(cleanParams).toEqual({"param1": "some val"});
+    });
 });
