@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 const axios = require('../../libs/ajax');
-const { uniqBy } = require('lodash');
+const { uniqBy, castArray } = require('lodash');
 const { getNameParts } = require('../../utils/StyleEditorUtils');
 
 /**
@@ -33,9 +33,9 @@ const Api = {
         return axios.get(url, options)
             .then(({data}) => {
                 const layer = data.layer || {};
-                const currentAvailableStyle = layer.styles && layer.styles.style || [];
+                const currentAvailableStyles = layer.styles && layer.styles.style && castArray(layer.styles.style) || [];
                 const stylesNames = styles.map(({name: styleName}) => styleName);
-                const filteredStyles = currentAvailableStyle.filter(({name: styleName}) => stylesNames.indexOf(styleName) === -1);
+                const filteredStyles = currentAvailableStyles.filter(({name: styleName}) => stylesNames.indexOf(styleName) === -1);
                 const layerObj = {
                     'layer': {
                         ...layer,
@@ -64,14 +64,14 @@ const Api = {
         return axios.get(url, options)
             .then(({data}) => {
                 const layer = data.layer || {};
-                const currentAvailableStyle = layer.styles && layer.styles.style || {};
+                const currentAvailableStyles = layer.styles && layer.styles.style && castArray(layer.styles.style) || [];
                 const layerObj = {
                     'layer': {
                         ...layer,
                         'styles': {
                             '@class': 'linked-hash-set',
                             'style': [
-                                ...currentAvailableStyle,
+                                ...currentAvailableStyles,
                                 ...styles
                             ]
                         }
@@ -96,13 +96,13 @@ const Api = {
         return axios.get(url, options)
             .then(({ data }) => {
                 const layer = data.layer || {};
-                const currentAvailableStyle = layer.styles && layer.styles.style || {};
+                const currentAvailableStyles = layer.styles && layer.styles.style && castArray(layer.styles.style) || [];
                 const defaultStyle = layer.defaultStyle || {};
 
                 // add old default to available styles to ensure to display it in the style list
                 const style = uniqBy([
                     defaultStyle,
-                    ...currentAvailableStyle
+                    ...currentAvailableStyles
                 ], 'name');
 
                 const layerObj = {
