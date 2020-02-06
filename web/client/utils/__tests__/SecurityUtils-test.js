@@ -210,32 +210,4 @@ describe('Test security utils methods', () => {
         expect.spyOn(SecurityUtils, 'getSecurityInfo').andReturn(securityInfoC);
         expect(SecurityUtils.cleanAuthParamsFromURL('http://www.some-site.com/geoserver?parameter1=value1&parameter2=value2&authkey=SOME_AUTH_KEY').indexOf('authkey')).toBe(-1);
     });
-    describe("addAuthenticationToSLD", () => {
-        let options = {};
-        it('with invalid CQL_FILTER value', () => {
-            const layerParams = {CQL_FILTER: null};
-            let newParams = SecurityUtils.addAuthenticationToSLD(layerParams, options);
-            expect(newParams.CQL_FILTER).toNotExist();
-        });
-        it('with valid CQL_FILTER value', () => {
-            const layerParamsWithCQL = {CQL_FILTER: "some filter"};
-            const newParams = SecurityUtils.addAuthenticationToSLD(layerParamsWithCQL, options);
-            expect(newParams.CQL_FILTER).toExist();
-        });
-        options = { securityToken: "tokenValue" };
-        it('with invalid CQL_FILTER value and SLD', () => {
-            const layerParams = {CQL_FILTER: null, SLD: "http://sample.server/geoserver/rest/sld?test1=aaa&method=authkey"};
-            let newParams = SecurityUtils.addAuthenticationToSLD(layerParams, options);
-            expect(newParams.CQL_FILTER).toNotExist();
-            expect(newParams.SLD).toExist();
-            expect(newParams.SLD).toBe("http://sample.server/geoserver/rest/sld?test1=aaa&method=authkey");
-        });
-        it('with valid CQL_FILTER value and SLD', () => {
-            const layerParamsWithCQL = {CQL_FILTER: "some filter", SLD: "http://sample.server/geoserver/rest/sld?test1=aaa&method=authkey"};
-            const newParams = SecurityUtils.addAuthenticationToSLD(layerParamsWithCQL, options);
-            expect(newParams.CQL_FILTER).toExist();
-            expect(newParams.SLD).toExist();
-            expect(newParams.SLD).toBe("http://sample.server/geoserver/rest/sld?test1=aaa&method=authkey");
-        });
-    });
 });

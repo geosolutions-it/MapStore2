@@ -54,7 +54,7 @@ module.exports = compose(
                     };
                 }
             }
-            layersUpdatedWithCql = map.layers.map(l => ({...l, params: {...l.params, CQL_FILTER: null}}));
+            layersUpdatedWithCql = map.layers.map(l => ({...l, params: {...l.params, CQL_FILTER: undefined}}));
             return {
                 map: {
                     ...map,
