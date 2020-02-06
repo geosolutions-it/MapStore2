@@ -163,7 +163,33 @@ const changeLayoutAction = {
     target: 'floating'
 };
 
+const initialStateWithLayers = {
+    containers: {
+        floating: {
+            widgets: [
+                {
+                    id: 'a7122cc0-f7a9-11e8-8602-03b7e0c9537b',
+                    widgetType: 'text',
+                    title: 'Test 1',
+                    map: {
+                        layers: [{
+                            id: "layer1",
+                            params: {CQL_FILTER: "some cql"}
+                        }],
+                        zoom: 2
+                    },
+                    dataGrid: {
+                        y: 0,
+                        x: 0,
+                        w: 1,
+                        h: 1
+                    }
+                }]
+        }
+    }
+};
 module.exports = {
     initialState,
+    initialStateWithLayers,
     changeLayoutAction
 };

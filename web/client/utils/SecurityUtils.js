@@ -1,4 +1,5 @@
 /**
+import { keys } from 'lodash';
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
  *
@@ -183,18 +184,23 @@ const SecurityUtils = {
             return parameters;
         }
     },
-    addAuthenticationToSLD: function(layerOptions, options) {
-        if (layerOptions.SLD) {
-            const parsed = URL.parse(layerOptions.SLD, true);
-            const params = SecurityUtils.addAuthenticationParameter(layerOptions.SLD, parsed.query, options.securityToken);
-            return assign({}, layerOptions, {
+    clearNilValuesForParams: (params = {}) => {
+        return Object.keys(params).reduce((pre, cur) => {
+            return !isNil(params[cur]) ? {...pre, [cur]: params[cur]} : pre;
+        }, {});
+    },
+    addAuthenticationToSLD: function(layerParams, options) {
+        if (layerParams.SLD) {
+            const parsed = URL.parse(layerParams.SLD, true);
+            const params = SecurityUtils.addAuthenticationParameter(layerParams.SLD, parsed.query, options.securityToken);
+            return assign({}, layerParams, {
                 SLD: URL.format(assign({}, parsed, {
                     query: params,
                     search: undefined
                 }))
             });
         }
-        return layerOptions;
+        return layerParams;
     },
     getAuthKeyParameter: function(url) {
         const foundRule = this.getAuthenticationRule(url);
