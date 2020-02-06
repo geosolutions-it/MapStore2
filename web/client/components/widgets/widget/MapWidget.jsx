@@ -13,7 +13,7 @@ const {withHandlers} = require('recompose');
 const MapView = withHandlers({
     onMapViewChanges: ({ updateProperty = () => { } }) => map => {
         const {layers, ...other} = map;
-        updateProperty('map', other, undefined, "merge" );
+        updateProperty('map', other, "merge" );
     }
 })(require('./MapView'));
 const LoadingSpinner = require('../../misc/LoadingSpinner');
