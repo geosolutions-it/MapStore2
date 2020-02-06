@@ -2275,6 +2275,7 @@
           },
           "Version": {
             "description": "Zeigt die Version von MapStore in den Karteneinstellungen an",
+            "descriptionGeorchestra": "Zeigt die Version von GeOrchestra in den Karteneinstellungen an",
             "title": "Ausführung"
           },
           "WFSDownload": {

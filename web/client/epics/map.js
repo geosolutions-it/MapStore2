@@ -37,6 +37,7 @@ const CoordinatesUtils = require('../utils/CoordinatesUtils');
 const {warning} = require('../actions/notifications');
 const {resetControls} = require('../actions/controls');
 const {clearLayers} = require('../actions/layers');
+const {clearWarning: clearMapInfoWarning} = require('../actions/mapInfo');
 const {removeAllAdditionalLayers} = require('../actions/additionallayers');
 const { head, isArray, isObject, mapValues } = require('lodash');
 
@@ -108,7 +109,12 @@ const resetLimitsOnInit = (action$, store) =>
         });
 
 const resetMapOnInit = action$ =>
-    action$.ofType(INIT_MAP).switchMap(() => Rx.Observable.of(removeAllAdditionalLayers(), resetControls(), clearLayers()));
+    action$.ofType(INIT_MAP).switchMap(() => Rx.Observable.of(
+        removeAllAdditionalLayers(),
+        resetControls(),
+        clearLayers(),
+        clearMapInfoWarning()
+    ));
 
 /**
  * Convert and normalize the extent into an array `minx,miny,maxx, maxy`

@@ -61,7 +61,7 @@ const pluginsToItems = (editedPlugin, editedCfg, cfgError, setEditor, documentat
                 tooltipId: 'contextCreator.configurePlugins.tooltips.mapTemplatesConfig',
                 onClick: () => onShowDialog('mapTemplatesConfig', true)
             }, {
-                visible: !isMandatory,
+                visible: !isMandatory && !plugin.denyUserSelection,
                 glyph: '1-user-mod',
                 tooltipId: plugin.isUserPlugin ?
                     'contextCreator.configurePlugins.tooltips.disableUserPlugin' :
@@ -69,7 +69,7 @@ const pluginsToItems = (editedPlugin, editedCfg, cfgError, setEditor, documentat
                 bsStyle: plugin.isUserPlugin ? 'success' : undefined,
                 onClick: () => changePluginsKey([plugin.name], 'isUserPlugin', !plugin.isUserPlugin)
             }, {
-                visible: plugin.isUserPlugin,
+                visible: plugin.isUserPlugin && !plugin.denyUserSelection,
                 glyph: plugin.active ? 'check' : 'unchecked',
                 tooltipId: plugin.active ?
                     'contextCreator.configurePlugins.tooltips.deactivatePlugin' :
