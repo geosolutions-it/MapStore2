@@ -76,7 +76,8 @@
       "title": "plugins.FeatureEditor.title",
       "description": "plugins.FeatureEditor.description",
       "dependencies": [
-        "QueryPanel"
+        "QueryPanel",
+        "WFSDownload"
       ],
       "denyUserSelection": true,
       "defaultConfig": {}
@@ -437,13 +438,15 @@
       "title": "plugins.Save.title",
       "description": "plugins.Save.description",
       "dependencies": [
-        "BurgerMenu"
+        "BurgerMenu",
+        "SaveAs"
       ]
     },
     {
       "name": "SaveAs",
       "glyph": "floppy-open",
       "title": "plugins.SaveAs.title",
+      "hidden": true,
       "description": "plugins.SaveAs.description",
       "dependencies": [
         "BurgerMenu"
