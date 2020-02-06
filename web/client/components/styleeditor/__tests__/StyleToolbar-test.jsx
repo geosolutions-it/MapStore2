@@ -70,7 +70,7 @@ describe('test StyleToolbar module component', () => {
             expect(buttons.length).toBe(present);
             const disabledButtons = document.querySelectorAll('button:disabled');
             expect(disabledButtons.length).toBe(disabled);
-        }
+        };
         ReactDOM.render(<StyleToolbar selectedStyle="" layerDefaultStyleName="polygon" editEnabled />, document.getElementById("container"));
         checkButtons({ present: 3, disabled: 2 }); // default is "" and it's name is one of GeoServer's default styles
         ReactDOM.render(<StyleToolbar selectedStyle="" layerDefaultStyleName="custom" editEnabled />, document.getElementById("container"));
