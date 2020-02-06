@@ -39,7 +39,6 @@ export const inputMapStatesCenterChanged = {
     }
 };
 export const inputMapStatesCenterChangedAndQuickFilters = {
-    cqlAlreadyAnded: true,
     layers: [
         {
             name: "topp:states",
@@ -77,8 +76,8 @@ export const inputDependenciesQuickFiltersAndFilter = {
  * output data for filters
  */
 
-export const resultMapStatesNoCQL = { layers: [ { name: 'topp:states', params: { CQL_FILTER: null } } ], center: {} };
-export const resultMapStatesCQL = { layers: [ { name: 'topp:states', params: { CQL_FILTER: '((strToLowerCase("state_abbr") LIKE \'%i%\'))' } } ], center: {}, cqlAlreadyAnded: true };
-export const resultMapStatesCQL2 = { cqlAlreadyAnded: true, layers: [ { name: 'topp:states', params: { CQL_FILTER: '((strToLowerCase("state_abbr") LIKE \'%calif%\'))' } } ], center: {} };
-export const resultMapStatesCQLQuickFiltersAndFilter = { layers: [ { name: 'topp:states', params: { CQL_FILTER: '(((strToLowerCase("state_abbr") LIKE \'%i%\')) AND (strToLowerCase("STATE_NAME") LIKE \'%i%\'))' } } ], center: {}, cqlAlreadyAnded: true };
-export const resultMapWithCqlStatesCQLQuickFiltersAndFilter = { layers: [ { name: 'topp:states', params: { CQL_FILTER: '((((strToLowerCase("state_abbr") LIKE \'%i%\')) AND (strToLowerCase("STATE_NAME") LIKE \'%i%\'))) AND ((strToLowerCase("state_abbr") LIKE \'%a%\'))' } } ], cqlAlreadyAnded: true};
+export const resultMapStatesNoCQL = { layers: [ { name: 'topp:states', params: { CQL_FILTER: undefined } } ], center: {} };
+export const resultMapStatesCQL = { layers: [ { name: 'topp:states', params: { CQL_FILTER: '((strToLowerCase("state_abbr") LIKE \'%i%\'))' } } ], center: {} };
+export const resultMapStatesCQLAndOriginalCql = { layers: [ { name: 'topp:states', params: { CQL_FILTER: '(((strToLowerCase("state_abbr") LIKE \'%i%\'))) AND ((strToLowerCase("state_abbr") LIKE \'%calif%\'))' } } ], center: {} };
+export const resultMapStatesCQLQuickFiltersAndFilter = { layers: [ { name: 'topp:states', params: { CQL_FILTER: '(((strToLowerCase("state_abbr") LIKE \'%i%\')) AND (strToLowerCase("STATE_NAME") LIKE \'%i%\'))' } } ], center: {} };
+export const resultMapWithCqlStatesCQLQuickFiltersAndFilter = { layers: [ { name: 'topp:states', params: { CQL_FILTER: '((((strToLowerCase("state_abbr") LIKE \'%i%\')) AND (strToLowerCase("STATE_NAME") LIKE \'%i%\'))) AND ((strToLowerCase("state_abbr") LIKE \'%a%\'))' } } ] };

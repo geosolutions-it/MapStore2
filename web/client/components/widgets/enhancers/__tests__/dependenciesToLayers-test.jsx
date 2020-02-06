@@ -21,6 +21,7 @@ import {
     inputDependenciesQuickFiltersAndFilter,
     resultMapStatesNoCQL,
     resultMapStatesCQL,
+    resultMapStatesCQLAndOriginalCql,
     resultMapStatesCQLQuickFiltersAndFilter,
     resultMapWithCqlStatesCQLQuickFiltersAndFilter
 } from '../../../../test-resources/widgets/dependenciesToLayersData';
@@ -69,7 +70,7 @@ describe('widgets dependenciesToLayers enhancer', () => {
     it('dependenciesToLayers with layer in common with dependencies, with quickFilters updated once', (done) => {
         const Sink = dependenciesToLayers(createSink( props => {
             expect(props).toExist();
-            expect(props.map).toEqual(resultMapStatesCQL);
+            expect(props.map).toEqual(resultMapStatesCQLAndOriginalCql);
             done();
         }));
         ReactDOM.render(<Sink

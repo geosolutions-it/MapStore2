@@ -41,23 +41,20 @@ module.exports = compose(
                 if (dependencies.filter) {
                     filterObjCollection = {...filterObjCollection, ...FilterUtils.composeAttributeFilters([filterObjCollection, dependencies.filter])};
                 }
-
                 if (!isEmpty(filterObjCollection) && FilterUtils.toCQLFilter(filterObjCollection)) {
                     cqlFilter = FilterUtils.toCQLFilter(filterObjCollection);
-                    // originalCqlFilter is used to store the cql_filter created on the layer that is coming from the map
-                    // we should avoid to add the merge between originalCqlFilter and cql filter generated from quickFilters etc,
-                    // because these changes are pushed in the state
-
-                    layersUpdatedWithCql = arrayUpdate(false,
-                        {...layerInCommon,
-                            // using originalCqlFilter only once
-                            originalCqlFilter: !map.originalCqlFilterAdded ? layerInCommon && layerInCommon.params && layerInCommon.params.CQL_FILTER : layerInCommon.originalCqlFilter,
-                            params: optionsToVendorParams({ params: {CQL_FILTER: cqlFilter}}, layerInCommon.originalCqlFilter)
-                        }, {name: targetLayerName}, map.layers);
+                    layersUpdatedWithCql = arrayUpdate(
+                        false,
+                        {
+                            ...layerInCommon,
+                            params: optionsToVendorParams({ params: {CQL_FILTER: cqlFilter}}, layerInCommon && layerInCommon.params && layerInCommon.params.CQL_FILTER)
+                        },
+                        {name: targetLayerName},
+                        map.layers
+                    );
                     return {
                         map: {
                             ...map,
-                            originalCqlFilterAdded: true,
                             layers: layersUpdatedWithCql
                         }
                     };
