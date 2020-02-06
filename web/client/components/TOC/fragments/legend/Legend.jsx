@@ -46,6 +46,8 @@ class Legend extends React.Component {
                 layer.url.replace(/[?].*$/g, '');
 
             let urlObj = urlUtil.parse(url);
+
+            const cleanParams = SecurityUtils.clearNilValuesForParams(layer.params);
             let query = assign({}, {
                 service: "WMS",
                 request: "GetLegendGraphic",
@@ -58,8 +60,8 @@ class Legend extends React.Component {
                 SLD_VERSION: "1.1.0",
                 LEGEND_OPTIONS: props.legendOptions
             }, layer.legendParams || {},
-            SecurityUtils.addAuthenticationToSLD(layer.params || {}, props.layer),
-            layer.params && layer.params.SLD_BODY ? {SLD_BODY: layer.params.SLD_BODY} : {},
+            SecurityUtils.addAuthenticationToSLD(cleanParams || {}, props.layer),
+            cleanParams && cleanParams.SLD_BODY ? {SLD_BODY: cleanParams.SLD_BODY} : {},
             props.scales && props.currentZoomLvl ? {SCALE: Math.round(props.scales[props.currentZoomLvl])} : {});
             SecurityUtils.addAuthenticationParameter(url, query);
 
