@@ -24,6 +24,7 @@ export default ({
 }) => (
     <React.Fragment>
         <ConfirmDialog
+            draggable={false}
             modal
             show={showConfirm}
             onClose={() => {
@@ -34,6 +35,7 @@ export default ({
                 onMapViewerReload();
             }}
             confirmButtonBSStyle="default"
+            closeGlyph="1-close"
             confirmButtonContent={<Message msgId="confirm"/>}
             closeText={<Message msgId="cancel"/>}
         >

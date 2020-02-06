@@ -50,7 +50,9 @@
         "removeLayersPermissions": true,
         "sortingPermissions": true,
         "addGroupsPermissions": true,
-        "removeGroupsPermissions": true
+        "removeGroupsPermissions": true,
+        "activateWidgetTool": true,
+        "activateMetedataTool": false
       },
       "children": [
         "TOCItemsSettings",
@@ -76,13 +78,18 @@
       "dependencies": [
         "QueryPanel"
       ],
+      "denyUserSelection": true,
       "defaultConfig": {}
     },
     {
       "name": "TOCItemsSettings",
       "glyph": "wrench",
       "title": "plugins.TOCItemsSettings.title",
-      "description": "plugins.TOCItemsSettings.description"
+      "description": "plugins.TOCItemsSettings.description",
+      "children": [
+          "StyleEditor"
+      ],
+      "denyUserSelection": true
     },
     {
       "name": "MapFooter",
@@ -101,6 +108,7 @@
         "WidgetsTray"
       ],
       "dependencies": [
+        "TOC",
         "WidgetsBuilder"
       ]
     },
@@ -108,7 +116,8 @@
       "name": "WidgetsTray",
       "glyph": "import",
       "title": "plugins.WidgetsTray.title",
-      "description": "plugins.WidgetsTray.description"
+      "description": "plugins.WidgetsTray.description",
+      "denyUserSelection": true
     },
     {
       "name": "WidgetsBuilder",
@@ -122,12 +131,6 @@
       "glyph": "sheet",
       "title": "plugins.Details.title",
       "description": "plugins.Details.description"
-    },
-    {
-      "name": "AutoMapUpdate",
-      "glyph": "refresh",
-      "title": "plugins.AutoMapUpdate.title",
-      "description": "plugins.AutoMapUpdate.description"
     },
     {
       "name": "HelpLink",
@@ -242,12 +245,14 @@
       "name": "AddGroup",
       "glyph": "add-folder",
       "title": "plugins.AddGroup.title",
-      "description": "plugins.AddGroup.description"
+      "description": "plugins.AddGroup.description",
+      "denyUserSelection": true
     }, {
       "name": "FilterLayer",
       "glyph": "filter-layer",
       "title": "plugins.FilterLayer.title",
       "description": "plugins.FilterLayer.description",
+      "denyUserSelection": true,
       "dependencies": ["QueryPanel"]
     },
     {
@@ -455,6 +460,7 @@
     },
     {
       "name": "Expander",
+      "hidden": true,
       "glyph": "option-horizontal",
       "title": "plugins.Expander.title",
       "description": "plugins.Expander.description"
@@ -463,14 +469,16 @@
       "name": "Undo",
       "glyph": "1-screen-backward",
       "dependencies": [
-        "Toolbar"
+        "Toolbar",
+        "Expander"
       ]
     },
     {
       "name": "Redo",
       "glyph": "1-screen-forward",
       "dependencies": [
-        "Toolbar"
+        "Toolbar",
+        "Expander"
       ]
     },
     {
@@ -505,7 +513,8 @@
       "name": "StyleEditor",
       "glyph": "1-stilo",
       "title": "plugins.StyleEditor.title",
-      "description": "plugins.StyleEditor.description"
+      "description": "plugins.StyleEditor.description",
+      "mandatory": true
     },
     {
       "name": "MapLoading",
@@ -518,11 +527,15 @@
     },
     {
       "name": "MapTemplates",
-      "title": "Map Templates"
+      "title": "Map Templates",
+      "dependencies": [
+          "BurgerMenu"
+      ]
     }, {
       "name": "UserExtensions",
       "glyph": "1-user-add",
       "title": "plugins.UserExtensions.title",
+      "hidden": true,
       "description": "plugins.UserExtensions.description",
       "dependencies": ["BurgerMenu"]
     }

@@ -2270,6 +2270,7 @@
           },
           "Version": {
             "description": "Mostra la versione di MapStore nellla finestra di settings",
+            "descriptionGeorchestra": "Mostra la versione di GeOrchestra nellla finestra di settings",
             "title": "Versione"
           },
           "WFSDownload": {
