@@ -232,17 +232,7 @@ describe('Test default style update with layers rest API', () => {
                 const layer = JSON.parse(config.data).layer;
                 expect(layer.defaultStyle).toEqual({ "name": "workspace001:new_default_style" });
                 expect(layer.styles.style).toEqual([
-                    OLD_DEFAULT_STYLE,
-                    {
-                        "name": "workspace001:new_default_style",
-                        "workspace": "workspace001",
-                        "href": "/geoserver/rest/workspaces/workspace001/styles/new_default_style.json"
-                    },
-                    {
-                        "name": "workspace001:other_style",
-                        "workspace": "workspace001",
-                        "href": "/geoserver/rest/workspaces/workspace001/styles/other_style.json"
-                    }
+                    OLD_DEFAULT_STYLE
                 ]);
             } catch (e) {
                 done(e);

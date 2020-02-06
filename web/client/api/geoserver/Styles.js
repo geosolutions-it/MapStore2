@@ -38,8 +38,9 @@ const getContentType = (format, languageVersion) => {
     return contentTypes[format] || contentTypes.sld;
 };
 
+// TODO: separate options and URL generation, here this duplication uses `isNameParam` to get the same options for styles.json or styles/<styleName>.json, that is tricky
 const formatRequestData = ({options = {}, format, baseUrl, name, workspace, languageVersion}, isNameParam) => {
-    const paramName = isNameParam ? {name: encodeURIComponent(name)} : {};
+    const paramName = isNameParam ? { name: encodeURIComponent(name) } : {};
     const opts = {
         ...options,
         params: {
@@ -58,7 +59,16 @@ const formatRequestData = ({options = {}, format, baseUrl, name, workspace, lang
     };
 };
 
-export const getStyleBaseUrl = ({geoserverBaseUrl, workspace, name}) => `${geoserverBaseUrl}rest/${workspace && `workspaces/${workspace}/` || ''}styles/${ `${encodeURIComponent(name)}.json`}`;
+export const getStyleBaseUrl = ({geoserverBaseUrl, workspace, name, format = "json"}) => `${geoserverBaseUrl}rest/${workspace && `workspaces/${workspace}/` || ''}styles/${ `${encodeURIComponent(name)}.${format}`}`;
+
+/**
+ * Parses the name of the file and extracts extension to guess style format.
+ * TODO: we should use a better approch
+ * @param {string} filename style.sld or style.css
+ */
+const getStyleFormatFromFilename = (filename) => {
+    return filename.split('.').pop();
+};
 
 /**
 * Api for GeoServer styles via rest
@@ -198,8 +208,8 @@ const Api = {
         const url = getStyleBaseUrl({name, workspace, geoserverBaseUrl});
         return axios.get(url, options)
             .then(response => {
-                return response.data && response.data.style && response.data.style.filename ?
-                    axios.get(getStyleBaseUrl({workspace, geoserverBaseUrl, fileName: response.data.style.filename})).then(({data: code}) => ({...response.data.style, code}))
+                return response.data && response.data.style && response.data.style.name ?
+                    axios.get(getStyleBaseUrl({ workspace, geoserverBaseUrl, name: response.data.style.name, format: getStyleFormatFromFilename(response.data.style.filename) })).then(({data: code}) => ({...response.data.style, code}))
                     : null;
             });
     }
