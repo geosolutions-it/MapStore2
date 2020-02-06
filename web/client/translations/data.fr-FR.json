@@ -1653,6 +1653,13 @@
                     "unknownError": "Il y avait une erreur de chargement du contexte. S'il vous plaît contacter l'administrateur",
                     "notFound": "Le contexte que vous essayez d'accéder n'existe pas"
                 },
+                "template": {
+                    "title": "Erreur lors du chargement du modèle",
+                    "notAccessible": "Vous n'êtes pas autorisé à accéder à ce modèle. Veuillez contacter le propriétaire de la ressource",
+                    "pleaseLogin": "Ce modèle n'est pas public. Veuillez essayer de vous connecter",
+                    "unknownError": "This template is not public. Please try to login",
+                    "notFound": "Le modèle auquel vous essayez d'accéder n'existe pas"
+                },
                 "map": {
                     "notAccessible": "Vous ne disposez pas de l'autorisation droit d'accès à cette carte. S'il vous plaît contacter l'administrateur pour obtenir l'accès",
                     "pleaseLogin": "Cette carte ou la carte ne sont pas publiques. S'il vous plaît essayer de vous connecter",
@@ -2079,7 +2086,8 @@
                 "mapFilter": "Filtrer les cartes",
                 "videoFilter": "Filtrer les vidéos",
                 "imageFilter": "Filtrer les images",
-                "import": "Importer une ressource dans un magasin local"
+                "import": "Importer une ressource dans un magasin local",
+                "trash": "Supprimer la ressource"
             },
             "mediaform": {
                 "confirmExitTitle": "Fermer Media Form",
@@ -2089,6 +2097,11 @@
                 "thumbnailMessage": "La taille des images doit être un carré de 98px x 98px, maximum 100 Ko.",
                 "confirmMapSaveTitle": "Mise à jour de la carte",
                 "confirmMapSaveContent": "La mise à jour de cette carte réinitialisera toutes les cartes dépendantes de l'histoire précédemment personnalisées via l'éditeur en ligne, confirmez?"
+            },
+            "mediaList" : {
+                "removeResourceTitle": "Êtes-vous sûr?",
+                "confirmRemoveResource": "Voulez-vous supprimer cette ressource multimédia de l'histoire?",
+                "confirmRemoveUsedResource": "Cette ressource sera également supprimée de toutes les sections / contenus où elle est utilisée les laissant vides. Voulez-vous le supprimer de l'histoire?"
             },
             "mapList": {
                 "emptyList": "Cliquez sur le bouton plus pour créer une carte ou sélectionnez un autre service de carte."
@@ -2380,6 +2393,21 @@
           "filterPlaceholder": "des couches de filtre",
           "addExtension": "Ajouter une extension",
           "removeExtension": "Supprimer l'extension"
+        },
+        "mapTemplates": {
+            "title": "Modèles de carte",
+            "favouritesTitle": "Favoris",
+            "allTitle": "Tout",
+            "filterPlaceholder": "Filtrer les modèles de carte...",
+            "transfer": "Remplacer la carte par ce modèle",
+            "merge": "Ajouter ce modèle à la carte",
+            "favouriteAdd": "Ajouter aux Favoris",
+            "favouriteRemove": "Supprimer des favoris",
+            "emptyTitle": "Pas de résultat",
+            "emptyDescription": "Le filtre entré ne correspond au nom ou à la description d'aucun des modèles",
+            "confirmReplaceTitle": "Remplacer le contenu de la carte",
+            "confirmReplaceMessage": "Vous allez remplacer toutes les couches et la configuration de la carte par le modèle sélectionné en cliquant sur le bouton remplacer",
+            "confirmReplaceConfirmButton": "Remplacer"
         },
         "tutorial": {
             "title": "Tutoriel",

@@ -26,7 +26,8 @@ import {
     toggleSettingsPanel,
     update,
     updateCurrentPage,
-    updateSetting
+    updateSetting,
+    removeResource
 } from '../../actions/geostory';
 import geostory from '../../reducers/geostory';
 import {
@@ -376,6 +377,37 @@ describe('geostory reducer', () => {
         expect(contB).toExist();
         expect(contB.map).toNotExist();
         expect(contC).toExist();
+        expect(contC.map).toNotExist();
+    });
+    it('REMOVE_RESOURCE and its dependencies', () => {
+        const state = geostory(undefined, setCurrentStory(TEST_STORY_1));
+        const resId = state.currentStory.resources[0].id;
+        let contA = state.currentStory.sections[0].contents[0].contents[0];
+        let contB = state.currentStory.sections[0].contents[0].contents[1];
+        let contC = state.currentStory.sections[0].contents[0].contents[2];
+        expect(state.currentStory.resources.length).toBe(2);
+        expect(contA).toExist();
+        expect(contA.resourceId).toBe(resId);
+        expect(contB).toExist();
+        expect(contB.map).toExist();
+        expect(contB.resourceId).toBe(resId);
+        expect(contC).toExist();
+        expect(contC.map).toExist();
+        expect(contC.resourceId).toBe(resId);
+        const newState = geostory(state, removeResource(resId, 'map'));
+        contA = newState.currentStory.sections[0].contents[0].contents[0];
+        contB = newState.currentStory.sections[0].contents[0].contents[1];
+        contC = newState.currentStory.sections[0].contents[0].contents[2];
+        expect(newState.currentStory.resources.length).toBe(1);
+        expect(newState.currentStory.resources[0].id).toNotBe(resId);
+        expect(contA).toExist();
+        expect(contA.resourceId).toNotExist();
+        expect(contA.map).toNotExist();
+        expect(contB).toExist();
+        expect(contB.resourceId).toNotExist();
+        expect(contB.map).toNotExist();
+        expect(contC).toExist();
+        expect(contC.resourceId).toNotExist();
         expect(contC.map).toNotExist();
     });
 });

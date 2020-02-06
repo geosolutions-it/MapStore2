@@ -60,6 +60,18 @@ describe('ResourceUnavailable component', () => {
         expect(desc).toExist();
         expect(desc.innerHTML).toBe('map.errors.loading.unknownError');
     });
+    it('ResourceUnavailable enabled not login (status 403) shared geostory', () => {
+        ReactDOM.render(<ResourceUnavailable mode={"geostory"} enabled isSharedStory status={403}/>, document.getElementById("container"));
+        const container = document.getElementById('container');
+        const el = container.querySelector('.empty-state-container');
+        expect(el).toExist();
+        const title = container.querySelector('h1 > span');
+        expect(title).toExist();
+        expect(title.innerHTML).toBe('geostory.errors.loading.notAccessible');
+        const desc = container.querySelector('.empty-state-description > .text-center > span');
+        expect(desc).toExist();
+        expect(desc.innerHTML).toBe('geostory.errors.loading.unknownError');
+    });
 
     it('ResourceUnavailable enabled, login and errorMessage', () => {
         ReactDOM.render(<ResourceUnavailable enabled login status={404} errorMessage={'Error 404'}/>, document.getElementById("container"));

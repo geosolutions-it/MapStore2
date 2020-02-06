@@ -1656,6 +1656,13 @@
                     "notFound": "The context you are trying to access doesn't exist",
 	                "notAccessible": "You don't have the right permission to access to this context. Please contact the administrator to get access"
                 },
+                "template": {
+                    "title": "Error loading template",
+                    "notAccessible": "You don't have permission to access this template. Please contact the resource owner",
+                    "pleaseLogin": "This template is not public. Please try to login",
+                    "unknownError": "There was an error loading the template. Please contact the administrator",
+                    "notFound": "The template you are trying to access doesn't exist"
+                },
                 "map": {
                     "notAccessible": "You don't have permission to access this map. Please contact the resource owner",
                     "pleaseLogin": "This map or the map is not public. Please try to login",
@@ -2083,7 +2090,8 @@
                 "mapFilter": "Filter maps",
                 "videoFilter": "Filter videos",
                 "imageFilter": "Filter images",
-                "import": "Import resource to local store"
+                "import": "Import resource to local store",
+                "trash": "Remove resource"
             },
             "mediaform": {
                 "confirmExitTitle": "Close Media Form",
@@ -2093,6 +2101,11 @@
                 "thumbnailMessage": "Size of images should be a square of 98px x 98px, max 100kb",
                 "confirmMapSaveTitle": "Map Update",
                 "confirmMapSaveContent": "Updating this map will reset all dependent maps in the story previously customized through the inline editor, confirm?"
+            },
+            "mediaList" : {
+                "removeResourceTitle": "Are you sure?",
+                "confirmRemoveResource": "Do you want to remove this media resource from the story?",
+                "confirmRemoveUsedResource": "This resource will also be removed from all the sections/contents where It's used leaving them empty. Do you want to remove It from the story?"
             },
             "mapList": {
                 "emptyList": "Click on the plus button to create a map or select a different map service."
@@ -2384,6 +2397,21 @@
           "filterPlaceholder": "Filter...",
           "addExtension": "Add Extension",
           "removeExtension": "Remove Extension"
+        },
+        "mapTemplates": {
+            "title": "Map Templates",
+            "favouritesTitle": "Favourites",
+            "allTitle": "All",
+            "filterPlaceholder": "Filter map templates...",
+            "transfer": "Replace map with this template",
+            "merge": "Add this template to map",
+            "favouriteAdd": "Add to favourites",
+            "favouriteRemove": "Remove from favourites",
+            "emptyTitle": "No Result",
+            "emptyDescription": "Entered filter does not match name or description of any of templates",
+            "confirmReplaceTitle": "Replace map content",
+            "confirmReplaceMessage": "You will replace all layers and map configuration with the selected template by clicking on replace button",
+            "confirmReplaceConfirmButton": "Replace"
         },
         "tutorial": {
             "title": "Tutorial",

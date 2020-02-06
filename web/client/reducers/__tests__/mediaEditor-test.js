@@ -45,7 +45,7 @@ describe('Test the mediaEditor reducer', () => {
         let state = mediaEditor({}, chooseMedia());
         expect(state.open).toEqual(false);
         expect(state.owner).toEqual(undefined);
-        expect(state.settings).toEqual(undefined);
+        expect(state.settings).toEqual(DEFAULT_STATE.settings);
         expect(state.stashedSettings).toEqual(undefined);
 
         // if there is a stashed change
@@ -59,7 +59,7 @@ describe('Test the mediaEditor reducer', () => {
         let state = mediaEditor({}, hide());
         expect(state.open).toEqual(false);
         expect(state.owner).toEqual(undefined);
-        expect(state.settings).toEqual(undefined);
+        expect(state.settings).toEqual(DEFAULT_STATE.settings);
         expect(state.selected).toEqual(undefined);
         expect(state.saveState).toEqual({editing: false, addingMedia: false});
         expect(state.stashedSettings).toEqual(undefined);
