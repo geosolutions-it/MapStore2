@@ -2325,7 +2325,10 @@
                     "title": "Errore di configurazione",
                     "body": "Analisi JSON di configurazione non riuscita.\nSi è verificato il seguente errore:\n\"{error}\""
                 },
-                "uploadLabel": "Clicca per selezionare un pacchetto di estensione da aggiungere a MapStore, o trascina il pacchetto direttamente sulla pagina",
+                "uploadLabel": "Trascina qui un pacchetto di estensione o clicca per selezionarne uno",
+                "uploadTitle": "Installa un plugin di MapStore",
+                "uploadParseError": "File index.json con formato errato",
+                "uploadMissingFileError": "File index.json mancante nel file",
                 "tooltips": {
                     "enableUserPlugin": "Abilita la selezione del plug-in corrente per l'utente",
                     "disableUserPlugin": "Disabilita la selezione del plug-in corrente per l'utente",

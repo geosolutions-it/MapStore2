@@ -2324,7 +2324,8 @@
                     "title": "Erreur de configuration",
                     "body": "Échec de l'analyse JSON de la configuration.\nL'erreur suivante s'est produite:\n\"{error}\""
                 },
-                "uploadLabel": "Cliquez pour choisir un package d'extension à ajouter à MapStore, ou faites glisser le package directement sur la page",
+                "uploadLabel": "Faites glisser un ensemble d'extensions ou cliquez pour le parcourir et le télécharger",
+                "uploadTitle": "Installer un plugin MapStore",
                 "tooltips": {
                     "enableUserPlugin": "Activer la sélection du plugin actuel pour l'utilisateur",
                     "disableUserPlugin": "Désactiver la sélection du plugin actuel pour l'utilisateur",

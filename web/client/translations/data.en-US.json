@@ -2328,7 +2328,8 @@
                     "title": "Configuration Error",
                     "body": "Configuration JSON parsing failed.\nThe following error occurred:\n\"{error}\""
                 },
-                "uploadLabel": "Click to choose an extension package to add to MapStore, or drag the package directly on the page",
+                "uploadLabel": "Drag an extension bundle or click to browse and upload it",
+                "uploadTitle": "Install a MapStore plugin",
                 "tooltips": {
                     "enableUserPlugin": "Enable selection of current plugin for user",
                     "disableUserPlugin": "Disable selection of current plugin for user",

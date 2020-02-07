@@ -50,6 +50,7 @@ export const CONTEXT_SAVED = 'CONTEXTCREATOR:CONTEXT_SAVED';
 export const SAVE_CONTEXT = 'CONTEXTCREATOR:SAVE_CONTEXT';
 export const ENABLE_UPLOAD_PLUGIN = 'CONTEXTCREATOR:ENABLE_UPLOAD_PLUGIN';
 export const UPLOAD_PLUGIN = 'CONTEXTCREATOR:UPLOAD_PLUGIN';
+export const UPLOAD_PLUGIN_ERROR = 'CONTEXTCREATOR:UPLOAD_PLUGIN_ERROR';
 export const UPLOADING_PLUGIN = 'CONTEXTCREATOR:UPLOADING_PLUGIN';
 export const PLUGIN_UPLOADED = 'CONTEXTCREATOR:PLUGIN_UPLOADED';
 
@@ -387,11 +388,20 @@ export const uploadPlugin = (files) => ({
 });
 
 /**
+ * Starts the plugin upload workflow
+ */
+export const uploadPluginError = (files) => ({
+    type: UPLOAD_PLUGIN_ERROR,
+    files
+});
+
+/**
  * Starts/ends plugin upload workflow
  */
-export const pluginUploading = (status = false) => ({
+export const pluginUploading = (status = false, plugins) => ({
     type: UPLOADING_PLUGIN,
-    status
+    status,
+    plugins
 });
 
 /**

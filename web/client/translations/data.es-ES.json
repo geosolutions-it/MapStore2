@@ -2324,7 +2324,8 @@
                     "title": "Error de configuración",
                     "body": "Error en el análisis de la configuración JSON.\nEl siguiente error ha ocurrido:\n\"{error}\""
                 },
-                "uploadLabel": "Haga clic para elegir un paquete de extensión para agregar a MapStore, o arrastre el paquete directamente a la página",
+                "uploadLabel": "Arrastre un paquete de extensión o haga clic para navegar y subirlo",
+                "uploadTitle": "Instalar un complemento MapStore",
                 "tooltips": {
                     "enableUserPlugin": "Habilitar la selección del complemento actual para el usuario",
                     "disableUserPlugin": "Desactiva la selección del complemento actual para el usuario",

@@ -20,8 +20,8 @@ import {SAVE_CONTEXT, SAVE_TEMPLATE, LOAD_CONTEXT, LOAD_TEMPLATE, EDIT_TEMPLATE,
     startResourceLoad, loadFinished, loadTemplate, showDialog, setFileDropStatus, updateTemplate, isValidContextName,
     contextNameChecked, setCreationStep, contextLoadError, loading, mapViewerLoad, mapViewerLoaded, setEditedPlugin,
     setEditedCfg, setParsedCfg, validateEditedCfg, setValidationStatus, savePluginCfg, enableMandatoryPlugins,
-    enablePlugins, disablePlugins, setCfgError, changePluginsKey, changeTemplatesKey, setEditedTemplate, pluginUploaded,
-    pluginUploading, enableUploadPlugin} from '../actions/contextcreator';
+    enablePlugins, disablePlugins, setCfgError, changePluginsKey, changeTemplatesKey, setEditedTemplate, pluginUploaded, pluginUploading
+} from '../actions/contextcreator';
 import {newContextSelector, resourceSelector, creationStepSelector, mapConfigSelector, mapViewerLoadedSelector, contextNameCheckedSelector,
     editedPluginSelector, editedCfgSelector, validationStatusSelector, parsedCfgSelector, cfgErrorSelector,
     pluginsSelector, initialEnabledPluginsSelector} from '../selectors/contextcreator';
@@ -243,14 +243,14 @@ export const contextCreatorLoadContext = (action$, store) => action$
         )
     );
 
-export const uploadPlugin = (action$) => action$
+export const uploadPluginEpic = (action$) => action$
     .ofType(UPLOAD_PLUGIN)
     .switchMap(({files}) =>
-        Rx.Observable.defer(() => upload(files))
-            .switchMap(result => Rx.Observable.from([pluginUploaded(result), enableUploadPlugin(false)]))
+        Rx.Observable.defer(() => upload(files.map(f => f.file)))
+            .switchMap(result => Rx.Observable.of(pluginUploaded(result)))
             .let(wrapStartStop(
-                pluginUploading(true),
-                pluginUploading(false),
+                pluginUploading(true, files.map(f => f.name)),
+                pluginUploading(false, files.map(f => f.name)),
                 () => Rx.Observable.of(error({
                     title: "notification.error",
                     message: "resources.contexts.errorUploadingPlugin",
