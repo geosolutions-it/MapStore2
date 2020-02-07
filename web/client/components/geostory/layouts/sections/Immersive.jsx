@@ -97,6 +97,7 @@ const Immersive = ({
             }}
             focusedContent={focusedContent}
             bubblingTextEditing={bubblingTextEditing}
+            sectionType={sectionType}
         />
         {mode === Modes.EDIT && !hideContent && <AddBar
             containerWidth={viewWidth}

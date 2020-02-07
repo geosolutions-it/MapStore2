@@ -423,7 +423,7 @@ export const closeShareOnGeostoryChangeMode = action$ =>
 export const scrollSideBar = (action$, {getState}) =>
     action$.ofType(UPDATE_CURRENT_PAGE)
         .filter(({columnId, sectionId}) => modeSelector(getState()) === 'edit' && ((columnId && columnId !== "EMPTY") || sectionId))
-        .debounceTime(100)
+        .debounceTime(50)
         .do(({columnId, sectionId}) => {
             const id = `sd_${columnId || sectionId}`;
             let el = document.getElementById(id);

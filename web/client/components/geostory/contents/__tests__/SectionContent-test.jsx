@@ -56,14 +56,14 @@ describe('Section Content (Container) component', () => {
         const ID_2 = "ID_2";
         ReactDOM.render((<TestScrollableContainer height={100}>
             <div style={{ width: '100%', height: 100 }}>
-                <Content id={ID_1} type="text" />
+                <Content sectionType="immersive" id={ID_1} type="column" />
             </div>
             <div style={{ width: '100%', height: 100 }}>
-                <Content id={ID_2} onVisibilityChange={({ id, visible }) => {
+                <Content sectionType="immersive" id={ID_2} onVisibilityChange={({ id, visible }) => {
                     expect(id).toBe(ID_2);
                     expect(visible).toBe(true);
                     done();
-                }} type="text"/>
+                }} type="column"/>
             </div>
         </TestScrollableContainer>), document.getElementById("container"));
         const container = document.getElementById('container');
