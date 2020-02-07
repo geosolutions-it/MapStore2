@@ -9,19 +9,20 @@
 import Rx from 'rxjs';
 import axios from 'axios';
 import jsonlint from 'jsonlint-mod';
-import {omit, pick, get, flatten, uniq, intersection, head, keys, values, findIndex, cloneDeep} from 'lodash';
+import {omit, pick, get, flatten, uniq, intersection, head, keys, values, findIndex, cloneDeep, isString} from 'lodash';
 import {push} from 'connected-react-router';
 
 import ConfigUtils from '../utils/ConfigUtils';
 import MapUtils from '../utils/MapUtils';
 
-import {SAVE_CONTEXT, SAVE_TEMPLATE, LOAD_CONTEXT, LOAD_TEMPLATE, EDIT_TEMPLATE, SHOW_DIALOG, SET_CREATION_STEP, MAP_VIEWER_LOAD,
+import {SAVE_CONTEXT, SAVE_TEMPLATE, LOAD_CONTEXT, LOAD_TEMPLATE, DELETE_TEMPLATE, EDIT_TEMPLATE, SHOW_DIALOG, SET_CREATION_STEP, MAP_VIEWER_LOAD,
     MAP_VIEWER_RELOAD, CHANGE_ATTRIBUTE, ENABLE_MANDATORY_PLUGINS, ENABLE_PLUGINS, DISABLE_PLUGINS, SAVE_PLUGIN_CFG,
     EDIT_PLUGIN, CHANGE_PLUGINS_KEY, UPDATE_EDITED_CFG, VALIDATE_EDITED_CFG, SET_RESOURCE, UPLOAD_PLUGIN, contextSaved, setResource,
     startResourceLoad, loadFinished, loadTemplate, showDialog, setFileDropStatus, updateTemplate, isValidContextName,
     contextNameChecked, setCreationStep, contextLoadError, loading, mapViewerLoad, mapViewerLoaded, setEditedPlugin,
     setEditedCfg, setParsedCfg, validateEditedCfg, setValidationStatus, savePluginCfg, enableMandatoryPlugins,
-    enablePlugins, setCfgError, changePluginsKey, changeTemplatesKey, setEditedTemplate, pluginUploaded, pluginUploading, enableUploadPlugin} from '../actions/contextcreator';
+    enablePlugins, setCfgError, changePluginsKey, changeTemplatesKey, setEditedTemplate, setTemplates, pluginUploaded, pluginUploading,
+    enableUploadPlugin} from '../actions/contextcreator';
 import {newContextSelector, resourceSelector, creationStepSelector, mapConfigSelector, mapViewerLoadedSelector, contextNameCheckedSelector,
     editedPluginSelector, editedCfgSelector, validationStatusSelector, parsedCfgSelector, cfgErrorSelector,
     pluginsSelector, initialEnabledPluginsSelector} from '../selectors/contextcreator';
@@ -35,7 +36,8 @@ import {backgroundListSelector} from '../selectors/backgroundselector';
 import {textSearchConfigSelector} from '../selectors/searchconfig';
 import {mapOptionsToSaveSelector} from '../selectors/mapsave';
 import {loadMapConfig} from '../actions/config';
-import {createResource, updateResource, getResource, getResources, getResourceIdByName} from '../api/persistence';
+import {createResource, createCategory, updateResource, deleteResource, getResource, getResources,
+    getResourceIdByName} from '../api/persistence';
 import { upload } from '../api/plugins';
 
 const saveContextErrorStatusToMessage = (status) => {
@@ -144,15 +146,29 @@ export const saveTemplateEpic = (action$) => action$
         .let(wrapStartStop(
             loading(true, 'templateSaving'),
             loading(false, 'templateSaving'),
-            ({status, data}) => Rx.Observable.of(error({
-                title: 'contextCreator.saveErrorNotification.titleTemplate',
-                message: saveContextErrorStatusToMessage(status),
-                position: "tc",
-                autoDismiss: 5,
-                values: {
-                    data
+            ({status, data}, stream$) => {
+                if (status === 404 && isString(data) && data.indexOf('Resource Category not found') > -1) {
+                    return createCategory('TEMPLATE').switchMap(() => stream$.skip(1))
+                        .catch(() => Rx.Observable.of(error({
+                            title: 'contextCreator.saveErrorNotification.titleTemplate',
+                            message: 'contextCreator.saveErrorNotification.categoryError',
+                            position: "tc",
+                            autoDismiss: 5,
+                            values: {
+                                categoryName: 'TEMPLATE'
+                            }
+                        })));
                 }
-            }))
+                return Rx.Observable.of(error({
+                    title: 'contextCreator.saveErrorNotification.titleTemplate',
+                    message: saveContextErrorStatusToMessage(status),
+                    position: "tc",
+                    autoDismiss: 5,
+                    values: {
+                        data
+                    }
+                }));
+            }
         )));
 
 /**
@@ -170,6 +186,29 @@ export const loadTemplateEpic = (action$) => action$
             loading(true, 'templateLoading'),
             loading(false, 'templateLoading')
         )));
+
+/**
+ * Delete a template from server and remove it from the current list
+ * @param {observable} action$ manages `DELETE_TEMPLATE`
+ * @param {object} store
+ */
+export const deleteTemplateEpic = (action$, store) => action$
+    .ofType(DELETE_TEMPLATE)
+    .switchMap(({resource}) => deleteResource(resource).map(() => {
+        const state = store.getState();
+        const newContext = newContextSelector(state);
+
+        return setTemplates(get(newContext, 'templates', []).filter(template => template.id !== resource.id));
+    }).let(wrapStartStop(
+        loading(true, "loading"),
+        loading(false, "loading"),
+        () => Rx.Observable.of(error({
+            title: "notification.error",
+            message: "contextCreator.configureTemplates.deleteError",
+            autoDismiss: 6,
+            position: "tc"
+        }))
+    )));
 
 /**
  * Trigger template metadata editor

@@ -11,7 +11,7 @@ import ConfigUtils from '../utils/ConfigUtils';
 
 import {SET_CREATION_STEP, MAP_VIEWER_LOADED, SHOW_MAP_VIEWER_RELOAD_CONFIRM, SET_RESOURCE, UPDATE_TEMPLATE, IS_VALID_CONTEXT_NAME,
     CONTEXT_NAME_CHECKED, CLEAR_CONTEXT_CREATOR, SET_FILTER_TEXT, SET_SELECTED_PLUGINS, SET_SELECTED_TEMPLATES, SET_PARSED_TEMPLATE,
-    SET_FILE_DROP_STATUS, SET_EDITED_TEMPLATE, SET_EDITED_PLUGIN, CHANGE_PLUGINS_KEY, CHANGE_TEMPLATES_KEY, CHANGE_ATTRIBUTE,
+    SET_FILE_DROP_STATUS, SET_EDITED_TEMPLATE, SET_TEMPLATES, SET_EDITED_PLUGIN, CHANGE_PLUGINS_KEY, CHANGE_TEMPLATES_KEY, CHANGE_ATTRIBUTE,
     LOADING, SHOW_DIALOG, SET_EDITED_CFG, UPDATE_EDITED_CFG, SET_VALIDATION_STATUS, SET_PARSED_CFG,
     SET_CFG_ERROR, ENABLE_UPLOAD_PLUGIN, UPLOADING_PLUGIN,
     PLUGIN_UPLOADED} from "../actions/contextcreator";
@@ -220,6 +220,9 @@ export default (state = {}, action) => {
     }
     case SET_EDITED_TEMPLATE: {
         return set('editedTemplate', find(get(state, 'newContext.templates', []), template => template.id === action.id), state);
+    }
+    case SET_TEMPLATES: {
+        return set('newContext.templates', action.templates, state);
     }
     case SET_EDITED_PLUGIN: {
         return set('editedPlugin', action.pluginName, state);

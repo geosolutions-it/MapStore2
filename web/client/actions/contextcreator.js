@@ -21,7 +21,9 @@ export const SET_FILE_DROP_STATUS = 'CONTEXTCREATOR:SET_FILE_DROP_STATUS';
 export const SAVE_TEMPLATE = 'CONTEXTCREATOR:SAVE_TEMPLATE';
 export const LOAD_TEMPLATE = 'CONTEXTCREATOR:LOAD_TEMPLATE';
 export const UPDATE_TEMPLATE = 'CONTEXTCREATOR:UPDATE_TEMPLATE';
+export const DELETE_TEMPLATE = 'CONTEXTCREATOR:DELETE_TEMPLATE';
 export const SET_EDITED_TEMPLATE = 'CONTEXTCREATOR:SET_EDITED_TEMPLATE';
+export const SET_TEMPLATES = 'CONTEXTCREATOR:SET_TEMPLATES';
 export const EDIT_TEMPLATE = 'CONTEXTCREATOR:EDIT_TEMPLATE';
 export const SET_FILTER_TEXT = 'CONTEXTCREATOR:SET_FILTER_TEXT';
 export const SET_SELECTED_PLUGINS = 'CONTEXTCREATOR:SET_SELECTED_PLUGINS';
@@ -158,12 +160,30 @@ export const updateTemplate = (resource) => ({
 });
 
 /**
+ * Deletes a template from server
+ * @param {object} resource template resource
+ */
+export const deleteTemplate = (resource) => ({
+    type: DELETE_TEMPLATE,
+    resource
+});
+
+/**
  * Set edited template
  * @param {number} id template id
  */
 export const setEditedTemplate = (id) => ({
     type: SET_EDITED_TEMPLATE,
     id
+});
+
+/**
+ * Set templates array
+ * @param {object[]} templates array of templates
+ */
+export const setTemplates = (templates) => ({
+    type: SET_TEMPLATES,
+    templates
 });
 
 /**

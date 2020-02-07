@@ -18,7 +18,7 @@ import {newContextSelector, resourceSelector, creationStepSelector, reloadConfir
     enabledTemplatesFilterTextSelector} from '../selectors/contextcreator';
 import {mapTypeSelector} from '../selectors/maptype';
 import {setCreationStep, changeAttribute, saveNewContext, saveTemplate, mapViewerReload, showMapViewerReloadConfirm, showDialog, setFilterText,
-    setSelectedPlugins, setSelectedTemplates, setParsedTemplate, setFileDropStatus, editPlugin, editTemplate, updateEditedCfg,
+    setSelectedPlugins, setSelectedTemplates, setParsedTemplate, setFileDropStatus, editPlugin, editTemplate, deleteTemplate, updateEditedCfg,
     changePluginsKey, changeTemplatesKey, enablePlugins, disablePlugins, enableUploadPlugin, uploadPlugin} from '../actions/contextcreator';
 import contextcreator from '../reducers/contextcreator';
 import * as epics from '../epics/contextcreator';
@@ -78,6 +78,7 @@ export default createPlugin('ContextCreator', {
         onChangeAttribute: changeAttribute,
         onSave: saveNewContext,
         onSaveTemplate: saveTemplate,
+        onDeleteTemplate: deleteTemplate,
         onMapViewerReload: mapViewerReload,
         onReloadConfirm: showMapViewerReloadConfirm,
         onEnableUploadPlugin: enableUploadPlugin,

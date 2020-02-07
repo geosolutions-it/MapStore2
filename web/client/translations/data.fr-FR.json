@@ -2353,8 +2353,11 @@
                 },
                 "tooltips": {
                     "uploadTool": "Télécharger un nouveau modèle",
-                    "editTemplate": "Modifier les propriétés du modèle"
-                }
+                    "editTemplate": "Modifier les propriétés du modèle",
+                    "deleteTemplate": "Supprimer le modèle"
+                },
+                "deleteError": "Impossible de supprimer le modèle, une erreur s'est produite",
+                "deleteConfirm": "Voulez-vous vraiment supprimer le modèle \"{templateName}\"?"
             },
             "configureMap": {
                 "label": "Configurer la carte",
@@ -2365,7 +2368,8 @@
                 "titleContext": "L'enregistrement de contexte a échoué",
                 "titleTemplate": "Échec de l'enregistrement du modèle",
                 "conflict": "Une ressource portant ce nom existe déjà",
-                "defaultMessage": "Erreur inconnue"
+                "defaultMessage": "Erreur inconnue",
+                "categoryError": "La création de la catégorie manquante \"{categoryName}\" a échoué"
             },
             "contextNameErrorNotification": {
                 "title": "Nom de contexte incorrect",

@@ -172,7 +172,7 @@ class SaveModal extends React.Component {
             </ResizableModal>}
         </Portal>);
     }
-    isValidForm = () => get(this.props.resource, "metadata.name");
+    isValidForm = () => get(this.props.resource, "metadata.name") && (!this.props.enableFileDrop || this.props.fileDropStatus === 'accepted')
 }
 
 module.exports = SaveModal;

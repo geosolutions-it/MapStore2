@@ -2353,8 +2353,11 @@
                 },
                 "tooltips": {
                     "uploadTool": "Subir nueva plantilla",
-                    "editTemplate": "Editar propiedades de plantilla"
-                }
+                    "editTemplate": "Editar propiedades de plantilla",
+                    "deleteTemplate": "Eliminar plantilla"
+                },
+                "deleteError": "No se pudo eliminar la plantilla, se produjo un error",
+                "deleteConfirm": "¿Está seguro de que desea eliminar la plantilla \"{templateName}\"?"
             },
             "configureMap": {
                 "label": "Configurar mapa",
@@ -2365,7 +2368,8 @@
                 "titleContext": "Error al guardar el contextod",
                 "titleTemplate": "Error al guardar la plantilla",
                 "conflict": "Ya existe un recurso con este nombre",
-                "defaultMessage": "Error desconocido"
+                "defaultMessage": "Error desconocido",
+                "categoryError": "Error al crear la categoría faltante \"{categoryName}\""
             },
             "contextNameErrorNotification": {
                 "title": "Nombre de contexto incorrecto",

@@ -115,6 +115,7 @@ export default class ContextCreator extends React.Component {
         onChangeAttribute: PropTypes.func,
         onSave: PropTypes.func,
         onSaveTemplate: PropTypes.func,
+        onDeleteTemplate: PropTypes.func,
         onEditTemplate: PropTypes.func,
         onEditPlugin: PropTypes.func,
         onEnablePlugins: PropTypes.func,
@@ -249,6 +250,7 @@ export default class ContextCreator extends React.Component {
                             setFileDropStatus={this.props.setFileDropStatus}
                             onShowDialog={this.props.onShowDialog}
                             onSaveTemplate={this.props.onSaveTemplate}
+                            onDeleteTemplate={this.props.onDeleteTemplate}
                             onEditTemplate={this.props.onEditTemplate}
                             onFilterAvailableTemplates={this.props.onFilterAvailableTemplates}
                             onFilterEnabledTemplates={this.props.onFilterEnabledTemplates}/>

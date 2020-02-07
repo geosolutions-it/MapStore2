@@ -2357,8 +2357,11 @@
                 },
                 "tooltips": {
                     "uploadTool": "Upload new template",
-                    "editTemplate": "Edit template properties"
-                }
+                    "editTemplate": "Edit template properties",
+                    "deleteTemplate": "Delete template"
+                },
+                "deleteError": "Couldn't delete the template, an error occurred",
+                "deleteConfirm": "Are you sure you want to delete template \"{templateName}\"?"
             },
             "configureMap": {
                 "label": "Configure Map",
@@ -2369,7 +2372,8 @@
                 "titleContext": "Context saving failed",
                 "titleTemplate": "Template saving failed",
                 "conflict": "A resource with this name already exists",
-                "defaultMessage": "Unknown error"
+                "defaultMessage": "Unknown error",
+                "categoryError": "Creating missing category \"{categoryName}\" failed"
             },
             "contextNameErrorNotification": {
                 "title": "Bad context name",
