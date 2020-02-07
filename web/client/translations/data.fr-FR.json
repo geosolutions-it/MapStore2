@@ -2086,7 +2086,8 @@
                 "mapFilter": "Filtrer les cartes",
                 "videoFilter": "Filtrer les vidéos",
                 "imageFilter": "Filtrer les images",
-                "import": "Importer une ressource dans un magasin local"
+                "import": "Importer une ressource dans un magasin local",
+                "trash": "Supprimer la ressource"
             },
             "mediaform": {
                 "confirmExitTitle": "Fermer Media Form",
@@ -2096,6 +2097,11 @@
                 "thumbnailMessage": "La taille des images doit être un carré de 98px x 98px, maximum 100 Ko.",
                 "confirmMapSaveTitle": "Mise à jour de la carte",
                 "confirmMapSaveContent": "La mise à jour de cette carte réinitialisera toutes les cartes dépendantes de l'histoire précédemment personnalisées via l'éditeur en ligne, confirmez?"
+            },
+            "mediaList" : {
+                "removeResourceTitle": "Êtes-vous sûr?",
+                "confirmRemoveResource": "Voulez-vous supprimer cette ressource multimédia de l'histoire?",
+                "confirmRemoveUsedResource": "Cette ressource sera également supprimée de toutes les sections / contenus où elle est utilisée les laissant vides. Voulez-vous le supprimer de l'histoire?"
             },
             "mapList": {
                 "emptyList": "Cliquez sur le bouton plus pour créer une carte ou sélectionnez un autre service de carte."
@@ -2269,6 +2275,7 @@
           },
           "Version": {
             "description": "Affiche la version de MapStore dans l'outil de paramètres de carte",
+            "descriptionGeorchestra": "Affiche la version de GeOrchestra dans l'outil de paramètres de carte",
             "title": "Version"
           },
           "WFSDownload": {
@@ -2317,7 +2324,8 @@
                     "title": "Erreur de configuration",
                     "body": "Échec de l'analyse JSON de la configuration.\nL'erreur suivante s'est produite:\n\"{error}\""
                 },
-                "uploadLabel": "Cliquez pour choisir un package d'extension à ajouter à MapStore, ou faites glisser le package directement sur la page",
+                "uploadLabel": "Faites glisser un ensemble d'extensions ou cliquez pour le parcourir et le télécharger",
+                "uploadTitle": "Installer un plugin MapStore",
                 "tooltips": {
                     "enableUserPlugin": "Activer la sélection du plugin actuel pour l'utilisateur",
                     "disableUserPlugin": "Désactiver la sélection du plugin actuel pour l'utilisateur",

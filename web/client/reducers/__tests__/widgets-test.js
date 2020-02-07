@@ -12,6 +12,7 @@ const {
     onEditorChange,
     insertWidget,
     updateWidgetLayer,
+    updateWidgetProperty,
     deleteWidget,
     changeLayout,
     clearWidgets,
@@ -31,7 +32,7 @@ const {getFloatingWidgets, getVisibleFloatingWidgets, getCollapsedIds} = require
 
 
 const expect = require('expect');
-const {find} = require('lodash');
+const {find, get} = require('lodash');
 
 describe('Test the widgets reducer', () => {
     it('initial state', () => {
@@ -270,5 +271,31 @@ describe('Test the widgets reducer', () => {
         expect(state).toExist();
         expect(state.tray).toBe(true);
         expect(widgets(state, toggleTray(false)).tray).toBe(false);
+    });
+    it('widgets updateWidgetProperty', () => {
+        const {initialState} = require('../../test-resources/widgets/layout-state-collapse.js');
+        const id = "a7122cc0-f7a9-11e8-8602-03b7e0c9537b";
+        const state = widgets({
+            ...initialState
+        }, updateWidgetProperty(id, "key", "value", "replace"));
+        const widget = find(get(state, `containers.floating.widgets`), {
+            id
+        });
+        expect(widget).toExist();
+        expect(widget.key).toBe("value");
+    });
+    it('widgets updateWidgetProperty, merge mode', () => {
+        const {initialStateWithLayers} = require('../../test-resources/widgets/layout-state-collapse.js');
+        const id = "a7122cc0-f7a9-11e8-8602-03b7e0c9537b";
+        const state = widgets({
+            ...initialStateWithLayers
+        }, updateWidgetProperty(id, "map", {zoom: 4}, "merge"));
+        const widget = find(get(state, `containers.floating.widgets`), {
+            id
+        });
+        expect(widget).toExist();
+        expect(widget.map.zoom).toBe(4);
+        expect(widget.map.layers.length).toBe(1);
+        expect(widget.map.layers[0].params.CQL_FILTER).toBe("some cql");
     });
 });

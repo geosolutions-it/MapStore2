@@ -9,7 +9,7 @@ import { Observable } from 'rxjs';
 import { groupBy } from 'lodash';
 import uuid from 'uuid';
 
-import { addResource, editResource } from '../../actions/geostory';
+import { addResource, editResource, removeResource } from '../../actions/geostory';
 import { resourcesSelector } from '../../selectors/geostory';
 import { selectedIdSelector } from '../../selectors/mediaEditor';
 import { SourceTypes } from '../../utils/MediaEditorUtils';
@@ -86,4 +86,26 @@ export const load = (store) => {
             totalCount: separatedResourcesPerType[mediaType].length
         }))
     ) || Observable.of(null);
+};
+
+/**
+     * Delete a media and returns the object shaped as {id, mediaType, source}
+     * @param {string} mediaType type of the media (image, video...)
+     * @param {object} store redux store middleware object (with dispatch and getStore method)
+     * @returns {Observable} a stream that emit an object like this
+     * ```
+     * {
+     *   "id", // of the deleted resource
+     *   "mediaType": image | map,
+     * }
+     * ```
+     */
+export const remove = (mediaType, store) => {
+    const state = store.getState();
+    const id = selectedIdSelector(state);
+    return Observable.of(id).do(
+        () => {
+            return store.dispatch(removeResource(id, mediaType));
+        }
+    ).map(() => ({id, type: mediaType}));
 };

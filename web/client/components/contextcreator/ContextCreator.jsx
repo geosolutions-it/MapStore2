@@ -123,6 +123,7 @@ export default class ContextCreator extends React.Component {
         onUpdateCfg: PropTypes.func,
         onEnableUploadPlugin: PropTypes.func,
         onUploadPlugin: PropTypes.func,
+        onUploadPluginError: PropTypes.func,
         uploadEnabled: PropTypes.bool,
         onMapViewerReload: PropTypes.func,
         onReloadConfirm: PropTypes.func,
@@ -244,6 +245,7 @@ export default class ContextCreator extends React.Component {
                             onEnableUpload={this.props.onEnableUploadPlugin}
                             uploadEnabled={this.props.uploadEnabled}
                             onUpload={this.props.onUploadPlugin}
+                            onUploadError={this.props.onUploadPluginError}
                             changeTemplatesKey={this.props.changeTemplatesKey}
                             setSelectedTemplates={this.props.setSelectedTemplates}
                             setParsedTemplate={this.props.setParsedTemplate}

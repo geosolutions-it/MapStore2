@@ -47,7 +47,8 @@ import {
     toggleSettingsPanel,
     update,
     updateCurrentPage,
-    updateSetting
+    updateSetting,
+    removeResource, REMOVE_RESOURCE
 } from '../geostory';
 
 describe('test geostory action creators', () => {
@@ -197,4 +198,13 @@ describe('test geostory action creators', () => {
         expect(retVal.prop).toBe(prop);
         expect(retVal.value).toBe(value);
     });
+    it('removeResource', () => {
+        const id = "test";
+        const mediaType = "image";
+        const action = removeResource(id, mediaType);
+        expect(action.type).toBe(REMOVE_RESOURCE);
+        expect(action.id).toBe(id);
+        expect(action.mediaType).toBe(mediaType);
+    });
+
 });

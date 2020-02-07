@@ -13,7 +13,7 @@ import {SET_CREATION_STEP, MAP_VIEWER_LOADED, SHOW_MAP_VIEWER_RELOAD_CONFIRM, SE
     CONTEXT_NAME_CHECKED, CLEAR_CONTEXT_CREATOR, SET_FILTER_TEXT, SET_SELECTED_PLUGINS, SET_SELECTED_TEMPLATES, SET_PARSED_TEMPLATE,
     SET_FILE_DROP_STATUS, SET_EDITED_TEMPLATE, SET_TEMPLATES, SET_EDITED_PLUGIN, CHANGE_PLUGINS_KEY, CHANGE_TEMPLATES_KEY, CHANGE_ATTRIBUTE,
     LOADING, SHOW_DIALOG, SET_EDITED_CFG, UPDATE_EDITED_CFG, SET_VALIDATION_STATUS, SET_PARSED_CFG,
-    SET_CFG_ERROR, ENABLE_UPLOAD_PLUGIN, UPLOADING_PLUGIN,
+    SET_CFG_ERROR, ENABLE_UPLOAD_PLUGIN, UPLOADING_PLUGIN, UPLOAD_PLUGIN_ERROR,
     PLUGIN_UPLOADED} from "../actions/contextcreator";
 import {set} from '../utils/ImmutableUtils';
 
@@ -83,6 +83,7 @@ const makeNode = (plugin, parent = null, plugins = [], localPlugins = []) => ({
     dependencies: plugin.dependencies || [],
     enabled: false,
     active: false,
+    denyUserSelection: plugin.denyUserSelection || false,
     isUserPlugin: false,
     pluginConfig: {
         ...omit(head(localPlugins.filter(localPlugin => localPlugin.name === plugin.name)) || {}, 'cfg'),
@@ -121,16 +122,26 @@ export default (state = {}, action) => {
         return set('showReloadConfirm', action.show, state);
     }
     case ENABLE_UPLOAD_PLUGIN: {
-        return set('uploadPluginEnabled', action.enable, state);
+        return {
+            ...state,
+            uploadPluginEnabled: action.enable,
+            uploadingPlugin: []
+        };
     }
     case UPLOADING_PLUGIN: {
-        return set('uploadingPlugin', action.status, state);
+        const uploadingPlugin = action.plugins.map(p => ({name: p, uploading: action.status}));
+        const notUpdated = plugin => uploadingPlugin.filter(p => p.name === plugin.name).length === 0;
+        return set('uploadingPlugin', [ ...(state.uploadingPlugin || []).filter(notUpdated), ...uploadingPlugin ], state);
+    }
+    case UPLOAD_PLUGIN_ERROR: {
+        return set('uploadingPlugin', action.files.map(f => ({name: f.file.name, uploading: false, error: f.error})), state);
     }
     case PLUGIN_UPLOADED: {
         const plugins = action.plugins.map(makeNode);
+        const notDuplicate = plugin => plugins.filter(p => p.name === plugin.name).length === 0;
         return {
             ...state,
-            plugins: [...state.plugins, ...plugins]
+            plugins: [...(state.plugins || []).filter(notDuplicate), ...plugins]
         };
     }
     case SET_RESOURCE: {

@@ -6,6 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 import React from "react";
+import {compose, withStateHandlers} from 'recompose';
 import SectionContents from '../../contents/SectionContents';
 import Background from './Background';
 import {backgroundPropWithHandler} from './enhancers/immersiveBackgroundManager';
@@ -19,7 +20,13 @@ import {get} from 'lodash';
  * Paragraph Section Type.
  * Paragraph is a page block that expands for all it's height
  */
-export default backgroundPropWithHandler(({
+export default compose(
+    backgroundPropWithHandler,
+    withStateHandlers({textEditorActive: false}, {
+        bubblingTextEditing: () => (editing) => {
+            return  {textEditorActiveClass: editing ? ' ms-text-editor-active' : ''};
+        }
+    }))(({
     id,
     background = {},
     contents = [],
@@ -37,7 +44,9 @@ export default backgroundPropWithHandler(({
     remove = () => {},
     updateBackground = () => {},
     editMedia = () => {},
-    focusedContent
+    focusedContent,
+    bubblingTextEditing = () => {},
+    textEditorActiveClass = ""
 }) => {
 
     const hideContent = get(focusedContent, "target.id") === contentId;
@@ -84,7 +93,7 @@ export default backgroundPropWithHandler(({
                     />}
             </ContainerDimensions>
             <SectionContents
-                className="ms-section-contents"
+                className={`ms-section-contents${textEditorActiveClass}`}
                 contents={contents}
                 mode={mode}
                 add={add}
@@ -99,6 +108,7 @@ export default backgroundPropWithHandler(({
                     [ContentTypes.TEXT]: ['size', 'align', 'theme', 'remove']
                 }}
                 focusedContent={focusedContent}
+                bubblingTextEditing={bubblingTextEditing}
             />
             {mode === Modes.EDIT && !hideContent && <AddBar
                 containerWidth={viewWidth}

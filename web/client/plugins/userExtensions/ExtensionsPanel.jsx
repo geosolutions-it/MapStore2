@@ -6,9 +6,11 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import React, { useState } from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
+import { compose, withState } from 'recompose';
+
 import { Glyphicon } from 'react-bootstrap';
 
 import { updateUserPlugin } from '../../actions/context';
@@ -21,6 +23,7 @@ import BaseFilter from '../../components/misc/Filter';
 import Toolbar from '../../components/misc/toolbar/Toolbar';
 import emptyState from '../../components/misc/enhancers/emptyState';
 import localizedProps from '../../components/misc/enhancers/localizedProps';
+import withPluginsDefinition from './withPluginsDefinition';
 
 const Filter = localizedProps('filterPlaceholder')(BaseFilter);
 
@@ -38,7 +41,7 @@ const ExtensionList = emptyState(({ filteredItems, filterText }) => filterText &
                 preview: <div style={{ position: 'relative', width: '100%', height: '100%', backgroundColor: extension.active ? 'transparent' : '#ddd', display: 'flex' }}>
                     <Glyphicon glyph={extension.glyph || 'plug'} style={{ fontSize: 26, margin: 'auto', color: '#ffffff' }} />
                 </div>,
-                title: extension.name,
+                title: extension.title || extension.name,
                 description: extension.description,
                 selected: extension.active,
                 loading: extension.loading,
@@ -71,15 +74,15 @@ const match = (filterText, extension) =>
         .reduce((p, n) => p || n, false);
 
 const ExtensionsPanel = ({
+    filterText,
+    onFilter,
     extensions = [],
     onSelect = () => { }
 }) => {
-    const [filterText, onFilter] = useState('');
     const filteredItems = extensions
         .filter((ext) => {
             return !filterText
-                || filterText &&
-                match(filterText, ext);
+                || filterText && match(filterText, ext);
         });
     return (<BorderLayout
         header={
@@ -96,9 +99,20 @@ const ExtensionsPanel = ({
             onSelect={onSelect} />
     </BorderLayout>);
 };
-export default connect(
-    createSelector(userPluginsSelector, extensions => ({extensions})),
-    {
-        onSelect: (extension) => updateUserPlugin(extension.name, { active: !extension.active })
-    }
+
+
+export default compose(
+    connect(
+        createSelector(userPluginsSelector, extensions => ({extensions})),
+        {
+            onSelect: (extension) => updateUserPlugin(extension.name, { active: !extension.active })
+        }
+    ),
+    // get plugins configuration
+    withPluginsDefinition(),
+    // localize extensions labels
+    localizedProps('extensions', 'title'),
+    localizedProps('extensions', 'description'),
+    // add filter state handling
+    withState('filterText', 'onFilter')
 )(ExtensionsPanel);

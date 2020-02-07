@@ -124,7 +124,7 @@ describe('ConfigUtils', () => {
     });
     afterEach((done) => {
         document.body.innerHTML = '';
-
+        ConfigUtils.setLocalConfigurationFile("localConfig.json");
         setTimeout(done);
     });
     it('convert from legacy and check projection conversion', () => {
@@ -276,6 +276,32 @@ describe('ConfigUtils', () => {
     it('loadConfiguration', (done) => {
         var retval = ConfigUtils.loadConfiguration();
         expect(retval).toExist();
+        done();
+    });
+
+    it("loadConfiguration returns a copied config", done => {
+        var retval = ConfigUtils.loadConfiguration();
+        expect(retval).toExist();
+        retval.newProperty = 'newValue';
+        expect(ConfigUtils.getDefaults().newProperty).toNotExist();
+        done();
+    });
+
+    it("loadConfiguration returns a copied config as a promise", done => {
+        ConfigUtils.setLocalConfigurationFile("");
+        ConfigUtils.loadConfiguration().then((retval) => {
+            expect(retval).toExist();
+            retval.newProperty = "newValue";
+            expect(ConfigUtils.getDefaults().newProperty).toNotExist();
+            done();
+        });
+    });
+
+    it("getDefaults returns a copied config", done => {
+        var retval = ConfigUtils.getDefaults();
+        expect(retval).toExist();
+        retval.newProperty = "newValue";
+        expect(ConfigUtils.getDefaults().newProperty).toNotExist();
         done();
     });
 

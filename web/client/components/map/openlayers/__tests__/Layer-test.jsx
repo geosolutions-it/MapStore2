@@ -616,6 +616,36 @@ describe('Openlayers layer', () => {
         // count layers
         expect(map.getLayers().getLength()).toBe(1);
         expect(map.getLayers().item(0).getSource().urls.length).toBe(1);
+        expect(map.getLayers().item(0).getSource().getStyle()).toBe("");
+    });
+    it('creates a wmts layer with style for openlayers map', () => {
+        var options = {
+            "type": "wmts",
+            "visibility": true,
+            "name": "nurc:Arc_Sample",
+            "group": "Meteo",
+            "format": "image/png",
+            "tileMatrixSet": [
+                {
+                    "TileMatrix": [],
+                    "ows:Identifier": "EPSG:900913",
+                    "ows:SupportedCRS": "urn:ogc:def:crs:EPSG::900913"
+                }
+            ],
+            "style": "teststyle",
+            "url": "http://sample.server/geoserver/gwc/service/wmts"
+        };
+        // create layers
+        var layer = ReactDOM.render(
+            <OpenlayersLayer type="wmts"
+                options={options} map={map} />, document.getElementById("container"));
+
+
+        expect(layer).toExist();
+        // count layers
+        expect(map.getLayers().getLength()).toBe(1);
+        expect(map.getLayers().item(0).getSource().urls.length).toBe(1);
+        expect(map.getLayers().item(0).getSource().getStyle()).toBe("teststyle");
     });
     it('test wmts resolutions, maxResolutions and minResolutions', () => {
         var options = {
