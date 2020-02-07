@@ -49,7 +49,6 @@ describe('contextcreator epics', () => {
             expect(actions[0].error).toNotExist();
             expect(actions[1].type).toBe(SET_EDITED_PLUGIN);
             expect(actions[1].pluginName).toNotExist();
-            done();
         }, {
             contextcreator: {
                 editedPlugin: 'editedPlugin',
@@ -63,7 +62,7 @@ describe('contextcreator epics', () => {
                     children: []
                 }]
             }
-        });
+        }, done);
     });
     it('editPluginEpic', (done) => {
         const pluginName = 'pluginName';
@@ -74,13 +73,12 @@ describe('contextcreator epics', () => {
             expect(actions[0].pluginName).toBe(pluginName);
             expect(actions[1].type).toBe(SET_EDITED_CFG);
             expect(actions[1].pluginName).toBe(pluginName);
-            done();
         }, {
             contextcreator: {
                 editedPlugin: "editedPlugin",
                 validationStatus: true
             }
-        });
+        }, done);
     });
     it('enablePluginsEpic', (done) => {
         const pluginsToEnable = ['ZoomIn', 'ZoomOut'];
@@ -100,31 +98,36 @@ describe('contextcreator epics', () => {
             expect(actions[2].ids.length).toBe(0);
             expect(actions[2].key).toBe('forcedMandatory');
             expect(actions[2].value).toBe(true);
-            done();
         }, {
             contextcreator: {
                 plugins: [{
                     name: 'MetadataExplorer',
                     title: 'Catalog',
                     dependencies: [],
+                    children: [],
+                    autoEnableChildren: [],
                     enabled: false,
                     isUserPlugin: false,
                     active: false
                 }, {
                     name: 'ZoomIn',
                     dependencies: [],
+                    children: [],
+                    autoEnableChildren: [],
                     enabled: false,
                     isUserPlugin: false,
                     active: false
                 }, {
                     name: 'ZoomOut',
                     dependencies: [],
+                    children: [],
+                    autoEnableChildren: [],
                     enabled: false,
                     isUserPlugin: false,
                     active: false
                 }]
             }
-        });
+        }, done);
     });
     it('enablePluginsEpic with dependencies', (done) => {
         const pluginsToEnable = ['Widgets', 'WidgetsBuilder'];
@@ -147,7 +150,6 @@ describe('contextcreator epics', () => {
             expect(actions[3].ids).toEqual(['WidgetsTray']);
             expect(actions[3].key).toBe('enabledDependentPlugins');
             expect(actions[3].value).toEqual(['WidgetsBuilder']);
-            done();
         }, {
             contextcreator: {
                 plugins: [{
@@ -195,7 +197,7 @@ describe('contextcreator epics', () => {
                     children: []
                 }]
             }
-        });
+        }, done);
     });
     it('enablePluginsEpic with transitive dependencies', (done) => {
         const pluginsToEnable = ['Widgets', 'WidgetsBuilder'];
@@ -234,7 +236,6 @@ describe('contextcreator epics', () => {
             expect(enabledDependentPluginsActions[3].ids).toEqual(['WidgetsTray']);
             expect(enabledDependentPluginsActions[3].key).toBe('enabledDependentPlugins');
             expect(enabledDependentPluginsActions[3].value).toEqual(['WidgetsBuilder']);
-            done();
         }, {
             contextcreator: {
                 plugins: [{
@@ -309,7 +310,7 @@ describe('contextcreator epics', () => {
                     children: []
                 }]
             }
-        });
+        }, done);
     });
     it('disablePluginsEpic', (done) => {
         const pluginsToDisable = ['ZoomIn', 'ZoomOut'];
@@ -320,31 +321,36 @@ describe('contextcreator epics', () => {
             expect(actions[0].ids).toEqual(pluginsToDisable);
             expect(actions[0].key).toBe('enabled');
             expect(actions[0].value).toBe(false);
-            done();
         }, {
             contextcreator: {
                 plugins: [{
                     name: 'MetadataExplorer',
                     title: 'Catalog',
                     dependencies: [],
+                    enabledDependentPlugins: [],
+                    children: [],
                     enabled: true,
                     isUserPlugin: false,
                     active: false
                 }, {
                     name: 'ZoomIn',
                     dependencies: [],
+                    enabledDependentPlugins: [],
+                    children: [],
                     enabled: true,
                     isUserPlugin: false,
                     active: false
                 }, {
                     name: 'ZoomOut',
                     dependencies: [],
+                    enabledDependentPlugins: [],
+                    children: [],
                     enabled: true,
                     isUserPlugin: false,
                     active: false
                 }]
             }
-        });
+        }, done);
     });
     it('disablePluginsEpic with dependencies', (done) => {
         const pluginsToDisable = ['WidgetsBuilder'];
@@ -363,18 +369,20 @@ describe('contextcreator epics', () => {
             expect(actions[2].ids).toEqual(['WidgetsTray']);
             expect(actions[2].key).toBe('forcedMandatory');
             expect(actions[2].value).toBe(false);
-            done();
         }, {
             contextcreator: {
                 plugins: [{
                     name: 'Widgets',
                     dependencies: [],
+                    enabledDependentPlugins: [],
                     enabled: true,
                     isUserPlugin: false,
                     active: false,
                     children: [{
                         name: 'WidgetsBuilder',
                         dependencies: ['WidgetsTray'],
+                        enabledDependentPlugins: [],
+                        children: [],
                         parent: 'Widgets',
                         enabled: true,
                         isUserPlugin: false,
@@ -382,6 +390,7 @@ describe('contextcreator epics', () => {
                     }, {
                         name: 'WidgetsTray',
                         dependencies: [],
+                        children: [],
                         enabledDependentPlugins: ['WidgetsBuilder'],
                         forcedMandatory: true,
                         parent: 'Widgets',
@@ -392,30 +401,34 @@ describe('contextcreator epics', () => {
                 }, {
                     name: 'ZoomIn',
                     dependencies: [],
+                    enabledDependentPlugins: [],
+                    children: [],
                     enabled: true,
                     isUserPlugin: true,
                     active: false
                 }, {
                     name: 'ZoomOut',
                     dependencies: [],
+                    enabledDependentPlugins: [],
+                    children: [],
                     enabled: false,
                     isUserPlugin: false,
                     active: false
                 }]
             }
-        });
+        }, done);
     });
     it('disablePluginsEpic with transitive dependencies', (done) => {
         const pluginsToDisable = ['Widgets'];
         const startActions = [disablePlugins(pluginsToDisable)];
-        testEpic(disablePluginsEpic, 5, startActions, actions => {
-            expect(actions.length).toBe(5);
+        testEpic(disablePluginsEpic, 6, startActions, actions => {
+            expect(actions.length).toBe(6);
             expect(actions[0].type).toBe(CHANGE_PLUGINS_KEY);
-            expect(actions[0].ids.sort()).toEqual(['BurgerMenu', 'CheeseburgerMenu', 'OmniBar', 'Widgets']);
+            expect(actions[0].ids.sort()).toEqual(['BurgerMenu', 'CheeseburgerMenu', 'OmniBar', 'Widgets', 'WidgetsBuilder', 'WidgetsTray']);
             expect(actions[0].key).toBe('enabled');
             expect(actions[0].value).toBe(false);
 
-            const enabledDependentPluginsActions = actions.slice(1, 4);
+            const enabledDependentPluginsActions = actions.slice(1, 5);
             enabledDependentPluginsActions.sort((x, y) => x.ids[0] < y.ids[0] ? -1 : x.ids[0] > y.ids[0] ? 1 : 0);
 
             expect(enabledDependentPluginsActions[0].type).toBe(CHANGE_PLUGINS_KEY);
@@ -430,17 +443,21 @@ describe('contextcreator epics', () => {
             expect(enabledDependentPluginsActions[2].ids).toEqual(['OmniBar']);
             expect(enabledDependentPluginsActions[2].key).toBe('enabledDependentPlugins');
             expect(enabledDependentPluginsActions[2].value).toEqual([]);
+            expect(enabledDependentPluginsActions[3].type).toBe(CHANGE_PLUGINS_KEY);
+            expect(enabledDependentPluginsActions[3].ids).toEqual(['WidgetsTray']);
+            expect(enabledDependentPluginsActions[3].key).toBe('enabledDependentPlugins');
+            expect(enabledDependentPluginsActions[3].value).toEqual([]);
 
-            expect(actions[4].type).toBe(CHANGE_PLUGINS_KEY);
-            expect(actions[4].ids.sort()).toEqual(['BurgerMenu', 'CheeseburgerMenu', 'OmniBar']);
-            expect(actions[4].key).toBe('forcedMandatory');
-            expect(actions[4].value).toBe(false);
-            done();
+            expect(actions[5].type).toBe(CHANGE_PLUGINS_KEY);
+            expect(actions[5].key).toBe('forcedMandatory');
+            expect(actions[5].ids.sort()).toEqual(['BurgerMenu', 'CheeseburgerMenu', 'OmniBar', 'WidgetsTray']);
+            expect(actions[5].value).toBe(false);
         }, {
             contextcreator: {
                 plugins: [{
                     name: 'Widgets',
                     dependencies: ['BurgerMenu'],
+                    enabledDependentPlugins: [],
                     enabled: true,
                     isUserPlugin: false,
                     active: true,
@@ -448,6 +465,7 @@ describe('contextcreator epics', () => {
                     children: [{
                         name: 'WidgetsBuilder',
                         dependencies: ['WidgetsTray'],
+                        enabledDependentPlugins: [],
                         parent: 'Widgets',
                         enabled: true,
                         isUserPlugin: false,
@@ -468,6 +486,7 @@ describe('contextcreator epics', () => {
                 }, {
                     name: 'ZoomIn',
                     dependencies: [],
+                    enabledDependentPlugins: [],
                     enabled: true,
                     isUserPlugin: true,
                     active: false,
@@ -503,6 +522,7 @@ describe('contextcreator epics', () => {
                 }, {
                     name: 'ZoomOut',
                     dependencies: [],
+                    enabledDependentPlugins: [],
                     enabled: false,
                     isUserPlugin: false,
                     active: false,
@@ -510,7 +530,7 @@ describe('contextcreator epics', () => {
                     children: []
                 }]
             }
-        });
+        }, done);
     });
     it('disablePluginsEpic disable all', (done) => {
         const pluginsToDisable = ['Widgets', 'ZoomIn'];
@@ -518,7 +538,7 @@ describe('contextcreator epics', () => {
         testEpic(disablePluginsEpic, 4, startActions, actions => {
             expect(actions.length).toBe(4);
             expect(actions[0].type).toBe(CHANGE_PLUGINS_KEY);
-            expect(actions[0].ids).toEqual(['Widgets', 'ZoomIn', 'ZoomOut']);
+            expect(actions[0].ids).toEqual(['Widgets', 'WidgetsBuilder', 'WidgetsTray', 'ZoomIn', 'ZoomOut']);
             expect(actions[0].key).toBe('enabled');
             expect(actions[0].value).toBe(false);
             expect(actions[1].type).toBe(CHANGE_PLUGINS_KEY);
@@ -530,7 +550,6 @@ describe('contextcreator epics', () => {
             expect(actions[2].key).toBe('forcedMandatory');
             expect(actions[2].value).toBe(false);
             expect(actions[3].type).toBe(ENABLE_MANDATORY_PLUGINS);
-            done();
         }, {
             contextcreator: {
                 plugins: [{
@@ -570,7 +589,7 @@ describe('contextcreator epics', () => {
                     active: false
                 }]
             }
-        });
+        }, done);
     });
     it('upload plugin bundle', (done) => {
         mockAxios.onPost().reply(200, { "myplugin": {}});

@@ -58,11 +58,11 @@ module.exports = compose(
                 };
             }
             // merging filterObj with quickFilters coming from dependencies
-            if (dependencies.quickFilters) {
+            if (layer && dependencies && dependencies.quickFilters && dependencies.layer && layer.name === dependencies.layer.name ) {
                 newFilterObj = {...newFilterObj, ...composeFilterObject(newFilterObj, dependencies.quickFilters, dependencies.options)};
             }
             // merging filterObj with attribute filter coming from dependencies
-            if (dependencies.filter) {
+            if (layer && dependencies && dependencies.filter && dependencies.layer && layer.name === dependencies.layer.name ) {
                 newFilterObj = {...newFilterObj, ...composeAttributeFilters([newFilterObj, dependencies.filter])};
             }
             // generating a cqlFilter based viewport coming from dependencies

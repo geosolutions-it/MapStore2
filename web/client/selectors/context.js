@@ -7,7 +7,7 @@
  */
 import { createSelector } from 'reselect';
 import { monitorStateSelector } from './localConfig';
-import { get } from 'lodash';
+import { get, findIndex } from 'lodash';
 import ConfigUtils from '../utils/ConfigUtils';
 
 
@@ -66,6 +66,19 @@ export const pluginsSelector = state =>
     isLoadingSelector(state)
         ? loadingPluginsSelector(state)
         : currentPluginsSelector(state) || defaultPluginsSelector(state);
+
+/**
+ * Creates a selector that will return true if mapstore currently has a context active,
+ * and it has a specific plugin activated
+ * @param {string} pluginName plugin name
+ */
+export const isPluginInContext = pluginName => createSelector(
+    currentContextSelector,
+    pluginsSelector,
+    (currentContext, contextPlugins = {}) => !currentContext ||
+        findIndex(get(contextPlugins, 'desktop', []), plugin => plugin.name === pluginName) > -1
+);
+
 /*
  * Adds the current context to the monitoredState. To update on every change of it.
  */

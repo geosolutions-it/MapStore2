@@ -2275,6 +2275,7 @@
           },
           "Version": {
             "description": "Affiche la version de MapStore dans l'outil de paramètres de carte",
+            "descriptionGeorchestra": "Affiche la version de GeOrchestra dans l'outil de paramètres de carte",
             "title": "Version"
           },
           "WFSDownload": {

@@ -22,7 +22,7 @@ import {
     SHOW
 } from '../actions/mediaEditor';
 import {LOCATION_CHANGE} from 'connected-react-router';
-import { compose, set } from '../utils/ImmutableUtils';
+import { compose, set, unset} from '../utils/ImmutableUtils';
 import {
     sourceIdSelector,
     currentMediaTypeSelector,
@@ -91,8 +91,9 @@ export default (state = DEFAULT_STATE, action) => {
             set('owner', undefined),
             set('saveState.addingMedia', false),
             set('saveState.editing', false),
-            set('settings', state.stashedSettings || state.settings), // restore defaults, TODO SOURCE ID IS NOT RESTORED
-            set('stashedSettings', undefined)
+            set('settings', state.stashedSettings || DEFAULT_STATE.settings), // restore defaults, TODO SOURCE ID IS NOT RESTORED
+            set('stashedSettings', undefined),
+            unset('selected')
         )(state);
     // set adding media state (to toggle add/select in media selectors)
     case LOAD_MEDIA_SUCCESS: {

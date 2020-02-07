@@ -36,6 +36,7 @@ const StyleToolbar = ({
     onShowModal,
     loading,
     selectedStyle,
+    layerDefaultStyleName,
     editEnabled,
     enableSetDefaultStyle,
     defaultStyles = [
@@ -103,7 +104,12 @@ const StyleToolbar = ({
                     glyph: 'code',
                     tooltipId: 'styleeditor.editSelectedStyle',
                     visible: !status && editEnabled ? true : false,
-                    disabled: !!loading || defaultStyles.indexOf(selectedStyle) !== -1 || disableCodeEditing,
+                    disabled: !!loading
+                        || defaultStyles.indexOf(selectedStyle) !== -1
+                        // empty or "" means layer's default style.
+                        // You can edit this only if it not one of GeoServer's default
+                        || !selectedStyle && defaultStyles.indexOf(layerDefaultStyleName) !== -1
+                        || disableCodeEditing,
                     onClick: () => onEditStyle()
                 },
                 {

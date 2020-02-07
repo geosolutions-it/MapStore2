@@ -7,9 +7,8 @@
  */
 
 import Rx from 'rxjs';
-import axios from 'axios';
 import jsonlint from 'jsonlint-mod';
-import {omit, pick, get, flatten, uniq, intersection, head, keys, values, findIndex, cloneDeep} from 'lodash';
+import {omit, pick, get, flatten, uniq, intersection, head, keys, values, findIndex, find, cloneDeep} from 'lodash';
 import {push} from 'connected-react-router';
 
 import ConfigUtils from '../utils/ConfigUtils';
@@ -21,7 +20,8 @@ import {SAVE_CONTEXT, SAVE_TEMPLATE, LOAD_CONTEXT, LOAD_TEMPLATE, EDIT_TEMPLATE,
     startResourceLoad, loadFinished, loadTemplate, showDialog, setFileDropStatus, updateTemplate, isValidContextName,
     contextNameChecked, setCreationStep, contextLoadError, loading, mapViewerLoad, mapViewerLoaded, setEditedPlugin,
     setEditedCfg, setParsedCfg, validateEditedCfg, setValidationStatus, savePluginCfg, enableMandatoryPlugins,
-    enablePlugins, setCfgError, changePluginsKey, changeTemplatesKey, setEditedTemplate, pluginUploaded, pluginUploading} from '../actions/contextcreator';
+    enablePlugins, disablePlugins, setCfgError, changePluginsKey, changeTemplatesKey, setEditedTemplate, pluginUploaded, pluginUploading
+} from '../actions/contextcreator';
 import {newContextSelector, resourceSelector, creationStepSelector, mapConfigSelector, mapViewerLoadedSelector, contextNameCheckedSelector,
     editedPluginSelector, editedCfgSelector, validationStatusSelector, parsedCfgSelector, cfgErrorSelector,
     pluginsSelector, initialEnabledPluginsSelector} from '../selectors/contextcreator';
@@ -36,6 +36,7 @@ import {textSearchConfigSelector} from '../selectors/searchconfig';
 import {mapOptionsToSaveSelector} from '../selectors/mapsave';
 import {loadMapConfig} from '../actions/config';
 import {createResource, updateResource, getResource, getResources, getResourceIdByName} from '../api/persistence';
+import getPluginsConfig from '../observables/config/getPluginsConfig';
 import { upload } from '../api/plugins';
 
 const saveContextErrorStatusToMessage = (status) => {
@@ -204,9 +205,9 @@ export const resetOnShowDialog = (action$, store) => action$
  */
 export const contextCreatorLoadContext = (action$, store) => action$
     .ofType(LOAD_CONTEXT)
-    .switchMap(({id, pluginsConfig = ConfigUtils.getConfigProp('contextPluginsConfiguration')}) => Rx.Observable.of(startResourceLoad()).concat(
+    .switchMap(({id, pluginsConfig}) => Rx.Observable.of(startResourceLoad()).concat(
         Rx.Observable.forkJoin(
-            Rx.Observable.defer(() => axios.get(pluginsConfig).then(result => result.data)),
+            Rx.Observable.defer(() => getPluginsConfig(pluginsConfig)),
             getResources({
                 category: 'TEMPLATE',
                 options: {
@@ -386,7 +387,7 @@ export const enableMandatoryPluginsEpic = (action$, store) => action$
     .ofType(ENABLE_MANDATORY_PLUGINS)
     .switchMap(() => {
         const state = store.getState();
-        const plugins = flattenPluginTree(pluginsSelector(state));
+        const plugins = pluginsSelector(state);
 
         return Rx.Observable.of(enablePlugins(plugins.filter(plugin => plugin.mandatory).map(plugin => plugin.name)));
     });
@@ -412,30 +413,63 @@ export const enablePluginsEpic = (action$, store) => action$
         let depsToForce = []; // plugins that need to be temporarily flagged as mandatory
 
         const enablePlugin = (pluginName) => {
-            const processDependency = (parentName, dep) => {
-                // add the plugin where we came from to enabledDependentPlugins of dep
-                if (!enabledDependentPlugins[dep.name]) {
-                    enabledDependentPlugins[dep.name] = dep.enabledDependentPlugins.slice();
+            const handleChildren = (processDepFunc, plugin) => {
+                // enable mandatory children
+                plugin.children.forEach(childPlugin => {
+                    if (childPlugin.mandatory) {
+                        enablePlugin(childPlugin.name);
+                    }
+                });
+                // autoEnableChildren need to be handled only when the action is triggered by the user from ui,
+                // unless the parent plugin is mandatory
+                if (!isInitial && !plugin.mandatory) {
+                    plugin.autoEnableChildren.forEach(childName => {
+                        // treat autoEnableChildren as dependencies, but dont force mandatory
+                        processDepFunc(null, findPlugin(pluginsState, childName), true);
+                    });
                 }
-                enabledDependentPlugins[dep.name].push(parentName);
+            };
+
+            const processDependency = (parentName, dep, dontForceMandatory = false) => {
+                // if dep is mandatory ignore it; it's dependency tree either has already been enabled or will be enabled anyway
+                if (dep.mandatory) {
+                    return;
+                }
+
+                const isDepEnabled = dep.enabled || pluginsToEnable.reduce((result, cur) => result || cur === dep.name, false);
+
+                // add the plugin where we came from to enabledDependentPlugins of dep, unless dontForceMandatory === true
+                if (parentName && !dontForceMandatory) {
+                    if (!enabledDependentPlugins[dep.name]) {
+                        enabledDependentPlugins[dep.name] = dep.enabledDependentPlugins.slice();
+                    }
+                    enabledDependentPlugins[dep.name].push(parentName);
+                }
 
                 // if dep is flagged as forcedMandatory we've already been here
                 if (dep.forcedMandatory || depsToForce.reduce((result, cur) => result || cur === dep.name, false)) {
                     return;
                 }
 
-                // flag dep to have forcedMandatory enabled
-                depsToForce.push(dep.name);
+                // flag dep to have forcedMandatory enabled if dontForceMandatory === false
+                if (!dontForceMandatory) {
+                    depsToForce.push(dep.name);
+                }
 
                 // enable it if not already enabled
-                if (!dep.enabled && pluginsToEnable.reduce((result, cur) => result && cur !== dep.name, true)) {
+                if (!isDepEnabled) {
                     pluginsToEnable.push(dep.name);
                 }
 
-                // recursively process the dependencies of dep
+                // recursively process the dependencies
                 dep.dependencies.forEach(depName => {
                     processDependency(dep.name, findPlugin(pluginsState, depName));
                 });
+
+                // enable children only if dep was disabled
+                if (!isDepEnabled) {
+                    handleChildren(processDependency, dep);
+                }
             };
 
             const plugin = findPlugin(pluginsState, pluginName);
@@ -445,13 +479,8 @@ export const enablePluginsEpic = (action$, store) => action$
                 pluginsToEnable.push(pluginName);
                 plugin.dependencies.forEach(depName => {
                     processDependency(pluginName, findPlugin(pluginsState, depName));
-                    // autoEnableChildren only applies when the action is triggered by the user from ui
-                    if (!isInitial) {
-                        plugin.autoEnableChildren.forEach(childName => {
-                            enablePlugin(childName);
-                        });
-                    }
                 });
+                handleChildren(processDependency, plugin);
             }
         };
 
@@ -495,10 +524,10 @@ export const disablePluginsEpic = (action$, store) => action$
         const maxCount = pluginsState.filter(plugin => plugin.enabled && !plugin.mandatory && !plugin.forcedMandatory).length;
         if (intersection(plugins, rootPlugins).length < maxCount) {
             let enabledDependentPlugins = {}; // object {[pluginName]: modified enabledDependentPlugins array}
-            let pluginsToDisable = plugins.slice(); // plugins that need to be enabled after dependency resolution
+            let pluginsToDisable = []; // plugins that need to be enabled after dependency resolution
             let depsToUnforceMandatory = []; // plugins that need to have their forcedMandatory flag removed
 
-            const disablePlugin = pluginName => {
+            const disablePlugin = (pluginName, isChild) => {
                 const processDependency = (parentName, plugin) => {
                     // update enabledDependentPlugins of plugin
                     const enabledDependentPluginsArr = enabledDependentPlugins[plugin.name] || plugin.enabledDependentPlugins.slice();
@@ -517,19 +546,30 @@ export const disablePluginsEpic = (action$, store) => action$
                         depsToUnforceMandatory.push(plugin.name);
                         // if the plugin is not mandatory disable it and recursively process it's dependencies
                         if (!plugin.mandatory) {
-                            pluginsToDisable.push(plugin.name);
-                            plugin.dependencies.forEach(depName => {
-                                processDependency(plugin.name, findPlugin(pluginsState, depName));
-                            });
+                            disablePlugin(plugin.name);
                         }
                     }
                 };
 
-                // start processing dependencies
+
                 const plugin = findPlugin(pluginsState, pluginName);
-                plugin.dependencies.forEach(depName => {
-                    processDependency(pluginName, findPlugin(pluginsState, depName));
-                });
+                const enabledDependentPluginsArr = enabledDependentPlugins[plugin.name] || plugin.enabledDependentPlugins.slice();
+
+                // if we came here recursively from a parent in plugin tree hierarchy, ignore mandatory flag
+                if (enabledDependentPluginsArr.length === 0 &&
+                    pluginsToDisable.reduce((result, cur) => result && cur !== plugin.name, true) && (!plugin.mandatory || isChild)) {
+                    pluginsToDisable.push(plugin.name);
+
+                    // start processing dependencies
+                    plugin.dependencies.forEach(depName => {
+                        processDependency(pluginName, findPlugin(pluginsState, depName));
+                    });
+
+                    // disable children
+                    plugin.children.filter(childPlugin => childPlugin.enabled).forEach(childPlugin => {
+                        disablePlugin(childPlugin.name, true);
+                    });
+                }
             };
 
             plugins.forEach(pluginName => {
@@ -547,7 +587,7 @@ export const disablePluginsEpic = (action$, store) => action$
 
         // disable everything and reenable initial mandatory plugins
         return Rx.Observable.of(
-            changePluginsKey(rootPlugins, 'enabled', false),
+            changePluginsKey(allPlugins, 'enabled', false),
             changePluginsKey(allPlugins, 'enabledDependentPlugins', []),
             changePluginsKey(allPlugins, 'forcedMandatory', false),
             enableMandatoryPlugins()
@@ -579,6 +619,30 @@ export const resetConfigOnPluginKeyChange = (action$, store) => action$
         }
 
         return Rx.Observable.empty();
+    });
+
+/**
+ * Enables/disables user extensions plugin when enabled user plugins are present
+ * @param {observable} action$
+ * @param {object} store
+ */
+export const handleUserExtensionsPlugin = (action$, store) => action$
+    .ofType(CHANGE_PLUGINS_KEY)
+    .filter(({key}) => key === 'enabled' || key === 'isUserPlugin')
+    .mergeMap(() => {
+        const state = store.getState();
+        const plugins = flattenPluginTree(pluginsSelector(state));
+
+        const enabledUserPluginsCount =
+            plugins.filter(({name, enabled, isUserPlugin}) => name !== 'UserExtensions' && enabled && isUserPlugin).length;
+        const isUserExtensionsEnabled = (find(plugins, ({name}) => name === 'UserExtensions') || {}).enabled;
+        const action = enabledUserPluginsCount > 0 && !isUserExtensionsEnabled ?
+            enablePlugins :
+            enabledUserPluginsCount === 0 && isUserExtensionsEnabled ?
+                disablePlugins :
+                null;
+
+        return action ? Rx.Observable.of(action(['UserExtensions'])) : Rx.Observable.empty();
     });
 
 /**

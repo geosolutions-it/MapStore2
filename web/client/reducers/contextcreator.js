@@ -83,6 +83,7 @@ const makeNode = (plugin, parent = null, plugins = [], localPlugins = []) => ({
     dependencies: plugin.dependencies || [],
     enabled: false,
     active: false,
+    denyUserSelection: plugin.denyUserSelection || false,
     isUserPlugin: false,
     pluginConfig: {
         ...omit(head(localPlugins.filter(localPlugin => localPlugin.name === plugin.name)) || {}, 'cfg'),
