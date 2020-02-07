@@ -16,8 +16,9 @@ const {
     DASHBOARD_RESET
 } = require('../actions/dashboard');
 
+const assign = require('object-assign');
 const set = require('lodash/fp/set');
-const { merge, get, find, omit, mapValues, castArray} = require('lodash');
+const { get, find, omit, mapValues, castArray} = require('lodash');
 const {arrayUpsert, compose, arrayDelete} = require('../utils/ImmutableUtils');
 
 const emptyState = {
@@ -100,7 +101,7 @@ function widgetsReducer(state = emptyState, action) {
         return arrayUpsert(`containers[${action.target}].widgets`,
             set(
                 action.key,
-                action.mode === "merge" ? merge(oldWidget[action.key], action.value) : action.value,
+                action.mode === "merge" ? assign(oldWidget[action.key], action.value) : action.value,
                 oldWidget,
             ), {
                 id: action.id
