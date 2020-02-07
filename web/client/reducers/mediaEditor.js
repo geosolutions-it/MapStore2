@@ -11,7 +11,6 @@ import { MediaTypes } from '../utils/GeoStoryUtils';
 import { SourceTypes } from '../utils/MediaEditorUtils';
 import {
     ADDING_MEDIA,
-    CHOOSE_MEDIA,
     EDITING_MEDIA,
     HIDE,
     LOAD_MEDIA_SUCCESS,
@@ -85,7 +84,6 @@ export default (state = DEFAULT_STATE, action) => {
     // hide resets the media editor as well as selected
     // resets all media editor settings
     case HIDE:
-    case CHOOSE_MEDIA:
         return compose(
             set('open', false),
             set('owner', undefined),

@@ -60,7 +60,8 @@ import {
     EDIT_MEDIA,
     CHOOSE_MEDIA,
     selectItem,
-    setMediaType
+    setMediaType,
+    hide
 } from '../actions/mediaEditor';
 import { show, error } from '../actions/notifications';
 
@@ -100,7 +101,7 @@ const updateMediaSection = (store, path) => action$ =>
                 actions = [...actions, addResource(resourceId, mediaType, resource)];
             }
             let media = mediaType === MediaTypes.MAP ? {resourceId, type: mediaType, map: undefined} : {resourceId, type: mediaType};
-            actions = [...actions, update(`${path}`, media, "merge" )];
+            actions = [...actions, update(`${path}`, media, "merge" ), hide()];
             return Observable.from(actions);
         });
 
@@ -130,7 +131,7 @@ export const openMediaEditorForNewMedia = (action$, store) =>
                         .switchMap(() => {
                             return Observable.of(remove(
                                 path));
-                        })
+                        }).takeUntil(action$.ofType(UPDATE))
                 ).takeUntil(action$.ofType(EDIT_MEDIA));
         });
 
