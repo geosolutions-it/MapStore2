@@ -222,6 +222,7 @@ const converters = {
                     service: records.service,
                     tags: "",
                     title: LayersUtils.getLayerTitleTranslations(record) || record.Name,
+                    formats: castArray(record.formats || []),
                     dimensions: (record.Dimension && castArray(record.Dimension) || []).map((dim) => assign({}, {
                         values: dim._ && dim._.split(',') || []
                     }, dim.$ || {}))
@@ -297,6 +298,7 @@ const converters = {
                     requestEncoding: record.requestEncoding,
                     tileMatrixSet: record.TileMatrixSet,
                     matrixIds,
+                    format: record.format,
                     TileMatrixSetLink: castArray(record.TileMatrixSetLink),
                     boundingBox: {
                         extent: [

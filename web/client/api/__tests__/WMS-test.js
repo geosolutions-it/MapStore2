@@ -124,10 +124,11 @@ describe('Test correctness of the WMS APIs', () => {
         });
     });
     it('GetRecords', (done) => {
-        API.getRecords('base/web/client/test-resources/wms/GetCapabilities-1.3.0.xml', 0, 1, '').then((result) => {
+        API.getRecords('base/web/client/test-resources/wms/GetCapabilities-1.3.0.xml', 0, 2, '').then((result) => {
             try {
                 expect(result).toExist();
                 expect(result.service).toExist();
+                expect(result.records[0].formats.length).toBe(20);
                 expect(result.numberOfRecordsMatched).toBe(5);
                 done();
             } catch (ex) {
@@ -152,10 +153,11 @@ describe('Test correctness of the WMS APIs', () => {
         });
     });
     it('GetRecords 1.1.1', (done) => {
-        API.getRecords('base/web/client/test-resources/wms/GetCapabilities-1.1.1.xml', 0, 1, '').then((result) => {
+        API.getRecords('base/web/client/test-resources/wms/GetCapabilities-1.1.1.xml', 0, 2, '').then((result) => {
             try {
                 expect(result).toExist();
                 expect(result.service).toExist();
+                expect(result.records[0].formats.length).toBe(42);
                 expect(result.numberOfRecordsMatched).toBe(7);
                 done();
             } catch (ex) {

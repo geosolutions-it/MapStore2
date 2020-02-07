@@ -78,6 +78,7 @@ const searchAndPaginate = (json = {}, startPosition, maxRecords, text) => {
     const onlineResource = getOnlineResource(root);
     const SRSList = root.Layer && (root.Layer.SRS || root.Layer.CRS) || [];
     const credits = root.Layer && root.Layer.Attribution && extractCredits(root.Layer.Attribution);
+    const rootFormats = root.Request && root.Request.GetMap && root.Request.GetMap.Format || [];
     const layersObj = flatLayers(root);
     const layers = isArray(layersObj) ? layersObj : [layersObj];
     const filteredLayers = layers
@@ -89,7 +90,7 @@ const searchAndPaginate = (json = {}, startPosition, maxRecords, text) => {
         service,
         records: filteredLayers
             .filter((layer, index) => index >= startPosition - 1 && index < startPosition - 1 + maxRecords)
-            .map((layer) => assign({}, layer, { onlineResource, SRS: SRSList, credits: layer.Attribution ? extractCredits(layer.Attribution) : credits}))
+            .map((layer) => assign({}, layer, { formats: rootFormats, onlineResource, SRS: SRSList, credits: layer.Attribution ? extractCredits(layer.Attribution) : credits}))
     };
 };
 
