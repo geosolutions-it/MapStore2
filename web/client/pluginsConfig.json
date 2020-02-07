@@ -76,10 +76,14 @@
       "title": "plugins.FeatureEditor.title",
       "description": "plugins.FeatureEditor.description",
       "dependencies": [
-        "QueryPanel",
+        "QueryPanel"
+      ],
+      "children": [
         "WFSDownload"
       ],
-      "denyUserSelection": true,
+      "autoEnableChildren": [
+        "WFSDownload"
+      ],
       "defaultConfig": {}
     },
     {
@@ -89,8 +93,7 @@
       "description": "plugins.TOCItemsSettings.description",
       "children": [
           "StyleEditor"
-      ],
-      "denyUserSelection": true
+      ]
     },
     {
       "name": "MapFooter",
@@ -109,7 +112,6 @@
         "WidgetsTray"
       ],
       "dependencies": [
-        "TOC",
         "WidgetsBuilder"
       ]
     },
@@ -246,14 +248,12 @@
       "name": "AddGroup",
       "glyph": "add-folder",
       "title": "plugins.AddGroup.title",
-      "description": "plugins.AddGroup.description",
-      "denyUserSelection": true
+      "description": "plugins.AddGroup.description"
     }, {
       "name": "FilterLayer",
       "glyph": "filter-layer",
       "title": "plugins.FilterLayer.title",
       "description": "plugins.FilterLayer.description",
-      "denyUserSelection": true,
       "dependencies": ["QueryPanel"]
     },
     {
@@ -516,8 +516,7 @@
       "name": "StyleEditor",
       "glyph": "1-stilo",
       "title": "plugins.StyleEditor.title",
-      "description": "plugins.StyleEditor.description",
-      "mandatory": true
+      "description": "plugins.StyleEditor.description"
     },
     {
       "name": "MapLoading",
