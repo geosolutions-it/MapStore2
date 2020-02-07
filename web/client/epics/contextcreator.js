@@ -20,8 +20,8 @@ import {SAVE_CONTEXT, SAVE_TEMPLATE, LOAD_CONTEXT, LOAD_TEMPLATE, DELETE_TEMPLAT
     startResourceLoad, loadFinished, loadTemplate, showDialog, setFileDropStatus, updateTemplate, isValidContextName,
     contextNameChecked, setCreationStep, contextLoadError, loading, mapViewerLoad, mapViewerLoaded, setEditedPlugin,
     setEditedCfg, setParsedCfg, validateEditedCfg, setValidationStatus, savePluginCfg, enableMandatoryPlugins,
-    enablePlugins, disablePlugins, setCfgError, changePluginsKey, changeTemplatesKey, setEditedTemplate, pluginUploaded, pluginUploading
-} from '../actions/contextcreator';
+    enablePlugins, disablePlugins, setCfgError, changePluginsKey, changeTemplatesKey, setEditedTemplate, setTemplates, pluginUploaded,
+    pluginUploading} from '../actions/contextcreator';
 import {newContextSelector, resourceSelector, creationStepSelector, mapConfigSelector, mapViewerLoadedSelector, contextNameCheckedSelector,
     editedPluginSelector, editedCfgSelector, validationStatusSelector, parsedCfgSelector, cfgErrorSelector,
     pluginsSelector, initialEnabledPluginsSelector} from '../selectors/contextcreator';
