@@ -11,7 +11,10 @@ const BorderLayout = require('../../layout/BorderLayout');
 const { omit } = require('lodash');
 const {withHandlers} = require('recompose');
 const MapView = withHandlers({
-    onMapViewChanges: ({ updateProperty = () => { } }) => map => updateProperty('map', map)
+    onMapViewChanges: ({ updateProperty = () => { } }) => map => {
+        const {layers, ...other} = map;
+        updateProperty('map', other, "merge" );
+    }
 })(require('./MapView'));
 const LoadingSpinner = require('../../misc/LoadingSpinner');
 

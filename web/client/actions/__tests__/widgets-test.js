@@ -101,6 +101,7 @@ describe('Test correctness of the widgets actions', () => {
         expect(retval.id).toBe("id");
         expect(retval.key).toBe("key");
         expect(retval.value).toBe("value");
+        expect(retval.mode).toBe("replace");
         expect(retval.target).toBe(DEFAULT_TARGET);
     });
     it('updateWidgetLayer', () => {

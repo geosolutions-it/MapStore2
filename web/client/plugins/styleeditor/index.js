@@ -201,6 +201,7 @@ const StyleToolbar = compose(
                 error,
                 isCodeChanged: initialCode !== code,
                 loading,
+                layerDefaultStyleName: defaultStyle,
                 selectedStyle: defaultStyle === selectedStyle ? '' : selectedStyle,
                 editEnabled: canEdit,
                 // enable edit only if service support current format

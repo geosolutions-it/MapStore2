@@ -9,7 +9,7 @@ import {get, find, findIndex, isEqual, uniq} from 'lodash';
 import { Controls, getEffectivePath } from '../utils/GeoStoryUtils';
 import { SectionTypes, findSectionIdFromColumnId } from './../utils/GeoStoryUtils';
 import { isAdminUserSelector } from './security';
-
+import {pathnameSelector} from "./router";
 /**
  * Returns a selector using a path inside the current story
  * @param {string} path the path
@@ -266,3 +266,8 @@ const findMediaResourceInContent = (rId, {contents, background, resourceId}) => 
  */
 export const isMediaResourceUsed = (state, resId) => !!find(sectionsSelector(state), section => findMediaResourceInContent(resId, section));
 
+/**
+ * It checks if is a shared story or not
+ * @param {object} state application state
+ */
+export const isSharedStory = (state = {}) => pathnameSelector(state).includes("geostory/shared");

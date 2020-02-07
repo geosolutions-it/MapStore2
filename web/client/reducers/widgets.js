@@ -17,7 +17,7 @@ const {
 } = require('../actions/dashboard');
 
 const set = require('lodash/fp/set');
-const { get, find, omit, mapValues, castArray} = require('lodash');
+const { merge, get, find, omit, mapValues, castArray} = require('lodash');
 const {arrayUpsert, compose, arrayDelete} = require('../utils/ImmutableUtils');
 
 const emptyState = {
@@ -91,14 +91,17 @@ function widgetsReducer(state = emptyState, action) {
 
         return tempState;
     case UPDATE_PROPERTY:
+        // if "merge" update map by merging a partial map object coming from
+        // onMapViewChanges handler for MapWidget
+        // if "replace" update the widget setting the value to the existing object
+        const oldWidget = find(get(state, `containers[${action.target}].widgets`), {
+            id: action.id
+        });
         return arrayUpsert(`containers[${action.target}].widgets`,
-            // update the widget setting the value to the existing object
             set(
                 action.key,
-                action.value,
-                find(get(state, `containers[${action.target}].widgets`), {
-                    id: action.id
-                }),
+                action.mode === "merge" ? merge(oldWidget[action.key], action.value) : action.value,
+                oldWidget,
             ), {
                 id: action.id
             }, state);

@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import { compose, nest, setDisplayName, branch, renderComponent } from "recompose";
+import { compose, nest, setDisplayName, branch, renderComponent} from "recompose";
 import visibilityHandler from './enhancers/visibilityHandler';
 import ContentWrapper from './ContentWrapper';
 import Content from './Content';

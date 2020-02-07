@@ -147,14 +147,14 @@ export const testRegex = (title, filterText, regex = RegExp(filterText, "i")) =>
     return filterText ? regex.test(title) : true;
 };
 /**
- * filter resources based on their title and a filter string
+ * filter resources based on their title (name in case of missing title), description and a filter string
  * @param {object[]} resources resources to filter
  * @param {string} filterText string used to generate regex
  * @param {RegExp} [regex] regex used to test input string, default it uses the filterText
  * @return {object[]} filtered resources
  */
 export const filterResources = (resources = [], filterText, regex = RegExp(filterText, "i") ) => {
-    return filter(resources, r => testRegex(r.data && r.data.title, filterText, regex));
+    return filter(resources, r => testRegex(r.data && (r.data.title || r.data.name), filterText, regex) || testRegex(r.data && r.data.description, filterText, regex));
 };
 /**
  * Creates a default template for the given type

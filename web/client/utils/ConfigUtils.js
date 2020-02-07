@@ -128,7 +128,7 @@ var ConfigUtils = {
         return null;
     },
     getDefaults: function() {
-        return defaultConfig;
+        return {...defaultConfig};
     },
     setLocalConfigurationFile(file) {
         localConfigFile = file;
@@ -139,11 +139,11 @@ var ConfigUtils = {
                 if (typeof response.data === 'object') {
                     defaultConfig = assign({}, defaultConfig, response.data);
                 }
-                return defaultConfig;
+                return {...defaultConfig};
             });
         }
         return new Promise((resolve) => {
-            resolve(defaultConfig);
+            resolve({...defaultConfig});
         });
     },
 

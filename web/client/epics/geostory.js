@@ -49,7 +49,8 @@ import {
     UPDATE,
     CHANGE_MODE,
     SET_WEBPAGE_URL,
-    EDIT_WEBPAGE
+    EDIT_WEBPAGE,
+    UPDATE_CURRENT_PAGE
 } from '../actions/geostory';
 import { setControlProperty } from '../actions/controls';
 
@@ -58,7 +59,8 @@ import {
     HIDE,
     EDIT_MEDIA,
     CHOOSE_MEDIA,
-    selectItem
+    selectItem,
+    setMediaType
 } from '../actions/mediaEditor';
 import { show, error } from '../actions/notifications';
 
@@ -66,7 +68,7 @@ import { LOGIN_SUCCESS, LOGOUT } from '../actions/security';
 
 
 import { isLoggedIn, isAdminUserSelector } from '../selectors/security';
-import { resourceIdSelectorCreator, createPathSelector, currentStorySelector, resourcesSelector, getFocusedContentSelector} from '../selectors/geostory';
+import { resourceIdSelectorCreator, createPathSelector, currentStorySelector, resourcesSelector, getFocusedContentSelector, isSharedStory, resourceByIdSelectorCreator, modeSelector} from '../selectors/geostory';
 import { currentMediaTypeSelector, sourceIdSelector} from '../selectors/mediaEditor';
 
 import { wrapStartStop } from '../observables/epics';
@@ -75,6 +77,7 @@ import { scrollToContent, ContentTypes, isMediaSection, Controls, getEffectivePa
 import { SourceTypes } from './../utils/MediaEditorUtils';
 
 import { HIDE as HIDE_MAP_EDITOR, SAVE as SAVE_MAP_EDITOR, hide as hideMapEditor, SHOW as MAP_EDITOR_SHOW} from '../actions/mapEditor';
+
 
 const updateMediaSection = (store, path) => action$ =>
     action$.ofType(CHOOSE_MEDIA)
@@ -230,15 +233,21 @@ export const editMediaForBackgroundEpic = (action$, store) =>
     action$.ofType(EDIT_MEDIA)
         .switchMap(({path, owner}) => {
             const selectedResource = resourceIdSelectorCreator(path)(store.getState());
-            return Observable.of(
-                showMediaEditor(owner),
-                selectItem(selectedResource)
-            )
+            const resource = resourceByIdSelectorCreator(selectedResource)(store.getState());
+            return Observable.of(currentMediaTypeSelector(store.getState()))
+            .filter((mediaType) => {
+                return resource && resource.type !== mediaType;
+            })
+            .map(() => setMediaType(resource.type)).merge(
+                Observable.of(
+                    showMediaEditor(owner),
+                    selectItem(selectedResource)
+                )
                           .merge(
                     action$.let(updateMediaSection(store, path))
                         .takeUntil(action$.ofType(HIDE, ADD)
                         )
-                );
+                ));
         });
 /**
  * Load a story configuration from local files
@@ -287,7 +296,7 @@ export const loadGeostoryEpic = (action$, {getState = () => {}}) => action$
                     let message = "geostory.errors.loading.unknownError";
                     if (e.status === 403 ) {
                         message = "geostory.errors.loading.pleaseLogin";
-                        if (isLoggedIn(getState())) {
+                        if (isLoggedIn(getState()) || isSharedStory(getState())) {
                             // TODO only in view mode
                             message = "geostory.errors.loading.geostoryNotAccessible";
                         }
@@ -404,3 +413,21 @@ export const inlineEditorEditMap = (action$, {getState}) =>
 export const closeShareOnGeostoryChangeMode = action$ =>
     action$.ofType(CHANGE_MODE)
         .switchMap(() => Observable.of(setControlProperty('share', 'enabled', false)));
+
+/**
+ * Handle the scroll of section preview in the sidebar
+ * @memberof epics.mediaEditor
+ * @param {Observable} action$ stream of actions
+ * @param {object} store redux store
+ */
+export const scrollSideBar = (action$, {getState}) =>
+    action$.ofType(UPDATE_CURRENT_PAGE)
+        .filter(({columnId, sectionId}) => modeSelector(getState()) === 'edit' && ((columnId && columnId !== "EMPTY") || sectionId))
+        .debounceTime(100)
+        .do(({columnId, sectionId}) => {
+            const id = `sd_${columnId || sectionId}`;
+            let el = document.getElementById(id);
+            if (el) {
+                el.scrollIntoView({behavior: "smooth", block: "nearest"});
+            }
+        }).ignoreElements();

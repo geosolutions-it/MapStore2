@@ -10,7 +10,7 @@ const { Observable } = require('rxjs');
 const { mapPropsStream, compose, branch, withPropsOnChange} = require('recompose');
 const { isEmpty, isEqual} = require('lodash');
 
-const { composeFilterObject, getLayerInCommon } = require('./utils');
+const { composeFilterObject } = require('./utils');
 const wpsBounds = require('../../../observables/wps/bounds');
 const FilterUtils = require('../../../utils/FilterUtils');
 const { getWpsUrl } = require('../../../utils/LayersUtils');
@@ -24,9 +24,8 @@ const MapUtils = require('../../../utils/MapUtils');
 module.exports = compose(
 
     branch(
-        ({mapSync, dependencies, map} = {}) => {
-            const layerInCommon = getLayerInCommon({dependencies, map});
-            return mapSync && !isEmpty(layerInCommon);
+        ({mapSync, dependencies} = {}) => {
+            return mapSync && (!isEmpty(dependencies.quickFilters) || !isEmpty(dependencies.filter));
         },
         compose(
             withPropsOnChange(["id"],
@@ -41,9 +40,8 @@ module.exports = compose(
                         isEqual(props.dependencies.layer, nextProps.dependencies.layer)
                     )
                     .debounceTime(500)
-                    .switchMap(({mapSync, dependencies = {}, map, filter: filterObj, hookRegister}) => {
-                        const layerInCommon = getLayerInCommon({dependencies, map});
-                        if (!mapSync || isEmpty(layerInCommon)) {
+                    .switchMap(({mapSync, dependencies = {}, filter: filterObj, hookRegister}) => {
+                        if (!mapSync || isEmpty(dependencies.layer)) {
                             return Observable.of({ loading: false });
                         }
                         let filterObjCollection = {};
@@ -53,10 +51,10 @@ module.exports = compose(
                         if (dependencies.filter) {
                             filterObjCollection = {...filterObjCollection, ...FilterUtils.composeAttributeFilters([filterObjCollection, dependencies.filter])};
                         }
-                        const featureTypeName = layerInCommon.name;
+                        const featureTypeName = dependencies && dependencies.layer && dependencies.layer.name;
                         if (!isEmpty(filterObjCollection)) {
                             const wfsGetFeature = FilterUtils.toOGCFilter(featureTypeName, filterObjCollection, "1.1.0");
-                            return wpsBounds(getWpsUrl(layerInCommon), {wfsGetFeature })
+                            return wpsBounds(getWpsUrl(dependencies.layer), {wfsGetFeature })
                                 .switchMap(response => {
                                     let json;
                                     let sw;
