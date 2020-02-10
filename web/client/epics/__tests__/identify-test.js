@@ -494,7 +494,7 @@ describe('identify Epics', () => {
             }
         });
     });
-    it('onMapClick do not trigger when mapinfo is not elabled', done => {
+    it('onMapClick do not trigger when mapinfo is not enabled', done => {
         testEpic(addTimeoutEpic(onMapClick, 10), 1, [clickOnMap()], ([action]) => {
             if (action.type === TEST_TIMEOUT) {
                 done();
@@ -506,6 +506,45 @@ describe('identify Epics', () => {
             }
         });
     });
+    it('onMapClick do not trigger when Indentify is not in context', done => {
+        testEpic(addTimeoutEpic(onMapClick, 10), 1, [clickOnMap()], ([action]) => {
+            if (action.type === TEST_TIMEOUT) {
+                done();
+            }
+        }, {
+            mapInfo: {
+                enabled: true,
+                disableAlwaysOn: false
+            },
+            context: {
+                currentContext: {
+                    plugins: {
+                        desktop: []
+                    }
+                }
+            }
+        });
+    });
+    it('onMapClick trigger when mapinfo is not enabled', done => {
+        testEpic(onMapClick, 1, [clickOnMap()], ([action]) => {
+            if (action.type === FEATURE_INFO_CLICK) {
+                done();
+            }
+        }, {
+            mapInfo: {
+                enabled: true,
+                disableAlwaysOn: false
+            },
+            context: {
+                currentContext: {
+                    plugins: {
+                        desktop: [{name: "Identify"}]
+                    }
+                }
+            }
+        });
+    });
+
     it('closeFeatureAndAnnotationEditing closes annotations', (done) => {
 
         const sentActions = closeIdentify();
