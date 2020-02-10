@@ -43,6 +43,7 @@ const GeoStory = ({
  * Plugin for GeoStory visualization
  * @name GeoStory
  * @memberof plugins
+ * @prop {numeric} cfg.interceptionTime default 100, the debounce before calculations of currentPage active section
  */
 export default createPlugin("GeoStory", {
     component: compose(
