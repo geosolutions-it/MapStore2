@@ -75,11 +75,13 @@ const stopGetFeatureInfoSelector = createSelector(
     measureActiveSelector,
     drawSupportActiveSelector,
     annotationsEditingSelector,
-    (isMapInfoDisabled, isMeasureActive, isDrawSupportActive, isAnnotationsEditing) =>
+    isPluginInContext('Identify'),
+    (isMapInfoDisabled, isMeasureActive, isDrawSupportActive, isAnnotationsEditing, identifyPluginPresent) =>
         isMapInfoDisabled
         || !!isMeasureActive
         || isDrawSupportActive
         || !!isAnnotationsEditing
+        || !identifyPluginPresent
 );
 
 /**
