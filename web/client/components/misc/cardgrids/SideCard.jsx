@@ -56,7 +56,6 @@ module.exports = ({
     ...props
 } = {}) =>
     <div
-        id={props.id ? `sd_${props.id}` : undefined}
         className={`mapstore-side-card${selected ? ' selected' : ''}${size ? ' ms-' + size : ''}${className ? ` ${className}` : ''}${fullText ? ' full-text' : ''}`}
         onClick={(event) => onClick({title, preview, description, caption, tools, ...props}, event)}
         onMouseEnter={onMouseEnter}

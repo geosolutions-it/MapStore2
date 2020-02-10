@@ -14,13 +14,15 @@ import {
     enablePluginsEpic,
     disablePluginsEpic,
     uploadPluginEpic,
-    saveTemplateEpic
+    saveTemplateEpic,
+    checkIfContextExists
 } from '../contextcreator';
 import {
     editPlugin,
     enablePlugins,
     disablePlugins,
     changePluginsKey,
+    changeAttribute,
     uploadPlugin,
     saveTemplate,
     SET_EDITED_PLUGIN,
@@ -32,9 +34,13 @@ import {
     UPLOADING_PLUGIN,
     LOADING,
     LOAD_TEMPLATE,
-    SHOW_DIALOG
+    SHOW_DIALOG,
+    IS_VALID_CONTEXT_NAME,
+    CONTEXT_NAME_CHECKED
 } from '../../actions/contextcreator';
-import { SHOW_NOTIFICATION } from '../../actions/notifications';
+import {
+    SHOW_NOTIFICATION
+} from '../../actions/notifications';
 
 import axios from "../../libs/ajax";
 import MockAdapter from "axios-mock-adapter";
@@ -665,6 +671,95 @@ describe('contextcreator epics', () => {
             expect(actions[4].value).toBe(false);
         }, {
             contextcreator: {}
+        }, done);
+    });
+    it('checkIfContextExists when it exists', (done) => {
+        mockAxios.onPost('/extjs/search/list').reply(200, {
+            ExtResourceList: {
+                Resource: {
+                    id: 10
+                },
+                ResourceCount: 1
+            }
+        });
+        const startActions = [changeAttribute('name', 'context')];
+        testEpic(checkIfContextExists, 5, startActions, actions => {
+            expect(actions.length).toBe(5);
+            expect(actions[0].type).toBe(LOADING);
+            expect(actions[0].name).toBe('contextNameCheck');
+            expect(actions[0].value).toBe(true);
+            expect(actions[1].type).toBe(SHOW_NOTIFICATION);
+            expect(actions[2].type).toBe(IS_VALID_CONTEXT_NAME);
+            expect(actions[2].valid).toBe(false);
+            expect(actions[3].type).toBe(LOADING);
+            expect(actions[3].name).toBe('contextNameCheck');
+            expect(actions[3].value).toBe(false);
+            expect(actions[4].type).toBe(CONTEXT_NAME_CHECKED);
+            expect(actions[4].checked).toBe(true);
+        }, {
+            contextcreator: {
+                resource: {
+                    name: 'context'
+                }
+            }
+        }, done);
+    });
+    it('checkIfContextExists when it exists and ids are the same', (done) => {
+        mockAxios.onPost('/extjs/search/list').reply(200, {
+            ExtResourceList: {
+                Resource: {
+                    id: 10
+                },
+                ResourceCount: 1
+            }
+        });
+        const startActions = [changeAttribute('name', 'context')];
+        testEpic(checkIfContextExists, 4, startActions, actions => {
+            expect(actions.length).toBe(4);
+            expect(actions[0].type).toBe(LOADING);
+            expect(actions[0].name).toBe('contextNameCheck');
+            expect(actions[0].value).toBe(true);
+            expect(actions[1].type).toBe(IS_VALID_CONTEXT_NAME);
+            expect(actions[1].valid).toBe(true);
+            expect(actions[2].type).toBe(LOADING);
+            expect(actions[2].name).toBe('contextNameCheck');
+            expect(actions[2].value).toBe(false);
+            expect(actions[3].type).toBe(CONTEXT_NAME_CHECKED);
+            expect(actions[3].checked).toBe(true);
+        }, {
+            contextcreator: {
+                resource: {
+                    id: 10,
+                    name: 'context'
+                }
+            }
+        }, done);
+    });
+    it('checkIfContextExists when it does not exist', (done) => {
+        mockAxios.onPost('/extjs/search/list').reply(200, {
+            ExtResourceList: {
+                ResourceCount: 0
+            }
+        });
+        const startActions = [changeAttribute('name', 'context')];
+        testEpic(checkIfContextExists, 4, startActions, actions => {
+            expect(actions.length).toBe(4);
+            expect(actions[0].type).toBe(LOADING);
+            expect(actions[0].name).toBe('contextNameCheck');
+            expect(actions[0].value).toBe(true);
+            expect(actions[1].type).toBe(IS_VALID_CONTEXT_NAME);
+            expect(actions[1].valid).toBe(true);
+            expect(actions[2].type).toBe(LOADING);
+            expect(actions[2].name).toBe('contextNameCheck');
+            expect(actions[2].value).toBe(false);
+            expect(actions[3].type).toBe(CONTEXT_NAME_CHECKED);
+            expect(actions[3].checked).toBe(true);
+        }, {
+            contextcreator: {
+                resource: {
+                    name: 'context'
+                }
+            }
         }, done);
     });
 });

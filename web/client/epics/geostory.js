@@ -60,7 +60,8 @@ import {
     EDIT_MEDIA,
     CHOOSE_MEDIA,
     selectItem,
-    setMediaType
+    setMediaType,
+    hide
 } from '../actions/mediaEditor';
 import { show, error } from '../actions/notifications';
 
@@ -100,7 +101,7 @@ const updateMediaSection = (store, path) => action$ =>
                 actions = [...actions, addResource(resourceId, mediaType, resource)];
             }
             let media = mediaType === MediaTypes.MAP ? {resourceId, type: mediaType, map: undefined} : {resourceId, type: mediaType};
-            actions = [...actions, update(`${path}`, media, "merge" )];
+            actions = [...actions, update(`${path}`, media, "merge" ), hide()];
             return Observable.from(actions);
         });
 
@@ -130,7 +131,7 @@ export const openMediaEditorForNewMedia = (action$, store) =>
                         .switchMap(() => {
                             return Observable.of(remove(
                                 path));
-                        })
+                        }).takeUntil(action$.ofType(UPDATE))
                 ).takeUntil(action$.ofType(EDIT_MEDIA));
         });
 
@@ -423,11 +424,15 @@ export const closeShareOnGeostoryChangeMode = action$ =>
 export const scrollSideBar = (action$, {getState}) =>
     action$.ofType(UPDATE_CURRENT_PAGE)
         .filter(({columnId, sectionId}) => modeSelector(getState()) === 'edit' && ((columnId && columnId !== "EMPTY") || sectionId))
-        .debounceTime(100)
-        .do(({columnId, sectionId}) => {
-            const id = `sd_${columnId || sectionId}`;
-            let el = document.getElementById(id);
+        .debounceTime(50) // little delay if too many UPDATE_CURRENT_PAGE actions come
+        .switchMap(() => {
+            /* We need to select the most inner highlighted element of the preview list
+             * The selector will query all the highlighted elements and the pop will extract
+             * the most inner (i.e a section content column in an immersive section)
+             */
+            const el = Array.from(document.querySelectorAll(".ms-geostory-builder .mapstore-side-card.ms-highlight")).pop();
             if (el) {
-                el.scrollIntoView({behavior: "smooth", block: "nearest"});
+                el.scrollIntoView({block: "center", inline: "nearest", behavior: "smooth"});
             }
-        }).ignoreElements();
+            return Observable.empty();
+        });

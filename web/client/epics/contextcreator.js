@@ -11,6 +11,8 @@ import jsonlint from 'jsonlint-mod';
 import {omit, pick, get, flatten, uniq, intersection, head, keys, values, findIndex, find, cloneDeep, isString} from 'lodash';
 import {push} from 'connected-react-router';
 
+import Api from '../api/GeoStoreDAO';
+
 import ConfigUtils from '../utils/ConfigUtils';
 import MapUtils from '../utils/MapUtils';
 
@@ -35,8 +37,7 @@ import {backgroundListSelector} from '../selectors/backgroundselector';
 import {textSearchConfigSelector} from '../selectors/searchconfig';
 import {mapOptionsToSaveSelector} from '../selectors/mapsave';
 import {loadMapConfig} from '../actions/config';
-import {createResource, createCategory, updateResource, deleteResource, getResource, getResources,
-    getResourceIdByName} from '../api/persistence';
+import {createResource, createCategory, updateResource, deleteResource, getResource, getResources} from '../api/persistence';
 import getPluginsConfig from '../observables/config/getPluginsConfig';
 import { upload } from '../api/plugins';
 
@@ -319,8 +320,16 @@ export const checkIfContextExists = (action$, store) => action$
         const contextName = resource && resource.name;
 
         return (contextName ?
-            getResourceIdByName('CONTEXT', contextName)
-                .switchMap(id => id !== get(resource, 'id') ?
+            Rx.Observable.defer(() => Api.searchListByAttributes({
+                AND: {
+                    FIELD: {
+                        field: ['NAME'],
+                        operator: ['EQUAL_TO'],
+                        value: [contextName]
+                    }
+                }
+            })).switchMap(({ExtResourceList: {Resource, ResourceCount}}) =>
+                get(Resource, 'id') !== get(resource, 'id') && ResourceCount > 0 ?
                     Rx.Observable.of(error({
                         title: 'contextCreator.contextNameErrorNotification.title',
                         message: 'contextCreator.saveErrorNotification.conflict',
@@ -331,15 +340,13 @@ export const checkIfContextExists = (action$, store) => action$
                 .let(wrapStartStop(
                     loading(true, 'contextNameCheck'),
                     loading(false, 'contextNameCheck'),
-                    e => {
-                        return e.status === 404 ?
-                            Rx.Observable.of(isValidContextName(true)) :
-                            Rx.Observable.of(error({
-                                title: 'contextCreator.contextNameErrorNotification.title',
-                                message: 'contextCreator.contextNameErrorNotification.unknownError',
-                                position: "tc",
-                                autoDismiss: 5
-                            }));
+                    () => {
+                        return Rx.Observable.of(error({
+                            title: 'contextCreator.contextNameErrorNotification.title',
+                            message: 'contextCreator.contextNameErrorNotification.unknownError',
+                            position: "tc",
+                            autoDismiss: 5
+                        }));
                     }
                 )) :
             Rx.Observable.empty()).concat(Rx.Observable.of(contextNameChecked(true)));

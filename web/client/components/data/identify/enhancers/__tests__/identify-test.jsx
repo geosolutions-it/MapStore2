@@ -92,6 +92,37 @@ describe("test identify enhancers", () => {
         expect(spyPurgeResults).toHaveBeenCalled();
         expect(spyHideMarker).toHaveBeenCalled();
     });
+    it("test reset on unmount", () => {
+        const Component = identifyLifecycle(({ onClose = () => { } }) => <div id="test-component" onClick={() => onClose()}></div>);
+        const testHandlers = {
+            changeMousePointer: () => { },
+            purgeResults: () => { },
+            hideMarker: () => { }
+        };
+        const spyChangeMousePointer = expect.spyOn(testHandlers, 'changeMousePointer');
+        const spyPurgeResults = expect.spyOn(testHandlers, 'purgeResults');
+        const spyHideMarker = expect.spyOn(testHandlers, 'hideMarker');
+        ReactDOM.render(
+            <Component
+                enabled
+                responses={[{}]}
+                changeMousePointer={testHandlers.changeMousePointer}
+                purgeResults={testHandlers.purgeResults}
+                hideMarker={testHandlers.hideMarker} />,
+            document.getElementById("container")
+        );
+
+        ReactDOM.render(<div></div>, document.getElementById("container"));
+        // this ensure that when the is un-mounted, the cursor of the mouse pointer, the marker and result are correctly reset.
+        expect(spyChangeMousePointer).toHaveBeenCalled();
+        expect(spyChangeMousePointer.calls.length).toBe(2);
+        expect(spyChangeMousePointer.calls[0].arguments[0]).toBe('pointer'); // cursor change on mount
+        expect(spyChangeMousePointer.calls[1].arguments[0]).toBe('auto'); // this is the reset on unmount
+        expect(spyPurgeResults).toHaveBeenCalled();
+        expect(spyPurgeResults.calls.length).toBe(1);
+        expect(spyHideMarker).toHaveBeenCalled();
+        expect(spyHideMarker.calls.length).toBe(1);
+    });
 
     it("test identifyLifecycle onChangeFormat", () => {
         const testHandlers = {
