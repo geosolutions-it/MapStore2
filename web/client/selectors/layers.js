@@ -18,8 +18,6 @@ const {defaultQueryableFilter} = require('../utils/MapInfoUtils');
 const {get, head, isEmpty, find, isObject, isArray, castArray} = require('lodash');
 const {flattenGroups} = require('../utils/TOCUtils');
 
-const {isPluginInContext} = require('./context');
-
 const layersSelector = ({layers, config} = {}) => layers && isArray(layers) ? layers : layers && layers.flat || config && config.layers || [];
 const currentBackgroundLayerSelector = state => head(layersSelector(state).filter(l => l && l.visibility && l.group === "background"));
 const getLayerFromId = (state, id) => head(layersSelector(state).filter(l => l.id === id));
@@ -36,11 +34,8 @@ const additionalLayersSelector = state => get(state, "additionallayers", []);
 
 const layerSelectorWithMarkers = createSelector(
     [layersSelector, clickedPointWithFeaturesSelector, geoColderSelector, centerToMarkerSelector, additionalLayersSelector,
-        highlightPointSelector, isPluginInContext('Identify')],
-    (layers = [], markerPosition, geocoder, centerToMarker, additionalLayers, highlightPoint, isVisible) => {
-        if (!isVisible) {
-            return layers;
-        }
+        highlightPointSelector],
+    (layers = [], markerPosition, geocoder, centerToMarker, additionalLayers, highlightPoint) => {
 
         // Perform an override action on the layers using options retrieved from additional layers
         const overrideLayers = additionalLayers.filter(({actionType}) => actionType === 'override');
