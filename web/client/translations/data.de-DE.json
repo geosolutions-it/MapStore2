@@ -2411,6 +2411,8 @@
             "favouriteRemove": "Von den Favoriten entfernen",
             "emptyTitle": "Kein Ergebnis",
             "emptyDescription": "Der eingegebene Filter stimmt nicht mit dem Namen oder der Beschreibung einer der Vorlagen überein",
+            "noTemplatesTitle": "Keine Vorlagen gefunden",
+            "noTemplatesDescription": "Der aktuelle Kontext enthält keine Vorlagen",
             "confirmReplaceTitle": "Ersetzen Sie den Karteninhalt",
             "confirmReplaceMessage": "Sie ersetzen alle Layer und die Kartenkonfiguration durch die ausgewählte Vorlage, indem Sie auf die Schaltfläche Ersetzen klicken",
             "confirmReplaceConfirmButton": "Ersetzen"

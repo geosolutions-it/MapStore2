@@ -2414,6 +2414,8 @@
             "favouriteRemove": "Rimuovi dai preferiti",
             "emptyTitle": "Nessun risultato",
             "emptyDescription": "Il filtro inserito non corrisponde al nome o alla descrizione di nessuno dei modelli",
+            "noTemplatesTitle": "Nessun modello trovato",
+            "noTemplatesDescription": "Il contesto corrente non contiene modelli",
             "confirmReplaceTitle": "Sostituisci il contenuto della mappa",
             "confirmReplaceMessage": "Sostituirai tutti i livelli e la configurazione della mappa con il modello selezionato facendo clic sul pulsante Sostituisci",
             "confirmReplaceConfirmButton": "Sostituire"

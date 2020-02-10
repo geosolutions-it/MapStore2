@@ -2411,6 +2411,8 @@
             "favouriteRemove": "Quitar de favoritos",
             "emptyTitle": "Sin resultados",
             "emptyDescription": "El filtro introducido no coincide con el nombre o la descripción de ninguna de las plantillas",
+            "noTemplatesTitle": "No se encontraron plantillas",
+            "noTemplatesDescription": "El contexto actual no contiene plantillas",
             "confirmReplaceTitle": "Reemplazar contenido del mapa",
             "confirmReplaceMessage": "Reemplazará todas las capas y la configuración del mapa con la plantilla seleccionada haciendo clic en el botón Reemplazar",
             "confirmReplaceConfirmButton": "Reemplazar"

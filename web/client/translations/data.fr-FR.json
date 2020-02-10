@@ -2411,6 +2411,8 @@
             "favouriteRemove": "Supprimer des favoris",
             "emptyTitle": "Pas de résultat",
             "emptyDescription": "Le filtre entré ne correspond au nom ou à la description d'aucun des modèles",
+            "noTemplatesTitle": "Aucun modèle trouvé",
+            "noTemplatesDescription": "Le contexte actuel ne contient aucun modèle",
             "confirmReplaceTitle": "Remplacer le contenu de la carte",
             "confirmReplaceMessage": "Vous allez remplacer toutes les couches et la configuration de la carte par le modèle sélectionné en cliquant sur le bouton remplacer",
             "confirmReplaceConfirmButton": "Remplacer"
