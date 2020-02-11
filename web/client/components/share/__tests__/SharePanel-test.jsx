@@ -61,10 +61,20 @@ describe("The SharePanel component", () => {
         expect(codeEmbed.length).toBe(2);
     });
     it('test hide embedPanel option remove the panel', () => {
-        ReactDOM.render(<SharePanel showAPI={false} getCount={() => 0} shareUrl="www.geo-solutions.it" isVisible />, document.getElementById("container"));
-        expect(document.getElementById('sharePanel-tabs-tab-3')).toExist();
-        ReactDOM.render(<SharePanel embedPanel={false} showAPI={false} getCount={() => 0} shareUrl="www.geo-solutions.it" isVisible />, document.getElementById("container"));
+        let panel = ReactDOM.render(<SharePanel showAPI={false} getCount={() => 0} shareUrl="www.geo-solutions.it" isVisible />, document.getElementById("container"));
+        const thirdTab = document.getElementById('sharePanel-tabs-tab-3');
+        ReactTestUtils.Simulate.click(thirdTab);
+        expect(panel.state.eventKey).toBe(3);
+        let liTags = document.querySelectorAll('li');
+
+        expect(liTags.length).toBe(3);
+        expect(document.querySelector('h4').innerHTML).toBe("<span>share.embeddedLinkTitle</span>");
+
+        panel = ReactDOM.render(<SharePanel embedPanel={false} showAPI={false} getCount={() => 0} shareUrl="www.geo-solutions.it" isVisible />, document.getElementById("container"));
         expect(document.getElementById('sharePanel-tabs-tab-3')).toNotExist();
+        expect(panel.state.eventKey).toBe(3);
+        liTags = document.querySelectorAll('li');
+        expect(document.querySelector('h4').innerHTML).toBe("<span>share.directLinkTitle</span>");
 
     });
 
