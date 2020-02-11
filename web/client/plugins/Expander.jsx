@@ -10,8 +10,6 @@ const React = require('react');
 const {Glyphicon} = require('react-bootstrap');
 const assign = require('object-assign');
 
-const Message = require('../components/I18N/Message');
-
 const ExpanderPlugin = require('../components/buttons/ToggleButton');
 
 module.exports = {

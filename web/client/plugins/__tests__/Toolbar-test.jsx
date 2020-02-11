@@ -37,7 +37,7 @@ const EXPANDER_ITEM = {
 const FULL_SCREEN_ITEM = {
     ...FullScreen.FullScreenPlugin.Toolbar,
     plugin: FullScreen.FullScreenPlugin
-}
+};
 
 describe('Toolbar Plugin', () => {
     beforeEach((done) => {
