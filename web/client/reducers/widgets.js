@@ -101,7 +101,7 @@ function widgetsReducer(state = emptyState, action) {
         return arrayUpsert(`containers[${action.target}].widgets`,
             set(
                 action.key,
-                action.mode === "merge" ? assign(oldWidget[action.key], action.value) : action.value,
+                action.mode === "merge" ? assign({}, oldWidget[action.key], action.value) : action.value,
                 oldWidget,
             ), {
                 id: action.id
