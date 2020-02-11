@@ -19,6 +19,8 @@ describe('Tests for the formatter functions', () => {
         expect(formatter()).toBe(undefined);
         expect(formatter({value: true}).type).toBe("span");
         expect(formatter({value: true}).props.children).toBe("true");
-
+        expect(formatter({value: false}).props.children).toBe("false");
+        expect(formatter({value: null})).toBe(undefined);
+        expect(formatter({value: undefined})).toBe(undefined);
     });
 });
