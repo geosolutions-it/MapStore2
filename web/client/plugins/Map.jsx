@@ -324,7 +324,6 @@ class MapPlugin extends React.Component {
                         crs={projection}
                         geometry={feature.geometry}
                         features={feature.features}
-                        msId={feature.id}
                         featuresCrs={ layer.featuresCrs || 'EPSG:4326' }
                         // FEATURE STYLE OVERWRITE LAYER STYLE
                         layerStyle={layer.style}
