@@ -6,7 +6,10 @@
  * LICENSE file in the root directory of this source tree.
 */
 const React = require('react');
+const {isNil} = require('lodash');
 
 module.exports = {
-    getFormatter: (desc) => desc.localType === 'boolean' ? ({value} = {}) => value !== undefined ? <span>{value && value.toString()}</span> : undefined : undefined
+    getFormatter: (desc) => desc.localType === 'boolean' ?
+        ({value} = {}) => !isNil(value) ? <span>{value.toString()}</span> : undefined :
+        undefined
 };
