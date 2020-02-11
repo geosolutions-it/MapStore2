@@ -180,8 +180,8 @@ class PluginsContainer extends React.Component {
             0
         );
         // render on root if container is root (plugin === null || plugin.impl === null) or plugin explicitly wants to render on root (doNotHide = true)
-        // in addition to the container
-        return !container.plugin || !container.plugin.impl || container.plugin.impl.doNotHide;
+        // in addition to the container. If the plugin impl has option "noRoot", rendering is skipped for root by default.
+        return !get(plugin, "impl.noRoot") && (!container.plugin || !container.plugin.impl || container.plugin.impl.doNotHide);
     };
 
     loadPlugins = (state, newProps) => {

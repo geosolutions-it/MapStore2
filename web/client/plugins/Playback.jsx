@@ -56,6 +56,7 @@ class PlaybackPlugin extends React.Component {
 
 module.exports = {
     PlaybackPlugin: assign(PlaybackPlugin, {
+        noRoot: true,
         disablePluginIf: "{state('featuregridmode') === 'EDIT'}",
         Timeline: {
             name: 'playback',
