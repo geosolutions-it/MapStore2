@@ -263,6 +263,10 @@ module.exports = {
             action: setControlProperty.bind(null, "metadataexplorer", "enabled", true, true),
             doNotHide: true
         },
+        BackgroundSelector: {
+            name: 'MetadataExplorer',
+            doNotHide: true
+        },
         TOC: {
             name: 'MetadataExplorer',
             doNotHide: true
