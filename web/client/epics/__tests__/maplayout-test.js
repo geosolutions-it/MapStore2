@@ -144,8 +144,8 @@ describe('map layout epics', () => {
         testEpic(updateMapLayoutEpic, 1, setControlProperty("drawer", "resizedWidth", 512), epicResult, state);
     });
 
-    it('tests layout updated on setControlProperties', (done) => {
-        const epicResult = actions => {
+    describe('tests layout updated for right panels', () => {
+        const epicResult = done => actions => {
             try {
                 expect(actions.length).toBe(1);
                 actions.map((action) => {
@@ -163,9 +163,24 @@ describe('map layout epics', () => {
             }
             done();
         };
-        const state = { controls: { metadataexplorer: { enabled: true, group: "parent" } } };
-        testEpic(updateMapLayoutEpic, 1, setControlProperties("metadataexplorer", "enabled", true, "group", "parent"), epicResult, state);
+        it('metadataexplorer', done => {
+            const state = { controls: { metadataexplorer: { enabled: true, group: "parent" } } };
+            testEpic(updateMapLayoutEpic, 1, setControlProperties("metadataexplorer", "enabled", true, "group", "parent"), epicResult(done), state);
+        });
+        it('userExtensions', (done) => {
+            const state = { controls: { userExtensions: { enabled: true, group: "parent" } } };
+            testEpic(updateMapLayoutEpic, 1, setControlProperties("userExtensions", "enabled", true, "group", "parent"), epicResult(done), state);
+        });
+        it('annotations', (done) => {
+            const state = { controls: { annotations: { enabled: true, group: "parent" } } };
+            testEpic(updateMapLayoutEpic, 1, setControlProperties("annotations", "enabled", true, "group", "parent"), epicResult(done), state);
+        });
+        it('details', (done) => {
+            const state = { controls: { details: { enabled: true, group: "parent" } } };
+            testEpic(updateMapLayoutEpic, 1, setControlProperties("details", "enabled", true, "group", "parent"), epicResult(done), state);
+        });
     });
+
 
     it('tests layout updated on noQueryableLayers', (done) => {
         const epicResult = actions => {
