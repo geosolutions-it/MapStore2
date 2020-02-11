@@ -29,6 +29,15 @@ class AnimatedContainer extends React.Component {
         </CSSTransitionGroup>);
     }
 }
+// only for tests
+class NormalContainer extends React.Component {
+    render() {
+        const { children, ...props } = this.props;
+        return (<div {...props}>
+            {children}
+        </div>);
+    }
+}
 
 class Toolbar extends React.Component {
     static propTypes = {
@@ -38,6 +47,7 @@ class Toolbar extends React.Component {
         style: PropTypes.object,
         panelStyle: PropTypes.object,
         panelClassName: PropTypes.string,
+        disableAnimation: PropTypes.bool,
         active: PropTypes.string,
         items: PropTypes.array,
         allVisible: PropTypes.bool,
@@ -66,6 +76,7 @@ class Toolbar extends React.Component {
             left: "450px"
         },
         panelClassName: "toolbar-panel",
+        disableAnimation: false,
         items: [],
         allVisible: true,
         layout: "vertical",
@@ -92,16 +103,22 @@ class Toolbar extends React.Component {
     };
 
     getTools = () => {
+        const hidableItems = this.props.items.filter((item) => !item.alwaysVisible) || [];
         const unsorted = this.props.items
-            .filter((item) => item.alwaysVisible || this.props.allVisible)
+            .filter((item) =>
+                item.alwaysVisible // items not hidden (by expander)
+                || hidableItems.length === 1 // if the item is only one, the expander will not show, instead we have only the item
+                || this.props.allVisible) // expanded state, all items are visible, no filtering.
+            .filter(item => item.showWhen ? item.showWhen(this.props) : true) // optional display option (used by expander, that depends on other)
             .map((item, index) => assign({}, item, {position: item.position || index}));
         return unsorted.sort((a, b) => a.position - b.position);
     };
 
     render() {
+        const Container = this.props.disableAnimation ? NormalContainer : AnimatedContainer;
         return (<ToolsContainer id={this.props.id} className={"mapToolbar btn-group-" + this.props.layout}
             toolCfg={this.props.btnConfig}
-            container={AnimatedContainer}
+            container={Container}
             mapType={this.props.mapType}
             toolStyle={this.props.buttonStyle}
             activeStyle={this.props.pressedButtonStyle}

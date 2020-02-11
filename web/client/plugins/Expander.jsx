@@ -10,8 +10,6 @@ const React = require('react');
 const {Glyphicon} = require('react-bootstrap');
 const assign = require('object-assign');
 
-const Message = require('../components/I18N/Message');
-
 const ExpanderPlugin = require('../components/buttons/ToggleButton');
 
 module.exports = {
@@ -21,8 +19,9 @@ module.exports = {
             position: 10000,
             alwaysVisible: true,
             tooltip: "expandtoolbar.tooltip",
+            // it is visible when Toolbar allVisible property is set to false or when there are no other items to hide
+            showWhen: ({ items = [] } = {}) => items.filter((i = {}) => !i.name !== 'expand' && !i.alwaysVisible).length > 1,
             icon: <Glyphicon glyph="option-horizontal"/>,
-            help: <Message msgId="helptexts.expandToolbar"/>,
             toggle: true,
             toggleControl: 'toolbar',
             toggleProperty: 'expanded',
