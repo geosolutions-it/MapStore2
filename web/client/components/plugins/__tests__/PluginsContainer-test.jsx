@@ -38,7 +38,7 @@ class Container extends React.Component {
         </React.Fragment>);
     }
 
-};
+}
 
 class NoRootPlugin extends React.Component {
     render() {
@@ -71,10 +71,10 @@ const pluginsCfg2 = {
 
 const pluginsCfg3 = {
     desktop: ["My", "NoRoot"]
-}
+};
 const pluginsCfg4 = {
     desktop: ["Container", "NoRoot"]
-}
+};
 
 describe('PluginsContainer', () => {
     beforeEach((done) => {
