@@ -191,7 +191,7 @@ describe("test the BackgroundSelector", () => {
             }
         ];
 
-        const backgroundSelector = ReactDOM.render(<BackgroundSelector enabled size={size} layers={layers} mapIsEditable/>, document.getElementById("container"));
+        const backgroundSelector = ReactDOM.render(<BackgroundSelector enabled size={size} layers={layers} mapIsEditable hasCatalog/>, document.getElementById("container"));
         expect(backgroundSelector).toExist();
         const node = ReactDOM.findDOMNode(backgroundSelector);
         expect(node).toExist();

@@ -118,7 +118,7 @@ compose(
             ...ownProps.thumbs
         }
     })),
-    // check if to show catalog
+    // check if catalog is present to render the + button. TODO: move the add button in the catalog
     withProps(({ items = [] }) => ({
         hasCatalog: !!find(items, { name: 'MetadataExplorer' })
     }))
