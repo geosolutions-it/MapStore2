@@ -15,6 +15,7 @@ import { error as showError } from '../actions/notifications';
 import { isLoggedIn } from '../selectors/security';
 import { setTemplates, setMapTemplatesLoaded, setTemplateData, setTemplateLoading, CLEAR_MAP_TEMPLATES, OPEN_MAP_TEMPLATES_PANEL,
     MERGE_TEMPLATE, REPLACE_TEMPLATE } from '../actions/maptemplates';
+import { zoomToExtent } from '../actions/map';
 import { templatesSelector, mapTemplatesLoadedSelector } from '../selectors/maptemplates';
 import { templatesSelector as contextTemplatesSelector } from '../selectors/context';
 import { mapSelector } from '../selectors/map';
@@ -137,14 +138,27 @@ export const replaceTemplateEpic = (action$, store) => action$
         const state = store.getState();
         const templates = templatesSelector(state);
         const template = find(templates, t => t.id === id);
+        const {zoom, center} = mapSelector(state);
 
         return (template.dataLoaded ? Observable.of(template.data) : Observable.defer(() => Api.getData(id)))
             .switchMap(data => (isString(data) ?
-                Observable.defer(() => toMapConfig(data, true)) :
+                Observable.defer(() => toMapConfig(data)) :
                 Observable.of(isObject(data) && data.map !== undefined ? data : null))
                 .switchMap(config => Observable.of(
                     ...(!template.dataLoaded ? [setTemplateData(id, data)] : []),
-                    ...(config ? [configureMap(cloneDeep(config), null)] : []))))
+                    ...(config ? [
+                        configureMap(cloneDeep({
+                            ...config,
+                            map: {
+                                ...config.map,
+
+                                // if no zoom or center provided keep the current ones
+                                zoom: config.zoom || zoom,
+                                center: config.center || center
+                            }
+                        }), null),
+                        ...(config.zoom === undefined ? [zoomToExtent(config.map.maxExtent, config.map.projection)] : [])
+                    ] : []))))
             .let(wrapStartStop(
                 setTemplateLoading(id, true),
                 setTemplateLoading(id, false),

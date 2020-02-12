@@ -18,13 +18,17 @@ const defaultValues = {
         10000,
         10000
     ],
-    center: {
-        x: 0,
-        y: 0,
-        crs: 'EPSG:900913'
-    },
     projection: 'EPSG:900913',
     layerType: 'wms'
+};
+
+const emptyBackground = {
+    group: 'background',
+    id: 'empty_background',
+    source: 'ol',
+    title: 'Empty Background',
+    type: 'empty',
+    visibility: true
 };
 
 /**
@@ -101,6 +105,14 @@ const removeEmptyProps = (obj) => keys(obj).filter(key => obj[key] !== undefined
 
 /**
  * Generates MapStore map configuration object from a WMC string
+ * List of WMC features to consider:
+ * * FormatList and StyleList are lists of all possible formats and styles. Also styles can be in SLD(Style Layer Descriptor)
+ * which is represented in a wmc file by a link to an SLD document.
+ * * Styles can have legendURL that points to the location of a map legend describing current style
+ * (extracted from Capabilities by context document creator). This element is optional.
+ * * WMC can have sld:MinScaleDenominator and sld:MaxScaleDenominator that define min/max scale at which the particular layer should be visible.
+ * * Layers can also have DataURL and MetadataURL that point to data or descriptive metadata respectively, corresponding to the layer.
+ * Both are optional
  * @param {string} wmcString wmc string
  * @param {bool} generateLayersGroup when true put all layers in a group with context's title
  */
@@ -144,18 +156,18 @@ export const toMapConfig = (wmcString, generateLayersGroup = false) => {
             const bbox = rootTagExtractor(general, 'BoundingBox');
 
             // if we have maxExtent in Extension then use that otherwise use bbox information
-            const maxExtentAndSRS = mapValues(
-                maxExtentExtension && pickAttributeValues(maxExtentExtension, 'minx', 'miny', 'maxx', 'maxy', 'SRS') ||
-                pickAttributeValues(bbox, 'minx', 'miny', 'maxx', 'maxy', 'SRS'),
+            const maxExtentObj = mapValues(
+                maxExtentExtension && pickAttributeValues(maxExtentExtension, 'minx', 'miny', 'maxx', 'maxy') ||
+                pickAttributeValues(bbox, 'minx', 'miny', 'maxx', 'maxy'),
                 parseFloat
             );
-            const maxExtent = maxExtentAndSRS && [maxExtentAndSRS.minx, maxExtentAndSRS.miny, maxExtentAndSRS.maxx, maxExtentAndSRS.maxy] ||
+            const maxExtent = maxExtentObj && [maxExtentObj.minx, maxExtentObj.miny, maxExtentObj.maxx, maxExtentObj.maxy] ||
                 defaultValues.maxExtent;
-            const projection = maxExtentAndSRS.SRS || defaultValues.projection; // from bbox or default
+            const projection = attrExtractor(bbox, 'SRS') || defaultValues.projection; // from bbox or default
 
             const layerGroup = generateLayersGroup ? uuidv1() : undefined;
 
-            const layers = rootTagsExtractor(layerList, 'Layer').map(layer => {
+            const baseLayers = rootTagsExtractor(layerList, 'Layer').map(layer => {
                 const layerExtensions = rootTagExtractor(layer, 'Extension');
                 const server = rootTagExtractor(layer, 'Server');
                 const styleTag = head(rootTagsExtractor(rootTagExtractor(layer, 'StyleList'), 'Style')
@@ -167,7 +179,9 @@ export const toMapConfig = (wmcString, generateLayersGroup = false) => {
                         pickAttributeValues(olTagExtractor(layerExtensions, 'maxExtent'), 'minx', 'maxx', 'miny', 'maxy'),
                         parseFloat),
                     tileSize: mapValues(pickAttributeValues(olTagExtractor(layerExtensions, 'tileSize'), 'width', 'height'), parseInt),
-                    transparent: transparentValue && parseBoolean(transparentValue)
+                    transparent: transparentValue && parseBoolean(transparentValue),
+                    isBaseLayer: parseBoolean(get(olTagExtractor(layerExtensions, 'isBaseLayer'), 'charContent')),
+                    singleTile: parseBoolean(get(olTagExtractor(layerExtensions, 'singleTile'), 'charContent'))
                     // other additional openlayers parameters go here
                 };
 
@@ -182,14 +196,22 @@ export const toMapConfig = (wmcString, generateLayersGroup = false) => {
                     format: get(head(rootTagsExtractor(rootTagExtractor(layer, 'FormatList'), 'Format')
                         .filter(format => parseBoolean(attrExtractor(format, 'current')))), 'charContent'),
                     style: get(rootTagExtractor(styleTag, 'Name'), 'charContent'),
+                    singleTile: olParameters.singleTile,
+                    queryable: parseBoolean(attrExtractor(layer, 'queryable')),
                     bbox: olParameters.maxExtent !== {} ? {
-                        bounds: olParameters.maxExtent
+                        bounds: olParameters.maxExtent,
+                        crs: projection
                     } : undefined,
-                    group: layerGroup
+                    group: olParameters.isBaseLayer ? 'background' : layerGroup
                 };
 
                 return {...removeEmptyProps(msLayerBase), params: removeEmptyProps(msLayerBase.params)};
             });
+
+            // if there are no background layers, add an empty background
+            const layers = baseLayers.filter(layer => layer.group === 'background').length === 0 ?
+                [emptyBackground, ...baseLayers] :
+                baseLayers;
 
             const groups = [...(layers.filter(layer => !layer.group || layer.group === 'Default').length > 0 ? [{
                 id: 'Default',
@@ -204,7 +226,6 @@ export const toMapConfig = (wmcString, generateLayersGroup = false) => {
                 catalogServices: {},
                 map: {
                     maxExtent,
-                    center: defaultValues.center,
                     projection,
                     backgrounds: [],
                     groups,
