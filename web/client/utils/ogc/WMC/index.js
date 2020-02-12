@@ -103,6 +103,8 @@ const parseBoolean = (string = '') => {
 
 const removeEmptyProps = (obj) => keys(obj).filter(key => obj[key] !== undefined).reduce((result, key) => ({...result, [key]: obj[key]}), {});
 
+const isValidMaxExtentObject = (obj) => !!(obj && obj.minx && obj.miny && obj.maxx && obj.maxy);
+
 /**
  * Generates MapStore map configuration object from a WMC string
  * List of WMC features to consider:
@@ -161,13 +163,14 @@ export const toMapConfig = (wmcString, generateLayersGroup = false) => {
                 pickAttributeValues(bbox, 'minx', 'miny', 'maxx', 'maxy'),
                 parseFloat
             );
-            const maxExtent = maxExtentObj && [maxExtentObj.minx, maxExtentObj.miny, maxExtentObj.maxx, maxExtentObj.maxy] ||
+            const maxExtent = isValidMaxExtentObject(maxExtentObj) &&
+                [maxExtentObj.minx, maxExtentObj.miny, maxExtentObj.maxx, maxExtentObj.maxy] ||
                 defaultValues.maxExtent;
             const projection = attrExtractor(bbox, 'SRS') || defaultValues.projection; // from bbox or default
 
             const layerGroup = generateLayersGroup ? uuidv1() : undefined;
 
-            const baseLayers = rootTagsExtractor(layerList, 'Layer').map(layer => {
+            const msLayers = rootTagsExtractor(layerList, 'Layer').map(layer => {
                 const layerExtensions = rootTagExtractor(layer, 'Extension');
                 const server = rootTagExtractor(layer, 'Server');
                 const styleTag = head(rootTagsExtractor(rootTagExtractor(layer, 'StyleList'), 'Style')
@@ -198,7 +201,7 @@ export const toMapConfig = (wmcString, generateLayersGroup = false) => {
                     style: get(rootTagExtractor(styleTag, 'Name'), 'charContent'),
                     singleTile: olParameters.singleTile,
                     queryable: parseBoolean(attrExtractor(layer, 'queryable')),
-                    bbox: olParameters.maxExtent !== {} ? {
+                    bbox: isValidMaxExtentObject(olParameters.maxExtent) ? {
                         bounds: olParameters.maxExtent,
                         crs: projection
                     } : undefined,
@@ -207,6 +210,12 @@ export const toMapConfig = (wmcString, generateLayersGroup = false) => {
 
                 return {...removeEmptyProps(msLayerBase), params: removeEmptyProps(msLayerBase.params)};
             });
+
+            // put background layers in the beginning of layers array
+            const baseLayers = [
+                ...msLayers.filter(layer => layer.group === 'background'),
+                ...msLayers.filter(layer => layer.group !== 'background')
+            ];
 
             // if there are no background layers, add an empty background
             const layers = baseLayers.filter(layer => layer.group === 'background').length === 0 ?
