@@ -14,6 +14,7 @@ import {
     enablePluginsEpic,
     disablePluginsEpic,
     uploadPluginEpic,
+    saveTemplateEpic,
     checkIfContextExists
 } from '../contextcreator';
 import {
@@ -23,6 +24,7 @@ import {
     changePluginsKey,
     changeAttribute,
     uploadPlugin,
+    saveTemplate,
     SET_EDITED_PLUGIN,
     SET_EDITED_CFG,
     SET_CFG_ERROR,
@@ -31,6 +33,8 @@ import {
     PLUGIN_UPLOADED,
     UPLOADING_PLUGIN,
     LOADING,
+    LOAD_TEMPLATE,
+    SHOW_DIALOG,
     IS_VALID_CONTEXT_NAME,
     CONTEXT_NAME_CHECKED
 } from '../../actions/contextcreator';
@@ -619,6 +623,55 @@ describe('contextcreator epics', () => {
         }, {
             contextcreator: {}
         });
+    });
+    it('saveTemplateEpic', (done) => {
+        mockAxios.onPut().reply(200, {});
+        const startActions = [saveTemplate({id: 1, metadata: {}})];
+        testEpic(saveTemplateEpic, 5, startActions, actions => {
+            expect(actions.length).toBe(5);
+            expect(actions[0].type).toBe(LOADING);
+            expect(actions[0].name).toBe('templateSaving');
+            expect(actions[0].value).toBe(true);
+            expect(actions[1].type).toBe(LOAD_TEMPLATE);
+            expect(actions[1].id).toBe(1);
+            expect(actions[2].type).toBe(SHOW_DIALOG);
+            expect(actions[2].dialogName).toBe('uploadTemplate');
+            expect(actions[2].show).toBe(false);
+            expect(actions[3].type).toBe(SHOW_NOTIFICATION);
+            expect(actions[4].type).toBe(LOADING);
+            expect(actions[4].name).toBe('templateSaving');
+            expect(actions[4].value).toBe(false);
+        }, {
+            contextcreator: {}
+        }, done);
+    });
+    it('saveTemplateEpic with missing category', (done) => {
+        let posted = false;
+        mockAxios.onPut().reply(() => {
+            return posted ? [200, {}] : [404, "Resource Category not found"];
+        });
+        mockAxios.onPost().reply(() => {
+            posted = true;
+            return [200, {}];
+        });
+        const startActions = [saveTemplate({id: 1, metadata: {}})];
+        testEpic(saveTemplateEpic, 5, startActions, actions => {
+            expect(actions.length).toBe(5);
+            expect(actions[0].type).toBe(LOADING);
+            expect(actions[0].name).toBe('templateSaving');
+            expect(actions[0].value).toBe(true);
+            expect(actions[1].type).toBe(LOAD_TEMPLATE);
+            expect(actions[1].id).toBe(1);
+            expect(actions[2].type).toBe(SHOW_DIALOG);
+            expect(actions[2].dialogName).toBe('uploadTemplate');
+            expect(actions[2].show).toBe(false);
+            expect(actions[3].type).toBe(SHOW_NOTIFICATION);
+            expect(actions[4].type).toBe(LOADING);
+            expect(actions[4].name).toBe('templateSaving');
+            expect(actions[4].value).toBe(false);
+        }, {
+            contextcreator: {}
+        }, done);
     });
     it('checkIfContextExists when it exists', (done) => {
         mockAxios.onPost('/extjs/search/list').reply(200, {

@@ -2361,8 +2361,11 @@
                 },
                 "tooltips": {
                     "uploadTool": "Neue Vorlage hochladen",
-                    "editTemplate": "Vorlageneigenschaften bearbeiten"
-                }
+                    "editTemplate": "Vorlageneigenschaften bearbeiten",
+                    "deleteTemplate": "Vorlage löschen"
+                },
+                "deleteError": "Die Vorlage konnte nicht gelöscht werden, ein Fehler ist aufgetreten",
+                "deleteConfirm": "Möchten Sie die Vorlage \"{templateName}\" wirklich löschen?"
             },
             "configureMap": {
                 "label": "Karte konfigurieren",
@@ -2373,7 +2376,8 @@
                 "titleContext": "Das Speichern des Kontexts ist fehlgeschlagen",
                 "titleTemplate": "Das Speichern der Vorlage ist fehlgeschlagen",
                 "conflict": "Eine Ressource mit diesem Namen ist bereits vorhanden",
-                "defaultMessage": "Unbekannter Fehler"
+                "defaultMessage": "Unbekannter Fehler",
+                "categoryError": "Das Erstellen der fehlenden Kategorie \"{categoryName}\" ist fehlgeschlagen"
             },
             "contextNameErrorNotification": {
                 "title": "Falscher Kontextname",
@@ -2407,6 +2411,8 @@
             "favouriteRemove": "Von den Favoriten entfernen",
             "emptyTitle": "Kein Ergebnis",
             "emptyDescription": "Der eingegebene Filter stimmt nicht mit dem Namen oder der Beschreibung einer der Vorlagen überein",
+            "noTemplatesTitle": "Keine Vorlagen gefunden",
+            "noTemplatesDescription": "Der aktuelle Kontext enthält keine Vorlagen",
             "confirmReplaceTitle": "Ersetzen Sie den Karteninhalt",
             "confirmReplaceMessage": "Sie ersetzen alle Layer und die Kartenkonfiguration durch die ausgewählte Vorlage, indem Sie auf die Schaltfläche Ersetzen klicken",
             "confirmReplaceConfirmButton": "Ersetzen"

@@ -2364,8 +2364,11 @@
                 },
                 "tooltips": {
                     "uploadTool": "Carica un nuovo modello",
-                    "editTemplate": "Modifica le proprietà del modello"
-                }
+                    "editTemplate": "Modifica le proprietà del modello",
+                    "deleteTemplate": "Elimina modello"
+                },
+                "deleteError": "Impossibile eliminare il modello, si è verificato un errore",
+                "deleteConfirm": "Sei sicuro di voler eliminare il modello \"{templateName}\"?"
             },
             "configureMap": {
                 "label": "Configura mappa",
@@ -2376,7 +2379,8 @@
                 "titleContext": "Salvataggio del contesto non riuscito",
                 "titleTemplate": "Salvataggio del modello non riuscito",
                 "conflict": "Una risorsa con questo nome esiste già",
-                "defaultMessage": "Errore sconosciuto"
+                "defaultMessage": "Errore sconosciuto",
+                "categoryError": "Creazione della categoria mancante \"{categoryName}\" non riuscita"
             },
             "contextNameErrorNotification": {
                 "title": "Nome di contesto errato",
@@ -2410,6 +2414,8 @@
             "favouriteRemove": "Rimuovi dai preferiti",
             "emptyTitle": "Nessun risultato",
             "emptyDescription": "Il filtro inserito non corrisponde al nome o alla descrizione di nessuno dei modelli",
+            "noTemplatesTitle": "Nessun modello trovato",
+            "noTemplatesDescription": "Il contesto corrente non contiene modelli",
             "confirmReplaceTitle": "Sostituisci il contenuto della mappa",
             "confirmReplaceMessage": "Sostituirai tutti i livelli e la configurazione della mappa con il modello selezionato facendo clic sul pulsante Sostituisci",
             "confirmReplaceConfirmButton": "Sostituire"

@@ -2365,8 +2365,11 @@
                 },
                 "tooltips": {
                     "uploadTool": "Upload new template",
-                    "editTemplate": "Edit template properties"
-                }
+                    "editTemplate": "Edit template properties",
+                    "deleteTemplate": "Delete template"
+                },
+                "deleteError": "Couldn't delete the template, an error occurred",
+                "deleteConfirm": "Are you sure you want to delete template \"{templateName}\"?"
             },
             "configureMap": {
                 "label": "Configure Map",
@@ -2377,7 +2380,8 @@
                 "titleContext": "Context saving failed",
                 "titleTemplate": "Template saving failed",
                 "conflict": "A resource with this name already exists",
-                "defaultMessage": "Unknown error"
+                "defaultMessage": "Unknown error",
+                "categoryError": "Creating missing category \"{categoryName}\" failed"
             },
             "contextNameErrorNotification": {
                 "title": "Bad context name",
@@ -2411,6 +2415,8 @@
             "favouriteRemove": "Remove from favourites",
             "emptyTitle": "No Result",
             "emptyDescription": "Entered filter does not match name or description of any of templates",
+            "noTemplatesTitle": "No templates found",
+            "noTemplatesDescription": "Current context contains no templates",
             "confirmReplaceTitle": "Replace map content",
             "confirmReplaceMessage": "You will replace all layers and map configuration with the selected template by clicking on replace button",
             "confirmReplaceConfirmButton": "Replace"

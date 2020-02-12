@@ -123,6 +123,17 @@ const Api = {
         const url = "extjs/search/category/" + category + "/*" + q + "*/thumbnail,details,featured"; // comma-separated list of wanted attributes
         return axios.get(url, this.addBaseUrl(parseOptions(options))).then(function(response) {return response.data; });
     },
+    createCategory: function(category) {
+        return axios.post(
+            "categories",
+            `<Category><name>${category}</name></Category>`,
+            this.addBaseUrl({
+                headers: {
+                    'Content-Type': "application/xml"
+                }
+            })
+        ).then(response => response.data);
+    },
     getUserDetails: function(username, password, options) {
         const url = "users/user/details";
         return axios.get(url, this.addBaseUrl(merge({

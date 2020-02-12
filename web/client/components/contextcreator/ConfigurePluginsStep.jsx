@@ -190,6 +190,7 @@ const configurePluginsStep = ({
     onUploadError = () => {},
     onShowDialog = () => {},
     onSaveTemplate,
+    onDeleteTemplate,
     onEditTemplate,
     onFilterAvailableTemplates,
     onFilterEnabledTemplates,
@@ -352,6 +353,7 @@ const configurePluginsStep = ({
                     setParsedTemplate={setParsedTemplate}
                     setFileDropStatus={setFileDropStatus}
                     onSave={onSaveTemplate}
+                    onDelete={onDeleteTemplate}
                     onEditTemplate={onEditTemplate}
                     onFilterAvailableTemplates={onFilterAvailableTemplates}
                     onFilterEnabledTemplates={onFilterEnabledTemplates}

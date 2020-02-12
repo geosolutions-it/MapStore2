@@ -67,11 +67,11 @@ export const openMapTemplatesPanelEpic = (action$, store) => action$
         };
 
         return Observable.of(setControlProperty('mapTemplates', 'enabled', true, true)).concat(!mapTemplatesLoaded ?
-            Observable.defer(() => Api.searchListByAttributes(makeFilter(), {
+            (contextTemplates.length > 0 ? Observable.defer(() => Api.searchListByAttributes(makeFilter(), {
                 params: {
                     includeAttributes: true
                 }
-            }, '/resources/search/list'))
+            }, '/resources/search/list')) : Observable.of({}))
                 .switchMap((data) => {
                     const resourceObj = get(data, 'ResourceList.Resource', []);
                     const resources = isArray(resourceObj) ? resourceObj : [resourceObj];

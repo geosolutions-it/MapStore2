@@ -46,11 +46,11 @@ const MapTemplatesListBase = ({
     );
 };
 
-const MapTemplatesList = emptyState(({items = []}) => items.length === 0, {
-    glyph: 'filter',
-    title: <Message msgId="mapTemplates.emptyTitle" />,
-    description: <Message msgId="mapTemplates.emptyDescription" />
-})(MapTemplatesListBase);
+const MapTemplatesList = emptyState(({items = []}) => items.length === 0, ({totalTemplateCount}) => ({
+    glyph: totalTemplateCount ? 'filter' : 'ban-circle',
+    title: <Message msgId={totalTemplateCount ? "mapTemplates.emptyTitle" : "mapTemplates.noTemplatesTitle"}/>,
+    description: <Message msgId={totalTemplateCount ? "mapTemplates.emptyDescription" : "mapTemplates.noTemplatesDescription"}/>
+}))(MapTemplatesListBase);
 
 const match = (filterText = '', template = {}) =>
     ['name', 'description']
@@ -131,6 +131,7 @@ export default ({
                     </div>
                 }>
                 <MapTemplatesList
+                    totalTemplateCount={templates.length}
                     items={items}
                     favouriteItems={favouriteItems}/>
             </BorderLayout>

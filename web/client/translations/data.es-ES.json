@@ -2361,8 +2361,11 @@
                 },
                 "tooltips": {
                     "uploadTool": "Subir nueva plantilla",
-                    "editTemplate": "Editar propiedades de plantilla"
-                }
+                    "editTemplate": "Editar propiedades de plantilla",
+                    "deleteTemplate": "Eliminar plantilla"
+                },
+                "deleteError": "No se pudo eliminar la plantilla, se produjo un error",
+                "deleteConfirm": "¿Está seguro de que desea eliminar la plantilla \"{templateName}\"?"
             },
             "configureMap": {
                 "label": "Configurar mapa",
@@ -2373,7 +2376,8 @@
                 "titleContext": "Error al guardar el contextod",
                 "titleTemplate": "Error al guardar la plantilla",
                 "conflict": "Ya existe un recurso con este nombre",
-                "defaultMessage": "Error desconocido"
+                "defaultMessage": "Error desconocido",
+                "categoryError": "Error al crear la categoría faltante \"{categoryName}\""
             },
             "contextNameErrorNotification": {
                 "title": "Nombre de contexto incorrecto",
@@ -2407,6 +2411,8 @@
             "favouriteRemove": "Quitar de favoritos",
             "emptyTitle": "Sin resultados",
             "emptyDescription": "El filtro introducido no coincide con el nombre o la descripción de ninguna de las plantillas",
+            "noTemplatesTitle": "No se encontraron plantillas",
+            "noTemplatesDescription": "El contexto actual no contiene plantillas",
             "confirmReplaceTitle": "Reemplazar contenido del mapa",
             "confirmReplaceMessage": "Reemplazará todas las capas y la configuración del mapa con la plantilla seleccionada haciendo clic en el botón Reemplazar",
             "confirmReplaceConfirmButton": "Reemplazar"
