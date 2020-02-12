@@ -47,6 +47,7 @@ const backgroundsListInit = (action$) =>
     action$.ofType(MAP_CONFIG_LOADED)
         .switchMap(({config}) => {
             const backgrounds = config.map && config.map.backgrounds || [];
+            const backgroundLayers = (config.map && config.map.layers || []).filter(layer => layer.group === 'background');
             const layerUpdateActions = backgrounds.filter(background => !!background.thumbnail).map(background => {
                 const toBlob = (data) => {
                     const bytes = atob(data.split(',')[1]);
@@ -60,7 +61,9 @@ const backgroundsListInit = (action$) =>
                 };
                 return changeLayerProperties(background.id, {thumbURL: toBlob(background.thumbnail)});
             });
-            return Rx.Observable.of(...layerUpdateActions.concat(createBackgroundsList(backgrounds)));
+            const currentBackground = head(backgroundLayers.filter(layer => layer.visibility));
+            return Rx.Observable.of(...layerUpdateActions.concat(createBackgroundsList(backgrounds)),
+                ...(currentBackground ? [setCurrentBackgroundLayer(currentBackground.id)] : []));
         });
 
 const setCurrentBackgroundLayerEpic = (action$, store) =>
