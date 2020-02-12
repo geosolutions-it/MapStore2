@@ -32,17 +32,20 @@ const createBackgroundIdStream = (intersection$, props$) => {
                 visible,
                 entry
             }
-        }), {});
+        }), {})
+        .debounceTime(100) // Better to debounce before calculations
+        .map((items = {}) => {
+            // get the one with max intersectionRatio that should be the selected background ID
+            const maxItem = maxBy(
+                Object.keys(items),
+                (k) => items[k].visible ? get(items[k], 'entry.intersectionRatio') : -Infinity
+            );
+            return {maxItem, items};
+        });
+
     return Observable.merge(
         visibility$
-            .map((items = {}) => {
-                // get the one with max intersectionRatio that should be the selected background ID
-                const maxItem = maxBy(
-                    Object.keys(items),
-                    (k) => get(items[k], 'entry.intersectionRatio')
-                );
-                return maxItem;
-            })
+            .pluck('maxItem')
             // optimization to avoid not useful events
             .distinctUntilChanged()
             // create the property from the Id stream
@@ -50,11 +53,7 @@ const createBackgroundIdStream = (intersection$, props$) => {
                 backgroundId
             })),
         visibility$
-            .map((items = {}) => {
-                const maxItem = maxBy(
-                    Object.keys(items),
-                    (k) => get(items[k], 'entry.intersectionRatio')
-                );
+            .map(({maxItem, items}) => {
                 if (get(items[maxItem], 'entry.intersectionRatio') === 0) {
                     return "EMPTY";
                 }

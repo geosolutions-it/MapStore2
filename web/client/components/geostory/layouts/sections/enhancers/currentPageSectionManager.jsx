@@ -6,37 +6,43 @@
  * LICENSE file in the root directory of this source tree.
  */
 import { compose, createEventHandler, mapPropsStream, setObservableConfig } from 'recompose';
-import { head } from "lodash";
+import { get, minBy} from "lodash";
 import { Observable } from "rxjs";
 
 // TODO: externalize
 import rxjsConfig from 'recompose/rxjsObservableConfig';
 setObservableConfig(rxjsConfig);
-
 /**
  * Handles the intersection event stream into calls to `updateCurrentPage`, when the current section changes.
  * @param {stream} intersection$ the stream of intersection event calls
  */
 const createCurrentPageUpdateStream = (intersection$, props$) =>
-    intersection$
-        // create a map with the latest states of each intersection event
-        .scan((items = {}, { id, visible, entry }) => ({
-            ...items,
-            [id]: {
-                visible,
-                entry
-            }
-        }), {})
-        // select the current section id
-        .map((items = {}) => {
-            // get the first visible item as current page
-            const visibleItemsKeys = Object.keys(items).filter(k => items[k].visible);
-            return head(visibleItemsKeys);
-        })
-        // optimization to avoid not useful events
-        .withLatestFrom(props$.pluck('updateCurrentPage'))
-        .do(([sectionId, updateCurrentPage]) => updateCurrentPage && updateCurrentPage({sectionId}))
-        .ignoreElements();
+    props$.map(({interceptorTime, updateCurrentPage} = {}) => ({interceptorTime, updateCurrentPage}) )
+        .distinctUntilKeyChanged("interceptorTime") // Configurable delay
+        .switchMap(({interceptorTime: delay = 100, updateCurrentPage} = {}) => {
+            return intersection$
+                // create a map with the latest states of each intersection event
+                .scan((items = {}, { id, visible, entry }) => ({
+                    ...items,
+                    [id]: {
+                        visible,
+                        entry
+                    }
+                }), {})
+                .debounceTime(delay) // Try to improve performances, debounce before calculations
+                // select the current section id
+                .map((items = {}) => {
+                    // get the highest visible item as current page using the distance from top and not the order in the object
+                    const currentSection =  minBy(
+                        Object.keys(items),
+                        (k) => items[k].visible ? get(items[k], 'entry.boundingClientRect.top') : Infinity
+                    );
+                    return currentSection;
+                })
+                .do(sectionId => {
+                    updateCurrentPage && updateCurrentPage({sectionId});
+                }).ignoreElements();
+        });
 
 /**
  * Enhances the story containers to call `updateCurrentPage` when `onVisibilityChange` is called

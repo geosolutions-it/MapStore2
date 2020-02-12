@@ -423,16 +423,31 @@ export const closeShareOnGeostoryChangeMode = action$ =>
  */
 export const scrollSideBar = (action$, {getState}) =>
     action$.ofType(UPDATE_CURRENT_PAGE)
-        .filter(({columnId, sectionId}) => modeSelector(getState()) === 'edit' && ((columnId && columnId !== "EMPTY") || sectionId))
+        .filter(({columnId, sectionId}) => modeSelector(getState()) === 'edit' && (!!columnId || !!sectionId))
         .debounceTime(50) // little delay if too many UPDATE_CURRENT_PAGE actions come
         .switchMap(() => {
             /* We need to select the most inner highlighted element of the preview list
              * The selector will query all the highlighted elements and the pop will extract
              * the most inner (i.e a section content column in an immersive section)
              */
-            const el = Array.from(document.querySelectorAll(".ms-geostory-builder .mapstore-side-card.ms-highlight")).pop();
-            if (el) {
-                el.scrollIntoView({block: "center", inline: "nearest", behavior: "smooth"});
-            }
-            return Observable.empty();
+            return Observable.of(Array.from(document.querySelectorAll(".ms-geostory-builder .mapstore-side-card.ms-highlight")).pop())
+                .filter(el => !!el)
+                .withLatestFrom(
+                    Observable.of(document.querySelector(".ms-geostory-builder .ms2-border-layout-body"))
+                    .filter(scrollable => !!scrollable)
+                )
+                .map(([el, scrollable]) => {
+                    const scroll = function() {
+                        const {top, bottom} = el.getBoundingClientRect();
+                        const {top: cTop, bottom: cBottom} = scrollable.getBoundingClientRect();
+                        if (top < cTop) {
+                            scrollable.scrollBy({top: (top - cTop) - 10, behavior: 'smooth'});
+                        } else if (bottom > cBottom) {
+                            scrollable.scrollBy({top: (bottom - cBottom) + 10, behavior: 'smooth'});
+                        }
+                    };
+                    return scroll;
+                })
+                .do(scroll => window.requestAnimationFrame(scroll))
+                .ignoreElements();
         });

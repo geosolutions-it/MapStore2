@@ -91,11 +91,13 @@ class Section extends React.Component {
         );
     }
 }
-const DEFAULT_THRESHOLD = Array.from(Array(11).keys()).map(v => v / 10); // [0, 0.1, 0.2 ... 0.9, 1]
+// We have to try to reduce the number of times that an interceptor observer call the onVisibility change
+// Less items better performance worst precision
+const DEFAULT_THRESHOLD = [0, 0.25, 0.5, 0.75, 1];
 
 // add the visibilityHandler to intercept current section (for current page state update)
 /*
  * negative rootMargin allows to get the top element highlighted (trigger visibility event)
  * if it's present in the viewport after initial 100px
 */
-export default visibilityHandler({ threshold: DEFAULT_THRESHOLD, rootMargin: "-110px" })(Section);
+export default visibilityHandler({ threshold: DEFAULT_THRESHOLD, rootMargin: "-200px" })(Section);

@@ -38,18 +38,15 @@ describe('currentPageSectionManager enhancer', () => {
     });
 
     it('calls updateCurrentPage when onVisibilityChange is called', done => {
-        const actions = {
-            updateCurrentPage: () => {}
+        const  updateCurrentPage = ({sectionId}) => {
+            expect(sectionId).toBe(contents[1].id);
+            done();
         };
-        const spyCallback = expect.spyOn(actions, 'updateCurrentPage');
         const Sink = currentPageSectionManager(createSink(props => {
             expect(props).toExist();
             // first render, trigger onVisibility change to make the background to be 1
-            props.onVisibilityChange({ id: contents[1].id, visible: true, entry: {intersectionRatio: 1} });
-            expect(spyCallback).toHaveBeenCalled();
-            expect(spyCallback.calls[0].arguments[0].sectionId).toBe(contents[1].id);
-            done();
+            props.onVisibilityChange({ id: contents[1].id, visible: true, entry: {intersectionRatio: 1, boundingClientRect: {top: 0}} });
         }));
-        ReactDOM.render(<Sink updateCurrentPage={actions.updateCurrentPage} contents={contents} />, document.getElementById("container"));
+        ReactDOM.render(<Sink interceptorTime={0} updateCurrentPage={updateCurrentPage} contents={contents} />, document.getElementById("container"));
     });
 });
