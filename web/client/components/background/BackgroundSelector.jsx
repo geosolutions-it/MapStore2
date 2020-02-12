@@ -39,6 +39,8 @@ class BackgroundSelector extends React.Component {
         onLayerChange: PropTypes.func,
         onStartChange: PropTypes.func,
         onAdd: PropTypes.func,
+        hasCatalog: PropTypes.bool,
+        alwaysVisible: PropTypes.bool, // useful for tests
         enabledCatalog: PropTypes.bool,
         onRemove: PropTypes.func,
         onBackgroundEdit: PropTypes.func,
@@ -219,7 +221,7 @@ class BackgroundSelector extends React.Component {
         };
         const {show: showConfirm, layerId: confirmLayerId, layerTitle: confirmLayerTitle} =
             this.props.confirmDeleteBackgroundModal || {show: false};
-        return visibleIconsLength <= 0 && this.props.enabled ? null : (
+        return (visibleIconsLength <= 0 && !this.props.alwaysVisible) && this.props.enabled ? null : (
             <span>
                 <ConfirmDialog
                     draggable={false}
@@ -249,8 +251,7 @@ class BackgroundSelector extends React.Component {
                 <div className={'background-plugin-position'} style={this.props.style}>
                     <PreviewButton
                         layers={this.props.layers}
-                        enabledCatalog={this.props.enabledCatalog}
-                        currentLayer={this.props.currentLayer}
+                        showAdd={this.props.mode !== 'mobile' && this.props.mapIsEditable && this.props.hasCatalog && !this.props.enabledCatalog}
                         onAdd={() => this.props.onAdd(this.props.source || 'backgroundSelector')}
                         showLabel={configuration.label}
                         src={this.getThumb(layer)}
@@ -260,8 +261,7 @@ class BackgroundSelector extends React.Component {
                         labelHeight={labelHeight}
                         label={layer.title}
                         onToggle={this.props.onToggle}
-                        mode={this.props.mode}
-                        mapIsEditable={this.props.mapIsEditable}/>
+                    />
                     <div className="background-list-container" style={listContainerStyle}>
                         <PreviewList vertical={configuration.vertical} start={this.props.start} bottom={0} height={previewListStyle.height} width={previewListStyle.width} icons={icons} pagination={pagination} length={visibleIconsLength} onStartChange={this.props.onStartChange} />
                     </div>
