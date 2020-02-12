@@ -8,10 +8,11 @@
 
 const React = require('react');
 const Message = require('../../components/I18N/Message');
-const {defaultProps} = require('recompose');
-const {Glyphicon} = require('react-bootstrap');
+const { filter, head, sortBy } = require('lodash');
 
-const assign = require('object-assign');
+const { defaultProps } = require('recompose');
+const { Glyphicon } = require('react-bootstrap');
+
 const HTMLViewer = require('../../components/data/identify/viewers/HTMLViewer');
 const TextViewer = require('../../components/data/identify/viewers/TextViewer');
 const JSONViewer = require('../../components/data/identify/viewers/JSONViewer');
@@ -43,9 +44,9 @@ const formatCards = {
         glyph: 'ext-txt',
         body: () => (
             <div>
-                <div><Message msgId="layerProperties.exampleOfResponse"/></div>
-                <br/>
-                <TextViewer response={responses.text}/>
+                <div><Message msgId="layerProperties.exampleOfResponse" /></div>
+                <br />
+                <TextViewer response={responses.text} />
             </div>
         )
     },
@@ -55,9 +56,9 @@ const formatCards = {
         glyph: 'ext-html',
         body: () => (
             <div>
-                <div><Message msgId="layerProperties.exampleOfResponse"/></div>
-                <br/>
-                <HTMLViewer response={responses.html}/>
+                <div><Message msgId="layerProperties.exampleOfResponse" /></div>
+                <br />
+                <HTMLViewer response={responses.html} />
             </div>
         )
     },
@@ -67,8 +68,8 @@ const formatCards = {
         glyph: 'ext-json',
         body: () => (
             <div>
-                <div><Message msgId="layerProperties.exampleOfResponse"/></div>
-                <br/>
+                <div><Message msgId="layerProperties.exampleOfResponse" /></div>
+                <br />
                 <JSONViewer response={responses.json} />
             </div>
         )
@@ -77,22 +78,22 @@ const formatCards = {
         titleId: 'layerProperties.templateFormatTitle',
         descId: 'layerProperties.templateFormatDescription',
         glyph: 'ext-empty',
-        body: ({template = '', ...props}) => (
+        body: ({ template = '', ...props }) => (
             <div>
-                <div>{template && template !== '<p><br></p>' ? <Message msgId="layerProperties.templatePreview"/> : null}</div>
-                <br/>
+                <div>{template && template !== '<p><br></p>' ? <Message msgId="layerProperties.templatePreview" /> : null}</div>
+                <br />
                 <div>
                     {template && template !== '<p><br></p>' ?
-                        <HtmlRenderer html={template}/>
+                        <HtmlRenderer html={template} />
                         :
                         <span>
-                            <p><Message msgId="layerProperties.templateFormatInfoAlert2" msgParams={{ attribute: '{ }'}}/></p>
+                            <p><Message msgId="layerProperties.templateFormatInfoAlert2" msgParams={{ attribute: '{ }' }} /></p>
                             <pre>
-                                <Message msgId="layerProperties.templateFormatInfoAlertExample" msgParams={{ properties: '{ properties.id }' }}/>
+                                <Message msgId="layerProperties.templateFormatInfoAlertExample" msgParams={{ properties: '{ properties.id }' }} />
                             </pre>
-                            <p><small><Message msgId="layerProperties.templateFormatInfoAlert1"/></small>&nbsp;(&nbsp;<Glyphicon glyph="pencil"/>&nbsp;)</p>
+                            <p><small><Message msgId="layerProperties.templateFormatInfoAlert1" /></small>&nbsp;(&nbsp;<Glyphicon glyph="pencil" />&nbsp;)</p>
                         </span>}
-                    <FeatureInfoEditor template={template} {...props}/>
+                    <FeatureInfoEditor template={template} {...props} />
                 </div>
             </div>
         )
@@ -120,13 +121,58 @@ const getConfiguredPlugin = (plugin, loaded, loadingComp) => {
     return plugin;
 };
 
-let settingsPlugins;
+let settingsPlugins = {};
 
-module.exports = ({showFeatureInfoTab = true, ...props}, {plugins, pluginsConfig, loadedPlugins}) => {
-    if (!settingsPlugins) {
-        settingsPlugins = assign({}, (PluginsUtils.getPluginItems({}, plugins, pluginsConfig, "TOC", props.id, true, loadedPlugins, (p) => p.container === 'TOCItemSettings') || [])
-            .reduce((previous, p) => ({...previous, [p.name]: p}), {}));
+const getStyleTabPlugin = ({ items, loadedPlugins, onToggleStyleEditor = () => { }, onUpdateParams = () => { }, ...props }) => {
+    // get Higher priority plugin that satisfies requirements.
+    const candidatePluginItems =
+            sortBy(filter([...items] || [], { target: 'style' }), ["priority"]) // find out plugins with target panel 'style' and sort by priority
+                .filter(({selector}) => selector ? selector(props) : true); // filter out items that do not have the correct requirements.
+    // TODO: to complete externalization of these items, we need to
+    // move handlers, Component creation and configuration on the plugins, delegating also action dispatch.
+    const thematic = head(filter(candidatePluginItems, {name: "ThematicLayer"}));
+    if (thematic) {
+        const item = thematic;
+        return {
+            Component: props.activeTab === 'style' && item.plugin && getConfiguredPlugin(item, loadedPlugins, <LoadingView width={100} height={100} />),
+            toolbar: [
+                {
+                    glyph: 'list',
+                    tooltipId: 'toc.thematic.classify',
+                    visible: props.isAdmin && !thematic && props.element.search || false,
+                    onClick: () => onUpdateParams({
+                        thematic: {
+                            unconfigured: true
+                        }
+                    })
+                },
+                {
+                    glyph: 'trash',
+                    tooltipId: 'toc.thematic.remove_thematic',
+                    visible: props.isAdmin && thematic || false,
+                    onClick: () => onUpdateParams({
+                        thematic: null
+                    })
+                }
+            ]
+        };
     }
+    const item = head(candidatePluginItems);
+    if (item && item.plugin) {
+        return {
+            onClose: () => onToggleStyleEditor(null, false),
+            onClick: () => onToggleStyleEditor(null, true),
+            Component: getConfiguredPlugin({ ...item, cfg: { ...item.plugin.cfg, active: true } }, loadedPlugins, <LoadingView width={100} height={100} />),
+            toolbarComponent: item.ToolbarComponent
+                && (
+                    item.plugin.cfg && defaultProps(item.plugin.cfg)(item.ToolbarComponent) || item.ToolbarComponent
+                )
+        };
+    }
+    return {};
+};
+
+module.exports = ({ showFeatureInfoTab = true, loadedPlugins, items, onToggleStyleEditor, ...props }) => {
 
     return [
         {
@@ -150,37 +196,9 @@ module.exports = ({showFeatureInfoTab = true, ...props}, {plugins, pluginsConfig
             titleId: 'layerProperties.style',
             tooltipId: 'layerProperties.style',
             glyph: 'dropper',
-            onClose: () => settingsPlugins && settingsPlugins.StyleEditor && props.onToggleStyleEditor && props.onToggleStyleEditor(null, false),
-            onClick: () => settingsPlugins && settingsPlugins.StyleEditor && props.onToggleStyleEditor && props.onToggleStyleEditor(null, true),
             visible: props.settings.nodeType === 'layers' && props.element.type === "wms",
-            Component: props.activeTab === 'style' && props.settings.options.thematic && settingsPlugins.ThematicLayer && getConfiguredPlugin(settingsPlugins.ThematicLayer, loadedPlugins, <LoadingView width={100} height={100} />)
-            || settingsPlugins.StyleEditor && getConfiguredPlugin({...settingsPlugins.StyleEditor, cfg: {...settingsPlugins.StyleEditor.cfg, active: true }}, loadedPlugins, <LoadingView width={100} height={100} />)
-            || StyleList,
-            toolbar: [
-                {
-                    glyph: 'list',
-                    tooltipId: 'toc.thematic.classify',
-                    visible: settingsPlugins.ThematicLayer && props.isAdmin && !props.settings.options.thematic && props.element.search || false,
-                    onClick: () => props.onUpdateParams && props.onUpdateParams({
-                        thematic: {
-                            unconfigured: true
-                        }
-                    })
-                },
-                {
-                    glyph: 'trash',
-                    tooltipId: 'toc.thematic.remove_thematic',
-                    visible: settingsPlugins.ThematicLayer && props.isAdmin && props.settings.options.thematic || false,
-                    onClick: () => props.onUpdateParams && props.onUpdateParams({
-                        thematic: null
-                    })
-                }
-            ],
-            toolbarComponent: settingsPlugins && settingsPlugins.StyleEditor && settingsPlugins.StyleEditor.ToolbarComponent &&
-                (
-                    settingsPlugins.StyleEditor.cfg && defaultProps(settingsPlugins.StyleEditor.cfg)(settingsPlugins.StyleEditor.ToolbarComponent)
-                    || settingsPlugins.StyleEditor.ToolbarComponent
-                )
+            Component: StyleList,
+            ...getStyleTabPlugin({ items, loadedPlugins, onToggleStyleEditor, ...props })
         },
         {
             id: 'feature',

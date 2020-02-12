@@ -188,7 +188,12 @@ module.exports = {
     StyleEditorPlugin: assign(StyleEditorPlugin, {
         TOC: {
             priority: 1,
-            container: 'TOCItemSettings',
+            container: 'TOCItemSettings'
+        },
+        TOCItemsSettings: {
+            name: 'StyleEditor',
+            target: 'style',
+            priority: 1,
             ToolbarComponent: StyleToolbar
         }
     }),

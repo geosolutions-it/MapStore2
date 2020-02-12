@@ -29,7 +29,7 @@ const Message = require('../I18N/Message');
  * @prop {string} className additional calss name
  */
 
-const TOCItemSettings = (props, context) => {
+const TOCItemSettings = (props) => {
     const {
         className = '',
         activeTab = 'general',
@@ -38,7 +38,6 @@ const TOCItemSettings = (props, context) => {
         groups = [],
         element = {},
         settings = {},
-        getTabs = () => [],
         onSave = () => {},
         onClose = () => {},
         onHideSettings = () => {},
@@ -53,10 +52,11 @@ const TOCItemSettings = (props, context) => {
         showFullscreen,
         draggable,
         position = 'left',
+        tabs,
         tabsConfig = {}
     } = props;
 
-    const tabs = getTabs(props, context);
+
     const ToolbarComponent = head(tabs.filter(tab => tab.id === activeTab && tab.toolbarComponent).map(tab => tab.toolbarComponent));
 
     const tabsCloseActions = tabs && tabs.map(tab => tab && tab.onClose).filter(val => val) || [];
