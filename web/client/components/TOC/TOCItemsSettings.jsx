@@ -52,7 +52,7 @@ const TOCItemSettings = (props) => {
         showFullscreen,
         draggable,
         position = 'left',
-        tabs,
+        tabs = [],
         tabsConfig = {}
     } = props;
 

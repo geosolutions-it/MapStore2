@@ -6,35 +6,37 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const React = require('react');
-const Message = require('../../components/I18N/Message');
-const { filter, head, sortBy } = require('lodash');
+import React from 'react';
+import Message from '../../components/I18N/Message';
+import { filter, head, sortBy } from 'lodash';
 
-const { defaultProps } = require('recompose');
-const { Glyphicon } = require('react-bootstrap');
+import { defaultProps } from 'recompose';
+import { Glyphicon } from 'react-bootstrap';
 
-const HTMLViewer = require('../../components/data/identify/viewers/HTMLViewer');
-const TextViewer = require('../../components/data/identify/viewers/TextViewer');
-const JSONViewer = require('../../components/data/identify/viewers/JSONViewer');
-const HtmlRenderer = require('../../components/misc/HtmlRenderer');
+import HTMLViewer from '../../components/data/identify/viewers/HTMLViewer';
+import TextViewer from '../../components/data/identify/viewers/TextViewer';
+import JSONViewer from '../../components/data/identify/viewers/JSONViewer';
+import HtmlRenderer from '../../components/misc/HtmlRenderer';
 
-const MapInfoUtils = require('../../utils/MapInfoUtils');
-const PluginsUtils = require('../../utils/PluginsUtils');
+import MapInfoUtils from '../../utils/MapInfoUtils';
+import PluginsUtils from '../../utils/PluginsUtils';
 
-const General = require('../../components/TOC/fragments/settings/General');
-const Display = require('../../components/TOC/fragments/settings/Display');
+import General from '../../components/TOC/fragments/settings/General';
+import Display from '../../components/TOC/fragments/settings/Display';
 
-const Elevation = require('../../components/TOC/fragments/settings/Elevation');
-const FeatureInfoEditor = require('../../components/TOC/fragments/settings/FeatureInfoEditor');
-const LoadingView = require('../../components/misc/LoadingView');
-
+import Elevation from '../../components/TOC/fragments/settings/Elevation';
+import FeatureInfoEditor from '../../components/TOC/fragments/settings/FeatureInfoEditor';
+import LoadingView from '../../components/misc/LoadingView';
+import html from 'raw-loader!./featureInfoPreviews/responseHTML.txt';
+import json from 'raw-loader!./featureInfoPreviews/responseJSON.txt';
+import text from 'raw-loader!./featureInfoPreviews/responseText.txt';
 const responses = {
-    html: require('raw-loader!./featureInfoPreviews/responseHTML.txt'),
-    json: JSON.parse(require('raw-loader!./featureInfoPreviews/responseJSON.txt')),
-    text: require('raw-loader!./featureInfoPreviews/responseText.txt')
+    html,
+    json: JSON.parse(json),
+    text
 };
 
-const { StyleSelector } = require('../styleeditor/index');
+import { StyleSelector } from '../styleeditor/index';
 const StyleList = defaultProps({ readOnly: true })(StyleSelector);
 
 const formatCards = {
@@ -99,11 +101,11 @@ const formatCards = {
         )
     }
 };
-
+import FeatureInfoCmp from '../../components/TOC/fragments/settings/FeatureInfo';
 const FeatureInfo = defaultProps({
     formatCards,
     defaultInfoFormat: MapInfoUtils.getAvailableInfoFormat()
-})(require('../../components/TOC/fragments/settings/FeatureInfo'));
+})(FeatureInfoCmp);
 
 const configuredPlugins = {};
 
@@ -121,43 +123,49 @@ const getConfiguredPlugin = (plugin, loaded, loadingComp) => {
     return plugin;
 };
 
-let settingsPlugins = {};
-
-const getStyleTabPlugin = ({ items, loadedPlugins, onToggleStyleEditor = () => { }, onUpdateParams = () => { }, ...props }) => {
+export const getStyleTabPlugin = ({ settings, items = [], loadedPlugins, onToggleStyleEditor = () => { }, onUpdateParams = () => { }, ...props }) => {
     // get Higher priority plugin that satisfies requirements.
     const candidatePluginItems =
-            sortBy(filter([...items] || [], { target: 'style' }), ["priority"]) // find out plugins with target panel 'style' and sort by priority
+            sortBy(filter([...items], { target: 'style' }), ["priority"]) // find out plugins with target panel 'style' and sort by priority
                 .filter(({selector}) => selector ? selector(props) : true); // filter out items that do not have the correct requirements.
     // TODO: to complete externalization of these items, we need to
     // move handlers, Component creation and configuration on the plugins, delegating also action dispatch.
-    const thematic = head(filter(candidatePluginItems, {name: "ThematicLayer"}));
-    if (thematic) {
-        const item = thematic;
+    const thematicPlugin = head(filter(candidatePluginItems, {name: "ThematicLayer"}));
+    if (thematicPlugin) {
+        const thematicConfig = settings && settings.options && settings.options.thematic;
+        const toolbar = [
+            {
+                glyph: 'list',
+                tooltipId: 'toc.thematic.classify',
+                visible: props.isAdmin && !thematicConfig || false,
+                onClick: () => onUpdateParams({
+                    thematic: {
+                        unconfigured: true
+                    }
+                })
+            },
+            {
+                glyph: 'trash',
+                tooltipId: 'toc.thematic.remove_thematic',
+                visible: props.isAdmin && thematicConfig || false,
+                onClick: () => onUpdateParams({
+                    thematic: null
+                })
+            }
+        ];
+        if (thematicConfig) {
+            return {
+                Component: props.activeTab === 'style' && thematicPlugin.plugin && getConfiguredPlugin(thematicPlugin, loadedPlugins, <LoadingView width={100} height={100} />),
+                toolbar
+            };
+        }
         return {
-            Component: props.activeTab === 'style' && item.plugin && getConfiguredPlugin(item, loadedPlugins, <LoadingView width={100} height={100} />),
-            toolbar: [
-                {
-                    glyph: 'list',
-                    tooltipId: 'toc.thematic.classify',
-                    visible: props.isAdmin && !thematic && props.element.search || false,
-                    onClick: () => onUpdateParams({
-                        thematic: {
-                            unconfigured: true
-                        }
-                    })
-                },
-                {
-                    glyph: 'trash',
-                    tooltipId: 'toc.thematic.remove_thematic',
-                    visible: props.isAdmin && thematic || false,
-                    onClick: () => onUpdateParams({
-                        thematic: null
-                    })
-                }
-            ]
+            toolbar
         };
     }
+
     const item = head(candidatePluginItems);
+    // StyleEditor
     if (item && item.plugin) {
         return {
             onClose: () => onToggleStyleEditor(null, false),
@@ -169,10 +177,11 @@ const getStyleTabPlugin = ({ items, loadedPlugins, onToggleStyleEditor = () => {
                 )
         };
     }
+    // keep default layer selector
     return {};
 };
 
-module.exports = ({ showFeatureInfoTab = true, loadedPlugins, items, onToggleStyleEditor, ...props }) => {
+export default ({ showFeatureInfoTab = true, loadedPlugins, items, onToggleStyleEditor, ...props }) => {
 
     return [
         {

@@ -131,7 +131,6 @@ module.exports = {
         TOCItemsSettings: {
             priority: 1,
             name: 'ThematicLayer',
-            selector: ({ settings }) => settings && settings.options && settings.options.thematic,
             container: "TOCItemSettings",
             target: "style"
         }

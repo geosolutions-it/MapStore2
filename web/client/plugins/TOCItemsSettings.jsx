@@ -87,7 +87,7 @@ const TOCItemsSettingsPlugin = compose(
     }),
     updateSettingsLifecycle,
     defaultProps({
-        getDimension: LayersUtils.getDimension,
+        getDimension: LayersUtils.getDimension
     }),
     getContext({
         loadedPlugins: PropTypes.object
