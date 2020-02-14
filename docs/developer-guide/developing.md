@@ -92,7 +92,8 @@ By default `npm start` runs a dev server connected to the mapstore online demo a
 
 If you want to use your own local test back-end you have to:
 
-* run `mvn jetty:run` - it makes run the mapstore back-end locally (port 8080), ìn memory db - By default 2 users
+* `cd web` directory
+* run `mvn jetty:run-war` - it makes run the mapstore back-end locally (port 8080), ìn memory db - By default 2 users
   * `admin` password `admin`
   * `user` with password `user`
 
