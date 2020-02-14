@@ -1,14 +1,20 @@
 # Connecting Widgets
 ********************
-In the dashboards it is possible to connect the widgets with a **Map** or a **Table**, allowing the user to interact simultaneously with all the connected widgets. 
+In dashboards it is possible to connect the added widgets allowing the user to inspect and interact with more than one of them at the same time.
 
 <img src="../img/connecting-widgets/widgets_interaction.gif" class="ms-docimage" style="max-width:700px;"/>
 
-If the connections button, in the [Sidebar](exploring-dashboards.md#sidebar), is lit, green, <img src="../img/button/connections.jpg" class="ms-docbutton"/> the connections between the widgets are visible on the dashboard and a colored bar appears above them highlighting which widgets are connected to each other. 
+Once at least one connection between widgets is set, it is possible to identify the connected widgets turning the connections button in the dashboard [Sidebar](exploring-dashboards.md#sidebar) green <img src="../img/button/connections.jpg" class="ms-docbutton"/>. This will highlight the connected elements with a colored bar on their upper side.
 
 <img src="../img/connecting-widgets/connections_widgets.gif" class="ms-docimage" style="max-width:700px;"/>
 
-## Connecting Widgets with Map
+In general, you can connect:
+
+* Map widgets with other widgets
+
+* Table widgets with other widgets
+
+## Connecting Map widgets with other widgets
 
 In dashboards it is possible to connect Map widgets with:
 
@@ -56,9 +62,9 @@ Also in this case the connecting procedure is similar to those seen previously, 
 
 <img src="../img/connecting-widgets/legend-map.jpg" class="ms-docimage"/>
 
-## Connecting Widgets with Table
+## Connecting Table widgets with other widgets
 
-With the same procedure used for maps, that seen in the [previous section](connecting-widgets.md#maps-with-other-maps), the user can connect Table widgets with:
+With the same procedure used for maps (see [previous section](connecting-widgets.md#maps-with-other-maps)) the user can connect Table widgets with:
 
 * Map widgets
 
@@ -68,28 +74,14 @@ With the same procedure used for maps, that seen in the [previous section](conne
 
 * Counter widgets, only if it refers to the same layer
 
-When a table is connected with other widgets, a filter appears on the table and its became a **Parent Table**. 
+When a table is connected with other widgets, it became a *Parent Table* and a filter appears on the top.
 
 <img src="../img/connecting-widgets/table_filter.jpg" class="ms-docimage" style="max-width:700px;"/>  
 
-Through the filter it is possible to filter its attributes like the following:
+It is possible to apply a filter in the *Parent Table* simply by writing a text in the input field present at the top of each column:
 
 <img src="../img/connecting-widgets/filter_on_table.gif" class="ms-docimage" style="max-width:700px;"/>
 
-## The interactions
-
-By connecting a *Table*, a *Map* and an other widget together the interaction between them it is possible thanks to the fact that they can be connected with a Map that is connected at the same time with a Parent Table.
-
-This triple connection is always possible by connecting widgets with the same layer and filtering the table. An example can be the following:
+Once a widget is connected to a map that is in turn connected with a *Parent Table*, filtering the *Parent Table* will also filter all the other connected widgets accordingly:
 
 <img src="../img/connecting-widgets/interaction_a.gif" class="ms-docimage" style="max-width:700px;"/> 
-
-The connection with the widgets of different layers can take place only if they are connected to the Map and not to the parent Table. An example can be the following:
-
-<img src="../img/connecting-widgets/interaction_ab.gif" class="ms-docimage" style="max-width:700px;"/> 
-
-!!! note
-    The map, at a different layer, is the only widget that can be connected to the Parent Table
-
-
-    
