@@ -17,7 +17,6 @@ const no90Lat = require('./enhancers/no90Lat');
  This component can render an input field in two different formats: 'decimal' or 'aeronautical'
 */
 class CoordinateEntry extends React.Component {
-
     static propTypes = {
         idx: PropTypes.number,
         value: PropTypes.number,
@@ -28,7 +27,8 @@ class CoordinateEntry extends React.Component {
         onChange: PropTypes.func,
         onKeyDown: PropTypes.func
     };
-    defaultProps = {
+
+    static defaultProps = {
         format: "decimal",
         constraints: {
             decimal: {
@@ -43,6 +43,7 @@ class CoordinateEntry extends React.Component {
             }
         }
     }
+
     render() {
         const {format} = this.props;
         return format === "decimal" || isNil(format) ?

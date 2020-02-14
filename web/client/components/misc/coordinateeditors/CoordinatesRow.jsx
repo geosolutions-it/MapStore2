@@ -37,7 +37,8 @@ class CoordinatesRow extends React.Component {
         formatVisible: PropTypes.bool,
         removeEnabled: PropTypes.bool
     };
-    defaultProps = {
+
+    static defaultProps = {
         showLabels: false,
         formatVisible: false,
         onMouseEnter: () => {},
@@ -69,7 +70,6 @@ class CoordinatesRow extends React.Component {
                     this.props.onMouseLeave();
                 }
             }}>
-
                 <Col xs={1}>
                     {this.props.showDraggable ? this.props.isDraggable ? this.props.connectDragSource(dragButton) : dragButton : null}
                 </Col>
