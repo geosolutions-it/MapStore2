@@ -129,9 +129,11 @@ class StandardApp extends React.Component {
         const {appStore, initialActions, appComponent, mode, ...other} = this.props;
         const App = dragDropContext(html5Backend)(this.props.appComponent);
         return this.state.initialized ?
-            <ErrorBoundary><Provider store={this.store}>
-                <App {...other} plugins={assign(PluginsUtils.getPlugins({...plugins, ...this.state.pluginsRegistry}), { requires })} />
-            </Provider></ErrorBoundary>
+            <ErrorBoundary onError={e => {
+                console.error(e); // eslint-disable-line no-console
+            }}><Provider store={this.store}>
+                    <App {...other} plugins={assign(PluginsUtils.getPlugins({...plugins, ...this.state.pluginsRegistry}), { requires })} />
+                </Provider></ErrorBoundary>
             : (<span><div className="_ms2_init_spinner _ms2_init_center"><div></div></div>
                 <div className="_ms2_init_text _ms2_init_center">Loading MapStore</div></span>);
     }
