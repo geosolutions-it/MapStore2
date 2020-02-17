@@ -507,5 +507,69 @@ describe('TOC Toolbar', () => {
         expect(btn.length).toBe(3);
         expect(btn[0].style.cursor).toBe('default');
     });
+    describe('Widget tool', () => {
+        const WIDGET_TOOL_SELECTOR = 'button .glyphicon-stats';
+        it('enable if activateWidgetTool is true', () => {
+            const actions = {
+                onNewWidget: () => {}
+            };
+            const spyNewWidget = expect.spyOn(actions, 'onNewWidget');
+            const selectedLayers = [{
+                id: 'l001',
+                title: 'layer001',
+                type: 'wms',
+                name: 'layer001name',
+                bbox: {
+                    bounds: {
+                        maxx: 10,
+                        maxy: 9,
+                        minx: -10,
+                        miny: -9
+                    }, crs: 'EPSG:3003'
+                }
+            }];
+            const activateTool = {
+                activateWidgetTool: true,
+                activateToolsContainer: true,
+                activateRemoveLayer: true,
+                activateRemoveGroup: true,
+                activateZoomTool: true,
+                activateQueryTool: true,
+                activateDownloadTool: true,
+                activateSettingsTool: true,
+                activateAddLayer: true,
+                activateAddGroup: true,
+                includeDeleteButtonInSettings: false,
+                activateMetedataTool: true,
+                activateLayerFilterTool: true
+            };
+
+            ReactDOM.render(<Toolbar activateTool={activateTool} selectedLayers={selectedLayers} onToolsActions={actions} />, document.getElementById("container"));
+            const widgetButton = document.querySelector(WIDGET_TOOL_SELECTOR);
+            expect(widgetButton).toExist();
+            widgetButton.click();
+            expect(spyNewWidget).toHaveBeenCalled();
+        });
+        it('deactivate for vector layers', () => {
+            const selectedLayers = [{
+                id: 'l002',
+                title: 'layer002',
+                type: 'vector',
+                name: 'layer001name',
+                bbox: {
+                    bounds: {
+                        maxx: 10,
+                        maxy: 9,
+                        minx: -10,
+                        miny: -9
+                    }, crs: 'EPSG:3003'
+                }
+            }];
+            ReactDOM.render(<Toolbar activateTool={{ activateWidgetTool: true }} selectedLayers={selectedLayers} />, document.getElementById("container"));
+            const widgetButton = document.querySelector(WIDGET_TOOL_SELECTOR);
+            expect(widgetButton).toNotExist();
+
+        });
+    });
 
 });
