@@ -7,10 +7,13 @@
  */
 import React from 'react';
 import endsWith from 'lodash/endsWith';
+import castArray from 'lodash/castArray';
+import flatten from 'lodash/flatten';
 import {Provider} from 'react-redux';
 
 import { createStore, combineReducers, applyMiddleware } from 'redux';
 import { combineEpics, createEpicMiddleware } from 'redux-observable';
+import thunkMiddleware from 'redux-thunk';
 
 import map from '../../reducers/map';
 import maptype from '../../reducers/maptype';
@@ -41,7 +44,8 @@ const createRegisterActionsMiddleware = (actions) => {
  *
  * @param  {object}   pluginDef plugin definition as loaded from require / import
  * @param  {object}   storeState      optional initial state for redux store (overrides default store built using plugin's reducers)
- * @param  {object}   plugins     optional plugins definition list ({MyPlugin: <definition>, ...}), used to filter available containers
+ * @param  {object}   [plugins]     optional plugins definition list ({MyPlugin: <definition>, ...}), used to filter available containers
+ * @params {function|function[]} [testEpics] optional epics to intercept actions for test
  * @returns {object} an object with the following properties:
  *   - Plugin: plugin propertly connected to a mocked store
  *   - store: the mocked store
@@ -52,7 +56,7 @@ const createRegisterActionsMiddleware = (actions) => {
  * import MyPlugin from './MyPlugin';
  * const { Plugin, store, actions, containers } = getPluginForTest(MyPlugin, {}, {ContainerPlugin: {}});
  */
-export const getPluginForTest = (pluginDef, storeState, plugins) => {
+export const getPluginForTest = (pluginDef, storeState, plugins, testEpics = [] ) => {
     const PluginImpl = Object.keys(pluginDef).reduce((previous, key) => {
         if (endsWith(key, 'Plugin')) {
             return pluginDef[key];
@@ -65,11 +69,17 @@ export const getPluginForTest = (pluginDef, storeState, plugins) => {
             return { ...previous, [key]: PluginImpl[key]};
         }, {});
     const reducer = combineReducers({ ...(pluginDef.reducers || {}), ...rootReducers });
+    const pluginEpics = Object.keys(pluginDef.epics || {}).map(key => pluginDef.epics[key]) || [];
 
-    const rootEpic = combineEpics.apply(null, Object.keys(pluginDef.epics || {}).map(key => pluginDef.epics[key]) || []);
+    const pluginsEpics = flatten( // converts array of epics [[epic1, epic2..], [epic3, epic4...], ...] into a flat array [epic1, epic2, epic3, epic4]
+        Object.keys(plugins || {}).map(k => plugins[k]) // transform the map in an array
+            .map(p => Object.keys(p.epics || {}).map(key => p.epics[key]) || []) // get epics as array from each plugin
+    );
+    const rootEpic = combineEpics.apply(null, [...pluginEpics, ...pluginsEpics, ...castArray(testEpics)]);
     const epicMiddleware = createEpicMiddleware(rootEpic);
     const actions = [];
-    const store = applyMiddleware(epicMiddleware, createRegisterActionsMiddleware(actions))(createStore)(reducer, storeState);
+
+    const store = applyMiddleware(thunkMiddleware, epicMiddleware, createRegisterActionsMiddleware(actions))(createStore)(reducer, storeState);
     return {
         Plugin: (props) => <Provider store={store}><PluginImpl {...props} /></Provider>,
         store,
