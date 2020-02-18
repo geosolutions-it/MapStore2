@@ -1627,7 +1627,9 @@
                     "notFound": "Dashboard nicht gefunden",
                     "notAccessible": "Dashboard nicht zugänglich"
                 },
-                "resourceAlreadyExists": "Eine Ressource mit diesem Namen existiert bereits"
+                "resourceAlreadyExists": "Eine Ressource mit diesem Namen existiert bereits",
+                "forbidden": "Ein unerwarteter Fehler ist aufgetreten (403 Verboten). Bitte wenden Sie sich an den Administrator",
+                "forbidden405": "Ein unerwarteter Fehler ist aufgetreten (405 Verboten). Bitte wenden Sie sich an den Administrator"
             },
             "editor": {
                 "save": "Speichern Sie das Dashboard",

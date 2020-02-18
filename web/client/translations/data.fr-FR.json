@@ -1627,7 +1627,9 @@
                     "notFound": "Tableau de bord introuvable",
                     "notAccessible": "Tableau de bord non accessible"
                 },
-                "resourceAlreadyExists": "Une ressource avec ce nom existe déjà"
+                "resourceAlreadyExists": "Une ressource avec ce nom existe déjà",
+                "forbidden": "Une erreur inattendue s'est produite (403 interdit). Veuillez contacter l'administrateur",
+                "forbidden405": "Une erreur inattendue s'est produite (405 interdit). Veuillez contacter l'administrateur"
             },
             "editor": {
                 "save": "Sauvegarder le tableau de bord",
