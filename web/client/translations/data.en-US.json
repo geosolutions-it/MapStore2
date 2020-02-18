@@ -27,6 +27,7 @@
         "showMore": "Show more...",
         "collapse": "Collapse",
         "expand": "Expand",
+        "Forbidden": "Forbidden",
         "version": {
             "label": "Version"
         },

@@ -10,7 +10,9 @@ const React = require('react');
 const DEFAULT_MESSAGES = {
     "FORMAT": "map.errorFormat",
     "SIZE": "map.errorSize",
-    409: "dashboard.errors.resourceAlreadyExists"
+    409: "dashboard.errors.resourceAlreadyExists",
+    403: "dashboard.errors.forbidden",
+    405: "dashboard.errors.forbidden405"
 };
 
 const Message = require('../../../I18N/Message');
