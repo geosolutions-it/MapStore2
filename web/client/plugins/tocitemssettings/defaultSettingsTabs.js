@@ -165,11 +165,12 @@ export const getStyleTabPlugin = ({ settings, items = [], loadedPlugins, onToggl
     }
 
     const item = head(candidatePluginItems);
-    // StyleEditor
+    // StyleEditor case TODO: externalize `onClose` trigger (delegating action dispatch) and components creation to make the two plugins independent
     if (item && item.plugin) {
         return {
+            // This is connected on TOCItemsSettings close, not on StyleEditor unmount
+            // to prevent re-initialization on each tab switch.
             onClose: () => onToggleStyleEditor(null, false),
-            onClick: () => onToggleStyleEditor(null, true),
             Component: getConfiguredPlugin({ ...item, cfg: { ...item.plugin.cfg, active: true } }, loadedPlugins, <LoadingView width={100} height={100} />),
             toolbarComponent: item.ToolbarComponent
                 && (
