@@ -4,7 +4,7 @@ In dashboards it is possible to connect the added widgets allowing the user to i
 
 <img src="../img/connecting-widgets/widgets_interaction.gif" class="ms-docimage" style="max-width:700px;"/>
 
-Once at least one connection between widgets is set, it is possible to identify the connected widgets turning the connections button in the dashboard [Sidebar](exploring-dashboards.md#sidebar) green <img src="../img/button/connections.jpg" class="ms-docbutton"/>. This will highlight the connected elements with a colored bar on their upper side.
+Once at least one connection between widgets is set, it is possible to identify the connected widgets turning on the connections button in the dashboard [Sidebar](exploring-dashboards.md#sidebar) making it green <img src="../img/button/connections.jpg" class="ms-docbutton"/>. This will highlight the connected elements with a colored bar on their upper side.
 
 <img src="../img/connecting-widgets/connections_widgets.gif" class="ms-docimage" style="max-width:700px;"/>
 
@@ -30,7 +30,7 @@ In dashboards it is possible to connect Map widgets with:
 
 ### Maps with other Maps
 
-As soon as more than one Map widget is added to the dashboard, in the *Configure map options* panel (accessible adding a new Map widget or editing an existing one) the connect/disconnect button appears:
+As soon as more than one Map widget is added to the dashboard, the connect/disconnect button appears inside the *Configure map options* panel (accessible by adding a new Map widget or editing an existing one).
 
 <img src="../img/connecting-widgets/connection-options.jpg" class="ms-docimage" style="max-width:400px;"/>
 
@@ -78,10 +78,13 @@ When a table is connected with other widgets, it became a *Parent Table* and a f
 
 <img src="../img/connecting-widgets/table_filter.jpg" class="ms-docimage" style="max-width:700px;"/>  
 
-It is possible to apply a filter in the *Parent Table* simply by writing a text in the input field present at the top of each column:
+It is possible to apply a filter in the *Parent Table* simply by typing a text in the input field present at the top of each column:
 
 <img src="../img/connecting-widgets/filter_on_table.gif" class="ms-docimage" style="max-width:700px;"/>
 
-Once a widget is connected to a map that is in turn connected with a *Parent Table*, filtering the *Parent Table* will also filter all the other connected widgets accordingly:
+Once a widget is connected to a map widget that is connected with a Parent Table at the same time, the filter applied in the Parent Table will also filter all the other connected widgets accordingly:
 
 <img src="../img/connecting-widgets/interaction_a.gif" class="ms-docimage" style="max-width:700px;"/> 
+
+!!! note
+    This type of interaction works even if the widget, connected to the map, does not have the same layer as the map or table
