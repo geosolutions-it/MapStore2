@@ -68,7 +68,7 @@ With the same procedure used for maps (see [previous section](connecting-widgets
 
 * Map widgets
 
-* Other tables widget, only if it refers to the same layer
+* Other table widgets, only if it refers to the same layer
 
 * Chart widgets, only if it refers to the same layer
 
@@ -82,9 +82,10 @@ It is possible to apply a filter in the *Parent Table* simply by typing a text i
 
 <img src="../img/connecting-widgets/filter_on_table.gif" class="ms-docimage" style="max-width:700px;"/>
 
-Once a widget is connected to a map widget that is connected with a Parent Table at the same time, the filter applied in the Parent Table will also filter all the other connected widgets accordingly:
+Once a widget is connected to a map widget that is connected with a Parent Table at the same time, the filter applied in the Parent Table will also filter all the other connected widgets accordingly. This is possible thanks to the spatial filter applied between the map and the widget. 
 
 <img src="../img/connecting-widgets/interaction_a.gif" class="ms-docimage" style="max-width:700px;"/> 
 
-!!! note
-    This type of interaction works even if the widget, connected to the map, does not have the same layer as the map or table
+This type of interaction works even if the widget, connected to the map, does not have the same layer as the map or table. An example, with a connection between a *Map Widget*, a *Table widget* Layer A and a *Counter widget* layer B can be the following:
+
+<img src="../img/connecting-widgets/interaction_ab.gif" class="ms-docimage" style="max-width:700px;"/> 
