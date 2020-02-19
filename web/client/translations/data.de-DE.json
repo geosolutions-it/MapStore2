@@ -1125,7 +1125,19 @@
                 }
             },
         "mapExport": {
-            "title": "Exportieren Sie die Karte"
+            "title": "Exportieren Sie die Karte",
+            "formats": {
+                "mapstore2": {
+                    "label": "JSON",
+                    "tooltip": "Exportieren Sie die Karte in das Format MapStore2 JSON"
+                },
+                "wmc": {
+                    "label": "WMC",
+                    "tooltip": "Exportieren Sie die Karte in das Format OGC Web Map Context"
+                }
+            },
+            "errorTitle": "Kartenexport fehlgeschlagen",
+            "wmcNoLayersError": "Mindestens eine WMS-Schicht, die für den Export nach WMC benötigt wird, hat Null gefunden"
         },
         "catalog": {
             "start": "Startdatum ",

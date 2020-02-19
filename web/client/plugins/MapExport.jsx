@@ -37,8 +37,8 @@ const enhanceExport = compose(
     ),
     defaultProps({
         formatOptions: [
-            { value: 'mapstore2', label: <Message msgId="mapExport.formats.legacyMapStore2" /> },
-            { value: 'OWSContext', label: <Message msgId="mapExport.formats.OWSContext" /> }
+            { value: 'mapstore2', label: <Message msgId="mapExport.formats.mapstore2" /> },
+            { value: 'wmc', label: <Message msgId="mapExport.formats.wmc" /> }
         ]
     }),
     withState('format', 'setFormat', 'mapstore2'),
@@ -77,8 +77,19 @@ const MapExportPlugin = {
             position: 4,
             text: <Message msgId="mapExport.title" />,
             icon: <Glyphicon glyph="download" />,
-            // action: toggleControl.bind(null, 'export', null),
-            action: () => exportMap(),
+            children: [{
+                name: 'export-mapstore2',
+                text: <Message msgId="mapExport.formats.mapstore2.label"/>,
+                tooltip: 'mapExport.formats.mapstore2.tooltip',
+                icon: <Glyphicon glyph="download"/>,
+                action: () => exportMap('mapstore2')
+            }, {
+                name: 'export-wmc',
+                text: <Message msgId="mapExport.formats.wmc.label"/>,
+                tooltip: 'mapExport.formats.wmc.tooltip',
+                icon: <Glyphicon glyph="download"/>,
+                action: () => exportMap('wmc')
+            }],
             priority: 2,
             doNotHide: true
         }
