@@ -51,6 +51,7 @@ class ToolsContainer extends React.Component {
     static propTypes = {
         id: PropTypes.string.isRequired,
         container: PropTypes.func,
+        containerWrapperStyle: PropTypes.object,
         tool: PropTypes.func,
         className: PropTypes.string,
         style: PropTypes.object,
