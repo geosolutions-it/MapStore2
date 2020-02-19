@@ -81,13 +81,13 @@ const MapExportPlugin = {
                 name: 'export-mapstore2',
                 text: <Message msgId="mapExport.formats.mapstore2.label"/>,
                 tooltip: 'mapExport.formats.mapstore2.tooltip',
-                icon: <Glyphicon glyph="download"/>,
+                icon: <Glyphicon glyph="ext-json"/>,
                 action: () => exportMap('mapstore2')
             }, {
                 name: 'export-wmc',
                 text: <Message msgId="mapExport.formats.wmc.label"/>,
                 tooltip: 'mapExport.formats.wmc.tooltip',
-                icon: <Glyphicon glyph="download"/>,
+                icon: <Glyphicon glyph="ext-wmc"/>,
                 action: () => exportMap('wmc')
             }],
             priority: 2,
