@@ -10,10 +10,15 @@ import FlexibleLayoutPlugin from '../../plugins/FlexibleLayout';
 import MapPlugin from '../../plugins/Map';
 import TOCPlugin from '../../plugins/TOC';
 
+import InfoPanelPlugin from './plugins/InfoPanel';
+
 export const plugins = {
     FlexibleLayoutPlugin,
     MapPlugin,
-    TOCPlugin
+    TOCPlugin,
+
+    // plugin to test layout functionality
+    InfoPanelPlugin
 };
 
 export const requires = {};

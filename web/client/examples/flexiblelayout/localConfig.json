@@ -83,7 +83,9 @@
             "container": "background"
           }
         }
-      }
+      },
+
+      "InfoPanel"
     ]
   }
 }
