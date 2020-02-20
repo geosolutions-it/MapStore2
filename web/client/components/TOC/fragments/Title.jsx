@@ -46,23 +46,22 @@ class Title extends React.Component {
             }
             return [...a, b, <strong key={idx}>{this.props.filterText.toLowerCase()}</strong>];
         }, []) : title;
-    }
+    };
+
+    renderTitle = () => {
+        const {title} = getTitleAndTooltip(this.props);
+        return <div className="toc-title" onClick={this.props.onClick ? (e) => this.props.onClick(this.props.node.id, 'layer', e.ctrlKey) : () => {}} onContextMenu={(e) => {e.preventDefault(); this.props.onContextMenu(this.props.node); }}>
+            {this.getFilteredTitle(title)}
+        </div>;
+    };
 
     render() {
-        const {title, tooltipText} = getTitleAndTooltip(this.props);
+        const {tooltipText} = getTitleAndTooltip(this.props);
         return this.props.tooltip && tooltipText ? (
             <OverlayTrigger placement={this.props.node.tooltipPlacement || "top"} overlay={(<Tooltip id={"tooltip-layer-title"}>{tooltipText}</Tooltip>)}>
-                <div className="toc-title" onClick={this.props.onClick ? (e) => this.props.onClick(this.props.node.id, 'layer', e.ctrlKey) : () => {}} onContextMenu={(e) => {e.preventDefault(); this.props.onContextMenu(this.props.node); }}>
-                    {this.getFilteredTitle(title)}
-                </div>
+                {this.renderTitle()}
             </OverlayTrigger>
-
-        ) :
-            (
-                <div className="toc-title" onClick={this.props.onClick ? (e) => this.props.onClick(this.props.node.id, 'layer', e.ctrlKey) : () => {}} onContextMenu={(e) => {e.preventDefault(); this.props.onContextMenu(this.props.node); }}>
-                    {this.getFilteredTitle(title)}
-                </div>
-            );
+        ) : this.renderTitle();
     }
 }
 
