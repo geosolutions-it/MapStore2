@@ -1120,7 +1120,8 @@
             },
             "errors": {
                 "fileNotSupported": "File non supportato",
-                "unknownError": "si è verificato un errore sconosciuto durante l'importazione"
+                "unknownError": "si è verificato un errore sconosciuto durante l'importazione",
+                "projectionNotSupported": "La proiezione del file che stai tentando di importare non è supportata"
             }
         },
         "mapExport": {
@@ -1472,9 +1473,9 @@
                     "preview": "Anteprima",
                     "addLayer": "Aggiungi un livello alla mappa",
                     "useTheSelectedLayer": "Usa il livello selezionato",
-                    "connectToAMap": "Connetti a una mappa",
-                    "connectToTheMap": "Connetti alla mappa",
-                    "selectMapToConnect": "Seleziona la mappa da connettere",
+                    "connectToAMap": "Connetti ad un altro widget",
+                    "connectToTheMap": "Connetti all'altro widget",
+                    "selectMapToConnect": "Seleziona il widget da connettere",
                     "clearConnection": "Disconnetti"
                 },
                 "errors": {
@@ -1651,6 +1652,13 @@
                     "pleaseLogin": "Questo contesto non è pubblico. Si prega di provare ad effettuare il login",
                     "unknownError": "Si è verificato un errore durante il caricamento del contesto. Si prega di contattare l'amministratore",
                     "notFound": "Il contesto che si sta tentando di accedere non esiste"
+                },
+                "template": {
+                    "title": "Errore durante il caricamento del modello",
+                    "notAccessible": "Non sei autorizzato ad accedere a questo modello. Si prega di contattare il proprietario della risorsa",
+                    "pleaseLogin": "Questo modello non è pubblico. Prova ad accedere",
+                    "unknownError": "Si è verificato un errore durante il caricamento del modello. Si prega di contattare l'amministratore",
+                    "notFound": "Il modello a cui stai tentando di accedere non esiste"
                 },
                 "map": {
                     "notAccessible": "Non si hanno i permessi di accesso a questa mappa. Si prega di contattare l'amministratore per ottenere l'accesso",
@@ -2079,14 +2087,25 @@
                 "mapFilter": "Filtra mappe",
                 "videoFilter": "Filtra video",
                 "imageFilter": "Filtra immagini",
-                "import": "Importa la risorsa localmente"
+                "import": "Importa la risorsa localmente",
+                "trash": "Elimina la risorsa"
             },
             "mediaform": {
                 "confirmExitTitle": "Chiudi Media From",
                 "confirmExitContent": "Annuallare le modifiche ed uscire?"
             },
             "mapForm": {
-                "thumbnailMessage": "Le dimensioni delle immagini devono essere di un quadrato di 98 px x 98 px, max 100 KB"
+                "thumbnailMessage": "Le dimensioni delle immagini devono essere di un quadrato di 98 px x 98 px, max 100 KB",
+                "confirmMapSaveTitle": "Aggiornare la mappa",
+                "confirmMapSaveContent": "L'aggiornamento di questa mappa ripristinerà tutte le mappe dipendenti nella storia precedentemente personalizzate tramite l'editor in linea, conferma?"
+            },
+            "mediaList" : {
+                "removeResourceTitle": "Sei sicuro?",
+                "confirmRemoveResource": "Vuoi rimuovere questa risorsa multimediale dalla storia?",
+                "confirmRemoveUsedResource": "Questa risorsa sarà rimossa anche da tutte le sezioni/contenuti che rimarrano vuoti. La vuoi rimuovere dalla storia?"
+            },
+            "mapList": {
+                "emptyList": "Premere il pulsante più per creare una mappa o selezionare un altro servizio di mappe."
             }
         },
         "backgroundDialog": {
@@ -2257,6 +2276,7 @@
           },
           "Version": {
             "description": "Mostra la versione di MapStore nellla finestra di settings",
+            "descriptionGeorchestra": "Mostra la versione di GeOrchestra nellla finestra di settings",
             "title": "Versione"
           },
           "WFSDownload": {
@@ -2305,6 +2325,10 @@
                     "title": "Errore di configurazione",
                     "body": "Analisi JSON di configurazione non riuscita.\nSi è verificato il seguente errore:\n\"{error}\""
                 },
+                "uploadLabel": "Trascina qui un pacchetto di estensione o clicca per selezionarne uno",
+                "uploadTitle": "Installa un plugin di MapStore",
+                "uploadParseError": "File index.json con formato errato",
+                "uploadMissingFileError": "File index.json mancante nel file",
                 "tooltips": {
                     "enableUserPlugin": "Abilita la selezione del plug-in corrente per l'utente",
                     "disableUserPlugin": "Disabilita la selezione del plug-in corrente per l'utente",
@@ -2312,6 +2336,7 @@
                     "deactivatePlugin": "Disabilita il caricamento di questo plugin all'avvio",
                     "editConfiguration": "Modifica la configurazione del plugin",
                     "pluginDocumentation": "Apri la documentazione di configurazione del plugin",
+                    "uploadPlugin": "Aggiungi una estensione a MapStore",
                     "mapTemplatesConfig": "Configura modelli"
                 },
                 "saveCfgErrorNotification":  {
@@ -2339,8 +2364,11 @@
                 },
                 "tooltips": {
                     "uploadTool": "Carica un nuovo modello",
-                    "editTemplate": "Modifica le proprietà del modello"
-                }
+                    "editTemplate": "Modifica le proprietà del modello",
+                    "deleteTemplate": "Elimina modello"
+                },
+                "deleteError": "Impossibile eliminare il modello, si è verificato un errore",
+                "deleteConfirm": "Sei sicuro di voler eliminare il modello \"{templateName}\"?"
             },
             "configureMap": {
                 "label": "Configura mappa",
@@ -2351,7 +2379,8 @@
                 "titleContext": "Salvataggio del contesto non riuscito",
                 "titleTemplate": "Salvataggio del modello non riuscito",
                 "conflict": "Una risorsa con questo nome esiste già",
-                "defaultMessage": "Errore sconosciuto"
+                "defaultMessage": "Errore sconosciuto",
+                "categoryError": "Creazione della categoria mancante \"{categoryName}\" non riuscita"
             },
             "contextNameErrorNotification": {
                 "title": "Nome di contesto errato",
@@ -2373,6 +2402,23 @@
           "filterPlaceholder": "filtro...",
           "addExtension": "Aggiungi estensione",
           "removeExtension": "Rimuovi Estensione"
+        },
+        "mapTemplates": {
+            "title": "Modelli di mappe",
+            "favouritesTitle": "Preferiti",
+            "allTitle": "Tutti",
+            "filterPlaceholder": "Filtra i modelli di mappe...",
+            "transfer": "Sostituisci mappa con questo modello",
+            "merge": "Aggiungi questo modello alla mappa",
+            "favouriteAdd": "Aggiungi ai preferiti",
+            "favouriteRemove": "Rimuovi dai preferiti",
+            "emptyTitle": "Nessun risultato",
+            "emptyDescription": "Il filtro inserito non corrisponde al nome o alla descrizione di nessuno dei modelli",
+            "noTemplatesTitle": "Nessun modello trovato",
+            "noTemplatesDescription": "Il contesto corrente non contiene modelli",
+            "confirmReplaceTitle": "Sostituisci il contenuto della mappa",
+            "confirmReplaceMessage": "Sostituirai tutti i livelli e la configurazione della mappa con il modello selezionato facendo clic sul pulsante Sostituisci",
+            "confirmReplaceConfirmButton": "Sostituire"
         },
         "tutorial": {
             "title": "Tutorial",

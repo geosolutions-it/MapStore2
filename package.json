@@ -73,11 +73,10 @@
     "style-loader": "0.12.4",
     "url-loader": "0.5.7",
     "vusion-webfonts-generator": "0.4.1",
-    "webpack": "4.36.0",
+    "webpack": "4.41.5",
     "webpack-bundle-size-analyzer": "2.0.2",
     "webpack-cli": "3.3.6",
-    "webpack-dev-server": "3.7.2",
-    "webpack-parallel-uglify-plugin": "1.1.2"
+    "webpack-dev-server": "3.7.2"
   },
   "//": "replace react-sortable-items with official on npm when it will support React 15",
   "dependencies": {
@@ -246,7 +245,7 @@
     "i18n": "node  utility/translations/findMissingTranslations.js",
     "postinstall": "node utility/build/checkCesium.js && rimraf node_modules/leaflet-simple-graticule/node_modules && rimraf node_modules/react-sortable-items/node_modules/react-dom && rimraf node_modules/mocha && ncp node_modules/@geosolutions/mocha node_modules/mocha",
     "clean": "rimraf ./web/client/dist",
-    "compile": "npm run clean && mkdirp ./web/client/dist && node --max_old_space_size=2048 ./node_modules/webpack/bin/webpack.js --progress  --colors --config build/prod-webpack.config.js",
+    "compile": "npm run clean && mkdirp ./web/client/dist && node --max_old_space_size=2048 ./node_modules/webpack/bin/webpack.js --progress --colors --config build/prod-webpack.config.js",
     "analyze": "npm run clean && mkdirp ./web/client/dist && webpack --json --config build/prod-webpack.config.js | webpack-bundle-size-analyzer",
     "start": "webpack-dev-server --progress --colors --port 8081 --hot --inline --config build/webpack.config.js --content-base web/client",
     "startprod": "webpack-dev-server --progress --colors --port 8081 --hot --inline --content-base web/client  --config build/prod-webpack.config.js",
@@ -257,7 +256,9 @@
     "mvntest": "karma start ./build/karma.conf.single-run.js --reporters junit,dots,coverage",
     "lint": "eslint web/client --ext .jsx,.js",
     "travis": "eslint web/client --ext .jsx,.js && npm run i18n && karma start ./build/karma.conf.single-run.js --browsers FirefoxHeadless --reporters dots,junit,coverage,coveralls && docma -c build/docma-config.json --dest web/docs",
-    "generate-icons": "node ./build/generateIcons.js"
+    "generate-icons": "node ./build/generateIcons.js",
+    "build-extension": "rimraf ./build/extensions/dist && mkdirp ./build/extensions/dist && webpack --progress  --colors --config build/extensions/prod-webpack.config.js",
+    "run-extension": "webpack-dev-server --progress --colors --port 8081 --hot --inline --config build/extensions/webpack.config.js --content-base build/extensions"
   },
   "author": "GeoSolutions",
   "license": "BSD-2-Clause"

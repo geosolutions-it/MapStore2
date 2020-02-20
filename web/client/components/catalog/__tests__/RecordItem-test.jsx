@@ -29,6 +29,7 @@ const sampleRecord = {
         crs: "EPSG:4326"
 
     },
+    formats: ["image/png", "image/jpeg", "text/html"],
     references: [{
         type: "OGC:WMS",
         url: "http://wms.sample.service:80/geoserver/wms?SERVICE=WMS&",
@@ -73,6 +74,7 @@ const sampleRecord3 = {
         crs: "EPSG:4326"
 
     },
+    format: "image/png",
     references: [{
         type: "OGC:WMTS",
         url: "http://wms.sample.service:80/geoserver/gwc/service/wmts",
@@ -183,6 +185,36 @@ describe('This test for RecordItem', () => {
         button.click();
         expect(actionsSpy.calls.length).toBe(1);
         expect(actionsSpy2.calls.length).toBe(1);
+        expect(actionsSpy.calls[0].arguments[0].format).toBe("image/png");
+    });
+    it('check WMTS resource format', () => {
+        let actions = {
+            onLayerAdd: () => {
+
+            },
+            onZoomToExtent: () => {
+
+            }
+        };
+        let actionsSpy = expect.spyOn(actions, "onLayerAdd");
+        let actionsSpy2 = expect.spyOn(actions, "onZoomToExtent");
+        const item = ReactDOM.render(<RecordItem
+            record={{...sampleRecord3, format: "image/jpeg"}}
+            onLayerAdd={actions.onLayerAdd}
+            onZoomToExtent={actions.onZoomToExtent} />, document.getElementById("container"));
+        expect(item).toExist();
+
+        const itemDom = ReactDOM.findDOMNode(item);
+        expect(itemDom).toExist();
+        let button = TestUtils.findRenderedDOMComponentWithTag(
+            item, 'button'
+        );
+        expect(button).toExist();
+        button.click();
+        expect(actionsSpy.calls.length).toBe(1);
+        expect(actionsSpy2.calls.length).toBe(1);
+        expect(actionsSpy.calls[0].arguments.length).toBe(1);
+        expect(actionsSpy.calls[0].arguments[0].format).toBe("image/jpeg");
     });
     it('check esri resource', () => {
         let actions = {
@@ -289,6 +321,60 @@ describe('This test for RecordItem', () => {
         expect(actionsSpy.calls.length).toBe(1);
         expect(actionsSpy.calls[0].arguments.length).toBe(1);
         expect(actionsSpy.calls[0].arguments[0].catalogURL).toNotExist();
+    });
+    it('check wms default format', () => {
+        let actions = {
+            onLayerAdd: () => {
+
+            }
+        };
+        let actionsSpy = expect.spyOn(actions, "onLayerAdd");
+        const item = ReactDOM.render(<RecordItem
+            record={sampleRecord}
+            onLayerAdd={actions.onLayerAdd}
+            catalogURL="fakeURL"
+            catalogType="wms"
+        />, document.getElementById("container"));
+        expect(item).toExist();
+
+        const itemDom = ReactDOM.findDOMNode(item);
+        expect(itemDom).toExist();
+        let button = TestUtils.findRenderedDOMComponentWithTag(
+            item, 'button'
+        );
+        expect(button).toExist();
+        button.click();
+        expect(actionsSpy.calls.length).toBe(1);
+        expect(actionsSpy.calls[0].arguments.length).toBe(1);
+        expect(actionsSpy.calls[0].arguments[0].catalogURL).toNotExist();
+        expect(actionsSpy.calls[0].arguments[0].format).toBe('image/png');
+    });
+    it('check wms NOT default format', () => {
+        let actions = {
+            onLayerAdd: () => {
+
+            }
+        };
+        let actionsSpy = expect.spyOn(actions, "onLayerAdd");
+        const item = ReactDOM.render(<RecordItem
+            record={{...sampleRecord, formats: ["image/jpeg"]}}
+            onLayerAdd={actions.onLayerAdd}
+            catalogURL="fakeURL"
+            catalogType="wms"
+        />, document.getElementById("container"));
+        expect(item).toExist();
+
+        const itemDom = ReactDOM.findDOMNode(item);
+        expect(itemDom).toExist();
+        let button = TestUtils.findRenderedDOMComponentWithTag(
+            item, 'button'
+        );
+        expect(button).toExist();
+        button.click();
+        expect(actionsSpy.calls.length).toBe(1);
+        expect(actionsSpy.calls[0].arguments.length).toBe(1);
+        expect(actionsSpy.calls[0].arguments[0].catalogURL).toNotExist();
+        expect(actionsSpy.calls[0].arguments[0].format).toBe('image/jpeg');
     });
     it('check auth params to be removed (WMS)', () => {
         const recordToClean = {

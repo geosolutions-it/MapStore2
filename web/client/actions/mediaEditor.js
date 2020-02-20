@@ -21,6 +21,7 @@ export const SELECT_ITEM = "MEDIA_EDITOR:SELECT_ITEM";
 export const SHOW = "MEDIA_EDITOR:SHOW";
 export const UPDATE_ITEM = "MEDIA_EDITOR:UPDATE_ITEM";
 export const IMPORT_IN_LOCAL = "MEDIA_EDITOR:IMPORT_IN_LOCAL";
+export const REMOVE_MEDIA = "MEDIA_EDITOR:REMOVE_MEDIA";
 
 import {SourceTypes} from '../utils/MediaEditorUtils';
 // RESOURCE FORMAT :
@@ -84,7 +85,7 @@ export const selectItem = (id) => ({ type: SELECT_ITEM, id});
  * update item in media editor list
  * @param {object} param.item
  */
-export const updateItem = (item) => ({ type: UPDATE_ITEM, item});
+export const updateItem = (item, mode = 'merge') => ({ type: UPDATE_ITEM, item, mode});
 /**
  * adding media
  * @param {boolean} adding
@@ -125,8 +126,7 @@ export const editMedia = ({path, owner = "geostory"}) => ({
 
 /**
  * @prop {object} options
- * @prop {object} options.resource the resource to be imported
- * @prop {string} options.sourceType the source type used too select local source
+ * @prop {object} options.type the mediaType
  * @prop {string} options.owner of the media editor
  */
 export const importInLocal = ({resource, sourceType = SourceTypes.GEOSTORY, owner = "geostory"}) => ({
@@ -135,3 +135,5 @@ export const importInLocal = ({resource, sourceType = SourceTypes.GEOSTORY, owne
     sourceType,
     owner
 });
+
+export const removeMedia = (mediaType, owner = "geostory") => ({type: REMOVE_MEDIA, mediaType, owner});

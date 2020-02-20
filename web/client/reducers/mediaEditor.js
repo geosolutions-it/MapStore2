@@ -11,7 +11,6 @@ import { MediaTypes } from '../utils/GeoStoryUtils';
 import { SourceTypes } from '../utils/MediaEditorUtils';
 import {
     ADDING_MEDIA,
-    CHOOSE_MEDIA,
     EDITING_MEDIA,
     HIDE,
     LOAD_MEDIA_SUCCESS,
@@ -21,7 +20,8 @@ import {
     SET_MEDIA_TYPE,
     SHOW
 } from '../actions/mediaEditor';
-import { compose, set } from '../utils/ImmutableUtils';
+import {LOCATION_CHANGE} from 'connected-react-router';
+import { compose, set, unset} from '../utils/ImmutableUtils';
 import {
     sourceIdSelector,
     currentMediaTypeSelector,
@@ -84,14 +84,14 @@ export default (state = DEFAULT_STATE, action) => {
     // hide resets the media editor as well as selected
     // resets all media editor settings
     case HIDE:
-    case CHOOSE_MEDIA:
         return compose(
             set('open', false),
             set('owner', undefined),
             set('saveState.addingMedia', false),
             set('saveState.editing', false),
-            set('settings', state.stashedSettings || state.settings), // restore defaults, TODO SOURCE ID IS NOT RESTORED
-            set('stashedSettings', undefined)
+            set('settings', state.stashedSettings || DEFAULT_STATE.settings), // restore defaults, TODO SOURCE ID IS NOT RESTORED
+            set('stashedSettings', undefined),
+            unset('selected')
         )(state);
     // set adding media state (to toggle add/select in media selectors)
     case LOAD_MEDIA_SUCCESS: {
@@ -99,13 +99,13 @@ export default (state = DEFAULT_STATE, action) => {
         return set(`data["${mediaType}"]["${sourceId}"]`, { params, resultData }, state);
     }
     case UPDATE_ITEM: {
-        const {item} = action;
+        const {item, mode} = action;
         const sourceId = sourceIdSelector({mediaEditor: state});
         const mediaType = currentMediaTypeSelector({mediaEditor: state});
         const resources = resultDataSelector({mediaEditor: state}).resources;
         const indexItem = findIndex(resources, {id: item.id});
         const resource = find(resources, {id: item.id});
-        const newResource = merge({}, merge({}, resource), merge({}, item));
+        const newResource = mode === "merge" ? merge({}, merge({}, resource), merge({}, item)) : item;
         return set(`data["${mediaType}"]["${sourceId}"].resultData.resources[${indexItem}]`, newResource, state);
     }
     case SELECT_ITEM: {
@@ -129,6 +129,8 @@ export default (state = DEFAULT_STATE, action) => {
             // set('settings', action.settings || state.settings), // TODO: allow fine customization
             // set('stashedSettings', state.settings) // This should allow to use default config or customize for a different usage
         )(state);
+    case LOCATION_CHANGE:
+        return DEFAULT_STATE;
     default:
         return state;
     }

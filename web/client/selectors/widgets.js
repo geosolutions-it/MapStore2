@@ -6,9 +6,10 @@
  * LICENSE file in the root directory of this source tree.
 */
 
-const { find, get, castArray} = require('lodash');
+const { find, get, castArray, isArray } = require('lodash');
 const {mapSelector} = require('./map');
 const {getSelectedLayer} = require('./layers');
+const {pathnameSelector} = require('./router');
 const {DEFAULT_TARGET, DEPENDENCY_SELECTOR_KEY, WIDGETS_REGEX} = require('../actions/widgets');
 const { getWidgetsGroups, getWidgetDependency} = require('../utils/WidgetsUtils');
 
@@ -51,16 +52,55 @@ const getCollapsedIds = createSelector(
     (collapsed = {}) => Object.keys(collapsed)
 );
 const getMapWidgets = state => (getFloatingWidgets(state) || []).filter(({ widgetType } = {}) => widgetType === "map");
+const getTableWidgets = state => (getFloatingWidgets(state) || []).filter(({ widgetType } = {}) => widgetType === "table");
 
 /**
  * Find in the state the available dependencies to connect
+ *
+ * Note: table widgets are excluded from selection when viewer is present,
+ * because there were conflict between map and other widgets
+ * (the map were containing other widgets) .
  */
 const availableDependenciesSelector = createSelector(
     getMapWidgets,
+    getTableWidgets,
     mapSelector,
-    (ws = [], map = []) => ({
-        availableDependencies: ws.map(({id}) => `widgets[${id}].map`).concat(castArray(map).map(() => "map"))
+    pathnameSelector,
+    (ws = [], tableWidgets = [], map = [], pathname) => ({
+        availableDependencies:
+            ws
+                .map(({id}) => `widgets[${id}].map`)
+                .concat(castArray(map).map(() => "map"))
+                .concat(castArray(tableWidgets).filter(() => pathname.indexOf("viewer") === -1).map(({id}) => `widgets[${id}]`))
     })
+);
+/**
+ * this selector adds some more filtering on tables when a widget is in edit mode
+ * and the table widgets does not share the same dataset (layername)
+ */
+const availableDependenciesForEditingWidgetSelector = createSelector(
+    getMapWidgets,
+    getTableWidgets,
+    mapSelector,
+    pathnameSelector,
+    getEditingWidget,
+    (ws = [], tableWidgets = [], map = {}, pathname, editingWidget) => {
+        const editingLayer = editingWidget && editingWidget.widgetType !== "map" ? editingWidget && editingWidget.layer || {} : editingWidget && editingWidget.map && editingWidget.map.layers || [];
+        return {
+            availableDependencies:
+                ws
+                    .map(({id}) => `widgets[${id}].map`)
+                    .concat(castArray(map).map(() => map ? "map" : null))
+                    .filter(w => w)
+                    .concat(
+                        castArray(tableWidgets)
+                            .filter(() => pathname.indexOf("viewer") === -1)
+                            .filter((w) => isArray(editingLayer) || editingLayer.name === w.layer.name)
+                            .filter((w) => editingWidget && editingWidget.id !== w.id)
+                            .map(({id}) => `widgets[${id}]`)
+                    )
+        };
+    }
 );
 /**
  * returns if the dependency selector state
@@ -104,6 +144,7 @@ module.exports = {
     getMapWidgets,
     getWidgetAttributeFilter,
     availableDependenciesSelector,
+    availableDependenciesForEditingWidgetSelector,
     dashBoardDependenciesSelector: () => ({}), // TODO dashboard dependencies
     /**
      * transforms dependencies in the form `{ k1: "path1", k1, "path2" }` into

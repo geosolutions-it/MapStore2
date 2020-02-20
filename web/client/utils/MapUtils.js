@@ -6,7 +6,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const {isString, trim, isNumber, pick, isEqual} = require('lodash');
+const {isString, trim, isNumber, pick, get, find, mapKeys, mapValues, keys, uniq, uniqWith, isEqual} = require('lodash');
+const uuidv1 = require('uuid/v1');
 
 
 const DEFAULT_SCREEN_DPI = 96;
@@ -371,6 +372,116 @@ function saveMapConfiguration(currentMap, currentLayers, currentGroups, currentB
     };
 }
 
+const generateNewUUIDs = (mapConfig = {}) => {
+    const newMapConfig = cloneDeep(mapConfig);
+
+    const oldIdToNew = {
+        ...get(mapConfig, 'map.layers', []).reduce((result, layer) => ({
+            ...result,
+            [layer.id]: layer.id === 'annotations' ? layer.id : uuidv1()
+        }), {}),
+        ...get(mapConfig, 'widgetsConfig.widgets', []).reduce((result, widget) => ({...result, [widget.id]: uuidv1()}), {})
+    };
+
+    return set('map.backgrounds', get(mapConfig, 'map.backgrounds', []).map(background => ({...background, id: oldIdToNew[background.id]})),
+        set('widgetsConfig', {
+            collapsed: mapValues(mapKeys(get(mapConfig, 'widgetsConfig.collapsed', {}), (value, key) => oldIdToNew[key]), (value) =>
+                ({...value, layouts: mapValues(value.layouts, (layout) => ({...layout, i: oldIdToNew[layout.i]}))})),
+            layouts: mapValues(get(mapConfig, 'widgetsConfig.layouts', {}), (value) =>
+                value.map(layout => ({...layout, i: oldIdToNew[layout.i]}))),
+            widgets: get(mapConfig, 'widgetsConfig.widgets', [])
+                .map(widget => ({
+                    ...widget,
+                    id: oldIdToNew[widget.id],
+                    layer: ({...get(widget, 'layer', {}), id: oldIdToNew[get(widget, 'layer.id')]})
+                }))
+        },
+        set('map.layers', get(mapConfig, 'map.layers', [])
+            .map(layer => ({...layer, id: oldIdToNew[layer.id]})), newMapConfig)));
+};
+
+const mergeMapConfigs = (cfg1 = {}, cfg2 = {}) => {
+    // removes empty props from layer as it can cause bugs
+    const fixLayers = (layers = []) => layers.map(layer => pick(layer, keys(layer).filter(key => layer[key] !== undefined)));
+
+    const cfg2Fixed = generateNewUUIDs(cfg2);
+
+    const backgrounds = [...get(cfg1, 'map.backgrounds', []), ...get(cfg2Fixed, 'map.backgrounds', [])];
+
+    const layers1 = fixLayers(get(cfg1, 'map.layers', []));
+    const layers2 = fixLayers(get(cfg2Fixed, 'map.layers', []));
+
+    const annotationsLayer1 = find(layers1, layer => layer.id === 'annotations');
+    const annotationsLayer2 = find(layers2, layer => layer.id === 'annotations');
+    const ordinaryLayers = [
+        ...layers1.filter(layer => layer.group && layer.group !== 'Default'),
+        ...layers2.filter(layer => layer.group && layer.group !== 'Default')
+    ];
+    const defaultLayers = [
+        ...layers1
+            .filter(layer => (layer.group === undefined || layer.group === 'Default') && layer.id !== 'annotations'),
+        ...layers2
+            .filter(layer => (layer.group === undefined || layer.group === 'Default') && layer.id !== 'annotations')
+    ];
+    const layers = [
+        ...ordinaryLayers,
+        ...defaultLayers,
+        ...(annotationsLayer1 || annotationsLayer2 ? [{
+            ...(annotationsLayer1 || {}),
+            ...(annotationsLayer2 || {}),
+            features: [
+                ...get(annotationsLayer1, 'features', []), ...get(annotationsLayer2, 'features', [])
+            ]
+        }] : [])
+    ];
+    const backgroundLayers = layers.filter(layer => layer.group === 'background');
+    const firstVisible = findIndex(backgroundLayers, layer => layer.visibility);
+
+    const sources1 = get(cfg1, 'map.sources', {});
+    const sources2 = get(cfg2Fixed, 'map.sources', {});
+    const sources = {...sources1, ...sources2};
+
+    const widgetsConfig1 = get(cfg1, 'widgetsConfig', {});
+    const widgetsConfig2 = get(cfg2Fixed, 'widgetsConfig', {});
+
+    return {
+        ...cfg2Fixed,
+        ...cfg1,
+        catalogServices: {
+            ...get(cfg1, 'catalogServices', {}),
+            services: {
+                ...get(cfg1, 'catalogServices.services', {}),
+                ...get(cfg2Fixed, 'catalogServices.services', {})
+            }
+        },
+        map: {
+            ...cfg2Fixed.map,
+            ...cfg1.map,
+            backgrounds,
+            groups: uniqWith([...get(cfg1, 'map.groups', []), ...get(cfg2Fixed, 'map.groups', [])],
+                (group1, group2) => group1.id === group2.id),
+            layers: [
+                ...backgroundLayers.slice(0, firstVisible + 1),
+                ...backgroundLayers.slice(firstVisible + 1).map(layer => ({...layer, visibility: false})),
+                ...layers.filter(layer => layer.group !== 'background')
+            ],
+            sources: !isEmpty(sources) ? sources : undefined
+        },
+        widgetsConfig: {
+            collapsed: {...widgetsConfig1.collapsed, ...widgetsConfig2.collapsed},
+            layouts: uniq([...keys(widgetsConfig1.layouts), ...keys(widgetsConfig2.layouts)])
+                .reduce((result, key) => ({
+                    ...result,
+                    [key]: [
+                        ...get(widgetsConfig1, `layouts.${key}`, []),
+                        ...get(widgetsConfig2, `layouts.${key}`, [])
+                    ]
+                }), {}),
+            widgets: [...get(widgetsConfig1, 'widgets', []), ...get(widgetsConfig2, 'widgets', [])]
+        }
+    };
+};
+
 function isSimpleGeomType(geomType) {
     switch (geomType) {
     case "MultiPoint": case "MultiLineString": case "MultiPolygon": case "GeometryCollection": case "Text": return false;
@@ -476,7 +587,32 @@ const compareMapChanges = (map1 = {}, map2 = {}) => {
     return isEqual(filteredMap1, filteredMap2);
 };
 
+/**
+ * creates utilities for registering, fetching, executing hooks
+ * used to override default ones in order to have a local hooks object
+ * one for each map widget
+ */
+const createRegisterHooks = () => {
+    let hooksCustom = {};
+    return {
+        registerHook: (name, hook) => {
+            hooksCustom[name] = hook;
+        },
+        getHook: (name) => hooksCustom[name],
+        executeHook: (hookName, existCallback, dontExistCallback) => {
+            const hook = hooksCustom[hookName];
+            if (hook) {
+                return existCallback(hook);
+            }
+            if (dontExistCallback) {
+                return dontExistCallback();
+            }
+            return null;
+        }
+    };
+};
 module.exports = {
+    createRegisterHooks,
     EXTENT_TO_ZOOM_HOOK,
     RESOLUTIONS_HOOK,
     RESOLUTION_HOOK,
@@ -504,6 +640,8 @@ module.exports = {
     getCurrentResolution,
     transformExtent,
     saveMapConfiguration,
+    generateNewUUIDs,
+    mergeMapConfigs,
     isSimpleGeomType,
     getSimpleGeomType,
     getIdFromUri,

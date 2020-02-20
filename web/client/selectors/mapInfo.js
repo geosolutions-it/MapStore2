@@ -10,7 +10,8 @@ const { get, omit, isArray } = require('lodash');
 
 const { createSelector, createStructuredSelector } = require('reselect');
 
-const {mapSelector} = require('./map');
+const { mapSelector } = require('./map');
+const { isPluginInContext } = require('./context');
 const { currentLocaleSelector } = require('./locale');
 const MapInfoUtils = require('../utils/MapInfoUtils');
 
@@ -29,7 +30,11 @@ const MapInfoUtils = require('../utils/MapInfoUtils');
   * @return {object} the mapinfo requests
   */
 const mapInfoRequestsSelector = state => get(state, "mapInfo.requests") || [];
-const isMapInfoOpen = state => !!mapInfoRequestsSelector(state) && mapInfoRequestsSelector(state).length > 0;
+const isMapInfoOpen = createSelector(
+    mapInfoRequestsSelector,
+    isPluginInContext('Identify'),
+    (mapInfoRequests, isIdentifyInContext) => !!mapInfoRequests && mapInfoRequests.length > 0 && isIdentifyInContext
+);
 
 /**
  * selects generalInfoFormat from state
@@ -70,11 +75,13 @@ const stopGetFeatureInfoSelector = createSelector(
     measureActiveSelector,
     drawSupportActiveSelector,
     annotationsEditingSelector,
-    (isMapInfoDisabled, isMeasureActive, isDrawSupportActive, isAnnotationsEditing) =>
+    isPluginInContext('Identify'),
+    (isMapInfoDisabled, isMeasureActive, isDrawSupportActive, isAnnotationsEditing, identifyPluginPresent) =>
         isMapInfoDisabled
         || !!isMeasureActive
         || isDrawSupportActive
         || !!isAnnotationsEditing
+        || !identifyPluginPresent
 );
 
 /**

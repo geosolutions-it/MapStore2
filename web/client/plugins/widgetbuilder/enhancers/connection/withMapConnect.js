@@ -16,6 +16,7 @@ module.exports = (mappings) => withHandlers({
     toggleConnection: ({ toggleConnection = () => { }, editorData = {}}) =>
         (available = []) => toggleConnection(!editorData.mapSync, available, {
             dependenciesMap: editorData.dependenciesMap,
-            mappings
+            mappings,
+            sourceWidgetType: editorData.widgetType
         })
 });

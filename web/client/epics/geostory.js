@@ -49,7 +49,8 @@ import {
     UPDATE,
     CHANGE_MODE,
     SET_WEBPAGE_URL,
-    EDIT_WEBPAGE
+    EDIT_WEBPAGE,
+    UPDATE_CURRENT_PAGE
 } from '../actions/geostory';
 import { setControlProperty } from '../actions/controls';
 
@@ -58,7 +59,9 @@ import {
     HIDE,
     EDIT_MEDIA,
     CHOOSE_MEDIA,
-    selectItem
+    selectItem,
+    setMediaType,
+    hide
 } from '../actions/mediaEditor';
 import { show, error } from '../actions/notifications';
 
@@ -66,15 +69,16 @@ import { LOGIN_SUCCESS, LOGOUT } from '../actions/security';
 
 
 import { isLoggedIn, isAdminUserSelector } from '../selectors/security';
-import { resourceIdSelectorCreator, createPathSelector, currentStorySelector, resourcesSelector, getFocusedContentSelector} from '../selectors/geostory';
+import { resourceIdSelectorCreator, createPathSelector, currentStorySelector, resourcesSelector, getFocusedContentSelector, isSharedStory, resourceByIdSelectorCreator, modeSelector} from '../selectors/geostory';
 import { currentMediaTypeSelector, sourceIdSelector} from '../selectors/mediaEditor';
 
 import { wrapStartStop } from '../observables/epics';
-import { scrollToContent, ContentTypes, isMediaSection, Controls, getEffectivePath, getFlatPath, isWebPageSection } from '../utils/GeoStoryUtils';
+import { scrollToContent, ContentTypes, isMediaSection, Controls, getEffectivePath, getFlatPath, isWebPageSection, MediaTypes } from '../utils/GeoStoryUtils';
 
 import { SourceTypes } from './../utils/MediaEditorUtils';
 
 import { HIDE as HIDE_MAP_EDITOR, SAVE as SAVE_MAP_EDITOR, hide as hideMapEditor, SHOW as MAP_EDITOR_SHOW} from '../actions/mapEditor';
+
 
 const updateMediaSection = (store, path) => action$ =>
     action$.ofType(CHOOSE_MEDIA)
@@ -96,8 +100,8 @@ const updateMediaSection = (store, path) => action$ =>
                 resourceId = uuid();
                 actions = [...actions, addResource(resourceId, mediaType, resource)];
             }
-
-            actions = [...actions, update(`${path}`, {resourceId, type: mediaType}, "merge" )];
+            let media = mediaType === MediaTypes.MAP ? {resourceId, type: mediaType, map: undefined} : {resourceId, type: mediaType};
+            actions = [...actions, update(`${path}`, media, "merge" ), hide()];
             return Observable.from(actions);
         });
 
@@ -127,7 +131,7 @@ export const openMediaEditorForNewMedia = (action$, store) =>
                         .switchMap(() => {
                             return Observable.of(remove(
                                 path));
-                        })
+                        }).takeUntil(action$.ofType(UPDATE))
                 ).takeUntil(action$.ofType(EDIT_MEDIA));
         });
 
@@ -230,15 +234,21 @@ export const editMediaForBackgroundEpic = (action$, store) =>
     action$.ofType(EDIT_MEDIA)
         .switchMap(({path, owner}) => {
             const selectedResource = resourceIdSelectorCreator(path)(store.getState());
-            return Observable.of(
-                showMediaEditor(owner),
-                selectItem(selectedResource)
-            )
+            const resource = resourceByIdSelectorCreator(selectedResource)(store.getState());
+            return Observable.of(currentMediaTypeSelector(store.getState()))
+            .filter((mediaType) => {
+                return resource && resource.type !== mediaType;
+            })
+            .map(() => setMediaType(resource.type)).merge(
+                Observable.of(
+                    showMediaEditor(owner),
+                    selectItem(selectedResource)
+                )
                           .merge(
                     action$.let(updateMediaSection(store, path))
                         .takeUntil(action$.ofType(HIDE, ADD)
                         )
-                );
+                ));
         });
 /**
  * Load a story configuration from local files
@@ -287,7 +297,7 @@ export const loadGeostoryEpic = (action$, {getState = () => {}}) => action$
                     let message = "geostory.errors.loading.unknownError";
                     if (e.status === 403 ) {
                         message = "geostory.errors.loading.pleaseLogin";
-                        if (isLoggedIn(getState())) {
+                        if (isLoggedIn(getState()) || isSharedStory(getState())) {
                             // TODO only in view mode
                             message = "geostory.errors.loading.geostoryNotAccessible";
                         }
@@ -404,3 +414,40 @@ export const inlineEditorEditMap = (action$, {getState}) =>
 export const closeShareOnGeostoryChangeMode = action$ =>
     action$.ofType(CHANGE_MODE)
         .switchMap(() => Observable.of(setControlProperty('share', 'enabled', false)));
+
+/**
+ * Handle the scroll of section preview in the sidebar
+ * @memberof epics.mediaEditor
+ * @param {Observable} action$ stream of actions
+ * @param {object} store redux store
+ */
+export const scrollSideBar = (action$, {getState}) =>
+    action$.ofType(UPDATE_CURRENT_PAGE)
+        .filter(({columnId, sectionId}) => modeSelector(getState()) === 'edit' && (!!columnId || !!sectionId))
+        .debounceTime(50) // little delay if too many UPDATE_CURRENT_PAGE actions come
+        .switchMap(() => {
+            /* We need to select the most inner highlighted element of the preview list
+             * The selector will query all the highlighted elements and the pop will extract
+             * the most inner (i.e a section content column in an immersive section)
+             */
+            return Observable.of(Array.from(document.querySelectorAll(".ms-geostory-builder .mapstore-side-card.ms-highlight")).pop())
+                .filter(el => !!el)
+                .withLatestFrom(
+                    Observable.of(document.querySelector(".ms-geostory-builder .ms2-border-layout-body"))
+                    .filter(scrollable => !!scrollable)
+                )
+                .map(([el, scrollable]) => {
+                    const scroll = function() {
+                        const {top, bottom} = el.getBoundingClientRect();
+                        const {top: cTop, bottom: cBottom} = scrollable.getBoundingClientRect();
+                        if (top < cTop) {
+                            scrollable.scrollBy({top: (top - cTop) - 10, behavior: 'smooth'});
+                        } else if (bottom > cBottom) {
+                            scrollable.scrollBy({top: (bottom - cBottom) + 10, behavior: 'smooth'});
+                        }
+                    };
+                    return scroll;
+                })
+                .do(scroll => window.requestAnimationFrame(scroll))
+                .ignoreElements();
+        });

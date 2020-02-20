@@ -278,6 +278,12 @@ export const createResource = ({ data, category, metadata, permission: configure
                 ).map(() => id)
                 : Observable.of(id)
         );
+
+export const createCategory = (category, API = GeoStoreDAO) =>
+    Observable.defer(
+        () => API.createCategory(category)
+    );
+
 /**
  * Updates a resource setting up permission and linked resources
  * @param {resource} param0 the resource to update (must contain the id)

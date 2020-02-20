@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ViewContext xmlns="http://www.closegis.net/context" version="1.1.0" id="ce1e4841" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.opengis.net/context http://schemas.opengis.net/context/1.1.0/context.xsd">
+  <General>
+    <Window width="1293" height="686" />
+    <BoundingBox minx="-227718.00" miny="6091011.00" maxx="-154186.00" maxy="6160110.00" SRS="EPSG:3857" />
+    <Title>Sample Context</Title>
+    <Abstract>
+        This is a sample context.
+    </Abstract>
+    <MetadataURL>
+      <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://server.com/srv/fre/xml.metadata.get" />
+    </MetadataURL>
+    <KeywordList>
+      <Keyword>sample</Keyword>
+      <Keyword>2020</Keyword>
+    </KeywordList>
+    <Extension>
+      <ol:maxExtent xmlns:ol="http://openlayers.org/context" minx="-1.00" miny="1.00" maxx="-1.00" maxy="1.00" />
+    </Extension>
+  </General>
+  <LayerList>
+    <Layer queryable="1" hidden="0">
+      <Server service="OGC:WMS" version="1.1.1">
+        <OnlineResource xlink:type="simple" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="https://server.com/service/wms" />
+      </Server>
+      <Name>test_layer1</Name>
+      <Title>Test Layer 1</Title>
+      <Abstract>This is a test layer</Abstract>
+      <MetadataURL>
+        <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://server.com/srv/fre/catalog.search#/metadata/903dea6a-fc33-4eb7-b652-a29476a9a0eb" />
+      </MetadataURL>
+      <sld:MinScaleDenominator xmlns:sld="http://www.opengis.net/sld">266.5911979812228</sld:MinScaleDenominator>
+      <sld:MaxScaleDenominator xmlns:sld="http://www.opengis.net/sld">559082264.0287180</sld:MaxScaleDenominator>
+      <FormatList>
+        <Format>image/png</Format>
+        <Format>application/atom+xml</Format>
+        <Format>application/pdf</Format>
+        <Format>application/vnd.google-earth.kml+xml</Format>
+        <Format>application/vnd.google-earth.kml+xml;mode=networklink</Format>
+        <Format>application/vnd.google-earth.kmz</Format>
+        <Format>image/geotiff</Format>
+        <Format>image/geotiff8</Format>
+        <Format>image/gif</Format>
+        <Format current="1">image/jpeg</Format>
+        <Format>image/png; mode=8bit</Format>
+        <Format>image/svg+xml</Format>
+        <Format>image/tiff</Format>
+        <Format>image/tiff8</Format>
+      </FormatList>
+      <StyleList>
+        <Style current="1">
+          <Name />
+          <Title>Default</Title>
+        </Style>
+      </StyleList>
+      <Extension>
+        <ol:maxExtent xmlns:ol="http://openlayers.org/context" minx="-2" miny="-2" maxx="2" maxy="2" />
+        <ol:tileSize xmlns:ol="http://openlayers.org/context" width="256" height="256" />
+        <ol:transparent xmlns:ol="http://openlayers.org/context">true</ol:transparent>
+        <ol:numZoomLevels xmlns:ol="http://openlayers.org/context">22</ol:numZoomLevels>
+        <ol:units xmlns:ol="http://openlayers.org/context">m</ol:units>
+        <ol:isBaseLayer xmlns:ol="http://openlayers.org/context">false</ol:isBaseLayer>
+        <ol:displayInLayerSwitcher xmlns:ol="http://openlayers.org/context">true</ol:displayInLayerSwitcher>
+        <ol:singleTile xmlns:ol="http://openlayers.org/context">true</ol:singleTile>
+        <ol:transitionEffect xmlns:ol="http://openlayers.org/context">resize</ol:transitionEffect>
+        <ol:gutter xmlns:ol="http://openlayers.org/context">0</ol:gutter>
+      </Extension>
+    </Layer>
+  </LayerList>
+</ViewContext>
+

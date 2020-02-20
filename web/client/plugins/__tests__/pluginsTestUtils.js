@@ -18,6 +18,7 @@ import maptype from '../../reducers/maptype';
 import layers from '../../reducers/layers';
 import controls from '../../reducers/controls';
 import annotations from '../../reducers/annotations';
+import context from '../../reducers/context';
 
 // StandardStore add by default current reducers
 const rootReducers = {
@@ -25,7 +26,8 @@ const rootReducers = {
     layers,
     controls,
     maptype,
-    annotations
+    annotations,
+    context
 };
 
 const createRegisterActionsMiddleware = (actions) => {

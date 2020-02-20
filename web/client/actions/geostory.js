@@ -37,7 +37,7 @@ export const TOGGLE_CONTENT_FOCUS = "GEOSTORY:TOGGLE_CONTENT_FOCUS";
 export const UPDATE = "GEOSTORY:UPDATE";
 export const UPDATE_SETTING = "GEOSTORY:UPDATE_SETTING";
 export const UPDATE_CURRENT_PAGE = "GEOSTORY:UPDATE_CURRENT_PAGE";
-
+export const REMOVE_RESOURCE = "GEOSTORY:REMOVE_RESOURCE";
 
 /**
  * Adds an entry to current story. The entry can be a section, a content or anything to append in an array (even sub-content)
@@ -222,3 +222,8 @@ export const updateSetting = (prop, value) => ({type: UPDATE_SETTING, prop, valu
 export const setWebPageUrl = (src) => ({ type: SET_WEBPAGE_URL, src });
 
 export const editWebPage = ({ path }, owner = 'GEOSTORY') => ({ type: EDIT_WEBPAGE, path, owner });
+
+/**
+ * Removes a resource in the current story
+ */
+export const removeResource = ( id, mediaType) => ({type: REMOVE_RESOURCE, id, mediaType});

@@ -213,6 +213,36 @@ describe('Test mapinfo selectors', () => {
         });
         expect(props).toEqual(true);
     });
+    it('test stopGetFeatureInfoSelector with identify in context', () => {
+        const stop = stopGetFeatureInfoSelector({
+            mapInfo: {
+                enabled: true
+            },
+            context: {
+                currentContext: {
+                    plugins: {
+                        desktop: [{ name: "Identify" }]
+                    }
+                }
+            }
+        });
+        expect(stop).toEqual(false); // it should pass
+    });
+    it('test stopGetFeatureInfoSelector with identify not in context', () => {
+        const stop = stopGetFeatureInfoSelector({
+            mapInfo: {
+                enabled: true
+            },
+            context: {
+                currentContext: {
+                    plugins: {
+                        desktop: []
+                    }
+                }
+            }
+        });
+        expect(stop).toEqual(true); // it should be stopped
+    });
     it('test mapInfoConfigurationSelector', () => {
         const infoFormat = "text/html";
         const showEmptyMessageGFI = true;

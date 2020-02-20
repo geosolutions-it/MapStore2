@@ -1120,7 +1120,8 @@
             },
             "errors": {
                 "fileNotSupported": "Archivo no compatible",
-                "unknownError": "hubo un error desconocido durante la importación"
+                "unknownError": "hubo un error desconocido durante la importación",
+                "projectionNotSupported": "La proyección del archivo que está intentando importar no es compatible"
             }
         },
         "mapExport": {
@@ -1472,9 +1473,9 @@
                     "preview": "Vista previa",
                     "addLayer": "Agregar una capa al mapa",
                     "useTheSelectedLayer": "Usar la capa seleccionada",
-                    "connectToAMap": "Conectar a un mapa",
-                    "connectToTheMap": "Conectarse al mapa",
-                    "selectMapToConnect": "Seleccione el mapa para conectarse",
+                    "connectToAMap": "Conectarse a otro widget",
+                    "connectToTheMap": "Conéctese al otro widget",
+                    "selectMapToConnect": "Seleccione el widget para conectarse",
                     "clearConnection": "Borrar conexión"
                 },
                 "errors": {
@@ -1651,6 +1652,13 @@
                     "pleaseLogin": "Este contexto no es pública. Por favor, intente iniciar la sesión",
                     "unknownError": "Hubo un error al cargar el contexto. Por favor, póngase en contacto con el administrador",
                     "notFound": "El contexto que está intentando acceder no existe"
+                },
+                "template": {
+                    "title": "Error al cargar la plantilla",
+                    "notAccessible": "No tienes permiso para acceder a esta plantilla. Por favor, póngase en contacto con el propietario del recurso",
+                    "pleaseLogin": "Esta plantilla no es pública. Por favor intente iniciar sesión",
+                    "unknownError": "Se produjo un error al cargar la plantilla. Por favor contacte al administrador",
+                    "notFound": "La plantilla a la que intentas acceder no existe"
                 },
                 "map": {
                     "notAccessible": "Usted no tiene permiso derecho de acceso a este mapa. Por favor, póngase en contacto con el administrador para obtener acceso",
@@ -2078,14 +2086,25 @@
                 "mapFilter": "Filtrar mapas",
                 "videoFilter": "Filtrar videos",
                 "imageFilter": "Filtrar imágenes",
-                "import": "Importar recurso a store locale"
+                "import": "Importar recurso a store locale",
+                "trash": "Eliminar recurso"
             },
             "mediaform": {
                 "confirmExitTitle": "Cerrar el Media Form",
                 "confirmExitContent": "¿Descartar cambios pendientes?"
             },
             "mapForm": {
-                "thumbnailMessage": "El tamaño de las imágenes debe ser un cuadrado de 98 px x 98 px, máximo 100 kb"
+                "thumbnailMessage": "El tamaño de las imágenes debe ser un cuadrado de 98 px x 98 px, máximo 100 kb",
+                "confirmMapSaveTitle": "Actualización de mapa",
+                "confirmMapSaveContent": "La actualización de este mapa restablecerá todos los mapas dependientes en la historia previamente personalizada a través del editor en línea, ¿confirma?"
+            },
+            "mediaList" : {
+                "removeResourceTitle": "¿Estás seguro?",
+                "confirmRemoveResource": "¿Desea eliminar este recurso de medios de la historia?",
+                "confirmRemoveUsedResource": "Este recurso también se eliminará de todas las secciones / contenidos donde se usa dejándolos vacíos. ¿Quieres eliminarlo de la historia?"
+            },
+            "mapList": {
+                "emptyList": "Haga clic en el botón más para crear un mapa o seleccione un servicio de mapas diferente."
             }
         },
         "backgroundDialog": {
@@ -2256,6 +2275,7 @@
           },
           "Version": {
             "description": "Muestra la versión de MapStore en la herramienta de configuración de mapas",
+            "descriptionGeorchestra": "Muestra la versión de GeOrchestra en la herramienta de configuración de mapas",
             "title": "Versión"
           },
           "WFSDownload": {
@@ -2304,6 +2324,8 @@
                     "title": "Error de configuración",
                     "body": "Error en el análisis de la configuración JSON.\nEl siguiente error ha ocurrido:\n\"{error}\""
                 },
+                "uploadLabel": "Arrastre un paquete de extensión o haga clic para navegar y subirlo",
+                "uploadTitle": "Instalar un complemento MapStore",
                 "tooltips": {
                     "enableUserPlugin": "Habilitar la selección del complemento actual para el usuario",
                     "disableUserPlugin": "Desactiva la selección del complemento actual para el usuario",
@@ -2311,6 +2333,7 @@
                     "deactivatePlugin": "Desactivar la carga de este complemento al inicio",
                     "editConfiguration": "Editar configuración del complemento",
                     "pluginDocumentation": "Abrir la documentación de configuración del complemento",
+                    "uploadPlugin": "Agregar una extensión a MapStore",
                     "mapTemplatesConfig": "Configurar plantillas"
                 },
                 "saveCfgErrorNotification":  {
@@ -2338,8 +2361,11 @@
                 },
                 "tooltips": {
                     "uploadTool": "Subir nueva plantilla",
-                    "editTemplate": "Editar propiedades de plantilla"
-                }
+                    "editTemplate": "Editar propiedades de plantilla",
+                    "deleteTemplate": "Eliminar plantilla"
+                },
+                "deleteError": "No se pudo eliminar la plantilla, se produjo un error",
+                "deleteConfirm": "¿Está seguro de que desea eliminar la plantilla \"{templateName}\"?"
             },
             "configureMap": {
                 "label": "Configurar mapa",
@@ -2350,7 +2376,8 @@
                 "titleContext": "Error al guardar el contextod",
                 "titleTemplate": "Error al guardar la plantilla",
                 "conflict": "Ya existe un recurso con este nombre",
-                "defaultMessage": "Error desconocido"
+                "defaultMessage": "Error desconocido",
+                "categoryError": "Error al crear la categoría faltante \"{categoryName}\""
             },
             "contextNameErrorNotification": {
                 "title": "Nombre de contexto incorrecto",
@@ -2372,6 +2399,23 @@
           "filterPlaceholder": "Filtrar...",
           "addExtension": "Añadir Extensión",
           "removeExtension": "Retire Extensión"
+        },
+        "mapTemplates": {
+            "title": "Plantillas de mapas",
+            "favouritesTitle": "Favoritos",
+            "allTitle": "Todos",
+            "filterPlaceholder": "Filtrar plantillas de mapa...",
+            "transfer": "Reemplazar mapa con esta plantilla",
+            "merge": "Agregue esta plantilla al mapa",
+            "favouriteAdd": "Agregar a favoritos",
+            "favouriteRemove": "Quitar de favoritos",
+            "emptyTitle": "Sin resultados",
+            "emptyDescription": "El filtro introducido no coincide con el nombre o la descripción de ninguna de las plantillas",
+            "noTemplatesTitle": "No se encontraron plantillas",
+            "noTemplatesDescription": "El contexto actual no contiene plantillas",
+            "confirmReplaceTitle": "Reemplazar contenido del mapa",
+            "confirmReplaceMessage": "Reemplazará todas las capas y la configuración del mapa con la plantilla seleccionada haciendo clic en el botón Reemplazar",
+            "confirmReplaceConfirmButton": "Reemplazar"
         },
         "tutorial": {
             "title": "Tutorial",

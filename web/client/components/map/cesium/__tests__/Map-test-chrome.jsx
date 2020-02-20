@@ -219,5 +219,20 @@ describe('CesiumMap', () => {
         // unregister hook
         MapUtils.registerHook(MapUtils.ZOOM_TO_EXTENT_HOOK);
     });
+    describe("hookRegister", () => {
+        it("default", () => {
+            const map = ReactDOM.render(<CesiumMap id="mymap" center={{y: 43.9, x: 10.3}} zoom={11}/>, document.getElementById("container"));
+            expect(map).toExist();
+            expect(ReactDOM.findDOMNode(map).id).toBe('mymap');
+            expect(MapUtils.getHook(MapUtils.ZOOM_TO_EXTENT_HOOK)).toExist();
+        });
+        it("with custom hookRegister", () => {
+            const customHooRegister = MapUtils.createRegisterHooks();
+            const map = ReactDOM.render(<CesiumMap hookRegister={customHooRegister} id="mymap" center={{y: 43.9, x: 10.3}} zoom={11}/>, document.getElementById("container"));
+            expect(map).toExist();
+            expect(ReactDOM.findDOMNode(map).id).toBe('mymap');
+            expect(customHooRegister.getHook(MapUtils.ZOOM_TO_EXTENT_HOOK)).toExist();
+        });
+    });
 
 });

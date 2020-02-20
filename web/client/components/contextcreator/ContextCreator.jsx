@@ -115,15 +115,21 @@ export default class ContextCreator extends React.Component {
         onChangeAttribute: PropTypes.func,
         onSave: PropTypes.func,
         onSaveTemplate: PropTypes.func,
+        onDeleteTemplate: PropTypes.func,
         onEditTemplate: PropTypes.func,
         onEditPlugin: PropTypes.func,
         onEnablePlugins: PropTypes.func,
         onDisablePlugins: PropTypes.func,
         onUpdateCfg: PropTypes.func,
+        onEnableUploadPlugin: PropTypes.func,
+        onUploadPlugin: PropTypes.func,
+        onUploadPluginError: PropTypes.func,
+        uploadEnabled: PropTypes.bool,
         onMapViewerReload: PropTypes.func,
         onReloadConfirm: PropTypes.func,
-        onShowDialog: PropTypes.func,
-        saveDestLocation: PropTypes.string
+        saveDestLocation: PropTypes.string,
+        uploading: PropTypes.bool,
+        onShowDialog: PropTypes.func
     };
 
     static contextTypes = {
@@ -177,7 +183,8 @@ export default class ContextCreator extends React.Component {
         saveDestLocation: '/context-manager',
         onSetStep: () => { },
         onChangeAttribute: () => { },
-        onReloadConfirm: () => { }
+        onReloadConfirm: () => { },
+        uploadEnabled: false
     };
 
     render() {
@@ -234,12 +241,18 @@ export default class ContextCreator extends React.Component {
                             onUpdateCfg={this.props.onUpdateCfg}
                             setSelectedPlugins={this.props.setSelectedPlugins}
                             changePluginsKey={this.props.changePluginsKey}
+                            uploading={this.props.uploading}
+                            onEnableUpload={this.props.onEnableUploadPlugin}
+                            uploadEnabled={this.props.uploadEnabled}
+                            onUpload={this.props.onUploadPlugin}
+                            onUploadError={this.props.onUploadPluginError}
                             changeTemplatesKey={this.props.changeTemplatesKey}
                             setSelectedTemplates={this.props.setSelectedTemplates}
                             setParsedTemplate={this.props.setParsedTemplate}
                             setFileDropStatus={this.props.setFileDropStatus}
                             onShowDialog={this.props.onShowDialog}
                             onSaveTemplate={this.props.onSaveTemplate}
+                            onDeleteTemplate={this.props.onDeleteTemplate}
                             onEditTemplate={this.props.onEditTemplate}
                             onFilterAvailableTemplates={this.props.onFilterAvailableTemplates}
                             onFilterEnabledTemplates={this.props.onFilterEnabledTemplates}/>

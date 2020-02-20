@@ -5,7 +5,6 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-
 import { Observable } from 'rxjs';
 
 import { LOCATION_CHANGE } from 'connected-react-router';
@@ -16,10 +15,10 @@ import { isLoggedIn } from '../selectors/security';
 
 import { LOAD_CONTEXT, LOAD_FINISHED, loadContext, loading, setContext, setResource, contextLoadError, loadFinished,
     SET_CURRENT_CONTEXT, CONTEXT_LOAD_ERROR } from '../actions/context';
+import { clearMapTemplates } from '../actions/maptemplates';
 import { loadMapConfig, MAP_CONFIG_LOADED, MAP_CONFIG_LOAD_ERROR } from '../actions/config';
 import { changeMapType } from '../actions/maptype';
 import { LOGIN_SUCCESS, LOGOUT } from '../actions/security';
-
 
 import { wrapStartStop } from '../observables/epics';
 import ConfigUtils from '../utils/ConfigUtils';
@@ -86,6 +85,7 @@ const errorToMessageId = (name, e, getState = () => {}) => {
 export const loadContextAndMap = (action$, { getState = () => { } } = {}) =>
     action$.ofType(LOAD_CONTEXT).switchMap(({ mapId, contextName }) =>
         Observable.merge(
+            Observable.of(clearMapTemplates()),
             getResourceIdByName('CONTEXT', contextName)
                 .switchMap(id => createContextFlow(id, action$, getState)).catch(e => {throw new ContextError(e); }),
             (mapId ? Observable.of(null) : getResourceDataByName('CONTEXT', contextName))

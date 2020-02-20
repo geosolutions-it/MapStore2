@@ -7,7 +7,7 @@
 */
 
 import React from 'react';
-import {compose, withState, lifecycle} from 'recompose';
+import {compose, withState, lifecycle, getContext} from 'recompose';
 import {get} from 'lodash';
 import {Glyphicon, Button} from 'react-bootstrap';
 import {Controlled as Codemirror} from 'react-codemirror2';
@@ -19,6 +19,14 @@ import ResizableModal from '../misc/ResizableModal';
 import ToolbarButton from '../misc/toolbar/ToolbarButton';
 import Message from '../I18N/Message';
 import ConfigureMapTemplates from './ConfigureMapTemplates';
+
+import Dropzone from 'react-dropzone';
+import Spinner from "react-spinkit";
+
+import JSZip from 'jszip';
+import FileUtils from '../../utils/FileUtils';
+import LocaleUtils from '../../utils/LocaleUtils';
+import PropTypes from 'prop-types';
 
 /**
  * Converts plugin objects to Transform items
@@ -58,7 +66,7 @@ const pluginsToItems = (editedPlugin, editedCfg, cfgError, setEditor, documentat
                 tooltipId: 'contextCreator.configurePlugins.tooltips.mapTemplatesConfig',
                 onClick: () => onShowDialog('mapTemplatesConfig', true)
             }, {
-                visible: !isMandatory,
+                visible: !isMandatory && !plugin.denyUserSelection,
                 glyph: '1-user-mod',
                 tooltipId: plugin.isUserPlugin ?
                     'contextCreator.configurePlugins.tooltips.disableUserPlugin' :
@@ -66,7 +74,7 @@ const pluginsToItems = (editedPlugin, editedCfg, cfgError, setEditor, documentat
                 bsStyle: plugin.isUserPlugin ? 'success' : undefined,
                 onClick: () => changePluginsKey([plugin.name], 'isUserPlugin', !plugin.isUserPlugin)
             }, {
-                visible: plugin.isUserPlugin,
+                visible: plugin.isUserPlugin && !plugin.denyUserSelection,
                 glyph: plugin.active ? 'check' : 'unchecked',
                 tooltipId: plugin.active ?
                     'contextCreator.configurePlugins.tooltips.deactivatePlugin' :
@@ -138,6 +146,13 @@ const pluginsToItems = (editedPlugin, editedCfg, cfgError, setEditor, documentat
 const pickIds = items => items && items.map(item => item.id);
 const ignoreMandatory = items => items && items.filter(item => !item.mandatory);
 
+
+const renderUploading = (plugin) => {
+    const uploadingStatus = plugin.error ? <Glyphicon glyph="remove" />
+        : (plugin.uploading ? <Spinner spinnerName = "circle" noFadeIn overrideSpinnerClassName = "spinner" /> : <Glyphicon glyph="ok"/>);
+    return <div className="uploading-file">{uploadingStatus}<span className="plugin-name">{plugin.name}</span><span className="upload-error">{plugin.error && plugin.error.message || ""}</span></div>;
+};
+
 const configurePluginsStep = ({
     loading,
     loadFlags,
@@ -153,6 +168,8 @@ const configurePluginsStep = ({
     availablePluginsFilterPlaceholder = "contextCreator.configurePlugins.pluginsFilterPlaceholder",
     enabledPluginsFilterPlaceholder = "contextCreator.configurePlugins.pluginsFilterPlaceholder",
     documentationBaseURL,
+    uploadEnabled = false,
+    uploading = [],
     showDialog = {},
     mapTemplates,
     availableTemplatesFilterText,
@@ -168,16 +185,54 @@ const configurePluginsStep = ({
     setSelectedPlugins = () => {},
     changePluginsKey = () => {},
     setEditor = () => {},
+    onEnableUpload = () => {},
+    onUpload = () => {},
+    onUploadError = () => {},
     onShowDialog = () => {},
     onSaveTemplate,
+    onDeleteTemplate,
     onEditTemplate,
     onFilterAvailableTemplates,
     onFilterEnabledTemplates,
     changeTemplatesKey,
     setSelectedTemplates,
     setParsedTemplate,
-    setFileDropStatus
+    setFileDropStatus,
+    messages = {}
 }) => {
+
+    const checkUpload = (files) => {
+        Promise.all(files.map(file => {
+            return FileUtils.readZip(file).then((buffer) => {
+                var zip = new JSZip();
+                return zip.loadAsync(buffer);
+            }).then((zip) => {
+                if (zip.files["index.json"]) {
+                    return zip.files["index.json"].async("text").then((json) => {
+                        try {
+                            const index = JSON.parse(json);
+                            if (index.plugins && index.plugins[0].name) {
+                                return { name: index.plugins[0].name, file };
+                            }
+                        } catch (e) {
+                            throw new Error(LocaleUtils.getMessageById(messages, "contextCreator.configurePlugins.uploadParseError"));
+                        }
+                        throw new Error(LocaleUtils.getMessageById(messages, "contextCreator.configurePlugins.uploadMissingFileError"));
+                    }).catch(e => {
+                        throw e;
+                    });
+                }
+                throw new Error(LocaleUtils.getMessageById(messages, "contextCreator.configurePlugins.uploadMissingFileError"));
+            }).catch(e => {
+                throw e;
+            });
+        })).then((namedFiles) => {
+            onUpload(namedFiles);
+        }).catch(e => {
+            onUploadError(files.map(f => ({file: f, error: e})));
+        });
+    };
+
     const selectedPlugins = allPlugins.filter(plugin => plugin.selected);
     const availablePlugins = allPlugins.filter(plugin => !plugin.enabled);
     const enabledPlugins = allPlugins.filter(plugin => plugin.enabled);
@@ -188,7 +243,34 @@ const configurePluginsStep = ({
     const selectedItems = pluginsToItemsFunc(selectedPlugins, false);
     const availableItems = pluginsToItemsFunc(availablePlugins, true);
     const enabledItems = pluginsToItemsFunc(enabledPlugins, true);
-
+    if (uploadEnabled) {
+        return (<div className="configure-plugins-step-upload">
+            <div className="title-header"><Message msgId="contextCreator.configurePlugins.uploadTitle" /><Glyphicon glyph="1-close" style={{ cursor: "pointer" }} onClick={(e) => {
+                e.stopPropagation();
+                onEnableUpload(false);
+            }} /></div>
+            <Dropzone
+                key="dropzone"
+                rejectClassName="alert-danger"
+                className="alert alert-info"
+                onDrop={checkUpload}>
+                <div style={{
+                    display: "flex",
+                    alignItems: "center",
+                    width: "100%",
+                    height: "100%",
+                    justifyContent: "center"
+                }}>
+                    <span style={{
+                        textAlign: "center"
+                    }}>
+                        <Message msgId="contextCreator.configurePlugins.uploadLabel"/>
+                    </span>
+                </div>
+            </Dropzone>
+            {uploading.map(plugin => renderUploading(plugin))}
+        </div>);
+    }
     return (
         <div className="configure-plugins-step">
             <Transfer
@@ -205,7 +287,10 @@ const configurePluginsStep = ({
                         glyph: 'info-sign',
                         title: 'contextCreator.configurePlugins.searchResultsEmpty'
                     },
-                    onFilter: onFilterAvailablePlugins
+                    onFilter: onFilterAvailablePlugins,
+                    tools: [{
+                        id: "upload", glyph: "upload", onClick: () => onEnableUpload(true), tooltipId: 'contextCreator.configurePlugins.tooltips.uploadPlugin'
+                    }]
                 }}
                 rightColumn={{
                     items: enabledItems,
@@ -268,6 +353,7 @@ const configurePluginsStep = ({
                     setParsedTemplate={setParsedTemplate}
                     setFileDropStatus={setFileDropStatus}
                     onSave={onSaveTemplate}
+                    onDelete={onDeleteTemplate}
                     onEditTemplate={onEditTemplate}
                     onFilterAvailableTemplates={onFilterAvailableTemplates}
                     onFilterEnabledTemplates={onFilterEnabledTemplates}
@@ -280,6 +366,9 @@ const configurePluginsStep = ({
 export default compose(
     withState('errorLineNumber', 'setErrorLineNumber'),
     withState('editor', 'setEditor'),
+    getContext({
+        messages: PropTypes.object
+    }),
     lifecycle({
         componentDidUpdate() {
             const {cfgError, editor, errorLineNumber, setErrorLineNumber} = this.props;

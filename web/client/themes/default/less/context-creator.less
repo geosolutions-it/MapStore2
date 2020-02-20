@@ -15,6 +15,58 @@
     }
 }
 
+.configure-plugins-step-upload {
+    .alert-info {
+        border-width: 1px;
+        height: 200px;
+        width: 800px;
+        margin: auto;
+        border-color: #ccc;
+        border-radius: 3px;
+        background-color: white;
+        cursor: pointer;
+        font-size: 16px;
+    }
+    .title-header {
+        background-color: #078aa3;
+        color: white;
+        font-weight: bold;
+        height: 50px;
+        width: 800px;
+        margin: auto;
+        font-size: 18px;
+        padding: 10px;
+        .glyphicon {
+            float: right;
+        }
+    }
+    .uploading-file {
+        width: 800px;
+        margin: auto;
+        height: 60px;
+        padding: 20px;
+        border: solid;
+        border-color: #ccc;
+        border-radius: 2px;
+        border-width: 1px;
+        margin-top: 5px;
+        .plugin-name {
+            padding-left: 10px;
+        }
+        .glyphicon-ok {
+            color: green;
+        }
+
+        .glyphicon-remove {
+            color: red;
+        }
+        .upload-error {
+            float: right;
+        }
+    }
+    height: 100%;
+}
+
 .configure-plugins-step {
     padding: 10px 0 10px 0;
     max-width: 1000px;
@@ -23,6 +75,11 @@
 
     .ms2-transfer-panel {
         padding: 8px;
+    }
+
+    .ms2-transfer-title-area .btn-group {
+        float: right;
+        margin-top: -10px;
     }
 
     .plugin-card-disabled {

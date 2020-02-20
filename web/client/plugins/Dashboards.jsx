@@ -29,7 +29,12 @@ const dashboardsCountSelector = createSelector(
     count => ({ count })
 );
 
-
+/**
+ * Plugin for Dashboards resources
+ * @name Dashboards
+ * @memberof plugins
+ * @prop {boolean} cfg.showCreateButton default true, use to render create a new one button
+ */
 class Dashboards extends React.Component {
     static propTypes = {
         mapType: PropTypes.string,
@@ -58,7 +63,7 @@ class Dashboards extends React.Component {
             xs: 12,
             sm: 6,
             lg: 3,
-            md: 4,
+            md: 2,
             className: 'ms-map-card-col'
         },
         maps: []
@@ -99,10 +104,10 @@ const DashboardsPlugin = compose(
     }),
     emptyState(
         ({resources = [], loading}) => !loading && resources.length === 0,
-        () => ({
+        ({showCreateButton = true}) => ({
             glyph: "dashboard",
             title: <Message msgId="resources.dashboards.noDashboardAvailable" />,
-            description: <EmptyDashboardsView />
+            description: <EmptyDashboardsView showCreateButton={showCreateButton}/>
         })
 
     )

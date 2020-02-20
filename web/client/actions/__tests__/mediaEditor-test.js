@@ -22,7 +22,8 @@ import {
     setMediaType, SET_MEDIA_TYPE,
     setAddingMedia, ADDING_MEDIA,
     setEditingMedia, EDITING_MEDIA,
-    show, SHOW
+    show, SHOW,
+    removeMedia, REMOVE_MEDIA
 } from '../mediaEditor';
 
 describe('mediaEditor actions', () => {
@@ -95,9 +96,14 @@ describe('mediaEditor actions', () => {
     });
     it('updateItem', () => {
         const map = {id: "val"};
-        const action = updateItem(map);
+        let action = updateItem(map);
         expect(action.item).toEqual(map);
         expect(action.type).toEqual(UPDATE_ITEM);
+        expect(action.mode).toEqual("merge");
+        action = updateItem(map, "replace");
+        expect(action.item).toEqual(map);
+        expect(action.type).toEqual(UPDATE_ITEM);
+        expect(action.mode).toEqual("replace");
     });
     it('setAddingMedia', () => {
         const adding = true;
@@ -128,5 +134,13 @@ describe('mediaEditor actions', () => {
         const action = show(owner);
         expect(action.owner).toEqual(owner);
         expect(action.type).toEqual(SHOW);
+    });
+    it('removeMedia', () => {
+        const owner = "geostory";
+        const type = "map";
+        const action = removeMedia(type, owner);
+        expect(action.type).toEqual(REMOVE_MEDIA);
+        expect(action.mediaType).toEqual(type);
+        expect(action.owner).toEqual(owner);
     });
 });

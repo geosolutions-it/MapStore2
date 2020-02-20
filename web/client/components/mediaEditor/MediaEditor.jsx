@@ -77,13 +77,12 @@ export default ({
                 </div>
                 <Select
                     disabled={saveState && saveState.addingMedia}
-                    clearValueText="mediaEditor.mediaPicker.clean"
                     noResultsText="mediaEditor.mediaPicker.noResults"
                     placeholder="mediaEditor.mediaPicker.selectService"
-                    clearable
                     options={services.map(s => ({label: s.name, value: s.id}))}
                     onChange={setMediaService}
                     value={selectedService}
+                    clearable={false}
                 />
             </div>
         </div>

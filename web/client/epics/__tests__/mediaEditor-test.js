@@ -16,7 +16,9 @@ import {
     mediaEditorNewMap,
     mediaEditorEditMap,
     reloadMediaResources,
-    importInLocalSource
+    importInLocalSource,
+    editRemoteMap,
+    removeMediaEpic
 } from '../mediaEditor';
 import {
     show as showMapEditor,
@@ -29,6 +31,7 @@ import {
     show,
     setEditingMedia,
     importInLocal,
+    removeMedia,
     ADDING_MEDIA,
     EDITING_MEDIA,
     LOAD_MEDIA_SUCCESS,
@@ -333,6 +336,183 @@ describe('MediaEditor Epics', () => {
                         geostory: {
                             name: "Current story",
                             type: "geostory"
+                        }
+                    }
+                }
+            }
+        });
+    });
+    it('editRemoteMap epic handle new map creation save stream', (done) => {
+        const NUM_ACTIONS = 5;
+        testEpic(editRemoteMap, NUM_ACTIONS, [showMapEditor("mediaEditorEditRemote", {data: {id: 'testId', type: 'map'}}), save({}, "mediaEditor")], (actions) => {
+            expect(actions.length).toEqual(NUM_ACTIONS);
+            actions.map((a) => {
+                switch (a.type) {
+                case SET_MEDIA_SERVICE:
+                    expect(a.id).toEqual('geostory');
+                    break;
+                case SAVE_MEDIA_SUCCESS:
+                    expect(a.data.id).toExist();
+                    break;
+                case LOAD_MEDIA:
+                    break;
+                case SELECT_ITEM:
+                    expect(a.id).toExist();
+                    break;
+                case HIDE:
+                    break;
+                default: expect(true).toEqual(false);
+                    break;
+                }
+            });
+            done();
+        }, {
+            geostory: {
+                resources: [{
+                    id: "102cbcf6-ff39-4b7f-83e4-78841ee13bb9",
+                    data: {
+                        src: "ht",
+                        title: "ti"
+                    }
+                }]
+            },
+            mediaEditor: {
+                saveState: {
+                    editing: false,
+                    adding: true
+                },
+                selected: "102cbcf6-ff39-4b7f-83e4-78841ee13bb9",
+                settings: {
+                    sourceId: "geostory",
+                    sources: {
+                        geostory: {
+                            name: "Current story",
+                            type: "geostory"
+                        }
+                    }
+                }
+            }
+        });
+    });
+    it('removeMedia epic handle the remove media  stream', (done) => {
+        const NUM_ACTIONS = 1;
+        const sourceId = "geostory";
+        testEpic(removeMediaEpic, NUM_ACTIONS, removeMedia("image"), (actions) => {
+            expect(actions.length).toEqual(NUM_ACTIONS);
+            actions.map((a) => {
+                switch (a.type) {
+                case LOAD_MEDIA:
+                    expect(a.params).toEqual(undefined);
+                    expect(a.mediaType).toEqual("image");
+                    expect(a.sourceId).toEqual(sourceId);
+                    break;
+                default: expect(true).toEqual(false);
+                    break;
+                }
+            });
+            done();
+        }, {
+            geostory: {
+                currentStory: {
+                    resources: [{
+                        id: "resId",
+                        type: "image"
+                    }]}
+            },
+            mediaEditor: {
+                settings: {
+                    sourceId,
+                    mediaType: "image"
+                },
+                selected: "resId"
+            }
+        });
+
+    });
+    it('loadMediaEditorDataEpic with loadMedia is able to empty e mediaType', (done) => {
+        const NUM_ACTIONS = 2;
+        const params = {mediaType: "map"};
+        const mediaType = "map";
+        const sourceId = "geostory";
+        testEpic(loadMediaEditorDataEpic, NUM_ACTIONS, loadMedia(params, mediaType, sourceId), (actions) => {
+            expect(actions.length).toEqual(NUM_ACTIONS);
+            actions.map((a) => {
+                switch (a.type) {
+                case LOAD_MEDIA_SUCCESS:
+                    expect(a.sourceId).toEqual(sourceId);
+                    expect(a.resultData.totalCount).toEqual(0);
+                    break;
+                default: expect(true).toEqual(false);
+                    break;
+                }
+            });
+            done();
+        }, {
+            geostory: {
+                currentStory: {
+                    resources: []}
+            },
+            mediaEditor: {
+                data: {
+                    map: {
+                        geostory: {
+                            params: {
+                                mediaType: 'map'
+                            },
+                            resultData: {
+                                resources: [
+                                    {
+                                        id: '71ecdd95-efc8-4639-ac1e-6ba292dc84d1',
+                                        type: 'map',
+                                        data: {}
+                                    }
+                                ],
+                                totalCount: 1
+                            }
+                        }
+                    },
+                    image: {
+                        geostory: {
+                            params: {
+                                mediaType: 'image'
+                            },
+                            resultData: {
+                                resources: [{id: '41456'}],
+                                totalCount: 1
+                            }
+                        }
+                    }
+                },
+                selected: '71ecdd95-efc8-4639-ac1e-6ba292dc84d1',
+                owner: "geostory",
+                settings: {
+                    mediaType: 'map',
+                    sourceId: 'geostory',
+                    mediaTypes: {
+                        image: {
+                            defaultSource: 'geostory',
+                            sources: [
+                                'geostory'
+                            ]
+                        },
+                        map: {
+                            defaultSource: 'geostory',
+                            sources: [
+                                'geostory',
+                                'geostoreMap'
+                            ]
+                        }
+                    },
+                    sources: {
+                        geostory: {
+                            name: 'Current story',
+                            type: 'geostory'
+                        },
+                        geostoreMap: {
+                            name: 'Geostore Dev',
+                            type: 'geostore',
+                            baseURL: 'rest/geostore/',
+                            category: 'MAP'
                         }
                     }
                 }

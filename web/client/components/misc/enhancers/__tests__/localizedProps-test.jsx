@@ -60,7 +60,7 @@ describe('localizedProps enhancher', () => {
         ReactDOM.render((<Sink options={[{label: "path.to.msg1"}, {label: "path.to.msg2"}]}/>), document.getElementById("container"));
     });
 
-    it('localizedProps for an array of objects', () => {
+    it('localizedProps for an array of objects with custom property key', () => {
 
         const Sink = compose(
             withContext(
@@ -73,11 +73,12 @@ describe('localizedProps enhancher', () => {
         )(createSink( props => {
             expect(props).toExist();
             expect(props.options).toExist();
-            expect(props.options[0].label).toBe("localized");
-            expect(props.options[1].label).toBe("localized2");
+            expect(props.options[0].myCustomlabel).toBe("localized");
+            expect(props.options[1].myCustomlabel).toBe("localized2");
         }));
         ReactDOM.render((<Sink options={[{myCustomlabel: "path.to.msg1"}, {myCustomlabel: "path.to.msg2"}]}/>), document.getElementById("container"));
     });
+
 
     it('localizedProps for an array of messages with wrong name', () => {
 
@@ -95,7 +96,7 @@ describe('localizedProps enhancher', () => {
             expect(props.options[0].label).toBe("");
             expect(props.options[1].label).toBe("");
         }));
-        ReactDOM.render((<Sink options={[{wrongNamelabel: "path.to.msg1"}, {wrongNamelabel: "path.to.msg2"}]}/>), document.getElementById("container"));
+        ReactDOM.render((<Sink options={[{wrongName: "path.to.msg1"}, {wrongName: "path.to.msg2"}]}/>), document.getElementById("container"));
     });
 
     it('localizedProps for an array of messages of type string', () => {

@@ -6,6 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 import React from "react";
+import {compose, withStateHandlers} from "recompose";
 
 import SectionContents from '../../contents/SectionContents';
 import immersiveBackgroundManager from "./enhancers/immersiveBackgroundManager";
@@ -37,7 +38,9 @@ const Immersive = ({
     viewWidth,
     viewHeight,
     focusedContent,
-    contentId
+    contentId,
+    bubblingTextEditing = () => {},
+    textEditorActiveClass = ""
 }) => {
     const hideContent = focusedContent && focusedContent.hideContent && (get(focusedContent, "target.id") === contentId);
     const visibility = hideContent ? 'hidden' : 'visible';
@@ -76,7 +79,7 @@ const Immersive = ({
             tools={{
                 [ContentTypes.COLUMN]: ['size', 'align', 'theme']
             }}
-            className="ms-section-contents"
+            className={`ms-section-contents${textEditorActiveClass}`}
             contents={contents}
             mode={mode}
             add={add}
@@ -93,6 +96,8 @@ const Immersive = ({
                 contentWrapperStyle: { minHeight: viewHeight, visibility }
             }}
             focusedContent={focusedContent}
+            bubblingTextEditing={bubblingTextEditing}
+            sectionType={sectionType}
         />
         {mode === Modes.EDIT && !hideContent && <AddBar
             containerWidth={viewWidth}
@@ -135,4 +140,10 @@ const Immersive = ({
     </section>);
 };
 
-export default immersiveBackgroundManager(Immersive);
+export default compose(
+    immersiveBackgroundManager,
+    withStateHandlers({textEditorActive: false}, {
+        bubblingTextEditing: () => (editing) => {
+            return  {textEditorActiveClass: editing ? ' ms-text-editor-active' : ''};
+        }
+    }))(Immersive);

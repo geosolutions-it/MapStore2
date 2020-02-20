@@ -32,9 +32,9 @@ const geoColderSelector = state => state.search && state.search;
 const centerToMarkerSelector = (state) => get(state, "mapInfo.centerToMarker", '');
 const additionalLayersSelector = state => get(state, "additionallayers", []);
 
-
 const layerSelectorWithMarkers = createSelector(
-    [layersSelector, clickedPointWithFeaturesSelector, geoColderSelector, centerToMarkerSelector, additionalLayersSelector, highlightPointSelector],
+    [layersSelector, clickedPointWithFeaturesSelector, geoColderSelector, centerToMarkerSelector, additionalLayersSelector,
+        highlightPointSelector],
     (layers = [], markerPosition, geocoder, centerToMarker, additionalLayers, highlightPoint) => {
 
         // Perform an override action on the layers using options retrieved from additional layers

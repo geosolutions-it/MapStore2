@@ -33,6 +33,8 @@ let defaultConfig = {
     geoStoreUrl: "/rest/geostore/",
     printUrl: "/mapstore/print/info.json",
     translationsPath: "translations",
+    extensionsRegistry: "extensions.json",
+    contextPluginsConfiguration: 'pluginsConfig.json',
     projectionDefs: [],
     themePrefix: "ms2",
     bingApiKey: null,
@@ -126,7 +128,7 @@ var ConfigUtils = {
         return null;
     },
     getDefaults: function() {
-        return defaultConfig;
+        return {...defaultConfig};
     },
     setLocalConfigurationFile(file) {
         localConfigFile = file;
@@ -137,11 +139,11 @@ var ConfigUtils = {
                 if (typeof response.data === 'object') {
                     defaultConfig = assign({}, defaultConfig, response.data);
                 }
-                return defaultConfig;
+                return {...defaultConfig};
             });
         }
         return new Promise((resolve) => {
-            resolve(defaultConfig);
+            resolve({...defaultConfig});
         });
     },
 

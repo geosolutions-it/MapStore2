@@ -6,8 +6,9 @@
  * LICENSE file in the root directory of this source tree.
  */
 import { get, isString, isNumber, findIndex, find, isObject, isArray, castArray } from "lodash";
-import { set, unset, arrayUpdate, compose } from '../utils/ImmutableUtils';
-import { getEffectivePath } from '../utils/GeoStoryUtils';
+import { set, unset, arrayUpdate, compose,
+    arrayDelete } from '../utils/ImmutableUtils';
+import { getEffectivePath, MediaTypes } from '../utils/GeoStoryUtils';
 
 import {
     ADD,
@@ -29,7 +30,8 @@ import {
     TOGGLE_SETTINGS_PANEL,
     UPDATE,
     UPDATE_CURRENT_PAGE,
-    UPDATE_SETTING
+    UPDATE_SETTING,
+    REMOVE_RESOURCE
 } from '../actions/geostory';
 
 /**
@@ -59,6 +61,22 @@ const getIndexToInsert = (array, position) => {
         index = Math.min(position, array.length);
     }
     return index;
+};
+
+const getContentsByResourceId = (rId, path, {contents, background, id, resourceId}) => {
+    let cts = [];
+    let localPath = path + `{"id": "${id}"}]`;
+    if (resourceId === rId) {
+        return [localPath];
+    }
+    if (background && background.resourceId === rId) {
+        cts.push(localPath + ".background");
+    }
+    if (contents) {
+        return contents.reduce((acc, e) => [...acc, ...getContentsByResourceId(rId, localPath + ".contents[", e)],
+            cts);
+    }
+    return cts;
 };
 
 let INITIAL_STATE = {
@@ -165,7 +183,33 @@ export default (state = INITIAL_STATE, action) => {
     }
     case EDIT_RESOURCE: {
         const { id, mediaType: type, data } = action;
-        const newState = arrayUpdate("currentStory.resources", { id, type, data }, { id }, state);
+
+        let newState = arrayUpdate("currentStory.resources", { id, type, data }, { id }, state);
+        // With a map resource we have to reset all contents' custom map configurations.
+        if (type === MediaTypes.MAP) {
+            state.currentStory.sections.reduce((acc, section) =>  ([...acc, ...getContentsByResourceId(id, "sections[", section)])
+                , [])
+                .map(rawPath => {
+                    const path = getEffectivePath(`currentStory.${rawPath}.map`, state);
+                    newState = set(path, undefined, newState);
+                });
+        }
+        return newState;
+    }
+    case REMOVE_RESOURCE: {
+        const {id, mediaType} = action;
+
+        let newState = arrayDelete("currentStory.resources", { id }, state);
+        state.currentStory.sections.reduce((acc, section) =>  ([...acc, ...getContentsByResourceId(id, "sections[", section)])
+            , [])
+            .map(rawPath => {
+                const resIdPath = getEffectivePath(`currentStory.${rawPath}.resourceId`, state);
+                newState = unset(resIdPath, newState);
+                if (mediaType === MediaTypes.MAP) {
+                    const customMapPath = getEffectivePath(`currentStory.${rawPath}.map`, state);
+                    newState = unset(customMapPath, newState);
+                }
+            });
         return newState;
     }
     case LOADING_GEOSTORY: {

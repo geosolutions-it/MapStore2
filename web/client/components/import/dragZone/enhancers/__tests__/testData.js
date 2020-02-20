@@ -9,6 +9,7 @@ const KMZ_FILE_URL = require('file-loader!../../../../../test-resources/caput-mu
 const KML_FILE_URL = require('file-loader!../../../../../test-resources/caput-mundi/caput-mundi.kml');
 const GEO_JSON_FILE_URL = require('file-loader!../../../../../test-resources/caput-mundi/caput-mundi.geojson');
 const MAP_FILE = require('file-loader!../../../../../test-resources/map.config');
+const UNSUPPORTED_MAP_FILE = require('file-loader!../../../../../test-resources/unsupportedMap.config');
 const getFile = (url, fileName = "file") =>
     Rx.Observable.defer( () => axios.get(url, {
         responseType: 'arraybuffer'
@@ -24,5 +25,6 @@ module.exports = {
     getKmlFile: () => getFile(KML_FILE_URL, "file.kml"),
     getKmzFile: () => getFile(KMZ_FILE_URL, "file.kmz"),
     getGeoJsonFile: (name = "file.json") => getFile(GEO_JSON_FILE_URL, name),
-    getMapFile: () => getFile(MAP_FILE, "map.json")
+    getMapFile: () => getFile(MAP_FILE, "map.json"),
+    getUnsupportedMapFile: () => getFile(UNSUPPORTED_MAP_FILE, "unsupportedMap.json")
 };

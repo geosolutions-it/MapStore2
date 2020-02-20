@@ -85,7 +85,7 @@ module.exports = (config = {}, pluginsDef, overrideConfig = cfg => cfg) => {
         });
 
         ReactDOM.render(
-            <StandardApp {...appConfig}/>,
+            <StandardApp enableExtensions {...appConfig}/>,
             document.getElementById('container')
         );
     };

@@ -21,7 +21,9 @@ export const SET_FILE_DROP_STATUS = 'CONTEXTCREATOR:SET_FILE_DROP_STATUS';
 export const SAVE_TEMPLATE = 'CONTEXTCREATOR:SAVE_TEMPLATE';
 export const LOAD_TEMPLATE = 'CONTEXTCREATOR:LOAD_TEMPLATE';
 export const UPDATE_TEMPLATE = 'CONTEXTCREATOR:UPDATE_TEMPLATE';
+export const DELETE_TEMPLATE = 'CONTEXTCREATOR:DELETE_TEMPLATE';
 export const SET_EDITED_TEMPLATE = 'CONTEXTCREATOR:SET_EDITED_TEMPLATE';
+export const SET_TEMPLATES = 'CONTEXTCREATOR:SET_TEMPLATES';
 export const EDIT_TEMPLATE = 'CONTEXTCREATOR:EDIT_TEMPLATE';
 export const SET_FILTER_TEXT = 'CONTEXTCREATOR:SET_FILTER_TEXT';
 export const SET_SELECTED_PLUGINS = 'CONTEXTCREATOR:SET_SELECTED_PLUGINS';
@@ -48,6 +50,11 @@ export const CONTEXT_LOAD_ERROR = 'CONTEXTCREATOR:CONTEXT_LOAD_ERROR';
 export const LOADING = 'CONTEXTCREATOR:LOADING';
 export const CONTEXT_SAVED = 'CONTEXTCREATOR:CONTEXT_SAVED';
 export const SAVE_CONTEXT = 'CONTEXTCREATOR:SAVE_CONTEXT';
+export const ENABLE_UPLOAD_PLUGIN = 'CONTEXTCREATOR:ENABLE_UPLOAD_PLUGIN';
+export const UPLOAD_PLUGIN = 'CONTEXTCREATOR:UPLOAD_PLUGIN';
+export const UPLOAD_PLUGIN_ERROR = 'CONTEXTCREATOR:UPLOAD_PLUGIN_ERROR';
+export const UPLOADING_PLUGIN = 'CONTEXTCREATOR:UPLOADING_PLUGIN';
+export const PLUGIN_UPLOADED = 'CONTEXTCREATOR:PLUGIN_UPLOADED';
 
 export const setCreationStep = (stepId) => ({
     type: SET_CREATION_STEP,
@@ -154,12 +161,30 @@ export const updateTemplate = (resource) => ({
 });
 
 /**
+ * Deletes a template from server
+ * @param {object} resource template resource
+ */
+export const deleteTemplate = (resource) => ({
+    type: DELETE_TEMPLATE,
+    resource
+});
+
+/**
  * Set edited template
  * @param {number} id template id
  */
 export const setEditedTemplate = (id) => ({
     type: SET_EDITED_TEMPLATE,
     id
+});
+
+/**
+ * Set templates array
+ * @param {object[]} templates array of templates
+ */
+export const setTemplates = (templates) => ({
+    type: SET_TEMPLATES,
+    templates
 });
 
 /**
@@ -363,4 +388,46 @@ export const contextSaved = (id) => ({
 export const saveNewContext = (destLocation) => ({
     type: SAVE_CONTEXT,
     destLocation
+});
+
+/**
+ * Enables / disabled the plugin upload tool.
+ * @param {boolean} enable flag to enable / disable the tool
+ */
+export const enableUploadPlugin = (enable = false) => ({
+    type: ENABLE_UPLOAD_PLUGIN,
+    enable
+});
+
+/**
+ * Starts the plugin upload workflow
+ */
+export const uploadPlugin = (files) => ({
+    type: UPLOAD_PLUGIN,
+    files
+});
+
+/**
+ * Starts the plugin upload workflow
+ */
+export const uploadPluginError = (files) => ({
+    type: UPLOAD_PLUGIN_ERROR,
+    files
+});
+
+/**
+ * Starts/ends plugin upload workflow
+ */
+export const pluginUploading = (status = false, plugins) => ({
+    type: UPLOADING_PLUGIN,
+    status,
+    plugins
+});
+
+/**
+ * Receives uploaded plugin(s) result
+ */
+export const pluginUploaded = (plugins) => ({
+    type: PLUGIN_UPLOADED,
+    plugins
 });

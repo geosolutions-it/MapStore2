@@ -1,20 +1,20 @@
-# Dev Setup and Run
+# Quick Setup and Run
 
-Clone the repository with the --recursive option to automatically clone submodules:
+Clone the repository:
 
-```
-git clone --recursive https://github.com/geosolutions-it/MapStore2.git
+```bash
+git clone https://github.com/geosolutions-it/MapStore2.git
 ```
 
 If needed, install NodeJS version >= 8 from [here](https://nodejs.org/en/download/releases/), then update npm to version >= 5, using:
 
-```
+```bash
 npm install -g npm
 ```
 
 Start the demo locally:
 
-```
+```bash
 npm cache clean  # this is useful to prevent errors on Windows during install
 
 npm install
@@ -24,8 +24,11 @@ npm start
 
 Then point your preferred browser to [http://localhost:8081](http://localhost:8081).
 
-**Other useful commands**
-```
+**note:** This running demo uses [https://dev.geo-solutions.it/mapstore/](https://dev.geo-solutions.it/mapstore/) as back-end.
+
+## Other useful commands
+
+```bash
 # Run tests
 npm test
 
@@ -35,6 +38,7 @@ npm run continuoustest
 #generate test documentation
 npm run doctest
 ```
+
 ## Quick Build and Deploy
 
 Install latest Maven, if needed, from [here](https://maven.apache.org/download.cgi) (version 3.1.0 is required).
@@ -50,11 +54,3 @@ Where version_identifier is an optional identifier of the generated war that wil
 Deploy the generated `mapstore.war` file (in web/target) to your favourite J2EE container (e.g. Tomcat).
 
 [Here](database-setup) you can find how to setup the database.
-
-## Developers Documentation
- * [Infrastructure](infrastructure-and-general-architecture)
- * [Developing with MapStore](developing-with-mapstore-2-intro)
- * [Configuration](configuration-files)
- * [Migration](mapstore-migration-guide)
- * [How to Release](release)
-

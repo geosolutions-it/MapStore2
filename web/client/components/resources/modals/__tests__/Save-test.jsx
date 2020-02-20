@@ -5,10 +5,11 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-var React = require('react');
-var ReactDOM = require('react-dom');
-var MetadataModal = require('../Save.jsx');
-var expect = require('expect');
+const React = require('react');
+const ReactDOM = require('react-dom');
+const MetadataModal = require('../Save.jsx');
+const expect = require('expect');
+const { find, get } = require('lodash');
 
 describe('This test for dashboard save form', () => {
 
@@ -137,6 +138,30 @@ describe('This test for dashboard save form', () => {
 
         const permissionSection = document.querySelector(".permissions-table");
         expect(permissionSection).toExist();
+    });
+    it('modal save button is disabled when enableFileDrop=true and fileDropStatus !== accepted', () => {
+        const user = {role: 'ADMIN'};
+        const metadataModalItem = ReactDOM.render(<MetadataModal user={user}
+            show resource={{}} useModal enableFileDrop fileDropStatus="rejected" id="MetadataModal"/>, document.getElementById('container'));
+        expect(metadataModalItem).toExist();
+
+        const buttons = document.getElementsByTagName('button');
+        const saveButton = find(buttons, button => button.childNodes[0] && (button.childNodes[0].textContent === 'save' ||
+            get(button.childNodes[0].childNodes[0], 'textContent') === 'save'));
+        expect(saveButton).toExist();
+        expect(saveButton.disabled).toBe(true);
+    });
+    it('modal save button is enabled when enableFileDrop=true and fileDropStatus === accepted', () => {
+        const user = {role: 'ADMIN'};
+        const metadataModalItem = ReactDOM.render(<MetadataModal user={user} show resource={{metadata: {name: 'res'}}} useModal
+            enableFileDrop fileDropStatus="accepted" id="MetadataModal"/>, document.getElementById('container'));
+        expect(metadataModalItem).toExist();
+
+        const buttons = document.getElementsByTagName('button');
+        const saveButton = find(buttons, button => button.childNodes[0] && (button.childNodes[0].textContent === 'save' ||
+            get(button.childNodes[0].childNodes[0], 'textContent') === 'save'));
+        expect(saveButton).toExist();
+        expect(saveButton.disabled).toBe(false);
     });
 
 });

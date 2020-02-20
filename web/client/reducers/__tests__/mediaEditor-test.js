@@ -8,6 +8,7 @@
 import expect from 'expect';
 
 import mediaEditor, {DEFAULT_STATE} from '../mediaEditor';
+import { LOCATION_CHANGE } from 'connected-react-router';
 
 const {
     chooseMedia,
@@ -41,24 +42,15 @@ describe('Test the mediaEditor reducer', () => {
         expect(state.saveState.editing).toEqual(editing);
     });
     it('CHOOSE_MEDIA', () => {
-        let state = mediaEditor({}, chooseMedia());
-        expect(state.open).toEqual(false);
-        expect(state.owner).toEqual(undefined);
-        expect(state.settings).toEqual(undefined);
-        expect(state.stashedSettings).toEqual(undefined);
-
-        // if there is a stashed change
-        state = mediaEditor({stashedSettings: {setting1: true}}, chooseMedia());
-        expect(state.open).toEqual(false);
-        expect(state.owner).toEqual(undefined);
-        expect(state.settings).toEqual({setting1: true});
-        expect(state.stashedSettings).toEqual(undefined);
+        const oState = {};
+        let state = mediaEditor(oState, chooseMedia());
+        expect(state).toBe(oState);
     });
     it('HIDE', () => {
         let state = mediaEditor({}, hide());
         expect(state.open).toEqual(false);
         expect(state.owner).toEqual(undefined);
-        expect(state.settings).toEqual(undefined);
+        expect(state.settings).toEqual(DEFAULT_STATE.settings);
         expect(state.selected).toEqual(undefined);
         expect(state.saveState).toEqual({editing: false, addingMedia: false});
         expect(state.stashedSettings).toEqual(undefined);
@@ -137,5 +129,40 @@ describe('Test the mediaEditor reducer', () => {
             }
         }, updateItem(map));
         expect(state.data.map.geostoreMap.resultData.resources[0]).toEqual(map);
+    });
+    it("LOCATION_CHANGE", () => {
+        const adding = true;
+        let state = mediaEditor(undefined, setAddingMedia(adding));
+        expect(state.saveState.addingMedia).toEqual(adding);
+        expect(state.selected).toEqual("");
+        expect(state).toNotEqual(DEFAULT_STATE);
+        state = mediaEditor(state, {type: LOCATION_CHANGE});
+        expect(state).toEqual(DEFAULT_STATE);
+    });
+    it('UPDATE_ITEM with mode replace', () => {
+        const map = {
+            id: "resId",
+            layers: [{id: "layerId"}]
+        };
+
+        let state = mediaEditor({
+            settings: {
+                mediaType: "map",
+                sourceId: "geostoreMap"
+            },
+            data: {
+                map: {
+                    geostoreMap: {
+                        resultData: {
+                            resources: [{
+                                id: "resId",
+                                test: "has to disappear"
+                            }]
+                        }
+                    }
+                }
+            }
+        }, updateItem(map, "replace"));
+        expect(state.data.map.geostoreMap.resultData.resources[0]).toBe(map);
     });
 });

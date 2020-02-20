@@ -9,7 +9,7 @@ import {get, find, findIndex, isEqual, uniq} from 'lodash';
 import { Controls, getEffectivePath } from '../utils/GeoStoryUtils';
 import { SectionTypes, findSectionIdFromColumnId } from './../utils/GeoStoryUtils';
 import { isAdminUserSelector } from './security';
-
+import {pathnameSelector} from "./router";
 /**
  * Returns a selector using a path inside the current story
  * @param {string} path the path
@@ -239,3 +239,35 @@ export const settingsItemsSelector = state => {
         return [...p, {label: c.title || "", value: c.id}];
     }, []);
 };
+
+
+/**
+ * Traverse story elements tree checking if passed resource is used.
+ * @param {*} rId Media resource id
+ * @param {object} story content
+ */
+const findMediaResourceInContent = (rId, {contents, background, resourceId}) => {
+    if (resourceId === rId) {
+        return true;
+    }
+    if (background && background.resourceId === rId) {
+        return true;
+    }
+    if (contents) {
+        return !!find(contents, e => findMediaResourceInContent(rId, e));
+    }
+    return false;
+};
+
+/**
+ * Return true if passed resource is used somewhere in the current story tree
+ * @param {object*} state Application state
+ * @param {*} resId Media resource id
+ */
+export const isMediaResourceUsed = (state, resId) => !!find(sectionsSelector(state), section => findMediaResourceInContent(resId, section));
+
+/**
+ * It checks if is a shared story or not
+ * @param {object} state application state
+ */
+export const isSharedStory = (state = {}) => pathnameSelector(state).includes("geostory/shared");

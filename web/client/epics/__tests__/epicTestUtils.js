@@ -12,14 +12,21 @@ module.exports = {
      * @param  {function} callback   The check function, called after `count` actions received
      * @param  {Object|function}   [state={}] the state or a function that return it
      */
-    testEpic: (epic, count, action, callback, state = {}) => {
+    testEpic: (epic, count, action, callback, state = {}, done) => {
         const actions = new Rx.Subject();
         const actions$ = new ActionsObservable(actions);
         const store = { getState: () => isFunction(state) ? state() : state, dispatch: () => {}};
         epic(actions$, store)
             .take(count)
             .toArray()
-            .subscribe(callback);
+            .subscribe(done ? (x) => {
+                try {
+                    callback(x);
+                    done();
+                } catch (e) {
+                    done(e);
+                }
+            } : callback);
         if (action.length) {
             action.map(act => actions.next(act));
         } else {

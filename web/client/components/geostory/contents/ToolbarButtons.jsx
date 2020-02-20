@@ -22,6 +22,7 @@ const BUTTON_CLASSES = 'square-button-md no-border';
 export const SizeButtonToolbar = ({editMap: disabled = false, align, sectionType, size, update = () => {} }) =>
     (<ToolbarDropdownButton
         value={size}
+        noTooltipWhenDisabled
         disabled={disabled}
         glyph="resize-horizontal"
         pullRight={(align === "right" || size === "full" || size === "large") && !sectionType}
@@ -49,6 +50,7 @@ export const SizeButtonToolbar = ({editMap: disabled = false, align, sectionType
 export const AlignButtonToolbar = ({editMap: disabled = false, align, sectionType, size, update = () => {} }) =>
     (<ToolbarDropdownButton
         value={align}
+        noTooltipWhenDisabled
         disabled={size === 'full' || disabled}
         glyph="align-center"
         pullRight={(align === "right" || size === "full" || size === "large") && !sectionType}
@@ -72,6 +74,7 @@ export const AlignButtonToolbar = ({editMap: disabled = false, align, sectionTyp
 export const ThemeButtonToolbar = ({editMap: disabled = false, theme, align, sectionType, update = () => {}, fit, themeOptions, size }) =>
     (<ToolbarDropdownButton
         value={theme}
+        noTooltipWhenDisabled
         pullRight={(align === "right" || size === "full" || size === "large") && !sectionType}
         glyph="dropper"
         tooltipId="geostory.contentToolbar.contentTheme"
@@ -97,6 +100,7 @@ export const DeleteButtonToolbar = ({ editMap: disabled = false, path, remove = 
     (<DeleteButton
         glyph={"trash"}
         visible
+        noTooltipWhenDisabled
         disabled={disabled}
         className={BUTTON_CLASSES}
         tooltipId={"geostory.contentToolbar.remove"}

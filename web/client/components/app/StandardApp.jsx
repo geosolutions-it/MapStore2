@@ -23,11 +23,15 @@ const PluginsUtils = require('../../utils/PluginsUtils');
 
 const assign = require('object-assign');
 const url = require('url');
-const {isObject, isArray} = require('lodash');
+const { isObject, isArray, castArray } = require('lodash');
 
 const urlQuery = url.parse(window.location.href, true).query;
 
+const axios = require('../../libs/ajax');
+
 require('./appPolyfill');
+
+const { augmentStore } = require('../../utils/StateUtils');
 
 const ErrorBoundary = require('react-error-boundary').default;
 
@@ -57,7 +61,8 @@ class StandardApp extends React.Component {
         printingEnabled: PropTypes.bool,
         onStoreInit: PropTypes.func,
         onInit: PropTypes.func,
-        mode: PropTypes.string
+        mode: PropTypes.string,
+        enableExtensions: PropTypes.bool
     };
 
     static defaultProps = {
@@ -66,11 +71,13 @@ class StandardApp extends React.Component {
         printingEnabled: false,
         appStore: () => ({dispatch: () => {}, getState: () => ({}), subscribe: () => {}}),
         appComponent: () => <span/>,
-        onStoreInit: () => {}
+        onStoreInit: () => {},
+        enableExtensions: false
     };
 
     state = {
-        initialized: false
+        initialized: false,
+        pluginsRegistry: {}
     };
 
     addProjDefinitions(config) {
@@ -119,12 +126,14 @@ class StandardApp extends React.Component {
 
     render() {
         const {plugins, requires} = this.props.pluginsDef;
-        const {pluginsDef, appStore, initialActions, appComponent, mode, ...other} = this.props;
+        const {appStore, initialActions, appComponent, mode, ...other} = this.props;
         const App = dragDropContext(html5Backend)(this.props.appComponent);
         return this.state.initialized ?
-            <ErrorBoundary><Provider store={this.store}>
-                <App {...other} plugins={assign(PluginsUtils.getPlugins(plugins), { requires })} />
-            </Provider></ErrorBoundary>
+            <ErrorBoundary onError={e => {
+                console.error(e); // eslint-disable-line no-console
+            }}><Provider store={this.store}>
+                    <App {...other} plugins={assign(PluginsUtils.getPlugins({...plugins, ...this.state.pluginsRegistry}), { requires })} />
+                </Provider></ErrorBoundary>
             : (<span><div className="_ms2_init_spinner _ms2_init_center"><div></div></div>
                 <div className="_ms2_init_text _ms2_init_center">Loading MapStore</div></span>);
     }
@@ -139,17 +148,58 @@ class StandardApp extends React.Component {
             initialized: true
         });
     };
+    loadExtensions = (path, callback) => {
+        if (this.props.enableExtensions) {
+            return axios.get(path).then((response) => {
+                const plugins = response.data;
+                Promise.all(Object.keys(plugins).map((pluginName) => {
+                    return PluginsUtils.loadPlugin(plugins[pluginName].bundle).then((loaded) => {
+                        return loaded.plugin.loadPlugin().then((impl) => {
+                            augmentStore({ reducers: impl.reducers || {}, epics: impl.epics || {} });
+                            const pluginDef = {
+                                [pluginName]: {
+                                    [pluginName]: {
+                                        loadPlugin: (resolve) => {
+                                            resolve(impl);
+                                        }
+                                    }
+                                }
+                            };
+                            return { plugin: pluginDef, translations: plugins[pluginName].translations || "" };
+                        });
+                    });
+                })).then((loaded) => {
+                    callback(loaded.reduce((previous, current) => {
+                        return { ...previous, ...current.plugin };
+                    }, {}), loaded.map(p => p.translations).filter(p => p !== ""));
+                }).catch(() => {
+                    callback({}, []);
+                });
+            }).catch(() => {
+                callback({}, []);
+            });
+        }
+        return callback({}, []);
+    };
     init = (config) => {
         this.store.dispatch(changeBrowserProperties(ConfigUtils.getBrowserProperties()));
         this.store.dispatch(localConfigLoaded(config));
         this.addProjDefinitions(config);
         const locale = LocaleUtils.getUserLocale();
-        this.store.dispatch(loadLocale(null, locale));
-        if (this.props.onInit) {
-            this.props.onInit(this.store, this.afterInit.bind(this, [config]), config);
-        } else {
-            this.afterInit(config);
-        }
+        this.loadExtensions(ConfigUtils.getConfigProp('extensionsRegistry'), (plugins, translations) => {
+            this.setState({
+                pluginsRegistry: plugins
+            });
+            if (translations.length > 0) {
+                ConfigUtils.setConfigProp("translationsPath", [...castArray(ConfigUtils.getConfigProp("translationsPath")), ...translations]);
+            }
+            this.store.dispatch(loadLocale(null, locale));
+            if (this.props.onInit) {
+                this.props.onInit(this.store, this.afterInit.bind(this, [config]), config);
+            } else {
+                this.afterInit(config);
+            }
+        });
     };
     /**
      * It returns an object of the same structure of the initialState but replacing strings like "{someExpression}" with the result of the expression between brackets.

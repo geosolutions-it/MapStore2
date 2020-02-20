@@ -209,4 +209,42 @@ describe('Test default style update with layers rest API', () => {
             styleName: 'workspace001:new_default_style'
         });
     });
+    it('test updateDefaultStyle, when styles are not available, it have to add the new style to the list', (done) => {
+
+        const OLD_DEFAULT_STYLE = {
+            name: 'workspace001:old_default_style',
+            workspace: 'workspace001',
+            href: '/geoserver/rest/workspaces/workspace001/styles/old_default_style.json'
+        };
+
+        mockAxios.onGet(/\/layers/).reply((config) => {
+            expect(config.url).toBe('/geoserver/rest/workspaces/workspace001/layers/layer001.json');
+            return [200, {
+                layer: {
+                    name: 'layer001',
+                    defaultStyle: OLD_DEFAULT_STYLE
+                }
+            }];
+        });
+
+        mockAxios.onPut(/\/layers/).reply((config) => {
+            try {
+                const layer = JSON.parse(config.data).layer;
+                expect(layer.defaultStyle).toEqual({ "name": "workspace001:new_default_style" });
+                expect(layer.styles.style).toEqual([
+                    OLD_DEFAULT_STYLE
+                ]);
+            } catch (e) {
+                done(e);
+            }
+            done();
+            return [200, {}];
+        });
+
+        API.updateDefaultStyle({
+            baseUrl: '/geoserver/',
+            layerName: 'workspace001:layer001',
+            styleName: 'workspace001:new_default_style'
+        });
+    });
 });

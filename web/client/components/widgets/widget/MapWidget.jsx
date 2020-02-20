@@ -7,11 +7,13 @@
  */
 const React = require('react');
 const WidgetContainer = require('./WidgetContainer');
+const BorderLayout = require('../../layout/BorderLayout');
 const { omit } = require('lodash');
 const {withHandlers} = require('recompose');
 const MapView = withHandlers({
-    onMapViewChanges: ({ updateProperty = () => { } }) => map => updateProperty('map', map)
+    onMapViewChanges: ({ updateProperty = () => { } }) => ({layers, ...map}) => updateProperty('map', map, "merge" )
 })(require('./MapView'));
+const LoadingSpinner = require('../../misc/LoadingSpinner');
 
 module.exports = ({
     updateProperty = () => { },
@@ -19,9 +21,11 @@ module.exports = ({
     id, title,
     map,
     icons,
+    hookRegister,
     mapStateSource,
     topRightItems,
     confirmDelete = false,
+    loading = false,
     onDelete = () => {},
     headerStyle
 } = {}) =>
@@ -29,12 +33,21 @@ module.exports = ({
         icons={icons}
         topRightItems={topRightItems}
     >
-        <MapView
-            updateProperty={updateProperty}
-            id={id}
-            map={omit(map, 'mapStateSource')}
-            mapStateSource={mapStateSource}
-            layers={map && map.layers}
-            options={{ style: { margin: 10, height: 'calc(100% - 20px)' }}}
-        />
+        <BorderLayout
+            footer={
+                <div style={{ height: "30px", overflow: "hidden"}}>
+                    {loading ? <span style={{ "float": "right"}}><LoadingSpinner /></span> : null}
+                </div>
+            }>
+            <MapView
+                updateProperty={updateProperty}
+                id={id}
+                map={omit(map, 'mapStateSource')}
+                mapStateSource={mapStateSource}
+                hookRegister={hookRegister}
+                layers={map && map.layers}
+                options={{ style: { margin: 10, height: 'calc(100% - 20px)' }}}
+            />
+        </BorderLayout>
+
     </WidgetContainer>);

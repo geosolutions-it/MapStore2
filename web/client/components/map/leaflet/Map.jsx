@@ -43,6 +43,7 @@ class LeafletMap extends React.Component {
         registerHooks: PropTypes.bool,
         interactive: PropTypes.bool,
         resolutions: PropTypes.array,
+        hookRegister: PropTypes.object,
         onCreationError: PropTypes.func
     };
 
@@ -65,6 +66,7 @@ class LeafletMap extends React.Component {
         onLayerError: () => {},
         resize: 0,
         registerHooks: true,
+        hookRegister: mapUtils,
         style: {},
         interactive: true,
         resolutions: mapUtils.getGoogleMercatorResolutions(0, 23)
@@ -380,15 +382,15 @@ class LeafletMap extends React.Component {
     };
 
     registerHooks = () => {
-        mapUtils.registerHook(mapUtils.EXTENT_TO_ZOOM_HOOK, (extent) => {
+        this.props.hookRegister.registerHook(mapUtils.EXTENT_TO_ZOOM_HOOK, (extent) => {
             var repojectedPointA = CoordinatesUtils.reproject([extent[0], extent[1]], this.props.projection, 'EPSG:4326');
             var repojectedPointB = CoordinatesUtils.reproject([extent[2], extent[3]], this.props.projection, 'EPSG:4326');
             return this.map.getBoundsZoom([[repojectedPointA.y, repojectedPointA.x], [repojectedPointB.y, repojectedPointB.x]]) - 1;
         });
-        mapUtils.registerHook(mapUtils.RESOLUTIONS_HOOK, () => {
+        this.props.hookRegister.registerHook(mapUtils.RESOLUTIONS_HOOK, () => {
             return this.getResolutions();
         });
-        mapUtils.registerHook(mapUtils.COMPUTE_BBOX_HOOK, (center, zoom) => {
+        this.props.hookRegister.registerHook(mapUtils.COMPUTE_BBOX_HOOK, (center, zoom) => {
             let latLngCenter = L.latLng([center.y, center.x]);
             // this call will use map internal size
             let topLeftPoint = this.map._getNewPixelOrigin(latLngCenter, zoom);
@@ -407,17 +409,17 @@ class LeafletMap extends React.Component {
                 rotation: 0
             };
         });
-        mapUtils.registerHook(mapUtils.GET_PIXEL_FROM_COORDINATES_HOOK, (pos) => {
+        this.props.hookRegister.registerHook(mapUtils.GET_PIXEL_FROM_COORDINATES_HOOK, (pos) => {
             let latLng = CoordinatesUtils.reproject(pos, this.props.projection, 'EPSG:4326');
             let pixel = this.map.latLngToContainerPoint([latLng.y, latLng.x]);
             return [pixel.x, pixel.y];
         });
-        mapUtils.registerHook(mapUtils.GET_COORDINATES_FROM_PIXEL_HOOK, (pixel) => {
+        this.props.hookRegister.registerHook(mapUtils.GET_COORDINATES_FROM_PIXEL_HOOK, (pixel) => {
             const point = this.map.containerPointToLatLng(pixel);
             let pos = CoordinatesUtils.reproject([point.lng, point.lat], 'EPSG:4326', this.props.projection);
             return [pos.x, pos.y];
         });
-        mapUtils.registerHook(mapUtils.ZOOM_TO_EXTENT_HOOK, (extent, { padding, crs, maxZoom, duration } = {}) => {
+        this.props.hookRegister.registerHook(mapUtils.ZOOM_TO_EXTENT_HOOK, (extent, { padding, crs, maxZoom, duration } = {}) => {
             const paddingTopLeft = padding && L.point(padding.left || 0, padding.top || 0);
             const paddingBottomRight = padding && L.point(padding.right || 0, padding.bottom || 0);
             const bounds = CoordinatesUtils.reprojectBbox(extent, crs, 'EPSG:4326');

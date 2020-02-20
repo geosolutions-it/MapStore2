@@ -12,21 +12,47 @@ import {
     resetConfigOnPluginKeyChange,
     editPluginEpic,
     enablePluginsEpic,
-    disablePluginsEpic
+    disablePluginsEpic,
+    uploadPluginEpic,
+    saveTemplateEpic,
+    checkIfContextExists
 } from '../contextcreator';
 import {
     editPlugin,
     enablePlugins,
     disablePlugins,
     changePluginsKey,
+    changeAttribute,
+    uploadPlugin,
+    saveTemplate,
     SET_EDITED_PLUGIN,
     SET_EDITED_CFG,
     SET_CFG_ERROR,
     CHANGE_PLUGINS_KEY,
-    ENABLE_MANDATORY_PLUGINS
+    ENABLE_MANDATORY_PLUGINS,
+    PLUGIN_UPLOADED,
+    UPLOADING_PLUGIN,
+    LOADING,
+    LOAD_TEMPLATE,
+    SHOW_DIALOG,
+    IS_VALID_CONTEXT_NAME,
+    CONTEXT_NAME_CHECKED
 } from '../../actions/contextcreator';
+import {
+    SHOW_NOTIFICATION
+} from '../../actions/notifications';
+
+import axios from "../../libs/ajax";
+import MockAdapter from "axios-mock-adapter";
 
 describe('contextcreator epics', () => {
+    let mockAxios;
+    beforeEach(() => {
+        mockAxios = new MockAdapter(axios);
+    });
+    afterEach(() => {
+        mockAxios.restore();
+    });
     it('resetConfigOnPluginKeyChange', (done) => {
         const startActions = [changePluginsKey(['plugin', 'editedPlugin'], 'enabled', false)];
         testEpic(resetConfigOnPluginKeyChange, 2, startActions, actions => {
@@ -35,7 +61,6 @@ describe('contextcreator epics', () => {
             expect(actions[0].error).toNotExist();
             expect(actions[1].type).toBe(SET_EDITED_PLUGIN);
             expect(actions[1].pluginName).toNotExist();
-            done();
         }, {
             contextcreator: {
                 editedPlugin: 'editedPlugin',
@@ -49,7 +74,7 @@ describe('contextcreator epics', () => {
                     children: []
                 }]
             }
-        });
+        }, done);
     });
     it('editPluginEpic', (done) => {
         const pluginName = 'pluginName';
@@ -60,13 +85,12 @@ describe('contextcreator epics', () => {
             expect(actions[0].pluginName).toBe(pluginName);
             expect(actions[1].type).toBe(SET_EDITED_CFG);
             expect(actions[1].pluginName).toBe(pluginName);
-            done();
         }, {
             contextcreator: {
                 editedPlugin: "editedPlugin",
                 validationStatus: true
             }
-        });
+        }, done);
     });
     it('enablePluginsEpic', (done) => {
         const pluginsToEnable = ['ZoomIn', 'ZoomOut'];
@@ -86,31 +110,36 @@ describe('contextcreator epics', () => {
             expect(actions[2].ids.length).toBe(0);
             expect(actions[2].key).toBe('forcedMandatory');
             expect(actions[2].value).toBe(true);
-            done();
         }, {
             contextcreator: {
                 plugins: [{
                     name: 'MetadataExplorer',
                     title: 'Catalog',
                     dependencies: [],
+                    children: [],
+                    autoEnableChildren: [],
                     enabled: false,
                     isUserPlugin: false,
                     active: false
                 }, {
                     name: 'ZoomIn',
                     dependencies: [],
+                    children: [],
+                    autoEnableChildren: [],
                     enabled: false,
                     isUserPlugin: false,
                     active: false
                 }, {
                     name: 'ZoomOut',
                     dependencies: [],
+                    children: [],
+                    autoEnableChildren: [],
                     enabled: false,
                     isUserPlugin: false,
                     active: false
                 }]
             }
-        });
+        }, done);
     });
     it('enablePluginsEpic with dependencies', (done) => {
         const pluginsToEnable = ['Widgets', 'WidgetsBuilder'];
@@ -133,7 +162,6 @@ describe('contextcreator epics', () => {
             expect(actions[3].ids).toEqual(['WidgetsTray']);
             expect(actions[3].key).toBe('enabledDependentPlugins');
             expect(actions[3].value).toEqual(['WidgetsBuilder']);
-            done();
         }, {
             contextcreator: {
                 plugins: [{
@@ -181,7 +209,7 @@ describe('contextcreator epics', () => {
                     children: []
                 }]
             }
-        });
+        }, done);
     });
     it('enablePluginsEpic with transitive dependencies', (done) => {
         const pluginsToEnable = ['Widgets', 'WidgetsBuilder'];
@@ -220,7 +248,6 @@ describe('contextcreator epics', () => {
             expect(enabledDependentPluginsActions[3].ids).toEqual(['WidgetsTray']);
             expect(enabledDependentPluginsActions[3].key).toBe('enabledDependentPlugins');
             expect(enabledDependentPluginsActions[3].value).toEqual(['WidgetsBuilder']);
-            done();
         }, {
             contextcreator: {
                 plugins: [{
@@ -295,7 +322,7 @@ describe('contextcreator epics', () => {
                     children: []
                 }]
             }
-        });
+        }, done);
     });
     it('disablePluginsEpic', (done) => {
         const pluginsToDisable = ['ZoomIn', 'ZoomOut'];
@@ -306,31 +333,36 @@ describe('contextcreator epics', () => {
             expect(actions[0].ids).toEqual(pluginsToDisable);
             expect(actions[0].key).toBe('enabled');
             expect(actions[0].value).toBe(false);
-            done();
         }, {
             contextcreator: {
                 plugins: [{
                     name: 'MetadataExplorer',
                     title: 'Catalog',
                     dependencies: [],
+                    enabledDependentPlugins: [],
+                    children: [],
                     enabled: true,
                     isUserPlugin: false,
                     active: false
                 }, {
                     name: 'ZoomIn',
                     dependencies: [],
+                    enabledDependentPlugins: [],
+                    children: [],
                     enabled: true,
                     isUserPlugin: false,
                     active: false
                 }, {
                     name: 'ZoomOut',
                     dependencies: [],
+                    enabledDependentPlugins: [],
+                    children: [],
                     enabled: true,
                     isUserPlugin: false,
                     active: false
                 }]
             }
-        });
+        }, done);
     });
     it('disablePluginsEpic with dependencies', (done) => {
         const pluginsToDisable = ['WidgetsBuilder'];
@@ -349,18 +381,20 @@ describe('contextcreator epics', () => {
             expect(actions[2].ids).toEqual(['WidgetsTray']);
             expect(actions[2].key).toBe('forcedMandatory');
             expect(actions[2].value).toBe(false);
-            done();
         }, {
             contextcreator: {
                 plugins: [{
                     name: 'Widgets',
                     dependencies: [],
+                    enabledDependentPlugins: [],
                     enabled: true,
                     isUserPlugin: false,
                     active: false,
                     children: [{
                         name: 'WidgetsBuilder',
                         dependencies: ['WidgetsTray'],
+                        enabledDependentPlugins: [],
+                        children: [],
                         parent: 'Widgets',
                         enabled: true,
                         isUserPlugin: false,
@@ -368,6 +402,7 @@ describe('contextcreator epics', () => {
                     }, {
                         name: 'WidgetsTray',
                         dependencies: [],
+                        children: [],
                         enabledDependentPlugins: ['WidgetsBuilder'],
                         forcedMandatory: true,
                         parent: 'Widgets',
@@ -378,30 +413,34 @@ describe('contextcreator epics', () => {
                 }, {
                     name: 'ZoomIn',
                     dependencies: [],
+                    enabledDependentPlugins: [],
+                    children: [],
                     enabled: true,
                     isUserPlugin: true,
                     active: false
                 }, {
                     name: 'ZoomOut',
                     dependencies: [],
+                    enabledDependentPlugins: [],
+                    children: [],
                     enabled: false,
                     isUserPlugin: false,
                     active: false
                 }]
             }
-        });
+        }, done);
     });
     it('disablePluginsEpic with transitive dependencies', (done) => {
         const pluginsToDisable = ['Widgets'];
         const startActions = [disablePlugins(pluginsToDisable)];
-        testEpic(disablePluginsEpic, 5, startActions, actions => {
-            expect(actions.length).toBe(5);
+        testEpic(disablePluginsEpic, 6, startActions, actions => {
+            expect(actions.length).toBe(6);
             expect(actions[0].type).toBe(CHANGE_PLUGINS_KEY);
-            expect(actions[0].ids.sort()).toEqual(['BurgerMenu', 'CheeseburgerMenu', 'OmniBar', 'Widgets']);
+            expect(actions[0].ids.sort()).toEqual(['BurgerMenu', 'CheeseburgerMenu', 'OmniBar', 'Widgets', 'WidgetsBuilder', 'WidgetsTray']);
             expect(actions[0].key).toBe('enabled');
             expect(actions[0].value).toBe(false);
 
-            const enabledDependentPluginsActions = actions.slice(1, 4);
+            const enabledDependentPluginsActions = actions.slice(1, 5);
             enabledDependentPluginsActions.sort((x, y) => x.ids[0] < y.ids[0] ? -1 : x.ids[0] > y.ids[0] ? 1 : 0);
 
             expect(enabledDependentPluginsActions[0].type).toBe(CHANGE_PLUGINS_KEY);
@@ -416,17 +455,21 @@ describe('contextcreator epics', () => {
             expect(enabledDependentPluginsActions[2].ids).toEqual(['OmniBar']);
             expect(enabledDependentPluginsActions[2].key).toBe('enabledDependentPlugins');
             expect(enabledDependentPluginsActions[2].value).toEqual([]);
+            expect(enabledDependentPluginsActions[3].type).toBe(CHANGE_PLUGINS_KEY);
+            expect(enabledDependentPluginsActions[3].ids).toEqual(['WidgetsTray']);
+            expect(enabledDependentPluginsActions[3].key).toBe('enabledDependentPlugins');
+            expect(enabledDependentPluginsActions[3].value).toEqual([]);
 
-            expect(actions[4].type).toBe(CHANGE_PLUGINS_KEY);
-            expect(actions[4].ids.sort()).toEqual(['BurgerMenu', 'CheeseburgerMenu', 'OmniBar']);
-            expect(actions[4].key).toBe('forcedMandatory');
-            expect(actions[4].value).toBe(false);
-            done();
+            expect(actions[5].type).toBe(CHANGE_PLUGINS_KEY);
+            expect(actions[5].key).toBe('forcedMandatory');
+            expect(actions[5].ids.sort()).toEqual(['BurgerMenu', 'CheeseburgerMenu', 'OmniBar', 'WidgetsTray']);
+            expect(actions[5].value).toBe(false);
         }, {
             contextcreator: {
                 plugins: [{
                     name: 'Widgets',
                     dependencies: ['BurgerMenu'],
+                    enabledDependentPlugins: [],
                     enabled: true,
                     isUserPlugin: false,
                     active: true,
@@ -434,6 +477,7 @@ describe('contextcreator epics', () => {
                     children: [{
                         name: 'WidgetsBuilder',
                         dependencies: ['WidgetsTray'],
+                        enabledDependentPlugins: [],
                         parent: 'Widgets',
                         enabled: true,
                         isUserPlugin: false,
@@ -454,6 +498,7 @@ describe('contextcreator epics', () => {
                 }, {
                     name: 'ZoomIn',
                     dependencies: [],
+                    enabledDependentPlugins: [],
                     enabled: true,
                     isUserPlugin: true,
                     active: false,
@@ -489,6 +534,7 @@ describe('contextcreator epics', () => {
                 }, {
                     name: 'ZoomOut',
                     dependencies: [],
+                    enabledDependentPlugins: [],
                     enabled: false,
                     isUserPlugin: false,
                     active: false,
@@ -496,7 +542,7 @@ describe('contextcreator epics', () => {
                     children: []
                 }]
             }
-        });
+        }, done);
     });
     it('disablePluginsEpic disable all', (done) => {
         const pluginsToDisable = ['Widgets', 'ZoomIn'];
@@ -504,7 +550,7 @@ describe('contextcreator epics', () => {
         testEpic(disablePluginsEpic, 4, startActions, actions => {
             expect(actions.length).toBe(4);
             expect(actions[0].type).toBe(CHANGE_PLUGINS_KEY);
-            expect(actions[0].ids).toEqual(['Widgets', 'ZoomIn', 'ZoomOut']);
+            expect(actions[0].ids).toEqual(['Widgets', 'WidgetsBuilder', 'WidgetsTray', 'ZoomIn', 'ZoomOut']);
             expect(actions[0].key).toBe('enabled');
             expect(actions[0].value).toBe(false);
             expect(actions[1].type).toBe(CHANGE_PLUGINS_KEY);
@@ -516,7 +562,6 @@ describe('contextcreator epics', () => {
             expect(actions[2].key).toBe('forcedMandatory');
             expect(actions[2].value).toBe(false);
             expect(actions[3].type).toBe(ENABLE_MANDATORY_PLUGINS);
-            done();
         }, {
             contextcreator: {
                 plugins: [{
@@ -556,6 +601,165 @@ describe('contextcreator epics', () => {
                     active: false
                 }]
             }
+        }, done);
+    });
+    it('upload plugin bundle', (done) => {
+        mockAxios.onPost().reply(200, { "myplugin": {}});
+        const startActions = [uploadPlugin([{name: "myplugin.zip", file: new Blob([""], {type: "text/plain"})}])];
+        testEpic(uploadPluginEpic, 3, startActions, actions => {
+            expect(actions.length).toBe(3);
+            expect(actions[0].type).toBe(UPLOADING_PLUGIN);
+            expect(actions[0].status).toBe(true);
+            expect(actions[0].plugins.length).toBe(1);
+            expect(actions[0].plugins[0]).toBe("myplugin.zip");
+            expect(actions[1].type).toBe(PLUGIN_UPLOADED);
+            expect(actions[1].plugins.length).toBe(1);
+            expect(actions[1].plugins[0].myplugin).toExist();
+            expect(actions[2].type).toBe(UPLOADING_PLUGIN);
+            expect(actions[2].status).toBe(false);
+            expect(actions[2].plugins.length).toBe(1);
+            expect(actions[2].plugins[0]).toBe("myplugin.zip");
+            done();
+        }, {
+            contextcreator: {}
         });
+    });
+    it('saveTemplateEpic', (done) => {
+        mockAxios.onPut().reply(200, {});
+        const startActions = [saveTemplate({id: 1, metadata: {}})];
+        testEpic(saveTemplateEpic, 5, startActions, actions => {
+            expect(actions.length).toBe(5);
+            expect(actions[0].type).toBe(LOADING);
+            expect(actions[0].name).toBe('templateSaving');
+            expect(actions[0].value).toBe(true);
+            expect(actions[1].type).toBe(LOAD_TEMPLATE);
+            expect(actions[1].id).toBe(1);
+            expect(actions[2].type).toBe(SHOW_DIALOG);
+            expect(actions[2].dialogName).toBe('uploadTemplate');
+            expect(actions[2].show).toBe(false);
+            expect(actions[3].type).toBe(SHOW_NOTIFICATION);
+            expect(actions[4].type).toBe(LOADING);
+            expect(actions[4].name).toBe('templateSaving');
+            expect(actions[4].value).toBe(false);
+        }, {
+            contextcreator: {}
+        }, done);
+    });
+    it('saveTemplateEpic with missing category', (done) => {
+        let posted = false;
+        mockAxios.onPut().reply(() => {
+            return posted ? [200, {}] : [404, "Resource Category not found"];
+        });
+        mockAxios.onPost().reply(() => {
+            posted = true;
+            return [200, {}];
+        });
+        const startActions = [saveTemplate({id: 1, metadata: {}})];
+        testEpic(saveTemplateEpic, 5, startActions, actions => {
+            expect(actions.length).toBe(5);
+            expect(actions[0].type).toBe(LOADING);
+            expect(actions[0].name).toBe('templateSaving');
+            expect(actions[0].value).toBe(true);
+            expect(actions[1].type).toBe(LOAD_TEMPLATE);
+            expect(actions[1].id).toBe(1);
+            expect(actions[2].type).toBe(SHOW_DIALOG);
+            expect(actions[2].dialogName).toBe('uploadTemplate');
+            expect(actions[2].show).toBe(false);
+            expect(actions[3].type).toBe(SHOW_NOTIFICATION);
+            expect(actions[4].type).toBe(LOADING);
+            expect(actions[4].name).toBe('templateSaving');
+            expect(actions[4].value).toBe(false);
+        }, {
+            contextcreator: {}
+        }, done);
+    });
+    it('checkIfContextExists when it exists', (done) => {
+        mockAxios.onPost('/extjs/search/list').reply(200, {
+            ExtResourceList: {
+                Resource: {
+                    id: 10
+                },
+                ResourceCount: 1
+            }
+        });
+        const startActions = [changeAttribute('name', 'context')];
+        testEpic(checkIfContextExists, 5, startActions, actions => {
+            expect(actions.length).toBe(5);
+            expect(actions[0].type).toBe(LOADING);
+            expect(actions[0].name).toBe('contextNameCheck');
+            expect(actions[0].value).toBe(true);
+            expect(actions[1].type).toBe(SHOW_NOTIFICATION);
+            expect(actions[2].type).toBe(IS_VALID_CONTEXT_NAME);
+            expect(actions[2].valid).toBe(false);
+            expect(actions[3].type).toBe(LOADING);
+            expect(actions[3].name).toBe('contextNameCheck');
+            expect(actions[3].value).toBe(false);
+            expect(actions[4].type).toBe(CONTEXT_NAME_CHECKED);
+            expect(actions[4].checked).toBe(true);
+        }, {
+            contextcreator: {
+                resource: {
+                    name: 'context'
+                }
+            }
+        }, done);
+    });
+    it('checkIfContextExists when it exists and ids are the same', (done) => {
+        mockAxios.onPost('/extjs/search/list').reply(200, {
+            ExtResourceList: {
+                Resource: {
+                    id: 10
+                },
+                ResourceCount: 1
+            }
+        });
+        const startActions = [changeAttribute('name', 'context')];
+        testEpic(checkIfContextExists, 4, startActions, actions => {
+            expect(actions.length).toBe(4);
+            expect(actions[0].type).toBe(LOADING);
+            expect(actions[0].name).toBe('contextNameCheck');
+            expect(actions[0].value).toBe(true);
+            expect(actions[1].type).toBe(IS_VALID_CONTEXT_NAME);
+            expect(actions[1].valid).toBe(true);
+            expect(actions[2].type).toBe(LOADING);
+            expect(actions[2].name).toBe('contextNameCheck');
+            expect(actions[2].value).toBe(false);
+            expect(actions[3].type).toBe(CONTEXT_NAME_CHECKED);
+            expect(actions[3].checked).toBe(true);
+        }, {
+            contextcreator: {
+                resource: {
+                    id: 10,
+                    name: 'context'
+                }
+            }
+        }, done);
+    });
+    it('checkIfContextExists when it does not exist', (done) => {
+        mockAxios.onPost('/extjs/search/list').reply(200, {
+            ExtResourceList: {
+                ResourceCount: 0
+            }
+        });
+        const startActions = [changeAttribute('name', 'context')];
+        testEpic(checkIfContextExists, 4, startActions, actions => {
+            expect(actions.length).toBe(4);
+            expect(actions[0].type).toBe(LOADING);
+            expect(actions[0].name).toBe('contextNameCheck');
+            expect(actions[0].value).toBe(true);
+            expect(actions[1].type).toBe(IS_VALID_CONTEXT_NAME);
+            expect(actions[1].valid).toBe(true);
+            expect(actions[2].type).toBe(LOADING);
+            expect(actions[2].name).toBe('contextNameCheck');
+            expect(actions[2].value).toBe(false);
+            expect(actions[3].type).toBe(CONTEXT_NAME_CHECKED);
+            expect(actions[3].checked).toBe(true);
+        }, {
+            contextcreator: {
+                resource: {
+                    name: 'context'
+                }
+            }
+        }, done);
     });
 });

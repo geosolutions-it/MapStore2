@@ -81,6 +81,16 @@ const identifyLifecycle = compose(
                 onEnableCenterToMarker();
             }
         },
+        componentWillUnmount() {
+            const {
+                hideMarker = () => { },
+                purgeResults = () => { },
+                changeMousePointer = () => { }
+            } = this.props;
+            changeMousePointer('auto');
+            hideMarker();
+            purgeResults();
+        },
         componentWillReceiveProps(newProps) {
             const {
                 hideMarker = () => {},

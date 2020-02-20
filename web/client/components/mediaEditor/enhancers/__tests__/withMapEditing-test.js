@@ -50,6 +50,7 @@ describe('media editor withMapEditing enhancer', () => {
             expect(props.openMapEditor).toExist();
             expect(props.importInLocal).toExist();
             expect(props.setAddingMedia).toExist();
+            expect(props.editRemoteMap).toExist();
             props.setAddingMedia(true);
         }));
         ReactDOM.render(<Provider store={store}><Sink setAddingMedia={actions.setAddingMedia} mediaType="map"/></Provider>, document.getElementById("container"));
@@ -65,6 +66,26 @@ describe('media editor withMapEditing enhancer', () => {
         }));
         ReactDOM.unmountComponentAtNode(document.getElementById("container"));
         ReactDOM.render(<Provider store={store}><SinkAddingMedia setAddingMedia={actions.setAddingMedia} mediaType="imag"/></Provider>, document.getElementById("container"));
+
+    });
+    it('withMapEditing editRemoteMap call open map editor', (done) => {
+        store.dispatch = (a) => {
+            expect(a).toExist();
+            expect(a.type).toBe("MAP_EDITOR:SHOW");
+            expect(a.owner).toBe("mediaEditorEditRemote");
+            expect(a.map).toExist();
+        };
+
+        const Sink = withMapEditing(createSink( props => {
+            expect(props).toExist();
+            expect(props.openMapEditor).toExist();
+            expect(props.editRemoteMap).toExist();
+            expect(props.setAddingMedia).toExist();
+            props.editRemoteMap();
+            done();
+        }));
+        ReactDOM.render(<Provider store={store}><Sink mediaType="map"/></Provider>, document.getElementById("container"));
+        store.dispatch = () => {};
 
     });
 });

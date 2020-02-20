@@ -7,18 +7,19 @@
 */
 
 import React from 'react';
-import {isString} from 'lodash';
+import {get, isString} from 'lodash';
 import {Glyphicon} from 'react-bootstrap';
 import jsonlint from 'jsonlint-mod';
 
 import Transfer from '../misc/transfer/Transfer';
+import ConfirmDialog from '../misc/ConfirmDialog';
 import Message from '../I18N/Message';
 import SaveModal from '../resources/modals/Save';
 import handleSaveModal from '../resources/modals/enhancers/handleSaveModal';
 
 const SaveDialog = handleSaveModal(SaveModal);
 
-const templateToItem = (onEditTemplate, template) => ({
+const templateToItem = (onEditTemplate, onDelete, template) => ({
     id: template.id,
     title: template.name || template.id.toString(),
     description: template.description,
@@ -26,6 +27,10 @@ const templateToItem = (onEditTemplate, template) => ({
         glyph: 'pencil',
         tooltipId: 'contextCreator.configureTemplates.tooltips.editTemplate',
         onClick: () => onEditTemplate(template.id)
+    }, {
+        glyph: 'trash',
+        tooltipId: 'contextCreator.configureTemplates.tooltips.deleteTemplate',
+        onClick: () => onDelete(template)
     }],
     preview:
         <div className="configure-map-templates-preview">
@@ -97,16 +102,26 @@ export default ({
     setParsedTemplate = () => {},
     setFileDropStatus = () => {},
     onSave = () => {},
+    onDelete = () => {},
     onEditTemplate = () => {},
     onFilterAvailableTemplates = () => {},
     onFilterEnabledTemplates = () => {},
     onShowUploadDialog = () => {}
-}) => (
-    <>
+}) => {
+    const [showDeleteConfirm, onShowDeleteConfirm] = React.useState(false);
+    const [templateToDelete, setTemplateToDelete] = React.useState();
+
+    const onDeleteTemplate = (template) => {
+        setTemplateToDelete(template);
+        onShowDeleteConfirm(true);
+    };
+    const templateToItemFunc = templateToItem.bind(null, onEditTemplate, onDeleteTemplate);
+
+    return (<>
         <Transfer
             className="configure-map-templates-transfer"
             leftColumn={{
-                items: mapTemplates.filter(template => !template.enabled).map(templateToItem.bind(null, onEditTemplate)),
+                items: mapTemplates.filter(template => !template.enabled).map(templateToItemFunc),
                 title: 'contextCreator.configureTemplates.availableTemplates',
                 tools: [{
                     id: 'upload-tool',
@@ -127,7 +142,7 @@ export default ({
                 onFilter: onFilterAvailableTemplates
             }}
             rightColumn={{
-                items: mapTemplates.filter(template => template.enabled).map(templateToItem.bind(null, onEditTemplate)),
+                items: mapTemplates.filter(template => template.enabled).map(templateToItemFunc),
                 title: 'contextCreator.configureTemplates.enabledTemplates',
                 filterText: enabledTemplatesFilterText,
                 filterPlaceholder: enabledTemplatesFilterPlaceholder,
@@ -142,7 +157,7 @@ export default ({
                 onFilter: onFilterEnabledTemplates
             }}
             allowCtrlMultiSelect
-            selectedItems={mapTemplates.filter(template => template.selected).map(templateToItem.bind(null, onEditTemplate))}
+            selectedItems={mapTemplates.filter(template => template.selected).map(templateToItemFunc)}
             selectedSide={mapTemplates.reduce((result, template) => template.selected && template.enabled || result, false) ?
                 'right' :
                 'left'
@@ -154,7 +169,6 @@ export default ({
         <SaveDialog
             loading={loading && (loadFlags.templateSaving || loadFlags.templateLoading)}
             resource={editedTemplate}
-            canSave
             clickOutEnabled={false}
             category="TEMPLATE"
             show={showUploadDialog}
@@ -172,5 +186,24 @@ export default ({
             }}
             onSave={onSave}
             onClose={() => onShowUploadDialog(false)}/>
-    </>
-);
+        <ConfirmDialog
+            draggable={false}
+            modal
+            show={showDeleteConfirm}
+            onClose={() => {
+                setTemplateToDelete();
+                onShowDeleteConfirm(false);
+            }}
+            onConfirm={() => {
+                onDelete(templateToDelete);
+                setTemplateToDelete();
+                onShowDeleteConfirm(false);
+            }}
+            confirmButtonBSStyle="default"
+            confirmButtonContent={<Message msgId="confirm"/>}
+            closeText={<Message msgId="cancel"/>}
+            closeGlyph="1-close">
+            <Message msgId="contextCreator.configureTemplates.deleteConfirm" msgParams={{templateName: get(templateToDelete, 'name')}}/>
+        </ConfirmDialog>
+    </>);
+};

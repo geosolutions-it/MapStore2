@@ -50,6 +50,7 @@ export const Controls = ({
                     {label: "geostory.mapEditor.bottomLeft", value: "bottomLeft"},
                     {label: "geostory.mapEditor.bottomRight", value: "bottomRight"}
                 ]}
+                wrapperStyle = {{ marginTop: "10px"}}
                 value={options.mapOptions && options.mapOptions.zoomPosition || "topLeft"}
                 clearable={false}
                 disabled={!options.zoomControl}

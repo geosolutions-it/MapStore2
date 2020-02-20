@@ -1120,7 +1120,8 @@
                 },
                 "errors": {
                     "fileNotSupported": "Datei wird nicht unterstützt",
-                    "unknownError": "Beim Import ist ein unbekannter Fehler aufgetreten"
+                    "unknownError": "Beim Import ist ein unbekannter Fehler aufgetreten",
+                    "projectionNotSupported": "Die Projektion der Datei, die Sie importieren möchten, wird nicht unterstützt"
                 }
             },
         "mapExport": {
@@ -1472,9 +1473,9 @@
                     "preview": "Vorschau",
                     "addLayer": "Fügt der Karte eine Ebene hinzu",
                     "useTheSelectedLayer": "Verwende die ausgewählte Ebene",
-                    "connectToAMap": "Mit einer Karte verbinden",
-                    "connectToTheMap": "Verbinden mit der Karte",
-                    "selectMapToConnect": "Wählen Sie die zu verbindende Karte aus",
+                    "connectToAMap": "Stellen Sie eine Verbindung zu einem anderen Widget her",
+                    "connectToTheMap": "Stellen Sie eine Verbindung mit dem anderen Widget her",
+                    "selectMapToConnect": "Wählen Sie das zu verbindende Widget aus",
                     "clearConnection": "Verbindung löschen"
                 },
                 "errors": {
@@ -1651,6 +1652,13 @@
                     "pleaseLogin": "Dieser Zusammenhang ist nicht öffentlich. Bitte versuchen Sie sich einloggen",
                     "unknownError": "Es gab einen Fehler den Kontext geladen. Bitte kontaktieren Sie den Administrator",
                     "notFound": "Der Kontext Sie zugreifen möchten, existiert nicht"
+                },
+                "template": {
+                    "title": "Fehler beim Laden der Vorlage",
+                    "notAccessible": "Sie haben keine Berechtigung, auf diese Vorlage zuzugreifen. Bitte wenden Sie sich an den Eigentümer der Ressource",
+                    "pleaseLogin": "Diese Vorlage ist nicht öffentlich. Bitte versuchen Sie sich einzuloggen",
+                    "unknownError": "Beim Laden der Vorlage ist ein Fehler aufgetreten. Bitte wenden Sie sich an den Administrator",
+                    "notFound": "Die Vorlage, auf die Sie zugreifen möchten, ist nicht vorhanden"
                 },
                 "map": {
                     "notAccessible": "Sie haben nicht das Recht, die Erlaubnis zu dieser Karte zuzugreifen. Bitte kontaktieren Sie den Administrator-Zugriff zu erhalten",
@@ -2078,14 +2086,25 @@
                 "mapFilter": "Karten filtern",
                 "videoFilter": "Filtern Sie Videos",
                 "imageFilter": "Filtern Sie Bilder",
-                "import": "Ressource in lokalen Speicher importieren"
+                "import": "Ressource in lokalen Speicher importieren",
+                "trash": "Remove resource"
             },
             "mediaform": {
                 "confirmExitTitle": "Schließen Media Form",
                 "confirmExitContent": "Ausstehende Änderungen verwerfen?"
             },
             "mapForm": {
-                "thumbnailMessage": "Die Größe der Bilder sollte ein Quadrat von 98 x 98 Pixel sein, maximal 100 KB"
+                "thumbnailMessage": "Die Größe der Bilder sollte ein Quadrat von 98 x 98 Pixel sein, maximal 100 KB",
+                "confirmMapSaveTitle": "Kartenupdate",
+                "confirmMapSaveContent": "Durch das Aktualisieren dieser Karte werden alle abhängigen Karten in der Story zurückgesetzt, die zuvor über den Inline-Editor angepasst wurden. Bestätigen Sie?"
+            },
+            "mediaList" : {
+                "removeResourceTitle": "Bist du sicher?",
+                "confirmRemoveResource": "Möchten Sie diese Medienressource aus der Story entfernen?",
+                "confirmRemoveUsedResource": "Diese Ressource wird auch aus allen Abschnitten / Inhalten entfernt, in denen sie verwendet wird und sie bleiben leer. Möchten Sie es aus der Geschichte entfernen?"
+            },
+            "mapList": {
+                "emptyList": "Klicken Sie auf die Plus-Schaltfläche, um eine Karte zu erstellen oder einen anderen Kartendienst auszuwählen."
             }
         },
         "backgroundDialog": {
@@ -2256,6 +2275,7 @@
           },
           "Version": {
             "description": "Zeigt die Version von MapStore in den Karteneinstellungen an",
+            "descriptionGeorchestra": "Zeigt die Version von GeOrchestra in den Karteneinstellungen an",
             "title": "Ausführung"
           },
           "WFSDownload": {
@@ -2304,6 +2324,8 @@
                     "title": "Konfigurationsfehler",
                     "body": "Konfigurations-JSON-Analyse fehlgeschlagen.\nDer folgende Fehler ist aufgetreten:\n\"{error}\""
                 },
+                "uploadLabel": "Ziehen Sie ein Erweiterungspaket oder klicken Sie, um es zu durchsuchen und hochzuladen",
+                "uploadTitle": "Installieren Sie ein MapStore-Plugin",
                 "tooltips": {
                     "enableUserPlugin": "Aktiviert die Auswahl des aktuellen Plugins für den Benutzer",
                     "disableUserPlugin": "Deaktivieren Sie die Auswahl des aktuellen Plugins für den Benutzer",
@@ -2311,6 +2333,7 @@
                     "deactivatePlugin": "Deaktivieren Sie das Laden dieses Plugins beim Start",
                     "editConfiguration": "Plugin Konfiguration bearbeiten",
                     "pluginDocumentation": "Öffnen Sie die Dokumentation zur Plugin-Konfiguration",
+                    "uploadPlugin": "Fügen Sie MapStore eine Erweiterung hinzu",
                     "mapTemplatesConfig": "Vorlagen konfigurieren"
                 },
                 "saveCfgErrorNotification":  {
@@ -2338,8 +2361,11 @@
                 },
                 "tooltips": {
                     "uploadTool": "Neue Vorlage hochladen",
-                    "editTemplate": "Vorlageneigenschaften bearbeiten"
-                }
+                    "editTemplate": "Vorlageneigenschaften bearbeiten",
+                    "deleteTemplate": "Vorlage löschen"
+                },
+                "deleteError": "Die Vorlage konnte nicht gelöscht werden, ein Fehler ist aufgetreten",
+                "deleteConfirm": "Möchten Sie die Vorlage \"{templateName}\" wirklich löschen?"
             },
             "configureMap": {
                 "label": "Karte konfigurieren",
@@ -2350,7 +2376,8 @@
                 "titleContext": "Das Speichern des Kontexts ist fehlgeschlagen",
                 "titleTemplate": "Das Speichern der Vorlage ist fehlgeschlagen",
                 "conflict": "Eine Ressource mit diesem Namen ist bereits vorhanden",
-                "defaultMessage": "Unbekannter Fehler"
+                "defaultMessage": "Unbekannter Fehler",
+                "categoryError": "Das Erstellen der fehlenden Kategorie \"{categoryName}\" ist fehlgeschlagen"
             },
             "contextNameErrorNotification": {
                 "title": "Falscher Kontextname",
@@ -2372,6 +2399,23 @@
           "filterPlaceholder": "Filterschichten",
           "addExtension": "Erweiterung hinzufügen",
           "removeExtension": "Erweiterung entfernen"
+        },
+        "mapTemplates": {
+            "title": "Kartenvorlagen",
+            "favouritesTitle": "Favoriten",
+            "allTitle": "Alle",
+            "filterPlaceholder": "Kartenvorlagen filtern...",
+            "transfer": "Ersetzen Sie die Karte durch diese Vorlage",
+            "merge": "Diese Vorlage zur Karte hinzufügen",
+            "favouriteAdd": "Zu Favoriten hinzufügen",
+            "favouriteRemove": "Von den Favoriten entfernen",
+            "emptyTitle": "Kein Ergebnis",
+            "emptyDescription": "Der eingegebene Filter stimmt nicht mit dem Namen oder der Beschreibung einer der Vorlagen überein",
+            "noTemplatesTitle": "Keine Vorlagen gefunden",
+            "noTemplatesDescription": "Der aktuelle Kontext enthält keine Vorlagen",
+            "confirmReplaceTitle": "Ersetzen Sie den Karteninhalt",
+            "confirmReplaceMessage": "Sie ersetzen alle Layer und die Kartenkonfiguration durch die ausgewählte Vorlage, indem Sie auf die Schaltfläche Ersetzen klicken",
+            "confirmReplaceConfirmButton": "Ersetzen"
         },
         "tutorial": {
             "title": "Anleitung",

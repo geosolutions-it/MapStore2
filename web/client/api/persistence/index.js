@@ -80,6 +80,7 @@ const Persistence = {
      * @return an observable that emits the id of the resource
      */
     createResource: (...args) => Persistence.getApi().createResource(...args),
+    createCategory: (...args) => Persistence.getApi().createCategory(...args),
     /**
      * retrieves resources and for each resource it retrieves data with all information about user's permission on that resource, attributes and data.
      */

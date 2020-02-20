@@ -7,6 +7,10 @@
  */
 
 const {connect} = require('react-redux');
+const {compose, withProps} = require('recompose');
+const {find} = require('lodash');
+
+
 const {toggleControl, setControlProperty} = require('../actions/controls');
 const {changeLayerProperties, updateNode} = require('../actions/layers');
 const {addBackground, addBackgroundProperties, confirmDeleteBackgroundModal,
@@ -88,30 +92,36 @@ const backgroundSelector = createSelector([
   * }
   */
 
-const BackgroundSelectorPlugin = connect(backgroundSelector, {
-    onPropertiesChange: changeLayerProperties,
-    onToggle: toggleControl.bind(null, 'backgroundSelector', null),
-    onLayerChange: setControlProperty.bind(null, 'backgroundSelector'),
-    onStartChange: setControlProperty.bind(null, 'backgroundSelector', 'start'),
-    onAdd: addBackground,
-    onRemove: removeNode,
-    onBackgroundEdit: backgroundEdited,
-    updateNode,
-    onUpdateThumbnail: updateThumbnail,
-    removeBackground,
-    clearModal: clearModalParameters,
-    addBackgroundProperties,
-    onRemoveBackground: confirmDeleteBackgroundModal,
-    setCurrentBackgroundLayer
-}, (stateProps, dispatchProps, ownProps) => ({
-    ...stateProps,
-    ...dispatchProps,
-    ...ownProps,
-    thumbs: {
-        ...thumbs,
-        ...ownProps.thumbs
-    }
-})
+const BackgroundSelectorPlugin =
+compose(
+    connect(backgroundSelector, {
+        onPropertiesChange: changeLayerProperties,
+        onToggle: toggleControl.bind(null, 'backgroundSelector', null),
+        onLayerChange: setControlProperty.bind(null, 'backgroundSelector'),
+        onStartChange: setControlProperty.bind(null, 'backgroundSelector', 'start'),
+        onAdd: addBackground,
+        onRemove: removeNode,
+        onBackgroundEdit: backgroundEdited,
+        updateNode,
+        onUpdateThumbnail: updateThumbnail,
+        removeBackground,
+        clearModal: clearModalParameters,
+        addBackgroundProperties,
+        onRemoveBackground: confirmDeleteBackgroundModal,
+        setCurrentBackgroundLayer
+    }, (stateProps, dispatchProps, ownProps) => ({
+        ...stateProps,
+        ...dispatchProps,
+        ...ownProps,
+        thumbs: {
+            ...thumbs,
+            ...ownProps.thumbs
+        }
+    })),
+    // check if catalog is present to render the + button. TODO: move the add button in the catalog
+    withProps(({ items = [] }) => ({
+        hasCatalog: !!find(items, { name: 'MetadataExplorer' })
+    }))
 )(require('../components/background/BackgroundSelector'));
 
 module.exports = {

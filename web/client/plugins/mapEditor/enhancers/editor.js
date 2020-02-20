@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 import React from 'react';
-import {withHandlers, compose, defaultProps, lifecycle} from 'recompose';
+import {withHandlers, compose, defaultProps} from 'recompose';
 import {pickBy} from 'lodash';
 import {connect} from 'react-redux';
 import {resizeMap} from '../../../actions/map';
@@ -59,10 +59,5 @@ export default compose(
 
 export const withResizeMap = compose(
     connect(null, {onResize: resizeMap}),
-    lifecycle({
-        componentDidMount() {
-            this.props.onResize();
-        }
-    }),
     withResizeSpy({debounceTime: 150})
 );

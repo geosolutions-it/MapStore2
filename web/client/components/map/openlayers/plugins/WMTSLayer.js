@@ -113,7 +113,7 @@ const createLayer = options => {
         version: options.version || "1.0.0",
         matrixSet: tileMatrixSetName,
         format,
-        style: options.style,
+        style: options.style || "",
         tileGrid: new WMTSTileGrid({
             origins,
             origin: !origins ? [20037508.3428, -20037508.3428] : undefined, // Either origin or origins must be configured, never both.

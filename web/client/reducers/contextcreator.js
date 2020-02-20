@@ -11,9 +11,10 @@ import ConfigUtils from '../utils/ConfigUtils';
 
 import {SET_CREATION_STEP, MAP_VIEWER_LOADED, SHOW_MAP_VIEWER_RELOAD_CONFIRM, SET_RESOURCE, UPDATE_TEMPLATE, IS_VALID_CONTEXT_NAME,
     CONTEXT_NAME_CHECKED, CLEAR_CONTEXT_CREATOR, SET_FILTER_TEXT, SET_SELECTED_PLUGINS, SET_SELECTED_TEMPLATES, SET_PARSED_TEMPLATE,
-    SET_FILE_DROP_STATUS, SET_EDITED_TEMPLATE, SET_EDITED_PLUGIN, CHANGE_PLUGINS_KEY, CHANGE_TEMPLATES_KEY, CHANGE_ATTRIBUTE,
+    SET_FILE_DROP_STATUS, SET_EDITED_TEMPLATE, SET_TEMPLATES, SET_EDITED_PLUGIN, CHANGE_PLUGINS_KEY, CHANGE_TEMPLATES_KEY, CHANGE_ATTRIBUTE,
     LOADING, SHOW_DIALOG, SET_EDITED_CFG, UPDATE_EDITED_CFG, SET_VALIDATION_STATUS, SET_PARSED_CFG,
-    SET_CFG_ERROR} from "../actions/contextcreator";
+    SET_CFG_ERROR, ENABLE_UPLOAD_PLUGIN, UPLOADING_PLUGIN, UPLOAD_PLUGIN_ERROR,
+    PLUGIN_UPLOADED} from "../actions/contextcreator";
 import {set} from '../utils/ImmutableUtils';
 
 const defaultPlugins = [
@@ -66,6 +67,36 @@ const findPlugin = (plugins, pluginName) =>
     plugins && plugins.reduce((result, plugin) =>
         result || pluginName === getPluginName(plugin) && plugin || findPlugin(plugin.children, pluginName), null);
 
+const makeNode = (plugin, parent = null, plugins = [], localPlugins = []) => ({
+    name: plugin.name,
+    title: plugin.title,
+    description: plugin.description,
+    glyph: plugin.glyph,
+    parent,
+    mandatory: !!plugin.mandatory,
+
+    // true if plugin is forced to be mandatory so that it cannot be disabled (if some plugin that has this plugin as a dependency is enabled)
+    forcedMandatory: false,
+
+    enabledDependentPlugins: [], // names of plugins that are enabled and have this plugin as a dependency
+    hidden: !!plugin.hidden,
+    dependencies: plugin.dependencies || [],
+    enabled: false,
+    active: false,
+    denyUserSelection: plugin.denyUserSelection || false,
+    isUserPlugin: false,
+    pluginConfig: {
+        ...omit(head(localPlugins.filter(localPlugin => localPlugin.name === plugin.name)) || {}, 'cfg'),
+        name: plugin.name,
+        cfg: plugin.defaultConfig
+    },
+    autoEnableChildren: plugin.autoEnableChildren || [],
+    children: get(plugin, 'children', [])
+        .map(childPluginName => head(plugins.filter(p => p.name === childPluginName)))
+        .filter(childPlugin => childPlugin !== undefined)
+        .map(childPlugin => makeNode(childPlugin, plugin.name, plugins, localPlugins))
+});
+
 const makePluginTree = (plugins, localPluginsConfig) => {
     const localPlugins = get(localPluginsConfig, 'desktop', []).map(plugin => isObject(plugin) ? plugin : {name: plugin});
 
@@ -76,37 +107,7 @@ const makePluginTree = (plugins, localPluginsConfig) => {
     const rootPlugins = plugins.reduce((curRootPlugins, plugin) =>
         get(plugin, 'children', []).reduce((newRootPlugins, childPlugin) =>
             newRootPlugins.filter(rootPlugin => rootPlugin.name !== childPlugin), curRootPlugins), plugins);
-
-    const makeNode = (parent, plugin) => ({
-        name: plugin.name,
-        title: plugin.title,
-        description: plugin.description,
-        glyph: plugin.glyph,
-        parent,
-        mandatory: !!plugin.mandatory,
-
-        // true if plugin is forced to be mandatory so that it cannot be disabled (if some plugin that has this plugin as a dependency is enabled)
-        forcedMandatory: false,
-
-        enabledDependentPlugins: [], // names of plugins that are enabled and have this plugin as a dependency
-        hidden: !!plugin.hidden,
-        dependencies: plugin.dependencies || [],
-        enabled: false,
-        active: false,
-        isUserPlugin: false,
-        pluginConfig: {
-            ...omit(head(localPlugins.filter(localPlugin => localPlugin.name === plugin.name)) || {}, 'cfg'),
-            name: plugin.name,
-            cfg: plugin.defaultConfig
-        },
-        autoEnableChildren: plugin.autoEnableChildren || [],
-        children: get(plugin, 'children', [])
-            .map(childPluginName => head(plugins.filter(p => p.name === childPluginName)))
-            .filter(childPlugin => childPlugin !== undefined)
-            .map(childPlugin => makeNode(plugin.name, childPlugin))
-    });
-
-    return rootPlugins.map(rootPlugin => makeNode(null, rootPlugin));
+    return rootPlugins.map(rootPlugin => makeNode(rootPlugin, null, plugins, localPlugins));
 };
 
 export default (state = {}, action) => {
@@ -119,6 +120,29 @@ export default (state = {}, action) => {
     }
     case SHOW_MAP_VIEWER_RELOAD_CONFIRM: {
         return set('showReloadConfirm', action.show, state);
+    }
+    case ENABLE_UPLOAD_PLUGIN: {
+        return {
+            ...state,
+            uploadPluginEnabled: action.enable,
+            uploadingPlugin: []
+        };
+    }
+    case UPLOADING_PLUGIN: {
+        const uploadingPlugin = action.plugins.map(p => ({name: p, uploading: action.status}));
+        const notUpdated = plugin => uploadingPlugin.filter(p => p.name === plugin.name).length === 0;
+        return set('uploadingPlugin', [ ...(state.uploadingPlugin || []).filter(notUpdated), ...uploadingPlugin ], state);
+    }
+    case UPLOAD_PLUGIN_ERROR: {
+        return set('uploadingPlugin', action.files.map(f => ({name: f.file.name, uploading: false, error: f.error})), state);
+    }
+    case PLUGIN_UPLOADED: {
+        const plugins = action.plugins.map(makeNode);
+        const notDuplicate = plugin => plugins.filter(p => p.name === plugin.name).length === 0;
+        return {
+            ...state,
+            plugins: [...(state.plugins || []).filter(notDuplicate), ...plugins]
+        };
     }
     case SET_RESOURCE: {
         const {data = {plugins: {desktop: []}}, ...resource} = action.resource || {};
@@ -207,6 +231,9 @@ export default (state = {}, action) => {
     }
     case SET_EDITED_TEMPLATE: {
         return set('editedTemplate', find(get(state, 'newContext.templates', []), template => template.id === action.id), state);
+    }
+    case SET_TEMPLATES: {
+        return set('newContext.templates', action.templates, state);
     }
     case SET_EDITED_PLUGIN: {
         return set('editedPlugin', action.pluginName, state);

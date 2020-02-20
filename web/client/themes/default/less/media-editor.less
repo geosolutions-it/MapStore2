@@ -35,15 +35,29 @@
             overflow: auto;
             margin: 0;
             width: 100%;
-            padding: 0 8px;
-            padding-bottom: 16px;
             flex: 1;
+            .items-list {
+                position: absolute;
+                height: 100%;
+                width: 100%;
+                padding: 0 8px;
+                padding-bottom: 16px;
+            }
             .row {
                 margin: 0;
             }
             .col-xs-12 {
                 padding: 0;
             }
+        }
+        .msEmptyListMessage {
+            position: relative;
+            overflow: auto;
+            margin: 0;
+            width: 100%;
+            flex: 1;
+            padding: 2px 5px;
+            text-align: center;
         }
         .ms-image-filter {
             padding: 8px;
@@ -55,6 +69,11 @@
             .ms2-border-layout-body {
                 .ms2-border-layout-content {
                     width: 100%;
+                }
+            }
+            .msSideGrid {
+                .items-list {
+                    position: relative;
                 }
             }
         }
@@ -104,5 +123,13 @@
             justify-content: flex-end;
             flex-direction: column;
         }
+    }
+    .catalog-footer {
+        display: flex;
+        text-align: center;
+        padding-top: 5px;
+        justify-content: center;
+        align-items: center;
+        height: 42px;
     }
 }
