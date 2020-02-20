@@ -12,21 +12,18 @@ const {find} = require('lodash');
 
 
 const {toggleControl, setControlProperty} = require('../actions/controls');
-const {changeLayerProperties, updateNode} = require('../actions/layers');
+const {changeLayerProperties, removeNode, updateNode} = require('../actions/layers');
 const {addBackground, addBackgroundProperties, confirmDeleteBackgroundModal,
     updateThumbnail, removeBackground, clearModalParameters, backgroundEdited, setCurrentBackgroundLayer} = require('../actions/backgroundselector');
 
 const {createSelector} = require('reselect');
-const {backgroundControlsSelector,
+const {allBackgroundLayerSelector, backgroundControlsSelector,
     currentBackgroundSelector, tempBackgroundSelector} = require('../selectors/layers');
-const {mapSelector, mapInfoSelector} = require('../selectors/map');
+const {mapSelector, mapInfoSelector, projectionSelector} = require('../selectors/map');
 const {modalParamsSelector, isDeletedIdSelector, backgroundListSelector,
     backgroundLayersSelector, confirmDeleteBackgroundModalSelector, allowBackgroundsDeletionSelector} = require('../selectors/backgroundselector');
 const {mapLayoutValuesSelector} = require('../selectors/maplayout');
-const {allBackgroundLayerSelector} = require('../selectors/layers');
 
-const {projectionSelector} = require('../selectors/map');
-const {removeNode} = require('../actions/layers');
 const thumbs = require('./background/DefaultThumbs');
 
 const backgroundSelector = createSelector([
