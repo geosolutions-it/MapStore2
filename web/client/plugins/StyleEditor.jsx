@@ -188,7 +188,7 @@ const StyleEditorPlugin = compose(
         }),
         lifecycle({
             componentDidMount() {
-                this.props.onToggleStyleEditor(null, true);
+                this.props.toggleStyleEditor(null, true);
             }
         })
     )
