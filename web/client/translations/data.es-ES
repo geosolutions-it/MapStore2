@@ -27,6 +27,7 @@
         "showMore": "Mostrar más...",
         "collapse": "Colapso",
         "expand": "Expandir",
+        "Forbidden": "Prohibido",
         "version": {
             "label": "Versión"
         },
@@ -1622,7 +1623,9 @@
                     "notFound": "Panel de control no encontrado",
                     "notAccessible": "Panel de control no accesible"
                 },
-                "resourceAlreadyExists":  "Ya existe un recurso con este nombre"
+                "resourceAlreadyExists":  "Ya existe un recurso con este nombre",
+                "forbidden": "Ocurrió un error inesperado (403 Prohibido). Por favor contacte al administrador",
+                "forbidden405": "Ocurrió un error inesperado (405 Prohibido). Por favor contacte al administrador"
             },
             "editor": {
                 "save": "Guardar el panel de control",

@@ -1613,7 +1613,9 @@
                     "notFound": "Kontrolna ploča nije pronađena",
                     "notAccessible": "Kontrolna ploča nije dostupna"
                 },
-                "resourceAlreadyExists": "Resurs sa ovim imenom već postoji"
+                "resourceAlreadyExists": "Resurs sa ovim imenom već postoji",
+                "forbidden": "An unexpected error occured (403 Forbidden). Please contact the Administrator",
+                "forbidden405": "An unexpected error occured (405 Forbidden). Please contact the Administrator"
             },
             "editor": {
                 "save": "Spremi kontrolnu ploču",

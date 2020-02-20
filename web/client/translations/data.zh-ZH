@@ -27,6 +27,7 @@
         "showMore": "Show more...",
         "collapse": "Collapse",
         "expand": "Expand",
+        "Forbidden": "Forbidden",
         "version": {
             "label": "版本"
         },
@@ -1553,7 +1554,9 @@
                     "notFound": "Dashboard not found",
 	                "notAccessible": "Dashboard not accessible"
                 },
-                "resourceAlreadyExists": "A resource with this name already exists"
+                "resourceAlreadyExists": "A resource with this name already exists",
+                "forbidden": "An unexpected error occured (403 Forbidden). Please contact the Administrator",
+                "forbidden405": "An unexpected error occured (405 Forbidden). Please contact the Administrator"
             },
             "editor": {
                 "save": "Save the dashboard",
