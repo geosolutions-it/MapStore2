@@ -77,7 +77,7 @@ function computeCurrentStep({
         : previousValue;
 }
 
-function LayoutPanel({
+function FlexibleLayoutPanel({
     active,
     activePlugins,
     className = '',
@@ -184,10 +184,9 @@ function LayoutPanel({
             }
         }
     }, [ activePluginsStr, sizeStr ]);
-
     return (
         <div
-            className={`ms-layout-panel${resizeHandle && !resizeDisabled ? ` axis-${resizeHandle}` : ''}${className && ` ${className}` || ''}`}>
+            className={`ms-flexible-layout-panel${resizeHandle && !resizeDisabled ? ` axis-${resizeHandle}` : ''}${className && ` ${className}` || ''}`}>
             {!resizeDisabled
                 ? <Resizable
                     key={keyId}
@@ -198,9 +197,9 @@ function LayoutPanel({
                     maxConstraints={maxConstraints}
                     resizeHandles={[resizeHandle]}
                     handle={<div
-                        className="ms-layout-panel-handle">
+                        className="ms-flexible-layout-panel-handle">
                         {handlePlaceholder && <div
-                            className="ms-layout-panel-handle-placeholder"
+                            className="ms-flexible-layout-panel-handle-placeholder"
                             style={(resizeHandle === 'n' || resizeHandle === 's')
                                 ? { left: 0, top }
                                 : { left, top: 0 }}>
@@ -291,13 +290,13 @@ function LayoutPanel({
                         });
                     }}>
                     <div
-                        className="ms-layout-panel-body"
+                        className="ms-flexible-layout-panel-body"
                         style={{ width, height }}>
                         {children}
                     </div>
                 </Resizable>
                 : <div
-                    className="ms-layout-panel-body"
+                    className="ms-flexible-layout-panel-body"
                     style={{
                         width: defaultWidth,
                         height: defaultHeight
@@ -308,7 +307,7 @@ function LayoutPanel({
     );
 }
 
-LayoutPanel.propTypes = {
+FlexibleLayoutPanel.propTypes = {
     name: PropTypes.string,
     active: PropTypes.bool,
     activePlugins: PropTypes.array,
@@ -330,7 +329,7 @@ LayoutPanel.propTypes = {
     defaultStepIndex: PropTypes.number
 };
 
-LayoutPanel.defaultProps = {
+FlexibleLayoutPanel.defaultProps = {
     activePlugins: [],
     className: '',
     resizeDisabled: false,
@@ -345,4 +344,4 @@ LayoutPanel.defaultProps = {
     maxDragThreshold: 0.1
 };
 
-export default LayoutPanel;
+export default FlexibleLayoutPanel;

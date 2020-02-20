@@ -12,7 +12,7 @@ import isNumber from 'lodash/isNumber';
 import isFunction from 'lodash/isFunction';
 import isNil from 'lodash/isNil';
 import BorderLayout from '../../../components/layout/BorderLayout';
-import SideMenu from '../SideMenu';
+import FlexibleLayoutSideMenu from '../FlexibleLayoutSideMenu';
 
 const LEFT_MENU_ID = 'left-menu';
 const RIGHT_MENU_ID = 'right-menu';
@@ -113,21 +113,21 @@ const LargeLayout = forwardRef(({
 
     return (
         <BorderLayout
-            className="ms-layout ms-lg"
+            className="ms-flexible-layout ms-lg"
             header={headerItems.map(({ Component }, key) => Component && <Component key={key}/>)}
             footer={footerItems.map(({ Component }, key) => Component && <Component key={key}/>)}
             columns={[
                 <div
                     ref={backgroundRef}
                     key="background"
-                    className="ms-layout-background"
+                    className="ms-flexible-layout-background"
                     style={{
                         ...backgroundLeftStyle,
                         ...backgroundRightStyle
                     }}>
                     {backgroundItems.map(({ Component }, key) => Component && <Component key={key}/>)}
                 </div>,
-                leftMenuItems.length > 0 ? <SideMenu
+                leftMenuItems.length > 0 ? <FlexibleLayoutSideMenu
                     ref={leftMenuRef}
                     key={LEFT_MENU_ID}
                     menuId={LEFT_MENU_ID}
@@ -161,7 +161,7 @@ const LargeLayout = forwardRef(({
                     panelSizes={panelSizes}
                     connectDragSize={connectDragSize}
                     tabsOrder={tabsOrder}/> : null,
-                rightMenuItems.length > 0 ? <SideMenu
+                rightMenuItems.length > 0 ? <FlexibleLayoutSideMenu
                     ref={rightMenuRef}
                     key={RIGHT_MENU_ID}
                     menuId={RIGHT_MENU_ID}
@@ -198,19 +198,19 @@ const LargeLayout = forwardRef(({
                 ...columnItems.map(({ Component }, key) => Component && <Component key={key}/>)
             ]}>
             <div
-                className="ms-layout-body-container">
+                className="ms-flexible-layout-body-container">
                 <div
                     ref={layoutBodyRef}
-                    id="ms-layout-body"
-                    className="ms-layout-body"
+                    id="ms-flexible-layout-body"
+                    className="ms-flexible-layout-body"
                     data-ms-size="lg">
                     {isContentVisible && bodyItems.map(({ Component }, key) => Component && <Component key={key}/>)}
-                    <div className="ms-layout-center">
+                    <div className="ms-flexible-layout-center">
                         {isContentVisible && centerItems.map(({ Component }, key) => Component && <Component key={key}/>)}
                     </div>
                 </div>
                 <div
-                    className="ms-layout-bottom">
+                    className="ms-flexible-layout-bottom">
                     {bottomItems.map(({ Component }, key) => Component && <Component key={key}/>)}
                 </div>
             </div>

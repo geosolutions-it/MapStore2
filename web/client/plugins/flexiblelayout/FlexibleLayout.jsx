@@ -31,9 +31,9 @@ const defaultLayoutComponents = {
 function LoaderPanel() {
     return (
         <BorderLayout
-            className="ms-layout">
+            className="ms-flexible-layout">
             <div
-                className="ms-layout-loader-panel">
+                className="ms-flexible-layout-loader-panel">
                 <Loader
                     style={{ margin: 'auto' }}
                     size={150}/>
@@ -60,7 +60,7 @@ const defaultGetType = ({
         });
 };
 
-export const useLayoutResize = (props) => {
+export const useFlexibleLayoutResize = (props) => {
     const layoutRef = useRef(null);
     const resize = useRef(null);
 
@@ -113,12 +113,10 @@ export const useLayoutResize = (props) => {
 };
 
 export const usePluginsComponents = (props, context) => {
-
     const loadedPluginsKeys = join(Object.keys(context.loadedPlugins || {}), ',');
     const plugins = usePlugins(props, context, [ loadedPluginsKeys ], props.loaderComponent);
     const pluginsLoaded = join(plugins.map(({ plugin }) => isFunction(plugin)), ',');
     const [ components, setComponents ] = useState({});
-
     useEffect(() => {
         setComponents(
             props.itemsMapping.reduce((itemsObject, { key, containerName }) => {
@@ -133,7 +131,7 @@ export const usePluginsComponents = (props, context) => {
     return components;
 };
 
-export const Layout = forwardRef(({
+export const FlexibleLayout = forwardRef(({
     error,
     loading,
     type,
@@ -156,7 +154,7 @@ export const Layout = forwardRef(({
             ? error
             : error && error.message || '';
         return (
-            <div className="ms-layout-config-error">
+            <div className="ms-flexible-layout-config-error">
                 <div>{errorMessage}</div>
             </div>
         );
@@ -188,7 +186,7 @@ export const Layout = forwardRef(({
     return LoaderComponent ? <LoaderComponent /> : <div />;
 });
 
-Layout.propTypes = {
+FlexibleLayout.propTypes = {
     error: PropTypes.oneOfType([PropTypes.bool, PropTypes.string]),
     loading: PropTypes.bool,
     type: PropTypes.string,
@@ -206,7 +204,7 @@ Layout.propTypes = {
     components: PropTypes.object
 };
 
-Layout.defaultProps = {
+FlexibleLayout.defaultProps = {
     error: false,
     loading: false,
     type: '',
@@ -240,13 +238,13 @@ Layout.defaultProps = {
     components: {}
 };
 
-const LayoutPlugin = (props, context) => {
+const FlexibleLayoutPlugin = (props, context) => {
 
     const components = usePluginsComponents(props, context);
-    const layoutRef = useLayoutResize(props);
+    const layoutRef = useFlexibleLayoutResize(props);
 
     return (
-        <Layout
+        <FlexibleLayout
             { ...props }
             ref={layoutRef}
             components={components}
@@ -254,11 +252,11 @@ const LayoutPlugin = (props, context) => {
     );
 };
 
-LayoutPlugin.contextTypes = {
+FlexibleLayoutPlugin.contextTypes = {
     loadedPlugins: PropTypes.object
 };
 
-LayoutPlugin.propTypes = {
+FlexibleLayoutPlugin.propTypes = {
     items: PropTypes.array,
     error: PropTypes.oneOfType([PropTypes.bool, PropTypes.string]),
     loading: PropTypes.bool,
@@ -285,7 +283,7 @@ LayoutPlugin.propTypes = {
     resizeDebounceFunction: PropTypes.func
 };
 
-LayoutPlugin.defaultProps = {
+FlexibleLayoutPlugin.defaultProps = {
     items: [],
     error: false,
     loading: false,
@@ -368,4 +366,4 @@ LayoutPlugin.defaultProps = {
     getType: defaultGetType
 };
 
-export default withResizeDetector(LayoutPlugin);
+export default withResizeDetector(FlexibleLayoutPlugin);

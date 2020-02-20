@@ -12,7 +12,7 @@ import isObject from 'lodash/isObject';
 import { createShallowSelectorCreator } from '../utils/ReselectUtils';
 
 export const activePluginsSelector = createShallowSelectorCreator((a, b) => a === b)(
-    state => get(state, 'controls.layout.activePlugins') || [],
+    state => get(state, 'controls.flexibleLayout.activePlugins') || [],
     activePlugins => activePlugins
 );
 
@@ -27,11 +27,11 @@ export const panelSizesSelector = createShallowSelectorCreator(
         || !isNil(a) && !isNil(b) && a.width === b.width && a.height === b.height;
     }
 )(
-    state => get(state, 'controls.layout.panelSizes') || {},
+    state => get(state, 'controls.flexibleLayout.panelSizes') || {},
     panelSizes => panelSizes
 );
 
-export const layoutStructureSelector = createShallowSelectorCreator(
+export const flexibleLayoutStructureSelector = createShallowSelectorCreator(
     (a, b) => {
         if (isObject(a) && isObject(b)) {
             const aStr = JSON.stringify(a);
@@ -41,8 +41,8 @@ export const layoutStructureSelector = createShallowSelectorCreator(
         return a === b || !isNil(a) && !isNil(b);
     }
 )(
-    state => get(state, 'controls.layout.structure') || {},
+    state => get(state, 'controls.flexibleLayout.structure') || {},
     layoutStructure => layoutStructure
 );
 
-export const layoutTypeSelector = state => get(state, 'controls.layout.type');
+export const flexibleLayoutTypeSelector = state => get(state, 'controls.flexibleLayout.type');

@@ -9,17 +9,17 @@
 import expect from 'expect';
 import { SET_CONTROL_PROPERTY } from '../controls';
 import {
-    updateLayoutType,
-    resizeLayoutPanel,
+    updateFlexibleLayoutType,
+    resizeFlexibleLayoutPanel,
     setActivePlugin
-} from '../layout';
+} from '../flexiblelayout';
 
-describe('Test correctness of the layout actions', () => {
+describe('Test correctness of the flexiblelayout actions', () => {
     it('updateLayoutType action', () => {
         const VALUE = 'lg';
-        const action = updateLayoutType(VALUE);
+        const action = updateFlexibleLayoutType(VALUE);
         expect(action.type).toBe(SET_CONTROL_PROPERTY);
-        expect(action.control).toBe('layout');
+        expect(action.control).toBe('flexibleLayout');
         expect(action.property).toBe('type');
         expect(action.value).toBe(VALUE);
     });
@@ -28,16 +28,16 @@ describe('Test correctness of the layout actions', () => {
         const MENU_ID = 'menu-id';
         const getState = () => ({
             controls: {
-                layout: {
+                flexibleLayout: {
                     panelSizes: {
                         previousId: { width: 0, height: 0 }
                     }
                 }
             }
         });
-        resizeLayoutPanel(MENU_ID, DATA)((action) => {
+        resizeFlexibleLayoutPanel(MENU_ID, DATA)((action) => {
             expect(action.type).toBe(SET_CONTROL_PROPERTY);
-            expect(action.control).toBe('layout');
+            expect(action.control).toBe('flexibleLayout');
             expect(action.property).toBe('panelSizes');
             expect(action.value).toEqual({
                 previousId: { width: 0, height: 0 },
@@ -51,7 +51,7 @@ describe('Test correctness of the layout actions', () => {
         const MENU_ID = 'menu-id';
         const getState = () => ({
             controls: {
-                layout: {
+                flexibleLayout: {
                     structure: {
                         [MENU_ID]: [ NAME, 'otherName' ]
                     },
@@ -63,9 +63,9 @@ describe('Test correctness of the layout actions', () => {
                 }
             }
         });
-        resizeLayoutPanel(NAME, DATA)((action) => {
+        resizeFlexibleLayoutPanel(NAME, DATA)((action) => {
             expect(action.type).toBe(SET_CONTROL_PROPERTY);
-            expect(action.control).toBe('layout');
+            expect(action.control).toBe('flexibleLayout');
             expect(action.property).toBe('panelSizes');
             expect(action.value).toEqual({
                 [MENU_ID]: {
@@ -79,7 +79,7 @@ describe('Test correctness of the layout actions', () => {
         const NAME = 'name';
         const getState = () => ({
             controls: {
-                layout: {
+                flexibleLayout: {
                     activePlugins: [],
                     structure: {
                         leftMenu: ['name']
@@ -89,7 +89,7 @@ describe('Test correctness of the layout actions', () => {
         });
         setActivePlugin(NAME)((action) => {
             expect(action.type).toBe(SET_CONTROL_PROPERTY);
-            expect(action.control).toBe('layout');
+            expect(action.control).toBe('flexibleLayout');
             expect(action.property).toBe('activePlugins');
             expect(action.value).toEqual([ NAME ]);
         }, getState);
@@ -100,7 +100,7 @@ describe('Test correctness of the layout actions', () => {
         const ENABLE = false;
         const getState = () => ({
             controls: {
-                layout: {
+                flexibleLayout: {
                     activePlugins: [],
                     structure: {
                         leftMenu: ['name']
@@ -110,7 +110,7 @@ describe('Test correctness of the layout actions', () => {
         });
         setActivePlugin(NAME, ENABLE)((action) => {
             expect(action.type).toBe(SET_CONTROL_PROPERTY);
-            expect(action.control).toBe('layout');
+            expect(action.control).toBe('flexibleLayout');
             expect(action.property).toBe('activePlugins');
             expect(action.value).toEqual([]);
         }, getState);
@@ -120,7 +120,7 @@ describe('Test correctness of the layout actions', () => {
         const NAME = 'name';
         const getState = () => ({
             controls: {
-                layout: {
+                flexibleLayout: {
                     activePlugins: ['other'],
                     structure: {
                         leftMenu: ['name'],
@@ -131,7 +131,7 @@ describe('Test correctness of the layout actions', () => {
         });
         setActivePlugin(NAME)((action) => {
             expect(action.type).toBe(SET_CONTROL_PROPERTY);
-            expect(action.control).toBe('layout');
+            expect(action.control).toBe('flexibleLayout');
             expect(action.property).toBe('activePlugins');
             expect(action.value).toEqual([ NAME, 'other' ]);
         }, getState);

@@ -16,22 +16,22 @@ import maplayout from '../reducers/maplayout';
 import controls from '../reducers/controls';
 import { userSelector } from '../selectors/security';
 import {
-    updateLayoutType,
-    resizeLayoutPanel,
+    updateFlexibleLayoutType,
+    resizeFlexibleLayoutPanel,
     setActivePlugin,
-    updateLayoutStructure
-} from '../actions/layout';
-import LayoutPlugin from './layout/Layout';
+    updateFlexibleLayoutStructure
+} from '../actions/flexiblelayout';
+import FlexibleLayoutPlugin from './flexiblelayout/FlexibleLayout';
 import {
     activePluginsSelector,
     panelSizesSelector,
-    layoutTypeSelector
-} from '../selectors/layout';
+    flexibleLayoutTypeSelector
+} from '../selectors/flexiblelayout';
 
 const selector = createSelector(
     [
         activePluginsSelector,
-        layoutTypeSelector,
+        flexibleLayoutTypeSelector,
         state => get(state, 'mapInitialConfig.loadingError'),
         mapSelector,
         userSelector,
@@ -46,16 +46,16 @@ const selector = createSelector(
     })
 );
 
-export default createPlugin('Layout', {
+export default createPlugin('FlexibleLayout', {
     component: connect(
         selector,
         {
-            onResize: updateLayoutType,
-            onResizePanel: resizeLayoutPanel,
+            onResize: updateFlexibleLayoutType,
+            onResizePanel: resizeFlexibleLayoutPanel,
             onSelect: setActivePlugin,
-            onUpdateStructure: updateLayoutStructure,
+            onUpdateStructure: updateFlexibleLayoutStructure,
             onUpdateMapSize: updateMapLayout
-        })(LayoutPlugin),
+        })(FlexibleLayoutPlugin),
     reducers: {
         maplayout,
         controls

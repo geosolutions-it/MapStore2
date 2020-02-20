@@ -9,14 +9,14 @@
 import expect from 'expect';
 import React from 'react';
 import ReactDOM from 'react-dom';
-import LayoutPlugin from '../Layout';
+import FlexibleLayoutPlugin from '../FlexibleLayout';
 import { getPluginForTest } from './pluginsTestUtils';
 import { SET_CONTROL_PROPERTY } from '../../actions/controls';
 
 // styles needed for layout structure
-import './layout-test-style.less';
+import './flexiblelayout-test-style.less';
 
-describe('Layout Plugin', () => {
+describe('FlexibleLayout Plugin', () => {
     beforeEach((done) => {
         document.body.innerHTML = '<div id="container"></div>';
         setTimeout(done);
@@ -29,49 +29,49 @@ describe('Layout Plugin', () => {
     });
 
     it('should create plugin with default configuration', () => {
-        const { Plugin } = getPluginForTest(LayoutPlugin);
+        const { Plugin } = getPluginForTest(FlexibleLayoutPlugin);
         ReactDOM.render(<Plugin />, document.getElementById('container'));
-        const loaderPanelNode = document.querySelector('.ms-layout-loader-panel');
+        const loaderPanelNode = document.querySelector('.ms-flexible-layout-loader-panel');
         expect(loaderPanelNode).toExist();
     });
 
     it('render large layout with default config', () => {
-        const { Plugin } = getPluginForTest(LayoutPlugin, {
+        const { Plugin } = getPluginForTest(FlexibleLayoutPlugin, {
             controls: {
-                layout: {
+                flexibleLayout: {
                     type: 'lg'
                 }
             },
             map: {}
         });
         ReactDOM.render(<Plugin />, document.getElementById('container'));
-        const largeLayout = document.querySelector('.ms-layout.ms-lg');
+        const largeLayout = document.querySelector('.ms-flexible-layout.ms-lg');
         expect(largeLayout).toExist();
     });
     it('render medium layout with default config', () => {
-        const { Plugin } = getPluginForTest(LayoutPlugin, {
+        const { Plugin } = getPluginForTest(FlexibleLayoutPlugin, {
             controls: {
-                layout: {
+                flexibleLayout: {
                     type: 'md'
                 }
             },
             map: {}
         });
         ReactDOM.render(<Plugin />, document.getElementById('container'));
-        const mediumLayout = document.querySelector('.ms-layout.ms-md');
+        const mediumLayout = document.querySelector('.ms-flexible-layout.ms-md');
         expect(mediumLayout).toExist();
     });
     it('render small layout with default config', () => {
-        const { Plugin } = getPluginForTest(LayoutPlugin, {
+        const { Plugin } = getPluginForTest(FlexibleLayoutPlugin, {
             controls: {
-                layout: {
+                flexibleLayout: {
                     type: 'sm'
                 }
             },
             map: {}
         });
         ReactDOM.render(<Plugin />, document.getElementById('container'));
-        const smallLayout = document.querySelector('.ms-layout.ms-sm');
+        const smallLayout = document.querySelector('.ms-flexible-layout.ms-sm');
         expect(smallLayout).toExist();
     });
     it('render item inside layout sections', (done) => {
@@ -162,16 +162,16 @@ describe('Layout Plugin', () => {
                 items: []
             }
         ];
-        const { Plugin, actions } = getPluginForTest(LayoutPlugin, {
+        const { Plugin, actions } = getPluginForTest(FlexibleLayoutPlugin, {
             controls: {
-                layout: {
+                flexibleLayout: {
                     type: 'lg'
                 }
             },
             map: {}
         });
         ReactDOM.render(<div style={{ position: 'absolute', width: 1920, height: 1080 }}><Plugin items={items}/></div>, document.getElementById('container'));
-        const largeLayout = document.querySelector('.ms-layout.ms-lg');
+        const largeLayout = document.querySelector('.ms-flexible-layout.ms-lg');
         expect(largeLayout).toExist();
         setTimeout(() => {
             try {
@@ -216,7 +216,7 @@ describe('Layout Plugin', () => {
                     initLayoutStructureAction
                 ] = actions;
                 expect(initLayoutStructureAction.type).toBe(SET_CONTROL_PROPERTY);
-                expect(initLayoutStructureAction.control).toBe('layout');
+                expect(initLayoutStructureAction.control).toBe('flexibleLayout');
                 expect(initLayoutStructureAction.property).toBe('structure');
             } catch (e) {
                 done(e);

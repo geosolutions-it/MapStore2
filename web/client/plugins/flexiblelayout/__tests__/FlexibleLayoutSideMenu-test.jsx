@@ -9,12 +9,12 @@
 import expect from 'expect';
 import React from 'react';
 import ReactDOM from 'react-dom';
-import SideMenu from '../SideMenu';
+import FlexibleLayoutSideMenu from '../FlexibleLayoutSideMenu';
 
 // styles needed for layout structure
-import './layout-test-style.less';
+import './flexiblelayout-test-style.less';
 
-describe('SideMenu Component', () => {
+describe('FlexibleLayoutSideMenu Component', () => {
     beforeEach((done) => {
         document.body.innerHTML = '<div id="container"></div>';
         setTimeout(done);
@@ -25,7 +25,7 @@ describe('SideMenu Component', () => {
         setTimeout(done);
     });
     it('render component with default configuration', () => {
-        ReactDOM.render(<SideMenu />, document.getElementById('container'));
+        ReactDOM.render(<FlexibleLayoutSideMenu />, document.getElementById('container'));
         const sideMenuNode = document.querySelector('.ms-menu-layout');
         expect(sideMenuNode).toExist();
     });
@@ -50,7 +50,7 @@ describe('SideMenu Component', () => {
             }
         ];
         ReactDOM.render(
-            <SideMenu
+            <FlexibleLayoutSideMenu
                 items={ITEMS}
                 activePlugins={ACTIVE_PLUGINS}
             />, document.getElementById('container'));

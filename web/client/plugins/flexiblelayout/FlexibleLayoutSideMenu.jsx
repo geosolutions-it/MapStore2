@@ -14,7 +14,7 @@ import isNumber from 'lodash/isNumber';
 import Menu from '../../components/layout/Menu';
 import BorderLayout from '../../components/layout/BorderLayout';
 
-const SideMenu = forwardRef(({
+const FlexibleLayoutSideMenu = forwardRef(({
     items = [],
     activePlugins = [],
     tabsProps = () => ({}),
@@ -80,7 +80,7 @@ const SideMenu = forwardRef(({
                     style={name !== selectedName ? { display: 'none' } : { position: 'relative', width: '100%', height: '100%' }}>
                     {Component && <Component
                         active={name === selectedName}
-                        layoutPanelProps={{
+                        flexibleLayoutPanelProps={{
                             name,
                             resizeHandle,
                             resizeHandleAxis,
@@ -127,7 +127,7 @@ const SideMenu = forwardRef(({
     );
 });
 
-SideMenu.propTypes = {
+FlexibleLayoutSideMenu.propTypes = {
     items: PropTypes.array,
     activePlugins: PropTypes.array,
     tabsProps: PropTypes.func,
@@ -157,7 +157,7 @@ SideMenu.propTypes = {
     tabsOrder: PropTypes.array
 };
 
-SideMenu.defaultProps = {
+FlexibleLayoutSideMenu.defaultProps = {
     activePlugins: [],
     tabsProps: () => ({}),
     className: '',
@@ -173,4 +173,4 @@ SideMenu.defaultProps = {
     onResizePanel: () => {}
 };
 
-export default SideMenu;
+export default FlexibleLayoutSideMenu;

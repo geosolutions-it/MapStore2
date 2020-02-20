@@ -9,13 +9,13 @@
 import expect from 'expect';
 import React from 'react';
 import ReactDOM from 'react-dom';
-import LayoutPanel from '../LayoutPanel';
+import FlexibleLayoutPanel from '../FlexibleLayoutPanel';
 import ReactTestUtils from 'react-dom/test-utils';
 
 // styles needed for layout structure
-import './layout-test-style.less';
+import './flexiblelayout-test-style.less';
 
-describe('LayoutPanel Component', () => {
+describe('FlexibleLayoutPanel Component', () => {
     beforeEach((done) => {
         document.body.innerHTML = '<div id="container"></div>';
         setTimeout(done);
@@ -26,33 +26,33 @@ describe('LayoutPanel Component', () => {
         setTimeout(done);
     });
     it('render component with default configuration', () => {
-        ReactDOM.render(<LayoutPanel />, document.getElementById('container'));
-        const layoutPanelNode = document.querySelector('.ms-layout-panel');
+        ReactDOM.render(<FlexibleLayoutPanel />, document.getElementById('container'));
+        const layoutPanelNode = document.querySelector('.ms-flexible-layout-panel');
         expect(layoutPanelNode).toExist();
-        const dragHandlerNode = layoutPanelNode.querySelector('.ms-layout-panel-handle');
+        const dragHandlerNode = layoutPanelNode.querySelector('.ms-flexible-layout-panel-handle');
         expect(dragHandlerNode).toExist();
     });
     it('render component with resizable disabled', () => {
-        ReactDOM.render(<LayoutPanel resizeDisabled />, document.getElementById('container'));
-        const layoutPanelNode = document.querySelector('.ms-layout-panel');
+        ReactDOM.render(<FlexibleLayoutPanel resizeDisabled />, document.getElementById('container'));
+        const layoutPanelNode = document.querySelector('.ms-flexible-layout-panel');
         expect(layoutPanelNode).toExist();
-        const dragHandlerNode = layoutPanelNode.querySelector('.ms-layout-panel-handle');
+        const dragHandlerNode = layoutPanelNode.querySelector('.ms-flexible-layout-panel-handle');
         expect(dragHandlerNode).toBe(null);
     });
 
     it('should drag from custom handler mouse', () => {
         const TEST_CHILD_CLASS = 'test-child';
-        ReactDOM.render(<LayoutPanel
+        ReactDOM.render(<FlexibleLayoutPanel
             active
             defaultWidth={100}
             defaultHeight={500}>
             <div className={TEST_CHILD_CLASS}></div>
-        </LayoutPanel>, document.getElementById('container'));
-        const layoutPanelNode = document.querySelector('.ms-layout-panel');
+        </FlexibleLayoutPanel>, document.getElementById('container'));
+        const layoutPanelNode = document.querySelector('.ms-flexible-layout-panel');
         expect(layoutPanelNode).toExist();
         const layoutPanelBody = layoutPanelNode.querySelector(`.${TEST_CHILD_CLASS}`);
         expect(layoutPanelBody.clientWidth).toBe(100);
-        const dragHandlerNode = document.querySelector('.ms-layout-panel-handle');
+        const dragHandlerNode = document.querySelector('.ms-flexible-layout-panel-handle');
         expect(dragHandlerNode).toExist();
 
         ReactTestUtils.Simulate.mouseDown(dragHandlerNode, { button: 0, clientX: 100, clientY: 0 });
@@ -62,16 +62,16 @@ describe('LayoutPanel Component', () => {
 
     it('should drag from custom handler touch', () => {
         const TEST_CHILD_CLASS = 'test-child';
-        ReactDOM.render(<LayoutPanel
+        ReactDOM.render(<FlexibleLayoutPanel
             defaultWidth={100}
             defaultHeight={500}>
             <div className={TEST_CHILD_CLASS}></div>
-        </LayoutPanel>, document.getElementById('container'));
-        const layoutPanelNode = document.querySelector('.ms-layout-panel');
+        </FlexibleLayoutPanel>, document.getElementById('container'));
+        const layoutPanelNode = document.querySelector('.ms-flexible-layout-panel');
         expect(layoutPanelNode).toExist();
         const layoutPanelBody = layoutPanelNode.querySelector(`.${TEST_CHILD_CLASS}`);
         expect(layoutPanelBody.clientWidth).toBe(100);
-        const dragHandlerNode = layoutPanelNode.querySelector('.ms-layout-panel-handle');
+        const dragHandlerNode = layoutPanelNode.querySelector('.ms-flexible-layout-panel-handle');
         expect(dragHandlerNode).toExist();
         ReactTestUtils.Simulate.touchStart(dragHandlerNode, { button: 0, clientX: 100, clientY: 0 });
         ReactTestUtils.Simulate.touchEnd(dragHandlerNode, { button: 0, clientX: 200, clientY: 0 });

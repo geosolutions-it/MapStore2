@@ -7,22 +7,22 @@
  */
 
 import React from 'react';
-import LayoutPanel from './LayoutPanel';
+import FlexibleLayoutPanel from './FlexibleLayoutPanel';
 
 /**
  * HOC to add draggable functionality to panel of layout
  */
-const withLayoutPanel = (
+const withFlexibleLayoutPanel = (
     Component,
     {
         defaultWidth = 400,
         defaultHeight = 200
     } = {}) => {
     return ({
-        layoutPanelProps,
+        flexibleLayoutPanelProps,
         ...props
     }) => {
-        if (!layoutPanelProps) {
+        if (!flexibleLayoutPanelProps) {
             return <Component { ...props } />;
         }
         const {
@@ -41,9 +41,9 @@ const withLayoutPanel = (
             steps,
             onClose,
             maxDragThreshold
-        } = layoutPanelProps;
+        } = flexibleLayoutPanelProps;
         return (
-            <LayoutPanel
+            <FlexibleLayoutPanel
                 active={props.active}
                 name={name}
                 activePlugins={activePlugins}
@@ -64,9 +64,9 @@ const withLayoutPanel = (
                 firstRender={!!(containerWidth === undefined
                     || containerHeight === undefined)}>
                 <Component { ...props } />
-            </LayoutPanel>
+            </FlexibleLayoutPanel>
         );
     };
 };
 
-export default withLayoutPanel;
+export default withFlexibleLayoutPanel;

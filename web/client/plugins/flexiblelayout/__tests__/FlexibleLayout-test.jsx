@@ -9,12 +9,12 @@
 import expect from 'expect';
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { Layout } from '../Layout';
+import { FlexibleLayout } from '../FlexibleLayout';
 
 // styles needed for layout structure
-import './layout-test-style.less';
+import './flexiblelayout-test-style.less';
 
-describe('Layout Component', () => {
+describe('FlexibleLayout Component', () => {
     beforeEach((done) => {
         document.body.innerHTML = '<div id="container"></div>';
         setTimeout(done);
@@ -27,8 +27,8 @@ describe('Layout Component', () => {
     });
 
     it('render component with default configuration', () => {
-        ReactDOM.render(<Layout />, document.getElementById('container'));
-        const loaderPanelNode = document.querySelector('.ms-layout-loader-panel');
+        ReactDOM.render(<FlexibleLayout />, document.getElementById('container'));
+        const loaderPanelNode = document.querySelector('.ms-flexible-layout-loader-panel');
         expect(loaderPanelNode).toExist();
     });
 
@@ -69,7 +69,7 @@ describe('Layout Component', () => {
             ]
         };
 
-        ReactDOM.render(<Layout
+        ReactDOM.render(<FlexibleLayout
             error={false}
             loading={false}
             type={LAYOUT_TYPE}

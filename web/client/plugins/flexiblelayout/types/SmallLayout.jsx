@@ -6,17 +6,17 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import React, { useRef, useEffect, useState, forwardRef } from 'react';
+import React, { useRef, useState, useEffect, forwardRef } from 'react';
 import PropTypes from 'prop-types';
 import isNumber from 'lodash/isNumber';
 import isFunction from 'lodash/isFunction';
 import isNil from 'lodash/isNil';
 import BorderLayout from '../../../components/layout/BorderLayout';
-import SideMenu from '../SideMenu';
+import FlexibleLayoutSideMenu from '../FlexibleLayoutSideMenu';
 
-const LEFT_MENU_ID = 'left-menu';
+const BOTTOM_MENU_ID = 'bottom-menu';
 
-const MediumLayout = forwardRef(({
+const SmallLayout = forwardRef(({
     bodyItems = [],
     backgroundItems = [],
     centerItems = [],
@@ -26,8 +26,8 @@ const MediumLayout = forwardRef(({
     bottomItems = [],
     headerItems = [],
     footerItems = [],
-    dragMargin = [8, 8],
-    minLayoutBodySize = [256, 256],
+    dragMargin = [0, 0],
+    minLayoutBodySize = [800, 600],
     onUpdateStructure = () => {},
     iconComponent,
     activePlugins,
@@ -43,7 +43,6 @@ const MediumLayout = forwardRef(({
     connectDragSize,
     tabsOrder
 }, ref) => {
-
     const backgroundRef = useRef();
     const layoutBodyRef = useRef();
 
@@ -53,16 +52,15 @@ const MediumLayout = forwardRef(({
             backgroundNode: backgroundRef
         };
     }
-
     const sideMenuItems = [ ...leftMenuItems, ...rightMenuItems ];
     useEffect(() => {
         const layoutStructure = {
-            [LEFT_MENU_ID]: sideMenuItems.map(({ name }) => name)
+            [BOTTOM_MENU_ID]: sideMenuItems.map(({ name }) => name)
         };
         onUpdateStructure(layoutStructure);
     }, []);
 
-    function calculateMaxAvailableSize(size = {}) {
+    function calculateMaxAvailableSize(size) {
         if (!(layoutBodyRef && layoutBodyRef.current)) {
             return [
                 undefined,
@@ -80,7 +78,7 @@ const MediumLayout = forwardRef(({
 
     function calculateAvailableContainerSize() {
         return [
-            width - 56,
+            width,
             height
         ];
     }
@@ -101,71 +99,68 @@ const MediumLayout = forwardRef(({
     }, [ panelSizesStr ]);
 
     const backgroundStyle = sideMenuItems.length === 0 ? {
-        left: 0
+        bottom: 0
     } : {};
 
     return (
         <BorderLayout
-            className="ms-layout ms-md"
+            className="ms-flexible-layout ms-sm"
             header={headerItems.map(({ Component }, key) => Component && <Component key={key}/>)}
             footer={footerItems.map(({ Component }, key) => Component && <Component key={key}/>)}
             columns={[
                 <div
                     ref={backgroundRef}
                     key="background"
-                    className="ms-layout-background"
+                    className="ms-flexible-layout-background"
                     style={backgroundStyle}>
                     {backgroundItems.map(({ Component }, key) => Component && <Component key={key}/>)}
                 </div>,
-                sideMenuItems.length > 0 ? <SideMenu
-                    overlay
-                    menuId={LEFT_MENU_ID}
-                    key={LEFT_MENU_ID}
-                    resizeHandle="e"
-                    resizeHandleAxis="x"
-                    calculateMaxAvailableSize={calculateMaxAvailableSize}
-                    calculateAvailableContainerSize={calculateAvailableContainerSize}
-                    size={[width, height]}
-                    resizeDisabled={resizeDisabled}
-                    style={{
-                        zIndex: 2,
-                        order: -1,
-                        pointerEvents: 'none'
-                    }}
-                    tabsProps={({ tooltipId }) => ({
-                        btnProps: {
-                            tooltipId,
-                            tooltipPosition: 'right'
-                        }
-                    })}
-                    containerHeight="100%"
-                    activePlugins={activePlugins}
-                    onSelect={onSelect}
-                    items={sideMenuItems}
-                    iconComponent={iconComponent}
-                    onResizePanel={onResizePanel}
-                    panelSizes={panelSizes}
-                    initialStepIndex={initialStepIndex}
-                    steps={steps}
-                    maxDragThreshold={maxDragThreshold}
-                    connectDragSize={connectDragSize}
-                    tabsOrder={tabsOrder}/> : null,
                 ...columnItems.map(({ Component }, key) => Component && <Component key={key}/>)
             ]}>
             <div
-                className="ms-layout-body-container">
+                className="ms-flexible-layout-body-container">
                 <div
-                    id="ms-layout-body"
                     ref={layoutBodyRef}
-                    className="ms-layout-body"
-                    data-ms-size="md">
-                    {isContentVisible && bodyItems.map(({ Component }, key) => Component && <Component key={key}/>) }
-                    <div className="ms-layout-center">
+                    id="ms-flexible-layout-body"
+                    className="ms-flexible-layout-body"
+                    data-ms-size="sm">
+                    {isContentVisible && bodyItems.map(({ Component }, key) => Component && <Component key={key}/>)}
+                    <div className="ms-flexible-layout-center">
                         {isContentVisible && centerItems.map(({ Component }, key) => Component && <Component key={key}/>)}
                     </div>
                 </div>
                 <div
-                    className="ms-layout-bottom">
+                    className="ms-flexible-layout-bottom">
+                    {sideMenuItems.length > 0 ? <FlexibleLayoutSideMenu
+                        menuId={BOTTOM_MENU_ID}
+                        key={BOTTOM_MENU_ID}
+                        resizeHandle="n"
+                        resizeHandleAxis="y"
+                        direction="horizontal"
+                        tabsAlignment="justify"
+                        calculateMaxAvailableSize={calculateMaxAvailableSize}
+                        calculateAvailableContainerSize={calculateAvailableContainerSize}
+                        size={[width, height]}
+                        style={{ pointerEvents: 'none' }}
+                        tabsProps={({ tooltipId }) => ({
+                            btnProps: {
+                                tooltipId,
+                                tooltipPosition: 'top'
+                            }
+                        })}
+                        activePlugins={activePlugins}
+                        onSelect={onSelect}
+                        containerWidth="100%"
+                        items={sideMenuItems}
+                        iconComponent={iconComponent}
+                        onResizePanel={onResizePanel}
+                        panelSizes={panelSizes}
+                        resizeDisabled={resizeDisabled}
+                        initialStepIndex={initialStepIndex}
+                        steps={steps}
+                        maxDragThreshold={maxDragThreshold}
+                        connectDragSize={connectDragSize}
+                        tabsOrder={tabsOrder}/> : null}
                     {bottomItems.map(({ Component }, key) => Component && <Component key={key}/>)}
                 </div>
             </div>
@@ -173,7 +168,7 @@ const MediumLayout = forwardRef(({
     );
 });
 
-MediumLayout.propTypes = {
+SmallLayout.propTypes = {
     bodyItems: PropTypes.array,
     backgroundItems: PropTypes.array,
     centerItems: PropTypes.array,
@@ -201,7 +196,7 @@ MediumLayout.propTypes = {
     tabsOrder: PropTypes.array
 };
 
-MediumLayout.defaultProps = {
+SmallLayout.defaultProps = {
     bodyItems: [],
     backgroundItems: [],
     centerItems: [],
@@ -211,12 +206,12 @@ MediumLayout.defaultProps = {
     bottomItems: [],
     headerItems: [],
     footerItems: [],
-    dragMargin: [8, 8],
-    minLayoutBodySize: [256, 256],
+    dragMargin: [0, 0],
+    minLayoutBodySize: [800, 600],
     onUpdateStructure: () => {},
     onSelect: () => {},
     onResizePanel: () => {},
     resizeDisabled: false
 };
 
-export default MediumLayout;
+export default SmallLayout;

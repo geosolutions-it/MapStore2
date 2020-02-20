@@ -10,22 +10,22 @@ import { setControlProperty } from './controls';
 import {
     updateActivePlugins,
     updatePanelSizes
-} from '../utils/LayoutUtils';
+} from '../utils/FlexibleLayoutUtils';
 import {
     activePluginsSelector,
     panelSizesSelector,
-    layoutStructureSelector
-} from '../selectors/layout';
+    flexibleLayoutStructureSelector
+} from '../selectors/flexiblelayout';
 
-export const updateLayoutType = setControlProperty.bind(null, 'layout', 'type');
+export const updateFlexibleLayoutType = setControlProperty.bind(null, 'flexibleLayout', 'type');
 
-export const resizeLayoutPanel = (name, data) => {
+export const resizeFlexibleLayoutPanel = (name, data) => {
     return (dispatch, getState) => {
         const state = getState();
         const panelSizes = panelSizesSelector(state);
-        const layoutStructure = layoutStructureSelector(state);
+        const layoutStructure = flexibleLayoutStructureSelector(state);
         const newPanelSizes = updatePanelSizes({ panelSizes, layoutStructure, name, data });
-        dispatch(setControlProperty('layout', 'panelSizes', newPanelSizes));
+        dispatch(setControlProperty('flexibleLayout', 'panelSizes', newPanelSizes));
     };
 };
 
@@ -33,10 +33,10 @@ export const setActivePlugin = (name, enable) => {
     return (dispatch, getState) => {
         const state = getState();
         const activePlugins = activePluginsSelector(state);
-        const layoutStructure =  layoutStructureSelector(state);
+        const layoutStructure =  flexibleLayoutStructureSelector(state);
         const newActivePlugins = updateActivePlugins({ activePlugins, layoutStructure, name, enable });
-        dispatch(setControlProperty('layout', 'activePlugins', newActivePlugins));
+        dispatch(setControlProperty('flexibleLayout', 'activePlugins', newActivePlugins));
     };
 };
 
-export const updateLayoutStructure = setControlProperty.bind(null, 'layout', 'structure');
+export const updateFlexibleLayoutStructure = setControlProperty.bind(null, 'flexibleLayout', 'structure');
