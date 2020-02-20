@@ -27,7 +27,7 @@ const {resultSelector, serviceListOpenSelector, newServiceSelector,
     newServiceTypeSelector, selectedServiceTypeSelector, searchOptionsSelector, servicesSelector,
     servicesSelectorWithBackgrounds, formatsSelector, loadingErrorSelector, selectedServiceSelector,
     modeSelector, layerErrorSelector, activeSelector, savingSelector, authkeyParamNameSelector,
-    searchTextSelector, groupSelector, pageSizeSelector, loadingSelector
+    searchTextSelector, groupSelector, pageSizeSelector, loadingSelector, selectedServiceLayerOptionsSelector
 } = require("../selectors/catalog");
 const {projectionSelector} = require('../selectors/map');
 
@@ -49,12 +49,13 @@ const catalogSelector = createSelector([
     (state) => newServiceTypeSelector(state),
     (state) => selectedServiceTypeSelector(state),
     (state) => searchOptionsSelector(state),
+    (state) => selectedServiceLayerOptionsSelector(state),
     (state) => currentLocaleSelector(state),
     (state) => currentMessagesSelector(state),
     (state) => pageSizeSelector(state),
     (state) => loadingSelector(state),
     (state) => projectionSelector(state)
-], (layers, modalParams, authkeyParamNames, result, saving, openCatalogServiceList, newService, newformat, selectedFormat, options, currentLocale, locales, pageSize, loading, crs) => ({
+], (layers, modalParams, authkeyParamNames, result, saving, openCatalogServiceList, newService, newformat, selectedFormat, options, layerOptions, currentLocale, locales, pageSize, loading, crs) => ({
     layers,
     modalParams,
     authkeyParamNames,
@@ -66,7 +67,7 @@ const catalogSelector = createSelector([
     pageSize,
     loading,
     crs,
-    records: result && CatalogUtils.getCatalogRecords(selectedFormat, result, options, locales) || []
+    records: result && CatalogUtils.getCatalogRecords(selectedFormat, result, { ...options, layerOptions }, locales) || []
 }));
 
 

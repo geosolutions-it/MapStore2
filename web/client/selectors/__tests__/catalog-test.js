@@ -23,6 +23,7 @@ const {
     resultSelector,
     searchTextSelector,
     searchOptionsSelector,
+    selectedServiceLayerOptionsSelector,
     selectedServiceTypeSelector,
     selectedServiceSelector,
     servicesSelector,
@@ -49,7 +50,10 @@ const state = {
             'Basic WMS Service': {
                 url: 'https://demo.geo-solutions.it/geoserver/wms',
                 type: 'wms',
-                title: 'Basic WMS Service'
+                title: 'Basic WMS Service',
+                layerOptions: {
+                    tileSize: 512
+                }
             },
             'Basic WMTS Service': {
                 url: 'https://demo.geo-solutions.it/geoserver/gwc/service/wmts',
@@ -154,6 +158,11 @@ describe('Test catalog selectors', () => {
         const retVal = selectedServiceTypeSelector(state2);
         expect(retVal).toExist();
         expect(retVal).toBe("wmts");
+    });
+    it('selectedServiceLayerOptionsSelector', () => {
+        const retVal = selectedServiceLayerOptionsSelector(state);
+        expect(retVal).toExist();
+        expect(retVal.tileSize).toBe(512);
     });
     it('test searchOptionsSelector', () => {
         const retVal = searchOptionsSelector(state);
