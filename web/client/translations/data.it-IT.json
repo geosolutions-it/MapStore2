@@ -27,6 +27,7 @@
         "showMore": "Mostra altri...",
         "collapse": "Collassa",
         "expand": "Espandi",
+        "Forbidden": "Vietato",
         "version": {
             "label": "Versione"
         },
@@ -1627,7 +1628,9 @@
                     "notFound": "Dashboard non trovata",
                     "notAccessible": "Dashboard non accessibile"
                 },
-                "resourceAlreadyExists": "Una risorsa con questo nome esiste già"
+                "resourceAlreadyExists": "Una risorsa con questo nome esiste già",
+                "forbidden": "Si è verificato un errore imprevisto (403 vietato). Si prega di contattare l'amministratore",
+                "forbidden405": "Si è verificato un errore imprevisto (405 vietato). Si prega di contattare l'amministratore"
             },
             "editor": {
                 "save": "Salva la dashboard",
