@@ -1,0 +1,65 @@
+{
+  "map": {
+    "projection": "EPSG:900913",
+    "units": "m",
+    "center": {
+      "x": 0,
+      "y": 0,
+      "crs": "EPSG:900913"
+    },
+    "zoom": 3,
+    "maxExtent": [
+      -20037508.34,
+      -20037508.34,
+      20037508.34,
+      20037508.34
+    ],
+    "layers": [
+      {
+        "format": "image/jpeg",
+        "group": "background",
+        "name": "s2cloudless:s2cloudless",
+        "opacity": 1,
+        "title": "Sentinel 2 Cloudless",
+        "type": "wms",
+        "url": [
+          "https://1maps.geo-solutions.it/geoserver/wms",
+          "https://2maps.geo-solutions.it/geoserver/wms",
+          "https://3maps.geo-solutions.it/geoserver/wms",
+          "https://4maps.geo-solutions.it/geoserver/wms",
+          "https://5maps.geo-solutions.it/geoserver/wms",
+          "https://6maps.geo-solutions.it/geoserver/wms"
+        ],
+        "source": "s2cloudless",
+        "visibility": true,
+        "singleTile": false
+      },
+      {
+        "id": "topp:states__5",
+        "search": {
+          "url": "https://demo.geo-solutions.it/geoserver/wfs",
+          "type": "wfs"
+        },
+        "name": "topp:states",
+        "title": "USA Population",
+        "type": "wms",
+        "url": "https://demo.geo-solutions.it/geoserver/wms",
+        "bbox": {
+          "crs": "EPSG:4326",
+          "bounds": {
+            "minx": "-124.731422",
+            "miny": "24.955967",
+            "maxx": "-66.969849",
+            "maxy": "49.371735"
+          }
+        },
+        "visibility": true,
+        "singleTile": false,
+        "dimensions": [],
+        "hideLoading": false,
+        "handleClickOnLayer": false,
+        "params": {}
+      }
+    ]
+  }
+}

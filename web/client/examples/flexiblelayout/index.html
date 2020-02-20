@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Flexible Layout Example</title>
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans&display=swap" rel="stylesheet">
+    <link rel="stylesheet" id="theme_stylesheet" href="../../dist/themes/default.css">
+    <style>
+        body {
+            margin: 0;
+        }
+
+        ._ms2_init_center {
+            position: fixed;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;
+            overflow: show;
+            margin: auto;
+            display: flex;
+            align-items: center;
+        }
+
+        ._ms2_init_center::before {
+            content: 'Loading MapStore';
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            text-align: center;
+            transform: translateX(-50%) translateY(-50%);
+            -webkit-animation: _ms2_init_text_anim 2s linear 0s infinite normal;
+            animation: _ms2_init_text_anim 2s linear 0s infinite normal;
+            color: #6F6F6f;
+            font-family: "Helvetica Neue", "Helvetica", "Arial", sans-serif;
+            font-size: 20px;
+            font-weight: bold;
+            width: 6em;
+            text-align: center;
+            margin: auto;
+        }
+
+        ._ms2_init_spinner {
+            height: 176px;
+            width: 176px;
+        }
+
+        ._ms2_init_spinner>div,
+        ._ms2_init_spinner>div:after {
+            border-radius: 50%;
+            width: 176px;
+            height: 176px;
+        }
+
+        ._ms2_init_spinner>div {
+            box-sizing: border-box;
+            text-indent: -9999em;
+            border: 16px solid rgba(119, 119, 119, 0.2);
+            border-left: 16px solid #777777;
+            -webkit-transform: translateZ(0);
+            -ms-transform: translateZ(0);
+            transform: translateZ(0);
+            -webkit-animation: _ms2_init_anim 1.1s infinite linear;
+            animation: _ms2_init_anim 1.1s infinite linear;
+        }
+
+        @-webkit-keyframes _ms2_init_anim {
+            0% {
+                -webkit-transform: rotate(0deg);
+                transform: rotate(0deg);
+            }
+
+            100% {
+                -webkit-transform: rotate(360deg);
+                transform: rotate(360deg);
+            }
+        }
+
+        @keyframes _ms2_init_anim {
+            0% {
+                -webkit-transform: rotate(0deg);
+                transform: rotate(0deg);
+            }
+
+            100% {
+                -webkit-transform: rotate(360deg);
+                transform: rotate(360deg);
+            }
+        }
+
+        ._ms2_init_text {
+            -webkit-animation: _ms2_init_text_anim 2s linear 0s infinite normal;
+            animation: _ms2_init_text_anim 2s linear 0s infinite normal;
+            color: #6F6F6f;
+            font-family: "Helvetica Neue", "Helvetica", "Arial", sans-serif;
+            font-size: 20px;
+            font-weight: bold;
+            height: 0.75em;
+            width: 6em;
+            text-align: center;
+            margin: auto;
+            z-index: 1000;
+            display: none;
+        }
+
+        @keyframes _ms2_init_text_anim {
+            0% {
+                opacity: 0
+            }
+
+            20% {
+                opacity: 0
+            }
+
+            50% {
+                opacity: 1
+            }
+
+            70% {
+                opacity: .75
+            }
+
+            100% {
+                opacity: 0
+            }
+        }
+    </style>
+</head>
+
+<body class="ms2" data-ms2-container="ms2">
+    <div id="container">
+        <div class="_ms2_init_spinner _ms2_init_center">
+            <div></div>
+        </div>
+        <div class="_ms2_init_text _ms2_init_center">Loading MapStore</div>
+    </div>
+    <script src="../../dist/flexiblelayout.js"></script>
+</body>
+
+</html>
