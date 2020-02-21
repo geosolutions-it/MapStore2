@@ -11,6 +11,7 @@ const PropTypes = require('prop-types');
 const {injectIntl, intlShape, defineMessages} = require('react-intl');
 
 var LocaleUtils = require('../../utils/LocaleUtils');
+const Portal = require('../misc/Portal');
 
 /**
  * Container for Notifications. Allows to display notifications by passing
@@ -64,7 +65,7 @@ class NotificationContainer extends React.Component {
 
     render() {
         const {notifications, onRemove, ...rest} = this.props;
-        return (<NotificationSystem ref="notify" { ...rest } />);
+        return (<Portal><NotificationSystem ref="notify" { ...rest } /></Portal>);
     }
 
     system = () => {

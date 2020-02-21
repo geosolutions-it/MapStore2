@@ -2318,7 +2318,7 @@
                 "pluginsFilterPlaceholder": "Filtra plug-in per nome...",
                 "availablePlugins": "Plugin disponibili",
                 "enabledPlugins": "Plugin abilitati",
-                "availablePluginsEmpty": "Abilitato tutti i plugin disponibili",
+                "availablePluginsEmpty": "Tutti i plugin disponibili sono abilitati",
                 "enabledPluginsEmpty": "Aggiungi plug-in alla configurazione dall'elenco dei plug-in disponibili",
                 "searchResultsEmpty": "Nessun plugin trovato che soddisfa i criteri di ricerca",
                 "cfgParsingError": {
@@ -2348,8 +2348,8 @@
                 "title": "Configura modelli",
                 "availableTemplates": "Modelli disponibili",
                 "enabledTemplates": "Modelli abilitati",
-                "templatesFilterPlaceholder": "Modelli di filtro...",
-                "availableTemplatesEmpty": "Abilitato tutti i modelli disponibili",
+                "templatesFilterPlaceholder": "Filtra i modelli per nome...",
+                "availableTemplatesEmpty": "Tutti i modelli disponibili sono abilitati",
                 "enabledTemplatesEmpty": "Aggiungi modelli alla configurazione dall'elenco dei modelli disponibili",
                 "searchResultsEmpty": "Nessun modello trovato che soddisfa i criteri di ricerca",
                 "fileDrop": {
