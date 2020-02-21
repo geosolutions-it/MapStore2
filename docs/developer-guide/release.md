@@ -25,7 +25,7 @@ Replacing:
 ```
 - [ ] Create an issue with this checklist in the release milestone.
 - [ ] If major release (YYYY.XX.00), create a branch (**YYYY.XX.xx**)  (`xx` is really `xx`, example: 2018.01.xx)
-- [ ]  If major release,Change [QA Jenkins job](http://build.geo-solutions.it/jenkins/view/MapStore2/job/MapStore2-QA-Build/) to build the new branch, enable the job continuous deploy
+- [ ] If major release,Change [QA Jenkins job](http://build.geo-solutions.it/jenkins/view/MapStore2/job/MapStore2-QA-Build/) to build the new branch, enable the job continuous deploy and update the `TAG_NAME` parameter in the [build job for the docker image](https://build.geo-solutions.it/jenkins/view/MapStore2/job/MapStore2%20QA%20Docker%20Image/configure)
 - [ ] create on [ReadTheDocs](https://readthedocs.org/projects/mapstore/) project the version build for `YYYY.XX.xx` (click on "Versions" and activate the version of the branch)
 - [ ] Test on QA [http://qa.mapstore.geo-solutions.it/mapstore/](http://qa.mapstore.geo-solutions.it/mapstore/)
     * Any fix must be done on **YYYY.XX.mm**. The fixes will be manually merged on master
@@ -47,4 +47,5 @@ Replacing:
 - [ ] Update the release procedure if needed.
 - [ ] Close this issue
 - [ ] Close the related milestone
+- [ ] Update the `TAG_NAME` parameter in the DEV jenkins job for [the DEV docker image](https://build.geo-solutions.it/jenkins/view/MapStore2/job/MapStore2%20DEV%20Docker%20Image/configure) and the `ms2version` parameter in the [build job for MapStore](https://build.geo-solutions.it/jenkins/view/MapStore2/job/MapStore2_Dev_Build/configure)
 ```
