@@ -238,7 +238,8 @@ const ReadOnlyStyleList = compose(
                 this.props.onInit(this.props.layer);
             }
         }
-    })
+    }),
+    loadingEnhancers(({ layer = {} }) => layer && layer.capabilitiesLoading)
 )(
     () =>
         <BorderLayout className="ms-style-editor-container" footer={<div style={{ height: 25 }} />}>
