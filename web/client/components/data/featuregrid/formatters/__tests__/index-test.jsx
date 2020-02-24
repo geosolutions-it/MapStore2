@@ -11,16 +11,16 @@ var expect = require('expect');
 describe('Tests for the formatter functions', () => {
     it('test getFormatter for strings', () => {
         const formatter = getFormatter({localType: "string"});
-        expect(formatter).toBe(undefined);
+        expect(formatter).toBe(null);
     });
     it('test getFormatter for booleans', () => {
         const formatter = getFormatter({localType: "boolean"});
         expect(typeof formatter).toBe("function");
-        expect(formatter()).toBe(undefined);
+        expect(formatter()).toBe(null);
         expect(formatter({value: true}).type).toBe("span");
         expect(formatter({value: true}).props.children).toBe("true");
         expect(formatter({value: false}).props.children).toBe("false");
-        expect(formatter({value: null})).toBe(undefined);
-        expect(formatter({value: undefined})).toBe(undefined);
+        expect(formatter({value: null})).toBe(null);
+        expect(formatter({value: undefined})).toBe(null);
     });
 });
