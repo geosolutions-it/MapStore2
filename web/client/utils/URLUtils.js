@@ -18,6 +18,7 @@ export const urlParts = (url) => {
         let location = window.location;
         urlPartsArray[1] = location.protocol;
         urlPartsArray[3] = location.hostname;
+        urlPartsArray[4] = location.port;
         urlPartsArray[5] = url;
 
     }
