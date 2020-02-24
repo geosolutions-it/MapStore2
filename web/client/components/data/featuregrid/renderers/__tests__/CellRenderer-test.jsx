@@ -47,7 +47,17 @@ describe('Tests <CellRenderer> component', () => {
             get: () => null
         }
     };
-
+    const CellRendererWithContext = compose(
+        withContext({
+            isProperty: () => null,
+            isModified: () => null,
+            isValid: () => null
+        },
+        () => ({
+            isProperty: () => true,
+            isModified: () => false,
+            isValid: () => true
+        })))(CellRenderer);
 
     it('should not crash when rendering <CellRenderer> with value=null, using boolean formatter', () => {
         /* Integration Test: CellRenderer & boolean formatter
@@ -57,50 +67,17 @@ describe('Tests <CellRenderer> component', () => {
          * that something must be returned. in particular the renderCellContent of
          * react-data-grid is returning the formatter value
         */
-        const CellRendererWithContext = compose(
-            withContext({
-                isProperty: () => null,
-                isModified: () => null,
-                isValid: () => null
-            },
-            () => ({
-                isProperty: () => true,
-                isModified: () => false,
-                isValid: () => true
-            })))(CellRenderer);
         const comp = ReactDOM.render(<CellRendererWithContext {...props} />, document.getElementById("container"));
         expect(comp).toExist();
     });
 
     it('should not crash when rendering <CellRenderer> with value=true, using boolean formatter', () => {
-        const CellRendererWithContext = compose(
-            withContext({
-                isProperty: () => null,
-                isModified: () => null,
-                isValid: () => null
-            },
-            () => ({
-                isProperty: () => true,
-                isModified: () => false,
-                isValid: () => true
-            })))(CellRenderer);
         const comp = ReactDOM.render(<CellRendererWithContext {...set("value", true, props)} />, document.getElementById("container"));
         expect(comp).toExist();
         expect(document.querySelectorAll("span")[1].innerHTML).toBe("true");
     });
 
     it('should not crash when rendering <CellRenderer> with value=false, using boolean formatter', () => {
-        const CellRendererWithContext = compose(
-            withContext({
-                isProperty: () => null,
-                isModified: () => null,
-                isValid: () => null
-            },
-            () => ({
-                isProperty: () => true,
-                isModified: () => false,
-                isValid: () => true
-            })))(CellRenderer);
         const comp = ReactDOM.render(<CellRendererWithContext {...set("value", false, props)} />, document.getElementById("container"));
         expect(comp).toExist();
         expect(document.querySelectorAll("span")[1].innerHTML).toBe("false");
