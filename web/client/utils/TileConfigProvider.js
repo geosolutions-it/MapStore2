@@ -1,26 +1,36 @@
-var assign = require('object-assign');
-var CONFIGPROVIDER = require('./ConfigProvider');
-var CoordinatesUtils = require('./ConfigUtils');
+import assign from 'object-assign';
+import CONFIGPROVIDER from './ConfigProvider';
+import CoordinatesUtils from './ConfigUtils';
 
-let TileConfigProvider = {
+export default {
     getLayerConfig: function(layer, options) {
         var providers = CONFIGPROVIDER;
-        var parts = layer.split('.');
-        var providerName = parts[0];
-        var variantName = parts[1];
-        if (!providers[providerName]) {
-            throw new Error('No such provider (' + providerName + ')');
+        let providerConfig;
+        let variantName;
+        let providerName;
+        if (layer !== "tms") {
+            const parts = layer.split('.');
+            providerName = parts[0];
+            variantName = parts[1];
+            providerConfig = providers[providerName];
+            if (!providerConfig) {
+                throw new Error('No such provider (' + providerName + ')');
+            }
+        } else if (layer === "tms") {
+            providerConfig = options;
         }
+
+
         let provider = {
-            url: providers[providerName].url,
-            options: providers[providerName].options
+            url: providerConfig.url,
+            options: providerConfig.options
         };
             // overwrite values in provider from variant.
-        if (variantName && 'variants' in providers[providerName]) {
-            if (!(variantName in providers[providerName].variants)) {
-                throw new Error('No such variant of ' + providerName + ' (' + variantName + ')');
+        if (variantName && 'variants' in providerConfig) {
+            if (!(variantName in providerConfig.variants)) {
+                throw new Error('No such variant of ' + (providerName || providerConfig.url) + ' (' + variantName + ')');
             }
-            let variant = providers[providerName].variants[variantName];
+            let variant = providerConfig.variants[variantName];
             let variantOptions;
             if (typeof variant === 'string') {
                 variantOptions = {
@@ -74,5 +84,3 @@ let TileConfigProvider = {
     }
 };
 
-
-module.exports = TileConfigProvider;
