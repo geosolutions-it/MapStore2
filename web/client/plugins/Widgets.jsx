@@ -6,21 +6,27 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const React = require('react');
-const {connect} = require('react-redux');
-const {createSelector} = require('reselect');
-const { compose, defaultProps, withProps, withPropsOnChange} = require('recompose');
-const {mapIdSelector} = require('../selectors/map');
-const { getVisibleFloatingWidgets, dependenciesSelector, getFloatingWidgetsLayout, isTrayEnabled} = require('../selectors/widgets');
-const { editWidget, updateWidgetProperty, deleteWidget, changeLayout, exportCSV, exportImage, toggleCollapse} = require('../actions/widgets');
-const editOptions = require('./widgets/editOptions');
-const autoDisableWidgets = require('./widgets/autoDisableWidgets');
+import React from 'react';
+import PropTypes from 'prop-types';
+import {connect} from 'react-redux';
+import {createSelector} from 'reselect';
+import { compose, defaultProps, withProps, withPropsOnChange} from 'recompose';
+
+
+import { createPlugin } from '../utils/PluginsUtils';
+
+import {mapIdSelector} from '../selectors/map';
+import { getVisibleFloatingWidgets, dependenciesSelector, getFloatingWidgetsLayout, isTrayEnabled} from '../selectors/widgets';
+import { editWidget, updateWidgetProperty, deleteWidget, changeLayout, exportCSV, exportImage, toggleCollapse} from '../actions/widgets';
+import editOptions from './widgets/editOptions';
+import autoDisableWidgets from './widgets/autoDisableWidgets';
 
 const RIGHT_MARGIN = 70;
-const {heightProvider} = require('../components/layout/enhancers/gridLayout');
-const ContainerDimensions = require('react-container-dimensions').default;
+import {heightProvider} from '../components/layout/enhancers/gridLayout';
+import ContainerDimensions from 'react-container-dimensions';
 
-const PropTypes = require('prop-types');
+import WidgetsViewBase from '../components/widgets/view/WidgetsView';
+
 const WidgetsView =
 compose(
     connect(
@@ -105,7 +111,7 @@ compose(
             })
         )
     )
-)(require('../components/widgets/view/WidgetsView'));
+)(WidgetsViewBase);
 
 
 class Widgets extends React.Component {
@@ -139,10 +145,16 @@ class Widgets extends React.Component {
  */
 const WidgetsPlugin = autoDisableWidgets(Widgets);
 
-module.exports = {
-    WidgetsPlugin,
+export default createPlugin("WidgetsPlugin", {
+    component: WidgetsPlugin,
+    containers: {
+        TOC: {
+            doNotHide: true,
+            name: "Widgets"
+        }
+    },
     reducers: {
         widgets: require('../reducers/widgets')
     },
     epics: require('../epics/widgets')
-};
+});
