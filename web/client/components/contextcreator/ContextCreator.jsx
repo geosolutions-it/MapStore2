@@ -174,7 +174,10 @@ export default class ContextCreator extends React.Component {
             "ZoomOut",
             "ZoomAll",
             "Annotations",
-            "MapImport"
+            "MapImport",
+            "Undo",
+            "Redo",
+            "Expander"
         ],
         ignoreViewerPlugins: false,
         allAvailablePlugins: [],
