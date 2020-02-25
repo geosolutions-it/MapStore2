@@ -13,6 +13,11 @@ class CellRenderer extends React.Component {
         isProperty: PropTypes.func,
         isValid: PropTypes.func
     };
+    static defaultProps = {
+        value: null,
+        rowData: {},
+        column: {}
+    }
     constructor(props) {
         super(props);
         this.setScrollLeft = (scrollBy) => this.refs.cell.setScrollLeft(scrollBy);
