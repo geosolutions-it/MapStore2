@@ -57,6 +57,7 @@ const fullscreen = {
  * @prop {string} bodyClassName custom class for modal body.
  * @prop {bool} draggable enable modal drag.
  * @prop {bool} fitContent try to fit content if modal height is less than maximum size
+ * @prop {string} dialogClassName custom class for the dialog component
  */
 
 const ResizableModal = ({
@@ -78,7 +79,8 @@ const ResizableModal = ({
     onFullscreen,
     fade = false,
     fitContent,
-    modalClassName = ''
+    modalClassName = '',
+    dialogClassName = ''
 }) => {
     const sizeClassName = sizes[size] || '';
     const fullscreenClassName = showFullscreen && fullscreenState === 'expanded' && fullscreen.className[fullscreenType] || '';
@@ -91,7 +93,7 @@ const ResizableModal = ({
                 containerClassName="ms-resizable-modal"
                 draggable={draggable}
                 modal
-                className={'modal-dialog modal-content' + sizeClassName + fullscreenClassName + (fitContent ? ' ms-fit-content' : '')}>
+                className={'modal-dialog modal-content' + sizeClassName + fullscreenClassName + dialogClassName + (fitContent ? ' ms-fit-content' : '')}>
                 <span role="header">
                     <h4 className="modal-title">
                         <div className="ms-title">{title}</div>

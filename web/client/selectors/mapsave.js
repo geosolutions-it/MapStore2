@@ -11,8 +11,17 @@ const {servicesSelector, selectedServiceSelector} = require('./catalog');
 const {getFloatingWidgets, getCollapsedState, getFloatingWidgetsLayout} = require('./widgets');
 const { mapInfoConfigurationSelector } = require('./mapInfo');
 
+const customSaveHandlers = {};
 
-const mapOptionsToSaveSelector = createStructuredSelector({
+const registerCustomSaveHandler = (section, handler) => {
+    if (handler) {
+        customSaveHandlers[section] = handler;
+    } else {
+        delete customSaveHandlers[section];
+    }
+};
+
+const basicMapOptionsToSaveSelector = createStructuredSelector({
     catalogServices: createStructuredSelector({
         services: servicesSelector,
         selectedService: selectedServiceSelector
@@ -24,4 +33,15 @@ const mapOptionsToSaveSelector = createStructuredSelector({
     }),
     mapInfoConfiguration: mapInfoConfigurationSelector
 });
-module.exports = {mapOptionsToSaveSelector};
+
+const mapOptionsToSaveSelector = (state) => {
+    const customState = Object.keys(customSaveHandlers).reduce((acc, fragment) => {
+        return {
+            ...acc,
+            [fragment]: customSaveHandlers[fragment](state)
+        };
+    }, {});
+    return { ...basicMapOptionsToSaveSelector(state), ...customState};
+};
+
+module.exports = {mapOptionsToSaveSelector, registerCustomSaveHandler};

@@ -199,6 +199,7 @@ const converters = {
                 return {
                     boundingBox: record.boundingBox,
                     description: dc && isString(dc.abstract) && dc.abstract || '',
+                    layerOptions: options && options.layerOptions || {},
                     identifier: dc && isString(dc.identifier) && dc.identifier || '',
                     references: references,
                     thumbnail: thumbURL,
@@ -221,6 +222,7 @@ const converters = {
                     identifier: record.Name,
                     service: records.service,
                     tags: "",
+                    layerOptions: options && options.layerOptions || {},
                     title: LayersUtils.getLayerTitleTranslations(record) || record.Name,
                     formats: castArray(record.formats || []),
                     dimensions: (record.Dimension && castArray(record.Dimension) || []).map((dim) => assign({}, {
@@ -292,6 +294,7 @@ const converters = {
                     description: getNodeText(record["ows:Abstract"] || record["ows:Title"] || record["ows:Identifier"]),
                     identifier: getNodeText(record["ows:Identifier"]),
                     tags: "",
+                    layerOptions: options && options.layerOptions || {},
                     style: record.style,
                     capabilitiesURL: capabilitiesURL,
                     queryable: record.queryable,
@@ -478,7 +481,8 @@ const CatalogUtils = {
             params: params,
             allowedSRS: allowedSRS,
             catalogURL,
-            ...baseConfig
+            ...baseConfig,
+            ...record.layerOptions
         };
     },
     getCatalogRecords: (format, records, options, locales) => {

@@ -128,9 +128,11 @@ module.exports = {
             });
         }, enabler: (state) => state.layerSettings && state.layerSettings.expanded
     }, {
-        TOC: {
+        TOCItemsSettings: {
             priority: 1,
-            container: "TOCItemSettings"
+            name: 'ThematicLayer',
+            container: "TOCItemSettings",
+            target: "style"
         }
     }),
     reducers: {

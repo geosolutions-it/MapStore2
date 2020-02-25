@@ -78,7 +78,8 @@ class SaveModal extends React.Component {
         metadataChanged: PropTypes.func,
         availablePermissions: PropTypes.arrayOf(PropTypes.string),
         availableGroups: PropTypes.arrayOf(PropTypes.object),
-        user: PropTypes.object
+        user: PropTypes.object,
+        dialogClassName: PropTypes.string
     };
 
     static contextTypes = {
@@ -107,7 +108,8 @@ class SaveModal extends React.Component {
         availablePermissions: ["canRead", "canWrite"],
         availableGroups: [],
         canSave: true,
-        user: {}
+        user: {},
+        dialogClassName: ''
     };
     onCloseMapPropertiesModal = () => {
         this.props.onClose();
@@ -130,6 +132,7 @@ class SaveModal extends React.Component {
                 show={this.props.show}
                 clickOutEnabled={this.props.clickOutEnabled}
                 bodyClassName="ms-flex modal-properties-container"
+                dialogClassName={this.props.dialogClassName}
                 buttons={[{
                     text: <Message msgId="close"/>,
                     onClick: this.onCloseMapPropertiesModal,

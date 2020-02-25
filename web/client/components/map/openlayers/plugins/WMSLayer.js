@@ -52,7 +52,7 @@ function wmsToOpenlayersOptions(options) {
         TRANSPARENT: options.transparent !== undefined ? options.transparent : true,
         SRS: CoordinatesUtils.normalizeSRS(options.srs || 'EPSG:3857', options.allowedSRS),
         CRS: CoordinatesUtils.normalizeSRS(options.srs || 'EPSG:3857', options.allowedSRS),
-        TILED: !isNil(options.tiled) ? options.tiled : true,
+        TILED: options.singleTile ? false : (!isNil(options.tiled) ? options.tiled : true),
         VERSION: options.version || "1.3.0"
     }, assign(
         {},
@@ -303,7 +303,7 @@ Layers.registerType('wms', {
                 const params = assign(newParams, SecurityUtils.addAuthenticationToSLD(optionsToVendorParams(newOptions) || {}, newOptions));
 
                 wmsSource.updateParams(assign(params, Object.keys(oldParams || {}).reduce((previous, key) => {
-                    return params[key] ? previous : assign(previous, {
+                    return !isNil(params[key]) ? previous : assign(previous, {
                         [key]: undefined
                     });
                 }, {})));

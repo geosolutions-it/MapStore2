@@ -27,6 +27,7 @@
         "showMore": "Show more...",
         "collapse": "Collapse",
         "expand": "Expand",
+        "Forbidden": "Forbidden",
         "version": {
             "label": "Version"
         },
@@ -1628,7 +1629,9 @@
                     "notFound": "Dashboard not found",
 	                "notAccessible": "Dashboard not accessible"
                 },
-                "resourceAlreadyExists": "A resource with this name already exists"
+                "resourceAlreadyExists": "A resource with this name already exists",
+                "forbidden": "An unexpected error occured (403 Forbidden). Please contact the Administrator",
+                "forbidden405": "An unexpected error occured (405 Forbidden). Please contact the Administrator"
             },
             "editor": {
                 "save": "Save the dashboard",
@@ -2321,7 +2324,7 @@
                 "pluginsFilterPlaceholder": "Filter plugins by name...",
                 "availablePlugins": "Available Plugins",
                 "enabledPlugins": "Enabled Plugins",
-                "availablePluginsEmpty": "Enabled all available plugins",
+                "availablePluginsEmpty": "All available plugins are enabled",
                 "enabledPluginsEmpty": "Add plugins to configuration from list of available plugins",
                 "searchResultsEmpty": "No plugins found that satisfy the search criteria",
                 "cfgParsingError": {
@@ -2349,8 +2352,8 @@
                 "title": "Configure Templates",
                 "availableTemplates": "Available Templates",
                 "enabledTemplates": "Enabled Templates",
-                "templatesFilterPlaceholder": "Filter templates...",
-                "availableTemplatesEmpty": "Enabled all available templates",
+                "templatesFilterPlaceholder": "Filter templates by name...",
+                "availableTemplatesEmpty": "All available templates are enabled",
                 "enabledTemplatesEmpty": "Add templates to configuration from list of available templates",
                 "searchResultsEmpty": "No templates found that satisfy the search criteria",
                 "fileDrop": {

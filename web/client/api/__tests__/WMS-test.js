@@ -14,6 +14,12 @@ import axios from '../../libs/ajax';
 let mockAxios;
 
 describe('Test correctness of the WMS APIs', () => {
+    it('parseUrl uses the first array element', () => {
+        expect(API.parseUrl(["http://first", "https://second"]).indexOf("http://first/")).toBe(0);
+    });
+    it('parseUrl uses the first string of a comma delimited list', () => {
+        expect(API.parseUrl(["http://first,https://second"]).indexOf("http://first/")).toBe(0);
+    });
     it('describeLayers', (done) => {
         API.describeLayers('base/web/client/test-resources/wms/DescribeLayers.xml', "workspace:vector_layer").then((result) => {
             try {
