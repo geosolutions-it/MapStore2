@@ -15,7 +15,7 @@ const CopyToClipboard = tooltip(RCopyToClipboard);
 
 const ShareCopyToClipboard = ({
     shareUrl = '',
-    copied,
+    copied = false,
     onCopy = () => {},
     onMouseLeave = () => {}
 }) => {
@@ -24,6 +24,7 @@ const ShareCopyToClipboard = ({
             text={shareUrl}
             tooltipId={copied ? 'share.msgCopiedUrl' : 'share.msgToCopyUrl'}
             tooltipPosition="bottom"
+            key={copied.toString()}
             onCopy={ () => onCopy(shareUrl) } >
             <Button
                 bsStyle="primary"
