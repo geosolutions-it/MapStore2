@@ -133,17 +133,20 @@ describe("test the MeasureDialog", () => {
         };
         const spyInit = expect.spyOn(handler, "onInit");
         const measurement = {};
-        let defaultOptions = {showAddAsAnnotation: true};
         ReactDOM.render(
             <MeasureDialog
                 show
                 onInit={handler.onInit}
-                defaultOptions={defaultOptions}
+                defaultOptions={{showAddAsAnnotation: true}}
                 measurement={measurement}/>, document.getElementById("container"));
-        setTimeout(() => {
-            defaultOptions = {showAddAsAnnotation: false};
-            expect(spyInit.calls.length).toBe(2);
-        }, 100);
+        expect(spyInit.calls.length).toBe(1);
+        ReactDOM.render(
+            <MeasureDialog
+                show
+                onInit={handler.onInit}
+                defaultOptions={{showAddAsAnnotation: false}}
+                measurement={measurement}/>, document.getElementById("container"));
+        expect(spyInit.calls.length).toBe(2);
     });
 
 });
