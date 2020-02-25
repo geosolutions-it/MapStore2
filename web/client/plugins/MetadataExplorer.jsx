@@ -9,8 +9,13 @@
 const React = require('react');
 const PropTypes = require('prop-types');
 const {connect} = require('react-redux');
+const { isNil } = require('lodash');
+
 const assign = require('object-assign');
 const {createSelector} = require("reselect");
+const { compose, branch, withProps, renderComponent, defaultProps } = require("recompose");
+const CatalogServiceEditor = require('../components/catalog/CatalogServiceEditor').default;
+
 const {Glyphicon, Panel} = require('react-bootstrap');
 const ContainerDimensions = require('react-container-dimensions').default;
 const {changeLayerProperties} = require('../actions/layers');
@@ -69,20 +74,54 @@ const catalogSelector = createSelector([
     records: result && CatalogUtils.getCatalogRecords(selectedFormat, result, options, locales) || []
 }));
 
+const Catalog = compose(
+    connect(catalogSelector, {
+        // add layer action to pass to the layers
+        onUpdateThumbnail: updateThumbnail,
+        onAddBackgroundProperties: addBackgroundProperties,
+        onZoomToExtent: zoomToExtent,
+        onFocusServicesList: focusServicesList,
+        onPropertiesChange: changeLayerProperties,
+        onAddBackground: backgroundAdded,
+        removeThumbnail,
+        onToggle: toggleControl.bind(null, 'backgroundSelector', null),
+        onLayerChange: setControlProperty.bind(null, 'backgroundSelector'),
+        onStartChange: setControlProperty.bind(null, 'backgroundSelector', 'start')
+    }),
+    defaultProps({
+        buttonStyle: {
+            marginBottom: "10px",
+            marginRight: "5px"
+        },
+        formatOptions: [{
+            label: 'image/png',
+            value: 'image/png'
+        }, {
+            label: 'image/png8',
+            value: 'image/png8'
+        }, {
+            label: 'image/jpeg',
+            value: 'image/jpeg'
+        }, {
+            label: 'image/vnd.jpeg-png',
+            value: 'image/vnd.jpeg-png'
+        }, {
+            label: 'image/gif',
+            value: 'image/gif'
+        }]
+    }),
 
-const Catalog = connect(catalogSelector, {
-    // add layer action to pass to the layers
-    onUpdateThumbnail: updateThumbnail,
-    onAddBackgroundProperties: addBackgroundProperties,
-    onZoomToExtent: zoomToExtent,
-    onFocusServicesList: focusServicesList,
-    onPropertiesChange: changeLayerProperties,
-    onAddBackground: backgroundAdded,
-    removeThumbnail,
-    onToggle: toggleControl.bind(null, 'backgroundSelector', null),
-    onLayerChange: setControlProperty.bind(null, 'backgroundSelector'),
-    onStartChange: setControlProperty.bind(null, 'backgroundSelector', 'start')
-})(require('../components/catalog/Catalog'));
+    branch(
+        ({mode}) => mode === "edit",
+        compose(
+            withProps(({ newService = {} }) => ({
+                showTemplate: !isNil(newService.showTemplate) ? newService.showTemplate : false
+            })),
+            renderComponent(CatalogServiceEditor)
+        )
+
+    )
+)(require('../components/catalog/Catalog'));
 
 
 class MetadataExplorerComponent extends React.Component {
