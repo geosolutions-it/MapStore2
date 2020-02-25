@@ -13,6 +13,7 @@ const LocaleUtils = require('../../../utils/LocaleUtils');
 const DropdownToolbarOptions = require('../../misc/toolbar/DropdownToolbarOptions');
 const CoordinateEntry = require('../../misc/coordinateeditors/CoordinateEntry');
 const Toolbar = require('../../misc/toolbar/Toolbar');
+const AdvancedSearch = require('./AdvancedSearch').default;
 const Spinner = require('react-spinkit');
 const {isNumber} = require('lodash');
 const assign = require('object-assign');
@@ -88,11 +89,19 @@ class SearchBar extends React.Component {
         onSearch: PropTypes.func,
         onSearchReset: PropTypes.func,
         onSearchTextChange: PropTypes.func,
+        onSearchFilterChange: PropTypes.func,
+        onSearchFilterClearAll: PropTypes.func,
+        onLoadContexts: PropTypes.func,
         optionsIcon: PropTypes.string,
         placeholder: PropTypes.string,
         placeholderMsgId: PropTypes.string,
         removeIcon: PropTypes.string,
         searchIcon: PropTypes.string,
+        advancedSearchIcon: PropTypes.string,
+        searchFilter: PropTypes.object,
+        contexts: PropTypes.object,
+        loadingContexts: PropTypes.bool,
+        loadingFilter: PropTypes.bool,
         searchOptions: PropTypes.object,
         searchText: PropTypes.string,
         selectedItems: PropTypes.array,
@@ -115,6 +124,8 @@ class SearchBar extends React.Component {
         onZoomToPoint: PropTypes.func,
         showAddressSearchOption: PropTypes.bool,
         showCoordinatesSearchOption: PropTypes.bool,
+        showAdvancedSearchPanel: PropTypes.bool,
+        showContextSearchOption: PropTypes.bool,
         showOptions: PropTypes.bool
     };
 
@@ -128,11 +139,13 @@ class SearchBar extends React.Component {
         onPurgeResults: () => {},
         onSearchTextChange: () => {},
         onCancelSelectedItem: () => {},
+        onLoadContexts: () => {},
         selectedItems: [],
         placeholderMsgId: "search.addressSearch",
         removeIcon: "1-close",
         optionsIcon: "cog",
         searchIcon: "search",
+        advancedSearchIcon: "filter",
         delay: 1000,
         blurResetDelay: 300,
         autoFocusOnSelect: true,
@@ -174,7 +187,9 @@ class SearchBar extends React.Component {
         showOptions: true,
         showCoordinatesSearchOption: true,
         showAddressSearchOption: true,
-        enabledSearchServicesConfig: false
+        enabledSearchServicesConfig: false,
+        showAdvancedSearchPanel: false,
+        showContextSearchOption: false
     };
 
     componentDidUpdate(prevProps) {
@@ -327,6 +342,20 @@ class SearchBar extends React.Component {
                                 if (this.props.isSearchClickable) {
                                     this.search();
                                 }
+                            }
+                        }, {
+                            glyph: this.props.advancedSearchIcon,
+                            tooltip: <Message
+                                msgId={`search.advancedSearchPanel.${this.props.showAdvancedSearchPanel ? 'hide' : 'show'}Tooltip` +
+                                (this.isSearchFilterEmpty() ? '' : 'Active')}/>,
+                            className: "square-button-md no-border " +
+                                (this.props.showAdvancedSearchPanel && this.props.showContextSearchOption ? "active" : ""),
+                            bsStyle: this.isSearchFilterEmpty() ? "default" : "success",
+                            pullRight: true,
+                            visible: this.props.showContextSearchOption,
+                            onClick: () => {
+                                this.props.onToggleControl("advancedsearchpanel");
+                                this.props.onLoadContexts('*', {params: {start: 0, limit: 12}});
                             }
                         }, {
                             tooltip: this.getError(this.props.error),
@@ -484,9 +513,27 @@ class SearchBar extends React.Component {
                         {this.renderSearchToolbar()}
                     </div>
                 </FormGroup>
+                <AdvancedSearch
+                    loading={this.props.loadingFilter || this.props.loadingContexts}
+                    loadFlags={{
+                        loadingFilter: this.props.loadingFilter,
+                        loadingContexts: this.props.loadingContexts
+                    }}
+                    show={this.props.showAdvancedSearchPanel}
+                    showContextSearchOption={this.props.showContextSearchOption}
+                    searchFilter={this.props.searchFilter}
+                    contexts={this.props.contexts}
+                    onClearAll={this.props.onSearchFilterClearAll}
+                    onSearchFilterChange={this.props.onSearchFilterChange}
+                    onLoadContexts={this.props.onLoadContexts}/>
             </div>
         );
     }
+
+    isSearchFilterEmpty = () => {
+        return !this.props.searchFilter || (this.props.searchFilter.contexts || []).length === 0;
+    };
+
 
     search = () => {
         var text = this.props.searchText;

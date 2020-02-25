@@ -5,10 +5,11 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import {Observable} from 'rxjs';
+import { Observable } from 'rxjs';
 import axios from '../libs/ajax';
-import {get} from 'lodash';
+import { get } from 'lodash';
 import {
+    LOAD_NEW_MAP,
     LOAD_MAP_CONFIG,
     LOAD_MAP_INFO,
     configureMap,
@@ -16,15 +17,28 @@ import {
     mapInfoLoadStart,
     mapInfoLoaded,
     mapInfoLoadError,
+    loadMapConfig,
     loadMapInfo
 } from '../actions/config';
 import Persistence from '../api/persistence';
 import { isLoggedIn } from '../selectors/security';
-import {projectionDefsSelector} from '../selectors/map';
+import { projectionDefsSelector } from '../selectors/map';
+
+export const loadNewMapEpic = (action$) =>
+    action$.ofType(LOAD_NEW_MAP)
+        .switchMap(({configName, contextId}) =>
+            contextId ?
+                Persistence.getResource(contextId)
+                    .switchMap(resource => Observable.of(loadMapConfig('', null, get(resource, 'data.mapConfig', {}), {context: contextId})))
+                    .catch(() => Observable.of(configureError({
+                        messageId: `map.errors.loading.contextLoadFailed`
+                    }))) :
+                Observable.of(loadMapConfig(configName, null))
+        );
 
 export const loadMapConfigAndConfigureMap = (action$, store) =>
     action$.ofType(LOAD_MAP_CONFIG)
-        .switchMap(({configName, mapId, config}) =>
+        .switchMap(({configName, mapId, config, mapInfo}) =>
             // delay here is to postpone map load to ensure that
             // certain epics always function correctly
             // i.e. FeedbackMask disables correctly after load
@@ -41,13 +55,13 @@ export const loadMapConfigAndConfigureMap = (action$, store) =>
                         if (projectionDefs.concat([{code: "EPSG:4326"}, {code: "EPSG:3857"}, {code: "EPSG:900913"}]).filter(({code}) => code === projection).length === 0) {
                             return Observable.of(configureError({messageId: `map.errors.loading.projectionError`, errorMessageParams: {projection}}, mapId));
                         }
-                        return mapId ? Observable.of(configureMap(response.data, mapId), loadMapInfo(mapId)) :
-                            Observable.of(configureMap(response.data, mapId));
+                        return mapId ? Observable.of(configureMap(response.data, mapId), mapInfo ? mapInfoLoaded(mapInfo) : loadMapInfo(mapId)) :
+                            Observable.of(configureMap(response.data, mapId), ...(mapInfo ? [mapInfoLoaded(mapInfo)] : []));
                     }
                     try {
                         const data = JSON.parse(response.data);
-                        return mapId ? Observable.of(configureMap(data, mapId), loadMapInfo(mapId)) :
-                            Observable.of(configureMap(data, mapId));
+                        return mapId ? Observable.of(configureMap(data, mapId), mapInfo ? mapInfoLoaded(mapInfo) : loadMapInfo(mapId)) :
+                            Observable.of(configureMap(data, mapId), ...(mapInfo ? [mapInfoLoaded(mapInfo)] : []));
                     } catch (e) {
                         return Observable.of(configureError('Configuration file broken (' + configName + '): ' + e.message, mapId));
                     }

@@ -1,0 +1,28 @@
+.Select {
+    .paged-select-options {
+        overflow-y: auto;
+        max-height: 160px;
+    }
+    .paged-select-bar-container {
+        padding: 8px 10px;
+        display: flex;
+        justify-content: center;
+        .paged-select-bar {
+            flex-grow: 1;
+            .prev-page-button {
+                float: left;
+            }
+            .next-page-button {
+                float: right;
+            }
+            .prev-page-button.glyphicon, .next-page-button.glyphicon {
+                color: @ms2-color-primary;
+                cursor: auto;
+            }
+            .prev-page-button.glyphicon:hover, .next-page-button.glyphicon:hover {
+                color: @ms2-color-primary-hover;
+                cursor: pointer;
+            }
+        }
+    }
+}

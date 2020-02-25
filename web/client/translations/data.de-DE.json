@@ -278,7 +278,8 @@
                 "errorWhenSaving": "Beim Speichern ist ein Fehler aufgetreten",
                 "errorWhenUpdating": "Während des Aktualisierungsprozesses ist ein Fehler aufgetreten",
                 "errorWhenDeleting": "Beim Löschen ist ein Fehler aufgetreten",
-                "errorSizeExceeded": "Bitte verkleinern Sie die Größe der Details oder die Qualität der Bilder"
+                "errorSizeExceeded": "Bitte verkleinern Sie die Größe der Details oder die Qualität der Bilder",
+                "errorLoadingContexts": "Beim Laden der Kontexte ist ein Fehler aufgetreten"
             },
             "search": "Suche..."
         },
@@ -642,6 +643,16 @@
                 "no_info_description": "Das Identifizierungsfeld wird bei der Suche nicht angezeigt",
                 "all_layers_description": "Das Fenster Identifizieren zeigt Informationen zu allen in der Karte sichtbaren Layern an",
                 "single_layer_description": "Das Fenster Identifizieren wird mit den Daten angezeigt, die bereits über die WFS-Suche verfügbar sind"
+            },
+            "advancedSearchPanel": {
+                "title": "Erweiterte Suchfilter",
+                "context": {
+                    "title": "Kontext"
+                },
+                "showTooltip": "Erweiterte Filter anzeigen",
+                "showTooltipActive": "Erweiterte Filter anzeigen (aktiv)",
+                "hideTooltip": "Erweiterte Filter ausblenden",
+                "hideTooltipActive": "Erweiterte Filter ausblenden (aktiv)"
             }
         },
         "draw": {
@@ -2131,6 +2142,10 @@
         "stepper": {
             "back": "Zurück",
             "next": "Nächste"
+        },
+        "newMapDialog": {
+            "title": "Wählen Sie einen Kontext",
+            "skipButtonTitle": "Überspringen"
         },
         "plugins": {
           "About": {

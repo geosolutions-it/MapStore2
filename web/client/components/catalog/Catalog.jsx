@@ -11,7 +11,7 @@ const PropTypes = require("prop-types");
 const React = require("react");
 const {FormControl, FormGroup, Alert, Pagination, Checkbox, Button, Panel, Form, Col, InputGroup, ControlLabel, Glyphicon, Tooltip} = require("react-bootstrap");
 const ReactQuill = require("react-quill");
-const Select = require("react-select");
+const Select = require("react-select").default;
 const Spinner = require("react-spinkit");
 
 const BorderLayout = require("../layout/BorderLayout");

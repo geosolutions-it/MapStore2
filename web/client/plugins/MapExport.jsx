@@ -23,7 +23,7 @@ const assign = require('object-assign');
 const { Glyphicon, Button } = require('react-bootstrap');
 
 const Dialog = require('../components/misc/StandardDialog');
-const Select = require('react-select');
+const Select = require('react-select').default;
 import * as epics from '../epics/mapexport';
 
 const enhanceExport = compose(

@@ -7,6 +7,7 @@
  */
 
 
+const LOAD_NEW_MAP = 'MAP:LOAD_NEW_MAP';
 const LOAD_MAP_CONFIG = "MAP_LOAD_MAP_CONFIG";
 const MAP_CONFIG_LOADED = 'MAP_CONFIG_LOADED';
 const MAP_CONFIG_LOAD_ERROR = 'MAP_CONFIG_LOAD_ERROR';
@@ -34,18 +35,28 @@ function configureError(e, mapId) {
     };
 }
 
+function loadNewMap(configName, contextId) {
+    return {
+        type: LOAD_NEW_MAP,
+        configName,
+        contextId
+    };
+}
+
 /**
  * Loads map configuration
  * @param {string} configName map config url
- * @param {*} mapId resource id of the map on a server
- * @param {*} config full config, overrides configName if not null or undefined
+ * @param {number} mapId resource id of the map on a server
+ * @param {object} config full config, overrides configName if not null or undefined
+ * @param {object} mapInfo map info override
  */
-function loadMapConfig(configName, mapId, config) {
+function loadMapConfig(configName, mapId, config, mapInfo) {
     return {
         type: LOAD_MAP_CONFIG,
         configName,
         mapId,
-        config
+        config,
+        mapInfo
     };
 }
 function mapInfoLoaded(info, mapId) {
@@ -80,6 +91,7 @@ const mapSaveError = error => ({type: MAP_SAVE_ERROR, error});
 const mapSaved = () => ({type: MAP_SAVED});
 
 module.exports = {
+    LOAD_NEW_MAP,
     LOAD_MAP_CONFIG,
     MAP_CONFIG_LOADED,
     MAP_CONFIG_LOAD_ERROR,
@@ -89,6 +101,7 @@ module.exports = {
     MAP_INFO_LOAD_ERROR,
     MAP_SAVE_ERROR,
     MAP_SAVED,
+    loadNewMap,
     loadMapConfig,
     loadMapInfo,
     configureMap,

@@ -7,7 +7,7 @@ const PropTypes = require('prop-types');
  * LICENSE file in the root directory of this source tree.
  */
 const React = require('react');
-const Select = require('react-select');
+const Select = require('react-select').default;
 require('react-select/dist/react-select.css');
 const {Checkbox} = require('react-bootstrap');
 const {get, head} = require('lodash');

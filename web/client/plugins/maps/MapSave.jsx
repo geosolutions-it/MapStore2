@@ -54,13 +54,13 @@ const SaveBaseDialog = compose(
         onSave: ({map, layers, groups, backgrounds, textSearchConfig, additionalOptions, saveMap, isMapSaveAs, user}) => resource => {
             const mapData = MapUtils.saveMapConfiguration(map, layers, groups,
                 backgrounds, textSearchConfig, additionalOptions);
-            const attributes = {"owner": user && user.name || null};
-            const {metadata, data, id, ...others} = resource;
+            const owner = {"owner": user && user.name || null};
+            const {metadata, data, attributes, id, ...others} = resource;
             let updates;
             if (!isMapSaveAs) {
                 updates = {data: mapData, metadata, id, ...others};
             } else {
-                updates = {data: mapData, metadata: {attributes, ...metadata}, ...others};
+                updates = {data: mapData, attributes, metadata: {attributes: {...owner}, ...metadata}, ...others};
             }
             return saveMap(updates);
         }

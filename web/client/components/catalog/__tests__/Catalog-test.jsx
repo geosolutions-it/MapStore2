@@ -10,7 +10,7 @@ const ReactDOM = require('react-dom');
 const expect = require('expect');
 const TestUtils = require('react-dom/test-utils');
 const {FormGroup} = require('react-bootstrap');
-const Select = require('react-select');
+const Select = require('react-select').default;
 
 const Catalog = require('../Catalog.jsx');
 

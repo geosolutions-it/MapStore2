@@ -278,7 +278,8 @@
                 "errorWhenSaving": "Se produjo un error durante el proceso de guardado",
                 "errorWhenUpdating": "Se produjo un error durante el proceso de actualización",
                 "errorWhenDeleting": "Se produjo un error durante el proceso de eliminación",
-                "errorSizeExceeded": "Por favor, reduzca el tamaño de los detalles o la calidad de las imágenes"
+                "errorSizeExceeded": "Por favor, reduzca el tamaño de los detalles o la calidad de las imágenes",
+                "errorLoadingContexts": "Se produjo un error durante la carga de contextos"
             },
             "search": "buscar..."
         },
@@ -642,6 +643,16 @@
                 "no_info_description": "El panel de identificación no aparecerá en la búsqueda",
                 "all_layers_description": "El panel Identificar aparecerá mostrando información de todas las capas visibles en el mapa",
                 "single_layer_description": "El panel de identificación aparecerá con los datos ya disponibles a través de la búsqueda de WFS"
+            },
+            "advancedSearchPanel": {
+                "title": "Filtros de busqueda avanzada",
+                "context": {
+                    "title": "Contexto"
+                },
+                "showTooltip": "Mostrar filtros avanzados",
+                "showTooltipActive": "Mostrar filtros avanzados (activo)",
+                "hideTooltip": "Ocultar filtros avanzados",
+                "hideTooltipActive": "Ocultar filtros avanzados (activo)"
             }
         },
         "draw": {
@@ -2131,6 +2142,10 @@
         "stepper": {
             "back": "Atrás",
             "next": "Siguiente"
+        },
+        "newMapDialog": {
+            "title": "Selecciona un contexto",
+            "skipButtonTitle": "Omitir"
         },
         "plugins": {
           "About": {
