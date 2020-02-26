@@ -19,8 +19,7 @@ import MapUtils from '../../../../utils/MapUtils';
 import { isVectorFormat} from '../../../../utils/VectorTileUtils';
 import urlParser from 'url';
 
-import {get, getTransform} from 'ol/proj';
-import {applyTransform} from 'ol/extent';
+import {get} from 'ol/proj';
 import TileLayer from 'ol/layer/Tile';
 import VectorTileLayer from 'ol/layer/VectorTile';
 import WMTS from 'ol/source/WMTS';
@@ -75,24 +74,23 @@ const createLayer = options => {
     * - wnu - westing, north-ing, up - some planetary coordinate systems have "west positive" coordinate systems
     */
     const switchOriginXY = projection.getAxisOrientation().substr(0, 2) === 'ne';
-    let origins = tileMatrixSet
+    const origins = tileMatrixSet
         && tileMatrixSet.TileMatrix
         && tileMatrixSet.TileMatrix
             .map(({ TopLeftCorner } = {}) => TopLeftCorner && CoordinatesUtils.parseString(TopLeftCorner))
             .map(({ x, y } = {}) => switchOriginXY ? [y, x] : [x, y]);
 
-    const bbox = options.bbox;
+    const sizes = tileMatrixSet
+        && tileMatrixSet.TileMatrix
+        && tileMatrixSet.TileMatrix
+            .map(({ MatrixWidth, MatrixHeight } = {}) => ([parseInt(MatrixWidth, 10), parseInt(MatrixHeight, 10)]));
 
-    const extent = bbox
-        ? applyTransform([
-            parseFloat(bbox.bounds.minx),
-            parseFloat(bbox.bounds.miny),
-            parseFloat(bbox.bounds.maxx),
-            parseFloat(bbox.bounds.maxy)
-        ], getTransform(bbox.crs, options.srs))
-        : null;
+    const tileSizes = tileMatrixSet
+        && tileMatrixSet.TileMatrix
+        && tileMatrixSet.TileMatrix
+            .map(({ TileWidth, TileHeight } = {}) => ([parseInt(TileWidth, 10), parseInt(TileHeight, 10)]));
 
-    let queryParameters = {};
+    const queryParameters = {};
     urls.forEach(url => SecurityUtils.addAuthenticationParameter(url, queryParameters, options.securityToken));
     const queryParametersString = urlParser.format({ query: { ...queryParameters } });
 
@@ -117,11 +115,12 @@ const createLayer = options => {
         tileGrid: new WMTSTileGrid({
             origins,
             origin: !origins ? [20037508.3428, -20037508.3428] : undefined, // Either origin or origins must be configured, never both.
-            // extent: extent,
             resolutions,
             matrixIds,
-            // TODO: matrixLimits from ranges
-            tileSize: options.tileSize || [TILE_SIZE, TILE_SIZE]
+            sizes,
+            extent: projection.getExtent(),
+            tileSizes,
+            tileSize: !tileSizes && (options.tileSize || [TILE_SIZE, TILE_SIZE])
         }),
         wrapX: true
     };
@@ -131,7 +130,6 @@ const createLayer = options => {
     const wmtsLayer = new Layer({
         opacity: options.opacity !== undefined ? options.opacity : 1,
         zIndex: options.zIndex,
-        extent: extent,
         maxResolution,
         visible: options.visibility !== false,
         source: isVector
