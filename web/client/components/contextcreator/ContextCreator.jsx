@@ -212,6 +212,27 @@ export default class ContextCreator extends React.Component {
                             context={this.context}
                             onChange={this.props.onChangeAttribute} />
                 }, {
+                    id: 'configure-map',
+                    label: 'contextCreator.configureMap.label',
+                    extraToolbarButtons: [{
+                        id: "map-reload",
+                        onClick: () => this.props.onReloadConfirm(true),
+                        label: 'contextCreator.configureMap.reload'
+                    }],
+                    component:
+                        <ConfigureMap
+                            pluginsConfig={this.props.ignoreViewerPlugins ?
+                                this.props.pluginsConfig :
+                                keys(this.props.pluginsConfig).reduce((curConfig, mode) => ({
+                                    ...curConfig,
+                                    [mode]: pluginsFilterOverride(this.props.pluginsConfig[mode], this.props.viewerPlugins)
+                                }), {})}
+                            plugins={this.context.plugins}
+                            mapType={this.props.mapType}
+                            showConfirm={this.props.showReloadConfirm}
+                            onReloadConfirm={this.props.onReloadConfirm}
+                            onMapViewerReload={this.props.onMapViewerReload} />
+                }, {
                     id: 'configure-plugins',
                     label: 'contextCreator.configurePlugins.label',
                     disableNext: !this.props.allAvailablePlugins.filter(
@@ -259,27 +280,6 @@ export default class ContextCreator extends React.Component {
                             onEditTemplate={this.props.onEditTemplate}
                             onFilterAvailableTemplates={this.props.onFilterAvailableTemplates}
                             onFilterEnabledTemplates={this.props.onFilterEnabledTemplates}/>
-                }, {
-                    id: 'configure-map',
-                    label: 'contextCreator.configureMap.label',
-                    extraToolbarButtons: [{
-                        id: "map-reload",
-                        onClick: () => this.props.onReloadConfirm(true),
-                        label: 'contextCreator.configureMap.reload'
-                    }],
-                    component:
-                        <ConfigureMap
-                            pluginsConfig={this.props.ignoreViewerPlugins ?
-                                this.props.pluginsConfig :
-                                keys(this.props.pluginsConfig).reduce((curConfig, mode) => ({
-                                    ...curConfig,
-                                    [mode]: pluginsFilterOverride(this.props.pluginsConfig[mode], this.props.viewerPlugins)
-                                }), {})}
-                            plugins={this.context.plugins}
-                            mapType={this.props.mapType}
-                            showConfirm={this.props.showReloadConfirm}
-                            onReloadConfirm={this.props.onReloadConfirm}
-                            onMapViewerReload={this.props.onMapViewerReload} />
                 }]} />
         );
     }
