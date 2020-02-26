@@ -22,7 +22,7 @@ const errorCode = err => typeof err === 'string' ? err : err.status;
 const errorData = err => typeof err === 'string' ? undefined : err;
 const errorMessage = error => {
     const code = errorCode(error);
-    return <Message msgId={DEFAULT_MESSAGES[code] || ("Error:" + errorString(error))} msgParams={errorData(error)} />;
+    return <Message msgId={DEFAULT_MESSAGES[code] || errorString(error)} msgParams={errorData(error)} />;
 };
 
 module.exports = ({ errors = []}) => {
