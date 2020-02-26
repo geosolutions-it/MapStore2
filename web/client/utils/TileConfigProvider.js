@@ -8,18 +8,23 @@ export default {
         let providerConfig;
         let variantName;
         let providerName;
-        if (layer !== "tms") {
-            const parts = layer.split('.');
+        let parts;
+        if (layer === 'custom') {
+            providerConfig = options;
+        } if (layer === "tms") {
+            providerConfig = {
+                url: `${options.url}/{z}/{x}/{y}.${options.extension || ''}`,
+                options
+            };
+        } else {
+            parts = layer.split('.');
             providerName = parts[0];
             variantName = parts[1];
             providerConfig = providers[providerName];
             if (!providerConfig) {
                 throw new Error('No such provider (' + providerName + ')');
             }
-        } else if (layer === "tms") {
-            providerConfig = options;
         }
-
 
         let provider = {
             url: providerConfig.url,

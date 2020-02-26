@@ -32,7 +32,7 @@ module.exports = {
     selectedStaticServiceTypeSelector,
     selectedServiceTypeSelector: (state) => get(state, `catalog.services["${get(state, 'catalog.selectedService')}"].type`, selectedStaticServiceTypeSelector(state)),
     searchOptionsSelector: (state) => get(state, "catalog.searchOptions"),
-    formatsSelector: (state) => get(state, "catalog.supportedFormats") || [{name: "csw", label: "CSW"}, {name: "wms", label: "WMS"}, {name: "wmts", label: "WMTS"}],
+    formatsSelector: (state) => get(state, "catalog.supportedFormats") || [{name: "csw", label: "CSW"}, {name: "wms", label: "WMS"}, {name: "wmts", label: "WMTS"}, {name: "tms", label: "TMS"}],
     loadingErrorSelector: (state) => get(state, "catalog.loadingError"),
     loadingSelector: (state) => get(state, "catalog.loading", false),
     selectedServiceSelector: (state) => get(state, "catalog.selectedService"),

@@ -243,8 +243,9 @@ export default (API) => ({
                         return actions.addNewService !== null ? Rx.Observable.of(actions.notification, actions.addNewService) : Rx.Observable.of(actions.notification);
                     })
                     .startWith(savingService(true))
-                    .catch(() => {
+                    .catch((e) => {
                         return Rx.Observable.of(error({
+                            exception: e,
                             title: "notification.warning",
                             message: "catalog.notification.warningAddCatalogService",
                             autoDismiss: 6,

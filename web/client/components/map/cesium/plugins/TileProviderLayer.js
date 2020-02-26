@@ -78,3 +78,22 @@ Layers.registerType('tileprovider', (options) => {
         proxy: proxy ? new TileProviderProxy(proxyUrl) : new NoProxy()
     });
 });
+Layers.registerType('tms', (options) => {
+    let [url, opt] = TileProvider.getLayerConfig("tms", options);
+    let proxyUrl = ConfigUtils.getProxyUrl({});
+    let proxy;
+    if (proxyUrl) {
+        proxy = opt.noCors || ProxyUtils.needProxy(url);
+    }
+    const cr = opt.credits;
+    const credit = cr ? new Cesium.Credit(cr.text, cr.imageUrl, cr.link) : opt.attribution;
+    return new Cesium.UrlTemplateImageryProvider({
+        url: template(url, opt),
+        enablePickFeatures: false,
+        subdomains: opt.subdomains,
+        maximumLevel: opt.maxZoom,
+        minimumLevel: opt.minZoom,
+        credit,
+        proxy: proxy ? new TileProviderProxy(proxyUrl) : new NoProxy()
+    });
+});

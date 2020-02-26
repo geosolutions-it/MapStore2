@@ -24,6 +24,7 @@ const Loader = require('../misc/Loader');
 class Catalog extends React.Component {
     static propTypes = {
         active: PropTypes.bool,
+        searchText: PropTypes.string,
         addAuthentication: PropTypes.bool,
         buttonClassName: PropTypes.string,
         buttonStyle: PropTypes.object,

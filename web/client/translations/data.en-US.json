@@ -1159,10 +1159,14 @@
             "service": "Service",
             "servicePlaceholder": "type a service",
             "url": "Url",
+            "urlTemplate": "URL Template",
             "urlPlaceholder": "type a URL",
             "type": "Type",
             "serviceTitle": "Title",
             "serviceTitlePlaceholder": "type a title",
+            "tms": {
+              "tooltip": "x,y,z are tile position, s is the sub-domain (default)"
+            },
             "missingReference": "Missing OGC reference metadata",
             "showDescription": "Show full description",
             "hideDescription": "Hide full description",

@@ -9,11 +9,10 @@
 const React = require('react');
 const PropTypes = require('prop-types');
 const {connect} = require('react-redux');
-const { isNil } = require('lodash');
 
 const assign = require('object-assign');
 const {createSelector} = require("reselect");
-const { compose, branch, withProps, renderComponent, defaultProps } = require("recompose");
+const { compose, branch, renderComponent, defaultProps } = require("recompose");
 const CatalogServiceEditor = require('../components/catalog/CatalogServiceEditor').default;
 
 const {Glyphicon, Panel} = require('react-bootstrap');
@@ -59,14 +58,14 @@ const catalogSelector = createSelector([
     (state) => pageSizeSelector(state),
     (state) => loadingSelector(state),
     (state) => projectionSelector(state)
-], (layers, modalParams, authkeyParamNames, result, saving, openCatalogServiceList, newService, newformat, selectedFormat, options, currentLocale, locales, pageSize, loading, crs) => ({
+], (layers, modalParams, authkeyParamNames, result, saving, openCatalogServiceList, service, newformat, selectedFormat, options, currentLocale, locales, pageSize, loading, crs) => ({
     layers,
     modalParams,
     authkeyParamNames,
     saving,
     openCatalogServiceList,
     format: newformat,
-    newService,
+    service,
     currentLocale,
     pageSize,
     loading,
@@ -113,13 +112,7 @@ const Catalog = compose(
 
     branch(
         ({mode}) => mode === "edit",
-        compose(
-            withProps(({ newService = {} }) => ({
-                showTemplate: !isNil(newService.showTemplate) ? newService.showTemplate : false
-            })),
-            renderComponent(CatalogServiceEditor)
-        )
-
+        renderComponent(CatalogServiceEditor)
     )
 )(require('../components/catalog/Catalog'));
 
@@ -271,13 +264,8 @@ const MetadataExplorerPlugin = connect(metadataExplorerSelector, {
     onDeleteService: deleteService,
     onError: addLayerError
 })(MetadataExplorerComponent);
+const API = require('../api/catalog').default;
 
-const API = {
-    csw: require('../api/CSW'),
-    wms: require('../api/WMS'),
-    wmts: require('../api/WMTS'),
-    backgrounds: require('../api/mapBackground')
-};
 /**
  * MetadataExplorer (Catalog) plugin. Shows the catalogs results (CSW, WMS and WMTS).
  * Some useful flags in `localConfig.json`:

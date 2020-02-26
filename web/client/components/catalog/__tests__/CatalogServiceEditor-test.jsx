@@ -8,11 +8,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import expect from 'expect';
-import TestUtils from 'react-dom/test-utils';
 import CatalogServiceEditor from '../CatalogServiceEditor';
 
-import { FormGroup } from 'react-bootstrap';
-import Select from 'react-select';
 describe('Test CatalogServiceEditor', () => {
     beforeEach((done) => {
         document.body.innerHTML = '<div id="container"></div>';
@@ -43,7 +40,7 @@ describe('Test CatalogServiceEditor', () => {
             selectedService="csw"
             formatOptions={formatOptions}
             mode="edit"
-            newService={{
+            service={{
                 url: "url",
                 type: "csw",
                 title: "csw",
