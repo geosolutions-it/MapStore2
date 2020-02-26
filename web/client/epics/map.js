@@ -194,24 +194,26 @@ const legacyZoomToExtent = (action, mapState) => {
  * @memberof epics.map
  */
 const zoomToExtentEpic = (action$, {getState = () => {} }) =>
-    action$.ofType(ZOOM_TO_EXTENT).switchMap(( action ) => {
-        const extent = toBoundsArray(action.extent);
-        if (!extent) {
-            return Rx.Observable.empty();
-        }
-        const hook = MapUtils.getHook(MapUtils.ZOOM_TO_EXTENT_HOOK);
-        const padding = mapPaddingSelector(getState());
-        if (hook) {
-            const { crs, maxZoom } = action;
-            hook(extent, {
-                crs,
-                padding,
-                maxZoom
-            });
-            return Rx.Observable.empty();
-        }
-        return legacyZoomToExtent({...action, extent}, mapSelector(getState()) );
-    });
+    action$.ofType(ZOOM_TO_EXTENT).switchMap(( action ) =>
+        Rx.Observable.of(null).delay(action.delay || 0).switchMap(() => {
+            const extent = toBoundsArray(action.extent);
+            if (!extent) {
+                return Rx.Observable.empty();
+            }
+            const hook = MapUtils.getHook(MapUtils.ZOOM_TO_EXTENT_HOOK);
+            const padding = mapPaddingSelector(getState());
+            if (hook) {
+                const { crs, maxZoom } = action;
+                hook(extent, {
+                    crs,
+                    padding,
+                    maxZoom
+                });
+                return Rx.Observable.empty();
+            }
+            return legacyZoomToExtent({...action, extent}, mapSelector(getState()) );
+        })
+    );
 /**
  * It checks user's permissions on current map on LOGIN_SUCCESS event
  * @memberof epics.map

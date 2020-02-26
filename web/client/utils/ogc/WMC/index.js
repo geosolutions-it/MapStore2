@@ -86,7 +86,7 @@ const removeEmptyProps = (obj) => keys(obj).filter(key => obj[key] !== undefined
 const isValidMaxExtentObject = (obj) => !!(obj && obj.minx && obj.miny && obj.maxx && obj.maxy);
 
 /**
- * Generates MapStore map configuration object from a WMC string
+ * Generates MapStore map configuration object from a WMC string.
  * List of WMC features to consider:
  * * FormatList and StyleList are lists of all possible formats and styles. Also styles can be in SLD(Style Layer Descriptor)
  * which is represented in a wmc file by a link to an SLD document.
