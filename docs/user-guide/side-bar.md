@@ -40,8 +40,7 @@ The scene will switch from 2D to 3D display mode and you will be guided by a bri
 
 <img src="../img/side-bar/3D-mode.jpg" class="ms-docimage"/>
 
-Identify Tool
--------------
+## Identify Tool
 
 The Identify tool  <img src="../img/button/identify.jpg" class="ms-docbutton"/> allows you to interact with the map by clicking on features to get information stored in the attribute table of the queried feature. It is active by default as the green color suggests.
 
