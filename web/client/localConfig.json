@@ -359,7 +359,12 @@
                     "showAddAsAnnotation": true
                   }
                 }
-            }, "Print", "MapImport", "MapExport", {
+            }, "Print", "MapImport", {
+                "name": "MapExport",
+                "cfg": {
+                    "enabledFormats": ["mapstore2", "wmc"]
+                }
+            }, {
                 "name": "Settings",
                 "cfg": {
                     "wrap": true

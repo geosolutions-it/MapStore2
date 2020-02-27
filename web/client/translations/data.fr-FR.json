@@ -1126,14 +1126,19 @@
         },
         "mapExport": {
             "title": "Exporter la carte",
+            "exportPanel": {
+                "title": "<p><h4>Sélectionnez votre format</h4></p>",
+                "exportButtonLabel": "Exportation"
+            },
             "formats": {
                 "mapstore2": {
-                    "label": "JSON",
-                    "tooltip": "Exportez la carte au format MapStore2 JSON"
+                    "label": "MapStore JSON",
+                    "description": "<p><small>Format de configuration de carte MapStore entièrement pris en charge</small></p>"
                 },
                 "wmc": {
                     "label": "WMC",
-                    "tooltip": "Exporter la carte au format OGC Web Map Context"
+                    "description": "<p><small>Format OGC Web Map Context</small></p>",
+                    "note": "<p><small><i><strong>note</strong>: le format WMC prend en charge <strong>uniquement les couches WMS</strong></i></small></p>"
                 }
             },
             "errorTitle": "Échec de l'exportation de la carte",
