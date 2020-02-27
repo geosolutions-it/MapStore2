@@ -14,7 +14,7 @@ import {SET_CREATION_STEP, MAP_VIEWER_LOADED, SHOW_MAP_VIEWER_RELOAD_CONFIRM, SE
     SET_FILE_DROP_STATUS, SET_EDITED_TEMPLATE, SET_TEMPLATES, SET_EDITED_PLUGIN, CHANGE_PLUGINS_KEY, CHANGE_TEMPLATES_KEY, CHANGE_ATTRIBUTE,
     LOADING, SHOW_DIALOG, SET_EDITED_CFG, UPDATE_EDITED_CFG, SET_VALIDATION_STATUS, SET_PARSED_CFG,
     SET_CFG_ERROR, ENABLE_UPLOAD_PLUGIN, UPLOADING_PLUGIN, UPLOAD_PLUGIN_ERROR,
-    PLUGIN_UPLOADED} from "../actions/contextcreator";
+    PLUGIN_UPLOADED, BACK_TO_PAGE_SHOW_CONFIRMATION} from "../actions/contextcreator";
 import {set} from '../utils/ImmutableUtils';
 
 const defaultPlugins = [
@@ -282,6 +282,9 @@ export default (state = {}, action) => {
         return set(action.name === "loading" ? "loading" : `loadFlags.${action.name}`, action.value, set(
             "loading", action.value, state
         ));
+    }
+    case BACK_TO_PAGE_SHOW_CONFIRMATION: {
+        return set('showBackToPageConfirmation', action.show, state);
     }
     default:
         return state;
