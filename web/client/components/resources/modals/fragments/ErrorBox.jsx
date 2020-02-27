@@ -7,7 +7,13 @@
  */
 
 const React = require('react');
-const DEFAULT_MESSAGES = { "FORMAT": "map.errorFormat", "SIZE": "map.errorSize", 409: "dashboard.errors.resourceAlreadyExists"};
+const DEFAULT_MESSAGES = {
+    "FORMAT": "map.errorFormat",
+    "SIZE": "map.errorSize",
+    409: "dashboard.errors.resourceAlreadyExists",
+    403: "dashboard.errors.forbidden",
+    405: "dashboard.errors.forbidden405"
+};
 
 const Message = require('../../../I18N/Message');
 const { Row } = require('react-bootstrap');
@@ -16,7 +22,7 @@ const errorCode = err => typeof err === 'string' ? err : err.status;
 const errorData = err => typeof err === 'string' ? undefined : err;
 const errorMessage = error => {
     const code = errorCode(error);
-    return <Message msgId={DEFAULT_MESSAGES[code] || ("Error:" + errorString(error))} msgParams={errorData(error)} />;
+    return <Message msgId={DEFAULT_MESSAGES[code] || errorString(error)} msgParams={errorData(error)} />;
 };
 
 module.exports = ({ errors = []}) => {
