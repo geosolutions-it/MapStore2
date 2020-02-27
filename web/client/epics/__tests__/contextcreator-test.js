@@ -15,6 +15,7 @@ import {
     disablePluginsEpic,
     uploadPluginEpic,
     saveTemplateEpic,
+    saveContextResource,
     checkIfContextExists
 } from '../contextcreator';
 import {
@@ -36,7 +37,10 @@ import {
     LOAD_TEMPLATE,
     SHOW_DIALOG,
     IS_VALID_CONTEXT_NAME,
-    CONTEXT_NAME_CHECKED
+    CONTEXT_NAME_CHECKED,
+    saveNewContext,
+    LOAD_EXTENSIONS,
+    CONTEXT_SAVED
 } from '../../actions/contextcreator';
 import {
     SHOW_NOTIFICATION
@@ -640,7 +644,6 @@ describe('contextcreator epics', () => {
             expect(actions[3].type).toBe(SHOW_NOTIFICATION);
             expect(actions[4].type).toBe(LOADING);
             expect(actions[4].name).toBe('templateSaving');
-            expect(actions[4].value).toBe(false);
         }, {
             contextcreator: {}
         }, done);
@@ -760,6 +763,28 @@ describe('contextcreator epics', () => {
                     name: 'context'
                 }
             }
+        }, done);
+    });
+
+    it('saveContextResource saves a context', (done) => {
+        mockAxios.onPost().reply(200, "1");
+        mockAxios.onGet().reply(200, {});
+        const startActions = [saveNewContext("/")];
+        testEpic(saveContextResource, 4, startActions, actions => {
+            expect(actions.length).toBe(4);
+            expect(actions[0].type).toBe(CONTEXT_SAVED);
+            expect(actions[0].id).toBe(1);
+            expect(actions[1].type).toBe("@@router/CALL_HISTORY_METHOD");
+            expect(actions[2].type).toBe(SHOW_NOTIFICATION);
+            expect(actions[2].message).toBe("saveDialog.saveSuccessMessage");
+            expect(actions[3].type).toBe(LOAD_EXTENSIONS);
+        }, {
+            contextcreator: {
+                resource: {
+                    name: 'context'
+                }
+            },
+            map: {}
         }, done);
     });
 });

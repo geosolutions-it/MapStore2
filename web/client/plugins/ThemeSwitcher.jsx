@@ -29,6 +29,6 @@ module.exports = {
         }
     }),
     reducers: {
-        theme: require('../reducers/theme')
+        theme: require('../reducers/theme').default
     }
 };
