@@ -229,7 +229,7 @@ export default class OpenlayersLayer extends React.Component {
                 .subscribe({
                     next: (tileEvents) => {
                         const errors = tileEvents.filter(e => e.type === 'tileloaderror');
-                        if (errors.length > 0) {
+                        if (errors.length > 0 && (options && !options.hideErrors || !options)) {
                             this.props.onLayerLoad(options.id, {error: true});
                             this.props.onLayerError(options.id, tileEvents.length, errors.length);
                         } else {
@@ -259,13 +259,11 @@ export default class OpenlayersLayer extends React.Component {
                     imageStopStream$.next();
                 }
             });
-            this.layer.getSource().on('imageloaderror', (event) => {
-                this.imagestoload--;
-                imageLoadEndStream$.next({type: 'imageloaderror', event});
-                if (this.imagestoload === 0) {
-                    imageStopStream$.next();
-                }
-            });
+            this.imagestoload--;
+            imageLoadEndStream$.next({type: 'imageloaderror', event});
+            if (this.imagestoload === 0) {
+                imageStopStream$.next();
+            }
 
             imageLoadEndStream$
                 .bufferWhen(() => imageStopStream$)
@@ -274,7 +272,9 @@ export default class OpenlayersLayer extends React.Component {
                         const errors = imageEvents.filter(e => e.type === 'imageloaderror');
                         if (errors.length > 0) {
                             this.props.onLayerLoad(options.id, {error: true});
-                            this.props.onLayerError(options.id, imageEvents.length, errors.length);
+                            if (options && !options.hideErrors || !options) {
+                                this.props.onLayerError(options.id, imageEvents.length, errors.length);
+                            }
                         } else {
                             this.props.onLayerLoad(options.id);
                         }

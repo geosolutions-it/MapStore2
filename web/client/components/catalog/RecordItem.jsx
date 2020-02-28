@@ -28,6 +28,7 @@ import SideCard from '../misc/cardgrids/SideCard';
 import Toolbar from '../misc/toolbar/Toolbar';
 import tooltip from '../misc/enhancers/tooltip';
 const Button = tooltip(ButtonRB);
+import TMSButton from './buttons/TMSButton';
 
 import defaultThumb from './img/default.jpg';
 import defaultBackgroundThumbs from '../../plugins/background/DefaultThumbs';
@@ -141,7 +142,7 @@ class RecordItem extends React.Component {
             return null;
         }
         // let's extract the references we need
-        const {wms, wmts} = extractOGCServicesReferences(record);
+        const {wms, wmts, tms} = extractOGCServicesReferences(record);
         // let's extract the esri
         const {esri} = extractEsriReferences(record);
         const background = record && record.background;
@@ -211,6 +212,22 @@ class RecordItem extends React.Component {
                 </Button>
             );
         }
+        if (tms) {
+            buttons.push(
+                <TMSButton
+                    key="tms-button"
+                    tooltipId="catalog.addToMap"
+                    className="square-button-md"
+                    bsStyle="primary"
+                    bsSize={this.props.buttonSize}
+                    addLayer={this.addLayer}
+                    record={this.props.record}
+                    key="addTmsLayer">
+                    <Glyphicon glyph="plus" />
+                </TMSButton>
+            );
+        }
+
         // create get capabilities links that will be used to share layers info
         if (this.props.showGetCapLinks) {
             let links = getRecordLinks(record);
@@ -253,7 +270,7 @@ class RecordItem extends React.Component {
 
     render() {
         const record = this.props.record;
-        const {wms, wmts} = extractOGCServicesReferences(record);
+        const {wms, wmts, tms} = extractOGCServicesReferences(record);
         const {esri} = extractEsriReferences(record);
         const background = record && record.background;
         const disabled = background && head((this.props.layers || []).filter(layer => layer.id === background.name ||
@@ -276,7 +293,7 @@ class RecordItem extends React.Component {
                 caption={
                     <div>
                         {!this.props.hideIdentifier && <div className="identifier">{record && record.identifier}</div>}
-                        <div>{!wms && !wmts && !esri && !background && <small className="text-danger"><Message msgId="catalog.missingReference"/></small>}</div>
+                        <div>{!wms && !wmts && !esri && !background && !tms && <small className="text-danger"><Message msgId="catalog.missingReference"/></small>}</div>
                         {!this.props.hideExpand &&
                                 <div
                                     className="ms-ruler"

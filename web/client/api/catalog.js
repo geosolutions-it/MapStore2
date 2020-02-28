@@ -6,6 +6,8 @@ import backgrounds from '../api/mapBackground';
 
 /**
  * API for catalog
+ * Must implement:
+ *
  */
 export default {
     csw,

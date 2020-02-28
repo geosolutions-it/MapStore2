@@ -8,9 +8,11 @@
 
 import Layers from '../../../../utils/leaflet/Layers';
 import L from 'leaflet';
-import TileProvider from '../../../../utils/TileConfigProvider';
 
-Layers.registerType('tileprovider', (options) => {
-    let [url, opt] = TileProvider.getLayerConfig(options.provider, {maxZoom: 23, ...options});
-    return L.tileLayer(url, opt);
+Layers.registerType('tms', (options) => {
+    return L.tileLayer(`${options.tileMapUrl}/{z}/{x}/{y}.${options.extension}`, {
+        hideErrors: options.hideErrors || true, // custom option to hide errors of TMS
+        tms: true // inverses y axis
+        // TODO: zoomOffset
+    });
 });

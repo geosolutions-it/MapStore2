@@ -42,11 +42,12 @@ import {
     selectedServiceSelector,
     servicesSelector,
     selectedCatalogSelector,
-    searchOptionsSelector
+    searchOptionsSelector,
+    catalogSearchInfoSelector
 } from '../selectors/catalog';
 import {metadataSourceSelector} from '../selectors/backgroundselector';
 import {currentMessagesSelector} from "../selectors/locale";
-import {layersSelector, getSelectedLayer} from '../selectors/layers';
+import {getSelectedLayer} from '../selectors/layers';
 import axios from '../libs/ajax';
 import {
     buildSRSMap,
@@ -74,7 +75,7 @@ export default (API) => ({
         action$.ofType(TEXT_SEARCH)
             .switchMap(({format, url, startPosition, maxRecords, text, options}) => {
                 return Rx.Observable.defer( () =>
-                    API[format].textSearch(url, startPosition, maxRecords, text, options, layersSelector(store.getState()))
+                    API[format].textSearch(url, startPosition, maxRecords, text, {options, ...catalogSearchInfoSelector(store.getState())})
                 )
                     .switchMap((result) => {
                         if (result.error) {

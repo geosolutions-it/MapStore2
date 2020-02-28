@@ -7,13 +7,14 @@
  */
 
 const assign = require('object-assign');
-const {head, isArray, isString, castArray, isObject, sortBy, uniq, includes} = require('lodash');
+const {head, isArray, isString, castArray, isObject, sortBy, uniq, includes, get} = require('lodash');
 const urlUtil = require('url');
 const CoordinatesUtils = require('./CoordinatesUtils');
 const ConfigUtils = require('./ConfigUtils');
 const LayersUtils = require('./LayersUtils');
 const LocaleUtils = require('./LocaleUtils');
 const WMTSUtils = require('./WMTSUtils');
+const { cleanAuthParamsFromURL } = require('./SecurityUtils');
 
 const WMS = require('../api/WMS');
 
@@ -322,6 +323,19 @@ const converters = {
         }
         return null;
     },
+    tms: ({records} = {}, options) => {
+        return records && records.map(record => ({
+            title: record.title,
+            identifier: record.identifier,
+            tileMapUrl: record.href,
+            description: record.srs, // To show description in record
+            tmsUrl: options.tmsUrl,
+            references: [{
+                type: "OGC:TMS",
+                url: options.url
+            }]
+        }));
+    },
     backgrounds: (records) => {
         if (records && records.records) {
             return records.records.map(record => {
@@ -362,7 +376,9 @@ const extractOGCServicesReferences = (record = { references: [] }) => ({
     wms: head(record.references.filter(reference => reference.type && (reference.type === "OGC:WMS"
         || reference.type.indexOf("OGC:WMS") > -1 && reference.type.indexOf("http-get-map") > -1))),
     wmts: head(record.references.filter(reference => reference.type && (reference.type === "OGC:WMTS"
-        || reference.type.indexOf("OGC:WMTS") > -1 && reference.type.indexOf("http-get-map") > -1)))
+        || reference.type.indexOf("OGC:WMTS") > -1 && reference.type.indexOf("http-get-map") > -1))),
+    tms: head(record.references.filter(reference => reference.type && (reference.type === "OGC:WMTS"
+        || reference.type.indexOf("OGC:TMS") > -1)))
 });
 const extractEsriReferences = (record = { references: [] }) => ({
     esri: head(record.references.filter(reference => reference.type && (reference.type === "ESRI:SERVER"
@@ -509,6 +525,39 @@ const CatalogUtils = {
             ...baseConfig
         };
 
+    },
+    tmsToLayer: ({ tileMapUrl }, { TileMap = {}}) => {
+        const { Title, Abstract, SRS, BoundingBox = {}, Origin, TileFormat = {}, TileSets } = TileMap;
+        const { version, tilemapservice } = TileMap.$;
+        const { minx, miny, maxx, maxy } = get(BoundingBox, '$', {});
+        const {x, y} = get(Origin, "$");
+        const { width: tileWidth, height: tileHeight, "mime-type": format, extension} = get(TileFormat, "$", {});
+        const tileSize = [parseFloat(tileWidth), parseFloat(tileHeight, 10)];
+        const tileSets = castArray(get(TileSets, "TileSet", []).map(({ $ }) => $)).map(({ href, order, "units-per-pixel": resolution}) => ({
+            href: cleanAuthParamsFromURL(href),
+            order: parseFloat(order),
+            resolution: parseFloat(resolution)
+        }));
+        const profile = get(TileSets, "profile");
+        return {
+            title: Title,
+            hideErrors: true, // TMS can rise a lot of errors of tile not found
+            name: Title,
+            allowedSRS: {[SRS]: true},
+            description: Abstract,
+            srs: SRS,
+            version,
+            tileMapService: tilemapservice ? cleanAuthParamsFromURL(tilemapservice) : undefined,
+            type: 'tms',
+            profile,
+            tileMapUrl,
+            bbox: BoundingBox && {crs: SRS, bounds: {minx: parseFloat(minx), miny: parseFloat(miny), maxx: parseFloat(maxx), maxy: parseFloat(maxy)}},
+            tileSets,
+            origin: {x: parseFloat(x), y: parseFloat(y)},
+            format,
+            tileSize,
+            extension
+        };
     }
 };
 module.exports = CatalogUtils;

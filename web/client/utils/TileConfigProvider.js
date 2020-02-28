@@ -81,7 +81,9 @@ export default {
                 }
             );
         };
-        provider.options.attribution = attributionReplacer(provider.options.attribution);
+        if (provider.options.attribution) {
+            provider.options.attribution = attributionReplacer(provider.options.attribution);
+        }
 
         // Compute final options combining provider options with any user overrides
         let layerOpts = assign({}, provider.options, options);

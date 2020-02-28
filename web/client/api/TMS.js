@@ -8,20 +8,31 @@
 import ConfigUtils from '../utils/ConfigUtils';
 import xml2js from 'xml2js';
 import axios from '../libs/ajax';
-import {castArray} from 'lodash';
-
+import { get, castArray } from 'lodash';
+import { cleanAuthParamsFromURL } from '../utils/SecurityUtils';
 
 const capabilitiesCache = {};
 
+const isSameSRS = (srs, projection) => srs === projection
+    || srs === "EPSG:3857" && projection === "EPSG:900913"
+    || srs === "EPSG:900913" && projection === "EPSG:3857";
+const searchAndPaginate = (json = {}, startPosition, maxRecords, text, info = {}) => {
 
-const searchAndPaginate = (json = {}, startPosition, maxRecords, text) => {
+    const layers = castArray(get(json, 'TileMapService.TileMaps.TileMap', []));
+    const { projection } = info;
+    const filteredLayers = layers
+        .map(({ $ = {} }) => ({
+            ...$, // get only the xml attributes
+            href: cleanAuthParamsFromURL($.href),
+            identifier: cleanAuthParamsFromURL($.href), // add identifier for the layer
+            tmsUrl: cleanAuthParamsFromURL(json.url) // Service URL
+        }))
+        .filter(({ srs }) => projection ? isSameSRS(srs, projection) : true)
+        .filter(({ title = "", srs = "" } = {}) => !text
+            || title.toLowerCase().indexOf(text.toLowerCase()) !== -1
+            || srs.toLowerCase().indexOf(text.toLowerCase()) !== -1
 
-    const layers = castArray(json.TileSets.TileSet);
-    const filteredLayers = layers.filter((layer) => !text
-            || layer.Name.toLowerCase().indexOf(text.toLowerCase()) !== -1
-            || layer.Title && layer.Title.toLowerCase().indexOf(text.toLowerCase()) !== -1
-            || layer.Abstract && layer.Abstract.toLowerCase().indexOf(text.toLowerCase()) !== -1
-    );
+        );
     return {
         numberOfRecordsMatched: filteredLayers.length,
         numberOfRecordsReturned: Math.min(maxRecords, filteredLayers.length),
@@ -32,24 +43,30 @@ const searchAndPaginate = (json = {}, startPosition, maxRecords, text) => {
 };
 
 export const parseUrl = url => url;
-export const getRecords = (url, startPosition, maxRecords, text) => {
+export const getRecords = (url, startPosition, maxRecords, text, info) => {
     const cached = capabilitiesCache[url];
     if (cached && new Date().getTime() < cached.timestamp + (ConfigUtils.getConfigProp('cacheExpire') || 60) * 1000) {
         return new Promise((resolve) => {
-            resolve(searchAndPaginate(cached.data, startPosition, maxRecords, text));
+            resolve(searchAndPaginate(cached.data, startPosition, maxRecords, text, info));
         });
     }
     return axios.get(url).then((response) => {
         let json;
         xml2js.parseString(response.data, { explicitArray: false }, (ignore, result) => {
-            json = result;
+            json = { ...result, url };
         });
         capabilitiesCache[url] = {
             timestamp: new Date().getTime(),
             data: json
         };
-        return searchAndPaginate(json, startPosition, maxRecords, text);
+        return searchAndPaginate(json, startPosition, maxRecords, text, info);
     });
 };
-// export const textSearch = (url, startPosition, maxRecords, text) => getRecords(url, startPosition, maxRecords, text);
+export const textSearch = (url, startPosition, maxRecords, text, info) => getRecords(url, startPosition, maxRecords, text, info);
 
+export const getTileMap = (url) => axios.get(url)
+    .then(response => {
+        return new Promise((resolve) => {
+            xml2js.parseString(response.data, { explicitArray: false }, (ignore, result) => resolve(result));
+        });
+    });

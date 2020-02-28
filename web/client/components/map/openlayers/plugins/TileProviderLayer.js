@@ -42,10 +42,4 @@ Layers.registerType('tileprovider', {
         return new TileLayer(tileXYZToOpenlayersOptions(opt));
     }
 });
-Layers.registerType('tms', {
-    create: (options) => {
-        let [url, opt] = TileProvider.getLayerConfig("tms", options);
-        opt.url = url;
-        return new TileLayer(tileXYZToOpenlayersOptions(opt));
-    }
-});
+
