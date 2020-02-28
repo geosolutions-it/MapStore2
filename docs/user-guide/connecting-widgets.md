@@ -97,3 +97,7 @@ Once a widget is connected to a map widget that is connected to a Parent Table a
 - If the dataset isn't the same, only the spatial filter of the Map widget will be applied as usual: in the following example, the Counter refers to a level other than that configured for the Parent Table
 
 <img src="../img/connecting-widgets/interaction_ab.gif" class="ms-docimage" style="max-width:700px;"/> 
+
+There are different combinations of connections, the image below illustrate the available ones by reporting also the kind of filters applied in each case
+
+<img src="../img/connecting-widgets/available_connections.jpg" class="ms-docimage" style="max-width:700px;"/> 
