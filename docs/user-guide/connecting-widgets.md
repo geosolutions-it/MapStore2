@@ -98,6 +98,6 @@ Once a widget is connected to a map widget that is connected to a Parent Table a
 
 <img src="../img/connecting-widgets/interaction_ab.gif" class="ms-docimage" style="max-width:700px;"/> 
 
-There are different combinations of connections, the image below illustrate the available ones by reporting also the kind of filters applied in each case
+There are different combinations of connections, the image below illustrates the allowed ones by reporting also the kind of filters applied for each case
 
 <img src="../img/connecting-widgets/available_connections.jpg" class="ms-docimage" style="max-width:700px;"/> 
