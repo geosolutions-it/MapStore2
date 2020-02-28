@@ -35,3 +35,4 @@ export const availablePluginsFilterTextSelector = createSelector(filterTextSelec
 export const enabledPluginsFilterTextSelector = createSelector(filterTextSelector, filterText => get(filterText, 'enabledPlugins'));
 export const availableTemplatesFilterTextSelector = createSelector(filterTextSelector, filterText => get(filterText, 'availableTemplates'));
 export const enabledTemplatesFilterTextSelector = createSelector(filterTextSelector, filterText => get(filterText, 'enabledTemplates'));
+export const showBackToPageConfirmationSelector = state => get(state, 'contextcreator.showBackToPageConfirmation', false);

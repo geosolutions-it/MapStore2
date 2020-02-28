@@ -129,12 +129,17 @@ export default class ContextCreator extends React.Component {
         onReloadConfirm: PropTypes.func,
         saveDestLocation: PropTypes.string,
         uploading: PropTypes.bool,
-        onShowDialog: PropTypes.func
+        onShowDialog: PropTypes.func,
+        onShowBackToPageConfirmation: PropTypes.func,
+        showBackToPageConfirmation: PropTypes.bool,
+        backToPageDestRoute: PropTypes.string,
+        backToPageConfirmationMessage: PropTypes.string
     };
 
     static contextTypes = {
         messages: PropTypes.object,
-        plugins: PropTypes.object
+        plugins: PropTypes.object,
+        router: PropTypes.object
     };
 
     static defaultProps = {
@@ -187,7 +192,11 @@ export default class ContextCreator extends React.Component {
         onSetStep: () => { },
         onChangeAttribute: () => { },
         onReloadConfirm: () => { },
-        uploadEnabled: false
+        uploadEnabled: false,
+        onShowBackToPageConfirmation: () => { },
+        showBackToPageConfirmation: false,
+        backToPageDestRoute: '/context-manager',
+        backToPageConfirmationMessage: 'contextCreator.undo'
     };
 
     render() {
@@ -196,6 +205,10 @@ export default class ContextCreator extends React.Component {
                 currentStepId={this.props.curStepId}
                 onSetStep={this.props.onSetStep}
                 onSave={() => this.props.onSave(this.props.saveDestLocation)}
+                onShowBackToPageConfirmation={this.props.onShowBackToPageConfirmation}
+                showBackToPageConfirmation={this.props.showBackToPageConfirmation}
+                backToPageConfirmationMessage={this.props.backToPageConfirmationMessage}
+                onConfirmBackToPage={() => this.context.router.history.push(this.props.backToPageDestRoute)}
                 steps={[{
                     id: 'general-settings',
                     label: 'contextCreator.generalSettings.label',
