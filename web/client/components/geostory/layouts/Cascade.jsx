@@ -78,6 +78,20 @@ const ContainerDimensions = emptyState(
     )
 )(ContainerDimensionsBase);
 
+const defaultGetSize = ({ width, mode }) => {
+    // don't apply custom style while editing
+    if (mode === Modes.EDIT) {
+        return '';
+    }
+    if (width < 640) {
+        return 'sm';
+    }
+    if (width >= 640 && width < 1024) {
+        return 'md';
+    }
+    return '';
+};
+
 const Cascade = ({
     mode = Modes.VIEW,
     sections = [],
@@ -89,15 +103,18 @@ const Cascade = ({
     update = () => {},
     remove = () => {},
     focusedContent,
-    isContentFocused = false
+    isContentFocused = false,
+    getSize = defaultGetSize
 }) => (<BorderLayout  className={`ms-cascade-story ms-${mode}`} bodyClassName={`ms2-border-layout-body ${isContentFocused ? 'no-overflow' : ''}`}>
     <ContainerDimensions
         sections={sections}
         add={add}>
-        {({ width, height }) =>
-            <div
+        {({ width, height }) => {
+            const containerSize = getSize({ width, height, mode });
+            const sizeClassName = containerSize ? ` ms-${containerSize}` : '';
+            return (<div
                 id="ms-sections-container"
-                className="ms-sections-container">
+                className={`ms-sections-container${sizeClassName}`}>
                 {
                     sections.map(({ contents = [], id: sectionId, type: sectionType, cover }) => {
                         return (
@@ -122,7 +139,8 @@ const Cascade = ({
                         );
                     })
                 }
-            </div>}
+            </div>);
+        }}
     </ContainerDimensions>
 </BorderLayout>);
 
