@@ -3,7 +3,7 @@ const {compose, mapPropsStream, withHandlers} = require('recompose');
 
 module.exports = compose(
     withHandlers({
-        useFiles: ({ currentMap, loadMap = () => { }, zoomToExtent = () => { }, onClose = () => { }, setLayers = () => { } }) =>
+        useFiles: ({ currentMap, loadMap = () => { }, onClose = () => { }, setLayers = () => { } }) =>
             ({ layers = [], maps = [] }, warnings) => {
                 const map = maps[0]; // only 1 map is allowed
                 if (map) {
@@ -16,10 +16,7 @@ module.exports = compose(
                             zoom: map.map.zoom || zoom,
                             center: map.map.center || center
                         }
-                    });
-                    if (map.map.zoom === undefined) {
-                        zoomToExtent(map.map.maxExtent, map.map.projection, undefined, 300);
-                    }
+                    }, null, map.map.zoom === undefined);
                 }
                 if (layers.length > 0) {
                     setLayers(layers, warnings); // TODO: warnings

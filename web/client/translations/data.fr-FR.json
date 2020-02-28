@@ -1133,7 +1133,7 @@
             "formats": {
                 "mapstore2": {
                     "label": "MapStore JSON",
-                    "description": "<p><small>Format de configuration de carte MapStore entièrement pris en charge</small></p>"
+                    "description": "<p><small>Format de configuration de carte MapStore</small></p>"
                 },
                 "wmc": {
                     "label": "WMC",

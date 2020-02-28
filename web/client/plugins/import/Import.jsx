@@ -12,7 +12,6 @@ const DragZone = require('../../components/import/ImportDragZone');
 const { connect } = require('react-redux');
 const StyleDialog = require('./StyleDialog');
 const { configureMap } = require('../../actions/config');
-const { zoomToExtent } = require('../../actions/map');
 const { mapSelector } = require('../../selectors/map');
 
 module.exports = compose(
@@ -36,8 +35,7 @@ module.exports = compose(
             connect(createStructuredSelector({
                 currentMap: mapSelector
             }), {
-                loadMap: configureMap,
-                zoomToExtent
+                loadMap: configureMap
             }),
             renderComponent(DragZone)
         )

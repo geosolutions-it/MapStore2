@@ -122,13 +122,12 @@ function panTo(center) {
  * @param {string} crs related the extent
  * @param {number} maxZoom the max zoom limit
 */
-function zoomToExtent(extent, crs, maxZoom, delay) {
+function zoomToExtent(extent, crs, maxZoom) {
     return {
         type: ZOOM_TO_EXTENT,
         extent,
         crs,
-        maxZoom,
-        delay
+        maxZoom
     };
 }
 
