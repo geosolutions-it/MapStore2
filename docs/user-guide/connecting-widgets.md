@@ -82,10 +82,18 @@ It is possible to apply a filter in the *Parent Table* simply by typing a text i
 
 <img src="../img/connecting-widgets/filter_on_table.gif" class="ms-docimage" style="max-width:700px;"/>
 
-Once a widget is connected to a map widget that is connected with a Parent Table at the same time, the filter applied in the Parent Table will also filter all the other connected widgets accordingly. This is possible thanks to the spatial filter applied between the map and the widget. 
+A Map widget that is connected to a Parent Table receives the alphanumeric filter of the Table and:
 
-<img src="../img/connecting-widgets/interaction_a.gif" class="ms-docimage" style="max-width:700px;"/> 
+- Performs a zoom to the extent that contains all the Table widget records (the result of the filter in the Table)
 
-This type of interaction works even if the widget, connected to the map, does not have the same layer as the map or table. An example, with a connection between a *Map Widget*, a *Table widget* Layer A and a *Counter widget* layer B can be the following:
+- If the Map widget contains the same dataset (layer) of the Parent Table, also the layer on map is filtered accordingly
+
+Once a widget is connected to a map widget that is connected to a Parent Table at the same time:
+
+- If the widget has been created on the same dataset (layer) of the Parent Table then two filters will be applied in AND to the widget itself: the spatial filter of the Map widget and the attribute filter defined in the Parent Table
+
+<img src="../img/connecting-widgets/interaction_a.gif" class="ms-docimage" style="max-width:700px;"/>
+
+- If the dataset isn't the same, only the spatial filter of the Map widget will be applied as usual: in the following example, the Counter refers to a level other than that configured for the Parent Table
 
 <img src="../img/connecting-widgets/interaction_ab.gif" class="ms-docimage" style="max-width:700px;"/> 
