@@ -34,7 +34,8 @@ import {
     enableUploadPlugin,
     uploadPluginError,
     pluginUploaded,
-    pluginUploading
+    pluginUploading,
+    showBackToPageConfirmation
 } from '../../actions/contextcreator';
 
 const testContextResource = {
@@ -244,5 +245,10 @@ describe('contextcreator reducer', () => {
         const state = contextcreator({plugins: [{name: "myplugin"}]}, pluginUploaded([{ name: 'myplugin', error: "myerror" }]));
         expect(state).toExist();
         expect(state.plugins.length).toBe(1);
+    });
+    it('showBackToPageConfirmation', () => {
+        const state = contextcreator(undefined, showBackToPageConfirmation(true));
+        expect(state).toExist();
+        expect(state.showBackToPageConfirmation).toBe(true);
     });
 });

@@ -55,6 +55,7 @@ export const UPLOAD_PLUGIN = 'CONTEXTCREATOR:UPLOAD_PLUGIN';
 export const UPLOAD_PLUGIN_ERROR = 'CONTEXTCREATOR:UPLOAD_PLUGIN_ERROR';
 export const UPLOADING_PLUGIN = 'CONTEXTCREATOR:UPLOADING_PLUGIN';
 export const PLUGIN_UPLOADED = 'CONTEXTCREATOR:PLUGIN_UPLOADED';
+export const BACK_TO_PAGE_SHOW_CONFIRMATION = 'CONTEXTCREATOR:BACK_TO_PAGE_SHOW_CONFIRMATION';
 
 export const setCreationStep = (stepId) => ({
     type: SET_CREATION_STEP,
@@ -430,4 +431,9 @@ export const pluginUploading = (status = false, plugins) => ({
 export const pluginUploaded = (plugins) => ({
     type: PLUGIN_UPLOADED,
     plugins
+});
+
+export const showBackToPageConfirmation = (show) => ({
+    type: BACK_TO_PAGE_SHOW_CONFIRMATION,
+    show
 });
