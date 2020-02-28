@@ -682,6 +682,7 @@
           {
             "name": "GeoStoryEditor",
             "cfg": {
+              "disablePluginIf": "{!!(state('browser') && state('browser').mobile)}",
               "containerPosition": "columns"
             }
           },

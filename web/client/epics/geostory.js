@@ -265,7 +265,7 @@ export const loadGeostoryEpic = (action$, {getState = () => {}}) => action$
                 return axios.get(`configs/${id}.json`)
                     // not return anything else that data in this case
                     // to match with data/resource object structure of getResource
-                    .then(({data}) => ({data, canEdit: true}));
+                    .then(({data}) => ({ data, isStatic: true, canEdit: true }));
             }
             return getResource(id);
         })
@@ -275,7 +275,7 @@ export const loadGeostoryEpic = (action$, {getState = () => {}}) => action$
                 }
                 return true;
             })
-            .switchMap(({ data, ...resource }) => {
+            .switchMap(({ data, isStatic = false, ...resource }) => {
                 const isAdmin = isAdminUserSelector(getState());
                 const user = isLoggedIn(getState());
                 const story = isString(data) ? JSON.parse(data) : data;
@@ -283,7 +283,8 @@ export const loadGeostoryEpic = (action$, {getState = () => {}}) => action$
                     return Observable.of(loadGeostoryError({status: 403}));
                 }
                 return Observable.from([
-                    setEditing(resource && resource.canEdit || isAdmin),
+                    // initialize editing only for new or static sources
+                    setEditing(isStatic && (resource && resource.canEdit || isAdmin)),
                     geostoryLoaded(id),
                     setCurrentStory(story),
                     setResource(resource)
