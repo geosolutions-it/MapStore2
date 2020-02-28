@@ -112,6 +112,7 @@ const Cascade = ({
         {({ width, height }) => {
             const containerSize = getSize({ width, height, mode });
             const sizeClassName = containerSize ? ` ms-${containerSize}` : '';
+            const isBackgroundMediaExpandable = containerSize === 'sm';
             return (<div
                 id="ms-sections-container"
                 className={`ms-sections-container${sizeClassName}`}>
@@ -123,6 +124,7 @@ const Cascade = ({
                                 onVisibilityChange={onVisibilityChange}
                                 add={add}
                                 editMedia={editMedia}
+                                expandableBackgroundMedia={isBackgroundMediaExpandable}
                                 editWebPage={editWebPage}
                                 updateCurrentPage={updateCurrentPage}
                                 update={update}

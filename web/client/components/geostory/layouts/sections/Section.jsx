@@ -47,7 +47,8 @@ class Section extends React.Component {
         inViewRef: PropTypes.func,
         excludeClassName: PropTypes.string,
         cover: PropTypes.bool,
-        focusedContent: PropTypes.object
+        focusedContent: PropTypes.object,
+        expandableBackgroundMedia: PropTypes.bool
     };
 
     static defaultProps = {
@@ -61,7 +62,8 @@ class Section extends React.Component {
         storyType: StoryTypes.CASCADE,
         viewHeight: 0,
         viewWidth: 0,
-        mode: Modes.VIEW
+        mode: Modes.VIEW,
+        expandableBackgroundMedia: false
     };
 
     state = {
@@ -78,6 +80,7 @@ class Section extends React.Component {
                 update={this.props.update}
                 inViewRef={this.props.inViewRef}
                 editMedia={this.props.editMedia}
+                expandableBackgroundMedia={this.props.expandableBackgroundMedia}
                 editWebPage={this.props.editWebPage}
                 updateCurrentPage={this.props.updateCurrentPage}
                 remove={this.props.remove}

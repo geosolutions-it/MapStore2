@@ -46,15 +46,17 @@ export default compose(
     editMedia = () => {},
     focusedContent,
     bubblingTextEditing = () => {},
-    textEditorActiveClass = ""
+    textEditorActiveClass = "",
+    expandableBackgroundMedia = false
 }) => {
 
     const hideContent = get(focusedContent, "target.id") === contentId;
     const visibility = hideContent ?  'hidden' : 'visible';
+    const expandableBackgroundClassName = expandableBackgroundMedia && background && background.type === 'map' ? ' ms-expandable-background' : '';
     return (
         <section
             ref={inViewRef}
-            className="ms-section ms-section-title"
+            className={`ms-section ms-section-title${expandableBackgroundClassName}`}
             id={id}
         >
             <ContainerDimensions>
@@ -74,6 +76,7 @@ export default compose(
                         update={updateBackground}
                         add={add}
                         editMedia={editMedia}
+                        expandable={expandableBackgroundMedia}
                         updateSection={updateSection}
                         cover={cover}
                         remove={remove}
