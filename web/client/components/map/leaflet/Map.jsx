@@ -108,11 +108,16 @@ class LeafletMap extends React.Component {
             maxZoom: limits && limits.maxZoom || 23
         }, this.props.mapOptions, this.crs ? {crs: this.crs} : {});
 
-        const map = L.map(this.props.id, assign({zoomControl: this.props.zoomControl}, mapOptions) ).setView([this.props.center.y, this.props.center.x],
+        const map = L.map(this.props.id, assign({ zoomControl: false }, mapOptions) ).setView([this.props.center.y, this.props.center.x],
             Math.round(this.props.zoom));
 
         this.map = map;
 
+        // store zoomControl in the class to target the right control while add/remove
+        if (this.props.zoomControl) {
+            this.mapZoomControl = L.control.zoom();
+            this.map.addControl(this.mapZoomControl);
+        }
 
         this.attribution = L.control.attribution();
         this.attribution.addTo(this.map);
@@ -234,14 +239,18 @@ class LeafletMap extends React.Component {
         }
         if (newProps.zoomControl !== this.props.zoomControl) {
             if (newProps.zoomControl) {
-                this.map.addControl(L.control.zoom());
-            } else {
-                this.map.removeControl(this.map.zoomControl);
+                this.mapZoomControl = L.control.zoom();
+                this.map.addControl(this.mapZoomControl);
+            } else if (this.mapZoomControl && !newProps.zoomControl) {
+                this.map.removeControl(this.mapZoomControl);
+                this.mapZoomControl = undefined;
             }
         }
-        if (this.map && newProps.resize !== this.props.resize) {
+        if (newProps.resize !== this.props.resize) {
             setTimeout(() => {
-                this.map.invalidateSize(false);
+                if (this.map) {
+                    this.map.invalidateSize(false);
+                }
             }, 0);
         }
         // update map limits
@@ -271,7 +280,16 @@ class LeafletMap extends React.Component {
                 // do nothing... probably an old configuration
             }
         }
+
+        if (this.mapZoomControl) {
+            this.map.removeControl(this.mapZoomControl);
+            this.mapZoomControl = undefined;
+        }
+        // remove all events
+        this.map.off();
+        // remove map and set to undefined for setTimeout for .invalidateSize action
         this.map.remove();
+        this.map = undefined;
     }
 
     getResolutions = () => {
@@ -347,7 +365,7 @@ class LeafletMap extends React.Component {
             height: this.map.getSize().y,
             width: this.map.getSize().x
         };
-        var center = this.map.getCenter();
+        const center = this.map.getCenter();
         this.props.onMapViewChanges({x: center.lng, y: center.lat, crs: "EPSG:4326"}, this.map.getZoom(), {
             bounds: {
                 minx: parseFloat(bbox[0]),
