@@ -31,7 +31,7 @@ describe('Plugins API', () => {
                 expect(mockAxios.history.post[0].url).toBe("uploadPlugin");
                 expect(mockAxios.history.post[0].headers["Content-Type"]).toBe("application/octet-stream");
                 done();
-            }, 0);
+            }, 100);
         });
     });
 });
