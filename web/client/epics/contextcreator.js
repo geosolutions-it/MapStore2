@@ -586,7 +586,7 @@ export const disablePluginsEpic = (action$, store) => action$
                     }
 
                     // if there are no more plugins that are enabled and have this plugin as a dependency, unforce it
-                    if (enabledDependentPlugins[plugin.name].length === 0 &&
+                    if ((!enabledDependentPlugins[plugin.name] || enabledDependentPlugins[plugin.name].length === 0) &&
                         pluginsToDisable.reduce((result, cur) => result && cur !== plugin.name, true)
                     ) {
                         depsToUnforceMandatory.push(plugin.name);
