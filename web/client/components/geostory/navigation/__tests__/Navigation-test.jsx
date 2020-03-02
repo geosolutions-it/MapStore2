@@ -30,13 +30,16 @@ describe('GeoStory Navigation component', () => {
         const el = container.querySelector('.ms-geostory-navigation-bar');
         expect(el).toExist();
     });
-    it('Test Navigation setEditing', () => {
+    it('Test Navigation custom buttons (setEditing)', () => {
         const actions = {
             setEditing: () => {}
         };
+        const buttons = [{
+            Element: () => <button className="test-button" onClick={() => actions.setEditing(true)}></button>
+        }];
         const spySetEditing = expect.spyOn(actions, 'setEditing');
-        ReactDOM.render(<Navigation setEditing={actions.setEditing} />, document.getElementById("container"));
-        ReactTestUtils.Simulate.click(document.querySelector('.glyphicon-pencil')); // <-- trigger switch edit mode button
+        ReactDOM.render(<Navigation buttons={buttons} />, document.getElementById("container"));
+        ReactTestUtils.Simulate.click(document.querySelector('.test-button')); // <-- trigger switch edit mode button
         expect(spySetEditing).toHaveBeenCalled();
         expect(spySetEditing.calls[0].arguments[0]).toBe(true);
     });

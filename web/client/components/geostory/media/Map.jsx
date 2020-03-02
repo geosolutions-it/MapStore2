@@ -41,18 +41,23 @@ export default compose(
             zoomControl: false,
             interactive: true,
             mapOptions: {
-                ...mapOptions,
                 scrollWheelZoom: true,
                 interactions: {
-                    ...mapOptions.interactions,
-                    mouseWheelZoom: true
+                    mouseWheelZoom: true,
+                    dragPan: true
                 }
             }
         }
         : {
             zoomControl: false,
             interactive: false,
-            mapOptions
+            mapOptions: {
+                scrollWheelZoom: false,
+                interactions: {
+                    mouseWheelZoom: false,
+                    dragPan: false
+                }
+            }
         };
 
     const expandMapOptions = expandable ? expandedMapOptions : { mapOptions };

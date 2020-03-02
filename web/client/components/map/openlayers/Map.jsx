@@ -99,22 +99,21 @@ class OpenlayersMap extends React.Component {
         register(proj4);
         // interactive flag is used only for initializations,
         // TODO manage it also when it changes status (ComponentWillReceiveProps)
-        const defaultInteractionOptions = {
-            doubleClickZoom: false,
-            dragPan: false,
-            altShiftDragRotate: false,
-            keyboard: false,
-            mouseWheelZoom: false,
-            shiftDragZoom: false,
-            pinchRotate: false,
-            pinchZoom: false
-        };
-        let interactionsOptions = !this.props.interactive
-            ? defaultInteractionOptions
-            : assign(
-                defaultInteractionOptions,
-                this.props.mapOptions.interactions
-            );
+        let interactionsOptions = assign(
+            this.props.interactive ?
+                {} :
+                {
+                    doubleClickZoom: false,
+                    dragPan: false,
+                    altShiftDragRotate: false,
+                    keyboard: false,
+                    mouseWheelZoom: false,
+                    shiftDragZoom: false,
+                    pinchRotate: false,
+                    pinchZoom: false
+                },
+            this.props.mapOptions.interactions);
+
         let interactions = defaults(assign({
             dragPan: false,
             mouseWheelZoom: false
@@ -254,7 +253,7 @@ class OpenlayersMap extends React.Component {
          * on every render. We should prevent it with something like isEqual if this becomes
          * a performance problem
          */
-        if (this.map && this.props.interactive && (this.props.mapOptions && this.props.mapOptions.interactions) !== (newProps.mapOptions && newProps.mapOptions.interactions)) {
+        if (this.map && (this.props.mapOptions && this.props.mapOptions.interactions) !== (newProps.mapOptions && newProps.mapOptions.interactions)) {
             const newInteractions = newProps.mapOptions.interactions || {};
             const mapInteractions = this.map.getInteractions().getArray();
             Object.keys(newInteractions).forEach(newInteraction => {
