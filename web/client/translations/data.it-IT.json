@@ -1142,7 +1142,7 @@
                 }
             },
             "errorTitle": "Esportazione della mappa non riuscita",
-            "wmcNoLayersError": "Almeno un livello WMS necessario per esportare in WMC, trovato zero"
+            "wmcNoLayersError": "É necessario almeno un livello WMS per esportare in formato WMC. Non ne è stato trovato nessuno."
         },
         "catalog": {
             "start": "Data d'inizio ",
