@@ -23,7 +23,7 @@ import {SAVE_CONTEXT, SAVE_TEMPLATE, LOAD_CONTEXT, LOAD_TEMPLATE, DELETE_TEMPLAT
     contextNameChecked, setCreationStep, contextLoadError, loading, mapViewerLoad, mapViewerLoaded, setEditedPlugin,
     setEditedCfg, setParsedCfg, validateEditedCfg, setValidationStatus, savePluginCfg, enableMandatoryPlugins,
     enablePlugins, disablePlugins, setCfgError, changePluginsKey, changeTemplatesKey, setEditedTemplate, setTemplates, pluginUploaded,
-    pluginUploading} from '../actions/contextcreator';
+    pluginUploading, loadExtensions} from '../actions/contextcreator';
 import {newContextSelector, resourceSelector, creationStepSelector, mapConfigSelector, mapViewerLoadedSelector, contextNameCheckedSelector,
     editedPluginSelector, editedCfgSelector, validationStatusSelector, parsedCfgSelector, cfgErrorSelector,
     pluginsSelector, initialEnabledPluginsSelector} from '../selectors/contextcreator';
@@ -115,7 +115,8 @@ export const saveContextResource = (action$, store) => action$
                 show({
                     title: "saveDialog.saveSuccessTitle",
                     message: "saveDialog.saveSuccessMessage"
-                })
+                }),
+                loadExtensions()
             ))
             .catch(({status, data}) => Rx.Observable.of(error({
                 title: 'contextCreator.saveErrorNotification.titleContext',
