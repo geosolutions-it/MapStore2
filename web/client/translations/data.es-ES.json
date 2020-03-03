@@ -253,6 +253,8 @@
             "featuredMaps": "Mapas Destacados"
         },
         "newMap": "Nuevo mapa",
+        "newMapEmpty": "Mapa vacío",
+        "newMapContext": "Contexto existente",
 		"maps": {
             "title": "Mapas",
             "addToFeaturedMaps": "Agregar a los mapas destacados",

@@ -253,6 +253,8 @@
             "featuredMaps": "Empfohlene Karten"
         },
         "newMap": "Neue Karte",
+        "newMapEmpty": "Leere Karte",
+        "newMapContext": "Bestehender Kontext",
         "maps": {
             "title": "Karten",
             "addToFeaturedMaps": "Zu den vorgestellten Karten hinzufügen",

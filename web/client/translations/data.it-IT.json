@@ -253,6 +253,8 @@
             "featuredMaps": "In Evidenza"
         },
         "newMap": "Nuova Mappa",
+        "newMapEmpty": "Mappa vuota",
+        "newMapContext": "Contesto esistente",
 		"maps": {
             "title": "Mappe",
             "addToFeaturedMaps": "Metti in evidenza",
