@@ -122,4 +122,37 @@ describe("test the Layer legend", () => {
                 done();
             });
     });
+    it('test legend scaleDependent and legendOptions default props', () => {
+        const layer = {
+            "type": "wms",
+            "url": "http://test2/reflector/open/service",
+            "visibility": true,
+            "title": "test layer 3 (no group)",
+            "name": "layer3",
+            "format": "image/png"
+        };
+        const legendComponent = ReactDOM.render(<Legend layer={layer} />, document.getElementById("container"));
+        expect(legendComponent.props.legendOptions).toBe('forceLabels:on;fontSize:30');
+        expect(legendComponent.props.scaleDependent).toBe(true);
+    });
+    it('test legend scaleDependent and legendOptions custom props', () => {
+        const layer = {
+            "type": "wms",
+            "url": "http://test2/reflector/open/service",
+            "visibility": true,
+            "title": "test layer 3 (no group)",
+            "name": "layer3",
+            "format": "image/png"
+        };
+        const legendOptionsCustom = 'forceLabels:on;fontSize:50';
+        const scaleDependentCustom = false;
+        const legendComponent = ReactDOM.render(
+            <Legend
+                layer={layer}
+                legendOptions={legendOptionsCustom}
+                scaleDependent={scaleDependentCustom}/>,
+            document.getElementById("container"));
+        expect(legendComponent.props.legendOptions).toBe(legendOptionsCustom);
+        expect(legendComponent.props.scaleDependent).toBe(scaleDependentCustom);
+    });
 });

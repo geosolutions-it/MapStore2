@@ -17,18 +17,31 @@ class WMSLegend extends React.Component {
         legendStyle: PropTypes.object,
         showOnlyIfVisible: PropTypes.bool,
         currentZoomLvl: PropTypes.number,
-        scales: PropTypes.array
+        scales: PropTypes.array,
+        WMSLegendOptions: PropTypes.string,
+        scaleDependent: PropTypes.bool
     };
 
     static defaultProps = {
         legendContainerStyle: {},
-        showOnlyIfVisible: false
+        showOnlyIfVisible: false,
+        scaleDependent: true
     };
 
     render() {
         let node = this.props.node || {};
         if (this.canShow(node) && node.type === "wms" && node.group !== "background") {
-            return <div style={this.props.legendContainerStyle}><Legend style={this.props.legendStyle} layer={node} currentZoomLvl={this.props.currentZoomLvl} scales={this.props.scales}/></div>;
+            return (
+                <div style={this.props.legendContainerStyle}>
+                    <Legend
+                        style={this.props.legendStyle}
+                        layer={node}
+                        currentZoomLvl={this.props.currentZoomLvl}
+                        scales={this.props.scales}
+                        legendOptions={this.props.WMSLegendOptions}
+                        scaleDependent={this.props.scaleDependent}/>
+                </div>
+            );
         }
         return null;
     }

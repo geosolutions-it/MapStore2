@@ -16,14 +16,16 @@ class Legend extends React.Component {
         legendOptions: PropTypes.string,
         style: PropTypes.object,
         currentZoomLvl: PropTypes.number,
-        scales: PropTypes.array
+        scales: PropTypes.array,
+        scaleDependent: PropTypes.bool
     };
 
     static defaultProps = {
         legendHeigth: 12,
         legendWidth: 12,
-        legendOptions: "forceLabels:on;fontSize:10",
-        style: {maxWidth: "100%"}
+        legendOptions: "forceLabels:on;fontSize:30",
+        style: {maxWidth: "100%"},
+        scaleDependent: true
     };
     state = {
         error: false
@@ -62,7 +64,7 @@ class Legend extends React.Component {
             }, layer.legendParams || {},
             SecurityUtils.addAuthenticationToSLD(cleanParams || {}, props.layer),
             cleanParams && cleanParams.SLD_BODY ? {SLD_BODY: cleanParams.SLD_BODY} : {},
-            props.scales && props.currentZoomLvl ? {SCALE: Math.round(props.scales[props.currentZoomLvl])} : {});
+            props.scales && props.currentZoomLvl && props.scaleDependent ? {SCALE: Math.round(props.scales[props.currentZoomLvl])} : {});
             SecurityUtils.addAuthenticationParameter(url, query);
 
             return urlUtil.format({
