@@ -8,6 +8,6 @@
 
 export const showNewMapDialogSelector = (state) => state.createnewmap && state.createnewmap.showNewMapDialog;
 export const newMapContextSelector = (state) => state.createnewmap && state.createnewmap.newMapContext;
-export const contextsSelector = (state) => state.createnewmap && state.createnewmap.contexts;
+export const hasContextsSelector = (state) => state.createnewmap && state.createnewmap.hasContexts;
 export const loadingSelector = (state) => state.createnewmap && state.createnewmap.loading;
 export const loadFlagsSelector = (state) => state.createnewmap && state.createnewmap.loadFlags;

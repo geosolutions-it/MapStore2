@@ -2145,7 +2145,8 @@
         },
         "newMapDialog": {
             "title": "Wählen Sie einen Kontext",
-            "skipButtonTitle": "Überspringen"
+            "noContexts": "Keine Kontexte gefunden",
+            "filterPlaceholder": "Suchkontexte..."
         },
         "plugins": {
           "About": {

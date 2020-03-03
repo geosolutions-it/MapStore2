@@ -16,8 +16,8 @@ const Rx = require('rxjs');
  * @param  {function} loadPage           A function that returns the observable that emits the page loaded. the event emitted must have at least { items [ ...items of the new page], total: the total number of results}
  * @return {Observable}                    Stream of props {with items, loading, error, total}
  */
-const loadMoreStream = (initialStream$, loadMore$, loadPage, {dataProp = "items", throttleTime = 500} = {}) =>
-    initialStream$.switchMap(searchParams =>
+const loadMoreStream = (initialStream$, loadMore$, loadPage, {dataProp = "items", initialStreamDebounce = 0, throttleTime = 500} = {}) =>
+    initialStream$.take(1).concat(initialStream$.debounceTime(initialStreamDebounce)).switchMap(searchParams =>
         loadPage(searchParams, 0)
             .startWith({ loading: true })
             .concat(Rx.Observable.of({loading: false}))
@@ -77,13 +77,14 @@ const loadMoreStream = (initialStream$, loadMore$, loadPage, {dataProp = "items"
  * @param {function} loadPage the function that returns the stream. It must accept 2 params: `searchParams`, `page`.
  */
 
-module.exports = (loadPage = () => Rx.Observable.empty()) => mapPropsStream((props$) => {
+module.exports = (loadPage = () => Rx.Observable.empty(), options) => mapPropsStream((props$) => {
     const { handler: onLoadMore, stream: loadMore$ } = createEventHandler();
     const { handler: loadFirst, stream: initialStream$ } = createEventHandler();
     return props$.combineLatest(loadMoreStream(
         initialStream$,
         loadMore$,
-        loadPage
+        loadPage,
+        options
     ).startWith({}), (a, b) => ({
         ...a,
         ...b,

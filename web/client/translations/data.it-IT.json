@@ -2146,7 +2146,8 @@
         },
         "newMapDialog": {
             "title": "Seleziona un contesto",
-            "skipButtonTitle": "Salta"
+            "noContexts": "Nessun contesto trovato",
+            "filterPlaceholder": "Cerca contesti..."
         },
         "plugins": {
           "About": {

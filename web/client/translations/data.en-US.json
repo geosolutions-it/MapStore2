@@ -253,6 +253,8 @@
             "featuredMaps": "Featured"
         },
         "newMap": "New Map",
+        "newMapEmpty": "Empty Map",
+        "newMapContext": "Existing Context",
 		"maps": {
             "title": "Maps",
             "addToFeaturedMaps": "Add to featured maps",
@@ -2149,7 +2151,8 @@
         },
         "newMapDialog": {
             "title": "Select a context",
-            "skipButtonTitle": "Skip"
+            "noContexts": "No contexts found",
+            "filterPlaceholder": "Search contexts..."
         },
         "plugins": {
           "About": {

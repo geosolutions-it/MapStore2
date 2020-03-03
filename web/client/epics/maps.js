@@ -30,6 +30,7 @@ const {
 } = require('../actions/currentMap');
 const {closeFeatureGrid} = require('../actions/featuregrid');
 const {toggleControl} = require('../actions/controls');
+const {setTabsHidden} = require('../actions/contenttabs');
 const {
     mapPermissionsFromIdSelector, mapThumbnailsUriFromIdSelector,
     mapDetailsUriFromIdSelector,
@@ -318,6 +319,21 @@ const loadMapsOnSearchFilterChange = (action$, store) =>
             );
         });
 
+const hideTabsOnSearchFilterChange = (action$) =>
+    action$.ofType(SEARCH_FILTER_CHANGED, SEARCH_FILTER_CLEAR_ALL)
+        .filter(({filter}) => !filter || filter === 'contexts')
+        .switchMap(({filterData}) => Rx.Observable.of(
+            setTabsHidden(
+                (filterData || []).length === 0 ? {
+                    geostories: false,
+                    dashboards: false
+                } : {
+                    geostories: true,
+                    dashboards: true
+                }
+            )
+        ));
+
 const mapsLoadContextsEpic = (action$) =>
     action$.ofType(LOAD_CONTEXTS)
         .distinctUntilChanged((prev, cur) =>
@@ -520,6 +536,7 @@ module.exports = {
     deleteMapAndAssociatedResourcesEpic,
     getMapsResourcesByCategoryEpic,
     loadMapsOnSearchFilterChange,
+    hideTabsOnSearchFilterChange,
     mapsLoadContextsEpic,
     mapsLoadContextsOnLogin,
     setDetailsChangedEpic,

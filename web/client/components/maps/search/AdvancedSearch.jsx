@@ -7,6 +7,7 @@
 */
 
 import React from 'react';
+import { zip, every } from 'lodash';
 
 import Select from '../../misc/PagedSelect';
 import Message from '../../I18N/Message';
@@ -60,12 +61,15 @@ export default ({
                     if ((searchText || '*') !== (contexts.searchText || '*')) {
                         onLoadContexts(searchText, {params: {start: 0, limit: contexts.limit}}, 500);
                     }
+                    return searchText;
                 }}
                 value={(searchFilter.contexts || []).map(context => contextToOption(context))}
                 options={(contexts.results || []).map(context => contextToOption(context, searchFilter.contexts, loadFlags.loadingContexts))}
+                valueComparator={(oldValue = [], newValue = []) => oldValue.length === newValue.length && every(zip(oldValue, newValue),
+                    ([{label: oldLabel}, {label: newLabel}]) => oldLabel === newLabel
+                )}
                 applyOptionsFilter={false}
                 removeSelected={false}
-                onSelectResetsInput={false}
                 onBlurResetsInput={false}
                 closeOnSelect={false}
                 pagination={{

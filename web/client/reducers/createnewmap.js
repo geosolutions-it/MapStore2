@@ -8,8 +8,8 @@
 
 import {
     SHOW_NEW_MAP_DIALOG,
-    SET_CONTEXTS,
     SET_NEW_MAP_CONTEXT,
+    HAS_CONTEXTS,
     LOADING
 } from '../actions/createnewmap';
 
@@ -20,11 +20,11 @@ export default (state = {}, action) => {
     case SHOW_NEW_MAP_DIALOG: {
         return set('showNewMapDialog', action.show, state);
     }
-    case SET_CONTEXTS: {
-        return set('contexts', action.contexts, state);
-    }
     case SET_NEW_MAP_CONTEXT: {
         return set('newMapContext', action.context, state);
+    }
+    case HAS_CONTEXTS: {
+        return set('hasContexts', action.value, state);
     }
     case LOADING: {
         // anyway sets loading to true

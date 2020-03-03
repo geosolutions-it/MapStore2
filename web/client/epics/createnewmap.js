@@ -7,35 +7,33 @@
  */
 
 import Rx from 'rxjs';
-import { values } from 'lodash';
 import { push } from 'connected-react-router';
 
 import {
-    SHOW_NEW_MAP_DIALOG,
     CREATE_NEW_MAP,
-    setContexts,
     loading,
-    showNewMapDialog
+    showNewMapDialog,
+    hasContexts
 } from '../actions/createnewmap';
+import { MAPS_LOAD_MAP } from '../actions/maps';
 
 import { mapTypeSelector } from '../selectors/maptype';
 
 import { getResources } from '../api/persistence';
 import { wrapStartStop } from '../observables/epics';
 
-export const loadContextsOnNewMapEpic = (action$) => action$
-    .ofType(SHOW_NEW_MAP_DIALOG)
-    .filter(({show}) => show)
+export const checkContextsOnMapLoad = (action$) => action$
+    .ofType(MAPS_LOAD_MAP)
     .switchMap(() => getResources({
         category: 'CONTEXT',
         options: {
             params: {
                 start: 0,
-                limit: 10000
+                limit: 1
             }
         }
-    }).map(response => response.totalCount === 1 ? [response.results] : values(response.results))
-        .switchMap(contexts => Rx.Observable.of(setContexts(contexts)))
+    }).map(response => response.totalCount)
+        .switchMap((totalCount = 0) => Rx.Observable.of(hasContexts(totalCount > 0)))
         .let(wrapStartStop(
             loading(true, 'newMapDialog'),
             loading(false, 'newMapDialog'),

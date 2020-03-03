@@ -42,12 +42,7 @@ const ConfigUtils = require('../utils/ConfigUtils');
 */
 const SearchBar = connect((state) => ({
     className: "maps-search",
-    hideOnBlur: false,
     placeholderMsgId: "maps.search",
-    typeAhead: false,
-    splitTools: false,
-    showOptions: false,
-    isSearchClickable: true,
     start: state && state.maps && state.maps.start,
     limit: state && state.maps && state.maps.limit,
     searchText: state.maps && state.maps.searchText !== '*' && state.maps.searchText || "",
@@ -68,11 +63,9 @@ const SearchBar = connect((state) => ({
     onSearchFilterClearAll: searchFilterClearAll,
     onLoadContexts: loadContexts
 }, (stateProps, dispatchProps, ownProps) => {
-
     return {
         ...stateProps,
         ...ownProps,
-        showContextSearchOption: true,
         onSearch: (text) => {
             let limit = stateProps.limit;
             dispatchProps.onSearch(text, {start: 0, limit});
@@ -86,7 +79,7 @@ const SearchBar = connect((state) => ({
         onSearchFilterClearAll: dispatchProps.onSearchFilterClearAll,
         onLoadContexts: dispatchProps.onLoadContexts
     };
-})(require("../components/mapcontrols/search/SearchBar"));
+})(require("../components/maps/search/SearchBar").default);
 
 module.exports = {
     MapSearchPlugin: SearchBar,

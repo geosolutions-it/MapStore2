@@ -1,5 +1,26 @@
+.create-new-map-container .dropdown-toggle {
+    height: 52px;
+}
+
 .new-map-dialog {
+    display: flex;
+    flex-direction: column;
     height: 100%;
+
+    .empty-state-container {
+        h1 {
+            font-size: 15px;
+        }
+    }
+
+    .new-map-dialog-list-container {
+        height: inherit;
+        overflow-y: auto;
+    }
+
+    .new-map-dialog-filter-container {
+        padding: 0 8px 8px 8px;
+    }
 
     .new-map-preview {
         display: flex;

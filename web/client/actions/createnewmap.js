@@ -8,7 +8,7 @@
 
 export const SHOW_NEW_MAP_DIALOG = 'CREATENEWMAP:SHOW_NEW_MAP_DIALOG';
 export const CREATE_NEW_MAP = 'CREATENEWMAP:CREATE_NEW_MAP';
-export const SET_CONTEXTS = 'CREATENEWMAP:SET_CONTEXTS';
+export const HAS_CONTEXTS = 'CREATENEWMAP:HAS_CONTEXTS';
 export const SET_NEW_MAP_CONTEXT = 'CREATENEWMAP:SET_NEW_MAP_CONTEXT';
 export const LOADING = 'CREATENEWMAP:LOADING';
 
@@ -22,9 +22,9 @@ export const createNewMap = (context) => ({
     context
 });
 
-export const setContexts = (contexts) => ({
-    type: SET_CONTEXTS,
-    contexts
+export const hasContexts = (value) => ({
+    type: HAS_CONTEXTS,
+    value
 });
 
 export const setNewMapContext = (context) => ({

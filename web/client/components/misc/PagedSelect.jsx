@@ -7,6 +7,7 @@
  */
 
 import React from 'react';
+import { isEqual } from 'lodash';
 import { Glyphicon } from 'react-bootstrap';
 import Select from 'react-select';
 
@@ -24,13 +25,26 @@ export default ({
         loadNextPage: () => {}
     },
     applyOptionsFilter = false,
+    valueComparator = isEqual,
     ...selectProps
 }) => {
-    const selectOptionsDiv = React.useRef(null);
+    const selectOptionsDiv = React.useRef();
+    const curSelectValue = React.useRef();
+
+    // react-select resets input value if this.props.value !== nextProps.value
+    // this is a workaround for that
+    React.useEffect(() => {
+        if (curSelectValue.current === undefined) {
+            curSelectValue.current = selectProps.value;
+        } else if (!valueComparator(curSelectValue.current, selectProps.value)) {
+            curSelectValue.current = selectProps.value;
+        }
+    });
 
     return (
         <Select
             {...selectProps}
+            value={curSelectValue.current || selectProps.value}
             filterOptions={(options, filter, currentValues, props) => selectProps.filterOptions ?
                 selectProps.filterOptions(options, filter, currentValues, props) :
                 defaultFilterOptions(
@@ -55,11 +69,15 @@ export default ({
                         <div className="paged-select-bar-container">
                             <div className="paged-select-bar">
                                 {!firstPage && <Glyphicon className="prev-page-button" glyph={prevPageIcon} onClick={() => {
-                                    selectOptionsDiv.current.scrollTop = 0;
+                                    if (selectOptionsDiv.current) {
+                                        selectOptionsDiv.current.scrollTop = 0;
+                                    }
                                     loadPrevPage();
                                 }}/>}
                                 {!lastPage && <Glyphicon className="next-page-button" glyph={nextPageIcon} onClick={() => {
-                                    selectOptionsDiv.current.scrollTop = 0;
+                                    if (selectOptionsDiv.current) {
+                                        selectOptionsDiv.current.scrollTop = 0;
+                                    }
                                     loadNextPage();
                                 }}/>}
                             </div>

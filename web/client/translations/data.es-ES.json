@@ -2145,7 +2145,8 @@
         },
         "newMapDialog": {
             "title": "Selecciona un contexto",
-            "skipButtonTitle": "Omitir"
+            "noContexts": "No se encontraron contextos",
+            "filterPlaceholder": "Contextos de búsqueda..."
         },
         "plugins": {
           "About": {
