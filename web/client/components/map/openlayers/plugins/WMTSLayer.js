@@ -19,7 +19,8 @@ import MapUtils from '../../../../utils/MapUtils';
 import { isVectorFormat} from '../../../../utils/VectorTileUtils';
 import urlParser from 'url';
 
-import {get} from 'ol/proj';
+import { get, getTransform } from 'ol/proj';
+import { applyTransform, getIntersection, isEmpty } from 'ol/extent';
 import TileLayer from 'ol/layer/Tile';
 import VectorTileLayer from 'ol/layer/VectorTile';
 import WMTS from 'ol/source/WMTS';
@@ -90,6 +91,20 @@ const createLayer = options => {
         && tileMatrixSet.TileMatrix
             .map(({ TileWidth, TileHeight } = {}) => ([parseInt(TileWidth, 10), parseInt(TileHeight, 10)]));
 
+    // if the layer comes with bbox, it can be used as extent to define the tile source's extent (and avoid to load tiles out of this area). Otherwise the default extent of the projection will be used.
+    const bbox = options.bbox;
+    const layerExtent = bbox
+        ? applyTransform([
+            parseFloat(bbox.bounds.minx),
+            parseFloat(bbox.bounds.miny),
+            parseFloat(bbox.bounds.maxx),
+            parseFloat(bbox.bounds.maxy)
+        ], getTransform(bbox.crs, options.srs))
+        : projection.getExtent();
+    let extent = getIntersection(layerExtent, projection.getExtent());
+    if (isEmpty(extent)) {
+        extent = projection.getExtent();
+    }
     const queryParameters = {};
     urls.forEach(url => SecurityUtils.addAuthenticationParameter(url, queryParameters, options.securityToken));
     const queryParametersString = urlParser.format({ query: { ...queryParameters } });
@@ -118,7 +133,7 @@ const createLayer = options => {
             resolutions,
             matrixIds,
             sizes,
-            extent: projection.getExtent(),
+            extent,
             tileSizes,
             tileSize: !tileSizes && (options.tileSize || [TILE_SIZE, TILE_SIZE])
         }),
