@@ -18,7 +18,9 @@ const {
     uploadPlugin, UPLOAD_PLUGIN,
     uploadPluginError, UPLOAD_PLUGIN_ERROR,
     pluginUploaded, PLUGIN_UPLOADED,
-    pluginUploading, UPLOADING_PLUGIN
+    pluginUploading, UPLOADING_PLUGIN,
+    showBackToPageConfirmation, BACK_TO_PAGE_SHOW_CONFIRMATION,
+    loadExtensions, LOAD_EXTENSIONS
 } = require('../contextcreator');
 
 describe('contextcreator actions', () => {
@@ -80,5 +82,16 @@ describe('contextcreator actions', () => {
         expect(retval).toExist();
         expect(retval.type).toBe(PLUGIN_UPLOADED);
         expect(retval.plugins.length).toBe(1);
+    });
+    it('showBackToPageConfirmation', () => {
+        const retval = showBackToPageConfirmation(true);
+        expect(retval).toExist();
+        expect(retval.show).toBe(true);
+        expect(retval.type).toBe(BACK_TO_PAGE_SHOW_CONFIRMATION);
+    });
+    it('loadExtensions', () => {
+        const retval = loadExtensions([{}]);
+        expect(retval).toExist();
+        expect(retval.type).toBe(LOAD_EXTENSIONS);
     });
 });

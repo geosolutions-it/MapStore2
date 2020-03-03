@@ -29,7 +29,6 @@ module.exports = {
         AutoMapUpdatePlugin: require('../plugins/AutoMapUpdate'),
         BackgroundSelectorPlugin: require('../plugins/BackgroundSelector'),
         BackgroundSwitcherPlugin: require('../plugins/BackgroundSwitcher'),
-        BackToPagePlugin: require('../plugins/BackToPage').default,
         BurgerMenuPlugin: require('../plugins/BurgerMenu'),
         CRSSelectorPlugin: require('../plugins/CRSSelector'),
         ContentTabs: require('../plugins/ContentTabs'),
@@ -118,8 +117,8 @@ module.exports = {
         VersionPlugin: require('../plugins/Version'),
         WFSDownloadPlugin: require('../plugins/WFSDownload'),
         WidgetsBuilderPlugin: require('../plugins/WidgetsBuilder').default,
-        WidgetsPlugin: require('../plugins/Widgets'),
-        WidgetsTrayPlugin: require('../plugins/WidgetsTray'),
+        WidgetsPlugin: require('../plugins/Widgets').default,
+        WidgetsTrayPlugin: require('../plugins/WidgetsTray').default,
         ZoomAllPlugin: require('../plugins/ZoomAll'),
         ZoomInPlugin: require('../plugins/ZoomIn'),
         ZoomOutPlugin: require('../plugins/ZoomOut')

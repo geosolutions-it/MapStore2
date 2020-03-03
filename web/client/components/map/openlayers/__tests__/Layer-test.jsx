@@ -73,7 +73,7 @@ const sampleTileMatrixConfig900913 = {
                     "MatrixHeight": "1",
                     "MatrixWidth": "1",
                     "ScaleDenominator": "5.590822639508929E8",
-                    "TileHeight": "256",
+                    "TileHeight": "512",
                     "TileWidth": "256",
                     "TopLeftCorner": "-2.003750834E7 2.0037508E7",
                     "ows:Identifier": "EPSG:900913:0"
@@ -82,7 +82,7 @@ const sampleTileMatrixConfig900913 = {
                     "MatrixHeight": "2",
                     "MatrixWidth": "2",
                     "ScaleDenominator": "2.7954113197544646E8",
-                    "TileHeight": "256",
+                    "TileHeight": "512",
                     "TileWidth": "256",
                     "TopLeftCorner": "-2.003750834E7 2.0037508E7",
                     "ows:Identifier": "EPSG:900913:1"
@@ -91,7 +91,7 @@ const sampleTileMatrixConfig900913 = {
                     "MatrixHeight": "4",
                     "MatrixWidth": "4",
                     "ScaleDenominator": "1.3977056598772323E8",
-                    "TileHeight": "256",
+                    "TileHeight": "512",
                     "TileWidth": "256",
                     "TopLeftCorner": "-2.003750834E7 2.0037508E7",
                     "ows:Identifier": "EPSG:900913:2"
@@ -524,6 +524,30 @@ describe('Openlayers layer', () => {
         expect(map.getLayers().item(0).getSource().getUrl()).toExist();
         expect(map.getLayers().item(0).getSource().getAttributions()).toNotExist();
     });
+    it('single tile wms layer for openlayers map sends tiled=false', (done) => {
+        var options = {
+            "type": "wms",
+            "visibility": true,
+            "name": "nurc:Arc_Sample",
+            "group": "Meteo",
+            "format": "image/png",
+            "singleTile": true,
+            "url": "http://sample.server/geoserver/wms"
+        };
+        // create layers
+        var layer = ReactDOM.render(
+            <OpenlayersLayer type="wms"
+                options={options} map={map} />, document.getElementById("container"));
+
+        expect(layer).toExist();
+        const loadFun = (image, src) => {
+            const tiled = src.match(/TILED=([^&]+)/i)[1];
+            expect(tiled.toLowerCase()).toBe("false");
+            done();
+        };
+        map.getLayers().item(0).getSource().setImageLoadFunction(loadFun);
+        map.getLayers().item(0).getSource().refresh();
+    });
     it('creates a single tile credits', () => {
         var options = {
             "type": "wms",
@@ -670,6 +694,108 @@ describe('Openlayers layer', () => {
         const wmtsLayer = map.getLayers().item(0);
         const expectedResolutions = sampleTileMatrixConfig900913.tileMatrixSet[0].TileMatrix.map( e => e.ScaleDenominator * 0.28E-3);
         wmtsLayer.getSource().getTileGrid().getResolutions().map((v, i) => expect(v).toBe(expectedResolutions[i]));
+    });
+    it('test wmts sizes and tile sizes', () => {
+        var options = {
+            "type": "wmts",
+            "visibility": true,
+            "name": "nurc:Arc_Sample",
+            "group": "Meteo",
+            "format": "image/png",
+            ...sampleTileMatrixConfig900913,
+            "url": "http://sample.server/geoserver/gwc/service/wmts"
+        };
+        // create layers
+        const layer = ReactDOM.render(
+            <OpenlayersLayer type="wmts"
+                options={options} map={map} />, document.getElementById("container"));
+
+
+        expect(layer).toExist();
+        // count layers
+        expect(map.getLayers().getLength()).toBe(1);
+
+        const wmtsLayer = map.getLayers().item(0);
+        expect(wmtsLayer.getSource().getTileGrid().getTileSize(1)[0]).toBe(256);
+        expect(wmtsLayer.getSource().getTileGrid().getTileSize(1)[1]).toBe(512);
+        expect(wmtsLayer.getSource().getTileGrid().getFullTileRange(1).minX).toBe(0);
+        expect(wmtsLayer.getSource().getTileGrid().getFullTileRange(1).maxX).toBe(1);
+        expect(wmtsLayer.getSource().getTileGrid().getFullTileRange(1).minY).toBe(0);
+        expect(wmtsLayer.getSource().getTileGrid().getFullTileRange(1).maxY).toBe(1);
+        expect(wmtsLayer.getSource().getTileGrid().getFullTileRange(2).minX).toBe(0);
+        expect(wmtsLayer.getSource().getTileGrid().getFullTileRange(2).maxX).toBe(3);
+        expect(wmtsLayer.getSource().getTileGrid().getFullTileRange(2).minY).toBe(0);
+        expect(wmtsLayer.getSource().getTileGrid().getFullTileRange(2).maxY).toBe(3);
+    });
+    it('test wmts layer extent', () => {
+        var options = {
+            "type": "wmts",
+            "visibility": true,
+            "name": "nurc:Arc_Sample",
+            "group": "Meteo",
+            "format": "image/png",
+            "bbox": {
+                crs: "EPSG:4326",
+                bounds: {
+                    minx: 10,
+                    maxx: 15,
+                    miny: 40,
+                    maxy: 45
+                }
+            },
+            ...sampleTileMatrixConfig900913,
+            "url": "http://sample.server/geoserver/gwc/service/wmts"
+        };
+        // create layers
+        const layer = ReactDOM.render(
+            <OpenlayersLayer type="wmts"
+                options={options} map={map} />, document.getElementById("container"));
+
+
+        expect(layer).toExist();
+        // count layers
+        expect(map.getLayers().getLength()).toBe(1);
+
+        const wmtsLayer = map.getLayers().item(0);
+        expect(Math.floor(wmtsLayer.getSource().getTileGrid().getExtent()[0])).toBe(1113194);
+        expect(Math.floor(wmtsLayer.getSource().getTileGrid().getExtent()[1])).toBe(4865942);
+        expect(Math.floor(wmtsLayer.getSource().getTileGrid().getExtent()[2])).toBe(1669792);
+        expect(Math.floor(wmtsLayer.getSource().getTileGrid().getExtent()[3])).toBe(5621521);
+    });
+    it('test wmts layer extent out of bounds', () => {
+        var options = {
+            "type": "wmts",
+            "visibility": true,
+            "name": "nurc:Arc_Sample",
+            "group": "Meteo",
+            "format": "image/png",
+            "bbox": {
+                crs: "EPSG:4326",
+                bounds: {
+                    minx: -360,
+                    maxx: 360,
+                    miny: -90,
+                    maxy: 90
+                }
+            },
+            ...sampleTileMatrixConfig900913,
+            "url": "http://sample.server/geoserver/gwc/service/wmts"
+        };
+        // create layers
+        const layer = ReactDOM.render(
+            <OpenlayersLayer type="wmts"
+                options={options} map={map} />, document.getElementById("container"));
+
+
+        expect(layer).toExist();
+        // count layers
+        expect(map.getLayers().getLength()).toBe(1);
+
+        const wmtsLayer = map.getLayers().item(0);
+        expect(Math.floor(wmtsLayer.getSource().getTileGrid().getExtent()[0])).toBe(-20037509);
+        expect(Math.floor(wmtsLayer.getSource().getTileGrid().getExtent()[1])).toBe(-20037509);
+        expect(Math.floor(wmtsLayer.getSource().getTileGrid().getExtent()[2])).toBe(20037508);
+        expect(Math.floor(wmtsLayer.getSource().getTileGrid().getExtent()[3])).toBe(20037508);
     });
     it('test fix for OL draw image (remove when OL > 5.3.0) ', () => {
         // see https://github.com/openlayers/openlayers/issues/8700
@@ -1562,6 +1688,38 @@ describe('Openlayers layer', () => {
 
         expect(spyRefresh).toHaveBeenCalled();
         expect(layer.layer.getSource().getParams().time).toBe("2019-01-01T00:00:00Z");
+    });
+    it('wms empty params not removed on update', () => {
+        var options = {
+            "type": "wms",
+            "visibility": true,
+            "name": "nurc:Arc_Sample",
+            "group": "Meteo",
+            "format": "image/png",
+            "opacity": 1.0,
+            "url": "http://sample.server/geoserver/wms",
+            "params": {
+                "cql_filter": "INCLUDE"
+            }
+        };
+        // create layers
+        var layer = ReactDOM.render(
+            <OpenlayersLayer type="wms"
+                options={options} map={map} />, document.getElementById("container"));
+
+        expect(layer).toExist();
+        // count layers
+        expect(map.getLayers().getLength()).toBe(1);
+
+        expect(layer.layer.getSource()).toExist();
+        expect(layer.layer.getSource().getParams()).toExist();
+        expect(layer.layer.getSource().getParams().STYLES).toBe("");
+
+        layer = ReactDOM.render(
+            <OpenlayersLayer type="wms"
+                options={assign({}, options, { format: "image/jpeg" })} map={map} />, document.getElementById("container"));
+
+        expect(layer.layer.getSource().getParams().STYLES).toBe("");
     });
     it('test wms security token on SLD param', () => {
         const options = {

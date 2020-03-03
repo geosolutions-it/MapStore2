@@ -20,6 +20,7 @@
             "addbtn": "Thêm vào",
             "groupName": "Tên nhóm"
         },
+        "Forbidden": "Forbidden",
         "annotations": {
             "add": "Mới",
             "addMarker": "Thêm một hình mới",
@@ -218,7 +219,9 @@
                     "title": "Lỗi tải bảng điều khiển",
                     "unknownError": "Có lỗi khi tải bảng điều khiển. Vui lòng liên hệ với quản trị viên"
                 },
-                "resourceAlreadyExists": "Một tài nguyên với tên này đã tồn tại"
+                "resourceAlreadyExists": "Một tài nguyên với tên này đã tồn tại",
+                "forbidden": "An unexpected error occured (403 Forbidden). Please contact the Administrator",
+                "forbidden405": "An unexpected error occured (405 Forbidden). Please contact the Administrator"
             },
             "loadingSpinner": "Đang tải Bảng điều khiển",
             "saveDialog": {

@@ -27,6 +27,7 @@
         "showMore": "Zeig mehr...",
         "collapse": "Kollabiert",
         "expand": "Erweitern",
+        "Forbidden": "Verboten",
         "version": {
             "label": "Version"
         },
@@ -1627,7 +1628,9 @@
                     "notFound": "Dashboard nicht gefunden",
                     "notAccessible": "Dashboard nicht zugänglich"
                 },
-                "resourceAlreadyExists": "Eine Ressource mit diesem Namen existiert bereits"
+                "resourceAlreadyExists": "Eine Ressource mit diesem Namen existiert bereits",
+                "forbidden": "Ein unerwarteter Fehler ist aufgetreten (403 Verboten). Bitte wenden Sie sich an den Administrator",
+                "forbidden405": "Ein unerwarteter Fehler ist aufgetreten (405 Verboten). Bitte wenden Sie sich an den Administrator"
             },
             "editor": {
                 "save": "Speichern Sie das Dashboard",
@@ -2317,7 +2320,7 @@
                 "pluginsFilterPlaceholder": "Plugins nach Namen filtern...",
                 "availablePlugins": "Verfügbare Plugins",
                 "enabledPlugins": "Aktivierte Plugins",
-                "availablePluginsEmpty": "Aktiviert alle verfügbaren Plugins",
+                "availablePluginsEmpty": "Alle verfügbaren Plugins sind aktiviert",
                 "enabledPluginsEmpty": "Fügen Sie der Konfiguration Plugins aus der Liste der verfügbaren Plugins hinzu",
                 "searchResultsEmpty": "Es wurden keine Plugins gefunden, die den Suchkriterien entsprechen",
                 "cfgParsingError": {
@@ -2345,8 +2348,8 @@
                 "title": "Vorlagen konfigurieren",
                 "availableTemplates": "Verfügbare Vorlagen",
                 "enabledTemplates": "Aktivierte Vorlagen",
-                "templatesFilterPlaceholder": "Vorlagen filtern",
-                "availableTemplatesEmpty": "Aktiviert alle verfügbaren Vorlagen",
+                "templatesFilterPlaceholder": "Vorlagen nach Namen filtern...",
+                "availableTemplatesEmpty": "Alle verfügbaren Vorlagen sind aktiviert",
                 "enabledTemplatesEmpty": "Fügen Sie der Konfiguration Vorlagen aus der Liste der verfügbaren Vorlagen hinzu",
                 "searchResultsEmpty": "Es wurden keine Vorlagen gefunden, die den Suchkriterien entsprechen",
                 "fileDrop": {

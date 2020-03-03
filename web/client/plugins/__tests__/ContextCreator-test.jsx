@@ -27,10 +27,15 @@ describe('ContextCreator component', () => {
         setTimeout(done);
     });
     it('default', () => {
+        const plugins = [
+            {enabled: true, title: 'title', pluginConfig: {cfg: {}}},
+            {enabled: false, title: 'title', pluginConfig: {cfg: {}}}
+        ];
         const { Plugin, actions } = getPluginForTest(ContextCreator, {
             contextcreator: {
-                stepId: 'configure-map',
-                newContext: {}
+                stepId: 'configure-plugins',
+                newContext: {},
+                plugins
             },
             map: {}
         });
@@ -45,9 +50,14 @@ describe('ContextCreator component', () => {
         expect(actions[0].destLocation).toBe("/context-manager");
     });
     it('custom destination', () => {
+        const plugins = [
+            {enabled: true, title: 'title', pluginConfig: {cfg: {}}},
+            {enabled: false, title: 'title', pluginConfig: {cfg: {}}}
+        ];
         const { Plugin, actions } = getPluginForTest(ContextCreator, {
             contextcreator: {
-                stepId: 'configure-map'
+                stepId: 'configure-plugins',
+                plugins
             },
             map: {}
         });

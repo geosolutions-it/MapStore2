@@ -35,6 +35,8 @@ const { augmentStore } = require('../../utils/StateUtils');
 
 const ErrorBoundary = require('react-error-boundary').default;
 
+const {LOAD_EXTENSIONS} = require('../../actions/contextcreator');
+
 /**
  * Standard MapStore2 application component
  *
@@ -184,8 +186,23 @@ class StandardApp extends React.Component {
     init = (config) => {
         this.store.dispatch(changeBrowserProperties(ConfigUtils.getBrowserProperties()));
         this.store.dispatch(localConfigLoaded(config));
-        this.addProjDefinitions(config);
         const locale = LocaleUtils.getUserLocale();
+        if (this.store.addActionListener) {
+            this.store.addActionListener((action) => {
+                if (action.type === LOAD_EXTENSIONS) {
+                    this.loadExtensions(ConfigUtils.getConfigProp('extensionsRegistry'), (plugins, translations) => {
+                        this.setState({
+                            pluginsRegistry: plugins
+                        });
+                        if (translations.length > 0) {
+                            ConfigUtils.setConfigProp("translationsPath", [...castArray(ConfigUtils.getConfigProp("translationsPath")), ...translations]);
+                        }
+                        this.store.dispatch(loadLocale(null, locale));
+                    });
+                }
+            });
+        }
+        this.addProjDefinitions(config);
         this.loadExtensions(ConfigUtils.getConfigProp('extensionsRegistry'), (plugins, translations) => {
             this.setState({
                 pluginsRegistry: plugins

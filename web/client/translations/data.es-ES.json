@@ -27,6 +27,7 @@
         "showMore": "Mostrar más...",
         "collapse": "Colapso",
         "expand": "Expandir",
+        "Forbidden": "Prohibido",
         "version": {
             "label": "Versión"
         },
@@ -1627,7 +1628,9 @@
                     "notFound": "Panel de control no encontrado",
                     "notAccessible": "Panel de control no accesible"
                 },
-                "resourceAlreadyExists":  "Ya existe un recurso con este nombre"
+                "resourceAlreadyExists":  "Ya existe un recurso con este nombre",
+                "forbidden": "Ocurrió un error inesperado (403 Prohibido). Por favor contacte al administrador",
+                "forbidden405": "Ocurrió un error inesperado (405 Prohibido). Por favor contacte al administrador"
             },
             "editor": {
                 "save": "Guardar el panel de control",
@@ -2317,7 +2320,7 @@
                 "pluginsFilterPlaceholder": "Filtrar complementos por nombre...",
                 "availablePlugins": "Complementos disponibles",
                 "enabledPlugins": "Complementos habilitados",
-                "availablePluginsEmpty": "Habilitado todos los complementos disponibles",
+                "availablePluginsEmpty": "Todos los complementos disponibles están habilitados",
                 "enabledPluginsEmpty": "Agregue complementos a la configuración desde la lista de complementos disponibles",
                 "searchResultsEmpty": "No se encontraron complementos que satisfagan los criterios de búsqueda.",
                 "cfgParsingError": {
@@ -2345,8 +2348,8 @@
                 "title": "Configurar plantillas",
                 "availableTemplates": "Plantillas Disponibles",
                 "enabledTemplates": "Plantillas habilitadas",
-                "templatesFilterPlaceholder": "Filtrar plantillas",
-                "availableTemplatesEmpty": "Habilitado todas las plantillas disponibles.",
+                "templatesFilterPlaceholder": "Filtrar plantillas por nombre...",
+                "availableTemplatesEmpty": "Todas las plantillas disponibles están habilitadas",
                 "enabledTemplatesEmpty": "Agregar plantillas a la configuración de la lista de plantillas disponibles",
                 "searchResultsEmpty": "No se encontraron plantillas que satisfagan los criterios de búsqueda.",
                 "fileDrop": {
