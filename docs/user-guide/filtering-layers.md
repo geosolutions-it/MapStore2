@@ -16,7 +16,7 @@ In [MapStore](https://mapstore.geo-solutions.it/mapstore/#/) it is possible to a
 
 ### Layer Filter
 
-This filter is applicable from the **Filter layer** button <img src="../img/button/filter-layer.jpg" class="ms-docbutton"/> in TOC's [Layer Toolbar](toc.md#toolbar-options) and it will persist in the following situations:
+This filter is applicable from the **Filter layer** button <img src="../img/button/filter-layer.jpg" class="ms-docbutton"/> in TOC's [Layers Toolbar](toc.md#toolbar-options) and it will persist in the following situations:
 
 * Using other tools like the [Feature Info](side-bar.md#identify-tool):
 
