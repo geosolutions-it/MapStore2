@@ -7,13 +7,16 @@
  */
 import React from 'react';
 import { compose, branch, withState } from 'recompose';
-import { Button, Glyphicon } from 'react-bootstrap';
+import { Button as ButtonRB, Glyphicon } from 'react-bootstrap';
 
 import MapView from '../../widgets/widget/MapView'; // TODO: use a external component
 import { applyDefaults } from '../../../utils/GeoStoryUtils';
 import {defaultLayerMapPreview} from '../../../utils/MediaEditorUtils';
 import Portal from '../../../components/misc/Portal';
+import tooltip from '../../../components/misc/enhancers/tooltip';
 import connectMap, {withLocalMapState, withMapEditingAndLocalMapState} from '../common/enhancers/map';
+
+const Button = tooltip(ButtonRB);
 
 export default compose(
     branch(
@@ -94,7 +97,9 @@ export default compose(
         {expandable && !editMap &&
         <Button
             className="ms-expand-media-button"
-            onClick={() => setActive(!active)}>
+            onClick={() => setActive(!active)}
+            tooltipId={active ? 'geostory.closeFullscreenMap' : 'geostory.showFullscreenMap'}
+            tooltipPosition="left">
             <Glyphicon glyph={!active ? '1-full-screen' : '1-close'}/>
         </Button>}
         </>
