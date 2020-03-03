@@ -91,6 +91,7 @@ const createLayer = options => {
         && tileMatrixSet.TileMatrix
             .map(({ TileWidth, TileHeight } = {}) => ([parseInt(TileWidth, 10), parseInt(TileHeight, 10)]));
 
+    // if the layer comes with bbox, it can be used as extent to define the tile source's extent (and avoid to load tiles out of this area). Otherwise the default extent of the projection will be used.
     const bbox = options.bbox;
     const layerExtent = bbox
         ? applyTransform([
