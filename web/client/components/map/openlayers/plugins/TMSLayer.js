@@ -16,6 +16,7 @@ import TileLayer from 'ol/layer/Tile';
 function tileXYZToOpenlayersOptions(options) {
     const { minx, miny, maxx, maxy } = get(options, "bbox.bounds", {});
     const sourceOpt = {
+        projection: options.srs,
         url: `${options.tileMapUrl}/{z}/{x}/{-y}.${options.extension}`, // TODO use resolutions
         attributions: options.attribution ? [options.attribution] : []
     };
@@ -23,21 +24,18 @@ function tileXYZToOpenlayersOptions(options) {
     const defaultTileGrid = source.getTileGrid();
 
     if (options.forceDefaultTileGrid) {
-        source.setTileGridForProjection(options.srs, new TileGrid({
+        const defaultExtent = defaultTileGrid.getExtent();
+        const newOrigin = [defaultExtent[0], defaultExtent[1]]; // minx, miny instead of top left corner, origin is bottom left.
+        const newTileGrid = new TileGrid({
             // origin must be overridden because GeoServer uses the tile-set origin and OL uses by default extent corner.
-            origin: defaultTileGrid.getOrigin(),
+            origin: newOrigin,
             extent: options.bbox && [minx, miny, maxx, maxy],
             resolutions: defaultTileGrid.getResolutions(),
             tileSize: options.tileSize
-        }));
+        });
+        source.setTileGridForProjection(options.srs, newTileGrid);
         if (options.srs === "EPSG:3857") {
-            source.setTileGridForProjection("EPSG:900913", new TileGrid({
-                // origin must be overridden because GeoServer uses the tile-set origin and OL uses by default extent corner.
-                origin: defaultTileGrid.getOrigin(),
-                extent: options.bbox && [minx, miny, maxx, maxy],
-                resolutions: defaultTileGrid.getResolutions(),
-                tileSize: options.tileSize
-            }));
+            source.setTileGridForProjection("EPSG:900913", newTileGrid);
         }
     } else {
         source.setTileGridForProjection(options.srs, new TileGrid({

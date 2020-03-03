@@ -40,7 +40,7 @@ export default ({
     onChangeServiceFormat = () => {},
     onChangeMetadataTemplate = () => {},
     onToggleAdvancedSettings = () => { },
-    onChangeAutoload = () => {},
+    onChangeServiceProperty = () => {},
     onToggleTemplate = () => {},
     onToggleThumbnail = () => {},
     onAddService = () => {},
@@ -69,7 +69,7 @@ export default ({
             onChangeServiceFormat={onChangeServiceFormat}
             onChangeMetadataTemplate={onChangeMetadataTemplate}
             onToggleAdvancedSettings={onToggleAdvancedSettings}
-            onChangeAutoload={onChangeAutoload}
+            onChangeServiceProperty={onChangeServiceProperty}
             onToggleTemplate={onToggleTemplate}
             onToggleThumbnail={onToggleThumbnail}
         />

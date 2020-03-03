@@ -41,7 +41,7 @@ export const CHANGE_METADATA_TEMPLATE = 'CATALOG:CHANGE_METADATA_TEMPLATE';
 export const CHANGE_TITLE = 'CATALOG:CHANGE_TITLE';
 export const CHANGE_TEXT = 'CATALOG:CHANGE_TEXT';
 export const CHANGE_TYPE = 'CATALOG:CHANGE_TYPE';
-export const CHANGE_AUTOLOAD = 'CATALOG:CHANGE_AUTOLOAD';
+export const CHANGE_SERVICE_PROPERTY = "CATALOG:CHANGE_SERVICE_PROPERTY";
 export const CHANGE_SERVICE_FORMAT = 'CATALOG:CHANGE_SERVICE_FORMAT';
 export const FOCUS_SERVICES_LIST = 'CATALOG:FOCUS_SERVICES_LIST';
 export const CHANGE_URL = 'CATALOG:CHANGE_URL';
@@ -146,10 +146,12 @@ export function changeText(text) {
         text
     };
 }
-export function changeAutoload(autoload) {
+
+export function changeServiceProperty(property, value) {
     return {
-        type: CHANGE_AUTOLOAD,
-        autoload
+        type: CHANGE_SERVICE_PROPERTY,
+        property,
+        value
     };
 }
 export function changeServiceFormat(format) {

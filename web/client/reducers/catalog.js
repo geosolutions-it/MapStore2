@@ -16,7 +16,7 @@ const {
     CHANGE_CATALOG_MODE,
     CHANGE_TITLE,
     CHANGE_TEXT,
-    CHANGE_AUTOLOAD,
+    CHANGE_SERVICE_PROPERTY,
     CHANGE_TYPE,
     CHANGE_URL,
     CHANGE_SERVICE_FORMAT,
@@ -124,12 +124,13 @@ function catalog(state = {
         return set("openCatalogServiceList", action.status, state);
     case CHANGE_TEXT:
         return set("searchOptions.text", action.text, state);
+    case CHANGE_SERVICE_PROPERTY: {
+        return  set(`newService["${action.property}"]`, action.value, state);
+    }
     case CHANGE_TITLE:
         return set("newService.title", action.title, state);
     case CHANGE_URL:
         return set("newService.url", action.url, state);
-    case CHANGE_AUTOLOAD:
-        return set("newService.autoload", action.autoload, state);
     case CHANGE_SERVICE_FORMAT:
         return set("newService.format", action.format, state);
     case CHANGE_TYPE: {

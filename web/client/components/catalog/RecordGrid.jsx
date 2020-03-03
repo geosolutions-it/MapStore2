@@ -40,6 +40,7 @@ class RecordGrid extends React.Component {
         clearModal: PropTypes.func,
         onAddBackground: PropTypes.func,
         showTemplate: PropTypes.bool,
+        service: PropTypes.object,
         defaultFormat: PropTypes.string,
         formatOptions: PropTypes.array,
         layerBaseConfig: PropTypes.object
@@ -80,6 +81,7 @@ class RecordGrid extends React.Component {
                     onError={this.props.onError}
                     catalogURL={this.props.catalogURL}
                     catalogType={this.props.catalogType}
+                    service={this.props.service}
                     showTemplate={this.props.showTemplate}
                     record={record}
                     authkeyParamNames={this.props.authkeyParamNames}

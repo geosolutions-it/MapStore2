@@ -21,14 +21,14 @@ export default ({
     service,
     onChangeServiceFormat = () => { },
     onChangeMetadataTemplate = () => { },
-    onChangeAutoload = () => { },
+    onChangeServiceProperty = () => { },
     onToggleTemplate = () => { },
     onToggleThumbnail = () => { }
 }) => (
     <div>
         <FormGroup controlId="autoload" key="autoload">
             <Col xs={12}>
-                <Checkbox value="autoload" onChange={(e) => onChangeAutoload(e.target.checked)}
+                <Checkbox value="autoload" onChange={(e) => onChangeServiceProperty("autoload", e.target.checked)}
                     checked={!isNil(service.autoload) ? service.autoload : false}>
                     <Message msgId="catalog.autoload" />
                 </Checkbox>

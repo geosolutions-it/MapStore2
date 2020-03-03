@@ -18,7 +18,7 @@ import { getTileMap } from '../../../api/TMS';
 import { tmsToLayer } from '../../../utils/CatalogUtils';
 
 
-export default ({ record, children, addLayer = () => { }, ...props }) => {
+export default ({ record, service, children, addLayer = () => { }, ...props }) => {
     const [loading, setLoading] = useState(false);
     return (<Button
         disabled={loading}
@@ -26,7 +26,7 @@ export default ({ record, children, addLayer = () => { }, ...props }) => {
         onClick={() => {
             setLoading(true);
             getTileMap(record.tileMapUrl).then( tileMap => {
-                addLayer(tmsToLayer(record, tileMap));
+                addLayer(tmsToLayer(record, tileMap, service));
                 setLoading(false);
             });
         }}>

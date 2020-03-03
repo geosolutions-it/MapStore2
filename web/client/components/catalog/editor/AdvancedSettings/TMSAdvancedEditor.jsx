@@ -10,20 +10,25 @@ import { isNil } from 'lodash';
 
 import Message from "../../../I18N/Message";
 import { FormGroup, Checkbox, Col } from "react-bootstrap";
+import InfoPopover from '../../../widgets/widget/InfoPopover';
 
 /**
  * Common Advanced settings form, used by WMS/CSW/WMTS
  */
 export default ({
     service,
-    onChangeAutoload = () => { }
+    onChangeServiceProperty = () => { }
 }) => (
     <div>
         <FormGroup controlId="autoload" key="autoload">
             <Col xs={12}>
-                <Checkbox value="autoload" onChange={(e) => onChangeAutoload(e.target.checked)}
+                <Checkbox value="autoload" onChange={(e) => onChangeServiceProperty("autoload", e.target.checked)}
                     checked={!isNil(service.autoload) ? service.autoload : false}>
                     <Message msgId="catalog.autoload" />
+                </Checkbox>
+                <Checkbox value="forceDefaultTileGrid" onChange={(e) => onChangeServiceProperty("forceDefaultTileGrid", e.target.checked)}
+                    checked={!isNil(service.forceDefaultTileGrid) ? service.forceDefaultTileGrid : false}>
+                    <Message msgId="catalog.tms.forceDefaultTileGrid" />&nbsp;<InfoPopover text={<Message msgId="catalog.tms.forceDefaultTileGridDescription" />} />
                 </Checkbox>
             </Col>
         </FormGroup>

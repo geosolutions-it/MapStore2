@@ -20,6 +20,7 @@ const searchAndPaginate = (json = {}, startPosition, maxRecords, text, info = {}
 
     const layers = castArray(get(json, 'TileMapService.TileMaps.TileMap', []));
     const { projection } = info;
+    const allSRS = get(info, 'options.service.allSRS'); // this option allows to show also other layers
     const filteredLayers = layers
         .map(({ $ = {} }) => ({
             ...$, // get only the xml attributes
@@ -27,7 +28,7 @@ const searchAndPaginate = (json = {}, startPosition, maxRecords, text, info = {}
             identifier: cleanAuthParamsFromURL($.href), // add identifier for the layer
             tmsUrl: cleanAuthParamsFromURL(json.url) // Service URL
         }))
-        .filter(({ srs }) => projection ? isSameSRS(srs, projection) : true)
+        .filter(({ srs }) => (projection && !allSRS) ? isSameSRS(srs, projection) : true)
         .filter(({ title = "", srs = "" } = {}) => !text
             || title.toLowerCase().indexOf(text.toLowerCase()) !== -1
             || srs.toLowerCase().indexOf(text.toLowerCase()) !== -1

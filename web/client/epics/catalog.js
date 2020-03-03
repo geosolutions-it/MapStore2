@@ -7,7 +7,7 @@
 */
 
 import * as Rx from 'rxjs';
-import {head, isArray, isString, isObject, keys} from 'lodash';
+import { head, isArray, isString, isObject, keys } from 'lodash';
 import {
     ADD_SERVICE,
     ADD_LAYERS_FROM_CATALOGS,
@@ -28,12 +28,12 @@ import {
     textSearch,
     changeSelectedService
 } from '../actions/catalog';
-import {showLayerMetadata, addLayer} from '../actions/layers';
-import {error, success} from '../actions/notifications';
-import {SET_CONTROL_PROPERTY, setControlProperties} from '../actions/controls';
-import {closeFeatureGrid} from '../actions/featuregrid';
-import {purgeMapInfoResults, hideMapinfoMarker} from '../actions/mapInfo';
-import {allowBackgroundsDeletion} from '../actions/backgroundselector';
+import { showLayerMetadata, addLayer } from '../actions/layers';
+import { error, success } from '../actions/notifications';
+import { SET_CONTROL_PROPERTY, setControlProperties } from '../actions/controls';
+import { closeFeatureGrid } from '../actions/featuregrid';
+import { purgeMapInfoResults, hideMapinfoMarker } from '../actions/mapInfo';
+import { allowBackgroundsDeletion } from '../actions/backgroundselector';
 import {
     authkeyParamNameSelector,
     delayAutoSearchSelector,
@@ -45,9 +45,9 @@ import {
     searchOptionsSelector,
     catalogSearchInfoSelector
 } from '../selectors/catalog';
-import {metadataSourceSelector} from '../selectors/backgroundselector';
-import {currentMessagesSelector} from "../selectors/locale";
-import {getSelectedLayer} from '../selectors/layers';
+import { metadataSourceSelector } from '../selectors/backgroundselector';
+import { currentMessagesSelector } from "../selectors/locale";
+import { getSelectedLayer } from '../selectors/layers';
 import axios from '../libs/ajax';
 import {
     buildSRSMap,
@@ -73,9 +73,9 @@ export default (API) => ({
      */
     recordSearchEpic: (action$, store) =>
         action$.ofType(TEXT_SEARCH)
-            .switchMap(({format, url, startPosition, maxRecords, text, options}) => {
-                return Rx.Observable.defer( () =>
-                    API[format].textSearch(url, startPosition, maxRecords, text, {options, ...catalogSearchInfoSelector(store.getState())})
+            .switchMap(({ format, url, startPosition, maxRecords, text, options }) => {
+                return Rx.Observable.defer(() =>
+                    API[format].textSearch(url, startPosition, maxRecords, text, { options, ...catalogSearchInfoSelector(store.getState()) })
                 )
                     .switchMap((result) => {
                         if (result.error) {
@@ -101,31 +101,31 @@ export default (API) => ({
     */
     addLayersFromCatalogsEpic: (action$, store) =>
         action$.ofType(ADD_LAYERS_FROM_CATALOGS)
-            .filter(({layers, sources}) => isArray(layers) && isArray(sources) && layers.length && layers.length === sources.length)
+            .filter(({ layers, sources }) => isArray(layers) && isArray(sources) && layers.length && layers.length === sources.length)
             // maxRecords is 4 (by default), but there can be a possibility that the record desired is not among
             // the results. In that case a more detailed search with full record name can be helpful
-            .switchMap(({layers, sources, options, startPosition = 1, maxRecords = 4 }) => {
+            .switchMap(({ layers, sources, options, startPosition = 1, maxRecords = 4 }) => {
                 const state = store.getState();
                 const addLayerOptions = options || searchOptionsSelector(state);
                 const services = servicesSelector(state);
                 const actions = layers
                     .filter((l, i) => !!services[sources[i]]) // ignore wrong catalog name
                     .map((l, i) => {
-                        const {type: format, url} = services[sources[i]];
+                        const { type: format, url } = services[sources[i]];
                         const text = layers[i];
-                        return Rx.Observable.defer( () =>
-                            API[format].textSearch(url, startPosition, maxRecords, text, addLayerOptions).catch(() => ({results: []}))
-                        ).map(r => ({...r, format, url, text}));
+                        return Rx.Observable.defer(() =>
+                            API[format].textSearch(url, startPosition, maxRecords, text, addLayerOptions).catch(() => ({ results: [] }))
+                        ).map(r => ({ ...r, format, url, text }));
                     });
                 return Rx.Observable.forkJoin(actions)
                     .switchMap((results) => {
                         if (isArray(results) && results.length) {
                             return Rx.Observable.of(results.map(r => {
-                                const {format, url, text, ...result} = r;
+                                const { format, url, text, ...result } = r;
                                 const locales = currentMessagesSelector(state);
                                 const records = getCatalogRecords(format, result, addLayerOptions, locales) || [];
                                 const record = head(records.filter(rec => rec.identifier === text)); // exact match of text and record identifier
-                                const {wms, wmts} = extractOGCServicesReferences(record);
+                                const { wms, wmts } = extractOGCServicesReferences(record);
                                 let layer = {};
                                 const layerBaseConfig = {}; // DO WE NEED TO FETCH IT FROM STATE???
                                 const authkeyParamName = authkeyParamNameSelector(state);
@@ -150,7 +150,7 @@ export default (API) => ({
                                         removeParams: authkeyParamName
                                     }, layerBaseConfig);
                                 } else {
-                                    const {esri} = extractEsriReferences(record);
+                                    const { esri } = extractEsriReferences(record);
                                     if (esri) {
                                         layer = esriToLayer(record, layerBaseConfig);
                                     }
@@ -178,7 +178,7 @@ export default (API) => ({
                 }
                 return Rx.Observable.empty();
             })
-            .catch( () => {
+            .catch(() => {
                 return Rx.Observable.empty();
             }),
     /**
@@ -217,7 +217,7 @@ export default (API) => ({
                                 notification = warningMessage;
                             }
                             if (result.error || result.data === "") {
-                                return {notification: errorMessage, addNewService};
+                                return { notification: errorMessage, addNewService };
                             }
                             if (newService.title !== "" && newService.url !== "") {
                                 notification = warningMessage;
@@ -238,7 +238,7 @@ export default (API) => ({
                                     });
                                 }
                             }
-                            return {notification, addNewService};
+                            return { notification, addNewService };
                         }))
                     .switchMap((actions) => {
                         return actions.addNewService !== null ? Rx.Observable.of(actions.notification, actions.addNewService) : Rx.Observable.of(actions.notification);
@@ -326,18 +326,18 @@ export default (API) => ({
              * it trigger search automatically after a delay, default is 1s
              * it uses layersSearch in favor of
              */
-    autoSearchEpic: (action$, {getState = () => {}} = {}) =>
+    autoSearchEpic: (action$, { getState = () => { } } = {}) =>
         action$.ofType(CHANGE_TEXT)
             .debounce(() => {
                 const state = getState();
                 const delay = delayAutoSearchSelector(state);
                 return Rx.Observable.timer(delay);
             })
-            .switchMap(({text}) => {
+            .switchMap(({ text }) => {
                 const state = getState();
                 const pageSize = pageSizeSelector(state);
-                const {type, url} = selectedCatalogSelector(state);
-                return Rx.Observable.of(textSearch({format: type, url, startPosition: 1, maxRecords: pageSize, text}));
+                const { type, url } = selectedCatalogSelector(state);
+                return Rx.Observable.of(textSearch({ format: type, url, startPosition: 1, maxRecords: pageSize, text }));
             }),
 
     catalogCloseEpic: (action$, store) =>

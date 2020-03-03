@@ -66,6 +66,7 @@ class RecordItem extends React.Component {
         onUpdateThumbnail: PropTypes.func,
         deletedId: PropTypes.string,
         clearModal: PropTypes.func,
+        service: PropTypes.service,
         showTemplate: PropTypes.bool,
         defaultFormat: PropTypes.string,
         formatOptions: PropTypes.array
@@ -215,6 +216,7 @@ class RecordItem extends React.Component {
         if (tms) {
             buttons.push(
                 <TMSButton
+                    service={this.props.service}
                     key="tms-button"
                     tooltipId="catalog.addToMap"
                     className="square-button-md"

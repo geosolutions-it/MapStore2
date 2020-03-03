@@ -5,11 +5,11 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
 */
-const {isNil, has, omit} = require("lodash");
+const { isNil, has, omit } = require("lodash");
 const assign = require("object-assign");
 const PropTypes = require("prop-types");
 const React = require("react");
-const {FormControl, FormGroup, Alert, Pagination, Button, Panel, Form, InputGroup, ControlLabel, Glyphicon} = require("react-bootstrap");
+const { FormControl, FormGroup, Alert, Pagination, Button, Panel, Form, InputGroup, ControlLabel, Glyphicon } = require("react-bootstrap");
 
 const Select = require("react-select");
 
@@ -88,17 +88,17 @@ class Catalog extends React.Component {
         includeSearchButton: true,
         includeResetButton: false,
         mode: "view",
-        onChangeCatalogMode: () => {},
-        onChangeFormat: () => {},
-        onChangeText: () => {},
-        onChangeSelectedService: () => {},
-        onPropertiesChange: () => {},
-        onError: () => {},
-        onLayerAdd: () => {},
-        onReset: () => {},
-        onSearch: () => {},
-        onZoomToExtent: () => {},
-        changeLayerProperties: () => {},
+        onChangeCatalogMode: () => { },
+        onChangeFormat: () => { },
+        onChangeText: () => { },
+        onChangeSelectedService: () => { },
+        onPropertiesChange: () => { },
+        onError: () => { },
+        onLayerAdd: () => { },
+        onReset: () => { },
+        onSearch: () => { },
+        onZoomToExtent: () => { },
+        changeLayerProperties: () => { },
         pageSize: 4,
         records: [],
         loading: false,
@@ -133,7 +133,7 @@ class Catalog extends React.Component {
         if (this.props.selectedService &&
             this.isValidServiceSelected() &&
             this.props.services[this.props.selectedService].autoload) {
-            this.search({services: this.props.services, selectedService: this.props.selectedService, searchText: this.props.searchText});
+            this.search({ services: this.props.services, selectedService: this.props.selectedService, searchText: this.props.searchText });
         }
     }
 
@@ -144,13 +144,13 @@ class Catalog extends React.Component {
                 nextProps.selectedService &&
                 nextProps.services[nextProps.selectedService] &&
                 nextProps.services[nextProps.selectedService].autoload) {
-                this.search({services: nextProps.services, selectedService: nextProps.selectedService, searchText: nextProps.searchText});
+                this.search({ services: nextProps.services, selectedService: nextProps.selectedService, searchText: nextProps.searchText });
             }
             if (nextProps.active && this.props.active === false &&
                 nextProps.selectedService &&
                 nextProps.services[nextProps.selectedService] &&
                 nextProps.services[nextProps.selectedService].autoload) {
-                this.search({services: nextProps.services, selectedService: nextProps.selectedService, searchText: nextProps.searchText});
+                this.search({ services: nextProps.services, selectedService: nextProps.selectedService, searchText: nextProps.searchText });
             }
         }
     }
@@ -161,7 +161,7 @@ class Catalog extends React.Component {
 
     onKeyDown = (event) => {
         if (event.keyCode === 13) {
-            this.search({services: this.props.services, selectedService: this.props.selectedService, searchText: this.props.searchText});
+            this.search({ services: this.props.services, selectedService: this.props.selectedService, searchText: this.props.searchText });
         }
     };
     getServices = () => {
@@ -203,7 +203,7 @@ class Catalog extends React.Component {
             let start = this.props.searchOptions.startPosition;
             // let next = this.props.result.nextRecord;
             let pageSize = this.props.pageSize;
-            let page = Math.floor( start / pageSize);
+            let page = Math.floor(start / pageSize);
             let pageN = Math.ceil(total / pageSize);
             return (<div className="catalog-pagination"><Pagination
                 prev next first last ellipsis boundaryLinks
@@ -212,9 +212,9 @@ class Catalog extends React.Component {
                 maxButtons={5}
                 activePage={page + 1}
                 onSelect={this.handlePage} />
-            <div className="push-right">
-                <Message msgId="catalog.pageInfo" msgParams={{start, end: start + returned - 1, total}} />
-            </div>
+                <div className="push-right">
+                    <Message msgId="catalog.pageInfo" msgParams={{ start, end: start + returned - 1, total }} />
+                </div>
             </div>);
         }
         return null;
@@ -230,7 +230,7 @@ class Catalog extends React.Component {
             const selectedService = this.props.services[this.props.selectedService];
             // check for configured metadata
             if (!isNil(selectedService.metadataTemplate) &&
-            !isNil(selectedService.showTemplate)) {
+                !isNil(selectedService.showTemplate)) {
                 showTemplate = selectedService.showTemplate;
                 metadataTemplate = selectedService.metadataTemplate;
             }
@@ -248,16 +248,17 @@ class Catalog extends React.Component {
                 hideThumbnail={hideThumbnail}
                 records={this.props.records.map(
                     (record) => showTemplate && metadataTemplate
-                        ? { ...record, metadataTemplate}
+                        ? { ...record, metadataTemplate }
                         : record)}
                 clearModal={this.props.clearModal}
-                onUpdateThumbnail = {this.props.onUpdateThumbnail}
+                onUpdateThumbnail={this.props.onUpdateThumbnail}
                 layers={this.props.layers}
-                modalParams= {this.props.modalParams}
+                modalParams={this.props.modalParams}
                 onAddBackgroundProperties={this.props.onAddBackgroundProperties}
                 source={this.props.source}
                 authkeyParamNames={this.props.authkeyParamNames}
                 catalogURL={this.isValidServiceSelected() && this.props.services[this.props.selectedService].url || ""}
+                service={this.props.services[this.props.selectedService]}
                 catalogType={this.props.services[this.props.selectedService] && this.props.services[this.props.selectedService].type}
                 showTemplate={this.props.services[this.props.selectedService].showTemplate}
                 onLayerAdd={this.props.onLayerAdd}
@@ -277,7 +278,7 @@ class Catalog extends React.Component {
                 formatOptions={this.props.formatOptions}
                 layerBaseConfig={this.props.layerBaseConfig}
                 onAdd={() => {
-                    this.search({services: this.props.services, selectedService: this.props.selectedService});
+                    this.search({ services: this.props.services, selectedService: this.props.selectedService });
                 }}
             />
         </div>);
@@ -286,14 +287,14 @@ class Catalog extends React.Component {
     renderButtons = () => {
         const buttons = [];
         if (this.props.includeSearchButton) {
-            buttons.push(<Button bsStyle="primary" style={this.props.buttonStyle} onClick={() => this.search({services: this.props.services, selectedService: this.props.selectedService, searchText: this.props.searchText})}
+            buttons.push(<Button bsStyle="primary" style={this.props.buttonStyle} onClick={() => this.search({ services: this.props.services, selectedService: this.props.selectedService, searchText: this.props.searchText })}
                 className={this.props.buttonClassName} key="catalog_search_button" disabled={this.props.loading || !this.isValidServiceSelected()}>
-                <Message msgId="catalog.search"/>
+                <Message msgId="catalog.search" />
             </Button>);
         }
         if (this.props.includeResetButton) {
             buttons.push(<Button style={this.props.buttonStyle} onClick={this.reset} key="catalog_reset_button">
-                <Message msgId="catalog.reset"/>
+                <Message msgId="catalog.reset" />
             </Button>);
         }
 
@@ -310,7 +311,7 @@ class Catalog extends React.Component {
             value={this.props.searchText}
             placeholder={LocaleUtils.getMessageById(this.context.messages, "catalog.textSearchPlaceholder")}
             onChange={this.onSearchTextChange}
-            onKeyDown={this.onKeyDown}/>);
+            onKeyDown={this.onKeyDown} />);
         return this.props.wrapOptions ? (<Panel collapsible defaultExpanded={false} header={LocaleUtils.getMessageById(this.context.messages, "catalog.options")}>
             {textSearch}
         </Panel>) : textSearch;
@@ -323,7 +324,7 @@ class Catalog extends React.Component {
                 bodyClassName="ms2-border-layout-body catalog"
                 header={(<Form>
                     <FormGroup controlId="labelService" key="labelService">
-                        <ControlLabel><Message msgId="catalog.service"/></ControlLabel>
+                        <ControlLabel><Message msgId="catalog.service" /></ControlLabel>
                     </FormGroup>
                     <FormGroup controlId="service" key="service">
                         <InputGroup>
@@ -337,10 +338,10 @@ class Catalog extends React.Component {
                                 placeholder={LocaleUtils.getMessageById(this.context.messages, "catalog.servicePlaceholder")} />
                             {this.isValidServiceSelected() && this.props.selectedService !== 'default_map_backgrounds' ? (<InputGroup.Addon className="btn"
                                 onClick={() => this.props.onChangeCatalogMode("edit", false)}>
-                                <Glyphicon glyph="pencil"/>
+                                <Glyphicon glyph="pencil" />
                             </InputGroup.Addon>) : null}
                             <InputGroup.Addon className="btn" onClick={() => this.props.onChangeCatalogMode("edit", true)}>
-                                <Glyphicon glyph="plus"/>
+                                <Glyphicon glyph="plus" />
                             </InputGroup.Addon>
                         </InputGroup>
                     </FormGroup>
@@ -353,7 +354,7 @@ class Catalog extends React.Component {
                     </FormGroup>
                 </Form>)}
                 footer={this.renderPagination()}>
-                { this.props.loading ? this.renderLoading() : this.renderResult() }
+                {this.props.loading ? this.renderLoading() : this.renderResult()}
             </BorderLayout>
         );
 
@@ -363,10 +364,10 @@ class Catalog extends React.Component {
         return this.props.services[this.props.selectedService] !== undefined;
 
     };
-    search = ({services, selectedService, start = 1, searchText = ""} = {}) => {
+    search = ({ services, selectedService, start = 1, searchText = "" } = {}) => {
         const url = services[selectedService].url;
         const type = services[selectedService].type;
-        this.props.onSearch({format: type, url, startPosition: start, maxRecords: this.props.pageSize, text: searchText || ""});
+        this.props.onSearch({ format: type, url, startPosition: start, maxRecords: this.props.pageSize, text: searchText || "", options: { service: this.props.services[this.props.selectedService] } });
     };
 
     reset = () => {
@@ -376,7 +377,7 @@ class Catalog extends React.Component {
     handlePage = (eventKey) => {
         if (eventKey) {
             let start = (eventKey - 1) * this.props.pageSize + 1;
-            this.search({services: this.props.services, selectedService: this.props.selectedService, start, searchText: this.props.searchText});
+            this.search({ services: this.props.services, selectedService: this.props.selectedService, start, searchText: this.props.searchText });
         }
     };
 }
