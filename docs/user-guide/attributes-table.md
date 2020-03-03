@@ -1,7 +1,7 @@
 # Attribute Table
 *****************
 
-In GIS, the Attribute Table associated to a vector layer is a table that stores tabular information related to the layer. The columns of the table are called fields and the rows are called records. Each record of the attribute table corresponds to one feature geometry of the layer. This relation allows to find records in the table (information) by selecting features on the map and viceversa.<br>
+In GIS, the Attribute Table associated to a vector layer is a table that stores tabular information related to the layer. The columns of the table are called fields and the rows are called records. Each record of the attribute table corresponds to a feature geometry of the layer. This relation allows to find records in the table (information) by selecting features on the map and viceversa.<br>
 In [MapStore](https://mapstore.geo-solutions.it/mapstore/#/), through the <img src="../img/button/attributes-table.jpg" class="ms-docbutton"/> button in [Layers Toolbar](toc.md#toolbar-options) it is possible to access the Attribute table:
 
 <img src="../img/attributes-table/attributes-table-1.jpg" class="ms-docimage"/>
