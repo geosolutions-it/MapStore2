@@ -209,6 +209,6 @@ describe('StandardRouter', () => {
         setTimeout(() => {
             expect(spyLoad).toHaveBeenCalled();
             done();
-        }, 0);
+        }, 200);
     });
 });
