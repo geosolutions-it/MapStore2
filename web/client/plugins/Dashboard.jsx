@@ -75,12 +75,13 @@ const WidgetsView = compose(
 
 /**
  * Dashboard Plugin
+ * @static
  * @memberof plugins
  * @name Dashboard
- * @class
- * @prop {boolean} enabled if true, render the plugin
- * @prop {number} rowHeight Rows have a static height
- * @prop {object} cols Number of columns in this layout. default { lg: 6, md: 6, sm: 4, xs: 2, xxs: 1 }
+ * @class Dashboard
+ * @prop {boolean} cfg.enabled if true, render the plugin
+ * @prop {number} cfg.rowHeight Rows have a static height
+ * @prop {object} cfg.cols Number of columns in this layout. default { lg: 6, md: 6, sm: 4, xs: 2, xxs: 1 }
  * for more info about rowHeight and cols, see https://github.com/STRML/react-grid-layout#grid-layout-props
  */
 class DashboardPlugin extends React.Component {
