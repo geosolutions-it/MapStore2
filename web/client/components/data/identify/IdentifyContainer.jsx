@@ -58,11 +58,13 @@ module.exports = props => {
         showCoordinateEditor,
         onChangeClickPoint,
         onChangeFormat,
-        formatCoord
+        formatCoord,
+        showInMapPopup,
+        isCesium
     } = props;
 
     const latlng = point && point.latlng || null;
-
+    const isEnabled = enabled && (isCesium || !showInMapPopup);
     let lngCorrected = null;
     if (latlng) {
         /* lngCorrected is the converted longitude in order to have the value between
@@ -80,12 +82,12 @@ module.exports = props => {
     const missingResponses = requests.length - responses.length;
     const revGeocodeDisplayName = reverseGeocodeData.error ? <Message msgId="identifyRevGeocodeError"/> : reverseGeocodeData.display_name;
     return (
-        <div id="identify-container" className={enabled && requests.length !== 0 ? "identify-active" : ""}>
+        <div id="identify-container" className={isEnabled && requests.length !== 0 ? "identify-active" : ""}>
             <DockablePanel
                 bsStyle="primary"
                 glyph="map-marker"
                 title={!viewerOptions.header ? validResponses[index] && validResponses[index].layerMetadata && validResponses[index].layerMetadata.title || '' : <Message msgId="identifyTitle" />}
-                open={enabled && requests.length !== 0}
+                open={isEnabled && requests.length !== 0}
                 size={size}
                 fluid={fluid}
                 position={position}

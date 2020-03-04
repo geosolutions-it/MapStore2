@@ -5,41 +5,45 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
 */
-const Rx = require('rxjs');
+import Rx from 'rxjs';
 
-const {get, find, isString, isNil} = require('lodash');
-const axios = require('../libs/ajax');
+import {get, find, isString, isNil} from 'lodash';
+import axios from '../libs/ajax';
 
-const uuid = require('uuid');
+import uuid from 'uuid';
 
-const {
+import {
     LOAD_FEATURE_INFO, ERROR_FEATURE_INFO, GET_VECTOR_INFO,
     FEATURE_INFO_CLICK, CLOSE_IDENTIFY, TOGGLE_HIGHLIGHT_FEATURE,
+    PURGE_MAPINFO_RESULTS,
     featureInfoClick, updateCenterToMarker, purgeMapInfoResults,
     exceptionsFeatureInfo, loadFeatureInfo, errorFeatureInfo,
     noQueryableLayers, newMapInfoRequest, getVectorInfo,
     showMapinfoMarker, hideMapinfoMarker
-} = require('../actions/mapInfo');
+} from '../actions/mapInfo';
 
-const { SET_CONTROL_PROPERTIES } = require('../actions/controls');
+import { SET_CONTROL_PROPERTIES, SET_CONTROL_PROPERTY, TOGGLE_CONTROL } from '../actions/controls';
 
-const { closeFeatureGrid } = require('../actions/featuregrid');
-const { CHANGE_MOUSE_POINTER, CLICK_ON_MAP, zoomToPoint } = require('../actions/map');
-const { closeAnnotations } = require('../actions/annotations');
-const { MAP_CONFIG_LOADED } = require('../actions/config');
+import { closeFeatureGrid } from '../actions/featuregrid';
+import { CHANGE_MOUSE_POINTER, CLICK_ON_MAP, zoomToPoint } from '../actions/map';
+import { closeAnnotations } from '../actions/annotations';
+import { MAP_CONFIG_LOADED } from '../actions/config';
+import {addPopup, cleanPopups} from '../actions/mapPopups';
+import { stopGetFeatureInfoSelector, identifyOptionsSelector,
+    clickPointSelector, clickLayerSelector,
+    isMapPopup, isHighlightEnabledSelector,
+    itemIdSelector, overrideParamsSelector, filterNameListSelector } from '../selectors/mapInfo';
+import { centerToMarkerSelector, queryableLayersSelector } from '../selectors/layers';
+import { modeSelector } from '../selectors/featuregrid';
+import { mapSelector, projectionDefsSelector, projectionSelector } from '../selectors/map';
+import { boundingMapRectSelector } from '../selectors/maplayout';
+import { centerToVisibleArea, isInsideVisibleArea, isPointInsideExtent, reprojectBbox, parseURN} from '../utils/CoordinatesUtils';
 
-const { stopGetFeatureInfoSelector, identifyOptionsSelector, clickPointSelector, clickLayerSelector } = require('../selectors/mapInfo');
-const { centerToMarkerSelector, queryableLayersSelector } = require('../selectors/layers');
-const { modeSelector } = require('../selectors/featuregrid');
-const { mapSelector, projectionDefsSelector, projectionSelector } = require('../selectors/map');
-const { boundingMapRectSelector } = require('../selectors/maplayout');
-const { centerToVisibleArea, isInsideVisibleArea, isPointInsideExtent, reprojectBbox } = require('../utils/CoordinatesUtils');
 
-const { isHighlightEnabledSelector, itemIdSelector, overrideParamsSelector, filterNameListSelector } = require('../selectors/mapInfo');
+import { getCurrentResolution, parseLayoutValue } from '../utils/MapUtils';
+import MapInfoUtils from '../utils/MapInfoUtils';
+import PopupViewer from '../components/data/identify/PopupViewer';
 
-const { getCurrentResolution, parseLayoutValue } = require('../utils/MapUtils');
-const MapInfoUtils = require('../utils/MapInfoUtils');
-const { parseURN } = require('../utils/CoordinatesUtils');
 const gridEditingSelector = state => modeSelector(state) === 'EDIT';
 
 const stopFeatureInfo = state => stopGetFeatureInfoSelector(state) || gridEditingSelector(state);
@@ -51,7 +55,7 @@ const stopFeatureInfo = state => stopGetFeatureInfoSelector(state) || gridEditin
  * @param basePath {string} base path to the service
  * @param requestParams {object} map of params for a getfeatureinfo request.
  */
-const getFeatureInfo = (basePath, requestParams, lMetaData, appParams = {}, attachJSON, itemId = null) => {
+export const getFeatureInfo = (basePath, requestParams, lMetaData, appParams = {}, attachJSON, itemId = null) => {
     const param = { ...appParams, ...requestParams };
     const reqId = uuid.v1();
     const retrieveFlow = (params) => Rx.Observable.defer(() => axios.get(basePath, { params }));
@@ -94,7 +98,7 @@ const getFeatureInfo = (basePath, requestParams, lMetaData, appParams = {}, atta
  * @name epics.identify
  * @type {Object}
  */
-module.exports = {
+export default {
     /**
      * Triggers data load on FEATURE_INFO_CLICK events
      */
@@ -143,8 +147,8 @@ module.exports = {
      * if `clickLayer` is present, this means that `handleClickOnLayer` is true for the clicked layer, so the marker have to be hidden, because
      * it's managed by the layer itself (e.g. annotations). So the marker have to be hidden.
      */
-    handleMapInfoMarker: (action$) =>
-        action$.ofType(FEATURE_INFO_CLICK)
+    handleMapInfoMarker: (action$, {getState}) =>
+        action$.ofType(FEATURE_INFO_CLICK).filter(() => !isMapPopup(getState()))
             .map(({ layer }) => layer
                 ? hideMapinfoMarker()
                 : showMapinfoMarker()
@@ -174,7 +178,10 @@ module.exports = {
             const {disableAlwaysOn = false} = (store.getState()).mapInfo;
             return disableAlwaysOn || !stopFeatureInfo(store.getState() || {});
         })
-            .map(({point, layer}) => featureInfoClick(point, layer)),
+            .switchMap(({point, layer}) => Rx.Observable.of(featureInfoClick(point, layer))
+                .merge(Rx.Observable.of(addPopup(uuid(), { component: PopupViewer, maxWidth: 600, position: {  coordinates: point ? point.rawPos : []}}))
+                    .filter(() => isMapPopup(store.getState()))
+                )),
     /**
      * triggers click again when highlight feature is enabled, to download the feature.
      */
@@ -227,11 +234,35 @@ module.exports = {
     /**
      * Close Feature Info when catalog is enabled
      */
-    closeFeatureInfoOnCatalogOpenEpic: (action$) =>
+    closeFeatureInfoOnCatalogOpenEpic: (action$, store) =>
         action$
             .ofType(SET_CONTROL_PROPERTIES)
             .filter((action) => action.control === "metadataexplorer" && action.properties && action.properties.enabled)
             .switchMap(() => {
-                return Rx.Observable.of(purgeMapInfoResults(), hideMapinfoMarker());
-            })
+                return Rx.Observable.of(purgeMapInfoResults(), hideMapinfoMarker() ).merge(
+                    Rx.Observable.of(cleanPopups())
+                        .filter(() => isMapPopup(store.getState()))
+                );
+            }),
+    /**
+     * Clean state on annotation open
+     */
+    closeFeatureInfoOnAnnotationOpenEpic: (action$, {getState}) =>
+        action$.ofType(TOGGLE_CONTROL)
+            .filter(({control} = {}) => control === 'annotations' && get(getState(), "controls.annotations.enabled", false))
+            .mapTo(purgeMapInfoResults()),
+    /**
+     * Clean state on measure open
+     */
+    closeFeatureInfoOnMeasureOpenEpic: (action$) =>
+        action$.ofType(SET_CONTROL_PROPERTY)
+            .filter(({control, value} = {}) => control === 'measure' && value)
+            .mapTo(purgeMapInfoResults()),
+    /**
+     * Clean popup on PURGE_MAPINFO_RESULTS
+     * */
+    cleanPopupsEpicOnPurge: (action$, {getState}) =>
+        action$.ofType(PURGE_MAPINFO_RESULTS)
+            .filter(() => isMapPopup(getState()))
+            .mapTo(cleanPopups())
 };

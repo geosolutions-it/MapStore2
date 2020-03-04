@@ -137,6 +137,7 @@ class LeafletMap extends React.Component {
                         lng: event.latlng.lng,
                         z: this.elevationLayer && this.elevationLayer.getElevation(event.latlng, event.containerPoint) || undefined
                     },
+                    rawPos: [event.latlng.lat, event.latlng.lng],
                     modifiers: {
                         alt: event.originalEvent.altKey,
                         ctrl: event.originalEvent.ctrlKey,

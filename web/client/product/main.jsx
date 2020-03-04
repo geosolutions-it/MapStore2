@@ -58,6 +58,7 @@ module.exports = (config = {}, pluginsDef, overrideConfig = cfg => cfg) => {
                 maps: require('../reducers/maps'),
                 maplayout: require('../reducers/maplayout'),
                 version: require('../reducers/version'),
+                mapPopups: require('../reducers/mapPopups').default,
                 ...appReducers
             },
             baseEpics || {

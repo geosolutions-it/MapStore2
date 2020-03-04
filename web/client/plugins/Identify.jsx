@@ -13,7 +13,7 @@ const assign = require('object-assign');
 
 const {mapSelector} = require('../selectors/map');
 const {layersSelector} = require('../selectors/layers');
-const { mapTypeSelector } = require('../selectors/maptype');
+const { mapTypeSelector, isCesium } = require('../selectors/maptype');
 
 const { generalInfoFormatSelector, clickPointSelector, indexSelector, responsesSelector, validResponsesSelector, showEmptyMessageGFISelector, isHighlightEnabledSelector, currentFeatureSelector, currentFeatureCrsSelector } = require('../selectors/mapInfo');
 
@@ -53,7 +53,8 @@ const selector = createStructuredSelector({
     dockStyle: state => mapLayoutValuesSelector(state, {height: true}),
     formatCoord: (state) => state.mapInfo && state.mapInfo.formatCoord,
     showCoordinateEditor: (state) => state.mapInfo && state.mapInfo.showCoordinateEditor,
-    showEmptyMessageGFI: state => showEmptyMessageGFISelector(state)
+    showEmptyMessageGFI: state => showEmptyMessageGFISelector(state),
+    isCesium
 });
 // result panel
 
@@ -242,5 +243,5 @@ module.exports = {
         }
     }),
     reducers: {mapInfo: require('../reducers/mapInfo')},
-    epics: require('../epics/identify')
+    epics: require('../epics/identify').default
 };

@@ -9,11 +9,12 @@ import React from 'react';
 import { compose, branch} from 'recompose';
 
 
-import MapView from '../../widgets/widget/MapView'; // TODO: use a external component
+import MapView from '../common/MapView'; // TODO: use a external component
 import { applyDefaults } from '../../../utils/GeoStoryUtils';
 import {defaultLayerMapPreview} from '../../../utils/MediaEditorUtils';
 
 import connectMap, {withLocalMapState, withMapEditingAndLocalMapState} from '../common/enhancers/map';
+
 
 export default compose(
     branch(
@@ -27,7 +28,8 @@ export default compose(
     map = {layers: [defaultLayerMapPreview]},
     fit,
     editMap = false,
-    onMapViewChanges
+    onMapViewChanges,
+    eventHandlers
 }) => {
     const { layers = [], mapOptions = {}, ...m} = (map.data ? map.data : map);
     return (<div
@@ -38,11 +40,13 @@ export default compose(
         {/* BaseMap component overrides the MapView id with map's id */}
         <MapView
             onMapViewChanges={onMapViewChanges}
+            eventHandlers={eventHandlers}
             map={{
                 ...m,
                 id: `media-${id}`
             }} // if map id is passed as number, the resource id, ol throws an error
             layers={layers}
+            tools={["popup"]}
             options={
                 // mouseWheelZoom is enabled only if inlineEditing is active and zoomControl too
                 applyDefaults(!editMap ? {mapOptions} : {
