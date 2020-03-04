@@ -112,6 +112,7 @@ export const scrollToContent = (id, scrollOptions) => {
 
 export const DEFAULT_MAP_OPTIONS = {
     zoomControl: true,
+    mapInfoControl: false,
     style: {width: "100%", height: "100%"},
     mapOptions: {
         interactions: {

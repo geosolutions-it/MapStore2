@@ -46,7 +46,7 @@ export default compose(
                 id: `media-${id}`
             }} // if map id is passed as number, the resource id, ol throws an error
             layers={layers}
-            tools={["popup"]}
+            tools={m.mapInfoControl ? ["popup"] : []}
             options={
                 // mouseWheelZoom is enabled only if inlineEditing is active and zoomControl too
                 applyDefaults(!editMap ? {mapOptions} : {

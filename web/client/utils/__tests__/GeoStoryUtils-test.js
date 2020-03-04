@@ -288,6 +288,7 @@ describe("GeoStory Utils", () => {
     it('test createMapObject', () => {
         const merged = {
             zoomControl: true,
+            mapInfoControl: false,
             style: {width: "100%", height: "100%"},
             mapOptions: {
                 interactions: {

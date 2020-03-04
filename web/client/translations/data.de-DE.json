@@ -2025,7 +2025,8 @@
                 "topLeft": "Oben links",
                 "topRight": "Oben rechts",
                 "bottomLeft": "Unten links",
-                "bottomRight": "Unten rechts"
+                "bottomRight": "Unten rechts",
+                "identify": "Identifiziere"
             },
             "webPageCreator": {
                 "title": "Website",
