@@ -1116,7 +1116,7 @@
                 "dropZone": {
                     "heading": "<p> <h4> Legen Sie hier Ihre Kartenkontexte oder Vektordateien ab </h4> <small> oder </small> </p>",
                     "selectFiles": "Dateien auswählen...",
-                    "infoSupported": "<p> <small> Unterstützte Kartenkontexte dateien: MapStore Legacy-Format. Unterstützte Vektor-Layer-Dateien: Shapefiles müssen in Zip-Archiven, KML / KMZ, GPX oder GeoJSON </small> </p> enthalten sein",
+                    "infoSupported": "<p> <small> Unterstützte Kartenkontexte dateien: MapStore Legacy-Format, WMC. Unterstützte Vektor-Layer-Dateien: Shapefiles müssen in Zip-Archiven, KML / KMZ, GPX oder GeoJSON </small> </p> enthalten sein",
                     "note": "<p> <small> <i> <strong> Hinweis </strong>: Die aktuelle Map wird bei Kartenkontexte überschrieben </i> </small> </p>"
                 },
                 "errors": {
@@ -1126,7 +1126,24 @@
                 }
             },
         "mapExport": {
-            "title": "Exportieren Sie die Karte"
+            "title": "Exportieren Sie die Karte",
+            "exportPanel": {
+                "title": "<p><h4>Wählen Sie Ihr Format</h4></p>",
+                "exportButtonLabel": "Export"
+            },
+            "formats": {
+                "mapstore2": {
+                    "label": "MapStore",
+                    "description": "<p><small>MapStore-Kartenkonfigurationsformat</small></p>"
+                },
+                "wmc": {
+                    "label": "WMC",
+                    "description": "<p><small>Format OGC Web Map Context</small></p>",
+                    "note": "<p><small><i><strong>Hinweis</strong>: Das WMC-Format unterstützt <strong>nur WMS-Ebenen</strong></i></small></p>"
+                }
+            },
+            "errorTitle": "Kartenexport fehlgeschlagen",
+            "wmcNoLayersError": "Mindestens eine WMS-Schicht, die für den Export nach WMC benötigt wird, hat Null gefunden"
         },
         "catalog": {
             "start": "Startdatum ",

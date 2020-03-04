@@ -1,0 +1,44 @@
+.export-panel {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background: rgba(0;0;0;0.75);
+    color: #fff;
+    z-index: 2000;
+    display: flex;
+    text-align: center;
+
+    .export-panel-heading-icon .glyphicon {
+        font-size: 80px;
+    }
+
+    .export-panel-formats-container {
+        margin-bottom: 6px;
+
+        button {
+            margin: 5px;
+        }
+
+        .btn-default {
+            background-color: transparent;
+            color: white;
+            border-radius: 4px;
+            border-color: transparent;
+        }
+
+        .btn-default:hover {
+            border-color: white;
+        }
+
+        .btn-default:focus {
+            background-color: transparent;
+            color: white;
+        }
+
+        .btn-default.format-selected {
+            border-color: @ms2-color-primary;
+        }
+    }
+}

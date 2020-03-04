@@ -7,10 +7,12 @@
  */
 
 const { compose, branch, mapPropsStream, renderComponent, renderNothing } = require('recompose');
+const { createStructuredSelector } = require('reselect');
 const DragZone = require('../../components/import/ImportDragZone');
 const { connect } = require('react-redux');
 const StyleDialog = require('./StyleDialog');
 const { configureMap } = require('../../actions/config');
+const { mapSelector } = require('../../selectors/map');
 
 module.exports = compose(
     mapPropsStream(
@@ -30,7 +32,9 @@ module.exports = compose(
     branch(
         ({ layers }) => !layers || layers.length === 0,
         compose(
-            connect(() => ({}), {
+            connect(createStructuredSelector({
+                currentMap: mapSelector
+            }), {
                 loadMap: configureMap
             }),
             renderComponent(DragZone)
