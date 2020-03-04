@@ -19,7 +19,9 @@ const zh = require('react-intl/locale-data/zh');
 const hr = require('react-intl/locale-data/hr');
 const pt = require('react-intl/locale-data/pt');
 const vi = require('react-intl/locale-data/vi');
-addLocaleData([...en, ...it, ...fr, ...de, ...es, ...nl, ...zh, ...hr, ...pt, ...vi]);
+const fi = require('react-intl/locale-data/fi');
+
+addLocaleData([...en, ...it, ...fr, ...de, ...es, ...nl, ...zh, ...hr, ...pt, ...vi, ...fi]);
 
 /*
  * it, en, fr, de, es are the default locales and it is preferrable to customize them via configuration.
