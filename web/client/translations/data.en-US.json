@@ -762,7 +762,7 @@
             }
         },
         "locate": {
-            "tooltip": "Follow my position",
+            "tooltip": "Show my position",
             "tooltipDeactivate": "Stop showing my position",
             "metersUnit": "meters",
             "feetUnit": "feet",
