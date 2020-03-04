@@ -18,6 +18,7 @@
 
     <modules>
         <module>web</module>
+        <module>MapStore2/backend</module>
     </modules>
 
 </project>

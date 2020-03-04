@@ -63,6 +63,17 @@
 		<url-pattern>*.js</url-pattern>
 	</filter-mapping>
 
+    <!--  Backend Spring MVC controllers -->
+    <servlet>
+        <servlet-name>dispatcher</servlet-name>
+        <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>dispatcher</servlet-name>
+        <url-pattern>/rest/config/*</url-pattern>
+    </servlet-mapping>
+
     <!-- CXF Servlet -->
 	<servlet>
 		<servlet-name>CXFServlet</servlet-name>
