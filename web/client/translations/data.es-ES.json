@@ -762,7 +762,8 @@
             }
         },
         "locate": {
-            "tooltip": "Localízame",
+            "tooltip": "Mostrar mi posición",
+            "tooltipDeactivate": "Deja de mostrar mi posición",
             "metersUnit": "metros",
             "feetUnit": "pies",
             "popup": "Usted está a {distance} {unit} de este punto",

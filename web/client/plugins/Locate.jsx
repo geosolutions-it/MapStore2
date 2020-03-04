@@ -18,8 +18,10 @@ const assign = require('object-assign');
 
 /**
   * Locate Plugin. Provides button to locate the user's position on the map.
-  * By deafault it will follow the user until he moves the map. He can click again to
-  * restore the following mode.
+  * By default it will follow the user until he interacts with the map.
+  * When the user move the map the follow mode deactivates and the locate tool is
+  * still active, only showing the user's position on the map. Clicking again on the locate tool
+  * will activate the following mode again.
   * @class  Locate
   * @memberof plugins
   * @static
@@ -30,7 +32,8 @@ const assign = require('object-assign');
   *
   */
 const LocatePlugin = connect((state) => ({
-    locate: state.locate && state.locate.state || 'DISABLED'
+    locate: state.locate && state.locate.state || 'DISABLED',
+    tooltip: state.locate && state.locate.state === 'FOLLOWING' ? "locate.tooltipDeactivate" : "locate.tooltip"
 }), {
     onClick: changeLocateState
 })(require('../components/mapcontrols/locate/LocateBtn'));
@@ -44,7 +47,6 @@ module.exports = {
             name: 'locate',
             position: 2,
             tool: true,
-            tooltip: "locate.tooltip",
             icon: <Glyphicon glyph="screenshot"/>,
             help: <Message msgId="helptexts.locateBtn"/>,
             priority: 1

@@ -762,7 +762,8 @@
             }
         },
         "locate": {
-            "tooltip": "Locate me",
+            "tooltip": "Show my position",
+            "tooltipDeactivate": "Stop showing my position",
             "metersUnit": "meters",
             "feetUnit": "feet",
             "popup": "You are within {distance} {unit} from this point",
