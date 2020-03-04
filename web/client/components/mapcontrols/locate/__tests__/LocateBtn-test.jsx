@@ -36,7 +36,8 @@ describe("test the Locate Button", () => {
         const icons = tbNode.getElementsByTagName('span');
         expect(icons.length).toBe(1);
 
-        expect(tbNode.className.indexOf('default') >= 0).toBe(true);
+        expect(tbNode.className.indexOf('default') === -1).toBe(true);
+        expect(tbNode.className.indexOf('success') >= 0).toBe(true);
         expect(tbNode.innerHTML).toExist();
     });
 
