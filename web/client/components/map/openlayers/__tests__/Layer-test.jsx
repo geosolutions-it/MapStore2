@@ -697,6 +697,76 @@ describe('Openlayers layer', () => {
         expect(wmtsLayer.getSource().getTileGrid().getFullTileRange(2).minY).toBe(0);
         expect(wmtsLayer.getSource().getTileGrid().getFullTileRange(2).maxY).toBe(3);
     });
+    it('test wmts layer extent', () => {
+        var options = {
+            "type": "wmts",
+            "visibility": true,
+            "name": "nurc:Arc_Sample",
+            "group": "Meteo",
+            "format": "image/png",
+            "bbox": {
+                crs: "EPSG:4326",
+                bounds: {
+                    minx: 10,
+                    maxx: 15,
+                    miny: 40,
+                    maxy: 45
+                }
+            },
+            ...sampleTileMatrixConfig900913,
+            "url": "http://sample.server/geoserver/gwc/service/wmts"
+        };
+        // create layers
+        const layer = ReactDOM.render(
+            <OpenlayersLayer type="wmts"
+                options={options} map={map} />, document.getElementById("container"));
+
+
+        expect(layer).toExist();
+        // count layers
+        expect(map.getLayers().getLength()).toBe(1);
+
+        const wmtsLayer = map.getLayers().item(0);
+        expect(Math.floor(wmtsLayer.getSource().getTileGrid().getExtent()[0])).toBe(1113194);
+        expect(Math.floor(wmtsLayer.getSource().getTileGrid().getExtent()[1])).toBe(4865942);
+        expect(Math.floor(wmtsLayer.getSource().getTileGrid().getExtent()[2])).toBe(1669792);
+        expect(Math.floor(wmtsLayer.getSource().getTileGrid().getExtent()[3])).toBe(5621521);
+    });
+    it('test wmts layer extent out of bounds', () => {
+        var options = {
+            "type": "wmts",
+            "visibility": true,
+            "name": "nurc:Arc_Sample",
+            "group": "Meteo",
+            "format": "image/png",
+            "bbox": {
+                crs: "EPSG:4326",
+                bounds: {
+                    minx: -360,
+                    maxx: 360,
+                    miny: -90,
+                    maxy: 90
+                }
+            },
+            ...sampleTileMatrixConfig900913,
+            "url": "http://sample.server/geoserver/gwc/service/wmts"
+        };
+        // create layers
+        const layer = ReactDOM.render(
+            <OpenlayersLayer type="wmts"
+                options={options} map={map} />, document.getElementById("container"));
+
+
+        expect(layer).toExist();
+        // count layers
+        expect(map.getLayers().getLength()).toBe(1);
+
+        const wmtsLayer = map.getLayers().item(0);
+        expect(Math.floor(wmtsLayer.getSource().getTileGrid().getExtent()[0])).toBe(-20037509);
+        expect(Math.floor(wmtsLayer.getSource().getTileGrid().getExtent()[1])).toBe(-20037509);
+        expect(Math.floor(wmtsLayer.getSource().getTileGrid().getExtent()[2])).toBe(20037508);
+        expect(Math.floor(wmtsLayer.getSource().getTileGrid().getExtent()[3])).toBe(20037508);
+    });
     it('test fix for OL draw image (remove when OL > 5.3.0) ', () => {
         // see https://github.com/openlayers/openlayers/issues/8700
         var options = {
