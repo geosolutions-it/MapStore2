@@ -25,7 +25,7 @@ By clicking on the <img src="../img/button/add_to_map_button.jpg" class="ms-docb
 !!! note
     For those layers which have long descriptions or long metadata information, the content is truncated in order to fit the *Layer Card* size. In order to access the complete information, the user can expand the card using the <img src="../img/button/expand_card_icon.jpg" class="ms-docbutton" style="max-height:20px;"/> button:
 
-    <p style="text-align:center;"><img src="../img/catalog/expand_card.gif" class="ms-docimage"  style="max-width:300px;"/>
+    <img src="../img/catalog/expand_card.gif" class="ms-docimage" style="max-width:400px;"/>
 
 ## Managing Remote Services
 
