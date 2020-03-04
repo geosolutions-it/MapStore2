@@ -56,7 +56,7 @@ pages:
       - Menu Bar: 'user-guide/menu-bar.md'
       - Printing a Map: 'user-guide/print.md'
       - Import Files: 'user-guide/import.md'
-      - Managing Remote Services from the Catalog: 'user-guide/catalog.md'
+      - Catalog Services: 'user-guide/catalog.md'
       - Performing Measurments: 'user-guide/measure.md'
       - Adding Annotations: 'user-guide/annotations.md'
       - Sharing a Map: 'user-guide/share.md'
