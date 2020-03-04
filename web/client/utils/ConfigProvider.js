@@ -1,4 +1,4 @@
-const CONFIGPROVIDER = {
+export default {
     OpenStreetMap: {
         url: '//{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
         options: {
@@ -805,4 +805,3 @@ const CONFIGPROVIDER = {
         }
     }
 };
-module.exports = CONFIGPROVIDER;

@@ -3,6 +3,7 @@ import wms from '../api/WMS';
 import wmts from '../api/WMTS';
 import * as tms from '../api/TMS';
 import backgrounds from '../api/mapBackground';
+import * as tileprovider from '../api/tileProvider';
 
 /**
  * API for catalog
@@ -14,5 +15,6 @@ export default {
     wms,
     tms,
     wmts,
-    backgrounds
+    backgrounds,
+    tileprovider
 };

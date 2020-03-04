@@ -13,7 +13,7 @@ import TileGrid from 'ol/tilegrid/TileGrid';
 
 import TileLayer from 'ol/layer/Tile';
 
-function tileXYZToOpenlayersOptions(options) {
+function tileXYZToOpenlayersOptions(options = {}) {
     const { minx, miny, maxx, maxy } = get(options, "bbox.bounds", {});
     const sourceOpt = {
         projection: options.srs,
@@ -37,7 +37,7 @@ function tileXYZToOpenlayersOptions(options) {
         if (options.srs === "EPSG:3857") {
             source.setTileGridForProjection("EPSG:900913", newTileGrid);
         }
-    } else {
+    } else if (options.tileSets) {
         source.setTileGridForProjection(options.srs, new TileGrid({
             origin: options.origin,
             extent: options.bbox && [minx, miny, maxx, maxy],

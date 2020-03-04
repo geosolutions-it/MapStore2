@@ -37,6 +37,8 @@ const { set } = require('../utils/ImmutableUtils');
 
 const {isNil} = require('lodash');
 const assign = require('object-assign');
+const uuid = require('uuid');
+
 const emptyService = {
     url: "",
     type: "wms",
@@ -147,24 +149,22 @@ function catalog(state = {
         if (action.service.isNew) {
             let service = assign({}, action.service);
             delete service.isNew;
-            newServices = assign({}, state.services, {[action.service.title]: service});
+            newServices = assign({}, state.services, {[action.service.title || uuid()]: service});
         } else {
             let services = assign({}, state.services);
-            delete services[action.service.oldService];
-            newServices = assign({}, services, {[action.service.title]: action.service});
+            newServices = assign({}, services, { [action.service.oldService]: action.service});
         }
-        return action.service.title !== "" && action.service.url !== "" ?
-            assign({}, state, {
-                services: newServices,
-                selectedService: action.service.title,
-                mode: "view",
-                result: null,
-                loadingError: null,
-                searchOptions: assign({}, state.searchOptions, {
-                    text: ""
-                }),
-                layerError: null
-            }) : state;
+        return assign({}, state, {
+            services: newServices,
+            selectedService: action.service.title,
+            mode: "view",
+            result: null,
+            loadingError: null,
+            searchOptions: assign({}, state.searchOptions, {
+                text: ""
+            }),
+            layerError: null
+        });
     }
     case CHANGE_SELECTED_SERVICE: {
         if (action.service !== state.selectedService) {

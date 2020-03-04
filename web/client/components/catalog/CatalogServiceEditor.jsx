@@ -28,7 +28,6 @@ export default ({
         format: "image/png"
     },
     formats = [{ name: "csw", label: "CSW" }],
-    urlPlaceholder = "catalog.urlPlaceholder",
     onChangeTitle = () => {},
     onChangeUrl = () => {},
     onChangeType = () => {},
@@ -52,10 +51,10 @@ export default ({
         <MainForm
             service={service}
             formats={formats}
-            urlPlaceholder={urlPlaceholder}
             onChangeTitle={onChangeTitle}
             onChangeUrl={onChangeUrl}
             onChangeType={onChangeType}
+            onChangeServiceProperty={onChangeServiceProperty}
             urlTooltip={urlTooltip}
         />
     }>

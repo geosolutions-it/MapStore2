@@ -339,6 +339,20 @@ const converters = {
             }]
         }));
     },
+    tileprovider: records => {
+        if (records && records.records) {
+            return records.records.map(record => {
+                return {
+                    description: record.title,
+                    title: record.title,
+                    identifier: record.name,
+                    thumbnail: record.thumbURL,
+                    references: []
+                };
+            });
+        }
+        return null;
+    },
     backgrounds: (records) => {
         if (records && records.records) {
             return records.records.map(record => {

@@ -1169,7 +1169,7 @@
               "forceDefaultTileGrid": "Force default tile grid",
               "forceDefaultTileGridDescription": "Use the global projection's tile grid instead of the origin and resolutions provided by the server. This is useful for some TMS services that advertise wrong origin or resoultions."
             },
-            "tileProvider": {
+            "tileprovider": {
               "tooltip": "x,y,z are tile position, s is the sub-domain (default)"
             },
             "missingReference": "Missing OGC reference metadata",
