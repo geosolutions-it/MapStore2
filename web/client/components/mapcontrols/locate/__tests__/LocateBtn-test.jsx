@@ -27,10 +27,10 @@ describe("test the Locate Button", () => {
 
     it('test default properties', () => {
         const tb = ReactDOM.render(<LocateBtn locate="DISABLED" />, document.getElementById("container"));
-        expect(tb).toExist();
+        expect(tb).toBeTruthy();
 
         const tbNode = ReactDOM.findDOMNode(tb);
-        expect(tbNode).toExist();
+        expect(tbNode).toBeTruthy();
         expect(tbNode.id).toBe("locate-btn");
 
         const icons = tbNode.getElementsByTagName('span');
@@ -38,12 +38,12 @@ describe("test the Locate Button", () => {
 
         expect(tbNode.className.indexOf('default') === -1).toBe(true);
         expect(tbNode.className.indexOf('success') >= 0).toBe(true);
-        expect(tbNode.innerHTML).toExist();
+        expect(tbNode.innerHTML).toBeTruthy();
     });
 
     it('test button state', () => {
         const tb = ReactDOM.render(<LocateBtn locate="FOLLOWING"/>, document.getElementById("container"));
-        expect(tb).toExist();
+        expect(tb).toBeTruthy();
 
         const tbNode = ReactDOM.findDOMNode(tb);
 
@@ -60,17 +60,17 @@ describe("test the Locate Button", () => {
         const tbNode = ReactDOM.findDOMNode(tb);
         tbNode.click();
 
-        expect(spy.calls.length).toEqual(1);
-        expect(spy.calls[0].arguments).toEqual(["FOLLOWING"]);
+        expect(spy.mock.calls.length).toEqual(1);
+        expect(spy.mock.calls[0]).toEqual(["FOLLOWING"]);
     });
 
     it('test permission denied state', () => {
         const component = ReactDOM.render(<LocateBtn locate="PERMISSION_DENIED"/>,
             document.getElementById("container"));
-        expect(component).toExist();
+        expect(component).toBeTruthy();
         // check if the button was correctly disabled
         const button = ReactTestUtils.findRenderedDOMComponentWithTag(component, "button");
-        expect(button).toExist();
+        expect(button).toBeTruthy();
         expect(button.disabled).toEqual(true);
     });
 

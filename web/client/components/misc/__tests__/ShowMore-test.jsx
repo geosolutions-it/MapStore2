@@ -28,7 +28,7 @@ describe('ShowMore component', () => {
         ReactDOM.render(<ShowMore/>, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('.ms-show-more');
-        expect(el).toExist();
+        expect(el).toBeTruthy();
     });
 
     it('ShowMore on load more', () => {
@@ -46,10 +46,10 @@ describe('ShowMore component', () => {
             onLoadMore={actions.onLoadMore}/>, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('.ms-show-more');
-        expect(el).toExist();
+        expect(el).toBeTruthy();
 
         const button = el.querySelector('.btn');
-        expect(button).toExist();
+        expect(button).toBeTruthy();
         ReactTestUtils.Simulate.click(button);
         expect(spyOnLoadMore).toHaveBeenCalledWith(1);
 

@@ -23,9 +23,9 @@ describe('handleNodeFiltering enhancer', () => {
     });
     it('handleNodeFiltering rendering nodes defaults', (done) => {
         const Sink = handleNodeFiltering(createSink( props => {
-            expect(props).toExist();
-            expect(props.nodes).toExist();
-            expect(props.nodes[0]).toExist();
+            expect(props).toBeTruthy();
+            expect(props.nodes).toBeTruthy();
+            expect(props.nodes[0]).toBeTruthy();
             expect(props.nodes[0].showComponent).toBe(true);
             done();
         }));

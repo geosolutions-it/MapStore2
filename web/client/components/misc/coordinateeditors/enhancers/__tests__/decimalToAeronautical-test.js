@@ -27,7 +27,7 @@ describe("test the Annotations enahncers", () => {
     });
     it('rendering default values', () => {
         const Sink = decimalToAeronautical(createSink(props => {
-            expect(props).toExist();
+            expect(props).toBeTruthy();
             // east is default in aeronautical format
             if (props.coordinate === "lon") {
                 expect(props.direction).toBe('E');
@@ -54,7 +54,7 @@ describe("test the Annotations enahncers", () => {
     });
     it('decimalToAeronautical conversion', (done) => {
         const Sink = decimalToAeronautical(createSink( props => {
-            expect(props).toExist();
+            expect(props).toBeTruthy();
             expect(props.degrees).toBe(1);
             expect(props.minutes).toBe(30);
             expect(props.seconds).toBe(0);
@@ -67,7 +67,7 @@ describe("test the Annotations enahncers", () => {
     });
     it('decimalToAeronautical conversion to 4 decimals as seconds', (done) => {
         const Sink = decimalToAeronautical(createSink( props => {
-            expect(props).toExist();
+            expect(props).toBeTruthy();
             expect(props.degrees).toBe(1);
             expect(props.minutes).toBe(33);
             expect(props.seconds).toBe(18.9193);
@@ -84,7 +84,7 @@ describe("test the Annotations enahncers", () => {
     it('decimalToAeronautical conversion correctly step on minutes and seconds', (done) => {
         // 13.3333333333 should be 13 degrees, 20 minutes
         const Sink = decimalToAeronautical(createSink(props => {
-            expect(props).toExist();
+            expect(props).toBeTruthy();
             expect(props.degrees).toBe(13);
             expect(props.minutes).toBe(20);
             expect(props.seconds).toBe(0);
@@ -101,7 +101,7 @@ describe("test the Annotations enahncers", () => {
             decimalToAeronautical
         );
         const Sink = enhancer(createSink(props => {
-            expect(props).toExist();
+            expect(props).toBeTruthy();
             if (props.seconds === 0) {
                 props.onChange({ "degrees": 47, "minutes": 45, "seconds": 1, "direction": "N" });
             }

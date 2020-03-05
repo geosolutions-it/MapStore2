@@ -15,7 +15,7 @@ const { widgets: complexGraphWidgets } = require('../../test-resources/widgets/c
 describe('Test WidgetsUtils', () => {
     it('test getConnectionList', () => {
         const pairs = getConnectionList(widgets);
-        expect(pairs).toExist();
+        expect(pairs).toBeTruthy();
         expect(pairs.length).toBe(2);
         pairs.map(p => {
             expect(p.length).toBe(2);

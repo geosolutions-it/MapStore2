@@ -68,18 +68,18 @@ describe('Tests <CellRenderer> component', () => {
          * react-data-grid is returning the formatter value
         */
         const comp = ReactDOM.render(<CellRendererWithContext {...props} />, document.getElementById("container"));
-        expect(comp).toExist();
+        expect(comp).toBeTruthy();
     });
 
     it('should not crash when rendering <CellRenderer> with value=true, using boolean formatter', () => {
         const comp = ReactDOM.render(<CellRendererWithContext {...set("value", true, props)} />, document.getElementById("container"));
-        expect(comp).toExist();
+        expect(comp).toBeTruthy();
         expect(document.querySelectorAll("span")[1].innerHTML).toBe("true");
     });
 
     it('should not crash when rendering <CellRenderer> with value=false, using boolean formatter', () => {
         const comp = ReactDOM.render(<CellRendererWithContext {...set("value", false, props)} />, document.getElementById("container"));
-        expect(comp).toExist();
+        expect(comp).toBeTruthy();
         expect(document.querySelectorAll("span")[1].innerHTML).toBe("false");
     });
 

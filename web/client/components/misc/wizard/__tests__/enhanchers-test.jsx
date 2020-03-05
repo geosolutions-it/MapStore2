@@ -28,10 +28,10 @@ describe('wizard enhancers ', () => {
         ReactDOM.render(<WizardContainer><div id="step1"></div><div id="step2"></div><div id="step3"></div></WizardContainer>, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('.ms-wizard');
-        expect(el).toExist();
-        expect(container.querySelector('.ms-wizard-next')).toExist();
+        expect(el).toBeTruthy();
+        expect(container.querySelector('.ms-wizard-next')).toBeTruthy();
         ReactDOM.render(<WizardContainer skipButtonsOnSteps={[0]} step={0}><div id="step1"></div><div id="step2"></div><div id="step3"></div></WizardContainer>, document.getElementById("container"));
-        expect(container.querySelector('.ms-wizard-next')).toNotExist();
+        expect(container.querySelector('.ms-wizard-next')).toBeFalsy();
     });
     it('setPage callback calls onNextPage', () => {
         const actions = {
@@ -42,7 +42,7 @@ describe('wizard enhancers ', () => {
         const cmp = ReactDOM.render((<WizardContainer setPage={actions.setPage}>
             <div id="step1"></div><div id="step2"></div><div id="step3"></div>
         </WizardContainer>), document.getElementById("container"));
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
         ReactTestUtils.Simulate.click(container.querySelector('.ms-wizard-next')); // <-- trigger event callback
         expect(spysetPage).toHaveBeenCalled();
     });
@@ -55,7 +55,7 @@ describe('wizard enhancers ', () => {
         const cmp = ReactDOM.render((<WizardContainer step={1} setPage={actions.setPage}>
             <div id="step1"></div><div id="step2"></div><div id="step3"></div>
         </WizardContainer>), document.getElementById("container"));
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
         ReactTestUtils.Simulate.click(container.querySelector('.ms-wizard-prev')); // <-- trigger event callback
         expect(spysetPage).toHaveBeenCalled();
     });

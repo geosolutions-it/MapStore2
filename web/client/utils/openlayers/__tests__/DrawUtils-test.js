@@ -14,7 +14,7 @@ describe('DrawUtils openlayers', () => {
 
     it('test createOLGeometry defaults', () => {
         const geom = createOLGeometry();
-        expect(geom).toExist();
+        expect(geom).toBeTruthy();
         expect(geom.getType()).toBe("Polygon");
     });
     it('test createOLGeometry LineString', () => {
@@ -23,12 +23,12 @@ describe('DrawUtils openlayers', () => {
         const coordinates = [[1, 1], [0, 0]];
 
         let geom = createOLGeometry({type});
-        expect(geom).toExist();
+        expect(geom).toBeTruthy();
         expect(geom.getType()).toBe(type);
         expect(geom.getCoordinates().length).toBe(0);
 
         geom = createOLGeometry({type, coordinates});
-        expect(geom).toExist();
+        expect(geom).toBeTruthy();
         expect(geom.getType()).toBe(type);
         expect(geom.getCoordinates().length).toBe(coordinates.length);
         expect(geom.getCoordinates()).toEqual(coordinates);
@@ -39,12 +39,12 @@ describe('DrawUtils openlayers', () => {
         const coordinates = [1, 1];
 
         let geom = createOLGeometry({type});
-        expect(geom).toExist();
+        expect(geom).toBeTruthy();
         expect(geom.getType()).toBe(type);
         expect(geom.getCoordinates().length).toBe(0);
 
         geom = createOLGeometry({type, coordinates});
-        expect(geom).toExist();
+        expect(geom).toBeTruthy();
         expect(geom.getType()).toBe(type);
         expect(geom.getCoordinates().length).toBe(coordinates.length);
         expect(geom.getCoordinates()).toEqual(coordinates);
@@ -55,12 +55,12 @@ describe('DrawUtils openlayers', () => {
         const coordinates = [[1, 1], [0, 0]];
 
         let geom = createOLGeometry({type});
-        expect(geom).toExist();
+        expect(geom).toBeTruthy();
         expect(geom.getType()).toBe(type);
         expect(geom.getCoordinates().length).toBe(0);
 
         geom = createOLGeometry({type, coordinates});
-        expect(geom).toExist();
+        expect(geom).toBeTruthy();
         expect(geom.getType()).toBe(type);
         expect(geom.getCoordinates().length).toBe(coordinates.length);
         expect(geom.getCoordinates()).toEqual(coordinates);
@@ -71,12 +71,12 @@ describe('DrawUtils openlayers', () => {
         const coordinates = [ [[1, 1], [0, 0]], [[21, 21], [20, 20]]];
 
         let geom = createOLGeometry({type});
-        expect(geom).toExist();
+        expect(geom).toBeTruthy();
         expect(geom.getType()).toBe(type);
         expect(geom.getCoordinates().length).toBe(0);
 
         geom = createOLGeometry({type, coordinates});
-        expect(geom).toExist();
+        expect(geom).toBeTruthy();
         expect(geom.getType()).toBe(type);
         expect(geom.getCoordinates().length).toBe(coordinates.length);
         expect(geom.getCoordinates()).toEqual(coordinates);
@@ -87,12 +87,12 @@ describe('DrawUtils openlayers', () => {
         const coordinates = [[ [[1, 1], [0, 0]], [[21, 21], [20, 20]]]];
 
         let geom = createOLGeometry({type});
-        expect(geom).toExist();
+        expect(geom).toBeTruthy();
         expect(geom.getType()).toBe(type);
         expect(geom.getCoordinates().length).toBe(0);
 
         geom = createOLGeometry({type, coordinates});
-        expect(geom).toExist();
+        expect(geom).toBeTruthy();
         expect(geom.getType()).toBe(type);
         expect(geom.getCoordinates().length).toBe(coordinates.length);
         expect(geom.getCoordinates()).toEqual(coordinates);
@@ -104,12 +104,12 @@ describe('DrawUtils openlayers', () => {
         const center = {x: 1, y: 1};
 
         let geom = createOLGeometry({type});
-        expect(geom).toExist();
+        expect(geom).toBeTruthy();
         expect(geom.getType()).toBe(type);
         expect(geom.getCoordinates().length).toBe(0);
 
         geom = createOLGeometry({type, radius, center});
-        expect(geom).toExist();
+        expect(geom).toBeTruthy();
         expect(geom.getType()).toBe(type);
         expect(geom.getCoordinates().length).toBe(1);
         expect(geom.getCoordinates()[0].length).toBe(101);

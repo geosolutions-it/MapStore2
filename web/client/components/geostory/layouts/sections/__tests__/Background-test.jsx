@@ -31,7 +31,7 @@ describe('Background component', () => {
         />, document.getElementById("container"));
         const container = document.getElementById('container');
         const backgroundContainer = container.querySelector('.ms-section-background-container');
-        expect(backgroundContainer).toExist();
+        expect(backgroundContainer).toBeTruthy();
         expect(backgroundContainer.clientHeight).toBe(VIEW_HEIGHT);
     });
 
@@ -53,9 +53,9 @@ describe('Background component', () => {
         const imageMedia = container.querySelector('.ms-media-image');
         const image = imageMedia.querySelector('img');
         const contentToolbar = container.querySelector('.ms-content-toolbar');
-        expect(backgroundContainer).toExist();
-        expect(imageMedia).toExist();
-        expect(contentToolbar).toExist();
+        expect(backgroundContainer).toBeTruthy();
+        expect(imageMedia).toBeTruthy();
+        expect(contentToolbar).toBeTruthy();
         expect(backgroundContainer.clientHeight).toBe(VIEW_HEIGHT);
         expect(image.getAttribute('src')).toBe('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==');
         testToolbarButtons(["pencil"], container);
@@ -76,9 +76,9 @@ describe('Background component', () => {
         const backgroundContainer = container.querySelector('.ms-section-background-container');
         const mapMedia = container.querySelector('.ms-media-map');
         const contentToolbar = container.querySelector('.ms-content-toolbar');
-        expect(backgroundContainer).toExist();
-        expect(mapMedia).toExist();
-        expect(contentToolbar).toExist();
+        expect(backgroundContainer).toBeTruthy();
+        expect(mapMedia).toBeTruthy();
+        expect(contentToolbar).toBeTruthy();
         expect(backgroundContainer.clientHeight).toBe(VIEW_HEIGHT);
     });
 });

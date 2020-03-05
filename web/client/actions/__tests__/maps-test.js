@@ -74,7 +74,7 @@ describe('Test correctness of the maps actions', () => {
         const resourceId = -1;
         const type = "STRING";
         const retFun = updateAttribute(resourceId, name, value, type, {});
-        expect(retFun).toExist();
+        expect(retFun).toBeTruthy();
         retFun((action) => {
             expect(action.type).toBe(THUMBNAIL_ERROR);
             done();
@@ -100,7 +100,7 @@ describe('Test correctness of the maps actions', () => {
         });
 
         const retFun = updateAttribute(resourceId, name, value, type, {});
-        expect(retFun).toExist();
+        expect(retFun).toBeTruthy();
         let count = 0;
         retFun((action) => {
             expect(action.type).toBe(ATTRIBUTE_UPDATED);
@@ -114,7 +114,7 @@ describe('Test correctness of the maps actions', () => {
         const resourceId = 1;
         // saveAll(map, metadataMap, nameThumbnail, dataThumbnail, categoryThumbnail, resourceIdMap, options)
         const retFun = saveAll({}, {name: "name"}, null, null, null, resourceId, {});
-        expect(retFun).toExist();
+        expect(retFun).toBeTruthy();
         let count = 0;
         retFun((action) => {
             switch (count) {
@@ -129,7 +129,7 @@ describe('Test correctness of the maps actions', () => {
         const resourceId = 1;
         // saveAll(map, metadataMap, nameThumbnail, dataThumbnail, categoryThumbnail, resourceIdMap, options)
         const retFun = saveAll({}, null, null, null, null, resourceId, {});
-        expect(retFun).toExist();
+        expect(retFun).toBeTruthy();
         let count = 0;
         retFun((action) => {
             switch (count) {
@@ -144,7 +144,7 @@ describe('Test correctness of the maps actions', () => {
         const resourceId = 1;
         // saveAll(map, metadataMap, nameThumbnail, dataThumbnail, categoryThumbnail, resourceIdMap, options)
         const retFun = saveAll({}, null, null, null, null, resourceId, {});
-        expect(retFun).toExist();
+        expect(retFun).toBeTruthy();
         let count = 0;
         retFun((action) => {
             switch (count) {
@@ -174,7 +174,7 @@ describe('Test correctness of the maps actions', () => {
         };
         const resourceId = 1;
         const retFun = updatePermissions(resourceId, securityRules);
-        expect(retFun).toExist();
+        expect(retFun).toBeTruthy();
         let count = 0;
         retFun((action) => {
             switch (count) {
@@ -186,7 +186,7 @@ describe('Test correctness of the maps actions', () => {
             done();
         });
         const retFun2 = updatePermissions(-1, securityRules);
-        expect(retFun).toExist();
+        expect(retFun).toBeTruthy();
         let count2 = 0;
         retFun2((action) => {
             switch (count2) {
@@ -200,7 +200,7 @@ describe('Test correctness of the maps actions', () => {
     it('mapUpdating', () => {
         let resourceId = 13;
         var retval = mapUpdating(resourceId);
-        expect(retval).toExist();
+        expect(retval).toBeTruthy();
         expect(retval.type).toBe(MAP_UPDATING);
         expect(retval.resourceId).toBe(resourceId);
     });
@@ -208,7 +208,7 @@ describe('Test correctness of the maps actions', () => {
     it('permissionsUpdated', () => {
         let resourceId = 13;
         var retval = permissionsUpdated(resourceId, null);
-        expect(retval).toExist();
+        expect(retval).toBeTruthy();
         expect(retval.type).toBe(PERMISSIONS_UPDATED);
         expect(retval.resourceId).toBe(resourceId);
     });
@@ -219,7 +219,7 @@ describe('Test correctness of the maps actions', () => {
         let value = "exampleDataUri";
         let type = "STRING";
         let retval = attributeUpdated(resourceId, name, value, type);
-        expect(retval).toExist();
+        expect(retval).toBeTruthy();
         expect(retval.type).toBe(ATTRIBUTE_UPDATED);
         expect(retval.resourceId).toBe(resourceId);
         expect(retval.name).toBe(name);
@@ -230,7 +230,7 @@ describe('Test correctness of the maps actions', () => {
         let resourceId = 1;
         let error = {status: 404, message: "not found"};
         let retval = thumbnailError(resourceId, error);
-        expect(retval).toExist();
+        expect(retval).toBeTruthy();
         expect(retval.type).toBe(THUMBNAIL_ERROR);
         expect(retval.resourceId).toBe(resourceId);
         expect(retval.error.status).toBe(error.status);
@@ -239,7 +239,7 @@ describe('Test correctness of the maps actions', () => {
     it('resetUpdating', () => {
         let resourceId = 1;
         let retval = resetUpdating(resourceId);
-        expect(retval).toExist();
+        expect(retval).toBeTruthy();
         expect(retval.type).toBe(RESET_UPDATING);
         expect(retval.resourceId).toBe(resourceId);
     });
@@ -247,7 +247,7 @@ describe('Test correctness of the maps actions', () => {
     it('onDisplayMetadataEdit', () => {
         let dispMetadataValue = true;
         let retval = onDisplayMetadataEdit(dispMetadataValue);
-        expect(retval).toExist();
+        expect(retval).toBeTruthy();
         expect(retval.type).toBe(DISPLAY_METADATA_EDIT);
         expect(retval.displayMetadataEditValue).toBe(dispMetadataValue);
     });
@@ -261,7 +261,7 @@ describe('Test correctness of the maps actions', () => {
             canWrite: true
         };
         var retval = saveMap(map, resourceId);
-        expect(retval).toExist();
+        expect(retval).toBeTruthy();
         expect(retval.type).toBe(SAVE_MAP);
         expect(retval.resourceId).toBe(resourceId);
         expect(retval.map).toBe(map);
@@ -302,8 +302,8 @@ describe('Test correctness of the maps actions', () => {
         const value = "newName";
         const a = metadataChanged(prop, value);
         expect(a.type).toBe(METADATA_CHANGED);
-        expect(a.prop).toExist();
-        expect(a.value).toExist();
+        expect(a.prop).toBeTruthy();
+        expect(a.value).toBeTruthy();
         expect(a.prop).toBe(prop);
         expect(a.value).toBe(value);
     });

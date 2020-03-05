@@ -25,18 +25,18 @@ describe('QueryToolbar component', () => {
         ReactDOM.render(<QueryToolbar />, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('.query-toolbar');
-        expect(el).toExist();
+        expect(el).toBeTruthy();
     });
     it('QueryToolbar check empty filter warning', () => {
         ReactDOM.render(<QueryToolbar emptyFilterWarning allowEmptyFilter spatialField={{}} crossLayerFilter={{attribute: "ATTR", operation: undefined}}/>, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('#query-toolbar-query.showWarning');
-        expect(el).toExist();
+        expect(el).toBeTruthy();
         ReactDOM.render(<QueryToolbar emptyFilterWarning allowEmptyFilter spatialField={{}} crossLayerFilter={{attribute: "ATTR", operation: "INTERSECT"}}/>, document.getElementById("container"));
-        expect(container.querySelector('#query-toolbar-query.showWarning')).toNotExist();
-        expect(container.querySelector('#query-toolbar-query')).toExist();
+        expect(container.querySelector('#query-toolbar-query.showWarning')).toBeFalsy();
+        expect(container.querySelector('#query-toolbar-query')).toBeTruthy();
         ReactDOM.render(<QueryToolbar emptyFilterWarning allowEmptyFilter spatialField={{geometry: {}}} crossLayerFilter={{attribute: "ATTR", operation: undefined}}/>, document.getElementById("container"));
-        expect(container.querySelector('#query-toolbar-query.showWarning')).toNotExist();
+        expect(container.querySelector('#query-toolbar-query.showWarning')).toBeFalsy();
     });
 
     describe('advancedToolbar', () => {

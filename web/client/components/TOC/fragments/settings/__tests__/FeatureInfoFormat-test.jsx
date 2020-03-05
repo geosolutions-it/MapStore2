@@ -38,9 +38,9 @@ describe('test Layer Properties FeatureInfoFormat module component', () => {
         // wrap in a stateful component, stateless components render return null
         // see: https://facebook.github.io/react/docs/top-level-api.html#reactdom.render
         const comp = ReactDOM.render(<FeatureInfoFormat element={l} label={label}/>, document.getElementById("container"));
-        expect(comp).toExist();
+        expect(comp).toBeTruthy();
         const span = ReactTestUtils.scryRenderedDOMComponentsWithTag( comp, "span" );
-        expect(span).toExist();
+        expect(span).toBeTruthy();
         expect(span.length).toBe(0);
     });
     it('tests FeatureInfoFormat component for wms', () => {
@@ -63,15 +63,15 @@ describe('test Layer Properties FeatureInfoFormat module component', () => {
         // wrap in a stateful component, stateless components render return null
         // see: https://facebook.github.io/react/docs/top-level-api.html#reactdom.render
         const comp = ReactDOM.render(<FeatureInfoFormat element={l} label={label} onChange={handlers.onChange}/>, document.getElementById("container"));
-        expect(comp).toExist();
+        expect(comp).toBeTruthy();
         const span = ReactTestUtils.scryRenderedDOMComponentsWithTag( comp, "span" );
-        expect(span).toExist();
+        expect(span).toBeTruthy();
         expect(span.length).toBe(2);
         span[1].click();
         const li = ReactTestUtils.scryRenderedDOMComponentsWithTag( comp, "li" );
-        expect(li).toExist();
+        expect(li).toBeTruthy();
         li[0].click();
-        expect(spy.calls.length).toBe(1);
+        expect(spy.mock.calls.length).toBe(1);
     });
     it('tests FeatureInfoFormat component for wms using generalInfoFormat', () => {
         const l = {
@@ -85,9 +85,9 @@ describe('test Layer Properties FeatureInfoFormat module component', () => {
         const generalInfoFormat = "text/html";
         const label = "label";
         const comp = ReactDOM.render(<FeatureInfoFormat element={l} label={label} generalInfoFormat={generalInfoFormat} onChange={() => {}}/>, document.getElementById("container"));
-        expect(comp).toExist();
+        expect(comp).toBeTruthy();
         const div = ReactTestUtils.scryRenderedDOMComponentsWithTag( comp, "div" );
-        expect(div[2]).toExist();
+        expect(div[2]).toBeTruthy();
         expect(div[2].textContent).toBe("HTML");
 
     });

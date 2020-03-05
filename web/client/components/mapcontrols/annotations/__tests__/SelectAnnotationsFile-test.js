@@ -26,9 +26,9 @@ describe("test the SelectAnnotationsFile modal", () => {
 
     it('test default properties', () => {
         const annotations = ReactDOM.render(<SelectAnnotationsFile/>, document.getElementById("container"));
-        expect(annotations).toExist();
+        expect(annotations).toBeTruthy();
         const annotationsNode = ReactDOM.findDOMNode(annotations);
-        expect(annotationsNode).toNotExist();
+        expect(annotationsNode).toBeFalsy();
     });
     it('test file selected', (done) => {
         const jsonFile = new File([`{ "coordinates": [
@@ -47,9 +47,9 @@ describe("test the SelectAnnotationsFile modal", () => {
             done();
         };
         const annotations = ReactDOM.render(<SelectAnnotationsFile onFileChoosen={onFileChoosen} show/>, document.getElementById("container"));
-        expect(annotations).toExist();
+        expect(annotations).toBeTruthy();
         const annotationsNode = ReactDOM.findDOMNode(annotations);
-        expect(annotationsNode).toExist();
+        expect(annotationsNode).toBeTruthy();
         annotations.checkfile([jsonFile]);
     });
 
@@ -71,12 +71,12 @@ describe("test the SelectAnnotationsFile modal", () => {
             type: "text/plain"
         });
         const annotations = ReactDOM.render(<SelectAnnotationsFile show/>, document.getElementById("container"));
-        expect(annotations).toExist();
+        expect(annotations).toBeTruthy();
         const annotationsNode = ReactDOM.findDOMNode(annotations);
-        expect(annotationsNode).toExist();
+        expect(annotationsNode).toBeTruthy();
         annotations.componentDidUpdate = () => {
             if (annotations.state.error) {
-                expect(annotations.state.error).toExist();
+                expect(annotations.state.error).toBeTruthy();
                 done();
             }
         };

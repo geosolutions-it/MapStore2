@@ -17,7 +17,7 @@ describe('Identify Coordinate Editor component', () => {
         ReactDOM.render(<Editor />, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('.coord-editor');
-        expect(el).toExist();
+        expect(el).toBeTruthy();
     });
     it('Test Editor onChange correctly passed and argument mapping', () => {
         const actions = {
@@ -27,8 +27,8 @@ describe('Identify Coordinate Editor component', () => {
         ReactDOM.render(<Editor onChange={actions.onChange} />, document.getElementById("container"));
         ReactTestUtils.Simulate.change(document.querySelector('input'), { target: { value: 20} }); // <-- trigger event callback
         expect(spyonChange).toHaveBeenCalled();
-        expect(spyonChange.calls[0].arguments[0]).toBe('lat');
-        expect(spyonChange.calls[0].arguments[1]).toBe(20);
+        expect(spyonChange.mock.calls[0][0]).toBe('lat');
+        expect(spyonChange.mock.calls[0][1]).toBe(20);
     });
     it('Test Editor onChangeFormat correctly passed', () => {
         const actions = {

@@ -11,6 +11,7 @@ import {createSink} from 'recompose';
 import expect from 'expect';
 import withSelectedMapReload from '../withSelectedMapReload';
 import  {Provider} from 'react-redux';
+import '../../../../libs/bindings/rxjsRecompose';
 const  store = {
     getState: () => {},
     subscribe: () => {}};
@@ -37,9 +38,9 @@ describe('media editor withSelectedMapReload enhancer', () => {
 
         store.dispatch = () => {};
         const Sink = withSelectedMapReload(createSink( props => {
-            expect(props).toExist();
+            expect(props).toBeTruthy();
             expect(spyOnMapChoice).toHaveBeenCalled();
-            expect(spyOnMapChoice.getLastCall().arguments[0]).toBe(resource);
+            expect(spyOnMapChoice.mock.calls[spyOnMapChoice.mock.calls.length - 1][0]).toBe(resource);
             done();
         }));
 

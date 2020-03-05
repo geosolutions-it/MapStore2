@@ -25,7 +25,7 @@ describe('StringSelector component', () => {
         ReactDOM.render(<StringSelector />, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('.mapstore-string-select');
-        expect(el).toExist();
+        expect(el).toBeTruthy();
     });
     it('Test StringSelector onSelect', () => {
         const actions = {
@@ -35,16 +35,16 @@ describe('StringSelector component', () => {
         const options = [{v: 1, l: "1"}, {v: 2, l: "2"}];
         ReactDOM.render(<StringSelector valueField="v" displayField="l" value={1} options={options} onSelect={actions.onSelect} />, document.getElementById("container"));
         const el = document.querySelector('.mapstore-string-select > :first-child');
-        expect(el).toExist();
-        expect(document.querySelector('.m-options')).toNotExist();
+        expect(el).toBeTruthy();
+        expect(document.querySelector('.m-options')).toBeFalsy();
         ReactTestUtils.Simulate.click(el); // <-- trigger event callback
-        expect(document.querySelector('.m-options')).toExist();
+        expect(document.querySelector('.m-options')).toBeTruthy();
         ReactTestUtils.Simulate.click(document.querySelector('.m-options ul li'));
         expect(spyonSelect).toHaveBeenCalled();
-        expect(document.querySelector('.m-options')).toNotExist();
+        expect(document.querySelector('.m-options')).toBeFalsy();
         ReactTestUtils.Simulate.click(el);
-        expect(document.querySelector('.m-options')).toExist();
+        expect(document.querySelector('.m-options')).toBeTruthy();
         document.querySelector('#container').click();
-        expect(document.querySelector('.m-options')).toNotExist();
+        expect(document.querySelector('.m-options')).toBeFalsy();
     });
 });

@@ -374,7 +374,7 @@ describe('Test featuregrid selectors', () => {
     });
     it('test if the feature has some geometry (true)', () => {
         const bool = hasGeometrySelector(initialState);
-        expect(bool).toExist();
+        expect(bool).toBeTruthy();
         expect(bool).toBe(true);
     });
     it('test if the feature has not geometry (false)', () => {
@@ -390,7 +390,7 @@ describe('Test featuregrid selectors', () => {
     });
     it('test selectedFeatureSelector ', () => {
         const feature = selectedFeatureSelector(initialState);
-        expect(feature).toExist();
+        expect(feature).toBeTruthy();
         expect(feature.id).toBe(idFt1);
     });
     it('test showAgainSelector default ', () => {
@@ -399,7 +399,7 @@ describe('Test featuregrid selectors', () => {
     });
     it('test showPopoverSyncSelector default ', () => {
         const val = showPopoverSyncSelector(initialState);
-        expect(val).toExist();
+        expect(val).toBeTruthy();
         expect(val).toBe(true);
     });
     it('test showAgainSelector ', () => {
@@ -412,32 +412,32 @@ describe('Test featuregrid selectors', () => {
     });
     it('test selectedFeaturesSelector ', () => {
         const features = selectedFeaturesSelector(initialState);
-        expect(features).toExist();
+        expect(features).toBeTruthy();
         expect(features.length).toBe(2);
     });
     it('test modeSelector ', () => {
         const mode = modeSelector(initialState);
-        expect(mode).toExist();
+        expect(mode).toBeTruthy();
         expect(mode).toBe(modeEdit);
     });
     it('test selectedFeaturesCount ', () => {
         const count = selectedFeaturesCount(initialState);
-        expect(count).toExist();
+        expect(count).toBeTruthy();
         expect(count).toBe(2);
     });
     it('test changesSelector ', () => {
         const ftChanged = changesSelector(initialState);
-        expect(ftChanged).toExist();
+        expect(ftChanged).toBeTruthy();
         expect(ftChanged.length).toBe(1);
     });
     it('test isDrawingSelector ', () => {
         const isdrawing = isDrawingSelector(initialState);
-        expect(isdrawing).toExist();
+        expect(isdrawing).toBeTruthy();
         expect(isdrawing).toBe(true);
     });
     it('test isSimpleGeomSelector ', () => {
         const geomType = isSimpleGeomSelector(initialState);
-        expect(geomType).toExist();
+        expect(geomType).toBeTruthy();
     });
     it('test titleSelector ', () => {
         expect(getTitleSelector(initialState)).toBe("Test Layer");

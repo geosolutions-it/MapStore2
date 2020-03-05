@@ -26,7 +26,7 @@ describe('This test for ResourceGrid', () => {
     it('creates the component with defaults', () => {
         ReactDOM.render(<ResourceGrid />, document.getElementById("container"));
         const dom = document.querySelector('.ms-grid');
-        expect(dom).toExist();
+        expect(dom).toBeTruthy();
     });
 
     it('component with data', () => {
@@ -34,7 +34,7 @@ describe('This test for ResourceGrid', () => {
         var map2 = { id: 2, name: "b", description: "description" };
         ReactDOM.render(<ResourceGrid resources={[map1, map2]} show />, document.getElementById("container"));
         const dom = document.querySelector('.ms-grid');
-        expect(dom).toExist();
+        expect(dom).toBeTruthy();
 
         // check list
         const list = dom.getElementsByClassName("map-thumb");

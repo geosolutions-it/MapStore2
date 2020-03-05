@@ -268,7 +268,7 @@ describe('TOCPlugin Plugin', () => {
                 name: "MetadataExplorer"
             }]} />, document.getElementById("container"));
             expect(document.querySelectorAll(TOOL_BUTTON_SELECTOR).length).toBe(1);
-            expect(document.querySelector(`${TOOL_BUTTON_SELECTOR} .glyphicon-add-layer`)).toExist();
+            expect(document.querySelector(`${TOOL_BUTTON_SELECTOR} .glyphicon-add-layer`)).toBeTruthy();
         });
         it('render AddGroup', () => {
             const { Plugin } = getPluginForTest(TOCPlugin, {
@@ -285,7 +285,7 @@ describe('TOCPlugin Plugin', () => {
                 name: "AddGroup"
             }]} />, document.getElementById("container"));
             expect(document.querySelectorAll(TOOL_BUTTON_SELECTOR).length).toBe(1);
-            expect(document.querySelector(`${TOOL_BUTTON_SELECTOR} .glyphicon-add-folder`)).toExist();
+            expect(document.querySelector(`${TOOL_BUTTON_SELECTOR} .glyphicon-add-folder`)).toBeTruthy();
         });
         const ZOOM_TO_SELECTOR = `${TOOL_BUTTON_SELECTOR} .glyphicon-zoom-to`;
         const FEATURES_GRID_SELECTOR = `${TOOL_BUTTON_SELECTOR} .glyphicon-features-grid`;
@@ -299,8 +299,8 @@ describe('TOCPlugin Plugin', () => {
             ReactDOM.render(<WrappedPlugin />, document.getElementById("container"));
             // check zoom and remove selector
             expect(document.querySelectorAll(TOOL_BUTTON_SELECTOR).length).toBe(2);
-            expect(document.querySelector(ZOOM_TO_SELECTOR)).toExist();
-            expect(document.querySelector(REMOVE_SELECTOR)).toExist();
+            expect(document.querySelector(ZOOM_TO_SELECTOR)).toBeTruthy();
+            expect(document.querySelector(REMOVE_SELECTOR)).toBeTruthy();
 
         });
         it('render FeatureEditor', () => {
@@ -311,9 +311,9 @@ describe('TOCPlugin Plugin', () => {
             }]} />, document.getElementById("container"));
             // check tools
             expect(document.querySelectorAll(TOOL_BUTTON_SELECTOR).length).toBe(3);
-            expect(document.querySelector(ZOOM_TO_SELECTOR)).toExist();
-            expect(document.querySelector(FEATURES_GRID_SELECTOR)).toExist();
-            expect(document.querySelector(REMOVE_SELECTOR)).toExist();
+            expect(document.querySelector(ZOOM_TO_SELECTOR)).toBeTruthy();
+            expect(document.querySelector(FEATURES_GRID_SELECTOR)).toBeTruthy();
+            expect(document.querySelector(REMOVE_SELECTOR)).toBeTruthy();
         });
         it('render TOCItemsSettings', () => {
             const { Plugin } = getPluginForTest(TOCPlugin, SELECTED_LAYER_STATE);
@@ -323,9 +323,9 @@ describe('TOCPlugin Plugin', () => {
             }]} />, document.getElementById("container"));
             // check tools
             expect(document.querySelectorAll(TOOL_BUTTON_SELECTOR).length).toBe(3);
-            expect(document.querySelector(ZOOM_TO_SELECTOR)).toExist();
-            expect(document.querySelector(SETTINGS_SELECTOR)).toExist();
-            expect(document.querySelector(REMOVE_SELECTOR)).toExist();
+            expect(document.querySelector(ZOOM_TO_SELECTOR)).toBeTruthy();
+            expect(document.querySelector(SETTINGS_SELECTOR)).toBeTruthy();
+            expect(document.querySelector(REMOVE_SELECTOR)).toBeTruthy();
         });
         it('render FilterLayer', () => {
             const { Plugin } = getPluginForTest(TOCPlugin, SELECTED_LAYER_STATE);
@@ -335,9 +335,9 @@ describe('TOCPlugin Plugin', () => {
             }]} />, document.getElementById("container"));
             // check tools
             expect(document.querySelectorAll(TOOL_BUTTON_SELECTOR).length).toBe(3);
-            expect(document.querySelector(ZOOM_TO_SELECTOR)).toExist();
-            expect(document.querySelector(FILTER_LAYER_SELECTOR)).toExist();
-            expect(document.querySelector(REMOVE_SELECTOR)).toExist();
+            expect(document.querySelector(ZOOM_TO_SELECTOR)).toBeTruthy();
+            expect(document.querySelector(FILTER_LAYER_SELECTOR)).toBeTruthy();
+            expect(document.querySelector(REMOVE_SELECTOR)).toBeTruthy();
         });
         it('render WidgetBuilder', () => { // this test fails only on travis (not locally)
             const { Plugin } = getPluginForTest(TOCPlugin, { ...SELECTED_LAYER_STATE, controls: { widgetBuilder: {available: true}}});
@@ -349,9 +349,9 @@ describe('TOCPlugin Plugin', () => {
             }]} />, document.getElementById("container"));
             // check tools
 
-            expect(document.querySelector(ZOOM_TO_SELECTOR)).toExist("zoom doesn't exist");
-            expect(document.querySelector(WIDGET_BUILDER_SELECTOR)).toExist("widget doesn't exist");
-            expect(document.querySelector(REMOVE_SELECTOR)).toExist("remove doesn't exist");
+            expect(document.querySelector(ZOOM_TO_SELECTOR)).toBeTruthy();
+            expect(document.querySelector(WIDGET_BUILDER_SELECTOR)).toBeTruthy();
+            expect(document.querySelector(REMOVE_SELECTOR)).toBeTruthy();
         });
     });
 });

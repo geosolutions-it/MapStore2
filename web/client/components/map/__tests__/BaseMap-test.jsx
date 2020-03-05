@@ -135,19 +135,19 @@ describe('BaseMap', () => {
     });
     it('test openlayers map', () => {
         const map = ReactDOM.render(<TestMap mapType="openlayers" id="myMap" layers={SAMPLE_LAYERS_1} />, document.getElementById("container"));
-        expect(map).toExist();
+        expect(map).toBeTruthy();
         const el = ReactDOM.findDOMNode(map);
-        expect(el).toExist();
+        expect(el).toBeTruthy();
         expect(el.id).toBe("myMap");
-        expect(el.querySelector('canvas')).toExist();
+        expect(el.querySelector('canvas')).toBeTruthy();
 
     });
     it('test leaflet map', () => {
         const map = ReactDOM.render(<TestMap mapType="leaflet" id="myMap" layers={SAMPLE_LAYERS_1} />, document.getElementById("container"));
-        expect(map).toExist();
+        expect(map).toBeTruthy();
         const el = ReactDOM.findDOMNode(map);
-        expect(el).toExist();
+        expect(el).toBeTruthy();
         expect(el.id).toBe("myMap");
-        expect(el.querySelector('div')).toExist();
+        expect(el.querySelector('div')).toBeTruthy();
     });
 });

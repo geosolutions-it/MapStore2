@@ -34,7 +34,7 @@ describe('leaflet Overview component', () => {
 
     it('create Overview with defaults', () => {
         const ov = ReactDOM.render(<Overview map={map}/>, document.getElementById("container"));
-        expect(ov).toExist();
+        expect(ov).toBeTruthy();
         const domMap = map.getContainer();
         const overview = domMap.getElementsByClassName('leaflet-control-minimap');
         expect(overview.length).toBe(1);

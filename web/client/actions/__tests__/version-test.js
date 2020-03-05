@@ -24,7 +24,7 @@ describe('Test correctness of the version actions', () => {
     it('load version', (done) => {
         loadVersion('base/web/client/test-resources/testVersion.txt')((a) => {
             try {
-                expect(a).toExist();
+                expect(a).toBeTruthy();
                 expect(a.type).toBe(CHANGE_VERSION);
                 expect(a.version.indexOf('myVersion')).toBe(0);
                 done();

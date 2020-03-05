@@ -24,9 +24,9 @@ describe('crossLayerFilter enhancer', () => {
     });
     it('crossLayerFilter WFS Capabilities', (done) => {
         const Sink = crossLayerFilter(createSink( props => {
-            expect(props).toExist();
+            expect(props).toBeTruthy();
             if (!props.loadingCapabilities) {
-                expect(props.errorObj).toNotExist();
+                expect(props.errorObj).toBeFalsy();
                 done();
             }
 
@@ -38,9 +38,9 @@ describe('crossLayerFilter enhancer', () => {
     });
     it('crossLayerFilter not supported', (done) => {
         const Sink = crossLayerFilter(createSink( props => {
-            expect(props).toExist();
+            expect(props).toBeTruthy();
             if (!props.loadingCapabilities) {
-                expect(props.errorObj).toExist();
+                expect(props.errorObj).toBeTruthy();
                 done();
             }
 
@@ -57,9 +57,9 @@ describe('crossLayerFilter enhancer', () => {
         };
         const spysetCrossLayerFilterParameter = expect.spyOn(actions, 'setCrossLayerFilterParameter');
         const Sink = crossLayerFilter(createSink( props => {
-            expect(props).toExist();
+            expect(props).toBeTruthy();
             if (!props.loadingAttributes) {
-                expect(props.attributes).toExist();
+                expect(props.attributes).toBeTruthy();
                 expect(props.attributes.length).toBe(22);
                 expect(spysetCrossLayerFilterParameter).toHaveBeenCalledWith("collectGeometries.queryCollection[geometryName]", "the_geom");
                 done();

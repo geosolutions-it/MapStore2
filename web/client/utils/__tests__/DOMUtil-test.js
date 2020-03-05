@@ -21,7 +21,7 @@ describe('Test the DOMUtils', () => {
         const spy = expect.spyOn(handlers, 'scroll');
         window.HTMLElement.prototype.scrollIntoView = handlers.scroll;
         scrollIntoViewId('container');
-        expect(spy.calls.length).toEqual(1);
+        expect(spy.mock.calls.length).toEqual(1);
     });
 
 });

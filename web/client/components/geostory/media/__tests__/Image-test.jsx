@@ -26,7 +26,7 @@ describe('Image component', () => {
     it('Image rendering with defaults', () => {
         ReactDOM.render(<Image />, document.getElementById("container"));
         const container = document.getElementById('container');
-        expect(container.querySelector('.glyphicon-picture')).toExist(); // empty state
+        expect(container.querySelector('.glyphicon-picture')).toBeTruthy(); // empty state
     });
     it('Image rendering with to contain', () => {
         ReactDOM.render(<Image
@@ -34,7 +34,7 @@ describe('Image component', () => {
             src={SAMPLE_SRC}/>, document.getElementById("container"));
         const container = document.getElementById('container');
         const image = container.querySelector('.ms-media-image > img');
-        expect(image).toExist();
+        expect(image).toBeTruthy();
         expect(image.style.objectFit).toBe('contain');
     });
     it('Image rendering with to cover', () => {
@@ -43,7 +43,7 @@ describe('Image component', () => {
             src={SAMPLE_SRC}/>, document.getElementById("container"));
         const container = document.getElementById('container');
         const image = container.querySelector('.ms-media-image > img');
-        expect(image).toExist();
+        expect(image).toBeTruthy();
         expect(image.style.objectFit).toBe('cover');
     });
     it.skip('Image rendering with enabled fullscreen preview', () => {
@@ -52,10 +52,10 @@ describe('Image component', () => {
         />, document.getElementById("container"));
         const container = document.getElementById('container');
         const image = container.querySelector('.ms-media-image > img');
-        expect(image).toExist();
+        expect(image).toBeTruthy();
         expect(image.style.objectFit).toBe('cover');
         ReactTestUtils.Simulate.click(image);
-        expect(document.querySelector('.ReactModalPortal')).toExist();
+        expect(document.querySelector('.ReactModalPortal')).toBeTruthy();
     });
     it('Image rendering with disabled fullscreen preview', () => {
         ReactDOM.render(<Image
@@ -64,9 +64,9 @@ describe('Image component', () => {
         />, document.getElementById("container"));
         const container = document.getElementById('container');
         const image = container.querySelector('.ms-media-image > img');
-        expect(image).toExist();
+        expect(image).toBeTruthy();
         expect(image.style.objectFit).toBe('cover');
         ReactTestUtils.Simulate.click(image);
-        expect(document.querySelector('.ReactModalPortal')).toNotExist();
+        expect(document.querySelector('.ReactModalPortal')).toBeFalsy();
     });
 });

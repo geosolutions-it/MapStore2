@@ -33,7 +33,7 @@ describe('Featuregrid TButton', () => {
         spyOn(events, "onClick");
         ReactDOM.render(<TButton id="TEST_BUTTON" onClick={events.onClick} visible />, document.getElementById("container"));
         let editButton = document.getElementById("fg-TEST_BUTTON");
-        expect(editButton).toExist();
+        expect(editButton).toBeTruthy();
         expect(isVisibleButton(editButton)).toBe(true);
         editButton.click();
         expect(events.onClick).toHaveBeenCalled();

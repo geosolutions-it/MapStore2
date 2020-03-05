@@ -96,8 +96,8 @@ describe('Tests ajax library', () => {
         axios.get('http://fakeexternaldomain.mapstore2').then(() => {
             done();
         }).catch(ex => {
-            expect(ex.config).toExist();
-            expect(ex.config.url).toExist();
+            expect(ex.config).toBeTruthy();
+            expect(ex.config.url).toBeTruthy();
             expect(ex.config.url).toContain('proxy/?url=');
             done();
         });
@@ -105,8 +105,8 @@ describe('Tests ajax library', () => {
 
     it('does not use proxy for requests on the same origin', (done) => {
         axios.get('base/web/client/test-resources/testConfig.json').then((response) => {
-            expect(response.config).toExist();
-            expect(response.config.url).toExist();
+            expect(response.config).toBeTruthy();
+            expect(response.config.url).toBeTruthy();
             expect(response.config.url).toBe('base/web/client/test-resources/testConfig.json');
             done();
         }).catch(ex => {
@@ -134,8 +134,8 @@ describe('Tests ajax library', () => {
                 done();
             })
             .catch((ex) => {
-                expect(ex.config).toExist();
-                expect(ex.config.url).toExist();
+                expect(ex.config).toBeTruthy();
+                expect(ex.config.url).toBeTruthy();
                 expect(ex.config.url).toContain('proxy/?url=');
                 done();
             });
@@ -165,7 +165,7 @@ describe('Tests ajax library', () => {
             })
             .catch((ex) => {
                 const decodedUrl = urlUtil.parse(decodeURIComponent(ex.config.url), true);
-                expect(decodedUrl.query).toNotContainKeys(['param3', 'param4', 'param11']);
+                expect(decodedUrl.query).not.toIncludeKeys(['param3', 'param4', 'param11']);
                 done();
             });
     });
@@ -179,8 +179,8 @@ describe('Tests ajax library', () => {
                 done();
             })
             .catch((ex) => {
-                expect(ex.config).toExist();
-                expect(ex.config.url).toExist();
+                expect(ex.config).toBeTruthy();
+                expect(ex.config.url).toBeTruthy();
                 expect(ex.config.url).toContain('proxy/?url=');
                 done();
             });
@@ -210,8 +210,8 @@ describe('Tests ajax library', () => {
         }).then(() => {
             done();
         }).catch((ex) => {
-            expect(ex.config).toExist();
-            expect(ex.config.url).toExist();
+            expect(ex.config).toBeTruthy();
+            expect(ex.config.url).toBeTruthy();
             expect(ex.config.url).toContain('proxy/?url=');
             done();
         });
@@ -219,15 +219,15 @@ describe('Tests ajax library', () => {
 
     it('test add authkey authentication to axios config with no login', (done) => {
         // mocking the authentication rules
-        expect.spyOn(SecurityUtils, 'isAuthenticationActivated').andReturn(true);
-        expect.spyOn(SecurityUtils, 'getAuthenticationRules').andReturn(authenticationRules);
+        expect.spyOn(SecurityUtils, 'isAuthenticationActivated').mockReturnValue(true);
+        expect.spyOn(SecurityUtils, 'getAuthenticationRules').mockReturnValue(authenticationRules);
         // authkey authentication with no user
-        expect.spyOn(SecurityUtils, 'getSecurityInfo').andReturn(null);
+        expect.spyOn(SecurityUtils, 'getSecurityInfo').mockReturnValue(null);
         axios.get('http://www.some-site.com/geoserver?parameter1=value1&parameter2=value2').then(() => {
             done();
         }).catch((exception) => {
-            expect(exception.config).toExist();
-            expect(exception.config.url).toExist();
+            expect(exception.config).toBeTruthy();
+            expect(exception.config.url).toBeTruthy();
             expect(exception.config.url.indexOf('authkey')).toBeLessThan(0);
             done();
         });
@@ -235,15 +235,15 @@ describe('Tests ajax library', () => {
 
     it('test add authkey authentication to axios config with login but no uuid', (done) => {
         // mocking the authentication rules
-        expect.spyOn(SecurityUtils, 'isAuthenticationActivated').andReturn(true);
-        expect.spyOn(SecurityUtils, 'getAuthenticationRules').andReturn(authenticationRules);
+        expect.spyOn(SecurityUtils, 'isAuthenticationActivated').mockReturnValue(true);
+        expect.spyOn(SecurityUtils, 'getAuthenticationRules').mockReturnValue(authenticationRules);
         // authkey authentication with user but no uuid
-        expect.spyOn(SecurityUtils, 'getSecurityInfo').andReturn(securityInfoA);
+        expect.spyOn(SecurityUtils, 'getSecurityInfo').mockReturnValue(securityInfoA);
         axios.get('http://www.some-site.com/geoserver?parameter1=value1&parameter2=value2').then(() => {
             done();
         }).catch((exception) => {
-            expect(exception.config).toExist();
-            expect(exception.config.url).toExist();
+            expect(exception.config).toBeTruthy();
+            expect(exception.config.url).toBeTruthy();
             expect(exception.config.url.indexOf('authkey')).toBeLessThan(0);
             done();
         });
@@ -251,15 +251,15 @@ describe('Tests ajax library', () => {
 
     it('test add authkey authentication to axios config with login and uuid', (done) => {
         // mocking the authentication rules
-        expect.spyOn(SecurityUtils, 'isAuthenticationActivated').andReturn(true);
-        expect.spyOn(SecurityUtils, 'getAuthenticationRules').andReturn(authenticationRules);
+        expect.spyOn(SecurityUtils, 'isAuthenticationActivated').mockReturnValue(true);
+        expect.spyOn(SecurityUtils, 'getAuthenticationRules').mockReturnValue(authenticationRules);
         // authkey authentication with user
-        expect.spyOn(SecurityUtils, 'getSecurityInfo').andReturn(securityInfoB);
+        expect.spyOn(SecurityUtils, 'getSecurityInfo').mockReturnValue(securityInfoB);
         axios.get('http://www.some-site.com/geoserver?parameter1=value1&parameter2=value2&authkey=TEST_AUTHKEY').then(() => {
             done();
         }).catch((exception) => {
-            expect(exception.config).toExist();
-            expect(exception.config.url).toExist();
+            expect(exception.config).toBeTruthy();
+            expect(exception.config.url).toBeTruthy();
             expect(exception.config.url.indexOf('authkey')).toBeGreaterThan(-1);
             expect(exception.config.url.indexOf("TEST_AUTHKEY")).toBeLessThan(0);
             done();
@@ -268,15 +268,15 @@ describe('Tests ajax library', () => {
 
     it('test add authkey authentication to axios config with login and uuid but authentication deactivated', (done) => {
         // mocking the authentication rules
-        expect.spyOn(SecurityUtils, 'isAuthenticationActivated').andReturn(false);
-        expect.spyOn(SecurityUtils, 'getAuthenticationRules').andReturn(authenticationRules);
+        expect.spyOn(SecurityUtils, 'isAuthenticationActivated').mockReturnValue(false);
+        expect.spyOn(SecurityUtils, 'getAuthenticationRules').mockReturnValue(authenticationRules);
         // authkey authentication with user
-        expect.spyOn(SecurityUtils, 'getSecurityInfo').andReturn(securityInfoB);
+        expect.spyOn(SecurityUtils, 'getSecurityInfo').mockReturnValue(securityInfoB);
         axios.get('http://www.some-site.com/geoserver?parameter1=value1&parameter2=value2').then(() => {
             done();
         }).catch((exception) => {
-            expect(exception.config).toExist();
-            expect(exception.config.url).toExist();
+            expect(exception.config).toBeTruthy();
+            expect(exception.config.url).toBeTruthy();
             expect(exception.config.url.indexOf('authkey')).toBeLessThan(0);
             done();
         });
@@ -284,15 +284,15 @@ describe('Tests ajax library', () => {
 
     it('test add basic authentication to axios config', (done) => {
         // mocking the authentication rules
-        expect.spyOn(SecurityUtils, 'isAuthenticationActivated').andReturn(true);
-        expect.spyOn(SecurityUtils, 'getAuthenticationRules').andReturn(authenticationRules);
+        expect.spyOn(SecurityUtils, 'isAuthenticationActivated').mockReturnValue(true);
+        expect.spyOn(SecurityUtils, 'getAuthenticationRules').mockReturnValue(authenticationRules);
         // basic authentication header available
-        expect.spyOn(SecurityUtils, 'getSecurityInfo').andReturn(securityInfoB);
+        expect.spyOn(SecurityUtils, 'getSecurityInfo').mockReturnValue(securityInfoB);
         axios.get('http://www.some-site.com/index?parameter1=value1&parameter2=value2').then(() => {
             done();
         }).catch((exception) => {
-            expect(exception.config).toExist();
-            expect(exception.config.headers).toExist();
+            expect(exception.config).toBeTruthy();
+            expect(exception.config.headers).toBeTruthy();
             expect(exception.config.headers.Authorization).toBe('Basic 263c6917-543f-43e3-8e1a-6a0d29952f72');
             done();
         });
@@ -300,14 +300,15 @@ describe('Tests ajax library', () => {
 
     it('add custom authkey authentication to axios config with login and uuid', (done) => {
         // mocking the authentication rules and user info
-        expect.spyOn(SecurityUtils, 'isAuthenticationActivated').andReturn(true);
-        expect.spyOn(SecurityUtils, 'getAuthenticationRules').andReturn(authenticationRules);
-        expect.spyOn(SecurityUtils, 'getSecurityInfo').andReturn(securityInfoB);
+        expect.spyOn(SecurityUtils, 'isAuthenticationActivated').mockReturnValue(true);
+        expect.spyOn(SecurityUtils, 'getAuthenticationRules').mockReturnValue(authenticationRules);
+        expect.spyOn(SecurityUtils, 'getSecurityInfo').mockReturnValue(securityInfoB);
         const theExpectedString = 'mario%3D' + securityInfoB.token;
         axios.get('http://non-existent.mapstore2/youhavetouseacustomone?parameter1=value1&par2=v2').then(() => {
             done("Axios actually reached the fake url");
         }).catch((exception) => {
-            expect(exception.config).toExist().toIncludeKey('url');
+            expect(exception.config).toBeTruthy();
+            expect(exception.config).toIncludeKey('url');
             expect(exception.config.url.indexOf('authkey')).toBeLessThan(0);
             expect(exception.config.url.indexOf(theExpectedString)).toBeGreaterThan(-1);
             done();
@@ -317,13 +318,14 @@ describe('Tests ajax library', () => {
 
     it('does not add autkeys if the configuration is wrong', (done) => {
         // mocking the authentication rules and user info
-        expect.spyOn(SecurityUtils, 'isAuthenticationActivated').andReturn(true);
-        expect.spyOn(SecurityUtils, 'getAuthenticationRules').andReturn(authenticationRules);
-        expect.spyOn(SecurityUtils, 'getSecurityInfo').andReturn(securityInfoA);
+        expect.spyOn(SecurityUtils, 'isAuthenticationActivated').mockReturnValue(true);
+        expect.spyOn(SecurityUtils, 'getAuthenticationRules').mockReturnValue(authenticationRules);
+        expect.spyOn(SecurityUtils, 'getSecurityInfo').mockReturnValue(securityInfoA);
         axios.get('http://non-existent.mapstore2/thisismissingtheparam?parameter1=value1&par2=v2').then(() => {
             done("Axios actually reached the fake url");
         }).catch((exception) => {
-            expect(exception.config).toExist().toIncludeKey('url');
+            expect(exception.config).toBeTruthy();
+            expect(exception.config).toIncludeKey('url');
             expect(exception.config.url.indexOf('authkey')).toBe(-1);
             done();
         });
@@ -331,13 +333,14 @@ describe('Tests ajax library', () => {
 
     it('adds Bearer header', (done) => {
         // mocking the authentication rules and user info
-        expect.spyOn(SecurityUtils, 'isAuthenticationActivated').andReturn(true);
-        expect.spyOn(SecurityUtils, 'getAuthenticationRules').andReturn(authenticationRules);
-        expect.spyOn(SecurityUtils, 'getSecurityInfo').andReturn(securityInfoB);
+        expect.spyOn(SecurityUtils, 'isAuthenticationActivated').mockReturnValue(true);
+        expect.spyOn(SecurityUtils, 'getAuthenticationRules').mockReturnValue(authenticationRules);
+        expect.spyOn(SecurityUtils, 'getSecurityInfo').mockReturnValue(securityInfoB);
         axios.get('http://non-existent.mapstore2/imtokenized?parameter1=value1&par2=v2').then(() => {
             done("Axios actually reached the fake url");
         }).catch((exception) => {
-            expect(exception.config).toExist().toIncludeKey('headers');
+            expect(exception.config).toBeTruthy();
+            expect(exception.config).toIncludeKey('headers');
             expect(exception.config.headers.Authorization).toBe('Bearer 263c6917-543f-43e3-8e1a-6a0d29952f72');
             done();
         });
@@ -345,13 +348,14 @@ describe('Tests ajax library', () => {
 
     it('adds Bearer header also when using baseURL', (done) => {
         // mocking the authentication rules and user info
-        expect.spyOn(SecurityUtils, 'isAuthenticationActivated').andReturn(true);
-        expect.spyOn(SecurityUtils, 'getAuthenticationRules').andReturn(authenticationRules);
-        expect.spyOn(SecurityUtils, 'getSecurityInfo').andReturn(securityInfoB);
+        expect.spyOn(SecurityUtils, 'isAuthenticationActivated').mockReturnValue(true);
+        expect.spyOn(SecurityUtils, 'getAuthenticationRules').mockReturnValue(authenticationRules);
+        expect.spyOn(SecurityUtils, 'getSecurityInfo').mockReturnValue(securityInfoB);
         axios.get('tokenservice?param=token', { baseURL: 'http://sitetocheck', timeout: 1}).then(() => {
             done("Axios actually reached the fake url");
         }).catch((exception) => {
-            expect(exception.config).toExist().toIncludeKey('headers');
+            expect(exception.config).toBeTruthy();
+            expect(exception.config).toIncludeKey('headers');
             expect(exception.config.headers.Authorization).toBe('Bearer 263c6917-543f-43e3-8e1a-6a0d29952f72');
             done();
         });
@@ -359,44 +363,48 @@ describe('Tests ajax library', () => {
 
     it('does not add Bearer headers if the configuration is wrong', (done) => {
         // mocking the authentication rules and user info
-        expect.spyOn(SecurityUtils, 'isAuthenticationActivated').andReturn(true);
-        expect.spyOn(SecurityUtils, 'getAuthenticationRules').andReturn(authenticationRules);
-        expect.spyOn(SecurityUtils, 'getSecurityInfo').andReturn(securityInfoA);
+        expect.spyOn(SecurityUtils, 'isAuthenticationActivated').mockReturnValue(true);
+        expect.spyOn(SecurityUtils, 'getAuthenticationRules').mockReturnValue(authenticationRules);
+        expect.spyOn(SecurityUtils, 'getSecurityInfo').mockReturnValue(securityInfoA);
         axios.get('http://non-existent.mapstore2/imtokenized?parameter1=value1&par2=v2').then(() => {
             done("Axios actually reached the fake url");
         }).catch((exception) => {
-            expect(exception.config).toExist().toIncludeKey('headers');
-            expect(exception.config.headers.Authorization).toNotExist();
+            expect(exception.config).toBeTruthy();
+            expect(exception.config).toIncludeKey('headers');
+            expect(exception.config.headers.Authorization).toBeFalsy();
             done();
         });
     });
 
     it('does not add BasicAuth headers if the configuration is wrong', (done) => {
         // mocking the authentication rules and user info
-        expect.spyOn(SecurityUtils, 'isAuthenticationActivated').andReturn(true);
-        expect.spyOn(SecurityUtils, 'getAuthenticationRules').andReturn(authenticationRules);
-        expect.spyOn(SecurityUtils, 'getSecurityInfo').andReturn(securityInfoA);
+        expect.spyOn(SecurityUtils, 'isAuthenticationActivated').mockReturnValue(true);
+        expect.spyOn(SecurityUtils, 'getAuthenticationRules').mockReturnValue(authenticationRules);
+        expect.spyOn(SecurityUtils, 'getSecurityInfo').mockReturnValue(securityInfoA);
         axios.get('http://www.some-site.com/index?parameter1=value1&parameter2=value2').then(() => {
             done("Axios actually reached the fake url");
         }).catch((exception) => {
-            expect(exception.config).toExist().toIncludeKey('headers');
-            expect(exception.config.headers.Authorization).toNotExist();
+            expect(exception.config).toBeTruthy();
+            expect(exception.config).toIncludeKey('headers');
+            expect(exception.config.headers.Authorization).toBeFalsy();
             done();
         });
     });
 
     it('does not add authentication if the method is not supported', (done) => {
         // mocking the authentication rules and user info
-        expect.spyOn(SecurityUtils, 'isAuthenticationActivated').andReturn(true);
-        expect.spyOn(SecurityUtils, 'getAuthenticationRules').andReturn(authenticationRules);
-        expect.spyOn(SecurityUtils, 'getSecurityInfo').andReturn(securityInfoA);
+        expect.spyOn(SecurityUtils, 'isAuthenticationActivated').mockReturnValue(true);
+        expect.spyOn(SecurityUtils, 'getAuthenticationRules').mockReturnValue(authenticationRules);
+        expect.spyOn(SecurityUtils, 'getSecurityInfo').mockReturnValue(securityInfoA);
         const url = 'https://not-supported.mapstore2:4433/?parameter1=value1&parameter2=value2';
         axios.get(url).then(() => {
             done("Axios actually reached the fake url");
         }).catch((exception) => {
-            expect(exception.config).toExist().toIncludeKey('headers');
-            expect(exception.config.headers.Authorization).toNotExist();
-            expect(exception.config).toExist().toIncludeKey('url');
+            expect(exception.config).toBeTruthy();
+            expect(exception.config).toIncludeKey('headers');
+            expect(exception.config.headers.Authorization).toBeFalsy();
+            expect(exception.config).toBeTruthy();
+            expect(exception.config).toIncludeKey('url');
             const parsed = urlUtil.parse(exception.config.url, true);
             expect(parsed.query.url).toEqual(url);
             done();
@@ -405,9 +413,9 @@ describe('Tests ajax library', () => {
 
     it('the interceptor can handle empty uri', (done) => {
         // mocking the authentication rules and user info
-        expect.spyOn(SecurityUtils, 'isAuthenticationActivated').andReturn(true);
-        expect.spyOn(SecurityUtils, 'getAuthenticationRules').andReturn(authenticationRules);
-        expect.spyOn(SecurityUtils, 'getSecurityInfo').andReturn(securityInfoA);
+        expect.spyOn(SecurityUtils, 'isAuthenticationActivated').mockReturnValue(true);
+        expect.spyOn(SecurityUtils, 'getAuthenticationRules').mockReturnValue(authenticationRules);
+        expect.spyOn(SecurityUtils, 'getSecurityInfo').mockReturnValue(securityInfoA);
         axios.get().then(() => {
             done("Axios actually reached the fake url");
         }).catch(() => {
@@ -416,27 +424,27 @@ describe('Tests ajax library', () => {
     });
 
     it('does set withCredentials on the request', (done)=> {
-        expect.spyOn(SecurityUtils, 'isAuthenticationActivated').andReturn(true);
-        expect.spyOn(SecurityUtils, 'getAuthenticationRules').andReturn(authenticationRules);
+        expect.spyOn(SecurityUtils, 'isAuthenticationActivated').mockReturnValue(true);
+        expect.spyOn(SecurityUtils, 'getAuthenticationRules').mockReturnValue(authenticationRules);
 
         axios.get('http://www.useBrowserCredentials.com/useBrowserCredentials?parameter1=value1&parameter2=value2').then(() => {
             done();
         }).catch( (exception) => {
-            expect(exception.config).toExist();
-            expect(exception.config.withCredentials).toExist();
+            expect(exception.config).toBeTruthy();
+            expect(exception.config.withCredentials).toBeTruthy();
             expect(exception.config.withCredentials).toBeTruthy();
             done();
         });
     });
 
     it('does not set withCredentials on the request', (done)=> {
-        expect.spyOn(SecurityUtils, 'isAuthenticationActivated').andReturn(true);
-        expect.spyOn(SecurityUtils, 'getAuthenticationRules').andReturn(authenticationRules);
+        expect.spyOn(SecurityUtils, 'isAuthenticationActivated').mockImplementation(() => true);
+        expect.spyOn(SecurityUtils, 'getAuthenticationRules').mockImplementation(() => authenticationRules);
         axios.get('http://www.skipBrowserCredentials.com/geoserver?parameter1=value1&parameter2=value2').then(() => {
             done();
         }).catch( (exception) => {
-            expect(exception.config).toExist();
-            expect(exception.config.withCredentials).toNotExist();
+            expect(exception.config).toBeTruthy();
+            expect(exception.config.withCredentials).toBeFalsy();
             done();
         });
     });
@@ -455,9 +463,9 @@ describe('Tests ajax library', () => {
                 }
             })
             .then(response => {
-                expect(response.config).toExist();
-                expect(response.config.url).toExist();
-                expect(response.config.url).toNotContain("proxy/?url=");
+                expect(response.config).toBeTruthy();
+                expect(response.config.url).toBeTruthy();
+                expect(response.config.url).not.toContain("proxy/?url=");
                 done();
             });
     });
@@ -472,8 +480,8 @@ describe('Tests ajax library', () => {
                 autoDetectCORS: true
             }
         }).catch((response) => {
-            expect(response.config).toExist();
-            expect(response.config.url).toExist();
+            expect(response.config).toBeTruthy();
+            expect(response.config.url).toBeTruthy();
             expect(response.config.url).toContain('proxy/?url=');
             done();
         });

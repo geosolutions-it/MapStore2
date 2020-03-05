@@ -35,10 +35,10 @@ describe('CRSSelector', () => {
     it('checks default', () => {
 
         const cmp = ReactDOM.render(<CRSSelector enabled {...crsOptions}/>, document.getElementById("container"));
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
 
         const cmpDom = ReactDOM.findDOMNode(cmp);
-        expect(cmpDom).toExist();
+        expect(cmpDom).toBeTruthy();
 
         const select = cmpDom.getElementsByTagName("select").item(0);
         const opts = select.childNodes;

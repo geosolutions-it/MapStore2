@@ -17,7 +17,7 @@ describe('Test correctness of the fullscreen actions', () => {
         const testControl = 'test';
         var retval = toggleFullscreen(true, testControl);
 
-        expect(retval).toExist();
+        expect(retval).toBeTruthy();
         expect(retval.type).toBe(TOGGLE_FULLSCREEN);
         expect(retval.enable).toBe(true);
         expect(retval.elementSelector).toBe(testControl);

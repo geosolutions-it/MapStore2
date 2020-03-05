@@ -29,8 +29,8 @@ describe('BackgroundSelector Plugin', () => {
     it('Render plugin with layers', () => {
         const { Plugin } = getPluginForTest(BackgroundSelectorPlugin, { layers: { flat: [{ group: 'background' }] } });
         ReactDOM.render(<Plugin alwaysVisible />, document.getElementById("container"));
-        expect(document.querySelector(BG_PLUGIN_SELECTOR)).toExist();
-        expect(document.querySelector(ADD_BTN_SELECTOR)).toNotExist();
+        expect(document.querySelector(BG_PLUGIN_SELECTOR)).toBeTruthy();
+        expect(document.querySelector(ADD_BTN_SELECTOR)).toBeFalsy();
     });
     it('Add button present only if catalog available', () => {
         const { Plugin } = getPluginForTest(BackgroundSelectorPlugin, {
@@ -42,8 +42,8 @@ describe('BackgroundSelector Plugin', () => {
             }});
         ReactDOM.render(<Plugin alwaysVisible/>, document.getElementById("container"));
 
-        expect(document.querySelector(ADD_BTN_SELECTOR)).toNotExist();
+        expect(document.querySelector(ADD_BTN_SELECTOR)).toBeFalsy();
         ReactDOM.render(<Plugin alwaysVisible items={[{ name: "MetadataExplorer" }]} />, document.getElementById("container"));
-        expect(document.querySelector(ADD_BTN_SELECTOR)).toExist();
+        expect(document.querySelector(ADD_BTN_SELECTOR)).toBeTruthy();
     });
 });

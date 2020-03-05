@@ -23,7 +23,7 @@ describe('LegendView component', () => {
     it('LegendView rendering with defaults', () => {
         ReactDOM.render(<LegendView />, document.getElementById("container"));
         const container = document.getElementById('container');
-        expect(container.querySelector('.compact-legend-grid')).toExist();
+        expect(container.querySelector('.compact-legend-grid')).toBeTruthy();
     });
 
     it('LegendView rendering with layers', () => {
@@ -43,6 +43,6 @@ describe('LegendView component', () => {
         ];
         ReactDOM.render(<LegendView layers={LAYERS} />, document.getElementById("container"));
         const container = document.getElementById('container');
-        expect(container.querySelector('.mapstore-side-card')).toExist();
+        expect(container.querySelector('.mapstore-side-card')).toBeTruthy();
     });
 });

@@ -49,8 +49,8 @@ describe("test FeatureInfoEditor", () => {
         // edit template
         const editor = cmp.quill.getEditor();
         editor.clipboard.dangerouslyPasteHTML(template);
-        expect(spyOnChange).toNotHaveBeenCalled();
-        spyOnChange.reset();
+        expect(spyOnChange).not.toHaveBeenCalled();
+        spyOnChange.mockReset();
 
         const btns = document.getElementsByClassName('ms-header-btn');
         expect(btns.length).toBe(2);
@@ -58,7 +58,7 @@ describe("test FeatureInfoEditor", () => {
         expect(spyOnShowEditor).toHaveBeenCalled();
 
         expect(spyOnShowEditor).toHaveBeenCalled();
-        expect(spyOnChange.calls[0].arguments).toEqual([ 'featureInfo', { template } ]);
+        expect(spyOnChange.mock.calls[0]).toEqual([ 'featureInfo', { template } ]);
     });
 
     it('test rendering close button', () => {
@@ -83,14 +83,14 @@ describe("test FeatureInfoEditor", () => {
         // edit template
         const editor = cmp.quill.getEditor();
         editor.clipboard.dangerouslyPasteHTML(template);
-        expect(spyOnChange).toNotHaveBeenCalled();
-        spyOnChange.reset();
+        expect(spyOnChange).not.toHaveBeenCalled();
+        spyOnChange.mockReset();
 
         const btns = document.getElementsByClassName('btn');
         expect(btns.length).toBe(1);
         TestUtils.Simulate.click(btns[0]);
         expect(spyOnShowEditor).toHaveBeenCalled();
-        expect(spyOnChange.calls[0].arguments).toEqual([ 'featureInfo', { template } ]);
+        expect(spyOnChange.mock.calls[0]).toEqual([ 'featureInfo', { template } ]);
     });
 
 });

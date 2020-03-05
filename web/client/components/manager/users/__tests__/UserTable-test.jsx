@@ -40,7 +40,7 @@ describe("Test UsersTable Component", () => {
     it('Test usergroup table', () => {
         let comp = ReactDOM.render(
             <UserTable show users={users}/>, document.getElementById("container"));
-        expect(comp).toExist();
+        expect(comp).toBeTruthy();
         let table = ReactTestUtils.scryRenderedDOMComponentsWithTag(comp, "table");
         expect(table.length).toBe(1);
         let rows = ReactTestUtils.scryRenderedDOMComponentsWithTag(comp, "tr");

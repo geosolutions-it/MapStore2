@@ -25,19 +25,19 @@ describe('Identify Coordinate component', () => {
         ReactDOM.render(<Coordinate />, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('.text-center');
-        expect(el).toExist();
+        expect(el).toBeTruthy();
     });
     it('Coordinate rendering with content', () => {
         ReactDOM.render(<Coordinate coordinate={{lat: 1, lon: 1}} />, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('.ms-coordinates-decimal');
-        expect(el).toExist();
+        expect(el).toBeTruthy();
     });
     it('Coordinate edit mode', () => {
         ReactDOM.render(<Coordinate edit coordinate={{ lat: 1, lon: 1 }} />, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('.coord-editor');
-        expect(el).toExist();
+        expect(el).toBeTruthy();
     });
     it('Test Editor onChangeFormat correctly passed', () => {
         const actions = {

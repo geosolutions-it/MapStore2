@@ -91,14 +91,14 @@ describe('EditorRegistry tests ', () => {
         const customEditors = assign({}, testEditors);
         register({name, editors: customEditors});
         const editor = getCustomEditor({attribute, url, typeName}, rules, {type: "string", props: {}});
-        expect(editor).toExist();
+        expect(editor).toBeTruthy();
     });
     it('getCustomEditor with positive match but not supported type, i.e. default editor', () => {
         const name = "DropDownEditor";
         const customEditors = assign({}, testEditors);
         register({name, editors: customEditors});
         const editor = getCustomEditor({attribute, url, typeName}, rules, {type: "varchar", props: {}});
-        expect(editor).toExist();
+        expect(editor).toBeTruthy();
     });
     it('getCustomEditor with positive match but not supported type, return null', () => {
         const name = "DropDownEditor";
@@ -132,13 +132,13 @@ describe('EditorRegistry tests ', () => {
         register({name, editors: customEditors});
 
         const AutocompleteEditor = getCustomEditor({attribute, url, typeName}, rules, {type: "string", props: {autocompleteEnabled: true}});
-        expect(AutocompleteEditor).toExist();
+        expect(AutocompleteEditor).toBeTruthy();
 
         const IntEditor = getCustomEditor({attribute, url, typeName}, rules, {type: "int", props: {}});
-        expect(IntEditor).toExist();
+        expect(IntEditor).toBeTruthy();
 
         const NumbEditor = getCustomEditor({attribute, url, typeName}, rules, {type: "number", props: {}});
-        expect(NumbEditor).toExist();
+        expect(NumbEditor).toBeTruthy();
 
     });
 });

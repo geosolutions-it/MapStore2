@@ -25,7 +25,7 @@ describe('ImageButton', () => {
 
     it('create a empty button', () => {
         const btn = ReactDOM.render(<ImageButton/>, document.getElementById("container"));
-        expect(btn).toExist();
+        expect(btn).toBeTruthy();
 
         const btnDiv = ReactDOM.findDOMNode(btn);
         expect(btnDiv.style.cursor).toBe("pointer");
@@ -43,7 +43,7 @@ describe('ImageButton', () => {
     it('creates an empty button with a custom style', () => {
         const btn = ReactDOM.render(<ImageButton
             style={{margin: "4px", border: "1px solid black"}}/>, document.getElementById("container"));
-        expect(btn).toExist();
+        expect(btn).toBeTruthy();
 
         const btnDiv = ReactDOM.findDOMNode(btn);
         expect(btnDiv.style.cursor).toBe("pointer");
@@ -60,7 +60,7 @@ describe('ImageButton', () => {
 
     it('create a button with image', () => {
         const btn = ReactDOM.render(<ImageButton image="fake"/>, document.getElementById("container"));
-        expect(btn).toExist();
+        expect(btn).toBeTruthy();
 
         const btnDiv = ReactDOM.findDOMNode(btn);
         expect(btnDiv.style.cursor).toBe("pointer");
@@ -77,11 +77,11 @@ describe('ImageButton', () => {
         };
         let spy = expect.spyOn(handlers, "onclick");
         const btn = ReactDOM.render(<ImageButton onClick={handlers.onclick}/>, document.getElementById("container"));
-        expect(btn).toExist();
+        expect(btn).toBeTruthy();
 
         const btnDiv = ReactDOM.findDOMNode(btn);
         btnDiv.click();
-        expect(spy.calls.length).toBe(1);
+        expect(spy.mock.calls.length).toBe(1);
     });
 
     it('creates a disabled button with default properties', () => {
@@ -90,12 +90,12 @@ describe('ImageButton', () => {
         };
         let spy = expect.spyOn(handlers, "onclick");
         const btn = ReactDOM.render(<ImageButton disabled onClick={handlers.onclick}/>, document.getElementById("container"));
-        expect(btn).toExist();
+        expect(btn).toBeTruthy();
 
         const btnDiv = ReactDOM.findDOMNode(btn);
         expect(btnDiv.style.cursor).toBe("not-allowed");
         btnDiv.click();
-        expect(spy.calls.length).toBe(0);
+        expect(spy.mock.calls.length).toBe(0);
     });
 
     it('creates a disabled button with a custom style', () => {
@@ -105,17 +105,17 @@ describe('ImageButton', () => {
         let spy = expect.spyOn(handlers, "onclick");
         const btn = ReactDOM.render(<ImageButton disabled onClick={handlers.onclick}
             style={{cursor: "none"}}/>, document.getElementById("container"));
-        expect(btn).toExist();
+        expect(btn).toBeTruthy();
 
         const btnDiv = ReactDOM.findDOMNode(btn);
         expect(btnDiv.style.cursor).toBe("none");
         btnDiv.click();
-        expect(spy.calls.length).toBe(0);
+        expect(spy.mock.calls.length).toBe(0);
     });
 
     it('creates a button with a tooltip', () => {
         const btn = ReactDOM.render(<ImageButton tooltip="Tooltip"/>, document.getElementById("container"));
-        expect(btn).toExist();
+        expect(btn).toBeTruthy();
 
         const btnDiv = ReactDOM.findDOMNode(btn);
         expect(btnDiv.title).toBe("Tooltip");
@@ -123,7 +123,7 @@ describe('ImageButton', () => {
 
     it('creates a button with a custom css class', () => {
         const btn = ReactDOM.render(<ImageButton className="custom"/>, document.getElementById("container"));
-        expect(btn).toExist();
+        expect(btn).toBeTruthy();
 
         const btnDiv = ReactDOM.findDOMNode(btn);
         expect(btnDiv.className).toBe("custom");

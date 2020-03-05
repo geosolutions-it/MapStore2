@@ -78,7 +78,7 @@ describe('TOC LayerMetadataModal', () => {
 
         ReactDOM.render(<LayerMetadataModal renderContent={RenderTemplate} layerMetadata={layerMetadata} />, document.getElementById("container"));
         const panelClass = document.getElementsByClassName('layer-settings-metadata-panel-title');
-        expect(panelClass).toExist();
+        expect(panelClass).toBeTruthy();
     });
 
     it('Hide Layer Metadata Modal component', () => {
@@ -98,8 +98,8 @@ describe('TOC LayerMetadataModal', () => {
         ReactDOM.render(<LayerMetadataModal hideLayerMetadata={onToolsActions.onHideLayerMetadata} renderContent={RenderTemplate} layerMetadata={layerMetadata} />, document.getElementById("container"));
         let panelClass = document.getElementsByClassName('layer-settings-metadata-panel-title');
         const closeButton = document.getElementsByClassName('layer-settings-metadata-panel-close');
-        expect(panelClass).toExist();
-        expect(closeButton).toExist();
+        expect(panelClass).toBeTruthy();
+        expect(closeButton).toBeTruthy();
         TestUtils.Simulate.click(closeButton[0]);
         expect(spyHideLayerMetadata).toHaveBeenCalled();
     });
@@ -121,7 +121,7 @@ describe('TOC LayerMetadataModal', () => {
 
         let comp = ReactDOM.render(<LayerMetadataModal renderContent={RenderTemplate} metadataTemplate={metadataTemplate} layerMetadata={layerMetadata} />, document.getElementById("container"));
         const panelClass = document.getElementsByClassName('layer-settings-metadata-panel-title');
-        expect(panelClass).toExist();
+        expect(panelClass).toBeTruthy();
         new Promise((resolve) => {
             require.ensure(['babel-standalone'], () => {
                 resolve(comp);
@@ -129,8 +129,8 @@ describe('TOC LayerMetadataModal', () => {
         }).then(() => {
             try {
                 const cmpDom = document.getElementById("msg_rss_micro");
-                expect(cmpDom).toExist();
-                expect(cmpDom.id).toExist();
+                expect(cmpDom).toBeTruthy();
+                expect(cmpDom.id).toBeTruthy();
                 expect(cmpDom.id).toBe("msg_rss_micro");
                 done();
             } catch (ex) {
@@ -160,7 +160,7 @@ describe('TOC LayerMetadataModal', () => {
 
         let comp = ReactDOM.render(<LayerMetadataModal renderContent={RenderTemplate} metadataTemplate={CompTemplate} layerMetadata={layerMetadata} />, document.getElementById("container"));
         const panelClass = document.getElementsByClassName('layer-settings-metadata-panel-title');
-        expect(panelClass).toExist();
+        expect(panelClass).toBeTruthy();
         new Promise((resolve) => {
             require.ensure(['babel-standalone'], () => {
                 resolve(comp);
@@ -168,8 +168,8 @@ describe('TOC LayerMetadataModal', () => {
         }).then(() => {
             try {
                 const cmpDom = document.getElementById("msg_rss_micro");
-                expect(cmpDom).toExist();
-                expect(cmpDom.id).toExist();
+                expect(cmpDom).toBeTruthy();
+                expect(cmpDom.id).toBeTruthy();
                 expect(cmpDom.id).toBe("msg_rss_micro");
                 done();
             } catch (ex) {

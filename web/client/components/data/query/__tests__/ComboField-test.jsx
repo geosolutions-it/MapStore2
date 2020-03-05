@@ -45,19 +45,19 @@ describe('ComboField', () => {
             document.getElementById("container")
         );
 
-        expect(combofield).toExist();
+        expect(combofield).toBeTruthy();
 
-        const comboFieldDOMNode = expect(ReactDOM.findDOMNode(combofield));
-        expect(comboFieldDOMNode).toExist();
+        const comboFieldDOMNode = ReactDOM.findDOMNode(combofield);
+        expect(comboFieldDOMNode).toBeTruthy();
 
-        let childNodes = comboFieldDOMNode.actual.childNodes;
+        let childNodes = comboFieldDOMNode.childNodes;
         expect(childNodes.length).toBe(2);
 
-        let rwDropdownlist = comboFieldDOMNode.actual.getElementsByClassName('rw-dropdownlist-picker rw-select rw-btn')[0];
-        expect(rwDropdownlist).toExist();
+        let rwDropdownlist = comboFieldDOMNode.getElementsByClassName('rw-dropdownlist-picker rw-select rw-btn')[0];
+        expect(rwDropdownlist).toBeTruthy();
 
-        let rwInput = comboFieldDOMNode.actual.getElementsByClassName('rw-input')[0];
-        expect(rwInput).toExist();
+        let rwInput = comboFieldDOMNode.getElementsByClassName('rw-input')[0];
+        expect(rwInput).toBeTruthy();
     });
 
     it('creates the ComboField with an exception message', () => {
@@ -79,10 +79,10 @@ describe('ComboField', () => {
             document.getElementById("container")
         );
 
-        expect(combofield).toExist();
+        expect(combofield).toBeTruthy();
 
-        const comboFieldDOMNode = expect(ReactDOM.findDOMNode(combofield));
-        expect(comboFieldDOMNode).toExist();
+        const comboFieldDOMNode = ReactDOM.findDOMNode(combofield);
+        expect(comboFieldDOMNode).toBeTruthy();
 
     });
 });

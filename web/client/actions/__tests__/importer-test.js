@@ -64,7 +64,7 @@ describe('Test correctness of the importer actions', () => {
         const testImports = (actionResult) => {
             let imports = actionResult && actionResult.imports;
             expect(actionResult.type).toBe(IMPORTS_LIST_LOADED);
-            expect(imports).toExist();
+            expect(imports).toBeTruthy();
             expect(imports.length).toBe(2);
         };
         let url = 'base/web/client/test-resources/importer/imports.json#';
@@ -112,7 +112,7 @@ describe('Test correctness of the importer actions', () => {
             expect(actionResult.type).toBe(LAYER_LOADED);
             expect(actionResult.importId).toBe(1);
             expect(actionResult.taskId).toBe(2);
-            expect(actionResult.layer).toExist();
+            expect(actionResult.layer).toBeTruthy();
         };
         let url = 'base/web/client/test-resources/importer/layer.json#';
         let tests = [testLoading, testLoadLayer, testLoading ];
@@ -137,7 +137,7 @@ describe('Test correctness of the importer actions', () => {
         };
         const testLoadTask = (actionResult) => {
             expect(actionResult.type).toBe(IMPORTS_TASK_LOADED);
-            expect(actionResult.task).toExist();
+            expect(actionResult.task).toBeTruthy();
         };
         let url = 'base/web/client/test-resources/importer/task.json#';
         let tests = [testLoading, testLoadTask, testLoadLayer, testLoading ];
@@ -152,10 +152,10 @@ describe('Test correctness of the importer actions', () => {
             expect(actionResult.type).toBe(IMPORTS_TASK_UPDATED);
             expect(actionResult.importId).toBe(1);
             expect(actionResult.taskId).toBe(2);
-            expect(actionResult.task).toExist();
+            expect(actionResult.task).toBeTruthy();
         };
         const testUpdateUI = (fun) => {
-            expect(fun).toExist();
+            expect(fun).toBeTruthy();
             fun('base/web/client/test-resources/importer/task.json#', 1, 2);
         };
         let url = 'base/web/client/test-resources/importer/task.json#';
@@ -184,7 +184,7 @@ describe('Test correctness of the importer actions', () => {
             expect(actionResult.type).toBe(IMPORTS_TASK_UPDATED);
             expect(actionResult.importId).toBe(1);
             expect(actionResult.taskId).toBe(2);
-            expect(actionResult.task).toExist();
+            expect(actionResult.task).toBeTruthy();
         };
         let url = 'base/web/client/test-resources/importer/task.json#';
         let tests = [testLoading, testLoadTask, testLoadLayer, testLoading ];
@@ -208,7 +208,7 @@ describe('Test correctness of the importer actions', () => {
             expect(actionResult.importId).toBe(1);
             expect(actionResult.taskId).toBe(2);
             expect(actionResult.transformId).toBe(3);
-            expect(actionResult.transform).toExist();
+            expect(actionResult.transform).toBeTruthy();
         };
         let url = 'base/web/client/test-resources/importer/transform.json#';
         let tests = [testLoading, testLoadTransform, testLoading ];
@@ -249,9 +249,9 @@ describe('Test correctness of the importer actions', () => {
     it('load styler tool', (done) => {
         const testConfigureMap = (actionResult) => {
             expect(actionResult.type).toBe(MAP_CONFIG_LOADED);
-            expect(actionResult.config).toExist();
-            expect(actionResult.config.map).toExist();
-            expect(actionResult.config.map.layers).toExist();
+            expect(actionResult.config).toBeTruthy();
+            expect(actionResult.config.map).toBeTruthy();
+            expect(actionResult.config.map.layers).toBeTruthy();
             expect(actionResult.config.map.layers.length).toBe(2);
             done();
         };
@@ -263,7 +263,7 @@ describe('Test correctness of the importer actions', () => {
     it('load styler tool', () => {
         const wsName = "worskpace_name";
         let res = selectWorkSpace(wsName);
-        expect(res).toExist();
+        expect(res).toBeTruthy();
         expect(res.type).toBe(IMPORTER_WORKSPACE_SELECTED);
         expect(res.workspace).toBe(wsName);
     });
@@ -291,7 +291,7 @@ describe('Test correctness of the importer actions', () => {
     // load workspaces
     it('update workspace creation status', () => {
         let res = dismissWorkspaceCreationStatus();
-        expect(res).toExist();
+        expect(res).toBeTruthy();
         expect(res.type).toBe(IMPORTER_WORKSPACE_STATUS_CHANGE);
     });
 

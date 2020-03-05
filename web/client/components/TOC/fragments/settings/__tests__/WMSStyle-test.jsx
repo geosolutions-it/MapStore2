@@ -39,9 +39,9 @@ describe('test  Layer Properties General module component', () => {
         };
 
         const comp = ReactDOM.render(<WMSStyle element={l} settings={settings} />, document.getElementById("container"));
-        expect(comp).toExist();
+        expect(comp).toBeTruthy();
         const form = ReactTestUtils.scryRenderedDOMComponentsWithTag( comp, "form" );
-        expect(form).toExist();
+        expect(form).toBeTruthy();
 
     });
     it('tests component events', () => {
@@ -66,13 +66,13 @@ describe('test  Layer Properties General module component', () => {
         let spyUpdate = expect.spyOn(handlers, "onChange");
 
         const comp = ReactDOM.render(<WMSStyle element={l} settings={settings} retrieveLayerData={handlers.retrieveLayerData} onChange={handlers.onChange}/>, document.getElementById("container"));
-        expect(comp).toExist();
+        expect(comp).toBeTruthy();
         // refresh layers list button click
         const buttons = ReactTestUtils.scryRenderedDOMComponentsWithTag( comp, "button" );
-        expect(buttons).toExist();
+        expect(buttons).toBeTruthy();
         expect(buttons.length).toBe(1);
         ReactTestUtils.Simulate.click(buttons[0]);
-        expect(spyRetrive.calls.length).toBe(1);
+        expect(spyRetrive.mock.calls.length).toBe(1);
 
         // Simpulate selection
         const selectArrow = ReactDOM.findDOMNode(comp).querySelector('.Select-arrow');
@@ -81,7 +81,7 @@ describe('test  Layer Properties General module component', () => {
         ReactTestUtils.Simulate.mouseDown(selectArrow, { button: 0 });
         ReactTestUtils.Simulate.keyDown(selectControl, { keyCode: 40, key: 'ArrowDown' });
         ReactTestUtils.Simulate.keyDown(inputs[0], { keyCode: 13, key: 'Enter' });
-        expect(spyUpdate.calls.length).toBe(1);
+        expect(spyUpdate.mock.calls.length).toBe(1);
 
         // click on arrow of the select auto try to retrieve data if not present
         const l2 = {
@@ -95,7 +95,7 @@ describe('test  Layer Properties General module component', () => {
         const comp1 = ReactDOM.render(<WMSStyle element={l2} settings={settings} retrieveLayerData={handlers.retrieveLayerData} updateSettings={handlers.updateSettings}/>, document.getElementById("container"));
         const selectArrow1 = ReactDOM.findDOMNode(comp1).querySelector('.Select-arrow');
         ReactTestUtils.Simulate.click(selectArrow1);
-        expect(spyRetrive.calls.length).toBe(2);
+        expect(spyRetrive.mock.calls.length).toBe(2);
     });
     it('tests rendering error', () => {
         const l = {
@@ -113,9 +113,9 @@ describe('test  Layer Properties General module component', () => {
             options: {opacity: 1}
         };
         const comp = ReactDOM.render(<WMSStyle element={l} settings={settings} />, document.getElementById("container"));
-        expect(comp).toExist();
+        expect(comp).toBeTruthy();
         const form = ReactTestUtils.scryRenderedDOMComponentsWithTag( comp, "form" );
-        expect(form).toExist();
+        expect(form).toBeTruthy();
 
     });
 

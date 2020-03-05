@@ -24,7 +24,7 @@ describe('dependenciesToWidget enhancer', () => {
     });
     it('dependency transformation', (done) => {
         const Sink = dependenciesToWidget(createSink( props => {
-            expect(props).toExist();
+            expect(props).toBeTruthy();
             expect(props.dependencies.x).toBe("a");
             done();
         }));
@@ -67,7 +67,7 @@ describe('dependenciesToWidget enhancer', () => {
             dependenciesMap: "widgets[d7e73050-3de1-11ea-8ee8-c127e39ddf83].dependenciesMap"
         };
         const Sink = dependenciesToWidget(createSink( props => {
-            expect(props).toExist();
+            expect(props).toBeTruthy();
             expect(props.dependencies.zoom).toBe(4);
             // if there was a loop an maximum call stack exceeded error would be thrown
             done();

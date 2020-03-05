@@ -36,10 +36,10 @@ describe('test WMSLegend module component', () => {
         const comp = ReactDOM.render(<WMSLegend node={l} />, document.getElementById("container"));
 
         const domNode = ReactDOM.findDOMNode(comp);
-        expect(domNode).toExist();
+        expect(domNode).toBeTruthy();
 
         const image = domNode.getElementsByTagName('img');
-        expect(image).toExist();
+        expect(image).toBeTruthy();
         expect(image.length).toBe(1);
     });
 
@@ -55,6 +55,6 @@ describe('test WMSLegend module component', () => {
         const comp = ReactDOM.render(<WMSLegend node={l} showOnlyIfVisible />, document.getElementById("container"));
 
         const domNode = ReactDOM.findDOMNode(comp);
-        expect(domNode).toNotExist();
+        expect(domNode).toBeFalsy();
     });
 });

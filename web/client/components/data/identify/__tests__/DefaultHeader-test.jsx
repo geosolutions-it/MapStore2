@@ -31,7 +31,7 @@ describe('DefaultHeader', () => {
             document.getElementById("container")
         );
 
-        expect(header).toExist();
+        expect(header).toBeTruthy();
     });
 
     it('creates the DefaultHeader component with title', () => {
@@ -40,7 +40,7 @@ describe('DefaultHeader', () => {
             document.getElementById("container")
         );
 
-        expect(header).toExist();
+        expect(header).toBeTruthy();
         const dom = ReactDOM.findDOMNode(header);
         expect(dom.innerHTML.indexOf('mytitle') !== -1).toBe(true);
     });

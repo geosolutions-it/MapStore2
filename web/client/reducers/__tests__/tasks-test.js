@@ -19,7 +19,7 @@ describe('Test the tasks reducer', () => {
             name: name
         };
         let state = tasks({}, testAction);
-        expect(state).toExist();
+        expect(state).toBeTruthy();
 
         expect(state[name].running).toBe(true);
     });

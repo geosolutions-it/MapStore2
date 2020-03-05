@@ -26,7 +26,7 @@ describe("test DockPanel", () => {
     it('test rendering', () => {
         ReactDOM.render(<DockPanel />, document.getElementById("container"));
         const domComp = document.getElementsByClassName('ms-side-panel')[0];
-        expect(domComp).toExist();
+        expect(domComp).toBeTruthy();
     });
 
     it('test open/close panel', () => {
@@ -50,11 +50,11 @@ describe("test DockPanel", () => {
             </DockPanel>, document.getElementById("container"));
 
         const header = document.getElementsByClassName('my-custom-head-row')[0];
-        expect(header).toExist();
+        expect(header).toBeTruthy();
         const footer = document.getElementsByClassName('my-custom-footer')[0];
-        expect(footer).toExist();
+        expect(footer).toBeTruthy();
         const body = document.getElementsByClassName('my-custom-body-child')[0];
-        expect(body).toExist();
+        expect(body).toBeTruthy();
     });
     it('test header, footer and children with closed panel (render nothing)', () => {
         // This prevents issues like "Pressing tab cause white space on right #3664"
@@ -66,11 +66,11 @@ describe("test DockPanel", () => {
             </DockPanel>, document.getElementById("container"));
 
         const header = document.getElementsByClassName('my-custom-head-row')[0];
-        expect(header).toNotExist();
+        expect(header).toBeFalsy();
         const footer = document.getElementsByClassName('my-custom-footer')[0];
-        expect(footer).toNotExist();
+        expect(footer).toBeFalsy();
         const body = document.getElementsByClassName('my-custom-body-child')[0];
-        expect(body).toNotExist();
+        expect(body).toBeFalsy();
     });
 
     it('test fullscreen', () => {

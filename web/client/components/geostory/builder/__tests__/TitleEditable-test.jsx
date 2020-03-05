@@ -25,6 +25,6 @@ describe('TitleEditable component', () => {
         ReactDOM.render(<TitleEditable/>, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('div');
-        expect(el).toExist();
+        expect(el).toBeTruthy();
     });
 });

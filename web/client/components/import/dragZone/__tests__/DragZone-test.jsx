@@ -17,6 +17,6 @@ describe('DragZone component', () => {
         ReactDOM.render(<DragZone />, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('#DRAGDROP_IMPORT_ZONE');
-        expect(el).toExist();
+        expect(el).toBeTruthy();
     });
 });

@@ -28,8 +28,8 @@ describe('media editor  withRemoveResource enhancer', () => {
     });
     it('withRemoveResource rendering with defaults', (done) => {
         const Sink = withRemoveResource(createSink( props => {
-            expect(props).toExist();
-            expect(props.removeMedia).toExist();
+            expect(props).toBeTruthy();
+            expect(props.removeMedia).toBeTruthy();
             done();
         }));
         ReactDOM.render(<Provider store={store}><Sink /></Provider>, document.getElementById("container"));

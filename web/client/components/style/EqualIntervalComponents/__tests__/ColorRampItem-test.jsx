@@ -27,7 +27,7 @@ describe("Test the ColorRampItem", () => {
         ReactDOM.render(<ColorRampItem />, document.getElementById("container"));
         const container = document.getElementById('container');
         const colorRamp = container.querySelector('.color-ramp-item');
-        expect(colorRamp).toExist();
+        expect(colorRamp).toBeTruthy();
     });
     it('ColorRampItem with string item equal to blue', () => {
         ReactDOM.render(<ColorRampItem item="blue" />, document.getElementById("container"));

@@ -33,20 +33,20 @@ describe("Test the Choice component", () => {
 
     it('creates component with defaults', () => {
         const cmp = ReactDOM.render(<Choice/>, document.getElementById("container"));
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
 
         const node = ReactDOM.findDOMNode(cmp);
-        expect(node).toExist();
+        expect(node).toBeTruthy();
         expect(node.childNodes.length).toBe(2);
         expect(node.childNodes[1].childNodes.length).toBe(0);
     });
 
     it('creates component with items', () => {
         const cmp = ReactDOM.render(<Choice items={items}/>, document.getElementById("container"));
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
 
         const node = ReactDOM.findDOMNode(cmp);
-        expect(node).toExist();
+        expect(node).toBeTruthy();
         expect(node.childNodes.length).toBe(2);
         expect(node.childNodes[1].childNodes.length).toBe(2);
         expect(node.childNodes[1].childNodes[0].textContent).toBe('A4');
@@ -60,7 +60,7 @@ describe("Test the Choice component", () => {
             called = true;
         };
         const cmp = ReactDOM.render(<Choice items={items} onChange={changeHandler}/>, document.getElementById("container"));
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
         const node = ReactDOM.findDOMNode(cmp);
         ReactTestUtils.Simulate.change(node.childNodes[1]);
 

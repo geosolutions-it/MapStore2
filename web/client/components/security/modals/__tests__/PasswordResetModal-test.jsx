@@ -26,12 +26,12 @@ describe("Test password reset modal", () => {
 
     it('creates component with defaults', () => {
         const cmp = ReactDOM.render(<PRModal options={{animation: false}}/>, document.getElementById("container"));
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
     });
 
     it('creates component to show', () => {
         const cmp = ReactDOM.render(<PRModal options={{animation: false}} show />, document.getElementById("container"));
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
     });
 
     it('test password reset submit', () => {
@@ -41,9 +41,9 @@ describe("Test password reset modal", () => {
                 expect(pass).toEqual("password");
             }
         };
-        let spy = expect.spyOn(callbacks, 'onPasswordChange');
+        let spy = expect.spyOn(callbacks, 'onPasswordChange').mockImplementation();
         const cmp = ReactDOM.render(<PRModal options={{animation: false}} show user={{name: "test"}} onPasswordChange={callbacks.onPasswordChange}/>, document.getElementById("container"));
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
         let inputs = document.getElementsByTagName("input");
         Array.prototype.forEach.call(inputs, (i) => {
             i.value = "password";
@@ -51,6 +51,6 @@ describe("Test password reset modal", () => {
         });
         let button = document.getElementsByTagName("button")[1];
         ReactTestUtils.Simulate.click(button);
-        expect(spy.calls.length).toEqual(1);
+        expect(spy.mock.calls.length).toEqual(1);
     });
 });

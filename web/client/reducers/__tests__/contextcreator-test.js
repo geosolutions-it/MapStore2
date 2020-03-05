@@ -104,7 +104,7 @@ describe('contextcreator reducer', () => {
     const stateMocker = createStateMocker({contextcreator});
     it('setCreationStep', () => {
         const state = contextcreator(undefined, setCreationStep('step'));
-        expect(state).toExist();
+        expect(state).toBeTruthy();
         expect(state.stepId).toBe('step');
     });
     it('clearContextCreator', () => {
@@ -113,8 +113,8 @@ describe('contextcreator reducer', () => {
     });
     it('changeAttribute', () => {
         const state = contextcreator(undefined, changeAttribute('key', 1));
-        expect(state).toExist();
-        expect(state.newContext).toExist();
+        expect(state).toBeTruthy();
+        expect(state.newContext).toBeTruthy();
         expect(state.newContext.key).toBe(1);
     });
     it('setFilterText', () => {
@@ -126,9 +126,9 @@ describe('contextcreator reducer', () => {
         const {data, ...resource} = testContextResource;
         const newContext = newContextSelector(state);
         const plugins = pluginsSelector(state);
-        expect(newContext).toExist();
+        expect(newContext).toBeTruthy();
         expect(newContext.windowTitle).toBe(data.windowTitle);
-        expect(newContext.templates).toExist();
+        expect(newContext.templates).toBeTruthy();
         expect(newContext.templates.length).toBe(2);
         expect(newContext.templates[0].id).toBe(1);
         expect(newContext.templates[0].enabled).toBe(false);
@@ -136,32 +136,32 @@ describe('contextcreator reducer', () => {
         expect(newContext.templates[1].id).toBe(2);
         expect(newContext.templates[1].enabled).toBe(true);
         expect(newContext.templates[1].selected).toBe(false);
-        expect(newContext.plugins).toNotExist();
-        expect(newContext.userPlugins).toNotExist();
+        expect(newContext.plugins).toBeFalsy();
+        expect(newContext.userPlugins).toBeFalsy();
         expect(mapConfigSelector(state)).toEqual(data.mapConfig);
         expect(resourceSelector(state)).toEqual(resource);
-        expect(plugins).toExist();
+        expect(plugins).toBeTruthy();
         expect(plugins.length).toBe(3);
         expect(plugins[0].name).toBe(defaultPlugins[0].name);
         expect(plugins[0].title).toBe(defaultPlugins[0].title);
         expect(plugins[0].enabled).toBe(false);
         expect(plugins[0].isUserPlugin).toBe(false);
         expect(plugins[0].active).toBe(false);
-        expect(plugins[0].pluginConfig).toExist();
+        expect(plugins[0].pluginConfig).toBeTruthy();
         expect(plugins[0].pluginConfig.name).toBe(defaultPlugins[0].name);
         expect(plugins[0].pluginConfig.cfg).toEqual(data.plugins.desktop[0].cfg);
         expect(plugins[0].children.length).toBe(1);
         expect(plugins[0].children[0].name).toBe(defaultPlugins[3].name);
         expect(plugins[0].children[0].title).toBe(defaultPlugins[3].title);
-        expect(plugins[0].children[0].pluginConfig).toExist();
+        expect(plugins[0].children[0].pluginConfig).toBeTruthy();
         expect(plugins[0].children[0].pluginConfig.name).toBe(defaultPlugins[3].name);
-        expect(plugins[0].children[0].pluginConfig.cfg).toNotExist();
+        expect(plugins[0].children[0].pluginConfig.cfg).toBeFalsy();
         expect(plugins[1].name).toBe(defaultPlugins[1].name);
         expect(plugins[1].title).toBe(defaultPlugins[1].title);
         expect(plugins[1].enabled).toBe(false);
         expect(plugins[1].isUserPlugin).toBe(true);
         expect(plugins[1].active).toBe(true);
-        expect(plugins[1].pluginConfig).toExist();
+        expect(plugins[1].pluginConfig).toBeTruthy();
         expect(plugins[1].pluginConfig.name).toBe(defaultPlugins[1].name);
         expect(plugins[1].pluginConfig.cfg).toEqual(data.userPlugins[0].cfg);
         expect(plugins[2].name).toBe(defaultPlugins[2].name);
@@ -169,7 +169,7 @@ describe('contextcreator reducer', () => {
         expect(plugins[2].enabled).toBe(false);
         expect(plugins[2].isUserPlugin).toBe(false);
         expect(plugins[2].active).toBe(false);
-        expect(plugins[2].pluginConfig).toExist();
+        expect(plugins[2].pluginConfig).toBeTruthy();
         expect(plugins[2].pluginConfig.name).toEqual(defaultPlugins[2].name);
         expect(plugins[2].pluginConfig.cfg).toEqual(defaultPlugins[2].defaultConfig);
     });
@@ -177,7 +177,7 @@ describe('contextcreator reducer', () => {
         const pluginsToSelect = ['Catalog', 'ZoomIn'];
         const state = stateMocker(setResource(testContextResource, pluginsConfig), setSelectedPlugins(pluginsToSelect));
         const plugins = pluginsSelector(state);
-        expect(plugins).toExist();
+        expect(plugins).toBeTruthy();
         const selectedPlugins = findPlugins(plugins, plugin => plugin.selected);
         expect(selectedPlugins.length).toBe(2);
         pluginsToSelect.map(pluginToSelect =>
@@ -195,7 +195,7 @@ describe('contextcreator reducer', () => {
         const pluginsToChange = ['CatalogChildPlugin', 'ZoomIn'];
         const state = stateMocker(setResource(testContextResource, pluginsConfig), changePluginsKey(pluginsToChange, 'enabled', true));
         const plugins = pluginsSelector(state);
-        expect(plugins).toExist();
+        expect(plugins).toBeTruthy();
         const enabledPlugins = findPlugins(plugins, plugin => plugin.enabled);
         expect(enabledPlugins.length).toBe(2);
         [...pluginsToChange].map(pluginToChange =>
@@ -211,20 +211,20 @@ describe('contextcreator reducer', () => {
     });
     it('enableUploadPlugin', () => {
         const state = contextcreator(undefined, enableUploadPlugin(true));
-        expect(state).toExist();
+        expect(state).toBeTruthy();
         expect(state.uploadPluginEnabled).toBe(true);
         expect(state.uploadingPlugin.length).toBe(0);
     });
     it('uploadingPlugin', () => {
         const state = contextcreator(undefined, pluginUploading(true, ['myplugin']));
-        expect(state).toExist();
+        expect(state).toBeTruthy();
         expect(state.uploadingPlugin.length).toBe(1);
         expect(state.uploadingPlugin[0].name).toBe("myplugin");
         expect(state.uploadingPlugin[0].uploading).toBe(true);
     });
     it('uploadingPluginError', () => {
         const state = contextcreator(undefined, uploadPluginError([{ file: {name: 'myplugin'}, error: "myerror"}]));
-        expect(state).toExist();
+        expect(state).toBeTruthy();
         expect(state.uploadingPlugin.length).toBe(1);
         expect(state.uploadingPlugin[0].name).toBe("myplugin");
         expect(state.uploadingPlugin[0].uploading).toBe(false);
@@ -232,23 +232,23 @@ describe('contextcreator reducer', () => {
     });
     it('disableUploadPlugin', () => {
         const state = contextcreator({ uploadingPlugin: [{}] }, enableUploadPlugin(false));
-        expect(state).toExist();
+        expect(state).toBeTruthy();
         expect(state.uploadPluginEnabled).toBe(false);
         expect(state.uploadingPlugin.length).toBe(0);
     });
     it('pluginUploaded', () => {
         const state = contextcreator(undefined, pluginUploaded([{ name: 'myplugin' }]));
-        expect(state).toExist();
+        expect(state).toBeTruthy();
         expect(state.plugins.length).toBe(1);
     });
     it('pluginUploaded no duplicates', () => {
         const state = contextcreator({plugins: [{name: "myplugin"}]}, pluginUploaded([{ name: 'myplugin', error: "myerror" }]));
-        expect(state).toExist();
+        expect(state).toBeTruthy();
         expect(state.plugins.length).toBe(1);
     });
     it('showBackToPageConfirmation', () => {
         const state = contextcreator(undefined, showBackToPageConfirmation(true));
-        expect(state).toExist();
+        expect(state).toBeTruthy();
         expect(state.showBackToPageConfirmation).toBe(true);
     });
 });

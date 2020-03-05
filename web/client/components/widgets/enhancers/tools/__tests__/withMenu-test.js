@@ -39,9 +39,9 @@ describe('withMenu enhancer', () => {
                 target: "menu",
                 text: <div id="test" />
             }]} />, document.getElementById("container"));
-        expect(document.getElementById("test")).toExist();
+        expect(document.getElementById("test")).toBeTruthy();
         // check the presence of a menu
-        expect(document.querySelector('.dropdown .widget-menu')).toExist();
+        expect(document.querySelector('.dropdown .widget-menu')).toBeTruthy();
         expect(document.querySelector('.mapstore-widget-options .glyphicon-test'));
     });
     it('withMenu not adding items without "menu" target', () => {
@@ -52,7 +52,7 @@ describe('withMenu enhancer', () => {
                 glyph: "text",
                 text: <div id="test" />
             }]} />, document.getElementById("container"));
-        expect(document.getElementById("test")).toNotExist();
+        expect(document.getElementById("test")).toBeFalsy();
     });
     it('Check Widgets menu callback', () => {
         const actions = {
@@ -88,6 +88,6 @@ describe('withMenu enhancer', () => {
             }]}
         />, document.getElementById("container"));
         ReactTestUtils.Simulate.click(document.querySelector("#test-menu"));
-        expect(spyCallback).toNotHaveBeenCalled();
+        expect(spyCallback).not.toHaveBeenCalled();
     });
 });

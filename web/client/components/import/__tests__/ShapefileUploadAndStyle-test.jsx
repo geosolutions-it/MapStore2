@@ -17,12 +17,12 @@ describe("Test ShapefileUploadAndStyle component", () => {
 
     it('creates component with defaults', () => {
         const cmp = ReactDOM.render(<ShapefileUploadAndStyle/>, document.getElementById("container"));
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
     });
 
     it('creates component loading', () => {
         const cmp = ReactDOM.render(<ShapefileUploadAndStyle loading />, document.getElementById("container"));
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
     });
 
     it('test parser error', done => {
@@ -38,7 +38,7 @@ describe("Test ShapefileUploadAndStyle component", () => {
         const cmp = ReactDOM.render(<ShapefileUploadAndStyle useDefaultStyle onShapeError={onShapeError} readFiles={() => {
             return ['{ "error":  }'].map(s => new Promise(() => JSON.parse(s)));
         }} />, document.getElementById("container"));
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
         cmp.addShape();
     });
 
@@ -55,7 +55,7 @@ describe("Test ShapefileUploadAndStyle component", () => {
         const cmp = ReactDOM.render(<ShapefileUploadAndStyle useDefaultStyle onShapeError={onShapeError} readFiles={() => {
             return ["100"].map(() => new Promise(() => decodeURIComponent('%')));
         }} />, document.getElementById("container"));
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
         cmp.addShape();
     });
 
@@ -75,14 +75,14 @@ describe("Test ShapefileUploadAndStyle component", () => {
                 const spyShapeLoading = expect.spyOn(handlers, 'shapeLoading');
 
                 const cmp = ReactDOM.render(<ShapefileUploadAndStyle useDefaultStyle {...handlers} />, document.getElementById("container"));
-                expect(cmp).toExist();
+                expect(cmp).toBeTruthy();
                 cmp.addShape([fileZip]);
                 expect(spyShapeLoading).toHaveBeenCalled();
                 expect(spyShapeLoading).toHaveBeenCalledWith(true);
 
                 setTimeout(() => {
                     expect(spyOnShapeChoosen).toHaveBeenCalled();
-                    const args = spyOnShapeChoosen.calls[0].arguments;
+                    const args = spyOnShapeChoosen.mock.calls[0];
                     const layer = args[0][0];
                     expect(layer.type).toEqual("vector");
                     expect(layer.visibility).toEqual(true);
@@ -106,7 +106,7 @@ describe("Test ShapefileUploadAndStyle component", () => {
                     expect(layer.features[0].id.length).toEqual("1e63efb0-6b37-11e9-8359-eb9aa043350b".length);
                     expect(spyShapeLoading).toHaveBeenCalled();
                     expect(spyShapeLoading).toHaveBeenCalledWith(false);
-                    expect(spyShapeLoading.calls.length).toBe(2);
+                    expect(spyShapeLoading.mock.calls.length).toBe(2);
                     done();
                 }, 100);
             })

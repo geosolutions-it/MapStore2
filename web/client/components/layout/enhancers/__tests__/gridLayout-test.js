@@ -23,7 +23,7 @@ describe('gridLayout enhancers', () => {
     });
     it('widthProvider rendering with defaults', (done) => {
         const Sink = widthProvider()(createSink( props => {
-            expect(props).toExist();
+            expect(props).toBeTruthy();
             expect(props.useDefaultWidthProvider).toBe(true);
             done();
         }));
@@ -31,7 +31,7 @@ describe('gridLayout enhancers', () => {
     });
     it('widthProvider rendering override defaults', (done) => {
         const Sink = widthProvider({overrideWidthProvider: true})(createSink(props => {
-            expect(props).toExist();
+            expect(props).toBeTruthy();
             expect(props.useDefaultWidthProvider).toBe(false);
             done();
         }));
@@ -39,7 +39,7 @@ describe('gridLayout enhancers', () => {
     });
     it('heightProvider rendering with defaults', (done) => {
         const Sink = heightProvider()(createSink(props => {
-            expect(props).toExist();
+            expect(props).toBeTruthy();
             done();
         }));
         ReactDOM.render(<Sink />, document.getElementById("container"));

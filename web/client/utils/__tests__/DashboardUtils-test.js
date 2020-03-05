@@ -12,8 +12,8 @@ import dashboardQuickFiltersResource from '../../test-resources/widgets/dashboar
 describe('DashboardUtils', () => {
 
     it('cleanResource', () => {
-        expect(dashboardQuickFiltersResource.data.widgets[0].quickFilters).toExist();
+        expect(dashboardQuickFiltersResource.data.widgets[0].quickFilters).toBeTruthy();
         const resourceClean = cleanResource(dashboardQuickFiltersResource);
-        expect(resourceClean.data.widgets[0].quickFilters).toNotExist();
+        expect(resourceClean.data.widgets[0].quickFilters).toBeFalsy();
     });
 });

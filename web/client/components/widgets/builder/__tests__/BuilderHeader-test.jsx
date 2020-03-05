@@ -25,7 +25,7 @@ describe('BuilderHeader component', () => {
         ReactDOM.render(<BuilderHeader />, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('.widgets-builder-header');
-        expect(el).toExist();
+        expect(el).toBeTruthy();
     });
     it('Test BuilderHeader onClose', () => {
         const actions = {
@@ -40,6 +40,6 @@ describe('BuilderHeader component', () => {
     it('filter button not present on first step', () => {
         ReactDOM.render(<BuilderHeader step={0} />, document.getElementById("container"));
         const btn = document.querySelector('.glyphicon-filter');
-        expect(btn).toNotExist();
+        expect(btn).toBeFalsy();
     });
 });

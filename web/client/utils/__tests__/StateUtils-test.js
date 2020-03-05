@@ -29,7 +29,7 @@ describe('StateUtils', () => {
             name: 'mystore'
         };
         setStore(mystore);
-        expect(getStore()).toExist();
+        expect(getStore()).toBeTruthy();
         expect(getStore().name).toBe('mystore');
     });
 
@@ -38,115 +38,115 @@ describe('StateUtils', () => {
             name: 'mystore'
         };
         setStore(mystore, 'customname');
-        expect(getStore().name).toNotExist();
-        expect(getStore('customname')).toExist();
+        expect(getStore().name).toBeFalsy();
+        expect(getStore('customname')).toBeTruthy();
         expect(getStore('customname').name).toBe('mystore');
     });
 
     it('createStore with rootReducer', () => {
-        const spy1 = expect.createSpy().andCall((action, state) => state);
+        const spy1 = expect.createSpy().mockImplementation((action, state) => state);
         const store = createStore({ rootReducer: spy1 });
-        expect(store).toExist();
-        expect(store.dispatch).toExist();
+        expect(store).toBeTruthy();
+        expect(store.dispatch).toBeTruthy();
         store.dispatch({type: "fake"});
-        expect(spy1.calls.length > 0).toBe(true);
+        expect(spy1.mock.calls.length > 0).toBe(true);
     });
 
     it('createStore with reducers list', () => {
-        const spy1 = expect.createSpy().andCall((action, state) => state);
+        const spy1 = expect.createSpy().mockImplementation((action, state) => state);
         const store = createStore({ reducers: {test: spy1} });
-        expect(store).toExist();
-        expect(store.dispatch).toExist();
+        expect(store).toBeTruthy();
+        expect(store.dispatch).toBeTruthy();
         store.dispatch({ type: "fake" });
-        expect(spy1.calls.length > 0).toBe(true);
+        expect(spy1.mock.calls.length > 0).toBe(true);
     });
 
     it('createStore with rootEpic', () => {
-        const spy1 = expect.createSpy().andCall((actions$) => actions$.ofType("fake").switchMap(() => Rx.Observable.empty()));
+        const spy1 = expect.createSpy().mockImplementation((actions$) => actions$.ofType("fake").switchMap(() => Rx.Observable.empty()));
         const store = createStore({ rootEpic: spy1 });
-        expect(store).toExist();
-        expect(store.dispatch).toExist();
+        expect(store).toBeTruthy();
+        expect(store.dispatch).toBeTruthy();
         store.dispatch({ type: "fake" });
-        expect(spy1.calls.length > 0).toBe(true);
+        expect(spy1.mock.calls.length > 0).toBe(true);
     });
 
     it('createStore with epics list', () => {
-        const spy1 = expect.createSpy().andCall((actions$) => actions$.ofType("fake").switchMap(() => Rx.Observable.empty()));
+        const spy1 = expect.createSpy().mockImplementation((actions$) => actions$.ofType("fake").switchMap(() => Rx.Observable.empty()));
         const store = createStore({ epics: {myepic: spy1} });
-        expect(store).toExist();
-        expect(store.dispatch).toExist();
+        expect(store).toBeTruthy();
+        expect(store.dispatch).toBeTruthy();
         store.dispatch({ type: "fake" });
-        expect(spy1.calls.length > 0).toBe(true);
+        expect(spy1.mock.calls.length > 0).toBe(true);
     });
 
     it('createStore with initial state', () => {
-        const spy1 = expect.createSpy().andCall((action, state) => state);
+        const spy1 = expect.createSpy().mockImplementation((action, state) => state);
         const store = createStore({ rootReducer: spy1, state: {prop: 'value'} });
-        expect(store).toExist();
-        expect(store.dispatch).toExist();
+        expect(store).toBeTruthy();
+        expect(store.dispatch).toBeTruthy();
         store.dispatch({ type: "fake" });
-        expect(spy1.calls.length > 0).toBe(true);
-        expect(spy1.calls[0].arguments[0].prop).toBe('value');
+        expect(spy1.mock.calls.length > 0).toBe(true);
+        expect(spy1.mock.calls[0][0].prop).toBe('value');
     });
     it('updateStore with rootReducer', () => {
-        const spy1 = expect.createSpy().andCall((action, state) => state);
-        const spy2 = expect.createSpy().andCall((action, state) => state);
+        const spy1 = expect.createSpy().mockImplementation((action, state) => state);
+        const spy2 = expect.createSpy().mockImplementation((action, state) => state);
         const store = createStore({ rootReducer: spy1 });
-        expect(store).toExist();
-        expect(store.dispatch).toExist();
+        expect(store).toBeTruthy();
+        expect(store.dispatch).toBeTruthy();
         store.dispatch({ type: "fake" });
-        const beforeUpdateCalls = spy1.calls.length;
+        const beforeUpdateCalls = spy1.mock.calls.length;
         expect(beforeUpdateCalls > 0).toBe(true);
-        expect(spy2.calls.length > 0).toBe(false);
+        expect(spy2.mock.calls.length > 0).toBe(false);
         updateStore({rootReducer: spy2}, store);
         store.dispatch({ type: "fake" });
-        expect(spy2.calls.length > 0).toBe(true);
-        expect(spy1.calls.length).toBe(beforeUpdateCalls);
+        expect(spy2.mock.calls.length > 0).toBe(true);
+        expect(spy1.mock.calls.length).toBe(beforeUpdateCalls);
     });
     it('updateStore with reducers', () => {
-        const spy1 = expect.createSpy().andCall((action, state) => state);
-        const spy2 = expect.createSpy().andCall((action, state) => state);
+        const spy1 = expect.createSpy().mockImplementation((action, state) => state);
+        const spy2 = expect.createSpy().mockImplementation((action, state) => state);
         const store = createStore({ reducers: { test: spy1 } });
-        expect(store).toExist();
-        expect(store.dispatch).toExist();
+        expect(store).toBeTruthy();
+        expect(store.dispatch).toBeTruthy();
         store.dispatch({ type: "fake" });
-        const beforeUpdateCalls = spy1.calls.length;
+        const beforeUpdateCalls = spy1.mock.calls.length;
         expect(beforeUpdateCalls > 0).toBe(true);
-        expect(spy2.calls.length > 0).toBe(false);
+        expect(spy2.mock.calls.length > 0).toBe(false);
         updateStore({ reducers: { test: spy2 } }, store);
         store.dispatch({ type: "fake" });
-        expect(spy2.calls.length > 0).toBe(true);
-        expect(spy1.calls.length).toBe(beforeUpdateCalls);
+        expect(spy2.mock.calls.length > 0).toBe(true);
+        expect(spy1.mock.calls.length).toBe(beforeUpdateCalls);
     });
 
     it('updateStore with rootEpic', () => {
-        const spy1 = expect.createSpy().andCall((actions$) => actions$.ofType("fake").switchMap(() => Rx.Observable.empty()));
-        const spy2 = expect.createSpy().andCall((actions$) => actions$.ofType("fake").switchMap(() => Rx.Observable.empty()));
+        const spy1 = expect.createSpy().mockImplementation((actions$) => actions$.ofType("fake").switchMap(() => Rx.Observable.empty()));
+        const spy2 = expect.createSpy().mockImplementation((actions$) => actions$.ofType("fake").switchMap(() => Rx.Observable.empty()));
         const store = createStore({ rootEpic: spy1 });
-        expect(store).toExist();
-        expect(store.dispatch).toExist();
+        expect(store).toBeTruthy();
+        expect(store.dispatch).toBeTruthy();
         store.dispatch({ type: "fake" });
-        const beforeUpdateCalls = spy1.calls.length;
+        const beforeUpdateCalls = spy1.mock.calls.length;
         expect(beforeUpdateCalls > 0).toBe(true);
-        expect(spy2.calls.length > 0).toBe(false);
+        expect(spy2.mock.calls.length > 0).toBe(false);
         updateStore({ rootEpic: spy2 }, store);
         store.dispatch({ type: "fake" });
-        expect(spy2.calls.length > 0).toBe(true);
-        expect(spy1.calls.length).toBe(beforeUpdateCalls);
+        expect(spy2.mock.calls.length > 0).toBe(true);
+        expect(spy1.mock.calls.length).toBe(beforeUpdateCalls);
     });
     it('updateStore with epics', () => {
-        const spy1 = expect.createSpy().andCall((actions$) => actions$.ofType("fake").switchMap(() => Rx.Observable.empty()));
-        const spy2 = expect.createSpy().andCall((actions$) => actions$.ofType("fake").switchMap(() => Rx.Observable.empty()));
+        const spy1 = expect.createSpy().mockImplementation((actions$) => actions$.ofType("fake").switchMap(() => Rx.Observable.empty()));
+        const spy2 = expect.createSpy().mockImplementation((actions$) => actions$.ofType("fake").switchMap(() => Rx.Observable.empty()));
         const store = createStore({ epics: { myepic: spy1 } });
-        expect(store).toExist();
-        expect(store.dispatch).toExist();
+        expect(store).toBeTruthy();
+        expect(store.dispatch).toBeTruthy();
         store.dispatch({ type: "fake" });
-        const beforeUpdateCalls = spy1.calls.length;
+        const beforeUpdateCalls = spy1.mock.calls.length;
         expect(beforeUpdateCalls > 0).toBe(true);
-        expect(spy2.calls.length > 0).toBe(false);
+        expect(spy2.mock.calls.length > 0).toBe(false);
         updateStore({ epics: { myepic: spy2 } }, store);
         store.dispatch({ type: "fake" });
-        expect(spy2.calls.length > 0).toBe(true);
-        expect(spy1.calls.length).toBe(beforeUpdateCalls);
+        expect(spy2.mock.calls.length > 0).toBe(true);
+        expect(spy1.mock.calls.length).toBe(beforeUpdateCalls);
     });
 });

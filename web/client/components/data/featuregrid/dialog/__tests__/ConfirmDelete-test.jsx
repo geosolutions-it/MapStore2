@@ -28,7 +28,7 @@ describe('Test for ConfirmDelete component', () => {
         const modalNewContainer = document.getElementById("modal-new-container");
         const DIALOG_QUERY_SELECTOR = '.modal-dialog';
         expect(modalInitialContainer.querySelector(DIALOG_QUERY_SELECTOR)).toBe(null);
-        expect(modalNewContainer.querySelector(DIALOG_QUERY_SELECTOR)).toExist();
+        expect(modalNewContainer.querySelector(DIALOG_QUERY_SELECTOR)).toBeTruthy();
     });
 });
 

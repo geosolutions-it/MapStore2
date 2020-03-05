@@ -70,7 +70,7 @@ describe('HighlightFeatureSupport', () => {
         let vector = createVectorLayer(layer);
         vector.addTo(map);
         const cmp = ReactDOM.render(<HighlightFeatureSupport map={map}/>, msNode);
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
     });
     it('create a HighlightFeatureSupport component enabled and test click', () => {
         let map = L.map("map", {
@@ -80,7 +80,7 @@ describe('HighlightFeatureSupport', () => {
         let vector = createVectorLayer(layer);
         vector.addTo(map);
         const cmp = ReactDOM.render(<HighlightFeatureSupport map={map} status="enabled"/>, msNode);
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
         cmp.featureClicked({layer: vector, originalEvent: {shiftKey: false}});
         cmp.featureClicked({layer: vector, originalEvent: {shiftKey: true}});
         // cmp.setProps({status: "disabled"});

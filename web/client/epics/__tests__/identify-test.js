@@ -88,23 +88,23 @@ describe('identify Epics', () => {
             try {
                 expect(actions.length).toBe(5);
                 const [a0, a1, a2, a3, a4] = actions;
-                expect(a0).toExist();
+                expect(a0).toBeTruthy();
                 expect(a0.type).toBe(PURGE_MAPINFO_RESULTS);
-                expect(a1).toExist();
+                expect(a1).toBeTruthy();
                 expect(a1.type).toBe(NEW_MAPINFO_REQUEST);
-                expect(a1.reqId).toExist();
-                expect(a1.request).toExist();
-                expect(a2).toExist();
+                expect(a1.reqId).toBeTruthy();
+                expect(a1.request).toBeTruthy();
+                expect(a2).toBeTruthy();
                 expect(a2.type).toBe(NEW_MAPINFO_REQUEST);
-                expect(a2.reqId).toExist();
-                expect(a2.request).toExist();
-                expect(a3).toExist();
+                expect(a2.reqId).toBeTruthy();
+                expect(a2.request).toBeTruthy();
+                expect(a3).toBeTruthy();
                 expect(a3.type).toBe(LOAD_FEATURE_INFO);
-                expect(a3.data).toExist();
-                expect(a3.requestParams).toExist();
-                expect(a3.reqId).toExist();
+                expect(a3.data).toBeTruthy();
+                expect(a3.requestParams).toBeTruthy();
+                expect(a3.reqId).toBeTruthy();
                 expect(a3.layerMetadata.title).toBe(state.layers.flat[a3.requestParams.id === "TEST" ? 0 : 1].title);
-                expect(a4).toExist();
+                expect(a4).toBeTruthy();
                 expect(a4.layerMetadata.title).toBe(state.layers.flat[a4.requestParams.id === "TEST" ? 0 : 1].title);
                 done();
             } catch (ex) {
@@ -142,21 +142,21 @@ describe('identify Epics', () => {
         const sentActions = [featureInfoClick({ latlng: { lat: 36.95, lng: -79.84 } }, "TEST", ["TEST"], {"TEST": {cql_filter: "id>1"}}, "province_view.5")];
         testEpic(getFeatureInfoOnFeatureInfoClick, 3, sentActions, ([a0, a1, a2]) => {
             try {
-                expect(a0).toExist();
+                expect(a0).toBeTruthy();
                 expect(a0.type).toBe(PURGE_MAPINFO_RESULTS);
-                expect(a1).toExist();
+                expect(a1).toBeTruthy();
                 expect(a1.type).toBe(NEW_MAPINFO_REQUEST);
-                expect(a1.reqId).toExist();
-                expect(a1.request).toExist();
-                expect(a1.request.cql_filter).toExist();
+                expect(a1.reqId).toBeTruthy();
+                expect(a1.request).toBeTruthy();
+                expect(a1.request.cql_filter).toBeTruthy();
                 expect(a1.request.cql_filter).toBe("id>1");
-                expect(a2).toExist();
+                expect(a2).toBeTruthy();
                 expect(a2.type).toBe(LOAD_FEATURE_INFO);
-                expect(a2.data).toExist();
-                expect(a2.data.features).toExist();
+                expect(a2.data).toBeTruthy();
+                expect(a2.data.features).toBeTruthy();
                 expect(a2.data.features.length).toBe(1);
-                expect(a2.requestParams).toExist();
-                expect(a2.reqId).toExist();
+                expect(a2.requestParams).toBeTruthy();
+                expect(a2.reqId).toBeTruthy();
                 expect(a2.layerMetadata.title).toBe(state.layers.flat[0].title);
                 done();
             } catch (ex) {
@@ -200,16 +200,16 @@ describe('identify Epics', () => {
         testEpic(getFeatureInfoOnFeatureInfoClick, 2, sentActions, ([a1, a2]) => {
             try {
                 // no purge
-                expect(a1).toExist();
+                expect(a1).toBeTruthy();
                 expect(a1.type).toBe(NEW_MAPINFO_REQUEST);
-                expect(a1.reqId).toExist();
-                expect(a1.request).toExist();
-                expect(a1.request.cql_filter).toNotExist();
-                expect(a2).toExist();
+                expect(a1.reqId).toBeTruthy();
+                expect(a1.request).toBeTruthy();
+                expect(a1.request.cql_filter).toBeFalsy();
+                expect(a2).toBeTruthy();
                 expect(a2.type).toBe(LOAD_FEATURE_INFO);
-                expect(a2.data).toExist();
-                expect(a2.requestParams).toExist();
-                expect(a2.reqId).toExist();
+                expect(a2.data).toBeTruthy();
+                expect(a2.requestParams).toBeTruthy();
+                expect(a2.reqId).toBeTruthy();
                 expect(a2.layerMetadata.title).toBe(state.layers.flat[0].title);
                 done();
             } catch (ex) {
@@ -238,19 +238,19 @@ describe('identify Epics', () => {
         const sentActions = [featureInfoClick({ latlng: { lat: 36.95, lng: -79.84 } })];
         testEpic(getFeatureInfoOnFeatureInfoClick, 3, sentActions, ([a0, a1, a2]) => {
             try {
-                expect(a0).toExist();
+                expect(a0).toBeTruthy();
                 expect(a0.type).toBe(PURGE_MAPINFO_RESULTS);
-                expect(a1).toExist();
+                expect(a1).toBeTruthy();
                 expect(a1.type).toBe(NEW_MAPINFO_REQUEST);
-                expect(a1.reqId).toExist();
-                expect(a1.request).toExist();
-                expect(a2).toExist();
+                expect(a1.reqId).toBeTruthy();
+                expect(a1.request).toBeTruthy();
+                expect(a2).toBeTruthy();
                 expect(a2.type).toBe(ERROR_FEATURE_INFO);
-                expect(a2).toExist();
+                expect(a2).toBeTruthy();
                 expect(a2.type).toBe(ERROR_FEATURE_INFO);
-                expect(a2.error).toExist();
-                expect(a2.reqId).toExist();
-                expect(a2.requestParams).toExist();
+                expect(a2.error).toBeTruthy();
+                expect(a2.reqId).toBeTruthy();
+                expect(a2.requestParams).toBeTruthy();
                 expect(a2.layerMetadata.title).toBe(state.layers.flat[0].title);
                 done();
             } catch (ex) {
@@ -279,17 +279,17 @@ describe('identify Epics', () => {
         const sentActions = [featureInfoClick({ latlng: { lat: 36.95, lng: -79.84 } })];
         testEpic(getFeatureInfoOnFeatureInfoClick, 3, sentActions, ([a0, a1, a2]) => {
             try {
-                expect(a0).toExist();
+                expect(a0).toBeTruthy();
                 expect(a0.type).toBe(PURGE_MAPINFO_RESULTS);
-                expect(a1).toExist();
+                expect(a1).toBeTruthy();
                 expect(a1.type).toBe(NEW_MAPINFO_REQUEST);
-                expect(a1.reqId).toExist();
-                expect(a1.request).toExist();
-                expect(a2).toExist();
+                expect(a1.reqId).toBeTruthy();
+                expect(a1.request).toBeTruthy();
+                expect(a2).toBeTruthy();
                 expect(a2.type).toBe(EXCEPTIONS_FEATURE_INFO);
-                expect(a2.exceptions).toExist();
-                expect(a2.reqId).toExist();
-                expect(a2.requestParams).toExist();
+                expect(a2.exceptions).toBeTruthy();
+                expect(a2.reqId).toBeTruthy();
+                expect(a2.requestParams).toBeTruthy();
                 expect(a2.layerMetadata.title).toBe(state.layers.flat[0].title);
                 done();
             } catch (ex) {
@@ -338,14 +338,14 @@ describe('identify Epics', () => {
         const sentActions = [featureInfoClick({ latlng: { lat: 36.95, lng: -79.84 } })];
         testEpic(getFeatureInfoOnFeatureInfoClick, 4, sentActions, ([a0, a1, a2, a3]) => {
             try {
-                expect(a0).toExist();
+                expect(a0).toBeTruthy();
                 expect(a0.type).toBe(PURGE_MAPINFO_RESULTS);
-                expect(a1).toExist();
+                expect(a1).toBeTruthy();
                 expect(a1.type).toBe(NEW_MAPINFO_REQUEST);
-                expect(a1.reqId).toExist();
-                expect(a1.request).toExist();
+                expect(a1.reqId).toBeTruthy();
+                expect(a1.request).toBeTruthy();
                 expect(a2.type).toBe(GET_VECTOR_INFO);
-                expect(a3).toExist();
+                expect(a3).toBeTruthy();
                 expect(a3.type).toBe(LOAD_FEATURE_INFO);
                 done();
             } catch (ex) {
@@ -375,17 +375,17 @@ describe('identify Epics', () => {
         const sentActions = [featureInfoClick({ latlng: { lat: 36.95, lng: -79.84 } })];
         testEpic(getFeatureInfoOnFeatureInfoClick, 3, sentActions, ([a0, a1, a2]) => {
             try {
-                expect(a0).toExist();
+                expect(a0).toBeTruthy();
                 expect(a0.type).toBe(PURGE_MAPINFO_RESULTS);
-                expect(a1).toExist();
+                expect(a1).toBeTruthy();
                 expect(a1.type).toBe(NEW_MAPINFO_REQUEST);
-                expect(a1.reqId).toExist();
-                expect(a1.request).toExist();
-                expect(a2).toExist();
+                expect(a1.reqId).toBeTruthy();
+                expect(a1.request).toBeTruthy();
+                expect(a2).toBeTruthy();
                 expect(a2.type).toBe(LOAD_FEATURE_INFO);
-                expect(a2.data).toExist();
-                expect(a2.requestParams).toExist();
-                expect(a2.reqId).toExist();
+                expect(a2.data).toBeTruthy();
+                expect(a2.requestParams).toBeTruthy();
+                expect(a2.reqId).toBeTruthy();
                 expect(a2.layerMetadata.title).toBe(state.layers.flat[0].title);
                 done();
             } catch (ex) {

@@ -26,10 +26,10 @@ describe('HistoryBar', () => {
     it('checks default', () => {
 
         const cmp = ReactDOM.render(<HistoryBar/>, document.getElementById("container"));
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
 
         const cmpDom = ReactDOM.findDOMNode(cmp);
-        expect(cmpDom).toExist();
+        expect(cmpDom).toBeTruthy();
 
         const normalButtons = cmpDom.getElementsByTagName("button");
         expect(normalButtons.length === 2);
@@ -54,7 +54,7 @@ describe('HistoryBar', () => {
                 : cmpDom.getElementsByTagName("img").item(1);
             undo.click();
             redo.click();
-            expect(spy.calls.length).toBe(2);
+            expect(spy.mock.calls.length).toBe(2);
         };
 
         genericTest("normal");
@@ -64,10 +64,10 @@ describe('HistoryBar', () => {
     it('checks with image buttons', () => {
 
         const cmp = ReactDOM.render(<HistoryBar btnType="image"/>, document.getElementById("container"));
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
 
         const cmpDom = ReactDOM.findDOMNode(cmp);
-        expect(cmpDom).toExist();
+        expect(cmpDom).toBeTruthy();
 
         const normalButtons = cmpDom.getElementsByTagName("button");
         expect(normalButtons.length === 0);

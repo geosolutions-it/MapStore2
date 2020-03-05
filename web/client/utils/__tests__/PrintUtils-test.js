@@ -210,25 +210,25 @@ describe('PrintUtils', () => {
     it('custom params are applied to wms layers', () => {
 
         const specs = PrintUtils.getMapfishLayersSpecification([layer], {}, 'map');
-        expect(specs).toExist();
+        expect(specs).toBeTruthy();
         expect(specs.length).toBe(1);
-        expect(specs[0].customParams.myparam).toExist();
+        expect(specs[0].customParams.myparam).toBeTruthy();
         expect(specs[0].customParams.myparam).toBe("myvalue");
     });
     it('vector layer generation for print', () => {
         const specs = PrintUtils.getMapfishLayersSpecification([vectorLayer], {projection: "EPSG:3857"}, 'map');
-        expect(specs).toExist();
+        expect(specs).toBeTruthy();
         expect(specs.length).toBe(1);
-        expect(specs[0].geoJson.features[0].geometry.coordinates[0], mapFishVectorLayer).toBe(mapFishVectorLayer.geoJson.features[0].geometry.coordinates[0]);
+        expect(specs[0].geoJson.features[0].geometry.coordinates[0]).toBe(mapFishVectorLayer.geoJson.features[0].geometry.coordinates[0]);
     });
     it('wms layer generation for legend', () => {
         const specs = PrintUtils.getMapfishLayersSpecification([layer], {projection: "EPSG:3857"}, 'legend');
-        expect(specs).toExist();
+        expect(specs).toBeTruthy();
         expect(specs.length).toBe(1);
     });
     it('toOpenLayers2Style for vector layer wich contains a FeatureCollection using the default style', () => {
         const style = PrintUtils.toOpenLayers2Style(vectorWithFtCollInside, null, "FeatureCollection");
-        expect(style).toExist();
+        expect(style).toBeTruthy();
 
         expect(style.strokeColor).toBe("#0000FF");
         expect(style.strokeOpacity).toBe(1);
@@ -239,14 +239,14 @@ describe('PrintUtils', () => {
     });
     it('toOpenLayers2Style for vector layer using a default LineString style', () => {
         const style = PrintUtils.toOpenLayers2Style(vector2, null, "LineString");
-        expect(style).toExist();
+        expect(style).toBeTruthy();
         expect(style.strokeColor).toBe("#0000FF");
         expect(style.strokeOpacity).toBe(1);
         expect(style.strokeWidth).toBe(3);
     });
     it('toOpenLayers2Style for vector layer using a default MultiPolygon style', () => {
         const style = PrintUtils.toOpenLayers2Style(vector2, null, "MultiPolygon");
-        expect(style).toExist();
+        expect(style).toBeTruthy();
         expect(style.strokeColor).toBe("#0000FF");
         expect(style.fillColor).toBe("#0000FF");
         expect(style.fillOpacity).toBe(0.1);
@@ -267,9 +267,9 @@ describe('PrintUtils', () => {
         ]);
         ConfigUtils.setConfigProp('useAuthenticationRules', true);
         const specs = PrintUtils.getMapfishLayersSpecification([layer], {}, 'map');
-        expect(specs).toExist();
+        expect(specs).toBeTruthy();
         expect(specs.length).toBe(1);
-        expect(specs[0].customParams.authkey).toExist();
+        expect(specs[0].customParams.authkey).toBeTruthy();
         expect(specs[0].customParams.authkey).toBe("mykey");
     });
     it('custom params include layerFilter and filterObj', () => {
@@ -278,9 +278,9 @@ describe('PrintUtils', () => {
             layerFilter: layerFilterSottoPasso,
             filterObj: filterObjSottoPasso
         }], {}, 'map');
-        expect(specs).toExist();
+        expect(specs).toBeTruthy();
         expect(specs.length).toBe(1);
-        expect(specs[0].customParams.CQL_FILTER).toExist();
+        expect(specs[0].customParams.CQL_FILTER).toBeTruthy();
         expect(specs[0].customParams.CQL_FILTER).toBe(`(("TIPO" = '2')) AND (("ID_OGGETTO" < '44'))`);
     });
     it('custom params include cql_filter', () => {
@@ -288,9 +288,9 @@ describe('PrintUtils', () => {
             ...layerSottoPasso,
             filterObj: filterObjSottoPasso
         }], {}, 'map');
-        expect(specs).toExist();
+        expect(specs).toBeTruthy();
         expect(specs.length).toBe(1);
-        expect(specs[0].customParams.CQL_FILTER).toExist();
+        expect(specs[0].customParams.CQL_FILTER).toBeTruthy();
         expect(specs[0].customParams.CQL_FILTER).toBe(`("ID_OGGETTO" < '44')`);
     });
     it('custom params include layerFilter', () => {
@@ -298,14 +298,14 @@ describe('PrintUtils', () => {
             ...layerSottoPasso,
             layerFilter: layerFilterSottoPasso
         }], {}, 'map');
-        expect(specs).toExist();
+        expect(specs).toBeTruthy();
         expect(specs.length).toBe(1);
-        expect(specs[0].customParams.CQL_FILTER).toExist();
+        expect(specs[0].customParams.CQL_FILTER).toBeTruthy();
         expect(specs[0].customParams.CQL_FILTER).toBe(`("TIPO" = '2')`);
     });
     it('wms layer generation for legend includes scale', () => {
         const specs = PrintUtils.getMapfishLayersSpecification([layer], testSpec, 'legend');
-        expect(specs).toExist();
+        expect(specs).toBeTruthy();
         expect(specs.length).toBe(1);
         expect(specs[0].classes.length).toBe(1);
         expect(specs[0].classes[0].icons.length).toBe(1);
@@ -313,17 +313,17 @@ describe('PrintUtils', () => {
     });
     it('vector layer default point style', () => {
         const style = PrintUtils.getOlDefaultStyle({features: [{geometry: {type: "Point"}}]});
-        expect(style).toExist();
+        expect(style).toBeTruthy();
         expect(style.pointRadius).toBe(5);
     });
     it('vector layer default marker style', () => {
         const style = PrintUtils.getOlDefaultStyle({styleName: "marker", features: [{geometry: {type: "Point"}}]});
-        expect(style).toExist();
-        expect(style.externalGraphic).toExist();
+        expect(style).toBeTruthy();
+        expect(style.externalGraphic).toBeTruthy();
     });
     it('vector layer default polygon style', () => {
         const style = PrintUtils.getOlDefaultStyle({features: [{geometry: {type: "Polygon"}}]});
-        expect(style).toExist();
+        expect(style).toBeTruthy();
         expect(style.strokeWidth).toBe(3);
         expect(style.strokeDashstyle).toBe("dash");
         expect(style.strokeLinecap).toBe("round");
@@ -334,17 +334,17 @@ describe('PrintUtils', () => {
     });
     it('vector layer default line style', () => {
         const style = PrintUtils.getOlDefaultStyle({features: [{geometry: {type: "LineString"}}]});
-        expect(style).toExist();
+        expect(style).toBeTruthy();
         expect(style.strokeWidth).toBe(3);
     });
     it('toAbsoluteUrl', () => {
         const url = PrintUtils.toAbsoluteURL("/geoserver", "http://localhost:8080");
-        expect(url).toExist();
+        expect(url).toBeTruthy();
         expect(url).toBe("http://localhost:8080/geoserver");
         expect(PrintUtils.toAbsoluteURL("//someurl/geoserver").indexOf("http")).toBe(0);
     });
     it('getMapSize', () => {
-        expect(PrintUtils.getMapSize()).toExist(); // check defaults
+        expect(PrintUtils.getMapSize()).toBeTruthy(); // check defaults
         expect(PrintUtils.getMapSize({map: {width: 200, height: 200}}, 150).height).toBe(150);
         expect(PrintUtils.getMapSize({rotation: true, map: {width: 200, height: 100}}, 200).height).toBe(400);
     });
@@ -354,14 +354,14 @@ describe('PrintUtils', () => {
     });
     it('getMapfishPrintSpecification', () => {
         const printSpec = PrintUtils.getMapfishPrintSpecification(testSpec);
-        expect(printSpec).toExist();
+        expect(printSpec).toBeTruthy();
         expect(printSpec.dpi).toBe(96);
         expect(printSpec.layers.length).toBe(1);
         expect(printSpec.geodetic).toBe(false);
     });
     it('from rgba to rgb', () => {
         const rgb = PrintUtils.rgbaTorgb("rgba(255, 255, 255, 0.1)");
-        expect(rgb).toExist();
+        expect(rgb).toBeTruthy();
         expect(rgb).toBe("rgb(255, 255, 255)");
     });
 });

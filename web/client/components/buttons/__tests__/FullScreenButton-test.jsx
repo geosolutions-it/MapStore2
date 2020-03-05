@@ -25,12 +25,12 @@ describe("test the FullScreenButton", () => {
 
     it('test default properties', () => {
         const tb = ReactDOM.render(<FullScreenButton/>, document.getElementById("container"));
-        expect(tb).toExist();
+        expect(tb).toBeTruthy();
 
         const tbNode = ReactDOM.findDOMNode(tb);
-        expect(tbNode).toExist();
+        expect(tbNode).toBeTruthy();
         expect(tbNode.id).toBe('fullscreen-btn');
-        expect(tbNode).toExist();
+        expect(tbNode).toBeTruthy();
         expect(tbNode.className.indexOf('primary') >= 0).toBe(true);
     });
 });

@@ -24,17 +24,17 @@ describe("Test the BandSelector component", () => {
 
     it('creates component with defaults', () => {
         const cmp = ReactDOM.render(<BandSelector/>, document.getElementById("container"));
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
         cmp.props.onChange();
     });
 
     it('creates component contrast', () => {
         const cmp = ReactDOM.render(<BandSelector contrast="GammaValue" disabled/>, document.getElementById("container"));
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
     });
     it('creates component algorithm', () => {
         const cmp = ReactDOM.render(<BandSelector contrast="Normalize" algorithm="" disabled/>, document.getElementById("container"));
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
     });
 
 });

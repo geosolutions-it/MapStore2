@@ -112,6 +112,6 @@ describe('test StyleTemplates module component', () => {
     it('test StyleTemplates modal uses portal', () => {
         ReactDOM.render(<StyleTemplates add />, document.getElementById("container"));
         const modalContainer = document.body.children[1].querySelector('.ms-resizable-modal');
-        expect(modalContainer).toExist();
+        expect(modalContainer).toBeTruthy();
     });
 });

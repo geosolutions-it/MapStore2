@@ -34,6 +34,6 @@ describe('WorkspacesFilter', () => {
         ReactDOM.render(<Provider store={store}><WorkspacesFilter /></Provider>, document.getElementById("container"));
         const container = document.getElementById('container');
         const input = container.querySelector('input');
-        expect(input).toExist();
+        expect(input).toBeTruthy();
     });
 });

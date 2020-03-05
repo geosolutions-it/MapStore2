@@ -24,11 +24,11 @@ describe('ConfigurePluginsStep component', () => {
     it('ConfigurePluginsStep rendering with defaults', () => {
         ReactDOM.render(<ConfigurePluginsStep />, document.getElementById("container"));
         const container = document.getElementById('container');
-        expect(container.getElementsByClassName('configure-plugins-step')[0]).toExist();
+        expect(container.getElementsByClassName('configure-plugins-step')[0]).toBeTruthy();
     });
     it('ConfigurePluginsStep in upload mode', () => {
         ReactDOM.render(<ConfigurePluginsStep uploadEnabled/>, document.getElementById("container"));
         const container = document.getElementById('container');
-        expect(container.getElementsByClassName('configure-plugins-step-upload')[0]).toExist();
+        expect(container.getElementsByClassName('configure-plugins-step-upload')[0]).toBeTruthy();
     });
 });

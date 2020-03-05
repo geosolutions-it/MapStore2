@@ -64,11 +64,11 @@ describe("contextmanager PaginationToolbar component", () => {
             <Provider store={store}>
                 <PaginationToolbar/>
             </Provider>, document.getElementById("container"));
-        expect(comp).toExist();
+        expect(comp).toBeTruthy();
 
         const container = document.getElementById('container');
         const pagination = container.getElementsByClassName('pagination');
-        expect(pagination).toExist();
+        expect(pagination).toBeTruthy();
         expect(pagination.length).toBe(1);
         const buttons = pagination[0].getElementsByTagName('a');
         expect(buttons.length).toBe(6); // start prev firstpage secondpage next end

@@ -30,13 +30,13 @@ describe('MapWidget component', () => {
     it('MapWidget rendering with defaults', () => {
         ReactDOM.render(<Provider store={{subscribe: () => {}, getState: () => ({maptype: {mapType: 'openlayers'}})}} ><MapWidget map={{layers: []}}/></Provider>, document.getElementById("container"));
         const container = document.getElementById('container');
-        expect(container.querySelector('.glyphicon-pencil')).toExist();
-        expect(container.querySelector('.glyphicon-trash')).toExist();
+        expect(container.querySelector('.glyphicon-pencil')).toBeTruthy();
+        expect(container.querySelector('.glyphicon-trash')).toBeTruthy();
     });
     it('view only mode', () => {
         ReactDOM.render(<Provider store={{ subscribe: () => { }, getState: () => ({ maptype: { mapType: 'openlayers' } }) }} ><MapWidget map={{ layers: [] }} canEdit={false}/></Provider>, document.getElementById("container"));
         const container = document.getElementById('container');
-        expect(container.querySelector('.glyphicon-pencil')).toNotExist();
-        expect(container.querySelector('.glyphicon-trash')).toNotExist();
+        expect(container.querySelector('.glyphicon-pencil')).toBeFalsy();
+        expect(container.querySelector('.glyphicon-trash')).toBeFalsy();
     });
 });

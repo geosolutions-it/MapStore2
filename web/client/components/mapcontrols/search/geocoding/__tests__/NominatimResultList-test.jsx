@@ -32,18 +32,18 @@ describe("test the NominatimResultList", () => {
             boundingbox: []
         }];
         const tb = ReactDOM.render(<NominatimResultList results={results}/>, document.getElementById("container"));
-        expect(tb).toExist();
+        expect(tb).toBeTruthy();
 
     });
 
     it('create component without items', () => {
         const tb = ReactDOM.render(<NominatimResultList />, document.getElementById("container"));
-        expect(tb).toExist();
+        expect(tb).toBeTruthy();
     });
 
     it('create component with empty items array', () => {
         const tb = ReactDOM.render(<NominatimResultList results={[]} notFoundMessage="not found"/>, document.getElementById("container"));
-        expect(tb).toExist();
+        expect(tb).toBeTruthy();
     });
 
     it('test click handler', () => {
@@ -65,6 +65,6 @@ describe("test the NominatimResultList", () => {
 
         let elem1 = TestUtils.findRenderedDOMComponentWithClass(elem[0], "search-result");
         ReactDOM.findDOMNode(elem1).click();
-        expect(spy.calls.length).toEqual(1);
+        expect(spy.mock.calls.length).toEqual(1);
     });
 });

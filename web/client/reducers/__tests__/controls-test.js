@@ -17,7 +17,7 @@ describe('Test the controls reducer', () => {
                 enabled: true
             }
         }, {});
-        expect(state.mycontrol).toExist();
+        expect(state.mycontrol).toBeTruthy();
         expect(state.mycontrol.enabled).toBe(true);
     });
 
@@ -26,7 +26,7 @@ describe('Test the controls reducer', () => {
             type: TOGGLE_CONTROL,
             control: 'mycontrol'
         });
-        expect(state.mycontrol).toExist();
+        expect(state.mycontrol).toBeTruthy();
         expect(state.mycontrol.enabled).toBe(true);
     });
 
@@ -39,7 +39,7 @@ describe('Test the controls reducer', () => {
             type: TOGGLE_CONTROL,
             control: 'mycontrol'
         });
-        expect(state.mycontrol).toExist();
+        expect(state.mycontrol).toBeTruthy();
         expect(state.mycontrol.enabled).toBe(false);
     });
 
@@ -53,7 +53,7 @@ describe('Test the controls reducer', () => {
             control: 'mycontrol',
             property: 'custom'
         });
-        expect(state.mycontrol).toExist();
+        expect(state.mycontrol).toBeTruthy();
         expect(state.mycontrol.custom).toBe(true);
     });
 
@@ -64,7 +64,7 @@ describe('Test the controls reducer', () => {
             property: 'prop',
             value: 'val'
         });
-        expect(state.mycontrol).toExist();
+        expect(state.mycontrol).toBeTruthy();
         expect(state.mycontrol.prop).toBe('val');
     });
 
@@ -81,7 +81,7 @@ describe('Test the controls reducer', () => {
             value: 'val',
             toggle: true
         });
-        expect(state.mycontrol).toExist();
+        expect(state.mycontrol).toBeTruthy();
         expect(state.mycontrol.prop).toBe(undefined);
     });
 
@@ -94,7 +94,7 @@ describe('Test the controls reducer', () => {
                 'prop2': 'val2'
             }
         });
-        expect(state.mycontrol).toExist();
+        expect(state.mycontrol).toBeTruthy();
         expect(state.mycontrol.prop1).toBe('val1');
         expect(state.mycontrol.prop2).toBe('val2');
     });
@@ -109,13 +109,13 @@ describe('Test the controls reducer', () => {
                 type: RESET_CONTROLS,
                 skip: []
             });
-        expect(state.c1).toExist();
-        expect(state.c2).toExist();
-        expect(state.c3).toExist();
+        expect(state.c1).toBeTruthy();
+        expect(state.c2).toBeTruthy();
+        expect(state.c3).toBeTruthy();
         expect(state.c1.enabled).toBe(false);
         expect(state.c2.enabled).toBe(false);
-        expect(state.c3.enabled).toNotExist();
-        expect(state.c3.idonthaveenabledfield).toExist();
+        expect(state.c3.enabled).toBeFalsy();
+        expect(state.c3.idonthaveenabledfield).toBeTruthy();
         expect(state.c3.idonthaveenabledfield).toBe("whatever");
     });
 
@@ -129,13 +129,13 @@ describe('Test the controls reducer', () => {
                 type: RESET_CONTROLS,
                 skip: ["c1", "c3"]
             });
-        expect(state.c1).toExist();
-        expect(state.c2).toExist();
-        expect(state.c3).toExist();
+        expect(state.c1).toBeTruthy();
+        expect(state.c2).toBeTruthy();
+        expect(state.c3).toBeTruthy();
         expect(state.c1.enabled).toBe(true);
         expect(state.c2.enabled).toBe(false);
-        expect(state.c3.enabled).toNotExist();
-        expect(state.c3.idonthaveenabledfield).toExist();
+        expect(state.c3.enabled).toBeFalsy();
+        expect(state.c3.idonthaveenabledfield).toBeTruthy();
         expect(state.c3.idonthaveenabledfield).toBe("whatever");
     });
 });

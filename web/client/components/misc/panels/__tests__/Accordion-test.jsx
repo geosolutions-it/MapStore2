@@ -35,7 +35,7 @@ describe("test Accordion", () => {
 
         ReactDOM.render(<Accordion activePanel="panel-001" panels={panels}/>, document.getElementById("container"));
         const domComp = document.getElementsByClassName('ms-accordion')[0];
-        expect(domComp).toExist();
+        expect(domComp).toBeTruthy();
         const panelsDOM = document.getElementsByClassName('panel');
         expect(panelsDOM.length).toBe(2);
         const selected = document.getElementsByClassName('ms-selected');
@@ -54,7 +54,7 @@ describe("test Accordion", () => {
 
         ReactDOM.render(<Accordion fillContainer activePanel="panel-001" panels={panels}/>, document.getElementById("container"));
         const domComp = document.getElementsByClassName('ms-accordion')[0];
-        expect(domComp).toExist();
+        expect(domComp).toBeTruthy();
         const panelsDOM = document.getElementsByClassName('panel');
         expect(panelsDOM.length).toBe(2);
         const selected = document.getElementsByClassName('ms-selected');
@@ -82,7 +82,7 @@ describe("test Accordion", () => {
 
         ReactDOM.render(<Accordion onSelect={testHandlers.onSelect} activePanel="panel-001" panels={panels}/>, document.getElementById("container"));
         const domComp = document.getElementsByClassName('ms-accordion')[0];
-        expect(domComp).toExist();
+        expect(domComp).toBeTruthy();
         const panelsDOM = document.getElementsByClassName('panel');
         expect(panelsDOM.length).toBe(2);
         const panelHead = document.getElementsByClassName('mapstore-side-card')[1];

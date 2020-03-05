@@ -16,7 +16,7 @@ describe('Test correctness of the style actions', () => {
 
     it('setStyleParameter', () => {
         const retVal = setStyleParameter('name', 'val');
-        expect(retVal).toExist();
+        expect(retVal).toBeTruthy();
         expect(retVal.type).toBe(SET_STYLE_PARAMETER);
         expect(retVal.name).toBe('name');
         expect(retVal.value).toBe('val');

@@ -25,15 +25,15 @@ describe('SideGrid component', () => {
         ReactDOM.render(<SideGrid />, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('.msSideGrid');
-        expect(el).toExist();
-        expect(el.querySelector(".items-list")).toExist();
+        expect(el).toBeTruthy();
+        expect(el.querySelector(".items-list")).toBeTruthy();
     });
     it('SideGrid rendering with className', () => {
         ReactDOM.render(<SideGrid className="TEST_CLASS"/>, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('.TEST_CLASS');
-        expect(el).toExist();
-        expect(el.querySelector(".items-list")).toExist();
+        expect(el).toBeTruthy();
+        expect(el.querySelector(".items-list")).toBeTruthy();
     });
     it('Test SideGrid onItemClick', () => {
         const actions = {
@@ -42,7 +42,7 @@ describe('SideGrid component', () => {
         const spyonItemClick = expect.spyOn(actions, 'onItemClick');
         ReactDOM.render(<SideGrid onItemClick={actions.onItemClick} items={[{}]}/>, document.getElementById("container"));
         const el = document.querySelector('.mapstore-side-card');
-        expect(el).toExist();
+        expect(el).toBeTruthy();
         el.click();
         expect(spyonItemClick).toHaveBeenCalled();
     });
@@ -55,7 +55,7 @@ describe('SideGrid component', () => {
 
         const container = document.getElementById('container');
         const el = container.querySelector('.msSideGrid');
-        expect(el).toExist();
+        expect(el).toBeTruthy();
 
         let customCards = container.getElementsByClassName('custom-card-component');
         expect(customCards.length).toBe(2);

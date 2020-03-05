@@ -27,22 +27,22 @@ describe('Section component', () => {
     it('Section rendering with defaults', () => {
         ReactDOM.render(<Section />, document.getElementById("container"));
         const container = document.getElementById('container');
-        expect(container.querySelector('.ms-section-unknown')).toExist();
+        expect(container.querySelector('.ms-section-unknown')).toBeTruthy();
 
     });
     it('Section rendering with unknown type', () => {
         ReactDOM.render(<Section type="SOME_UNKNOWN_TYPE" />, document.getElementById("container"));
         const container = document.getElementById('container');
-        expect(container.querySelector('.ms-section-unknown')).toExist();
+        expect(container.querySelector('.ms-section-unknown')).toBeTruthy();
 
     });
     it('Section rendering with of known section (paragraph)', () => {
         ReactDOM.render(<Section {...STORY.sections[0]} />, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('.ms-section-paragraph');
-        expect(el).toExist();
-        expect(container.querySelector('.ms-section-unknown')).toNotExist();
-        expect(el.querySelector('.ms-section-contents')).toExist();
+        expect(el).toBeTruthy();
+        expect(container.querySelector('.ms-section-unknown')).toBeFalsy();
+        expect(el.querySelector('.ms-section-contents')).toBeTruthy();
     });
     describe('every section type supports onVisibilityChange', () => {
         lists.SectionTypes.forEach((type) => {
@@ -55,8 +55,8 @@ describe('Section component', () => {
                     onVisibilityChange={({id, visible, entry}) => {
                         expect(id).toBe(`test-${type}-section`);
                         expect(visible).toBe(true);
-                        expect(entry).toExist();
-                        expect(entry.intersectionRatio).toExist();
+                        expect(entry).toBeTruthy();
+                        expect(entry.intersectionRatio).toBeTruthy();
                         done();
                     }}
                 />, document.getElementById("container"));

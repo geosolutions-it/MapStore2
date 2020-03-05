@@ -28,7 +28,7 @@ describe('WPSWidgetOptions component', () => {
         ReactDOM.render(<WPSWidgetOptions />, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('.chart-options-form');
-        expect(el).toExist();
+        expect(el).toBeTruthy();
     });
     it('Test WPSWidgetOptions onChange for chart context', () => {
         const actions = {
@@ -40,34 +40,34 @@ describe('WPSWidgetOptions component', () => {
         // simulate change with tab (for react-select)
         ReactTestUtils.Simulate.change(inputs[0], { target: { value: 'STATE_NAME' } });
         ReactTestUtils.Simulate.keyDown(inputs[0], {keyCode: 9, key: 'Tab' });
-        expect(spyonChange.calls[0].arguments[0]).toBe("options.groupByAttributes");
-        expect(spyonChange.calls[0].arguments[1]).toBe("STATE_NAME");
+        expect(spyonChange.mock.calls[0][0]).toBe("options.groupByAttributes");
+        expect(spyonChange.mock.calls[0][1]).toBe("STATE_NAME");
 
         ReactTestUtils.Simulate.change(inputs[1], { target: { value: 'STATE_NAME' } });
         ReactTestUtils.Simulate.keyDown(inputs[1], {keyCode: 9, key: 'Tab' });
-        expect(spyonChange.calls[1].arguments[0]).toBe("options.aggregationAttribute");
-        expect(spyonChange.calls[1].arguments[1]).toBe("STATE_NAME");
+        expect(spyonChange.mock.calls[1][0]).toBe("options.aggregationAttribute");
+        expect(spyonChange.mock.calls[1][1]).toBe("STATE_NAME");
 
         ReactTestUtils.Simulate.change(inputs[2], { target: { value: 'Count' } });
         ReactTestUtils.Simulate.keyDown(inputs[2], {keyCode: 9, key: 'Tab' });
-        expect(spyonChange.calls[2].arguments[0]).toBe("options.aggregateFunction");
-        expect(spyonChange.calls[2].arguments[1]).toBe("Count");
+        expect(spyonChange.mock.calls[2][0]).toBe("options.aggregateFunction");
+        expect(spyonChange.mock.calls[2][1]).toBe("Count");
 
         ReactTestUtils.Simulate.change(inputs[3]);
-        expect(spyonChange.calls[3].arguments[0]).toBe("legend");
-        expect(spyonChange.calls[3].arguments[1]).toBe(true);
+        expect(spyonChange.mock.calls[3][0]).toBe("legend");
+        expect(spyonChange.mock.calls[3][1]).toBe(true);
 
         ReactTestUtils.Simulate.change(inputs[5]);
-        expect(spyonChange.calls[4].arguments[0]).toBe("cartesian");
-        expect(spyonChange.calls[4].arguments[1]).toBe(false);
+        expect(spyonChange.mock.calls[4][0]).toBe("cartesian");
+        expect(spyonChange.mock.calls[4][1]).toBe(false);
 
         ReactTestUtils.Simulate.change(inputs[6]);
-        expect(spyonChange.calls[5].arguments[0]).toBe("yAxis");
-        expect(spyonChange.calls[5].arguments[1]).toBe(true);
+        expect(spyonChange.mock.calls[5][0]).toBe("yAxis");
+        expect(spyonChange.mock.calls[5][1]).toBe(true);
 
         ReactTestUtils.Simulate.change(inputs[7], { target: { value: 'Y axis label' } });
-        expect(spyonChange.calls[6].arguments[0]).toBe("yAxisLabel");
-        expect(spyonChange.calls[6].arguments[1]).toBe("Y axis label");
+        expect(spyonChange.mock.calls[6][0]).toBe("yAxisLabel");
+        expect(spyonChange.mock.calls[6][1]).toBe("Y axis label");
 
 
     });
@@ -89,18 +89,18 @@ describe('WPSWidgetOptions component', () => {
         // simulate change with tab (for react-select)
         ReactTestUtils.Simulate.change(inputs[0], { target: { value: 'STATE_NAME' } });
         ReactTestUtils.Simulate.keyDown(inputs[0], { keyCode: 9, key: 'Tab' });
-        expect(spyonChange.calls[0].arguments[0]).toBe("options.aggregationAttribute");
-        expect(spyonChange.calls[0].arguments[1]).toBe("STATE_NAME");
+        expect(spyonChange.mock.calls[0][0]).toBe("options.aggregationAttribute");
+        expect(spyonChange.mock.calls[0][1]).toBe("STATE_NAME");
 
 
         ReactTestUtils.Simulate.change(inputs[1], { target: { value: 'Count' } });
         ReactTestUtils.Simulate.keyDown(inputs[1], { keyCode: 9, key: 'Tab' });
-        expect(spyonChange.calls[1].arguments[0]).toBe("options.aggregateFunction");
-        expect(spyonChange.calls[1].arguments[1]).toBe("Count");
+        expect(spyonChange.mock.calls[1][0]).toBe("options.aggregateFunction");
+        expect(spyonChange.mock.calls[1][1]).toBe("Count");
 
         ReactTestUtils.Simulate.change(inputs[2], { target: { value: 'test' } });
-        expect(spyonChange.calls[2].arguments[0]).toBe("options.seriesOptions.[0].uom");
-        expect(spyonChange.calls[2].arguments[1]).toBe("test");
+        expect(spyonChange.mock.calls[2][0]).toBe("options.seriesOptions.[0].uom");
+        expect(spyonChange.mock.calls[2][1]).toBe("test");
     });
 
     it('Test WPSWidgetOptions with rotation slider ', () => {
@@ -120,7 +120,7 @@ describe('WPSWidgetOptions component', () => {
             dependencies={{ viewport: {} }}
             data={{type: "line", xAxisAngle: 45}}/>, document.getElementById("container"));
         const slider = document.getElementsByClassName('mapstore-slider');
-        expect(slider).toExist();
+        expect(slider).toBeTruthy();
         const tooltip = document.getElementsByClassName('noUi-tooltip')[0];
         expect(tooltip.innerText).toBe("45");
 

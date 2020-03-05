@@ -15,7 +15,7 @@ import {selectTheme, themeLoaded} from '../../actions/theme';
 describe('Test the theme reducer', () => {
     it('should manage the THEME_SELECTED action', () => {
         const state = theme({}, selectTheme({id: "default"}));
-        expect(state.selectedTheme).toExist();
+        expect(state.selectedTheme).toBeTruthy();
         expect(state.selectedTheme.id).toBe("default");
     });
     it('should manage the THEME_LOADED action', () => {

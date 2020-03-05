@@ -132,8 +132,8 @@ describe('ConfigUtils', () => {
         // check zoom
         expect(config.map.zoom).toBe(5);
         // check lat-lng in 4326
-        expect(config.map.center.x).toBeA('number');
-        expect(config.map.center.y).toBeA('number');
+        expect(typeof config.map.center.x).toBe('number');
+        expect(typeof config.map.center.y).toBe('number');
         expect(config.map.center.x).toBeLessThan(90);
         expect(config.map.center.x).toBeGreaterThan(-90);
         expect(config.map.center.y).toBeLessThan(180);
@@ -153,7 +153,7 @@ describe('ConfigUtils', () => {
         for (let source in config.sources) {
             if (config.sources.hasOwnProperty(source)) {
                 let sourceObj = config.sources[source];
-                expect(sourceObj.ptype).toBeA('string');
+                expect(typeof sourceObj.ptype).toBe('string');
             }
         }
     });
@@ -173,40 +173,40 @@ describe('ConfigUtils', () => {
         var config = ConfigUtils.mergeConfigs(lconfig, testMap);
         // check layers replaced
         expect(config.map.layers.length).toBe(1);
-        expect(config.gsSources["gxp-source-508"]).toExist();
+        expect(config.gsSources["gxp-source-508"]).toBeTruthy();
     });
 
     it('getCenter', () => {
         var center = ConfigUtils.getCenter([13, 43]);
-        expect(center).toExist();
+        expect(center).toBeTruthy();
         expect(center.y).toBe(43);
         expect(center.x).toBe(13);
         expect(center.crs).toBe('EPSG:4326');
 
         center = ConfigUtils.getCenter([13, 43], 'EPSG:4326');
-        expect(center).toExist();
+        expect(center).toBeTruthy();
         expect(center.y).toBe(43);
         expect(center.x).toBe(13);
         expect(center.crs).toBe('EPSG:4326');
 
         center = ConfigUtils.getCenter({y: 43, x: 13, crs: 'EPSG:4326'});
-        expect(center).toExist();
+        expect(center).toBeTruthy();
         expect(center.y).toBe(43);
         expect(center.x).toBe(13);
         expect(center.crs).toBe('EPSG:4326');
 
         center = ConfigUtils.getCenter({y: 4786738, x: 1459732, crs: 'EPSG:900913'});
-        expect(center).toExist();
-        expect(center.y).toExist();
-        expect(center.x).toExist();
+        expect(center).toBeTruthy();
+        expect(center.y).toBeTruthy();
+        expect(center.x).toBeTruthy();
         expect(center.crs).toBe('EPSG:4326');
         expect(Math.round(center.x)).toBe(13);
         expect(Math.round(center.y)).toBe(39);
 
         center = ConfigUtils.getCenter([1459732, 4786738], 'EPSG:900913');
-        expect(center).toExist();
-        expect(center.y).toExist();
-        expect(center.x).toExist();
+        expect(center).toBeTruthy();
+        expect(center.y).toBeTruthy();
+        expect(center.x).toBeTruthy();
         expect(center.crs).toBe('EPSG:4326');
         expect(Math.round(center.x)).toBe(13);
         expect(Math.round(center.y)).toBe(39);
@@ -214,44 +214,44 @@ describe('ConfigUtils', () => {
 
     it('getConfigurationOptions', () => {
         var retval = ConfigUtils.getConfigurationOptions({});
-        expect(retval).toExist();
-        expect(retval.configUrl).toExist();
+        expect(retval).toBeTruthy();
+        expect(retval.configUrl).toBeTruthy();
         expect(retval.configUrl).toBe('config.json');
 
         retval = ConfigUtils.getConfigurationOptions({}, 'name', 'extension');
-        expect(retval).toExist();
-        expect(retval.configUrl).toExist();
+        expect(retval).toBeTruthy();
+        expect(retval.configUrl).toBeTruthy();
         expect(retval.configUrl).toBe('name.extension');
 
         retval = ConfigUtils.getConfigurationOptions({}, 'name');
-        expect(retval).toExist();
-        expect(retval.configUrl).toExist();
+        expect(retval).toBeTruthy();
+        expect(retval.configUrl).toBeTruthy();
         expect(retval.configUrl).toBe('name.json');
 
         retval = ConfigUtils.getConfigurationOptions({}, undefined, 'extension');
-        expect(retval).toExist();
-        expect(retval.configUrl).toExist();
+        expect(retval).toBeTruthy();
+        expect(retval.configUrl).toBeTruthy();
         expect(retval.configUrl).toBe('config.extension');
 
         retval = ConfigUtils.getConfigurationOptions({
             mapId: 42
         });
-        expect(retval).toExist();
-        expect(retval.configUrl).toExist();
+        expect(retval).toBeTruthy();
+        expect(retval.configUrl).toBeTruthy();
         expect(retval.configUrl).toBe('/rest/geostore/data/42');
 
         retval = ConfigUtils.getConfigurationOptions({
             mapId: 42
         }, undefined, undefined, 'gbase/');
-        expect(retval).toExist();
-        expect(retval.configUrl).toExist();
+        expect(retval).toBeTruthy();
+        expect(retval.configUrl).toBeTruthy();
         expect(retval.configUrl).toBe('gbase/data/42');
     });
 
     it('getUserConfiguration', () => {
         const testval = ConfigUtils.getConfigurationOptions({});
         const retval = ConfigUtils.getUserConfiguration();
-        expect(retval).toExist();
+        expect(retval).toBeTruthy();
         expect(retval.configUrl).toBe(testval.configUrl);
         expect(retval.legacy).toBe(testval.legacy);
     });
@@ -259,7 +259,7 @@ describe('ConfigUtils', () => {
         const url = "http://somepath/wfs";
         const testval = "http://somepath/wps?service=WPS";
         const retval = ConfigUtils.getParsedUrl(url, {});
-        expect(retval).toExist();
+        expect(retval).toBeTruthy();
         expect(retval).toBe(testval);
     });
     it('getParsedUrl with valid url ending with asd return null', () => {
@@ -275,33 +275,33 @@ describe('ConfigUtils', () => {
 
     it('loadConfiguration', (done) => {
         var retval = ConfigUtils.loadConfiguration();
-        expect(retval).toExist();
+        expect(retval).toBeTruthy();
         done();
     });
 
     it("loadConfiguration returns a copied config", done => {
         var retval = ConfigUtils.loadConfiguration();
-        expect(retval).toExist();
+        expect(retval).toBeTruthy();
         retval.newProperty = 'newValue';
-        expect(ConfigUtils.getDefaults().newProperty).toNotExist();
+        expect(ConfigUtils.getDefaults().newProperty).toBeFalsy();
         done();
     });
 
     it("loadConfiguration returns a copied config as a promise", done => {
         ConfigUtils.setLocalConfigurationFile("");
         ConfigUtils.loadConfiguration().then((retval) => {
-            expect(retval).toExist();
+            expect(retval).toBeTruthy();
             retval.newProperty = "newValue";
-            expect(ConfigUtils.getDefaults().newProperty).toNotExist();
+            expect(ConfigUtils.getDefaults().newProperty).toBeFalsy();
             done();
         });
     });
 
     it("getDefaults returns a copied config", done => {
         var retval = ConfigUtils.getDefaults();
-        expect(retval).toExist();
+        expect(retval).toBeTruthy();
         retval.newProperty = "newValue";
-        expect(ConfigUtils.getDefaults().newProperty).toNotExist();
+        expect(ConfigUtils.getDefaults().newProperty).toBeFalsy();
         done();
     });
 
@@ -341,7 +341,7 @@ describe('ConfigUtils', () => {
         ConfigUtils.setConfigProp('testProperty', 'testValue');
         expect(ConfigUtils.getConfigProp('testProperty')).toBe('testValue');
         ConfigUtils.removeConfigProp('testProperty');
-        expect(ConfigUtils.getConfigProp('testProperty')).toNotExist();
+        expect(ConfigUtils.getConfigProp('testProperty')).toBeFalsy();
     });
 
     it('testing cleanDuplicatedQuestionMarks', () => {

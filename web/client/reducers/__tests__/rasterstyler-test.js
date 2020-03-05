@@ -21,8 +21,8 @@ describe('Test the rasterstyler reducer', () => {
             property: 'testProperty',
             value: 'testValue'
         });
-        expect(state.testComponent).toExist();
-        expect(state.testComponent.testProperty).toExist();
+        expect(state.testComponent).toBeTruthy();
+        expect(state.testComponent.testProperty).toBeTruthy();
         expect(state.testComponent.testProperty).toBe('testValue');
     });
 

@@ -26,7 +26,7 @@ describe('SwitchToolbar component', () => {
         ReactDOM.render(<SwitchToolbar />, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('button');
-        expect(el).toExist();
+        expect(el).toBeTruthy();
     });
     it('Test SwitchToolbar onClick', () => {
         const actions = {
@@ -35,7 +35,7 @@ describe('SwitchToolbar component', () => {
         const spyonClick = expect.spyOn(actions, 'onClick');
         ReactDOM.render(<SwitchToolbar onClick={actions.onClick} />, document.getElementById("container"));
         const input = document.getElementsByTagName('button')[0];
-        expect(input).toExist();
+        expect(input).toBeTruthy();
         ReactTestUtils.Simulate.click(input);
         expect(spyonClick).toHaveBeenCalled();
     });

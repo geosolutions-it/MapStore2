@@ -24,7 +24,7 @@ describe("Test the StylePolygon style component", () => {
     });
     it('create component with default', () => {
         const cmp = ReactDOM.render(<StylePolygon shapeStyle={shapeStyle}/>, document.getElementById("container"));
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
     });
 
 

@@ -25,9 +25,9 @@ describe('Paragraph component', () => {
     it('Paragraph rendering with of known section (paragraph)', () => {
         ReactDOM.render(<Paragraph {...STORY.sections[0]} />, document.getElementById("container"));
         const container = document.getElementById('container');
-        expect(container.querySelector('.ms-section-paragraph > .ms-section-contents')).toExist();
+        expect(container.querySelector('.ms-section-paragraph > .ms-section-contents')).toBeTruthy();
 
-        expect(container.querySelector('.ms-content-text')).toExist();
-        expect(container.querySelector('.ms-content-image')).toExist();
+        expect(container.querySelector('.ms-content-text')).toBeTruthy();
+        expect(container.querySelector('.ms-content-image')).toBeTruthy();
     });
 });

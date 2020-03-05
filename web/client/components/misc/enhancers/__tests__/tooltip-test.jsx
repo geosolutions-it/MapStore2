@@ -28,15 +28,15 @@ describe("tooltip enhancer", () => {
         const CMP = tooltip(({id}) => <div id={id} />);
         ReactDOM.render(<CMP id="text-cmp"/>, document.getElementById("container"));
         const el = document.getElementById("text-cmp");
-        expect(el).toExist();
+        expect(el).toBeTruthy();
     });
     it('creates component with tooltip props', () => {
         const CMP = tooltip(Button);
         ReactDOM.render(<CMP tooltip={<div>Hello</div>} tooltipTrigger={['click', 'focus', 'hover']} id="text-cmp">TEXT</CMP>, document.getElementById("container"));
         const el = document.getElementById("text-cmp");
-        expect(el).toExist();
+        expect(el).toBeTruthy();
         el.click();
-        expect(el.getAttribute('aria-describedby')).toExist();
+        expect(el.getAttribute('aria-describedby')).toBeTruthy();
     });
 
 });

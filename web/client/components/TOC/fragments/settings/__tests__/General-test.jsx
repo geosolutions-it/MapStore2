@@ -41,9 +41,9 @@ describe('test  Layer Properties General module component', () => {
         // wrap in a stateful component, stateless components render return null
         // see: https://facebook.github.io/react/docs/top-level-api.html#reactdom.render
         const comp = ReactDOM.render(<General element={l} settings={settings} />, document.getElementById("container"));
-        expect(comp).toExist();
+        expect(comp).toBeTruthy();
         const inputs = ReactTestUtils.scryRenderedDOMComponentsWithTag( comp, "input" );
-        expect(inputs).toExist();
+        expect(inputs).toBeTruthy();
         expect(inputs.length).toBe(15);
 
     });
@@ -66,13 +66,13 @@ describe('test  Layer Properties General module component', () => {
         // wrap in a stateful component, stateless components render return null
         // see: https://facebook.github.io/react/docs/top-level-api.html#reactdom.render
         const comp = ReactDOM.render(<General element={l} settings={settings} onChange={handlers.onChange}/>, document.getElementById("container"));
-        expect(comp).toExist();
+        expect(comp).toBeTruthy();
         const inputs = ReactTestUtils.scryRenderedDOMComponentsWithTag( comp, "input" );
-        expect(inputs).toExist();
+        expect(inputs).toBeTruthy();
         expect(inputs.length).toBe(15);
         ReactTestUtils.Simulate.change(inputs[0]);
         ReactTestUtils.Simulate.blur(inputs[1]);
-        expect(spy.calls.length).toBe(1);
+        expect(spy.mock.calls.length).toBe(1);
     });
     it('tests hidden title translations', () => {
         const l = {
@@ -95,9 +95,9 @@ describe('test  Layer Properties General module component', () => {
         // wrap in a stateful component, stateless components render return null
         // see: https://facebook.github.io/react/docs/top-level-api.html#reactdom.render
         const comp = ReactDOM.render(<General pluginCfg={pluginCfg} element={l} settings={settings} onChange={handlers.onChange}/>, document.getElementById("container"));
-        expect(comp).toExist();
+        expect(comp).toBeTruthy();
         const forms = ReactTestUtils.scryRenderedDOMComponentsWithClass( comp, "form-group" );
-        expect(forms).toExist();
+        expect(forms).toBeTruthy();
         expect(forms.length).toBe(3);
     });
 
@@ -114,7 +114,7 @@ describe('test  Layer Properties General module component', () => {
             options: {opacity: 1}
         };
         const comp = ReactDOM.render(<General pluginCfg={{}} element={layer} settings={settings}/>, document.getElementById("container"));
-        expect(comp).toExist();
+        expect(comp).toBeTruthy();
         const labels = ReactTestUtils.scryRenderedDOMComponentsWithClass( comp, "control-label" );
         expect(labels.length).toBe(7);
         expect(labels[4].innerText).toBe("layerProperties.group");
@@ -135,7 +135,7 @@ describe('test  Layer Properties General module component', () => {
             options: {opacity: 1}
         };
         const comp = ReactDOM.render(<General pluginCfg={{}} element={layer} showTooltipOptions={false} settings={settings}/>, document.getElementById("container"));
-        expect(comp).toExist();
+        expect(comp).toBeTruthy();
         const labels = ReactTestUtils.scryRenderedDOMComponentsWithClass( comp, "control-label" );
         expect(labels.length).toBe(5);
         expect(labels[4].innerText).toBe("layerProperties.group");

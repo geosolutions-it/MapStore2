@@ -37,9 +37,9 @@ describe('utcDateWrapper enhancher', () => {
         />, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('#CMP');
-        expect(el).toExist();
+        expect(el).toBeTruthy();
         const inputs = container.getElementsByTagName('input');
-        expect(inputs).toExist();
+        expect(inputs).toBeTruthy();
         expect(inputs.length).toBe(1);
         expect(inputs[0].value).toBe('02/01/2018');
     });
@@ -51,9 +51,9 @@ describe('utcDateWrapper enhancher', () => {
         />, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('#CMP');
-        expect(el).toExist();
+        expect(el).toBeTruthy();
         const inputs = container.getElementsByTagName('input');
-        expect(inputs).toExist();
+        expect(inputs).toBeTruthy();
         expect(inputs.length).toBe(1);
         expect(inputs[0].value).toBe('03:00:00');
     });
@@ -65,9 +65,9 @@ describe('utcDateWrapper enhancher', () => {
         />, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('#CMP');
-        expect(el).toExist();
+        expect(el).toBeTruthy();
         const inputs = container.getElementsByTagName('input');
-        expect(inputs).toExist();
+        expect(inputs).toBeTruthy();
         expect(inputs.length).toBe(1);
         expect(inputs[0].value).toBe('02/01/2018 03:00:00');
     });
@@ -79,7 +79,7 @@ describe('utcDateWrapper enhancher', () => {
         const spyonSetDate = expect.spyOn(actions, 'onSetDate');
 
         const check = (date, expectedUTCString, index, callback = () => {}) => (props) => {
-            expect(props).toExist();
+            expect(props).toBeTruthy();
             // check component as expectedUTCDate
             // check the current date is properly shifted
             expect(date.getTime() + date.getTimezoneOffset() * 60000).toEqual(props.date.getTime());
@@ -89,7 +89,7 @@ describe('utcDateWrapper enhancher', () => {
             expect(spyonSetDate).toHaveBeenCalled();
 
             // check the returned date is properly conveerted back to UTC Date
-            expect(spyonSetDate.calls[index].arguments[0].toISOString()).toBe(expectedUTCString);
+            expect(spyonSetDate.mock.calls[index][0].toISOString()).toBe(expectedUTCString);
             callback();
         };
         const Sink = utcDateWrapper()(createSink( props => {

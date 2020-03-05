@@ -54,7 +54,7 @@ describe('Test correctness of the map actions', () => {
         const testProjection = 'EPSG:32632';
         var retval = changeMapView(testCenter, testZoom, testBbox, testSize, null, testProjection);
 
-        expect(retval).toExist();
+        expect(retval).toBeTruthy();
         expect(retval.type).toBe(CHANGE_MAP_VIEW);
         expect(retval.center).toBe(testCenter);
         expect(retval.zoom).toBe(testZoom);
@@ -68,7 +68,7 @@ describe('Test correctness of the map actions', () => {
         const retval = clickOnMap(testVal);
 
         expect(retval.type).toBe(CLICK_ON_MAP);
-        expect(retval.point).toExist();
+        expect(retval.point).toBeTruthy();
         expect(retval.point).toBe(testVal);
     });
 
@@ -77,12 +77,12 @@ describe('Test correctness of the map actions', () => {
         let {type, values, title, message, autoDismiss, position } = errorLoadingFont(err);
 
         expect(type).toBe(SHOW_NOTIFICATION);
-        expect(values).toExist();
-        expect(values.family).toExist();
-        expect(title).toExist();
-        expect(message).toExist();
-        expect(position).toExist();
-        expect(autoDismiss).toExist();
+        expect(values).toBeTruthy();
+        expect(values.family).toBeTruthy();
+        expect(title).toBeTruthy();
+        expect(message).toBeTruthy();
+        expect(position).toBeTruthy();
+        expect(autoDismiss).toBeTruthy();
         expect(values.family).toBe("FontAwesome");
         expect(title).toBe("warning");
         expect(message).toBe("map.errorLoadingFont");
@@ -94,11 +94,11 @@ describe('Test correctness of the map actions', () => {
         let {type, values, title, message, autoDismiss, position } = errorLoadingFont();
 
         expect(type).toBe(SHOW_NOTIFICATION);
-        expect(values).toExist();
-        expect(title).toExist();
-        expect(message).toExist();
-        expect(position).toExist();
-        expect(autoDismiss).toExist();
+        expect(values).toBeTruthy();
+        expect(title).toBeTruthy();
+        expect(message).toBeTruthy();
+        expect(position).toBeTruthy();
+        expect(autoDismiss).toBeTruthy();
         expect(values.family).toBe("");
         expect(title).toBe("warning");
         expect(message).toBe("map.errorLoadingFont");
@@ -111,7 +111,7 @@ describe('Test correctness of the map actions', () => {
         const testVal = 'pointer';
         const retval = changeMousePointer(testVal);
 
-        expect(retval).toExist();
+        expect(retval).toBeTruthy();
         expect(retval.type).toBe(CHANGE_MOUSE_POINTER);
         expect(retval.pointer).toBe(testVal);
     });
@@ -120,7 +120,7 @@ describe('Test correctness of the map actions', () => {
         const testVal = 9;
         const retval = changeZoomLevel(testVal);
 
-        expect(retval).toExist();
+        expect(retval).toBeTruthy();
         expect(retval.type).toBe(CHANGE_ZOOM_LVL);
         expect(retval.zoom).toBe(testVal);
     });
@@ -128,9 +128,9 @@ describe('Test correctness of the map actions', () => {
     it('zoom to extent', () => {
         const retval = zoomToExtent([-30, -30, 30, 30], 'EPSG:4326', 18);
 
-        expect(retval).toExist();
+        expect(retval).toBeTruthy();
         expect(retval.type).toBe(ZOOM_TO_EXTENT);
-        expect(retval.extent).toExist();
+        expect(retval.extent).toBeTruthy();
         expect(retval.crs).toBe('EPSG:4326');
         expect(retval.maxZoom).toBe(18);
     });
@@ -139,7 +139,7 @@ describe('Test correctness of the map actions', () => {
         const testVal = 'EPSG:4326';
         const retval = changeMapCrs(testVal);
 
-        expect(retval).toExist();
+        expect(retval).toBeTruthy();
         expect(retval.type).toBe(CHANGE_MAP_CRS);
         expect(retval.crs).toBe(testVal);
     });
@@ -148,7 +148,7 @@ describe('Test correctness of the map actions', () => {
         const testScales = [100000, 50000, 25000, 10000, 5000];
         const retval = changeMapScales(testScales);
 
-        expect(retval).toExist();
+        expect(retval).toBeTruthy();
         expect(retval.type).toBe(CHANGE_MAP_SCALES);
         expect(retval.scales).toEqual(testScales);
     });
@@ -158,7 +158,7 @@ describe('Test correctness of the map actions', () => {
         let mapStateSource = "test";
         var retval = changeMapStyle(style, mapStateSource);
 
-        expect(retval).toExist();
+        expect(retval).toBeTruthy();
         expect(retval.type).toBe(CHANGE_MAP_STYLE);
         expect(retval.style).toBe(style);
         expect(retval.mapStateSource).toBe(mapStateSource);
@@ -168,7 +168,7 @@ describe('Test correctness of the map actions', () => {
         let angle = 0.5235987755982989;
         let mapStateSource = "test";
         let retval = changeRotation(angle, mapStateSource);
-        expect(retval).toExist();
+        expect(retval).toBeTruthy();
         expect(retval.type).toEqual(CHANGE_ROTATION);
         expect(retval.rotation).toEqual(angle);
         expect(retval.mapStateSource).toEqual(mapStateSource);
@@ -177,20 +177,20 @@ describe('Test correctness of the map actions', () => {
     it('updateVersion', () => {
         const version = 2;
         const retval = updateVersion(version);
-        expect(retval).toExist();
+        expect(retval).toBeTruthy();
         expect(retval.type).toEqual(UPDATE_VERSION);
         expect(retval.version).toEqual(2);
     });
 
     it('initMap', () => {
         const retval = initMap();
-        expect(retval).toExist();
+        expect(retval).toBeTruthy();
         expect(retval.type).toEqual(INIT_MAP);
     });
 
     it('resizeMap', () => {
         const retval = resizeMap();
-        expect(retval).toExist();
+        expect(retval).toBeTruthy();
         expect(retval.type).toEqual(RESIZE_MAP);
     });
     it('change map limits', () => {
@@ -198,7 +198,7 @@ describe('Test correctness of the map actions', () => {
         const crs = "EPSG:4326";
         const minZoom = 2;
         const action = changeMapLimits({ restrictedExtent, crs, minZoom});
-        expect(action).toExist();
+        expect(action).toBeTruthy();
         expect(action.type).toBe(CHANGE_MAP_LIMITS);
         expect(action.restrictedExtent).toBe(restrictedExtent);
         expect(action.crs).toBe(crs);
@@ -210,7 +210,7 @@ describe('Test correctness of the map actions', () => {
         const zoom = 12;
         const crs = "EPSG:4326";
         const retval = zoomToPoint(pos, zoom, crs);
-        expect(retval).toExist();
+        expect(retval).toBeTruthy();
         expect(retval.type).toEqual(ZOOM_TO_POINT);
         expect(retval.pos).toEqual(pos);
         expect(retval.zoom).toEqual(zoom);
@@ -220,7 +220,7 @@ describe('Test correctness of the map actions', () => {
     it('setMapResolutions', () => {
         const resolutions = [4, 2];
         const retval = setMapResolutions(resolutions);
-        expect(retval).toExist();
+        expect(retval).toBeTruthy();
         expect(retval.type).toEqual(SET_MAP_RESOLUTIONS);
         expect(retval.resolutions).toEqual(resolutions);
     });

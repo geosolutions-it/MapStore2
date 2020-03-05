@@ -36,7 +36,7 @@ describe('TOC Filter', () => {
         const cmp = ReactDOM.render(<Filter onFilter={actions.onFilter}
             onFocus={actions.onFocus}/>, document.getElementById("container"));
         const el = ReactDOM.findDOMNode(cmp);
-        expect(el).toExist();
+        expect(el).toBeTruthy();
 
         const input = el.getElementsByTagName('INPUT');
         input.value = 'filter text';
@@ -49,7 +49,7 @@ describe('TOC Filter', () => {
         expect(glyphs.length).toBe(1);
 
         const glyphType = el.getElementsByClassName('glyphicon-filter');
-        expect(glyphType).toExist();
+        expect(glyphType).toBeTruthy();
     });
 
     it('clear filter', () => {
@@ -61,7 +61,7 @@ describe('TOC Filter', () => {
         const cmp = ReactDOM.render(<Filter onFilter={actions.onFilter}
             onFocus={actions.onFocus}/>, document.getElementById("container"));
         const el = ReactDOM.findDOMNode(cmp);
-        expect(el).toExist();
+        expect(el).toBeTruthy();
 
         const glyphs = el.getElementsByClassName('glyphicon');
         expect(glyphs.length).toBe(1);

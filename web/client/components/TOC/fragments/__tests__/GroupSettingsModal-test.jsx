@@ -28,6 +28,6 @@ describe('TOC GroupSettingsModal', () => {
         const cmp = ReactDOM.render(<GroupSettingsModal element={{id: 'group001'}} settings={{expanded: true}}/>, document.getElementById("container"));
         expect(cmp.state).toEqual({ initialState: { id: 'group001' }, originalSettings: { id: 'group001' }});
         const el = document.getElementById('mapstore-layer-groups-settings');
-        expect(el).toExist();
+        expect(el).toBeTruthy();
     });
 });

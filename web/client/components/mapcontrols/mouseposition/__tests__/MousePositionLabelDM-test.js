@@ -29,10 +29,10 @@ describe('MousePositionLabelDM', () => {
         const cmp = ReactDOM.render(
             <MousePositionLabelDM/>
             , document.getElementById("container"));
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
 
         const cmpDom = ReactDOM.findDOMNode(cmp);
-        expect(cmpDom).toExist();
+        expect(cmpDom).toBeTruthy();
 
         expect(cmpDom.textContent).toBe("Lat: ° ' Lng: ° ' ");
 
@@ -60,10 +60,10 @@ describe('MousePositionLabelDM', () => {
                 />
             </IntlProvider>
             , document.getElementById("container"));
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
 
         const cmpDom = ReactDOM.findDOMNode(cmp);
-        expect(cmpDom).toExist();
+        expect(cmpDom).toBeTruthy();
 
         expect(cmpDom.textContent).toBe("Lat: 13° 32.000' Lng: 028° 18.000' ");
     });
@@ -77,10 +77,10 @@ describe('MousePositionLabelDM', () => {
                 />
             </IntlProvider>
             , document.getElementById("container"));
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
 
         const cmpDom = ReactDOM.findDOMNode(cmp);
-        expect(cmpDom).toExist();
+        expect(cmpDom).toBeTruthy();
 
         // it should be 010° 28' 30.05'' instead of 010° 29' 00''
         expect(cmpDom.textContent).toBe("Lat: 43° 42.436' Lng: 010° 28.501' ");

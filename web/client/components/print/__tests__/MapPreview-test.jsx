@@ -25,36 +25,36 @@ describe("Test the MapPreview component", () => {
 
     it('creates component with defaults', () => {
         const cmp = ReactDOM.render(<MapPreview/>, document.getElementById("container"));
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
 
         const node = ReactDOM.findDOMNode(cmp);
-        expect(node).toNotExist();
+        expect(node).toBeFalsy();
     });
 
     it('creates a leaflet map', () => {
         const cmp = ReactDOM.render(<MapPreview map={{center: {x: 10.0, y: 40.0}, zoom: 5}}/>, document.getElementById("container"));
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
 
         const node = ReactDOM.findDOMNode(cmp);
-        expect(node).toExist();
+        expect(node).toBeTruthy();
         expect(node.getElementsByClassName('leaflet-map-pane').length).toBe(1);
     });
 
     it('creates a openlayers map', () => {
         const cmp = ReactDOM.render(<MapPreview mapType="openlayers" map={{center: {x: 10.0, y: 40.0}, zoom: 5}}/>, document.getElementById("container"));
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
 
         const node = ReactDOM.findDOMNode(cmp);
-        expect(node).toExist();
+        expect(node).toBeTruthy();
         expect(node.getElementsByClassName('ol-viewport').length).toBe(1);
     });
 
     it('creates a scalebox', () => {
         const cmp = ReactDOM.render(<MapPreview map={{center: {x: 10.0, y: 40.0}, zoom: 5, scaleZoom: 1}} scales={[10, 20, 30]} />, document.getElementById("container"));
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
 
         const node = ReactDOM.findDOMNode(cmp);
-        expect(node).toExist();
+        expect(node).toBeTruthy();
         expect(node.getElementsByTagName('select').length).toBe(1);
         expect(node.getElementsByTagName('select')[0].selectedIndex).toBe(1);
     });
@@ -76,10 +76,10 @@ describe("Test the MapPreview component", () => {
             url: "http://fake"
         }];
         const cmp = ReactDOM.render(<MapPreview layers={layers} map={{center: {x: 10.0, y: 40.0}, zoom: 5}}/>, document.getElementById("container"));
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
 
         const node = ReactDOM.findDOMNode(cmp);
-        expect(node).toExist();
+        expect(node).toBeTruthy();
         expect(node.getElementsByClassName('leaflet-layer').length).toBe(2);
     });
 

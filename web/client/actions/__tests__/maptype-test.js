@@ -16,7 +16,7 @@ describe('Test correctness of the maptype actions', () => {
 
     it('changeMapType', () => {
         const retVal = changeMapType('maptype');
-        expect(retVal).toExist();
+        expect(retVal).toBeTruthy();
         expect(retVal.type).toBe(MAP_TYPE_CHANGED);
         expect(retVal.mapType).toBe('maptype');
     });

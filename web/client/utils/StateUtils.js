@@ -125,7 +125,7 @@ const fetchEpic = (storeName = PERSISTED_STORE_NAME, name = 'rootEpic') => {
  * @param {string} name optional name (if you want to persist more than one store)
  */
 export const getState = (name) => {
-    return getStore(name) && getStore(name).getState() || {};
+    return getStore(name)?.getState?.() ?? {};
 };
 
 /**

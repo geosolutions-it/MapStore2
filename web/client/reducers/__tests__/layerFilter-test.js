@@ -18,8 +18,8 @@ describe('Test the layerFilter reducer', () => {
             type: INIT_LAYER_FILTER,
             filter
         });
-        expect(state.persisted).toExist();
-        expect(state.applied).toExist();
+        expect(state.persisted).toBeTruthy();
+        expect(state.applied).toBeTruthy();
         expect(state.persisted).toBe(filter);
         expect(state.applied).toBe(filter);
     });
@@ -29,8 +29,8 @@ describe('Test the layerFilter reducer', () => {
         const state = layerFilter({persisted: filterA, applied: filterB}, {
             type: DISCARD_CURRENT_FILTER
         });
-        expect(state.persisted).toExist();
-        expect(state.applied).toExist();
+        expect(state.persisted).toBeTruthy();
+        expect(state.applied).toBeTruthy();
         expect(state.persisted).toBe(filterA);
         expect(state.applied).toBe(filterA);
         expect(state.applied === state.persisted).toBeTruthy();
@@ -42,8 +42,8 @@ describe('Test the layerFilter reducer', () => {
             type: APPLIED_FILTER,
             filter
         });
-        expect(state.persisted).toExist();
-        expect(state.applied).toExist();
+        expect(state.persisted).toBeTruthy();
+        expect(state.applied).toBeTruthy();
         expect(state.persisted).toBe(filterA);
         expect(state.applied).toBe(filter);
         expect(state.applied !== state.persisted).toBeTruthy();
@@ -54,8 +54,8 @@ describe('Test the layerFilter reducer', () => {
         const state = layerFilter({persisted: filterA, applied: filterB}, {
             type: STORE_CURRENT_APPLIED_FILTER
         });
-        expect(state.persisted).toExist();
-        expect(state.applied).toExist();
+        expect(state.persisted).toBeTruthy();
+        expect(state.applied).toBeTruthy();
         expect(state.persisted).toBe(filterB);
         expect(state.applied).toBe(filterB);
         expect(state.applied === state.persisted).toBeTruthy();
@@ -66,7 +66,7 @@ describe('Test the layerFilter reducer', () => {
         const state = layerFilter({persisted: filterA, applied: filterB}, {
             type: QUERY_FORM_RESET
         });
-        expect(state.persisted).toExist();
-        expect(state.applied).toNotExist();
+        expect(state.persisted).toBeTruthy();
+        expect(state.applied).toBeFalsy();
     });
 });

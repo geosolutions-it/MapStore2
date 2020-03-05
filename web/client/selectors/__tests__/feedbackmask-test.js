@@ -18,15 +18,15 @@ const state = {
 describe('Test feedbackmask selectors', () => {
     it('test feedbackMaskSelector', () => {
         const feedbackMask = feedbackMaskSelector(state);
-        expect(feedbackMask).toExist();
+        expect(feedbackMask).toBeTruthy();
         expect(feedbackMask).toBe(state.feedbackMask);
 
         const feedbackMaskEmptyState = feedbackMaskSelector({});
-        expect(feedbackMaskEmptyState).toExist();
+        expect(feedbackMaskEmptyState).toBeTruthy();
         expect(feedbackMaskEmptyState).toEqual({});
 
         const feedbackMaskNoState = feedbackMaskSelector();
-        expect(feedbackMaskNoState).toExist();
+        expect(feedbackMaskNoState).toBeTruthy();
         expect(feedbackMaskNoState).toEqual({});
     });
 });

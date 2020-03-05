@@ -19,7 +19,7 @@ describe('DataGrid forceScrollTop enhancer', () => {
     });
     it('with defaults', (done) => {
         const Sink = forceScrollTop(createSink(({ scrollToTop}) => {
-            expect(scrollToTop).toNotExist();
+            expect(scrollToTop).toBeFalsy();
             done();
         }));
         ReactDOM.render(<Sink />, document.getElementById("container"));

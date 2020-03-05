@@ -427,7 +427,7 @@ const state = {
 describe('Test annotations selectors', () => {
     it('test annotationsLayerSelector', () => {
         const retVal = annotationsLayerSelector(state);
-        expect(retVal).toExist();
+        expect(retVal).toBeTruthy();
         expect(retVal.id).toBe("annotations");
     });
     it('test removingSelector', () => {

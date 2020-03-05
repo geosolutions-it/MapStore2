@@ -18,7 +18,7 @@ describe('Test correctness of the cookies actions', () => {
     it('setCookieVisibility', () => {
         let status = true;
         var retval = setCookieVisibility(status);
-        expect(retval).toExist();
+        expect(retval).toBeTruthy();
         expect(retval.type).toBe(SET_COOKIE_VISIBILITY);
         expect(retval.status).toBeTruthy();
     });
@@ -26,7 +26,7 @@ describe('Test correctness of the cookies actions', () => {
     it('setMoreDetailsVisibility', () => {
         let status = true;
         var retval = setMoreDetailsVisibility(status);
-        expect(retval).toExist();
+        expect(retval).toBeTruthy();
         expect(retval.type).toBe(SET_MORE_DETAILS_VISIBILITY);
         expect(retval.status).toBeTruthy();
     });

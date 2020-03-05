@@ -24,34 +24,34 @@ describe('ContentWrapper component', () => {
     it('rendering with defaults and with content', () => {
         const container = document.getElementById('container');
         ReactDOM.render(<ContentWrapper />, document.getElementById("container"));
-        expect(container.querySelector('.ms-content')).toExist();
-        expect(container.querySelector('.ms-content .ms-content-body')).toExist(); // has body
+        expect(container.querySelector('.ms-content')).toBeTruthy();
+        expect(container.querySelector('.ms-content .ms-content-body')).toBeTruthy(); // has body
         ReactDOM.render(<ContentWrapper><div className="TEST"></div></ContentWrapper>, document.getElementById("container"));
-        expect(container.querySelector('.ms-content')).toExist();
-        expect(container.querySelector('.ms-content .ms-content-body .TEST')).toExist();
+        expect(container.querySelector('.ms-content')).toBeTruthy();
+        expect(container.querySelector('.ms-content .ms-content-body .TEST')).toBeTruthy();
     });
     it('rendering with props(id, type, contentStyleWrapper)', () => {
         const SOME_ID = 'some-id';
         const container = document.getElementById('container');
         ReactDOM.render(<ContentWrapper id={SOME_ID} type="text" contentWrapperStyle={{position: "absolute"}}/>, document.getElementById("container"));
         const wrapper = container.querySelector(`#${SOME_ID}`); // wrapper has the ID
-        expect(wrapper).toExist();
+        expect(wrapper).toBeTruthy();
         expect(container.querySelector('.ms-content-text').id).toBe(SOME_ID); // the class is applied to the wrapper depending on the type
-        expect(wrapper.querySelector('.ms-content-body')).toExist(); // has body
+        expect(wrapper.querySelector('.ms-content-body')).toBeTruthy(); // has body
         expect(wrapper.style.position).toBe('absolute'); // contentWrapperStyle is applied to the wrapper
     });
     it('inViewRef applied to the container', done => {
         const callback = ref => {
             if (ref) {
                 // check ref is the content object
-                expect(ref.className.indexOf("ms-content")).toBeGreaterThanOrEqualTo(0);
+                expect(ref.className.indexOf("ms-content")).toBeGreaterThanOrEqual(0);
                 done();
             }
         };
         ReactDOM.render(<ContentWrapper inViewRef={callback} />, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('.ms-content');
-        expect(el).toExist();
+        expect(el).toBeTruthy();
     });
     it('test classes generated from default props', () => {
         const DEFAULT_THEME_CLASS_NAME = 'ms-bright';
@@ -60,7 +60,7 @@ describe('ContentWrapper component', () => {
         ReactDOM.render(<ContentWrapper type="text"/>, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('.ms-content');
-        expect(el).toExist();
+        expect(el).toBeTruthy();
         expect(el.getAttribute('class')).toBe(`ms-content ms-content-text ${DEFAULT_THEME_CLASS_NAME} ${DEFAULT_ALIGN_CLASS_NAME} ${DEFAULT_SIZE_CLASS_NAME}`);
     });
     it('test classes generated from theme prop', () => {
@@ -71,7 +71,7 @@ describe('ContentWrapper component', () => {
         ReactDOM.render(<ContentWrapper type="text" theme={THEME}/>, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('.ms-content');
-        expect(el).toExist();
+        expect(el).toBeTruthy();
         expect(el.getAttribute('class')).toBe(`ms-content ms-content-text ${THEME_CLASS_NAME} ${DEFAULT_ALIGN_CLASS_NAME} ${DEFAULT_SIZE_CLASS_NAME}`);
     });
     it('test classes generated from align prop', () => {
@@ -82,7 +82,7 @@ describe('ContentWrapper component', () => {
         ReactDOM.render(<ContentWrapper type="text" align={ALIGN}/>, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('.ms-content');
-        expect(el).toExist();
+        expect(el).toBeTruthy();
         expect(el.getAttribute('class')).toBe(`ms-content ms-content-text ${DEFAULT_THEME_CLASS_NAME} ${ALIGN_CLASS_NAME} ${DEFAULT_SIZE_CLASS_NAME}`);
     });
     it('test classes generated from size prop', () => {
@@ -93,7 +93,7 @@ describe('ContentWrapper component', () => {
         ReactDOM.render(<ContentWrapper type="text" size={SIZE}/>, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('.ms-content');
-        expect(el).toExist();
+        expect(el).toBeTruthy();
         expect(el.getAttribute('class')).toBe(`ms-content ms-content-text ${DEFAULT_THEME_CLASS_NAME} ${DEFAULT_ALIGN_CLASS_NAME} ${SIZE_CLASS_NAME}`);
     });
     it('test classes generated from size prop', () => {
@@ -103,7 +103,7 @@ describe('ContentWrapper component', () => {
         ReactDOM.render(<ContentWrapper type="text"/>, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('.ms-content');
-        expect(el).toExist();
+        expect(el).toBeTruthy();
         expect(el.getAttribute('class')).toBe(`ms-content ms-content-text ${DEFAULT_THEME_CLASS_NAME} ${DEFAULT_ALIGN_CLASS_NAME} ${SIZE_CLASS_NAME}`);
     });
 });

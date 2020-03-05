@@ -22,7 +22,7 @@ describe('Test the backgroundSelector reducer', () => {
             type: ADD_BACKGROUND,
             source: "backgroundSelector"
         });
-        expect(state.source).toExist();
+        expect(state.source).toBeTruthy();
         expect(state.source).toBe("backgroundSelector");
     });
 
@@ -64,7 +64,7 @@ describe('Test the backgroundSelector reducer', () => {
             type: CREATE_BACKGROUNDS_LIST,
             backgrounds: [{id: '1', thumbnail: 'data'}]
         });
-        expect(state.backgrounds).toExist();
+        expect(state.backgrounds).toBeTruthy();
         expect(state.backgrounds.length).toBe(1);
         expect(state.backgrounds[0]).toEqual({id: '1', thumbnail: 'data'});
     });

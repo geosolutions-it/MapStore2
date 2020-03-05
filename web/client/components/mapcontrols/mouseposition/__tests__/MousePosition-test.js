@@ -27,70 +27,70 @@ describe('MousePosition', () => {
 
     it('checks enabled', () => {
         const cmp = ReactDOM.render(<MousePosition enabled mousePosition={{x: 1, y: 1, crs: "EPSG:4326"}}/>, document.getElementById("container"));
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
 
         const cmpDom = ReactDOM.findDOMNode(cmp);
-        expect(cmpDom).toExist();
-        expect(cmpDom.id).toExist();
+        expect(cmpDom).toBeTruthy();
+        expect(cmpDom.id).toBeTruthy();
 
         // checking that the copy to clipboard button don't exists
         const buttons = cmpDom.getElementsByTagName('button');
-        expect(buttons).toExist();
+        expect(buttons).toBeTruthy();
         expect(buttons.length).toBe(0);
     });
 
     it('checks disabled', () => {
         const cmp = ReactDOM.render(<MousePosition enabled={false} mousePosition={{x: 1, y: 1, crs: "EPSG:4326"}}/>, document.getElementById("container"));
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
 
         const cmpDom = ReactDOM.findDOMNode(cmp);
-        expect(cmpDom).toNotExist();
+        expect(cmpDom).toBeFalsy();
     });
 
     it('checks no position', () => {
         const cmp = ReactDOM.render(<MousePosition enabled/>, document.getElementById("container"));
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
 
         const cmpDom = ReactDOM.findDOMNode(cmp);
-        expect(cmpDom).toExist();
+        expect(cmpDom).toBeTruthy();
         expect(cmpDom.innerText.indexOf('...') !== -1).toBe(true);
     });
 
     it('checks no elevation', () => {
         const cmp = ReactDOM.render(<MousePosition enabled />, document.getElementById("container"));
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
 
         const cmpDom = ReactDOM.findDOMNode(cmp);
-        expect(cmpDom).toExist();
+        expect(cmpDom).toBeTruthy();
         expect(cmpDom.getElementsByClassName('mapstore-mouse-elevation').length).toBe(0);
     });
 
     it('checks elevation enabled', () => {
         const cmp = ReactDOM.render(<MousePosition enabled showElevation mousePosition={{ x: 11, y: 12, z: 13, crs: "EPSG:4326" }}/>, document.getElementById("container"));
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
 
         const cmpDom = ReactDOM.findDOMNode(cmp);
-        expect(cmpDom).toExist();
+        expect(cmpDom).toBeTruthy();
         expect(cmpDom.getElementsByClassName('mapstore-mouse-elevation').length).toBe(1);
         expect(cmpDom.innerHTML).toContain('13');
     });
 
     it('checks default templates degrees', () => {
         const cmp = ReactDOM.render(<MousePosition enabled mousePosition={{x: 1, y: 1, crs: "EPSG:4326"}}/>, document.getElementById("container"));
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
 
         const cmpDom = ReactDOM.findDOMNode(cmp);
-        expect(cmpDom).toExist();
+        expect(cmpDom).toBeTruthy();
         expect(cmpDom.innerHTML).toContain('Lat:');
         expect(cmpDom.innerHTML).toContain('Lng:');
     });
 
     it('checks default templates meters', () => {
         const cmp = ReactDOM.render(<MousePosition enabled crs="EPSG:3857" mousePosition={{x: 1, y: 1, crs: "EPSG:4326"}}/>, document.getElementById("container"));
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
 
         const cmpDom = ReactDOM.findDOMNode(cmp);
-        expect(cmpDom).toExist();
+        expect(cmpDom).toBeTruthy();
         expect(cmpDom.innerHTML).toContain('Y:');
         expect(cmpDom.innerHTML).toContain('X:');
     });
@@ -107,10 +107,10 @@ describe('MousePosition', () => {
         }
 
         const cmp = ReactDOM.render(<MousePosition degreesTemplate={Template} enabled mousePosition={{x: 11, y: 12, crs: "EPSG:4326"}}/>, document.getElementById("container"));
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
 
         const cmpDom = ReactDOM.findDOMNode(cmp);
-        expect(cmpDom).toExist();
+        expect(cmpDom).toBeTruthy();
         expect(cmpDom.innerHTML).toContain('11');
         expect(cmpDom.innerHTML).toContain('12');
     });
@@ -119,9 +119,9 @@ describe('MousePosition', () => {
         const elevationTemplate = (z) => <div>Z: {z}</div>;
 
         const cmp = ReactDOM.render(<MousePosition elevationTemplate={elevationTemplate} showElevation enabled mousePosition={{ x: 11, y: 12, z: 13, crs: "EPSG:4326" }} />, document.getElementById("container"));
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
         const cmpDom = ReactDOM.findDOMNode(cmp);
-        expect(cmpDom).toExist();
+        expect(cmpDom).toBeTruthy();
         expect(cmpDom.innerHTML).toContain('Z:');
         expect(cmpDom.innerHTML).toContain('13');
     });
@@ -132,16 +132,16 @@ describe('MousePosition', () => {
             mousePosition={{x: 1, y: 1, crs: "EPSG:4326"}}
             copyToClipboardEnabled
         />, document.getElementById("container"));
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
 
         // checking if the component exists
         const cmpDom = ReactDOM.findDOMNode(cmp);
-        expect(cmpDom).toExist();
-        expect(cmpDom.id).toExist();
+        expect(cmpDom).toBeTruthy();
+        expect(cmpDom.id).toBeTruthy();
 
         // checking if the copy to clipboard button exists
         const buttons = cmpDom.getElementsByTagName('button');
-        expect(buttons).toExist();
+        expect(buttons).toBeTruthy();
         expect(buttons.length).toBe(1);
     });
 
@@ -165,11 +165,11 @@ describe('MousePosition', () => {
         const button = cmpDom.getElementsByTagName('button')[0];
 
         // if propmt for ctrl+c we accept
-        expect.spyOn(window, 'prompt').andReturn(true);
+        expect.spyOn(window, 'prompt').mockReturnValue(true);
 
         // checking copy to clipboard invocation
         button.click();
-        expect(spy.calls.length).toBe(1);
+        expect(spy.mock.calls.length).toBe(1);
     });
 
     it('checks lat ang lag value', () => {
@@ -192,11 +192,11 @@ describe('MousePosition', () => {
         const button = cmpDom.getElementsByTagName('button')[0];
 
         // if propmt for ctrl+c we accept
-        expect.spyOn(window, 'prompt').andReturn(true);
+        expect.spyOn(window, 'prompt').mockReturnValue(true);
 
         // checking copy to clipboard invocation
         button.click();
-        expect(spy.calls.length).toBe(1);
+        expect(spy.mock.calls.length).toBe(1);
     });
 
 });

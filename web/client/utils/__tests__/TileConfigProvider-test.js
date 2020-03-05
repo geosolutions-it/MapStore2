@@ -20,15 +20,15 @@ describe('TileConfigProvider', () => {
     });
     it('test getLayerConfig', () => {
         const config = TileConfigProvider.getLayerConfig("OpenStreetMap");
-        expect(config).toExist();
+        expect(config).toBeTruthy();
     });
     it('test getLayerConfig with variant', () => {
         const config = TileConfigProvider.getLayerConfig('Thunderforest.OpenCycleMap');
-        expect(config).toExist();
+        expect(config).toBeTruthy();
     });
     it('test getLayerConfig with variant optins', () => {
         const [url, config] = TileConfigProvider.getLayerConfig('Thunderforest.Transport');
-        expect(url).toExist();
-        expect(config).toExist();
+        expect(url).toBeTruthy();
+        expect(config).toBeTruthy();
     });
 });

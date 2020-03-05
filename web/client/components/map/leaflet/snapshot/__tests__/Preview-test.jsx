@@ -32,12 +32,12 @@ describe("test the Leaflet Preview component", () => {
         let status;
         const onStatusChange = (val) => {status = val; };
         let tb = ReactDOM.render(<GrabMap active={false} onStatusChange={onStatusChange} timeout={0} />, document.getElementById("snap"));
-        expect(tb).toExist();
+        expect(tb).toBeTruthy();
         tb = ReactDOM.render(<GrabMap active={false} onStatusChange={onStatusChange} timeout={0} snapstate={{error: "Test"}} />, document.getElementById("snap"));
         expect(status).toEqual("DISABLED");
     });
     it('snapshot creation', (done) => {
         const tb = ReactDOM.render(<GrabMap active timeout={0} onSnapshotReady={() => { expect(tb.isTainted()).toBe(false); done(); }} layers={[{loading: false, visibility: true}, {loading: false}]}/>, document.getElementById("snap"));
-        expect(tb).toExist();
+        expect(tb).toBeTruthy();
     });
 });

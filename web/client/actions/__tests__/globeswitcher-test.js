@@ -18,13 +18,13 @@ describe('Test correctness of the maptype actions', () => {
 
     it('toggle3d', () => {
         const retVal = toggle3d(true);
-        expect(retVal).toExist();
+        expect(retVal).toBeTruthy();
         expect(retVal.type).toBe(TOGGLE_3D);
         expect(retVal.enable).toBe(true);
     });
     it('updateLast2dMapType', () => {
         const retVal = updateLast2dMapType("leaflet");
-        expect(retVal).toExist();
+        expect(retVal).toBeTruthy();
         expect(retVal.type).toBe(UPDATE_LAST_2D_MAPTYPE);
         expect(retVal.mapType).toBe('leaflet');
     });

@@ -85,13 +85,12 @@ describe('Test correctness of the GeoStore APIs', () => {
     it('check the utility functions', () => {
         const result = API.addBaseUrl(null);
         expect(result).toIncludeKey("baseURL");
-        expect(result.baseURL).toNotBe(null);
+        expect(result.baseURL).not.toBe(null);
 
         const result2 = API.addBaseUrl({otherOption: 3});
-        expect(result2)
-            .toIncludeKey("baseURL")
-            .toIncludeKey('otherOption');
-        expect(result2.baseURL).toNotBe(null);
+        expect(result2).toIncludeKey("baseURL");
+        expect(result2).toIncludeKey('otherOption');
+        expect(result2.baseURL).not.toBe(null);
 
         const baseURL = "/test/geostore/rest";
         const withCustomBaseUrl = API.addBaseUrl({otherOption: 3, baseURL});
@@ -102,11 +101,11 @@ describe('Test correctness of the GeoStore APIs', () => {
         const originalUser = {name: "username", newPassword: "PASSWORD"};
         const user = API.utils.initUser(originalUser);
         expect(user.password).toBe(originalUser.newPassword);
-        expect(user.attribute).toExist();
+        expect(user.attribute).toBeTruthy();
         expect(user.attribute.length).toBe(1);
         expect(user.attribute.length).toBe(1);
         expect(user.attribute[0].name).toBe("UUID");
-        expect(user.attribute[0].value).toExist();
+        expect(user.attribute[0].value).toBeTruthy();
         const originalUser2 = {name: "username", newPassword: "PASSWORD", attribute: [{name: "email", value: "test@test.test"}]};
         const user2 = API.utils.initUser(originalUser2);
         expect(user2.attribute.length).toBe(2);
@@ -136,7 +135,7 @@ describe('Test correctness of the GeoStore APIs', () => {
         });
         mockAxios.onGet().reply(200);
         API.login().then(() => {
-            expect(mockAxios.history.post[0].auth).toNotExist();
+            expect(mockAxios.history.post[0].auth).toBeFalsy();
             done();
         });
     });
@@ -145,7 +144,7 @@ describe('Test correctness of the GeoStore APIs', () => {
         mockAxios.onPost().reply(200, { access_token: "token" });
         mockAxios.onGet().reply(200);
         API.login("user", "password").then(() => {
-            expect(mockAxios.history.post[0].auth).toExist();
+            expect(mockAxios.history.post[0].auth).toBeTruthy();
             expect(mockAxios.history.post[0].auth.username).toBe('user');
             expect(mockAxios.history.post[0].auth.password).toBe("password");
             done();
@@ -232,7 +231,7 @@ describe('Test correctness of the GeoStore APIs', () => {
 
         mockAxios.onGet().reply(200, sampleResponse);
         API.getAvailableGroups({role: "ADMIN"}).then((data) => {
-            expect(data).toExist();
+            expect(data).toBeTruthy();
             expect(data.length).toBe(2);
             const everyoneGroup = data.find(g => g.id === 1);
             expect(everyoneGroup).toEqual({id: 1, groupName: "everyone"});
@@ -274,7 +273,7 @@ describe('Test correctness of the GeoStore APIs', () => {
 
         mockAxios.onGet().reply(200, sampleResponse);
         API.getAvailableGroups({role: "ADMIN"}).then((data) => {
-            expect(data).toExist();
+            expect(data).toBeTruthy();
             expect(data.length).toBe(1);
             expect(data[0]).toEqual({id: 1, groupName: "everyone"});
         });

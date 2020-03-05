@@ -17,12 +17,12 @@ describe("This test for LinkToPage component", () => {
 
     it('creates componet with defaults', () => {
         const cmp = ReactDOM.render(<LinkToPage/>, document.getElementById("container"));
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
     });
 
     it('creates empty componet with url and params', () => {
         const cmp = ReactDOM.render(<LinkToPage url="testUrl" params={{a: "testA", b: "testB"}}/>, document.getElementById("container"));
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
         let url = cmp.buildUrl();
         expect(url).toBe("testUrl" + encodeURI("?a=testA&b=testB&"));
     });

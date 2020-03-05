@@ -53,35 +53,35 @@ describe("Test GroupDialog Component", () => {
     it('Test group rendering', () => {
         let comp = ReactDOM.render(
             <GroupDialog group={group1}/>, document.getElementById("container"));
-        expect(comp).toExist();
+        expect(comp).toBeTruthy();
     });
 
     it('Test group loading', () => {
         let comp = ReactDOM.render(
             <GroupDialog show group={{...group1, status: "loading"}}/>, document.getElementById("container"));
-        expect(comp).toExist();
+        expect(comp).toBeTruthy();
     });
     it('Test group error', () => {
         let comp = ReactDOM.render(
             <GroupDialog show group={{...group1, lastError: {statusText: "ERROR"}}}/>, document.getElementById("container"));
-        expect(comp).toExist();
+        expect(comp).toBeTruthy();
     });
     it('Test group dialog with users', () => {
         let comp = ReactDOM.render(
             <GroupDialog show group={group1} availableUsers={users}/>, document.getElementById("container"));
-        expect(comp).toExist();
+        expect(comp).toBeTruthy();
     });
     it('Test group dialog with new users', () => {
         let comp = ReactDOM.render(
             <GroupDialog show group={{...group1, newUsers: [user1]}} availableUsers={users}/>, document.getElementById("container"));
-        expect(comp).toExist();
+        expect(comp).toBeTruthy();
     });
     it('Testing selected group-dialog-tab is highlighted', () => {
         let comp = ReactDOM.render(
             <GroupDialog group={group1} />,
             document.getElementById("container"));
 
-        expect(comp).toExist();
+        expect(comp).toBeTruthy();
         const tabs = document.querySelectorAll('.nav.nav-justified > li');
         expect(tabs[0].getAttribute('class')).toBe('active');
         const groupGroupButton = tabs[1].children[0];
@@ -94,7 +94,7 @@ describe("Test GroupDialog Component", () => {
             <GroupDialog group={group1} />,
             document.getElementById("container"));
 
-        expect(comp).toExist();
+        expect(comp).toBeTruthy();
         const labels = document.querySelectorAll('.control-label');
         const [ groupName, description ] = labels;
         expect(groupName.children.length).toBe(2);
@@ -180,7 +180,7 @@ describe("Test GroupDialog Component", () => {
                     group={{...group1, status: "modified"}}
                     onClose={actions.onClose}
                 />, document.getElementById("container"));
-            expect(groupDlg).toExist();
+            expect(groupDlg).toBeTruthy();
             let buttons = document.querySelectorAll('button');
             expect(buttons.length).toBe(6);
             let saveBtn = buttons[4];
@@ -214,6 +214,6 @@ describe("Test GroupDialog Component", () => {
         input.value = 'test';
         ReactTestUtils.Simulate.change(input);
         expect(spySearchUsers).toHaveBeenCalledWith('test', 0, 5);
-        spySearchUsers.restore();
+        spySearchUsers.mockRestore();
     });
 });

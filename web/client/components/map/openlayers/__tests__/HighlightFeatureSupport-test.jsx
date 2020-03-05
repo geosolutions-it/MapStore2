@@ -86,7 +86,7 @@ describe('HighlightFeatureSupport Ol', () => {
         let vector = createVectorLayer(layer);
         map.addLayer(vector);
         let cmp = ReactDOM.render(<HighlightFeatureSupport map={map}/>, msNode);
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
         cmp = ReactDOM.render(<HighlightFeatureSupport map={map} status="enabled"/>, msNode);
         cmp.selectionChange();
         cmp = ReactDOM.render(<HighlightFeatureSupport map={map} status="disabled"/>, msNode);

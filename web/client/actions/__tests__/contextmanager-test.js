@@ -20,12 +20,12 @@ const {
 describe('contextmanager actions', () => {
     it('searchContexts', () => {
         const retval = searchContexts();
-        expect(retval).toExist();
+        expect(retval).toBeTruthy();
         expect(retval.type).toBe(SEARCH_CONTEXTS);
     });
     it('contextLoading', () => {
         const retval = contextsLoading(true, "test");
-        expect(retval).toExist();
+        expect(retval).toBeTruthy();
         expect(retval.type).toBe(LOADING);
         expect(retval.value).toBe(true);
         expect(retval.name).toBe("test");
@@ -36,7 +36,7 @@ describe('contextmanager actions', () => {
             success: true,
             totalCount: 1
         }, "test", "someOptions");
-        expect(retval).toExist();
+        expect(retval).toBeTruthy();
         expect(retval.type).toBe(CONTEXTS_LIST_LOADED);
         expect(retval.results[0].id).toBe(1);
         expect(retval.totalCount).toBe(1);
@@ -46,18 +46,18 @@ describe('contextmanager actions', () => {
     });
     it('deleteContext', () => {
         const retval = deleteContext(1);
-        expect(retval).toExist();
+        expect(retval).toBeTruthy();
         expect(retval.type).toBe(DELETE_CONTEXT);
         expect(retval.id).toBe(1);
     });
     it('contextDeleted', () => {
         const retval = contextDeleted();
-        expect(retval).toExist();
+        expect(retval).toBeTruthy();
         expect(retval.type).toBe(CONTEXT_DELETED);
     });
     it('reloadContexts', () => {
         const retval = reloadContexts();
-        expect(retval).toExist();
+        expect(retval).toBeTruthy();
         expect(retval.type).toBe(RELOAD_CONTEXTS);
     });
 });

@@ -110,7 +110,7 @@ describe("Test ResizableGrid Component", () => {
             <ResizableGrid
                 {...defaultProps}
             />, document.getElementById("container"));
-        expect(comp).toExist();
+        expect(comp).toBeTruthy();
     });
 
     it('Test ResizableGrid re-rendering for entering in the UNSAFE_componentWillReceiveProps', () => {
@@ -118,7 +118,7 @@ describe("Test ResizableGrid Component", () => {
             <ResizableGrid
                 {...defaultProps}
             />, document.getElementById("container"));
-        expect(comp).toExist();
+        expect(comp).toBeTruthy();
         let comp2 = ReactDOM.render(
             <ResizableGrid
                 {...defaultProps}
@@ -129,7 +129,7 @@ describe("Test ResizableGrid Component", () => {
                     size: 0.35
                 }}
             />, document.getElementById("container"));
-        expect(comp2).toExist();
+        expect(comp2).toBeTruthy();
 
         let comp3 = ReactDOM.render(
             <ResizableGrid
@@ -141,7 +141,7 @@ describe("Test ResizableGrid Component", () => {
                     size: 0.5
                 }}
             />, document.getElementById("container"));
-        expect(comp3).toExist();
+        expect(comp3).toBeTruthy();
 
     });
 

@@ -26,17 +26,17 @@ describe('Test for DownloadOptions component', () => {
     // test DEFAULTS
     it('render with defaults', () => {
         const cmp = ReactDOM.render(<DownloadOptions/>, document.getElementById("container"));
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
     });
     it('render with element selected', () => {
         const cmp = ReactDOM.render(<DownloadOptions downloadOptions={{selectedFormat: "test"}} formats={[{name: "test"}]}/>, document.getElementById("container"));
-        expect(cmp).toExist();
-        expect(TestUtils.scryRenderedDOMComponentsWithClass(cmp, "Select-value-label")).toExist();
+        expect(cmp).toBeTruthy();
+        expect(TestUtils.scryRenderedDOMComponentsWithClass(cmp, "Select-value-label")).toBeTruthy();
     });
     it('render with srs list element selected', () => {
         const cmp = ReactDOM.render(<DownloadOptions downloadOptions={{selectedSrs: "test"}} srsList={[{name: "test"}]}/>, document.getElementById("container"));
-        expect(cmp).toExist();
-        expect(TestUtils.scryRenderedDOMComponentsWithClass(cmp, "Select-value-label")).toExist();
+        expect(cmp).toBeTruthy();
+        expect(TestUtils.scryRenderedDOMComponentsWithClass(cmp, "Select-value-label")).toBeTruthy();
     });
     it('singlePage checkbox events', () => {
         const events = {
@@ -52,13 +52,13 @@ describe('Test for DownloadOptions component', () => {
     it('singlePage checkbox not to render: virtualScroll=true', () => {
         ReactDOM.render(<DownloadOptions downloadOptions={{selectedFormat: "test"}} formats={[{name: "test"}]}/>, document.getElementById("container"));
         const check = document.querySelector('input[type=checkbox]');
-        expect(check).toNotExist();
+        expect(check).toBeFalsy();
 
     });
     it('singlePage checkbox to render: virtualScroll=false', () => {
         ReactDOM.render(<DownloadOptions virtualScroll={false} downloadOptions={{selectedFormat: "test"}} formats={[{name: "test"}]}/>, document.getElementById("container"));
         const check = document.querySelector('input[type=checkbox]');
-        expect(check).toExist();
+        expect(check).toBeTruthy();
 
     });
 });

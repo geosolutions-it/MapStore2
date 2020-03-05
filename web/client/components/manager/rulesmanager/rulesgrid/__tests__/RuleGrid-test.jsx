@@ -25,8 +25,8 @@ describe('Test RulesGrid component', () => {
     it('render with defaults', () => {
         ReactDOM.render(<RulesGrid rowGetter={() => {}} rowsCount={0} width={100} height={100}/>, document.getElementById("container"));
         const container = document.getElementById('container');
-        expect(container).toExist();
+        expect(container).toBeTruthy();
         const grid = container.querySelector(".react-grid-Container");
-        expect(grid).toExist();
+        expect(grid).toBeTruthy();
     });
 });

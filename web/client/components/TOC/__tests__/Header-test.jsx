@@ -26,77 +26,77 @@ describe('TOC Header', () => {
     it('render component', () => {
         ReactDOM.render(<Header/>, document.getElementById("container"));
         const el = document.getElementsByClassName("mapstore-toc-head").item(0);
-        expect(el).toExist();
+        expect(el).toBeTruthy();
         const row = el.getElementsByClassName("row");
         expect(row.length).toBe(3);
         const sections = document.getElementsByClassName("toc-head-sections-3").item(0);
-        expect(sections).toExist();
+        expect(sections).toBeTruthy();
     });
 
     it('disable toolbar', () => {
         ReactDOM.render(<Header title={'Map Title'} showTools={false}/>, document.getElementById("container"));
         const el = document.getElementsByClassName("mapstore-toc-head").item(0);
-        expect(el).toExist();
+        expect(el).toBeTruthy();
         const row = el.getElementsByClassName("row");
         expect(row.length).toBe(2);
         const sections = document.getElementsByClassName("toc-head-sections-2").item(0);
-        expect(sections).toExist();
+        expect(sections).toBeTruthy();
         const title = document.getElementsByClassName("mapstore-toc-head-title").item(0);
-        expect(title).toExist();
+        expect(title).toBeTruthy();
         expect(title.innerHTML).toContain('Map Title');
     });
 
     it('disable filter', () => {
         ReactDOM.render(<Header showFilter={false}/>, document.getElementById("container"));
         const el = document.getElementsByClassName("mapstore-toc-head").item(0);
-        expect(el).toExist();
+        expect(el).toBeTruthy();
         const row = el.getElementsByClassName("row");
         expect(row.length).toBe(2);
         const sections = document.getElementsByClassName("toc-head-sections-2").item(0);
-        expect(sections).toExist();
+        expect(sections).toBeTruthy();
         const title = document.getElementsByClassName("mapstore-toc-head-title").item(0);
-        expect(title).toExist();
-        expect(title.innerHTML).toNotContain('Map Title');
+        expect(title).toBeTruthy();
+        expect(title.innerHTML).not.toContain('Map Title');
     });
 
     it('disable filter', () => {
         ReactDOM.render(<Header showTitle={false}/>, document.getElementById("container"));
         const el = document.getElementsByClassName("mapstore-toc-head").item(0);
-        expect(el).toExist();
+        expect(el).toBeTruthy();
         const row = el.getElementsByClassName("row");
         expect(row.length).toBe(2);
         const sections = document.getElementsByClassName("toc-head-sections-2").item(0);
-        expect(sections).toExist();
+        expect(sections).toBeTruthy();
         const title = document.getElementsByClassName("mapstore-toc-head-title").item(0);
-        expect(title).toNotExist();
+        expect(title).toBeFalsy();
     });
 
     it('disable title and filter', () => {
         ReactDOM.render(<Header showTitle={false} showFilter={false} toolbar={<div id="new-toolbar">toolbar</div>}/>, document.getElementById("container"));
         const el = document.getElementsByClassName("mapstore-toc-head").item(0);
-        expect(el).toExist();
+        expect(el).toBeTruthy();
         const row = el.getElementsByClassName("row");
         expect(row.length).toBe(1);
         const sections = document.getElementsByClassName("toc-head-sections-1").item(0);
-        expect(sections).toExist();
+        expect(sections).toBeTruthy();
         const title = document.getElementsByClassName("mapstore-toc-head-title").item(0);
-        expect(title).toNotExist();
+        expect(title).toBeFalsy();
         const toolbar = document.getElementById("new-toolbar");
-        expect(toolbar).toExist();
+        expect(toolbar).toBeTruthy();
         expect(toolbar.innerHTML).toBe('toolbar');
     });
 
     it('disable all', () => {
         ReactDOM.render(<Header showTitle={false} showTools={false} showFilter={false} toolbar={<div id="new-toolbar">toolbar</div>}/>, document.getElementById("container"));
         const el = document.getElementsByClassName("mapstore-toc-head").item(0);
-        expect(el).toExist();
+        expect(el).toBeTruthy();
         const row = el.getElementsByClassName("row");
         expect(row.length).toBe(0);
         const sections = document.getElementsByClassName("toc-head-sections").item(0);
-        expect(sections).toExist();
+        expect(sections).toBeTruthy();
         const title = document.getElementsByClassName("mapstore-toc-head-title").item(0);
-        expect(title).toNotExist();
+        expect(title).toBeFalsy();
         const toolbar = document.getElementById("new-toolbar");
-        expect(toolbar).toNotExist();
+        expect(toolbar).toBeFalsy();
     });
 });

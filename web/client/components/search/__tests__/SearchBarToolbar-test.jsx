@@ -27,6 +27,6 @@ describe('SearchBarToolbar component', () => {
     it('SearchBarToolbar with defaults', () => {
         ReactDOM.render(<SearchBarToolbar/>, document.getElementById("container"));
         const rootSpan = document.getElementsByClassName('search-toolbar-options')[0];
-        expect(rootSpan).toExist();
+        expect(rootSpan).toBeTruthy();
     });
 });

@@ -28,7 +28,7 @@ describe("test the MeasureDialog", () => {
     it('test component creation', () => {
         let measurement = {};
         const mc = ReactDOM.render(<MeasureDialog show measurement={measurement}/>, document.getElementById("container"));
-        expect(mc).toExist();
+        expect(mc).toBeTruthy();
     });
     it('test close', () => {
         let measurement = {};
@@ -37,19 +37,19 @@ describe("test the MeasureDialog", () => {
         };
         let spy = expect.spyOn(handlers, "onClose");
         const mc = ReactDOM.render(<MeasureDialog show onClose={handlers.onClose} measurement={measurement}/>, document.getElementById("container"));
-        expect(mc).toExist();
+        expect(mc).toBeTruthy();
         const dom = ReactDOM.findDOMNode(mc);
         const closeBtn = dom.getElementsByClassName('close')[0];
-        expect(closeBtn).toExist();
+        expect(closeBtn).toBeTruthy();
         ReactTestUtils.Simulate.click(closeBtn);
-        expect(spy.calls.length).toBe(1);
+        expect(spy.mock.calls.length).toBe(1);
     });
     it('test default, render a modal', () => {
         let measurement = {};
         const mc = ReactDOM.render(<MeasureDialog show measurement={measurement}/>, document.getElementById("container"));
-        expect(mc).toExist();
+        expect(mc).toBeTruthy();
         const dialog = document.getElementById('measure-dialog');
-        expect(dialog).toExist();
+        expect(dialog).toBeTruthy();
 
     });
     it('test render as side panel', () => {
@@ -74,18 +74,18 @@ describe("test the MeasureDialog", () => {
                 onInit={handlers.onInit}
                 toggleMeasure={handlers.toggleMeasure}
                 measurement={measurement}/>, document.getElementById("container"));
-        expect(mc).toExist();
+        expect(mc).toBeTruthy();
         const dom = ReactDOM.findDOMNode(mc);
         const btnGroups = dom.getElementsByClassName('btn-group');
         expect(btnGroups.length).toBe(2);
 
         const dialog = document.getElementById('measure-dialog');
-        expect(dialog).toNotExist();
-        expect(spyMount.calls.length).toBe(1);
+        expect(dialog).toBeFalsy();
+        expect(spyMount.mock.calls.length).toBe(1);
         expect(spyMount).toHaveBeenCalledWith(showCoordinateEditor);
-        expect(spyToggleMeasure.calls.length).toBe(1);
+        expect(spyToggleMeasure.mock.calls.length).toBe(1);
         expect(spyToggleMeasure).toHaveBeenCalledWith({geomType: "LineString"});
-        expect(spyInit.calls.length).toBe(1);
+        expect(spyInit.mock.calls.length).toBe(1);
         expect(spyInit).toHaveBeenCalledWith(defaultOptions);
     });
 
@@ -114,17 +114,17 @@ describe("test the MeasureDialog", () => {
                 onInit={handlers.onInit}
                 toggleMeasure={handlers.toggleMeasure}
                 measurement={measurement}/>, document.getElementById("container"));
-        expect(mc).toExist();
+        expect(mc).toBeTruthy();
         const dom = ReactDOM.findDOMNode(mc);
         const btnGroups = dom.getElementsByClassName('btn-group');
         expect(btnGroups.length).toBe(2);
 
         const dialog = document.getElementById('measure-dialog');
-        expect(dialog).toNotExist();
-        expect(spyMount.calls.length).toBe(1);
-        expect(spyToggleMeasure.calls.length).toBe(1);
+        expect(dialog).toBeFalsy();
+        expect(spyMount.mock.calls.length).toBe(1);
+        expect(spyToggleMeasure.mock.calls.length).toBe(1);
         expect(spyToggleMeasure).toHaveBeenCalledWith({geomType: "Bearing"});
-        expect(spyInit.calls.length).toBe(1);
+        expect(spyInit.mock.calls.length).toBe(1);
         expect(spyInit).toHaveBeenCalledWith(defaultOptions);
     });
     it('should trigger onInit if defaultOptions are updated', () => {
@@ -139,14 +139,14 @@ describe("test the MeasureDialog", () => {
                 onInit={handler.onInit}
                 defaultOptions={{showAddAsAnnotation: true}}
                 measurement={measurement}/>, document.getElementById("container"));
-        expect(spyInit.calls.length).toBe(1);
+        expect(spyInit.mock.calls.length).toBe(1);
         ReactDOM.render(
             <MeasureDialog
                 show
                 onInit={handler.onInit}
                 defaultOptions={{showAddAsAnnotation: false}}
                 measurement={measurement}/>, document.getElementById("container"));
-        expect(spyInit.calls.length).toBe(2);
+        expect(spyInit.mock.calls.length).toBe(2);
     });
 
 });

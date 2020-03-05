@@ -35,8 +35,8 @@ describe('Test LegacyVectorStyle', () => {
                 }
             }
         }, true);
-        expect(style).toExist();
-        expect(style.getImage()).toExist();
+        expect(style).toBeTruthy();
+        expect(style.getImage()).toBeTruthy();
     });
 
     it('style name', () => {
@@ -44,7 +44,7 @@ describe('Test LegacyVectorStyle', () => {
             type: 'Point',
             iconUrl: 'myurl'
         });
-        expect(style).toExist();
+        expect(style).toBeTruthy();
     });
 
     it('guess image point style', () => {
@@ -62,8 +62,8 @@ describe('Test LegacyVectorStyle', () => {
                 color: 'blue'
             }
         });
-        expect(style).toExist();
-        expect(style.getImage()).toExist();
+        expect(style).toBeTruthy();
+        expect(style.getImage()).toBeTruthy();
     });
 
 
@@ -404,7 +404,7 @@ describe('Test LegacyVectorStyle', () => {
                 ...DEFAULT_ANNOTATIONS_STYLES
             }
         }, false, ["textValue"]);
-        expect(styleFunc).toExist();
+        expect(styleFunc).toBeTruthy();
 
         const styleGenerated = styleFunc(new Feature({
             geometry: new GeometryCollection([
@@ -413,7 +413,7 @@ describe('Test LegacyVectorStyle', () => {
                 new Point([1, 20])
             ])
         }));
-        expect(styleGenerated).toExist();
+        expect(styleGenerated).toBeTruthy();
     });
 
 });

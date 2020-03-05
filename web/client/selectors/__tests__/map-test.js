@@ -40,20 +40,20 @@ describe('Test map selectors', () => {
                 }
             }});
 
-        expect(props).toExist();
+        expect(props).toBeTruthy();
         expect(props).toBe(details);
     });
     it('test mapSelector from config', () => {
         const props = mapSelector({config: state});
 
-        expect(props.center).toExist();
+        expect(props.center).toBeTruthy();
         expect(props.center.x).toBe(1);
     });
 
     it('test mapSelector from map', () => {
         const props = mapSelector(state);
 
-        expect(props.center).toExist();
+        expect(props.center).toBeTruthy();
         expect(props.center.x).toBe(1);
     });
     it('test projectionSelector from map', () => {
@@ -61,14 +61,14 @@ describe('Test map selectors', () => {
         state.map.projection = proj;
         const projection = projectionSelector(state);
 
-        expect(projection).toExist();
+        expect(projection).toBeTruthy();
         expect(projection).toBe(proj);
     });
 
     it('test mapSelector from map with history', () => {
         const props = mapSelector({map: {present: {center}}});
 
-        expect(props.center).toExist();
+        expect(props.center).toBeTruthy();
         expect(props.center.x).toBe(1);
     });
 
@@ -81,7 +81,7 @@ describe('Test map selectors', () => {
     it('test mapSelector from map non configured', () => {
         const props = mapSelector({config: null});
 
-        expect(props).toNotExist();
+        expect(props).toBeFalsy();
     });
 
     it('test mapIdSelector', () => {

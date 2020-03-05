@@ -25,10 +25,10 @@ describe('widgets tableWidget enhancer', () => {
     it('tableWidget onAddFilter', (done) => {
         const someFilter = { attribute: "state"};
         const Sink = tableWidget(createSink( props => {
-            expect(props).toExist();
-            expect(props.gridEvents).toExist();
-            expect(props.gridEvents.onAddFilter).toExist();
-            expect(props.gridEvents.onColumnResize).toExist();
+            expect(props).toBeTruthy();
+            expect(props.gridEvents).toBeTruthy();
+            expect(props.gridEvents.onAddFilter).toBeTruthy();
+            expect(props.gridEvents.onColumnResize).toBeTruthy();
 
             props.gridEvents.onAddFilter(someFilter);
             done();

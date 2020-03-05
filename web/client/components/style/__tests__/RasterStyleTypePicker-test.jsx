@@ -24,7 +24,7 @@ describe("Test the RasterStyleTypePicker component", () => {
 
     it('creates component with defaults', () => {
         const cmp = ReactDOM.render(<RasterStyleTypePicker/>, document.getElementById("container"));
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
     });
 
 });

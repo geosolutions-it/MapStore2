@@ -30,29 +30,29 @@ describe('loadingState enhancher', () => {
         ReactDOM.render(<CMP />, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('#CMP');
-        expect(el).toExist();
+        expect(el).toBeTruthy();
     });
     it('loadingState rendering with loading state', () => {
         ReactDOM.render(<CMP loading/>, document.getElementById("container"));
         const container = document.getElementById('container');
-        expect(container.querySelector('.loader-container')).toExist();
+        expect(container.querySelector('.loader-container')).toBeTruthy();
         const loading = container.querySelector('.mapstore-full-size-loader');
-        expect(loading).toExist();
+        expect(loading).toBeTruthy();
         const content = container.querySelector('#CONTENT');
-        expect(content).toNotExist();
+        expect(content).toBeFalsy();
     });
     it('loadingState rendering with custom loading function', () => {
         ReactDOM.render(<Custom prop/>, document.getElementById("container"));
         let container = document.getElementById('container');
         let loading = container.querySelector('.mapstore-full-size-loader');
-        expect(loading).toExist();
+        expect(loading).toBeTruthy();
         let content = container.querySelector('#Custom');
-        expect(content).toNotExist();
+        expect(content).toBeFalsy();
         ReactDOM.render(<Custom />, document.getElementById("container"));
         container = document.getElementById('container');
         loading = container.querySelector('.mapstore-full-size-loader');
-        expect(loading).toNotExist();
+        expect(loading).toBeFalsy();
         content = container.querySelector('#Custom');
-        expect(content).toExist();
+        expect(content).toBeTruthy();
     });
 });

@@ -18,7 +18,7 @@ describe('Test correctness of the rasterstyle actions', () => {
 
     it('setRasterStyleParameter', () => {
         const retVal = setRasterStyleParameter('cmp', 'property', 'val');
-        expect(retVal).toExist();
+        expect(retVal).toBeTruthy();
         expect(retVal.type).toBe(SET_RASTERSTYLE_PARAMETER);
         expect(retVal.component).toBe('cmp');
         expect(retVal.property).toBe('property');
@@ -26,7 +26,7 @@ describe('Test correctness of the rasterstyle actions', () => {
     });
     it('setRasterLayer', () => {
         const retVal = setRasterLayer('layer');
-        expect(retVal).toExist();
+        expect(retVal).toBeTruthy();
         expect(retVal.type).toBe(SET_RASTER_LAYER);
         expect(retVal.layer).toBe('layer');
     });

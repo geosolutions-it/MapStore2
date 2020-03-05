@@ -26,26 +26,26 @@ describe('SideCard component', () => {
         ReactDOM.render(<SideCard />, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('.mapstore-side-card');
-        expect(el).toExist();
-        expect(container.querySelector('.selected')).toNotExist();
+        expect(el).toBeTruthy();
+        expect(container.querySelector('.selected')).toBeFalsy();
     });
     it('SideCard selected', () => {
         ReactDOM.render(<SideCard selected/>, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('.selected');
-        expect(el).toExist();
+        expect(el).toBeTruthy();
     });
 
     it('SideCard show/hide preview node', () => {
         ReactDOM.render(<SideCard selected/>, document.getElementById("container"));
         const container = document.getElementById('container');
         let preview = container.querySelector('.mapstore-side-preview');
-        expect(preview).toNotExist();
+        expect(preview).toBeFalsy();
 
         ReactDOM.render(<SideCard preview={'icon'} selected/>, document.getElementById("container"));
 
         preview = container.querySelector('.mapstore-side-preview');
-        expect(preview).toExist();
+        expect(preview).toBeTruthy();
         preview.innerHTML = 'icon';
     });
 
@@ -54,12 +54,12 @@ describe('SideCard component', () => {
         ReactDOM.render(<SideCard selected/>, document.getElementById("container"));
         const container = document.getElementById('container');
         let caption = container.querySelector('.mapstore-side-caption');
-        expect(caption).toNotExist();
+        expect(caption).toBeFalsy();
 
         ReactDOM.render(<SideCard caption={'caption'} selected/>, document.getElementById("container"));
 
         caption = container.querySelector('.mapstore-side-card-caption');
-        expect(caption).toExist();
+        expect(caption).toBeTruthy();
         caption.innerHTML = 'caption';
     });
 
@@ -67,12 +67,12 @@ describe('SideCard component', () => {
         ReactDOM.render(<SideCard selected/>, document.getElementById("container"));
         const container = document.getElementById('container');
         let caption = container.querySelector('.mapstore-side-caption');
-        expect(caption).toNotExist();
+        expect(caption).toBeFalsy();
 
         ReactDOM.render(<SideCard caption={'caption'} selected/>, document.getElementById("container"));
 
         caption = container.querySelector('.mapstore-side-card-caption');
-        expect(caption).toExist();
+        expect(caption).toBeTruthy();
         caption.innerHTML = 'caption';
     });
 
@@ -80,12 +80,12 @@ describe('SideCard component', () => {
         ReactDOM.render(<SideCard selected/>, document.getElementById("container"));
         const container = document.getElementById('container');
         let body = container.querySelector('.ms-body');
-        expect(body).toNotExist();
+        expect(body).toBeFalsy();
 
         ReactDOM.render(<SideCard body={'body'} selected/>, document.getElementById("container"));
 
         body = container.querySelector('.ms-body');
-        expect(body).toExist();
+        expect(body).toBeTruthy();
         body.innerHTML = 'body';
     });
     it('SideCard test mouse events', () => {
@@ -98,7 +98,7 @@ describe('SideCard component', () => {
         ReactDOM.render(<SideCard selected {...actions} />, document.getElementById("container"));
         const container = document.getElementById('container');
         let card = container.querySelector('.mapstore-side-card');
-        expect(card).toExist();
+        expect(card).toBeTruthy();
 
         ReactTestUtils.Simulate.mouseEnter(card);
         expect(spyMouseEnter).toHaveBeenCalled();
@@ -113,10 +113,10 @@ describe('SideCard component', () => {
         let titleClassName = container.querySelector('.mapstore-side-card-title');
         let descClassName = container.querySelector('.mapstore-side-card-desc');
         let previewClassName = container.querySelector('.mapstore-side-preview');
-        expect(body).toNotExist();
-        expect(titleClassName).toNotExist();
-        expect(descClassName).toNotExist();
-        expect(previewClassName).toNotExist();
+        expect(body).toBeFalsy();
+        expect(titleClassName).toBeFalsy();
+        expect(descClassName).toBeFalsy();
+        expect(previewClassName).toBeFalsy();
     });
     it('SideCard witht preview and title and description, with only caption', () => {
         ReactDOM.render(<SideCard caption={'caption'} description = "desc" title="title" preview={<img src=""/>} />, document.getElementById("container"));
@@ -125,9 +125,9 @@ describe('SideCard component', () => {
         let titleClassName = container.querySelector('.mapstore-side-card-title');
         let descClassName = container.querySelector('.mapstore-side-card-desc');
         let previewClassName = container.querySelector('.mapstore-side-preview');
-        expect(body).toNotExist();
-        expect(titleClassName).toExist();
-        expect(descClassName).toExist();
-        expect(previewClassName).toExist();
+        expect(body).toBeFalsy();
+        expect(titleClassName).toBeTruthy();
+        expect(descClassName).toBeTruthy();
+        expect(previewClassName).toBeTruthy();
     });
 });

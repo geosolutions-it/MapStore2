@@ -41,9 +41,9 @@ describe('wfsTable enhancer', () => {
     it('retrieve WFS describeFeatureType and features', (done) => {
 
         const Sink = wfsTable(createSink(props => {
-            expect(props).toExist();
+            expect(props).toBeTruthy();
             if (props.describeFeatureType) {
-                expect(props.describeFeatureType.featureTypes).toExist();
+                expect(props.describeFeatureType.featureTypes).toBeTruthy();
             }
             if (props.features && props.features.length > 0) {
                 expect(props.features.length > 0).toBe(true);
@@ -62,9 +62,9 @@ describe('wfsTable enhancer', () => {
     it('retrieve WFS describeFeatureType with virtualScroll', (done) => {
         let triggered = false;
         const Sink = wfsTable(createSink(props => {
-            expect(props).toExist();
+            expect(props).toBeTruthy();
             if (props.describeFeatureType) {
-                expect(props.describeFeatureType.featureTypes).toExist();
+                expect(props.describeFeatureType.featureTypes).toBeTruthy();
             }
             if (props.pages && props.features.length > 0 && props.pages[0] === 0 && !triggered) {
                 expect(props.pages[1]).toBe(20);

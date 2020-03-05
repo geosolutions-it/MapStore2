@@ -26,10 +26,10 @@ describe('Test for HelpBadge', () => {
     // test DEFAULTS
     it('creates the component with defaults', () => {
         const helpBadge = ReactDOM.render(<HelpBadge/>, document.getElementById("container"));
-        expect(helpBadge).toExist();
+        expect(helpBadge).toBeTruthy();
 
         const helpToggleBtnDom = ReactDOM.findDOMNode(helpBadge);
-        expect(helpToggleBtnDom).toExist();
+        expect(helpToggleBtnDom).toBeTruthy();
         expect(helpToggleBtnDom.className.indexOf('badge') >= 0).toBe(true);
         expect(helpToggleBtnDom.className.indexOf('hidden') >= 0).toBe(true);
         expect(helpToggleBtnDom.innerHTML).toBe("?");
@@ -41,11 +41,11 @@ describe('Test for HelpBadge', () => {
             isVisible
             className="foofoo"
         />, document.getElementById("container"));
-        expect(helpBadge).toExist();
+        expect(helpBadge).toBeTruthy();
 
         const helpBadgeDom = ReactDOM.findDOMNode(helpBadge);
-        expect(helpBadgeDom).toExist();
-        expect(helpBadgeDom.id).toExist();
+        expect(helpBadgeDom).toBeTruthy();
+        expect(helpBadgeDom.id).toBeTruthy();
         expect(helpBadgeDom.className.indexOf('foofoo') >= 0).toBe(true);
         expect(helpBadgeDom.className.indexOf('hidden') < 0).toBe(true);
     });
@@ -59,9 +59,9 @@ describe('Test for HelpBadge', () => {
         const helpBadge = ReactDOM.render(<HelpBadge
             changeHelpText={onMouseOverFn.changeHelpText}
             changeHelpwinVisibility={onMouseOverFn.changeHelpwinVisibility}/>, document.getElementById("container"));
-        expect(helpBadge).toExist();
+        expect(helpBadge).toBeTruthy();
         const helpBadgeDom = ReactDOM.findDOMNode(helpBadge);
-        expect(helpBadgeDom).toExist();
+        expect(helpBadgeDom).toBeTruthy();
 
         TestUtils.Simulate.mouseOver(helpBadgeDom);
 

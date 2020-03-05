@@ -29,7 +29,7 @@ describe('StylePanel component', () => {
     it('StylePanel rendering with layers', () => {
         ReactDOM.render(<StylePanel layers={[L1, L2]} selected={L1} stylers={{"Point": <div></div>}}/>, document.getElementById("container"));
         const container = document.getElementById('container');
-        expect(container.querySelector('h4')).toExist();
+        expect(container.querySelector('h4')).toBeTruthy();
         const checkBoxes = Array.slice(container.querySelectorAll('input[type=checkbox]'));
         expect(checkBoxes.length).toBe(2);
         expect(checkBoxes.filter(e => e.checked).length).toBe(1);
@@ -37,12 +37,12 @@ describe('StylePanel component', () => {
     it('StylePanel rendering with errors', () => {
         ReactDOM.render(<StylePanel errors={[W1]} layers={[L1, L2]} selected={L1} stylers={{ "Point": <div></div> }} />, document.getElementById("container"));
         const container = document.getElementById('container');
-        expect(container.querySelector('.alert')).toExist();
+        expect(container.querySelector('.alert')).toBeTruthy();
     });
     it('StylePanel rendering with success', () => {
         ReactDOM.render(<StylePanel success={"TEST"} layers={[L1, L2]} selected={L1} stylers={{ "Point": <div></div> }} />, document.getElementById("container"));
         const container = document.getElementById('container');
-        expect(container.querySelector('.alert')).toExist();
+        expect(container.querySelector('.alert')).toBeTruthy();
     });
     it('Test StylePanel onSuccess to have been called on NEXT / FINISH button click', (done) => {
         const actions = {
@@ -57,7 +57,7 @@ describe('StylePanel component', () => {
         };
 
         const cmp = ReactDOM.render(<StylePanel shapeStyle={{marker: true}} errors={[W1]} layers={[L1, L2]} selected={L1} stylers={{ "Point": <div></div> }} onLayerAdded={onLayerAdded} onSuccess={actions.onSuccess} />, document.getElementById("container"));
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
         const btn = document.querySelectorAll('button')[2];
         ReactTestUtils.Simulate.click(btn); // <-- trigger event callback
     });
@@ -81,7 +81,7 @@ describe('StylePanel component', () => {
             onError={onError}
             onLayerAdded={actions.onLayerAdded}
             onSuccess={actions.onSuccess} />, document.getElementById("container"));
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
         const btn = document.querySelectorAll('button')[2];
         ReactTestUtils.Simulate.click(btn); // <-- trigger event callback
     });

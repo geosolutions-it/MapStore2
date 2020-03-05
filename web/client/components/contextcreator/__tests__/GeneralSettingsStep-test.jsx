@@ -25,7 +25,7 @@ describe('GeneralSettingsStep component', () => {
     it('GeneralSettingsStep rendering with defaults', () => {
         ReactDOM.render(<GeneralSettingsStep />, document.getElementById("container"));
         const container = document.getElementById('container');
-        expect(container.getElementsByClassName('general-settings-step')).toExist();
+        expect(container.getElementsByClassName('general-settings-step')).toBeTruthy();
     });
     it('accepts only letters, numbers, dashes, and underscores for the context name', () => {
         const actions = {
@@ -37,7 +37,7 @@ describe('GeneralSettingsStep component', () => {
         const contextNameInput = container.querySelector('.general-settings-step .form-group input');
         contextNameInput.value = "_tes24 t-- 5*  __=+''...,";
         ReactTestUtils.Simulate.change(contextNameInput);
-        expect(spyonChange.calls.length).toEqual(1);
+        expect(spyonChange.mock.calls.length).toEqual(1);
         expect(spyonChange).toHaveBeenCalledWith("name", "_tes24t--5__");
     });
 });

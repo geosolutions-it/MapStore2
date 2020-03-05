@@ -26,27 +26,27 @@ describe('PaginationToolbar', () => {
     // test DEFAULTS
     it('creates the component with defaults', () => {
         const item = ReactDOM.render(<PaginationToolbar />, document.getElementById("container"));
-        expect(item).toExist();
+        expect(item).toBeTruthy();
     });
 
 
     // test items
     it('creates the component with items', () => {
         const item = ReactDOM.render(<PaginationToolbar pageSize={2} page={1} items={["a", "b"]} total={2}/>, document.getElementById("container"));
-        expect(item).toExist();
+        expect(item).toBeTruthy();
         const pagination = ReactDOM.findDOMNode(item).getElementsByClassName("pagination");
-        expect(pagination).toExist();
+        expect(pagination).toBeTruthy();
         expect(pagination.length).toBe(1);
         const buttons = pagination[0].getElementsByTagName('a');
-        expect(buttons).toExist();
+        expect(buttons).toBeTruthy();
         expect(buttons.length).toBe(5); // current page + prev, next...
     });
     // test loading
     it('creates the component loading', () => {
         const item = ReactDOM.render(<PaginationToolbar pageSize={2} page={1} items={["a", "b"]} total={2} loading />, document.getElementById("container"));
-        expect(item).toExist();
+        expect(item).toBeTruthy();
         const spinner = ReactDOM.findDOMNode(item).getElementsByClassName('mapstore-small-size-loader');
-        expect(spinner).toExist();
+        expect(spinner).toBeTruthy();
         expect(spinner.length).toBe(1);
     });
 });

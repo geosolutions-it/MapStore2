@@ -26,12 +26,12 @@ describe('Test for DownloadDialog component', () => {
     // test DEFAULTS
     it('render with defaults', () => {
         const cmp = ReactDOM.render(<DownloadDialog/>, document.getElementById("container"));
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
     });
     it('render with enabled', () => {
         const cmp = ReactDOM.render(<DownloadDialog enabled formats={[{name: "test"}]}/>, document.getElementById("container"));
-        expect(cmp).toExist();
-        expect(TestUtils.scryRenderedDOMComponentsWithClass(cmp, "Select-value-label")).toExist();
+        expect(cmp).toBeTruthy();
+        expect(TestUtils.scryRenderedDOMComponentsWithClass(cmp, "Select-value-label")).toBeTruthy();
     });
     it('export event', () => {
         const events = {

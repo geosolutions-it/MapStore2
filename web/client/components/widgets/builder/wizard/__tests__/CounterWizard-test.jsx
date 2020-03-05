@@ -27,22 +27,22 @@ describe('CounterWizard component', () => {
         ReactDOM.render(<CounterWizard />, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('.ms-wizard');
-        expect(el).toExist();
-        expect(container.querySelector('.chart-options-form')).toNotExist();
-        expect(container.querySelector('.empty-state-container')).toExist();
+        expect(el).toBeTruthy();
+        expect(container.querySelector('.chart-options-form')).toBeFalsy();
+        expect(container.querySelector('.empty-state-container')).toBeTruthy();
 
     });
     it('CounterWizard rendering with base attributes', () => {
         ReactDOM.render(<CounterWizard featureTypeProperties={get(describeStates, "featureTypes[0].properties")}/>, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('.ms-wizard');
-        expect(el).toExist();
-        expect(container.querySelector('.chart-options-form')).toExist();
+        expect(el).toBeTruthy();
+        expect(container.querySelector('.chart-options-form')).toBeTruthy();
     });
     it('CounterWizard rendering widget options', () => {
         ReactDOM.render(<CounterWizard step={1}/>, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('.chart-options-form');
-        expect(el).toNotExist();
+        expect(el).toBeFalsy();
     });
 });

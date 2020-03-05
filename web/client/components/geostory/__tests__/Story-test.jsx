@@ -24,6 +24,6 @@ describe('Story component', () => {
     it('Story rendering with defaults', () => {
         ReactDOM.render(<Story />, document.getElementById("container"));
         const container = document.getElementById('container');
-        expect(container.querySelector('.ms-cascade-story')).toExist();
+        expect(container.querySelector('.ms-cascade-story')).toBeTruthy();
     });
 });

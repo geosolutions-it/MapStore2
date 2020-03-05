@@ -37,7 +37,7 @@ const {find, get} = require('lodash');
 describe('Test the widgets reducer', () => {
     it('initial state', () => {
         const state = widgets(undefined, {type: "START"});
-        expect(state.containers).toExist();
+        expect(state.containers).toBeTruthy();
         expect(state.dependencies.key).toBeFalsy();
         expect(state.dependencies.viewport).toBe("map.bbox");
         expect(state.dependencies.center).toBe("map.center");
@@ -157,25 +157,25 @@ describe('Test the widgets reducer', () => {
     it('widgets addDependency', () => {
         const action = addDependency("key", "value");
         const state = widgets({ dependencies: {} }, action);
-        expect(state).toExist();
+        expect(state).toBeTruthy();
         expect(state.dependencies.key).toBe("value");
     });
     it('widgets removeDependency', () => {
         const action = removeDependency("key");
         const state = widgets({dependencies: {key: "value"}}, action);
-        expect(state).toExist();
+        expect(state).toBeTruthy();
         expect(state.dependencies.key).toBeFalsy();
     });
     it('widgets loadDependencies', () => {
         const action = loadDependencies({key: "value"});
         const state = widgets( undefined, action);
-        expect(state).toExist();
+        expect(state).toBeTruthy();
         expect(state.dependencies.key).toBe("value");
     });
     it('widgets resetDependencies', () => {
         const action = resetDependencies();
         const state = widgets( {dependencies: {key: "value"}}, action);
-        expect(state).toExist();
+        expect(state).toBeTruthy();
         expect(state.dependencies.key).toBeFalsy();
         expect(state.dependencies.viewport).toBe("map.bbox");
         expect(state.dependencies.center).toBe("map.center");
@@ -185,8 +185,8 @@ describe('Test the widgets reducer', () => {
         const widgetsData = { widgets: [{}] };
         const action = dashboardLoaded("RESOURCE", widgetsData);
         const state = widgets( undefined, action);
-        expect(state).toExist();
-        expect(state.containers[DEFAULT_TARGET].widgets).toExist();
+        expect(state).toBeTruthy();
+        expect(state.containers[DEFAULT_TARGET].widgets).toBeTruthy();
         expect(state.containers[DEFAULT_TARGET].widgets.length).toBe(1);
     });
     it('widgets toggleCollapse and toggleCollapseAll', () => {
@@ -196,15 +196,15 @@ describe('Test the widgets reducer', () => {
         })[0];
         const action = toggleCollapse(widgetToCollapse);
         let ws = widgets(initialState, action);
-        expect(ws).toExist();
-        expect(getCollapsedIds({ widgets: ws })).toExist();
+        expect(ws).toBeTruthy();
+        expect(getCollapsedIds({ widgets: ws })).toBeTruthy();
         expect(getCollapsedIds({ widgets: ws }).length).toBe(1);
 
         // verify also selector
         expect(getVisibleFloatingWidgets({ widgets: initialState }).length).toBe(3);
         expect(getVisibleFloatingWidgets({ widgets: ws }).length).toBe(2);
         let collapsedState = ws.containers[DEFAULT_TARGET].collapsed[widgetToCollapse.id];
-        expect(collapsedState).toExist();
+        expect(collapsedState).toBeTruthy();
         // check the layout is saved
         expect(collapsedState.layout).toBe(find(initialState.containers[DEFAULT_TARGET].layout, {i: widgetToCollapse.id}));
         // check the layouts are saved for every break point.
@@ -219,31 +219,31 @@ describe('Test the widgets reducer', () => {
         // waiting for the automatic trigger by the react-grid-layout lib
         // this checks before the change layout event simulation are not mandatory for the functionality
         // it's only a double check that the parts was existing and are removed after change layout simulation.
-        expect(find(ws.containers[DEFAULT_TARGET].layout, { i: widgetToCollapse.id })).toExist();
+        expect(find(ws.containers[DEFAULT_TARGET].layout, { i: widgetToCollapse.id })).toBeTruthy();
         Object.keys(ws.containers[DEFAULT_TARGET].layouts).forEach(breakPoint => {
-            expect(find(ws.containers[DEFAULT_TARGET].layouts[breakPoint], { i: widgetToCollapse.id })).toExist();
+            expect(find(ws.containers[DEFAULT_TARGET].layouts[breakPoint], { i: widgetToCollapse.id })).toBeTruthy();
         });
         // change layout simulation
         ws = widgets(ws, changeLayoutAction);
         // now layouts are removed
-        expect(find(ws.containers[DEFAULT_TARGET].layout, { i: widgetToCollapse.id })).toNotExist();
+        expect(find(ws.containers[DEFAULT_TARGET].layout, { i: widgetToCollapse.id })).toBeFalsy();
         Object.keys(ws.containers[DEFAULT_TARGET].layouts).forEach(breakPoint => {
-            expect(find(ws.containers[DEFAULT_TARGET].layouts[breakPoint], { i: widgetToCollapse.id })).toNotExist();
+            expect(find(ws.containers[DEFAULT_TARGET].layouts[breakPoint], { i: widgetToCollapse.id })).toBeFalsy();
         });
         // second call to toggleCollapse for the same widget triggers expand
         ws = widgets(ws, action);
-        expect(ws).toExist();
-        expect(getCollapsedIds({ widgets: ws })).toExist();
+        expect(ws).toBeTruthy();
+        expect(getCollapsedIds({ widgets: ws })).toBeTruthy();
         expect(getCollapsedIds({ widgets: ws }).length).toBe(0);
         // check the collapsed state is not present anymore for the widget
-        expect(ws.containers[DEFAULT_TARGET].collapsed[widgetToCollapse.id]).toNotExist();
+        expect(ws.containers[DEFAULT_TARGET].collapsed[widgetToCollapse.id]).toBeFalsy();
         // check the layout is restored
-        expect(find(ws.containers[DEFAULT_TARGET].layout, { i: widgetToCollapse.id })).toExist();
+        expect(find(ws.containers[DEFAULT_TARGET].layout, { i: widgetToCollapse.id })).toBeTruthy();
         // check the layouts are restored for every break point.
         Object.keys(ws.containers[DEFAULT_TARGET].layouts).forEach(breakPoint => {
             expect(
                 find(ws.containers[DEFAULT_TARGET].layouts[breakPoint], { i: widgetToCollapse.id })
-            ).toExist();
+            ).toBeTruthy();
         });
         // verify also selector
         expect(getVisibleFloatingWidgets({ widgets: ws }).length).toBe(3);
@@ -268,7 +268,7 @@ describe('Test the widgets reducer', () => {
         expect(widgets(undefined, {type: "NO_ACTION"}).tray).toBeFalsy();
         const action = toggleTray(true);
         const state = widgets( undefined, action);
-        expect(state).toExist();
+        expect(state).toBeTruthy();
         expect(state.tray).toBe(true);
         expect(widgets(state, toggleTray(false)).tray).toBe(false);
     });
@@ -281,7 +281,7 @@ describe('Test the widgets reducer', () => {
         const widget = find(get(state, `containers.floating.widgets`), {
             id
         });
-        expect(widget).toExist();
+        expect(widget).toBeTruthy();
         expect(widget.key).toBe("value");
     });
     it('widgets updateWidgetProperty, merge mode', () => {
@@ -293,7 +293,7 @@ describe('Test the widgets reducer', () => {
         const widget = find(get(state, `containers.floating.widgets`), {
             id
         });
-        expect(widget).toExist();
+        expect(widget).toBeTruthy();
         expect(widget.map.zoom).toBe(4);
         expect(widget.map.layers.length).toBe(1);
         expect(widget.map.layers[0].params.CQL_FILTER).toBe("some cql");

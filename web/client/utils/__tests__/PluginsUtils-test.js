@@ -67,13 +67,13 @@ describe('PluginsUtils', () => {
             test: "TEST"
         };
         let desc1 = PluginsUtils.getPluginDescriptor({}, {P1Plugin: P1, P2Plugin: P2}, [{name: "P1", cfg}, "P2"], "P1" );
-        expect(desc1).toExist();
+        expect(desc1).toBeTruthy();
         expect(desc1.id).toBe("P1");
         expect(desc1.name).toBe("P1");
-        expect(desc1.cfg).toExist(cfg);
+        expect(desc1.cfg).toBeTruthy();
         expect(desc1.items.length).toBe(1);
         expect(desc1.items[0].test).toBe(item.test);
-        expect(desc1.items[0].cfg).toExist();
+        expect(desc1.items[0].cfg).toBeTruthy();
     });
     it('getPluginDescriptor functional component', () => {
         const Component = () => {
@@ -83,7 +83,7 @@ describe('PluginsUtils', () => {
             component: Component
         });
         const desc1 = PluginsUtils.getPluginDescriptor({}, P1, ["P1"], "P1");
-        expect(desc1).toExist();
+        expect(desc1).toBeTruthy();
         expect(desc1.id).toBe("P1");
         expect(desc1.name).toBe("P1");
         expect(desc1.impl).toBe(Component);
@@ -310,7 +310,7 @@ describe('PluginsUtils', () => {
             dispatch: (action) => action
         }), {context1: "test2"}, "{dispatch((function() { return 'test'; }))}");
 
-        expect(expr).toExist();
+        expect(expr).toBeTruthy();
         expect(expr()).toBe("test");
     });
 
@@ -326,13 +326,13 @@ describe('PluginsUtils', () => {
             epics: {myepic: {}},
             options: {myoption: {}}
         });
-        expect(plugin.MyPlugin).toExist();
+        expect(plugin.MyPlugin).toBeTruthy();
         expect(plugin.MyPlugin.isMapStorePlugin).toBe(true);
-        expect(plugin.MyPlugin.myprop).toExist();
-        expect(plugin.MyPlugin.Container).toExist();
-        expect(plugin.MyPlugin.myoption).toExist();
-        expect(plugin.reducers).toExist();
-        expect(plugin.epics).toExist();
+        expect(plugin.MyPlugin.myprop).toBeTruthy();
+        expect(plugin.MyPlugin.Container).toBeTruthy();
+        expect(plugin.MyPlugin.myoption).toBeTruthy();
+        expect(plugin.reducers).toBeTruthy();
+        expect(plugin.epics).toBeTruthy();
     });
 
     it('createPlugin lazy', (done) => {
@@ -351,20 +351,20 @@ describe('PluginsUtils', () => {
             epics: { myepic: {} },
             options: { myoption: {} }
         });
-        expect(plugin.MyPlugin).toExist();
-        expect(plugin.MyPlugin.Container).toExist();
-        expect(plugin.MyPlugin.myoption).toExist();
-        expect(plugin.MyPlugin.enabler).toExist();
-        expect(plugin.MyPlugin.loadPlugin).toExist();
-        expect(plugin.reducers).toExist();
-        expect(plugin.epics).toExist();
+        expect(plugin.MyPlugin).toBeTruthy();
+        expect(plugin.MyPlugin.Container).toBeTruthy();
+        expect(plugin.MyPlugin.myoption).toBeTruthy();
+        expect(plugin.MyPlugin.enabler).toBeTruthy();
+        expect(plugin.MyPlugin.loadPlugin).toBeTruthy();
+        expect(plugin.reducers).toBeTruthy();
+        expect(plugin.epics).toBeTruthy();
         expect(plugin.MyPlugin.enabler({
             my: {
                 enabled: true
             }
         })).toBe(true);
         plugin.MyPlugin.loadPlugin(resp => {
-            expect(resp).toExist();
+            expect(resp).toBeTruthy();
             expect(resp.myproperty).toBe(true);
             expect(resp.isMapStorePlugin).toBe(true);
             done();
@@ -376,8 +376,8 @@ describe('PluginsUtils', () => {
             PluginsUtils.importPlugin(source.data, (name, plugin) => {
                 expect(name).toBe('Dummy');
                 plugin.loadPlugin((pluginDef) => {
-                    expect(pluginDef).toExist();
-                    expect(pluginDef.component).toExist();
+                    expect(pluginDef).toBeTruthy();
+                    expect(pluginDef.component).toBeTruthy();
                     done();
                 });
             });
@@ -388,8 +388,8 @@ describe('PluginsUtils', () => {
         PluginsUtils.loadPlugin('base/web/client/test-resources/lazy/dummy.js').then(({name, plugin}) => {
             expect(name).toBe('Dummy');
             plugin.loadPlugin((pluginDef) => {
-                expect(pluginDef).toExist();
-                expect(pluginDef.component).toExist();
+                expect(pluginDef).toBeTruthy();
+                expect(pluginDef.component).toBeTruthy();
                 done();
             });
         });
@@ -414,11 +414,11 @@ describe('PluginsUtils', () => {
         const spyNo = expect.spyOn(P1.reducers, "reducer1");
         const finalReducer = PluginsUtils.combineReducers([P1, P2], reducers);
         const state = finalReducer();
-        expect(state.reducer1).toExist();
+        expect(state.reducer1).toBeTruthy();
         expect(state.reducer1.A).toBe("A");
 
         // test overriding
-        expect(spyNo.calls.length).toBe(0);
+        expect(spyNo.mock.calls.length).toBe(0);
     });
 
     it('combineEpics', () => {

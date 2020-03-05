@@ -61,10 +61,10 @@ describe('Test the featuregrid reducer', () => {
     });
     it('default state', () => {
         let state = featuregrid(undefined, {type: 'UNKNOWN'});
-        expect(state).toExist();
-        expect(state.pagination).toExist();
-        expect(state.select).toExist();
-        expect(state.features).toExist();
+        expect(state).toBeTruthy();
+        expect(state.pagination).toBeTruthy();
+        expect(state.select).toBeTruthy();
+        expect(state.features).toBeTruthy();
     });
     it('hideSyncPopover', () => {
         let state = featuregrid({}, hideSyncPopover());
@@ -72,7 +72,7 @@ describe('Test the featuregrid reducer', () => {
     });
     it('toggleShowAgain toggling', () => {
         let state = featuregrid({showAgain: false}, toggleShowAgain());
-        expect(state).toExist();
+        expect(state).toBeTruthy();
         expect(state.showAgain).toBe(true);
         let state2 = featuregrid({showAgain: true}, toggleShowAgain());
         expect(state2.showAgain).toBe(false);
@@ -81,18 +81,18 @@ describe('Test the featuregrid reducer', () => {
         const someValue = "someValue";
         const editingAllowedRoles = [someValue];
         let state = featuregrid({}, initPlugin({editingAllowedRoles}));
-        expect(state).toExist();
+        expect(state).toBeTruthy();
         expect(state.editingAllowedRoles.length).toBe(1);
         expect(state.editingAllowedRoles[0]).toBe(someValue);
     });
     it('openFeatureGrid', () => {
         let state = featuregrid(undefined, openFeatureGrid());
-        expect(state).toExist();
+        expect(state).toBeTruthy();
         expect(state.open).toBe(true);
     });
     it('closeFeatureGrid', () => {
         let state = featuregrid(undefined, closeFeatureGrid());
-        expect(state).toExist();
+        expect(state).toBeTruthy();
         expect(state.open).toBe(false);
         expect(state.mode).toBe(MODES.VIEW);
     });
@@ -101,30 +101,30 @@ describe('Test the featuregrid reducer', () => {
         // TODO FIX this test or the reducer
         // single select
         let state = featuregrid( undefined, selectFeatures([1, 2]));
-        expect(state.select).toExist();
+        expect(state.select).toBeTruthy();
         expect(state.select.length).toBe(1);
         expect(state.select[0]).toBe(1);
         state = featuregrid( state, selectFeatures([1, 2]));
-        expect(state.select).toExist();
+        expect(state.select).toBeTruthy();
         expect(state.select.length).toBe(1);
         expect(state.select[0]).toBe(1);
         // check multiselect true, append false
         state = featuregrid(undefined, {type: 'UNKNOWN'});
         state = featuregrid({...state, multiselect: true}, selectFeatures([1, 2], false));
-        expect(state.select).toExist();
+        expect(state.select).toBeTruthy();
         expect(state.select.length).toBe(1);
         expect(state.select[0]).toBe(1);
 
         // check multiselect true, append true
         state = featuregrid( state, selectFeatures([3], true));
-        expect(state.select).toExist();
+        expect(state.select).toBeTruthy();
         expect(state.select.length).toBe(2);
         expect(state.select[1]).toBe(3);
     });
 
     it('clearSelection', () => {
         let state = featuregrid({select: [1, 2]}, clearSelection());
-        expect(state.select).toExist();
+        expect(state.select).toBeTruthy();
         expect(state.select.length).toBe(0);
     });
     it('featureModified', () => {
@@ -138,17 +138,17 @@ describe('Test the featuregrid reducer', () => {
         }];
         let state = featuregrid({select: [1, 2]}, featureModified(features, updated));
         expect(state.changes.length).toBe(2);
-        expect(state.select).toExist();
+        expect(state.select).toBeTruthy();
     });
     it('deselectFeature', () => {
         let state = featuregrid( {select: [1, 2], changes: []}, deselectFeatures([1]));
-        expect(state.select).toExist();
+        expect(state.select).toBeTruthy();
         expect(state.select[0]).toBe(2);
     });
 
     it('toggleSelection', () => {
         let state = featuregrid( {select: [1, 2], multiselect: true, changes: []}, toggleSelection([1]));
-        expect(state.select).toExist();
+        expect(state.select).toBeTruthy();
         expect(state.select[0]).toBe(2);
         expect(state.select.length).toBe(1);
         state = featuregrid( state, toggleSelection([2]));
@@ -162,7 +162,7 @@ describe('Test the featuregrid reducer', () => {
 
     it('setFeatures', () => {
         let state = featuregrid( {}, setFeatures(museam.features));
-        expect(state.features).toExist();
+        expect(state.features).toBeTruthy();
         expect(state.features.length).toBe(1);
     });
     it('dockSizeFeatures', () => {
@@ -219,7 +219,7 @@ describe('Test the featuregrid reducer', () => {
     });
     it('toggleTool', () => {
         let state = featuregrid( {}, toggleTool("toolA"));
-        expect(state.tools).toExist();
+        expect(state.tools).toBeTruthy();
         expect(state.tools.toolA).toBe(true);
         state = featuregrid( state, toggleTool("toolA"));
         expect(state.tools.toolA).toBe(false);
@@ -228,8 +228,8 @@ describe('Test the featuregrid reducer', () => {
     });
     it('customizeAttribute', () => {
         let state = featuregrid( {}, customizeAttribute("attrA", "test", true));
-        expect(state.attributes).toExist();
-        expect(state.attributes.attrA).toExist();
+        expect(state.attributes).toBeTruthy();
+        expect(state.attributes.attrA).toBeTruthy();
         expect(state.attributes.attrA.test).toBe(true);
         // auto toggle
         state = featuregrid( state, customizeAttribute("attrA", "test"));
@@ -291,12 +291,12 @@ describe('Test the featuregrid reducer', () => {
     it('UPDATE_FILTER', () => {
         const update = {attribute: "ATTRIBUTE", opeartor: "OPERATOR", value: "VAL", rawValue: "RAWVAL"};
         let state = featuregrid({}, updateFilter(update));
-        expect(state.filters).toExist();
-        expect(state.filters[update.attribute]).toExist();
+        expect(state.filters).toBeTruthy();
+        expect(state.filters[update.attribute]).toBeTruthy();
         expect(state.filters[update.attribute].value).toBe(update.value);
         state = featuregrid({}, createQuery("url", {}));
-        expect(state.filters).toExist();
-        expect(state.filters[update.attribute]).toNotExist();
+        expect(state.filters).toBeTruthy();
+        expect(state.filters[update.attribute]).toBeFalsy();
 
     });
     it('featureTypeLoaded', () => {

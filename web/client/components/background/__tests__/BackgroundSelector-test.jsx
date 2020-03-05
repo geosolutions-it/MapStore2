@@ -18,7 +18,7 @@ describe("test the BackgroundSelector", () => {
 
     it('test BackgroundSelector default props', () => {
         const backgroundSelector = ReactDOM.render(<BackgroundSelector/>, document.getElementById("container"));
-        expect(backgroundSelector).toExist();
+        expect(backgroundSelector).toBeTruthy();
         const node = ReactDOM.findDOMNode(backgroundSelector);
         expect(node).toBe(null);
     });
@@ -39,9 +39,9 @@ describe("test the BackgroundSelector", () => {
             }
         ];
         const backgroundSelector = ReactDOM.render(<BackgroundSelector size={size} layers={layers}/>, document.getElementById("container"));
-        expect(backgroundSelector).toExist();
+        expect(backgroundSelector).toBeTruthy();
         const node = ReactDOM.findDOMNode(backgroundSelector);
-        expect(node).toExist();
+        expect(node).toBeTruthy();
 
         const icons = backgroundSelector.getIcons(5, 5, 5, true);
         expect(icons.length).toBe(0);
@@ -66,9 +66,9 @@ describe("test the BackgroundSelector", () => {
         ];
 
         const backgroundSelector = ReactDOM.render(<BackgroundSelector size={size} enabled layers={layers}/>, document.getElementById("container"));
-        expect(backgroundSelector).toExist();
+        expect(backgroundSelector).toBeTruthy();
         const node = ReactDOM.findDOMNode(backgroundSelector);
-        expect(node).toExist();
+        expect(node).toBeTruthy();
 
         const icons = backgroundSelector.getIcons(5, 5, 5, false);
         expect(icons.length).toBeGreaterThan(0);
@@ -98,9 +98,9 @@ describe("test the BackgroundSelector", () => {
             }
         ];
         const backgroundSelector = ReactDOM.render(<BackgroundSelector size={size} enabled layers={layers}/>, document.getElementById("container"));
-        expect(backgroundSelector).toExist();
+        expect(backgroundSelector).toBeTruthy();
         const node = ReactDOM.findDOMNode(backgroundSelector);
-        expect(node).toNotExist();
+        expect(node).toBeFalsy();
     });
 
     it('test BackgroundSelector on mobile', () => {
@@ -120,9 +120,9 @@ describe("test the BackgroundSelector", () => {
         ];
 
         const backgroundSelector = ReactDOM.render(<BackgroundSelector mode="mobile" size={size} layers={layers}/>, document.getElementById("container"));
-        expect(backgroundSelector).toExist();
+        expect(backgroundSelector).toBeTruthy();
         const node = ReactDOM.findDOMNode(backgroundSelector);
-        expect(node).toExist();
+        expect(node).toBeTruthy();
     });
 
     it('test BackgroundSelector on mobile enabled', () => {
@@ -142,9 +142,9 @@ describe("test the BackgroundSelector", () => {
         ];
 
         const backgroundSelector = ReactDOM.render(<BackgroundSelector mode="mobile" size={size} enabled layers={layers}/>, document.getElementById("container"));
-        expect(backgroundSelector).toExist();
+        expect(backgroundSelector).toBeTruthy();
         const node = ReactDOM.findDOMNode(backgroundSelector);
-        expect(node).toExist();
+        expect(node).toBeTruthy();
     });
 
     it('test BackgroundSelector on mobile enabled min height', () => {
@@ -164,9 +164,9 @@ describe("test the BackgroundSelector", () => {
         ];
 
         const backgroundSelector = ReactDOM.render(<BackgroundSelector mode="mobile" size={size} enabled layers={layers}/>, document.getElementById("container"));
-        expect(backgroundSelector).toExist();
+        expect(backgroundSelector).toBeTruthy();
         const node = ReactDOM.findDOMNode(backgroundSelector);
-        expect(node).toExist();
+        expect(node).toBeTruthy();
     });
 
     it('test BackgroundSelector tool buttons', () => {
@@ -192,9 +192,9 @@ describe("test the BackgroundSelector", () => {
         ];
 
         const backgroundSelector = ReactDOM.render(<BackgroundSelector enabled size={size} layers={layers} mapIsEditable hasCatalog/>, document.getElementById("container"));
-        expect(backgroundSelector).toExist();
+        expect(backgroundSelector).toBeTruthy();
         const node = ReactDOM.findDOMNode(backgroundSelector);
-        expect(node).toExist();
+        expect(node).toBeTruthy();
 
         const editButtons = node.getElementsByClassName('edit-button');
         const deleteButtons = node.getElementsByClassName('delete-button');
@@ -228,7 +228,7 @@ describe("test the BackgroundSelector", () => {
         ReactDOM.render(<BackgroundSelector size={size} layers={layers} mapIsEditable />, document.getElementById("container"));
         // check confirm dialog
         const dialog = document.querySelector('#confirm-dialog');
-        expect(dialog).toExist();
+        expect(dialog).toBeTruthy();
         // check is not draggable
         expect(dialog.className.split(' ').filter( c => c === 'modal-dialog-draggable').length).toBe(0);
         expect(dialog.className.split(' ').filter(c => c === 'react-draggable').length).toBe(0);
@@ -257,9 +257,9 @@ describe("test the BackgroundSelector", () => {
         ];
 
         const backgroundSelector = ReactDOM.render(<BackgroundSelector enabled size={size} layers={layers} mapIsEditable={false}/>, document.getElementById("container"));
-        expect(backgroundSelector).toExist();
+        expect(backgroundSelector).toBeTruthy();
         const node = ReactDOM.findDOMNode(backgroundSelector);
-        expect(node).toExist();
+        expect(node).toBeTruthy();
         const toolButtons = node.getElementsByClassName('background-tool-button');
         const addButton = node.querySelectorAll('.square-button-md glyphicon-plus');
         expect(toolButtons.length).toBe(0);
@@ -289,9 +289,9 @@ describe("test the BackgroundSelector", () => {
         ];
 
         const backgroundSelector = ReactDOM.render(<BackgroundSelector mode="mobile" enabled size={size} layers={layers} mapIsEditable={false}/>, document.getElementById("container"));
-        expect(backgroundSelector).toExist();
+        expect(backgroundSelector).toBeTruthy();
         const node = ReactDOM.findDOMNode(backgroundSelector);
-        expect(node).toExist();
+        expect(node).toBeTruthy();
         const toolButtons = node.getElementsByClassName('background-tool-button');
         const addButton = node.querySelectorAll('.square-button-md glyphicon-plus');
         expect(toolButtons.length).toBe(0);

@@ -31,7 +31,7 @@ describe('editableWidget enhancer', () => {
     });
     it('rendering with defaults', (done) => {
         const Sink = editableWidget()(createSink( props => {
-            expect(props).toExist();
+            expect(props).toBeTruthy();
             expect(props.widgetTools.length).toBe(0);
             done();
         }));
@@ -39,10 +39,10 @@ describe('editableWidget enhancer', () => {
     });
     it('when canEdit = true adds a widget tool', (done) => {
         const Sink = editable(createSink( props => {
-            expect(props).toExist();
+            expect(props).toBeTruthy();
             expect(props.widgetTools.length).toBe(2);
-            expect(props.widgetTools[0].glyph).toExist();
-            expect(props.widgetTools[1].glyph).toExist();
+            expect(props.widgetTools[0].glyph).toBeTruthy();
+            expect(props.widgetTools[1].glyph).toBeTruthy();
             done();
         }));
         ReactDOM.render(<Sink />, document.getElementById("container"));
@@ -55,17 +55,17 @@ describe('editableWidget enhancer', () => {
         const spyEdit = expect.spyOn(actions, 'onEdit');
         const spyDelete = expect.spyOn(actions, 'onDelete');
         const SinkCallEdit = editable(createSink(({ widgetTools = [] }) => {
-            expect(widgetTools[0]).toExist();
+            expect(widgetTools[0]).toBeTruthy();
             widgetTools[0].onClick();
         }));
         const SinkCallDelete = editable(createSink(({ widgetTools = [] }) => {
-            expect(widgetTools[0]).toExist();
+            expect(widgetTools[0]).toBeTruthy();
             widgetTools[1].onClick();
         }));
         ReactDOM.render(<SinkCallEdit onEdit={actions.onEdit} />, document.getElementById("container"));
         expect(spyEdit).toHaveBeenCalled();
         ReactDOM.render(<SinkCallDelete toggleDeleteConfirm={actions.onDelete} />, document.getElementById("container"));
         expect(spyDelete).toHaveBeenCalled();
-        expect(spyDelete.calls[0].arguments[0]).toBe(true);
+        expect(spyDelete.mock.calls[0][0]).toBe(true);
     });
 });

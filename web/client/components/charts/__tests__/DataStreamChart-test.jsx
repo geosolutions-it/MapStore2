@@ -36,13 +36,13 @@ describe('DataStreamChart component', () => {
         ReactDOM.render(<DataStreamChart />, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('div');
-        expect(el).toNotExist();
+        expect(el).toBeFalsy();
     });
     it('DataStreamChart with mock data stream', () => {
         const dataStreamFactory = () => Rx.Observable.of({data});
         ReactDOM.render(<DataStreamChart dataStreamFactory={dataStreamFactory} type="line" xAxis={{dataKey: "name"}} series={SERIES}/>, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('div');
-        expect(el).toExist();
+        expect(el).toBeTruthy();
     });
 });

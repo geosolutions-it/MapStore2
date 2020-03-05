@@ -26,14 +26,14 @@ describe('YAxisLabel component', () => {
         ReactDOM.render(<YAxisLabel />, document.getElementById("container"));
         const container = document.getElementById('container');
         const text = container.querySelector('text');
-        expect(text).toExist();
+        expect(text).toBeTruthy();
     });
 
     it('YAxisLabel rendering with a big number as label', () => {
         ReactDOM.render(<YAxisLabel payload={{value: 123456789}}/>, document.getElementById("container"));
         const container = document.getElementById('container');
         const text = container.querySelector('text');
-        expect(text).toExist();
+        expect(text).toBeTruthy();
         expect(text.innerText).toBe("123.5 M");
     });
 
@@ -41,7 +41,7 @@ describe('YAxisLabel component', () => {
         ReactDOM.render(<YAxisLabel payload={{value: 1234}}/>, document.getElementById("container"));
         const container = document.getElementById('container');
         const text = container.querySelector('text');
-        expect(text).toExist();
+        expect(text).toBeTruthy();
         expect(text.innerText).toBe("1.2 K");
     });
 
@@ -49,7 +49,7 @@ describe('YAxisLabel component', () => {
         ReactDOM.render(<YAxisLabel payload={{value: "123456789"}}/>, document.getElementById("container"));
         const container = document.getElementById('container');
         const text = container.querySelector('text');
-        expect(text).toExist();
+        expect(text).toBeTruthy();
         expect(text.innerText).toBe("123456789");
     });
 });

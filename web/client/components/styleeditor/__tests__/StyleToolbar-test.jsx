@@ -62,7 +62,7 @@ describe('test StyleToolbar module component', () => {
     it('test StyleToolbar modal uses portal', () => {
         ReactDOM.render(<StyleToolbar showModal />, document.getElementById("container"));
         const modalContainer = document.body.children[1].querySelector('.ms-resizable-modal');
-        expect(modalContainer).toExist();
+        expect(modalContainer).toBeTruthy();
     });
     it('in case of default style, editable only if not default GeoServer style ', () => {
         const checkButtons = ({present, disabled}) => {

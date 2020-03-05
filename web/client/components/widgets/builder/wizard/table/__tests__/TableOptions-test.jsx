@@ -28,10 +28,10 @@ describe('TableOptions component', () => {
         ReactDOM.render(<TableOptions />, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('.chart-options-form');
-        expect(el).toExist();
+        expect(el).toBeTruthy();
         const resetButton = document.querySelector('.btn');
-        expect(resetButton).toNotExist();
-        expect(document.querySelector('.empty-state-container')).toExist();
+        expect(resetButton).toBeFalsy();
+        expect(document.querySelector('.empty-state-container')).toBeTruthy();
     });
     it('Test TableOptions tools visibility', () => {
 
@@ -40,7 +40,7 @@ describe('TableOptions component', () => {
             featureTypeProperties={get(describeStates, "featureTypes[0].properties")}
             dependencies={{ viewport: {} }} />, document.getElementById("container"));
         const resetButton = document.querySelector('.btn');
-        expect(resetButton).toExist();
+        expect(resetButton).toBeTruthy();
 
     });
     it('Test TableOptions onChange', () => {
@@ -56,9 +56,9 @@ describe('TableOptions component', () => {
         const inputs = document.querySelectorAll('input');
         expect(inputs.length).toBe(10);
         const resetButton = document.querySelector('.btn');
-        expect(resetButton).toExist();
+        expect(resetButton).toBeTruthy();
         ReactTestUtils.Simulate.click(resetButton);
-        expect(spyonChange.calls[0].arguments[0]).toBe("options.columnSettings");
-        expect(spyonChange.calls[0].arguments[1]).toBe(undefined);
+        expect(spyonChange.mock.calls[0][0]).toBe("options.columnSettings");
+        expect(spyonChange.mock.calls[0][1]).toBe(undefined);
     });
 });

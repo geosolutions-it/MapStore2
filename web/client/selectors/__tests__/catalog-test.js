@@ -98,7 +98,7 @@ describe('Test catalog selectors', () => {
     });
     it('test resultSelector', () => {
         const retVal = resultSelector(state);
-        expect(retVal).toExist();
+        expect(retVal).toBeTruthy();
         expect(retVal.numberOfRecordsMatched).toBe(52);
     });
     it('test serviceListOpenSelector', () => {
@@ -107,24 +107,24 @@ describe('Test catalog selectors', () => {
     });
     it('test newServiceSelector', () => {
         const retVal = newServiceSelector(state);
-        expect(retVal).toExist();
+        expect(retVal).toBeTruthy();
         expect(retVal.type).toBe("wms");
         expect(retVal.title).toBe("title");
         expect(retVal.url).toBe("url");
     });
     it('test servicesSelector', () => {
         const retVal = servicesSelector(state);
-        expect(retVal).toExist();
+        expect(retVal).toBeTruthy();
         expect(Object.keys(retVal).length).toBe(3);
     });
     it('test newServiceTypeSelector', () => {
         const retVal = newServiceTypeSelector(state);
-        expect(retVal).toExist();
+        expect(retVal).toBeTruthy();
         expect(retVal).toBe("wms");
     });
     it('test selectedServiceTypeSelector', () => {
         const retVal = selectedServiceTypeSelector(state);
-        expect(retVal).toExist();
+        expect(retVal).toBeTruthy();
         expect(retVal).toBe("wms");
     });
     it('selectedServiceTypeSelector with points', () => {
@@ -156,22 +156,22 @@ describe('Test catalog selectors', () => {
             }
         };
         const retVal = selectedServiceTypeSelector(state2);
-        expect(retVal).toExist();
+        expect(retVal).toBeTruthy();
         expect(retVal).toBe("wmts");
     });
     it('selectedServiceLayerOptionsSelector', () => {
         const retVal = selectedServiceLayerOptionsSelector(state);
-        expect(retVal).toExist();
+        expect(retVal).toBeTruthy();
         expect(retVal.tileSize).toBe(512);
     });
     it('test searchOptionsSelector', () => {
         const retVal = searchOptionsSelector(state);
-        expect(retVal).toExist();
+        expect(retVal).toBeTruthy();
         expect(retVal.url).toBe(url);
     });
     it('test formatsSelector', () => {
         const retVal = formatsSelector(state);
-        expect(retVal).toExist();
+        expect(retVal).toBeTruthy();
         expect(retVal.length).toBe(3);
     });
     it('test loadingErrorSelector', () => {
@@ -180,12 +180,12 @@ describe('Test catalog selectors', () => {
     });
     it('test selectedServiceSelector', () => {
         const retVal = selectedServiceSelector(state);
-        expect(retVal).toExist();
+        expect(retVal).toBeTruthy();
         expect(retVal).toBe("Basic WMS Service");
     });
     it('test modeSelector', () => {
         const retVal = modeSelector(state);
-        expect(retVal).toExist();
+        expect(retVal).toBeTruthy();
         expect(retVal).toBe("view");
     });
     it('test layerErrorSelector', () => {
@@ -194,7 +194,7 @@ describe('Test catalog selectors', () => {
     });
     it('test activeSelector', () => {
         const retVal = activeSelector(state);
-        expect(retVal).toExist();
+        expect(retVal).toBeTruthy();
         expect(retVal).toBeTruthy();
     });
     it('test searchTextSelector', () => {
@@ -202,18 +202,18 @@ describe('Test catalog selectors', () => {
         expect(retVal).toBe("");
 
         retVal = searchTextSelector(set("catalog.searchOptions.text", "someval", state));
-        expect(retVal).toExist();
+        expect(retVal).toBeTruthy();
         expect(retVal).toBe("someval");
     });
     it('test authkeyParamNameSelector with authkey params set', () => {
         const authkeyParamNames = authkeyParamNameSelector(state);
-        expect(authkeyParamNames).toExist();
+        expect(authkeyParamNames).toBeTruthy();
         expect(authkeyParamNames.length).toBe(1);
         expect(authkeyParamNames[0]).toBe("ms2-authkey");
     });
     it('test authkeyParamNameSelector without authkey params set', () => {
         const authkeyParamNames = authkeyParamNameSelector({});
-        expect(authkeyParamNames).toExist();
+        expect(authkeyParamNames).toBeTruthy();
         expect(authkeyParamNames.length).toBe(0);
     });
     it('test loadingSelector', () => {
@@ -221,25 +221,25 @@ describe('Test catalog selectors', () => {
         expect(loading).toBe(false);
 
         loading = loadingSelector({catalog: {loading: true}});
-        expect(loading).toExist();
+        expect(loading).toBeTruthy();
         expect(loading).toBe(true);
     });
     it('test pageSizeSelector', () => {
         let pageSize = pageSizeSelector({});
-        expect(pageSize).toExist();
+        expect(pageSize).toBeTruthy();
         expect(pageSize).toBe(4);
 
         pageSize = pageSizeSelector({catalog: {pageSize: 5}});
-        expect(pageSize).toExist();
+        expect(pageSize).toBeTruthy();
         expect(pageSize).toBe(5);
     });
     it('test delayAutoSearchSelector', () => {
         let delay = delayAutoSearchSelector({});
-        expect(delay).toExist();
+        expect(delay).toBeTruthy();
         expect(delay).toBe(1000);
 
         delay = delayAutoSearchSelector({catalog: {delayAutoSearch: 1234}});
-        expect(delay).toExist();
+        expect(delay).toBeTruthy();
         expect(delay).toBe(1234);
     });
 

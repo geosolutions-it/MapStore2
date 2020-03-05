@@ -13,63 +13,63 @@ const {Filter, marshaller, unmarshaller} = require('../Filter');
  */
 const validate = function(body, localPart) {
     const doc = unmarshaller.unmarshalDocument(body);
-    expect(doc).toExist();
+    expect(doc).toBeTruthy();
     expect(doc.name && doc.name.localPart).toBe(localPart);
     return doc;
 };
 describe('Test Filter generation/parsing', () => {
 
     it('propertyIsLike', () => {
-        expect(Filter.propertyIsLike).toExist();
+        expect(Filter.propertyIsLike).toBeTruthy();
         let jsonBody = Filter.propertyIsLike("propName", "%propValueLike%");
-        expect(jsonBody).toExist();
+        expect(jsonBody).toBeTruthy();
         const doc = marshaller.marshalDocument( { name: "ogc:PropertyIsLike", value: jsonBody});
-        expect(doc).toExist();
+        expect(doc).toBeTruthy();
         let outJson = validate(doc, "PropertyIsLike");
-        expect(outJson).toExist();
+        expect(outJson).toBeTruthy();
     });
 
     it('BBox', () => {
-        expect(Filter.propertyIsLike).toExist();
+        expect(Filter.propertyIsLike).toBeTruthy();
         let jsonBody = Filter.bbox(0, 0, 1, 1, "EPSG:4326");
-        expect(jsonBody).toExist();
+        expect(jsonBody).toBeTruthy();
         const doc = marshaller.marshalDocument( { name: "ogc:BBOX", value: jsonBody});
-        expect(doc).toExist();
+        expect(doc).toBeTruthy();
         validate(doc, "BBOX");
     });
     it('and', () => {
-        expect(Filter.propertyIsLike).toExist();
+        expect(Filter.propertyIsLike).toBeTruthy();
         let json1 = Filter.propertyIsLike("propName", "%propValueLike%");
-        expect(json1).toExist();
+        expect(json1).toBeTruthy();
         let json2 = Filter.bbox(0, 0, 1, 1, "EPSG:4326");
         let and = Filter.and([json1, json2]);
         const doc = marshaller.marshalDocument( and );
-        expect(doc).toExist();
+        expect(doc).toBeTruthy();
         let outJson = validate(doc, "And");
-        expect(outJson).toExist();
+        expect(outJson).toBeTruthy();
     });
     it('or', () => {
-        expect(Filter.propertyIsLike).toExist();
+        expect(Filter.propertyIsLike).toBeTruthy();
         let json1 = Filter.propertyIsLike("propName", "%propValueLike%");
-        expect(json1).toExist();
+        expect(json1).toBeTruthy();
         let json2 = Filter.bbox(0, 0, 1, 1, "EPSG:4326");
         let or = Filter.or([json1, json2]);
         const doc = marshaller.marshalDocument( or );
-        expect(doc).toExist();
+        expect(doc).toBeTruthy();
         let outJson = validate(doc, "Or");
-        expect(outJson).toExist();
+        expect(outJson).toBeTruthy();
     });
     it('Filter', () => {
-        expect(Filter.propertyIsLike).toExist();
+        expect(Filter.propertyIsLike).toBeTruthy();
         let json1 = Filter.propertyIsLike("propName", "%propValueLike%");
-        expect(json1).toExist();
+        expect(json1).toBeTruthy();
         let json2 = Filter.bbox(0, 0, 1, 1, "EPSG:4326");
         let or = Filter.or([json1, json2]);
         let filter = Filter.filter(or);
         const doc = marshaller.marshalDocument( filter );
-        expect(doc).toExist();
+        expect(doc).toBeTruthy();
         let outJson = validate(doc, "Filter");
-        expect(outJson).toExist();
+        expect(outJson).toBeTruthy();
     });
 
 });

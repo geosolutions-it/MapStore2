@@ -87,51 +87,51 @@ const initialState = {
 describe('Test queryform selectors', () => {
     it(' 1) - spatialFieldSelector', () => {
         const spatialfield = spatialFieldSelector(initialState);
-        expect(spatialfield).toExist();
+        expect(spatialfield).toBeTruthy();
         expect(spatialfield.method).toBe(circle);
         expect(spatialfield.attribute).toBe(attribute);
     });
     it(' 2) - spatialFieldGeomSelector', () => {
         const geom = spatialFieldGeomSelector(initialState);
-        expect(geom).toExist();
+        expect(geom).toBeTruthy();
         expect(geom.type).toBe(type);
     });
     it(' 3) - spatialFieldGeomTypeSelector', () => {
         const geomType = spatialFieldGeomTypeSelector(initialState);
-        expect(type).toExist();
+        expect(type).toBeTruthy();
         expect(type).toBe(geomType);
     });
     it(' 4) - spatialFieldGeomProjSelector', () => {
         const geomProj = spatialFieldGeomProjSelector(initialState);
-        expect(geomProj).toExist();
+        expect(geomProj).toBeTruthy();
         expect(geomProj).toBe(projection);
     });
     it(' 5) - spatialFieldGeomCoordSelector', () => {
         const geomCoord = spatialFieldGeomCoordSelector(initialState);
-        expect(geomCoord).toExist();
+        expect(geomCoord).toBeTruthy();
         expect(geomCoord.length).toBe(1);
         expect(geomCoord[0].length).toBe(6);
     });
     it(' 6) - spatialFieldMethodSelector', () => {
         const method = spatialFieldMethodSelector(initialState);
-        expect(method).toExist();
+        expect(method).toBeTruthy();
         expect(method).toBe(circle);
     });
     it(' 7) - queryFormUiStateSelector', () => {
         const queryFormUiState = queryFormUiStateSelector(initialState);
-        expect(queryFormUiState).toExist();
+        expect(queryFormUiState).toBeTruthy();
         expect(queryFormUiState.attributePanelExpanded).toBe(false);
         expect(queryFormUiState.spatialPanelExpanded).toBe(true);
         expect(queryFormUiState.crossLayerExpanded).toBe(true);
     });
     it(' 8) - storedFilterSelector', () => {
         const storedFilter = storedFilterSelector(initialState);
-        expect(storedFilter).toExist();
+        expect(storedFilter).toBeTruthy();
         expect(storedFilter.id).toBe(1);
     });
     it(' 9) - appliedFilterSelector', () => {
         const appliedFilter = appliedFilterSelector(initialState);
-        expect(appliedFilter).toExist();
+        expect(appliedFilter).toBeTruthy();
         expect(appliedFilter.id).toBe(2);
     });
     it(' 10) - availableCrossLayerFilterLayersSelector', () => {
@@ -140,7 +140,7 @@ describe('Test queryform selectors', () => {
             {type: "csw", group: "group name"},
             {type: "wms", group: "background"}]
         });
-        expect(layers).toExist();
+        expect(layers).toBeTruthy();
         expect(layers.length).toBe(1);
         expect(layers[0].group).toBe("group name");
         expect(layers[0].type).toBe("wms");

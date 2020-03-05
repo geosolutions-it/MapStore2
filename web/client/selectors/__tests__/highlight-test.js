@@ -80,20 +80,20 @@ const initialState = {
 describe('Test highlight selectors', () => {
     it('test if there are some selected features', () => {
         const features = selectedFeatures(initialState);
-        expect(features).toExist();
+        expect(features).toBeTruthy();
         expect(features.length).toBe(2);
     });
 
     it('test if there are not some selected features', () => {
         initialState.featuregrid.select = [];
         const features = selectedFeatures(initialState);
-        expect(features).toExist();
+        expect(features).toBeTruthy();
         expect(features.length).toBe(0);
     });
     it('test filteredspatialObject', () => {
         const spatialObject = initialState.query.filterObj.spatialField;
         const features = filteredspatialObject(initialState);
-        expect(features).toExist();
+        expect(features).toBeTruthy();
         expect(features).toBe(spatialObject);
     });
     it('test filteredspatialObject with empty state', () => {
@@ -102,43 +102,43 @@ describe('Test highlight selectors', () => {
     it('test filteredGeometry', () => {
         const geometry = initialState.query.filterObj.spatialField.geometry;
         const features = filteredGeometry(initialState);
-        expect(features).toExist();
+        expect(features).toBeTruthy();
         expect(features).toBe(geometry);
     });
     it('test filteredspatialObjectCoord', () => {
         const coordinates = initialState.query.filterObj.spatialField.geometry.coordinates;
         const features = filteredspatialObjectCoord(initialState);
-        expect(features).toExist();
+        expect(features).toBeTruthy();
         expect(features).toBe(coordinates);
     });
     it('test filteredSpatialObjectId', () => {
         const geometryId = initialState.query.filterObj.spatialField.geometry.id;
         const features = filteredSpatialObjectId(initialState);
-        expect(features).toExist();
+        expect(features).toBeTruthy();
         expect(features).toBe(geometryId);
     });
     it('test filteredSpatialObjectCrs', () => {
         const geometryCrs = initialState.query.filterObj.spatialField.geometry.projection;
         const features = filteredSpatialObjectCrs(initialState);
-        expect(features).toExist();
+        expect(features).toBeTruthy();
         expect(features).toBe(geometryCrs);
     });
     it('test filteredspatialObjectType', () => {
         const geometryType = initialState.query.filterObj.spatialField.geometry.type;
         const features = filteredspatialObjectType(initialState);
-        expect(features).toExist();
+        expect(features).toBeTruthy();
         expect(features).toBe(geometryType);
     });
     it('test filteredFeatures', () => {
         const features = filteredFeatures(initialState);
-        expect(features).toExist();
+        expect(features).toBeTruthy();
         expect(features).toEqual(feature3);
     });
     it('test highlighedFeatures', () => {
         const features = highlighedFeatures(initialState);
         const featuresSelected = initialState.featuregrid.select;
         const combinedFeatures = [...featuresSelected, ...feature3];
-        expect(features).toExist();
+        expect(features).toBeTruthy();
         expect(features).toEqual(combinedFeatures);
     });
 });

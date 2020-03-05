@@ -28,7 +28,7 @@ describe('GeoStory Navigation component', () => {
         ReactDOM.render(<Navigation />, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('.ms-geostory-navigation-bar');
-        expect(el).toExist();
+        expect(el).toBeTruthy();
     });
     it('Test Navigation custom buttons (setEditing)', () => {
         const actions = {
@@ -41,7 +41,7 @@ describe('GeoStory Navigation component', () => {
         ReactDOM.render(<Navigation buttons={buttons} />, document.getElementById("container"));
         ReactTestUtils.Simulate.click(document.querySelector('.test-button')); // <-- trigger switch edit mode button
         expect(spySetEditing).toHaveBeenCalled();
-        expect(spySetEditing.calls[0].arguments[0]).toBe(true);
+        expect(spySetEditing.mock.calls[0][0]).toBe(true);
     });
     it('render sections entries and trigger handlers', () => {
         const actions = {
@@ -52,17 +52,17 @@ describe('GeoStory Navigation component', () => {
         expect(document.querySelectorAll('.btn-tray').length).toBe(2);
         ReactTestUtils.Simulate.click(document.querySelector('.btn-tray')); // <-- trigger
         expect(spyScrollTo).toHaveBeenCalled();
-        expect(spyScrollTo.calls[0].arguments[0]).toBe(STORY.sections[1].id);
+        expect(spyScrollTo.mock.calls[0][0]).toBe(STORY.sections[1].id);
     });
     it('current section page is highlighted', () => {
         ReactDOM.render(<Navigation settings={{isNavbarEnabled: true}} currentPage={{ sectionId: SELECTED_ID}} navigableItems={STORY.sections} />, document.getElementById("container"));
         const selectedElement = document.querySelector("button.active");
-        expect(selectedElement).toExist();
+        expect(selectedElement).toBeTruthy();
         expect(selectedElement.innerText).toBe("Abstract");
     });
     it('should render home icon', () => {
         ReactDOM.render(<Navigation router={{ pathname: '/geostory/shared/1', search: '?showHome=true' }} />, document.getElementById('container'));
-        expect(document.querySelector('#home-button')).toExist();
+        expect(document.querySelector('#home-button')).toBeTruthy();
     });
     it('should hide home icon when showHome is false', () => {
         ReactDOM.render(<Navigation router={{ pathname: '/geostory/shared/1', search: '?showHome=false' }} />, document.getElementById('container'));

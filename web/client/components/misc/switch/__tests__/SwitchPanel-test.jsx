@@ -25,7 +25,7 @@ describe('SwitchPanel component', () => {
         ReactDOM.render(<SwitchPanel expanded><div id="content"></div></SwitchPanel>, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('.mapstore-switch-panel');
-        expect(el).toExist();
+        expect(el).toBeTruthy();
     });
     it('buttons, loading, error', () => {
 
@@ -33,15 +33,15 @@ describe('SwitchPanel component', () => {
 
         // render loading
         ReactDOM.render(<SwitchPanel expanded loading/>, document.getElementById("container"));
-        expect(container.querySelector('.switch-loading')).toExist();
+        expect(container.querySelector('.switch-loading')).toBeTruthy();
 
         // render error
         ReactDOM.render(<SwitchPanel error={{}}/>, document.getElementById("container"));
-        expect(container.querySelector('.glyphicon-exclamation-mark')).toExist();
+        expect(container.querySelector('.glyphicon-exclamation-mark')).toBeTruthy();
 
         // render clear filter
         ReactDOM.render(<SwitchPanel expanded buttons={[{glyph: "icon"}]} />, document.getElementById("container"));
-        expect(container.querySelector('.glyphicon-icon')).toExist();
+        expect(container.querySelector('.glyphicon-icon')).toBeTruthy();
     });
     it('Test SwitchPanel onSwitch', () => {
         const actions = {
@@ -55,6 +55,6 @@ describe('SwitchPanel component', () => {
     it('Test SwitchPanel with toolbar', () => {
         ReactDOM.render(<SwitchPanel useToolbar />, document.getElementById("container"));
         const input = document.getElementsByTagName('button')[0];
-        expect(input).toExist();
+        expect(input).toBeTruthy();
     });
 });

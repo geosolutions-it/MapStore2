@@ -26,7 +26,7 @@ describe('TransferColumnCardList component', () => {
     it('TransferColumnCardList rendering with defaults', () => {
         ReactDOM.render(<TransferColumnCardList items={["item"]}/>, document.getElementById("container"));
         const container = document.getElementById('container');
-        expect(container.getElementsByClassName('ms2-transfer-sidegrid')[0]).toExist();
+        expect(container.getElementsByClassName('ms2-transfer-sidegrid')[0]).toBeTruthy();
     });
     it('Select items', () => {
         const actions = {
@@ -38,13 +38,13 @@ describe('TransferColumnCardList component', () => {
         ReactDOM.render(<TransferColumnCardList items={["item1", "item2", "item3", "item4"]} {...actions}/>, document.getElementById("container"));
         const container = document.getElementById('container');
         const column = container.getElementsByClassName('ms2-transfer-sidegrid')[0];
-        expect(column).toExist();
+        expect(column).toBeTruthy();
         const items = column.getElementsByClassName('mapstore-side-card');
         expect(items.length).toBe(4);
 
         TestUtils.Simulate.click(items[0]);
 
-        expect(spy.calls.length).toBe(1);
-        expect(spy.calls[0].arguments[0]).toEqual(["item1"]);
+        expect(spy.mock.calls.length).toBe(1);
+        expect(spy.mock.calls[0][0]).toEqual(["item1"]);
     });
 });

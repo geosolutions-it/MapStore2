@@ -37,7 +37,7 @@ describe('Test mapsave selectors', () => {
     });
     it('check widgets state is correctly selected', () => {
         const retVal = mapOptionsToSaveSelector(state);
-        expect(retVal.widgetsConfig).toExist();
+        expect(retVal.widgetsConfig).toBeTruthy();
         expect(retVal.widgetsConfig.widgets).toBe(state.widgets.containers.floating.widgets);
         expect(retVal.widgetsConfig.layouts).toBe(state.widgets.containers.floating.layouts);
         expect(retVal.widgetsConfig.collapsed).toBe(state.widgets.containers.floating.collapsed);
@@ -46,7 +46,7 @@ describe('Test mapsave selectors', () => {
     it('check custom save handlers', () => {
         registerCustomSaveHandler('custom', (s) => s.custom);
         const retVal = mapOptionsToSaveSelector(state);
-        expect(retVal.custom).toExist();
+        expect(retVal.custom).toBeTruthy();
         expect(retVal.custom.someProperty).toBe("some value");
     });
 });

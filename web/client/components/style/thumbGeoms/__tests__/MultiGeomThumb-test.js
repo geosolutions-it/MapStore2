@@ -19,15 +19,15 @@ describe("Test the MultiGeomThumb component", () => {
 
     it('create component with default', () => {
         const cmp = ReactDOM.render(<MultiGeomThumb />, document.getElementById("container"));
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
     });
     it('create component with only Polygon', () => {
         const style = DEFAULT_ANNOTATIONS_STYLES;
         const cmp = ReactDOM.render(<MultiGeomThumb styleMultiGeom={style} geometry={{features: [{geometry: {type: "Polygon"}}]}}/>, document.getElementById("container"));
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
         const rect = TestUtils.findRenderedDOMComponentWithTag(cmp, 'rect');
         const svg = TestUtils.findRenderedDOMComponentWithTag(cmp, 'svg');
-        expect(rect).toExist();
+        expect(rect).toBeTruthy();
         const path = TestUtils.scryRenderedDOMComponentsWithTag(cmp, 'path');
         expect(path.length).toBe(0);
         expect(rect.attributes.width.value).toBe("50");
@@ -45,11 +45,11 @@ describe("Test the MultiGeomThumb component", () => {
         const style = {...stroke, ...fill};
 
         const cmp = ReactDOM.render(<MultiGeomThumb styleMultiGeom={style} geometry={{features: [{geometry: {type: "Polygon"}}, {geometry: {type: "LineString"}} ]}}/>, document.getElementById("container"));
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
         const rect = TestUtils.findRenderedDOMComponentWithTag(cmp, 'rect');
 
         const svg = TestUtils.findRenderedDOMComponentWithTag(cmp, 'svg');
-        expect(rect).toExist();
+        expect(rect).toBeTruthy();
         expect(rect.attributes.width.value).toBe("50");
         expect(rect.attributes.height.value).toBe("50");
         expect(rect.attributes.x.value).toBe("40");
@@ -61,10 +61,10 @@ describe("Test the MultiGeomThumb component", () => {
     it('create component with only Circle', () => {
         const style = DEFAULT_ANNOTATIONS_STYLES;
         const cmp = ReactDOM.render(<MultiGeomThumb styleMultiGeom={style} geometry={{features: [{geometry: {type: "Circle"}}]}} properties={{circles: [0]}}/>, document.getElementById("container"));
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
         const circle = TestUtils.findRenderedDOMComponentWithTag(cmp, 'circle');
 
-        expect(circle).toExist();
+        expect(circle).toBeTruthy();
         expect(circle.attributes.cx.value).toBe("50");
         expect(circle.attributes.cy.value).toBe("50");
         expect(circle.attributes.r.value).toBe("25");

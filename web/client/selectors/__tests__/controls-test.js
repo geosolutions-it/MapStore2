@@ -53,22 +53,22 @@ const state = {
 describe('Test controls selectors', () => {
     it('test queryPanelSelector', () => {
         const retVal = queryPanelSelector(state);
-        expect(retVal).toExist();
+        expect(retVal).toBeTruthy();
         expect(retVal).toBe(true);
     });
     it('test wfsDownloadAvailable', () => {
         const retVal = wfsDownloadAvailable(state);
-        expect(retVal).toExist();
+        expect(retVal).toBeTruthy();
         expect(retVal).toBe(true);
     });
     it('test wfsDownloadSelector', () => {
         const retVal = wfsDownloadSelector(state);
-        expect(retVal).toExist();
+        expect(retVal).toBeTruthy();
         expect(retVal).toBe(true);
     });
     it('test widgetBuilderAvailable', () => {
         const retVal = widgetBuilderAvailable(state);
-        expect(retVal).toExist();
+        expect(retVal).toBeTruthy();
         expect(retVal).toBe(true);
     });
     it('test widgetBuilderAvailable no widgetBuilder in state', () => {
@@ -77,12 +77,12 @@ describe('Test controls selectors', () => {
     });
     it('test widgetBuilderSelector', () => {
         const retVal = widgetBuilderSelector(state);
-        expect(retVal).toExist();
+        expect(retVal).toBeTruthy();
         expect(retVal).toBe(true);
     });
     it('test initialSettingsSelector', () => {
         const retVal = initialSettingsSelector(state);
-        expect(retVal).toExist();
+        expect(retVal).toBeTruthy();
         expect(retVal).toEqual({
             id: 'layerId',
             name: 'layerName',
@@ -91,14 +91,14 @@ describe('Test controls selectors', () => {
     });
     it('test originalSettingsSelector', () => {
         const retVal = originalSettingsSelector(state);
-        expect(retVal).toExist();
+        expect(retVal).toBeTruthy();
         expect(retVal).toEqual({
             style: 'generic'
         });
     });
     it('test activeTabSettingsSelector', () => {
         const retVal = activeTabSettingsSelector(state);
-        expect(retVal).toExist();
+        expect(retVal).toBeTruthy();
         expect(retVal).toBe('style');
         expect(activeTabSettingsSelector({})).toBe('general');
     });
@@ -108,12 +108,12 @@ describe('Test controls selectors', () => {
     });
     it('test drawerEnabledControlSelector', () => {
         const retVal = drawerEnabledControlSelector({controls: {drawer: {enabled: true}}});
-        expect(retVal).toExist();
+        expect(retVal).toBeTruthy();
         expect(retVal).toBe(true);
     });
     it('test showCoordinateEditorSelector', () => {
         const retVal = showCoordinateEditorSelector({controls: {measure: {showCoordinateEditor: true}}});
-        expect(retVal).toExist();
+        expect(retVal).toBeTruthy();
         expect(retVal).toBe(true);
     });
 });

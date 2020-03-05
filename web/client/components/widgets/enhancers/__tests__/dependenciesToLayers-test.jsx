@@ -38,7 +38,7 @@ describe('widgets dependenciesToLayers enhancer', () => {
     });
     it('dependenciesToLayers default', (done) => {
         const Sink = dependenciesToLayers(createSink( props => {
-            expect(props).toExist();
+            expect(props).toBeTruthy();
             expect(props.map).toEqual(inputMapDefault);
             done();
         }));
@@ -46,7 +46,7 @@ describe('widgets dependenciesToLayers enhancer', () => {
     });
     it('dependenciesToLayers with no layer in common with dependencies', (done) => {
         const Sink = dependenciesToLayers(createSink( props => {
-            expect(props).toExist();
+            expect(props).toBeTruthy();
             expect(props.map).toEqual(resultMapStatesNoCQL);
             done();
         }));
@@ -57,7 +57,7 @@ describe('widgets dependenciesToLayers enhancer', () => {
     });
     it('dependenciesToLayers with layer in common with dependencies, with quickFilters', (done) => {
         const Sink = dependenciesToLayers(createSink( props => {
-            expect(props).toExist();
+            expect(props).toBeTruthy();
             expect(props.map).toEqual(resultMapStatesCQL);
             done();
         }));
@@ -69,7 +69,7 @@ describe('widgets dependenciesToLayers enhancer', () => {
     });
     it('dependenciesToLayers with layer in common with dependencies, with quickFilters updated once', (done) => {
         const Sink = dependenciesToLayers(createSink( props => {
-            expect(props).toExist();
+            expect(props).toBeTruthy();
             expect(props.map).toEqual(resultMapStatesCQLAndOriginalCql);
             done();
         }));
@@ -81,7 +81,7 @@ describe('widgets dependenciesToLayers enhancer', () => {
     });
     it('dependenciesToLayers with layer in common with dependencies, with quickFilters and filter', (done) => {
         const Sink = dependenciesToLayers(createSink( props => {
-            expect(props).toExist();
+            expect(props).toBeTruthy();
             expect(props.map).toEqual(resultMapStatesCQLQuickFiltersAndFilter);
             done();
         }));
@@ -93,7 +93,7 @@ describe('widgets dependenciesToLayers enhancer', () => {
     });
     it('dependenciesToLayers, map with cql, with layer in common with dependencies, with quickFilters and filter', (done) => {
         const Sink = dependenciesToLayers(createSink( props => {
-            expect(props).toExist();
+            expect(props).toBeTruthy();
             expect(props.map).toEqual(resultMapWithCqlStatesCQLQuickFiltersAndFilter);
             done();
         }));

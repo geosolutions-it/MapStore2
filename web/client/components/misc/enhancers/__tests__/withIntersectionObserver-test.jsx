@@ -29,8 +29,8 @@ describe('withIntersectionObserverEnhancer enhancer', () => {
             <div style={{ height: 100 }}></div>
             <CMP onVisibilityChange={(inView, entry) => {
                 if (inView) {
-                    expect(entry).toExist();
-                    expect(entry.intersectionRatio).toBeGreaterThanOrEqualTo(RATIO);
+                    expect(entry).toBeTruthy();
+                    expect(entry.intersectionRatio).toBeGreaterThanOrEqual(RATIO);
                     done();
                 } else {
                     expect(entry.intersectionRatio).toBeLessThanOrEqualTo(RATIO);

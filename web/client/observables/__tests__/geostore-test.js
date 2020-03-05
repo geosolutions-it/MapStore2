@@ -63,7 +63,7 @@ describe('geostore observables for resources management', () => {
             e => expect(true).toBe(false, e),
             () => {
                 // check the connected resource is deleted too
-                expect(spy.calls.length).toBe(2);
+                expect(spy.mock.calls.length).toBe(2);
                 done();
             }
         );
@@ -81,8 +81,8 @@ describe('geostore observables for resources management', () => {
             result => spyFuncs.dummy(result),
             e => expect(true).toBe(false, e),
             () => {
-                expect(spyResult.calls.length).toBe(1);
-                expect(spyResult.calls[0].arguments[0]).toEqual(['CONTEXT', resourceName, 1]);
+                expect(spyResult.mock.calls.length).toBe(1);
+                expect(spyResult.mock.calls[0][0]).toEqual(['CONTEXT', resourceName, 1]);
                 done();
             }
         );

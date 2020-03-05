@@ -33,10 +33,10 @@ describe('test Node module component', () => {
             type: 'wms'
         };
         const comp = ReactDOM.render(<Node node={l} />, document.getElementById("container"));
-        expect(comp).toExist();
+        expect(comp).toBeTruthy();
 
         const domNode = ReactDOM.findDOMNode(comp);
-        expect(domNode).toExist();
+        expect(domNode).toBeTruthy();
     });
 
     it('tests Node styler creation', () => {
@@ -53,10 +53,10 @@ describe('test Node module component', () => {
             };
         };
         const comp = ReactDOM.render(<Node node={l} isDraggable={false} styler={styler}/>, document.getElementById("container"));
-        expect(comp).toExist();
+        expect(comp).toBeTruthy();
 
         const domNode = ReactDOM.findDOMNode(comp);
-        expect(domNode).toExist();
+        expect(domNode).toBeTruthy();
 
         expect(domNode.style.display).toBe('none');
     });
@@ -69,10 +69,10 @@ describe('test Node module component', () => {
             storeIndex: 9
         };
         const comp = ReactDOM.render(<Node node={l}><div className="layer-content"/></Node>, document.getElementById("container"));
-        expect(comp).toExist();
+        expect(comp).toBeTruthy();
 
         const domNode = ReactDOM.findDOMNode(comp);
-        expect(domNode).toExist();
+        expect(domNode).toBeTruthy();
 
         const layers = domNode.getElementsByClassName('layer-content');
         expect(layers.length).toBe(1);
@@ -87,10 +87,10 @@ describe('test Node module component', () => {
             storeIndex: 9
         };
         const comp = ReactDOM.render(<Node node={l}><div position="collapsible" className="layer-collapsible"/><div className="layer-content"/></Node>, document.getElementById("container"));
-        expect(comp).toExist();
+        expect(comp).toBeTruthy();
 
         const domNode = ReactDOM.findDOMNode(comp);
-        expect(domNode).toExist();
+        expect(domNode).toBeTruthy();
 
         const layers = domNode.getElementsByClassName('layer-content');
         expect(layers.length).toBe(1);

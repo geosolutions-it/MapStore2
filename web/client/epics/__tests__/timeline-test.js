@@ -125,7 +125,7 @@ describe('timeline Epics', () => {
             const { time, type } = action1;
             const { offsetTime, type: typeOff} = action2;
             const { start, end, type: typeRange } = action3;
-            expect(time).toExist();
+            expect(time).toBeTruthy();
             expect(type).toBe(SET_CURRENT_TIME);
             expect(typeOff).toBe(SET_OFFSET_TIME);
             expect(typeRange).toBe(RANGE_CHANGED);
@@ -140,7 +140,7 @@ describe('timeline Epics', () => {
         testEpic(settingInitialOffsetValue, 1, enableOffset(false), ([action]) => {
             const { time, type } = action;
             expect(type).toBe(SET_OFFSET_TIME);
-            expect(time).toNotExist();
+            expect(time).toBeFalsy();
             done();
         });
     });

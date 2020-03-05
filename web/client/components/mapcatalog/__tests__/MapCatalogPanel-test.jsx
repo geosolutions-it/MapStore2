@@ -27,6 +27,6 @@ describe('MapCatalogPanel component', () => {
     it('MapCatalogPanel with defaults', () => {
         ReactDOM.render(<MapCatalogPanel/>, document.getElementById('container'));
         const rootDiv = document.getElementsByClassName('map-catalog-panel')[0];
-        expect(rootDiv).toExist();
+        expect(rootDiv).toBeTruthy();
     });
 });

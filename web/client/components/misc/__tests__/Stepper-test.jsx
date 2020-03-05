@@ -31,9 +31,9 @@ describe('Stepper component', () => {
         ReactDOM.render(<Stepper steps={steps} currentStepId="test"/>, document.getElementById("container"));
         const container = document.getElementById("container");
         const stepper = container.getElementsByClassName('ms2-stepper')[0];
-        expect(stepper).toExist();
+        expect(stepper).toBeTruthy();
         const footerStepBar = container.getElementsByClassName('footer-step-bar')[0];
-        expect(footerStepBar).toExist();
+        expect(footerStepBar).toBeTruthy();
         expect(footerStepBar.childElementCount).toBe(1);
     });
 });

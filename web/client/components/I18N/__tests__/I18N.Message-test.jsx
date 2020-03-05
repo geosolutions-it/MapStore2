@@ -47,10 +47,10 @@ describe('This test for I18N.Message', () => {
         var testMsg = currentData.messages[msgId];
 
         const cmp = ReactDOM.render(<Localized messages={eng.messages} locale="en-US"><I18N.Message msgId={msgId}/></Localized>, document.getElementById("container"));
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
 
         const cmpDom = ReactDOM.findDOMNode(cmp);
-        expect(cmpDom).toExist();
+        expect(cmpDom).toBeTruthy();
         expect(cmpDom.innerHTML).toBe(testMsg);
     });
 
@@ -59,10 +59,10 @@ describe('This test for I18N.Message', () => {
         var testMsg = currentData.messages[msgId];
 
         const cmp = ReactDOM.render(<Localized messages={ita.messages} locale="it-IT"><I18N.Message msgId={msgId}/></Localized>, document.getElementById("container"));
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
 
         const cmpDom = ReactDOM.findDOMNode(cmp);
-        expect(cmpDom).toExist();
+        expect(cmpDom).toBeTruthy();
         expect(cmpDom.innerHTML).toBe(testMsg);
     });
 
@@ -72,7 +72,7 @@ describe('This test for I18N.Message', () => {
 
         const cmp = ReactDOM.render(<Localized messages={eng.messages} locale="en-US"><I18N.Message msgId={msgId}>{msg => <option>{msg}</option>}</I18N.Message></Localized>, document.getElementById("container"));
         const option = TestUtils.findRenderedDOMComponentWithTag(cmp, 'option');
-        expect(option).toExist();
+        expect(option).toBeTruthy();
         expect(option.innerHTML).toBe(testMsg);
     });
 });

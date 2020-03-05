@@ -11,17 +11,17 @@ const notifications = require('../notifications');
 describe('Test the notifications reducer', () => {
     it('add notification', () => {
         let state = notifications([], show({title: "test", uid: 1}));
-        expect(state).toExist();
+        expect(state).toBeTruthy();
         expect(state.length).toBe(1);
     });
     it('hide notification', () => {
         let state = notifications([{uid: 1}], hide(1));
-        expect(state).toExist();
+        expect(state).toBeTruthy();
         expect(state.length).toBe(0);
     });
     it('clear notifications', () => {
         let state = notifications([{uid: 1}], clear());
-        expect(state).toExist();
+        expect(state).toBeTruthy();
         expect(state.length).toBe(0);
     });
 });

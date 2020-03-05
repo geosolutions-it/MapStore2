@@ -26,7 +26,7 @@ describe('CrossLayerFilter component', () => {
         ReactDOM.render(<CrossLayerFilter />, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('.mapstore-switch-panel');
-        expect(el).toExist();
+        expect(el).toBeTruthy();
     });
     it('buttons, loading, error selector presence', () => {
         ReactDOM.render(<CrossLayerFilter crossLayerExpanded={false} />, document.getElementById("container"));
@@ -34,17 +34,17 @@ describe('CrossLayerFilter component', () => {
 
         // render loading
         ReactDOM.render(<CrossLayerFilter crossLayerExpanded layers={[{name: "test"}]} queryCollection={{typeName: "test"}} loadingCapabilities/>, document.getElementById("container"));
-        expect(container.querySelector('.switch-loading')).toExist();
+        expect(container.querySelector('.switch-loading')).toBeTruthy();
 
         // render error
         ReactDOM.render(<CrossLayerFilter crossLayerExpanded layers={[{name: "test"}]} queryCollection={{typeName: "test"}} errorObj={{}}/>, document.getElementById("container"));
-        expect(container.querySelector('.glyphicon-exclamation-mark')).toExist();
+        expect(container.querySelector('.glyphicon-exclamation-mark')).toBeTruthy();
 
         // render clear filter
         ReactDOM.render(<CrossLayerFilter crossLayerExpanded layers={[{name: "test"}]} queryCollection={{typeName: "test"}} />, document.getElementById("container"));
-        expect(container.querySelector('.glyphicon-clear-filter')).toExist();
-        expect(container.querySelector('.geometry-operation-selector')).toNotExist();
-        expect(container.querySelector('.mapstore-conditions-group')).toNotExist();
+        expect(container.querySelector('.glyphicon-clear-filter')).toBeTruthy();
+        expect(container.querySelector('.geometry-operation-selector')).toBeFalsy();
+        expect(container.querySelector('.mapstore-conditions-group')).toBeFalsy();
 
         // render also geometric operation
         ReactDOM.render(<CrossLayerFilter
@@ -54,8 +54,8 @@ describe('CrossLayerFilter component', () => {
                 typeName: "test",
                 geometryName: "geometry"
             }} />, document.getElementById("container"));
-        expect(container.querySelector('.geometry-operation-selector')).toExist();
-        expect(container.querySelector('.mapstore-conditions-group')).toNotExist();
+        expect(container.querySelector('.geometry-operation-selector')).toBeTruthy();
+        expect(container.querySelector('.mapstore-conditions-group')).toBeFalsy();
 
         // render also attribute filter group
         ReactDOM.render(<CrossLayerFilter
@@ -71,8 +71,8 @@ describe('CrossLayerFilter component', () => {
                 name: "Within"
             }]}
         />, document.getElementById("container"));
-        expect(container.querySelector('.geometry-operation-selector')).toExist();
-        expect(container.querySelector('.mapstore-conditions-group')).toExist();
+        expect(container.querySelector('.geometry-operation-selector')).toBeTruthy();
+        expect(container.querySelector('.mapstore-conditions-group')).toBeTruthy();
     });
     it('Test CrossLayerFilter expandCrossLayerFilterPanel', () => {
         const actions = {
@@ -93,7 +93,7 @@ describe('CrossLayerFilter component', () => {
             }]}
             expandCrossLayerFilterPanel={actions.expandCrossLayerFilterPanel} />, document.getElementById("container"));
         const el = document.querySelector('.m-slider');
-        expect(el).toExist();
+        expect(el).toBeTruthy();
         ReactTestUtils.Simulate.click(el);
         expect(spyexpandCrossLayerFilterPanel).toHaveBeenCalled();
     });

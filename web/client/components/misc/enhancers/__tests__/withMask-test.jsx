@@ -23,21 +23,21 @@ describe('withMask enhancer', () => {
     it('withMask rendering with defaults', () => {
         const Sink = withMask()(() => <div id="test">test</div>);
         ReactDOM.render(<Sink />, document.getElementById("container"));
-        expect(document.querySelector('#test')).toExist();
-        expect(document.querySelector('.ms2-mask-container')).toExist();
-        expect(document.querySelector('.ms2-mask')).toNotExist();
+        expect(document.querySelector('#test')).toBeTruthy();
+        expect(document.querySelector('.ms2-mask-container')).toBeTruthy();
+        expect(document.querySelector('.ms2-mask')).toBeFalsy();
     });
     it('withMask rendering mask', () => {
         const Sink = withMask(({test}) => test, () => <div id="mask"></div>)(() => <div id="test">test</div>);
         ReactDOM.render(<Sink test/>, document.getElementById("container"));
-        expect(document.querySelector('#test')).toExist();
-        expect(document.querySelector('.ms2-mask-container')).toExist();
-        expect(document.querySelector('.ms2-mask')).toExist();
-        expect(document.querySelector('#mask')).toExist();
+        expect(document.querySelector('#test')).toBeTruthy();
+        expect(document.querySelector('.ms2-mask-container')).toBeTruthy();
+        expect(document.querySelector('.ms2-mask')).toBeTruthy();
+        expect(document.querySelector('#mask')).toBeTruthy();
         ReactDOM.render(<Sink test={false} />, document.getElementById("container"));
-        expect(document.querySelector('.ms2-mask-container')).toExist();
-        expect(document.querySelector('.ms2-mask')).toNotExist();
-        expect(document.querySelector('#mask')).toNotExist();
+        expect(document.querySelector('.ms2-mask-container')).toBeTruthy();
+        expect(document.querySelector('.ms2-mask')).toBeFalsy();
+        expect(document.querySelector('#mask')).toBeFalsy();
     });
     it('withMask alwaysWrap option', () => {
         const Sink = withMask(
@@ -47,22 +47,22 @@ describe('withMask enhancer', () => {
                 alwaysWrap: false
             })(() => <div id="test">test</div>);
         ReactDOM.render(<Sink test />, document.getElementById("container"));
-        expect(document.querySelector('#test')).toExist();
-        expect(document.querySelector('.ms2-mask-container')).toExist();
-        expect(document.querySelector('.ms2-mask')).toExist();
-        expect(document.querySelector('#mask')).toExist();
+        expect(document.querySelector('#test')).toBeTruthy();
+        expect(document.querySelector('.ms2-mask-container')).toBeTruthy();
+        expect(document.querySelector('.ms2-mask')).toBeTruthy();
+        expect(document.querySelector('#mask')).toBeTruthy();
         ReactDOM.render(<Sink test={false} />, document.getElementById("container"));
-        expect(document.querySelector('#test')).toExist();
-        expect(document.querySelector('.ms2-mask-container')).toNotExist();
-        expect(document.querySelector('.ms2-mask')).toNotExist();
-        expect(document.querySelector('#mask')).toNotExist();
+        expect(document.querySelector('#test')).toBeTruthy();
+        expect(document.querySelector('.ms2-mask-container')).toBeFalsy();
+        expect(document.querySelector('.ms2-mask')).toBeFalsy();
+        expect(document.querySelector('#mask')).toBeFalsy();
     });
     it('withMask add custom className', () => {
         const Sink = withMask(undefined, undefined, {className: 'custom-class'})(() => <div id="test">test</div>);
         ReactDOM.render(<Sink />, document.getElementById("container"));
-        expect(document.querySelector('#test')).toExist();
-        expect(document.querySelector('.ms2-mask-container')).toExist();
-        expect(document.querySelector('.ms2-mask')).toNotExist();
-        expect(document.querySelector('.custom-class')).toExist();
+        expect(document.querySelector('#test')).toBeTruthy();
+        expect(document.querySelector('.ms2-mask-container')).toBeTruthy();
+        expect(document.querySelector('.ms2-mask')).toBeFalsy();
+        expect(document.querySelector('.custom-class')).toBeTruthy();
     });
 });

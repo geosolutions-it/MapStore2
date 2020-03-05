@@ -25,19 +25,19 @@ describe('Tests for SharingLinks', () => {
 
     it('create the component with defaults', () => {
         const component = ReactDOM.render(<SharingLinks/>, document.getElementById('container'));
-        expect(component).toExist();
+        expect(component).toBeTruthy();
         // no dom node should be rendered with the default values
         const componentDom = ReactDOM.findDOMNode(component);
-        expect(componentDom).toNotExist();
+        expect(componentDom).toBeFalsy();
     });
 
     it('create the component with some links', () => {
         const links = [{'url': 'url1'}, {'url': 'url2'}];
         const component = ReactDOM.render(<SharingLinks links={links}/>, document.getElementById('container'));
-        expect(component).toExist();
+        expect(component).toBeTruthy();
         // no dom node should be rendered with the default values
         const componentDom = ReactDOM.findDOMNode(component);
-        expect(componentDom).toExist();
+        expect(componentDom).toBeTruthy();
         // let's click on the share button
         const shareButtons = document.getElementsByTagName('button');
         expect(shareButtons.length).toBe(1);
@@ -52,7 +52,7 @@ describe('Tests for SharingLinks', () => {
         let values = [];
         values.push(inputs[0].value);
         values.push(inputs[1].value);
-        expect(values).toInclude('url1');
-        expect(values).toInclude('url2');
+        expect(values).toContainEqual('url1');
+        expect(values).toContainEqual('url2');
     });
 });

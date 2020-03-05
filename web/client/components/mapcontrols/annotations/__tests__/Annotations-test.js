@@ -27,17 +27,17 @@ describe("test the Annotations Panel", () => {
 
     it('test default properties', () => {
         const annotations = ReactDOM.render(<Annotations/>, document.getElementById("container"));
-        expect(annotations).toExist();
+        expect(annotations).toBeTruthy();
         const annotationsNode = ReactDOM.findDOMNode(annotations);
-        expect(annotationsNode).toExist();
+        expect(annotationsNode).toBeTruthy();
     });
 
     it('test removing annotations', () => {
         const annotations = ReactDOM.render(<Annotations removing={{}}/>, document.getElementById("container"));
-        expect(annotations).toExist();
+        expect(annotations).toBeTruthy();
 
         const annotationsNode = ReactDOM.findDOMNode(annotations);
-        expect(annotationsNode).toExist();
+        expect(annotationsNode).toBeTruthy();
     });
 
     it('test removing annotations and confirm', () => {
@@ -53,16 +53,16 @@ describe("test the Annotations Panel", () => {
 
         const annotations = ReactDOM.render(<Annotations removing={removingObj} onConfirmRemove={testHandlers.onConfirmHandler}
             onCancelRemove={testHandlers.onCancelHandler}/>, document.getElementById("container"));
-        expect(annotations).toExist();
+        expect(annotations).toBeTruthy();
 
         let confirmButton = ReactDOM.findDOMNode(TestUtils.scryRenderedDOMComponentsWithTag(annotations, "button")[6]);
 
-        expect(confirmButton).toExist();
+        expect(confirmButton).toBeTruthy();
         TestUtils.Simulate.click(confirmButton);
 
-        expect(spyConfirm.calls.length).toEqual(1);
-        expect(spyConfirm.calls[0].arguments[0]).toEqual(removingObj);
-        expect(spyCancel.calls.length).toEqual(0);
+        expect(spyConfirm.mock.calls.length).toEqual(1);
+        expect(spyConfirm.mock.calls[0][0]).toEqual(removingObj);
+        expect(spyCancel.mock.calls.length).toEqual(0);
     });
 
     it('test removing annotations and cancel', () => {
@@ -76,15 +76,15 @@ describe("test the Annotations Panel", () => {
 
         const annotations = ReactDOM.render(<Annotations removing onConfirmRemove={testHandlers.onConfirmHandler}
             onCancelRemove={testHandlers.onCancelHandler}/>, document.getElementById("container"));
-        expect(annotations).toExist();
+        expect(annotations).toBeTruthy();
 
         let cancelButton = ReactDOM.findDOMNode(TestUtils.scryRenderedDOMComponentsWithTag(annotations, "button")[5]);
 
-        expect(cancelButton).toExist();
+        expect(cancelButton).toBeTruthy();
         TestUtils.Simulate.click(cancelButton);
 
-        expect(spyConfirm.calls.length).toEqual(0);
-        expect(spyCancel.calls.length).toEqual(1);
+        expect(spyConfirm.mock.calls.length).toEqual(0);
+        expect(spyCancel.mock.calls.length).toEqual(1);
     });
 
     it('test rendering detail mode', () => {
@@ -118,7 +118,7 @@ describe("test the Annotations Panel", () => {
 
         const Editor = () => <div className="myeditor"/>;
         const annotations = ReactDOM.render(<Annotations mode="detail" editor={Editor} current="1" annotations={annotationsList}/>, document.getElementById("container"));
-        expect(annotations).toExist();
+        expect(annotations).toBeTruthy();
         expect(TestUtils.scryRenderedDOMComponentsWithClass(annotations, "mapstore-annotations-panel-card").length).toBe(0);
         expect(TestUtils.scryRenderedDOMComponentsWithClass(annotations, "myeditor").length).toBe(1);
     });
@@ -139,7 +139,7 @@ describe("test the Annotations Panel", () => {
                 iconColor: 'blue'
             }
         }}/>, document.getElementById("container"));
-        expect(annotations).toExist();
+        expect(annotations).toBeTruthy();
         expect(TestUtils.scryRenderedDOMComponentsWithClass(annotations, "mapstore-annotations-panel-card").length).toBe(0);
         expect(TestUtils.scryRenderedDOMComponentsWithClass(annotations, "myeditor").length).toBe(1);
     });
@@ -183,7 +183,7 @@ describe("test the Annotations Panel", () => {
 
         const annotations = ReactDOM.render(<Annotations mode="list" classNameSelector={classNameSelector} annotations={annotationsList} />, document.getElementById("container"));
 
-        expect(annotations).toExist();
+        expect(annotations).toBeTruthy();
 
         /*
         TODO verify the external properties
@@ -218,7 +218,7 @@ describe("test the Annotations Panel", () => {
             return <span className={"myeditor" + props.feature.properties.id}>This is my editor</span>;
         };
         const annotations = ReactDOM.render(<Annotations mode="detail" editor={Editor} current="1" annotations={annotationsList} />, document.getElementById("container"));
-        expect(annotations).toExist();
+        expect(annotations).toBeTruthy();
         expect(TestUtils.scryRenderedDOMComponentsWithClass(annotations, "mapstore-annotations-panel-card").length).toBe(0);
         expect(TestUtils.scryRenderedDOMComponentsWithClass(annotations, "myeditor1").length).toBe(1);
     });

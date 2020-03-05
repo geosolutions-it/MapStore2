@@ -31,7 +31,7 @@ describe('TOC component', () => {
             layers={[{ id: "LAYER", group: "GGG", options: {} }]}/>, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('.toc-title');
-        expect(el).toExist();
+        expect(el).toBeTruthy();
     });
     it('Test TOC onChange', () => {
         const actions = {
@@ -45,7 +45,7 @@ describe('TOC component', () => {
 
         const container = document.getElementById('container');
         const el = container.querySelector('.visibility-check');
-        expect(el).toExist();
+        expect(el).toBeTruthy();
         ReactTestUtils.Simulate.click(el); // <-- trigger event callback
         expect(spyonChange).toHaveBeenCalled();
     });

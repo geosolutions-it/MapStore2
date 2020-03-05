@@ -23,12 +23,12 @@ describe("This test for AutocompleteCombobox component", () => {
     });
     it('creates AutocompleteCombobox with defaults', () => {
         const comp = ReactDOM.render(<AutocompleteCombobox autocompleteStreamFactory={createPagedUniqueAutompleteStream}/>, document.getElementById("container"));
-        expect(comp).toExist();
+        expect(comp).toBeTruthy();
     });
 
     it('creates AutocompleteCombobox with change', () => {
         const comp = ReactDOM.render(<AutocompleteCombobox value="old" autocompleteStreamFactory={createPagedUniqueAutompleteStream}/>, document.getElementById("container"));
-        expect(comp).toExist();
+        expect(comp).toBeTruthy();
         const input = document.getElementsByTagName("input")[0];
         input.value = "newValue";
 

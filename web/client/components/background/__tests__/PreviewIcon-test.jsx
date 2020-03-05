@@ -19,9 +19,9 @@ describe("test the PreviewIcon", () => {
 
     it('test PreviewIcon default props', () => {
         const previewIcon = ReactDOM.render(<PreviewIcon/>, document.getElementById("container"));
-        expect(previewIcon).toExist();
+        expect(previewIcon).toBeTruthy();
         const node = ReactDOM.findDOMNode(previewIcon);
-        expect(node).toExist();
+        expect(node).toBeTruthy();
         const image = node.querySelector('.background-preview-icon-frame').children[0];
         ReactTestUtils.Simulate.click(image);
         ReactTestUtils.Simulate.mouseOver(image);
@@ -48,9 +48,9 @@ describe("test the PreviewIcon", () => {
         const spySetCurrentBackgroundLayer = expect.spyOn(actions, 'setCurrentBackgroundLayer');
 
         const previewIcon = ReactDOM.render(<PreviewIcon onPropertiesChange={actions.onPropertiesChange} onToggle={actions.onToggle} onLayerChange={actions.onLayerChange} setCurrentBackgroundLayer={actions.setCurrentBackgroundLayer} vertical layer={layer}/>, document.getElementById("container"));
-        expect(previewIcon).toExist();
+        expect(previewIcon).toBeTruthy();
         const node = ReactDOM.findDOMNode(previewIcon);
-        expect(node).toExist();
+        expect(node).toBeTruthy();
         const image = node.querySelector('.background-preview-icon-frame').children[0];
         ReactTestUtils.Simulate.mouseOver(image);
         expect(spyLayerChange).toHaveBeenCalled();
@@ -79,14 +79,14 @@ describe("test the PreviewIcon", () => {
         const spyLayerChange = expect.spyOn(actions, 'onLayerChange');
 
         const previewIcon = ReactDOM.render(<PreviewIcon onPropertiesChange={actions.onPropertiesChange} onToggle={actions.onToggle} onLayerChange={actions.onLayerChange} layer={layer}/>, document.getElementById("container"));
-        expect(previewIcon).toExist();
+        expect(previewIcon).toBeTruthy();
         const node = ReactDOM.findDOMNode(previewIcon);
-        expect(node).toExist();
+        expect(node).toBeTruthy();
         const image = node.querySelector('.background-preview-icon-frame').children[0];
         ReactTestUtils.Simulate.mouseOver(image);
         expect(spyLayerChange).toHaveBeenCalled();
         ReactTestUtils.Simulate.click(image);
-        expect(spyPropertiesChange).toNotHaveBeenCalled();
-        expect(spyToggle).toNotHaveBeenCalled();
+        expect(spyPropertiesChange).not.toHaveBeenCalled();
+        expect(spyToggle).not.toHaveBeenCalled();
     });
 });

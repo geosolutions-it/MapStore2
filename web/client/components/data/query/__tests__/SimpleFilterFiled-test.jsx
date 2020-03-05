@@ -25,7 +25,7 @@ describe('SimpleFilterField', () => {
 
     it('create a SimpleFilterField component without any props', () => {
         const cmp = ReactDOM.render(<SimpleFilterField/>, document.getElementById("container"));
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
     });
     it('create a SimpleFilterField rendering radio', () => {
         let conf = {
@@ -45,11 +45,11 @@ describe('SimpleFilterField', () => {
             "collapsible": true
         };
         const cmp = ReactDOM.render(<SimpleFilterField {...conf} />, document.getElementById("container"));
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
         let node = ReactDOM.findDOMNode(cmp);
-        expect(node).toExist();
+        expect(node).toBeTruthy();
         let inputs = node.getElementsByTagName("input");
-        expect(inputs).toExist();
+        expect(inputs).toBeTruthy();
         expect(inputs.length).toBe(2);
         expect(inputs[0].getAttribute("type")).toBe("radio");
         inputs[0].checked = true;
@@ -76,11 +76,11 @@ describe('SimpleFilterField', () => {
             "defaultOptions": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
         };
         const cmp = ReactDOM.render(<SimpleFilterField {...conf} />, document.getElementById("container"));
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
         let node = ReactDOM.findDOMNode(cmp);
-        expect(node).toExist();
+        expect(node).toBeTruthy();
         let inputs = node.getElementsByTagName("input");
-        expect(inputs).toExist();
+        expect(inputs).toBeTruthy();
         expect(inputs.length).toBe(3);
         expect(inputs[0].getAttribute("type")).toBe("checkbox");
         expect(inputs[0].checked).toBe(true);
@@ -115,7 +115,7 @@ describe('SimpleFilterField', () => {
             }
         };
         const cmp = ReactDOM.render(<SimpleFilterField {...conf} />, document.getElementById("container"));
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
         cmp.onComboChange("", "", "null");
     });
     it('create a SimpleFilterField rendering combo multi', () => {
@@ -137,7 +137,7 @@ describe('SimpleFilterField', () => {
             "values": ["Monday", "Tuesday", "Wednesday"]
         };
         const cmp = ReactDOM.render(<SimpleFilterField {...conf} />, document.getElementById("container"));
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
         cmp.selectAll();
         cmp.clearAll();
         cmp.shouldComponentUpdate("");
@@ -154,7 +154,7 @@ describe('SimpleFilterField', () => {
             "collapsible": true
         };
         const cmp = ReactDOM.render(<SimpleFilterField {...conf} />, document.getElementById("container"));
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
         cmp.selectAll();
         cmp.clearAll();
         cmp.onNumberChange(4, "day_of_week", 10);
@@ -172,7 +172,7 @@ describe('SimpleFilterField', () => {
             "collapsible": true
         };
         const cmp = ReactDOM.render(<SimpleFilterField {...conf} />, document.getElementById("container"));
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
         cmp.selectAll();
         cmp.clearAll();
         cmp.onTextChange(4, "day_of_week", "10");

@@ -11,8 +11,8 @@ import { OL_VECTOR_FORMATS } from '../VectorTileUtils';
 
 describe('VectorTileUtils openlayers', () => {
     it('test OL_VECTOR_FORMATS contains entry for all supported formats', () => {
-        expect(OL_VECTOR_FORMATS['application/vnd.mapbox-vector-tile']).toExist();
-        expect(OL_VECTOR_FORMATS['application/json;type=geojson']).toExist();
-        expect(OL_VECTOR_FORMATS['application/json;type=topojson']).toExist();
+        expect(OL_VECTOR_FORMATS['application/vnd.mapbox-vector-tile']).toBeTruthy();
+        expect(OL_VECTOR_FORMATS['application/json;type=geojson']).toBeTruthy();
+        expect(OL_VECTOR_FORMATS['application/json;type=topojson']).toBeTruthy();
     });
 });

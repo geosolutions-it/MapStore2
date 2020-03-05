@@ -35,17 +35,17 @@ describe('MapCatalog component', () => {
     });
     it('MapCatalog rendering with defaults', () => {
         ReactDOM.render(<MapCatalog />, document.getElementById("container"));
-        expect(document.querySelector('input')).toExist();
-        expect(document.querySelector('.map-catalog')).toExist();
+        expect(document.querySelector('input')).toBeTruthy();
+        expect(document.querySelector('.map-catalog')).toBeTruthy();
     });
     it('MapCatalog rendering with items and text', () => {
         ReactDOM.render(<MapCatalog searchText="MAP" items={[{
             title: "MAP",
             description: "description"
         }]}/>, document.getElementById("container"));
-        expect(document.querySelector('input')).toExist();
+        expect(document.querySelector('input')).toBeTruthy();
         expect(document.querySelector('input').value).toBe("MAP");
-        expect(document.querySelector('.map-catalog')).toExist();
+        expect(document.querySelector('.map-catalog')).toBeTruthy();
         expect(document.querySelectorAll('.mapstore-side-card').length).toBe(1);
     });
 
@@ -54,22 +54,22 @@ describe('MapCatalog component', () => {
             title: "",
             description: "description"
         }]}/>, document.getElementById("container"));
-        expect(document.querySelector('input')).toExist();
+        expect(document.querySelector('input')).toBeTruthy();
         expect(document.querySelector('input').value).toBe("MAP");
-        expect(document.querySelector('.map-catalog')).toExist();
+        expect(document.querySelector('.map-catalog')).toBeTruthy();
         const h4 = document.querySelector('.text-center h4');
-        expect(h4).toNotExist();
+        expect(h4).toBeFalsy();
         expect(document.querySelectorAll('.mapstore-side-card').length).toBe(1);
     });
 
     it('mapCatalog enhancer', (done) => {
         const Sink = mapCatalog(createSink( props => {
             if (props.items && props.items.length > 0) {
-                expect(props).toExist();
+                expect(props).toBeTruthy();
                 const item = props.items[0];
-                expect(props.skip).toNotExist();
-                expect(item).toExist();
-                expect(item.title).toExist();
+                expect(props.skip).toBeFalsy();
+                expect(item).toBeTruthy();
+                expect(item.title).toBeTruthy();
                 done();
             }
         }));
@@ -78,11 +78,11 @@ describe('MapCatalog component', () => {
     it('mapCatalogWithEmptyMap enhancer', (done) => {
         const Sink = mapCatalogWithEmptymap(createSink(props => {
             if (props.items && props.items.length > 0) {
-                expect(props).toExist();
+                expect(props).toBeTruthy();
                 const item = props.items[0];
                 expect(props.skip).toBe(1);
-                expect(item).toExist();
-                expect(item.title).toExist();
+                expect(item).toBeTruthy();
+                expect(item.title).toBeTruthy();
                 done();
             }
         }));

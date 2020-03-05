@@ -64,8 +64,8 @@ describe('thematic epic', () => {
             actions.forEach((action) => {
                 switch (action.type) {
                 case FIELDS_LOADED:
-                    expect(action.layer).toExist();
-                    expect(action.fields).toExist();
+                    expect(action.layer).toBeTruthy();
+                    expect(action.fields).toBeTruthy();
                     expect(action.fields.length).toBe(1);
                     done();
                     break;
@@ -84,9 +84,9 @@ describe('thematic epic', () => {
             actions.forEach((action) => {
                 switch (action.type) {
                 case FIELDS_ERROR:
-                    expect(action.layer).toExist();
-                    expect(action.fields).toNotExist();
-                    expect(action.error).toExist();
+                    expect(action.layer).toBeTruthy();
+                    expect(action.fields).toBeFalsy();
+                    expect(action.error).toBeTruthy();
                     done();
                     break;
                 default:
@@ -104,8 +104,8 @@ describe('thematic epic', () => {
             actions.forEach((action) => {
                 switch (action.type) {
                 case CLASSIFICATION_LOADED:
-                    expect(action.layer).toExist();
-                    expect(action.classification).toExist();
+                    expect(action.layer).toBeTruthy();
+                    expect(action.classification).toBeTruthy();
                     expect(action.classification.length).toBe(1);
                     done();
                     break;
@@ -124,9 +124,9 @@ describe('thematic epic', () => {
             actions.forEach((action) => {
                 switch (action.type) {
                 case CLASSIFICATION_ERROR:
-                    expect(action.layer).toExist();
-                    expect(action.classification).toNotExist();
-                    expect(action.error).toExist();
+                    expect(action.layer).toBeTruthy();
+                    expect(action.classification).toBeFalsy();
+                    expect(action.error).toBeTruthy();
                     done();
                     break;
                 default:
@@ -144,10 +144,10 @@ describe('thematic epic', () => {
             actions.forEach((action) => {
                 switch (action.type) {
                 case CHANGE_LAYER_PARAMS:
-                    expect(action.layer).toExist();
-                    expect(action.params).toExist();
-                    expect(action.params.SLD).toNotExist();
-                    expect(action.params.viewparams).toNotExist();
+                    expect(action.layer).toBeTruthy();
+                    expect(action.params).toBeTruthy();
+                    expect(action.params.SLD).toBeFalsy();
+                    expect(action.params.viewparams).toBeFalsy();
                     done();
                     break;
                 default:
@@ -165,10 +165,10 @@ describe('thematic epic', () => {
             actions.forEach((action) => {
                 switch (action.type) {
                 case CHANGE_LAYER_PARAMS:
-                    expect(action.layer).toExist();
-                    expect(action.params).toExist();
-                    expect(action.params.SLD).toNotExist();
-                    expect(action.params.viewparams).toNotExist();
+                    expect(action.layer).toBeTruthy();
+                    expect(action.params).toBeTruthy();
+                    expect(action.params.SLD).toBeFalsy();
+                    expect(action.params.viewparams).toBeFalsy();
                     done();
                     break;
                 default:

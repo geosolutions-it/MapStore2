@@ -19,8 +19,8 @@ describe('RuleServiceUtils', () => {
             expect(converted[k]).toEqual(GS_RULE1[k]);
         });
         // check layerDetails not supported
-        expect(convertRuleGF2GS({ ...GF_RULE1 }).layerDetails).toNotExist();
-        expect(convertRuleGF2GS({ ...GF_RULE1, layer: undefined }).layerDetails).toNotExist();
+        expect(convertRuleGF2GS({ ...GF_RULE1 }).layerDetails).toBeFalsy();
+        expect(convertRuleGF2GS({ ...GF_RULE1, layer: undefined }).layerDetails).toBeFalsy();
     });
     it('convertRuleGS2GF', () => {
         const converted = convertRuleGS2GF(GS_RULE1);

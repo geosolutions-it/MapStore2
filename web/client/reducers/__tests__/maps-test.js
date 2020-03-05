@@ -42,7 +42,7 @@ const permissions = {
 describe('Test the maps reducer', () => {
     it('on default state and unknown action, ', () => {
         let state = maps(undefined, {type: "____NOT_EXISTING_ACTION____"});
-        expect(state).toExist();
+        expect(state).toBeTruthy();
         expect(state.enabled).toBe(false);
         expect(state.searchText).toBe("");
     });
@@ -158,22 +158,22 @@ describe('Test the maps reducer', () => {
 
         state = maps(state, permissionsLoaded(permissions, sampleMap.id));
         expect(state.results[0].permissionLoading).toBe(false);
-        expect(state.results[0].permissions).toExist();
-        expect(state.results[0].permissions.SecurityRuleList).toExist();
-        expect(state.results[0].permissions.SecurityRuleList.SecurityRule).toExist();
+        expect(state.results[0].permissions).toBeTruthy();
+        expect(state.results[0].permissions.SecurityRuleList).toBeTruthy();
+        expect(state.results[0].permissions.SecurityRuleList.SecurityRule).toBeTruthy();
         expect(state.results[0].permissions.SecurityRuleList.SecurityRule.length).toBe(1);
         state = maps(state, permissionsLoaded({
             SecurityRuleList: {SecurityRule: [SecurityRule]}
         }, sampleMap.id));
-        expect(state.results[0].permissions.SecurityRuleList).toExist();
-        expect(state.results[0].permissions.SecurityRuleList.SecurityRule).toExist();
+        expect(state.results[0].permissions.SecurityRuleList).toBeTruthy();
+        expect(state.results[0].permissions.SecurityRuleList.SecurityRule).toBeTruthy();
         expect(state.results[0].permissions.SecurityRuleList.SecurityRule.length).toBe(1);
 
         // check permission list loading doesn't fail if permission is undefined or null
         // i.e. when some error occurs loading permissions
         const errorState = maps({}, permissionsLoaded(null, sampleMap.id));
-        expect(errorState).toExist();
-        expect(errorState.results).toExist();
+        expect(errorState).toBeTruthy();
+        expect(errorState.results).toBeTruthy();
     });
 
 });

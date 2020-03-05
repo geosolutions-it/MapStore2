@@ -25,13 +25,13 @@ describe('ChartView component', () => {
         ReactDOM.render(<ChartView />, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('.mapstore-widget-chart');
-        expect(el).toExist();
+        expect(el).toBeTruthy();
     });
     it('ChartView rendering with error', () => {
         ReactDOM.render(<ChartView error={new Error()}/>, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('.mapstore-widget-chart');
-        expect(el).toExist();
-        expect(container.querySelector('.empty-state-container')).toExist();
+        expect(el).toBeTruthy();
+        expect(container.querySelector('.empty-state-container')).toBeTruthy();
     });
 });

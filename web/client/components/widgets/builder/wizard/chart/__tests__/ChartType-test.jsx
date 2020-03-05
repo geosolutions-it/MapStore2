@@ -25,14 +25,14 @@ describe('ChartType component', () => {
         ReactDOM.render(<ChartType />, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('.msSideGrid');
-        expect(el).toExist();
-        expect(container.querySelector('.selected')).toNotExist();
+        expect(el).toBeTruthy();
+        expect(container.querySelector('.selected')).toBeFalsy();
     });
     it('ChartType selected', () => {
         ReactDOM.render(<ChartType type="bar"/>, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('.selected');
-        expect(el).toExist();
+        expect(el).toBeTruthy();
     });
     it('Test ChartType onSelect', () => {
         const actions = {
@@ -44,7 +44,7 @@ describe('ChartType component', () => {
         ReactDOM.render(<ChartType type="bar" onSelect={actions.onSelect} onNextPage={actions.onNextPage} />, document.getElementById("container"));
         ReactTestUtils.Simulate.click(document.querySelector('.selected')); // <-- trigger event callback
         expect(spyonSelect).toHaveBeenCalled();
-        expect(spyonSelect.calls[0].arguments[0]).toBe("bar");
+        expect(spyonSelect.mock.calls[0][0]).toBe("bar");
         expect(spyonNextPage).toHaveBeenCalled();
     });
 });

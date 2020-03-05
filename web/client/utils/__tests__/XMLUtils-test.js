@@ -49,10 +49,10 @@ describe('XMLUtils tests', () => {
         expect(attributes.length).toBe(2);
         expect(attributes[0].name).toBe('attr1');
         expect(attributes[0].value).toBe('value');
-        expect(attributes[0].xmlns).toNotExist();
+        expect(attributes[0].xmlns).toBeFalsy();
         expect(attributes[1].name).toBe('attr2');
         expect(attributes[1].value).toBe(1);
-        expect(attributes[1].xmlns).toNotExist();
+        expect(attributes[1].xmlns).toBeFalsy();
     });
     it('objectToAttributes with xmlns', () => {
         const attributes = objectToAttributes({

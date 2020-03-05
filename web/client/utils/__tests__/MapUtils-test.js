@@ -137,7 +137,7 @@ describe('Test the MapUtils', () => {
     it('getBboxForExtent without the COMPUTE_BBOX_HOOK hook', () => {
         registerHook(COMPUTE_BBOX_HOOK, undefined);
         let bbox = getBbox(null, null, null);
-        expect(bbox).toNotExist();
+        expect(bbox).toBeFalsy();
     });
     it('getBboxForExtent with a COMPUTE_BBOX_HOOK hook', () => {
         registerHook(COMPUTE_BBOX_HOOK, () => "bbox");
@@ -2154,10 +2154,10 @@ describe('Test the MapUtils', () => {
         updateObjectFieldKey(clone3, 'test3', 'test4');
         expect(clone.test1).toBe(origin.test1);
         expect(clone.test2).toBe(origin.test2);
-        expect(clone2.test1).toNotExist();
-        expect(clone2.test3).toExist();
-        expect(clone3.test3).toNotExist();
-        expect(clone3.test4).toNotExist();
+        expect(clone2.test1).toBeFalsy();
+        expect(clone2.test3).toBeTruthy();
+        expect(clone3.test3).toBeFalsy();
+        expect(clone3.test4).toBeFalsy();
     });
 
     it('mergeMapConfigs', () => {
@@ -2302,18 +2302,18 @@ describe('Test the MapUtils', () => {
 
         const cfg = mergeMapConfigs(cfg1, cfg2);
 
-        expect(cfg).toExist();
-        expect(cfg.catalogServices).toExist();
-        expect(cfg.catalogServices.services).toExist();
+        expect(cfg).toBeTruthy();
+        expect(cfg.catalogServices).toBeTruthy();
+        expect(cfg.catalogServices.services).toBeTruthy();
 
         const servicesKeys = keys(cfg.catalogServices.services).sort();
         expect(servicesKeys).toEqual(["Demo CSW Service", "Demo WMS Service"]);
         expect(cfg.catalogServices.services["Demo CSW Service"]).toEqual(cfg1.catalogServices.services["Demo CSW Service"]);
         expect(cfg.catalogServices.services["Demo WMS Service"]).toEqual(cfg2.catalogServices.services["Demo WMS Service"]);
 
-        expect(cfg.map).toExist();
+        expect(cfg.map).toBeTruthy();
         expect(cfg.map.backgrounds.length).toBe(1);
-        expect(cfg.map.backgrounds[0].id).toNotBe(cfg2.map.backgrounds[0].id);
+        expect(cfg.map.backgrounds[0].id).not.toBe(cfg2.map.backgrounds[0].id);
         expect(cfg.map.backgrounds[0].id.length).toBe(36);
         expect(cfg.map.backgrounds[0].thumbnail).toBe("data");
         expect(cfg.map.center).toEqual({
@@ -2330,41 +2330,41 @@ describe('Test the MapUtils', () => {
         expect(cfg.map.layers[0].group).toBe("background");
         expect(cfg.map.layers[1].id).toBe("layer3");
         expect(cfg.map.layers[1].group).toBe("group");
-        expect(cfg.map.layers[2].id).toNotBe("layer2");
+        expect(cfg.map.layers[2].id).not.toBe("layer2");
         expect(cfg.map.layers[2].id.length).toBe(36);
         expect(cfg.map.layers[2].group).toBe("group2");
         expect(cfg.map.layers[3].id).toBe("layer1");
-        expect(cfg.map.layers[3].group).toNotExist();
+        expect(cfg.map.layers[3].group).toBeFalsy();
         expect(cfg.map.layers[4].id).toBe("layer2");
-        expect(cfg.map.layers[4].group).toNotExist();
-        expect(cfg.map.layers[5].id).toNotBe("layer3");
+        expect(cfg.map.layers[4].group).toBeFalsy();
+        expect(cfg.map.layers[5].id).not.toBe("layer3");
         expect(cfg.map.layers[5].id.length).toBe(36);
-        expect(cfg.map.layers[5].group).toNotExist();
+        expect(cfg.map.layers[5].group).toBeFalsy();
         expect(cfg.map.layers[6].id).toBe("annotations");
         expect(cfg.map.projection).toBe(cfg1.map.projection);
         expect(cfg.map.units).toBe("m");
-        expect(cfg.widgetsConfig).toExist();
+        expect(cfg.widgetsConfig).toBeTruthy();
         expect(cfg.widgetsConfig.widgets.length).toBe(1);
-        expect(cfg.widgetsConfig.widgets[0].id).toNotBe("widget1");
+        expect(cfg.widgetsConfig.widgets[0].id).not.toBe("widget1");
         expect(cfg.widgetsConfig.widgets[0].id.length).toBe(36);
-        expect(cfg.widgetsConfig.widgets[0].layer).toExist();
+        expect(cfg.widgetsConfig.widgets[0].layer).toBeTruthy();
         expect(cfg.widgetsConfig.widgets[0].layer.id).toBe(cfg.map.layers[2].id);
         expect(cfg.widgetsConfig.widgets[0].layer.group).toBe("group2");
-        expect(cfg.widgetsConfig.collapsed).toExist();
+        expect(cfg.widgetsConfig.collapsed).toBeTruthy();
 
         const collapsedKeys = keys(cfg.widgetsConfig.collapsed);
 
         expect(collapsedKeys.length).toBe(1);
         expect(collapsedKeys[0]).toBe(cfg.widgetsConfig.widgets[0].id);
-        expect(cfg.widgetsConfig.collapsed[collapsedKeys[0]].layouts).toExist();
-        expect(cfg.widgetsConfig.collapsed[collapsedKeys[0]].layouts.lg).toExist();
-        expect(cfg.widgetsConfig.collapsed[collapsedKeys[0]].layouts.xxs).toExist();
+        expect(cfg.widgetsConfig.collapsed[collapsedKeys[0]].layouts).toBeTruthy();
+        expect(cfg.widgetsConfig.collapsed[collapsedKeys[0]].layouts.lg).toBeTruthy();
+        expect(cfg.widgetsConfig.collapsed[collapsedKeys[0]].layouts.xxs).toBeTruthy();
         expect(cfg.widgetsConfig.collapsed[collapsedKeys[0]].layouts.lg.i).toBe(cfg.widgetsConfig.widgets[0].id);
         expect(cfg.widgetsConfig.collapsed[collapsedKeys[0]].layouts.xxs.i).toBe(cfg.widgetsConfig.widgets[0].id);
 
-        expect(cfg.widgetsConfig.layouts).toExist();
-        expect(cfg.widgetsConfig.layouts.lg).toExist();
-        expect(cfg.widgetsConfig.layouts.xxs).toExist();
+        expect(cfg.widgetsConfig.layouts).toBeTruthy();
+        expect(cfg.widgetsConfig.layouts.lg).toBeTruthy();
+        expect(cfg.widgetsConfig.layouts.xxs).toBeTruthy();
         expect(cfg.widgetsConfig.layouts.lg[0].i).toBe(cfg.widgetsConfig.widgets[0].id);
         expect(cfg.widgetsConfig.layouts.xxs[0].i).toBe(cfg.widgetsConfig.widgets[0].id);
     });

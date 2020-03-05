@@ -84,34 +84,34 @@ describe('FilterField', () => {
             </FilterField>,
             document.getElementById("container"));
 
-        expect(filterfield).toExist();
+        expect(filterfield).toBeTruthy();
 
-        expect(filterfield.props.children).toExist();
+        expect(filterfield.props.children).toBeTruthy();
         expect(filterfield.props.children.length).toBe(2);
 
-        expect(filterfield.props.attributes).toExist();
+        expect(filterfield.props.attributes).toBeTruthy();
         expect(filterfield.props.attributes.length).toBe(2);
 
-        expect(filterfield.props.filterField).toExist();
+        expect(filterfield.props.filterField).toBeTruthy();
 
-        const filterFieldDOMNode = expect(ReactDOM.findDOMNode(filterfield));
+        const filterFieldDOMNode = ReactDOM.findDOMNode(filterfield);
 
-        expect(filterFieldDOMNode).toExist();
+        expect(filterFieldDOMNode).toBeTruthy();
 
-        let childNodes = filterFieldDOMNode.actual.childNodes;
+        let childNodes = filterFieldDOMNode.childNodes;
 
         expect(childNodes.length).toBe(1);
 
-        const inputFields = filterFieldDOMNode.actual.getElementsByClassName('rw-input');
+        const inputFields = filterFieldDOMNode.getElementsByClassName('rw-input');
         expect(inputFields.length).toBe(3);
 
-        const attributeSelect = filterFieldDOMNode.actual.getElementsByClassName('rw-input')[0];
+        const attributeSelect = filterFieldDOMNode.getElementsByClassName('rw-input')[0];
         expect(attributeSelect.childNodes[0].nodeValue).toBe("Attribute1");
 
-        const operatorSelect = filterFieldDOMNode.actual.getElementsByClassName('rw-input')[1];
+        const operatorSelect = filterFieldDOMNode.getElementsByClassName('rw-input')[1];
         expect(operatorSelect.childNodes[0].nodeValue).toBe("=");
 
-        const valueSelect = filterFieldDOMNode.actual.getElementsByClassName('rw-input')[2];
+        const valueSelect = filterFieldDOMNode.getElementsByClassName('rw-input')[2];
         expect(valueSelect.childNodes[0].nodeValue).toBe("attribute1");
 
         filterfield.updateFieldElement(200, "value", "value", "string", {currentPage: 0});
@@ -160,34 +160,34 @@ describe('FilterField', () => {
             </FilterField>,
             document.getElementById("container"));
 
-        expect(filterfield).toExist();
+        expect(filterfield).toBeTruthy();
 
-        expect(filterfield.props.children).toExist();
+        expect(filterfield.props.children).toBeTruthy();
         expect(filterfield.props.children.length).toBe(2);
 
-        expect(filterfield.props.attributes).toExist();
+        expect(filterfield.props.attributes).toBeTruthy();
         expect(filterfield.props.attributes.length).toBe(1);
 
-        expect(filterfield.props.filterField).toExist();
+        expect(filterfield.props.filterField).toBeTruthy();
 
-        const filterFieldDOMNode = expect(ReactDOM.findDOMNode(filterfield));
+        const filterFieldDOMNode = ReactDOM.findDOMNode(filterfield);
 
-        expect(filterFieldDOMNode).toExist();
+        expect(filterFieldDOMNode).toBeTruthy();
 
-        let childNodes = filterFieldDOMNode.actual.childNodes;
+        let childNodes = filterFieldDOMNode.childNodes;
 
         expect(childNodes.length).toBe(1);
 
-        const inputFields = filterFieldDOMNode.actual.getElementsByClassName('rw-input');
+        const inputFields = filterFieldDOMNode.getElementsByClassName('rw-input');
         expect(inputFields.length).toBe(3);
 
-        const attributeSelect = filterFieldDOMNode.actual.getElementsByClassName('rw-input')[0];
+        const attributeSelect = filterFieldDOMNode.getElementsByClassName('rw-input')[0];
         expect(attributeSelect.childNodes[0].nodeValue).toBe("Attribute1");
 
-        const operatorSelect = filterFieldDOMNode.actual.getElementsByClassName('rw-input')[1];
+        const operatorSelect = filterFieldDOMNode.getElementsByClassName('rw-input')[1];
         expect(operatorSelect.childNodes[0].nodeValue).toBe("=");
 
-        const valueSelectContainer = filterFieldDOMNode.actual.getElementsByClassName('col-xs-5')[0].childNodes[0];
+        const valueSelectContainer = filterFieldDOMNode.getElementsByClassName('col-xs-5')[0].childNodes[0];
         expect(valueSelectContainer.style.display).toBe('none');
 
     });
@@ -232,10 +232,10 @@ describe('FilterField', () => {
         const filterfield = ReactDOM.render(<FilterField filterField={filterField} attributes={attributes} onUpdateField={actions.onUpdateField} onChangeCascadingValue={actions.onChangeCascadingValue} onUpdateExceptionField={actions.onUpdateExceptionField}/>, document.getElementById("container"));
 
         filterfield.props.onUpdateField();
-        expect(filterfield).toExist();
+        expect(filterfield).toBeTruthy();
         filterfield.updateFieldElement(201, "name", "value", "string", {currentPage: 0});
         expect(spyUpdateField).toHaveBeenCalled();
-        expect(spyChangeCascadingValue).toNotHaveBeenCalled();
+        expect(spyChangeCascadingValue).not.toHaveBeenCalled();
         expect(spyUpdateField).toHaveBeenCalledWith(201, "name", "value", "string", {currentPage: 0});
 
         filterfield.updateFieldElement(204, "value", "value", "boolean", {currentPage: 1});
@@ -286,11 +286,11 @@ describe('FilterField', () => {
 
         const filterfield = ReactDOM.render(<FilterField filterField={filterField} attributes={attributes} onUpdateField={actions.onUpdateField} onChangeCascadingValue={actions.onChangeCascadingValue} onUpdateExceptionField={actions.onUpdateExceptionField}/>, document.getElementById("container"));
 
-        expect(filterfield).toExist();
+        expect(filterfield).toBeTruthy();
         filterfield.updateFieldElement(200, "value", "value", "string", {});
         expect(spyUpdateField).toHaveBeenCalled();
         // expect(spyUpdateField).toHaveBeenCalledWith(200, "value", "value", "string");
-        expect(spyChangeCascadingValue).toNotHaveBeenCalled();
+        expect(spyChangeCascadingValue).not.toHaveBeenCalled();
 
         expect.restoreSpies();
     });

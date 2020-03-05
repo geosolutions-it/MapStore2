@@ -181,7 +181,7 @@ describe('Test the layers reducer', () => {
         };
         let state = layers({flat: [{id: 'sample'}, {id: 'other'}]}, testAction);
         expect(state.flat[0].opacity).toBe(0.5);
-        expect(state.flat[1].opacity).toNotExist();
+        expect(state.flat[1].opacity).toBeFalsy();
     });
 
     it('updateNode changing Format', () => {
@@ -193,7 +193,7 @@ describe('Test the layers reducer', () => {
         };
         let state = layers({flat: [{id: 'sample'}, {id: 'other'}]}, testAction);
         expect(state.flat[0].format).toBe("image/vnd.jpeg-png");
-        expect(state.flat[1].format).toNotExist();
+        expect(state.flat[1].format).toBeFalsy();
     });
 
 
@@ -310,9 +310,9 @@ describe('Test the layers reducer', () => {
             }]
         };
         const state1 = layers(state, changeLayerParams("rv1", {elevation: 200}));
-        expect(state1.flat[1].params).toExist();
+        expect(state1.flat[1].params).toBeTruthy();
         expect(state1.flat[1].params.elevation).toBe(200);
-        expect(state1.flat[2].params).toNotExist();
+        expect(state1.flat[2].params).toBeFalsy();
         const state2 = layers(state, changeLayerParams(["rv1", "rv2"], { elevation: 200 }));
         expect(state2.flat[1].params.elevation).toBe(200);
         expect(state2.flat[2].params.elevation).toBe(200);
@@ -429,10 +429,10 @@ describe('Test the layers reducer', () => {
         let state = layers({
             flat: [{group: "group"}]
         }, testAction);
-        expect(state).toExist();
-        expect(state.flat).toExist();
-        expect(state.flat[0].group).toExist();
-        expect(state.flat[0].p).toExist();
+        expect(state).toBeTruthy();
+        expect(state.flat).toBeTruthy();
+        expect(state.flat[0].group).toBeTruthy();
+        expect(state.flat[0].p).toBeTruthy();
         expect(state.flat[0].p).toEqual("property");
     });
 
@@ -445,8 +445,8 @@ describe('Test the layers reducer', () => {
         let state = layers({
             flat: []
         }, testAction);
-        expect(state).toExist();
-        expect(state.refreshing).toExist();
+        expect(state).toBeTruthy();
+        expect(state.refreshing).toBeTruthy();
         expect(state.refreshing.length).toBe(1);
         expect(state.refreshing[0].layer).toBe('fake');
     });
@@ -461,8 +461,8 @@ describe('Test the layers reducer', () => {
             flat: [{url: 'url1', id: 'layer1'}, {url: 'url2', id: 'layer2'}],
             refreshing: [{url: 'url1', id: 'layer1'}, {url: 'url2', id: 'layer2'}]
         }, testAction);
-        expect(state).toExist();
-        expect(state.refreshing).toExist();
+        expect(state).toBeTruthy();
+        expect(state.refreshing).toBeTruthy();
         expect(state.refreshing.length).toBe(1);
         expect(state.refreshing[0].id).toBe('layer2');
     });
@@ -477,11 +477,11 @@ describe('Test the layers reducer', () => {
             flat: [{url: 'url1', id: 'layer1'}, {url: 'url2', id: 'layer2'}],
             refreshing: [{url: 'url1', id: 'layer1'}, {url: 'url2', id: 'layer2'}]
         }, testAction);
-        expect(state).toExist();
-        expect(state.refreshing).toExist();
+        expect(state).toBeTruthy();
+        expect(state.refreshing).toBeTruthy();
         expect(state.refreshing.length).toBe(1);
         expect(state.refreshing[0].id).toBe('layer2');
-        expect(state.refreshError).toExist();
+        expect(state.refreshError).toBeTruthy();
     });
 
     it('change group properties with default group', () => {
@@ -496,15 +496,15 @@ describe('Test the layers reducer', () => {
             flat: [{name: "layer1", group: "meteo"}, {name: "layer2"}]
         }, action);
         // the state should exists
-        expect(state).toExist();
-        expect(state.flat).toExist();
+        expect(state).toBeTruthy();
+        expect(state.flat).toBeTruthy();
         // no changes in layer1
-        expect(state.flat[0].group).toExist();
+        expect(state.flat[0].group).toBeTruthy();
         expect(state.flat[0].group).toBe("meteo");
-        expect(state.flat[0].visibility).toNotExist();
+        expect(state.flat[0].visibility).toBeFalsy();
         // visibility property has been added to layer2
-        expect(state.flat[1].group).toNotExist();
-        expect(state.flat[1].visibility).toExist();
+        expect(state.flat[1].group).toBeFalsy();
+        expect(state.flat[1].visibility).toBeTruthy();
         expect(state.flat[1].visibility).toBe(true);
     });
 
@@ -516,12 +516,12 @@ describe('Test the layers reducer', () => {
         };
 
         let state = layers({}, testAction1);
-        expect(state).toExist();
-        expect(state.flat).toExist();
-        expect(state.flat[0].group).toExist();
-        expect(state.flat[0].id).toExist();
+        expect(state).toBeTruthy();
+        expect(state.flat).toBeTruthy();
+        expect(state.flat[0].group).toBeTruthy();
+        expect(state.flat[0].id).toBeTruthy();
         expect(state.flat[0].id).toBe("test_id1");
-        expect(state.groups).toExist();
+        expect(state.groups).toBeTruthy();
         expect(state.groups[0].name).toBe("test");
         expect(state.groups[0].nodes[0]).toBe("test_id1");
 
@@ -532,12 +532,12 @@ describe('Test the layers reducer', () => {
         };
 
         state = layers(state, testAction2);
-        expect(state).toExist();
-        expect(state.flat).toExist();
-        expect(state.flat[0].group).toExist();
-        expect(state.flat[0].id).toExist();
+        expect(state).toBeTruthy();
+        expect(state.flat).toBeTruthy();
+        expect(state.flat[0].group).toBeTruthy();
+        expect(state.flat[0].id).toBeTruthy();
         expect(state.flat[0].id).toBe("test_id2");
-        expect(state.groups).toExist();
+        expect(state.groups).toBeTruthy();
         expect(state.groups[0].name).toBe("test");
         expect(state.groups[0].nodes[1]).toBe("test_id2");
 
@@ -548,12 +548,12 @@ describe('Test the layers reducer', () => {
         };
 
         state = layers(state, testAction3);
-        expect(state).toExist();
-        expect(state.flat).toExist();
-        expect(state.flat[2].group).toExist();
-        expect(state.flat[2].id).toExist();
+        expect(state).toBeTruthy();
+        expect(state.flat).toBeTruthy();
+        expect(state.flat[2].group).toBeTruthy();
+        expect(state.flat[2].id).toBeTruthy();
         expect(state.flat[2].id).toBe("test_id3");
-        expect(state.groups).toExist();
+        expect(state.groups).toBeTruthy();
         expect(state.groups[0].name).toBe("test");
         expect(state.groups[0].nodes[0]).toBe("test_id3");
         expect(state.groups[0].nodes[1]).toBe("test_id1");
@@ -581,8 +581,8 @@ describe('Test the layers reducer', () => {
             testAction
         );
 
-        expect(state.settings).toExist();
-        expect(state.selected).toExist();
+        expect(state.settings).toBeTruthy();
+        expect(state.selected).toBeTruthy();
 
     });
 
@@ -617,16 +617,16 @@ describe('Test the layers reducer', () => {
         };
         state = layers(state, removeAction);
 
-        expect(state).toExist();
-        expect(state.flat).toExist();
-        expect(state.flat).toExclude({group: "group1", id: "test_id1"});
-        expect(state.flat).toInclude({group: "group1", id: "test_id2"});
-        expect(state.flat).toInclude({group: "group2", id: "test_id3"});
-        expect(state.groups).toExist();
-        expect(state.groups[1].nodes).toExclude('test_id1');
-        expect(state.groups[1].nodes).toInclude('test_id2');
+        expect(state).toBeTruthy();
+        expect(state.flat).toBeTruthy();
+        expect(state.flat).not.toContainEqual({group: "group1", id: "test_id1"});
+        expect(state.flat).toContainEqual({group: "group1", id: "test_id2"});
+        expect(state.flat).toContainEqual({group: "group2", id: "test_id3"});
+        expect(state.groups).toBeTruthy();
+        expect(state.groups[1].nodes).not.toContainEqual('test_id1');
+        expect(state.groups[1].nodes).toContainEqual('test_id2');
         expect(state.groups[1].name).toBe('group1');
-        expect(state.groups[0].nodes).toInclude('test_id3');
+        expect(state.groups[0].nodes).toContainEqual('test_id3');
         expect(state.groups[0].name).toBe('group2');
     });
 
@@ -638,8 +638,8 @@ describe('Test the layers reducer', () => {
             options: {opacity: 0.5, size: 500}
         };
         const state = layers({}, action);
-        expect(state).toExist();
-        expect(state.settings).toExist();
+        expect(state).toBeTruthy();
+        expect(state.settings).toBeTruthy();
         expect(state.settings.expanded).toBe(true);
         expect(state.settings.node).toBe("node1");
         expect(state.settings.nodeType).toBe("layers");
@@ -651,11 +651,11 @@ describe('Test the layers reducer', () => {
             type: "HIDE_SETTINGS"
         };
         const state = layers({}, action);
-        expect(state).toExist();
-        expect(state.settings).toExist();
+        expect(state).toBeTruthy();
+        expect(state.settings).toBeTruthy();
         expect(state.settings.expanded).toBe(false);
-        expect(state.settings.node).toNotExist();
-        expect(state.settings.nodeType).toNotExist();
+        expect(state.settings.node).toBeFalsy();
+        expect(state.settings.nodeType).toBeFalsy();
         expect(state.settings.options).toEqual({});
     });
 
@@ -665,8 +665,8 @@ describe('Test the layers reducer', () => {
             options: {opacity: 0.8, size: 400}
         };
         const state = layers({}, action);
-        expect(state).toExist();
-        expect(state.settings).toExist();
+        expect(state).toBeTruthy();
+        expect(state.settings).toBeTruthy();
         expect(state.settings.options).toEqual({opacity: 0.8, size: 400});
     });
 
@@ -676,8 +676,8 @@ describe('Test the layers reducer', () => {
             options: {size: 450}
         };
         const state = layers({settings: {options: {opacity: 0.8, size: 400}}}, action);
-        expect(state).toExist();
-        expect(state.settings).toExist();
+        expect(state).toBeTruthy();
+        expect(state.settings).toBeTruthy();
         expect(state.settings.options).toEqual({opacity: 0.8, size: 450});
     });
 
@@ -686,10 +686,10 @@ describe('Test the layers reducer', () => {
             type: "LAYERS:CLEAR_LAYERS"
         };
         const state = layers({flat: [{id: "layer"}], groups: [{id: "group"}]}, action);
-        expect(state).toExist();
-        expect(state.flat).toExist();
+        expect(state).toBeTruthy();
+        expect(state.flat).toBeTruthy();
         expect(state.flat).toEqual([]);
-        expect(state.groups).toExist();
+        expect(state.groups).toBeTruthy();
         expect(state.groups).toEqual([]);
     });
 
@@ -700,8 +700,8 @@ describe('Test the layers reducer', () => {
         };
 
         const state = layers({}, action);
-        expect(state).toExist();
-        expect(state.filter).toExist();
+        expect(state).toBeTruthy();
+        expect(state.filter).toBeTruthy();
         expect(state.filter).toEqual('text');
     });
 
@@ -711,7 +711,7 @@ describe('Test the layers reducer', () => {
         };
 
         const state = layers({}, action);
-        expect(state).toExist();
+        expect(state).toBeTruthy();
         expect(state.filter).toEqual('');
     });
 
@@ -724,8 +724,8 @@ describe('Test the layers reducer', () => {
         };
 
         const state = layers({flat: [{id: "layer"}], groups: [{id: "group"}]}, action);
-        expect(state).toExist();
-        expect(state.selected).toExist();
+        expect(state).toBeTruthy();
+        expect(state.selected).toBeTruthy();
         expect(state.selected).toEqual(['layer']);
     });
 
@@ -738,8 +738,8 @@ describe('Test the layers reducer', () => {
         };
 
         const state = layers({flat: [{id: "layer"}], groups: [{id: "group", nodes: ["layer"]}]}, action);
-        expect(state).toExist();
-        expect(state.selected).toExist();
+        expect(state).toBeTruthy();
+        expect(state.selected).toBeTruthy();
         expect(state.selected).toEqual(['layer', 'group']);
     });
 
@@ -752,8 +752,8 @@ describe('Test the layers reducer', () => {
         };
 
         const state = layers({flat: [{id: "layer"}, {id: "layer2"}, {id: "layer3"}], groups: [{id: "group", nodes: ["layer", {id: 'group001', nodes: ["layer2"]}]}]}, action);
-        expect(state).toExist();
-        expect(state.selected).toExist();
+        expect(state).toBeTruthy();
+        expect(state.selected).toBeTruthy();
         expect(state.selected).toEqual(['layer', 'layer2', 'group001', 'group' ]);
     });
 
@@ -766,8 +766,8 @@ describe('Test the layers reducer', () => {
         };
 
         const state = layers({flat: [{id: "layer"}, {id: "layer2"}], groups: [{id: "group"}], selected: ['layer2']}, action);
-        expect(state).toExist();
-        expect(state.selected).toExist();
+        expect(state).toBeTruthy();
+        expect(state.selected).toBeTruthy();
         expect(state.selected).toEqual(['layer2', 'layer']);
     });
 
@@ -780,8 +780,8 @@ describe('Test the layers reducer', () => {
         };
 
         const state = layers({flat: [{id: "layer"}, {id: "layer2"}, {id: "layer3"}], groups: [{id: "group", nodes: ["layer", {id: 'group001', nodes: ["layer2"]}]}], selected: ['layer2', 'group2']}, action);
-        expect(state).toExist();
-        expect(state.selected).toExist();
+        expect(state).toBeTruthy();
+        expect(state.selected).toBeTruthy();
         expect(state.selected).toEqual(['layer2', 'group2', 'layer', 'layer2', 'group001', 'group']);
     });
 
@@ -791,8 +791,8 @@ describe('Test the layers reducer', () => {
         };
 
         const state = layers({flat: [{id: "layer"}, {id: "layer2"}, {id: "layer3"}], groups: [{id: "group", nodes: ["layer", {id: 'group001', nodes: ["layer2"]}]}], selected: ['layer2', 'group2']}, action);
-        expect(state).toExist();
-        expect(state.selected).toExist();
+        expect(state).toBeTruthy();
+        expect(state.selected).toBeTruthy();
         expect(state.selected).toEqual([]);
     });
 
@@ -804,8 +804,8 @@ describe('Test the layers reducer', () => {
         };
 
         const state = layers({}, action);
-        expect(state).toExist();
-        expect(state.layerMetadata).toExist();
+        expect(state).toBeTruthy();
+        expect(state.layerMetadata).toBeTruthy();
         expect(state.layerMetadata.expanded).toEqual(true);
     });
 
@@ -815,8 +815,8 @@ describe('Test the layers reducer', () => {
         };
 
         const state = layers({}, action);
-        expect(state).toExist();
-        expect(state.layerMetadata).toExist();
+        expect(state).toBeTruthy();
+        expect(state.layerMetadata).toBeTruthy();
         expect(state.layerMetadata.expanded).toEqual(false);
     });
 
@@ -827,7 +827,7 @@ describe('Test the layers reducer', () => {
         };
 
         const state = layers({groups: [{id: 'group1'}]}, action);
-        expect(state).toExist();
+        expect(state).toBeTruthy();
         expect(state.groups.length).toBe(2);
         expect(state.groups[1].title).toBe('newgroup');
     });
@@ -840,7 +840,7 @@ describe('Test the layers reducer', () => {
         };
 
         const state = layers({ groups: [{ id: 'group1', nodes: [{ id: 'group1.group2', nodes: [{ id: 'group1.group2.group3', nodes: []}]}] }] }, action);
-        expect(state).toExist();
+        expect(state).toBeTruthy();
         expect(state.groups.length).toBe(1);
         expect(state.groups[0].nodes.length).toBe(1);
         expect(state.groups[0].nodes[0].nodes.length).toBe(2);
@@ -863,24 +863,24 @@ describe('Test the layers reducer', () => {
                 }]
             }
         );
-        expect(state).toExist();
+        expect(state).toBeTruthy();
         expect(state.groups.length).toBe(1);
         expect(state.groups[0].nodes.length).toBe(1);
         expect(state.groups[0].nodes[0].nodes.length).toBe(3);
         const newgroup1 = state.groups[0].nodes[0].nodes[1];
         const newgroup2 = state.groups[0].nodes[0].nodes[2];
         expect(newgroup1.title).toBe('newgroup');
-        expect(newgroup1.name).toExist();
+        expect(newgroup1.name).toBeTruthy();
         expect(newgroup1.name.length).toBe(36);
-        expect(newgroup1.id).toExist();
+        expect(newgroup1.id).toBeTruthy();
         expect(newgroup1.id.length).toBe(6 + 6 + 36 + 2);
         expect(newgroup2.title).toBe('newgroup');
-        expect(newgroup2.name).toExist();
+        expect(newgroup2.name).toBeTruthy();
         expect(newgroup2.name.length).toBe(36);
-        expect(newgroup2.id).toExist();
+        expect(newgroup2.id).toBeTruthy();
         expect(newgroup2.id.length).toBe(6 + 6 + 36 + 2);
-        expect(newgroup1.name).toNotBe(newgroup2.name);
-        expect(newgroup1.id).toNotBe(newgroup2.id);
+        expect(newgroup1.name).not.toBe(newgroup2.name);
+        expect(newgroup1.id).not.toBe(newgroup2.id);
     });
 
     it('move groups when two are with the same title', () => {
@@ -909,7 +909,7 @@ describe('Test the layers reducer', () => {
                 nodes: []
             }]
         }, action);
-        expect(state).toExist();
+        expect(state).toBeTruthy();
         expect(state.groups).toEqual([
             {
                 id: 'Default',

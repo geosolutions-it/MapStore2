@@ -42,7 +42,7 @@ describe('Test the draw reducer', () => {
         };
 
         let state = draw(initialState, testAction);
-        expect(state).toExist();
+        expect(state).toBeTruthy();
 
         expect(state.drawStatus).toBe("start");
         expect(state.drawOwner).toBe("queryform");
@@ -61,7 +61,7 @@ describe('Test the draw reducer', () => {
             currentStyle: style
         };
         let state = draw({}, testAction);
-        expect(state.currentStyle).toExist();
+        expect(state.currentStyle).toBeTruthy();
         expect(state.currentStyle).toBe(style);
     });
     it('FeatureGrid GEOMETRY_CHANGED', () => {
@@ -76,7 +76,7 @@ describe('Test the draw reducer', () => {
             features: [feature]
         };
         let state = draw({}, testAction);
-        expect(state.tempFeatures).toExist();
+        expect(state.tempFeatures).toBeTruthy();
         expect(state.tempFeatures[0]).toBe(feature);
     });
 });

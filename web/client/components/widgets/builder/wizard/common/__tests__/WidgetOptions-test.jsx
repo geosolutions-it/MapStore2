@@ -25,7 +25,7 @@ describe('WidgetOptions component', () => {
         ReactDOM.render(<WidgetOptions />, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('.widget-options-form');
-        expect(el).toExist();
+        expect(el).toBeTruthy();
     });
     it('Test WidgetOptions onChange', () => {
         const actions = {
@@ -36,11 +36,11 @@ describe('WidgetOptions component', () => {
         const inputs = document.querySelectorAll('input');
 
         ReactTestUtils.Simulate.change(inputs[0], { target: { value: 'Title' } });
-        expect(spyonChange.calls[0].arguments[0]).toBe("title");
-        expect(spyonChange.calls[0].arguments[1]).toBe("Title");
+        expect(spyonChange.mock.calls[0][0]).toBe("title");
+        expect(spyonChange.mock.calls[0][1]).toBe("Title");
 
         ReactTestUtils.Simulate.change(inputs[1], { target: { value: 'Description' } });
-        expect(spyonChange.calls[1].arguments[0]).toBe("description");
-        expect(spyonChange.calls[1].arguments[1]).toBe("Description");
+        expect(spyonChange.mock.calls[1][0]).toBe("description");
+        expect(spyonChange.mock.calls[1][1]).toBe("Description");
     });
 });

@@ -28,7 +28,7 @@ describe('TOC SettingsModal', () => {
         const cmp = ReactDOM.render(<SettingsModal element={{id: 'layer001'}} settings={{expanded: true}}/>, document.getElementById("container"));
         expect(cmp.state).toEqual({ initialState: { id: 'layer001' }, originalSettings: { id: 'layer001' }});
         const el = document.getElementById('mapstore-layer-settings');
-        expect(el).toExist();
+        expect(el).toBeTruthy();
     });
 
     it('trigger retrieveLayerData in UNSAFE_componentWillReceiveProps', () => {
@@ -36,14 +36,14 @@ describe('TOC SettingsModal', () => {
         const cmp2 = ReactDOM.render(<SettingsModal element={{id: 'layer001', type: "wms", capabilitiesLoading: true}} settings={{expanded: true}}/>, document.getElementById("container"));
         const el = document.getElementById('mapstore-layer-settings');
         const textarea = document.getElementsByTagName('textarea')[0];
-        expect(el).toExist();
-        expect(cmp).toExist();
-        expect(cmp2).toExist();
-        expect(textarea).toNotExist();
+        expect(el).toBeTruthy();
+        expect(cmp).toBeTruthy();
+        expect(cmp2).toBeTruthy();
+        expect(textarea).toBeFalsy();
         const cmp3 = ReactDOM.render(<SettingsModal element={{id: 'layer001', type: "wms", capabilitiesLoading: false, description: "description of layer"}} settings={{expanded: true}}/>, document.getElementById("container"));
-        expect(cmp3).toExist();
+        expect(cmp3).toBeTruthy();
         const textareaAfterLoading = document.getElementsByTagName('textarea')[0];
-        expect(textareaAfterLoading).toExist();
+        expect(textareaAfterLoading).toBeTruthy();
         expect(textareaAfterLoading.value).toBe("description of layer");
     });
 });

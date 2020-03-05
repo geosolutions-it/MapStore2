@@ -23,9 +23,9 @@ describe('ScaleDenominator', () => {
     });
     it('create component with defaults', () => {
         const sb = ReactDOM.render(<ScaleDenominator minValue={1000} maxValue={10000}/>, document.getElementById("container"));
-        expect(sb).toExist();
+        expect(sb).toBeTruthy();
         const domNode = ReactDOM.findDOMNode(sb);
-        expect(domNode).toExist();
+        expect(domNode).toBeTruthy();
 
         const comboItems = sb.scales;
         expect(comboItems.length).toBe(23);

@@ -25,49 +25,49 @@ import {CREATE_BACKGROUNDS_LIST,
 describe('Test backgroundSelector actions', () => {
     it('test accessing catalog from backgroundSelector', () => {
         const action = addBackground('backgroundSelector');
-        expect(action).toExist();
+        expect(action).toBeTruthy();
         expect(action.type).toBe(ADD_BACKGROUND);
-        expect(action.source).toExist();
+        expect(action.source).toBeTruthy();
         expect(action.source).toBe('backgroundSelector');
     });
     it('test adding or updating thumbnails', () => {
         const action = updateThumbnail('binary Code', '1983');
-        expect(action).toExist();
+        expect(action).toBeTruthy();
         expect(action.type).toBe(UPDATE_BACKGROUND_THUMBNAIL);
-        expect(action.thumbnailData).toExist();
+        expect(action.thumbnailData).toBeTruthy();
         expect(action.thumbnailData).toBe('binary Code');
-        expect(action.id).toExist();
+        expect(action.id).toBeTruthy();
         expect(action.id).toBe('1983');
     });
     it('test adding or updating thumbnails', () => {
         const action = createBackgroundsList([1234, 1232, 9982]);
-        expect(action).toExist();
+        expect(action).toBeTruthy();
         expect(action.type).toBe(CREATE_BACKGROUNDS_LIST);
-        expect(action.backgrounds).toExist();
+        expect(action.backgrounds).toBeTruthy();
         expect(action.backgrounds.length).toBe(3);
     });
     it('test adding background properties', () => {
         const action = addBackgroundProperties({name: 'thumb'}, true);
-        expect(action).toExist();
+        expect(action).toBeTruthy();
         expect(action.type).toBe(ADD_BACKGROUND_PROPERTIES);
-        expect(action.modalParams).toExist();
+        expect(action.modalParams).toBeTruthy();
         expect(action.modalParams.name).toBe('thumb');
     });
     it('test removing background thumbnail info by Id', () => {
         const action = removeBackground('1983');
-        expect(action).toExist();
+        expect(action).toBeTruthy();
         expect(action.type).toBe(REMOVE_BACKGROUND);
-        expect(action.backgroundId).toExist();
+        expect(action.backgroundId).toBeTruthy();
         expect(action.backgroundId).toBe('1983');
     });
     it('test clearing backgrounds', () => {
         const action = clearBackgrounds();
-        expect(action).toExist();
+        expect(action).toBeTruthy();
         expect(action.type).toBe(BACKGROUNDS_CLEAR);
     });
     it('test clearing background\'s properties', () => {
         const action = clearModalParameters();
-        expect(action).toExist();
+        expect(action).toBeTruthy();
         expect(action.type).toBe(CLEAR_MODAL_PARAMETERS);
     });
 });

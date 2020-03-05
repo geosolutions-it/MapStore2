@@ -50,10 +50,10 @@ describe('test Group module component', () => {
             showComponent: true
         };
         const comp = ReactDOM.render(<Group node={group}><div/></Group>, document.getElementById("container"));
-        expect(comp).toExist();
+        expect(comp).toBeTruthy();
 
         const domNode = ReactDOM.findDOMNode(comp);
-        expect(domNode).toExist();
+        expect(domNode).toBeTruthy();
         const children = domNode.children;
         expect(children.length).toBe(2);
 
@@ -85,10 +85,10 @@ describe('test Group module component', () => {
             showComponent: true
         };
         const comp = ReactDOM.render(<Group node={group} filter={(layer, node) => layer.group === node.name}><div/></Group>, document.getElementById("container"));
-        expect(comp).toExist();
+        expect(comp).toBeTruthy();
 
         const domNode = ReactDOM.findDOMNode(comp);
-        expect(domNode).toExist();
+        expect(domNode).toBeTruthy();
 
         const children = domNode.children;
         expect(children.length).toBe(2);
@@ -122,10 +122,10 @@ describe('test Group module component', () => {
             showComponent: true
         };
         const comp = ReactDOM.render(<Group node={group} filter={(layer, node) => layer.group === node.name}><div className="layer"/></Group>, document.getElementById("container"));
-        expect(comp).toExist();
+        expect(comp).toBeTruthy();
 
         const domNode = ReactDOM.findDOMNode(comp);
-        expect(domNode).toExist();
+        expect(domNode).toBeTruthy();
 
         const children = domNode.getElementsByClassName('layer');
         expect(children.length).toBe(0);
@@ -155,10 +155,10 @@ describe('test Group module component', () => {
             showComponent: true
         };
         const comp = ReactDOM.render(<Group node={group} expanded filter={(layer, node) => layer.group === node.name}><div className="layer"/></Group>, document.getElementById("container"));
-        expect(comp).toExist();
+        expect(comp).toBeTruthy();
 
         const domNode = ReactDOM.findDOMNode(comp);
-        expect(domNode).toExist();
+        expect(domNode).toBeTruthy();
 
         const children = domNode.getElementsByClassName('layer');
         expect(children.length).toBe(1);
@@ -186,13 +186,13 @@ describe('test Group module component', () => {
         const comp = ReactDOM.render(<Group node={group} groupVisibilityCheckbox visibilityCheckType="checkbox"
             propertiesChangeHandler={actions.propertiesChangeHandler}><div/></Group>,
         document.getElementById("container"));
-        expect(comp).toExist();
+        expect(comp).toBeTruthy();
         const cmpDom = ReactDOM.findDOMNode(comp);
-        expect(cmpDom).toExist();
+        expect(cmpDom).toBeTruthy();
         const checkBox = cmpDom.getElementsByTagName('input')[0];
-        expect(checkBox).toExist();
+        expect(checkBox).toBeTruthy();
         checkBox.click();
-        expect(spy.calls.length).toBe(1);
+        expect(spy.mock.calls.length).toBe(1);
     });
     it('test group visibility glyph', () => {
         const layers = [{
@@ -216,13 +216,13 @@ describe('test Group module component', () => {
         const comp = ReactDOM.render(<Group node={group} groupVisibilityCheckbox visibilityCheckType="glyph"
             propertiesChangeHandler={actions.propertiesChangeHandler}><div/></Group>,
         document.getElementById("container"));
-        expect(comp).toExist();
+        expect(comp).toBeTruthy();
         const cmpDom = ReactDOM.findDOMNode(comp);
-        expect(cmpDom).toExist();
+        expect(cmpDom).toBeTruthy();
         const checkBox = cmpDom.getElementsByClassName('glyphicon')[0];
-        expect(checkBox).toExist();
+        expect(checkBox).toBeTruthy();
         checkBox.click();
-        expect(spy.calls.length).toBe(1);
+        expect(spy.mock.calls.length).toBe(1);
     });
 
 });

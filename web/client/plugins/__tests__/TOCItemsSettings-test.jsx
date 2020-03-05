@@ -77,7 +77,7 @@ describe('TOCItemsSettings Plugin', () => {
     it('creates a Toolbar plugin with default configuration, general tab', () => {
         const { Plugin } = getPluginForTest(TOCItemsSettingsPlugin, OPEN_PANEL_STATE);
         ReactDOM.render(<Plugin />, document.getElementById("container"));
-        expect(document.querySelector(SETTINGS_SELECTOR)).toExist();
+        expect(document.querySelector(SETTINGS_SELECTOR)).toBeTruthy();
         const tabIndexes = document.querySelectorAll(TAB_INDEX_SELECTOR);
         expect(tabIndexes.length).toBe(4);
         expect(tabIndexes[0].className).toBe("active"); // general tab active
@@ -87,7 +87,7 @@ describe('TOCItemsSettings Plugin', () => {
     it('display panel', () => {
         const { Plugin } = getPluginForTest(TOCItemsSettingsPlugin, DISPLAY_PANEL_STATE);
         ReactDOM.render(<Plugin />, document.getElementById("container"));
-        expect(document.querySelector(SETTINGS_SELECTOR)).toExist();
+        expect(document.querySelector(SETTINGS_SELECTOR)).toBeTruthy();
         const tabIndexes = document.querySelectorAll(TAB_INDEX_SELECTOR);
         expect(tabIndexes.length).toBe(4);
         expect(tabIndexes[1].className).toBe("active");
@@ -101,14 +101,14 @@ describe('TOCItemsSettings Plugin', () => {
             .ofType(UPDATE_NODE)
             .filter(({ options = {} }) => !options.capabilitiesLoading) // skip loading event
             .map(action => {
-                expect(action.options.availableStyles).toExist();
+                expect(action.options.availableStyles).toBeTruthy();
                 expect(action.options.availableStyles.length).toBe(2);
                 expect(document.querySelectorAll('.msSideGrid .items-list > div').length).toBe(2); // check layer list rendered
                 done();
             }).ignoreElements();
         const { Plugin } = getPluginForTest(TOCItemsSettingsPlugin, STYLE_PANEL_STATE, undefined, checkStylesEpic);
         ReactDOM.render(<Plugin />, document.getElementById("container"));
-        expect(document.querySelector(SETTINGS_SELECTOR)).toExist();
+        expect(document.querySelector(SETTINGS_SELECTOR)).toBeTruthy();
         const tabIndexes = document.querySelectorAll(TAB_INDEX_SELECTOR);
         expect(tabIndexes.length).toBe(4);
         expect(tabIndexes[2].className).toBe("active");

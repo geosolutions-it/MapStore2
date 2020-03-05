@@ -25,16 +25,16 @@ describe('Test for HelpTextPanel', () => {
     // test DEFAULTS
     it('creates the component with defaults', () => {
         const helpPanel = ReactDOM.render(<HelpTextPanel asPanel/>, document.getElementById("container"));
-        expect(helpPanel).toExist();
+        expect(helpPanel).toBeTruthy();
 
         const helpPanelDom = ReactDOM.findDOMNode(helpPanel);
-        expect(helpPanelDom).toExist();
-        // expect(helpPanelDom.id).toExist();
+        expect(helpPanelDom).toBeTruthy();
+        // expect(helpPanelDom.id).toBeTruthy();
         expect(helpPanelDom.className.indexOf('hidden') >= 0).toBe(true);
 
         // header text
         const panelHeader = helpPanelDom.getElementsByClassName('panel-heading').item(0);
-        expect(panelHeader).toExist();
+        expect(panelHeader).toBeTruthy();
         expect(panelHeader.innerHTML.indexOf("HELP") !== -1).toBe(true);
     });
 
@@ -46,21 +46,21 @@ describe('Test for HelpTextPanel', () => {
             title="footitle"
             helpText="foohelptext"
         />, document.getElementById("container"));
-        expect(helpPanel).toExist();
+        expect(helpPanel).toBeTruthy();
 
         const helpPanelDom = ReactDOM.findDOMNode(helpPanel);
-        expect(helpPanelDom).toExist();
+        expect(helpPanelDom).toBeTruthy();
         expect(helpPanelDom.id).toBe("fooid");
         expect(helpPanelDom.className.indexOf('hidden') < 0).toBe(true);
 
         // header text
         const panelHeader = helpPanelDom.getElementsByClassName('panel-heading').item(0);
-        expect(panelHeader).toExist();
+        expect(panelHeader).toBeTruthy();
         expect(panelHeader.innerHTML.indexOf("footitle") !== -1).toBe(true);
 
         // text in body
         const panelBody = helpPanelDom.getElementsByClassName('panel-body').item(0);
-        expect(panelBody).toExist();
+        expect(panelBody).toBeTruthy();
         expect(panelBody.innerHTML.indexOf("foohelptext") !== -1).toBe(true);
     });
 

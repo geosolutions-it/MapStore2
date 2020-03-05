@@ -18,7 +18,7 @@ describe('Test contenttabs actions', () => {
     it('Test onTabSelected action creator', () => {
         const id = 'layer_001';
         const retval = onTabSelected(id);
-        expect(retval).toExist();
+        expect(retval).toBeTruthy();
         expect(retval.id).toBe(id);
         expect(retval.type).toBe(ON_TAB_SELECTED);
     });

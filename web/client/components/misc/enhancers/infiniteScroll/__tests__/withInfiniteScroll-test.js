@@ -60,7 +60,7 @@ describe('withInfiniteScroll enhancer', () => {
             }
         })(CMP);
         const cmp = ReactDOM.render(<EnhancedCMP />, document.getElementById("container"));
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
 
     });
 });

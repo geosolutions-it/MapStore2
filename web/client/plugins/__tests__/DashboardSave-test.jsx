@@ -68,12 +68,12 @@ describe('DashboardSave Plugins (DashboardSave, DashboardSaveAs)', () => {
             // hide when not logged in
             expect(containers.BurgerMenu.selector({ security: {} }).style.display).toBe("none");
             // always show when user logged in
-            expect(containers.BurgerMenu.selector({ security: { user: {} } }).style.display).toNotExist();
+            expect(containers.BurgerMenu.selector({ security: { user: {} } }).style.display).toBeFalsy();
             // show if resource is available for clone
             expect(containers.BurgerMenu.selector({
                 security: { user: {} },
                 geostory: { resource: { id: 1234, canEdit: false } }
-            }).style.display).toNotExist();
+            }).style.display).toBeFalsy();
         });
         it('show when control is set to "saveAs"', () => {
             const { Plugin } = getPluginForTest(DashboardSaveAs, stateMocker(DUMMY_ACTION, triggerSaveAs(true)));

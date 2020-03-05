@@ -52,7 +52,7 @@ describe('\nAutocomplete Observables', () => {
             })
         )(AutocompleteEditor);
         const item = ReactDOM.render(<ReactItem {...assign({}, props)}/>, document.getElementById("container"));
-        expect(item).toExist();
+        expect(item).toBeTruthy();
     });
 
     it('test with fake stream, performFetch=true', (done) => {
@@ -68,7 +68,7 @@ describe('\nAutocomplete Observables', () => {
             })
         )(AutocompleteEditor);
         const item = ReactDOM.render(<ReactItem {...assign({}, props, {performFetch: true})}/>, document.getElementById("container"));
-        expect(item).toExist();
+        expect(item).toBeTruthy();
     });
 
     it('test a failure case intercepted into catch statement ', (done) => {
@@ -83,7 +83,7 @@ describe('\nAutocomplete Observables', () => {
             })
         )(AutocompleteEditor);
         const item = ReactDOM.render(<ReactItem {...assign({}, props, {performFetch: true, url: "wrong"})}/>, document.getElementById("container"));
-        expect(item).toExist();
+        expect(item).toBeTruthy();
     });
 
     it('test with fake createWFSFetchStream, performFetch=true', (done) => {
@@ -112,7 +112,7 @@ describe('\nAutocomplete Observables', () => {
             },
             value: "searchText",
             performFetch: true})}/>, document.getElementById("container"));
-        expect(item).toExist();
+        expect(item).toBeTruthy();
     });
     it('test with fake createWFSFetchStream, performFetch=false', (done) => {
         const ReactItem = mapPropsStream(props$ =>
@@ -139,14 +139,14 @@ describe('\nAutocomplete Observables', () => {
             },
             value: "searchText",
             performFetch: false})}/>, document.getElementById("container"));
-        expect(item).toExist();
+        expect(item).toBeTruthy();
     });
     it("test singleAttributeFilter NAME LIKE '%montana%'", () => {
         const searchText = "montana";
         const queriableAttributes = ["NAME"];
         const predicate = "LIKE";
         const filter = singleAttributeFilter({searchText, queriableAttributes, predicate});
-        expect(filter).toExist();
+        expect(filter).toBeTruthy();
         expect(filter).toBe("(strToLowerCase(NAME) LIKE '%montana%')");
     });
     it("test singleAttributeFilter empty queriable attributes, returns empty string", () => {

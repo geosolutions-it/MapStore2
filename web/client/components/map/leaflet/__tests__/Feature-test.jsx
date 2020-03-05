@@ -42,8 +42,8 @@ describe('leaflet Feature component', () => {
             container={container}
             geometry={geometry}/>, document.getElementById("container"));
 
-        expect(lineString._layers).toExist();
-        expect(lineString._layers[0]).toExist();
+        expect(lineString._layers).toBeTruthy();
+        expect(lineString._layers[0]).toBeTruthy();
         expect({...lineString._layers[0].options}).toEqual({highlight: undefined});
 
         const style = {
@@ -57,8 +57,8 @@ describe('leaflet Feature component', () => {
             style={style}
             geometry={geometry}/>, document.getElementById("container"));
         setTimeout(() => {
-            expect(lineString._layers).toExist();
-            expect(lineString._layers[0]).toExist();
+            expect(lineString._layers).toBeTruthy();
+            expect(lineString._layers[0]).toBeTruthy();
             expect({...lineString._layers[0].options}).toEqual({...style});
         }, 0);
 
@@ -79,8 +79,8 @@ describe('leaflet Feature component', () => {
             container={container}
             geometry={geometry}/>, document.getElementById("container"));
 
-        expect(multiLineString._layers).toExist();
-        expect(multiLineString._layers[0]).toExist();
+        expect(multiLineString._layers).toBeTruthy();
+        expect(multiLineString._layers[0]).toBeTruthy();
 
         let layersKeys = Object.keys(multiLineString._layers[0]._layers);
         let firstLayer = multiLineString._layers[0]._layers[layersKeys[0]];
@@ -97,8 +97,8 @@ describe('leaflet Feature component', () => {
             geometry={geometry}/>, document.getElementById("container"));
 
         setTimeout(() => {
-            expect(multiLineString._layers).toExist();
-            expect(multiLineString._layers[0]).toExist();
+            expect(multiLineString._layers).toBeTruthy();
+            expect(multiLineString._layers[0]).toBeTruthy();
             layersKeys = Object.keys(multiLineString._layers[0]._layers);
             firstLayer = multiLineString._layers[0]._layers[layersKeys[0]];
             expect({...firstLayer.options}).toEqual({...style});
@@ -119,8 +119,8 @@ describe('leaflet Feature component', () => {
             container={container}
             geometry={geometry}/>, document.getElementById("container"));
 
-        expect(polygon._layers).toExist();
-        expect(polygon._layers[0]).toExist();
+        expect(polygon._layers).toBeTruthy();
+        expect(polygon._layers[0]).toBeTruthy();
         expect({...polygon._layers[0].options}).toEqual({highlight: undefined});
 
         const style = {
@@ -137,8 +137,8 @@ describe('leaflet Feature component', () => {
             geometry={geometry}/>, document.getElementById("container"));
 
         setTimeout(() => {
-            expect(polygon._layers).toExist();
-            expect(polygon._layers[0]).toExist();
+            expect(polygon._layers).toBeTruthy();
+            expect(polygon._layers[0]).toBeTruthy();
             expect({...polygon._layers[0].options}).toEqual({...style});
         }, 0);
 
@@ -164,8 +164,8 @@ describe('leaflet Feature component', () => {
             container={container}
             geometry={geometry}/>, document.getElementById("container"));
 
-        expect(multiPolygon._layers).toExist();
-        expect(multiPolygon._layers[0]).toExist();
+        expect(multiPolygon._layers).toBeTruthy();
+        expect(multiPolygon._layers[0]).toBeTruthy();
 
         let layersKeys = Object.keys(multiPolygon._layers[0]._layers);
         let firstLayer = multiPolygon._layers[0]._layers[layersKeys[0]];
@@ -185,8 +185,8 @@ describe('leaflet Feature component', () => {
             geometry={geometry}/>, document.getElementById("container"));
 
         setTimeout(() => {
-            expect(multiPolygon._layers).toExist();
-            expect(multiPolygon._layers[0]).toExist();
+            expect(multiPolygon._layers).toBeTruthy();
+            expect(multiPolygon._layers[0]).toBeTruthy();
             layersKeys = Object.keys(multiPolygon._layers[0]._layers);
             firstLayer = multiPolygon._layers[0]._layers[layersKeys[0]];
             expect({...firstLayer.options}).toEqual({...style});
@@ -222,7 +222,7 @@ describe('leaflet Feature component', () => {
             container={container}
             features={features} />, document.getElementById("container"));
 
-        expect(collection._layers).toExist();
+        expect(collection._layers).toBeTruthy();
         expect(collection._layers.length).toBe(2);
         expect({ ...collection._layers[0].options }).toEqual({ highlight: undefined });
 
@@ -237,7 +237,7 @@ describe('leaflet Feature component', () => {
             style={style}
             features={features} />, document.getElementById("container"));
         setTimeout(() => {
-            expect(collection._layers).toExist();
+            expect(collection._layers).toBeTruthy();
             expect(collection._layers.length).toBe(2);
             expect({ ...collection._layers[0].options }).toEqual({ ...style });
             expect({ ...collection._layers[1].options }).toEqual({ ...style });

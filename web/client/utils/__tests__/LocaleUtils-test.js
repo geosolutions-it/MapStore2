@@ -55,7 +55,7 @@ describe('LocaleUtils', () => {
     });
 
     it('getSupportedLocales', () => {
-        expect(LocaleUtils.getSupportedLocales()).toExist();
+        expect(LocaleUtils.getSupportedLocales()).toBeTruthy();
     });
 
     it('getErrorMessage', () => {

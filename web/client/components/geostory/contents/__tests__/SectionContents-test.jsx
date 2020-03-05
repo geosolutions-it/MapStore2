@@ -25,7 +25,7 @@ describe('SectionContents component', () => {
         ReactDOM.render(<SectionContents className="TEST_SECTION"/>, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('.TEST_SECTION');
-        expect(el).toExist();
+        expect(el).toBeTruthy();
     });
     it('SectionContents handlers add and update path transformation for components', done => {
         const SECTION_ID = "TEST_ID";
@@ -59,6 +59,6 @@ describe('SectionContents component', () => {
             ContentComponent={DummyContentComponent} />), document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('.TEST_SECTION');
-        expect(el).toExist();
+        expect(el).toBeTruthy();
     });
 });

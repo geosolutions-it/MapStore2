@@ -27,8 +27,8 @@ describe('Test Catalog panel', () => {
     it('creates the component with defaults', () => {
         const item = ReactDOM.render(<Catalog />, document.getElementById("container"));
         const catalog = TestUtils.findRenderedDOMComponentWithClass(item, "ms2-border-layout-body catalog");
-        expect(item).toExist();
-        expect(catalog).toExist();
+        expect(item).toBeTruthy();
+        expect(catalog).toBeTruthy();
     });
     it('test the search of records', (done) => {
         const item = ReactDOM.render(<Catalog
@@ -39,12 +39,12 @@ describe('Test Catalog panel', () => {
             }}}
             selectedService="csw"
             onSearch={(props) => {
-                expect(props).toExist();
+                expect(props).toBeTruthy();
                 expect(props).toEqual({ format: 'csw', url: 'url', startPosition: 1, maxRecords: 4, text: '' } );
                 done();
             }}
         />, document.getElementById("container"));
-        expect(item).toExist();
+        expect(item).toBeTruthy();
         const buttons = TestUtils.scryRenderedDOMComponentsWithTag(item, "button");
         expect(buttons.length).toBe(1);
         const searchButton = buttons[0];
@@ -78,7 +78,7 @@ describe('Test Catalog panel', () => {
             }}
         />, document.getElementById("container"));
 
-        expect(item).toExist();
+        expect(item).toBeTruthy();
 
         const formatFormGroups = TestUtils.scryRenderedComponentsWithType(item, FormGroup).filter(fg => {
             const labels = TestUtils.scryRenderedDOMComponentsWithTag(fg, 'label');
@@ -86,7 +86,7 @@ describe('Test Catalog panel', () => {
         });
         expect(formatFormGroups.length).toBe(1);
         const formatSelect = TestUtils.findRenderedComponentWithType(formatFormGroups[0], Select);
-        expect(formatSelect).toExist();
+        expect(formatSelect).toBeTruthy();
         expect(formatSelect.props.value).toBe('image/png8');
         expect(formatSelect.props.options).toEqual(formatOptions);
     });
@@ -109,10 +109,10 @@ describe('Test Catalog panel', () => {
             result={{numberOfRecordsMatched: 1}}
             records={[{title, description, references: []}]}
         />, document.getElementById("container"));
-        expect(item).toExist();
+        expect(item).toBeTruthy();
         const expandClass = ".glyphicon-chevron-left";
         const expandButton = document.querySelector(expandClass);
-        expect(expandButton).toExist(`${expandClass} does not exist`);
+        expect(expandButton).toBeTruthy();
     });
     it('renders records without thumbnail for a specific service', () => {
         const title = "title";
@@ -133,9 +133,9 @@ describe('Test Catalog panel', () => {
             result={{numberOfRecordsMatched: 1}}
             records={[{title, description, references: []}]}
         />, document.getElementById("container"));
-        expect(item).toExist();
+        expect(item).toBeTruthy();
         const previewClassName = ".mapstore-side-preview";
         const preview = document.querySelector(previewClassName);
-        expect(preview).toNotExist(`${previewClassName} does not exist`);
+        expect(preview).toBeFalsy();
     });
 });

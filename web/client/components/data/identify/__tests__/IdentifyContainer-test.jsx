@@ -68,7 +68,7 @@ describe("test IdentifyContainer", () => {
         );
 
         let alertModal = document.getElementsByClassName('ms-alert-center')[0];
-        expect(alertModal).toExist();
+        expect(alertModal).toBeTruthy();
         expect(alertModal.children[0].innerHTML).toBe('test response');
 
         ReactDOM.render(
@@ -81,7 +81,7 @@ describe("test IdentifyContainer", () => {
         );
 
         alertModal = document.getElementsByClassName('ms-alert-center')[0];
-        expect(alertModal).toNotExist();
+        expect(alertModal).toBeFalsy();
     });
 
     it('test component with warning no queryable layer', () => {

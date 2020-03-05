@@ -26,16 +26,16 @@ describe("Sidebar component", () => {
             <div id="content" />
         </Sidebar>, document.getElementById("container"));
         const el = document.getElementById('content');
-        expect(el).toExist();
+        expect(el).toBeTruthy();
     });
     it('create Sidebar wjth title and content', () => {
         ReactDOM.render(<Sidebar open>
             <SidebarHeader title={<span id="content">content</span>} />
         </Sidebar>, document.getElementById("container"));
         const titleContainer = document.getElementsByClassName('sidebar-title')[0];
-        expect(titleContainer).toExist();
+        expect(titleContainer).toBeTruthy();
         const content = document.getElementById("content");
-        expect(content).toExist();
+        expect(content).toBeTruthy();
     });
 
 });

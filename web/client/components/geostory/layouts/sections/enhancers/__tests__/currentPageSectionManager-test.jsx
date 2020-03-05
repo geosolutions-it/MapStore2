@@ -31,7 +31,7 @@ describe('currentPageSectionManager enhancer', () => {
     });
     it('rendering with defaults', (done) => {
         const Sink = currentPageSectionManager(createSink( props => {
-            expect(props).toExist();
+            expect(props).toBeTruthy();
             done();
         }));
         ReactDOM.render(<Sink />, document.getElementById("container"));
@@ -43,7 +43,7 @@ describe('currentPageSectionManager enhancer', () => {
             done();
         };
         const Sink = currentPageSectionManager(createSink(props => {
-            expect(props).toExist();
+            expect(props).toBeTruthy();
             // first render, trigger onVisibility change to make the background to be 1
             props.onVisibilityChange({ id: contents[1].id, visible: true, entry: {intersectionRatio: 1, boundingClientRect: {top: 0}} });
         }));

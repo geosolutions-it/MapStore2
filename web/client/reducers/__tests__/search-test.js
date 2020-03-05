@@ -42,7 +42,7 @@ describe('Test the search reducer', () => {
             type: TEXT_SEARCH_ERROR,
             error: {message: "M"}
         });
-        expect(state.error).toExist();
+        expect(state.error).toBeTruthy();
     });
     it('search results loaded', () => {
         let testAction1 = {
@@ -51,7 +51,7 @@ describe('Test the search reducer', () => {
         };
 
         let state = search({error: {}}, testAction1);
-        expect(state).toExist();
+        expect(state).toBeTruthy();
         expect(state.results).toEqual(["result1", "result2"]);
         expect(state.error).toBe(null);
 
@@ -61,7 +61,7 @@ describe('Test the search reducer', () => {
         };
 
         state = search(state, testAction2);
-        expect(state).toExist();
+        expect(state).toBeTruthy();
         expect(state.results).toEqual(["result3", "result4"]);
 
         let testAction3 = {
@@ -71,7 +71,7 @@ describe('Test the search reducer', () => {
         };
 
         state = search(state, testAction3);
-        expect(state).toExist();
+        expect(state).toBeTruthy();
         expect(state.results).toEqual(["result3", "result4", "result5", "result6"]);
     });
     it('search results purge', () => {

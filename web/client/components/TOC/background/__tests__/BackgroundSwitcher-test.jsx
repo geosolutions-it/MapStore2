@@ -43,14 +43,14 @@ describe("test the BakckgroundSwitcher", () => {
             "format": "image/png"
         }];
         const tb = ReactDOM.render(<BackgroundSwitcher layers={layers}/>, document.getElementById("container"));
-        expect(tb).toExist();
+        expect(tb).toBeTruthy();
 
     });
 
     it('create component without layers', () => {
 
         const tb = ReactDOM.render(<BackgroundSwitcher />, document.getElementById("container"));
-        expect(tb).toExist();
+        expect(tb).toBeTruthy();
 
     });
 
@@ -78,6 +78,6 @@ describe("test the BakckgroundSwitcher", () => {
         let thumbs = TestUtils.scryRenderedComponentsWithType(tb, Thumbnail);
         expect(thumbs.length).toBe(2);
         ReactDOM.findDOMNode(thumbs[0]).click();
-        expect(spy.calls.length).toEqual(1);
+        expect(spy.mock.calls.length).toEqual(1);
     });
 });

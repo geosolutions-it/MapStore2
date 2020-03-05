@@ -23,7 +23,7 @@ describe('VisibilityContainer component', () => {
         ReactDOM.render(<VisibilityContainer />, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('.ms-visibility-container');
-        expect(el).toExist();
+        expect(el).toBeTruthy();
     });
     it('test changing of loading state based on debounce time (in view)', (done) => {
         const DEBOUNCE_TIME = 50;
@@ -37,9 +37,9 @@ describe('VisibilityContainer component', () => {
             </VisibilityContainer>, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('.ms-visibility-container');
-        expect(el).toExist();
+        expect(el).toBeTruthy();
         let loader = container.querySelector('#loader');
-        expect(loader).toExist();
+        expect(loader).toBeTruthy();
         let component = container.querySelector('#component');
         expect(component).toBe(null);
         done();
@@ -47,7 +47,7 @@ describe('VisibilityContainer component', () => {
             loader = container.querySelector('#loader');
             expect(loader).toBe(null);
             component = container.querySelector('#component');
-            expect(component).toExist();
+            expect(component).toBeTruthy();
             done();
         }, DEBOUNCE_TIME * 2);
     });
@@ -70,14 +70,14 @@ describe('VisibilityContainer component', () => {
 
         const container = document.getElementById('container');
         const el = container.querySelector('.ms-visibility-container');
-        expect(el).toExist();
+        expect(el).toBeTruthy();
         let loader = container.querySelector('#loader');
-        expect(loader).toExist();
+        expect(loader).toBeTruthy();
         let component = container.querySelector('#component');
         expect(component).toBe(null);
         setTimeout(() => {
             loader = container.querySelector('#loader');
-            expect(loader).toExist();
+            expect(loader).toBeTruthy();
             component = container.querySelector('#component');
             expect(component).toBe(null);
             done();

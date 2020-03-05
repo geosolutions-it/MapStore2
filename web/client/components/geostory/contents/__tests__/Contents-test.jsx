@@ -38,14 +38,14 @@ describe('Contents component', () => {
         ReactDOM.render(<Contents className="CONTENTS_CLASS_NAME" />, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('.CONTENTS_CLASS_NAME');
-        expect(el).toExist();
+        expect(el).toBeTruthy();
     });
     it('renders components', () => {
         ReactDOM.render(<Contents className="CONTENTS_CLASS_NAME" contents={CONTENTS}/>, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('.CONTENTS_CLASS_NAME');
-        expect(el).toExist();
-        expect(container.querySelector(`${CONTENTS[0].id}`)).toNotExist(); // the id must be applied to the wrapper, not to the content ( to support scroll )
+        expect(el).toBeTruthy();
+        expect(container.querySelector(`${CONTENTS[0].id}`)).toBeFalsy(); // the id must be applied to the wrapper, not to the content ( to support scroll )
     });
     it('do nor render add-bar in edit mode if addButtons are not present', () => {
         ReactDOM.render(<Contents
@@ -54,7 +54,7 @@ describe('Contents component', () => {
             contents={CONTENTS} />, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('.add-bar');
-        expect(el).toNotExist();
+        expect(el).toBeFalsy();
     });
     it('addButtons rendered for every content', () => {
         ReactDOM.render(<Contents
@@ -87,7 +87,7 @@ describe('Contents component', () => {
             contents={CONTENTS} />, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('.add-bar');
-        expect(el).toExist();
+        expect(el).toBeTruthy();
         ReactTestUtils.Simulate.click(document.querySelector('.add-bar button'));
         ReactTestUtils.Simulate.click(document.querySelector('#test-button'));
     });
@@ -110,7 +110,7 @@ describe('Contents component', () => {
             />, document.getElementById("container"));
             const container = document.getElementById('container');
             const el = container.querySelector('CONTENTS_CLASS_NAME');
-            expect(el).toExist();
+            expect(el).toBeTruthy();
         });
         it('update', done => {
             const TEST_NEW_CONTENT = "TEST_SECTION";
@@ -131,7 +131,7 @@ describe('Contents component', () => {
             />, document.getElementById("container"));
             const container = document.getElementById('container');
             const el = container.querySelector('CONTENTS_CLASS_NAME');
-            expect(el).toExist();
+            expect(el).toBeTruthy();
         });
         it('remove (without path, calls the remove of itself path)', done => {
             const DummyContentComponent = createSink(({ remove }) => {
@@ -148,7 +148,7 @@ describe('Contents component', () => {
             />, document.getElementById("container"));
             const container = document.getElementById('container');
             const el = container.querySelector('CONTENTS_CLASS_NAME');
-            expect(el).toExist();
+            expect(el).toBeTruthy();
         });
         it('remove (with path, for sub-pieces)', done => {
             const DummyContentComponent = createSink(({ remove }) => {
@@ -165,7 +165,7 @@ describe('Contents component', () => {
             />, document.getElementById("container"));
             const container = document.getElementById('container');
             const el = container.querySelector('CONTENTS_CLASS_NAME');
-            expect(el).toExist();
+            expect(el).toBeTruthy();
         });
     });
 });

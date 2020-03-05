@@ -23,15 +23,15 @@ describe('handleResourceData enhancer', () => {
     });
     it('handleResourceData rendering with defaults', (done) => {
         const Sink = handleResourceData(createSink( props => {
-            expect(props.onSave).toExist();
+            expect(props.onSave).toBeTruthy();
             done();
         }));
         ReactDOM.render(<Sink />, document.getElementById("container"));
     });
     it('handleResourceData onUpdate', (done) => {
         const Sink = handleResourceData(createSink( props => {
-            expect(props).toExist();
-            expect(props.onUpdate).toExist();
+            expect(props).toBeTruthy();
+            expect(props.onUpdate).toBeTruthy();
             expect(props.metadata.name).toBe("TEST");
             if (props.resource.metadata.name === "TEST") {
                 props.onUpdate("metadata.name", "NEW_VALUE");
@@ -45,15 +45,15 @@ describe('handleResourceData enhancer', () => {
     });
     it('handleResourceData onUpdateLinkedResource', (done) => {
         const Sink = handleResourceData(createSink(props => {
-            expect(props).toExist();
-            expect(props.onUpdateLinkedResource).toExist();
+            expect(props).toBeTruthy();
+            expect(props.onUpdateLinkedResource).toBeTruthy();
             expect(props.metadata.name).toBe("TEST");
             if (!props.linkedResources) {
                 props.onUpdateLinkedResource("thumbnail", "DATA", "CATEGORY", {tail: "TEST"});
             } else {
                 const thumb = props.linkedResources.thumbnail;
-                expect(thumb.category).toExist("CATEGORY");
-                expect(thumb.data).toExist("DATA");
+                expect(thumb.category).toBeTruthy();
+                expect(thumb.data).toBeTruthy();
                 expect(thumb.tail).toBe("TEST");
                 done();
             }
@@ -63,14 +63,14 @@ describe('handleResourceData enhancer', () => {
     });
     it('handleResourceData confirm dialog', (done) => {
         const Sink = handleResourceData(createSink(props => {
-            expect(props).toExist();
-            expect(props.onClose).toExist();
+            expect(props).toBeTruthy();
+            expect(props.onClose).toBeTruthy();
             if (props.resource.metadata.name === "TEST") {
                 props.onUpdate("metadata.name", "TEST");
                 props.onClose();
                 setTimeout(() => {
                     const m = document.querySelector('.modal-dialog');
-                    expect(m).toExist();
+                    expect(m).toBeTruthy();
                     done();
                 }, 10);
             }

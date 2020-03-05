@@ -27,10 +27,10 @@ describe('This test for MapItem', () => {
     // test DEFAULTS
     it('creates the component with defaults', () => {
         const mapItem = ReactDOM.render(<MapItem map={{}}/>, document.getElementById("container"));
-        expect(mapItem).toExist();
+        expect(mapItem).toBeTruthy();
 
         const mapItemDom = ReactDOM.findDOMNode(mapItem);
-        expect(mapItemDom).toExist();
+        expect(mapItemDom).toBeTruthy();
 
         expect(mapItemDom.className).toBe('list-group-item');
         const headings = mapItemDom.getElementsByClassName('list-group-item-heading');
@@ -41,10 +41,10 @@ describe('This test for MapItem', () => {
         const testName = "test";
         const testDescription = "testDescription";
         const mapItem = ReactDOM.render(<MapItem map={{name: testName, description: testDescription}}/>, document.getElementById("container"));
-        expect(mapItem).toExist();
+        expect(mapItem).toBeTruthy();
 
         const mapItemDom = ReactDOM.findDOMNode(mapItem);
-        expect(mapItemDom).toExist();
+        expect(mapItemDom).toBeTruthy();
 
         expect(mapItemDom.className).toBe('list-group-item');
         const headings = mapItemDom.getElementsByClassName('list-group-item-heading');

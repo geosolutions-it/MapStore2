@@ -166,15 +166,15 @@ describe('geostory reducer', () => {
             const CONTENT_ID = TEST_STORY.sections[0].contents[0].id;
             const pathToContentHtml = `sections[{"id":"${SECTION_ID}"}].contents[{"id":"${CONTENT_ID}"}].html`;
             const STATE = { geostory: geostory(STATE_STORY, remove(pathToContentHtml)) };
-            expect(sectionAtIndexSelectorCreator(0)(STATE).contents[0].html).toNotExist();
+            expect(sectionAtIndexSelectorCreator(0)(STATE).contents[0].html).toBeFalsy();
         });
         it('as array index', () => {
             const SECTION_ID = TEST_STORY.sections[1].id;
             const CONTENT_ID = TEST_STORY.sections[1].contents[0].id;
             const pathToContentHtml = `sections[{"id":"${SECTION_ID}"}].contents[{"id":"${CONTENT_ID}"}]`;
             const STATE = { geostory: geostory(STATE_STORY, remove(pathToContentHtml)) };
-            expect(sectionAtIndexSelectorCreator(1)(STATE).contents[1]).toNotExist(); // removes only the item at index
-            expect(sectionAtIndexSelectorCreator(1)(STATE).contents[0]).toExist();
+            expect(sectionAtIndexSelectorCreator(1)(STATE).contents[1]).toBeFalsy(); // removes only the item at index
+            expect(sectionAtIndexSelectorCreator(1)(STATE).contents[0]).toBeTruthy();
             expect(sectionAtIndexSelectorCreator(1)(STATE).contents.length).toBe(1);
             expect(sectionAtIndexSelectorCreator(1)(STATE).contents[0].id).toBe("col2"); // 2nd element of the array shifted in first position
         });
@@ -183,8 +183,8 @@ describe('geostory reducer', () => {
             const CONTENT_ID = TEST_STORY.sections[1].contents[0].id;
             const pathToContentHtml = `sections[{"id":"${SECTION_ID}"}].contents[{"id":"${CONTENT_ID}"}].contents[0]`;
             const STATE = { geostory: geostory(STATE_STORY, remove(pathToContentHtml)) };
-            expect(sectionAtIndexSelectorCreator(1)(STATE).contents[1]).toExist(); // removes only the item at index
-            expect(sectionAtIndexSelectorCreator(1)(STATE).contents[0]).toExist();
+            expect(sectionAtIndexSelectorCreator(1)(STATE).contents[1]).toBeTruthy(); // removes only the item at index
+            expect(sectionAtIndexSelectorCreator(1)(STATE).contents[0]).toBeTruthy();
             expect(sectionAtIndexSelectorCreator(1)(STATE).contents[0].contents.length).toBe(1);
             expect(sectionAtIndexSelectorCreator(1)(STATE).contents[0].contents[0].type).toBe("media"); // 2nd element of the array shifted in first position
         });
@@ -200,7 +200,7 @@ describe('geostory reducer', () => {
     it('loadingGeostory', () => {
         const action = loadingGeostory(true, "saving");
         const state = geostory(undefined, action);
-        expect(state).toExist();
+        expect(state).toBeTruthy();
         expect(loadingSelector({geostory: state})).toBe(true);
         expect(state.loading).toBe(true);
         expect(state.loadFlags.saving).toBe(true);
@@ -284,19 +284,19 @@ describe('geostory reducer', () => {
         const STATE_STORY_1 = geostory(undefined, setCurrentStory(TEST_STORY));
         const action = setFocusOnContent(true, {id: "col1"}, "#SomeID2 .ms-section-background-container", true, 'sections[{"id": "SomeID2"}].contents[{"id": "col1"}].background');
         const state = {geostory: geostory(STATE_STORY_1, action)};
-        expect(state).toExist();
+        expect(state).toBeTruthy();
         expect(isFocusOnContentSelector(state)).toBeTruthy();
 
         const focusedContent = getFocusedContentSelector(state);
-        expect(focusedContent).toExist();
-        expect(focusedContent.target).toExist();
+        expect(focusedContent).toBeTruthy();
+        expect(focusedContent.target).toBeTruthy();
         expect(focusedContent.target.id).toBe("col1");
         expect(focusedContent.selector).toBe("#SomeID2 .ms-section-background-container");
         expect(focusedContent.hideContent).toBeTruthy();
         expect(focusedContent.path).toBe('sections[{"id": "SomeID2"}].contents[{"id": "col1"}].background');
 
         const  focusedContentEl = getCurrentFocusedContentEl(state);
-        expect(focusedContentEl).toExist();
+        expect(focusedContentEl).toBeTruthy();
         expect(focusedContentEl).toEqual({});
     });
 
@@ -362,22 +362,22 @@ describe('geostory reducer', () => {
         let contA = state.currentStory.sections[0].contents[0].contents[0];
         let contB = state.currentStory.sections[0].contents[0].contents[1];
         let contC = state.currentStory.sections[0].contents[0].contents[2];
-        expect(contA).toExist();
-        expect(contA.map).toNotExist();
-        expect(contB).toExist();
-        expect(contB.map).toExist();
-        expect(contC).toExist();
-        expect(contC.map).toExist();
+        expect(contA).toBeTruthy();
+        expect(contA.map).toBeFalsy();
+        expect(contB).toBeTruthy();
+        expect(contB.map).toBeTruthy();
+        expect(contC).toBeTruthy();
+        expect(contC.map).toBeTruthy();
         const newState = geostory(state, editResource('4ef233d3-6612-4b7c-9b3c-0b15b024ce76', 'map', {}));
         contA = newState.currentStory.sections[0].contents[0].contents[0];
         contB = newState.currentStory.sections[0].contents[0].contents[1];
         contC = newState.currentStory.sections[0].contents[0].contents[2];
-        expect(contA).toExist();
-        expect(contA.map).toNotExist();
-        expect(contB).toExist();
-        expect(contB.map).toNotExist();
-        expect(contC).toExist();
-        expect(contC.map).toNotExist();
+        expect(contA).toBeTruthy();
+        expect(contA.map).toBeFalsy();
+        expect(contB).toBeTruthy();
+        expect(contB.map).toBeFalsy();
+        expect(contC).toBeTruthy();
+        expect(contC.map).toBeFalsy();
     });
     it('REMOVE_RESOURCE and its dependencies', () => {
         const state = geostory(undefined, setCurrentStory(TEST_STORY_1));
@@ -386,28 +386,28 @@ describe('geostory reducer', () => {
         let contB = state.currentStory.sections[0].contents[0].contents[1];
         let contC = state.currentStory.sections[0].contents[0].contents[2];
         expect(state.currentStory.resources.length).toBe(2);
-        expect(contA).toExist();
+        expect(contA).toBeTruthy();
         expect(contA.resourceId).toBe(resId);
-        expect(contB).toExist();
-        expect(contB.map).toExist();
+        expect(contB).toBeTruthy();
+        expect(contB.map).toBeTruthy();
         expect(contB.resourceId).toBe(resId);
-        expect(contC).toExist();
-        expect(contC.map).toExist();
+        expect(contC).toBeTruthy();
+        expect(contC.map).toBeTruthy();
         expect(contC.resourceId).toBe(resId);
         const newState = geostory(state, removeResource(resId, 'map'));
         contA = newState.currentStory.sections[0].contents[0].contents[0];
         contB = newState.currentStory.sections[0].contents[0].contents[1];
         contC = newState.currentStory.sections[0].contents[0].contents[2];
         expect(newState.currentStory.resources.length).toBe(1);
-        expect(newState.currentStory.resources[0].id).toNotBe(resId);
-        expect(contA).toExist();
-        expect(contA.resourceId).toNotExist();
-        expect(contA.map).toNotExist();
-        expect(contB).toExist();
-        expect(contB.resourceId).toNotExist();
-        expect(contB.map).toNotExist();
-        expect(contC).toExist();
-        expect(contC.resourceId).toNotExist();
-        expect(contC.map).toNotExist();
+        expect(newState.currentStory.resources[0].id).not.toBe(resId);
+        expect(contA).toBeTruthy();
+        expect(contA.resourceId).toBeFalsy();
+        expect(contA.map).toBeFalsy();
+        expect(contB).toBeTruthy();
+        expect(contB.resourceId).toBeFalsy();
+        expect(contB.map).toBeFalsy();
+        expect(contC).toBeTruthy();
+        expect(contC.resourceId).toBeFalsy();
+        expect(contC.map).toBeFalsy();
     });
 });

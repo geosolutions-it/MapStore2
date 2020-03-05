@@ -23,10 +23,10 @@ describe('nodeEditor enhancer', () => {
     });
     it('nodeEditor rendering with map', (done) => {
         const Sink = nodeEditor(createSink( props => {
-            expect(props).toExist();
+            expect(props).toBeTruthy();
             expect(props.groups.length).toBe(1);
-            expect(props.nodes).toExist();
-            expect(props.element).toExist();
+            expect(props.nodes).toBeTruthy();
+            expect(props.element).toBeTruthy();
             expect(props.activeTab).toBe("general");
             expect(props.settings.nodeType).toBe('layers');
             done();
@@ -37,7 +37,7 @@ describe('nodeEditor enhancer', () => {
     });
     it('nodeEditor rendering callback', () => {
         const Sink = nodeEditor(createSink( props => {
-            expect(props.onChange).toExist();
+            expect(props.onChange).toBeTruthy();
             props.onChange("a", "b");
 
         }));
@@ -53,7 +53,7 @@ describe('nodeEditor enhancer', () => {
     });
     it('nodeEditor onUpdateParams callback', () => {
         const Sink = nodeEditor(createSink(props => {
-            expect(props.onUpdateParams).toExist();
+            expect(props.onUpdateParams).toBeTruthy();
             props.onUpdateParams({something: "newValue"}, true);
 
         }));

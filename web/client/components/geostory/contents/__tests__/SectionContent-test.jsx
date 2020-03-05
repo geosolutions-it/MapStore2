@@ -29,27 +29,27 @@ describe('Section Content (Container) component', () => {
     it('Content rendering with defaults', () => {
         ReactDOM.render(<Content />, document.getElementById("container"));
         const container = document.getElementById('container');
-        expect(container.querySelector('.ms-content')).toExist();
-        expect(container.querySelector('.ms-content.ms-content-unknown')).toExist();
+        expect(container.querySelector('.ms-content')).toBeTruthy();
+        expect(container.querySelector('.ms-content.ms-content-unknown')).toBeTruthy();
     });
     it('Content rendering known type (text)', () => {
         ReactDOM.render(<Content {...STORY.sections[0].contents[0]} />, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('.ms-content-text');
-        expect(el).toExist();
+        expect(el).toBeTruthy();
     });
     it('Content rendering known type (image)', () => {
         ReactDOM.render(<Content type={MediaTypes.IMAGE} {...STORY.sections[0].contents[0]} />, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('.ms-content-image');
-        expect(el).toExist();
+        expect(el).toBeTruthy();
     });
     it('Content rendering known SPECIAL type (column)', () => {
         ReactDOM.render(<Content type={ContentTypes.COLUMN} contents={[{ type: ContentTypes.TEXT, html: "<p id=\"SOMETHING\"></p>" }]} />, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('.ms-content-column');
-        expect(el).toExist();
-        expect(container.querySelector('#SOMETHING')).toExist();
+        expect(el).toBeTruthy();
+        expect(container.querySelector('#SOMETHING')).toBeTruthy();
     });
     it('Content has intersection observer', (done) => {
         const ID_1 = "ID_1";
@@ -68,7 +68,7 @@ describe('Section Content (Container) component', () => {
         </TestScrollableContainer>), document.getElementById("container"));
         const container = document.getElementById('container');
         const scrollable = container.querySelector(`#${SCROLLABLE_CONTAINER_ID}`);
-        expect(scrollable).toExist();
+        expect(scrollable).toBeTruthy();
         scrollable.scrollBy(0, 120);
     });
 

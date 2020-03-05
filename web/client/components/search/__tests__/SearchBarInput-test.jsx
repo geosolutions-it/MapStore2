@@ -39,10 +39,10 @@ describe('SearchBarInput tests', () => {
         renderSearchBar(testHandlers);
         let input = document.getElementsByTagName("input")[0];
 
-        expect(input).toExist();
+        expect(input).toBeTruthy();
         input.value = "test";
         TestUtils.Simulate.change(input);
-        setTimeout(() => {expect(spy.calls.length).toEqual(1); done(); }, 50);
+        setTimeout(() => {expect(spy.mock.calls.length).toEqual(1); done(); }, 50);
     });
 
     it('test focus and blur events', (done) => {
@@ -55,15 +55,15 @@ describe('SearchBarInput tests', () => {
         const spyReset = expect.spyOn(testHandlers, 'onPurgeResultsHandler');
         ReactDOM.render(<SearchBarInput show searchText="test" delay={0} typeAhead blurResetDelay={0} onSearch={testHandlers.onSearchHandler} onPurgeResults={testHandlers.onPurgeResultsHandler}/>, document.getElementById("container"));
         let input = document.getElementsByTagName("input")[0];
-        expect(input).toExist();
+        expect(input).toBeTruthy();
         input.value = "test";
 
         TestUtils.Simulate.click(input);
         TestUtils.Simulate.focus(input);
         TestUtils.Simulate.blur(input);
         setTimeout(() => {
-            expect(spy.calls.length).toEqual(1);
-            expect(spyReset.calls.length).toEqual(1);
+            expect(spy.mock.calls.length).toEqual(1);
+            expect(spyReset.mock.calls.length).toEqual(1);
             done();
         }, 50);
     });
@@ -71,13 +71,13 @@ describe('SearchBarInput tests', () => {
     it('test autofocus on selected items', (done) => {
         ReactDOM.render(<SearchBarInput show searchText="test" delay={0} typeAhead blurResetDelay={0} />, document.getElementById("container"));
         let input = document.getElementsByTagName("input")[0];
-        expect(input).toExist();
+        expect(input).toBeTruthy();
         let spyOnFocus = expect.spyOn(input, 'focus');
         input.value = "test";
         TestUtils.Simulate.blur(input);
         ReactDOM.render(<SearchBarInput show searchText="test" delay={0} typeAhead blurResetDelay={0} selectedItems={[{text: "TEST"}]}/>, document.getElementById("container"));
         setTimeout(() => {
-            expect(spyOnFocus.calls.length).toEqual(1);
+            expect(spyOnFocus.mock.calls.length).toEqual(1);
             done();
         }, 210);
     });

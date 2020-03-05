@@ -36,7 +36,7 @@ describe('Test correctness of the snapshot actions', () => {
         const retval = changeSnapshotState(testVal);
 
         expect(retval.type).toBe(CHANGE_SNAPSHOT_STATE);
-        expect(retval.state).toExist();
+        expect(retval.state).toBeTruthy();
         expect(retval.state).toBe(testVal);
     });
     it('snapshot error', () => {
@@ -44,7 +44,7 @@ describe('Test correctness of the snapshot actions', () => {
         const retval = onSnapshotError(testVal);
 
         expect(retval.type).toBe(SNAPSHOT_ERROR);
-        expect(retval.error).toExist();
+        expect(retval.error).toBeTruthy();
         expect(retval.error).toBe(testVal);
     });
 
@@ -54,15 +54,15 @@ describe('Test correctness of the snapshot actions', () => {
         const height = 20;
         const size = 20;
         const act = onSnapshotReady(snapshot, width, height, size);
-        expect(act).toExist();
+        expect(act).toBeTruthy();
         expect(act.type).toBe(SNAPSHOT_READY);
-        expect(act.imgData).toExist();
+        expect(act.imgData).toBeTruthy();
         expect(act.imgData).toBe(snapshot);
-        expect(act.width).toExist();
+        expect(act.width).toBeTruthy();
         expect(act.width).toBe(width);
-        expect(act.height).toExist();
+        expect(act.height).toBeTruthy();
         expect(act.height).toBe(height);
-        expect(act.size).toExist();
+        expect(act.size).toBeTruthy();
         expect(act.size).toBe(size);
     });
     it('test upload canvas exeption action', () => {

@@ -40,10 +40,10 @@ describe('FeatureInfoFormatSelector', () => {
                 availableInfoFormat={data}
                 infoFormat={defaultVal}/>
             , document.getElementById("container"));
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
 
         const cmpDom = ReactDOM.findDOMNode(cmp);
-        expect(cmpDom).toExist();
+        expect(cmpDom).toBeTruthy();
 
         const select = cmpDom.getElementsByTagName("select").item(0);
         const opts = select.childNodes;

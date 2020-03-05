@@ -27,54 +27,54 @@ describe('Content component', () => {
         ReactDOM.render(<Content />, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('.ms-content');
-        expect(el).toExist();
+        expect(el).toBeTruthy();
     });
     it('Content rendering text', () => {
         ReactDOM.render(<Content type={ContentTypes.TEXT} html={"<p id=\"SOME_TEXT\"></p>"} />, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('#SOME_TEXT'); // TODO: it should be content-text
-        expect(el).toExist();
+        expect(el).toBeTruthy();
     });
     it('Content rendering placeholder for title', () => {
         ReactDOM.render(<Content type={ContentTypes.TEXT} html={EMPTY_CONTENT} mode={Modes.EDIT} sectionType="title"/>, document.getElementById("container"));
         const container = document.getElementById('container');
         const h1 = container.querySelector('h1');
-        expect(h1).toExist();
+        expect(h1).toBeTruthy();
         expect(h1.innerText).toBe("geostory.builder.defaults.htmlTitlePlaceholder");
     });
     it('Content rendering placeholder for title html = undefined', () => {
         ReactDOM.render(<Content type={ContentTypes.TEXT} html={undefined} mode={Modes.EDIT} sectionType="title"/>, document.getElementById("container"));
         const container = document.getElementById('container');
         const h1 = container.querySelector('h1');
-        expect(h1).toExist();
+        expect(h1).toBeTruthy();
         expect(h1.innerText).toBe("geostory.builder.defaults.htmlTitlePlaceholder");
     });
     it('Content rendering placeholder for title, html = ""', () => {
         ReactDOM.render(<Content type={ContentTypes.TEXT} html={""} mode={Modes.EDIT} sectionType="title"/>, document.getElementById("container"));
         const container = document.getElementById('container');
         const h1 = container.querySelector('h1');
-        expect(h1).toExist();
+        expect(h1).toBeTruthy();
         expect(h1.innerText).toBe("geostory.builder.defaults.htmlTitlePlaceholder");
     });
     it('Content rendering placeholder for paragraph', () => {
         ReactDOM.render(<Content type={ContentTypes.TEXT} html={EMPTY_CONTENT} mode={Modes.EDIT} sectionType="paragraph"/>, document.getElementById("container"));
         const container = document.getElementById('container');
         const h1 = container.querySelector('h1');
-        expect(h1).toExist();
+        expect(h1).toBeTruthy();
         expect(h1.innerText).toBe("geostory.builder.defaults.htmlPlaceholder");
     });
     it('Content rendering placeholder for paragraph', () => {
         ReactDOM.render(<Content type={ContentTypes.TEXT} html={EMPTY_CONTENT} mode={Modes.EDIT} sectionType="paragraph"/>, document.getElementById("container"));
         const container = document.getElementById('container');
         const h1 = container.querySelector('h1');
-        expect(h1).toExist();
+        expect(h1).toBeTruthy();
         expect(h1.innerText).toBe("geostory.builder.defaults.htmlPlaceholder");
     });
     it('Content rendering Media IMAGE', () => {
         ReactDOM.render(<Content lazy={false} type={ContentTypes.MEDIA} mediaType={MediaTypes.IMAGE} src="http:/" />, document.getElementById("container"));
         const container = document.getElementById('container');
         const imageContent = container.querySelector('.ms-media.ms-media-image');
-        expect(imageContent).toExist();
+        expect(imageContent).toBeTruthy();
     });
     it('Content rendering Media MAP', () => {
         ReactDOM.render(
@@ -83,7 +83,7 @@ describe('Content component', () => {
             </Provider>, document.getElementById("container"));
         const container = document.getElementById('container');
         const imageContent = container.querySelector('.ms-media.ms-media-map');
-        expect(imageContent).toExist();
+        expect(imageContent).toBeTruthy();
     });
 
 });

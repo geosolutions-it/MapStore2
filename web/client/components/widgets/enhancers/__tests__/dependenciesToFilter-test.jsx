@@ -38,7 +38,7 @@ describe('widgets dependenciesToFilter enhancer', () => {
     });
     it('dependenciesToFilter default', (done) => {
         const Sink = dependenciesToFilter(createSink( props => {
-            expect(props).toExist();
+            expect(props).toBeTruthy();
             expect(props.filter).toBe(undefined);
             done();
         }));
@@ -46,7 +46,7 @@ describe('widgets dependenciesToFilter enhancer', () => {
     });
     it('dependenciesToFilter with quickFilters only', (done) => {
         const Sink = dependenciesToFilter(createSink( props => {
-            expect(props).toExist();
+            expect(props).toBeTruthy();
             expect(props.filter).toBe(resultQuickFilters);
             done();
         }));
@@ -57,7 +57,7 @@ describe('widgets dependenciesToFilter enhancer', () => {
     });
     it('dependenciesToFilter with quickFilters and dependencies.quickFilters', (done) => {
         const Sink = dependenciesToFilter(createSink( props => {
-            expect(props).toExist();
+            expect(props).toBeTruthy();
             expect(props.filter).toBe(resultQuickFiltersAndDependenciesQF);
             done();
         }));
@@ -73,7 +73,7 @@ describe('widgets dependenciesToFilter enhancer', () => {
     });
     it('dependenciesToFilter with filter and quickFilter', (done) => {
         const Sink = dependenciesToFilter(createSink( props => {
-            expect(props).toExist();
+            expect(props).toBeTruthy();
             expect(props.filter).toBe(resultFilterOnly);
             done();
         }));
@@ -86,7 +86,7 @@ describe('widgets dependenciesToFilter enhancer', () => {
     });
     it('dependenciesToFilter with dependencies.filter and quickFilters', (done) => {
         const Sink = dependenciesToFilter(createSink( props => {
-            expect(props).toExist();
+            expect(props).toBeTruthy();
             expect(props.filter).toBe(resultQuickFiltersAndDependenciesFilter);
             done();
         }));
@@ -102,7 +102,7 @@ describe('widgets dependenciesToFilter enhancer', () => {
     });
     it('dependenciesToFilter with quickFilter only and spatial filter', (done) => {
         const Sink = dependenciesToFilter(createSink( props => {
-            expect(props).toExist();
+            expect(props).toBeTruthy();
             expect(props.filter).toBe(resultSpatialAndQuickFilters);
             done();
         }));
@@ -116,7 +116,7 @@ describe('widgets dependenciesToFilter enhancer', () => {
     });
     it('dependenciesToFilter spatial filter', (done) => {
         const Sink = dependenciesToFilter(createSink( props => {
-            expect(props).toExist();
+            expect(props).toBeTruthy();
             expect(props.filter).toBe(resultFilterObjRes1);
             done();
         }));
@@ -124,7 +124,7 @@ describe('widgets dependenciesToFilter enhancer', () => {
     });
     it('dependenciesToFilter with mapsync and spatial filter', (done) => {
         const Sink = dependenciesToFilter(createSink( props => {
-            expect(props).toExist();
+            expect(props).toBeTruthy();
             expect(props.filter).toBe(resultMergeFilterRes);
             done();
         }));
@@ -137,7 +137,7 @@ describe('widgets dependenciesToFilter enhancer', () => {
     });
     it('dependenciesToFilter with mapsync, spatial filter and cql_filter', (done) => {
         const Sink = dependenciesToFilter(createSink(props => {
-            expect(props).toExist();
+            expect(props).toBeTruthy();
             expect(props.filter).toBe(resultMergeFilterCQLRes);
             done();
         }));

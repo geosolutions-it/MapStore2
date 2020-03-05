@@ -38,7 +38,7 @@ describe('Test the users reducer', () => {
             users: [],
             totalCount: 0
         });
-        expect(state.users).toExist();
+        expect(state.users).toBeTruthy();
         expect(state.users.length).toBe(0);
     });
     it('edit user', () => {
@@ -50,7 +50,7 @@ describe('Test the users reducer', () => {
             },
             totalCount: 0
         });
-        expect(state.currentUser).toExist();
+        expect(state.currentUser).toBeTruthy();
         expect(state.currentUser.name).toBe("user");
         const stateMerge = users({currentUser: {
             id: 1,
@@ -65,10 +65,10 @@ describe('Test the users reducer', () => {
             },
             totalCount: 0
         });
-        expect(stateMerge.currentUser).toExist();
+        expect(stateMerge.currentUser).toBeTruthy();
         expect(stateMerge.currentUser.id).toBe(1);
         expect(stateMerge.currentUser.name).toBe("user");
-        expect(stateMerge.currentUser.groups).toExist();
+        expect(stateMerge.currentUser.groups).toBeTruthy();
 
         // action for a user not related with current.
         let newState = users(stateMerge, {
@@ -94,7 +94,7 @@ describe('Test the users reducer', () => {
             key: "name",
             newValue: "newName"
         });
-        expect(state.currentUser).toExist();
+        expect(state.currentUser).toBeTruthy();
         expect(state.currentUser.id).toBe(1);
         expect(state.currentUser.name).toBe("newName");
         const stateMerge = users({currentUser: {
@@ -106,9 +106,9 @@ describe('Test the users reducer', () => {
             key: "attribute.attr1",
             newValue: "value2"
         });
-        expect(stateMerge.currentUser).toExist();
+        expect(stateMerge.currentUser).toBeTruthy();
         expect(stateMerge.currentUser.id).toBe(1);
-        expect(stateMerge.currentUser.attribute).toExist();
+        expect(stateMerge.currentUser.attribute).toBeTruthy();
         expect(stateMerge.currentUser.attribute.length).toBe(1);
         expect(stateMerge.currentUser.attribute[0].value).toBe("value2");
 
@@ -118,9 +118,9 @@ describe('Test the users reducer', () => {
             key: "attribute.attr1",
             newValue: "NEW_VALUE"
         });
-        expect(stateMerge2.currentUser).toExist();
+        expect(stateMerge2.currentUser).toBeTruthy();
         expect(stateMerge2.currentUser.id).toBe(1);
-        expect(stateMerge2.currentUser.attribute).toExist();
+        expect(stateMerge2.currentUser.attribute).toBeTruthy();
         expect(stateMerge2.currentUser.attribute.length).toBe(1);
         expect(stateMerge2.currentUser.attribute[0].value).toBe("NEW_VALUE");
     });
@@ -136,7 +136,7 @@ describe('Test the users reducer', () => {
             type: USERMANAGER_UPDATE_USER,
             status: "saved"
         });
-        expect(state.currentUser).toExist();
+        expect(state.currentUser).toBeTruthy();
         expect(state.currentUser.id).toBe(1);
     });
 
@@ -150,7 +150,7 @@ describe('Test the users reducer', () => {
             id: 1,
             status: "delete"
         });
-        expect(state.deletingUser).toExist();
+        expect(state.deletingUser).toBeTruthy();
         const cancelledState = users(state, {
             type: USERMANAGER_DELETE_USER,
             id: 1,
@@ -165,7 +165,7 @@ describe('Test the users reducer', () => {
             groups: [{groupName: "group1", id: 10, description: "test"}],
             status: "success"
         });
-        expect(state.groups).toExist();
+        expect(state.groups).toBeTruthy();
         expect(state.groupsStatus).toBe("success");
     });
     it('test group cache clean after group creation', () => {
@@ -174,7 +174,7 @@ describe('Test the users reducer', () => {
             groups: [{groupName: "group1", id: 10, description: "test"}],
             status: "success"
         });
-        expect(state.groups).toExist();
+        expect(state.groups).toBeTruthy();
         expect(state.groupsStatus).toBe("success");
         let stateWOutgroups = users(state, {
             type: UPDATEGROUP,
@@ -188,7 +188,7 @@ describe('Test the users reducer', () => {
             groups: [{groupName: "group1", id: 10, description: "test"}],
             status: "success"
         });
-        expect(state.groups).toExist();
+        expect(state.groups).toBeTruthy();
         expect(state.groupsStatus).toBe("success");
         let stateWOutgroups = users(state, {
             type: DELETEGROUP,

@@ -24,10 +24,10 @@ describe('sampleChartData enhancer', () => {
     });
     it('sampleChartData rendering with defaults', (done) => {
         const Sink = sampleChartData(createSink( props => {
-            expect(props).toExist();
-            expect(props.data).toExist();
-            expect(props.series).toExist();
-            expect(props.xAxis).toExist();
+            expect(props).toBeTruthy();
+            expect(props.data).toBeTruthy();
+            expect(props.series).toBeTruthy();
+            expect(props.xAxis).toBeTruthy();
             done();
         }));
         ReactDOM.render(<Sink />, document.getElementById("container"));

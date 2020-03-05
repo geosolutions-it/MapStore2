@@ -28,10 +28,10 @@ describe('This test for dashboard save form', () => {
     // test DEFAULTS
     it('creates the component with defaults, show=false', () => {
         const metadataModalItem = ReactDOM.render(<MetadataModal show={false}/>, document.getElementById("container"));
-        expect(metadataModalItem).toExist();
+        expect(metadataModalItem).toBeTruthy();
 
         const metadataModalItemDom = ReactDOM.findDOMNode(metadataModalItem);
-        expect(metadataModalItemDom).toNotExist();
+        expect(metadataModalItemDom).toBeFalsy();
 
         const getModals = function() {
             return document.getElementsByTagName("body")[0].getElementsByClassName('modal-dialog');
@@ -43,7 +43,7 @@ describe('This test for dashboard save form', () => {
 
     it('creates the component with a format error', () => {
         const metadataModalItem = ReactDOM.render(<MetadataModal show errors={["FORMAT"]} useModal id="MetadataModal"/>, document.getElementById("container"));
-        expect(metadataModalItem).toExist();
+        expect(metadataModalItem).toBeTruthy();
 
         const getModals = function() {
             return document.getElementsByTagName("body")[0].getElementsByClassName('modal-dialog');
@@ -57,12 +57,12 @@ describe('This test for dashboard save form', () => {
         expect(closeBtnList.length).toBe(2);
 
         const errorFORMAT = modalDivList.item(0).querySelector('.errorFORMAT');
-        expect(errorFORMAT).toExist();
+        expect(errorFORMAT).toBeTruthy();
     });
 
     it('creates the component with a size error', () => {
         const metadataModalItem = ReactDOM.render(<MetadataModal show errors={["SIZE"]} useModal id="MetadataModal"/>, document.getElementById("container"));
-        expect(metadataModalItem).toExist();
+        expect(metadataModalItem).toBeTruthy();
 
         const getModals = function() {
             return document.getElementsByTagName("body")[0].getElementsByClassName('modal-dialog');
@@ -75,13 +75,13 @@ describe('This test for dashboard save form', () => {
         expect(closeBtnList.length).toBe(2);
 
         const errorSIZE = modalDivList.item(0).querySelector('.errorSIZE');
-        expect(errorSIZE).toExist();
+        expect(errorSIZE).toBeTruthy();
     });
 
     it('modal show permissions editor whe user is admin', () => {
         const user = {role: 'ADMIN'};
         const metadataModalItem = ReactDOM.render(<MetadataModal show user={user} useModal id="MetadataModal"/>, document.getElementById("container"));
-        expect(metadataModalItem).toExist();
+        expect(metadataModalItem).toBeTruthy();
 
         const getModals = function() {
             return document.getElementsByTagName("body")[0].getElementsByClassName('modal-dialog');
@@ -90,14 +90,14 @@ describe('This test for dashboard save form', () => {
         expect(getModals().length).toBe(1);
 
         const permissionSection = document.querySelector(".permissions-table");
-        expect(permissionSection).toExist();
+        expect(permissionSection).toBeTruthy();
     });
 
     it('modal show permissions editor with user is owner', () => {
         const user = {role: 'USER', name: 'geo'};
         const resource = {attributes: {owner: 'geo'}};
         const metadataModalItem = ReactDOM.render(<MetadataModal show user={user} resource={resource} useModal id="MetadataModal"/>, document.getElementById("container"));
-        expect(metadataModalItem).toExist();
+        expect(metadataModalItem).toBeTruthy();
 
         const getModals = function() {
             return document.getElementsByTagName("body")[0].getElementsByClassName('modal-dialog');
@@ -106,14 +106,14 @@ describe('This test for dashboard save form', () => {
         expect(getModals().length).toBe(1);
 
         const permissionSection = document.querySelector(".permissions-table");
-        expect(permissionSection).toExist();
+        expect(permissionSection).toBeTruthy();
     });
 
     it('modal hide permissions editor when user is neither admin nor owner', () => {
         const user = {role: 'USER', name: 'solution'};
         const resource = {attributes: {owner: 'geo'}};
         const metadataModalItem = ReactDOM.render(<MetadataModal show user={user} resource={resource} useModal id="MetadataModal"/>, document.getElementById("container"));
-        expect(metadataModalItem).toExist();
+        expect(metadataModalItem).toBeTruthy();
 
         const getModals = function() {
             return document.getElementsByTagName("body")[0].getElementsByClassName('modal-dialog');
@@ -128,7 +128,7 @@ describe('This test for dashboard save form', () => {
         const user = { role: 'USER', name: 'solution' };
         const resource = {  };
         const metadataModalItem = ReactDOM.render(<MetadataModal show user={user} resource={resource} useModal id="MetadataModal" />, document.getElementById("container"));
-        expect(metadataModalItem).toExist();
+        expect(metadataModalItem).toBeTruthy();
 
         const getModals = () => {
             return document.getElementsByTagName("body")[0].getElementsByClassName('modal-dialog');
@@ -137,30 +137,30 @@ describe('This test for dashboard save form', () => {
         expect(getModals().length).toBe(1);
 
         const permissionSection = document.querySelector(".permissions-table");
-        expect(permissionSection).toExist();
+        expect(permissionSection).toBeTruthy();
     });
     it('modal save button is disabled when enableFileDrop=true and fileDropStatus !== accepted', () => {
         const user = {role: 'ADMIN'};
         const metadataModalItem = ReactDOM.render(<MetadataModal user={user}
             show resource={{}} useModal enableFileDrop fileDropStatus="rejected" id="MetadataModal"/>, document.getElementById('container'));
-        expect(metadataModalItem).toExist();
+        expect(metadataModalItem).toBeTruthy();
 
         const buttons = document.getElementsByTagName('button');
         const saveButton = find(buttons, button => button.childNodes[0] && (button.childNodes[0].textContent === 'save' ||
             get(button.childNodes[0].childNodes[0], 'textContent') === 'save'));
-        expect(saveButton).toExist();
+        expect(saveButton).toBeTruthy();
         expect(saveButton.disabled).toBe(true);
     });
     it('modal save button is enabled when enableFileDrop=true and fileDropStatus === accepted', () => {
         const user = {role: 'ADMIN'};
         const metadataModalItem = ReactDOM.render(<MetadataModal user={user} show resource={{metadata: {name: 'res'}}} useModal
             enableFileDrop fileDropStatus="accepted" id="MetadataModal"/>, document.getElementById('container'));
-        expect(metadataModalItem).toExist();
+        expect(metadataModalItem).toBeTruthy();
 
         const buttons = document.getElementsByTagName('button');
         const saveButton = find(buttons, button => button.childNodes[0] && (button.childNodes[0].textContent === 'save' ||
             get(button.childNodes[0].childNodes[0], 'textContent') === 'save'));
-        expect(saveButton).toExist();
+        expect(saveButton).toBeTruthy();
         expect(saveButton.disabled).toBe(false);
     });
 

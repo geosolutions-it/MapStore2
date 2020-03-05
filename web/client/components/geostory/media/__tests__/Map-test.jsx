@@ -29,18 +29,18 @@ describe('Map component', () => {
         ReactDOM.render(<Provider store={mockStore}><Map /></Provider>, document.getElementById("container"));
         const container = document.getElementById('container');
         const mediaMapNode = container.querySelector('.ms-media-map');
-        expect(mediaMapNode).toExist();
+        expect(mediaMapNode).toBeTruthy();
     });
     it('should show buttons to expand map', () => {
         const mockStore = { subscribe: () => {}, getState: () => ({}) };
         ReactDOM.render(<Provider store={mockStore}><Map expandable /></Provider>, document.getElementById("container"));
         const container = document.getElementById('container');
         const mediaMapNode = container.querySelector('.ms-media-map');
-        expect(mediaMapNode).toExist();
+        expect(mediaMapNode).toBeTruthy();
         expect(mediaMapNode.children.length).toBe(2);
         expect(document.body.children.length).toBe(1);
         const expandMediaButtonNode = mediaMapNode.querySelector('.ms-expand-media-button');
-        expect(expandMediaButtonNode).toExist();
+        expect(expandMediaButtonNode).toBeTruthy();
         ReactTestUtils.Simulate.click(expandMediaButtonNode);
         expect(mediaMapNode.children.length).toBe(0);
         expect(document.body.children.length).toBe(2);
@@ -67,9 +67,9 @@ describe('Map component', () => {
 
         const container = document.getElementById('container');
         const mediaMapNode = container.querySelector('.ms-media-map');
-        expect(mediaMapNode).toExist();
+        expect(mediaMapNode).toBeTruthy();
         const mapContainer = container.querySelector('#media-map');
-        expect(mapContainer).toExist();
+        expect(mapContainer).toBeTruthy();
         expect(mapContainer.style.cursor).toBe('pointer');
     });
 });

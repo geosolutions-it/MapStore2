@@ -273,12 +273,12 @@ describe('MapEditor component', () => {
         /></Provider>, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('.ms-geostory-map-editor');
-        expect(el).toExist();
+        expect(el).toBeTruthy();
         const layersCards = container.querySelectorAll(".toc-title");
         expect(layersCards.length).toBe(3);
         ReactTestUtils.Simulate.click(layersCards.item(0));
         const selected = container.querySelector(".layer-collapsed.toc-default-layer.selected");
-        expect(selected).toExist();
+        expect(selected).toBeTruthy();
     });
     it('MapEditor call update  ', (done) => {
         const update = (path, val) => {

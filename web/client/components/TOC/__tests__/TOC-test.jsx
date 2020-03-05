@@ -109,10 +109,10 @@ describe('Layers component', () => {
                 </Group>
             </TOC>,
             document.getElementById("container"));
-        expect(element).toExist();
+        expect(element).toBeTruthy();
 
         const domNode = ReactDOM.findDOMNode(element);
-        expect(domNode).toExist();
+        expect(domNode).toBeTruthy();
         expect(domNode.children.length).toBe(3);
     });
 
@@ -128,10 +128,10 @@ describe('Layers component', () => {
                 </Group>
             </TOC>,
             document.getElementById("container"));
-        expect(element).toExist();
+        expect(element).toBeTruthy();
 
         const domNode = ReactDOM.findDOMNode(element);
-        expect(domNode).toExist();
+        expect(domNode).toBeTruthy();
         expect(domNode.children.length).toBe(2);
     });
 
@@ -142,10 +142,10 @@ describe('Layers component', () => {
                 <Layer/>
             </TOC>,
             document.getElementById("container"));
-        expect(element).toExist();
+        expect(element).toBeTruthy();
 
         const domNode = ReactDOM.findDOMNode(element);
-        expect(domNode).toExist();
+        expect(domNode).toBeTruthy();
         expect(domNode.children.length).toBe(layers.length);
     });
 
@@ -184,7 +184,7 @@ describe('Layers component', () => {
         const comp = ReactDOM.render(<TOC nodes={nodes}><TestComponent/></TOC>, document.getElementById("container"));
 
         const domNode = ReactDOM.findDOMNode(comp);
-        expect(domNode).toExist();
+        expect(domNode).toBeTruthy();
 
         const elements = TestUtils.scryRenderedComponentsWithType(comp, TestComponent);
         expect(elements.length).toBe(7);

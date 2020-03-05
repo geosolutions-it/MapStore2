@@ -27,9 +27,9 @@ describe('ScaleBox', () => {
     });
     it('create component with defaults', () => {
         const sb = ReactDOM.render(<ScaleBox />, document.getElementById("container"));
-        expect(sb).toExist();
+        expect(sb).toBeTruthy();
         const domNode = ReactDOM.findDOMNode(sb);
-        expect(domNode).toExist();
+        expect(domNode).toBeTruthy();
         expect(domNode.id).toBe('mapstore-scalebox');
 
         const comboItems = Array.prototype.slice.call(domNode.getElementsByTagName('option'), 0);
@@ -43,33 +43,33 @@ describe('ScaleBox', () => {
         comboItems.map((option, index) => expect(parseInt(option.value, 10)).toBe(index));
         expect(comboItems.reduce((pre, cur, i) => {
             return pre && (i === 0 ? cur.selected : !cur.selected);
-        }), true).toBe(true);
+        }, true)).toBe(true);
     });
     it('minZoom property filters options', () => {
         const sb = ReactDOM.render(<ScaleBox minZoom={2} />, document.getElementById("container"));
-        expect(sb).toExist();
+        expect(sb).toBeTruthy();
         const domNode = ReactDOM.findDOMNode(sb);
-        expect(domNode).toExist();
+        expect(domNode).toBeTruthy();
         expect(domNode.id).toBe('mapstore-scalebox');
 
         const comboItems = Array.prototype.slice.call(domNode.getElementsByTagName('option'), 0);
         expect(comboItems.length).toBe(27);
         // values 0 and 1 should not be there, because minZoom = 2
-        comboItems.map(option => expect(parseInt(option.value, 10)).toBeGreaterThanOrEqualTo(2));
+        comboItems.map(option => expect(parseInt(option.value, 10)).toBeGreaterThanOrEqual(2));
 
         expect(comboItems.reduce((pre, cur, i) => {
             return pre && (i === 0 ? cur.selected : !cur.selected);
-        }), true).toBe(true);
+        }, true)).toBe(true);
     });
     it('test handler for onChange event', () => {
         var newZoom;
 
         const sb = ReactDOM.render(<ScaleBox onChange={(z) => {newZoom = z; }}/>, document.getElementById("container"));
-        expect(sb).toExist();
+        expect(sb).toBeTruthy();
         const domNode = ReactDOM.findDOMNode(sb);
-        expect(domNode).toExist();
+        expect(domNode).toBeTruthy();
         const domSelect = domNode.getElementsByTagName('select').item(0);
-        expect(domSelect).toExist();
+        expect(domSelect).toBeTruthy();
 
         domSelect.value = 5;
         TestUtils.Simulate.change(domSelect, {target: {value: 5}});
@@ -78,22 +78,22 @@ describe('ScaleBox', () => {
 
     it('renders readOnly', () => {
         const sb = ReactDOM.render(<ScaleBox readOnly/>, document.getElementById("container"));
-        expect(sb).toExist();
+        expect(sb).toBeTruthy();
         const domNode = ReactDOM.findDOMNode(sb);
-        expect(domNode).toExist();
+        expect(domNode).toBeTruthy();
         const domLabel = domNode.getElementsByTagName('label').item(0);
-        expect(domLabel).toExist();
+        expect(domLabel).toBeTruthy();
     });
 
     it('uses template', () => {
         const sb = ReactDOM.render(<ScaleBox readOnly template={(scale) => {
             return "Scale:" + scale;
         }}/>, document.getElementById("container"));
-        expect(sb).toExist();
+        expect(sb).toBeTruthy();
         const domNode = ReactDOM.findDOMNode(sb);
-        expect(domNode).toExist();
+        expect(domNode).toBeTruthy();
         const domLabel = domNode.getElementsByTagName('label').item(0);
-        expect(domLabel).toExist();
+        expect(domLabel).toBeTruthy();
         expect(domLabel.innerHTML).toContain("Scale:");
     });
 });

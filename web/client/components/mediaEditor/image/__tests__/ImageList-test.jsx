@@ -24,6 +24,6 @@ describe('ImageList component', () => {
     it('ImageList rendering with defaults', () => {
         ReactDOM.render(<ImageList />, document.getElementById("container"));
         const container = document.getElementById('container');
-        expect(container.querySelector('.ms-imageList')).toExist();
+        expect(container.querySelector('.ms-imageList')).toBeTruthy();
     });
 });

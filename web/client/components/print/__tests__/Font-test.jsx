@@ -29,20 +29,20 @@ describe("Test the Font component", () => {
 
     it('creates component with defaults', () => {
         const cmp = ReactDOM.render(<Font/>, document.getElementById("container"));
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
 
         const node = ReactDOM.findDOMNode(cmp);
-        expect(node).toExist();
+        expect(node).toBeTruthy();
         expect(node.childNodes.length).toBe(2);
         expect(node.childNodes[1].childNodes.length).toBe(4);
     });
 
     it('creates component with fonts', () => {
         const cmp = ReactDOM.render(<Font fonts={fonts}/>, document.getElementById("container"));
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
 
         const node = ReactDOM.findDOMNode(cmp);
-        expect(node).toExist();
+        expect(node).toBeTruthy();
         expect(node.getElementsByTagName('select')[0].childNodes.length).toBe(2);
         expect(node.getElementsByTagName('select')[0].childNodes[0].textContent).toBe('Font1');
     });
@@ -54,7 +54,7 @@ describe("Test the Font component", () => {
             called = true;
         };
         const cmp = ReactDOM.render(<Font onChangeFamily={changeHandler}/>, document.getElementById("container"));
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
         const node = ReactDOM.findDOMNode(cmp);
         ReactTestUtils.Simulate.change(node.getElementsByTagName('select')[0]);
 
@@ -68,7 +68,7 @@ describe("Test the Font component", () => {
             called = true;
         };
         const cmp = ReactDOM.render(<Font onChangeSize={changeHandler}/>, document.getElementById("container"));
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
         const node = ReactDOM.findDOMNode(cmp);
         ReactTestUtils.Simulate.change(node.getElementsByTagName('input')[0]);
 
@@ -82,7 +82,7 @@ describe("Test the Font component", () => {
             called = true;
         };
         const cmp = ReactDOM.render(<Font onChangeBold={changeHandler}/>, document.getElementById("container"));
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
         const node = ReactDOM.findDOMNode(cmp);
         ReactTestUtils.Simulate.click(node.getElementsByTagName('button')[0]);
 
@@ -96,7 +96,7 @@ describe("Test the Font component", () => {
             called = true;
         };
         const cmp = ReactDOM.render(<Font onChangeItalic={changeHandler}/>, document.getElementById("container"));
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
         const node = ReactDOM.findDOMNode(cmp);
         ReactTestUtils.Simulate.click(node.getElementsByTagName('button')[1]);
 

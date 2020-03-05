@@ -24,8 +24,8 @@ describe('MapForm component', () => {
     it('MapForm rendering with defaults', () => {
         ReactDOM.render(<MapForm/>, document.getElementById("container"));
         const container = document.getElementById('container');
-        expect(container.querySelector('.ms-mapForm')).toExist();
+        expect(container.querySelector('.ms-mapForm')).toBeTruthy();
         expect(container.querySelectorAll('input').length).toBe(3);
-        expect(container.querySelector(".dropzone-thumbnail-container")).toExist();
+        expect(container.querySelector(".dropzone-thumbnail-container")).toBeTruthy();
     });
 });

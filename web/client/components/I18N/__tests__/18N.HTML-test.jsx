@@ -47,10 +47,10 @@ describe('This test for I18N.HTML', () => {
         var testMsg = currentData.messages[msgId];
 
         const cmp = ReactDOM.render(<Localized messages={eng.messages} locale="en-US"><I18N.HTML msgId={msgId}/></Localized>, document.getElementById("container"));
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
 
         const cmpDom = ReactDOM.findDOMNode(cmp);
-        expect(cmpDom).toExist();
+        expect(cmpDom).toBeTruthy();
         expect(cmpDom.innerHTML).toBe(testMsg);
     });
 
@@ -59,10 +59,10 @@ describe('This test for I18N.HTML', () => {
         var testMsg = currentData.messages[msgId];
 
         const cmp = ReactDOM.render(<Localized messages={ita.messages} locale="it-IT"><I18N.HTML msgId={msgId}/></Localized>, document.getElementById("container"));
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
 
         const cmpDom = ReactDOM.findDOMNode(cmp);
-        expect(cmpDom).toExist();
+        expect(cmpDom).toBeTruthy();
         expect(cmpDom.innerHTML).toBe(testMsg);
     });
 });

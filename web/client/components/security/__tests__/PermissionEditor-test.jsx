@@ -67,12 +67,12 @@ describe("Test the permission editor component", () => {
 
     it('creates component with defaults', () => {
         const cmp = ReactDOM.render(<PermissionEditor/>, document.getElementById("container"));
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
     });
 
     it('creates component with some existing permission rules', () => {
         const cmp = setupEditor(document.getElementById("container"));
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
         expect(cmp.localGroups.length).toBe(2);
         const nodeEven = ReactTestUtils.scryRenderedDOMComponentsWithClass(cmp, "even");
         expect(nodeEven.length).toBe(1);
@@ -90,15 +90,15 @@ describe("Test the permission editor component", () => {
         let groupChangeSpy = expect.spyOn(actions, "onGroupsChange");
 
         const cmp = setupEditor(document.getElementById("container"), actions);
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
 
         const cmpDom = cmp.refs.permChoice1;
-        expect(cmpDom).toExist();
+        expect(cmpDom).toBeTruthy();
 
         cmpDom.selectValue("canWrite");
         cmpDom.selectValue("canRead");
 
-        expect(groupChangeSpy.calls.length).toBe(2);
+        expect(groupChangeSpy.mock.calls.length).toBe(2);
     });
 
 
@@ -116,20 +116,20 @@ describe("Test the permission editor component", () => {
         let groupAddCallbackSpy = expect.spyOn(actions, "onAddPermission");
 
         const cmp = setupEditor(document.getElementById("container"), actions);
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
 
         const cmpDom = cmp.refs.newChoice;
-        expect(cmpDom).toExist();
+        expect(cmpDom).toBeTruthy();
 
         cmpDom.selectValue("canWrite");
 
-        expect(newPermissionChangeSpy.calls.length).toBe(1);
+        expect(newPermissionChangeSpy.mock.calls.length).toBe(1);
 
         const addBtnDom = cmp.refs.buttonAdd;
-        expect(addBtnDom).toExist();
+        expect(addBtnDom).toBeTruthy();
         ReactDOM.findDOMNode(addBtnDom).click();
 
-        expect(groupChangeCallbackSpy.calls.length).toBe(0);
-        expect(groupAddCallbackSpy.calls.length).toBe(1);
+        expect(groupChangeCallbackSpy.mock.calls.length).toBe(0);
+        expect(groupAddCallbackSpy.mock.calls.length).toBe(1);
     });
 });

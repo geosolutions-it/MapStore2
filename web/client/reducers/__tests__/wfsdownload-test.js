@@ -18,7 +18,7 @@ describe('Test the wfsdownload reducer', () => {
     });
     it('onDownloadOptionChange', () => {
         const state = wfsdownload({}, onDownloadOptionChange("selectedFormat", "csv"));
-        expect(state.downloadOptions).toExist();
+        expect(state.downloadOptions).toBeTruthy();
         expect(state.downloadOptions.selectedFormat).toBe("csv");
     });
     it('onDownloadFinished', () => {

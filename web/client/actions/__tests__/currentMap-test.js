@@ -29,7 +29,7 @@ describe('Test correctness of the maps actions', () => {
             canWrite: true
         };
         var retval = editMap(map);
-        expect(retval).toExist();
+        expect(retval).toBeTruthy();
         expect(retval.type).toBe(EDIT_MAP);
         expect(retval.map.thumbnail).toBe(thumbnail);
         expect(retval.map.id).toBe(123);
@@ -40,7 +40,7 @@ describe('Test correctness of the maps actions', () => {
         let thumbnailData = [];
         let thumbnail = "myThumnbnailUrl";
         var retval = updateCurrentMap(thumbnailData, thumbnail);
-        expect(retval).toExist();
+        expect(retval).toBeTruthy();
         expect(retval.type).toBe(UPDATE_CURRENT_MAP);
         expect(retval.thumbnail).toBe(thumbnail);
         expect(retval.thumbnailData).toBe(thumbnailData);
@@ -56,7 +56,7 @@ describe('Test correctness of the maps actions', () => {
             }
         };
         var retval = updateCurrentMapGroups(groups);
-        expect(retval).toExist();
+        expect(retval).toBeTruthy();
         expect(retval.type).toBe(UPDATE_CURRENT_MAP_GROUPS);
         expect(retval.groups).toBe(groups);
     });
@@ -64,7 +64,7 @@ describe('Test correctness of the maps actions', () => {
     it('errorCurrentMap', () => {
         let errors = ["FORMAT"];
         var retval = errorCurrentMap(errors);
-        expect(retval).toExist();
+        expect(retval).toBeTruthy();
         expect(retval.type).toBe(ERROR_CURRENT_MAP);
         expect(retval.errors).toBe(errors);
     });
@@ -82,20 +82,20 @@ describe('Test correctness of the maps actions', () => {
             }
         };
         const retval = updateCurrentMapPermissions(permissions);
-        expect(retval).toExist();
+        expect(retval).toBeTruthy();
         expect(retval.type).toBe(UPDATE_CURRENT_MAP_PERMISSIONS);
         expect(retval.permissions).toBe(permissions);
     });
     it('removeThumbnail', () => {
         let resourceId = 1;
         const retval = removeThumbnail(resourceId);
-        expect(retval).toExist();
+        expect(retval).toBeTruthy();
         expect(retval.type).toBe(REMOVE_THUMBNAIL);
         expect(retval.resourceId).toBe(resourceId);
     });
     it('resetCurrentMap', () => {
         const retval = resetCurrentMap();
-        expect(retval).toExist();
+        expect(retval).toBeTruthy();
         expect(retval.type).toBe(RESET_CURRENT_MAP);
     });
     it('addCurrentMapPermission', () => {
@@ -108,7 +108,7 @@ describe('Test correctness of the maps actions', () => {
             }
         };
         const retval = addCurrentMapPermission(rule);
-        expect(retval).toExist();
+        expect(retval).toBeTruthy();
         expect(retval.type).toBe(ADD_CURRENT_MAP_PERMISSION);
     });
 

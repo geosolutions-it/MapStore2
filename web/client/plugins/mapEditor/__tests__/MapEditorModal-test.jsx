@@ -28,6 +28,6 @@ describe('MapEditorModal component', () => {
             <Provider store={{subscribe: () => {}, dispatch: () => {}, getState: () => ({mapEditor: {open: true}})}}>
                 <MapEditorModal open/>
             </Provider>, document.getElementById("container"));
-        expect(document.querySelector('.modal-fixed')).toExist();
+        expect(document.querySelector('.modal-fixed')).toBeTruthy();
     });
 });

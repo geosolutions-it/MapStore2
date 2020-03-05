@@ -96,11 +96,11 @@ describe('Openlayers MeasurementSupport', () => {
 
     it('test creation', () => {
         const cmp = renderMeasurement();
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
     });
     it('test if a new layer is added to the map in order to allow drawing.', () => {
         let cmp = renderMeasurement();
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
 
         let initialLayersNum = getMapLayersNum(map);
         cmp = renderMeasurement({
@@ -113,7 +113,7 @@ describe('Openlayers MeasurementSupport', () => {
     });
     it('test if drawing layers will be removed', () => {
         let cmp = renderMeasurement();
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
 
         let initialLayersNum = getMapLayersNum(map);
         cmp = renderMeasurement({
@@ -130,7 +130,7 @@ describe('Openlayers MeasurementSupport', () => {
         const spyOnChangeMeasurementState = expect.spyOn(testHandlers, "changeMeasurementState");
         const spyUpdateMeasures = expect.spyOn(testHandlers, "updateMeasures");
         let cmp = renderWithDrawing();
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
         cmp = renderMeasurement({
             measurement: {
                 geomType: "LineString",
@@ -141,11 +141,11 @@ describe('Openlayers MeasurementSupport', () => {
             },
             uom
         });
-        expect(spyOnChangeMeasurementState).toNotHaveBeenCalled();
+        expect(spyOnChangeMeasurementState).not.toHaveBeenCalled();
         expect(spyUpdateMeasures).toHaveBeenCalled();
-        expect(spyUpdateMeasures.calls.length).toBe(1);
-        const measureState = spyUpdateMeasures.calls[0].arguments[0];
-        expect(measureState).toExist();
+        expect(spyUpdateMeasures.mock.calls.length).toBe(1);
+        const measureState = spyUpdateMeasures.mock.calls[0][0];
+        expect(measureState).toBeTruthy();
         expect(round(measureState.len, 2)).toBe(400787.44);
         expect(measureState.bearing).toBe(0);
         expect(measureState.area).toBe(0);
@@ -155,7 +155,7 @@ describe('Openlayers MeasurementSupport', () => {
         const spyUpdateMeasures = expect.spyOn(testHandlers, "updateMeasures");
         const spyOnChangeMeasurementState = expect.spyOn(testHandlers, "changeMeasurementState");
         let cmp = renderWithDrawing();
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
         cmp = renderMeasurement({
             measurement: {
                 geomType: "Bearing",
@@ -166,11 +166,11 @@ describe('Openlayers MeasurementSupport', () => {
             },
             uom
         });
-        expect(spyOnChangeMeasurementState).toNotHaveBeenCalled();
+        expect(spyOnChangeMeasurementState).not.toHaveBeenCalled();
         expect(spyUpdateMeasures).toHaveBeenCalled();
-        expect(spyUpdateMeasures.calls.length).toBe(1);
-        const measureState = spyUpdateMeasures.calls[0].arguments[0];
-        expect(measureState).toExist();
+        expect(spyUpdateMeasures.mock.calls.length).toBe(1);
+        const measureState = spyUpdateMeasures.mock.calls[0][0];
+        expect(measureState).toBeTruthy();
         expect(measureState.len).toBe(0);
         expect(round(measureState.bearing, 2)).toBe(33.63);
         expect(measureState.area).toBe(0);
@@ -180,7 +180,7 @@ describe('Openlayers MeasurementSupport', () => {
         const spyUpdateMeasures = expect.spyOn(testHandlers, "updateMeasures");
         const spyOnChangeMeasurementState = expect.spyOn(testHandlers, "changeMeasurementState");
         let cmp = renderWithDrawing();
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
         cmp = renderMeasurement({
             measurement: {
                 geomType: "Polygon",
@@ -191,11 +191,11 @@ describe('Openlayers MeasurementSupport', () => {
             },
             uom
         });
-        expect(spyOnChangeMeasurementState).toNotHaveBeenCalled();
+        expect(spyOnChangeMeasurementState).not.toHaveBeenCalled();
         expect(spyUpdateMeasures).toHaveBeenCalled();
-        expect(spyUpdateMeasures.calls.length).toBe(1);
-        const measureState = spyUpdateMeasures.calls[0].arguments[0];
-        expect(measureState).toExist();
+        expect(spyUpdateMeasures.mock.calls.length).toBe(1);
+        const measureState = spyUpdateMeasures.mock.calls[0][0];
+        expect(measureState).toBeTruthy();
         expect(round(measureState.area, 2)).toBe(49379574502.64);
         expect(measureState.bearing).toBe(0);
     });
@@ -205,7 +205,7 @@ describe('Openlayers MeasurementSupport', () => {
         const spyUpdateMeasures = expect.spyOn(testHandlers, "updateMeasures");
         const spyOnChangeGeometry = expect.spyOn(testHandlers, "changeGeometry");
         let cmp = renderWithDrawing();
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
         cmp = renderMeasurement({
             measurement: {
                 geomType: "LineString",
@@ -230,17 +230,17 @@ describe('Openlayers MeasurementSupport', () => {
                 name: 'My line with 3 points'
             })
         });
-        expect(spyOnChangeMeasurementState).toNotHaveBeenCalled();
-        expect(spyUpdateMeasures).toNotHaveBeenCalled();
+        expect(spyOnChangeMeasurementState).not.toHaveBeenCalled();
+        expect(spyUpdateMeasures).not.toHaveBeenCalled();
         expect(spyOnChangeGeometry).toHaveBeenCalled();
-        const changedFeature = spyOnChangeGeometry.calls[0].arguments[0];
+        const changedFeature = spyOnChangeGeometry.mock.calls[0][0];
         expect(changedFeature.type).toBe("Feature");
         expect(changedFeature.geometry.coordinates.length).toBe(3);
 
     });
     it('test drawing a distance (LineString) and moving pointer', () => {
         let cmp = renderWithDrawing();
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
         cmp = renderMeasurement({
             measurement: {
                 geomType: "LineString",

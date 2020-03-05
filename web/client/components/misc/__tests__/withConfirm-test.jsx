@@ -18,7 +18,7 @@ describe('withConfirm enhancer', () => {
     });
     it('withConfirm rendering with defaults', (done) => {
         const Sink = withConfirm(createSink( props => {
-            expect(props).toExist();
+            expect(props).toBeTruthy();
             done();
         }));
         ReactDOM.render(<Sink />, document.getElementById("container"));
@@ -34,10 +34,10 @@ describe('withConfirm enhancer', () => {
         const getModalContainer = () => document.querySelector('.modal');
         const getYesButton = () => document.querySelectorAll('.modal-footer button')[0];
         const getNoButton = () => document.querySelectorAll('.modal-footer button')[1];
-        const isModalVisible = () => expect(document.querySelector('#confirm-dialog')).toExist();
-        const isModalHidden = () => expect(document.querySelector('#confirm-dialog')).toNotExist();
+        const isModalVisible = () => expect(document.querySelector('#confirm-dialog')).toBeTruthy();
+        const isModalHidden = () => expect(document.querySelector('#confirm-dialog')).toBeFalsy();
         isModalHidden();
-        expect(buttonElement).toExist();
+        expect(buttonElement).toBeTruthy();
         // open confirm
         ReactTestUtils.Simulate.click(buttonElement);
         isModalVisible();

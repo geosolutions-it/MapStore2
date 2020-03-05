@@ -27,34 +27,34 @@ describe('Column component', () => {
         ReactDOM.render(<Column />, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('.ms-column-contents');
-        expect(el).toExist();
+        expect(el).toBeTruthy();
     });
     it('Column rendering contents', () => {
         ReactDOM.render(<Column contents={[{ type: ContentTypes.TEXT, html: '<p id="TEST_HTML">something</p>' }]}/>, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('#TEST_HTML');
-        expect(el).toExist();
+        expect(el).toBeTruthy();
     });
     it('Column edit mode has add button', () => {
         ReactDOM.render(<Column mode={Modes.EDIT} contents={[{ type: ContentTypes.TEXT, html: '<p id="TEST_HTML">something</p>' }]} />, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('.add-bar');
-        expect(el).toExist();
+        expect(el).toBeTruthy();
     });
     describe('Column contents has proper toolbars', () => {
         it('text', () => {
             // text content should contain only delete button
             ReactDOM.render(<Column mode={Modes.EDIT} contents={[{ type: ContentTypes.TEXT, html: '<p id="TEST_HTML">something</p>' }]} />, document.getElementById("container"));
             const textToolbar = document.querySelector('.ms-content-toolbar .btn-group');
-            expect(textToolbar).toExist();
+            expect(textToolbar).toBeTruthy();
             expect(textToolbar.querySelectorAll('button').length).toBe(1);
-            expect(textToolbar.querySelector('button .glyphicon-trash')).toExist(); // align tool
+            expect(textToolbar.querySelector('button .glyphicon-trash')).toBeTruthy(); // align tool
         });
         it('media', () => {
             // media and image contents must have edit, resize and align tools
             ReactDOM.render(<Column mode={Modes.EDIT} contents={[{ type: ContentTypes.MEDIA }]} />, document.getElementById("container"));
             let mediaToolbar = document.querySelector('.ms-content-toolbar .btn-group');
-            expect(mediaToolbar).toExist();
+            expect(mediaToolbar).toBeTruthy();
 
         });
         it('image', () => {
@@ -62,13 +62,13 @@ describe('Column component', () => {
             // image contents must have edit, resize align and delete tools
             ReactDOM.render(<Column mode={Modes.EDIT} contents={[{ type: MediaTypes.IMAGE }]} />, document.getElementById("container"));
             let mediaToolbar = document.querySelector('.ms-content-toolbar .btn-group');
-            expect(mediaToolbar).toExist();
+            expect(mediaToolbar).toBeTruthy();
             const buttons = mediaToolbar.querySelectorAll('.ms-content-toolbar .btn-group button');
             expect(buttons.length).toBe(4);
-            expect(mediaToolbar.querySelector('button .glyphicon-pencil')).toExist(); // edit tool
-            expect(mediaToolbar.querySelector('button .glyphicon-resize-horizontal')).toExist(); // resize tool
-            expect(mediaToolbar.querySelector('button .glyphicon-align-center')).toExist(); // align tool
-            expect(mediaToolbar.querySelector('button .glyphicon-trash')).toExist(); // delete tool
+            expect(mediaToolbar.querySelector('button .glyphicon-pencil')).toBeTruthy(); // edit tool
+            expect(mediaToolbar.querySelector('button .glyphicon-resize-horizontal')).toBeTruthy(); // resize tool
+            expect(mediaToolbar.querySelector('button .glyphicon-align-center')).toBeTruthy(); // align tool
+            expect(mediaToolbar.querySelector('button .glyphicon-trash')).toBeTruthy(); // delete tool
         });
     });
 });

@@ -13,7 +13,7 @@ describe('mapExport actions', () => {
 
     it('exportMap', () => {
         const action = exportMap();
-        expect(action).toExist();
+        expect(action).toBeTruthy();
         expect(action.type).toBe(EXPORT_MAP);
         expect(action.format).toBe("mapstore2");
     });

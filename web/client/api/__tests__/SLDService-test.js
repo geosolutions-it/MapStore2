@@ -290,30 +290,30 @@ describe('Test correctness of the SLDService APIs', () => {
     it('check getThematicParameters', () => {
         const result = API.getThematicParameters(paramsDef);
         expect(result.length).toBe(2);
-        expect(result[0].values).toExist();
+        expect(result[0].values).toBeTruthy();
     });
     it('check getColors only standard', () => {
         const result = API.getColors(undefined, layer, 10);
         expect(result.length).toBe(5);
-        expect(result[0].colors).toExist();
+        expect(result[0].colors).toBeTruthy();
         expect(result[0].colors.length).toBe(10);
     });
     it('check getColors custom colors', () => {
         const result = API.getColors(colors, layer, 10);
         expect(result.length).toBe(1);
-        expect(result[0].colors).toExist();
+        expect(result[0].colors).toBeTruthy();
         expect(result[0].colors.length).toBe(10);
     });
     it('check getColors layer colors', () => {
         const result = API.getColors(undefined, layerWithColors, 10);
         expect(result.length).toBe(1);
-        expect(result[0].colors).toExist();
+        expect(result[0].colors).toBeTruthy();
         expect(result[0].colors.length).toBe(10);
     });
     it('check getColors layer with additional colors', () => {
         const result = API.getColors(undefined, layerWithAdditionalColors, 10);
         expect(result.length).toBe(6);
-        expect(result[0].colors).toExist();
+        expect(result[0].colors).toBeTruthy();
         expect(result[0].colors.length).toBe(10);
     });
     it('check hasThematicStyle on no thematized layer', () => {
@@ -326,6 +326,6 @@ describe('Test correctness of the SLDService APIs', () => {
     });
     it('check removeThematicStyle', () => {
         const result = API.removeThematicStyle(layerWithThema);
-        expect(result.SLD).toNotExist();
+        expect(result.SLD).toBeFalsy();
     });
 });

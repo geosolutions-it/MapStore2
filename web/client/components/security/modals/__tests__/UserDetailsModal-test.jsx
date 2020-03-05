@@ -25,12 +25,12 @@ describe("Test user details modal", () => {
 
     it('creates component with defaults', () => {
         const cmp = ReactDOM.render(<UDModal />, document.getElementById("container"));
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
     });
 
     it('creates component to show', () => {
         const cmp = ReactDOM.render(<UDModal show user={{user: {name: "user"}}}/>, document.getElementById("container"));
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
     });
 
     it('creates component with attributes', () => {
@@ -69,7 +69,7 @@ describe("Test user details modal", () => {
             return attr.name && attr.name === "email" || attr.name === "company";
         };
         const cmp = ReactDOM.render(<UDModal options={{animation: false}} show displayAttributes={displayAttributes} user={testUser}/>, document.getElementById("container"));
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
         const modalDOM = document.getElementsByClassName('ms-resizable-modal')[0];
 
         expect(modalDOM.getElementsByClassName('row').length).toEqual(6);

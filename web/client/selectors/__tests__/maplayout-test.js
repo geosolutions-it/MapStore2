@@ -103,7 +103,7 @@ describe('Test map layout selectors', () => {
             }
         };
         const padding = mapPaddingSelector(state);
-        expect(padding).toExist();
+        expect(padding).toBeTruthy();
         expect(padding.top).toBe(0);
         expect(padding.left).toBe(200);
         expect(padding.right).toBe(0);

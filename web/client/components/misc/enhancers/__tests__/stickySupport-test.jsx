@@ -43,8 +43,8 @@ describe('stickySupport enhancer', () => {
             height={50}/>, document.getElementById('container'));
 
         const enhancedNode = document.querySelector('#enhanced-node');
-        expect(cmp).toExist();
-        expect(cmp._stickybits).toExist();
+        expect(cmp).toBeTruthy();
+        expect(cmp._stickybits).toBeTruthy();
         expect(cmp._node).toBe(enhancedNode);
         const positionStyle = cmp._stickybits.definePosition() || 'fixed';
 

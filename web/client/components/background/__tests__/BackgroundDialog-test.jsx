@@ -27,9 +27,9 @@ describe('test BackgroundDialog', () => {
 
         const dialog = ReactDOM.render(<BackgroundDialog updateThumbnail={actions.updateThumbnail} onSave={actions.onSave}/>,
             document.getElementById("container"));
-        expect(dialog).toExist();
+        expect(dialog).toBeTruthy();
         const node = ReactDOM.findDOMNode(dialog);
-        expect(node).toExist();
+        expect(node).toBeTruthy();
         const footer = node.getElementsByClassName('modal-footer');
         expect(footer.length).toBe(1);
         const buttons = footer[0].getElementsByClassName('btn');

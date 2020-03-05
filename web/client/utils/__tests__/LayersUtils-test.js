@@ -42,8 +42,8 @@ describe('LayersUtils', () => {
                 group: "group1"
             }]
         });
-        expect(state.layers).toExist();
-        expect(state.layers.flat).toExist();
+        expect(state.layers).toBeTruthy();
+        expect(state.layers.flat).toBeTruthy();
         expect(state.layers.flat.length).toBe(2);
         expect(state.layers.groups.length).toBe(1);
     });
@@ -58,8 +58,8 @@ describe('LayersUtils', () => {
                 group: "group2"
             }]
         });
-        expect(state.layers).toExist();
-        expect(state.layers.flat).toExist();
+        expect(state.layers).toBeTruthy();
+        expect(state.layers.flat).toBeTruthy();
         expect(state.layers.flat.length).toBe(2);
         expect(state.layers.groups.length).toBe(2);
     });
@@ -93,14 +93,14 @@ describe('LayersUtils', () => {
         ];
         const newGroups = LayersUtils.deepChange(nestedGroups, 'custom.nested001.nested002', 'value', 'changed');
 
-        expect(newGroups).toExist();
+        expect(newGroups).toBeTruthy();
         expect(newGroups).toEqual([
             {id: 'default', nodes: ['layer001', 'layer002']},
             {id: 'custom', nodes: [{id: 'custom.nested001', nodes: ['layer003', {id: 'custom.nested001.nested002', nodes: ['layer004'], value: 'changed'}]}]}
         ]);
 
         const newGroupsWrongId = LayersUtils.deepChange(nestedGroups, 'nested005', 'value', 'changed');
-        expect(newGroupsWrongId).toExist();
+        expect(newGroupsWrongId).toBeTruthy();
         expect(newGroupsWrongId).toEqual([
             {id: 'default', nodes: ['layer001', 'layer002']},
             {id: 'custom', nodes: [{id: 'custom.nested001', nodes: ['layer003', {id: 'custom.nested001.nested002', nodes: ['layer004'], value: 'now'}]}]}
@@ -139,7 +139,7 @@ describe('LayersUtils', () => {
             }
         ];
         const newGroups = LayersUtils.deepChange(groups, '1.3', {description: "new desc"});
-        expect(newGroups).toExist();
+        expect(newGroups).toBeTruthy();
         expect(newGroups[0].nodes[0].description).toBe("new desc");
         expect(newGroups[0].nodes[0].tooltipOptions).toBe("both");
         expect(newGroups[0].nodes[0].tooltipPlacement).toBe("right");
@@ -153,7 +153,7 @@ describe('LayersUtils', () => {
         ];
         const newGroups = LayersUtils.getGroupNodes({nodes: nestedGroups});
 
-        expect(newGroups).toExist();
+        expect(newGroups).toBeTruthy();
         expect(newGroups).toEqual(['layer001', 'layer002', 'default', 'layer003', 'layer004', 'custom.nested001.nested002', 'custom.nested001', 'custom']);
 
     });
@@ -166,11 +166,11 @@ describe('LayersUtils', () => {
         ];
         const newGroups = LayersUtils.getNode(nestedGroups, 'custom.nested001.nested002');
 
-        expect(newGroups).toExist();
+        expect(newGroups).toBeTruthy();
         expect(newGroups).toEqual({id: 'custom.nested001.nested002', nodes: ['layer004'], value: 'now'});
 
         const newGroupsNull = LayersUtils.getNode(nestedGroups, 'nested010');
-        expect(newGroupsNull).toNotExist();
+        expect(newGroupsNull).toBeFalsy();
     });
     it('extract data from sources no state', () => {
         expect( LayersUtils.extractDataFromSources()).toBe(null);
@@ -744,19 +744,19 @@ describe('LayersUtils', () => {
     it('test findGeoServerName with array url', () => {
         const matched = LayersUtils
             .findGeoServerName({url: ['https://1maps.geo-solutions.it/geoserver/wms'], regexRule: /\/[\w- ]*geoserver[\w- ]*\//});
-        expect(matched).toExist();
+        expect(matched).toBeTruthy();
     });
 
     it('test findGeoServerName with string url', () => {
         const matched = LayersUtils
             .findGeoServerName({url: 'https://1maps.geo-solutions.it/geoserver/wms', regexRule: /\/[\w- ]*geoserver[\w- ]*\//});
-        expect(matched).toExist();
+        expect(matched).toBeTruthy();
     });
 
     it('test getCapabilitiesUrl', () => {
         const capabilities = LayersUtils
             .getCapabilitiesUrl({url: ['https://1maps.geo-solutions.it/geoserver/wms'], name: 'states'});
-        expect(capabilities).toExist();
+        expect(capabilities).toBeTruthy();
     });
     it('getAuthenticationParam', () => {
         expect(LayersUtils.getAuthenticationParam({
@@ -938,11 +938,11 @@ describe('LayersUtils', () => {
                     type: "wms"
                 },
                 l => {
-                    expect(l.params).toNotExist();
+                    expect(l.params).toBeFalsy();
                     const keys = Object.keys(l);
                     expect(keys).toContain('id');
-                    expect(keys).toNotContain('params');
-                    expect(keys).toNotContain('credits');
+                    expect(keys).not.toContain('params');
+                    expect(keys).not.toContain('credits');
                 }
             ],
             // save params if present
@@ -953,8 +953,8 @@ describe('LayersUtils', () => {
                     }
                 },
                 l => {
-                    expect(l.params).toExist();
-                    expect(l.params.viewParams).toExist();
+                    expect(l.params).toBeTruthy();
+                    expect(l.params.viewParams).toBeTruthy();
                 }
             ],
             // save credits if present
@@ -965,7 +965,7 @@ describe('LayersUtils', () => {
                     }
                 },
                 l => {
-                    expect(l.credits).toExist();
+                    expect(l.credits).toBeTruthy();
                 }
             ],
             // save tooltipOptions and tooltipPlacement if present
@@ -975,8 +975,8 @@ describe('LayersUtils', () => {
                     tooltipPlacement: "right"
                 },
                 l => {
-                    expect(l.tooltipOptions).toExist();
-                    expect(l.tooltipPlacement).toExist();
+                    expect(l.tooltipOptions).toBeTruthy();
+                    expect(l.tooltipPlacement).toBeTruthy();
                 }
             ]
         ];

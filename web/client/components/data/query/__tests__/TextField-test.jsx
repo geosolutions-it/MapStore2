@@ -25,7 +25,7 @@ describe('TextField', () => {
 
     it('create a TextField component without any props', () => {
         const cmp = ReactDOM.render(<TextField/>, document.getElementById("container"));
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
     });
     it('create a TextField with isNull operator', () => {
         let conf = {
@@ -37,11 +37,11 @@ describe('TextField', () => {
             type: "string"
         };
         const cmp = ReactDOM.render(<TextField {...conf} />, document.getElementById("container"));
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
         let node = ReactDOM.findDOMNode(cmp);
-        expect(node).toExist();
+        expect(node).toBeTruthy();
         let inputs = node.getElementsByTagName("input");
-        expect(inputs).toExist();
+        expect(inputs).toBeTruthy();
         expect(inputs.length).toBe(1);
         cmp.changeText({target: { value: "1"}});
 

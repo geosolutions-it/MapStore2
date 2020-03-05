@@ -23,10 +23,10 @@ describe("Test BorderLayout Component", () => {
     it('Test BorderLayout', () => {
         ReactDOM.render(
             <BorderLayout id="MYCOMPONENT" className={"CLASS"}/>, document.getElementById("container"));
-        expect(document.getElementsByClassName( 'ms2-border-layout-body')[0]).toExist();
-        expect(document.getElementsByClassName('ms2-border-layout-content')).toExist();
-        expect(document.getElementsByClassName('CLASS')).toExist();
-        expect(document.getElementById('MYCOMPONENT')).toExist();
+        expect(document.getElementsByClassName( 'ms2-border-layout-body')[0]).toBeTruthy();
+        expect(document.getElementsByClassName('ms2-border-layout-content')).toBeTruthy();
+        expect(document.getElementsByClassName('CLASS')).toBeTruthy();
+        expect(document.getElementById('MYCOMPONENT')).toBeTruthy();
     });
     it('Test BorderLayout with header footer and columns', () => {
         ReactDOM.render(
@@ -38,10 +38,10 @@ describe("Test BorderLayout Component", () => {
                 <div className="content"></div>
             </BorderLayout>), document.getElementById("container"));
 
-        expect(document.getElementsByClassName('header')[0]).toExist();
-        expect(document.getElementsByClassName('footer')[0]).toExist();
-        expect(document.getElementsByClassName('left')[0]).toExist();
-        expect(document.getElementsByClassName('right')[0]).toExist();
-        expect(document.getElementsByClassName('content')[0]).toExist();
+        expect(document.getElementsByClassName('header')[0]).toBeTruthy();
+        expect(document.getElementsByClassName('footer')[0]).toBeTruthy();
+        expect(document.getElementsByClassName('left')[0]).toBeTruthy();
+        expect(document.getElementsByClassName('right')[0]).toBeTruthy();
+        expect(document.getElementsByClassName('content')[0]).toBeTruthy();
     });
 });

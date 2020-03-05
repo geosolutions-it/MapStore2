@@ -17,13 +17,13 @@ describe('Timeline/Playback Settings component', () => {
         ReactDOM.render(<Settings />, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('.ms-playback-settings');
-        expect(el).toExist();
+        expect(el).toBeTruthy();
     });
     it('rendering with values', () => {
         ReactDOM.render(<Settings following stepUnit="days" timeStep={1} frameDuration={1} fixedStep />, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('.ms-playback-settings');
-        expect(el).toExist();
+        expect(el).toBeTruthy();
         expect(document.querySelector('#frameDuration').value).toBe('1');
         expect(document.querySelector('input#formPlaybackStep').value).toBe('1');
         expect(document.querySelector('select#formPlaybackStep').value).toBe('days');
@@ -57,8 +57,8 @@ describe('Timeline/Playback Settings component', () => {
         const element = document.querySelector('#frameDuration');
         ReactTestUtils.Simulate.change(element, { target: { value: "2" } });
         expect(spyonChangeSetting).toHaveBeenCalled();
-        expect(spyonChangeSetting.calls[0].arguments[0]).toBe("frameDuration");
-        expect(spyonChangeSetting.calls[0].arguments[1]).toBe(2);
+        expect(spyonChangeSetting.mock.calls[0][0]).toBe("frameDuration");
+        expect(spyonChangeSetting.mock.calls[0][1]).toBe(2);
     });
     it('Test onChangeSetting default values to 1', () => {
         const actions = {
@@ -69,7 +69,7 @@ describe('Timeline/Playback Settings component', () => {
         const element = document.querySelector('#frameDuration');
         ReactTestUtils.Simulate.change(element, { target: { value: "-2" } });
         expect(spyonChangeSetting).toHaveBeenCalled();
-        expect(spyonChangeSetting.calls[0].arguments[1]).toBe(1);
+        expect(spyonChangeSetting.mock.calls[0][1]).toBe(1);
     });
     it('Test toggleAnimationRange', () => {
         const actions = {
@@ -79,7 +79,7 @@ describe('Timeline/Playback Settings component', () => {
         ReactDOM.render(<Settings toggleAnimationRange={actions.toggleAnimationRange} />, document.getElementById("container"));
         ReactTestUtils.Simulate.click(document.querySelector(".mapstore-switch-panel .m-slider")); // <-- trigger event callback
         expect(spytoggleAnimationRange).toHaveBeenCalled();
-        expect(spytoggleAnimationRange.calls[0].arguments[0]).toBe(true);
+        expect(spytoggleAnimationRange.mock.calls[0][0]).toBe(true);
     });
     it('Test toggleAnimationRange disable', () => {
         const actions = {
@@ -90,7 +90,7 @@ describe('Timeline/Playback Settings component', () => {
             startPlaybackTime: "2018-11-19T11:36:26.990Z", endPlaybackTime: "2019-11-19T11:36:26.990Z" }} toggleAnimationRange={actions.toggleAnimationRange} />, document.getElementById("container"));
         ReactTestUtils.Simulate.click(document.querySelector(".mapstore-switch-panel .m-slider")); // <-- trigger event callback
         expect(spytoggleAnimationRange).toHaveBeenCalled();
-        expect(spytoggleAnimationRange.calls[0].arguments[0]).toBe(false);
+        expect(spytoggleAnimationRange.mock.calls[0][0]).toBe(false);
     });
     it('Test playbackButtons', () => {
         const actions = {
@@ -121,8 +121,8 @@ describe('Timeline/Playback Settings component', () => {
         />, document.getElementById("container"));
         ReactTestUtils.Simulate.click(document.querySelectorAll(".ms-inline-datetime")[0].querySelector("button"));
         expect(spyClick).toHaveBeenCalled();
-        expect(spyClick.calls[0].arguments[0].startPlaybackTime).toExist();
-        expect(spyClick.calls[0].arguments[0].endPlaybackTime).toExist();
+        expect(spyClick.mock.calls[0][0].startPlaybackTime).toBeTruthy();
+        expect(spyClick.mock.calls[0][0].endPlaybackTime).toBeTruthy();
     });
     it('setPlaybackRange callback for time end', () => {
         const actions = {
@@ -137,8 +137,8 @@ describe('Timeline/Playback Settings component', () => {
         />, document.getElementById("container"));
         ReactTestUtils.Simulate.click(document.querySelectorAll(".ms-inline-datetime")[1].querySelector("button")); // <-- trigger event callback
         expect(spyClick).toHaveBeenCalled();
-        expect(spyClick.calls[0].arguments[0].startPlaybackTime).toExist();
-        expect(spyClick.calls[0].arguments[0].endPlaybackTime).toExist();
+        expect(spyClick.mock.calls[0][0].startPlaybackTime).toBeTruthy();
+        expect(spyClick.mock.calls[0][0].endPlaybackTime).toBeTruthy();
     });
     it('follow button', () => {
         const actions = {
@@ -153,8 +153,8 @@ describe('Timeline/Playback Settings component', () => {
         />, document.getElementById("container"));
         ReactTestUtils.Simulate.change(document.querySelectorAll('input[type=checkbox]')[2]); // <-- trigger event callback
         expect(spyClick).toHaveBeenCalled();
-        expect(spyClick.calls[0].arguments[0]).toBe("following");
-        expect(spyClick.calls[0].arguments[1]).toBe(true);
+        expect(spyClick.mock.calls[0][0]).toBe("following");
+        expect(spyClick.mock.calls[0][1]).toBe(true);
     });
 
 

@@ -25,13 +25,13 @@ describe('ChartWizard component', () => {
         ReactDOM.render(<TableWizard />, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('.ms-wizard');
-        expect(el).toExist();
-        expect(container.querySelector('.chart-options-form')).toExist();
+        expect(el).toBeTruthy();
+        expect(container.querySelector('.chart-options-form')).toBeTruthy();
     });
     it('ChartWizard rendering options', () => {
         ReactDOM.render(<TableWizard step={1} />, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('.widget-options-form');
-        expect(el).toExist();
+        expect(el).toBeTruthy();
     });
 });

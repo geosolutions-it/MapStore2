@@ -25,18 +25,18 @@ describe("test the ConfirmButton", () => {
 
     it('test default props', () => {
         const tb = ReactDOM.render(<ConfirmButton/>, document.getElementById("container"));
-        expect(tb).toExist();
+        expect(tb).toBeTruthy();
         const tbNode = ReactDOM.findDOMNode(tb);
-        expect(tbNode).toExist();
+        expect(tbNode).toBeTruthy();
     });
     it('test click display confirm', () => {
         const tb = ReactDOM.render(<ConfirmButton/>, document.getElementById("container"));
-        expect(tb).toExist();
+        expect(tb).toBeTruthy();
         const tbNode = ReactDOM.findDOMNode(tb);
-        expect(tbNode).toExist();
+        expect(tbNode).toBeTruthy();
         const ReactTestUtils = require('react-dom/test-utils');
         ReactTestUtils.Simulate.click(tbNode);
-        expect(tb).toExist();
+        expect(tb).toBeTruthy();
         const txt = tbNode.textContent || tbNode.innerText;
         expect(txt).toBe("Confirm?");
     });
@@ -46,14 +46,14 @@ describe("test the ConfirmButton", () => {
         };
         const spy1 = expect.spyOn(handlers1, "onConfirm");
         const tb = ReactDOM.render(<ConfirmButton onConfirm={handlers1.onConfirm}/>, document.getElementById("container"));
-        expect(tb).toExist();
+        expect(tb).toBeTruthy();
         const tbNode = ReactDOM.findDOMNode(tb);
-        expect(tbNode).toExist();
+        expect(tbNode).toBeTruthy();
         const ReactTestUtils = require('react-dom/test-utils');
         ReactTestUtils.Simulate.click(tbNode);
-        expect(tb).toExist();
+        expect(tb).toBeTruthy();
         ReactTestUtils.Simulate.click(tbNode);
-        expect(spy1.calls.length).toBe(1);
+        expect(spy1.mock.calls.length).toBe(1);
     });
     it('test cancel on blur', (done) => {
         const handlers2 = {
@@ -61,26 +61,26 @@ describe("test the ConfirmButton", () => {
         };
         const spy2 = expect.spyOn(handlers2, "onConfirm");
         const tb = ReactDOM.render(<ConfirmButton onConfirm={handlers2.onConfirm}/>, document.getElementById("container"));
-        expect(tb).toExist();
+        expect(tb).toBeTruthy();
         const tbNode = ReactDOM.findDOMNode(tb);
-        expect(tbNode).toExist();
+        expect(tbNode).toBeTruthy();
         const ReactTestUtils = require('react-dom/test-utils');
         ReactTestUtils.Simulate.click(tbNode);
         ReactTestUtils.Simulate.focus(tbNode);
         ReactTestUtils.Simulate.blur(tbNode);
-        expect(tb).toExist();
+        expect(tb).toBeTruthy();
         // click out for blur
         setTimeout(() => {
             ReactTestUtils.Simulate.click(tbNode);
-            expect(spy2.calls.length).toBe(0); // second click don't do confirm
+            expect(spy2.mock.calls.length).toBe(0); // second click don't do confirm
             done();
         }, 100);
     });
     it('test disableAfterConfirmed', () => {
         const tb = ReactDOM.render(<ConfirmButton disableAfterConfirmed />, document.getElementById("container"));
-        expect(tb).toExist();
+        expect(tb).toBeTruthy();
         const tbNode = ReactDOM.findDOMNode(tb);
-        expect(tbNode).toExist();
+        expect(tbNode).toBeTruthy();
         const ReactTestUtils = require('react-dom/test-utils');
         ReactTestUtils.Simulate.click(tbNode);
         ReactTestUtils.Simulate.click(tbNode);

@@ -19,14 +19,14 @@ describe("Test the LineThumb component", () => {
 
     it('create component with default', () => {
         const cmp = ReactDOM.render(<LineThumb />, document.getElementById("container"));
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
     });
     it('create component with default style from annotation utils', () => {
         const style = DEFAULT_ANNOTATIONS_STYLES.LineString;
         const cmp = ReactDOM.render(<LineThumb styleRect={style}/>, document.getElementById("container"));
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
         const path = TestUtils.findRenderedDOMComponentWithTag(cmp, 'path');
-        expect(path).toExist();
+        expect(path).toBeTruthy();
         expect(path.attributes.d.value).toBe("M25 75 L50 50 L75 75 L100 75");
         expect(path.attributes["stroke-linecap"].value).toBe("round");
         expect(path.attributes["stroke-linejoin"].value).toBe("round");

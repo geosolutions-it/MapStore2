@@ -26,7 +26,7 @@ describe('AutocompleteFieldHOC', () => {
 
     it('create a AutocompleteFieldHOC component without any props', () => {
         const cmp = ReactDOM.render(<AutocompleteFieldHOC/>, document.getElementById("container"));
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
     });
     it('create a AutocompleteFieldHOC with 2 options', () => {
         let conf = {
@@ -50,7 +50,7 @@ describe('AutocompleteFieldHOC', () => {
             maxFeaturesWPS: 5
         };
         const cmp = ReactDOM.render(<AutocompleteFieldHOC {...conf} />, document.getElementById("container"));
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
 
     });
 
@@ -74,8 +74,8 @@ describe('AutocompleteFieldHOC', () => {
         const DOM = ReactDOM.findDOMNode(component);
         ReactTestUtils.Simulate.click(DOM.querySelector('button'));
         const pagination = DOM.querySelector('.autocomplete-toolbar');
-        expect(component).toExist();
-        expect(pagination).toExist();
+        expect(component).toBeTruthy();
+        expect(pagination).toBeTruthy();
     });
 
     it('create a AutocompleteFieldHOC without pagination fields', () => {
@@ -94,7 +94,7 @@ describe('AutocompleteFieldHOC', () => {
         const DOM = ReactDOM.findDOMNode(component);
         ReactTestUtils.Simulate.click(DOM.querySelector('button'));
         const pagination = DOM.querySelector('.autocomplete-toolbar');
-        expect(component).toExist();
+        expect(component).toBeTruthy();
         expect(pagination).toBe(null);
     });
 });

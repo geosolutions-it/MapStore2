@@ -38,7 +38,7 @@ describe('Test styleeditor selector', () => {
         };
         const retval = temporaryIdSelector(state);
 
-        expect(retval).toExist();
+        expect(retval).toBeTruthy();
         expect(retval).toBe('4d91420-d79b-11e8-94c3-cf252a711708');
     });
     it('test templateIdSelector', () => {
@@ -49,7 +49,7 @@ describe('Test styleeditor selector', () => {
         };
         const retval = templateIdSelector(state);
 
-        expect(retval).toExist();
+        expect(retval).toBeTruthy();
         expect(retval).toBe('6f13030-d79e-11e8-95aa-85d7608156db');
     });
     it('test templateIdSelector', () => {
@@ -60,7 +60,7 @@ describe('Test styleeditor selector', () => {
         };
         const retval = statusStyleSelector(state);
 
-        expect(retval).toExist();
+        expect(retval).toBeTruthy();
         expect(retval).toBe('edit');
     });
     it('test errorStyleSelector', () => {
@@ -75,7 +75,7 @@ describe('Test styleeditor selector', () => {
         };
         const retval = errorStyleSelector(state);
 
-        expect(retval).toExist();
+        expect(retval).toBeTruthy();
         expect(retval).toEqual(
             {
                 global: {
@@ -92,7 +92,7 @@ describe('Test styleeditor selector', () => {
         };
         const retval = loadingStyleSelector(state);
 
-        expect(retval).toExist();
+        expect(retval).toBeTruthy();
         expect(retval).toBe(true);
     });
     it('test formatStyleSelector', () => {
@@ -103,7 +103,7 @@ describe('Test styleeditor selector', () => {
         };
         const retval = formatStyleSelector(state);
 
-        expect(retval).toExist();
+        expect(retval).toBeTruthy();
         expect(retval).toBe('css');
     });
     it('test languageVersionStyleSelector', () => {
@@ -114,7 +114,7 @@ describe('Test styleeditor selector', () => {
         };
         const retval = languageVersionStyleSelector(state);
 
-        expect(retval).toExist();
+        expect(retval).toBeTruthy();
         expect(retval).toEqual({ version: '1.0.0' });
     });
     it('test codeStyleSelector', () => {
@@ -125,7 +125,7 @@ describe('Test styleeditor selector', () => {
         };
         const retval = codeStyleSelector(state);
 
-        expect(retval).toExist();
+        expect(retval).toBeTruthy();
         expect(retval).toBe('* { stroke: #333333 }');
     });
     it('test initialCodeStyleSelector', () => {
@@ -136,7 +136,7 @@ describe('Test styleeditor selector', () => {
         };
         const retval = initialCodeStyleSelector(state);
 
-        expect(retval).toExist();
+        expect(retval).toBeTruthy();
         expect(retval).toBe('* { stroke: #333333; }');
     });
     it('test selectedStyleSelector', () => {
@@ -165,7 +165,7 @@ describe('Test styleeditor selector', () => {
         };
         const retval = selectedStyleSelector(state);
 
-        expect(retval).toExist();
+        expect(retval).toBeTruthy();
         expect(retval).toBe('generic');
     });
     it('test addStyleSelector', () => {
@@ -176,7 +176,7 @@ describe('Test styleeditor selector', () => {
         };
         const retval = addStyleSelector(state);
 
-        expect(retval).toExist();
+        expect(retval).toBeTruthy();
         expect(retval).toBe(true);
     });
     it('test geometryTypeSelector', () => {
@@ -233,7 +233,7 @@ describe('Test styleeditor selector', () => {
         };
         const retval = geometryTypeSelector(state);
 
-        expect(retval).toExist();
+        expect(retval).toBeTruthy();
         expect(retval).toBe('point');
     });
 
@@ -291,7 +291,7 @@ describe('Test styleeditor selector', () => {
         };
         const retval = layerPropertiesSelector(state);
 
-        expect(retval).toExist();
+        expect(retval).toBeTruthy();
         expect(retval).toEqual({ RANK: { localPart: 'short', prefix: 'xsd' } });
     });
     it('test enabledStyleEditorSelector', () => {
@@ -302,7 +302,7 @@ describe('Test styleeditor selector', () => {
         };
         const retval = enabledStyleEditorSelector(state);
 
-        expect(retval).toExist();
+        expect(retval).toBeTruthy();
         expect(retval).toBe(true);
     });
     it('test styleServiceSelector', () => {
@@ -315,7 +315,7 @@ describe('Test styleeditor selector', () => {
         };
         const retval = styleServiceSelector(state);
 
-        expect(retval).toExist();
+        expect(retval).toBeTruthy();
         expect(retval).toEqual(
             {
                 baseUrl: '/geoserver'
@@ -330,7 +330,7 @@ describe('Test styleeditor selector', () => {
         };
         const retval = canEditStyleSelector(state);
 
-        expect(retval).toExist();
+        expect(retval).toBeTruthy();
         expect(retval).toBe(true);
     });
     it('test getUpdatedLayer', () => {
@@ -359,7 +359,7 @@ describe('Test styleeditor selector', () => {
         };
         const retval = getUpdatedLayer(state);
 
-        expect(retval).toExist();
+        expect(retval).toBeTruthy();
         expect(retval).toEqual({
             id: 'layerId',
             name: 'layerName',
@@ -415,7 +415,7 @@ describe('Test styleeditor selector', () => {
         };
         const retval = getAllStyles(state);
 
-        expect(retval).toExist();
+        expect(retval).toBeTruthy();
         expect(retval).toEqual({
             availableStyles: [
                 {
@@ -481,7 +481,7 @@ describe('Test styleeditor selector', () => {
             }
         };
         const retval = selectedStyleFormatSelector(state);
-        expect(retval).toExist();
+        expect(retval).toBeTruthy();
         expect(retval).toBe('css');
 
     });

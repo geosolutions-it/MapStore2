@@ -34,8 +34,8 @@ describe('localizedProps enhancher', () => {
             ),
             localizedProps("placeholder")
         )(createSink( props => {
-            expect(props).toExist();
-            expect(props.placeholder).toExist();
+            expect(props).toBeTruthy();
+            expect(props.placeholder).toBeTruthy();
             expect(props.placeholder).toBe("localized");
         }));
         ReactDOM.render((<Sink placeholder={"path.to.message"}/>), document.getElementById("container"));
@@ -52,8 +52,8 @@ describe('localizedProps enhancher', () => {
             ),
             localizedProps("options")
         )(createSink( props => {
-            expect(props).toExist();
-            expect(props.options).toExist();
+            expect(props).toBeTruthy();
+            expect(props.options).toBeTruthy();
             expect(props.options[0].label).toBe("localized");
             expect(props.options[1].label).toBe("localized2");
         }));
@@ -71,8 +71,8 @@ describe('localizedProps enhancher', () => {
             ),
             localizedProps("options", "myCustomlabel")
         )(createSink( props => {
-            expect(props).toExist();
-            expect(props.options).toExist();
+            expect(props).toBeTruthy();
+            expect(props.options).toBeTruthy();
             expect(props.options[0].myCustomlabel).toBe("localized");
             expect(props.options[1].myCustomlabel).toBe("localized2");
         }));
@@ -91,8 +91,8 @@ describe('localizedProps enhancher', () => {
             ),
             localizedProps("options")
         )(createSink( props => {
-            expect(props).toExist();
-            expect(props.options).toExist();
+            expect(props).toBeTruthy();
+            expect(props.options).toBeTruthy();
             expect(props.options[0].label).toBe("");
             expect(props.options[1].label).toBe("");
         }));
@@ -110,8 +110,8 @@ describe('localizedProps enhancher', () => {
             ),
             localizedProps("options")
         )(createSink( props => {
-            expect(props).toExist();
-            expect(props.options).toExist();
+            expect(props).toBeTruthy();
+            expect(props.options).toBeTruthy();
             expect(props.options[0].label).toBe("localized");
             expect(props.options[1].label).toBe("localized2");
         }));

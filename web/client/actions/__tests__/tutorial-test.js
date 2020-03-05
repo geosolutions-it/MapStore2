@@ -31,7 +31,7 @@ describe('Test the tutorial actions', () => {
 
     it('startTutorial', () => {
         const retval = startTutorial();
-        expect(retval).toExist();
+        expect(retval).toBeTruthy();
         expect(retval.type).toBe(START_TUTORIAL);
     });
 
@@ -43,7 +43,7 @@ describe('Test the tutorial actions', () => {
         const defaultStep = 'defaultStep';
         const presetList = 'presetList';
         const retval = initTutorial(id, steps, style, checkbox, defaultStep, presetList);
-        expect(retval).toExist();
+        expect(retval).toBeTruthy();
         expect(retval.type).toBe(INIT_TUTORIAL);
         expect(retval.id).toBe(id);
         expect(retval.steps).toBe(steps);
@@ -61,7 +61,7 @@ describe('Test the tutorial actions', () => {
         const defaultStep = 'defaultStep';
         const stop = true;
         const retval = setupTutorial(id, steps, style, checkbox, defaultStep, stop);
-        expect(retval).toExist();
+        expect(retval).toBeTruthy();
         expect(retval.type).toBe(SETUP_TUTORIAL);
         expect(retval.id).toBe(id);
         expect(retval.steps).toBe(steps);
@@ -75,7 +75,7 @@ describe('Test the tutorial actions', () => {
         const tour = 'tour';
         const steps = 'steps';
         const retval = updateTutorial(tour, steps);
-        expect(retval).toExist();
+        expect(retval).toBeTruthy();
         expect(retval.type).toBe(UPDATE_TUTORIAL);
         expect(retval.tour).toBe(tour);
         expect(retval.steps).toBe(steps);
@@ -83,25 +83,25 @@ describe('Test the tutorial actions', () => {
 
     it('disableTutorial', () => {
         const retval = disableTutorial();
-        expect(retval).toExist();
+        expect(retval).toBeTruthy();
         expect(retval.type).toBe(DISABLE_TUTORIAL);
     });
 
     it('resetTutorial', () => {
         const retval = resetTutorial();
-        expect(retval).toExist();
+        expect(retval).toBeTruthy();
         expect(retval.type).toBe(RESET_TUTORIAL);
     });
 
     it('closeTutorial', () => {
         const retval = closeTutorial();
-        expect(retval).toExist();
+        expect(retval).toBeTruthy();
         expect(retval.type).toBe(CLOSE_TUTORIAL);
     });
 
     it('toggleTutorial', () => {
         const retval = toggleTutorial();
-        expect(retval).toExist();
+        expect(retval).toBeTruthy();
         expect(retval.type).toBe(TOGGLE_TUTORIAL);
     });
 

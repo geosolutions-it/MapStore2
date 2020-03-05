@@ -28,7 +28,7 @@ describe('WebPage component', () => {
             viewHeight={100}
         />, document.getElementById("container"));
         const container = document.getElementById("container");
-        expect(container.querySelector(".ms-webpage-wrapper")).toExist();
+        expect(container.querySelector(".ms-webpage-wrapper")).toBeTruthy();
     });
 
     it('should render page when provided all neccesary data', () => {
@@ -38,7 +38,7 @@ describe('WebPage component', () => {
             viewHeight={100}
         />, document.getElementById("container"));
         const container = document.getElementById("container");
-        expect(container.querySelector(".ms-webpage-wrapper")).toExist();
+        expect(container.querySelector(".ms-webpage-wrapper")).toBeTruthy();
     });
 
     it('should\'t render page when src is not provided', () => {
@@ -48,7 +48,7 @@ describe('WebPage component', () => {
         />, document.getElementById("container"));
         const container = document.getElementById("container");
         expect(container.querySelector(".ms-webpage-wrapper")).toBe(null);
-        expect(container.querySelector(".empty-state-main-view")).toExist();
+        expect(container.querySelector(".empty-state-main-view")).toBeTruthy();
     });
 
     it('should\'t render page when size is not provided', () => {
@@ -58,7 +58,7 @@ describe('WebPage component', () => {
         />, document.getElementById("container"));
         const container = document.getElementById("container");
         expect(container.querySelector(".ms-webpage-wrapper")).toBe(null);
-        expect(container.querySelector(".empty-state-main-view")).toExist();
+        expect(container.querySelector(".empty-state-main-view")).toBeTruthy();
     });
 
     it('should\'t render page when viewHeight is not provided', () => {
@@ -68,13 +68,13 @@ describe('WebPage component', () => {
         />, document.getElementById("container"));
         const container = document.getElementById("container");
         expect(container.querySelector(".ms-webpage-wrapper")).toBe(null);
-        expect(container.querySelector(".empty-state-main-view")).toExist();
+        expect(container.querySelector(".empty-state-main-view")).toBeTruthy();
     });
 
     it('should render proper placeholder when data is empty', () => {
         ReactDOM.render(<WebPage />, document.getElementById("container"));
         const container = document.getElementById("container");
         expect(container.querySelector(".ms-webpage-wrapper")).toBe(null);
-        expect(container.querySelector(".glyphicon-code")).toExist();
+        expect(container.querySelector(".glyphicon-code")).toBeTruthy();
     });
 });

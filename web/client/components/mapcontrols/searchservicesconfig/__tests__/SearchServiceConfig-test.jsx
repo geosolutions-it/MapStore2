@@ -30,19 +30,19 @@ describe("test text search service config components", () => {
 
     it('test Result Props creation', () => {
         const tb = ReactDOM.render(<ResultsProps.Element/>, document.getElementById("container"));
-        expect(tb).toExist();
+        expect(tb).toBeTruthy();
     });
     it('test Services List creation', () => {
         const tb = ReactDOM.render(<ServicesList.Element/>, document.getElementById("container"));
-        expect(tb).toExist();
+        expect(tb).toBeTruthy();
     });
     it('test WFS optional props creation', () => {
         const tb = ReactDOM.render(<WFSOptionalProps.Element/>, document.getElementById("container"));
-        expect(tb).toExist();
+        expect(tb).toBeTruthy();
     });
     it('test WFS serivece props creation', () => {
         const tb = ReactDOM.render(<WFSServiceProps.Element/>, document.getElementById("container"));
-        expect(tb).toExist();
+        expect(tb).toBeTruthy();
     });
 
 });

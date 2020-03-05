@@ -40,7 +40,7 @@ describe('Test the highlight reducer', () => {
         };
 
         let state = highlight(initialState, testAction);
-        expect(state).toExist();
+        expect(state).toBeTruthy();
 
         expect(state.status).toBe("enabled");
         expect(state.layer).toBe("featureselector");
@@ -56,7 +56,7 @@ describe('Test the highlight reducer', () => {
 
 
         let state = highlight( undefined, testAction);
-        expect(state).toExist();
+        expect(state).toBeTruthy();
 
         expect(state.status).toBe("update");
         expect(state.layer).toBe("featureselector");
@@ -71,7 +71,7 @@ describe('Test the highlight reducer', () => {
             featuresPath: path
         };
         let state = highlight( undefined, testAction);
-        expect(state).toExist();
+        expect(state).toBeTruthy();
 
         expect(state.featuresPath).toBe(path);
 

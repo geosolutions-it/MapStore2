@@ -24,7 +24,7 @@ describe('accessRuleParser enhancer', () => {
     });
     it('rendering with defaults', (done) => {
         const Sink = accessRuleParser("hasAllAccess")(createSink(props => {
-            expect(props).toExist();
+            expect(props).toBeTruthy();
             expect(props.hasAllAccess).toBe(true);
             done();
         }));
@@ -32,7 +32,7 @@ describe('accessRuleParser enhancer', () => {
     });
     it('single rule', (done) => {
         const Sink = accessRuleParser("hasAllAccess")(createSink( props => {
-            expect(props).toExist();
+            expect(props).toBeTruthy();
             expect(props.hasAllAccess).toBe(true);
             done();
         }));
@@ -40,7 +40,7 @@ describe('accessRuleParser enhancer', () => {
     });
     it('single rule with equal return true', (done) => {
         const Sink = accessRuleParser("hasAllAccess")(createSink( props => {
-            expect(props).toExist();
+            expect(props).toBeTruthy();
             expect(props.hasAllAccess).toBe(true);
             done();
         }));
@@ -48,7 +48,7 @@ describe('accessRuleParser enhancer', () => {
     });
     it('single rule with equal return false', (done) => {
         const Sink = accessRuleParser("hasAllAccess")(createSink( props => {
-            expect(props).toExist();
+            expect(props).toBeTruthy();
             expect(props.hasAllAccess).toBe(false);
             done();
         }));
@@ -56,7 +56,7 @@ describe('accessRuleParser enhancer', () => {
     });
     it('single rule with differ return true', (done) => {
         const Sink = accessRuleParser("hasAllAccess")(createSink( props => {
-            expect(props).toExist();
+            expect(props).toBeTruthy();
             expect(props.hasAllAccess).toBe(true);
             done();
         }));
@@ -64,7 +64,7 @@ describe('accessRuleParser enhancer', () => {
     });
     it('single rule with differ return false', (done) => {
         const Sink = accessRuleParser("hasAllAccess")(createSink( props => {
-            expect(props).toExist();
+            expect(props).toBeTruthy();
             expect(props.hasAllAccess).toBe(false);
             done();
         }));
@@ -72,7 +72,7 @@ describe('accessRuleParser enhancer', () => {
     });
     it('array of rules', (done) => {
         const Sink = accessRuleParser("hasAllAccess")(createSink(props => {
-            expect(props).toExist();
+            expect(props).toBeTruthy();
             expect(props.hasAllAccess).toBeFalsy();
             done();
         }));
@@ -80,7 +80,7 @@ describe('accessRuleParser enhancer', () => {
     });
     it('array of rules with __OR__', (done) => {
         const Sink = accessRuleParser("hasAllAccess")(createSink(props => {
-            expect(props).toExist();
+            expect(props).toBeTruthy();
             expect(props.hasAllAccess).toBe(true);
             done();
         }));
@@ -88,7 +88,7 @@ describe('accessRuleParser enhancer', () => {
     });
     it('single negative rule', (done) => {
         const Sink = accessRuleParser("hasAllAccess")(createSink(props => {
-            expect(props).toExist();
+            expect(props).toBeTruthy();
             expect(props.hasAllAccess).toBe(false);
             done();
         }));
@@ -96,7 +96,7 @@ describe('accessRuleParser enhancer', () => {
     });
     it('single negative rule with equal return true (so false)', (done) => {
         const Sink = accessRuleParser("hasAllAccess")(createSink(props => {
-            expect(props).toExist();
+            expect(props).toBeTruthy();
             expect(props.hasAllAccess).toBe(false);
             done();
         }));
@@ -104,7 +104,7 @@ describe('accessRuleParser enhancer', () => {
     });
     it('single negative rule with equal return false (so true)', (done) => {
         const Sink = accessRuleParser("hasAllAccess")(createSink(props => {
-            expect(props).toExist();
+            expect(props).toBeTruthy();
             expect(props.hasAllAccess).toBe(true);
             done();
         }));
@@ -112,7 +112,7 @@ describe('accessRuleParser enhancer', () => {
     });
     it('single negative rule with differ return true (so false)', (done) => {
         const Sink = accessRuleParser("hasAllAccess")(createSink(props => {
-            expect(props).toExist();
+            expect(props).toBeTruthy();
             expect(props.hasAllAccess).toBe(false);
             done();
         }));
@@ -120,7 +120,7 @@ describe('accessRuleParser enhancer', () => {
     });
     it('single negative rule with differ return false (so true)', (done) => {
         const Sink = accessRuleParser("hasAllAccess")(createSink(props => {
-            expect(props).toExist();
+            expect(props).toBeTruthy();
             expect(props.hasAllAccess).toBe(true);
             done();
         }));
@@ -128,7 +128,7 @@ describe('accessRuleParser enhancer', () => {
     });
     it('array of rules', (done) => {
         const Sink = accessRuleParser("hasAllAccess")(createSink(props => {
-            expect(props).toExist();
+            expect(props).toBeTruthy();
             expect(props.hasAllAccess).toBeFalsy();
             done();
         }));
@@ -136,7 +136,7 @@ describe('accessRuleParser enhancer', () => {
     });
     it('array of rules with __OR__', (done) => {
         const Sink = accessRuleParser("hasAllAccess")(createSink(props => {
-            expect(props).toExist();
+            expect(props).toBeTruthy();
             const { accessInfo } = props;
             const { mapInfo } = accessInfo;
             const {canEdit, canDelete} = mapInfo;
@@ -152,7 +152,7 @@ describe('accessRuleParser enhancer', () => {
     });
     it('asObject option', (done) => {
         const Sink = accessRuleParser("hasAllAccess", {asObject: true})(createSink(props => {
-            expect(props).toExist();
+            expect(props).toBeTruthy();
             expect(props.hasAllAccess.test).toBe(true);
             done();
         }));
@@ -160,7 +160,7 @@ describe('accessRuleParser enhancer', () => {
     });
     it('asObject with single rule', (done) => {
         const Sink = accessRuleParser("hasAllAccess", { asObject: true })(createSink(props => {
-            expect(props).toExist();
+            expect(props).toBeTruthy();
             expect(props.hasAllAccess.test).toBe(true);
             done();
         }));
@@ -168,7 +168,7 @@ describe('accessRuleParser enhancer', () => {
     });
     it('asObject with array of rules', (done) => {
         const Sink = accessRuleParser("hasAllAccess", { asObject: true })(createSink(props => {
-            expect(props).toExist();
+            expect(props).toBeTruthy();
             expect(props.hasAllAccess.test).toBe(false);
             done();
         }));
@@ -178,7 +178,7 @@ describe('accessRuleParser enhancer', () => {
     });
     it('asObject with array of rules nested (XOR)', (done) => {
         const Sink = accessRuleParser("hasAllAccess", { asObject: true })(createSink(props => {
-            expect(props).toExist();
+            expect(props).toBeTruthy();
             const {accessInfo, hasAllAccess} = props;
             const {mapInfo} = accessInfo;
             expect(hasAllAccess.test).toBe(!!(!mapInfo.canEdit && mapInfo.canDelete || mapInfo.canEdit && !mapInfo.canDelete ));

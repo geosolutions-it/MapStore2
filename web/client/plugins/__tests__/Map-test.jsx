@@ -40,7 +40,7 @@ describe('Map Plugin', () => {
     it('creates a Map plugin with default configuration (leaflet)', () => {
         const { Plugin } = getPluginForTest(MapPlugin, {map});
         ReactDOM.render(<Plugin />, document.getElementById("container"));
-        expect(document.getElementById('map')).toExist();
+        expect(document.getElementById('map')).toBeTruthy();
         expect(document.getElementsByClassName('leaflet-container').length).toBe(1);
     });
 
@@ -49,7 +49,7 @@ describe('Map Plugin', () => {
             mapType: 'openlayers'
         } });
         ReactDOM.render(<Plugin pluginCfg={{ shouldLoadFont: false }} />, document.getElementById("container"));
-        expect(document.getElementById('map')).toExist();
+        expect(document.getElementById('map')).toBeTruthy();
         expect(document.getElementsByClassName('ol-viewport').length).toBe(1);
     });
 

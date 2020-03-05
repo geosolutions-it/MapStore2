@@ -57,15 +57,15 @@ describe("test TOCItemsSettings", () => {
         const navBar = document.getElementsByClassName('nav-justified')[0];
         expect(navBar.children.length).toBe(2);
         const testGeneralBody = document.getElementById('test-general-body');
-        expect(testGeneralBody).toExist();
+        expect(testGeneralBody).toBeTruthy();
         const testDisplayBody = document.getElementById('test-display-body');
-        expect(testDisplayBody).toNotExist();
+        expect(testDisplayBody).toBeFalsy();
     });
 
     it('test without tabs', () => {
         ReactDOM.render(<TOCItemsSettings settings={settings} activeTab="general" tabs={[]}/>, document.getElementById("container"));
         const navBar = document.getElementsByClassName('nav-justified')[0];
-        expect(navBar).toNotExist();
+        expect(navBar).toBeFalsy();
     });
 
     it('test with tabs length 1', () => {
@@ -77,9 +77,9 @@ describe("test TOCItemsSettings", () => {
             Component: () => <div id="test-general-body"></div>
         }]}/>, document.getElementById("container"));
         const navBar = document.getElementsByClassName('nav-justified')[0];
-        expect(navBar).toNotExist();
+        expect(navBar).toBeFalsy();
         const testGeneralBody = document.getElementById('test-general-body');
-        expect(testGeneralBody).toExist();
+        expect(testGeneralBody).toBeTruthy();
     });
 
     it('test alert modal', () => {
@@ -195,9 +195,9 @@ describe("test TOCItemsSettings", () => {
         ]} element={layers[0]}/>, document.getElementById("container"));
 
         const btnGroup = document.querySelector('.btn-group');
-        expect(btnGroup).toNotExist();
+        expect(btnGroup).toBeFalsy();
         const customToolbar = document.querySelector('.custom-toolbar');
-        expect(customToolbar).toExist();
+        expect(customToolbar).toBeTruthy();
     });
 
 });

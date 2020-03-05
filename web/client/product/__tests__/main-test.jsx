@@ -66,7 +66,7 @@ describe('standard application runner', () => {
     it('testing default appStore', () => {
         let defaultConfig;
         mainApp(defaultConfig, {plugins: {}}, (config) => {
-            expect(config.appStore).toExist();
+            expect(config.appStore).toBeTruthy();
             const state = config.appStore().getState();
             const reducersKeys = Object.keys(state);
             expect(includes(reducersKeys, "maptype")).toBe(true);
@@ -83,7 +83,7 @@ describe('standard application runner', () => {
             }
         };
         mainApp(defaultConfig, {plugins: {}}, (config) => {
-            expect(config.appStore).toExist();
+            expect(config.appStore).toBeTruthy();
             const state = config.appStore().getState();
             const reducersKeys = Object.keys(state);
             expect(includes(reducersKeys, "maptype")).toBe(true);
@@ -101,7 +101,7 @@ describe('standard application runner', () => {
             }
         };
         mainApp(defaultConfig, {plugins: {}}, (config) => {
-            expect(config.appStore).toExist();
+            expect(config.appStore).toBeTruthy();
             const state = config.appStore().getState();
             const reducersKeys = Object.keys(state);
             expect(includes(reducersKeys, "maptype")).toBe(false);

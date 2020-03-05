@@ -30,7 +30,7 @@ describe('Featuregrid toolbar component', () => {
     it('render with defaults', () => {
         ReactDOM.render(<Toolbar/>, document.getElementById("container"));
         const el = document.getElementsByClassName("featuregrid-toolbar")[0];
-        expect(el).toExist();
+        expect(el).toBeTruthy();
         const downloadBtn = document.getElementById("fg-download-grid");
         const editButton = document.getElementById("fg-edit-mode");
         expect(isVisibleButton(downloadBtn)).toBe(false);
@@ -39,7 +39,7 @@ describe('Featuregrid toolbar component', () => {
     it('check download displayDownload', () => {
         ReactDOM.render(<Toolbar displayDownload />, document.getElementById("container"));
         const el = document.getElementsByClassName("featuregrid-toolbar")[0];
-        expect(el).toExist();
+        expect(el).toBeTruthy();
         const downloadBtn = document.getElementById("fg-download-grid");
         const editButton = document.getElementById("fg-edit-mode");
         expect(isVisibleButton(downloadBtn)).toBe(true);
@@ -52,7 +52,7 @@ describe('Featuregrid toolbar component', () => {
         spyOn(events, "switchEditMode");
         ReactDOM.render(<Toolbar events={events} mode="VIEW" isEditingAllowed/>, document.getElementById("container"));
         const el = document.getElementsByClassName("featuregrid-toolbar")[0];
-        expect(el).toExist();
+        expect(el).toBeTruthy();
         let editButton = document.getElementById("fg-edit-mode");
         expect(isVisibleButton(editButton)).toBe(true);
         editButton.click();
@@ -71,7 +71,7 @@ describe('Featuregrid toolbar component', () => {
         spyOn(events, "showQueryPanel");
         ReactDOM.render(<Toolbar events={events} mode="VIEW" isSearchAllowed/>, document.getElementById("container"));
         const el = document.getElementsByClassName("featuregrid-toolbar")[0];
-        expect(el).toExist();
+        expect(el).toBeTruthy();
         let editButton = document.getElementById("fg-search");
         expect(isVisibleButton(editButton)).toBe(true);
         editButton.click();
@@ -87,7 +87,7 @@ describe('Featuregrid toolbar component', () => {
         spyOn(events, "zoomAll");
         ReactDOM.render(<Toolbar events={events} mode="VIEW" />, document.getElementById("container"));
         const el = document.getElementsByClassName("featuregrid-toolbar")[0];
-        expect(el).toExist();
+        expect(el).toBeTruthy();
         let editButton = document.getElementById("fg-zoom-all");
         expect(isVisibleButton(editButton)).toBe(true);
         editButton.click();
@@ -103,7 +103,7 @@ describe('Featuregrid toolbar component', () => {
         spyOn(events, "switchViewMode");
         ReactDOM.render(<Toolbar events={events} mode="VIEW" isEditingAllowed/>, document.getElementById("container"));
         const el = document.getElementsByClassName("featuregrid-toolbar")[0];
-        expect(el).toExist();
+        expect(el).toBeTruthy();
         let backButton = document.getElementById("fg-back-view");
         expect(isVisibleButton(backButton)).toBe(false);
         backButton.click();
@@ -125,7 +125,7 @@ describe('Featuregrid toolbar component', () => {
         spyOn(events, "createFeature");
         ReactDOM.render(<Toolbar events={events} mode="VIEW" isEditingAllowed/>, document.getElementById("container"));
         const el = document.getElementsByClassName("featuregrid-toolbar")[0];
-        expect(el).toExist();
+        expect(el).toBeTruthy();
         let addButton = document.getElementById("fg-add-feature");
         expect(isVisibleButton(addButton)).toBe(false);
         addButton.click();
@@ -148,7 +148,7 @@ describe('Featuregrid toolbar component', () => {
         spyOn(events, "startDrawingFeature");
         ReactDOM.render(<Toolbar events={events} mode="VIEW" isEditingAllowed/>, document.getElementById("container"));
         const el = document.getElementsByClassName("featuregrid-toolbar")[0];
-        expect(el).toExist();
+        expect(el).toBeTruthy();
         let button = document.getElementById("fg-draw-feature");
         expect(isVisibleButton(button)).toBe(false);
         button.click();
@@ -177,7 +177,7 @@ describe('Featuregrid toolbar component', () => {
         spyOn(events, "deleteFeatures");
         ReactDOM.render(<Toolbar events={events} mode="VIEW" isEditingAllowed/>, document.getElementById("container"));
         const el = document.getElementsByClassName("featuregrid-toolbar")[0];
-        expect(el).toExist();
+        expect(el).toBeTruthy();
         let button = document.getElementById("fg-remove-features");
         expect(isVisibleButton(button)).toBe(false);
         button.click();
@@ -203,7 +203,7 @@ describe('Featuregrid toolbar component', () => {
         spyOn(events, "clearFeatureEditing");
         ReactDOM.render(<Toolbar events={events} mode="VIEW" isEditingAllowed/>, document.getElementById("container"));
         const el = document.getElementsByClassName("featuregrid-toolbar")[0];
-        expect(el).toExist();
+        expect(el).toBeTruthy();
         let button = document.getElementById("fg-cancel-editing");
         expect(isVisibleButton(button)).toBe(false);
         button.click();
@@ -226,7 +226,7 @@ describe('Featuregrid toolbar component', () => {
         spyOn(events, "deleteGeometry");
         ReactDOM.render(<Toolbar events={events} mode="VIEW" isEditingAllowed/>, document.getElementById("container"));
         const el = document.getElementsByClassName("featuregrid-toolbar")[0];
-        expect(el).toExist();
+        expect(el).toBeTruthy();
         let button = document.getElementById("fg-delete-geometry");
         expect(isVisibleButton(button)).toBe(false);
         button.click();
@@ -252,7 +252,7 @@ describe('Featuregrid toolbar component', () => {
         spyOn(events, "settings");
         ReactDOM.render(<Toolbar events={events} mode="VIEW" selectedCount={0} />, document.getElementById("container"));
         const el = document.getElementsByClassName("featuregrid-toolbar")[0];
-        expect(el).toExist();
+        expect(el).toBeTruthy();
         let button = document.getElementById("fg-grid-settings");
         expect(isVisibleButton(button)).toBe(true);
         button.click();
@@ -260,7 +260,7 @@ describe('Featuregrid toolbar component', () => {
         ReactDOM.render(<Toolbar events={events} mode="VIEW" selectedCount={0} isColumnsOpen/>, document.getElementById("container"));
         button = document.getElementById("fg-grid-settings");
         expect(isVisibleButton(button)).toBe(true);
-        expect(button.className).toExist();
+        expect(button.className).toBeTruthy();
         expect(button.className.indexOf("success") >= 0).toBe(true);
         ReactDOM.render(<Toolbar events={events} mode="EDIT" selectedCount={1} />, document.getElementById("container"));
         button = document.getElementById("fg-grid-settings");
@@ -279,7 +279,7 @@ describe('Featuregrid toolbar component', () => {
 
         ReactDOM.render(<Toolbar mode="EDIT" selectedCount={0} hasSupportedGeometry={false} />, document.getElementById("container"));
         const el = document.getElementsByClassName("featuregrid-toolbar")[0];
-        expect(el).toExist();
+        expect(el).toBeTruthy();
         expect(filter(document.getElementsByClassName("square-button"), function(b) { return isVisibleButton(b); }).length).toBe(1);
         expect(isVisibleButton(document.getElementById("fg-add-feature"))).toBe(false);
         expect(isVisibleButton(document.getElementById("fg-back-view"))).toBe(true);
@@ -308,7 +308,7 @@ describe('Featuregrid toolbar component', () => {
         spyOn(events, "switchEditMode");
         ReactDOM.render(<Toolbar events={events} mode="VIEW" disableZoomAll/>, document.getElementById("container"));
         const el = document.getElementsByClassName("featuregrid-toolbar")[0];
-        expect(el).toExist();
+        expect(el).toBeTruthy();
         let zoomAllButton = document.getElementById("fg-zoom-all");
         expect(isVisibleButton(zoomAllButton)).toBe(true);
         expect(el.children[2].disabled).toBe(true);
@@ -325,9 +325,9 @@ describe('Featuregrid toolbar component', () => {
         });
         it('enabled/disabled state', () => {
             ReactDOM.render(<Toolbar showTimeSyncButton timeSync mode="VIEW" disableZoomAll />, document.getElementById("container"));
-            expect(document.getElementById("fg-timeSync-button").className.split(' ')).toInclude('btn-success');
+            expect(document.getElementById("fg-timeSync-button").className.split(' ')).toContainEqual('btn-success');
             ReactDOM.render(<Toolbar showTimeSyncButton mode="VIEW" disableZoomAll />, document.getElementById("container"));
-            expect(document.getElementById("fg-timeSync-button").className.split(' ')).toNotInclude('btn-success');
+            expect(document.getElementById("fg-timeSync-button").className.split(' ')).not.toContainEqual('btn-success');
         });
         it('handler', () => {
             const events = {
@@ -336,10 +336,10 @@ describe('Featuregrid toolbar component', () => {
             const spy = spyOn(events, "setTimeSync");
             ReactDOM.render(<Toolbar showTimeSyncButton timeSync events={events} mode="VIEW" disableZoomAll />, document.getElementById("container"));
             document.getElementById("fg-timeSync-button").click();
-            expect(spy.calls[0].arguments[0]).toBe(false);
+            expect(spy.mock.calls[0][0]).toBe(false);
             ReactDOM.render(<Toolbar showTimeSyncButton events={events} mode="VIEW" disableZoomAll />, document.getElementById("container"));
             document.getElementById("fg-timeSync-button").click();
-            expect(spy.calls[1].arguments[0]).toBe(true);
+            expect(spy.mock.calls[1][0]).toBe(true);
         });
     });
     it('check chart button', () => {
@@ -349,7 +349,7 @@ describe('Featuregrid toolbar component', () => {
         spyOn(events, "chart");
         ReactDOM.render(<Toolbar events={events} mode="VIEW" showChartButton />, document.getElementById("container"));
         const el = document.getElementsByClassName("featuregrid-toolbar")[0];
-        expect(el).toExist();
+        expect(el).toBeTruthy();
         let chart = document.getElementById("fg-grid-map-chart");
         expect(isVisibleButton(chart)).toBe(true);
 

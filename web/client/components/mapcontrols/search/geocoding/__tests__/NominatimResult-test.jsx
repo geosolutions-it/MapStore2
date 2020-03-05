@@ -31,13 +31,13 @@ describe("test the NominatimResult", () => {
             boundingbox: []
         };
         const tb = ReactDOM.render(<NominatimResult item={item}/>, document.getElementById("container"));
-        expect(tb).toExist();
+        expect(tb).toBeTruthy();
 
     });
 
     it('create component without item', () => {
         const tb = ReactDOM.render(<NominatimResult />, document.getElementById("container"));
-        expect(tb).toExist();
+        expect(tb).toBeTruthy();
     });
 
     it('test click handler', () => {
@@ -53,8 +53,8 @@ describe("test the NominatimResult", () => {
         var tb = ReactDOM.render(<NominatimResult item={item} onItemClick={testHandlers.clickHandler}/>, document.getElementById("container"));
         let elem = TestUtils.findRenderedDOMComponentWithClass(tb, "search-result");
 
-        expect(elem).toExist();
+        expect(elem).toBeTruthy();
         ReactDOM.findDOMNode(elem).click();
-        expect(spy.calls.length).toEqual(1);
+        expect(spy.mock.calls.length).toEqual(1);
     });
 });

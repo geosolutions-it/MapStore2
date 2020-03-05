@@ -65,7 +65,7 @@ describe('zoomToFeatureHandler enhancer', () => {
     });
     it('zoomToFeatureHandler rendering with defaults', (done) => {
         const Sink = zoomToFeatureHandler(createSink( props => {
-            expect(props.zoomToFeature).toExist();
+            expect(props.zoomToFeature).toBeTruthy();
             done();
         }));
         ReactDOM.render(<Sink />, document.getElementById("container"));
@@ -84,8 +84,8 @@ describe('zoomToFeatureHandler enhancer', () => {
             currentFeatureCrs="EPSG:3857"
             currentFeature={SAMPLE_FEATURES}/>, document.getElementById("container"));
         expect(spy).toHaveBeenCalled();
-        expect(spy.calls[0].arguments[0]).toBeAn(Array);
-        expect(spy.calls[0].arguments[1]).toBe("EPSG:3857");
+        expect(spy.mock.calls[0][0]).toBeInstanceOf(Array);
+        expect(spy.mock.calls[0][1]).toBe("EPSG:3857");
     });
     it('not zoom if at least one geometry is not available', () => {
         const actions = {
@@ -100,7 +100,7 @@ describe('zoomToFeatureHandler enhancer', () => {
             zoomToExtent={actions.zoomToExtent}
             currentFeatureCrs="EPSG:3857"
             currentFeature={[SAMPLE_FEATURES[0]]} />, document.getElementById("container"));
-        expect(spy).toNotHaveBeenCalled();
+        expect(spy).not.toHaveBeenCalled();
 
     });
 });

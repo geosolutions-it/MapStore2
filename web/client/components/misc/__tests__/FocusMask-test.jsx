@@ -30,23 +30,23 @@ describe("FocusMask component", () => {
 
     it('creates a mask without holes ', () => {
         const cmp = ReactDOM.render(<FocusMask/>, document.getElementById("container"));
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
     });
 
     it('creates a mask with one holes ', () => {
         const cmp = ReactDOM.render(<FocusMask targets={[{selector: "#test_1"}]}/>, document.getElementById("mask"));
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
         const div1 = document.elementFromPoint(100, 100);
         expect(div1.id).toBe("test_1");
         const div2 = document.elementFromPoint(100, 400);
-        expect(div2.id).toNotBe("test_2");
+        expect(div2.id).not.toBe("test_2");
     });
 
     it('creates a mask with tow holes one passing event the other not ', () => {
         const cmp = ReactDOM.render(<FocusMask targets={[{selector: "#test_1", stopEventsOnTarget: true}, {selector: "#test_2"}]}/>, document.getElementById("mask"));
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
         const div1 = document.elementFromPoint(100, 100);
-        expect(div1.id).toNotBe("test_1");
+        expect(div1.id).not.toBe("test_1");
         const div2 = document.elementFromPoint(100, 400);
         expect(div2.id).toBe("test_2");
     });

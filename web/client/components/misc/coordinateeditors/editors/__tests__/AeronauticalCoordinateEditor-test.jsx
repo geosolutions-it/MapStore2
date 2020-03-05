@@ -52,7 +52,7 @@ describe('AeronauticalCoordinateEditor enhancer', () => {
         expect(elements[2].value).toBe('0');
         ReactTestUtils.Simulate.change(elements[0], { target: { value: "20" } });
         expect(spyonChange).toHaveBeenCalled();
-        expect(parseFloat(spyonChange.calls[0].arguments[0])).toBe(20);
+        expect(parseFloat(spyonChange.mock.calls[0][0])).toBe(20);
     });
     it('Test AeronauticalCoordinateEditor onChange not exceed maxDegrees', () => {
         const actions = {
@@ -71,7 +71,7 @@ describe('AeronauticalCoordinateEditor enhancer', () => {
         expect(elements[2].value).toBe('0');
         ReactTestUtils.Simulate.change(elements[1], { target: { value: "20" } });
         expect(spyonChange).toHaveBeenCalled();
-        expect(parseFloat(spyonChange.calls[0].arguments[0])).toBe(180);
+        expect(parseFloat(spyonChange.mock.calls[0][0])).toBe(180);
         expect(elements[0].value).toBe('180');
         expect(elements[1].value).toBe('0');
         expect(elements[2].value).toBe('0');

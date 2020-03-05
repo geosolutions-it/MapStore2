@@ -25,7 +25,7 @@ describe('NumberField', () => {
 
     it('create a NumberField component without any props', () => {
         const cmp = ReactDOM.render(<NumberField/>, document.getElementById("container"));
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
     });
     it('create a NumberField rendering number range', () => {
         let conf = {
@@ -41,11 +41,11 @@ describe('NumberField', () => {
             fieldException: "p...a"
         };
         const cmp = ReactDOM.render(<NumberField {...conf} />, document.getElementById("container"));
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
         let node = ReactDOM.findDOMNode(cmp);
-        expect(node).toExist();
+        expect(node).toBeTruthy();
         let inputs = node.getElementsByTagName("input");
-        expect(inputs).toExist();
+        expect(inputs).toBeTruthy();
         expect(inputs.length).toBe(2);
         cmp.changeNumber({lowBound: 10, upBound: 1});
         cmp.changeNumber({lowBound: 10, upBound: 100});
@@ -64,11 +64,11 @@ describe('NumberField', () => {
             options: {min: 0, max: 100, precision: 3}
         };
         const cmp = ReactDOM.render(<NumberField {...conf} />, document.getElementById("container"));
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
         let node = ReactDOM.findDOMNode(cmp);
-        expect(node).toExist();
+        expect(node).toBeTruthy();
         let inputs = node.getElementsByTagName("input");
-        expect(inputs).toExist();
+        expect(inputs).toBeTruthy();
         expect(inputs.length).toBe(1);
         cmp.changeNumber(null);
         cmp.changeNumber(10);
@@ -85,11 +85,11 @@ describe('NumberField', () => {
             <NumberField
                 onUpdateField={actions.onUpdateField}
             />, document.getElementById("container"));
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
         const node = ReactDOM.findDOMNode(cmp);
         const input = node.getElementsByTagName('INPUT');
         TestUtils.Simulate.change(input[0], {target: {value: 'aaa'}});
-        expect(spyOnUpdateField).toNotHaveBeenCalled();
+        expect(spyOnUpdateField).not.toHaveBeenCalled();
     });
 
     it('if value is number changeNumber should be called', () => {
@@ -102,7 +102,7 @@ describe('NumberField', () => {
             <NumberField
                 onUpdateField={actions.onUpdateField}
             />, document.getElementById("container"));
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
         const node = ReactDOM.findDOMNode(cmp);
         const input = node.getElementsByTagName('INPUT');
         TestUtils.Simulate.change(input[0], {target: {value: '7'}});

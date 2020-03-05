@@ -25,6 +25,6 @@ describe('MapTemplatesPanel component', () => {
     it('MapTemplatesPanel rendering with defaults', () => {
         ReactDOM.render(<MapTemplatesPanel />, document.getElementById("container"));
         const container = document.getElementById('container');
-        expect(container.getElementsByClassName('map-templates-panel')[0]).toExist();
+        expect(container.getElementsByClassName('map-templates-panel')[0]).toBeTruthy();
     });
 });

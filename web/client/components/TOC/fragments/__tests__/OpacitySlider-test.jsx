@@ -26,7 +26,7 @@ describe('test OpacitySlider module component', () => {
     it('render component', () => {
         const cmp = ReactDOM.render(<OpacitySlider />, document.getElementById("container"));
         const domNode = ReactDOM.findDOMNode(cmp);
-        expect(domNode).toExist();
+        expect(domNode).toBeTruthy();
         const target = document.getElementsByClassName('noUi-target');
         expect(target.length).toBe(1);
         expect(target[0].getAttribute('disabled')).toBe(null);
@@ -35,7 +35,7 @@ describe('test OpacitySlider module component', () => {
     it('show tooltip', () => {
         const cmp = ReactDOM.render(<OpacitySlider opacity={0.6}/>, document.getElementById("container"));
         const domNode = ReactDOM.findDOMNode(cmp);
-        expect(domNode).toExist();
+        expect(domNode).toBeTruthy();
         const tooltips = document.getElementsByClassName('noUi-tooltip');
         expect(tooltips.length).toBe(1);
         expect(tooltips[0].innerHTML).toBe('60 %');
@@ -44,7 +44,7 @@ describe('test OpacitySlider module component', () => {
     it('hide tooltip', () => {
         const cmp = ReactDOM.render(<OpacitySlider hideTooltip opacity={0.6}/>, document.getElementById("container"));
         const domNode = ReactDOM.findDOMNode(cmp);
-        expect(domNode).toExist();
+        expect(domNode).toBeTruthy();
         const tooltips = document.getElementsByClassName('noUi-tooltip');
         expect(tooltips.length).toBe(0);
     });
@@ -52,7 +52,7 @@ describe('test OpacitySlider module component', () => {
     it('disable component', () => {
         const cmp = ReactDOM.render(<OpacitySlider disabled opacity={0.6}/>, document.getElementById("container"));
         const domNode = ReactDOM.findDOMNode(cmp);
-        expect(domNode).toExist();
+        expect(domNode).toBeTruthy();
         const target = document.getElementsByClassName('noUi-target');
         expect(target.length).toBe(1);
         expect(target[0].getAttribute('disabled')).toBe('true');

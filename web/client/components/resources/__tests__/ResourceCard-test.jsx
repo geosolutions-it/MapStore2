@@ -27,10 +27,10 @@ describe('This test for ResourceCard', () => {
     // test DEFAULTS
     it('creates the component with defaults', () => {
         const mapItem = ReactDOM.render(<ResourceCard map={{}} />, document.getElementById("container"));
-        expect(mapItem).toExist();
+        expect(mapItem).toBeTruthy();
 
         const mapItemDom = ReactDOM.findDOMNode(mapItem);
-        expect(mapItemDom).toExist();
+        expect(mapItemDom).toBeTruthy();
 
         expect(mapItemDom.childNodes[0].className).toBe('gridcard map-thumb');
         const headings = mapItemDom.getElementsByClassName('gridcard-title');
@@ -41,10 +41,10 @@ describe('This test for ResourceCard', () => {
         const testName = "test";
         const testDescription = "testDescription";
         const mapItem = ReactDOM.render(<ResourceCard resource={{ name: testName, description: testDescription }} />, document.getElementById("container"));
-        expect(mapItem).toExist();
+        expect(mapItem).toBeTruthy();
 
         const mapItemDom = ReactDOM.findDOMNode(mapItem);
-        expect(mapItemDom).toExist();
+        expect(mapItemDom).toBeTruthy();
 
         expect(mapItemDom.childNodes[0].className).toBe('gridcard map-thumb');
         const headings = mapItemDom.getElementsByClassName('gridcard-title');
@@ -114,15 +114,15 @@ describe('This test for ResourceCard', () => {
         );
         expect(buttons.length).toBe(3);
         buttons.forEach(b => TestUtils.Simulate.click(b));
-        expect(spyonEdit.calls.length).toEqual(1);
-        expect(spyonShare.calls.length).toEqual(1);
+        expect(spyonEdit.mock.calls.length).toEqual(1);
+        expect(spyonShare.mock.calls.length).toEqual(1);
         // wait for confirm
-        expect(spyonDelete.calls.length).toEqual(0);
-        expect(document.querySelector('.modal-dialog')).toExist();
+        expect(spyonDelete.mock.calls.length).toEqual(0);
+        expect(document.querySelector('.modal-dialog')).toBeTruthy();
         const confirmBtn = document.querySelectorAll('.modal-footer .btn-primary')[0];
-        expect(confirmBtn).toExist();
+        expect(confirmBtn).toBeTruthy();
         TestUtils.Simulate.click(confirmBtn);
-        expect(spyonDelete.calls.length).toEqual(1);
+        expect(spyonDelete.mock.calls.length).toEqual(1);
 
     });
 });

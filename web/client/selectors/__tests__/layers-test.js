@@ -17,16 +17,16 @@ const {
 describe('Test layers selectors', () => {
     it('test getLayerFromName', () => {
         let layer = getLayerFromName({}, "ws:layer_1");
-        expect(layer).toNotExist();
+        expect(layer).toBeFalsy();
         layer = getLayerFromName({layers: {flat: [{name: "ws:layer_1"}]}}, "ws:layer_1");
-        expect(layer).toExist();
+        expect(layer).toBeTruthy();
         expect(layer).toEqual({name: "ws:layer_1"});
     });
     it('test getLayerFromId', () => {
         let layer = getLayerFromId({}, "layer_1");
-        expect(layer).toNotExist();
+        expect(layer).toBeFalsy();
         layer = getLayerFromId({layers: {flat: [{id: "layer_1"}]}}, "layer_1");
-        expect(layer).toExist();
+        expect(layer).toBeTruthy();
         expect(layer).toEqual({id: "layer_1"});
     });
     it('test layersSelector from config', () => {
@@ -52,7 +52,7 @@ describe('Test layers selectors', () => {
 
     it('test layersSelector without layers', () => {
         const props = layersSelector({});
-        expect(props).toExist();
+        expect(props).toBeTruthy();
         expect(props.length).toBe(0);
     });
 
@@ -246,7 +246,7 @@ describe('Test layers selectors', () => {
 
         expect(props.length).toBe(1);
         expect(props[0].nodes.length).toBe(2);
-        expect(props[0].nodes[0]).toNotBeA('string');
+        expect(typeof props[0].nodes[0]).not.toBe('string');
     });
 
     it('test groupsSelector from layers flat more groups', () => {
@@ -261,8 +261,8 @@ describe('Test layers selectors', () => {
         expect(props.length).toBe(2);
         expect(props[0].nodes.length).toBe(1);
         expect(props[1].nodes.length).toBe(1);
-        expect(props[0].nodes[0]).toNotBeA('string');
-        expect(props[1].nodes[0]).toNotBeA('string');
+        expect(typeof props[0].nodes[0]).not.toBe('string');
+        expect(typeof props[1].nodes[0]).not.toBe('string');
     });
 
     it('test selectedNodesSelector', () => {
@@ -483,7 +483,7 @@ describe('Test layers selectors', () => {
 
     it('test centerToMarkerSelector', () => {
         let props = centerToMarkerSelector({});
-        expect(props).toEqual(false);
+        expect(props).toBeFalsy();
 
         props = centerToMarkerSelector({
             mapInfo: {

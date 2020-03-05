@@ -28,20 +28,20 @@ describe('This test for Thumbnail', () => {
     // test DEFAULTS
     it('creates the component with defaults, loading=true', () => {
         const thumbnailItem = ReactDOM.render(<Thumbnail loading/>, document.getElementById("container"));
-        expect(thumbnailItem).toExist();
+        expect(thumbnailItem).toBeTruthy();
 
         const thumbnailItemDom = ReactDOM.findDOMNode(thumbnailItem);
-        expect(thumbnailItemDom).toExist();
+        expect(thumbnailItemDom).toBeTruthy();
 
         expect(thumbnailItemDom.className).toBe('btn btn-info');
     });
 
     it('creates the component with defaults, loading=false', () => {
         const thumbnailItem = ReactDOM.render(<Thumbnail loading={false} map={{saving: false}}/>, document.getElementById("container"));
-        expect(thumbnailItem).toExist();
+        expect(thumbnailItem).toBeTruthy();
 
         const thumbnailItemDom = ReactDOM.findDOMNode(thumbnailItem);
-        expect(thumbnailItemDom).toExist();
+        expect(thumbnailItemDom).toBeTruthy();
 
         expect(thumbnailItemDom.className).toBe('dropzone-thumbnail-container');
     });
@@ -55,13 +55,13 @@ describe('This test for Thumbnail', () => {
             errors: []
         };
         const thumbnailItem = ReactDOM.render(<Thumbnail map={map}/>, document.getElementById("container"));
-        expect(thumbnailItem).toExist();
+        expect(thumbnailItem).toBeTruthy();
 
         const thumbnailItemDom = ReactDOM.findDOMNode(thumbnailItem);
-        expect(thumbnailItemDom).toExist();
+        expect(thumbnailItemDom).toBeTruthy();
 
         const content = TestUtils.findRenderedDOMComponentWithClass(thumbnailItem, 'dropzone-content-image');
-        expect(content).toExist();
+        expect(content).toBeTruthy();
     });
 
     it('creates the component with a thumbnail', () => {
@@ -74,13 +74,13 @@ describe('This test for Thumbnail', () => {
             errors: []
         };
         const thumbnailItem = ReactDOM.render(<Thumbnail map={map}/>, document.getElementById("container"));
-        expect(thumbnailItem).toExist();
+        expect(thumbnailItem).toBeTruthy();
 
         const thumbnailItemDom = ReactDOM.findDOMNode(thumbnailItem);
-        expect(thumbnailItemDom).toExist();
+        expect(thumbnailItemDom).toBeTruthy();
 
         const content = TestUtils.findRenderedDOMComponentWithClass(thumbnailItem, 'dropzone-content-image-added');
-        expect(content).toExist();
+        expect(content).toBeTruthy();
     });
 
 
@@ -97,16 +97,16 @@ describe('This test for Thumbnail', () => {
         };
 
         const thumbnailItem = ReactDOM.render(<Thumbnail map={map}/>, document.getElementById("container"));
-        expect(thumbnailItem).toExist();
+        expect(thumbnailItem).toBeTruthy();
 
         // map, metadata
         thumbnailItem.updateThumbnail(null, null);
 
         const thumbnailItemDom = ReactDOM.findDOMNode(thumbnailItem);
-        expect(thumbnailItemDom).toExist();
+        expect(thumbnailItemDom).toBeTruthy();
 
         const content = TestUtils.findRenderedDOMComponentWithClass(thumbnailItem, 'dropzone-content-image-added');
-        expect(content).toExist();
+        expect(content).toBeTruthy();
     });
 
     it('creates the component with a thumbnail, map=null, metadata=object', () => {
@@ -127,16 +127,16 @@ describe('This test for Thumbnail', () => {
         };
 
         const thumbnailItem = ReactDOM.render(<Thumbnail map={map}/>, document.getElementById("container"));
-        expect(thumbnailItem).toExist();
+        expect(thumbnailItem).toBeTruthy();
 
         // map, metadata
         thumbnailItem.updateThumbnail(null, metadata);
 
         const thumbnailItemDom = ReactDOM.findDOMNode(thumbnailItem);
-        expect(thumbnailItemDom).toExist();
+        expect(thumbnailItemDom).toBeTruthy();
 
         const content = TestUtils.findRenderedDOMComponentWithClass(thumbnailItem, 'dropzone-content-image-added');
-        expect(content).toExist();
+        expect(content).toBeTruthy();
     });
 
     it('creates the component with a thumbnail, onDrop files=null', () => {
@@ -152,7 +152,7 @@ describe('This test for Thumbnail', () => {
         };
 
         const thumbnailItem = ReactDOM.render(<Thumbnail map={map}/>, document.getElementById("container"));
-        expect(thumbnailItem).toExist();
+        expect(thumbnailItem).toBeTruthy();
 
         /* let files = [{
             type: "image/png",
@@ -164,10 +164,10 @@ describe('This test for Thumbnail', () => {
         // thumbnailItem.onDrop(files);
 
         const thumbnailItemDom = ReactDOM.findDOMNode(thumbnailItem);
-        expect(thumbnailItemDom).toExist();
+        expect(thumbnailItemDom).toBeTruthy();
 
         const content = TestUtils.findRenderedDOMComponentWithClass(thumbnailItem, 'dropzone-content-image-added');
-        expect(content).toExist();
+        expect(content).toBeTruthy();
     });
 
 
@@ -184,16 +184,16 @@ describe('This test for Thumbnail', () => {
         };
 
         const thumbnailItem = ReactDOM.render(<Thumbnail map={map}/>, document.getElementById("container"));
-        expect(thumbnailItem).toExist();
+        expect(thumbnailItem).toBeTruthy();
 
         // map, metadata
         thumbnailItem.onRemoveThumbnail(null);
 
         const thumbnailItemDom = ReactDOM.findDOMNode(thumbnailItem);
-        expect(thumbnailItemDom).toExist();
+        expect(thumbnailItemDom).toBeTruthy();
 
         const content = TestUtils.findRenderedDOMComponentWithClass(thumbnailItem, 'dropzone-content-image-added');
-        expect(content).toExist();
+        expect(content).toBeTruthy();
     });
 
     it('creates the component with a thumbnail, deleteThumbnail(thumbnail, mapId)', () => {
@@ -209,15 +209,15 @@ describe('This test for Thumbnail', () => {
         };
 
         const thumbnailItem = ReactDOM.render(<Thumbnail map={map}/>, document.getElementById("container"));
-        expect(thumbnailItem).toExist();
+        expect(thumbnailItem).toBeTruthy();
 
         // map, metadata
         thumbnailItem.deleteThumbnail(thumbnail, map.id);
 
         const thumbnailItemDom = ReactDOM.findDOMNode(thumbnailItem);
-        expect(thumbnailItemDom).toExist();
+        expect(thumbnailItemDom).toBeTruthy();
 
         const content = TestUtils.findRenderedDOMComponentWithClass(thumbnailItem, 'dropzone-content-image-added');
-        expect(content).toExist();
+        expect(content).toBeTruthy();
     });
 });

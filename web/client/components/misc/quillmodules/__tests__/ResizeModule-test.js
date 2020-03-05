@@ -37,8 +37,8 @@ describe("test quill ResizeModule", () => {
                     resizeModule: {},
                     toolbar: toolbarConfig
                 }}/>, document.getElementById("container"));
-        expect(rQuill).toExist();
-        expect(document.querySelector('.ql-editor')).toExist();
+        expect(rQuill).toBeTruthy();
+        expect(document.querySelector('.ql-editor')).toBeTruthy();
     });
 
     it('test Toolbar class', () => {
@@ -63,9 +63,9 @@ describe("test quill ResizeModule", () => {
                 }
             }
         });
-        expect(toolbar.toolbar).toNotExist();
+        expect(toolbar.toolbar).toBeFalsy();
         toolbar.onCreate();
-        expect(toolbar.toolbar).toExist();
+        expect(toolbar.toolbar).toBeTruthy();
         toolbar.onUpdate();
         toolbar.onDestroy();
     });
@@ -82,10 +82,10 @@ describe("test quill ResizeModule", () => {
                 }
             }
         });
-        expect(displaySize).toExist();
-        expect(displaySize.display).toNotExist();
+        expect(displaySize).toBeTruthy();
+        expect(displaySize.display).toBeFalsy();
         displaySize.onCreate();
-        expect(displaySize.display).toExist();
+        expect(displaySize.display).toBeTruthy();
         displaySize.onUpdate();
         displaySize.getCurrentSize();
         expect(displaySize.display.style.right).toBe('-4px');
@@ -114,10 +114,10 @@ describe("test quill ResizeModule", () => {
             },
             onUpdate: () => {}
         });
-        expect(resize).toExist();
-        expect(resize.boxes).toNotExist();
+        expect(resize).toBeTruthy();
+        expect(resize.boxes).toBeFalsy();
         resize.onCreate();
-        expect(resize.boxes).toExist();
+        expect(resize.boxes).toBeTruthy();
         resize.handleMousedown({
             clientX: 0,
             clientY: 0,
@@ -149,11 +149,11 @@ describe("test quill ResizeModule", () => {
                     resizeModule: {},
                     toolbar: toolbarConfig
                 }}/>, document.getElementById("container"));
-        expect(rQuill).toExist();
-        expect(document.querySelector('.ql-editor')).toExist();
-        expect(document.querySelector('.ms-quill-iframe')).toNotExist();
+        expect(rQuill).toBeTruthy();
+        expect(document.querySelector('.ql-editor')).toBeTruthy();
+        expect(document.querySelector('.ms-quill-iframe')).toBeFalsy();
         rQuill.getEditor().insertEmbed(0, 'video', 'http://test-url');
-        expect(document.querySelector('.ms-quill-iframe')).toExist();
+        expect(document.querySelector('.ms-quill-iframe')).toBeTruthy();
     });
 
     it('test ResizeModule class ', () => {
@@ -162,13 +162,13 @@ describe("test quill ResizeModule", () => {
             <ReactQuill />, document.getElementById("container"));
         const quill = rQuill.getEditor();
         const resizeModule = new ResizeModule(quill, {});
-        expect(resizeModule.overlay).toNotExist();
+        expect(resizeModule.overlay).toBeFalsy();
         resizeModule.show(domNode);
-        expect(resizeModule.overlay).toExist();
+        expect(resizeModule.overlay).toBeTruthy();
         resizeModule.handleClick({});
         resizeModule.checkImage({});
         resizeModule.hide();
-        expect(resizeModule.overlay).toNotExist();
+        expect(resizeModule.overlay).toBeFalsy();
     });
 
 });

@@ -28,12 +28,12 @@ describe('ContentToolbar component', () => {
         ReactDOM.render(<ContentToolbar />, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('.ms-content-toolbar');
-        expect(el).toExist();
+        expect(el).toBeTruthy();
     });
     it('ContentToolbar rendering all supported items', () => {
         ReactDOM.render(<ContentToolbar tools={["align", "size", "theme"]}/>, document.getElementById("container"));
         const buttons = document.getElementsByTagName('button');
-        expect(buttons).toExist();
+        expect(buttons).toBeTruthy();
         expect(buttons.length).toEqual(3);
     });
     const testItems = [{
@@ -65,15 +65,15 @@ describe('ContentToolbar component', () => {
                 }}
             />, document.getElementById("container"));
             const buttons = document.getElementsByTagName('button');
-            expect(buttons).toExist();
+            expect(buttons).toBeTruthy();
             expect(buttons.length).toEqual(tool.totButtons);
 
             const list = document.getElementsByTagName('li');
-            expect(list).toExist();
+            expect(list).toBeTruthy();
             expect(list.length).toEqual(tool.length, `the ${tool.name} had wrong number of li tags, expect ${list.length} toEqual ${tool.length}`);
 
             const aTags = document.getElementsByTagName('a');
-            expect(aTags).toExist();
+            expect(aTags).toBeTruthy();
             castArray(aTags).forEach((a, i) => {
                 ReactTestUtils.Simulate.click(aTags[i]);
             });
@@ -90,7 +90,7 @@ describe('ContentToolbar component', () => {
             }}
         />, document.getElementById("container"));
         const buttons = document.getElementsByTagName('button');
-        expect(buttons).toExist();
+        expect(buttons).toBeTruthy();
         expect(buttons.length).toEqual(1);
         ReactTestUtils.Simulate.click(buttons[0]);
     });
@@ -104,7 +104,7 @@ describe('ContentToolbar component', () => {
                 path="TEST_PATH"
             />, document.getElementById("container"));
             const list = document.querySelectorAll('.ms-content-toolbar li a span');
-            expect(list).toExist();
+            expect(list).toBeTruthy();
             expect(list.length).toBe(3);
             expect(list[0].innerText).toBe("geostory.contentToolbar.leftAlignLabel");
             expect(list[1].innerText).toBe("geostory.contentToolbar.centerAlignLabel");
@@ -120,7 +120,7 @@ describe('ContentToolbar component', () => {
                 path="TEST_PATH"
             />, document.getElementById("container"));
             const list = document.querySelectorAll('.ms-content-toolbar li a span');
-            expect(list).toExist();
+            expect(list).toBeTruthy();
             expect(list.length).toBe(4);
             expect(list[0].innerText).toBe("geostory.contentToolbar.smallSizeLabel");
             expect(list[1].innerText).toBe("geostory.contentToolbar.mediumSizeLabel");
@@ -138,7 +138,7 @@ describe('ContentToolbar component', () => {
                 path="TEST_PATH"
             />, document.getElementById("container"));
             const list = document.querySelectorAll('.ms-content-toolbar li a span');
-            expect(list).toExist();
+            expect(list).toBeTruthy();
             expect(list.length).toBe(4);
             expect(list[0].innerText).toBe("geostory.contentToolbar.brightThemeLabel");
             expect(list[1].innerText).toBe("geostory.contentToolbar.brightTextThemeLabel");
@@ -157,10 +157,10 @@ describe('ContentToolbar component', () => {
                 }}
             />, document.getElementById("container"));
             const removeButton = document.querySelector('.ms-content-toolbar button');
-            expect(removeButton).toExist();
+            expect(removeButton).toBeTruthy();
             ReactTestUtils.Simulate.click(removeButton);
             const confirmDialog = document.querySelector('.modal-dialog');
-            expect(confirmDialog.style.display).toNotBe("none"); // check confirmation dialog to be shown
+            expect(confirmDialog.style.display).not.toBe("none"); // check confirmation dialog to be shown
             const confirmButton = confirmDialog.querySelector('.btn-group .btn');
             ReactTestUtils.Simulate.click(confirmButton); // confirm
         });
@@ -175,7 +175,7 @@ describe('ContentToolbar component', () => {
                 }}
             />, document.getElementById("container"));
             const buttons = document.getElementsByTagName('button');
-            expect(buttons).toExist();
+            expect(buttons).toBeTruthy();
             expect(buttons.length).toEqual(1);
             ReactTestUtils.Simulate.click(buttons[0]);
         });

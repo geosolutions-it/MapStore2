@@ -35,7 +35,7 @@ describe('ContextCreator component', () => {
     it('ContextCreator rendering with defaults', () => {
         ReactDOM.render(<ContextCreator />, document.getElementById("container"));
         const container = document.getElementById('container');
-        expect(container.getElementsByClassName('ms2-stepper')[0]).toExist();
+        expect(container.getElementsByClassName('ms2-stepper')[0]).toBeTruthy();
     });
     describe('Test ContextCreator onSave', () => {
         it('default destination', () => {
@@ -65,7 +65,7 @@ describe('ContextCreator component', () => {
                 </Localized>, document.getElementById("container"));
             // save button
             const saveBtn = document.querySelectorAll('.footer-button-toolbar button')[0];
-            expect(saveBtn).toExist();
+            expect(saveBtn).toBeTruthy();
             expect(saveBtn.childNodes[0].innerHTML).toBe('save');
             ReactTestUtils.Simulate.click(saveBtn); // <-- trigger event callback
             // check destination path
@@ -99,7 +99,7 @@ describe('ContextCreator component', () => {
                 </Localized>, document.getElementById("container"));
             // save button
             const saveBtn = document.querySelectorAll('.footer-button-toolbar button')[0];
-            expect(saveBtn).toExist();
+            expect(saveBtn).toBeTruthy();
             expect(saveBtn.childNodes[0].innerHTML).toBe('save');
             ReactTestUtils.Simulate.click(saveBtn); // <-- trigger event callback
             // check customization of destination path

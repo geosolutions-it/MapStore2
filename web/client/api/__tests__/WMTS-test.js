@@ -14,7 +14,7 @@ describe('Test correctness of the WMTS APIs', () => {
     it('GetRecords KVP', (done) => {
         API.getRecords('base/web/client/test-resources/wmts/GetCapabilities-1.0.0.xml', 0, 3, '').then((result) => {
             try {
-                expect(result).toExist();
+                expect(result).toBeTruthy();
                 expect(result.numberOfRecordsMatched).toBe(3);
                 expect(result.records[0].style).toBe("");
                 result.records.map(record => {
@@ -34,7 +34,7 @@ describe('Test correctness of the WMTS APIs', () => {
     it('GetRecords RESTful', (done) => {
         API.getRecords('base/web/client/test-resources/wmts/GetCapabilities-rest.xml', 0, 7, '').then((result) => {
             try {
-                expect(result).toExist();
+                expect(result).toBeTruthy();
                 expect(result.numberOfRecordsMatched).toBe(7);
                 // all records should be RESTful with same GetTileURL
                 result.records.map(record => {
@@ -58,7 +58,7 @@ describe('Test correctness of the WMTS APIs', () => {
         // GS 2.15 has ResourceURLs together with KVP. This checks that the proper URL is returned by getTileURL, used to generate the layer. See #3796
         API.getRecords('base/web/client/test-resources/wmts/GetCapabilities-1.0.0_gs_2.15.xml', 0, 3, '').then((result) => {
             try {
-                expect(result).toExist();
+                expect(result).toBeTruthy();
                 expect(result.numberOfRecordsMatched).toBe(3);
                 expect(result.records[0].style).toBe("");
                 result.records.map(record => {

@@ -50,7 +50,7 @@ describe('Test correctness of the map actions', () => {
         const retval = changeMapInfoState(testVal);
 
         expect(retval.type).toBe(CHANGE_MAPINFO_STATE);
-        expect(retval.enabled).toExist();
+        expect(retval.enabled).toBeTruthy();
         expect(retval.enabled).toBe(testVal);
     });
 
@@ -58,12 +58,12 @@ describe('Test correctness of the map actions', () => {
         const reqIdVal = 100;
         const requestVal = {p: "p"};
         const e = newMapInfoRequest(reqIdVal, requestVal);
-        expect(e).toExist();
+        expect(e).toBeTruthy();
         expect(e.type).toBe(NEW_MAPINFO_REQUEST);
-        expect(e.reqId).toExist();
-        expect(e.reqId).toBeA('number');
+        expect(e.reqId).toBeTruthy();
+        expect(typeof e.reqId).toBe('number');
         expect(e.reqId).toBe(100);
-        expect(e.request).toExist();
+        expect(e.request).toBeTruthy();
         expect(e.request.p).toBe("p");
     });
 
@@ -84,9 +84,9 @@ describe('Test correctness of the map actions', () => {
         let placeId;
         showMapinfoRevGeocode({lat: 40, lng: 10})((e) => {
             placeId = e.reverseGeocodeData.place_id;
-            expect(e).toExist();
+            expect(e).toBeTruthy();
             expect(e.type).toBe(SHOW_REVERSE_GEOCODE);
-            expect(placeId).toExist();
+            expect(placeId).toBeTruthy();
         });
     });
 
@@ -98,7 +98,7 @@ describe('Test correctness of the map actions', () => {
         const overrideParams = {cql_filter: "ID_ORIG=1234"};
 
         const action = featureInfoClick(point, layer, filterNameList, overrideParams, itemId);
-        expect(action).toExist();
+        expect(action).toBeTruthy();
         expect(action.type).toBe(FEATURE_INFO_CLICK);
         expect(action.point).toBe(point);
         expect(action.layer).toBe(layer);
@@ -108,7 +108,7 @@ describe('Test correctness of the map actions', () => {
     });
     it('reset reverse geocode data', () => {
         const e = hideMapinfoRevGeocode();
-        expect(e).toExist();
+        expect(e).toBeTruthy();
         expect(e.type).toBe(HIDE_REVERSE_GEOCODE);
     });
 
@@ -140,14 +140,14 @@ describe('Test correctness of the map actions', () => {
     });
     it('toggleHighlightFeature', () => {
         const retVal = toggleHighlightFeature(true);
-        expect(retVal).toExist();
+        expect(retVal).toBeTruthy();
         expect(retVal.type).toBe(TOGGLE_HIGHLIGHT_FEATURE);
         expect(toggleHighlightFeature().enabled).toBeFalsy();
         expect(toggleHighlightFeature(true).enabled).toBe(true);
     });
     it('changePage', () => {
         const retVal = changePage(true);
-        expect(retVal).toExist();
+        expect(retVal).toBeTruthy();
         expect(retVal.type).toBe(CHANGE_PAGE);
         expect(changePage().index).toBeFalsy();
         expect(changePage(1).index).toBe(1);

@@ -13,14 +13,14 @@ var locale = require('../locale');
 describe('Test the locale reducer', () => {
     it('fills localization data from loaded translation file', () => {
         var state = locale({}, {type: 'CHANGE_LOCALE', messages: {}, locale: 'it-IT'});
-        expect(state.current).toExist();
+        expect(state.current).toBeTruthy();
         expect(state.current).toBe('it-IT');
-        expect(state.messages).toExist();
+        expect(state.messages).toBeTruthy();
     });
 
     it('creates an error on wrongly translation file', () => {
         var state = locale({}, {type: 'LOCALE_LOAD_ERROR', error: 'error'});
-        expect(state.loadingError).toExist();
+        expect(state.loadingError).toBeTruthy();
     });
 
     it('returns original state on unrecognized action', () => {

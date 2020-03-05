@@ -19,7 +19,7 @@ describe('contextmanager reducer', () => {
     it('searchTextChanged', () => {
         const action = searchTextChanged('searchtext');
         const state = contextmanager(undefined, action);
-        expect(state).toExist();
+        expect(state).toBeTruthy();
         expect(state.searchText).toBe('searchtext');
     });
     it('contextsListLoaded', () => {
@@ -27,20 +27,20 @@ describe('contextmanager reducer', () => {
             results: ""
         }, "TEST");
         const state = contextmanager(undefined, action);
-        expect(state).toExist();
+        expect(state).toBeTruthy();
         expect(state.results.length).toBe(0);
         expect(state.searchText).toBe("TEST");
     });
     it('contextsLoading', () => {
         const action = contextsLoading(true);
         const state = contextmanager(undefined, action);
-        expect(state).toExist();
+        expect(state).toBeTruthy();
         expect(state.loading).toBe(true);
     });
     it('contextsLoading save', () => {
         const action = contextsLoading(true, "saving");
         const state = contextmanager(undefined, action);
-        expect(state).toExist();
+        expect(state).toBeTruthy();
         expect(state.loading).toBe(true);
         expect(state.loadFlags.saving).toBe(true);
     });

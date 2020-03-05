@@ -28,17 +28,17 @@ describe("propsStreamFactory enhancer", () => {
         ReactDOM.render(<CMP />, document.getElementById("container"));
         const el = document.getElementById("count-0");
         // const el = document.getElementById("count-1");
-        expect(el).toExist();
+        expect(el).toBeTruthy();
     });
     it('creates component with dataStreamFactory props', () => {
         const CMP = propsStreamFactory(({count}) => <div id={"count-" + count} />);
         ReactDOM.render(<CMP dataStreamFactory={$props => $props.scan( (acc) => acc + 1, 0).map(count => ({count}))}/>, document.getElementById("container"));
         const el = document.getElementById("count-1");
         // const el = document.getElementById("count-1");
-        expect(el).toExist();
+        expect(el).toBeTruthy();
         ReactDOM.render(<CMP dataStreamFactory={$props => $props.scan( (acc) => acc + 1, 0).map(count => ({count}))}/>, document.getElementById("container"));
         const el2 = document.getElementById("count-2");
-        expect(el2).toExist();
+        expect(el2).toBeTruthy();
     });
 
 });

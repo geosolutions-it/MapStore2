@@ -28,8 +28,8 @@ describe.skip('MediaModal component', () => {
                 <MediaModal open/>
             </Provider>, document.getElementById("container"));
         const container = document.getElementById('container');
-        expect(container.querySelector('.modal-fixed')).toNotExist();
-        expect(document.querySelector('.modal-fixed')).toExist();
+        expect(container.querySelector('.modal-fixed')).toBeFalsy();
+        expect(document.querySelector('.modal-fixed')).toBeTruthy();
     });
 });
 

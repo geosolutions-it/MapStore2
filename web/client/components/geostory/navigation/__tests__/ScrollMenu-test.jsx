@@ -28,9 +28,9 @@ describe('ScrollMenu component', () => {
         ReactDOM.render(<ScrollMenu items={navigableItemsSelectorCreator()({geostory: {currentStory: STORY}})} />, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('.ms-horizontal-menu');
-        expect(el).toExist();
+        expect(el).toBeTruthy();
         const buttons = container.querySelectorAll('button.menu-item');
-        expect(buttons).toExist();
+        expect(buttons).toBeTruthy();
         expect(buttons.length).toBe(4);
     });
     it('should fire scrollTo on menu item click', (done) => {
@@ -66,7 +66,7 @@ describe('ScrollMenu component', () => {
 
         const container = document.getElementById('container');
         const scrollMenuNode = container.querySelector('.ms-horizontal-menu');
-        expect(scrollMenuNode).toExist();
+        expect(scrollMenuNode).toBeTruthy();
         const menuItemNode = scrollMenuNode.querySelectorAll('.menu-item');
         expect(menuItemNode.length).toBe(5);
         Simulate.click(menuItemNode[0]);
@@ -106,7 +106,7 @@ describe('ScrollMenu component', () => {
 
         const container = document.getElementById('container');
         const scrollMenuNode = container.querySelector('.ms-horizontal-menu');
-        expect(scrollMenuNode).toExist();
+        expect(scrollMenuNode).toBeTruthy();
         const menuItemNode = scrollMenuNode.querySelectorAll('.menu-item');
         const item5Node = menuItemNode[4];
         let item5BoundingClientRect = item5Node.getBoundingClientRect();
@@ -159,9 +159,9 @@ describe('ScrollMenu component', () => {
 
         const container = document.getElementById('container');
         const scrollMenuNode = container.querySelector('.ms-horizontal-menu');
-        expect(scrollMenuNode).toExist();
+        expect(scrollMenuNode).toBeTruthy();
         const rightArrowNode = scrollMenuNode.querySelector('.glyphicon-chevron-right');
-        expect(rightArrowNode).toExist();
+        expect(rightArrowNode).toBeTruthy();
         let leftArrowNode = scrollMenuNode.querySelector('.glyphicon-chevron-left');
         expect(leftArrowNode).toBe(null);
 
@@ -170,6 +170,6 @@ describe('ScrollMenu component', () => {
         });
 
         leftArrowNode = scrollMenuNode.querySelector('.glyphicon-chevron-left');
-        expect(leftArrowNode).toExist();
+        expect(leftArrowNode).toBeTruthy();
     });
 });

@@ -12,7 +12,7 @@ const {UPDATE_MAP_LAYOUT, updateMapLayout} = require('../maplayout');
 describe('Test map layout actions', () => {
     it('updateMapLayout', () => {
         const retval = updateMapLayout({left: 300});
-        expect(retval).toExist();
+        expect(retval).toBeTruthy();
         expect(retval.type).toEqual(UPDATE_MAP_LAYOUT);
         expect(retval.layout).toEqual({left: 300});
     });

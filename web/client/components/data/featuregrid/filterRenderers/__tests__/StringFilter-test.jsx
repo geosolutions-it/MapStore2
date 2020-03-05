@@ -26,12 +26,12 @@ describe('Test for StringFilter component', () => {
     it('render with defaults', () => {
         ReactDOM.render(<StringFilter/>, document.getElementById("container"));
         const el = document.getElementsByClassName("form-control input-sm")[0];
-        expect(el).toExist();
+        expect(el).toBeTruthy();
     });
     it('render with value', () => {
         ReactDOM.render(<StringFilter value={"TEST"}/>, document.getElementById("container"));
         const el = document.getElementsByClassName("form-control input-sm")[0];
-        expect(el).toExist();
+        expect(el).toBeTruthy();
         expect(el.value).toBe("TEST");
     });
     it('Test StringFilter onChange', () => {
@@ -55,7 +55,7 @@ describe('Test for StringFilter component', () => {
         input.value = "test  ";
         ReactTestUtils.Simulate.change(input);
         expect(spyonChange).toHaveBeenCalled();
-        const args = spyonChange.calls[0].arguments[0];
+        const args = spyonChange.mock.calls[0][0];
         expect(args.value).toBe("test");
         expect(args.rawValue).toBe( "test  ");
     });
@@ -72,12 +72,12 @@ describe('Test for StringFilter component', () => {
 
         input.value = " ";
         ReactTestUtils.Simulate.change(input);
-        const args = spyonChange.calls[1].arguments[0];
+        const args = spyonChange.mock.calls[1][0];
         expect(args.value).toBe(undefined);
         expect(args.rawValue).toBe(" ");
         input.value = "";
         ReactTestUtils.Simulate.change(input);
-        const args2 = spyonChange.calls[2].arguments[0];
+        const args2 = spyonChange.mock.calls[2][0];
         expect(args2.value).toBe(undefined);
         expect(args2.rawValue).toBe("");
     });

@@ -19,7 +19,7 @@ describe('Test the geostories reducer', () => {
     it('geostories setGeostoriesAvailable', () => {
         const action = setGeostoriesAvailable(true);
         const state = geostories( undefined, action);
-        expect(state).toExist();
+        expect(state).toBeTruthy();
         expect(state.available).toBe(true);
     });
     it('geostories geostoriesListLoaded', () => {
@@ -29,20 +29,20 @@ describe('Test the geostories reducer', () => {
             searchText: "TEST"
         });
         const state = geostories( undefined, action);
-        expect(state).toExist();
+        expect(state).toBeTruthy();
         expect(state.results.length).toBe(0);
         expect(state.searchText).toBe("TEST");
     });
     it('geostories geostoriesLoading', () => {
         const action = geostoriesLoading(true);
         const state = geostories( undefined, action);
-        expect(state).toExist();
+        expect(state).toBeTruthy();
         expect(state.loading).toBe(true);
     });
     it('geostories geostoriesLoading save', () => {
         const action = geostoriesLoading(true, "saving");
         const state = geostories(undefined, action);
-        expect(state).toExist();
+        expect(state).toBeTruthy();
         expect(state.loading).toBe(true);
         expect(state.loadFlags.saving).toBe(true);
     });

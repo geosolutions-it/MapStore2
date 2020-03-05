@@ -24,7 +24,7 @@ describe("Test the OpacityPicker component", () => {
 
     it('creates component with defaults', () => {
         const cmp = ReactDOM.render(<OpacityPicker/>, document.getElementById("container"));
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
     });
 
 });

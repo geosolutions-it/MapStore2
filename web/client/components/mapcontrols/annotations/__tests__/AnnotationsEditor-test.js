@@ -37,9 +37,9 @@ describe("test the AnnotationsEditor Panel", () => {
 
     it('test default properties', () => {
         const viewer = ReactDOM.render(<AnnotationsEditor/>, document.getElementById("container"));
-        expect(viewer).toExist();
+        expect(viewer).toBeTruthy();
         const viewerNode = ReactDOM.findDOMNode(viewer);
-        expect(viewerNode).toExist();
+        expect(viewerNode).toBeTruthy();
     });
 
     it('test display annotation', () => {
@@ -49,10 +49,10 @@ describe("test the AnnotationsEditor Panel", () => {
             description: '<span><i>desc</i></span>'
         };
         const viewer = ReactDOM.render(<AnnotationsEditor {...feature} />, document.getElementById("container"));
-        expect(viewer).toExist();
+        expect(viewer).toBeTruthy();
 
         const viewerNode = ReactDOM.findDOMNode(viewer);
-        expect(viewerNode).toExist();
+        expect(viewerNode).toBeTruthy();
         expect(viewerNode.innerText.indexOf('mytitle') !== -1).toBe(true);
         expect(viewerNode.innerHTML.indexOf('<i>desc</i>') !== -1).toBe(true);
     });
@@ -75,10 +75,10 @@ describe("test the AnnotationsEditor Panel", () => {
                 editable: false
             }
         ]}}/>, document.getElementById("container"));
-        expect(viewer).toExist();
+        expect(viewer).toBeTruthy();
 
         const viewerNode = ReactDOM.findDOMNode(viewer);
-        expect(viewerNode).toExist();
+        expect(viewerNode).toBeTruthy();
         expect(viewerNode.innerText.indexOf('my feature: 1') !== -1).toBe(true);
     });
 
@@ -92,7 +92,7 @@ describe("test the AnnotationsEditor Panel", () => {
         const viewer = ReactDOM.render(<AnnotationsEditor {...properties} {...actions} editing={{
             properties
         }}/>, document.getElementById("container"));
-        expect(viewer).toExist();
+        expect(viewer).toBeTruthy();
         expect(TestUtils.scryRenderedDOMComponentsWithTag(viewer, "input").length).toEqual(1);
         expect(TestUtils.scryRenderedDOMComponentsWithClass(viewer, "quill").length).toEqual(1);
     });
@@ -114,15 +114,15 @@ describe("test the AnnotationsEditor Panel", () => {
 
         const viewer = ReactDOM.render(<AnnotationsEditor {...feature} onEdit={testHandlers.onEditHandler}
             onRemove={testHandlers.onRemoveHandler}/>, document.getElementById("container"));
-        expect(viewer).toExist();
+        expect(viewer).toBeTruthy();
 
         let editButton = ReactDOM.findDOMNode(TestUtils.scryRenderedDOMComponentsWithTag(viewer, "button")[1]);
 
-        expect(editButton).toExist();
+        expect(editButton).toBeTruthy();
         TestUtils.Simulate.click(editButton);
 
-        expect(spyEdit.calls.length).toEqual(1);
-        expect(spyRemove.calls.length).toEqual(0);
+        expect(spyEdit.mock.calls.length).toEqual(1);
+        expect(spyRemove.mock.calls.length).toEqual(0);
     });
     it('test click remove annotation', () => {
         const feature = {
@@ -140,18 +140,18 @@ describe("test the AnnotationsEditor Panel", () => {
 
         const viewer = ReactDOM.render(<AnnotationsEditor {...feature} onEdit={testHandlers.onEditHandler}
             onRemove={testHandlers.onRemoveHandler}/>, document.getElementById("container"));
-        expect(viewer).toExist();
+        expect(viewer).toBeTruthy();
 
         let removeButton = ReactDOM.findDOMNode(TestUtils.scryRenderedDOMComponentsWithTag(viewer, "button")[2]);
 
-        expect(removeButton).toExist();
+        expect(removeButton).toBeTruthy();
         TestUtils.Simulate.click(removeButton);
 
         const dialog = document.getElementById("confirm-dialog");
         let buttons = document.getElementsByTagName("button");
 
-        expect(spyEdit.calls.length).toEqual(0);
-        expect(dialog).toExist();
+        expect(spyEdit.mock.calls.length).toEqual(0);
+        expect(dialog).toBeTruthy();
         expect(buttons.length).toBe(7);
     });
     it('test click remove geometry', () => {
@@ -176,15 +176,15 @@ describe("test the AnnotationsEditor Panel", () => {
             }}
             onAddGeometry={testHandlers.onAddHandler}
             onDeleteGeometry={testHandlers.onRemoveHandler}/>, document.getElementById("container"));
-        expect(viewer).toExist();
+        expect(viewer).toBeTruthy();
 
         let removeButton = ReactDOM.findDOMNode(TestUtils.scryRenderedDOMComponentsWithTag(viewer, "button")[2]);
 
-        expect(removeButton).toExist();
+        expect(removeButton).toBeTruthy();
         TestUtils.Simulate.click(removeButton);
 
-        expect(spyAdd.calls.length).toEqual(0);
-        expect(spyRemove.calls.length).toEqual(1);
+        expect(spyAdd.mock.calls.length).toEqual(0);
+        expect(spyRemove.mock.calls.length).toEqual(1);
     });
 
     it('test click add geometry, and opening of DropdownFeatureType', () => {
@@ -208,14 +208,14 @@ describe("test the AnnotationsEditor Panel", () => {
             }}
             onAddGeometry={testHandlers.onAddHandler}
             onDeleteGeometry={testHandlers.onRemoveHandler}/>, document.getElementById("container"));
-        expect(viewer).toExist();
+        expect(viewer).toBeTruthy();
 
         let addButton = ReactDOM.findDOMNode(TestUtils.scryRenderedDOMComponentsWithTag(viewer, "button")[1]);
 
-        expect(addButton).toExist();
+        expect(addButton).toBeTruthy();
         TestUtils.Simulate.click(addButton);
 
-        expect(spyRemove.calls.length).toEqual(0);
+        expect(spyRemove.mock.calls.length).toEqual(0);
     });
 
     it('test click save', () => {
@@ -240,15 +240,15 @@ describe("test the AnnotationsEditor Panel", () => {
             }}
             onSave={testHandlers.onSaveHandler}
             onCancelEdit={testHandlers.onCancelHandler}/>, document.getElementById("container"));
-        expect(viewer).toExist();
+        expect(viewer).toBeTruthy();
 
         let saveButton = ReactDOM.findDOMNode(TestUtils.scryRenderedDOMComponentsWithTag(viewer, "button")[3]);
 
-        expect(saveButton).toExist();
+        expect(saveButton).toBeTruthy();
         TestUtils.Simulate.click(saveButton);
 
-        expect(spySave.calls.length).toEqual(1);
-        expect(spyCancel.calls.length).toEqual(0);
+        expect(spySave.mock.calls.length).toEqual(1);
+        expect(spyCancel.mock.calls.length).toEqual(0);
     });
 
     it('test click cancel', () => {
@@ -271,15 +271,15 @@ describe("test the AnnotationsEditor Panel", () => {
             geometry: {}
         }} onSave={testHandlers.onSaveHandler}
         onCancelEdit={testHandlers.onCancelHandler}/>, document.getElementById("container"));
-        expect(viewer).toExist();
+        expect(viewer).toBeTruthy();
 
         let cancelButton = ReactDOM.findDOMNode(TestUtils.scryRenderedDOMComponentsWithTag(viewer, "button")[0]);
 
-        expect(cancelButton).toExist();
+        expect(cancelButton).toBeTruthy();
         TestUtils.Simulate.click(cancelButton);
 
-        expect(spySave.calls.length).toEqual(0);
-        expect(spyCancel.calls.length).toEqual(1);
+        expect(spySave.mock.calls.length).toEqual(0);
+        expect(spyCancel.mock.calls.length).toEqual(1);
     });
 
     it('test click cancel trigger UnsavedChangesModal', () => {
@@ -302,14 +302,14 @@ describe("test the AnnotationsEditor Panel", () => {
         onToggleUnsavedChangesModal={testHandlers.onToggleUnsavedChangesModal}
         unsavedChanges
         />, document.getElementById("container"));
-        expect(viewer).toExist();
+        expect(viewer).toBeTruthy();
 
         let cancelButton = ReactDOM.findDOMNode(TestUtils.scryRenderedDOMComponentsWithTag(viewer, "button")[0]);
 
-        expect(cancelButton).toExist();
+        expect(cancelButton).toBeTruthy();
         TestUtils.Simulate.click(cancelButton);
 
-        expect(spyUnsavedModal.calls.length).toEqual(1);
+        expect(spyUnsavedModal.mock.calls.length).toEqual(1);
     });
 
     it('test click save validate title error', () => {
@@ -332,16 +332,16 @@ describe("test the AnnotationsEditor Panel", () => {
             features: [{}]
         }} onSave={testHandlers.onSaveHandler}
         onError={testHandlers.onErrorHandler}/>, document.getElementById("container"));
-        expect(viewer).toExist();
+        expect(viewer).toBeTruthy();
 
         let saveButton = ReactDOM.findDOMNode(TestUtils.scryRenderedDOMComponentsWithTag(viewer, "button")[3]);
 
-        expect(saveButton).toExist();
+        expect(saveButton).toBeTruthy();
         TestUtils.Simulate.click(saveButton);
 
-        expect(spySave.calls.length).toEqual(0);
-        expect(spyError.calls.length).toEqual(1);
-        expect(spyError.calls[0].arguments[0].title).toBe('annotations.mandatory');
+        expect(spySave.mock.calls.length).toEqual(0);
+        expect(spyError.mock.calls.length).toEqual(1);
+        expect(spyError.mock.calls[0][0].title).toBe('annotations.mandatory');
     });
 
     it('test click save validate geometry error', () => {
@@ -364,16 +364,16 @@ describe("test the AnnotationsEditor Panel", () => {
             features: null
         }} onSave={testHandlers.onSaveHandler}
         onError={testHandlers.onErrorHandler}/>, document.getElementById("container"));
-        expect(viewer).toExist();
+        expect(viewer).toBeTruthy();
 
         let saveButton = ReactDOM.findDOMNode(TestUtils.scryRenderedDOMComponentsWithTag(viewer, "button")[2]);
 
-        expect(saveButton).toExist();
+        expect(saveButton).toBeTruthy();
         TestUtils.Simulate.click(saveButton);
 
-        expect(spySave.calls.length).toEqual(0);
-        expect(spyError.calls.length).toEqual(1);
-        expect(spyError.calls[0].arguments[0].geometry).toBe('annotations.emptygeometry');
+        expect(spySave.mock.calls.length).toEqual(0);
+        expect(spyError.mock.calls.length).toEqual(1);
+        expect(spyError.mock.calls[0][0].geometry).toBe('annotations.emptygeometry');
     });
 
     it('test edit field', () => {
@@ -391,12 +391,12 @@ describe("test the AnnotationsEditor Panel", () => {
             editing={{
                 properties: feature
             }}/>, document.getElementById("container"));
-        expect(viewer).toExist();
+        expect(viewer).toBeTruthy();
 
         const titleField = ReactDOM.findDOMNode(TestUtils.scryRenderedDOMComponentsWithTag(viewer, "input")[0]);
         titleField.value = 'anothertitle';
         TestUtils.Simulate.change(titleField);
-        expect(spyChangeProperties.calls.length).toEqual(2);
+        expect(spyChangeProperties.mock.calls.length).toEqual(2);
 
     });
 
@@ -415,7 +415,7 @@ describe("test the AnnotationsEditor Panel", () => {
             errors={{
                 title: 'myerror'
             }}/>, document.getElementById("container"));
-        expect(viewer).toExist();
+        expect(viewer).toBeTruthy();
         const viewerNode = ReactDOM.findDOMNode(viewer);
         expect(viewerNode.innerText.indexOf('myerror') !== -1).toBe(true);
     });
@@ -432,12 +432,12 @@ describe("test the AnnotationsEditor Panel", () => {
                 properties: feature,
                 style: [{}]
             }}/>, document.getElementById("container"));
-        expect(viewer).toExist();
+        expect(viewer).toBeTruthy();
         const viewerNode = ReactDOM.findDOMNode(viewer);
         expect(viewerNode.className).toBe('mapstore-annotations-info-viewer');
 
         const stylerPanel = TestUtils.findRenderedDOMComponentWithClass(viewer, "mapstore-annotations-info-viewer-styler");
-        expect(stylerPanel).toExist();
+        expect(stylerPanel).toBeTruthy();
     });
 
     it('test styler click on marker', () => {
@@ -478,14 +478,14 @@ describe("test the AnnotationsEditor Panel", () => {
             }]
         }}
         onSetStyle={testHandlers.onSetStyle} styling/>, document.getElementById("container"));
-        expect(viewer).toExist();
+        expect(viewer).toBeTruthy();
         let marker = ReactDOM.findDOMNode(TestUtils.scryRenderedDOMComponentsWithClass(viewer, "mapstore-annotations-info-viewer-marker")[0]);
 
-        expect(marker).toExist();
+        expect(marker).toBeTruthy();
         TestUtils.Simulate.click(marker);
 
-        expect(spySetStyle.calls.length).toEqual(1);
-        expect(spySetStyle.calls[0].arguments[0]).toExist();
+        expect(spySetStyle.mock.calls.length).toEqual(1);
+        expect(spySetStyle.mock.calls[0][0]).toBeTruthy();
     });
 
     it('test styler select glyph', () => {
@@ -514,16 +514,16 @@ describe("test the AnnotationsEditor Panel", () => {
             }]
         }}
         onSetStyle={testHandlers.onSetStyle} styling/>, document.getElementById("container"));
-        expect(viewer).toExist();
+        expect(viewer).toBeTruthy();
 
         let select = ReactDOM.findDOMNode(TestUtils.scryRenderedDOMComponentsWithClass(viewer, "Select-control")[0]);
 
-        expect(select).toExist();
+        expect(select).toBeTruthy();
         TestUtils.Simulate.keyDown(select, { keyCode: 40, key: 'ArrowDown' });
         TestUtils.Simulate.keyDown(select, { keyCode: 13, key: 'Enter' });
 
-        expect(spySetStyle.calls.length).toEqual(1);
-        expect(spySetStyle.calls[0].arguments[0]).toExist();
+        expect(spySetStyle.mock.calls.length).toEqual(1);
+        expect(spySetStyle.mock.calls[0][0]).toBeTruthy();
     });
 
     it('test annotation zoom', () => {
@@ -544,16 +544,16 @@ describe("test the AnnotationsEditor Panel", () => {
         const spyZoom = expect.spyOn(testHandlers, 'onZoom');
 
         const viewer = ReactDOM.render(<AnnotationsEditor feature={feature} {...feature} {...actions} onZoom={testHandlers.onZoom}/>, document.getElementById("container"));
-        expect(viewer).toExist();
+        expect(viewer).toBeTruthy();
 
         const viewerNode = ReactDOM.findDOMNode(viewer);
-        expect(viewerNode).toExist();
+        expect(viewerNode).toBeTruthy();
         const zoomButton = ReactDOM.findDOMNode(TestUtils.scryRenderedDOMComponentsWithClass(viewer, "mapstore-annotations-info-viewer-buttons")[0]).querySelectorAll('button')[0];
 
-        expect(zoomButton).toExist();
+        expect(zoomButton).toBeTruthy();
         TestUtils.Simulate.click(zoomButton);
 
-        expect(spyZoom.calls.length).toEqual(1);
+        expect(spyZoom.mock.calls.length).toEqual(1);
     });
 
     it('test rendering Circle Editor', () => {
@@ -569,9 +569,9 @@ describe("test the AnnotationsEditor Panel", () => {
                 features: [circleGeom]
             }}
             selected={circleGeom}/>, document.getElementById("container"));
-        expect(viewer).toExist();
+        expect(viewer).toBeTruthy();
         const inputs = TestUtils.scryRenderedDOMComponentsWithTag(viewer, "input");
-        expect(inputs[0]).toExist();
+        expect(inputs[0]).toBeTruthy();
         expect(inputs[0].name).toBe("radius");
 
     });
@@ -589,9 +589,9 @@ describe("test the AnnotationsEditor Panel", () => {
                 features: [circleGeom]
             }}
             selected={circleGeom}/>, document.getElementById("container"));
-        expect(viewer).toExist();
+        expect(viewer).toBeTruthy();
         const inputs = TestUtils.scryRenderedDOMComponentsWithTag(viewer, "input");
-        expect(inputs[0]).toExist();
+        expect(inputs[0]).toBeTruthy();
         expect(inputs[0].name).toBe("text");
 
     });

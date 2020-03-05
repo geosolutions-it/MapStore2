@@ -25,16 +25,16 @@ describe("This test for HtmlRenderer component", () => {
 
     it('creates componet with defaults', () => {
         const cmp = ReactDOM.render(<HtmlRenderer/>, document.getElementById("container"));
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
 
         const node = ReactDOM.findDOMNode(cmp);
-        expect(node.id).toNotExist();
+        expect(node.id).toBeFalsy();
         expect(node.childNodes.length).toBe(0);
     });
 
     it('creates empty componet with id', () => {
         const cmp = ReactDOM.render(<HtmlRenderer id="testId"/>, document.getElementById("container"));
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
 
         const node = ReactDOM.findDOMNode(cmp);
         expect(node.id).toBe("testId");
@@ -44,7 +44,7 @@ describe("This test for HtmlRenderer component", () => {
     it('creates a filled componet', () => {
         const srcCode = '<p id="innerP"><span id="innerSPAN">text</span></p>';
         const cmp = ReactDOM.render(<HtmlRenderer html={srcCode}/>, document.getElementById("container"));
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
 
         const node = ReactDOM.findDOMNode(cmp);
         expect(node.childNodes.length).toBe(1);

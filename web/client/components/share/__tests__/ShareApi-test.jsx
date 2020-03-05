@@ -26,7 +26,7 @@ describe("The ShareAPI component", () => {
 
     it('is created with defaults', () => {
         const cmpSharePanel = ReactDOM.render(<ShareApi/>, document.getElementById("container"));
-        expect(cmpSharePanel).toExist();
+        expect(cmpSharePanel).toBeTruthy();
 
     });
 
@@ -35,10 +35,10 @@ describe("The ShareAPI component", () => {
         const shareConfigUrl = 'configurl';
 
         const cmpSharePanel = ReactDOM.render(<ShareApi shareUrl={url} shareConfigUrl={shareConfigUrl}/>, document.getElementById("container"));
-        expect(cmpSharePanel).toExist();
+        expect(cmpSharePanel).toBeTruthy();
 
         const codeEmbed = ReactDOM.findDOMNode(ReactTestUtils.scryRenderedDOMComponentsWithTag(cmpSharePanel, "code")[0]);
-        expect(codeEmbed).toExist();
+        expect(codeEmbed).toBeTruthy();
         expect(codeEmbed.innerText.indexOf(url) !== -1).toBe(true);
         expect(codeEmbed.innerText.indexOf(shareConfigUrl) !== -1).toBe(true);
     });
@@ -48,10 +48,10 @@ describe("The ShareAPI component", () => {
         const shareConfigUrl = 'configurl';
         const version = '18e36c9e2ce1cbf57648907ec177e02f0118764d';
         const cmpSharePanel = ReactDOM.render(<ShareApi shareUrl={url} shareConfigUrl={shareConfigUrl} version={version}/>, document.getElementById("container"));
-        expect(cmpSharePanel).toExist();
+        expect(cmpSharePanel).toBeTruthy();
 
         const codeEmbed = ReactDOM.findDOMNode(ReactTestUtils.scryRenderedDOMComponentsWithTag(cmpSharePanel, "code")[0]);
-        expect(codeEmbed).toExist();
+        expect(codeEmbed).toBeTruthy();
         expect(codeEmbed.innerText.indexOf('?' + version) !== -1).toBe(true);
     });
 
@@ -60,10 +60,10 @@ describe("The ShareAPI component", () => {
         const shareConfigUrl = 'configurl';
         const version = '${mapstore2.version}';
         const cmpSharePanel = ReactDOM.render(<ShareApi shareUrl={url} shareConfigUrl={shareConfigUrl} version={version}/>, document.getElementById("container"));
-        expect(cmpSharePanel).toExist();
+        expect(cmpSharePanel).toBeTruthy();
 
         const codeEmbed = ReactDOM.findDOMNode(ReactTestUtils.scryRenderedDOMComponentsWithTag(cmpSharePanel, "code")[0]);
-        expect(codeEmbed).toExist();
+        expect(codeEmbed).toBeTruthy();
         expect(codeEmbed.innerText.indexOf('?' + version) !== -1).toBe(false);
     });
 
@@ -72,10 +72,10 @@ describe("The ShareAPI component", () => {
         const shareConfigUrl = 'configurl';
         const version = 'no-version';
         const cmpSharePanel = ReactDOM.render(<ShareApi shareUrl={url} shareConfigUrl={shareConfigUrl} version={version}/>, document.getElementById("container"));
-        expect(cmpSharePanel).toExist();
+        expect(cmpSharePanel).toBeTruthy();
 
         const codeEmbed = ReactDOM.findDOMNode(ReactTestUtils.scryRenderedDOMComponentsWithTag(cmpSharePanel, "code")[0]);
-        expect(codeEmbed).toExist();
+        expect(codeEmbed).toBeTruthy();
         expect(codeEmbed.innerText.indexOf('?' + version) !== -1).toBe(false);
     });
 

@@ -21,19 +21,19 @@ describe('Icons openlayers styles', () => {
             }
         };
         const styles = getIcon(options);
-        expect(styles).toExist();
+        expect(styles).toBeTruthy();
         expect(styles.length).toBe(2);
         const shadow = styles[0];
-        expect(shadow).toExist();
+        expect(shadow).toBeTruthy();
         const shadowImage = shadow.getImage();
         expect(shadowImage.getAnchor()).toEqual([12, 12]);
         expect(shadowImage.getOpacity()).toEqual(1);
         expect(shadowImage.getRotation()).toEqual(1);
         expect(shadowImage.getSize()).toEqual(null);
         const icon = styles[1];
-        expect(icon).toExist();
+        expect(icon).toBeTruthy();
         const iconImage = icon.getImage();
-        expect(iconImage).toExist();
+        expect(iconImage).toBeTruthy();
         expect(iconImage.getAnchor()).toEqual([18, 46]);
         expect(iconImage.getOpacity()).toEqual(1);
         expect(iconImage.getOrigin()).toEqual([72, 46]);
@@ -41,7 +41,7 @@ describe('Icons openlayers styles', () => {
         expect(iconImage.getSize()).toEqual([36, 46]);
         expect(new RegExp("/web/client/components/mapcontrols/annotations/img/markers_default.png").test(iconImage.getSrc())).toEqual(true);
         const iconText = icon.getText();
-        expect(iconText).toExist();
+        expect(iconText).toBeTruthy();
         expect(iconText.getFill().getColor()).toEqual("#FFFFFF");
         expect(iconText.getFont()).toEqual("14px FontAwesome");
 
@@ -57,12 +57,12 @@ describe('Icons openlayers styles', () => {
             }
         };
         const styles = getIcon(options);
-        expect(styles).toExist();
+        expect(styles).toBeTruthy();
         expect(styles.length).toBe(3);
         const highlightStyle = styles[2];
-        expect(highlightStyle).toExist();
+        expect(highlightStyle).toBeTruthy();
         const highlightStyleIcon = highlightStyle.getImage();
-        expect(highlightStyleIcon).toExist();
+        expect(highlightStyleIcon).toBeTruthy();
     });
     it('test standard getIcon iconUrl, no shadow, no highlight', () => {
         const getIcon = Icons.standard.getIcon;
@@ -78,11 +78,11 @@ describe('Icons openlayers styles', () => {
             }
         };
         const styles = getIcon(options);
-        expect(styles).toExist();
+        expect(styles).toBeTruthy();
         expect(styles.length).toBe(1);
         const icon = styles[0];
         const iconImage = icon.getImage();
-        expect(iconImage).toExist();
+        expect(iconImage).toBeTruthy();
         expect(iconImage.getAnchor()).toEqual([7, 7]);
         expect(iconImage.getOpacity()).toEqual(1);
         expect(iconImage.getOrigin()).toEqual([0, 0]);
@@ -105,24 +105,24 @@ describe('Icons openlayers styles', () => {
             }
         };
         const styles = getIcon(options);
-        expect(styles).toExist();
+        expect(styles).toBeTruthy();
         expect(styles.length).toBe(3);
         const icon = styles[1];
         const iconImage = icon.getImage();
-        expect(iconImage).toExist();
+        expect(iconImage).toBeTruthy();
         expect(iconImage.getAnchor()).toEqual([7, 7]);
         expect(iconImage.getOpacity()).toEqual(1);
         expect(iconImage.getOrigin()).toEqual([0, 0]);
         expect(iconImage.getRotation()).toEqual(1);
         expect(iconImage.getSize()).toEqual([14, 14]);
         const highlightStyle = styles[2];
-        expect(highlightStyle).toExist();
+        expect(highlightStyle).toBeTruthy();
         const highlightStyleIcon = highlightStyle.getImage();
-        expect(highlightStyleIcon).toExist();
+        expect(highlightStyleIcon).toBeTruthy();
         const shadowStyle = styles[0];
-        expect(shadowStyle).toExist();
+        expect(shadowStyle).toBeTruthy();
         const shadowStyleImage = shadowStyle.getImage();
-        expect(shadowStyleImage).toExist();
+        expect(shadowStyleImage).toBeTruthy();
         expect(shadowStyleImage.getAnchor()).toEqual([12, 41]);
         expect(new RegExp("/assets/img.png").test(shadowStyleImage.getSrc())).toEqual(true);
     });
@@ -140,15 +140,15 @@ describe('Icons openlayers styles', () => {
             }
         };
         const styles = getIcon(options);
-        expect(styles).toExist();
+        expect(styles).toBeTruthy();
         expect(styles.length).toBe(1);
         const icon = styles[0];
         const iconImage = icon.getImage();
-        expect(iconImage).toExist();
+        expect(iconImage).toBeTruthy();
         expect(iconImage.getAnchor()).toEqual([2, 2]);
     });
     it('test html icon, not implemented', () => {
         const getIcon = Icons.html.getIcon;
-        expect(getIcon()).toNotExist();
+        expect(getIcon()).toBeFalsy();
     });
 });

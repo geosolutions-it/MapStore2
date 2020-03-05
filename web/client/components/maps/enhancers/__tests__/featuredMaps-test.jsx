@@ -91,7 +91,7 @@ describe('featuredMaps enhancher', () => {
         ReactDOM.render(<CMP items={[]} enableFeaturedMaps={handlers.enableFeaturedMaps} />, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('#CMP');
-        expect(el).toExist();
+        expect(el).toBeTruthy();
 
         let previousItemsCount = el.querySelector('.previous-items-count');
         expect(previousItemsCount.innerHTML).toBe('0');
@@ -117,7 +117,7 @@ describe('featuredMaps enhancher', () => {
         viewSize = el.querySelector('.view-size');
         expect(viewSize.innerHTML).toBe('4');
 
-        expect(spy.calls.length).toEqual(0);
+        expect(spy.mock.calls.length).toEqual(0);
     });
 
 });

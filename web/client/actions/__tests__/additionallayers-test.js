@@ -25,7 +25,7 @@ describe('Test additional layers actions', () => {
             style: 'generic'
         };
         const retval = updateAdditionalLayer(id, owner, actionType, options);
-        expect(retval).toExist();
+        expect(retval).toBeTruthy();
         expect(retval.id).toBe(id);
         expect(retval.owner).toBe(owner);
         expect(retval.actionType).toBe(actionType);
@@ -37,7 +37,7 @@ describe('Test additional layers actions', () => {
         const owner = 'owner';
         const options = [{ style: 'point' }];
         const retval = updateOptionsByOwner(owner, options);
-        expect(retval).toExist();
+        expect(retval).toBeTruthy();
         expect(retval.owner).toBe(owner);
         expect(retval.options).toBe(options);
         expect(retval.type).toBe(UPDATE_OPTIONS_BY_OWNER);
@@ -47,14 +47,14 @@ describe('Test additional layers actions', () => {
         const id = 'layer_001';
         const owner = 'owner';
         const retval = removeAdditionalLayer({id, owner});
-        expect(retval).toExist();
+        expect(retval).toBeTruthy();
         expect(retval.id).toBe(id);
         expect(retval.owner).toBe(owner);
         expect(retval.type).toBe(REMOVE_ADDITIONAL_LAYER);
     });
     it('Test removeAllAdditionalLayers action creator', () => {
         const retval = removeAllAdditionalLayers();
-        expect(retval).toExist();
+        expect(retval).toBeTruthy();
         expect(retval.type).toBe(REMOVE_ALL_ADDITIONAL_LAYERS);
     });
 });

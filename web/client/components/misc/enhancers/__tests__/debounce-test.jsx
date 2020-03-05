@@ -24,18 +24,18 @@ describe('debounce enhancer', () => {
     });
     it('debounce call only last action', (done) => {
         const action = (status, method, owner, features) => {
-            expect(status).toExist();
+            expect(status).toBeTruthy();
             expect(status).toBe("replace");
-            expect(method).toNotExist();
-            expect(owner).toExist();
+            expect(method).toBeFalsy();
+            expect(owner).toBeTruthy();
             expect(owner).toBe("queryform");
-            expect(features).toExist();
+            expect(features).toBeTruthy();
             expect(features).toBe("geom2");
             done();
         };
         const Sink = compose(debounce("onChangeDrawingStatus", 800))(createSink( props => {
-            expect(props).toExist();
-            expect(props.onChangeDrawingStatus).toExist();
+            expect(props).toBeTruthy();
+            expect(props.onChangeDrawingStatus).toBeTruthy();
             props.onChangeDrawingStatus("geom");
             props.onChangeDrawingStatus("geom1");
             props.onChangeDrawingStatus("replace", undefined, "queryform", "geom2");

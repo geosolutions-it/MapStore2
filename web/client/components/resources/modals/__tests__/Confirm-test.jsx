@@ -23,7 +23,7 @@ describe("ConfirmDialog component", () => {
     it('creates component with content', () => {
         ReactDOM.render(<ConfirmModal show><div id="TEST">some content</div></ConfirmModal>, document.getElementById("container"));
         let dialog = document.getElementsByClassName("modal-dialog").item(0);
-        expect(dialog).toExist();
+        expect(dialog).toBeTruthy();
         expect(document.querySelectorAll('button').length).toBe(3); // close, confirm, cancel
     });
 

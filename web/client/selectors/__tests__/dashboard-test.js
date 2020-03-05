@@ -53,7 +53,7 @@ describe('dashboard selectors', () => {
             dashboard: {
                 resource: {}
             }
-        })).toExist();
+        })).toBeTruthy();
     });
     it('isDashboardLoading', () => {
         expect(isDashboardLoading({

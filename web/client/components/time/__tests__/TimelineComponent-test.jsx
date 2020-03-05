@@ -25,7 +25,7 @@ describe('test TimelineComponent module component', () => {
 
     it('test TimelineComponent creation', () => {
         const comp = ReactDOM.render(<Timeline />, document.getElementById("container"));
-        expect(comp).toExist();
+        expect(comp).toBeTruthy();
 
     });
     it('test TimelineComponent re-rendering on props change', () => {
@@ -34,14 +34,14 @@ describe('test TimelineComponent module component', () => {
         };
         const comp = ReactDOM.render(<Timeline currentTime="2016-02-24T12:00:00.000Z" rangechangedHandler={actions.rangeChange} />, document.getElementById("container"));
         const reComp = ReactDOM.render(<Timeline currentTime="2016-02-24T12:00:00.000Z" rangechangedHandler={actions.rangeChange} collapse={false} items={TEST_ITEMS}/>, document.getElementById("container"));
-        expect(comp).toExist();
-        expect(reComp).toExist();
+        expect(comp).toBeTruthy();
+        expect(reComp).toBeTruthy();
         const point = document.querySelector('.vis-point');
-        expect(point).toExist();
+        expect(point).toBeTruthy();
     });
     it('test TimelineComponent readOnly', () => {
         ReactDOM.render(<Timeline readOnly />, document.getElementById("container"));
-        expect(document.querySelector('.read-only-timeline')).toExist();
+        expect(document.querySelector('.read-only-timeline')).toBeTruthy();
         // TODO: test cursor not dragging
     });
     it('test range items rendered correctly', () => {
@@ -50,10 +50,10 @@ describe('test TimelineComponent module component', () => {
             rangeChange: () => { }
         };
         const comp = ReactDOM.render(<Timeline currentTime={CURRENT_TIME} rangeItems={[{ id: 'RANGE_1', start: new Date("2016-01-00T00:00:00.000Z"), end: new Date("2017-01-00T00:00:00.000Z"), className: 'ms-current-range', type: 'background'}]} rangechangedHandler={actions.rangeChange} collapse={false} items={TEST_ITEMS} />, document.getElementById("container"));
-        expect(comp).toExist();
+        expect(comp).toBeTruthy();
 
         const rangeItem = document.querySelector('.ms-current-range');
-        expect(rangeItem).toExist();
+        expect(rangeItem).toBeTruthy();
     });
     it('re-rendering rangeItems do not change current items (optimization)', () => {
         const CURRENT_TIME = "2016-02-24T12:00:00.000Z";
@@ -66,19 +66,19 @@ describe('test TimelineComponent module component', () => {
         ReactDOM.render(<Timeline currentTime={CURRENT_TIME} rangeItems={RANGE_STATE_1} rangechangedHandler={actions.rangeChange} collapse={false} items={TEST_ITEMS} />, document.getElementById("container"));
         const point1 = document.querySelector('.vis-point');
         // expect(point0).toBe(point1);
-        expect(document.querySelector('.TEST_RANGE')).toExist();
+        expect(document.querySelector('.TEST_RANGE')).toBeTruthy();
         ReactDOM.render(<Timeline currentTime={CURRENT_TIME} rangeItems={RANGE_STATE_2} rangechangedHandler={actions.rangeChange} collapse={false} items={TEST_ITEMS} />, document.getElementById("container"));
         const point2 = document.querySelector('.vis-point');
         expect(point1).toBe(point2); // change the range items do not change other items
-        expect(document.querySelector('.TEST_RANGE')).toExist();
+        expect(document.querySelector('.TEST_RANGE')).toBeTruthy();
         // remove range
         ReactDOM.render(<Timeline currentTime={CURRENT_TIME} rangechangedHandler={actions.rangeChange} collapse={false} items={TEST_ITEMS} />, document.getElementById("container"));
-        expect(document.querySelector('.TEST_RANGE')).toNotExist();
+        expect(document.querySelector('.TEST_RANGE')).toBeFalsy();
         const point3 = document.querySelector('.vis-point');
         expect(point1).toBe(point3); // change the range items do not change other items
         // add range
         ReactDOM.render(<Timeline currentTime={CURRENT_TIME} rangeItems={RANGE_STATE_1} rangechangedHandler={actions.rangeChange} collapse={false} items={TEST_ITEMS} />, document.getElementById("container"));
-        expect(document.querySelector('.TEST_RANGE')).toExist();
+        expect(document.querySelector('.TEST_RANGE')).toBeTruthy();
 
     });
 

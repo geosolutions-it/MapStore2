@@ -33,15 +33,15 @@ describe('This test for ZoomToMaxExtentButton', () => {
                 <ZoomToMaxExtentButton/>
             </Provider>,
             document.getElementById("container"));
-        expect(zmeBtn).toExist();
+        expect(zmeBtn).toBeTruthy();
 
         const zmeBtnNode = ReactDOM.findDOMNode(zmeBtn);
-        expect(zmeBtnNode).toExist();
+        expect(zmeBtnNode).toBeTruthy();
         expect(zmeBtnNode.id).toBe("mapstore-zoomtomaxextent");
 
-        expect(zmeBtnNode).toExist();
+        expect(zmeBtnNode).toBeTruthy();
         expect(zmeBtnNode.className.indexOf('default') >= 0).toBe(true);
-        expect(zmeBtnNode.innerHTML).toExist();
+        expect(zmeBtnNode.innerHTML).toBeTruthy();
     });
 
     it('test glyphicon property', () => {
@@ -50,11 +50,11 @@ describe('This test for ZoomToMaxExtentButton', () => {
                 <ZoomToMaxExtentButton/>
             </Provider>,
             document.getElementById("container"));
-        expect(zmeBtn).toExist();
+        expect(zmeBtn).toBeTruthy();
 
         const zmeBtnNode = ReactDOM.findDOMNode(zmeBtn);
-        expect(zmeBtnNode).toExist();
-        expect(zmeBtnNode).toExist();
+        expect(zmeBtnNode).toBeTruthy();
+        expect(zmeBtnNode).toBeTruthy();
         const icons = zmeBtnNode.getElementsByTagName('span');
         expect(icons.length).toBe(1);
     });
@@ -65,11 +65,11 @@ describe('This test for ZoomToMaxExtentButton', () => {
                 <ZoomToMaxExtentButton glyphicon="info-sign" text="button"/>
             </Provider>,
             document.getElementById("container"));
-        expect(zmeBtn).toExist();
+        expect(zmeBtn).toBeTruthy();
 
         const zmeBtnNode = ReactDOM.findDOMNode(zmeBtn);
-        expect(zmeBtnNode).toExist();
-        expect(zmeBtnNode).toExist();
+        expect(zmeBtnNode).toBeTruthy();
+        expect(zmeBtnNode).toBeTruthy();
 
         const btnItems = zmeBtnNode.getElementsByTagName('span');
         expect(btnItems.length).toBe(1);
@@ -108,21 +108,21 @@ describe('This test for ZoomToMaxExtentButton', () => {
                     }}
                 />
                 , document.getElementById("container"));
-            expect(cmp).toExist();
+            expect(cmp).toBeTruthy();
 
-            let componentSpy = expect.spyOn(cmp, 'zoomToMaxExtent').andCallThrough();
+            let componentSpy = expect.spyOn(cmp, 'zoomToMaxExtent');
 
             const cmpDom = document.getElementById("mapstore-zoomtomaxextent");
-            expect(cmpDom).toExist();
+            expect(cmpDom).toBeTruthy();
 
             cmpDom.click();
 
             // check that the correct zoom to extent method has been invoked
-            expect(componentSpy.calls.length).toBe(1);
-            componentSpy.restore();
+            expect(componentSpy.mock.calls.length).toBe(1);
+            componentSpy.mockRestore();
 
-            expect(spy.calls.length).toBe(1);
-            expect(spy.calls[0].arguments.length).toBe(6);
+            expect(spy.mock.calls.length).toBe(1);
+            expect(spy.mock.calls[0].length).toBe(6);
         };
 
         genericTest("normal");
@@ -135,10 +135,10 @@ describe('This test for ZoomToMaxExtentButton', () => {
                 <ZoomToMaxExtentButton className="custom" glyphicon="info-sign" text="button"/>
             </Provider>,
             document.getElementById("container"));
-        expect(zmeBtn).toExist();
+        expect(zmeBtn).toBeTruthy();
 
         const zmeBtnNode = ReactDOM.findDOMNode(zmeBtn);
-        expect(zmeBtnNode).toExist();
+        expect(zmeBtnNode).toBeTruthy();
 
         expect(zmeBtnNode.className.indexOf('custom') !== -1).toBe(true);
     });
@@ -174,28 +174,28 @@ describe('This test for ZoomToMaxExtentButton', () => {
                     }}
                 />
                 , document.getElementById("container"));
-            expect(cmp).toExist();
+            expect(cmp).toBeTruthy();
 
-            let componentSpy = expect.spyOn(cmp, 'zoomToInitialExtent').andCallThrough();
+            let componentSpy = expect.spyOn(cmp, 'zoomToInitialExtent');
 
             const cmpDom = document.getElementById("mapstore-zoomtomaxextent");
-            expect(cmpDom).toExist();
+            expect(cmpDom).toBeTruthy();
 
             cmpDom.click();
 
             // check that the correct zoom to extent method has been invoked
-            expect(componentSpy.calls.length).toBe(1);
-            componentSpy.restore();
+            expect(componentSpy.mock.calls.length).toBe(1);
+            componentSpy.mockRestore();
 
-            expect(actionsSpy.calls.length).toBe(1);
-            expect(actionsSpy.calls[0].arguments.length).toBe(6);
-            expect(actionsSpy.calls[0].arguments[0]).toExist();
-            expect(actionsSpy.calls[0].arguments[1]).toExist();
+            expect(actionsSpy.mock.calls.length).toBe(1);
+            expect(actionsSpy.mock.calls[0].length).toBe(6);
+            expect(actionsSpy.mock.calls[0][0]).toBeTruthy();
+            expect(actionsSpy.mock.calls[0][1]).toBeTruthy();
             // the bbox is null since no hook was registered
-            expect(actionsSpy.calls[0].arguments[2]).toNotExist();
-            expect(actionsSpy.calls[0].arguments[3]).toExist();
-            expect(actionsSpy.calls[0].arguments[4]).toNotExist();
-            expect(actionsSpy.calls[0].arguments[5]).toEqual(projection);
+            expect(actionsSpy.mock.calls[0][2]).toBeFalsy();
+            expect(actionsSpy.mock.calls[0][3]).toBeTruthy();
+            expect(actionsSpy.mock.calls[0][4]).toBeFalsy();
+            expect(actionsSpy.mock.calls[0][5]).toEqual(projection);
         };
 
         genericTest("normal", "EPSG:900913");

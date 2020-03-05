@@ -42,9 +42,9 @@ describe('GeoCodeUtils', () => {
             }
         }];
         let layer = GeoCodeUtils.nominatimToLayer("test", testNominatim);
-        expect(layer).toExist();
+        expect(layer).toBeTruthy();
         expect(layer.name).toBe("test");
-        expect(layer.features).toExist();
+        expect(layer.features).toBeTruthy();
         expect(layer.features.length).toBe(1);
         expect(layer.features[0].properties.display_name).toBe(testNominatim[0].display_name);
     });

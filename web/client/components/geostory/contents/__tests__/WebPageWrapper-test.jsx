@@ -32,6 +32,6 @@ describe('WebPageWrapper', () => {
         const props = { editURL: true };
         ReactDOM.render(<WebPageWrapper {...props} />, document.getElementById("container"));
         const el = document.querySelector('.modal-dialog');
-        expect(el).toExist();
+        expect(el).toBeTruthy();
     });
 });

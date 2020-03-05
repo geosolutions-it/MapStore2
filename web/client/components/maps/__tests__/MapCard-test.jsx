@@ -27,10 +27,10 @@ describe('This test for MapCard', () => {
     // test DEFAULTS
     it('creates the component with defaults', () => {
         const mapItem = ReactDOM.render(<MapCard map={{}}/>, document.getElementById("container"));
-        expect(mapItem).toExist();
+        expect(mapItem).toBeTruthy();
 
         const mapItemDom = ReactDOM.findDOMNode(mapItem);
-        expect(mapItemDom).toExist();
+        expect(mapItemDom).toBeTruthy();
 
         expect(mapItemDom.childNodes[0].className).toBe('gridcard map-thumb');
         const headings = mapItemDom.getElementsByClassName('gridcard-title');
@@ -41,10 +41,10 @@ describe('This test for MapCard', () => {
         const testName = "test";
         const testDescription = "testDescription";
         const mapItem = ReactDOM.render(<MapCard map={{name: testName, description: testDescription}}/>, document.getElementById("container"));
-        expect(mapItem).toExist();
+        expect(mapItem).toBeTruthy();
 
         const mapItemDom = ReactDOM.findDOMNode(mapItem);
-        expect(mapItemDom).toExist();
+        expect(mapItemDom).toBeTruthy();
 
         expect(mapItemDom.childNodes[0].className).toBe('gridcard map-thumb');
         const headings = mapItemDom.getElementsByClassName('gridcard-title');
@@ -65,9 +65,9 @@ describe('This test for MapCard', () => {
         const detailsTool = TestUtils.findRenderedDOMComponentWithTag(
             component, 'button'
         );
-        expect(detailsTool).toExist();
+        expect(detailsTool).toBeTruthy();
         TestUtils.Simulate.click(detailsTool);
-        expect(spy.calls.length).toEqual(1);
+        expect(spy.mock.calls.length).toEqual(1);
     });
     it('test edit/delete/share', () => {
         const testName = "test";
@@ -97,10 +97,10 @@ describe('This test for MapCard', () => {
         expect(buttons.length).toBe(3);
         buttons.forEach(b => TestUtils.Simulate.click(b));
 
-        expect(spyonEdit.calls.length).toEqual(1);
+        expect(spyonEdit.mock.calls.length).toEqual(1);
         // wait for confirm
-        expect(spyonMapDelete.calls.length).toEqual(0);
-        expect(spyonShare.calls.length).toEqual(1);
+        expect(spyonMapDelete.mock.calls.length).toEqual(0);
+        expect(spyonShare.mock.calls.length).toEqual(1);
     });
     it('test edit properties tool', () => {
         const testName = "test";
@@ -120,9 +120,9 @@ describe('This test for MapCard', () => {
         expect(tools.length).toBeGreaterThan(0);
 
         const wrenchTool = tools.find(tool => !!tool.querySelector('.glyphicon-wrench'));
-        expect(wrenchTool).toExist();
+        expect(wrenchTool).toBeTruthy();
         TestUtils.Simulate.click(wrenchTool);
-        expect(spy.calls.length).toBe(1);
+        expect(spy.mock.calls.length).toBe(1);
     });
     it('test edit properties tool with dashboard', () => {
         const testName = "test";
@@ -142,8 +142,8 @@ describe('This test for MapCard', () => {
         expect(tools.length).toBeGreaterThan(0);
 
         const wrenchTool = tools.find(tool => !!tool.querySelector('.glyphicon-wrench'));
-        expect(wrenchTool).toExist();
+        expect(wrenchTool).toBeTruthy();
         TestUtils.Simulate.click(wrenchTool);
-        expect(spy.calls.length).toBe(1);
+        expect(spy.mock.calls.length).toBe(1);
     });
 });

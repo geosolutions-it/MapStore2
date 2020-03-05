@@ -27,7 +27,7 @@ describe('SLDUtils', () => {
             opacity: "0.50",
             state: rasterstylerstate,
             layer: layer});
-        expect(pseudo).toExist();
+        expect(pseudo).toBeTruthy();
         let rgb = jsonToSLD(
             {
                 styletype: "rgb",
@@ -35,14 +35,14 @@ describe('SLDUtils', () => {
                 state: rasterstylerstate,
                 layer: layer
             });
-        expect(rgb).toExist();
+        expect(rgb).toBeTruthy();
         let gray = jsonToSLD({
             styletype: "gray",
             opacity: "0.50",
             state: rasterstylerstate,
             layer: layer
         });
-        expect(gray).toExist();
+        expect(gray).toBeTruthy();
     });
     it('test vectorlayer state to sld strings', () => {
         let rules = [
@@ -82,7 +82,7 @@ describe('SLDUtils', () => {
         let sld = vecStyleToSLD({
             rules,
             layer});
-        expect(sld).toExist();
+        expect(sld).toBeTruthy();
         expect(sld).toEqual(result);
     });
 });

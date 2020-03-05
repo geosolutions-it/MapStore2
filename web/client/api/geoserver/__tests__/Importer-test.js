@@ -23,7 +23,7 @@ describe('GeoServer Importer API', () => {
     it('getImports', done => {
         mock.onGet(`${BASE_URL}imports`).reply(200, SAMPLE_IMPORTS_1);
         Importer.getImports(BASE_URL).then( ({data}) => {
-            expect(data.imports).toExist();
+            expect(data.imports).toBeTruthy();
             expect((data.imports).length).toBe(2);
             done();
         }).catch(e=> done(e));
@@ -35,8 +35,8 @@ describe('GeoServer Importer API', () => {
 
         const FILE = new File(FILE_CONTENT, FILE_NAME);
         mock.onPost(`${BASE_URL}imports/${ID}/tasks`).reply((config) => {
-            expect(config.data).toExist();
-            expect(config.data.get(FILE_NAME)).toExist();
+            expect(config.data).toBeTruthy();
+            expect(config.data.get(FILE_NAME)).toBeTruthy();
             expect(config.data.get(FILE_NAME).name).toBe(FILE_NAME);
             return [200];
         });

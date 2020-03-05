@@ -23,14 +23,14 @@ describe("EmptyView component", () => {
     it('create EmptyView with defaults', () => {
         ReactDOM.render(<EmptyView />, document.getElementById("container"));
         const el = document.getElementsByClassName('glyphicon')[0];
-        expect(el).toExist();
+        expect(el).toBeTruthy();
     });
     it('create EmptyView title, description and content', () => {
         ReactDOM.render(<EmptyView title="Title" description="description" content={<div id="content" >TEST</div>}/>, document.getElementById("container"));
         const description = document.getElementsByTagName('p')[0];
-        expect(description).toExist();
+        expect(description).toBeTruthy();
         const content = document.getElementById("content");
-        expect(content).toExist();
+        expect(content).toBeTruthy();
     });
 
 });

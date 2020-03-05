@@ -138,7 +138,7 @@ describe('wfsquery Epics', () => {
                 expect(pathname).toBe(`${BASE_URL}`);
                 const params = queryString.split('&');
                 const paramPairs = params.map(p => p.split('='));
-                expect(head(paramPairs.filter(([k, v]) => k === 'time' && v === encodeURIComponent(DATE)))).toNotExist();
+                expect(head(paramPairs.filter(([k, v]) => k === 'time' && v === encodeURIComponent(DATE)))).toBeFalsy();
                 return [200, expectedResult];
             });
             testEpic(wfsQueryEpic, 2, query(BASE_URL, { pagination: {} }, { viewParams: "a:b" }), actions => {
@@ -167,7 +167,7 @@ describe('wfsquery Epics', () => {
                 expect(pathname).toBe(`${BASE_URL}`);
                 const params = queryString.split('&');
                 const paramPairs = params.map(p => p.split('='));
-                expect(head(paramPairs.filter(([k, v]) => k === 'time' && v === encodeURIComponent(DATE)))).toExist();
+                expect(head(paramPairs.filter(([k, v]) => k === 'time' && v === encodeURIComponent(DATE)))).toBeTruthy();
                 return [200, expectedResult];
             });
             testEpic(wfsQueryEpic, 2, query(BASE_URL, { pagination: {} }, { viewParams: "a:b" }), actions => {

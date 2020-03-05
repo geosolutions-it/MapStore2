@@ -146,18 +146,18 @@ describe('This test for RecordItem', () => {
     // test DEFAULTS
     it('creates the component with defaults', () => {
         const item = ReactDOM.render(<RecordItem />, document.getElementById("container"));
-        expect(item).toExist();
+        expect(item).toBeTruthy();
 
         const itemDom = ReactDOM.findDOMNode(item);
-        expect(itemDom).toNotExist();
+        expect(itemDom).toBeFalsy();
     });
     // test data
     it('creates the component with data', () => {
         const item = ReactDOM.render(<RecordItem record={sampleRecord}/>, document.getElementById("container"));
-        expect(item).toExist();
+        expect(item).toBeTruthy();
 
         const itemDom = ReactDOM.findDOMNode(item);
-        expect(itemDom).toExist();
+        expect(itemDom).toBeTruthy();
     });
     it('check WMTS resource', () => {
         let actions = {
@@ -174,18 +174,18 @@ describe('This test for RecordItem', () => {
             record={sampleRecord3}
             onLayerAdd={actions.onLayerAdd}
             onZoomToExtent={actions.onZoomToExtent}/>, document.getElementById("container"));
-        expect(item).toExist();
+        expect(item).toBeTruthy();
 
         const itemDom = ReactDOM.findDOMNode(item);
-        expect(itemDom).toExist();
+        expect(itemDom).toBeTruthy();
         let button = TestUtils.findRenderedDOMComponentWithTag(
             item, 'button'
         );
-        expect(button).toExist();
+        expect(button).toBeTruthy();
         button.click();
-        expect(actionsSpy.calls.length).toBe(1);
-        expect(actionsSpy2.calls.length).toBe(1);
-        expect(actionsSpy.calls[0].arguments[0].format).toBe("image/png");
+        expect(actionsSpy.mock.calls.length).toBe(1);
+        expect(actionsSpy2.mock.calls.length).toBe(1);
+        expect(actionsSpy.mock.calls[0][0].format).toBe("image/png");
     });
     it('check WMTS resource format', () => {
         let actions = {
@@ -202,19 +202,19 @@ describe('This test for RecordItem', () => {
             record={{...sampleRecord3, format: "image/jpeg"}}
             onLayerAdd={actions.onLayerAdd}
             onZoomToExtent={actions.onZoomToExtent} />, document.getElementById("container"));
-        expect(item).toExist();
+        expect(item).toBeTruthy();
 
         const itemDom = ReactDOM.findDOMNode(item);
-        expect(itemDom).toExist();
+        expect(itemDom).toBeTruthy();
         let button = TestUtils.findRenderedDOMComponentWithTag(
             item, 'button'
         );
-        expect(button).toExist();
+        expect(button).toBeTruthy();
         button.click();
-        expect(actionsSpy.calls.length).toBe(1);
-        expect(actionsSpy2.calls.length).toBe(1);
-        expect(actionsSpy.calls[0].arguments.length).toBe(1);
-        expect(actionsSpy.calls[0].arguments[0].format).toBe("image/jpeg");
+        expect(actionsSpy.mock.calls.length).toBe(1);
+        expect(actionsSpy2.mock.calls.length).toBe(1);
+        expect(actionsSpy.mock.calls[0].length).toBe(1);
+        expect(actionsSpy.mock.calls[0][0].format).toBe("image/jpeg");
     });
     it('check esri resource', () => {
         let actions = {
@@ -227,16 +227,16 @@ describe('This test for RecordItem', () => {
         const item = ReactDOM.render(<RecordItem
             record={esriRecord}
             onLayerAdd={actions.onLayerAdd}/>, document.getElementById("container"));
-        expect(item).toExist();
+        expect(item).toBeTruthy();
 
         const itemDom = ReactDOM.findDOMNode(item);
-        expect(itemDom).toExist();
+        expect(itemDom).toBeTruthy();
         let button = TestUtils.findRenderedDOMComponentWithTag(
             item, 'button'
         );
-        expect(button).toExist();
+        expect(button).toBeTruthy();
         button.click();
-        expect(actionsSpy.calls.length).toBe(1);
+        expect(actionsSpy.mock.calls.length).toBe(1);
     });
 
 
@@ -256,17 +256,17 @@ describe('This test for RecordItem', () => {
             record={sampleRecord}
             onLayerAdd={actions.onLayerAdd}
             onZoomToExtent={actions.onZoomToExtent}/>, document.getElementById("container"));
-        expect(item).toExist();
+        expect(item).toBeTruthy();
 
         const itemDom = ReactDOM.findDOMNode(item);
-        expect(itemDom).toExist();
+        expect(itemDom).toBeTruthy();
         let button = TestUtils.findRenderedDOMComponentWithTag(
             item, 'button'
         );
-        expect(button).toExist();
+        expect(button).toBeTruthy();
         button.click();
-        expect(actionsSpy.calls.length).toBe(1);
-        expect(actionsSpy2.calls.length).toBe(1);
+        expect(actionsSpy.mock.calls.length).toBe(1);
+        expect(actionsSpy2.mock.calls.length).toBe(1);
     });
 
     it('check event handlers with catalogUrl and csw service', () => {
@@ -282,18 +282,18 @@ describe('This test for RecordItem', () => {
             catalogURL="fakeURL"
             catalogType="csw"
         />, document.getElementById("container"));
-        expect(item).toExist();
+        expect(item).toBeTruthy();
 
         const itemDom = ReactDOM.findDOMNode(item);
-        expect(itemDom).toExist();
+        expect(itemDom).toBeTruthy();
         let button = TestUtils.findRenderedDOMComponentWithTag(
             item, 'button'
         );
-        expect(button).toExist();
+        expect(button).toBeTruthy();
         button.click();
-        expect(actionsSpy.calls.length).toBe(1);
-        expect(actionsSpy.calls[0].arguments.length).toBe(1);
-        expect(actionsSpy.calls[0].arguments[0].catalogURL).toExist();
+        expect(actionsSpy.mock.calls.length).toBe(1);
+        expect(actionsSpy.mock.calls[0].length).toBe(1);
+        expect(actionsSpy.mock.calls[0][0].catalogURL).toBeTruthy();
     });
 
     it('check event handlers with catalogUrl and wms service', () => {
@@ -309,18 +309,18 @@ describe('This test for RecordItem', () => {
             catalogURL="fakeURL"
             catalogType="wms"
         />, document.getElementById("container"));
-        expect(item).toExist();
+        expect(item).toBeTruthy();
 
         const itemDom = ReactDOM.findDOMNode(item);
-        expect(itemDom).toExist();
+        expect(itemDom).toBeTruthy();
         let button = TestUtils.findRenderedDOMComponentWithTag(
             item, 'button'
         );
-        expect(button).toExist();
+        expect(button).toBeTruthy();
         button.click();
-        expect(actionsSpy.calls.length).toBe(1);
-        expect(actionsSpy.calls[0].arguments.length).toBe(1);
-        expect(actionsSpy.calls[0].arguments[0].catalogURL).toNotExist();
+        expect(actionsSpy.mock.calls.length).toBe(1);
+        expect(actionsSpy.mock.calls[0].length).toBe(1);
+        expect(actionsSpy.mock.calls[0][0].catalogURL).toBeFalsy();
     });
     it('check wms default format', () => {
         let actions = {
@@ -335,19 +335,19 @@ describe('This test for RecordItem', () => {
             catalogURL="fakeURL"
             catalogType="wms"
         />, document.getElementById("container"));
-        expect(item).toExist();
+        expect(item).toBeTruthy();
 
         const itemDom = ReactDOM.findDOMNode(item);
-        expect(itemDom).toExist();
+        expect(itemDom).toBeTruthy();
         let button = TestUtils.findRenderedDOMComponentWithTag(
             item, 'button'
         );
-        expect(button).toExist();
+        expect(button).toBeTruthy();
         button.click();
-        expect(actionsSpy.calls.length).toBe(1);
-        expect(actionsSpy.calls[0].arguments.length).toBe(1);
-        expect(actionsSpy.calls[0].arguments[0].catalogURL).toNotExist();
-        expect(actionsSpy.calls[0].arguments[0].format).toBe('image/png');
+        expect(actionsSpy.mock.calls.length).toBe(1);
+        expect(actionsSpy.mock.calls[0].length).toBe(1);
+        expect(actionsSpy.mock.calls[0][0].catalogURL).toBeFalsy();
+        expect(actionsSpy.mock.calls[0][0].format).toBe('image/png');
     });
     it('check wms NOT default format', () => {
         let actions = {
@@ -362,19 +362,19 @@ describe('This test for RecordItem', () => {
             catalogURL="fakeURL"
             catalogType="wms"
         />, document.getElementById("container"));
-        expect(item).toExist();
+        expect(item).toBeTruthy();
 
         const itemDom = ReactDOM.findDOMNode(item);
-        expect(itemDom).toExist();
+        expect(itemDom).toBeTruthy();
         let button = TestUtils.findRenderedDOMComponentWithTag(
             item, 'button'
         );
-        expect(button).toExist();
+        expect(button).toBeTruthy();
         button.click();
-        expect(actionsSpy.calls.length).toBe(1);
-        expect(actionsSpy.calls[0].arguments.length).toBe(1);
-        expect(actionsSpy.calls[0].arguments[0].catalogURL).toNotExist();
-        expect(actionsSpy.calls[0].arguments[0].format).toBe('image/jpeg');
+        expect(actionsSpy.mock.calls.length).toBe(1);
+        expect(actionsSpy.mock.calls[0].length).toBe(1);
+        expect(actionsSpy.mock.calls[0][0].catalogURL).toBeFalsy();
+        expect(actionsSpy.mock.calls[0][0].format).toBe('image/jpeg');
     });
     it('check auth params to be removed (WMS)', () => {
         const recordToClean = {
@@ -411,21 +411,21 @@ describe('This test for RecordItem', () => {
             catalogURL="fakeURL"
             catalogType="wms"
         />, document.getElementById("container"));
-        expect(item).toExist();
+        expect(item).toBeTruthy();
 
         const itemDom = ReactDOM.findDOMNode(item);
-        expect(itemDom).toExist();
+        expect(itemDom).toBeTruthy();
         let button = TestUtils.findRenderedDOMComponentWithTag(
             item, 'button'
         );
-        expect(button).toExist();
+        expect(button).toBeTruthy();
         button.click();
-        expect(actionsSpy.calls.length).toBe(1);
-        expect(actionsSpy.calls[0].arguments.length).toBe(1);
-        expect(actionsSpy.calls[0].arguments[0].catalogURL).toNotExist();
-        expect(actionsSpy.calls[0].arguments[0].params).toExist();
-        expect(actionsSpy.calls[0].arguments[0].params.requiredParam).toBe("REQUIRED");
-        expect(actionsSpy.calls[0].arguments[0].params["ms2-authkey"]).toNotExist("auth param is passed in params list but it shouldn't");
+        expect(actionsSpy.mock.calls.length).toBe(1);
+        expect(actionsSpy.mock.calls[0].length).toBe(1);
+        expect(actionsSpy.mock.calls[0][0].catalogURL).toBeFalsy();
+        expect(actionsSpy.mock.calls[0][0].params).toBeTruthy();
+        expect(actionsSpy.mock.calls[0][0].params.requiredParam).toBe("REQUIRED");
+        expect(actionsSpy.mock.calls[0][0].params["ms2-authkey"]).toBeFalsy();
     });
     it('check auth params to be removed (WMTS)', () => {
         const recordToClean = {
@@ -462,21 +462,21 @@ describe('This test for RecordItem', () => {
             catalogURL="fakeURL"
             catalogType="wms"
         />, document.getElementById("container"));
-        expect(item).toExist();
+        expect(item).toBeTruthy();
 
         const itemDom = ReactDOM.findDOMNode(item);
-        expect(itemDom).toExist();
+        expect(itemDom).toBeTruthy();
         let button = TestUtils.findRenderedDOMComponentWithTag(
             item, 'button'
         );
-        expect(button).toExist();
+        expect(button).toBeTruthy();
         button.click();
-        expect(actionsSpy.calls.length).toBe(1);
-        expect(actionsSpy.calls[0].arguments.length).toBe(1);
-        expect(actionsSpy.calls[0].arguments[0].catalogURL).toNotExist();
-        expect(actionsSpy.calls[0].arguments[0].params).toExist();
-        expect(actionsSpy.calls[0].arguments[0].params.requiredParam).toBe("REQUIRED");
-        expect(actionsSpy.calls[0].arguments[0].params["ms2-authkey"]).toNotExist("auth param is passed in params list but it shouldn't");
+        expect(actionsSpy.mock.calls.length).toBe(1);
+        expect(actionsSpy.mock.calls[0].length).toBe(1);
+        expect(actionsSpy.mock.calls[0][0].catalogURL).toBeFalsy();
+        expect(actionsSpy.mock.calls[0][0].params).toBeTruthy();
+        expect(actionsSpy.mock.calls[0][0].params.requiredParam).toBe("REQUIRED");
+        expect(actionsSpy.mock.calls[0][0].params["ms2-authkey"]).toBeFalsy();
     });
 
     it('check event handlers with layerBaseConfig and csw service', () => {
@@ -495,18 +495,18 @@ describe('This test for RecordItem', () => {
                 extraProp: 'val1'
             }}
         />, document.getElementById("container"));
-        expect(item).toExist();
+        expect(item).toBeTruthy();
 
         const itemDom = ReactDOM.findDOMNode(item);
-        expect(itemDom).toExist();
+        expect(itemDom).toBeTruthy();
         let button = TestUtils.findRenderedDOMComponentWithTag(
             item, 'button'
         );
-        expect(button).toExist();
+        expect(button).toBeTruthy();
         button.click();
-        expect(actionsSpy.calls.length).toBe(1);
-        expect(actionsSpy.calls[0].arguments.length).toBe(1);
-        expect(actionsSpy.calls[0].arguments[0].extraProp).toBe('val1');
+        expect(actionsSpy.mock.calls.length).toBe(1);
+        expect(actionsSpy.mock.calls[0].length).toBe(1);
+        expect(actionsSpy.mock.calls[0][0].extraProp).toBe('val1');
     });
 
     it('check event handlers with layerBaseConfig and wms service', () => {
@@ -525,18 +525,18 @@ describe('This test for RecordItem', () => {
                 extraProp: 'val1'
             }}
         />, document.getElementById("container"));
-        expect(item).toExist();
+        expect(item).toBeTruthy();
 
         const itemDom = ReactDOM.findDOMNode(item);
-        expect(itemDom).toExist();
+        expect(itemDom).toBeTruthy();
         let button = TestUtils.findRenderedDOMComponentWithTag(
             item, 'button'
         );
-        expect(button).toExist();
+        expect(button).toBeTruthy();
         button.click();
-        expect(actionsSpy.calls.length).toBe(1);
-        expect(actionsSpy.calls[0].arguments.length).toBe(1);
-        expect(actionsSpy.calls[0].arguments[0].extraProp).toBe('val1');
+        expect(actionsSpy.mock.calls.length).toBe(1);
+        expect(actionsSpy.mock.calls[0].length).toBe(1);
+        expect(actionsSpy.mock.calls[0][0].extraProp).toBe('val1');
     });
 
     it('test create record item with no get capabilities links', () => {
@@ -544,9 +544,9 @@ describe('This test for RecordItem', () => {
         const component = ReactDOM.render(<RecordItem record={sampleRecord} showGetCapLinks/>,
             document.getElementById("container"));
         // check that the component was intanciated
-        expect(component).toExist();
+        expect(component).toBeTruthy();
         const componentDom = ReactDOM.findDOMNode(component);
-        expect(componentDom).toExist();
+        expect(componentDom).toBeTruthy();
         // we should have two buttons enable
         const buttons = componentDom.getElementsByTagName('button');
         expect(buttons.length).toBe(1);
@@ -557,9 +557,9 @@ describe('This test for RecordItem', () => {
         const component = ReactDOM.render(<RecordItem record={getCapRecord} showGetCapLinks/>,
             document.getElementById("container"));
         // check that the component was intanciated
-        expect(component).toExist();
+        expect(component).toBeTruthy();
         const componentDom = ReactDOM.findDOMNode(component);
-        expect(componentDom).toExist();
+        expect(componentDom).toBeTruthy();
         // we should have two buttons enable
         const buttons = componentDom.getElementsByTagName('button');
         expect(buttons.length).toBe(2);
@@ -570,9 +570,9 @@ describe('This test for RecordItem', () => {
         const component = ReactDOM.render(<RecordItem showGetCapLinks={false} record={getCapRecord}/>,
             document.getElementById("container"));
         // check that the component was intanciated
-        expect(component).toExist();
+        expect(component).toBeTruthy();
         const componentDom = ReactDOM.findDOMNode(component);
-        expect(componentDom).toExist();
+        expect(componentDom).toBeTruthy();
         // we should have only one button
         const buttons = componentDom.getElementsByTagName('button');
         expect(buttons.length).toBe(1);
@@ -589,14 +589,14 @@ describe('This test for RecordItem', () => {
             record={sampleRecord2}
             onError={actions.onError}
             crs="EPSG:3857"/>, document.getElementById("container"));
-        expect(item).toExist();
+        expect(item).toBeTruthy();
 
         let button = TestUtils.findRenderedDOMComponentWithTag(
             item, 'button'
         );
-        expect(button).toExist();
+        expect(button).toBeTruthy();
         button.click();
-        expect(actionsSpy.calls.length).toBe(1);
+        expect(actionsSpy.mock.calls.length).toBe(1);
     });
     it('check add layer with bounding box', () => {
         let actions = {
@@ -612,19 +612,19 @@ describe('This test for RecordItem', () => {
             record={sampleRecord}
             onLayerAdd={actions.onLayerAdd}
         />, document.getElementById("container"));
-        expect(item).toExist();
+        expect(item).toBeTruthy();
 
         const itemDom = ReactDOM.findDOMNode(item);
-        expect(itemDom).toExist();
+        expect(itemDom).toBeTruthy();
         let button = TestUtils.findRenderedDOMComponentWithTag(
             item, 'button'
         );
-        expect(button).toExist();
+        expect(button).toBeTruthy();
         button.click();
-        expect(actionsSpy.calls.length).toBe(1);
-        expect(actionsSpy.calls[0].arguments[0].bbox).toExist();
-        expect(actionsSpy.calls[0].arguments[0].bbox.crs).toExist();
-        expect(actionsSpy.calls[0].arguments[0].bbox.bounds).toExist();
+        expect(actionsSpy.mock.calls.length).toBe(1);
+        expect(actionsSpy.mock.calls[0][0].bbox).toBeTruthy();
+        expect(actionsSpy.mock.calls[0][0].bbox.crs).toBeTruthy();
+        expect(actionsSpy.mock.calls[0][0].bbox.bounds).toBeTruthy();
     });
 
     // test title localization
@@ -655,10 +655,10 @@ describe('This test for RecordItem', () => {
     it('uses the correct localization', () => {
         // Default localization is en-US
         const item = ReactDOM.render(<RecordItem record={localizedRecord}/>, document.getElementById("container"));
-        expect(item).toExist();
+        expect(item).toBeTruthy();
 
         const itemDom = ReactDOM.findDOMNode(item);
-        expect(itemDom).toExist();
+        expect(itemDom).toBeTruthy();
         const identifiers = itemDom.getElementsByClassName('identifier');
         expect(identifiers.length).toBe(1);
         const titles = itemDom.getElementsByClassName('mapstore-side-card-title');
@@ -669,10 +669,10 @@ describe('This test for RecordItem', () => {
     it('uses the default localization', () => {
         // Default localization is en-US
         const item = ReactDOM.render(<RecordItem record={localizedRecord} currentLocale="it-IT"/>, document.getElementById("container"));
-        expect(item).toExist();
+        expect(item).toBeTruthy();
 
         const itemDom = ReactDOM.findDOMNode(item);
-        expect(itemDom).toExist();
+        expect(itemDom).toBeTruthy();
         const identifiers = itemDom.getElementsByClassName('identifier');
         expect(identifiers.length).toBe(1);
         const titles = itemDom.getElementsByClassName('mapstore-side-card-title');
@@ -683,10 +683,10 @@ describe('This test for RecordItem', () => {
     it('has not title', () => {
         // Default localization is en-US
         const item = ReactDOM.render(<RecordItem record={noTitleRecord} currentLocale="it-IT"/>, document.getElementById("container"));
-        expect(item).toExist();
+        expect(item).toBeTruthy();
 
         const itemDom = ReactDOM.findDOMNode(item);
-        expect(itemDom).toExist();
+        expect(itemDom).toBeTruthy();
         const identifiers = itemDom.getElementsByClassName('identifier');
         expect(identifiers.length).toBe(1);
         const titles = itemDom.getElementsByClassName('mapstore-side-card-title');
@@ -711,10 +711,10 @@ describe('This test for RecordItem', () => {
         };
 
         const item = ReactDOM.render(<RecordItem record={recordWithoutRef}/>, document.getElementById("container"));
-        expect(item).toExist();
+        expect(item).toBeTruthy();
 
         const itemDom = ReactDOM.findDOMNode(item);
-        expect(itemDom).toExist();
+        expect(itemDom).toBeTruthy();
         const dangerText = itemDom.getElementsByClassName('text-danger');
         expect(dangerText.length).toBe(1);
     });
@@ -722,18 +722,18 @@ describe('This test for RecordItem', () => {
     it('hide/show thumbnail', () => {
 
         let item = ReactDOM.render(<RecordItem record={longDescriptioRecord} hideThumbnail/>, document.getElementById("container"));
-        expect(item).toExist();
+        expect(item).toBeTruthy();
 
         let itemDom = ReactDOM.findDOMNode(item);
-        expect(itemDom).toExist();
+        expect(itemDom).toBeTruthy();
         let image = itemDom.getElementsByTagName('img');
         expect(image.length).toBe(0);
 
         item = ReactDOM.render(<RecordItem record={longDescriptioRecord} hideThumbnail={false}/>, document.getElementById("container"));
-        expect(item).toExist();
+        expect(item).toBeTruthy();
 
         itemDom = ReactDOM.findDOMNode(item);
-        expect(itemDom).toExist();
+        expect(itemDom).toBeTruthy();
         image = itemDom.getElementsByTagName('img');
         expect(image.length).toBe(1);
 
@@ -742,19 +742,19 @@ describe('This test for RecordItem', () => {
     it('hide/show identifier', () => {
 
         let item = ReactDOM.render(<RecordItem record={longDescriptioRecord} hideIdentifier/>, document.getElementById("container"));
-        expect(item).toExist();
+        expect(item).toBeTruthy();
 
         let itemDom = ReactDOM.findDOMNode(item);
-        expect(itemDom).toExist();
+        expect(itemDom).toBeTruthy();
         let identifier = itemDom.getElementsByClassName('identifier');
         expect(identifier.length).toBe(0);
 
 
         item = ReactDOM.render(<RecordItem record={longDescriptioRecord} hideIdentifier={false}/>, document.getElementById("container"));
-        expect(item).toExist();
+        expect(item).toBeTruthy();
 
         itemDom = ReactDOM.findDOMNode(item);
-        expect(itemDom).toExist();
+        expect(itemDom).toBeTruthy();
         identifier = itemDom.getElementsByClassName('identifier');
         expect(identifier.length).toBe(1);
 
@@ -762,22 +762,22 @@ describe('This test for RecordItem', () => {
 
     it('show Expand button', () => {
         let item = ReactDOM.render(<RecordItem record={longDescriptioRecord} hideExpand={false}/>, document.getElementById("container"));
-        expect(item).toExist();
+        expect(item).toBeTruthy();
 
         item = ReactDOM.render(<RecordItem record={longDescriptioRecord} hideExpand={false}/>, document.getElementById("container"));
         let itemDom = ReactDOM.findDOMNode(item);
-        expect(itemDom).toExist();
+        expect(itemDom).toBeTruthy();
         let expand = itemDom.getElementsByClassName('glyphicon-chevron-left');
         expect(expand.length).toBe(1);
 
     });
     it('hide Expand button', () => {
         let item = ReactDOM.render(<RecordItem record={longDescriptioRecord} hideExpand/>, document.getElementById("container"));
-        expect(item).toExist();
+        expect(item).toBeTruthy();
         let itemDom = ReactDOM.findDOMNode(item);
 
         itemDom = ReactDOM.findDOMNode(item);
-        expect(itemDom).toExist();
+        expect(itemDom).toBeTruthy();
         let expand = itemDom.getElementsByClassName('glyphicon-chevron-left');
         expect(expand.length).toBe(0);
     });
@@ -796,10 +796,10 @@ describe('This test for RecordItem', () => {
                 showTemplate
                 hideExpand={false}
             />, document.getElementById("container"));
-        expect(item).toExist();
+        expect(item).toBeTruthy();
 
         let itemDom = ReactDOM.findDOMNode(item);
-        expect(itemDom).toExist();
+        expect(itemDom).toBeTruthy();
         let expand = itemDom.getElementsByClassName('glyphicon-chevron-left');
         expect(expand.length).toBe(1);
         ReactTestUtils.Simulate.click(expand[0]);
@@ -820,10 +820,10 @@ describe('This test for RecordItem', () => {
                 showTemplate
                 hideExpand={false}
             />, document.getElementById("container"));
-        expect(item).toExist();
+        expect(item).toBeTruthy();
 
         let itemDom = ReactDOM.findDOMNode(item);
-        expect(itemDom).toExist();
+        expect(itemDom).toBeTruthy();
         let expand = itemDom.getElementsByClassName('glyphicon-chevron-left');
         expect(expand.length).toBe(1);
         ReactTestUtils.Simulate.click(expand[0]);
@@ -841,16 +841,16 @@ describe('This test for RecordItem', () => {
             defaultFormat={defaultFormat}
             record={sampleRecord}
             onLayerAdd={actions.onLayerAdd}/>, document.getElementById("container"));
-        expect(item).toExist();
+        expect(item).toBeTruthy();
 
         const itemDom = ReactDOM.findDOMNode(item);
-        expect(itemDom).toExist();
+        expect(itemDom).toBeTruthy();
         let button = TestUtils.findRenderedDOMComponentWithTag(
             item, 'button'
         );
-        expect(button).toExist();
+        expect(button).toBeTruthy();
         button.click();
-        expect(actionsSpy.calls.length).toBe(1);
-        expect(actionsSpy.calls[0].arguments[0].format).toBe(defaultFormat);
+        expect(actionsSpy.mock.calls.length).toBe(1);
+        expect(actionsSpy.mock.calls[0][0].format).toBe(defaultFormat);
     });
 });

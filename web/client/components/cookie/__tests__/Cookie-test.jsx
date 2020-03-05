@@ -25,13 +25,13 @@ describe('Test for Cookie component', () => {
     // test DEFAULTS
     it('render with defaults', () => {
         const cmp = ReactDOM.render(<Cookie/>, document.getElementById("container"));
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
     });
 
     it('render with show = true', () => {
         const cmp = ReactDOM.render(<Cookie show externalCookieUrl=""/>, document.getElementById("container"));
-        expect(cmp).toExist();
-        expect(TestUtils.scryRenderedDOMComponentsWithClass(cmp, "mapstore-cookie-panel")).toExist();
+        expect(cmp).toBeTruthy();
+        expect(TestUtils.scryRenderedDOMComponentsWithClass(cmp, "mapstore-cookie-panel")).toBeTruthy();
     });
 
 });

@@ -24,7 +24,7 @@ describe('Test Maps Dashboard Content Tabs', () => {
         ];
         testEpic(updateMapsDashboardTabs, 1, act, (res) => {
             const action = res[0];
-            expect(action).toExist();
+            expect(action).toBeTruthy();
             expect(action.id).toBe("dashboards");
             done();
         }, {contenttabs: {selected: "maps"}});

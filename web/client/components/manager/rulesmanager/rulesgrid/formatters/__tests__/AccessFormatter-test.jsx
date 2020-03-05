@@ -24,12 +24,12 @@ describe('Test AccessFormatter component', () => {
         ReactDOM.render(<AccessFormatter/>, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('.ms-deny-cell');
-        expect(el).toExist();
+        expect(el).toBeTruthy();
     });
     it('render with ALLOW', () => {
         ReactDOM.render(<AccessFormatter value={"ALLOW"}/>, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('.ms-allow-cell');
-        expect(el).toExist();
+        expect(el).toBeTruthy();
     });
 });

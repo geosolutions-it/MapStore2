@@ -95,7 +95,7 @@ describe('FilterUtils', () => {
         };
 
         let filter = FilterUtils.toOGCFilter("ft_name_test", filterObj);
-        expect(filter).toExist();
+        expect(filter).toBeTruthy();
     });
     it('Calculate CQL filter', () => {
         let filterObj = {
@@ -138,7 +138,7 @@ describe('FilterUtils', () => {
         };
 
         let filter = FilterUtils.toCQLFilter(filterObj);
-        expect(filter).toExist();
+        expect(filter).toBeTruthy();
         expect(filter).toBe("(\"attribute1\"='value1') AND (INTERSECTS(the_geom,SRID=4326;Polygon((1 2, 2 3, 3 4, 4 5, 5 6, 1 2))))");
     });
     it('Calculate CQL filter without filter projection', () => {
@@ -181,7 +181,7 @@ describe('FilterUtils', () => {
         };
 
         let filter = FilterUtils.toCQLFilter(filterObj);
-        expect(filter).toExist();
+        expect(filter).toBeTruthy();
         expect(filter).toBe("(\"attribute1\"='value1') AND (INTERSECTS(the_geom,Polygon((1 2, 2 3, 3 4, 4 5, 5 6, 1 2))))");
     });
     it('Check for pagination wfs 1.1.0', () => {
@@ -1195,7 +1195,7 @@ describe('FilterUtils', () => {
         };
 
         let filter = FilterUtils.toCQLFilter(filterObj);
-        expect(filter).toExist();
+        expect(filter).toBeTruthy();
         expect(filter).toBe("(\"attribute3\" = \'0\')");
     });
     it('Calculate CQL filter for string  and LIKE operator', () => {
@@ -1218,7 +1218,7 @@ describe('FilterUtils', () => {
         };
 
         let filter = FilterUtils.toCQLFilter(filterObj);
-        expect(filter).toExist();
+        expect(filter).toBeTruthy();
         expect(filter).toBe("(\"attribute3\" LIKE \'%val%\')");
     });
     it('Calculate one single sub group CQL filter', () => {
@@ -1381,7 +1381,7 @@ describe('FilterUtils', () => {
                 }
             }
         });
-        expect(filter).toExist();
+        expect(filter).toBeTruthy();
         expect(filter).toBe("(\"attribute3\" LIKE \'%val%\')");
     });
     it('compose filterFilds', () => {
@@ -1490,7 +1490,7 @@ describe('FilterUtils', () => {
                 }]
         };
         const filter = FilterUtils.composeAttributeFilters([filterA, filterB]);
-        expect(filter).toExist();
+        expect(filter).toBeTruthy();
         expect(filter.groupFields.length).toBe(5);
         expect(filter.groupFields[0].logic).toBe("AND");
         expect(filter.groupFields[1].groupId).toBe(filter.groupFields[0].id);

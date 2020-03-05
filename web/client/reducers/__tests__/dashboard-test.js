@@ -39,37 +39,37 @@ describe('Test the dashboard reducer', () => {
     it('dashboard triggerSave', () => {
         const action = triggerSave(true);
         const state = dashboard( undefined, action);
-        expect(state).toExist();
+        expect(state).toBeTruthy();
         expect(state.showSaveModal).toBe(true);
     });
     it('dashboard triggerSaveAs', () => {
         const action = triggerSaveAs(true);
         const state = dashboard( undefined, action);
-        expect(state).toExist();
+        expect(state).toBeTruthy();
         expect(state.showSaveAsModal).toBe(true);
     });
     it('dashboard dashboardLoaded', () => {
         const action = dashboardLoaded("TEST");
         const state = dashboard( undefined, action);
-        expect(state).toExist();
+        expect(state).toBeTruthy();
         expect(state.resource).toBe("TEST");
     });
     it('dashboard dashboardSaveError', () => {
         const action = dashboardSaveError(["error1"]);
         const state = dashboard( undefined, action);
-        expect(state).toExist();
+        expect(state).toBeTruthy();
         expect(state.saveErrors.length).toBe(1);
     });
     it('dashboard dashboardSaved', () => {
         const action = dashboardSaved();
         const state = dashboard( {saveErrors: ["error"]}, action);
-        expect(state.saveErrors).toNotExist();
-        expect(state).toExist();
+        expect(state.saveErrors).toBeFalsy();
+        expect(state).toBeTruthy();
     });
     it('dashboard dashboardLoading', () => {
         const action = dashboardLoading(true, "saving");
         const state = dashboard( undefined, action);
-        expect(state).toExist();
+        expect(state).toBeTruthy();
         expect(state.loading).toBe(true);
         expect(state.loadFlags.saving).toBe(true);
     });

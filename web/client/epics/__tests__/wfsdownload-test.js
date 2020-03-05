@@ -57,7 +57,7 @@ describe('wfsdownload Epics', () => {
     it('startFeatureExportDownload triggers on downloadFeatures', (done) => {
         const epicResult = actions => {
             expect(actions.length).toBe(1);
-            expect(actions[0].error.request.responseURL).toExist();
+            expect(actions[0].error.request.responseURL).toBeTruthy();
             // remove duplicated question marks
             expect(actions[0].error.request.responseURL.indexOf('??') < 0).toBe(true);
 

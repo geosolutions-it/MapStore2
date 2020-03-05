@@ -67,8 +67,8 @@ describe('contextmanager epics', () => {
         const startActions = [contextSaved("Search Text")];
         testEpic(reloadOnContexts, 1, startActions, ([a]) => {
             expect(a.type).toBe(SEARCH_CONTEXTS);
-            expect(a.options).toExist();
-            expect(a.options.params).toExist();
+            expect(a.options).toBeTruthy();
+            expect(a.options.params).toBeTruthy();
             expect(a.options.params.start).toBe(0);
             expect(a.options.params.limit).toBe(12);
             expect(a.text).toBe("test");

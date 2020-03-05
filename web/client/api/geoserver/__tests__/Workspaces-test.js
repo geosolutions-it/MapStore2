@@ -12,13 +12,13 @@ var API = require('../Workspaces');
 describe('Test Workspaces rest API', () => {
     it('getWorkspaces', (done) => {
         API.getWorkspaces("base/web/client/test-resources/geoserver/rest/").then((workspaces)=> {
-            expect(workspaces).toExist();
+            expect(workspaces).toBeTruthy();
             done();
         });
     });
     it('saveDatastore', (done) => {
         API.createDataStore("base/web/client/test-resources/geoserver/rest/", "test", "STYLE_BODY").then((response)=> {
-            expect(response).toExist();
+            expect(response).toBeTruthy();
             done();
         });
     });

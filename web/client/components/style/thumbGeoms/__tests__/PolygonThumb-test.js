@@ -19,16 +19,16 @@ describe("Test the PolygonThumb component", () => {
 
     it('create component with default', () => {
         const cmp = ReactDOM.render(<PolygonThumb />, document.getElementById("container"));
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
     });
     it('create component with default style from annotation utils', () => {
         const style = DEFAULT_ANNOTATIONS_STYLES;
         const featureType = "MultiPolygon";
         const cmp = ReactDOM.render(<PolygonThumb styleRect={style[featureType]}/>, document.getElementById("container"));
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
         const rect = TestUtils.findRenderedDOMComponentWithTag(cmp, 'rect');
         const svg = TestUtils.findRenderedDOMComponentWithTag(cmp, 'svg');
-        expect(rect).toExist();
+        expect(rect).toBeTruthy();
         expect(rect.attributes.width.value).toBe("50");
         expect(rect.attributes.height.value).toBe("50");
         expect(rect.attributes.x.value).toBe("25");

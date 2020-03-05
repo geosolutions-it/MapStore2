@@ -36,7 +36,7 @@ describe('Openlayers ScaleBar component', () => {
 
     it('create ScaleBar with defaults', () => {
         const sb = ReactDOM.render(<ScaleBar map={map}/>, document.getElementById("container"));
-        expect(sb).toExist();
+        expect(sb).toBeTruthy();
         const domMap = map.getViewport();
         const scaleBars = domMap.getElementsByClassName('ol-scale-line');
         expect(scaleBars.length).toBe(1);
@@ -44,7 +44,7 @@ describe('Openlayers ScaleBar component', () => {
 
     it('create ScaleBar with container', () => {
         const sb = ReactDOM.render(<ScaleBar map={map} container="#container"/>, document.getElementById("container"));
-        expect(sb).toExist();
+        expect(sb).toBeTruthy();
         const domMap = map.getViewport();
         let scaleBars = domMap.getElementsByClassName('ol-scale-line');
         expect(scaleBars.length).toBe(0);

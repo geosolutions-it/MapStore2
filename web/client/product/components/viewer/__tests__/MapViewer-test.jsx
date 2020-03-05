@@ -39,7 +39,7 @@ describe("Test the MapViewerCmp component", () => {
     it('testing creation with defaults', () => {
         const mapViewerPros = { wrappedContainer: MapViewerContainer };
         const cmpMapViewerCmp = renderMapViewerComp(mapViewerPros);
-        expect(cmpMapViewerCmp).toExist();
+        expect(cmpMapViewerCmp).toBeTruthy();
     });
 
     it('testing creation with mapId = new', () => {
@@ -51,7 +51,7 @@ describe("Test the MapViewerCmp component", () => {
                 expect(mapId).toBe(null);
             }};
         const cmpMapViewerCmp = renderMapViewerComp(mapViewerPros);
-        expect(cmpMapViewerCmp).toExist();
+        expect(cmpMapViewerCmp).toBeTruthy();
     });
 
     it('testing creation with mapId = anyString', () => {
@@ -63,7 +63,7 @@ describe("Test the MapViewerCmp component", () => {
                 expect(mapId).toBe(null);
             }};
         const cmpMapViewerCmp = renderMapViewerComp(mapViewerPros);
-        expect(cmpMapViewerCmp).toExist();
+        expect(cmpMapViewerCmp).toBeTruthy();
     });
 
     it('testing creation with mapId = 0', () => {
@@ -75,7 +75,7 @@ describe("Test the MapViewerCmp component", () => {
                 expect(mapId).toBe(null);
             }};
         const component = renderMapViewerComp(mapViewerPros);
-        expect(component).toExist();
+        expect(component).toBeTruthy();
     });
 
     it('testing creation with mapId = 1', () => {
@@ -87,7 +87,7 @@ describe("Test the MapViewerCmp component", () => {
                 expect(mapId).toBe(1);
             }};
         const component = renderMapViewerComp(mapViewerPros);
-        expect(component).toExist();
+        expect(component).toBeTruthy();
     });
     it('testing update of map on mapId change', (done) => {
         let count = 1;
@@ -109,7 +109,7 @@ describe("Test the MapViewerCmp component", () => {
         renderMapViewerComp({ ...mapViewerPros, location: { ...location }});
         // render second time
         const component = renderMapViewerComp({ ...mapViewerPros, match: match2, location: {...location}});
-        expect(component).toExist();
+        expect(component).toBeTruthy();
     });
 
 });

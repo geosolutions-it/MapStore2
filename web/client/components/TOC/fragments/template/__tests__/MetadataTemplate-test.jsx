@@ -49,8 +49,8 @@ describe("Test Layer Metadata JSX Template", () => {
         }).then(() => {
             try {
                 const cmpDom = document.getElementById("msg_rss_micro");
-                expect(cmpDom).toExist();
-                expect(cmpDom.id).toExist();
+                expect(cmpDom).toBeTruthy();
+                expect(cmpDom.id).toBeTruthy();
                 expect(cmpDom.id).toBe("msg_rss_micro");
                 done();
             } catch (ex) {
@@ -91,7 +91,7 @@ describe("Test Layer Metadata JSX Template", () => {
         }).then(() => {
             try {
                 const cmpDom = document.getElementById("msg_rss_micro");
-                expect(cmpDom).toExist();
+                expect(cmpDom).toBeTruthy();
                 expect(cmpDom.innerText.indexOf("MyIdentifier") !== -1).toBe(true);
                 done();
             } catch (ex) {

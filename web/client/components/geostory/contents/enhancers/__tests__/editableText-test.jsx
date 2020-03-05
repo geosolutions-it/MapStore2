@@ -30,7 +30,7 @@ describe('editableText enhancer', () => {
     });
     it('rendering with defaults', (done) => {
         const Sink = editableText(createSink( props => {
-            expect(props).toExist();
+            expect(props).toBeTruthy();
             done();
         }));
         ReactDOM.render(<Sink />, document.getElementById("container"));
@@ -51,7 +51,7 @@ describe('editableText enhancer', () => {
     it.skip('save is called and editor is called when blur', (done) => {
         const actions = {
             save: (html) => {
-                expect(html.indexOf('<p>test</p>')).toBeGreaterThanOrEqualTo(0);
+                expect(html.indexOf('<p>test</p>')).toBeGreaterThanOrEqual(0);
                 done();
             }
         };
@@ -75,7 +75,7 @@ describe('editableText enhancer', () => {
     it('when editor is called on blur with empty content', (done) => {
         const actions = {
             save: (html) => {
-                expect(html.indexOf(EMPTY_CONTENT)).toBeGreaterThanOrEqualTo(0);
+                expect(html.indexOf(EMPTY_CONTENT)).toBeGreaterThanOrEqual(0);
                 done();
             }
         };

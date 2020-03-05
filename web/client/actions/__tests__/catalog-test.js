@@ -33,7 +33,7 @@ describe('Test correctness of the catalog actions', () => {
         const sources = ["catalog name"];
         const retval = addLayersMapViewerUrl(layers, sources);
 
-        expect(retval).toExist();
+        expect(retval).toBeTruthy();
         expect(retval.type).toBe(ADD_LAYERS_FROM_CATALOGS);
         expect(retval.layers).toEqual(layers);
         expect(retval.sources).toEqual(sources);
@@ -47,7 +47,7 @@ describe('Test correctness of the catalog actions', () => {
         const options = {};
         const retval = textSearch({format, url: urlValue, startPosition, maxRecords, text, options});
 
-        expect(retval).toExist();
+        expect(retval).toBeTruthy();
         expect(retval.type).toBe(TEXT_SEARCH);
         expect(retval.format).toBe(format);
         expect(retval.url).toBe(urlValue);
@@ -59,21 +59,21 @@ describe('Test correctness of the catalog actions', () => {
     it('deleteCatalogService', () => {
         var retval = deleteCatalogService(service);
 
-        expect(retval).toExist();
+        expect(retval).toBeTruthy();
         expect(retval.type).toBe(DELETE_CATALOG_SERVICE);
         expect(retval.service).toBe(service);
     });
     it('deleteService', () => {
         var retval = deleteService(status);
 
-        expect(retval).toExist();
+        expect(retval).toBeTruthy();
         expect(retval.type).toBe(DELETE_SERVICE);
     });
     it('changeAutoload', () => {
         let status = true;
         var retval = changeAutoload(status);
 
-        expect(retval).toExist();
+        expect(retval).toBeTruthy();
         expect(retval.type).toBe(CHANGE_AUTOLOAD);
         expect(retval.autoload).toBe(status);
     });
@@ -81,21 +81,21 @@ describe('Test correctness of the catalog actions', () => {
         let status = true;
         var retval = savingService(status);
 
-        expect(retval).toExist();
+        expect(retval).toBeTruthy();
         expect(retval.type).toBe(SAVING_SERVICE);
         expect(retval.status).toBe(status);
     });
     it('changeCatalogFormat', () => {
         var retval = changeCatalogFormat(type);
 
-        expect(retval).toExist();
+        expect(retval).toBeTruthy();
         expect(retval.type).toBe(CHANGE_CATALOG_FORMAT);
         expect(retval.format).toBe(type);
     });
     it('changeSelectedService', () => {
         var retval = changeSelectedService(service);
 
-        expect(retval).toExist();
+        expect(retval).toBeTruthy();
         expect(retval.type).toBe(CHANGE_SELECTED_SERVICE);
         expect(retval.service).toBe(service);
     });
@@ -103,7 +103,7 @@ describe('Test correctness of the catalog actions', () => {
         const status = true;
         var retval = focusServicesList(status);
 
-        expect(retval).toExist();
+        expect(retval).toBeTruthy();
         expect(retval.type).toBe(FOCUS_SERVICES_LIST);
         expect(retval.status).toBe(status);
     });
@@ -111,28 +111,28 @@ describe('Test correctness of the catalog actions', () => {
         const mode = "edit";
         var retval = changeCatalogMode(mode);
 
-        expect(retval).toExist();
+        expect(retval).toBeTruthy();
         expect(retval.type).toBe(CHANGE_CATALOG_MODE);
         expect(retval.mode).toBe(mode);
     });
     it('changeTitle', () => {
         var retval = changeTitle(title);
 
-        expect(retval).toExist();
+        expect(retval).toBeTruthy();
         expect(retval.type).toBe(CHANGE_TITLE);
         expect(retval.title).toBe(title);
     });
     it('changeText', () => {
         const val = "val";
         const retval = changeText(val);
-        expect(retval).toExist();
+        expect(retval).toBeTruthy();
         expect(retval.type).toBe(CHANGE_TEXT);
         expect(retval.text).toBe(val);
     });
     it('changeUrl', () => {
         var retval = changeUrl(url);
 
-        expect(retval).toExist();
+        expect(retval).toBeTruthy();
         expect(retval.type).toBe(CHANGE_URL);
         expect(retval.url).toBe(url);
     });
@@ -140,25 +140,25 @@ describe('Test correctness of the catalog actions', () => {
         const newType = "wms";
         var retval = changeType(newType);
 
-        expect(retval).toExist();
+        expect(retval).toBeTruthy();
         expect(retval.type).toBe(CHANGE_TYPE);
         expect(retval.newType).toBe(newType);
     });
     it('addService', () => {
         var retval = addService();
-        expect(retval).toExist();
+        expect(retval).toBeTruthy();
         expect(retval.type).toBe(ADD_SERVICE);
     });
     it('addCatalogService', () => {
         var retval = addCatalogService(service);
 
-        expect(retval).toExist();
+        expect(retval).toBeTruthy();
         expect(retval.type).toBe(ADD_CATALOG_SERVICE);
         expect(retval.service).toBe(service);
     });
     it('resetCatalog', () => {
         var retval = resetCatalog();
-        expect(retval).toExist();
+        expect(retval).toBeTruthy();
         expect(retval.type).toBe(RESET_CATALOG);
     });
     it('initCatalog', (done) => {
@@ -181,8 +181,8 @@ describe('Test correctness of the catalog actions', () => {
                     expect(actionResult.loading).toBe(true);
                 } else {
                     let result = actionResult && actionResult.result;
-                    expect(result).toExist();
-                    expect(result.records).toExist();
+                    expect(result).toBeTruthy();
+                    expect(result.records).toBeTruthy();
                     expect(result.records.length).toBe(1);
                 }
                 done();
@@ -197,8 +197,8 @@ describe('Test correctness of the catalog actions', () => {
                 if (result.type === SET_LOADING) {
                     expect(result.loading).toBe(true);
                 } else {
-                    expect(result).toExist();
-                    expect(result.error).toExist();
+                    expect(result).toBeTruthy();
+                    expect(result.error).toBeTruthy();
                 }
                 done();
             } catch (ex) {
@@ -213,17 +213,17 @@ describe('Test correctness of the catalog actions', () => {
                 if (actionResult.type === SET_LOADING) {
                     expect(actionResult.loading).toBe(true);
                 } else {
-                    expect(result).toExist();
-                    expect(result.records).toExist();
+                    expect(result).toBeTruthy();
+                    expect(result.records).toBeTruthy();
                     expect(result.records.length).toBe(2);
                     let rec0 = result.records[0];
-                    expect(rec0.dc).toExist();
-                    expect(rec0.dc.URI).toExist();
+                    expect(rec0.dc).toBeTruthy();
+                    expect(rec0.dc.URI).toBeTruthy();
                     expect(rec0.dc.URI[0]);
                     let uri = rec0.dc.URI[0];
-                    expect(uri.name).toExist();
-                    expect(uri.value).toExist();
-                    expect(uri.description).toExist();
+                    expect(uri.name).toBeTruthy();
+                    expect(uri.value).toBeTruthy();
+                    expect(uri.description).toBeTruthy();
                 }
                 done();
             } catch (ex) {
@@ -234,14 +234,14 @@ describe('Test correctness of the catalog actions', () => {
     it('add layer and describe it', (done) => {
         const verify = (action) => {
             if (action.type === ADD_LAYER) {
-                expect(action.layer).toExist();
+                expect(action.layer).toBeTruthy();
                 const layer = action.layer;
-                expect(layer.id).toExist();
+                expect(layer.id).toBeTruthy();
                 expect(layer.id).toBe(LayersUtils.getLayerId(action.layer, []));
             } else if (action.type === CHANGE_LAYER_PROPERTIES) {
-                expect(action.layer).toExist();
-                expect(action.newProperties).toExist();
-                expect(action.newProperties.search).toExist();
+                expect(action.layer).toBeTruthy();
+                expect(action.newProperties).toBeTruthy();
+                expect(action.newProperties.search).toBeTruthy();
                 expect(action.newProperties.search.type).toBe('wfs');
                 expect(action.newProperties.search.url).toBe("http://some.geoserver.org:80/geoserver/wfs");
                 done();
@@ -257,13 +257,13 @@ describe('Test correctness of the catalog actions', () => {
     it('add layer with no describe layer', (done) => {
         const verify = (action) => {
             if (action.type === ADD_LAYER) {
-                expect(action.layer).toExist();
+                expect(action.layer).toBeTruthy();
                 const layer = action.layer;
-                expect(layer.id).toExist();
+                expect(layer.id).toBeTruthy();
                 expect(layer.id).toBe(LayersUtils.getLayerId(action.layer, []));
             } else if (action.type === DESCRIBE_ERROR) {
-                expect(action.layer).toExist();
-                expect(action.error).toExist();
+                expect(action.layer).toBeTruthy();
+                expect(action.error).toBeTruthy();
                 done();
             }
         };

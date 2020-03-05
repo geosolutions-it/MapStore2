@@ -35,13 +35,13 @@ describe("Test the ThemaClassesEditor component", () => {
 
     it('creates component with defaults', () => {
         const cmp = ReactDOM.render(<ThemaClassesEditor />, document.getElementById("container"));
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
         const domNode = ReactDOM.findDOMNode(cmp);
         expect(domNode.getElementsByClassName('cp-swatch').length).toBe(0);
     });
     it('creates component with classes', () => {
         const cmp = ReactDOM.render(<ThemaClassesEditor classification={classification}/>, document.getElementById("container"));
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
         const domNode = ReactDOM.findDOMNode(cmp);
         expect(domNode.getElementsByClassName('cp-swatch').length).toBe(2);
     });
@@ -75,15 +75,15 @@ describe("Test the ThemaClassesEditor component", () => {
             />, document.getElementById("container"));
         const domNode = ReactDOM.findDOMNode(cmp);
         const colorPicker = domNode.querySelector('.cp-swatch');
-        expect(colorPicker).toExist();
+        expect(colorPicker).toBeTruthy();
         TestUtils.Simulate.click(colorPicker);
         const sampleColor = domNode.querySelector('div[title="#D0021B"]');
         TestUtils.Simulate.click(sampleColor);
         TestUtils.Simulate.click(domNode.querySelector('.cp-cover'));
         expect(spyUpdate).toHaveBeenCalled();
-        expect(spyUpdate.calls.length).toBe(1);
-        expect(spyUpdate.calls[0].arguments[0].length).toBe(2);
-        expect(spyUpdate.calls[0].arguments[0][0].color.toUpperCase()).toBe('#D0021B');
+        expect(spyUpdate.mock.calls.length).toBe(1);
+        expect(spyUpdate.mock.calls[0][0].length).toBe(2);
+        expect(spyUpdate.mock.calls[0][0][0].color.toUpperCase()).toBe('#D0021B');
     });
 
     it('on update color no choice', () => {
@@ -99,9 +99,9 @@ describe("Test the ThemaClassesEditor component", () => {
             />, document.getElementById("container"));
         const domNode = ReactDOM.findDOMNode(cmp);
         const colorPicker = domNode.querySelector('.cp-swatch');
-        expect(colorPicker).toExist();
+        expect(colorPicker).toBeTruthy();
         TestUtils.Simulate.click(colorPicker);
         TestUtils.Simulate.click(domNode.querySelector('.cp-cover'));
-        expect(spyUpdate).toNotHaveBeenCalled();
+        expect(spyUpdate).not.toHaveBeenCalled();
     });
 });

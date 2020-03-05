@@ -67,7 +67,7 @@ describe('Test the queryform reducer', () => {
         };
 
         let state = queryform(initialState, testAction);
-        expect(state).toExist();
+        expect(state).toBeTruthy();
 
         expect(state.filterFields.length).toBe(2);
 
@@ -77,7 +77,7 @@ describe('Test the queryform reducer', () => {
         expect(state.filterFields[0].value).toBe("attributeValue");
         expect(state.filterFields[0].exception).toBe(null);
 
-        expect(state.filterFields[1].rowId).toNotEqual(state.filterFields[0].rowId);
+        expect(state.filterFields[1].rowId).not.toEqual(state.filterFields[0].rowId);
         expect(state.filterFields[1].attribute).toBe(null);
         expect(state.filterFields[1].operator).toBe("=");
         expect(state.filterFields[1].value).toBe(null);
@@ -99,7 +99,7 @@ describe('Test the queryform reducer', () => {
         };
 
         let state = queryform(initialState, testAction);
-        expect(state).toExist();
+        expect(state).toBeTruthy();
 
         expect(state.filterFields.length).toBe(2);
 
@@ -109,7 +109,7 @@ describe('Test the queryform reducer', () => {
         expect(state.filterFields[0].value).toBe("attributeValue");
         expect(state.filterFields[0].exception).toBe(null);
 
-        expect(state.filterFields[1].rowId).toNotEqual(state.filterFields[0].rowId);
+        expect(state.filterFields[1].rowId).not.toEqual(state.filterFields[0].rowId);
         expect(state.filterFields[1].attribute).toBe(null);
         expect(state.filterFields[1].operator).toBe("=");
         expect(state.filterFields[1].value).toBe(null);
@@ -148,7 +148,7 @@ describe('Test the queryform reducer', () => {
         };
 
         let state = queryform(initialState, testAction);
-        expect(state).toExist();
+        expect(state).toBeTruthy();
 
         expect(state.filterFields.length).toBe(2);
         expect(state.filterFields[0].attribute).toBe("attributeName1");
@@ -162,7 +162,7 @@ describe('Test the queryform reducer', () => {
         };
 
         state = queryform(state, testAction);
-        expect(state).toExist();
+        expect(state).toBeTruthy();
 
         expect(state.filterFields.length).toBe(2);
         expect(state.filterFields[0].attribute).toBe("attributeName1");
@@ -177,7 +177,7 @@ describe('Test the queryform reducer', () => {
         };
 
         state = queryform(state, testAction);
-        expect(state).toExist();
+        expect(state).toBeTruthy();
 
         expect(state.filterFields.length).toBe(2);
         expect(state.filterFields[0].attribute).toBe("attributeName1");
@@ -218,7 +218,7 @@ describe('Test the queryform reducer', () => {
             }]
         };
         let state = queryform(initialState, testAction);
-        expect(state).toExist();
+        expect(state).toBeTruthy();
         expect(state.filterFields.length).toBe(2);
         expect(state.filterFields[0].attribute).toBe("attributeName");
         expect(state.filterFields[0].options.attributeName.length).toBe(2);
@@ -250,7 +250,7 @@ describe('Test the queryform reducer', () => {
         };
 
         let state = queryform(initialState, testAction);
-        expect(state).toExist();
+        expect(state).toBeTruthy();
 
         expect(state.filterFields.length).toBe(2);
         expect(state.filterFields[0].exception).toBe("exception message");
@@ -274,7 +274,7 @@ describe('Test the queryform reducer', () => {
         };
 
         let state = queryform(initialState, testAction);
-        expect(state).toExist();
+        expect(state).toBeTruthy();
 
         expect(state.groupFields.length).toBe(2);
         expect(state.groupFields[1].index).toBe(1);
@@ -300,7 +300,7 @@ describe('Test the queryform reducer', () => {
         };
 
         let state = queryform(initialState, testAction);
-        expect(state).toExist();
+        expect(state).toBeTruthy();
 
         expect(state.groupFields.length).toBe(1);
         expect(state.groupFields[0].index).toBe(0);
@@ -344,7 +344,7 @@ describe('Test the queryform reducer', () => {
         };
 
         let state = queryform(initialState, testAction);
-        expect(state).toExist();
+        expect(state).toBeTruthy();
 
         expect(state.groupFields.length).toBe(1);
         expect(state.groupFields[0].index).toBe(0);
@@ -366,7 +366,7 @@ describe('Test the queryform reducer', () => {
         };
 
         let state = queryform(initialState, testAction);
-        expect(state).toExist();
+        expect(state).toBeTruthy();
 
         expect(state.attributePanelExpanded).toEqual(false);
     });
@@ -383,7 +383,7 @@ describe('Test the queryform reducer', () => {
         };
 
         let state = queryform(initialState, testAction);
-        expect(state).toExist();
+        expect(state).toBeTruthy();
 
         expect(state.spatialPanelExpanded).toEqual(false);
     });
@@ -405,7 +405,7 @@ describe('Test the queryform reducer', () => {
         };
 
         let state = queryform(initialState, testAction);
-        expect(state).toExist();
+        expect(state).toBeTruthy();
 
         expect(state.spatialField.method).toEqual("BBOX");
     });
@@ -427,7 +427,7 @@ describe('Test the queryform reducer', () => {
         };
 
         let state = queryform(initialState, testAction);
-        expect(state).toExist();
+        expect(state).toBeTruthy();
 
         expect(state.spatialField.operation).toEqual("DWITHIN");
     });
@@ -447,8 +447,8 @@ describe('Test the queryform reducer', () => {
         };
 
         let state = queryform(initialState, testAction);
-        expect(state).toExist();
-        expect(state.spatialField).toExist();
+        expect(state).toBeTruthy();
+        expect(state.spatialField).toBeTruthy();
 
         expect(state.spatialField.method).toEqual(null);
         expect(state.spatialField.attribute).toEqual("the_geom");
@@ -467,7 +467,7 @@ describe('Test the queryform reducer', () => {
         };
 
         let state = queryform(initialState, testAction);
-        expect(state).toExist();
+        expect(state).toBeTruthy();
 
         expect(state.showDetailsPanel).toEqual(true);
     });
@@ -480,7 +480,7 @@ describe('Test the queryform reducer', () => {
         };
         const initialState = { spatialField: {geometry: {}} };
         let state = queryform(initialState, testAction);
-        expect(state).toExist();
+        expect(state).toBeTruthy();
         expect(state.spatialField.geometry).toEqual(geometry);
     });
 
@@ -492,7 +492,7 @@ describe('Test the queryform reducer', () => {
         };
         const initialState = { spatialField: {attribute: {}} };
         let state = queryform(initialState, testAction);
-        expect(state).toExist();
+        expect(state).toBeTruthy();
         expect(state.spatialField.attribute).toEqual(attribute);
     });
 
@@ -510,7 +510,7 @@ describe('Test the queryform reducer', () => {
         };
         const action = changeSpatialFilterValue(args);
         const newState = queryform(initialState, action);
-        expect(newState.spatialField).toExist();
+        expect(newState.spatialField).toBeTruthy();
         expect(newState.spatialField.geometry).toBe(args.feature.geometry);
         expect(newState.spatialField.collectGeometries).toBe(args.collectGeometries);
         expect(newState.spatialField.value).toBe(args.value);
@@ -542,7 +542,7 @@ describe('Test the queryform reducer', () => {
             status: "start"
         };
         const state = queryform(initialState, testAction1);
-        expect(state).toExist();
+        expect(state).toBeTruthy();
         expect(state.toolbarEnabled).toBeFalsy();
         const testAction2 = {
             type: CHANGE_DRAWING_STATUS,
@@ -550,7 +550,7 @@ describe('Test the queryform reducer', () => {
             status: "start"
         };
         const state2 = queryform(initialState, testAction2);
-        expect(state2).toExist();
+        expect(state2).toBeTruthy();
         expect(state2.toolbarEnabled).toBeTruthy();
     });
 
@@ -563,7 +563,7 @@ describe('Test the queryform reducer', () => {
             geometry
         };
         const state = queryform(initialState, testAction1);
-        expect(state).toExist();
+        expect(state).toBeTruthy();
         expect(state.toolbarEnabled).toBeTruthy();
         expect(state.spatialField.geometry).toBe(geometry);
         const testAction2 = {
@@ -572,7 +572,7 @@ describe('Test the queryform reducer', () => {
             status: "start"
         };
         const state2 = queryform(initialState, testAction2);
-        expect(state2).toExist();
+        expect(state2).toBeTruthy();
         expect(state2.toolbarEnabled).toBeFalsy();
         expect(state2.spatialField.geometry).toEqual({});
     });
@@ -585,7 +585,7 @@ describe('Test the queryform reducer', () => {
             distance
         };
         const state = queryform(initialState, testAction1);
-        expect(state).toExist();
+        expect(state).toBeTruthy();
         expect(state.spatialField.geometry.distance).toBe(distance);
     });
 
@@ -602,7 +602,7 @@ describe('Test the queryform reducer', () => {
         };
 
         let state = queryform(initialState, testAction);
-        expect(state).toExist();
+        expect(state).toBeTruthy();
 
         expect(state.test).toEqual(true);
         expect(state.spatialField.attribute).toEqual("GEOMETRY");
@@ -619,7 +619,7 @@ describe('Test the queryform reducer', () => {
         };
 
         let state = queryform(initialState, testAction);
-        expect(state).toExist();
+        expect(state).toBeTruthy();
 
         expect(state.showGeneratedFilter).toEqual("data");
     });
@@ -678,8 +678,8 @@ describe('Test the queryform reducer', () => {
         };
 
         let state = queryform(initialState, testAction);
-        expect(state).toExist();
-        expect(state.spatialField).toExist();
+        expect(state).toBeTruthy();
+        expect(state.spatialField).toBeTruthy();
         expect(state.spatialField.zoneFields[0].values.length).toBe(2);
 
         expect(state.spatialField.zoneFields[0].open).toBe(true);
@@ -733,8 +733,8 @@ describe('Test the queryform reducer', () => {
         };
 
         let state = queryform(initialState, testAction);
-        expect(state).toExist();
-        expect(state.spatialField).toExist();
+        expect(state).toBeTruthy();
+        expect(state.spatialField).toBeTruthy();
         expect(state.spatialField.zoneFields[0].busy).toBe(true);
     });
 
@@ -836,8 +836,8 @@ describe('Test the queryform reducer', () => {
         };
 
         let state = queryform(initialState, testAction);
-        expect(state).toExist();
-        expect(state.spatialField).toExist();
+        expect(state).toBeTruthy();
+        expect(state.spatialField).toBeTruthy();
 
         expect(state.spatialField.zoneFields[0].value).toEqual("Five");
         expect(state.spatialField.zoneFields[0].geometryName).toEqual("the_geom");
@@ -871,8 +871,8 @@ describe('Test the queryform reducer', () => {
         };
 
         let state = queryform(initialState, testAction);
-        expect(state).toExist();
-        expect(state.spatialField).toExist();
+        expect(state).toBeTruthy();
+        expect(state.spatialField).toBeTruthy();
         expect(state.spatialField.zoneFields[0].values).toBe(null);
     });
 
@@ -884,8 +884,8 @@ describe('Test the queryform reducer', () => {
         };
 
         let state = queryform({simpleFilterFields: [{fieldId: 1, combo: false}, {fieldId: 2, combo: true}]}, testAction);
-        expect(state).toExist();
-        expect(state.simpleFilterFields).toExist();
+        expect(state).toBeTruthy();
+        expect(state.simpleFilterFields).toBeTruthy();
         expect(state.simpleFilterFields[0].combo).toBe(true);
     });
 
@@ -896,8 +896,8 @@ describe('Test the queryform reducer', () => {
         };
 
         let state = queryform( {simpleFilterFields: []}, testAction);
-        expect(state).toExist();
-        expect(state.simpleFilterFields).toExist();
+        expect(state).toBeTruthy();
+        expect(state.simpleFilterFields).toBeTruthy();
         expect(state.simpleFilterFields[0].combo).toBe(true);
         expect(state.simpleFilterFields[0].fieldId).toBe(1);
     });
@@ -909,8 +909,8 @@ describe('Test the queryform reducer', () => {
         };
 
         let state = queryform({simpleFilterFields: [{fieldId: 1, combo: false}]}, testAction);
-        expect(state).toExist();
-        expect(state.simpleFilterFields).toExist();
+        expect(state).toBeTruthy();
+        expect(state.simpleFilterFields).toBeTruthy();
         expect(state.simpleFilterFields.length).toBe(0);
     });
 
@@ -920,8 +920,8 @@ describe('Test the queryform reducer', () => {
         };
 
         let state = queryform({simpleFilterFields: [{fieldId: 1, combo: false}]}, testAction);
-        expect(state).toExist();
-        expect(state.simpleFilterFields).toExist();
+        expect(state).toBeTruthy();
+        expect(state.simpleFilterFields).toBeTruthy();
         expect(state.simpleFilterFields.length).toBe(0);
     });
     it('set autocomplete mode', () => {
@@ -936,7 +936,7 @@ describe('Test the queryform reducer', () => {
         };
 
         let state = queryform(initialState, testAction);
-        expect(state).toExist();
+        expect(state).toBeTruthy();
 
         expect(state.autocompleteEnabled).toBe(true);
 
@@ -957,7 +957,7 @@ describe('Test the queryform reducer', () => {
         };
 
         let state = queryform(initialState, testAction);
-        expect(state).toExist();
+        expect(state).toBeTruthy();
 
         expect(state.filterFields[0].openAutocompleteMenu).toBe(true);
 
@@ -1070,8 +1070,8 @@ describe('Test the queryform reducer', () => {
         };
 
         let state = queryform(initialState, testAction);
-        expect(state).toExist();
-        expect(state.spatialField).toExist();
+        expect(state).toBeTruthy();
+        expect(state.spatialField).toBeTruthy();
         expect(state.spatialField.zoneFields[0].open).toBe(true);
     });*/
 });

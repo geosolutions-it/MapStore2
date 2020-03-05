@@ -27,9 +27,9 @@ describe("Test the Cesium tooltip component", () => {
 
     it('test default component', () => {
         const cmp = ReactDOM.render(<CesiumTooltip/>, document.getElementById("container"));
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
         const domNode = ReactDOM.findDOMNode(cmp);
-        expect(domNode).toExist();
+        expect(domNode).toBeTruthy();
         expect(domNode.children.length).toBe(1);
         const tr = domNode.getElementsByTagName('TR');
         expect(tr.length).toBe(5);
@@ -38,9 +38,9 @@ describe("Test the Cesium tooltip component", () => {
 
     it('test default component with touch', () => {
         const cmp = ReactDOM.render(<CesiumTooltip touch/>, document.getElementById("container"));
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
         const domNode = ReactDOM.findDOMNode(cmp);
-        expect(domNode).toExist();
+        expect(domNode).toBeTruthy();
         expect(domNode.children.length).toBe(1);
         const tr = domNode.getElementsByTagName('TR');
         expect(tr.length).toBe(7);

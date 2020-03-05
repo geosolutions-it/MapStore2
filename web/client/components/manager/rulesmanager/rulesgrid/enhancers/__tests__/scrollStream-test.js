@@ -12,8 +12,8 @@ const Rx = require("rxjs");
 describe('rulegrid scrollStream', () => {
     it('generate pages request', (done) => {
         const moreRules = (pagesRequest) => {
-            expect(pagesRequest).toExist();
-            expect(pagesRequest.pagesToLoad).toExist();
+            expect(pagesRequest).toBeTruthy();
+            expect(pagesRequest.pagesToLoad).toBeTruthy();
             expect(pagesRequest.pagesToLoad).toEqual([0, 1]);
             expect(pagesRequest.startPage).toBe(0);
             expect(pagesRequest.endPage).toBe(1);

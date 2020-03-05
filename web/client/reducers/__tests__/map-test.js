@@ -101,15 +101,15 @@ describe('Test the map reducer', () => {
 
         // add map scales
         var state = mapConfig({projection: "EPSG:3857"}, action);
-        expect(state.mapOptions).toExist();
-        expect(state.mapOptions.view).toExist();
+        expect(state.mapOptions).toBeTruthy();
+        expect(state.mapOptions.view).toBeTruthy();
         expect(state.mapOptions.view.resolutions).toEqual(resolutions);
         expect(state.projection).toBe("EPSG:3857");
 
         // update map scales
         state = mapConfig(state, action2);
-        expect(state.mapOptions).toExist();
-        expect(state.mapOptions.view).toExist();
+        expect(state.mapOptions).toBeTruthy();
+        expect(state.mapOptions.view).toBeTruthy();
         expect(state.mapOptions.view.resolutions).toEqual(resolutions2);
 
         // remove state.mapOptions on map scales reset
@@ -121,7 +121,7 @@ describe('Test the map reducer', () => {
             },
             prop: 'prop'
         }, actionReset);
-        expect(state.mapOptions).toNotExist();
+        expect(state.mapOptions).toBeFalsy();
         expect(state.prop).toBe('prop');
 
         // remove only state.mapOptions.view on map scales reset
@@ -133,8 +133,8 @@ describe('Test the map reducer', () => {
                 prop: 'prop'
             }
         }, actionReset);
-        expect(state.mapOptions).toExist();
-        expect(state.mapOptions.view).toNotExist();
+        expect(state.mapOptions).toBeTruthy();
+        expect(state.mapOptions.view).toBeFalsy();
         expect(state.mapOptions.prop).toBe('prop');
 
         // remove only state.mapOptions.view.resolutions on map scales reset
@@ -146,17 +146,17 @@ describe('Test the map reducer', () => {
                 }
             }
         }, actionReset);
-        expect(state.mapOptions).toExist();
-        expect(state.mapOptions.view).toExist();
-        expect(state.mapOptions.view.resolutions).toNotExist();
+        expect(state.mapOptions).toBeTruthy();
+        expect(state.mapOptions.view).toBeTruthy();
+        expect(state.mapOptions.view.resolutions).toBeFalsy();
         expect(state.mapOptions.view.prop).toBe('prop');
 
         // add map scales with no initial state
         state = mapConfig(undefined, action);
-        expect(state).toExist();
-        expect(state.mapOptions).toExist();
-        expect(state.mapOptions.view).toExist();
-        expect(state.mapOptions.view.resolutions).toExist();
+        expect(state).toBeTruthy();
+        expect(state.mapOptions).toBeTruthy();
+        expect(state.mapOptions.view).toBeTruthy();
+        expect(state.mapOptions.view.resolutions).toBeTruthy();
     });
 
     it('sets new resolutions', () => {

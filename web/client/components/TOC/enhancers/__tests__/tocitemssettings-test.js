@@ -86,7 +86,7 @@ describe("test updateSettingsLifecycle", () => {
             onRetrieveLayerData={testHandlers.onRetrieveLayerData}
         />, document.getElementById("container"));
 
-        expect(spyOnRetrieveLayerData).toNotHaveBeenCalled();
+        expect(spyOnRetrieveLayerData).not.toHaveBeenCalled();
     });
 
     it('test mounted retrieve data layer with desc', () => {
@@ -109,7 +109,7 @@ describe("test updateSettingsLifecycle", () => {
             onRetrieveLayerData={testHandlers.onRetrieveLayerData}
         />, document.getElementById("container"));
 
-        expect(spyOnRetrieveLayerData).toNotHaveBeenCalled();
+        expect(spyOnRetrieveLayerData).not.toHaveBeenCalled();
     });
 
     it('test component update', () => {
@@ -249,8 +249,8 @@ describe("test updateSettingsLifecycle", () => {
         const testClose = document.getElementById('test-close');
         TestUtils.Simulate.click(testClose);
 
-        expect(spyOnUpdateNode).toNotHaveBeenCalled();
-        expect(spyOnHideSettings).toNotHaveBeenCalled();
+        expect(spyOnUpdateNode).not.toHaveBeenCalled();
+        expect(spyOnHideSettings).not.toHaveBeenCalled();
         expect(spyOnShowAlertModal).toHaveBeenCalled();
         expect(spyOnShowAlertModal).toHaveBeenCalledWith(true);
     });
@@ -332,7 +332,7 @@ describe("test updateSettingsLifecycle", () => {
 
         const testClose = document.getElementById('test-close');
         TestUtils.Simulate.click(testClose);
-        expect(spyTabCloseAction).toNotHaveBeenCalled();
+        expect(spyTabCloseAction).not.toHaveBeenCalled();
     });
 
     it('test component on close with arg different from array (forced close)', () => {
@@ -354,7 +354,7 @@ describe("test updateSettingsLifecycle", () => {
 
         const testClose = document.getElementById('test-close');
         TestUtils.Simulate.click(testClose);
-        expect(spyTabCloseAction).toNotHaveBeenCalled();
+        expect(spyTabCloseAction).not.toHaveBeenCalled();
     });
 
     it('test component on save with tabCloseActions', () => {
@@ -393,7 +393,7 @@ describe("test updateSettingsLifecycle", () => {
         const testSave = document.getElementById('test-save');
         TestUtils.Simulate.click(testSave);
 
-        expect(spyTabCloseAction).toNotHaveBeenCalled();
+        expect(spyTabCloseAction).not.toHaveBeenCalled();
     });
 
     it('test component on save with arg different from array', () => {
@@ -413,7 +413,7 @@ describe("test updateSettingsLifecycle", () => {
         const testSave = document.getElementById('test-save');
         TestUtils.Simulate.click(testSave);
 
-        expect(spyTabCloseAction).toNotHaveBeenCalled();
+        expect(spyTabCloseAction).not.toHaveBeenCalled();
     });
 
 });

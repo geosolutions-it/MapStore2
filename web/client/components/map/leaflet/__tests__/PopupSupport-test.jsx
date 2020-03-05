@@ -15,7 +15,7 @@ import PopupSupport from '../PopupSupport';
 
 const popupExists = () => {
     const popup = document.querySelector('.leaflet-popup-content');
-    expect(popup).toExist();
+    expect(popup).toBeTruthy();
     return popup;
 };
 
@@ -52,7 +52,7 @@ describe('Leaflet PopupSupport', () => {
 
     it('should render', () => {
         const component = renderPopups();
-        expect(component).toExist();
+        expect(component).toBeTruthy();
     });
     it('should attach popup with a text content to map', () => {
         const popups = [
@@ -65,9 +65,9 @@ describe('Leaflet PopupSupport', () => {
 
         ];
         const component = renderPopups({ popups });
-        expect(component).toExist();
+        expect(component).toBeTruthy();
         const popup = popupExists();
-        expect(popup.querySelector('#test-map-popup')).toExist();
+        expect(popup.querySelector('#test-map-popup')).toBeTruthy();
     });
     it('should attach popup with a html content to map', () => {
         const popups = [
@@ -80,9 +80,9 @@ describe('Leaflet PopupSupport', () => {
 
         ];
         const component = renderPopups({ popups });
-        expect(component).toExist();
+        expect(component).toBeTruthy();
         const popup = popupExists();
-        expect(popup.querySelector('#innerHtml')).toExist();
+        expect(popup.querySelector('#innerHtml')).toBeTruthy();
     });
     it('should attach popup with a component to map', () => {
         const popups = [
@@ -95,9 +95,9 @@ describe('Leaflet PopupSupport', () => {
 
         ];
         const component = renderPopups({ popups });
-        expect(component).toExist();
+        expect(component).toBeTruthy();
         const popup = popupExists();
-        expect(popup.querySelector('#test-map-popup')).toExist();
+        expect(popup.querySelector('#test-map-popup')).toBeTruthy();
     });
     it('should attach popup with a component instance to map', () => {
         const popups = [
@@ -109,9 +109,9 @@ describe('Leaflet PopupSupport', () => {
             }
         ];
         const component = renderPopups({ popups });
-        expect(component).toExist();
+        expect(component).toBeTruthy();
         const popup = popupExists();
-        expect(popup.querySelector('#test-map-popup')).toExist();
+        expect(popup.querySelector('#test-map-popup')).toBeTruthy();
     });
     it('should attach popups text, html, component', () => {
         const popups = [
@@ -136,13 +136,13 @@ describe('Leaflet PopupSupport', () => {
 
         ];
         const component = renderPopups({ popups });
-        expect(component).toExist();
+        expect(component).toBeTruthy();
         const poups = document.querySelectorAll('.leaflet-popup-content');
-        expect(poups).toExist();
+        expect(poups).toBeTruthy();
         expect(poups.length).toBe(3);
-        expect(poups[0].querySelector('#test-text-map-popup')).toExist();
-        expect(poups[1].querySelector('#test-html-map-popup')).toExist();
-        expect(poups[2].querySelector('#test-component-map-popup')).toExist();
+        expect(poups[0].querySelector('#test-text-map-popup')).toBeTruthy();
+        expect(poups[1].querySelector('#test-html-map-popup')).toBeTruthy();
+        expect(poups[2].querySelector('#test-component-map-popup')).toBeTruthy();
     });
     it('should close an open popups and call the right action', (done) => {
         const popups = [
@@ -158,7 +158,7 @@ describe('Leaflet PopupSupport', () => {
             done();
         };
         const component = renderPopups({ popups, onPopupClose});
-        expect(component).toExist();
+        expect(component).toBeTruthy();
         const close = document.querySelector('.leaflet-popup-close-button');
         close.click();
     });

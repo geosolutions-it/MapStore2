@@ -25,29 +25,29 @@ describe('CounterView component', () => {
         ReactDOM.render(<CounterView />, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('.empty-state-image');
-        expect(el).toExist();
+        expect(el).toBeTruthy();
     });
     it('CounterView rendering with data', () => {
         ReactDOM.render(<CounterView data={[{ dataKey: 1 }]} series={[{dataKey: "dataKey"}]}/>, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('.empty-state-image');
-        expect(el).toNotExist();
-        expect(container.querySelector('span')).toExist();
+        expect(el).toBeFalsy();
+        expect(container.querySelector('span')).toBeTruthy();
     });
     it('CounterView rendering with error', () => {
         ReactDOM.render(<CounterView error={new Error()}/>, document.getElementById("container"));
         const container = document.getElementById('container');
-        expect(container.querySelector('.glyphicon-warning-sign')).toExist();
+        expect(container.querySelector('.glyphicon-warning-sign')).toBeTruthy();
     });
     it('CounterView rendering style', () => {
         ReactDOM.render(<CounterView data={[{ dataKey: 1 }]} series={[{ dataKey: "dataKey" }]} />, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('.counter-widget-view');
-        expect(el).toExist();
+        expect(el).toBeTruthy();
         const content = el.querySelector('div');
         expect(content.style.width).toBe("100%");
         expect(content.style.height).toBe("100%");
-        expect(content.style.transform).toExist();
+        expect(content.style.transform).toBeTruthy();
         expect(content.style.top).toBe('50%');
         expect(content.style.left).toBe('50%');
         ReactDOM.render(<CounterView data={[{ dataKey: 1 }]} style={{top: "10px"}} series={[{ dataKey: "dataKey" }]} />, document.getElementById("container"));

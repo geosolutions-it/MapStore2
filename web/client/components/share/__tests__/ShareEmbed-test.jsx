@@ -27,7 +27,7 @@ describe("The ShareEmbed component", () => {
 
     it('is created with defaults', () => {
         const cmpSharePanel = ReactDOM.render(<ShareEmbed/>, document.getElementById("container"));
-        expect(cmpSharePanel).toExist();
+        expect(cmpSharePanel).toBeTruthy();
 
     });
 
@@ -35,10 +35,10 @@ describe("The ShareEmbed component", () => {
         const url = location.href;
         const iFrameStr = "<iframe style=\"border: none;\" height=\"400\" width=\"600\" src=\"" + url + "\"></iframe>";
         const cmpSharePanel = ReactDOM.render(<ShareEmbed shareUrl={url}/>, document.getElementById("container"));
-        expect(cmpSharePanel).toExist();
+        expect(cmpSharePanel).toBeTruthy();
 
         const codeEmbed = ReactDOM.findDOMNode(ReactTestUtils.scryRenderedDOMComponentsWithTag(cmpSharePanel, "code")[0]);
-        expect(codeEmbed).toExist();
+        expect(codeEmbed).toBeTruthy();
         expect(codeEmbed.innerText).toEqual(iFrameStr);
 
     });
@@ -54,7 +54,7 @@ describe("The ShareEmbed component", () => {
         ReactTestUtils.Simulate.change(checkbox);
         const codeEmbed = ReactDOM.findDOMNode(ReactTestUtils.scryRenderedDOMComponentsWithTag(cmpSharePanel, "code")[0]);
         expect(checkbox.checked).toBe(true);
-        expect(codeEmbed).toExist();
+        expect(codeEmbed).toBeTruthy();
         expect(codeEmbed.innerText).toEqual(iFrameStr);
     });
     it('test showTOCToggle prop', () => {

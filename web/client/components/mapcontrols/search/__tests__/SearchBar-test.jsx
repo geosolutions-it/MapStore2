@@ -28,7 +28,7 @@ describe("test the SearchBar", () => {
     it('test component creation', () => {
         ReactDOM.render(<SearchBar/>, document.getElementById("container"));
         const rootDiv = document.getElementsByClassName('MapSearchBar')[0];
-        expect(rootDiv).toExist();
+        expect(rootDiv).toBeTruthy();
     });
 
     it('test search and reset buttons', () => {
@@ -50,19 +50,18 @@ describe("test the SearchBar", () => {
         testHandlers.onSearchTextChangeHandler = renderSearchBar.bind(null, testHandlers);
 
         const spyReset = expect.spyOn(testHandlers, 'onSearchResetHandler');
-        spyReset.andCallThrough();
         renderSearchBar(testHandlers);
         let input = document.getElementsByTagName('input')[0];
         // test reset button
-        expect(input).toExist();
+        expect(input).toBeTruthy();
         input.value = "test";
         TestUtils.Simulate.change(input);
         let reset = document.getElementsByClassName("glyphicon-1-close")[0];
-        expect(reset).toExist();
+        expect(reset).toBeTruthy();
         let search = document.getElementsByClassName("glyphicon-search")[0];
-        expect(search).toExist();
+        expect(search).toBeTruthy();
         TestUtils.Simulate.click(reset);
-        expect(spyReset.calls.length).toEqual(1);
+        expect(spyReset.mock.calls.length).toEqual(1);
         expect(input.value).toEqual("");
     });
 
@@ -82,15 +81,15 @@ describe("test the SearchBar", () => {
         renderSearchBar(testHandlers);
         let input = document.getElementsByTagName('input')[0];
 
-        expect(input).toExist();
+        expect(input).toBeTruthy();
         input.value = "test";
         TestUtils.Simulate.change(input);
         TestUtils.Simulate.keyDown(input, {key: "Enter", keyCode: 13, which: 13});
-        expect(spy.calls.length).toEqual(1);
+        expect(spy.mock.calls.length).toEqual(1);
         input.value = "";
         TestUtils.Simulate.change(input);
         TestUtils.Simulate.keyDown(input, {key: "Enter", keyCode: 13, which: 13});
-        expect(spyReset.calls.length).toEqual(1);
+        expect(spyReset.mock.calls.length).toEqual(1);
     });
 
     it('test that options are passed to search action', () => {
@@ -120,17 +119,17 @@ describe("test the SearchBar", () => {
         renderSearchBar(testHandlers);
         let input = document.getElementsByTagName('input')[0];
 
-        expect(input).toExist();
+        expect(input).toBeTruthy();
         input.value = "test";
         TestUtils.Simulate.change(input);
         TestUtils.Simulate.keyDown(input, {key: "Enter", keyCode: 13, which: 13});
-        expect(spy.calls.length).toEqual(1);
+        expect(spy.mock.calls.length).toEqual(1);
         expect(spy).toHaveBeenCalledWith('test', searchOptions, 23);
     });
     it('test error and loading status', () => {
         ReactDOM.render(<SearchBar loading error={{message: "TEST_ERROR"}}/>, document.getElementById("container"));
         let error = document.getElementsByClassName("searcherror")[0];
-        expect(error).toExist();
+        expect(error).toBeTruthy();
     });
 
     it('test cancel items', (done) => {
@@ -144,11 +143,11 @@ describe("test the SearchBar", () => {
         ReactDOM.render(<SearchBar searchText="" delay={0} typeAhead blurResetDelay={0} onCancelSelectedItem={testHandlers.onCancelSelectedItem} selectedItems={[{text: "TEST"}]}/>, document.getElementById("container"));
 
         let input = document.getElementsByTagName('input')[0];
-        expect(input).toExist();
+        expect(input).toBeTruthy();
         TestUtils.Simulate.keyDown(input, {key: "Backspace", keyCode: 8, which: 8});
 
         setTimeout(() => {
-            expect(spy.calls.length).toEqual(1);
+            expect(spy.mock.calls.length).toEqual(1);
             done();
         }, 10);
     });
@@ -157,8 +156,8 @@ describe("test the SearchBar", () => {
         ReactDOM.render(<SearchBar splitTools={false} searchText={"some val"} delay={0} typeAhead={false} />, document.getElementById("container"));
         let reset = document.getElementsByClassName("glyphicon-1-close")[0];
         let search = document.getElementsByClassName("glyphicon-search");
-        expect(reset).toExist();
-        expect(search).toExist();
+        expect(reset).toBeTruthy();
+        expect(search).toBeTruthy();
         expect(search.length).toBe(2);
     });
     it('test only search present, splitTools=false', () => {
@@ -167,7 +166,7 @@ describe("test the SearchBar", () => {
         expect(reset.length).toBe(0);
 
         let search = document.getElementsByClassName("magnifying-glass")[0];
-        expect(search).toExist();
+        expect(search).toBeTruthy();
     });
 
 
@@ -177,14 +176,14 @@ describe("test the SearchBar", () => {
         expect(reset.length).toBe(0);
 
         let search = document.getElementsByClassName("magnifying-glass")[0];
-        expect(search).toExist();
+        expect(search).toBeTruthy();
     });
 
     it('test only reset present, splitTools=true', () => {
         ReactDOM.render(<SearchBar splitTools searchText={"va"} delay={0} typeAhead={false} />, document.getElementById("container"));
         let reset = document.getElementsByClassName("glyphicon-1-close")[0];
         let search = document.getElementsByClassName("glyphicon-search");
-        expect(reset).toExist();
+        expect(reset).toBeTruthy();
         expect(search.length).toBe(1);
     });
     it('test zoomToPoint, with search, with decimal, with reset', () => {
@@ -285,7 +284,7 @@ describe("test the SearchBar", () => {
         let reset = document.getElementsByClassName("glyphicon-search")[0];
         let cog = document.getElementsByClassName("glyphicon-cog");
         let zoom = document.getElementsByClassName("glyphicon-zoom-to");
-        expect(reset).toExist();
+        expect(reset).toBeTruthy();
         expect(cog.length).toBe(0);
         expect(zoom.length).toBe(0);
     });

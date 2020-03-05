@@ -25,11 +25,11 @@ describe('Test for TopToolbar component', () => {
     it('render with defaults', () => {
         ReactDOM.render(<Header/>, document.getElementById("container"));
         const el = document.getElementsByClassName("data-grid-top-toolbar")[0];
-        expect(el).toExist();
+        expect(el).toBeTruthy();
     });
     it('render with ViewTools', () => {
         ReactDOM.render(<Header toolbar={Toolbar}/>, document.getElementById("container"));
         const el = document.getElementsByClassName("data-grid-top-toolbar")[0];
-        expect(el).toExist();
+        expect(el).toBeTruthy();
     });
 });

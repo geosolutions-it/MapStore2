@@ -22,9 +22,9 @@ describe('LocaleUtils', () => {
         }];
         const testBounds = [37, -109.05, 41, -102.04];
         const layer = L.geoJson(features, {});
-        expect(layer).toExist();
+        expect(layer).toBeTruthy();
         const feature = fromLeafletFeatureToQueryform(layer);
-        expect(feature).toExist();
+        expect(feature).toBeTruthy();
         expect(feature.type).toBe("Polygon");
         expect(feature.coordinates.length).toBe(1);
         expect(feature.coordinates[0].length).toBe(5);

@@ -28,9 +28,9 @@ describe('handlingUnsupportedProjection enhancer', () => {
         ReactDOM.render(<Sink projection="EPSG:31468" />, document.getElementById("container"));
         const title = document.querySelector("h1 span");
         const description = document.querySelector(".empty-state-description span");
-        expect(title).toExist();
+        expect(title).toBeTruthy();
         expect(title.innerText).toBe("map.errors.loading.title");
-        expect(description).toExist();
+        expect(description).toBeTruthy();
         expect(description.innerText).toBe("map.errors.loading.projectionError");
 
     });

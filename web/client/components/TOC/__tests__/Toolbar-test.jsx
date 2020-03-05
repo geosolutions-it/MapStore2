@@ -50,7 +50,7 @@ describe('TOC Toolbar', () => {
         const spyAddGroup = expect.spyOn(onToolsActions, 'onAddGroup');
         ReactDOM.render(<Toolbar onToolsActions={onToolsActions}/>, document.getElementById("container"));
         const el = document.getElementsByClassName("btn-group").item(0);
-        expect(el).toExist();
+        expect(el).toBeTruthy();
         const btn = el.getElementsByClassName("btn");
         expect(btn.length).toBe(2);
         expect(btn[0].innerHTML).toContain('add-layer');
@@ -87,10 +87,10 @@ describe('TOC Toolbar', () => {
         const cmp = ReactDOM.render(<Toolbar selectedLayers={selectedLayers} onToolsActions={onToolsActions}/>, document.getElementById("container"));
 
         const modal = document.getElementsByClassName('modal-dialog').item(0);
-        expect(modal).toNotExist();
+        expect(modal).toBeFalsy();
 
         const el = ReactDOM.findDOMNode(cmp);
-        expect(el).toExist();
+        expect(el).toBeTruthy();
         const btn = el.getElementsByClassName("btn");
         expect(btn.length).toBe(6);
         TestUtils.Simulate.click(btn[0]);
@@ -123,7 +123,7 @@ describe('TOC Toolbar', () => {
 
         TestUtils.Simulate.click(btn[4]);
         const removeModal = document.getElementsByClassName('modal-dialog').item(0);
-        expect(removeModal).toExist();
+        expect(removeModal).toBeTruthy();
     });
 
     it('layer single selection (no search)', () => {
@@ -146,10 +146,10 @@ describe('TOC Toolbar', () => {
         const cmp = ReactDOM.render(<Toolbar selectedLayers={selectedLayers} onToolsActions={onToolsActions}/>, document.getElementById("container"));
 
         const modal = document.getElementsByClassName('modal-dialog').item(0);
-        expect(modal).toNotExist();
+        expect(modal).toBeFalsy();
 
         const el = ReactDOM.findDOMNode(cmp);
-        expect(el).toExist();
+        expect(el).toBeTruthy();
         const btn = el.getElementsByClassName("btn");
         expect(btn.length).toBe(3);
         TestUtils.Simulate.click(btn[0]);
@@ -165,7 +165,7 @@ describe('TOC Toolbar', () => {
 
         TestUtils.Simulate.click(btn[2]);
         const removeModal = document.getElementsByClassName('modal-dialog').item(0);
-        expect(removeModal).toExist();
+        expect(removeModal).toBeTruthy();
     });
 
     it('layer single selection (loading error)', () => {
@@ -190,10 +190,10 @@ describe('TOC Toolbar', () => {
         const cmp = ReactDOM.render(<Toolbar selectedLayers={selectedLayers} onToolsActions={onToolsActions}/>, document.getElementById("container"));
 
         const modal = document.getElementsByClassName('modal-dialog').item(0);
-        expect(modal).toNotExist();
+        expect(modal).toBeFalsy();
 
         const el = ReactDOM.findDOMNode(cmp);
-        expect(el).toExist();
+        expect(el).toBeTruthy();
         const btn = el.getElementsByClassName("btn");
         expect(btn.length).toBe(3);
         TestUtils.Simulate.click(btn[2]);
@@ -202,11 +202,11 @@ describe('TOC Toolbar', () => {
 
         TestUtils.Simulate.click(btn[1]);
         const removeModal = document.getElementsByClassName('modal-dialog').item(0);
-        expect(removeModal).toExist();
+        expect(removeModal).toBeTruthy();
 
         TestUtils.Simulate.click(btn[0]);
         expect(spySettings).toHaveBeenCalled();
-        expect(btn[0].querySelector('.glyphicon-wrench')).toExist();
+        expect(btn[0].querySelector('.glyphicon-wrench')).toBeTruthy();
     });
 
     it('multiple layer selection (loading error)', () => {
@@ -243,10 +243,10 @@ describe('TOC Toolbar', () => {
         const cmp = ReactDOM.render(<Toolbar selectedLayers={selectedLayers} onToolsActions={onToolsActions}/>, document.getElementById("container"));
 
         const modal = document.getElementsByClassName('modal-dialog').item(0);
-        expect(modal).toNotExist();
+        expect(modal).toBeFalsy();
 
         const el = ReactDOM.findDOMNode(cmp);
-        expect(el).toExist();
+        expect(el).toBeTruthy();
         const btn = el.getElementsByClassName("btn");
         expect(btn.length).toBe(2);
         TestUtils.Simulate.click(btn[1]);
@@ -255,7 +255,7 @@ describe('TOC Toolbar', () => {
 
         TestUtils.Simulate.click(btn[0]);
         const removeModal = document.getElementsByClassName('modal-dialog').item(0);
-        expect(removeModal).toExist();
+        expect(removeModal).toBeTruthy();
     });
 
     it('layer single selection with catalogURL', () => {
@@ -281,10 +281,10 @@ describe('TOC Toolbar', () => {
         const cmp = ReactDOM.render(<Toolbar selectedLayers={selectedLayers} onToolsActions={onToolsActions}/>, document.getElementById("container"));
 
         const modal = document.getElementsByClassName('modal-dialog').item(0);
-        expect(modal).toNotExist();
+        expect(modal).toBeFalsy();
 
         const el = ReactDOM.findDOMNode(cmp);
-        expect(el).toExist();
+        expect(el).toBeTruthy();
         const btn = el.getElementsByClassName("btn");
         expect(btn.length).toBe(7);
 
@@ -294,7 +294,7 @@ describe('TOC Toolbar', () => {
 
         TestUtils.Simulate.click(btn[4]);
         const removeModal = document.getElementsByClassName('modal-dialog').item(0);
-        expect(removeModal).toExist();
+        expect(removeModal).toBeTruthy();
     });
 
     it('group single selection', () => {
@@ -345,10 +345,10 @@ describe('TOC Toolbar', () => {
         const cmp = ReactDOM.render(<Toolbar selectedLayers={selectedLayers} selectedGroups={selectedGroups} onToolsActions={onToolsActions}/>, document.getElementById("container"));
 
         const modal = document.getElementsByClassName('modal-dialog').item(0);
-        expect(modal).toNotExist();
+        expect(modal).toBeFalsy();
 
         const el = ReactDOM.findDOMNode(cmp);
-        expect(el).toExist();
+        expect(el).toBeTruthy();
         const btn = el.getElementsByClassName("btn");
         expect(btn.length).toBe(5);
         TestUtils.Simulate.click(btn[0]);
@@ -368,7 +368,7 @@ describe('TOC Toolbar', () => {
 
         TestUtils.Simulate.click(btn[4]);
         const removeModal = document.getElementsByClassName('modal-dialog').item(0);
-        expect(removeModal).toExist();
+        expect(removeModal).toBeTruthy();
     });
 
     it('add group max depth ok', () => {
@@ -382,10 +382,10 @@ describe('TOC Toolbar', () => {
         const cmp = ReactDOM.render(<Toolbar maxDepth={2} selectedGroups={selectedGroups} onToolsActions={onToolsActions} />, document.getElementById("container"));
 
         const modal = document.getElementsByClassName('modal-dialog').item(0);
-        expect(modal).toNotExist();
+        expect(modal).toBeFalsy();
 
         const el = ReactDOM.findDOMNode(cmp);
-        expect(el).toExist();
+        expect(el).toBeTruthy();
         const btn = el.getElementsByClassName("btn");
         expect(btn.length).toBe(4);
     });
@@ -400,10 +400,10 @@ describe('TOC Toolbar', () => {
         const cmp = ReactDOM.render(<Toolbar maxDepth={2} selectedGroups={selectedGroups} onToolsActions={onToolsActions} />, document.getElementById("container"));
 
         const modal = document.getElementsByClassName('modal-dialog').item(0);
-        expect(modal).toNotExist();
+        expect(modal).toBeFalsy();
 
         const el = ReactDOM.findDOMNode(cmp);
-        expect(el).toExist();
+        expect(el).toBeTruthy();
         const btn = el.getElementsByClassName("btn");
         expect(btn.length).toBe(3);
     });
@@ -471,16 +471,16 @@ describe('TOC Toolbar', () => {
         const cmp = ReactDOM.render(<Toolbar selectedLayers={selectedLayers} selectedGroups={selectedGroups}/>, document.getElementById("container"));
 
         const modal = document.getElementsByClassName('modal-dialog').item(0);
-        expect(modal).toNotExist();
+        expect(modal).toBeFalsy();
 
         const el = ReactDOM.findDOMNode(cmp);
-        expect(el).toExist();
+        expect(el).toBeTruthy();
         const btn = el.getElementsByClassName("btn");
         expect(btn.length).toBe(1);
 
         TestUtils.Simulate.click(btn[0]);
         const removeModal = document.getElementsByClassName('modal-dialog').item(0);
-        expect(removeModal).toExist();
+        expect(removeModal).toBeTruthy();
     });
 
     it('layer single selection (epsg not supported)', () => {
@@ -502,7 +502,7 @@ describe('TOC Toolbar', () => {
         const cmp = ReactDOM.render(<Toolbar selectedLayers={selectedLayers} onToolsActions={onToolsActions}/>, document.getElementById("container"));
 
         const el = ReactDOM.findDOMNode(cmp);
-        expect(el).toExist();
+        expect(el).toBeTruthy();
         const btn = el.getElementsByClassName('btn');
         expect(btn.length).toBe(3);
         expect(btn[0].style.cursor).toBe('default');
@@ -546,7 +546,7 @@ describe('TOC Toolbar', () => {
 
             ReactDOM.render(<Toolbar activateTool={activateTool} selectedLayers={selectedLayers} onToolsActions={actions} />, document.getElementById("container"));
             const widgetButton = document.querySelector(WIDGET_TOOL_SELECTOR);
-            expect(widgetButton).toExist();
+            expect(widgetButton).toBeTruthy();
             widgetButton.click();
             expect(spyNewWidget).toHaveBeenCalled();
         });
@@ -567,7 +567,7 @@ describe('TOC Toolbar', () => {
             }];
             ReactDOM.render(<Toolbar activateTool={{ activateWidgetTool: true }} selectedLayers={selectedLayers} />, document.getElementById("container"));
             const widgetButton = document.querySelector(WIDGET_TOOL_SELECTOR);
-            expect(widgetButton).toNotExist();
+            expect(widgetButton).toBeFalsy();
 
         });
     });

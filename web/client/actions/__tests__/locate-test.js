@@ -15,7 +15,7 @@ describe('Test correctness of the locate actions', () => {
         const testVal = "val";
         const retval = changeLocateState(testVal);
         expect(retval.type).toBe(CHANGE_LOCATE_STATE);
-        expect(retval.state).toExist();
+        expect(retval.state).toBeTruthy();
         expect(retval.state).toBe(testVal);
     });
 });

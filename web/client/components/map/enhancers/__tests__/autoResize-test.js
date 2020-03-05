@@ -23,7 +23,7 @@ describe('autoResize enhancer', () => {
     });
     it('autoResize rendering with defaults', (done) => {
         const Sink = autoResize()(createSink( props => {
-            expect(props).toExist();
+            expect(props).toBeTruthy();
             expect(props.resize).toBe(0);
             done();
         }));

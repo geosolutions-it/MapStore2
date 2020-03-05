@@ -26,12 +26,12 @@ describe("Test the login modal", () => {
 
     it('creates component with defaults', () => {
         const cmp = ReactDOM.render(<LoginForm options={{animation: false}}/>, document.getElementById("container"));
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
     });
 
     it('creates empty component with error', () => {
         const cmp = ReactDOM.render(<LoginForm options={{animation: false}} show loginError={{status: 0}}/>, document.getElementById("container"));
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
         let node = document.getElementsByClassName('alert-danger');
         expect(node.length).toBe(1);
     });
@@ -49,22 +49,22 @@ describe("Test the login modal", () => {
         const spy = expect.spyOn(testHandlers, 'onSubmit');
         const spySuccess = expect.spyOn(testHandlers, 'onLoginSuccess');
         const cmp = ReactDOM.render(<LoginForm options={{animation: false}} show key="test" onLoginSuccess={testHandlers.onLoginSuccess} onSubmit={testHandlers.onSubmit}/>, document.getElementById("container"));
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
         let username = document.getElementsByTagName("input")[0];
-        expect(username).toExist();
+        expect(username).toBeTruthy();
         username.value = "test";
         ReactTestUtils.Simulate.change(username);
 
         let password = document.getElementsByTagName("input")[1];
-        expect(password).toExist();
+        expect(password).toBeTruthy();
         password.value = "test";
         ReactTestUtils.Simulate.change(password);
 
         let button = document.getElementsByTagName("button")[1];
         ReactTestUtils.Simulate.click(button);
-        expect(spy.calls.length).toEqual(1);
+        expect(spy.mock.calls.length).toEqual(1);
         ReactDOM.render(<LoginForm options={{animation: false}} show key="test" onSubmit={testHandlers.onSubmit} onLoginSuccess={testHandlers.onLoginSuccess} user={{name: "TEST"}} />, document.getElementById("container"));
-        expect(spySuccess.calls.length).toEqual(1);
+        expect(spySuccess.mock.calls.length).toEqual(1);
 
 
     });

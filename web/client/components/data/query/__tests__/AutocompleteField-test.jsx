@@ -25,7 +25,7 @@ describe('AutocompleteField', () => {
 
     it('create a AutocompleteField component without any props', () => {
         const cmp = ReactDOM.render(<AutocompleteField/>, document.getElementById("container"));
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
     });
     it('create a AutocompleteField with 2 options', () => {
         let conf = {
@@ -41,11 +41,11 @@ describe('AutocompleteField', () => {
             autocompleteEnabled: true
         };
         const cmp = ReactDOM.render(<AutocompleteField {...conf} />, document.getElementById("container"));
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
         let node = ReactDOM.findDOMNode(cmp);
-        expect(node).toExist();
+        expect(node).toBeTruthy();
         let inputs = node.getElementsByTagName("input");
-        expect(inputs).toExist();
+        expect(inputs).toBeTruthy();
         expect(inputs.length).toBe(1);
 
     });

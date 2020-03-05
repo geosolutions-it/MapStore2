@@ -37,7 +37,7 @@ describe('Openlayers Overview component', () => {
 
     it('create Overview with defaults', () => {
         const ov = ReactDOM.render(<Overview map={map}/>, document.getElementById("container"));
-        expect(ov).toExist();
+        expect(ov).toBeTruthy();
         const domMap = map.getViewport();
         const overview = domMap.getElementsByClassName('ol-overviewmap');
         expect(overview.length).toBe(1);
@@ -45,7 +45,7 @@ describe('Openlayers Overview component', () => {
 
     it('testing mouse events', () => {
         const ov = ReactDOM.render(<Overview map={map}/>, document.getElementById("container"));
-        expect(ov).toExist();
+        expect(ov).toBeTruthy();
         const domMap = map.getViewport();
         const overview = domMap.getElementsByClassName('ol-overviewmap');
         expect(overview.length).toBe(1);

@@ -23,8 +23,8 @@ describe('rulegrid virtulaScrollFetch', () => {
     it('generate pages request', (done) => {
         const inter = axios.interceptors.request.use(rulesInterceptor);
         const onLoad = ({pages}) => {
-            expect(pages).toExist();
-            expect(pages[0]).toExist();
+            expect(pages).toBeTruthy();
+            expect(pages[0]).toBeTruthy();
             expect(pages[0].length).toBe(5);
             done();
         };

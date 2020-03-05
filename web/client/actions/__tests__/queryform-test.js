@@ -88,7 +88,7 @@ describe('Test correctness of the queryform actions', () => {
 
         var retval = addFilterField(groupId);
 
-        expect(retval).toExist();
+        expect(retval).toBeTruthy();
         expect(retval.type).toBe(ADD_FILTER_FIELD);
         expect(retval.groupId).toBe(1);
     });
@@ -99,7 +99,7 @@ describe('Test correctness of the queryform actions', () => {
 
         var retval = toggleMenu(rowId, status);
 
-        expect(retval).toExist();
+        expect(retval).toBeTruthy();
         expect(retval.type).toBe(TOGGLE_AUTOCOMPLETE_MENU);
         expect(retval.rowId).toBe(rowId);
         expect(retval.status).toBe(status);
@@ -109,7 +109,7 @@ describe('Test correctness of the queryform actions', () => {
         let status = true;
         var retval = setAutocompleteMode(status);
 
-        expect(retval).toExist();
+        expect(retval).toBeTruthy();
         expect(retval.type).toBe(SET_AUTOCOMPLETE_MODE);
         expect(retval.status).toBe(status);
     });
@@ -120,7 +120,7 @@ describe('Test correctness of the queryform actions', () => {
 
         var retval = addGroupField(groupId, index);
 
-        expect(retval).toExist();
+        expect(retval).toBeTruthy();
         expect(retval.type).toBe(ADD_GROUP_FIELD);
         expect(retval.groupId).toBe(1);
         expect(retval.index).toBe(0);
@@ -130,21 +130,21 @@ describe('Test correctness of the queryform actions', () => {
         const geometry = {center: [0, 1], coordinates: []};
         const retval = updateGeometrySpatialField(geometry);
 
-        expect(retval).toExist();
+        expect(retval).toBeTruthy();
         expect(retval.type).toBe(UPDATE_GEOMETRY);
         expect(retval.geometry).toBe(geometry);
     });
 
     it('selectViewportSpatialMethod', () => {
         const retval = selectViewportSpatialMethod();
-        expect(retval).toExist();
+        expect(retval).toBeTruthy();
         expect(retval.type).toBe(SELECT_VIEWPORT_SPATIAL_METHOD);
     });
 
     it('changeSpatialAttribute', () => {
         const attribute = "some value";
         const retval = changeSpatialAttribute(attribute);
-        expect(retval).toExist();
+        expect(retval).toBeTruthy();
         expect(retval.type).toBe(CHANGE_SPATIAL_ATTRIBUTE);
         expect(retval.attribute).toBe(attribute);
     });
@@ -154,7 +154,7 @@ describe('Test correctness of the queryform actions', () => {
 
         let retval = removeFilterField(rowId);
 
-        expect(retval).toExist();
+        expect(retval).toBeTruthy();
         expect(retval.type).toBe(REMOVE_FILTER_FIELD);
         expect(retval.rowId).toBe(100);
     });
@@ -166,7 +166,7 @@ describe('Test correctness of the queryform actions', () => {
 
         let retval = updateFilterField(rowId, fieldName, fieldValue);
 
-        expect(retval).toExist();
+        expect(retval).toBeTruthy();
         expect(retval.type).toBe(UPDATE_FILTER_FIELD);
         expect(retval.rowId).toBe(100);
         expect(retval.fieldName).toBe("fieldName");
@@ -179,7 +179,7 @@ describe('Test correctness of the queryform actions', () => {
 
         let retval = updateExceptionField(rowId, message);
 
-        expect(retval).toExist();
+        expect(retval).toBeTruthy();
         expect(retval.type).toBe(UPDATE_EXCEPTION_FIELD);
         expect(retval.rowId).toBe(100);
         expect(retval.exceptionMessage).toBe("message");
@@ -191,7 +191,7 @@ describe('Test correctness of the queryform actions', () => {
 
         let retval = updateLogicCombo(groupId, logic);
 
-        expect(retval).toExist();
+        expect(retval).toBeTruthy();
         expect(retval.type).toBe(UPDATE_LOGIC_COMBO);
         expect(retval.groupId).toBe(100);
         expect(retval.logic).toBe("OR");
@@ -202,7 +202,7 @@ describe('Test correctness of the queryform actions', () => {
 
         let retval = removeGroupField(groupId);
 
-        expect(retval).toExist();
+        expect(retval).toBeTruthy();
         expect(retval.type).toBe(REMOVE_GROUP_FIELD);
         expect(retval.groupId).toBe(100);
     });
@@ -212,7 +212,7 @@ describe('Test correctness of the queryform actions', () => {
 
         let retval = changeCascadingValue(attributes);
 
-        expect(retval).toExist();
+        expect(retval).toBeTruthy();
         expect(retval.type).toBe(CHANGE_CASCADING_VALUE);
         expect(retval.attributes.length).toBe(0);
     });
@@ -222,7 +222,7 @@ describe('Test correctness of the queryform actions', () => {
 
         let retval = expandAttributeFilterPanel(expanded);
 
-        expect(retval).toExist();
+        expect(retval).toBeTruthy();
         expect(retval.type).toBe(EXPAND_ATTRIBUTE_PANEL);
         expect(retval.expand).toBe(false);
     });
@@ -232,7 +232,7 @@ describe('Test correctness of the queryform actions', () => {
 
         let retval = expandSpatialFilterPanel(expanded);
 
-        expect(retval).toExist();
+        expect(retval).toBeTruthy();
         expect(retval.type).toBe(EXPAND_SPATIAL_PANEL);
         expect(retval.expand).toBe(false);
     });
@@ -243,7 +243,7 @@ describe('Test correctness of the queryform actions', () => {
 
         let retval = selectSpatialMethod(method, fieldName);
 
-        expect(retval).toExist();
+        expect(retval).toBeTruthy();
         expect(retval.type).toBe(SELECT_SPATIAL_METHOD);
         expect(retval.method).toBe("BBOX");
         expect(retval.fieldName).toBe("method");
@@ -255,7 +255,7 @@ describe('Test correctness of the queryform actions', () => {
 
         let retval = selectSpatialOperation(operation, fieldName);
 
-        expect(retval).toExist();
+        expect(retval).toBeTruthy();
         expect(retval.type).toBe(SELECT_SPATIAL_OPERATION);
         expect(retval.operation).toBe("DWITHIN");
         expect(retval.fieldName).toBe("operation");
@@ -264,7 +264,7 @@ describe('Test correctness of the queryform actions', () => {
     it('removeSpatialSelection', () => {
         let retval = removeSpatialSelection();
 
-        expect(retval).toExist();
+        expect(retval).toBeTruthy();
         expect(retval.type).toBe(REMOVE_SPATIAL_SELECT);
     });
 
@@ -273,7 +273,7 @@ describe('Test correctness of the queryform actions', () => {
 
         let retval = showSpatialSelectionDetails(show);
 
-        expect(retval).toExist();
+        expect(retval).toBeTruthy();
         expect(retval.type).toBe(SHOW_SPATIAL_DETAILS);
         expect(retval.show).toBe(true);
     });
@@ -281,7 +281,7 @@ describe('Test correctness of the queryform actions', () => {
     it('changeDwithinValue', () => {
         let retval = changeDwithinValue(1);
 
-        expect(retval).toExist();
+        expect(retval).toBeTruthy();
         expect(retval.type).toBe(CHANGE_DWITHIN_VALUE);
         expect(retval.distance).toBe(1);
     });
@@ -289,14 +289,14 @@ describe('Test correctness of the queryform actions', () => {
     it('query', () => {
         let retval = query("url", null);
 
-        expect(retval).toExist();
+        expect(retval).toBeTruthy();
         expect(retval.type).toBe(SHOW_GENERATED_FILTER);
         expect(retval.data).toBe(null);
     });
 
     it('search', () => {
         const retval = search("URL", {});
-        expect(retval).toExist();
+        expect(retval).toBeTruthy();
         expect(retval.type).toBe(QUERY_FORM_SEARCH);
     });
 
@@ -305,7 +305,7 @@ describe('Test correctness of the queryform actions', () => {
 
         };
         const retval = loadFilter(filter);
-        expect(retval).toExist();
+        expect(retval).toBeTruthy();
         expect(retval.type).toBe(LOAD_FILTER);
         expect(retval.filter).toBe(filter);
     });
@@ -313,21 +313,21 @@ describe('Test correctness of the queryform actions', () => {
     it('reset', () => {
         let retval = reset();
 
-        expect(retval).toExist();
+        expect(retval).toBeTruthy();
         expect(retval.type).toBe(QUERY_FORM_RESET);
     });
 
     it('resetZones', () => {
         let retval = resetZones();
 
-        expect(retval).toExist();
+        expect(retval).toBeTruthy();
         expect(retval.type).toBe(ZONES_RESET);
     });
 
     it('zoneFilter', () => {
         let retval = zoneFilter(null, 1);
 
-        expect(retval).toExist();
+        expect(retval).toBeTruthy();
         expect(retval.type).toBe(ZONE_FILTER);
         expect(retval.data).toBe(null);
         expect(retval.id).toBe(1);
@@ -336,7 +336,7 @@ describe('Test correctness of the queryform actions', () => {
     it('zoneSearchError', () => {
         let retval = zoneSearchError("error");
 
-        expect(retval).toExist();
+        expect(retval).toBeTruthy();
         expect(retval.type).toBe(ZONE_SEARCH_ERROR);
         expect(retval.error).toBe("error");
     });
@@ -344,7 +344,7 @@ describe('Test correctness of the queryform actions', () => {
     it('zoneSearch', () => {
         let retval = zoneSearch(true, 1);
 
-        expect(retval).toExist();
+        expect(retval).toBeTruthy();
         expect(retval.type).toBe(ZONE_SEARCH);
         expect(retval.active).toBe(true);
         expect(retval.id).toBe(1);
@@ -353,7 +353,7 @@ describe('Test correctness of the queryform actions', () => {
     it('loads an existing zones file', (done) => {
         zoneGetValues('../../test-resources/featureGrid-test-data.json')((e) => {
             try {
-                expect(e).toExist();
+                expect(e).toBeTruthy();
                 done();
             } catch (ex) {
                 done(ex);
@@ -364,7 +364,7 @@ describe('Test correctness of the queryform actions', () => {
     /* it('openMenu', () => {
         let retval = openMenu(true, 1);
 
-        expect(retval).toExist();
+        expect(retval).toBeTruthy();
         expect(retval.type).toBe(OPEN_MENU);
         expect(retval.active).toBe(true);
         expect(retval.id).toBe(1);
@@ -373,7 +373,7 @@ describe('Test correctness of the queryform actions', () => {
     it('zoneChange', () => {
         let retval = zoneChange(1, "value");
 
-        expect(retval).toExist();
+        expect(retval).toBeTruthy();
         expect(retval.type).toBe(ZONE_CHANGE);
         expect(retval.value).toBe("value");
         expect(retval.id).toBe(1);
@@ -382,7 +382,7 @@ describe('Test correctness of the queryform actions', () => {
     it('simpleFilterFieldUpdate', () => {
         let retval = simpleFilterFieldUpdate(1, "value");
 
-        expect(retval).toExist();
+        expect(retval).toBeTruthy();
         expect(retval.type).toBe(SIMPLE_FILTER_FIELD_UPDATE);
         expect(retval.properties).toBe("value");
         expect(retval.id).toBe(1);
@@ -391,21 +391,21 @@ describe('Test correctness of the queryform actions', () => {
     it('addSimpleFilterField', () => {
         let retval = addSimpleFilterField("value");
 
-        expect(retval).toExist();
+        expect(retval).toBeTruthy();
         expect(retval.type).toBe(ADD_SIMPLE_FILTER_FIELD);
         expect(retval.properties).toBe("value");
     });
     it('removeSimpleFilterField', () => {
         let retval = removeSimpleFilterField(1);
 
-        expect(retval).toExist();
+        expect(retval).toBeTruthy();
         expect(retval.type).toBe(REMOVE_SIMPLE_FILTER_FIELD);
         expect(retval.id).toBe(1);
     });
     it('removeAllSimpleFilterFields', () => {
         let retval = removeAllSimpleFilterFields();
 
-        expect(retval).toExist();
+        expect(retval).toBeTruthy();
         expect(retval.type).toBe(REMOVE_ALL_SIMPLE_FILTER_FIELDS);
     });
     it('removeAllSimpleFilterFields', () => {
@@ -421,7 +421,7 @@ describe('Test correctness of the queryform actions', () => {
         };
         let retval = changeSpatialFilterValue(arg);
 
-        expect(retval).toExist();
+        expect(retval).toBeTruthy();
         expect(retval.type).toBe(CHANGE_SPATIAL_FILTER_VALUE);
         expect(retval.geometry).toBe(arg.feature.geometry);
         expect(retval.collectGeometries).toBe(arg.collectGeometries);

@@ -54,43 +54,43 @@ describe('Toolbar Plugin', () => {
     it('creates a Toolbar plugin with default configuration', () => {
         const { Plugin } = getPluginForTest(ToolbarPlugin, { controls: { toolbar: { expanded: false } } }, {ExpanderPlugin: Expander, ZoomInPlugin: ZoomIn});
         ReactDOM.render(<Plugin />, document.getElementById("container"));
-        expect(document.querySelector('#mapstore-toolbar')).toExist();
+        expect(document.querySelector('#mapstore-toolbar')).toBeTruthy();
     });
     it('items rendering', () => {
         const { Plugin } = getPluginForTest(ToolbarPlugin, { controls: { toolbar: { expanded: false } }});
         // ONLY ONE BUTTON TO HIDE, EXPANDER DO NOT SHOW, button is directly visible
         ReactDOM.render(<Plugin disableAnimation items={[ZOOM_IN_ITEM, EXPANDER_ITEM]} />, document.getElementById("container"));
-        expect(document.querySelector('#mapstore-toolbar')).toExist();
-        expect(document.querySelector('#zoomin-btn')).toExist();
+        expect(document.querySelector('#mapstore-toolbar')).toBeTruthy();
+        expect(document.querySelector('#zoomin-btn')).toBeTruthy();
         expect(document.querySelectorAll('#mapstore-toolbar button').length).toBe(1);
         let expander = document.querySelector('#mapstore-toolbar button .glyphicon-option-horizontal');
-        expect(expander).toNotExist();
+        expect(expander).toBeFalsy();
         // TWO BUTTONS TO HIDE, EXPANDER SHOWS, all buttons are hidden
         ReactDOM.render(<Plugin disableAnimation items={[ZOOM_IN_ITEM, ZOOM_OUT_ITEM, EXPANDER_ITEM]} />, document.getElementById("container"));
         expect(document.querySelectorAll('#mapstore-toolbar button').length).toBe(1);
-        expect(document.querySelector('#mapstore-toolbar')).toExist();
-        expect(document.querySelector('#zoomin-btn')).toNotExist();
+        expect(document.querySelector('#mapstore-toolbar')).toBeTruthy();
+        expect(document.querySelector('#zoomin-btn')).toBeFalsy();
         expander = document.querySelector('#mapstore-toolbar button .glyphicon-option-horizontal');
-        expect(expander).toExist();
-        expect(document.querySelector('#mapstore-toolbar button.btn-success .glyphicon-option-horizontal')).toNotExist(); // btn-success means active, it should be collapsed because state contains {expanded: false}
+        expect(expander).toBeTruthy();
+        expect(document.querySelector('#mapstore-toolbar button.btn-success .glyphicon-option-horizontal')).toBeFalsy(); // btn-success means active, it should be collapsed because state contains {expanded: false}
         // Buttons with alwaysVisible = true always shown (FULL SCREEN)
         ReactDOM.render(<Plugin disableAnimation items={[ZOOM_IN_ITEM, ZOOM_OUT_ITEM, FULL_SCREEN_ITEM, EXPANDER_ITEM]} />, document.getElementById("container"));
         expect(document.querySelectorAll('#mapstore-toolbar button').length).toBe(2);
-        expect(document.querySelector('#mapstore-toolbar')).toExist();
-        expect(document.querySelector('#zoomin-btn')).toNotExist();
-        expect(document.querySelector('#fullscreen-btn')).toExist();
+        expect(document.querySelector('#mapstore-toolbar')).toBeTruthy();
+        expect(document.querySelector('#zoomin-btn')).toBeFalsy();
+        expect(document.querySelector('#fullscreen-btn')).toBeTruthy();
         expander = document.querySelector('#mapstore-toolbar button .glyphicon-option-horizontal');
-        expect(expander).toExist();
-        expect(document.querySelector('#mapstore-toolbar button.btn-success .glyphicon-option-horizontal')).toNotExist(); // btn-success means active, it should be collapsed because state contains {expanded: false}
+        expect(expander).toBeTruthy();
+        expect(document.querySelector('#mapstore-toolbar button.btn-success .glyphicon-option-horizontal')).toBeFalsy(); // btn-success means active, it should be collapsed because state contains {expanded: false}
         // SIMULATE EXPANDER OPEN, all buttons are visible, expander active
         expander.click();
         expect(document.querySelectorAll('#mapstore-toolbar button').length).toBe(4);
-        expect(document.querySelector('#zoomin-btn')).toExist();
-        expect(document.querySelector('#zoomout-btn')).toExist();
-        expect(document.querySelector('#mapstore-toolbar')).toExist();
-        expect(document.querySelector('#fullscreen-btn')).toExist();
+        expect(document.querySelector('#zoomin-btn')).toBeTruthy();
+        expect(document.querySelector('#zoomout-btn')).toBeTruthy();
+        expect(document.querySelector('#mapstore-toolbar')).toBeTruthy();
+        expect(document.querySelector('#fullscreen-btn')).toBeTruthy();
         expander = document.querySelector('#mapstore-toolbar button.btn-success .glyphicon-option-horizontal'); // btn-success means active
-        expect(expander).toExist();
+        expect(expander).toBeTruthy();
     });
 
 });

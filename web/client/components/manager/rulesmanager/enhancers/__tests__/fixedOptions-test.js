@@ -31,9 +31,9 @@ describe('fixedOption enhancer', () => {
         const Sink = fixedOptions(createSink( props => {
             switch (counter) {
             case 0: {
-                expect(props).toExist();
-                expect(props.onValueSelected).toExist();
-                expect(props.onSelect).toExist();
+                expect(props).toBeTruthy();
+                expect(props.onValueSelected).toBeTruthy();
+                expect(props.onSelect).toBeTruthy();
                 props.onSelect("%");
                 counter++;
                 break;
@@ -52,16 +52,16 @@ describe('fixedOption enhancer', () => {
         const Sink = fixedOptions(createSink( props => {
             switch (counter) {
             case 0: {
-                expect(props).toExist();
+                expect(props).toBeTruthy();
                 expect(props.selectedValue).toBe("%");
-                expect(props.onValueSelected).toExist();
-                expect(props.onSelect).toExist();
+                expect(props.onValueSelected).toBeTruthy();
+                expect(props.onSelect).toBeTruthy();
                 props.onChange("");
                 counter++;
                 break;
             }
             case 1: {
-                expect(props.onToggle).toExist();
+                expect(props.onToggle).toBeTruthy();
                 props.onToggle(false);
                 counter++;
                 break;
@@ -72,7 +72,7 @@ describe('fixedOption enhancer', () => {
             }
         }));
         const onValueSelected = (val) => {
-            expect(val).toNotExist();
+            expect(val).toBeFalsy();
             done();
         };
         ReactDOM.render(<Sink clearable={false} selected="%" onValueSelected={onValueSelected}/>, document.getElementById("container"));
@@ -82,14 +82,14 @@ describe('fixedOption enhancer', () => {
         const Sink = fixedOptions(createSink( props => {
             switch (counter) {
             case 0: {
-                expect(props).toExist();
+                expect(props).toBeTruthy();
                 expect(props.selectedValue).toBe("%");
                 props.onChange("TEST");
                 counter++;
                 break;
             }
             case 1: {
-                expect(props).toExist();
+                expect(props).toBeTruthy();
                 expect(props.selectedValue).toBe("TEST");
                 expect(props.typing).toBeTruthy();
                 props.onToggle(false);
@@ -97,7 +97,7 @@ describe('fixedOption enhancer', () => {
                 break;
             }
             case 2: {
-                expect(props).toExist();
+                expect(props).toBeTruthy();
                 expect(props.selectedValue).toBe("%");
                 expect(props.typing).toBeFalsy();
                 props.onToggle(false);
@@ -116,14 +116,14 @@ describe('fixedOption enhancer', () => {
         const Sink = fixedOptions(createSink( props => {
             switch (counter) {
             case 0: {
-                expect(props).toExist();
+                expect(props).toBeTruthy();
                 expect(props.selectedValue).toBe("%");
                 props.onChange("TEST");
                 counter++;
                 break;
             }
             case 1: {
-                expect(props).toExist();
+                expect(props).toBeTruthy();
                 expect(props.selectedValue).toBe("TEST");
                 props.onReset();
                 counter++;
@@ -133,7 +133,7 @@ describe('fixedOption enhancer', () => {
             }
         }));
         const onValueSelected = (val) => {
-            expect(val).toNotExist();
+            expect(val).toBeFalsy();
             done();
         };
         ReactDOM.render(<Sink selected="%" onValueSelected={onValueSelected}/>, document.getElementById("container"));

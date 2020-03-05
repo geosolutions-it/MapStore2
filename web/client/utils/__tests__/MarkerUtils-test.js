@@ -15,8 +15,8 @@ const {
 
 describe('Test the MarkerUtils', () => {
     it('extraMarker offsets', () => {
-        expect(extraMarkers.getOffsets(extraMarkers.colors[0], extraMarkers.shapes[0])).toEqual([-2, 0]);
-        expect(extraMarkers.getOffsets(extraMarkers.colors[1], extraMarkers.shapes[0])).toEqual([-(extraMarkers.size[0] + 2), 0]);
+        expect(extraMarkers.getOffsets(extraMarkers.colors[0], extraMarkers.shapes[0])).toEqual([-2, -0]);
+        expect(extraMarkers.getOffsets(extraMarkers.colors[1], extraMarkers.shapes[0])).toEqual([-(extraMarkers.size[0] + 2), -0]);
         expect(extraMarkers.getOffsets(extraMarkers.colors[1], extraMarkers.shapes[1])).toEqual([-(extraMarkers.size[0] + 2), -extraMarkers.size[1]]);
     });
 
@@ -58,7 +58,7 @@ describe('Test the MarkerUtils', () => {
 
     it('getGlyphs', () => {
         expect(Object.keys(getGlyphs('fontawesome')).length > 0).toBe(true);
-        expect(getGlyphs('fontawesome').comment).toExist();
+        expect(getGlyphs('fontawesome').comment).toBeTruthy();
     });
 
     it('markerToDataUrl', () => {
@@ -66,6 +66,6 @@ describe('Test the MarkerUtils', () => {
             iconShape: 'penta',
             iconColor: 'green'};
         const dataUrl = extraMarkers.markerToDataUrl(style);
-        expect(dataUrl).toExist();
+        expect(dataUrl).toBeTruthy();
     });
 });

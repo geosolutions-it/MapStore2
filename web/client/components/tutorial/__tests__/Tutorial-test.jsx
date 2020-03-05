@@ -59,7 +59,7 @@ describe("Test the Tutorial component", () => {
 
     it('test component default actions', () => {
         const cmp = ReactDOM.render(<Tutorial/>, document.getElementById("container"));
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
 
         cmp.props.actions.onSetup();
         cmp.props.actions.onStart();
@@ -76,30 +76,30 @@ describe("Test the Tutorial component", () => {
         const spyUpdate = expect.spyOn(actions, 'onUpdate');
 
         const cmp = ReactDOM.render(<Tutorial introStyle={{}} defaultStep={{}} showCheckbox={false} actions={actions}/>, document.getElementById("container"));
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
 
         expect(spySetup).toHaveBeenCalled();
         expect(spySetup).toHaveBeenCalledWith('default', [], {}, <div id="tutorial-intro-checkbox-container"/>, {}, {default_tutorial: []});
 
         const domNode = ReactDOM.findDOMNode(cmp);
-        expect(domNode).toExist();
+        expect(domNode).toBeTruthy();
         expect(domNode.children.length).toBe(2);
 
         const joyridePlaceholder = domNode.getElementsByClassName('tutorial-joyride-placeholder');
-        expect(joyridePlaceholder).toExist();
+        expect(joyridePlaceholder).toBeTruthy();
         expect(joyridePlaceholder.length).toBe(1);
 
         const intro = domNode.getElementsByClassName('tutorial-presentation-position');
-        expect(intro).toExist();
+        expect(intro).toBeTruthy();
         expect(intro.length).toBe(1);
 
         ReactDOM.render(<Tutorial introStyle={{}} defaultStep={{}} showCheckbox={false} actions={actions}/>, document.getElementById("container"));
 
-        expect(spyClose).toNotHaveBeenCalled();
-        expect(spyStart).toNotHaveBeenCalled();
+        expect(spyClose).not.toHaveBeenCalled();
+        expect(spyStart).not.toHaveBeenCalled();
 
         cmp.onTour();
-        expect(spyUpdate).toNotHaveBeenCalled();
+        expect(spyUpdate).not.toHaveBeenCalled();
     });
 
     it('test component with preset steps', () => {
@@ -110,21 +110,21 @@ describe("Test the Tutorial component", () => {
         const spyReset = expect.spyOn(actions, 'onReset');
 
         const cmp = ReactDOM.render(<Tutorial introStyle={{}} error={{}} steps={presetList.test} preset={'test'} presetList={presetList} defaultStep={{}} showCheckbox actions={actions}/>, document.getElementById("container"));
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
 
         expect(spySetup).toHaveBeenCalled();
         expect(spySetup).toHaveBeenCalledWith('default', presetList.test, {}, <div id="tutorial-intro-checkbox-container"><input type="checkbox" id="tutorial-intro-checkbox" className="tutorial-tooltip-intro-checkbox" onChange={cmp.props.actions.onDisable}/><span><I18N.Message msgId={"tutorial.checkbox"}/></span></div>, {}, {default_tutorial: presetList.test, test: presetList.test});
 
         const domNode = ReactDOM.findDOMNode(cmp);
-        expect(domNode).toExist();
+        expect(domNode).toBeTruthy();
         expect(domNode.children.length).toBe(2);
 
         const joyride = domNode.getElementsByClassName('joyride');
-        expect(joyride).toExist();
+        expect(joyride).toBeTruthy();
         expect(joyride.length).toBe(1);
 
         const intro = domNode.getElementsByClassName('tutorial-presentation-position');
-        expect(intro).toExist();
+        expect(intro).toBeTruthy();
         expect(intro.length).toBe(1);
 
         ReactDOM.render(<Tutorial toggle introStyle={{}} error={{}} steps={presetList.test} preset={'test'} presetList={presetList} defaultStep={{}} showCheckbox actions={actions}/>, document.getElementById("container"));
@@ -152,11 +152,11 @@ describe("Test the Tutorial component", () => {
         const spyStart = expect.spyOn(actions, 'onStart');
 
         const cmp = ReactDOM.render(<Tutorial status={'error'} steps={presetList.test} preset={'test'} presetList={presetList} defaultStep={{}} showCheckbox actions={actions}/>, document.getElementById("container"));
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
 
         ReactDOM.render(<Tutorial status={'error'} steps={presetList.test} stepIndex={1} preset={'test'} presetList={presetList} defaultStep={{}} showCheckbox actions={actions}/>, document.getElementById("container"));
 
-        expect(spyStart).toNotHaveBeenCalled();
+        expect(spyStart).not.toHaveBeenCalled();
         expect(spyClose).toHaveBeenCalled();
     });
 
@@ -165,12 +165,12 @@ describe("Test the Tutorial component", () => {
         const spyStart = expect.spyOn(actions, 'onStart');
 
         const cmp = ReactDOM.render(<Tutorial steps={presetList.test} preset={'test'} presetList={presetList} defaultStep={{}} showCheckbox actions={actions}/>, document.getElementById("container"));
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
 
         ReactDOM.render(<Tutorial steps={presetList.test} preset={'test'} presetList={presetList} defaultStep={{}} showCheckbox actions={actions}/>, document.getElementById("container"));
 
-        expect(spyStart).toNotHaveBeenCalled();
-        expect(spyClose).toNotHaveBeenCalled();
+        expect(spyStart).not.toHaveBeenCalled();
+        expect(spyClose).not.toHaveBeenCalled();
     });
 
     it('test component with error on update with action', () => {
@@ -194,7 +194,7 @@ describe("Test the Tutorial component", () => {
         ];
 
         const cmp = ReactDOM.render(<Tutorial status={'error'} stepIndex={0} steps={actionPreset} preset={'actionPreset'} presetList={{actionPreset}} defaultStep={{}} showCheckbox actions={actions}/>, document.getElementById("container"));
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
         ReactDOM.render(<Tutorial status={'error'} steps={actionPreset} stepIndex={1} preset={'actionPreset'} presetList={{actionPreset}} defaultStep={{}} showCheckbox actions={actions}/>, document.getElementById("container"));
 
         expect(spyStart).toHaveBeenCalled();
@@ -228,7 +228,7 @@ describe("Test the Tutorial component", () => {
         ];
 
         const cmp = ReactDOM.render(<Tutorial status={'error'} stepIndex={0} steps={actionPreset} preset={'actionPreset'} presetList={{actionPreset}} defaultStep={{}} showCheckbox actions={actions}/>, document.getElementById("container"));
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
         ReactDOM.render(<Tutorial status={'error'} steps={actionPreset} stepIndex={1} preset={'actionPreset'} presetList={{actionPreset}} defaultStep={{}} showCheckbox actions={actions}/>, document.getElementById("container"));
 
         expect(spyStart).toHaveBeenCalled();

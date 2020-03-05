@@ -215,8 +215,8 @@ describe('maps Epics', () => {
                     expect(action.type).toBe(CLOSE_FEATURE_GRID);
                     break;
                 case UPDATE_DETAILS:
-                    expect(action.detailsText.indexOf(detailsText)).toNotBe(-1);
-                    expect(action.originalDetails.indexOf(detailsText)).toNotBe(-1);
+                    expect(action.detailsText.indexOf(detailsText)).not.toBe(-1);
+                    expect(action.originalDetails.indexOf(detailsText)).not.toBe(-1);
                     expect(action.doBackup).toBe(true);
                     break;
                 default:
@@ -292,8 +292,8 @@ describe('maps Epics', () => {
             actions.map((action) => {
                 switch (action.type) {
                 case UPDATE_DETAILS:
-                    expect(action.detailsText.indexOf(detailsText)).toNotBe(-1);
-                    expect(action.originalDetails.indexOf(detailsText)).toNotBe(-1);
+                    expect(action.detailsText.indexOf(detailsText)).not.toBe(-1);
+                    expect(action.originalDetails.indexOf(detailsText)).not.toBe(-1);
                     expect(action.doBackup).toBe(true);
                     break;
                 default:

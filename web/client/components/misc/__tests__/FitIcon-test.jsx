@@ -25,21 +25,21 @@ describe('FitIcon component', () => {
         ReactDOM.render(<FitIcon />, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('.glyphicon');
-        expect(el).toExist();
+        expect(el).toBeTruthy();
         expect(el.style.fontSize).toBe("100px");
     });
     it('FitIcon rendering with iconFit', () => {
         ReactDOM.render(<FitIcon iconFit/>, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('.glyphicon');
-        expect(el).toExist();
+        expect(el).toBeTruthy();
         expect(el.style.fontSize).toBe("50px");
     });
     it('FitIcon rendering with padding and margin', () => {
         ReactDOM.render(<FitIcon iconFit padding="2" margin="1"/>, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('.glyphicon');
-        expect(el).toExist();
+        expect(el).toBeTruthy();
         expect(el.style.fontSize).toBe("44px");
         expect(el.style.padding).toBe("2px");
         expect(el.style.margin).toBe("1px");

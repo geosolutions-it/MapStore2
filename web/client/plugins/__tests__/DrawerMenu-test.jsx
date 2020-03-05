@@ -61,17 +61,17 @@ describe('DrawerMenu Plugin', () => {
             }
         });
         ReactDOM.render(<Plugin menuOptions={{ resizable: true }} />, document.getElementById("container"));
-        expect(document.getElementById('mapstore-drawermenu')).toNotExist();
+        expect(document.getElementById('mapstore-drawermenu')).toBeFalsy();
 
         ReactDOM.render(<Plugin items={[SAMPLE_ITEM]} menuOptions={{ resizable: true }} />, document.getElementById("container"));
-        expect(document.getElementById('mapstore-drawermenu')).toExist();
+        expect(document.getElementById('mapstore-drawermenu')).toBeTruthy();
     });
     it('creates a resizable DrawerMenu plugin', () => {
         const { Plugin, store } = getPluginForTest(DrawerMenuPlugin, { controls: {
             drawer: {}
         } });
         ReactDOM.render(<Plugin items={[SAMPLE_ITEM]} menuOptions={{resizable: true}} />, document.getElementById("container"));
-        expect(document.getElementById('mapstore-drawermenu')).toExist();
+        expect(document.getElementById('mapstore-drawermenu')).toBeTruthy();
 
         const drag = document.getElementsByClassName('react-resizable-handle')[0];
         simulateMovementFromTo(drag, 300, 100, 400, 100);

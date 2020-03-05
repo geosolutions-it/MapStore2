@@ -60,7 +60,7 @@ describe('Leaflet MeasurementSupport', () => {
                 changeMeasurementState={() => {}}
             />
             , msNode);
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
     });
 
     it('test rendering', () => {
@@ -72,7 +72,7 @@ describe('Leaflet MeasurementSupport', () => {
                 messages={myMessages}
             />
             , msNode);
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
         expect(L.drawLocal).toEqual(myMessages);
         // restoring old value of drawLocal because other test would fail otherwise.
         // L is global so drawLocal need to be restore to default value
@@ -97,7 +97,7 @@ describe('Leaflet MeasurementSupport', () => {
                 changeMeasurementState={() => {}}
             />
             , msNode);
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
 
         cmp = ReactDOM.render(
             <MeasurementSupport
@@ -127,7 +127,7 @@ describe('Leaflet MeasurementSupport', () => {
                 changeMeasurementState={() => {}}
             />
             , msNode);
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
 
         let initialLayersNum = getMapLayersNum(map);
         cmp = ReactDOM.render(
@@ -172,7 +172,7 @@ describe('Leaflet MeasurementSupport', () => {
                 changeMeasurementState={(data) => {newMeasureState = data; }}
             />
             , msNode);
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
 
         cmp = ReactDOM.render(
             <MeasurementSupport
@@ -184,10 +184,10 @@ describe('Leaflet MeasurementSupport', () => {
                 changeMeasurementState={(data) => {newMeasureState = data; }}
             />
             , msNode);
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
 
         document.getElementById('map').addEventListener('click', () => {
-            expect(newMeasureState).toExist();
+            expect(newMeasureState).toBeTruthy();
         });
         document.getElementById('map').click();
     });
@@ -210,7 +210,7 @@ describe('Leaflet MeasurementSupport', () => {
                 changeMeasurementState={(data) => {newMeasureState = data; }}
             />
             , msNode);
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
 
         cmp = ReactDOM.render(
             <MeasurementSupport
@@ -224,7 +224,7 @@ describe('Leaflet MeasurementSupport', () => {
             , msNode);
 
         document.getElementById('map').addEventListener('draw:addvertex', () => {
-            expect(newMeasureState).toExist();
+            expect(newMeasureState).toBeTruthy();
         });
         document.getElementById('map').click();
     });
@@ -247,7 +247,7 @@ describe('Leaflet MeasurementSupport', () => {
                 changeMeasurementState={(data) => {newMeasureState = data; }}
             />
             , msNode);
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
 
         cmp = ReactDOM.render(
             <MeasurementSupport
@@ -260,7 +260,7 @@ describe('Leaflet MeasurementSupport', () => {
             />
             , msNode);
         document.getElementById('map').addEventListener('draw:addvertex', () => {
-            expect(newMeasureState).toExist();
+            expect(newMeasureState).toBeTruthy();
         });
         document.getElementById('map').click();
     });
@@ -283,7 +283,7 @@ describe('Leaflet MeasurementSupport', () => {
                 changeMeasurementState={(data) => {newMeasureState = data; }}
             />
             , msNode);
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
 
         cmp = ReactDOM.render(
             <MeasurementSupport
@@ -296,7 +296,7 @@ describe('Leaflet MeasurementSupport', () => {
             />
             , msNode);
         document.getElementById('map').addEventListener('draw:addvertex', () => {
-            expect(newMeasureState).toExist();
+            expect(newMeasureState).toBeTruthy();
         });
         document.getElementById('map').click();
     });

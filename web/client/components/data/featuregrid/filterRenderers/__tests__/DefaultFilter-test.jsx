@@ -26,12 +26,12 @@ describe('Test for DefaultFilter component', () => {
     it('render with defaults', () => {
         ReactDOM.render(<DefaultFilter/>, document.getElementById("container"));
         const el = document.getElementsByClassName("form-control input-sm")[0];
-        expect(el).toExist();
+        expect(el).toBeTruthy();
     });
     it('render with value', () => {
         ReactDOM.render(<DefaultFilter value={"TEST"}/>, document.getElementById("container"));
         const el = document.getElementsByClassName("form-control input-sm")[0];
-        expect(el).toExist();
+        expect(el).toBeTruthy();
         expect(el.value).toBe("TEST");
     });
     it('Test DefaultFilter onChange', () => {

@@ -41,6 +41,6 @@ describe('NewMapDialog component', () => {
         });
         ReactDOM.render(<NewMapDialog show/>, document.getElementById("container"));
         const rootDiv = document.getElementsByClassName('new-map-dialog')[0];
-        expect(rootDiv).toExist();
+        expect(rootDiv).toBeTruthy();
     });
 });

@@ -31,9 +31,9 @@ describe('MapTemplates Plugins', () => {
             }
         });
         ReactDOM.render(<Plugin/>, document.getElementById("container"));
-        expect(document.getElementsByClassName('ms-side-panel')[0]).toExist();
-        expect(document.getElementsByClassName('map-templates-loader')[0]).toExist();
-        expect(document.getElementsByClassName('map-templates-panel')[0]).toNotExist();
+        expect(document.getElementsByClassName('ms-side-panel')[0]).toBeTruthy();
+        expect(document.getElementsByClassName('map-templates-loader')[0]).toBeTruthy();
+        expect(document.getElementsByClassName('map-templates-panel')[0]).toBeFalsy();
     });
     it('shows MapTemplates loaded', () => {
         const { Plugin } = getPluginForTest(MapTemplates, {
@@ -47,8 +47,8 @@ describe('MapTemplates Plugins', () => {
             }
         });
         ReactDOM.render(<Plugin/>, document.getElementById("container"));
-        expect(document.getElementsByClassName('ms-side-panel')[0]).toExist();
-        expect(document.getElementsByClassName('map-templates-loader')[0]).toNotExist();
-        expect(document.getElementsByClassName('map-templates-panel')[0]).toExist();
+        expect(document.getElementsByClassName('ms-side-panel')[0]).toBeTruthy();
+        expect(document.getElementsByClassName('map-templates-loader')[0]).toBeFalsy();
+        expect(document.getElementsByClassName('map-templates-panel')[0]).toBeTruthy();
     });
 });

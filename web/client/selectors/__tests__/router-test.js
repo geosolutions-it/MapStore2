@@ -25,13 +25,13 @@ const state = {
 describe('Test router selectors', () => {
     it('test pathnameSelector', () => {
         const retVal = pathnameSelector(state);
-        expect(retVal).toExist();
+        expect(retVal).toBeTruthy();
         expect(retVal).toBe(pathname);
     });
 
     it('test searchSelector', () => {
         const retVal = searchSelector(state);
-        expect(retVal).toExist();
+        expect(retVal).toBeTruthy();
         expect(retVal).toBe(search);
     });
 });

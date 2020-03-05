@@ -50,7 +50,7 @@ let initialState = {
 describe('Test security selectors', () => {
     it('test userSelector', () => {
         const userlogged = userSelector(initialState);
-        expect(userlogged).toExist();
+        expect(userlogged).toBeTruthy();
         expect(userlogged.id).toBe(id);
         expect(userlogged.name).toBe(name);
         initialState.security.user = null;
@@ -60,12 +60,12 @@ describe('Test security selectors', () => {
     });
     it('test userRoleSelector', () => {
         const roleofuserlogged = userRoleSelector(initialState);
-        expect(roleofuserlogged).toExist();
+        expect(roleofuserlogged).toBeTruthy();
         expect(roleofuserlogged).toBe(role);
     });
     it('test isAdminUserSelector with logged admin user', () => {
         const idAdminLogged = isAdminUserSelector(initialState);
-        expect(idAdminLogged).toExist();
+        expect(idAdminLogged).toBeTruthy();
         expect(idAdminLogged).toBe(true);
     });
     it('test isAdminUserSelector user not logged', () => {
@@ -76,7 +76,7 @@ describe('Test security selectors', () => {
     });
     it('test rulesSelector user ', () => {
         const rules = rulesSelector(initialState);
-        expect(rules).toExist();
+        expect(rules).toBeTruthy();
     });
     it('test securityTokenSelector', () => {
         expect(securityTokenSelector({ security: { token: '########-####-####-####-###########' }})).toBe('########-####-####-####-###########');
@@ -84,12 +84,12 @@ describe('Test security selectors', () => {
     });
     it('test userGroupSecuritySelector ', () => {
         const group = userGroupSecuritySelector(initialState);
-        expect(group).toExist();
+        expect(group).toBeTruthy();
         expect(group.id).toBe(479);
     });
     it('test userParamsSelector ', () => {
         const userParams = userParamsSelector(initialState);
-        expect(userParams).toExist();
+        expect(userParams).toBeTruthy();
         expect(userParams.id).toBe(id);
         expect(userParams.name).toBe(name);
     });

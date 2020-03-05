@@ -64,16 +64,16 @@ describe('ZoneField', () => {
             document.getElementById("container")
         );
 
-        expect(zoneField).toExist();
+        expect(zoneField).toBeTruthy();
 
-        expect(zoneField.props.values).toExist();
+        expect(zoneField.props.values).toBeTruthy();
         expect(zoneField.props.values.length).toBe(6);
         expect(zoneField.props.typeName).toBe("geosolutions:zones");
         expect(zoneField.props.busy).toBe(false);
         expect(zoneField.props.open).toBe(false);
         expect(zoneField.props.disabled).toBe(false);
 
-        const zoneFieldDOMNode = expect(ReactDOM.findDOMNode(zoneField));
-        expect(zoneFieldDOMNode).toExist();
+        const zoneFieldDOMNode = ReactDOM.findDOMNode(zoneField);
+        expect(zoneFieldDOMNode).toBeTruthy();
     });
 });

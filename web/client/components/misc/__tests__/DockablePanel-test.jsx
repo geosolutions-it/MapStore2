@@ -33,7 +33,7 @@ describe("Test DockablePanel Component", () => {
     it('Test DockablePanel rendering without tools', () => {
         let comp = ReactDOM.render(
             <DockablePanel {...defaultProps}/>, document.getElementById("container"));
-        expect(comp).toExist();
+        expect(comp).toBeTruthy();
 
     });
 

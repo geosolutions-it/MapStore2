@@ -66,7 +66,7 @@ describe('StandardContainer', () => {
         };
 
         const app = ReactDOM.render(<Provider store={store}><StandardContainer plugins={plugins} componentConfig={componentConfig}/></Provider>, document.getElementById("container"));
-        expect(app).toExist();
+        expect(app).toBeTruthy();
         const dom = ReactDOM.findDOMNode(app);
         expect(dom.getElementsByClassName('mycomponent').length).toBe(1);
         expect(dom.getElementsByClassName('MyPlugin').length).toBe(1);

@@ -25,20 +25,20 @@ describe('MeasureEditor component', () => {
         ReactDOM.render(<MeasureEditor />, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('input');
-        expect(el).toExist();
+        expect(el).toBeTruthy();
     });
     it('MeasureEditor rendering value', () => {
         ReactDOM.render(<MeasureEditor value={10}/>, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('input');
-        expect(el).toExist();
+        expect(el).toBeTruthy();
         expect(el.value).toBe('10');
     });
     it('MeasureEditor rendering value different UOM', () => {
         ReactDOM.render(<MeasureEditor value={10000} displayUom="km" />, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('input');
-        expect(el).toExist();
+        expect(el).toBeTruthy();
         expect(el.value).toBe('10');
         const options = document.querySelectorAll("option");
         expect(options.length).toBe(5);
@@ -52,7 +52,7 @@ describe('MeasureEditor component', () => {
         ReactDOM.render(<MeasureEditor value={10} projection="EPSG:4326"/>, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('input');
-        expect(el).toExist();
+        expect(el).toBeTruthy();
         expect(el.value).toBe('10');
         const options = document.querySelectorAll("option");
         expect(options.length).toBe(1);
@@ -62,7 +62,7 @@ describe('MeasureEditor component', () => {
         ReactDOM.render(<MeasureEditor value={10000} displayUom="km" />, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('input');
-        expect(el).toExist();
+        expect(el).toBeTruthy();
         expect(el.value).toBe('10');
         ReactDOM.render(<MeasureEditor value={1000} displayUom="km" />, document.getElementById("container"));
         expect(el.value).toBe('1');
@@ -80,7 +80,7 @@ describe('MeasureEditor component', () => {
         ReactTestUtils.Simulate.change(el);
         ReactDOM.render(<MeasureEditor onChange={actions.onChange} displayUom="km" value={1000} />, document.getElementById("container"));
         expect(spyonChange).toHaveBeenCalled();
-        expect(spyonChange.calls[0].arguments[0]).toBe(1000);
+        expect(spyonChange.mock.calls[0][0]).toBe(1000);
         expect(el.value).toBe('1');
         ReactDOM.render(<MeasureEditor onChange={actions.onChange} displayUom="km" value={10000} />, document.getElementById("container"));
         expect(el.value).toBe('10');

@@ -37,7 +37,7 @@ describe('EmptyMaps component', () => {
             </Provider>, document.getElementById("container"));
 
         const container = document.getElementById('container');
-        expect(container.querySelector('button')).toExist();
+        expect(container.querySelector('button')).toBeTruthy();
         expect(container.querySelector('div').style['margin-bottom']).toEqual('20px');
     });
 
@@ -53,7 +53,7 @@ describe('EmptyMaps component', () => {
             </Provider>, document.getElementById("container"));
 
         const container = document.getElementById('container');
-        expect(container.querySelector('button')).toNotExist();
+        expect(container.querySelector('button')).toBeFalsy();
         expect(container.querySelector('div').style['margin-bottom']).toEqual('20px');
     });
 });

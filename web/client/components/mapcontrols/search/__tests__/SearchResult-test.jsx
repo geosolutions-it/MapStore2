@@ -31,23 +31,23 @@ describe("test the NominatimResult", () => {
 
     it('test component creation', () => {
         const tb = ReactDOM.render(<SearchResult item={item}/>, document.getElementById("container"));
-        expect(tb).toExist();
+        expect(tb).toBeTruthy();
 
     });
 
     it('create component without item', () => {
         const tb = ReactDOM.render(<SearchResult />, document.getElementById("container"));
-        expect(tb).toExist();
+        expect(tb).toBeTruthy();
     });
 
     it('create component with displayName and subtitle', () => {
         const tb = ReactDOM.render(<SearchResult item={item} displayName="test ${properties.prop1}" subTitle="test ${properties.prop2}"/>, document.getElementById("container"));
-        expect(tb).toExist();
+        expect(tb).toBeTruthy();
         const title = TestUtils.findRenderedDOMComponentWithClass(tb, "text-result-title");
         const subTitle = TestUtils.findRenderedDOMComponentWithClass(tb, "text-info");
 
-        expect(title).toExist();
-        expect(subTitle).toExist();
+        expect(title).toBeTruthy();
+        expect(subTitle).toBeTruthy();
         expect(title.textContent).toBe("test 1");
         expect(subTitle.textContent).toBe("test 2");
     });
@@ -59,8 +59,8 @@ describe("test the NominatimResult", () => {
         const spy = expect.spyOn(testHandlers, 'clickHandler');
         var tb = ReactDOM.render(<SearchResult item={item} onItemClick={testHandlers.clickHandler}/>, document.getElementById("container"));
         let elem = TestUtils.findRenderedDOMComponentWithClass(tb, "search-result");
-        expect(elem).toExist();
+        expect(elem).toBeTruthy();
         ReactDOM.findDOMNode(elem).click();
-        expect(spy.calls.length).toEqual(1);
+        expect(spy.mock.calls.length).toEqual(1);
     });
 });

@@ -26,20 +26,20 @@ describe('InlineSpinner', () => {
 
     it('test defaults', () => {
         const spinner = ReactDOM.render(<InlineSpinner />, document.getElementById("container"));
-        expect(spinner).toExist();
+        expect(spinner).toBeTruthy();
 
         const domNode = ReactDOM.findDOMNode(spinner);
-        expect(domNode).toExist();
+        expect(domNode).toBeTruthy();
 
         expect(domNode.style.display).toBe('none');
     });
 
     it('test loading animation', () => {
         const spinner = ReactDOM.render(<InlineSpinner loading/>, document.getElementById("container"));
-        expect(spinner).toExist();
+        expect(spinner).toBeTruthy();
 
         const domNode = ReactDOM.findDOMNode(spinner);
-        expect(domNode).toExist();
+        expect(domNode).toBeTruthy();
 
         expect(domNode.style.display).toBe('inline-block');
     });

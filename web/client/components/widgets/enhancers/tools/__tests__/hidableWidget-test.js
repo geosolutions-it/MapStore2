@@ -33,7 +33,7 @@ describe('hidableWidget enhancer', () => {
     });
     it('hidableWidget rendering with defaults', (done) => {
         const Sink = hidableWidget()(createSink( props => {
-            expect(props).toExist();
+            expect(props).toBeTruthy();
             expect(props.widgetTools.length).toBe(0);
             done();
         }));
@@ -41,9 +41,9 @@ describe('hidableWidget enhancer', () => {
     });
     it('when toolsOptions.showHide = true adds a widget tool', (done) => {
         const Sink = hidable(createSink( props => {
-            expect(props).toExist();
+            expect(props).toBeTruthy();
             expect(props.widgetTools.length).toBe(1);
-            expect(props.widgetTools[0].glyph).toExist();
+            expect(props.widgetTools[0].glyph).toBeTruthy();
             done();
         }));
         ReactDOM.render(<Sink />, document.getElementById("container"));
@@ -54,17 +54,17 @@ describe('hidableWidget enhancer', () => {
         };
         const spy = expect.spyOn(actions, 'updateProperty');
         const Sink = hidable(createSink(({ widgetTools = [] }) => {
-            expect(widgetTools[0]).toExist();
+            expect(widgetTools[0]).toBeTruthy();
             widgetTools[0].onClick();
         }));
         ReactDOM.render(<Sink updateProperty={actions.updateProperty}/>, document.getElementById("container"));
         expect(spy).toHaveBeenCalled();
-        expect(spy.calls[0].arguments[0]).toBe("hide");
-        expect(spy.calls[0].arguments[1]).toBe(true);
+        expect(spy.mock.calls[0][0]).toBe("hide");
+        expect(spy.mock.calls[0][1]).toBe(true);
         ReactDOM.render(<Sink hide updateProperty={actions.updateProperty} />, document.getElementById("container"));
         expect(spy).toHaveBeenCalled();
-        expect(spy.calls[1].arguments[0]).toBe("hide");
-        expect(spy.calls[1].arguments[1]).toBe(false);
+        expect(spy.mock.calls[1][0]).toBe("hide");
+        expect(spy.mock.calls[1][1]).toBe(false);
 
     });
 });

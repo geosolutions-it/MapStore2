@@ -31,7 +31,7 @@ describe('loadMore enhancer', () => {
         const Sink = loadMore(
             (params, page) => Observable.of({ items: Array(10), page }).catch( e => { done(e); })
         )(createSink( props => {
-            expect(props).toExist();
+            expect(props).toBeTruthy();
             if (props.page === undefined) {
                 props.loadFirst();
             } else if (props.page === 0) {

@@ -33,8 +33,8 @@ describe("Test JSX Template", () => {
         }).then(() => {
             try {
                 const cmpDom = document.getElementById("template");
-                expect(cmpDom).toExist();
-                expect(cmpDom.id).toExist();
+                expect(cmpDom).toBeTruthy();
+                expect(cmpDom.id).toBeTruthy();
                 expect(cmpDom.id).toBe("template");
                 done();
             } catch (ex) {
@@ -52,10 +52,10 @@ describe("Test JSX Template", () => {
             });
         }).then(() => {
             try {
-                expect(comp).toExist();
+                expect(comp).toBeTruthy();
                 const cmpDom = document.getElementById("template");
-                expect(cmpDom).toExist();
-                expect(cmpDom.id).toExist();
+                expect(cmpDom).toBeTruthy();
+                expect(cmpDom.id).toBeTruthy();
                 expect(cmpDom.id).toBe("template");
                 done();
             } catch (ex) {
@@ -73,10 +73,10 @@ describe("Test JSX Template", () => {
             });
         }).then(() => {
             try {
-                expect(comp).toExist();
+                expect(comp).toBeTruthy();
                 const cmpDom = document.getElementById("template");
-                expect(cmpDom).toExist();
-                expect(cmpDom.id).toExist();
+                expect(cmpDom).toBeTruthy();
+                expect(cmpDom.id).toBeTruthy();
                 expect(cmpDom.id).toBe("template");
                 done();
             } catch (ex) {
@@ -94,18 +94,18 @@ describe("Test JSX Template", () => {
             });
         }).then(() => {
             try {
-                expect(comp).toExist();
+                expect(comp).toBeTruthy();
                 const cmpDom = document.getElementById("template");
-                expect(cmpDom).toExist();
-                expect(cmpDom.id).toExist();
+                expect(cmpDom).toBeTruthy();
+                expect(cmpDom.id).toBeTruthy();
                 expect(cmpDom.id).toBe("template");
 
                 comp = ReactDOM.render(
                     <Template template="<div id={model.id}/>" model={{id: "template-update"}} />
                     , document.getElementById("container"));
                 const cmpDom1 = document.getElementById("template-update");
-                expect(cmpDom1).toExist();
-                expect(cmpDom1.id).toExist();
+                expect(cmpDom1).toBeTruthy();
+                expect(cmpDom1.id).toBeTruthy();
                 expect(cmpDom1.id).toBe("template-update");
                 done();
             } catch (ex) {
@@ -123,15 +123,15 @@ describe("Test JSX Template", () => {
             });
         }).then(() => {
             try {
-                expect(comp).toExist();
+                expect(comp).toBeTruthy();
                 const cmpDom = document.getElementById("temp");
-                expect(cmpDom).toExist();
+                expect(cmpDom).toBeTruthy();
 
                 comp = ReactDOM.render(
                     <Template template="<div id='template'/>" model={{id: "temp"}} />
                     , document.getElementById("container"));
                 const cmpDom1 = document.getElementById("temp");
-                expect(cmpDom1).toExist();
+                expect(cmpDom1).toBeTruthy();
                 done();
             } catch (ex) {
                 done(ex);

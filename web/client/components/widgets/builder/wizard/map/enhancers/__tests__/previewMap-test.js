@@ -29,10 +29,10 @@ describe('previewMap enhancer', () => {
         const Sink = previewMap(createSink( props => {
             props.onMapViewChanges({mapStateSource: "TEST"});
             expect(spyCallback).toHaveBeenCalled();
-            expect(spyCallback.calls.length).toBe(2);
-            expect(spyCallback.calls[0].arguments[0]).toBe("map");
-            expect(spyCallback.calls[1].arguments[0]).toBe("mapStateSource");
-            expect(spyCallback.calls[1].arguments[1]).toBe("TEST");
+            expect(spyCallback.mock.calls.length).toBe(2);
+            expect(spyCallback.mock.calls[0][0]).toBe("map");
+            expect(spyCallback.mock.calls[1][0]).toBe("mapStateSource");
+            expect(spyCallback.mock.calls[1][1]).toBe("TEST");
             done();
 
         }));

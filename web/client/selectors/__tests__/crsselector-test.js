@@ -12,7 +12,7 @@ describe('Test layers selectors', () => {
     it('test crsInputValueSelector', () => {
         const props = crsInputValueSelector({crsselector: {value: 'EPSG:4326'}});
 
-        expect(props).toExist();
+        expect(props).toBeTruthy();
         expect(props).toBe('EPSG:4326');
     });
 });

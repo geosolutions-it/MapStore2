@@ -17,7 +17,7 @@ describe('Test layers rest API', () => {
     it('get layer', (done) => {
         const LAYER_NAME = "TEST_LAYER_1";
         API.getLayer("base/web/client/test-resources/geoserver/rest/", LAYER_NAME).then((layer)=> {
-            expect(layer).toExist();
+            expect(layer).toBeTruthy();
             expect(layer.name).toBe(LAYER_NAME);
             done();
         });
@@ -29,7 +29,7 @@ describe('Test layers rest API', () => {
             layerName: LAYER_NAME,
             styles: [{name: 'generic'}]
         }).then((layer)=> {
-            expect(layer).toExist();
+            expect(layer).toBeTruthy();
             expect(layer.layer.styles.style.length).toBe(1);
             expect(layer.layer.styles.style[0].name).toBe('point');
             done();
@@ -42,7 +42,7 @@ describe('Test layers rest API', () => {
             layerName: LAYER_NAME,
             styles: [{name: 'polygon'}]
         }).then((layer)=> {
-            expect(layer).toExist();
+            expect(layer).toBeTruthy();
             expect(layer.layer.styles.style.length).toBe(3);
             expect(layer.layer.styles.style[0].name).toBe('point');
             expect(layer.layer.styles.style[1].name).toBe('generic');
@@ -59,7 +59,7 @@ describe('Test layers rest API', () => {
             layerName: LAYER_NAME,
             styleName: newDefaultStyle
         }).then((layerObj)=> {
-            expect(layerObj).toExist();
+            expect(layerObj).toBeTruthy();
             expect(layerObj.layer.defaultStyle.name).toBe(newDefaultStyle);
             expect(layerObj.layer.styles.style.length).toBe(3);
             expect(layerObj.layer.styles.style[0].name).toBe('test_TEST_LAYER_1');

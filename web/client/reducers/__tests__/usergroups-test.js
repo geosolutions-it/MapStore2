@@ -43,7 +43,7 @@ describe('Test the usergroups reducer', () => {
             groups: [],
             totalCount: 0
         });
-        expect(state.groups).toExist();
+        expect(state.groups).toBeTruthy();
         expect(state.groups.length).toBe(0);
     });
     it('edit group', () => {
@@ -55,7 +55,7 @@ describe('Test the usergroups reducer', () => {
             },
             totalCount: 0
         });
-        expect(state.currentGroup).toExist();
+        expect(state.currentGroup).toBeTruthy();
         expect(state.currentGroup.groupName).toBe("group");
         const stateMerge = usergroups({currentGroup: {
             id: 1
@@ -69,7 +69,7 @@ describe('Test the usergroups reducer', () => {
             },
             totalCount: 0
         });
-        expect(stateMerge.currentGroup).toExist();
+        expect(stateMerge.currentGroup).toBeTruthy();
         expect(stateMerge.currentGroup.id).toBe(1);
         expect(stateMerge.currentGroup.groupName).toBe("group");
 
@@ -97,7 +97,7 @@ describe('Test the usergroups reducer', () => {
             key: "groupName",
             newValue: "newGroupName"
         });
-        expect(state.currentGroup).toExist();
+        expect(state.currentGroup).toBeTruthy();
         expect(state.currentGroup.id).toBe(1);
         expect(state.currentGroup.groupName).toBe("newGroupName");
         const stateMerge = usergroups({currentGroup: {
@@ -108,7 +108,7 @@ describe('Test the usergroups reducer', () => {
             key: "description",
             newValue: "value2"
         });
-        expect(stateMerge.currentGroup).toExist();
+        expect(stateMerge.currentGroup).toBeTruthy();
         expect(stateMerge.currentGroup.id).toBe(1);
         expect(stateMerge.currentGroup.description).toBe("value2");
 
@@ -118,7 +118,7 @@ describe('Test the usergroups reducer', () => {
             key: "description",
             newValue: "new description"
         });
-        expect(stateMerge2.currentGroup).toExist();
+        expect(stateMerge2.currentGroup).toBeTruthy();
         expect(stateMerge2.currentGroup.id).toBe(1);
         expect(stateMerge2.currentGroup.description).toBe("new description");
     });
@@ -134,7 +134,7 @@ describe('Test the usergroups reducer', () => {
             type: UPDATEGROUP,
             status: STATUS_SAVED
         });
-        expect(state.currentGroup).toExist();
+        expect(state.currentGroup).toBeTruthy();
         expect(state.currentGroup.id).toBe(1);
         expect(state.currentGroup.users.length).toBe(1);
         expect(state.currentGroup.users[0].name).toBe("user");
@@ -150,7 +150,7 @@ describe('Test the usergroups reducer', () => {
             id: 1,
             status: "delete"
         });
-        expect(state.deletingGroup).toExist();
+        expect(state.deletingGroup).toBeTruthy();
         const cancelledState = usergroups(state, {
             type: DELETEGROUP,
             id: 1,
@@ -171,7 +171,7 @@ describe('Test the usergroups reducer', () => {
             count: 1,
             status: STATUS_SUCCESS
         });
-        expect(state.availableUsers).toExist();
+        expect(state.availableUsers).toBeTruthy();
         expect(state.availableUsers.length).toBe(1);
         expect(state.availableUsersCount).toEqual(1);
         expect(state.availableUsersLoading).toBe(false);

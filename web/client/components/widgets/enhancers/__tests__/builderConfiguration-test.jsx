@@ -39,7 +39,7 @@ describe('widgets builderConfiguration enhancer', () => {
         const actions = {
             onConfigurationError: () => {
                 setTimeout(() => {
-                    expect(document.querySelector('.empty-state-container')).toExist();
+                    expect(document.querySelector('.empty-state-container')).toBeTruthy();
                     done();
                 }, 20);
 

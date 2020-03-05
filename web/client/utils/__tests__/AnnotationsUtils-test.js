@@ -280,22 +280,22 @@ describe('Test the AnnotationsUtils', () => {
     it('circlesToMultiPolygon', () => {
         const {geometry, properties, style} = feature;
         const f = circlesToMultiPolygon(geometry, properties, style.Circle);
-        expect(f).toExist();
+        expect(f).toBeTruthy();
         expect(f.type).toBe("Feature");
         expect(f.geometry.type).toBe("MultiPolygon");
-        expect(f.properties).toExist();
-        expect(f.properties.ms_style).toExist();
+        expect(f.properties).toBeTruthy();
+        expect(f.properties.ms_style).toBeTruthy();
         expect(f.properties.ms_style.strokeColor).toBe(style.Circle.color);
     });
     it('fromCircleToPolygon', () => {
         const {geometry, properties} = circle1;
         const {style} = feature;
         const ft = fromCircleToPolygon(geometry, properties, style.Circle);
-        expect(ft).toExist();
+        expect(ft).toBeTruthy();
         expect(ft.type).toBe("Feature");
         expect(ft.geometry.type).toBe("Polygon");
-        expect(ft.properties).toExist();
-        expect(ft.properties.ms_style).toExist();
+        expect(ft.properties).toBeTruthy();
+        expect(ft.properties.ms_style).toBeTruthy();
         expect(ft.properties.isCircle).toBe(undefined);
         const {geometry: geometry2, properties: properties2} = circle2;
 
@@ -306,12 +306,12 @@ describe('Test the AnnotationsUtils', () => {
     it('textToPoint', () => {
         const {geometry, properties, style} = feature;
         const fts = textToPoint(geometry, properties, style.Text);
-        expect(fts).toExist();
+        expect(fts).toBeTruthy();
         expect(fts.length).toBe(2);
         expect(fts[0].type).toBe("Feature");
         expect(fts[0].geometry.type).toBe("MultiPoint");
-        expect(fts[0].properties).toExist();
-        expect(fts[0].properties.ms_style).toExist();
+        expect(fts[0].properties).toBeTruthy();
+        expect(fts[0].properties.ms_style).toBeTruthy();
         expect(fts[0].properties.ms_style.label).toBe("pino");
 
     });
@@ -319,11 +319,11 @@ describe('Test the AnnotationsUtils', () => {
         const {geometry, properties} = textFeature;
         const {style} = feature;
         const ft = fromTextToPoint(geometry, properties, style.Text);
-        expect(ft).toExist();
+        expect(ft).toBeTruthy();
         expect(ft.type).toBe("Feature");
         expect(ft.geometry.type).toBe("Point");
-        expect(ft.properties).toExist();
-        expect(ft.properties.ms_style).toExist();
+        expect(ft.properties).toBeTruthy();
+        expect(ft.properties.ms_style).toBeTruthy();
         expect(ft.properties.ms_style.label).toBe("pino");
 
     });
@@ -331,32 +331,32 @@ describe('Test the AnnotationsUtils', () => {
         const ft = fromAnnotationToGeoJson(circle1);
         expect(ft.type).toBe("Feature");
         expect(ft.geometry.type).toBe("Polygon");
-        expect(ft.properties).toExist();
-        expect(ft.properties.ms_style).toExist();
+        expect(ft.properties).toBeTruthy();
+        expect(ft.properties.ms_style).toBeTruthy();
         expect(ft.properties.isCircle).toBe(undefined);
     });
     it('fromAnnotationToGeoJson with a geodesic LineString', () => {
         const ft = fromAnnotationToGeoJson(geodesicLineString);
         expect(ft.type).toBe("Feature");
         expect(ft.geometry.type).toBe("LineString");
-        expect(ft.properties).toExist();
-        expect(ft.properties.ms_style).toExist();
+        expect(ft.properties).toBeTruthy();
+        expect(ft.properties.ms_style).toBeTruthy();
         expect(ft.properties.geometryGeodesic).toBe(undefined);
     });
     it('fromAnnotationToGeoJson with a text', () => {
         const ft = fromAnnotationToGeoJson(textFeature);
         expect(ft.type).toBe("Feature");
         expect(ft.geometry.type).toBe("Point");
-        expect(ft.properties).toExist();
-        expect(ft.properties.ms_style).toExist();
+        expect(ft.properties).toBeTruthy();
+        expect(ft.properties.ms_style).toBeTruthy();
         expect(ft.properties.isText).toBe(undefined);
     });
     it('fromAnnotationToGeoJson with a point', () => {
         const ft = fromAnnotationToGeoJson(featureCollection.features[0]);
         expect(ft.type).toBe("Feature");
         expect(ft.geometry.type).toBe("Point");
-        expect(ft.properties).toExist();
-        expect(ft.properties.ms_style).toExist();
+        expect(ft.properties).toBeTruthy();
+        expect(ft.properties.ms_style).toBeTruthy();
     });
     it('fromAnnotationToGeoJson with a LineString in origin, but with a style of a startPoint', () => {
         const f = {
@@ -372,8 +372,8 @@ describe('Test the AnnotationsUtils', () => {
         expect(ft.geometry.type).toBe("Point");
         expect(ft.geometry.coordinates[0]).toBe(0);
         expect(ft.geometry.coordinates[1]).toBe(0);
-        expect(ft.properties).toExist();
-        expect(ft.properties.ms_style).toExist();
+        expect(ft.properties).toBeTruthy();
+        expect(ft.properties.ms_style).toBeTruthy();
     });
     it('fromAnnotationToGeoJson with a LineString with dashArray', () => {
         const f = {
@@ -388,24 +388,24 @@ describe('Test the AnnotationsUtils', () => {
         };
         const ft = fromAnnotationToGeoJson(f);
         expect(ft.type).toBe("Feature");
-        expect(ft.properties).toExist();
-        expect(ft.properties.ms_style).toExist();
+        expect(ft.properties).toBeTruthy();
+        expect(ft.properties.ms_style).toBeTruthy();
         expect(ft.properties.ms_style.strokeDashstyle).toEqual("1 3");
     });
     it('flattenGeometryCollection', () => {
         const fts = flattenGeometryCollection(feature);
-        expect(fts).toExist();
+        expect(fts).toBeTruthy();
         expect(fts.length).toBe(9);
         expect(fts[6].type).toBe("Feature");
         expect(fts[6].geometry.type).toBe("MultiPolygon");
-        expect(fts[6].properties.ms_style).toExist();
+        expect(fts[6].properties.ms_style).toBeTruthy();
         expect(fts[6].properties.ms_style.strokeColor).toBe(feature.style.Circle.color);
-        expect(fts[6].properties).toExist();
+        expect(fts[6].properties).toBeTruthy();
         expect(fts[7].type).toBe("Feature");
         expect(fts[7].geometry.type).toBe("MultiPoint");
-        expect(fts[7].properties.ms_style).toExist();
+        expect(fts[7].properties.ms_style).toBeTruthy();
         expect(fts[7].properties.ms_style.label).toBe("pino");
-        expect(fts[7].properties).toExist();
+        expect(fts[7].properties).toBeTruthy();
     });
 
     it('test normalizeAnnotation defaults', () => {
@@ -570,14 +570,14 @@ describe('Test the AnnotationsUtils', () => {
     });
     it('test annotationsToPrint from featureCollection', () => {
         let fts = annotationsToPrint([featureCollection]);
-        expect(fts).toExist();
+        expect(fts).toBeTruthy();
         expect(fts.length).toBe(2);
         expect(fts[0].geometry.type).toBe("Point");
         expect(fts[1].geometry.type).toBe("LineString");
     });
     it('test annotationsToPrint from array of geometryCollection', () => {
         let fts = annotationsToPrint([feature]);
-        expect(fts).toExist();
+        expect(fts).toBeTruthy();
         expect(fts.length).toBe(9);
         expect(fts[0].geometry.type).toBe("MultiPolygon");
         expect(fts[1].geometry.type).toBe("MultiLineString");
@@ -604,7 +604,7 @@ describe('Test the AnnotationsUtils', () => {
             }]
         };
         let fts = annotationsToPrint([f]);
-        expect(fts).toExist();
+        expect(fts).toBeTruthy();
         expect(fts.length).toBe(1); // filter the style not applied
     });
     it('getStartEndPointsForLinestring, defaults', () => {
@@ -743,7 +743,7 @@ describe('Test the AnnotationsUtils', () => {
         expect(f.geometry).toEqual(geometryGeodesic);
         expect(f.type).toEqual("Feature");
         expect(f.properties.id).toEqual("VR46");
-        expect(f.properties.ms_style).toExist();
+        expect(f.properties.ms_style).toBeTruthy();
     });
 
     it('test isCompletePolygon defaults', () => {
@@ -759,7 +759,7 @@ describe('Test the AnnotationsUtils', () => {
     });
     it('test getDashArrayFromStyle', () => {
         // default
-        expect(getDashArrayFromStyle()).toEqual("");
+        expect(getDashArrayFromStyle()).toBeFalsy();
         expect(getDashArrayFromStyle("3 4 5")).toEqual("3 4 5");
         expect(getDashArrayFromStyle(["3", "4", "5"])).toEqual("3 4 5");
     });
@@ -778,9 +778,9 @@ describe('Test the AnnotationsUtils', () => {
             }]
         };
         let fts = annotationsToPrint([f]);
-        expect(fts).toExist();
+        expect(fts).toBeTruthy();
         expect(fts.length).toBe(1);
-        expect(fts[0].properties.ms_style).toExist();
+        expect(fts[0].properties.ms_style).toBeTruthy();
         expect(fts[0].properties.ms_style.strokeDashstyle).toBe('solid');
     });
 
@@ -813,10 +813,10 @@ describe('Test the AnnotationsUtils', () => {
             }]
         };
         let fts = annotationsToPrint([f]);
-        expect(fts).toExist();
+        expect(fts).toBeTruthy();
         expect(fts.length).toBe(1);
-        expect(fts[0].properties.ms_style).toExist();
-        expect(fts[0].properties.ms_style.labelOutlineColor).toNotExist();
+        expect(fts[0].properties.ms_style).toBeTruthy();
+        expect(fts[0].properties.ms_style.labelOutlineColor).toBeFalsy();
     });
 
     it('test annotationsToPrint text with outline', () => {
@@ -852,9 +852,9 @@ describe('Test the AnnotationsUtils', () => {
             }]
         };
         let fts = annotationsToPrint([f]);
-        expect(fts).toExist();
+        expect(fts).toBeTruthy();
         expect(fts.length).toBe(1);
-        expect(fts[0].properties.ms_style).toExist();
-        expect(fts[0].properties.ms_style.labelOutlineColor).toExist();
+        expect(fts[0].properties.ms_style).toBeTruthy();
+        expect(fts[0].properties.ms_style.labelOutlineColor).toBeTruthy();
     });
 });

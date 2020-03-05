@@ -14,52 +14,52 @@ const {Filter} = require('../Filter');
  */
 const validate = function(body, localPart) {
     const doc = unmarshaller.unmarshalDocument(body);
-    expect(doc).toExist();
+    expect(doc).toBeTruthy();
     expect(doc.name && doc.name.localPart).toBe(localPart);
     return doc;
 };
 describe('Test CSW request/response generation/parsing', () => {
 
     it('getRecords', () => {
-        expect(CSW.getRecords).toExist();
+        expect(CSW.getRecords).toBeTruthy();
         let jsonBody = CSW.getRecords(0, 1);
-        expect(jsonBody).toExist();
+        expect(jsonBody).toBeTruthy();
         const doc = marshaller.marshalDocument( { name: "csw:GetRecords", value: jsonBody});
-        expect(doc).toExist();
+        expect(doc).toBeTruthy();
         validate(doc, "GetRecords");
     });
 
     it('getRecords with Filters', () => {
-        expect(CSW.getRecords).toExist();
+        expect(CSW.getRecords).toBeTruthy();
 
         // create a filter
         let json1 = Filter.propertyIsLike("propName", "%propValueLike%");
-        expect(json1).toExist();
+        expect(json1).toBeTruthy();
         let json2 = Filter.bbox(0, 0, 1, 1, "EPSG:4326");
         let or = Filter.or([json1, json2]);
         let filter = Filter.filter(or);
 
         // create a getRecords with the filter
         let jsonBody = CSW.getRecords(0, 1, filter);
-        expect(jsonBody).toExist();
+        expect(jsonBody).toBeTruthy();
 
         // marshal and unmarshal
         const doc = marshaller.marshalDocument( { name: "csw:GetRecords", value: jsonBody});
-        expect(doc).toExist();
+        expect(doc).toBeTruthy();
         let jsonOut = validate(doc, "GetRecords").value;
 
         // check if the filter exists in the unmarshalled object
-        expect(jsonOut).toExist();
-        expect(jsonOut.abstractQuery).toExist();
-        expect(jsonOut.abstractQuery.value.constraint).toExist();
-        expect(jsonOut.abstractQuery.value.constraint.filter).toExist();
+        expect(jsonOut).toBeTruthy();
+        expect(jsonOut.abstractQuery).toBeTruthy();
+        expect(jsonOut.abstractQuery.value.constraint).toBeTruthy();
+        expect(jsonOut.abstractQuery.value.constraint.filter).toBeTruthy();
     });
     it('getRecordById', () => {
-        expect(CSW.getRecordById).toExist();
+        expect(CSW.getRecordById).toBeTruthy();
         let jsonBody = CSW.getRecordById("TEST_ID");
-        expect(jsonBody).toExist();
+        expect(jsonBody).toBeTruthy();
         const doc = marshaller.marshalDocument( { name: "csw:GetRecordById", value: jsonBody});
-        expect(doc).toExist();
+        expect(doc).toBeTruthy();
         validate(doc, "GetRecordById");
     });
 });

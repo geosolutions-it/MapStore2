@@ -24,17 +24,17 @@ describe("Test the PseudoColorSettings component", () => {
 
     it('creates component with defaults', () => {
         const cmp = ReactDOM.render(<PseudoColorSettings/>, document.getElementById("container"));
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
     });
 
     it('creates component add entry', () => {
         const cmp = ReactDOM.render(<PseudoColorSettings />, document.getElementById("container"));
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
         cmp.addEntry();
     });
     it('creates component remove entry', () => {
         const cmp = ReactDOM.render(<PseudoColorSettings selected={0} colorMapEntry={[{color: '#AA34FF', quantity: 1, label: "test" }]}/>, document.getElementById("container"));
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
         cmp.removeEntry();
         cmp.selectEntry(2);
     });

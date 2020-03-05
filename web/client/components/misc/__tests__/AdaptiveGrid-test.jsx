@@ -46,9 +46,9 @@ describe("Test AdaptiveGrid Component", () => {
             />, document.getElementById("container"));
 
         const domComp = document.getElementsByClassName('react-grid-Container')[0];
-        expect(domComp).toExist();
+        expect(domComp).toBeTruthy();
         const rect = domComp.getBoundingClientRect();
-        expect(rect).toExist();
+        expect(rect).toBeTruthy();
         expect(rect.width).toBe(200);
     });
 });

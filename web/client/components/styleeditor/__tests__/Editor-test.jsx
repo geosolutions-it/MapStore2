@@ -26,8 +26,8 @@ describe('test Editor module component (Style Editor)', () => {
 
     it('test Editor creation', () => {
         const comp = ReactDOM.render(<Editor />, document.getElementById("container"));
-        expect(comp).toExist();
-        expect(comp.editor).toExist();
+        expect(comp).toBeTruthy();
+        expect(comp.editor).toBeTruthy();
     });
 
     it('test Editor geocss mode, highlight values', () => {
@@ -37,8 +37,8 @@ describe('test Editor module component (Style Editor)', () => {
             code={code}
             waitTime={0}
         />, document.getElementById("container"));
-        expect(comp).toExist();
-        expect(comp.editor).toExist();
+        expect(comp).toBeTruthy();
+        expect(comp.editor).toBeTruthy();
 
         // mark, stroke, stroke-width
         const cmProperties = document.querySelectorAll('.cm-property');
@@ -85,8 +85,8 @@ describe('test Editor module component (Style Editor)', () => {
                 }
             ]}
         />, document.getElementById("container"));
-        expect(comp).toExist();
-        expect(comp.editor).toExist();
+        expect(comp).toBeTruthy();
+        expect(comp.editor).toBeTruthy();
         let cmAtom = document.querySelectorAll('.cm-atom');
         expect(cmAtom.length).toBe(1);
         expect(cmAtom[0].innerHTML).toBe(ORIGINAL_VALUE);
@@ -120,7 +120,7 @@ describe('test Editor module component (Style Editor)', () => {
         let editorError = document.querySelectorAll('.ms-style-editor-error');
         expect(editorError.length).toBe(0);
         let infoPopover = document.querySelector('.mapstore-info-popover');
-        expect(infoPopover).toNotExist();
+        expect(infoPopover).toBeFalsy();
 
         ReactDOM.render(<Editor
             mode="geocss"
@@ -135,7 +135,7 @@ describe('test Editor module component (Style Editor)', () => {
         expect(editorError.length > 0).toBe(true);
 
         infoPopover = document.querySelector('.mapstore-info-popover');
-        expect(infoPopover).toExist();
+        expect(infoPopover).toBeTruthy();
 
     });
 
@@ -146,14 +146,14 @@ describe('test Editor module component (Style Editor)', () => {
         />, document.getElementById("container"));
 
         let loadingDOM = document.querySelector('.mapstore-small-size-loader');
-        expect(loadingDOM).toExist();
+        expect(loadingDOM).toBeTruthy();
 
         ReactDOM.render(<Editor
             mode="geocss"
         />, document.getElementById("container"));
 
         loadingDOM = document.querySelector('.mapstore-small-size-loader');
-        expect(loadingDOM).toNotExist();
+        expect(loadingDOM).toBeFalsy();
     });
 
     it('test Editor shows default validation pop up', () => {
@@ -164,7 +164,7 @@ describe('test Editor module component (Style Editor)', () => {
         let editorError = document.querySelectorAll('.ms-style-editor-error');
         expect(editorError.length).toBe(0);
         let infoPopover = document.querySelector('.mapstore-info-popover');
-        expect(infoPopover).toNotExist();
+        expect(infoPopover).toBeFalsy();
 
         ReactDOM.render(<Editor
             mode="geocss"
@@ -176,7 +176,7 @@ describe('test Editor module component (Style Editor)', () => {
         expect(editorError.length > 0).toBe(true);
 
         infoPopover = document.querySelector('.mapstore-info-popover');
-        expect(infoPopover).toExist();
+        expect(infoPopover).toBeTruthy();
         TestUtils.Simulate.mouseOver(infoPopover.children[0]);
         expect(document.querySelector('.popover-content > span').innerHTML).toBe('styleeditor.genericValidationError');
     });

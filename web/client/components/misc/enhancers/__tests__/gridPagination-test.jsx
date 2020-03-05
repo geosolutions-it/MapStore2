@@ -34,27 +34,27 @@ describe('gridPagination enhancher', () => {
         ReactDOM.render(<CMP />, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('#CMP');
-        expect(el).toExist();
+        expect(el).toBeTruthy();
         const bottom = el.querySelector('.bottom');
-        expect(bottom).toNotExist();
+        expect(bottom).toBeFalsy();
     });
     it('gridPagination rendering with show more', () => {
         ReactDOM.render(<CMP pagination="show-more"/>, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('#CMP');
-        expect(el).toExist();
+        expect(el).toBeTruthy();
         const bottom = el.querySelector('.bottom');
-        expect(bottom).toExist();
+        expect(bottom).toBeTruthy();
         const showMore = el.querySelector('.ms-show-more');
-        expect(showMore).toExist();
+        expect(showMore).toBeTruthy();
     });
     it('gridPagination rendering with horizontal virtual scroll', () => {
         ReactDOM.render(<CMP pagination="virtual-scroll-horizontal"/>, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('#CMP');
-        expect(el).toExist();
+        expect(el).toBeTruthy();
         const bottom = el.querySelector('.bottom');
-        expect(bottom).toExist();
+        expect(bottom).toBeTruthy();
 
         expect(el.getAttribute('class')).toBe(' ms-grid-horizontal');
     });

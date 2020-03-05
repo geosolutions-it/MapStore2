@@ -15,16 +15,16 @@ import { toMapConfig, toWMC } from '../WMC';
 describe('WMC tests', () => {
     it('toMapConfig with a valid sample context', () =>
         axios.get('base/web/client/test-resources/wmc/context.wmc').then(response => toMapConfig(response.data)).then(config => {
-            expect(config).toExist();
+            expect(config).toBeTruthy();
             expect(config.version).toBe(2);
             expect(config.catalogServices).toEqual({});
-            expect(config.map).toExist();
+            expect(config.map).toBeTruthy();
             expect(config.map.maxExtent).toEqual([-1, 1, -1, 1]);
             expect(config.map.projection).toBe('EPSG:3857');
             expect(config.map.backgrounds).toEqual([]);
-            expect(config.map.center).toNotExist();
-            expect(config.map.zoom).toNotExist();
-            expect(config.map.groups).toExist();
+            expect(config.map.center).toBeFalsy();
+            expect(config.map.zoom).toBeFalsy();
+            expect(config.map.groups).toBeTruthy();
             expect(config.map.groups.length).toBe(4);
             expect(config.map.groups[0].id).toBe('Default');
             expect(config.map.groups[0].title).toBe('Default');
@@ -38,9 +38,9 @@ describe('WMC tests', () => {
             expect(config.map.groups[3].id).toBe('groupid3');
             expect(config.map.groups[3].title).toBe('Group3');
             expect(config.map.groups[3].expanded).toBe(true);
-            expect(config.map.layers).toExist();
+            expect(config.map.layers).toBeTruthy();
             expect(config.map.layers.length).toBe(3);
-            expect(config.map.layers[0].id).toExist();
+            expect(config.map.layers[0].id).toBeTruthy();
             expect(config.map.layers[0].id.length).toBe(36);
             expect(omit(config.map.layers[0], 'id')).toEqual({
                 name: 'background_layer',
@@ -55,7 +55,7 @@ describe('WMC tests', () => {
                 params: {},
                 group: 'background'
             });
-            expect(config.map.layers[1].id).toExist();
+            expect(config.map.layers[1].id).toBeTruthy();
             expect(config.map.layers[1].id.length).toBe(36);
             expect(omit(config.map.layers[1], 'id')).toEqual({
                 name: 'test_layer1',
@@ -96,7 +96,7 @@ describe('WMC tests', () => {
                     crs: 'EPSG:3857'
                 }
             });
-            expect(config.map.layers[2].id).toExist();
+            expect(config.map.layers[2].id).toBeTruthy();
             expect(config.map.layers[2].id.length).toBe(36);
             expect(omit(config.map.layers[2], 'id')).toEqual({
                 name: 'test_layer2',
@@ -124,23 +124,23 @@ describe('WMC tests', () => {
     );
     it('toMapConfig with generateLayersGroup=true', () =>
         axios.get('base/web/client/test-resources/wmc/context-no-groups.wmc').then(response => toMapConfig(response.data, true)).then(config => {
-            expect(config).toExist();
+            expect(config).toBeTruthy();
             expect(config.version).toBe(2);
             expect(config.catalogServices).toEqual({});
-            expect(config.map).toExist();
+            expect(config.map).toBeTruthy();
             expect(config.map.maxExtent).toEqual([-1, 1, -1, 1]);
             expect(config.map.projection).toBe('EPSG:3857');
             expect(config.map.backgrounds).toEqual([]);
-            expect(config.map.center).toNotExist();
-            expect(config.map.zoom).toNotExist();
-            expect(config.map.groups).toExist();
+            expect(config.map.center).toBeFalsy();
+            expect(config.map.zoom).toBeFalsy();
+            expect(config.map.groups).toBeTruthy();
             expect(config.map.groups.length).toBe(1);
-            expect(config.map.groups[0].id).toExist();
+            expect(config.map.groups[0].id).toBeTruthy();
             expect(config.map.groups[0].id.length).toBe(36);
             expect(config.map.groups[0].title).toBe('Sample Context');
-            expect(config.map.layers).toExist();
+            expect(config.map.layers).toBeTruthy();
             expect(config.map.layers.length).toBe(3);
-            expect(config.map.layers[0].id).toExist();
+            expect(config.map.layers[0].id).toBeTruthy();
             expect(config.map.layers[0].id.length).toBe(36);
             expect(omit(config.map.layers[0], 'id')).toEqual({
                 name: 'background_layer',
@@ -155,7 +155,7 @@ describe('WMC tests', () => {
                 params: {},
                 group: 'background'
             });
-            expect(config.map.layers[1].id).toExist();
+            expect(config.map.layers[1].id).toBeTruthy();
             expect(config.map.layers[1].id.length).toBe(36);
             expect(omit(config.map.layers[1], 'id')).toEqual({
                 name: 'test_layer1',
@@ -179,7 +179,7 @@ describe('WMC tests', () => {
                 },
                 group: config.map.groups[0].id
             });
-            expect(config.map.layers[2].id).toExist();
+            expect(config.map.layers[2].id).toBeTruthy();
             expect(config.map.layers[2].id.length).toBe(36);
             expect(omit(config.map.layers[2], 'id')).toEqual({
                 name: 'test_layer2',
@@ -208,25 +208,25 @@ describe('WMC tests', () => {
     );
     it('toMapConfig with a context without backgrounds', () =>
         axios.get('base/web/client/test-resources/wmc/context-no-backgrounds.wmc').then(response => toMapConfig(response.data)).then(config => {
-            expect(config).toExist();
+            expect(config).toBeTruthy();
             expect(config.version).toBe(2);
             expect(config.catalogServices).toEqual({});
-            expect(config.map).toExist();
+            expect(config.map).toBeTruthy();
             expect(config.map.maxExtent).toEqual([-1, 1, -1, 1]);
             expect(config.map.projection).toBe('EPSG:3857');
             expect(config.map.backgrounds).toEqual([]);
-            expect(config.map.center).toNotExist();
-            expect(config.map.zoom).toNotExist();
-            expect(config.map.groups).toExist();
+            expect(config.map.center).toBeFalsy();
+            expect(config.map.zoom).toBeFalsy();
+            expect(config.map.groups).toBeTruthy();
             expect(config.map.groups.length).toBe(1);
             expect(config.map.groups[0].id).toBe('Default');
             expect(config.map.groups[0].expanded).toBe(true);
-            expect(config.map.layers).toExist();
+            expect(config.map.layers).toBeTruthy();
             expect(config.map.layers.length).toBe(4);
             expect(config.map.layers[0].type).toBe('empty');
             expect(config.map.layers[0].group).toBe('background');
             expect(config.map.layers[0].visibility).toBe(true);
-            expect(config.map.layers[1].id).toExist();
+            expect(config.map.layers[1].id).toBeTruthy();
             expect(config.map.layers[1].id.length).toBe(36);
             expect(omit(config.map.layers[1], 'id')).toEqual({
                 name: 'test_layer1',
@@ -249,7 +249,7 @@ describe('WMC tests', () => {
                     crs: 'EPSG:3857'
                 }
             });
-            expect(config.map.layers[2].id).toExist();
+            expect(config.map.layers[2].id).toBeTruthy();
             expect(config.map.layers[2].id.length).toBe(36);
             expect(omit(config.map.layers[2], 'id')).toEqual({
                 name: 'test_layer2',
@@ -273,7 +273,7 @@ describe('WMC tests', () => {
                     crs: 'EPSG:3857'
                 }
             });
-            expect(config.map.layers[3].id).toExist();
+            expect(config.map.layers[3].id).toBeTruthy();
             expect(config.map.layers[3].id.length).toBe(36);
             expect(omit(config.map.layers[3], 'id')).toEqual({
                 name: 'test_layer3',

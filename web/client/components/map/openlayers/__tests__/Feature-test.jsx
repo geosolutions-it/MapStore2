@@ -98,7 +98,7 @@ describe('Test Feature', () => {
                 crs={"EPSG:4326"}
             />, document.getElementById("container"));
 
-        expect(layer).toExist();
+        expect(layer).toBeTruthy();
         // count layers
         const count = container.getSource().getFeatures().length;
         expect(count).toBe(1);
@@ -151,7 +151,7 @@ describe('Test Feature', () => {
                 crs={"EPSG:4326"}
             />, document.getElementById("container"));
 
-        expect(layer).toExist();
+        expect(layer).toBeTruthy();
         // count layers
         const count = container.getSource().getFeatures().length;
         expect(count).toBe(0);
@@ -215,11 +215,11 @@ describe('Test Feature', () => {
             />, document.getElementById("container"));
 
         setTimeout(() => {
-            expect(layer).toExist();
+            expect(layer).toBeTruthy();
             // count layers
             expect(container.getSource().getFeatures().length === 1 );
             let style = layer._feature[0].getStyle();
-            expect(style).toNotExist();
+            expect(style).toBeFalsy();
         }, 0);
 
         options.features.features[0].properties.name = 'other name';
@@ -239,7 +239,7 @@ describe('Test Feature', () => {
 
         setTimeout(() => {
             let style = layer._feature[0].getStyle();
-            expect(style).toExist();
+            expect(style).toBeTruthy();
         }, 0);
 
         // change geometry
@@ -313,11 +313,11 @@ describe('Test Feature', () => {
             />, document.getElementById("container"));
 
         setTimeout(() => {
-            expect(layer).toExist();
+            expect(layer).toBeTruthy();
             // count layers
             expect(container.getSource().getFeatures().length === 1 );
             let style = layer._feature[0].getStyle();
-            expect(style).toNotExist();
+            expect(style).toBeFalsy();
         }, 0);
 
         options.features.features[0].properties.name = 'other name';
@@ -341,7 +341,7 @@ describe('Test Feature', () => {
 
         setTimeout(() => {
             let style = layer._feature[0].getStyle();
-            expect(style).toNotExist();
+            expect(style).toBeFalsy();
         }, 0);
 
         layer = ReactDOM.render(
@@ -358,7 +358,7 @@ describe('Test Feature', () => {
         );
         setTimeout(() => {
             let style = layer._feature[0].getStyle();
-            expect(style).toExist();
+            expect(style).toBeTruthy();
         }, 0);
         const count = container.getSource().getFeatures().length;
         expect(count).toBe(1);
@@ -427,7 +427,7 @@ describe('Test Feature', () => {
                 crs={"EPSG:4326"}
             />, document.getElementById("container"));
 
-        expect(layer).toExist();
+        expect(layer).toBeTruthy();
         // count layers
         const count = container.getSource().getFeatures().length;
         expect(count).toBe(1);

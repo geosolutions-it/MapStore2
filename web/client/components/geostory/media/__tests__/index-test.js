@@ -33,14 +33,14 @@ describe('Media component', () => {
             document.getElementById("container"));
         try {
             let container = document.getElementById('container');
-            expect(container.querySelector('.ms-visibility-container')).toExist();
-            expect(container.querySelector('.ms-media-loader')).toExist();
+            expect(container.querySelector('.ms-visibility-container')).toBeTruthy();
+            expect(container.querySelector('.ms-media-loader')).toBeTruthy();
             const scrollContainer =  document.getElementById('scroll-container');
             scrollContainer.scrollTo(0, scrollContainer.scrollHeight);
             setTimeout(() => {
                 container = document.getElementById('container');
                 expect(container.querySelector('.ms-media-loader')).toBe(null);
-                expect(container.querySelector('.empty-state-container')).toExist();
+                expect(container.querySelector('.empty-state-container')).toBeTruthy();
                 done();
             }, DEBOUNCE_TIME * 2);
         } catch (e) {
@@ -59,13 +59,13 @@ describe('Media component', () => {
             document.getElementById("container"));
         try {
             let container = document.getElementById('container');
-            expect(container.querySelector('.ms-visibility-container')).toExist();
-            expect(container.querySelector('.ms-media-loader')).toExist();
+            expect(container.querySelector('.ms-visibility-container')).toBeTruthy();
+            expect(container.querySelector('.ms-media-loader')).toBeTruthy();
             const scrollContainer =  document.getElementById('scroll-container');
             scrollContainer.scrollTo(0, scrollContainer.scrollHeight);
             setTimeout(() => {
                 scrollContainer.scrollTo(0, 0);
-                expect(container.querySelector('.ms-media-loader')).toExist();
+                expect(container.querySelector('.ms-media-loader')).toBeTruthy();
                 expect(container.querySelector('.empty-state-container')).toBe(null);
                 done();
             }, DEBOUNCE_TIME / 2);

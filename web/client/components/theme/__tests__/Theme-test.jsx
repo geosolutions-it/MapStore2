@@ -27,7 +27,7 @@ describe('Theme', () => {
         const version = 'no-version';
         const theme = ReactDOM.render(<Theme path="/base/web/client/test-resources/themes" themeElement="theme_stylesheet" version={version}/>, document.getElementById("container"));
         const style = document.getElementById('theme_stylesheet');
-        expect(theme).toExist();
+        expect(theme).toBeTruthy();
         expect(url.parse(style.href).path).toBe('/base/web/client/test-resources/themes/default.css');
     });
 
@@ -36,7 +36,7 @@ describe('Theme', () => {
         const version = '${mapstore2.version}';
         const theme = ReactDOM.render(<Theme path="/base/web/client/test-resources/themes" themeElement="theme_stylesheet" version={version}/>, document.getElementById("container"));
         const style = document.getElementById('theme_stylesheet');
-        expect(theme).toExist();
+        expect(theme).toBeTruthy();
         expect(url.parse(style.href).path).toBe('/base/web/client/test-resources/themes/default.css');
     });
 
@@ -45,7 +45,7 @@ describe('Theme', () => {
         const version = 'DEV';
         const theme = ReactDOM.render(<Theme path="/base/web/client/test-resources/themes" themeElement="theme_stylesheet" version={version}/>, document.getElementById("container"));
         const style = document.getElementById('theme_stylesheet');
-        expect(theme).toExist();
+        expect(theme).toBeTruthy();
         expect(url.parse(style.href).path).toBe('/base/web/client/test-resources/themes/default.css?DEV');
     });
 
@@ -54,7 +54,7 @@ describe('Theme', () => {
         const version = 'DEV';
         let theme = ReactDOM.render(<Theme path="/base/web/client/test-resources/themes" themeElement="theme_stylesheet" version={version}/>, document.getElementById("container"));
         let style = document.getElementById('theme_stylesheet');
-        expect(theme).toExist();
+        expect(theme).toBeTruthy();
         expect(url.parse(style.href).path).toBe('/base/web/client/test-resources/themes/default.css?DEV');
 
         theme = ReactDOM.render(<Theme path="/base/web/client/test-resources/themes" theme="custom" themeElement="theme_stylesheet" version={version}/>, document.getElementById("container"));
@@ -68,9 +68,9 @@ describe('Theme', () => {
         let theme = ReactDOM.render(<Theme path="/base/web/client/test-resources/themes" themeElement="theme_stylesheet" version="no-version" onLoad={() => {
             done();
         }}/>, document.getElementById("container"));
-        expect(theme).toExist();
+        expect(theme).toBeTruthy();
         let style = document.getElementById('theme_stylesheet');
-        expect(style).toExist();
+        expect(style).toBeTruthy();
         expect(url.parse(style.href).path).toBe('/base/web/client/test-resources/themes/default.css');
     });
 
@@ -80,18 +80,18 @@ describe('Theme', () => {
         let theme = ReactDOM.render(<Theme path="/base/web/client/test-resources/themes" themeElement="theme_stylesheet" version="no-version" onLoad={() => {
             done();
         }}/>, document.getElementById("container"));
-        expect(theme).toExist();
+        expect(theme).toBeTruthy();
         let style = document.getElementById('theme_stylesheet');
-        expect(style).toExist();
+        expect(style).toBeTruthy();
         expect(url.parse(style.href).path).toBe('/base/web/client/test-resources/themes/default.css');
     });
 
     it('test undefined version', () => {
         document.head.removeChild(document.getElementById('theme_stylesheet'));
         let theme = ReactDOM.render(<Theme path="/base/web/client/test-resources/themes" themeElement="theme_stylesheet"/>, document.getElementById("container"));
-        expect(theme).toExist();
+        expect(theme).toBeTruthy();
         let style = document.getElementById('theme_stylesheet');
-        expect(style).toNotExist();
+        expect(style).toBeFalsy();
     });
 
 });

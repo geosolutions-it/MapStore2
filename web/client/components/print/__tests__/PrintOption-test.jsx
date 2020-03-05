@@ -35,40 +35,40 @@ describe("Test the PrintOption component", () => {
 
     it('creates component with defaults', () => {
         const cmp = ReactDOM.render(<PrintOption/>, document.getElementById("container"));
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
 
         const node = ReactDOM.findDOMNode(cmp);
-        expect(node).toExist();
+        expect(node).toBeTruthy();
         expect(node.getElementsByTagName('input').length).toBe(1);
         expect(node.getElementsByTagName('input')[0].checked).toBe(false);
     });
 
     it('creates component with value', () => {
         const cmp = ReactDOM.render(<PrintOption checked/>, document.getElementById("container"));
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
 
         const node = ReactDOM.findDOMNode(cmp);
-        expect(node).toExist();
+        expect(node).toBeTruthy();
         expect(node.getElementsByTagName('input').length).toBe(1);
         expect(node.getElementsByTagName('input')[0].checked).toBe(true);
     });
 
     it('creates component enabled', () => {
         const cmp = ReactDOM.render(<PrintOption enableRegex={/landscape/} layouts={layouts}/>, document.getElementById("container"));
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
 
         const node = ReactDOM.findDOMNode(cmp);
-        expect(node).toExist();
+        expect(node).toBeTruthy();
         expect(node.getElementsByTagName('input').length).toBe(1);
         expect(node.getElementsByTagName('input')[0].disabled).toBe(false);
     });
 
     it('creates component disabled', () => {
         const cmp = ReactDOM.render(<PrintOption enableRegex={/fake/} layouts={layouts}/>, document.getElementById("container"));
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
 
         const node = ReactDOM.findDOMNode(cmp);
-        expect(node).toExist();
+        expect(node).toBeTruthy();
         expect(node.getElementsByTagName('input').length).toBe(1);
         expect(node.getElementsByTagName('input')[0].disabled).toBe(true);
     });

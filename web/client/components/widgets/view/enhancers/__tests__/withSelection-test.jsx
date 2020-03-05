@@ -24,14 +24,14 @@ describe('withSelection enhancer', () => {
     });
     it('withSelection rendering with defaults', (done) => {
         const Sink = withSelection(createSink( props => {
-            expect(props).toExist();
+            expect(props).toBeTruthy();
             done();
         }));
         ReactDOM.render(<Sink />, document.getElementById("container"));
     });
     it('withSelection rendering with selectionActive', (done) => {
         const Sink = withSelection(createSink(props => {
-            expect(props).toExist();
+            expect(props).toBeTruthy();
             expect(props.className.indexOf('selection-active') >= 0).toBe(true);
             done();
         }));
@@ -41,7 +41,7 @@ describe('withSelection enhancer', () => {
         const View = withSelection( WidgetsView );
         const WIDGETS = [{ id: "TEST_1", widgetType: 'text' }, { id: "TEST_2", widgetType: 'text' }];
         ReactDOM.render(<View isWidgetSelectable={w => w.id === "TEST_1"} selectionActive className="test" widgets={WIDGETS} />, document.getElementById("container"));
-        expect(document.querySelector('.react-grid-layout.selection-active.test')).toExist();
+        expect(document.querySelector('.react-grid-layout.selection-active.test')).toBeTruthy();
         expect(document.querySelectorAll('.react-grid-layout.selection-active.test .disabled').length).toBe(1);
     });
 });

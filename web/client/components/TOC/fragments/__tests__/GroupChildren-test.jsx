@@ -43,10 +43,10 @@ describe('test GroupChildren module component', () => {
         const comp = ReactDOM.render(<GroupChildren node={g}><div className="layer" /></GroupChildren>, document.getElementById("container"));
 
         const domNode = ReactDOM.findDOMNode(comp);
-        expect(domNode).toExist();
+        expect(domNode).toBeTruthy();
 
         const layers = domNode.getElementsByClassName('layer');
-        expect(layers).toExist();
+        expect(layers).toBeTruthy();
         expect(layers.length).toBe(1);
     });
 
@@ -95,7 +95,7 @@ describe('test GroupChildren module component', () => {
         const comp = ReactDOM.render(<GroupChildren node={node}><TestComponent/></GroupChildren>, document.getElementById("container"));
 
         const domNode = ReactDOM.findDOMNode(comp);
-        expect(domNode).toExist();
+        expect(domNode).toBeTruthy();
 
         const elements = TestUtils.scryRenderedComponentsWithType(comp, TestComponent);
         expect(elements.length).toBe(7);

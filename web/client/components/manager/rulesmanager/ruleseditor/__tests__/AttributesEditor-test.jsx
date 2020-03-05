@@ -40,14 +40,14 @@ describe('Attributes Editor component', () => {
         ReactDOM.render(<AttributesEditor/>, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('.ms-rule-editor');
-        expect(el).toExist();
+        expect(el).toBeTruthy();
         expect(el.style.display).toBe("none");
     });
     it('render attributes', () => {
         ReactDOM.render(<AttributesEditor attributes={attributes} active constraints={constraints} />, document.getElementById("container"));
         const container = document.getElementById('container');
         const rows = container.querySelectorAll('.row');
-        expect(rows).toExist();
+        expect(rows).toBeTruthy();
         expect(rows.length).toBe(3);
     });
 

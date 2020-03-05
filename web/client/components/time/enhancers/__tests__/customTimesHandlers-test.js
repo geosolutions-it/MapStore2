@@ -25,8 +25,8 @@ describe('customTimesHandlers enhancer', () => {
     });
     it('rendering with defaults defines handlers', () => {
         const Sink = clickHandlers(createSink( props => {
-            expect(props.clickHandler).toExist();
-            expect(props.timechangedHandler).toExist();
+            expect(props.clickHandler).toBeTruthy();
+            expect(props.timechangedHandler).toBeTruthy();
 
         }));
         ReactDOM.render(<Sink />, document.getElementById("container"));
@@ -49,10 +49,10 @@ describe('customTimesHandlers enhancer', () => {
 
         }));
         const cmp = ReactDOM.render(<Sink selectedLayer={SELECTED_LAYER} setCurrentTime={actions.setCurrentTime} />, document.getElementById("container"));
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
         expect(spyCallback).toHaveBeenCalled();
-        expect(spyCallback.calls[0].arguments[0]).toBe(DATE);
-        expect(spyCallback.calls[0].arguments[1]).toBe(SELECTED_LAYER);
+        expect(spyCallback.mock.calls[0][0]).toBe(DATE);
+        expect(spyCallback.mock.calls[0][1]).toBe(SELECTED_LAYER);
     });
     it('click triggers selectGroup', () => {
         const actions = {
@@ -73,9 +73,9 @@ describe('customTimesHandlers enhancer', () => {
 
         }));
         const cmp = ReactDOM.render(<Sink selectGroup={actions.selectGroup} />, document.getElementById("container"));
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
         expect(spyCallback).toHaveBeenCalled();
-        expect(spyCallback.calls[0].arguments[0]).toBe(LAYER);
+        expect(spyCallback.mock.calls[0][0]).toBe(LAYER);
     });
 
     it('handlers do not trigger setCurrentTime when playing', () => { // to skip user's actions during animation on timeline
@@ -96,8 +96,8 @@ describe('customTimesHandlers enhancer', () => {
 
         }));
         const cmp = ReactDOM.render(<Sink status="PLAY" setCurrentTime={actions.setCurrentTime} />, document.getElementById("container"));
-        expect(cmp).toExist();
-        expect(spyCallback).toNotHaveBeenCalled();
+        expect(cmp).toBeTruthy();
+        expect(spyCallback).not.toHaveBeenCalled();
     });
     it('click triggers  do not trigger selectGroup when playing ', () => {
         const actions = {
@@ -118,8 +118,8 @@ describe('customTimesHandlers enhancer', () => {
 
         }));
         const cmp = ReactDOM.render(<Sink status="PLAY" selectGroup={actions.selectGroup} />, document.getElementById("container"));
-        expect(cmp).toExist();
-        expect(spyCallback).toNotHaveBeenCalled();
+        expect(cmp).toBeTruthy();
+        expect(spyCallback).not.toHaveBeenCalled();
     });
 
     it('timechangedHandler for currentTime', () => {
@@ -137,10 +137,10 @@ describe('customTimesHandlers enhancer', () => {
 
         }));
         const cmp = ReactDOM.render(<Sink setCurrentTime={actions.setCurrentTime} />, document.getElementById("container"));
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
         expect(spyCallback).toHaveBeenCalled();
-        expect(spyCallback.calls[0].arguments[0]).toBe(DATE);
-        expect(spyCallback.calls[0].arguments[1]).toBe(undefined);
+        expect(spyCallback.mock.calls[0][0]).toBe(DATE);
+        expect(spyCallback.mock.calls[0][1]).toBe(undefined);
     });
     it('timechangedHandler for currentTime with selected layer', () => {
         const actions = {
@@ -158,10 +158,10 @@ describe('customTimesHandlers enhancer', () => {
 
         }));
         const cmp = ReactDOM.render(<Sink selectedLayer={SELECTED_LAYER} setCurrentTime={actions.setCurrentTime} />, document.getElementById("container"));
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
         expect(spyCallback).toHaveBeenCalled();
-        expect(spyCallback.calls[0].arguments[0]).toBe(DATE);
-        expect(spyCallback.calls[0].arguments[1]).toBe(SELECTED_LAYER);
+        expect(spyCallback.mock.calls[0][0]).toBe(DATE);
+        expect(spyCallback.mock.calls[0][1]).toBe(SELECTED_LAYER);
     });
     it('timechangedHandler with range', () => {
         const actions = {
@@ -184,10 +184,10 @@ describe('customTimesHandlers enhancer', () => {
 
         }));
         const cmp = ReactDOM.render(<Sink currentTime={CURRENT_TIME} currentTimeRange={currentTimeRange} setCurrentTime={actions.setCurrentTime} setOffset={actions.setOffset} />, document.getElementById("container"));
-        expect(cmp).toExist();
-        expect(spyOffsetCallback).toNotHaveBeenCalled();
+        expect(cmp).toBeTruthy();
+        expect(spyOffsetCallback).not.toHaveBeenCalled();
         expect(spyCurrentTimeCallback).toHaveBeenCalled();
-        expect(spyCurrentTimeCallback.calls[0].arguments[0]).toBe(NEW_DATE);
+        expect(spyCurrentTimeCallback.mock.calls[0][0]).toBe(NEW_DATE);
     });
 
     it('timechangedHandler for offsetTime', () => {
@@ -209,9 +209,9 @@ describe('customTimesHandlers enhancer', () => {
 
         }));
         const cmp = ReactDOM.render(<Sink currentTime={CURRENT_TIME} currentTimeRange={currentTimeRange} setOffset={actions.setOffset} />, document.getElementById("container"));
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
         expect(spyCallback).toHaveBeenCalled();
-        expect(spyCallback.calls[0].arguments[0]).toBe(NEW_DATE);
+        expect(spyCallback.mock.calls[0][0]).toBe(NEW_DATE);
     });
     it('timechangedHandler switch times when move currentTime', () => {
         const actions = {
@@ -234,11 +234,11 @@ describe('customTimesHandlers enhancer', () => {
 
         }));
         const cmp = ReactDOM.render(<Sink currentTime={CURRENT_TIME} currentTimeRange={currentTimeRange} setCurrentTime={actions.setCurrentTime} setOffset={actions.setOffset} />, document.getElementById("container"));
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
         expect(spyOffsetCallback).toHaveBeenCalled();
         expect(spyCurrentTimeCallback).toHaveBeenCalled();
-        expect(spyOffsetCallback.calls[0].arguments[0]).toBe(NEW_DATE);
-        expect(spyCurrentTimeCallback.calls[0].arguments[0]).toBe(CURRENT_OFFSET);
+        expect(spyOffsetCallback.mock.calls[0][0]).toBe(NEW_DATE);
+        expect(spyCurrentTimeCallback.mock.calls[0][0]).toBe(CURRENT_OFFSET);
     });
     it('timechangedHandler switch times when move offsetTime', () => {
         const actions = {
@@ -261,11 +261,11 @@ describe('customTimesHandlers enhancer', () => {
 
         }));
         const cmp = ReactDOM.render(<Sink currentTime={CURRENT_TIME} currentTimeRange={currentTimeRange} setCurrentTime={actions.setCurrentTime} setOffset={actions.setOffset} />, document.getElementById("container"));
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
         expect(spyOffsetCallback).toHaveBeenCalled();
         expect(spyCurrentTimeCallback).toHaveBeenCalled();
-        expect(spyOffsetCallback.calls[0].arguments[0]).toBe(CURRENT_TIME);
-        expect(spyCurrentTimeCallback.calls[0].arguments[0]).toBe(NEW_DATE);
+        expect(spyOffsetCallback.mock.calls[0][0]).toBe(CURRENT_TIME);
+        expect(spyCurrentTimeCallback.mock.calls[0][0]).toBe(NEW_DATE);
     });
     it('timechangedHandler for playback controls (startPlaybackTime), with switch)', () => {
         const actions = {
@@ -287,11 +287,11 @@ describe('customTimesHandlers enhancer', () => {
 
         }));
         const cmp = ReactDOM.render(<Sink playbackRange={playbackRange} setPlaybackRange={actions.setPlaybackRange} />, document.getElementById("container"));
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
         expect(spyCallback).toHaveBeenCalled();
         // dates switch
-        expect(spyCallback.calls[0].arguments[0].startPlaybackTime).toBe(CURRENT_PLAYBACK_END);
-        expect(spyCallback.calls[0].arguments[0].endPlaybackTime).toBe(DATE);
+        expect(spyCallback.mock.calls[0][0].startPlaybackTime).toBe(CURRENT_PLAYBACK_END);
+        expect(spyCallback.mock.calls[0][0].endPlaybackTime).toBe(DATE);
     });
     it('timechangedHandler for playback controls (endPlaybackTime)', () => {
         const actions = {
@@ -312,10 +312,10 @@ describe('customTimesHandlers enhancer', () => {
 
         }));
         const cmp = ReactDOM.render(<Sink playbackRange={playbackRange} setPlaybackRange={actions.setPlaybackRange} />, document.getElementById("container"));
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
         expect(spyCallback).toHaveBeenCalled();
         // dates switch
-        expect(spyCallback.calls[0].arguments[0].startPlaybackTime).toBe(CURRENT_PLAYBACK_START);
-        expect(spyCallback.calls[0].arguments[0].endPlaybackTime).toBe(DATE);
+        expect(spyCallback.mock.calls[0][0].startPlaybackTime).toBe(CURRENT_PLAYBACK_START);
+        expect(spyCallback.mock.calls[0][0].endPlaybackTime).toBe(DATE);
     });
 });

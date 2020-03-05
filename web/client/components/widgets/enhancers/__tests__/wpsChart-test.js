@@ -25,7 +25,7 @@ describe('wpsChart enhancer', () => {
     it('wpsChart data retrival', (done) => {
         const Sink = wpsChart(createSink( ({data, loading} = {}) => {
             if (!loading) {
-                expect(data).toExist();
+                expect(data).toBeTruthy();
                 expect(data.length).toBe(6);
                 done();
             }
@@ -47,7 +47,7 @@ describe('wpsChart enhancer', () => {
     it('wpsChart error management', (done) => {
         const Sink = wpsChart(createSink( ({error, loading} = {}) => {
             if (!loading && error) {
-                expect(error).toExist();
+                expect(error).toBeTruthy();
                 done();
             }
         }));

@@ -25,11 +25,11 @@ describe('This test for InfoButton', () => {
     // test DEFAULTS
     it('creates the component with defaults', () => {
         const about = ReactDOM.render(<InfoButton/>, document.getElementById("container"));
-        expect(about).toExist();
+        expect(about).toBeTruthy();
 
         const aboutDom = ReactDOM.findDOMNode(about);
-        expect(aboutDom).toExist();
-        expect(aboutDom.id).toExist();
+        expect(aboutDom).toBeTruthy();
+        expect(aboutDom.id).toBeTruthy();
 
         const btnList = aboutDom.getElementsByClassName('btn-info');
         expect(btnList.length).toBe(1);
@@ -187,7 +187,7 @@ describe('This test for InfoButton', () => {
 
     it('creates the component with a ImageButton', () => {
         const about = ReactDOM.render(<InfoButton btnType="image"/>, document.getElementById("container"));
-        expect(about).toExist();
+        expect(about).toBeTruthy();
         const aboutDom = ReactDOM.findDOMNode(about);
         expect(aboutDom.getElementsByClassName('btn-primary').length).toBe(0);
         expect(aboutDom.getElementsByTagName('img').length).toBe(1);

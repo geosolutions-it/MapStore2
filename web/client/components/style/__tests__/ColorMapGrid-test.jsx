@@ -24,12 +24,12 @@ describe("Test the ColorMap component", () => {
 
     it('creates component with defaults', () => {
         const cmp = ReactDOM.render(<ColorMap />, document.getElementById("container"));
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
     });
 
     it('creates component with element', (done) => {
         const cmp = ReactDOM.render(<ColorMap entries={[{color: '#9013fe', quantity: 0, label: 'label'}]}/>, document.getElementById("container"));
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
         cmp.selectEntry({node: {childIndex: 0}});
         setTimeout(() => {
             cmp.valueChanged();

@@ -26,12 +26,12 @@ describe('Test for AttributeSelector component', () => {
     it('render with defaults', () => {
         ReactDOM.render(<AttributeSelector/>, document.getElementById("container"));
         const el = document.getElementsByClassName("data-attribute-selector")[0];
-        expect(el).toExist();
+        expect(el).toBeTruthy();
     });
     it('render with attributes, checked by default', () => {
         ReactDOM.render(<AttributeSelector attributes={[{label: "label", attribute: "attr"}]}/>, document.getElementById("container"));
         const check = document.getElementsByTagName("input")[0];
-        expect(check).toExist();
+        expect(check).toBeTruthy();
         expect(check.checked).toBe(true);
     });
     it('check hide is not selected', () => {

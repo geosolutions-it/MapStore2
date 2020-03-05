@@ -16,12 +16,12 @@ const {
 describe('dimension actions', () => {
     it('updateLayerDimensionData', () => {
         const retVal = updateLayerDimensionData();
-        expect(retVal).toExist();
+        expect(retVal).toBeTruthy();
         expect(retVal.type).toBe(UPDATE_LAYER_DIMENSION_DATA);
     });
     it('setCurrentTime', () => {
         const retVal = setCurrentTime();
-        expect(retVal).toExist();
+        expect(retVal).toBeTruthy();
         expect(retVal.type).toBe(SET_CURRENT_TIME);
     });
 });

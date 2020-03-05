@@ -58,18 +58,18 @@ describe('StandardApp', () => {
 
     it('creates a default app', () => {
         const app = ReactDOM.render(<StandardApp/>, document.getElementById("container"));
-        expect(app).toExist();
+        expect(app).toBeTruthy();
     });
 
     it('creates a default app with onInit', (done) => {
         const init = {
             onInit: (cfg) => {
-                expect(cfg).toExist();
+                expect(cfg).toBeTruthy();
                 done();
             }
         };
         let app = ReactDOM.render(<StandardApp onInit={init.onInit}/>, document.getElementById("container"));
-        expect(app).toExist();
+        expect(app).toBeTruthy();
     });
 
     it('creates a default app with the given store creator', (done) => {
@@ -86,7 +86,7 @@ describe('StandardApp', () => {
 
 
         const app = ReactDOM.render(<StandardApp appStore={store}/>, document.getElementById("container"));
-        expect(app).toExist();
+        expect(app).toBeTruthy();
     });
 
     it('creates a default app and runs the initial actions', (done) => {
@@ -108,12 +108,12 @@ describe('StandardApp', () => {
 
 
         const app = ReactDOM.render(<StandardApp appStore={store} initialActions={[myaction.bind(null, 10)]}/>, document.getElementById("container"));
-        expect(app).toExist();
+        expect(app).toBeTruthy();
     });
 
     it('creates a default app and reads initialState from localConfig', (done) => {
         const store = (plugins, storeOpts) => {
-            expect(storeOpts.initialState.defaultState.test).toExist();
+            expect(storeOpts.initialState.defaultState.test).toBeTruthy();
             expect(storeOpts.initialState.defaultState.testMode).toBe('EXPRESSION_MODE_desktop');
             done();
             return {
@@ -136,7 +136,7 @@ describe('StandardApp', () => {
             }
         };
         const app = ReactDOM.render(<StandardApp appStore={store} storeOpts={storeOpts}/>, document.getElementById("container"));
-        expect(app).toExist();
+        expect(app).toBeTruthy();
     });
 
     it('creates a default app and reads initialState with mode', (done) => {
@@ -164,12 +164,12 @@ describe('StandardApp', () => {
             }
         };
         const app = ReactDOM.render(<StandardApp mode={'TEST'} appStore={store} storeOpts={storeOpts} />, document.getElementById("container"));
-        expect(app).toExist();
+        expect(app).toBeTruthy();
     });
 
     it('test the parseInitialState func', (done) => {
         const store = (plugins, storeOpts) => {
-            expect(storeOpts.initialState.defaultState.test).toExist();
+            expect(storeOpts.initialState.defaultState.test).toBeTruthy();
             done();
             return {
                 dispatch() {
@@ -199,7 +199,7 @@ describe('StandardApp', () => {
             }
         };
         const app = ReactDOM.render(<StandardApp appStore={store} storeOpts={storeOpts}/>, document.getElementById("container"));
-        expect(app).toExist();
+        expect(app).toBeTruthy();
         const parsedInitialState = app.parseInitialState(storeOpts.initialState, {});
         expect(parsedInitialState.defaultState.withArray.length).toBe(1);
         expect(parsedInitialState.defaultState.withArrayEmpty.length).toBe(0);
@@ -223,7 +223,7 @@ describe('StandardApp', () => {
                 }
             });
             const app = ReactDOM.render(<StandardApp appStore={store} appComponent={mycomponent}/>, document.getElementById("container"));
-            expect(app).toExist();
+            expect(app).toBeTruthy();
 
             const dom = ReactDOM.findDOMNode(app);
             expect(dom.className).toBe('mycomponent');
@@ -257,7 +257,7 @@ describe('StandardApp', () => {
             });
 
             const app = ReactDOM.render(<StandardApp appStore={store} appComponent={mycomponent} pluginsDef={pluginsDef}/>, document.getElementById("container"));
-            expect(app).toExist();
+            expect(app).toBeTruthy();
 
             const dom = ReactDOM.findDOMNode(app);
             expect(dom.getElementsByClassName('MyPlugin').length).toBe(1);
@@ -279,7 +279,7 @@ describe('StandardApp', () => {
 
 
         const app = ReactDOM.render(<StandardApp appStore={store} enableExtensions />, document.getElementById("container"));
-        expect(app).toExist();
+        expect(app).toBeTruthy();
         setTimeout(() => {
             expect(mockAxios.history.get.length).toBe(2);
             expect(mockAxios.history.get[1].url).toBe("extensions.json");
@@ -300,10 +300,10 @@ describe('StandardApp', () => {
 
 
         const app = ReactDOM.render(<StandardApp appStore={store} enableExtensions={false} />, document.getElementById("container"));
-        expect(app).toExist();
+        expect(app).toBeTruthy();
         setTimeout(() => {
             expect(mockAxios.history.get.length).toBe(1);
-            expect(mockAxios.history.get[0].url).toNotBe("extensions.json");
+            expect(mockAxios.history.get[0].url).not.toBe("extensions.json");
             done();
         }, 0);
     });
@@ -326,7 +326,7 @@ describe('StandardApp', () => {
 
 
         const app = ReactDOM.render(<StandardApp appStore={store} enableExtensions/>, document.getElementById("container"));
-        expect(app).toExist();
+        expect(app).toBeTruthy();
         setTimeout(() => {
             expect(mockAxios.history.get.length).toBe(3);
             expect(mockAxios.history.get[1].url).toBe("extensions.json");

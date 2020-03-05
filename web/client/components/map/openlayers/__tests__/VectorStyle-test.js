@@ -84,9 +84,9 @@ describe('Test VectorStyle', () => {
         );
         expect(typeof olStyle).toBe("object");
         expect(olStyle.getRadius()).toBe(800);
-        expect(olStyle.getStroke()).toNotBe(null);
+        expect(olStyle.getStroke()).not.toBe(null);
         expect(olStyle.getStroke().getColor()).toBe("#223366");
-        expect(olStyle.getFill()).toNotBe(null);
+        expect(olStyle.getFill()).not.toBe(null);
         expect(olStyle.getFill().getColor()).toBe("#998877");
     });
     it('getMarkerStyle, default', () => {
@@ -177,9 +177,9 @@ describe('Test VectorStyle', () => {
         expect(olStyle[1].getText().getFill().getColor()).toEqual("#FFFFFF");
         // **************** highlight ****************
         const highlightStyle = olStyle[2];
-        expect(highlightStyle).toExist();
+        expect(highlightStyle).toBeTruthy();
         const highlightStyleIcon = highlightStyle.getImage();
-        expect(highlightStyleIcon).toExist();
+        expect(highlightStyleIcon).toBeTruthy();
     });
     it('getMarkerStyle, with a Marker Style with url, no shadow, no highlight', () => {
         const markerStyle = {
@@ -463,7 +463,7 @@ describe('Test VectorStyle', () => {
             iconColor: "blue"
         };
         const geomFunc = getGeometryTrasformation(markerStyle);
-        expect(geomFunc).toNotBe(null);
+        expect(geomFunc).not.toBe(null);
         const feature = new Feature({
             geometry: new Point([1, 2]),
             labelPoint: new Point([1, 1]),
@@ -479,7 +479,7 @@ describe('Test VectorStyle', () => {
             geometry: "centerPoint"
         };
         const geomFunc = getGeometryTrasformation(markerStyle);
-        expect(geomFunc).toNotBe(null);
+        expect(geomFunc).not.toBe(null);
         const feature = new Feature({
             geometry: new Polygon([[[1, 2], [2, 2], [3, 2], [1, 2]]]),
             labelPoint: new Point([1, 1]),
@@ -493,7 +493,7 @@ describe('Test VectorStyle', () => {
             geometry: "lineToArc"
         };
         const geomFunc = getGeometryTrasformation(markerStyle);
-        expect(geomFunc).toNotBe(null);
+        expect(geomFunc).not.toBe(null);
         const feature = new Feature({
             geometry: new MultiPoint([[1, 2], [2, 2], [3, 2], [1, 2]]),
             labelPoint: new Point([1, 1]),
@@ -507,7 +507,7 @@ describe('Test VectorStyle', () => {
             geometry: "lineToArc"
         };
         const geomFunc = getGeometryTrasformation(markerStyle);
-        expect(geomFunc).toNotBe(null);
+        expect(geomFunc).not.toBe(null);
         const feature = new Feature({
             geometry: new Polygon([[[1, 2], [2, 2], [3, 2], [1, 2]]]),
             labelPoint: new Point([1, 1]),
@@ -578,8 +578,8 @@ describe('Test VectorStyle', () => {
                 }
             }
         }, true);
-        expect(style).toExist();
-        expect(style.getImage()).toExist();
+        expect(style).toBeTruthy();
+        expect(style.getImage()).toBeTruthy();
         // TODO: add  more tests from LegacyVectorStyle here
     });
     it('getStyle can return a promise', (done) => {
@@ -593,8 +593,8 @@ describe('Test VectorStyle', () => {
             }
         }, true);
         stylePromise.then(style => {
-            expect(style).toExist();
-            expect(style.getImage()).toExist();
+            expect(style).toBeTruthy();
+            expect(style.getImage()).toBeTruthy();
             done();
         });
     });
@@ -636,8 +636,8 @@ describe('Test VectorStyle', () => {
             }
         }, true);
         stylePromise.then(style => {
-            expect(style).toExist();
-            expect(style.getImage()).toExist();
+            expect(style).toBeTruthy();
+            expect(style.getImage()).toBeTruthy();
             done();
         });
     });

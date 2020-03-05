@@ -787,7 +787,7 @@ describe('MyPlugin Test', () => {
     it('creates MyPlugin with default configuration', () => {
         const {Plugin, store, actions, containers } = getPluginForTest(MyPlugin, initialState);
         ReactDOM.render(<Plugin />, document.getElementById("container"));
-        expect(document.getElementById('<my plugin id>')).toExist();
+        expect(document.getElementById('<my plugin id>')).toBeTruthy();
         expect(...);
     });
     // use pluginCfg to override plugins properties
@@ -796,7 +796,7 @@ describe('MyPlugin Test', () => {
         ReactDOM.render(<Plugin pluginCfg={{
             property: 'value'
         }}/>, document.getElementById("container"));
-        expect(document.getElementById('<my plugin id>')).toExist();
+        expect(document.getElementById('<my plugin id>')).toBeTruthy();
         expect(...);
     });
 

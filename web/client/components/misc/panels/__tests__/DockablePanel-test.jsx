@@ -25,16 +25,16 @@ describe("test DockablePanel", () => {
     it('test as modal', () => {
         ReactDOM.render(<DockablePanel show/>, document.getElementById("container"));
         const modal = document.getElementsByClassName('ms-resizable-modal')[0];
-        expect(modal).toExist();
+        expect(modal).toBeTruthy();
         const dock = document.getElementsByClassName('ms-side-panel')[0];
-        expect(dock).toNotExist();
+        expect(dock).toBeFalsy();
     });
 
     it('test as dock', () => {
         ReactDOM.render(<DockablePanel dock/>, document.getElementById("container"));
         const modal = document.getElementsByClassName('ms-resizable-modal')[0];
-        expect(modal).toNotExist();
+        expect(modal).toBeFalsy();
         const dock = document.getElementsByClassName('ms-side-panel')[0];
-        expect(dock).toExist();
+        expect(dock).toBeTruthy();
     });
 });

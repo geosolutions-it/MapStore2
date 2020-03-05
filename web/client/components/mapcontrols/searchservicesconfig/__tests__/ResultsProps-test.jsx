@@ -27,7 +27,7 @@ describe("test ResultProps component", () => {
 
     it('test ResultProps creation', () => {
         const tb = ReactDOM.render(<ResultsProps.Element/>, document.getElementById("container"));
-        expect(tb).toExist();
+        expect(tb).toBeTruthy();
         const labels = ReactTestUtils.scryRenderedDOMComponentsWithClass(tb, "control-label");
         expect(labels.length).toBe(4);
     });
@@ -40,9 +40,9 @@ describe("test ResultProps component", () => {
             launchInfoPanel: "single_layer"
         };
         const tb = ReactDOM.render(<ResultsProps.Element service={service}/>, document.getElementById("container"));
-        expect(tb).toExist();
+        expect(tb).toBeTruthy();
         const infos = ReactTestUtils.findRenderedDOMComponentWithClass(tb, "priority-info with-top-margin");
-        expect(infos).toExist();
+        expect(infos).toBeTruthy();
         const labels = ReactTestUtils.scryRenderedDOMComponentsWithClass(tb, "control-label");
         expect(labels.length).toBe(4);
         expect(labels[0].innerText).toBe("search.s_title");

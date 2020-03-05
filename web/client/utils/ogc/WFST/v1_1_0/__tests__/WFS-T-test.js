@@ -21,26 +21,26 @@ const expectedUpdate = require('raw-loader!../../../../../test-resources/wfst/up
 describe('Test WFS-T request bodies generation', () => {
     it('WFS-T insert', () => {
         const result = insert(wyoming, describeStates);
-        expect(result).toExist();
+        expect(result).toBeTruthy();
     });
     it('WFS-T transaction with insert polygon', () => {
         const result = transaction([insert(wyoming, describeStates)], featureTypeSchema(describeStates));
-        expect(result).toExist();
+        expect(result).toBeTruthy();
         expect(result).toEqual(expectedInsertWyoming.replace(/[\r\n]/g, ''));
     });
     it('WFS-T transaction with insert multypolygon', () => {
         const result = transaction([insert(wyoming, describeStates)], featureTypeSchema(describeStates));
-        expect(result).toExist();
+        expect(result).toBeTruthy();
         expect(result).toEqual(expectedInsertWyoming.replace(/[\n\r]/g, ''));
     });
     it('WFS-T transaction with insert point', () => {
         const result = transaction([insert(museam, describePois)], featureTypeSchema(describePois));
-        expect(result).toExist();
+        expect(result).toBeTruthy();
         expect(result).toEqual(expectedInsertmuseam.replace(/[\n\r]/g, ''));
     });
     it('WFS-T transaction with delete', () => {
         const result = transaction([deleteFeature(museam, describePois)], featureTypeSchema(describePois));
-        expect(result).toExist();
+        expect(result).toBeTruthy();
         expect(result).toEqual(expectedDelete.replace(/[\r\n]/g, ''));
     });
     it('WFS-T transaction with update', () => {
@@ -48,7 +48,7 @@ describe('Test WFS-T request bodies generation', () => {
             [update([property("NAME", "newName"), fidFilter("ogc", "poi.7")], describePois)
             ],
             featureTypeSchema(describePois));
-        expect(result).toExist();
+        expect(result).toBeTruthy();
         expect(result).toEqual(expectedUpdate.replace(/[\r\n]/g, ''));
     });
 });

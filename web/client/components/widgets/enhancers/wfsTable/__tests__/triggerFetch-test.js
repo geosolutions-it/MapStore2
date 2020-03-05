@@ -28,8 +28,8 @@ describe('triggerFetch stream', () => {
             .bufferCount(3)
             .subscribe(
                 ([p1, p2]) => {
-                    expect(p1.options.viewParams).toNotExist();
-                    expect(p2.options.viewParams).toExist();
+                    expect(p1.options.viewParams).toBeFalsy();
+                    expect(p2.options.viewParams).toBeTruthy();
                     done();
                 }
             );

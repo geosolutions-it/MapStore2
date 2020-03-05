@@ -36,18 +36,18 @@ describe('test DefaultLayer module component', () => {
             type: 'wms'
         };
         const comp = ReactDOM.render(<Layer visibilityCheckType="checkbox" node={l} />, document.getElementById("container"));
-        expect(comp).toExist();
+        expect(comp).toBeTruthy();
 
         const domNode = ReactDOM.findDOMNode(comp);
-        expect(domNode).toExist();
+        expect(domNode).toBeTruthy();
 
         const checkbox = domNode.getElementsByTagName('input').item(0);
-        expect(checkbox).toExist();
+        expect(checkbox).toBeTruthy();
         expect(parseInt(checkbox.dataset.position, 10)).toBe(l.storeIndex);
         expect(checkbox.checked).toBe(l.visibility);
 
         const label = domNode.getElementsByClassName('toc-title').item(0);
-        expect(label).toExist();
+        expect(label).toBeTruthy();
         expect(label.innerHTML).toBe(l.title || l.name);
     });
 
@@ -59,18 +59,18 @@ describe('test DefaultLayer module component', () => {
             storeIndex: 9
         };
         const comp = ReactDOM.render(<Layer visibilityCheckType="checkbox" node={l} />, document.getElementById("container"));
-        expect(comp).toExist();
+        expect(comp).toBeTruthy();
 
         const domNode = ReactDOM.findDOMNode(comp);
-        expect(domNode).toExist();
+        expect(domNode).toBeTruthy();
 
         const checkbox = domNode.getElementsByTagName('input').item(0);
-        expect(checkbox).toExist();
+        expect(checkbox).toBeTruthy();
         expect(parseInt(checkbox.dataset.position, 10)).toBe(l.storeIndex);
         expect(checkbox.checked).toBe(l.visibility);
 
         const label = domNode.getElementsByClassName('toc-title').item(0);
-        expect(label).toExist();
+        expect(label).toBeTruthy();
         expect(label.innerHTML).toBe(l.title || l.name);
     });
 
@@ -96,13 +96,13 @@ describe('test DefaultLayer module component', () => {
                 propertiesChangeHandler={handler}
                 node={l}
             />, document.getElementById("container"));
-        expect(comp).toExist();
+        expect(comp).toBeTruthy();
 
         const domNode = ReactDOM.findDOMNode(comp);
-        expect(domNode).toExist();
+        expect(domNode).toBeTruthy();
 
         const checkbox = domNode.getElementsByTagName('input').item(0);
-        expect(checkbox).toExist();
+        expect(checkbox).toBeTruthy();
 
         checkbox.checked = !l.visibility;
         TestUtils.Simulate.change(checkbox, {
@@ -128,13 +128,13 @@ describe('test DefaultLayer module component', () => {
         let spy = expect.spyOn(actions, "onToggle");
         const comp = ReactDOM.render(<Layer visibilityCheckType="checkbox" node={l} activateLegendTool onToggle={actions.onToggle}/>,
             document.getElementById("container"));
-        expect(comp).toExist();
+        expect(comp).toBeTruthy();
         const domNode = ReactDOM.findDOMNode(comp);
-        expect(domNode).toExist();
+        expect(domNode).toBeTruthy();
         const tool = ReactDOM.findDOMNode(TestUtils.scryRenderedDOMComponentsWithClass(comp, "toc-legend")[0]);
-        expect(tool).toExist();
+        expect(tool).toBeTruthy();
         tool.click();
-        expect(spy.calls.length).toBe(1);
+        expect(spy.mock.calls.length).toBe(1);
     });
 
     it('tests opacity tool', () => {
@@ -148,11 +148,11 @@ describe('test DefaultLayer module component', () => {
 
         const comp = ReactDOM.render(<Layer visibilityCheckType="checkbox" node={l} activateLegendTool/>,
             document.getElementById("container"));
-        expect(comp).toExist();
+        expect(comp).toBeTruthy();
         const domNode = ReactDOM.findDOMNode(comp);
-        expect(domNode).toExist();
+        expect(domNode).toBeTruthy();
         const tool = domNode.getElementsByClassName("noUi-target")[0];
-        expect(tool).toExist();
+        expect(tool).toBeTruthy();
         expect(tool.getAttribute('disabled')).toBe(null);
     });
 
@@ -168,11 +168,11 @@ describe('test DefaultLayer module component', () => {
 
         const comp = ReactDOM.render(<Layer visibilityCheckType="checkbox" node={l} activateLegendTool/>,
             document.getElementById("container"));
-        expect(comp).toExist();
+        expect(comp).toBeTruthy();
         const domNode = ReactDOM.findDOMNode(comp);
-        expect(domNode).toExist();
+        expect(domNode).toBeTruthy();
         const tool = domNode.getElementsByClassName("noUi-target")[0];
-        expect(tool).toExist();
+        expect(tool).toBeTruthy();
         expect(tool.getAttribute('disabled')).toBe('true');
     });
 
@@ -188,9 +188,9 @@ describe('test DefaultLayer module component', () => {
 
         const comp = ReactDOM.render(<Layer visibilityCheckType="checkbox" node={l} activateLegendTool={false} activateOpacityTool={false}/>,
             document.getElementById("container"));
-        expect(comp).toExist();
+        expect(comp).toBeTruthy();
         const domNode = ReactDOM.findDOMNode(comp);
-        expect(domNode).toExist();
+        expect(domNode).toBeTruthy();
         const collapsible = domNode.getElementsByClassName("collapsible-toc");
         expect(collapsible.length).toBe(0);
         const button = domNode.getElementsByClassName("toc-legend");
@@ -209,9 +209,9 @@ describe('test DefaultLayer module component', () => {
 
         const comp = ReactDOM.render(<Layer visibilityCheckType="checkbox" node={l} activateLegendTool activateOpacityTool={false}/>,
             document.getElementById("container"));
-        expect(comp).toExist();
+        expect(comp).toBeTruthy();
         const domNode = ReactDOM.findDOMNode(comp);
-        expect(domNode).toExist();
+        expect(domNode).toBeTruthy();
         const collapsible = domNode.getElementsByClassName("collapsible-toc");
         expect(collapsible.length).toBe(1);
         const button = domNode.getElementsByClassName("toc-legend");
@@ -232,9 +232,9 @@ describe('test DefaultLayer module component', () => {
 
         const comp = ReactDOM.render(<Layer showFullTitleOnExpand node={l} />,
             document.getElementById("container"));
-        expect(comp).toExist();
+        expect(comp).toBeTruthy();
         const domNode = ReactDOM.findDOMNode(comp);
-        expect(domNode).toExist();
+        expect(domNode).toBeTruthy();
         const title = domNode.getElementsByClassName("toc-full-title");
         expect(title.length).toBe(1);
     });
@@ -252,7 +252,7 @@ describe('test DefaultLayer module component', () => {
         const comp = ReactDOM.render(<Layer showFullTitleOnExpand={false} node={l} />,
             document.getElementById("container"));
         const domNode = ReactDOM.findDOMNode(comp);
-        expect(domNode).toExist();
+        expect(domNode).toBeTruthy();
         const title = domNode.getElementsByClassName("toc-full-title");
         expect(title.length).toBe(0);
 
@@ -284,7 +284,7 @@ describe('test DefaultLayer module component', () => {
         const comp = ReactDOM.render(<Layer indicators={indicators} node={l} />,
             document.getElementById("container"));
         const domNode = ReactDOM.findDOMNode(comp);
-        expect(domNode).toExist();
+        expect(domNode).toBeTruthy();
         const title = domNode.getElementsByClassName("TIME_INDICATOR");
         expect(title.length).toBe(1);
     });
@@ -301,7 +301,7 @@ describe('test DefaultLayer module component', () => {
         const comp = ReactDOM.render(<Layer showFullTitleOnExpand={false} node={l} />,
             document.getElementById("container"));
         const domNode = ReactDOM.findDOMNode(comp);
-        expect(domNode).toExist();
+        expect(domNode).toBeTruthy();
         const title = domNode.getElementsByClassName("chevron-left");
         expect(title.length).toBe(0);
     });
@@ -318,7 +318,7 @@ describe('test DefaultLayer module component', () => {
         const comp = ReactDOM.render(<Layer node={l}/>,
             document.getElementById("container"));
         const domNode = ReactDOM.findDOMNode(comp);
-        expect(domNode).toExist();
+        expect(domNode).toBeTruthy();
         const tooltips = domNode.getElementsByClassName('noUi-tooltip');
         expect(tooltips.length).toBe(1);
         expect(tooltips[0].innerHTML).toBe('50 %');
@@ -336,7 +336,7 @@ describe('test DefaultLayer module component', () => {
         const comp = ReactDOM.render(<Layer hideOpacityTooltip node={l}/>,
             document.getElementById("container"));
         const domNode = ReactDOM.findDOMNode(comp);
-        expect(domNode).toExist();
+        expect(domNode).toBeTruthy();
         const tooltips = domNode.getElementsByClassName('noUi-tooltip');
         expect(tooltips.length).toBe(0);
     });
@@ -354,7 +354,7 @@ describe('test DefaultLayer module component', () => {
         const comp = ReactDOM.render(<Layer hideOpacityTooltip node={l} />,
             document.getElementById("container"));
         const domNode = ReactDOM.findDOMNode(comp);
-        expect(domNode).toNotExist();
+        expect(domNode).toBeFalsy();
     });
 
     it('showComponent true shows item', () => {
@@ -370,7 +370,7 @@ describe('test DefaultLayer module component', () => {
         const comp = ReactDOM.render(<Layer hideOpacityTooltip node={l} />,
             document.getElementById("container"));
         const domNode = ReactDOM.findDOMNode(comp);
-        expect(domNode).toExist();
+        expect(domNode).toBeTruthy();
     });
 
     it('test dummy node', () => {
@@ -381,12 +381,12 @@ describe('test DefaultLayer module component', () => {
 
         const comp = ReactDOM.render(<Layer node={node}/>, document.getElementById("container"));
         const domNode = ReactDOM.findDOMNode(comp);
-        expect(domNode).toExist();
-        expect(domNode.style).toExist();
+        expect(domNode).toBeTruthy();
+        expect(domNode.style).toBeTruthy();
         expect(domNode.style.opacity).toBe('0');
         expect(domNode.style.boxShadow).toBe('none');
         const headNode = domNode.getElementsByClassName('toc-default-layer-head')[0];
-        expect(headNode).toExist();
+        expect(headNode).toBeTruthy();
         expect(headNode.childNodes.length).toBe(0);
     });
 });

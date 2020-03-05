@@ -12,7 +12,7 @@ const { configureError, loadMapConfig, loadMapInfo, configureMap, MAP_CONFIG_LOA
 describe('Test configuration related actions', () => {
     it('loadMapConfig', () => {
         const retVal = loadMapConfig("test", 1);
-        expect(retVal).toExist();
+        expect(retVal).toBeTruthy();
         expect(retVal.type).toBe(LOAD_MAP_CONFIG);
         expect(retVal.configName).toBe("test");
         expect(retVal.mapId).toBe(1);
@@ -22,20 +22,20 @@ describe('Test configuration related actions', () => {
         const mapId = 1;
         const DATA = {};
         const retVal = configureMap(DATA, mapId);
-        expect(retVal).toExist();
+        expect(retVal).toBeTruthy();
         expect(retVal.type).toBe(MAP_CONFIG_LOADED);
         expect(retVal);
     });
 
     it('configureError', () => {
         const retVal = configureError();
-        expect(retVal).toExist();
+        expect(retVal).toBeTruthy();
         expect(retVal.type).toBe(MAP_CONFIG_LOAD_ERROR);
     });
 
     it('getResource access info', () => {
         const retVal = loadMapInfo(1);
-        expect(retVal).toExist();
+        expect(retVal).toBeTruthy();
         expect(retVal.type).toBe(LOAD_MAP_INFO);
         expect(retVal.mapId).toBe(1);
     });

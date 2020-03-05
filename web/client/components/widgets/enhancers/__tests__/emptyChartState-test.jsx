@@ -25,11 +25,11 @@ describe('widgets emptyChartState enhancer', () => {
     it('emptyChartState rendering with defaults', () => {
         const Dummy = emptyChartState(() => <div id="dummy"></div>);
         ReactDOM.render(<Dummy data={[]}/>, document.getElementById("container"));
-        expect(document.getElementById("dummy")).toNotExist();
+        expect(document.getElementById("dummy")).toBeFalsy();
     });
     it('emptyChartState rendering with data', () => {
         const Dummy = emptyChartState(() => <div id="dummy"></div>);
         ReactDOM.render(<Dummy data={["a"]}/>, document.getElementById("container"));
-        expect(document.getElementById("dummy")).toExist();
+        expect(document.getElementById("dummy")).toBeTruthy();
     });
 });

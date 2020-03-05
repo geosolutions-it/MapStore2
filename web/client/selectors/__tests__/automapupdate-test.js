@@ -25,14 +25,14 @@ const state = {
 describe('Test automapupdate selectors', () => {
     it('test getWMSLayers', () => {
         const layers = getWMSLayers(state);
-        expect(layers).toExist();
+        expect(layers).toBeTruthy();
 
         expect(layers.length).toBe(1);
     });
 
     it('test refreshingLayers', () => {
         const layers = refreshingLayers(state);
-        expect(layers).toExist();
+        expect(layers).toBeTruthy();
 
         expect(layers.length).toBe(1);
     });

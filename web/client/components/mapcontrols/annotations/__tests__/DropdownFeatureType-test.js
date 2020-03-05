@@ -20,7 +20,7 @@ const titles = {
 };
 
 const testSpies = (spies, button) => {
-    expect(button).toExist();
+    expect(button).toBeTruthy();
     button.click();
     spies.forEach(spy => {
         expect(spy).toHaveBeenCalled();
@@ -29,7 +29,7 @@ const testSpies = (spies, button) => {
 
 const resetSpies = (spies) => {
     spies.forEach(spy => {
-        spy.restore();
+        spy.mockRestore();
     });
 };
 
@@ -54,10 +54,10 @@ describe("test the DropdownFeatureType Panel", () => {
             />, document.getElementById("container")
         );
         const items = document.getElementsByTagName("li");
-        expect(items).toExist();
+        expect(items).toBeTruthy();
         expect(items.length).toBe(5);
         const spans = document.getElementsByTagName("span");
-        expect(spans).toExist();
+        expect(spans).toBeTruthy();
         expect(spans.length).toBe(6);
         expect(spans[0].className).toBe("glyphicon glyphicon-pencil-add");
         expect(spans[1].className).toBe("glyphicon glyphicon-point");

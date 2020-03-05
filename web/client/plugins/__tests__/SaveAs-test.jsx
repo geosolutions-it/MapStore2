@@ -45,12 +45,12 @@ describe('MapSave Plugins (MapSave, MapSaveAs)', () => {
             // hide when not logged in
             expect(containers.BurgerMenu.selector({ security: {} }).style.display).toBe("none");
             // show when logged In
-            expect(containers.BurgerMenu.selector({ security: { user: {} } }).style.display).toNotExist();
+            expect(containers.BurgerMenu.selector({ security: { user: {} } }).style.display).toBeFalsy();
             // show if resource is available for clone
             expect(containers.BurgerMenu.selector({
                 security: { user: {} },
                 map: { info: { id: 1234, canEdit: false } }
-            }).style.display).toNotExist();
+            }).style.display).toBeFalsy();
         });
         it('show when control is set to "saveAs"', () => {
             const storeState = stateMocker(DUMMY_ACTION, toggleControl('mapSaveAs', 'enabled'));

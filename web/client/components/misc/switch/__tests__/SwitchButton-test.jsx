@@ -26,7 +26,7 @@ describe('SwitchButton component', () => {
         ReactDOM.render(<SwitchButton />, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('.mapstore-switch-btn');
-        expect(el).toExist();
+        expect(el).toBeTruthy();
     });
     it('Test SwitchButton onChange', () => {
         const actions = {

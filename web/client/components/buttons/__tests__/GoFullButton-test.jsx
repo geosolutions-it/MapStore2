@@ -25,22 +25,22 @@ describe("test the GoFullButton", () => {
 
     it('test not showing', () => {
         const tb = ReactDOM.render(<GoFullButton/>, document.getElementById("container"));
-        expect(tb).toExist();
+        expect(tb).toBeTruthy();
         const tbNode = ReactDOM.findDOMNode(tb);
-        expect(tbNode).toNotExist();
+        expect(tbNode).toBeFalsy();
     });
     it('test showing on originalUrl property set', () => {
         const tb = ReactDOM.render(<GoFullButton originalUrl={"TEST"}/>, document.getElementById("container"));
-        expect(tb).toExist();
+        expect(tb).toBeTruthy();
         const tbNode = ReactDOM.findDOMNode(tb);
-        expect(tbNode).toExist();
+        expect(tbNode).toBeTruthy();
     });
     it('test showing on regex match', () => {
         const href = location.href;
         const tb = ReactDOM.render(<GoFullButton urlRegex={"(.*)"} urlReplaceString={"$1"}/>, document.getElementById("container"));
-        expect(tb).toExist();
+        expect(tb).toBeTruthy();
         expect(tb.generateUrl()).toBe(href);
         const tbNode = ReactDOM.findDOMNode(tb);
-        expect(tbNode).toExist();
+        expect(tbNode).toBeTruthy();
     });
 });

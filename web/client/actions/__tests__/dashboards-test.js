@@ -20,19 +20,19 @@ const {
 describe('dashboards (browse) actions', () => {
     it('setDashboardsAvailable', () => {
         const retval = setDashboardsAvailable(true);
-        expect(retval).toExist();
+        expect(retval).toBeTruthy();
         expect(retval.type).toBe(SET_DASHBOARDS_AVAILABLE);
         expect(retval.available).toBe(true);
 
     });
     it('searchDashboards', () => {
         const retval = searchDashboards();
-        expect(retval).toExist();
+        expect(retval).toBeTruthy();
         expect(retval.type).toBe(SEARCH_DASHBOARDS);
     });
     it('dashboardLoading', () => {
         const retval = dashboardsLoading(true, "test");
-        expect(retval).toExist();
+        expect(retval).toBeTruthy();
         expect(retval.type).toBe(LOADING);
         expect(retval.value).toBe(true);
         expect(retval.name).toBe("test");
@@ -46,7 +46,7 @@ describe('dashboards (browse) actions', () => {
             searchText: "test",
             options: "someOptions"
         });
-        expect(retval).toExist();
+        expect(retval).toBeTruthy();
         expect(retval.type).toBe(DASHBOARDS_LIST_LOADED);
         expect(retval.results[0].id).toBe(1);
         expect(retval.totalCount).toBe(1);
@@ -56,18 +56,18 @@ describe('dashboards (browse) actions', () => {
     });
     it('deleteDashboard', () => {
         const retval = deleteDashboard(1);
-        expect(retval).toExist();
+        expect(retval).toBeTruthy();
         expect(retval.type).toBe(DELETE_DASHBOARD);
         expect(retval.id).toBe(1);
     });
     it('dashboardDeleted', () => {
         const retval = dashboardDeleted();
-        expect(retval).toExist();
+        expect(retval).toBeTruthy();
         expect(retval.type).toBe(DASHBOARD_DELETED);
     });
     it('reloadDashboards', () => {
         const retval = reloadDashboards();
-        expect(retval).toExist();
+        expect(retval).toBeTruthy();
         expect(retval.type).toBe(RELOAD);
     });
 

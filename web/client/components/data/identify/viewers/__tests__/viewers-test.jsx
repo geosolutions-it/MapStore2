@@ -31,20 +31,20 @@ describe('Identity Viewers', () => {
 
     it('test HTMLViewer', () => {
         const cmp = ReactDOM.render(<HTMLViewer response="<span class='testclass'>test</span>" />, document.getElementById("container"));
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
 
         const cmpDom = ReactDOM.findDOMNode(cmp);
-        expect(cmpDom).toExist();
+        expect(cmpDom).toBeTruthy();
 
         expect(cmpDom.getElementsByClassName("testclass").length).toBe(1);
     });
 
     it('test TextViewer', () => {
         const cmp = ReactDOM.render(<TextViewer response="testtext" />, document.getElementById("container"));
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
 
         const cmpDom = ReactDOM.findDOMNode(cmp);
-        expect(cmpDom).toExist();
+        expect(cmpDom).toBeTruthy();
 
         expect(cmpDom.innerHTML.indexOf('testtext') !== -1).toBe(true);
     });
@@ -59,10 +59,10 @@ describe('Identity Viewers', () => {
                 }
             }]
         }} rowViewer={SimpleRowViewer}/>, document.getElementById("container"));
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
 
         const cmpDom = ReactDOM.findDOMNode(cmp);
-        expect(cmpDom).toExist();
+        expect(cmpDom).toBeTruthy();
 
         expect(cmpDom.innerHTML.indexOf('myname') !== -1).toBe(true);
         expect(cmpDom.innerHTML.indexOf('mydescription') !== -1).toBe(true);
@@ -81,10 +81,10 @@ describe('Identity Viewers', () => {
                 }
             }]
         }} />, document.getElementById("container"));
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
 
         const cmpDom = ReactDOM.findDOMNode(cmp);
-        expect(cmpDom).toExist();
+        expect(cmpDom).toBeTruthy();
         expect(cmpDom.innerText.indexOf('This is my viewer: 1') !== -1).toBe(true);
     });
 
@@ -106,10 +106,10 @@ describe('Identity Viewers', () => {
                         }
                     }]
                 }} />, document.getElementById("container"));
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
 
         const cmpDom = ReactDOM.findDOMNode(cmp);
-        expect(cmpDom).toExist();
+        expect(cmpDom).toBeTruthy();
 
         const templateDOM = document.getElementById('my-template');
         expect(templateDOM.innerHTML).toBe('the property name is myname');
@@ -134,10 +134,10 @@ describe('Identity Viewers', () => {
                         }
                     }]
                 }} />, document.getElementById("container"));
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
 
         const cmpDom = ReactDOM.findDOMNode(cmp);
-        expect(cmpDom).toExist();
+        expect(cmpDom).toBeTruthy();
 
         const templateDOM = document.getElementById('my-template');
         expect(templateDOM.innerHTML).toBe('the property id is ');
@@ -212,10 +212,10 @@ describe('Identity Viewers', () => {
                         }
                     }]
                 }} />, document.getElementById("container"));
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
 
         const cmpDom = ReactDOM.findDOMNode(cmp);
-        expect(cmpDom).toExist();
+        expect(cmpDom).toBeTruthy();
 
         const templateDOM = document.getElementsByClassName('my-template');
         expect(templateDOM[0].innerHTML).toBe('the property id is 1');

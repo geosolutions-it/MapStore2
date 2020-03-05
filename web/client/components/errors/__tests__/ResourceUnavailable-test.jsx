@@ -25,26 +25,26 @@ describe('ResourceUnavailable component', () => {
         ReactDOM.render(<ResourceUnavailable />, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('.empty-state-container');
-        expect(el).toNotExist();
+        expect(el).toBeFalsy();
     });
 
     it('ResourceUnavailable enabled', () => {
         ReactDOM.render(<ResourceUnavailable enabled alwaysVisible/>, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('.empty-state-container');
-        expect(el).toExist();
+        expect(el).toBeTruthy();
     });
 
     it('ResourceUnavailable enabled and login (status 404)', () => {
         ReactDOM.render(<ResourceUnavailable enabled login status={404}/>, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('.empty-state-container');
-        expect(el).toExist();
+        expect(el).toBeTruthy();
         const title = container.querySelector('h1 > span');
-        expect(title).toExist();
+        expect(title).toBeTruthy();
         expect(title.innerHTML).toBe('map.errors.loading.notFound');
         const desc = container.querySelector('.empty-state-description > .text-center > span');
-        expect(desc).toExist();
+        expect(desc).toBeTruthy();
         expect(desc.innerHTML).toBe('map.errors.loading.unknownError');
     });
 
@@ -52,24 +52,24 @@ describe('ResourceUnavailable component', () => {
         ReactDOM.render(<ResourceUnavailable enabled login status={403}/>, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('.empty-state-container');
-        expect(el).toExist();
+        expect(el).toBeTruthy();
         const title = container.querySelector('h1 > span');
-        expect(title).toExist();
+        expect(title).toBeTruthy();
         expect(title.innerHTML).toBe('map.errors.loading.notAccessible');
         const desc = container.querySelector('.empty-state-description > .text-center > span');
-        expect(desc).toExist();
+        expect(desc).toBeTruthy();
         expect(desc.innerHTML).toBe('map.errors.loading.unknownError');
     });
     it('ResourceUnavailable enabled not login (status 403) shared geostory', () => {
         ReactDOM.render(<ResourceUnavailable mode={"geostory"} enabled isSharedStory status={403}/>, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('.empty-state-container');
-        expect(el).toExist();
+        expect(el).toBeTruthy();
         const title = container.querySelector('h1 > span');
-        expect(title).toExist();
+        expect(title).toBeTruthy();
         expect(title.innerHTML).toBe('geostory.errors.loading.notAccessible');
         const desc = container.querySelector('.empty-state-description > .text-center > span');
-        expect(desc).toExist();
+        expect(desc).toBeTruthy();
         expect(desc.innerHTML).toBe('geostory.errors.loading.unknownError');
     });
 
@@ -77,12 +77,12 @@ describe('ResourceUnavailable component', () => {
         ReactDOM.render(<ResourceUnavailable enabled login status={404} errorMessage={'Error 404'}/>, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('.empty-state-container');
-        expect(el).toExist();
+        expect(el).toBeTruthy();
         const title = container.querySelector('h1 > span');
-        expect(title).toExist();
+        expect(title).toBeTruthy();
         expect(title.innerHTML).toBe('map.errors.loading.notFound');
         const desc = container.querySelector('.empty-state-description > .text-center > span');
-        expect(desc).toExist();
+        expect(desc).toBeTruthy();
         expect(desc.innerHTML).toBe('Error 404');
     });
 
@@ -90,14 +90,14 @@ describe('ResourceUnavailable component', () => {
         ReactDOM.render(<ResourceUnavailable enabled login status={404} errorMessage={'Error 404'} mode="testMode" glyphs={{testMode: 'list'}}/>, document.getElementById("container"));
         const container = document.getElementById('container');
         const glyphicon = container.querySelector('.glyphicon-list');
-        expect(glyphicon).toExist();
+        expect(glyphicon).toBeTruthy();
     });
 
     it('ResourceUnavailable glyph and mode (missing glyph)', () => {
         ReactDOM.render(<ResourceUnavailable enabled login status={404} errorMessage={'Error 404'} mode="newTestMode" glyphs={{testMode: 'list'}}/>, document.getElementById("container"));
         const container = document.getElementById('container');
         const glyphicon = container.querySelector('.glyphicon-1-map');
-        expect(glyphicon).toExist();
+        expect(glyphicon).toBeTruthy();
     });
 
     it('ResourceUnavailable with home button and showHomeButton to true', () => {
@@ -105,7 +105,7 @@ describe('ResourceUnavailable component', () => {
         ReactDOM.render(<ResourceUnavailable enabled login showHomeButton homeButton={<HomeButton />}/>, document.getElementById("container"));
         const container = document.getElementById('container');
         const button = container.querySelector('.home-button');
-        expect(button).toExist();
+        expect(button).toBeTruthy();
     });
 
     it('ResourceUnavailable with home button and showHomeButton to false', () => {
@@ -113,6 +113,6 @@ describe('ResourceUnavailable component', () => {
         ReactDOM.render(<ResourceUnavailable enabled login homeButton={<HomeButton />}/>, document.getElementById("container"));
         const container = document.getElementById('container');
         const button = container.querySelector('.home-button');
-        expect(button).toNotExist();
+        expect(button).toBeFalsy();
     });
 });

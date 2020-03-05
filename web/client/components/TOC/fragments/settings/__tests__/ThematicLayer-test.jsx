@@ -151,7 +151,7 @@ describe('test ThematicLayer module component', () => {
         const comp = ReactDOM.render(<ThematicLayer layer={layer} />, document.getElementById("container"));
 
         const domNode = ReactDOM.findDOMNode(comp);
-        expect(domNode).toExist();
+        expect(domNode).toBeTruthy();
         expect(document.getElementsByClassName('thematic_layer').length).toBe(1);
     });
 
@@ -159,7 +159,7 @@ describe('test ThematicLayer module component', () => {
         const comp = ReactDOM.render(<ThematicLayer layer={layerWithUnconfiguredThematic} adminCfg={{open: true, current: "{}"}}/>, document.getElementById("container"));
 
         const domNode = ReactDOM.findDOMNode(comp);
-        expect(domNode).toExist();
+        expect(domNode).toBeTruthy();
         expect(document.getElementsByClassName('thematic_layer').length).toBe(1);
         expect(document.getElementsByClassName('thematic_layer')[0].childNodes.length).toBe(0);
     });
@@ -168,7 +168,7 @@ describe('test ThematicLayer module component', () => {
         const comp = ReactDOM.render(<ThematicLayer layer={layerWithUnconfiguredThematic} canEditThematic adminCfg={{ open: true, current: "{}" }} />, document.getElementById("container"));
 
         const domNode = ReactDOM.findDOMNode(comp);
-        expect(domNode).toExist();
+        expect(domNode).toBeTruthy();
         expect(document.getElementsByClassName('thematic_layer').length).toBe(1);
         expect(document.getElementsByClassName('thematic_layer')[0].childNodes.length).toBe(1);
         expect(domNode.getElementsByClassName('react-codemirror2').length).toBe(1);
@@ -178,7 +178,7 @@ describe('test ThematicLayer module component', () => {
         const comp = ReactDOM.render(<ThematicLayer layer={layerWithConfiguredThematic} adminCfg={{ open: true, current: "{}" }} canEditThematic/>, document.getElementById("container"));
 
         const domNode = ReactDOM.findDOMNode(comp);
-        expect(domNode).toExist();
+        expect(domNode).toBeTruthy();
         expect(document.getElementsByClassName('thematic_layer').length).toBe(1);
         expect(document.getElementsByClassName('thematic_layer')[0].childNodes.length).toBe(1);
         expect(domNode.getElementsByClassName('react-codemirror2').length).toBe(1);
@@ -188,7 +188,7 @@ describe('test ThematicLayer module component', () => {
         const comp = ReactDOM.render(<ThematicLayer layer={layerWithConfiguredThematic} adminCfg={{ open: false, current: "{}" }} canEditThematic />, document.getElementById("container"));
 
         const domNode = ReactDOM.findDOMNode(comp);
-        expect(domNode).toExist();
+        expect(domNode).toBeTruthy();
         expect(document.getElementsByClassName('thematic_layer').length).toBe(1);
         expect(document.getElementsByClassName('thematic_layer')[0].childNodes.length).toBe(1);
         expect(domNode.getElementsByClassName('react-codemirror2').length).toBe(0);
@@ -198,7 +198,7 @@ describe('test ThematicLayer module component', () => {
         const comp = ReactDOM.render(<ThematicLayer layer={layerWithConfiguredThematic} adminCfg={{ open: false, current: "{}" }} canEditThematic />, document.getElementById("container"));
 
         const domNode = ReactDOM.findDOMNode(comp);
-        expect(domNode).toExist();
+        expect(domNode).toBeTruthy();
         expect(document.getElementsByClassName('thematic_layer').length).toBe(1);
         expect(document.getElementsByClassName('thematic_layer')[0].childNodes.length).toBe(1);
         expect(domNode.getElementsByClassName('mapstore-switch-panel').length).toBe(2);
@@ -208,20 +208,20 @@ describe('test ThematicLayer module component', () => {
         const comp = ReactDOM.render(<ThematicLayer layer={layerWithConfiguredThematic} adminCfg={{ open: false, current: "{}" }} canEditThematic />, document.getElementById("container"));
 
         const domNode = ReactDOM.findDOMNode(comp);
-        expect(domNode).toExist();
+        expect(domNode).toBeTruthy();
         expect(document.getElementsByClassName('thematic_layer').length).toBe(1);
         expect(document.getElementsByClassName('thematic_layer')[0].childNodes.length).toBe(1);
-        expect(domNode.getElementsByClassName('mapstore-switch-panel')[0].querySelector('button.square-button-sm')).toExist();
+        expect(domNode.getElementsByClassName('mapstore-switch-panel')[0].querySelector('button.square-button-sm')).toBeTruthy();
     });
 
     it('tests ThematicLayer component with configured thematic thema style admin buttons for no admin', () => {
         const comp = ReactDOM.render(<ThematicLayer layer={layerWithConfiguredThematic} adminCfg={{ open: false, current: "{}" }} />, document.getElementById("container"));
 
         const domNode = ReactDOM.findDOMNode(comp);
-        expect(domNode).toExist();
+        expect(domNode).toBeTruthy();
         expect(document.getElementsByClassName('thematic_layer').length).toBe(1);
         expect(document.getElementsByClassName('thematic_layer')[0].childNodes.length).toBe(1);
-        expect(domNode.getElementsByClassName('mapstore-switch-panel')[0].querySelector('button.square-button-sm')).toNotExist();
+        expect(domNode.getElementsByClassName('mapstore-switch-panel')[0].querySelector('button.square-button-sm')).toBeFalsy();
     });
 
     it('tests ThematicLayer component with configured thematic thema style toggle configuration', () => {
@@ -234,12 +234,12 @@ describe('test ThematicLayer module component', () => {
             adminCfg={{ open: false, current: "{}" }} canEditThematic/>, document.getElementById("container"));
 
         const domNode = ReactDOM.findDOMNode(comp);
-        expect(domNode).toExist();
+        expect(domNode).toBeTruthy();
         expect(document.getElementsByClassName('thematic_layer').length).toBe(1);
         expect(document.getElementsByClassName('thematic_layer')[0].childNodes.length).toBe(1);
         const cfgButton = domNode.getElementsByClassName('mapstore-switch-panel')[0].querySelector('button.square-button-sm');
         TestUtils.Simulate.click(cfgButton);
-        expect(spyConfigurationChange.calls.length).toBe(2);
+        expect(spyConfigurationChange.mock.calls.length).toBe(2);
     });
 
     it('tests ThematicLayer component with configured thematic thema style change configuration', () => {
@@ -252,14 +252,14 @@ describe('test ThematicLayer module component', () => {
             adminCfg={{ open: true, current: "{}" }} canEditThematic />, document.getElementById("container"));
 
         const domNode = ReactDOM.findDOMNode(comp);
-        expect(domNode).toExist();
+        expect(domNode).toBeTruthy();
         expect(document.getElementsByClassName('thematic_layer').length).toBe(1);
         expect(document.getElementsByClassName('thematic_layer')[0].childNodes.length).toBe(1);
         const doc = comp.cfgEditor.editor.getDoc();
         doc.replaceRange('{', {line: 1, ch: 1});
-        expect(spyConfigurationChange.calls.length).toBe(2);
-        expect(spyConfigurationChange.calls[1].arguments.length).toBe(3);
-        expect(spyConfigurationChange.calls[1].arguments[2]).toBe('{}{');
+        expect(spyConfigurationChange.mock.calls.length).toBe(2);
+        expect(spyConfigurationChange.mock.calls[1].length).toBe(3);
+        expect(spyConfigurationChange.mock.calls[1][2]).toBe('{}{');
     });
 
     it('tests ThematicLayer component with configured thematic thema style invalid configuration', () => {
@@ -267,7 +267,7 @@ describe('test ThematicLayer module component', () => {
             adminCfg={{ open: true, current: "{" }} canEditThematic />, document.getElementById("container"));
 
         const domNode = ReactDOM.findDOMNode(comp);
-        expect(domNode).toExist();
+        expect(domNode).toBeTruthy();
         expect(document.getElementsByClassName('thematic_layer').length).toBe(1);
         expect(document.getElementsByClassName('thematic_layer')[0].childNodes.length).toBe(1);
         expect(domNode.getElementsByClassName("text-danger").length).toBe(1);
@@ -278,7 +278,7 @@ describe('test ThematicLayer module component', () => {
             adminCfg={{ open: true, current: "{}" }} canEditThematic />, document.getElementById("container"));
 
         const domNode = ReactDOM.findDOMNode(comp);
-        expect(domNode).toExist();
+        expect(domNode).toBeTruthy();
         expect(document.getElementsByClassName('thematic_layer').length).toBe(1);
         expect(document.getElementsByClassName('thematic_layer')[0].childNodes.length).toBe(1);
         expect(domNode.getElementsByClassName("text-danger").length).toBe(0);
@@ -289,7 +289,7 @@ describe('test ThematicLayer module component', () => {
             layer={layerWithConfiguredThematic} adminCfg={{ open: false, current: "{}" }} />, document.getElementById("container"));
 
         const domNode = ReactDOM.findDOMNode(comp);
-        expect(domNode).toExist();
+        expect(domNode).toBeTruthy();
         expect(document.getElementsByClassName('thematic_layer').length).toBe(1);
         expect(document.getElementsByClassName('thematic_layer')[0].childNodes.length).toBe(1);
         const fieldsCombo = domNode.querySelectorAll('.rw-combobox')[0];
@@ -311,7 +311,7 @@ describe('test ThematicLayer module component', () => {
             layer={layerWithConfiguredThematic} adminCfg={{ open: false, current: "{}" }} />, document.getElementById("container"));
 
         const domNode = ReactDOM.findDOMNode(comp);
-        expect(domNode).toExist();
+        expect(domNode).toBeTruthy();
         expect(document.getElementsByClassName('thematic_layer').length).toBe(1);
         expect(document.getElementsByClassName('thematic_layer')[0].childNodes.length).toBe(1);
         const fieldsCombo = domNode.querySelectorAll('.rw-combobox')[0];
@@ -319,10 +319,10 @@ describe('test ThematicLayer module component', () => {
         const fieldsOptions = fieldsCombo.querySelectorAll('.rw-popup li');
         TestUtils.Simulate.click(fieldsOptions[0]);
         expect(spyChange).toHaveBeenCalled();
-        expect(spyChange.calls[1].arguments[0]).toBe('thematic');
-        expect(spyChange.calls[1].arguments[1].current.field).toBe('myfield1');
+        expect(spyChange.mock.calls[1][0]).toBe('thematic');
+        expect(spyChange.mock.calls[1][1].current.field).toBe('myfield1');
         expect(spyClassify).toHaveBeenCalled();
-        expect(spyClassify.calls[0].arguments[0].thematic.current.field).toBe('myfield1');
+        expect(spyClassify.mock.calls[0][0].thematic.current.field).toBe('myfield1');
     });
 
     it('tests ThematicLayer component with configured thematic thema style method', () => {
@@ -330,7 +330,7 @@ describe('test ThematicLayer module component', () => {
             layer={layerWithConfiguredThematic} adminCfg={{ open: false, current: "{}" }} />, document.getElementById("container"));
 
         const domNode = ReactDOM.findDOMNode(comp);
-        expect(domNode).toExist();
+        expect(domNode).toBeTruthy();
         expect(document.getElementsByClassName('thematic_layer').length).toBe(1);
         expect(document.getElementsByClassName('thematic_layer')[0].childNodes.length).toBe(1);
         const methodsCombo = domNode.querySelectorAll('.rw-combobox')[1];
@@ -344,15 +344,15 @@ describe('test ThematicLayer module component', () => {
             layer={layerWithConfiguredThematic} adminCfg={{ open: false, current: "{}" }} />, document.getElementById("container"));
 
         const domNode = ReactDOM.findDOMNode(comp);
-        expect(domNode).toExist();
+        expect(domNode).toBeTruthy();
         expect(document.getElementsByClassName('thematic_layer').length).toBe(1);
         expect(document.getElementsByClassName('thematic_layer')[0].childNodes.length).toBe(1);
         const strokeToggle = domNode.querySelectorAll('input[type="checkbox"]')[0];
-        expect(strokeToggle).toNotExist();
+        expect(strokeToggle).toBeFalsy();
         const colorPicker = domNode.querySelector('.cp-swatch');
-        expect(colorPicker).toNotExist();
+        expect(colorPicker).toBeFalsy();
         const weightPicker = domNode.querySelectorAll('.rw-numberpicker')[1];
-        expect(weightPicker).toNotExist();
+        expect(weightPicker).toBeFalsy();
     });
 
     it('tests ThematicLayer component with configured thematic thema style choose method', () => {
@@ -368,7 +368,7 @@ describe('test ThematicLayer module component', () => {
             layer={layerWithConfiguredThematic} adminCfg={{ open: false, current: "{}" }} />, document.getElementById("container"));
 
         const domNode = ReactDOM.findDOMNode(comp);
-        expect(domNode).toExist();
+        expect(domNode).toBeTruthy();
         expect(document.getElementsByClassName('thematic_layer').length).toBe(1);
         expect(document.getElementsByClassName('thematic_layer')[0].childNodes.length).toBe(1);
         const methodsCombo = domNode.querySelectorAll('.rw-combobox')[1];
@@ -376,10 +376,10 @@ describe('test ThematicLayer module component', () => {
         const methodsOptions = methodsCombo.querySelectorAll('.rw-popup li');
         TestUtils.Simulate.click(methodsOptions[0]);
         expect(spyChange).toHaveBeenCalled();
-        expect(spyChange.calls[1].arguments[0]).toBe('thematic');
-        expect(spyChange.calls[1].arguments[1].current.method).toBe('equalIntervals');
+        expect(spyChange.mock.calls[1][0]).toBe('thematic');
+        expect(spyChange.mock.calls[1][1].current.method).toBe('equalIntervals');
         expect(spyClassify).toHaveBeenCalled();
-        expect(spyClassify.calls[0].arguments[0].thematic.current.method).toBe('equalIntervals');
+        expect(spyClassify.mock.calls[0][0].thematic.current.method).toBe('equalIntervals');
     });
 
     it('tests ThematicLayer component with configured thematic thema style intervals', () => {
@@ -394,17 +394,17 @@ describe('test ThematicLayer module component', () => {
             layer={layerWithConfiguredThematic} adminCfg={{ open: false, current: "{}" }} />, document.getElementById("container"));
 
         const domNode = ReactDOM.findDOMNode(comp);
-        expect(domNode).toExist();
+        expect(domNode).toBeTruthy();
         expect(document.getElementsByClassName('thematic_layer').length).toBe(1);
         expect(document.getElementsByClassName('thematic_layer')[0].childNodes.length).toBe(1);
         const intervalsPicker = domNode.querySelectorAll('.rw-numberpicker')[0];
-        expect(intervalsPicker).toExist();
+        expect(intervalsPicker).toBeTruthy();
         TestUtils.Simulate.mouseDown(intervalsPicker.querySelector('.rw-btn'));
         expect(spyChange).toHaveBeenCalled();
-        expect(spyChange.calls[1].arguments[0]).toBe('thematic');
-        expect(spyChange.calls[1].arguments[1].current.intervals).toBe(4);
+        expect(spyChange.mock.calls[1][0]).toBe('thematic');
+        expect(spyChange.mock.calls[1][1].current.intervals).toBe(4);
         expect(spyClassify).toHaveBeenCalled();
-        expect(spyClassify.calls[0].arguments[0].thematic.current.intervals).toBe(4);
+        expect(spyClassify.mock.calls[0][0].thematic.current.intervals).toBe(4);
     });
 
     it('tests ThematicLayer component with configured thematic thema style colors', () => {
@@ -419,20 +419,20 @@ describe('test ThematicLayer module component', () => {
             layer={layerWithConfiguredThematic} adminCfg={{ open: false, current: "{}" }} />, document.getElementById("container"));
 
         const domNode = ReactDOM.findDOMNode(comp);
-        expect(domNode).toExist();
+        expect(domNode).toBeTruthy();
         expect(document.getElementsByClassName('thematic_layer').length).toBe(1);
         expect(document.getElementsByClassName('thematic_layer')[0].childNodes.length).toBe(1);
         const colorsSelector = domNode.querySelectorAll('.color-range-selector')[0];
-        expect(colorsSelector).toExist();
+        expect(colorsSelector).toBeTruthy();
         TestUtils.Simulate.click(colorsSelector);
         const colorsOptions = colorsSelector.querySelectorAll('.rw-popup li');
         expect(colorsOptions.length).toBe(2);
         TestUtils.Simulate.click(colorsOptions[1]);
         expect(spyChange).toHaveBeenCalled();
-        expect(spyChange.calls[1].arguments[0]).toBe('thematic');
-        expect(spyChange.calls[1].arguments[1].current.ramp).toBe('blue');
+        expect(spyChange.mock.calls[1][0]).toBe('thematic');
+        expect(spyChange.mock.calls[1][1].current.ramp).toBe('blue');
         expect(spyClassify).toHaveBeenCalled();
-        expect(spyClassify.calls[0].arguments[0].thematic.current.ramp).toBe('blue');
+        expect(spyClassify.mock.calls[0][0].thematic.current.ramp).toBe('blue');
     });
 
     it('tests ThematicLayer component with configured thematic thema style stroke off', () => {
@@ -440,13 +440,13 @@ describe('test ThematicLayer module component', () => {
             layer={layerWithConfiguredThematicAndNoStroke} adminCfg={{ open: false, current: "{}" }} />, document.getElementById("container"));
 
         const domNode = ReactDOM.findDOMNode(comp);
-        expect(domNode).toExist();
+        expect(domNode).toBeTruthy();
         expect(document.getElementsByClassName('thematic_layer').length).toBe(1);
         expect(document.getElementsByClassName('thematic_layer')[0].childNodes.length).toBe(1);
         const strokeToggle = domNode.querySelectorAll('input[type="checkbox"]')[0];
-        expect(strokeToggle).toExist();
+        expect(strokeToggle).toBeTruthy();
         const colorPicker = domNode.querySelector('.cp-disabled');
-        expect(colorPicker).toExist();
+        expect(colorPicker).toBeTruthy();
         const weightPicker = domNode.querySelectorAll('.rw-numberpicker')[1];
         expect(weightPicker.className.indexOf('rw-state-disabled') !== -1).toBe(true);
     });
@@ -463,16 +463,16 @@ describe('test ThematicLayer module component', () => {
             layer={layerWithConfiguredThematic} adminCfg={{ open: false, current: "{}" }} />, document.getElementById("container"));
 
         const domNode = ReactDOM.findDOMNode(comp);
-        expect(domNode).toExist();
+        expect(domNode).toBeTruthy();
         expect(document.getElementsByClassName('thematic_layer').length).toBe(1);
         expect(document.getElementsByClassName('thematic_layer')[0].childNodes.length).toBe(1);
         const strokeToggle = domNode.querySelectorAll('input[type="checkbox"]')[0];
-        expect(strokeToggle).toExist();
+        expect(strokeToggle).toBeTruthy();
         TestUtils.Simulate.change(strokeToggle, { "target": { "checked": false } });
         expect(spyChange).toHaveBeenCalled();
-        expect(spyChange.calls[1].arguments[0]).toBe('thematic');
-        expect(spyChange.calls[1].arguments[1].current.strokeOn).toBe(false);
-        expect(spyClassify).toNotHaveBeenCalled();
+        expect(spyChange.mock.calls[1][0]).toBe('thematic');
+        expect(spyChange.mock.calls[1][1].current.strokeOn).toBe(false);
+        expect(spyClassify).not.toHaveBeenCalled();
     });
 
     it('tests ThematicLayer component with configured thematic thema style strokeWeight', () => {
@@ -487,16 +487,16 @@ describe('test ThematicLayer module component', () => {
             layer={layerWithConfiguredThematic} adminCfg={{ open: false, current: "{}" }} />, document.getElementById("container"));
 
         const domNode = ReactDOM.findDOMNode(comp);
-        expect(domNode).toExist();
+        expect(domNode).toBeTruthy();
         expect(document.getElementsByClassName('thematic_layer').length).toBe(1);
         expect(document.getElementsByClassName('thematic_layer')[0].childNodes.length).toBe(1);
         const weightPicker = domNode.querySelectorAll('.rw-numberpicker')[1];
-        expect(weightPicker).toExist();
+        expect(weightPicker).toBeTruthy();
         TestUtils.Simulate.mouseDown(weightPicker.querySelector('.rw-btn'));
         expect(spyChange).toHaveBeenCalled();
-        expect(spyChange.calls[1].arguments[0]).toBe('thematic');
-        expect(spyChange.calls[1].arguments[1].current.strokeWeight).toBe(2);
-        expect(spyClassify).toNotHaveBeenCalled();
+        expect(spyChange.mock.calls[1][0]).toBe('thematic');
+        expect(spyChange.mock.calls[1][1].current.strokeWeight).toBe(2);
+        expect(spyClassify).not.toHaveBeenCalled();
     });
 
     it('tests ThematicLayer component with configured thematic thema style strokeColor', () => {
@@ -511,20 +511,20 @@ describe('test ThematicLayer module component', () => {
             layer={layerWithConfiguredThematic} adminCfg={{ open: false, current: "{}" }} />, document.getElementById("container"));
 
         const domNode = ReactDOM.findDOMNode(comp);
-        expect(domNode).toExist();
+        expect(domNode).toBeTruthy();
         expect(document.getElementsByClassName('thematic_layer').length).toBe(1);
         expect(document.getElementsByClassName('thematic_layer')[0].childNodes.length).toBe(1);
         const colorPicker = domNode.querySelector('.cp-swatch');
-        expect(colorPicker).toExist();
+        expect(colorPicker).toBeTruthy();
         TestUtils.Simulate.click(colorPicker);
         const sampleColor = domNode.querySelector('div[title="#D0021B"]');
         TestUtils.Simulate.click(sampleColor);
         TestUtils.Simulate.click(domNode.querySelector('.cp-cover'));
         expect(spyChange).toHaveBeenCalled();
-        expect(spyChange.calls.length).toBe(2);
-        expect(spyChange.calls[1].arguments[0]).toBe('thematic');
-        expect(spyChange.calls[1].arguments[1].current.strokeColor.toUpperCase()).toBe('#D0021B');
-        expect(spyClassify).toNotHaveBeenCalled();
+        expect(spyChange.mock.calls.length).toBe(2);
+        expect(spyChange.mock.calls[1][0]).toBe('thematic');
+        expect(spyChange.mock.calls[1][1].current.strokeColor.toUpperCase()).toBe('#D0021B');
+        expect(spyClassify).not.toHaveBeenCalled();
     });
 
     it('tests ThematicLayer component with configured thematic thema style strokeColor not chosen', () => {
@@ -537,14 +537,14 @@ describe('test ThematicLayer module component', () => {
             layer={layerWithConfiguredThematic} adminCfg={{ open: false, current: "{}" }} />, document.getElementById("container"));
 
         const domNode = ReactDOM.findDOMNode(comp);
-        expect(domNode).toExist();
+        expect(domNode).toBeTruthy();
         expect(document.getElementsByClassName('thematic_layer').length).toBe(1);
         expect(document.getElementsByClassName('thematic_layer')[0].childNodes.length).toBe(1);
         const colorPicker = domNode.querySelector('.cp-swatch');
-        expect(colorPicker).toExist();
+        expect(colorPicker).toBeTruthy();
         TestUtils.Simulate.click(colorPicker);
         TestUtils.Simulate.click(domNode.querySelector('.cp-cover'));
-        expect(spyChange.calls.length).toBe(1);
+        expect(spyChange.mock.calls.length).toBe(1);
     });
 
     it('tests ThematicLayer component with configured thematic thema style params', () => {
@@ -557,7 +557,7 @@ describe('test ThematicLayer module component', () => {
             layer={layerWithConfiguredThematicAndParams} adminCfg={{ open: false, current: "{}" }} />, document.getElementById("container"));
 
         const domNode = ReactDOM.findDOMNode(comp);
-        expect(domNode).toExist();
+        expect(domNode).toBeTruthy();
         expect(document.getElementsByClassName('thematic_layer').length).toBe(1);
         expect(document.getElementsByClassName('thematic_layer')[0].childNodes.length).toBe(1);
         expect(domNode.querySelectorAll('.rw-combobox').length).toBe(3);
@@ -568,9 +568,9 @@ describe('test ThematicLayer module component', () => {
         expect(paramsOptions.length).toBe(1);
         TestUtils.Simulate.click(paramsOptions[0]);
         expect(spyChange).toHaveBeenCalled();
-        expect(spyChange.calls[0].arguments.length).toBe(2);
-        expect(spyChange.calls[0].arguments[0]).toBe('thematic');
-        expect(spyChange.calls[0].arguments[1].current.myparam).toBe(1);
+        expect(spyChange.mock.calls[0].length).toBe(2);
+        expect(spyChange.mock.calls[0][0]).toBe('thematic');
+        expect(spyChange.mock.calls[0][1].current.myparam).toBe(1);
     });
 
     it('tests ThematicLayer component with configured thematic thema style classification', () => {
@@ -578,10 +578,10 @@ describe('test ThematicLayer module component', () => {
             layer={layerWithConfiguredThematic} adminCfg={{ open: false, current: "{}" }} />, document.getElementById("container"));
 
         const domNode = ReactDOM.findDOMNode(comp);
-        expect(domNode).toExist();
+        expect(domNode).toBeTruthy();
         expect(document.getElementsByClassName('thematic_layer').length).toBe(1);
         expect(document.getElementsByClassName('thematic_layer')[0].childNodes.length).toBe(1);
-        expect(domNode.querySelector('.thema-classes-editor')).toExist();
+        expect(domNode.querySelector('.thema-classes-editor')).toBeTruthy();
     });
 
     it('tests ThematicLayer component with configured thematic thema style remove style button', () => {
@@ -597,7 +597,7 @@ describe('test ThematicLayer module component', () => {
             layer={layerWithConfiguredThematicAndParams} adminCfg={{ open: false, current: "{}" }} />, document.getElementById("container"));
 
         const domNode = ReactDOM.findDOMNode(comp);
-        expect(domNode).toExist();
+        expect(domNode).toBeTruthy();
         expect(document.getElementsByClassName('thematic_layer').length).toBe(1);
         expect(document.getElementsByClassName('thematic_layer')[0].childNodes.length).toBe(1);
         const removeButton = domNode.querySelector('.glyphicon-trash');
@@ -619,7 +619,7 @@ describe('test ThematicLayer module component', () => {
             layer={layerWithConfiguredThematicCustomClassification} adminCfg={{ open: false, current: "{}" }} />, document.getElementById("container"));
 
         const domNode = ReactDOM.findDOMNode(comp);
-        expect(domNode).toExist();
+        expect(domNode).toBeTruthy();
         expect(document.getElementsByClassName('thematic_layer').length).toBe(1);
         expect(document.getElementsByClassName('thematic_layer')[0].childNodes.length).toBe(1);
         const undoButton = domNode.querySelector('.glyphicon-undo');
@@ -639,7 +639,7 @@ describe('test ThematicLayer module component', () => {
             layer={layerWithConfiguredThematic} adminCfg={{ open: false, current: "{}" }} />, document.getElementById("container"));
 
         const domNode = ReactDOM.findDOMNode(comp);
-        expect(domNode).toExist();
+        expect(domNode).toBeTruthy();
         expect(document.getElementsByClassName('thematic_layer').length).toBe(1);
         expect(document.getElementsByClassName('thematic_layer')[0].childNodes.length).toBe(1);
         const refreshButton = domNode.querySelector('.glyphicon-ok');
@@ -659,11 +659,11 @@ describe('test ThematicLayer module component', () => {
             adminCfg={{ open: false, current: "{}" }} />, document.getElementById("container"));
 
         const domNode = ReactDOM.findDOMNode(comp);
-        expect(domNode).toExist();
+        expect(domNode).toBeTruthy();
         expect(document.getElementsByClassName('thematic_layer').length).toBe(1);
         expect(document.getElementsByClassName('thematic_layer')[0].childNodes.length).toBe(1);
         const error = domNode.querySelectorAll('.alert-danger')[0];
-        expect(error).toExist();
+        expect(error).toBeTruthy();
         expect(error.innerText.indexOf('myerror') !== -1).toBe(true);
     });
 
@@ -679,9 +679,9 @@ describe('test ThematicLayer module component', () => {
             layer={layerWithConfiguredThematic} adminCfg={{ open: false, current: "{}" }} />, document.getElementById("container"));
 
         const domNode = ReactDOM.findDOMNode(comp);
-        expect(domNode).toExist();
+        expect(domNode).toBeTruthy();
         const intervalsPicker = domNode.querySelectorAll('.rw-numberpicker')[0];
-        expect(intervalsPicker).toExist();
+        expect(intervalsPicker).toBeTruthy();
         TestUtils.Simulate.mouseDown(intervalsPicker.querySelector('.rw-btn'));
         expect(spyInvalid).toHaveBeenCalled();
     });
@@ -698,7 +698,7 @@ describe('test ThematicLayer module component', () => {
             layer={layerWithConfiguredThematic} adminCfg={{ open: false, current: "{}" }} classification={classification} />, document.getElementById("container"));
 
         const domNode = ReactDOM.findDOMNode(comp);
-        expect(domNode).toExist();
+        expect(domNode).toBeTruthy();
         const input = domNode.querySelectorAll('input.rw-input')[7];
         TestUtils.Simulate.change(input, { "target": { "value": "5" } });
         expect(spyInvalid).toHaveBeenCalled();

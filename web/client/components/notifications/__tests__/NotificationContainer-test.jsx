@@ -42,18 +42,18 @@ describe('NotificationContainer tests', () => {
     // test DEFAULTS
     it('creates the component with defaults', () => {
         const item = ReactDOM.render(<IntlProvider><NotificationContainer /></IntlProvider>, document.getElementById("container"));
-        expect(item).toExist();
+        expect(item).toBeTruthy();
 
     });
     it('creates the component with notifications', () => {
         const item = ReactDOM.render(<IntlProvider><NotificationContainer notifications={[N1]} /></IntlProvider>, document.getElementById("container"));
-        expect(item).toExist();
+        expect(item).toBeTruthy();
         let elems = TestUtils.scryRenderedDOMComponentsWithClass(item, "notifications-tr");
         expect(elems.length).toBe(1);
     });
     it('update notifications', () => {
         let item = ReactDOM.render(<IntlProvider><NotificationContainer notifications={[N1]} /></IntlProvider>, document.getElementById("container"));
-        expect(item).toExist();
+        expect(item).toBeTruthy();
         let elems = TestUtils.scryRenderedDOMComponentsWithClass(item, "notification");
         expect(elems.length).toBe(1);
 
@@ -81,7 +81,7 @@ describe('NotificationContainer tests', () => {
             <IntlProvider>
                 <NotificationContainer notifications={[directTemplating]} />
             </IntlProvider>, document.getElementById("container"));
-        expect(item).toExist();
+        expect(item).toBeTruthy();
         let elem = TestUtils.findRenderedDOMComponentWithClass(item, "notification-message");
         expect(elem.innerText).toBe("i'm using a variable!");
 

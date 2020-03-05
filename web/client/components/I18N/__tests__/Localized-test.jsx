@@ -36,7 +36,7 @@ describe('Test the localization support HOC', () => {
             </Localized>
             , document.getElementById("container"));
         var dom = ReactDOM.findDOMNode(localized);
-        expect(dom).toExist();
+        expect(dom).toBeTruthy();
         expect(dom.innerHTML).toBe("my message");
     });
 
@@ -47,7 +47,7 @@ describe('Test the localization support HOC', () => {
             </Localized>
             , document.getElementById("container"));
         var dom = ReactDOM.findDOMNode(localized);
-        expect(dom).toExist();
+        expect(dom).toBeTruthy();
         expect(dom.innerHTML).toBe("my message");
     });
 
@@ -58,13 +58,13 @@ describe('Test the localization support HOC', () => {
             </Localized>
             , document.getElementById("container"));
         var dom = ReactDOM.findDOMNode(localized);
-        expect(dom).toNotExist();
+        expect(dom).toBeFalsy();
     });
 
     it('renders a loading error', () => {
         var localized = ReactDOM.render(<Localized loadingError="loadingError" />, document.getElementById("container"));
         var dom = ReactDOM.findDOMNode(localized);
-        expect(dom).toExist();
-        expect(dom.className.indexOf("loading-locale-error")).toNotBe(-1);
+        expect(dom).toBeTruthy();
+        expect(dom.className.indexOf("loading-locale-error")).not.toBe(-1);
     });
 });

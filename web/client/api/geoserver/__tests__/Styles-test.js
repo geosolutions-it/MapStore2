@@ -18,7 +18,7 @@ describe('Test styles rest API', () => {
     it('save style', (done) => {
         const STYLE_NAME = "test_TEST_LAYER_1";
         API.saveStyle("base/web/client/test-resources/geoserver/rest/", STYLE_NAME, "STYLE_BODY").then((response)=> {
-            expect(response).toExist();
+            expect(response).toBeTruthy();
             done();
         });
     });

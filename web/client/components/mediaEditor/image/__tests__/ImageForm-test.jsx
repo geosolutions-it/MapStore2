@@ -24,7 +24,7 @@ describe('ImageForm component', () => {
     it('ImageForm rendering with defaults', () => {
         ReactDOM.render(<ImageForm />, document.getElementById("container"));
         const container = document.getElementById('container');
-        expect(container.querySelector('.ms-imageForm')).toExist();
+        expect(container.querySelector('.ms-imageForm')).toBeTruthy();
         expect(container.querySelectorAll('input').length).toBe(5);
     });
 });

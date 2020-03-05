@@ -37,7 +37,7 @@ describe('login Epics', () => {
             const epicResult = actions => {
                 expect(actions.length).toBe(NUM_ACTIONS);
                 const [a] = actions;
-                expect(a).toExist();
+                expect(a).toBeTruthy();
                 expect(a.type).toBe(MAP_CONFIG_LOAD_ERROR);
                 expect(a.error.status).toBe(403);
                 done();

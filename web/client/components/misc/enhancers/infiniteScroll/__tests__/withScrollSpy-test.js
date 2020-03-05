@@ -38,7 +38,7 @@ describe('withScrollSpy enhancer', () => {
         };
         const EnhancedCMP = withScrollSpy({ querySelector: "#mydiv" })(CMP);
         const cmp = ReactDOM.render(<EnhancedCMP onLoadMore={actions.onLoadMore} items={[1]}/>, document.getElementById("container"));
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
         // simulate scroll event
         const element = document.getElementById('mydiv');
         element.scrollTop = element.scrollHeight - element.clientHeight;
@@ -53,7 +53,7 @@ describe('withScrollSpy enhancer', () => {
         };
         const EnhancedCMP = withScrollSpy({ querySelector: "#mydiv" })(CMP);
         const cmp = ReactDOM.render(<EnhancedCMP onLoadMore={actions.onLoadMore} items={Array(20)} />, document.getElementById("container"));
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
         // simulate scroll event
         const element = document.getElementById('mydiv');
         element.scrollTop = element.scrollHeight - element.clientHeight;

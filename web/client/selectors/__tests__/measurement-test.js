@@ -42,7 +42,7 @@ describe('Test maptype', () => {
 
     it('test showAddAsAnnotationSelector', () => {
         const retval = showAddAsAnnotationSelector({measurement: {showAddAsAnnotation: true}});
-        expect(retval).toExist();
+        expect(retval).toBeTruthy();
         expect(retval).toBe(true);
     });
     it('test getValidFeatureSelector no feature geom', () => {
@@ -59,7 +59,7 @@ describe('Test maptype', () => {
                 feature: polyFeatureNotClosedInvalid
             }
         });
-        expect(retval).toExist();
+        expect(retval).toBeTruthy();
         expect(retval.feature.geometry.coordinates).toEqual( [ [ [ 0, 1 ], [ 0, 5 ], [ 2, 1 ], [ 0, 1 ] ] ] );
 
         retval = measurementSelector({

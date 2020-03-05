@@ -17,7 +17,7 @@ describe('Test version selector', () => {
     it('test versionSelector with key 18e36c9e2ce1cbf57648907ec177e02f0118764d', () => {
         const current = "18e36c9e2ce1cbf57648907ec177e02f0118764d";
         const version = versionSelector({version: { current}});
-        expect(version).toExist();
+        expect(version).toBeTruthy();
         expect(version).toBe(current);
     });
     it('test validateVersion', () => {

@@ -18,13 +18,13 @@ describe('CoordinatesUtils', () => {
     it('convert lat lon to mercator without specifying source and dest', () => {
         const point = [45, 13];
         const transformed = CoordinatesUtils.reproject(point, "", "");
-        expect(transformed).toNotExist();
+        expect(transformed).toBeFalsy();
         expect(transformed).toEqual(null);
         const transformed2 = CoordinatesUtils.reproject(point, null, null);
-        expect(transformed2).toNotExist();
+        expect(transformed2).toBeFalsy();
         expect(transformed2).toEqual(null);
         const transformed3 = CoordinatesUtils.reproject(point, undefined, undefined);
-        expect(transformed3).toNotExist();
+        expect(transformed3).toBeFalsy();
         expect(transformed3).toEqual(null);
     });
     it('convert lat lon to mercator', () => {
@@ -32,13 +32,13 @@ describe('CoordinatesUtils', () => {
 
         var transformed = CoordinatesUtils.reproject(point, 'EPSG:4326', 'EPSG:900913');
 
-        expect(transformed).toExist();
-        expect(transformed.x).toExist();
-        expect(transformed.y).toExist();
-        expect(transformed.srs).toExist();
+        expect(transformed).toBeTruthy();
+        expect(transformed.x).toBeTruthy();
+        expect(transformed.y).toBeTruthy();
+        expect(transformed.srs).toBeTruthy();
 
-        expect(transformed.x).toNotBe(45);
-        expect(transformed.y).toNotBe(13);
+        expect(transformed.x).not.toBe(45);
+        expect(transformed.y).not.toBe(13);
         expect(transformed.srs).toBe('EPSG:900913');
     });
     it('it should tests the creation of a bbox given the center, resolution and size', () => {
@@ -47,7 +47,7 @@ describe('CoordinatesUtils', () => {
         let rotation = 0;
         let size = [10, 10];
         let bbox = CoordinatesUtils.getProjectedBBox(center, resolution, rotation, size);
-        expect(bbox).toExist();
+        expect(bbox).toBeTruthy();
         expect(bbox.maxx).toBeGreaterThan(bbox.minx);
         expect(bbox.maxy).toBeGreaterThan(bbox.miny);
     });
@@ -56,10 +56,10 @@ describe('CoordinatesUtils', () => {
         var bbox = [44, 12, 45, 13];
         var projbbox = CoordinatesUtils.reprojectBbox(bbox, 'EPSG:4326', 'EPSG:900913');
 
-        expect(projbbox).toExist();
+        expect(projbbox).toBeTruthy();
         expect(projbbox.length).toBe(4);
         for (let i = 0; i < 4; i++) {
-            expect(projbbox[i]).toNotBe(bbox[i]);
+            expect(projbbox[i]).not.toBe(bbox[i]);
         }
     });
     it('test getAvailableCRS', () => {
@@ -116,9 +116,9 @@ describe('CoordinatesUtils', () => {
             ]
         };
         const reprojectedTestPoint = CoordinatesUtils.reprojectGeoJson(testPoint, "EPSG:4326", "EPSG:900913");
-        expect(reprojectedTestPoint).toExist();
-        expect(reprojectedTestPoint.features).toExist();
-        expect(reprojectedTestPoint.features[0]).toExist();
+        expect(reprojectedTestPoint).toBeTruthy();
+        expect(reprojectedTestPoint.features).toBeTruthy();
+        expect(reprojectedTestPoint.features[0]).toBeTruthy();
         expect(reprojectedTestPoint.features[0].type).toBe("Feature");
         expect(reprojectedTestPoint.features[0].geometry.type).toBe("Point");
         // approximate values should be the same
@@ -470,33 +470,33 @@ describe('CoordinatesUtils', () => {
         expect(CoordinatesUtils.fetchProjRemotely("EPSG:3044", "base/web/client/test-resources/wms/projDef_3044.txt") instanceof Promise).toBeTruthy();
     });
     it('test determineCrs', () => {
-        expect(CoordinatesUtils.determineCrs("EPSG:4326")).toNotBe(null);
+        expect(CoordinatesUtils.determineCrs("EPSG:4326")).not.toBe(null);
         expect(CoordinatesUtils.determineCrs("EPSG:3004")).toBe(null);
         expect(CoordinatesUtils.determineCrs({crs: "EPSG:3004"}).crs).toBe("EPSG:3004");
     });
     it('test calculateDistance', () => {
-        expect(CoordinatesUtils.calculateDistance([[1, 1], [2, 2]], "haversine")).toNotBe(null);
+        expect(CoordinatesUtils.calculateDistance([[1, 1], [2, 2]], "haversine")).not.toBe(null);
         expect(CoordinatesUtils.calculateDistance([[1, 1], [2, 2]], "haversine")).toBe(157225.432);
         expect(CoordinatesUtils.calculateDistance([[1, 1], [2, 2]], "vincenty")).toBe(156876.149);
     });
     it('test calculate Geodesic Distance', () => {
-        expect(CoordinatesUtils.FORMULAS.haversine([[1, 1], [2, 2]] )).toNotBe(null);
+        expect(CoordinatesUtils.FORMULAS.haversine([[1, 1], [2, 2]] )).not.toBe(null);
         expect(CoordinatesUtils.FORMULAS.haversine([[1, 1], [2, 2]])).toBe(157225.432);
     });
     it('test calculate vincenty Distance', () => {
-        expect(CoordinatesUtils.FORMULAS.vincenty([[1, 1], [2, 2]] )).toNotBe(null);
+        expect(CoordinatesUtils.FORMULAS.vincenty([[1, 1], [2, 2]] )).not.toBe(null);
         expect(CoordinatesUtils.FORMULAS.vincenty([[1, 1], [2, 2]] )).toBe(156876.149);
     });
     it('test transformLineToArcs', () => {
-        expect(CoordinatesUtils.transformLineToArcs([[1, 1], [2, 2]] )).toNotBe(null);
+        expect(CoordinatesUtils.transformLineToArcs([[1, 1], [2, 2]] )).not.toBe(null);
         expect(CoordinatesUtils.transformLineToArcs([[1, 1], [2, 2]] ).length).toBe(100);
     });
     it('test transformLineToArcs with 2 equal points', () => {
-        expect(CoordinatesUtils.transformLineToArcs([[1, 1], [1, 1]] )).toNotBe(null);
+        expect(CoordinatesUtils.transformLineToArcs([[1, 1], [1, 1]] )).not.toBe(null);
         expect(CoordinatesUtils.transformLineToArcs([[1, 1], [1, 1]] ).length).toBe(0);
     });
     it('test transformArcsToLine', () => {
-        expect(CoordinatesUtils.transformArcsToLine(CoordinatesUtils.transformLineToArcs([[1, 1], [2, 2]] ))).toNotBe(null);
+        expect(CoordinatesUtils.transformArcsToLine(CoordinatesUtils.transformLineToArcs([[1, 1], [2, 2]] ))).not.toBe(null);
         expect(CoordinatesUtils.transformArcsToLine(CoordinatesUtils.transformLineToArcs([[1, 1], [2, 2]] )).length).toBe(2);
     });
     it('test getNormalizedLatLon', () => {

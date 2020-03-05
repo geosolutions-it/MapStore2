@@ -29,8 +29,8 @@ describe('WithContainer Overlay', () => {
         ConfigUtils.setConfigProp('themePrefix', 'custom');
         const cmp = ReactDOM.render(<div id="old-portal-container"><Portal><div className="portal-child"/></Portal></div>, document.getElementById("old-container"));
         const el = ReactDOM.findDOMNode(cmp);
-        expect(el).toExist();
-        expect(document.getElementById('container').querySelector('.portal-child')).toExist();
+        expect(el).toBeTruthy();
+        expect(document.getElementById('container').querySelector('.portal-child')).toBeTruthy();
         expect(document.getElementById('old-portal-container').querySelector('.portal-child')).toBe(null);
     });
 });

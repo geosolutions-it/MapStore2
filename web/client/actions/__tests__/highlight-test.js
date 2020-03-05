@@ -20,7 +20,7 @@ describe('Test correctness of the highlight actions', () => {
 
         let retval = highlightStatus(status);
 
-        expect(retval).toExist();
+        expect(retval).toBeTruthy();
         expect(retval.type).toBe(HIGHLIGHT_STATUS);
         expect(retval.status).toBe("enabled");
     });
@@ -29,7 +29,7 @@ describe('Test correctness of the highlight actions', () => {
 
         let retval = setHighlightFeaturesPath(path);
 
-        expect(retval).toExist();
+        expect(retval).toBeTruthy();
         expect(retval.type).toBe(SET_HIGHLIGHT_FEATURES_PATH);
         expect(retval.featuresPath).toBe(path);
     });
@@ -39,7 +39,7 @@ describe('Test correctness of the highlight actions', () => {
 
         let retval = updateHighlighted(features, 'update');
 
-        expect(retval).toExist();
+        expect(retval).toBeTruthy();
         expect(retval.type).toBe(UPDATE_HIGHLIGHTED);
         expect(retval.features).toBe(features);
         expect(retval.status).toBe('update');

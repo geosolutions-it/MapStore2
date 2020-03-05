@@ -35,7 +35,7 @@ describe('widgets dependenciesToExtent enhancer', () => {
     });
     it('dependenciesToExtent default', (done) => {
         const Sink = dependenciesToExtent(createSink( props => {
-            expect(props).toExist();
+            expect(props).toBeTruthy();
             expect(props).toEqual({});
             done();
         }));
@@ -44,10 +44,10 @@ describe('widgets dependenciesToExtent enhancer', () => {
 
     it('dependenciesToExtent fetching bounds and triggering zoom to extent', (done) => {
         const Sink = dependenciesToExtent(createSink( props => {
-            expect(props).toExist();
-            expect(props.hookRegister).toExist();
+            expect(props).toBeTruthy();
+            expect(props.hookRegister).toBeTruthy();
             const hook = props.hookRegister.getHook(MapUtils.ZOOM_TO_EXTENT_HOOK);
-            expect(hook).toExist();
+            expect(hook).toBeTruthy();
             done();
         }));
         mockAxios.onPost().reply(
@@ -74,10 +74,10 @@ describe('widgets dependenciesToExtent enhancer', () => {
 
     it('dependenciesToExtent fetching bounds and triggering zoom to extent, even if layers does not match', (done) => {
         const Sink = dependenciesToExtent(createSink( props => {
-            expect(props).toExist();
-            expect(props.hookRegister).toExist();
+            expect(props).toBeTruthy();
+            expect(props.hookRegister).toBeTruthy();
             const hook = props.hookRegister.getHook(MapUtils.ZOOM_TO_EXTENT_HOOK);
-            expect(hook).toExist();
+            expect(hook).toBeTruthy();
             done();
         }));
         mockAxios.onPost().reply(

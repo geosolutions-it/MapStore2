@@ -27,38 +27,38 @@ describe("Test the PrintSubmit component", () => {
 
     it('creates component with defaults', () => {
         const cmp = ReactDOM.render(<PrintSubmit/>, document.getElementById("container"));
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
 
         const node = ReactDOM.findDOMNode(cmp);
-        expect(node).toExist();
+        expect(node).toBeTruthy();
         expect(node.tagName.toLowerCase()).toBe('button');
-        expect(node.disabled).toNotExist();
+        expect(node.disabled).toBeFalsy();
     });
 
     it('creates component disabled', () => {
         const cmp = ReactDOM.render(<PrintSubmit disabled/>, document.getElementById("container"));
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
 
         const node = ReactDOM.findDOMNode(cmp);
-        expect(node).toExist();
+        expect(node).toBeTruthy();
         expect(node.tagName.toLowerCase()).toBe('button');
-        expect(node.disabled).toExist();
+        expect(node.disabled).toBeTruthy();
     });
 
     it('creates component loading', () => {
         const cmp = ReactDOM.render(<PrintSubmit loading/>, document.getElementById("container"));
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
         const node = ReactDOM.findDOMNode(cmp);
         expect(node.getElementsByClassName('spinner').length).toBe(1);
     });
 
     it('pdf onPrint', (done) => {
         const handler = (e) => {
-            expect(e).toExist();
+            expect(e).toBeTruthy();
             done();
         };
         const cmp = ReactDOM.render(<PrintSubmit onPrint={handler}/>, document.getElementById("container"));
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
         const node = ReactDOM.findDOMNode(cmp);
         ReactTestUtils.Simulate.click(node);
     });

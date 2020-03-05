@@ -24,8 +24,8 @@ describe('handleNodeSelection enhancer', () => {
     });
     it('handleNodeSelection rendering with defaults', (done) => {
         const Sink = handleNodeSelection(createSink( props => {
-            expect(props).toExist();
-            expect(props.onNodeSelect).toExist();
+            expect(props).toBeTruthy();
+            expect(props.onNodeSelect).toBeTruthy();
             props.onNodeSelect('LAYER', "layers");
             // after onNodeSelect call the selectedNodes array is populated
             if (props.selectedNodes && props.selectedNodes.length === 1) {

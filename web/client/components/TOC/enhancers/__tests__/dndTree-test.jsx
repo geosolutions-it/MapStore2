@@ -99,8 +99,8 @@ describe('dndTree TOC enhancer', () => {
 
         ReactDOM.render(<EnhancedComponent testFunc={test.testFunc} nodes={testNodes}/>, document.getElementById("container"));
 
-        expect(testFuncSpy.calls.length).toBe(1);
-        expect(testFuncSpy.calls[0].arguments[0]).toEqual([{
+        expect(testFuncSpy.mock.calls.length).toBe(1);
+        expect(testFuncSpy.mock.calls[0][0]).toEqual([{
             id: 'Default',
             name: 'Default',
             nodes: [{
@@ -203,8 +203,8 @@ describe('dndTree TOC enhancer', () => {
 
         ReactDOM.render(<EnhancedComponent testFunc={test.testFunc} testDndState={dndState} nodes={testNodes}/>, document.getElementById("container"));
 
-        expect(testFuncSpy.calls.length).toBe(2);
-        expect(testFuncSpy.calls[1].arguments[0]).toEqual([{
+        expect(testFuncSpy.mock.calls.length).toBe(2);
+        expect(testFuncSpy.mock.calls[1][0]).toEqual([{
             id: 'Default',
             name: 'Default',
             nodes: [{
@@ -310,8 +310,8 @@ describe('dndTree TOC enhancer', () => {
 
         ReactDOM.render(<EnhancedComponent testFunc={test.testFunc} testDndState={dndState} nodes={testNodes}/>, document.getElementById("container"));
 
-        expect(testFuncSpy.calls.length).toBe(2);
-        expect(testFuncSpy.calls[1].arguments[0]).toEqual([{
+        expect(testFuncSpy.mock.calls.length).toBe(2);
+        expect(testFuncSpy.mock.calls[1][0]).toEqual([{
             id: 'Default',
             name: 'Default',
             nodes: [{
@@ -428,8 +428,8 @@ describe('dndTree TOC enhancer', () => {
 
         ReactDOM.render(<EnhancedComponent testFunc={test.testFunc} testDndState={dndState} nodes={testNodes}/>, document.getElementById("container"));
 
-        expect(testFuncSpy.calls.length).toBe(2);
-        expect(testFuncSpy.calls[1].arguments[0]).toEqual([{
+        expect(testFuncSpy.mock.calls.length).toBe(2);
+        expect(testFuncSpy.mock.calls[1][0]).toEqual([{
             id: 'Default',
             name: 'Default',
             nodes: [{

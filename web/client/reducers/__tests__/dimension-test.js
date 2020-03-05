@@ -23,7 +23,7 @@ describe('Test the dimension reducer', () => {
             domain: "123--123"
         });
         const state = dimension( undefined, action);
-        expect(state).toExist();
+        expect(state).toBeTruthy();
         expect(layerDimensionDataSelectorCreator("TEST_LAYER", "time")( {
             dimension: state
         }).name).toBe("time");
@@ -41,13 +41,13 @@ describe('Test the dimension reducer', () => {
             }
         };
         const state = dimension(initialState, action);
-        expect(state).toExist();
+        expect(state).toBeTruthy();
         expect(layerDimensionDataSelectorCreator('sample1', 'dimension1')( {
             dimension: state
-        })).toNotExist();
+        })).toBeFalsy();
         expect(layerDimensionDataSelectorCreator('sample2', 'dimension1')( {
             dimension: state
-        })).toExist();
+        })).toBeTruthy();
     });
     it('removing a layer when there is no data in dimension state', () => {
         const action = {
@@ -58,7 +58,7 @@ describe('Test the dimension reducer', () => {
             currentTime: '00:00:00z'
         };
         const state = dimension(initialState, action);
-        expect(state).toExist();
+        expect(state).toBeTruthy();
     });
     it('reset dimension data when switch to a new map', () => {
         const action = {
@@ -68,21 +68,21 @@ describe('Test the dimension reducer', () => {
             currentTime: '00:00:00z'
         };
         const state = dimension(initialState, action);
-        expect(state).toExist();
-        expect(state.currentTime).toNotExist();
+        expect(state).toBeTruthy();
+        expect(state.currentTime).toBeFalsy();
     });
     it('setCurrentTime', () => {
         const NEXT_TIME = '2016-09-03T00:00:00.000Z';
         const action = setCurrentTime(NEXT_TIME);
         const state = dimension( undefined, action);
-        expect(state).toExist();
+        expect(state).toBeTruthy();
         expect(state.currentTime).toBe(NEXT_TIME);
     });
     it('setCurrentOffset', () => {
         const NEXT_TIME = '2016-09-03T00:00:00.000Z';
         const action = setCurrentOffset(NEXT_TIME);
         const state = dimension(undefined, action);
-        expect(state).toExist();
+        expect(state).toBeTruthy();
         expect(state.offsetTime).toBe(NEXT_TIME);
     });
     it('moveTime', () => {
@@ -92,9 +92,9 @@ describe('Test the dimension reducer', () => {
         const NEXT_TIME = '2016-09-03T00:00:00.000Z';
         const action = moveTime(NEXT_TIME);
         const state = dimension(d, action);
-        expect(state).toExist();
+        expect(state).toBeTruthy();
         expect(state.currentTime).toBe(NEXT_TIME);
-        expect(state.offsetTime).toNotExist();
+        expect(state.offsetTime).toBeFalsy();
     });
     it('moveTime with offset', () => {
         const d = {
@@ -104,7 +104,7 @@ describe('Test the dimension reducer', () => {
         const NEXT_TIME = '2016-09-03T00:00:00.000Z';
         const action = moveTime(NEXT_TIME);
         const state = dimension(d, action);
-        expect(state).toExist();
+        expect(state).toBeTruthy();
         expect(state.currentTime).toBe(NEXT_TIME);
         // also offset time should shift of old offsetTime - currentTime from NEXT_TIME
         expect(state.offsetTime).toBe('2016-09-04T00:00:00.000Z');

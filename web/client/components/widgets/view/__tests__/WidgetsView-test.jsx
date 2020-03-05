@@ -42,29 +42,29 @@ describe('WidgetsView component', () => {
         ReactDOM.render(<WidgetsView />, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('.widget-container');
-        expect(el).toExist();
+        expect(el).toBeTruthy();
     });
     it('Test WidgetsView with widgets', () => {
         ReactDOM.render(<WidgetsView widgets={[dummyWidget]}/>, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('.mapstore-widget-card');
-        expect(el).toExist();
+        expect(el).toBeTruthy();
     });
     it('Test WidgetsView with width=460', () => {
         const WIDGET_MOBILE_RIGHT_SPACE = 34;
         const width = 460;
         const cmp = ReactDOM.render(<WidgetsView widgets={[dummyWidget]} useDefaultWidthProvider={false} width={width}/>, document.getElementById("container"));
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
         const innerLayout = ReactTestUtils.findRenderedComponentWithType(cmp, Responsive);
-        expect(innerLayout).toExist();
+        expect(innerLayout).toBeTruthy();
         expect(innerLayout.props.width).toEqual(width - WIDGET_MOBILE_RIGHT_SPACE);
     });
     it('Test WidgetsView with width=640', () => {
         const width = 640;
         const cmp = ReactDOM.render(<WidgetsView widgets={[dummyWidget]} useDefaultWidthProvider={false} width={width}/>, document.getElementById("container"));
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
         const innerLayout = ReactTestUtils.findRenderedComponentWithType(cmp, Responsive);
-        expect(innerLayout).toExist();
+        expect(innerLayout).toBeTruthy();
         expect(innerLayout.props.width).toEqual(width);
     });
     it('handler editWidget', () => {
@@ -73,7 +73,7 @@ describe('WidgetsView component', () => {
         };
         const spyEditWidget = expect.spyOn(actions, 'editWidget');
         const cmp = ReactDOM.render(<WidgetsView widgets={[dummyWidget]} editWidget={actions.editWidget} />, document.getElementById("container"));
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
         const container = document.getElementById('container');
         ReactTestUtils.Simulate.click(container.querySelector('.glyphicon-pencil')); // <-- trigger event callback
         expect(spyEditWidget).toHaveBeenCalled();
@@ -84,11 +84,11 @@ describe('WidgetsView component', () => {
         };
         const spyDeleteWidget = expect.spyOn(actions, 'deleteWidget');
         const cmp = ReactDOM.render(<WidgetsView widgets={[dummyWidget]} deleteWidget={actions.deleteWidget} />, document.getElementById("container"));
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
         const container = document.getElementById('container');
         ReactTestUtils.Simulate.click(container.querySelector('.glyphicon-trash')); // <-- trigger event callback
-        expect(spyDeleteWidget).toNotHaveBeenCalled(); // callback should have been called only after confirm dialog
-        expect(document.querySelector('.modal-dialog')).toExist(); // confirm dialog opened. NOTE: rendered in the document, not in the container
+        expect(spyDeleteWidget).not.toHaveBeenCalled(); // callback should have been called only after confirm dialog
+        expect(document.querySelector('.modal-dialog')).toBeTruthy(); // confirm dialog opened. NOTE: rendered in the document, not in the container
         ReactTestUtils.Simulate.click(document.querySelector('.modal-footer button'));
         expect(spyDeleteWidget).toHaveBeenCalled();
     });
@@ -96,12 +96,12 @@ describe('WidgetsView component', () => {
         ReactDOM.render(<WidgetsView layouts={{ md: [{ i: dummyWidget.id, w: 1, h: 1, x: 1, y: 1 }]}} widgets={[dummyWidget]} />, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('.react-grid-item');
-        expect(el).toExist();
+        expect(el).toBeTruthy();
     });
     it('statics widgets', () => {
         ReactDOM.render(<WidgetsView layouts={{ md: [{ i: dummyWidget.id, w: 1, h: 1, x: 1, y: 1 }] }} widgets={[{...dummyWidget, dataGrid: {"static": true, w: 1, h: 1, x: 1, y: 1 }}]} />, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('.react-grid-item.static');
-        expect(el).toExist();
+        expect(el).toBeTruthy();
     });
 });

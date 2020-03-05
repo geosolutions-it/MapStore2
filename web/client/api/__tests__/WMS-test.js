@@ -23,7 +23,7 @@ describe('Test correctness of the WMS APIs', () => {
     it('describeLayers', (done) => {
         API.describeLayers('base/web/client/test-resources/wms/DescribeLayers.xml', "workspace:vector_layer").then((result) => {
             try {
-                expect(result).toExist();
+                expect(result).toBeTruthy();
                 expect(result.length).toBe(2);
                 expect(result[0].owsType).toBe("WFS");
                 done();
@@ -35,7 +35,7 @@ describe('Test correctness of the WMS APIs', () => {
     it('describeLayer with OGC-SCHEMAS', (done) => {
         API.describeLayer('base/web/client/test-resources/wms/DescribeLayers.xml', "workspace:vector_layer").then((result) => {
             try {
-                expect(result).toExist();
+                expect(result).toBeTruthy();
                 expect(result.owsType).toBe("WFS");
                 done();
             } catch (ex) {
@@ -46,10 +46,10 @@ describe('Test correctness of the WMS APIs', () => {
     it('GetCapabilities 1.3.0', (done) => {
         API.getCapabilities('base/web/client/test-resources/wms/GetCapabilities-1.3.0.xml').then((result) => {
             try {
-                expect(result).toExist();
-                expect(result.capability).toExist();
+                expect(result).toBeTruthy();
+                expect(result.capability).toBeTruthy();
                 expect(result.version).toBe("1.3.0");
-                expect(result.capability.layer).toExist();
+                expect(result.capability.layer).toBeTruthy();
                 done();
             } catch (ex) {
                 done(ex);
@@ -59,10 +59,10 @@ describe('Test correctness of the WMS APIs', () => {
     it('GetCapabilities 1.1.1', (done) => {
         API.getCapabilities('base/web/client/test-resources/wms/GetCapabilities-1.1.1.xml').then((result) => {
             try {
-                expect(result).toExist();
-                expect(result.capability).toExist();
+                expect(result).toBeTruthy();
+                expect(result.capability).toBeTruthy();
                 expect(result.version).toBe("1.1.1");
-                expect(result.capability.layer).toExist();
+                expect(result.capability.layer).toBeTruthy();
                 done();
             } catch (ex) {
                 done(ex);
@@ -72,11 +72,11 @@ describe('Test correctness of the WMS APIs', () => {
     it('GetCapabilities 1.3.0 RAW', (done) => {
         API.getCapabilities('base/web/client/test-resources/wms/GetCapabilities-1.3.0.xml', true).then((result) => {
             try {
-                expect(result).toExist();
-                expect(result.WMS_Capabilities).toExist();
-                expect(result.WMS_Capabilities.Capability).toExist();
+                expect(result).toBeTruthy();
+                expect(result.WMS_Capabilities).toBeTruthy();
+                expect(result.WMS_Capabilities.Capability).toBeTruthy();
                 expect(result.WMS_Capabilities.$.version).toBe("1.3.0");
-                expect(result.WMS_Capabilities.Capability.Layer).toExist();
+                expect(result.WMS_Capabilities.Capability.Layer).toBeTruthy();
                 done();
             } catch (ex) {
                 done(ex);
@@ -86,11 +86,11 @@ describe('Test correctness of the WMS APIs', () => {
     it('GetCapabilities 1.1.1 RAW', (done) => {
         API.getCapabilities('base/web/client/test-resources/wms/GetCapabilities-1.1.1.xml', true).then((result) => {
             try {
-                expect(result).toExist();
-                expect(result.WMT_MS_Capabilities).toExist();
-                expect(result.WMT_MS_Capabilities.Capability).toExist();
+                expect(result).toBeTruthy();
+                expect(result.WMT_MS_Capabilities).toBeTruthy();
+                expect(result.WMT_MS_Capabilities.Capability).toBeTruthy();
                 expect(result.WMT_MS_Capabilities.$.version).toBe("1.1.1");
-                expect(result.WMT_MS_Capabilities.Capability.Layer).toExist();
+                expect(result.WMT_MS_Capabilities.Capability.Layer).toBeTruthy();
                 done();
             } catch (ex) {
                 done(ex);
@@ -101,12 +101,12 @@ describe('Test correctness of the WMS APIs', () => {
     it('GetBBOX', (done) => {
         API.getCapabilities('base/web/client/test-resources/wms/GetCapabilities-1.1.1.xml').then((result) => {
             try {
-                expect(result).toExist();
-                expect(result.capability).toExist();
-                expect(result.capability.layer).toExist();
+                expect(result).toBeTruthy();
+                expect(result.capability).toBeTruthy();
+                expect(result.capability.layer).toBeTruthy();
                 const bbox = API.getBBox(result.capability.layer);
-                expect(bbox.extent).toExist();
-                expect(bbox.crs).toExist();
+                expect(bbox.extent).toBeTruthy();
+                expect(bbox.crs).toBeTruthy();
                 done();
             } catch (ex) {
                 done(ex);
@@ -116,13 +116,13 @@ describe('Test correctness of the WMS APIs', () => {
     it('GetBBOX Bounds', (done) => {
         API.getCapabilities('base/web/client/test-resources/wms/GetCapabilities-1.1.1.xml').then((result) => {
             try {
-                expect(result).toExist();
-                expect(result.capability).toExist();
-                expect(result.capability.layer).toExist();
+                expect(result).toBeTruthy();
+                expect(result.capability).toBeTruthy();
+                expect(result.capability.layer).toBeTruthy();
                 const bbox = API.getBBox(result.capability.layer, true);
-                expect(bbox.bounds).toExist();
-                expect(bbox.bounds.minx).toExist();
-                expect(bbox.crs).toExist();
+                expect(bbox.bounds).toBeTruthy();
+                expect(bbox.bounds.minx).toBeTruthy();
+                expect(bbox.crs).toBeTruthy();
                 done();
             } catch (ex) {
                 done(ex);
@@ -132,8 +132,8 @@ describe('Test correctness of the WMS APIs', () => {
     it('GetRecords', (done) => {
         API.getRecords('base/web/client/test-resources/wms/GetCapabilities-1.3.0.xml', 0, 2, '').then((result) => {
             try {
-                expect(result).toExist();
-                expect(result.service).toExist();
+                expect(result).toBeTruthy();
+                expect(result.service).toBeTruthy();
                 expect(result.records[0].formats.length).toBe(20);
                 expect(result.numberOfRecordsMatched).toBe(5);
                 done();
@@ -146,11 +146,11 @@ describe('Test correctness of the WMS APIs', () => {
         // note: maxRecords = 2 because of strange pagination system. Need to restore this when fixed
         API.getRecords('base/web/client/test-resources/wms/attribution.xml', 0, 2, '').then((result) => {
             try {
-                expect(result).toExist();
-                expect(result.service).toExist();
+                expect(result).toBeTruthy();
+                expect(result.service).toBeTruthy();
                 expect(result.numberOfRecordsMatched).toBe(2);
-                expect(result.records[0]).toExist();
-                expect(result.records[0].credits).toExist();
+                expect(result.records[0]).toBeTruthy();
+                expect(result.records[0].credits).toBeTruthy();
                 expect(result.records[0].credits.imageUrl).toBe('logo.png');
                 done();
             } catch (ex) {
@@ -161,8 +161,8 @@ describe('Test correctness of the WMS APIs', () => {
     it('GetRecords 1.1.1', (done) => {
         API.getRecords('base/web/client/test-resources/wms/GetCapabilities-1.1.1.xml', 0, 2, '').then((result) => {
             try {
-                expect(result).toExist();
-                expect(result.service).toExist();
+                expect(result).toBeTruthy();
+                expect(result.service).toBeTruthy();
                 expect(result.records[0].formats.length).toBe(42);
                 expect(result.numberOfRecordsMatched).toBe(7);
                 done();
@@ -190,7 +190,7 @@ describe('Test correctness of the WMS APIs', () => {
         };
 
         const capability = API.parseLayerCapabilities(capabilities, {name: 'mytest'});
-        expect(capability).toExist();
+        expect(capability).toBeTruthy();
     });
 });
 

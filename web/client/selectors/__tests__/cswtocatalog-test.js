@@ -98,8 +98,8 @@ describe('Test csw to catalog selector', () => {
             }
         };
         const records = cswToCatalogSelector(testState.catalog);
-        expect(records).toExist();
-        expect(records[0]).toExist();
+        expect(records).toBeTruthy();
+        expect(records[0]).toBeTruthy();
         expect(_.isEqual(records[0], sampleRecord)).toBe(true);
     });
     it('test correct conversion for geoserver style', () => {
@@ -117,8 +117,8 @@ describe('Test csw to catalog selector', () => {
             }
         };
         const records = cswToCatalogSelector(testState.catalog);
-        expect(records).toExist();
-        expect(records[0]).toExist();
+        expect(records).toBeTruthy();
+        expect(records[0]).toBeTruthy();
         expect(_.isEqual(records[0], sampleRecord)).toBe(true);
     });
 });

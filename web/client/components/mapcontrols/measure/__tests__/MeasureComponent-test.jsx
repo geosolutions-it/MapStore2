@@ -31,17 +31,17 @@ describe("test the MeasureComponent", () => {
     it('test component creation', () => {
         let measurement = {};
         const mc = ReactDOM.render(<MeasureComponent measurement={measurement}/>, document.getElementById("container"));
-        expect(mc).toExist();
+        expect(mc).toBeTruthy();
     });
 
     it('test creation of button UIs ', () => {
         let measurement = {};
         const mc = ReactDOM.render(<MeasureComponent useButtonGroup measurement={measurement}/>, document.getElementById("container"));
-        expect(mc).toExist();
+        expect(mc).toBeTruthy();
         const domNode = ReactDOM.findDOMNode(mc);
-        expect(domNode).toExist();
+        expect(domNode).toBeTruthy();
         const domButtons = domNode.getElementsByTagName('button');
-        expect(domButtons).toExist();
+        expect(domButtons).toBeTruthy();
         expect(domButtons.length).toBe(3);
     });
 
@@ -49,11 +49,11 @@ describe("test the MeasureComponent", () => {
     it('test creation of measurement result panel UI ', () => {
         let measurement = {};
         const mc = ReactDOM.render(<MeasureComponent measurement={measurement}/>, document.getElementById("container"));
-        expect(mc).toExist();
+        expect(mc).toBeTruthy();
         const domNode = ReactDOM.findDOMNode(mc);
-        expect(domNode).toExist();
+        expect(domNode).toBeTruthy();
         const domResultPanel = document.getElementById('measure-result-panel');
-        expect(domResultPanel).toExist();
+        expect(domResultPanel).toBeTruthy();
     });
 
     it('test line activation', () => {
@@ -69,10 +69,10 @@ describe("test the MeasureComponent", () => {
                 }}
                 lineMeasureEnabled={false} />, document.getElementById("container")
         );
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
 
         const cmpDom = ReactDOM.findDOMNode(cmp);
-        expect(cmpDom).toExist();
+        expect(cmpDom).toBeTruthy();
 
         const buttons = cmpDom.getElementsByTagName('button');
         expect(buttons.length).toBe(3);
@@ -80,7 +80,7 @@ describe("test the MeasureComponent", () => {
         const lineBtn = buttons.item(0);
         lineBtn.click();
 
-        expect(newMeasureState).toExist();
+        expect(newMeasureState).toBeTruthy();
         expect(newMeasureState.geomType).toBe('LineString');
     });
 
@@ -97,10 +97,10 @@ describe("test the MeasureComponent", () => {
                 }}
                 areaMeasureEnabled={false} />, document.getElementById("container")
         );
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
 
         const cmpDom = ReactDOM.findDOMNode(cmp);
-        expect(cmpDom).toExist();
+        expect(cmpDom).toBeTruthy();
 
         const buttons = cmpDom.getElementsByTagName('button');
         expect(buttons.length).toBe(3);
@@ -108,7 +108,7 @@ describe("test the MeasureComponent", () => {
         const areaBtn = buttons.item(1);
         areaBtn.click();
 
-        expect(newMeasureState).toExist();
+        expect(newMeasureState).toBeTruthy();
         expect(newMeasureState.geomType).toBe('Polygon');
     });
 
@@ -125,10 +125,10 @@ describe("test the MeasureComponent", () => {
                 }}
                 bearingMeasureEnabled={false} />, document.getElementById("container")
         );
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
 
         const cmpDom = ReactDOM.findDOMNode(cmp);
-        expect(cmpDom).toExist();
+        expect(cmpDom).toBeTruthy();
 
         const buttons = cmpDom.getElementsByTagName('button');
         expect(buttons.length).toBe(3);
@@ -136,7 +136,7 @@ describe("test the MeasureComponent", () => {
         const bearingBtn = buttons.item(2);
         bearingBtn.click();
 
-        expect(newMeasureState).toExist();
+        expect(newMeasureState).toBeTruthy();
         expect(newMeasureState.geomType).toBe('Bearing');
     });
 
@@ -154,10 +154,10 @@ describe("test the MeasureComponent", () => {
                 withReset
             />, document.getElementById("container")
         );
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
 
         const cmpDom = ReactDOM.findDOMNode(cmp);
-        expect(cmpDom).toExist();
+        expect(cmpDom).toBeTruthy();
 
         const buttons = cmpDom.getElementsByTagName('button');
         expect(buttons.length).toBe(4);
@@ -167,7 +167,7 @@ describe("test the MeasureComponent", () => {
         // Dectivate
         resetBtn.click();
 
-        expect(newMeasureState).toExist();
+        expect(newMeasureState).toBeTruthy();
         expect(newMeasureState.geomType).toBe(null);
     });
 
@@ -184,10 +184,10 @@ describe("test the MeasureComponent", () => {
         let cmp = ReactDOM.render(
             <MeasureComponent measurement={measurement} bearingMeasureEnabled/>, document.getElementById("container")
         );
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
 
         const bearingSpan = document.getElementById('measure-bearing-res');
-        expect(bearingSpan).toExist();
+        expect(bearingSpan).toBeTruthy();
 
         cmp = ReactDOM.render(
             <MeasureComponent measurement={{...measurement, bearing: 45}} bearingMeasureEnabled/>, document.getElementById("container")
@@ -229,10 +229,10 @@ describe("test the MeasureComponent", () => {
                 lineMeasureEnabled
             />, document.getElementById("container")
         );
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
 
         const lenSpan = document.getElementById('measure-len-res');
-        expect(lenSpan).toExist();
+        expect(lenSpan).toBeTruthy();
 
         let testDiv = document.createElement("div");
         document.body.appendChild(testDiv);
@@ -258,7 +258,7 @@ describe("test the MeasureComponent", () => {
                 }} measurement={assign({}, measurement, {geomType: 'Polygon', area: 1000000})}/>, document.getElementById("container")
         );
         const areaSpan = document.getElementById('measure-area-res');
-        expect(areaSpan).toExist();
+        expect(areaSpan).toBeTruthy();
         expect(areaSpan.firstChild.firstChild.firstChild.innerHTML).toBe("1");
     });
 
@@ -293,9 +293,9 @@ describe("test the MeasureComponent", () => {
                 lineMeasureEnabled
             />, document.getElementById("container")
         );
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
         const coordEditorPanel = TestUtils.findRenderedDOMComponentWithClass(cmp, 'ms2-border-layout-body');
-        expect(coordEditorPanel).toExist();
+        expect(coordEditorPanel).toBeTruthy();
     });
 
     it('rendering a coordinate editor for Polygons with 4 empty rows', () => {
@@ -329,10 +329,10 @@ describe("test the MeasureComponent", () => {
                 areaMeasureEnabled
             />, document.getElementById("container")
         );
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
         const coordEditorPanel = TestUtils.findRenderedDOMComponentWithClass(cmp, 'ms2-border-layout-body');
         const coordinateRows = TestUtils.scryRenderedDOMComponentsWithClass(cmp, 'coordinateRow');
-        expect(coordEditorPanel).toExist();
+        expect(coordEditorPanel).toBeTruthy();
         expect(coordinateRows.length).toBe(4);
 
     });

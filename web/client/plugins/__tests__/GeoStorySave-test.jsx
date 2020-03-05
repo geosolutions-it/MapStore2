@@ -44,7 +44,7 @@ describe('GeoStorySave Plugins (GeoStorySave, GeoStorySaveAs)', () => {
             // hide when not logged in
             expect(containers.BurgerMenu.selector({ security: {} }).style.display).toBe("none");
             // show when logged in
-            expect(containers.BurgerMenu.selector({security: {user: {}}}).style.display).toNotExist();
+            expect(containers.BurgerMenu.selector({security: {user: {}}}).style.display).toBeFalsy();
             // hide if you don't have permissions
             expect(containers.BurgerMenu.selector({ security: { user: {} }, geostory: { resource: { id: 1234, canEdit: false } } }).style.display ).toBe("none");
         });
@@ -73,7 +73,7 @@ describe('GeoStorySave Plugins (GeoStorySave, GeoStorySaveAs)', () => {
             expect(containers.BurgerMenu.selector({
                 security: { user: {} },
                 geostory: { resource: { id: 1234, canEdit: false } }
-            }).style.display).toNotExist();
+            }).style.display).toBeFalsy();
         });
         it('show when control is set to "saveAs"', () => {
             const { Plugin } = getPluginForTest(GeoStorySaveAs, stateMocker(DUMMY_ACTION, setControl(Controls.SHOW_SAVE, "saveAs")));

@@ -170,7 +170,7 @@ describe('widgets Epics', () => {
             expect(actions.length).toBe(1);
             const action = actions[0];
             expect(action.type).toBe(LOAD_DEPENDENCIES);
-            expect(action.dependencies).toExist();
+            expect(action.dependencies).toBeTruthy();
             expect(action.dependencies.center).toBe("map.center");
             expect(action.dependencies.viewport).toBe("map.bbox");
             expect(action.dependencies.zoom).toBe("map.zoom");
@@ -191,7 +191,7 @@ describe('widgets Epics', () => {
             expect(actions[0].value).toBe(true);
             const action = actions[1];
             expect(action.type).toBe(EDITOR_CHANGE);
-            expect(action.key).toExist();
+            expect(action.key).toBeTruthy();
             expect(action.key).toBe("dependenciesMap");
             expect(action.value.center).toBe("center");
             expect(action.value.zoom).toBe("zoom");
@@ -215,7 +215,7 @@ describe('widgets Epics', () => {
             expect(actions[0].value).toBe(true);
             const action = actions[1];
             expect(action.type).toBe(EDITOR_CHANGE);
-            expect(action.key).toExist();
+            expect(action.key).toBeTruthy();
             expect(action.key).toBe("dependenciesMap");
             expect(action.value.center).toBe("widgets[a].map.center");
             expect(action.value.zoom).toBe("widgets[a].map.zoom");
@@ -243,7 +243,7 @@ describe('widgets Epics', () => {
             expect(actions[1].value).toBe(true);
             const action = actions[2];
             expect(action.type).toBe(EDITOR_CHANGE);
-            expect(action.key).toExist();
+            expect(action.key).toBeTruthy();
             expect(action.key).toBe("dependenciesMap");
             expect(action.value.center).toBe("widgets[w1].map.center");
             expect(action.value.zoom).toBe("widgets[w1].map.zoom");
@@ -286,10 +286,10 @@ describe('widgets Epics', () => {
             expect(actions[0].value).toBe(false);
             const action = actions[1];
             expect(action.type).toBe(EDITOR_CHANGE);
-            expect(action.key).toExist();
+            expect(action.key).toBeTruthy();
             expect(action.key).toBe("dependenciesMap");
-            expect(action.value.center).toNotExist();
-            expect(action.value.zoom).toNotExist();
+            expect(action.value.center).toBeFalsy();
+            expect(action.value.zoom).toBeFalsy();
             done();
         };
         testEpic(toggleWidgetConnectFlow,

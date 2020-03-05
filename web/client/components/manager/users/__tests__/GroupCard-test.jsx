@@ -36,7 +36,7 @@ describe("Test GroupCard Component", () => {
     it('Test group rendering', () => {
         let comp = ReactDOM.render(
             <GroupCard group={group1}/>, document.getElementById("container"));
-        expect(comp).toExist();
+        expect(comp).toBeTruthy();
         let title = ReactTestUtils.scryRenderedDOMComponentsWithClass(
             comp,
             "gridcard-title"
@@ -50,7 +50,7 @@ describe("Test GroupCard Component", () => {
     it('Test groupname rendering inside the card', () => {
         let comp = ReactDOM.render(
             <GroupCard group={group1} />, document.getElementById("container"));
-        expect(comp).toExist();
+        expect(comp).toBeTruthy();
         let items = document.querySelectorAll('#container .gridcard .user-data-container > div');
         let renderName = items[1];
         expect(renderName.innerHTML).toBe(group1.groupName);

@@ -130,7 +130,7 @@ describe('timeline selector', () => {
         })).toEqual(SAMPLE_RANGE);
     });
     it('rangeSelector', () => {
-        expect(rangeDataSelector(SAMPLE_STATE_HISTOGRAM)[TEST_LAYER_ID]).toExist();
+        expect(rangeDataSelector(SAMPLE_STATE_HISTOGRAM)[TEST_LAYER_ID]).toBeTruthy();
     });
     it('itemsSelector', () => {
         const histogramItems = itemsSelector(SAMPLE_STATE_HISTOGRAM);
@@ -150,10 +150,10 @@ describe('timeline selector', () => {
         domainValuesItems.map((item) => {
             expect(item.type).toBe("point");
             expect(item.group).toBe(TEST_LAYER_ID);
-            expect(item.start).toExist();
+            expect(item.start).toBeTruthy();
             expect(item.end).toEqual(item.start);
-            expect(item.count).toNotExist();
-            expect(item.className).toNotExist();
+            expect(item.count).toBeFalsy();
+            expect(item.className).toBeFalsy();
             expect(item.content).toBe(" ");
         });
         // TODO: test items from static time values inside layer, not fully supported yet.

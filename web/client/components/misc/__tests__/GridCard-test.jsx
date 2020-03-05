@@ -27,10 +27,10 @@ describe('This test for GridCard', () => {
     // test DEFAULTS
     it('creates the component with defaults', () => {
         const item = ReactDOM.render(<GridCard />, document.getElementById("container"));
-        expect(item).toExist();
+        expect(item).toBeTruthy();
 
         const mapItemDom = ReactDOM.findDOMNode(item);
-        expect(mapItemDom).toExist();
+        expect(mapItemDom).toBeTruthy();
 
         expect(mapItemDom.className).toBe('gridcard');
         const headings = mapItemDom.getElementsByClassName('gridcard-title');
@@ -41,10 +41,10 @@ describe('This test for GridCard', () => {
         const testName = "test";
         const testDescription = "testDescription";
         const item = ReactDOM.render(<GridCard header={testName}>{testDescription}</GridCard>, document.getElementById("container"));
-        expect(item).toExist();
+        expect(item).toBeTruthy();
 
         const itemDom = ReactDOM.findDOMNode(item);
-        expect(itemDom).toExist();
+        expect(itemDom).toBeTruthy();
 
         expect(itemDom.className).toBe('gridcard');
         const headings = itemDom.getElementsByClassName('gridcard-title');
@@ -59,6 +59,6 @@ describe('This test for GridCard', () => {
         var button = TestUtils.findRenderedDOMComponentWithTag(
             component, 'button'
         );
-        expect(button).toExist();
+        expect(button).toBeTruthy();
     });
 });

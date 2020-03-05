@@ -24,7 +24,7 @@ describe("Test the StylePoint style component", () => {
     });
     it('create component with default', () => {
         const cmp = ReactDOM.render(<StylePoint shapeStyle={shapeStyle}/>, document.getElementById("container"));
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
     });
 
 

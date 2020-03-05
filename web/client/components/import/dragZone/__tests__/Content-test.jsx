@@ -24,19 +24,19 @@ describe('Content component', () => {
         ReactDOM.render(<Content />, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('.glyphicon-upload');
-        expect(el).toExist();
+        expect(el).toBeTruthy();
     });
     it('rendering with loading', () => {
         ReactDOM.render(<Content loading/>, document.getElementById("container"));
         const container = document.getElementById('container');
 
-        expect(container.querySelector('.glyphicon-upload')).toNotExist();
-        expect(container.querySelector('.mapstore-medium-size-loader')).toExist();
+        expect(container.querySelector('.glyphicon-upload')).toBeFalsy();
+        expect(container.querySelector('.mapstore-medium-size-loader')).toBeTruthy();
     });
     it('rendering with error', () => {
         ReactDOM.render(<Content error={{message: "ERROR"}} />, document.getElementById("container"));
         const container = document.getElementById('container');
-        expect(container.querySelector('.glyphicon-upload')).toNotExist();
-        expect(container.querySelector('.glyphicon-exclamation-mark')).toExist();
+        expect(container.querySelector('.glyphicon-upload')).toBeFalsy();
+        expect(container.querySelector('.glyphicon-exclamation-mark')).toBeTruthy();
     });
 });

@@ -33,12 +33,12 @@ describe('Test for DateTimeFilter component', () => {
     it('DateTimeFilter render with defaults', () => {
         ReactDOM.render(<DateTimeFilter intl={intlMock}/>, document.getElementById("container"));
         const el = document.getElementsByTagName("input")[0];
-        expect(el).toExist();
+        expect(el).toBeTruthy();
     });
     it('DateTimeFilter render with value', () => {
         ReactDOM.render(<DateTimeFilter type="date" value="2017-01-05Z"/>, document.getElementById("container"));
         const el = document.getElementsByTagName("input")[0];
-        expect(el).toExist();
+        expect(el).toBeTruthy();
         const input = document.getElementsByTagName("input")[0];
         expect(input.value.length > 0).toBe(true);
     });
@@ -47,7 +47,7 @@ describe('Test for DateTimeFilter component', () => {
         const format='DD/MM/YYYY hh:mm:ss'; // eslint-disable-line space-infix-ops
         const date = '22/05/2010';
         const handleChange = ({value, operator}) => {
-            expect(value.startDate).toExist();
+            expect(value.startDate).toBeTruthy();
             expect(operator).toEqual('<>');
             done();
         };
@@ -62,7 +62,7 @@ describe('Test for DateTimeFilter component', () => {
         const format='DD/MM/YYYY hh:mm:ss'; // eslint-disable-line space-infix-ops
         const date = '22/05/2010';
         const handleChange = ({value, operator}) => {
-            expect(value.startDate).toExist();
+            expect(value.startDate).toBeTruthy();
             expect(operator).toEqual('=');
             done();
         };

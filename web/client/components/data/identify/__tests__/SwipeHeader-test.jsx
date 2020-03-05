@@ -32,7 +32,7 @@ describe('SwipeHeader', () => {
             document.getElementById("container")
         );
 
-        expect(header).toExist();
+        expect(header).toBeTruthy();
     });
 
     it('creates the SwipeHeader component with title', () => {
@@ -41,7 +41,7 @@ describe('SwipeHeader', () => {
             document.getElementById("container")
         );
 
-        expect(header).toExist();
+        expect(header).toBeTruthy();
         const dom = ReactDOM.findDOMNode(header);
         expect(dom.innerHTML.indexOf('mytitle') !== -1).toBe(true);
     });
@@ -52,7 +52,7 @@ describe('SwipeHeader', () => {
             document.getElementById("container")
         );
 
-        expect(header).toExist();
+        expect(header).toBeTruthy();
         const dom = ReactDOM.findDOMNode(header);
         expect(dom.getElementsByTagName('button').length).toBe(2);
     });
@@ -78,16 +78,16 @@ describe('SwipeHeader', () => {
         const buttons = dom.getElementsByTagName('button');
 
         ReactTestUtils.Simulate.click(buttons[0]);
-        expect(spyPrev.calls.length).toEqual(1);
+        expect(spyPrev.mock.calls.length).toEqual(1);
         ReactTestUtils.Simulate.click(buttons[1]);
-        expect(spyNext.calls.length).toEqual(1);
+        expect(spyNext.mock.calls.length).toEqual(1);
     });
     it('should not have button if size is less than 2', () => {
         const header = ReactDOM.render(
             <SwipeHeader title="mytitle" size={1}/>,
             document.getElementById("container")
         );
-        expect(header).toExist();
+        expect(header).toBeTruthy();
         const dom = ReactDOM.findDOMNode(header);
         expect(dom.getElementsByTagName('button').length).toBe(0);
     });

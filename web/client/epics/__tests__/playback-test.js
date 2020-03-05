@@ -97,7 +97,7 @@ describe('playback Epics', () => {
             expect(mock.history.get.length).toBe(1);
             expect(mock.history.get[0].params.domain).toBe("time");
             // if animation range active, animation fromValue at the beginning should not be set
-            expect(mock.history.get[0].params.fromValue).toNotExist();
+            expect(mock.history.get[0].params.fromValue).toBeFalsy();
             done();
         }, {
             ...ANIMATION_MOCK_STATE,

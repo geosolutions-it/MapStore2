@@ -28,7 +28,7 @@ describe('leaflet ScaleBar component', () => {
 
     it('create ScaleBar with defaults', () => {
         const sb = ReactDOM.render(<ScaleBar map={map}/>, document.getElementById("container"));
-        expect(sb).toExist();
+        expect(sb).toBeTruthy();
         const domMap = map.getContainer();
         const scaleBars = domMap.getElementsByClassName('leaflet-control-scale-line');
         expect(scaleBars.length).toBe(1);
@@ -36,7 +36,7 @@ describe('leaflet ScaleBar component', () => {
 
     it('create ScaleBar with container', () => {
         const sb = ReactDOM.render(<ScaleBar map={map} container="#container"/>, document.getElementById("container"));
-        expect(sb).toExist();
+        expect(sb).toBeTruthy();
         const domMap = map.getContainer();
         let scaleBars = domMap.getElementsByClassName('leaflet-control-scale-line');
         expect(scaleBars.length).toBe(0);

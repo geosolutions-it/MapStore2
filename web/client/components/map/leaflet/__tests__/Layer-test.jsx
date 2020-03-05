@@ -54,7 +54,7 @@ describe('Leaflet layer', () => {
                 map={map}/>, document.getElementById("container"));
         var lcount = 0;
 
-        expect(layer).toExist();
+        expect(layer).toBeTruthy();
         // count layers
         map.eachLayer(function() {lcount++; });
         expect(lcount).toBe(0);
@@ -74,7 +74,7 @@ describe('Leaflet layer', () => {
                 options={options} map={map}/>, document.getElementById("container"));
         var lcount = 0;
 
-        expect(layer).toExist();
+        expect(layer).toBeTruthy();
         // count layers
         map.eachLayer(function() {lcount++; });
         expect(lcount).toBe(0);
@@ -93,7 +93,7 @@ describe('Leaflet layer', () => {
                 options={options} map={map}/>, document.getElementById("container"));
         var lcount = 0;
 
-        expect(layer).toExist();
+        expect(layer).toBeTruthy();
         // count layers
         map.eachLayer(function() {lcount++; });
         expect(lcount).toBe(0);
@@ -105,7 +105,7 @@ describe('Leaflet layer', () => {
             <LeafLetLayer type="osm"
                 options={options} map={map}/>, document.getElementById("container"));
         var lcount = 0;
-        expect(layer).toExist();
+        expect(layer).toBeTruthy();
         // count layers
         map.eachLayer(function() {lcount++; });
         expect(lcount).toBe(1);
@@ -118,7 +118,7 @@ describe('Leaflet layer', () => {
             <LeafLetLayer type="graticule"
                 options={options} map={map}/>, document.getElementById("container"));
         var lcount = 0;
-        expect(layer).toExist();
+        expect(layer).toBeTruthy();
         // count layers
         map.eachLayer(function() {lcount++; });
         expect(lcount).toBe(1);
@@ -136,7 +136,7 @@ describe('Leaflet layer', () => {
             <LeafLetLayer type="mapquest"
                 options={options} map={map}/>, document.getElementById("container"));
 
-        expect(layer).toExist();
+        expect(layer).toBeTruthy();
         // count layers
         let lcount = 0;
         map.eachLayer(function() {lcount++; });
@@ -156,7 +156,7 @@ describe('Leaflet layer', () => {
             <LeafLetLayer type="osm"
                 options={options} map={map}/>, document.getElementById("container"));
         var lcount = 0;
-        expect(layer).toExist();
+        expect(layer).toBeTruthy();
         // count layers
         map.eachLayer(function() {lcount++; });
         expect(lcount).toBe(1);
@@ -177,7 +177,7 @@ describe('Leaflet layer', () => {
                 options={options} map={map}/>, document.getElementById("container"));
         var lcount = 0;
 
-        expect(layer).toExist();
+        expect(layer).toBeTruthy();
         // count layers
         map.eachLayer(function() {lcount++; });
         expect(lcount).toBe(1);
@@ -202,7 +202,7 @@ describe('Leaflet layer', () => {
                 format: 'application/json;type=geojson'
             }}
             map={map} />, document.getElementById("container"));
-        expect(layer).toExist();
+        expect(layer).toBeTruthy();
         let lcount = 0;
         map.eachLayer(function() { lcount++; });
         expect(lcount).toBe(1);
@@ -217,7 +217,7 @@ describe('Leaflet layer', () => {
             }}
             map={map} />, document.getElementById("container"));
 
-        expect(layer).toExist();
+        expect(layer).toBeTruthy();
         lcount = 0;
         map.eachLayer(function() { lcount++; });
         expect(lcount).toBe(1);
@@ -233,7 +233,7 @@ describe('Leaflet layer', () => {
             }}
             map={map} />, document.getElementById("container"));
 
-        expect(layer).toExist();
+        expect(layer).toBeTruthy();
         lcount = 0;
         map.eachLayer(function() { lcount++; });
         expect(lcount).toBe(1);
@@ -249,7 +249,7 @@ describe('Leaflet layer', () => {
             }}
             map={map} />, document.getElementById("container"));
 
-        expect(layer).toExist();
+        expect(layer).toBeTruthy();
         lcount = 0;
         map.eachLayer(function() { lcount++; });
         expect(lcount).toBe(1);
@@ -274,13 +274,13 @@ describe('Leaflet layer', () => {
                 options={options} map={map} />, document.getElementById("container"));
         var lcount = 0;
 
-        expect(layer).toExist();
+        expect(layer).toBeTruthy();
         // count layers
         map.eachLayer(function() { lcount++; });
         expect(lcount).toBe(1);
         let elevationFunc;
         map.eachLayer((l) => {elevationFunc = l.getElevation;});
-        expect(elevationFunc).toExist();
+        expect(elevationFunc).toBeTruthy();
     });
     it('creates a wms layer with credits', () => {
         const CREDITS1 = {
@@ -299,7 +299,7 @@ describe('Leaflet layer', () => {
         var layer = ReactDOM.render(
             <LeafLetLayer type="wms"
                 options={options} map={map} />, document.getElementById("container"));
-        expect(layer).toExist();
+        expect(layer).toBeTruthy();
         // count layers
         map.eachLayer( l => expect(l.getAttribution()).toBe(CREDITS1.title));
     });
@@ -326,7 +326,7 @@ describe('Leaflet layer', () => {
                 options={options} map={map}/>, document.getElementById("container"));
         var lcount = 0;
 
-        expect(layer).toExist();
+        expect(layer).toBeTruthy();
         // count layers
         map.eachLayer(function() {lcount++; });
         expect(lcount).toBe(1);
@@ -357,7 +357,7 @@ describe('Leaflet layer', () => {
                 options={options} map={map}/>, document.getElementById("container"));
         var lcount = 0;
 
-        expect(layer).toExist();
+        expect(layer).toBeTruthy();
         // count layers
         map.eachLayer(function() {lcount++; });
         expect(lcount).toBe(1);
@@ -467,7 +467,7 @@ describe('Leaflet layer', () => {
                     msId={feature.id}
                     featuresCrs={ 'EPSG:4326' }
                 />)}</LeafLetLayer>, document.getElementById("container"));
-        expect(layer).toExist();
+        expect(layer).toBeTruthy();
         let l2 = ReactDOM.render(
             <LeafLetLayer type="vector"
                 options={options} map={map}>
@@ -479,7 +479,7 @@ describe('Leaflet layer', () => {
                     msId={feature.id}
                     featuresCrs={ 'EPSG:4326' }
                 />)}</LeafLetLayer>, document.getElementById("container"));
-        expect(l2).toExist();
+        expect(l2).toBeTruthy();
     });
 
     it('creates a wms layer for leaflet map with custom tileSize', () => {
@@ -498,7 +498,7 @@ describe('Leaflet layer', () => {
                 options={options} map={map}/>, document.getElementById("container"));
         var lcount = 0;
 
-        expect(layer).toExist();
+        expect(layer).toBeTruthy();
         // count layers
         map.eachLayer(function() {lcount++; });
         expect(lcount).toBe(1);
@@ -522,7 +522,7 @@ describe('Leaflet layer', () => {
                 options={options} map={map}/>, document.getElementById("container"));
         var lcount = 0;
 
-        expect(layer).toExist();
+        expect(layer).toBeTruthy();
         // count layers
         map.eachLayer(function() {lcount++; });
         expect(lcount).toBe(1);
@@ -562,7 +562,7 @@ describe('Leaflet layer', () => {
             <LeafLetLayer type="google" options={options} map={map}/>, document.getElementById("container"));
         let lcount = 0;
 
-        expect(layer).toExist();
+        expect(layer).toBeTruthy();
         // count layers
         map.eachLayer(function() {lcount++; });
         expect(lcount).toBe(1);
@@ -580,7 +580,7 @@ describe('Leaflet layer', () => {
             <LeafLetLayer type="bing" options={options} map={map}/>, document.getElementById("container"));
         var lcount = 0;
 
-        expect(layer).toExist();
+        expect(layer).toBeTruthy();
         // count layers
         map.eachLayer(function() {lcount++; });
         expect(lcount).toBe(1);
@@ -592,7 +592,7 @@ describe('Leaflet layer', () => {
             <LeafLetLayer type="osm"
                 options={{}} position={0} map={map}/>, document.getElementById("container"));
         var lcount = 0;
-        expect(layer).toExist();
+        expect(layer).toBeTruthy();
         // count layers
         map.eachLayer(function() {lcount++; });
         expect(lcount).toBe(1);
@@ -623,7 +623,7 @@ describe('Leaflet layer', () => {
                 options={options} map={map}/>, document.getElementById("container"));
         var lcount = 0;
 
-        expect(layer).toExist();
+        expect(layer).toBeTruthy();
         // count layers
         map.eachLayer(function() {lcount++; });
         expect(lcount).toBe(1);
@@ -651,7 +651,7 @@ describe('Leaflet layer', () => {
             <LeafLetLayer type="wms"
                 options={options} map={map} position={10}/>, document.getElementById("container"));
 
-        expect(layer).toExist();
+        expect(layer).toBeTruthy();
         // count layers
         let lcount = 0;
         map.eachLayer(function() {lcount++; });
@@ -680,7 +680,7 @@ describe('Leaflet layer', () => {
                 options={options} map={map}/>, document.getElementById("container"));
         var lcount = 0;
 
-        expect(layer).toExist();
+        expect(layer).toBeTruthy();
         // count layers
         map.eachLayer(function() {lcount++; });
         expect(lcount).toBe(1);
@@ -725,7 +725,7 @@ describe('Leaflet layer', () => {
             map={map}
             securityToken="########-####-####-####-###########" />, document.getElementById("container"));
 
-        expect(layer).toExist();
+        expect(layer).toBeTruthy();
         let lcount = 0;
         map.eachLayer(function() { lcount++; });
         expect(lcount).toBe(1);
@@ -768,7 +768,7 @@ describe('Leaflet layer', () => {
             map={map}
             securityToken="########-####-####-####-###########"/>, document.getElementById("container"));
 
-        expect(layer).toExist();
+        expect(layer).toBeTruthy();
         let lcount = 0;
         map.eachLayer(function() {lcount++; });
         expect(lcount).toBe(1);
@@ -832,7 +832,7 @@ describe('Leaflet layer', () => {
             map={map}
             securityToken="########-####-####-####-###########"/>, document.getElementById("container"));
 
-        expect(layer).toExist();
+        expect(layer).toBeTruthy();
         let lcount = 0;
         map.eachLayer(function() {lcount++; });
         expect(lcount).toBe(1);
@@ -873,7 +873,7 @@ describe('Leaflet layer', () => {
                 options={options} map={map}/>, document.getElementById("container"));
         var lcount = 0;
 
-        expect(layer).toExist();
+        expect(layer).toBeTruthy();
 
         const newOptions = assign({}, options, {
             singleTile: true
@@ -881,7 +881,7 @@ describe('Leaflet layer', () => {
         layer = ReactDOM.render(
             <LeafLetLayer type="wms"
                 options={newOptions} map={map}/>, document.getElementById("container"));
-        expect(layer).toExist();
+        expect(layer).toBeTruthy();
         // count layers
         map.eachLayer(function() {lcount++; });
         expect(lcount).toBe(1);
@@ -907,7 +907,7 @@ describe('Leaflet layer', () => {
             map={map}
         />, document.getElementById("container"));
 
-        expect(layer).toExist();
+        expect(layer).toBeTruthy();
         let lcount = 0;
         map.eachLayer(() => { lcount++; });
         expect(lcount).toBe(1);
@@ -947,7 +947,7 @@ describe('Leaflet layer', () => {
             map={map}
         />, document.getElementById("container"));
 
-        expect(layer).toExist();
+        expect(layer).toBeTruthy();
         let lcount = 0;
         map.eachLayer(() => { lcount++; });
         expect(lcount).toBe(1);
@@ -990,7 +990,7 @@ describe('Leaflet layer', () => {
             map={map}
         />, document.getElementById("container"));
 
-        expect(layer).toExist();
+        expect(layer).toBeTruthy();
         let lcount = 0;
         map.eachLayer(() => { lcount++; });
         expect(lcount).toBe(1);
@@ -1022,7 +1022,7 @@ describe('Leaflet layer', () => {
             }}
             map={map}/>, document.getElementById("container"));
 
-        expect(layer).toExist();
+        expect(layer).toBeTruthy();
         let lcount = 0;
         map.eachLayer(function() {lcount++; });
         expect(lcount).toBe(1);
@@ -1038,7 +1038,7 @@ describe('Leaflet layer', () => {
             }}
             map={map}/>, document.getElementById("container"));
 
-        expect(layer).toExist();
+        expect(layer).toBeTruthy();
         lcount = 0;
         map.eachLayer(function() {lcount++; });
         expect(lcount).toBe(1);
@@ -1055,7 +1055,7 @@ describe('Leaflet layer', () => {
             }}
             map={map}/>, document.getElementById("container"));
 
-        expect(layer).toExist();
+        expect(layer).toBeTruthy();
         lcount = 0;
         map.eachLayer(function() {lcount++; });
         expect(lcount).toBe(1);
@@ -1072,7 +1072,7 @@ describe('Leaflet layer', () => {
             }}
             map={map}/>, document.getElementById("container"));
 
-        expect(layer).toExist();
+        expect(layer).toBeTruthy();
         lcount = 0;
         map.eachLayer(function() {lcount++; });
         expect(lcount).toBe(1);

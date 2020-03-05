@@ -37,10 +37,10 @@ describe("Test the PrintOptions component", () => {
 
     it('creates component with defaults', () => {
         const cmp = ReactDOM.render(<PrintOptions/>, document.getElementById("container"));
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
 
         const node = ReactDOM.findDOMNode(cmp);
-        expect(node).toExist();
+        expect(node).toBeTruthy();
         expect(node.getElementsByTagName('input').length).toBe(2);
         expect(node.getElementsByTagName('input')[0].checked).toBe(true);
         expect(node.getElementsByTagName('input')[1].checked).toBe(false);
@@ -48,10 +48,10 @@ describe("Test the PrintOptions component", () => {
 
     it('creates component with value', () => {
         const cmp = ReactDOM.render(<PrintOptions selected="Option2"/>, document.getElementById("container"));
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
 
         const node = ReactDOM.findDOMNode(cmp);
-        expect(node).toExist();
+        expect(node).toBeTruthy();
         expect(node.getElementsByTagName('input').length).toBe(2);
         expect(node.getElementsByTagName('input')[0].checked).toBe(false);
         expect(node.getElementsByTagName('input')[1].checked).toBe(true);
@@ -59,10 +59,10 @@ describe("Test the PrintOptions component", () => {
 
     it('creates component with options', () => {
         const cmp = ReactDOM.render(<PrintOptions options={options}/>, document.getElementById("container"));
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
 
         const node = ReactDOM.findDOMNode(cmp);
-        expect(node).toExist();
+        expect(node).toBeTruthy();
         expect(node.getElementsByTagName('input').length).toBe(2);
         expect(node.getElementsByTagName('input')[0].value).toBe('O1');
         expect(node.getElementsByTagName('input')[1].value).toBe('O2');
@@ -70,10 +70,10 @@ describe("Test the PrintOptions component", () => {
 
     it('creates component enabled', () => {
         const cmp = ReactDOM.render(<PrintOptions enableRegex={/landscape/} layouts={layouts}/>, document.getElementById("container"));
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
 
         const node = ReactDOM.findDOMNode(cmp);
-        expect(node).toExist();
+        expect(node).toBeTruthy();
         expect(node.getElementsByTagName('input').length).toBe(2);
         expect(node.getElementsByTagName('input')[0].disabled).toBe(false);
         expect(node.getElementsByTagName('input')[1].disabled).toBe(false);
@@ -81,10 +81,10 @@ describe("Test the PrintOptions component", () => {
 
     it('creates component disabled', () => {
         const cmp = ReactDOM.render(<PrintOptions enableRegex={/fake/} layouts={layouts}/>, document.getElementById("container"));
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
 
         const node = ReactDOM.findDOMNode(cmp);
-        expect(node).toExist();
+        expect(node).toBeTruthy();
         expect(node.getElementsByTagName('input').length).toBe(2);
         expect(node.getElementsByTagName('input')[0].disabled).toBe(true);
         expect(node.getElementsByTagName('input')[1].disabled).toBe(true);

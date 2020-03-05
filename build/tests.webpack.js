@@ -1,3 +1,4 @@
-var context = require.context('../web', true, /(-test\.jsx?)|(-test-chrome\.jsx?)$/);
+import "./expect.customize";
+const context = require.context('../web', true, /(-test\.jsx?)|(-test-chrome\.jsx?)$/);
 context.keys().forEach(context);
-module.exports = context;
+export default context;

@@ -35,7 +35,7 @@ describe('ZoomIn Plugin', () => {
     it('creates a ZoomIn plugin with default configuration', () => {
         const { Plugin } = getPluginForTest(ZoomInPlugin, { map });
         ReactDOM.render(<Plugin />, document.getElementById("container"));
-        expect(document.getElementById('zoomin-btn')).toExist();
+        expect(document.getElementById('zoomin-btn')).toBeTruthy();
     });
 
     it('Checks ZoomIn supported containers', () => {

@@ -19,14 +19,14 @@ describe('Test correctness of the rasterstyle actions', () => {
     it('setStylerLayer', () => {
         const layer = {name: "TEST"};
         const retVal = setStylerLayer(layer);
-        expect(retVal).toExist();
+        expect(retVal).toBeTruthy();
         expect(retVal.type).toBe(SET_STYLER_LAYER);
         expect(retVal.layer).toBe(layer);
     });
     it('setRasterLayer', () => {
         const layer = {name: "TEST"};
         const retVal = reset(layer);
-        expect(retVal).toExist();
+        expect(retVal).toBeTruthy();
         expect(retVal.type).toBe(STYLER_RESET);
         expect(retVal.layer).toBe(layer);
     });

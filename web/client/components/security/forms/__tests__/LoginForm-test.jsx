@@ -27,12 +27,12 @@ describe("Test the login form component", () => {
 
     it('creates component with defaults', () => {
         const cmp = ReactDOM.render(<LoginForm/>, document.getElementById("container"));
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
     });
 
     it('creates empty component with error', () => {
         const cmp = ReactDOM.render(<LoginForm loginError={{status: 0}} />, document.getElementById("container"));
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
         const node = ReactTestUtils.scryRenderedDOMComponentsWithClass(cmp, "alert-danger");
         expect(node.length).toBe(1);
     });
@@ -50,24 +50,24 @@ describe("Test the login form component", () => {
         const spy = expect.spyOn(testHandlers, 'onSubmit');
         const spySuccess = expect.spyOn(testHandlers, 'onLoginSuccess');
         const cmp = ReactDOM.render(<LoginForm key="test" onLoginSuccess={testHandlers.onLoginSuccess} onSubmit={testHandlers.onSubmit}/>, document.getElementById("container"));
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
         let username = ReactDOM.findDOMNode(ReactTestUtils.scryRenderedDOMComponentsWithTag(cmp, "input")[0]);
-        expect(username).toExist();
+        expect(username).toBeTruthy();
         username.value = "test";
         ReactTestUtils.Simulate.change(username);
 
         let password = ReactDOM.findDOMNode(ReactTestUtils.scryRenderedDOMComponentsWithTag(cmp, "input")[1]);
-        expect(password).toExist();
+        expect(password).toBeTruthy();
         password.value = "test";
         ReactTestUtils.Simulate.change(password);
 
         let button = ReactDOM.findDOMNode(ReactTestUtils.scryRenderedDOMComponentsWithTag(cmp, "button")[0]);
         ReactTestUtils.Simulate.click(button);
 
-        expect(spy.calls.length).toEqual(1);
+        expect(spy.mock.calls.length).toEqual(1);
         ReactDOM.render(<LoginForm key="test" onSubmit={testHandlers.onSubmit} onLoginSuccess={testHandlers.onLoginSuccess} user={{user: {name: "TEST"}}} />, document.getElementById("container"));
         // cmp.setProps({onSubmit: testHandlers.onSubmit, userDetails: }});
-        expect(spySuccess.calls.length).toEqual(1);
+        expect(spySuccess.mock.calls.length).toEqual(1);
 
 
     });

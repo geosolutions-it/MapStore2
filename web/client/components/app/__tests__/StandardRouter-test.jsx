@@ -59,7 +59,7 @@ describe('StandardRouter', () => {
             getState: () => ({})
         };
         const app = ReactDOM.render(<Provider store={store}><StandardRouter/></Provider>, document.getElementById("container"));
-        expect(app).toExist();
+        expect(app).toBeTruthy();
     });
 
     it('creates a default router app with pages', () => {
@@ -76,7 +76,7 @@ describe('StandardRouter', () => {
             component: mycomponent
         }];
         const app = ReactDOM.render(<Provider store={store}><StandardRouter pages={pages}/></Provider>, document.getElementById("container"));
-        expect(app).toExist();
+        expect(app).toBeTruthy();
         const dom = ReactDOM.findDOMNode(app);
 
         expect(dom.getElementsByClassName('mycomponent').length).toBe(1);
@@ -100,7 +100,7 @@ describe('StandardRouter', () => {
             component: mycomponent
         }];
         const app = ReactDOM.render(<Provider store={store}><StandardRouter plugins={plugins} pages={pages}/></Provider>, document.getElementById("container"));
-        expect(app).toExist();
+        expect(app).toBeTruthy();
 
         const dom = ReactDOM.findDOMNode(app);
 
@@ -125,7 +125,7 @@ describe('StandardRouter', () => {
             component: mycomponent
         }];
         const app = ReactDOM.render(<Provider store={store}><StandardRouter plugins={plugins} pages={pages}  loadAfterTheme={false}/></Provider>, document.getElementById("container"));
-        expect(app).toExist();
+        expect(app).toBeTruthy();
 
         const dom = ReactDOM.findDOMNode(app);
 
@@ -149,7 +149,7 @@ describe('StandardRouter', () => {
             component: mycomponent
         }];
         const app = ReactDOM.render(<Provider store={store}><StandardRouter plugins={plugins} pages={pages} loadAfterTheme themeLoaded/></Provider>, document.getElementById("container"));
-        expect(app).toExist();
+        expect(app).toBeTruthy();
 
         const dom = ReactDOM.findDOMNode(app);
 
@@ -173,7 +173,7 @@ describe('StandardRouter', () => {
             component: mycomponent
         }];
         const app = ReactDOM.render(<Provider store={store}><StandardRouter plugins={plugins} pages={pages} loadAfterTheme themeLoaded={false} /></Provider>, document.getElementById("container"));
-        expect(app).toExist();
+        expect(app).toBeTruthy();
 
         const dom = ReactDOM.findDOMNode(app);
 
@@ -200,6 +200,6 @@ describe('StandardRouter', () => {
             theme: "default",
             path: "base/web/client/test-resources/themes"
         }} loadAfterTheme themeLoaded={false} onThemeLoaded={done}/></Provider>, document.getElementById("container"));
-        expect(app).toExist();
+        expect(app).toBeTruthy();
     });
 });

@@ -24,7 +24,7 @@ describe('WidgetsView component', () => {
         ReactDOM.render(<Dashboard widgets={[]}/>, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('.widget-card-on-map');
-        expect(el).toNotExist();
+        expect(el).toBeFalsy();
     });
     it('DashBoard empty', () => {
         ReactDOM.render(<Dashboard widgets={[{
@@ -43,6 +43,6 @@ describe('WidgetsView component', () => {
         }]}/>, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('.mapstore-widget-card');
-        expect(el).toExist();
+        expect(el).toBeTruthy();
     });
 });

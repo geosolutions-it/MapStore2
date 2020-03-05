@@ -25,10 +25,10 @@ describe('This test for MapList', () => {
     // test DEFAULTS
     it('creates the component with defaults', () => {
         const mapList = ReactDOM.render(<MapList/>, document.getElementById("container"));
-        expect(mapList).toExist();
+        expect(mapList).toBeTruthy();
 
         const dom = ReactDOM.findDOMNode(mapList);
-        expect(dom).toExist();
+        expect(dom).toBeTruthy();
         // check body existence
         const panelBody = dom.getElementsByClassName('panel-body');
         expect(panelBody.length).toBe(1);
@@ -40,10 +40,10 @@ describe('This test for MapList', () => {
     it('checks properties', () => {
         const testTitle = "testTitle";
         const mapList = ReactDOM.render(<MapList panelProps={{header: testTitle}}/>, document.getElementById("container"));
-        expect(mapList).toExist();
+        expect(mapList).toBeTruthy();
 
         const dom = ReactDOM.findDOMNode(mapList);
-        expect(dom).toExist();
+        expect(dom).toBeTruthy();
         // check body
         const panelBody = dom.getElementsByClassName('panel-body');
         expect(panelBody.length).toBe(1, "Panel Body Missing");
@@ -58,9 +58,9 @@ describe('This test for MapList', () => {
         var map1 = {id: 1, name: "a", description: "description"};
         var map2 = {id: 2, name: "b", description: "description"};
         const mapList = ReactDOM.render(<MapList maps={[map1, map2]}/>, document.getElementById("container"));
-        expect(mapList).toExist();
+        expect(mapList).toBeTruthy();
         const dom = ReactDOM.findDOMNode(mapList);
-        expect(dom).toExist();
+        expect(dom).toBeTruthy();
 
         // check body
         const panelBody = dom.getElementsByClassName('panel-body');

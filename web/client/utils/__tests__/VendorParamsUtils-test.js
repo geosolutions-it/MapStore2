@@ -11,7 +11,7 @@ const { optionsToVendorParams} = require('../VendorParamsUtils');
 describe('VendorParamUtils ', () => {
 
     it('optionsToVendorParams', () => {
-        expect(optionsToVendorParams()).toNotExist();
+        expect(optionsToVendorParams()).toBeFalsy();
         expect(optionsToVendorParams({
             params: {
                 CQL_FILTER: "INCLUDE"

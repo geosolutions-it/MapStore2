@@ -25,9 +25,9 @@ describe('CrsSelectorMenu component', () => {
             </ListGroupItem>]</CrsSelectorMenu>, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('.dropdown-menu');
-        expect(el).toExist();
+        expect(el).toBeTruthy();
         const selected = container.querySelector('.dropdown-menu span div:nth-child(2)').textContent;
-        expect(selected).toExist();
+        expect(selected).toBeTruthy();
         expect(selected).toBe('EPSG:4326');
     });
 });

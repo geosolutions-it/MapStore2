@@ -35,7 +35,7 @@ describe('Test the WMTSUtils', () => {
             const operations = WMTSUtils.getOperations(json);
             const kvpOperation = WMTSUtils.getOperation(operations, "GetTile", "KVP");
             expect(kvpOperation).toBe("http://sample.server/geoserver/gwc/service/wmts?");
-            expect(WMTSUtils.getOperation(operations, "GetTile", "RESTful")).toNotExist();
+            expect(WMTSUtils.getOperation(operations, "GetTile", "RESTful")).toBeFalsy();
             expect(WMTSUtils.getRequestEncoding(json)).toBe("KVP");
             done();
         });
@@ -44,10 +44,10 @@ describe('Test the WMTSUtils', () => {
         xml2js.parseString(restCapabilities, { explicitArray: false }, (ignore, json) => {
             const operations = WMTSUtils.getOperations(json);
             const kvpOperation = WMTSUtils.getOperation(operations, "GetTile", "KVP");
-            expect(kvpOperation).toNotExist();
+            expect(kvpOperation).toBeFalsy();
             expect(WMTSUtils.getOperation(operations, "GetTile", "RESTful")).toBe("https://maps.sampleServer.org/basemap");
             const tileURLs = WMTSUtils.getGetTileURL(json.Capabilities.Contents.Layer[0]);
-            expect(tileURLs).toExist();
+            expect(tileURLs).toBeTruthy();
             expect(tileURLs.length).toBe(5);
             expect(tileURLs[0]).toBe("https://maps1.sampleServer.org/basemap/geolandbasemap/{Style}/{TileMatrixSet}/{TileMatrix}/{TileRow}/{TileCol}.png");
             done();

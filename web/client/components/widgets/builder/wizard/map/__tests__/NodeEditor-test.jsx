@@ -32,6 +32,6 @@ describe('NodeEditor component', () => {
         const container = document.getElementById('container');
         // search the icon rendered
         const el = container.querySelector('.glyphicon-wrench');
-        expect(el).toExist();
+        expect(el).toBeTruthy();
     });
 });

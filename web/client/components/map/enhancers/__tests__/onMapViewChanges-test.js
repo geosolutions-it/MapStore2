@@ -23,7 +23,7 @@ describe('onMapViewChanges enhancer', () => {
     });
     it('onMapViewChanges rendering with defaults', () => {
         const Sink = onMapViewChanges(createSink( props => {
-            expect(props.eventHandlers.onMapViewChanges).toExist();
+            expect(props.eventHandlers.onMapViewChanges).toBeTruthy();
             setTimeout(props.eventHandlers.onMapViewChanges("CENTER", "ZOOM", { bbox: { x: 2 } }, "SIZE", "mapStateSource", "projection"));
 
         }));
@@ -33,14 +33,14 @@ describe('onMapViewChanges enhancer', () => {
         const spy = expect.spyOn(actions, 'onMapViewChanges');
         ReactDOM.render(<Sink map={{ bbox: { x: 1, y: 1 }, test: "TEST" }} onMapViewChanges={actions.onMapViewChanges} />, document.getElementById("container"));
         expect(spy).toHaveBeenCalled();
-        const map = spy.calls[0].arguments[0];
-        expect(map).toExist();
-        expect(map.center).toExist();
-        expect(map.zoom).toExist();
-        expect(map.bbox).toExist();
-        expect(map.size).toExist();
-        expect(map.mapStateSource).toExist();
-        expect(map.projection).toExist();
+        const map = spy.mock.calls[0][0];
+        expect(map).toBeTruthy();
+        expect(map.center).toBeTruthy();
+        expect(map.zoom).toBeTruthy();
+        expect(map.bbox).toBeTruthy();
+        expect(map.size).toBeTruthy();
+        expect(map.mapStateSource).toBeTruthy();
+        expect(map.projection).toBeTruthy();
     });
 
 });

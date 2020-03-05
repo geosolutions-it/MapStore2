@@ -25,7 +25,7 @@ describe("This test for PagedCombobox component", () => {
     });
     it('creates PagedCombobox with defaults', () => {
         const comp = ReactDOM.render(<PagedCombobox/>, document.getElementById("container"));
-        expect(comp).toExist();
+        expect(comp).toBeTruthy();
 
         const input = ReactDOM.findDOMNode(TestUtils.scryRenderedDOMComponentsWithClass(comp, "rw-input")[0]);
         // triggering default actions
@@ -46,7 +46,7 @@ describe("This test for PagedCombobox component", () => {
             placement: "top"
         };
         const comp = ReactDOM.render(<PagedCombobox tooltip={tooltip}/>, document.getElementById("container"));
-        expect(comp).toExist();
+        expect(comp).toBeTruthy();
     });
 
     it('creates PagedCombobox with functional itemComponent', () => {
@@ -54,7 +54,7 @@ describe("This test for PagedCombobox component", () => {
             !!item.pagination ? <span>{item[textField]} {item.pagination} </span> : <span>{item[textField]}</span>
         );
         const comp = ReactDOM.render(<PagedCombobox pagination={{paginated: false}} itemComponent={AutocompleteListItemFunctional} textField="label" data={[{value: "value", label: "label"}]} />, document.getElementById("container"));
-        expect(comp).toExist();
+        expect(comp).toBeTruthy();
         const tool = ReactDOM.findDOMNode(TestUtils.scryRenderedDOMComponentsWithClass(comp, "rw-i rw-i-caret-down")[0]);
         tool.click();
         const option1 = ReactDOM.findDOMNode(TestUtils.scryRenderedDOMComponentsWithClass(comp, "rw-list-option")[0]);
@@ -63,7 +63,7 @@ describe("This test for PagedCombobox component", () => {
     });
     it('creates PagedCombobox with class itemComponent', () => {
         const comp = ReactDOM.render(<PagedCombobox pagination={{paginated: false}} itemComponent={AutocompleteListItem} textField="label" data={[{value: "value", label: "label"}]}/>, document.getElementById("container"));
-        expect(comp).toExist();
+        expect(comp).toBeTruthy();
         const tool = ReactDOM.findDOMNode(TestUtils.scryRenderedDOMComponentsWithClass(comp, "rw-i rw-i-caret-down")[0]);
         tool.click();
         const option1 = ReactDOM.findDOMNode(TestUtils.scryRenderedDOMComponentsWithClass(comp, "rw-list-option")[0]);
@@ -73,7 +73,7 @@ describe("This test for PagedCombobox component", () => {
         const tooltip = <Tooltip id={"wonderfulId"}>"a message for the tooltip"</Tooltip>;
 
         const comp = ReactDOM.render(<PagedCombobox tooltip={{customizedTooltip: tooltip}}/>, document.getElementById("container"));
-        expect(comp).toExist();
+        expect(comp).toBeTruthy();
     });
     it('tests PagedCombobox onToggle and opening of option lists', () => {
         const actions = {
@@ -84,17 +84,17 @@ describe("This test for PagedCombobox component", () => {
             label: "label", value: "value"
         }];
         const comp = ReactDOM.render(<PagedCombobox onToggle={actions.onToggle} data={data}/>, document.getElementById("container"));
-        expect(comp).toExist();
+        expect(comp).toBeTruthy();
         const domNode = ReactDOM.findDOMNode(comp);
-        expect(domNode).toExist();
+        expect(domNode).toBeTruthy();
         const tool = ReactDOM.findDOMNode(TestUtils.scryRenderedDOMComponentsWithClass(comp, "rw-i rw-i-caret-down")[0]);
         tool.click();
-        expect(spy.calls.length).toBe(1);
+        expect(spy.mock.calls.length).toBe(1);
         // this tests if the option list is opened
         const firstOption = ReactDOM.findDOMNode(TestUtils.scryRenderedDOMComponentsWithClass(comp, "rw-list-option")[0]);
-        expect(firstOption).toExist();
+        expect(firstOption).toBeTruthy();
         const valueOption = firstOption.getElementsByTagName("span")[0];
-        expect(valueOption).toExist();
+        expect(valueOption).toBeTruthy();
         expect(valueOption.innerText).toBe("label");
     });
     it('tests PagedCombobox onChange', () => {
@@ -106,14 +106,14 @@ describe("This test for PagedCombobox component", () => {
             label: "label", value: "value"
         }];
         const comp = ReactDOM.render(<PagedCombobox onChange={actions.onChange} data={data}/>, document.getElementById("container"));
-        expect(comp).toExist();
+        expect(comp).toBeTruthy();
         const input = ReactDOM.findDOMNode(TestUtils.scryRenderedDOMComponentsWithClass(comp, "rw-input")[0]);
         TestUtils.Simulate.change(input, {
             target: {
                 value: "other"
             }
         });
-        expect(spy.calls.length).toBe(1);
+        expect(spy.mock.calls.length).toBe(1);
     });
     it('tests PagedCombobox onFocus', (done) => {
         const actions = {
@@ -124,11 +124,11 @@ describe("This test for PagedCombobox component", () => {
             label: "label", value: "value"
         }];
         const comp = ReactDOM.render(<PagedCombobox onFocus={actions.onFocus} data={data}/>, document.getElementById("container"));
-        expect(comp).toExist();
+        expect(comp).toBeTruthy();
         const input = ReactDOM.findDOMNode(TestUtils.scryRenderedDOMComponentsWithClass(comp, "rw-input")[0]);
         TestUtils.Simulate.focus(input);
         setTimeout(() => {
-            expect(spy.calls.length).toEqual(1);
+            expect(spy.mock.calls.length).toEqual(1);
             done();
         }, 50);
     });
@@ -142,19 +142,19 @@ describe("This test for PagedCombobox component", () => {
             label: "label", value: "value"
         }];
         const comp = ReactDOM.render(<PagedCombobox onSelect={actions.onSelect} data={data}/>, document.getElementById("container"));
-        expect(comp).toExist();
+        expect(comp).toBeTruthy();
         const domNode = ReactDOM.findDOMNode(comp);
-        expect(domNode).toExist();
+        expect(domNode).toBeTruthy();
         const tool = ReactDOM.findDOMNode(TestUtils.scryRenderedDOMComponentsWithClass(comp, "rw-i rw-i-caret-down")[0]);
         tool.click();
         // this tests if the option list is opened
         const firstOption = ReactDOM.findDOMNode(TestUtils.scryRenderedDOMComponentsWithClass(comp, "rw-list-option")[0]);
-        expect(firstOption).toExist();
+        expect(firstOption).toBeTruthy();
         const valueOption = firstOption.getElementsByTagName("span")[0];
-        expect(valueOption).toExist();
+        expect(valueOption).toBeTruthy();
         TestUtils.Simulate.click(firstOption);
         setTimeout(() => {
-            expect(spy.calls.length).toEqual(1);
+            expect(spy.mock.calls.length).toEqual(1);
             done();
         }, 50);
     });

@@ -27,6 +27,6 @@ describe('SearchBarBase component', () => {
     it('SearchBarBase with defaults', () => {
         ReactDOM.render(<SearchBarBase/>, document.getElementById("container"));
         const rootDiv = document.getElementsByClassName('MapSearchBar')[0];
-        expect(rootDiv).toExist();
+        expect(rootDiv).toBeTruthy();
     });
 });

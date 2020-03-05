@@ -56,7 +56,7 @@ describe('RuleService API for GeoFence StandAlone', () => {
             return [200, RULES];
         });
         RuleService.loadRules(1, PARAMS, 10).then(v => {
-            expect(v.rules).toExist();
+            expect(v.rules).toBeTruthy();
             expect(v.rules.length).toBe(2);
             // check the rules are converted in internal format
             expect(v.rules[0].grant).toBe("ALLOW");
@@ -72,7 +72,7 @@ describe('RuleService API for GeoFence StandAlone', () => {
             return [200, RULES];
         });
         RuleService.moveRules(1, [{id: 1 }, { id: 2 }]).then(v => {
-            expect(v.rules).toExist();
+            expect(v.rules).toBeTruthy();
             expect(v.rules.length).toBe(2);
             done();
         });

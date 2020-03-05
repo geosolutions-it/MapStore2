@@ -24,19 +24,19 @@ describe('PropertiesViewer', () => {
     });
     it('test defaults', () => {
         const cmp = ReactDOM.render(<PropertiesViewer/>, document.getElementById("container"));
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
 
         const cmpDom = ReactDOM.findDOMNode(cmp);
-        expect(cmpDom).toExist();
+        expect(cmpDom).toBeTruthy();
 
         expect(cmpDom.childNodes.length).toBe(0);
     });
     it('test title rendering', () => {
         const cmp = ReactDOM.render(<PropertiesViewer title="testTitle"/>, document.getElementById("container"));
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
 
         const cmpDom = ReactDOM.findDOMNode(cmp);
-        expect(cmpDom).toExist();
+        expect(cmpDom).toBeTruthy();
 
         expect(cmpDom.childNodes.length).toBe(1);
         expect(cmpDom.childNodes.item(0).innerHTML).toBe("testTitle");
@@ -48,10 +48,10 @@ describe('PropertiesViewer', () => {
             k2: "v2"
         };
         const cmp = ReactDOM.render(<PropertiesViewer {...testProps}/>, document.getElementById("container"));
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
 
         const cmpDom = ReactDOM.findDOMNode(cmp);
-        expect(cmpDom).toExist();
+        expect(cmpDom).toBeTruthy();
 
         expect(cmpDom.childNodes.length).toBe(1);
 
@@ -69,10 +69,10 @@ describe('PropertiesViewer', () => {
 
     it('test feature isexcluded', () => {
         const cmp = ReactDOM.render(<PropertiesViewer feature={"myfeature"} title="testTitle" />, document.getElementById("container"));
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
 
         const cmpDom = ReactDOM.findDOMNode(cmp);
-        expect(cmpDom).toExist();
+        expect(cmpDom).toBeTruthy();
 
         expect(cmpDom.innerText.indexOf('myfeature')).toBe(-1);
     });
@@ -83,16 +83,16 @@ describe('PropertiesViewer', () => {
             withHtml: "<div> some text </div>"
         };
         const cmp = ReactDOM.render(<PropertiesViewer {...testProps}/>, document.getElementById("container"));
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
 
         const cmpDom = ReactDOM.findDOMNode(cmp);
-        expect(cmpDom).toExist();
+        expect(cmpDom).toBeTruthy();
         expect(cmpDom.childNodes.length).toBe(1);
 
         const body = cmpDom.childNodes.item(0);
         const pChild = body.childNodes.item(0);
         const spanChild = pChild.childNodes.item(2);
-        expect(spanChild).toExist();
+        expect(spanChild).toBeTruthy();
         expect(spanChild.childNodes.item(0).outerHTML).toBe(testProps.withHtml);
     });
 });

@@ -17,10 +17,10 @@ import mapcatalog from '../mapcatalog';
 describe('mapcatalog reducer', () => {
     it('triggerReload', () => {
         const state = mapcatalog(undefined, triggerReload());
-        expect(state).toExist();
+        expect(state).toBeTruthy();
         expect(state.triggerReloadValue).toBe(true);
         const newState = mapcatalog(state, triggerReload());
-        expect(newState).toExist();
+        expect(newState).toBeTruthy();
         expect(newState.triggerReloadValue).toBe(false);
     });
 });

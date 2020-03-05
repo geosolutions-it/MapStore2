@@ -34,8 +34,8 @@ const testExpression = (spyonChange, spyonValueChange, rawValue, expectedOperato
     const input = document.getElementsByTagName("input")[0];
     input.value = rawValue;
     ReactTestUtils.Simulate.change(input);
-    const args = spyonChange.calls[spyonChange.calls.length - 1].arguments[0];
-    const valueArgs = spyonValueChange.calls[spyonValueChange.calls.length - 1].arguments[0];
+    const args = spyonChange.mock.calls[spyonChange.mock.calls.length - 1][0];
+    const valueArgs = spyonValueChange.mock.calls[spyonValueChange.mock.calls.length - 1][0];
     expect(args.value).toBe(expectedValue);
     expect(args.operator).toBe(expectedOperator);
     expect(valueArgs).toBe(rawValue);
@@ -55,12 +55,12 @@ describe('Test for NumberFilter component', () => {
     it('render with defaults', () => {
         ReactDOM.render(<NumberFilter/>, document.getElementById("container"));
         const el = document.getElementsByClassName("form-control input-sm")[0];
-        expect(el).toExist();
+        expect(el).toBeTruthy();
     });
     it('render with value', () => {
         ReactDOM.render(<NumberFilter value={1}/>, document.getElementById("container"));
         const el = document.getElementsByClassName("form-control input-sm")[0];
-        expect(el).toExist();
+        expect(el).toBeTruthy();
         const input = document.getElementsByTagName("input")[0];
         expect(input.value).toBe("1");
     });

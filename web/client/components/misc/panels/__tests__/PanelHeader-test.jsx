@@ -25,9 +25,9 @@ describe("test PanelHeader", () => {
     it('test rendering', () => {
         ReactDOM.render(<PanelHeader onClose={() => {}}/>, document.getElementById("container"));
         const domComp = document.getElementsByClassName('ms-header')[0];
-        expect(domComp).toExist();
+        expect(domComp).toBeTruthy();
         const styleClass = document.getElementsByClassName('ms-default')[0];
-        expect(styleClass).toExist();
+        expect(styleClass).toBeTruthy();
         const buttons = document.getElementsByClassName('square-button');
         expect(buttons.length).toBe(2);
         expect(buttons[1].children[0].getAttribute('class')).toBe('glyphicon glyphicon-1-close');
@@ -36,9 +36,9 @@ describe("test PanelHeader", () => {
     it('test left position', () => {
         ReactDOM.render(<PanelHeader position="left" onClose={() => {}}/>, document.getElementById("container"));
         const domComp = document.getElementsByClassName('ms-header')[0];
-        expect(domComp).toExist();
+        expect(domComp).toBeTruthy();
         const styleClass = document.getElementsByClassName('ms-default')[0];
-        expect(styleClass).toExist();
+        expect(styleClass).toBeTruthy();
         const buttons = document.getElementsByClassName('square-button');
         expect(buttons.length).toBe(2);
         expect(buttons[0].children[0].getAttribute('class')).toBe('glyphicon glyphicon-1-close');
@@ -47,22 +47,22 @@ describe("test PanelHeader", () => {
     it('test additional rows', () => {
         ReactDOM.render(<PanelHeader additionalRows={<div className="custom-header-row"/>} onClose={() => {}}/>, document.getElementById("container"));
         const domComp = document.getElementsByClassName('ms-header')[0];
-        expect(domComp).toExist();
+        expect(domComp).toBeTruthy();
         const styleClass = document.getElementsByClassName('ms-default')[0];
-        expect(styleClass).toExist();
+        expect(styleClass).toBeTruthy();
         const buttons = document.getElementsByClassName('square-button');
         expect(buttons.length).toBe(2);
         expect(buttons[1].children[0].getAttribute('class')).toBe('glyphicon glyphicon-1-close');
         const customRow = document.getElementsByClassName('custom-header-row');
-        expect(customRow).toExist();
+        expect(customRow).toBeTruthy();
     });
 
     it('test additional bsStyle', () => {
         ReactDOM.render(<PanelHeader bsStyle="primary" onClose={() => {}}/>, document.getElementById("container"));
         const domComp = document.getElementsByClassName('ms-header')[0];
-        expect(domComp).toExist();
+        expect(domComp).toBeTruthy();
         const styleClass = document.getElementsByClassName('ms-primary')[0];
-        expect(styleClass).toExist();
+        expect(styleClass).toBeTruthy();
         const icon = document.getElementsByClassName('bg-primary');
         expect(icon.length).toBe(1);
         const buttons = document.getElementsByClassName('btn-primary');
@@ -73,37 +73,37 @@ describe("test PanelHeader", () => {
         // right
         ReactDOM.render(<PanelHeader showFullscreen onClose={() => {}}/>, document.getElementById("container"));
         let fullscreenGlyph = document.getElementsByClassName('glyphicon-chevron-left')[0];
-        expect(fullscreenGlyph).toExist();
+        expect(fullscreenGlyph).toBeTruthy();
         ReactDOM.render(<PanelHeader showFullscreen fullscreen onClose={() => {}}/>, document.getElementById("container"));
         fullscreenGlyph = document.getElementsByClassName('glyphicon-chevron-right')[0];
-        expect(fullscreenGlyph).toExist();
+        expect(fullscreenGlyph).toBeTruthy();
         // left
         ReactDOM.render(<PanelHeader position="left" showFullscreen onClose={() => {}}/>, document.getElementById("container"));
         fullscreenGlyph = document.getElementsByClassName('glyphicon-chevron-right')[0];
-        expect(fullscreenGlyph).toExist();
+        expect(fullscreenGlyph).toBeTruthy();
         ReactDOM.render(<PanelHeader position="left" showFullscreen fullscreen onClose={() => {}}/>, document.getElementById("container"));
         fullscreenGlyph = document.getElementsByClassName('glyphicon-chevron-left')[0];
-        expect(fullscreenGlyph).toExist();
+        expect(fullscreenGlyph).toBeTruthy();
         // bottom
         ReactDOM.render(<PanelHeader position="bottom" showFullscreen onClose={() => {}}/>, document.getElementById("container"));
         fullscreenGlyph = document.getElementsByClassName('glyphicon-chevron-up')[0];
-        expect(fullscreenGlyph).toExist();
+        expect(fullscreenGlyph).toBeTruthy();
         ReactDOM.render(<PanelHeader position="bottom" showFullscreen fullscreen onClose={() => {}}/>, document.getElementById("container"));
         fullscreenGlyph = document.getElementsByClassName('glyphicon-chevron-down')[0];
-        expect(fullscreenGlyph).toExist();
+        expect(fullscreenGlyph).toBeTruthy();
         // top
         ReactDOM.render(<PanelHeader position="top" showFullscreen onClose={() => {}}/>, document.getElementById("container"));
         fullscreenGlyph = document.getElementsByClassName('glyphicon-chevron-down')[0];
-        expect(fullscreenGlyph).toExist();
+        expect(fullscreenGlyph).toBeTruthy();
         ReactDOM.render(<PanelHeader position="top" showFullscreen fullscreen onClose={() => {}}/>, document.getElementById("container"));
         fullscreenGlyph = document.getElementsByClassName('glyphicon-chevron-up')[0];
-        expect(fullscreenGlyph).toExist();
+        expect(fullscreenGlyph).toBeTruthy();
     });
 
     it('test icon not button', () => {
         ReactDOM.render(<PanelHeader bsStyle="primary" onClose={() => {}}/>, document.getElementById("container"));
         const domComp = document.getElementsByClassName('ms-header')[0];
-        expect(domComp).toExist();
+        expect(domComp).toBeTruthy();
         const icon = document.getElementsByClassName('bg-primary');
         expect(icon.length).toBe(1);
         expect(icon[0].tagName.toLowerCase()).toBe('div');
@@ -112,12 +112,12 @@ describe("test PanelHeader", () => {
     it('test icon not button onClose is null', () => {
         ReactDOM.render(<PanelHeader bsStyle="primary" onClose={null}/>, document.getElementById("container"));
         const closeButton = document.querySelector('.ms-close');
-        expect(closeButton).toNotExist();
+        expect(closeButton).toBeFalsy();
     });
 
     it('test icon not button onClose is function', () => {
         ReactDOM.render(<PanelHeader bsStyle="primary" onClose={() => {}}/>, document.getElementById("container"));
         const closeButton = document.querySelector('.ms-close');
-        expect(closeButton).toExist();
+        expect(closeButton).toBeTruthy();
     });
 });

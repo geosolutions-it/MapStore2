@@ -87,13 +87,13 @@ describe('map epics', () => {
     it('zoomToExtentEpic', (done) => {
         MapUtils.registerHook(MapUtils.ZOOM_TO_EXTENT_HOOK);
         testEpic(zoomToExtentEpic, 1, zoomToExtent([10, 44, 12, 46], "EPSG:4326"), ([a0]) => {
-            expect(a0).toExist();
+            expect(a0).toBeTruthy();
             expect(a0.type).toBe(CHANGE_MAP_VIEW);
             expect(a0.center.x).toBe(11);
             expect(a0.center.y).toBe(45);
             expect(a0.zoom).toBeGreaterThan(4);
-            expect(a0.bbox).toExist();
-            expect(a0.bbox.bounds).toExist();
+            expect(a0.bbox).toBeTruthy();
+            expect(a0.bbox.bounds).toBeTruthy();
             expect(a0.bbox.bounds.minx).toBe(10);
             expect(a0.bbox.bounds.miny).toBe(44);
             expect(a0.bbox.bounds.maxx).toBe(12);
@@ -109,13 +109,13 @@ describe('map epics', () => {
             maxx: "12",
             maxy: "46"
         }, "EPSG:4326"), ([a0]) => {
-            expect(a0).toExist();
+            expect(a0).toBeTruthy();
             expect(a0.type).toBe(CHANGE_MAP_VIEW);
             expect(a0.center.x).toBe(11);
             expect(a0.center.y).toBe(45);
             expect(a0.zoom).toBeGreaterThan(4);
-            expect(a0.bbox).toExist();
-            expect(a0.bbox.bounds).toExist();
+            expect(a0.bbox).toBeTruthy();
+            expect(a0.bbox.bounds).toBeTruthy();
             expect(a0.bbox.bounds.minx).toBe(10);
             expect(a0.bbox.bounds.miny).toBe(44);
             expect(a0.bbox.bounds.maxx).toBe(12);
@@ -127,28 +127,28 @@ describe('map epics', () => {
     it('zoomToExtentEpic with full extent', (done) => {
         MapUtils.registerHook(MapUtils.ZOOM_TO_EXTENT_HOOK);
         testEpic(zoomToExtentEpic, 1, zoomToExtent([-180, -90, 180, 90], "EPSG:4326"), ([a0]) => {
-            expect(a0).toExist();
+            expect(a0).toBeTruthy();
             expect(a0.type).toBe(CHANGE_MAP_VIEW);
             expect(a0.zoom).toBe(1);
-            expect(a0.bbox).toExist();
-            expect(a0.bbox.bounds).toExist();
+            expect(a0.bbox).toBeTruthy();
+            expect(a0.bbox.bounds).toBeTruthy();
             expect(a0.bbox.bounds.minx).toBe(-180);
-            expect(a0.bbox.bounds.miny).toExist(-90);
-            expect(a0.bbox.bounds.maxx).toExist(180);
-            expect(a0.bbox.bounds.maxy).toExist(90);
+            expect(a0.bbox.bounds.miny).toBe(-90);
+            expect(a0.bbox.bounds.maxx).toBe(180);
+            expect(a0.bbox.bounds.maxy).toBe(90);
             done();
         }, STATE_FULL);
     });
     it('zoomToExtentEpic with max zoom', (done) => {
         MapUtils.registerHook(MapUtils.ZOOM_TO_EXTENT_HOOK);
         testEpic(zoomToExtentEpic, 1, zoomToExtent([10, 44, 12, 46], "EPSG:4326", 4), ([a0]) => {
-            expect(a0).toExist();
+            expect(a0).toBeTruthy();
             expect(a0.type).toBe(CHANGE_MAP_VIEW);
             expect(a0.center.x).toBe(11);
             expect(a0.center.y).toBe(45);
             expect(a0.zoom).toBe(4);
-            expect(a0.bbox).toExist();
-            expect(a0.bbox.bounds).toExist();
+            expect(a0.bbox).toBeTruthy();
+            expect(a0.bbox.bounds).toBeTruthy();
             expect(a0.bbox.bounds.minx).toBe(10);
             expect(a0.bbox.bounds.miny).toBe(44);
             expect(a0.bbox.bounds.maxx).toBe(12);
@@ -162,9 +162,9 @@ describe('map epics', () => {
             hook: () => {}
         };
         const spy = expect.spyOn(handlers, 'hook').andCall( () => {
-            expect(spy.calls.length).toBe(1);
-            expect(spy.calls[0].arguments[0]).toEqual([10, 44, 12, 46]);
-            expect(spy.calls[0].arguments[1]).toEqual({
+            expect(spy.mock.calls.length).toBe(1);
+            expect(spy.mock.calls[0][0]).toEqual([10, 44, 12, 46]);
+            expect(spy.mock.calls[0][1]).toEqual({
                 crs: "EPSG:4326",
                 padding: {
                     left: 200,
@@ -186,7 +186,7 @@ describe('map epics', () => {
     });
     it('checkMapPermissions after login', (done) => {
         const checkActions = ([a]) => {
-            expect(a).toExist();
+            expect(a).toBeTruthy();
             expect(a.type).toBe(LOAD_MAP_INFO);
             done();
         };

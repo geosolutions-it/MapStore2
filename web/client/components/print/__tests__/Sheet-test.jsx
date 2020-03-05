@@ -43,20 +43,20 @@ describe("Test the Sheet component", () => {
 
     it('creates component with defaults', () => {
         const cmp = ReactDOM.render(<Sheet/>, document.getElementById("container"));
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
 
         const node = ReactDOM.findDOMNode(cmp);
-        expect(node).toExist();
+        expect(node).toBeTruthy();
         expect(node.childNodes.length).toBe(2);
         expect(node.childNodes[1].childNodes.length).toBe(0);
     });
 
     it('creates component with layouts', () => {
         const cmp = ReactDOM.render(<Sheet layouts={layouts}/>, document.getElementById("container"));
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
 
         const node = ReactDOM.findDOMNode(cmp);
-        expect(node).toExist();
+        expect(node).toBeTruthy();
         expect(node.childNodes.length).toBe(2);
         expect(node.childNodes[1].childNodes.length).toBe(2);
         expect(node.childNodes[1].childNodes[0].textContent).toBe('A4');
@@ -65,10 +65,10 @@ describe("Test the Sheet component", () => {
 
     it('creates component with regex', () => {
         const cmp = ReactDOM.render(<Sheet layouts={weirdLayouts} sheetRegex={/^[^_]+_([^_]+)/}/>, document.getElementById("container"));
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
 
         const node = ReactDOM.findDOMNode(cmp);
-        expect(node).toExist();
+        expect(node).toBeTruthy();
         expect(node.childNodes.length).toBe(2);
         expect(node.childNodes[1].childNodes.length).toBe(1);
         expect(node.childNodes[1].childNodes[0].textContent).toBe('A4');
@@ -81,7 +81,7 @@ describe("Test the Sheet component", () => {
             called = true;
         };
         const cmp = ReactDOM.render(<Sheet layouts={layouts} onChange={changeHandler}/>, document.getElementById("container"));
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
         const node = ReactDOM.findDOMNode(cmp);
         ReactTestUtils.Simulate.change(node.childNodes[1]);
 
@@ -94,7 +94,7 @@ describe("Test the Sheet component", () => {
             'A3': 'L2'
         };
         const cmp = ReactDOM.render(<Sheet layouts={layouts} layoutNames={layoutNames}/>, document.getElementById("container"));
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
         const node = ReactDOM.findDOMNode(cmp);
         const options = node.getElementsByTagName('option');
         expect(options.length).toBe(2);
@@ -106,7 +106,7 @@ describe("Test the Sheet component", () => {
     it('uses custom layoutNames function', () => {
         const layoutNames = (layout) => layout + " sheet";
         const cmp = ReactDOM.render(<Sheet layouts={layouts} layoutNames={layoutNames}/>, document.getElementById("container"));
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
         const node = ReactDOM.findDOMNode(cmp);
         const options = node.getElementsByTagName('option');
         expect(options.length).toBe(2);

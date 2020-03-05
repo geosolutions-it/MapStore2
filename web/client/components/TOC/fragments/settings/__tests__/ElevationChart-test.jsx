@@ -51,9 +51,9 @@ describe('test Layer Properties Elevation Chart component', () => {
             document.getElementById("container")
         );
 
-        expect(comp).toExist();
+        expect(comp).toBeTruthy();
         const div = ReactTestUtils.scryRenderedDOMComponentsWithTag( comp, "div" );
-        expect(div).toExist();
+        expect(div).toBeTruthy();
     });
 
     it('Render 1 line in simple LineChart', () => {
@@ -81,9 +81,9 @@ describe('test Layer Properties Elevation Chart component', () => {
             document.getElementById("container")
         );
 
-        expect(comp).toExist();
+        expect(comp).toBeTruthy();
 
         const chart = ReactDOM.findDOMNode(comp).querySelector('.recharts-line .recharts-line-curve');
-        expect(chart).toExist();
+        expect(chart).toBeTruthy();
     });
 });

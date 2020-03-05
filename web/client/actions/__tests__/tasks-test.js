@@ -23,7 +23,7 @@ describe('Test correctness of the tasks actions', () => {
         let name = "myName";
         let actionPayload = null;
         const retVal = taskSuccess(result, name, actionPayload);
-        expect(retVal).toExist();
+        expect(retVal).toBeTruthy();
         expect(retVal.type).toBe(TASK_SUCCESS);
         expect(retVal.result).toBe(result);
         expect(retVal.name).toBe(name);
@@ -35,7 +35,7 @@ describe('Test correctness of the tasks actions', () => {
         let name = "myName";
         let actionPayload = null;
         const retVal = taskError(error, name, actionPayload);
-        expect(retVal).toExist();
+        expect(retVal).toBeTruthy();
         expect(retVal.type).toBe(TASK_ERROR);
         expect(retVal.error).toBe(error);
         expect(retVal.name).toBe(name);
@@ -46,7 +46,7 @@ describe('Test correctness of the tasks actions', () => {
     it('test taskStarted action', () => {
         let name = "myName";
         const retVal = taskStarted(name);
-        expect(retVal).toExist();
+        expect(retVal).toBeTruthy();
         expect(retVal.type).toBe(TASK_STARTED);
         expect(retVal.name).toBe(name);
     });

@@ -17,7 +17,7 @@ describe('Test the searchconfig reducer', () => {
             config: { version: 2, map: {layers: [], text_search_config: {override: true}}}};
 
         const state = searchconfig({}, action);
-        expect(state.textSearchConfig).toExist();
+        expect(state.textSearchConfig).toBeTruthy();
         expect(state.textSearchConfig.override).toBe(true);
     });
     it('Map config loaded without textSearchConfig', () => {
@@ -39,7 +39,7 @@ describe('Test the searchconfig reducer', () => {
         expect(state.service).toBe(undefined);
         expect(state.init_service_values).toBe(undefined);
         expect(state.editIdx).toBe(undefined);
-        expect(state.textSearchConfig).toExist();
+        expect(state.textSearchConfig).toBeTruthy();
     });
 
     it('test service update', () => {
@@ -50,7 +50,7 @@ describe('Test the searchconfig reducer', () => {
             service: {name: "changed"},
             idx: 0
         });
-        expect(state.textSearchConfig).toExist();
+        expect(state.textSearchConfig).toBeTruthy();
         expect(state.textSearchConfig.services[0].name).toBe("changed");
     });
     it('test service add', () => {
@@ -61,7 +61,7 @@ describe('Test the searchconfig reducer', () => {
             service: {name: "changed"},
             idx: -1
         });
-        expect(state.textSearchConfig).toExist();
+        expect(state.textSearchConfig).toBeTruthy();
         expect(state.textSearchConfig.services[1].name).toBe("changed");
     });
 
@@ -71,7 +71,7 @@ describe('Test the searchconfig reducer', () => {
             property: "prop",
             value: 'val'
         });
-        expect(state.prop).toExist();
+        expect(state.prop).toBeTruthy();
         expect(state.prop).toBe('val');
     });
     it('should support both: old textSearchConfig field with typo and corrected new one', () => {
@@ -91,8 +91,8 @@ describe('Test the searchconfig reducer', () => {
                 }
             }
         });
-        expect(oldState.textSearchConfig).toExist();
-        expect(newState.textSearchConfig).toExist();
+        expect(oldState.textSearchConfig).toBeTruthy();
+        expect(newState.textSearchConfig).toBeTruthy();
         expect(oldState.textSearchConfig).toBe('test');
         expect(newState.textSearchConfig).toBe('test');
     });

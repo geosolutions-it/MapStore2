@@ -183,7 +183,7 @@ describe('Test the catalog reducer', () => {
     it('CHANGE_SERVICE_FORMAT', () => {
         const format = "image/jpeg";
         const state = catalog({}, changeServiceFormat(format));
-        expect(state.newService).toExist();
+        expect(state.newService).toBeTruthy();
         expect(state.newService.format).toBe(format);
     });
     it('CHANGE_SELECTED_SERVICE', () => {

@@ -37,6 +37,6 @@ describe('MapCatalog plugin', () => {
 
         ReactDOM.render(<Plugin/>, document.getElementById('container'));
         const rootDiv = document.getElementsByClassName('map-catalog-dock-panel')[0];
-        expect(rootDiv).toExist();
+        expect(rootDiv).toBeTruthy();
     });
 });

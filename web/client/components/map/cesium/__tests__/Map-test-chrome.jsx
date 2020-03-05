@@ -36,13 +36,13 @@ describe('CesiumMap', () => {
     });
     it('creates a div for cesium map with given id', () => {
         const map = ReactDOM.render(<CesiumMap id="mymap" center={{y: 43.9, x: 10.3}} zoom={11}/>, document.getElementById("container"));
-        expect(map).toExist();
+        expect(map).toBeTruthy();
         expect(ReactDOM.findDOMNode(map).id).toBe('mymap');
     });
 
     it('creates a div for cesium map with default id (map)', () => {
         const map = ReactDOM.render(<CesiumMap center={{y: 43.9, x: 10.3}} zoom={11}/>, document.getElementById("container"));
-        expect(map).toExist();
+        expect(map).toBeTruthy();
         expect(ReactDOM.findDOMNode(map).id).toBe('map');
     });
 
@@ -54,15 +54,15 @@ describe('CesiumMap', () => {
                 <div id="container2"><CesiumMap id="map2" center={{y: 43.9, x: 10.3}} zoom={11}/></div>
             </div>
             , document.getElementById("container"));
-        expect(container).toExist();
+        expect(container).toBeTruthy();
 
-        expect(document.getElementById('map1')).toExist();
-        expect(document.getElementById('map2')).toExist();
+        expect(document.getElementById('map1')).toBeTruthy();
+        expect(document.getElementById('map2')).toBeTruthy();
     });
 
     it('populates the container with cesium objects', () => {
         const map = ReactDOM.render(<CesiumMap center={{y: 43.9, x: 10.3}} zoom={11}/>, document.getElementById("container"));
-        expect(map).toExist();
+        expect(map).toBeTruthy();
         expect(document.getElementsByClassName('cesium-viewer').length).toBe(1);
         expect(document.getElementsByClassName('cesium-viewer-cesiumWidgetContainer').length).toBe(1);
         expect(document.getElementsByClassName('cesium-widget').length).toBe(1);
@@ -75,7 +75,7 @@ describe('CesiumMap', () => {
         const map = ReactDOM.render(<CesiumMap center={{y: 43.9, x: 10.3}} zoom={11}>
             <CesiumLayer type="osm" options={options} />
         </CesiumMap>, document.getElementById("container"));
-        expect(map).toExist();
+        expect(map).toBeTruthy();
         expect(map.map.imageryLayers.length).toBe(1);
     });
 
@@ -89,8 +89,8 @@ describe('CesiumMap', () => {
         const map = ReactDOM.render(<CesiumMap center={{ y: 43.9, x: 10.3 }} zoom={11}>
             <CesiumLayer type="wms" options={options} />
         </CesiumMap>, document.getElementById("container"));
-        expect(map).toExist();
-        expect(map.map.terrainProvider).toExist();
+        expect(map).toBeTruthy();
+        expect(map.map.terrainProvider).toBeTruthy();
         expect(map.map.terrainProvider.layerName).toBe('mylayer');
     });
     it('check if the handler for "moveend" event is called', (done) => {
@@ -120,20 +120,20 @@ describe('CesiumMap', () => {
         const cesiumMap = map.map;
         cesiumMap.camera.moveEnd.addEventListener(() => {
             // check arguments
-            expect(spy.calls[0].arguments.length).toEqual(7);
-            expect(spy.calls.length).toBe(expectedCalls);
+            expect(spy.mock.calls[0].length).toEqual(7);
+            expect(spy.mock.calls.length).toBe(expectedCalls);
             // check camera moved
-            expect(Math.round(spy.calls[0].arguments[0].y * precision) / precision).toBe(30);
-            expect(Math.round(spy.calls[0].arguments[0].x * precision) / precision).toBe(20);
-            expect(spy.calls[0].arguments[1]).toEqual(5);
+            expect(Math.round(spy.mock.calls[0][0].y * precision) / precision).toBe(30);
+            expect(Math.round(spy.mock.calls[0][0].x * precision) / precision).toBe(20);
+            expect(spy.mock.calls[0][1]).toEqual(5);
 
-            expect(spy.calls[0].arguments[6].orientation.heading).toBe(1);
+            expect(spy.mock.calls[0][6].orientation.heading).toBe(1);
 
-            for (let c = 0; c < spy.calls.length; c++) {
-                expect(spy.calls[c].arguments[2].bounds).toExist();
-                expect(spy.calls[c].arguments[2].crs).toExist();
-                expect(spy.calls[c].arguments[3].height).toExist();
-                expect(spy.calls[c].arguments[3].width).toExist();
+            for (let c = 0; c < spy.mock.calls.length; c++) {
+                expect(spy.mock.calls[c][2].bounds).toBeTruthy();
+                expect(spy.mock.calls[c][2].crs).toBeTruthy();
+                expect(spy.mock.calls[c][3].height).toBeTruthy();
+                expect(spy.mock.calls[c][3].width).toBeTruthy();
             }
             done();
 
@@ -164,11 +164,11 @@ describe('CesiumMap', () => {
                 onClick={testHandlers.handler}
             />
             , document.getElementById("container"));
-        expect(map.map).toExist();
+        expect(map.map).toBeTruthy();
         map.onClick(map.map, {position: {x: 100, y: 100 }});
         setTimeout(() => {
-            expect(spy.calls.length).toEqual(1);
-            expect(spy.calls[0].arguments.length).toEqual(1);
+            expect(spy.mock.calls.length).toEqual(1);
+            expect(spy.mock.calls[0].length).toEqual(1);
             done();
         }, 800);
     });
@@ -189,7 +189,7 @@ describe('CesiumMap', () => {
             />
             , document.getElementById("container"));
 
-        expect(Math.round(cesiumMap.camera.positionCartographic.height - map.getHeightFromZoom(12))).toBe(0);
+        expect(Math.abs(Math.round(cesiumMap.camera.positionCartographic.height - map.getHeightFromZoom(12)))).toBe(0);
         expect(Math.round(cesiumMap.camera.positionCartographic.latitude * 180.0 / Math.PI)).toBe(44);
         expect(Math.round(cesiumMap.camera.positionCartographic.longitude * 180.0 / Math.PI)).toBe(10);
     });
@@ -197,7 +197,7 @@ describe('CesiumMap', () => {
         // instanciating the map that will be used to compute the bounfing box
         const testHandlers = {
             onMapViewChanges: (args) => {
-                expect(args).toExist();
+                expect(args).toBeTruthy();
                 expect(args.x).toBeGreaterThan(14);
                 expect(args.y).toBeGreaterThan(14);
                 expect(args.x).toBeLessThan(16);
@@ -213,7 +213,7 @@ describe('CesiumMap', () => {
         // computing the bounding box for the new center and the new zoom
         const hook = MapUtils.getHook(MapUtils.ZOOM_TO_EXTENT_HOOK);
         // update the map with the new center and the new zoom so we can check our computed bouding box
-        expect(hook).toExist();
+        expect(hook).toBeTruthy();
 
         hook([10, 10, 20, 20], {crs: "EPSG:4326", duration: 0});
         // unregister hook
@@ -222,16 +222,16 @@ describe('CesiumMap', () => {
     describe("hookRegister", () => {
         it("default", () => {
             const map = ReactDOM.render(<CesiumMap id="mymap" center={{y: 43.9, x: 10.3}} zoom={11}/>, document.getElementById("container"));
-            expect(map).toExist();
+            expect(map).toBeTruthy();
             expect(ReactDOM.findDOMNode(map).id).toBe('mymap');
-            expect(MapUtils.getHook(MapUtils.ZOOM_TO_EXTENT_HOOK)).toExist();
+            expect(MapUtils.getHook(MapUtils.ZOOM_TO_EXTENT_HOOK)).toBeTruthy();
         });
         it("with custom hookRegister", () => {
             const customHooRegister = MapUtils.createRegisterHooks();
             const map = ReactDOM.render(<CesiumMap hookRegister={customHooRegister} id="mymap" center={{y: 43.9, x: 10.3}} zoom={11}/>, document.getElementById("container"));
-            expect(map).toExist();
+            expect(map).toBeTruthy();
             expect(ReactDOM.findDOMNode(map).id).toBe('mymap');
-            expect(customHooRegister.getHook(MapUtils.ZOOM_TO_EXTENT_HOOK)).toExist();
+            expect(customHooRegister.getHook(MapUtils.ZOOM_TO_EXTENT_HOOK)).toBeTruthy();
         });
     });
 

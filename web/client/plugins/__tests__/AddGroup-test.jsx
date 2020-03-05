@@ -34,7 +34,7 @@ describe('AddGroup Plugin', () => {
             }
         });
         ReactDOM.render(<Plugin />, document.getElementById("container"));
-        expect(document.getElementById('mapstore-add-toc-group')).toExist();
+        expect(document.getElementById('mapstore-add-toc-group')).toBeTruthy();
     });
 
     it('Closes AddGroup on cancel', () => {
@@ -74,9 +74,9 @@ describe('AddGroup Plugin', () => {
         ReactTestUtils.Simulate.click(btn);
         expect(store.getState().layers.groups.length).toBe(2);
         expect(store.getState().layers.groups[1].title).toBe('newgroup');
-        expect(store.getState().layers.groups[1].name).toExist();
+        expect(store.getState().layers.groups[1].name).toBeTruthy();
         expect(store.getState().layers.groups[1].name.length).toBe(36);
-        expect(store.getState().layers.groups[1].id).toExist();
+        expect(store.getState().layers.groups[1].id).toBeTruthy();
         expect(store.getState().layers.groups[1].id.length).toBe(36);
         expect(store.getState().layers.groups[1].nodes.length).toBe(0);
     });
@@ -108,9 +108,9 @@ describe('AddGroup Plugin', () => {
         expect(store.getState().layers.groups[0].nodes[0].nodes.length).toBe(1);
         const newgroup = store.getState().layers.groups[0].nodes[0].nodes[0];
         expect(newgroup.title).toBe('newgroup');
-        expect(newgroup.name).toExist();
+        expect(newgroup.name).toBeTruthy();
         expect(newgroup.name.length).toBe(36);
-        expect(newgroup.id).toExist();
+        expect(newgroup.id).toBeTruthy();
         expect(newgroup.id.length).toBe(6 + 6 + 36 + 2);
         expect(newgroup.nodes.length).toBe(0);
     });

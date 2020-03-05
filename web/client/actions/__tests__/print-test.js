@@ -33,7 +33,7 @@ describe('Test correctness of the print actions', () => {
     it('loadPrintCapabilities', (done) => {
         loadPrintCapabilities('base/web/client/test-resources/info.json')((e) => {
             try {
-                expect(e).toExist();
+                expect(e).toBeTruthy();
                 expect(e.type).toBe(PRINT_CAPABILITIES_LOADED);
                 done();
             } catch (ex) {
@@ -45,7 +45,7 @@ describe('Test correctness of the print actions', () => {
     it('loadPrintCapabilities error', (done) => {
         loadPrintCapabilities('base/web/client/test-resources/missing.json')((e) => {
             try {
-                expect(e).toExist();
+                expect(e).toBeTruthy();
                 expect(e.type).toBe(PRINT_CAPABILITIES_ERROR);
                 done();
             } catch (ex) {
@@ -56,7 +56,7 @@ describe('Test correctness of the print actions', () => {
 
     it('setPrintParameter', () => {
         const retVal = setPrintParameter('name', 'val');
-        expect(retVal).toExist();
+        expect(retVal).toBeTruthy();
         expect(retVal.type).toBe(SET_PRINT_PARAMETER);
         expect(retVal.name).toBe('name');
         expect(retVal.value).toBe('val');
@@ -64,14 +64,14 @@ describe('Test correctness of the print actions', () => {
 
     it('configurePrintMap', () => {
         const retVal = configurePrintMap({x: 1, y: 1}, 5, 6, 2.0, [], 'EPSG:4326', 'en-US');
-        expect(retVal).toExist();
+        expect(retVal).toBeTruthy();
         expect(retVal.type).toBe(CONFIGURE_PRINT_MAP);
-        expect(retVal.center).toExist();
+        expect(retVal.center).toBeTruthy();
         expect(retVal.center.x).toBe(1);
         expect(retVal.zoom).toBe(5);
         expect(retVal.scaleZoom).toBe(6);
         expect(retVal.scale).toBe(2.0);
-        expect(retVal.layers).toExist();
+        expect(retVal.layers).toBeTruthy();
         expect(retVal.layers.length).toBe(0);
         expect(retVal.projection).toBe('EPSG:4326');
         expect(retVal.currentLocale).toBe('en-US');
@@ -79,7 +79,7 @@ describe('Test correctness of the print actions', () => {
 
     it('changePrintZoomLevel', () => {
         const retVal = changePrintZoomLevel(5, 10000);
-        expect(retVal).toExist();
+        expect(retVal).toBeTruthy();
         expect(retVal.type).toBe(CHANGE_PRINT_ZOOM_LEVEL);
         expect(retVal.zoom).toBe(5);
         expect(retVal.scale).toBe(10000);
@@ -87,14 +87,14 @@ describe('Test correctness of the print actions', () => {
 
     it('changeMapPrintPreview', () => {
         const retVal = changeMapPrintPreview({x: 1, y: 1}, 5, {bounds: {}}, {width: 10, height: 50}, 'source', 'EPSG:4326');
-        expect(retVal).toExist();
+        expect(retVal).toBeTruthy();
         expect(retVal.type).toBe(CHANGE_MAP_PRINT_PREVIEW);
-        expect(retVal.center).toExist();
+        expect(retVal.center).toBeTruthy();
         expect(retVal.center.x).toBe(1);
         expect(retVal.zoom).toBe(5);
-        expect(retVal.bbox).toExist();
-        expect(retVal.bbox.bounds).toExist();
-        expect(retVal.size).toExist();
+        expect(retVal.bbox).toBeTruthy();
+        expect(retVal.bbox.bounds).toBeTruthy();
+        expect(retVal.size).toBeTruthy();
         expect(retVal.size.width).toBe(10);
         expect(retVal.size.height).toBe(50);
         expect(retVal.mapStateSource).toBe('source');
@@ -104,7 +104,7 @@ describe('Test correctness of the print actions', () => {
     it('printSubmit', (done) => {
         printSubmit('base/web/client/test-resources/print.json', {})((e) => {
             try {
-                expect(e).toExist();
+                expect(e).toBeTruthy();
                 expect(e.type).toBe(PRINT_CREATED);
                 done();
             } catch (ex) {
@@ -116,7 +116,7 @@ describe('Test correctness of the print actions', () => {
     it('printSubmit error', (done) => {
         printSubmit('base/web/client/test-resources/missing.json', {})((e) => {
             try {
-                expect(e).toExist();
+                expect(e).toBeTruthy();
                 expect(e.type).toBe(PRINT_ERROR);
                 done();
             } catch (ex) {
@@ -127,13 +127,13 @@ describe('Test correctness of the print actions', () => {
 
     it('printSubmitting', () => {
         const retVal = printSubmitting();
-        expect(retVal).toExist();
+        expect(retVal).toBeTruthy();
         expect(retVal.type).toBe(PRINT_SUBMITTING);
     });
 
     it('printCancel', () => {
         const retVal = printCancel();
-        expect(retVal).toExist();
+        expect(retVal).toBeTruthy();
         expect(retVal.type).toBe(PRINT_CANCEL);
     });
 });

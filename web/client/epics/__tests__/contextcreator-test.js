@@ -62,9 +62,9 @@ describe('contextcreator epics', () => {
         testEpic(resetConfigOnPluginKeyChange, 2, startActions, actions => {
             expect(actions.length).toBe(2);
             expect(actions[0].type).toBe(SET_CFG_ERROR);
-            expect(actions[0].error).toNotExist();
+            expect(actions[0].error).toBeFalsy();
             expect(actions[1].type).toBe(SET_EDITED_PLUGIN);
-            expect(actions[1].pluginName).toNotExist();
+            expect(actions[1].pluginName).toBeFalsy();
         }, {
             contextcreator: {
                 editedPlugin: 'editedPlugin',
@@ -110,7 +110,7 @@ describe('contextcreator epics', () => {
             expect(actions[1].key).toBe('isUserPlugin');
             expect(actions[1].value).toBe(false);
             expect(actions[2].type).toBe(CHANGE_PLUGINS_KEY);
-            expect(actions[2].ids).toExist();
+            expect(actions[2].ids).toBeTruthy();
             expect(actions[2].ids.length).toBe(0);
             expect(actions[2].key).toBe('forcedMandatory');
             expect(actions[2].value).toBe(true);
@@ -680,7 +680,7 @@ describe('contextcreator epics', () => {
             expect(actions[0].plugins[0]).toBe("myplugin.zip");
             expect(actions[1].type).toBe(PLUGIN_UPLOADED);
             expect(actions[1].plugins.length).toBe(1);
-            expect(actions[1].plugins[0].myplugin).toExist();
+            expect(actions[1].plugins[0].myplugin).toBeTruthy();
             expect(actions[2].type).toBe(UPLOADING_PLUGIN);
             expect(actions[2].status).toBe(false);
             expect(actions[2].plugins.length).toBe(1);

@@ -23,8 +23,8 @@ describe('mapToNodes enhancer', () => {
     });
     it('mapToNodes rendering with defaults', (done) => {
         const Sink = mapToNodes(createSink( props => {
-            expect(props).toExist();
-            expect(props.nodes).toExist();
+            expect(props).toBeTruthy();
+            expect(props.nodes).toBeTruthy();
             expect(props.nodes.length).toBe(1);
             const gNode = props.nodes[0];
             expect(gNode.name).toBe("GGG");
@@ -35,7 +35,7 @@ describe('mapToNodes enhancer', () => {
             expect(lNode.id).toBe("LAYER");
             expect(lNode.name).toBe("LAYER");
             expect(lNode.group).toBe("GGG");
-            expect(lNode.options).toExist();
+            expect(lNode.options).toBeTruthy();
             done();
         }));
         ReactDOM.render(<Sink

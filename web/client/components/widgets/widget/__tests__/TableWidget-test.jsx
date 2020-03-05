@@ -41,15 +41,15 @@ describe('TableWidget component', () => {
         ReactDOM.render(<TableWidget />, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('.mapstore-widget-card');
-        expect(el).toExist();
-        expect(container.querySelector('.glyphicon-pencil')).toExist();
-        expect(container.querySelector('.glyphicon-trash')).toExist();
+        expect(el).toBeTruthy();
+        expect(container.querySelector('.glyphicon-pencil')).toBeTruthy();
+        expect(container.querySelector('.glyphicon-trash')).toBeTruthy();
     });
     it('view only mode', () => {
         ReactDOM.render(<TableWidget canEdit={false} />, document.getElementById("container"));
         const container = document.getElementById('container');
-        expect(container.querySelector('.glyphicon-pencil')).toNotExist();
-        expect(container.querySelector('.glyphicon-trash')).toNotExist();
+        expect(container.querySelector('.glyphicon-pencil')).toBeFalsy();
+        expect(container.querySelector('.glyphicon-trash')).toBeFalsy();
     });
     it('Test TableWidget onEdit callback', () => {
         const actions = {
@@ -66,13 +66,13 @@ describe('TableWidget component', () => {
         ReactDOM.render(<TableWidget loading />, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('.loader-container');
-        expect(el).toExist();
+        expect(el).toBeTruthy();
     });
     it('TableWidget empty', () => {
         ReactDOM.render(<TableWidget describeFeatureType={describePois} features={[]} />, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('.react-grid-Empty');
-        expect(el).toExist();
+        expect(el).toBeTruthy();
     });
 
 });

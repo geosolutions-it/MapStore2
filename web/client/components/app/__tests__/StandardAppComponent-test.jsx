@@ -42,7 +42,7 @@ describe('StandardAppComponent', () => {
             getState: () => ({})
         };
         const app = ReactDOM.render(<Provider store={store}><StandardAppComponent/></Provider>, document.getElementById("container"));
-        expect(app).toExist();
+        expect(app).toBeTruthy();
     });
 
     it('creates a default app with plugins', () => {
@@ -56,7 +56,7 @@ describe('StandardAppComponent', () => {
             getState: () => ({})
         };
         const app = ReactDOM.render(<Provider store={store}><StandardAppComponent plugins={plugins} pluginsConfig={{desktop: ['My']}} /></Provider>, document.getElementById("container"));
-        expect(app).toExist();
+        expect(app).toBeTruthy();
 
         const dom = ReactDOM.findDOMNode(app);
 

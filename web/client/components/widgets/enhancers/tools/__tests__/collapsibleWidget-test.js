@@ -33,7 +33,7 @@ describe('collapsibleWidget enhancer', () => {
     });
     it('rendering with defaults', (done) => {
         const Sink = collapsibleWidget()(createSink( props => {
-            expect(props).toExist();
+            expect(props).toBeTruthy();
             expect(props.widgetTools.length).toBe(0);
             done();
         }));
@@ -41,17 +41,17 @@ describe('collapsibleWidget enhancer', () => {
     });
     it('when toolsOptions.showCollapse = true adds a widget tool', (done) => {
         const Sink = collapsible(createSink( props => {
-            expect(props).toExist();
+            expect(props).toBeTruthy();
             expect(props.widgetTools.length).toBe(1);
             expect(props.widgetTools[0].visible).toBe(true);
-            expect(props.widgetTools[0].glyph).toExist();
+            expect(props.widgetTools[0].glyph).toBeTruthy();
             done();
         }));
         ReactDOM.render(<Sink />, document.getElementById("container"));
     });
     it('hide when pinned (dataGrid.static = pinned)', (done) => {
         const Sink = collapsible(createSink(props => {
-            expect(props).toExist();
+            expect(props).toBeTruthy();
             expect(props.widgetTools.length).toBe(1);
             expect(props.widgetTools[0].visible).toBe(false);
             done();
@@ -60,7 +60,7 @@ describe('collapsibleWidget enhancer', () => {
     });
     it('show when hidden (hide = true hides the tool for certain types of users )', (done) => {
         const Sink = collapsible(createSink(props => {
-            expect(props).toExist();
+            expect(props).toBeTruthy();
             expect(props.widgetTools.length).toBe(1);
             expect(props.widgetTools[0].visible).toBe(true);
             done();
@@ -73,7 +73,7 @@ describe('collapsibleWidget enhancer', () => {
         };
         const spyToggleCollapse = expect.spyOn(actions, 'toggleCollapse');
         const Sink = collapsible(createSink(({ widgetTools = [] }) => {
-            expect(widgetTools[0]).toExist();
+            expect(widgetTools[0]).toBeTruthy();
             widgetTools[0].onClick();
         }));
         ReactDOM.render(<Sink toggleCollapse={actions.toggleCollapse}/>, document.getElementById("container"));

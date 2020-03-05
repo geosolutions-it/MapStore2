@@ -44,61 +44,61 @@ describe('Test the thematic reducer', () => {
     it('loadFields action', () => {
         const state = thematic({}, loadFields(layer));
         expect(state.loadingFields).toBe(true);
-        expect(state.fields).toNotExist();
-        expect(state.errorFields).toNotExist();
+        expect(state.fields).toBeFalsy();
+        expect(state.errorFields).toBeFalsy();
     });
 
     it('fieldsLoaded action', () => {
         const state = thematic({}, fieldsLoaded(layer, fields));
         expect(state.loadingFields).toBe(false);
-        expect(state.fields).toExist();
+        expect(state.fields).toBeTruthy();
         expect(state.fields.length).toBe(1);
-        expect(state.errorFields).toNotExist();
+        expect(state.errorFields).toBeFalsy();
     });
 
     it('fieldsError action', () => {
         const state = thematic({}, fieldsError(layer, error));
         expect(state.loadingFields).toBe(false);
-        expect(state.fields).toNotExist();
-        expect(state.errorFields).toExist();
+        expect(state.fields).toBeFalsy();
+        expect(state.errorFields).toBeTruthy();
     });
 
     it('loadClassification action', () => {
         const state = thematic({}, loadClassification(layer, {}));
         expect(state.loadingClassification).toBe(true);
-        expect(state.classification).toNotExist();
-        expect(state.errorClassification).toNotExist();
+        expect(state.classification).toBeFalsy();
+        expect(state.errorClassification).toBeFalsy();
     });
 
     it('classificationLoaded action', () => {
         const state = thematic({}, classificationLoaded(layer, classification));
         expect(state.loadingClassification).toBe(false);
-        expect(state.classification).toExist();
+        expect(state.classification).toBeTruthy();
         expect(state.classification.length).toBe(1);
-        expect(state.errorClassification).toNotExist();
+        expect(state.errorClassification).toBeFalsy();
     });
 
     it('classificationError action', () => {
         const state = thematic({}, classificationError(layer, error));
         expect(state.loadingClassification).toBe(false);
-        expect(state.classification).toNotExist();
-        expect(state.errorClassification).toExist();
+        expect(state.classification).toBeFalsy();
+        expect(state.errorClassification).toBeTruthy();
     });
 
     it('changeConfiguration action', () => {
         const state = thematic({}, changeConfiguration(layer, true, "{}"));
-        expect(state.adminCfg).toExist();
+        expect(state.adminCfg).toBeTruthy();
         expect(state.adminCfg.open).toBe(true);
         expect(state.adminCfg.current).toBe("{}");
-        expect(state.adminCfg.error).toNotExist();
+        expect(state.adminCfg.error).toBeFalsy();
     });
 
     it('changeConfiguration action with error', () => {
         const state = thematic({}, changeConfiguration(layer, true, "{}", error));
-        expect(state.adminCfg).toExist();
+        expect(state.adminCfg).toBeTruthy();
         expect(state.adminCfg.open).toBe(true);
         expect(state.adminCfg.current).toBe("{}");
-        expect(state.adminCfg.error).toExist();
+        expect(state.adminCfg.error).toBeTruthy();
     });
 
     it('setDirty action', () => {
@@ -113,8 +113,8 @@ describe('Test the thematic reducer', () => {
 
     it('setInvalidInput action', () => {
         const state = thematic({}, setInvalidInput('intervals', 'myerror', 'params'));
-        expect(state.invalidInputs).toExist();
-        expect(state.invalidInputs.intervals).toExist();
+        expect(state.invalidInputs).toBeTruthy();
+        expect(state.invalidInputs.intervals).toBeTruthy();
         expect(state.invalidInputs.intervals.message).toBe('myerror');
         expect(state.invalidInputs.intervals.params).toBe('params');
     });
@@ -125,7 +125,7 @@ describe('Test the thematic reducer', () => {
                 intervals: {}
             }
         }, resetInvalidInput('intervals'));
-        expect(state.invalidInputs).toExist();
-        expect(state.invalidInputs.intervals).toNotExist();
+        expect(state.invalidInputs).toBeTruthy();
+        expect(state.invalidInputs.intervals).toBeFalsy();
     });
 });

@@ -40,7 +40,7 @@ describe('The ShareCopyToClipboard component', () => {
             onCopy={onCopy}
         />, document.getElementById("container"));
         const button = document.getElementsByClassName('btn-primary')[0];
-        expect(button).toExist();
+        expect(button).toBeTruthy();
         ReactTestUtils.Simulate.click(button);
     });
 });

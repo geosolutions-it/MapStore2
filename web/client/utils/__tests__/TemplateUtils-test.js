@@ -25,17 +25,17 @@ describe('TemplateUtils', () => {
     });
     it('test template generation', () => {
         let templateFunction = generateTemplateString("this is a ${test}");
-        expect(templateFunction).toExist();
+        expect(templateFunction).toBeTruthy();
         let templateResult = templateFunction({test: "TEST"});
         expect(templateResult).toBe("this is a TEST");
     });
     it('test template cache', () => {
         let templateFunction = generateTemplateString("this is a ${test}");
-        expect(templateFunction).toExist();
+        expect(templateFunction).toBeTruthy();
         let templateResult = templateFunction({test: "TEST"});
         expect(templateResult).toBe("this is a TEST");
         let templateFunction2 = generateTemplateString("this is a ${test}");
-        expect(templateFunction2).toExist();
+        expect(templateFunction2).toBeTruthy();
         let templateResult2 = templateFunction2({test: "TEST"});
         expect(templateResult2).toBe("this is a TEST");
         expect(templateFunction).toBe(templateFunction2);
@@ -46,7 +46,7 @@ describe('TemplateUtils', () => {
     });
     it('test escape function', () => {
         let templateFunction = generateTemplateString("this is a ${test}", a => a + "2");
-        expect(templateFunction).toExist();
+        expect(templateFunction).toBeTruthy();
         let templateResult = templateFunction({test: "TEST"});
         expect(templateResult).toBe("this is a TEST2");
     });

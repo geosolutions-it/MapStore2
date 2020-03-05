@@ -150,7 +150,7 @@ describe('openDashboardWidgetEditor epic', () => {
             actions.map((action) => {
                 switch (action.type) {
                 case EDIT_NEW:
-                    expect(action.widget).toExist();
+                    expect(action.widget).toBeTruthy();
                     // verify default mapSync, legend, cartesian and yaxis
                     expect(action.widget.mapSync).toBe(false);
                     expect(action.widget.legend).toBe(false);
@@ -246,7 +246,7 @@ describe('openDashboardWidgetEditor epic', () => {
             testEpic(filterAnonymousUsersForDashboard, NUM_ACTIONS, checkLoggedUser(), actions => {
                 expect(actions.length).toBe(NUM_ACTIONS);
                 const [a] = actions;
-                expect(a).toExist();
+                expect(a).toBeTruthy();
                 expect(a.type).toBe(DASHBOARD_LOAD_ERROR);
                 expect(a.error.status).toBe(403);
             },
@@ -256,7 +256,7 @@ describe('openDashboardWidgetEditor epic', () => {
             testEpic(filterAnonymousUsersForDashboard, NUM_ACTIONS, logout(), actions => {
                 expect(actions.length).toBe(NUM_ACTIONS);
                 const [a] = actions;
-                expect(a).toExist();
+                expect(a).toBeTruthy();
                 expect(a.type).toBe(DASHBOARD_LOAD_ERROR);
             },
             newDashboardState);

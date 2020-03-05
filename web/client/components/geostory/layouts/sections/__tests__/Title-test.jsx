@@ -26,7 +26,7 @@ describe('Title component', () => {
         ReactDOM.render(<Title />, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('.ms-section-title');
-        expect(el).toExist();
+        expect(el).toBeTruthy();
     });
     it('Title background rendering (image)', () => {
         const IMAGE_SRC = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==';
@@ -45,15 +45,15 @@ describe('Title component', () => {
         ReactDOM.render(<Title contents={CONTENTS} mode="edit"/>, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('.ms-section-title');
-        expect(el).toExist();
+        expect(el).toBeTruthy();
         const img = el.querySelector('img');
-        expect(img).toExist();
+        expect(img).toBeTruthy();
         expect(img.getAttribute('src')).toBe(IMAGE_SRC);
         const contentToolbar = container.querySelector('.ms-content-toolbar');
-        expect(contentToolbar).toExist();
+        expect(contentToolbar).toBeTruthy();
 
         const buttonsInToolbar = container.querySelectorAll('.ms-section-background-container .btn-group .glyphicon');
-        expect(buttonsInToolbar).toExist();
+        expect(buttonsInToolbar).toBeTruthy();
         expect(buttonsInToolbar.length).toBe(6);
         testToolbarButtons(["pencil", "height-view", "fit-contain", "size-extra-large", "align-center", "dropper"], container);
 
@@ -70,17 +70,17 @@ describe('Title component', () => {
         ReactDOM.render(<Title contents={CONTENTS} viewHeight={VIEW_HEIGHT} sectionType="title" cover mode="edit"/>, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('.ms-section-title');
-        expect(el).toExist();
+        expect(el).toBeTruthy();
 
         const sectionContents = container.querySelector('.ms-section-contents');
-        expect(sectionContents).toExist();
+        expect(sectionContents).toBeTruthy();
         expect(sectionContents.clientHeight).toBe(VIEW_HEIGHT);
 
         const backgroundContainer = container.querySelector('.ms-section-background-container');
-        expect(backgroundContainer).toExist();
+        expect(backgroundContainer).toBeTruthy();
         expect(backgroundContainer.clientHeight).toBe(VIEW_HEIGHT);
         const contentToolbar = container.querySelector('.ms-content-toolbar');
-        expect(contentToolbar).toExist();
+        expect(contentToolbar).toBeTruthy();
         testToolbarButtons(["pencil", "height-auto"], container);
     });
 
@@ -96,14 +96,14 @@ describe('Title component', () => {
         ReactDOM.render(<Title contents={CONTENTS} viewHeight={VIEW_HEIGHT} cover={false}/>, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('.ms-section-title');
-        expect(el).toExist();
+        expect(el).toBeTruthy();
 
         const sectionContents = container.querySelector('.ms-section-contents');
-        expect(sectionContents).toExist();
+        expect(sectionContents).toBeTruthy();
         expect(sectionContents.clientHeight < VIEW_HEIGHT).toBe(true);
 
         const backgroundContainer = container.querySelector('.ms-section-background-container');
-        expect(backgroundContainer).toExist();
+        expect(backgroundContainer).toBeTruthy();
         expect(backgroundContainer.clientHeight).toBe(sectionContents.clientHeight);
     });
     it('Title rendering with Map as background', () => {
@@ -128,17 +128,17 @@ describe('Title component', () => {
             , document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('.ms-section-title');
-        expect(el).toExist();
+        expect(el).toBeTruthy();
 
         const sectionContents = container.querySelector('.ms-section-contents');
-        expect(sectionContents).toExist();
+        expect(sectionContents).toBeTruthy();
         expect(sectionContents.clientHeight).toBe(VIEW_HEIGHT);
 
         const backgroundContainer = container.querySelector('.ms-section-background-container');
-        expect(backgroundContainer).toExist();
+        expect(backgroundContainer).toBeTruthy();
         expect(backgroundContainer.clientHeight).toBe(VIEW_HEIGHT);
         const contentToolbar = container.querySelector('.ms-content-toolbar');
-        expect(contentToolbar).toExist();
+        expect(contentToolbar).toBeTruthy();
         testToolbarButtons(["pencil", "height-auto", "map-edit", "size-extra-large", "align-center", "dropper"], container);
     });
     it('should apply expandable background class on media map', () => {
@@ -163,6 +163,6 @@ describe('Title component', () => {
             , document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('.ms-section-title.ms-expandable-background');
-        expect(el).toExist();
+        expect(el).toBeTruthy();
     });
 });

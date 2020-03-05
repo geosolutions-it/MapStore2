@@ -49,22 +49,22 @@ describe('GeometryDetails', () => {
             document.getElementById("container")
         );
 
-        expect(geometryDetails).toExist();
-        expect(geometryDetails.props.geometry).toExist();
+        expect(geometryDetails).toBeTruthy();
+        expect(geometryDetails.props.geometry).toBeTruthy();
         expect(geometryDetails.props.geometry).toBe(geometry);
-        expect(geometryDetails.props.type).toExist(true);
+        expect(geometryDetails.props.type).toBeTruthy();
         expect(geometryDetails.props.type).toBe("Circle");
 
-        const geometryDetailsDOMNode = expect(ReactDOM.findDOMNode(geometryDetails));
-        expect(geometryDetailsDOMNode).toExist();
+        const geometryDetailsDOMNode = ReactDOM.findDOMNode(geometryDetails);
+        expect(geometryDetailsDOMNode).toBeTruthy();
 
-        let childNodes = geometryDetailsDOMNode.actual.childNodes;
+        let childNodes = geometryDetailsDOMNode.childNodes;
         expect(childNodes.length).toBe(2);
-        expect(childNodes[1]).toExist();
+        expect(childNodes[1]).toBeTruthy();
         const pb = childNodes[1].querySelector('.panel-body');
-        expect(pb).toExist();
+        expect(pb).toBeTruthy();
         let panelBodyRows = pb.getElementsByClassName('row');
-        expect(panelBodyRows).toExist();
+        expect(panelBodyRows).toBeTruthy();
         expect(panelBodyRows.length).toBe(3);
 
         expect(pb.childNodes.length).toBe(1);
@@ -83,12 +83,12 @@ describe('GeometryDetails', () => {
         const actions = {
             onChangeDrawingStatus: (drawStatus, notDef, owner, geom) => {
                 expect(drawStatus).toBe('endDrawing');
-                expect(geom[0]).toExist();
+                expect(geom[0]).toBeTruthy();
                 expect(geom[0].type).toBe('Polygon');
-                expect(geom[0].center).toExist();
-                expect(geom[0].center.x).toExist();
+                expect(geom[0].center).toBeTruthy();
+                expect(geom[0].center.x).toBeTruthy();
                 expect(geom[0].center.x.toPrecision(9)).toBe('-1761074.34');
-                expect(geom[0].center.y).toExist();
+                expect(geom[0].center.y).toBeTruthy();
                 expect(geom[0].center.y.toPrecision(9)).toBe('5852757.63');
                 expect(geom[0].radius).toBe(836584);
                 expect(geom[0].projection).toBe('EPSG:900913');
@@ -99,7 +99,7 @@ describe('GeometryDetails', () => {
         let type = "Circle";
 
         const cmp = ReactDOM.render(<GeometryDetails geometry={geometry} projection="EPSG:900913" type={type} onChangeDrawingStatus={actions.onChangeDrawingStatus} />, document.getElementById("container"));
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
         ReactTestUtils.Simulate.click(document.getElementsByClassName('glyphicon-ok')[0]); // <-- trigger event callback
     });
 
@@ -130,7 +130,7 @@ describe('GeometryDetails', () => {
         const type = "Circle";
 
         const cmp = ReactDOM.render(<GeometryDetails geometry={geometry} projection="EPSG:4326" type={type} onChangeDrawingStatus={actions.onChangeDrawingStatus} />, document.getElementById("container"));
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
         ReactTestUtils.Simulate.click(document.getElementsByClassName('glyphicon-ok')[0]); // <-- trigger event callback
     });
 
@@ -156,21 +156,21 @@ describe('GeometryDetails', () => {
             document.getElementById("container")
         );
 
-        expect(geometryDetails).toExist();
-        expect(geometryDetails.props.geometry).toExist();
+        expect(geometryDetails).toBeTruthy();
+        expect(geometryDetails.props.geometry).toBeTruthy();
         expect(geometryDetails.props.geometry).toBe(geometry);
-        expect(geometryDetails.props.type).toExist(true);
+        expect(geometryDetails.props.type).toBeTruthy();
         expect(geometryDetails.props.type).toBe("BBOX");
 
-        const geometryDetailsDOMNode = expect(ReactDOM.findDOMNode(geometryDetails));
-        expect(geometryDetailsDOMNode).toExist();
+        const geometryDetailsDOMNode = ReactDOM.findDOMNode(geometryDetails);
+        expect(geometryDetailsDOMNode).toBeTruthy();
 
-        let childNodes = geometryDetailsDOMNode.actual.childNodes;
+        let childNodes = geometryDetailsDOMNode.childNodes;
         expect(childNodes.length).toBe(2);
         const pb = childNodes[1].querySelector('.panel-body');
-        expect(pb).toExist();
+        expect(pb).toBeTruthy();
         let panelBodyRows = pb.getElementsByClassName('row');
-        expect(panelBodyRows).toExist();
+        expect(panelBodyRows).toBeTruthy();
         expect(panelBodyRows.length).toBe(3);
     });
 });

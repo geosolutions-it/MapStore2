@@ -13,7 +13,7 @@ describe('Test tutorial selector', () => {
     it('test tutorialSelector', () => {
         const tutorial = tutorialSelector({tutorial: { tourAction: "next"}});
 
-        expect(tutorial).toExist();
+        expect(tutorial).toBeTruthy();
         expect(tutorial.tourAction).toBe("next");
     });
 });

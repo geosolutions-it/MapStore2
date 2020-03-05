@@ -17,12 +17,12 @@ describe("Test the ColorPicker style component", () => {
 
     it('creates component with defaults', () => {
         const cmp = ReactDOM.render(<ColorPicker line/>, document.getElementById("container"));
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
     });
 
     it('creates component loading', () => {
         const cmp = ReactDOM.render(<ColorPicker line={false} disabled/>, document.getElementById("container"));
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
     });
 
 });

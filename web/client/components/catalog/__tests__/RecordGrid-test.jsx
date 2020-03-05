@@ -49,54 +49,54 @@ describe('This test for Record Grid', () => {
     // test DEFAULTS
     it('creates the component with defaults', () => {
         const item = ReactDOM.render(<RecordGrid />, document.getElementById("container"));
-        expect(item).toExist();
+        expect(item).toBeTruthy();
 
         const itemDom = ReactDOM.findDOMNode(item);
-        expect(itemDom).toExist();
+        expect(itemDom).toBeTruthy();
 
         expect(itemDom.className).toBe("record-grid container-fluid");
     });
     // test data
     it('creates the component with data', () => {
         const item = ReactDOM.render(<RecordGrid records={[sampleRecord]} catalogURL={sampleCatalogURL}/>, document.getElementById("container"));
-        expect(item).toExist();
+        expect(item).toBeTruthy();
 
         const itemDom = ReactDOM.findDOMNode(item);
-        expect(itemDom).toExist();
+        expect(itemDom).toBeTruthy();
         expect(itemDom.className).toBe("record-grid container-fluid");
 
         // check the thumbnail as a to verify thtat the url is really loaded into the component
         let img = TestUtils.findRenderedDOMComponentWithTag(
             item, 'img'
         );
-        expect(img).toExist();
+        expect(img).toBeTruthy();
         expect(img.src).toBe(sampleRecord.thumbnail);
     });
 
     // test non-array configuration
     it('creates the component with non-array data', () => {
         const item = ReactDOM.render(<RecordGrid records={sampleRecord} catalogURL={sampleCatalogURL}/>, document.getElementById("container"));
-        expect(item).toExist();
+        expect(item).toBeTruthy();
 
         const itemDom = ReactDOM.findDOMNode(item);
-        expect(itemDom).toExist();
+        expect(itemDom).toBeTruthy();
         expect(itemDom.className).toBe("record-grid container-fluid");
 
         // check the thumbnail as a to verify thtat the url is really loaded into the component
         let img = TestUtils.findRenderedDOMComponentWithTag(
             item, 'img'
         );
-        expect(img).toExist();
+        expect(img).toBeTruthy();
         expect(img.src).toBe(sampleRecord.thumbnail);
     });
 
     // test empty configuration
     it('creates the component with no data', () => {
         const item = ReactDOM.render(<RecordGrid records={false} catalogURL={sampleCatalogURL}/>, document.getElementById("container"));
-        expect(item).toExist();
+        expect(item).toBeTruthy();
 
         const itemDom = ReactDOM.findDOMNode(item);
-        expect(itemDom).toNotExist();
+        expect(itemDom).toBeFalsy();
     });
 
     it('creates the component with not allowed custom crs', () => {
@@ -107,13 +107,13 @@ describe('This test for Record Grid', () => {
         let actionsSpy = expect.spyOn(actions, "onError");
         const item = ReactDOM.render(<RecordGrid records={[sampleRecord]}
             catalogURL={sampleCatalogURL} crs="EPSG:3857" onError={actions.onError}/>, document.getElementById("container"));
-        expect(item).toExist();
+        expect(item).toBeTruthy();
         let button = TestUtils.findRenderedDOMComponentWithTag(
             item, 'button'
         );
-        expect(button).toExist();
+        expect(button).toBeTruthy();
         button.click();
-        expect(actionsSpy.calls.length).toBe(1);
+        expect(actionsSpy.mock.calls.length).toBe(1);
     });
 
     it('creates the component with allowed custom crs', () => {
@@ -124,12 +124,12 @@ describe('This test for Record Grid', () => {
         let actionsSpy = expect.spyOn(actions, "onLayerAdd");
         const item = ReactDOM.render(<RecordGrid records={[sampleRecord]}
             catalogURL={sampleCatalogURL} crs="EPSG:4326" onLayerAdd={actions.onLayerAdd} />, document.getElementById("container"));
-        expect(item).toExist();
+        expect(item).toBeTruthy();
         let button = TestUtils.findRenderedDOMComponentWithTag(
             item, 'button'
         );
-        expect(button).toExist();
+        expect(button).toBeTruthy();
         button.click();
-        expect(actionsSpy.calls.length).toBe(1);
+        expect(actionsSpy.mock.calls.length).toBe(1);
     });
 });

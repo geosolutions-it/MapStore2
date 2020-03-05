@@ -32,13 +32,13 @@ describe('projUtils', () => {
     it('axis orientation', () => {
         addProjections(SAMPLE_PROJECTION.code, SAMPLE_PROJECTION.extent, SAMPLE_PROJECTION.worldExtent, "neu", "m");
         const prj = get(SAMPLE_PROJECTION.code);
-        expect(prj).toExist();
+        expect(prj).toBeTruthy();
         expect(prj.getAxisOrientation()).toBe("neu");
     });
     it('units', () => {
         addProjections(SAMPLE_PROJECTION.code, SAMPLE_PROJECTION.extent, SAMPLE_PROJECTION.worldExtent, "enu", "m");
         const prj = get(SAMPLE_PROJECTION.code);
-        expect(prj).toExist();
+        expect(prj).toBeTruthy();
         expect(prj.getUnits()).toBe("m");
     });
     it('test fallbackToSupportedProjection with unsupported custom crs', () => {

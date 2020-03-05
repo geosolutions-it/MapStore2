@@ -46,7 +46,7 @@ describe('Rules Editor Main Editor component', () => {
         renderComp({active: false}, store);
         const container = document.getElementById('container');
         const el = container.querySelector('.ms-rule-editor');
-        expect(el).toExist();
+        expect(el).toBeTruthy();
         expect(el.style.display).toBe("none");
     });
     it('render default when active', () => {
@@ -56,12 +56,12 @@ describe('Rules Editor Main Editor component', () => {
         renderComp({active: true}, store);
         const container = document.getElementById('container');
         const el = container.querySelector('.ms-rule-editor');
-        expect(el).toExist();
+        expect(el).toBeTruthy();
         const rows = el.querySelectorAll('.row');
-        expect(rows).toExist();
+        expect(rows).toBeTruthy();
         expect(rows.length).toBe(8);
         const disabledRows = el.querySelectorAll('.ms-disabled.row');
-        expect(disabledRows).toExist();
+        expect(disabledRows).toBeTruthy();
         expect(disabledRows.length).toBe(1);
     });
     it('render priority selector', () => {
@@ -71,9 +71,9 @@ describe('Rules Editor Main Editor component', () => {
         renderComp({active: true, rule: {id: 10}}, store);
         const container = document.getElementById('container');
         const el = container.querySelector('.ms-rule-editor');
-        expect(el).toExist();
+        expect(el).toBeTruthy();
         const rows = el.querySelectorAll('.row');
-        expect(rows).toExist();
+        expect(rows).toBeTruthy();
         expect(rows.length).toBe(9);
     });
 });

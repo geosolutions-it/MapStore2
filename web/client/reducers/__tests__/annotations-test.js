@@ -61,7 +61,7 @@ const testAllProperty = (state, checkState) => {
 describe('Test the annotations reducer', () => {
     it('default states annotations', () => {
         const state = annotations(undefined, {type: 'default'});
-        expect(state.validationErrors).toExist();
+        expect(state.validationErrors).toBeTruthy();
     });
     it('toggleDeleteFtModal', () => {
         // toggleDeleteFtModal, confirmDeleteFeature,
@@ -79,13 +79,13 @@ describe('Test the annotations reducer', () => {
     it('test activating / deactivating highlight point', () => {
         let point = {lat: 3, lon: 4};
         let state = annotations({}, highlightPoint(point));
-        expect(state).toExist();
+        expect(state).toBeTruthy();
         expect(state.clickPoint.latlng.lat).toBe(point.lat);
         expect(state.clickPoint.latlng.lng).toBe(point.lon);
         expect(state.showMarker).toBe(true);
 
         state = annotations({}, highlightPoint());
-        expect(state).toExist();
+        expect(state).toBeTruthy();
         expect(state.clickPoint).toBe(null);
         expect(state.showMarker).toBe(false);
     });
@@ -166,7 +166,7 @@ describe('Test the annotations reducer', () => {
             type: CONFIRM_REMOVE_ANNOTATION,
             id: '1'
         });
-        expect(state.removing).toNotExist();
+        expect(state.removing).toBeFalsy();
         expect(state.stylerType).toBe("");
 
     });
@@ -185,15 +185,15 @@ describe('Test the annotations reducer', () => {
             type: CONFIRM_REMOVE_ANNOTATION,
             id: '1'
         });
-        expect(state.removing).toNotExist();
-        expect(state.editing).toExist();
+        expect(state.removing).toBeFalsy();
+        expect(state.editing).toBeTruthy();
         expect(state.editing.features.length).toBe(0);
     });
     it('cancel remove annotation', () => {
         const state = annotations({removing: '1'}, {
             type: CANCEL_REMOVE_ANNOTATION
         });
-        expect(state.removing).toNotExist();
+        expect(state.removing).toBeFalsy();
     });
     it('edit annotation', () => {
         const feature = {
@@ -217,7 +217,7 @@ describe('Test the annotations reducer', () => {
             type: EDIT_ANNOTATION,
             feature: featureColl
         });
-        expect(state.editing).toExist();
+        expect(state.editing).toBeTruthy();
         expect(state.editing.features[0].properties.id).toBe('1');
         expect(state.editing.properties.id).toBe('1asdfads');
         expect(state.stylerType).toBe("marker");
@@ -231,8 +231,8 @@ describe('Test the annotations reducer', () => {
         }}, {
             type: CANCEL_EDIT_ANNOTATION
         });
-        expect(state.editing).toNotExist();
-        expect(state.drawing).toNotExist();
+        expect(state.editing).toBeFalsy();
+        expect(state.drawing).toBeFalsy();
         expect(isEmpty(state.editedFields)).toBe(true);
         expect(state.unsavedChanges).toBe(false);
     });
@@ -244,9 +244,9 @@ describe('Test the annotations reducer', () => {
         }, drawing: true, validationErrors: {'title': 'mytitle'}}, {
             type: SAVE_ANNOTATION
         });
-        expect(state.editing).toNotExist();
-        expect(state.drawing).toNotExist();
-        expect(state.validationErrors.title).toNotExist();
+        expect(state.editing).toBeFalsy();
+        expect(state.drawing).toBeFalsy();
+        expect(state.validationErrors.title).toBeFalsy();
         expect(isEmpty(state.editedFields)).toBe(true);
         expect(state.unsavedChanges).toBe(false);
     });
@@ -374,7 +374,7 @@ describe('Test the annotations reducer', () => {
         const state = annotations({editing: null}, {
             type: NEW_ANNOTATION
         });
-        expect(state.editing).toExist();
+        expect(state.editing).toBeTruthy();
         expect(state.editing.geometry).toBe(null);
         expect(state.editing.features.length).toBe(0);
         expect(state.originalStyle).toBe(null);
@@ -390,7 +390,7 @@ describe('Test the annotations reducer', () => {
         const state = annotations({}, {
             type: CANCEL_SHOW_ANNOTATION
         });
-        expect(state.current).toNotExist();
+        expect(state.current).toBeFalsy();
     });
     it('filter annotations', () => {
         const state = annotations({}, {
@@ -534,7 +534,7 @@ describe('Test the annotations reducer', () => {
             type: EDIT_ANNOTATION,
             feature: featureColl
         });
-        expect(state.editing).toExist();
+        expect(state.editing).toBeTruthy();
         expect(state.editing.features[0].properties.id).toBe('1');
         expect(state.editing.properties.id).toBe('1asdfads');
         expect(state.stylerType).toBe("text");
@@ -564,7 +564,7 @@ describe('Test the annotations reducer', () => {
             type: EDIT_ANNOTATION,
             feature: featureColl
         });
-        expect(state.editing).toExist();
+        expect(state.editing).toBeTruthy();
         expect(state.editing.features[0].properties.id).toBe('1');
         expect(state.editing.properties.id).toBe('1asdfads');
         expect(state.stylerType).toBe("circle");
@@ -835,8 +835,8 @@ describe('Test the annotations reducer', () => {
             originalStyle: null
         }, setEditingFeature(feature));
 
-        expect(state).toExist();
-        expect(state.editing).toExist();
+        expect(state).toBeTruthy();
+        expect(state.editing).toBeTruthy();
         expect(state.editing.type).toBe('FeatureCollection');
         expect(state.editing.properties).toEqual({ id: '1asdfads', canEdit: false });
         expect(state.editing.newFeature).toBe(true);

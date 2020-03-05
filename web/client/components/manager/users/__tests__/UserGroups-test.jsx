@@ -49,17 +49,17 @@ describe("Test UserGroups Component", () => {
     it('Test rendering for existing user', () => {
         let comp = ReactDOM.render(
             <UserGroups user={user1} groups={groups}/>, document.getElementById("container"));
-        expect(comp).toExist();
+        expect(comp).toBeTruthy();
         comp.onChange([{value: 10, groupName: "everyone"}]);
     });
     it('Test rendering for new user', () => {
         let comp = ReactDOM.render(
             <UserGroups groups={groups}/>, document.getElementById("container"));
-        expect(comp).toExist();
-        expect(comp.getOptions()).toExist();
+        expect(comp).toBeTruthy();
+        expect(comp.getOptions()).toBeTruthy();
         expect(comp.getOptions().length).toBe(groups.length);
 
-        expect(comp.getDefaultGroups()).toExist();
+        expect(comp.getDefaultGroups()).toBeTruthy();
         expect(comp.getDefaultGroups().length).toBe(1);
         expect(comp.getDefaultGroups()[0].groupName).toBe("everyone");
     });

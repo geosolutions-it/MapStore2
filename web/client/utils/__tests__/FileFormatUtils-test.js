@@ -12,7 +12,7 @@ var FileFormatUtils = require('../FileFormatUtils');
 describe('FileFormatUtils', () => {
     it('getByOutputFormat custom format', () => {
         const result = FileFormatUtils.getByOutputFormat("TEST-CSV");
-        expect(result).toExist();
+        expect(result).toBeTruthy();
         expect(result.extension).toBe("csv");
         expect(result.outputFormat).toBe("TEST-CSV");
     });

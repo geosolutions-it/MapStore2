@@ -34,9 +34,9 @@ describe('Annotations Plugin', () => {
         });
         ReactDOM.render(<Plugin />, document.getElementById("container"));
         const panel = document.querySelector('.ms-annotations-panel');
-        expect(panel).toExist();
+        expect(panel).toBeTruthy();
         // check the annotation panel has the classes that fits even with headers (for embedded or other, not full window size context)
-        expect(panel.className.split(" ")).toInclude("ms-side-panel");
-        expect(panel.className.split(" ")).toInclude("ms-absolute-dock");
+        expect(panel.className.split(" ")).toContainEqual("ms-side-panel");
+        expect(panel.className.split(" ")).toContainEqual("ms-absolute-dock");
     });
 });

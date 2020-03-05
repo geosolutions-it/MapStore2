@@ -28,7 +28,7 @@ describe('Test correctness of the notifications actions', () => {
         expect(action.type).toBe(SHOW_NOTIFICATION);
         expect(action.title).toBe('test');
         expect(action.level).toBe('success');
-        expect(action.uid).toExist();
+        expect(action.uid).toBeTruthy();
     });
     it('hide', () => {
         const action = hide("1234");
@@ -44,28 +44,28 @@ describe('Test correctness of the notifications actions', () => {
         expect(action.type).toBe(SHOW_NOTIFICATION);
         expect(action.title).toBe('test');
         expect(action.level).toBe('success');
-        expect(action.uid).toExist();
+        expect(action.uid).toBeTruthy();
     });
     it('warning', () => {
         const action = warning({title: "test"});
         expect(action.type).toBe(SHOW_NOTIFICATION);
         expect(action.title).toBe('test');
         expect(action.level).toBe('warning');
-        expect(action.uid).toExist();
+        expect(action.uid).toBeTruthy();
     });
     it('error', () => {
         const action = error({title: "test"});
         expect(action.type).toBe(SHOW_NOTIFICATION);
         expect(action.title).toBe('test');
         expect(action.level).toBe('error');
-        expect(action.uid).toExist();
+        expect(action.uid).toBeTruthy();
     });
     it('info', () => {
         const action = info({title: "test"});
         expect(action.type).toBe(SHOW_NOTIFICATION);
         expect(action.title).toBe('test');
         expect(action.level).toBe('info');
-        expect(action.uid).toExist();
+        expect(action.uid).toBeTruthy();
     });
     it('dispatchAction', () => {
         const customAction = () => {

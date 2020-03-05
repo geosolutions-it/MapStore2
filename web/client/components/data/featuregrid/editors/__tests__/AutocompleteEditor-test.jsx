@@ -34,6 +34,6 @@ describe('FeatureGrid AutocompleteEditor component', () => {
             rowIdx={1}
             autocompleteStreamFactory={createPagedUniqueAutompleteStream}
             column={testColumn}/>, document.getElementById("container"));
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
     });
 });

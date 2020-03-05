@@ -24,7 +24,7 @@ describe('widgets dependenciesToOptions enhancer', () => {
     });
     it('dependenciesToOptions default', (done) => {
         const Sink = dependenciesToOptions(createSink( props => {
-            expect(props).toExist();
+            expect(props).toBeTruthy();
             expect(props.options).toBe(undefined);
             done();
         }));
@@ -35,7 +35,7 @@ describe('widgets dependenciesToOptions enhancer', () => {
             a: "a"
         };
         const Sink = dependenciesToOptions(createSink( props => {
-            expect(props).toExist();
+            expect(props).toBeTruthy();
             expect(props.options).toBe(options);
             done();
         }));
@@ -46,7 +46,7 @@ describe('widgets dependenciesToOptions enhancer', () => {
             a: "a"
         };
         const Sink = dependenciesToOptions(createSink( props => {
-            expect(props).toExist();
+            expect(props).toBeTruthy();
             expect(props.options.a).toBe("a");
             expect(props.options.viewParams).toBe("a:b");
             done();

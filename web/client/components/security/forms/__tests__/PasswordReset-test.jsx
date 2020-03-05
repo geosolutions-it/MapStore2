@@ -27,33 +27,33 @@ describe("Test the password reset form component", () => {
 
     it('creates component with defaults', () => {
         const cmp = ReactDOM.render(<PasswordReset/>, document.getElementById("container"));
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
     });
 
     it('alert for success', () => {
         const cmp = ReactDOM.render(<PasswordReset changed/>, document.getElementById("container"));
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
         let alert = ReactDOM.findDOMNode(ReactTestUtils.scryRenderedDOMComponentsWithClass(cmp, "alert-success")[0]);
-        expect(alert).toExist();
+        expect(alert).toBeTruthy();
     });
 
     it('alert for error', () => {
         const cmp = ReactDOM.render(<PasswordReset error={{message: 'error'}}/>, document.getElementById("container"));
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
         let alert = ReactDOM.findDOMNode(ReactTestUtils.scryRenderedDOMComponentsWithClass(cmp, "alert-danger")[0]);
-        expect(alert).toExist();
+        expect(alert).toBeTruthy();
     });
 
     it('test component validity', () => {
         const cmp = ReactDOM.render(<PasswordReset />, document.getElementById("container"));
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
         let password = ReactDOM.findDOMNode(ReactTestUtils.scryRenderedDOMComponentsWithTag(cmp, "input")[0]);
-        expect(password).toExist();
+        expect(password).toBeTruthy();
         password.value = "test";
         ReactTestUtils.Simulate.change(password);
         expect(cmp.isValid()).toEqual(false);
         let password2 = ReactDOM.findDOMNode(ReactTestUtils.scryRenderedDOMComponentsWithTag(cmp, "input")[1]);
-        expect(password2).toExist();
+        expect(password2).toBeTruthy();
         password2.value = "test2";
         ReactTestUtils.Simulate.change(password2);
         expect(cmp.isValid()).toEqual(false);

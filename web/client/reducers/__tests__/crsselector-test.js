@@ -17,7 +17,7 @@ describe('Test the mousePosition reducer', () => {
         };
 
         let state = crsSelect({}, testAction);
-        expect(state).toExist();
+        expect(state).toBeTruthy();
         expect(state.value).toBe('EPSG:4326');
     });
 

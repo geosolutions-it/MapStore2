@@ -24,6 +24,6 @@ describe('ToolbarDropdownButton component', () => {
         ReactDOM.render(<ToolbarDropdownButton />, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('.square-button-md.no-border');
-        expect(el).toExist();
+        expect(el).toBeTruthy();
     });
 });

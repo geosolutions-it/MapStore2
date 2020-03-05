@@ -23,10 +23,10 @@ describe('handleNodePropertyChanges enhancer', () => {
     });
     it('handleNodePropertyChanges rendering with defaults', (done) => {
         const Sink = handleNodePropertyChanges(createSink( props => {
-            expect(props).toExist();
-            expect(props.changeGroupProperty).toExist();
-            expect(props.changeLayerProperty).toExist();
-            expect(props.changeLayerPropertyByGroup).toExist();
+            expect(props).toBeTruthy();
+            expect(props.changeGroupProperty).toBeTruthy();
+            expect(props.changeLayerProperty).toBeTruthy();
+            expect(props.changeLayerPropertyByGroup).toBeTruthy();
             done();
         }));
         ReactDOM.render(<Sink />, document.getElementById("container"));
@@ -37,7 +37,7 @@ describe('handleNodePropertyChanges enhancer', () => {
         };
         const spyCallbacks = expect.spyOn(actions, 'onChange');
         const Sink = handleNodePropertyChanges(createSink(props => {
-            expect(props).toExist();
+            expect(props).toBeTruthy();
             props.changeGroupProperty("GGG", "title", "TEST");
             props.changeLayerProperty("LAYER", "name", "TEST");
             props.changeLayerPropertyByGroup("GGG", "title", "TEST");
@@ -50,16 +50,16 @@ describe('handleNodePropertyChanges enhancer', () => {
         ReactDOM.render(<Sink
             map={{ groups: [{ id: 'GGG' }], layers: [{ id: "LAYER", group: "GGG", options: {} }] }}
             onChange={actions.onChange} />, document.getElementById("container"));
-        expect(spyCallbacks.calls.length).toBe(5);
-        expect(spyCallbacks.calls[0].arguments[0]).toBe("map.groups[0].title");
-        expect(spyCallbacks.calls[0].arguments[1]).toBe("TEST");
-        expect(spyCallbacks.calls[1].arguments[0]).toBe("map.layers[0].name");
-        expect(spyCallbacks.calls[1].arguments[1]).toBe("TEST");
-        expect(spyCallbacks.calls[2].arguments[0]).toBe("map.layers[0].title");
-        expect(spyCallbacks.calls[2].arguments[1]).toBe("TEST");
-        expect(spyCallbacks.calls[3].arguments[0]).toBe("map[a]");
-        expect(spyCallbacks.calls[3].arguments[1]).toBe("a");
-        expect(spyCallbacks.calls[4].arguments[0]).toBe("map[b]");
-        expect(spyCallbacks.calls[4].arguments[1]).toBe("b");
+        expect(spyCallbacks.mock.calls.length).toBe(5);
+        expect(spyCallbacks.mock.calls[0][0]).toBe("map.groups[0].title");
+        expect(spyCallbacks.mock.calls[0][1]).toBe("TEST");
+        expect(spyCallbacks.mock.calls[1][0]).toBe("map.layers[0].name");
+        expect(spyCallbacks.mock.calls[1][1]).toBe("TEST");
+        expect(spyCallbacks.mock.calls[2][0]).toBe("map.layers[0].title");
+        expect(spyCallbacks.mock.calls[2][1]).toBe("TEST");
+        expect(spyCallbacks.mock.calls[3][0]).toBe("map[a]");
+        expect(spyCallbacks.mock.calls[3][1]).toBe("a");
+        expect(spyCallbacks.mock.calls[4][0]).toBe("map[b]");
+        expect(spyCallbacks.mock.calls[4][1]).toBe("b");
     });
 });

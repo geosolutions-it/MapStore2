@@ -26,10 +26,10 @@ describe('tests FloatingLegend component', () => {
 
     it('render component', () => {
         const cmp = ReactDOM.render(<FloatingLegend />, document.getElementById("container"));
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
 
         const toggleButtonContainer = document.getElementById('ms-legend-action');
-        expect(toggleButtonContainer).toExist();
+        expect(toggleButtonContainer).toBeTruthy();
         expect(toggleButtonContainer.children.length).toBe(1);
 
         const toggleButtonPlaceholder = toggleButtonContainer.children[0];
@@ -56,7 +56,7 @@ describe('tests FloatingLegend component', () => {
                     }
                 ]}/>, document.getElementById("container"));
 
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
 
         const layers = document.getElementsByClassName('mapstore-side-card');
         expect(layers.length).toBe(2);
@@ -80,7 +80,7 @@ describe('tests FloatingLegend component', () => {
                     }
                 ]}/>, document.getElementById("container"));
 
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
 
         const title = document.getElementsByClassName('mapstore-side-card-title')[0].childNodes[0].childNodes[0].data;
         expect(title).toBe('layer:00');
@@ -107,7 +107,7 @@ describe('tests FloatingLegend component', () => {
                     }
                 ]}/>, document.getElementById("container"));
 
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
 
         const layers = document.getElementsByClassName('mapstore-side-card');
         expect(layers.length).toBe(2);
@@ -210,9 +210,9 @@ describe('tests FloatingLegend component', () => {
                     }
                 ]}/>, document.getElementById("container"));
 
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
 
-        expect(cmp.list).toExist();
+        expect(cmp.list).toBeTruthy();
         const list = ReactDOM.findDOMNode(cmp.list);
         const prevListSize = list.clientHeight;
 
@@ -289,7 +289,7 @@ describe('tests FloatingLegend component', () => {
                     }
                 ]}/>, document.getElementById("container"));
 
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
         const tooltips = document.getElementsByClassName('noUi-tooltip');
         expect(tooltips.length).toBe(2);
         expect(tooltips[0].innerHTML).toBe('60 %');
@@ -324,7 +324,7 @@ describe('tests FloatingLegend component', () => {
                     }
                 ]}/>, document.getElementById("container"));
 
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
         const tooltips = document.getElementsByClassName('noUi-tooltip');
         expect(tooltips.length).toBe(0);
     });

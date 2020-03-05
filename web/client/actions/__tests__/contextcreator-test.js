@@ -26,72 +26,72 @@ const {
 describe('contextcreator actions', () => {
     it('setCreationStep', () => {
         const retval = setCreationStep('test');
-        expect(retval).toExist();
+        expect(retval).toBeTruthy();
         expect(retval.stepId).toBe('test');
         expect(retval.type).toBe(SET_CREATION_STEP);
     });
     it('clearContextCreator', () => {
         const retval = clearContextCreator();
-        expect(retval).toExist();
+        expect(retval).toBeTruthy();
         expect(retval.type).toBe(CLEAR_CONTEXT_CREATOR);
     });
     it('changeAttribute', () => {
         const retval = changeAttribute('key', 0);
-        expect(retval).toExist();
+        expect(retval).toBeTruthy();
         expect(retval.key).toBe('key');
         expect(retval.value).toBe(0);
         expect(retval.type).toBe(CHANGE_ATTRIBUTE);
     });
     it('contextSaved', () => {
         const retval = contextSaved();
-        expect(retval).toExist();
+        expect(retval).toBeTruthy();
         expect(retval.type).toBe(CONTEXT_SAVED);
     });
     it('saveNewContext', () => {
         const retval = saveNewContext();
-        expect(retval).toExist();
+        expect(retval).toBeTruthy();
         expect(retval.type).toBe(SAVE_CONTEXT);
     });
     it('enableUploadPlugin', () => {
         const retval = enableUploadPlugin(true);
-        expect(retval).toExist();
+        expect(retval).toBeTruthy();
         expect(retval.type).toBe(ENABLE_UPLOAD_PLUGIN);
         expect(retval.enable).toBe(true);
     });
     it('uploadPlugin', () => {
         const retval = uploadPlugin([{}]);
-        expect(retval).toExist();
+        expect(retval).toBeTruthy();
         expect(retval.type).toBe(UPLOAD_PLUGIN);
         expect(retval.files.length).toBe(1);
     });
     it('uploadPluginError', () => {
         const retval = uploadPluginError([{}]);
-        expect(retval).toExist();
+        expect(retval).toBeTruthy();
         expect(retval.type).toBe(UPLOAD_PLUGIN_ERROR);
         expect(retval.files.length).toBe(1);
     });
     it('pluginUploading', () => {
         const retval = pluginUploading(true, [{}]);
-        expect(retval).toExist();
+        expect(retval).toBeTruthy();
         expect(retval.type).toBe(UPLOADING_PLUGIN);
         expect(retval.status).toBe(true);
         expect(retval.plugins.length).toBe(1);
     });
     it('pluginUploaded', () => {
         const retval = pluginUploaded([{}]);
-        expect(retval).toExist();
+        expect(retval).toBeTruthy();
         expect(retval.type).toBe(PLUGIN_UPLOADED);
         expect(retval.plugins.length).toBe(1);
     });
     it('showBackToPageConfirmation', () => {
         const retval = showBackToPageConfirmation(true);
-        expect(retval).toExist();
+        expect(retval).toBeTruthy();
         expect(retval.show).toBe(true);
         expect(retval.type).toBe(BACK_TO_PAGE_SHOW_CONFIRMATION);
     });
     it('loadExtensions', () => {
         const retval = loadExtensions([{}]);
-        expect(retval).toExist();
+        expect(retval).toBeTruthy();
         expect(retval.type).toBe(LOAD_EXTENSIONS);
     });
 });

@@ -25,15 +25,15 @@ describe('Test for HelpWrapper', () => {
     // test DEFAULTS
     it('wraps child component properly', () => {
         const helpWrapper = ReactDOM.render(<HelpWrapper><div id="child-div" key="child-key" /></HelpWrapper>, document.getElementById("container"));
-        expect(helpWrapper).toExist();
+        expect(helpWrapper).toBeTruthy();
 
         const helpWrapperDom = ReactDOM.findDOMNode(helpWrapper);
-        expect(helpWrapperDom).toExist();
+        expect(helpWrapperDom).toBeTruthy();
 
         // creates a help badge
         const badge = helpWrapperDom.getElementsByTagName('span').item(0);
-        expect(badge).toExist();
-        expect(badge.id).toExist();
+        expect(badge).toBeTruthy();
+        expect(badge.id).toBeTruthy();
         expect(badge.id).toBe("helpbadge-child-key");
         expect(badge.className.indexOf('badge') >= 0).toBe(true);
         expect(badge.className.indexOf('hidden') >= 0).toBe(true);
@@ -41,8 +41,8 @@ describe('Test for HelpWrapper', () => {
 
         // the wrapped child from outside
         const child = helpWrapperDom.getElementsByTagName('div').item(0);
-        expect(child).toExist();
-        expect(child.id).toExist();
+        expect(child).toBeTruthy();
+        expect(child.id).toBeTruthy();
         expect(child.id).toBe("child-div");
     });
 

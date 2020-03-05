@@ -19,15 +19,15 @@ describe('Test theme related actions', () => {
         const theme = {id: "newtheme"};
         const e = selectTheme(theme);
 
-        expect(e).toExist();
+        expect(e).toBeTruthy();
         expect(e.type).toBe(THEME_SELECTED);
-        expect(e.theme).toExist();
+        expect(e.theme).toBeTruthy();
         expect(e.theme).toBe(theme);
     });
     it('test theme loaded action', () => {
         const e = themeLoaded();
 
-        expect(e).toExist();
+        expect(e).toBeTruthy();
         expect(e.type).toBe(THEME_LOADED);
     });
 });

@@ -26,14 +26,14 @@ describe("test the OverlayProgressBar", () => {
 
     it('test OverlayProgressBar starts loading', () => {
         const overlayProgressBar = ReactDOM.render(<OverlayProgressBar loading/>, document.getElementById("container"));
-        expect(overlayProgressBar).toExist();
+        expect(overlayProgressBar).toBeTruthy();
         const node = ReactDOM.findDOMNode(overlayProgressBar);
         expect(node.children.length).toBe(1);
     });
 
     it('test OverlayProgressBar stops loading', () => {
         const overlayProgressBar = ReactDOM.render(<OverlayProgressBar loading={false}/>, document.getElementById("container"));
-        expect(overlayProgressBar).toExist();
+        expect(overlayProgressBar).toBeTruthy();
         const node = ReactDOM.findDOMNode(overlayProgressBar);
         expect(node).toBe(null);
     });

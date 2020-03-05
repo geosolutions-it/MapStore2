@@ -25,6 +25,6 @@ describe('StepHeader component', () => {
         ReactDOM.render(<StepHeader title="TITLE"/>, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('.mapstore-step-title');
-        expect(el).toExist();
+        expect(el).toBeTruthy();
     });
 });

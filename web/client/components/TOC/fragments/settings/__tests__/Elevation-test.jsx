@@ -54,8 +54,8 @@ describe('test Layer Properties Elevation component', () => {
             document.getElementById("container")
         );
 
-        expect(comp).toExist();
+        expect(comp).toBeTruthy();
         const div = ReactTestUtils.scryRenderedDOMComponentsWithTag( comp, "div" );
-        expect(div).toExist();
+        expect(div).toBeTruthy();
     });
 });

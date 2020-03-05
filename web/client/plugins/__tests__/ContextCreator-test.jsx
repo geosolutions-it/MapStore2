@@ -42,7 +42,7 @@ describe('ContextCreator component', () => {
         ReactDOM.render(<Plugin />, document.getElementById("container"));
         // save button
         const button = document.querySelectorAll('.footer-button-toolbar button')[0];
-        expect(button).toExist();
+        expect(button).toBeTruthy();
         expect(button.childNodes[0].innerHTML).toBe('save');
         ReactTestUtils.Simulate.click(button); // <-- trigger event callback
         // check destination path
@@ -64,7 +64,7 @@ describe('ContextCreator component', () => {
         ReactDOM.render(<Plugin saveDestLocation="MY_DESTINATION" />, document.getElementById("container"));
         // save button
         const button = document.querySelectorAll('.footer-button-toolbar button')[0];
-        expect(button).toExist();
+        expect(button).toBeTruthy();
         expect(button.childNodes[0].innerHTML).toBe('save');
         ReactTestUtils.Simulate.click(button); // <-- trigger event callback
         // check customization of destination path

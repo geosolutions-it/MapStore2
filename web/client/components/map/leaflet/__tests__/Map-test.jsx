@@ -63,13 +63,13 @@ describe('LeafletMap', () => {
 
     it('creates a div for leaflet map with given id', () => {
         const map = ReactDOM.render(<LeafletMap id="mymap" center={{y: 43.9, x: 10.3}} zoom={11} mapOptions={{zoomAnimation: false}}/>, document.getElementById("container"));
-        expect(map).toExist();
+        expect(map).toBeTruthy();
         expect(ReactDOM.findDOMNode(map).id).toBe('mymap');
     });
 
     it('creates a div for leaflet map with default id (map)', () => {
         const map = ReactDOM.render(<LeafletMap center={{y: 43.9, x: 10.3}} zoom={11} mapOptions={{zoomAnimation: false}}/>, document.getElementById("container"));
-        expect(map).toExist();
+        expect(map).toBeTruthy();
         expect(ReactDOM.findDOMNode(map).id).toBe('map');
     });
 
@@ -81,15 +81,15 @@ describe('LeafletMap', () => {
                 <div id="container2"><LeafletMap id="map2" center={{y: 43.9, x: 10.3}} zoom={11} mapOptions={{zoomAnimation: false}}/></div>
             </div>
             , document.getElementById("container"));
-        expect(container).toExist();
+        expect(container).toBeTruthy();
 
-        expect(document.getElementById('map1')).toExist();
-        expect(document.getElementById('map2')).toExist();
+        expect(document.getElementById('map1')).toBeTruthy();
+        expect(document.getElementById('map2')).toBeTruthy();
     });
 
     it('populates the container with leaflet objects', () => {
         const map = ReactDOM.render(<LeafletMap center={{y: 43.9, x: 10.3}} zoom={11} mapOptions={{zoomAnimation: false}}/>, document.getElementById("container"));
-        expect(map).toExist();
+        expect(map).toBeTruthy();
         expect(document.getElementsByClassName('leaflet-map-pane').length).toBe(1);
         expect(document.getElementsByClassName('leaflet-tile-pane').length).toBe(1);
         expect(document.getElementsByClassName('leaflet-popup-pane').length).toBe(1);
@@ -98,11 +98,11 @@ describe('LeafletMap', () => {
 
     it('enables leaflet controls', () => {
         const map = ReactDOM.render(<LeafletMap center={{y: 43.9, x: 10.3}} zoom={11} mapOptions={{zoomAnimation: false}}/>, document.getElementById("container"));
-        expect(map).toExist();
+        expect(map).toBeTruthy();
         expect(document.getElementsByClassName('leaflet-control-zoom-in').length).toBe(1);
 
         const leafletMap = map.map;
-        expect(leafletMap).toExist();
+        expect(leafletMap).toBeTruthy();
 
         const zoomIn = document.getElementsByClassName('leaflet-control-zoom-in')[0];
         zoomIn.click();
@@ -120,7 +120,7 @@ describe('LeafletMap', () => {
         const map = ReactDOM.render(<LeafletMap center={{y: 43.9, x: 10.3}} zoom={11} mapOptions={{zoomAnimation: false}}>
             <LeafLetLayer type="osm" options={options} />
         </LeafletMap>, document.getElementById("container"));
-        expect(map).toExist();
+        expect(map).toBeTruthy();
         expect(document.getElementsByClassName('leaflet-layer').length).toBe(1);
     });
 
@@ -134,8 +134,8 @@ describe('LeafletMap', () => {
         const map = ReactDOM.render(<LeafletMap center={{ y: 43.9, x: 10.3 }} zoom={11} mapOptions={{ zoomAnimation: false }}>
             <LeafLetLayer type="wms" options={options} />
         </LeafletMap>, document.getElementById("container"));
-        expect(map).toExist();
-        expect(map.elevationLayer).toExist();
+        expect(map).toBeTruthy();
+        expect(map.elevationLayer).toBeTruthy();
         expect(document.getElementsByClassName('leaflet-layer').length).toBe(1);
     });
 
@@ -157,22 +157,22 @@ describe('LeafletMap', () => {
         const leafletMap = map.map;
 
         leafletMap.on('moveend', () => {
-            expect(spy.calls.length).toEqual(expectedCalls);
-            expect(spy.calls[0].arguments.length).toEqual(6);
+            expect(spy.mock.calls.length).toEqual(expectedCalls);
+            expect(spy.mock.calls[0].length).toEqual(6);
 
-            expect(spy.calls[0].arguments[0].y).toEqual(43.9);
-            expect(spy.calls[0].arguments[0].x).toEqual(10.3);
-            expect(spy.calls[0].arguments[1]).toEqual(11);
+            expect(spy.mock.calls[0][0].y).toEqual(43.9);
+            expect(spy.mock.calls[0][0].x).toEqual(10.3);
+            expect(spy.mock.calls[0][1]).toEqual(11);
 
-            expect(spy.calls[1].arguments[0].y).toEqual(44);
-            expect(spy.calls[1].arguments[0].x).toEqual(10);
-            expect(spy.calls[1].arguments[1]).toEqual(12);
+            expect(spy.mock.calls[1][0].y).toEqual(44);
+            expect(spy.mock.calls[1][0].x).toEqual(10);
+            expect(spy.mock.calls[1][1]).toEqual(12);
 
             for (let c = 0; c < expectedCalls; c++) {
-                expect(spy.calls[c].arguments[2].bounds).toExist();
-                expect(spy.calls[c].arguments[2].crs).toExist();
-                expect(spy.calls[c].arguments[3].height).toExist();
-                expect(spy.calls[c].arguments[3].width).toExist();
+                expect(spy.mock.calls[c][2].bounds).toBeTruthy();
+                expect(spy.mock.calls[c][2].crs).toBeTruthy();
+                expect(spy.mock.calls[c][3].height).toBeTruthy();
+                expect(spy.mock.calls[c][3].width).toBeTruthy();
             }
         });
         leafletMap.setView({lat: 44, lng: 10}, 12);
@@ -209,15 +209,15 @@ describe('LeafletMap', () => {
                 shiftKey: false
             }
         });
-        expect(spy.calls.length).toBe(1);
-        expect(spy.calls[0].arguments.length).toBe(1);
-        expect(spy.calls[0].arguments[0].pixel).toExist();
-        expect(spy.calls[0].arguments[0].latlng).toExist();
-        expect(spy.calls[0].arguments[0].latlng.z).toNotExist();
-        expect(spy.calls[0].arguments[0].modifiers).toExist();
-        expect(spy.calls[0].arguments[0].modifiers.alt).toBe(false);
-        expect(spy.calls[0].arguments[0].modifiers.ctrl).toBe(false);
-        expect(spy.calls[0].arguments[0].modifiers.shift).toBe(false);
+        expect(spy.mock.calls.length).toBe(1);
+        expect(spy.mock.calls[0].length).toBe(1);
+        expect(spy.mock.calls[0][0].pixel).toBeTruthy();
+        expect(spy.mock.calls[0][0].latlng).toBeTruthy();
+        expect(spy.mock.calls[0][0].latlng.z).toBeFalsy();
+        expect(spy.mock.calls[0][0].modifiers).toBeTruthy();
+        expect(spy.mock.calls[0][0].modifiers.alt).toBe(false);
+        expect(spy.mock.calls[0][0].modifiers.ctrl).toBe(false);
+        expect(spy.mock.calls[0][0].modifiers.shift).toBe(false);
     });
 
     it('check if the handler for "click" event is called with elevation', () => {
@@ -257,15 +257,15 @@ describe('LeafletMap', () => {
                 shiftKey: false
             }
         });
-        expect(spy.calls.length).toBe(1);
-        expect(spy.calls[0].arguments.length).toBe(1);
-        expect(spy.calls[0].arguments[0].pixel).toExist();
-        expect(spy.calls[0].arguments[0].latlng).toExist();
-        expect(spy.calls[0].arguments[0].latlng.z).toExist();
-        expect(spy.calls[0].arguments[0].modifiers).toExist();
-        expect(spy.calls[0].arguments[0].modifiers.alt).toBe(false);
-        expect(spy.calls[0].arguments[0].modifiers.ctrl).toBe(false);
-        expect(spy.calls[0].arguments[0].modifiers.shift).toBe(false);
+        expect(spy.mock.calls.length).toBe(1);
+        expect(spy.mock.calls[0].length).toBe(1);
+        expect(spy.mock.calls[0][0].pixel).toBeTruthy();
+        expect(spy.mock.calls[0][0].latlng).toBeTruthy();
+        expect(spy.mock.calls[0][0].latlng.z).toBeTruthy();
+        expect(spy.mock.calls[0][0].modifiers).toBeTruthy();
+        expect(spy.mock.calls[0][0].modifiers.alt).toBe(false);
+        expect(spy.mock.calls[0][0].modifiers.ctrl).toBe(false);
+        expect(spy.mock.calls[0][0].modifiers.shift).toBe(false);
     });
 
     it('check if the handler for "mousemove" event is called', () => {
@@ -301,12 +301,12 @@ describe('LeafletMap', () => {
                 shiftKey: false
             }
         });
-        expect(spy.calls.length).toBe(1);
-        expect(spy.calls[0].arguments.length).toBe(1);
-        expect(spy.calls[0].arguments[0].pixel).toExist();
-        expect(spy.calls[0].arguments[0].x).toExist();
-        expect(spy.calls[0].arguments[0].y).toExist();
-        expect(spy.calls[0].arguments[0].z).toNotExist();
+        expect(spy.mock.calls.length).toBe(1);
+        expect(spy.mock.calls[0].length).toBe(1);
+        expect(spy.mock.calls[0][0].pixel).toBeTruthy();
+        expect(spy.mock.calls[0][0].x).toBeTruthy();
+        expect(spy.mock.calls[0][0].y).toBeTruthy();
+        expect(spy.mock.calls[0][0].z).toBeFalsy();
     });
 
     it('check if the handler for "mousemove" event is called with elevation', () => {
@@ -348,12 +348,12 @@ describe('LeafletMap', () => {
                 shiftKey: false
             }
         });
-        expect(spy.calls.length).toBe(1);
-        expect(spy.calls[0].arguments.length).toBe(1);
-        expect(spy.calls[0].arguments[0].pixel).toExist();
-        expect(spy.calls[0].arguments[0].x).toExist();
-        expect(spy.calls[0].arguments[0].y).toExist();
-        expect(spy.calls[0].arguments[0].z).toExist();
+        expect(spy.mock.calls.length).toBe(1);
+        expect(spy.mock.calls[0].length).toBe(1);
+        expect(spy.mock.calls[0][0].pixel).toBeTruthy();
+        expect(spy.mock.calls[0][0].x).toBeTruthy();
+        expect(spy.mock.calls[0][0].y).toBeTruthy();
+        expect(spy.mock.calls[0][0].z).toBeTruthy();
     });
 
     it('check if the map changes when receive new props', () => {
@@ -419,9 +419,9 @@ describe('LeafletMap', () => {
         map = ReactDOM.render(<LeafletMap id="mymap" center={{y: 44, x: 10}} zoom={5}/>, document.getElementById("container"));
         const mapBbox = map.map.getBounds().toBBoxString().split(',');
         // check our computed bounding box agains the map computed one
-        expect(bbox).toExist();
-        expect(mapBbox).toExist();
-        expect(bbox.bounds).toExist();
+        expect(bbox).toBeTruthy();
+        expect(mapBbox).toBeTruthy();
+        expect(bbox.bounds).toBeTruthy();
 
         expect(isNumber(bbox.bounds.minx)).toBe(true);
         expect(isNumber(bbox.bounds.miny)).toBe(true);
@@ -433,7 +433,7 @@ describe('LeafletMap', () => {
         expect(Math.round(bbox.bounds.maxx)).toBe(Math.round(parseFloat(mapBbox[2])));
         expect(Math.round(bbox.bounds.maxy)).toBe(Math.round(parseFloat(mapBbox[3])));
 
-        expect(bbox.crs).toExist();
+        expect(bbox.crs).toBeTruthy();
         // in the case of leaflet the bounding box CRS should always be "EPSG:4326" and the roation 0
         expect(bbox.crs).toBe("EPSG:4326");
         expect(bbox.rotation).toBe(0);
@@ -452,22 +452,22 @@ describe('LeafletMap', () => {
         expect(map.map.getCenter().lat).toBe(50.0);
 
         // setup some spyes to detect changes in leaflet map view
-        const setViewSpy = expect.spyOn(map.map, "setView").andCallThrough();
+        const setViewSpy = expect.spyOn(map.map, "setView");
 
         // since the props are the same no view changes should happend
         map = ReactDOM.render(<LeafletMap id="mymap" center={{y: 40.0, x: 10.0}} zoom={10}/>,
             document.getElementById("container"));
-        expect(setViewSpy.calls.length).toBe(0);
+        expect(setViewSpy.mock.calls.length).toBe(0);
 
         // the view view should not be updated since new props are equal to map values
         map = ReactDOM.render(<LeafletMap id="mymap" center={{y: 50.0, x: 20.0}} zoom={15}/>,
             document.getElementById("container"));
-        expect(setViewSpy.calls.length).toBe(0);
+        expect(setViewSpy.mock.calls.length).toBe(0);
 
         // the zoom and center values should be udpated
         map = ReactDOM.render(<LeafletMap id="mymap" center={{y: 40.0, x: 10.0}} zoom={10}/>,
             document.getElementById("container"));
-        expect(setViewSpy.calls.length).toBe(1);
+        expect(setViewSpy.mock.calls.length).toBe(1);
         expect(map.map.getZoom()).toBe(10);
         expect(map.map.getCenter().lng).toBe(10.0);
         expect(map.map.getCenter().lat).toBe(40.0);
@@ -478,17 +478,17 @@ describe('LeafletMap', () => {
         mapUtils.registerHook(mapUtils.GET_COORDINATES_FROM_PIXEL_HOOK, undefined);
         let getPixelFromCoordinates = mapUtils.getHook(mapUtils.GET_PIXEL_FROM_COORDINATES_HOOK);
         let getCoordinatesFromPixel = mapUtils.getHook(mapUtils.GET_COORDINATES_FROM_PIXEL_HOOK);
-        expect(getPixelFromCoordinates).toNotExist();
-        expect(getCoordinatesFromPixel).toNotExist();
+        expect(getPixelFromCoordinates).toBeFalsy();
+        expect(getCoordinatesFromPixel).toBeFalsy();
 
         const map = ReactDOM.render(<LeafletMap id="mymap" center={{y: 0, x: 0}} zoom={11} registerHooks mapOptions={{zoomAnimation: false}}/>,
             document.getElementById("container"));
-        expect(map).toExist();
+        expect(map).toBeTruthy();
 
         getPixelFromCoordinates = mapUtils.getHook(mapUtils.GET_PIXEL_FROM_COORDINATES_HOOK);
         getCoordinatesFromPixel = mapUtils.getHook(mapUtils.GET_COORDINATES_FROM_PIXEL_HOOK);
-        expect(getPixelFromCoordinates).toExist();
-        expect(getCoordinatesFromPixel).toExist();
+        expect(getPixelFromCoordinates).toBeTruthy();
+        expect(getCoordinatesFromPixel).toBeTruthy();
     });
     it('test ZOOM_TO_EXTENT_HOOK', () => {
         mapUtils.registerHook(mapUtils.ZOOM_TO_EXTENT_HOOK, undefined);
@@ -509,16 +509,16 @@ describe('LeafletMap', () => {
                 maxZoom: 21 }}
             onMapViewChanges={testHandlers.onMapViewChanges} />,
         document.getElementById("container"));
-        expect(map).toExist();
+        expect(map).toBeTruthy();
         const hook = mapUtils.getHook(mapUtils.ZOOM_TO_EXTENT_HOOK);
-        expect(hook).toExist();
+        expect(hook).toBeTruthy();
         hook([0, 0, 20, 20], {crs: "EPSG:4326"});
         expect(spy).toHaveBeenCalled();
-        expect(spy.calls[1]).toExist(); // first is called by initial render
-        expect(spy.calls[1].arguments[0].x).toBeGreaterThan(9);
-        expect(spy.calls[1].arguments[0].y).toBeGreaterThan(9);
-        expect(spy.calls[1].arguments[0].x).toBeLessThan(11);
-        expect(spy.calls[1].arguments[0].y).toBeLessThan(11);
+        expect(spy.mock.calls[1]).toBeTruthy(); // first is called by initial render
+        expect(spy.mock.calls[1][0].x).toBeGreaterThan(9);
+        expect(spy.mock.calls[1][0].y).toBeGreaterThan(9);
+        expect(spy.mock.calls[1][0].x).toBeLessThan(11);
+        expect(spy.mock.calls[1][0].y).toBeLessThan(11);
         const bounds1 = map.map.getBounds();
         // center should be the same
         expect(bounds1.getCenter().lng).toBeGreaterThan(9);
@@ -544,19 +544,19 @@ describe('LeafletMap', () => {
         expect(bounds2.getCenter().lat).toBeLessThan(11);
 
         // but bounds different
-        expect(bounds2.getEast()).toNotEqual(bounds1.getEast());
-        expect(bounds2.getWest()).toNotEqual(bounds1.getWest());
-        expect(bounds2.getNorth()).toNotEqual(bounds1.getNorth());
-        expect(bounds2.getSouth()).toNotEqual(bounds1.getSouth());
+        expect(bounds2.getEast()).not.toEqual(bounds1.getEast());
+        expect(bounds2.getWest()).not.toEqual(bounds1.getWest());
+        expect(bounds2.getNorth()).not.toEqual(bounds1.getNorth());
+        expect(bounds2.getSouth()).not.toEqual(bounds1.getSouth());
 
         // bounds2 size must be greater than bounds1
-        expect(bounds2.getWest() - bounds2.getEast()).toNotEqual(bounds1.getWest() - bounds1.getEast());
-        expect(bounds2.getNorth() - bounds2.getSouth()).toNotEqual(bounds1.getNorth() - bounds1.getSouth());
+        expect(bounds2.getWest() - bounds2.getEast()).not.toEqual(bounds1.getWest() - bounds1.getEast());
+        expect(bounds2.getNorth() - bounds2.getSouth()).not.toEqual(bounds1.getNorth() - bounds1.getSouth());
     });
 
     it('create attribution with container', () => {
         let map = ReactDOM.render(<LeafletMap center={{y: 43.9, x: 10.3}} zoom={11} mapOptions={{attribution: {container: 'body'}}}/>, document.getElementById("container"));
-        expect(map).toExist();
+        expect(map).toBeTruthy();
         const domMap = document.getElementById('container');
         let attributions = domMap.getElementsByClassName('leaflet-control-attribution');
         expect(attributions.length).toBe(0);
@@ -566,7 +566,7 @@ describe('LeafletMap', () => {
 
     it('remove attribution from container', () => {
         let map = ReactDOM.render(<LeafletMap center={{y: 43.9, x: 10.3}} zoom={11} mapOptions={{attribution: {container: 'body'}}}/>, document.getElementById("container"));
-        expect(map).toExist();
+        expect(map).toBeTruthy();
         const domMap = document.getElementById('container');
         let attributions = domMap.getElementsByClassName('leaflet-control-attribution');
         expect(attributions.length).toBe(0);
@@ -583,7 +583,7 @@ describe('LeafletMap', () => {
             <LeafletMap center={{y: 43.9, x: 10.3}} zoom={11}/>,
             document.getElementById("container"));
 
-        expect(map).toExist();
+        expect(map).toBeTruthy();
         let event = {
             layer: {
                 layerId: 2,
@@ -593,9 +593,9 @@ describe('LeafletMap', () => {
         };
 
         map.addLayerObservable(event, false);
-        expect(event.layer.layerLoadingStream$).toNotExist();
-        expect(event.layer.layerErrorStream$).toNotExist();
-        expect(event.layer.layerLoadStream$).toNotExist();
+        expect(event.layer.layerLoadingStream$).toBeFalsy();
+        expect(event.layer.layerErrorStream$).toBeFalsy();
+        expect(event.layer.layerLoadStream$).toBeFalsy();
 
     });
 
@@ -611,7 +611,7 @@ describe('LeafletMap', () => {
             <LeafletMap center={{y: 43.9, x: 10.3}} zoom={11} onLayerError={actions.onLayerError}/>,
             document.getElementById("container"));
 
-        expect(map).toExist();
+        expect(map).toBeTruthy();
         let event = {
             layer: {
                 layerId: 2,
@@ -624,7 +624,7 @@ describe('LeafletMap', () => {
 
         event.layer.layerLoadingStream$.next();
         event.layer.layerLoadStream$.next();
-        expect(spyLayerError).toNotHaveBeenCalled();
+        expect(spyLayerError).not.toHaveBeenCalled();
     });
 
     it('add layer observable with tile error', () => {
@@ -639,7 +639,7 @@ describe('LeafletMap', () => {
             <LeafletMap center={{y: 43.9, x: 10.3}} zoom={11} onLayerError={actions.onLayerError}/>,
             document.getElementById("container"));
 
-        expect(map).toExist();
+        expect(map).toBeTruthy();
         let event = {
             layer: {
                 layerId: 2,
@@ -658,16 +658,16 @@ describe('LeafletMap', () => {
     describe("hookRegister", () => {
         it("default", () => {
             const map = ReactDOM.render(<LeafletMap id="mymap" center={{y: 43.9, x: 10.3}} zoom={11} mapOptions={{zoomAnimation: false}}/>, document.getElementById("container"));
-            expect(map).toExist();
+            expect(map).toBeTruthy();
             expect(ReactDOM.findDOMNode(map).id).toBe('mymap');
-            expect(MapUtils.getHook(MapUtils.ZOOM_TO_EXTENT_HOOK)).toExist();
+            expect(MapUtils.getHook(MapUtils.ZOOM_TO_EXTENT_HOOK)).toBeTruthy();
         });
         it("with custom hookRegister", () => {
             const customHooRegister = MapUtils.createRegisterHooks();
             const map = ReactDOM.render(<LeafletMap hookRegister={customHooRegister} id="mymap" center={{y: 43.9, x: 10.3}} zoom={11} mapOptions={{zoomAnimation: false}}/>, document.getElementById("container"));
-            expect(map).toExist();
+            expect(map).toBeTruthy();
             expect(ReactDOM.findDOMNode(map).id).toBe('mymap');
-            expect(customHooRegister.getHook(MapUtils.ZOOM_TO_EXTENT_HOOK)).toExist();
+            expect(customHooRegister.getHook(MapUtils.ZOOM_TO_EXTENT_HOOK)).toBeTruthy();
         });
     });
 });

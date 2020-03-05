@@ -157,7 +157,7 @@ describe('widgetsbuilder epic', () => {
             actions.map((action) => {
                 switch (action.type) {
                 case EDIT_NEW:
-                    expect(action.widget).toExist();
+                    expect(action.widget).toBeTruthy();
                     // verify default mapSync
                     expect(action.widget.mapSync).toBe(true);
                     break;
@@ -181,7 +181,7 @@ describe('widgetsbuilder epic', () => {
             actions.map((action) => {
                 switch (action.type) {
                 case EDIT_NEW:
-                    expect(action.widget).toExist();
+                    expect(action.widget).toBeTruthy();
                     // verify default mapSync
                     expect(action.widget.mapSync).toBe(true);
                     break;

@@ -27,39 +27,39 @@ describe('Test correctness of the layerFilter actions', () => {
 
     it('openQueryBuilder', () => {
         var retval = openQueryBuilder();
-        expect(retval).toExist();
+        expect(retval).toBeTruthy();
         expect(retval.type).toBe(OPEN_QUERY_BUILDER);
     });
 
     it('initLayerFilter', () => {
         var retval = initLayerFilter();
-        expect(retval).toExist();
+        expect(retval).toBeTruthy();
         expect(retval.type).toBe(INIT_LAYER_FILTER);
     });
 
     it('storeAppliedFilter', () => {
         const filter = {};
         var retval = storeAppliedFilter(filter);
-        expect(retval).toExist();
+        expect(retval).toBeTruthy();
         expect(retval.type).toBe(APPLIED_FILTER);
         expect(retval.filter).toBe(filter);
     });
 
     it('storeCurrentFilter', () => {
         var retval = storeCurrentFilter();
-        expect(retval).toExist();
+        expect(retval).toBeTruthy();
         expect(retval.type).toBe(STORE_CURRENT_APPLIED_FILTER);
     });
 
     it('discardCurrentFilter', () => {
         var retval = discardCurrentFilter();
-        expect(retval).toExist();
+        expect(retval).toBeTruthy();
         expect(retval.type).toBe(DISCARD_CURRENT_FILTER);
     });
 
     it('applyFilter', () => {
         var retval = applyFilter();
-        expect(retval).toExist();
+        expect(retval).toBeTruthy();
         expect(retval.type).toBe(APPLY_FILTER);
     });
 

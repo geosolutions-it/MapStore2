@@ -14,10 +14,10 @@ import createStore from "../StandardStore";
 describe('Test StandardStore', () => {
     it('storeOpts notify is true by default', () => {
         const store = createStore({}, {}, {}, {}, /* storeOpts */{});
-        expect(store.addActionListener).toExist();
+        expect(store.addActionListener).toBeTruthy();
     });
     it('addActionListener is not available if storeOpts notify is false', () => {
         const store = createStore({}, {}, {}, {}, /* storeOpts */{ notify: false });
-        expect(store.addActionListener).toNotExist();
+        expect(store.addActionListener).toBeFalsy();
     });
 });

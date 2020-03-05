@@ -28,9 +28,9 @@ describe('media editor withMapEditing enhancer', () => {
     });
     it('withMapEditing rendering with defaults', (done) => {
         const Sink = withMapEditing(createSink( props => {
-            expect(props).toExist();
-            expect(props.openMapEditor).toExist();
-            expect(props.importInLocal).toExist();
+            expect(props).toBeTruthy();
+            expect(props.openMapEditor).toBeTruthy();
+            expect(props.importInLocal).toBeTruthy();
             done();
         }));
         ReactDOM.render(<Provider store={store}><Sink /></Provider>, document.getElementById("container"));
@@ -40,26 +40,26 @@ describe('media editor withMapEditing enhancer', () => {
             setAddingMedia: () => { }
         };
         store.dispatch = (a) => {
-            expect(a).toExist();
+            expect(a).toBeTruthy();
             expect(a.type).toBe("MAP_EDITOR:SHOW");
         };
         const spyAddingMedia = expect.spyOn(actions, 'setAddingMedia');
 
         const Sink = withMapEditing(createSink( props => {
-            expect(props).toExist();
-            expect(props.openMapEditor).toExist();
-            expect(props.importInLocal).toExist();
-            expect(props.setAddingMedia).toExist();
-            expect(props.editRemoteMap).toExist();
+            expect(props).toBeTruthy();
+            expect(props.openMapEditor).toBeTruthy();
+            expect(props.importInLocal).toBeTruthy();
+            expect(props.setAddingMedia).toBeTruthy();
+            expect(props.editRemoteMap).toBeTruthy();
             props.setAddingMedia(true);
         }));
         ReactDOM.render(<Provider store={store}><Sink setAddingMedia={actions.setAddingMedia} mediaType="map"/></Provider>, document.getElementById("container"));
         store.dispatch = () => {};
         const SinkAddingMedia = withMapEditing(createSink( props => {
-            expect(props).toExist();
-            expect(props.openMapEditor).toExist();
-            expect(props.importInLocal).toExist();
-            expect(props.setAddingMedia).toExist();
+            expect(props).toBeTruthy();
+            expect(props.openMapEditor).toBeTruthy();
+            expect(props.importInLocal).toBeTruthy();
+            expect(props.setAddingMedia).toBeTruthy();
             props.setAddingMedia(true);
             expect(spyAddingMedia).toHaveBeenCalled();
             done();
@@ -70,17 +70,17 @@ describe('media editor withMapEditing enhancer', () => {
     });
     it('withMapEditing editRemoteMap call open map editor', (done) => {
         store.dispatch = (a) => {
-            expect(a).toExist();
+            expect(a).toBeTruthy();
             expect(a.type).toBe("MAP_EDITOR:SHOW");
             expect(a.owner).toBe("mediaEditorEditRemote");
-            expect(a.map).toExist();
+            expect(a.map).toBeTruthy();
         };
 
         const Sink = withMapEditing(createSink( props => {
-            expect(props).toExist();
-            expect(props.openMapEditor).toExist();
-            expect(props.editRemoteMap).toExist();
-            expect(props.setAddingMedia).toExist();
+            expect(props).toBeTruthy();
+            expect(props.openMapEditor).toBeTruthy();
+            expect(props.editRemoteMap).toBeTruthy();
+            expect(props.setAddingMedia).toBeTruthy();
             props.editRemoteMap();
             done();
         }));

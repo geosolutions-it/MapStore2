@@ -135,7 +135,7 @@ describe('Test the mediaEditor reducer', () => {
         let state = mediaEditor(undefined, setAddingMedia(adding));
         expect(state.saveState.addingMedia).toEqual(adding);
         expect(state.selected).toEqual("");
-        expect(state).toNotEqual(DEFAULT_STATE);
+        expect(state).not.toEqual(DEFAULT_STATE);
         state = mediaEditor(state, {type: LOCATION_CHANGE});
         expect(state).toEqual(DEFAULT_STATE);
     });

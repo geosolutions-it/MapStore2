@@ -79,7 +79,7 @@ describe('test geostory action creators', () => {
         expect(action.path).toBe(PATH);
         expect(action.position).toBe(POSITION);
         expect(action.element).toBe(SECTION);
-        expect(action.id).toExist("action didn't generated missing ID");
+        expect(action.id).toBeTruthy();
     });
     it('loadGeostory', () => {
         const id = 'sampleStory';
@@ -136,21 +136,21 @@ describe('test geostory action creators', () => {
     });
     it('updateCurrentPage', () => {
         const retVal = updateCurrentPage({sectionId: "TEST"});
-        expect(retVal).toExist();
+        expect(retVal).toBeTruthy();
         expect(retVal.type).toBe(UPDATE_CURRENT_PAGE);
         expect(retVal.sectionId).toBe('TEST');
     });
     it('saveStory', () => {
         const SAMPLE_RESOURCE = { id: 1234, data: { } };
         const retVal = saveStory(SAMPLE_RESOURCE);
-        expect(retVal).toExist();
+        expect(retVal).toBeTruthy();
         expect(retVal.type).toBe(SAVE);
         expect(retVal.resource).toBe(SAMPLE_RESOURCE);
     });
     it('selectCard', () => {
         const card = "id-card";
         const retVal = selectCard(card);
-        expect(retVal).toExist();
+        expect(retVal).toBeTruthy();
         expect(retVal.type).toBe(SELECT_CARD);
         expect(retVal.card).toBe(card);
     });
@@ -159,7 +159,7 @@ describe('test geostory action creators', () => {
         const target = "target";
         const position = 0;
         const retVal = move(source, target, position);
-        expect(retVal).toExist();
+        expect(retVal).toBeTruthy();
         expect(retVal.type).toBe(MOVE);
         expect(retVal.source).toBe(source);
         expect(retVal.target).toBe(target);
@@ -167,7 +167,7 @@ describe('test geostory action creators', () => {
     });
     it('set focus on a content', () => {
         const retVal = setFocusOnContent(false, "target", "selector", true, "path");
-        expect(retVal).toExist();
+        expect(retVal).toBeTruthy();
         expect(retVal.type).toBe(TOGGLE_CONTENT_FOCUS);
         expect(retVal.status).toBe(false);
         expect(retVal.target).toBe("target");
@@ -178,14 +178,14 @@ describe('test geostory action creators', () => {
     it('toggleSetting', () => {
         const option = "isLogoEnabled";
         const retVal = toggleSetting(option);
-        expect(retVal).toExist();
+        expect(retVal).toBeTruthy();
         expect(retVal.type).toBe(TOGGLE_SETTING);
         expect(retVal.option).toBe(option);
     });
     it('toggleSettingsPanel', () => {
         const withSave = true;
         const retVal = toggleSettingsPanel(withSave );
-        expect(retVal).toExist();
+        expect(retVal).toBeTruthy();
         expect(retVal.type).toBe(TOGGLE_SETTINGS_PANEL);
         expect(retVal.withSave).toBe(withSave);
     });
@@ -193,7 +193,7 @@ describe('test geostory action creators', () => {
         const prop = "isLogoEnabled";
         const value = true;
         const retVal = updateSetting(prop, value);
-        expect(retVal).toExist();
+        expect(retVal).toBeTruthy();
         expect(retVal.type).toBe(UPDATE_SETTING);
         expect(retVal.prop).toBe(prop);
         expect(retVal.value).toBe(value);

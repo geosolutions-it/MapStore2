@@ -85,7 +85,7 @@ describe('context epics', () => {
                 expect(setResourceAction.type).toBe(SET_RESOURCE);
                 expect(setResourceAction.resource.canDelete).toBe(true); // check one random content of the resource
                 expect(setContextAction.type).toBe(SET_CURRENT_CONTEXT);
-                expect(setContextAction.context.plugins.desktop).toExist(); // check context content
+                expect(setContextAction.context.plugins.desktop).toBeTruthy(); // check context content
                 expect(loadFinishedAction.type).toBe(LOAD_FINISHED);
                 expect(loadEndAction.type).toBe(LOADING);
                 expect(loadEndAction.value).toBe(false);

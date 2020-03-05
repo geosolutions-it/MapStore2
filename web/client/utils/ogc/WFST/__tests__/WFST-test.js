@@ -22,12 +22,12 @@ describe('Test WFS-T request bodies generation', () => {
     it('WFS-T insert', () => {
         const {insert} = requestBuilder(describeStates);
         const result = insert(wyoming);
-        expect(result).toExist();
+        expect(result).toBeTruthy();
     });
     it('WFS-T insert (array)', () => {
         const {insert} = requestBuilder(describeStates);
         const result = insert([wyoming]);
-        expect(result).toExist();
+        expect(result).toBeTruthy();
     });
     it('WFS-T transaction insert (arg list)', () => {
         const {transaction, insert} = requestBuilder(describePois);
@@ -38,28 +38,28 @@ describe('Test WFS-T request bodies generation', () => {
     it('WFS-T transaction with insert polygon', () => {
         const {insert, transaction} = requestBuilder(describeStates);
         const result = transaction(insert(wyoming));
-        expect(result).toExist();
+        expect(result).toBeTruthy();
         expect(result).toEqual(expectedInsertWyoming.replace(/[\n\r]/g, ''));
     });
 
     it('WFS-T transaction with insert point', () => {
         const {insert, transaction} = requestBuilder(describePois);
         const result = transaction([insert(museam)]);
-        expect(result).toExist();
+        expect(result).toBeTruthy();
         expect(result).toEqual(expectedInsertmuseam.replace(/[\n\r]/g, ''));
     });
 
     it('WFS-T transaction with delete', () => {
         const {deleteFeature, transaction} = requestBuilder(describePois);
         const result = transaction(deleteFeature(museam));
-        expect(result).toExist();
+        expect(result).toBeTruthy();
         expect(result).toEqual(expectedDelete.replace(/[\r\n]/g, ''));
     });
 
     it('WFS-T transaction with delete (as array)', () => {
         const {deleteFeature, transaction} = requestBuilder(describePois);
         const result = transaction([deleteFeature(museam)]);
-        expect(result).toExist();
+        expect(result).toBeTruthy();
         expect(result).toEqual(expectedDelete.replace(/[\r\n]/g, ''));
     });
 
@@ -69,7 +69,7 @@ describe('Test WFS-T request bodies generation', () => {
             update(
                 [propertyChange("NAME", "newName"), fidFilter("ogc", "poi.7")])
         );
-        expect(result).toExist();
+        expect(result).toBeTruthy();
         expect(result).toEqual(expectedUpdate.replace(/[\r\n]/g, ''));
     });
     it('WFS-T transaction with update (arg list)', () => {
@@ -77,7 +77,7 @@ describe('Test WFS-T request bodies generation', () => {
         const result = transaction(
             update(propertyChange("NAME", "newName"), fidFilter("ogc", "poi.7")),
         );
-        expect(result).toExist();
+        expect(result).toBeTruthy();
         expect(result).toEqual(expectedUpdate.replace(/[\n\r]/g, ''));
     });
 

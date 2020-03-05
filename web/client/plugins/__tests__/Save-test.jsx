@@ -44,7 +44,7 @@ describe('MapSave Plugins (MapSave, MapSaveAs)', () => {
             // hide when not logged in
             expect(containers.BurgerMenu.selector({ security: {} }).style.display).toBe("none");
             // show when logged in
-            expect(containers.BurgerMenu.selector({security: {user: {}}, map: { info: { id: 1234, canEdit: true } }}).style.display).toNotExist();
+            expect(containers.BurgerMenu.selector({security: {user: {}}, map: { info: { id: 1234, canEdit: true } }}).style.display).toBeFalsy();
             // hide if you don't have permissions
             expect(containers.BurgerMenu.selector({ security: { user: {} }, map: { info: { id: 1234, canEdit: false } } }).style.display ).toBe("none");
         });

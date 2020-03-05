@@ -35,9 +35,9 @@ describe('test GroupTitle module component', () => {
         };
         const comp = ReactDOM.render(<GroupTitle node={l} currentLocale="en-US"/>, document.getElementById("container"));
         const domNode = ReactDOM.findDOMNode(comp);
-        expect(domNode).toExist();
+        expect(domNode).toBeTruthy();
         const title = domNode.getElementsByClassName('toc-group-title').item(0);
-        expect(title).toExist();
+        expect(title).toBeTruthy();
         expect(title.innerHTML).toBe(l.title.default);
     });
 
@@ -50,18 +50,18 @@ describe('test GroupTitle module component', () => {
         };
         const comp = ReactDOM.render(<GroupTitle node={l} currentLocale="it-IT"/>, document.getElementById("container"));
         const domNode = ReactDOM.findDOMNode(comp);
-        expect(domNode).toExist();
+        expect(domNode).toBeTruthy();
         const title = domNode.getElementsByClassName('toc-group-title').item(0);
-        expect(title).toExist();
+        expect(title).toBeTruthy();
         expect(title.innerHTML).toBe(l.title['it-IT']);
     });
 
     it('tests GroupTitle without title', () => {
         const comp = ReactDOM.render(<GroupTitle node={{}} currentLocale="it-IT"/>, document.getElementById("container"));
         const domNode = ReactDOM.findDOMNode(comp);
-        expect(domNode).toExist();
+        expect(domNode).toBeTruthy();
         const title = domNode.getElementsByClassName('toc-group-title').item(0);
-        expect(title).toExist();
+        expect(title).toBeTruthy();
         expect(title.innerHTML).toBe('');
     });
 
@@ -75,7 +75,7 @@ describe('test GroupTitle module component', () => {
         };
         const comp = ReactDOM.render(<GroupTitle node={l} tooltip currentLocale="it-IT"/>, document.getElementById("container"));
         const domNode = ReactDOM.findDOMNode(comp);
-        expect(domNode).toExist();
+        expect(domNode).toBeTruthy();
         ReactTestUtils.Simulate.mouseOver(domNode);
         expect(ReactDOM.findDOMNode(comp).getAttribute('aria-describedby')).toBe('tooltip-layer-group');
     });
@@ -89,7 +89,7 @@ describe('test GroupTitle module component', () => {
         };
         const comp = ReactDOM.render(<GroupTitle node={l} currentLocale="it-IT"/>, document.getElementById("container"));
         const domNode = ReactDOM.findDOMNode(comp);
-        expect(domNode).toExist();
+        expect(domNode).toBeTruthy();
         ReactTestUtils.Simulate.mouseOver(domNode);
         expect(ReactDOM.findDOMNode(comp).getAttribute('aria-describedby')).toBe(null);
     });
@@ -108,7 +108,7 @@ describe('test GroupTitle module component', () => {
         const currentLocale = "it-IT";
         const comp = ReactDOM.render(<GroupTitle node={node} tooltip currentLocale={currentLocale}/>, document.getElementById("container"));
         const domNode = ReactDOM.findDOMNode(comp);
-        expect(domNode).toExist();
+        expect(domNode).toBeTruthy();
         ReactTestUtils.Simulate.mouseOver(domNode);
         expect(ReactDOM.findDOMNode(comp).getAttribute('aria-describedby')).toBe('tooltip-layer-group');
         expect(getTooltip(node, currentLocale)).toBe("Gruppo - desc");

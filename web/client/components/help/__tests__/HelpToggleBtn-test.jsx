@@ -25,21 +25,21 @@ describe('Test for HelpToggleBtn', () => {
     // test DEFAULTS
     it('creates the component with defaults', () => {
         const helpToggleBtn = ReactDOM.render(<HelpToggleBtn/>, document.getElementById("container"));
-        expect(helpToggleBtn).toExist();
+        expect(helpToggleBtn).toBeTruthy();
 
         const helpToggleBtnDom = ReactDOM.findDOMNode(helpToggleBtn);
-        expect(helpToggleBtnDom).toExist();
+        expect(helpToggleBtnDom).toBeTruthy();
 
         const icons = helpToggleBtnDom.getElementsByTagName('span');
         expect(icons.length).toBe(1);
 
         expect(helpToggleBtnDom.className.indexOf('default') >= 0).toBe(true);
-        expect(helpToggleBtnDom.innerHTML).toExist();
+        expect(helpToggleBtnDom.innerHTML).toBeTruthy();
     });
 
     it('test button state', () => {
         const helpToggleBtn = ReactDOM.render(<HelpToggleBtn pressed/>, document.getElementById("container"));
-        expect(helpToggleBtn).toExist();
+        expect(helpToggleBtn).toBeTruthy();
 
         const helpToggleBtnDom = ReactDOM.findDOMNode(helpToggleBtn);
 

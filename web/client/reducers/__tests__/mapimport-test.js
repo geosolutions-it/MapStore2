@@ -31,7 +31,7 @@ describe('mapimport reducer', () => {
 
         const action = setLayers([L1, L2], [W1]);
         const state = mapimport( undefined, action);
-        expect(state).toExist();
+        expect(state).toBeTruthy();
         expect(state.layers.length).toBe(2);
         expect(state.errors.length).toBe(1);
         expect(state.selected).toBe(L1);
@@ -39,13 +39,13 @@ describe('mapimport reducer', () => {
     it('mapimport onSelectLayer', () => {
         const action = onSelectLayer(L1);
         const state = mapimport( undefined, action);
-        expect(state).toExist();
+        expect(state).toBeTruthy();
         expect(state.selected).toBe(L1);
     });
     it('mapimport onSelectLayer', () => {
         const action = onError(W1);
         const state = mapimport(undefined, action);
-        expect(state).toExist();
+        expect(state).toBeTruthy();
         expect(state.errors.length).toBe(1);
         const state2 = mapimport(state, onError(W1_2));
         expect(state2.errors.length).toBe(1);
@@ -55,13 +55,13 @@ describe('mapimport reducer', () => {
     it('mapimport setLoading', () => {
         const action = setLoading(true);
         const state = mapimport( undefined, action);
-        expect(state).toExist();
+        expect(state).toBeTruthy();
         expect(state.loading).toBe(true);
     });
     it('mapimport onLayerAdded', () => {
         const BASE_STATE = mapimport(undefined, setLayers([L1, L2], [W1]));
         const state = mapimport(BASE_STATE, onLayerAdded(L1));
-        expect(state).toExist();
+        expect(state).toBeTruthy();
         expect(state.layers.length).toBe(1);
         expect(state.errors.length).toBe(1);
         expect(state.selected).toBe(L2);
@@ -69,19 +69,19 @@ describe('mapimport reducer', () => {
     it('mapimport updateBBox', () => {
         const action = updateBBox(BBOX);
         const state = mapimport( undefined, action);
-        expect(state).toExist();
+        expect(state).toBeTruthy();
         expect(state.bbox).toBe(BBOX);
     });
     it('mapimport onSuccess', () => {
         const action = onSuccess(MESSAGE);
         const state = mapimport( undefined, action);
-        expect(state).toExist();
+        expect(state).toBeTruthy();
         expect(state.success).toBe(MESSAGE);
     });
     it('state change on setLayers when import is canceled', () => {
         const action = setLayers(null);
         const state = mapimport( undefined, action);
-        expect(state).toExist();
+        expect(state).toBeTruthy();
         expect(state.layers).toBe(null);
         expect(state.errors).toBe(null);
         expect(state.selected).toBe(null);

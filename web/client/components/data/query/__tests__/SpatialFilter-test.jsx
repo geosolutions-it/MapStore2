@@ -52,31 +52,31 @@ describe('SpatialFilter', () => {
             document.getElementById("container")
         );
 
-        expect(spatialfilter).toExist();
-        expect(spatialfilter.props.spatialField).toExist();
+        expect(spatialfilter).toBeTruthy();
+        expect(spatialfilter.props.spatialField).toBeTruthy();
         expect(spatialfilter.props.spatialField).toBe(spatialField);
-        expect(spatialfilter.props.spatialOperations).toExist();
+        expect(spatialfilter.props.spatialOperations).toBeTruthy();
         expect(spatialfilter.props.spatialOperations).toBe(spatialOperations);
-        expect(spatialfilter.props.spatialMethodOptions).toExist();
+        expect(spatialfilter.props.spatialMethodOptions).toBeTruthy();
         expect(spatialfilter.props.spatialMethodOptions).toBe(spatialMethodOptions);
         expect(spatialfilter.props.spatialPanelExpanded).toBe(true);
         expect(spatialfilter.props.showDetailsPanel).toBe(false);
 
-        const spatialFilterDOMNode = expect(ReactDOM.findDOMNode(spatialfilter));
-        expect(spatialFilterDOMNode).toExist();
+        const spatialFilterDOMNode = ReactDOM.findDOMNode(spatialfilter);
+        expect(spatialFilterDOMNode).toBeTruthy();
 
-        let spatialPanel = spatialFilterDOMNode.actual.querySelector('.mapstore-switch-panel');
-        expect(spatialPanel).toExist();
+        let spatialPanel = spatialFilterDOMNode.querySelector('.mapstore-switch-panel');
+        expect(spatialPanel).toBeTruthy();
 
-        let combosPanel = spatialFilterDOMNode.actual.getElementsByClassName('panel-body');
-        expect(combosPanel).toExist();
+        let combosPanel = spatialFilterDOMNode.getElementsByClassName('panel-body');
+        expect(combosPanel).toBeTruthy();
 
         let containerFluid = combosPanel[1].childNodes[0];
-        expect(containerFluid).toExist();
+        expect(containerFluid).toBeTruthy();
         // expect(containerFluid.className).toBe("container-fluid");
 
         let logicHeader = containerFluid.childNodes[0];
-        expect(logicHeader).toExist();
+        expect(logicHeader).toBeTruthy();
         expect(logicHeader.className).toBe("logicHeader inline-form filter-field-row filter-field-fixed-row row");
 
         let operationPanelRows = combosPanel[2].getElementsByClassName('row');
@@ -136,17 +136,17 @@ describe('SpatialFilter', () => {
             document.getElementById("container")
         );
 
-        expect(spatialfilter).toExist();
-        expect(spatialfilter.props.spatialField).toExist();
+        expect(spatialfilter).toBeTruthy();
+        expect(spatialfilter.props.spatialField).toBeTruthy();
         expect(spatialfilter.props.spatialField).toBe(spatialField);
         expect(spatialfilter.props.spatialPanelExpanded).toBe(false);
         expect(spatialfilter.props.showDetailsPanel).toBe(false);
 
-        const spatialFilterDOMNode = expect(ReactDOM.findDOMNode(spatialfilter));
-        expect(spatialFilterDOMNode).toExist();
+        const spatialFilterDOMNode = ReactDOM.findDOMNode(spatialfilter);
+        expect(spatialFilterDOMNode).toBeTruthy();
 
-        let combosPanels = spatialFilterDOMNode.actual.getElementsByClassName('zone-combo');
-        expect(combosPanels).toExist();
+        let combosPanels = spatialFilterDOMNode.getElementsByClassName('zone-combo');
+        expect(combosPanels).toBeTruthy();
         expect(combosPanels.length).toBe(2);
     });
 });

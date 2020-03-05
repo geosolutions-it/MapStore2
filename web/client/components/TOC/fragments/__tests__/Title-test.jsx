@@ -39,7 +39,7 @@ describe('test Title module component', () => {
         const comp = ReactDOM.render(<Title node={l} />, document.getElementById("container"));
 
         const domNode = ReactDOM.findDOMNode(comp);
-        expect(domNode).toExist();
+        expect(domNode).toBeTruthy();
 
         expect(domNode.innerText.indexOf('Layer') !== -1).toBe(true);
     });
@@ -61,9 +61,9 @@ describe('test Title module component', () => {
 
         const comp = ReactDOM.render(<Title node={l} onContextMenu={actions.onContextMenu}/>, document.getElementById("container"));
         const domNode = ReactDOM.findDOMNode(comp);
-        expect(domNode).toExist();
+        expect(domNode).toBeTruthy();
         ReactTestUtils.Simulate.contextMenu(domNode);
-        expect(spy.calls.length).toBe(1);
+        expect(spy.mock.calls.length).toBe(1);
     });
 
     it('tests Title attribute title as object without currentLocale', () => {
@@ -80,7 +80,7 @@ describe('test Title module component', () => {
         };
         const comp = ReactDOM.render(<Title node={l} currentLocale="en-US"/>, document.getElementById("container"));
         const domNode = ReactDOM.findDOMNode(comp);
-        expect(domNode).toExist();
+        expect(domNode).toBeTruthy();
         expect(domNode.innerHTML).toBe(l.title.default);
     });
 
@@ -98,7 +98,7 @@ describe('test Title module component', () => {
         };
         const comp = ReactDOM.render(<Title node={l} currentLocale="it-IT"/>, document.getElementById("container"));
         const domNode = ReactDOM.findDOMNode(comp);
-        expect(domNode).toExist();
+        expect(domNode).toBeTruthy();
         expect(domNode.innerHTML).toBe(l.title['it-IT']);
     });
 
@@ -112,7 +112,7 @@ describe('test Title module component', () => {
         };
         const comp = ReactDOM.render(<Title node={l} currentLocale="it-IT"/>, document.getElementById("container"));
         const domNode = ReactDOM.findDOMNode(comp);
-        expect(domNode).toExist();
+        expect(domNode).toBeTruthy();
         expect(domNode.innerHTML).toBe(l.name);
     });
 
@@ -130,7 +130,7 @@ describe('test Title module component', () => {
         };
         const comp = ReactDOM.render(<Title node={l} tooltip currentLocale="it-IT"/>, document.getElementById("container"));
         const domNode = ReactDOM.findDOMNode(comp);
-        expect(domNode).toExist();
+        expect(domNode).toBeTruthy();
         ReactTestUtils.Simulate.mouseOver(domNode);
         expect(ReactDOM.findDOMNode(comp).getAttribute('aria-describedby')).toBe('tooltip-layer-title');
     });
@@ -149,7 +149,7 @@ describe('test Title module component', () => {
         };
         const comp = ReactDOM.render(<Title node={l} currentLocale="it-IT"/>, document.getElementById("container"));
         const domNode = ReactDOM.findDOMNode(comp);
-        expect(domNode).toExist();
+        expect(domNode).toBeTruthy();
         ReactTestUtils.Simulate.mouseOver(domNode);
         expect(ReactDOM.findDOMNode(comp).getAttribute('aria-describedby')).toBe(null);
     });
@@ -172,7 +172,7 @@ describe('test Title module component', () => {
         const currentLocale = "it-IT";
         const comp = ReactDOM.render(<Title node={node} tooltip currentLocale={currentLocale}/>, document.getElementById("container"));
         const domNode = ReactDOM.findDOMNode(comp);
-        expect(domNode).toExist();
+        expect(domNode).toBeTruthy();
         ReactTestUtils.Simulate.mouseOver(domNode);
         expect(ReactDOM.findDOMNode(comp).getAttribute('aria-describedby')).toBe('tooltip-layer-title');
         expect(getTooltip(node, currentLocale)).toBe("Livello - desc");

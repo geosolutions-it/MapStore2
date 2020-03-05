@@ -30,21 +30,21 @@ describe("test the OL Snapshot Preview component", () => {
 
     it('component creation', () => {
         const tb = ReactDOM.render(<GrabMap active={false}/>, document.getElementById("snap"));
-        expect(tb).toExist();
+        expect(tb).toBeTruthy();
     });
     it('component snapshot img creation', (done) => {
         const map = ReactDOM.render(<OLMap center={{y: 43.9, x: 10.3}} zoom={11} />, document.getElementById("map"));
-        expect(map).toExist();
-        let tb = ReactDOM.render(<GrabMap mapId="map" snapstate={{error: "Test"}} active={false} timeout={0} onSnapshotReady={() => { expect(tb.isTainted(false)); expect(tb.exportImage()).toExist(); done(); }}/>, document.getElementById("snap"));
-        expect(tb).toExist();
-        tb = ReactDOM.render(<GrabMap mapId="map" snapstate={{error: "Test"}} active timeout={0} onSnapshotReady={() => { expect(tb.isTainted(false)); expect(tb.exportImage()).toExist(); done(); }}/>, document.getElementById("snap"));
+        expect(map).toBeTruthy();
+        let tb = ReactDOM.render(<GrabMap mapId="map" snapstate={{error: "Test"}} active={false} timeout={0} onSnapshotReady={() => { expect(tb.isTainted(false)); expect(tb.exportImage()).toBeTruthy(); done(); }}/>, document.getElementById("snap"));
+        expect(tb).toBeTruthy();
+        tb = ReactDOM.render(<GrabMap mapId="map" snapstate={{error: "Test"}} active timeout={0} onSnapshotReady={() => { expect(tb.isTainted(false)); expect(tb.exportImage()).toBeTruthy(); done(); }}/>, document.getElementById("snap"));
     });
     it('component deactivation do not generate snapshot', () => {
         const map = ReactDOM.render(<OLMap center={{y: 43.9, x: 10.3}} zoom={11} />, document.getElementById("map"));
-        expect(map).toExist();
+        expect(map).toBeTruthy();
         // set a big timeout to make you sure that the snapshot is not not generated
         let tb = ReactDOM.render(<GrabMap mapId="map" snapstate={{error: "Test"}} active timeout={10000} onSnapshotReady={() => { expect(true).toBe(false); }}/>, document.getElementById("snap"));
-        expect(tb).toExist();
+        expect(tb).toBeTruthy();
         tb = ReactDOM.render(<GrabMap mapId="map" snapstate={{error: "Test"}} active={false} timeout={10000} onSnapshotReady={() => { expect(true).toBe(false); }}/>, document.getElementById("snap"));
     });
 });

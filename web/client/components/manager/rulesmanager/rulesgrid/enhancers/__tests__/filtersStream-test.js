@@ -12,7 +12,7 @@ const Rx = require("rxjs");
 describe('rulegrid filterStream', () => {
     it('debounce addFilter$', (done) => {
         const setFilters = (filter) => {
-            expect(filter).toExist();
+            expect(filter).toBeTruthy();
             expect(filter).toBe("WFS");
             done();
         };

@@ -98,7 +98,7 @@ describe('wfsChartOptions enhancer', () => {
     });
     it('wfsChartOptions rendering with defaults', (done) => {
         const Sink = wfsChartOptions(createSink( props => {
-            expect(props).toExist();
+            expect(props).toBeTruthy();
             done();
         }));
         ReactDOM.render(<Sink />, document.getElementById("container"));

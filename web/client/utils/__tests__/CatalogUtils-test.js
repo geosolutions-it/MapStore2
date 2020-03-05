@@ -95,7 +95,7 @@ describe('Test the CatalogUtils', () => {
         const layer = CatalogUtils.recordToLayer(records[0]);
         expect(layer.allowedSRS['EPSG:4326']).toBe(true);
         expect(layer.allowedSRS['EPSG:3857']).toBe(true);
-        expect(layer.allowedSRS['EPSG:5041']).toNotExist();
+        expect(layer.allowedSRS['EPSG:5041']).toBeFalsy();
     });
 
     it('wms layer options', () => {
@@ -644,14 +644,14 @@ describe('Test the CatalogUtils', () => {
         }, {});
         expect(records.length).toBe(2);
         const r = records[0];
-        expect(r.thumbnail).toExist();
+        expect(r.thumbnail).toBeTruthy();
         expect(r.references.length).toBe(1);
         const ref = r.references[0];
         expect(ref.type).toBe("OGC:WMS");
         expect(ref.params.name).toBe("layer.name");
         const esri = records[1];
-        expect(esri).toExist();
-        expect(esri.references[0]).toExist();
+        expect(esri).toBeTruthy();
+        expect(esri.references[0]).toBeTruthy();
         expect(esri.references[0].type).toBe("arcgis");
         expect(esri.references[0].params.name).toBe("1-Hurricane Track");
     });

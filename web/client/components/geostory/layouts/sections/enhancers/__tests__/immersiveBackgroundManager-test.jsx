@@ -31,14 +31,14 @@ describe('immersiveBackgroundManager enhancer', () => {
     });
     it('rendering with defaults', (done) => {
         const Sink = immersiveBackgroundManager(createSink( props => {
-            expect(props).toExist();
+            expect(props).toBeTruthy();
             done();
         }));
         ReactDOM.render(<Sink />, document.getElementById("container"));
     });
     it('holds last background ', (done) => {
         const Sink = immersiveBackgroundManager(createSink(props => {
-            expect(props).toExist();
+            expect(props).toBeTruthy();
             if (props.background.id !== contents[1].background.id) {
                 // first render, trigger onVisibility change to make the background to be 1
                 props.onVisibilityChange({ id: contents[1].id, visible: true });

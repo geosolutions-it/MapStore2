@@ -23,27 +23,27 @@ describe('Test correctness of the feedbackMask actions', () => {
     it('feedbackMaskLoading', () => {
         const mode = 'map';
         const retval = feedbackMaskLoading(mode);
-        expect(retval).toExist();
+        expect(retval).toBeTruthy();
         expect(retval.type).toBe(FEEDBACK_MASK_LOADING);
         expect(retval.mode).toBe(mode);
     });
     it('feedbackMaskLoaded', () => {
         const retval = feedbackMaskLoaded();
-        expect(retval).toExist();
+        expect(retval).toBeTruthy();
         expect(retval.type).toBe(FEEDBACK_MASK_LOADED);
     });
     it('feedbackMaskEnabled', () => {
         const enabled = true;
         const error = {status: 404};
         const retval = feedbackMaskEnabled(enabled, error);
-        expect(retval).toExist();
+        expect(retval).toBeTruthy();
         expect(retval.type).toBe(FEEDBACK_MASK_ENABLED);
         expect(retval.enabled).toBe(enabled);
         expect(retval.error).toBe(error);
     });
     it('detectedNewPage', () => {
         const retval = detectedNewPage('viewer');
-        expect(retval).toExist();
+        expect(retval).toBeTruthy();
         expect(retval.type).toBe(DETECTED_NEW_PAGE);
         expect(retval.currentPage).toBe('viewer');
     });

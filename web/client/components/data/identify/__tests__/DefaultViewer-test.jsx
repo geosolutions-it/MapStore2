@@ -31,7 +31,7 @@ describe('DefaultViewer', () => {
             document.getElementById("container")
         );
 
-        expect(viewer).toExist();
+        expect(viewer).toBeTruthy();
     });
 
     it('creates the DefaultViewer component with custom container', () => {
@@ -41,7 +41,7 @@ describe('DefaultViewer', () => {
             document.getElementById("container")
         );
 
-        expect(viewer).toExist();
+        expect(viewer).toBeTruthy();
         const dom = ReactDOM.findDOMNode(viewer);
         expect(dom.getElementsByClassName("mycontainer").length).toBe(1);
     });
@@ -59,7 +59,7 @@ describe('DefaultViewer', () => {
             document.getElementById("container")
         );
 
-        expect(viewer).toExist();
+        expect(viewer).toBeTruthy();
         const dom = ReactDOM.findDOMNode(viewer);
         expect(dom.getElementsByClassName("mycontainer").length).toBe(1);
     });
@@ -89,7 +89,7 @@ describe('DefaultViewer', () => {
             document.getElementById("container")
         );
 
-        expect(viewer).toExist();
+        expect(viewer).toBeTruthy();
         const dom = ReactDOM.findDOMNode(viewer);
         expect(dom.getElementsByClassName("panel").length).toBe(2);
         expect(dom.getElementsByClassName("alert").length).toBe(1);
@@ -101,7 +101,7 @@ describe('DefaultViewer', () => {
             document.getElementById("container")
         );
 
-        expect(viewer).toExist();
+        expect(viewer).toBeTruthy();
         const dom = ReactDOM.findDOMNode(viewer);
         expect(dom.getElementsByClassName("alert").length).toBe(1);
     });
@@ -123,7 +123,7 @@ describe('DefaultViewer', () => {
             document.getElementById("container")
         );
 
-        expect(viewer).toExist();
+        expect(viewer).toBeTruthy();
         const dom = ReactDOM.findDOMNode(viewer);
         expect(dom.getElementsByClassName("alert").length).toBe(0);
     });
@@ -134,7 +134,7 @@ describe('DefaultViewer', () => {
             document.getElementById("container")
         );
 
-        expect(viewer).toExist();
+        expect(viewer).toBeTruthy();
         const dom = ReactDOM.findDOMNode(viewer);
         expect(dom.getElementsByClassName("alert").length).toBe(0);
     });
@@ -154,7 +154,7 @@ describe('DefaultViewer', () => {
             document.getElementById("container")
         );
 
-        expect(viewer).toExist();
+        expect(viewer).toBeTruthy();
         const dom = ReactDOM.findDOMNode(viewer);
         expect(dom.getElementsByClassName("custom").length).toBe(1);
         expect(dom.innerHTML.indexOf('myresponse') !== -1).toBe(true);
@@ -173,7 +173,7 @@ describe('DefaultViewer', () => {
             <DefaultViewer responses={[{}, {}]} setIndex={testHandlers.setIndex}/>,
             document.getElementById("container")
         );
-        expect(spySetIndex.calls.length).toEqual(1);
+        expect(spySetIndex.mock.calls.length).toEqual(1);
     });
 
     it("test DefaultViewer component doesn't need reset current index when requests are the same", () => {
@@ -189,6 +189,6 @@ describe('DefaultViewer', () => {
             <DefaultViewer responses={[{}]} setIndex={testHandlers.setIndex}/>,
             document.getElementById("container")
         );
-        expect(spySetIndex.calls.length).toEqual(0);
+        expect(spySetIndex.mock.calls.length).toEqual(0);
     });
 });

@@ -63,7 +63,7 @@ describe('ReselectUtils', () => {
         expect(selector(createMockState([
             { ...OBJ_1 },
             { ...OBJ_2 }
-        ]))).toNotBe(OBJ_ARR_1);
+        ]))).not.toBe(OBJ_ARR_1);
     });
     it('createShallowSelector with object', () => {
 

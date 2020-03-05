@@ -14,9 +14,9 @@ describe('Test browser related actions', () => {
         let e = changeBrowserProperties({touch: true});
 
         try {
-            expect(e).toExist();
+            expect(e).toBeTruthy();
             expect(e.type).toBe(CHANGE_BROWSER_PROPERTIES);
-            expect(e.newProperties).toExist();
+            expect(e.newProperties).toBeTruthy();
             expect(e.newProperties.touch).toBe(true);
             done();
         } catch (ex) {

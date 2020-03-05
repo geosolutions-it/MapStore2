@@ -29,9 +29,9 @@ describe('LangSelector', () => {
         var value;
 
         const cmp = ReactDOM.render(<LangSelector/>, document.getElementById("container"));
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
         const cmpDom = ReactDOM.findDOMNode(cmp);
-        expect(cmpDom).toExist();
+        expect(cmpDom).toBeTruthy();
 
         const opts = cmpDom.childNodes;
         const langs = {

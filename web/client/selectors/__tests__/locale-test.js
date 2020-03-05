@@ -23,17 +23,17 @@ const state = {
 describe('Test locale selectors', () => {
     it('test currentLocaleSelectors', () => {
         const currentLocale = currentLocaleSelector(state);
-        expect(currentLocale).toExist();
+        expect(currentLocale).toBeTruthy();
         expect(currentLocale).toBe(state.locale.current);
     });
     it('test currentMessagesSelector', () => {
         const currentMessages = currentMessagesSelector(state);
-        expect(currentMessages).toExist();
+        expect(currentMessages).toBeTruthy();
         expect(currentMessages).toEqual(state.locale.messages);
     });
     it('test currentMessagesSelector empty', () => {
         const currentMessages = currentMessagesSelector({});
-        expect(currentMessages).toExist();
+        expect(currentMessages).toBeTruthy();
         expect(currentMessages).toEqual({});
     });
 });

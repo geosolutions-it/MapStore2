@@ -26,7 +26,7 @@ describe('Test for BottomToolbar component', () => {
     it('render with defaults', () => {
         ReactDOM.render(<BottomToolbar/>, document.getElementById("container"));
         const el = document.getElementsByClassName("data-grid-bottom-toolbar")[0];
-        expect(el).toExist();
+        expect(el).toBeTruthy();
     });
     it('render 1 page only results', () => {
         const events = {
@@ -36,7 +36,7 @@ describe('Test for BottomToolbar component', () => {
         const props = {startIndex: 0, maxFeatures: 10, totalFeatures: 9, resultSize: 9};
         ReactDOM.render(<BottomToolbar {...props}/>, document.getElementById("container"));
         const el = document.getElementsByClassName("data-grid-bottom-toolbar")[0];
-        expect(el).toExist();
+        expect(el).toBeTruthy();
         expect(document.getElementsByClassName("first-page")[0].disabled).toBe(true);
         expect(document.getElementsByClassName("prev-page")[0].disabled).toBe(true);
         expect(document.getElementsByClassName("next-page")[0].disabled).toBe(true);
@@ -45,7 +45,7 @@ describe('Test for BottomToolbar component', () => {
         document.getElementsByClassName("prev-page")[0].click();
         document.getElementsByClassName("next-page")[0].click();
         document.getElementsByClassName("last-page")[0].click();
-        expect(spy.calls.length).toBe(0);
+        expect(spy.mock.calls.length).toBe(0);
     });
     it('render 2nd page of 3', () => {
         const events = {
@@ -55,7 +55,7 @@ describe('Test for BottomToolbar component', () => {
         const props = {startIndex: 10, maxFeatures: 10, totalFeatures: 29, resultSize: 10};
         ReactDOM.render(<BottomToolbar onPageChange={events.onPageChange} {...props}/>, document.getElementById("container"));
         const el = document.getElementsByClassName("data-grid-bottom-toolbar")[0];
-        expect(el).toExist();
+        expect(el).toBeTruthy();
         expect(document.getElementsByClassName("first-page")[0].disabled).toBe(false);
         expect(document.getElementsByClassName("prev-page")[0].disabled).toBe(false);
         expect(document.getElementsByClassName("next-page")[0].disabled).toBe(false);
@@ -64,7 +64,7 @@ describe('Test for BottomToolbar component', () => {
         document.getElementsByClassName("prev-page")[0].click();
         document.getElementsByClassName("next-page")[0].click();
         document.getElementsByClassName("last-page")[0].click();
-        expect(spy.calls.length).toBe(4);
+        expect(spy.mock.calls.length).toBe(4);
     });
     it('render 3nd page of 3', () => {
         const events = {
@@ -74,7 +74,7 @@ describe('Test for BottomToolbar component', () => {
         const props = {startIndex: 20, maxFeatures: 10, totalFeatures: 29, resultSize: 9};
         ReactDOM.render(<BottomToolbar onPageChange={events.onPageChange} {...props}/>, document.getElementById("container"));
         const el = document.getElementsByClassName("data-grid-bottom-toolbar")[0];
-        expect(el).toExist();
+        expect(el).toBeTruthy();
         expect(document.getElementsByClassName("first-page")[0].disabled).toBe(false);
         expect(document.getElementsByClassName("prev-page")[0].disabled).toBe(false);
         expect(document.getElementsByClassName("next-page")[0].disabled).toBe(true);
@@ -83,14 +83,14 @@ describe('Test for BottomToolbar component', () => {
         document.getElementsByClassName("prev-page")[0].click();
         document.getElementsByClassName("next-page")[0].click();
         document.getElementsByClassName("last-page")[0].click();
-        expect(spy.calls.length).toBe(2);
+        expect(spy.mock.calls.length).toBe(2);
     });
     //
     /*
     it('render with attributes, checked by default', () => {
         ReactDOM.render(<BottomToolbar attributes={[{label: "label"}]}/>, document.getElementById("container"));
         const check = document.getElementsByTagName("input")[0];
-        expect(check).toExist();
+        expect(check).toBeTruthy();
         expect(check.checked).toBe(true);
     });
     it('check hide is not selected', () => {

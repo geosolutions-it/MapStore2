@@ -28,6 +28,6 @@ describe('MediaEditor component', () => {
                 <MediaEditor />
             </Provider>, document.getElementById("container"));
         const container = document.getElementById('container');
-        expect(container.querySelector('.ms-mediaEditor')).toExist();
+        expect(container.querySelector('.ms-mediaEditor')).toBeTruthy();
     });
 });

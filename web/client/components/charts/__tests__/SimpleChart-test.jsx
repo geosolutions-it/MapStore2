@@ -37,19 +37,19 @@ describe('SimpleChart component', () => {
         ReactDOM.render(<SimpleChart />, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('div');
-        expect(el).toNotExist();
+        expect(el).toBeFalsy();
     });
     it('test line chart', () => {
         ReactDOM.render(<SimpleChart data={data} type="line" xAxis={{dataKey: "name"}} series={SERIES}/>, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('div');
-        expect(el).toExist();
+        expect(el).toBeTruthy();
     });
     it('test line chart with oblique labels', () => {
         ReactDOM.render(<SimpleChart data={data} type="line" xAxis={{dataKey: "name"}} xAxisAngle={45} series={SERIES}/>, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('div');
-        expect(el).toExist();
+        expect(el).toBeTruthy();
         const text = container.querySelector('text');
         expect(text.attributes.transform.value).toBe("rotate(-45)");
 
@@ -58,19 +58,19 @@ describe('SimpleChart component', () => {
         ReactDOM.render(<SimpleChart data={data} type="pie" xAxis={{dataKey: "name"}} series={SERIES}/>, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('div');
-        expect(el).toExist();
+        expect(el).toBeTruthy();
     });
     it('test bar chart', () => {
         ReactDOM.render(<SimpleChart data={data} type="bar" xAxis={{dataKey: "name"}} series={SERIES}/>, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('div');
-        expect(el).toExist();
+        expect(el).toBeTruthy();
     });
     it('test bar chart with oblique labels', () => {
         ReactDOM.render(<SimpleChart data={data} type="bar" xAxis={{dataKey: "name"}} xAxisAngle={45} series={SERIES}/>, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('div');
-        expect(el).toExist();
+        expect(el).toBeTruthy();
         const text = container.querySelector('text');
         expect(text.attributes.transform.value).toBe("rotate(-45)");
 
@@ -79,7 +79,7 @@ describe('SimpleChart component', () => {
         ReactDOM.render(<SimpleChart data={data} type="gauge" xAxis={{dataKey: "name"}} series={SERIES}/>, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('div');
-        expect(el).toExist();
+        expect(el).toBeTruthy();
     });
     it('test chart legend and tooltip', () => {
         ReactDOM.render(<SimpleChart data={data} xAxis={{dataKey: "name"}} series={SERIES}/>, document.getElementById("container"));
@@ -87,9 +87,9 @@ describe('SimpleChart component', () => {
         const el = container.querySelector('div');
         const legend = container.querySelector("div > div.recharts-legend-wrapper");
         const tooltip = container.querySelector("div > div.recharts-tooltip-wrapper");
-        expect(el).toExist();
-        expect(legend).toExist();
-        expect(tooltip).toExist();
+        expect(el).toBeTruthy();
+        expect(legend).toBeTruthy();
+        expect(tooltip).toBeTruthy();
 
     });
 });

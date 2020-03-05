@@ -1392,7 +1392,7 @@ describe('featuregrid Epics', () => {
                 switch (action.type) {
                 case LOAD_FILTER:
                     // load filter, if present
-                    expect(action.filter).toExist();
+                    expect(action.filter).toBeTruthy();
                     break;
                 case CHANGE_DRAWING_STATUS:
                     //  throw drawstatechange if drawStatus is not clean on queryPanel close

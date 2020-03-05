@@ -24,7 +24,7 @@ describe("Test the StylePolyline style component", () => {
     });
     it('create component with default', () => {
         const cmp = ReactDOM.render(<StylePolyline shapeStyle={shapeStyle}/>, document.getElementById("container"));
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
     });
 
 

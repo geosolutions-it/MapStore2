@@ -43,8 +43,8 @@ describe('rulegrid triggerFetch', () => {
             throw new Error("ERROR");
         };
         const onLoadError = (e) => {
-            expect(e.title).toExist();
-            expect(e.message).toExist();
+            expect(e.title).toBeTruthy();
+            expect(e.message).toBeTruthy();
             done();
         };
         const prop$ = Rx.Observable.of({ version: 0, filters: {}, setLoading: () => { }, onLoad, onLoadError });

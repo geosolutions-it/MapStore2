@@ -26,7 +26,7 @@ describe("Toolbar component", () => {
     it('creates component with defaults', () => {
         ReactDOM.render(<Toolbar />, document.getElementById("container"));
         const el = document.getElementsByClassName("btn-group");
-        expect(el).toExist();
+        expect(el).toBeTruthy();
     });
     it('creates component with buttons and defaultProps', () => {
         ReactDOM.render(<Toolbar key={"toolbar"} btnDefaultProps={{className: "TEST_CLASS"}} buttons={[{
@@ -37,9 +37,9 @@ describe("Toolbar component", () => {
             glyph: "plus"
         }]}/>, document.getElementById("container"));
         const el = document.getElementsByClassName("btn-group");
-        expect(el).toExist();
+        expect(el).toBeTruthy();
         const btn = document.getElementById("button");
-        expect(btn).toExist();
+        expect(btn).toBeTruthy();
         expect(document.getElementsByClassName("TEST_CLASS").length > 0).toBe(true);
     });
     it('test button visibility', () => {
@@ -52,9 +52,9 @@ describe("Toolbar component", () => {
             glyph: "plus"
         }]}/>, document.getElementById("container"));
         const el = document.getElementsByClassName("btn-group");
-        expect(el).toExist();
+        expect(el).toBeTruthy();
         const btn = document.getElementById("button");
-        expect(btn).toNotExist();
+        expect(btn).toBeFalsy();
     });
     // Optionally removes css animation group
     it('test disable animation', () => {
@@ -68,6 +68,6 @@ describe("Toolbar component", () => {
         }]} />, document.getElementById("container"));
         // this allows vertical toolbar with bootstrap css (animation group add internal span)
         const el = document.querySelector(".btn-group > button");
-        expect(el).toExist();
+        expect(el).toBeTruthy();
     });
 });

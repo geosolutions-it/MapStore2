@@ -15,7 +15,7 @@ describe('MultiDim API', () => {
             result => {
                 try {
                     const domains = result.Domains.DimensionDomain;
-                    expect(result).toExist();
+                    expect(result).toBeTruthy();
                     expect(domains.length).toBe(3);
                     expect(domains[0].Identifier).toBe("elevation");
                     expect(domains[0].Domain).toBe("0.0,200.0,400.0,600.0,800.0,1000.0");
@@ -36,7 +36,7 @@ describe('MultiDim API', () => {
             result => {
                 try {
                     const histogram = result.Histogram;
-                    expect(histogram).toExist();
+                    expect(histogram).toBeTruthy();
                     expect(histogram.Identifier).toBe("time");
                     expect(histogram.Values).toBe("240,0,240,0,0,240");
                     expect(histogram.Domain).toBe("2016-02-23T00:00:00.000Z/2016-02-25T00:00:00.000Z/PT8H");
@@ -57,7 +57,7 @@ describe('MultiDim API', () => {
                 result => {
                     try {
                         const DomainValues = result.DomainValues;
-                        expect(DomainValues).toExist();
+                        expect(DomainValues).toBeTruthy();
                         expect(DomainValues.Identifier).toBe("time");
                         expect(DomainValues.Domain.split(",").length).toBe(2);
                         // expect(histogram.Domain).toBe("2016-02-23T00:00:00.000Z/2016-02-25T00:00:00.000Z/PT8H");

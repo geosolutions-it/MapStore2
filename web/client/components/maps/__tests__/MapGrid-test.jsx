@@ -25,10 +25,10 @@ describe('This test for MapGrid', () => {
     // test DEFAULTS
     it('creates the component with defaults', () => {
         const mapList = ReactDOM.render(<MapGrid/>, document.getElementById("container"));
-        expect(mapList).toExist();
+        expect(mapList).toBeTruthy();
 
         const dom = ReactDOM.findDOMNode(mapList);
-        expect(dom).toExist();
+        expect(dom).toBeTruthy();
     });
 
     it('checks data', () => {
@@ -36,9 +36,9 @@ describe('This test for MapGrid', () => {
         var map2 = {id: 2, name: "b", description: "description"};
         let currentMap = {displayMetadataEdit: true};
         const mapList = ReactDOM.render(<MapGrid maps={[map1, map2]} currentMap={currentMap} show/>, document.getElementById("container"));
-        expect(mapList).toExist();
+        expect(mapList).toBeTruthy();
         const dom = ReactDOM.findDOMNode(mapList);
-        expect(dom).toExist();
+        expect(dom).toBeTruthy();
 
         // check list
         const list = dom.getElementsByClassName("map-thumb");

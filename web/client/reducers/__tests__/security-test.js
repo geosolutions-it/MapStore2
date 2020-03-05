@@ -79,7 +79,7 @@ describe('Test the security reducer', () => {
     const testError = {state: 0};
     it('login state', () => {
         let state = security({}, {type: LOGIN_SUCCESS, userDetails: testUser, authHeader: testAuthHeader});
-        expect(state).toExist();
+        expect(state).toBeTruthy();
         expect(state.user.name).toBe("user");
         expect(state.authHeader).toBe(testAuthHeader);
         expect(state.token).toBe(testToken);
@@ -87,8 +87,8 @@ describe('Test the security reducer', () => {
 
     it('login state when bearer is used', () => {
         let state = security(undefined, {type: LOGIN_SUCCESS, userDetails: userWithSecurityToken});
-        expect(state).toExist()
-            .toIncludeKey("authHeader");
+        expect(state).toBeTruthy();
+        expect(state).toIncludeKey("authHeader");
         expect(state.user.name).toBe("secured");
         expect(state.token).toBe("1234567890");
         expect(state.authHeader).toBe(undefined);
@@ -96,18 +96,18 @@ describe('Test the security reducer', () => {
 
     it('login fail', () => {
         let state = security({}, {type: LOGIN_FAIL, error: testError});
-        expect(state).toExist();
-        expect(state.loginError).toExist(testError);
+        expect(state).toBeTruthy();
+        expect(state.loginError).toBeTruthy();
         expect(state.loginError.state).toBe(0);
 
     });
     it('reset error', () => {
         let state = security({}, {type: RESET_ERROR});
-        expect(state).toExist();
+        expect(state).toBeTruthy();
     });
     it('logout', () => {
         let state = security({}, {type: LOGOUT});
-        expect(state).toExist();
+        expect(state).toBeTruthy();
         expect(!state.user).toBe(true);
     });
     it('update user', () => {
@@ -115,7 +115,7 @@ describe('Test the security reducer', () => {
             id: 6,
             name: "changed"
         }});
-        expect(state).toExist();
+        expect(state).toBeTruthy();
         expect(state.user.name).toBe("changed");
     });
 
@@ -124,7 +124,7 @@ describe('Test the security reducer', () => {
             id: 7,
             name: "changed"
         }});
-        expect(state).toExist();
+        expect(state).toBeTruthy();
         expect(state.user.name).toBe("user");
     });
 
@@ -133,15 +133,15 @@ describe('Test the security reducer', () => {
             id: 6,
             password: "newpassword"
         }});
-        expect(state).toExist();
+        expect(state).toBeTruthy();
         expect(state.user.password).toBe("newpassword");
         expect(state.passwordChanged).toBe(true);
     });
 
     it('change password fail', () => {
         let state = security({user: testUser.User}, {type: CHANGE_PASSWORD_FAIL, error: {message: 'error'}});
-        expect(state).toExist();
-        expect(state.passwordError).toExist();
+        expect(state).toBeTruthy();
+        expect(state.passwordError).toBeTruthy();
     });
 
     it('reset password error', () => {
@@ -151,18 +151,18 @@ describe('Test the security reducer', () => {
                 user: testUser.User,
                 passwordError: "what an error!"
             }, {type: SET_CONTROL_PROPERTY, control: "AnotherControl", property: "enabled"});
-        expect(state).toExist()
-            .toIncludeKey("passwordError")
-            .toNotIncludeKey("passwordChanged");
+        expect(state).toBeTruthy();
+        expect(state).toIncludeKey("passwordError");
+        expect(state).not.toIncludeKey("passwordChanged");
         // Actually reset the control
         state = security(
             {
                 user: testUser.User,
                 passwordError: "what an error!"
             }, {type: SET_CONTROL_PROPERTY, control: "ResetPassword", property: "enabled"});
-        expect(state).toExist()
-            .toIncludeKey("passwordError")
-            .toIncludeKey("passwordChanged");
+        expect(state).toBeTruthy();
+        expect(state).toIncludeKey("passwordError");
+        expect(state).toIncludeKey("passwordChanged");
         expect(state.passwordError).toBe(null);
         expect(state.passwordChanged).toBe(false);
     });
@@ -175,20 +175,20 @@ describe('Test the security reducer', () => {
     it('refresh success', () => {
         const now = new Date() / 1000 | 0;
         let state = security(undefined, {type: REFRESH_SUCCESS, userDetails: userWithSecurityToken});
-        expect(state).toExist()
-            .toIncludeKey("token");
+        expect(state).toBeTruthy();
+        expect(state).toIncludeKey("token");
         expect(state.token).toBe("1234567890");
-        expect(state.expires).toBeGreaterThanOrEqualTo(now + 86400);
+        expect(state.expires).toBeGreaterThanOrEqual(now + 86400);
         expect(state.refresh_token).toBe("abcdef");
     });
 
     it('refresh success without expire', () => {
         const now = new Date() / 1000 | 0;
         let state = security(undefined, {type: REFRESH_SUCCESS, userDetails: securityTokenState});
-        expect(state).toExist()
-            .toIncludeKey("token");
+        expect(state).toBeTruthy();
+        expect(state).toIncludeKey("token");
         expect(state.token).toBe("1234567890");
-        expect(state.expires).toBeGreaterThanOrEqualTo(now + 48 * 60 * 60);
+        expect(state.expires).toBeGreaterThanOrEqual(now + 48 * 60 * 60);
         expect(state.refresh_token).toBe("abcdef");
     });
 
@@ -197,8 +197,8 @@ describe('Test the security reducer', () => {
             {user: userWithSecurityToken.User, token: "aaa", refresh_token: "bbb"},
             {type: SESSION_VALID, userDetails: securityTokenState}
         );
-        expect(state).toExist()
-            .toIncludeKey("token");
+        expect(state).toBeTruthy();
+        expect(state).toIncludeKey("token");
         expect(state.token).toBe("aaa");
         expect(state.refresh_token).toBe("bbb");
         expect(state.user.name).toBe("sec2");

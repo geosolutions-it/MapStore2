@@ -39,7 +39,7 @@ describe('MapSearch Plugin', () => {
         });
         // check container for burger menu
         ReactDOM.render(<Plugin />, document.getElementById("container"));
-        expect(document.getElementById('map-search-bar')).toExist();
+        expect(document.getElementById('map-search-bar')).toBeTruthy();
     });
     describe('test search configuration', () => {
         let oldURL;
@@ -57,7 +57,7 @@ describe('MapSearch Plugin', () => {
             const { Plugin, actions } = getPluginForTest(MapSearch, storeState);
             ReactDOM.render(<Plugin />, document.getElementById("container"));
             const clearButton = document.querySelector('.glyphicon-1-close');
-            expect(clearButton).toExist();
+            expect(clearButton).toBeTruthy();
             ConfigUtils.setConfigProp('geoStoreUrl', TEST_URL);
             ReactTestUtils.Simulate.click(clearButton);
             expect(actions.length).toBe(1);

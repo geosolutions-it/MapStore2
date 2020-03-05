@@ -15,12 +15,12 @@ describe('Identify Coordinate Viewer Component', () => {
     it('Viewer rendering with defaults', () => {
         ReactDOM.render(<Viewer />, document.getElementById("container"));
         const el = document.querySelector('.col-xs-12');
-        expect(el).toExist();
+        expect(el).toBeTruthy();
     });
     it('Viewer rendering with className', () => {
         ReactDOM.render(<Viewer className="TEST"/>, document.getElementById("container"));
         const el = document.querySelector('.TEST');
-        expect(el).toExist();
+        expect(el).toBeTruthy();
     });
 
     it('decimal coordinates', () => {

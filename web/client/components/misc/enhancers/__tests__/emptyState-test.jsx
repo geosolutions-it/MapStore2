@@ -40,28 +40,28 @@ describe('emptyState enhancher', () => {
         ReactDOM.render(<CMP />, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('#EMPTY_CONTENT');
-        expect(el).toExist();
+        expect(el).toBeTruthy();
     });
     it('emptyState rendering with content (children)', () => {
         ReactDOM.render(<CMP><div content="CONTENT">CONTENT</div></CMP>, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('#EMPTY_CONTENT');
-        expect(el).toNotExist();
+        expect(el).toBeFalsy();
         const content = container.querySelector('#CONTENT');
-        expect(content).toNotExist();
+        expect(content).toBeFalsy();
     });
     it('emptyState rendering with content (prop)', () => {
         ReactDOM.render(<PropCMP />, document.getElementById("container"));
         const container = document.getElementById('container');
         let empty = container.querySelector('#EMPTY_CONTENT');
-        expect(empty).toExist();
+        expect(empty).toBeTruthy();
         let content = container.querySelector('#CONTENT');
-        expect(content).toNotExist();
+        expect(content).toBeFalsy();
         ReactDOM.render(<PropCMP prop={"CONTENT"}><div content="CONTENT"></div></PropCMP>, document.getElementById("container"));
         empty = container.querySelector('#EMPTY_CONTENT');
-        expect(empty).toNotExist();
+        expect(empty).toBeFalsy();
         content = container.querySelector('#PropCMP');
-        expect(content).toExist();
+        expect(content).toBeTruthy();
     });
     it('custom component with transformed component props', () => {
         const CMP2 = emptyState(
@@ -72,6 +72,6 @@ describe('emptyState enhancher', () => {
         ReactDOM.render(<CMP2 emptyId="EMPTY"/>, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('#EMPTY');
-        expect(el).toExist();
+        expect(el).toBeTruthy();
     });
 });

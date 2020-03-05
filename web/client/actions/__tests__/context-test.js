@@ -12,7 +12,7 @@ describe('context actions', () => {
         const mapId = "test";
         const contextName = "contextName";
         const retVal = loadContext({ mapId, contextName });
-        expect(retVal).toExist();
+        expect(retVal).toBeTruthy();
         expect(retVal.type).toBe(LOAD_CONTEXT);
         expect(retVal.mapId).toBe(mapId);
         expect(retVal.contextName).toBe(contextName);
@@ -20,14 +20,14 @@ describe('context actions', () => {
     it('setContext', () => {
         const context = {};
         const retVal = setContext(context);
-        expect(retVal).toExist();
+        expect(retVal).toBeTruthy();
         expect(retVal.type).toBe(SET_CURRENT_CONTEXT);
         expect(retVal.context).toBe(context);
     });
     it('setResource', () => {
         const resource = {};
         const retVal = setResource(resource);
-        expect(retVal).toExist();
+        expect(retVal).toBeTruthy();
         expect(retVal.type).toBe(SET_RESOURCE);
         expect(retVal.resource).toBe(resource);
     });
@@ -45,13 +45,13 @@ describe('context actions', () => {
     it('contextLoadError', () => {
         const ERROR = Error("test");
         const retVal = contextLoadError({ error: ERROR });
-        expect(retVal).toExist();
+        expect(retVal).toBeTruthy();
         expect(retVal.type).toBe(CONTEXT_LOAD_ERROR);
         expect(retVal.error).toBe(ERROR);
     });
     it('loadFinished', () => {
         const retVal = loadFinished();
-        expect(retVal).toExist();
+        expect(retVal).toBeTruthy();
         expect(retVal.type).toBe(LOAD_FINISHED);
     });
 });

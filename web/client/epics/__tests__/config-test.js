@@ -46,7 +46,7 @@ describe('config epics', () => {
         it('load existing configuration file', (done) => {
             mockAxios.onGet("/base/web/client/test-resources/testConfig.json").reply(() => ([ 200, {} ]));
             const checkActions = ([a]) => {
-                expect(a).toExist();
+                expect(a).toBeTruthy();
                 expect(a.type).toBe(MAP_CONFIG_LOADED);
                 done();
             };
@@ -59,7 +59,7 @@ describe('config epics', () => {
         it('load existing configuration file, with unsupported projection 31468', (done) => {
             mockAxios.onGet("/base/web/client/test-resources/testConfigEPSG31468.json").reply(() => ([ 200, testConfigEPSG31468 ]));
             const checkActions = ([a]) => {
-                expect(a).toExist();
+                expect(a).toBeTruthy();
                 expect(a.type).toBe(MAP_CONFIG_LOAD_ERROR);
                 expect(a.error).toEqual({errorMessageParams: {projection: "EPSG:31468"}, messageId: "map.errors.loading.projectionError"});
                 done();
@@ -74,7 +74,7 @@ describe('config epics', () => {
             mockAxios.onGet("/base/web/client/test-resources/testConfig.json").reply(() => ([ 200, {} ]));
             mockAxios.onGet("/base/web/client/test-resources/testConfig.json").reply(() => ([ 200, {} ]));
             const checkActions = ([a, b]) => {
-                expect(a).toExist();
+                expect(a).toBeTruthy();
                 expect(a.type).toBe(MAP_CONFIG_LOADED);
                 expect(b.type).toBe(LOAD_MAP_INFO);
                 done();
@@ -88,7 +88,7 @@ describe('config epics', () => {
         it('does not load a missing configuration file', (done) => {
             mockAxios.onGet("missingConfig.json").reply(() => ([ 404, {} ]));
             const checkActions = ([a]) => {
-                expect(a).toExist();
+                expect(a).toBeTruthy();
                 expect(a.type).toBe(MAP_CONFIG_LOAD_ERROR);
                 done();
             };
@@ -100,7 +100,7 @@ describe('config epics', () => {
         it('load broken configuration file', (done) => {
             mockAxios.onGet("/base/web/client/test-resources/testConfig.broken.json").reply(() => ([ 200, configBroken  ]));
             const checkActions = ([a]) => {
-                expect(a).toExist();
+                expect(a).toBeTruthy();
                 expect(a.type).toBe(MAP_CONFIG_LOAD_ERROR);
                 done();
             };
@@ -115,7 +115,7 @@ describe('config epics', () => {
             testEpic(loadMapConfigAndConfigureMap, NUM_ACTIONS, loadMapConfig('new.json'), (actions) => {
                 expect(actions.length).toBe(NUM_ACTIONS);
                 const action = head(actions);
-                expect(action).toExist();
+                expect(action).toBeTruthy();
                 expect(action.type).toBe(MAP_CONFIG_LOAD_ERROR);
                 expect(action.error.status).toBe(403);
                 done();
@@ -127,7 +127,7 @@ describe('config epics', () => {
             testEpic(loadMapConfigAndConfigureMap, NUM_ACTIONS, loadMapConfig('new.json', null, { version: 2}), (actions) => {
                 expect(actions.length).toBe(NUM_ACTIONS);
                 const [a] = actions;
-                expect(a).toExist();
+                expect(a).toBeTruthy();
                 expect(a.type).toBe(MAP_CONFIG_LOADED);
                 done();
             });
@@ -138,7 +138,7 @@ describe('config epics', () => {
             testEpic(loadMapConfigAndConfigureMap, NUM_ACTIONS, loadMapConfig('new.json'), (actions) => {
                 expect(actions.length).toBe(NUM_ACTIONS);
                 const [a1] = actions;
-                expect(a1).toExist();
+                expect(a1).toBeTruthy();
                 expect(a1.type).toBe(MAP_CONFIG_LOADED);
                 done();
             }, {
@@ -158,7 +158,7 @@ describe('config epics', () => {
             testEpic(loadMapConfigAndConfigureMap, NUM_ACTIONS, loadMapConfig('new.json'), (actions) => {
                 expect(actions.length).toBe(NUM_ACTIONS);
                 const [a1] = actions;
-                expect(a1).toExist();
+                expect(a1).toBeTruthy();
                 expect(a1.type).toBe(MAP_CONFIG_LOADED);
                 done();
             }, {
@@ -183,7 +183,7 @@ describe('config epics', () => {
 
         it('load map info', (done) => {
             const checkActions = ([a, b]) => {
-                expect(a).toExist();
+                expect(a).toBeTruthy();
                 expect(a.type).toBe(MAP_INFO_LOAD_START);
                 expect(b.type).toBe(MAP_INFO_LOADED);
                 done();

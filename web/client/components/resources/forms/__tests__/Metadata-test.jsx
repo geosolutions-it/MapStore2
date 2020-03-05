@@ -80,7 +80,7 @@ describe('Metadata component', () => {
         input.value = "test.text.stuff";
         ReactTestUtils.Simulate.change(input); // <-- trigger event callback
         expect(spyonChange).toHaveBeenCalled();
-        expect(spyonChange.calls[0].arguments[1]).toBe('test,text,stuff');
+        expect(spyonChange.mock.calls[0][1]).toBe('test,text,stuff');
     });
     it('Metadata rendering Modified At label when modifiedAt prop is undefined', () => {
         const resource = {

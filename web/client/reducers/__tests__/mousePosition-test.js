@@ -21,7 +21,7 @@ describe('Test the mousePosition reducer', () => {
             enabled: true
         };
         let state = mousePosition( {}, testAction);
-        expect(state.enabled).toExist();
+        expect(state.enabled).toBeTruthy();
         expect(state.enabled).toBe(true);
     });
 
@@ -31,7 +31,7 @@ describe('Test the mousePosition reducer', () => {
             position: {lat: 0, lng: -55 }
         };
         let state = mousePosition( {}, testAction);
-        expect(state.position).toExist();
+        expect(state.position).toBeTruthy();
         expect(state.position.lat).toBe(0);
         expect(state.position.lng).toBe(-55);
     });
@@ -43,7 +43,7 @@ describe('Test the mousePosition reducer', () => {
             crs: 'EPSG:900911'
         };
         let state = mousePosition( {}, testAction);
-        expect(state.crs).toExist();
+        expect(state.crs).toBeTruthy();
         expect(state.crs).toBe('EPSG:900911');
     });
 

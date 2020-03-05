@@ -36,20 +36,20 @@ describe("Test GroupGrid Component", () => {
     it('Test group grid rendering', () => {
         let comp = ReactDOM.render(
             <GroupGrid groups={[group1]}/>, document.getElementById("container"));
-        expect(comp).toExist();
+        expect(comp).toBeTruthy();
         comp = ReactDOM.render(
             <GroupGrid groups={[group1]} loading/>, document.getElementById("container"));
-        expect(comp).toExist();
+        expect(comp).toBeTruthy();
         let domNode = ReactDOM.findDOMNode(comp);
         expect(domNode.className).toBe("container-fluid");
         let rows = ReactTestUtils.scryRenderedDOMComponentsWithClass(
             comp,
             "row"
         );
-        expect(rows).toExist();
+        expect(rows).toBeTruthy();
         expect(rows.length).toBe(1);
         let card = ReactTestUtils.scryRenderedDOMComponentsWithClass(comp, "gridcard");
-        expect(card).toExist();
+        expect(card).toBeTruthy();
         expect(card.length).toBe(1);
         let buttons = ReactTestUtils.scryRenderedDOMComponentsWithClass(
             comp,
@@ -62,7 +62,7 @@ describe("Test GroupGrid Component", () => {
     it('Test everyone\'s group rendering in grid', () => {
         let comp = ReactDOM.render(
             <GroupGrid groups={[{id: 999, groupName: "everyone"}]} loading/>, document.getElementById("container"));
-        expect(comp).toExist();
+        expect(comp).toBeTruthy();
         let domNode = ReactDOM.findDOMNode(comp);
         expect(domNode.className).toBe("container-fluid");
         let buttons = ReactTestUtils.scryRenderedDOMComponentsWithClass(
@@ -80,7 +80,7 @@ describe("Test GroupGrid Component", () => {
         const spyDelete = expect.spyOn(testHandlers, 'onDelete');
         let comp = ReactDOM.render(
             <GroupGrid groups={[group1]} onEdit={testHandlers.onEdit} onDelete={testHandlers.onDelete}/>, document.getElementById("container"));
-        expect(comp).toExist();
+        expect(comp).toBeTruthy();
         let domNode = ReactDOM.findDOMNode(comp);
         expect(domNode.className).toBe("container-fluid");
         let buttons = ReactTestUtils.scryRenderedDOMComponentsWithClass(
@@ -90,8 +90,8 @@ describe("Test GroupGrid Component", () => {
         expect(buttons.length).toBe(2);
         ReactTestUtils.Simulate.click(buttons[0]);
         ReactTestUtils.Simulate.click(buttons[1]);
-        expect(spyEdit.calls.length).toEqual(1);
-        expect(spyDelete.calls.length).toEqual(1);
+        expect(spyEdit.mock.calls.length).toEqual(1);
+        expect(spyDelete.mock.calls.length).toEqual(1);
     });
 
 });

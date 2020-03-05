@@ -36,7 +36,7 @@ describe('BurgerMenu plugin', () => {
         }];
         ReactDOM.render(<Plugin items={items}/>, document.getElementById("container"));
         const burgerMenuSpan = document.getElementById('mapstore-burger-menu');
-        expect(burgerMenuSpan).toExist();
+        expect(burgerMenuSpan).toBeTruthy();
         const liEls = document.querySelectorAll('.dropdown-menu > li');
         expect(liEls.length).toBe(2);
     });
@@ -54,11 +54,11 @@ describe('BurgerMenu plugin', () => {
         }];
         ReactDOM.render(<Plugin items={items}/>, document.getElementById("container"));
         const burgerMenuSpan = document.getElementById('mapstore-burger-menu');
-        expect(burgerMenuSpan).toExist();
+        expect(burgerMenuSpan).toBeTruthy();
         const liEls = document.querySelectorAll('.dropdown-menu > li');
         expect(liEls.length).toBe(1);
         const submenuDiv = liEls[0].querySelector('.burger-menu-submenu');
-        expect(submenuDiv).toExist();
+        expect(submenuDiv).toBeTruthy();
         expect(submenuDiv.querySelectorAll('.burger-menu-submenu li').length).toBe(1);
     });
 });

@@ -32,7 +32,7 @@ describe('Builder component', () => {
         ReactDOM.render(<Builder />, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('.ms-geostory-builder');
-        expect(el).toExist();
+        expect(el).toBeTruthy();
         expect(el.querySelectorAll('button').length).toBe(4);
     });
     it('Builder rendering with sections', () => {
@@ -41,8 +41,8 @@ describe('Builder component', () => {
         </Provider>, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('.ms-geostory-builder');
-        expect(el).toExist();
-        expect(el.querySelector('.mapstore-side-preview')).toExist();
+        expect(el).toBeTruthy();
+        expect(el.querySelector('.mapstore-side-preview')).toBeTruthy();
         expect(el.querySelectorAll('.mapstore-side-preview').length).toBe(3); // 3 sections
 
     });
@@ -52,8 +52,8 @@ describe('Builder component', () => {
         </Provider>, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('.msSideGrid');
-        expect(el).toExist();
-        expect(el.querySelector('.mapstore-side-preview')).toExist();
+        expect(el).toBeTruthy();
+        expect(el.querySelector('.mapstore-side-preview')).toBeTruthy();
         expect(el.querySelectorAll('.ms-section-preview-icon').length).toBe(0); // 3 sections + 2 columns with preview disabled
     });
 });

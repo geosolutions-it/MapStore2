@@ -38,6 +38,6 @@ describe('MapWizard component', () => {
         ReactDOM.render(<Provider store={store}><MapWizard editorData={{ map }} /></Provider>, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('.ms-wizard');
-        expect(el).toExist();
+        expect(el).toBeTruthy();
     });
 });

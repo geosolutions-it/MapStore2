@@ -91,10 +91,10 @@ describe('PluginsContainer', () => {
     it('checks filterDisabledPlugins one disabled', () => {
         const cmp = ReactDOM.render(<PluginsContainer mode="desktop" defaultMode="desktop" params={{}}
             plugins={plugins} pluginsConfig={pluginsCfg}/>, document.getElementById("container"));
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
 
         const cmpDom = ReactDOM.findDOMNode(cmp);
-        expect(cmpDom).toExist();
+        expect(cmpDom).toBeTruthy();
 
         const rendered = cmpDom.getElementsByTagName("div");
         expect(rendered.length).toBe(1);
@@ -103,10 +103,10 @@ describe('PluginsContainer', () => {
     it('checks filterDisabledPlugins no disabled', () => {
         const cmp = ReactDOM.render(<PluginsContainer mode="desktop" defaultMode="desktop" params={{}}
             plugins={plugins} pluginsConfig={pluginsCfg2} />, document.getElementById("container"));
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
 
         const cmpDom = ReactDOM.findDOMNode(cmp);
-        expect(cmpDom).toExist();
+        expect(cmpDom).toBeTruthy();
 
         const rendered = cmpDom.getElementsByTagName("div");
         expect(rendered.length).toBe(2);
@@ -115,10 +115,10 @@ describe('PluginsContainer', () => {
         // Not rendered without container
         let cmp = ReactDOM.render(<PluginsContainer mode="desktop" defaultMode="desktop" params={{}}
             plugins={plugins} pluginsConfig={pluginsCfg3} />, document.getElementById("container"));
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
 
         let cmpDom = ReactDOM.findDOMNode(cmp);
-        expect(cmpDom).toExist();
+        expect(cmpDom).toBeTruthy();
 
         let rendered = cmpDom.getElementsByTagName("div");
 
@@ -126,13 +126,13 @@ describe('PluginsContainer', () => {
         expect(rendered.length).toBe(1);
         cmp = ReactDOM.render(<PluginsContainer mode="desktop" defaultMode="desktop" params={{}}
             plugins={plugins} pluginsConfig={pluginsCfg4} />, document.getElementById("container"));
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
 
         cmpDom = ReactDOM.findDOMNode(cmp);
-        expect(cmpDom).toExist();
+        expect(cmpDom).toBeTruthy();
 
         rendered = cmpDom.getElementsByTagName("div");
-        expect(document.getElementById('no-impl-item-no-root-plugin')).toNotExist();
-        expect(document.getElementById('no-root')).toExist();
+        expect(document.getElementById('no-impl-item-no-root-plugin')).toBeFalsy();
+        expect(document.getElementById('no-root')).toBeTruthy();
     });
 });

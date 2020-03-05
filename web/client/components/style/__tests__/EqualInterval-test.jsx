@@ -24,7 +24,7 @@ describe("Test the EqualInterval component", () => {
 
     it('creates component with defaults', () => {
         const cmp = ReactDOM.render(<EqualInterval/>, document.getElementById("container"));
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
         cmp.generateEqualIntervalRamp();
         cmp.props.onChange();
     });

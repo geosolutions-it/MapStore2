@@ -80,12 +80,12 @@ const {
 describe('Test correctness of the annotations actions', () => {
     it('edit annotation', (done) => {
         const result = editAnnotation('1');
-        expect(result).toExist();
+        expect(result).toBeTruthy();
         expect(isFunction(result)).toBe(true);
         result((action) => {
             expect(action.type).toEqual(EDIT_ANNOTATION);
             expect(action.featureType).toEqual('Point');
-            expect(action.feature).toExist();
+            expect(action.feature).toBeTruthy();
             expect(action.feature.properties.name).toEqual('myannotation');
             done();
         }, () => ({
@@ -209,8 +209,8 @@ describe('Test correctness of the annotations actions', () => {
         expect(result.type).toEqual(SAVE_ANNOTATION);
         expect(result.id).toEqual('1');
         expect(result.fields.name).toEqual('changed');
-        expect(result.geometry).toExist();
-        expect(result.style).toExist();
+        expect(result.geometry).toBeTruthy();
+        expect(result.style).toBeTruthy();
         expect(result.newFeature).toBe(true);
     });
 
@@ -232,13 +232,13 @@ describe('Test correctness of the annotations actions', () => {
     it('set style', () => {
         const result = setStyle({});
         expect(result.type).toEqual(SET_STYLE);
-        expect(result.style).toExist();
+        expect(result.style).toBeTruthy();
     });
 
     it('update annotation geometry', () => {
         const result = updateAnnotationGeometry({});
         expect(result.type).toEqual(UPDATE_ANNOTATION_GEOMETRY);
-        expect(result.geometry).toExist();
+        expect(result.geometry).toBeTruthy();
     });
 
     it('validation error', () => {
@@ -346,7 +346,7 @@ describe('Test correctness of the annotations actions', () => {
     it('load  annotations', () => {
         const result = loadAnnotations([]);
         expect(result.type).toEqual(LOAD_ANNOTATIONS);
-        expect(result.features).toExist();
+        expect(result.features).toBeTruthy();
         expect(result.override).toBe(false);
     });
 });

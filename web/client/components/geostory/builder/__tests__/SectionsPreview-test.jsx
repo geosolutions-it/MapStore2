@@ -31,7 +31,7 @@ describe('SectionsPreview component', () => {
         ReactDOM.render(<SectionsPreview/>, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('.msSideGrid');
-        expect(el).toExist();
+        expect(el).toBeTruthy();
     });
     it('SectionsPreview rendering with sections, preview enabled', () => {
 
@@ -40,7 +40,7 @@ describe('SectionsPreview component', () => {
         </Provider>, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('.msSideGrid');
-        expect(el).toExist();
+        expect(el).toBeTruthy();
         expect(el.querySelectorAll('.items-list > div').length).toBe(3); // 3 (sections) + 2 (first inner) + 2 (second inner) + 1 (title inner)
         expect(el.querySelectorAll('.mapstore-side-preview').length).toBe(3);
     });
@@ -52,7 +52,7 @@ describe('SectionsPreview component', () => {
             </Provider>, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('.msSideGrid');
-        expect(el).toExist();
+        expect(el).toBeTruthy();
         expect(el.querySelectorAll('.items-list > div').length).toBe(11); // one for each card in the side grid
         expect(el.querySelectorAll('.mapstore-side-preview').length).toBe(11);
     });

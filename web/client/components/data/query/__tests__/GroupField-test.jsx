@@ -27,7 +27,7 @@ describe('GroupField', () => {
 
     it('creates the GroupField component with his default content', () => {
         const groupfield = ReactDOM.render(<GroupField/>, document.getElementById("container"));
-        expect(groupfield).toExist();
+        expect(groupfield).toBeTruthy();
     });
 
     it('creates the GroupField component with initial content', () => {
@@ -82,18 +82,18 @@ describe('GroupField', () => {
             document.getElementById("container")
         );
 
-        expect(groupfield).toExist();
-        expect(groupfield.props.filterFields).toExist();
+        expect(groupfield).toBeTruthy();
+        expect(groupfield.props.filterFields).toBeTruthy();
         expect(groupfield.props.filterFields.length).toBe(2);
-        expect(groupfield.props.groupFields).toExist();
+        expect(groupfield.props.groupFields).toBeTruthy();
         expect(groupfield.props.groupFields.length).toBe(1);
-        expect(groupfield.props.groupLevels).toExist();
+        expect(groupfield.props.groupLevels).toBeTruthy();
         expect(groupfield.props.groupLevels).toBe(5);
-        expect(groupfield.props.attributes).toExist();
+        expect(groupfield.props.attributes).toBeTruthy();
         expect(groupfield.props.attributes.length).toBe(1);
 
-        const groupFieldDOMNode = expect(ReactDOM.findDOMNode(groupfield));
-        expect(groupFieldDOMNode).toExist();
+        const groupFieldDOMNode = ReactDOM.findDOMNode(groupfield);
+        expect(groupFieldDOMNode).toBeTruthy();
 
         let containerGroupPanel = document.getElementsByClassName('panel-body')[0];
         let childNodes = containerGroupPanel.childNodes;
@@ -207,26 +207,26 @@ describe('GroupField', () => {
             document.getElementById("container")
         );
 
-        expect(groupfield).toExist();
-        expect(groupfield.props.filterFields).toExist();
+        expect(groupfield).toBeTruthy();
+        expect(groupfield.props.filterFields).toBeTruthy();
         expect(groupfield.props.filterFields.length).toBe(2);
-        expect(groupfield.props.groupFields).toExist();
+        expect(groupfield.props.groupFields).toBeTruthy();
         expect(groupfield.props.groupFields.length).toBe(1);
-        expect(groupfield.props.groupLevels).toExist();
+        expect(groupfield.props.groupLevels).toBeTruthy();
         expect(groupfield.props.groupLevels).toBe(5);
-        expect(groupfield.props.attributes).toExist();
+        expect(groupfield.props.attributes).toBeTruthy();
         expect(groupfield.props.attributes.length).toBe(2);
 
-        const groupFieldDOMNode = expect(ReactDOM.findDOMNode(groupfield));
-        expect(groupFieldDOMNode).toExist();
+        const groupFieldDOMNode = ReactDOM.findDOMNode(groupfield);
+        expect(groupFieldDOMNode).toBeTruthy();
 
         let groupPanel = document.getElementsByClassName('panel-body')[0];
         let childNodes = groupPanel.childNodes;
         expect(childNodes.length).toBe(1);
 
-        let selectBtn = groupFieldDOMNode.actual.getElementsByClassName('rw-dropdownlist-picker rw-select rw-btn')[5];
+        let selectBtn = groupFieldDOMNode.getElementsByClassName('rw-dropdownlist-picker rw-select rw-btn')[5];
         selectBtn.click();
-        let options = groupFieldDOMNode.actual.getElementsByClassName('rw-list-option');
+        let options = groupFieldDOMNode.getElementsByClassName('rw-list-option');
         expect(options.length).toBe(2);
         expect(options[0].childNodes[0].nodeValue).toBe("attribute_a");
         expect(options[1].childNodes[0].nodeValue).toBe("attribute_b");

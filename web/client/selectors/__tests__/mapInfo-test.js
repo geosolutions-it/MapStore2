@@ -132,7 +132,7 @@ describe('Test mapinfo selectors', () => {
     });
     it('test generalInfoFormatSelector ', () => {
         const mapinfo = generalInfoFormatSelector({mapInfo: {configuration: {infoFormat: "text/html"}}});
-        expect(mapinfo).toExist();
+        expect(mapinfo).toBeTruthy();
         expect(mapinfo).toBe("text/html");
     });
     it('test mapInfoRequestsSelector no state', () => {
@@ -312,31 +312,31 @@ describe('Test mapinfo selectors', () => {
     it('test clickedPointWithFeaturesSelector', () => {
         // default
         expect(clickedPointWithFeaturesSelector({})).toBe(undefined);
-        expect(clickedPointWithFeaturesSelector(RESPONSE_STATE)).toExist();
+        expect(clickedPointWithFeaturesSelector(RESPONSE_STATE)).toBeTruthy();
 
         const clickedPoint = clickedPointWithFeaturesSelector(
             RESPONSE_STATE_WITH_FEATURES_METADATA
         );
-        expect(clickedPoint).toExist();
-        expect(clickedPoint.pixel).toExist();
-        expect(clickedPoint.latlng).toExist();
+        expect(clickedPoint).toBeTruthy();
+        expect(clickedPoint.pixel).toBeTruthy();
+        expect(clickedPoint.latlng).toBeTruthy();
 
         // when highlight is false, do not return features
-        expect(clickedPoint.features).toNotExist();
-        expect(clickedPoint.featuresCrs).toNotExist();
+        expect(clickedPoint.features).toBeFalsy();
+        expect(clickedPoint.featuresCrs).toBeFalsy();
 
         // with highlight and features, returns features
         const STATE_HIGHLIGHT = { mapInfo: {...RESPONSE_STATE_WITH_FEATURES_METADATA.mapInfo, highlight: true}};
         const clickedPointFeatures = clickedPointWithFeaturesSelector(STATE_HIGHLIGHT);
-        expect(clickedPointFeatures.features).toExist();
+        expect(clickedPointFeatures.features).toBeTruthy();
         expect(clickedPointFeatures.features.length).toBe(1);
         // radius have to be included for points, multipoints...
-        expect(clickedPointFeatures.features[0].style.radius).toExist();
+        expect(clickedPointFeatures.features[0].style.radius).toBeTruthy();
 
         // radius have to be excluded for polygons ( or the style will be not visible, because interpreted as a Circle)... (TODO: do it in VectorStyle)
         expect(clickedPointWithFeaturesSelector(
             set('mapInfo.responses[0].layerMetadata.features[0].geometry.type', "Polygon", STATE_HIGHLIGHT)
-        ).features[0].style.radius).toNotExist();
+        ).features[0].style.radius).toBeFalsy();
     });
 
 });

@@ -21,7 +21,7 @@ describe('DateTimePicker component', () => {
         ReactDOM.render(<DateTimePicker />, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('.rw-datetimepicker');
-        expect(el).toExist();
+        expect(el).toBeTruthy();
     });
 
 

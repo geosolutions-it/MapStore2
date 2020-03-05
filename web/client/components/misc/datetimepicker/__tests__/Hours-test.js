@@ -19,7 +19,7 @@ describe('Hours component', () => {
         ReactDOM.render(<Hours />, document.getElementById("container"));
         const container = document.getElementById('container');
         const hour = container.querySelector('.rw-list-option');
-        expect(hour).toExist();
+        expect(hour).toBeTruthy();
     });
 
     it('Hours call on select when mouse click time', () => {

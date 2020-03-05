@@ -192,7 +192,7 @@ describe('Openlayers layer', () => {
             <OpenlayersLayer source={source}
                 map={map}/>, document.getElementById("container"));
 
-        expect(layer).toExist();
+        expect(layer).toBeTruthy();
         // count layers
         expect(map.getLayers().getLength()).toBe(0);
     });
@@ -210,7 +210,7 @@ describe('Openlayers layer', () => {
             <OpenlayersLayer source={source}
                 options={options} map={map}/>, document.getElementById("container"));
 
-        expect(layer).toExist();
+        expect(layer).toBeTruthy();
         // count layers
         // count layers
         expect(map.getLayers().getLength()).toBe(0);
@@ -228,7 +228,7 @@ describe('Openlayers layer', () => {
             <OpenlayersLayer source={source}
                 options={options} map={map}/>, document.getElementById("container"));
 
-        expect(layer).toExist();
+        expect(layer).toBeTruthy();
         // count layers
         expect(map.getLayers().getLength()).toBe(0);
     });
@@ -239,7 +239,7 @@ describe('Openlayers layer', () => {
             <OpenlayersLayer type="osm"
                 options={options} map={map}/>, document.getElementById("container"));
 
-        expect(layer).toExist();
+        expect(layer).toBeTruthy();
         // count layers
         expect(map.getLayers().getLength()).toBe(1);
     });
@@ -255,7 +255,7 @@ describe('Openlayers layer', () => {
             <OpenlayersLayer type="osm"
                 options={options} map={map}/>, document.getElementById("container"));
 
-        expect(layer).toExist();
+        expect(layer).toBeTruthy();
         // count layers
         expect(map.getLayers().getLength()).toBe(1);
     });
@@ -275,11 +275,11 @@ describe('Openlayers layer', () => {
                 options={options} map={map}/>, document.getElementById("container"));
 
 
-        expect(layer).toExist();
+        expect(layer).toBeTruthy();
         // count layers
         expect(map.getLayers().getLength()).toBe(1);
         expect(map.getLayers().item(0).getSource().urls.length).toBe(1);
-        expect(map.getLayers().item(0).getSource().getAttributions()).toNotExist();
+        expect(map.getLayers().item(0).getSource().getAttributions()).toBeFalsy();
     });
 
     it('test wms vector formats', () => {
@@ -299,7 +299,7 @@ describe('Openlayers layer', () => {
             }}
             map={map} />, document.getElementById("container"));
 
-        expect(layer).toExist();
+        expect(layer).toBeTruthy();
         expect(map.getLayers().getLength()).toBe(1);
         expect(layer.layer.getType()).toBe('VECTOR_TILE');
         expect(layer.layer.getSource().format_.constructor.name).toBe('GeoJSON');
@@ -311,7 +311,7 @@ describe('Openlayers layer', () => {
                 format: 'application/vnd.mapbox-vector-tile'
             }}
             map={map} />, document.getElementById("container"));
-        expect(layer).toExist();
+        expect(layer).toBeTruthy();
         expect(map.getLayers().getLength()).toBe(1);
         expect(layer.layer.getType()).toBe('VECTOR_TILE');
         expect(layer.layer.getSource().format_.constructor.name).toBe('MVT');
@@ -324,7 +324,7 @@ describe('Openlayers layer', () => {
             }}
             map={map} />, document.getElementById("container"));
 
-        expect(layer).toExist();
+        expect(layer).toBeTruthy();
         expect(map.getLayers().getLength()).toBe(1);
         expect(layer.layer.getType()).toBe('VECTOR_TILE');
         expect(layer.layer.getSource().format_.constructor.name).toBe('TopoJSON');
@@ -352,13 +352,13 @@ describe('Openlayers layer', () => {
             }}
             map={map} />, document.getElementById("container"));
 
-        expect(layer).toExist();
+        expect(layer).toBeTruthy();
         expect(map.getLayers().getLength()).toBe(1);
         expect(layer.layer.getType()).toBe('VECTOR_TILE');
         expect(layer.layer.getSource().format_.constructor.name).toBe('GeoJSON');
         setTimeout(() => {
             const style = layer.layer.getStyle();
-            expect(style).toExist();
+            expect(style).toBeTruthy();
             expect(style.getStroke().getColor()).toBe('rgb(255, 0, 0)');
             expect(style.getFill().getColor()).toBe('rgba(255, 255, 0, 0.5)');
             done();
@@ -414,13 +414,13 @@ describe('Openlayers layer', () => {
             }}
             map={map} />, document.getElementById("container"));
 
-        expect(layer).toExist();
+        expect(layer).toBeTruthy();
         expect(map.getLayers().getLength()).toBe(1);
         expect(layer.layer.getType()).toBe('VECTOR_TILE');
         expect(layer.layer.getSource().format_.constructor.name).toBe('GeoJSON');
         setTimeout(() => {
             const style = layer.layer.getStyle();
-            expect(style).toExist();
+            expect(style).toBeTruthy();
             expect(style.getStroke().getColor()).toBe('#FF0000');
             expect(style.getFill().getColor()).toBe('rgba(255, 255, 0, 0.5)');
             done();
@@ -451,34 +451,34 @@ describe('Openlayers layer', () => {
             <OpenlayersLayer type="wms"
                 options={options} map={map} />, document.getElementById("container"));
 
-        expect(layer).toExist();
+        expect(layer).toBeTruthy();
         // check creation
         expect(map.getLayers().getLength()).toBe(1);
         expect(map.getLayers().item(0).getSource().urls.length).toBe(1);
-        expect(map.getLayers().item(0).getSource().getAttributions()).toExist();
+        expect(map.getLayers().item(0).getSource().getAttributions()).toBeTruthy();
         expect(map.getLayers().item(0).getSource().getAttributions()()[0]).toBe(TEXT1);
         // check remove
         ReactDOM.render(
             <OpenlayersLayer type="wms"
                 options={{...options, credits: undefined}} map={map} />, document.getElementById("container"));
-        expect(map.getLayers().item(0).getSource().getAttributions()).toNotExist();
+        expect(map.getLayers().item(0).getSource().getAttributions()).toBeFalsy();
         // check update
         ReactDOM.render(
             <OpenlayersLayer type="wms"
                 options={{ ...options, credits: {title: TEXT2} }} map={map} />, document.getElementById("container"));
-        expect(map.getLayers().item(0).getSource().getAttributions()).toExist();
+        expect(map.getLayers().item(0).getSource().getAttributions()).toBeTruthy();
         expect(map.getLayers().item(0).getSource().getAttributions()()[0]).toBe(TEXT2);
         // check content update
         ReactDOM.render(
             <OpenlayersLayer type="wms"
                 options={options} map={map} />, document.getElementById("container"));
-        expect(map.getLayers().item(0).getSource().getAttributions()).toExist();
+        expect(map.getLayers().item(0).getSource().getAttributions()).toBeTruthy();
         expect(map.getLayers().item(0).getSource().getAttributions()()[0]).toBe(TEXT1);
         // check complex contents
         ReactDOM.render(
             <OpenlayersLayer type="wms"
                 options={{...options, credits: CREDITS1}} map={map} />, document.getElementById("container"));
-        expect(map.getLayers().item(0).getSource().getAttributions()).toExist();
+        expect(map.getLayers().item(0).getSource().getAttributions()).toBeTruthy();
         expect(map.getLayers().item(0).getSource().getAttributions()()[0]).toBe('<img src="test.jpg" title="test">');
     });
 
@@ -497,10 +497,10 @@ describe('Openlayers layer', () => {
             <OpenlayersLayer type="wms"
                 options={options} map={map} />, document.getElementById("container"));
 
-        expect(layer).toExist();
+        expect(layer).toBeTruthy();
         // count layers
         expect(map.getLayers().getLength()).toBe(1);
-        expect(map.getLayers().item(0).get('getElevation')).toExist();
+        expect(map.getLayers().item(0).get('getElevation')).toBeTruthy();
     });
 
     it('creates a single tile wms layer for openlayers map', () => {
@@ -518,11 +518,11 @@ describe('Openlayers layer', () => {
             <OpenlayersLayer type="wms"
                 options={options} map={map} />, document.getElementById("container"));
 
-        expect(layer).toExist();
+        expect(layer).toBeTruthy();
         // count layers
         expect(map.getLayers().getLength()).toBe(1);
-        expect(map.getLayers().item(0).getSource().getUrl()).toExist();
-        expect(map.getLayers().item(0).getSource().getAttributions()).toNotExist();
+        expect(map.getLayers().item(0).getSource().getUrl()).toBeTruthy();
+        expect(map.getLayers().item(0).getSource().getAttributions()).toBeFalsy();
     });
     it('single tile wms layer for openlayers map sends tiled=false', (done) => {
         var options = {
@@ -539,7 +539,7 @@ describe('Openlayers layer', () => {
             <OpenlayersLayer type="wms"
                 options={options} map={map} />, document.getElementById("container"));
 
-        expect(layer).toExist();
+        expect(layer).toBeTruthy();
         const loadFun = (image, src) => {
             const tiled = src.match(/TILED=([^&]+)/i)[1];
             expect(tiled.toLowerCase()).toBe("false");
@@ -566,11 +566,11 @@ describe('Openlayers layer', () => {
             <OpenlayersLayer type="wms"
                 options={options} map={map} />, document.getElementById("container"));
 
-        expect(layer).toExist();
+        expect(layer).toBeTruthy();
         // count layers
         expect(map.getLayers().getLength()).toBe(1);
-        expect(map.getLayers().item(0).getSource().getUrl()).toExist();
-        expect(map.getLayers().item(0).getSource().getAttributions()).toExist();
+        expect(map.getLayers().item(0).getSource().getUrl()).toBeTruthy();
+        expect(map.getLayers().item(0).getSource().getAttributions()).toBeTruthy();
     });
 
     it('creates a single tile wms layer for openlayers map ratio', (done) => {
@@ -588,10 +588,10 @@ describe('Openlayers layer', () => {
             <OpenlayersLayer type="wms"
                 options={options} map={map} />, document.getElementById("container"));
 
-        expect(layer).toExist();
+        expect(layer).toBeTruthy();
         // count layers
         expect(map.getLayers().getLength()).toBe(1);
-        expect(map.getLayers().item(0).getSource().getUrl()).toExist();
+        expect(map.getLayers().item(0).getSource().getUrl()).toBeTruthy();
         let width = 0;
         const loadFun = (image, src) => {
             if (width === 0) {
@@ -636,7 +636,7 @@ describe('Openlayers layer', () => {
                 options={options} map={map}/>, document.getElementById("container"));
 
 
-        expect(layer).toExist();
+        expect(layer).toBeTruthy();
         // count layers
         expect(map.getLayers().getLength()).toBe(1);
         expect(map.getLayers().item(0).getSource().urls.length).toBe(1);
@@ -665,7 +665,7 @@ describe('Openlayers layer', () => {
                 options={options} map={map} />, document.getElementById("container"));
 
 
-        expect(layer).toExist();
+        expect(layer).toBeTruthy();
         // count layers
         expect(map.getLayers().getLength()).toBe(1);
         expect(map.getLayers().item(0).getSource().urls.length).toBe(1);
@@ -687,7 +687,7 @@ describe('Openlayers layer', () => {
                 options={options} map={map}/>, document.getElementById("container"));
 
 
-        expect(layer).toExist();
+        expect(layer).toBeTruthy();
         // count layers
         expect(map.getLayers().getLength()).toBe(1);
 
@@ -711,7 +711,7 @@ describe('Openlayers layer', () => {
                 options={options} map={map} />, document.getElementById("container"));
 
 
-        expect(layer).toExist();
+        expect(layer).toBeTruthy();
         // count layers
         expect(map.getLayers().getLength()).toBe(1);
 
@@ -752,7 +752,7 @@ describe('Openlayers layer', () => {
                 options={options} map={map} />, document.getElementById("container"));
 
 
-        expect(layer).toExist();
+        expect(layer).toBeTruthy();
         // count layers
         expect(map.getLayers().getLength()).toBe(1);
 
@@ -787,7 +787,7 @@ describe('Openlayers layer', () => {
                 options={options} map={map} />, document.getElementById("container"));
 
 
-        expect(layer).toExist();
+        expect(layer).toBeTruthy();
         // count layers
         expect(map.getLayers().getLength()).toBe(1);
 
@@ -814,14 +814,14 @@ describe('Openlayers layer', () => {
                 options={options} map={map} />, document.getElementById("container"));
 
 
-        expect(layer).toExist();
+        expect(layer).toBeTruthy();
         // count layers
         expect(map.getLayers().getLength()).toBe(1);
 
         const wmtsLayer = map.getLayers().item(0);
         const expectedResolutions = lowResGridset.tileMatrixSet[0].TileMatrix.map(e => e.ScaleDenominator * 0.28E-3);
         wmtsLayer.getSource().getTileGrid().getResolutions().map((v, i) => expect(v).toBe(expectedResolutions[i]));
-        expect(wmtsLayer.getMaxResolution()).toBeMoreThan(wmtsLayer.getSource().getTileGrid().getResolutions()[0]);
+        expect(wmtsLayer.getMaxResolution()).toBeGreaterThan(wmtsLayer.getSource().getTileGrid().getResolutions()[0]);
     });
 
     it('creates a wmts layer with multiple urls for openlayers map', () => {
@@ -846,7 +846,7 @@ describe('Openlayers layer', () => {
                 options={options} map={map}/>, document.getElementById("container"));
 
 
-        expect(layer).toExist();
+        expect(layer).toBeTruthy();
         // count layers
         expect(map.getLayers().getLength()).toBe(1);
         expect(map.getLayers().item(0).getSource().urls.length).toBe(2);
@@ -867,7 +867,7 @@ describe('Openlayers layer', () => {
             <OpenlayersLayer type="wms"
                 options={options} map={map}/>, document.getElementById("container"));
 
-        expect(layer).toExist();
+        expect(layer).toBeTruthy();
         // count layers
         expect(map.getLayers().getLength()).toBe(1);
         expect(map.getLayers().item(0).getProperties().source.getTileGrid().getTileSize()).toBe(512);
@@ -887,7 +887,7 @@ describe('Openlayers layer', () => {
             <OpenlayersLayer type="wms"
                 options={options} map={map}/>, document.getElementById("container"));
 
-        expect(layer).toExist();
+        expect(layer).toBeTruthy();
         // count layers
         expect(map.getLayers().getLength()).toBe(1);
         expect(map.getLayers().item(0).getSource().urls.length).toBe(2);
@@ -907,7 +907,7 @@ describe('Openlayers layer', () => {
                 options={options} map={map} />, document.getElementById("container"));
 
 
-        expect(layer).toExist();
+        expect(layer).toBeTruthy();
         // count layers
         expect(map.getLayers().getLength()).toBe(1);
         expect(map.getLayers().item(0).getSource().getTileGrid().getOrigin()).toEqual([-20037508.342789244, -20037508.342789244]);
@@ -928,7 +928,7 @@ describe('Openlayers layer', () => {
                 options={options} map={map}/>, document.getElementById("container"));
 
 
-        expect(layer).toExist();
+        expect(layer).toBeTruthy();
         // count layers
         expect(map.getLayers().getLength()).toBe(1);
         expect(map.getLayers().item(0).getSource().getTileGrid().getOrigin()).toEqual([0, 0]);
@@ -950,7 +950,7 @@ describe('Openlayers layer', () => {
                 options={options} map={map}/>, document.getElementById("container"));
 
 
-        expect(layer).toExist();
+        expect(layer).toBeTruthy();
         // count layers
         expect(map.getLayers().getLength()).toBe(1);
         expect(map.getLayers().item(0).getSource().urls.length).toBe(2);
@@ -966,8 +966,8 @@ describe('Openlayers layer', () => {
                 options={options} map={map}/>, document.getElementById("container"));
 
 
-        expect(layer).toExist();
-        expect(layer.layer).toExist();
+        expect(layer).toBeTruthy();
+        expect(layer.layer).toBeTruthy();
 
         expect(layer.layer.detached).toBe(true);
 
@@ -1005,7 +1005,7 @@ describe('Openlayers layer', () => {
         let layer = ReactDOM.render(
             <OpenlayersLayer type="google" options={options} map={map} mapId="map"/>, document.getElementById("container"));
 
-        expect(layer).toExist();
+        expect(layer).toBeTruthy();
         // count layers
         // google maps does not create a real ol layer, it is just injecting a gmaps api layer into DOM
         expect(map.getLayers().getLength()).toBe(0);
@@ -1029,9 +1029,9 @@ describe('Openlayers layer', () => {
             <OpenlayersLayer type="overlay"
                 options={options} map={map}/>, document.getElementById('ovcontainer'));
 
-        expect(layer).toExist();
+        expect(layer).toBeTruthy();
 
-        expect(document.getElementById('overlay-1-overlay')).toExist();
+        expect(document.getElementById('overlay-1-overlay')).toBeTruthy();
     });
 
     it('creates and overlay layer for openlayers map with close support', () => {
@@ -1058,9 +1058,9 @@ describe('Openlayers layer', () => {
             <OpenlayersLayer type="overlay"
                 options={options} map={map}/>, document.getElementById('ovcontainer'));
 
-        expect(layer).toExist();
+        expect(layer).toBeTruthy();
         const overlayElement = document.getElementById('overlay-1-overlay');
-        expect(overlayElement).toExist();
+        expect(overlayElement).toBeTruthy();
         const close = overlayElement.getElementsByClassName('close')[0];
         close.click();
         expect(closed).toBe(true);
@@ -1090,9 +1090,9 @@ describe('Openlayers layer', () => {
             <OpenlayersLayer type="overlay"
                 options={options} map={map} />, document.getElementById('ovcontainer'));
 
-        expect(layer).toExist();
+        expect(layer).toBeTruthy();
         const overlayElement = document.getElementById('overlay-1-overlay');
-        expect(overlayElement).toExist();
+        expect(overlayElement).toBeTruthy();
         const link = overlayElement.getElementsByClassName('link')[0];
         link.click();
         expect(clicked).toBe(true);
@@ -1118,11 +1118,11 @@ describe('Openlayers layer', () => {
             <OpenlayersLayer type="overlay"
                 options={options} map={map}/>, document.getElementById('ovcontainer'));
 
-        expect(layer).toExist();
+        expect(layer).toBeTruthy();
         const overlayElement = document.getElementById('overlay-1-overlay');
-        expect(overlayElement.getAttribute('data-reactid')).toNotExist();
+        expect(overlayElement.getAttribute('data-reactid')).toBeFalsy();
         const close = overlayElement.getElementsByClassName('close')[0];
-        expect(close.getAttribute('data-reactid')).toNotExist();
+        expect(close.getAttribute('data-reactid')).toBeFalsy();
     });
 
     it('creates a vector layer for openlayers map', () => {
@@ -1157,7 +1157,7 @@ describe('Openlayers layer', () => {
             <OpenlayersLayer type="vector"
                 options={options} map={map}/>, document.getElementById("container"));
 
-        expect(layer).toExist();
+        expect(layer).toBeTruthy();
         // count layers
         expect(map.getLayers().getLength()).toBe(1);
     });
@@ -1232,7 +1232,7 @@ describe('Openlayers layer', () => {
             <OpenlayersLayer type="vector"
                 options={options} map={map}/>, document.getElementById("container"));
 
-        expect(layer).toExist();
+        expect(layer).toBeTruthy();
         // count layers
         expect(map.getLayers().getLength()).toBe(1);
     });
@@ -1281,7 +1281,7 @@ describe('Openlayers layer', () => {
             <OpenlayersLayer type="vector"
                 options={options} map={map}/>, document.getElementById("container"));
 
-        expect(layer).toExist();
+        expect(layer).toBeTruthy();
         // count layers
         expect(map.getLayers().getLength()).toBe(1);
     });
@@ -1324,7 +1324,7 @@ describe('Openlayers layer', () => {
             <OpenlayersLayer type="vector"
                 options={options} map={map}/>, document.getElementById("container"));
 
-        expect(layer).toExist();
+        expect(layer).toBeTruthy();
         // count layers
         expect(map.getLayers().getLength()).toBe(1);
     });
@@ -1362,7 +1362,7 @@ describe('Openlayers layer', () => {
             <OpenlayersLayer type="vector"
                 options={options} map={map}/>, document.getElementById("container"));
 
-        expect(layer).toExist();
+        expect(layer).toBeTruthy();
         // count layers
         expect(map.getLayers().getLength()).toBe(1);
     });
@@ -1398,12 +1398,12 @@ describe('Openlayers layer', () => {
         let layer = ReactDOM.render(
             <OpenlayersLayer type="google" options={options} map={map} mapId="map"/>, document.getElementById("container"));
 
-        expect(layer).toExist();
+        expect(layer).toBeTruthy();
         // count layers
         // google maps does not create a real ol layer, it is just injecting a gmaps api layer into DOM
         expect(map.getLayers().getLength()).toBe(0);
         let div = document.getElementById("mapgmaps");
-        expect(div).toExist();
+        expect(div).toBeTruthy();
 
         // if only one layer for google exists, the div will be hidden
         let newOpts = assign({}, options, {visibility: false});
@@ -1446,7 +1446,7 @@ describe('Openlayers layer', () => {
         let layer = ReactDOM.render(
             <OpenlayersLayer type="google" options={options} map={map} mapId="map"/>, document.getElementById("container"));
 
-        expect(layer).toExist();
+        expect(layer).toBeTruthy();
         map.getView().setRotation(Math.PI / 2.0);
 
         let viewport = map.getViewport();
@@ -1455,7 +1455,7 @@ describe('Openlayers layer', () => {
         viewport.dispatchEvent(new MouseEvent('mouseup'));
 
         let dom = document.getElementById("mapgmaps");
-        expect(dom).toExist();
+        expect(dom).toBeTruthy();
         expect(dom.style.transform).toBe('rotate(90deg)');
     });
 
@@ -1470,7 +1470,7 @@ describe('Openlayers layer', () => {
         var layer = ReactDOM.render(
             <OpenlayersLayer type="bing" options={options} map={map}/>, document.getElementById("container"));
 
-        expect(layer).toExist();
+        expect(layer).toBeTruthy();
         // count layers
         expect(map.getLayers().getLength()).toBe(1);
     });
@@ -1486,8 +1486,8 @@ describe('Openlayers layer', () => {
         var layer = ReactDOM.render(
             <OpenlayersLayer type="bing" options={options} map={map}/>, document.getElementById("container"));
 
-        expect(layer).toExist();
-        expect(layer.layer).toExist();
+        expect(layer).toBeTruthy();
+        expect(layer.layer).toBeTruthy();
         // count layers
         expect(map.getLayers().getLength()).toBe(1);
         expect(layer.layer.getVisible()).toBe(true);
@@ -1525,7 +1525,7 @@ describe('Openlayers layer', () => {
         var layer = ReactDOM.render(
             <OpenlayersLayer type="mapquest" options={options} map={map}/>, document.getElementById("container"));
 
-        expect(layer).toExist();
+        expect(layer).toBeTruthy();
         // count layers
         // MapQuest is not supported on Openlayers
         expect(map.getLayers().getLength()).toBe(0);
@@ -1546,7 +1546,7 @@ describe('Openlayers layer', () => {
             <OpenlayersLayer type="wms"
                 options={options} map={map}/>, document.getElementById("container"));
 
-        expect(layer).toExist();
+        expect(layer).toBeTruthy();
         // count layers
         expect(map.getLayers().getLength()).toBe(1);
 
@@ -1574,7 +1574,7 @@ describe('Openlayers layer', () => {
             <OpenlayersLayer type="wms" position={10}
                 options={options} map={map}/>, document.getElementById("container"));
 
-        expect(layer).toExist();
+        expect(layer).toBeTruthy();
         // count layers
         expect(map.getLayers().getLength()).toBe(1);
 
@@ -1604,12 +1604,12 @@ describe('Openlayers layer', () => {
             <OpenlayersLayer type="wms" observables={["cql_filter"]}
                 options={options} map={map}/>, document.getElementById("container"));
 
-        expect(layer).toExist();
+        expect(layer).toBeTruthy();
         // count layers
         expect(map.getLayers().getLength()).toBe(1);
 
-        expect(layer.layer.getSource()).toExist();
-        expect(layer.layer.getSource().getParams()).toExist();
+        expect(layer.layer.getSource()).toBeTruthy();
+        expect(layer.layer.getSource().getParams()).toBeTruthy();
         expect(layer.layer.getSource().getParams().cql_filter).toBe("INCLUDE");
 
         layer = ReactDOM.render(
@@ -1635,14 +1635,14 @@ describe('Openlayers layer', () => {
             <OpenlayersLayer type="wms" observables={["cql_filter"]}
                 options={options} map={map} />, document.getElementById("container"));
 
-        expect(layer).toExist();
+        expect(layer).toBeTruthy();
         const source = layer.layer.getSource();
         const spy = expect.spyOn(source, "refresh");
         // count layers
         expect(map.getLayers().getLength()).toBe(1);
 
-        expect(layer.layer.getSource()).toExist();
-        expect(layer.layer.getSource().getParams()).toExist();
+        expect(layer.layer.getSource()).toBeTruthy();
+        expect(layer.layer.getSource().getParams()).toBeTruthy();
         expect(layer.layer.getSource().getParams().cql_filter).toBe("INCLUDE");
 
         layer = ReactDOM.render(
@@ -1672,14 +1672,14 @@ describe('Openlayers layer', () => {
             <OpenlayersLayer type="wms" observables={["cql_filter"]}
                 options={options} map={map} />, document.getElementById("container"));
 
-        expect(layer).toExist();
+        expect(layer).toBeTruthy();
         const source = layer.layer.getSource();
         const spyRefresh = expect.spyOn(source, "refresh");
         // count layers
         expect(map.getLayers().getLength()).toBe(1);
 
-        expect(layer.layer.getSource()).toExist();
-        expect(layer.layer.getSource().getParams()).toExist();
+        expect(layer.layer.getSource()).toBeTruthy();
+        expect(layer.layer.getSource().getParams()).toBeTruthy();
         expect(layer.layer.getSource().getParams().cql_filter).toBe("INCLUDE");
 
         layer = ReactDOM.render(
@@ -1707,12 +1707,12 @@ describe('Openlayers layer', () => {
             <OpenlayersLayer type="wms"
                 options={options} map={map} />, document.getElementById("container"));
 
-        expect(layer).toExist();
+        expect(layer).toBeTruthy();
         // count layers
         expect(map.getLayers().getLength()).toBe(1);
 
-        expect(layer.layer.getSource()).toExist();
-        expect(layer.layer.getSource().getParams()).toExist();
+        expect(layer.layer.getSource()).toBeTruthy();
+        expect(layer.layer.getSource().getParams()).toBeTruthy();
         expect(layer.layer.getSource().getParams().STYLES).toBe("");
 
         layer = ReactDOM.render(
@@ -1759,9 +1759,9 @@ describe('Openlayers layer', () => {
             map={map}
             securityToken="########-####-####-####-###########" />, document.getElementById("container"));
 
-        expect(layer).toExist();
+        expect(layer).toBeTruthy();
         expect(map.getLayers().getLength()).toBe(1);
-        expect(layer.layer.getSource()).toExist();
+        expect(layer.layer.getSource()).toBeTruthy();
         expect(layer.layer.getSource().getParams()['ms2-authkey']).toBe("########-####-####-####-###########");
         expect(layer.layer.getSource().getParams().SLD).toBe("http://sample.server/geoserver/rest/sld?test1=aaa&ms2-authkey=" + encodeURIComponent("########-####-####-####-###########"));
     });
@@ -1800,9 +1800,9 @@ describe('Openlayers layer', () => {
             map={map}
             securityToken="########-####-####-####-###########"/>, document.getElementById("container"));
 
-        expect(layer).toExist();
+        expect(layer).toBeTruthy();
         expect(map.getLayers().getLength()).toBe(1);
-        expect(layer.layer.getSource()).toExist();
+        expect(layer.layer.getSource()).toBeTruthy();
         expect(layer.layer.getSource().getParams()['ms2-authkey']).toBe("########-####-####-####-###########");
 
         layer = ReactDOM.render(<OpenlayersLayer
@@ -1912,7 +1912,7 @@ describe('Openlayers layer', () => {
             map={map}
             securityToken="########-####-####-####-###########"/>, document.getElementById("container"));
 
-        expect(layer).toExist();
+        expect(layer).toBeTruthy();
         expect(map.getLayers().getLength()).toBe(1);
         expect(layer.layer.getSource().getUrls().map(u => decodeURIComponent(u))).toEqual(["http://sample.server/geoserver/gwc/service/wmts?ms2-authkey=########-####-####-####-###########"]);
 
@@ -1921,7 +1921,7 @@ describe('Openlayers layer', () => {
             options={options}
             map={map}
             securityToken=""/>, document.getElementById("container"));
-        expect(layer).toExist();
+        expect(layer).toBeTruthy();
         expect(map.getLayers().getLength()).toBe(1);
         expect(layer.layer.getSource().getUrls().map(u => decodeURIComponent(u))).toEqual(["http://sample.server/geoserver/gwc/service/wmts"]);
 
@@ -1932,7 +1932,7 @@ describe('Openlayers layer', () => {
             map={map}
             securityToken="########-####-$$$$-####-###########"/>, document.getElementById("container"));
 
-        expect(layer).toExist();
+        expect(layer).toBeTruthy();
         expect(map.getLayers().getLength()).toBe(1);
         expect(layer.layer.getSource().getUrls().map(u => decodeURIComponent(u))).toEqual(["http://sample.server/geoserver/gwc/service/wmts?ms2-authkey=########-####-$$$$-####-###########"]);
 
@@ -2104,7 +2104,7 @@ describe('Openlayers layer', () => {
             map={map}
         />, document.getElementById("container"));
 
-        expect(layer).toExist();
+        expect(layer).toBeTruthy();
         expect(layer.layer.getSource().getParams().CQL_FILTER).toBe("prop = 'value'");
     });
     it('test crossOrigin is applied to tiled wms', () => {
@@ -2129,7 +2129,7 @@ describe('Openlayers layer', () => {
             map={map}
         />, document.getElementById("container"));
 
-        expect(layer).toExist();
+        expect(layer).toBeTruthy();
         expect(layer.layer.getSource().crossOrigin).toBe("Anonymous");
     });
     it('test crossOrigin is applied to single tile wms', () => {
@@ -2154,7 +2154,7 @@ describe('Openlayers layer', () => {
             map={map}
         />, document.getElementById("container"));
 
-        expect(layer).toExist();
+        expect(layer).toBeTruthy();
         expect(layer.layer.getSource().crossOrigin_).toBe("Anonymous");
     });
     it('test filterObj param to be transformed in cql_filter', () => {
@@ -2191,7 +2191,7 @@ describe('Openlayers layer', () => {
             map={map}
         />, document.getElementById("container"));
 
-        expect(layer).toExist();
+        expect(layer).toBeTruthy();
 
         expect(layer.layer.getSource().getParams().CQL_FILTER).toBe("(\"prop2\" = 'value2')");
     });
@@ -2227,14 +2227,14 @@ describe('Openlayers layer', () => {
             options={options}
             map={map}
         />, document.getElementById("container"));
-        expect(layer).toExist();
+        expect(layer).toBeTruthy();
         expect(layer.layer.getSource().getParams().CQL_FILTER).toBe("(\"prop2\" = 'value2')");
         layer = ReactDOM.render(<OpenlayersLayer
             type="wms"
             options={{...options, filterObj: undefined}}
             map={map}
         />, document.getElementById("container"));
-        expect(layer).toExist();
+        expect(layer).toBeTruthy();
         expect(layer.layer.getSource().getParams().CQL_FILTER).toBe(undefined);
     });
 
@@ -2275,7 +2275,7 @@ describe('Openlayers layer', () => {
             map={map}
         />, document.getElementById("container"));
 
-        expect(layer).toExist();
+        expect(layer).toBeTruthy();
 
         expect(layer.layer.getSource().getParams().CQL_FILTER).toBe("((\"prop2\" = 'value2')) AND (prop = 'value')");
     });
@@ -2307,7 +2307,7 @@ describe('Openlayers layer', () => {
             }}
             map={map}/>, document.getElementById("container"));
 
-        expect(layer).toExist();
+        expect(layer).toBeTruthy();
         expect(map.getLayers().getLength()).toBe(1);
         expect(layer.layer.getType()).toBe('VECTOR_TILE');
         expect(layer.layer.getSource().format_.constructor.name).toBe('GeoJSON');
@@ -2322,7 +2322,7 @@ describe('Openlayers layer', () => {
             }}
             map={map}/>, document.getElementById("container"));
 
-        expect(layer).toExist();
+        expect(layer).toBeTruthy();
         expect(map.getLayers().getLength()).toBe(1);
         expect(layer.layer.getType()).toBe('VECTOR_TILE');
         expect(layer.layer.getSource().format_.constructor.name).toBe('MVT');
@@ -2336,7 +2336,7 @@ describe('Openlayers layer', () => {
             }}
             map={map}/>, document.getElementById("container"));
 
-        expect(layer).toExist();
+        expect(layer).toBeTruthy();
         expect(map.getLayers().getLength()).toBe(1);
         expect(layer.layer.getType()).toBe('VECTOR_TILE');
         expect(layer.layer.getSource().format_.constructor.name).toBe('TopoJSON');
@@ -2409,7 +2409,7 @@ describe('Openlayers layer', () => {
             options={options}
             map={map}/>, document.getElementById("container"));
 
-        expect(layer).toExist();
+        expect(layer).toBeTruthy();
         expect(map.getLayers().getLength()).toBe(1);
         expect(layer.layer.getType()).toBe('VECTOR_TILE');
         expect(layer.layer.getSource().format_.constructor.name).toBe('MVT');

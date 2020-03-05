@@ -334,10 +334,10 @@ describe('Test styleeditor epics', () => {
                         break;
                     case ERROR_STYLE:
                         expect(action.status).toBe(undefined);
-                        expect(action.error).toExist();
+                        expect(action.error).toBeTruthy();
                         break;
                     case LOADED_STYLE:
-                        expect(action).toExist();
+                        expect(action).toBeTruthy();
                         break;
                     default:
                         expect(true).toBe(false);
@@ -390,12 +390,12 @@ describe('Test styleeditor epics', () => {
                         expect(action.status).toBe(undefined);
                         break;
                     case LOADED_STYLE:
-                        expect(action).toExist();
+                        expect(action).toBeTruthy();
                         break;
                     case UPDATE_OPTIONS_BY_OWNER:
                         expect(action.owner).toBe('styleeditor');
                         expect(action.options[0].style).toBe('test_style');
-                        expect(action.options[0]._v_).toExist();
+                        expect(action.options[0]._v_).toBeTruthy();
                         expect(action.options[0].singleTile).toBe(true);
                         break;
                     case UPDATE_TEMPORARY_STYLE:
@@ -467,7 +467,7 @@ describe('Test styleeditor epics', () => {
                         expect(action.status).toBe('');
                         break;
                     case LOADED_STYLE:
-                        expect(action).toExist();
+                        expect(action).toBeTruthy();
                         break;
                     default:
                         expect(action).toBe(false);
@@ -532,7 +532,7 @@ describe('Test styleeditor epics', () => {
                         expect(action.status).toBe('');
                         break;
                     case LOADED_STYLE:
-                        expect(action).toExist();
+                        expect(action).toBeTruthy();
                         break;
                     default:
                         expect(action).toBe(false);
@@ -587,10 +587,10 @@ describe('Test styleeditor epics', () => {
                     case UPDATE_NODE:
                         expect(action.node).toBe('layerId');
                         expect(action.nodeType).toBe('layer');
-                        expect(action.options._v_).toExist();
+                        expect(action.options._v_).toBeTruthy();
                         break;
                     case LOADED_STYLE:
-                        expect(action).toExist();
+                        expect(action).toBeTruthy();
                         break;
                     case UPDATE_TEMPORARY_STYLE:
                         expect(action.temporaryId).toBe(undefined);

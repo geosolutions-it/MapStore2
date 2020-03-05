@@ -25,17 +25,17 @@ describe('AddBar component', () => {
         ReactDOM.render(<AddBar />, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('.add-bar');
-        expect(el).toExist();
+        expect(el).toBeTruthy();
     });
     it('AddBar toggle popover and button click events', done => {
         ReactDOM.render(<AddBar buttons={[{glyph: "sheet", onClick: () => done()} ]} />, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('.add-bar button');
-        expect(el).toExist();
+        expect(el).toBeTruthy();
         ReactTestUtils.Simulate.click(el);
         // check the popover is shown after click
         const popover = document.querySelector('.popover-content'); // the popover is rendered in document
-        expect(popover).toExist();
+        expect(popover).toBeTruthy();
         // emulate toolbar button click, done in click handler
         ReactTestUtils.Simulate.click(document.querySelector('.popover-content .glyphicon-sheet'));
     });

@@ -39,17 +39,17 @@ describe("test the SearchResultList", () => {
 
     it('test component creation', () => {
         const tb = ReactDOM.render(<SearchResultList results={results}/>, document.getElementById("container"));
-        expect(tb).toExist();
+        expect(tb).toBeTruthy();
     });
 
     it('create component without items', () => {
         const tb = ReactDOM.render(<SearchResultList />, document.getElementById("container"));
-        expect(tb).toExist();
+        expect(tb).toBeTruthy();
     });
 
     it('create component with empty items array', () => {
         const tb = ReactDOM.render(<SearchResultList results={[]} notFoundMessage="not found"/>, document.getElementById("container"));
-        expect(tb).toExist();
+        expect(tb).toBeTruthy();
     });
 
 
@@ -61,14 +61,14 @@ describe("test the SearchResultList", () => {
             }
         }));
         const cmp = ReactDOM.render(<SearchResultList mapConfig={{size: {width: 200, height: 200}}} sizeAdjustment={{width: 100, height: 120}} fitToMapSize results={res} notFoundMessage="not found"/>, document.getElementById("container"));
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
         let list = TestUtils.findRenderedDOMComponentWithClass(cmp, "search-result-list");
         expect(list.offsetHeight).toBe(80);
         expect(list.offsetWidth).toBe(100);
     });
     it('get service info from internal object', () => {
         let tb = ReactDOM.render(<SearchResultList results={results} notFoundMessage="not found"/>, document.getElementById("container"));
-        expect(tb).toExist();
+        expect(tb).toBeTruthy();
 
         let title = TestUtils.findRenderedDOMComponentWithClass(tb, "text-result-title");
         let subTitle = TestUtils.findRenderedDOMComponentWithClass(tb, "text-info");
@@ -91,7 +91,7 @@ describe("test the SearchResultList", () => {
             },
             __SERVICE__: "S1"
         }]} notFoundMessage="not found"/>, document.getElementById("container"));
-        expect(tb).toExist();
+        expect(tb).toBeTruthy();
 
         let title = TestUtils.findRenderedDOMComponentWithClass(tb, "text-result-title");
         let subTitle = TestUtils.findRenderedDOMComponentWithClass(tb, "text-info");
@@ -114,7 +114,7 @@ describe("test the SearchResultList", () => {
             },
             __SERVICE__: "S1"
         }]} notFoundMessage="not found"/>, document.getElementById("container"));
-        expect(tb).toExist();
+        expect(tb).toBeTruthy();
 
         let title = TestUtils.findRenderedDOMComponentWithClass(tb, "text-result-title");
         let subTitle = TestUtils.findRenderedDOMComponentWithClass(tb, "text-info");
@@ -144,7 +144,7 @@ describe("test the SearchResultList", () => {
 
         let elem1 = TestUtils.findRenderedDOMComponentWithClass(elem[0], "search-result");
         ReactDOM.findDOMNode(elem1).click();
-        expect(spy.calls.length).toEqual(1);
+        expect(spy.mock.calls.length).toEqual(1);
         expect(spy).toHaveBeenCalledWith(items[0], mapConfig);
     });
 

@@ -25,35 +25,35 @@ describe("test the ToggleButton", () => {
 
     it('test default properties', () => {
         const tb = ReactDOM.render(<ToggleButton/>, document.getElementById("container"));
-        expect(tb).toExist();
+        expect(tb).toBeTruthy();
 
         const tbNode = ReactDOM.findDOMNode(tb);
-        expect(tbNode).toExist();
-        expect(tbNode.id).toNotExist();
+        expect(tbNode).toBeTruthy();
+        expect(tbNode.id).toBeFalsy();
 
-        expect(tbNode).toExist();
+        expect(tbNode).toBeTruthy();
         expect(tbNode.className.indexOf('default') >= 0).toBe(true);
-        expect(tbNode.innerHTML).toNotExist();
+        expect(tbNode.innerHTML).toBeFalsy();
     });
 
     it('test glyphicon property', () => {
         const tb = ReactDOM.render(<ToggleButton glyphicon="info-sign"/>, document.getElementById("container"));
-        expect(tb).toExist();
+        expect(tb).toBeTruthy();
 
         const tbNode = ReactDOM.findDOMNode(tb);
-        expect(tbNode).toExist();
-        expect(tbNode).toExist();
+        expect(tbNode).toBeTruthy();
+        expect(tbNode).toBeTruthy();
         const icons = tbNode.getElementsByTagName('span');
         expect(icons.length).toBe(1);
     });
 
     it('test glyphicon property with text', () => {
         const tb = ReactDOM.render(<ToggleButton glyphicon="info-sign" text="button"/>, document.getElementById("container"));
-        expect(tb).toExist();
+        expect(tb).toBeTruthy();
 
         const tbNode = ReactDOM.findDOMNode(tb);
-        expect(tbNode).toExist();
-        expect(tbNode).toExist();
+        expect(tbNode).toBeTruthy();
+        expect(tbNode).toBeTruthy();
 
         const btnItems = tbNode.getElementsByTagName('span');
         expect(btnItems.length).toBe(1);
@@ -62,7 +62,7 @@ describe("test the ToggleButton", () => {
 
     it('test button state', () => {
         const tb = ReactDOM.render(<ToggleButton pressed/>, document.getElementById("container"));
-        expect(tb).toExist();
+        expect(tb).toBeTruthy();
 
         const tbNode = ReactDOM.findDOMNode(tb);
 
@@ -82,9 +82,9 @@ describe("test the ToggleButton", () => {
             const tbNode = ReactDOM.findDOMNode(tb);
             tbNode.click();
 
-            expect(spy.calls.length).toEqual(1);
-            expect(spy.calls[0].arguments[0]).toEqual(false);
-            expect(spy.calls[0].arguments[1]).toEqual(test);
+            expect(spy.mock.calls.length).toEqual(1);
+            expect(spy.mock.calls[0][0]).toEqual(false);
+            expect(spy.mock.calls[0][1]).toEqual(test);
         };
 
         genericTest('normal');
@@ -93,7 +93,7 @@ describe("test the ToggleButton", () => {
 
     it('test image button', () => {
         const tb = ReactDOM.render(<ToggleButton btnType={'image'}/>, document.getElementById("container"));
-        expect(tb).toExist();
+        expect(tb).toBeTruthy();
         const tbNode = ReactDOM.findDOMNode(tb);
         expect(tbNode.localName).toBe("img");
     });

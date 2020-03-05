@@ -23,7 +23,7 @@ describe('withShareTool enhancer', () => {
     });
     it('withShareTool rendering with defaults', (done) => {
         const Sink = withShareTool(createSink( props => {
-            expect(props).toExist();
+            expect(props).toBeTruthy();
             done();
         }));
         ReactDOM.render(<Sink />, document.getElementById("container"));
@@ -37,8 +37,8 @@ describe('withShareTool enhancer', () => {
         const FAKE_RESOURCE_URL = `${FAKE_ORIGIN}${FAKE_PATH}#/${FAKE_RESOURCE_PATH}`;
         it('render panel with current window URL', () => {
             const Sink = addSharePanel(createSink(props => {
-                expect(props).toExist();
-                expect(props.onShare).toExist(true);
+                expect(props).toBeTruthy();
+                expect(props.onShare).toBeTruthy();
             }));
             ReactDOM.render(<Sink
                 showShareModal
@@ -46,9 +46,9 @@ describe('withShareTool enhancer', () => {
                 getShareUrl={() => FAKE_RESOURCE_PATH}
             />, document.getElementById("container"));
             const sharePanel = document.querySelector('#sharePanel-tabs');
-            expect(sharePanel).toExist('Share panel doesn\'t exist');
+            expect(sharePanel).toBeTruthy();
             const directLink = sharePanel.querySelector('#sharePanel-tabs-pane-1 .input-link input');
-            expect(directLink).toExist('directLink doesn\'t exist');
+            expect(directLink).toBeTruthy();
             expect(directLink.value).toBe(window.location.origin + window.location.pathname + "#/" + FAKE_RESOURCE_PATH);
         });
         it('URL is generated using application path', () => {
@@ -64,14 +64,14 @@ describe('withShareTool enhancer', () => {
                 })}
             />, document.getElementById("container"));
             const sharePanel = document.querySelector('#sharePanel-tabs');
-            expect(sharePanel).toExist('Share panel doesn\'t exist');
+            expect(sharePanel).toBeTruthy();
             const directLink = sharePanel.querySelector('#sharePanel-tabs-pane-1 .input-link input');
-            expect(directLink).toExist('directLink doesn\'t exist');
+            expect(directLink).toBeTruthy();
             expect(directLink.value).toBe(FAKE_RESOURCE_URL);
             expect(directLink.value).toBe("http://some-location/mapstore/#/FAKE_RESOURCE_PATH"); // double check
             document.getElementById('sharePanel-tabs-tab-3').click();
             const codeBlock = document.getElementsByTagName('code')[0];
-            expect(codeBlock).toExist();
+            expect(codeBlock).toBeTruthy();
             const iframeCode = codeBlock.innerText;
             // normal behaviour has the URL (without embedded)
             expect(iframeCode.indexOf(FAKE_RESOURCE_URL)).toBeGreaterThan(0);
@@ -85,11 +85,11 @@ describe('withShareTool enhancer', () => {
                 getShareUrl={() => FAKE_RESOURCE_PATH}
             />, document.getElementById("container"));
             const sharePanel = document.querySelector('#sharePanel-tabs');
-            expect(sharePanel).toExist('Share panel doesn\'t exist');
+            expect(sharePanel).toBeTruthy();
             document.getElementById('sharePanel-tabs-tab-3').click();
             // check if the showTOC is enabled by deafult
             let showTOC = document.querySelector('#sharePanel-tabs .input-link-tools input[type=checkbox]');
-            expect(showTOC).toExist();
+            expect(showTOC).toBeTruthy();
             ReactDOM.render(<Sink
                 shareOptions={{ embedOptions: { showTOCToggle: false } }}
                 showShareModal
@@ -100,7 +100,7 @@ describe('withShareTool enhancer', () => {
             document.getElementById('sharePanel-tabs-tab-3').click();
             showTOC = document.querySelector('#sharePanel-tabs .input-link-tools input[type=checkbox]');
             // verify the embedOptions.showTOCToggle has effect on "show TOC" checkbox hiding it
-            expect(showTOC).toNotExist();
+            expect(showTOC).toBeFalsy();
         });
     });
 

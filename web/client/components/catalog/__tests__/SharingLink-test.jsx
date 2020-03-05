@@ -28,24 +28,24 @@ describe('Tests for SharingLink', () => {
 
     it('create the component with defaults', () => {
         const component = ReactDOM.render(<SharingLink/>, document.getElementById('container'));
-        expect(component).toExist();
+        expect(component).toBeTruthy();
         // no dom node should be rendered with the default values
         const componentDom = ReactDOM.findDOMNode(component);
-        expect(componentDom).toNotExist();
+        expect(componentDom).toBeFalsy();
     });
 
     it('create the component with required url property', () => {
         const component = ReactDOM.render(<SharingLink url="url"/>, document.getElementById('container'));
-        expect(component).toExist();
+        expect(component).toBeTruthy();
         // expecting a dom node to be available
         const componentDom = ReactDOM.findDOMNode(component);
-        expect(componentDom).toExist();
+        expect(componentDom).toBeTruthy();
         // we should have an input and a button available
         const input = TestUtils.findRenderedDOMComponentWithTag(component, 'input');
-        expect(input).toExist();
+        expect(input).toBeTruthy();
         expect(input.value).toBe('url');
         const button = TestUtils.findRenderedDOMComponentWithTag(component, 'button');
-        expect(button).toExist();
+        expect(button).toBeTruthy();
     });
 
     it('create the component with a valid label id', () => {
@@ -54,18 +54,18 @@ describe('Tests for SharingLink', () => {
         // intanciating the component
         const component = ReactDOM.render(<Localized locale="en-US" messages={messages}><SharingLink url="url" labelId="link"/></Localized>,
             document.getElementById('container'));
-        expect(component).toExist();
+        expect(component).toBeTruthy();
         // expecting a dom node to be available
         const componentDom = ReactDOM.findDOMNode(component);
-        expect(componentDom).toExist();
+        expect(componentDom).toBeTruthy();
         // we should have an input and a button available
         const input = TestUtils.findRenderedDOMComponentWithTag(component, 'input');
-        expect(input).toExist();
+        expect(input).toBeTruthy();
         expect(input.value).toBe('url');
         const button = TestUtils.findRenderedDOMComponentWithTag(component, 'button');
-        expect(button).toExist();
+        expect(button).toBeTruthy();
         const buttonText = button.innerText || button.textContent;
-        expect(buttonText).toExist();
+        expect(buttonText).toBeTruthy();
         expect(buttonText.indexOf('Link')).toBeGreaterThan(-1);
     });
 
@@ -77,13 +77,13 @@ describe('Tests for SharingLink', () => {
         const spy = expect.spyOn(actions, "onCopy");
         // intanciate the main component
         const component = ReactDOM.render(<SharingLink url="url" onCopy={actions.onCopy}/>, document.getElementById('container'));
-        expect(component).toExist();
+        expect(component).toBeTruthy();
         // if propmt for ctrl+c we accept
-        expect.spyOn(window, 'prompt').andReturn(true);
+        expect.spyOn(window, 'prompt').mockReturnValue(true);
         // testing that on copy call back is invoked
         const button = TestUtils.findRenderedDOMComponentWithTag(component, 'button');
-        expect(button).toExist();
+        expect(button).toBeTruthy();
         button.click();
-        expect(spy.calls.length).toBe(1);
+        expect(spy.mock.calls.length).toBe(1);
     });
 });

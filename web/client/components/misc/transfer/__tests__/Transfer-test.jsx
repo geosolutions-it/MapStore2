@@ -57,12 +57,12 @@ describe('Transfer component', () => {
     it('Transfer rendering with defaults', () => {
         ReactDOM.render(<Transfer />, document.getElementById("container"));
         const container = document.getElementById('container');
-        expect(container.getElementsByClassName('ms2-transfer')[0]).toExist();
+        expect(container.getElementsByClassName('ms2-transfer')[0]).toBeTruthy();
     });
     it('Transfer with items', () => {
         ReactDOM.render(<Transfer leftColumn={testLeftColumn} rightColumn={testRightColumn}/>, document.getElementById("container"));
         const container = document.getElementById('container');
-        expect(container.getElementsByClassName('ms2-transfer')[0]).toExist();
+        expect(container.getElementsByClassName('ms2-transfer')[0]).toBeTruthy();
         const columns = container.getElementsByClassName('ms2-transfer-sidegrid');
         expect(columns.length).toBe(2);
         expect(columns[0].getElementsByClassName('mapstore-side-card').length).toBe(testLeftColumn.items.length);
@@ -77,9 +77,9 @@ describe('Transfer component', () => {
 
         ReactDOM.render(<Transfer leftColumn={testLeftColumn} rightColumn={testRightColumn} {...actions}/>, document.getElementById("container"));
         const container = document.getElementById('container');
-        expect(container.getElementsByClassName('ms2-transfer')[0]).toExist();
+        expect(container.getElementsByClassName('ms2-transfer')[0]).toBeTruthy();
         const moveButtonsContainer = container.getElementsByClassName('btn-group-vertical')[0];
-        expect(moveButtonsContainer).toExist();
+        expect(moveButtonsContainer).toBeTruthy();
         const moveButtons = moveButtonsContainer.getElementsByClassName('square-button-md');
         expect(moveButtons.length).toBe(4);
         expect(moveButtons[0].hasAttribute('disabled')).toBe(false);
@@ -90,11 +90,11 @@ describe('Transfer component', () => {
         TestUtils.Simulate.click(moveButtons[0]);
         TestUtils.Simulate.click(moveButtons[3]);
 
-        expect(spy.calls.length).toBe(2);
-        expect(spy.calls[0].arguments[0]).toEqual(testLeftColumn.items);
-        expect(spy.calls[0].arguments[1]).toBe('right');
-        expect(spy.calls[1].arguments[0]).toEqual(testRightColumn.items);
-        expect(spy.calls[1].arguments[1]).toBe('left');
+        expect(spy.mock.calls.length).toBe(2);
+        expect(spy.mock.calls[0][0]).toEqual(testLeftColumn.items);
+        expect(spy.mock.calls[0][1]).toBe('right');
+        expect(spy.mock.calls[1][0]).toEqual(testRightColumn.items);
+        expect(spy.mock.calls[1][1]).toBe('left');
     });
     it('Move buttons with selected items', () => {
         const actions = {
@@ -106,9 +106,9 @@ describe('Transfer component', () => {
         ReactDOM.render(<Transfer leftColumn={testLeftColumn} rightColumn={testRightColumn} selectedItems={[testLeftColumn.items[1]]}
             selectedSide="left" {...actions}/>, document.getElementById("container"));
         const container = document.getElementById('container');
-        expect(container.getElementsByClassName('ms2-transfer')[0]).toExist();
+        expect(container.getElementsByClassName('ms2-transfer')[0]).toBeTruthy();
         const moveButtonsContainer = container.getElementsByClassName('btn-group-vertical')[0];
-        expect(moveButtonsContainer).toExist();
+        expect(moveButtonsContainer).toBeTruthy();
         const moveButtons = moveButtonsContainer.getElementsByClassName('square-button-md');
         expect(moveButtons.length).toBe(4);
         expect(moveButtons[0].hasAttribute('disabled')).toBe(false);
@@ -118,16 +118,16 @@ describe('Transfer component', () => {
 
         TestUtils.Simulate.click(moveButtons[1]);
 
-        expect(spy.calls.length).toBe(1);
-        expect(spy.calls[0].arguments[0]).toEqual([testLeftColumn.items[1]]);
-        expect(spy.calls[0].arguments[1]).toBe('right');
+        expect(spy.mock.calls.length).toBe(1);
+        expect(spy.mock.calls[0][0]).toEqual([testLeftColumn.items[1]]);
+        expect(spy.mock.calls[0][1]).toBe('right');
     });
     it('Move buttons with no items', () => {
         ReactDOM.render(<Transfer leftColumn={{}} rightColumn={{}}/>, document.getElementById("container"));
         const container = document.getElementById('container');
-        expect(container.getElementsByClassName('ms2-transfer')[0]).toExist();
+        expect(container.getElementsByClassName('ms2-transfer')[0]).toBeTruthy();
         const moveButtonsContainer = container.getElementsByClassName('btn-group-vertical')[0];
-        expect(moveButtonsContainer).toExist();
+        expect(moveButtonsContainer).toBeTruthy();
         const moveButtons = moveButtonsContainer.getElementsByClassName('square-button-md');
         expect(moveButtons.length).toBe(4);
         expect(moveButtons[0].hasAttribute('disabled')).toBe(true);
@@ -139,7 +139,7 @@ describe('Transfer component', () => {
         ReactDOM.render(<Transfer leftColumn={testLeftColumn} rightColumn={{...testRightColumn, filterText: "item5"}}
             filter={(text, items) => items.filter(item => text === '' || item.id === text)}/>, document.getElementById("container"));
         const container = document.getElementById('container');
-        expect(container.getElementsByClassName('ms2-transfer')[0]).toExist();
+        expect(container.getElementsByClassName('ms2-transfer')[0]).toBeTruthy();
         const columns = container.getElementsByClassName('ms2-transfer-sidegrid');
         const leftItems = columns[0].getElementsByClassName('mapstore-side-card');
         const rightItems = columns[1].getElementsByClassName('mapstore-side-card');

@@ -24,9 +24,9 @@ describe('Test correctness of the searchText APIs', () => {
         let servName = "myService";
         API.Utils.setService(servName, myFun);
         try {
-            expect(API.Services).toExist();
-            expect(API.Services[servName]).toExist();
-            expect(API.Utils.getService(servName)).toExist();
+            expect(API.Services).toBeTruthy();
+            expect(API.Services[servName]).toBeTruthy();
+            expect(API.Utils.getService(servName)).toBeTruthy();
             done();
         } catch (ex) {
             done(ex);

@@ -23,9 +23,9 @@ describe('Test correctness of mausePosition actions', () => {
 
         var retval = changeMousePosition(position);
 
-        expect(retval).toExist();
+        expect(retval).toBeTruthy();
         expect(retval.type).toBe(CHANGE_MOUSE_POSITION);
-        expect(retval.position).toExist();
+        expect(retval.position).toBeTruthy();
         expect(retval.position).toBe(position);
     });
 
@@ -34,9 +34,9 @@ describe('Test correctness of mausePosition actions', () => {
 
         var retval = changeMousePositionCrs(crs);
 
-        expect(retval).toExist();
+        expect(retval).toBeTruthy();
         expect(retval.type).toBe(CHANGE_MOUSE_POSITION_CRS);
-        expect(retval.crs).toExist();
+        expect(retval.crs).toBeTruthy();
         expect(retval.crs).toBe(crs);
     });
 
@@ -46,9 +46,9 @@ describe('Test correctness of mausePosition actions', () => {
 
         var retval = changeMousePositionState(enabled);
 
-        expect(retval).toExist();
+        expect(retval).toBeTruthy();
         expect(retval.type).toBe(CHANGE_MOUSE_POSITION_STATE);
-        expect(retval.enabled).toExist();
+        expect(retval.enabled).toBeTruthy();
         expect(retval.enabled).toBe(true);
     });
 

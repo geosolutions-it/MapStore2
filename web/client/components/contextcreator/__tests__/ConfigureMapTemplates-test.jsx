@@ -26,7 +26,7 @@ describe('ConfigureMapTemplate component', () => {
     it('ConfigureMapTemplate with defaults', () => {
         ReactDOM.render(<ConfigureMapTemplate/>, document.getElementById("container"));
         const container = document.getElementById('container');
-        expect(container.getElementsByClassName('configure-map-templates-transfer')[0]).toExist();
+        expect(container.getElementsByClassName('configure-map-templates-transfer')[0]).toBeTruthy();
     });
     it('ConfigureMapTemplate template tools', () => {
         const template = {
@@ -45,10 +45,10 @@ describe('ConfigureMapTemplate component', () => {
         ReactDOM.render(<ConfigureMapTemplate mapTemplates={[template]} onEditTemplate={actions.onEditTemplate} onDelete={actions.onDelete}/>,
             document.getElementById("container"));
         const container = document.getElementById('container');
-        expect(container.getElementsByClassName('configure-map-templates-transfer')[0]).toExist();
+        expect(container.getElementsByClassName('configure-map-templates-transfer')[0]).toBeTruthy();
 
         const sideCard = container.getElementsByClassName('mapstore-side-card')[0];
-        expect(sideCard).toExist();
+        expect(sideCard).toBeTruthy();
         const toolButtons = sideCard.getElementsByTagName('button');
         expect(toolButtons.length).toBe(2);
 
@@ -58,10 +58,10 @@ describe('ConfigureMapTemplate component', () => {
         expect(onEditTemplateSpy).toHaveBeenCalled();
 
         const confirmDialog = document.getElementById('confirm-dialog');
-        expect(confirmDialog).toExist();
+        expect(confirmDialog).toBeTruthy();
         const confirmButton = find(confirmDialog.getElementsByTagName('button'),
             button => get(button.childNodes[0], 'textContent') === 'confirm');
-        expect(confirmButton).toExist();
+        expect(confirmButton).toBeTruthy();
         TestUtils.Simulate.click(confirmButton);
 
         expect(onDeleteSpy).toHaveBeenCalled();

@@ -40,13 +40,13 @@ describe('DateField', () => {
                 fieldValue={fieldValue}/>,
             document.getElementById("container")
         );
-        expect(datefield).toExist();
+        expect(datefield).toBeTruthy();
         const dateFieldDOMNode = ReactDOM.findDOMNode(datefield);
-        expect(dateFieldDOMNode).toExist();
+        expect(dateFieldDOMNode).toBeTruthy();
         let childNodes = dateFieldDOMNode.getElementsByTagName('DIV');
         expect(childNodes.length).toBe(2);
         let dateRow = childNodes[0];
-        expect(dateRow).toExist();
+        expect(dateRow).toBeTruthy();
         expect(dateRow.childNodes.length).toBe(1);
     });
 
@@ -64,13 +64,13 @@ describe('DateField', () => {
                 fieldValue={fieldValue}/>,
             document.getElementById("container")
         );
-        expect(datefield).toExist();
+        expect(datefield).toBeTruthy();
         const dateFieldDOMNode = ReactDOM.findDOMNode(datefield);
-        expect(dateFieldDOMNode).toExist();
+        expect(dateFieldDOMNode).toBeTruthy();
         let childNodes = dateFieldDOMNode.getElementsByTagName('DIV');
         expect(childNodes.length).toBe(5);
         let dateRow = childNodes[0];
-        expect(dateRow).toExist();
+        expect(dateRow).toBeTruthy();
         expect(dateRow.childNodes.length).toBe(2);
     });
 
@@ -91,13 +91,13 @@ describe('DateField', () => {
                 fieldValue={fieldValue}/>,
             document.getElementById("container")
         );
-        expect(datefield).toExist();
+        expect(datefield).toBeTruthy();
         const dateFieldDOMNode = ReactDOM.findDOMNode(datefield);
-        expect(dateFieldDOMNode).toExist();
+        expect(dateFieldDOMNode).toBeTruthy();
         let childNodes = dateFieldDOMNode.getElementsByTagName('DIV');
         expect(childNodes.length).toBe(2);
         let dateRow = childNodes[0];
-        expect(dateRow).toExist();
+        expect(dateRow).toBeTruthy();
         expect(dateRow.childNodes.length).toBe(1);
         const buttons = ReactTestUtils.scryRenderedDOMComponentsWithTag(datefield, "button");
         expect(buttons.length).toBe(2);
@@ -122,13 +122,13 @@ describe('DateField', () => {
                 fieldValue={fieldValue}/>,
             document.getElementById("container")
         );
-        expect(datefield).toExist();
+        expect(datefield).toBeTruthy();
         const dateFieldDOMNode = ReactDOM.findDOMNode(datefield);
-        expect(dateFieldDOMNode).toExist();
+        expect(dateFieldDOMNode).toBeTruthy();
         let childNodes = dateFieldDOMNode.getElementsByTagName('DIV');
         expect(childNodes.length).toBe(2);
         let dateRow = childNodes[0];
-        expect(dateRow).toExist();
+        expect(dateRow).toBeTruthy();
         expect(dateRow.childNodes.length).toBe(1);
         const buttons = ReactTestUtils.scryRenderedDOMComponentsWithTag(datefield, "button");
         expect(buttons.length).toBe(1);

@@ -25,24 +25,24 @@ describe('MediaPreview component', () => {
     it('MediaPreview rendering with defaults', () => {
         ReactDOM.render(<MediaPreview />, document.getElementById("container"));
         const container = document.getElementById('container');
-        expect(container.querySelector('.ms-media-preview')).toNotExist();
+        expect(container.querySelector('.ms-media-preview')).toBeFalsy();
     });
     it('MediaPreview for image', () => {
         ReactDOM.render(<MediaPreview mediaType={MediaTypes.IMAGE} />, document.getElementById("container"));
         const container = document.getElementById('container');
-        expect(container.querySelector('.ms-media-preview')).toExist();
-        expect(container.querySelector('.glyphicon-picture')).toExist();
+        expect(container.querySelector('.ms-media-preview')).toBeTruthy();
+        expect(container.querySelector('.glyphicon-picture')).toBeTruthy();
     });
     it('MediaPreview for map', () => {
         ReactDOM.render(<MediaPreview mediaType={MediaTypes.MAP} />, document.getElementById("container"));
         const container = document.getElementById('container');
-        expect(container.querySelector('.ms-media-preview')).toExist();
-        expect(container.querySelector('.glyphicon-1-map')).toExist();
+        expect(container.querySelector('.ms-media-preview')).toBeTruthy();
+        expect(container.querySelector('.glyphicon-1-map')).toBeTruthy();
     });
     it('MediaPreview video', () => {
         ReactDOM.render(<MediaPreview mediaType={MediaTypes.VIDEO} />, document.getElementById("container"));
         const container = document.getElementById('container');
-        expect(container.querySelector('.ms-media-preview')).toExist();
-        expect(container.querySelector('.glyphicon-playback')).toExist();
+        expect(container.querySelector('.ms-media-preview')).toBeTruthy();
+        expect(container.querySelector('.glyphicon-playback')).toBeTruthy();
     });
 });

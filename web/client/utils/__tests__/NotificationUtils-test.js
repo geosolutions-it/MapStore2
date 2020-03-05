@@ -19,7 +19,7 @@ describe('NotificationUtils', () => {
     });
     it('test basicError', () => {
         const action = basicError();
-        expect(action).toExist();
+        expect(action).toBeTruthy();
         expect(action.type).toBe(SHOW_NOTIFICATION);
         expect(action.level).toBe("error");
         expect(action.title).toBe("notification.warning");
@@ -29,7 +29,7 @@ describe('NotificationUtils', () => {
     });
     it('test basicSuccess', () => {
         const action = basicSuccess('Thunderforest.OpenCycleMap');
-        expect(action).toExist();
+        expect(action).toBeTruthy();
         expect(action.type).toBe(SHOW_NOTIFICATION);
         expect(action.level).toBe("success");
         expect(action.title).toBe("notification.success");

@@ -28,28 +28,28 @@ describe('SquareCard component', () => {
         ReactDOM.render(<SquareCard />, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('.ms-square-card');
-        expect(el).toExist();
-        expect(container.querySelector('.ms-selected')).toNotExist();
+        expect(el).toBeTruthy();
+        expect(container.querySelector('.ms-selected')).toBeFalsy();
     });
 
     it('SquareCard rendering with selected', () => {
         ReactDOM.render(<SquareCard selected/>, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('.ms-square-card');
-        expect(el).toExist();
-        expect(container.querySelector('.ms-selected')).toExist();
+        expect(el).toBeTruthy();
+        expect(container.querySelector('.ms-selected')).toBeTruthy();
     });
 
     it('SquareCard rendering with title and preview', () => {
         ReactDOM.render(<SquareCard title={'Title'} preview={'Preview'} />, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('.ms-square-card');
-        expect(el).toExist();
+        expect(el).toBeTruthy();
         const preview = container.querySelector('.ms-preview');
-        expect(preview).toExist();
+        expect(preview).toBeTruthy();
         expect(preview.innerHTML).toBe('Preview');
         const title = container.querySelector('small');
-        expect(title).toExist();
+        expect(title).toBeTruthy();
         expect(title.innerHTML).toBe('Title');
     });
 
@@ -57,11 +57,11 @@ describe('SquareCard component', () => {
         ReactDOM.render(<SquareCard title={'Title'} previewSrc={'src'} />, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('.ms-square-card');
-        expect(el).toExist();
+        expect(el).toBeTruthy();
         const previewImg = container.querySelector('img');
-        expect(previewImg).toExist();
+        expect(previewImg).toBeTruthy();
         const title = container.querySelector('small');
-        expect(title).toExist();
+        expect(title).toBeTruthy();
         expect(title.innerHTML).toBe('Title');
     });
 
@@ -77,7 +77,7 @@ describe('SquareCard component', () => {
             onClick={actions.onClick}/>, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('.ms-square-card');
-        expect(el).toExist();
+        expect(el).toBeTruthy();
         ReactTestUtils.Simulate.click(el);
         expect(spyOnClick).toHaveBeenCalled();
     });

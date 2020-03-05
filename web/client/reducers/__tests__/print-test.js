@@ -91,8 +91,8 @@ describe('Test the print reducer', () => {
             layers: [],
             projection: 'EPSG:4326'
         });
-        expect(state.map).toExist();
-        expect(state.map.center).toExist();
+        expect(state.map).toBeTruthy();
+        expect(state.map.center).toBeTruthy();
         expect(state.map.center.x).toBe(1);
         expect(state.map.zoom).toBe(5);
         expect(state.map.scale).toBe(10000);
@@ -115,8 +115,8 @@ describe('Test the print reducer', () => {
             }],
             projection: 'EPSG:4326'
         });
-        expect(state.map).toExist();
-        expect(state.map.center).toExist();
+        expect(state.map).toBeTruthy();
+        expect(state.map.center).toBeTruthy();
         expect(state.map.center.x).toBe(1);
         expect(state.map.zoom).toBe(5);
         expect(state.map.scale).toBe(10000);
@@ -134,7 +134,7 @@ describe('Test the print reducer', () => {
             zoom: 8,
             scale: 10000
         });
-        expect(state.map).toExist();
+        expect(state.map).toBeTruthy();
         expect(state.map.zoom).toBe(7);
         expect(state.map.scaleZoom).toBe(8);
     });
@@ -144,7 +144,7 @@ describe('Test the print reducer', () => {
             type: CHANGE_MAP_PRINT_PREVIEW,
             size: 1000
         });
-        expect(state.map).toExist();
+        expect(state.map).toBeTruthy();
         expect(state.map.size).toBe(1000);
     });
 
@@ -176,7 +176,7 @@ describe('Test the print reducer', () => {
         const state = print({capabilities: {}, spec: {}, pdfUrl: 'myurl'}, {
             type: PRINT_CANCEL
         });
-        expect(state.pdfUrl).toNotExist();
+        expect(state.pdfUrl).toBeFalsy();
     });
 
     it('configure print map title with current locale', () => {
@@ -195,8 +195,8 @@ describe('Test the print reducer', () => {
             projection: 'EPSG:4326',
             currentLocale: 'it-IT'
         });
-        expect(state.map).toExist();
-        expect(state.map.center).toExist();
+        expect(state.map).toBeTruthy();
+        expect(state.map.center).toBeTruthy();
         expect(state.map.center.x).toBe(1);
         expect(state.map.zoom).toBe(5);
         expect(state.map.scale).toBe(10000);
@@ -221,8 +221,8 @@ describe('Test the print reducer', () => {
             projection: 'EPSG:4326',
             currentLocale: 'en-US'
         });
-        expect(state.map).toExist();
-        expect(state.map.center).toExist();
+        expect(state.map).toBeTruthy();
+        expect(state.map.center).toBeTruthy();
         expect(state.map.center.x).toBe(1);
         expect(state.map.zoom).toBe(5);
         expect(state.map.scale).toBe(10000);
@@ -244,8 +244,8 @@ describe('Test the print reducer', () => {
             projection: 'EPSG:4326',
             currentLocale: 'en-US'
         });
-        expect(state.map).toExist();
-        expect(state.map.center).toExist();
+        expect(state.map).toBeTruthy();
+        expect(state.map.center).toBeTruthy();
         expect(state.map.center.x).toBe(1);
         expect(state.map.zoom).toBe(5);
         expect(state.map.scale).toBe(10000);

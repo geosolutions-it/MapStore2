@@ -27,7 +27,7 @@ describe('Test for AttributeFilter component', () => {
     it('render with defaults', () => {
         ReactDOM.render(<AttributeFilter/>, document.getElementById("container"));
         const el = document.getElementsByClassName("form-control input-sm")[0];
-        expect(el).toExist();
+        expect(el).toBeTruthy();
     });
     it('render not filterable', () => {
         ReactDOM.render(<AttributeFilter column={{filterable: false}}/>, document.getElementById("container"));
@@ -35,17 +35,17 @@ describe('Test for AttributeFilter component', () => {
     });
     it('check tooltip', () => {
         const cmp = ReactDOM.render(<Localized locale="en-US" messages={{test: "TEST"}}><AttributeFilter tooltipMsgId="test"/></Localized>, document.getElementById("container"));
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
         const cmpDom = ReactDOM.findDOMNode(cmp);
-        expect(cmpDom).toExist();
+        expect(cmpDom).toBeTruthy();
         const filterDomCmp = ReactTestUtils.findRenderedComponentWithType(cmp, AttributeFilter);
-        expect(filterDomCmp).toExist();
+        expect(filterDomCmp).toBeTruthy();
         ReactTestUtils.Simulate.mouseEnter(ReactDOM.findDOMNode(filterDomCmp));
     });
     it('render with value', () => {
         const cmp = ReactDOM.render(<AttributeFilter value={"TEST"}/>, document.getElementById("container"));
         const el = document.getElementsByClassName("form-control input-sm")[0];
-        expect(el).toExist();
+        expect(el).toBeTruthy();
         const input = ReactTestUtils.findRenderedDOMComponentWithTag(cmp, "input");
         expect(input.value).toBe("TEST");
     });
@@ -61,7 +61,7 @@ describe('Test for AttributeFilter component', () => {
         };
         const spyonChange = expect.spyOn(actions, 'onChange');
         const cmp = ReactDOM.render(<AttributeFilter onChange={actions.onChange} />, document.getElementById("container"));
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
         const input = ReactTestUtils.findRenderedDOMComponentWithTag(cmp, "input");
         input.value = "test";
         ReactTestUtils.Simulate.change(input);

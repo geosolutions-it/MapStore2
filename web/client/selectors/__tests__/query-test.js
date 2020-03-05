@@ -303,32 +303,32 @@ const initialState = {
 describe('Test query selectors', () => {
     it('test wfsURL selector', () => {
         const searchUrl = wfsURL(initialState);
-        expect(searchUrl).toExist();
+        expect(searchUrl).toBeTruthy();
         expect(searchUrl).toBe("http://localhost:8081/geoserver/wfs?");
     });
     it('test wfsURLSelector selector', () => {
         const url = wfsURLSelector(initialState);
-        expect(url).toExist();
+        expect(url).toBeTruthy();
         expect(url).toBe("http://localhost:8081/geoserver/wfs?");
     });
     it('test typeNameSelector selector', () => {
         const typename = typeNameSelector(initialState);
-        expect(typename).toExist();
+        expect(typename).toBeTruthy();
         expect(typename).toBe("editing:polygons.layer");
     });
     it('test isSyncWmsActive selector', () => {
         const sync = isSyncWmsActive(initialState);
-        expect(sync).toExist();
+        expect(sync).toBeTruthy();
         expect(sync).toBe(true);
     });
     it('test wfsFilter selector', () => {
         const filterObj = wfsFilter(initialState);
-        expect(filterObj).toExist();
+        expect(filterObj).toBeTruthy();
         expect(filterObj.featureTypeName).toBe("editing:polygons.layer");
     });
     it('test resultsSelector selector', () => {
         const res = resultsSelector(initialState);
-        expect(res).toExist();
+        expect(res).toBeTruthy();
         expect(res.length).toBe(5);
     });
     it('test paginationInfo.startIndex selector', () => {
@@ -376,7 +376,7 @@ describe('Test query selectors', () => {
         expect(isLoaded).toBe(false);
     });
     it('featureTypeSelectorCreator', () => {
-        expect(featureTypeSelectorCreator("editing:polygons.layer")(initialState)).toExist();
+        expect(featureTypeSelectorCreator("editing:polygons.layer")(initialState)).toBeTruthy();
     });
     it('featureTypeSelectorCreator works with layer names with points', () => {
         expect(featureTypeSelectorCreator(STRANGE_LAYER_NAME)({
@@ -384,16 +384,16 @@ describe('Test query selectors', () => {
                 featureTypes: { [STRANGE_LAYER_NAME]: {
                     something: "insideThis"
                 }}}
-        })).toExist();
+        })).toBeTruthy();
     });
     it('test getFeatureById selector', () => {
         const ft = getFeatureById(initialState, "poligoni.7");
-        expect(ft).toExist();
+        expect(ft).toBeTruthy();
         expect(ft.id).toBe("poligoni.7");
     });
     it('test attributesSelector selector', () => {
         const attr = attributesSelector(initialState);
-        expect(attr).toExist();
+        expect(attr).toBeTruthy();
         expect(attr.length).toBe(1);
         expect(attr[0].label).toBe("name");
         expect(attr[0].valueId).toBe("id");
@@ -409,14 +409,14 @@ describe('Test query selectors', () => {
                 filterObj: {featureTypeName: STRANGE_LAYER_NAME}
             }
         });
-        expect(attr).toExist();
+        expect(attr).toBeTruthy();
         expect(attr.length).toBe(1);
         expect(attr[0].label).toBe("name");
         expect(attr[0].valueId).toBe("id");
     });
     it('test featureCollectionResultSelector selector', () => {
         const fc = featureCollectionResultSelector(initialState);
-        expect(fc).toExist();
+        expect(fc).toBeTruthy();
         expect(fc.features.length).toBe(4);
     });
 

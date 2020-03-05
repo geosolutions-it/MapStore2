@@ -57,7 +57,7 @@ describe('Openlayers PopupSupport', () => {
 
     it('should render', () => {
         const component = renderPopups();
-        expect(component).toExist();
+        expect(component).toBeTruthy();
     });
     it('should attach popup with a text content to map', () => {
         const popups = [
@@ -70,9 +70,9 @@ describe('Openlayers PopupSupport', () => {
 
         ];
         const component = renderPopups({ popups });
-        expect(component).toExist();
+        expect(component).toBeTruthy();
         expect(getOverlaysNum(map)).toBe(1);
-        expect(document.querySelector('#test-map-popup')).toExist();
+        expect(document.querySelector('#test-map-popup')).toBeTruthy();
     });
     it('should attach popup with a html content to map', () => {
         const popups = [
@@ -85,9 +85,9 @@ describe('Openlayers PopupSupport', () => {
 
         ];
         const component = renderPopups({ popups });
-        expect(component).toExist();
+        expect(component).toBeTruthy();
         expect(getOverlaysNum(map)).toBe(1);
-        expect(document.querySelector('#innerHtml')).toExist();
+        expect(document.querySelector('#innerHtml')).toBeTruthy();
     });
     it('should attach popup with a component to map', () => {
         const popups = [
@@ -100,9 +100,9 @@ describe('Openlayers PopupSupport', () => {
 
         ];
         const component = renderPopups({ popups });
-        expect(component).toExist();
+        expect(component).toBeTruthy();
         expect(getOverlaysNum(map)).toBe(1);
-        expect(document.querySelector('#test-map-popup')).toExist();
+        expect(document.querySelector('#test-map-popup')).toBeTruthy();
     });
     it('should attach popup with a component instance to map', () => {
         const popups = [
@@ -114,9 +114,9 @@ describe('Openlayers PopupSupport', () => {
             }
         ];
         const component = renderPopups({ popups });
-        expect(component).toExist();
+        expect(component).toBeTruthy();
         expect(getOverlaysNum(map)).toBe(1);
-        expect(document.querySelector('#test-map-popup')).toExist();
+        expect(document.querySelector('#test-map-popup')).toBeTruthy();
     });
     it('should attach popups text, html, component', () => {
         const popups = [
@@ -141,12 +141,12 @@ describe('Openlayers PopupSupport', () => {
 
         ];
         const component = renderPopups({ popups });
-        expect(component).toExist();
+        expect(component).toBeTruthy();
         expect(getOverlaysNum(map)).toBe(3);
 
-        expect(document.querySelector('#test-text-map-popup')).toExist();
-        expect(document.querySelector('#test-html-map-popup')).toExist();
-        expect(document.querySelector('#test-component-map-popup')).toExist();
+        expect(document.querySelector('#test-text-map-popup')).toBeTruthy();
+        expect(document.querySelector('#test-html-map-popup')).toBeTruthy();
+        expect(document.querySelector('#test-component-map-popup')).toBeTruthy();
     });
 
 });

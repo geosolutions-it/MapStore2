@@ -26,9 +26,9 @@ describe('FlagButton', () => {
     it('checks default', () => {
 
         const cmp = ReactDOM.render(<FlagButton/>, document.getElementById("container"));
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
 
         const cmpDom = ReactDOM.findDOMNode(cmp);
-        expect(cmpDom).toExist();
+        expect(cmpDom).toBeTruthy();
     });
 });

@@ -27,10 +27,10 @@ describe('This test for MetadataModal', () => {
     // test DEFAULTS
     it('creates the component with defaults, show=false', () => {
         const metadataModalItem = ReactDOM.render(<MetadataModal map={{}} show={false}/>, document.getElementById("container"));
-        expect(metadataModalItem).toExist();
+        expect(metadataModalItem).toBeTruthy();
 
         const metadataModalItemDom = ReactDOM.findDOMNode(metadataModalItem);
-        expect(metadataModalItemDom).toExist();
+        expect(metadataModalItemDom).toBeTruthy();
         const modalDivList = document.getElementsByClassName("modal-content");
         expect(modalDivList.length).toBe(0);
 
@@ -52,7 +52,7 @@ describe('This test for MetadataModal', () => {
         };
 
         const metadataModalItem = ReactDOM.render(<MetadataModal show useModal map={map} id="MetadataModal"/>, document.getElementById("container"));
-        expect(metadataModalItem).toExist();
+        expect(metadataModalItem).toBeTruthy();
 
         const modalDivList = document.getElementsByClassName("modal-content");
         const closeBtnList = modalDivList.item(0).getElementsByTagName('button');
@@ -81,12 +81,12 @@ describe('This test for MetadataModal', () => {
         const cmp = ReactDOM.render(<MetadataModal
             show useModal map={map} id="MetadataModal"
             detailsSheetActions={{onToggleUnsavedChangesModal: actions.onToggleUnsavedChangesModal}} onDisplayMetadataEdit={actions.spyonDisplayMetadataEdit} />, document.getElementById("container"));
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
         let el = document.querySelector('#ms-resizable-modal .btn-group button');
-        expect(el).toExist();
+        expect(el).toBeTruthy();
         ReactTestUtils.Simulate.click(el); // <-- trigger event callback
         expect(spyonToggleUnsavedChangesModal).toHaveBeenCalled();
-        expect(spyonDisplayMetadataEdit).toNotHaveBeenCalled();
+        expect(spyonDisplayMetadataEdit).not.toHaveBeenCalled();
         ReactDOM.render(<MetadataModal
             show useModal map={map} id="MetadataModal"
             onDisplayMetadataEdit={actions.onDisplayMetadataEdit} />, document.getElementById("container"));
@@ -106,7 +106,7 @@ describe('This test for MetadataModal', () => {
         };
 
         const metadataModalItem = ReactDOM.render(<MetadataModal show map={map} useModal id="MetadataModal"/>, document.getElementById("container"));
-        expect(metadataModalItem).toExist();
+        expect(metadataModalItem).toBeTruthy();
 
         const getModals = function() {
             return document.getElementsByTagName("body")[0].getElementsByClassName('modal-dialog');
@@ -119,7 +119,7 @@ describe('This test for MetadataModal', () => {
         expect(closeBtnList.length).toBe(2);
 
         const errorFORMAT = modalDivList.item(0).getElementsByTagName('errorFORMAT');
-        expect(errorFORMAT).toExist();
+        expect(errorFORMAT).toBeTruthy();
     });
 
     it('creates the component with a size error', () => {
@@ -133,7 +133,7 @@ describe('This test for MetadataModal', () => {
         };
 
         const metadataModalItem = ReactDOM.render(<MetadataModal show map={map} useModal id="MetadataModal"/>, document.getElementById("container"));
-        expect(metadataModalItem).toExist();
+        expect(metadataModalItem).toBeTruthy();
 
         const getModals = function() {
             return document.getElementsByTagName("body")[0].getElementsByClassName('modal-dialog');
@@ -146,7 +146,7 @@ describe('This test for MetadataModal', () => {
         expect(closeBtnList.length).toBe(2);
 
         const errorFORMAT = modalDivList.item(0).getElementsByTagName('errorSIZE');
-        expect(errorFORMAT).toExist();
+        expect(errorFORMAT).toBeTruthy();
     });
 
     it('details row is shown for maps', () => {
@@ -163,7 +163,7 @@ describe('This test for MetadataModal', () => {
         };
 
         const metadataModalItem = ReactDOM.render(<MetadataModal show useModal map={map} id="MetadataModal"/>, document.getElementById("container"));
-        expect(metadataModalItem).toExist();
+        expect(metadataModalItem).toBeTruthy();
         const detailsSheetArray = document.getElementsByClassName('ms-details-sheet');
         expect(detailsSheetArray.length).toBe(1);
     });
@@ -182,7 +182,7 @@ describe('This test for MetadataModal', () => {
         };
 
         const metadataModalItem = ReactDOM.render(<MetadataModal show useModal map={map} id="MetadataModal"/>, document.getElementById("container"));
-        expect(metadataModalItem).toExist();
+        expect(metadataModalItem).toBeTruthy();
         const detailsSheetArray = document.getElementsByClassName('ms-details-sheet');
         expect(detailsSheetArray.length).toBe(0);
     });
@@ -209,13 +209,13 @@ describe('This test for MetadataModal', () => {
 
         const spyonOnSave = expect.spyOn(actions, 'onSave');
         const metadataModalItem = ReactDOM.render(<MetadataModal show useModal map={map} id="MetadataModal" onSave={actions.onSave} />, document.getElementById("container"));
-        expect(metadataModalItem).toExist();
+        expect(metadataModalItem).toBeTruthy();
         const modalDivList = document.getElementsByClassName("modal-content");
         const modalButtons = modalDivList.item(0).getElementsByTagName('button');
         const saveButton = modalButtons[1];
         expect(saveButton.disabled).toBeTruthy();
         ReactTestUtils.Simulate.click(saveButton);
-        expect(spyonOnSave).toNotHaveBeenCalled();
+        expect(spyonOnSave).not.toHaveBeenCalled();
     });
 
     it('save button is enabled when name is filled and user is able to save', () => {
@@ -240,7 +240,7 @@ describe('This test for MetadataModal', () => {
 
         const spyonOnSave = expect.spyOn(actions, 'onSave');
         const metadataModalItem = ReactDOM.render(<MetadataModal show useModal map={map} id="MetadataModal" onSave={actions.onSave} />, document.getElementById("container"));
-        expect(metadataModalItem).toExist();
+        expect(metadataModalItem).toBeTruthy();
         const modalDivList = document.getElementsByClassName("modal-content");
         const modalButtons = modalDivList.item(0).getElementsByTagName('button');
         const saveButton = modalButtons[1];
@@ -268,12 +268,12 @@ describe('This test for MetadataModal', () => {
                 onResetCurrentMap={actions.onResetCurrentMap}
                 detailsSheetActions={{onToggleUnsavedChangesModal: actions.onToggleUnsavedChangesModal}}
             />, document.getElementById("container"));
-        expect(metadataModal).toExist();
+        expect(metadataModal).toBeTruthy();
         const unsavedChangesDialog = document.querySelector('.modal-dialog');
         const unsavedChangesDialogBody = document.querySelector('.modal-dialog .modal-body');
         let buttons = document.querySelectorAll('button');
-        expect(unsavedChangesDialog).toExist();
-        expect(unsavedChangesDialogBody).toExist();
+        expect(unsavedChangesDialog).toBeTruthy();
+        expect(unsavedChangesDialogBody).toBeTruthy();
         expect(unsavedChangesDialogBody.children[0].innerText).toBe("map.details.fieldsChanged");
         expect(unsavedChangesDialogBody.children[2].innerText).toBe("map.details.sureToClose");
         expect(buttons.length).toBe(3);
@@ -284,8 +284,8 @@ describe('This test for MetadataModal', () => {
         ReactTestUtils.Simulate.click(closeBtn);
 
         expect(onResetCurrentMapSpy).toHaveBeenCalled();
-        expect(onDisplayMetadataEditSpy).toNotHaveBeenCalled();
-        expect(onToggleUnsavedChangesModalSpy).toNotHaveBeenCalled();
+        expect(onDisplayMetadataEditSpy).not.toHaveBeenCalled();
+        expect(onToggleUnsavedChangesModalSpy).not.toHaveBeenCalled();
     });
 
     it('showing unsaved changes modal and without closing the modal', () => {
@@ -308,12 +308,12 @@ describe('This test for MetadataModal', () => {
                 onResetCurrentMap={actions.onResetCurrentMap}
                 detailsSheetActions={{onToggleUnsavedChangesModal: actions.onToggleUnsavedChangesModal}}
             />, document.getElementById("container"));
-        expect(metadataModal).toExist();
+        expect(metadataModal).toBeTruthy();
         const unsavedChangesDialog = document.querySelector('.modal-dialog');
         const unsavedChangesDialogBody = document.querySelector('.modal-dialog .modal-body');
         let buttons = document.querySelectorAll('button');
-        expect(unsavedChangesDialog).toExist();
-        expect(unsavedChangesDialogBody).toExist();
+        expect(unsavedChangesDialog).toBeTruthy();
+        expect(unsavedChangesDialogBody).toBeTruthy();
         expect(unsavedChangesDialogBody.children[0].innerText).toBe("map.details.fieldsChanged");
         expect(unsavedChangesDialogBody.children[2].innerText).toBe("map.details.sureToClose");
         expect(buttons.length).toBe(3);
@@ -323,7 +323,7 @@ describe('This test for MetadataModal', () => {
         expect(cancelBtn.innerText).toBe("saveDialog.cancel");
         ReactTestUtils.Simulate.click(cancelBtn);
 
-        expect(onResetCurrentMapSpy).toNotHaveBeenCalled();
+        expect(onResetCurrentMapSpy).not.toHaveBeenCalled();
         expect(onDisplayMetadataEditSpy).toHaveBeenCalled();
         expect(onToggleUnsavedChangesModalSpy).toHaveBeenCalled();
     });

@@ -19,7 +19,7 @@ describe('no90Lat enhancer', () => {
             expect(parseFloat(v)).toBeLessThan(90);
         };
         const Sink = no90Lat(createSink( props => {
-            expect(props).toExist();
+            expect(props).toBeTruthy();
             props.onChange("90");
             done();
         }));
@@ -27,10 +27,10 @@ describe('no90Lat enhancer', () => {
     });
     it('no90Lat rendering with negative value', (done) => {
         const onChange = (v) => {
-            expect(parseFloat(v)).toBeMoreThan(-90);
+            expect(parseFloat(v)).toBeGreaterThan(-90);
         };
         const Sink = no90Lat(createSink(props => {
-            expect(props).toExist();
+            expect(props).toBeTruthy();
             props.onChange("-90");
             done();
         }));
@@ -41,7 +41,7 @@ describe('no90Lat enhancer', () => {
             expect(parseFloat(v)).toBe(90);
         };
         const Sink = no90Lat(createSink(props => {
-            expect(props).toExist();
+            expect(props).toBeTruthy();
             props.onChange("90");
             done();
         }));

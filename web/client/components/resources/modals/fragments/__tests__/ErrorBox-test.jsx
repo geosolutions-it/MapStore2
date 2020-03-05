@@ -17,7 +17,7 @@ describe("ErrorBox component", () => {
 
     it('creates component with defaults', () => {
         ReactDOM.render(<ErrorBox />, getContainerDiv());
-        expect(document.querySelector(".dropzone-errorBox")).toNotExist();
+        expect(document.querySelector(".dropzone-errorBox")).toBeFalsy();
 
     });
 
@@ -29,7 +29,7 @@ describe("ErrorBox component", () => {
         ReactDOM.render(<ErrorBox errors={errors}/>, getContainerDiv());
 
         const ErrorSpan = document.querySelector(".errorForbidden");
-        expect(ErrorSpan).toExist();
+        expect(ErrorSpan).toBeTruthy();
         expect(ErrorSpan.innerHTML).toContain("<span>dashboard.errors.forbidden</span>");
     });
     it('test 405 Error', () => {
@@ -39,7 +39,7 @@ describe("ErrorBox component", () => {
         }];
         ReactDOM.render(<ErrorBox errors={errors}/>, getContainerDiv());
         const ErrorSpan = document.querySelector(`.error${errors[0].statusText}`);
-        expect(ErrorSpan).toExist();
+        expect(ErrorSpan).toBeTruthy();
         expect(ErrorSpan.innerHTML).toBe("<span>dashboard.errors.forbidden405</span>");
     });
     it('test 409 Error', () => {
@@ -49,7 +49,7 @@ describe("ErrorBox component", () => {
         }];
         ReactDOM.render(<ErrorBox errors={errors}/>, getContainerDiv());
         const ErrorSpan = document.querySelector(`.error${errors[0].statusText}`);
-        expect(ErrorSpan).toExist();
+        expect(ErrorSpan).toBeTruthy();
         expect(ErrorSpan.innerHTML).toBe("<span>dashboard.errors.resourceAlreadyExists</span>");
     });
     it('test FORMAT Error', () => {
@@ -59,7 +59,7 @@ describe("ErrorBox component", () => {
         }];
         ReactDOM.render(<ErrorBox errors={errors}/>, getContainerDiv());
         const ErrorSpan = document.querySelector(`.error${errors[0].statusText}`);
-        expect(ErrorSpan).toExist();
+        expect(ErrorSpan).toBeTruthy();
         expect(ErrorSpan.innerHTML).toBe(`<span>map.errorFormat</span>`);
     });
     it('test SIZE Error', () => {
@@ -69,7 +69,7 @@ describe("ErrorBox component", () => {
         }];
         ReactDOM.render(<ErrorBox errors={errors}/>, getContainerDiv());
         const ErrorSpan = document.querySelector(`.error${errors[0].statusText}`);
-        expect(ErrorSpan).toExist();
+        expect(ErrorSpan).toBeTruthy();
         expect(ErrorSpan.innerHTML).toBe(`<span>map.errorSize</span>`);
     });
     it('test 404 Error, not handled', () => {
@@ -80,7 +80,7 @@ describe("ErrorBox component", () => {
         // this will not track the lack for statusText that could be missing in locale.messages
         ReactDOM.render(<ErrorBox errors={errors}/>, getContainerDiv());
         const ErrorSpan = document.querySelector(`.error${errors[0].statusText}`);
-        expect(ErrorSpan).toExist();
+        expect(ErrorSpan).toBeTruthy();
         expect(ErrorSpan.innerHTML).toBe(`<span>${errors[0].statusText}</span>`);
     });
 

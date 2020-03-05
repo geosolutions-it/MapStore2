@@ -51,26 +51,26 @@ describe('Test correctness of the widgets actions', () => {
     it('exportCSV', () => {
         const data = [{a: "a"}];
         const retval = exportCSV({data, title: "TITLE"});
-        expect(retval).toExist();
+        expect(retval).toBeTruthy();
         expect(retval.type).toBe(EXPORT_CSV);
         expect(retval.data).toBe(data);
         expect(retval.title).toBe("TITLE");
     });
     it('exportImage', () => {
         const retval = exportImage({widgetDivId: "WIDGET"});
-        expect(retval).toExist();
+        expect(retval).toBeTruthy();
         expect(retval.type).toBe(EXPORT_IMAGE);
         expect(retval.widgetDivId).toBe("WIDGET");
     });
     it('openFilterEditor', () => {
         const retval = openFilterEditor();
-        expect(retval).toExist();
+        expect(retval).toBeTruthy();
         expect(retval.type).toBe(OPEN_FILTER_EDITOR);
     });
     it('createWidget', () => {
         const widget = {};
         const retval = createWidget(widget);
-        expect(retval).toExist();
+        expect(retval).toBeTruthy();
         expect(retval.type).toBe(NEW);
         expect(retval.widget).toBe(widget);
     });
@@ -78,7 +78,7 @@ describe('Test correctness of the widgets actions', () => {
         const widget = {};
         const TARGET = "TARGET";
         const retval = insertWidget(widget, TARGET);
-        expect(retval).toExist();
+        expect(retval).toBeTruthy();
         expect(retval.type).toBe(INSERT);
         expect(retval.widget).toBe(widget);
         expect(retval.target).toBe(TARGET);
@@ -89,14 +89,14 @@ describe('Test correctness of the widgets actions', () => {
     it('updateWidget', () => {
         const widget = {};
         const retval = updateWidget(widget);
-        expect(retval).toExist();
+        expect(retval).toBeTruthy();
         expect(retval.type).toBe(UPDATE);
         expect(retval.widget).toBe(widget);
         expect(retval.target).toBe(DEFAULT_TARGET);
     });
     it('updateWidgetProperty', () => {
         const retval = updateWidgetProperty("id", "key", "value");
-        expect(retval).toExist();
+        expect(retval).toBeTruthy();
         expect(retval.type).toBe(UPDATE_PROPERTY);
         expect(retval.id).toBe("id");
         expect(retval.key).toBe("key");
@@ -107,14 +107,14 @@ describe('Test correctness of the widgets actions', () => {
     it('updateWidgetLayer', () => {
         const layer = {id: "1", name: "layer1"};
         const retval = updateWidgetLayer(layer);
-        expect(retval).toExist();
+        expect(retval).toBeTruthy();
         expect(retval.type).toBe(UPDATE_LAYER);
         expect(retval.layer).toBe(layer);
     });
     it('deleteWidget', () => {
         const widget = {};
         const retval = deleteWidget(widget);
-        expect(retval).toExist();
+        expect(retval).toBeTruthy();
         expect(retval.type).toBe(DELETE);
         expect(retval.widget).toBe(widget);
         expect(retval.target).toBe(DEFAULT_TARGET);
@@ -125,7 +125,7 @@ describe('Test correctness of the widgets actions', () => {
             lg: {}
         };
         const retval = changeLayout(layout, allLayouts);
-        expect(retval).toExist();
+        expect(retval).toBeTruthy();
         expect(retval.layout).toBe(layout);
         expect(retval.allLayouts).toBe(allLayouts);
         expect(retval.type).toBe(CHANGE_LAYOUT);
@@ -134,7 +134,7 @@ describe('Test correctness of the widgets actions', () => {
     it('editWidget', () => {
         const widget = {};
         const retval = editWidget(widget);
-        expect(retval).toExist();
+        expect(retval).toBeTruthy();
         expect(retval.type).toBe(EDIT);
         expect(retval.widget).toBe(widget);
     });
@@ -142,7 +142,7 @@ describe('Test correctness of the widgets actions', () => {
         const widget = {};
         const settings = {};
         const retval = editNewWidget(widget, settings);
-        expect(retval).toExist();
+        expect(retval).toBeTruthy();
         expect(retval.type).toBe(EDIT_NEW);
         expect(retval.widget).toBe(widget);
         expect(retval.settings).toBe(settings);
@@ -151,7 +151,7 @@ describe('Test correctness of the widgets actions', () => {
         const key = "KEY";
         const value = "VALUE";
         const retval = onEditorChange(key, value);
-        expect(retval).toExist();
+        expect(retval).toBeTruthy();
         expect(retval.type).toBe(EDITOR_CHANGE);
         expect(retval.key).toBe(key);
         expect(retval.value).toBe(value);
@@ -160,14 +160,14 @@ describe('Test correctness of the widgets actions', () => {
         const key = "KEY";
         const value = "VALUE";
         const retval = changeEditorSetting(key, value);
-        expect(retval).toExist();
+        expect(retval).toBeTruthy();
         expect(retval.type).toBe(EDITOR_SETTING_CHANGE);
         expect(retval.key).toBe(key);
         expect(retval.value).toBe(value);
     });
     it('setPage', () => {
         const retval = setPage(1);
-        expect(retval).toExist();
+        expect(retval).toBeTruthy();
         expect(retval.type).toBe(EDITOR_SETTING_CHANGE);
         expect(retval.key).toBe("step");
         expect(retval.value).toBe(1);
@@ -175,7 +175,7 @@ describe('Test correctness of the widgets actions', () => {
     it('setupDependencySelector', () => {
         const value = { active: true, setup: "setup" };
         const retval = setupDependencySelector(value);
-        expect(retval).toExist();
+        expect(retval).toBeTruthy();
         expect(retval.type).toBe(EDITOR_SETTING_CHANGE);
         expect(retval.key).toBe(`${DEPENDENCY_SELECTOR_KEY}`);
         expect(retval.value).toBe(value);
@@ -183,7 +183,7 @@ describe('Test correctness of the widgets actions', () => {
     it('toggleDependencySelector', () => {
         const value = { setup: "setup" };
         const retval = toggleDependencySelector(true, value);
-        expect(retval).toExist();
+        expect(retval).toBeTruthy();
         expect(retval.type).toBe(EDITOR_SETTING_CHANGE);
         expect(retval.key).toBe(`${DEPENDENCY_SELECTOR_KEY}`);
         expect(retval.value.setup).toBe("setup");
@@ -191,12 +191,12 @@ describe('Test correctness of the widgets actions', () => {
     });
     it('createChart', () => {
         const retval = createChart(true);
-        expect(retval).toExist();
+        expect(retval).toBeTruthy();
         expect(retval.type).toBe(NEW_CHART);
     });
     it('toggleTray', () => {
         const retval = toggleTray(true);
-        expect(retval).toExist();
+        expect(retval).toBeTruthy();
         expect(retval.type).toBe(TOGGLE_TRAY);
         expect(retval.value).toBe(true);
     });

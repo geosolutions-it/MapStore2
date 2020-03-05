@@ -40,16 +40,16 @@ describe('Test correctness of the usergroups actions', () => {
     });
     it('get UserGroups', (done) => {
         const retFun = getUserGroups('usergroups.json', {params: {start: 0, limit: 10}});
-        expect(retFun).toExist();
+        expect(retFun).toBeTruthy();
         let count = 0;
         retFun((action) => {
             expect(action.type).toBe(GETGROUPS);
             count++;
             if (count === 2) {
                 expect(action.status).toBe(STATUS_SUCCESS);
-                expect(action.groups).toExist();
-                expect(action.groups[0]).toExist();
-                expect(action.groups[0].groupName).toExist();
+                expect(action.groups).toBeTruthy();
+                expect(action.groups[0]).toBeTruthy();
+                expect(action.groups[0].groupName).toBeTruthy();
                 done();
             }
 
@@ -62,14 +62,14 @@ describe('Test correctness of the usergroups actions', () => {
     });
     it('getUserGroups error', (done) => {
         const retFun = getUserGroups('MISSING_LINK', {params: {start: 0, limit: 10}});
-        expect(retFun).toExist();
+        expect(retFun).toBeTruthy();
         let count = 0;
         retFun((action) => {
             expect(action.type).toBe(GETGROUPS);
             count++;
             if (count === 2) {
                 expect(action.status).toBe(STATUS_ERROR);
-                expect(action.error).toExist();
+                expect(action.error).toBeTruthy();
                 done();
             }
 
@@ -78,13 +78,13 @@ describe('Test correctness of the usergroups actions', () => {
     });
     it('edit UserGroup', (done) => {
         const retFun = editGroup({id: 1});
-        expect(retFun).toExist();
+        expect(retFun).toBeTruthy();
         let count = 0;
         retFun((action) => {
             expect(action.type).toBe(EDITGROUP);
             count++;
             if (count === 2) {
-                expect(action.group).toExist();
+                expect(action.group).toBeTruthy();
                 expect(action.status).toBe("success");
                 done();
             }
@@ -94,13 +94,13 @@ describe('Test correctness of the usergroups actions', () => {
     it('edit UserGroup new', (done) => {
         let template = {groupName: "hello"};
         const retFun = editGroup(template);
-        expect(retFun).toExist();
+        expect(retFun).toBeTruthy();
         let count = 0;
         retFun((action) => {
             expect(action.type).toBe(EDITGROUP);
             count++;
             if (count === 1) {
-                expect(action.group).toExist();
+                expect(action.group).toBeTruthy();
                 expect(action.group).toBe(template);
                 done();
             }
@@ -109,14 +109,14 @@ describe('Test correctness of the usergroups actions', () => {
 
     it('close UserGroup edit', (done) => {
         const retFun = editGroup();
-        expect(retFun).toExist();
+        expect(retFun).toBeTruthy();
         let count = 0;
         retFun((action) => {
             expect(action.type).toBe(EDITGROUP);
             count++;
             if (count === 1) {
-                expect(action.group).toNotExist();
-                expect(action.status).toNotExist();
+                expect(action.group).toBeFalsy();
+                expect(action.status).toBeFalsy();
                 done();
             }
         });
@@ -124,13 +124,13 @@ describe('Test correctness of the usergroups actions', () => {
 
     it('edit UserGroup error', (done) => {
         const retFun = editGroup({id: 99999});
-        expect(retFun).toExist();
+        expect(retFun).toBeTruthy();
         let count = 0;
         retFun((action) => {
             expect(action.type).toBe(EDITGROUP);
             count++;
             if (count === 2) {
-                expect(action.error).toExist();
+                expect(action.error).toBeTruthy();
                 expect(action.status).toBe("error");
                 done();
             }
@@ -139,7 +139,7 @@ describe('Test correctness of the usergroups actions', () => {
 
     it('change usergroup metadata', () => {
         const action = changeGroupMetadata("groupName", "New Group Name");
-        expect(action).toExist();
+        expect(action).toBeTruthy();
         expect(action.type).toBe(EDITGROUPDATA);
         expect(action.key).toBe("groupName");
         expect(action.newValue).toBe("New Group Name");
@@ -150,7 +150,7 @@ describe('Test correctness of the usergroups actions', () => {
         // 1# is a workaround to skip the trailing slash of the request
         // that can not be managed by the test-resources
         const retFun = saveGroup({id: "1#", newUsers: [{id: 100, name: "name1"}]});
-        expect(retFun).toExist();
+        expect(retFun).toBeTruthy();
         let count = 0;
         retFun((action) => {
             if (action.type) {
@@ -158,7 +158,7 @@ describe('Test correctness of the usergroups actions', () => {
             }
             count++;
             if (count === 2) {
-                expect(action.group).toExist();
+                expect(action.group).toBeTruthy();
                 expect(action.status).toBe("saved");
             }
             if (count === 3) {
@@ -172,7 +172,7 @@ describe('Test correctness of the usergroups actions', () => {
             return assign(options, {baseURL: 'base/web/client/test-resources/geostore/usergroups/newGroup.txt#'});
         };
         const retFun = saveGroup({groupName: "TEST"});
-        expect(retFun).toExist();
+        expect(retFun).toBeTruthy();
         let count = 0;
         retFun((action) => {
             if (action.type) {
@@ -180,8 +180,8 @@ describe('Test correctness of the usergroups actions', () => {
             }
             count++;
             if (count === 2) {
-                expect(action.group).toExist();
-                expect(action.group.id).toExist();
+                expect(action.group).toBeTruthy();
+                expect(action.group.id).toBeTruthy();
                 expect(action.group.id).toBe(1);
                 expect(action.status).toBe("created");
             }
@@ -196,7 +196,7 @@ describe('Test correctness of the usergroups actions', () => {
             return assign(options, {baseURL: 'base/web/client/test-resources/geostore/usergroups/newGroup.txt#'});
         };
         const retFun = saveGroup({groupName: "TEST", newUsers: [{id: 100, name: "name1"}]});
-        expect(retFun).toExist();
+        expect(retFun).toBeTruthy();
         let count = 0;
         retFun((action) => {
             if (action.type) {
@@ -204,8 +204,8 @@ describe('Test correctness of the usergroups actions', () => {
             }
             count++;
             if (count === 2) {
-                expect(action.group).toExist();
-                expect(action.group.id).toExist();
+                expect(action.group).toBeTruthy();
+                expect(action.group.id).toBeTruthy();
                 expect(action.group.id).toBe(1);
                 expect(action.status).toBe("created");
             }
@@ -218,10 +218,10 @@ describe('Test correctness of the usergroups actions', () => {
 
     it('delete Group', (done) => {
         let confirm = deleteGroup(1);
-        expect(confirm).toExist();
+        expect(confirm).toBeTruthy();
         expect(confirm.status).toBe("confirm");
         const retFun = deleteGroup(1, "delete");
-        expect(retFun).toExist();
+        expect(retFun).toBeTruthy();
         let count = 0;
         retFun((action) => {
             if (action.type) {
@@ -229,7 +229,7 @@ describe('Test correctness of the usergroups actions', () => {
             }
             count++;
             if (count === 2) {
-                expect(action.status).toExist();
+                expect(action.status).toBeTruthy();
                 expect(action.status).toBe(STATUS_DELETED);
                 expect(action.id).toBe(1);
                 done();
@@ -242,28 +242,28 @@ describe('Test correctness of the usergroups actions', () => {
     });
     it('search users', (done) => {
         const retFun = searchUsers('users.json', 0, 10, {params: {start: 0, limit: 10}}, "");
-        expect(retFun).toExist();
+        expect(retFun).toBeTruthy();
         let count = 0;
         retFun((action) => {
             expect(action.type).toBe(SEARCHUSERS);
             count++;
             if (count === 2) {
-                expect(action.users).toExist();
-                expect(action.users[0]).toExist();
-                expect(action.users[0].groups).toExist();
+                expect(action.users).toBeTruthy();
+                expect(action.users[0]).toBeTruthy();
+                expect(action.users[0].groups).toBeTruthy();
                 done();
             }
         });
     });
     it('search users', (done) => {
         const retFun = searchUsers('MISSING_LINK', {params: {start: 0, limit: 10}});
-        expect(retFun).toExist();
+        expect(retFun).toBeTruthy();
         let count = 0;
         retFun((action) => {
             expect(action.type).toBe(SEARCHUSERS);
             count++;
             if (count === 2) {
-                expect(action.error).toExist();
+                expect(action.error).toBeTruthy();
                 done();
             }
         });

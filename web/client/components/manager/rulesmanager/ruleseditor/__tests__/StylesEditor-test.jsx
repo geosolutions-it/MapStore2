@@ -30,17 +30,17 @@ describe('Styles Editor component', () => {
         ReactDOM.render(<StylesEditor/>, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('.ms-rule-editor');
-        expect(el).toExist();
+        expect(el).toBeTruthy();
         expect(el.style.display).toBe("none");
     });
     it('render defaults when active', () => {
         ReactDOM.render(<StylesEditor active/>, document.getElementById("container"));
         const container = document.getElementById('container');
         const rows = container.querySelectorAll('.ms-add-style');
-        expect(rows).toExist();
+        expect(rows).toBeTruthy();
         expect(rows.length).toBe(2);
         const btns = container.querySelectorAll('button');
-        expect(btns).toExist();
+        expect(btns).toBeTruthy();
         expect(btns.length).toBe(2);
         ReactTestUtils.Simulate.click(btns[0]);
         ReactTestUtils.Simulate.click(btns[1]);
@@ -50,26 +50,26 @@ describe('Styles Editor component', () => {
         ReactDOM.render(<StylesEditor active styles={styles} constraints={constraints} />, document.getElementById("container"));
         const container = document.getElementById('container');
         const cards = container.querySelectorAll('.mapstore-side-card');
-        expect(cards).toExist();
+        expect(cards).toBeTruthy();
         expect(cards.length).toBe(2);
     });
     it('render default style modal', () => {
         ReactDOM.render(<StylesEditor active modal="default" styles={styles} constraints={constraints} />, document.getElementById("container"));
         const modal = document.querySelector('.ms-style-modal');
-        expect(modal).toExist();
+        expect(modal).toBeTruthy();
         const sideCard = modal.querySelector(".mapstore-side-card");
-        expect(sideCard).toExist();
+        expect(sideCard).toBeTruthy();
         ReactTestUtils.Simulate.click(sideCard);
     });
     it('render availables styles modal', () => {
         ReactDOM.render(<StylesEditor active modal="availables" styles={styles} constraints={constraints} />, document.getElementById("container"));
         const modal = document.querySelector('.ms-style-modal');
-        expect(modal).toExist();
+        expect(modal).toBeTruthy();
         const sideCard = modal.querySelector(".mapstore-side-card");
-        expect(sideCard).toExist();
+        expect(sideCard).toBeTruthy();
         ReactTestUtils.Simulate.click(sideCard);
         const btns = modal.querySelectorAll('button');
-        expect(btns).toExist();
+        expect(btns).toBeTruthy();
         expect(btns.length).toBe(2);
         ReactTestUtils.Simulate.click(btns[0]);
         ReactTestUtils.Simulate.click(btns[1]);

@@ -33,8 +33,8 @@ describe('test rules manager reducer', () => {
             ]
         });
         expect(state.selectedRules.length).toBe(2);
-        expect(state.selectedRules).toInclude({ id: "rules3" });
-        expect(state.selectedRules).toInclude({ id: "rules4" });
+        expect(state.selectedRules).toContainEqual({ id: "rules3" });
+        expect(state.selectedRules).toContainEqual({ id: "rules4" });
     });
 
     it('merge selected rules', () => {
@@ -54,10 +54,10 @@ describe('test rules manager reducer', () => {
             ]
         });
         expect(state.selectedRules.length).toBe(4);
-        expect(state.selectedRules).toInclude({ id: "rules1" });
-        expect(state.selectedRules).toInclude({ id: "rules2" });
-        expect(state.selectedRules).toInclude({ id: "rules3" });
-        expect(state.selectedRules).toInclude({ id: "rules4" });
+        expect(state.selectedRules).toContainEqual({ id: "rules1" });
+        expect(state.selectedRules).toContainEqual({ id: "rules2" });
+        expect(state.selectedRules).toContainEqual({ id: "rules3" });
+        expect(state.selectedRules).toContainEqual({ id: "rules4" });
     });
 
     it('substitute unselected rules', () => {
@@ -79,8 +79,8 @@ describe('test rules manager reducer', () => {
             ]
         });
         expect(state.selectedRules.length).toBe(2);
-        expect(state.selectedRules).toInclude({ id: "rules3" });
-        expect(state.selectedRules).toInclude({ id: "rules4" });
+        expect(state.selectedRules).toContainEqual({ id: "rules3" });
+        expect(state.selectedRules).toContainEqual({ id: "rules4" });
     });
 
     it('merge unselected rules', () => {
@@ -102,8 +102,8 @@ describe('test rules manager reducer', () => {
             ]
         });
         expect(state.selectedRules.length).toBe(2);
-        expect(state.selectedRules).toInclude({ id: "rules1" });
-        expect(state.selectedRules).toInclude({ id: "rules2" });
+        expect(state.selectedRules).toContainEqual({ id: "rules1" });
+        expect(state.selectedRules).toContainEqual({ id: "rules2" });
     });
 
     it('update filters values', () => {
@@ -151,11 +151,11 @@ describe('test rules manager reducer', () => {
             valuesCount: 20
         });
         expect(state.options.groups.length).toBe(2);
-        expect(state.options.groups).toInclude("group1");
-        expect(state.options.groups).toInclude("group2");
+        expect(state.options.groups).toContainEqual("group1");
+        expect(state.options.groups).toContainEqual("group2");
         expect(state.options.layers.length).toBe(2);
-        expect(state.options.layers).toInclude("layer3");
-        expect(state.options.layers).toInclude("layer4");
+        expect(state.options.layers).toContainEqual("layer3");
+        expect(state.options.layers).toContainEqual("layer4");
         expect(state.options.layersPage).toBe(10);
         expect(state.options.layersCount).toBe(20);
     });

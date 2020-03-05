@@ -16,7 +16,7 @@ import ReactTestUtils from 'react-dom/test-utils';
 const doCommonTests = (document) => {
     const container = document.getElementById('container');
     const el = container.querySelector('.ms-geostory-map-controls');
-    expect(el).toExist();
+    expect(el).toBeTruthy();
 };
 
 describe('Controls component', () => {
@@ -51,9 +51,9 @@ describe('Controls component', () => {
         expect(checkboxes.length).toBe(3);
         ReactTestUtils.Simulate.change(checkboxes[0]);
         expect(spyChangeMap).toHaveBeenCalled();
-        expect(spyChangeMap.calls.length).toBe(2);
-        expect(spyChangeMap.calls[0].arguments).toEqual(['zoomControl', false]);
-        expect(spyChangeMap.calls[1].arguments).toEqual(['mapOptions.interactions', { doubleClickZoom: newZoomStatus, shiftDragZoom: newZoomStatus, pinchZoom: newZoomStatus } ]);
+        expect(spyChangeMap.mock.calls.length).toBe(2);
+        expect(spyChangeMap.mock.calls[0]).toEqual(['zoomControl', false]);
+        expect(spyChangeMap.mock.calls[1]).toEqual(['mapOptions.interactions', { doubleClickZoom: newZoomStatus, shiftDragZoom: newZoomStatus, pinchZoom: newZoomStatus } ]);
     });
     it('rendering Controls comp and triggering pan interaction update', () => {
         const actions = {
@@ -72,8 +72,8 @@ describe('Controls component', () => {
         expect(checkboxes.length).toBe(3);
         ReactTestUtils.Simulate.change(checkboxes[1]);
         expect(spyChangeMap).toHaveBeenCalled();
-        expect(spyChangeMap.calls.length).toBe(1);
-        expect(spyChangeMap.calls[0].arguments).toEqual(['mapOptions.interactions', { dragPan: newDragPanStatus, keyboardPan: newDragPanStatus } ]);
+        expect(spyChangeMap.mock.calls.length).toBe(1);
+        expect(spyChangeMap.mock.calls[0]).toEqual(['mapOptions.interactions', { dragPan: newDragPanStatus, keyboardPan: newDragPanStatus } ]);
     });
     it('rendering Controls comp and triggering mapInfoControl update', () => {
         const actions = {
@@ -91,7 +91,7 @@ describe('Controls component', () => {
         expect(checkboxes.length).toBe(3);
         ReactTestUtils.Simulate.change(checkboxes[2]);
         expect(spyChangeMap).toHaveBeenCalled();
-        expect(spyChangeMap.calls.length).toBe(1);
-        expect(spyChangeMap.calls[0].arguments).toEqual(['mapInfoControl', true]);
+        expect(spyChangeMap.mock.calls.length).toBe(1);
+        expect(spyChangeMap.mock.calls[0]).toEqual(['mapInfoControl', true]);
     });
 });

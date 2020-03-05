@@ -41,7 +41,7 @@ describe('MapInfoUtils', () => {
             "TEMPLATE": "application/json"
         };
         let results = getAvailableInfoFormat();
-        expect(results).toExist();
+        expect(results).toBeTruthy();
         expect(Object.keys(results).length).toBe(Object.keys(testData).length);
 
         let testKeys = Object.keys(testData);
@@ -55,7 +55,7 @@ describe('MapInfoUtils', () => {
     it('getAvailableInfoFormatLabels', () => {
         let testData = ['TEXT', 'PROPERTIES', 'HTML', 'TEMPLATE'];
         let results = getAvailableInfoFormatLabels();
-        expect(results).toExist();
+        expect(results).toBeTruthy();
         expect(results.length).toBe(4);
 
         expect(results.reduce((prev, label) => {
@@ -66,7 +66,7 @@ describe('MapInfoUtils', () => {
     it('getAvailableInfoFormatValues', () => {
         let testData = ['text/plain', 'text/html', 'application/json'];
         let results = getAvailableInfoFormatValues();
-        expect(results).toExist();
+        expect(results).toBeTruthy();
         expect(results.length).toBe(4);
 
         expect(results.reduce((prev, value) => {
@@ -76,13 +76,13 @@ describe('MapInfoUtils', () => {
 
     it('getDefaultInfoFormatValue', () => {
         let results = getDefaultInfoFormatValue();
-        expect(results).toExist();
+        expect(results).toBeTruthy();
         expect(results).toBe('text/plain');
     });
 
     it('it should returns a bbox', () => {
         let results = CoordinatesUtils.createBBox(-10, 10, -10, 10);
-        expect(results).toExist();
+        expect(results).toBeTruthy();
         expect(results.maxx).toBe(-10);
     });
     it('buildIdentifyRequest should honour queryLayers', () => {
@@ -105,7 +105,7 @@ describe('MapInfoUtils', () => {
             url: "http://localhost"
         };
         let req1 = buildIdentifyRequest(layer1, props);
-        expect(req1.request).toExist();
+        expect(req1.request).toBeTruthy();
         expect(req1.request.query_layers).toEqual("sublayer1,sublayer2");
 
         let layer2 = {
@@ -114,7 +114,7 @@ describe('MapInfoUtils', () => {
             url: "http://localhost"
         };
         let req2 = buildIdentifyRequest(layer2, props);
-        expect(req2.request).toExist();
+        expect(req2.request).toBeTruthy();
         expect(req2.request.query_layers).toEqual("layer");
 
         let layer3 = {
@@ -124,7 +124,7 @@ describe('MapInfoUtils', () => {
             url: "http://localhost"
         };
         let req3 = buildIdentifyRequest(layer3, props);
-        expect(req3.request).toExist();
+        expect(req3.request).toBeTruthy();
         expect(req3.request.query_layers).toEqual("");
     });
 
@@ -148,7 +148,7 @@ describe('MapInfoUtils', () => {
             url: "http://localhost"
         };
         let req1 = buildIdentifyRequest(layer1, props);
-        expect(req1.request).toExist();
+        expect(req1.request).toBeTruthy();
         expect(req1.request.service).toBe('WMS');
     });
 
@@ -175,7 +175,7 @@ describe('MapInfoUtils', () => {
             }
         };
         let req1 = buildIdentifyRequest(layer1, props);
-        expect(req1.request).toExist();
+        expect(req1.request).toBeTruthy();
         expect(req1.request.service).toBe('WMS');
         expect(req1.request.info_format).toBe('text/html');
     });
@@ -206,7 +206,7 @@ describe('MapInfoUtils', () => {
             }
         };
         let req1 = buildIdentifyRequest(layer1, props);
-        expect(req1.request).toExist();
+        expect(req1.request).toBeTruthy();
         expect(req1.request.service).toBe('WMS');
         expect(req1.request.info_format).toBe('application/json');
         expect(req1.metadata.viewer.type).toBe('customViewer');
@@ -231,7 +231,7 @@ describe('MapInfoUtils', () => {
             url: "http://localhost"
         };
         let req1 = buildIdentifyRequest(layer1, props);
-        expect(req1.request).toExist();
+        expect(req1.request).toBeTruthy();
         expect(req1.request.service).toBe('WMTS');
     });
 
@@ -254,7 +254,7 @@ describe('MapInfoUtils', () => {
             features: [{properties: {}}]
         };
         let req1 = buildIdentifyRequest(layer1, props);
-        expect(req1.request).toExist();
+        expect(req1.request).toBeTruthy();
         expect(req1.request.lat).toBe(43);
     });
 
@@ -284,16 +284,16 @@ describe('MapInfoUtils', () => {
             }
         };
         let req1 = buildIdentifyRequest(layer1, props);
-        expect(req1.request).toExist();
+        expect(req1.request).toBeTruthy();
         expect(req1.request.service).toBe('WMS');
         expect(req1.request.info_format).toBe('application/json');
         expect(req1.metadata.viewer.type).toBe('customViewer');
 
         let get = getViewer(req1.metadata.viewer.type);
-        expect(get).toNotExist();
+        expect(get).toBeFalsy();
         setViewer('customViewer', <App/>);
         let newGet = getViewer(req1.metadata.viewer.type);
-        expect(newGet).toExist();
+        expect(newGet).toBeTruthy();
     });
 
     it('getValidator for vector layer', () => {

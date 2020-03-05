@@ -42,10 +42,10 @@ describe("Test the PrintPreview component", () => {
 
     it('creates component with defaults', () => {
         const cmp = ReactDOM.render(<PrintPreview/>, document.getElementById("container"));
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
 
         const node = ReactDOM.findDOMNode(cmp);
-        expect(node).toExist();
+        expect(node).toBeTruthy();
     });
 
     it('pdf next page', (done) => {
@@ -54,7 +54,7 @@ describe("Test the PrintPreview component", () => {
             done();
         };
         const cmp = ReactDOM.render(<PrintPreview pages={10} currentPage={1} setPage={handler} url=""/>, document.getElementById("container"));
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
         const node = ReactDOM.findDOMNode(cmp);
         ReactTestUtils.Simulate.click(node.getElementsByTagName('button')[5]);
     });
@@ -65,7 +65,7 @@ describe("Test the PrintPreview component", () => {
             done();
         };
         const cmp = ReactDOM.render(<PrintPreview pages={10} currentPage={1} setPage={handler} url=""/>, document.getElementById("container"));
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
         const node = ReactDOM.findDOMNode(cmp);
         ReactTestUtils.Simulate.click(node.getElementsByTagName('button')[6]);
     });
@@ -76,7 +76,7 @@ describe("Test the PrintPreview component", () => {
             done();
         };
         const cmp = ReactDOM.render(<PrintPreview pages={10} currentPage={10} setPage={handler} url=""/>, document.getElementById("container"));
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
         const node = ReactDOM.findDOMNode(cmp);
         ReactTestUtils.Simulate.click(node.getElementsByTagName('button')[3]);
     });
@@ -87,7 +87,7 @@ describe("Test the PrintPreview component", () => {
             done();
         };
         const cmp = ReactDOM.render(<PrintPreview pages={10} currentPage={10} setPage={handler} url=""/>, document.getElementById("container"));
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
         const node = ReactDOM.findDOMNode(cmp);
         ReactTestUtils.Simulate.click(node.getElementsByTagName('button')[4]);
     });
@@ -99,7 +99,7 @@ describe("Test the PrintPreview component", () => {
         };
         const cmp = ReactDOM.render(<PrintPreview zoomFactor={2.0} scale={1.0}
             pages={10} currentPage={1} setScale={handler} url=""/>, document.getElementById("container"));
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
         const node = ReactDOM.findDOMNode(cmp);
         ReactTestUtils.Simulate.click(node.getElementsByTagName('button')[1]);
     });
@@ -111,7 +111,7 @@ describe("Test the PrintPreview component", () => {
         };
         const cmp = ReactDOM.render(<PrintPreview zoomFactor={2.0} scale={4.0}
             pages={10} currentPage={1} setScale={handler} url=""/>, document.getElementById("container"));
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
         const node = ReactDOM.findDOMNode(cmp);
         ReactTestUtils.Simulate.click(node.getElementsByTagName('button')[2]);
     });

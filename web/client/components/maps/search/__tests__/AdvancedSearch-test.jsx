@@ -27,6 +27,6 @@ describe('AdvancedSearch component', () => {
     it('AdvancedSearch with defaults', () => {
         ReactDOM.render(<AdvancedSearch show/>, document.getElementById("container"));
         const rootDiv = document.getElementsByClassName('advanced-search-panel')[0];
-        expect(rootDiv).toExist();
+        expect(rootDiv).toBeTruthy();
     });
 });

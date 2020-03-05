@@ -27,7 +27,7 @@ describe('QueryBuilder', () => {
 
     it('creates the QueryBuilder component with his default content', () => {
         const querybuilder = ReactDOM.render(<QueryBuilder/>, document.getElementById("container"));
-        expect(querybuilder).toExist();
+        expect(querybuilder).toBeTruthy();
     });
 
     it('creates the QueryBuilder component with initial content', () => {
@@ -77,20 +77,20 @@ describe('QueryBuilder', () => {
             document.getElementById("container")
         );
 
-        expect(querybuilder).toExist();
-        expect(querybuilder.props.filterFields).toExist();
+        expect(querybuilder).toBeTruthy();
+        expect(querybuilder.props.filterFields).toBeTruthy();
         expect(querybuilder.props.filterFields.length).toBe(2);
-        expect(querybuilder.props.groupFields).toExist();
+        expect(querybuilder.props.groupFields).toBeTruthy();
         expect(querybuilder.props.groupFields.length).toBe(1);
-        expect(querybuilder.props.groupLevels).toExist();
+        expect(querybuilder.props.groupLevels).toBeTruthy();
         expect(querybuilder.props.groupLevels).toBe(5);
-        expect(querybuilder.props.attributes).toExist();
+        expect(querybuilder.props.attributes).toBeTruthy();
         expect(querybuilder.props.attributes.length).toBe(1);
 
-        const queryBuilderDOMNode = expect(ReactDOM.findDOMNode(querybuilder));
+        const queryBuilderDOMNode = ReactDOM.findDOMNode(querybuilder);
 
-        expect(queryBuilderDOMNode).toExist();
-        let childNodes = queryBuilderDOMNode.actual.childNodes;
+        expect(queryBuilderDOMNode).toBeTruthy();
+        let childNodes = queryBuilderDOMNode.childNodes;
         expect(childNodes.length).toBe(2);
     });
 
@@ -130,16 +130,16 @@ describe('QueryBuilder', () => {
             document.getElementById("container")
         );
 
-        expect(querybuilder).toExist();
+        expect(querybuilder).toBeTruthy();
 
-        const queryBuilderDOMNode = expect(ReactDOM.findDOMNode(querybuilder));
+        const queryBuilderDOMNode = ReactDOM.findDOMNode(querybuilder);
 
-        expect(queryBuilderDOMNode).toExist();
-        let childNodes = queryBuilderDOMNode.actual.childNodes;
+        expect(queryBuilderDOMNode).toBeTruthy();
+        let childNodes = queryBuilderDOMNode.childNodes;
         expect(childNodes.length).toBe(2);
 
         const queryButton = document.getElementById('query-toolbar-query');
-        expect(queryButton).toExist();
+        expect(queryButton).toBeTruthy();
         expect(queryButton.getAttribute("disabled")).toBe('');
         // check presence of attribute, spatial and cross layer filter
         expect(document.querySelectorAll('.mapstore-switch-panel').length).toBe(3);
@@ -183,7 +183,7 @@ describe('QueryBuilder', () => {
             />,
             document.getElementById("container")
         );
-        expect(querybuilder).toExist();
+        expect(querybuilder).toBeTruthy();
         // only attribute filter should be shown
         expect(document.querySelectorAll('.mapstore-switch-panel').length).toBe(1);
     });
@@ -196,7 +196,7 @@ describe('QueryBuilder', () => {
             featureTypeConfigUrl={"randomurl"} />,
         document.getElementById("container"));
 
-        expect(querybuilder).toExist();
+        expect(querybuilder).toBeTruthy();
     });
 
     it('creates the QueryBuilder component with empty filter support', () => {
@@ -247,12 +247,12 @@ describe('QueryBuilder', () => {
             document.getElementById("container")
         );
 
-        expect(querybuilder).toExist();
+        expect(querybuilder).toBeTruthy();
 
-        const queryBuilderDOMNode = expect(ReactDOM.findDOMNode(querybuilder));
-        expect(queryBuilderDOMNode).toExist();
+        const queryBuilderDOMNode = ReactDOM.findDOMNode(querybuilder);
+        expect(queryBuilderDOMNode).toBeTruthy();
         const queryButton = document.getElementById('query-toolbar-query');
-        expect(queryButton).toExist();
-        expect(queryButton.getAttribute("disabled")).toNotExist();
+        expect(queryButton).toBeTruthy();
+        expect(queryButton.getAttribute("disabled")).toBeFalsy();
     });
 });

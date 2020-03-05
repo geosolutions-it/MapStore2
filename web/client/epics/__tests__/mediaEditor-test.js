@@ -205,10 +205,10 @@ describe('MediaEditor Epics', () => {
                 case LOAD_MEDIA_SUCCESS:
                     expect(a.mediaType).toEqual(type);
                     expect(a.sourceId).toEqual('geostory');
-                    expect(a.resultData).toExist();
+                    expect(a.resultData).toBeTruthy();
                     break;
                 case SELECT_ITEM:
-                    expect(a.id).toExist();
+                    expect(a.id).toBeTruthy();
                     break;
                 case HIDE:
                     break;
@@ -246,7 +246,7 @@ describe('MediaEditor Epics', () => {
             actions.map((a) => {
                 switch (a.type) {
                 case UPDATE_ITEM:
-                    expect(a.item).toExist();
+                    expect(a.item).toBeTruthy();
                     break;
                 case HIDE:
                     break;
@@ -307,7 +307,7 @@ describe('MediaEditor Epics', () => {
                 case LOAD_MEDIA:
                     break;
                 case SELECT_ITEM:
-                    expect(a.id).toExist();
+                    expect(a.id).toBeTruthy();
                     break;
                 default: expect(true).toEqual(false);
                     break;
@@ -352,12 +352,12 @@ describe('MediaEditor Epics', () => {
                     expect(a.id).toEqual('geostory');
                     break;
                 case SAVE_MEDIA_SUCCESS:
-                    expect(a.data.id).toExist();
+                    expect(a.data.id).toBeTruthy();
                     break;
                 case LOAD_MEDIA:
                     break;
                 case SELECT_ITEM:
-                    expect(a.id).toExist();
+                    expect(a.id).toBeTruthy();
                     break;
                 case HIDE:
                     break;

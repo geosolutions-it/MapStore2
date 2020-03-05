@@ -227,11 +227,11 @@ describe('search Epics', () => {
         let actionsType = actions.map(a => a.type);
 
         expectedActions.forEach((a) => {
-            expect(actionsType.indexOf(a)).toNotBe(-1);
+            expect(actionsType.indexOf(a)).not.toBe(-1);
         });
 
         const zoomToExtentAction = actions.find(m => m.type === ZOOM_TO_EXTENT);
-        expect(zoomToExtentAction.maxZoom).toExist();
+        expect(zoomToExtentAction.maxZoom).toBeTruthy();
         expect(zoomToExtentAction.extent.length).toEqual(4);
 
         let testSearchNestedServicesSelectedAction = actions.filter(m => m.type === TEXT_SEARCH_NESTED_SERVICES_SELECTED)[0];
@@ -256,7 +256,7 @@ describe('search Epics', () => {
         let expectedActions = [ZOOM_ADD_POINT, UPDATE_ADDITIONAL_LAYER, ZOOM_TO_POINT ];
         let actionsType = actions.map(a => a.type);
         expectedActions.forEach((a) => {
-            expect(actionsType.indexOf(a)).toNotBe(-1);
+            expect(actionsType.indexOf(a)).not.toBe(-1);
         });
     });
 
@@ -302,8 +302,8 @@ describe('search Epics', () => {
             if (actions.length === 5) {
                 const addMarkerAction = actions.filter(m => m.type === TEXT_SEARCH_ADD_MARKER)[0];
 
-                expect(addMarkerAction).toExist();
-                expect(addMarkerAction.markerPosition.geometry).toExist();
+                expect(addMarkerAction).toBeTruthy();
+                expect(addMarkerAction.markerPosition.geometry).toBeTruthy();
 
                 done();
             }
@@ -323,11 +323,11 @@ describe('search Epics', () => {
             }]
         };
         testEpic(searchEpic, 3, action, (actions) => {
-            expect(actions).toExist();
+            expect(actions).toBeTruthy();
             expect(actions[0].type).toBe(TEXT_SEARCH_LOADING);
             expect(actions.length).toBe(3);
             expect(actions[1].type).toBe(TEXT_SEARCH_ERROR);
-            expect(actions[1].error).toExist();
+            expect(actions[1].error).toBeTruthy();
             expect(actions[1].error.serviceType).toBe('nom');
             expect(actions[2].type).toBe(TEXT_SEARCH_LOADING);
             done();
@@ -415,7 +415,7 @@ describe('search Epics', () => {
         let action = searchLayerWithFilter({layer: "layerName", cql_filter: "cql"});
         const NUM_ACTIONS = 1;
         testEpic(searchOnStartEpic, NUM_ACTIONS, action, (actions) => {
-            expect(actions).toExist();
+            expect(actions).toBeTruthy();
             expect(actions.length).toBe(NUM_ACTIONS);
             expect(actions[0].type).toBe(SHOW_NOTIFICATION);
             expect(actions[0].message).toBe("search.errors.nonQueriableLayers");
@@ -426,7 +426,7 @@ describe('search Epics', () => {
         let action = searchLayerWithFilter({layer: "layerName", cql_filter: "cql"});
         const NUM_ACTIONS = 1;
         testEpic(searchOnStartEpic, NUM_ACTIONS, action, (actions) => {
-            expect(actions).toExist();
+            expect(actions).toBeTruthy();
             expect(actions.length).toBe(NUM_ACTIONS);
             expect(actions[0].type).toBe(SHOW_NOTIFICATION);
             expect(actions[0].message).toBe("search.errors.nonQueriableLayers");
@@ -437,7 +437,7 @@ describe('search Epics', () => {
         let action = searchLayerWithFilter({layer: "layerName", cql_filter: "cql"});
         const NUM_ACTIONS = 1;
         testEpic(searchOnStartEpic, NUM_ACTIONS, action, (actions) => {
-            expect(actions).toExist();
+            expect(actions).toBeTruthy();
             expect(actions.length).toBe(NUM_ACTIONS);
             expect(actions[0].type).toBe(SHOW_NOTIFICATION);
             expect(actions[0].message).toBe("search.errors.serverError");
@@ -448,7 +448,7 @@ describe('search Epics', () => {
         let action = searchLayerWithFilter({layer: "layerName", cql_filter: "cql"});
         const NUM_ACTIONS = 2;
         testEpic(addTimeoutEpic(searchOnStartEpic, 100), NUM_ACTIONS, action, (actions) => {
-            expect(actions).toExist();
+            expect(actions).toBeTruthy();
             expect(actions.length).toBe(NUM_ACTIONS);
             expect(actions[0].type).toBe(FEATURE_INFO_CLICK);
             expect(actions[1].type).toBe(SHOW_MAPINFO_MARKER);

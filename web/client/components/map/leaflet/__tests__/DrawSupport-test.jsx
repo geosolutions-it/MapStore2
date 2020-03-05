@@ -38,7 +38,7 @@ describe('Leaflet DrawSupport', () => {
                 drawOwner="me"
             />
             , msNode);
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
     });
 
     it('test circle drawing creation.', () => {
@@ -54,7 +54,7 @@ describe('Leaflet DrawSupport', () => {
                 options={{stopAfterDrawing: true}}
             />
             , msNode);
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
 
         cmp = ReactDOM.render(
             <DrawSupport
@@ -66,7 +66,7 @@ describe('Leaflet DrawSupport', () => {
             />
             , msNode);
 
-        expect(map._layers).toExist();
+        expect(map._layers).toBeTruthy();
     });
 
     it('test if drawing layers will be removed', () => {
@@ -90,7 +90,7 @@ describe('Leaflet DrawSupport', () => {
                 drawMethod="BBOX"
             />
             , msNode);
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
 
         cmp = ReactDOM.render(
             <DrawSupport
@@ -126,7 +126,7 @@ describe('Leaflet DrawSupport', () => {
                 options={{editEnabled: false}}
             />
             , msNode);
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
         cmp = ReactDOM.render(
             <DrawSupport
                 map={map}
@@ -156,7 +156,7 @@ describe('Leaflet DrawSupport', () => {
         cmp = ReactDOM.render( <DrawSupport map={map} drawOwner="me" drawStatus="drawOrEdit" drawMethod="MultiLineString" features={[]} options={{editEnabled: true}} />, msNode);
         cmp = ReactDOM.render( <DrawSupport map={map} drawOwner="me" drawStatus="drawOrEdit" drawMethod="MultiPolygon" features={[]} options={{editEnabled: true}} />, msNode);
         cmp = ReactDOM.render( <DrawSupport map={map} drawOwner="me" drawStatus="drawOrEdit" drawMethod="MultiPolygon" features={[]} options={{editEnabled: true}} />, msNode);
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
 
     });
     it('test drawEnabled=true', () => {
@@ -171,7 +171,7 @@ describe('Leaflet DrawSupport', () => {
         cmp = ReactDOM.render( <DrawSupport map={map} drawOwner="me" drawStatus="drawOrEdit" drawMethod="MultiPoint" features={[]} options={{drawEnabled: true}} />, msNode);
         cmp = ReactDOM.render( <DrawSupport map={map} drawOwner="me" drawStatus="drawOrEdit" drawMethod="MultiLineString" features={[]} options={{drawEnabled: true}} />, msNode);
         cmp = ReactDOM.render( <DrawSupport map={map} drawOwner="me" drawStatus="drawOrEdit" drawMethod="MultiPolygon" features={[]} options={{drawEnabled: true}} />, msNode);
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
 
     });
     it('test stop status', () => {
@@ -181,7 +181,7 @@ describe('Leaflet DrawSupport', () => {
         });
         let cmp = ReactDOM.render( <DrawSupport map={map} drawOwner="me" drawStatus="start" drawMethod="LineString" options={{}} />, msNode);
         cmp = ReactDOM.render( <DrawSupport map={map} drawOwner="me" drawStatus="stop" drawMethod="LineString" options={{}} />, msNode);
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
 
     });
     it('test updateSpatialField = true', () => {
@@ -204,7 +204,7 @@ describe('Leaflet DrawSupport', () => {
                 coordinates: [latlngs]
             }
         }]} options={{drawEnabled: false, updateSpatialField: true}} />, msNode);
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
 
     });
 
@@ -270,7 +270,7 @@ describe('Leaflet DrawSupport', () => {
             onEndDrawing={actions.onEndDrawing}
             options={{geodesic: true}}/>, msNode);
 
-        expect(spyonEndDrawing).toNotHaveBeenCalled();
+        expect(spyonEndDrawing).not.toHaveBeenCalled();
     });
 
 });

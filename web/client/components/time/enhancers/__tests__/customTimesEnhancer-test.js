@@ -35,7 +35,7 @@ describe('customTimesEnhancer enhancer', () => {
     });
     it('customTimesEnhancer rendering with defaults', (done) => {
         const Sink = customTimesEnhancer(createSink( props => {
-            expect(props.rangeItems).toExist();
+            expect(props.rangeItems).toBeTruthy();
             expect(props.rangeItems.length).toBe(0);
             done();
         }));
@@ -44,7 +44,7 @@ describe('customTimesEnhancer enhancer', () => {
     it('playbackEnabled and playbackRange add range items and cursors', (done) => {
 
         const Sink = customTimesEnhancer(createSink( props => {
-            expect(props.rangeItems).toExist();
+            expect(props.rangeItems).toBeTruthy();
             expect(props.rangeItems.length).toBe(1);
             expect(props.rangeItems[0].id).toBe('playback-range');
             expect(props.rangeItems[0].type).toBe('background');
@@ -59,7 +59,7 @@ describe('customTimesEnhancer enhancer', () => {
     it('current time add cursor for currentTime', (done) => {
 
         const Sink = customTimesEnhancer(createSink(props => {
-            expect(props.rangeItems).toExist();
+            expect(props.rangeItems).toBeTruthy();
             expect(props.rangeItems.length).toBe(0);
             expect(props.customTimes.currentTime).toBe(CURRENT_TIME);
             done();
@@ -69,7 +69,7 @@ describe('customTimesEnhancer enhancer', () => {
     it('offsetEnabled currentTimeRange add draggable range and cursors', (done) => {
 
         const Sink = customTimesEnhancer(createSink(props => {
-            expect(props.rangeItems).toExist();
+            expect(props.rangeItems).toBeTruthy();
             expect(props.rangeItems.length).toBe(1);
             expect(props.rangeItems[0].id).toBe("current-range");
             expect(props.rangeItems[0].type).toBe('background');
@@ -84,7 +84,7 @@ describe('customTimesEnhancer enhancer', () => {
     });
     it('readOnly', (done) => {
         const Sink = customTimesEnhancer(createSink(props => {
-            expect(props.rangeItems).toExist();
+            expect(props.rangeItems).toBeTruthy();
             expect(props.rangeItems.length).toBe(1);
             expect(props.rangeItems[0].id).toBe("current-range");
             expect(props.rangeItems[0].editable.updateTime).toBe(false);
@@ -109,6 +109,6 @@ describe('customTimesEnhancer enhancer', () => {
         const onUpdateSpy = expect.spyOn(actions, 'moveCurrentRange');
         ReactDOM.render(<Sink items={TEST_ITEMS} offsetEnabled moveCurrentRange={actions.moveCurrentRange} currentTime={CURRENT_TIME} currentTimeRange={currentTimeRange} />, document.getElementById("container"));
         expect(onUpdateSpy).toHaveBeenCalled();
-        expect(onUpdateSpy.calls[0].arguments[0]).toBe(NEW_DATE);
+        expect(onUpdateSpy.mock.calls[0][0]).toBe(NEW_DATE);
     });
 });

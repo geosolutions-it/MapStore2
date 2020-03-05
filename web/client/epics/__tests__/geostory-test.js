@@ -129,7 +129,7 @@ describe('Geostory Epics', () => {
         ], (actions) => {
             expect(actions.length).toBe(NUM_ACTIONS);
             const container = document.getElementById('container');
-            expect(container).toExist();
+            expect(container).toBeTruthy();
             expect(container.scrollHeight).toBeGreaterThan(0);
             done();
         }, {
@@ -245,7 +245,7 @@ describe('Geostory Epics', () => {
                         expect(a.story).toEqual(TEST_STORY);
                         break;
                     case SET_RESOURCE: {
-                        expect(a.resource).toExist();
+                        expect(a.resource).toBeTruthy();
                         break;
                     }
                     case CHANGE_MODE: {
@@ -253,7 +253,7 @@ describe('Geostory Epics', () => {
                         break;
                     }
                     case GEOSTORY_LOADED: {
-                        expect(a.id).toExist();
+                        expect(a.id).toBeTruthy();
                         break;
                     }
                     default: expect(true).toBe(false);
@@ -285,7 +285,7 @@ describe('Geostory Epics', () => {
                         expect(a.story).toEqual(TEST_STORY);
                         break;
                     case SET_RESOURCE: {
-                        expect(a.resource).toExist();
+                        expect(a.resource).toBeTruthy();
                         break;
                     }
                     case CHANGE_MODE: {
@@ -293,7 +293,7 @@ describe('Geostory Epics', () => {
                         break;
                     }
                     case GEOSTORY_LOADED: {
-                        expect(a.id).toExist();
+                        expect(a.id).toBeTruthy();
                         break;
                     }
                     default: expect(true).toBe(false);
@@ -1144,7 +1144,7 @@ describe('Geostory Epics', () => {
             const callback = (actions) => {
                 expect(actions.length).toBe(1);
                 expect(actions[0].type).toBe(UPDATE);
-                expect(actions[0].element).toExist();
+                expect(actions[0].element).toBeTruthy();
                 expect(actions[0].element.editURL).toBe(true);
                 expect(actions[0].mode).toBe('merge');
                 done();
@@ -1220,7 +1220,7 @@ describe('Geostory Epics', () => {
             expect(actions.length).toBe(1);
             expect(actions[0].type).toBe(UPDATE);
             expect(actions[0].path).toBe(path);
-            expect(actions[0].element).toExist();
+            expect(actions[0].element).toBeTruthy();
             expect(actions[0].element.editURL).toBe(true);
             expect(actions[0].mode).toBe('merge');
         };

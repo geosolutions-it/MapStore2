@@ -19,17 +19,17 @@ describe("test the PreviewButton", () => {
 
     it('test PreviewButton default props', () => {
         const previewButton = ReactDOM.render(<PreviewButton/>, document.getElementById("container"));
-        expect(previewButton).toExist();
+        expect(previewButton).toBeTruthy();
         const node = ReactDOM.findDOMNode(previewButton);
-        expect(node).toExist();
+        expect(node).toBeTruthy();
         const container = node.querySelector('.background-preview-button-container');
         ReactTestUtils.Simulate.click(container);
     });
 
     it('test PreviewButton show label', () => {
         const previewButton = ReactDOM.render(<PreviewButton showLabel={false}/>, document.getElementById("container"));
-        expect(previewButton).toExist();
+        expect(previewButton).toBeTruthy();
         const node = ReactDOM.findDOMNode(previewButton);
-        expect(node).toExist();
+        expect(node).toBeTruthy();
     });
 });

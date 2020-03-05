@@ -41,12 +41,12 @@ describe("test identify enhancers", () => {
             <Component changeMousePointer={testHandlers.changeMousePointer} enabled/>,
             document.getElementById("container")
         );
-        expect(spyMousePointer.calls.length).toEqual(1);
+        expect(spyMousePointer.mock.calls.length).toEqual(1);
         ReactDOM.render(
             <Component changeMousePointer={testHandlers.changeMousePointer} enabled={false}/>,
             document.getElementById("container")
         );
-        expect(spyMousePointer.calls.length).toEqual(2);
+        expect(spyMousePointer.mock.calls.length).toEqual(2);
     });
 
     it("test identifyLifecycle component doesn't need reset current index when requests are the same", () => {
@@ -63,7 +63,7 @@ describe("test identify enhancers", () => {
             <Component enabled responses={[{}]} setIndex={testHandlers.setIndex}/>,
             document.getElementById("container")
         );
-        expect(spySetIndex.calls.length).toEqual(0);
+        expect(spySetIndex.mock.calls.length).toEqual(0);
     });
 
     it("test identifyLifecycle on close", () => {
@@ -115,13 +115,13 @@ describe("test identify enhancers", () => {
         ReactDOM.render(<div></div>, document.getElementById("container"));
         // this ensure that when the is un-mounted, the cursor of the mouse pointer, the marker and result are correctly reset.
         expect(spyChangeMousePointer).toHaveBeenCalled();
-        expect(spyChangeMousePointer.calls.length).toBe(2);
-        expect(spyChangeMousePointer.calls[0].arguments[0]).toBe('pointer'); // cursor change on mount
-        expect(spyChangeMousePointer.calls[1].arguments[0]).toBe('auto'); // this is the reset on unmount
+        expect(spyChangeMousePointer.mock.calls.length).toBe(2);
+        expect(spyChangeMousePointer.mock.calls[0][0]).toBe('pointer'); // cursor change on mount
+        expect(spyChangeMousePointer.mock.calls[1][0]).toBe('auto'); // this is the reset on unmount
         expect(spyPurgeResults).toHaveBeenCalled();
-        expect(spyPurgeResults.calls.length).toBe(1);
+        expect(spyPurgeResults.mock.calls.length).toBe(1);
         expect(spyHideMarker).toHaveBeenCalled();
-        expect(spyHideMarker.calls.length).toBe(1);
+        expect(spyHideMarker.mock.calls.length).toBe(1);
     });
 
     it("test identifyLifecycle onChangeFormat", () => {

@@ -33,15 +33,15 @@ describe('TextWidget component', () => {
         ReactDOM.render(<TextWidget />, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('.mapstore-widget-card');
-        expect(container.querySelector('.glyphicon-pencil')).toExist();
-        expect(container.querySelector('.glyphicon-trash')).toExist();
-        expect(el).toExist();
+        expect(container.querySelector('.glyphicon-pencil')).toBeTruthy();
+        expect(container.querySelector('.glyphicon-trash')).toBeTruthy();
+        expect(el).toBeTruthy();
     });
     it('view only mode', () => {
         ReactDOM.render(<TextWidget canEdit={false} />, document.getElementById("container"));
         const container = document.getElementById('container');
-        expect(container.querySelector('.glyphicon-pencil')).toNotExist();
-        expect(container.querySelector('.glyphicon-trash')).toNotExist();
+        expect(container.querySelector('.glyphicon-pencil')).toBeFalsy();
+        expect(container.querySelector('.glyphicon-trash')).toBeFalsy();
     });
     it('onEdit callback', () => {
         const actions = {
@@ -58,6 +58,6 @@ describe('TextWidget component', () => {
         const TEST_TEXT = '<div id="TEST_TEXT"> TEST </div>';
         ReactDOM.render(<TextWidget text={TEST_TEXT} />, document.getElementById("container"));
         const container = document.getElementById('container');
-        expect(container.querySelector('#TEST_TEXT')).toExist();
+        expect(container.querySelector('#TEST_TEXT')).toBeTruthy();
     });
 });
