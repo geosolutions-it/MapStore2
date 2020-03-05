@@ -9,13 +9,17 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 import { Overlay } from 'ol';
+import isString from 'lodash/isString';
 import * as Utils from '../../../utils/PopupUtils';
+import popupsComponents from '../popups';
 
-
-const addMutationObserver = (popup, container) => {
+const addMutationObserver = (popup, container, options = {}) => {
     let observer = new MutationObserver(() => {
         popup.getMap().render();
         popup.setElement(popup.getElement());
+        // force autoPan via position reset
+        popup.setPosition(undefined);
+        popup.setPosition(options.coordinates);
     });
     observer.observe(container, {attributes: true, childList: true, subtree: true });
     return observer;
@@ -41,8 +45,9 @@ export default class PopupSupport extends React.Component {
         this.props.onPopupClose(id);
     }
     renderPopups = () => {
-        return this.preparePopups().map(({ popup, id, component: PopupContent, content, props, compStyle, containerStyle}) => {
+        return this.preparePopups().map(({ popup, id, component, content, props, compStyle, containerStyle}) => {
             const context = popup.getElement();
+            const PopupContent = isString(component) && popupsComponents[component] || component;
             let El;
             if (!!PopupContent) {
                 El = React.isValidElement(PopupContent) && PopupContent || <PopupContent style={compStyle} {...props}/>;
@@ -107,7 +112,7 @@ export default class PopupSupport extends React.Component {
                 position: coordinates
             });
             map.addOverlay(popup);
-            const observer = addMutationObserver(popup, container);
+            const observer = addMutationObserver(popup, container, { coordinates });
             const containerStyle = {maxWidth, maxHeight: maxHeight};
             const compStyle = {maxWidth: maxWidth - 30, maxHeight: maxHeight - 20};
             return {popup, observer, compStyle, containerStyle, ...options};

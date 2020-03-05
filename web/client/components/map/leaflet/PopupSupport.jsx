@@ -9,8 +9,9 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 import L from 'leaflet';
+import isString from 'lodash/isString';
 import * as Utils from '../../../utils/PopupUtils';
-
+import popupsComponents from '../popups';
 
 // It adds a mutation observer to popup's container
 // When react render inside it, the observer call an update on leaflet popup
@@ -53,8 +54,9 @@ export default class PopupSupport extends React.Component {
     renderPopups() {
         return  this.preparePopups()
             .filter(({component}) => !!component)
-            .map(({popup, props = {}, compStyle, component: PopupContent, id}) => {
+            .map(({popup, props = {}, compStyle, component, id}) => {
                 const context = popup.getContent();
+                const PopupContent = isString(component) && popupsComponents[component] || component;
                 const El = React.isValidElement(PopupContent) && PopupContent || <PopupContent style={compStyle} {...props}/>;
                 return context ? ReactDOM.createPortal(El, context, id) : null;
             });
@@ -94,7 +96,7 @@ export default class PopupSupport extends React.Component {
             component && addMutationObserver(popup, container);
 
             popup.setLatLng(coordinates);
-            map.addLayer(popup); // This is needed to mange multiple popup
+            map.addLayer(popup); // This is needed to manage multiple popup
             const compStyle = {maxWidth: maxWidth - 30, maxHeight: maxHeight - 20};
 
             return {popup, compStyle, ...options};

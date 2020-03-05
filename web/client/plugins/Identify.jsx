@@ -190,7 +190,12 @@ const IdentifyPlugin = compose(
         showRevGeocode: showMapinfoRevGeocode,
         hideRevGeocode: hideMapinfoRevGeocode,
         onEnableCenterToMarker: updateCenterToMarker.bind(null, 'enabled')
-    }),
+    }, (stateProps, dispatchProps, ownProps) => ({
+        ...ownProps,
+        ...stateProps,
+        ...dispatchProps,
+        enabled: stateProps.enabled && (stateProps.isCesium || !ownProps.showInMapPopup)
+    })),
     // highlight support
     compose(
         connect(

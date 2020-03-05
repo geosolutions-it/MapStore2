@@ -42,7 +42,7 @@ import { centerToVisibleArea, isInsideVisibleArea, isPointInsideExtent, reprojec
 
 import { getCurrentResolution, parseLayoutValue } from '../utils/MapUtils';
 import MapInfoUtils from '../utils/MapInfoUtils';
-import PopupViewer from '../components/data/identify/PopupViewer';
+import { IDENTIFY_POPUP } from '../components/map/popups';
 
 const gridEditingSelector = state => modeSelector(state) === 'EDIT';
 
@@ -179,7 +179,7 @@ export default {
             return disableAlwaysOn || !stopFeatureInfo(store.getState() || {});
         })
             .switchMap(({point, layer}) => Rx.Observable.of(featureInfoClick(point, layer))
-                .merge(Rx.Observable.of(addPopup(uuid(), { component: PopupViewer, maxWidth: 600, position: {  coordinates: point ? point.rawPos : []}}))
+                .merge(Rx.Observable.of(addPopup(uuid(), { component: IDENTIFY_POPUP, maxWidth: 600, position: {  coordinates: point ? point.rawPos : []}}))
                     .filter(() => isMapPopup(store.getState()))
                 )),
     /**
