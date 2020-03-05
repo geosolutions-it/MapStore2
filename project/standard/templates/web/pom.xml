@@ -16,6 +16,12 @@
   </properties>
 
   <dependencies>
+    <!-- MapStore backend -->
+    <dependency>
+      <groupId>it.geosolutions.mapstore</groupId>
+      <artifactId>mapstore-backend</artifactId>
+      <version>1.0-SNAPSHOT</version>
+    </dependency>
     <!-- ================================================================ -->
     <!-- GeoStore modules -->
     <!-- ================================================================ -->
