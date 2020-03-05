@@ -11,6 +11,7 @@ import { get } from 'lodash';
 import {
     LOAD_NEW_MAP,
     LOAD_MAP_CONFIG,
+    MAP_CONFIG_LOADED,
     LOAD_MAP_INFO,
     configureMap,
     configureError,
@@ -20,6 +21,7 @@ import {
     loadMapConfig,
     loadMapInfo
 } from '../actions/config';
+import { zoomToExtent } from '../actions/map';
 import Persistence from '../api/persistence';
 import { isLoggedIn } from '../selectors/security';
 import { projectionDefsSelector } from '../selectors/map';
@@ -68,6 +70,12 @@ export const loadMapConfigAndConfigureMap = (action$, store) =>
                 })
                 .catch((e) => Observable.of(configureError(e, mapId)))
         );
+
+export const zoomToMaxExtentOnConfigureMap = action$ =>
+    action$.ofType(MAP_CONFIG_LOADED)
+        .filter(({zoomToMaxExtent}) => zoomToMaxExtent)
+        .delay(300) // without the delay the map zoom will not change
+        .map(({config}) => zoomToExtent(get(config, 'map.maxExtent'), get(config, 'map.projection')));
 
 export const loadMapInfoEpic = action$ =>
     action$.ofType(LOAD_MAP_INFO)

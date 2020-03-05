@@ -7,8 +7,10 @@
  */
 
 import {connect} from 'react-redux';
+import PropTypes from 'prop-types';
+
 import {createSelector} from 'reselect';
-import {compose, defaultProps} from 'recompose';
+import { compose, defaultProps, withPropsOnChange, getContext} from 'recompose';
 import { createPlugin } from '../utils/PluginsUtils';
 import LayersUtils from '../utils/LayersUtils';
 import {hideSettings, updateSettings, updateNode, updateSettingsParams} from '../actions/layers';
@@ -85,9 +87,16 @@ const TOCItemsSettingsPlugin = compose(
     }),
     updateSettingsLifecycle,
     defaultProps({
-        getDimension: LayersUtils.getDimension,
-        getTabs: defaultSettingsTabs
-    })
+        getDimension: LayersUtils.getDimension
+    }),
+    getContext({
+        loadedPlugins: PropTypes.object
+    }),
+    withPropsOnChange(({items = []} = {}, {items: nextItems} = {}) => {
+        return items !== nextItems; // TODO: check if equal
+    }, (props) => ({
+        tabs: defaultSettingsTabs(props)
+    }))
 )(TOCItemsSettings);
 
 /**

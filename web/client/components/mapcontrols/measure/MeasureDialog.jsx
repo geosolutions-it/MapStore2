@@ -8,6 +8,7 @@
 
 const PropTypes = require('prop-types');
 const React = require('react');
+const {isEqual} = require('lodash');
 const MeasureComponent = require('./MeasureComponent');
 const DockablePanel = require('../../misc/panels/DockablePanel');
 const Message = require('../../I18N/Message');
@@ -60,6 +61,13 @@ class MeasureDialog extends React.Component {
         });
         this.props.onInit(otherDefaultOptions);
     }
+
+    componentDidUpdate(prevProps) {
+        if (!isEqual(prevProps.defaultOptions, this.props.defaultOptions)) {
+            this.props.onInit(this.props.defaultOptions);
+        }
+    }
+
     render() {
         // TODO FIX TRANSALATIONS TITLE
         return this.props.show ? (

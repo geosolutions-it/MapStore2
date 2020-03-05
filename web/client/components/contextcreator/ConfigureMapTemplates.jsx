@@ -179,6 +179,7 @@ export default ({
             fileDropStatus={fileDropStatus}
             fileDropLabel="contextCreator.configureTemplates.fileDrop.label"
             fileDropClearMessage={<Message msgId="contextCreator.configureTemplates.fileDrop.clear"/>}
+            dialogClassName=" modal-higher"
             onFileDrop={onTemplateDrop.bind(null, setParsedTemplate, setFileDropStatus)}
             onFileDropClear={() => {
                 setParsedTemplate();

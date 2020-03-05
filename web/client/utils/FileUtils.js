@@ -15,6 +15,7 @@ const {Promise} = require('es6-promise');
 const parser = new DOMParser();
 const assign = require('object-assign');
 const {hint: geojsonhint} = require('@mapbox/geojsonhint/lib/object');
+const {toMapConfig} = require('./ogc/WMC');
 
 const cleanStyleFromKml = (xml) => {
 
@@ -38,7 +39,8 @@ const FileUtils = {
         'kml': 'application/vnd.google-earth.kml+xml',
         'zip': 'application/zip',
         'json': 'application/json',
-        'geojson': 'application/json'
+        'geojson': 'application/json',
+        'wmc': 'application/vnd.wmc'
     },
     recognizeExt: function(fileName) {
         return fileName.split('.').slice(-1)[0];
@@ -126,6 +128,18 @@ const FileUtils = {
                 } catch (e) {
                     reject(e);
                 }
+            };
+            reader.onerror = function() {
+                reject(reader.error.name);
+            };
+            reader.readAsText(file);
+        });
+    },
+    readWMC: function(file) {
+        return new Promise((resolve, reject) => {
+            let reader = new FileReader();
+            reader.onload = function() {
+                toMapConfig(reader.result, true).then(config => resolve(config)).catch(e => reject(e));
             };
             reader.onerror = function() {
                 reject(reader.error.name);

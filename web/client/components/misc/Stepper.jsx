@@ -10,13 +10,18 @@ import React from 'react';
 import {Button, ButtonToolbar, Label} from 'react-bootstrap';
 import Message from '../I18N/Message';
 import BorderLayout from '../layout/BorderLayout';
+import CloseButton from '../buttons/CloseButton';
 
 export default ({
     steps = [],
     hideNamesExceptCurrent = false,
     currentStepId,
     onSetStep = () => {},
-    onSave = () => {}
+    onSave = () => {},
+    onShowBackToPageConfirmation = () => { },
+    showBackToPageConfirmation = false,
+    backToPageConfirmationMessage = 'contextCreator.undo',
+    onConfirmBackToPage = () => { }
 }) => {
     const curStepIndex = steps.findIndex(step => step.id === currentStepId);
 
@@ -45,6 +50,14 @@ export default ({
                         onClick={() => onSetStep(steps[curStepIndex - 1].id)}>
                         <Message msgId="stepper.back"/>
                     </Button>
+                    <CloseButton
+                        className="no-border"
+                        title={<Message msgId="close"/>}
+                        showConfirm={showBackToPageConfirmation}
+                        onShowConfirm={onShowBackToPageConfirmation}
+                        onConfirm={onConfirmBackToPage}
+                        onClick={() => onShowBackToPageConfirmation(true)}
+                        confirmMessage={backToPageConfirmationMessage}/>
                 </ButtonToolbar>
             </div>
             <div className="footer-step-bar">

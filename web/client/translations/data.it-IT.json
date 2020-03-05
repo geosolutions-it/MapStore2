@@ -27,6 +27,7 @@
         "showMore": "Mostra altri...",
         "collapse": "Collassa",
         "expand": "Espandi",
+        "Forbidden": "Vietato",
         "version": {
             "label": "Versione"
         },
@@ -1128,7 +1129,7 @@
             "dropZone": {
                 "heading": "<p> <h4> Rilascia qui i contesti di mappa o i file vettoriali </h4> <small> o </small> </p>",
                 "selectFiles": "Seleziona i file...",
-                "infoSupported": "<p> <small> File di contesti di mappa supportati: formato legacy di MapStore<br /> File di livello vettoriale supportati: shapefile (devono essere contenuti in archivi zip), KML / KMZ, GPX o GeoJSON </small> </p>",
+                "infoSupported": "<p> <small> File di contesti di mappa supportati: formato legacy di MapStore, WMC<br /> File di livello vettoriale supportati: shapefile (devono essere contenuti in archivi zip), KML / KMZ, GPX o GeoJSON </small> </p>",
                 "note": "<p> <small> <i> <strong> nota </strong>: la mappa corrente verrà sovrascritta in caso di nuovi contesti di mappa </i> </small> </p>"
             },
             "errors": {
@@ -1138,7 +1139,24 @@
             }
         },
         "mapExport": {
-            "title": "Esporta mappa"
+            "title": "Esporta mappa",
+            "exportPanel": {
+                "title": "<p><h4>Seleziona il tuo formato</h4></p>",
+                "exportButtonLabel": "Esportare"
+            },
+            "formats": {
+                "mapstore2": {
+                    "label": "MapStore",
+                    "description": "<p><small>Formato standard di MapStore</small></p>"
+                },
+                "wmc": {
+                    "label": "WMC",
+                    "description": "<p><small>Formato OGC Web Map Context</small></p>",
+                    "note": "<p><small><i><strong>nota</strong>: il formato WMC supporta <strong>solo livelli WMS</strong></i></small></p>"
+                }
+            },
+            "errorTitle": "Esportazione della mappa non riuscita",
+            "wmcNoLayersError": "É necessario almeno un livello WMS per esportare in formato WMC. Non ne è stato trovato nessuno."
         },
         "catalog": {
             "start": "Data d'inizio ",
@@ -1640,7 +1658,9 @@
                     "notFound": "Dashboard non trovata",
                     "notAccessible": "Dashboard non accessibile"
                 },
-                "resourceAlreadyExists": "Una risorsa con questo nome esiste già"
+                "resourceAlreadyExists": "Una risorsa con questo nome esiste già",
+                "forbidden": "Si è verificato un errore imprevisto (403 vietato). Si prega di contattare l'amministratore",
+                "forbidden405": "Si è verificato un errore imprevisto (405 vietato). Si prega di contattare l'amministratore"
             },
             "editor": {
                 "save": "Salva la dashboard",
@@ -2336,7 +2356,7 @@
                 "pluginsFilterPlaceholder": "Filtra plug-in per nome...",
                 "availablePlugins": "Plugin disponibili",
                 "enabledPlugins": "Plugin abilitati",
-                "availablePluginsEmpty": "Abilitato tutti i plugin disponibili",
+                "availablePluginsEmpty": "Tutti i plugin disponibili sono abilitati",
                 "enabledPluginsEmpty": "Aggiungi plug-in alla configurazione dall'elenco dei plug-in disponibili",
                 "searchResultsEmpty": "Nessun plugin trovato che soddisfa i criteri di ricerca",
                 "cfgParsingError": {
@@ -2366,8 +2386,8 @@
                 "title": "Configura modelli",
                 "availableTemplates": "Modelli disponibili",
                 "enabledTemplates": "Modelli abilitati",
-                "templatesFilterPlaceholder": "Modelli di filtro...",
-                "availableTemplatesEmpty": "Abilitato tutti i modelli disponibili",
+                "templatesFilterPlaceholder": "Filtra i modelli per nome...",
+                "availableTemplatesEmpty": "Tutti i modelli disponibili sono abilitati",
                 "enabledTemplatesEmpty": "Aggiungi modelli alla configurazione dall'elenco dei modelli disponibili",
                 "searchResultsEmpty": "Nessun modello trovato che soddisfa i criteri di ricerca",
                 "fileDrop": {

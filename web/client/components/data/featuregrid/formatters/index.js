@@ -10,6 +10,6 @@ const {isNil} = require('lodash');
 
 module.exports = {
     getFormatter: (desc) => desc.localType === 'boolean' ?
-        ({value} = {}) => !isNil(value) ? <span>{value.toString()}</span> : undefined :
-        undefined
+        ({value} = {}) => !isNil(value) ? <span>{value.toString()}</span> : null :
+        null
 };

@@ -33,7 +33,8 @@ const checkFileType = (file) => {
             || type === 'application/vnd.google-earth.kml+xml'
             || type === 'application/vnd.google-earth.kmz'
             || type === 'application/gpx+xml'
-            || type === 'application/json') {
+            || type === 'application/json'
+            || type === 'application/vnd.wmc') {
             resolve(file);
         } else {
             // Drag and drop of compressed folders doesn't correctly send the zip mime type (windows, also conflicts with installations of WinRar)
@@ -98,6 +99,9 @@ const readFile = (onWarnings) => (file) => {
             }
             return [{...f, "fileName": file.name}];
         });
+    }
+    if (type === 'application/vnd.wmc') {
+        return FileUtils.readWMC(file).then(config => [config]);
     }
     return null;
 };
