@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
@@ -27,18 +28,22 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import it.geosolutions.mapstore.utils.ResourceUtils;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
 /**
  * REST service used to upload an extension.
  * Can be configured using the following properties:
+ *  - datadir.location: base folder where the configuration files will be stored (default: empty, stores in application root)
  *  - extensions.folder: base folder where the extension will be stored (default: dist/extensions)
  *  - extensions.registry: json file where uploaded extensions are registered (default: extensions.json)
  *  - context.plugins.config: json file where context creator plugins are configured (default: pluginsConfig.json)
  */
 @Controller
 public class UploadPluginController {
+	@Value("${datadir.location:}") private String dataDir = "";
     @Value("${extensions.folder:dist/extensions}") private String bundlesPath = "dist/extensions";
     @Value("${extensions.registry:extensions.json}") private String extensionsConfig = "extensions.json";
     @Value("${context.plugins.config:pluginsConfig.json}") private String pluginsConfig = "pluginsConfig.json";
@@ -64,6 +69,7 @@ public class UploadPluginController {
         String bundleName = null;
         Map<File, String> tempFiles = new HashMap<File, String>();
         JSONObject plugin = null;
+        boolean addTranslations = false;
         while(entry != null) {
             if (!entry.isDirectory()) {
                 if (entry.getName().toLowerCase().endsWith(".js")) {
@@ -85,20 +91,22 @@ public class UploadPluginController {
                     File tempAsset = File.createTempFile("mapstore-asset-translations", ".json");
                     storeAsset(zip, tempAsset);
                     tempFiles.put(tempAsset, "asset/" + entry.getName());
+                    addTranslations = true;
                 }
             }
             entry = zip.getNextEntry();
         }
         String pluginBundle = bundlesPath + "/" + pluginName + "/" + bundleName;
-        addExtension(pluginName + "Plugin", pluginBundle);
+        String translations = addTranslations ? bundlesPath + "/" + pluginName + "/translations" : null;
+        addExtension(pluginName + "Plugin", pluginBundle, translations);
         for(File tempFile : tempFiles.keySet()) {
             String type = tempFiles.get(tempFile);
             if ("js".equals(type)) {
-                moveAsset(tempFile, context.getRealPath(pluginBundle));
+                moveAsset(tempFile, pluginBundle);
             }
             if(type.indexOf("asset/") == 0) {
                 String assetPath = bundlesPath + "/" + pluginName + "/" + type.substring(type.indexOf("/") + 1);
-                moveAsset(tempFile, context.getRealPath(assetPath));
+                moveAsset(tempFile, assetPath);
             }
         }
        
@@ -121,11 +129,14 @@ public class UploadPluginController {
         this.pluginsConfig = pluginsConfig;
     }
 
-
+    private Optional<File> findResource(String resourceName) {
+    	return ResourceUtils.findResource(dataDir, context, resourceName);
+    }
 
     private void moveAsset(File tempAsset, String finalAsset) throws FileNotFoundException, IOException {
-        new File(finalAsset).getParentFile().mkdirs();
-        try (FileInputStream input = new FileInputStream(tempAsset); FileOutputStream output = new FileOutputStream(finalAsset)) {
+    	String assetPath = ResourceUtils.getResourcePath(dataDir, context, finalAsset);
+        new File(assetPath).getParentFile().mkdirs();
+        try (FileInputStream input = new FileInputStream(tempAsset); FileOutputStream output = new FileOutputStream(assetPath)) {
             IOUtils.copy(input, output);
         }
         tempAsset.delete();
@@ -133,10 +144,16 @@ public class UploadPluginController {
 
     private void addPluginConfiguration(JSONObject json) throws IOException {
         JSONObject config = null;
-        try (FileInputStream input = new FileInputStream(context.getRealPath(pluginsConfig))) {
-            config = readJSON(input);
-        } catch (FileNotFoundException e) {
-            config = new JSONObject();
+        Optional<File> pluginsConfigFile = findResource(pluginsConfig);
+        if (pluginsConfigFile.isPresent()) {
+        	try (FileInputStream input = new FileInputStream(pluginsConfigFile.get())) {
+                config = readJSON(input);
+            } catch (FileNotFoundException e) {
+                config = new JSONObject();
+                config.accumulate("plugins", new JSONArray());
+            }
+        } else {
+        	config = new JSONObject();
             config.accumulate("plugins", new JSONArray());
         }
         if (config != null) {
@@ -149,38 +166,38 @@ public class UploadPluginController {
                 
             });
             plugins.add(json);
-            storePluginsConfig(config);
+            storeJSONConfig(config, pluginsConfig);
         }
     }
 
-    private void storePluginsConfig(JSONObject config) throws FileNotFoundException, IOException {
-        try (FileOutputStream output = new FileOutputStream(context.getRealPath(pluginsConfig))) {
-            output.write(config.toString().getBytes());
-        }
+    private void storeJSONConfig(JSONObject config, String configName) throws FileNotFoundException, IOException {
+    	ResourceUtils.storeJSONConfig(dataDir, context, config, configName);
     }
-
-    private void addExtension(String pluginName, String pluginBundle) throws FileNotFoundException, IOException {
+    
+    private void addExtension(String pluginName, String pluginBundle, String translations) throws FileNotFoundException, IOException {
         JSONObject config = null;
-        try (FileInputStream input = new FileInputStream(context.getRealPath(extensionsConfig))) {
-            config = readJSON(input);
-        } catch (FileNotFoundException e) {
-            config = new JSONObject();
+        Optional<File> extensionsConfigFile = findResource(extensionsConfig);
+        if (extensionsConfigFile.isPresent()) {
+	        try (FileInputStream input = new FileInputStream(extensionsConfigFile.get())) {
+	            config = readJSON(input);
+	        } catch (FileNotFoundException e) {
+	            config = new JSONObject();
+	        }
+        } else {
+        	config = new JSONObject();
         }
         if (config != null) {
             JSONObject extension = new JSONObject();
             extension.accumulate("bundle", pluginBundle);
+            if (translations != null) {
+            	extension.accumulate("translations", translations);
+            }
             if (config.containsKey(pluginName)) {
                 config.replace(pluginName,extension);
             } else {
                 config.accumulate(pluginName,extension);
             }
-            storeExtensionsConfig(config);
-        }
-    }
-
-    private void storeExtensionsConfig(JSONObject config) throws IOException {
-        try (FileOutputStream output = new FileOutputStream(context.getRealPath(extensionsConfig))) {
-            output.write(config.toString().getBytes());
+            storeJSONConfig(config, extensionsConfig);
         }
     }
 
@@ -204,6 +221,10 @@ public class UploadPluginController {
         }
     }
 
+    public void setDataDir(String dataDir) {
+        this.dataDir = dataDir;
+    }
+    
     public void setContext(ServletContext context) {
         this.context = context;
     }
