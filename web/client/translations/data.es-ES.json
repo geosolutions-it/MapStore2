@@ -762,7 +762,8 @@
             }
         },
         "locate": {
-            "tooltip": "Localízame",
+            "tooltip": "Mostrar mi posición",
+            "tooltipDeactivate": "Deja de mostrar mi posición",
             "metersUnit": "metros",
             "feetUnit": "pies",
             "popup": "Usted está a {distance} {unit} de este punto",
@@ -1116,7 +1117,7 @@
             "dropZone": {
                 "heading": "<p> <h4> Suelta contextos de mapas o archivos vectoriales aquí </h4> <small> o </small> </p>",
                 "selectFiles": "Selecciona archivos...",
-                "infoSupported": "<p> <small> Archivos de contexto de mapas admitidos: formato heredado MapStore<br /> Archivos de capa vectorial soportados: shapefiles (deben estar en archivos comprimidos), KML / KMZ, GPX o GeoJSON </small> </p>",
+                "infoSupported": "<p> <small> Archivos de contexto de mapas admitidos: formato heredado MapStore, WMC<br /> Archivos de capa vectorial soportados: shapefiles (deben estar en archivos comprimidos), KML / KMZ, GPX o GeoJSON </small> </p>",
                 "note": "<p> <small> <i> <strong> nota </strong>: el mapa actual se sobrescribe en el caso de nuevos contextos de mapa </i> </small> </p>"
             },
             "errors": {
@@ -1126,7 +1127,24 @@
             }
         },
         "mapExport": {
-            "title": "Exportar el mapa"
+            "title": "Exportar el mapa",
+            "exportPanel": {
+                "title": "<p><h4>Seleccione su formato</h4></p>",
+                "exportButtonLabel": "Exportar"
+            },
+            "formats": {
+                "mapstore2": {
+                    "label": "MapStore",
+                    "description": "<p><small>Formato de configuración del mapa MapStore</small></p>"
+                },
+                "wmc": {
+                    "label": "WMC",
+                    "description": "<p><small>Formato OGC Web Map Context</small></p>",
+                    "note": "<p><small><i><strong>nota</strong>: el formato WMC admite <strong>solo capas WMS</strong></i></small></p>"
+                }
+            },
+            "errorTitle": "La exportación del mapa falló",
+            "wmcNoLayersError": "Se necesita al menos una capa WMS para exportar a WMC, se encontró cero"
         },
         "catalog": {
             "start": "Fecha de inicio ",

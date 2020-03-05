@@ -762,7 +762,8 @@
             }
         },
         "locate": {
-            "tooltip": "Mia posizione",
+            "tooltip": "Mostra la mia posizione",
+            "tooltipDeactivate": "Smetti di mostrare la mia posizione",
             "metersUnit": "metri",
             "feetUnit": "piedi",
             "popup": "Sei nel raggio di {distance} {unit} da questo punto",
@@ -1116,7 +1117,7 @@
             "dropZone": {
                 "heading": "<p> <h4> Rilascia qui i contesti di mappa o i file vettoriali </h4> <small> o </small> </p>",
                 "selectFiles": "Seleziona i file...",
-                "infoSupported": "<p> <small> File di contesti di mappa supportati: formato legacy di MapStore<br /> File di livello vettoriale supportati: shapefile (devono essere contenuti in archivi zip), KML / KMZ, GPX o GeoJSON </small> </p>",
+                "infoSupported": "<p> <small> File di contesti di mappa supportati: formato legacy di MapStore, WMC<br /> File di livello vettoriale supportati: shapefile (devono essere contenuti in archivi zip), KML / KMZ, GPX o GeoJSON </small> </p>",
                 "note": "<p> <small> <i> <strong> nota </strong>: la mappa corrente verrà sovrascritta in caso di nuovi contesti di mappa </i> </small> </p>"
             },
             "errors": {
@@ -1126,7 +1127,24 @@
             }
         },
         "mapExport": {
-            "title": "Esporta mappa"
+            "title": "Esporta mappa",
+            "exportPanel": {
+                "title": "<p><h4>Seleziona il tuo formato</h4></p>",
+                "exportButtonLabel": "Esportare"
+            },
+            "formats": {
+                "mapstore2": {
+                    "label": "MapStore",
+                    "description": "<p><small>Formato standard di MapStore</small></p>"
+                },
+                "wmc": {
+                    "label": "WMC",
+                    "description": "<p><small>Formato OGC Web Map Context</small></p>",
+                    "note": "<p><small><i><strong>nota</strong>: il formato WMC supporta <strong>solo livelli WMS</strong></i></small></p>"
+                }
+            },
+            "errorTitle": "Esportazione della mappa non riuscita",
+            "wmcNoLayersError": "É necessario almeno un livello WMS per esportare in formato WMC. Non ne è stato trovato nessuno."
         },
         "catalog": {
             "start": "Data d'inizio ",

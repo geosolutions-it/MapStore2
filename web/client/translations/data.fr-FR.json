@@ -762,7 +762,8 @@
             }
         },
         "locate": {
-            "tooltip": "Me localiser",
+            "tooltip": "Afficher ma position",
+            "tooltipDeactivate": "Arrête de montrer ma position",
             "metersUnit": "mètres",
             "feetUnit": "pieds",
             "popup": "Vous êtes à moins de {distance} {unit} de ce point",
@@ -1116,7 +1117,7 @@
             "dropZone": {
                 "heading": "<p> <h4> Déposez votre contextes cartographiques ou vos fichiers vectoriels ici </h4> <small> ou </small> </p>",
                 "selectFiles": "Sélectionnez les fichiers...",
-                "infoSupported": "<p> <small> Fichiers de contextes cartographiques pris en charge: format hérité MapStore<br /> Fichiers vectoriels pris en charge: shapefile (doivent être contenus dans des archives zip), KML / KMZ, GPX ou GeoJSON </small> </p>",
+                "infoSupported": "<p> <small> Fichiers de contextes cartographiques pris en charge: format hérité MapStore, WMC<br /> Fichiers vectoriels pris en charge: shapefile (doivent être contenus dans des archives zip), KML / KMZ, GPX ou GeoJSON </small> </p>",
                 "note": "<p> <small> <i> <strong> note </strong>: la carte actuelle sera remplacée dans le cas des fichiers de contextes cartographiques </i> </small> </p>"
             },
             "errors": {
@@ -1126,7 +1127,24 @@
             }
         },
         "mapExport": {
-            "title": "Exporter la carte"
+            "title": "Exporter la carte",
+            "exportPanel": {
+                "title": "<p><h4>Sélectionnez votre format</h4></p>",
+                "exportButtonLabel": "Exportation"
+            },
+            "formats": {
+                "mapstore2": {
+                    "label": "MapStore",
+                    "description": "<p><small>Format standard de MapStore</small></p>"
+                },
+                "wmc": {
+                    "label": "WMC",
+                    "description": "<p><small>Format OGC Web Map Context</small></p>",
+                    "note": "<p><small><i><strong>note</strong>: le format WMC prend en charge <strong>uniquement les couches WMS</strong></i></small></p>"
+                }
+            },
+            "errorTitle": "Échec de l'exportation de la carte",
+            "wmcNoLayersError": "Au moins une couche WMS nécessaire pour exporter vers WMC, trouvée zéro"
         },
         "catalog": {
             "start": "Date de début ",

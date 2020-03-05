@@ -180,10 +180,6 @@ describe('StandardRouter', () => {
         expect(dom.getElementsByClassName('_ms2_init_spinner').length).toBe(1);
     });
     it('if we wait for theme onThemeLoaded is called when theme is loaded', (done) => {
-        const funcs = {
-            onThemeLoaded: () => { }
-        };
-        const spyLoad = expect.spyOn(funcs, 'onThemeLoaded');
         const plugins = {
             MyPlugin: {}
         };
@@ -203,12 +199,7 @@ describe('StandardRouter', () => {
         const app = ReactDOM.render(<Provider store={store}><StandardRouter plugins={plugins} pages={pages} version="VERSION" themeCfg={{
             theme: "default",
             path: "base/web/client/test-resources/themes"
-        }} loadAfterTheme themeLoaded={false} onThemeLoaded={spyLoad}/></Provider>, document.getElementById("container"));
+        }} loadAfterTheme themeLoaded={false} onThemeLoaded={done}/></Provider>, document.getElementById("container"));
         expect(app).toExist();
-
-        setTimeout(() => {
-            expect(spyLoad).toHaveBeenCalled();
-            done();
-        }, 0);
     });
 });

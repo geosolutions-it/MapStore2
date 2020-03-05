@@ -19,6 +19,11 @@ const Container = connect(() => ({
     bsStyle: "primary",
     title: <Glyphicon glyph="menu-hamburger"/>
 }))(DropdownButton);
+const InnerContainer = ({children, ...props}) => (
+    <div {...props}>
+        {children}
+    </div>
+);
 
 const ToolsContainer = require('./containers/ToolsContainer');
 const Message = require('./locale/Message');
@@ -62,10 +67,10 @@ class BurgerMenu extends React.Component {
         panelClassName: "toolbar-panel"
     };
 
-    getPanels = () => {
-        return this.props.items.filter((item) => item.panel)
+    getPanels = items => {
+        return items.filter((item) => item.panel)
             .map((item) => assign({}, item, {panel: item.panel === true ? item.plugin : item.panel})).concat(
-                this.props.items.filter((item) => item.tools).reduce((previous, current) => {
+                items.filter((item) => item.tools).reduce((previous, current) => {
                     return previous.concat(
                         current.tools.map((tool, index) => ({
                             name: current.name + index,
@@ -78,7 +83,44 @@ class BurgerMenu extends React.Component {
     };
 
     getTools = () => {
-        return [{element: <span key="burger-menu-title">{this.props.title}</span>}, ...this.props.items.sort((a, b) => a.position - b.position)];
+        const processChildren = (children = []) => {
+            const childTools = children.map(child => ({
+                ...child,
+                ...processChildren(child.children)
+            })).sort((a, b) => a.position - b.position);
+            const innerProps = {
+                container: InnerContainer,
+                containerWrapperStyle: {position: 'static'},
+                className: 'burger-menu-submenu',
+                toolStyle: 'primary',
+                activeStyle: 'default',
+                stateSelector: 'burgermenu',
+                eventSelector: 'onSelect',
+                tool: MenuItem,
+                panelStyle: this.props.panelStyle,
+                panelClassName: this.props.panelClassName
+            };
+            return children.length > 0 ? {
+                containerWrapperStyle: {position: 'static'},
+                style: {position: 'relative'},
+                childTools,
+                childPanels: this.getPanels(children),
+                innerProps
+            } : {};
+        };
+
+        return [
+            {
+                element:
+                    <span key="burger-menu-title">
+                        {this.props.title}
+                    </span>
+            },
+            ...this.props.items.map(item => ({
+                ...item,
+                ...processChildren(item.children)
+            })).sort((a, b) => a.position - b.position)
+        ];
     };
 
     render() {
@@ -92,7 +134,7 @@ class BurgerMenu extends React.Component {
                 eventSelector="onSelect"
                 tool={MenuItem}
                 tools={this.getTools()}
-                panels={this.getPanels()}
+                panels={this.getPanels(this.props.items)}
                 panelStyle={this.props.panelStyle}
                 panelClassName={this.props.panelClassName}
             />);
