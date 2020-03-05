@@ -775,7 +775,8 @@
             }
         },
         "locate": {
-            "tooltip": "Mia posizione",
+            "tooltip": "Mostra la mia posizione",
+            "tooltipDeactivate": "Smetti di mostrare la mia posizione",
             "metersUnit": "metri",
             "feetUnit": "piedi",
             "popup": "Sei nel raggio di {distance} {unit} da questo punto",

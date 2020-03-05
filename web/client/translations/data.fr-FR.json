@@ -775,7 +775,8 @@
             }
         },
         "locate": {
-            "tooltip": "Me localiser",
+            "tooltip": "Afficher ma position",
+            "tooltipDeactivate": "Arrête de montrer ma position",
             "metersUnit": "mètres",
             "feetUnit": "pieds",
             "popup": "Vous êtes à moins de {distance} {unit} de ce point",
