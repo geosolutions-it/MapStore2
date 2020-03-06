@@ -7,7 +7,7 @@ In [MapStore](https://mapstore.geo-solutions.it/mapstore/#/) it is possible to s
 
 <img src="../img/share/share_cards.jpg" class="ms-docimage"  style="max-width:400px;"/>
 
-* Inside the resource by clicking on the [Burger Menu](menu-bar.md#burger-menu) <img src="../img/button/sharebm.jpg" class="ms-docbutton" style="max-height:25px;"/> option (only for Maps)
+* Inside the resource (Map, Dashboard etc) by clicking on the [Burger Menu](menu-bar.md#burger-menu) <img src="../img/button/sharebm.jpg" class="ms-docbutton" style="max-height:25px;"/> option (only for Maps)
 
 The user is allowed to save a resource in different ways:
 
@@ -23,7 +23,7 @@ As soon as the Share window opens, the link section is by default displayed:
 
 <img src="../img/share/share_window.jpg" class="ms-docimage"  style="max-width:400px;"/>
 
-In here it is possible to copy the resource url link and access its qr code. Moreover only opening this window from the [Burger Menu](menu-bar.md#burger-menu) it is possible to access the advanced options where the user can add the bbox param to the link (in this case the zoom and the coordinates of the displayed map will be shared with the link).
+Here it is possible to copy the resource url link and access its qr code. Moreover only opening this window from the [Burger Menu](menu-bar.md#burger-menu) it is possible to access the advanced options where the user can add the bbox param to the link (in this case the zoom and the coordinates of the displayed map will be shared with the link).
 
 ## Social
 
