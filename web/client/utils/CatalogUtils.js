@@ -335,6 +335,7 @@ const converters = {
             tmsUrl: options.tmsUrl,
             references: [{
                 type: "OGC:TMS",
+                version: "1.0.0",
                 url: options.url
             }]
         }));
@@ -343,10 +344,9 @@ const converters = {
         if (records && records.records) {
             return records.records.map(record => {
                 return {
-                    description: record.title,
-                    title: record.title,
-                    identifier: record.name,
-                    thumbnail: record.thumbURL,
+                    title: record.provider,
+                    type: "tileprovider",
+                    provider: record.provider,
                     references: []
                 };
             });
@@ -585,6 +585,19 @@ const CatalogUtils = {
             tileSize,
             extension
         };
+    },
+    /**
+     * Converts a record into a layer
+     */
+    tileProviderToLayer: (record, service) => {
+        return {
+            type: "tileprovider",
+            title: record.title,
+            service,
+            provider: record.provider, // "ProviderName.VariantName"
+            name: record.provider
+        };
+
     }
 };
 module.exports = CatalogUtils;

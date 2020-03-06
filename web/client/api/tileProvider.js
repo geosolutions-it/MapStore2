@@ -35,19 +35,19 @@ export const getRecords = (url, startPosition, maxRecords, text, info) => {
         const variants = getVariants(service.provider);
         if (variants.length === 0) {
             layers.push({
-                tileprovider: `${service.provider}`,
+                provider: `${service.provider}`,
                 title: `${service.provider}`
             });
         } else {
             layers = variants.map(variant => ({
-                tileprovider: `${service.provider}.${variant}`
+                provider: `${service.provider}.${variant}`
             }));
         }
 
     } else if (service.url) {
         layers = [{
             ...service,
-            tileprovider: CUSTOM // this overrides also in case of null value
+            provider: CUSTOM // this overrides also in case of null value
         }];
     }
     return new Promise((resolve) => {
@@ -60,13 +60,12 @@ export const textSearch = (url, startPosition, maxRecords, text, info) => getRec
 
 
 export const validate = () => (service) => {
-    const validateURLTemplate = () => false;
+    const validateURLTemplate = () => true; // TODO
     const isValidURL = service.provider === "custom" ? validateURLTemplate(service.url) : !!service.provider;
     if (service.title && isValidURL) {
         return Observable.of(service);
     }
-    const error = new Error("validation URL");
-    error.notification = "Not valid URL template";
+    const error = new Error("catalog.config.notValidURLTemplate");
     // insert valid URL;
     throw error;
 };

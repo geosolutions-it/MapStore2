@@ -28,7 +28,8 @@ import SideCard from '../misc/cardgrids/SideCard';
 import Toolbar from '../misc/toolbar/Toolbar';
 import tooltip from '../misc/enhancers/tooltip';
 const Button = tooltip(ButtonRB);
-import TMSButton from './buttons/TMSButton';
+import AddTMS from './buttons/AddTMS';
+import AddTileProvider from './buttons/AddTileProvider';
 
 import defaultThumb from './img/default.jpg';
 import defaultBackgroundThumbs from '../../plugins/background/DefaultThumbs';
@@ -147,6 +148,7 @@ class RecordItem extends React.Component {
         // let's extract the esri
         const {esri} = extractEsriReferences(record);
         const background = record && record.background;
+        const tileProvider = record && record.type === "tileprovider" && record.provider;
 
         // let's create the buttons
         let buttons = [];
@@ -215,7 +217,7 @@ class RecordItem extends React.Component {
         }
         if (tms) {
             buttons.push(
-                <TMSButton
+                <AddTMS
                     service={this.props.service}
                     key="tms-button"
                     tooltipId="catalog.addToMap"
@@ -226,8 +228,24 @@ class RecordItem extends React.Component {
                     record={this.props.record}
                     key="addTmsLayer">
                     <Glyphicon glyph="plus" />
-                </TMSButton>
+                </AddTMS>
             );
+        }
+        if (tileProvider) {
+            buttons.push(
+                <AddTileProvider
+                    service={this.props.service}
+                    key="tileprovider-button"
+                    tooltipId="catalog.addToMap"
+                    className="square-button-md"
+                    bsStyle="primary"
+                    bsSize={this.props.buttonSize}
+                    addLayer={this.addLayer}
+                    record={this.props.record}
+                    key="addTmsLayer">
+                    <Glyphicon glyph="plus" />
+                </AddTileProvider>
+            )
         }
 
         // create get capabilities links that will be used to share layers info

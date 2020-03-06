@@ -35,17 +35,19 @@ const DefaultURLEditor = ({ service = {}, onChangeUrl = () => { } }) => (<FormGr
 import CONFIG_PROVIDER from '../../../utils/ConfigProvider';
 
 
-const TileProviderURLEditor = ({ onChangeServiceProperty, service = {}, onChangeUrl = () => { } }) => {
+const TileProviderURLEditor = ({ onChangeServiceProperty, service = {}, onChangeUrl = () => { }, onChangeTitle = () => {} }) => {
     const providers = Object.keys(CONFIG_PROVIDER);
     const selectedProvider = service?.provider?.split?.(".")?.[0];
+    const isCustom = !selectedProvider || selectedProvider === CUSTOM;
     return (<FormGroup>
-        <Col xs={12} sm={3} md={3}>
+        <Col xs={12} sm={ isCustom ? 3 : 12} md={isCustom ? 3 : 12}>
             <ControlLabel><Message msgId="catalog.url" /></ControlLabel>
             <FormControl
                 onChange={(e) => {
                     const provider = e.target.value;
 
                     onChangeServiceProperty("provider", `${provider}` );
+                    onChangeTitle(provider);
                 }}
                 value={selectedProvider}
                 componentClass="select">
@@ -53,7 +55,7 @@ const TileProviderURLEditor = ({ onChangeServiceProperty, service = {}, onChange
             </FormControl>
         </Col>
         <Col xs={12} sm={9} md={9}>
-            {!selectedProvider || selectedProvider === CUSTOM
+            {isCustom
                 ? <React.Fragment>
                     <ControlLabel><Message msgId="catalog.tileProvider.alternatives" /></ControlLabel>
                     <FormControl
@@ -88,7 +90,7 @@ export default ({
     const URLEditor = service.type === "tileprovider" ? TileProviderURLEditor : DefaultURLEditor;
     return (
         <Form horizontal >
-            <URLEditor key="url-row" service={service} onChangeUrl={onChangeUrl} onChangeServiceProperty={onChangeServiceProperty} />
+            <URLEditor key="url-row" service={service} onChangeUrl={onChangeUrl} onChangeTitle={onChangeTitle} onChangeServiceProperty={onChangeServiceProperty} />
             <FormGroup controlId="title" key="type-title-row">
                 <Col key="type" xs={12} sm={3} md={3}>
                     <ControlLabel><Message msgId="catalog.type" /></ControlLabel>
