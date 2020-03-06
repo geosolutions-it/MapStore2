@@ -150,12 +150,12 @@ function catalog(state = {
         } else {
             let services = assign({}, state.services);
             delete services[action.service.oldService];
-            newServices = assign({}, services, {[action.service.title]: action.service});
+            newServices = assign({}, services, {[action.service.id || action.service.title]: action.service});
         }
         return action.service.title !== "" && action.service.url !== "" ?
             assign({}, state, {
                 services: newServices,
-                selectedService: action.service.title,
+                selectedService: action.service.id || action.service.title,
                 mode: "view",
                 result: null,
                 loadingError: null,
