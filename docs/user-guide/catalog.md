@@ -4,7 +4,7 @@
 The Catalog Service for the Web (CSW) is an [OGC Standard](https://www.ogc.org/standards) used to publish and search geospatial data and related metadata on the internet. It describes geospatial services such as Web Map Service (WMS) and Web Map Tile Service (WMTS).
 
 In [MapStore](https://mapstore.geo-solutions.it/mapstore/#/) the Catalog offers the possibility to access CSW, WMS and WMTS Remote Services and to add the related layers to the map. By default, as soon as a user opens the Catalog, a CSW a WMS and a WMTS Demo Services are available, allowing to import layers from the GeoSolutions GeoServer.
-The user can access the Catalog with a click on the <img src="../img/catalog/catalog-option.jpg" class="ms-docbutton" style="max-height:25px;" /> option present in [Burger Menu](menu-bar.md#burger-menu) <img src="../img/button/burger.jpg" class="ms-docbutton" />. As soon as you open it, the first display is like the following:
+The user can access the Catalog with a click on the <img src="../img/button/catalog-option.jpg" class="ms-docbutton" style="max-height:25px;" /> option present in [Burger Menu](menu-bar.md#burger-menu) <img src="../img/button/burger.jpg" class="ms-docbutton" />. As soon as you open it, the first display is like the following:
 
 <img src="../img/catalog/catalog_panel.jpg" class="ms-docimage"  style="max-width:500px;" />
 
@@ -67,13 +67,13 @@ The Advances settings section opens by clicking on the <img src="../img/button/e
 
 <img src="../img/catalog/advanced_settings.jpg" class="ms-docimage"  style="max-width:500px;" />
 
-In here the user can set the following options:
+Here the user can set the following options:
 
 * *Search on service selection* that allow to enable/disable the automatic loading of the catalog records when the user opens that Service 
 
-* *Show preview* that can show/hide the layers preview in Catalog
+* *Show preview* that can show/hide layers thumbnails in Catalog
 
-* Change the *Format* of the layers image that will be rendered on the map (`png`, `png8`, `jpeg`, `vnd.jpeg-png` or `gif`)
+* Change the *Format* of the image that will be rendered on the map (`png`, `png8`, `jpeg`, `vnd.jpeg-png` or `gif`) for layers belonging to the selected source
 
 * *Show metadata template* can be enabled when the user wants to insert in the layer description a text with metadata information 
 
@@ -86,11 +86,11 @@ In order to better understand this function, let's make an example supposing to 
 
 <img src="../img/catalog/metadata.jpg" class="ms-docimage"  style="max-width:500px;" />
 
-Enabling the *Show metadata template* option appears a text editor through witch it is possible to insert the custom metadata information for that service. In order to dynamically call each layer's metadata value the user can insert the desired properties name with the format `${property_name}`:
+Enabling the *Show metadata template* option appears a text editor through witch it is possible to insert the custom metadata information for that service. In order to dynamically parse each layer's metadata value the user can insert the desired properties name with the format `${property_name}`:
 
 <img src="../img/catalog/metadata-tooltip.jpg" class="ms-docimage" style="max-width:500px;"/>
 
-In this case it is possible to add a text like the following, in order to call several layers properties:
+In this case it is possible to add a text like the following, in order to present desired metadata properties:
 
 ```
 title: ${title}
@@ -129,4 +129,4 @@ Inserting this text and saving, the result should be that each layer will show i
 <img src="../img/catalog/metadata-det.gif" class="ms-docimage"  style="max-width:500px;"/>
 
 !!! note
-    If some metadata is absent, the `source Not Available` text will be shown.
+    If some metadata are missing, the server response will be `source Not Available`

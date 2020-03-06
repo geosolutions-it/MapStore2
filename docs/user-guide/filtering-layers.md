@@ -2,17 +2,20 @@
 ******************
 
 When using vector layers it might be useful to work with a subset of features. About that, [MapStore](https://mapstore.geo-solutions.it/mapstore/#/) let the user set up a **Layer Filter** that acts directly on a layer with WFS available and filter its content upfront.
-The map will immediately update when a filter is created and all other tools will take it into consideration when used.
+The map will immediately update when a filter is applied.
+
+!!!warning
+    The [MapStore](https://mapstore.geo-solutions.it/mapstore/#/)'s filtering capabilities are working on top of the WFS specifications so that service must be enabled if you want to filter a layer using the tools described in this section.
 
 ## Filter types
 
-In [MapStore](https://mapstore.geo-solutions.it/mapstore/#/) it is possible to apply three types of filters, called:
+In [MapStore](https://mapstore.geo-solutions.it/mapstore/#/) it is possible to apply filters on layers in three different ways:
 
-* *Layer Filter*
+* With the *Layer Filter* tool available in [TOC](toc.md)
 
-* *Advanced Search*
+* With the *Advanced Search* tool available from the [Attribute Table](attributes-table.md)
 
-* *Quick Filter*
+* With the *Quick Filter* available in the [Attribute Table](attributes-table.md)
 
 ### Layer Filter
 
@@ -26,7 +29,7 @@ This filter is applicable from the **Filter layer** button <img src="../img/butt
 
 <img src="../img/filtering-layers/filtered_advanced_filtering.gif" class="ms-docimage"/>
 
-* Opening the map next time (you need to Save the map from [Burger Menu](menu-bar.md#burger-menu) after the filter application)
+* Opening the map next time (you need to Save the map from [Burger Menu](menu-bar.md#burger-menu) after applying a filter)
 
 Once a *Layer filter* is set, it is possible to enable/disable it simply by clicking on the button that will appear near the layer name in [TOC](toc.md):
 
@@ -44,7 +47,7 @@ This filter is applied through the [Query Panel](filtering-layers.md#query-panel
 
 This filter, applicable from **Advanced Search** button <img src="../img/button/advanced-search.jpg" class="ms-docbutton"/> in [Attribute Table](attributes-table.md), behaves as follows:
 
-* It can be used to filter the geometries resulting from an already applied *Layer Filter* (in this case the *Layer Filter* will go in `AND` with the *Advanced Filtering*)
+* It can be used to apply a filter to a layer for search purposes in [Attribute Table](attributes-table.md): this filter is applied in `AND` to the *Layer Filter* if it is already been set.
 
 <img src="../img/filtering-layers/filtered_features_grid.jpg" class="ms-docimage"/>
 
@@ -58,15 +61,17 @@ Also this filter is applied through the [Query Panel](filtering-layers.md#query-
 
 ### Quick Filter
 
-This filter, applicable directly in the [Attribute Table](attributes-table.md) just below the field names, can be also used in combination with the other types of filter:
+This filter, applicable directly in the [Attribute Table](attributes-table.md) just below the field names, can be also used in combination with other filter applied:
 
 <img src="../img/filtering-layers/filtered_quick_filter.gif" class="ms-docimage"/>
 
-In the case the user wants to filter the layer through a text field, he can simply write something inside the input box and the field will be automatically filtered matching with the input text:
+The user has the possibility to apply simple filters by attributes simply typing the filter's value in the available input fields (Date or Time pickers are available according to real attributes data types and a tooltip usually gives an information on how to fill the filter's input field). Filtering by one or more attributes, layer records in [Attribute Table](attributes-table.md) are automatically filtered accordingly.
+
+If the user wants to filter by an attribute of type String, he can simply write something inside the input box and the list of records in table will be automatically filtered by matching with the input text.
 
 <img src="../img/filtering-layers/attribute-table-quick-filter-1.jpg" class="ms-docimage"/>
 
-When, instead, the goal is to filter the layer through a numerical field, it is possible to make use of the following operations:
+If the User wants to filter by a numeric attribute, he can type directly a number or an expression using the following operators:
 
 * Not equal (**!=** or **!==** or **<>**)
 
@@ -84,11 +89,11 @@ In order to filter a numerical filed matching the records *greater than* or *equ
 
 <img src="../img/filtering-layers/attribute-table-quick-filter-3.jpg" class="ms-docimage"/>
 
-The *Quick Filter* remains active as long as the [Attribute Table](attributes-table.md) is open but, unlike the *Advanced Search*, closing the [Attribute Table](attributes-table.md) it will not reappear anymore.
+The *Quick Filter* remains active as long as the [Attribute Table](attributes-table.md) is open but, unlike the *Advanced Search*, closing the [Attribute Table](attributes-table.md) it will not reappear anymore if the [Attribute Table](attributes-table.md) is re-opened in a second time.
 
 ## Query Panel
 
-This panel, used in order to set a filter of the *Layer Filter* or *Advanced Search* types, is divided in three main sections:
+This tool is used to define advanced filters in [MapStore](https://mapstore.geo-solutions.it/mapstore/#/). It includes three main sections:
 
 * **Attribute Filter**
 
@@ -98,11 +103,9 @@ This panel, used in order to set a filter of the *Layer Filter* or *Advanced Sea
 
 <img src="../img/filtering-layers/query-panel.jpg" class="ms-docimage" style="max-width:500px;"/>
 
-Those filter types are persistent during the filtering section. This means that if a filter is set, the user can apply another one only for that records already filtered by the first one.
-
 ### Attribute filter
 
-This filter allows to set one or more conditions referred to the attribute table fields. <br>
+This filter allows to set one or more conditions referred to the [Attribute Table](attributes-table.md) fields. <br>
 First of all it is possible to choose if the filter will match: 
 
 * **Any** conditions
@@ -111,14 +114,14 @@ First of all it is possible to choose if the filter will match:
 
 * **None** conditions
 
-After that, the user can insert one or more conditions, that can also be grouped in one or more condition groups (use the <img src="../img/button/cond_group.jpg" class="ms-docbutton"/> button in order to create a group).<br>
+After that, the user can insert one or more conditions, that can also be grouped in one or more condition groups (use the <img src="../img/button/condition_group.jpg" class="ms-docbutton"/> button in order to create a group).<br>
 A condition can be set by selecting a value for each of the three input boxes:
 
 * The first input box allows to choose a layer field
 
 * In the second input box it is possible to choose the operation to perform (selecting a text field can be **=**, **like**, **ilike** or **isNull**, selecting a numerical field, can be **=**, **>**, **<**, **>=**, **<=**, **<>** or **><**)
 
-* The third input box allows to choose between the selected field values when the field is textual, or simply insert a value when the field is numerical
+* The third input box (in case of fields of type String) provides a paginated list of available field values already present in the layer's dataset (a GeoServer WPS process is used for this). In case of numeric fields the user can simply type a value to use for the filter.
 
 A simple *Attribute Filter* applied for a numerical field can be, for example:
 
@@ -126,23 +129,28 @@ A simple *Attribute Filter* applied for a numerical field can be, for example:
 
 ### Region of interest
 
-In order to set this filter, performed comparing the layer with a spatial geometry, the user can:
+In order to set this filter the user can:
 
-* Select the *Filter type* between **Viewport**, **Rectangle**, **Circle**, **Polygon** (selecting Rectangle, Circle or Polygon it is necessary to draw the geometry on the map)
+* Select the *Filter type* by choosing between **Viewport**, **Rectangle**, **Circle**, **Polygon** (selecting Rectangle, Circle or Polygon it is necessary to draw the filter's geometry on the map)
 
-* Select the *Geometric operation* between **Intersects**, **Is contained**, **Contains**
+* Select the *Geometric operation* by choosing between **Intersects**, **Is contained**, **Contains**
 
 Applying a *Circle* filter with *Intersect* operation, for example, the process could be similar to the following:
 
 <img src="../img/filtering-layers/geom_filter.gif" class="ms-docimage" style="max-width:600px;"/>
 
-Once this filter is set, it is always possible to edit the coordinates and the dimensions of the drawn geometry by clicking on the **Details** button <img src="../img/button/edit-icon-1.jpg" class="ms-docbutton"/>. Editing a circle, for example, it is possible to change the center coordinates (*x*, *y*) and the radius dimension (*m*):
+Once this filter is set, it is always possible to edit the coordinates and the dimensions of the drawn filter's geometry by clicking on the **Details** button <img src="../img/button/edit-icon-1.jpg" class="ms-docbutton"/>. Editing a circle, for example, it is possible to change the center coordinates (*x*, *y*) and the radius dimension (*m*):
 
 <img src="../img/filtering-layers/edit_geom.jpg" class="ms-docimage" style="max-width:500px;"/>
 
 ### Layer filter
 
-This tool allows to set a filter for a layer that takes into account another layer or even the same one. In order to perform this operation it is required to set the following options:
+This tool allows to set [cross-layer filters](https://docs.geoserver.org/stable/en/user/extensions/querylayer/index.html) for a layer by using another layer or even the same one. 
+
+!!!warning
+    This filter tool requires the [Query Layer plugin](https://docs.geoserver.org/stable/en/user/extensions/querylayer/index.html#installing-the-querylayer-module) installed in GeoServer
+
+In order to set up a cross-layer filter the options below are required:
 
 * *Target layer* (between those present in the [TOC](toc.md))
 

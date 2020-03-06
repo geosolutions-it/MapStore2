@@ -18,7 +18,7 @@ Through this window it is possible to:
 
 ## Measure distance
 
-As soon as the measure window opens, by default the measure distance option is selected <img src="../img/button/measure-distance-green.jpg" class="ms-docbutton"/>. In order to perform a distance measure, each click on the map correspond to a vertex of the multiline (at least two vertices are needed) while the double click inserts the last vertex concluding the drawing session. 
+As soon as the measure window opens, by default the measure distance option is selected <img src="../img/button/measure-distance-green.jpg" class="ms-docbutton"/>. In order to perform a distance measure, each click on the map correspond to a vertex of the line (at least two vertices are needed) while the double click inserts the last vertex concluding the drawing session. 
 
 <img src="../img/measure/measure-distance-ex.gif" class="ms-docimage" style="max-width:600px;"/>
 
