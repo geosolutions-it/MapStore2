@@ -10,6 +10,7 @@ const React = require('react');
 
 const assign = require('object-assign');
 const {Glyphicon} = require('react-bootstrap');
+const {get} = require('lodash');
 
 const Message = require('../components/I18N/Message');
 
@@ -25,7 +26,10 @@ module.exports = {
             text: <Message msgId="docs"/>,
             icon: <Glyphicon glyph="question-sign"/>,
             action: () => ({type: ''}),
-            selector: () => ({href: 'https://mapstore.readthedocs.io/en/latest/', target: 'blank'}),
+            selector: (state, ownProps) => {
+                const docsUrl = get(ownProps, 'defaultOptions.docsUrl', 'https://mapstore.readthedocs.io/en/latest/');
+                return {href: docsUrl, target: 'blank'};
+            },
             priority: 2,
             doNotHide: true
         }
