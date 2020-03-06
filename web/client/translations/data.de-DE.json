@@ -2439,6 +2439,26 @@
             "confirmReplaceMessage": "Sie ersetzen alle Layer und die Kartenkonfiguration durch die ausgewählte Vorlage, indem Sie auf die Schaltfläche Ersetzen klicken",
             "confirmReplaceConfirmButton": "Ersetzen"
         },
+        "mapCatalog": {
+            "title": "Kartenkatalog",
+            "filterPlaceholder": "Karten suchen...",
+            "deleteConfirmContent": "Möchten Sie die Karte \"{mapName}\" wirklich löschen?",
+            "tooltips": {
+                "edit": "Eigenschaften bearbeiten",
+                "delete": "Ressource löschen",
+                "share": "Teilen"
+            },
+            "deletedMap": {
+                "title": "Karte gelöscht",
+                "message": "Die Karte wurde erfolgreich gelöscht"
+            },
+            "updatedMap": {
+                "title": "Gespeicherte Karte",
+                "message": "Die Karte wurde erfolgreich gespeichert"
+            },
+            "deleteError": "Beim Löschen der Karte ist ein unerwarteter Fehler aufgetreten",
+            "updateError": "Beim Speichern der Karte ist ein unerwarteter Fehler aufgetreten"
+        },
         "tutorial": {
             "title": "Anleitung",
             "back": "zurück",
