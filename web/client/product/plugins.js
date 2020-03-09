@@ -61,7 +61,7 @@ module.exports = {
         GoFull: require('../plugins/GoFull'),
         GridContainerPlugin: require('../plugins/GridContainer'),
         GroupManagerPlugin: require('../plugins/manager/GroupManager'),
-        HelpLinkPlugin: require('../plugins/HelpLink'),
+        HelpLinkPlugin: require('../plugins/HelpLink').default,
         HelpPlugin: require('../plugins/Help'),
         HomePlugin: require('../plugins/Home'),
         IdentifyPlugin: require('../plugins/Identify'),

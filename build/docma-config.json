@@ -219,6 +219,7 @@
                 "web/client/plugins/FullScreen.jsx",
                 "web/client/plugins/GlobeViewSwitcher.jsx",
                 "web/client/plugins/GoFull.jsx",
+                "web/client/plugins/HelpLink.jsx",
                 "web/client/plugins/Identify.jsx",
                 "web/client/plugins/Locate.jsx",
                 "web/client/plugins/Login.jsx",
