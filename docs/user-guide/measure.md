@@ -1,76 +1,52 @@
 # Performing Measurements
 *************************
 
-Measure tools in [MapStore](https://mapstore.geo-solutions.it/mapstore/#/) allow the user to perform distance, area and bearing measurments on the map.
+Measure tools in [MapStore](https://mapstore.geo-solutions.it/mapstore/#/) allows the user to perform distance, area and bearing measurements on the map and to add the traced geometries as [Annotations](annotations.md).<br>
+This tool is accessible from [Burger Menu](menu-bar.md#burger-menu) by selecting the <img src="../img/button/measure-icon.jpg" class="ms-docbutton" style="max-height:20px;"/> option that opens the following window:
 
-Starting from a new map or an already existing map:
+<img src="../img/measure/measure.jpg" class="ms-docimage" style="max-width:600px;"/>
 
-* **Click** on the *Burger menu* button <img src="../img/button/burger.jpg" class="ms-docbutton" /> from the main menu bar
+Through this window it is possible to:
 
-* **Click** on the *Measure* option from the list <img src="../img/measure/measure-icon.jpg" class="ms-docbutton"  style="max-height:20px;" />
+* Measure distance <img src="../img/button/measure-distance.jpg" class="ms-docbutton"/>
 
-A pop-up page will open showing four buttons, with the first three buttons representing the available measurement tools to use and the last
-button add ability to create annotation from the measurements.
+* Measure Area <img src="../img/button/measure-area.jpg" class="ms-docbutton"/>
 
-<img src="../img/measure/measure.jpg" class="ms-docimage"  style="max-width:500px;" />
+* Measure Bearing <img src="../img/button/measure-bearing.jpg" class="ms-docbutton"/>
 
-Measuring Distances
--------------------
+* Add the measure as [Annotation](annotations.md) <img src="../img/button/add-as-annotation.jpg" class="ms-docbutton"/>
 
-Since [MapStore](https://mapstore.geo-solutions.it/mapstore/#/) works in geographic coordinates, the measured distances are geodesic. You can draw a segment line or multi-segments line.
+## Measure distance
 
-* **Click** on *Measure Distance* button <img src="../img/button/measure-distance.jpg" class="ms-docbutton"/>
+As soon as the measure window opens, by default the measure distance option is selected <img src="../img/button/measure-distance-green.jpg" class="ms-docbutton"/>. In order to perform a distance measure, each click on the map correspond to a vertex of the line (at least two vertices are needed) while the double click inserts the last vertex concluding the drawing session. 
 
-* **Click** on the map to draw the starting point and the nodes between the segments
+<img src="../img/measure/measure-distance-ex.gif" class="ms-docimage" style="max-width:600px;"/>
 
-* **Double-click** to end the line drawing
+The available units of measure are:
 
-The length will be reported as a tool tip on the end point and on the measure page. A list of measurement units is available and can be set at your leisure.
+<img src="../img/measure/distance-uom.jpg" class="ms-docimage" style="max-width:300px;"/>
 
-<img src="../img/measure/measure-distance-1.jpg" class="ms-docimage"  style="max-width:500px;"/>
+## Measure area
 
-Measuring Areas
----------------
+Once the **Measure Area** button is selected <img src="../img/button/measure-area-green.jpg" class="ms-docbutton"/>, it is possible to start the drawing session (in this case at least 3 vertices need to be indicated). Same as measuring the distance, each click correspond to a vertex and the double click will indicate the last one.
 
-* **Click** on *Measure Area* button <img src="../img/button/measure-area.jpg" class="ms-docbutton"/>
+<img src="../img/measure/measure-area-ex.gif" class="ms-docimage" style="max-width:600px;"/>
 
-* **Click** on the map to draw the vertices of a polygon
+In this case the available units of measure are:
 
-* **Double-click** to end your drawing sketch
+<img src="../img/measure/area-uom.jpg" class="ms-docimage" style="max-width:300px;"/>
 
-The area will be reported as a tool tip and on the measure page. A list of measurement units is available and can be set at your leisure.
+## Measure bearing
 
-<img src="../img/measure/measure-area-1.jpg" class="ms-docimage"  style="max-width:500px;"/>
+Bearing measurements allows you to measure directions and angles. In the quadrant bearing system, the bearing of a line is measured as an angle from the reference meridian, either the north or the south, toward the east or the west. Bearings in the quadrant bearing system are written as a meridian, an angle and a direction. For example, a bearing of N 30 W defines an angle of 30 degrees west measured from north. A bearing of S 15 E defines an angle of 15 degrees east measured from the south.<br>
+After selecting the **Measure Bearing** button <img src="../img/button/measure-bearing-green.jpg" class="ms-docbutton"/> the user can draw a line with only two vertices that indicates respectively the starting and the ending point. 
 
-Measuring Bearings
-------------------
+<img src="../img/measure/measure-bearing-ex.gif" class="ms-docimage" style="max-width:600px;"/>
 
-Bearings measurements allow you to measure directions and angles.
-In the quadrant bearing system, the bearing of a line is measured as an angle from the reference meridian, either the north or the south, toward the east or the west. Bearings in the quadrant bearing system are written as a meridian, an angle and a direction. For example, a bearing of N 30 W defines an angle of 30 degrees west measured from north. A bearing of S 15 E defines an angle of 15 degrees east measured from the south.
+## Add measure as annotation
 
-* **Click** on *Measure Bearing* button <img src="../img/button/measure-bearing.jpg" class="ms-docbutton"/>
+Once a measure is drawn, it gets possible to add it as [Annotation](annotations.md) through the <img src="../img/button/add-as-annotation.jpg" class="ms-docbutton"/> button. The following panel opens:
 
-* **Click** on the map to draw the starting point
+<img src="../img/measure/add-as-annotation-ex.jpg" class="ms-docimage"/>
 
-* **Choose** a direction
-
-* **Click** to draw the end point
-
-The bearing measure will be reported as a tool tip and on the measure page.
-
-<img src="../img/measure/measure-bearing-1.jpg" class="ms-docimage"  style="max-width:500px;"/>
-
-Annotation
-------------------
-
-It is possible to define [annotation](annotations.md) from the measurements i.e length, area or bearing.
-
-* Define the measurement i.e distance, area or bearing
-
-* **Click** on  *Add as annotation* button <img src="../img/button/add-as-annotation.jpg" class="ms-docbutton"/>
-
-*(This button is clickable only after defining the measurement)*
-
-Annotation panel will open and you can continue to define the new [annotation](annotations.md) originating from measurement.
-
-<img src="../img/measure/annotation-prefill.jpg" class="ms-docimage"  style="max-width:500px;"/>
+From this step the creation process is the same as that seen creating a normal annotation (see [Annotations section](annotations.md)).

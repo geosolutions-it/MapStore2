@@ -1,102 +1,96 @@
 # Catalog Services
 ******************
 
-The Catalog Service for the Web (CSW) is an OGC Standard to publish and search geospatial data and related metadata on the internet. It describes geospatial services such as Web Map Service (WMS) and Web Map Tile Service (WMTS).
+The Catalog Service for the Web (CSW) is an [OGC Standard](https://www.ogc.org/standards) used to publish and search geospatial data and related metadata on the internet. It describes geospatial services such as Web Map Service (WMS) and Web Map Tile Service (WMTS).
 
-In [MapStore](https://mapstore.geo-solutions.it/mapstore/#/) the Catalog offers demo services that allow you to extract the data and add them to the map from GeoServer or to create connections to other geospatial services (supported services are WMS, WMTS and CSW).
-
-Adding Layers from Demo Services
---------------------------------
-
-CSW, WMS and WMTS Demo Services are available by default allowing you to import layers from the GeoSolutions GeoServer and to add them to your map.
-
-Starting from a new map or an already existing map:
-
-* **Click** on the *Burger menu* button <img src="../img/button/burger.jpg" class="ms-docbutton" /> from the main menu bar.
-
-* **Click** on the *Catalog* option from the list <img src="../img/catalog/catalog-option.jpg" class="ms-docbutton" style="max-height:20px;" />.
-
-The Catalog page will open showing a list of services, a search box to search the layers by name and a list of the retrieved layers ready to be added to the map.
+In [MapStore](https://mapstore.geo-solutions.it/mapstore/#/) the Catalog offers the possibility to access CSW, WMS and WMTS Remote Services and to add the related layers to the map. By default, as soon as a user opens the Catalog, a CSW a WMS and a WMTS Demo Services are available, allowing to import layers from the GeoSolutions GeoServer.
+The user can access the Catalog with a click on the <img src="../img/button/catalog-option.jpg" class="ms-docbutton" style="max-height:25px;" /> option present in [Burger Menu](menu-bar.md#burger-menu) <img src="../img/button/burger.jpg" class="ms-docbutton" />. As soon as you open it, the first display is like the following:
 
 <img src="../img/catalog/catalog_panel.jpg" class="ms-docimage"  style="max-width:500px;" />
 
-An example:
+## Adding Layers from Remote Services
 
-* **Select** *GeoSolutions GeoServer WMS* from the list.
+In order to add a layer, the user can first of all open the catalog and choose from the following dropdown menu the Remote Service from where the layer is going to be added:
 
-<img src="../img/catalog/service_list.jpg" class="ms-docimage"  style="max-width:500px;"/>
+<img src="../img/catalog/service_list.jpg" class="ms-docimage"  style="max-width:600px;"/>
 
-* **Type** a text in the search box, e.g. "us", then click on the search button (or press `ENTER`).
+Once the Remote Service is set, it is possible to search the desired layer by typing a text on the search bar:
 
-<img src="../img/catalog/catalog_search.jpg" class="ms-docimage"  style="max-width:500px;"/>
+<img src="../img/catalog/catalog_search.jpg" class="ms-docimage"  style="max-width:600px;"/>
 
-* **Add** the layer to the map clicking on <img src="../img/button/add_to_map_button.jpg" class="ms-docbutton"/>.
+By clicking on the <img src="../img/button/add_to_map_button.jpg" class="ms-docbutton"/> button, the layer is finally added to the [TOC](toc.md) and rendered to the map viewer:
 
 <img src="../img/catalog/added_layer.jpg" class="ms-docimage"/>
 
-Adding and Editing a Service
-----------------------------
-
-As mentioned before, [MapStore](https://mapstore.geo-solutions.it/mapstore/#/) allows you to connect to remote services and to import the data from them.
-
-* **Click** on the <img src="../img/button/+.jpg" class="ms-docbutton"/> button to add a new service.
-
-<img src="../img/catalog/new_service.jpg" class="ms-docimage"  style="max-width:500px;"/>
-
-The Service manager window opens, where the user can start to insert the informations related to the new service:
-
-* **Type** the URL name (e.g. `http://tms.comune.fi.it/geowebcache/service/wms`);
-
-* **Select** the Type of the service (e.g. *WMS*);
-
-* **Type** the Title (e.g. *GeoPortal of Firenze*).
-
-In addition to basic information, the user can customize the Service with other useful parameters: Search on selection, Preview and Image format.
-
-* **Expand** the Advanced Settings window;
-
-<img src="../img/catalog/add-service.jpg" class="ms-docimage"  style="max-width:500px;" />
-
-* **Tick** the Search on service selection if you want to trigger a search at the same time you select the service;
-
-* **Tick** the Show preview to see the resulting layers previews near their title;
-
-* **Select** the Format (e.g. jpeg), if you want to set a specific default format for the images;
-
-<img src="../img/catalog/cat-adv-settings.jpg" class="ms-docimage"  style="max-width:500px;"/>
-
-* **Save** the created Service.
-
-A list of layers will be loaded from the portal ready to be added to your map.
-
-<img src="../img/catalog/catalog_firenze.jpg" class="ms-docimage"  style="max-width:500px;"/>
-
 !!! note
-    For those layers which have long descriptions or long metadata information, the content is truncated in order to fit the *Layer Card* size. It is possible to expand the card using the <img src="../img/button/expand_card_icon.jpg" class="ms-docbutton"/> button:
+    For those layers which have long descriptions or long metadata information, the content is truncated in order to fit the *Layer Card* size. In order to access the complete information, the user can expand the card using the <img src="../img/button/expand_card_icon.jpg" class="ms-docbutton" style="max-height:20px;"/> button:
 
-    <p style="text-align:center;"><img src="../img/catalog/expand_card.gif" class="ms-docimage"  style="max-width:300px;"/>
+    <img src="../img/catalog/expand_card.gif" class="ms-docimage" style="max-width:400px;"/>
 
-In order to edit a service, **Click** on the edit button <img src="../img/button/edit-service.jpg" class="ms-docbutton" /> and apply your changes.
+## Managing Remote Services
 
-Custom Metadata Template
-------------------------
+[MapStore](https://mapstore.geo-solutions.it/mapstore/#/) allows also to add new Remote Services to the map project (<img src="../img/button/+.jpg" class="ms-docbutton"/>) or Edit/Remove the existing ones (<img src="../img/button/edit-service.jpg" class="ms-docbutton" />). 
 
-The Catalog tool of [MapStore](https://mapstore.geo-solutions.it/mapstore/#/) lets you choose whether to show metadata or not, and how they appear. About that, a **Metadata Template** is provided inside the *Advanced Settings* panel of the Service manager:
+<img src="../img/catalog/add_edit_services.jpg" class="ms-docimage"  style="max-width:600px;"/>
 
-<img src="../img/catalog/metadata.jpg" class="ms-docimage"  style="max-width:500px;" />
+The adding/editing process is very similar and the only difference is that editing an existing Service the input fields will be already filled with its settings, while adding a new one all the fields will be empty. Moreover only editing an existing Service, it will be possible to remove it from the Services list.<br>
+Editing an existing Service, for example, the first display is the following: 
+
+<img src="../img/catalog/new_service.jpg" class="ms-docimage"  style="max-width:600px;"/>
+
+From here the user is allowed to set the Service options, that can be divided into:
+
+* **General settings**
+
+* **Advanced Settings**
+
+Once the options are properly set, it is possible to <img src="../img/button/save_service.jpg" class="ms-docbutton"/> the Service. If the user wants to discard the edits, instead, there's the <img src="../img/button/cancel_service.jpg" class="ms-docbutton"/> button. 
+An existing Service can finally be removed from the Services list through the <img src="../img/button/delete_service.jpg" class="ms-docbutton"/> button (this option is not available creating a new Remote Service).
+
+### General settings
+
+The general settings are three mandatory fields that each Remote Service needs to have:
+
+<img src="../img/catalog/general_settings.jpg" class="ms-docimage"  style="max-width:600px;"/>
+
+In particular:
+
+* **Url**
+
+* **Type** (between *CSW*, *WMS* and *WMTS*)
+
+* **Title**
+
+### Advanced settings
+
+The Advances settings section opens by clicking on the <img src="../img/button/expand_card_icon.jpg" class="ms-docbutton"/> icon:
+
+<img src="../img/catalog/advanced_settings.jpg" class="ms-docimage"  style="max-width:500px;" />
+
+Here the user can set the following options:
+
+* *Search on service selection* that allow to enable/disable the automatic loading of the catalog records when the user opens that Service 
+
+* *Show preview* that can show/hide layers thumbnails in Catalog
+
+* Change the *Format* of the image that will be rendered on the map (`png`, `png8`, `jpeg`, `vnd.jpeg-png` or `gif`) for layers belonging to the selected source
+
+* *Show metadata template* can be enabled when the user wants to insert in the layer description a text with metadata information 
 
 !!! warning
     The *Metadata Template* function is available for **CSW Services** only.
 
-* **Tick** that checkbox to get access to this functionality.
+#### Metadata templates
 
-The *Metadata Template* panel makes available a **Text Editor** through which you can expose the available metadata information within a custom text. [MapStore](https://mapstore.geo-solutions.it/mapstore/#/) suggests you how to correctly retrieve the properties values (**`${ property_name }`**) and what properties are available (see the tooltip content in the picture below).
+In order to better understand this function, let's make an example supposing to edit the `GeoSolutions GeoServer CSW` service:
 
-<img src="../img/catalog/metadata-tooltip.jpg" class="ms-docimage"  style="max-width:500px;" />
+<img src="../img/catalog/metadata.jpg" class="ms-docimage"  style="max-width:500px;" />
 
-An example:
+Enabling the *Show metadata template* option appears a text editor through witch it is possible to insert the custom metadata information for that service. In order to dynamically parse each layer's metadata value the user can insert the desired properties name with the format `${property_name}`:
 
-* **Type** the following template in the text editor
+<img src="../img/catalog/metadata-tooltip.jpg" class="ms-docimage" style="max-width:500px;"/>
+
+In this case it is possible to add a text like the following, in order to present desired metadata properties:
 
 ```
 title: ${title}
@@ -130,11 +124,9 @@ type: ${type}
 uri: ${uri}
 ```
 
-* **Click** on *Save*
-
-* This should be the results for the *test.point* layer from Catalog:
+Inserting this text and saving, the result should be that each layer will show its properties in catalog with the format we set:
 
 <img src="../img/catalog/metadata-det.gif" class="ms-docimage"  style="max-width:500px;"/>
 
 !!! note
-    If some metadata is absent, the `source Not Available` text will be shown.
+    If some metadata are missing, the server response will be `source Not Available`
