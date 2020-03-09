@@ -226,24 +226,123 @@
     }
     padding: 8px;
 }
+
+.ms-sections-container-small-screen {
+    @ms-story-padding-small-screen: @square-btn-medium-size / 2 + 8px;
+    .ms-section .ms-section-background .ms-section-background-container .ms-media {
+        /* alignment of content */
+        .ms-story-align-center();
+        /* size of content */
+        width: @ms-story-size-full;
+    }
+    .ms-section-title {
+        .ms-content-text {
+            width: 100%;
+            .ms-content-body {
+                margin-left: auto;
+                margin-right: auto;
+                padding-left: @ms-story-padding-small-screen;
+                padding-right: @ms-story-padding-small-screen;
+            }
+            .ms-content-body,
+            .ms-content-body > div {
+                width: 100%;
+            }
+            .ms-content-body .ms-content-toolbar {
+                width: auto;
+            }
+        }
+    }
+    .ms-section-paragraph {
+        padding-left: @ms-story-padding-small-screen;
+        padding-right: @ms-story-padding-small-screen;
+    }
+    .ms-section-immersive {
+        .ms-content-column {
+            padding-left: @ms-story-padding-small-screen;
+            padding-right: @ms-story-padding-small-screen;
+        }
+    }
+    .ms-content {
+        /* size of content */
+        width: @ms-story-size-full;
+        /* alignment of content */
+        .ms-story-align-center();
+        &.ms-content-text {
+            .ms-content-body {
+                /* font size for all the main classes in text content */
+                p { font-size: @ms-story-font-size-base * 0.75; }
+                h1 { font-size: @ms-story-font-size-h1 * 0.75; }
+                h2 { font-size: @ms-story-font-size-h2 * 0.75; }
+                h3 { font-size: @ms-story-font-size-h3 * 0.75; }
+                h4 { font-size: @ms-story-font-size-h4 * 0.75; }
+                h5 { font-size: @ms-story-font-size-h5 * 0.75; }
+                h6 { font-size: @ms-story-font-size-h6 * 0.75; }
+            }
+        }
+    }
+    .ms-section.ms-expandable-background {
+        &.ms-section-title .ms-content-text .ms-content-body,
+        &.ms-section-immersive .ms-content-column {
+            padding-right: @square-btn-medium-size + 8px;
+        }
+    }
+}
+.ms-sections-container-medium-screen {
+    @ms-story-padding-medium-screen: @square-btn-medium-size * 1.5;
+    .ms-section .ms-section-background .ms-section-background-container {
+        /* size of content */
+        &.ms-size-full .ms-media { width: 100%; }
+        &.ms-size-large .ms-media { width: 90%; }
+        &.ms-size-medium .ms-media { width: 80%; }
+        &.ms-size-small .ms-media { width: 60%; }
+    }
+    .ms-section-title .ms-content-text .ms-content-body {
+        padding-left: @ms-story-padding-medium-screen;
+        padding-right: @ms-story-padding-medium-screen;
+    }
+    .ms-section-paragraph {
+        padding-left: @ms-story-padding-medium-screen;
+        padding-right: @ms-story-padding-medium-screen;
+    }
+    .ms-content {
+        &.ms-content-text {
+            .ms-content-body {
+                p { font-size: @ms-story-font-size-base * 0.80; }
+                h1 { font-size: @ms-story-font-size-h1 * 0.80; }
+                h2 { font-size: @ms-story-font-size-h2 * 0.80; }
+                h3 { font-size: @ms-story-font-size-h3 * 0.80; }
+                h4 { font-size: @ms-story-font-size-h4 * 0.80; }
+                h5 { font-size: @ms-story-font-size-h5 * 0.80; }
+                h6 { font-size: @ms-story-font-size-h6 * 0.80; }
+            }
+        }
+        /* size of content */
+        &.ms-size-full { width: 100%; }
+        &.ms-size-large { width: 90%; }
+        &.ms-size-medium { width: 80%; }
+        &.ms-size-small { width: 60%; }
+    }
+}
+
 .ms-cascade-story {
 
     /////////////
     // SECTIONS
     /////////////
 
-    .ms-sections {
-        /*
-        Main scrollable container of the cascade story
-        */
-        .ms-sections-container {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            overflow-y: auto;
-        }
+    /*
+    Main scrollable container of the cascade story
+    */
+    .ms-sections-container {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        overflow-y: auto;
+        &.ms-sm { .ms-sections-container-small-screen(); }
+        &.ms-md { .ms-sections-container-medium-screen(); }
     }
 
     ////////////
@@ -461,6 +560,12 @@
             .ms-content.ms-content-text.ms-dark .ms-content-body > * {
                 box-shadow: none;
             }
+            .ms-content-column {
+                .ms-content:not(.ms-content-text) {
+                    padding-top: 16px;
+                    padding-bottom: 16px;
+                }
+            }
         }
         // overrides and specific styles for immersive section layout
         &.ms-section-immersive {
@@ -474,7 +579,7 @@
             .ms-content-column {
                     display: flex; // align vertically the content
                     pointer-events: none; // pass pointer events to background (this div takes full width and height)
-                    padding: 64px 24px;
+                    padding: 64px @square-btn-medium-size + 6px;
                     padding-top: 164px;
                 &>.ms-content-body {
                     // override background of paragraph (or title) content.
@@ -581,7 +686,6 @@
                 }
 
                 .ms-text-wrapper {
-                    min-width: 200px;
                     min-height: 40px;
                 }
 
@@ -744,6 +848,7 @@
         &.ms-media-map {
             .ol-zoom {
                 top: 50px;
+                left: 6px;
             }
 
         }
@@ -825,6 +930,28 @@
         width: 100%;
         height: 100%;
     }
+    /////////////////////
+    // VIEW
+    /////////////////////
+    &.ms-view {
+        .ms-section {
+            &.ms-section-paragraph {
+                padding-top: 32px;
+                padding-bottom: 32px;
+            }
+        }
+        .ms-media.ms-media-map .ol-zoom {
+            top: 6px;
+        }
+        .ms-media.ms-media-map .leaflet-control-zoom {
+            top: 6px;
+            left: 6px;
+            margin: 0;
+        }
+        .ms-section.ms-section-immersive .ms-content-column {
+            padding-top: 64px;
+        }
+    }
 
     /////////////////////
     // LIBRARIES FIX
@@ -834,6 +961,27 @@
     .public-DraftStyleDefault-ltr {
         text-align: inherit;
     }
+}
+
+.ms-expand-media-button {
+    .square-button-md();
+    .shadow-soft();
+    .no-border();
+    position: absolute;
+    z-index: 500;
+    top: 0;
+    right: 0;
+    margin: 4px;
+}
+.ms-expanded-media-container {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    padding: 4px;
+    background-color: rgba(0, 0, 0, 0.25);
+    & > * {
+        background-color: @ms-story-bg;
+    } 
 }
 
 .ms-media-map.topLeft .ol-zoom.ol-unselectable.ol-control {

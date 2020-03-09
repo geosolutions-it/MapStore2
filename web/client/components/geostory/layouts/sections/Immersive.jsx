@@ -40,12 +40,14 @@ const Immersive = ({
     focusedContent,
     contentId,
     bubblingTextEditing = () => {},
-    textEditorActiveClass = ""
+    textEditorActiveClass = "",
+    expandableBackgroundMedia = false
 }) => {
     const hideContent = focusedContent && focusedContent.hideContent && (get(focusedContent, "target.id") === contentId);
     const visibility = hideContent ? 'hidden' : 'visible';
+    const expandableBackgroundClassName = expandableBackgroundMedia && background && background.type === 'map' ? ' ms-expandable-background' : '';
     return (<section
-        className="ms-section ms-section-immersive"
+        className={`ms-section ms-section-immersive${expandableBackgroundClassName}`}
         id={id}
         ref={inViewRef}
     >
@@ -61,6 +63,7 @@ const Immersive = ({
             scrollContainerSelector="#ms-sections-container"
             add={add}
             editMedia={editMedia}
+            expandable={expandableBackgroundMedia}
             path={path}
             update={updateBackground}
             updateCurrentPage={updateCurrentPage}

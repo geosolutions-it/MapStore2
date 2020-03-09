@@ -71,8 +71,6 @@ export default ({
                 scrollBy={scrollBy}
                 data={getItems(items, currentPage)}
                 arrowLeft={ArrowLeft}
-                hideArrows
-                hideSingleArrow
                 scrollToSelected
                 arrowRight={ArrowRight}
                 selected={selected}

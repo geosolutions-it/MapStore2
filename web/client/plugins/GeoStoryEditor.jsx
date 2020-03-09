@@ -21,7 +21,8 @@ import {
     selectedCardSelector,
     isFocusOnContentSelector,
     settingsSelector,
-    settingsChangedSelector
+    settingsChangedSelector,
+    isEditAllowedSelector
 } from '../selectors/geostory';
 import geostory from '../reducers/geostory';
 import {
@@ -39,7 +40,31 @@ import {
 import Builder from '../components/geostory/builder/Builder';
 import { Modes, scrollToContent } from '../utils/GeoStoryUtils';
 import { createPlugin } from '../utils/PluginsUtils';
+import tooltip from '../components/misc/enhancers/tooltip';
+import { Button as ButtonRB, Glyphicon } from 'react-bootstrap';
+const Button = tooltip(ButtonRB);
 
+const EditButton = connect(
+    createStructuredSelector({
+        isEditAllowed: isEditAllowedSelector
+    }),
+    { setEditingMode: setEditing }
+)(({
+    isEditAllowed,
+    setEditingMode = () => {}
+}) => {
+    return isEditAllowed
+        ? (
+            <Button
+                className="square-button-md no-border"
+                onClick={() => setEditingMode(true)}
+                tooltipId="geostory.navigation.edit"
+                tooltipPosition="bottom">
+                <Glyphicon glyph="pencil" />
+            </Button>
+        )
+        : null;
+});
 
 const GeoStoryEditor = ({
     currentPage,
@@ -123,6 +148,11 @@ export default createPlugin('GeoStoryEditor', {
             onUpdate: update
         }
     )(GeoStoryEditor),
+    containers: {
+        GeoStoryNavigation: {
+            tool: EditButton
+        }
+    },
     reducers: {
         geostory
     }

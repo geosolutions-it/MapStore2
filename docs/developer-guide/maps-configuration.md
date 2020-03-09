@@ -209,8 +209,8 @@ WMS layers can be configured to be used as a source for elevation related functi
 
 This requires:
 
-- a GeoServer WMS service with the DDS/BIL plugin
-- A WMS layer configured with BIL 16 bit output in big endian mode and -9999 nodata value
+- a GeoServer WMS service with the [DDS/BIL plugin](https://docs.geoserver.org/stable/en/user/community/dds/index.html)
+- A WMS layer configured with **BIL 16 bit** output in **big endian mode** and **-9999 nodata value**
 - a static layer in the Map plugin configuration (use the additionalLayers configuration option):
 
 in `localConfig.json`

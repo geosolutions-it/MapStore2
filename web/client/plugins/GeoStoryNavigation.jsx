@@ -11,9 +11,7 @@ import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import { createPlugin } from '../utils/PluginsUtils';
 import { Modes, scrollToContent } from '../utils/GeoStoryUtils';
-import { setEditing } from '../actions/geostory';
 import {
-    isEditAllowedSelector,
     currentPageSelector,
     currentPositionSelector,
     modeSelector,
@@ -32,30 +30,36 @@ const GeoStoryNavigation = ({
     mode = Modes.VIEW,
     currentPage,
     currentPosition,
-    isEditAllowed,
     totalItems,
     settings,
-    setEditingMode = () => { },
     navigableItems = [],
     pathname,
-    search
-}) => (mode === Modes.VIEW ? <div
-    key="geostory-navigation"
-    className="ms-geostory-navigation"
-    style={{width: "100%", position: 'relative' }}>
-    <Navigation
-        settings={settings}
-        currentPage={currentPage}
-        currentPosition={currentPosition}
-        isEditAllowed={isEditAllowed}
-        totalItems={totalItems}
-        scrollTo={(id, options = { behavior: "smooth" }) => {
-            scrollToContent(id, options);
-        }}
-        navigableItems={navigableItems}
-        router={{ pathname, search }}
-        setEditing={setEditingMode} />
-</div> : null);
+    search,
+    items = []
+}) => {
+
+    // get all buttons from other plugins via items
+    const buttons = items
+        .filter(({ tool }) => tool)
+        .map(({ tool }) => ({ Element: tool }));
+
+    return (mode === Modes.VIEW ? <div
+        key="geostory-navigation"
+        className="ms-geostory-navigation"
+        style={{width: "100%", position: 'relative' }}>
+        <Navigation
+            settings={settings}
+            currentPage={currentPage}
+            currentPosition={currentPosition}
+            totalItems={totalItems}
+            scrollTo={(id, options = { behavior: "smooth" }) => {
+                scrollToContent(id, options);
+            }}
+            navigableItems={navigableItems}
+            router={{ pathname, search }}
+            buttons={buttons} />
+    </div> : null);
+};
 /**
  * Plugin for GeoStory top panel for navigation
  * @name GeoStoryNavigation
@@ -68,14 +72,11 @@ export default createPlugin('GeoStoryNavigation', {
             settings: settingsSelector,
             currentPage: currentPageSelector,
             currentPosition: currentPositionSelector,
-            isEditAllowed: isEditAllowedSelector,
             totalItems: totalItemsSelector,
             navigableItems: navigableItemsSelectorCreator({includeAlways: false}),
             pathname: pathnameSelector,
             search: searchSelector
-        }), {
-            setEditingMode: setEditing
-        }
+        })
     )(GeoStoryNavigation),
     reducers: {
         geostory

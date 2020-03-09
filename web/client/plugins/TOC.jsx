@@ -638,6 +638,24 @@ const checkPluginsEnhancer = branch(
  *   }
  *  }
  * ```
+ * Another legendOptions entry can be `WMSLegendOptions` it is styling prop for the wms legend.
+ * example:
+ * ```
+ * "layerOptions": {
+ *  "legendOptions": {
+ *   "WMSLegendOptions": "forceLabels:on;fontSize:30"
+ *  }
+ * }
+ * ```
+ * Another one legendOptions entry is `scaleDependent`, this option activates / deactivates scale dependency.
+ * example:
+ * ```
+ * "layerOptions": {
+ *  "legendOptions": {
+ *   "scaleDependent": true
+ *  }
+ * }
+ * ```
  * Another layerOptions entry can be `indicators`. `indicators` is an array of icons to add to the TOC. They must satisfy a condition to be shown in the TOC.
  * For the moment only indicators of type `dimension` are supported.
  * example :
