@@ -2219,6 +2219,10 @@
             "description": "Login Tool",
             "title": "Login"
           },
+          "MapCatalog": {
+            "description": "Consente la navigazione, la modifica, l'eliminazione e il caricamento di mappe disponibili sul server",
+            "title": "Catalogo mappe"
+          },
           "MapExport": {
             "description": "Permette di esportare la mappa in un file",
             "title": "Esporta Mappa"

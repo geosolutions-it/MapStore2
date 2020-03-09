@@ -2219,6 +2219,10 @@
             "description": "Login Tool",
             "title": "Login"
           },
+          "MapCatalog": {
+            "description": "Ermöglicht das Durchsuchen, Bearbeiten, Löschen und Laden von Karten, die auf dem Server verfügbar sind",
+            "title": "Kartenkatalog"
+          },
           "MapExport": {
             "description": "Ermöglicht das Exportieren einer Karte in eine Datei",
             "title": "Kartenexport"

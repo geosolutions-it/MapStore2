@@ -12,6 +12,12 @@ import {
 
 import { set } from '../utils/ImmutableUtils';
 
+
+/**
+ * Manages the state of the MapCatalog plugin
+ * @prop {boolean} triggerReloadValue triggers the reload of maps with current search text
+ * @memberof reducers
+ */
 export default (state = {}, action) => {
     switch (action.type) {
     case TRIGGER_RELOAD: {

@@ -43,4 +43,34 @@ describe('loadMore enhancer', () => {
         }));
         ReactDOM.render(<Sink />, document.getElementById("container"));
     });
+    it('loadMore test debounce on loadFirst', (done) => {
+        const Sink = loadMore(
+            ({text = ''} = {}, page) => {
+                return Observable.of({ items: Array(10), page, text }).catch( e => { done(e); });
+            }, {
+                initialStreamDebounce: 50
+            }
+        )(createSink(props => {
+            if (props.page === undefined) {
+                props.loadFirst();
+                setTimeout(() => {
+                    props.loadFirst({text: 't'});
+                }, 15);
+                setTimeout(() => {
+                    props.loadFirst({text: 'te'});
+                }, 20);
+                setTimeout(() => {
+                    props.loadFirst({text: 'tex'});
+                }, 25);
+            } else if (props.text) {
+                try {
+                    expect(props.text).toBe('tex');
+                    done();
+                } catch (e) {
+                    done(e);
+                }
+            }
+        }));
+        ReactDOM.render(<Sink />, document.getElementById("container"));
+    });
 });

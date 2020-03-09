@@ -2218,6 +2218,10 @@
             "description": "Login Tool",
             "title": "Login"
           },
+          "MapCatalog": {
+            "description": "Permet la navigation, l'édition, la suppression et le chargement des cartes disponibles sur le serveur",
+            "title": "Catalogue de cartes"
+          },
           "MapExport": {
             "description": "Permet d'exporter la carte dans un fichier",
             "title": "Exportation de carte"

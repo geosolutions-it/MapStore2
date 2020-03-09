@@ -2222,6 +2222,10 @@
             "description": "Login tool",
             "title": "Login"
           },
+          "MapCatalog": {
+            "description": "Allows browsing, editing, deleting and loading of maps that are available on the server",
+            "title": "Map Catalog"
+          },
           "MapExport": {
             "description": "Allows to export map in a file",
             "title": "Map Export"
