@@ -299,7 +299,6 @@ const customTemplates = [
         format: 'css',
         preview: <SVGPreview
             type="linestring"
-            type="linestring"
             paths={[{
                 stroke: "#000",
                 strokeWidth: 12
