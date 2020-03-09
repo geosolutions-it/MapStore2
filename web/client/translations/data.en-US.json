@@ -27,6 +27,7 @@
         "showMore": "Show more...",
         "collapse": "Collapse",
         "expand": "Expand",
+        "Forbidden": "Forbidden",
         "version": {
             "label": "Version"
         },
@@ -761,7 +762,8 @@
             }
         },
         "locate": {
-            "tooltip": "Locate me",
+            "tooltip": "Show my position",
+            "tooltipDeactivate": "Stop showing my position",
             "metersUnit": "meters",
             "feetUnit": "feet",
             "popup": "You are within {distance} {unit} from this point",
@@ -1116,7 +1118,7 @@
             "dropZone": {
                 "heading": "<p><h4>Drop your map context or vector files here</h4><small>or</small></p>",
                 "selectFiles": "Select Files...",
-                "infoSupported": "<p><small>Supported map context files: MapStore legacy format<br />Supported vector layer files: shapefiles (must be contained in zip archives), KML/KMZ, GeoJSON or GPX</small></p>",
+                "infoSupported": "<p><small>Supported map context files: MapStore legacy format, WMC<br />Supported vector layer files: shapefiles (must be contained in zip archives), KML/KMZ, GeoJSON or GPX</small></p>",
                 "note": "<p><small><i><strong>note</strong>: current map will be overridden in case of map context files</i></small></p>"
             },
             "errors": {
@@ -1126,7 +1128,24 @@
             }
         },
         "mapExport": {
-            "title": "Export Map"
+            "title": "Export Map",
+            "exportPanel": {
+                "title": "<p><h4>Select your format</h4></p>",
+                "exportButtonLabel": "Export"
+            },
+            "formats": {
+                "mapstore2": {
+                    "label": "MapStore",
+                    "description": "<p><small>MapStore map configuration format</small></p>"
+                },
+                "wmc": {
+                    "label": "WMC",
+                    "description": "<p><small>OGC Web Map Context format</small></p>",
+                    "note": "<p><small><i><strong>note</strong>: WMC format supports <strong>only WMS layers</strong></i></small></p>"
+                }
+            },
+            "errorTitle": "Map Export failed",
+            "wmcNoLayersError": "At least one WMS layer needed to export to WMC, found zero"
         },
         "catalog": {
             "start": "Start date ",
@@ -1628,7 +1647,9 @@
                     "notFound": "Dashboard not found",
 	                "notAccessible": "Dashboard not accessible"
                 },
-                "resourceAlreadyExists": "A resource with this name already exists"
+                "resourceAlreadyExists": "A resource with this name already exists",
+                "forbidden": "An unexpected error occured (403 Forbidden). Please contact the Administrator",
+                "forbidden405": "An unexpected error occured (405 Forbidden). Please contact the Administrator"
             },
             "editor": {
                 "save": "Save the dashboard",
@@ -1929,6 +1950,8 @@
             "zoomToContent": "Zoom to content",
             "emptyTitle": "This story is empty",
             "emptyDescription": "Start creating an awesome geostory by adding new content",
+            "closeFullscreenMap": "Close fullscreen map",
+            "showFullscreenMap": "Show fullscreen map",
             "contentToolbar": {
                 "contentSize": "Change size",
                 "contentHeightAuto": "Make this section to adapt to the content height",
@@ -2322,7 +2345,7 @@
                 "pluginsFilterPlaceholder": "Filter plugins by name...",
                 "availablePlugins": "Available Plugins",
                 "enabledPlugins": "Enabled Plugins",
-                "availablePluginsEmpty": "Enabled all available plugins",
+                "availablePluginsEmpty": "All available plugins are enabled",
                 "enabledPluginsEmpty": "Add plugins to configuration from list of available plugins",
                 "searchResultsEmpty": "No plugins found that satisfy the search criteria",
                 "cfgParsingError": {
@@ -2350,8 +2373,8 @@
                 "title": "Configure Templates",
                 "availableTemplates": "Available Templates",
                 "enabledTemplates": "Enabled Templates",
-                "templatesFilterPlaceholder": "Filter templates...",
-                "availableTemplatesEmpty": "Enabled all available templates",
+                "templatesFilterPlaceholder": "Filter templates by name...",
+                "availableTemplatesEmpty": "All available templates are enabled",
                 "enabledTemplatesEmpty": "Add templates to configuration from list of available templates",
                 "searchResultsEmpty": "No templates found that satisfy the search criteria",
                 "fileDrop": {

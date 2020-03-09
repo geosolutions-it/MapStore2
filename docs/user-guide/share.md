@@ -1,32 +1,45 @@
-# Sharing a Map
-***************
+# Sharing Resources
+*******************
 
-Sharing a map works only if you have already saved your map. It allows you to share the direct link of the map or on your favorite social networks or to embed it in your website.
+In [MapStore](https://mapstore.geo-solutions.it/mapstore/#/) it is possible to share a Resource:
 
-From the home page:
+* Directly from MapStore [Homepage](home-page.md) by clicking on the Share button <img src="../img/button/share.jpg" class="ms-docbutton"/> present in each resource toolbar
 
-* **Open** a saved map.
+<img src="../img/share/share_cards.jpg" class="ms-docimage"  style="max-width:400px;"/>
 
-From the main menu bar:
+* Inside the resource (Map, Dashboard etc) by clicking on the [Burger Menu](menu-bar.md#burger-menu) <img src="../img/button/sharebm.jpg" class="ms-docbutton" style="max-height:25px;"/> option (only for Maps)
 
-* **Click** on the *Burger menu* button <img src="../img/button/burger.jpg" class="ms-docbutton"/>.
+The user is allowed to save a resource in different ways:
 
-* **Click** on the *Share* option from the list <img src="../img/share/share.jpg" class="ms-docbutton"  style="max-height:20px;" />.
+* With a direct link
 
-A pop-up page will open showing the share page. From the *Link* tab you can use the direct link or the QR code.
+* Through a social network
 
-<img src="../img/share/share-1.jpg" class="ms-docimage"  style="max-width:500px;"/>
+* With embedded code or APIs
 
-From the *Social* tab, you can share the map on social networks.
+## Link
 
-<img src="../img/share/share-2.jpg" class="ms-docimage"  style="max-width:500px;"/>
+As soon as the Share window opens, the link section is by default displayed:
 
-From the *Embed* tab, you can embed the iframe code in your website or using APIs (for expert developers).
+<img src="../img/share/share_window.jpg" class="ms-docimage"  style="max-width:400px;"/>
 
-<img src="../img/share/share-3.jpg" class="ms-docimage"  style="max-width:500px;"/>
+Here it is possible to copy the resource url link and access its qr code. Moreover only opening this window from the [Burger Menu](menu-bar.md#burger-menu) it is possible to access the advanced options where the user can add the bbox param to the link (in this case the zoom and the coordinates of the displayed map will be shared with the link).
 
-If you enable the *Advanced Options* an additional option to the sharable map link can be added to include the **bbox** as query parameter, the value corresponds to the current extent in the viewport.
+## Social
 
-<img src="../img/share/share-bbox.jpg" class="ms-docimage"  style="max-width:500px;"/>
+The social section displays like the following:
 
-The **bbox** query parameter is needed to zoom the map to a specific extent at startup.
+<img src="../img/share/social.jpg" class="ms-docimage"  style="max-width:400px;"/>
+
+From here it is possible to share the Resource in Facebook, Twitter and Likedin. Also in this case, only opening the window from the maps [Burger Menu](menu-bar.md#burger-menu) the user can add the bbox param.
+
+## Embed
+
+Accessing the embed section it displays the following: 
+
+<img src="../img/share/embed.jpg" class="ms-docimage"  style="max-width:400px;"/>
+
+With this section the user can copy the embedded code or the APIs, useful for example when you need to insert the resource inside a webpage. Also in this case, only opening the window from the maps [Burger Menu](menu-bar.md#burger-menu) the user can add the bbox param.
+
+!!!note
+    At the moment the embed section is available only for Maps.

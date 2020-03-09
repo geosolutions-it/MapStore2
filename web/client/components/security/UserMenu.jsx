@@ -98,7 +98,7 @@ class UserMenu extends React.Component {
 
     renderGuestTools = () => {
         let DropDown = this.props.nav ? NavDropdown : DropdownButton;
-        return (<DropDown id="loginButton" className={this.props.className} pullRight bsStyle={this.props.bsStyle} title={this.renderButtonText()} id="dropdown-basic-primary" {...this.props.menuProps}>
+        return (<DropDown className={this.props.className} pullRight bsStyle={this.props.bsStyle} title={this.renderButtonText()} id="dropdown-basic-primary" {...this.props.menuProps}>
             <MenuItem onClick={this.props.onShowLogin}><Glyphicon glyph="log-in" /><Message msgId="user.login"/></MenuItem>
         </DropDown>);
     };

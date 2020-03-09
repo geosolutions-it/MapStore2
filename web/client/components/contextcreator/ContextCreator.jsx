@@ -129,12 +129,17 @@ export default class ContextCreator extends React.Component {
         onReloadConfirm: PropTypes.func,
         saveDestLocation: PropTypes.string,
         uploading: PropTypes.bool,
-        onShowDialog: PropTypes.func
+        onShowDialog: PropTypes.func,
+        onShowBackToPageConfirmation: PropTypes.func,
+        showBackToPageConfirmation: PropTypes.bool,
+        backToPageDestRoute: PropTypes.string,
+        backToPageConfirmationMessage: PropTypes.string
     };
 
     static contextTypes = {
         messages: PropTypes.object,
-        plugins: PropTypes.object
+        plugins: PropTypes.object,
+        router: PropTypes.object
     };
 
     static defaultProps = {
@@ -174,7 +179,10 @@ export default class ContextCreator extends React.Component {
             "ZoomOut",
             "ZoomAll",
             "Annotations",
-            "MapImport"
+            "MapImport",
+            "Undo",
+            "Redo",
+            "Expander"
         ],
         ignoreViewerPlugins: false,
         allAvailablePlugins: [],
@@ -184,7 +192,11 @@ export default class ContextCreator extends React.Component {
         onSetStep: () => { },
         onChangeAttribute: () => { },
         onReloadConfirm: () => { },
-        uploadEnabled: false
+        uploadEnabled: false,
+        onShowBackToPageConfirmation: () => { },
+        showBackToPageConfirmation: false,
+        backToPageDestRoute: '/context-manager',
+        backToPageConfirmationMessage: 'contextCreator.undo'
     };
 
     render() {
@@ -193,6 +205,10 @@ export default class ContextCreator extends React.Component {
                 currentStepId={this.props.curStepId}
                 onSetStep={this.props.onSetStep}
                 onSave={() => this.props.onSave(this.props.saveDestLocation)}
+                onShowBackToPageConfirmation={this.props.onShowBackToPageConfirmation}
+                showBackToPageConfirmation={this.props.showBackToPageConfirmation}
+                backToPageConfirmationMessage={this.props.backToPageConfirmationMessage}
+                onConfirmBackToPage={() => this.context.router.history.push(this.props.backToPageDestRoute)}
                 steps={[{
                     id: 'general-settings',
                     label: 'contextCreator.generalSettings.label',
@@ -208,6 +224,27 @@ export default class ContextCreator extends React.Component {
                             loading={this.props.loading && this.props.loadFlags.contextNameCheck}
                             context={this.context}
                             onChange={this.props.onChangeAttribute} />
+                }, {
+                    id: 'configure-map',
+                    label: 'contextCreator.configureMap.label',
+                    extraToolbarButtons: [{
+                        id: "map-reload",
+                        onClick: () => this.props.onReloadConfirm(true),
+                        label: 'contextCreator.configureMap.reload'
+                    }],
+                    component:
+                        <ConfigureMap
+                            pluginsConfig={this.props.ignoreViewerPlugins ?
+                                this.props.pluginsConfig :
+                                keys(this.props.pluginsConfig).reduce((curConfig, mode) => ({
+                                    ...curConfig,
+                                    [mode]: pluginsFilterOverride(this.props.pluginsConfig[mode], this.props.viewerPlugins)
+                                }), {})}
+                            plugins={this.context.plugins}
+                            mapType={this.props.mapType}
+                            showConfirm={this.props.showReloadConfirm}
+                            onReloadConfirm={this.props.onReloadConfirm}
+                            onMapViewerReload={this.props.onMapViewerReload} />
                 }, {
                     id: 'configure-plugins',
                     label: 'contextCreator.configurePlugins.label',
@@ -256,27 +293,6 @@ export default class ContextCreator extends React.Component {
                             onEditTemplate={this.props.onEditTemplate}
                             onFilterAvailableTemplates={this.props.onFilterAvailableTemplates}
                             onFilterEnabledTemplates={this.props.onFilterEnabledTemplates}/>
-                }, {
-                    id: 'configure-map',
-                    label: 'contextCreator.configureMap.label',
-                    extraToolbarButtons: [{
-                        id: "map-reload",
-                        onClick: () => this.props.onReloadConfirm(true),
-                        label: 'contextCreator.configureMap.reload'
-                    }],
-                    component:
-                        <ConfigureMap
-                            pluginsConfig={this.props.ignoreViewerPlugins ?
-                                this.props.pluginsConfig :
-                                keys(this.props.pluginsConfig).reduce((curConfig, mode) => ({
-                                    ...curConfig,
-                                    [mode]: pluginsFilterOverride(this.props.pluginsConfig[mode], this.props.viewerPlugins)
-                                }), {})}
-                            plugins={this.context.plugins}
-                            mapType={this.props.mapType}
-                            showConfirm={this.props.showReloadConfirm}
-                            onReloadConfirm={this.props.onReloadConfirm}
-                            onMapViewerReload={this.props.onMapViewerReload} />
                 }]} />
         );
     }

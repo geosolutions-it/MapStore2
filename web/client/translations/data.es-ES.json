@@ -27,6 +27,7 @@
         "showMore": "Mostrar más...",
         "collapse": "Colapso",
         "expand": "Expandir",
+        "Forbidden": "Prohibido",
         "version": {
             "label": "Versión"
         },
@@ -761,7 +762,8 @@
             }
         },
         "locate": {
-            "tooltip": "Localízame",
+            "tooltip": "Mostrar mi posición",
+            "tooltipDeactivate": "Deja de mostrar mi posición",
             "metersUnit": "metros",
             "feetUnit": "pies",
             "popup": "Usted está a {distance} {unit} de este punto",
@@ -1115,7 +1117,7 @@
             "dropZone": {
                 "heading": "<p> <h4> Suelta contextos de mapas o archivos vectoriales aquí </h4> <small> o </small> </p>",
                 "selectFiles": "Selecciona archivos...",
-                "infoSupported": "<p> <small> Archivos de contexto de mapas admitidos: formato heredado MapStore<br /> Archivos de capa vectorial soportados: shapefiles (deben estar en archivos comprimidos), KML / KMZ, GPX o GeoJSON </small> </p>",
+                "infoSupported": "<p> <small> Archivos de contexto de mapas admitidos: formato heredado MapStore, WMC<br /> Archivos de capa vectorial soportados: shapefiles (deben estar en archivos comprimidos), KML / KMZ, GPX o GeoJSON </small> </p>",
                 "note": "<p> <small> <i> <strong> nota </strong>: el mapa actual se sobrescribe en el caso de nuevos contextos de mapa </i> </small> </p>"
             },
             "errors": {
@@ -1125,7 +1127,24 @@
             }
         },
         "mapExport": {
-            "title": "Exportar el mapa"
+            "title": "Exportar el mapa",
+            "exportPanel": {
+                "title": "<p><h4>Seleccione su formato</h4></p>",
+                "exportButtonLabel": "Exportar"
+            },
+            "formats": {
+                "mapstore2": {
+                    "label": "MapStore",
+                    "description": "<p><small>Formato de configuración del mapa MapStore</small></p>"
+                },
+                "wmc": {
+                    "label": "WMC",
+                    "description": "<p><small>Formato OGC Web Map Context</small></p>",
+                    "note": "<p><small><i><strong>nota</strong>: el formato WMC admite <strong>solo capas WMS</strong></i></small></p>"
+                }
+            },
+            "errorTitle": "La exportación del mapa falló",
+            "wmcNoLayersError": "Se necesita al menos una capa WMS para exportar a WMC, se encontró cero"
         },
         "catalog": {
             "start": "Fecha de inicio ",
@@ -1627,7 +1646,9 @@
                     "notFound": "Panel de control no encontrado",
                     "notAccessible": "Panel de control no accesible"
                 },
-                "resourceAlreadyExists":  "Ya existe un recurso con este nombre"
+                "resourceAlreadyExists":  "Ya existe un recurso con este nombre",
+                "forbidden": "Ocurrió un error inesperado (403 Prohibido). Por favor contacte al administrador",
+                "forbidden405": "Ocurrió un error inesperado (405 Prohibido). Por favor contacte al administrador"
             },
             "editor": {
                 "save": "Guardar el panel de control",
@@ -1925,6 +1946,8 @@
             "addWebPageContent": "Agregar contenido de página web",
             "emptyTitle": "Esta historia esta vacia",
             "emptyDescription": "Comience a crear una increíble geografía agregando nuevo contenido",
+            "closeFullscreenMap": "Cerrar mapa a pantalla completa",
+            "showFullscreenMap": "Ver mapa en pantalla completa",
             "contentToolbar": {
                 "contentSize": "Cambiar tamaño",
                 "contentHeightAuto": "Haga esta sección para adaptarse a la altura del contenido",
@@ -2318,7 +2341,7 @@
                 "pluginsFilterPlaceholder": "Filtrar complementos por nombre...",
                 "availablePlugins": "Complementos disponibles",
                 "enabledPlugins": "Complementos habilitados",
-                "availablePluginsEmpty": "Habilitado todos los complementos disponibles",
+                "availablePluginsEmpty": "Todos los complementos disponibles están habilitados",
                 "enabledPluginsEmpty": "Agregue complementos a la configuración desde la lista de complementos disponibles",
                 "searchResultsEmpty": "No se encontraron complementos que satisfagan los criterios de búsqueda.",
                 "cfgParsingError": {
@@ -2346,8 +2369,8 @@
                 "title": "Configurar plantillas",
                 "availableTemplates": "Plantillas Disponibles",
                 "enabledTemplates": "Plantillas habilitadas",
-                "templatesFilterPlaceholder": "Filtrar plantillas",
-                "availableTemplatesEmpty": "Habilitado todas las plantillas disponibles.",
+                "templatesFilterPlaceholder": "Filtrar plantillas por nombre...",
+                "availableTemplatesEmpty": "Todas las plantillas disponibles están habilitadas",
                 "enabledTemplatesEmpty": "Agregar plantillas a la configuración de la lista de plantillas disponibles",
                 "searchResultsEmpty": "No se encontraron plantillas que satisfagan los criterios de búsqueda.",
                 "fileDrop": {

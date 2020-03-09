@@ -38,7 +38,7 @@ describe("test TOCItemsSettings", () => {
     });
 
     it('test with tabs', () => {
-        ReactDOM.render(<TOCItemsSettings settings={settings} activeTab="general" getTabs={() => [
+        ReactDOM.render(<TOCItemsSettings settings={settings} activeTab="general" tabs={[
             {
                 id: 'general',
                 titleId: 'layerProperties.general',
@@ -63,13 +63,13 @@ describe("test TOCItemsSettings", () => {
     });
 
     it('test without tabs', () => {
-        ReactDOM.render(<TOCItemsSettings settings={settings} activeTab="general" getTabs={() => []}/>, document.getElementById("container"));
+        ReactDOM.render(<TOCItemsSettings settings={settings} activeTab="general" tabs={[]}/>, document.getElementById("container"));
         const navBar = document.getElementsByClassName('nav-justified')[0];
         expect(navBar).toNotExist();
     });
 
     it('test with tabs length 1', () => {
-        ReactDOM.render(<TOCItemsSettings settings={settings} activeTab="general" getTabs={() => [{
+        ReactDOM.render(<TOCItemsSettings settings={settings} activeTab="general" tabs={[{
             id: 'general',
             titleId: 'layerProperties.general',
             tooltipId: 'layerProperties.general',
@@ -89,7 +89,7 @@ describe("test TOCItemsSettings", () => {
     });
 
     it('test with a title ', () => {
-        ReactDOM.render(<TOCItemsSettings settings={settings} activeTab="general" getTabs={() => [
+        ReactDOM.render(<TOCItemsSettings settings={settings} activeTab="general" tabs={[
             {
                 id: 'general',
                 titleId: 'layerProperties.general',
@@ -118,7 +118,7 @@ describe("test TOCItemsSettings", () => {
 
         const spyOnClick = expect.spyOn(testHandlers, 'onClick');
 
-        ReactDOM.render(<TOCItemsSettings settings={settings} activeTab="general" getTabs={() => [
+        ReactDOM.render(<TOCItemsSettings settings={settings} activeTab="general" tabs={[
             {
                 id: 'general',
                 titleId: 'layerProperties.general',
@@ -150,7 +150,7 @@ describe("test TOCItemsSettings", () => {
 
         const spyOnClose = expect.spyOn(testHandlers, 'onClose');
 
-        ReactDOM.render(<TOCItemsSettings settings={settings} activeTab="general" getTabs={() => [
+        ReactDOM.render(<TOCItemsSettings settings={settings} activeTab="general" tabs={[
             {
                 id: 'general',
                 titleId: 'layerProperties.general',
@@ -176,7 +176,7 @@ describe("test TOCItemsSettings", () => {
 
     it('test ToolbarComponent from tab', () => {
 
-        ReactDOM.render(<TOCItemsSettings settings={settings} activeTab="general" getTabs={() => [
+        ReactDOM.render(<TOCItemsSettings settings={settings} activeTab="general" tabs={[
             {
                 id: 'general',
                 titleId: 'layerProperties.general',

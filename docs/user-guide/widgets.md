@@ -5,7 +5,7 @@ In [MapStore](https://mapstore.geo-solutions.it/mapstore/#/) it is possible to c
 
 ## Add a Widget
 
-Once at least one layer is present in the map (see [Catalog](catalog.md) section for more information about adding layers), it is possible to create a widget by selecting that layer in the [TOC](toc.md) and by clicking on the <img src="../img/button/widgets.jpg" class="ms-docbutton"/> button in the [layer toolbar](toc.md#toolbar-options). Performing these operations the *Widget* panel appears:
+Once at least one layer is present in the map (see [Catalog](catalog.md) section for more information about adding layers), it is possible to create a widget by selecting that layer in the [TOC](toc.md) and by clicking on the <img src="../img/button/widgets.jpg" class="ms-docbutton"/> button from the [Layer Toolbar](toc.md#toolbar-options) or from the [Attribute Table](attributes-table.md). Performing these operations the *Widget* panel appears:
 
 <img src="../img/widgets/map-widgets-panel.jpg" class="ms-docimage" style="max-width:450px;"/>
 

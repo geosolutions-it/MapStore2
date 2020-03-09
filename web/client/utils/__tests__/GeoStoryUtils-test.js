@@ -291,6 +291,7 @@ describe("GeoStory Utils", () => {
             mapInfoControl: false,
             style: {width: "100%", height: "100%"},
             mapOptions: {
+                scrollWheelZoom: false,
                 interactions: {
                     mouseWheelZoom: false,
                     mouseClick: false,

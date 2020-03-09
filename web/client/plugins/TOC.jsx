@@ -551,7 +551,9 @@ const checkPluginsEnhancer = branch(
             activateSettingsTool: activateSettingsTool && !!find(items, { name: "TOCItemsSettings"}) || false,
             activateQueryTool: activateQueryTool && !!find(items, {name: "FeatureEditor"}) || false,
             activateLayerFilterTool: activateLayerFilterTool && !!find(items, {name: "FilterLayer"}) || false,
-            activateWidgetTool: activateWidgetTool && !!find(items, { name: "WidgetBuilder" }) // NOTE: activateWidgetTool is already controlled by a selector. TODO: Simplify investigating on the best approch
+            // NOTE: activateWidgetTool is already controlled by a selector. TODO: Simplify investigating on the best approach
+            // the button should hide if also widgets plugins is not available. Maybe is a good idea to merge the two plugins
+            activateWidgetTool: activateWidgetTool && !!find(items, { name: "WidgetBuilder" }) && !!find(items, { name: "Widgets" })
         })
     )
 );
@@ -635,6 +637,24 @@ const checkPluginsEnhancer = branch(
  *    }
  *   }
  *  }
+ * ```
+ * Another legendOptions entry can be `WMSLegendOptions` it is styling prop for the wms legend.
+ * example:
+ * ```
+ * "layerOptions": {
+ *  "legendOptions": {
+ *   "WMSLegendOptions": "forceLabels:on;fontSize:30"
+ *  }
+ * }
+ * ```
+ * Another one legendOptions entry is `scaleDependent`, this option activates / deactivates scale dependency.
+ * example:
+ * ```
+ * "layerOptions": {
+ *  "legendOptions": {
+ *   "scaleDependent": true
+ *  }
+ * }
  * ```
  * Another layerOptions entry can be `indicators`. `indicators` is an array of icons to add to the TOC. They must satisfy a condition to be shown in the TOC.
  * For the moment only indicators of type `dimension` are supported.

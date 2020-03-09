@@ -11,7 +11,7 @@ import ReactDOM from 'react-dom';
 import ReactTestUtils from 'react-dom/test-utils';
 import {Provider} from 'react-redux';
 import configureMockStore from 'redux-mock-store';
-
+import Localized from '../../I18N/Localized';
 import { isEqual } from 'lodash';
 
 
@@ -39,14 +39,30 @@ describe('ContextCreator component', () => {
     });
     describe('Test ContextCreator onSave', () => {
         it('default destination', () => {
+            const eng = {
+                "locale": "en-US",
+                "messages": {
+                    "aboutLbl": "About"
+                }
+            };
             const actions = {
                 onSave: () => { }
             };
             const spyonSave = expect.spyOn(actions, 'onSave');
+            const allAvailablePlugins = [
+                {enabled: true, title: 'title', pluginConfig: {cfg: {}}},
+                {enabled: false, title: 'title', pluginConfig: {cfg: {}}}
+            ];
             ReactDOM.render(
-                <Provider store={store}>
-                    <ContextCreator curStepId="configure-map" onSave={actions.onSave} />
-                </Provider>, document.getElementById("container"));
+                <Localized messages={eng.messages} locale="en-US">
+                    <Provider store={store}>
+                        <ContextCreator
+                            isCfgValidated
+                            allAvailablePlugins={allAvailablePlugins}
+                            curStepId="configure-plugins"
+                            onSave={actions.onSave} />
+                    </Provider>
+                </Localized>, document.getElementById("container"));
             // save button
             const saveBtn = document.querySelectorAll('.footer-button-toolbar button')[0];
             expect(saveBtn).toExist();
@@ -56,14 +72,31 @@ describe('ContextCreator component', () => {
             expect(spyonSave).toHaveBeenCalledWith("/context-manager");
         });
         it('custom destination', () => {
+            const eng = {
+                "locale": "en-US",
+                "messages": {
+                    "aboutLbl": "About"
+                }
+            };
             const actions = {
                 onSave: () => { }
             };
             const spyonSave = expect.spyOn(actions, 'onSave');
+            const allAvailablePlugins = [
+                {enabled: true, title: 'title', pluginConfig: {cfg: {}}},
+                {enabled: false, title: 'title', pluginConfig: {cfg: {}}}
+            ];
             ReactDOM.render(
-                <Provider store={store}>
-                    <ContextCreator curStepId="configure-map" saveDestLocation="MY_DESTINATION" onSave={actions.onSave} />
-                </Provider>, document.getElementById("container"));
+                <Localized messages={eng.messages} locale="en-US">
+                    <Provider store={store}>
+                        <ContextCreator
+                            isCfgValidated
+                            allAvailablePlugins={allAvailablePlugins}
+                            curStepId="configure-plugins"
+                            saveDestLocation="MY_DESTINATION"
+                            onSave={actions.onSave} />
+                    </Provider>
+                </Localized>, document.getElementById("container"));
             // save button
             const saveBtn = document.querySelectorAll('.footer-button-toolbar button')[0];
             expect(saveBtn).toExist();

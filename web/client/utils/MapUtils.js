@@ -68,6 +68,10 @@ function executeHook(hookName, existCallback, dontExistCallback) {
     return null;
 }
 
+function clearHooks() {
+    hooks = {};
+}
+
 /**
  * @param dpi {number} dot per inch resolution
  * @return {number} dot per meter resolution
@@ -648,5 +652,6 @@ module.exports = {
     parseLayoutValue,
     prepareMapObjectToCompare,
     updateObjectFieldKey,
-    compareMapChanges
+    compareMapChanges,
+    clearHooks
 };

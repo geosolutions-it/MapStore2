@@ -18,7 +18,8 @@ const capabilitiesCache = {};
 
 const {isArray, castArray, get} = require('lodash');
 
-const parseUrl = (url) => {
+const parseUrl = (urls) => {
+    const url = (isArray(urls) && urls || urls.split(','))[0];
     const parsed = urlUtil.parse(url, true);
     return urlUtil.format(assign({}, parsed, {search: null}, {
         query: assign({

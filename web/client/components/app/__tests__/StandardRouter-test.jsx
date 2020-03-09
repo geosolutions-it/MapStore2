@@ -11,7 +11,7 @@ const React = require('react');
 const ReactDOM = require('react-dom');
 const {Provider} = require('react-redux');
 
-const StandardRouter = require('../StandardRouter');
+const StandardRouter = require('../StandardRouter').default;
 
 const ConfigUtils = require('../../../utils/ConfigUtils');
 
@@ -105,5 +105,101 @@ describe('StandardRouter', () => {
         const dom = ReactDOM.findDOMNode(app);
 
         expect(dom.getElementsByClassName('MyPlugin').length).toBe(1);
+    });
+
+    it('if we dont wait for theme no spinner is shown', () => {
+        const plugins = {
+            MyPlugin: {}
+        };
+
+        const store = {
+            dispatch: () => { },
+            subscribe: () => {
+                return () => { };
+            },
+            getState: () => ({})
+        };
+        const pages = [{
+            name: 'mypage',
+            path: '/',
+            component: mycomponent
+        }];
+        const app = ReactDOM.render(<Provider store={store}><StandardRouter plugins={plugins} pages={pages}  loadAfterTheme={false}/></Provider>, document.getElementById("container"));
+        expect(app).toExist();
+
+        const dom = ReactDOM.findDOMNode(app);
+
+        expect(dom.getElementsByClassName('_ms2_init_spinner').length).toBe(0);
+    });
+    it('if we wait for theme no spinner is shown if the theme is already loaded', () => {
+        const plugins = {
+            MyPlugin: {}
+        };
+
+        const store = {
+            dispatch: () => { },
+            subscribe: () => {
+                return () => { };
+            },
+            getState: () => ({})
+        };
+        const pages = [{
+            name: 'mypage',
+            path: '/',
+            component: mycomponent
+        }];
+        const app = ReactDOM.render(<Provider store={store}><StandardRouter plugins={plugins} pages={pages} loadAfterTheme themeLoaded/></Provider>, document.getElementById("container"));
+        expect(app).toExist();
+
+        const dom = ReactDOM.findDOMNode(app);
+
+        expect(dom.getElementsByClassName('_ms2_init_spinner').length).toBe(0);
+    });
+    it('if we wait for theme spinner is shown if the theme is not already loaded', () => {
+        const plugins = {
+            MyPlugin: {}
+        };
+
+        const store = {
+            dispatch: () => { },
+            subscribe: () => {
+                return () => { };
+            },
+            getState: () => ({})
+        };
+        const pages = [{
+            name: 'mypage',
+            path: '/',
+            component: mycomponent
+        }];
+        const app = ReactDOM.render(<Provider store={store}><StandardRouter plugins={plugins} pages={pages} loadAfterTheme themeLoaded={false} /></Provider>, document.getElementById("container"));
+        expect(app).toExist();
+
+        const dom = ReactDOM.findDOMNode(app);
+
+        expect(dom.getElementsByClassName('_ms2_init_spinner').length).toBe(1);
+    });
+    it('if we wait for theme onThemeLoaded is called when theme is loaded', (done) => {
+        const plugins = {
+            MyPlugin: {}
+        };
+
+        const store = {
+            dispatch: () => { },
+            subscribe: () => {
+                return () => { };
+            },
+            getState: () => ({})
+        };
+        const pages = [{
+            name: 'mypage',
+            path: '/',
+            component: mycomponent
+        }];
+        const app = ReactDOM.render(<Provider store={store}><StandardRouter plugins={plugins} pages={pages} version="VERSION" themeCfg={{
+            theme: "default",
+            path: "base/web/client/test-resources/themes"
+        }} loadAfterTheme themeLoaded={false} onThemeLoaded={done}/></Provider>, document.getElementById("container"));
+        expect(app).toExist();
     });
 });

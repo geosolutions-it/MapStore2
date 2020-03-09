@@ -10,7 +10,7 @@ const React = require('react');
 const PropTypes = require('prop-types');
 const { connect } = require('react-redux');
 const { createSelector } = require('reselect');
-const { compose, branch, toClass } = require('recompose');
+const { compose, branch, toClass, lifecycle } = require('recompose');
 const assign = require('object-assign');
 const { isArray, isString } = require('lodash');
 
@@ -31,7 +31,7 @@ const {
 
 const { userRoleSelector } = require('../selectors/security');
 
-const { initStyleService } = require('../actions/styleeditor');
+const { initStyleService, toggleStyleEditor } = require('../actions/styleeditor');
 const { updateSettingsParams } = require('../actions/layers');
 
 const {
@@ -181,6 +181,16 @@ const StyleEditorPlugin = compose(
             }
         },
         props => <div style={{position: 'relative', height: '100%', display: 'flex'}}><Loader {...props}/></div>
+    ),
+    compose(
+        connect(() => ({}), {
+            toggleStyleEditor
+        }),
+        lifecycle({
+            componentDidMount() {
+                this.props.toggleStyleEditor(null, true);
+            }
+        })
     )
 )(StyleEditorPanel);
 
@@ -188,7 +198,12 @@ module.exports = {
     StyleEditorPlugin: assign(StyleEditorPlugin, {
         TOC: {
             priority: 1,
-            container: 'TOCItemSettings',
+            container: 'TOCItemSettings'
+        },
+        TOCItemsSettings: {
+            name: 'StyleEditor',
+            target: 'style',
+            priority: 1,
             ToolbarComponent: StyleToolbar
         }
     }),

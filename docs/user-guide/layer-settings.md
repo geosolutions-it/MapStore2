@@ -1,120 +1,188 @@
 # Layer Settings
 ****************
 
-In this section, you will learn how to manage the layers, to set the display mode and the style of the layers, and to set the format of the feature info.
+In this section, you will learn how to manage the layer settings in terms of general information, display mode, style and feature Info. <br>
+Since a layer is added to the [TOC](toc.md) it is possible to access its settings with the dedicated button <img src="../img/button/properties.jpg" class="ms-docbutton"/> that appears selecting a layer:
 
-* **Add** a layer and **Select** it.
+<img src="../img/layer-settings/layer-settings.jpg" class="ms-docimage"  style="max-width:300px;"/>
 
-* **Click** on <img src="../img/button/properties.jpg" class="ms-docbutton"/> to access the settings.
+The layer settings panel is composed of four sections:
 
-General Settings Form
----------------------
+<img src="../img/layer-settings/panel_sections.jpg" class="ms-docimage"  style="max-width:500px;"/>
 
-On the first page of the form, you can change the Title of the layer,
-translate it in several languages, add a description and assign it to a new Layer Group as seen in the [TOC](toc.md).
+* General information
+
+* Display
+
+* Style
+
+* Feature Info
+
+!!!warning
+    For WMTS layers the Style and the Feature Info sections are not implemented. Moreover the Display section is limited to the Transparency level parameter.
+
+## General information
+
+By default, as soon as the user opens the layer settings panel the General information section appears:
 
 <img src="../img/layer-settings/layer_general_settings.jpg" class="ms-docimage"  style="max-width:500px;"/>
 
-It is also possible to configure the **Tooltip** content displayed when moving the mouse over the TOC elements.
-The *Tooltip* combobox lets you decide what information to display (`Title`, `Description` or both), the *Placement* value indicates the information text position (`Top`, `Right` or `Bottom`).
+In this page it is possible to:
+
+* Change the *Title*
+
+* Set the *Title translations*, that will be switched by changing the language
+
+* Take a look at the *Name* of the layer
+
+* Edit the layer's *Description*
+
+* Set the layer *Group*
+
+* Configure the *Tooltip* that appears moving the cursor over the layer's item in TOC. In this case the user can decide that the *Title*, the *Description*, both or nothing will be displayed. Moreover you can set the *Placement* of the tooltip, choosing between *Top*, *Right* or *Bottom*:
 
 <img src="../img/layer-settings/tooltip_options.jpg" class="ms-docimage"  style="max-width:400px;"/>
 
-Let's type a *Description* (for example "My first description"), select the `Title and Description` *Tooltip* and the `Right` *Placement*, save this configuration by clicking the *Save* <img src="../img/button/save_button.jpg" class="ms-docbutton"/> button and see the results.
+Setting a tooltip that shows the Title and the Description on the Right, for example, it can be similar to the following:
 
 <img src="../img/layer-settings/custom_tooltip.jpg" class="ms-docimage"/>
 
-So [MapStore](https://mapstore.geo-solutions.it/mapstore/#/) lets you configure a different tooltip for each layer in the TOC.
+## Display
 
-Display Form
-------------
+Through the second section of the layer settings panel it is possible to change the display settings:
 
-On the second page, you can set the rendering options of the layer such as the image format and the opacity (transparency). You can enable/disable the use of the cache (if checked the **Tiled=true** URL parameter will be added to the WMS request) and displaying the layer as a single tile.
+<img src="../img/layer-settings/display.jpg" class="ms-docimage"  style="max-width:450px;"/>
 
-<img src="../img/layer-settings/display.jpg" class="ms-docimage"  style="max-width:500px;"/>
+In particular, the user is allowed to:
 
-Style Form
-----------
+* Set the rendering image format (choosing between `png`, `png8`, `jpeg`, `vnd.jpeg-png` and `gif`)
 
-On the third page, you can choose a style from the list and apply it to the layer.
+* Set the opacity value of the layer (in %)
 
-<img src="../img/layer-settings/style.jpg" class="ms-docimage"/>
+* Enable/disable the transparency for that layer
 
-Style Editor
-------------
+* Enable/disable the use of the layer cached tiles  (if checked, the *Tiled=true* URL parameter will be added to the WMS request and to [use tiles cached with GeoWebCache](https://docs.geoserver.org/latest/en/user/geowebcache/using.html#direct-integration-with-geoserver-wms))
 
-If you have any *editing grants* on the styles' source, you can customize layers' styles through the **Style Editor**.
+* Decide to display the image as a single tile or as multiple tiles
 
-<img src="../img/layer-settings/style_editor.jpg" class="ms-docimage"/>
+## Style
 
-The Style Editor tool provides its functionalities on top of [GeoServer](http://geoserver.org/) REST APIs, so the styling
-functionalities are available only for those layers that are loaded in [MapStore](https://mapstore.geo-solutions.it/mapstore/#/) from GeoServer.
-By default the GeoServer's REST APIs are available only for the GeoServer administrators, so a basic authentication form will appears in MapStore to enter the *Admin* credentials. Without Admin rights, the editing capabilities on styles are not available and only a list of the available styles will be shown in order to assign one of them to the selected layer. If the [users integration between GeoServer and MapStore](../../developer-guide/integrations/users/geoserver/) is configured, the editing functionalities of the styles will be available according to the role of the authenticated user in MapStore in a more transparent way.
-<br>
-Once done these requirements' checks you can edit an existing style or create a new one from scratch.
+The third section, dedicated to the layer style, displays like the following:
 
-***Edit styles***
+<img src="../img/layer-settings/ls-style.jpg" class="ms-docimage" style="max-width:450px"/>
 
-* **Click** on the **Edit selected style** button <img src="../img/button/style_editor_edit_button.jpg" class="ms-docbutton"/> if you want to edit an existing style.
+In this case the user is allowed to:
 
-<img src="../img/layer-settings/style_editor_edit_style.gif" class="ms-docimage"  style="max-width:700px;"/>
+* Search through the available layer styles and select the desired one
 
-* **Click** on the **Save current style** button <img src="../img/button/style_editor_save_current_style.jpg" class="ms-docbutton"/> to save your changes
+* Create a new style
 
-* **Click** on the **Back to style list** button <img src="../img/button/style_editor_back_button.jpg" class="ms-docbutton"/> to go back without saving the changes.
+* Edit an existing style
 
-***Create new styles***
+* Delete an existing style
 
-* **Click** on the **Create new style** button <img src="../img/button/style_editor_new_style_button.jpg" class="ms-docbutton"/> if you want to create your style from scratch.   [MapStore](https://mapstore.geo-solutions.it/mapstore/#/) shows you some style templates from which you can start your customization. Those templates can be:
+!!!note
+    By the default [service security rules](https://docs.geoserver.org/stable/en/user/security/service.html#service-security) the GeoServer's REST APIs are available only for the GeoServer administrators, so a basic authentication form will appears in MapStore to enter the *Admin* credentials. Without Admin rights, the editing capabilities on styles are not available and only the list of available styles will appear to allow the user to select one of them to the layer.
 
-    * ***CSS - Cascading Style Sheet*** (a language used for describing the presentation of a document written in a markup language like the HTML)
+    Take a look at the [User Integration with GeoServer](../developer-guide/integrations/users/geoserver.md) section of [Developer Guide](../developer-guide/index.md) in order to understand how to configure the way MapStore and GeoServer share users, groups and roles. If the users integration between GeoServer and MapStore is configured, the editing functionalities of the styles will be available according to the role of the authenticated user in MapStore in a more transparent way.
 
-    * ***SLD - Styled Layer Descriptor*** (an XML schema specified by the [Open Geospatial Consortium (OGC)](http://www.opengeospatial.org/) for describing the appearance of map layers)
+### Create a new style 
 
-<img src="../img/layer-settings/style_editor_add_style_template.jpg" class="ms-docimage"  style="max-width:500px;">
+It is possible to create a new style with a click on the <img src="../img/button/style_editor_new_style_button.jpg" class="ms-docbutton"/> button. At this stage the user can choose between different types of template from which the customization will start:
 
-* **Select** a style template
+* *CSS - Cascading Style Sheet* (a language used for describing the presentation of a document written in a markup language like the HTML)
 
-* **Click** on the **Add selected template to list of styles** button <img src="../img/button/style_editor_add_style_button.jpg" class="ms-docbutton"/>
+* *SLD - Styled Layer Descriptor* (an XML schema specified by the [Open Geospatial Consortium OGC](http://www.opengeospatial.org/) for describing the appearance of map layers)
 
-* **Enter** a *Title* (and an *Abstract* if you want to) for your style
+<img src="../img/layer-settings/style_editor_add_style_template.jpg" class="ms-docimage" style="max-width:500px;">
+
+!!!note
+    The availability of the style formats depends, firstly, from the [GeoServer](http://geoserver.org/). [MapStore](https://mapstore.geo-solutions.it/mapstore/#/), by default, will add all the supported format that the server provides. To edit or create styles using the CSS format the [CSS extension](https://docs.geoserver.org/latest/en/user/styling/css/install.html) must be installed in GeoServer
+
+Once the new style is chosen, with a click on the <img src="../img/button/style_editor_add_style_button.jpg" class="ms-docbutton"/> button the following window opens:
 
 <img src="../img/layer-settings/style_editor_new_style_name.jpg" class="ms-docimage"  style="max-width:500px;">
 
-* **Click** on *Save*
+Here the user can set the *Title* and the *Abstract* (optional), and through the **Save** button the new style will be automatically added to the styles list.
 
-* Now you can see your new style in the styles' list and **Edit** it through the editor
+### Edit an existing style
+
+Existing styles can be edited clicking on the <img src="../img/button/style_editor_edit_button.jpg" class="ms-docbutton"/> button. The page that opens allows the user to customize the style in the related format:
 
 <img src="../img/layer-settings/style_editor_edit_new_style.gif" class="ms-docimage"  style="max-width:700px;">
 
-As you can see the **Style Editor** has a ***syntax control*** function that highlights any possible error with a red underline.
-If errors are detected an icon with a red exclamation point <img src="../img/button/style_editor_error_icon.jpg" class="ms-docbutton"/> will be shown in the top-right side of the editor:
+The editor is easy to approach thanks also to the following functions:
+
+* The *sintax control* highlights any possible error with a red underline (if error are detected an icon with a red exclamation point <img src="../img/button/style_editor_error_icon.jpg" class="ms-docbutton"/> will be shown in the top-right side of the editor)
 
 <img src="../img/layer-settings/style_editor_syntax_error.jpg" class="ms-docimage">
 
-The ***autocomplete*** function suggests you the style's properties names and prevents syntax errors:
+* The *autocomplete* function suggests the possible style's properties in order to prevents syntax errors:
 
 <img src="../img/layer-settings/style_editor_autocomplete.jpg" class="ms-docimage"  style="max-width:500px;">
 
-Another useful tool is the ***color picker*** that allow you to choose colors, directly from the editor, via an interface with a visual representation of a color:
+* The *color picker*, that can be activated through the square filled icon (<img src="../img/button/style_editor_color_picker_icon.jpg" class="ms-docbutton" style="max-height:15px;"/>) near the color code, helps in choosing colors directly from the editor, showing an interface like the following:
 
 <img src="../img/layer-settings/style_editor_color_picker.jpg" class="ms-docimage"  style="max-width:500px;">
 
-Click on the square filled icon (<img src="../img/button/style_editor_color_picker_icon.jpg" class="ms-docbutton" style="max-height:15px;"/>) near the color code to activate this function.
+!!!warning
+    The *autocomplete* and the *color picker* functions are available only in the CSS editor.
 
-Feature Info Form
------------------
+## Feature Info Form
 
-On the fourth page, you can set the format of the extracted information from a feature or a pixel location when querying a layer.
+Through the last section of the layer settings panel, it is possible to decide the information format that appears querying a layer with the [Identify Tool](side-bar.md#identify-tool):
 
 <img src="../img/layer-settings/feature-info-form.jpg" class="ms-docimage"  style="max-width:500px;"/>
 
-The Identify button, located in the [Side bar](side-bar.md), is enabled by default and allows you to query objects on the map by clicking on it. You can choose to get the info in Plain Text, HTML, Properties List or to customize your own template. An example is shown below:
+In particular, the user can choose between:
 
-* **Select** the HTML format, Then **Save** it.
+* **Text**
 
-<img src="../img/layer-settings/html.jpg" class="ms-docimage"  style="max-width:500px;"/>
+* **HTML**
 
-* **Click** on the layer. The info will be returned as a record (row) of a table corresponding to the info of that feature element of the layer.
+* **Properties**
 
-<img src="../img/layer-settings/html-1.jpg" class="ms-docimage"/>
+* **Template**
+
+!!!note
+    Without selecting any format here, the [Identify Tool](side-bar.md#identify-tool) will return the layers information with the format chosen in Map Settings (a [Burger Menu](menu-bar.md#burger-menu) option). Once a user specifies the information format in layers settings, instead, that format will take precedence over the map settings only for that specific layer.
+
+### Text
+
+An example of layer information in text format can be:
+
+<img src="../img/layer-settings/GFI_text.jpg" class="ms-docimage"  style="max-width:600px;"/>
+
+### HTML
+
+An example of layer information in HTML format can be:
+
+<img src="../img/layer-settings/GFI_html.jpg" class="ms-docimage"/>
+
+### Properties
+
+An example of layer information in properties format can be:
+
+<img src="../img/layer-settings/GFI_properties.jpg" class="ms-docimage"  style="max-width:600px;"/>
+
+### Templates
+
+In this case the user can customize the information format:
+
+<img src="../img/layer-settings/GFI_template.jpg" class="ms-docimage"  style="max-width:500px;"/>
+
+In particular, by clicking on the <img src="../img/button/edit_button.jpg" class="ms-docbutton"/> button, the following text editor appears:
+
+<img src="../img/layer-settings/edit_custom_format.jpg" class="ms-docimage"  style="max-width:600px;"/>
+
+Here it is possible to insert the text to be displayed through the [Identify Tool](side-bar.md#identify-tool), with the possibility to wrap the desired properties. <br>
+Let's make an example: we assume to have a layer where each record corresponds to a USA State geometry in the map. In the [Attribute Table](attributes-table.md) of this layer there's the `STATE_NAME` field that, for each record, contains a text value with the name of the State. <br>
+If the goal is to show, performing the [Identify Tool](side-bar.md#identify-tool), only the State name, an option could be to insert the following text on the Template text editor:
+
+<img src="../img/layer-settings/GFI_template_ex.jpg" class="ms-docimage"  style="max-width:400px;"/>
+
+In this case, by clicking on the map, the [Identify Tool](side-bar.md#identify-tool) returns:
+
+<img src="../img/layer-settings/GFI_template_ex1.jpg" class="ms-docimage"/>
+
+Using the `${properties.NAME_OF_THE_FIELD}` syntax, MapStore is able to parse the response to the [Identify Tool](side-bar.md#identify-tool) request by matching the configured placeholder.

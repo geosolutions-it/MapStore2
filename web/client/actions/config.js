@@ -17,12 +17,19 @@ const MAP_INFO_LOAD_ERROR = 'MAP_INFO_LOAD_ERROR';
 const MAP_SAVE_ERROR = 'MAP:MAP_SAVE_ERROR';
 const MAP_SAVED = 'MAP:MAP_SAVED';
 
-function configureMap(conf, mapId) {
+/**
+ * Configure the viewer to display the map
+ * @param {object} conf map config
+ * @param {number} mapId map resource id
+ * @param {boolean} zoomToMaxExtent if true, trigger zooming to map's max extent instead of the zoom value specified in the config
+ */
+function configureMap(conf, mapId, zoomToMaxExtent) {
     return {
         type: MAP_CONFIG_LOADED,
         config: conf,
         legacy: !!mapId,
-        mapId: mapId
+        mapId: mapId,
+        zoomToMaxExtent
     };
 }
 

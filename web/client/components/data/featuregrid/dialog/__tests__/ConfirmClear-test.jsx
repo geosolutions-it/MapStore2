@@ -13,6 +13,7 @@ const expect = require('expect');
 describe('Test for ConfirmClear component', () => {
     beforeEach((done) => {
         document.body.innerHTML = '<div id="container"><div class="ms2"><div id="modal-new-container"></div></div><div id="modal-container"></div></div>';
+        document.body.className = "";
         setTimeout(done);
     });
 

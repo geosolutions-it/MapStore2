@@ -11,7 +11,7 @@ const { urlParts, isSameUrl, sameQueryParams, isValidURL } = require('../URLUtil
 const url1 = "https://demo.geo-solutions.it:443/geoserver/wfs";
 const url2 = "https://demo.geo-solutions.it/geoserver/wfs";
 const url3 = "/geoserver/wfs";
-const url4 = "http://localhost/geoserver/wfs";
+const url4 = (location && location.origin || "FAIL") + "/geoserver/wfs";
 const urlPartsResult1 = {
     protocol: "https:",
     domain: "demo.geo-solutions.it",

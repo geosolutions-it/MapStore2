@@ -16,7 +16,7 @@ const {pages, pluginsDef, initialState, storeOpts} = require('./appConfig');
 const StandardRouter = connect((state) => ({
     locale: state.locale || {},
     pages
-}))(require('../MapStore2/web/client/components/app/StandardRouter'));
+}))(require('../MapStore2/web/client/components/app/StandardRouter').default);
 
 const appStore = require('../MapStore2/web/client/stores/StandardStore').bind(null, initialState, {}, {}, {});
 

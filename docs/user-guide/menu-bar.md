@@ -84,7 +84,7 @@ In this case, the user can define the following settings:
 <img src="../img/menu-bar/launch-info-panel.jpg" class="ms-docimage"  style="max-width:400px;"/>
 
 !!! note
-Note that, selecting *All Layers* or *Search Layer* options, the point used for Identify request is a point belonging to the surface of the geometry of the selected record. Moreover, using *Search Layer* the Identify request will filter results to the selected record and to its layer; it will also force the info_format to "application/json" to allow filtering features by using the ID of the selected record.
+    Note that, selecting *All Layers* or *Search Layer* options, the point used for Identify request is a point belonging to the surface of the geometry of the selected record. Moreover, using *Search Layer* the Identify request will filter results to the selected record and to its layer; it will also force the info_format to "application/json" to allow filtering features by using the ID of the selected record.
 
 Once all the option are set, it is possible to move forward with the Next button <img src="../img/button/next-txt.jpg" class="ms-docbutton"/> that opens the *Optional properties* panel:
 

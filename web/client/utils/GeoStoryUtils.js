@@ -115,7 +115,10 @@ export const DEFAULT_MAP_OPTIONS = {
     mapInfoControl: false,
     style: {width: "100%", height: "100%"},
     mapOptions: {
+        // leaflet
+        scrollWheelZoom: false,
         interactions: {
+            // openlayers
             mouseWheelZoom: false,
             dragPan: true
         }
