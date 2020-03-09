@@ -65,7 +65,7 @@ class GroupDialog extends React.Component {
         descLimit: 255,
         nameLimit: 255,
         style: {},
-        buttonSize: "large",
+        buttonSize: "small",
         includeCloseButton: true,
         inputStyle: {
             height: "32px",
@@ -142,7 +142,7 @@ class GroupDialog extends React.Component {
     renderButtons = () => {
         let CloseBtn = <CloseConfirmButton status={this.props.group && this.props.group.status} onClick={this.props.onClose}/>;
         return [
-            <Button key="save" bsSize={this.props.buttonSize} bsSize="small"
+            <Button key="save" bsSize={this.props.buttonSize}
                 bsStyle={this.isSaved() ? "success" : "primary" }
                 onClick={() => this.props.onSave(this.props.group)}
                 disabled={!this.isValid() || this.isSaving()}>

@@ -300,7 +300,6 @@ class Catalog extends React.Component {
                 addAuthentication={this.props.addAuthentication}
                 currentLocale={this.props.currentLocale}
                 recordItem={this.props.recordItem}
-                hideThumbnail={this.props.hideThumbnail}
                 hideIdentifier={this.props.hideIdentifier}
                 hideExpand={this.props.hideExpand}
                 onAddBackground={this.props.onAddBackground}

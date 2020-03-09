@@ -87,7 +87,7 @@ describe('Test Feature', () => {
 
         // create layers
         let layer = ReactDOM.render(
-            <Feature type="vector"
+            <Feature
                 options={options}
                 geometry={geometry}
                 type={type}
@@ -140,7 +140,7 @@ describe('Test Feature', () => {
 
         // create layers
         let layer = ReactDOM.render(
-            <Feature type="vector"
+            <Feature
                 options={options}
                 geometry={geometry}
                 type={type}
@@ -203,7 +203,7 @@ describe('Test Feature', () => {
 
         // create layers
         let layer = ReactDOM.render(
-            <Feature type="vector"
+            <Feature
                 options={options}
                 geometry={geometry}
                 type={type}
@@ -225,7 +225,7 @@ describe('Test Feature', () => {
         options.features.features[0].properties.name = 'other name';
 
         layer = ReactDOM.render(
-            <Feature type="vector"
+            <Feature
                 options={options}
                 geometry={geometry}
                 type={type}
@@ -244,7 +244,7 @@ describe('Test Feature', () => {
 
         // change geometry
         layer = ReactDOM.render(
-            <Feature type="vector"
+            <Feature
                 options={options}
                 geometry={geometry}
                 type={type}
@@ -302,7 +302,7 @@ describe('Test Feature', () => {
 
         // create layers
         let layer = ReactDOM.render(
-            <Feature type="vector"
+            <Feature
                 options={options}
                 geometry={geometry}
                 type={type}
@@ -329,7 +329,7 @@ describe('Test Feature', () => {
                 [1, 1]]
         };
         layer = ReactDOM.render(
-            <Feature type="vector"
+            <Feature
                 options={options}
                 geometry={newGeometry}
                 type={type}
@@ -345,7 +345,7 @@ describe('Test Feature', () => {
         }, 0);
 
         layer = ReactDOM.render(
-            <Feature type="vector"
+            <Feature
                 options={options}
                 geometry={geometry}
                 type={type}
@@ -416,7 +416,7 @@ describe('Test Feature', () => {
 
         // create layers
         let layer = ReactDOM.render(
-            <Feature type="vector"
+            <Feature
                 options={options}
                 geometry={geometry}
                 type={type}

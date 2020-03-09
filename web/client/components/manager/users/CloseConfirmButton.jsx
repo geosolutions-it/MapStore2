@@ -14,7 +14,6 @@ import Message from '../../I18N/Message';
 const WithConfirmButton = withConfirm(ToolbarButton);
 
 export const CloseConfirmButton = ({onClick = () => {}, status = "success"}) => <WithConfirmButton
-    bsStyle="primary"
     confirmPredicate={status === "modified"}
     confirmTitle={<Message msgId="warning" />}
     confirmYes={<Message msgId="saveDialog.close" />}
