@@ -24,8 +24,23 @@ require('../plugins/WMSLayer');
 
 describe('LeafletMap', () => {
 
+    let mapStyle;
     beforeEach(() => {
         document.body.innerHTML = '<div id="container"></div>';
+        // assign size to map component to get width and height of map
+        mapStyle = document.createElement('style');
+        mapStyle.innerHTML = `
+        #container {
+            position: relative;
+            width: 500px;
+            height: 500px;
+        }
+        #container > * {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+        }`;
+        document.head.appendChild(mapStyle);
     });
     afterEach(() => {
         try {
@@ -38,6 +53,12 @@ describe('LeafletMap', () => {
         } catch (e) {
             // ignore
         }
+
+        if (mapStyle) {
+            document.head.removeChild(mapStyle);
+            mapStyle = undefined;
+        }
+        MapUtils.clearHooks();
     });
 
     it('creates a div for leaflet map with given id', () => {
@@ -476,7 +497,7 @@ describe('LeafletMap', () => {
             onMapViewChanges: () => {}
         };
         // fix size
-        document.querySelector('#container').setAttribute('style', "width: 200px; height: 200px");
+        document.querySelector('#container').setAttribute('style', "width: 200px; height: 160px");
         const spy = expect.spyOn(testHandlers, 'onMapViewChanges');
         const map = ReactDOM.render(<LeafletMap
             id="mymap"

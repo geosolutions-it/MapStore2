@@ -1946,6 +1946,8 @@
             "addWebPageContent": "Aggiungi contenuto alla pagina Web",
             "emptyTitle": "Questa storia è vuota",
             "emptyDescription": "Inizia a creare una fantastica storia aggiungendo dei nuovi contenuti",
+            "closeFullscreenMap": "Chiudi mappa",
+            "showFullscreenMap": "Visualizza mappa a pieno schermo",
             "contentToolbar": {
                 "contentSize": "Cambia larghezza",
                 "contentHeightAuto": "Adatta la sezione all'altezza del contenuto",

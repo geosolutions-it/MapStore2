@@ -1946,6 +1946,8 @@
             "addWebPageContent": "Ajouter du contenu de page Web",
             "emptyTitle": "Cette histoire est vide",
             "emptyDescription": "Commencez à créer une géostory géniale en ajoutant du nouveau contenu",
+            "closeFullscreenMap": "Fermer carte plein écran",
+            "showFullscreenMap": "Montrer la carte en plein écran",
             "contentToolbar": {
                 "contentSize": "Changer la taille",
                 "contentHeightAuto": "Faire cette section pour s'adapter à la hauteur du contenu",

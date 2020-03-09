@@ -17,23 +17,22 @@ import { getQueryParams } from '../../../utils/URLUtils';
  * Navigation Bar for view mode of GeoStory
  * Contains the button to switch to edit mode and the navigation menu.
  * @prop {function} scrollTo handler to scroll to a particular section or id. Gets id of the HTML element as first argument and scroll options as second. See {@link https://developer.mozilla.org/en-US/docs/Web/API/Element/scrollIntoView}
- * @prop {function} setEditing handler to set edit/view mode. Takes the `editing` flag as argument.
  * @prop {object} story the current story to navigate
  * @prop {object} currentPage contains current `sectionId`
  * @prop {number} currentPosition currentPosition indicates the position of current sections
  * @prop {number} totalItems totalItems is the total number of sections present in the story
  * @prop {object} router router object in store contains location data
+ * @prop {array} buttons array of buttons for Toolbar
  */
 export default ({
     settings,
     scrollTo = () => {},
-    setEditing = () => {},
     navigableItems = [],
     currentPage, // current page progress (current page + 1/totPages),
     totalItems = 1,
-    isEditAllowed = true,
     currentPosition = 0,
-    router
+    router,
+    buttons = []
 }) => {
     return (
         <div className="ms-geostory-navigation-bar">
@@ -48,20 +47,7 @@ export default ({
             <div className="ms-geostory-navigation-tools">
 
                 <div className="ms-geostory-navigation-toolbar">
-                    <Toolbar
-                        btnDefaultProps={{
-                            className: 'square-button-md no-border',
-                            bsStyle: 'default',
-                            tooltipPosition: 'bottom'
-                        }}
-                        buttons={[
-                            {
-                                glyph: 'pencil',
-                                visible: isEditAllowed,
-                                tooltipId: 'geostory.navigation.edit',
-                                onClick: () => setEditing(true)
-                            }
-                        ]} />
+                    <Toolbar buttons={buttons} />
                 </div>
                 {
                     router &&

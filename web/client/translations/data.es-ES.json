@@ -1946,6 +1946,8 @@
             "addWebPageContent": "Agregar contenido de página web",
             "emptyTitle": "Esta historia esta vacia",
             "emptyDescription": "Comience a crear una increíble geografía agregando nuevo contenido",
+            "closeFullscreenMap": "Cerrar mapa a pantalla completa",
+            "showFullscreenMap": "Ver mapa en pantalla completa",
             "contentToolbar": {
                 "contentSize": "Cambiar tamaño",
                 "contentHeightAuto": "Haga esta sección para adaptarse a la altura del contenido",

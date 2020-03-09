@@ -1950,6 +1950,8 @@
             "zoomToContent": "Zoom to content",
             "emptyTitle": "This story is empty",
             "emptyDescription": "Start creating an awesome geostory by adding new content",
+            "closeFullscreenMap": "Close fullscreen map",
+            "showFullscreenMap": "Show fullscreen map",
             "contentToolbar": {
                 "contentSize": "Change size",
                 "contentHeightAuto": "Make this section to adapt to the content height",
