@@ -346,7 +346,13 @@
             }, {
                 "name": "TOC",
                 "cfg": {
-                    "activateMetedataTool": false
+                    "activateMetedataTool": false,
+                    "layerOptions": {
+                      "legendOptions": {
+                        "WMSLegendOptions": "forceLabels:on;fontSize:30",
+                        "scaleDependent": true
+                      }
+                    }
                 }
             },
             "FilterLayer",
