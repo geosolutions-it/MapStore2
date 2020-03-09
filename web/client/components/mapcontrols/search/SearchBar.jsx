@@ -48,6 +48,7 @@ export default ({
             }
         }
     },
+    loading,
     delay,
     blurResetDelay,
     typeAhead,
@@ -214,6 +215,7 @@ export default ({
                 }
                 <SearchBarToolbar
                     splitTools={false}
+                    loading={loading}
                     toolbarButtons={[{
                         glyph: removeIcon,
                         className: "square-button-md no-border",
