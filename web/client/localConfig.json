@@ -295,17 +295,7 @@
                 }
               }
             }
-          },
-          "AutoMapUpdate",
-          {
-            "name": "HelpLink",
-            "cfg": {
-              "defaultOptions": {
-                "docsUrl": "https://mapstore.readthedocs.io/en/latest/"
-              }
-            }
-          },
-          "DrawerMenu", "Version", "Notifications", "BackgroundSelector", "Annotations",
+          }, "AutoMapUpdate", "HelpLink", "DrawerMenu", "Version", "Notifications", "BackgroundSelector", "Annotations",
             {
               "name": "Share",
               "cfg": {
