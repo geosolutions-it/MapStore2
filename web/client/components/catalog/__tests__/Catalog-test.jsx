@@ -114,4 +114,28 @@ describe('Test Catalog panel', () => {
         const expandButton = document.querySelector(expandClass);
         expect(expandButton).toExist(`${expandClass} does not exist`);
     });
+    it('renders records without thumbnail for a specific service', () => {
+        const title = "title";
+        const description = "description";
+        const item = ReactDOM.render(<Catalog
+            services={{"csw": {
+                type: "csw",
+                url: "url",
+                title: "csw",
+                format: "image/png8",
+                metadataTemplate: "<p>${title} and ${description}</p>",
+                hideThumbnail: true
+            }}}
+            searchOptions={{}}
+            selectedService="csw"
+            loading={false}
+            mode="view"
+            result={{numberOfRecordsMatched: 1}}
+            records={[{title, description, references: []}]}
+        />, document.getElementById("container"));
+        expect(item).toExist();
+        const previewClassName = ".mapstore-side-preview";
+        const preview = document.querySelector(previewClassName);
+        expect(preview).toNotExist(`${previewClassName} does not exist`);
+    });
 });

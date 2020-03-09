@@ -11,7 +11,6 @@ const CoordinatesRow = require('../../../misc/coordinateeditors/CoordinatesRow')
 
 const Editor = (props) => (
     <CoordinatesRow
-        key="IdentifyEditor"
         format={props.formatCoord || "decimal"}
         aeronauticalOptions={{
             seconds: {
@@ -26,7 +25,7 @@ const Editor = (props) => (
         onChangeFormat={(format) => {
             props.onChangeFormat(format);
         }}
-        key={"GFI row coord editor"}
+        key="GFI row coord editor"
         component={props.coordinate || {}}
         customClassName="coord-editor"
         isDraggable={false}

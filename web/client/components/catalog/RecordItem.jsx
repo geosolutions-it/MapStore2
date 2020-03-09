@@ -151,7 +151,6 @@ class RecordItem extends React.Component {
             buttons.push(disabled ?
                 <Message msgId="catalog.backgroundAlreadyAdded"/> :
                 <Button
-                    key="wms-button"
                     tooltipId="catalog.addToMap"
                     className="square-button-md"
                     bsStyle="primary"
@@ -170,7 +169,6 @@ class RecordItem extends React.Component {
             const type = wms ? 'wms' : 'wmts';
             buttons.push(
                 <Button
-                    key={`${type}-button`}
                     tooltipId="catalog.addToMap"
                     className="square-button-md"
                     bsStyle="primary"
@@ -197,7 +195,6 @@ class RecordItem extends React.Component {
         if (esri) {
             buttons.push(
                 <Button
-                    key="wmts-button"
                     tooltipId="catalog.addToMap"
                     className="square-button-md"
                     bsStyle="primary"
@@ -205,7 +202,7 @@ class RecordItem extends React.Component {
                     onClick={() => {
                         this.addLayer(esriToLayer(this.props.record, this.props.layerBaseConfig));
                     }}
-                    key="addwmtsLayer">
+                    key={`addesrilayer`}>
                     <Glyphicon glyph="plus" />
                 </Button>
             );
