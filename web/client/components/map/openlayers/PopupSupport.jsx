@@ -88,12 +88,13 @@ export default class PopupSupport extends React.Component {
             !!observer && observer.disconnect();
             !!popup && map.removeOverlay(popup);
         });
+        const margin = 20;
         this._popups = popups.map((options) => {
             const { id, position: { coordinates }, className,
-                maxWidth = Math.round(size[0] * 0.9),
-                maxHeight = Math.round(size[1] * 0.5),
+                maxWidth = Math.round(size[0] * 0.9) - margin * 2,
+                maxHeight = Math.round(size[1] * 0.5) - margin * 2,
                 autoPan = true,
-                autoPanMargin = 20,
+                autoPanMargin = margin,
                 offset = [0, 0],
                 autoPanAnimation = {
                     duration: 200

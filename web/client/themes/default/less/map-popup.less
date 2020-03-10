@@ -1,105 +1,143 @@
 .map-popup-ol {
-  margin-bottom: 15px ;
-  text-align: left;
-  > .ol-popup-content-wrapper {
-    padding: 1px;
-    background: white;
-    color: #333;
-    box-shadow: 0 3px 3px rgba(0,0,0,0.1);
-    border-radius: 12px;
-    > .ol-popup-content {
-      position: relative;
-      background-color: white;      
-      margin: 20px 20px;
+    margin-bottom: 15px;
+    text-align: left;
+
+    >.ol-popup-content-wrapper {
+        padding: 4px;
+        background: @ms2-color-background;
+        color: @ms2-color-text;
+        .shadow-far;
+        border-radius: 12px;
+
+        >.ol-popup-content {
+            position: relative;
+            background-color: @ms2-color-background;
+            margin: 20px 20px;
+        }
     }
-  }
-  * {
-    user-select: text !important;
-  }
+
+    * {
+        user-select: text !important;
+    }
 }
 
-.map-popup-ol:after, .map-popup-ol:before {
-  border: solid transparent;
-  content: " ";
-  height: 0;
-  width: 0;
-  position: absolute;
-  pointer-events: none;
-  bottom: -11px;
-}
-.map-popup-ol:after {
-  border-top-color: white;
-  border-width: 13px;
-  left: 50%;
-  margin-left: -13px;
-}
+.map-popup-ol:after,
 .map-popup-ol:before {
-  border-top-color: #ccc;
-  border-width: 13px;
-  left: 50%;
-  margin-left: -13px;
+    border: solid transparent;
+    content: " ";
+    height: 0;
+    width: 0;
+    position: absolute;
+    pointer-events: none;
+    bottom: -11px;
+}
+
+.map-popup-ol:after {
+    border-top-color: @ms2-color-background;
+    border-width: 13px;
+    left: 50%;
+    margin-left: -13px;
+}
+
+.map-popup-ol:before {
+    border-top-color: @ms2-color-shade-lighter;
+    border-width: 13px;
+    left: 50%;
+    margin-left: -13px;
 }
 
 .ol-popup-closer {
-  text-decoration: none;
-  position: absolute;
-  top: -4px;
-  right: 2px;
-  padding-right: 4px;
-  color: #078aa3;
-  font-size: x-large;
+    text-decoration: none;
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding: 4px 6px;
+    color: @ms2-color-primary;
+    font-size: @font-size-base;
+    font-weight: normal;
+    cursor: pointer;
+    font-family: "mapstore2";
+
+    &:before {
+        display: block;
+        .glyphicon-1-close-content();
+    }
 }
 
 
 .ms-leaflet-popup {
-  
-  .leaflet-popup-content-wrapper{
-    overflow: hidden;
-  }
-  a.leaflet-popup-close-button {
-    color: #078aa3;
-    font-size: x-large;
-    top: 0px;
-    right: 0;
-    padding: 4px 3px 0 0;
-    font-family:"Helvetica Neue", Arial, Helvetica, sans-serif;
-    font-weight: normal;
-  }
-  a.leaflet-popup-close-button:hover {
-    color: #056172;
-  }
+
+    .leaflet-popup-content-wrapper {
+        overflow: hidden;
+        .shadow-far;
+    }
+
+    .leaflet-popup-content {
+        margin: 20px 20px;
+    }
+
+    a.leaflet-popup-close-button {
+        text-decoration: none;
+        position: absolute;
+        top: 0;
+        right: 0;
+        padding: 4px 6px;
+        width: 28px;
+        height: 32px;
+        display: block;
+        font-size: @font-size-base;
+        font-weight: normal;
+        cursor: pointer;
+        font-family: "mapstore2";
+        color: transparent;
+
+        &:hover {
+            color: transparent;
+        }
+
+        &:before {
+            display: block;
+            color: @ms2-color-primary;
+            .glyphicon-1-close-content();
+        }
+    }
 }
 
 .ms-map-popup {
-  overflow: auto;
-  .mapstore-identify-viewer {
-    min-width: 100px;
-    min-height: 100px;
-    max-height: inherit;
-    max-width: inherit;
-    overflow: hidden;
-   
-    .panel {
-          -webkit-box-shadow: none;
-          box-shadow: none;
-          margin-bottom: 0px;
-          overflow: auto;
-      .panel-heading {
-      .panel-title {
-        > span{
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-        }
-      }    
-      }
-        }
+    overflow: visible;
 
+    .mapstore-identify-viewer {
+        min-width: 100px;
+        min-height: 100px;
+        max-height: inherit;
+        max-width: inherit;
+        overflow: hidden;
+
+        .panel {
+            -webkit-box-shadow: none;
+            box-shadow: none;
+            overflow: hidden;
+            margin: 0 auto;
+
+            .panel-heading {
+                .panel-title {
+                    >span {
+                        display: flex;
+                        justify-content: space-between;
+                        align-items: center;
+                    }
+                }
+            }
+
+            .panel-body {
+                max-height: 300px;
+                overflow: auto;
+            }
+        }
     }
-    
-  
-  .loader-container {
-    min-width: 50px;
-    min-height: 50px;
-  }
+
+    .loader-container {
+        min-width: 50px;
+        min-height: 50px;
+    }
 }
