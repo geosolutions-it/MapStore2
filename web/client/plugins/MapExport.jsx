@@ -61,7 +61,7 @@ const MapExport = enhanceExport(
         enabled,
         format,
         formats,
-        enabledFormats = ["mapstore2"],
+        enabledFormats = ["mapstore2", "wmc"],
         setFormat = () => { },
         onExport = () => { },
         onClose = () => { }
