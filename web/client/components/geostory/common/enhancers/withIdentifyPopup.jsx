@@ -9,7 +9,7 @@ import React from 'react';
 import {compose, branch, withStateHandlers, withPropsOnChange, mapPropsStream, createEventHandler} from 'recompose';
 import {Observable} from 'rxjs';
 import { isEqual} from 'lodash';
-
+import uuidv1 from 'uuid/v1';
 import MapInfoViewer from '../MapInfoViewer';
 
 import {getFeatureInfo} from '../../../../epics/identify';
@@ -40,11 +40,46 @@ export const withIdentifyRequest  = mapPropsStream(props$ => {
                         map,
                         point,
                         currentLocale: "en-US"});
-                    return getFeatureInfo(url, request, metadata, filterRequestParams(layer, includeOptions, excludeParams), false);
+                    const basePath = url;
+                    const requestParams = request;
+                    const appParams = filterRequestParams(layer, includeOptions, excludeParams);
+                    const param = { ...appParams, ...requestParams };
+                    const reqId = uuidv1();
+                    return getFeatureInfo(basePath, param, false)
+                        .map((response) =>
+                            response.data.exceptions
+                                ? ({
+                                    reqId,
+                                    exceptions: response.data.exceptions,
+                                    requestParams,
+                                    layerMetadata: metadata
+                                })
+                                : ({
+                                    data: response.data,
+                                    reqId: reqId,
+                                    requestParams,
+                                    layerMetadata: {
+                                        ...metadata,
+                                        features: response.features,
+                                        featuresCrs: response.featuresCrs
+                                    }
+                                })
+                        )
+                        .catch((e) => ({
+                            error: e.data || e.statusText || e.status,
+                            reqId,
+                            requestParams,
+                            layerMetadata: metadata
+                        }))
+                        .startWith(({
+                            start: true,
+                            reqId,
+                            request: param
+                        }));
                 }).scan(({requests, responses, validResponses}, action) => {
-                    if (action.type === 'NEW_MAPINFO_REQUEST') {
+                    if (action.start) {
                         const {reqId, request} = action;
-                        return {requests: requests.concat({reqId, request}), responses, validResponses};
+                        return {requests: requests.concat({ reqId, request }), responses, validResponses};
                     }
                     const {data, requestParams, layerMetadata} = action;
                     const validator = getValidator(mapInfoFormat);

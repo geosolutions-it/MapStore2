@@ -62,6 +62,7 @@ module.exports = props => {
     } = props;
 
     const latlng = point && point.latlng || null;
+
     let lngCorrected = null;
     if (latlng) {
         /* lngCorrected is the converted longitude in order to have the value between

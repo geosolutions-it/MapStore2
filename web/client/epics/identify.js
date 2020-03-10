@@ -55,9 +55,7 @@ const stopFeatureInfo = state => stopGetFeatureInfoSelector(state) || gridEditin
  * @param basePath {string} base path to the service
  * @param requestParams {object} map of params for a getfeatureinfo request.
  */
-export const getFeatureInfo = (basePath, requestParams, lMetaData, appParams = {}, attachJSON, itemId = null) => {
-    const param = { ...appParams, ...requestParams };
-    const reqId = uuid.v1();
+export const getFeatureInfo = (basePath, param, attachJSON, itemId = null) => {
     const retrieveFlow = (params) => Rx.Observable.defer(() => axios.get(basePath, { params }));
     return ((
         attachJSON && param.info_format !== "application/json" )
@@ -83,14 +81,7 @@ export const getFeatureInfo = (basePath, requestParams, lMetaData, appParams = {
                 features: data.features && data.features.filter(f => itemId ? f.id === itemId : true),
                 featuresCrs: data && data.crs && parseURN(data.crs)
             }))
-    )
-        .map((response) =>
-            response.data.exceptions
-                ? exceptionsFeatureInfo(reqId, response.data.exceptions, requestParams, lMetaData)
-                : loadFeatureInfo(reqId, response.data, requestParams, { ...lMetaData, features: response.features, featuresCrs: response.featuresCrs })
-        )
-        .catch((e) => Rx.Observable.of(errorFeatureInfo(reqId, e.data || e.statusText || e.status, requestParams, lMetaData)))
-        .startWith(newMapInfoRequest(reqId, param));
+    );
 };
 
 /**
@@ -131,7 +122,22 @@ export default {
                             request = {...request, ...overrideParams[layer.name]};
                         }
                         if (url) {
-                            return getFeatureInfo(url, request, metadata, MapInfoUtils.filterRequestParams(layer, includeOptions, excludeParams), isHighlightEnabledSelector(getState()), itemIdSelector(getState()));
+                            const basePath = url;
+                            const requestParams = request;
+                            const lMetaData = metadata;
+                            const appParams = MapInfoUtils.filterRequestParams(layer, includeOptions, excludeParams);
+                            const attachJSON = isHighlightEnabledSelector(getState());
+                            const itemId = itemIdSelector(getState());
+                            const reqId = uuid.v1();
+                            const param = { ...appParams, ...requestParams };
+                            return getFeatureInfo(basePath, param, attachJSON, itemId)
+                                .map((response) =>
+                                    response.data.exceptions
+                                        ? exceptionsFeatureInfo(reqId, response.data.exceptions, requestParams, lMetaData)
+                                        : loadFeatureInfo(reqId, response.data, requestParams, { ...lMetaData, features: response.features, featuresCrs: response.featuresCrs })
+                                )
+                                .catch((e) => Rx.Observable.of(errorFeatureInfo(reqId, e.data || e.statusText || e.status, requestParams, lMetaData)))
+                                .startWith(newMapInfoRequest(reqId, param));
                         }
                         return Rx.Observable.of(getVectorInfo(layer, request, metadata));
                     });
