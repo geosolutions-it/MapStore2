@@ -84,7 +84,9 @@ export const Controls = ({
                 className="ms-geostory-map-controls-switch"
                 checked={options.mapInfoControl}
             />
-            <FeatureInfoFormatSelector infoFormat={options.mapOptions && options.mapOptions.mapInfoFormat || "text/plain"}
+            <FeatureInfoFormatSelector
+                disabled={!options.mapInfoControl}
+                infoFormat={options.mapOptions && options.mapOptions.mapInfoFormat || "text/plain"}
                 onInfoFormatChange={(format) => onChangeMap("mapOptions.mapInfoFormat", format)}/>
         </FormGroup>
     </Form>);
