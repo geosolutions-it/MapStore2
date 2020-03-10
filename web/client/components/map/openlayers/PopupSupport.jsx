@@ -15,11 +15,13 @@ import popupsComponents from '../popups';
 
 const addMutationObserver = (popup, container, options = {}) => {
     let observer = new MutationObserver(() => {
-        popup.getMap().render();
-        popup.setElement(popup.getElement());
         // force autoPan via position reset
-        popup.setPosition(undefined);
-        popup.setPosition(options.coordinates);
+        const map = popup.getMap();
+        const mapSize = map.getSize();
+        if (mapSize) {
+            popup.setPosition(undefined);
+            popup.setPosition(options.coordinates);
+        }
     });
     observer.observe(container, {attributes: true, childList: true, subtree: true });
     return observer;
