@@ -4,6 +4,7 @@
  *
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
+ *
  */
 
 import expect from 'expect';
@@ -16,13 +17,12 @@ import {
     editContext as editContextEpic
 } from '../contextmanager';
 
-import { editContext } from '../../actions/contextmanager';
-
 import { contextSaved, CLEAR_CONTEXT_CREATOR } from '../../actions/contextcreator';
 
 import {
     SEARCH_CONTEXTS,
     searchContexts,
+    editContext,
     LOADING,
     CONTEXTS_LIST_LOADED
 } from '../../actions/contextmanager';
