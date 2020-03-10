@@ -33,7 +33,13 @@ const mapInfoSelector = state => get(mapSelector(state), "info");
 const mapInfoLoadingSelector = state => get(mapSelector(state), "loadingInfo", false);
 const mapSaveErrorsSelector = state => get(mapSelector(state), "mapSaveErrors");
 const mapInfoDetailsUriFromIdSelector = state => get(mapInfoSelector(state), "details");
-const mapIsEditableSelector = state => get(mapInfoSelector, 'mapInfo.canEdit') || get(state, 'context.resource.canEdit');
+const mapIsEditableSelector = state => {
+    const mapInfoCanEdit = get(mapInfoSelector(state), 'canEdit');
+    if (mapInfoCanEdit === undefined) {
+        return get(state, 'context.resource.canEdit');
+    }
+    return mapInfoCanEdit;
+};
 
 // TODO: move these in selectors/localConfig.js or selectors/config.js
 const projectionDefsSelector = (state) => state.localConfig && state.localConfig.projectionDefs || [];
