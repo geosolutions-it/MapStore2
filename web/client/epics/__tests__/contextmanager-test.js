@@ -12,10 +12,13 @@ import ConfigUtils from '../../utils/ConfigUtils';
 
 import {
     searchContextsEpic,
-    reloadOnContexts
+    reloadOnContexts,
+    editContext as editContextEpic
 } from '../contextmanager';
 
-import { contextSaved } from '../../actions/contextcreator';
+import { editContext } from '../../actions/contextmanager';
+
+import { contextSaved, CLEAR_CONTEXT_CREATOR } from '../../actions/contextcreator';
 
 import {
     SEARCH_CONTEXTS,
@@ -29,6 +32,9 @@ import {
 } from '../../actions/notifications';
 
 let getDefaults = ConfigUtils.getDefaults;
+
+const ROUTER_PUSH_ACTION = "@@router/CALL_HISTORY_METHOD";
+
 
 describe('contextmanager epics', () => {
     beforeEach( () => {
@@ -97,5 +103,19 @@ describe('contextmanager epics', () => {
             expect(actions[2].value).toBe(false);
             done();
         }, {});
+    });
+    describe('editContext', () => {
+        it('when resource is present, trigger router', done => {
+            const startActions = [editContext({ test: "some resource", id: 1 })];
+            testEpic(editContextEpic, 2, startActions, ([a1, a2]) => {
+                expect(a1.type).toBe(CLEAR_CONTEXT_CREATOR);
+                expect(a2.type).toBe(ROUTER_PUSH_ACTION);
+                const { method, args } = a2.payload;
+                const path = args[0];
+                expect(method).toBe("push");
+                expect(path).toBe("/context-creator/1");
+                done();
+            });
+        });
     });
 });
