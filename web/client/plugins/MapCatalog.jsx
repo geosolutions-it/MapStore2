@@ -29,6 +29,20 @@ import { createPlugin } from '../utils/PluginsUtils';
 import mapcatalog from '../reducers/mapcatalog';
 import * as epics from '../epics/mapcatalog';
 
+/**
+ * Allows users to browse/edit/remove existing maps
+ * @memberof plugins
+ * @class
+ * @name MapCatalog
+ * @prop {boolean} [active] true if the panel is active
+ * @prop {string} [mapType] current map viewer type
+ * @prop {object} [user] user information
+ * @prop {boolean} [triggerReloadValue] boolean value used to force the reload of the maps list
+ * @prop {function} [onToggleControl] toggle map templates panel visibility callback
+ * @prop {function} [onTriggerReload] callback that changes triggerReloadValue to force the reload of the maps list
+ * @prop {function} [onDelete] triggers map deletion
+ * @prop {function} [onSave] triggers map saving
+ */
 const MapCatalogComponent = ({
     active,
     mapType,
@@ -67,7 +81,7 @@ const MapCatalogComponent = ({
 
 export default createPlugin('MapCatalog', {
     component: connect(createStructuredSelector({
-        active: state => state.controls?.mapCatalog?.enabled,
+        active: state => state.controls && state.controls.mapCatalog && state.controls.mapCatalog.enabled,
         mapType: mapTypeSelector,
         user: userSelector,
         triggerReloadValue: triggerReloadValueSelector
