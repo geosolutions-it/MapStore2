@@ -2221,6 +2221,10 @@
             "description": "Login Tool",
             "title": "Login"
           },
+          "MapCatalog": {
+            "description": "Consente la navigazione, la modifica, l'eliminazione e il caricamento di mappe disponibili sul server",
+            "title": "Catalogo mappe"
+          },
           "MapExport": {
             "description": "Permette di esportare la mappa in un file",
             "title": "Esporta Mappa"
@@ -2442,6 +2446,26 @@
             "confirmReplaceTitle": "Sostituisci il contenuto della mappa",
             "confirmReplaceMessage": "Sostituirai tutti i livelli e la configurazione della mappa con il modello selezionato facendo clic sul pulsante Sostituisci",
             "confirmReplaceConfirmButton": "Sostituire"
+        },
+        "mapCatalog": {
+            "title": "Catalogo mappe",
+            "filterPlaceholder": "Cerca mappe...",
+            "deleteConfirmContent": "Sei sicuro di voler eliminare la mappa \"{mapName}\"?",
+            "tooltips": {
+                "edit": "Modifica proprietà",
+                "delete": "Elimina risorsa",
+                "share": "Condividi"
+            },
+            "deletedMap": {
+                "title": "Mappa cancellata",
+                "message": "La mappa è stata eliminata correttamente"
+            },
+            "updatedMap": {
+                "title": "Mappa Salvata",
+                "message": "La mappa è stata salvata correttamente"
+            },
+            "deleteError": "Si è verificato un errore imprevisto durante l'eliminazione della mappa",
+            "updateError": "Si è verificato un errore imprevisto durante il salvataggio della mappa"
         },
         "tutorial": {
             "title": "Tutorial",

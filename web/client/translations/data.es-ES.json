@@ -2220,6 +2220,10 @@
             "description": "Login Tool",
             "title": "Login"
           },
+          "MapCatalog": {
+            "description": "Permite navegar, editar, borrar y cargar mapas que están disponibles en el servidor",
+            "title": "Catálogo de mapas"
+          },
           "MapExport": {
             "description": "Permite exportar el mapa en un archivo",
             "title": "Exportación de mapas"
@@ -2439,6 +2443,26 @@
             "confirmReplaceTitle": "Reemplazar contenido del mapa",
             "confirmReplaceMessage": "Reemplazará todas las capas y la configuración del mapa con la plantilla seleccionada haciendo clic en el botón Reemplazar",
             "confirmReplaceConfirmButton": "Reemplazar"
+        },
+        "mapCatalog": {
+            "title": "Catálogo de mapas",
+            "filterPlaceholder": "Buscar mapas...",
+            "deleteConfirmContent": "¿Estás seguro de que quieres eliminar el mapa \"{mapName}\"?",
+            "tooltips": {
+                "edit": "Editar propiedades",
+                "delete": "Eliminar recurso",
+                "share": "Compartir"
+            },
+            "deletedMap": {
+                "title": "Mapa eliminado",
+                "message": "El mapa se eliminó correctamente"
+            },
+            "updatedMap": {
+                "title": "Mapa guardado",
+                "message": "El mapa se guardó correctamente"
+            },
+            "deleteError": "Se produjo un error inesperado al eliminar el mapa",
+            "updateError": "Se produjo un error inesperado al guardar el mapa"
         },
         "tutorial": {
             "title": "Tutorial",

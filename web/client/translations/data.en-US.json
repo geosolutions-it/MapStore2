@@ -2224,6 +2224,10 @@
             "description": "Login tool",
             "title": "Login"
           },
+          "MapCatalog": {
+            "description": "Allows browsing, editing, deleting and loading of maps that are available on the server",
+            "title": "Map Catalog"
+          },
           "MapExport": {
             "description": "Allows to export map in a file",
             "title": "Map Export"
@@ -2443,6 +2447,26 @@
             "confirmReplaceTitle": "Replace map content",
             "confirmReplaceMessage": "You will replace all layers and map configuration with the selected template by clicking on replace button",
             "confirmReplaceConfirmButton": "Replace"
+        },
+        "mapCatalog": {
+            "title": "Map Catalog",
+            "filterPlaceholder": "Search maps...",
+            "deleteConfirmContent": "Are you sure you want to delete \"{mapName}\" map?",
+            "tooltips": {
+                "edit": "Edit properties",
+                "delete": "Delete resource",
+                "share": "Share"
+            },
+            "deletedMap": {
+                "title": "Deleted Map",
+                "message": "The map was successfully deleted"
+            },
+            "updatedMap": {
+                "title": "Saved Map",
+                "message": "The map was successfully saved"
+            },
+            "deleteError": "Unexpected error occurred while deleting the map",
+            "updateError": "Unexpected error occurred while saving the map"
         },
         "tutorial": {
             "title": "Tutorial",

@@ -2220,6 +2220,10 @@
             "description": "Login Tool",
             "title": "Login"
           },
+          "MapCatalog": {
+            "description": "Permet la navigation, l'édition, la suppression et le chargement des cartes disponibles sur le serveur",
+            "title": "Catalogue de cartes"
+          },
           "MapExport": {
             "description": "Permet d'exporter la carte dans un fichier",
             "title": "Exportation de carte"
@@ -2439,6 +2443,26 @@
             "confirmReplaceTitle": "Remplacer le contenu de la carte",
             "confirmReplaceMessage": "Vous allez remplacer toutes les couches et la configuration de la carte par le modèle sélectionné en cliquant sur le bouton remplacer",
             "confirmReplaceConfirmButton": "Remplacer"
+        },
+        "mapCatalog": {
+            "title": "Catalogue de cartes",
+            "filterPlaceholder": "Rechercher des cartes...",
+            "deleteConfirmContent": "Voulez-vous vraiment supprimer la carte \"{mapName}\"?",
+            "tooltips": {
+                "edit": "Modifier les propriétés",
+                "delete": "Supprimer la ressource",
+                "share": "Partager"
+            },
+            "deletedMap": {
+                "title": "Carte supprimée",
+                "message": "La carte a été supprimée avec succès"
+            },
+            "updatedMap": {
+                "title": "Carte sauvegardée",
+                "message": "La carte a été enregistrée avec succès"
+            },
+            "deleteError": "Une erreur inattendue s'est produite lors de la suppression de la carte",
+            "updateError": "Une erreur inattendue s'est produite lors de l'enregistrement de la carte"
         },
         "tutorial": {
             "title": "Tutoriel",
