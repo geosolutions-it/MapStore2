@@ -282,7 +282,7 @@
     },
     {
       "name": "MapCatalog",
-      "glyph": "1-map",
+      "glyph": "maps-catalog",
       "title": "plugins.MapCatalog.title",
       "description": "plugins.MapCatalog.description",
       "dependencies": [

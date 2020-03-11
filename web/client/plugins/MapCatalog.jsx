@@ -82,7 +82,7 @@ export default createPlugin('MapCatalog', {
             name: 'mapcatalog',
             position: 6,
             text: <Message msgId="mapCatalog.title" />,
-            icon: <Glyphicon glyph="1-map" />,
+            icon: <Glyphicon glyph="maps-catalog" />,
             action: () => toggleControl('mapCatalog', 'enabled'),
             priority: 2,
             doNotHide: true
