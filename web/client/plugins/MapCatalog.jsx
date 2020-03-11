@@ -34,14 +34,6 @@ import * as epics from '../epics/mapcatalog';
  * @memberof plugins
  * @class
  * @name MapCatalog
- * @prop {boolean} [active] true if the panel is active
- * @prop {string} [mapType] current map viewer type
- * @prop {object} [user] user information
- * @prop {boolean} [triggerReloadValue] boolean value used to force the reload of the maps list
- * @prop {function} [onToggleControl] toggle map templates panel visibility callback
- * @prop {function} [onTriggerReload] callback that changes triggerReloadValue to force the reload of the maps list
- * @prop {function} [onDelete] triggers map deletion
- * @prop {function} [onSave] triggers map saving
  */
 const MapCatalogComponent = ({
     active,

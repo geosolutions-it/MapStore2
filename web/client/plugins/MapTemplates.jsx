@@ -32,13 +32,6 @@ import * as epics from '../epics/maptemplates';
  * @memberof plugins
  * @class
  * @name MapTemplates
- * @prop {boolean} [active] true if the panel is active
- * @prop {object[]} [templates] the list of templates
- * @prop {boolean} [templatesLoaded] true if templates have been loaded from server
- * @prop {function} [onToggleControl] toggle map templates panel visibility callback
- * @prop {function} [onMergeTemplate] callback that adds the template to the current map configuration
- * @prop {function} [onReplaceTemplate] callback that replaces the current map configuration with the template
- * @prop {function} [onToggleFavourite] callback that toggles the favourite flag of a template
  */
 const mapTemplates = ({
     active,
