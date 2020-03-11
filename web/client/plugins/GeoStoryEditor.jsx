@@ -41,6 +41,8 @@ import Builder from '../components/geostory/builder/Builder';
 import { Modes, scrollToContent } from '../utils/GeoStoryUtils';
 import { createPlugin } from '../utils/PluginsUtils';
 import tooltip from '../components/misc/enhancers/tooltip';
+import { withRouter } from 'react-router';
+import { removeQueryFromUrl } from '../utils/ShareUtils';
 import { Button as ButtonRB, Glyphicon } from 'react-bootstrap';
 const Button = tooltip(ButtonRB);
 
@@ -51,18 +53,28 @@ const EditButton = connect(
     { setEditingMode: setEditing }
 )(({
     isEditAllowed,
-    setEditingMode = () => {}
+    setEditingMode = () => {},
+    location,
+    history
 }) => {
+
+    const handleOnClick = () => {
+        setEditingMode(true);
+        const { pathname } = location;
+        if (pathname.includes('/geostory/shared')) {
+            const newUrl = removeQueryFromUrl(pathname.replace('/geostory/shared', '/geostory'));
+            history.push(newUrl);
+        }
+    };
+
     return isEditAllowed
-        ? (
-            <Button
-                className="square-button-md no-border"
-                onClick={() => setEditingMode(true)}
-                tooltipId="geostory.navigation.edit"
-                tooltipPosition="bottom">
-                <Glyphicon glyph="pencil" />
-            </Button>
-        )
+        ? <Button
+            className="square-button-md no-border"
+            onClick={handleOnClick}
+            tooltipId="geostory.navigation.edit"
+            tooltipPosition="bottom">
+            <Glyphicon glyph="pencil" />
+        </Button>
         : null;
 });
 
@@ -150,7 +162,7 @@ export default createPlugin('GeoStoryEditor', {
     )(GeoStoryEditor),
     containers: {
         GeoStoryNavigation: {
-            tool: EditButton
+            tool: withRouter(EditButton)
         }
     },
     reducers: {
