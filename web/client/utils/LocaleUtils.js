@@ -67,6 +67,10 @@ let supportedLocales = {
     "vi": {
         code: "vi-VN",
         description: "tiếng Việt"
+    },
+    "fi": {
+        code: "fi-FI",
+        description: "Suomi"
     }
 };
 const DATE_FORMATS = {
@@ -77,7 +81,8 @@ const DATE_FORMATS = {
     "zh-ZH": "YYYY/MM/DD",
     "hr-HR": "DD/MM/YYYY",
     "pt-PT": "DD/MM/YYYY",
-    "vi-VN": "DD/MM/YYYY"
+    "vi-VN": "DD/MM/YYYY",
+    "fi-FI": "DD/MM/YYYY"
 };
 
 let errorParser = {};
