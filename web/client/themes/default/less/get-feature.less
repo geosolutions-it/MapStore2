@@ -18,6 +18,17 @@
         }
     }
 }
+.ms-identify-swipe-header {
+    display: flex;
+    align-items: center;
+    & > *:not(.btn-group) {
+        flex: 1;
+        padding: 0 8px;
+    }
+    .btn-group {
+        min-width: @square-btn-medium-size * 2;
+    }
+}
 
 .coordinateRow {
     margin: 8px 0px;

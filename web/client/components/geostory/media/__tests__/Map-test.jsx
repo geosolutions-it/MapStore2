@@ -46,4 +46,30 @@ describe('Map component', () => {
         expect(document.body.children.length).toBe(2);
         expect(document.body.children[1].getAttribute('class')).toBe('ms-expanded-media-container');
     });
+    it('should use cursor pointer with active map info control', () => {
+        const mockStore = { subscribe: () => {}, getState: () => ({
+            maptype: {
+                mapType: 'openlayers'
+            }
+        }) };
+        const MAP = {
+            layers: [],
+            mapInfoControl: true
+        };
+
+        ReactDOM.render(
+            <Provider store={mockStore}>
+                <Map
+                    id="map"
+                    map={MAP} />
+            </Provider>,
+            document.getElementById("container"));
+
+        const container = document.getElementById('container');
+        const mediaMapNode = container.querySelector('.ms-media-map');
+        expect(mediaMapNode).toExist();
+        const mapContainer = container.querySelector('#media-map');
+        expect(mapContainer).toExist();
+        expect(mapContainer.style.cursor).toBe('pointer');
+    });
 });

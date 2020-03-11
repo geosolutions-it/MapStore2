@@ -160,6 +160,7 @@ const identifyDefaultProps = defaultProps({
  * @prop cfg.viewerOptions.header {expression} the header of the viewer, expression from the context{expression}
  * @prop cfg.disableCenterToMarker {bool} disable zoom to marker action
  * @prop cfg.zIndex {number} component z index order
+ * @prop cfg.showInMapPopup {boolean} if true show the identify as popup
  *
  * @example
  * {

@@ -82,11 +82,20 @@ export default class PopupSupport extends React.Component {
         });
         // Create popups
         this._popups = popups.map(( options = {}) => {
+
+            const maxMapWidth = size.x * 0.9;
+            const maxMapHeight =  size.y * 0.5;
+
             const { id, position: { coordinates }, component, content, className,
-                maxWidth = size.x * 0.9,
-                maxHeight = size.y * 0.5,
+                maxWidth: maxWidthOption = maxMapWidth,
+                maxHeight: maxHeightOption = maxMapHeight,
                 autoPan = true,
                 offset = [0, 7]} = options;
+
+            // check if max sizes in options are greater then sizes of map
+            const maxWidth = maxWidthOption > maxMapWidth ? maxMapWidth : maxWidthOption;
+            const maxHeight = maxHeightOption > maxMapHeight ? maxMapHeight : maxHeightOption;
+
             const container = Utils.createContainer(id, className);
             container.setAttribute("style", `max-width: ${maxWidth}px; max-height: ${maxHeight}px`);
             Utils.append(container, content);

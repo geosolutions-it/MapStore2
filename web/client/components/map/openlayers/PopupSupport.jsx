@@ -90,17 +90,24 @@ export default class PopupSupport extends React.Component {
             !!observer && observer.disconnect();
             !!popup && map.removeOverlay(popup);
         });
-        const margin = 20;
+
         this._popups = popups.map((options) => {
+            const margin = 20;
+            const maxMapWidth = Math.round(size[0] * 0.9) - margin * 2;
+            const maxMapHeight =  Math.round(size[1] * 0.5) - margin * 2;
             const { id, position: { coordinates }, className,
-                maxWidth = Math.round(size[0] * 0.9) - margin * 2,
-                maxHeight = Math.round(size[1] * 0.5) - margin * 2,
+                maxWidth: maxWidthOption = maxMapWidth,
+                maxHeight: maxHeightOption = maxMapHeight,
                 autoPan = true,
                 autoPanMargin = margin,
                 offset = [0, 0],
                 autoPanAnimation = {
                     duration: 200
                 }} = options;
+
+            // check if max sizes in options are greater then sizes of map
+            const maxWidth = maxWidthOption > maxMapWidth ? maxMapWidth : maxWidthOption;
+            const maxHeight = maxHeightOption > maxMapHeight ? maxMapHeight : maxHeightOption;
 
             const container = Utils.createContainer(id, className);
             const popup = new Overlay({

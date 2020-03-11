@@ -46,7 +46,15 @@ class SwipeHeader extends React.Component {
     };
 
     render() {
-        return <span><span>{this.props.title}</span><ButtonGroup className="pull-right">{this.renderLeftButton()}{this.renderRightButton()}</ButtonGroup></span>;
+        return (
+            <div className="ms-identify-swipe-header">
+                <div>{this.props.title}</div>
+                {this.props.size > 1 &&
+                <ButtonGroup>
+                    {this.renderLeftButton()}{this.renderRightButton()}
+                </ButtonGroup>}
+            </div>
+        );
     }
 }
 
