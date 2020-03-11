@@ -539,7 +539,7 @@ describe('map epics', () => {
             const initState = {
                 router: {
                     location: {
-                        pathname: '/viewer/openlayers/4321'
+                        pathname: '/viewer/openlayers/new'
                     }
                 }
             };
