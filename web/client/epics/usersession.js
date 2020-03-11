@@ -26,7 +26,7 @@ const saveUserSessionErrorStatusToMessage = (status) => {
  *
  * @param {function} nameSelector selector that builds the session identifier
  * @param {*} sessionSelector selector that builds the session object to save
- * @param {*} idSelecotr selector of the identifier for the current session (if it already exists)
+ * @param {*} idSelector selector of the identifier for the current session (if it already exists)
  * @example
  *
  * const nameSelector = (state) => ({state.context.name + "." + state.security.user.name})
