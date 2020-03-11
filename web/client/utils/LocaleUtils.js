@@ -134,7 +134,7 @@ const LocaleUtils = {
     },
     getLocale: function(query = {}) {
         const key = Object.keys(supportedLocales)[0];
-        const defaultLocale = supportedLocales.en ? { key: 'en', locale: supportedLocales.fi } : { key, locale: supportedLocales[key] };
+        const defaultLocale = supportedLocales.en ? { key: 'en', locale: supportedLocales.en } : { key, locale: supportedLocales[key] };
         let locale = supportedLocales[
             LocaleUtils.normalizeLocaleCode(query.locale || (navigator ? navigator.language || navigator.browserLanguage : defaultLocale.key))
         ];
