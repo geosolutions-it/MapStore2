@@ -46,7 +46,7 @@ const {backgroundListSelector} = require('../selectors/backgroundselector');
 const {mapOptionsToSaveSelector} = require('../selectors/mapsave');
 const {feedbackMaskSelector} = require('../selectors/feedbackmask');
 const { isLoggedIn } = require('../selectors/security');
-const { unsavedMapSelector } = require('../selectors/controls');
+const {pathnameSelector} = require('../selectors/router');
 const { push } = require('connected-react-router');
 const textSearchConfigSelector = state => state.searchconfig && state.searchconfig.textSearchConfig;
 
@@ -261,7 +261,7 @@ const compareMapChanges = (action$, { getState = () => {} }) =>
 
 const redirectUnauthorizedUserOnNewMap = (action$, { getState = () => {}}) =>
     action$.ofType(MAP_CONFIG_LOAD_ERROR)
-        .filter((action) => action.error && action.error.status === 403 && unsavedMapSelector(getState()))
+        .filter((action) => action.error && action.error.status === 403 && pathnameSelector(getState()).indexOf("new") !== -1)
         .filter(() => !isLoggedIn(getState()))
         .switchMap(() => Rx.Observable.of(push('/'))); // go to home page
 
