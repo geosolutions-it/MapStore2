@@ -11,7 +11,7 @@ const {connect} = require('react-redux');
 const {Button, Grid, Glyphicon} = require('react-bootstrap');
 const {editGroup} = require('../../actions/usergroups');
 const {getUserGroups, groupSearchTextChanged} = require('../../actions/usergroups');
-const SearchBar = require("../../components/mapcontrols/search/SearchBar");
+const SearchBar = require("../../components/search/SearchBar").default;
 const GroupsGrid = require('./users/GroupGrid');
 const GroupDialog = require('./users/GroupDialog');
 const GroupDeleteConfirm = require('./users/GroupDeleteConfirm');
@@ -28,7 +28,6 @@ class GroupManager extends React.Component {
         typeAhead: PropTypes.bool,
         splitTools: PropTypes.bool,
         isSearchClickable: PropTypes.bool,
-        showOptions: PropTypes.bool,
         searchText: PropTypes.string,
         onSearch: PropTypes.func,
         onSearchReset: PropTypes.func,
@@ -44,7 +43,6 @@ class GroupManager extends React.Component {
         splitTools: false,
         placeholderMsgId: "usergroups.searchGroups",
         typeAhead: false,
-        showOptions: false,
         searchText: "",
         start: 0,
         limit: 20,
@@ -63,7 +61,6 @@ class GroupManager extends React.Component {
             <SearchBar
                 className={this.props.className}
                 splitTools={this.props.splitTools}
-                showOptions={this.props.showOptions}
                 isSearchClickable={this.props.isSearchClickable}
                 hideOnBlur={this.props.hideOnBlur}
                 placeholderMsgId ={this.props.placeholderMsgId}
@@ -71,9 +68,7 @@ class GroupManager extends React.Component {
                 onSearchReset={this.props.onSearchReset}
                 onSearchTextChange={this.props.onSearchTextChange}
                 typeAhead={this.props.typeAhead}
-                searchText={this.props.searchText}
-                start={this.props.start}
-                limit={this.props.limit} />
+                searchText={this.props.searchText}/>
             <Grid style={{marginBottom: "10px"}} fluid>
                 <h1 className="usermanager-title"><Message msgId={"usergroups.groups"}/></h1>
                 <Button style={{marginRight: "10px"}} bsStyle="success" onClick={this.onNew}>

@@ -7,6 +7,7 @@
  */
 
 const ON_TAB_SELECTED = 'CONTENT_TABS:ON_TAB_SELECTED';
+const SET_TABS_HIDDEN = 'CONTENT_TABS:SET_TABS_HIDDEN';
 
 /**
  * Select Tab
@@ -23,4 +24,9 @@ const onTabSelected = (id) => {
     };
 };
 
-module.exports = {onTabSelected, ON_TAB_SELECTED};
+const setTabsHidden = (tabs) => ({
+    type: SET_TABS_HIDDEN,
+    tabs
+});
+
+module.exports = {onTabSelected, ON_TAB_SELECTED, setTabsHidden, SET_TABS_HIDDEN};

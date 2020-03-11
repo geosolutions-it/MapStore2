@@ -254,6 +254,8 @@
             "featuredMaps": "Featured"
         },
         "newMap": "New Map",
+        "newMapEmpty": "Empty Map",
+        "newMapContext": "Existing Context",
 		"maps": {
             "title": "Maps",
             "addToFeaturedMaps": "Add to featured maps",
@@ -279,7 +281,8 @@
                 "errorWhenSaving": "An error occurred during saving process",
                 "errorWhenUpdating": "An error occurred during updating process",
                 "errorWhenDeleting": "An error occurred during deleting process",
-                "errorSizeExceeded": "Please, reduce the size of the details or the quality of the images"
+                "errorSizeExceeded": "Please, reduce the size of the details or the quality of the images",
+                "errorLoadingContexts": "An error occurred during contexts loading"
             },
 			"search": "search..."
 		},
@@ -643,6 +646,16 @@
                 "no_info_description": "Identify panel will not show up on search",
                 "all_layers_description": "Identify panel will show up displaying information of all layers visible in map",
                 "single_layer_description": "Identify panel will show up with the data already available through the WFS search"
+            },
+            "advancedSearchPanel": {
+                "title": "Advanced search filters",
+                "context": {
+                    "title": "Context"
+                },
+                "showTooltip": "Show advanced filters",
+                "showTooltipActive": "Show advanced filters (active)",
+                "hideTooltip": "Hide advanced filters",
+                "hideTooltipActive": "Hide advanced filters (active)"
             }
         },
         "draw": {
@@ -2158,6 +2171,11 @@
         "stepper": {
             "back": "Back",
             "next": "Next"
+        },
+        "newMapDialog": {
+            "title": "Select a context",
+            "noContexts": "No contexts found",
+            "filterPlaceholder": "Search contexts..."
         },
         "plugins": {
           "About": {

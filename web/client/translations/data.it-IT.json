@@ -254,6 +254,8 @@
             "featuredMaps": "In Evidenza"
         },
         "newMap": "Nuova Mappa",
+        "newMapEmpty": "Mappa vuota",
+        "newMapContext": "Contesto esistente",
 		"maps": {
             "title": "Mappe",
             "addToFeaturedMaps": "Metti in evidenza",
@@ -279,7 +281,8 @@
                 "errorWhenSaving": "C'è stato un errore durante il salvataggio",
                 "errorWhenUpdating": "C'è stato un errore durante l'aggiornamento",
                 "errorWhenDeleting": "C'è stato un errore durante la cancellazione",
-                "errorSizeExceeded": "Riduci il contenuto o la qualità delle immagini"
+                "errorSizeExceeded": "Riduci il contenuto o la qualità delle immagini",
+                "errorLoadingContexts": "Si è verificato un errore durante il caricamento dei contesti"
             },
 			"search": "Cerca..."
 		},
@@ -643,6 +646,16 @@
                 "no_info_description": "Il pannello Informazioni Sulle Feature non comparirà",
                 "all_layers_description": "Il pannello Informazioni Sulle Feature mostrerà informazioni di tutti i layer presenti in mappa",
                 "single_layer_description": "Il pannello Informazioni Sulle Feature mostrerà i dati disponibili relativi all'elemento selezionato"
+            },
+            "advancedSearchPanel": {
+                "title": "Filtri di ricerca avanzata",
+                "context": {
+                    "title": "Contesto"
+                },
+                "showTooltip": "Mostra filtri avanzati",
+                "showTooltipActive": "Mostra filtri avanzati (attivo)",
+                "hideTooltip": "Nascondi filtri avanzati",
+                "hideTooltipActive": "Nascondi filtri avanzati (attivo)"
             }
         },
         "draw": {
@@ -2155,6 +2168,11 @@
         "stepper": {
             "back": "Indietro",
             "next": "Avanti"
+        },
+        "newMapDialog": {
+            "title": "Seleziona un contesto",
+            "noContexts": "Nessun contesto trovato",
+            "filterPlaceholder": "Cerca contesti..."
         },
         "plugins": {
           "About": {

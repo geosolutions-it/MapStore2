@@ -18,7 +18,8 @@ const {onTabSelected} = require('../actions/contenttabs');
 
 const selectedSelector = createSelector(
     state => state && state.contenttabs && state.contenttabs.selected,
-    selected => ({ selected })
+    state => state && state.contenttabs && state.contenttabs.hiddenTabs,
+    (selected, hiddenTabs) => ({ selected, hiddenTabs })
 );
 
 const DefaultTitle = ({ item = {}, index }) => <span>{ item.title || `Tab ${index}` }</span>;
@@ -48,6 +49,7 @@ class ContentTabs extends React.Component {
         className: PropTypes.string,
         style: PropTypes.object,
         items: PropTypes.array,
+        hiddenTabs: PropTypes.object,
         id: PropTypes.string,
         onSelect: PropTypes.func
 
@@ -55,6 +57,7 @@ class ContentTabs extends React.Component {
     static defaultProps = {
         selected: 0,
         items: [],
+        hiddenTabs: {},
         className: "content-tabs",
         style: {},
         id: "content-tabs",
@@ -74,14 +77,16 @@ class ContentTabs extends React.Component {
                             container={(props) => <div {...props}>
                                 <div style={{marginTop: "10px"}}>
                                     <Nav bsStyle="tabs" activeKey="1" onSelect={k => this.props.onSelect(k)}>
-                                        {[...this.props.items].sort((a, b) => a.position - b.position).map(
-                                            ({ TitleComponent = DefaultTitle, ...item }, idx) =>
-                                                (<NavItem
-                                                    key={item.key || idx}
-                                                    active={(item.key || idx) === this.props.selected}
-                                                    eventKey={item.key || idx} >
-                                                    <TitleComponent index={idx} item={item} />
-                                                </NavItem>))}
+                                        {[...this.props.items].filter(item => !this.props.hiddenTabs[item.name])
+                                            .sort((a, b) => a.position - b.position).map(
+                                                ({ TitleComponent = DefaultTitle, ...item }, idx) =>
+                                                    (<NavItem
+                                                        key={item.key || idx}
+                                                        active={(item.key || idx) === this.props.selected}
+                                                        eventKey={item.key || idx} >
+                                                        <TitleComponent index={idx} item={item} />
+                                                    </NavItem>)
+                                            )}
                                     </Nav>
                                 </div>
                                 {props.children}

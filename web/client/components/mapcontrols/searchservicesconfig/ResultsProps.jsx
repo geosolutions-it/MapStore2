@@ -11,7 +11,7 @@ const {FormGroup, ControlLabel, FormControl, Label} = require('react-bootstrap')
 const Slider = require('react-nouislider');
 const assign = require('object-assign');
 const PropTypes = require('prop-types');
-const Select = require("react-select");
+const Select = require("react-select").default;
 
 const Message = require('../../I18N/Message');
 const LocaleUtils = require('../../../utils/LocaleUtils');

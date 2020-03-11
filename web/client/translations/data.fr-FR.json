@@ -254,6 +254,8 @@
             "featuredMaps": "Cartes en vedette"
         },
         "newMap": "Nouvelle carte",
+        "newMapEmpty": "Carte vide",
+        "newMapContext": "Contexte existant",
         "maps": {
             "title": "Cartes",
             "addToFeaturedMaps": "Ajouter aux cartes sélectionnées",
@@ -279,7 +281,8 @@
                 "errorWhenSaving": "Une erreur est survenue lors du processus d'enregistrement",
                 "errorWhenUpdating": "Une erreur s'est produite lors du processus de mise à jour",
                 "errorWhenDeleting": "Une erreur s'est produite lors du processus de suppression",
-                "errorSizeExceeded": "S'il vous plaît, réduisez la taille des détails ou la qualité des images"
+                "errorSizeExceeded": "S'il vous plaît, réduisez la taille des détails ou la qualité des images",
+                "errorLoadingContexts": "Une erreur s'est produite lors du chargement des contextes"
             },
             "search": "rechercher ..."
         },
@@ -643,6 +646,16 @@
                 "no_info_description": "Le panneau d'identification n'apparaîtra pas dans la recherche",
                 "all_layers_description": "Le panneau Identifier affichera des informations sur toutes les couches visibles sur la carte.",
                 "single_layer_description": "Le panneau Identify apparaîtra avec les données déjà disponibles via la recherche WFS"
+            },
+            "advancedSearchPanel": {
+                "title": "Filtres de recherche avancés",
+                "context": {
+                    "title": "Le contexte"
+                },
+                "showTooltip": "Afficher les filtres avancés",
+                "showTooltipActive": "Afficher les filtres avancés (actif)",
+                "hideTooltip": "Masquer les filtres avancés",
+                "hideTooltipActive": "Masquer les filtres avancés (actif)"
             }
         },
         "draw": {
@@ -2154,6 +2167,11 @@
         "stepper": {
             "back": "Retour",
             "next": "Suivant"
+        },
+        "newMapDialog": {
+            "title": "Sélectionnez un contexte",
+            "noContexts": "Aucun contexte trouvé",
+            "filterPlaceholder": "Contextes de recherche..."
         },
         "plugins": {
           "About": {

@@ -11,7 +11,7 @@ const {connect} = require('react-redux');
 const {Button, Grid, Glyphicon} = require('react-bootstrap');
 const {editUser} = require('../../actions/users');
 const {getUsers, usersSearchTextChanged} = require('../../actions/users');
-const SearchBar = require("../../components/mapcontrols/search/SearchBar");
+const SearchBar = require("../../components/search/SearchBar").default;
 const UserGrid = require('./users/UserGrid');
 const UserDialog = require('./users/UserDialog');
 const UserDeleteConfirm = require('./users/UserDeleteConfirm');
@@ -23,7 +23,6 @@ class UserManager extends React.Component {
     static propTypes = {
         onNewUser: PropTypes.func,
         splitTools: PropTypes.bool,
-        showOptions: PropTypes.bool,
         isSearchClickable: PropTypes.bool,
         className: PropTypes.string,
         hideOnBlur: PropTypes.bool,
@@ -41,7 +40,6 @@ class UserManager extends React.Component {
         className: "user-search",
         hideOnBlur: false,
         isSearchClickable: true,
-        showOptions: false,
         splitTools: false,
         placeholderMsgId: "users.searchUsers",
         typeAhead: false,
@@ -63,7 +61,6 @@ class UserManager extends React.Component {
             <SearchBar
                 className={this.props.className}
                 splitTools={this.props.splitTools}
-                showOptions={this.props.showOptions}
                 isSearchClickable={this.props.isSearchClickable}
                 hideOnBlur={this.props.hideOnBlur}
                 placeholderMsgId ={this.props.placeholderMsgId}
@@ -71,9 +68,7 @@ class UserManager extends React.Component {
                 onSearchReset={this.props.onSearchReset}
                 onSearchTextChange={this.props.onSearchTextChange}
                 typeAhead={this.props.typeAhead}
-                searchText={this.props.searchText}
-                start={this.props.start}
-                limit={this.props.limit} />
+                searchText={this.props.searchText}/>
             <Grid style={{marginBottom: "10px"}} fluid>
                 <h1 className="usermanager-title"><Message msgId={"users.users"}/></h1>
                 <Button style={{marginRight: "10px"}} bsStyle="success" onClick={this.onNew}>&nbsp;<span><Glyphicon glyph="1-user-add" /><Message msgId="users.newUser" /></span></Button>

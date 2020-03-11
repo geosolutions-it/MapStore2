@@ -297,7 +297,7 @@ const configurePluginsStep = ({
                     title: 'contextCreator.configurePlugins.enabledPlugins',
                     filterText: enabledPluginsFilterText,
                     filterPlaceholder: enabledPluginsFilterPlaceholder,
-                    mptyStateProps: {
+                    emptyStateProps: {
                         glyph: 'wrench',
                         title: 'contextCreator.configurePlugins.enabledPluginsEmpty'
                     },
