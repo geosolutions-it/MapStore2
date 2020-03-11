@@ -483,49 +483,51 @@ const storeDetailsInfoEpic = (action$, store) =>
  */
 const mapSaveMapResourceEpic = (action$, store) =>
     action$.ofType(SAVE_MAP_RESOURCE)
-        .exhaustMap(({resource}) => Rx.Observable.forkJoin(
-            (() => {
-                const contextId = get(resource, 'attributes.context');
-                return contextId ? getResource(contextId, {withData: false}) : Rx.Observable.of(null);
-            })(),
-            !resource.id ? createResource(resource) : updateResource(resource))
-            .switchMap(([contextResource, rid]) => (keys(resource.attributes).length > 0 ?
-                Rx.Observable.forkJoin(
-                    keys(resource.attributes).map(attrName => updateResourceAttribute({
+        .exhaustMap(({resource}) => {
+            const validAttributesNames = keys(resource.attributes)
+                .filter(attrName => resource.attributes[attrName] !== undefined && resource.attributes[attrName] !== null);
+            return Rx.Observable.forkJoin(
+                (() => {
+                    const contextId = get(resource, 'attributes.context');
+                    return contextId ? getResource(contextId, {withData: false}) : Rx.Observable.of(null);
+                })(),
+                !resource.id ? createResource(resource) : updateResource(resource))
+                .switchMap(([contextResource, rid]) => (validAttributesNames.length > 0 ?
+                    Rx.Observable.forkJoin(validAttributesNames.map(attrName => updateResourceAttribute({
                         id: rid,
                         name: attrName,
                         value: resource.attributes[attrName]
-                    }))
-                ) : Rx.Observable.of([])).switchMap(() =>
-                Rx.Observable.from([
-                    ...(resource.id ? [loadMapInfo(rid)] : []),
-                    resource.id ? toggleControl('mapSave') : toggleControl('mapSaveAs'),
-                    mapSaved(),
-                    ...(!resource.id ? [
-                        mapCreated(rid, assign({id: rid, canDelete: true, canEdit: true, canCopy: true}, resource.metadata), resource.data),
-                        push(contextResource ?
-                            `/context/${contextResource.name}/${rid}` :
-                            `/viewer/${mapTypeSelector(store.getState())}/${rid}`)]
-                        : [])
-                ])
-                    .merge(
-                        Rx.Observable.of(basicSuccess({
-                            title: 'map.savedMapTitle',
-                            message: 'map.savedMapMessage',
-                            autoDismiss: 6,
-                            position: 'tc'
-                        }))
-                    )
-            ))
-            .catch((e) => {
-                const { status, statusText, data, message, ...other} = e;
-                return Rx.Observable.of(mapSaveError(status ? { status, statusText, data } : message || other), basicError({
-                    ...getErrorMessage(e, 'geostore', 'mapsError'),
-                    autoDismiss: 6,
-                    position: 'tc'
-                }));
-            })
-            .startWith(!resource.id ? savingMap(resource.metadata) : mapUpdating(resource.metadata)));
+                    }))) : Rx.Observable.of([])).switchMap(() =>
+                    Rx.Observable.from([
+                        ...(resource.id ? [loadMapInfo(rid)] : []),
+                        resource.id ? toggleControl('mapSave') : toggleControl('mapSaveAs'),
+                        mapSaved(),
+                        ...(!resource.id ? [
+                            mapCreated(rid, assign({id: rid, canDelete: true, canEdit: true, canCopy: true}, resource.metadata), resource.data),
+                            push(contextResource ?
+                                `/context/${contextResource.name}/${rid}` :
+                                `/viewer/${mapTypeSelector(store.getState())}/${rid}`)]
+                            : [])
+                    ])
+                        .merge(
+                            Rx.Observable.of(basicSuccess({
+                                title: 'map.savedMapTitle',
+                                message: 'map.savedMapMessage',
+                                autoDismiss: 6,
+                                position: 'tc'
+                            }))
+                        )
+                ))
+                .catch((e) => {
+                    const { status, statusText, data, message, ...other} = e;
+                    return Rx.Observable.of(mapSaveError(status ? { status, statusText, data } : message || other), basicError({
+                        ...getErrorMessage(e, 'geostore', 'mapsError'),
+                        autoDismiss: 6,
+                        position: 'tc'
+                    }));
+                })
+                .startWith(!resource.id ? savingMap(resource.metadata) : mapUpdating(resource.metadata));
+        });
 
 module.exports = {
     loadMapsEpic,
