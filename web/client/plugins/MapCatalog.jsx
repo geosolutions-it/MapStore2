@@ -30,7 +30,7 @@ import mapcatalog from '../reducers/mapcatalog';
 import * as epics from '../epics/mapcatalog';
 
 /**
- * Allows users to browse/edit/remove existing maps
+ * Allows users to existing maps directly on the map.
  * @memberof plugins
  * @class
  * @name MapCatalog
