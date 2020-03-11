@@ -661,7 +661,7 @@ const checkPluginsEnhancer = branch(
  * example :
  * ```
  * "layerOptions" : {
- *   "indicators: [{
+ *   "indicators": [{
  *      "key": "dimension", // key: required id for the entry to render
  *      "type": "dimension", // type: only one supported is dimension
  *      "glyph": "calendar", // glyph to use

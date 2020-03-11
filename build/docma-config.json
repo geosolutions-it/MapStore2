@@ -14,7 +14,7 @@
         "relativePath": null,
         "filter": null,
         "allowUnknownTags": true,
-        "plugins": ["plugins/markdown"]
+        "plugins": ["node_modules/jsdoc/plugins/markdown"]
     },
     "markdown": {
         "gfm": true,
