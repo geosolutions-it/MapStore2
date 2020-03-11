@@ -93,7 +93,7 @@ let errorParser = {};
  */
 const LocaleUtils = {
     ensureIntl(callback) {
-        require.ensure(['intl', 'intl/locale-data/jsonp/en.js', 'intl/locale-data/jsonp/it.js', 'intl/locale-data/jsonp/fr.js', 'intl/locale-data/jsonp/de.js', 'intl/locale-data/jsonp/es.js', 'intl/locale-data/jsonp/nl.js', 'intl/locale-data/jsonp/zh.js', 'intl/locale-data/jsonp/hr.js', 'intl/locale-data/jsonp/vi.js'], (require) => {
+        require.ensure(['intl', 'intl/locale-data/jsonp/en.js', 'intl/locale-data/jsonp/it.js', 'intl/locale-data/jsonp/fr.js', 'intl/locale-data/jsonp/de.js', 'intl/locale-data/jsonp/es.js', 'intl/locale-data/jsonp/nl.js', 'intl/locale-data/jsonp/zh.js', 'intl/locale-data/jsonp/hr.js', 'intl/locale-data/jsonp/vi.js', 'intl/locale-data/jsonp/fi.js'], (require) => {
             global.Intl = require('intl');
             require('intl/locale-data/jsonp/en.js');
             require('intl/locale-data/jsonp/it.js');
@@ -105,6 +105,7 @@ const LocaleUtils = {
             require('intl/locale-data/jsonp/hr.js');
             require('intl/locale-data/jsonp/pt.js');
             require('intl/locale-data/jsonp/vi.js');
+            require('intl/locale-data/jsonp/fi.js');
             if (callback) {
                 callback();
             }
@@ -133,7 +134,7 @@ const LocaleUtils = {
     },
     getLocale: function(query = {}) {
         const key = Object.keys(supportedLocales)[0];
-        const defaultLocale = supportedLocales.en ? { key: 'en', locale: supportedLocales.en } : { key, locale: supportedLocales[key] };
+        const defaultLocale = supportedLocales.en ? { key: 'en', locale: supportedLocales.fi } : { key, locale: supportedLocales[key] };
         let locale = supportedLocales[
             LocaleUtils.normalizeLocaleCode(query.locale || (navigator ? navigator.language || navigator.browserLanguage : defaultLocale.key))
         ];
