@@ -11,11 +11,6 @@ export default {
         let parts;
         if (layer === 'custom') {
             providerConfig = options;
-        } if (layer === "tms") {
-            providerConfig = {
-                url: `${options.url}/{z}/{x}/{y}.${options.extension || ''}`,
-                options
-            };
         } else {
             parts = layer.split('.');
             providerName = parts[0];
@@ -28,7 +23,7 @@ export default {
 
         let provider = {
             url: providerConfig.url,
-            options: providerConfig.options
+            options: providerConfig.options || {}
         };
             // overwrite values in provider from variant.
         if (variantName && 'variants' in providerConfig) {

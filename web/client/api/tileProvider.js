@@ -8,6 +8,7 @@
 import CONFIG_PROVIDER from '../utils/ConfigProvider';
 import {get} from 'lodash';
 import {Observable} from 'rxjs';
+import { isValidURLTemplate } from '../utils/URLUtils';
 
 
 const CUSTOM = "custom";
@@ -45,8 +46,12 @@ export const getRecords = (url, startPosition, maxRecords, text, info) => {
         }
 
     } else if (service.url) {
+        // TODO: handle variants in options
         layers = [{
             ...service,
+            url: service.url,
+            attribution: service.attribution,
+            options: service.options || {},
             provider: CUSTOM // this overrides also in case of null value
         }];
     }
@@ -59,10 +64,14 @@ export const getRecords = (url, startPosition, maxRecords, text, info) => {
 export const textSearch = (url, startPosition, maxRecords, text, info) => getRecords(url, startPosition, maxRecords, text, info);
 
 
+const validateURLTemplate = (url) => {
+    return isValidURLTemplate(url); // TODO: check parameters
+};
 export const validate = () => (service) => {
-    const validateURLTemplate = () => true; // TODO
-    const isValidURL = service.provider === "custom" ? validateURLTemplate(service.url) : !!service.provider;
-    if (service.title && isValidURL) {
+
+
+    const isValid = (!service.provider || service.provider === "custom") ? validateURLTemplate(service.url) : !!service.provider;
+    if (service.title && isValid) {
         return Observable.of(service);
     }
     const error = new Error("catalog.config.notValidURLTemplate");

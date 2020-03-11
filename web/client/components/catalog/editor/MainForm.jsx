@@ -34,19 +34,18 @@ const DefaultURLEditor = ({ service = {}, onChangeUrl = () => { } }) => (<FormGr
 // selector for tile provider
 import CONFIG_PROVIDER from '../../../utils/ConfigProvider';
 
-
-const TileProviderURLEditor = ({ onChangeServiceProperty, service = {}, onChangeUrl = () => { }, onChangeTitle = () => {} }) => {
-    const providers = Object.keys(CONFIG_PROVIDER);
+const PROVIDERS_ALLOWED = ["OpenStreetMap", "OpenSeaMap"];
+const TileProviderURLEditor = ({ onChangeServiceProperty, service = {}, onChangeUrl = () => { }, onChangeTitle = () => { } }) => {
+    const providers = Object.keys(CONFIG_PROVIDER).filter(k => PROVIDERS_ALLOWED.indexOf(k) >= 0);
     const selectedProvider = service?.provider?.split?.(".")?.[0];
     const isCustom = !selectedProvider || selectedProvider === CUSTOM;
     return (<FormGroup>
-        <Col xs={12} sm={ isCustom ? 3 : 12} md={isCustom ? 3 : 12}>
-            <ControlLabel><Message msgId="catalog.url" /></ControlLabel>
+        <Col xs={12} sm={isCustom ? 3 : 12} md={isCustom ? 3 : 12}>
+            <ControlLabel><Message msgId="catalog.tileProvider.provider" /></ControlLabel>
             <FormControl
                 onChange={(e) => {
                     const provider = e.target.value;
-
-                    onChangeServiceProperty("provider", `${provider}` );
+                    onChangeServiceProperty("provider", `${provider}`);
                     onChangeTitle(provider);
                 }}
                 value={selectedProvider}
@@ -57,7 +56,7 @@ const TileProviderURLEditor = ({ onChangeServiceProperty, service = {}, onChange
         <Col xs={12} sm={9} md={9}>
             {isCustom
                 ? <React.Fragment>
-                    <ControlLabel><Message msgId="catalog.tileProvider.alternatives" /></ControlLabel>
+                    <ControlLabel><Message msgId="catalog.tileProvider.urlTemplate" /></ControlLabel>
                     <FormControl
                         type="text"
                         style={{
@@ -67,9 +66,7 @@ const TileProviderURLEditor = ({ onChangeServiceProperty, service = {}, onChange
                         value={service && service.url}
                         onChange={(e) => onChangeUrl(e.target.value)} />
                 </React.Fragment>
-                : <React.Fragment>
-                    <ControlLabel><Message msgId="catalog.tileProvider.alternatives" /></ControlLabel>
-                </React.Fragment>
+                : null
             }
         </Col>
     </FormGroup>);
@@ -90,7 +87,6 @@ export default ({
     const URLEditor = service.type === "tileprovider" ? TileProviderURLEditor : DefaultURLEditor;
     return (
         <Form horizontal >
-            <URLEditor key="url-row" service={service} onChangeUrl={onChangeUrl} onChangeTitle={onChangeTitle} onChangeServiceProperty={onChangeServiceProperty} />
             <FormGroup controlId="title" key="type-title-row">
                 <Col key="type" xs={12} sm={3} md={3}>
                     <ControlLabel><Message msgId="catalog.type" /></ControlLabel>
@@ -113,5 +109,6 @@ export default ({
                         onChange={(e) => onChangeTitle(e.target.value)} />
                 </Col>
             </FormGroup>
-        </Form>)
+            <URLEditor key="url-row" service={service} onChangeUrl={onChangeUrl} onChangeTitle={onChangeTitle} onChangeServiceProperty={onChangeServiceProperty} />
+        </Form>);
 };

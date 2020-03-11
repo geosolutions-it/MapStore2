@@ -212,9 +212,9 @@ class Catalog extends React.Component {
                 maxButtons={5}
                 activePage={page + 1}
                 onSelect={this.handlePage} />
-                <div className="push-right">
-                    <Message msgId="catalog.pageInfo" msgParams={{ start, end: start + returned - 1, total }} />
-                </div>
+            <div className="push-right">
+                <Message msgId="catalog.pageInfo" msgParams={{ start, end: start + returned - 1, total }} />
+            </div>
             </div>);
         }
         return null;
