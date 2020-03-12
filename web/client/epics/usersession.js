@@ -35,7 +35,7 @@ const saveUserSessionErrorStatusToMessage = (status) => {
  * const epic = saveUserSessionEpic(nameSelector, sessionSelector, idSelector)
  * setInterval(() => dispatch({type: SAVE_USER_SESSION}), 60 * 1000)
  */
-export const saveUserSessionEpic = (nameSelector, sessionSelector, idSelector = () => {}) => (action$, store) => action$
+export const saveUserSessionEpicCreator = (nameSelector, sessionSelector, idSelector = () => {}) => (action$, store) => action$
     .ofType(SAVE_USER_SESSION)
     .switchMap(() => {
         const state = store.getState();
@@ -88,7 +88,16 @@ export const saveUserSessionEpic = (nameSelector, sessionSelector, idSelector = 
             ));
     });
 
-export const startStopUserSessionSaveEpic = (startAction, endAction, frequency) => (action$) => action$
+/**
+ * Returns an epic that saves a user session (dispatching the saveUserSession action creator)
+ * at defined intervals.
+ * It can be started and stopped by two specific actions (configurable).
+ *
+ * @param {*} startAction the action type that will start saving of the user sessions
+ * @param {*} endAction the action type that will stop saving of the user sessions
+ * @param {*} frequency interval between saves (in milliseconds)
+ */
+export const autoSaveSessionEpicCreator = (startAction, endAction, frequency) => (action$) => action$
     .ofType(startAction)
     .switchMap(() => Rx.Observable.interval(frequency).switchMap(() => Rx.Observable.of(saveUserSession())))
     .takeUntil(action$.ofType(endAction));

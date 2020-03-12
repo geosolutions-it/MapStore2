@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 import { testEpic } from './epicTestUtils';
-import { saveUserSessionEpic, startStopUserSessionSaveEpic } from "../usersession";
+import { saveUserSessionEpicCreator, autoSaveSessionEpicCreator } from "../usersession";
 import { saveUserSession, USER_SESSION_SAVED, USER_SESSION_LOADING, SAVE_USER_SESSION } from "../../actions/usersession";
 import { SHOW_NOTIFICATION } from "../../actions/notifications";
 import expect from "expect";
@@ -40,7 +40,7 @@ describe('usersession Epics', () => {
     it('user session is saved using data from sessionSelector', (done) => {
         mockAxios.onPost().reply(200, "1");
         mockAxios.onGet().reply(200, {});
-        testEpic(saveUserSessionEpic(idSelector, sessionSelector), 2, saveUserSession(), (actions) => {
+        testEpic(saveUserSessionEpicCreator(idSelector, sessionSelector), 2, saveUserSession(), (actions) => {
             expect(actions[0].type).toBe(USER_SESSION_LOADING);
             expect(actions[1].type).toBe(USER_SESSION_SAVED);
             expect(actions[1].id).toBe(1);
@@ -51,7 +51,7 @@ describe('usersession Epics', () => {
     it('user session name is taken from idSelector', (done) => {
         mockAxios.onPost().reply(200, "1");
         mockAxios.onGet().reply(200, {});
-        testEpic(saveUserSessionEpic(idSelector, sessionSelector), 2, saveUserSession(), (actions) => {
+        testEpic(saveUserSessionEpicCreator(idSelector, sessionSelector), 2, saveUserSession(), (actions) => {
             expect(actions[0].type).toBe(USER_SESSION_LOADING);
             expect(actions[1].type).toBe(USER_SESSION_SAVED);
             expect(mockAxios.history.post[0].data).toContain("id.myuser");
@@ -60,7 +60,7 @@ describe('usersession Epics', () => {
     it('user session is indexed by username', (done) => {
         mockAxios.onPost().reply(200, "1");
         mockAxios.onGet().reply(200, {});
-        testEpic(saveUserSessionEpic(idSelector, sessionSelector), 2, saveUserSession(), (actions) => {
+        testEpic(saveUserSessionEpicCreator(idSelector, sessionSelector), 2, saveUserSession(), (actions) => {
             expect(actions[0].type).toBe(USER_SESSION_LOADING);
             expect(actions[1].type).toBe(USER_SESSION_SAVED);
             expect(mockAxios.history.post[0].data).toContain("<value>myuser</value>");
@@ -68,7 +68,7 @@ describe('usersession Epics', () => {
     });
     it('error is shown if there is an error from server when saving session', (done) => {
         mockAxios.onPost().reply(500);
-        testEpic(saveUserSessionEpic(idSelector, sessionSelector), 2, saveUserSession(), (actions) => {
+        testEpic(saveUserSessionEpicCreator(idSelector, sessionSelector), 2, saveUserSession(), (actions) => {
             expect(actions[0].type).toBe(USER_SESSION_LOADING);
             expect(actions[1].type).toBe(SHOW_NOTIFICATION);
         }, initialState, done);
@@ -79,7 +79,7 @@ describe('usersession Epics', () => {
         mockAxios.onPost("/rest/geostore/categories").reply(200);
         mockAxios.onPost("/rest/geostore/resources/resource/1/permissions").reply(200);
         mockAxios.onGet().reply(200, {});
-        testEpic(saveUserSessionEpic(idSelector, sessionSelector), 2, saveUserSession(), (actions) => {
+        testEpic(saveUserSessionEpicCreator(idSelector, sessionSelector), 2, saveUserSession(), (actions) => {
             expect(actions[0].type).toBe(USER_SESSION_LOADING);
             expect(actions[1].type).toBe(USER_SESSION_SAVED);
         }, initialState, done);
@@ -88,7 +88,7 @@ describe('usersession Epics', () => {
         mockAxios.onPost().reply(200, "1");
         mockAxios.onPut().reply(200, "1");
         mockAxios.onGet().reply(200, {});
-        testEpic(saveUserSessionEpic(idSelector, sessionSelector, () => 1), 2, saveUserSession(), (actions) => {
+        testEpic(saveUserSessionEpicCreator(idSelector, sessionSelector, () => 1), 2, saveUserSession(), (actions) => {
             expect(actions[0].type).toBe(USER_SESSION_LOADING);
             expect(actions[1].type).toBe(USER_SESSION_SAVED);
             expect(mockAxios.history.put.length).toBe(2);
@@ -97,7 +97,7 @@ describe('usersession Epics', () => {
         }, initialState, done);
     });
     it('start and stop user session save', (done) => {
-        const store = testEpic(startStopUserSessionSaveEpic('START', 'STOP', 10), (action) => action.type !== "STOP", {type: 'START'}, (actions) => {
+        const store = testEpic(autoSaveSessionEpicCreator('START', 'STOP', 10), (action) => action.type !== "STOP", {type: 'START'}, (actions) => {
             expect(actions[0].type).toBe(SAVE_USER_SESSION);
             expect(actions[actions.length - 1].type).toBe("EPIC_COMPLETED");
         }, initialState, done, true);
