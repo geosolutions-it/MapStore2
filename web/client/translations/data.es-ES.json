@@ -2061,7 +2061,8 @@
                 "topLeft": "Arriba a la izquierda",
                 "topRight": "Parte superior derecha",
                 "bottomLeft": "Abajo a la izquierda",
-                "bottomRight": "Abajo a la derecha"
+                "bottomRight": "Abajo a la derecha",
+                "identify": "Identificar"
             },
             "webPageCreator": {
                 "title": "Página web",

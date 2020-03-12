@@ -2065,7 +2065,8 @@
                 "topLeft": "Top Left",
                 "topRight": "Top Right",
                 "bottomLeft": "Bottom Left",
-                "bottomRight": "Bottom Right"
+                "bottomRight": "Bottom Right",
+                "identify": "Identify"
             },
             "webPageCreator": {
                 "title": "Web page",
