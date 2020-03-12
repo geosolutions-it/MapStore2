@@ -7,13 +7,26 @@
  */
 
 const {
-    ON_TAB_SELECTED
+    ON_TAB_SELECTED,
+    SET_TABS_HIDDEN
 } = require('../actions/contenttabs');
 
 function contenttabs(state = {selected: "maps"}, action) {
     switch (action.type) {
     case ON_TAB_SELECTED: {
-        return {selected: action.id || "maps"};
+        return {
+            ...state,
+            selected: action.id || "maps"
+        };
+    }
+    case SET_TABS_HIDDEN: {
+        return {
+            ...state,
+            hiddenTabs: {
+                ...(state.hiddenTabs || {}),
+                ...action.tabs
+            }
+        };
     }
     default:
         return state;

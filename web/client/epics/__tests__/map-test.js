@@ -537,24 +537,14 @@ describe('map epics', () => {
             };
 
             const initState = {
-                controls: {
-                    unsavedMap: {
-                        enabled: true
+                router: {
+                    location: {
+                        pathname: '/viewer/openlayers/new'
                     }
                 }
             };
 
             testEpic(redirectUnauthorizedUserOnNewMap, 1, configureError({status: 403}), epicResponse, initState);
-        });
-        it('shouldn\'t navigate to homepage when user didn\'t change anything', (done) => {
-            const epicResponse = (actions) => {
-                expect(actions.length).toBe(1);
-                expect(actions[0].type).toBe(TEST_TIMEOUT);
-                done();
-            };
-
-            testEpic(addTimeoutEpic(redirectUnauthorizedUserOnNewMap, 10), 1, configureError({status: 403}), epicResponse);
-
         });
     });
 });

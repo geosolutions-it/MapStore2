@@ -16,7 +16,7 @@ const {
     CLOSE_DETAILS_PANEL, closeDetailsPanel, loadMaps, MAPS_GET_MAP_RESOURCES_BY_CATEGORY,
     openDetailsPanel, UPDATE_DETAILS, DETAILS_LOADED, getMapResourcesByCategory,
     MAP_DELETING, MAP_DELETED, deleteMap, mapDeleted, TOGGLE_DETAILS_SHEET,
-    saveMapResource, MAP_CREATED, SAVING_MAP, MAP_UPDATING, MAPS_LOAD_MAP
+    saveMapResource, MAP_CREATED, SAVING_MAP, MAP_UPDATING, MAPS_LOAD_MAP, LOADING
 } = require('../../actions/maps');
 const { mapInfoLoaded, MAP_SAVED, LOAD_MAP_INFO } = require('../../actions/config');
 const {SHOW_NOTIFICATION} = require('../../actions/notifications');
@@ -99,6 +99,7 @@ const testMap = {
             "lastUpdate": "2017-05-17 10:18:11.455",
             "description": "",
             "id": 464,
+            "contextName": null,
             "name": "TEST MAP",
             "thumbnail": "base%2Fweb%2Fclient%2Ftest-resources%2Fimg%2Fblank.jpg",
             "owner": "mapstore"
@@ -561,22 +562,21 @@ describe('Get Map Resource By Category Epic', () => {
     });
     it('test getMapsResourcesByCategoryEpic ', done => {
 
-        testEpic(addTimeoutEpic(getMapsResourcesByCategoryEpic), 1, getMapResourcesByCategory('MAP', 'test', {
+        testEpic(addTimeoutEpic(getMapsResourcesByCategoryEpic), 3, getMapResourcesByCategory('MAP', 'test', {
             baseUrl,
             params: { start: 0, limit: 12 }
         }), actions => {
-            expect(actions.length).toBe(1);
-            actions.map((action) => {
-                switch (action.type) {
-                case MAPS_LIST_LOADED:
-                    expect(action.maps).toEqual(testMap);
-                    expect(action.params).toEqual(params);
-                    expect(action.searchText).toBe('test');
-                    break;
-                default:
-                    expect(true).toBe(false);
-                }
-            });
+            expect(actions.length).toBe(3);
+            expect(actions[0].type).toBe(LOADING);
+            expect(actions[0].value).toBe(true);
+            expect(actions[0].name).toBe('loadingMaps');
+            expect(actions[1].type).toBe(MAPS_LIST_LOADED);
+            expect(actions[1].maps).toEqual(testMap);
+            expect(actions[1].params).toEqual(params);
+            expect(actions[1].searchText).toBe('test');
+            expect(actions[2].type).toBe(LOADING);
+            expect(actions[2].value).toBe(false);
+            expect(actions[2].name).toBe('loadingMaps');
             done();
         });
     });

@@ -254,6 +254,8 @@
             "featuredMaps": "Cartes en vedette"
         },
         "newMap": "Nouvelle carte",
+        "newMapEmpty": "Carte vide",
+        "newMapContext": "Contexte existant",
         "maps": {
             "title": "Cartes",
             "addToFeaturedMaps": "Ajouter aux cartes sélectionnées",
@@ -279,7 +281,8 @@
                 "errorWhenSaving": "Une erreur est survenue lors du processus d'enregistrement",
                 "errorWhenUpdating": "Une erreur s'est produite lors du processus de mise à jour",
                 "errorWhenDeleting": "Une erreur s'est produite lors du processus de suppression",
-                "errorSizeExceeded": "S'il vous plaît, réduisez la taille des détails ou la qualité des images"
+                "errorSizeExceeded": "S'il vous plaît, réduisez la taille des détails ou la qualité des images",
+                "errorLoadingContexts": "Une erreur s'est produite lors du chargement des contextes"
             },
             "search": "rechercher ..."
         },
@@ -643,6 +646,16 @@
                 "no_info_description": "Le panneau d'identification n'apparaîtra pas dans la recherche",
                 "all_layers_description": "Le panneau Identifier affichera des informations sur toutes les couches visibles sur la carte.",
                 "single_layer_description": "Le panneau Identify apparaîtra avec les données déjà disponibles via la recherche WFS"
+            },
+            "advancedSearchPanel": {
+                "title": "Filtres de recherche avancés",
+                "context": {
+                    "title": "Le contexte"
+                },
+                "showTooltip": "Afficher les filtres avancés",
+                "showTooltipActive": "Afficher les filtres avancés (actif)",
+                "hideTooltip": "Masquer les filtres avancés",
+                "hideTooltipActive": "Masquer les filtres avancés (actif)"
             }
         },
         "draw": {
@@ -2156,6 +2169,11 @@
             "back": "Retour",
             "next": "Suivant"
         },
+        "newMapDialog": {
+            "title": "Sélectionnez un contexte",
+            "noContexts": "Aucun contexte trouvé",
+            "filterPlaceholder": "Contextes de recherche..."
+        },
         "plugins": {
           "About": {
             "description": "Outil qui affiche la fenêtre À propos",
@@ -2220,6 +2238,10 @@
           "Login": {
             "description": "Login Tool",
             "title": "Login"
+          },
+          "MapCatalog": {
+            "description": "Permet la navigation, l'édition, la suppression et le chargement des cartes disponibles sur le serveur",
+            "title": "Catalogue de cartes"
           },
           "MapExport": {
             "description": "Permet d'exporter la carte dans un fichier",
@@ -2440,6 +2462,26 @@
             "confirmReplaceTitle": "Remplacer le contenu de la carte",
             "confirmReplaceMessage": "Vous allez remplacer toutes les couches et la configuration de la carte par le modèle sélectionné en cliquant sur le bouton remplacer",
             "confirmReplaceConfirmButton": "Remplacer"
+        },
+        "mapCatalog": {
+            "title": "Catalogue de cartes",
+            "filterPlaceholder": "Rechercher des cartes...",
+            "deleteConfirmContent": "Voulez-vous vraiment supprimer la carte \"{mapName}\"?",
+            "tooltips": {
+                "edit": "Modifier les propriétés",
+                "delete": "Supprimer la ressource",
+                "share": "Partager"
+            },
+            "deletedMap": {
+                "title": "Carte supprimée",
+                "message": "La carte a été supprimée avec succès"
+            },
+            "updatedMap": {
+                "title": "Carte sauvegardée",
+                "message": "La carte a été enregistrée avec succès"
+            },
+            "deleteError": "Une erreur inattendue s'est produite lors de la suppression de la carte",
+            "updateError": "Une erreur inattendue s'est produite lors de l'enregistrement de la carte"
         },
         "tutorial": {
             "title": "Tutoriel",

@@ -25,16 +25,16 @@ const TransferColumnCardList = ({
         {items.map((item, idx) => {
             const isSelected = item.id && selectedItems.reduce((result, selectedItem) => result || selectedItem.id === item.id, false);
             return (<SideCard
-                {...item}
-                key={item.id || idx}
-                size={item.cardSize}
-                className={(item.className ? `${item.className} ` : ' ') + (idx === items.length - 1 ? 'ms2-transfer-lastcard' : '')}
-                selected={isSelected}
                 onClick={(_, event) => isRoot ? onSelect(isSelected ?
                     selectedItems.filter(selectedItem => selectedItem.id !== item.id) :
                     allowCtrlMultiSelect && event.ctrlKey && side === selectedSide ?
                         [...selectedItems, item] :
                         [item], side) : {}}
+                {...item}
+                key={item.id || idx}
+                size={item.cardSize}
+                className={(item.className ? `${item.className} ` : ' ') + (idx === items.length - 1 ? 'ms2-transfer-lastcard' : '')}
+                selected={isSelected}
                 tools={item.tools && <Toolbar
                     buttons={item.tools.map(tool => ({
                         ...tool,

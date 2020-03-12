@@ -110,7 +110,9 @@ class FeaturedMaps extends React.Component {
             };
         }
         return {
-            url: "viewer/" + this.props.mapType + "/" + res.id,
+            url: res.contextName ?
+                "context/" + res.contextName + "/" + res.id :
+                "viewer/" + this.props.mapType + "/" + res.id,
             shareApi: true
         };
     }

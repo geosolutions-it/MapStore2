@@ -48,24 +48,24 @@ export default ({
 
                 <div className="ms-geostory-navigation-toolbar">
                     <Toolbar buttons={buttons} />
+                    {
+                        router &&
+                        router.pathname &&
+                        router.search &&
+                        getQueryParams(router.search).showHome === 'true' &&
+                        router.pathname.includes('/geostory/shared') && (
+                            <Home
+                                bsStyle="default"
+                                className="square-button-md no-border"
+                                tooltipPosition="right"
+                                renderUnsavedMapChangesDialog={false}
+                            />
+                        )
+                    }
                 </div>
-                {
-                    router &&
-                    router.pathname &&
-                    router.search &&
-                    getQueryParams(router.search).showHome === 'true' &&
-                    router.pathname.includes('/geostory/shared') && (
-                        <Home
-                            bsStyle="default"
-                            className="square-button-md no-border"
-                            tooltipPosition="right"
-                            renderUnsavedMapChangesDialog={false}
-                        />
-                    )
-                }
                 <div className="ms-geostory-navigation-elements">
                     {navigableItems && navigableItems.length && settings && settings.isNavbarEnabled ?
-                        (<div className="ms-geostory-navigation-navigableItems">
+                        (<div className="ms-geostory-navigation-navigable-items">
                             <ScrollMenu
                                 items={navigableItems}
                                 currentPage={currentPage}
@@ -73,14 +73,14 @@ export default ({
                             />
                         </div>) : null}
                     <div className="ms-geostory-navigation-metadata">
-                        {settings && settings.isLogoEnabled &&
-                            <div className="ms-geostory-navigation-logo">
-                                <img src={settings.thumbnail && (settings.thumbnail.data || settings.thumbnail.url) || ""} height={32}/>
-                            </div>
-                        }
                         {settings && settings.isTitleEnabled &&
                             <div className="ms-geostory-navigation-title">
                                 {settings.storyTitle}
+                            </div>
+                        }
+                        {settings && settings.isLogoEnabled &&
+                            <div className="ms-geostory-navigation-logo">
+                                <img src={settings.thumbnail && (settings.thumbnail.data || settings.thumbnail.url) || ""} height={32}/>
                             </div>
                         }
                     </div>

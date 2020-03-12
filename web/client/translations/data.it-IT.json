@@ -254,6 +254,8 @@
             "featuredMaps": "In Evidenza"
         },
         "newMap": "Nuova Mappa",
+        "newMapEmpty": "Mappa vuota",
+        "newMapContext": "Contesto esistente",
 		"maps": {
             "title": "Mappe",
             "addToFeaturedMaps": "Metti in evidenza",
@@ -279,7 +281,8 @@
                 "errorWhenSaving": "C'è stato un errore durante il salvataggio",
                 "errorWhenUpdating": "C'è stato un errore durante l'aggiornamento",
                 "errorWhenDeleting": "C'è stato un errore durante la cancellazione",
-                "errorSizeExceeded": "Riduci il contenuto o la qualità delle immagini"
+                "errorSizeExceeded": "Riduci il contenuto o la qualità delle immagini",
+                "errorLoadingContexts": "Si è verificato un errore durante il caricamento dei contesti"
             },
 			"search": "Cerca..."
 		},
@@ -643,6 +646,16 @@
                 "no_info_description": "Il pannello Informazioni Sulle Feature non comparirà",
                 "all_layers_description": "Il pannello Informazioni Sulle Feature mostrerà informazioni di tutti i layer presenti in mappa",
                 "single_layer_description": "Il pannello Informazioni Sulle Feature mostrerà i dati disponibili relativi all'elemento selezionato"
+            },
+            "advancedSearchPanel": {
+                "title": "Filtri di ricerca avanzata",
+                "context": {
+                    "title": "Contesto"
+                },
+                "showTooltip": "Mostra filtri avanzati",
+                "showTooltipActive": "Mostra filtri avanzati (attivo)",
+                "hideTooltip": "Nascondi filtri avanzati",
+                "hideTooltipActive": "Nascondi filtri avanzati (attivo)"
             }
         },
         "draw": {
@@ -2157,6 +2170,11 @@
             "back": "Indietro",
             "next": "Avanti"
         },
+        "newMapDialog": {
+            "title": "Seleziona un contesto",
+            "noContexts": "Nessun contesto trovato",
+            "filterPlaceholder": "Cerca contesti..."
+        },
         "plugins": {
           "About": {
             "description": "Strumento che mostra la finestra Informazioni",
@@ -2221,6 +2239,10 @@
           "Login": {
             "description": "Login Tool",
             "title": "Login"
+          },
+          "MapCatalog": {
+            "description": "Consente la navigazione, la modifica, l'eliminazione e il caricamento di mappe disponibili sul server",
+            "title": "Catalogo mappe"
           },
           "MapExport": {
             "description": "Permette di esportare la mappa in un file",
@@ -2443,6 +2465,26 @@
             "confirmReplaceTitle": "Sostituisci il contenuto della mappa",
             "confirmReplaceMessage": "Sostituirai tutti i livelli e la configurazione della mappa con il modello selezionato facendo clic sul pulsante Sostituisci",
             "confirmReplaceConfirmButton": "Sostituire"
+        },
+        "mapCatalog": {
+            "title": "Catalogo mappe",
+            "filterPlaceholder": "Cerca mappe...",
+            "deleteConfirmContent": "Sei sicuro di voler eliminare la mappa \"{mapName}\"?",
+            "tooltips": {
+                "edit": "Modifica proprietà",
+                "delete": "Elimina risorsa",
+                "share": "Condividi"
+            },
+            "deletedMap": {
+                "title": "Mappa cancellata",
+                "message": "La mappa è stata eliminata correttamente"
+            },
+            "updatedMap": {
+                "title": "Mappa Salvata",
+                "message": "La mappa è stata salvata correttamente"
+            },
+            "deleteError": "Si è verificato un errore imprevisto durante l'eliminazione della mappa",
+            "updateError": "Si è verificato un errore imprevisto durante il salvataggio della mappa"
         },
         "tutorial": {
             "title": "Tutorial",

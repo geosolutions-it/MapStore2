@@ -63,7 +63,7 @@ const SearchBar = connect(searchSelector, {
     onSearchReset: resetSearch,
     onSearchTextChange: searchTextChanged,
     onCancelSelectedItem: cancelSelectedItem
-})(require("../components/mapcontrols/search/SearchBar"));
+})(require("../components/mapcontrols/search/SearchBar").default);
 
 const {mapSelector} = require('../selectors/map');
 

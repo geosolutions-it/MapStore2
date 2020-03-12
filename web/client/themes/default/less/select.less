@@ -88,20 +88,30 @@
     border: 1px solid @ms2-color-shade-lighter !important;
 }
 
+.Select-option.is-disabled {
+    color: #aaaaaa !important;
+}
+
+.Select-option.is-disabled:hover {
+    background-color: @ms2-color-background !important;
+    color: #aaaaaa !important;
+}
+
 .Select-option {
     color: @text-color !important;
     background-color: @ms2-color-background !important;
 }
-.Select-option {
-    &:focus {
-        color: @text-color !important;
-        background-color: @ms2-color-background !important;
-    }
-	&:hover {
-	    background-color: @ms2-color-primary !important;
-	    color: @ms2-color-background !important;
-	}
-}/*
+//.Select-option {
+//    &:focus {
+//        color: @text-color !important;
+//        background-color: @ms2-color-background !important;
+//    }
+//	&:hover {
+//	    background-color: @ms2-color-primary !important;
+//	    color: @ms2-color-background !important;
+//	}
+//}
+/*
 .Select-option.is-selected{
     color: @ms2-color-text-primary !important;
     background-color: darken(@ms2-color-primary, 10%) !important;

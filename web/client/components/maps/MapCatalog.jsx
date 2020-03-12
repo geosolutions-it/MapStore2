@@ -25,17 +25,30 @@ const SideGrid = compose(
         })
 
 )(require('../misc/cardgrids/SideGrid'));
-module.exports = ({ setSearchText = () => { }, selected, skip = 0, onSelected, loading, searchText, items = [], total, title = <Message msgId={"maps.title"} /> }) => {
+module.exports = ({
+    setSearchText = () => { },
+    selected,
+    skip = 0,
+    onSelected,
+    loading,
+    searchText,
+    items = [],
+    loaderProps = {},
+    total,
+    header,
+    title = <Message msgId={"maps.title"} />
+}) => {
     return (<BorderLayout
         className="map-catalog"
-        header={<MapCatalogForm title={title} searchText={searchText} onSearchTextChange={setSearchText} />}
+        header={header || <MapCatalogForm title={title} searchText={searchText} onSearchTextChange={setSearchText} />}
         footer={<div className="catalog-footer">
-            <span>{loading ? <LoadingSpinner /> : null}</span>
+            <span>{loading && items.length > 0 ? <LoadingSpinner /> : null}</span>
             {!isNil(total) ?
                 <span className="res-info"><Message msgId="catalog.pageInfoInfinite"
                     msgParams={{ loaded: items.length - skip, total }} /></span> : null}
         </div>}>
         <SideGrid
+            loaderProps={loaderProps}
             items={items.map(i =>
                 i === selected
                     || selected

@@ -9,7 +9,10 @@ const {changeMapType} = require('../actions/maptype');
 const Rx = require('rxjs');
 const {get} = require('lodash');
 const defaultRegex = /\/(viewer)\/(\w+)\/(\w+)/;
-const findMapType = path => path.match(defaultRegex) && path.replace(defaultRegex, "$2");
+const findMapType = path => {
+    const match = path.match(defaultRegex);
+    return match && match[0] && match[0].replace(defaultRegex, '$2');
+};
 const { LOCATION_CHANGE } = require('connected-react-router');
 
 /**

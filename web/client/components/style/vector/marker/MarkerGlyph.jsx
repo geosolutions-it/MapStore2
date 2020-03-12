@@ -9,7 +9,7 @@
 const PropTypes = require('prop-types');
 const React = require('react');
 const {Row, Col} = require('react-bootstrap');
-const Select = require('react-select');
+const Select = require('react-select').default;
 
 const Message = require('../../../I18N/Message');
 
