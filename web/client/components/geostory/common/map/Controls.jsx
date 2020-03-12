@@ -86,7 +86,7 @@ export const Controls = ({
             />
             <FeatureInfoFormatSelector
                 disabled={!options.mapInfoControl}
-                infoFormat={options.mapOptions && options.mapOptions.mapInfoFormat || "text/plain"}
+                infoFormat={options.mapOptions && options.mapOptions.mapInfoFormat || "application/json"}
                 onInfoFormatChange={(format) => onChangeMap("mapOptions.mapInfoFormat", format)}/>
         </FormGroup>
     </Form>);

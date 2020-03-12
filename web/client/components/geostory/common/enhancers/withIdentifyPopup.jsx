@@ -11,10 +11,24 @@ import {Observable} from 'rxjs';
 import { isEqual} from 'lodash';
 import uuidv1 from 'uuid/v1';
 import MapInfoViewer from '../MapInfoViewer';
-
 import {getFeatureInfo} from '../../../../epics/identify';
 
-import {defaultQueryableFilter, buildIdentifyRequest, filterRequestParams, getValidator} from '../../../../utils/MapInfoUtils';
+import {
+    getAvailableInfoFormatValues,
+    getDefaultInfoFormatValue,
+    defaultQueryableFilter,
+    buildIdentifyRequest,
+    filterRequestParams,
+    getValidator
+} from '../../../../utils/MapInfoUtils';
+
+// verify if 'application/json' is available if not use default
+export const getDefaultInfoFormat = () => {
+    const availableInfoFormats = getAvailableInfoFormatValues();
+    return availableInfoFormats.indexOf('application/json') !== -1
+        ? 'application/json'
+        : getDefaultInfoFormatValue();
+};
 
 // Simplified version of load feature info request derived from identify epics
 export const withIdentifyRequest  = mapPropsStream(props$ => {
@@ -22,7 +36,7 @@ export const withIdentifyRequest  = mapPropsStream(props$ => {
     return loadFeatureInfo$.withLatestFrom(props$
         .map(({map, layers, options}) => ({map, layers, options}))
         .distinctUntilChanged((a, b ) => isEqual(a, b)))
-        .switchMap(([{point}, {map, layers = [], options: {mapOptions: {mapInfoFormat = "text/plain"} = {}} = {}}]) => {
+        .switchMap(([{point}, {map, layers = [], options: {mapOptions: {mapInfoFormat = getDefaultInfoFormat()} = {}} = {}}]) => {
             const queryableLayers = layers.filter(defaultQueryableFilter);
 
             const excludeParams = ["SLD_BODY"];
@@ -111,7 +125,7 @@ export const  withPopupSupport =  branch(({map: {mapInfoControl = false} = {}}) 
             },
             onPopupClose: () => () => ({popups: []})
         }),
-        withPropsOnChange(["mapInfo", "popups"], ({mapInfo, popups, options: {mapOptions: {mapInfoFormat = "text/plain"} = {}} = {}}) => {
+        withPropsOnChange(["mapInfo", "popups"], ({mapInfo, popups, options: {mapOptions: {mapInfoFormat = getDefaultInfoFormat()} = {}} = {}}) => {
             const {responses, requests, validResponses} = mapInfo;
             const component = () => (<MapInfoViewer
                 responses={responses} requests={requests}
