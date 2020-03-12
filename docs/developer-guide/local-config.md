@@ -24,6 +24,10 @@ This is the main structure:
     // useCORS array contains a list of services that support CORS and so do not need a proxy
     "useCORS": ["http://nominatim.openstreetmap.org", "https://nominatim.openstreetmap.org"]
   },
+  // JSON file where uploaded extensions are configured
+  "extensionsRegistry": "extensions.json",
+  // URL of the folder from where extensions bundles and other assets are loaded
+  "extensionsFolder": "",
   // API keys for bing and mapquest services
   "bingApiKey",
   // force dates to be in this specified format. use moment js format pattern
