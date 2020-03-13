@@ -79,6 +79,7 @@ const updateMapLayoutEpic = (action$, store) =>
                 get(state, "controls.metadataexplorer.enabled") && {right: mapLayout.right.md} || null,
                 get(state, "controls.measure.enabled") && showCoordinateEditorSelector(state) && {right: mapLayout.right.md} || null,
                 get(state, "controls.userExtensions.enabled") && { right: mapLayout.right.md } || null,
+                get(state, "controls.mapTemplates.enabled") && { right: mapLayout.right.md } || null,
                 get(state, "mapInfo.enabled") && isMapInfoOpen(state) && {right: mapLayout.right.md} || null
             ].filter(panel => panel)) || {right: 0};
 
