@@ -5,10 +5,10 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import CONFIG_PROVIDER from '../utils/ConfigProvider';
+import CONFIG_PROVIDER from '../../utils/ConfigProvider';
 import {get} from 'lodash';
 import {Observable} from 'rxjs';
-import { isValidURLTemplate } from '../utils/URLUtils';
+import { isValidURLTemplate } from '../../utils/URLUtils';
 
 
 const CUSTOM = "custom";
@@ -44,11 +44,12 @@ export const getRecords = (url, startPosition, maxRecords, text, info) => {
                 provider: `${service.provider}.${variant}`
             }));
         }
-
+    // custom service
     } else if (service.url) {
         // TODO: handle variants in options
         layers = [{
             ...service,
+            type: 'tileprovider',
             url: service.url,
             attribution: service.attribution,
             options: service.options || {},

@@ -16,8 +16,9 @@ import localizedProps from '../../misc/enhancers/localizedProps';
 const FormControl = localizedProps('placeholder')(FC);
 
 const CUSTOM = "custom";
+const TMS = "tms";
 
-const DefaultURLEditor = ({ service = {}, onChangeUrl = () => { } }) => (<FormGroup controlId="title">
+const DefaultURLEditor = ({ service = {}, onChangeUrl = () => { } }) => (<FormGroup controlId="URL">
     <Col xs={12}>
         <ControlLabel><Message msgId="catalog.url" /></ControlLabel>
         <FormControl
@@ -35,12 +36,16 @@ const DefaultURLEditor = ({ service = {}, onChangeUrl = () => { } }) => (<FormGr
 import CONFIG_PROVIDER from '../../../utils/ConfigProvider';
 
 const PROVIDERS_ALLOWED = ["OpenStreetMap", "OpenSeaMap"];
+
+const getProviderLabel = k=> k === TMS ? "TMS 1.0.0" : k;
 const TileProviderURLEditor = ({ onChangeServiceProperty, service = {}, onChangeUrl = () => { }, onChangeTitle = () => { } }) => {
     const providers = Object.keys(CONFIG_PROVIDER).filter(k => PROVIDERS_ALLOWED.indexOf(k) >= 0);
-    const selectedProvider = service?.provider?.split?.(".")?.[0];
+    const selectedProvider = service === TMS ? service : service?.provider?.split?.(".")?.[0];
     const isCustom = !selectedProvider || selectedProvider === CUSTOM;
+    const isTMS = selectedProvider === TMS;
+    const needURL = isTMS || isCustom;
     return (<FormGroup>
-        <Col xs={12} sm={isCustom ? 3 : 12} md={isCustom ? 3 : 12}>
+        <Col xs={12} sm={isCustom ? 3 : 12} md={needURL ? 3 : 12}>
             <ControlLabel><Message msgId="catalog.tileProvider.provider" /></ControlLabel>
             <FormControl
                 onChange={(e) => {
@@ -50,7 +55,7 @@ const TileProviderURLEditor = ({ onChangeServiceProperty, service = {}, onChange
                 }}
                 value={selectedProvider}
                 componentClass="select">
-                {[CUSTOM, ...providers].map(k => ({ name: k, label: k })).map((format) => <option value={format.name} key={format.name}>{format.label}</option>)}
+                {[CUSTOM, TMS, ...providers].map(k => ({ name: k, label: getProviderLabel(k) })).map((format) => <option value={format.name} key={format.name}>{format.label}</option>)}
             </FormControl>
         </Col>
         <Col xs={12} sm={9} md={9}>
@@ -66,7 +71,19 @@ const TileProviderURLEditor = ({ onChangeServiceProperty, service = {}, onChange
                         value={service && service.url}
                         onChange={(e) => onChangeUrl(e.target.value)} />
                 </React.Fragment>
-                : null
+                : isTMS
+                    ? <Col xs={12}>
+                        <ControlLabel><Message msgId="catalog.url" /></ControlLabel>
+                        <FormControl
+                            type="text"
+                            style={{
+                                textOverflow: "ellipsis"
+                            }}
+                            placeholder="catalog.urlPlaceholder"
+                            value={service && service.url}
+                            onChange={(e) => onChangeUrl(e.target.value)} />
+                    </Col>
+                    : null
             }
         </Col>
     </FormGroup>);
@@ -84,7 +101,7 @@ export default ({
     onChangeServiceProperty,
     onChangeType
 }) => {
-    const URLEditor = service.type === "tileprovider" ? TileProviderURLEditor : DefaultURLEditor;
+    const URLEditor = service.type === "tms" ? TileProviderURLEditor : DefaultURLEditor;
     return (
         <Form horizontal >
             <FormGroup controlId="title" key="type-title-row">

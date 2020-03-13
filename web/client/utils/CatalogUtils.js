@@ -345,8 +345,11 @@ const converters = {
             return records.records.map(record => {
                 return {
                     title: record.provider,
+                    url: record.url,
+                    attribution: record.attribution,
+                    options: record.options,
+                    provider: record.provider, // "ProviderName.VariantName"
                     type: "tileprovider",
-                    provider: record.provider,
                     references: []
                 };
             });
@@ -592,8 +595,11 @@ const CatalogUtils = {
     tileProviderToLayer: (record, service) => {
         return {
             type: "tileprovider",
-            title: record.title,
             service,
+            url: record.url,
+            title: record.title,
+            attribution: record.attribution,
+            options: record.options,
             provider: record.provider, // "ProviderName.VariantName"
             name: record.provider
         };

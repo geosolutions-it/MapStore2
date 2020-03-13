@@ -48,7 +48,7 @@ import {
 import { metadataSourceSelector } from '../selectors/backgroundselector';
 import { currentMessagesSelector } from "../selectors/locale";
 import { getSelectedLayer } from '../selectors/layers';
-import axios from '../libs/ajax';
+
 import {
     buildSRSMap,
     esriToLayer,
@@ -58,60 +58,6 @@ import {
     recordToLayer
 } from '../utils/CatalogUtils';
 import CoordinatesUtils from '../utils/CoordinatesUtils';
-
-
-// Service validation and tests for catalog services
-
-class ValidationError extends Error {
-    constructor(message, notification) {
-        super(message);
-        this.name = "ValidationError";
-        this.notification = notification;
-    }
-}
-
-const standardValidation = ({services}) => (service) => {
-    if (service.title === "" || service.url === "") {
-        throw new ValidationError("Validation Error", error({
-            title: "notification.warning",
-            message: "catalog.notification.warningAddCatalogService",
-            autoDismiss: 6,
-            position: "tc"
-        }));
-    }
-    if (service.title !== "" && service.url !== "") {
-        if (!services[service.title] || services[service.title] && service.oldService === service.title) {
-            return Rx.Observable.of(service);
-        }
-        throw new ValidationError("Validation Error", error({
-            title: "notification.warning",
-            message: "catalog.notification.duplicatedServiceTitle",
-            autoDismiss: 6,
-            position: "tc"
-        }));
-    }
-};
-
-const standardServiceTest = (API) => service => {
-    const serviceError = error({
-        title: "notification.warning",
-        message: "catalog.notification.errorServiceUrl",
-        autoDismiss: 6,
-        position: "tc"
-    });
-
-    return Rx.Observable.defer(() => axios.get(API[service.type].parseUrl(service.url)))
-        .catch(() => {
-            throw new ValidationError("Service Test error", serviceError);
-        })
-        .switchMap((result) => {
-            if (result.error || result.data === "") {
-                throw new ValidationError("Service Test error", serviceError);
-            }
-            return Rx.Observable.of(service);
-        });
-};
-// END of standard validation tools
 
 
 /**
@@ -253,8 +199,8 @@ export default (API) => ({
                 const services = servicesSelector(state);
                 return Rx.Observable.of(newService)
                     // validate
-                    .switchMap(API[newService.type]?.validate?.({services}) ?? standardValidation({services}))
-                    .switchMap(API[newService.type]?.testService?.(newService) || standardServiceTest(API))
+                    .switchMap(API[newService.type]?.validate?.({ services }) ?? ((service) => Rx.Observable.of(service)))
+                    .switchMap(API[newService.type]?.testService?.(newService) ?? ((service) => Rx.Observable.of(service)))
                     .switchMap(() => {
                         return Rx.Observable.of(
                             addCatalogService(newService),
@@ -268,10 +214,10 @@ export default (API) => ({
                     })
                     .startWith(savingService(true))
                     .catch((e) => {
-                        return Rx.Observable.of(e.notification || error({
+                        return Rx.Observable.of(error({
                             exception: e,
                             title: "notification.warning",
-                            message: "catalog.notification.warningAddCatalogService",
+                            message: e.notification || "catalog.notification.warningAddCatalogService",
                             autoDismiss: 6,
                             position: "tc"
                         }));
