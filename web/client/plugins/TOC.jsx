@@ -582,8 +582,6 @@ const checkPluginsEnhancer = branch(
  * @prop {boolean} cfg.showFullTitleOnExpand shows full length title in the legend. default `false`.
  * @prop {boolean} cfg.hideOpacityTooltip hide toolip on opacity sliders
  * @prop {string[]|string|object|function} cfg.metadataTemplate custom template for displaying metadata
- * @prop {element} cfg.groupNodeComponent render a custom component for group node
- * @prop {element} cfg.layerNodeComponent render a custom component for layer node
  * example :
  * ```
  * {
@@ -622,6 +620,8 @@ const checkPluginsEnhancer = branch(
  *  }
  * ```
  *
+ * @prop {element} cfg.groupNodeComponent render a custom component for group node
+ * @prop {element} cfg.layerNodeComponent render a custom component for layer node
  * @prop {object} cfg.layerOptions: options to pass to the layer.
  * Some of the layerOptions are: `legendContainerStyle`, `legendStyle`. These 2 allow to customize the legend:
  * For instance you can pass some styling props to the legend.

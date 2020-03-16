@@ -20,11 +20,14 @@ import java.util.function.Predicate;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import javax.servlet.ServletContext;
+
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -116,8 +119,55 @@ public class UploadPluginController {
         }
         return plugin.toString();
     }
+    
+    /**
+     * Removes an installed plugin extension.
+     * @param pluginName name of the extension to be removed
+     */
+    @Secured({ "ROLE_ADMIN" })
+    @RequestMapping(value="/uninstallPlugin/{pluginName}", method = RequestMethod.DELETE)
+    public @ResponseBody String uninstallPlugin(@PathVariable String pluginName) throws IOException {
+    	JSONObject configObj = getExtensionConfig();
+    	JSONObject pluginsConfigObj = getPluginsConfiguration();
+    	String key = pluginName + "Plugin";
+		if (configObj.containsKey(key)) {
+    		JSONObject pluginConfig = configObj.getJSONObject(key);
+    		String pluginBundle = pluginConfig.getString("bundle");
+    		String pluginFolder = pluginBundle.substring(0, pluginBundle.lastIndexOf("/"));
+    		removeFolder(pluginFolder);
+    		
+    		JSONArray plugins = pluginsConfigObj.getJSONArray("plugins");
+    		JSONObject toRemove = null;
+    		for(int i = 0; i < plugins.size(); i++) {
+    			JSONObject plugin = plugins.getJSONObject(i);
+    			String name = plugin.getString("name");
+    			if (name.contentEquals(pluginName)) {
+    				toRemove = plugin;
+    			}
+    		}
+    		if (toRemove != null) {
+    			plugins.remove(toRemove);
+    		}
+    		
+    		
+    		configObj.remove(key);
+    		storeJSONConfig(configObj, extensionsConfig);
+    		storeJSONConfig(pluginsConfigObj, pluginsConfig);
+    		return pluginConfig.toString();
+    	} else {
+    		return new JSONObject().toString();
+    	}
+    }
 
-    public void setBundlesPath(String bundlesPath) {
+    private void removeFolder(String pluginFolder) throws IOException {
+    	File folderPath = new File(ResourceUtils.getResourcePath(dataDir, context, pluginFolder));
+    	if (folderPath.exists()) {
+			FileUtils.cleanDirectory(folderPath);
+			folderPath.delete();
+    	}
+	}
+
+	public void setBundlesPath(String bundlesPath) {
         this.bundlesPath = bundlesPath;
     }
 
@@ -169,6 +219,17 @@ public class UploadPluginController {
             storeJSONConfig(config, pluginsConfig);
         }
     }
+    
+    private JSONObject getPluginsConfiguration() throws IOException {
+        Optional<File> pluginsConfigFile = findResource(pluginsConfig);
+        if (pluginsConfigFile.isPresent()) {
+        	try (FileInputStream input = new FileInputStream(pluginsConfigFile.get())) {
+                return readJSON(input);
+            }
+        } else {
+        	throw new FileNotFoundException(pluginsConfig);
+        }
+    }
 
     private void storeJSONConfig(JSONObject config, String configName) throws FileNotFoundException, IOException {
     	ResourceUtils.storeJSONConfig(dataDir, context, config, configName);
@@ -198,6 +259,17 @@ public class UploadPluginController {
                 config.accumulate(pluginName,extension);
             }
             storeJSONConfig(config, extensionsConfig);
+        }
+    }
+    
+    private JSONObject getExtensionConfig() throws IOException {
+        Optional<File> extensionsConfigFile = findResource(extensionsConfig);
+        if (extensionsConfigFile.isPresent()) {
+	        try (FileInputStream input = new FileInputStream(extensionsConfigFile.get())) {
+	            return readJSON(input);
+	        }
+        } else {
+        	throw new FileNotFoundException(extensionsConfig);
         }
     }
 

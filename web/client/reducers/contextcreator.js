@@ -14,7 +14,8 @@ import {SET_CREATION_STEP, MAP_VIEWER_LOADED, SHOW_MAP_VIEWER_RELOAD_CONFIRM, SE
     SET_FILE_DROP_STATUS, SET_EDITED_TEMPLATE, SET_TEMPLATES, SET_EDITED_PLUGIN, CHANGE_PLUGINS_KEY, CHANGE_TEMPLATES_KEY, CHANGE_ATTRIBUTE,
     LOADING, SHOW_DIALOG, SET_EDITED_CFG, UPDATE_EDITED_CFG, SET_VALIDATION_STATUS, SET_PARSED_CFG,
     SET_CFG_ERROR, ENABLE_UPLOAD_PLUGIN, UPLOADING_PLUGIN, UPLOAD_PLUGIN_ERROR,
-    PLUGIN_UPLOADED, BACK_TO_PAGE_SHOW_CONFIRMATION} from "../actions/contextcreator";
+    PLUGIN_UPLOADED, UNINSTALLING_PLUGIN, UNINSTALL_PLUGIN_ERROR, PLUGIN_UNINSTALLED,
+    BACK_TO_PAGE_SHOW_CONFIRMATION} from "../actions/contextcreator";
 import {set} from '../utils/ImmutableUtils';
 
 const defaultPlugins = [
@@ -85,6 +86,7 @@ const makeNode = (plugin, parent = null, plugins = [], localPlugins = []) => ({
     active: false,
     denyUserSelection: plugin.denyUserSelection || false,
     isUserPlugin: false,
+    isExtension: plugin.extension ?? false,
     pluginConfig: {
         ...omit(head(localPlugins.filter(localPlugin => localPlugin.name === plugin.name)) || {}, 'cfg'),
         name: plugin.name,
@@ -142,6 +144,21 @@ export default (state = {}, action) => {
         return {
             ...state,
             plugins: [...(state.plugins || []).filter(notDuplicate), ...plugins]
+        };
+    }
+    case UNINSTALLING_PLUGIN: {
+        if (action.status) {
+            return set('uninstallingPlugin', {name: action.plugin, uninstalling: true}, state);
+        }
+        return set('uninstallingPlugin', undefined, state);
+    }
+    case UNINSTALL_PLUGIN_ERROR: {
+        return set('uninstallingPlugin', {name: action.plugin, uninstalling: false, error: action.error}, state);
+    }
+    case PLUGIN_UNINSTALLED: {
+        return {
+            ...state,
+            plugins: state.plugins.filter(p => p.name !== action.plugin)
         };
     }
     case SET_RESOURCE: {
@@ -275,7 +292,9 @@ export default (state = {}, action) => {
             set(`newContext.${action.key}`, action.value, state);
     }
     case SHOW_DIALOG: {
-        return set('parsedTemplate', undefined, set(`showDialog.${action.dialogName}`, action.show, state));
+        return set('parsedTemplate', undefined,
+            set(`showDialog.${action.dialogName}`, action.show,
+                set(`showDialog.${action.dialogName}Payload`, action.payload, state)));
     }
     case LOADING: {
         // anyway sets loading to true

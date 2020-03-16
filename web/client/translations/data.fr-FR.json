@@ -1700,6 +1700,10 @@
                     "unknownError": "Il y avait une erreur de chargement de la carte. S'il vous plaît contacter l'administrateur",
                     "notFound": "La carte que vous essayez d'accéder n'existe pas"
                 },
+                "plugins": {
+                  "upload": "Erreur lors du téléchargement du plugin",
+                  "uninstall": "Erreur lors de la désinstallation du plugin"
+                },
                 "resourceAlreadyExists": "Une ressource avec ce nom existe déjà"
             }
         },
@@ -2372,6 +2376,9 @@
                 },
                 "uploadLabel": "Faites glisser un ensemble d'extensions ou cliquez pour le parcourir et le télécharger",
                 "uploadTitle": "Installer un plugin MapStore",
+                "uploadParseError": "le fichier index.json a le mauvais format",
+                "uploadMissingFileError": "fichier index.json manquant dans le zip",
+                "confirmRemovePlugin": "¿Está seguro de que desea eliminar la extensión?",
                 "tooltips": {
                     "enableUserPlugin": "Activer la sélection du plugin actuel pour l'utilisateur",
                     "disableUserPlugin": "Désactiver la sélection du plugin actuel pour l'utilisateur",
@@ -2380,6 +2387,7 @@
                     "editConfiguration": "Modifier la configuration du plugin",
                     "pluginDocumentation": "Ouvrir la documentation de configuration du plugin",
                     "uploadPlugin": "Ajouter une extension à MapStore",
+                    "removePlugin": "Supprimer cette extension de MapStore",
                     "mapTemplatesConfig": "Configurer le modèles"
                 },
                 "saveCfgErrorNotification":  {
