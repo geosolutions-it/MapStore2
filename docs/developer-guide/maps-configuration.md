@@ -13,6 +13,16 @@ Where:
   - A **number** represents standard maps, stored on the database.
   - A **string** instead represents a static json file in the root of the application.
 
+The first case can be used to load a map from the maps database, using its id.
+
+There is a special mapId, 0 (zero), that is used to load a basic OSM map for demo purposes.
+
+```http
+http://localhost:8081/#viewer/openlayers/0
+```
+
+The configuration of this map is stored in the static `config.json` file in the root of the project.
+
 The second case can be used to define standard map contexts.
 
 This is used for the **new map**. If you're logged in and allowed to create maps, when you try to create a new map you will see the the application will bring you to the URL:
@@ -23,14 +33,14 @@ http://localhost:8081/#viewer/openlayers/new
 
 This is a special context that uses the `new.json` file in the root of the project. (`web/client` for standard mapstore, root for custom projects). You can edit `new.json` to customize the initial template for new maps (for instance, you can change the backgrounds).
 
-`new.json` is a special case, but you can configure your own static map context creating these json files in the root of the project, for instance `mycontext.json` and accessing them at the URL:
+`new.json` and `config.json` are special cases, but you can configure your own static map context creating these json files in the root of the project, for instance `mycontext.json` and accessing them at the URL:
 
 ```http
 http://localhost:8081/#viewer/openlayers/mycontext
 
 ```
 
-**important note**: `new.json` is a special file and doesn't require the version. For other map context, you **must** specify the version of the map file type in the root of the json file:
+**important note**: `new.json` and `config.json` are special files and don't require the version. For other map context, you **must** specify the version of the map file type in the root of the json file:
 
 ```javascript
     {
