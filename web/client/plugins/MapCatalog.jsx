@@ -29,6 +29,12 @@ import { createPlugin } from '../utils/PluginsUtils';
 import mapcatalog from '../reducers/mapcatalog';
 import * as epics from '../epics/mapcatalog';
 
+/**
+ * Allows users to existing maps directly on the map.
+ * @memberof plugins
+ * @class
+ * @name MapCatalog
+ */
 const MapCatalogComponent = ({
     active,
     mapType,
@@ -67,7 +73,7 @@ const MapCatalogComponent = ({
 
 export default createPlugin('MapCatalog', {
     component: connect(createStructuredSelector({
-        active: state => state.controls?.mapCatalog?.enabled,
+        active: state => state.controls && state.controls.mapCatalog && state.controls.mapCatalog.enabled,
         mapType: mapTypeSelector,
         user: userSelector,
         triggerReloadValue: triggerReloadValueSelector
