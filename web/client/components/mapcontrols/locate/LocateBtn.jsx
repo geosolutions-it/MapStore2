@@ -131,7 +131,14 @@ class LocateBtn extends React.Component {
 
     }
 
-    getBtnStyle = () => this.props.locate === "FOLLOWING" ? "success active" : this.props.bsStyle;
+    getBtnStyle = () => {
+        const {locate, bsStyle} = this.props;
+        let style = bsStyle;
+        if (locate === "FOLLOWING" || locate === "ENABLED") {
+            style = "success active";
+        }
+        return style;
+    };
 }
 
 module.exports = LocateBtn;
