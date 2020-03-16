@@ -35,7 +35,18 @@ describe('LangSelector', () => {
 
         const opts = cmpDom.childNodes;
         const langs = {
-            'Italiano': 'it-IT', 'English': 'en-US', 'Français': 'fr-FR', 'Deutsch': 'de-DE', 'Español': 'es-ES', "中文": "zh-ZH", 'Nederlands': 'nl-NL', 'Hrvatski': 'hr-HR', 'Português': 'pt-PT', "tiếng Việt": "vi-VN"};
+            'Italiano': 'it-IT',
+            'English': 'en-US',
+            'Français': 'fr-FR',
+            'Deutsch': 'de-DE',
+            'Español': 'es-ES',
+            "中文": "zh-ZH",
+            'Nederlands': 'nl-NL',
+            'Hrvatski': 'hr-HR',
+            'Português': 'pt-PT',
+            "tiếng Việt": "vi-VN",
+            'Suomi': 'fi-FI'
+        };
 
         for (let i = 0; i < opts.length; i++) {
             lbl = opts[i].innerHTML;
@@ -47,7 +58,9 @@ describe('LangSelector', () => {
 
     it('checks if a change of the combo fires the proper action', () => {
         let newLang;
-        const cmp = ReactDOM.render(<LangSelector onLanguageChange={ (lang) => {newLang = lang; }}/>, document.getElementById("container"));
+        const cmp = ReactDOM.render(<LangSelector onLanguageChange={(lang) => {
+            newLang = lang;
+        }}/>, document.getElementById("container"));
         const cmpDom = ReactDOM.findDOMNode(cmp);
 
         cmpDom.value = "it-IT";

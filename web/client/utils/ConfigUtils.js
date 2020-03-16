@@ -34,6 +34,7 @@ let defaultConfig = {
     printUrl: "/mapstore/print/info.json",
     translationsPath: "translations",
     extensionsRegistry: "extensions.json",
+    extensionsFolder: "",
     contextPluginsConfiguration: 'pluginsConfig.json',
     projectionDefs: [],
     themePrefix: "ms2",

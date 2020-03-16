@@ -2292,7 +2292,7 @@
             "title": "Réglages"
           },
           "Share": {
-            "description": "Permet de partager la carte de manière variopus (lien, QR-Code, embed, réseaux sociaux ...)",
+            "description": "Permet de partager la carte de diverses manières (lien, QR-Code, embarqué, réseaux sociaux ...)",
             "title": "Outil de partage"
           },
           "StyleEditor": {

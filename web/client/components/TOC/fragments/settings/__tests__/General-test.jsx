@@ -44,7 +44,7 @@ describe('test  Layer Properties General module component', () => {
         expect(comp).toBeTruthy();
         const inputs = ReactTestUtils.scryRenderedDOMComponentsWithTag( comp, "input" );
         expect(inputs).toBeTruthy();
-        expect(inputs.length).toBe(15);
+        expect(inputs.length).toBe(16);
 
     });
     it('tests Layer Properties Display component events', () => {
@@ -69,7 +69,7 @@ describe('test  Layer Properties General module component', () => {
         expect(comp).toBeTruthy();
         const inputs = ReactTestUtils.scryRenderedDOMComponentsWithTag( comp, "input" );
         expect(inputs).toBeTruthy();
-        expect(inputs.length).toBe(15);
+        expect(inputs.length).toBe(16);
         ReactTestUtils.Simulate.change(inputs[0]);
         ReactTestUtils.Simulate.blur(inputs[1]);
         expect(spy.mock.calls.length).toBe(1);

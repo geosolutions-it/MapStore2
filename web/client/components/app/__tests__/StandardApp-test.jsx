@@ -41,6 +41,7 @@ class mycomponent extends React.Component {
 describe('StandardApp', () => {
     beforeEach((done) => {
         document.body.innerHTML = '<div id="container"></div>';
+        ConfigUtils.setConfigProp("extensionsFolder", "");
         ConfigUtils.setLocalConfigurationFile('base/web/client/test-resources/localConfig.json');
         setTimeout(done);
     });
@@ -53,6 +54,7 @@ describe('StandardApp', () => {
         ReactDOM.unmountComponentAtNode(document.getElementById("container"));
         document.body.innerHTML = '';
         ConfigUtils.setLocalConfigurationFile('localConfig.json');
+        ConfigUtils.setConfigProp("persisted.reduxStore", undefined);
         setTimeout(done);
     });
 
@@ -331,6 +333,37 @@ describe('StandardApp', () => {
             expect(mockAxios.history.get.length).toBe(3);
             expect(mockAxios.history.get[1].url).toBe("extensions.json");
             expect(mockAxios.history.get[2].url).toBe("extensions.json");
+            done();
+        }, 0);
+    });
+    it('extensions assets are loaded from external folder if configured', (done) => {
+        ConfigUtils.setConfigProp("extensionsFolder", "myfolder/");
+        mockAxios = new MockAdapter(axios);
+        mockAxios.onGet(/localConfig/).reply(200, {});
+        mockAxios.onGet(/extensions/).reply(200, {
+            My: {
+                bundle: "myplugin.js",
+                translations: "translations"
+            }
+        });
+        mockAxios.onGet(/myplugin/).reply(200, "window.webpackJsonp.push([[\"myplugin\"], {\"a\": function(e, n, t) {n.default={}} }])");
+        mockAxios.onGet(/translations/).reply(200, {});
+        const store = () => ({
+            dispatch() { },
+            getState() {
+                return {};
+            },
+            subscribe() {
+            },
+            replaceReducer() {}
+        });
+        ConfigUtils.setConfigProp("persisted.reduxStore", store());
+
+        const app = ReactDOM.render(<StandardApp appStore={store} enableExtensions />, document.getElementById("container"));
+        expect(app).toBeTruthy();
+        setTimeout(() => {
+            expect(mockAxios.history.get.length).toBe(3);
+            expect(mockAxios.history.get[2].url).toBe("myfolder/myplugin.js");
             done();
         }, 0);
     });

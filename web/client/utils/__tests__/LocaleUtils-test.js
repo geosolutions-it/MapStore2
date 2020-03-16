@@ -92,7 +92,7 @@ describe('LocaleUtils', () => {
         expect(LocaleUtils.getDateFormat("pt-PT")).toBe("DD/MM/YYYY");
     });
     it('test the defaults for DATE_FORMATS', () => {
-        expect(Object.keys(LocaleUtils.DATE_FORMATS).length).toBe(8);
-        expect(Object.keys(LocaleUtils.DATE_FORMATS)).toEqual(["default", "en-US", "it-IT", "nl-NL", "zh-ZH", "hr-HR", "pt-PT", "vi-VN"]);
+        expect(Object.keys(LocaleUtils.DATE_FORMATS).length).toBe(9);
+        expect(Object.keys(LocaleUtils.DATE_FORMATS)).toEqual(["default", "en-US", "it-IT", "nl-NL", "zh-ZH", "hr-HR", "pt-PT", "vi-VN", "fi-FI"]);
     });
 });

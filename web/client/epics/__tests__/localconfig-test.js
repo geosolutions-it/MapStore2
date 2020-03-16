@@ -26,7 +26,7 @@ describe('localconfig Epics', () => {
                 const suppLocales = LocaleUtils.getSupportedLocales();
                 switch (action.type) {
                 case SUPPORTED_LOCALES_REGISTERED:
-                    expect(Object.keys(suppLocales).length).toBe(10);
+                    expect(Object.keys(suppLocales).length).toBe(11);
                     break;
                 default:
                     expect(true).toBe(false);

@@ -69,6 +69,29 @@ public class ConfigControllerTest {
     }
     
     @Test
+    public void testLoadAsset() throws IOException {
+    	ServletContext context = Mockito.mock(ServletContext.class);
+        File tempResource = TestUtils.copyToTemp(ConfigControllerTest.class.getResourceAsStream("/bundle.js"));
+        Mockito.when(context.getRealPath(Mockito.anyString())).thenReturn(tempResource.getAbsolutePath());
+        controller.setContext(context);
+        String resource = controller.loadAsset("localConfig");
+        assertEquals("console.log('hello')", resource.trim());
+        tempResource.delete();
+    }
+    
+    @Test
+    public void testLoadAssetFromDataDir() throws IOException {
+    	File dataDir = TestUtils.getDataDir();
+        File tempResource = TestUtils.copyTo(ConfigControllerTest.class.getResourceAsStream("/bundle.js"), dataDir, "bundle.js");
+        controller.setDataDir(dataDir.getAbsolutePath());
+        ServletContext context = Mockito.mock(ServletContext.class);
+        controller.setContext(context);
+        String resource = controller.loadAsset("bundle.js");
+        assertEquals("console.log('hello')", resource.trim());
+        tempResource.delete();
+    }
+    
+    @Test
     public void testOverrides() throws IOException {
         File tempResource = TestUtils.copyToTemp(ConfigControllerTest.class.getResourceAsStream("/localConfigFull.json"));
         File tempProperties = TestUtils.copyToTemp(ConfigControllerTest.class.getResourceAsStream("/mapstore.properties"));

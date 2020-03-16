@@ -10,6 +10,13 @@ This is a list of things to do if you want to update from a previous version val
 ## Migration from 2020.01.00 to 2020.02.00
 
 - The translations file extension has been changed into JSON. Now translation files has been renamed from `data.<locale>` to `data.<locale>.json`. This change makes the `.json` extension mandatory for all translation files. This means that depending projects with custom translation files should be renabled in the same name. E.g. `data.it-IT` have to be renamed as `data.it-IT.json`
+- The testing infrastructure has been upgraded to use a modern expect library, from latest jest. This implies some breaking changes for writing your own unit tests. In particular some expect clauses have been renamed, and ispecting spies changed a little bit:
+  * toExist -> toBeTruthy
+  * toNotExist -> toBeFalsy
+  * toNot_Something_ -> .not.toSomething
+  * spy.calls -> spy.mock.calls
+  * spy.calls[n].arguments -> spy.mock.calls[n]
+  * spies always call the original function, you can mock it using mockImplementation
 
 ## Migration from 2019.02.01 to 2020.01.00
 

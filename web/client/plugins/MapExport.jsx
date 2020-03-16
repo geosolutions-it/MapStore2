@@ -25,6 +25,7 @@ import { createControlEnabledSelector } from '../selectors/controls';
 import ExportPanel from '../components/export/ExportPanel';
 import * as epics from '../epics/mapexport';
 
+const DEFAULTS = ["mapstore2", "wmc"];
 const isEnabled = createControlEnabledSelector('export');
 
 const enhanceExport = compose(
@@ -61,7 +62,7 @@ const MapExport = enhanceExport(
         enabled,
         format,
         formats,
-        enabledFormats = ["mapstore2", "wmc"],
+        enabledFormats = DEFAULTS,
         setFormat = () => { },
         onExport = () => { },
         onClose = () => { }
@@ -82,7 +83,7 @@ const MapExportPlugin = {
     MapExportPlugin: assign(MapExport, {
         disablePluginIf: "{state('mapType') === 'cesium'}",
         BurgerMenu: config => {
-            const enabledFormats = get(config, 'cfg.enabledFormats', []);
+            const enabledFormats = get(config, 'cfg.enabledFormats', DEFAULTS);
             return {
                 name: 'export',
                 position: 4,

@@ -1,0 +1,2600 @@
+{
+  "locale": "fi-FI",
+  "messages": {
+    "Language": "Kieli",
+    "msgId0": "{name} otti {numPhotos, plural, =0 {ei ottanut yhtään kuvaa} =1 {yhden kuvan} other {# kuvaa}} ajankohtana {takenDate, date, long}.",
+    "htmlTest": "{name} {surname}",
+    "about_title": "Tietoja MapStoresta",
+    "aboutLbl": "Tietoja MapStoresta",
+    "about_p0-0": "MapStore on framework karttapalveluiden kehittämiseen standardi-web-karttakirjastoilla, kuten",
+    "about_p0-1": "ja",
+    "about_p1": "MapStorella tehtyjä esimerkkisovelluksia on useita:",
+    "about_ul0_li0": "MapViewer on yksinkertainen, esiasetettujen karttojen katseluohjelma (tallennettu valinnaisesti tietokantaan GeoStore-sovelluksen avulla)",
+    "about_ul0_li1": "MapPublisher on kehitetty luomaan, tallentamaan ja jakamaan yksinkertaisella ja intuitiivisella tavalla karttoja ja yhdistelmiä, jotka on luotu valitsemalla sisältö tunnetuista lähteistä, kuten Google Maps ja OpenStreetMap, tai palveluista, joita tarjoavat organisaatiot, jotka käyttävät avoimia protokollia, kuten OGC WMS, WFS , WMTS tai TMS ja niin edelleen. Lisätietoja ",
+    "about_h20": "Lisenssi",
+    "about_p3": "MapStore on ilmainen avoimen lähdekoodin ohjelmisto, joka perustuu OpenLayers-, Leaflet- ja ReactJS-ohjelmiin, ja on lisensoitu yksinkertaistetun BSD-lisenssin nojalla.",
+    "about_p5-0": "Lisätietoja: ",
+    "about_a0": "tämän",
+    "about_p5-1": "sivu.",
+    "about_h21": "Tekijät",
+    "about_p6": "MapStoren tekijät:",
+    "enable": "Salli",
+    "layers": "Tasot",
+    "warning": "Varoitus",
+    "errorTitleDefault": "Virhe",
+    "errorDefault": "Tapahtui virhe",
+    "pageInfoShowMore": "Tulokset {count}/{total}",
+    "showMore": "Näytä lisää...",
+    "collapse": "Tiivistä",
+    "expand": "Laajenna",
+    "Forbidden": "Kielletty",
+    "version": {
+      "label": "Versio"
+    },
+    "autorefresh": {
+      "of": "of",
+      "updating": "Päivitetään...",
+      "layers": "tasot"
+    },
+    "localeErrors": {
+      "404": "Käännöstiedostoa ei löytynyt"
+    },
+    "details": {
+      "title": "Tietoja tästä kartasta"
+    },
+    "showEmptyMessageGFI": "Näytä tyhjät viestit GetFeatureInfo-paneelissa",
+    "remove": "Poista",
+    "layerProperties": {
+      "windowTitle": "Tason ominaisuudet",
+      "title": "Otsikko",
+      "name": "Nimi",
+      "group": "Ryhmä",
+      "general": "Yleinen",
+      "description": "Kuvaus",
+      "display": "Näyttö",
+      "style": "Tyyli",
+      "transparent": "Läpinäkyvä",
+      "singleTile": "Yksi tiili",
+      "cached": "Käytä välimuistiasetuksia",
+      "styleCustom": "Käytä tyyliä \"{value}\"",
+      "styleListLoadError": "Tyyliluettelon lataamisessa tapahtui virhe",
+      "stylesRefreshList": "Päivitä tyyliluettelo",
+      "format": "Formaatti",
+      "delete": "Poista",
+      "deleteLayer": "Poista taso",
+      "deleteLayerMessage": "Haluatko poistaa tämän tason?",
+      "deleteLayerGroup": "Poista ryhmä",
+      "deleteLayerGroupMessage": "Haluatko poistaa tämän ryhmän ja sen kaikki tasot?",
+      "confirmDelete": "Oletko varma?",
+      "featureTypeError": "Tasoattribuutteja ei voi ladata",
+      "featureTypeErrorInvalidJSON": "Tasoattribuutteja ei voi ladata. Vastaus ei ole kelvollinen",
+      "elevation": "Korkeus",
+      "titleTranslations": "Otsikkokäännökset",
+      "groupProperties": "Ryhmäominaisuudet",
+      "featureInfo": "Ominaisuustiedot",
+      "featureInfoFormatLbl": "Tunnista vastausmuoto",
+      "legenderror": "Selite ei ole käytettävissä",
+      "editCustomFormat": "Muokkaa mukautettua muotoa",
+      "exampleOfResponse": "Esimerkki",
+      "changedSettings": "Muutetut asetukset",
+      "changedSettingsAlert": "Olet sulkemassa asetuspaneelia tallentamatta muutoksia",
+      "textFormatTitle": "TEKSTI",
+      "textFormatDescription": "Näyttää ominaisuustietojen tulokset selkeänä tekstinä",
+      "htmlFormatTitle": "HTML",
+      "htmlFormatDescription": "Näyttää ominaisuustietojen tulokset html-muodossa",
+      "propertiesFormatTitle": "OMINAISUUDET",
+      "propertiesFormatDescription": "Näyttää ominaisuustietojen tulokset ominaisuusluettelona",
+      "templateFormatTitle": "MALLI",
+      "templateFormatDescription": "Mukauta ominaisuustietojen tulokset",
+      "templateFormatInfoAlert1": "Napsauta Muokkaa-painiketta lisätäksesi uuden mallin.",
+      "templateFormatInfoAlert2": "Käytä ${ attribute } kääriäksesi näytettävät ominaisuudet",
+      "templateFormatInfoAlertExample": "Kohteen ID on ${ properties }",
+      "templatePreview": "Mallin esikatselu",
+      "tooltip": {
+        "label": "Työkaluvinkkejä",
+        "title": "Otsikko",
+        "description": "Kuvaus",
+        "both": "Otsikko ja kuvaus",
+        "none": "Ei työkaluvinkkejä",
+        "labelPlacement": "Sijoittelu",
+        "right": "Oikea",
+        "bottom": "Alaosa",
+        "top": "Yläosa"
+      }
+    },
+    "longitude": "Pituusaste",
+    "latitude": "Leveysaste",
+    "notification": {
+      "update": "Päivitys",
+      "warning": "Varoitus",
+      "success": "Onnistui",
+      "backgroundLayerNotSupported": "Aiemmin valittua taustaa ei tueta tämäntyyppisellä kartalla. Käytetään ensimmäistä saatavilla olevaa.",
+      "noBackgroundLayerSupported": "Tämän tyyppiselle kartalle ei ole tuettuja taustatasoja.",
+      "updateOldMap": "Tämä on vanha kartta, joten kaikkia toimintoja ei voida ottaa käyttöön. Napsauta päivityspainiketta päivittääksesi kartan tai hylätäksesi tämän ilmoituksen, jos et halua päivittää sitä.",
+      "warningSaveUpdatedMap": "Jotkut tasot eivät ole päivittyneet oikein",
+      "saveUpdatedMap": "Kaikki tasot ovat päivittyneet onnistuneesti",
+      "incompatibleBackgroundAndProjection": "Valitsemasi projektio ei ole yhteensopiva taustan kanssa, vaihda yhteensopivaan tai tyhjään taustaan ​​ja valitse sitten tämä projektio!",
+      "incompatibleDataAndProjection": "Nykyinen taso tai kerrokset ja karttaprojektio eivät ole täysin yhteensopivia. Osa tai kaikki tiedot eivät välttämättä näy kartalla"
+    },
+    "dock": {
+      "row": "{rowsSelected} rivi valittu",
+      "rows": "{rowsSelected} riviä valittu"
+    },
+    "globeswitcher": {
+      "tooltipDeactivate": "Poistu 3D-tilasta",
+      "tooltipActivate": "Siirry 3D-tilaan"
+    },
+    "cookie": {
+      "info": "Tämä verkkosivusto käyttää evästeitä käyttökokemuksen parantamiseksi. Oletamme, että tämä käy, mutta voit halutessasi poistua sivulta.",
+      "moreDetailsButton": "Lisätietoja",
+      "leave": "Jätä",
+      "accept": "Hyväksy"
+    },
+    "background": "Tausta",
+    "language": "Kieli",
+    "mousePositionCoordinates": "Koordinaattien osoitin",
+    "mouseCoordinates": "Koordinaatit:",
+    "mousePositionCRS": "CRS:",
+    "mousePositionElevation": "Kork.:",
+    "mousePositionNoElevation": "N/A",
+    "elevationLoading": "Ladataan...",
+    "elevationLoadingError": "Virhe",
+    "elevationNotAvailable": "N/A",
+    "mapScale": "Mittakaava:",
+    "showMousePositionCoordinates": "Näytä/piilota koordinaatit",
+    "menu": "Valikko",
+    "options": "Vaihtoehdot",
+    "settings": "Asetukset",
+    "help": "Ohje",
+    "docs": "Dokumentaatio",
+    "gohome": "Takaisin etusivulle",
+    "back": "Takaisin Tuojaan",
+    "printbutton": "Tulosta",
+    "annotationsbutton": "Merkinnät",
+    "noresultfound": "Tulosta ei löytynyt",
+    "save": "Tallenna",
+    "saveAs": "Tallenna nimellä...",
+    "opacity": "Peittävyys",
+    "elevation": "Korkeus",
+    "close": "Sulje",
+    "cancel": "Peru",
+    "no": "Ei",
+    "yes": "Kyllä",
+    "confirm": "Vahvista",
+    "confirmTitle": "Vahvistatko?",
+    "pageInfo": "{total, plural, =0 {Ei kohteita} =1 {{total} Kohde {total}} other {Kohteet {start}-{end}/{total}}}",
+    "loading": "Ladataan...",
+    "group": "Ryhmä",
+    "groups": "Ryhmät",
+    "permission": "Lupa",
+    "permissions": "Luvat",
+    "global": {
+      "colors": {
+        "red": "{number, plural, =0 {Punainen} =1 {Punainen} other {Punaiset}}",
+        "blue": "{number, plural, =0 {Sininen} =1 {Sininen} other {Siniset}}",
+        "green": "{number, plural, =0 {Vihreä} =1 {Vihreä} other {Vihreät}}",
+        "gray": "{number, plural, =0 {Harmaa} =1 {Harmaa} other {Harmaat}}",
+        "jet": "{number, plural, =0 {Jet} =1 {Jet} other {Jet}}",
+        "brown": "{number, plural, =0 {Ruseka} =1 {Ruskea} other {Ruskeat}}",
+        "purple": "{number, plural, =0 {Violetti} =1 {Violetti} other {Violetit}}",
+        "random": "{number, plural, =0 {Satunnainen} =1 {Satunnainen} other {Satunnaiset}}"
+      }
+    },
+    "home": {
+      "open": "Avoin",
+      "shortDescription": "Nykyaikaista web-karttojen kehittämistä OpenLayersin, Leafletin and Reactin kanssa<br/><small>käväise lukemassa <a href=\"https://mapstore.readthedocs.io/en/latest/\">dokumentaatiota</a></small>",
+      "forkMeOnGitHub": "Forkkaa minut GitHubissa",
+      "description": "MapStore on kehitetty luomaan, tallentamaan ja jakamaan yksinkertaisella ja intuitiivisella tavalla karttoja ja yhdistelmiä, jotka on luotu valitsemalla sisältö tunnetuista lähteistä, kuten Google Maps ja OpenStreetMap, tai palveluista, joita tarjoavat organisaatiot, jotka käyttävät avoimia protokollia, kuten OGC WMS, WFS , WMTS tai TMS ja niin edelleen. <br/>Lisätietoja <a href=\"https://mapstore.readthedocs.io/en/latest/\"> </a>",
+      "Applications": "Sovellukset",
+      "Examples": "Esimerkit",
+      "LinkedinGroup": "Mapstore Linkedin Group",
+      "scrollTop": "Vieritä sivun yläosaan",
+      "footerDescription": "<small>GeoSolutions S.a.s. | Via di Montramito 3/A, 55054 Massarosa (Lucca) - Italy info@geo-solutions.it | Tel: +39 0584 962313 | Fax: +39 0584 1660272</small>",
+      "ml": {
+        "title": "Ota yhteyttä ja pysy ajan tasalla postituslistojen avulla",
+        "subscribe_users": "Liity käyttäjien postituslistalle",
+        "subscribe_devel": "Liity kehittäjien postituslistalle",
+        "visit_group": "Vieraile ryhmässä",
+        "subscribe": "Liity",
+        "email": "Sähköposti:"
+      },
+      "examples": {
+        "viewer": {
+          "html": "<h3>Viewer</h3><p>Simple Viewer</p>"
+        },
+        "3dviewer": {
+          "html": "<h3>3D Viewer</h3><p>Simple CesiumJS based 3D Viewer</p>"
+        },
+        "manager": {
+          "html": "<h3>Manager</h3><p>Browse MapStore Maps</p>"
+        },
+        "mouseposition": {
+          "html": "<h3>Hiiren sijainnin hallinta</h3><p>Mukautetut esimerkit</p>"
+        },
+        "scalebar": {
+          "html": "<h3>Mittakaavan hallinta</h3><p>Mukautetut esimerkit</p>"
+        },
+        "layertree": {
+          "html": "<h3>Advanced LayerTree</h3><p>Mukautetut esimerkit</p>"
+        },
+        "queryform": {
+          "html": "<h3>Query Builder</h3><p>Muokatut esimerkit</p>"
+        },
+        "featuregrid": {
+          "html": "<h3>Ominaisuuksien muokkausohjelma</h3><p>Mukautetut esimerkit</p>"
+        },
+        "print": {
+          "html": "<h3>Tulostaminen</h3><p>Mukautetut esimerkit</p>"
+        },
+        "plugins": {
+          "html": "<h3>Lisäosat</h3><p>Luo oma sovelluksesi</p>"
+        },
+        "api": {
+          "html": "<h3>API</h3><p>Käytä sovellusliittymiä sisällyttääksesi MapStore-kartan sovellukseesi</p>"
+        },
+        "rasterstyler": {
+          "html": "<h3>Rasterin tyyli</h3><p>Tyylittele rasteritasosi</p>"
+        }
+      }
+    },
+    "cookiesPolicyNotification": {
+      "title": "Tämä sivu käyttää evästeitä",
+      "message": "Jatkamalla sivulla suostut evästeiden käyttöön.",
+      "confirm": "Suostun"
+    },
+    "manager": {
+      "openInANewTab": "Avaa kartta",
+      "deleteMap": "Poista kartta",
+      "deleteMapMessage": "Haluatko varmasti poistaa kartan?",
+      "editMapMetadata": "Muokkaa kartan tietoja",
+      "mapTypes_combo": "Valitse Map Viewer: ",
+      "theme_combo": "Valitse teema:",
+      "maps_title": "Kartat",
+      "locales_combo": "Kieli:",
+      "featuredMaps": "Suosikit"
+    },
+    "newMap": "Uusi kartta",
+    "maps": {
+      "title": "Kartat",
+      "addToFeaturedMaps": "Lisää suositeltuihin karttoihin",
+      "removeFromFeaturedMaps": "Poista suositelluista kartoista",
+      "feedback": {
+        "noDetailsAvailable": "Tietoja ei saatavilla",
+        "successSavedMap": "Kartta on luotu oikein",
+        "errorDeletingMap": "Virhe tämän kartan poistamisessa",
+        "errorDeletingThumbnailOfMap": "Virhe poistettaessa tämän kartan pikkukuvaa",
+        "errorDeletingDetailsOfMap": "Virhe poistettaessa tämän kartan tietoja",
+        "allResDeleted": "Kaikki tähän karttaan liittyvät resurssit on poistettu onnistuneesti",
+        "errorFetchingDetailsOfMap": "Virhe haettaessa tämän kartan tietoja",
+        "details": {
+          "deletedSuccesfully": "Tiedot on poistettu oikein",
+          "savedSuccesfully": "Tiedot on tallennettu oikein",
+          "updatedSuccesfully": "Tiedot on päivitetty oikein"
+        },
+        "thumbnail": {
+          "deletedSuccesfully": "Pikkukuva on poistettu oikein",
+          "savedSuccesfully": "Pikkukuva on tallennettu oikein",
+          "updatedSuccesfully": "Pikkukuva on päivitetty oikein"
+        },
+        "errorWhenSaving": "Tallennuksen aikana tapahtui virhe",
+        "errorWhenUpdating": "Päivitysprosessin aikana tapahtui virhe",
+        "errorWhenDeleting": "Virhe poiston aikana",
+        "errorSizeExceeded": "Pienennä yksityiskohtien kokoa tai kuvien laatua"
+      },
+      "search": "Haku..."
+    },
+    "resources": {
+      "successSaved": "Tämä resurssi on tallennettu oikein",
+      "deleteConfirmTitle": "Oletko varma",
+      "deleteConfirmMessage": "Haluatko varmasti poistaa tämän resurssin?",
+      "deleteConfirmButtonText": "Poista",
+      "deleteCancelButtonText": "Sulje",
+      "resource": {
+        "deleteResource": "Poista",
+        "editResource": "Muokkaa ominaisuuksia",
+        "editResourceData": "Muokkaa resurssitietoja",
+        "addToFeatured": "Lisää suositeltuihin",
+        "removeFromFeatured": "Poista suositelluista",
+        "showDetails": "Näytä yksityiskohdat"
+      },
+      "contents": {
+        "title": "Sisältö"
+      },
+      "dashboards": {
+        "newDashboard": "Uusi hallintapaneeli",
+        "title": "Hallintapaneelit ({count})",
+        "titleNoCount": "Hallintapaneelit",
+        "create": "Luo hallintapaneeli",
+        "noDashboardAvailable": "Ei hallintapaneeleja saatavilla",
+        "createANewOne": "Luo uusi hallintapaneeli",
+        "deleteError": "Kohteiden poistamisessa tapahtui virhe",
+        "errorLoadingDashboards": "Hallintapaneelien lataamisessa tapahtui virhe"
+      },
+      "maps": {
+        "title": "Kartat ({count})",
+        "noMapAvailable": "Ei karttoja saatavilla",
+        "createNewOne": "Luo uusi",
+        "unsavedMapConfirmTitle": "Tallentamattomia muutoksia",
+        "unsavedMapConfirmMessage": "Haluatko varmasti jättää tallentamattomia muutoksia?",
+        "unsavedMapConfirmButtonText": "Jätä",
+        "unsavedMapCancelButtonText": "Sulje"
+      },
+      "geostories": {
+        "newGeostory": "Uusi tarina",
+        "title": "Tarinat ({count})",
+        "titleNoCount": "Tarinat",
+        "create": "Luo tarina",
+        "noGeostoryAvailable": "Ei tarinoita saatavilla",
+        "createANewOne": "Luo uusi tarina",
+        "deleteError": "Kohteiden poistamisessa tapahtui virhe",
+        "errorLoadingGeostories": "Tarinoiden lataamisessa tapahtui virhe"
+      }
+    },
+    "map": {
+      "errorLoadingFont": "The font family {family} is not correctly loaded. Some elements (like symbols in markers) can have rendering problems",
+      "loading": "Ladataan...",
+      "loadingSpinner": "Ladataan karttaa",
+      "loadingerror": "Virhe latauksen aikana",
+      "name": "Name",
+      "description": "Kuvaus",
+      "namePlaceholder": "Kartan nimi",
+      "descriptionPlaceholder": "Karttakuvaus",
+      "saveTitle": "Tallenna kartta",
+      "saveText": "Tallenna nykyinen kartta?",
+      "thumbnail": "Thumbnail",
+      "message": "Tuo tai napsauta tuodaksesi kuva",
+      "suggestion": "(paras 300px X 180px, max 500 kt)",
+      "errorFormat": "Tuetut muodot: png/jpg",
+      "errorSize": "Suurin sallittu koko: 500 kt",
+      "errorCustomSize": "Suurin sallittu koko: {maxFileSize}",
+      "error": "Annettu kuva on virheellinen",
+      "savedMapTitle": "Tallennettu kartta",
+      "savedMapMessage": "Kartta on tallennettu oikein",
+      "thumbnailError": {
+        "error403": "Et voi päivittää pikkukuvaa",
+        "error404": "Tapahtui virhe pikkukuvan luomisen aikana",
+        "error409": "Pikkukuva tällä nimellä on jo olemassa",
+        "errorDefault": "Verkkovirhe"
+      },
+      "mapError": {
+        "errorTitle": "Nykyistä karttaa ei voi tallentaa",
+        "error403": "Et voi päivittää karttaa",
+        "error404": "Kartan luomisessa tapahtui virhe",
+        "error409": "Tämän niminen resurssi on jo olemassa",
+        "error500": "Sisäinen palvelinvirhe. Varmista, ylittääkö karttakonfiguraatiotiedoston koko kiinteän rajan",
+        "errorDefault": "Verkkovirhe"
+      },
+      "permissions": {
+        "noRules": "Ei sääntöjä",
+        "addRule": "Lisää sääntö...",
+        "selectGroup": "Valitse ryhmä...",
+        "canView": "voi katsella",
+        "canWrite": "voi muokata",
+        "noResult": "tuloksia ei löytynyt",
+        "title": "Luparyhmät"
+      },
+      "details": {
+        "back": "Takaisin",
+        "save": "Tallenna",
+        "show": "Näytä yksityiskohdat",
+        "add": "Lisää uusia tietoja",
+        "edit": "Muokkaa tietoja",
+        "rowTitle": "Yksityiskohdat",
+        "title": "Yksityiskohdat - {name}",
+        "undo": "Kumoa poisto",
+        "showPreview": "Näytä esikatselu",
+        "hidePreview": "Piilota esikatselu",
+        "delete": "Poista yksityiskohdat",
+        "titleUnsavedChanges": "Haluatko varmasti sulkea tallentamatta muutoksia?",
+        "sureToClose": "Haluatko varmasti sulkea tallentamatta muutoksia?",
+        "fieldsChanged": "Joitakin kenttiä on muutettu"
+      },
+      "errors": {
+        "loading": {
+          "title": "Virhe kartan lataamisessa",
+          "notFound": "Karttaa ei löytynyt",
+          "notAccessible": "Kartta ei ole saatavilla",
+          "unknownError": "<p><small>Yksi seuraavista voi olla syy:</small><ul><li>sinulla ei ole käyttöoikeutta</li><li>yrität käyttää karttaa, jota ei ole olemassa</li><li>kartta on poistettu</li><li>kartan projektiota ei ole määritetty</li></ul><p>",
+          "projectionError": "The projection {projection} of the map is not configured",
+          "title": "Karttaa ei voi tarkastella"
+        }
+      }
+    },
+    "floatinglegend": {
+      "showTOC": "Näytä tasot",
+      "showLegend": "Näytä selite",
+      "hideLegend": "Piilota selite"
+    },
+    "addgroup": {
+      "addbtn": "Lisää",
+      "groupName": "Ryhmän nimi"
+    },
+    "toc": {
+      "toggleLayerVisibility": "Vaihda tason näkyvyys",
+      "toggleGroupVisibility": "Vaihda ryhmän näkyvyyttä",
+      "displayLegendAndTools": "Näytä selite ja työkalut",
+      "zoomToLayerExtent": "Zoomaa tason laajuuteen",
+      "addLayer": "Lisää taso",
+      "addLayerToGroup": "Lisää taso valittuun ryhmään",
+      "addGroup": "Lisää ryhmä",
+      "addSubGroup": "Lisää aliryhmä valittuun ryhmään",
+      "toolZoomToLayerTooltip": "Zoomaa valittuun tason laajuuteen",
+      "toolZoomToLayersTooltip": "Zoomaa valittuun tasojen-mittaan",
+      "toolLayerSettingsTooltip": "Valitut tasoasetukset",
+      "toolGroupSettingsTooltip": "Valitut ryhmäasetukset",
+      "toolTrashLayerTooltip": "Poista valittu taso",
+      "toolTrashLayersTooltip": "Poista valitut tasot",
+      "toolTrashGroupTooltip": "Poista valittu ryhmä",
+      "toolFeaturesGridTooltip": "Avaa määritetaulukko",
+      "layerFilterTooltip": "Suodatintaso",
+      "toolDownloadTooltip": "Vie tasodata",
+      "noFilteredResults": "Ei tuloksia",
+      "filterPlaceholder": "Suodata tasoja",
+      "clearFilter": "Tyhjennä suodatin",
+      "toolReloadLayerTooltip": "Valitun tason uudelleenlataus pakotetaan",
+      "toolReloadLayersTooltip": "Valittujen tasojen pakottaminen uudelleen",
+      "statusIconOpen": "Sulje ryhmä",
+      "statusIconClose": "Avaa ryhmä",
+      "grabLayerIcon": "Tartu ja lajittele taso",
+      "grabGroupIcon": "Tartu ja lajittele ryhmä",
+      "toggleLayerVisibilityWarning": "Vaihda tason näkyvyys, Varoitus: taso ei latautunut oikein",
+      "createWidget": "Luo widget valitulle tasolle",
+      "editLayerProperties": "Muokkaa tason ominaisuuksia",
+      "browseData": "Avaa määritetaulukko",
+      "removeLayer": "Poista taso",
+      "loadingerror": "Tasoa ei ole ladattu oikein tai sitä ei ole saatavilla",
+      "measure": "Toimenpide",
+      "backgroundSwitcher": "Taustat",
+      "layers": "Tasot",
+      "drawerButton": "Tasot",
+      "refreshTitle": "Päivitä tasot",
+      "refreshConfirm": "Päivitä",
+      "refreshMessage": "Lataa WMS-tasot -kokoonpano palvelimelta / palvelimilta",
+      "refreshError": "Virhe tasojen päivittämisessä: ",
+      "epsgNotSupported": "CRS {epsg} not supported for zoom to layer",
+      "filterIconEnabled": "Poista tasosuodatin käytöstä",
+      "filterIconDisabled": "Ota tasosuodatin käyttöön",
+      "refreshOptions": {
+        "bbox": "Päivitä BBOX",
+        "search": "Päivitä hakuvaihtoehdot",
+        "title": "Päivitä otsikko",
+        "dimensions": "Päivitä mitat"
+      },
+      "layerMetadata": {
+        "identifier": "Tunniste",
+        "title": "Nimike",
+        "abstract": "Tiivistelmä",
+        "subject": "Aihe",
+        "type": "Tyyppi",
+        "creator": "Creator",
+        "toolLayerMetadataTooltip": "Näytä valitun tason metatiedot",
+        "layerMetadataPanelTitle": "Tason metatiedot",
+        "notification": {
+          "warnigGetMetadataRecordById": "Virhe metatietohaussa"
+        }
+      },
+      "thematic": {
+        "classification_field": "Luokituskenttä:",
+        "classification_method": "Luokitusmenetelmä:",
+        "classification_aggregate": "Aggregointitoiminto:",
+        "classification_colors": "Väriramppi:",
+        "classification_intervals": "Välistys:",
+        "preview": "Esikatselu",
+        "remove_thematic": "Takaisin yksinkertaiseen tyyliin",
+        "values": {
+          "equalInterval": "yhtä suuret välit",
+          "quantile": "kvantiilit",
+          "jenks": "luonnolliset tauot",
+          "sum": "summa",
+          "avg": "keskiarvo",
+          "count": "Määrä",
+          "min": "Min",
+          "max": "Max"
+        },
+        "configuration": "Kokoonpano",
+        "apply": "Käytä luokitusta",
+        "restore": "Palauta mukautukset",
+        "go_to_cfg": "Määritä...",
+        "go_to_thema": "Käytä tätä kokoonpanoa",
+        "cfgError": "Virhe JSON-asetuksissa",
+        "classify": "Luokittele",
+        "remove": "Poista luokitus",
+        "data_panel": "Data",
+        "classification_stroke": "Viiva",
+        "classification_error": "Virhe kutsuttaessa luokittelupalvelua: {message}",
+        "fields_error": "Virhe ladattaessa kenttälistausta: {message}",
+        "interval_limit": "Välistyksen tulee olla numero väliltä {min} ja {max}",
+        "invalid_object": "Virheellinen palveluvastaus",
+        "invalid_geometry": "Geometriatyyppi ei kelpaa (piste, viiva tai monikulmio)",
+        "invalid_classes": "Max-arvon on oltava suurempi kuin min-arvon jokaisessa luokassa"
+      },
+      "error": {
+        "defaultGroupOnTop": "{groupTitle} ryhmä on asetettu oletusryhmäksi, siksi sen on oltava ylimpänä"
+      }
+    },
+    "print": {
+      "paneltitle": "Tulosta",
+      "layout": "Taitto",
+      "sheetsize": "Arkin koko:",
+      "legendoptions": "Selitevaihtoehdot",
+      "submit": "Tulosta",
+      "title": "Otsikko",
+      "titleplaceholder": "Kirjoita otsikko...",
+      "description": "Kuvaus",
+      "descriptionplaceholder": "Kirjoita kuvaus...",
+      "resolution": "Resoluutio:",
+      "defaultBackground": "Käytä OSM:ää taustana",
+      "printtooltip": "Tulosta",
+      "alternatives": {
+        "legend": "Sisällytä selite",
+        "2pages": "Selite erillisellä sivulla",
+        "landscape": "Vaaka",
+        "portrait": "Pysty"
+      },
+      "legend": {
+        "font": "Nimiöiden muokkaus:",
+        "forceLabels": "Näytä nimiöt:",
+        "antiAliasing": "Fontin reunojen pehmennys:",
+        "iconsSize": "Kuvakkeiden koko:",
+        "dpi": "Dpi:"
+      },
+      "layoutWarning": "Asettelu ei sallittu"
+    },
+    "backgroundSwither": {
+      "tooltip": "Valitse tausta"
+    },
+    "info": {
+      "tooltip": "Kyselyobjektit kartalla"
+    },
+    "expandtoolbar": {
+      "tooltip": "Laajenna / Kutista"
+    },
+    "getFeatureInfoTitle": "Ominaisuustiedot",
+    "identifyTitle": "Ominaisuustiedot",
+    "identifyNoQueryableLayers": "Ei aktiivista kyselytasota",
+    "identifyRevGeocodeHeader": "Koordinaatit",
+    "identifyZoomToFeature": "Zoomaa ominaisuuteen",
+    "identifyStopHighlightingFeatures": "Älä korosta ominaisuuksia",
+    "identifyHighlightFeatures": "Korosta ominaisuuksia",
+    "identifyShowCoordinateEditor": "Näytä koordinaattieditori",
+    "identifyHideCoordinateEditor": "Piilota koordinaattieditori",
+    "identifyRevGeocodeModalTitle": "Osoite",
+    "identifyRevGeocodeSubmitText": "Lisätietoja",
+    "identifyRevGeocodeCloseText": "Sulje",
+    "identifyRevGeocodeError": "Geokoodaus epäonnistui",
+    "getFeatureInfoError": {
+      "title": "Hups! Jotain on vialla",
+      "text": "Virhe tämän<b>GetFeatureInfo</b>-pyynnön aikana"
+    },
+    "noFeatureInfo": "Napsautetulle pisteelle ei ole tietoa",
+    "noInfoForLayers": "Seuraavilla tasoilla ei ole kohteita: ",
+    "history": {
+      "barLabel": "Karttahistoria",
+      "undoBtnTooltip": "Palaa takaisin",
+      "redoBtnTooltip": "Mene eteenpäin"
+    },
+    "infoFormatLbl": "Tunnista vastausmuoto",
+    "measureSupport": {
+      "continueLine": "Napsauta jatkaaksesi viivan piirtämistä",
+      "continuePolygon": "Napsauta jatkaaksesi monikulmion piirtämistä",
+      "startDrawing": "Napsauta aloittaaksesi piirtämisen"
+    },
+    "measureComponent": {
+      "Measure": "Mittaa",
+      "MeasureLength": "Mittaa etäisyys",
+      "MeasureArea": "Mitta-alue",
+      "MeasureBearing": "Mittaa suuntima",
+      "tooltip": "Mittaa pituus ja pinta-ala",
+      "title": "Mittaa",
+      "lengthButtonText": "Viiva",
+      "areaButtonText": "Alue",
+      "resetButtonText": "Nollaa",
+      "lengthLabel": "Pituus",
+      "areaLabel": "Alue",
+      "bearingLabel": "Suuntima",
+      "formula": "Kaava etäisyyden laskemiseen",
+      "showLabel": "Näytä mittauskuvake",
+      "addAsAnnotation": "Lisää merkinnäksi",
+      "newMeasure": "Uusi merkintä",
+      "selectTool": "Valitse mittaustyökalu"
+    },
+    "search": {
+      "decimal": "Desimaali",
+      "aeronautical": "Linnuntietä",
+      "changeSearchInputField": "Vaihda hakutyökalu",
+      "addressSearch": "Etsi sijaintinimen perusteella",
+      "coordinatesSearch": "Etsi koordinaattien perusteella",
+      "searchservicesbutton": "Määritä hakupalvelut",
+      "configpaneltitle": "Luo / muokkaa hakupalvelua",
+      "serviceslistlabel": "Käytettävissä olevat palvelut",
+      "overriedservice": "Ohita oletuspalvelut",
+      "addbtn": "Lisää",
+      "nextbtn": "Seuraava",
+      "prevbtn": "Takaisin",
+      "savebtn": "Tallenna / Päivitä",
+      "cancelbtn": "Peruuta",
+      "confirmremove": "Poista?",
+      "cancelconfirm": "Oletko varma?",
+      "s_name": "Nimi",
+      "s_title": "Nimike",
+      "s_description": "Kuvaus",
+      "s_priority": "Prioriteetti",
+      "s_url": "Palvelun URL-osoite",
+      "s_layer": "Taso",
+      "s_attributes": "Ominaisuudet",
+      "s_sort": "Lajitteluperuste",
+      "s_max_features": "Ominaisuudet (max)",
+      "s_wfs_props_label": "WFS-palvelun ominaisuudet",
+      "s_wfs_opt_props_label": "Valinnaiset ominaisuudet",
+      "s_result_props_label": "Tulosnäytön ominaisuudet",
+      "s_priority_info": "Käytetään hakutulosten lajitteluun, ala-arvot ensin. Nominatim-tuloksilla prioriteetti = 5",
+      "serviceslistempty": "Mukautettuja palveluita ei ole määritelty",
+      "service_missing": "{serviceType} palvelua ei ole konfiguroitu",
+      "generic_error": "Virhe haun aikana. Yksityiskohdat: {message}",
+      "errors": {
+        "nonQueriableLayers": "URL-osoitteessa oleva taso ei ole kyseltävissä tai se ei ole näkyvissä kartalla",
+        "serverError": "Palvelin on palauttanut virheen suorittaessaan GetFeatureInfo-pyyntöä. Tarkista ovatko parametrit oikein"
+      },
+      "s_launch_info_panel": {
+        "label": "Käynnistä info",
+        "no_info": "Ei tietoa",
+        "all_layers": "Kaikki tasot",
+        "single_layer": "Hakutaso",
+        "no_info_description": "Paneeli ei näy haussa",
+        "all_layers_description": "Paneeli näyttää kaikki kartalla näkyvät tasot",
+        "single_layer_description": "Paneeli näkyy WFS-haun kautta jo saatavilla olevien tietojen kanssa"
+      }
+    },
+    "draw": {
+      "fill": "Täytä",
+      "text": "Teksti",
+      "fontTitle": "Fontti",
+      "color": "Väri",
+      "lineDash": "LineDash",
+      "stroke": "Viiva",
+      "opacity": "Läpinäkyvyys",
+      "width": "Leveys",
+      "font": {
+        "textColor": "Väri",
+        "family": "Perhe",
+        "size": "Koko",
+        "style": "Tyyli",
+        "weight": "Paksuus",
+        "textAlign": "Kohdista"
+      },
+      "marker": {
+        "layout": "Layout",
+        "shape": "Muoto",
+        "size": "Koko",
+        "type": "Tyyppi",
+        "icon": "Ikoni"
+      }
+    },
+    "drawLocal": {
+      "draw": {
+        "toolbar": {
+          "actions": {
+            "title": "Peruuta piirto",
+            "text": "Peruuta"
+          },
+          "undo": {
+            "title": "Poista viimeinen piirretty piste",
+            "text": "Poista viimeinen piste"
+          },
+          "buttons": {
+            "polyline": "Piirrä viiva",
+            "polygon": "Piirrä monikulmio",
+            "rectangle": "Piirrä suorakulmio",
+            "circle": "Piirrä ympyrä",
+            "marker": "Piirrä merkki"
+          }
+        },
+        "handlers": {
+          "circle": {
+            "tooltip": {
+              "start": "Piirrä ympyrä napsauttamalla ja vetämällä."
+            }
+          },
+          "marker": {
+            "tooltip": {
+              "start": "Napsauta karttaa asettaaksesi merkinnän."
+            }
+          },
+          "polygon": {
+            "tooltip": {
+              "start": "Napsauta piirtääksesi muodon.",
+              "cont": "Napsauta jatkaaksesi muodon piirtämistä.",
+              "end": "Sulje muoto napsauttamalla ensimmäistä pistettä."
+            }
+          },
+          "polyline": {
+            "error": "Virhe: viivat eivät saa ylittää toisiaan!",
+            "tooltip": {
+              "start": "Napsauta aloittaaksesi viivan piirtämisen.",
+              "cont": "Napsauta jatkaaksesi viivan piirtämistä.",
+              "end": "Napsauta viimeistä pistettä lopettaaksesi linjan."
+            }
+          },
+          "rectangle": {
+            "tooltip": {
+              "start": "Piirrä suorakulmio napsauttamalla ja vetämällä."
+            }
+          },
+          "simpleshape": {
+            "tooltip": {
+              "end": "Vapauta hiiri lopettaaksesi piirtämisen."
+            }
+          }
+        }
+      },
+      "edit": {
+        "toolbar": {
+          "actions": {
+            "save": {
+              "title": "Tallenna muutokset.",
+              "text": "Tallenna"
+            },
+            "cancel": {
+              "title": "Peruuta muokkaus, hylkää kaikki muutokset.",
+              "text": "Peruuta"
+            }
+          },
+          "buttons": {
+            "edit": "Muokkaa tasoja.",
+            "editDisabled": "Ei tasoja muokattavaksi.",
+            "remove": "Poista tasot.",
+            "removeDisabled": "Ei tasoja poistettavaksi."
+          }
+        },
+        "handlers": {
+          "edit": {
+            "tooltip": {
+              "text": "Vedä reunoja tai merkintää muokataksesi ominaisuutta.",
+              "subtext": "Kumoa muutokset napsauttamalla Peruuta."
+            }
+          },
+          "remove": {
+            "tooltip": {
+              "text": "Poista ominaisuus napsauttamalla ominaisuutta"
+            }
+          }
+        }
+      }
+    },
+    "locate": {
+      "tooltip": "Etsi minut",
+      "tooltipDeactivate": "Lopeta sijaintini näyttäminen",
+      "metersUnit": "metriä",
+      "feetUnit": "jalkaa",
+      "popup": "Sijaitset {distance} {unit} tästä pisteestä",
+      "outsideMapBoundsMsg": "Vaikutat sijaitsevan kartan rajojen ulkopuolella"
+    },
+    "zoombuttons": {
+      "zoomInTooltip": "Suurenna zoomia",
+      "zoomOutTooltip": "Pienennä zoomia",
+      "zoomAllTooltip": "Zoomaa enimmäisarvoon"
+    },
+    "fullscreen": {
+      "tooltipActivate": "Vaihda koko näytölle",
+      "tooltipDeactivate": "Poistu koko näytön tilasta",
+      "viewLargerMap": "Näytä suurempi kartta"
+    },
+    "helptexts": {
+      "scaleBox": "Tämä on ScaleBoxin ohjeteksti",
+      "zoomToMaxExtentButton": "Tämä on ZoomToMaxExtentButtonin ohjeteksti",
+      "zoomIn": "Tämä on ZoomIn-ohjeteksti",
+      "zoomOut": "Tämä on ZoomOutin ohjeteksti",
+      "searchBar": "Kirjoita etsimäsi paikan osoite. esim. 'Kalevankatu, Helsinki'. Voit lisätä koordinaatteja tässä muodossa: 43.87,10.20",
+      "metadataexplorer": "Tämä on MetadataExplorer-ohjelman ohjeteksti",
+      "settingsPanel": "Tämä on SettingsPanelin ohjeteksti",
+      "gohome": "Tämä on pääsivun ohjeteksti",
+      "measureComponent": "Tämä on toimenpidekomponentin ohjeteksti",
+      "backgroundSwitcher": "Tämä on BackgroundSwitcherin ohjeteksti",
+      "layerSwitcher": "Tämä on LayerSwitcherin ohjeteksti",
+      "infoButton": "Tämä on InfoButton-ohjeteksti",
+      "locateBtn": "Tämä on LocateBtn-ohjelman ohjeteksti",
+      "snapshot": "Tämä on tilannekuvan ohjeteksti",
+      "print": "Tämä on Tulostamisen ohjeteksti",
+      "shapefile": "Tämä on Shapefilen ohjeteksti",
+      "rasterstyler": "Määritä minimiarvo, maksimiarvo, luokkien lukumäärä ja väriramppi uuden luokituksen luomiseksi valitulle rasteritasolle",
+      "expandToolbar": "Tämä on ohjeteksti Laajenna / Pienennä -sovellukselle",
+      "historyundo": "Käytä tätä painiketta siirtyäksesi edelliseen kartan zoomaukseen ja sijaintiin",
+      "historyredo": "Käytä tätä painiketta siirtyäksesi seuraavaan kartan zoomaukseen ja sijaintiin",
+      "vectorstyler": "Lisää sääntö ja luo uusi tyylitelty vektoritaso",
+      "styler": "Lisää sääntö ja luo uusi tyylitaso"
+    },
+    "queryform": {
+      "title": "Tarkennettu haku",
+      "query": "Haku",
+      "apply": "Käytä",
+      "reset": "Nollaa",
+      "save": "Tallenna",
+      "discard": "Kumoa",
+      "query_request_exception": "Kyselyssä virhe",
+      "config": {
+        "load_config_exception": "Virhe konfiguroinnin lataamisessa"
+      },
+      "comboField": {
+        "default_placeholder": "Valitse...",
+        "drop_down": "Avaa pudotusvalikko"
+      },
+      "form": {
+        "header": "Etsi datasta",
+        "dataset_header": "Data"
+      },
+      "emptyfilter": "Ei suodatinta. Haku voi katketa, jos palvelin ei tue sivutusta.",
+      "attributefilter": {
+        "add_condition": "Lisää ehto",
+        "delete": "Poista",
+        "add_group": "Lisää ryhmä",
+        "group_label_a": "Täsmää",
+        "group_label_b": "seuraavista ehdoista:",
+        "combo_placeholder": "Ominaisuustieto",
+        "text_placeholder": "Kirjoita etsittävä teksti",
+        "attribute_filter_header": "Ominaisuussuodatin",
+        "tooltipTextField": "käytä<b>*</b>mistä tahansa määrästä merkkejä</br>käytä<b>.</b>yhdestä merkistä</br>käytä<b>!</b>poistuaksesi kaksi edellä mainittua (* ja.)</br>",
+        "groupField": {
+          "any": "mikä tahansa",
+          "all": "kaikki",
+          "none": "ei yhtään"
+        },
+        "numberfield": {
+          "isRequired": "Kentän arvo vaaditaan",
+          "wrong_range": "Alarajan on oltava alempi kuin yläraja"
+        },
+        "datefield": {
+          "wrong_date_range": "Aloituspäivän on oltava aikaisemmin kuin lopetuspäivä"
+        },
+        "autocomplete": {
+          "emptyList": "Ei tuloksia",
+          "emptyFilter": "Suodatin ei tuottanut tuloksia",
+          "open": "Avaa valikko"
+        }
+      },
+      "spatialfilter": {
+        "filterType": "Suodattimen tyyppi",
+        "geometric_operation": "Geometrinen toiminta",
+        "combo_placeholder": "Valitse...",
+        "spatial_filter_header": "Kiinnostava alue",
+        "remove": "Poista",
+        "draw_start_label": "Piirrä mielenkiintoinen alue kartalle",
+        "dwithin_label": "metriä",
+        "details": {
+          "detail_button_label": "Tiedot",
+          "details_header": "Valinnan yksityiskohdat",
+          "details_bbox_label": "Muokkaa koordinaatteja alueen muuttamiseksi",
+          "details_circle_label": "Muokkaa numerokenttiä muokataksesi ympyrän sädettä ja keskustaa",
+          "reset_bbox": "Nollaa",
+          "save_bbox": "Tallenna BBOX-muutokset",
+          "save_radius": "Tallenna säde- / keskipistemuokkaukset",
+          "radius": "Radius({unit})"
+        },
+        "methods": {
+          "zone": "Alue",
+          "viewport": "Ikkuna",
+          "regions": "Alueet",
+          "box": "Suorakaide",
+          "buffer": "Bufferi",
+          "circle": "Ympyrä",
+          "poly": "Polygoni",
+          "cql": "CQL"
+        },
+        "operations": {
+          "intersects": "leikkaa",
+          "bbox": "BoundingBox",
+          "contains": "Sisältää",
+          "dwithin": "Etäisyys",
+          "within": "Sisältää"
+        }
+      },
+      "crossLayerFilter": {
+        "title": "tasosuodatin",
+        "targetLayer": "Kohdetaso",
+        "clear": "Tyhjennä suodatin",
+        "operation": "Toiminto",
+        "placeholder": "Valitse taso",
+        "errors": {
+          "noCrossLayerAvailable": "Ristiinsuodatus ei ole käytettävissä valitulle tasolle"
+        }
+      },
+      "changedFilter": "Suodatin vaihdettu",
+      "changedFilterAlert": "Tallentamattomia muutoksia. Haluatko tallentaa ne?",
+      "resetFilter": "Poista suodatin",
+      "confirmReset": "Vahvista",
+      "loadingError": "Nykyinen suodatin aiheutti renderöintiongelman kartan tasolle. Tarkista tason määritykset palvelimella tai korjaa suodatin",
+      "changedFilterWithErrorAlert": "Suodatin aiheuttaa tason renderointivirheen, haluatko tallentaa sen silti?"
+    },
+    "annotations": {
+      "errorLoadingSymbols": "Symboliluettelon lataamisessa oli ongelma. Ota yhteyttä järjestelmänvalvojaan tarkistaaksesi asetusvaihtoehdot",
+      "edit": "Muokkaa",
+      "remove": "Poista",
+      "save": "Tallenna",
+      "cancel": "Peruuta",
+      "back": "Takaisin",
+      "applyStyle": "Käytä tyyliä",
+      "addMarker": "Lisää uusi geometria",
+      "styleGeometry": "Vaihda tyyli",
+      "deleteGeometry": "Poista kaikki merkintägeometriat",
+      "removeannotation": "Haluatko poistaa merkinnät otsikolla: {title}?",
+      "removegeometry": "Haluatko poistaa kaikki merkintäominaisuudet?",
+      "confirm": "Vahvista",
+      "mandatory": "Pakollinen kenttä",
+      "emptygeometry": "Geometria ei voi olla tyhjä",
+      "add": "Uusi",
+      "filter": "Suodata merkinnät...",
+      "undo": "Haluatko varmasti luopua merkinnän muokkausistunnosta?",
+      "titleUndoGeom": "Geometria on muuttunut",
+      "undoGeom": "Haluatko varmasti poistua tallentamatta? (Menetät muutokset)",
+      "confirmGeom": "Vahvista",
+      "cancelModalGeom": "Peruuta",
+      "deleteFeature": "Poista tämä ominaisuus",
+      "undoDeleteFeature": "Haluatko varmasti poistaa tämän ominaisuuden?",
+      "title": "Merkinnät",
+      "zoomTo": "Zoomaa",
+      "insertText": "Lisää tekstihuomautus",
+      "downloadtooltip": "Lataa merkinnät",
+      "downloadcurrenttooltip": "Lataa nykyinen merkintä",
+      "downloadError": "Vientivirhe",
+      "loadtooltip": "Tuo merkinnät",
+      "loadtitle": "Tuo merkinnät",
+      "selectfiletext": "Pudota tiedosto tähän tai napsauta valitaksesi tuotava huomautustiedosto. (tuetut tiedostot: JSON)",
+      "loadoverride": "Korvaa merkinnät",
+      "loaderror": "Valitse yksi tai useampi merkintätiedosto. (tuetut tiedostot: json)",
+      "defaulttitle": "Muokkaa oletusotsikkoa",
+      "field": {
+        "title": "Otsikko",
+        "description": "Kuvaus"
+      },
+      "titles": {
+        "marker": "Piste",
+        "line": "Viiva",
+        "polygon": "Monikulmio",
+        "text": "Teksti",
+        "circle": "Ympyrä"
+      },
+      "editor": {
+        "decimal": "Desimaali",
+        "aeronautical": "Ilma",
+        "title": {
+          "Polygon": "Monikulmioeditori",
+          "LineString": "Viivaeditori",
+          "Bearing": "Suuntimaeditori",
+          "Circle": "Ympyräeditori",
+          "Point": "Piste-editori",
+          "MultiPoint": "Multipiste-editori",
+          "Text": "Tekstieditori"
+        },
+        "center": "Keskus",
+        "add": "Lisää uusia koordinaatteja",
+        "addByClick": "Lisää uusia koordinaatteja napsauttamalla plus-painiketta tai kartalla",
+        "valid": "Geometria on validi",
+        "radius": "Säde",
+        "text": "Teksti",
+        "lat": "Leveysaste",
+        "lon": "Pituusaste",
+        "notValidMarker": "Lisää validi koordinaatti (+ | - 90 ° lat, + | -180 ° lon)",
+        "notValidPolyline": "Kaikkien koordinaattien on oltava valideja (+ | - 90 ° lat, + | -180 ° lon)",
+        "notValidText": "Lisää tekstiarvo ja validi koordinaatti (+ | - 90 ° lat, + | -180 ° lon)",
+        "notValidCircle": "Lisää sädearvo ja validi koordinaatti (+ | - 90 ° lat, + | -180 ° lon)"
+      }
+    },
+    "user": {
+      "login": "Kirjaudu sisään",
+      "logout": "Kirjaudu ulos",
+      "info": "Tilin tiedot",
+      "details": "Käyttäjän tiedot",
+      "noAttributesMessage": "Tiliisi ei liity mitään tietoja",
+      "changePwd": "Vaihda salasana",
+      "newPwd": "Uusi salasana",
+      "retypePwd": "Kirjoita salasana uudelleen",
+      "passwordMinlenght": "Salasan tulee olla vähintään {minSize} merkkiä",
+      "passwordCheckFail": "Salasanat eivät täsmää!",
+      "passwordInvalid": "Virheellinen salasana",
+      "username": "Käyttäjänimi",
+      "password": "Salasana",
+      "passwordMessage": "Salasanassa on oltava vähintään 6 merkkiä",
+      "passwordChanged": "Salasana vaihdettu",
+      "passwordError": "Virhe salasanan vaihtamisessa",
+      "signIn": "Kirjaudu sisään",
+      "loginFail": "Kirjautuminen epäonnistui",
+      "loginFailedStatusMessages": {
+        "usernamePwdInsert": "Lisää käyttäjätunnus ja salasana",
+        "usernamePwdIncorrect": "Käyttäjätunnus tai salasana väärin"
+      },
+      "detailsName": "Nimi",
+      "detailsRole": "Rooli",
+      "detailsGroups": "Ryhmät",
+      "detailsEmail": "Sähköposti",
+      "detailsCompany": "Yritys",
+      "detailsNotes": "Huomautuksia"
+    },
+    "users": {
+      "title": "Hallinnoi tilejä",
+      "users": "Käyttäjät",
+      "manageUsers": "Hallinnoi käyttäjiä",
+      "searchUsers": "Etsi käyttäjiä...",
+      "newUser": "Uusi käyttäjä",
+      "editUser": "Muokkaa käyttäjää",
+      "deleteUser": "Poista käyttäjä",
+      "statusTitle": "Tila",
+      "enabled": "Käytössä",
+      "groupTitle": "Ryhmät:",
+      "roleTitle": "Rooli",
+      "saveUser": "Tallenna",
+      "savingUser": "Tallennetaan...",
+      "userSaved": "Tallennettu!",
+      "createUser": "Luo",
+      "creatingUser": "Luodaan...",
+      "userCreated": "Luotu!",
+      "deleting": "Poistetaan...",
+      "delete": "Poista",
+      "confirmDeleteUser": "Haluatko varmasti poistaa tämän käyttäjän?",
+      "errorDelete": "Tämän käyttäjän poistamisessa tapahtui virhe:",
+      "errorSaving": "Käyttäjää tallennettaessa tapahtui virhe:",
+      "selectedGroups": "VALITUT RYHMÄT",
+      "requiredFiedsMessage": "Tähdellä (*) merkityt kentät ovat pakollisia"
+    },
+    "usergroups": {
+      "searchGroups": "Hakuryhmät...",
+      "groups": "Ryhmät",
+      "nameLimit": "Nimi voi olla enintään 255 merkkiä.",
+      "descLimit": "Kuvaus on rajoitettu 255 merkkiin.",
+      "editGroup": "Muokkaa ryhmää",
+      "deleteGroup": "Poista ryhmä",
+      "removeUser": "Poista käyttäjä",
+      "newGroup": "Uusi ryhmä",
+      "manageGroups": "Hallitse ryhmiä",
+      "description": "Kuvaus:",
+      "noDescriptionAvailable": "(Ei kuvausta saatavilla)",
+      "groupName": "Ryhmän nimi",
+      "groupDescription": "Kuvaus",
+      "saveGroup": "Tallenna",
+      "createGroup": "Luo",
+      "creatingGroup": "Luodaan...",
+      "groupMembers": "Jäsenet:",
+      "addMember": "Lisää jäsen:",
+      "selectMemberPlaceholder": "Valitse jäsen...",
+      "noUsers": "Ei käyttäjiä tässä ryhmässä",
+      "errorSaving": "Tätä ryhmää tallennettaessa tapahtui virhe",
+      "errorDelete": "Tämän ryhmän poistamisessa tapahtui virhe",
+      "confirmDeleteGroup": "Haluatko varmasti poistaa tämän ryhmän?"
+    },
+    "share": {
+      "title": "Jaa",
+      "titlePanel": "Jaa kartta",
+      "socialIntro": "Sosiaalisessa mediassa",
+      "directLinkTitle": "Suoran linkin kautta",
+      "embeddedLinkTitle": "Upotetun linkin kautta",
+      "social": "Some",
+      "direct": "Linkki",
+      "code": "Upote",
+      "forceDrawer": "Näytä TOC",
+      "apiLinkTitle": "API",
+      "QRCodeLinkTitle": "qr-koodi",
+      "msgCopiedUrl": "Kopioitu",
+      "msgToCopyUrl": "Kopioi napsauttamalla",
+      "sharedTitle": "Vilkaise uutta karttaani: ",
+      "advancedOptions": "Lisäasetukset",
+      "addBboxParam": "Lisää bbox-parametrit jakamislinkkiin",
+      "wrongBboxParamTitle": "virheellinen bbox-parametri",
+      "wrongBboxParamMessage": "bbox-parametrien on oltava EPSG: 4326: ssa ja kirjoitettu bbox = minx, miny, maxx, maxy",
+      "showHomeButton": "Linkki MapStoren sivuille"
+    },
+    "snapshot": {
+      "title": "Kuvan esikatselu",
+      "save": "Tallenna",
+      "tooltip": "Tallenna tilannekuva kartasta.",
+      "googleBingError": "Google- ja Bing-tasot eivät ole käytettävissä tilannekuvassa tekijänoikeusrajoitusten vuoksi.",
+      "downloadingSnapshots": "Tilannekuvaa luodaan",
+      "date": "Päiväys",
+      "layers": "Tasot",
+      "size": "Koko",
+      "notsupported": "Tilannekuvaa ei tueta",
+      "taintedMessage": "Tilannekuvien tallentamista on rajoitettu joidenkin selaimen tietosuojasääntöjen vuoksi. Parempien tulosten saamiseksi napsauta hiiren kakkospainikkeella esikatselua ja valitse Tallenna kuva nimellä (tukee Firefox ja Chrome)."
+    },
+    "shapefile": {
+      "title": "Lisää paikallisia vektoritiedostoja",
+      "tooltip": "Lisää paikallinen vektoritiedosto karttaan.",
+      "placeholder": "Pudota tiedostot tähän tai valitse tuotavat vektoritiedostot napsauttamalla. (tuetut tiedostot: SHP-tiedostojen on oltava zip-muodossa, KML / KMZ e GPX)",
+      "defaultStyle": "Oletustyyli",
+      "zoom": "Zoomaa vektoritiedostoihin",
+      "error": {
+        "select": "Valitse yksi tai useampi tiedosto. (tuetut tiedostot: SHP-tiedostojen on oltava zip-muodossa, KML / KMZ e GPX)",
+        "shapeFileParsingError": "Vektoritiedostoa ei voi ladata. Tiedosto voi olla vaurioitunut.",
+        "genericLoadError": "Vektoritiedostoa ei voi ladata kartalle",
+        "missingPrj": "Puuttuva projektiotieto (.prj), koordinaattijärjestelmän oletetaan olevan EPSG: 4326"
+      },
+      "add": "Lisää",
+      "cancel": "Peruuta",
+      "success": " tuotu oikein",
+      "next": "Seuraava",
+      "skip": "Ohita",
+      "finish": "Valmis",
+      "layerOf": "Taso {count} / {total}:"
+    },
+    "mapImport": {
+      "title": "Tuo",
+      "dropZone": {
+        "heading": "<p><h4>Pudota karttaympäristö tai vektoritiedostot tähän</h4><pienet>tai</small></p>",
+        "selectFiles": "Valitse tiedostot...",
+        "infoSupported": "<p><small>Tuetut karttaympäristötiedostot: MapStore-vanha muoto >",
+        "note": "<p><pienempi><i><strong>huomautus</strong>: Nykyinen kartta ohitetaan, jos karttakontitiedostot</i></small></p>"
+      },
+      "errors": {
+        "fileNotSupported": "Tiedostoa ei tueta",
+        "unknownError": "Tuonnin aikana tapahtui tuntematon virhe",
+        "projectionNotSupported": "Tuotavien tiedostojen projisointia ei tueta"
+      }
+    },
+    "mapExport": {
+      "title": "Vie kartta",
+      "exportPanel": {
+        "title": "<p><h4>Valitse formaatti</h4></p>",
+        "exportButtonLabel": "Vie"
+      },
+      "formats": {
+        "mapstore2": {
+          "label": "MapStore",
+          "description": "<p><small>MapStoren kartta-asetusten formaatti</small></p>"
+        },
+        "wmc": {
+          "label": "WMC",
+          "description": "<p><small>OGC Web Map Context- formaatti</small></p>",
+          "note": "<p><small><i><strong>note</strong>: WMC-formaattia voi käyttää <strong>vain WMS-tasojen kanssa</strong></i></small></p>"
+        }
+      },
+      "errorTitle": "Kartan vienti epäonnistui",
+      "wmcNoLayersError": "Vähintään yksi WMS-taso tarvitaan, jotta kartta voitaisiin viedä WMC-formaatissa"
+    },
+    "catalog": {
+      "start": "Aloituspäiväys ",
+      "end": "Lopetuspäiväys ",
+      "notAvailable": "Ei saatavilla",
+      "title": "Luettelo",
+      "autoload": "Hae palveluvalinnasta",
+      "clearValueText": "Poista valinta",
+      "noResultsText": "Ei tuloksia",
+      "tooltip": "Selaa luetteloa",
+      "addToMap": "Lisää karttaan",
+      "getWMSLink": "Hanki WMS-linkki",
+      "error": "Tietueiden lataamisessa luettelosta tapahtui virhe",
+      "pageInfo": "Tulokset {start}-{end} / {total}",
+      "resultInfo": "{total, plural, =0 {Ei yhtään} =1 {{total} Item of {total}} other {{start}-{end} of {total}}}",
+      "pageInfoInfinite": "{total, plural, =undefined {} =0 {No results} =1 {{total} of {total} matched} other {Loaded {loaded} of {total} matched}}",
+      "noRecordsMatched": "Tietueita ei löytynyt",
+      "wmsGetCapLink": "WMS",
+      "wfsGetCapLink": "WFS",
+      "share": "Jaa",
+      "copyToClipboard": "Kopioi leikepöydälle",
+      "copied": "Kopioitu!",
+      "textSearchPlaceholder": "Etsittävä teksti...",
+      "search": "Hae",
+      "delete": "Poista",
+      "reset": "Nollaa",
+      "options": "Vaihtoehdot",
+      "srs_not_allowed": "Tämä palvelu ei tue karttakoordinaattijärjestelmää",
+      "add": "Lisää",
+      "service": "Palvelu",
+      "servicePlaceholder": "kirjoita palvelu",
+      "url": "URL",
+      "urlPlaceholder": "kirjoita URL-osoite",
+      "type": "Tyyppi",
+      "serviceTitle": "Otsikko",
+      "serviceTitlePlaceholder": "kirjoita otsikko",
+      "missingReference": "OGC-viitetiedot puuttuvat",
+      "showDescription": "Näytä koko kuvaus",
+      "hideDescription": "Piilota koko kuvaus",
+      "templateFormatDescriptionExample": "Tason kuvaus on",
+      "showTemplate": "Näytä metatietomalli",
+      "showPreview": "Näytä esikatselu",
+      "advancedSettings": "Lisäasetukset",
+      "templateMetadataAvailable": "Metatiedot saatavissa Dublin Core -muodossa: abstrakti, borderingBox, kontribuuttorit, luojat, kuvaus, formaatti, tunniste, viitteet, oikeudet, lähde, aihe, aika, otsikko, tyyppi, uri",
+      "notification": {
+        "errorTitle": "Virhe",
+        "errorSearchingRecords": "Joitain tallenteita ei löytynyt: {records} Tarkista kysely.",
+        "warningAddCatalogService": "Lisää validi URL ja otsikko",
+        "addCatalogService": "Palvelu lisätty oikein",
+        "duplicatedServiceTitle": "Tällä otsikolla oleva palvelu on jo olemassa. Vaihda otsikko",
+        "serviceDeletedCorrectly": "Palvelu poistettiin oikein",
+        "errorServiceUrl": "Palvelu ei ole käytettävissä. Tarkista annettu URL"
+      },
+      "backgroundAlreadyAdded": "Tausta lisätty"
+    },
+    "uploader": {
+      "filename": "Tiedostonimi",
+      "type": "Tyyppi",
+      "lastModified": "Viimeksi muokattu",
+      "filesize": "Koko",
+      "beforeUpload": "Valmistellaan latausta... ",
+      "uploadingFiles": "Ladataan tiedostoja...",
+      "dropfile": "Pudota tiedostot tähän ladataksesi",
+      "dropfileImport": "Pudota tiedostot tähän lisätäksesi ne prosessiin"
+    },
+    "importer": {
+      "title": "Tuo tietoja",
+      "imports": "Tuo istunnot",
+      "importN": "Istunto {id}",
+      "creatingImportProcess": " Luodaan tuontia... ",
+      "dropfile": "Pudota tiedostot tähän luodaksesi uuden tuonnin",
+      "dropfileImport": "Pudota tiedostot tähän lisätäksesi ne tähän istuntoon",
+      "process": "Istunto",
+      "number": "#",
+      "workspace": {
+        "create": "Luo",
+        "createWS": "Luo uusi työtila: ",
+        "target": "Kohdetyötila: ",
+        "failure": "Virhe työtilaa luotaessa: {statusWS}",
+        "success": "Työtila {statusWS} luotu onnistuneesti",
+        "select": "Valitse kohdetyötila",
+        "new": "Uusi työtilan nimi..."
+      },
+      "import": {
+        "actions": "Tapahtumat",
+        "tasks": "Paketit",
+        "runImport": "Käynnistä",
+        "deleteImport": "Poista istunto",
+        "deleteTask": "Poista",
+        "status": "Tila",
+        "archive": "Arkisto",
+        "deleting": "Poistetaan...",
+        "analyzing": "Analysoidaan pakettia...",
+        "applyingPreset": "Esiasetusten hakeminen..."
+      },
+      "task": {
+        "panelTitle": "Tuo paketti {id}",
+        "general": "Yleistä tietoa",
+        "status": "Tila",
+        "updateMode": "Päivitystila",
+        "originalData": "Alkuperäinen tiedosto",
+        "file": "Tiedostonimi",
+        "format": "Formaatti",
+        "targetStore": "Kohdesäilö",
+        "storeType": "Säilön tyyppi",
+        "storeName": "Säilön nimi",
+        "layer": "Taso",
+        "transforms": "Muutosketju",
+        "update": "Päivitä",
+        "run": "Tuo tämä paketti",
+        "edit": "Muokkaa oletustyyliä",
+        "delete": "Poista tämä paketti"
+      },
+      "transform": {
+        "panelTitle": "Muutos {id}",
+        "type": "Muutostyyppi",
+        "actions": "Tapahtumat",
+        "options": "Muutosvaihtoehdot",
+        "overviewlevels": "Yleiskvua tasoista",
+        "delete": "Poista tämä muutos"
+      }
+    },
+    "rasterstyler": {
+      "tooltip": "Luo ja muokkaa rasteritason tyyliä",
+      "paneltitle": "Rasterin tyyli",
+      "layerlabel": "Taso",
+      "typelabel": "Tyylityyppi",
+      "opacitylabel": "Läpinäkyvyys",
+      "redtitle": "Punainen",
+      "greentitle": "Vihreä",
+      "bluetitle": "Sininen",
+      "graytitle": "Harmaa",
+      "pseudobandtitle": "Kanavan valinta",
+      "eqinttitle": "Tasavälit",
+      "pseudotitle": "PseudoColor-asetukset",
+      "applybtn": "Käytä tyyliä"
+    },
+    "bandselector": {
+      "band": "Kanava",
+      "enhancement": "Lisäys",
+      "algorithmTitle": "Valinnainen algoritmi",
+      "value": "Arvo",
+      "min": "Min",
+      "max": "Max",
+      "enha": {
+        "none": "Ei yhtään",
+        "Normalize": "Normalisoi",
+        "Histogram": "Histogrammi",
+        "GammaValue": "Gammakorjaus"
+      },
+      "algorithm": {
+        "none": "Ei yhtään",
+        "StretchToMinimumMaximum": "Venytä",
+        "ClipToMinimumMaximum": "Leikkaa",
+        "ClipToZero": "Kiinnitä nollapisteeseen"
+      }
+    },
+    "equalinterval": {
+      "min": "Min",
+      "max": "Max",
+      "classes": "Luokat",
+      "ramp": "Väriramppi",
+      "classify": "Luokittele",
+      "maxerror": "Suurimman arvon on oltava suurempi kuin min-arvo",
+      "minerror": "Min-arvon on oltava pienempi kuin maksimiarvo"
+    },
+    "colormapgrid": {
+      "color": "Väri",
+      "quantity": "Määrä",
+      "label": "Nimike",
+      "minmaxerror": "Arvon on oltava edellisen ja seuraavan solun arvojen välillä"
+    },
+    "pseudocolorsettings": {
+      "type": "Tyyppi",
+      "extended": "Laajennettu",
+      "colormap": "Värikartta",
+      "add": "Lisää merkintä",
+      "remove": "Poista merkintä"
+    },
+    "rasterstyletype": {
+      "rgb": "Punainen Vihreä Sininen",
+      "gray": "Harmaasävy",
+      "pseudo": "Valeväri (pseudo)",
+      "multi": "Monikaistainen",
+      "single": "Yksikaistainen"
+    },
+    "featuregrid": {
+      "columns": "Sarakkeet",
+      "header": "Hakutulosluettelo",
+      "tools": "Työkalupaneeli",
+      "export": "Vie",
+      "selectall": "Valitse kaikki",
+      "deselectall": "Poista valinta",
+      "backtosearch": "Takaisin hakuun",
+      "resultInfo": "{total, plural, =0 {Ei kohteita} =1 {{total} Item of {total}} other {{start}-{end} of {total}}}",
+      "resultInfoVirtual": "{total, plural, =0 {Ei kohteita} =1 {{total} Item of {total}} other {{total} Items}}",
+      "pageInfo": "{totalPages, plural, =0 {Ei sivuja} =1 {Page {totalPages} of {totalPages}} other {Page {page} of {totalPages}}}",
+      "pagination": {
+        "page": "Sivu",
+        "of": "/",
+        "to": "kohteeseen",
+        "more": "lisää"
+      },
+      "noFeaturesAvailable": "Ominaisuuksia ei ole käytettävissä",
+      "errorSaving": "Virhe tallennettaessa",
+      "errorProjFetch": "Virhe haettaessa proj4-merkkijonomäärittelyä osoitteesta spatialreference.org. Synkronointityökalu ei voi käyttää paikkasuodatinta.",
+      "notSupportedGeometryTitle": "Geometriatyyppiä ei tueta ",
+      "notSupportedGeometry": "Nykyisen tason geometriatyypin muokkausta ei tueta, mutta voit silti muokata ominaisuustietoja",
+      "yesButton": "Kyllä",
+      "noButton": "Ei",
+      "deleteButton": "Poista",
+      "clear": "Haluatko varmasti peruuttaa kaikki tekemäsi muutokset?",
+      "featureClose": "Oletko varma, että suljet ominaisuusruudun?",
+      "delete": "Vahvistatko kohteiden poistamisen ({count} kpl)?",
+      "missingGeometry": "Geometria puuttuu",
+      "filter": {
+        "placeholders": {
+          "default": "Haku...",
+          "string": "Kirjoita suodatettava teksti...",
+          "date": "Kirjoita päivämäärä suodattaaksesi...",
+          "number": "Kirjoita numero tai lauseke..."
+        },
+        "tooltips": {
+          "editMode": "Pikahaku ei ole käytettävissä muokkaustilassa",
+          "default": "Haku...",
+          "string": "Kirjoita suodatettava teksti...",
+          "number": "Kirjoita numero tai lauseke. Esimerkkejä: 10,>2,<10",
+          "date": "Kirjoita päiväys tai lauseke. Käytä päiväysformaattia: {format}."
+        }
+      },
+      "toolbar": {
+        "synchPopoverTitle": "Synkronoi kartta suodattimen kanssa ",
+        "synchPopoverText": "Käytä tätä työkalua synkronoidaksesi kartta valitun suodattimen kanssa",
+        "notShowAgain": "Älä näytä tätä viestiä uudelleen",
+        "editMode": "Muokkaustila",
+        "advancedFilter": "Tarkennettu haku",
+        "quitEditMode": "Lopeta muokkaustila",
+        "addNewFeatures": "Lisää uusi ominaisuus",
+        "editFeature": "Muokkaa ominaisuutta",
+        "drawGeom": "Piirrä ominaisuus",
+        "stopDrawGeom": "Peruuta geometrian laatiminen",
+        "addGeom": "Lisää muoto olemassa olevaan geometriaan",
+        "deleteSelectedFeatures": "Poista valitut ominaisuudet",
+        "saveChanges": "Tallenna muutokset",
+        "saving": "Tallennetaan...",
+        "cancelChanges": "Peruuta muutokset",
+        "deleteGeometry": "Poista geometria",
+        "downloadGridData": "Lataa ruudukkotiedot",
+        "hideShowColumns": "Piilota / näytä sarakkeet",
+        "zoomAll": "Zoomaa kokonaiseksi",
+        "syncOnMap": "Synkronoi kartta suodattimen kanssa",
+        "enableTimeSync": "Synkronoi valitun ajan tai aikavälin kanssa",
+        "disableTimeSync": "Älä synkronoi valitun ajan tai aikavälin kanssa",
+        "createNewChart": "Luo kaavio valitulle tasolle"
+      }
+    },
+    "wfsdownload": {
+      "title": "Vie tietoja",
+      "format": "Tiedostomuoto",
+      "srs": "SRS",
+      "export": "Vie",
+      "downloadonlycurrentpage": "Lataa vain nykyinen sivu",
+      "error": {
+        "title": "Virhe viennin aikana",
+        "invalidOutputFormat": "Valittu vientimuoto ei ole käytettävissä"
+      }
+    },
+    "widgets": {
+      "types": {
+        "map": {
+          "title": "Kartta",
+          "caption": "lisää kartta"
+        },
+        "legend": {
+          "title": "Selite",
+          "caption": "lisää selite"
+        },
+        "chart": {
+          "title": "Kaavio",
+          "caption": "lisää kaavio"
+        },
+        "text": {
+          "title": "Teksti",
+          "caption": "lisää teksti"
+        },
+        "table": {
+          "title": "Taulukko",
+          "caption": "lisää taulukko"
+        },
+        "counter": {
+          "title": "Laskuri",
+          "caption": "lisää laskuri"
+        }
+      },
+      "selectWidgetType": "Valitse widget-tyyppi",
+      "selectChartType": {
+        "title": "Valitse kaavion tyyppi"
+      },
+      "selectMap": {
+        "TOC": {
+          "noLayerTitle": "Ei tasoja",
+          "noLayerDescription": "Kartalla ei ole tasoja. Jos haluat lisätä tason luettelosta, napsauta '+' -painiketta yläreunassa olevalla työkalurivillä"
+        },
+        "emptyMap": {
+          "title": "Tyhjä kartta",
+          "description": "Aloita tyhjästä kartasta"
+        }
+      },
+      "title": "Otsikko",
+      "description": "Kuvaus",
+      "errors": {
+        "notext": "Tekstiä ei ole saatavilla",
+        "nodata": "Tietoja ei ole saatavilla valitusta tasosta / suodattimesta",
+        "noLegend": "Ei näytettäviä selitteitä",
+        "noLegendDescription": "Kartalla ei ole tasoja näytettäväksi selitteessä",
+        "nodatainviewport": "Ei tietoja nykyisessä ikkunassa",
+        "timeoutExpired": "Palvelulta vei liian paljon aikaa vastata. Ehkä kysely on liian monimutkainen tai palvelin on varattu",
+        "genericError": "Tiedon uudelleentoiston aikana tapahtui virhe"
+      },
+      "builder": {
+        "header": {
+          "title": "Widget"
+        },
+        "wizard": {
+          "backToTypeSelection": "Takaisin kaavion tyypin valintaan",
+          "backToWidgetTypeSelection": "Takaisin widget-tyyppivalintaan",
+          "backToFeatureGrid": "Takaisin ominaisuusruudukkoon",
+          "backToLayerSelection": "Takaisin tasovalintaan",
+          "backToMapSelection": "Takaisin karttojen valintaan",
+          "backToPreview": "Takaisin esikatseluun",
+          "backToChartOptions": "Takaisin kaaviovaihtoehtoihin",
+          "selectALayer": "Valitse taso",
+          "selectAMap": "Valitse kartta",
+          "configureChartOptions": "Kaavioasetusten määrittäminen",
+          "configureWidgetOptions": "Widget-asetusten määrittäminen",
+          "backToTableOptions": "Takaisin taulukkovaihtoehtoihin",
+          "configureTableOptions": "Määritä taulukkoasetukset",
+          "resetColumnsSizes": "Palauta kaikki muutokset sarakekokoihin",
+          "updateWidget": "Päivitä widget",
+          "addTheWidget": "Lisää widget",
+          "titlePlaceholder": "Lisää otsikko...",
+          "textPlaceholder": "Lisää teksti...",
+          "useThisMap": "Käytä tätä karttaa",
+          "configureMapOptions": "Määritä kartta-asetukset",
+          "preview": "Esikatselu",
+          "addLayer": "Lisää taso karttaan",
+          "useTheSelectedLayer": "Käytä valittua tasoa",
+          "connectToAMap": "Yhdistä toiseen widgettiin",
+          "connectToTheMap": "Yhdistä toiseen widgettiin",
+          "selectMapToConnect": "Valitse widget yhdistettäväksi ",
+          "clearConnection": "Poista yhteys"
+        },
+        "errors": {
+          "noAttributesTitle": "Ei määritettäviä ominaisuuksia",
+          "noAttributesDescription": "Valitussa tasossa ei ole näytettäviä määritteitä. Valitse toinen widget-tyyppi tai taso",
+          "noWidgetsAvailableTitle": "Widgetiä ei voi luoda valitulle tasolle",
+          "noWidgetsAvailableDescription": "<p><strong>Yritä valita toinen taso tai widget-tyyppi</strong></p><p>Palvelin ei tarjoa tarvittavia palveluja tasolle ja valitulle widget-tyypille</p><p>Mahdolliset syyt ovat:<ul><li>Valittu taso on rasteritaso</li><li>WFS-palvelu ei ole käytettävissä</li><li>WPS-prosessi<code>gs: aggregate</ code>ei ole käytettävissä</li></ul></p>",
+          "checkAtLeastOneAttribute": "Sinun on valittava vähintään yksi sarake",
+          "noMapAvailableForLegend": "Karttaa ei ole saatavilla",
+          "noMapAvailableForLegendDescription": "Tarvitset ainakin yhden kartta-widgetin legendan luomiseen"
+        },
+        "setupFilter": "Määritä suodatin widget-tiedoille"
+      },
+      "widget": {
+        "menu": {
+          "showChartData": "Näytä kaavion tiedot",
+          "edit": "Muokkaa",
+          "delete": "Poista",
+          "collapse": "Kutista",
+          "confirmDelete": "Oletko varma?",
+          "downloadData": "Lataa tiedot",
+          "exportImage": "Vie kuva",
+          "pin": "Tartu",
+          "unpin": "Irrota",
+          "hide": "Piilota",
+          "hideDescription": "Piilota tämä widget muille käyttäjille",
+          "unhide": "Näytä",
+          "unhideDescription": "Piilota widget muille käyttäjille"
+        }
+      },
+      "chartType": {
+        "bar": {
+          "title": "Pylväskaavio",
+          "description": "Luo pylväskaavio lisätäksesi karttaan",
+          "caption": "Pylväs"
+        },
+        "pie": {
+          "title": "Ympyräkaavio",
+          "description": "Luo ympyräkaavio lisätäksesi karttaan",
+          "caption": "Ympyrä"
+        },
+        "line": {
+          "title": "Viivakaavio",
+          "description": "Luo viivakaavio lisätäksesi karttaan",
+          "caption": "Viiva"
+        },
+        "gauge": {
+          "title": "Mittarikaavio",
+          "description": "Luo mittarikaavio, joka lisätään karttaan",
+          "caption": "Mittari"
+        }
+      },
+      "chartOptionsTitle": "Määritä tiedot",
+      "widgetOptionsTitle": "Widget-tietojen määrittäminen",
+      "placeHolder": {
+        "default": "Valitse ominaisuus"
+      },
+      "groupByAttributes": {
+        "line": "X-ominaisuus",
+        "pie": "Ryhmittele",
+        "bar": "X Attribuutti",
+        "gauge": "Ryhmittele",
+        "counter": "Ryhmittele",
+        "default": "Ryhmittele"
+      },
+      "aggregationAttribute": {
+        "line": "Y-ominaisuus",
+        "pie": "Käytä",
+        "bar": "Y-ominaisuus",
+        "gauge": "Käytä",
+        "counter": "Käytä",
+        "default": "Käytä"
+      },
+      "aggregateFunction": {
+        "line": "Operaatio",
+        "pie": "Operaatio",
+        "bar": "Operaatio",
+        "gauge": "Operaatio",
+        "counter": "Operaatio",
+        "default": "Operaatio"
+      },
+      "colorRamp": {
+        "line": "Väri",
+        "pie": "Väriramppi",
+        "bar": "Väri",
+        "gauge": "Väri",
+        "counter": "Väri",
+        "default": "Väri"
+      },
+      "uom": {
+        "line": "Mittayksikkö",
+        "pie": "Mittayksikkö",
+        "bar": "Mittayksikkö",
+        "gauge": "Mittayksikkö",
+        "counter": "Mittayksikkö",
+        "default": "Mittayksikkö"
+      },
+      "mapSync": "Live-suodatus ikkunan mukaan",
+      "displayLegend": {
+        "line": "Näytä selite",
+        "pie": "Näytä selite",
+        "bar": "Näytä selite",
+        "gauge": "Näytä nimikkeet"
+      },
+      "displayCartesian": {
+        "line": "Piilota ruudukko",
+        "bar": "Piilota ruudukko"
+      },
+      "xAxisAngle": {
+        "line": "X-akseli: Nimikkeen kiertokulma °",
+        "bar": "X-akseli: Nimikkeen kiertokulma °"
+      },
+      "yAxis": {
+        "line": "Piilota Y-akseli",
+        "bar": "Piilota Y-akseli"
+      },
+      "yAxisLabel": {
+        "line": "Selitteen nimike",
+        "bar": "Selitteen nimike"
+      },
+      "advancedOptions": {
+        "line": "Lisäasetukset",
+        "bar": "Lisäasetukset"
+      },
+      "tray": {
+        "title": "Widgetit",
+        "expandTray": "Laajenna widget-alustaa",
+        "collapseTray": "Kutista widgettilokero",
+        "expandAll": "Laajenna kaikki widgetit",
+        "collapseAll": "Kutista kaikki widgetit",
+        "notifications": {
+          "collapsed": {
+            "message": "Aikajana ja widgetit eivät voi näkyä samanaikaisesti. Widget-alustalla voit siirtyä aikajanan ja widgetien välillä",
+            "timelineTitle": "Aikajana on kaatunut",
+            "widgetsTitle": "Widgetit ovat kaatuneet"
+          }
+        }
+      }
+    },
+    "dashboard": {
+      "loadingSpinner": "Hallintapaneelin lataus",
+      "errors": {
+        "loading": {
+          "title": "Virhe hallintapaneelin lataamisessa",
+          "dashboardNotAccessible": "Sinulla ei ole lupaa käyttää tätä hallintapaneelia. Ota yhteyttä resurssin omistajaan",
+          "pleaseLogin": "Tämä hallintapaneeli ei ole julkinen. Yritä kirjautua sisään",
+          "dashboardDoesNotExist": "Hallintapaneelia, jota yrität käyttää, ei ole",
+          "unknownError": "Hallintapaneelin lataamisessa tapahtui virhe. Ota yhteyttä järjestelmänvalvojaan",
+          "notFound": "Hallintapaneelia ei löydy",
+          "notAccessible": "Hallintapaneeliin ei pääse"
+        },
+        "resourceAlreadyExists": "Tämän nimen resurssi on jo olemassa",
+        "forbidden": "Odottamaton virhe (403 kielletty). Ota yhteyttä järjestelmänvalvojaan",
+        "forbidden405": "Odottamaton virhe (405 kielletty). Ota yhteyttä järjestelmänvalvojaan"
+      },
+      "editor": {
+        "save": "Tallenna hallintapaneeli",
+        "addACardToTheDashboard": "Lisää widget hallintapaneeliin",
+        "showConnections": "Näytä yhteydet",
+        "hideConnections": "Piilota yhteydet"
+      },
+      "emptyTitle": "Hallintapaneeli on tyhjä"
+    },
+    "context": {
+      "loadingSpinner": "Ladataan sisältöä",
+      "errors": {
+        "loading": {
+          "title": "Virhe sisällön lataamisessa",
+          "notAccessible": "Sinulla ei ole pääsyä sisältöön. Ota yhteys omistajaan",
+          "pleaseLogin": "Jotkut resurssit eivät välttämättä ole julkisia. Yritä kirjautua sisään",
+          "unknownError": "Kartan tai sisällön lataamisessa tapahtui virhe. Ota yhteyttä järjestelmänvalvojaan",
+          "notFound": "Resurssia ei löytynyt",
+          "notAccessible": "Resurssi ei ole käytettävissä"
+        },
+        "context": {
+          "notAccessible": "Sinulla ei ole pääsyä sisältöön. Ota yhteys omistajaan",
+          "pleaseLogin": "Tämä sisältö ei ole julkinen. Yritä kirjautua sisään",
+          "unknownError": "Sisällön lataamisessa tapahtui virhe. Ota yhteyttä järjestelmänvalvojaan",
+          "notFound": "Sisältöä, jota yrität käyttää, ei ole",
+          "notAccessible": "Sinulla ei ole oikeutta käyttää tätä sisältöä. Ota yhteys järjestelmänvalvojaan saadaksesi käyttöoikeudet"
+        },
+        "template": {
+          "title": "Virhe ladattaessa mallia",
+          "notAccessible": "Sinulla ei ole lupaa käyttää tätä mallia. Ota yhteyttä resurssin omistajaan",
+          "pleaseLogin": "Tämä malli ei ole julkinen. Yritä kirjautua sisään",
+          "unknownError": "Mallin lataamisessa tapahtui virhe. Ota yhteyttä järjestelmänvalvojaan",
+          "notFound": "Mallia, jota yrität käyttää, ei ole"
+        },
+        "map": {
+          "notAccessible": "YSinulla ei ole pääsyä karttaan. Ota yhteys omistajaa.",
+          "pleaseLogin": "Tämä kartta ei ole julkinen. Yritä kirjautua sisään",
+          "unknownError": "Karttaa ladattaessa tapahtui virhe. Ota yhteyttä järjestelmänvalvojaan",
+          "notFound": "Kartta, jota yrität käyttää, ei ole",
+          "notAccessible": "Sinulla ei ole oikeutta käyttää tätä karttaa. Ota yhteys järjestelmänvalvojaan saadaksesi käyttöoikeudet"
+        },
+        "resourceAlreadyExists": "Tämän nimiminen resurssi on jo olemassa"
+      }
+    },
+    "wizard": {
+      "next": "Seuraava",
+      "prev": "Edellinen",
+      "finish": "Valmis"
+    },
+    "vectorstyler": {
+      "tooltip": "Luo ja muokkaa vektoritasotyyliä",
+      "paneltitle": "Vektorityyli",
+      "layerlabel": "Tasp",
+      "rulelabel": "Säännöt",
+      "namelabel": "Säännön nimi",
+      "symboltitle": "Symboli",
+      "labeltitle": "Nimike",
+      "conditiontitle": "Ehdot",
+      "applybtn": "Käytä tyyliä",
+      "addrulebtn": "Lisää sääntö",
+      "removerulebtn": "Poista sääntö"
+    },
+    "scaledenominator": {
+      "minlabel": "Minimittakaavan nimittäjä",
+      "maxlabel": "Maksimittakaavan nimittäjä",
+      "maxerror": "Suurimman arvon on oltava suurempi kuin min-arvo",
+      "minerror": "Minimiarvon on oltava pienempi kuin maksimiarvo",
+      "none": "None"
+    },
+    "markNameSelector": {
+      "circle": "Ympyrä",
+      "square": "Neliö",
+      "triangle": "Kolmio",
+      "star": "Tähti",
+      "cross": "Risti",
+      "x": "X"
+    },
+    "styler": {
+      "tooltip": "Luo ja muokkaa tasotyyliä",
+      "paneltitle": "Tyylin muokkaus",
+      "layerlabel": "Taso"
+    },
+    "styleeditor": {
+      "styleListfilterPlaceholder": "Suodata tyylejä nimen, otsikon tai tiivistelmän perusteella",
+      "templateFilterPlaceholder": "Suodata tyylimallit otsikon mukaan",
+      "createStyleFromTemplate": "Valitse malli uuden tyylin luomiseksi",
+      "titleRequired": "<div>Otsikko vaaditaan!</div><div>Otsikon ja tiivistelmän on oltava aakkosnumeerisia</div>",
+      "titleSettings": "Otsikko",
+      "titleSettingsplaceholder": "Kirjoita otsikko (aakkosnumeerinen)",
+      "abstractSettings": "Tiivistelmä",
+      "abstractSettingsplaceholder": "Kirjoita tiivistelmä (aakkosnumeerinen)",
+      "createStyleModalTitle": "Luo uusi tyyli",
+      "filterMatchNotFound": "Ei tyylejä vastaavia tekstisuodattimia",
+      "backToList": "Takaisin tyyliluetteloon",
+      "createNewStyle": "Luo uusi tyyli",
+      "editSelectedStyle": "Muokkaa valittua tyyliä",
+      "saveCurrentStyle": "Tallenna nykyinen tyyli",
+      "addSelectedTemplate": "Lisää valittu malli tyyliluetteloon",
+      "deleteSelectedStyle": "Poista valittu tyyli",
+      "closeWithoutSaveAlertTitle": "Tyyli on muuttunut",
+      "closeWithoutSaveAlert": "Poistu tyylieditorista tallentamatta muutoksia",
+      "deleteStyleAlertTitle": "Poista tyyli",
+      "deleteStyleAlert": "Valittu tyyli poistetaan pysyvästi",
+      "delete": "Poista",
+      "defaultStyle": "Oletustyyli",
+      "availableStyle": "Saatavilla oleva tyyli",
+      "styleNotFound": "Tyyliä ei löytynyt",
+      "noPermission": "Käyttäjä ei voi muokata tyylejä",
+      "deletedStyleSuccessTitle": "Poista tyyli",
+      "deletedStyleSuccessMessage": "Tyyli on poistettu onnistuneesti",
+      "deletedStyleErrorTitle": "Poista tyylivirhe",
+      "deletedStyleErrorMessage": "Nykyistä tyyliä ei voitu poistaa",
+      "savedStyleTitle": "Tyyli tallennettu",
+      "savedStyleMessage": "Tyyli on tallennettu onnistuneesti",
+      "missingAvailableStyles": "Tyylit puuttuvat",
+      "missingAvailableStylesMessage": "<ul><h4>Mahdolliset syyt:</h4><li>Valittu taso on tasoryhmä</li><li>Tasoa ei ole määritetty oikein palvelinpuolella</li></ul>",
+      "createTmpErrorTitle": "Uusi väliaikainen tyyli",
+      "createTmpStyleErrorMessage": "Väliaikaista tyyliä ei voitu luoda. Tämä voi johtua tyylipalvelun tukemattomasta tyyliformaatista",
+      "updateTmpErrorTitle": "Väliaikainen tyylin päivitys",
+      "updateTmpStyleErrorMessage": "Väliaikaista tyyliä ei voitu päivittää. Vika voi olla muodossa, jota ei tueta, tai yhteysongelmassa.",
+      "createStyleErrorTitle": "Uusi tyyli",
+      "createStyleErrorMessage": "Tyyliä ei voitu tallentaa tyylipalveluun. Vika voi olla muodossa, jota ei tueta, tai yhteysongelmassa.",
+      "updateStyleErrorTitle": "Muokkaa tyyliä",
+      "updateStyleErrorMessage": "Tyyliä ei voitu päivittää tyylipalvelussa. Vika voi olla muodossa, jota ei tueta, tai yhteysongelmassa.",
+      "validationErrorTitle": "Validointivirhe",
+      "genericValidationError": "Tyyli ei ole kelvollinen, eikä sitä voitu käyttää.",
+      "setDefaultStyle": "Aseta valittu tyyli nykyisen tason oletusasetukseksi",
+      "setDefaultStyleSuccessTitle": "Tyylin asetus oletukseksi onnistui",
+      "setDefaultStyleSuccessMessage": "Oletustyyli on otettu käyttöön",
+      "setDefaultStyleErrorTitle": "Virhe oletustyylin asettamisessa",
+      "setDefaultStyleErrorMessage": "Ei ole mahdollista käyttää valittua tyyliä oletusasetuksena"
+    },
+    "playback": {
+      "settings": {
+        "tooltip": "Asetukset",
+        "title": "Toistoasetukset",
+        "frameDuration": "Ruudun kesto",
+        "range": {
+          "title": "Animaatioalue",
+          "zoomTooltip": "Zoomaa nykyiseen animaatioalueeseen",
+          "animationStart": "Animaatio alkaa",
+          "animationEnd": "Animaatio päättyy",
+          "zoomToCurrentPlayackRange": "Zoomaus nykyiselle toistoalueelle",
+          "setToCurrentViewRange": "Aseta nykyiselle näkymälle",
+          "fitToSelectedLayerRange": "Sovita valitun tason alueelle"
+        },
+        "step": {
+          "tooltip": "Kun 'Napsauta ohjaamaan tasoa' -asetus on poistettu käytöstä, voit mukauttaa animaatiota",
+          "label": "Animaatiovaihe",
+          "year": "{number, plural, =0 {Year} =1 {Year} other {Years}}",
+          "week": "{number, plural, =0 {Week} =1 {Week} other {Weeks}}",
+          "day": "{number, plural, =0 {Day} =1 {Day} other {Days}}",
+          "hour": "{number, plural, =0 {Hour} =1 {Hour} other {Hours}}",
+          "minute": "{number, plural, =0 {Minute} =1 {Minute} other {Minutes}}",
+          "second": "{number, plural, =0 {Second} =1 {Second} other {Seconds}}"
+        },
+        "mode": {
+          "title": "Tila",
+          "following": "Seuraa animaatiota",
+          "followingDescription": "Kun animaatio on aktiivinen, seuraa kursoria"
+        }
+      },
+      "backwardStep": "Mene taaksepäin",
+      "forwardStep": "Mene eteenpäin",
+      "play": "Play",
+      "pause": "Tauko",
+      "paused": "Toista (keskeytetty)",
+      "stop": "Pysäytä"
+    },
+    "timeline": {
+      "settings": {
+        "title": "Aikajana-asetukset",
+        "snapToGuideLayer": "Napsauta ohjaamaan tasoa",
+        "snapToGuideLayerTooltip": "Pakottaa aikakohdistimen napsauttamaan valitun tason tietoja. Poista tämä vaihtoehto käytöstä, kun haluat avata aikakohdistimet ja ottaa käyttöön animaation vaiheen mukauttamisen"
+      },
+      "hide": "Piilota aikajana",
+      "show": "Näytä aikajana",
+      "mapSyncOn": "Näytä kaikki ajat, suodattamatta ikkunan perusteella",
+      "mapSyncOff": "Näytä vain nykyisessä näkymässä käytettävissä olevat ajat",
+      "currentTime": "Siirry nykyiseen aikaan",
+      "rangeStart": "Siirry nykyiselle aikavälille",
+      "rangeEnd": "Siirry nykyiselle aikavälille",
+      "hideLayerName": "Piilota tasojen nimet",
+      "showLayerName": "Näytä tasojen nimet",
+      "enableRange": "Ota ajanjakso käyttöön",
+      "disableRange": "Poista ajanjakso käytöstä",
+      "enablePlayBack": "Ota toistosäätimet käyttöön",
+      "disablePlayBack": "Poista toiston ohjaimet käytöstä",
+      "expand": "Laajenna aikaliukusäädintä",
+      "collapse": "Kutista aikaliukusäädin",
+      "collapsed": {
+        "title": "Aikajana on kaatunut",
+        "tooltip": "Napsauta tätä laajentaaksesi sitä uudelleen"
+      },
+      "errors": {
+        "multidim_error_title": "Backend ei vastaa",
+        "multidim_error_message": "Moniulotteiselle tuelle vaadittavat palvelut eivät vastaa. Yritä myöhemmin uudelleen tai ota yhteyttä järjestelmänvalvojaan."
+      }
+    },
+    "rulesmanager": {
+      "apply": "Käytä",
+      "remove": "Poista geometria",
+      "resetconstraints": "Palauttaa rajoitukset",
+      "constraintsmsg": "Oikeuksien, työtilan tai tason vaihtaminen, yksityiskohdat poistetaan. Haluatko varmasti tehdä niin?",
+      "defstyle": "Oletustyyli",
+      "avstyle": "Käytettävissä olevat tyylit",
+      "clearbtn": "Poista kaikki",
+      "selectbtn": "Valitse kaikki",
+      "placeholders": {
+        "role": "Kirjoita hakeaksesi rooleja",
+        "user": "Kirjoita hakeaksesi käyttäjiä",
+        "service": "Kirjoita hakeaksesi palveluita",
+        "request": "Kirjoita hakeaksesi pyyntöjä",
+        "workspace": "Kirjoita hakeaksesi työtiloja",
+        "layer": "Kirjoita hakeaksesi tasoja",
+        "access": "Kirjoita hakeaksesi käyttöoikeuksia",
+        "ip": "###. ###. ###. ### / ##",
+        "priority": "Valitse prioriteetti",
+        "filter": "Suodata tyylejä..."
+      },
+      "menutitle": "Hallitse pääsyä koskevia sääntöjä",
+      "tooltip": {
+        "addT": "Lisää sääntö",
+        "editT": "Muokkaa valittua sääntöä",
+        "addBeT": "Lisää uusi sääntö ennen valintaa",
+        "addAfT": "Lisää uusi sääntö valitun jälkeen",
+        "deleteT": "Poista valitut säännöt",
+        "cacheT": "Tyhjennä välimuisti",
+        "save": "Tallenna nykyinen sääntö",
+        "close": "Poistu luontisäännöstä"
+      },
+      "navItems": {
+        "main": "Yleinen sääntö",
+        "style": "Tyyli",
+        "filter": "Suodattimet",
+        "attribute": "Attribuuttisääntö"
+      },
+      "rule": "Sääntö",
+      "cachetitle": "Tyhjennä välimuisti",
+      "cachemsg": "Oletko varma, että tyhjennät sääntövälimuistin?",
+      "deltitle": "Poista sääntö",
+      "delmsg": "Haluatko todella poistaa tämän säännön?",
+      "invalidForm": "Lomake ei kelpaa, tarkista kenttäarvot",
+      "ip": "IP",
+      "title": "Käyttöoikeussäännöt",
+      "role": "Rooli",
+      "user": "Käyttäjä",
+      "priority": "Prioriteetti",
+      "service": "Palvelu",
+      "request": "Pyynnöt",
+      "workspace": "Työtila",
+      "layer": "Taso",
+      "filters": "Suodattimet",
+      "rules": "Säännöt",
+      "access": "Käyttöoikeudet",
+      "newModal": "Uusi sääntö",
+      "editModal": "Muokkaa sääntöä",
+      "newButton": "Luo",
+      "editButton": "Tallenna",
+      "close": "Sulje",
+      "previous": "Edellinen",
+      "next": "Seuraava",
+      "cacheCleaned": "Välimuistin puhdistus onnistui",
+      "errorTitle": "Geofence",
+      "errorCQL": "Geometria ei kelpaa!",
+      "errorCleaningCache": "Virhe puhdistettaessa välimuistia.",
+      "errorLoadingRoles": "Virhe roolien lataamisessa.",
+      "errorLoadingUsers": "Virhe käyttäjien lataamisessa.",
+      "errorLoadingWorkspaces": "Virhe työtilojen lataamisessa.",
+      "errorLoadingLayers": "Virhe ladatessa tasoja.",
+      "errorLoadingRules": "Virhe sääntöjen lataamisessa.",
+      "errorMovingRules": "Virhe sääntöjen siirtämisessä.",
+      "errorDeletingRules": "Virhe sääntöjen poistamisessa.",
+      "errorAddingRule": "Virhe lisättäessä sääntöä.",
+      "errorUpdatingRule": "Virhe tallennettaessa sääntöä.",
+      "errorDuplicateRule": "Sääntö kopioitu.",
+      "errorLoading": "Virhe ladatessa",
+      "deleteModal": "Poista säännöt",
+      "selectedRulesDelete": "Poistetaanko valitut säännöt?",
+      "deleteButton": "Poista",
+      "cancelButton": "Peruuta",
+      "cqlRead": "CQL-suodattimen lukemissäännöt",
+      "cqlWrite": "CQL-suodattimen kirjoitussäännöt",
+      "missingconfig": "Säännönhallintaohjelma ohittaa määritykset. Pääsy evätty!",
+      "selectworkspace": "Sinun on valittava työtila, jotta lisäasetukset voidaan ottaa käyttöön"
+    },
+    "geostory": {
+      "loadingSpinner": "Ladataan tarinaa",
+      "addTitleSection": "Lisää otsikko-osa",
+      "addParagraphSection": "Lisää kappaleosa",
+      "addImmersiveSection": "Lisää ympäröivä osio",
+      "addMediaSection": "Lisää mediaosa",
+      "addWebPageSection": "Lisää verkkosivun osa",
+      "addImmersiveContent": "Lisää kiehtovaa sisältöä",
+      "addTextContent": "Lisää tekstisisältöä",
+      "addMediaContent": "Lisää mediasisältöä",
+      "addWebPageContent": "Lisää verkkosivun sisältöä",
+      "zoomToContent": "Zoomaa sisältöön",
+      "emptyTitle": "Tämä tarina on tyhjä",
+      "emptyDescription": "Aloita tarinan luominen lisäämällä uutta sisältöä",
+      "closeFullscreenMap": "Sulje koko ruudun kartta",
+      "showFullscreenMap": "Näytä kartta koko ruudulla",
+      "contentToolbar": {
+        "contentSize": "Muuta kokoa",
+        "contentHeightAuto": "Tee tämä osa sopeuttaaksesi sisällön korkeuteen",
+        "contentHeightView": "Tee tämä osa sopimaan näkymään pystysuunnassa",
+        "smallSizeLabel": "Pieni",
+        "mediumSizeLabel": "Keskikoko",
+        "largeSizeLabel": "Suuri",
+        "fullSizeLabel": "Täysi",
+        "contentAlign": "Kohdista sisältö",
+        "leftAlignLabel": "Vasen",
+        "centerAlignLabel": "Centre",
+        "rightAlignLabel": "Oikea",
+        "contentTheme": "Vaihda kentän teema",
+        "brightThemeLabel": "Kirkas",
+        "brightTextThemeLabel": "Kirkas teksti",
+        "darkThemeLabel": "Tumma",
+        "darkTextThemeLabel": "Tumma teksti",
+        "cover": "Aseta tausta peittämään koko tila",
+        "fit": "Tee koko tausta näkyväksi",
+        "editMedia": "Vaihda medialähde",
+        "remove": "Poista",
+        "removeConfirmTitle": "Oletko varma?",
+        "removeConfirmContent": "Haluatko poistaa tämän sisällön tarinasta?",
+        "editMap": "Muokkaa kartan kokoonpanoa",
+        "resetMap": "Palauta kartta alkuperäiseen",
+        "resetMapConfirm": "Palauta kartan määritykset",
+        "resetConfirmContent": "Palautetaanko karttamääritykset alkuperäiseen?",
+        "saveChanges": "Tallenna muutokset",
+        "closeMapEditing": "Sulje",
+        "confirmCloseMapEditing": "Sulje kartan muokkaus",
+        "pendingChangesDiscardConfirm": "Hylätäänkö nykyiset karttamuutokset?",
+        "editURL": "Muokkaa verkkosivun URL-osoitetta",
+        "advancedMapEditor": "Avaa laajempi karttaeditori"
+      },
+      "navigation": {
+        "edit": "Muokkaa tarinaa"
+      },
+      "builder": {
+        "defaults": {
+          "htmlTitlePlaceholder": "Lisää otsikko",
+          "htmlPlaceholder": "Lisää teksti tähän...",
+          "titleTitle": "Otsikkoalue",
+          "titleParagraph": "Kappalealue",
+          "titleImmersive": "Syventävä alue",
+          "titleImmersiveContent": "Syventävä sisältö",
+          "titleMedia": "Mediaosasto",
+          "titleImage": "Kuva",
+          "titleText": "Teksti",
+          "titleWebPage": "Verkkosivu",
+          "titleWebPageSection": "Verkkosivualue",
+          "titleUnknown": "TUNTEMATON"
+        },
+        "delete": "Poista valittu alue",
+        "preview": "Näytä esikatselu",
+        "edit": "Muokkaa tarinaa",
+        "noContents": "Sisältöä ei ole saatavana",
+        "collapseAll": "Kutista kaikki",
+        "expandAll": "Laajenna kaikki",
+        "fullscreen": "Näytä esikatselu koko näytössä",
+        "settings": {
+          "tooltip": "Asetukset",
+          "back": "Takaisin muokkaajaan",
+          "backConfirmTitle": "Asetukset muutettu",
+          "backConfirmBody": "Oletko varma, että haluat sulkea asetuspaneelin tallentamatta muutoksia",
+          "backConfirmNo": "Ei",
+          "backConfirmYes": "Kyllä",
+          "save": "Tallenna asetukset",
+          "headerTitle": "Tarina-asetukset",
+          "title": "Otsikko",
+          "titlePlaceholder": "Kirjoita otsikko",
+          "logo": "Logo",
+          "logoPlaceholder": "Logo ei saa ylittää 48 px korkeutta, ja sen leveydeksi suositellaan 96 px. enintään 500 kt",
+          "autoplay": "Automaattinen toisto",
+          "enableAutoplay": "Ota automaattinen toisto käyttöön",
+          "autoplayInterval": "Automaattisen toiston väliaika (sekunteina)",
+          "autoplayIntervalPlaceholder": "Ota automaattisen toiston väliaika käyttöön",
+          "navbar": "Navigointipalkki",
+          "showNavbar": "Näytä navigointipalkki"
+        }
+      },
+      "errors": {
+        "loading": {
+          "title": "Virhe",
+          "unknownError": "Tuntematon virhe",
+          "pleaseLogin": "Ole hyvä ja kirjaudu sisään",
+          "notAccessible": "Tätä tarinaa ei voida näyttää",
+          "geostoryNotAccessible": "Sinulla ei ole käyttöoikeutta tähän tarinaan. Ota yhteyttä resurssin omistajaan",
+          "geostoryDoesNotExist": "Tätä tarinaa ei ole"
+        }
+      },
+      "mapEditor": {
+        "configureMapOptions": "Määritä kartta",
+        "settings": "Asetukset",
+        "settingsSubTitle": "Hallinnoi käyttäjien vuorovaikutusta",
+        "toc": "Tasot",
+        "pan": "Vieritä karttaa",
+        "zoom": "Lähennä / loitonna karttaa",
+        "topLeft": "Vasen yläkulma",
+        "topRight": "Oikea yläkulma",
+        "bottomLeft": "Vasen alakulma",
+        "bottomRight": "Oikea alakulma"
+      },
+      "webPageCreator": {
+        "title": "Verkkosivu",
+        "saveButton": "Tallenna",
+        "error": "Anna kelvollinen verkkosivun URL-osoite",
+        "url": {
+          "label": "URL"
+        }
+      }
+    },
+    "saveDialog": {
+      "title": "Muokkaa ominaisuuksia",
+      "name": "Nimi",
+      "description": "Kuvaus",
+      "createdAt": "Luotu",
+      "modifiedAt": "Muokattu",
+      "namePlaceholder": "Anna nimi...",
+      "descriptionPlaceholder": "Anna kuvaus...",
+      "confirmCloseText": "Sinulla on tallentamattomia muutoksia. Oletko varma, että haluat sulkea tallentamatta?",
+      "close": "Sulje",
+      "cancel": "Peruuta",
+      "saveSuccessTitle": "Tallennus onnistui",
+      "saveSuccessMessage": "Tallennettu onnistuneesti"
+    },
+    "mapEditor": {
+      "modalTitle": "Karttaeditori",
+      "confirmExitTitle": "Sulje karttaeditori",
+      "confirmExitContent": "Hylätäänkö tallentamattomat muutokset?"
+    },
+    "mediaEditor": {
+      "modalTitle": "Media",
+      "images": "Kuvat",
+      "videos": "Videot",
+      "maps": "Kartat",
+      "preview": "Esikatselu",
+      "apply": "Käytä",
+      "confirmExitTitle": "Sulje editori",
+      "confirmExitContent": "Hylätäänkö tallentamattomat muutokset?",
+      "mediaPicker": {
+        "services": "Palvelut: ",
+        "clean": "Tyhjennä tulokset",
+        "noResults": "Ei tuloksia",
+        "selectService": "Valitse palvelu",
+        "add": "Lisää",
+        "back": "Takaisin",
+        "save": "Tallenna",
+        "edit": "Muokkaa",
+        "sourcePlaceholder": "Anna lähde",
+        "source": "Lähde",
+        "titlePlaceholder": "Anna otsikko",
+        "title": "Otsikko",
+        "altTextPlaceholder": "Anna vaihtoehtoinen teksti",
+        "altText": "Vaihtoehtoinen teksti",
+        "descriptionPlaceholder": "Anna kuvaus",
+        "description": "Kuvaus",
+        "creditsPlaceholder": "Anna tekijät",
+        "credits": "Tekijät",
+        "mapFilter": "Suodata karttoja",
+        "videoFilter": "Suodata videoita",
+        "imageFilter": "Suodata kuvia",
+        "import": "Tuo resurssi",
+        "trash": "Poista resurssi"
+      },
+      "mediaform": {
+        "confirmExitTitle": "Sulje media",
+        "confirmExitContent": "Hylätäänkö tallentamattomat muutokset?"
+      },
+      "mapForm": {
+        "thumbnailMessage": "Kuvien koon tulee olla neliö, jonka koko on 98px x 98px, enintään 100 kt",
+        "confirmMapSaveTitle": "Päivitä kartta",
+        "confirmMapSaveContent": "Kartan päivittäminen nollaa tarinan muut kartat jotka riippuvat tästä kartasta ja joita on aiemmin muokattu editorin kautta, vahvistatko?"
+      },
+      "mediaList": {
+        "removeResourceTitle": "Oletko varma?",
+        "confirmRemoveResource": "Haluatko poistaa tämän mediaresurssin tarinasta?",
+        "confirmRemoveUsedResource": "Tämä resurssi poistetaan myös kaikista osioista ja sisällöistä joissa sitä käytetään jättäen ne tyhjiksi. Haluatko poistaa sen tarinasta?"
+      },
+      "mapList": {
+        "emptyList": "Napsauta plus-painiketta luodaksesi kartan tai valitaksesi toisen karttapalvelun."
+      }
+    },
+    "backgroundDialog": {
+      "addTitle": "Lisää uusi tausta",
+      "editTitle": "Muokkaa nykyistä taustaa",
+      "title": "Otsikko",
+      "titlePlaceholder": "Anna otsikko",
+      "add": "Lisää",
+      "thumbnailMessage": "Kuvien koon tulee olla neliö, jonka koko on 98 x 98px tai 128px x 128px, enintään 500 kt",
+      "additionalParameters": "Lisäparametrit",
+      "addAdditionalParameterTooltip": "Lisää parametri",
+      "removeAdditionalParameterTooltip": "Poista parametri",
+      "parameter": "Parametri",
+      "value": "Arvo",
+      "string": "Merkkijono",
+      "number": "Numero",
+      "boolean": "Totuusarvo"
+    },
+    "defaultMapBackgroundsServiceTitle": "Oletustaustakarttapalvelu",
+    "backgroundSelector": {
+      "addTooltip": "Lisää uusi taustakartta",
+      "confirmDelete": "Oletko varma että haluat poistaa taustakartan \"{title}\"?"
+    },
+    "stepper": {
+      "back": "Takaisin",
+      "next": "Seuraava"
+    },
+    "plugins": {
+      "About": {
+        "description": "Työkalu, joka näyttää Tietoja-ikkunan",
+        "title": "Tietoja"
+      },
+      "AddGroup": {
+        "description": "Antaa käyttäjien luoda uusia tasoryhmiä",
+        "title": "Lisää tasoryhmä"
+      },
+      "Annotations": {
+        "description": "Työkalu merkintöjen piirtämiseen kartalle",
+        "title": "Merkinnät"
+      },
+      "AutoMapUpdate": {
+        "description": "Antaa käyttäjän päivittää kartan (vanha mapstore-versio)",
+        "title": "Automaattinen karttapäivitys"
+      },
+      "BackgroundSelector": {
+        "description": "Mahdollistaa taustakartan valitsemisen",
+        "title": "Taustavalitsin"
+      },
+      "BurgerMenu": {
+        "description": "Kartan oikeassa yläkulmassa oleva valikko, joka sisältää muita laajennuksia",
+        "title": "Valikko"
+      },
+      "CRSSelector": {
+        "description": "Mahdollistaa karttaprojektion vaihtamisen",
+        "title": "Koordinaattijärjestelmävalitsin"
+      },
+      "Details": {
+        "description": "Anna käyttäjän avata kartan tietokortti, jos sellainen on",
+        "title": "Karttatiedot"
+      },
+      "Expander": {
+        "description": "Sivupalkin apuohjelma, joka mahdollistaa joidenkin painikkeiden piilottamisen",
+        "title": "Laajennin"
+      },
+      "FeatureEditor": {
+        "description": "Selaa ominaisuustietoja taulukossa",
+        "title": "Attribuuttitaulukko"
+      },
+      "FilterLayer": {
+        "description": "Mahdollistaa tason suodattamisen",
+        "title": "Suodatin"
+      },
+      "HelpLink": {
+        "description": "Painike, jolla pääset MapStore-ohjeisiin",
+        "title": "Dokumentaatiolinkki"
+      },
+      "Home": {
+        "description": "Linkki kotisivulle",
+        "title": "Kotisivu"
+      },
+      "Identify": {
+        "description": "Näytä kartalla olevan kohteen tiedot",
+        "title": "Tunnista"
+      },
+      "Locate": {
+        "description": "Etsi ja seuraa käyttäjän sijaintia kartalla",
+        "title": "Paikannustyökalu"
+      },
+      "Login": {
+        "description": "Sisäänkirjautumistyökalu",
+        "title": "Kirjaudu"
+      },
+      "MapCatalog": {
+        "description": "Mahdollistaa palvelimella olevien karttojen selaamisen, muokkaamisen, poistamisen ja lataamisen",
+        "title": "Karttakatalogi"
+      },
+      "MapExport": {
+        "description": "Mahdollistaa kartan viemisen tiedostoon",
+        "title": "Vie kartta"
+      },
+      "MapImport": {
+        "description": "Mahdollistaa tiedostojen tuomisen (SHP, KML/KMZ, GeoJSON, GPX) tai vietyjen karttojen uudelleen lataamisen.",
+        "title": "Tuo kartta"
+      },
+      "MapLoading": {
+        "description": "Sivupalkissa karttaa ladatessa näytettävä animaatio",
+        "title": "Kartan latausosoitin"
+      },
+      "Measure": {
+        "description": "Mahdollistaa etäisyyksien ja alueiden mittaamisen kartalla",
+        "title": "Mitta"
+      },
+      "MetadataExplorer": {
+        "description": "Selaa palveluita (WMS / WMTS / CSW) lisätäksesi tasoja karttaan",
+        "title": "Katalogi"
+      },
+      "MousePosition": {
+        "description": "Näyttää koordinaatit kursorin osoittamassa kohdassa",
+        "title": "Kursorin koordinaatit"
+      },
+      "Print": {
+        "description": "Mahdollistaa nykyisen kartan ja selitteen tulostamisen",
+        "title": "Tulostustyökalu"
+      },
+      "Save": {
+        "description": "Antaa käyttäjän tallentaa karttaan tehdyt muutokset palvelimelle",
+        "title": "Tallenna"
+      },
+      "SaveAs": {
+        "description": "Antaa käyttäjän luoda tai kloonata karttoja palvelimelle",
+        "title": "Tallenna nimellä"
+      },
+      "ScaleBox": {
+        "description": "Kartan nykyisen mittakaavan osoitin ja valitsin",
+        "title": "Mittakaavan valitsin"
+      },
+      "Search": {
+        "description": "Hakutyökalu (GeoCoder)",
+        "title": "Hakupalkki"
+      },
+      "Settings": {
+        "description": "Mahdollistaa joidenkin kartan asetusten muokkaamisen (kieli, oletustietomuoto...)",
+        "title": "Asetukset"
+      },
+      "Share": {
+        "description": "Mahdollistaa kartan jakamisen erilaisilla tavoilla (linkki, QR-koodi, upotus, sosiaalinen media...)",
+        "title": "Jaa-työkalu"
+      },
+      "StyleEditor": {
+        "description": "Tason tyylieditori",
+        "title": "Tyylieditori"
+      },
+      "TOC": {
+        "description": "Tarjoaa lajiteltavan luettelon tasoista",
+        "title": "Tasoluettelo"
+      },
+      "TOCItemsSettings": {
+        "description": "Anna käyttäjän muokata tason asetuksia",
+        "title": "Tasoan asetukset"
+      },
+      "Timeline": {
+        "description": "Mahdollistaa eri ajanhetkien tarkastelun aikaulotteiselle datalle",
+        "title": "Aikajana"
+      },
+      "Tutorial": {
+        "description": "Lisää oppaan selittämään erilaisia toimintoja",
+        "title": "Opas"
+      },
+      "UserExtensions": {
+        "description": "Antaa käyttäjän ottaa käyttöön tai poistaa käytöstä laajennuksia",
+        "title": "Käyttäjälaajennukset"
+      },
+      "Version": {
+        "description": "Näyttää MapStoren version kartta-asetukset -työkalussa",
+        "descriptionGeorchestra": "Näyttää GeOrchestra-version kartta-asetukset -työkalussa",
+        "title": "Versio"
+      },
+      "WFSDownload": {
+        "description": "Mahdollistaa tietojen lataamisen attribuuttitaulusta",
+        "title": "Lataa tiedot"
+      },
+      "Widgets": {
+        "description": "Mahdollistaa vimpaimien lisäämisen ja näyttämisen kartalla",
+        "title": "Vimpaimet"
+      },
+      "WidgetsTray": {
+        "description": "Valikko vimpaimien pienentämiseen ja laajentamiseen. ",
+        "title": "Vimpainvalikko"
+      },
+      "ZoomAll": {
+        "description": "Sivupalkin painike zoomataksesi koko kartan laajuuteen",
+        "title": "Näytä koko kartta"
+      },
+      "ZoomIn": {
+        "description": "Painike, joka lisää kartan zoomaustasoa",
+        "title": "Lähennä"
+      },
+      "ZoomOut": {
+        "description": "Painike, joka vähentää kartan zoomaustasoa",
+        "title": "Loitonna"
+      }
+    },
+    "contextCreator": {
+      "generalSettings": {
+        "label": "Yleiset asetukset",
+        "title": "Luo uusi sovellusympäristö",
+        "name": "Nimi",
+        "namePlaceholder": "Anna sovellusympäristön nimi...",
+        "windowTitle": "Ikkunan otsikko",
+        "windowTitlePlaceholder": "Anna ikkunan otsikko..."
+      },
+      "configurePlugins": {
+        "label": "Konfiguroi laajennuksia",
+        "pluginsFilterPlaceholder": "Suodata laajennukset nimen mukaan...",
+        "availablePlugins": "Käytettävissä olevat laajennukset",
+        "enabledPlugins": "Käytössä olevat laajennukset",
+        "availablePluginsEmpty": "Ota kaikki käytettävissä olevat laajennukset käyttöön",
+        "enabledPluginsEmpty": "Lisää laajennuksia konfiguraatioon käytettävissä olevien laajennusten luettelosta",
+        "searchResultsEmpty": "Hakukriteerit täyttäviä laajennuksia ei löytynyt",
+        "cfgParsingError": {
+          "title": "Konfiguraatiovirhe",
+          "body": "Konfiguraatiotiedoston parsiminen epäonnistui.\nKohdattiin seuraava virhe:\n\"{error}\""
+        },
+        "uploadLabel": "Vedä laajennuspaketti tähän tai napsauta valitaksesi laajennuspaketti",
+        "uploadTitle": "Asenna MapStore-laajennus",
+        "tooltips": {
+          "enableUserPlugin": "Anna käyttäjän ottaa nykyinen laajennus käyttöön",
+          "disableUserPlugin": "Poista käyttäjältä mahdollisuus ottaa nykyinen nykyisen laajennus käyttöön",
+          "activatePlugin": "Ota laajennus käyttöön käynnistyksen yhteydessä",
+          "deactivatePlugin": "Älä ota laajennusta käyttöön käynnistyksen yhteydessä",
+          "editConfiguration": "Muokkaa laajennuksen konfiguraatiota",
+          "pluginDocumentation": "Avaa laajennuksen asetusten dokumentaatio",
+          "uploadPlugin": "Lisää MapStore-laajennus",
+          "mapTemplatesConfig": "Määritä asetusmalleja"
+        },
+        "saveCfgErrorNotification": {
+          "title": "Syntaksivirhe laajennuksen konfiguraatiossa",
+          "message": "Laajennuksen \"{pluginName}\" konfiguraatiossa on virhe. Korjaa virhe ja yritä uudelleen"
+        }
+      },
+      "configureTemplates": {
+        "title": "Määritä asetusmalleja",
+        "availableTemplates": "Käytettävissä olevat mallit",
+        "enabledTemplates": "Käytössä olevat mallit",
+        "templatesFilterPlaceholder": "Suodata malleja...",
+        "availableTemplatesEmpty": "Ota kaikki saatavilla olevat mallit käyttöön",
+        "enabledTemplatesEmpty": "Lisää malleja konfiguraatioon käytettävissä olevien mallien luettelosta",
+        "searchResultsEmpty": "Hakukriteerit täyttäviä malleja ei löytynyt",
+        "fileDrop": {
+          "label": "Malli",
+          "clear": "Pudota tai napsauta valitaksesi karttamallitiedosto (tukee vietyjä JSON MapStore-karttoja ja WMC-tiedostoja)"
+        },
+        "uploadDialog": {
+          "title": "Lisää karttamalli",
+          "save": "Lisää",
+          "jsonParsingError": "JSON-parsiminen epäonnistui: \"{error}\"",
+          "fileReadError": "Odottamaton virhe lukiessa tiedostoa"
+        },
+        "tooltips": {
+          "uploadTool": "Lisää uusi malli",
+          "editTemplate": "Muokkaa mallin ominaisuuksia",
+          "deleteTemplate": "Poista malli"
+        },
+        "deleteError": "Mallia ei voitu poistaa, tapahtui virhe",
+        "deleteConfirm": "Oletko varma että haluat poistaa mallin \"{templateName}\"?"
+      },
+      "configureMap": {
+        "label": "Määritä kartta",
+        "reload": "Lataa kartta uudelleen",
+        "confirm": "Tämä hylkää kaikki nykyiset karttamuutokset. Haluatko jatkaa?"
+      },
+      "saveErrorNotification": {
+        "titleContext": "Kontekstin tallennus epäonnistui",
+        "titleTemplate": "Mallin tallennus epäonnistui",
+        "conflict": "Saman niminen resurssi on jo olemassa",
+        "defaultMessage": "Tuntematon virhe",
+        "categoryError": "Puuttuvan kategorian \"{categoryName}\" luonti epäonnistui"
+      },
+      "contextNameErrorNotification": {
+        "title": "Virheellinen kontekstinimi",
+        "unknownError": "Odottamaton virhe"
+      },
+      "undo": "Haluatko varmasti hylätä kontekstin muokkausistunnon?"
+    },
+    "contextManager": {
+      "title": "Hallitse konteksteja",
+      "gridTitle": "Kontekstit",
+      "searchPlaceholder": "Hae...",
+      "newContext": "Uusi konteksti",
+      "editContextTooltip": "Muokkaa kontekstia"
+    },
+    "userExtensions": {
+      "title": "Käyttäjälaajennukset",
+      "emptyTitle": "Ei tulosta",
+      "emptyDescription": "Suodatin ei vastaa minkään laajennuksen nimeä tai kuvausta",
+      "filterPlaceholder": "Suodata...",
+      "addExtension": "Lisää laajennus",
+      "removeExtension": "Poista laajennus"
+    },
+    "mapTemplates": {
+      "title": "Karttamallit",
+      "favouritesTitle": "Suosikit",
+      "allTitle": "Kaikki",
+      "filterPlaceholder": "Suodata karttamalleja...",
+      "transfer": "Korvaa kartta tällä mallilla",
+      "merge": "Lisää tämä malli karttaan",
+      "favouriteAdd": "Lisää suosikkeihin",
+      "favouriteRemove": "Poista suosikeista",
+      "emptyTitle": "Ei tulosta",
+      "emptyDescription": "Suodatin ei vastaa minkään mallin nimeä tai kuvausta",
+      "noTemplatesTitle": "Malleja ei löytynyt",
+      "noTemplatesDescription": "Nykyinen konteksti ei sisällä malleja",
+      "confirmReplaceTitle": "Korvaa kartan sisältö",
+      "confirmReplaceMessage": "Voit korvata kaikki tasot ja karttamääritykset valitulla mallilla napsauttamalla korvaa-painiketta",
+      "confirmReplaceConfirmButton": "Korvaa"
+    },
+    "mapCatalog": {
+      "title": "Karttakatalogi",
+      "filterPlaceholder": "Etsi karttoja...",
+      "deleteConfirmContent": "Oletko varma, että haluat poistaa kartan \"{mapName}\"?",
+      "tooltips": {
+        "edit": "Muokkaa asetuksia",
+        "delete": "Poista resurssi",
+        "share": "Jaa"
+      },
+      "deletedMap": {
+        "title": "Poista kartta",
+        "message": "Kartta onnistuneesti poistettu"
+      },
+      "updatedMap": {
+        "title": "Tallennettu kartta",
+        "message": "Kartta onnistuneesti tallennettu"
+      },
+      "deleteError": "Odottamaton virhe karttaa poistaessa",
+      "updateError": "Odottamaton virhe karttaa tallennettaessa"
+    },
+    "tutorial": {
+      "title": "Ohje",
+      "back": "Takaisin",
+      "next": "Seuraava",
+      "close": "Sulje",
+      "skip": "Ohita",
+      "last": "Valmis",
+      "start": "Aloita",
+      "checkbox": "älä näytä tätä viestiä uudelleen",
+      "error": "Virhe: kohdetta ei löydy",
+      "intro": {
+        "title": "Tervetuloa MapStoreen",
+        "text": "kehys web-karttasovellusten rakentamiseksi käyttämällä yleisiä karttakirjastoja, kuten OpenLayers ja Leaflet."
+      },
+      "drawerMenu": {
+        "title": "Päävalikko",
+        "text": "Löydät tietoja ja työkaluja tasojen hallitsemiseksi"
+      },
+      "searchBar": {
+        "title": "Hakupalkki",
+        "text": "Kirjoita etsimäsi paikan osoite. esim. 'kalevankatu, helsinki'. Voit myös antaa koordinaatteja muodossa: 43.87,10.20"
+      },
+      "home": {
+        "title": "Koti",
+        "text": "Napsauta siirtyäksesi kotisivulle"
+      },
+      "searchButton": {
+        "title": "Haku",
+        "text": "Napsauta avataksesi hakupalkki ja kirjoita sitten etsimäsi paikan osoite. esim. 'kalevankatu, helsinki'. Voit myös antaa koordinaatteja muodossa: 43.87,10.20"
+      },
+      "burgerMenu": {
+        "title": "Asetusvalikko",
+        "text": "Sisältää asetuksia ja ohjeita"
+      },
+      "zoomInButton": {
+        "title": "Lähennä",
+        "text": "Napsauta zoomataksesi karttaa lähemmäs"
+      },
+      "zoomOutButton": {
+        "title": "Loitonna",
+        "text": "Napsauta zoomataksesi karttaa kauemmas"
+      },
+      "fullscreen": {
+        "title": "Koko näyttö",
+        "text": "Napsauta siirtyäksesi kokonäyttö-tilaan"
+      },
+      "identifyButton": {
+        "title": "Info",
+        "text": "Paina aktivoidaksesi työkalu, ja napsauta sitten karttaa hakeaksesi tietoja kohteista"
+      },
+      "mapType": {
+        "title": "Kirjasto",
+        "text": "Voit valita kartan piirtämiseen joko Leaflet- tai OpenLayers-kirjaston"
+      },
+      "mapsGrid": {
+        "title": "Kartat",
+        "text": "Sisältää esimerkkejä MapStoresta. Napsauta kuvaa kokeillaksesi demoa."
+      },
+      "examples": {
+        "title": "Mukautettu sovellus",
+        "text": "Voit käyttää MapStoren komponentteja ja laajennuksia mukautettujen sovellusten luomiseen"
+      },
+      "introCesium": {
+        "title": "3D-karttaohjeet",
+        "text": "Napsauta Seuraava-painiketta aloittaaksesi opetusohjelman"
+      },
+      "cesium": {
+        "title": "Vuorovaikutukset kartan kanssa",
+        "pan": "Vieritä karttaa",
+        "zoom": "Zoomaa näkymää",
+        "tilt": "Kallista näkymää",
+        "rotate": "Kierrä näkymää",
+        "oneDrag": "Vedä yhdellä sormella",
+        "twoPinch": "Kahden sormen nipistys",
+        "twoDragSame": "Kahden sormen vetäminen samaan suuntaan",
+        "twoDragOpposite": "Kahden sormen vetäminen vastakkaiseen suuntaan",
+        "leftClick": "Napsautus + vedä",
+        "rightClick": "Hiiren oikea painike + vedä, tai hiiren rullan vieritys",
+        "middleClick": "Hiiren keskipainike + vedä, tai CTRL + vasen tai oikea hiiren painike + vedä"
+      },
+      "cesiumCompass": {
+        "title": "Kompassi",
+        "text": "Voit käyttää kompassia kiertääksesi maapalloa. Kierrä karttaa vetämällä"
+      },
+      "cesiumNavigation": {
+        "title": "Navigointi",
+        "text": "Sisältää lähennys- ja loitonnuspainikkeet"
+      },
+      "dashboardIntro": {
+        "title": "Hallintapaneelin opas",
+        "text": "Katsaus hallintapaneelin toiminnoista"
+      },
+      "dashboardNav": {
+        "title": "Navigointipalkki",
+        "text": "Sisältää kielivalinnan, sisäänkirjautumisen, kotisivulinkin ja asetukset-valikon"
+      },
+      "dashboardContainer": {
+        "title": "Ohjauspaneeli",
+        "text": "<p>MapStore-ohjauspaneeli tarjoaa joukon tietoja yhdellä näkymällä. Kartalla näkyvän paikkatiedon oheen voidaan sijoittaa attribuuttitaulukkoja, kaavioita ja muita elementtejä. Tarkoituksena on yhdistää erilaisia tietoja, näyttää tilastollisia yksityiskohtia antaa erilaisia tekstuaalisia kuvauksia tiettyyn kontekstiin liittyen.</p><p>Kaikki käyttäjät voivat katsella ja vuorovaikuttaa julkaistujen ohjauspaneelien kanssa, mutta vain käyttäjät joilla on muokkausoikeus voivat lisätä, järjestää, tai poistaa vimpaimia tai muuttaa niiden kokoa.</p>"
+      },
+      "dashboardAddWidget": {
+        "title": "Lisää vimpain",
+        "text": "Jos haluat lisätä vimpaimen ohjauspaneeliin, napsauta + -painiketta"
+      },
+      "dashboardBuilder": {
+        "title": "Luo uusi vimpain",
+        "text": "Voit valita haluamasi vimpaintyypin ja lisätä sen ohjauspaneeliin valitsemalla yhden luettelon kohteista"
+      },
+      "dashboardAddChart": {
+        "title": "Kaavio-vimpain",
+        "text": "<p>Vimpain, joka näyttää ja yhdistää tiedot piirakka-, viiva- tai palkkikaavioihin.</p><p>Vaiheet:</p><p><ul><li>Valitse vektoritaso</ li><li>Valitse kaavion tyyppi</li><li>Määritä kartta</li><li>Tallenna ja lisää ohjauspaneeliin</li></ul></p>"
+      },
+      "dashboardAddText": {
+        "title": "Teksti-vimpain",
+        "text": "<p>Lisää oma teksti ohjauspaneeliin.</p><p>Vaiheet:</p><p><ul><li>Muokkaa tekstiä editorissa</li><li>Tallenna ja lisää ohjauspaneeliin</li></ul></p>"
+      },
+      "dashboardAddTable": {
+        "title": "Taulukko-vimpain",
+        "text": "<p>Lisää ohjauspaneeliin attribuuttitaulukko, joka sisältää valitun vektoritason tietoja. Voit myös suodattaa tietoja taulukon mukauttamiseksi.</p><p>Vaiheet:</p><p><ul><li>Valitse vektoritaso</li><li>Määritä taulukko</li><li>Tallenna ja lisää ohjauspaneeliin</li></ul></p>"
+      },
+      "dashboardAddCounter": {
+        "title": "Laskuri-vimpain",
+        "text": "<p>Lisää uusi laskuri ohjauspaneeliin. Laskuri näyttää valitusta vektoritasosta aggregoituja tietoja.</p><p>Vaiheet:</p><p><ul><li>Valitse vektoritaso</li><li>Määritä laskuri< / li><li>Tallenna ja lisää ohjauspaneeliin</li></ul></p>"
+      },
+      "dashboardAddMap": {
+        "title": "Kartta-vimpain",
+        "text": "<p>Lisää uusi interaktiivinen kartta ohjauspaneeliin. Voit lisätä useita karttoja ja yhdistää niihin muita vimpaimia. Ensimmäisen kartan tallentamisen jälkeen selite-vimpain lisätään vimpainluetteloon. Selite-vimpain näyttää kartan selitteen.</p><p>Vaiheet:</p><p><ul><li>Valitse kartta</li><li>Paranna karttaa lisäämällä uusia tasoja</li><li>Tallenna ja lisää ohjauspaneeliin</li></ul></p>"
+      }
+    }
+  }
+}
