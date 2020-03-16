@@ -51,7 +51,7 @@ public class UploadPluginControllerTest {
         String result = controller.uploadPlugin(zipStream);
         assertEquals("{\"name\":\"My\",\"dependencies\":[\"Toolbar\"],\"extension\":true}", result);
         String extensions = TestUtils.getContent(tempExtensions);
-        assertEquals("{\"MyPlugin\":{\"bundle\":\"dist/extensions/My/myplugin.js\"}}", extensions);
+        assertEquals("{\"MyPlugin\":{\"bundle\":\"dist/extensions/My/myplugin.js\",\"translations\":\"dist/extensions/My/translations\"}}", extensions);
         tempConfig.delete();
         tempExtensions.delete();
     }
@@ -108,5 +108,20 @@ public class UploadPluginControllerTest {
             assertNotNull(e);
         }
         
+    }
+    
+    @Test
+    public void testUploadValidBundleWithDataDir() throws IOException {
+    	File dataDir = TestUtils.getDataDir();
+        controller.setDataDir(dataDir.getAbsolutePath());
+        ServletContext context = Mockito.mock(ServletContext.class);
+        controller.setContext(context);
+        File tempConfig = TestUtils.copyTo(UploadPluginControllerTest.class.getResourceAsStream("/pluginsConfig.json"), dataDir, "pluginsConfig.json");
+        File tempExtensions = TestUtils.copyTo(UploadPluginControllerTest.class.getResourceAsStream("/extensions.json"), dataDir, "extensions.json");
+        InputStream zipStream = UploadPluginControllerTest.class.getResourceAsStream("/plugin.zip");
+        controller.uploadPlugin(zipStream);
+        assertTrue(new File(dataDir.getAbsolutePath() + File.separator + "dist" + File.separator + "extensions" + File.separator + "My" + File.separator + "myplugin.js").exists());
+        tempConfig.delete();
+        tempExtensions.delete();
     }
 }
