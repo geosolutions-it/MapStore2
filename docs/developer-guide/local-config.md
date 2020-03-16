@@ -1,5 +1,5 @@
 # Application configuration
-The application will load by default it will load the `localConfig.js`
+The application will load by default it will load the `localConfig.json`
 
 You can load a custom configuration by passing the `localConfig` argument in query string:
 
