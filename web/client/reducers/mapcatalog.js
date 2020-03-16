@@ -7,6 +7,7 @@
  */
 
 import {
+    SET_FILTER_RELOAD_DELAY,
     TRIGGER_RELOAD
 } from '../actions/mapcatalog';
 
@@ -20,6 +21,9 @@ import { set } from '../utils/ImmutableUtils';
  */
 export default (state = {}, action) => {
     switch (action.type) {
+    case SET_FILTER_RELOAD_DELAY: {
+        return set('filterReloadDelay', action.delay, state);
+    }
     case TRIGGER_RELOAD: {
         return set('triggerReloadValue', !(state.triggerReloadValue || false), state);
     }

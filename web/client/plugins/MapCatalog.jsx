@@ -9,17 +9,21 @@
 import React from 'react';
 import { Glyphicon } from 'react-bootstrap';
 import { connect } from 'react-redux';
-import { createStructuredSelector } from 'reselect';
+import { createSelector, createStructuredSelector } from 'reselect';
 
 import { toggleControl } from '../actions/controls';
 import {
+    setFilterReloadDelay,
     triggerReload,
     saveMap,
     deleteMap
 } from '../actions/mapcatalog';
 import { mapTypeSelector } from '../selectors/maptype';
-import { userSelector } from '../selectors/security';
-import { triggerReloadValueSelector } from '../selectors/mapcatalog';
+import { userSelector, isLoggedIn } from '../selectors/security';
+import {
+    triggerReloadValueSelector,
+    filterReloadDelaySelector
+} from '../selectors/mapcatalog';
 
 import MapCatalogPanel from '../components/mapcatalog/MapCatalogPanel';
 import DockPanel from '../components/misc/panels/DockPanel';
@@ -34,10 +38,12 @@ const MapCatalogComponent = ({
     mapType,
     user,
     triggerReloadValue,
+    filterReloadDelay,
     onToggleControl = () => {},
     onTriggerReload = () => {},
     onDelete = () => {},
-    onSave = () => {}
+    onSave = () => {},
+    ...props
 }) => {
     return (
         <DockPanel
@@ -46,6 +52,7 @@ const MapCatalogComponent = ({
             position="right"
             size={660}
             bsStyle="primary"
+            glyph="maps-catalog"
             title={<Message msgId="mapCatalog.title"/>}
             onClose={() => onToggleControl()}
             style={{ height: 'calc(100% - 30px)' }}>
@@ -53,6 +60,8 @@ const MapCatalogComponent = ({
                 mapType={mapType}
                 user={user}
                 triggerReloadValue={triggerReloadValue}
+                filterReloadDelay={filterReloadDelay}
+                setFilterReloadDelay={props.setFilterReloadDelay}
                 onTriggerReload={onTriggerReload}
                 onDelete={onDelete}
                 onSave={onSave}
@@ -70,8 +79,10 @@ export default createPlugin('MapCatalog', {
         active: state => state.controls?.mapCatalog?.enabled,
         mapType: mapTypeSelector,
         user: userSelector,
-        triggerReloadValue: triggerReloadValueSelector
+        triggerReloadValue: triggerReloadValueSelector,
+        filterReloadDelay: filterReloadDelaySelector
     }), {
+        setFilterReloadDelay,
         onToggleControl: toggleControl.bind(null, 'mapCatalog', 'enabled'),
         onTriggerReload: triggerReload,
         onDelete: deleteMap,
@@ -84,6 +95,12 @@ export default createPlugin('MapCatalog', {
             text: <Message msgId="mapCatalog.title" />,
             icon: <Glyphicon glyph="maps-catalog" />,
             action: () => toggleControl('mapCatalog', 'enabled'),
+            selector: createSelector(
+                isLoggedIn,
+                (loggedIn) => ({
+                    style: loggedIn ? {} : { display: "none" }
+                })
+            ),
             priority: 2,
             doNotHide: true
         }

@@ -10,6 +10,8 @@ import React from 'react';
 
 export default (Component) => ({
     triggerReloadValue = false,
+    filterReloadDelay = 0,
+    setFilterReloadDelay = () => {},
     onTriggerReload = () => {},
     loadFirst = () => {},
     ...props
@@ -17,14 +19,23 @@ export default (Component) => ({
     const [filterText, setFilterText] = React.useState('');
 
     React.useEffect(() => {
-        loadFirst({searchText: filterText});
+        // temporary solution to a backend problem
+        setTimeout(() => {
+            loadFirst({searchText: filterText});
+        }, filterReloadDelay || 0);
     }, [filterText, triggerReloadValue, loadFirst]);
 
     return (
         <Component
             {...props}
             filterText={filterText}
-            onFilter={setFilterText}
-            onReloadFilter={() => onTriggerReload()}/>
+            onFilter={(text, delay) => {
+                setFilterReloadDelay(delay);
+                setFilterText(text);
+            }}
+            onReloadFilter={(delay) => {
+                setFilterReloadDelay(delay);
+                onTriggerReload();
+            }}/>
     );
 };
