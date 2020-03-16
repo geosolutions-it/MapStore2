@@ -69,6 +69,7 @@ class Toolbar extends React.Component {
             closeText: '',
             confirmDeleteText: '',
             confirmDeleteMessage: '',
+            confirmDeleteConfirmText: '',
             confirmDeleteCancelText: '',
             createWidgetTooltip: '',
             addLayerTooltip: '',
@@ -324,6 +325,7 @@ class Toolbar extends React.Component {
                     onClose={this.closeDeleteDialog}
                     onConfirm={this.removeNodes}
                     titleText={this.props.selectedGroups && this.props.selectedGroups.length ? this.props.text.confirmDeleteLayerGroupText : this.props.text.confirmDeleteText}
+                    confirmText={this.props.text.confirmDeleteConfirmText}
                     cancelText={this.props.text.confirmDeleteCancelText}
                     body={this.props.selectedGroups && this.props.selectedGroups.length ? this.props.text.confirmDeleteLayerGroupMessage : this.props.text.confirmDeleteMessage} />
                 {layerMetadataModal}

@@ -409,6 +409,7 @@ class LayerTree extends React.Component {
                                 confirmDeleteMessage: <Message msgId="layerProperties.deleteLayerMessage" />,
                                 confirmDeleteLayerGroupText: <Message msgId="layerProperties.deleteLayerGroup" />,
                                 confirmDeleteLayerGroupMessage: <Message msgId="layerProperties.deleteLayerGroupMessage" />,
+                                confirmDeleteConfirmText: <Message msgId="layerProperties.delete"/>,
                                 confirmDeleteCancelText: <Message msgId="cancel"/>,
                                 addLayer: <Message msgId="toc.addLayer"/>,
                                 addLayerTooltip: <Message msgId="toc.addLayer" />,
