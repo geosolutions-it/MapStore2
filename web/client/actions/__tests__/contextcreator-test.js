@@ -19,6 +19,10 @@ const {
     uploadPluginError, UPLOAD_PLUGIN_ERROR,
     pluginUploaded, PLUGIN_UPLOADED,
     pluginUploading, UPLOADING_PLUGIN,
+    uninstallPlugin, UNINSTALL_PLUGIN,
+    uninstallPluginError, UNINSTALL_PLUGIN_ERROR,
+    pluginUninstalled, PLUGIN_UNINSTALLED,
+    pluginUninstalling, UNINSTALLING_PLUGIN,
     showBackToPageConfirmation, BACK_TO_PAGE_SHOW_CONFIRMATION,
     loadExtensions, LOAD_EXTENSIONS
 } = require('../contextcreator');
@@ -83,6 +87,34 @@ describe('contextcreator actions', () => {
         expect(retval.type).toBe(PLUGIN_UPLOADED);
         expect(retval.plugins.length).toBe(1);
     });
+
+    it('uninstallPlugin', () => {
+        const retval = uninstallPlugin("My");
+        expect(retval).toExist();
+        expect(retval.type).toBe(UNINSTALL_PLUGIN);
+        expect(retval.plugin).toBe("My");
+    });
+    it('uninstallPluginError', () => {
+        const retval = uninstallPluginError("My", "myerror");
+        expect(retval).toExist();
+        expect(retval.type).toBe(UNINSTALL_PLUGIN_ERROR);
+        expect(retval.plugin).toBe("My");
+        expect(retval.error).toBe("myerror");
+    });
+    it('pluginUninstalling', () => {
+        const retval = pluginUninstalling(true, "My");
+        expect(retval).toExist();
+        expect(retval.type).toBe(UNINSTALLING_PLUGIN);
+        expect(retval.status).toBe(true);
+        expect(retval.plugin).toBe("My");
+    });
+    it('pluginUninstalled', () => {
+        const retval = pluginUninstalled("My");
+        expect(retval).toExist();
+        expect(retval.type).toBe(PLUGIN_UNINSTALLED);
+        expect(retval.plugin).toBe("My");
+    });
+
     it('showBackToPageConfirmation', () => {
         const retval = showBackToPageConfirmation(true);
         expect(retval).toExist();

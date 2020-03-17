@@ -35,6 +35,9 @@ import {
     uploadPluginError,
     pluginUploaded,
     pluginUploading,
+    uninstallPluginError,
+    pluginUninstalled,
+    pluginUninstalling,
     showBackToPageConfirmation
 } from '../../actions/contextcreator';
 
@@ -246,6 +249,26 @@ describe('contextcreator reducer', () => {
         expect(state).toExist();
         expect(state.plugins.length).toBe(1);
     });
+
+    it('uninstallingPlugin', () => {
+        const state = contextcreator(undefined, pluginUninstalling(true, 'myplugin'));
+        expect(state).toExist();
+        expect(state.uninstallingPlugin.name).toBe("myplugin");
+        expect(state.uninstallingPlugin.uninstalling).toBe(true);
+    });
+    it('uninstallPluginError', () => {
+        const state = contextcreator(undefined, uninstallPluginError('myplugin', "myerror"));
+        expect(state).toExist();
+        expect(state.uninstallingPlugin.name).toBe("myplugin");
+        expect(state.uninstallingPlugin.uninstalling).toBe(false);
+        expect(state.uninstallingPlugin.error).toBe("myerror");
+    });
+    it('pluginUninstalled', () => {
+        const state = contextcreator({plugins: [{name: "My"}]}, pluginUninstalled('My'));
+        expect(state).toExist();
+        expect(state.plugins.length).toBe(0);
+    });
+
     it('showBackToPageConfirmation', () => {
         const state = contextcreator(undefined, showBackToPageConfirmation(true));
         expect(state).toExist();
