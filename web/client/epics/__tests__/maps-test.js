@@ -16,19 +16,20 @@ const {
     CLOSE_DETAILS_PANEL, closeDetailsPanel, loadMaps, MAPS_GET_MAP_RESOURCES_BY_CATEGORY,
     openDetailsPanel, UPDATE_DETAILS, DETAILS_LOADED, getMapResourcesByCategory,
     MAP_DELETING, MAP_DELETED, deleteMap, mapDeleted, TOGGLE_DETAILS_SHEET,
-    saveMapResource, MAP_CREATED, SAVING_MAP, MAP_UPDATING, MAPS_LOAD_MAP, LOADING
+    saveMapResource, MAP_CREATED, SAVING_MAP, MAP_UPDATING, MAPS_LOAD_MAP, LOADING, LOAD_CONTEXTS
 } = require('../../actions/maps');
 const { mapInfoLoaded, MAP_SAVED, LOAD_MAP_INFO } = require('../../actions/config');
 const {SHOW_NOTIFICATION} = require('../../actions/notifications');
-const {TOGGLE_CONTROL} = require('../../actions/controls');
+const {TOGGLE_CONTROL, SET_CONTROL_PROPERTY} = require('../../actions/controls');
 const {RESET_CURRENT_MAP, editMap} = require('../../actions/currentMap');
 const {CLOSE_FEATURE_GRID} = require('../../actions/featuregrid');
+const {loginSuccess, logout} = require('../../actions/security');
 
 const {
     setDetailsChangedEpic, loadMapsEpic, getMapsResourcesByCategoryEpic,
     closeDetailsPanelEpic, fetchDataForDetailsPanel,
-    fetchDetailsFromResourceEpic, deleteMapAndAssociatedResourcesEpic,
-    storeDetailsInfoEpic, mapSaveMapResourceEpic, reloadMapsEpic } = require('../maps');
+    fetchDetailsFromResourceEpic, deleteMapAndAssociatedResourcesEpic, mapsSetupFilterOnLogin,
+    storeDetailsInfoEpic, mapSaveMapResourceEpic, reloadMapsEpic} = require('../maps');
 const rootEpic = combineEpics(setDetailsChangedEpic, closeDetailsPanelEpic);
 const epicMiddleware = createEpicMiddleware(rootEpic);
 const mockStore = configureMockStore([epicMiddleware]);
@@ -547,6 +548,26 @@ describe('maps Epics', () => {
             });
         });
         done();
+    });
+    it('mapsSetupFilterOnLogin on LOGIN_SUCCESS', (done) => {
+        testEpic(mapsSetupFilterOnLogin, 2, loginSuccess({}, '', ''), actions => {
+            expect(actions.length).toBe(2);
+            expect(actions[0].type).toBe(SET_CONTROL_PROPERTY);
+            expect(actions[0].control).toBe('advancedsearchpanel');
+            expect(actions[0].property).toBe('enabled');
+            expect(actions[0].value).toBe(false);
+            expect(actions[1].type).toBe(LOAD_CONTEXTS);
+        }, {}, done);
+    });
+    it('mapsSetupFilterOnLogin on LOGOUT', (done) => {
+        testEpic(mapsSetupFilterOnLogin, 2, logout(), actions => {
+            expect(actions.length).toBe(2);
+            expect(actions[0].type).toBe(SET_CONTROL_PROPERTY);
+            expect(actions[0].control).toBe('advancedsearchpanel');
+            expect(actions[0].property).toBe('enabled');
+            expect(actions[0].value).toBe(false);
+            expect(actions[1].type).toBe(LOAD_CONTEXTS);
+        }, {}, done);
     });
 });
 describe('Get Map Resource By Category Epic', () => {
