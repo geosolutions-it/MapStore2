@@ -84,6 +84,7 @@ const parseBoolean = (string = '') => {
 const removeEmptyProps = (obj) => keys(obj).filter(key => obj[key] !== undefined).reduce((result, key) => ({...result, [key]: obj[key]}), {});
 
 const isValidMaxExtentObject = (obj) => !!(obj && obj.minx && obj.miny && obj.maxx && obj.maxy);
+const isValidBboxObject = (obj) => !!(obj && isValidMaxExtentObject(obj.bounds) && obj.crs);
 
 /**
  * Generates MapStore map configuration object from a WMC string.
@@ -135,18 +136,28 @@ export const toMapConfig = (wmcString, generateLayersGroup = false) => {
             const globalExtensions = rootTagExtractor(general, 'Extension');
 
             const maxExtentExtension = olTagExtractor(globalExtensions, 'maxExtent');
-            const bbox = rootTagExtractor(general, 'BoundingBox');
+            const bboxTag = rootTagExtractor(general, 'BoundingBox');
 
             // if we have maxExtent in Extension then use that otherwise use bbox information
             const maxExtentObj = mapValues(
                 maxExtentExtension && pickAttributeValues(maxExtentExtension, 'minx', 'miny', 'maxx', 'maxy') ||
-                pickAttributeValues(bbox, 'minx', 'miny', 'maxx', 'maxy'),
+                pickAttributeValues(bboxTag, 'minx', 'miny', 'maxx', 'maxy'),
                 parseFloat
             );
             const maxExtent = isValidMaxExtentObject(maxExtentObj) &&
                 [maxExtentObj.minx, maxExtentObj.miny, maxExtentObj.maxx, maxExtentObj.maxy] ||
                 defaultValues.maxExtent;
-            const projection = attrExtractor(bbox, 'SRS') || defaultValues.projection; // from bbox or default
+            const projection = attrExtractor(bboxTag, 'SRS') || defaultValues.projection; // from bbox or default
+
+            // extract bbox
+            const bboxObj = {
+                bounds: mapValues(
+                    pickAttributeValues(bboxTag, 'minx', 'miny', 'maxx', 'maxy'),
+                    parseFloat
+                ),
+                crs: attrExtractor(bboxTag, 'SRS')
+            };
+            const bbox = isValidBboxObject(bboxObj) ? bboxObj : undefined;
 
             const layerGroup = generateLayersGroup ? uuidv1() : undefined;
 
@@ -261,6 +272,7 @@ export const toMapConfig = (wmcString, generateLayersGroup = false) => {
                 catalogServices: {},
                 map: {
                     maxExtent,
+                    bbox,
                     projection,
                     backgrounds: [],
                     groups,
@@ -315,10 +327,10 @@ export const toWMC = (
         attributes: makeSimpleXlink(href)
     });
 
-    const {maxExtent, projection, layers, groups} = map;
+    const {maxExtent, bbox, projection, layers, groups} = map;
 
-    const makeMaxExtentFromBbox = bbox => {
-        const reprojectedBbox = reprojectBbox(bbox.bounds, bbox.crs, projection);
+    const makeMaxExtentFromBbox = bboxObj => {
+        const reprojectedBbox = reprojectBbox(bboxObj.bounds, bboxObj.crs, projection);
         return {
             name: 'maxExtent',
             attributes: objectToAttributes({
@@ -513,7 +525,10 @@ export const toWMC = (
                 textContent: abstract
             }, {
                 name: 'BoundingBox',
-                attributes: objectToAttributes({
+                attributes: objectToAttributes(isValidBboxObject(bbox) ? {
+                    ...bbox.bounds,
+                    SRS: bbox.crs
+                } : {
                     minx: maxExtent[0],
                     miny: maxExtent[1],
                     maxx: maxExtent[2],

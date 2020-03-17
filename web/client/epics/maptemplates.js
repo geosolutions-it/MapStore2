@@ -15,7 +15,6 @@ import { error as showError } from '../actions/notifications';
 import { isLoggedIn } from '../selectors/security';
 import { setTemplates, setMapTemplatesLoaded, setTemplateData, setTemplateLoading, CLEAR_MAP_TEMPLATES, OPEN_MAP_TEMPLATES_PANEL,
     MERGE_TEMPLATE, REPLACE_TEMPLATE } from '../actions/maptemplates';
-import { zoomToExtent } from '../actions/map';
 import { templatesSelector, mapTemplatesLoadedSelector } from '../selectors/maptemplates';
 import { templatesSelector as contextTemplatesSelector } from '../selectors/context';
 import { mapSelector } from '../selectors/map';
@@ -156,8 +155,7 @@ export const replaceTemplateEpic = (action$, store) => action$
                                 zoom: config.map.zoom || zoom,
                                 center: config.map.center || center
                             }
-                        }), null),
-                        ...(config.map.zoom === undefined ? [zoomToExtent(config.map.maxExtent, config.map.projection)] : [])
+                        }), null, config.map.zoom === undefined && (config.map.bbox || config.map.maxExtent))
                     ] : []))))
             .let(wrapStartStop(
                 setTemplateLoading(id, true),

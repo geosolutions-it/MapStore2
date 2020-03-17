@@ -590,7 +590,7 @@ class OpenlayersMap extends React.Component {
         this.props.hookRegister.registerHook(mapUtils.GET_COORDINATES_FROM_PIXEL_HOOK, (pixel) => {
             return this.map.getCoordinateFromPixel(pixel);
         });
-        this.props.hookRegister.registerHook(mapUtils.ZOOM_TO_EXTENT_HOOK, (extent, { padding, crs, maxZoom: zoomLevel, duration } = {}) => {
+        this.props.hookRegister.registerHook(mapUtils.ZOOM_TO_EXTENT_HOOK, (extent, { padding, crs, maxZoom: zoomLevel, duration, preserveResolution } = {}) => {
             let bounds = CoordinatesUtils.reprojectBbox(extent, crs, this.props.projection);
             // if EPSG:4326 with max extent (-180, -90, 180, 90) bounds are 0,0,0,0. In this case zoom to max extent
             // TODO: improve this to manage all degenerated bounding boxes.
@@ -602,11 +602,22 @@ class OpenlayersMap extends React.Component {
             if (bounds && bounds[0] === bounds[2] && bounds[1] === bounds[3] && isNil(maxZoom)) {
                 maxZoom = 21; // TODO: allow to this maxZoom to be customizable
             }
-            this.map.getView().fit(bounds, {
+            let view = this.map.getView();
+
+            const resolution = view.getResolutionForExtent(extent);
+
+            console.log('resolution', resolution);
+
+            view.fit(bounds, {
+                size: this.map.getSize(),
                 padding: padding && [padding.top || 0, padding.right || 0, padding.bottom || 0, padding.left || 0],
                 maxZoom,
                 duration
             });
+
+            if (preserveResolution) {
+                view.setResolution(resolution);
+            }
         });
     };
 }
