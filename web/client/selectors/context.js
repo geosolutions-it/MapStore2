@@ -19,6 +19,8 @@ import { getMonitoredState } from '../utils/PluginsUtils';
  */
 export const currentContextSelector = state => state.context && state.context.currentContext;
 
+export const contextResourceSelector = state => state.context && state.context.resource;
+
 export const currentTitleSelector = state => state.context && state.context.currentContext && state.context.currentContext.windowTitle;
 
 /**
