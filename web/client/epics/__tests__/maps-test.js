@@ -633,6 +633,24 @@ describe('Create and update flow using persistence api', () => {
             done();
         });
     });
+    it('test create with a null attribute', done => {
+        testEpic(addTimeoutEpic(mapSaveMapResourceEpic), 5, saveMapResource({id: 10, attributes: {context: null}}), actions => {
+            expect(actions.length).toBe(5);
+            actions.map((action) => {
+                switch (action.type) {
+                case MAP_UPDATING:
+                case TOGGLE_CONTROL:
+                case MAP_SAVED:
+                case SHOW_NOTIFICATION:
+                case LOAD_MAP_INFO:
+                    break;
+                default:
+                    expect(true).toBe(false);
+                }
+            });
+            done();
+        });
+    });
 
     it('test reloadMaps', function(done) {
         const callback = actions => {
