@@ -86,8 +86,8 @@ class Selector extends React.Component {
                 });
             }
         };
-        const allowed = (role) => includes(this.props.allowedRoles, "ALL") ? true : includes(role, this.props.allowedRoles);
-        return (this.props.enabled && allowed(this.props.currentRole) ? <Dropdown
+        const isAllowed = includes(this.props.allowedRoles, "ALL") || includes(this.props.allowedRoles, this.props.currentRole);
+        return (this.props.enabled && isAllowed ? <Dropdown
             dropup
             className="ms-prj-selector">
             <Button
