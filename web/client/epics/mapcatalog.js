@@ -14,8 +14,11 @@ import { deleteResource, updateResource } from '../api/persistence';
 import {
     DELETE_MAP,
     SAVE_MAP,
+    setFilterReloadDelay,
     triggerReload
 } from '../actions/mapcatalog';
+
+// the delay in epics below is needed to temporarily mitigate georchestra backend issues
 
 export const deleteMapEpic = (action$) => action$
     .ofType(DELETE_MAP)
@@ -27,7 +30,7 @@ export const deleteMapEpic = (action$) => action$
                     message: 'mapCatalog.deletedMap.message',
                     autoDismiss: 6,
                     position: 'tc'
-                }), triggerReload())
+                }), setFilterReloadDelay(700), triggerReload())
             )
             .catch(() => Rx.Observable.of(basicError({
                 message: 'mapCatalog.deleteError'
@@ -44,7 +47,7 @@ export const saveMapEpic = (action$) => action$
                     message: 'mapCatalog.updatedMap.message',
                     autoDismiss: 6,
                     position: 'tc'
-                }), triggerReload())
+                }), setFilterReloadDelay(700), triggerReload())
             )
             .catch(() => Rx.Observable.of(basicError({
                 message: 'mapCatalog.updateError'

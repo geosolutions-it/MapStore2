@@ -7,3 +7,4 @@
  */
 
 export const triggerReloadValueSelector = state => state.mapcatalog?.triggerReloadValue;
+export const filterReloadDelaySelector = state => state.mapcatalog?.filterReloadDelay;
