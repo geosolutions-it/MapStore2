@@ -7,8 +7,8 @@
  */
 import Rx from 'rxjs';
 import { error } from '../actions/notifications';
-import { SAVE_USER_SESSION, userSessionSaved, loading, saveUserSession } from "../actions/usersession";
-import { createResource, createCategory, updateResource } from '../api/persistence';
+import { SAVE_USER_SESSION, LOAD_USER_SESSION, userSessionSaved, userSessionLoaded, loading, saveUserSession } from "../actions/usersession";
+import { createResource, createCategory, updateResource, getResourceDataByName, getResourceIdByName } from '../api/persistence';
 import {userSelector} from '../selectors/security';
 import { wrapStartStop } from '../observables/epics';
 import isString from "lodash/isString";
@@ -101,3 +101,25 @@ export const autoSaveSessionEpicCreator = (startAction, endAction, frequency) =>
     .ofType(startAction)
     .switchMap(() => Rx.Observable.interval(frequency).switchMap(() => Rx.Observable.of(saveUserSession())))
     .takeUntil(action$.ofType(endAction));
+
+/**
+ * Returns an epic that loads the user session, triggered by a LOAD_USER_SESSION action.
+ *
+ * @param {*} nameSelector selector that builds the session identifier
+ */
+export const loadUserSessionEpicCreator = (nameSelector) => (action$, store) =>
+    action$.ofType(LOAD_USER_SESSION).switchMap(() => {
+        const state = store.getState();
+        const sessionName = nameSelector(state);
+        return Rx.Observable.forkJoin(
+            getResourceIdByName("USERSESSION", sessionName),
+            getResourceDataByName("USERSESSION", sessionName)
+        ).switchMap(([id, session]) => Rx.Observable.of(
+            userSessionLoaded(id, session)
+        ))
+            .let(wrapStartStop(
+                loading(true, 'userSessionLoading'),
+                loading(false, 'userSessionLoading'),
+                () => Rx.Observable.of(userSessionLoaded(undefined, undefined))
+            ));
+    });

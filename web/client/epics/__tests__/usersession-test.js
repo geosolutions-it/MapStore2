@@ -6,8 +6,9 @@
  * LICENSE file in the root directory of this source tree.
  */
 import { testEpic } from './epicTestUtils';
-import { saveUserSessionEpicCreator, autoSaveSessionEpicCreator } from "../usersession";
-import { saveUserSession, USER_SESSION_SAVED, USER_SESSION_LOADING, SAVE_USER_SESSION } from "../../actions/usersession";
+import { saveUserSessionEpicCreator, autoSaveSessionEpicCreator, loadUserSessionEpicCreator } from "../usersession";
+import { saveUserSession, loadUserSession,
+    USER_SESSION_SAVED, USER_SESSION_LOADING, SAVE_USER_SESSION, USER_SESSION_LOADED } from "../../actions/usersession";
 import { SHOW_NOTIFICATION } from "../../actions/notifications";
 import expect from "expect";
 
@@ -48,7 +49,7 @@ describe('usersession Epics', () => {
             expect(actions[1].session.sample2).toBe("sample2");
         }, initialState, done);
     });
-    it('user session name is taken from idSelector', (done) => {
+    it('user session name is taken from idSelector during save', (done) => {
         mockAxios.onPost().reply(200, "1");
         mockAxios.onGet().reply(200, {});
         testEpic(saveUserSessionEpicCreator(idSelector, sessionSelector), 2, saveUserSession(), (actions) => {
@@ -57,7 +58,7 @@ describe('usersession Epics', () => {
             expect(mockAxios.history.post[0].data).toContain("id.myuser");
         }, initialState, done);
     });
-    it('user session is indexed by username', (done) => {
+    it('user session is indexed by username during save', (done) => {
         mockAxios.onPost().reply(200, "1");
         mockAxios.onGet().reply(200, {});
         testEpic(saveUserSessionEpicCreator(idSelector, sessionSelector), 2, saveUserSession(), (actions) => {
@@ -104,5 +105,14 @@ describe('usersession Epics', () => {
         setTimeout(() => {
             store.dispatch({ type: 'STOP' });
         }, 100);
+    });
+    it('user session name is taken from idSelector when loading', (done) => {
+        mockAxios.onGet().reply(200, {});
+        testEpic(loadUserSessionEpicCreator(idSelector), 2, loadUserSession(), (actions) => {
+            expect(actions[0].type).toBe(USER_SESSION_LOADING);
+            expect(actions[1].type).toBe(USER_SESSION_LOADED);
+            expect(mockAxios.history.get[0].url).toContain("id.myuser");
+            expect(mockAxios.history.get[1].url).toContain("id.myuser");
+        }, initialState, done);
     });
 });

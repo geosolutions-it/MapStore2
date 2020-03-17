@@ -7,8 +7,8 @@
  */
 
 import expect from 'expect';
-import {SAVE_USER_SESSION, USER_SESSION_SAVED, USER_SESSION_LOADING,
-    saveUserSession, userSessionSaved, loading} from "../usersession";
+import {SAVE_USER_SESSION, USER_SESSION_SAVED, LOAD_USER_SESSION, USER_SESSION_LOADED, USER_SESSION_LOADING,
+    saveUserSession, userSessionSaved, loadUserSession, userSessionLoaded, loading} from "../usersession";
 
 describe('Test correctness of the usersession actions', () => {
 
@@ -29,5 +29,17 @@ describe('Test correctness of the usersession actions', () => {
         expect(action.type).toBe(USER_SESSION_LOADING);
         expect(action.name).toBe("loading");
         expect(action.value).toBe(true);
+    });
+    it('load user session', () => {
+        const action = loadUserSession();
+        expect(action.type).toBe(LOAD_USER_SESSION);
+    });
+    it('user session loaded', () => {
+        const action = userSessionLoaded(1, {
+            attribute: "myvalue"
+        });
+        expect(action.type).toBe(USER_SESSION_LOADED);
+        expect(action.id).toBe(1);
+        expect(action.session.attribute).toBe("myvalue");
     });
 });

@@ -7,7 +7,7 @@
  */
 import { Observable } from 'rxjs';
 import axios from '../libs/ajax';
-import { get } from 'lodash';
+import { get, merge } from 'lodash';
 import {
     LOAD_NEW_MAP,
     LOAD_MAP_CONFIG,
@@ -40,12 +40,12 @@ export const loadNewMapEpic = (action$) =>
 
 export const loadMapConfigAndConfigureMap = (action$, store) =>
     action$.ofType(LOAD_MAP_CONFIG)
-        .switchMap(({configName, mapId, config, mapInfo}) =>
+        .switchMap(({configName, mapId, config, mapInfo, overrideConfig = {}}) =>
             // delay here is to postpone map load to ensure that
             // certain epics always function correctly
             // i.e. FeedbackMask disables correctly after load
             // TODO: investigate the root causes of the problem and come up with a better solution, if possible
-            (config ? Observable.of({data: config}).delay(100) : Observable.defer(() => axios.get(configName)))
+            (config ? Observable.of({data: merge(config, overrideConfig)}).delay(100) : Observable.defer(() => axios.get(configName)))
                 .switchMap(response => {
                     // added !config in order to avoid showing login modal when a new.json mapConfig is used in a public context
                     if (configName === "new.json" && !config && !isLoggedIn(store.getState())) {
@@ -57,13 +57,15 @@ export const loadMapConfigAndConfigureMap = (action$, store) =>
                         if (projectionDefs.concat([{code: "EPSG:4326"}, {code: "EPSG:3857"}, {code: "EPSG:900913"}]).filter(({code}) => code === projection).length === 0) {
                             return Observable.of(configureError({messageId: `map.errors.loading.projectionError`, errorMessageParams: {projection}}, mapId));
                         }
-                        return mapId ? Observable.of(configureMap(response.data, mapId), mapInfo ? mapInfoLoaded(mapInfo) : loadMapInfo(mapId)) :
-                            Observable.of(configureMap(response.data, mapId), ...(mapInfo ? [mapInfoLoaded(mapInfo)] : []));
+                        const mapConfig = merge(response.data, overrideConfig);
+                        return mapId ? Observable.of(configureMap(mapConfig, mapId), mapInfo ? mapInfoLoaded(mapInfo) : loadMapInfo(mapId)) :
+                            Observable.of(configureMap(mapConfig, mapId), ...(mapInfo ? [mapInfoLoaded(mapInfo)] : []));
                     }
                     try {
                         const data = JSON.parse(response.data);
-                        return mapId ? Observable.of(configureMap(data, mapId), mapInfo ? mapInfoLoaded(mapInfo) : loadMapInfo(mapId)) :
-                            Observable.of(configureMap(data, mapId), ...(mapInfo ? [mapInfoLoaded(mapInfo)] : []));
+                        const mapConfig = merge(data, overrideConfig);
+                        return mapId ? Observable.of(configureMap(mapConfig, mapId), mapInfo ? mapInfoLoaded(mapInfo) : loadMapInfo(mapId)) :
+                            Observable.of(configureMap(mapConfig, mapId), ...(mapInfo ? [mapInfoLoaded(mapInfo)] : []));
                     } catch (e) {
                         return Observable.of(configureError('Configuration file broken (' + configName + '): ' + e.message, mapId));
                     }

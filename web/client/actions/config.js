@@ -56,14 +56,16 @@ function loadNewMap(configName, contextId) {
  * @param {number} mapId resource id of the map on a server
  * @param {object} config full config, overrides configName if not null or undefined
  * @param {object} mapInfo map info override
+ * @param {object} overrideConfig config override
  */
-function loadMapConfig(configName, mapId, config, mapInfo) {
+function loadMapConfig(configName, mapId, config, mapInfo, overrideConfig) {
     return {
         type: LOAD_MAP_CONFIG,
         configName,
         mapId,
         config,
-        mapInfo
+        mapInfo,
+        overrideConfig
     };
 }
 function mapInfoLoaded(info, mapId) {
