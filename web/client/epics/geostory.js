@@ -73,7 +73,7 @@ import { resourceIdSelectorCreator, createPathSelector, currentStorySelector, re
 import { currentMediaTypeSelector, sourceIdSelector} from '../selectors/mediaEditor';
 
 import { wrapStartStop } from '../observables/epics';
-import { scrollToContent, ContentTypes, isMediaSection, Controls, getEffectivePath, getFlatPath, isWebPageSection, MediaTypes } from '../utils/GeoStoryUtils';
+import { scrollToContent, ContentTypes, isMediaSection, Controls, getEffectivePath, getFlatPath, isWebPageSection, MediaTypes, Modes } from '../utils/GeoStoryUtils';
 
 import { SourceTypes } from './../utils/MediaEditorUtils';
 
@@ -276,15 +276,23 @@ export const loadGeostoryEpic = (action$, {getState = () => {}}) => action$
                 return true;
             })
             .switchMap(({ data, isStatic = false, ...resource }) => {
-                const isAdmin = isAdminUserSelector(getState());
-                const user = isLoggedIn(getState());
+                const state = getState();
+                const isAdmin = isAdminUserSelector(state);
+                const user = isLoggedIn(state);
+
                 const story = isString(data) ? JSON.parse(data) : data;
                 if (!user && isNaN(parseInt(id, 10))) {
                     return Observable.of(loadGeostoryError({status: 403}));
                 }
+
+                const isEditMode = modeSelector(state) === Modes.EDIT;
+
                 return Observable.from([
                     // initialize editing only for new or static sources
-                    setEditing(isStatic && (resource && resource.canEdit || isAdmin)),
+                    // or verify if user can edit when current mode is equal to EDIT
+                    ...(isStatic || isEditMode
+                        ? [ setEditing((resource && resource.canEdit || isAdmin)) ]
+                        : []),
                     geostoryLoaded(id),
                     setCurrentStory(story),
                     setResource(resource)

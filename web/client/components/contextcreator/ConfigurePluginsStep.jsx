@@ -27,6 +27,60 @@ import JSZip from 'jszip';
 import FileUtils from '../../utils/FileUtils';
 import LocaleUtils from '../../utils/LocaleUtils';
 import PropTypes from 'prop-types';
+import ConfirmModal from '../resources/modals/ConfirmModal';
+
+const getEnabledTools = (plugin, isMandatory, editedPlugin, documentationBaseURL, onEditPlugin,
+    onShowDialog, changePluginsKey) => {
+    return [{
+        visible: plugin.name === 'MapTemplates',
+        glyph: '1-map',
+        tooltipId: 'contextCreator.configurePlugins.tooltips.mapTemplatesConfig',
+        onClick: () => onShowDialog('mapTemplatesConfig', true)
+    }, {
+        visible: !isMandatory && !plugin.denyUserSelection,
+        glyph: '1-user-mod',
+        tooltipId: plugin.isUserPlugin ?
+            'contextCreator.configurePlugins.tooltips.disableUserPlugin' :
+            'contextCreator.configurePlugins.tooltips.enableUserPlugin',
+        bsStyle: plugin.isUserPlugin ? 'success' : undefined,
+        onClick: () => changePluginsKey([plugin.name], 'isUserPlugin', !plugin.isUserPlugin)
+    }, {
+        visible: plugin.isUserPlugin && !plugin.denyUserSelection,
+        glyph: plugin.active ? 'check' : 'unchecked',
+        tooltipId: plugin.active ?
+            'contextCreator.configurePlugins.tooltips.deactivatePlugin' :
+            'contextCreator.configurePlugins.tooltips.activatePlugin',
+        onClick: () => changePluginsKey([plugin.name], 'active', !plugin.active)
+    }, {
+        glyph: 'wrench',
+        tooltipId: 'contextCreator.configurePlugins.tooltips.editConfiguration',
+        active: plugin.name === editedPlugin,
+        onClick: () => onEditPlugin(plugin.name === editedPlugin ? undefined : plugin.name)
+    }, {
+        visible: !!documentationBaseURL,
+        glyph: 'question-sign',
+        tooltipId: 'contextCreator.configurePlugins.tooltips.pluginDocumentation',
+        Element: (props) =>
+            <a target="_blank" rel="noopener noreferrer"
+                href={documentationBaseURL && documentationBaseURL + '#plugins.' + (plugin.docName || plugin.name)}>
+                <ToolbarButton {...props}/>
+            </a>
+    }, {
+        visible: plugin.isExtension,
+        glyph: 'trash',
+        tooltipId: 'contextCreator.configurePlugins.tooltips.removePlugin',
+        onClick: () => onShowDialog('confirmRemovePlugin', true, plugin.name)
+    }];
+};
+
+const getAvailableTools = (plugin, onShowDialog) => {
+    return [{
+        visible: plugin.isExtension,
+        glyph: 'trash',
+        tooltipId: 'contextCreator.configurePlugins.tooltips.removePlugin',
+        onClick: () => onShowDialog('confirmRemovePlugin', true, plugin.name)
+    }];
+};
 
 /**
  * Converts plugin objects to Transform items
@@ -51,7 +105,7 @@ const pluginsToItems = (editedPlugin, editedCfg, cfgError, setEditor, documentat
     onEnablePlugins, onDisablePlugins, onUpdateCfg, onShowDialog, changePluginsKey, isRoot, plugins = [],
     processChildren, parentIsEnabled) =>
     plugins.filter(plugin => !plugin.hidden).map(plugin => {
-        const enableTools = (isRoot || parentIsEnabled) && plugin.enabled;
+        const enableTools = (isRoot || parentIsEnabled);
         const isMandatory = plugin.forcedMandatory || plugin.mandatory;
         return {
             id: plugin.name,
@@ -60,42 +114,9 @@ const pluginsToItems = (editedPlugin, editedCfg, cfgError, setEditor, documentat
             description: plugin.description || 'plugin name: ' + plugin.name,
             mandatory: isMandatory,
             className: !isRoot && parentIsEnabled && !plugin.enabled ? 'plugin-card-disabled' : '',
-            tools: enableTools ? [{
-                visible: plugin.name === 'MapTemplates',
-                glyph: '1-map',
-                tooltipId: 'contextCreator.configurePlugins.tooltips.mapTemplatesConfig',
-                onClick: () => onShowDialog('mapTemplatesConfig', true)
-            }, {
-                visible: !isMandatory && !plugin.denyUserSelection,
-                glyph: '1-user-mod',
-                tooltipId: plugin.isUserPlugin ?
-                    'contextCreator.configurePlugins.tooltips.disableUserPlugin' :
-                    'contextCreator.configurePlugins.tooltips.enableUserPlugin',
-                bsStyle: plugin.isUserPlugin ? 'success' : undefined,
-                onClick: () => changePluginsKey([plugin.name], 'isUserPlugin', !plugin.isUserPlugin)
-            }, {
-                visible: plugin.isUserPlugin && !plugin.denyUserSelection,
-                glyph: plugin.active ? 'check' : 'unchecked',
-                tooltipId: plugin.active ?
-                    'contextCreator.configurePlugins.tooltips.deactivatePlugin' :
-                    'contextCreator.configurePlugins.tooltips.activatePlugin',
-                onClick: () => changePluginsKey([plugin.name], 'active', !plugin.active)
-            }, {
-                glyph: 'wrench',
-                tooltipId: 'contextCreator.configurePlugins.tooltips.editConfiguration',
-                active: plugin.name === editedPlugin,
-                onClick: () => onEditPlugin(plugin.name === editedPlugin ? undefined : plugin.name)
-            }, {
-                visible: !!documentationBaseURL,
-                glyph: 'question-sign',
-                tooltipId: 'contextCreator.configurePlugins.tooltips.pluginDocumentation',
-                Element: (props) =>
-                    <a target="_blank" rel="noopener noreferrer"
-                        href={documentationBaseURL && documentationBaseURL + '#plugins.' + (plugin.docName || plugin.name)}>
-                        <ToolbarButton {...props}/>
-                    </a>
-            }] : [],
-            component: enableTools && plugin.name === editedPlugin ?
+            tools: enableTools ? (plugin.enabled ? getEnabledTools(plugin, isMandatory, editedPlugin, documentationBaseURL, onEditPlugin,
+                onShowDialog, changePluginsKey) : getAvailableTools(plugin, onShowDialog)) : [],
+            component: (enableTools && plugin.enabled) && plugin.name === editedPlugin ?
                 <div className="plugin-configuration-editor">
                     <Codemirror
                         value={editedCfg}
@@ -189,6 +210,7 @@ const configurePluginsStep = ({
     onUpload = () => {},
     onUploadError = () => {},
     onShowDialog = () => {},
+    onRemovePlugin = () => {},
     onSaveTemplate,
     onDeleteTemplate,
     onEditTemplate,
@@ -359,6 +381,9 @@ const configurePluginsStep = ({
                     onFilterEnabledTemplates={onFilterEnabledTemplates}
                     onShowUploadDialog={onShowDialog.bind(null, 'uploadTemplate')}/>
             </ResizableModal>
+            <ConfirmModal onClose={onShowDialog.bind(null, 'confirmRemovePlugin', false)} onConfirm={onRemovePlugin.bind(null, showDialog.confirmRemovePluginPayload)} show={showDialog.confirmRemovePlugin} buttonSize="large">
+                <Message msgId="contextCreator.configurePlugins.confirmRemovePlugin"/>
+            </ConfirmModal>
         </div>
     );
 };

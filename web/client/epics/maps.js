@@ -29,7 +29,7 @@ const {
     resetCurrentMap, EDIT_MAP
 } = require('../actions/currentMap');
 const {closeFeatureGrid} = require('../actions/featuregrid');
-const {toggleControl} = require('../actions/controls');
+const {toggleControl, setControlProperty} = require('../actions/controls');
 const {setTabsHidden} = require('../actions/contenttabs');
 const {
     mapPermissionsFromIdSelector, mapThumbnailsUriFromIdSelector,
@@ -364,12 +364,12 @@ const mapsLoadContextsEpic = (action$) =>
             );
         });
 
-const mapsLoadContextsOnLogin = (action$, store) =>
+const mapsSetupFilterOnLogin = (action$, store) =>
     action$.ofType(LOGIN_SUCCESS, LOGOUT)
         .switchMap(() => {
             const state = store.getState();
             const contexts = contextsSelector(state) || {};
-            return Rx.Observable.of(loadContexts(contexts.searchText,
+            return Rx.Observable.of(setControlProperty('advancedsearchpanel', 'enabled', false), loadContexts(contexts.searchText,
                 {params: {start: get(contexts, 'start', 0), limit: get(contexts, 'limit', 12)}},
                 0,
                 true
@@ -483,49 +483,55 @@ const storeDetailsInfoEpic = (action$, store) =>
  */
 const mapSaveMapResourceEpic = (action$, store) =>
     action$.ofType(SAVE_MAP_RESOURCE)
-        .exhaustMap(({resource}) => Rx.Observable.forkJoin(
-            (() => {
-                const contextId = get(resource, 'attributes.context');
-                return contextId ? getResource(contextId, {withData: false}) : Rx.Observable.of(null);
-            })(),
-            !resource.id ? createResource(resource) : updateResource(resource))
-            .switchMap(([contextResource, rid]) => (keys(resource.attributes).length > 0 ?
-                Rx.Observable.forkJoin(
-                    keys(resource.attributes).map(attrName => updateResourceAttribute({
+        .exhaustMap(({resource}) => {
+            // filter out invalid attributes
+            const validAttributesNames = keys(resource.attributes)
+                .filter(attrName => resource.attributes[attrName] !== undefined && resource.attributes[attrName] !== null);
+            return Rx.Observable.forkJoin(
+                (() => {
+                    // get a context information using the id in the attribute
+                    const contextId = get(resource, 'attributes.context');
+                    return contextId ? getResource(contextId, {withData: false}) : Rx.Observable.of(null);
+                })(),
+                !resource.id ? createResource(resource) : updateResource(resource))
+                .switchMap(([contextResource, rid]) => (validAttributesNames.length > 0 ?
+                    // update valid attributes
+                    Rx.Observable.forkJoin(validAttributesNames.map(attrName => updateResourceAttribute({
                         id: rid,
                         name: attrName,
                         value: resource.attributes[attrName]
-                    }))
-                ) : Rx.Observable.of([])).switchMap(() =>
-                Rx.Observable.from([
-                    ...(resource.id ? [loadMapInfo(rid)] : []),
-                    resource.id ? toggleControl('mapSave') : toggleControl('mapSaveAs'),
-                    mapSaved(),
-                    ...(!resource.id ? [
-                        mapCreated(rid, assign({id: rid, canDelete: true, canEdit: true, canCopy: true}, resource.metadata), resource.data),
-                        push(contextResource ?
-                            `/context/${contextResource.name}/${rid}` :
-                            `/viewer/${mapTypeSelector(store.getState())}/${rid}`)]
-                        : [])
-                ])
-                    .merge(
-                        Rx.Observable.of(basicSuccess({
-                            title: 'map.savedMapTitle',
-                            message: 'map.savedMapMessage',
-                            autoDismiss: 6,
-                            position: 'tc'
-                        }))
-                    )
-            ))
-            .catch((e) => {
-                const { status, statusText, data, message, ...other} = e;
-                return Rx.Observable.of(mapSaveError(status ? { status, statusText, data } : message || other), basicError({
-                    ...getErrorMessage(e, 'geostore', 'mapsError'),
-                    autoDismiss: 6,
-                    position: 'tc'
-                }));
-            })
-            .startWith(!resource.id ? savingMap(resource.metadata) : mapUpdating(resource.metadata)));
+                    }))) : Rx.Observable.of([])).switchMap(() =>
+                    Rx.Observable.from([
+                        ...(resource.id ? [loadMapInfo(rid)] : []),
+                        resource.id ? toggleControl('mapSave') : toggleControl('mapSaveAs'),
+                        mapSaved(),
+                        ...(!resource.id ? [
+                            mapCreated(rid, assign({id: rid, canDelete: true, canEdit: true, canCopy: true}, resource.metadata), resource.data),
+                            // if we got a valid context information redirect to a context, instead of the default viewer
+                            push(contextResource ?
+                                `/context/${contextResource.name}/${rid}` :
+                                `/viewer/${mapTypeSelector(store.getState())}/${rid}`)]
+                            : [])
+                    ])
+                        .merge(
+                            Rx.Observable.of(basicSuccess({
+                                title: 'map.savedMapTitle',
+                                message: 'map.savedMapMessage',
+                                autoDismiss: 6,
+                                position: 'tc'
+                            }))
+                        )
+                ))
+                .catch((e) => {
+                    const { status, statusText, data, message, ...other} = e;
+                    return Rx.Observable.of(mapSaveError(status ? { status, statusText, data } : message || other), basicError({
+                        ...getErrorMessage(e, 'geostore', 'mapsError'),
+                        autoDismiss: 6,
+                        position: 'tc'
+                    }));
+                })
+                .startWith(!resource.id ? savingMap(resource.metadata) : mapUpdating(resource.metadata));
+        });
 
 module.exports = {
     loadMapsEpic,
@@ -538,7 +544,7 @@ module.exports = {
     loadMapsOnSearchFilterChange,
     hideTabsOnSearchFilterChange,
     mapsLoadContextsEpic,
-    mapsLoadContextsOnLogin,
+    mapsSetupFilterOnLogin,
     setDetailsChangedEpic,
     fetchDetailsFromResourceEpic,
     saveResourceDetailsEpic,

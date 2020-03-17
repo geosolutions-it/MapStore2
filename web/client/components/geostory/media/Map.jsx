@@ -9,12 +9,13 @@ import React from 'react';
 import { compose, branch, withState } from 'recompose';
 import { Button as ButtonRB, Glyphicon } from 'react-bootstrap';
 
-import MapView from '../../widgets/widget/MapView'; // TODO: use a external component
+import MapView from '../common/MapView';
 import { applyDefaults } from '../../../utils/GeoStoryUtils';
 import {defaultLayerMapPreview} from '../../../utils/MediaEditorUtils';
 import Portal from '../../../components/misc/Portal';
 import tooltip from '../../../components/misc/enhancers/tooltip';
 import connectMap, {withLocalMapState, withMapEditingAndLocalMapState} from '../common/enhancers/map';
+import { withResizeDetector } from 'react-resize-detector';
 
 const Button = tooltip(ButtonRB);
 
@@ -25,16 +26,20 @@ export default compose(
     ),
     withLocalMapState,
     withMapEditingAndLocalMapState,
-    withState('active', 'setActive', false)
+    withState('active', 'setActive', false),
+    withResizeDetector
 )(({
     id,
     map = {layers: [defaultLayerMapPreview]},
     fit,
     editMap = false,
     onMapViewChanges,
+    eventHandlers,
     expandable = false,
     active,
-    setActive
+    setActive,
+    width,
+    height
 }) => {
 
     const { layers = [], mapOptions = {}, ...m} = (map.data ? map.data : map);
@@ -79,7 +84,7 @@ export default compose(
         }
         : expandMapOptions;
 
-
+    const isMapInfoControlActive = m.mapInfoControl && !(expandable && !active);
     // BaseMap component overrides the MapView id with map's id
     const mapView = (
         <>
@@ -87,11 +92,19 @@ export default compose(
             // force unmount to setup correct interactions
             key={expandable ? 'overlay' : 'block'}
             onMapViewChanges={onMapViewChanges}
+            eventHandlers={eventHandlers}
             map={{
                 ...m,
-                id: `media-${id}`
+                id: `media-${id}`,
+                resize: width + '-' + height,
+                style: {
+                    width: '100%',
+                    height: '100%',
+                    cursor: isMapInfoControlActive ? 'pointer' : 'default'
+                }
             }} // if map id is passed as number, the resource id, ol throws an error
             layers={layers}
+            tools={isMapInfoControlActive ? ["popup"] : []}
             options={applyDefaults(updatedMapOptions)}
         />
         {expandable && !editMap &&

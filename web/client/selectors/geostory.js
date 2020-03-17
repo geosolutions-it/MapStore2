@@ -60,7 +60,11 @@ export const resourceSelector = state => get(state, 'geostory.resource');
  * @param {object} state the application state
  */
 export const canEditSelector = state => get(resourceSelector(state), 'canEdit', false);
-
+/**
+ * Get id of current story
+ * @param {object} state the application state
+ */
+export const geostoryIdSelector = state => get(resourceSelector(state), 'id');
 /**
  * Selects the edit permission of the resource
  * @param {object} state the application state

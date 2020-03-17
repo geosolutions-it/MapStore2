@@ -16,7 +16,8 @@ module.exports = () => {
         MeasurementSupport: require('../openlayers/MeasurementSupport').default,
         Overview: require('../openlayers/Overview').default,
         ScaleBar: require('../openlayers/ScaleBar').default,
-        DrawSupport: require('../openlayers/DrawSupport').default
+        DrawSupport: require('../openlayers/DrawSupport').default,
+        PopupSupport: require('../openlayers/PopupSupport').default
     };
 };
 

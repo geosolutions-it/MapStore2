@@ -20,3 +20,7 @@ export const upload = (files, url = "rest/config/uploadPlugin") => {
         )
     ).then((responses) => responses.map(r => r.data));
 };
+
+export const uninstall = (plugin, url = "rest/config/uninstallPlugin") => {
+    return axios.delete(url + "/" + plugin).then(response => response.data);
+};

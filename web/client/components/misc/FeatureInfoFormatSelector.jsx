@@ -19,7 +19,8 @@ class FeatureInfoFormatSelector extends React.Component {
         label: PropTypes.oneOfType([PropTypes.func, PropTypes.string, PropTypes.object]),
         availableInfoFormat: PropTypes.object,
         infoFormat: PropTypes.string,
-        onInfoFormatChange: PropTypes.func
+        onInfoFormatChange: PropTypes.func,
+        disabled: PropTypes.bool
     };
 
     static defaultProps = {
@@ -48,6 +49,7 @@ class FeatureInfoFormatSelector extends React.Component {
             <FormGroup bsSize="small">
                 <ControlLabel>{this.props.label}</ControlLabel>
                 <FormControl
+                    disabled={this.props.disabled}
                     id={this.props.id}
                     value={this.props.infoFormat}
                     componentClass="select"

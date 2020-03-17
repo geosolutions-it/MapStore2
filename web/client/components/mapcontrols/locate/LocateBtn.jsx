@@ -71,7 +71,7 @@ class LocateBtn extends React.Component {
     renderButton = () => {
         const geoLocationDisabled = this.props.locate === "PERMISSION_DENIED";
         return (
-            <Button id={this.props.id} disabled={geoLocationDisabled} {...this.props.btnConfig} onClick={this.onClick} bsStyle="success active" style={this.props.style}>
+            <Button id={this.props.id} disabled={geoLocationDisabled} {...this.props.btnConfig} onClick={this.onClick} bsStyle={this.getBtnStyle()} style={this.props.style}>
                 <Glyphicon glyph={this.props.glyph}/>{this.props.text}{this.props.help}
             </Button>
         );
@@ -132,11 +132,10 @@ class LocateBtn extends React.Component {
     }
 
     getBtnStyle = () => {
-        let style = this.props.bsStyle;
-        if (this.props.locate === "FOLLOWING") {
+        const {locate, bsStyle} = this.props;
+        let style = bsStyle;
+        if (locate === "FOLLOWING" || locate === "ENABLED") {
             style = "success active";
-        } else if (this.props.locate === "ENABLED") {
-            style = "info";
         }
         return style;
     };

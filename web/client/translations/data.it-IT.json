@@ -1700,6 +1700,10 @@
                     "unknownError": "Si è verificato un errore durante il caricamento della mappa. Si prega di contattare l'amministratore",
                     "notFound": "La mappa si sta tentando di accedere non esiste"
                 },
+                "plugins": {
+                    "upload": "Errore durante l'upload del plugin",
+                    "uninstall": "Errore durante la disinstallazione del plugin"
+                },
                 "resourceAlreadyExists": "Una risorsa con questo nome esiste già"
             }
         },
@@ -2062,7 +2066,8 @@
                 "topLeft": "Angolo in alto a sinistra",
                 "topRight": "Angolo in alto a destra",
                 "bottomLeft": "Angolo in basso a sinistra",
-                "bottomRight": "Angolo in basso a destra"
+                "bottomRight": "Angolo in basso a destra",
+                "identify": "Identify"
             },
             "webPageCreator": {
                 "title": "Pagina web",
@@ -2374,6 +2379,7 @@
                 "uploadTitle": "Installa un plugin di MapStore",
                 "uploadParseError": "File index.json con formato errato",
                 "uploadMissingFileError": "File index.json mancante nel file",
+                "confirmRemovePlugin": "Sei sicuro di voler eliminare l'estensione?",
                 "tooltips": {
                     "enableUserPlugin": "Abilita la selezione del plug-in corrente per l'utente",
                     "disableUserPlugin": "Disabilita la selezione del plug-in corrente per l'utente",
@@ -2382,6 +2388,7 @@
                     "editConfiguration": "Modifica la configurazione del plugin",
                     "pluginDocumentation": "Apri la documentazione di configurazione del plugin",
                     "uploadPlugin": "Aggiungi una estensione a MapStore",
+                    "removePlugin": "Rimuovi questa estensione da MapStore",
                     "mapTemplatesConfig": "Configura modelli"
                 },
                 "saveCfgErrorNotification":  {

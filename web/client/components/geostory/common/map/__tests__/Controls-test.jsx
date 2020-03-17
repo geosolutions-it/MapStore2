@@ -48,7 +48,7 @@ describe('Controls component', () => {
             />, document.getElementById("container"));
         doCommonTests(document);
         const checkboxes = document.querySelectorAll("input[type=checkbox]");
-        expect(checkboxes.length).toBe(2);
+        expect(checkboxes.length).toBe(3);
         ReactTestUtils.Simulate.change(checkboxes[0]);
         expect(spyChangeMap).toHaveBeenCalled();
         expect(spyChangeMap.calls.length).toBe(2);
@@ -69,10 +69,29 @@ describe('Controls component', () => {
             />, document.getElementById("container"));
         doCommonTests(document);
         const checkboxes = document.querySelectorAll("input[type=checkbox]");
-        expect(checkboxes.length).toBe(2);
+        expect(checkboxes.length).toBe(3);
         ReactTestUtils.Simulate.change(checkboxes[1]);
         expect(spyChangeMap).toHaveBeenCalled();
         expect(spyChangeMap.calls.length).toBe(1);
         expect(spyChangeMap.calls[0].arguments).toEqual(['mapOptions.interactions', { dragPan: newDragPanStatus, keyboardPan: newDragPanStatus } ]);
+    });
+    it('rendering Controls comp and triggering mapInfoControl update', () => {
+        const actions = {
+            onChangeMap: () => {}
+        };
+        const spyChangeMap = expect.spyOn(actions, 'onChangeMap');
+        const oldZoomStatus = true;
+        ReactDOM.render(
+            <Controls
+                map={{zoomControl: oldZoomStatus}}
+                onChangeMap={actions.onChangeMap}
+            />, document.getElementById("container"));
+        doCommonTests(document);
+        const checkboxes = document.querySelectorAll("input[type=checkbox]");
+        expect(checkboxes.length).toBe(3);
+        ReactTestUtils.Simulate.change(checkboxes[2]);
+        expect(spyChangeMap).toHaveBeenCalled();
+        expect(spyChangeMap.calls.length).toBe(1);
+        expect(spyChangeMap.calls[0].arguments).toEqual(['mapInfoControl', true]);
     });
 });

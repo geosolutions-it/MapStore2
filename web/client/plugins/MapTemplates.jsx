@@ -25,6 +25,14 @@ import MapTemplatesPanel from '../components/maptemplates/MapTemplatesPanel';
 import maptemplates from '../reducers/maptemplates';
 import * as epics from '../epics/maptemplates';
 
+/**
+ * Provides a list of map templates available inside of a currently loaded context.
+ * Allows to merge their contents with the current map configuration or to replace it entirely.
+ * Map templates can be of various formats(currently supported are MapStore JSON, OGC WMC)
+ * @memberof plugins
+ * @class
+ * @name MapTemplates
+ */
 const mapTemplates = ({
     active,
     templates = [],

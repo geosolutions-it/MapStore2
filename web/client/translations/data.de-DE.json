@@ -1701,6 +1701,10 @@
                     "unknownError": "Es gab einen Fehler in der Karte geladen werden. Bitte kontaktieren Sie den Administrator",
                     "notFound": "Die Karte, die Sie zugreifen möchten, existiert nicht"
                 },
+                "plugins": {
+                  "upload": "Fehler beim Hochladen des Plugins",
+                  "uninstall": "Fehler beim Deinstallieren des Plugins"
+                },
                 "resourceAlreadyExists": "Eine Ressource mit diesem Namen existiert bereits"
             }
         },
@@ -2062,7 +2066,8 @@
                 "topLeft": "Oben links",
                 "topRight": "Oben rechts",
                 "bottomLeft": "Unten links",
-                "bottomRight": "Unten rechts"
+                "bottomRight": "Unten rechts",
+                "identify": "Identifiziere"
             },
             "webPageCreator": {
                 "title": "Website",
@@ -2372,6 +2377,9 @@
                 },
                 "uploadLabel": "Ziehen Sie ein Erweiterungspaket oder klicken Sie, um es zu durchsuchen und hochzuladen",
                 "uploadTitle": "Installieren Sie ein MapStore-Plugin",
+                "uploadParseError": "index.json-Datei hat das falsche Format",
+                "uploadMissingFileError": "index.json-Datei fehlt in zip",
+                "confirmRemovePlugin": "Möchten Sie die Erweiterung wirklich entfernen?",
                 "tooltips": {
                     "enableUserPlugin": "Aktiviert die Auswahl des aktuellen Plugins für den Benutzer",
                     "disableUserPlugin": "Deaktivieren Sie die Auswahl des aktuellen Plugins für den Benutzer",
@@ -2380,6 +2388,7 @@
                     "editConfiguration": "Plugin Konfiguration bearbeiten",
                     "pluginDocumentation": "Öffnen Sie die Dokumentation zur Plugin-Konfiguration",
                     "uploadPlugin": "Fügen Sie MapStore eine Erweiterung hinzu",
+                    "removePlugin": "Entfernen Sie diese Erweiterung aus MapStore",
                     "mapTemplatesConfig": "Vorlagen konfigurieren"
                 },
                 "saveCfgErrorNotification":  {
