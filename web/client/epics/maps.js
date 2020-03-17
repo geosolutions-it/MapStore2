@@ -29,7 +29,7 @@ const {
     resetCurrentMap, EDIT_MAP
 } = require('../actions/currentMap');
 const {closeFeatureGrid} = require('../actions/featuregrid');
-const {toggleControl} = require('../actions/controls');
+const {toggleControl, setControlProperty} = require('../actions/controls');
 const {setTabsHidden} = require('../actions/contenttabs');
 const {
     mapPermissionsFromIdSelector, mapThumbnailsUriFromIdSelector,
@@ -364,12 +364,12 @@ const mapsLoadContextsEpic = (action$) =>
             );
         });
 
-const mapsLoadContextsOnLogin = (action$, store) =>
+const mapsSetupFilterOnLogin = (action$, store) =>
     action$.ofType(LOGIN_SUCCESS, LOGOUT)
         .switchMap(() => {
             const state = store.getState();
             const contexts = contextsSelector(state) || {};
-            return Rx.Observable.of(loadContexts(contexts.searchText,
+            return Rx.Observable.of(setControlProperty('advancedsearchpanel', 'enabled', false), loadContexts(contexts.searchText,
                 {params: {start: get(contexts, 'start', 0), limit: get(contexts, 'limit', 12)}},
                 0,
                 true
@@ -544,7 +544,7 @@ module.exports = {
     loadMapsOnSearchFilterChange,
     hideTabsOnSearchFilterChange,
     mapsLoadContextsEpic,
-    mapsLoadContextsOnLogin,
+    mapsSetupFilterOnLogin,
     setDetailsChangedEpic,
     fetchDetailsFromResourceEpic,
     saveResourceDetailsEpic,
