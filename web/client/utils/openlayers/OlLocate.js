@@ -122,7 +122,7 @@ OlLocate.prototype.stop = function() {
         this.map.un('click', this.clickHandler);
         this.map.un('touch', this.clickHandler);
     }
-    if (this.options.stopFollowingOnDrag && !this.follow) {
+    if (this.options.stopFollowingOnDrag) {
         this.map.un('pointerdrag', this.stopHandler);
     }
     this.set("state", "DISABLED");
