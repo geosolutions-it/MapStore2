@@ -484,15 +484,18 @@ const storeDetailsInfoEpic = (action$, store) =>
 const mapSaveMapResourceEpic = (action$, store) =>
     action$.ofType(SAVE_MAP_RESOURCE)
         .exhaustMap(({resource}) => {
+            // filter out invalid attributes
             const validAttributesNames = keys(resource.attributes)
                 .filter(attrName => resource.attributes[attrName] !== undefined && resource.attributes[attrName] !== null);
             return Rx.Observable.forkJoin(
                 (() => {
+                    // get a context information using the id in the attribute
                     const contextId = get(resource, 'attributes.context');
                     return contextId ? getResource(contextId, {withData: false}) : Rx.Observable.of(null);
                 })(),
                 !resource.id ? createResource(resource) : updateResource(resource))
                 .switchMap(([contextResource, rid]) => (validAttributesNames.length > 0 ?
+                    // update valid attributes
                     Rx.Observable.forkJoin(validAttributesNames.map(attrName => updateResourceAttribute({
                         id: rid,
                         name: attrName,
@@ -504,6 +507,7 @@ const mapSaveMapResourceEpic = (action$, store) =>
                         mapSaved(),
                         ...(!resource.id ? [
                             mapCreated(rid, assign({id: rid, canDelete: true, canEdit: true, canCopy: true}, resource.metadata), resource.data),
+                            // if we got a valid context information redirect to a context, instead of the default viewer
                             push(contextResource ?
                                 `/context/${contextResource.name}/${rid}` :
                                 `/viewer/${mapTypeSelector(store.getState())}/${rid}`)]
