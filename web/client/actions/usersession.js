@@ -7,10 +7,15 @@
  */
 
 export const SAVE_USER_SESSION = "USER_SESSION:SAVE";
+export const LOAD_USER_SESSION = "USER_SESSION:LOAD";
 export const USER_SESSION_SAVED = "USER_SESSION:SAVED";
+export const USER_SESSION_LOADED = "USER_SESSION:LOADED";
 export const USER_SESSION_LOADING = "USER_SESSION:LOADING";
+
 export const saveUserSession = () => ({type: SAVE_USER_SESSION});
 export const userSessionSaved = (id, session) => ({type: USER_SESSION_SAVED, id, session});
+export const loadUserSession = () => ({type: LOAD_USER_SESSION});
+export const userSessionLoaded = (id, session) => ({type: USER_SESSION_LOADED, id, session});
 
 export const loading = (value, name = "loading") => ({
     type: USER_SESSION_LOADING,

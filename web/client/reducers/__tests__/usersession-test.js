@@ -8,12 +8,18 @@
 import expect from 'expect';
 
 import usersession from '../usersession';
-import {USER_SESSION_SAVED, USER_SESSION_LOADING} from "../../actions/usersession";
+import {USER_SESSION_SAVED, USER_SESSION_LOADED, USER_SESSION_LOADING} from "../../actions/usersession";
 
 // saveUserSession, userSessionSaved, loading
 describe('Test the usersession reducer', () => {
     it('user session saved', () => {
         const state = usersession({}, { type: USER_SESSION_SAVED, id: 1, session: {attribute: "mysession"} });
+        expect(state.session).toExist();
+        expect(state.id).toBe(1);
+        expect(state.session.attribute).toBe("mysession");
+    });
+    it('user session loaded', () => {
+        const state = usersession({}, { type: USER_SESSION_LOADED, id: 1, session: {attribute: "mysession"} });
         expect(state.session).toExist();
         expect(state.id).toBe(1);
         expect(state.session.attribute).toBe("mysession");

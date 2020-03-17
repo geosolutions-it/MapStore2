@@ -132,6 +132,20 @@ describe('config epics', () => {
                 done();
             });
         });
+        it('load a context with new map with override', (done) => {
+            mockAxios.onGet("/new.json").reply(() => ([ 200, {} ]));
+            const NUM_ACTIONS = 1;
+            testEpic(loadMapConfigAndConfigureMap, NUM_ACTIONS, loadMapConfig('new.json', null, { version: 2}, undefined, {myproperty: "myvalue"}), (actions) => {
+                expect(actions.length).toBe(NUM_ACTIONS);
+                const [a] = actions;
+                expect(a).toExist();
+                expect(a.type).toBe(MAP_CONFIG_LOADED);
+                expect(a.config).toExist();
+                expect(a.config.version).toBe(2);
+                expect(a.config.myproperty).toBe("myvalue");
+                done();
+            });
+        });
         it('load new map as ADMIN', (done) => {
             const NUM_ACTIONS = 1;
             mockAxios.onGet("/new.json").reply(() => ([ 200, {} ]));
