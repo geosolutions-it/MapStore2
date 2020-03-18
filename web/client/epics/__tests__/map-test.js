@@ -172,8 +172,7 @@ describe('map epics', () => {
                     right: 0,
                     top: 0
                 },
-                maxZoom: 4,
-                preserveResoulution: undefined
+                maxZoom: 4
             });
             // unregister
             MapUtils.registerHook(MapUtils.ZOOM_TO_EXTENT_HOOK);

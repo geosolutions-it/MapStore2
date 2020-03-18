@@ -7,7 +7,7 @@
  */
 
 import { Parser } from 'xml2js';
-import { keys, values, get, head, isArray, mapValues, uniqWith, findIndex, pick } from 'lodash';
+import { keys, values, get, head, isArray, mapValues, uniqWith, findIndex, pick, has } from 'lodash';
 import uuidv1 from 'uuid/v1';
 
 import {
@@ -268,15 +268,24 @@ export const toMapConfig = (wmcString, generateLayersGroup = false) => {
                 title: viewContextTitle || layerGroup
             }] : [])];
 
+            const msCenter = msTagExtractor(globalExtensions, 'center');
+            const center = {
+                ...mapValues(pickAttributeValues(msCenter, 'x', 'y'), parseFloat),
+                crs: attrExtractor(msCenter, 'crs')
+            };
+            const zoom = parseFloat(get(msTagExtractor(globalExtensions, 'zoom'), 'charContent'));
+
             const msMapConfig = {
                 catalogServices: {},
                 map: {
                     maxExtent,
-                    bbox,
+                    bbox: zoom ? undefined : bbox,
                     projection,
                     backgrounds: [],
                     groups,
-                    layers
+                    layers,
+                    center: has(center, 'x', 'y', 'crs') ? center : undefined,
+                    zoom
                 },
                 version: 2
             };
@@ -327,7 +336,7 @@ export const toWMC = (
         attributes: makeSimpleXlink(href)
     });
 
-    const {maxExtent, bbox, projection, layers, groups} = map;
+    const {maxExtent, bbox, projection, layers, groups, center, zoom} = map;
 
     const makeMaxExtentFromBbox = bboxObj => {
         const reprojectedBbox = reprojectBbox(bboxObj.bounds, bboxObj.crs, projection);
@@ -362,7 +371,13 @@ export const toWMC = (
                 expanded: group.expanded
             })
         }))
-    } : null], namespaces.ms);
+    } : null, center && {
+        name: 'center',
+        attributes: objectToAttributes(center)
+    }, zoom && {
+        name: 'zoom',
+        textContent: zoom.toString()
+    }], namespaces.ms);
 
     const layerList = {
         name: 'LayerList',

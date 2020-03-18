@@ -16,7 +16,7 @@ module.exports = compose(
                             zoom: map.map.zoom || zoom,
                             center: map.map.center || center
                         }
-                    }, null, map.map.zoom === undefined && (map.map.bbox || {bounds: map.map.maxExtent}));
+                    }, null, !map.map.zoom && (map.map.bbox || {bounds: map.map.maxExtent}));
                 }
                 if (layers.length > 0) {
                     setLayers(layers, warnings); // TODO: warnings

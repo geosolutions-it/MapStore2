@@ -121,15 +121,13 @@ function panTo(center) {
  * @param {number[]} extent in the form of [minx, miny, maxx, maxy]
  * @param {string} crs related the extent
  * @param {number} maxZoom the max zoom limit
- * @param {boolean} preserveResolution for openlayers; when using a hook if set to true will preserve the current resolution
 */
-function zoomToExtent(extent, crs, maxZoom, preserveResolution) {
+function zoomToExtent(extent, crs, maxZoom) {
     return {
         type: ZOOM_TO_EXTENT,
         extent,
         crs,
-        maxZoom,
-        preserveResolution
+        maxZoom
     };
 }
 

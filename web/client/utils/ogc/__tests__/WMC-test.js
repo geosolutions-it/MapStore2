@@ -22,8 +22,8 @@ describe('WMC tests', () => {
             expect(config.map.maxExtent).toEqual([-1, 1, -1, 1]);
             expect(config.map.projection).toBe('EPSG:3857');
             expect(config.map.backgrounds).toEqual([]);
-            expect(config.map.center).toNotExist();
-            expect(config.map.zoom).toNotExist();
+            expect(config.map.center).toEqual({x: 1.5, y: 2.5, crs: "EPSG:3857"});
+            expect(config.map.zoom).toBe(7);
             expect(config.map.groups).toExist();
             expect(config.map.groups.length).toBe(4);
             expect(config.map.groups[0].id).toBe('Default');

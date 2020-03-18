@@ -155,7 +155,7 @@ export const replaceTemplateEpic = (action$, store) => action$
                                 zoom: config.map.zoom || zoom,
                                 center: config.map.center || center
                             }
-                        }), null, config.map.zoom === undefined && (config.map.bbox || config.map.maxExtent))
+                        }), null, !config.map.zoom && (config.map.bbox || config.map.maxExtent))
                     ] : []))))
             .let(wrapStartStop(
                 setTemplateLoading(id, true),

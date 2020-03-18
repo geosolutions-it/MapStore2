@@ -206,8 +206,7 @@ const zoomToExtentEpic = (action$, {getState = () => {} }) =>
             hook(extent, {
                 crs,
                 padding,
-                maxZoom,
-                preserveResolution: action.preserveResolution
+                maxZoom
             });
             return Rx.Observable.empty();
         }
