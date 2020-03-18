@@ -45,7 +45,7 @@ export const loadMapConfigAndConfigureMap = (action$, store) =>
             // certain epics always function correctly
             // i.e. FeedbackMask disables correctly after load
             // TODO: investigate the root causes of the problem and come up with a better solution, if possible
-            (config ? Observable.of({data: merge(config, overrideConfig)}).delay(100) : Observable.defer(() => axios.get(configName)))
+            (config ? Observable.of({data: merge({}, config, overrideConfig)}).delay(100) : Observable.defer(() => axios.get(configName)))
                 .switchMap(response => {
                     // added !config in order to avoid showing login modal when a new.json mapConfig is used in a public context
                     if (configName === "new.json" && !config && !isLoggedIn(store.getState())) {
@@ -57,13 +57,13 @@ export const loadMapConfigAndConfigureMap = (action$, store) =>
                         if (projectionDefs.concat([{code: "EPSG:4326"}, {code: "EPSG:3857"}, {code: "EPSG:900913"}]).filter(({code}) => code === projection).length === 0) {
                             return Observable.of(configureError({messageId: `map.errors.loading.projectionError`, errorMessageParams: {projection}}, mapId));
                         }
-                        const mapConfig = merge(response.data, overrideConfig);
+                        const mapConfig = merge({}, response.data, overrideConfig);
                         return mapId ? Observable.of(configureMap(mapConfig, mapId), mapInfo ? mapInfoLoaded(mapInfo) : loadMapInfo(mapId)) :
                             Observable.of(configureMap(mapConfig, mapId), ...(mapInfo ? [mapInfoLoaded(mapInfo)] : []));
                     }
                     try {
                         const data = JSON.parse(response.data);
-                        const mapConfig = merge(data, overrideConfig);
+                        const mapConfig = merge({}, data, overrideConfig);
                         return mapId ? Observable.of(configureMap(mapConfig, mapId), mapInfo ? mapInfoLoaded(mapInfo) : loadMapInfo(mapId)) :
                             Observable.of(configureMap(mapConfig, mapId), ...(mapInfo ? [mapInfoLoaded(mapInfo)] : []));
                     } catch (e) {

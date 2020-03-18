@@ -98,12 +98,28 @@ describe('usersession Epics', () => {
         }, initialState, done);
     });
     it('start and stop user session save', (done) => {
-        const store = testEpic(autoSaveSessionEpicCreator('START', 'STOP', 10), (action) => action.type !== "STOP", {type: 'START'}, (actions) => {
+        const store = testEpic(autoSaveSessionEpicCreator('START', 'STOP', 10, () => ({type: 'END'})), (action) => action.type !== "END", {type: 'START'}, (actions) => {
             expect(actions[0].type).toBe(SAVE_USER_SESSION);
             expect(actions[actions.length - 1].type).toBe("EPIC_COMPLETED");
         }, initialState, done, true);
         setTimeout(() => {
             store.dispatch({ type: 'STOP' });
+        }, 100);
+    });
+    it('start, stop and restart user session save', (done) => {
+        let count = 0;
+        const store = testEpic(autoSaveSessionEpicCreator('START', 'STOP', 10, () => ({type: 'END' + (count++)})), (action) => action.type !== "END1", {type: 'START'}, (actions) => {
+            expect(actions[0].type).toBe(SAVE_USER_SESSION);
+            expect(actions[actions.length - 1].type).toBe("EPIC_COMPLETED");
+        }, initialState, done, true);
+        setTimeout(() => {
+            store.dispatch({ type: 'STOP' });
+            setTimeout(() => {
+                store.dispatch({ type: 'START' });
+                setTimeout(() => {
+                    store.dispatch({ type: 'STOP' });
+                }, 100);
+            }, 50);
         }, 100);
     });
     it('user session name is taken from idSelector when loading', (done) => {
