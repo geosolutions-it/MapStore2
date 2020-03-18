@@ -31,19 +31,29 @@ function MapExportError(title, message) {
     this.message = message;
 }
 
-const saveMap = state => MapUtils.saveMapConfiguration(
-    mapSelector(state),
-    layersSelector(state),
-    groupsSelector(state),
-    backgroundListSelector(state),
-    textSearchConfigSelector(state),
-    mapOptionsToSaveSelector(state)
-);
+const saveMap = (state, addBbox = false) => {
+    const savedConfig = MapUtils.saveMapConfiguration(
+        mapSelector(state),
+        layersSelector(state),
+        groupsSelector(state),
+        backgroundListSelector(state),
+        textSearchConfigSelector(state),
+        mapOptionsToSaveSelector(state)
+    );
+
+    return addBbox ? {
+        ...savedConfig,
+        map: {
+            ...savedConfig.map,
+            bbox: mapSelector(state).bbox
+        }
+    } : savedConfig;
+};
 
 const PersistMap = {
     mapstore2: (state) => Rx.Observable.of([JSON.stringify(saveMap(state)), 'map.json', 'application/json']),
     wmc: (state) => {
-        const config = saveMap(state);
+        const config = saveMap(state, true);
         const layers = get(config, 'map.layers', []).filter(layer => !!layer.url && layer.type === 'wms');
 
         if (layers.length === 0) {

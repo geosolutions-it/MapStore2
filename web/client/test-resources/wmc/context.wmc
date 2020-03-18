@@ -22,6 +22,8 @@
         <ms:Group id="groupid1.groupid2" title="Group2" expanded="false"/>
         <ms:Group id="groupid3" title="Group3" expanded="true"/>
       </ms:GroupList>
+      <ms:center xmlns:ms="http://geo-solutions.it/mapstore/context" x="1.5" y="2.5" crs="EPSG:3857"/>
+      <ms:zoom xmlns:ms="http://geo-solutions.it/mapstore/context">7</ms:zoom>
     </Extension>
   </General>
   <LayerList>

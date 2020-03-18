@@ -22,15 +22,15 @@ const MAP_SAVED = 'MAP:MAP_SAVED';
  * Configure the viewer to display the map
  * @param {object} conf map config
  * @param {number} mapId map resource id
- * @param {boolean} zoomToMaxExtent if true, trigger zooming to map's max extent instead of the zoom value specified in the config
+ * @param {boolean} zoomToExtent if provided, zooms to this extent after the map is configured
  */
-function configureMap(conf, mapId, zoomToMaxExtent) {
+function configureMap(conf, mapId, zoomToExtent) {
     return {
         type: MAP_CONFIG_LOADED,
         config: conf,
         legacy: !!mapId,
         mapId: mapId,
-        zoomToMaxExtent
+        zoomToExtent
     };
 }
 

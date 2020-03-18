@@ -75,9 +75,9 @@ export const loadMapConfigAndConfigureMap = (action$, store) =>
 
 export const zoomToMaxExtentOnConfigureMap = action$ =>
     action$.ofType(MAP_CONFIG_LOADED)
-        .filter(({zoomToMaxExtent}) => zoomToMaxExtent)
+        .filter(action => !!action.zoomToExtent)
         .delay(300) // without the delay the map zoom will not change
-        .map(({config}) => zoomToExtent(get(config, 'map.maxExtent'), get(config, 'map.projection')));
+        .map(({config, zoomToExtent: extent}) => zoomToExtent(extent.bounds, extent.crs || get(config, 'map.projection')));
 
 export const loadMapInfoEpic = action$ =>
     action$.ofType(LOAD_MAP_INFO)
