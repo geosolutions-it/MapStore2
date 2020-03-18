@@ -94,10 +94,10 @@ export const saveUserSessionEpicCreator = (nameSelector, sessionSelector, idSele
  * at defined intervals.
  * It can be started and stopped by two specific actions (configurable).
  *
- * @param {*} startAction the action type that will start saving of the user sessions
- * @param {*} endAction the action type that will stop saving of the user sessions
- * @param {*} frequency interval between saves (in milliseconds)
- * @param {*} finalAction optional action emitted after stop
+ * @param {string} startAction the action type that will start saving of the user sessions
+ * @param {string} endAction the action type that will stop saving of the user sessions
+ * @param {number} frequency interval between saves (in milliseconds)
+ * @param {function} finalAction optional action creator emitted after stop
  */
 export const autoSaveSessionEpicCreator = (startAction, endAction, frequency, finalAction) => (action$) => action$
     .ofType(startAction)
@@ -109,7 +109,7 @@ export const autoSaveSessionEpicCreator = (startAction, endAction, frequency, fi
 /**
  * Returns an epic that loads the user session, triggered by a LOAD_USER_SESSION action.
  *
- * @param {*} nameSelector selector that builds the session identifier
+ * @param {function} nameSelector selector that builds the session identifier
  */
 export const loadUserSessionEpicCreator = (nameSelector) => (action$, store) =>
     action$.ofType(LOAD_USER_SESSION).switchMap(({name}) => {
