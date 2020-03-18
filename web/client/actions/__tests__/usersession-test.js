@@ -8,7 +8,9 @@
 
 import expect from 'expect';
 import {SAVE_USER_SESSION, USER_SESSION_SAVED, LOAD_USER_SESSION, USER_SESSION_LOADED, USER_SESSION_LOADING,
-    saveUserSession, userSessionSaved, loadUserSession, userSessionLoaded, loading} from "../usersession";
+    REMOVE_USER_SESSION, USER_SESSION_REMOVED, SAVE_MAP_CONFIG,
+    saveUserSession, userSessionSaved, loadUserSession, userSessionLoaded, loading,
+    removeUserSession, userSessionRemoved, saveMapConfig} from "../usersession";
 
 describe('Test correctness of the usersession actions', () => {
 
@@ -31,8 +33,9 @@ describe('Test correctness of the usersession actions', () => {
         expect(action.value).toBe(true);
     });
     it('load user session', () => {
-        const action = loadUserSession();
+        const action = loadUserSession("name");
         expect(action.type).toBe(LOAD_USER_SESSION);
+        expect(action.name).toBe("name");
     });
     it('user session loaded', () => {
         const action = userSessionLoaded(1, {
@@ -41,5 +44,18 @@ describe('Test correctness of the usersession actions', () => {
         expect(action.type).toBe(USER_SESSION_LOADED);
         expect(action.id).toBe(1);
         expect(action.session.attribute).toBe("myvalue");
+    });
+    it('remove user session', () => {
+        const action = removeUserSession();
+        expect(action.type).toBe(REMOVE_USER_SESSION);
+    });
+    it('user session removed', () => {
+        const action = userSessionRemoved();
+        expect(action.type).toBe(USER_SESSION_REMOVED);
+    });
+    it('save map config', () => {
+        const action = saveMapConfig({});
+        expect(action.type).toBe(SAVE_MAP_CONFIG);
+        expect(action.config).toExist();
     });
 });

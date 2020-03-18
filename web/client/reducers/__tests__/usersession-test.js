@@ -8,7 +8,8 @@
 import expect from 'expect';
 
 import usersession from '../usersession';
-import {USER_SESSION_SAVED, USER_SESSION_LOADED, USER_SESSION_LOADING} from "../../actions/usersession";
+import {USER_SESSION_SAVED, USER_SESSION_LOADED, USER_SESSION_LOADING,
+    USER_SESSION_REMOVED, SAVE_MAP_CONFIG} from "../../actions/usersession";
 
 // saveUserSession, userSessionSaved, loading
 describe('Test the usersession reducer', () => {
@@ -33,5 +34,14 @@ describe('Test the usersession reducer', () => {
         const state = usersession({}, { type: USER_SESSION_LOADING, name: "loading", value: false });
         expect(state.loading.value).toBe(false);
         expect(state.loading.name).toBe("loading");
+    });
+    it('user session removed', () => {
+        const state = usersession({id: 1, session: {attribute: "mysession"}}, { type: USER_SESSION_REMOVED });
+        expect(state.session).toNotExist();
+        expect(state.id).toNotExist();
+    });
+    it('save map config', () => {
+        const state = usersession({}, { type: SAVE_MAP_CONFIG, config: {} });
+        expect(state.config).toExist();
     });
 });

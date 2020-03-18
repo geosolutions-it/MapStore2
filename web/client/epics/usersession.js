@@ -6,9 +6,10 @@
  * LICENSE file in the root directory of this source tree.
  */
 import Rx from 'rxjs';
-import { error } from '../actions/notifications';
-import { SAVE_USER_SESSION, LOAD_USER_SESSION, userSessionSaved, userSessionLoaded, loading, saveUserSession } from "../actions/usersession";
-import { createResource, createCategory, updateResource, getResourceDataByName, getResourceIdByName } from '../api/persistence';
+import { error, success } from '../actions/notifications';
+import { SAVE_USER_SESSION, LOAD_USER_SESSION, REMOVE_USER_SESSION,
+    userSessionSaved, userSessionLoaded, loading, saveUserSession, userSessionRemoved } from "../actions/usersession";
+import { createResource, createCategory, updateResource, getResourceDataByName, getResourceIdByName, deleteResource } from '../api/persistence';
 import {userSelector} from '../selectors/security';
 import { wrapStartStop } from '../observables/epics';
 import isString from "lodash/isString";
@@ -32,7 +33,7 @@ const saveUserSessionErrorStatusToMessage = (status) => {
  * const nameSelector = (state) => ({state.context.name + "." + state.security.user.name})
  * const sessionSelector = (state) => ({state.map.present})
  * const idSelector = (state) => ({state.usersession.id})
- * const epic = saveUserSessionEpic(nameSelector, sessionSelector, idSelector)
+ * const epic = saveUserSessionEpicCreator(nameSelector, sessionSelector, idSelector)
  * setInterval(() => dispatch({type: SAVE_USER_SESSION}), 60 * 1000)
  */
 export const saveUserSessionEpicCreator = (nameSelector, sessionSelector, idSelector = () => {}) => (action$, store) => action$
@@ -93,24 +94,27 @@ export const saveUserSessionEpicCreator = (nameSelector, sessionSelector, idSele
  * at defined intervals.
  * It can be started and stopped by two specific actions (configurable).
  *
- * @param {*} startAction the action type that will start saving of the user sessions
- * @param {*} endAction the action type that will stop saving of the user sessions
- * @param {*} frequency interval between saves (in milliseconds)
+ * @param {string} startAction the action type that will start saving of the user sessions
+ * @param {string} endAction the action type that will stop saving of the user sessions
+ * @param {number} frequency interval between saves (in milliseconds)
+ * @param {function} finalAction optional action creator emitted after stop
  */
-export const autoSaveSessionEpicCreator = (startAction, endAction, frequency) => (action$) => action$
+export const autoSaveSessionEpicCreator = (startAction, endAction, frequency, finalAction) => (action$) => action$
     .ofType(startAction)
-    .switchMap(() => Rx.Observable.interval(frequency).switchMap(() => Rx.Observable.of(saveUserSession())))
-    .takeUntil(action$.ofType(endAction));
+    .switchMap(() => Rx.Observable.interval(frequency)
+        .switchMap(() => Rx.Observable.of(saveUserSession()))
+        .takeUntil(action$.ofType(endAction)).concat(finalAction ? Rx.Observable.of(finalAction()) : Rx.Observable.empty())
+    );
 
 /**
  * Returns an epic that loads the user session, triggered by a LOAD_USER_SESSION action.
  *
- * @param {*} nameSelector selector that builds the session identifier
+ * @param {function} nameSelector selector that builds the session identifier
  */
 export const loadUserSessionEpicCreator = (nameSelector) => (action$, store) =>
-    action$.ofType(LOAD_USER_SESSION).switchMap(() => {
+    action$.ofType(LOAD_USER_SESSION).switchMap(({name}) => {
         const state = store.getState();
-        const sessionName = nameSelector(state);
+        const sessionName = name || nameSelector(state);
         return Rx.Observable.forkJoin(
             getResourceIdByName("USERSESSION", sessionName),
             getResourceDataByName("USERSESSION", sessionName)
@@ -123,3 +127,32 @@ export const loadUserSessionEpicCreator = (nameSelector) => (action$, store) =>
                 () => Rx.Observable.of(userSessionLoaded(undefined, undefined))
             ));
     });
+
+/**
+ * Returns a user session remove epic.
+ * The epic triggers on a REMOVE_USER_SESSION action.
+ *
+ * @param {function} idSelector selector of the identifier for the current session (to be removed)
+ * @example
+ *
+ * const idSelector = (state) => ({state.usersession.id})
+ * const epic = removeUserSessionEpicCreator(idSelector)
+ */
+export const removeUserSessionEpicCreator = (idSelector) => (action$, store) =>
+    action$.ofType(REMOVE_USER_SESSION).switchMap(() => {
+        const state = store.getState();
+        const sessionId = idSelector(state);
+        return deleteResource({id: sessionId}).switchMap(() => Rx.Observable.of(userSessionRemoved(), success({
+            title: "success",
+            message: "userSession.successRemoved"
+        })));
+    }).let(wrapStartStop(
+        loading(true, 'userSessionRemoving'),
+        loading(false, 'userSessionRemoving'),
+        () => Rx.Observable.of(error({
+            title: 'userSession.removeErrorNotification.titleContext',
+            message: 'userSession.removeErrorNotification.defaultMessage',
+            position: "tc",
+            autoDismiss: 5
+        }))
+    ));
