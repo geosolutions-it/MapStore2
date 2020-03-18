@@ -50,7 +50,8 @@ const searchFeaturedMaps = (start, limit, searchText = '') => {
             Rx.Observable.forkJoin(
                 maps.map(({context}) => context ?
                     getResource(context, {includeAttributes: false, withData: false, withPermissions: false})
-                        .switchMap(resource => Rx.Observable.of(resource.name)) :
+                        .switchMap(resource => Rx.Observable.of(resource.name))
+                        .catch(() => Rx.Observable.of(null)) :
                     Rx.Observable.of(null))
             ).map(contextNames => makeExtResource(results, maps, contextNames));
     };
