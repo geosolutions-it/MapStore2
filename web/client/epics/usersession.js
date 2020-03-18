@@ -132,7 +132,7 @@ export const loadUserSessionEpicCreator = (nameSelector) => (action$, store) =>
  * Returns a user session remove epic.
  * The epic triggers on a REMOVE_USER_SESSION action.
  *
- * @param {*} idSelector selector of the identifier for the current session (to be removed)
+ * @param {function} idSelector selector of the identifier for the current session (to be removed)
  * @example
  *
  * const idSelector = (state) => ({state.usersession.id})
@@ -156,4 +156,3 @@ export const removeUserSessionEpicCreator = (idSelector) => (action$, store) =>
             autoDismiss: 5
         }))
     ));
-
