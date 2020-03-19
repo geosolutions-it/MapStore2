@@ -14,7 +14,7 @@ import { validate as defaultValidate, testService as defaultTestService } from '
 /**
  * Implements the abstraction of TMS catalog, that can be:
  * - tileprovider: custom or pre-configured configuration of tileprovider layers.
- * - tms: standard TMS 1.0.0 service, with remote data retrival.
+ * - tms: standard TMS 1.0.0 service, with remote data retrieval.
  * @module api.catalog.TMS
  */
 
@@ -22,7 +22,8 @@ import { validate as defaultValidate, testService as defaultTestService } from '
 export const parseUrl = TMS100.parseUrl;
 
 export const getRecords = (url, startPosition, maxRecords, text, info = {}) => {
-    const { service } = info;
+    const {options} = info;
+    const { service = {} } = options || {};
     if ( service.provider === "tms") {
         TMS100.getRecords(url, startPosition, maxRecords, text, info);
 
@@ -30,7 +31,8 @@ export const getRecords = (url, startPosition, maxRecords, text, info = {}) => {
     return tileProvider.getRecords(url, startPosition, maxRecords, text, info);
 };
 export const textSearch = (url, startPosition, maxRecords, text, info = {}) => {
-    const { service } = info;
+    const { options } = info;
+    const { service = {} } = options || {};
     if (service.provider === "tms") {
         return TMS100.getRecords(url, startPosition, maxRecords, text, info);
     }
@@ -38,9 +40,9 @@ export const textSearch = (url, startPosition, maxRecords, text, info = {}) => {
 };
 export const validate = (info) => (service) => {
     if (service.provider === "tms") {
-        return defaultValidate(service)(info);
+        return defaultValidate(info)(service);
     }
-    return tileProvider.validate(service)(info);
+    return tileProvider.validate(info)(service);
 };
 export const testService = (API) => service => {
     if (service.provider === "tms") {

@@ -10,7 +10,7 @@
 import csw from '../CSW';
 import wms from '../WMS';
 import wmts from '../WMTS';
-import * as tms from './TMS_1_0_0';
+import * as tms from './TMS';
 import backgrounds from '../mapBackground';
 import { validate, testService } from './common';
 

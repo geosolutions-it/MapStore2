@@ -71,7 +71,7 @@ const catalogSelector = createSelector([
     pageSize,
     loading,
     crs,
-    records: result && CatalogUtils.getCatalogRecords(selectedFormat, result, { ...options, layerOptions }, locales) || []
+    records: result && CatalogUtils.getCatalogRecords(selectedFormat, result, { ...options, layerOptions, service }, locales) || []
 }));
 
 const Catalog = compose(

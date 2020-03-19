@@ -298,7 +298,7 @@ const getMapsResourcesByCategoryEpic = (action$, store) =>
                 .let(wrapStartStop(
                     loading(true, 'loadingMaps'),
                     loading(false, 'loadingMaps'),
-                    e => loadError(e)
+                    e => Rx.Observable.of(loadError(e))
                 ));
         });
 

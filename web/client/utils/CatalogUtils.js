@@ -326,22 +326,23 @@ const converters = {
         }
         return null;
     },
-    tms: ({records} = {}, options) => {
-        return records && records.map(record => ({
-            title: record.title,
-            identifier: record.identifier,
-            tileMapUrl: record.href,
-            description: record.srs, // To show description in record
-            tmsUrl: options.tmsUrl,
-            references: [{
-                type: "OGC:TMS",
-                version: "1.0.0",
-                url: options.url
-            }]
-        }));
-    },
-    tileprovider: records => {
+    tms: (records, options = {}) => {
         if (records && records.records) {
+            const isTMS100 = options.service && options.service.provider === "tms";
+            if (isTMS100) {
+                return records && records.map(record => ({
+                    title: record.title,
+                    identifier: record.identifier,
+                    tileMapUrl: record.href,
+                    description: record.srs, // To show description in record
+                    tmsUrl: options.tmsUrl,
+                    references: [{
+                        type: "OGC:TMS",
+                        version: "1.0.0",
+                        url: options.url
+                    }]
+                }));
+            }
             return records.records.map(record => {
                 return {
                     title: record.provider,
