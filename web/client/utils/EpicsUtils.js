@@ -10,7 +10,7 @@
 const defaultEpicWrapper = (epic, k = "--unknown--") => (...args) =>
     epic(...args).catch((error, source) => {
         // eslint-disable-next-line
-        console.error(`Error in epic "${k}". Source`, error);
+        console.error(`Error in epic "${k}". Original error:`, error);
         setTimeout(() => {
             // throw anyway error
             throw error;
