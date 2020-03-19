@@ -1,12 +1,20 @@
 /**
- * default wrapper for the epics.
+ * Default wrapper for the epics. This avoids to close all epics system for unhandled exceptions.
+ * It allows also to identify the error showing in console the name of the epic that triggered the exception and the error.
+ * At the end, it throws the exception again so it can be automatically intercepted in dev tools.
  * @memberof utils.EpicsUtils
- * @param {epic} epic the epic to wrap
- * @return {epic} epic wrapped with error catch and re-subscribe functionalities.S
+ * @param {epic} the epic to wrap
+ * @param {string} [key] the name of the epic
+ * @returns {epic} the epic with error handling functionalities
  */
-const defaultEpicWrapper = epic => (...args) =>
+const defaultEpicWrapper = (epic, k = "--unknown--") => (...args) =>
     epic(...args).catch((error, source) => {
-        setTimeout(() => { throw error; }, 0);
+        // eslint-disable-next-line
+        console.error(`Error in epic "${k}". Original error:`, error);
+        setTimeout(() => {
+            // throw anyway error
+            throw error;
+        }, 0);
         return source;
     });
 
@@ -18,4 +26,4 @@ const defaultEpicWrapper = epic => (...args) =>
  * @return {array} the wrapped epics list as an array (usable as an input to redux-observable combineEpics function).
  */
 export const wrapEpics = (epics, wrapper = defaultEpicWrapper) =>
-    Object.keys(epics).map(k => epics[k]).map(wrapper);
+    Object.keys(epics).map(k => wrapper(epics[k], k));
