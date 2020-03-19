@@ -99,6 +99,15 @@ describe("GeoStory Utils", () => {
         expect(classes).toBe(" ms-dark ms-align-left ms-size-medium");
     });
 
+    it('should not apply theme value if object', () => {
+        const classes = getClassNameFromProps({
+            theme: { backgroundColor: '#000000' },
+            align: "left",
+            size: "medium"
+        }); // with custom params
+        expect(classes).toBe(" ms-align-left ms-size-medium");
+    });
+
     it("test StoryTypes", () => {
         expect(StoryTypes).toEqual({
             CASCADE: "cascade"

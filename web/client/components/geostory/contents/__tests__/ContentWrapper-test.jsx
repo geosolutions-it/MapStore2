@@ -106,4 +106,21 @@ describe('ContentWrapper component', () => {
         expect(el).toExist();
         expect(el.getAttribute('class')).toBe(`ms-content ms-content-text${DEFAULT_THEME_CLASS_NAME}${DEFAULT_ALIGN_CLASS_NAME}${SIZE_CLASS_NAME}`);
     });
+    it('should apply custom theme', () => {
+        const COLOR = '#ffffff';
+        const BACKGROUND_COLOR = '#000000';
+        ReactDOM.render(
+            <ContentWrapper
+                type="text"
+                theme={{
+                    color: COLOR,
+                    backgroundColor: BACKGROUND_COLOR
+                }}
+            />, document.getElementById("container"));
+        const container = document.getElementById('container');
+        const contentBodyNode = container.querySelector('.ms-content-body');
+        expect(contentBodyNode).toBeTruthy();
+        expect(contentBodyNode.style.backgroundColor).toBe('rgb(0, 0, 0)');
+        expect(contentBodyNode.style.color).toBe('rgb(255, 255, 255)');
+    });
 });
