@@ -100,6 +100,28 @@ const testMap = {
             "lastUpdate": "2017-05-17 10:18:11.455",
             "description": "",
             "id": 464,
+            "context": "2100",
+            "contextName": "test-context",
+            "name": "TEST MAP",
+            "thumbnail": "base%2Fweb%2Fclient%2Ftest-resources%2Fimg%2Fblank.jpg",
+            "owner": "mapstore"
+        }
+    ]
+};
+
+const testMap2 = {
+    "success": true,
+    "totalCount": 13,
+    "results": [
+        {
+            "canDelete": false,
+            "canEdit": false,
+            "canCopy": true,
+            "creation": "2014-04-04 12:14:21.17",
+            "lastUpdate": "2017-05-17 10:18:11.455",
+            "description": "",
+            "id": 464,
+            "context": "2134",
             "contextName": null,
             "name": "TEST MAP",
             "thumbnail": "base%2Fweb%2Fclient%2Ftest-resources%2Fimg%2Fblank.jpg",
@@ -571,36 +593,66 @@ describe('maps Epics', () => {
     });
 });
 describe('Get Map Resource By Category Epic', () => {
-    const oldGetDefaults = ConfigUtils.getDefaults;
-    beforeEach(() => {
-        let customUrl = "base/web/client/test-resources/geostore/extjs/search/category/MAP/test.json#";
-        ConfigUtils.getDefaults = () => ({
-            geoStoreUrl: customUrl
-        });
-    });
-    afterEach(() => {
-        ConfigUtils.getDefaults = oldGetDefaults;
-    });
-    it('test getMapsResourcesByCategoryEpic ', done => {
-
-        testEpic(addTimeoutEpic(getMapsResourcesByCategoryEpic), 3, getMapResourcesByCategory('MAP', 'test', {
-            baseUrl,
-            params: { start: 0, limit: 12 }
-        }), actions => {
-            expect(actions.length).toBe(3);
-            expect(actions[0].type).toBe(LOADING);
-            expect(actions[0].value).toBe(true);
-            expect(actions[0].name).toBe('loadingMaps');
-            expect(actions[1].type).toBe(MAPS_LIST_LOADED);
-            expect(actions[1].maps).toEqual(testMap);
-            expect(actions[1].params).toEqual(params);
-            expect(actions[1].searchText).toBe('test');
-            expect(actions[2].type).toBe(LOADING);
-            expect(actions[2].value).toBe(false);
-            expect(actions[2].name).toBe('loadingMaps');
-            done();
-        });
-    });
+    it('test getMapsResourcesByCategoryEpic', () =>
+        axios.get('base/web/client/test-resources/geostore/extjs/search/category/MAP/test.json').then(({data: testJson}) => new Promise(resolve => {
+            const mock = new MockAdapter(axios);
+            mock.onGet('/extjs/resource/2100').reply(200, {
+                ShortResource: {
+                    canDelete: true,
+                    canEdit: true,
+                    creation: "2020-01-09T11:29:17.935+01:00",
+                    description: "",
+                    id: 2100,
+                    lastUpdate: "2020-01-09T15:26:57.611+01:00",
+                    name: "test-context"
+                }
+            });
+            mock.onGet().reply(200, testJson);
+            testEpic(addTimeoutEpic(getMapsResourcesByCategoryEpic), 3, getMapResourcesByCategory('MAP', 'test', {
+                baseUrl,
+                params: { start: 0, limit: 12 }
+            }), actions => {
+                expect(actions.length).toBe(3);
+                expect(actions[0].type).toBe(LOADING);
+                expect(actions[0].value).toBe(true);
+                expect(actions[0].name).toBe('loadingMaps');
+                expect(actions[1].type).toBe(MAPS_LIST_LOADED);
+                expect(actions[1].maps).toEqual(testMap);
+                expect(actions[1].params).toEqual(params);
+                expect(actions[1].searchText).toBe('test');
+                expect(actions[2].type).toBe(LOADING);
+                expect(actions[2].value).toBe(false);
+                expect(actions[2].name).toBe('loadingMaps');
+                mock.restore();
+                resolve();
+            });
+        }))
+    );
+    it('test getMapsResourcesByCategoryEpic with a map that belongs to a deleted context', () =>
+        axios.get('base/web/client/test-resources/geostore/extjs/search/category/MAP/test2.json').then(({data: testJson}) => new Promise(resolve => {
+            const mock = new MockAdapter(axios);
+            mock.onGet('/extjs/resource/2134').reply(404);
+            mock.onGet().reply(200, testJson);
+            testEpic(addTimeoutEpic(getMapsResourcesByCategoryEpic), 3, getMapResourcesByCategory('MAP', 'test', {
+                baseUrl,
+                params: { start: 0, limit: 12 }
+            }), actions => {
+                expect(actions.length).toBe(3);
+                expect(actions[0].type).toBe(LOADING);
+                expect(actions[0].value).toBe(true);
+                expect(actions[0].name).toBe('loadingMaps');
+                expect(actions[1].type).toBe(MAPS_LIST_LOADED);
+                expect(actions[1].maps).toEqual(testMap2);
+                expect(actions[1].params).toEqual(params);
+                expect(actions[1].searchText).toBe('test');
+                expect(actions[2].type).toBe(LOADING);
+                expect(actions[2].value).toBe(false);
+                expect(actions[2].name).toBe('loadingMaps');
+                mock.restore();
+                resolve();
+            });
+        }))
+    );
 });
 const Persistence = require("../../api/persistence");
 const Rx = require("rxjs");
