@@ -17,6 +17,7 @@ import isArray from "lodash/isArray";
 import values from "lodash/values";
 import filter from "lodash/filter";
 import merge from "lodash/merge";
+import isString from "lodash/isString";
 import includes from "lodash/includes";
 import uuid from 'uuid';
 
@@ -76,8 +77,8 @@ export const lists = {
  * @prop {string} align one of 'center', 'left' or 'right'
  * @prop {string} size one of 'full', 'large', 'medium' or 'small'
  */
-export const getClassNameFromProps = ({ theme = 'bright', align = 'center', size = 'full' }) => {
-    const themeClassName = ` ms-${theme}`;
+export const getClassNameFromProps = ({ theme = '', align = 'center', size = 'full' }) => {
+    const themeClassName = theme && isString(theme) && ` ms-${theme}` || '';
     const alignClassName = ` ms-align-${align}`;
     const sizeClassName = ` ms-size-${size}`;
     return `${themeClassName}${alignClassName}${sizeClassName}`;
@@ -182,7 +183,6 @@ export const getDefaultSectionTemplate = (type, localize = v => v) => {
                     theme: 'bright',
                     background: {
                         fit: 'cover',
-                        theme: 'bright',
                         size: 'full',
                         align: 'center'
                     }
@@ -269,8 +269,7 @@ export const getDefaultSectionTemplate = (type, localize = v => v) => {
             background: {
                 fit: 'cover',
                 size: 'full',
-                align: 'center',
-                theme: 'bright'
+                align: 'center'
             }
         };
     }

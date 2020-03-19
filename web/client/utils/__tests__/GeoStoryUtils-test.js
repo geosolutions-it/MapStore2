@@ -89,7 +89,7 @@ describe("GeoStory Utils", () => {
     });
     it('test getClassNameFromProps class creator', () => {
         let classes = getClassNameFromProps({}); // defaults
-        expect(classes).toBe(" ms-bright ms-align-center ms-size-full");
+        expect(classes).toBe(" ms-align-center ms-size-full");
 
         classes = getClassNameFromProps({
             theme: "dark",
@@ -191,7 +191,7 @@ describe("GeoStory Utils", () => {
             expect(content.align).toBe("center");
             expect(content.theme).toBe("bright");
             const background = data.contents[0].background;
-            expect(background.theme).toBe("bright");
+            expect(background.theme).toBe(undefined);
             expect(background.fit).toBe("cover");
             expect(background.size).toBe("full");
             expect(background.align).toBe("center");
@@ -236,7 +236,7 @@ describe("GeoStory Utils", () => {
             expect(background.type).toBe(undefined);
             expect(background.size).toBe("full");
             expect(background.fit).toBe("cover");
-            expect(background.theme).toBe("bright");
+            expect(background.theme).toBe(undefined);
             expect(background.align).toBe("center");
         });
         it("SectionTemplates.MEDIA", () => {
@@ -271,7 +271,7 @@ describe("GeoStory Utils", () => {
             expect(background.type).toBe(undefined);
             expect(background.size).toBe("full");
             expect(background.fit).toBe("cover");
-            expect(background.theme).toBe("bright");
+            expect(background.theme).toBe(undefined);
             expect(background.align).toBe("center");
         });
 

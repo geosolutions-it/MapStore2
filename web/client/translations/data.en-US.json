@@ -1986,6 +1986,9 @@
                 "brightTextThemeLabel": "Bright text",
                 "darkThemeLabel": "Dark",
                 "darkTextThemeLabel": "Dark text",
+                "defaultThemeLabel": "Default",
+                "customizeThemeLabel": "Customize",
+                "customizeThemeRemoveLabel": "Remove customization",
                 "cover": "Make the background cover the whole container space",
                 "fit": "Make the whole background visible inside the container",
                 "editMedia": "Change media source",
@@ -2046,7 +2049,8 @@
                     "autoplayInterval" : "Autoplay interval (seconds)",
                     "autoplayIntervalPlaceholder" : "Enable autoplay interval",
                     "navbar" : "Navigation bar",
-                    "showNavbar" : "Show navbar"
+                    "showNavbar" : "Show navbar",
+                    "theme": "Theme"
                 }
             },
             "errors": {
@@ -2079,6 +2083,13 @@
                 "url": {
                     "label": "URL"
                 }
+            },
+            "customizeTheme": {
+                "backgroundColorLabel": "Background",
+                "textColorLabel": "Text",
+                "shadowLabel": "Shadow",
+                "useAlternativeTextColor": "Use alternative text color",
+                "alternativeTextColorPopover": "<p>Warning: the selected text color could be not readable on this background.</p><p>An alternative text color is {color} &nbsp;<span class=\"ms-custom-theme-picker-alternative-text\" style=\"background-color:{color}\"></span></p>"
             }
         },
         "saveDialog": {

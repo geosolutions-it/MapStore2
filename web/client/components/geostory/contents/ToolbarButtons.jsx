@@ -12,6 +12,9 @@ import Message from '../../I18N/Message';
 import ToolbarButton from '../../misc/toolbar/ToolbarButton';
 import ToolbarDropdownButton from '../common/ToolbarDropdownButton';
 import withConfirm from "../../misc/withConfirm";
+import { CustomThemePickerMenuItem } from '../common/CustomThemePicker';
+import isObject from "lodash/isObject";
+import isString from "lodash/isString";
 const DeleteButton = withConfirm(ToolbarButton);
 const BUTTON_CLASSES = 'square-button-md no-border';
 
@@ -71,26 +74,45 @@ export const AlignButtonToolbar = ({editMap: disabled = false, align, sectionTyp
         onSelect={(selected) => update('align', selected)}/>
     );
 
-export const ThemeButtonToolbar = ({editMap: disabled = false, theme, align, sectionType, update = () => {}, fit, themeOptions, size }) =>
+export const ThemeButtonToolbar = ({editMap: disabled = false, theme, themeStyle, storyTheme, align, sectionType, update = () => {}, themeProps, size }) =>
     (<ToolbarDropdownButton
         value={theme}
         noTooltipWhenDisabled
         pullRight={(align === "right" || size === "full" || size === "large") && !sectionType}
         glyph="dropper"
         tooltipId="geostory.contentToolbar.contentTheme"
-        disabled={fit === 'cover' && size === 'full' || disabled}
-        options={themeOptions || [{
+        disabled={disabled}
+        shouldClose={(value, event) => {
+            return isObject(value) && event?.target?.getAttribute?.('class') !== 'ms-color-picker-cover'
+            || isString(value)
+            || value === undefined;
+        }}
+        hideMenuItem={(value, option) => {
+            return isObject(value) && (isString(option?.value) || option?.value === undefined);
+        }}
+        options={[{
+            value: '',
+            isActive: (value) => value === undefined || value === '',
+            label: <Message msgId="geostory.contentToolbar.defaultThemeLabel"/>
+        }, {
             value: 'bright',
             label: <Message msgId="geostory.contentToolbar.brightThemeLabel"/>
-        }, {
-            value: 'bright-text',
-            label: <Message msgId="geostory.contentToolbar.brightTextThemeLabel"/>
         }, {
             value: 'dark',
             label: <Message msgId="geostory.contentToolbar.darkThemeLabel"/>
         }, {
-            value: 'dark-text',
-            label: <Message msgId="geostory.contentToolbar.darkTextThemeLabel"/>
+            value: isObject(theme) && theme || {},
+            Component: (props) => (
+                <CustomThemePickerMenuItem
+                    { ...props }
+                    disableBackgroundAlpha={themeProps?.disableBackgroundAlpha}
+                    disableShadow={themeProps?.disableShadow}
+                    disableTextColor={themeProps?.disableTextColor}
+                    themeStyle={themeStyle}
+                    onUpdate={update}
+                    storyTheme={storyTheme}
+                />
+            )
         }]}
         onSelect={(selected) => update('theme', selected)}/>
     );

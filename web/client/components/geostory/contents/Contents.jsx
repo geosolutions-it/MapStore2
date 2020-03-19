@@ -50,7 +50,8 @@ export default ({
     add = () => {},
     update = () => {},
     remove = () => {},
-    bubblingTextEditing = () => {}
+    bubblingTextEditing = () => {},
+    storyTheme
 }) =>
     (<div className={className}>
         {contents.reduce(( rendered = [], { id, ...props }) => {
@@ -70,6 +71,7 @@ export default ({
                     remove={(path, ...args) => remove(`contents[{"id": "${id}"}]` + (path ? "." + path : ""), ...args)}
                     {...contentProps}
                     {...props}
+                    storyTheme={storyTheme}
                     bubblingTextEditing={bubblingTextEditing}
                     tools={tools && tools[props.type]} />)];
             if (mode === Modes.EDIT && addButtons.length > 0) {

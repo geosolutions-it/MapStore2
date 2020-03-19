@@ -1982,6 +1982,9 @@
                 "brightTextThemeLabel": "Testo chiaro",
                 "darkThemeLabel": "Scuro",
                 "darkTextThemeLabel": "Testo scuro",
+                "defaultThemeLabel": "Predefinito",
+                "customizeThemeLabel": "Personaliza",
+                "customizeThemeRemoveLabel": "Rimuovere tema personalizzato",
                 "cover": "Fai in modo che lo sfondo copra l'intero spazio del contenitore",
                 "fit": "Rendi visibile tutto lo sfondo all'interno del contenitore",
                 "editMedia": "Cambia la sorgente del media",
@@ -2043,7 +2046,8 @@
                     "autoplayInterval": "Intervallo dell'autoplay (secondi)",
                     "autoplayIntervalPlaceholder": "Abilita l'intervallo dell'autoplay",
                     "navbar": "Barra di navigazione",
-                    "showNavbar": "Mostra barra di navigazione"
+                    "showNavbar": "Mostra barra di navigazione",
+                    "theme": "Tema"
                 }
             },
             "errors": {
@@ -2076,6 +2080,13 @@
                 "url": {
                     "label": "URL"
                 }
+            },
+            "customizeTheme": {
+                "backgroundColorLabel": "Sfondo",
+                "textColorLabel": "Testo",
+                "shadowLabel": "Ombra",
+                "useAlternativeTextColor": "Usa colore testo alternativo",
+                "alternativeTextColorPopover": "<p>Attenzione: il colore del testo selezionato potrebbe essere non leggibili su questo sfondo.</p><p>Un colore alternativo è {color} &nbsp;<span class=\"ms-custom-theme-picker-alternative-text\" style=\"background-color:{color}\"></span></p>"
             }
         },
          "saveDialog": {

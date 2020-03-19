@@ -1,5 +1,42 @@
+
+.ms-geostory-navigation-btn(@color; @background; @border) {
+        color: @color;
+        background-color: @background;
+        border-color: @border;
+        &.active:focus,
+        &.active.focus,
+        &:focus,
+        &.focus,
+        &:active,
+        &.active,
+        &.active:hover {
+            color: @color;
+            background-color: @background;
+            border-color: @border;
+            outline: 1px auto @ms2-color-primary !important;
+            outline-color: inherit !important;
+        }
+    
+        &:active:hover {
+            color: @color;
+            background-color: @background;
+            border-color: @border;
+        }
+        &:hover {
+            color: @color;
+            background-color: @background;
+            border-color: @border;
+            outline: 2px auto @ms2-color-primary !important;
+            outline-color: inherit !important;
+        }
+}
+
 .ms-geostory-navigation {
     height: @square-btn-size;
+    background-color: @ms-story-bg;
+    .btn-default {
+        .ms-geostory-navigation-btn(inherit; inherit; transparent);
+    }
     .ms-geostory-navigation-bar {
         position: relative;
         top: 0;
@@ -8,6 +45,7 @@
         height: 100%;
         display: flex;
         flex-direction: column;
+        background-color: inherit;
         .progress-bar {
             background-color: @ms-story-bg-grey;
             height: 4px;
@@ -23,14 +61,17 @@
             display: flex;
             flex: 1;
             padding: 0 4px;
+            background-color: inherit;
             .ms-geostory-navigation-elements {
                 
                 flex: 1;
                 display: flex;
+                background-color: inherit;
                 .ms-geostory-navigation-navigable-items {
                     flex: 1;
                     min-height: @square-btn-medium-size;
                     max-width: 50%;
+                    background-color: inherit;
                 }
             }
 
@@ -53,14 +94,6 @@
                 }
             }
 
-            .menu-item {
-                margin: 0px 5px;
-                &.active {
-                    background-color: @ms2-color-primary;
-                    color: @ms2-color-background;
-                }
-            }
-
             @media all and (max-width: 600px) {
                 .ms-geostory-navigation-elements .ms-geostory-navigation-navigable-items {
                     max-width: 100%;
@@ -78,5 +111,13 @@
         overflow: hidden;
         display: flex;
         align-items: center;
+        background-color: inherit;
+        .ms-menu-item {
+            margin: 0 6px;
+            .active {
+                background-color: @ms2-color-primary;
+                color: @ms2-color-background;
+            }
+        }
     }
 }

@@ -11,6 +11,13 @@
       "altText": "Lorem ipsum dolor sit amet, consectetur adipiscing elit"
     }
   }],
+  "settings": {
+    "theme": {
+      "color": "#333333",
+      "backgroundColor": "#ffffff",
+      "borderColor": "#e6e6e6"
+    }
+  },
   "sections": [
     {
       "type": "title",
@@ -28,8 +35,7 @@
           "background": {
             "fit": "cover",
             "size": "full",
-            "align": "center",
-            "theme": "bright"
+            "align": "center"
           }
         }
       ]

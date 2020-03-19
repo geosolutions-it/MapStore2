@@ -59,16 +59,9 @@ describe('Content component', () => {
     it('Content rendering placeholder for paragraph', () => {
         ReactDOM.render(<Content type={ContentTypes.TEXT} html={EMPTY_CONTENT} mode={Modes.EDIT} sectionType="paragraph"/>, document.getElementById("container"));
         const container = document.getElementById('container');
-        const h1 = container.querySelector('h1');
-        expect(h1).toExist();
-        expect(h1.innerText).toBe("geostory.builder.defaults.htmlPlaceholder");
-    });
-    it('Content rendering placeholder for paragraph', () => {
-        ReactDOM.render(<Content type={ContentTypes.TEXT} html={EMPTY_CONTENT} mode={Modes.EDIT} sectionType="paragraph"/>, document.getElementById("container"));
-        const container = document.getElementById('container');
-        const h1 = container.querySelector('h1');
-        expect(h1).toExist();
-        expect(h1.innerText).toBe("geostory.builder.defaults.htmlPlaceholder");
+        const p = container.querySelector('p');
+        expect(p).toExist();
+        expect(p.innerText).toBe("geostory.builder.defaults.htmlPlaceholder");
     });
     it('Content rendering Media IMAGE', () => {
         ReactDOM.render(<Content lazy={false} type={ContentTypes.MEDIA} mediaType={MediaTypes.IMAGE} src="http:/" />, document.getElementById("container"));
