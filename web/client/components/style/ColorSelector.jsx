@@ -6,40 +6,62 @@
  * LICENSE file in the root directory of this source tree.
 */
 
-const React = require('react');
-const PropTypes = require('prop-types');
-const ColorPicker = require('./ColorPicker');
-const {Glyphicon} = require('react-bootstrap');
+import React from 'react';
+import PropTypes from 'prop-types';
+import { Glyphicon } from 'react-bootstrap';
 
-class ColorSelector extends React.Component {
+import ColorPicker from './ColorPicker';
 
-    static propTypes = {
-        color: PropTypes.shape({r: PropTypes.number, g: PropTypes.number, b: PropTypes.number, a: PropTypes.number}),
-        checked: PropTypes.bool,
-        line: PropTypes.bool,
-        width: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-        onChangeColor: PropTypes.func
-    };
+function ColorSelector({
+    color,
+    format,
+    line,
+    width,
+    onChangeColor,
+    disableAlpha,
+    containerNode,
+    onOpen,
+    popover,
+    presetColors
+}) {
 
-    static defaultProps = {
-        line: false,
-        color: {r: 147, g: 96, b: 237, a: 100},
-        checked: false
-    };
-
-    render() {
-        return (<div className="ms-color-selector">
+    return (
+        <div
+            className="ms-color-selector">
             <ColorPicker
-                text=""
-                line={this.props.line}
-                value={this.props.color}
-                style={{width: this.props.width}}
-                onChangeColor={(color) => {
-                    this.props.onChangeColor(color);
-                }}/>
-            <Glyphicon glyph="1-stilo" />
-        </div>);
-    }
+                text={<Glyphicon glyph="dropper" />}
+                format={format}
+                line={line}
+                value={color}
+                style={{ width }}
+                onChangeColor={onChangeColor}
+                pickerProps={{
+                    disableAlpha,
+                    presetColors
+                }}
+                containerNode={containerNode}
+                popover={popover}
+                onOpen={onOpen}
+            />
+        </div>
+    );
 }
 
-module.exports = ColorSelector;
+ColorSelector.propTypes = {
+    color: PropTypes.oneOfType([
+        PropTypes.string,
+        PropTypes.shape({r: PropTypes.number, g: PropTypes.number, b: PropTypes.number, a: PropTypes.number})
+    ]),
+    line: PropTypes.bool,
+    width: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+    onChangeColor: PropTypes.func,
+    onOpen: PropTypes.func
+};
+
+ColorSelector.defaultProps = {
+    line: false,
+    onChangeColor: () => {},
+    onOpen: () => {}
+};
+
+export default ColorSelector;
