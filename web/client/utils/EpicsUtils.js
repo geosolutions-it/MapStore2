@@ -1,15 +1,17 @@
 /**
- * default wrapper for the epics.
+ * Default wrapper for the epics. This avoids to close all epics system for unhandled exceptions.
+ * It allows also to identify the error showing in console the name of the epic that triggered the exception and the error.
+ * At the end, it throws the exception again so it can be automatically intercepted in dev tools.
  * @memberof utils.EpicsUtils
- * @param {epic} epic the epic to wrap
- * @return {epic} epic wrapped with error catch and re-subscribe functionalities.S
+ * @param {string} epicName the name of the epic
+ * @returns {function} function that wraps the epic adding error handling functionality
  */
 const defaultEpicWrapper = k => epic => (...args) =>
     epic(...args).catch((error, source) => {
+        // eslint-disable-next-line
+        console.error(`Error in epic ${k}. Source`, error);
         setTimeout(() => {
-            // eslint-disable-next-line
-            console.error(`Error in epic ${k}. Source`, error);
-            // throw anyway error to allow catch.
+            // throw anyway error
             throw error;
         }, 0);
         return source;
