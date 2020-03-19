@@ -4,9 +4,14 @@
  * @param {epic} epic the epic to wrap
  * @return {epic} epic wrapped with error catch and re-subscribe functionalities.S
  */
-const defaultEpicWrapper = epic => (...args) =>
+const defaultEpicWrapper = k => epic => (...args) =>
     epic(...args).catch((error, source) => {
-        setTimeout(() => { throw error; }, 0);
+        setTimeout(() => {
+            // eslint-disable-next-line
+            console.error(`Error in epic ${k}. Source`, error);
+            // throw anyway error to allow catch.
+            throw error;
+        }, 0);
         return source;
     });
 
@@ -18,4 +23,4 @@ const defaultEpicWrapper = epic => (...args) =>
  * @return {array} the wrapped epics list as an array (usable as an input to redux-observable combineEpics function).
  */
 export const wrapEpics = (epics, wrapper = defaultEpicWrapper) =>
-    Object.keys(epics).map(k => epics[k]).map(wrapper);
+    Object.keys(epics).map(k => wrapper(k)(epics[k]) );
