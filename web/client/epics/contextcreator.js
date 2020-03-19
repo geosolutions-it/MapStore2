@@ -807,6 +807,9 @@ export const savePluginCfgEpic = (action$, store) => action$
         const cfgError = cfgErrorSelector(state);
 
         return pluginName && parsedCfg && !cfgError ?
-            Rx.Observable.of(changePluginsKey([pluginName], 'pluginConfig.cfg', parsedCfg)) :
+            Rx.Observable.of(
+                changePluginsKey([pluginName], 'pluginConfig.cfg', parsedCfg.cfg),
+                changePluginsKey([pluginName], 'pluginConfig.override', parsedCfg.override)
+            ) :
             Rx.Observable.empty();
     });
