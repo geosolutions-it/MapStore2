@@ -10,7 +10,6 @@ const ReactDOM = require('react-dom');
 const expect = require('expect');
 const TestUtils = require('react-dom/test-utils');
 
-
 const Catalog = require('../Catalog');
 
 describe('Test Catalog panel', () => {

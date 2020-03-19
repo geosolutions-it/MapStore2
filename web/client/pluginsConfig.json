@@ -281,6 +281,15 @@
       ]
     },
     {
+      "name": "MapCatalog",
+      "glyph": "maps-catalog",
+      "title": "plugins.MapCatalog.title",
+      "description": "plugins.MapCatalog.description",
+      "dependencies": [
+        "BurgerMenu"
+      ]
+    },
+    {
       "name": "MapImport",
       "glyph": "upload",
       "title": "plugins.MapImport.title",

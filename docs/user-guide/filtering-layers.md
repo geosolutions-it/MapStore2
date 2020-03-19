@@ -1,109 +1,167 @@
 # Filtering Layers
 ******************
 
-When using vector layers it might be useful to work with a subset of features.
-About that, [MapStore](https://mapstore.geo-solutions.it/mapstore/#/) let you set up a **Layer Filter** that acts directly on a layer with WFS available and filter its content upfront.
-The map will immediately update when a filter is created and all other tools will take it into consideration when used. More over, the filter is saved into the map context so if you save it the filter will apply when you open the map next time.
+When using vector layers it might be useful to work with a subset of features. About that, [MapStore](https://mapstore.geo-solutions.it/mapstore/#/) let the user set up a **Layer Filter** that acts directly on a layer with WFS available and filter its content upfront.
+The map will immediately update when a filter is applied.
 
-Creating a new Layer Filter
----------------------------
+!!!warning
+    The [MapStore](https://mapstore.geo-solutions.it/mapstore/#/)'s filtering capabilities are working on top of the WFS specifications so that service must be enabled if you want to filter a layer using the tools described in this section.
 
-As we said  in [this](toc.md#managing-layers) section, is it possible to set up a *Layer Filter* from the <img src="../img/button/filter-layer.jpg" class="ms-docbutton"/> button of the TOC toolbar. Select a vector layer and click on it to see the toolbar.
+## Filter types
 
-<img src="../img/filtering-layers/filter_layer_button.jpg" class="ms-docimage"  style="max-width:500px;"/>
+In [MapStore](https://mapstore.geo-solutions.it/mapstore/#/) it is possible to apply filters on layers in three different ways:
 
-The following steps show you how to filter that layer:
+* With the *Layer Filter* tool available in [TOC](toc.md)
 
-* **Click** on the <img src="../img/button/filter-layer.jpg" class="ms-docbutton"/> button to open the *Query Builder*.
+* With the *Advanced Search* tool available from the [Attribute Table](attributes-table.md)
 
-<img src="../img/filtering-layers/query_builder.jpg" class="ms-docimage"  style="max-width:500px;"/>
+* With the *Quick Filter* available in the [Attribute Table](attributes-table.md)
 
-* **Set up** a filter. In this example we will draw a region of interest on the map to perform a spatial query:
+### Layer Filter
 
-    * **Select** a *Filter Type* (a `Rectangle` for example), you can choose between these spatial objects:
+This filter is applicable from the **Filter layer** button <img src="../img/button/filter-layer.jpg" class="ms-docbutton"/> in TOC's [Layers Toolbar](toc.md#toolbar-options) and it will persist in the following situations:
 
-        * *Viewport*
+* Using other tools like the [Identify tool](side-bar.md#identify-tool):
 
-        * *Rectangle*
+<img src="../img/filtering-layers/get_filtered_features_info.gif" class="ms-docimage"/>
 
-        * *Circle*
+* Applying another type of filter
 
-        * *Polygon*
+<img src="../img/filtering-layers/filtered_advanced_filtering.gif" class="ms-docimage"/>
 
-    * **Select** a *Geometric Operation* (`Intersect` could be fine), you can choose between these operations:
+* Opening the map next time (you need to Save the map from [Burger Menu](menu-bar.md#burger-menu) after applying a filter)
 
-        * *Intersect*
+Once a *Layer filter* is set, it is possible to enable/disable it simply by clicking on the button that will appear near the layer name in [TOC](toc.md):
 
-        * *Is contained*
+<img src="../img/filtering-layers/toogle-layer.jpg" class="ms-docimage" style="max-width:300px;"/>
 
-        * *Contains*
+This filter is applied through the [Query Panel](filtering-layers.md#query-panel). Once the settings are chosen, it is possible to **Apply** <img src="../img/button/apply_button.jpg" class="ms-docbutton"/> them. After that the user can:
 
-<img src="../img/filtering-layers/filter_set_up.jpg" class="ms-docimage"  style="max-width:500px;"/>
+* **Undo** <img src="../img/button/undo_button.jpg" class="ms-docbutton"/> the last changes
 
-A message suggest you to *draw the region of interest on the map*, so do it to complete the filter creation.
+* **Reset** <img src="../img/button/reset_button.jpg" class="ms-docbutton"/> the filter to the initial situation
 
- * **Draw** a rectangle on the map
+* **Save** <img src="../img/button/save_button.jpg" class="ms-docbutton"/> the filter in order to make it persistent
 
-<img src="../img/filtering-layers/rectangle_filter.jpg" class="ms-docimage"/>
+### Advanced Search
 
-* **Click** the *Apply* <img src="../img/button/apply_button.jpg" class="ms-docbutton"/> button of the Query Builder toolbar, the map updates immediately.
+This filter, applicable from **Advanced Search** button <img src="../img/button/advanced-search.jpg" class="ms-docbutton"/> in [Attribute Table](attributes-table.md), behaves as follows:
 
-<img src="../img/filtering-layers/applied_filter.jpg" class="ms-docimage"/>
-
-* **Click** on *Save* <img src="../img/button/save_button.jpg" class="ms-docbutton"/> button to make it persistent. It means the filter will take effect whenever using the layer even if the *Query Builder* is closed.
-
-A filter icon <img src="../img/button/filter-layer.jpg" class="ms-docbutton"/> is shown in the [TOC](toc.md) right next to the layer title to notify that the layer is filtered. The *Filter Icon* is toggleable to temporarily disable the filter anytime.
-
-<img src="../img/filtering-layers/enable_layer_filter.gif" class="ms-docimage" style="max-width:700px;"/>
-
-### Layer Filter Persistence
-
-Once the filter has been saved the filter becomes **persistent** along with the other layer options and inside the map object on map save.
-
-If you try to retrieve the features information through a click on the map, the filter you have created is applied to the content you get:
-
-<img src="../img/filtering-layers/get_filtered_features_info.gif" class="ms-docimage" style="max-width:700px;"/>
-
-The layer [Attributes Table](attributes-table.md) also takes the filter into account:
+* It can be used to apply a filter to a layer for search purposes in [Attribute Table](attributes-table.md): this filter is applied in `AND` to the *Layer Filter* if it is already been set.
 
 <img src="../img/filtering-layers/filtered_features_grid.jpg" class="ms-docimage"/>
 
-Any additional filter you define using the [Advanced Filtering](attributes-table.md#advanced-filtering) tool or the *Quick Filter* will overlap the layer filter.
-*Layer Filter* will go in *`AND`* with *Advanced Filtering*:
+* It is possible to sync this filter with the map through the <img src="../img/button/sync.jpg" class="ms-docbutton"/> icon:
 
-<img src="../img/filtering-layers/filtered_advanced_filtering.gif" class="ms-docimage" style="max-width:700px;"/>
+<img src="../img/filtering-layers/ar_sync.gif" class="ms-docimage" style="max-width:500px;"/>
 
-*Layer Filter* will go in *`AND`* with *Quick Filter*:
+* It will be automatically removed/reapplied by closing/opening the [Attribute Table](attributes-table.md)
 
-<img src="../img/filtering-layers/filtered_quick_filter.gif" class="ms-docimage"  style="max-width:700px;"/>
+Also this filter is applied through the [Query Panel](filtering-layers.md#query-panel) but in this case it is not possible to Save it and make it persistent reopening the map the next time. The user is only allowed to apply it by clicking on **Search** <img src="../img/button/search.jpg" class="ms-docbutton"/> or eventually **Reset** <img src="../img/button/reset_button.jpg" class="ms-docbutton"/> it.
 
-When saving a map the *Layer Filter* is saved along with it, so if you reload the map the filter will still be active.
+### Quick Filter
 
-Modifying a Layer Filter
-------------------------
+This filter, applicable directly in the [Attribute Table](attributes-table.md) just below the field names, can be also used in combination with other filter applied:
 
-If you want to change the *Layer Filter* configuration you have to click the *Filter Layer* button <img src="../img/button/filter-layer.jpg" class="ms-docbutton"/> in the [TOC](toc.md) toolbar so that the *Query Builder* opens.
+<img src="../img/filtering-layers/filtered_quick_filter.gif" class="ms-docimage"/>
 
-* **Modify** the existing filter (adding new conditions for example)
+The user has the possibility to apply simple filters by attributes simply typing the filter's value in the available input fields (Date or Time pickers are available according to real attributes data types and a tooltip usually gives an information on how to fill the filter's input field). Filtering by one or more attributes, layer records in [Attribute Table](attributes-table.md) are automatically filtered accordingly.
 
-* **Click** on *Apply* <img src="../img/button/apply_button.jpg" class="ms-docbutton"/> so that the map updates
+If the user wants to filter by an attribute of type String, he can simply write something inside the input box and the list of records in table will be automatically filtered by matching with the input text.
 
-* **Click** on *Save* <img src="../img/button/save_button.jpg" class="ms-docbutton"/> to make the filter persistent
+<img src="../img/filtering-layers/attribute-table-quick-filter-1.jpg" class="ms-docimage"/>
 
-<img src="../img/filtering-layers/modify_layer_filter.gif" class="ms-docimage"  style="max-width:700px;"/>
+If the User wants to filter by a numeric attribute, he can type directly a number or an expression using the following operators:
 
-The *Query Builder* toolbar makes also available the *Undo* button <img src="../img/button/undo_button.jpg" class="ms-docbutton"/> to discard applied changes to the filter since the last save (so it is disabled if no changes are made after the last save).
+* Not equal (**!=** or **!==** or **<>**)
 
-Removing a Layer Filter
------------------------
+* Equal or less than (**<=**)
 
-When opening the *Query Builder* of a filtered layer, the filter is already configured.
-The *Reset* button <img src="../img/button/reset_button.jpg" class="ms-docbutton"/> is the only one enabled and it allows you to clear the filter (it restores an empty filter):
+* Equal or greater than (**>=**)
 
-* **Click** on *Reset* <img src="../img/button/reset_button.jpg" class="ms-docbutton"/>, an empty filter will be configured and the map updates immediately.
+* Less than (**<**)
 
-* **Click** on *Save* <img src="../img/button/save_button.jpg" class="ms-docbutton"/> to make the state persistent or **Click** *Undo* <img src="../img/button/undo_button.jpg" class="ms-docbutton"/> to restore the previous saved filter.
+* Greater than (**>**)
 
-An example in the following gif:
+* Equal (**===** or **==** or *=*)
 
-<img src="../img/filtering-layers/remove_layer_filter.gif" class="ms-docimage"  style="max-width:700px;"/>
+In order to filter a numerical filed matching the records *greater than* or *equal* to a certain threshold value, an example can be:
+
+<img src="../img/filtering-layers/attribute-table-quick-filter-3.jpg" class="ms-docimage"/>
+
+The *Quick Filter* remains active as long as the [Attribute Table](attributes-table.md) is open but, unlike the *Advanced Search*, closing the [Attribute Table](attributes-table.md) it will not reappear anymore if the [Attribute Table](attributes-table.md) is re-opened in a second time.
+
+## Query Panel
+
+This tool is used to define advanced filters in [MapStore](https://mapstore.geo-solutions.it/mapstore/#/). It includes three main sections:
+
+* **Attribute Filter**
+
+* **Region of Interest**
+
+* **Layer Filter**
+
+<img src="../img/filtering-layers/query-panel.jpg" class="ms-docimage" style="max-width:500px;"/>
+
+### Attribute filter
+
+This filter allows to set one or more conditions referred to the [Attribute Table](attributes-table.md) fields. <br>
+First of all it is possible to choose if the filter will match: 
+
+* **Any** conditions
+
+* **All** conditions 
+
+* **None** conditions
+
+After that, the user can insert one or more conditions, that can also be grouped in one or more condition groups (use the <img src="../img/button/condition_group.jpg" class="ms-docbutton"/> button in order to create a group).<br>
+A condition can be set by selecting a value for each of the three input boxes:
+
+* The first input box allows to choose a layer field
+
+* In the second input box it is possible to choose the operation to perform (selecting a text field can be **=**, **like**, **ilike** or **isNull**, selecting a numerical field, can be **=**, **>**, **<**, **>=**, **<=**, **<>** or **><**)
+
+* The third input box (in case of fields of type String) provides a paginated list of available field values already present in the layer's dataset (a GeoServer WPS process is used for this). In case of numeric fields the user can simply type a value to use for the filter.
+
+A simple *Attribute Filter* applied for a numerical field can be, for example:
+
+<img src="../img/filtering-layers/att_filter.gif" class="ms-docimage" style="max-width:600px;"/>
+
+### Region of interest
+
+In order to set this filter the user can:
+
+* Select the *Filter type* by choosing between **Viewport**, **Rectangle**, **Circle**, **Polygon** (selecting Rectangle, Circle or Polygon it is necessary to draw the filter's geometry on the map)
+
+* Select the *Geometric operation* by choosing between **Intersects**, **Is contained**, **Contains**
+
+Applying a *Circle* filter with *Intersect* operation, for example, the process could be similar to the following:
+
+<img src="../img/filtering-layers/geom_filter.gif" class="ms-docimage" style="max-width:600px;"/>
+
+Once this filter is set, it is always possible to edit the coordinates and the dimensions of the drawn filter's geometry by clicking on the **Details** button <img src="../img/button/edit-icon-1.jpg" class="ms-docbutton"/>. Editing a circle, for example, it is possible to change the center coordinates (*x*, *y*) and the radius dimension (*m*):
+
+<img src="../img/filtering-layers/edit_geom.jpg" class="ms-docimage" style="max-width:500px;"/>
+
+### Layer filter
+
+This tool allows to set [cross-layer filters](https://docs.geoserver.org/stable/en/user/extensions/querylayer/index.html) for a layer by using another layer or even the same one. 
+
+!!!warning
+    This filter tool requires the [Query Layer plugin](https://docs.geoserver.org/stable/en/user/extensions/querylayer/index.html#installing-the-querylayer-module) installed in GeoServer
+
+In order to set up a cross-layer filter the options below are required:
+
+* *Target layer* (between those present in the [TOC](toc.md))
+
+* *Operation* to be chosen between **Intersects**, **Is contained** or **Contains** 
+
+* Optionally some *Conditions* (see [Attribute filter](filtering-layers.md#attribute-filter))
+
+In order to better understand this type of filter, let's make an example. We suppose that the user want to filter the Italian Regions with the Unesco Item's one:
+
+<img src="../img/filtering-layers/layer-filter-1.jpg" class="ms-docimage" style="max-width:500px;"/>
+
+In particular, if our goal is to take a look at the Italian Regions that contain the Unesco sites with *serial code=1*, the operations to perform can be the following:
+
+<img src="../img/filtering-layers/layer_filter.gif" class="ms-docimage"/>

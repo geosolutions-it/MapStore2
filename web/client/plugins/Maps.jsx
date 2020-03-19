@@ -109,8 +109,14 @@ class Maps extends React.Component {
             fluid={this.props.fluid}
             title={this.props.title}
             colProps={this.props.colProps}
-            viewerUrl={(map) => {this.context.router.history.push("/viewer/" + this.props.mapType + "/" + map.id);}}
-            getShareUrl={(map) => `viewer/${this.props.mapType}/${map.id}`}
+            viewerUrl={(map = {}) => {
+                if (map.contextName) {
+                    this.context.router.history.push("/context/" + map.contextName + "/" + map.id);
+                } else {
+                    this.context.router.history.push("/viewer/" + this.props.mapType + "/" + map.id);
+                }
+            }}
+            getShareUrl={(map) => map.contextName ? `context/${map.contextName}/${map.id}` : `viewer/${this.props.mapType}/${map.id}`}
             shareApi
             bottom={<PaginationToolbar />}
             metadataModal={MetadataModal}

@@ -33,8 +33,7 @@ const Extensions = ({
         title={<Message msgId="userExtensions.title" />}
         onClose={() => onClose()}
         glyph="plug"
-        style={{ height: 'calc(100% - 30px)' }}
-        noResize>
+        style={{ height: 'calc(100% - 30px)' }}>
         <ExtensionsPanel />
     </DockPanel>);
 

@@ -7,7 +7,7 @@
  */
 
 import expect from 'expect';
-import {upload} from "../plugins";
+import {upload, uninstall} from "../plugins";
 import MockAdapter from "axios-mock-adapter";
 import axios from "../../libs/ajax";
 
@@ -33,5 +33,15 @@ describe('Plugins API', () => {
                 done();
             }, 100);
         });
+    });
+    it('uninstall successfully calls the uninstall endpoint', (done) => {
+        mockAxios = new MockAdapter(axios);
+        mockAxios.onDelete().reply(200, {});
+        uninstall("My", "uninstallPlugin");
+        setTimeout(() => {
+            expect(mockAxios.history.delete.length).toBe(1);
+            expect(mockAxios.history.delete[0].url).toBe("uninstallPlugin/My");
+            done();
+        }, 100);
     });
 });

@@ -11,11 +11,14 @@ const { configureError, loadMapConfig, loadMapInfo, configureMap, MAP_CONFIG_LOA
 
 describe('Test configuration related actions', () => {
     it('loadMapConfig', () => {
-        const retVal = loadMapConfig("test", 1);
+        const retVal = loadMapConfig("test", 1, {}, {}, {});
         expect(retVal).toExist();
         expect(retVal.type).toBe(LOAD_MAP_CONFIG);
         expect(retVal.configName).toBe("test");
         expect(retVal.mapId).toBe(1);
+        expect(retVal.config).toExist();
+        expect(retVal.mapInfo).toExist();
+        expect(retVal.overrideConfig).toExist();
     });
 
     it('configureMap', () => {

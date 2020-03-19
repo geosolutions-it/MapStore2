@@ -36,8 +36,8 @@ describe("test the Locate Button", () => {
         const icons = tbNode.getElementsByTagName('span');
         expect(icons.length).toBe(1);
 
-        expect(tbNode.className.indexOf('default') === -1).toBe(true);
-        expect(tbNode.className.indexOf('success') >= 0).toBe(true);
+        expect(tbNode.className.indexOf('default') >= 0).toBe(true);
+        expect(tbNode.className.indexOf('success') === -1).toBe(true);
         expect(tbNode.innerHTML).toExist();
     });
 
@@ -47,6 +47,7 @@ describe("test the Locate Button", () => {
 
         const tbNode = ReactDOM.findDOMNode(tb);
 
+        expect(tbNode.className.indexOf('default') === -1).toBe(true);
         expect(tbNode.className.indexOf('success') >= 0).toBe(true);
     });
 
@@ -62,6 +63,8 @@ describe("test the Locate Button", () => {
 
         expect(spy.calls.length).toEqual(1);
         expect(spy.calls[0].arguments).toEqual(["FOLLOWING"]);
+        expect(tbNode.className.indexOf('default') === -1).toBe(true);
+        expect(tbNode.className.indexOf('success') >= 0).toBe(true);
     });
 
     it('test permission denied state', () => {

@@ -106,7 +106,8 @@ const Persistence = {
     * @param {object} API the API to use
     * @return an observable that emits axios response for the deleted resource and for each of its deleted attributes
     */
-    deleteResource: (...args) => Persistence.getApi().deleteResource(...args)
+    deleteResource: (...args) => Persistence.getApi().deleteResource(...args),
+    searchListByAttributes: (...args) => Persistence.getApi().searchListByAttributes(...args)
 };
 
 module.exports = Persistence;

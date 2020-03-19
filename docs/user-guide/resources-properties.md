@@ -9,7 +9,7 @@ Through the *Edit properties* window the user can perform the following operatio
 
 * Add a *Thumbnail*
 
-* Add a *Name** and a **Description*
+* Add a *Name* and a *Description*
 
 * Add a *Permission* rule
 

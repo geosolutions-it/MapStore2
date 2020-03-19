@@ -9,7 +9,7 @@ const PropTypes = require('prop-types');
 
 const React = require('react');
 
-const {Glyphicon, Button, ButtonGroup} = require('react-bootstrap');
+const {Glyphicon, Button} = require('react-bootstrap');
 
 class SwipeHeader extends React.Component {
     static propTypes = {
@@ -34,19 +34,33 @@ class SwipeHeader extends React.Component {
     }
 
     renderLeftButton = () => {
+        const isDisabled = this.props.index === 0 ? true : false;
         return this.props.useButtons ?
-            <Button ref="left" disabled={this.props.index === 0 ? true : false} className={this.props.btnClassName || "square-button-md"} bsStyle="primary" onClick={() => {this.props.onPrevious(); }}><Glyphicon glyph="arrow-left"/></Button> :
-            <a ref="left" disabled={this.props.index === 0 ? true : false} className={this.props.btnClassName || "square-button-md"} onClick={() => {this.props.onPrevious(); }}><Glyphicon glyph="chevron-left" /></a>;
+            <Button ref="left" disabled={isDisabled} className={this.props.btnClassName || "square-button-md no-border"} onClick={() => {this.props.onPrevious(); }}><Glyphicon glyph="back"/></Button> :
+            <a ref="left" disabled={isDisabled} className={this.props.btnClassName || "square-button-md"} onClick={() => {this.props.onPrevious(); }}><Glyphicon glyph="back" /></a>;
     };
 
     renderRightButton = () => {
+        const isDisabled = this.props.index === this.props.size - 1 ? true : false;
         return this.props.useButtons ?
-            <Button ref="right" disabled={this.props.index === this.props.size - 1 ? true : false } className={this.props.btnClassName || "square-button-md"} bsStyle="primary" onClick={() => {this.props.onNext(); }}><Glyphicon glyph="arrow-right"/></Button> :
-            <a ref="right" disabled={this.props.index === this.props.size - 1 ? true : false} className={this.props.btnClassName || "square-button-md"} onClick={() => {this.props.onNext(); }}><Glyphicon glyph="chevron-right" /></a>;
+            <Button ref="right" disabled={isDisabled} className={this.props.btnClassName || "square-button-md no-border"} onClick={() => {this.props.onNext(); }}><Glyphicon glyph="next"/></Button> :
+            <a ref="right" disabled={isDisabled} className={this.props.btnClassName || "square-button-md"} onClick={() => {this.props.onNext(); }}><Glyphicon glyph="next" /></a>;
     };
 
     render() {
-        return <span><span>{this.props.title}</span><ButtonGroup className="pull-right">{this.renderLeftButton()}{this.renderRightButton()}</ButtonGroup></span>;
+        return (
+            <div className="ms-identify-swipe-header">
+                {this.props.size > 1 &&
+                <div className="ms-identify-swipe-header-arrow">
+                    {this.renderLeftButton()}
+                </div>}
+                <div className="ms-identify-swipe-header-title">{this.props.title}</div>
+                {this.props.size > 1 &&
+                <div className="ms-identify-swipe-header-arrow">
+                    {this.renderRightButton()}
+                </div>}
+            </div>
+        );
     }
 }
 

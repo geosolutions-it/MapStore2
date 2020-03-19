@@ -65,12 +65,17 @@ module.exports = ({
         this.isMounded = true;
         const div = this.findScrollDomNode();
         if (div) {
+            this.listenerAdded = true;
             div.addEventListener('scroll', this.onScroll, false);
             this.onScroll();
         }
     }
     componentDidUpdate(prevProps) {
         const div = this.findScrollDomNode();
+        if (div && !this.listenerAdded) {
+            div.addEventListener('scroll', this.onScroll, false);
+            this.listenerAdded = true;
+        }
         if (div
             && (dataProp && this.props[dataProp]
                 ? this.props[dataProp] !== prevProps[dataProp]
@@ -80,6 +85,7 @@ module.exports = ({
     }
     componentWillUnmount() {
         this.isMounded = false;
+        this.listenerAdded = false;
         const div = this.findScrollDomNode();
         if (div) {
             div.removeEventListener('scroll', this.onScroll, false);

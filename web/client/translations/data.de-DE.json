@@ -255,6 +255,8 @@
             "featuredMaps": "Empfohlene Karten"
         },
         "newMap": "Neue Karte",
+        "newMapEmpty": "Leere Karte",
+        "newMapContext": "Bestehender Kontext",
         "maps": {
             "title": "Karten",
             "addToFeaturedMaps": "Zu den vorgestellten Karten hinzufügen",
@@ -280,7 +282,8 @@
                 "errorWhenSaving": "Beim Speichern ist ein Fehler aufgetreten",
                 "errorWhenUpdating": "Während des Aktualisierungsprozesses ist ein Fehler aufgetreten",
                 "errorWhenDeleting": "Beim Löschen ist ein Fehler aufgetreten",
-                "errorSizeExceeded": "Bitte verkleinern Sie die Größe der Details oder die Qualität der Bilder"
+                "errorSizeExceeded": "Bitte verkleinern Sie die Größe der Details oder die Qualität der Bilder",
+                "errorLoadingContexts": "Beim Laden der Kontexte ist ein Fehler aufgetreten"
             },
             "search": "Suche..."
         },
@@ -644,6 +647,16 @@
                 "no_info_description": "Das Identifizierungsfeld wird bei der Suche nicht angezeigt",
                 "all_layers_description": "Das Fenster Identifizieren zeigt Informationen zu allen in der Karte sichtbaren Layern an",
                 "single_layer_description": "Das Fenster Identifizieren wird mit den Daten angezeigt, die bereits über die WFS-Suche verfügbar sind"
+            },
+            "advancedSearchPanel": {
+                "title": "Erweiterte Suchfilter",
+                "context": {
+                    "title": "Kontext"
+                },
+                "showTooltip": "Erweiterte Filter anzeigen",
+                "showTooltipActive": "Erweiterte Filter anzeigen (aktiv)",
+                "hideTooltip": "Erweiterte Filter ausblenden",
+                "hideTooltipActive": "Erweiterte Filter ausblenden (aktiv)"
             }
         },
         "draw": {
@@ -1688,6 +1701,10 @@
                     "unknownError": "Es gab einen Fehler in der Karte geladen werden. Bitte kontaktieren Sie den Administrator",
                     "notFound": "Die Karte, die Sie zugreifen möchten, existiert nicht"
                 },
+                "plugins": {
+                  "upload": "Fehler beim Hochladen des Plugins",
+                  "uninstall": "Fehler beim Deinstallieren des Plugins"
+                },
                 "resourceAlreadyExists": "Eine Ressource mit diesem Namen existiert bereits"
             }
         },
@@ -2049,7 +2066,8 @@
                 "topLeft": "Oben links",
                 "topRight": "Oben rechts",
                 "bottomLeft": "Unten links",
-                "bottomRight": "Unten rechts"
+                "bottomRight": "Unten rechts",
+                "identify": "Identifiziere"
             },
             "webPageCreator": {
                 "title": "Website",
@@ -2156,6 +2174,11 @@
             "back": "Zurück",
             "next": "Nächste"
         },
+        "newMapDialog": {
+            "title": "Wählen Sie einen Kontext",
+            "noContexts": "Keine Kontexte gefunden",
+            "filterPlaceholder": "Suchkontexte..."
+        },
         "plugins": {
           "About": {
             "description": "Tool, das das Fenster \"Info\" anzeigt",
@@ -2220,6 +2243,10 @@
           "Login": {
             "description": "Login Tool",
             "title": "Login"
+          },
+          "MapCatalog": {
+            "description": "Ermöglicht das Durchsuchen, Bearbeiten, Löschen und Laden von Karten, die auf dem Server verfügbar sind",
+            "title": "Kartenkatalog"
           },
           "MapExport": {
             "description": "Ermöglicht das Exportieren einer Karte in eine Datei",
@@ -2350,6 +2377,9 @@
                 },
                 "uploadLabel": "Ziehen Sie ein Erweiterungspaket oder klicken Sie, um es zu durchsuchen und hochzuladen",
                 "uploadTitle": "Installieren Sie ein MapStore-Plugin",
+                "uploadParseError": "index.json-Datei hat das falsche Format",
+                "uploadMissingFileError": "index.json-Datei fehlt in zip",
+                "confirmRemovePlugin": "Möchten Sie die Erweiterung wirklich entfernen?",
                 "tooltips": {
                     "enableUserPlugin": "Aktiviert die Auswahl des aktuellen Plugins für den Benutzer",
                     "disableUserPlugin": "Deaktivieren Sie die Auswahl des aktuellen Plugins für den Benutzer",
@@ -2358,6 +2388,7 @@
                     "editConfiguration": "Plugin Konfiguration bearbeiten",
                     "pluginDocumentation": "Öffnen Sie die Dokumentation zur Plugin-Konfiguration",
                     "uploadPlugin": "Fügen Sie MapStore eine Erweiterung hinzu",
+                    "removePlugin": "Entfernen Sie diese Erweiterung aus MapStore",
                     "mapTemplatesConfig": "Vorlagen konfigurieren"
                 },
                 "saveCfgErrorNotification":  {
@@ -2440,6 +2471,26 @@
             "confirmReplaceTitle": "Ersetzen Sie den Karteninhalt",
             "confirmReplaceMessage": "Sie ersetzen alle Layer und die Kartenkonfiguration durch die ausgewählte Vorlage, indem Sie auf die Schaltfläche Ersetzen klicken",
             "confirmReplaceConfirmButton": "Ersetzen"
+        },
+        "mapCatalog": {
+            "title": "Kartenkatalog",
+            "filterPlaceholder": "Karten suchen...",
+            "deleteConfirmContent": "Möchten Sie die Karte \"{mapName}\" wirklich löschen?",
+            "tooltips": {
+                "edit": "Eigenschaften bearbeiten",
+                "delete": "Ressource löschen",
+                "share": "Teilen"
+            },
+            "deletedMap": {
+                "title": "Karte gelöscht",
+                "message": "Die Karte wurde erfolgreich gelöscht"
+            },
+            "updatedMap": {
+                "title": "Gespeicherte Karte",
+                "message": "Die Karte wurde erfolgreich gespeichert"
+            },
+            "deleteError": "Beim Löschen der Karte ist ein unerwarteter Fehler aufgetreten",
+            "updateError": "Beim Speichern der Karte ist ein unerwarteter Fehler aufgetreten"
         },
         "tutorial": {
             "title": "Anleitung",

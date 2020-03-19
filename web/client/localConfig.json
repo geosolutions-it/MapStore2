@@ -366,10 +366,7 @@
                   }
                 }
             }, "Print", "MapImport", {
-                "name": "MapExport",
-                "cfg": {
-                    "enabledFormats": ["mapstore2", "wmc"]
-                }
+                "name": "MapExport"
             }, {
                 "name": "Settings",
                 "cfg": {

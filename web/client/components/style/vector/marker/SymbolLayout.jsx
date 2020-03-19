@@ -8,7 +8,7 @@
 
 const PropTypes = require('prop-types');
 const React = require('react');
-const Select = require('react-select');
+const Select = require('react-select').default;
 const {Row, Col, InputGroup, Glyphicon, Alert } = require('react-bootstrap');
 const {isArray, find, filter, isEqual} = require('lodash');
 const axios = require('axios');

@@ -46,6 +46,7 @@ pages:
       - Managing Users: 'user-guide/managing-users.md'
       - Managing Groups: 'user-guide/managing-groups.md'
     - Resources Properties: 'user-guide/resources-properties.md'
+    - Sharing Resources: 'user-guide/share.md'
     - Exploring Maps:
       - Overview: 'user-guide/exploring-maps.md'
       - Table of Contents: 'user-guide/toc.md'
@@ -56,10 +57,9 @@ pages:
       - Menu Bar: 'user-guide/menu-bar.md'
       - Printing a Map: 'user-guide/print.md'
       - Import Files: 'user-guide/import.md'
-      - Managing Remote Services from the Catalog: 'user-guide/catalog.md'
+      - Catalog Services: 'user-guide/catalog.md'
       - Performing Measurments: 'user-guide/measure.md'
       - Adding Annotations: 'user-guide/annotations.md'
-      - Sharing a Map: 'user-guide/share.md'
       - Side Bar: 'user-guide/side-bar.md'
       - Background Selector: 'user-guide/background.md'
       - Timeline: 'user-guide/timeline.md'
@@ -93,11 +93,13 @@ pages:
       - Writing Plugins: 'developer-guide/plugins-howto.md'
       - Writing Epics: 'developer-guide/writing-epics.md'
       - Writing Actions and Reducers: 'developer-guide/writing-actions-reducers.md'
+      - Implement User Sessions: 'developer-guide/user-sessions.md'
     - Configuration:
       - Configuration Files: 'developer-guide/configuration-files.md'
       - Application Configuration: 'developer-guide/local-config.md'
       - Configuring plugins: 'developer-guide/plugins-documentation.md'
       - Map Configuration: 'developer-guide/maps-configuration.md'
+      - Externalize Configuration: 'developer-guide/externalized-configuration.md'
     - Database Setup: 'developer-guide/database-setup.md'
     - Integrations:
       - users:

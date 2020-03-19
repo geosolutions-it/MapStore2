@@ -11,7 +11,7 @@ const PropTypes = require("prop-types");
 const React = require("react");
 const { FormControl, FormGroup, Alert, Pagination, Button, Panel, Form, InputGroup, ControlLabel, Glyphicon } = require("react-bootstrap");
 
-const Select = require("react-select");
+const Select = require("react-select").default;
 
 const BorderLayout = require("../layout/BorderLayout");
 const LocaleUtils = require("../../utils/LocaleUtils");

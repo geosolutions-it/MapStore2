@@ -130,6 +130,7 @@ export default class ContextCreator extends React.Component {
         saveDestLocation: PropTypes.string,
         uploading: PropTypes.bool,
         onShowDialog: PropTypes.func,
+        onRemovePlugin: PropTypes.func,
         onShowBackToPageConfirmation: PropTypes.func,
         showBackToPageConfirmation: PropTypes.bool,
         backToPageDestRoute: PropTypes.string,
@@ -288,6 +289,7 @@ export default class ContextCreator extends React.Component {
                             setParsedTemplate={this.props.setParsedTemplate}
                             setFileDropStatus={this.props.setFileDropStatus}
                             onShowDialog={this.props.onShowDialog}
+                            onRemovePlugin={this.props.onRemovePlugin}
                             onSaveTemplate={this.props.onSaveTemplate}
                             onDeleteTemplate={this.props.onDeleteTemplate}
                             onEditTemplate={this.props.onEditTemplate}

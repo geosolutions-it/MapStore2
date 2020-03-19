@@ -10,7 +10,8 @@ const {
     MAPS_LIST_LOADED, MAPS_LIST_LOADING, MAPS_LIST_LOAD_ERROR, MAP_CREATED, MAP_ERROR, MAP_UPDATING,
     MAP_METADATA_UPDATED, MAP_DELETING, ATTRIBUTE_UPDATED, PERMISSIONS_LIST_LOADING,
     PERMISSIONS_LIST_LOADED, SAVE_MAP, PERMISSIONS_UPDATED, THUMBNAIL_ERROR, RESET_UPDATING,
-    MAPS_SEARCH_TEXT_CHANGED, METADATA_CHANGED, SHOW_DETAILS} = require('../actions/maps');
+    MAPS_SEARCH_TEXT_CHANGED, SEARCH_FILTER_CHANGED, SET_SEARCH_FILTER, SET_CONTEXTS, LOADING, METADATA_CHANGED,
+    SHOW_DETAILS} = require('../actions/maps');
 const {
     EDIT_MAP, RESET_CURRENT_MAP} = require('../actions/currentMap');
 const assign = require('object-assign');
@@ -64,11 +65,36 @@ function maps(state = {
     enabled: false,
     showMapDetails: true,
     errors: [],
-    searchText: ""}, action) {
+    searchFilter: {},
+    searchText: "",
+    results: ""}, action) {
     switch (action.type) {
     case MAPS_SEARCH_TEXT_CHANGED: {
         return assign({}, state, {
             searchText: action.text
+        });
+    }
+    case SEARCH_FILTER_CHANGED: {
+        return assign({}, state, {
+            searchFilter: {
+                ...state.searchFilter,
+                [action.filter]: action.filterData
+            }
+        });
+    }
+    case SET_SEARCH_FILTER: {
+        return assign({}, state, {searchFilter: action.searchFilter});
+    }
+    case SET_CONTEXTS: {
+        return assign({}, state, {contexts: action.contexts});
+    }
+    case LOADING: {
+        return assign({}, state, {
+            loading: action.value,
+            loadFlags: {
+                ...(state.loadFlags || {}),
+                ...(action.name !== 'loading' ? {[action.name]: action.value} : {})
+            }
         });
     }
     case METADATA_CHANGED: {

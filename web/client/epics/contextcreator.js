@@ -18,12 +18,12 @@ import MapUtils from '../utils/MapUtils';
 
 import {SAVE_CONTEXT, SAVE_TEMPLATE, LOAD_CONTEXT, LOAD_TEMPLATE, DELETE_TEMPLATE, EDIT_TEMPLATE, SHOW_DIALOG, SET_CREATION_STEP, MAP_VIEWER_LOAD,
     MAP_VIEWER_RELOAD, CHANGE_ATTRIBUTE, ENABLE_MANDATORY_PLUGINS, ENABLE_PLUGINS, DISABLE_PLUGINS, SAVE_PLUGIN_CFG,
-    EDIT_PLUGIN, CHANGE_PLUGINS_KEY, UPDATE_EDITED_CFG, VALIDATE_EDITED_CFG, SET_RESOURCE, UPLOAD_PLUGIN, contextSaved, setResource,
+    EDIT_PLUGIN, CHANGE_PLUGINS_KEY, UPDATE_EDITED_CFG, VALIDATE_EDITED_CFG, SET_RESOURCE, UPLOAD_PLUGIN, UNINSTALL_PLUGIN, contextSaved, setResource,
     startResourceLoad, loadFinished, loadTemplate, showDialog, setFileDropStatus, updateTemplate, isValidContextName,
     contextNameChecked, setCreationStep, contextLoadError, loading, mapViewerLoad, mapViewerLoaded, setEditedPlugin,
     setEditedCfg, setParsedCfg, validateEditedCfg, setValidationStatus, savePluginCfg, enableMandatoryPlugins,
     enablePlugins, disablePlugins, setCfgError, changePluginsKey, changeTemplatesKey, setEditedTemplate, setTemplates, pluginUploaded,
-    pluginUploading, loadExtensions} from '../actions/contextcreator';
+    pluginUploading, pluginUninstalled, pluginUninstalling, loadExtensions} from '../actions/contextcreator';
 import {newContextSelector, resourceSelector, creationStepSelector, mapConfigSelector, mapViewerLoadedSelector, contextNameCheckedSelector,
     editedPluginSelector, editedCfgSelector, validationStatusSelector, parsedCfgSelector, cfgErrorSelector,
     pluginsSelector, initialEnabledPluginsSelector} from '../selectors/contextcreator';
@@ -39,7 +39,7 @@ import {mapOptionsToSaveSelector} from '../selectors/mapsave';
 import {loadMapConfig} from '../actions/config';
 import {createResource, createCategory, updateResource, deleteResource, getResource, getResources} from '../api/persistence';
 import getPluginsConfig from '../observables/config/getPluginsConfig';
-import { upload } from '../api/plugins';
+import { upload, uninstall } from '../api/plugins';
 
 const saveContextErrorStatusToMessage = (status) => {
     switch (status) {
@@ -293,7 +293,27 @@ export const uploadPluginEpic = (action$) => action$
                 pluginUploading(false, files.map(f => f.name)),
                 () => Rx.Observable.of(error({
                     title: "notification.error",
-                    message: "resources.contexts.errorUploadingPlugin",
+                    message: "context.errors.plugins.upload",
+                    autoDismiss: 6,
+                    position: "tc"
+                }))
+            ))
+    );
+
+export const uninstallPluginEpic = (action$) => action$
+    .ofType(UNINSTALL_PLUGIN)
+    .switchMap(({plugin}) =>
+        Rx.Observable.defer(() => uninstall(plugin))
+            .switchMap(result => Rx.Observable.of(
+                pluginUninstalled(plugin, result),
+                showDialog('confirmRemovePlugin', false)
+            ))
+            .let(wrapStartStop(
+                pluginUninstalling(true, plugin),
+                pluginUninstalling(false, plugin),
+                () => Rx.Observable.of(error({
+                    title: "notification.error",
+                    message: "context.errors.plugins.uninstall",
                     autoDismiss: 6,
                     position: "tc"
                 }))

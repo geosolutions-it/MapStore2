@@ -11,6 +11,8 @@
         <ms:Group id="37b5eb60-5189-11ea-8531-a737d86e9a07" title="Some Group" expanded="true"/>
         <ms:Group id="37b5eb60-5189-11ea-8531-a737d86e9a07.44bc9340-5189-11ea-8531-a737d86e9a07" title="Some Group" expanded="true"/>
       </ms:GroupList>
+      <ms:center x="-83.01860427856452" y="36.23686543982026" crs="EPSG:4326"/>
+      <ms:zoom>3</ms:zoom>
     </Extension>
   </General>
   <LayerList>
