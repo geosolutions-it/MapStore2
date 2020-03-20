@@ -22,7 +22,6 @@ const {addService, deleteService, textSearch, changeCatalogFormat, changeCatalog
     changeUrl, changeTitle, changeServiceProperty, changeType, changeServiceFormat, changeSelectedService,
     addLayer, addLayerError, focusServicesList, changeText,
     changeMetadataTemplate, toggleAdvancedSettings, toggleThumbnail, toggleTemplate, catalogClose} = require("../actions/catalog");
-const {zoomToExtent} = require("../actions/map");
 const {addBackgroundProperties, updateThumbnail, removeThumbnail, clearModalParameters, backgroundAdded} = require('../actions/backgroundselector');
 const {currentLocaleSelector, currentMessagesSelector} = require("../selectors/locale");
 const {layersSelector} = require('../selectors/layers');
@@ -79,7 +78,6 @@ const Catalog = compose(
         // add layer action to pass to the layers
         onUpdateThumbnail: updateThumbnail,
         onAddBackgroundProperties: addBackgroundProperties,
-        onZoomToExtent: zoomToExtent,
         onFocusServicesList: focusServicesList,
         onPropertiesChange: changeLayerProperties,
         onAddBackground: backgroundAdded,

@@ -68,9 +68,7 @@ export const textSearch = (url, startPosition, maxRecords, text, info) => getRec
 const validateURLTemplate = (url) => {
     return isValidURLTemplate(url); // TODO: check parameters
 };
-export const validate = () => (service) => {
-
-
+export const validate = (service) => {
     const isValid = (!service.provider || service.provider === "custom") ? validateURLTemplate(service.url) : !!service.provider;
     if (service.title && isValid) {
         return Observable.of(service);
@@ -80,7 +78,7 @@ export const validate = () => (service) => {
     throw error;
 };
 
-export const testService = () => (service) => Observable.of(service);
+export const testService = (service) => Observable.of(service);
 /**
  * API (fake) for tileProvider catalog. Browse static configuration in ConfigProvider variants for each provider or offers a custom, 1 element source to add custom tileProvider.
  * @module api.tileProvider

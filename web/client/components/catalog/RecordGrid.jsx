@@ -17,7 +17,6 @@ class RecordGrid extends React.Component {
         recordItem: PropTypes.element,
         catalogURL: PropTypes.string,
         catalogType: PropTypes.string,
-        onZoomToExtent: PropTypes.func,
         zoomToLayer: PropTypes.bool,
         onLayerAdd: PropTypes.func,
         onPropertiesChange: PropTypes.func,
@@ -73,7 +72,6 @@ class RecordGrid extends React.Component {
                     source={this.props.source}
                     onLayerAdd={this.props.onLayerAdd}
                     onPropertiesChange={this.props.onPropertiesChange}
-                    onZoomToExtent={this.props.onZoomToExtent}
                     zoomToLayer={this.props.zoomToLayer}
                     hideThumbnail={this.props.hideThumbnail}
                     hideIdentifier={this.props.hideIdentifier}

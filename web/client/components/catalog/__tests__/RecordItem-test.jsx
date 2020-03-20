@@ -163,17 +163,14 @@ describe('This test for RecordItem', () => {
         let actions = {
             onLayerAdd: () => {
 
-            },
-            onZoomToExtent: () => {
-
             }
+
         };
         let actionsSpy = expect.spyOn(actions, "onLayerAdd");
-        let actionsSpy2 = expect.spyOn(actions, "onZoomToExtent");
         const item = ReactDOM.render(<RecordItem
             record={sampleRecord3}
             onLayerAdd={actions.onLayerAdd}
-            onZoomToExtent={actions.onZoomToExtent}/>, document.getElementById("container"));
+        />, document.getElementById("container"));
         expect(item).toExist();
 
         const itemDom = ReactDOM.findDOMNode(item);
@@ -184,24 +181,20 @@ describe('This test for RecordItem', () => {
         expect(button).toExist();
         button.click();
         expect(actionsSpy.calls.length).toBe(1);
-        expect(actionsSpy2.calls.length).toBe(1);
         expect(actionsSpy.calls[0].arguments[0].format).toBe("image/png");
+        expect(actionsSpy.calls[0].arguments[1].zoomToLayer).toBeTruthy();
     });
     it('check WMTS resource format', () => {
         let actions = {
             onLayerAdd: () => {
 
-            },
-            onZoomToExtent: () => {
-
             }
         };
         let actionsSpy = expect.spyOn(actions, "onLayerAdd");
-        let actionsSpy2 = expect.spyOn(actions, "onZoomToExtent");
         const item = ReactDOM.render(<RecordItem
             record={{...sampleRecord3, format: "image/jpeg"}}
             onLayerAdd={actions.onLayerAdd}
-            onZoomToExtent={actions.onZoomToExtent} />, document.getElementById("container"));
+        />, document.getElementById("container"));
         expect(item).toExist();
 
         const itemDom = ReactDOM.findDOMNode(item);
@@ -212,9 +205,9 @@ describe('This test for RecordItem', () => {
         expect(button).toExist();
         button.click();
         expect(actionsSpy.calls.length).toBe(1);
-        expect(actionsSpy2.calls.length).toBe(1);
         expect(actionsSpy.calls[0].arguments.length).toBe(1);
         expect(actionsSpy.calls[0].arguments[0].format).toBe("image/jpeg");
+        expect(actionsSpy.calls[0].arguments[1].zoomToLayer).toBeTruthy();
     });
     it('check esri resource', () => {
         let actions = {
@@ -245,17 +238,13 @@ describe('This test for RecordItem', () => {
         let actions = {
             onLayerAdd: () => {
 
-            },
-            onZoomToExtent: () => {
-
             }
         };
         let actionsSpy = expect.spyOn(actions, "onLayerAdd");
-        let actionsSpy2 = expect.spyOn(actions, "onZoomToExtent");
         const item = ReactDOM.render(<RecordItem
             record={sampleRecord}
             onLayerAdd={actions.onLayerAdd}
-            onZoomToExtent={actions.onZoomToExtent}/>, document.getElementById("container"));
+        />, document.getElementById("container"));
         expect(item).toExist();
 
         const itemDom = ReactDOM.findDOMNode(item);
@@ -266,7 +255,7 @@ describe('This test for RecordItem', () => {
         expect(button).toExist();
         button.click();
         expect(actionsSpy.calls.length).toBe(1);
-        expect(actionsSpy2.calls.length).toBe(1);
+        expect(actionsSpy.calls[0].arguments[1].zoomToLayer).toBeTruthy();
     });
 
     it('check event handlers with catalogUrl and csw service', () => {
@@ -601,9 +590,6 @@ describe('This test for RecordItem', () => {
     it('check add layer with bounding box', () => {
         let actions = {
             onLayerAdd: () => {
-
-            },
-            onZoomToExtent: () => {
 
             }
         };

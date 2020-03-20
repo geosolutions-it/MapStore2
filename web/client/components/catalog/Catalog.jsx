@@ -47,7 +47,6 @@ class Catalog extends React.Component {
         onLayerAdd: PropTypes.func,
         onReset: PropTypes.func,
         onSearch: PropTypes.func,
-        onZoomToExtent: PropTypes.func,
         onAddBackground: PropTypes.func,
         pageSize: PropTypes.number,
         records: PropTypes.array,
@@ -97,7 +96,6 @@ class Catalog extends React.Component {
         onLayerAdd: () => { },
         onReset: () => { },
         onSearch: () => { },
-        onZoomToExtent: () => { },
         changeLayerProperties: () => { },
         pageSize: 4,
         records: [],
@@ -263,7 +261,6 @@ class Catalog extends React.Component {
                 showTemplate={this.props.services[this.props.selectedService].showTemplate}
                 onLayerAdd={this.props.onLayerAdd}
                 onPropertiesChange={this.props.onPropertiesChange}
-                onZoomToExtent={this.props.onZoomToExtent}
                 zoomToLayer={this.props.zoomToLayer}
                 onError={this.props.onError}
                 showGetCapLinks={this.props.showGetCapLinks}

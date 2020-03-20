@@ -145,18 +145,12 @@ function catalog(state = {
         return assign({}, state, {newService: assign({}, state.newService, {type, ...templateOptions})});
     }
     case ADD_CATALOG_SERVICE: {
-        let newServices;
-        if (action.service.isNew) {
-            let service = assign({}, action.service);
-            delete service.isNew;
-            newServices = assign({}, state.services, {[action.service.title || uuid()]: service});
-        } else {
-            let services = assign({}, state.services);
-            newServices = assign({}, services, { [action.service.oldService]: action.service});
-        }
+        const { isNew, ...service } = action.service;
+        const selectedService = isNew ? service.title + uuid() : state.selectedService;
+        const newServices = assign({}, state.services, { [selectedService]: service});
         return assign({}, state, {
             services: newServices,
-            selectedService: action.service.title,
+            selectedService,
             mode: "view",
             result: null,
             loadingError: null,

@@ -196,11 +196,10 @@ export default (API) => ({
             .switchMap(() => {
                 const state = store.getState();
                 const newService = newServiceSelector(state);
-                const services = servicesSelector(state);
                 return Rx.Observable.of(newService)
                     // validate
-                    .switchMap(API[newService.type]?.validate?.({ services }) ?? ((service) => Rx.Observable.of(service)))
-                    .switchMap(API[newService.type]?.testService?.(newService) ?? ((service) => Rx.Observable.of(service)))
+                    .switchMap((service) => API[service.type]?.validate?.(service) ?? ( Rx.Observable.of(service)))
+                    .switchMap((service) => API[service.type]?.testService?.(service) ?? (Rx.Observable.of(service)))
                     .switchMap(() => {
                         return Rx.Observable.of(
                             addCatalogService(newService),

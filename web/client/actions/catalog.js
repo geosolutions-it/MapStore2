@@ -18,6 +18,8 @@ var API = {
 };
 
 import {addLayer as addNewLayer, changeLayerProperties} from './layers';
+import { zoomToExtent } from './map';
+
 
 import * as LayersUtils from '../utils/LayersUtils';
 import * as ConfigUtils from '../utils/ConfigUtils';
@@ -258,12 +260,15 @@ export function describeError(layer, error) {
     };
 }
 
-export function addLayerAndDescribe(layer) {
+export function addLayerAndDescribe(layer, {zoomToLayer = false} = {}) {
     return (dispatch, getState) => {
         const state = getState();
         const layers = layersSelector(state);
         const id = LayersUtils.getLayerId(layer, layers || []);
         dispatch(addNewLayer({...layer, id}));
+        if (zoomToLayer && layer.bbox) {
+            dispatch(zoomToExtent(layer.bbox.bounds, layer.bbox.crs));
+        }
         if (layer.type === 'wms') {
             // try to describe layer
             return API.wms.describeLayers(layer.url, layer.name).then((results) => {
@@ -282,6 +287,7 @@ export function addLayerAndDescribe(layer) {
 
             }).catch((e) => dispatch(describeError(layer, e)));
         }
+
         return null;
     };
 }

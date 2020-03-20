@@ -52,8 +52,6 @@ class RecordItem extends React.Component {
         onCopy: PropTypes.func,
         onError: PropTypes.func,
         onLayerAdd: PropTypes.func,
-        onAddBackground: PropTypes.func,
-        onZoomToExtent: PropTypes.func,
         record: PropTypes.object,
         showGetCapLinks: PropTypes.bool,
         zoomToLayer: PropTypes.bool,
@@ -62,7 +60,6 @@ class RecordItem extends React.Component {
         layers: PropTypes.array,
         onAdd: PropTypes.func,
         source: PropTypes.string,
-        modalParams: PropTypes.object,
         onAddBackgroundProperties: PropTypes.func,
         onUpdateThumbnail: PropTypes.func,
         deletedId: PropTypes.string,
@@ -86,7 +83,6 @@ class RecordItem extends React.Component {
         onCopy: () => {},
         onError: () => {},
         onLayerAdd: () => {},
-        onZoomToExtent: () => {},
         onPropertiesChange: () => {},
         onLayerChange: () => {},
         clearModal: () => {},
@@ -162,8 +158,7 @@ class RecordItem extends React.Component {
                     bsSize={this.props.buttonSize}
                     onClick={() => {
                         const layer = {...background, id: background.name, visibility: false};
-                        this.props.onLayerAdd(layer);
-                        this.props.onAddBackground(layer.id);
+                        this.props.onLayerAdd(layer, { background });
                     }}
                     key="addlayer">
                     <Glyphicon glyph="plus" />
@@ -181,15 +176,7 @@ class RecordItem extends React.Component {
                     onClick={() => {
                         const layer = this.makeLayer(type, wms || wmts, record.format && [record.format] || record.formats);
                         if (layer) {
-                            if (this.props.source === 'backgroundSelector') {
-                                this.props.onAddBackgroundProperties({
-                                    identifier: record.identifier,
-                                    editing: false,
-                                    layer
-                                }, true);
-                            } else {
-                                this.addLayer(layer);
-                            }
+                            this.addLayer(layer, {record});
                         }
                     }}
                     key={`add${type}layer`}>
@@ -216,14 +203,13 @@ class RecordItem extends React.Component {
             buttons.push(
                 <AddTMS
                     service={this.props.service}
-                    key="tms-button"
+                    key="addTmsLayer"
                     tooltipId="catalog.addToMap"
                     className="square-button-md"
                     bsStyle="primary"
                     bsSize={this.props.buttonSize}
                     addLayer={this.addLayer}
-                    record={this.props.record}
-                    key="addTmsLayer">
+                    record={this.props.record}>
                     <Glyphicon glyph="plus" />
                 </AddTMS>
             );
@@ -231,18 +217,17 @@ class RecordItem extends React.Component {
         if (tileProvider) {
             buttons.push(
                 <AddTileProvider
+                    key="addTileProviderLayer"
                     service={this.props.service}
-                    key="tileprovider-button"
                     tooltipId="catalog.addToMap"
                     className="square-button-md"
                     bsStyle="primary"
                     bsSize={this.props.buttonSize}
                     addLayer={this.addLayer}
-                    record={this.props.record}
-                    key="addTmsLayer">
+                    record={this.props.record}>
                     <Glyphicon glyph="plus" />
                 </AddTileProvider>
-            )
+            );
         }
 
         // create get capabilities links that will be used to share layers info
@@ -269,34 +254,17 @@ class RecordItem extends React.Component {
             : record.metadataTemplate ? '' : (isArray(record.description) ? record.description.join(", ") : record.description);
     };
 
-    renderBackgroundDialog() {
-        return (
-            <BackgroundDialog
-                onClose={this.props.clearModal}
-                onSave={layer => {
-                    this.addLayer(layer);
-                    this.props.onAddBackground(layer.id);
-                }}
-                updateThumbnail={this.props.onUpdateThumbnail}
-                defaultFormat={this.props.defaultFormat}
-                formatOptions={this.props.formatOptions}
-                {...this.props.modalParams}
-            />
-        );
-    }
-
     render() {
         const record = this.props.record;
         const {wms, wmts, tms} = extractOGCServicesReferences(record);
         const {esri} = extractEsriReferences(record);
+        const tileProvider = record && record.type === "tileprovider" && record.provider;
         const background = record && record.background;
         const disabled = background && head((this.props.layers || []).filter(layer => layer.id === background.name ||
             layer.type === background.type && layer.source === background.source && layer.name === background.name));
         // the preview and toolbar width depends on the values defined in the theme (variable.less)
         // IMPORTANT: if those values are changed then these defaults also have to change
         return record ? (<div>
-            {this.props.modalParams && this.props.modalParams.identifier === record.identifier && !this.props.modalParams.editing ?
-                this.renderBackgroundDialog() : null}
             <SideCard
                 style={{transform: "none", opacity: disabled ? 0.4 : 1}}
                 fullText={this.state.fullText}
@@ -310,7 +278,7 @@ class RecordItem extends React.Component {
                 caption={
                     <div>
                         {!this.props.hideIdentifier && <div className="identifier">{record && record.identifier}</div>}
-                        <div>{!wms && !wmts && !esri && !background && !tms && <small className="text-danger"><Message msgId="catalog.missingReference"/></small>}</div>
+                        <div>{!wms && !wmts && !esri && !background && !tms && !tileProvider && <small className="text-danger"><Message msgId="catalog.missingReference"/></small>}</div>
                         {!this.props.hideExpand &&
                                 <div
                                     className="ms-ruler"
@@ -394,17 +362,23 @@ class RecordItem extends React.Component {
         );
     }
 
-    addLayer = (layer) => {
-        if (layer) {
-            this.props.onLayerAdd(layer);
-            if (this.props.record.boundingBox && this.props.zoomToLayer) {
-                let extent = this.props.record.boundingBox.extent;
-                let crs = this.props.record.boundingBox.crs;
-                this.props.onZoomToExtent(extent, crs);
+    addLayer = (layer, {background} = {}) => {
+        if (this.props.source === 'backgroundSelector') {
+            if (background) {
+                // background
+                this.props.onLayerAdd({...layer, group: 'background'}, { source: this.props.source });
+                this.props.onAddBackground(layer.id);
+            } else {
+                this.props.onAddBackgroundProperties({
+                    editing: false,
+                    layer
+                }, true);
             }
+        } else {
+            const zoomToLayer = this.props.zoomToLayer;
+            this.props.onLayerAdd(layer, { zoomToLayer });
         }
     }
-
     /**
      * it manages visibility of expand button.
      * it checks if the width of descriptionRuler is higher than the width of the desc-section

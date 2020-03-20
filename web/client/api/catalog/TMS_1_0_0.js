@@ -8,7 +8,7 @@
 import ConfigUtils from '../../utils/ConfigUtils';
 import xml2js from 'xml2js';
 import axios from '../../libs/ajax';
-import { get, castArray } from 'lodash';
+import { get, castArray, find } from 'lodash';
 import { cleanAuthParamsFromURL } from '../../utils/SecurityUtils';
 
 const capabilitiesCache = {};
@@ -16,6 +16,18 @@ const capabilitiesCache = {};
 const isSameSRS = (srs, projection) => srs === projection
     || srs === "EPSG:3857" && projection === "EPSG:900913"
     || srs === "EPSG:900913" && projection === "EPSG:3857";
+
+const guessFormat = (url = "") => {
+    const parts = url.split("@");
+    if (parts.length > 1) {
+        const format = parts[parts.length - 1];
+        if (find(["png", "png8", "jpeg", "vnd.jpeg-png", "gif"], format)) {
+            return format;
+        }
+    }
+    return null;
+};
+
 const searchAndPaginate = (json = {}, startPosition, maxRecords, text, info = {}) => {
 
     const layers = castArray(get(json, 'TileMapService.TileMaps.TileMap', []));
@@ -26,6 +38,7 @@ const searchAndPaginate = (json = {}, startPosition, maxRecords, text, info = {}
             ...$, // get only the xml attributes
             href: cleanAuthParamsFromURL($.href),
             identifier: cleanAuthParamsFromURL($.href), // add identifier for the layer
+            format: guessFormat($.href),
             tmsUrl: cleanAuthParamsFromURL(json.url) // Service URL
         }))
         .filter(({ srs }) => (projection && !allSRS) ? isSameSRS(srs, projection) : true)

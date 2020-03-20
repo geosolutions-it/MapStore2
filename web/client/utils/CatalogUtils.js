@@ -326,13 +326,12 @@ const converters = {
         }
         return null;
     },
-    tms: (records, options = {}) => {
-        if (records && records.records) {
+    tms: (data, options = {}) => {
+        if (data && data.records) {
             const isTMS100 = options.service && options.service.provider === "tms";
             if (isTMS100) {
-                return records && records.map(record => ({
+                return data.records.map(record => ({
                     title: record.title,
-                    identifier: record.identifier,
                     tileMapUrl: record.href,
                     description: record.srs, // To show description in record
                     tmsUrl: options.tmsUrl,
@@ -343,7 +342,8 @@ const converters = {
                     }]
                 }));
             }
-            return records.records.map(record => {
+            // custom or static tile provider
+            return data.records.map(record => {
                 return {
                     title: record.provider,
                     url: record.url,
@@ -398,7 +398,7 @@ const extractOGCServicesReferences = (record = { references: [] }) => ({
         || reference.type.indexOf("OGC:WMS") > -1 && reference.type.indexOf("http-get-map") > -1))),
     wmts: head(record.references.filter(reference => reference.type && (reference.type === "OGC:WMTS"
         || reference.type.indexOf("OGC:WMTS") > -1 && reference.type.indexOf("http-get-map") > -1))),
-    tms: head(record.references.filter(reference => reference.type && (reference.type === "OGC:WMTS"
+    tms: head(record.references.filter(reference => reference.type && (reference.type === "OGC:TMS"
         || reference.type.indexOf("OGC:TMS") > -1)))
 });
 const extractEsriReferences = (record = { references: [] }) => ({
@@ -569,6 +569,7 @@ const CatalogUtils = {
         const profile = get(TileSets, "profile");
         return {
             title: Title,
+            visibility: true,
             hideErrors: true, // TMS can rise a lot of errors of tile not found
             name: Title,
             allowedSRS: {[SRS]: true},
@@ -593,10 +594,10 @@ const CatalogUtils = {
     /**
      * Converts a record into a layer
      */
-    tileProviderToLayer: (record, service) => {
+    tileProviderToLayer: (record) => {
         return {
             type: "tileprovider",
-            service,
+            visibility: true,
             url: record.url,
             title: record.title,
             attribution: record.attribution,

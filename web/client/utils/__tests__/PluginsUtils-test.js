@@ -448,7 +448,7 @@ describe('PluginsUtils', () => {
         const appEpics = {
             appEpics: (actions$) => actions$.filter(a => a.type === 'TEST_ACTION').map(() => ({ type: "RESPONSE" }))
         };
-        const epics = PluginsUtils.combineEpics(plugins, appEpics, epic => (...args) => { counter++; return epic(...args); });
+        const epics = PluginsUtils.combineEpics(plugins, appEpics, () => epic => (...args) => { counter++; return epic(...args); });
         epicTest(epics, 1, [{ type: 'TEST_ACTION1' }, { type: 'TEST_ACTION' }], () => {
             expect(counter).toBe(1);
             done();

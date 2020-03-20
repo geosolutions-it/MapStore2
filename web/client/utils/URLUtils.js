@@ -95,7 +95,7 @@ export const isValidURL = (url, regexp = /^(http(s{0,1}):\/\/)+?[\w.-]+(?:\.[\w\
 /**
  * Check url templates. It accepts URL in this format
  */
-export const isValidURLTemplate = (url, params, regexp = /^(http(s{0,1}):\/\/)+?[\w.\-{}]+(?:\.[\w\.-]+)+[\w\-\._~\/{}]+$/) => {
+export const isValidURLTemplate = (url, params, regexp = /^(http(s{0,1}):\/\/)+?[\w.\-{}]+(?:\.[\w\.-]+)+[\w\-\._~\/\;\.\%\:\&\=\?{}]+$/) => {
     const regex = new RegExp(regexp);
     const match = regex.test(url);
     if (!match) {

@@ -12,14 +12,11 @@ import * as tileProvider from './tileProvider';
 import { validate as defaultValidate, testService as defaultTestService } from './common';
 
 /**
- * Implements the abstraction of TMS catalog, that can be:
- * - tileprovider: custom or pre-configured configuration of tileprovider layers.
+ * Implements Catalog API for the abstraction of a TMS catalog, that can provide layers of type:
+ * - tileprovider: custom (type of provider is "custom", or empty) or pre-configured configuration of tileprovider layers (will have provider: "provider.variant").
  * - tms: standard TMS 1.0.0 service, with remote data retrieval.
  * @module api.catalog.TMS
  */
-
-
-export const parseUrl = TMS100.parseUrl;
 
 export const getRecords = (url, startPosition, maxRecords, text, info = {}) => {
     const {options} = info;
@@ -38,15 +35,15 @@ export const textSearch = (url, startPosition, maxRecords, text, info = {}) => {
     }
     return tileProvider.getRecords(url, startPosition, maxRecords, text, info);
 };
-export const validate = (info) => (service) => {
+export const validate = service => {
     if (service.provider === "tms") {
-        return defaultValidate(info)(service);
+        return defaultValidate(service);
     }
-    return tileProvider.validate(info)(service);
+    return tileProvider.validate(service);
 };
-export const testService = (API) => service => {
+export const testService = service => {
     if (service.provider === "tms") {
-        return defaultTestService(API)(service);
+        return defaultTestService({ parseUrl: TMS100.parseUrl })(service);
     }
-    return tileProvider.testService(API)(service);
+    return tileProvider.testService(service);
 };

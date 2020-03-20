@@ -20,20 +20,22 @@ export class ServiceValidationError extends Error {
 }
 
 /**
- * Validate the current service setup. This is the default valudation that checks url and title to be filled
+ * Validate the current service setup. This is the default validation that checks url and title to be filled
  *  @returns function that takes the service as parameter and return a stream. The stream emit the service again or throw an exception.
  */
-export const validate = ({ services }) => (service) => {
+export const validate = (service) => {
     if (service.title === "" || service.url === "") {
         throw new ServiceValidationError("Validation Error", "catalog.notification.warningAddCatalogService");
     }
+    /* TODO: avoid check about duplicated title, use ID
     if (service.title !== "" && service.url !== "") {
         if (!services[service.title] || services[service.title] && service.oldService === service.title) {
             return Rx.Observable.of(service);
         }
         throw new ServiceValidationError("Validation Error", "catalog.notification.duplicatedServiceTitle");
     }
-    return Rx.Observable.complete();
+     */
+    return Rx.Observable.of(service);
 };
 
 /**
@@ -44,15 +46,15 @@ export const validate = ({ services }) => (service) => {
 export const testService = ({parseUrl}) => service => {
     const serviceError = "catalog.notification.errorServiceUrl";
 
-    return Rx.Observable.defer(() => axios.get(parseUrl(service.url)))
-        .catch(() => {
+    return Rx.Observable.defer(
+        () => axios.get(parseUrl(service.url))
+    ).catch(() => {
+        throw new ServiceValidationError("Service Test error", serviceError);
+    }).switchMap((result) => {
+        if (result.error || result.data === "") {
             throw new ServiceValidationError("Service Test error", serviceError);
-        })
-        .switchMap((result) => {
-            if (result.error || result.data === "") {
-                throw new ServiceValidationError("Service Test error", serviceError);
-            }
-            return Rx.Observable.of(service);
-        });
+        }
+        return Rx.Observable.of(service);
+    });
 };
 // END of standard validation tools

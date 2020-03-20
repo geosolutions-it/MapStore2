@@ -8,7 +8,9 @@
 
 import React from 'react';
 import Message from '../../I18N/Message';
+import HTML from '../../I18N/HTML';
 
+import InfoPopover from '../../widgets/widget/InfoPopover';
 import { FormControl as FC, Form, Col, FormGroup, ControlLabel } from "react-bootstrap";
 
 import localizedProps from '../../misc/enhancers/localizedProps';
@@ -38,7 +40,7 @@ import CONFIG_PROVIDER from '../../../utils/ConfigProvider';
 const PROVIDERS_ALLOWED = ["OpenStreetMap", "OpenSeaMap"];
 
 const getProviderLabel = k=> k === TMS ? "TMS 1.0.0" : k;
-const TileProviderURLEditor = ({ onChangeServiceProperty, service = {}, onChangeUrl = () => { }, onChangeTitle = () => { } }) => {
+const TmsURLEditor = ({ onChangeServiceProperty, service = {}, onChangeUrl = () => { }, onChangeTitle = () => { } }) => {
     const providers = Object.keys(CONFIG_PROVIDER).filter(k => PROVIDERS_ALLOWED.indexOf(k) >= 0);
     const selectedProvider = service === TMS ? service : service?.provider?.split?.(".")?.[0];
     const isCustom = !selectedProvider || selectedProvider === CUSTOM;
@@ -46,7 +48,7 @@ const TileProviderURLEditor = ({ onChangeServiceProperty, service = {}, onChange
     const needURL = isTMS || isCustom;
     return (<FormGroup>
         <Col xs={12} sm={isCustom ? 3 : 12} md={needURL ? 3 : 12}>
-            <ControlLabel><Message msgId="catalog.tileProvider.provider" /></ControlLabel>
+            <ControlLabel><Message msgId="catalog.tms.provider" /></ControlLabel>
             <FormControl
                 onChange={(e) => {
                     const provider = e.target.value;
@@ -61,7 +63,7 @@ const TileProviderURLEditor = ({ onChangeServiceProperty, service = {}, onChange
         <Col xs={12} sm={9} md={9}>
             {isCustom
                 ? <React.Fragment>
-                    <ControlLabel><Message msgId="catalog.tileProvider.urlTemplate" /></ControlLabel>
+                    <ControlLabel><Message msgId="catalog.tms.urlTemplate" />&nbsp;&nbsp;<InfoPopover text={<HTML msgId="catalog.tms.urlTemplateHint" />} /></ControlLabel>
                     <FormControl
                         type="text"
                         style={{
@@ -101,7 +103,7 @@ export default ({
     onChangeServiceProperty,
     onChangeType
 }) => {
-    const URLEditor = service.type === "tms" ? TileProviderURLEditor : DefaultURLEditor;
+    const URLEditor = service.type === "tms" ? TmsURLEditor : DefaultURLEditor;
     return (
         <Form horizontal >
             <FormGroup controlId="title" key="type-title-row">

@@ -238,11 +238,17 @@ class BackgroundSelector extends React.Component {
                     closeGlyph="1-close">
                     <Message msgId="backgroundSelector.confirmDelete" msgParams={{title: confirmLayerTitle}}/>
                 </ConfirmDialog>
-                {this.props.modalParams && this.props.modalParams.editing && <BackgroundDialog
+                {this.props.modalParams && <BackgroundDialog
                     onClose={this.props.clearModal}
                     onSave={layerToAdd => {
-                        this.props.updateNode(layerToAdd.id, 'layers', layerToAdd);
-                        this.props.onBackgroundEdit(layerToAdd.id);
+                        if (this.props.modalParams.editing) {
+                            this.props.updateNode(layerToAdd.id, 'layers', layerToAdd);
+                            this.props.onBackgroundEdit(layerToAdd.id);
+                        } else {
+                            this.props.addLayer(layerToAdd);
+                            this.props.backgroundAdded(layerToAdd.id);
+                        }
+
                     }}
                     updateThumbnail={this.props.onUpdateThumbnail}
                     {...backgroundDialogParams}
