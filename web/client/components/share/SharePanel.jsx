@@ -86,7 +86,9 @@ class SharePanel extends React.Component {
     };
 
     state = {
-        eventKey: 1
+        eventKey: 1,
+        showAdvanced: true,
+        bboxEnabled: true
     };
 
     UNSAFE_componentWillMount() {
@@ -115,7 +117,7 @@ class SharePanel extends React.Component {
     getShareUrl = () => {
         const { settings, advancedSettings } = this.props;
         let shareUrl = getSharedGeostoryUrl(removeQueryFromUrl(this.props.shareUrl));
-        if (settings.bboxEnabled && advancedSettings && advancedSettings.bbox && this.state.bbox) shareUrl = `${shareUrl}?bbox=${this.state.bbox}`;
+        if (this.state.bboxEnabled && advancedSettings && advancedSettings.bbox && this.state.bbox) shareUrl = `${shareUrl}?bbox=${this.state.bbox}`;
         if (settings.showHome && advancedSettings && advancedSettings.homeButton) shareUrl = `${shareUrl}?showHome=true`;
         return shareUrl;
     };
@@ -180,12 +182,8 @@ class SharePanel extends React.Component {
                 expanded={this.state.showAdvanced}
                 onSwitch={() => this.setState({ showAdvanced: !this.state.showAdvanced })}>
                 {this.props.advancedSettings.bbox && <Checkbox
-                    checked={this.props.settings.bboxEnabled ? true : false}
-                    onChange={() =>
-                        this.props.onUpdateSettings({
-                            ...this.props.settings,
-                            bboxEnabled: !this.props.settings.bboxEnabled
-                        })}>
+                    checked={this.state.bboxEnabled}
+                    onChange={() => this.setState({ bboxEnabled: !this.state.bboxEnabled })}>
                     <Message msgId="share.addBboxParam" />
                 </Checkbox>}
                 {this.props.advancedSettings.homeButton && <Checkbox

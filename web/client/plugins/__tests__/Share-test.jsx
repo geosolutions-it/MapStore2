@@ -204,4 +204,46 @@ describe('Share Plugin', () => {
         }, 1000);
     });
 
+    it('test Share plugin advanced options is active by default and add bbox param checkbox is checked, EPSG:4326', (done) => {
+        try {
+            const controls = {
+                share: {
+                    enabled: true
+                }
+            };
+            const map = {
+                bbox: {
+                    bounds: {
+                        minx: 9,
+                        miny: 45,
+                        maxx: 10,
+                        maxy: 46
+                    },
+                    crs: 'EPSG:4326'
+                }
+            };
+            const { Plugin } = getPluginForTest(SharePlugin, { controls, map });
+            ReactDOM.render(<Plugin />, document.getElementById("container"));
+            setTimeout(() => {
+                const inputLink = document.querySelector('input[type=\'text\']');
+                expect(inputLink).toExist();
+                const shareUrl = inputLink.value;
+                const splitUrl = shareUrl.split('?');
+                const query = splitUrl[splitUrl.length - 1];
+                expect(query).toBe('bbox=9,45,10,46');
+                const sharePanelDialog = document.getElementById('share-panel-dialog');
+                expect(sharePanelDialog).toExist();
+                const switchButton = sharePanelDialog.querySelector('.mapstore-switch-btn input[type=\'checkbox\']');
+                expect(switchButton).toExist();
+                expect(switchButton.checked).toBe(true);
+                const bboxCheckbox = sharePanelDialog.querySelector('.panel-body .checkbox input[type=\'checkbox\']');
+                expect(bboxCheckbox).toExist();
+                expect(bboxCheckbox.checked).toBe(true);
+                done();
+            }, 500);
+        } catch (e) {
+            done(e);
+        }
+    });
+
 });

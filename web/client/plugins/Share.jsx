@@ -81,7 +81,10 @@ const Share = connect(createSelector([
     embedOptions: {
         showTOCToggle: !context
     },
-    settings
+    settings,
+    advancedSettings: {
+        bbox: true
+    }
 })), {
     onClose: toggleControl.bind(null, 'share', null),
     onUpdateSettings: setControlProperty.bind(null, 'share', 'settings')
