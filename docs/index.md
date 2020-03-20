@@ -11,7 +11,7 @@ functionalities (like chart widgets, dashboards, timelines and others).
 Application Context where users can save, manage and share its own resources by also managing access permissions to other groups of users.
 
 [MapStore](https://mapstore.geo-solutions.it/mapstore/#/) is not only a product but also a WebGIS framework. As a standard geoportal product, it is a web-based product that allows to provide  
-a powerfull and interactive geospatial WebGIS, it provides a direct and real-time access to geospatial data warehouses and it supports all available 
+a powerful and interactive geospatial WebGIS, it provides a direct and real-time access to geospatial data warehouses and it supports all available 
 standards formats for geospatial data. 
 [MapStore](https://mapstore.geo-solutions.it/mapstore/#/) also provides advanced spatial analysis capabilities that can be used to build WebGIS solutions through a powerful, dynamic and open 
 geospatial application. Since [MapStore](https://mapstore.geo-solutions.it/mapstore/#/) is also a framework, you can use it to build your own WebGIS applications by using its plugins and modules.
