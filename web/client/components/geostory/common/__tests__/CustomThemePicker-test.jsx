@@ -53,11 +53,11 @@ describe('CustomThemePicker component', () => {
         const swatchNode = fieldNode.querySelector('.ms-color-picker-swatch');
         expect(swatchNode).toBeTruthy();
         ReactTestUtils.Simulate.click(swatchNode);
-        const sketchPickerNode = fieldNode.querySelector('.sketch-picker');
+        const sketchPickerNode = document.querySelector('.sketch-picker');
         expect(sketchPickerNode).toBeTruthy();
         const [sketchPickerHexInputNode] = sketchPickerNode.querySelectorAll('input');
         ReactTestUtils.Simulate.change(sketchPickerHexInputNode, { target: { value: BACKGROUND_COLOR } });
-        const coverNode = fieldNode.querySelector('.ms-color-picker-cover');
+        const coverNode = document.querySelector('.ms-color-picker-cover');
         ReactTestUtils.Simulate.click(coverNode);
     });
     it('should change text color', (done) => {
@@ -77,11 +77,11 @@ describe('CustomThemePicker component', () => {
         const swatchNode = fieldNode.querySelector('.ms-color-picker-swatch');
         expect(swatchNode).toBeTruthy();
         ReactTestUtils.Simulate.click(swatchNode);
-        const sketchPickerNode = fieldNode.querySelector('.sketch-picker');
+        const sketchPickerNode = document.querySelector('.sketch-picker');
         expect(sketchPickerNode).toBeTruthy();
         const [sketchPickerHexInputNode] = sketchPickerNode.querySelectorAll('input');
         ReactTestUtils.Simulate.change(sketchPickerHexInputNode, { target: { value: COLOR } });
-        const coverNode = fieldNode.querySelector('.ms-color-picker-cover');
+        const coverNode = document.querySelector('.ms-color-picker-cover');
         ReactTestUtils.Simulate.click(coverNode);
     });
     it('should change shadow', (done) => {
@@ -92,8 +92,6 @@ describe('CustomThemePicker component', () => {
                     expect(theme.borderColor).toBe(undefined);
                     expect(theme.color).toBe(undefined);
                     expect(theme.boxShadow).toBe('0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22)');
-                    expect(theme.WebkitBoxShadow).toBe('0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22)');
-                    expect(theme.MozBoxShadow).toBe('0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22)');
                     done();
                 }}
             />, document.getElementById("container"));

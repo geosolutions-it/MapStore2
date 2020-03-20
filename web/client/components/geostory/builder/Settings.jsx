@@ -58,6 +58,7 @@ export default ({
             </div>
             <CustomThemePicker
                 theme={settings?.theme}
+                placement="right"
                 disableBackgroundAlpha
                 disableShadow
                 onChange={(theme) => onUpdateSettings("theme", theme)}/>

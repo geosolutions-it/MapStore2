@@ -12,22 +12,33 @@ import isObject from 'lodash/isObject';
 import tinycolor from 'tinycolor2';
 import { Button as ButtonRB, MenuItem, Glyphicon } from 'react-bootstrap';
 import ToolbarPopover from './ToolbarPopover';
-import { getConfigProp } from '../../../utils/ConfigUtils';
 import SwitchButton from '../../misc/switch/SwitchButton';
 import Message from '../../I18N/Message';
 import HTML from '../../I18N/HTML';
 import tooltip from '../../misc/enhancers/tooltip';
 
 const Button = tooltip(ButtonRB);
-
+/**
+ * CustomThemePicker: compact theme input fields provides editing for text, background and shadow
+ * @prop {object} theme theme object
+ * @prop {string} theme.color theme text color css style
+ * @prop {string} theme.backgroundColor theme background color css style
+ * @prop {string} theme.boxShadow theme box shadow css style
+ * @prop {bool} disableBackgroundAlpha disable alpha for background color picker
+ * @prop {bool} disableTextColor disable text color input field
+ * @prop {bool} disableShadow disable shadow input field
+ * @prop {function} onChange return changed theme
+ * @prop {function} onOpen detect when color picker is open
+ * @prop {string} placement preferred placement of picker, one of `top`, `right`, `bottom` or `left`
+ */
 function CustomThemePicker({
     theme,
     disableBackgroundAlpha,
     disableTextColor,
     disableShadow,
-    containerNode,
     onChange = () => {},
-    onOpen
+    onOpen,
+    placement
 }) {
 
     const trigger = useRef();
@@ -45,8 +56,8 @@ function CustomThemePicker({
             <div><Message msgId="geostory.customizeTheme.backgroundColorLabel"/></div>
             <div>
                 <ColorSelector
+                    placement={placement}
                     key={backgroundColor}
-                    containerNode={containerNode}
                     onOpen={onOpen}
                     color={backgroundColor}
                     format={!disableBackgroundAlpha ? 'rgb' : 'hex'}
@@ -111,8 +122,8 @@ function CustomThemePicker({
             </div>
             <div>
                 <ColorSelector
+                    placement={placement}
                     key={color}
-                    containerNode={containerNode}
                     color={color}
                     onOpen={onOpen}
                     format="hex"
@@ -138,9 +149,7 @@ function CustomThemePicker({
                             ? { ...newTheme }
                             : {
                                 ...newTheme,
-                                boxShadow: '0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22)',
-                                MozBoxShadow: '0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22)',
-                                WebkitBoxShadow: '0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22)'
+                                boxShadow: '0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22)'
                             });
                     }}
                 />
@@ -216,7 +225,7 @@ export function CustomThemePickerMenuItem({
                 theme={theme}
                 onChange={handleUpdateTheme}
                 onOpen={onActive}
-                containerNode={document.querySelector('.' + (getConfigProp('themePrefix') || 'ms2') + " > div") || document.body}/>
+            />
         </div>}
         </>
     );

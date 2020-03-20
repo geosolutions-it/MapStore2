@@ -77,9 +77,11 @@ describe("Test the ThemaClassesEditor component", () => {
         const colorPicker = domNode.querySelector('.ms-color-picker-swatch');
         expect(colorPicker).toExist();
         TestUtils.Simulate.click(colorPicker);
-        const sampleColor = domNode.querySelector('div[title="#D0021B"]');
+        // query in the document because now the overlay picker container is related to container node (portal)
+        const sampleColor = document.querySelector('div[title="#D0021B"]');
         TestUtils.Simulate.click(sampleColor);
-        TestUtils.Simulate.click(domNode.querySelector('.ms-color-picker-cover'));
+        // query in the document because now the overlay picker container is related to container node (portal)
+        TestUtils.Simulate.click(document.querySelector('.ms-color-picker-cover'));
         expect(spyUpdate).toHaveBeenCalled();
         expect(spyUpdate.calls.length).toBe(1);
         expect(spyUpdate.calls[0].arguments[0].length).toBe(2);
@@ -101,7 +103,8 @@ describe("Test the ThemaClassesEditor component", () => {
         const colorPicker = domNode.querySelector('.ms-color-picker-swatch');
         expect(colorPicker).toExist();
         TestUtils.Simulate.click(colorPicker);
-        TestUtils.Simulate.click(domNode.querySelector('.ms-color-picker-cover'));
+        // query in the document because now the overlay picker container is related to container node (portal)
+        TestUtils.Simulate.click(document.querySelector('.ms-color-picker-cover'));
         expect(spyUpdate).toNotHaveBeenCalled();
     });
 });
