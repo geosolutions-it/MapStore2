@@ -13,9 +13,13 @@ import url from 'url';
 const urlQuery = url.parse(window.location.href, true).query;
 
 import Page from '../../containers/Page';
-import {loadGeostory} from '../../actions/geostory';
+import {
+    loadGeostory,
+    setEditing
+} from '../../actions/geostory';
+import { geostoryIdSelector } from '../../selectors/geostory';
+import { isLoggedIn } from '../../selectors/security';
 import BorderLayout from '../../components/layout/BorderLayout';
-import { removeQueryFromUrl } from '../../utils/ShareUtils';
 
 class GeoStoryPage extends React.Component {
     static propTypes = {
@@ -24,21 +28,28 @@ class GeoStoryPage extends React.Component {
         loadResource: PropTypes.func,
         reset: PropTypes.func,
         plugins: PropTypes.object,
-        isAuth: PropTypes.bool,
+        canEdit: PropTypes.bool,
         location: PropTypes.object,
-        history: PropTypes.object
+        history: PropTypes.object,
+        setEditing: PropTypes.func,
+        previousId: PropTypes.oneOfType([
+            PropTypes.number,
+            PropTypes.string
+        ])
     };
 
     static defaultProps = {
         name: "geostory",
         mode: 'desktop',
-        reset: () => { }
+        reset: () => { },
+        setEditing: () => {}
     };
 
     componentWillMount() {
-        this.redirectAuth();
         const id = get(this.props, "match.params.gid");
+        const previousId = this.props.previousId && this.props.previousId + '';
         this.props.reset();
+        this.setInitialMode(previousId !== id);
         this.props.loadResource(id);
     }
     componentDidUpdate(oldProps) {
@@ -48,6 +59,7 @@ class GeoStoryPage extends React.Component {
             if (isNil(id)) {
                 this.props.reset();
             } else {
+                this.setInitialMode(true);
                 this.props.loadResource(id);
             }
         }
@@ -65,20 +77,28 @@ class GeoStoryPage extends React.Component {
         />);
     }
 
-    redirectAuth = () => {
+    setInitialMode = (isViewMode) => {
         const { pathname } = this.props.location;
-        if (this.props.isAuth && pathname.includes('/geostory/shared')) {
-            const newUrl = removeQueryFromUrl(pathname.replace('/geostory/shared', '/geostory'));
-            this.props.history.push(newUrl);
+        const isShared = pathname.includes('/geostory/shared');
+        // mobile and shared page need to disable editing on start
+        if (isShared || !this.props.canEdit || isViewMode) {
+            this.props.setEditing(false);
         }
     }
 }
 
+const canEditGeoStorySelector = (state) => {
+    const isMobile = state?.browser?.mobile;
+    return isLoggedIn(state) && !isMobile ? true : false;
+};
+
 export default connect((state) => ({
     mode: urlQuery.mobile || state.browser && state.browser.mobile ? 'mobile' : 'desktop',
-    isAuth: state.security.user
+    canEdit: canEditGeoStorySelector(state),
+    previousId: geostoryIdSelector(state)
 }),
 {
-    loadResource: loadGeostory
+    loadResource: loadGeostory,
+    setEditing
     // reset: resetGeostory
 })(GeoStoryPage);

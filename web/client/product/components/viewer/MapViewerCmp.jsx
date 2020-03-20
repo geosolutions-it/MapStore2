@@ -16,6 +16,7 @@ class MapViewerComponent extends React.Component {
     static propTypes = {
         mode: PropTypes.string,
         match: PropTypes.object,
+        loadNewMap: PropTypes.func,
         loadMapConfig: PropTypes.func,
         onInit: PropTypes.func,
         plugins: PropTypes.object,
@@ -27,6 +28,7 @@ class MapViewerComponent extends React.Component {
         mode: 'desktop',
         plugins: {},
         onInit: () => {},
+        loadNewMap: () => {},
         loadMapConfig: () => {},
         match: {
             params: {}
@@ -34,13 +36,16 @@ class MapViewerComponent extends React.Component {
     };
     UNSAFE_componentWillMount() {
         const id = this.props.match.params.mapId || '0';
-        this.updateMap(id);
+        const contextId = this.props.match.params.contextId;
+        this.updateMap(id, contextId);
     }
     componentDidUpdate(oldProps) {
         const id = this.props.match.params.mapId || '0';
         const oldId = oldProps.match.params.mapId || '0';
-        if (id !== oldId) {
-            this.updateMap(id);
+        const contextId = this.props.match.params.contextId;
+        const oldContextId = oldProps.match.params.contextId;
+        if (id !== oldId || contextId  !== oldContextId) {
+            this.updateMap(id, contextId);
         }
     }
 
@@ -52,7 +57,7 @@ class MapViewerComponent extends React.Component {
             params={this.props.match.params}
         />);
     }
-    updateMap = (id) => {
+    updateMap = (id, contextId) => {
         if (id && oldLocation !== this.props.location) {
             oldLocation = this.props.location;
             if (!ConfigUtils.getDefaults().ignoreMobileCss) {
@@ -62,15 +67,20 @@ class MapViewerComponent extends React.Component {
             }
             const url = require('url');
             const urlQuery = url.parse(window.location.href, true).query;
+
             // if 0 it loads config.json
             // if mapId is a string it loads mapId.json
             // if it is a number it loads the config from geostore
             let mapId = id === '0' ? null : id;
             let config = urlQuery && urlQuery.config || null;
             const { configUrl } = ConfigUtils.getConfigUrl({ mapId, config });
-            mapId = mapId === 'new' ? null : mapId;
             this.props.onInit();
-            this.props.loadMapConfig(configUrl, mapId);
+
+            if (mapId === 'new') {
+                this.props.loadNewMap(configUrl, contextId && parseInt(contextId, 10));
+            } else {
+                this.props.loadMapConfig(configUrl, mapId);
+            }
         }
     }
 }

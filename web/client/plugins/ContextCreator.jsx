@@ -19,7 +19,7 @@ import {newContextSelector, resourceSelector, creationStepSelector, reloadConfir
 import {mapTypeSelector} from '../selectors/maptype';
 import {setCreationStep, changeAttribute, saveNewContext, saveTemplate, mapViewerReload, showMapViewerReloadConfirm, showDialog, setFilterText,
     setSelectedPlugins, setSelectedTemplates, setParsedTemplate, setFileDropStatus, editPlugin, editTemplate, deleteTemplate, updateEditedCfg,
-    changePluginsKey, changeTemplatesKey, enablePlugins, disablePlugins, enableUploadPlugin, uploadPlugin,
+    changePluginsKey, changeTemplatesKey, enablePlugins, disablePlugins, enableUploadPlugin, uploadPlugin, uninstallPlugin,
     uploadPluginError, showBackToPageConfirmation} from '../actions/contextcreator';
 import contextcreator from '../reducers/contextcreator';
 import * as epics from '../epics/contextcreator';
@@ -87,6 +87,7 @@ export default createPlugin('ContextCreator', {
         onUploadPlugin: uploadPlugin,
         onUploadPluginError: uploadPluginError,
         onShowDialog: showDialog,
+        onRemovePlugin: uninstallPlugin,
         onShowBackToPageConfirmation: showBackToPageConfirmation
     })(ContextCreator),
     reducers: {

@@ -150,12 +150,16 @@ class StandardApp extends React.Component {
             initialized: true
         });
     };
+    getAssetPath =(asset) => {
+        return ConfigUtils.getConfigProp("extensionsFolder") + asset;
+    };
     loadExtensions = (path, callback) => {
         if (this.props.enableExtensions) {
             return axios.get(path).then((response) => {
                 const plugins = response.data;
                 Promise.all(Object.keys(plugins).map((pluginName) => {
-                    return PluginsUtils.loadPlugin(plugins[pluginName].bundle).then((loaded) => {
+                    const bundlePath = this.getAssetPath(plugins[pluginName].bundle);
+                    return PluginsUtils.loadPlugin(bundlePath).then((loaded) => {
                         return loaded.plugin.loadPlugin().then((impl) => {
                             augmentStore({ reducers: impl.reducers || {}, epics: impl.epics || {} });
                             const pluginDef = {
@@ -183,34 +187,29 @@ class StandardApp extends React.Component {
         }
         return callback({}, []);
     };
+    onPluginsLoaded = (plugins, translations) => {
+        this.setState({
+            pluginsRegistry: plugins
+        });
+        if (translations.length > 0) {
+            ConfigUtils.setConfigProp("translationsPath", [...castArray(ConfigUtils.getConfigProp("translationsPath")), ...translations.map(this.getAssetPath)]);
+        }
+        const locale = LocaleUtils.getUserLocale();
+        this.store.dispatch(loadLocale(null, locale));
+    };
     init = (config) => {
         this.store.dispatch(changeBrowserProperties(ConfigUtils.getBrowserProperties()));
         this.store.dispatch(localConfigLoaded(config));
-        const locale = LocaleUtils.getUserLocale();
         if (this.store.addActionListener) {
             this.store.addActionListener((action) => {
                 if (action.type === LOAD_EXTENSIONS) {
-                    this.loadExtensions(ConfigUtils.getConfigProp('extensionsRegistry'), (plugins, translations) => {
-                        this.setState({
-                            pluginsRegistry: plugins
-                        });
-                        if (translations.length > 0) {
-                            ConfigUtils.setConfigProp("translationsPath", [...castArray(ConfigUtils.getConfigProp("translationsPath")), ...translations]);
-                        }
-                        this.store.dispatch(loadLocale(null, locale));
-                    });
+                    this.loadExtensions(ConfigUtils.getConfigProp('extensionsRegistry'), this.onPluginsLoaded);
                 }
             });
         }
         this.addProjDefinitions(config);
         this.loadExtensions(ConfigUtils.getConfigProp('extensionsRegistry'), (plugins, translations) => {
-            this.setState({
-                pluginsRegistry: plugins
-            });
-            if (translations.length > 0) {
-                ConfigUtils.setConfigProp("translationsPath", [...castArray(ConfigUtils.getConfigProp("translationsPath")), ...translations]);
-            }
-            this.store.dispatch(loadLocale(null, locale));
+            this.onPluginsLoaded(plugins, translations);
             if (this.props.onInit) {
                 this.props.onInit(this.store, this.afterInit.bind(this, [config]), config);
             } else {

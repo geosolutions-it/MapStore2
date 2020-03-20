@@ -84,6 +84,7 @@ const layerSelectorWithMarkers = createSelector(
     }
 );
 
+const rawGroupsSelector = (state) => state.layers && state.layers.flat && state.layers.groups || [];
 const groupsSelector = (state) => state.layers && state.layers.flat && state.layers.groups && LayersUtils.denormalizeGroups(state.layers.flat, state.layers.groups).groups || [];
 
 const selectedNodesSelector = (state) => state.layers && state.layers.selected || [];
@@ -144,6 +145,7 @@ const selectedLayerLoadingErrorSelector = state => (getSelectedLayer(state) || {
 module.exports = {
     getLayerFromName,
     layersSelector,
+    rawGroupsSelector,
     layerSelectorWithMarkers,
     queryableLayersSelector,
     groupsSelector,

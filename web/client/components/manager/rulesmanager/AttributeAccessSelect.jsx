@@ -6,7 +6,7 @@
 * LICENSE file in the root directory of this source tree.
 */
 const React = require('react');
-const Select = require('react-select');
+const Select = require('react-select').default;
 const defaultOptions = [
     {value: 'NONE', label: "NONE"},
     {value: 'READONLY', label: 'READ ONLY'},

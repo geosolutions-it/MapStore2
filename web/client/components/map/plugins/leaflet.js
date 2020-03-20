@@ -16,6 +16,7 @@ module.exports = () => {
         MeasurementSupport: require('../leaflet/MeasurementSupport'),
         Overview: require('../leaflet/Overview'),
         ScaleBar: require('../leaflet/ScaleBar'),
-        DrawSupport: require('../leaflet/DrawSupport')
+        DrawSupport: require('../leaflet/DrawSupport'),
+        PopupSupport: require('../leaflet/PopupSupport').default
     };
 };

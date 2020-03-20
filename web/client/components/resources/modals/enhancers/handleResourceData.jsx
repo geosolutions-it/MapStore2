@@ -23,9 +23,16 @@ module.exports = compose(
                 name: resource.name,
                 description: resource.description
             },
+            attributes: {
+                ...resource.attributes,
+                context: resource.context || resource.attributes && resource.attributes.context
+            },
             resource: {
                 id: resource.id,
-                attributes: resource.attributes,
+                attributes: {
+                    ...resource.attributes,
+                    context: resource.context || resource.attributes && resource.attributes.context
+                },
                 metadata: {
                     name: resource.name,
                     description: resource.description

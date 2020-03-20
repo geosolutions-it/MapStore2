@@ -14,6 +14,7 @@ import {
     enablePluginsEpic,
     disablePluginsEpic,
     uploadPluginEpic,
+    uninstallPluginEpic,
     saveTemplateEpic,
     saveContextResource,
     checkIfContextExists
@@ -25,6 +26,7 @@ import {
     changePluginsKey,
     changeAttribute,
     uploadPlugin,
+    uninstallPlugin,
     saveTemplate,
     SET_EDITED_PLUGIN,
     SET_EDITED_CFG,
@@ -33,6 +35,8 @@ import {
     ENABLE_MANDATORY_PLUGINS,
     PLUGIN_UPLOADED,
     UPLOADING_PLUGIN,
+    UNINSTALLING_PLUGIN,
+    PLUGIN_UNINSTALLED,
     LOADING,
     LOAD_TEMPLATE,
     SHOW_DIALOG,
@@ -685,6 +689,28 @@ describe('contextcreator epics', () => {
             expect(actions[2].status).toBe(false);
             expect(actions[2].plugins.length).toBe(1);
             expect(actions[2].plugins[0]).toBe("myplugin.zip");
+            done();
+        }, {
+            contextcreator: {}
+        });
+    });
+    it('uninstall plugin', (done) => {
+        mockAxios.onDelete().reply(200, { "myplugin": {}});
+        const startActions = [uninstallPlugin("My")];
+        testEpic(uninstallPluginEpic, 4, startActions, actions => {
+            expect(actions.length).toBe(4);
+            expect(actions[0].type).toBe(UNINSTALLING_PLUGIN);
+            expect(actions[0].status).toBe(true);
+            expect(actions[0].plugin).toBe("My");
+            expect(actions[1].type).toBe(PLUGIN_UNINSTALLED);
+            expect(actions[1].plugin).toBe("My");
+            expect(actions[1].cfg).toExist();
+            expect(actions[2].type).toBe(SHOW_DIALOG);
+            expect(actions[2].dialogName).toBe("confirmRemovePlugin");
+            expect(actions[2].show).toBe(false);
+            expect(actions[3].type).toBe(UNINSTALLING_PLUGIN);
+            expect(actions[3].status).toBe(false);
+            expect(actions[3].plugin).toBe("My");
             done();
         }, {
             contextcreator: {}

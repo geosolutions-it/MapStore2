@@ -254,6 +254,8 @@
             "featuredMaps": "Featured"
         },
         "newMap": "New Map",
+        "newMapEmpty": "Empty Map",
+        "newMapContext": "Existing Context",
 		"maps": {
             "title": "Maps",
             "addToFeaturedMaps": "Add to featured maps",
@@ -279,7 +281,8 @@
                 "errorWhenSaving": "An error occurred during saving process",
                 "errorWhenUpdating": "An error occurred during updating process",
                 "errorWhenDeleting": "An error occurred during deleting process",
-                "errorSizeExceeded": "Please, reduce the size of the details or the quality of the images"
+                "errorSizeExceeded": "Please, reduce the size of the details or the quality of the images",
+                "errorLoadingContexts": "An error occurred during contexts loading"
             },
 			"search": "search..."
 		},
@@ -643,6 +646,16 @@
                 "no_info_description": "Identify panel will not show up on search",
                 "all_layers_description": "Identify panel will show up displaying information of all layers visible in map",
                 "single_layer_description": "Identify panel will show up with the data already available through the WFS search"
+            },
+            "advancedSearchPanel": {
+                "title": "Advanced search filters",
+                "context": {
+                    "title": "Context"
+                },
+                "showTooltip": "Show advanced filters",
+                "showTooltipActive": "Show advanced filters (active)",
+                "hideTooltip": "Hide advanced filters",
+                "hideTooltipActive": "Hide advanced filters (active)"
             }
         },
         "draw": {
@@ -1691,6 +1704,10 @@
                     "notFound": "The map you are trying to access doesn't exist",
 	                "notAccessible": "You don't have the right permission to access to this map. Please contact the administrator to get access"
                 },
+                "plugins": {
+                  "upload": "Error during plugin upload",
+                  "uninstall": "Error during plugin uninstall"
+                },
                 "resourceAlreadyExists": "A resource with this name already exists"
             }
         },
@@ -2052,7 +2069,8 @@
                 "topLeft": "Top Left",
                 "topRight": "Top Right",
                 "bottomLeft": "Bottom Left",
-                "bottomRight": "Bottom Right"
+                "bottomRight": "Bottom Right",
+                "identify": "Identify"
             },
             "webPageCreator": {
                 "title": "Web page",
@@ -2158,6 +2176,11 @@
         "stepper": {
             "back": "Back",
             "next": "Next"
+        },
+        "newMapDialog": {
+            "title": "Select a context",
+            "noContexts": "No contexts found",
+            "filterPlaceholder": "Search contexts..."
         },
         "plugins": {
           "About": {
@@ -2277,7 +2300,7 @@
             "title": "Settings"
           },
           "Share": {
-            "description": "Allows to share the map in variopus ways (link, QR-Code, embed, social networks...)",
+            "description": "Allows to share the map in various ways (link, QR-Code, embed, social networks...)",
             "title": "Share Tool"
           },
           "StyleEditor": {
@@ -2357,6 +2380,9 @@
                 },
                 "uploadLabel": "Drag an extension bundle or click to browse and upload it",
                 "uploadTitle": "Install a MapStore plugin",
+                "uploadParseError": "index.json file index.json has a wrong format",
+                "uploadMissingFileError": "index.json file missing in zip",
+                "confirmRemovePlugin": "Are you sure you want to remove the extension?",
                 "tooltips": {
                     "enableUserPlugin": "Enable selection of current plugin for user",
                     "disableUserPlugin": "Disable selection of current plugin for user",
@@ -2365,6 +2391,7 @@
                     "editConfiguration": "Edit plugin configuration",
                     "pluginDocumentation": "Open plugin configuration documentation",
                     "uploadPlugin": "Add an extension to MapStore",
+                    "removePlugin": "Remove this extension from MapStore",
                     "mapTemplatesConfig": "Configure templates"
                 },
                 "saveCfgErrorNotification":  {

@@ -13,7 +13,7 @@ const assign = require('object-assign');
 
 const {mapSelector} = require('../selectors/map');
 const {layersSelector} = require('../selectors/layers');
-const { mapTypeSelector } = require('../selectors/maptype');
+const { mapTypeSelector, isCesium } = require('../selectors/maptype');
 
 const { generalInfoFormatSelector, clickPointSelector, indexSelector, responsesSelector, validResponsesSelector, showEmptyMessageGFISelector, isHighlightEnabledSelector, currentFeatureSelector, currentFeatureCrsSelector } = require('../selectors/mapInfo');
 
@@ -53,7 +53,8 @@ const selector = createStructuredSelector({
     dockStyle: state => mapLayoutValuesSelector(state, {height: true}),
     formatCoord: (state) => state.mapInfo && state.mapInfo.formatCoord,
     showCoordinateEditor: (state) => state.mapInfo && state.mapInfo.showCoordinateEditor,
-    showEmptyMessageGFI: state => showEmptyMessageGFISelector(state)
+    showEmptyMessageGFI: state => showEmptyMessageGFISelector(state),
+    isCesium
 });
 // result panel
 
@@ -159,6 +160,7 @@ const identifyDefaultProps = defaultProps({
  * @prop cfg.viewerOptions.header {expression} the header of the viewer, expression from the context{expression}
  * @prop cfg.disableCenterToMarker {bool} disable zoom to marker action
  * @prop cfg.zIndex {number} component z index order
+ * @prop cfg.showInMapPopup {boolean} if true show the identify as popup
  *
  * @example
  * {
@@ -189,7 +191,12 @@ const IdentifyPlugin = compose(
         showRevGeocode: showMapinfoRevGeocode,
         hideRevGeocode: hideMapinfoRevGeocode,
         onEnableCenterToMarker: updateCenterToMarker.bind(null, 'enabled')
-    }),
+    }, (stateProps, dispatchProps, ownProps) => ({
+        ...ownProps,
+        ...stateProps,
+        ...dispatchProps,
+        enabled: stateProps.enabled && (stateProps.isCesium || !ownProps.showInMapPopup)
+    })),
     // highlight support
     compose(
         connect(
@@ -242,5 +249,5 @@ module.exports = {
         }
     }),
     reducers: {mapInfo: require('../reducers/mapInfo')},
-    epics: require('../epics/identify')
+    epics: require('../epics/identify').default
 };

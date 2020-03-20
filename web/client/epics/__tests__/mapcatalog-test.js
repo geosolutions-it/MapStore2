@@ -13,6 +13,7 @@ import axios from "../../libs/ajax";
 import MockAdapter from "axios-mock-adapter";
 
 import {
+    SET_FILTER_RELOAD_DELAY,
     TRIGGER_RELOAD,
     deleteMap,
     saveMap
@@ -51,21 +52,23 @@ describe('mapcatalog epics', () => {
         mockAxios.onGet().reply(200, {
             AttributeList: {}
         });
-        testEpic(deleteMapEpic, 2, deleteMap(testMap), actions => {
-            expect(actions.length).toBe(2);
+        testEpic(deleteMapEpic, 3, deleteMap(testMap), actions => {
+            expect(actions.length).toBe(3);
             expect(actions[0].type).toBe(SHOW_NOTIFICATION);
             expect(actions[0].level).toBe('success');
-            expect(actions[1].type).toBe(TRIGGER_RELOAD);
+            expect(actions[1].type).toBe(SET_FILTER_RELOAD_DELAY);
+            expect(actions[2].type).toBe(TRIGGER_RELOAD);
         }, {}, done);
     });
 
     it('saveMapEpic', (done) => {
         mockAxios.onPut().reply(200, {});
-        testEpic(saveMapEpic, 2, saveMap(testMap), actions => {
-            expect(actions.length).toBe(2);
+        testEpic(saveMapEpic, 3, saveMap(testMap), actions => {
+            expect(actions.length).toBe(3);
             expect(actions[0].type).toBe(SHOW_NOTIFICATION);
             expect(actions[0].level).toBe('success');
-            expect(actions[1].type).toBe(TRIGGER_RELOAD);
+            expect(actions[1].type).toBe(SET_FILTER_RELOAD_DELAY);
+            expect(actions[2].type).toBe(TRIGGER_RELOAD);
         }, {}, done);
     });
 });

@@ -12,12 +12,13 @@ module.exports = {
      * @param  {function} callback   The check function, called after `count` actions received
      * @param  {Object|function}   [state={}] the state or a function that return it
      */
-    testEpic: (epic, count, action, callback, state = {}, done) => {
+    testEpic: (epic, count, action, callback, state = {}, done, withCompleteAction = false) => {
         const actions = new Rx.Subject();
         const actions$ = new ActionsObservable(actions);
-        const store = { getState: () => isFunction(state) ? state() : state, dispatch: () => {}};
-        epic(actions$, store)
-            .take(count)
+        const store = { getState: () => isFunction(state) ? state() : state, dispatch: (a) => {
+            actions.next(a);
+        }};
+        epic(actions$, store)[isFunction(count) ? "takeWhile" : "take"](count, true).concat( withCompleteAction ? Rx.Observable.of({ type: "EPIC_COMPLETED"}) : [])
             .toArray()
             .subscribe(done ? (x) => {
                 try {
@@ -32,6 +33,7 @@ module.exports = {
         } else {
             actions.next(action);
         }
+        return store;
     },
     /**
      * The action emitted by the addTimeoutEpic

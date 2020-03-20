@@ -254,6 +254,8 @@
             "featuredMaps": "In Evidenza"
         },
         "newMap": "Nuova Mappa",
+        "newMapEmpty": "Mappa vuota",
+        "newMapContext": "Contesto esistente",
 		"maps": {
             "title": "Mappe",
             "addToFeaturedMaps": "Metti in evidenza",
@@ -279,7 +281,8 @@
                 "errorWhenSaving": "C'è stato un errore durante il salvataggio",
                 "errorWhenUpdating": "C'è stato un errore durante l'aggiornamento",
                 "errorWhenDeleting": "C'è stato un errore durante la cancellazione",
-                "errorSizeExceeded": "Riduci il contenuto o la qualità delle immagini"
+                "errorSizeExceeded": "Riduci il contenuto o la qualità delle immagini",
+                "errorLoadingContexts": "Si è verificato un errore durante il caricamento dei contesti"
             },
 			"search": "Cerca..."
 		},
@@ -643,6 +646,16 @@
                 "no_info_description": "Il pannello Informazioni Sulle Feature non comparirà",
                 "all_layers_description": "Il pannello Informazioni Sulle Feature mostrerà informazioni di tutti i layer presenti in mappa",
                 "single_layer_description": "Il pannello Informazioni Sulle Feature mostrerà i dati disponibili relativi all'elemento selezionato"
+            },
+            "advancedSearchPanel": {
+                "title": "Filtri di ricerca avanzata",
+                "context": {
+                    "title": "Contesto"
+                },
+                "showTooltip": "Mostra filtri avanzati",
+                "showTooltipActive": "Mostra filtri avanzati (attivo)",
+                "hideTooltip": "Nascondi filtri avanzati",
+                "hideTooltipActive": "Nascondi filtri avanzati (attivo)"
             }
         },
         "draw": {
@@ -1687,6 +1700,10 @@
                     "unknownError": "Si è verificato un errore durante il caricamento della mappa. Si prega di contattare l'amministratore",
                     "notFound": "La mappa si sta tentando di accedere non esiste"
                 },
+                "plugins": {
+                    "upload": "Errore durante l'upload del plugin",
+                    "uninstall": "Errore durante la disinstallazione del plugin"
+                },
                 "resourceAlreadyExists": "Una risorsa con questo nome esiste già"
             }
         },
@@ -2049,7 +2066,8 @@
                 "topLeft": "Angolo in alto a sinistra",
                 "topRight": "Angolo in alto a destra",
                 "bottomLeft": "Angolo in basso a sinistra",
-                "bottomRight": "Angolo in basso a destra"
+                "bottomRight": "Angolo in basso a destra",
+                "identify": "Identify"
             },
             "webPageCreator": {
                 "title": "Pagina web",
@@ -2155,6 +2173,11 @@
         "stepper": {
             "back": "Indietro",
             "next": "Avanti"
+        },
+        "newMapDialog": {
+            "title": "Seleziona un contesto",
+            "noContexts": "Nessun contesto trovato",
+            "filterPlaceholder": "Cerca contesti..."
         },
         "plugins": {
           "About": {
@@ -2356,6 +2379,7 @@
                 "uploadTitle": "Installa un plugin di MapStore",
                 "uploadParseError": "File index.json con formato errato",
                 "uploadMissingFileError": "File index.json mancante nel file",
+                "confirmRemovePlugin": "Sei sicuro di voler eliminare l'estensione?",
                 "tooltips": {
                     "enableUserPlugin": "Abilita la selezione del plug-in corrente per l'utente",
                     "disableUserPlugin": "Disabilita la selezione del plug-in corrente per l'utente",
@@ -2364,6 +2388,7 @@
                     "editConfiguration": "Modifica la configurazione del plugin",
                     "pluginDocumentation": "Apri la documentazione di configurazione del plugin",
                     "uploadPlugin": "Aggiungi una estensione a MapStore",
+                    "removePlugin": "Rimuovi questa estensione da MapStore",
                     "mapTemplatesConfig": "Configura modelli"
                 },
                 "saveCfgErrorNotification":  {

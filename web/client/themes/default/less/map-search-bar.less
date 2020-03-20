@@ -24,6 +24,7 @@ div.MapSearchBar .input-group-addon {
 }
 
 .navbar-dx .MapSearchBar .input-group,
+.navbar-dx .MapSearchBar .advanced-search-panel,
 .navbar-dx.shadow {
 	-webkit-box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
 	-moz-box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
@@ -182,6 +183,37 @@ div.MapSearchBar .input-group-addon {
         .btn-group-menu-options-format {
             top: 60px;
 
+        }
+    }
+}
+
+.MapSearchBar {
+    z-index: 1
+}
+
+.advanced-search-panel {
+    position: absolute;
+    width: 100%;
+    border-radius: 4px;
+    background-color: @ms2-color-background;
+    padding: 8px;
+
+    .advanced-search-title-area {
+        display: flex;
+
+        h5 {
+            flex-grow: 1;
+        }
+    }
+
+    .advanced-search-context {
+        h5 {
+            font-weight: bold;
+        }
+        .Select {
+            .Select-option.is-selected {
+                background-color: @ms2-color-background
+            }
         }
     }
 }

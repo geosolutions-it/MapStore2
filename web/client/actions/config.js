@@ -7,6 +7,7 @@
  */
 
 
+const LOAD_NEW_MAP = 'MAP:LOAD_NEW_MAP';
 const LOAD_MAP_CONFIG = "MAP_LOAD_MAP_CONFIG";
 const MAP_CONFIG_LOADED = 'MAP_CONFIG_LOADED';
 const MAP_CONFIG_LOAD_ERROR = 'MAP_CONFIG_LOAD_ERROR';
@@ -21,15 +22,15 @@ const MAP_SAVED = 'MAP:MAP_SAVED';
  * Configure the viewer to display the map
  * @param {object} conf map config
  * @param {number} mapId map resource id
- * @param {boolean} zoomToMaxExtent if true, trigger zooming to map's max extent instead of the zoom value specified in the config
+ * @param {boolean} zoomToExtent if provided, zooms to this extent after the map is configured
  */
-function configureMap(conf, mapId, zoomToMaxExtent) {
+function configureMap(conf, mapId, zoomToExtent) {
     return {
         type: MAP_CONFIG_LOADED,
         config: conf,
         legacy: !!mapId,
         mapId: mapId,
-        zoomToMaxExtent
+        zoomToExtent
     };
 }
 
@@ -41,18 +42,30 @@ function configureError(e, mapId) {
     };
 }
 
+function loadNewMap(configName, contextId) {
+    return {
+        type: LOAD_NEW_MAP,
+        configName,
+        contextId
+    };
+}
+
 /**
  * Loads map configuration
  * @param {string} configName map config url
- * @param {*} mapId resource id of the map on a server
- * @param {*} config full config, overrides configName if not null or undefined
+ * @param {number} mapId resource id of the map on a server
+ * @param {object} config full config, overrides configName if not null or undefined
+ * @param {object} mapInfo map info override
+ * @param {object} overrideConfig config override
  */
-function loadMapConfig(configName, mapId, config) {
+function loadMapConfig(configName, mapId, config, mapInfo, overrideConfig) {
     return {
         type: LOAD_MAP_CONFIG,
         configName,
         mapId,
-        config
+        config,
+        mapInfo,
+        overrideConfig
     };
 }
 function mapInfoLoaded(info, mapId) {
@@ -87,6 +100,7 @@ const mapSaveError = error => ({type: MAP_SAVE_ERROR, error});
 const mapSaved = () => ({type: MAP_SAVED});
 
 module.exports = {
+    LOAD_NEW_MAP,
     LOAD_MAP_CONFIG,
     MAP_CONFIG_LOADED,
     MAP_CONFIG_LOAD_ERROR,
@@ -96,6 +110,7 @@ module.exports = {
     MAP_INFO_LOAD_ERROR,
     MAP_SAVE_ERROR,
     MAP_SAVED,
+    loadNewMap,
     loadMapConfig,
     loadMapInfo,
     configureMap,

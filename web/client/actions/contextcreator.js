@@ -52,9 +52,13 @@ export const CONTEXT_SAVED = 'CONTEXTCREATOR:CONTEXT_SAVED';
 export const SAVE_CONTEXT = 'CONTEXTCREATOR:SAVE_CONTEXT';
 export const ENABLE_UPLOAD_PLUGIN = 'CONTEXTCREATOR:ENABLE_UPLOAD_PLUGIN';
 export const UPLOAD_PLUGIN = 'CONTEXTCREATOR:UPLOAD_PLUGIN';
-export const UPLOAD_PLUGIN_ERROR = 'CONTEXTCREATOR:UPLOAD_PLUGIN_ERROR';
 export const UPLOADING_PLUGIN = 'CONTEXTCREATOR:UPLOADING_PLUGIN';
 export const PLUGIN_UPLOADED = 'CONTEXTCREATOR:PLUGIN_UPLOADED';
+export const UPLOAD_PLUGIN_ERROR = 'CONTEXTCREATOR:UPLOAD_PLUGIN_ERROR';
+export const UNINSTALL_PLUGIN = 'CONTEXTCREATOR:UNINSTALL_PLUGIN';
+export const UNINSTALLING_PLUGIN = 'CONTEXTCREATOR:UNINSTALLING_PLUGIN';
+export const PLUGIN_UNINSTALLED = 'CONTEXTCREATOR:PLUGIN_UNINSTALLED';
+export const UNINSTALL_PLUGIN_ERROR = 'CONTEXTCREATOR:UNINSTALL_PLUGIN_ERROR';
 export const BACK_TO_PAGE_SHOW_CONFIRMATION = 'CONTEXTCREATOR:BACK_TO_PAGE_SHOW_CONFIRMATION';
 export const LOAD_EXTENSIONS = 'CONTEXTCREATOR:LOAD_EXTENSIONS';
 
@@ -87,10 +91,11 @@ export const changeAttribute = (key, value) => ({
     value
 });
 
-export const showDialog = (dialogName, show) => ({
+export const showDialog = (dialogName, show, payload = {}) => ({
     type: SHOW_DIALOG,
     dialogName,
-    show
+    show,
+    payload
 });
 
 /**
@@ -410,7 +415,15 @@ export const uploadPlugin = (files) => ({
 });
 
 /**
- * Starts the plugin upload workflow
+ * Starts the plugin uninstall workflow
+ */
+export const uninstallPlugin = (plugin) => ({
+    type: UNINSTALL_PLUGIN,
+    plugin
+});
+
+/**
+ * Receives upload error result
  */
 export const uploadPluginError = (files) => ({
     type: UPLOAD_PLUGIN_ERROR,
@@ -426,6 +439,15 @@ export const pluginUploading = (status = false, plugins) => ({
     plugins
 });
 
+/**
+ * Starts/ends plugin uninstall workflow
+ */
+export const pluginUninstalling = (status = false, plugin) => ({
+    type: UNINSTALLING_PLUGIN,
+    status,
+    plugin
+});
+
 export const loadExtensions = () => ({ type: LOAD_EXTENSIONS });
 
 /**
@@ -434,6 +456,24 @@ export const loadExtensions = () => ({ type: LOAD_EXTENSIONS });
 export const pluginUploaded = (plugins) => ({
     type: PLUGIN_UPLOADED,
     plugins
+});
+
+/**
+ * Receives uninstalled plugin result
+ */
+export const pluginUninstalled = (plugin, cfg) => ({
+    type: PLUGIN_UNINSTALLED,
+    plugin,
+    cfg
+});
+
+/**
+ * Receives uninstall error result
+ */
+export const uninstallPluginError = (plugin, error) => ({
+    type: UNINSTALL_PLUGIN_ERROR,
+    plugin,
+    error
 });
 
 export const showBackToPageConfirmation = (show) => ({

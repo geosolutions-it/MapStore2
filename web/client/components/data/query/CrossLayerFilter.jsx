@@ -12,7 +12,7 @@ const Message = require('../../I18N/Message');
 
 const SwitchPanel = require('../../misc/switch/SwitchPanel');
 const {Row, Col} = require('react-bootstrap');
-const Select = require('react-select');
+const Select = require('react-select').default;
 
 
 const GeometricOperationSelector = require('./GeometricOperationSelector');

@@ -6,9 +6,9 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import {Observable} from 'rxjs';
+import { Observable } from 'rxjs';
 import uuid from 'uuid/v1';
-import { includes, isNil } from 'lodash';
+import { includes, isNil, omit, isArray, isObject, get } from 'lodash';
 import GeoStoreDAO from '../api/GeoStoreDAO';
 
 const createLinkedResourceURL = (id, tail = "") => `rest/geostore/data/${id}${tail}`;
@@ -329,6 +329,40 @@ export const deleteResource = ({ id }, { deleteLinkedResources = true} = {}, API
             [id, ...ids].map(i => API.deleteResource(i))
         )
     );
+
+export const searchListByAttributes = (filter, options = {}, API = GeoStoreDAO) =>
+    Observable.defer(
+        () => API.searchListByAttributes(filter, options)
+    ).switchMap(result => {
+        const parseAttributes = (record) => {
+            const attributes = get(record, 'Attributes.attribute');
+            const attributesArray = isArray(attributes) && attributes || isObject(attributes) && [attributes];
+            return attributesArray && attributesArray.reduce((newAttributes, attribute) => ({...newAttributes, [attribute.name]: attribute.value}), {}) || {};
+        };
+
+        if (!result || !get(result, 'ExtResourceList.Resource')) {
+            return Observable.of(({
+                results: [],
+                totalCount: 0
+            }));
+        }
+
+        const resourceObj = get(result, 'ExtResourceList.Resource', []);
+        const resources = (isArray(resourceObj) ? resourceObj : [resourceObj]).map(resource => ({
+            ...omit(resource, 'Attributes'),
+            attributes: parseAttributes(resource)
+        }));
+
+        return (options.withPermissions ?
+            Observable.forkJoin(
+                resources.map(res => Observable.defer(() => API.getResourcePermissions(res.id, {}, true))
+                    .map(permissions => ({...res, permissions})))
+            ) : Observable.of(resources))
+            .map(resourcesArr => ({
+                results: resourcesArr,
+                totalCount: get(result, 'ExtResourceList.ResourceCount')
+            }));
+    });
 
 /**
 * Updates a resource attribute

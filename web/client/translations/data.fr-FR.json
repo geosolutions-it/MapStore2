@@ -254,6 +254,8 @@
             "featuredMaps": "Cartes en vedette"
         },
         "newMap": "Nouvelle carte",
+        "newMapEmpty": "Carte vide",
+        "newMapContext": "Contexte existant",
         "maps": {
             "title": "Cartes",
             "addToFeaturedMaps": "Ajouter aux cartes sélectionnées",
@@ -279,7 +281,8 @@
                 "errorWhenSaving": "Une erreur est survenue lors du processus d'enregistrement",
                 "errorWhenUpdating": "Une erreur s'est produite lors du processus de mise à jour",
                 "errorWhenDeleting": "Une erreur s'est produite lors du processus de suppression",
-                "errorSizeExceeded": "S'il vous plaît, réduisez la taille des détails ou la qualité des images"
+                "errorSizeExceeded": "S'il vous plaît, réduisez la taille des détails ou la qualité des images",
+                "errorLoadingContexts": "Une erreur s'est produite lors du chargement des contextes"
             },
             "search": "rechercher ..."
         },
@@ -643,6 +646,16 @@
                 "no_info_description": "Le panneau d'identification n'apparaîtra pas dans la recherche",
                 "all_layers_description": "Le panneau Identifier affichera des informations sur toutes les couches visibles sur la carte.",
                 "single_layer_description": "Le panneau Identify apparaîtra avec les données déjà disponibles via la recherche WFS"
+            },
+            "advancedSearchPanel": {
+                "title": "Filtres de recherche avancés",
+                "context": {
+                    "title": "Le contexte"
+                },
+                "showTooltip": "Afficher les filtres avancés",
+                "showTooltipActive": "Afficher les filtres avancés (actif)",
+                "hideTooltip": "Masquer les filtres avancés",
+                "hideTooltipActive": "Masquer les filtres avancés (actif)"
             }
         },
         "draw": {
@@ -1687,6 +1700,10 @@
                     "unknownError": "Il y avait une erreur de chargement de la carte. S'il vous plaît contacter l'administrateur",
                     "notFound": "La carte que vous essayez d'accéder n'existe pas"
                 },
+                "plugins": {
+                  "upload": "Erreur lors du téléchargement du plugin",
+                  "uninstall": "Erreur lors de la désinstallation du plugin"
+                },
                 "resourceAlreadyExists": "Une ressource avec ce nom existe déjà"
             }
         },
@@ -2048,7 +2065,8 @@
                 "topLeft": "En haut à gauche",
                 "topRight": "En haut à droite",
                 "bottomLeft": "En bas à gauche",
-                "bottomRight": "En bas à droite"
+                "bottomRight": "En bas à droite",
+                "identify": "Information"
             },
             "webPageCreator": {
                 "title": "Page Web",
@@ -2154,6 +2172,11 @@
         "stepper": {
             "back": "Retour",
             "next": "Suivant"
+        },
+        "newMapDialog": {
+            "title": "Sélectionnez un contexte",
+            "noContexts": "Aucun contexte trouvé",
+            "filterPlaceholder": "Contextes de recherche..."
         },
         "plugins": {
           "About": {
@@ -2273,7 +2296,7 @@
             "title": "Réglages"
           },
           "Share": {
-            "description": "Permet de partager la carte de manière variopus (lien, QR-Code, embed, réseaux sociaux ...)",
+            "description": "Permet de partager la carte de diverses manières (lien, QR-Code, embarqué, réseaux sociaux ...)",
             "title": "Outil de partage"
           },
           "StyleEditor": {
@@ -2353,6 +2376,9 @@
                 },
                 "uploadLabel": "Faites glisser un ensemble d'extensions ou cliquez pour le parcourir et le télécharger",
                 "uploadTitle": "Installer un plugin MapStore",
+                "uploadParseError": "le fichier index.json a le mauvais format",
+                "uploadMissingFileError": "fichier index.json manquant dans le zip",
+                "confirmRemovePlugin": "¿Está seguro de que desea eliminar la extensión?",
                 "tooltips": {
                     "enableUserPlugin": "Activer la sélection du plugin actuel pour l'utilisateur",
                     "disableUserPlugin": "Désactiver la sélection du plugin actuel pour l'utilisateur",
@@ -2361,6 +2387,7 @@
                     "editConfiguration": "Modifier la configuration du plugin",
                     "pluginDocumentation": "Ouvrir la documentation de configuration du plugin",
                     "uploadPlugin": "Ajouter une extension à MapStore",
+                    "removePlugin": "Supprimer cette extension de MapStore",
                     "mapTemplatesConfig": "Configurer le modèles"
                 },
                 "saveCfgErrorNotification":  {
