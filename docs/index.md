@@ -7,8 +7,8 @@ Bing or other servers compliant to OGC standards like WFS, CSW, WMC, WMS, WMTS a
 [MapStore](https://mapstore.geo-solutions.it/mapstore/#/) is used to find, view and query published geospatial data and to integrate multiple remote sources into a single map; the result is
 an high quality and user friendly framework that allows different kind of use cases by harmonizing remote data with smart and advanced 
 functionalities (like chart widgets, dashboards, timelines and others).
-[MapStore](https://mapstore.geo-solutions.it/mapstore/#/) resources are not only related to Maps but also Dashboards and Stories; in [MapStore](https://mapstore.geo-solutions.it/mapstore/#/) you can create your own innovative and fascinating 
-Application Context where users can save, manage and share its own resources by also managing access permissions to other groups of users.
+[MapStore](https://mapstore.geo-solutions.it/mapstore/#/) resources are not only related to Maps but also [Dashboards](https://mapstore.readthedocs.io/en/latest/user-guide/exploring-dashboards/) and **Stories**; in [MapStore](https://mapstore.geo-solutions.it/mapstore/#/) you can create your own innovative and fascinating 
+**Application Context** where users can save, manage and share its own resources by also managing access permissions to other groups of users.
 
 [MapStore](https://mapstore.geo-solutions.it/mapstore/#/) is not only a product but also a WebGIS framework. As a standard geoportal product, it is a web-based product that allows to provide  
 a powerful and interactive geospatial WebGIS, it provides a direct and real-time access to geospatial data warehouses and it supports all available 
