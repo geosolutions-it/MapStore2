@@ -12,7 +12,7 @@ const configureMockStore = require('redux-mock-store').default;
 const {createEpicMiddleware, combineEpics } = require('redux-observable');
 const {CALL_HISTORY_METHOD} = require('connected-react-router');
 const {
-    saveDetails, SET_DETAILS_CHANGED, MAPS_LIST_LOADING, MAPS_LIST_LOADED,
+    saveDetails, SET_DETAILS_CHANGED, MAPS_LIST_LOADING, MAPS_LIST_LOADED, MAPS_LIST_LOAD_ERROR,
     CLOSE_DETAILS_PANEL, closeDetailsPanel, loadMaps, MAPS_GET_MAP_RESOURCES_BY_CATEGORY,
     openDetailsPanel, UPDATE_DETAILS, DETAILS_LOADED, getMapResourcesByCategory,
     MAP_DELETING, MAP_DELETED, deleteMap, mapDeleted, TOGGLE_DETAILS_SHEET,
@@ -653,6 +653,25 @@ describe('Get Map Resource By Category Epic', () => {
             });
         }))
     );
+    it('test getMapsResourcesByCategoryEpic with an error', (done) => {
+        const mock = new MockAdapter(axios);
+        mock.onPost().reply(404);
+        testEpic(addTimeoutEpic(getMapsResourcesByCategoryEpic), 3, getMapResourcesByCategory('MAP', 'test', {
+            baseUrl,
+            params: { start: 0, limit: 12 }
+        }), actions => {
+            expect(actions.length).toBe(3);
+            expect(actions[0].type).toBe(LOADING);
+            expect(actions[0].value).toBe(true);
+            expect(actions[0].name).toBe('loadingMaps');
+            expect(actions[1].type).toBe(MAPS_LIST_LOAD_ERROR);
+            expect(actions[2].type).toBe(LOADING);
+            expect(actions[2].value).toBe(false);
+            expect(actions[2].name).toBe('loadingMaps');
+            mock.restore();
+            done();
+        });
+    });
 });
 const Persistence = require("../../api/persistence");
 const Rx = require("rxjs");
