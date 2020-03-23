@@ -34,6 +34,7 @@ require('./appPolyfill');
 const { augmentStore } = require('../../utils/StateUtils');
 
 const ErrorBoundary = require('react-error-boundary').default;
+const ErrorBoundaryFallbackComponent = require('./ErrorFallBackComp').default;
 
 const {LOAD_EXTENSIONS} = require('../../actions/contextcreator');
 
@@ -130,12 +131,13 @@ class StandardApp extends React.Component {
         const {plugins, requires} = this.props.pluginsDef;
         const {appStore, initialActions, appComponent, mode, ...other} = this.props;
         const App = dragDropContext(html5Backend)(this.props.appComponent);
+
         return this.state.initialized ?
-            <ErrorBoundary onError={e => {
-                console.error(e); // eslint-disable-line no-console
-            }}><Provider store={this.store}>
+            <ErrorBoundary FallbackComponent={ ErrorBoundaryFallbackComponent}>
+                <Provider store={this.store}>
                     <App {...other} plugins={assign(PluginsUtils.getPlugins({...plugins, ...this.state.pluginsRegistry}), { requires })} />
-                </Provider></ErrorBoundary>
+                </Provider>
+            </ErrorBoundary>
             : (<span><div className="_ms2_init_spinner _ms2_init_center"><div></div></div>
                 <div className="_ms2_init_text _ms2_init_center">Loading MapStore</div></span>);
     }
