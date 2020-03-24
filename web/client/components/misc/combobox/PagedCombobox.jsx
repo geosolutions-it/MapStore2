@@ -146,13 +146,15 @@ class PagedCombobox extends React.Component {
             options.push({ [this.props.textField]: '', [this.props.valueField]: '', disabled: true, pagination: this.renderPagination() });
         }
         const data = this.props.loading ? [] : options;
+
+        const ItemComponent = this.props.itemComponent;
         const field = (<Combobox
             placeholder={this.props.placeholder}
             dropUp={this.props.dropUp}
             busy={this.props.busy}
             data={data}
             disabled={this.props.disabled}
-            itemComponent={(other) => <this.props.itemComponent textField={this.props.textField} valueField={this.props.valueField} {...other}/>}
+            itemComponent={(other) => <ItemComponent textField={this.props.textField} valueField={this.props.valueField} {...other}/>}
             messages={this.props.messages || messages}
             open={this.props.open}
             filter={this.props.filter}
