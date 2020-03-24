@@ -650,6 +650,7 @@ PDOK.brtachtergrondkaartwater
 PDOK.luchtfotoRGB
 PDOK.luchtfotoIR
 ```
+
 ## Other supported formats
 
 The JSON format above is the standard MapStore format. Anyway MapStore allows to import/export different kinds of formats for maps.
