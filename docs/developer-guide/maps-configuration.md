@@ -347,7 +347,7 @@ e.g. (RESTful):
 
 e.g. (KVP)
 
-```json
+```javascript
 {
   "version": 2,
   "map": {
@@ -514,7 +514,7 @@ It's enough to add `provider` property and 'tileprovider' as type property to th
 
 i.e.
 
-```json
+```javascript
 {
     "type": "tileprovider",
     "title": "Title",
