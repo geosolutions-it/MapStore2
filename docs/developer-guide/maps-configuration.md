@@ -481,7 +481,7 @@ TODO
 
 example:
 
-```javascript
+```json
     {
         "type": "google",
         "title": "Google HYBRID",
@@ -496,7 +496,7 @@ example:
 
 example:
 
-```javascript
+```json
 {
     "type": "osm",
     "title": "Open Street Map",
@@ -514,7 +514,7 @@ It's enough to add `provider` property and 'tileprovider' as type property to th
 
 i.e.
 
-``` javascript
+```json
 {
     "type": "tileprovider",
     "title": "Title",
