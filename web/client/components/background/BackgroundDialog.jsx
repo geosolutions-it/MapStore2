@@ -262,7 +262,7 @@ export default class BackgroundDialog extends React.Component {
                         placeholder={LocaleUtils.getMessageById(this.context.messages, "backgroundDialog.titlePlaceholder")}
                         onChange={event => this.setState({title: event.target.value})}/>
                 </FormGroup>
-                this.renderSpecificTypeForm()
+                {this.renderSpecificTypeForm()}
             </Form>}
         </ResizableModal>);
     }

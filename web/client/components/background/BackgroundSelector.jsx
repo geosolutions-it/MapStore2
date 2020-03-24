@@ -123,7 +123,7 @@ class BackgroundSelector extends React.Component {
                                     this.props.onRemoveBackground(true, layer.title || layer.name || '', layer.id);
                                 }}
                             />}
-                            {this.props.mapIsEditable && !this.props.enabledCatalog && !!(layer.type === 'wms' || layer.type === 'wmts') &&
+                            {this.props.mapIsEditable && !this.props.enabledCatalog && !!(layer.type === 'wms' || layer.type === 'wmts' || layer.type === 'tms' || layer.type === 'tileprovider') &&
                                 <ToolbarButton
                                     glyph="wrench"
                                     className="square-button-md background-tool-button edit-button"

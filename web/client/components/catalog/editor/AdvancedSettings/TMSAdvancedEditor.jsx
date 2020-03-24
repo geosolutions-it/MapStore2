@@ -21,9 +21,9 @@ import { FormGroup, Checkbox, Col, ControlLabel } from "react-bootstrap";
 import InfoPopover from '../../../widgets/widget/InfoPopover';
 
 // TODO: add variants
-const INITIAL_CODE_VALUE = `{
+const INITIAL_CODE_VALUE = {
     "options": {}
-}`;
+};
 /**
  * Advanced settings form, used by TMS
  * @prop {object} service the service to edit
@@ -33,7 +33,12 @@ export default ({
     service = {},
     onChangeServiceProperty = () => { }
 }) => {
-    const [code, setCode] = useState(INITIAL_CODE_VALUE);
+    const settings = service.options || service.variants ? {
+        options: service.options || {},
+        variants: service.variants
+    } : undefined;
+    const INIT_CODE = JSON.stringify( settings || INITIAL_CODE_VALUE, true, 2);
+    const [code, setCode] = useState(INIT_CODE);
     const [valid, setValid] = useState(true);
     // parse code and set options
     useEffect(() => {
