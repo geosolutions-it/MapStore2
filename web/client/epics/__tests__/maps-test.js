@@ -708,8 +708,8 @@ describe('Create and update flow using persistence api', () => {
         });
     });
     it('test update flow ', done => {
-        testEpic(addTimeoutEpic(mapSaveMapResourceEpic), 5, saveMapResource( {id: 10}), actions => {
-            expect(actions.length).toBe(5);
+        testEpic(addTimeoutEpic(mapSaveMapResourceEpic), 6, saveMapResource( {id: 10}), actions => {
+            expect(actions.length).toBe(6);
             actions.map((action) => {
                 switch (action.type) {
                 case MAP_UPDATING:
@@ -727,8 +727,8 @@ describe('Create and update flow using persistence api', () => {
         });
     });
     it('test create with a null attribute', done => {
-        testEpic(addTimeoutEpic(mapSaveMapResourceEpic), 5, saveMapResource({id: 10, attributes: {context: null}}), actions => {
-            expect(actions.length).toBe(5);
+        testEpic(addTimeoutEpic(mapSaveMapResourceEpic), 6, saveMapResource({id: 10, attributes: {context: null}}), actions => {
+            expect(actions.length).toBe(6);
             actions.map((action) => {
                 switch (action.type) {
                 case MAP_UPDATING:
