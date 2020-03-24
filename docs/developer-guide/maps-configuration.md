@@ -266,7 +266,7 @@ A WMTS layer can have a `requestEncoding` that is RESTful or KVP. In case of RES
 
 e.g. (RESTful):
 
-```json
+```javascript
 
 {
   "version": 2,
