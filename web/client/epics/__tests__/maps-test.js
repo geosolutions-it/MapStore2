@@ -18,7 +18,7 @@ const {
     MAP_DELETING, MAP_DELETED, deleteMap, mapDeleted, TOGGLE_DETAILS_SHEET,
     saveMapResource, MAP_CREATED, SAVING_MAP, MAP_UPDATING, MAPS_LOAD_MAP, LOADING, LOAD_CONTEXTS
 } = require('../../actions/maps');
-const { mapInfoLoaded, MAP_SAVED, LOAD_MAP_INFO } = require('../../actions/config');
+const { mapInfoLoaded, MAP_SAVED, LOAD_MAP_INFO, MAP_CONFIG_LOADED } = require('../../actions/config');
 const {SHOW_NOTIFICATION} = require('../../actions/notifications');
 const {TOGGLE_CONTROL, SET_CONTROL_PROPERTY} = require('../../actions/controls');
 const {RESET_CURRENT_MAP, editMap} = require('../../actions/currentMap');
@@ -717,6 +717,7 @@ describe('Create and update flow using persistence api', () => {
                 case MAP_SAVED:
                 case SHOW_NOTIFICATION:
                 case LOAD_MAP_INFO:
+                case MAP_CONFIG_LOADED:
                     break;
                 default:
                     expect(true).toBe(false);
@@ -735,6 +736,7 @@ describe('Create and update flow using persistence api', () => {
                 case MAP_SAVED:
                 case SHOW_NOTIFICATION:
                 case LOAD_MAP_INFO:
+                case MAP_CONFIG_LOADED:
                     break;
                 default:
                     expect(true).toBe(false);
