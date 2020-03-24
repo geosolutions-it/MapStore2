@@ -89,21 +89,20 @@ class PluginsContainer extends React.Component {
         this.loadPlugins(this.props.pluginsState, this.props);
     }
 
-    UNSAFE_componentWillReceiveProps(newProps) {
-        this.loadPlugins(newProps.pluginsState, newProps);
-    }
-
     shouldComponentUpdate(nextProps, nextState) {
-        return nextProps.pluginsConfig !== this.props.pluginsConfig
-            || nextProps.plugins !== this.props.plugins
+        return !isEqual(nextProps.pluginsConfig, this.props.pluginsConfig)
+            || !isEqual(nextProps.plugins, this.props.plugins)
             || nextProps.params !== this.props.params
             || nextProps.mode !== this.props.mode
-            || nextProps.monitoredState !== this.props.monitoredState
+            || !isEqual(nextProps.monitoredState, this.props.monitoredState)
             || nextProps.className !== this.props.className
             || nextProps.style !== this.props.style
             || nextProps.defaultMode !== this.props.defaultMode
             || !isEqual(nextProps.pluginsState, this.props.pluginsState)
             || !isEqual(nextState.loadedPlugins, this.state.loadedPlugins);
+    }
+    UNSAFE_componentWillUpdate(newProps) {
+        this.loadPlugins(newProps.pluginsState, newProps);
     }
 
     getState = (path, newProps) => {
