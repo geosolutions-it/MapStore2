@@ -2086,7 +2086,7 @@
                 "textColorLabel": "Testo",
                 "shadowLabel": "Ombra",
                 "useAlternativeTextColor": "Usa colore testo alternativo",
-                "alternativeTextColorPopover": "<p>Attenzione: il colore del testo selezionato potrebbe essere non leggibili su questo sfondo.</p><p>Un colore alternativo è {color} &nbsp;<span class=\"ms-custom-theme-picker-alternative-text\" style=\"background-color:{color}\"></span></p>"
+                "alternativeTextColorPopover": "<p>Attenzione: il colore del testo selezionato potrebbe non essere leggibile su questo sfondo.</p><p>Un colore alternativo è {color} &nbsp;<span class=\"ms-custom-theme-picker-alternative-text\" style=\"background-color:{color}\"></span></p>"
             }
         },
          "saveDialog": {
