@@ -32,6 +32,7 @@ const searchAndPaginate = (layers, startPosition, maxRecords, text) => {
 export const getRecords = (url, startPosition, maxRecords, text, info) => {
     const service = get(info, 'options.service'); // this option allows to show also other layers
     let layers = [];
+    // existing tile provider from ConfigProvider
     if (service.provider && service.provider !== CUSTOM) {
         const variants = getVariants(service.provider);
         if (variants.length === 0) {
@@ -46,9 +47,11 @@ export const getRecords = (url, startPosition, maxRecords, text, info) => {
         }
     // custom service
     } else if (service.url) {
+        // only one layer, as configured
         // TODO: handle variants in options
         layers = [{
             ...service,
+            title: service.title,
             type: 'tileprovider',
             url: service.url,
             attribution: service.attribution,
@@ -56,6 +59,7 @@ export const getRecords = (url, startPosition, maxRecords, text, info) => {
             provider: CUSTOM // this overrides also in case of null value
         }];
     }
+    // fake request with generated layers
     return new Promise((resolve) => {
         resolve(searchAndPaginate(layers, startPosition, maxRecords, text));
     });

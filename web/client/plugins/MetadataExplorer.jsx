@@ -12,7 +12,7 @@ const {connect} = require('react-redux');
 
 const assign = require('object-assign');
 const {createSelector} = require("reselect");
-const { compose, branch, renderComponent, defaultProps } = require("recompose");
+const { compose, branch, renderComponent, defaultProps, withPropsOnChange } = require("recompose");
 const CatalogServiceEditor = require('../components/catalog/CatalogServiceEditor').default;
 
 const {Glyphicon, Panel} = require('react-bootstrap');
@@ -28,7 +28,7 @@ const {layersSelector} = require('../selectors/layers');
 const {setControlProperty, toggleControl} = require("../actions/controls");
 const {resultSelector, serviceListOpenSelector, newServiceSelector,
     newServiceTypeSelector, selectedServiceTypeSelector, searchOptionsSelector, servicesSelector,
-    servicesSelectorWithBackgrounds, formatsSelector, loadingErrorSelector, selectedServiceSelector,
+    servicesSelectorWithBackgrounds, loadingErrorSelector, selectedServiceSelector,
     modeSelector, layerErrorSelector, activeSelector, savingSelector, authkeyParamNameSelector,
     searchTextSelector, groupSelector, pageSizeSelector, loadingSelector, selectedServiceLayerOptionsSelector
 } = require("../selectors/catalog");
@@ -40,6 +40,8 @@ const Message = require("../components/I18N/Message");
 const DockPanel = require("../components/misc/panels/DockPanel");
 require('./metadataexplorer/css/style.css');
 const CatalogUtils = require('../utils/CatalogUtils');
+const DEFAULT_ALLOWED_PROVIDERS = ["OpenStreetMap", "OpenSeaMap", "Stamen"];
+
 
 const catalogSelector = createSelector([
     (state) => layersSelector(state),
@@ -58,13 +60,13 @@ const catalogSelector = createSelector([
     (state) => pageSizeSelector(state),
     (state) => loadingSelector(state),
     (state) => projectionSelector(state)
-], (layers, modalParams, authkeyParamNames, result, saving, openCatalogServiceList, service, newformat, selectedFormat, options, layerOptions, currentLocale, locales, pageSize, loading, crs) => ({
+], (layers, modalParams, authkeyParamNames, result, saving, openCatalogServiceList, service, format, selectedFormat, options, layerOptions, currentLocale, locales, pageSize, loading, crs) => ({
     layers,
     modalParams,
     authkeyParamNames,
     saving,
     openCatalogServiceList,
-    format: newformat,
+    format,
     service,
     currentLocale,
     pageSize,
@@ -108,7 +110,6 @@ const Catalog = compose(
             value: 'image/gif'
         }]
     }),
-
     branch(
         ({mode}) => mode === "edit",
         renderComponent(CatalogServiceEditor)
@@ -122,7 +123,7 @@ class MetadataExplorerComponent extends React.Component {
         source: PropTypes.string,
         active: PropTypes.bool,
         searchOnStartup: PropTypes.bool,
-        formats: PropTypes.array,
+        serviceTypes: PropTypes.array,
         wrap: PropTypes.bool,
         wrapWithPanel: PropTypes.bool,
         panelStyle: PropTypes.object,
@@ -145,6 +146,7 @@ class MetadataExplorerComponent extends React.Component {
 
     static defaultProps = {
         id: "mapstore-metadata-explorer",
+        serviceTypes: [{ name: "csw", label: "CSW" }, { name: "wms", label: "WMS" }, { name: "wmts", label: "WMTS" }, { name: "tms", label: "TMS", allowedProviders: DEFAULT_ALLOWED_PROVIDERS }],
         active: false,
         wrap: false,
         modal: true,
@@ -213,7 +215,6 @@ class MetadataExplorerComponent extends React.Component {
 
 const metadataExplorerSelector = createSelector([
     searchOptionsSelector,
-    formatsSelector,
     resultSelector,
     loadingErrorSelector,
     selectedServiceSelector,
@@ -226,9 +227,8 @@ const metadataExplorerSelector = createSelector([
     searchTextSelector,
     groupSelector,
     metadataSourceSelector
-], (searchOptions, formats, result, loadingError, selectedService, mode, services, servicesWithBackgrounds, layerError, active, dockStyle, searchText, group, source) => ({
+], (searchOptions, result, loadingError, selectedService, mode, services, servicesWithBackgrounds, layerError, active, dockStyle, searchText, group, source) => ({
     searchOptions,
-    formats,
     result,
     loadingError,
     selectedService,
@@ -274,6 +274,8 @@ const API = require('../api/catalog').default;
  * @name MetadataExplorer
  * @memberof plugins
  * @prop {string} cfg.hideThumbnail shows/hides thumbnail
+ * @prop {object[]} cfg.serviceTypes Service types available to add a new catalog. default: `[{ name: "csw", label: "CSW" }, { name: "wms", label: "WMS" }, { name: "wmts", label: "WMTS" }, { name: "tms", label: "TMS", allowedProviders }]`.
+ * `allowedProviders` is a whitelist of tileProviders from ConfigProvider.js. you can set a global variable allowedProviders in localConfig.json to set it up globally. You can configure it to "ALL" to get all the list (at your own risk, some services could change or not be available anymore)
  * @prop {object} cfg.hideIdentifier shows/hides identifier
  * @prop {boolean} cfg.hideExpand shows/hides full description button
  * @prop {number} cfg.zoomToLayer enable/disable zoom to layer when added

@@ -5,10 +5,12 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-
 import React from 'react';
+import {get, find} from 'lodash';
 import Message from '../../I18N/Message';
 import HTML from '../../I18N/HTML';
+
+import {getConfigProp} from '../../../utils/ConfigUtils';
 
 import InfoPopover from '../../widgets/widget/InfoPopover';
 import { FormControl as FC, Form, Col, FormGroup, ControlLabel } from "react-bootstrap";
@@ -37,11 +39,16 @@ const DefaultURLEditor = ({ service = {}, onChangeUrl = () => { } }) => (<FormGr
 // selector for tile provider
 import CONFIG_PROVIDER from '../../../utils/ConfigProvider';
 
-const PROVIDERS_ALLOWED = ["OpenStreetMap", "OpenSeaMap"];
-
 const getProviderLabel = k=> k === TMS ? "TMS 1.0.0" : k;
-const TmsURLEditor = ({ onChangeServiceProperty, service = {}, onChangeUrl = () => { }, onChangeTitle = () => { } }) => {
-    const providers = Object.keys(CONFIG_PROVIDER).filter(k => PROVIDERS_ALLOWED.indexOf(k) >= 0);
+const TmsURLEditor = ({ serviceTypes = [], onChangeServiceProperty, service = {}, onChangeUrl = () => { }, onChangeTitle = () => { } }) => {
+    const allowedProviders =
+        getConfigProp('allowedProviders') // this allows overriding of the allowed providers list to remove some service that has been deactivated from the list
+        || get(find(serviceTypes || [], {name: "tms"}), 'allowedProviders') // can be configured at plugin level or via props
+        || [];
+    const providers = Object.keys(CONFIG_PROVIDER)
+        .filter(k =>
+            allowedProviders === "ALL" // if set to "ALL" doesn't filter anything
+            || allowedProviders.indexOf(k) >= 0);
     const selectedProvider = service === TMS ? service : service?.provider?.split?.(".")?.[0];
     const isCustom = !selectedProvider || selectedProvider === CUSTOM;
     const isTMS = selectedProvider === TMS;
@@ -53,7 +60,13 @@ const TmsURLEditor = ({ onChangeServiceProperty, service = {}, onChangeUrl = () 
                 onChange={(e) => {
                     const provider = e.target.value;
                     onChangeServiceProperty("provider", `${provider}`);
-                    onChangeTitle(provider);
+                    // auto-set title for pre-configured tile provider
+                    if (provider !== CUSTOM && provider !== TMS) {
+                        onChangeTitle(provider);
+                    // auto reset if Title was set automatically
+                    } else if (!isCustom && !isTMS) {
+                        onChangeTitle("");
+                    }
                 }}
                 value={selectedProvider}
                 componentClass="select">
@@ -94,10 +107,11 @@ const TmsURLEditor = ({ onChangeServiceProperty, service = {}, onChangeUrl = () 
 
 /**
  * Main Form for editing a catalog entry
+ *
  */
 export default ({
     service = {},
-    formats,
+    serviceTypes, // TODO: this should be renamed most properly with something like serviceTypes
     onChangeTitle,
     onChangeUrl,
     onChangeServiceProperty,
@@ -113,7 +127,7 @@ export default ({
                         onChange={(e) => onChangeType(e.target.value)}
                         value={service && service.type}
                         componentClass="select">
-                        {formats.map((format) => <option value={format.name} key={format.name}>{format.label}</option>)}
+                        {serviceTypes.map((type) => <option value={type.name} key={type.name}>{type.label}</option>)}
                     </FormControl>
                 </Col>
                 <Col key="title" xs={12} sm={9} md={9}>
@@ -128,6 +142,6 @@ export default ({
                         onChange={(e) => onChangeTitle(e.target.value)} />
                 </Col>
             </FormGroup>
-            <URLEditor key="url-row" service={service} onChangeUrl={onChangeUrl} onChangeTitle={onChangeTitle} onChangeServiceProperty={onChangeServiceProperty} />
+            <URLEditor key="url-row" serviceTypes={serviceTypes} service={service} onChangeUrl={onChangeUrl} onChangeTitle={onChangeTitle} onChangeServiceProperty={onChangeServiceProperty} />
         </Form>);
 };

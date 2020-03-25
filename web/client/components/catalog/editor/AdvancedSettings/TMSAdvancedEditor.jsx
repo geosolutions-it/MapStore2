@@ -5,14 +5,11 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import React, { useState, useEffect} from 'react';
+import React from 'react';
 import { isEqual, isNil } from 'lodash';
 
-import { Controlled as CodeMirror } from 'react-codemirror2';
-import 'codemirror/lib/codemirror.css';
-import 'codemirror/addon/lint/lint';
-import 'codemirror/addon/lint/json-lint';
-import 'codemirror/mode/javascript/javascript';
+import JSONEditor from '../../../misc/codeEditors/JSONEditor';
+
 
 import Message from "../../../I18N/Message";
 import HTML from "../../../I18N/HTML";
@@ -31,38 +28,32 @@ const INITIAL_CODE_VALUE = {
  */
 export default ({
     service = {},
+    setValid = () => { },
     onChangeServiceProperty = () => { }
 }) => {
     const settings = service.options || service.variants ? {
         options: service.options || {},
         variants: service.variants
     } : undefined;
-    const INIT_CODE = JSON.stringify( settings || INITIAL_CODE_VALUE, true, 2);
-    const [code, setCode] = useState(INIT_CODE);
-    const [valid, setValid] = useState(true);
-    // parse code and set options
-    useEffect(() => {
-        try {
-            const config = JSON.parse(code);
-            const {options, variants} = config;
-            setValid(true);
-            if (!isEqual(options, service.options)) {
-                onChangeServiceProperty("options", options);
-            }
-            if (!isEqual(variants, service.variants)) {
-                onChangeServiceProperty("variants", variants);
-            }
-        } catch (e) {
-            setValid(false);
-            if (service.options) {
-                onChangeServiceProperty("options", undefined);
-            }
-            if (service.variants) {
-                onChangeServiceProperty("variants", undefined);
-            }
-
+    const onValid = (config) => {
+        const { options, variants } = config;
+        if (!isEqual(options, service.options)) {
+            onChangeServiceProperty("options", options);
         }
-    }, [code]);
+        if (!isEqual(variants, service.variants)) {
+            onChangeServiceProperty("variants", variants);
+        }
+        setValid(true);
+    };
+    const onError = () => {
+        if (service.options) {
+            onChangeServiceProperty("options", undefined);
+        }
+        if (service.variants) {
+            onChangeServiceProperty("variants", undefined);
+        }
+        setValid(false);
+    };
     return (<div>
         <FormGroup controlId="autoload" key="autoload">
             <Col xs={12}>
@@ -80,20 +71,7 @@ export default ({
             {!service.provider || service.provider === "custom"
                 ? <Col>
                     <ControlLabel><Message msgId="catalog.tms.customTMSConfiguration" />&nbsp;&nbsp;<InfoPopover text={<HTML msgId="catalog.tms.customTMSConfigurationHint" />} /></ControlLabel>
-                    <CodeMirror
-                        options={{
-                            theme: 'lesser-dark',
-                            mode: 'application/json',
-                            lineNumbers: true,
-                            styleSelectedText: true,
-                            indentUnit: 2,
-                            tabSize: 2
-                        }}
-                        value={code}
-                        onBeforeChange={(_, __, value) => {
-                            setCode(value);
-                        }}
-                    />
+                    <JSONEditor json={settings || INITIAL_CODE_VALUE} onValid={onValid} onError={onError} />
                 </Col>
                 : null}
         </FormGroup>

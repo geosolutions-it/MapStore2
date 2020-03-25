@@ -345,7 +345,7 @@ const converters = {
             // custom or static tile provider
             return data.records.map(record => {
                 return {
-                    title: record.provider,
+                    title: record.title || record.provider,
                     url: record.url,
                     attribution: record.attribution,
                     options: record.options,
