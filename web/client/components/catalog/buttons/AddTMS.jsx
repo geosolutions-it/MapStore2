@@ -26,8 +26,8 @@ export default ({ record, service, children, addLayer = () => { }, ...props }) =
         onClick={() => {
             setLoading(true);
             getTileMap(record.tileMapUrl).then( tileMap => {
-                addLayer(tmsToLayer(record, tileMap, service));
                 setLoading(false);
+                addLayer(tmsToLayer(record, tileMap, service));
             });
         }}>
         {loading ? <LoadingSpinner /> : children}
