@@ -74,7 +74,7 @@ export const AlignButtonToolbar = ({editMap: disabled = false, align, sectionTyp
         onSelect={(selected) => update('align', selected)}/>
     );
 
-export const ThemeButtonToolbar = ({editMap: disabled = false, theme, themeStyle, storyTheme, align, sectionType, update = () => {}, themeProps, size }) =>
+export const ThemeButtonToolbar = ({editMap: disabled = false, theme, storyTheme, align, sectionType, update = () => {}, themeProps, size }) =>
     (<ToolbarDropdownButton
         value={theme}
         noTooltipWhenDisabled
@@ -87,34 +87,37 @@ export const ThemeButtonToolbar = ({editMap: disabled = false, theme, themeStyle
             || isString(value)
             || value === undefined;
         }}
-        hideMenuItem={(value, option) => {
-            return isObject(value) && (isString(option?.value) || option?.value === undefined);
+        hideMenuItem={(selected, options) => {
+            return selected?.value === 'custom' && options?.value !== 'custom';
         }}
         options={[{
             value: '',
-            isActive: (value) => value === undefined || value === '',
+            isActive: (current) =>
+                current === undefined || current === ''
+                || isObject(current) && (current.value === undefined || current.value === ''),
             label: <Message msgId="geostory.contentToolbar.defaultThemeLabel"/>
         }, {
             value: 'bright',
+            isActive: (current) => current?.value === 'bright' || current === 'bright',
             label: <Message msgId="geostory.contentToolbar.brightThemeLabel"/>
         }, {
             value: 'dark',
+            isActive: (current) => current?.value === 'dark' || current === 'dark',
             label: <Message msgId="geostory.contentToolbar.darkThemeLabel"/>
         }, {
-            value: isObject(theme) && theme || {},
+            value: 'custom',
             Component: (props) => (
                 <CustomThemePickerMenuItem
                     { ...props }
                     disableBackgroundAlpha={themeProps?.disableBackgroundAlpha}
                     disableShadow={themeProps?.disableShadow}
                     disableTextColor={themeProps?.disableTextColor}
-                    themeStyle={themeStyle}
                     onUpdate={update}
                     storyTheme={storyTheme}
                 />
             )
         }]}
-        onSelect={(selected) => update('theme', selected)}/>
+        onSelect={(value) => update('theme', { ...(isObject(theme) && theme), value })}/>
     );
 
 

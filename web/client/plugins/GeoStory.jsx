@@ -40,7 +40,7 @@ const GeoStory = ({
 );
 
 const storyThemeSelector = (state) => {
-    return settingsSelector(state)?.theme || {};
+    return settingsSelector(state)?.theme?.general || {};
 };
 
 /**

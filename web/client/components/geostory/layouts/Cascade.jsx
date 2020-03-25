@@ -20,7 +20,6 @@ import {Modes, SectionTypes, SectionTemplates} from '../../../utils/GeoStoryUtil
 
 import withFocusMask from './sections/enhancers/withFocusMask';
 import isObject from 'lodash/isObject';
-import isString from 'lodash/isString';
 
 const ContainerDimensions = emptyState(
     ({ sections = [] }) => sections.length === 0,
@@ -117,10 +116,9 @@ const Cascade = ({
             const sizeClassName = containerSize ? ` ms-${containerSize}` : '';
             const isBackgroundMediaExpandable = containerSize === 'sm';
             const storyTheme = theme && isObject(theme) && theme || {};
-            const themeClassName = theme && isString(theme) && ` ms-${theme}` || '';
             return (<div
                 id="ms-sections-container"
-                className={`ms-sections-container${sizeClassName}${themeClassName}`}
+                className={`ms-sections-container${sizeClassName}`}
                 style={storyTheme}>
                 {
                     sections.map(({ contents = [], id: sectionId, type: sectionType, cover }) => {

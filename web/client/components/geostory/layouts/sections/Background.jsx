@@ -15,8 +15,7 @@ import { lists, getClassNameFromProps, Modes } from '../../../../utils/GeoStoryU
 import ContentToolbar from '../../contents/ContentToolbar';
 import { Portal } from 'react-overlays';
 import pattern from './patterns/grid.svg';
-import { SectionTypes } from './../../../../utils/GeoStoryUtils';
-import isObject from 'lodash/isObject';
+import { SectionTypes, getThemeStyleFromProps } from './../../../../utils/GeoStoryUtils';
 
 /**
  * Background.
@@ -64,7 +63,7 @@ class Background extends Component {
     };
 
     render() {
-        const theme = this.props.theme && isObject(this.props.theme) && this.props.theme || {};
+        const theme = getThemeStyleFromProps(this.props);
         const parentNode = !this.props.disableToolbarPortal && this.refs && this.refs.div && this.refs.div.parentNode;
         const defaultTools = this.props.sectionType === SectionTypes.TITLE ? ['editMedia', 'cover' ] : ['editMedia' ];
         const toolbar = (

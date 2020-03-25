@@ -86,7 +86,10 @@ describe('Background component', () => {
         ReactDOM.render(<Background
             backgroundPlaceholder={{}}
             theme={{
-                backgroundColor: BACKGROUND_COLOR
+                value: 'custom',
+                custom: {
+                    backgroundColor: BACKGROUND_COLOR
+                }
             }}
         />, document.getElementById("container"));
         const container = document.getElementById('container');

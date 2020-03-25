@@ -52,7 +52,7 @@ describe('ContentToolbar component', () => {
         name: "theme",
         length: 4,
         totButtons: 1,
-        aTag: ["", "bright", "dark", {}]
+        aTag: ["", "bright", "dark", "custom"]
     }];
     testItems.forEach(tool => {
         it(`ContentToolbar rendering ${tool.name} item and click event`, (done) => {
@@ -60,7 +60,11 @@ describe('ContentToolbar component', () => {
                 tools={[tool.name]}
                 update={(t, selected) => {
                     expect(t).toEqual(tool.name);
-                    expect(includes(tool.aTag, selected)).toEqual(true);
+                    if (tool.name === 'theme') {
+                        expect(includes(tool.aTag, selected.value)).toEqual(true);
+                    } else {
+                        expect(includes(tool.aTag, selected)).toEqual(true);
+                    }
                     done();
                 }}
             />, document.getElementById("container"));

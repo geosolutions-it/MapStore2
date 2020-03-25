@@ -13,9 +13,11 @@
   }],
   "settings": {
     "theme": {
-      "color": "#333333",
-      "backgroundColor": "#ffffff",
-      "borderColor": "#e6e6e6"
+      "general": {
+        "color": "#333333",
+        "backgroundColor": "#ffffff",
+        "borderColor": "#e6e6e6"
+      }
     }
   },
   "sections": [

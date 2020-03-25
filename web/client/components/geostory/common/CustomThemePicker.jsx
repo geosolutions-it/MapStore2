@@ -20,10 +20,10 @@ import tooltip from '../../misc/enhancers/tooltip';
 const Button = tooltip(ButtonRB);
 /**
  * CustomThemePicker: compact theme input fields provides editing for text, background and shadow
- * @prop {object} theme theme object
- * @prop {string} theme.color theme text color css style
- * @prop {string} theme.backgroundColor theme background color css style
- * @prop {string} theme.boxShadow theme box shadow css style
+ * @prop {object} themeStyle theme object
+ * @prop {string} themeStyle.color theme text color css style
+ * @prop {string} themeStyle.backgroundColor theme background color css style
+ * @prop {string} themeStyle.boxShadow theme box shadow css style
  * @prop {bool} disableBackgroundAlpha disable alpha for background color picker
  * @prop {bool} disableTextColor disable text color input field
  * @prop {bool} disableShadow disable shadow input field
@@ -32,7 +32,7 @@ const Button = tooltip(ButtonRB);
  * @prop {string} placement preferred placement of picker, one of `top`, `right`, `bottom` or `left`
  */
 function CustomThemePicker({
-    theme,
+    themeStyle,
     disableBackgroundAlpha,
     disableTextColor,
     disableShadow,
@@ -42,8 +42,8 @@ function CustomThemePicker({
 }) {
 
     const trigger = useRef();
-    const backgroundColor = theme?.backgroundColor;
-    const color = theme?.color;
+    const backgroundColor = themeStyle?.backgroundColor;
+    const color = themeStyle?.color;
 
     const mostReadableTextColor = !disableTextColor && backgroundColor && color
         && !tinycolor.isReadable(color, backgroundColor)
@@ -67,11 +67,11 @@ function CustomThemePicker({
                         const borderColor = tinycolor(newBackgroundColor).isLight()
                             ? tinycolor(newBackgroundColor).darken(10).toHexString()
                             : tinycolor(newBackgroundColor).lighten(15).toHexString();
-                        const readableTextColor = !disableTextColor && !theme?.color && {
+                        const readableTextColor = !disableTextColor && !themeStyle?.color && {
                             color: tinycolor.mostReadable(newBackgroundColor, ['#000000', '#ffffff'], { includeFallbackColors: true }).toHexString()
                         };
                         onChange({
-                            ...theme,
+                            ...themeStyle,
                             backgroundColor: newBackgroundColor,
                             borderColor,
                             ...(!disableTextColor && readableTextColor)
@@ -106,7 +106,7 @@ function CustomThemePicker({
                                 display: 'block'
                             }}
                             onClick={() =>  {
-                                onChange({ ...theme, color: mostReadableTextColor });
+                                onChange({ ...themeStyle, color: mostReadableTextColor });
                                 trigger.current?.hide?.();
                             }}>
                             <Message msgId="geostory.customizeTheme.useAlternativeTextColor"/>
@@ -131,7 +131,7 @@ function CustomThemePicker({
                     presetColors={[]}
                     onChangeColor={(newColor) => {
                         onChange({
-                            ...theme,
+                            ...themeStyle,
                             color: newColor
                         });
                     }}/>
@@ -142,9 +142,9 @@ function CustomThemePicker({
             <div><Message msgId="geostory.customizeTheme.shadowLabel"/></div>
             <div>
                 <SwitchButton
-                    checked={theme?.boxShadow}
+                    checked={themeStyle?.boxShadow}
                     onChange={() => {
-                        const { boxShadow, MozBoxShadow, WebkitBoxShadow, ...newTheme } = theme || {};
+                        const { boxShadow, MozBoxShadow, WebkitBoxShadow, ...newTheme } = themeStyle || {};
                         onChange(boxShadow
                             ? { ...newTheme }
                             : {
@@ -160,8 +160,8 @@ function CustomThemePicker({
 }
 
 export function CustomThemePickerMenuItem({
+    selected,
     value,
-    themeStyle,
     storyTheme,
     onUpdate,
     onActive,
@@ -170,12 +170,21 @@ export function CustomThemePickerMenuItem({
     disableShadow
 }) {
 
-    const handleUpdateTheme = (theme) => {
-        onUpdate('theme', theme);
-        // store properties of the theme style
-        if (isObject(theme)) {
-            onUpdate('themeStyle', theme);
+    const handleUpdateTheme = (key, themeStyle) => {
+        const selectedTheme = isObject(selected) && selected;
+        if (themeStyle) {
+            return onUpdate('theme', {
+                ...selectedTheme,
+                value: key,
+                [value]: {
+                    ...themeStyle
+                }
+            });
         }
+        return onUpdate('theme', {
+            ...selectedTheme,
+            value: key
+        });
     };
 
     const {
@@ -190,8 +199,8 @@ export function CustomThemePickerMenuItem({
         ...storyThemeBackgroundColor
     };
 
-    const isActive = isObject(value);
-    const theme = isActive && value || themeStyle || defaultTheme;
+    const isActive = selected?.value === value;
+    const themeStyle = selected?.[value] || defaultTheme;
 
     return (
         <>
@@ -204,7 +213,7 @@ export function CustomThemePickerMenuItem({
                     className="square-button-md no-border"
                     onClick={(event) => {
                         event.stopPropagation();
-                        handleUpdateTheme();
+                        handleUpdateTheme('');
                     }}>
                     <Glyphicon glyph="trash"/>
                 </Button>
@@ -212,7 +221,7 @@ export function CustomThemePickerMenuItem({
             : <>
             <MenuItem
                 active={isActive}
-                onClick={() => handleUpdateTheme(theme)}>
+                onClick={() => handleUpdateTheme(value, themeStyle)}>
                 <Message msgId="geostory.contentToolbar.customizeThemeLabel"/>
             </MenuItem>
             </>}
@@ -222,8 +231,8 @@ export function CustomThemePickerMenuItem({
                 disableBackgroundAlpha={disableBackgroundAlpha}
                 disableTextColor={disableTextColor}
                 disableShadow={disableShadow}
-                theme={theme}
-                onChange={handleUpdateTheme}
+                themeStyle={themeStyle}
+                onChange={(newTheme) => handleUpdateTheme(value, newTheme)}
                 onOpen={onActive}
             />
         </div>}

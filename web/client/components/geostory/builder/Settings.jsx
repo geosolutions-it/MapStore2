@@ -57,11 +57,11 @@ export default ({
                 <ControlLabel><Message msgId="geostory.builder.settings.theme"/></ControlLabel>
             </div>
             <CustomThemePicker
-                theme={settings?.theme}
+                themeStyle={settings?.theme?.general}
                 placement="right"
                 disableBackgroundAlpha
                 disableShadow
-                onChange={(theme) => onUpdateSettings("theme", theme)}/>
+                onChange={(general) => onUpdateSettings("theme", { ...settings?.theme, general })}/>
         </FormGroup>
         <FormGroup>
             <div style={{ marginBottom: "10px"}}>

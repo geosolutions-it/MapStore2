@@ -35,7 +35,7 @@ export default ({
     router,
     buttons = []
 }) => {
-    const theme = settings?.theme;
+    const theme = settings?.theme?.general;
     const {
         borderColor,
         color,

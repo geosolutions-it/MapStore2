@@ -18,6 +18,7 @@ import values from "lodash/values";
 import filter from "lodash/filter";
 import merge from "lodash/merge";
 import isString from "lodash/isString";
+import isObject from "lodash/isObject";
 import includes from "lodash/includes";
 import uuid from 'uuid';
 
@@ -73,15 +74,29 @@ export const lists = {
 
 /**
  * Return a class name from props of a content
- * @prop {string} theme one of 'bright', 'dark', 'dark-transparent' or 'bright-transparent'
+ * @prop {object} theme theme object
+ * @prop {string} theme.value one of 'bright', 'dark', 'dark-transparent' or 'bright-transparent'
  * @prop {string} align one of 'center', 'left' or 'right'
  * @prop {string} size one of 'full', 'large', 'medium' or 'small'
  */
-export const getClassNameFromProps = ({ theme = '', align = 'center', size = 'full' }) => {
-    const themeClassName = theme && isString(theme) && ` ms-${theme}` || '';
+export const getClassNameFromProps = ({ theme = {}, align = 'center', size = 'full' }) => {
+    const themeValue = theme?.value || isString(theme) && theme;
+    const themeClassName = themeValue && themeValue !== 'custom' && isString(themeValue) && ` ms-${themeValue}` || '';
     const alignClassName = ` ms-align-${align}`;
     const sizeClassName = ` ms-size-${size}`;
     return `${themeClassName}${alignClassName}${sizeClassName}`;
+};
+
+/**
+ * Return a theme style props of a content and background
+ * @prop {object} theme one of 'bright', 'dark', 'dark-transparent' or 'bright-transparent'
+ * @prop {string} theme.value style key
+ * @prop {string} theme[theme.value] a style object referred to the style key
+ */
+export const getThemeStyleFromProps = ({ theme = {} }) => {
+    const styleKey = theme?.value;
+    const style = theme?.[styleKey];
+    return isObject(style) && style || {};
 };
 
 /**

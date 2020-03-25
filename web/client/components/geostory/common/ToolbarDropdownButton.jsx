@@ -64,7 +64,8 @@ export default function ToolbarDropdownButton({
                     : (
                         <Component
                             key={option.value}
-                            value={value}
+                            selected={value}
+                            value={option.value}
                             active={isFunction(option?.isActive) && option.isActive(value)
                             || !isNil(value) && value === option.value}
                             onClick={option?.Component ? onSelect : () => onSelect(option.value)}
