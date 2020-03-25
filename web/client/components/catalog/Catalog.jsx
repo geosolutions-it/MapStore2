@@ -66,7 +66,6 @@ class Catalog extends React.Component {
         onAddBackgroundProperties: PropTypes.func,
         modalParams: PropTypes.object,
         layers: PropTypes.array,
-        onUpdateThumbnail: PropTypes.func,
         clearModal: PropTypes.func,
         formatOptions: PropTypes.array,
         layerBaseConfig: PropTypes.object
@@ -249,7 +248,6 @@ class Catalog extends React.Component {
                         ? { ...record, metadataTemplate }
                         : record)}
                 clearModal={this.props.clearModal}
-                onUpdateThumbnail={this.props.onUpdateThumbnail}
                 layers={this.props.layers}
                 modalParams={this.props.modalParams}
                 onAddBackgroundProperties={this.props.onAddBackgroundProperties}

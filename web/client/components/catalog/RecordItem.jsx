@@ -61,7 +61,6 @@ class RecordItem extends React.Component {
         onAdd: PropTypes.func,
         source: PropTypes.string,
         onAddBackgroundProperties: PropTypes.func,
-        onUpdateThumbnail: PropTypes.func,
         deletedId: PropTypes.string,
         clearModal: PropTypes.func,
         service: PropTypes.service,
@@ -74,7 +73,6 @@ class RecordItem extends React.Component {
         buttonSize: "small",
         crs: "EPSG:3857",
         currentLocale: 'en-US',
-        onUpdateThumbnail: () => {},
         onAddBackgroundProperties: () => {},
         hideThumbnail: false,
         hideIdentifier: false,
@@ -363,6 +361,7 @@ class RecordItem extends React.Component {
     }
 
     addLayer = (layer, {background} = {}) => {
+        // TODO: extenralize this switch
         if (this.props.source === 'backgroundSelector') {
             if (background) {
                 // background
