@@ -13,10 +13,10 @@ import { Button as ButtonRB } from 'react-bootstrap';
 
 import tooltip from '../../misc/enhancers/tooltip';
 const Button = tooltip(ButtonRB);
+import LoadingSpinner from '../../misc/LoadingSpinner';
 
 import { getTileMap } from '../../../api/TMS';
 import { tmsToLayer } from '../../../utils/CatalogUtils';
-
 
 export default ({ record, service, children, addLayer = () => { }, ...props }) => {
     const [loading, setLoading] = useState(false);
@@ -30,6 +30,6 @@ export default ({ record, service, children, addLayer = () => { }, ...props }) =
                 setLoading(false);
             });
         }}>
-        {children}
+        {loading ? <LoadingSpinner /> : children}
     </Button>);
 };
