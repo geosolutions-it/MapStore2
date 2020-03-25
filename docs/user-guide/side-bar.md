@@ -1,94 +1,91 @@
 # Sidebar
 *********
 
-The sidebar is a navigation panel containing various elements that help the user to explore the map. It incorporates tools for zooming, changing the extent, navigating in 3D mode and querying objects on the map. Moreover, the following icon <img src="../img/button/collapse.jpg" class="ms-docbutton"/> is used to expand/collapse the sidebar.
+The *Sidebar* is a navigation panel containing various elements that help the user to explore the map. In particular, it is possible zooming, changing the extent, navigating in 3D mode and querying objects on the map. 
+Moreover, the following icon <img src="../img/button/collapse.jpg" class="ms-docbutton"/> is used to expand/collapse the sidebar.
 
-<img src="../img/side-bar/side-bar-1.jpg" class="ms-docimage"/>
+<img src="../img/side-bar/sidebar.jpg" class="ms-docimage"/>
 
 Geolocation tool
 ----------------
 
-The Geolocation tool allows you to locate your real position on the map.
-
-* **Click** on the *Locate me* icon <img src="../img/button/geolocation.jpg" class="ms-docbutton"/>. The icon will be highlighted in green and your position will be shown on the map.
+Trought the *Show my position* <img src="../img/button/geolocation.jpg" class="ms-docbutton"/> the user can center the map on his position. Therefore the button turns green. 
 
 <img src="../img/side-bar/position.jpg" class="ms-docimage"/>
+
+The position is still active even when the user interacts with the map; with a single click on the button it is possible re-center the map on his position. 
+To desable the position the button needs to be duble clicked. 
 
 Zooming tools
 -------------
 
-[MapStore](https://mapstore.geo-solutions.it/mapstore/#/) provides several tools to zoom in and out, and to switch the map extent.
+[MapStore](https://mapstore.geo-solutions.it/mapstore/#/) provides several tools allows the user to:
 
-* You can increase the map zoom by using the zoom in icon <img src="../img/button/zoom-in.jpg" class="ms-docbutton"/>.
+* **Increase** <img src="../img/button/zoom-in.jpg" class="ms-docbutton"/> the map zoom
 
-* You can decrease the map zoom by using the zoom out icon <img src="../img/button/zoom-out.jpg" class="ms-docbutton"/>.
+* **Decrease** <img src="../img/button/zoom-out.jpg" class="ms-docbutton"/> the map zoom
 
-* You can switch to full screen view <img src="../img/button/full-screen.jpg" class="ms-docbutton"/>.
+* **Switch to full screen**  <img src="../img/button/full-screen.jpg" class="ms-docbutton"/> view
 
-* You can navigate through the extents used in a session by going back <img src="../img/button/back-extent.jpg" class="ms-docbutton"/> and forward <img src="../img/button/forward-extent.jpg" class="ms-docbutton"/> or to zoom to the maximum extent <img src="../img/button/max-extent.jpg" class="ms-docbutton"/>.
+* **Go back** <img src="../img/button/back-extent.jpg" class="ms-docbutton"/> to the last change 
+
+* **Go forward** <img src="../img/button/forward-extent.jpg" class="ms-docbutton"/> to the last change 
+
+* **Zoom to the maximum extent** <img src="../img/button/max-extent.jpg" class="ms-docbutton"/> the map
 
 3D Navigation
 -------------
 
-Based on CesiumJS, a 3D Navigator is implemented in [MapStore](https://mapstore.geo-solutions.it/mapstore/#/) that allows you to display the map contents in 3D mode, particularly the layers will be overlaid on the globe.
-
-* **Open** a new map then **Add** a layer.
-
-* **Click** on the 3D icon <img src="../img/button/3D-icon.jpg" class="ms-docbutton"/> in the *Sidebar*.
-
-The scene will switch from 2D to 3D display mode and you will be guided by a brief tutorial that explain you how to interact with the map.
+Based on CesiumJS, a **3D Navigator** <img src="../img/button/3D-icon.jpg" class="ms-docbutton"/> is implemented in [MapStore](https://mapstore.geo-solutions.it/mapstore/#/) that allows the user to display the map contents in 3D mode. In particularly the layers will be overlaid on the globe and it is possible to orbit around the globe trought the compass place in the upper right corner of the map.
 
 <img src="../img/side-bar/3D-mode.jpg" class="ms-docimage"/>
 
 ## Identify Tool
 
-The Identify tool  <img src="../img/button/identify.jpg" class="ms-docbutton"/> allows you to interact with the map by clicking on features to get information stored in the attribute table of the queried feature. It is active by default as the green color suggests.
+Getting information about the layers, which have been loaded into the map, is possible thanks to the **Identify** button <img src="../img/button/identify.jpg" class="ms-docbutton"/>, through which the attribute table, where the characteristics of the layer are stored, is queried. 
+The tool is active by default, as suggested by the green of the button. Therefore by clicking on a point on the level opens a modal window on the right side. On the window are dispalyed the requested information and the coordinates of the point.
 
-* **Add** a layer to the map (e.g. USA Population).
+<img src="../img/side-bar/identify-tool.jpg" class="ms-docimage"/>
 
-* **Click** on a feature of the layer added previously. A pop-up page will open on the right showing the requested information and the coordinates of the point.
+The returned information are viewed in Text plain format by default. It is possible to change the format selecting the <img src="../img/button/setting_button.jpg" class="ms-docbutton"/> option in [Burger Menu](menu-bar.md#burger-menu) where the user can select, from the list menu *Identify response format*, three different formats: **TEXT**, **HTML** and **PROPERTIES**.
 
-<img src="../img/side-bar/get_feature_info.jpg" class="ms-docimage"/>
+<img src="../img/side-bar/format-options.jpg" class="ms-docimage" style="max-width:400px;"/>
 
-The returned information are viewed in Text plain format by default. In order to change it:
+The information will be returned in the format chosen by the user. For exaple with *PROPERTIES* format as follows:
 
-* **Navigate** into *Settings* from the main menu bar.
-
-<img src="../img/side-bar/settings.jpg" class="ms-docimage"/>
-
-* **Select** from the list menu *Identify response format* another format (e.g. HTML) then **Click** on a feature.
-
-<img src="../img/side-bar/info_formats.jpg" class="ms-docimage" style="max-width:500px;"/>
-
-* The informations will be returned as HTML accordingly.
-
-<img src="../img/side-bar/html_info.jpg" class="ms-docimage"/>
+<img src="../img/side-bar/format_example.jpg" class="ms-docimage"/>
 
 !!! warning
     This global settings could be overwritten by a layer-specific configuration (see [Feature Info Form](layer-settings.md#feature-info-form)).
 
-Below the point coordinates there are three icons:
 
-* **More Info** <img src="../img/button/more_info_icon.jpg" class="ms-docbutton"/> shows a popup window displaying the point address.
+In addition to the features, the following information is provided by the *Identify Tool*: 
 
-<img src="../img/side-bar/more_info.jpg" class="ms-docimage"/>
+* The **point address**  trought the *More Info* button  <img src="../img/button/more_info_icon.jpg" class="ms-docbutton"/>
 
-* **Coordinates Editor** <img src="../img/button/coordinates_editor_icon.jpg" class="ms-docbutton"/> makes available a tool to perform queries using decimal or aeronautical coordinates (we will explain more in depth this tool in the next paragraph).
+<img src="../img/side-bar/more-info.jpg" class="ms-docimage"/>
 
-* **Highlight Features** <img src="../img/button/highlight_features_icon.jpg" class="ms-docbutton"/> highlights the resulting features.
+* The **coordinates** <img src="../img/button/coordinates_editor_icon.jpg" class="ms-docbutton"/> of the point
 
-<img src="../img/side-bar/highlight_features.jpg" class="ms-docimage"/>
+<img src="../img/side-bar/coordinate.jpg" class="ms-docimage"/>
 
-Using the <img src="../img/button/zoom-layer.jpg" class="ms-docbutton"/> button it is possible to zoom the highlighted feature.
+!!! note
+    The point coordinates are viewed in **decimal** or **areonautical** format. It is possible to change the format by the *setting* button <img src="../img/button/gear_icon.jpg" class="ms-docbutton" style="max-heigth:50px;"/> 
+
+* The **Highlight Features** <img src="../img/button/highlight_features_icon.jpg" class="ms-docbutton"/> highlights the resulting features. Using the <img src="../img/button/zoom-layer.jpg" class="ms-docbutton"/> button it is possible to zoom the highlighted feature.
+
+<img src="../img/side-bar/hightlight-point1.gif" class="ms-docimage"/>
 
 ### Using the Coordinates Editor
 
-You might want to search features starting from their coordinates. The **Coordinates Editor** helps you to have more precision than just clicking on the map, so you can query objects by directly typing in their latitude and longitude.
+ In order to search for features starting from their coordinates it is possible using the **Coordinate Editor**. The user might precisely query objects by entering their latitude and longitude.  
 
-You can choose between `Decimal` coordinates:
+The point coordinates are searched in **decimal** or **areonautical** format. It is possible to change the format by the *setting* button <img src="../img/button/gear_icon.jpg" class="ms-docbutton" style="max-heigth:50px;"/> 
 
-<img src="../img/side-bar/decimal_coordinates_editor.gif" class="ms-docimage"  style="max-width:700px;"/>
+An example of search with `Decimal` coordinates as follows:
 
-and `Aeronautical` coordinates:
+<img src="../img/side-bar/decimal-ex.gif" class="ms-docimage"  />
 
-<img src="../img/side-bar/aeronautical_coordinates_editor.gif" class="ms-docimage"  style="max-width:700px;"/>
+An example of search with `Aeronautical` coordinates as follows:
+
+<img src="../img/side-bar/areonautical-ex.gif" class="ms-docimage"  style="max-width:700px;"/>
