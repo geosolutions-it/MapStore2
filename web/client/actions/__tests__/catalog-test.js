@@ -256,6 +256,29 @@ describe('Test correctness of the catalog actions', () => {
         });
         callback(verify, () => ({ layers: [] }));
     });
+    it('add layer with multiple urls', (done) => {
+        const verify = (action) => {
+            if (action.type === ADD_LAYER) {
+                expect(action.layer).toExist();
+                const layer = action.layer;
+                expect(layer.id).toExist();
+                expect(layer.id).toBe(LayersUtils.getLayerId(action.layer, []));
+            } else if (action.type === CHANGE_LAYER_PROPERTIES) {
+                expect(action.layer).toExist();
+                expect(action.newProperties).toExist();
+                expect(action.newProperties.search).toExist();
+                expect(action.newProperties.search.type).toBe('wfs');
+                expect(action.newProperties.search.url).toBe("http://some.geoserver.org:80/geoserver/wfs");
+                done();
+            }
+        };
+        const callback = addLayer({
+            url: ['base/web/client/test-resources/wms/DescribeLayers.xml', 'base/web/client/test-resources/wms/DescribeLayers.xml'],
+            type: 'wms',
+            name: 'workspace:vector_layer'
+        });
+        callback(verify, () => ({ layers: []}));
+    });
     it('add layer with no describe layer', (done) => {
         const verify = (action) => {
             if (action.type === ADD_LAYER) {

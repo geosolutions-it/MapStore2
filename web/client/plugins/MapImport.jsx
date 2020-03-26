@@ -19,7 +19,20 @@ const {toggleControl} = require('../actions/controls');
 const assign = require('object-assign');
 const {Glyphicon} = require('react-bootstrap');
 const {mapTypeSelector} = require('../selectors/maptype');
-
+/**
+ * Allows the user to import a file into current map.
+ * Supported formats are:
+ * - **Maps** (current map will be overridden):
+ *     - MapStore JSON format
+ *     - WMC
+ * - **Vector Data**:
+ *     - shapefiles (must be contained in zip archives)
+ *     - KML/KMZ
+ *     - GeoJSON
+ *     - GPX
+ * @memberof plugins
+ * @name MapImport
+ */
 module.exports = {
     MapImportPlugin: assign({loadPlugin: (resolve) => {
         require.ensure(['./import/Import'], () => {

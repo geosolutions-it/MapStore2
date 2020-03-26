@@ -86,7 +86,8 @@ class SharePanel extends React.Component {
     };
 
     state = {
-        eventKey: 1
+        eventKey: 1,
+        showAdvanced: true
     };
 
     UNSAFE_componentWillMount() {

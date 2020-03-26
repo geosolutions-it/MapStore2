@@ -32,6 +32,12 @@ const wmsLayer = {
     type: 'wms'
 };
 describe('LayersUtils', () => {
+    it('getLayerUrl supports single and multiple url layers', () => {
+        expect(['a', 'b']).toContain(LayersUtils.getLayerUrl({url: ['a', 'b']}));
+        expect(LayersUtils.getLayerUrl({
+            url: 'a'
+        })).toBe('a');
+    });
     it('splits layers and groups one group', () => {
         const state = LayersUtils.splitMapAndLayers({
             layers: [{
