@@ -124,11 +124,17 @@ const featuredMapsPluginSelector = createSelector([
     state => state.browser && state.browser.mobile,
     searchTextSelector,
     resourceSelector,
-    isFeaturedMapsEnabled
-], (mapType, role, isMobile, searchText, resource, isFeaturedEnabled) => ({
+    isFeaturedMapsEnabled,
+    state => state.maps && state.maps.results
+], (mapType, role, isMobile, searchText, resource, isFeaturedEnabled, permissions) => ({
     mapType,
     role,
-    permission: role === 'ADMIN',
+    permission:
+        permissions &&
+        permissions.map(permission => ({
+            ...permission,
+            featuredEnabled: isFeaturedEnabled && role === "ADMIN"
+        })),
     pagination: isMobile ? 'virtual-scroll-horizontal' : 'show-more',
     searchText,
     resource,

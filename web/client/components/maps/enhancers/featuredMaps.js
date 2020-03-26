@@ -94,28 +94,40 @@ const getIcon = record => {
 /*
  * converts record item into a item for MapsGrid
  */
-const resultToProps = ({result = {}, permission}) => ({
-    items: (result.Resource || []).map((record = {}) => ({
-        id: record.id,
-        name: record.name,
-        category: record.category,
-        icon: getIcon(record),
-        canCopy: permission,
-        canDelete: permission,
-        canEdit: permission,
-        creation: record.creation,
-        description: record.description,
-        lastUpdate: record.lastUpdate,
-        context: record.context,
-        contextName: record.contextName,
-        thumbnail: record.thumbnail,
-        owner: record.owner,
-        featured: 'added',
-        featuredEnabled: true
-    })),
-    total: result && result.ResourceCount ? result.ResourceCount : 0,
-    loading: false
-});
+const resultToProps = ({result = {}, permission}) => {
+    if (permission && permission.length > 0) {
+        let mergedResult = [];
+        result.Resource.map(record =>
+            mergedResult.push({
+                ...record,
+                ...permission.find(per => per.name === record.name)
+            })
+        );
+        result.Resource = mergedResult;
+    }
+    return {
+        items: (result.Resource || []).map((record = {}) => ({
+            id: record.id,
+            name: record.name,
+            category: record.category,
+            icon: getIcon(record),
+            canCopy: record.canCopy,
+            canDelete: record.canDelete,
+            canEdit: record.canEdit,
+            creation: record.creation,
+            description: record.description,
+            lastUpdate: record.lastUpdate,
+            context: record.context,
+            contextName: record.contextName,
+            thumbnail: record.thumbnail,
+            owner: record.owner,
+            featured: "added",
+            featuredEnabled: record.featuredEnabled
+        })),
+        total: result && result.ResourceCount ? result.ResourceCount : 0,
+        loading: false
+    };
+};
 
 /*
  * retrieves data from a GeoStore service and converts to props

@@ -41,7 +41,7 @@ describe('featuredMaps enhancher', () => {
         GeoStoreDAO.addBaseUrl = (options) => {
             return assign(options, {baseURL: 'base/web/client/test-resources/geostore/'});
         };
-        const props = loadPage({permission: true});
+        const props = loadPage({permission: [{canCopy: true, canEdit: true, canDelete: true, featuredEnabled: true, name: 'Map'}]});
         props.subscribe(res => {
             expect(res).toEqual({
                 items: [{
