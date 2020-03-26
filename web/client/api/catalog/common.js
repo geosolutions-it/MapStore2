@@ -25,16 +25,8 @@ export class ServiceValidationError extends Error {
  */
 export const validate = (service) => {
     if (service.title === "" || service.url === "") {
-        throw new ServiceValidationError("Validation Error", "catalog.notification.warningAddCatalogService");
+        return Rx.Observable.throw(new ServiceValidationError("Validation Error", "catalog.notification.warningAddCatalogService"));
     }
-    /* TODO: avoid check about duplicated title, use ID
-    if (service.title !== "" && service.url !== "") {
-        if (!services[service.title] || services[service.title] && service.oldService === service.title) {
-            return Rx.Observable.of(service);
-        }
-        throw new ServiceValidationError("Validation Error", "catalog.notification.duplicatedServiceTitle");
-    }
-     */
     return Rx.Observable.of(service);
 };
 

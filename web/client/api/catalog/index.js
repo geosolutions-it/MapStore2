@@ -36,6 +36,7 @@ import { validate, testService } from './common';
  * @name catalog
  */
 export default {
+    // TODO: separate catalog specific API from OGC services API
     csw: {
         validate,
         testService: testService(csw),
