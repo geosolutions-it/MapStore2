@@ -228,6 +228,8 @@
                 "web/client/plugins/MapCatalog.jsx",
                 "web/client/plugins/MapSearch.jsx",
                 "web/client/plugins/MapTemplates.jsx",
+                "web/client/plugins/MapImport.jsx",
+                "web/client/plugins/MapExport.jsx",
                 "web/client/plugins/Measure.jsx",
                 "web/client/plugins/MeasurePanel.jsx",
                 "web/client/plugins/MeasureResults.jsx",

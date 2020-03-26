@@ -8,9 +8,10 @@
 
 const { urlParts } = require('../utils/URLUtils');
 const url = require('url');
-const { isArray, sortBy, head, castArray, isNumber } = require('lodash');
+const { sortBy, head, castArray, isNumber } = require('lodash');
 const assign = require('object-assign');
 const chroma = require('chroma-js');
+const {getLayerUrl} = require('../utils/LayersUtils');
 
 const isAttributeAllowed = (type) => ['Integer', 'Long', 'Double', 'Float', 'BigDecimal'].indexOf(type) !== -1;
 const getSimpleType = () => {
@@ -183,7 +184,7 @@ const API = {
      * @returns {string} url to get a classification SLD
      */
     getStyleService: (layer, params) => {
-        const parts = urlParts(isArray(layer.url) ? layer.url[0] : layer.url);
+        const parts = urlParts(getLayerUrl(layer));
         return url.format(assign(getUrl(parts), {
             pathname: parts.applicationRootPath + "/rest/sldservice/" + layer.name + "/classify.xml",
             query: assign({}, mapParams(layer, params), { fullSLD: true })
@@ -200,7 +201,7 @@ const API = {
      * @returns {string} url to get a classification metadata JSON
      */
     getStyleMetadataService: (layer, params) => {
-        const parts = urlParts(isArray(layer.url) ? layer.url[0] : layer.url);
+        const parts = urlParts(getLayerUrl(layer));
         return url.format(assign(getUrl(parts), {
             pathname: parts.applicationRootPath + "/rest/sldservice/" + layer.name + "/classify.json",
             query: params
@@ -247,7 +248,7 @@ const API = {
      * @returns {string} url of the attributes service
      */
     getFieldsService: (layer) => {
-        const parts = urlParts(isArray(layer.url) ? layer.url[0] : layer.url);
+        const parts = urlParts(getLayerUrl(layer));
         const table = layer.thematic && layer.thematic.datatable || layer.name;
         return url.format(assign(getUrl(parts), {
             pathname: parts.applicationRootPath + "/rest/sldservice/" + table + "/attributes.json"

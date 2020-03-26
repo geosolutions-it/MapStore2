@@ -52,7 +52,7 @@ const enhanceExport = compose(
             }
         }
     }),
-    withState('format', 'setFormat', 'mapstore2'),
+    withState('format', 'setFormat', 'mapstore2')
 
 );
 
@@ -79,6 +79,12 @@ const MapExport = enhanceExport(
     }
 );
 
+/**
+ * Allows the user to export the current map in a file.
+ * @memberof plugins
+ * @name MapExport
+ * @property {string[]} cfg.enabledFormats the list of allowed formats. By default ["mapstore2", "wmc"]
+ */
 const MapExportPlugin = {
     MapExportPlugin: assign(MapExport, {
         disablePluginIf: "{state('mapType') === 'cesium'}",
