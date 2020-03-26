@@ -577,6 +577,9 @@
             "redoBtnTooltip": "Ir hacia adelante"
         },
         "infoFormatLbl": "Identificar el formato de respuesta",
+        "infoTriggerLabel": "Identificar desencadenante",
+        "click": "Click",
+        "hover": "Hover",
         "measureSupport": {
             "continueLine": "Haga clic para seguir dibujando la línea",
             "continuePolygon": "Haga clic para continuar dibujando el polígono",

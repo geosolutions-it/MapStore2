@@ -578,6 +578,9 @@
             "redoBtnTooltip": "Gehe vorwärts"
         },
         "infoFormatLbl": "Identifiziere das Antwortformat",
+        "infoTriggerLabel": "Auslöser identifizieren",
+        "click": "Click",
+        "hover": "Hover",
         "measureSupport": {
             "continueLine": "Klicken Sie auf, um mit dem Zeichnen der Linie fortzufahren",
             "continuePolygon": "Klicken Sie, um mit dem Zeichnen des Polygons fortzufahren",

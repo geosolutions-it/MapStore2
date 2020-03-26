@@ -577,6 +577,9 @@
             "redoBtnTooltip": "Vai avanti"
         },
         "infoFormatLbl": "Formato risposte interrogazioni su mappa",
+        "infoTriggerLabel": "Identificare il trigger",
+        "click": "Click",
+        "hover": "Hover",
         "measureSupport": {
             "continueLine": "Clicca per continuare a disegnare la linea",
             "continuePolygon": "Clicca per continuare a disegnare il poligono",

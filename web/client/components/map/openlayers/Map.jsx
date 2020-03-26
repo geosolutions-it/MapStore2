@@ -455,6 +455,7 @@ class OpenlayersMap extends React.Component {
 
     mouseMoveEvent = (event) => {
         if (!event.dragging && event.coordinate) {
+            const getElevation = this.map.get('elevationLayer') && this.map.get('elevationLayer').get('getElevation');
             let pos = event.coordinate.slice();
             let coords = toLonLat(pos, this.props.projection);
             let tLng = coords[0] / 360 % 1 * 360;
@@ -471,7 +472,13 @@ class OpenlayersMap extends React.Component {
                 pixel: {
                     x: event.pixel[0],
                     y: event.pixel[1]
-                }
+                },
+                latlng: {
+                    lat: coords[1],
+                    lng: tLng,
+                    z: getElevation && getElevation(pos, event.pixel) || undefined
+                },
+                rawPos: event.coordinate.slice()
             });
         }
     };

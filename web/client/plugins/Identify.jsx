@@ -20,6 +20,7 @@ const { generalInfoFormatSelector, clickPointSelector, indexSelector, responsesS
 
 const { hideMapinfoMarker, showMapinfoRevGeocode, hideMapinfoRevGeocode, clearWarning, toggleMapInfoState, changeMapInfoFormat, updateCenterToMarker, closeIdentify, purgeMapInfoResults, featureInfoClick, changeFormat, toggleShowCoordinateEditor, changePage, toggleHighlightFeature} = require('../actions/mapInfo');
 const { changeMousePointer, zoomToExtent} = require('../actions/map');
+const { changeMousePositionState } = require("../actions/mousePosition");
 
 
 const {currentLocaleSelector} = require('../selectors/locale');
@@ -226,6 +227,12 @@ const FeatureInfoFormatSelector = connect((state) => ({
     onInfoFormatChange: changeMapInfoFormat
 })(require("../components/misc/FeatureInfoFormatSelector"));
 
+const FeatureInfoTriggerSelector = connect((state) => ({
+    trigger: state.mousePosition.enabled ? 'hover' : 'click'
+}), {
+    onTriggerChange: (event) => event.target.value === 'hover' ? changeMousePositionState(true) : changeMousePositionState(false)
+})(require("../components/misc/FeatureInfoTriggerSelector"));
+
 module.exports = {
     IdentifyPlugin: assign(IdentifyPlugin, {
         Toolbar: {
@@ -241,10 +248,11 @@ module.exports = {
             })
         },
         Settings: {
-            tool: <FeatureInfoFormatSelector
+            tool: [<FeatureInfoFormatSelector
                 key="featureinfoformat"
                 label={<Message msgId="infoFormatLbl" />
-                }/>,
+                }/>, <FeatureInfoTriggerSelector
+                key="featureinfotrigger" />],
             position: 3
         }
     }),

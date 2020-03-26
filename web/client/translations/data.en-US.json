@@ -577,6 +577,9 @@
             "redoBtnTooltip": "Go forward"
         },
         "infoFormatLbl": "Identify response format",
+        "infoTriggerLabel": "Identify trigger",
+        "click": "Click",
+        "hover": "Hover",
         "measureSupport": {
             "continueLine": "Click to continue drawing the line",
             "continuePolygon": "Click to continue drawing the polygon",

@@ -29,6 +29,7 @@ import { CHANGE_MOUSE_POINTER, CLICK_ON_MAP, zoomToPoint } from '../actions/map'
 import { closeAnnotations } from '../actions/annotations';
 import { MAP_CONFIG_LOADED } from '../actions/config';
 import {addPopup, cleanPopups} from '../actions/mapPopups';
+import { CHANGE_MOUSE_POSITION } from '../actions/mousePosition';
 import { stopGetFeatureInfoSelector, identifyOptionsSelector,
     clickPointSelector, clickLayerSelector,
     isMapPopup, isHighlightEnabledSelector,
@@ -270,5 +271,13 @@ export default {
     cleanPopupsEpicOnPurge: (action$, {getState}) =>
         action$.ofType(PURGE_MAPINFO_RESULTS)
             .filter(() => isMapPopup(getState()))
-            .mapTo(cleanPopups())
+            .mapTo(cleanPopups()),
+    /**
+     * Triggers data load on CHANGE_MOUSE_POSITION events
+     */
+    changeMousePositionEpic: (action$) =>
+        action$.ofType(CHANGE_MOUSE_POSITION)
+            .debounceTime(1000)
+            .switchMap(({position, layer}) => Rx.Observable.of(featureInfoClick(position, layer))
+                .merge(Rx.Observable.of(addPopup(uuid(), { component: IDENTIFY_POPUP, maxWidth: 600, position: {  coordinates: position ? position.rawPos : []}}))))
 };
