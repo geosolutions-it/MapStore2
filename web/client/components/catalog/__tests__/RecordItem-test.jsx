@@ -205,7 +205,7 @@ describe('This test for RecordItem', () => {
         expect(button).toExist();
         button.click();
         expect(actionsSpy.calls.length).toBe(1);
-        expect(actionsSpy.calls[0].arguments.length).toBe(1);
+        expect(actionsSpy.calls[0].arguments.length).toBe(2);
         expect(actionsSpy.calls[0].arguments[0].format).toBe("image/jpeg");
         expect(actionsSpy.calls[0].arguments[1].zoomToLayer).toBeTruthy();
     });
@@ -281,8 +281,9 @@ describe('This test for RecordItem', () => {
         expect(button).toExist();
         button.click();
         expect(actionsSpy.calls.length).toBe(1);
-        expect(actionsSpy.calls[0].arguments.length).toBe(1);
+        expect(actionsSpy.calls[0].arguments.length).toBe(2);
         expect(actionsSpy.calls[0].arguments[0].catalogURL).toExist();
+        expect(actionsSpy.calls[0].arguments[1].zoomToLayer).toBeTruthy();
     });
 
     it('check event handlers with catalogUrl and wms service', () => {
@@ -308,8 +309,9 @@ describe('This test for RecordItem', () => {
         expect(button).toExist();
         button.click();
         expect(actionsSpy.calls.length).toBe(1);
-        expect(actionsSpy.calls[0].arguments.length).toBe(1);
+        expect(actionsSpy.calls[0].arguments.length).toBe(2);
         expect(actionsSpy.calls[0].arguments[0].catalogURL).toNotExist();
+        expect(actionsSpy.calls[0].arguments[1].zoomToLayer).toBeTruthy();
     });
     it('check wms default format', () => {
         let actions = {
@@ -334,9 +336,10 @@ describe('This test for RecordItem', () => {
         expect(button).toExist();
         button.click();
         expect(actionsSpy.calls.length).toBe(1);
-        expect(actionsSpy.calls[0].arguments.length).toBe(1);
+        expect(actionsSpy.calls[0].arguments.length).toBe(2);
         expect(actionsSpy.calls[0].arguments[0].catalogURL).toNotExist();
         expect(actionsSpy.calls[0].arguments[0].format).toBe('image/png');
+        expect(actionsSpy.calls[0].arguments[1].zoomToLayer).toBeTruthy();
     });
     it('check wms NOT default format', () => {
         let actions = {
@@ -361,9 +364,10 @@ describe('This test for RecordItem', () => {
         expect(button).toExist();
         button.click();
         expect(actionsSpy.calls.length).toBe(1);
-        expect(actionsSpy.calls[0].arguments.length).toBe(1);
+        expect(actionsSpy.calls[0].arguments.length).toBe(2);
         expect(actionsSpy.calls[0].arguments[0].catalogURL).toNotExist();
         expect(actionsSpy.calls[0].arguments[0].format).toBe('image/jpeg');
+        expect(actionsSpy.calls[0].arguments[1].zoomToLayer).toBeTruthy();
     });
     it('check auth params to be removed (WMS)', () => {
         const recordToClean = {
@@ -410,10 +414,11 @@ describe('This test for RecordItem', () => {
         expect(button).toExist();
         button.click();
         expect(actionsSpy.calls.length).toBe(1);
-        expect(actionsSpy.calls[0].arguments.length).toBe(1);
+        expect(actionsSpy.calls[0].arguments.length).toBe(2);
         expect(actionsSpy.calls[0].arguments[0].catalogURL).toNotExist();
         expect(actionsSpy.calls[0].arguments[0].params).toExist();
         expect(actionsSpy.calls[0].arguments[0].params.requiredParam).toBe("REQUIRED");
+        expect(actionsSpy.calls[0].arguments[1].zoomToLayer).toBeTruthy();
         expect(actionsSpy.calls[0].arguments[0].params["ms2-authkey"]).toNotExist("auth param is passed in params list but it shouldn't");
     });
     it('check auth params to be removed (WMTS)', () => {
@@ -461,7 +466,8 @@ describe('This test for RecordItem', () => {
         expect(button).toExist();
         button.click();
         expect(actionsSpy.calls.length).toBe(1);
-        expect(actionsSpy.calls[0].arguments.length).toBe(1);
+        expect(actionsSpy.calls[0].arguments.length).toBe(2);
+        expect(actionsSpy.calls[0].arguments[1].zoomToLayer).toBeTruthy();
         expect(actionsSpy.calls[0].arguments[0].catalogURL).toNotExist();
         expect(actionsSpy.calls[0].arguments[0].params).toExist();
         expect(actionsSpy.calls[0].arguments[0].params.requiredParam).toBe("REQUIRED");
@@ -494,7 +500,8 @@ describe('This test for RecordItem', () => {
         expect(button).toExist();
         button.click();
         expect(actionsSpy.calls.length).toBe(1);
-        expect(actionsSpy.calls[0].arguments.length).toBe(1);
+        expect(actionsSpy.calls[0].arguments.length).toBe(2);
+        expect(actionsSpy.calls[0].arguments[1].zoomToLayer).toBeTruthy();
         expect(actionsSpy.calls[0].arguments[0].extraProp).toBe('val1');
     });
 
@@ -524,7 +531,8 @@ describe('This test for RecordItem', () => {
         expect(button).toExist();
         button.click();
         expect(actionsSpy.calls.length).toBe(1);
-        expect(actionsSpy.calls[0].arguments.length).toBe(1);
+        expect(actionsSpy.calls[0].arguments.length).toBe(2);
+        expect(actionsSpy.calls[0].arguments[1].zoomToLayer).toBeTruthy();
         expect(actionsSpy.calls[0].arguments[0].extraProp).toBe('val1');
     });
 

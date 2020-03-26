@@ -54,4 +54,4 @@ export default ({onValid, onError, json = {}}) => {
             </div>
         </div>}
     </div>);
-}
+};

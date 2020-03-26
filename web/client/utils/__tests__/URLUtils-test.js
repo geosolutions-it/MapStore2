@@ -168,7 +168,7 @@ describe('URLUtils', () => {
     ];
     it('isValidURLTemplate', () => {
         SAMPLE_URL_TEMPLATES.map(url => expect(isValidURLTemplate(url)).toBeTruthy());
-    })
+    });
 });
 
 

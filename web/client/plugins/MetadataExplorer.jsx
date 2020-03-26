@@ -11,7 +11,7 @@ const PropTypes = require('prop-types');
 const {connect} = require('react-redux');
 
 const assign = require('object-assign');
-const {createSelector, createStructuredSelector} = require("reselect");
+const {createStructuredSelector} = require("reselect");
 const { compose, branch, renderComponent, withProps, defaultProps } = require("recompose");
 const CatalogServiceEditor = require('../components/catalog/CatalogServiceEditor').default;
 

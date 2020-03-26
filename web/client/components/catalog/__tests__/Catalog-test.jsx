@@ -29,16 +29,17 @@ describe('Test Catalog panel', () => {
         expect(catalog).toExist();
     });
     it('test the search of records', (done) => {
+        const SERVICE = {
+            type: "csw",
+            url: "url",
+            title: "csw"
+        };
         const item = ReactDOM.render(<Catalog
-            services={{"csw": {
-                type: "csw",
-                url: "url",
-                title: "csw"
-            }}}
+            services={{ "csw": SERVICE}}
             selectedService="csw"
             onSearch={(props) => {
                 expect(props).toExist();
-                expect(props).toEqual({ format: 'csw', url: 'url', startPosition: 1, maxRecords: 4, text: '' } );
+                expect(props).toEqual({ format: 'csw', url: 'url', startPosition: 1, maxRecords: 4, text: '', options: {service: SERVICE} } );
                 done();
             }}
         />, document.getElementById("container"));

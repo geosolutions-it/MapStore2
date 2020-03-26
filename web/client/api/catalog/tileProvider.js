@@ -20,12 +20,13 @@ const searchAndPaginate = (layers, startPosition, maxRecords, text) => {
         .filter(({ title = "" } = {}) => !text
             || title.toLowerCase().indexOf(text.toLowerCase()) !== -1
         );
+    const records = filteredLayers
+        .filter((layer, index) => index >= startPosition - 1 && index < startPosition - 1 + maxRecords);
     return {
         numberOfRecordsMatched: filteredLayers.length,
-        numberOfRecordsReturned: Math.min(maxRecords, filteredLayers.length),
+        numberOfRecordsReturned: records.length,
         nextRecord: startPosition + Math.min(maxRecords, filteredLayers.length) + 1,
-        records: filteredLayers
-            .filter((layer, index) => index >= startPosition - 1 && index < startPosition - 1 + maxRecords)
+        records
     };
 };
 

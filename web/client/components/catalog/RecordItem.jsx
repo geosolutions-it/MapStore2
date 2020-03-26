@@ -34,8 +34,6 @@ import AddTileProvider from './buttons/AddTileProvider';
 import defaultThumb from './img/default.jpg';
 import defaultBackgroundThumbs from '../../plugins/background/DefaultThumbs';
 
-import BackgroundDialog from '../background/BackgroundDialog';
-
 class RecordItem extends React.Component {
     static propTypes = {
         addAuthentication: PropTypes.bool,
