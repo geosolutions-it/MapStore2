@@ -32,7 +32,8 @@ export default ({
     editWebPage = () => {},
     update = () => {},
     remove = () => {},
-    bubblingTextEditing = () => {}
+    bubblingTextEditing = () => {},
+    expandable
 }) => (
     <Contents
         className="ms-column-contents"
@@ -47,10 +48,13 @@ export default ({
         viewWidth={viewWidth}
         viewHeight={viewHeight}
         bubblingTextEditing={bubblingTextEditing}
+        contentProps={{
+            expandable
+        }}
         tools={{
             [ContentTypes.TEXT]: ['remove'],
             [MediaTypes.IMAGE]: ['editMedia', 'size', 'align', 'remove'],
-            [MediaTypes.MAP]: ['editMedia', 'editMap', 'size', 'align', 'remove'],
+            [MediaTypes.MAP]: ['editMedia', 'editMap', 'remove'],
             [MediaTypes.VIDEO]: ['editMedia', 'remove'], // TODO change this list for video
             [ContentTypes.WEBPAGE]: ['editURL', 'size', 'align', 'remove']
         }}

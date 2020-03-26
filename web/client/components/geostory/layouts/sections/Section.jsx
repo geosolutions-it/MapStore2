@@ -48,7 +48,7 @@ class Section extends React.Component {
         excludeClassName: PropTypes.string,
         cover: PropTypes.bool,
         focusedContent: PropTypes.object,
-        expandableBackgroundMedia: PropTypes.bool
+        expandableMedia: PropTypes.bool
     };
 
     static defaultProps = {
@@ -63,7 +63,7 @@ class Section extends React.Component {
         viewHeight: 0,
         viewWidth: 0,
         mode: Modes.VIEW,
-        expandableBackgroundMedia: false
+        expandableMedia: false
     };
 
     state = {
@@ -80,7 +80,7 @@ class Section extends React.Component {
                 update={this.props.update}
                 inViewRef={this.props.inViewRef}
                 editMedia={this.props.editMedia}
-                expandableBackgroundMedia={this.props.expandableBackgroundMedia}
+                expandableMedia={this.props.expandableMedia}
                 editWebPage={this.props.editWebPage}
                 updateCurrentPage={this.props.updateCurrentPage}
                 remove={this.props.remove}

@@ -224,7 +224,7 @@ const FeatureInfoFormatSelector = connect((state) => ({
     infoFormat: generalInfoFormatSelector(state)
 }), {
     onInfoFormatChange: changeMapInfoFormat
-})(require("../components/misc/FeatureInfoFormatSelector"));
+})(require("../components/misc/FeatureInfoFormatSelector").default);
 
 module.exports = {
     IdentifyPlugin: assign(IdentifyPlugin, {

@@ -27,7 +27,8 @@ export default ({
     remove = () => {},
     inViewRef,
     viewWidth,
-    viewHeight
+    viewHeight,
+    expandableMedia
 }) => (
     <section
         className="ms-section ms-section-paragraph"
@@ -46,6 +47,9 @@ export default ({
             sectionId={id}
             viewWidth={viewWidth}
             viewHeight={viewHeight}
+            contentProps={{
+                expandable: expandableMedia
+            }}
         />
         {mode === Modes.EDIT && <AddBar
             containerWidth={viewWidth}

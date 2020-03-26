@@ -261,6 +261,7 @@
         .ms-content-column {
             padding-left: @ms-story-padding-small-screen;
             padding-right: @ms-story-padding-small-screen;
+            min-width: auto;
         }
     }
     .ms-content {
@@ -292,10 +293,10 @@
     @ms-story-padding-medium-screen: @square-btn-medium-size * 1.5;
     .ms-section .ms-section-background .ms-section-background-container {
         /* size of content */
-        &.ms-size-full .ms-media { width: 100%; }
-        &.ms-size-large .ms-media { width: 90%; }
-        &.ms-size-medium .ms-media { width: 80%; }
-        &.ms-size-small .ms-media { width: 60%; }
+        &.ms-size-full .ms-media { width: @ms-story-size-full; }
+        &.ms-size-large .ms-media { width: @ms-story-size-large; }
+        &.ms-size-medium .ms-media { width: @ms-story-size-medium; }
+        &.ms-size-small .ms-media { width: @ms-story-size-medium; }
     }
     .ms-section-title .ms-content-text .ms-content-body {
         padding-left: @ms-story-padding-medium-screen;
@@ -318,10 +319,10 @@
             }
         }
         /* size of content */
-        &.ms-size-full { width: 100%; }
-        &.ms-size-large { width: 90%; }
-        &.ms-size-medium { width: 80%; }
-        &.ms-size-small { width: 60%; }
+        &.ms-size-full { width: @ms-story-size-full; }
+        &.ms-size-large { width: @ms-story-size-large; }
+        &.ms-size-medium { width: @ms-story-size-medium; }
+        &.ms-size-small { width: @ms-story-size-medium; }
     }
 }
 
@@ -564,6 +565,15 @@
                 .ms-content:not(.ms-content-text) {
                     padding-top: 16px;
                     padding-bottom: 16px;
+                    &.ms-content-map {
+                        width: 100%;
+                    }
+                }
+                .ms-media-map {
+                    height: 350px;
+                    & > div {
+                        position: relative;
+                    }
                 }
             }
         }
@@ -577,6 +587,7 @@
             }
             // column contents overrides
             .ms-content-column {
+                min-width: 500px;
                     display: flex; // align vertically the content
                     pointer-events: none; // pass pointer events to background (this div takes full width and height)
                     padding: 64px @square-btn-medium-size + 6px;
@@ -639,6 +650,20 @@
                 }
                 .ms-media-credits {
                     right: 16px;
+                }
+                .ms-media-map {
+                    height: 350px;
+                    & > div {
+                        position: relative;
+                    }
+                    .ms-expand-media-button {
+                        margin: 0;
+                        top: 20px;
+                        right: 20px;
+                    }
+                }
+                .ms-content.ms-content-map {
+                    width: 100%;
                 }
             }
         }

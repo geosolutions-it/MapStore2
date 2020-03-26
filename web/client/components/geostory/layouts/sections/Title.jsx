@@ -47,12 +47,12 @@ export default compose(
     focusedContent,
     bubblingTextEditing = () => {},
     textEditorActiveClass = "",
-    expandableBackgroundMedia = false
+    expandableMedia = false
 }) => {
 
     const hideContent = get(focusedContent, "target.id") === contentId;
     const visibility = hideContent ?  'hidden' : 'visible';
-    const expandableBackgroundClassName = expandableBackgroundMedia && background && background.type === 'map' ? ' ms-expandable-background' : '';
+    const expandableBackgroundClassName = expandableMedia && background && background.type === 'map' ? ' ms-expandable-background' : '';
     return (
         <section
             ref={inViewRef}
@@ -76,7 +76,7 @@ export default compose(
                         update={updateBackground}
                         add={add}
                         editMedia={editMedia}
-                        expandable={expandableBackgroundMedia}
+                        expandable={expandableMedia}
                         updateSection={updateSection}
                         cover={cover}
                         remove={remove}
