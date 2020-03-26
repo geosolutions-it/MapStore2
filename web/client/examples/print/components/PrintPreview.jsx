@@ -24,10 +24,11 @@ class PrintPreview extends React.Component {
         });
     }
     render() {
+        const PrintP = this.state.PrintPlugin;
         return (
-            this.state.PrintPlugin ? <Draggable start={{x: 0, y: 0}} handle=".panel-heading, .panel-heading *">
+            PrintP ? <Draggable start={{x: 0, y: 0}} handle=".panel-heading, .panel-heading *">
                 <div>
-                    <this.state.PrintPlugin style={this.props.style}
+                    <PrintP style={this.props.style}
                     />
                 </div>
             </Draggable> : null
