@@ -18,7 +18,7 @@ import { validate, testService } from './common';
 /**
  * APIs collection for catalog.
  * Each entry must implement:
- * - `textSearch` (url, startPosition, maxRecords, text) => function that returns a promise. The promise emits an object with this shape:
+ * - `textSearch` (url, startPosition, maxRecords, text, info) => function that returns a promise. The Promise returned emits an object with this shape:
  * ```javascript
  * {
  *      numberOfRecordsMatched: 20
@@ -30,13 +30,15 @@ import { validate, testService } from './common';
  * }
  * ```
  * Optionally implements validation functions:
- * - `validate`: function that gets the service object and returns an Observable. The stream emit an exception if the service validation fails. Otherwise it emits the service object.
- * - `testService` function that gets the service object and returns an Observable. The stream emit an exception if the service do not respond. Otherwise it emits the service object.
+ * - `validate`: function that gets the service object and returns an Observable. The stream emit an exception if the service validation fails. Otherwise it emits the `service` object and complete.
+ * - `testService` function that gets the service object and returns an Observable. The stream emit an exception if the service do not respond. Otherwise it emits the `service` object and complete.
  * @memberof api
  * @name catalog
  */
 export default {
-    // TODO: separate catalog specific API from OGC services API
+    // TODO: we should separate catalog specific API from OGC services API, to define better the real intrefaces of each API.
+    // TODO: validate could be converted in a simple function
+    // TODO: testService could be converted in a simple Promise
     csw: {
         validate,
         testService: testService(csw),
