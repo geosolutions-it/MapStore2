@@ -7,7 +7,7 @@
  */
 
 import { Parser } from 'xml2js';
-import { keys, values, get, head, isArray, mapValues, uniqWith, findIndex, pick, has } from 'lodash';
+import { keys, values, get, head, mapValues, uniqWith, findIndex, pick, has } from 'lodash';
 import uuidv1 from 'uuid/v1';
 
 import {
@@ -20,6 +20,7 @@ import {
     objectToAttributes,
     assignNamespace
 } from '../../XMLUtils';
+import {getLayerUrl} from '../../LayersUtils';
 
 import { reprojectBbox } from '../../CoordinatesUtils';
 
@@ -460,7 +461,7 @@ export const toWMC = (
                         service: layerTypeToService[layer.type],
                         version: '1.3.0'
                     }),
-                    children: [makeOnlineResource(isArray(layer.url) ? layer.url[0] : layer.url)]
+                    children: [makeOnlineResource(getLayerUrl(layer))]
                 }, dimensionsWMS.length > 0 && {
                     name: 'DimensionList',
                     children: dimensionsWMS.map(dimension => {

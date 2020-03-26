@@ -88,7 +88,9 @@ const makeNode = (plugin, parent = null, plugins = [], localPlugins = []) => ({
     isUserPlugin: false,
     isExtension: plugin.extension ?? false,
     pluginConfig: {
-        ...omit(head(localPlugins.filter(localPlugin => localPlugin.name === plugin.name)) || {}, 'cfg'),
+        override: plugin.defaultOverride,
+        ...omit(head(localPlugins.filter(localPlugin => localPlugin.name === plugin.name)) || {},
+            'cfg', ...(plugin.defaultOverride ? ['override'] : [])),
         name: plugin.name,
         cfg: plugin.defaultConfig
     },
@@ -185,7 +187,8 @@ export default (state = {}, action) => {
                 ...plugin,
                 pluginConfig: {
                     ...get(plugin, 'pluginConfig', {}),
-                    cfg: get(targetPlugin, 'cfg')
+                    cfg: get(targetPlugin, 'cfg'),
+                    override: get(targetPlugin, 'override')
                 },
                 isUserPlugin: !!userPlugin,
                 active: targetPlugin.active || false,
@@ -270,8 +273,12 @@ export default (state = {}, action) => {
             ), state);
     }
     case SET_EDITED_CFG: {
+        const plugin = findPlugin(get(state, 'plugins', []), action.pluginName);
         return action.pluginName ?
-            set('editedCfg', JSON.stringify(get(findPlugin(get(state, 'plugins', []), action.pluginName), 'pluginConfig.cfg', {}), null, 2), state) :
+            set('editedCfg', JSON.stringify({
+                cfg: get(plugin, 'pluginConfig.cfg', {}),
+                override: get(plugin, 'pluginConfig.override', {})
+            }, null, 2), state) :
             state;
     }
     case UPDATE_EDITED_CFG: {
