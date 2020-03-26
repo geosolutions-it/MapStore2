@@ -9,9 +9,10 @@
 const MapUtils = require('../MapUtils');
 const CoordinatesUtils = require('../CoordinatesUtils');
 const WMTSUtils = require('../WMTSUtils');
+const {getLayerUrl} = require('../LayersUtils');
 const {optionsToVendorParams} = require('../VendorParamsUtils');
 
-const {isArray, isObject} = require('lodash');
+const {isObject} = require('lodash');
 
 const assign = require('object-assign');
 
@@ -68,9 +69,7 @@ module.exports = {
                 title: isObject(layer.title) ? layer.title[props.currentLocale] || layer.title.default : layer.title,
                 regex: layer.featureInfoRegex
             },
-            url: isArray(layer.url) ?
-                layer.url[0] :
-                layer.url.replace(/[?].*$/g, '')
+            url: getLayerUrl(layer).replace(/[?].*$/g, '')
         };
     }
 };
