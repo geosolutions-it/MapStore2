@@ -8,7 +8,8 @@
 
 const MapUtils = require('../MapUtils');
 const CoordinatesUtils = require('../CoordinatesUtils');
-const {isArray, isObject, head} = require('lodash');
+const {getLayerUrl} = require('../LayersUtils');
+const {isObject, head} = require('lodash');
 const { optionsToVendorParams } = require('../VendorParamsUtils');
 
 const SecurityUtils = require('../SecurityUtils');
@@ -81,9 +82,7 @@ module.exports = {
                 viewer,
                 featureInfo
             },
-            url: isArray(layer.url) ?
-                layer.url[0] :
-                layer.url.replace(/[?].*$/g, '')
+            url: getLayerUrl(layer).replace(/[?].*$/g, '')
         };
     }
 };
