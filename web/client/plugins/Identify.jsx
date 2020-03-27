@@ -55,7 +55,8 @@ const selector = createStructuredSelector({
     formatCoord: (state) => state.mapInfo && state.mapInfo.formatCoord,
     showCoordinateEditor: (state) => state.mapInfo && state.mapInfo.showCoordinateEditor,
     showEmptyMessageGFI: state => showEmptyMessageGFISelector(state),
-    isCesium
+    isCesium,
+    mousePositionEnabled: (state) => state.mousePosition.enabled
 });
 // result panel
 
@@ -196,7 +197,7 @@ const IdentifyPlugin = compose(
         ...ownProps,
         ...stateProps,
         ...dispatchProps,
-        enabled: stateProps.enabled && (stateProps.isCesium || !ownProps.showInMapPopup)
+        enabled: stateProps.enabled && (stateProps.isCesium || !ownProps.showInMapPopup) && !stateProps.mousePositionEnabled
     })),
     // highlight support
     compose(

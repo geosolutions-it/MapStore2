@@ -15,7 +15,7 @@ import uuid from 'uuid';
 import {
     LOAD_FEATURE_INFO, ERROR_FEATURE_INFO, GET_VECTOR_INFO,
     FEATURE_INFO_CLICK, CLOSE_IDENTIFY, TOGGLE_HIGHLIGHT_FEATURE,
-    PURGE_MAPINFO_RESULTS,
+    PURGE_MAPINFO_RESULTS, UPDATE_CENTER_TO_MARKER,
     featureInfoClick, updateCenterToMarker, purgeMapInfoResults,
     exceptionsFeatureInfo, loadFeatureInfo, errorFeatureInfo,
     noQueryableLayers, newMapInfoRequest, getVectorInfo,
@@ -28,8 +28,9 @@ import { closeFeatureGrid } from '../actions/featuregrid';
 import { CHANGE_MOUSE_POINTER, CLICK_ON_MAP, zoomToPoint } from '../actions/map';
 import { closeAnnotations } from '../actions/annotations';
 import { MAP_CONFIG_LOADED } from '../actions/config';
-import {addPopup, cleanPopups} from '../actions/mapPopups';
-import { CHANGE_MOUSE_POSITION } from '../actions/mousePosition';
+import {addPopup, cleanPopups, removePopup} from '../actions/mapPopups';
+import { CHANGE_MOUSE_POSITION, CHANGE_MOUSE_POSITION_STATE } from '../actions/mousePosition';
+import { updateMapLayout } from '../actions/maplayout';
 import { stopGetFeatureInfoSelector, identifyOptionsSelector,
     clickPointSelector, clickLayerSelector,
     isMapPopup, isHighlightEnabledSelector,
@@ -279,9 +280,44 @@ export default {
     /**
      * Triggers data load on CHANGE_MOUSE_POSITION events
      */
-    changeMousePositionEpic: (action$) =>
+    changeMousePositionEpic: (action$, {getState}) =>
         action$.ofType(CHANGE_MOUSE_POSITION)
-            .debounceTime(1000)
-            .switchMap(({position, layer}) => Rx.Observable.of(featureInfoClick(position, layer))
-                .merge(Rx.Observable.of(addPopup(uuid(), { component: IDENTIFY_POPUP, maxWidth: 600, position: {  coordinates: position ? position.rawPos : []}}))))
+            .debounceTime(500)
+            .switchMap(({position, layer}) => {
+                const arePopupsPresent = getState().mapPopups.popups.length;
+                if (arePopupsPresent) {
+                    return Rx.Observable.empty();
+                }
+                return Rx.Observable.of(featureInfoClick(position, layer))
+                    .merge(Rx.Observable.of(addPopup(uuid(), { component: IDENTIFY_POPUP, maxWidth: 600, position: {  coordinates: position ? position.rawPos : []}})));
+            }),
+    /**
+     * Triggers remove popup on CHANGE_MOUSE_POSITION_STATE
+     */
+    changeMousePositionStateEpic: (action$, {getState}) =>
+        action$.ofType(CHANGE_MOUSE_POSITION_STATE)
+            .switchMap(({enabled}) => {
+                let observable = Rx.Observable.empty();
+                const popups = getState().mapPopups.popups;
+                if (popups.length && !enabled) {
+                    const activePopupId = popups[0].id;
+                    observable = Rx.Observable.of(removePopup(activePopupId));
+                }
+                if (enabled) {
+                    observable = Rx.Observable.of(updateMapLayout({layer: {right: 0}}));
+                }
+                return observable;
+            }),
+    /**
+     * Triggers map layout changes on UPDATE_CENTER_TO_MARKER
+     */
+    updateCenterToMarkerEpic: (action$, {getState}) =>
+        action$.ofType(UPDATE_CENTER_TO_MARKER)
+            .switchMap(() => {
+                let observable = Rx.Observable.empty();
+                if (getState().mousePosition.enabled) {
+                    observable = Rx.Observable.of(updateMapLayout({layer: {right: 0}}));
+                }
+                return observable;
+            })
 };
