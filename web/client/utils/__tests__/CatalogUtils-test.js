@@ -715,13 +715,13 @@ describe('Test the CatalogUtils', () => {
             };
 
             const layer = CatalogUtils.tmsToLayer(RECORD, TileMapSample, OPTIONS);
-            const SRS = TileMapSample.TileMap.SRS
+            const SRS = TileMapSample.TileMap.SRS;
             const { x, y } = TileMapSample.TileMap.Origin.$;
             const {minx, miny, maxx, maxy} = TileMapSample.TileMap.BoundingBox.$;
             expect(layer.type).toBe("tms");
             expect(layer.visibility).toBe(true);
             expect(layer.hideErrors).toBe(true); // avoid many error that can occour
-            expect(layer.name).toBe(TileMapSample.TileMap.Title)
+            expect(layer.name).toBe(TileMapSample.TileMap.Title);
             expect(layer.title).toBe(TileMapSample.TileMap.Title);
             expect(layer.description).toBe(TileMapSample.TileMap.Abstract);
             expect(layer.srs).toBe(SRS);
@@ -762,7 +762,7 @@ describe('Test the CatalogUtils', () => {
                             ...$,
                             href: `${$.href}?authkey=AUTHKEY`
                         }
-                    }
+                    };
                 }))
             )(TileMapSample);
             ConfigUtils.setConfigProp('useAuthenticationRules', true);
