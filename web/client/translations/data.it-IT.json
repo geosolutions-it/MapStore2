@@ -569,7 +569,7 @@
             "title": "Ooops! Qualcosa non va",
             "text": "Si è verificato un errore nel fare questa richiesta <b>GetFeatureInfo</b>"
         },
-        "noFeatureInfo": "Non ci sono informazioni disponibili per il punto selezionato",
+        "noFeatureInfo": "Non ci sono informazioni disponibili per questo punto",
         "noInfoForLayers": "Non ci sono features per i seguenti layers: ",
         "history":{
             "barLabel": "Storia Mappa",
@@ -577,7 +577,7 @@
             "redoBtnTooltip": "Vai avanti"
         },
         "infoFormatLbl": "Formato risposte interrogazioni su mappa",
-        "infoTriggerLabel": "Identificare il trigger",
+        "infoTriggerLabel": "Evento trigger interrogazioni su mappa",
         "click": "Click",
         "hover": "Hover",
         "measureSupport": {

@@ -570,7 +570,7 @@
             "title": "Ooops! Etwas ist schiefgelaufen.",
             "text": "Ein Fehler ist während dieser <b>GetFeatureInfo</b> Anfrage aufgetreten"
         },
-        "noFeatureInfo": "Es sind keine Informationen für den gewählten Punkt verfügbar",
+        "noFeatureInfo": "Zu diesem Punkt sind keine Informationen verfügbar",
         "noInfoForLayers": "Für die folgenden Ebenen gibt es keine Objekte: ",
         "history":{
             "barLabel": "Kartenverlauf",
@@ -578,7 +578,7 @@
             "redoBtnTooltip": "Gehe vorwärts"
         },
         "infoFormatLbl": "Identifiziere das Antwortformat",
-        "infoTriggerLabel": "Auslöser identifizieren",
+        "infoTriggerLabel": "Auslöseereignis für Identifizieren",
         "click": "Click",
         "hover": "Hover",
         "measureSupport": {

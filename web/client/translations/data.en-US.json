@@ -569,7 +569,7 @@
             "title": "Ooops! Something's wrong",
             "text": "An error has occurred during this <b>GetFeatureInfo</b> request"
         },
-        "noFeatureInfo": "There is no information available for the point you clicked",
+        "noFeatureInfo": "There is no information available for this point",
         "noInfoForLayers": "There are no features for the following layers: ",
         "history":{
             "barLabel": "Map history",
@@ -577,7 +577,7 @@
             "redoBtnTooltip": "Go forward"
         },
         "infoFormatLbl": "Identify response format",
-        "infoTriggerLabel": "Identify trigger",
+        "infoTriggerLabel": "Trigger event for Identify",
         "click": "Click",
         "hover": "Hover",
         "measureSupport": {
