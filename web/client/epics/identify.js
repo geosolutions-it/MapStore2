@@ -34,7 +34,7 @@ import { stopGetFeatureInfoSelector, identifyOptionsSelector,
     clickPointSelector, clickLayerSelector,
     isMapPopup, isHighlightEnabledSelector,
     itemIdSelector, overrideParamsSelector, filterNameListSelector } from '../selectors/mapInfo';
-import { centerToMarkerSelector, queryableLayersSelector } from '../selectors/layers';
+import { centerToMarkerSelector, queryableLayersSelector, queryableSelectedLayersSelector } from '../selectors/layers';
 import { modeSelector } from '../selectors/featuregrid';
 import { mapSelector, projectionDefsSelector, projectionSelector } from '../selectors/map';
 import { boundingMapRectSelector } from '../selectors/maplayout';
@@ -97,7 +97,11 @@ export default {
     getFeatureInfoOnFeatureInfoClick: (action$, { getState = () => { } }) =>
         action$.ofType(FEATURE_INFO_CLICK)
             .switchMap(({ point, filterNameList = [], overrideParams = {} }) => {
-                const queryableLayers = queryableLayersSelector(getState());
+                let queryableLayers = queryableLayersSelector(getState());
+                const queryableSelectedLayers = queryableSelectedLayersSelector(getState());
+                if (queryableSelectedLayers.length) {
+                    queryableLayers = queryableSelectedLayers;
+                }
                 if (queryableLayers.length === 0) {
                     return Rx.Observable.of(purgeMapInfoResults(), noQueryableLayers());
                 }

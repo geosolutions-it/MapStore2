@@ -11,7 +11,7 @@ const {
     getLayerFromName, getLayerFromId, layersSelector, layerSelectorWithMarkers, groupsSelector, selectedNodesSelector, layerFilterSelector, layerSettingSelector,
     layerMetadataSelector, wfsDownloadSelector, backgroundControlsSelector,
     currentBackgroundSelector, tempBackgroundSelector, centerToMarkerSelector,
-    getLayersWithDimension, elementSelector
+    getLayersWithDimension, elementSelector, queryableSelectedLayersSelector
 } = require('../layers');
 
 describe('Test layers selectors', () => {
@@ -723,5 +723,54 @@ describe('Test layers selectors', () => {
             "group": "first.second.third"
         };
         expect(elementSelector(state)).toEqual(element);
+    });
+    it('test queryableSelectedLayersSelector', () => {
+        const queryableSelectedLayers = [
+            {
+                type: 'wms',
+                visibility: true,
+                id: 'mapstore:states__7'
+            },
+            {
+                type: 'wms',
+                visibility: true,
+                id: 'mapstore:Types__6'
+            },
+            {
+                type: 'wms',
+                visibility: true,
+                id: 'mapstore:Meteorite_Landings_from_NASA_Open_Data_Portal__5'
+            }
+        ];
+        const state = {
+            layers: {
+                flat: [
+                    {
+                        id: 'mapnik__0',
+                        group: 'background',
+                        type: 'osm',
+                        visibility: true
+                    },
+                    {
+                        id: 'Night2012__1',
+                        group: 'background',
+                        type: 'tileprovider',
+                        visibility: false
+                    },
+                    {
+                        type: 'wms',
+                        visibility: true,
+                        id: 'mapstore:DE_USNG_UTM18__8'
+                    },
+                    ...queryableSelectedLayers
+                ],
+                selected: [
+                    'mapstore:states__7',
+                    'mapstore:Types__6',
+                    'mapstore:Meteorite_Landings_from_NASA_Open_Data_Portal__5'
+                ]
+            }
+        };
+        expect(queryableSelectedLayersSelector(state)).toEqual(queryableSelectedLayers);
     });
 });
