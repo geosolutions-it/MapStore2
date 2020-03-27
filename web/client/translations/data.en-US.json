@@ -1986,6 +1986,9 @@
                 "brightTextThemeLabel": "Bright text",
                 "darkThemeLabel": "Dark",
                 "darkTextThemeLabel": "Dark text",
+                "defaultThemeLabel": "Default",
+                "customizeThemeLabel": "Customize",
+                "customizeThemeRemoveLabel": "Remove customization",
                 "cover": "Make the background cover the whole container space",
                 "fit": "Make the whole background visible inside the container",
                 "editMedia": "Change media source",
@@ -2046,7 +2049,8 @@
                     "autoplayInterval" : "Autoplay interval (seconds)",
                     "autoplayIntervalPlaceholder" : "Enable autoplay interval",
                     "navbar" : "Navigation bar",
-                    "showNavbar" : "Show navbar"
+                    "showNavbar" : "Show navbar",
+                    "theme": "Theme"
                 }
             },
             "errors": {
@@ -2079,6 +2083,13 @@
                 "url": {
                     "label": "URL"
                 }
+            },
+            "customizeTheme": {
+                "backgroundColorLabel": "Background",
+                "textColorLabel": "Text",
+                "shadowLabel": "Shadow",
+                "useAlternativeTextColor": "Use alternative text color",
+                "alternativeTextColorPopover": "<p>Warning: the selected text color could be not readable on this background.</p><p>An alternative text color is {color} &nbsp;<span class=\"ms-custom-theme-picker-alternative-text\" style=\"background-color:{color}\"></span></p>"
             }
         },
         "saveDialog": {
@@ -2624,6 +2635,18 @@
                 "title": "Map Widget",
                 "text": "<p>Add a new interactive map to the dashboard. You can add more than one map with the ability to connect other widgets to them. After saving the first map, the legend widget will be added to the list. Legend Widget will show a legend related to the connected map.</p><p>Steps:</p><p><ul><li>Select a map</li><li>Improve map by adding new layers</li><li>Save and add to dashboard</li></ul></p>"
             }
+        },
+        "userSession": {
+          "saveErrorNotification": {
+            "titleContext": "User session saving failed",
+            "categoryError": "Creating missing category \"{categoryName}\" failed",
+            "defaultMessage": "Unknown error"
+          },
+          "removeErrorNotification": {
+            "titleContext": "User session removing failed",
+            "defaultMessage": "Unknown error"
+          },
+          "successRemoved": "User session removed"
         }
     }
 }

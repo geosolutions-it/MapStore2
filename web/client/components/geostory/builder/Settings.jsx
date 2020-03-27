@@ -6,35 +6,30 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import React from 'react';
+import React, { useState } from 'react';
 import {Form, FormControl, FormGroup, ControlLabel} from 'react-bootstrap';
 import Message from '../../I18N/Message';
 import SwitchButton from '../../misc/switch/SwitchButton';
 import Thumbnail from '../../maps/forms/Thumbnail';
-import {withState, compose} from 'recompose';
 import CheckboxTree from 'react-checkbox-tree';
 import 'react-checkbox-tree/lib/react-checkbox-tree.css';
 import localizedProps from '../../misc/enhancers/localizedProps';
-
+import CustomThemePicker from '../common/CustomThemePicker';
 const InputLocalized = localizedProps("placeholder")(FormControl);
 
-const updateTitle = compose(
-    withState("storyTitle", "setStoryTitle", ({settings}) => settings.storyTitle),
-    withState("expanded", "setExpanded", ({settings}) => settings.expanded || [])
-);
 /**
  * Shows list of settings for the story
  */
-export default updateTitle(({
-    expanded = [],
-    storyTitle,
+export default ({
     items = [],
     settings,
     onToggleSettings = () => {},
-    onUpdateSettings = () => {},
-    setExpanded = () => {},
-    setStoryTitle = () => {}
+    onUpdateSettings = () => {}
 }) => {
+
+    const [storyTitle, setStoryTitle] = useState(settings.storyTitle);
+    const [expanded, setExpanded] = useState(settings.expanded || []);
+
     return (<Form className="ms-geostory-settings">
         <div className="text-center">
             <h4><Message msgId="geostory.builder.settings.headerTitle"/></h4>
@@ -56,6 +51,17 @@ export default updateTitle(({
                 placeholder="geostory.builder.settings.titlePlaceholder"
                 style = {{ marginTop: "10px"}}
             />
+        </FormGroup>
+        <FormGroup>
+            <div style={{ marginBottom: "10px"}}>
+                <ControlLabel><Message msgId="geostory.builder.settings.theme"/></ControlLabel>
+            </div>
+            <CustomThemePicker
+                themeStyle={settings?.theme?.general}
+                placement="right"
+                disableBackgroundAlpha
+                disableShadow
+                onChange={(general) => onUpdateSettings("theme", { ...settings?.theme, general })}/>
         </FormGroup>
         <FormGroup>
             <div style={{ marginBottom: "10px"}}>
@@ -100,5 +106,4 @@ export default updateTitle(({
             />)}
         </FormGroup>
     </Form>);
-}
-);
+};

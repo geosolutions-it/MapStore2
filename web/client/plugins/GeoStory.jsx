@@ -17,7 +17,7 @@ import { getMessageById } from '../utils/LocaleUtils';
 import { add, update, updateCurrentPage, remove, editWebPage } from '../actions/geostory';
 import { editMedia } from '../actions/mediaEditor';
 import * as epics from '../epics/geostory';
-import { currentStorySelector, modeSelector, getFocusedContentSelector, isFocusOnContentSelector} from '../selectors/geostory';
+import { currentStorySelector, modeSelector, getFocusedContentSelector, isFocusOnContentSelector, settingsSelector } from '../selectors/geostory';
 import { currentMessagesSelector } from '../selectors/locale';
 import geostory from '../reducers/geostory';
 import BorderLayout from '../components/layout/BorderLayout';
@@ -39,6 +39,10 @@ const GeoStory = ({
 </BorderLayout>
 );
 
+const storyThemeSelector = (state) => {
+    return settingsSelector(state)?.theme?.general || {};
+};
+
 /**
  * Plugin for GeoStory visualization
  * @name GeoStory
@@ -53,7 +57,8 @@ export default createPlugin("GeoStory", {
                 story: currentStorySelector,
                 messages: currentMessagesSelector,
                 focusedContent: getFocusedContentSelector,
-                isContentFocused: isFocusOnContentSelector
+                isContentFocused: isFocusOnContentSelector,
+                theme: storyThemeSelector
             }), {
                 add,
                 update,

@@ -14,6 +14,8 @@ export const USER_SESSION_REMOVED = "USER_SESSION:REMOVED";
 export const USER_SESSION_LOADED = "USER_SESSION:LOADED";
 export const USER_SESSION_LOADING = "USER_SESSION:LOADING";
 export const SAVE_MAP_CONFIG = "USER_SESSION:ORIGINAL_CONFIG";
+export const USER_SESSION_START_SAVING = "USER_SESSION:START_SAVING";
+export const USER_SESSION_STOP_SAVING = "USER_SESSION:STOP_SAVING";
 
 export const saveUserSession = () => ({type: SAVE_USER_SESSION});
 export const userSessionSaved = (id, session) => ({type: USER_SESSION_SAVED, id, session});
@@ -21,6 +23,8 @@ export const loadUserSession = (name = "") => ({type: LOAD_USER_SESSION, name});
 export const userSessionLoaded = (id, session) => ({type: USER_SESSION_LOADED, id, session});
 export const removeUserSession = () => ({type: REMOVE_USER_SESSION});
 export const userSessionRemoved = () => ({type: USER_SESSION_REMOVED});
+export const userSessionStartSaving = () => ({type: USER_SESSION_START_SAVING});
+export const userSessionStopSaving = () => ({type: USER_SESSION_STOP_SAVING});
 export const saveMapConfig = (config) => ({type: SAVE_MAP_CONFIG, config});
 export const loading = (value, name = "loading") => ({
     type: USER_SESSION_LOADING,
