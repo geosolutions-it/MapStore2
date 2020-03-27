@@ -10,23 +10,20 @@
  */
 const { isMatch } = require('lodash');
 const { withProps } = require('recompose');
-const traverse = (branch = [], filter) => {
-    for (let i = 0; i < branch.length; i++) {
-        if (isMatch(branch[i], filter)) {
-            return branch[i];
+const traverse = (branch = [], filter, fn) => {
+    for (let i in branch) {
+        if (branch[i] !== null && typeof(branch[i]) === "object") {
+            if (isMatch(branch[i], filter)) {
+                fn.apply(this, [branch[i]]);
+            }
+            traverse(branch[i], filter, fn);
         }
     }
-
-    for (let j = 0; j < branch.length; j++) {
-        let result = traverse(branch[j].nodes, filter);
-        if (result !== undefined) {
-            return result;
-        }
-    }
-
-    return null; // no match found
-
 };
-module.exports = withProps(({ nodes = {}, editNode }) => ({
-    selectedNode: editNode && traverse(nodes, { id: editNode })
-}));
+module.exports = withProps(({ nodes = {}, editNode }) => {
+    let selectedNode = {};
+    editNode && traverse(nodes, { id: editNode }, (resultNode)=>{
+        selectedNode = resultNode;
+    });
+    return { selectedNode };
+});
