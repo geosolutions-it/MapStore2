@@ -2620,6 +2620,18 @@
                 "title": "Widget de mapa",
                 "text": "<p> Agregue un nuevo mapa interactivo al panel de control. Puede agregar más de un mapa con la capacidad de conectar otros widgets a ellos. Después de guardar el primer mapa, el widget de leyenda se agregará a la lista. El widget de leyenda mostrará una leyenda relacionada con el mapa conectado. </p> <p> Pasos: </p> <p> <ul> <li> Seleccione un mapa </li> <li> Mejore el mapa agregando nuevas capas </li> <li> Guarde y agregue al panel de control </li> </ul> </p>"
             }
+        },
+        "userSession": {
+          "saveErrorNotification": {
+            "titleContext": "Error al guardar la sesión del usuario",
+            "categoryError": "Creando categoría faltante \"{categoryName}\"faile",
+            "defaultMessage": "Error desconocido"
+          },
+          "removeErrorNotification": {
+            "titleContext": "Error al eliminar sesión de usuario",
+            "defaultMessage": "Error desconocido"
+          },
+          "successRemoved": "Sesión de usuario eliminada"
         }
     }
 }

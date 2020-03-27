@@ -2624,6 +2624,18 @@
                 "title": "Map Widget",
                 "text": "<p>Add a new interactive map to the dashboard. You can add more than one map with the ability to connect other widgets to them. After saving the first map, the legend widget will be added to the list. Legend Widget will show a legend related to the connected map.</p><p>Steps:</p><p><ul><li>Select a map</li><li>Improve map by adding new layers</li><li>Save and add to dashboard</li></ul></p>"
             }
+        },
+        "userSession": {
+          "saveErrorNotification": {
+            "titleContext": "User session saving failed",
+            "categoryError": "Creating missing category \"{categoryName}\" faile",
+            "defaultMessage": "Unknown error"
+          },
+          "removeErrorNotification": {
+            "titleContext": "User session removing failed",
+            "defaultMessage": "Unknown error"
+          },
+          "successRemoved": "User session removed"
         }
     }
 }
