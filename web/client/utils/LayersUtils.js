@@ -248,6 +248,10 @@ const SecurityUtils = require('./SecurityUtils');
 
 const LayerCustomUtils = {};
 
+const getLayerUrl = (layer) => {
+    return isArray(layer.url) ? layer.url[0] : layer.url;
+};
+
 const LayersUtils = {
     getSourceId,
     extractSourcesFromLayers,
@@ -523,13 +527,18 @@ const LayersUtils = {
         return regex.test(location) && location.match(regex)[0] || null;
     },
     /**
+     * Return a base url for the given layer.
+     * Supports multiple urls.
+     */
+    getLayerUrl,
+    /**
      * This method search for a /geoserver/  string inside the url
      * if it finds it returns a getCapabilitiesUrl to a single layer if it has a name like WORKSPACE:layerName
      * otherwise it returns the default getCapabilitiesUrl
     */
     getCapabilitiesUrl: (layer) => {
         const matchedGeoServerName = LayersUtils.findGeoServerName({url: layer.url});
-        let reqUrl = isArray(layer.url) ? layer.url[0] : layer.url;
+        let reqUrl = getLayerUrl(layer);
         if (!!matchedGeoServerName) {
             let urlParts = reqUrl.split(matchedGeoServerName);
             if (urlParts.length === 2) {

@@ -141,6 +141,12 @@ const queryableLayersSelector = state => layersSelector(state).filter(defaultQue
  * @return {boolean} true if selected layer has error
  */
 const selectedLayerLoadingErrorSelector = state => (getSelectedLayer(state) || {}).loadingError === 'Error';
+/**
+ * Return queriable selected layers
+ * @param {object} state the state
+ * @return {array} the queriable selected layers
+ */
+const queryableSelectedLayersSelector = state => getSelectedLayers(state).filter(defaultQueryableFilter);
 
 module.exports = {
     getLayerFromName,
@@ -165,5 +171,6 @@ module.exports = {
     tempBackgroundSelector,
     centerToMarkerSelector,
     elementSelector,
-    selectedLayerLoadingErrorSelector
+    selectedLayerLoadingErrorSelector,
+    queryableSelectedLayersSelector
 };
