@@ -1195,7 +1195,7 @@
             "serviceTitle": "Título",
             "serviceTitlePlaceholder": "escribe un título",
             "tms": {
-              "proveedor": "Proveedor",
+              "provider": "Proveedor",
               "urlTemplate": "Plantilla de URL",
               "urlTemplateHint": "<p> URL de plantilla para su servicio TMS personalizado, con la posibilidad de insertar variables (expresadas con llaves, por ejemplo, <code> {var_name} </code>) que serán reemplazadas por la aplicación. <br />. Las variables <code> {x} </code>, <code> {y} </code> y <code> {z} </code> están reservadas para los valores de coordenadas de la cuadrícula de mosaico. También puede usar variables <code> {s} </code> para subdominios. Cualquier otra variable especificada en la URL debe especificarse también en las opciones dentro de \"Configuración personalizada de TMS\" (Configuración avanzada) </p> ",
               "customTMSConfiguration": "Configuración personalizada de TMS",
@@ -1204,7 +1204,7 @@
               "forceDefaultTileGridDescription": "Utilice la cuadrícula de mosaico de la proyección global en lugar del origen y las resoluciones proporcionadas por el servidor. Esto es útil para algunos servicios de TMS que anuncian origen o revelaciones incorrectos"
             },
             "tileprovider": {
-              "información sobre herramientas": "x, y, z son la posición del mosaico, s es el subdominio (predeterminado)"
+              "tooltip": "x, y, z son la posición del mosaico, s es el subdominio (predeterminado)"
             },
             "missingReference": "Faltan metadatos de referencia OGC",
             "showDescription": "Mostrar descripción completa",

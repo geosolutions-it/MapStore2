@@ -1204,7 +1204,7 @@
                 "forceDefaultTileGridDescription": "Utilisez la grille de tuiles de la projection globale au lieu de l'origine et des résolutions fournies par le serveur. Ceci est utile pour certains services TMS qui annoncent une origine ou des résolutions incorrectes."
               },
               "tileprovider": {
-                "info-bulle": "x, y, z sont la position des tuiles, s est le sous-domaine (par défaut)"
+                "tooltip": "x, y, z sont la position des tuiles, s est le sous-domaine (par défaut)"
             },
             "missingReference": "Les métadonnées des références OGC manquent",
             "showDescription": "Afficher la description complète",

@@ -1196,17 +1196,15 @@
             "serviceTitle": "Titel",
             "serviceTitlePlaceholder": "Geben Sie einen Titel ein",
             "tms": {
-                  "Anbieter": "Anbieter",
-                  "urlTemplate": "URL-Vorlage",
-                  "urlTemplateHint": "<p> Vorlagen-URL für Ihren benutzerdefinierten TMS-Dienst mit der Möglichkeit, Variablen einzufügen (ausgedrückt in geschweiften Klammern, z. B. <code> {var_name} </ code>), die von der Anwendung ersetzt werden. <br />. Die Variablen <code> {x} </ code>, <code> {y} </ code> und <code> {z} </ code> sind für Kachelgitterkoordinatenwerte reserviert. Sie können auch Variablen verwenden <code> {s} </ code> für Subdomains. Jede andere in der URL angegebene Variable muss auch in den Optionen unter \"Benutzerdefinierte TMS-Konfiguration\" (Erweiterte Einstellungen) angegeben werden.</p>",
-                  "customTMSConfiguration": "Benutzerdefinierte TMS-Konfiguration",
-                  "customTMSConfigurationHint": "<p> Optionen können Folgendes enthalten: <br/> <ul> <ul> <li> <code>\"subdomains\": ['a', 'b'] </ code>: Wird für mehrere Domains verwendet. Ersetzen des <code> {s} </code> in der URL-Vorlage </li> <li> <code> \"maxNativeZoom\": 20 </code>: Maximaler Zoom vom Server </li> </ul> </p>",                  "forceDefaultTileGrid": "Standard-Kachelraster erzwingen",
-                  "forceDefaultTileGridDescription": "Verwenden Sie das Kachelraster der globalen Projektion anstelle des vom Server bereitgestellten Ursprungs und der vom Server bereitgestellten Auflösungen. Dies ist nützlich für einige TMS-Dienste, die falsche Ursprünge oder Ergebnisse anzeigen."
-                },
-                "Fliesenanbieter": {
-                  "Tooltip": "x, y, z sind Kachelpositionen, s ist die Unterdomäne (Standard)"
-                }
-              }
+              "provider": "Anbieter",
+              "urlTemplate": "URL-Vorlage",
+              "urlTemplateHint": "<p> Vorlagen-URL für Ihren benutzerdefinierten TMS-Dienst mit der Möglichkeit, Variablen einzufügen (ausgedrückt in geschweiften Klammern, z. B. <code> {var_name} </ code>), die von der Anwendung ersetzt werden. <br />. Die Variablen <code> {x} </ code>, <code> {y} </ code> und <code> {z} </ code> sind für Kachelgitterkoordinatenwerte reserviert. Sie können auch Variablen verwenden <code> {s} </ code> für Subdomains. Jede andere in der URL angegebene Variable muss auch in den Optionen unter \"Benutzerdefinierte TMS-Konfiguration\" (Erweiterte Einstellungen) angegeben werden.</p>",
+              "customTMSConfiguration": "Benutzerdefinierte TMS-Konfiguration",
+              "customTMSConfigurationHint": "<p> Optionen können Folgendes enthalten: <br/> <ul> <ul> <li> <code>\"subdomains\": ['a', 'b'] </ code>: Wird für mehrere Domains verwendet. Ersetzen des <code> {s} </code> in der URL-Vorlage </li> <li> <code> \"maxNativeZoom\": 20 </code>: Maximaler Zoom vom Server </li> </ul> </p>",                  "forceDefaultTileGrid": "Standard-Kachelraster erzwingen",
+              "forceDefaultTileGridDescription": "Verwenden Sie das Kachelraster der globalen Projektion anstelle des vom Server bereitgestellten Ursprungs und der vom Server bereitgestellten Auflösungen. Dies ist nützlich für einige TMS-Dienste, die falsche Ursprünge oder Ergebnisse anzeigen."
+            },
+            "tileprovider": {
+              "tooltip": "x, y, z sind Kachelpositionen, s ist die Unterdomäne (Standard)"
             },
             "missingReference": "Fehlende OGC-Referenzmetadaten",
             "showDescription": "Vollständige Beschreibung anzeigen",
