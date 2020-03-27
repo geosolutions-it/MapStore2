@@ -1,5 +1,5 @@
 /*
- * Copyright 2018, GeoSolutions Sas.
+ * Copyright 2020, GeoSolutions Sas.
  * All rights reserved.
  *
  * This source code is licensed under the BSD-style license found in the
@@ -36,7 +36,7 @@ describe('withSelectedNode enhancer', () => {
         ReactDOM.render( <Sink nodes={nodeVal} editNode={"layer1"} />, document.getElementById("container"));
     });
 
-    it('withSelectedNode selecting node from other group', (done) => {
+    it('withSelectedNode selecting node from a subgroup of Default', (done) => {
         const Sink = withSelectedNode(createSink( (props) => {
             expect(props).toExist();
             expect(props.editNode).toExist();
@@ -48,6 +48,20 @@ describe('withSelectedNode enhancer', () => {
             done();
         }));
         const nodeVal = {nodes: [{id: "Default", nodes: [{id: "layer1"}]}, {id: "Meteo", nodes: [{id: "layer2"}]}]};
-        ReactDOM.render(<Sink nodes={nodeVal} editNode={"layer2"}/>, document.getElementById("container"));
+        ReactDOM.render(<Sink nodes={nodeVal} editNode={"layer2"} />, document.getElementById("container"));
+    });
+
+    it('withSelectedNode selecting node from other group', (done) => {
+        const Sink = withSelectedNode(createSink( (props) => {
+            expect(props).toExist();
+            expect(props.editNode).toExist();
+            expect(isEmpty(props.nodes)).toBe(false);
+            expect(isEmpty(props.selectedNode)).toBe(false);
+            expect(isNull(props.selectedNode)).toBe(false);
+            expect(props.selectedNode).toEqual({id: "layer2"});
+            done();
+        }));
+        const nodeVal = {nodes: [{id: "Default"}, {id: "someotherGroup", nodes: [{id: "layer1"}, {id: "Meteo", nodes: [{id: "layer2"}]}]}]};
+        ReactDOM.render(<Sink nodes={nodeVal} editNode={"layer2"} />, document.getElementById("container"));
     });
 });
