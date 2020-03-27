@@ -599,7 +599,9 @@
             "showLabel": "Mostrar etiqueta de medición",
             "addAsAnnotation": "Añadir como anotación",
             "newMeasure": "Nueva anotación",
-            "selectTool": "Seleccione una herramienta de medición"
+            "selectTool": "Seleccione una herramienta de medición",
+            "exportToGeoJSON": "Exportar a GeoJSON",
+            "addAsLayer": "Agregar como capa"
         },
         "search":{
             "decimal": "Decimal",

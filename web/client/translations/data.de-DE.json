@@ -600,7 +600,9 @@
             "showLabel": "Zeige Bezeichnungsetikett",
             "addAsAnnotation": "Als Anmerkung hinzufügen",
             "newMeasure": "Neue Anmerkung",
-            "selectTool": "Wählen Sie ein Messwerkzeug aus"
+            "selectTool": "Wählen Sie ein Messwerkzeug aus",
+            "exportToGeoJSON": "Export nach GeoJSON",
+            "addAsLayer": "Als Ebene hinzufügen"
         },
         "search":{
             "decimal": "Dezimal",
