@@ -1,5 +1,0 @@
-Sample TMS
-https://public.sig.rennesmetropole.fr/geowebcache/service/tms/1.0.0
-https://osm.geobretagne.fr/gwc01/service/tms/1.0.0
-http://tiles.craig.fr/ortho/tms/1.0.0/
-https://tiles.craig.fr/ortho/tms/1.0.0/ortho_2016/webmercator/{z}/{x}/{-y}.jpeg  {zoomOffset: -1}
