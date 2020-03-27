@@ -2620,6 +2620,18 @@
                 "title": "Widget Mappa",
                 "text": "<p> Aggiungi una nuova mappa interattiva alla dashboard. È possibile aggiungere più di una mappa con la possibilità di collegare ad esse altri widget. Dopo aver salvato la prima mappa, il widget legenda verrà aggiunto all'elenco. Legend Widget mostrerà una legenda relativa alla mappa connessa. </p> <p> Passaggi: </p> <p> <ul> <li> Seleziona una mappa </li> <li> Migliora la mappa aggiungendo nuovi livelli </li> <li> Salva e aggiungi alla dashboard </li> </ul> </p>"
             }
+        },
+        "userSession": {
+          "saveErrorNotification": {
+            "titleContext": "Salvataggio della sessione utente non riuscita",
+            "categoryError": "Creazione della categoria mancante \"{categoryName}\" non riuscita",
+            "defaultMessage": "Errore sconosciuto"
+          },
+          "removeErrorNotification": {
+            "titleContext": "Cancellazione della sessione utente non riuscita",
+            "defaultMessage": "Errore sconosciuto"
+          },
+          "successRemoved": "Sessione utente cancellata"
         }
     }
 }

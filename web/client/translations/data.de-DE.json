@@ -2621,6 +2621,18 @@
                 "title": "Karten Widget",
                 "text": "<p> Fügen Sie eine neue interaktive Karte zum Dashboard hinzu. Sie können mehr als eine Karte mit der Möglichkeit hinzufügen, andere Widgets mit ihnen zu verbinden. Nach dem Speichern der ersten Karte wird das Legenden-Widget zur Liste hinzugefügt. Das Legenden-Widget zeigt eine Legende zur verbundenen Karte. </p> <p> Schritte: </p> <p> <ul> <li> Wählen Sie eine Karte </li> <li> Verbessern Sie die Karte, indem Sie neue Ebenen hinzufügen </li> <li> Speichern und zum Dashboard hinzufügen </li> </ul> </p>"
             }
+        },
+        "userSession": {
+          "saveErrorNotification": {
+            "titleContext": "Speichern der Benutzersitzung fehlgeschlagen",
+            "categoryError": "Fehlende Kategorie erstellen \"{categoryName}\" faile",
+            "defaultMessage": "Unbekannter Fehler"
+          },
+          "removeErrorNotification": {
+            "titleContext": "Entfernen der Benutzersitzung fehlgeschlagen",
+            "defaultMessage": "Unbekannter Fehler"
+          },
+          "successRemoved": "Benutzersitzung entfernt"
         }
     }
 }
