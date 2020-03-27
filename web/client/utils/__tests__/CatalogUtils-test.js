@@ -655,5 +655,54 @@ describe('Test the CatalogUtils', () => {
         expect(esri.references[0].type).toBe("arcgis");
         expect(esri.references[0].params.name).toBe("1-Hurricane Track");
     });
+    describe('tms', () => {
+        const TMS_DATA = { records: [{
+            title: "TEST_TITLE",
+            href: "TEST_HREF",
+            srs: "EPSG:4326",
+        }]};
+        const TILEPROVIDER_DATA = {
+            records: [{
+                provider: "provider.variant",
+                options: {
+                    subdomains: ['a']
+                }
+            }]
+        };
+        const OPTIONS_TMS = {
+            tmsUrl: "TMS_URL",
+            url: "SomeURL",
+            service: {provider: "tms"}
+        };
+        const OPTIONS_TILEPROVIDER = {
+
+        };
+        it('getCatalogRecords tileProvider', () => {
+            const res = CatalogUtils.getCatalogRecords('tms', TILEPROVIDER_DATA, OPTIONS_TILEPROVIDER);
+            const rec = res[0];
+            expect(res[0]).toBeTruthy();
+            expect(rec.title).toBe(TILEPROVIDER_DATA.records[0].provider);
+            expect(rec.provider).toBe(TILEPROVIDER_DATA.records[0].provider);
+            expect(rec.options).toBe(TILEPROVIDER_DATA.records[0].options);
+            expect(rec.type).toBe("tileprovider");
+        });
+        it('getCatalogRecords TMS 1.0.0', () => {
+            const res = CatalogUtils.getCatalogRecords('tms', TMS_DATA, OPTIONS_TMS);
+            const rec = res[0];
+            expect(res[0]).toBeTruthy();
+            expect(rec.title).toBe(TMS_DATA.records[0].title);
+            expect(rec.description).toBe(TMS_DATA.records[0].srs);
+            expect(rec.tileMapUrl).toBe(TMS_DATA.records[0].href);
+            expect(rec.references[0].url).toBe(OPTIONS_TMS.url);
+            expect(rec.references[0].type).toBe("OGC:TMS");
+            expect(rec.references[0].version).toBe("1.0.0");
+        });
+        it('tmsToLayer', () => {
+            const RECORD = {
+
+            };
+            // TODO: tmsToLayer(RECORD, TileMapService, OPTIONS);
+        });
+    });
 
 });
