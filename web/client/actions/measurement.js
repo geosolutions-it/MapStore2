@@ -9,6 +9,9 @@ const CHANGE_MEASUREMENT_TOOL = 'CHANGE_MEASUREMENT_TOOL';
 const CHANGE_MEASUREMENT_STATE = 'CHANGE_MEASUREMENT_STATE';
 const CHANGE_UOM = 'MEASUREMENT:CHANGE_UOM';
 const CHANGED_GEOMETRY = 'MEASUREMENT:CHANGED_GEOMETRY';
+const SET_STYLE = 'MEASUREMENT:SET_STYLE';
+const SET_TEXT_LABELS = 'MEASUREMENT:SET_TEXT_LABELS';
+const ADD_AS_LAYER = 'MEASUREMENT:ADD_AS_LAYER';
 const RESET_GEOMETRY = 'MEASUREMENT:RESET_GEOMETRY';
 const CHANGE_FORMAT = 'MEASUREMENT:CHANGE_FORMAT';
 const CHANGE_COORDINATES = 'MEASUREMENT:CHANGE_COORDINATES';
@@ -19,13 +22,12 @@ const INIT = 'MEASUREMENT:INIT';
 /**
  * trigger the epic to add the measure feature into an annotation.
 */
-function addAnnotation(feature, value, uom, measureTool) {
+function addAnnotation(features, textLabels, uom) {
     return {
         type: ADD_MEASURE_AS_ANNOTATION,
-        feature,
-        value,
-        uom,
-        measureTool
+        features,
+        textLabels,
+        uom
     };
 }
 
@@ -57,12 +59,33 @@ function changeUom(uom, value, previousUom) {
     };
 }
 
-function changeGeometry(feature) {
+function changeGeometry(features) {
     return {
         type: CHANGED_GEOMETRY,
-        feature
+        features
     };
 }
+function setStyle(style) {
+    return {
+        type: SET_STYLE,
+        style
+    };
+}
+function setTextLabels(textLabels) {
+    return {
+        type: SET_TEXT_LABELS,
+        textLabels
+    };
+}
+function addAsLayer(features, textLabels, uom) {
+    return {
+        type: ADD_AS_LAYER,
+        features,
+        textLabels,
+        uom
+    };
+}
+
 function changeFormatMeasurement(format) {
     return {
         type: CHANGE_FORMAT,
@@ -94,12 +117,7 @@ function changeMeasurementState(measureState) {
         areaMeasureEnabled: measureState.areaMeasureEnabled,
         bearingMeasureEnabled: measureState.bearingMeasureEnabled,
         geomType: measureState.geomType,
-        point: measureState.point,
-        len: measureState.len,
-        area: measureState.area,
-        bearing: measureState.bearing,
-        lenUnit: measureState.lenUnit,
-        areaUnit: measureState.areaUnit,
+        values: measureState.values,
         feature: measureState.feature
     };
 }
@@ -115,6 +133,9 @@ module.exports = {
     CHANGE_MEASUREMENT_STATE,
     changeUom, CHANGE_UOM,
     changeGeometry, CHANGED_GEOMETRY,
+    setStyle, SET_STYLE,
+    setTextLabels, SET_TEXT_LABELS,
+    addAsLayer, ADD_AS_LAYER,
     changeFormatMeasurement, CHANGE_FORMAT,
     updateMeasures, UPDATE_MEASURES,
     changeCoordinates, CHANGE_COORDINATES,

@@ -13,7 +13,7 @@ const {creationError, changeMapView, clickOnMap} = require('../../actions/map');
 const {removePopup} = require('../../actions/mapPopups');
 const {layerLoading, layerLoad, layerError} = require('../../actions/layers');
 const {changeMousePosition} = require('../../actions/mousePosition');
-const {changeMeasurementState, changeGeometry, resetGeometry, updateMeasures} = require('../../actions/measurement');
+const {changeMeasurementState, changeGeometry, resetGeometry, updateMeasures, setTextLabels} = require('../../actions/measurement');
 const {measurementSelector} = require('../../selectors/measurement');
 const {changeSelectionState} = require('../../actions/selection');
 const {changeLocateState, onLocateError} = require('../../actions/locate');
@@ -61,7 +61,8 @@ module.exports = (mapType, actions) => {
         changeMeasurementState,
         updateMeasures,
         resetGeometry,
-        changeGeometry
+        changeGeometry,
+        setTextLabels
     })(components.MeasurementSupport || Empty);
 
     const Locate = connect((state) => ({

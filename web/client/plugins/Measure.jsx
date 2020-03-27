@@ -12,7 +12,7 @@ const {Glyphicon} = require('react-bootstrap');
 const assign = require('object-assign');
 const {createSelector} = require('reselect');
 const Message = require('./locale/Message');
-const {changeMeasurement, changeUom, changeFormatMeasurement, changeCoordinates, addAnnotation, init} = require('../actions/measurement');
+const {changeMeasurement, changeUom, changeFormatMeasurement, changeCoordinates, addAnnotation, addAsLayer, init} = require('../actions/measurement');
 const {toggleControl, setControlProperty} = require('../actions/controls');
 const {MeasureDialog} = require('./measure/index');
 
@@ -72,12 +72,13 @@ const Measure = connect(
         onInit: init,
         onChangeCoordinates: changeCoordinates,
         onClose: toggleMeasureTool,
-        onMount: (showCoordinateEditor) => setControlProperty("measure", "showCoordinateEditor", showCoordinateEditor)
+        onMount: (showCoordinateEditor) => setControlProperty("measure", "showCoordinateEditor", showCoordinateEditor),
+        onAddAsLayer: addAsLayer
     }, null, {pure: false})(MeasureDialog);
 
 module.exports = {
     MeasurePlugin: assign(Measure, {
-        disablePluginIf: "{state('mapType') === 'cesium'}",
+        disablePluginIf: "{state('mapType') === 'cesium' || state('mapType') === 'leaflet' }",
         BurgerMenu: {
             name: 'measurement',
             position: 9,

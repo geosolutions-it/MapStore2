@@ -12,10 +12,20 @@ import round from 'lodash/round';
 import isEqual from 'lodash/isEqual';
 import dropRight from 'lodash/dropRight';
 import pick from 'lodash/pick';
+import get from 'lodash/get';
+import last from 'lodash/last';
 
 import assign from 'object-assign';
 
-import {reprojectGeoJson, reproject, calculateAzimuth, calculateDistance, transformLineToArcs} from '../../../utils/CoordinatesUtils';
+import {
+    reprojectGeoJson,
+    reproject,
+    pointObjectToArray,
+    calculateAzimuth,
+    calculateDistance,
+    transformLineToArcs,
+    midpoint
+} from '../../../utils/CoordinatesUtils';
 import {convertUom, getFormattedBearingValue} from '../../../utils/MeasureUtils';
 import {set} from '../../../utils/ImmutableUtils';
 import {startEndPolylineStyle} from './VectorStyle';
@@ -50,7 +60,8 @@ export default class MeasurementSupport extends React.Component {
         updateMeasures: PropTypes.func,
         resetGeometry: PropTypes.func,
         changeGeometry: PropTypes.func,
-        updateOnMouseMove: PropTypes.bool
+        updateOnMouseMove: PropTypes.bool,
+        setTextLabels: PropTypes.func
     };
 
     static contextTypes = {
@@ -63,6 +74,7 @@ export default class MeasurementSupport extends React.Component {
         updateMeasures: () => {},
         changeGeometry: () => {},
         formatNumber: n => n,
+        setTextLabels: () => {},
         startEndPoint: {
             startPointOptions: {
                 radius: 3,
@@ -91,16 +103,46 @@ export default class MeasurementSupport extends React.Component {
         }
         if (!newProps.measurement.geomType) {
             this.removeDrawInteraction();
+            this.removeMeasureTooltips();
+            this.removeSegmentLengthOverlays();
+            this.textLabels = [];
+            this.segmentLengths = [];
+            this.props.map.removeLayer(this.measureLayer);
+            this.vector = null;
+            this.measureLayer = null;
+            if (newProps.measurement.features && newProps.measurement.features.length > 0) {
+                this.props.changeGeometry([]);
+            }
+            if (newProps.measurement.textLabels && newProps.measurement.textLabels.length > 0) {
+                this.props.setTextLabels([]);
+            }
+            if (this.source) {
+                this.source.clear();
+                this.source = null;
+            }
         }
-        let oldFt = this.props.measurement.feature;
-        let newFt = newProps.measurement.feature;
+        let oldFt = this.props.measurement.features;
+        let newFt = newProps.measurement.features;
         /**
          * update the feature drawn and recalculate the measures and tooltips
          * then update the stae with only the new measures calculated
          */
-        if (newFt && newFt.geometry && newProps.measurement.updatedByUI && (!isEqual(oldFt, newFt) || !isEqual(this.props.uom, newProps.uom))) {
+        if (newProps.measurement.updatedByUI && (!isEqual(oldFt, newFt) || !isEqual(this.props.uom, newProps.uom))) {
             this.updateMeasures(newProps);
         }
+    }
+
+    getLength = (coords, props) => {
+        if (props.measurement.geomType === 'Bearing' && coords.length > 1) {
+            // calculate the azimuth as base for bearing information
+            return calculateAzimuth(coords[0], coords[1], getProjectionCode(props.map));
+        }
+        const reprojectedCoords = this.reprojectedCoordinatesIn4326(coords);
+        return calculateDistance(reprojectedCoords, props.measurement.lengthFormula);
+    }
+
+    getArea = (polygon) => {
+        return this.calculateGeodesicArea(polygon.getLinearRing(0).getCoordinates());
     }
 
     render() {
@@ -116,61 +158,56 @@ export default class MeasurementSupport extends React.Component {
      * It must receive only valid coordinates
     */
     updateMeasures = (props) => {
-        this.replaceFeatures([props.measurement.feature], props);
-
-        // update measure tooltip
-        if (props.measurement.showLabel) {
-            this.removeMeasureTooltips();
-            this.measureTooltipElement = document.createElement("div");
-            this.measureTooltipElement.className = this.drawing ? "tooltip tooltip-measure" : "tooltip tooltip-static";
-
-            let geom = this.source.getFeatures()[0].getGeometry();
-            let output;
-            if (geom instanceof Polygon) {
-                output = this.formatArea(geom, props);
-                this.tooltipCoord = geom.getInteriorPoint().getCoordinates();
-            } else if (geom instanceof LineString) {
-                output = this.formatLength(geom, props);
-                this.tooltipCoord = geom.getLastCoordinate();
+        const converter = ({type, value}) => {
+            if (type === 'length') {
+                return this.formatLengthValue(value, props.uom, false);
+            } else if (type === 'area') {
+                return this.formatAreaValue(value, props.uom);
             }
-            this.measureTooltipElement.innerHTML = output;
-            this.measureTooltip = new Overlay({
-                element: this.measureTooltipElement,
-                offset: [0, -7],
-                positioning: 'bottom-center'
-            });
-            this.measureTooltip.setPosition(this.tooltipCoord);
-            props.map.addOverlay(this.measureTooltip);
+            return this.formatLengthValue(value, props.uom, true);
+        };
+
+        for (let i = 0; i < this.outputValues.length; ++i) {
+            if (!this.outputValues[i]) continue;
+            this.measureTooltipElements[i].innerHTML = converter(this.outputValues[i]);
         }
-        this.sketchFeature = this.source.getFeatures()[0];
-        this.updateMeasurementResults(props, true);
+        for (let i = 0; i < this.segmentOverlayElements.length; ++i) {
+            if (!this.segmentOverlayElements[i]) continue;
+            const text = converter(this.segmentLengths[i]);
+            this.segmentOverlayElements[i].innerHTML = text;
+            this.textLabels[i].text = text;
+        }
+
+        if (!this.drawing) {
+            this.props.setTextLabels(this.textLabels);
+        }
     }
 
-    /**
-     * takes features form props and
-     * it adds it to the measure vector layer
-    */
-    replaceFeatures = (features, props) => {
-        let featuresToReplace = features;
-        if (props.measurement.lineMeasureEnabled) {
-            // creatin arcs for distance measure
-            let newCoords = transformLineToArcs(props.measurement.feature.geometry.coordinates);
-            let ft = set("geometry.coordinates", newCoords, features[0]);
-            featuresToReplace = [ft];
+    addFeature = (featureObj) => {
+        let newSource = false;
+
+        if (!this.source) {
+            this.source = new VectorSource();
+            newSource = true;
         }
-        this.source = new VectorSource();
-        featuresToReplace.forEach((geoJSON) => {
-            let geometry = reprojectGeoJson(geoJSON, "EPSG:4326", getProjectionCode(this.props.map)).geometry;
-            const feature = new Feature({
-                geometry: createOLGeometry(geometry)
-            });
-            this.source.addFeature(feature);
+
+        let geometry = reprojectGeoJson(featureObj, "EPSG:4326", getProjectionCode(this.props.map)).geometry;
+        const feature = new Feature({
+            geometry: createOLGeometry(geometry)
         });
-        this.measureLayer.setSource(this.source);
+        this.source.addFeature(feature);
+
+        if (newSource) {
+            this.measureLayer.setSource(this.source);
+        }
+    };
+
+    resetGeometry = () => {
+        this.source.clear();
+        this.props.resetGeometry();
     };
 
     addDrawInteraction = (newProps) => {
-        let vector;
         let draw;
         let geometryType;
         let {startEndPoint} = newProps.measurement;
@@ -181,39 +218,44 @@ export default class MeasurementSupport extends React.Component {
         if (this.drawInteraction) {
             this.removeDrawInteraction();
         }
-        // create a layer to draw on
-        this.source = new VectorSource();
-        let styles = [
-            new Style({
-                fill: new Fill({
-                    color: 'rgba(255, 255, 255, 0.2)'
-                }),
-                stroke: new Stroke({
-                    color: '#ffcc33',
-                    width: 2
-                }),
-                image: new CircleStyle({
-                    radius: 7,
+
+        if (!this.vector) {
+            // create a layer to draw on
+            this.source = new VectorSource();
+            let styles = [
+                new Style({
                     fill: new Fill({
-                        color: '#ffcc33'
+                        color: 'rgba(255, 255, 255, 0.2)'
+                    }),
+                    stroke: new Stroke({
+                        color: '#ffcc33',
+                        width: 2
+                    }),
+                    image: new CircleStyle({
+                        radius: 7,
+                        fill: new Fill({
+                            color: '#ffcc33'
+                        })
                     })
-                })
-            })];
-        let startEndPointStyles = [];
-        let applyStartEndPointStyle = startEndPoint || startEndPoint === true;
-        if (applyStartEndPointStyle || startEndPoint === undefined ) {
-            // if startPointOptions or endPointOptions is undefined it will use the default values set in VectorStyle for that point
-            let options = applyStartEndPointStyle ? startEndPoint === undefined ? {} : startEndPoint : newProps.startEndPoint;
-            startEndPointStyles = startEndPolylineStyle(options.startPointOptions, options.endPointOptions);
+                })];
+            let startEndPointStyles = [];
+            let applyStartEndPointStyle = startEndPoint || startEndPoint === true;
+            if (applyStartEndPointStyle || startEndPoint === undefined ) {
+                // if startPointOptions or endPointOptions is undefined it will use the default values set in VectorStyle for that point
+                let options = applyStartEndPointStyle ? startEndPoint === undefined ? {} : startEndPoint : newProps.startEndPoint;
+                startEndPointStyles = startEndPolylineStyle(options.startPointOptions, options.endPointOptions);
+            }
+
+            const vectorStyle = [...styles, ...startEndPointStyles];
+
+            this.vector = new VectorLayer({
+                source: this.source,
+                zIndex: 1000000,
+                style: vectorStyle
+            });
+
+            this.props.map.addLayer(this.vector);
         }
-
-        vector = new VectorLayer({
-            source: this.source,
-            zIndex: 1000000,
-            style: [...styles, ...startEndPointStyles]
-        });
-
-        this.props.map.addLayer(vector);
 
         if (newProps.measurement.geomType === 'Bearing') {
             geometryType = 'LineString';
@@ -222,7 +264,7 @@ export default class MeasurementSupport extends React.Component {
         }
         // create an interaction to draw with
         draw = new Draw({
-            source: this.source,
+            source: new VectorSource(),
             type: /** @type {ol.geom.GeometryType} */ geometryType,
             style: new Style({
                 fill: new Fill({
@@ -257,49 +299,166 @@ export default class MeasurementSupport extends React.Component {
             // to update length/area on drawing a new vertex
             this.sketchFeature = evt.feature;
             this.drawing = true;
-            let oldtooltips = document.getElementsByClassName("tooltip-static") || [];
-            for (let i = 0; i < oldtooltips.length; i++) {
-                oldtooltips[i].parentNode.removeChild(oldtooltips[i]);
+
+            if (!this.textLabels) {
+                this.textLabels = [];
+            }
+            if (!this.segmentLengths) {
+                this.segmentLengths = [];
+            }
+            if (this.props.measurement.showLabel) {
+                this.createMeasureTooltip(this.props.measurement.geomType === 'Polygon' ? [0, 0] : undefined);
+                if (this.props.measurement.geomType === 'Polygon') {
+                    this.createMeasureTooltip();
+                }
+            }
+            if (this.props.measurement.showSegmentLengths && this.props.measurement.geomType === 'Polygon') {
+                this.createSegmentLengthOverlay();
             }
 
-            if (this.props.measurement.showLabel) {
-                this.createMeasureTooltip();
-            }
-            // clear previous measurements, but only if the event is dispatch by the click event not by ui
-            this.source.clear();
             this.listener = this.sketchFeature.getGeometry().on('change', (e) => {
                 let geom = e.target;
                 let output;
+                let outputValue;
                 if (geom instanceof Polygon) {
-                    output = this.formatArea(geom, this.props);
+                    outputValue = {
+                        value: this.getArea(geom),
+                        type: 'area'
+                    };
+                    output = this.formatAreaValue(outputValue.value, this.props.uom);
                     this.tooltipCoord = geom.getInteriorPoint().getCoordinates();
+
+                    const coords = geom.getCoordinates()[0];
+                    let segments = [];
+
+                    if (this.props.measurement.showSegmentLengths &&
+                        (this.curPolygonLength === undefined || this.curPolygonLength < coords.length)) {
+                        this.createSegmentLengthOverlay();
+                        this.curPolygonLength = coords.length;
+                    }
+
+                    if (coords.length > 2) {
+                        segments.push(midpoint(coords[coords.length - 1], coords[coords.length - 2], true));
+                        segments.push(midpoint(coords[coords.length - 2], coords[coords.length - 3], true));
+                        for (let i = 0; i < segments.length; ++i) {
+                            const length = this.getLength(coords.slice(coords.length - 2 - i, coords.length - i), this.props);
+                            const text = this.formatLengthValue(length, this.props.uom, false);
+
+                            this.segmentOverlayElements[this.segmentOverlays.length - i - 1].innerHTML = text;
+                            this.segmentOverlays[this.segmentOverlays.length - i - 1].setPosition(segments[i]);
+                            this.segmentLengths[this.segmentOverlays.length - i - 1] = {
+                                value: length,
+                                type: 'length'
+                            };
+                            this.textLabels[this.segmentOverlays.length - i - 1] = {
+                                text,
+                                position: pointObjectToArray(reproject(segments[i], getProjectionCode(this.props.map), 'EPSG:4326'))
+                            };
+                        }
+                    }
+
                 } else if (geom instanceof LineString) {
-                    output = this.formatLength(geom, this.props);
+                    const coords = geom.getCoordinates();
+                    const lastSegment = [coords[coords.length - 2], coords[coords.length - 1]];
+
+                    if (this.props.measurement.showSegmentLengths &&
+                        (this.curLineStringLength === undefined || this.curLineStringLength < coords.length)) {
+                        this.createSegmentLengthOverlay();
+                        this.curLineStringLength = coords.length;
+                    }
+
+                    const length = this.getLength(coords, this.props);
+                    const lastSegmentLength = this.getLength(lastSegment, this.props);
+
+                    output = this.formatLengthValue(length, this.props.uom, this.props.measurement.geomType === 'Bearing');
                     this.tooltipCoord = geom.getLastCoordinate();
+
+                    const overlayText = this.formatLengthValue(lastSegmentLength, this.props.uom, this.props.measurement.geomType === 'Bearing');
+                    last(this.segmentOverlayElements).innerHTML = overlayText;
+                    last(this.segmentOverlays).setPosition(midpoint(lastSegment[0], lastSegment[1], true));
+                    this.textLabels[this.segmentOverlays.length - 1] = {
+                        text: overlayText
+                    };
+                    this.segmentLengths[this.segmentOverlays.length - 1] = {
+                        value: lastSegmentLength,
+                        type: this.props.measurement.geomType === 'Bearing' ? 'bearing' : 'length'
+                    };
+
+                    outputValue = {
+                        value: length,
+                        type: this.props.measurement.geomType === 'Bearing' ? 'bearing' : 'length'
+                    };
                 }
                 if (this.props.measurement.showLabel) {
-                    this.measureTooltipElement.innerHTML = output;
-                    this.measureTooltip.setPosition(this.tooltipCoord);
+                    last(this.measureTooltipElements).innerHTML = output;
+                    last(this.measureTooltips).setPosition(this.tooltipCoord);
+                    this.outputValues[this.outputValues.length - 1] = outputValue;
+
+                    if (geom instanceof Polygon) {
+                        const coords = geom.getCoordinates()[0];
+                        const length = this.getLength(coords.length === 3 ? dropRight(coords) : coords, this.props);
+
+                        this.measureTooltipElements[this.measureTooltipElements.length - 2].innerHTML =
+                            this.formatLengthValue(length, this.props.uom, false);
+                        this.outputValues[this.measureTooltipElements.length - 2] = {
+                            value: length,
+                            type: 'length'
+                        };
+                        this.perimeterTooltipCoord = geom.getLastCoordinate();
+                        this.measureTooltips[this.measureTooltipElements.length - 2].setPosition(this.perimeterTooltipCoord);
+                    }
                 }
             });
-            this.props.resetGeometry();
         });
         draw.on('drawend', (evt) => {
             this.drawing = false;
+            const currentFeatures = get(this.props.measurement, 'features', []);
             const geojsonFormat = new GeoJSON();
+
             let newFeature = reprojectGeoJson(geojsonFormat.writeFeatureObject(evt.feature.clone()), getProjectionCode(this.props.map), "EPSG:4326");
-            this.props.changeGeometry(newFeature);
+            newFeature.properties = newFeature.properties || {};
+            newFeature.properties.values = this.props.measurement.values;
+
+            this.props.changeGeometry([...currentFeatures, newFeature]);
             if (this.props.measurement.lineMeasureEnabled) {
                 // Calculate arc
-                let newCoords = transformLineToArcs(newFeature.geometry.coordinates);
+                let oldCoords = newFeature.geometry.coordinates;
+                let newCoords = transformLineToArcs(oldCoords);
+
+                // the last overlay is a dummy
+                this.textLabels.pop();
+                this.segmentLengths.pop();
+                this.props.map.removeOverlay(last(this.segmentOverlays));
+                last(this.segmentOverlayElements).parentNode.removeChild(last(this.segmentOverlayElements));
+                this.segmentOverlays.pop();
+                this.segmentOverlayElements.pop();
+
+                // Generate correct textLabels and update segment overlays
+                for (let i = 0; i < oldCoords.length - 1; ++i) {
+                    const middlePoint = newCoords[100 * i + 50];
+                    this.textLabels[this.segmentOverlays.length - oldCoords.length + 1 + i].position = middlePoint;
+                    this.segmentOverlays[this.segmentOverlays.length - oldCoords.length + 1 + i].setPosition(
+                        pointObjectToArray(reproject(middlePoint, 'EPSG:4326', getProjectionCode(this.props.map)))
+                    );
+                }
+
                 newFeature = set("geometry.coordinates", newCoords, newFeature);
             }
-            this.replaceFeatures([newFeature], this.props);
+            this.props.setTextLabels(this.textLabels);
+
+            this.addFeature(newFeature);
             if (this.props.measurement.showLabel) {
-                this.measureTooltipElement.className = 'tooltip tooltip-static';
-                this.measureTooltip.setOffset([0, -7]);
+                last(this.measureTooltipElements).className = 'tooltip tooltip-static';
+                last(this.measureTooltips).setOffset([0, -7]);
+                if (this.props.measurement.geomType === 'Polygon') {
+                    this.measureTooltipElements[this.measureTooltipElements.length - 2].className = 'tooltip tooltip-static';
+                    this.measureTooltips[this.measureTooltipElements.length - 2].setOffset([0, -7]);
+                }
                 unByKey(this.listener);
             }
+
+            this.curPolygonLength = undefined;
+            this.curLineStringLength = undefined;
         });
 
         this.props.map.addInteraction(draw);
@@ -309,16 +468,14 @@ export default class MeasurementSupport extends React.Component {
         this.createHelpTooltip();
 
         this.drawInteraction = draw;
-        this.measureLayer = vector;
+        this.measureLayer = this.vector;
     };
 
     removeDrawInteraction = () => {
         if (this.drawInteraction !== null) {
             this.removeHelpTooltip();
-            this.removeMeasureTooltips();
             this.props.map.removeInteraction(this.drawInteraction);
             this.drawInteraction = null;
-            this.props.map.removeLayer(this.measureLayer);
             this.sketchFeature = null;
             this.props.map.un('click', () => this.updateMeasurementResults(this.props), this);
             unByKey(this.clickListener);
@@ -386,15 +543,32 @@ export default class MeasurementSupport extends React.Component {
         const geojsonFormat = new GeoJSON();
         let feature = reprojectGeoJson(geojsonFormat.writeFeatureObject(this.sketchFeature.clone()), getProjectionCode(props.map), "EPSG:4326");
 
+        const getMeasureValue = {
+            'Point': () => reproject(sketchCoords, getProjectionCode(this.props.map), 'EPSG:4326'),
+            'LineString': () => calculateDistance(this.reprojectedCoordinatesIn4326(sketchCoords), props.measurement.lengthFormula),
+            'Polygon': () => this.calculateGeodesicArea(this.sketchFeature.getGeometry().getLinearRing(0).getCoordinates()),
+            'Bearing': () => bearing
+        };
+
         // it will no longer create 100 points for arcs to put in the state
         let newMeasureState = assign({}, props.measurement,
             {
-                point: props.measurement.geomType === 'Point' ? reproject(sketchCoords, getProjectionCode(this.props.map), 'EPSG:4326') : null,
-                len: props.measurement.geomType === 'LineString' ? calculateDistance(this.reprojectedCoordinatesIn4326(sketchCoords), props.measurement.lengthFormula) : 0,
-                area: props.measurement.geomType === 'Polygon' ? this.calculateGeodesicArea(this.sketchFeature.getGeometry().getLinearRing(0).getCoordinates()) : 0,
-                bearing: props.measurement.geomType === 'Bearing' ? bearing : 0,
-                lenUnit: props.measurement.lenUnit,
-                areaUnit: props.measurement.areaUnit,
+                values: [{
+                    value: (getMeasureValue[props.measurement.geomType] || (() => null))(),
+                    position: pointObjectToArray(reproject(props.measurement.geomType === 'Polygon' ?
+                        this.sketchFeature.getGeometry().getInteriorPoint().getCoordinates() :
+                        last(sketchCoords),
+                    getProjectionCode(this.props.map), 'EPSG:4326')),
+                    type: props.measurement.pointMeasureEnabled ? 'point' :
+                        props.measurement.lineMeasureEnabled ? 'length' :
+                            props.measurement.areaMeasureEnabled ? 'area' :
+                                props.measurement.bearingMeasureEnabled ? 'bearing' : undefined
+                }, ...(props.measurement.geomType === 'Polygon' ? [{
+                    value: (this.outputValues[this.measureTooltipElements.length - 2] || {}).value || 0,
+                    position: pointObjectToArray(reproject(last(sketchCoords[0]), getProjectionCode(this.props.map), 'EPSG:4326')),
+                    uom: props.uom,
+                    type: 'length'
+                }] : [])],
                 feature: set("geometry.coordinates", this.drawing ?
                     props.measurement.geomType === 'Polygon' ? [dropRight(feature.geometry.coordinates[0], feature.geometry.coordinates[0].length <= 2 ? 0 : 1)] : dropRight(feature.geometry.coordinates) :
                     feature.geometry.coordinates, feature)
@@ -441,48 +615,74 @@ export default class MeasurementSupport extends React.Component {
     /**
      * Creates a new measure tooltip
      */
-    createMeasureTooltip = () => {
-        this.removeMeasureTooltips();
-        this.measureTooltipElement = document.createElement('div');
-        this.measureTooltipElement.className = 'tooltip tooltip-measure';
-        this.measureTooltip = new Overlay({
-            element: this.measureTooltipElement,
-            offset: [0, -15],
+    createMeasureTooltip = (offset = [0, -15]) => {
+        if (!this.measureTooltipElements) {
+            this.measureTooltipElements = [];
+        }
+        if (!this.measureTooltips) {
+            this.measureTooltips = [];
+        }
+        if (!this.outputValues) {
+            this.outputValues = [];
+        }
+
+        let measureTooltipElement = document.createElement('div');
+        measureTooltipElement.className = 'tooltip tooltip-measure';
+
+        this.measureTooltipElements.push(measureTooltipElement);
+
+        let measureTooltip = new Overlay({
+            element: measureTooltipElement,
+            offset,
             positioning: 'bottom-center'
         });
-        this.props.map.addOverlay(this.measureTooltip);
+        this.props.map.addOverlay(measureTooltip);
+
+        this.measureTooltips.push(measureTooltip);
+        this.outputValues.push(null);
     }
     /**
-       * Format length output.
-       * @param {ol.geom.LineString} line The line.
-       * @return {string} The formatted length with uom chosen.
-       */
-    formatLength = (line, props) => {
-        const sketchCoords = line.getCoordinates();
-        if (props.measurement.geomType === 'Bearing' && sketchCoords.length > 1) {
-            // calculate the azimuth as base for bearing information
-            const bearing = calculateAzimuth(sketchCoords[0], sketchCoords[1], getProjectionCode(props.map));
-            return getFormattedBearingValue(bearing);
-        }
-        const reprojectedCoords = this.reprojectedCoordinatesIn4326(sketchCoords);
-        const length = calculateDistance(reprojectedCoords, props.measurement.lengthFormula);
-        const {label, unit} = props.uom && props.uom.length;
-        const output = round(convertUom(length, "m", unit), 2);
-        return this.props.formatNumber(output) + " " + (label);
-    };
-
-    /**
-     * Format area output.
-     * @param {ol.geom.Polygon} polygon The polygon.
-     * @return {string} Formatted area.
+     * Create new segment length overlays
      */
-    formatArea = (polygon, props) => {
-        const area = this.calculateGeodesicArea(polygon.getLinearRing(0).getCoordinates());
-        const {label, unit} = props.uom && props.uom.area;
-        const output = round(convertUom(area, "sqm", unit), 2);
+    createSegmentLengthOverlay = () => {
+        if (!this.segmentOverlayElements) {
+            this.segmentOverlayElements = [];
+        }
+        if (!this.segmentOverlays) {
+            this.segmentOverlays = [];
+        }
+
+        let segmentOverlayElement = document.createElement('div');
+        segmentOverlayElement.style = '';
+
+        this.segmentOverlayElements.push(segmentOverlayElement);
+
+        let segmentOverlay = new Overlay({
+            element: segmentOverlayElement,
+            offset: [0, 0],
+            positioning: 'center-center'
+        });
+
+        this.props.map.addOverlay(segmentOverlay);
+
+        this.segmentOverlays.push(segmentOverlay);
+    }
+
+    formatLengthValue = (value, uom, isBearing) => {
+        if (isBearing) {
+            return getFormattedBearingValue(value);
+        }
+        const {label, unit} = uom && uom.length;
+        const output = round(convertUom(value, "m", unit), 2);
+        return this.props.formatNumber(output) + " " + (label);
+    }
+
+    formatAreaValue = (value, uom) => {
+        const {label, unit} = uom && uom.area;
+        const output = round(convertUom(value, "sqm", unit), 2);
 
         return this.props.formatNumber(output) + " " + label;
-    };
+    }
 
     removeHelpTooltip = () => {
         if (this.helpTooltipElement && this.helpTooltipElement.parentNode) {
@@ -490,15 +690,31 @@ export default class MeasurementSupport extends React.Component {
         }
     }
     removeMeasureTooltips = () => {
-        if (this.measureTooltipElement && this.measureTooltipElement.parentNode) {
-            let oldtooltips = document.getElementsByClassName("tooltip-static") || [];
-            for (let i = 0; i < oldtooltips.length; i++) {
-                oldtooltips[i].parentNode.removeChild(oldtooltips[i]);
-            }
-            oldtooltips = document.getElementsByClassName("tooltip-measure") || [];
-            for (let i = 0; i < oldtooltips.length; i++) {
-                oldtooltips[i].parentNode.removeChild(oldtooltips[i]);
-            }
+        (this.measureTooltips || []).forEach(measureTooltip => {
+            this.props.map.removeOverlay(measureTooltip);
+        });
+        let oldtooltips = document.getElementsByClassName("tooltip-static") || [];
+        for (let i = 0; i < oldtooltips.length; i++) {
+            oldtooltips[i].parentNode.removeChild(oldtooltips[i]);
         }
+        oldtooltips = document.getElementsByClassName("tooltip-measure") || [];
+        for (let i = 0; i < oldtooltips.length; i++) {
+            oldtooltips[i].parentNode.removeChild(oldtooltips[i]);
+        }
+
+        this.measureTooltips = [];
+        this.measureTooltipElements = [];
+        this.outputValues = [];
+    }
+    removeSegmentLengthOverlays = () => {
+        (this.segmentOverlays || []).forEach(segmentOverlay => {
+            this.props.map.removeOverlay(segmentOverlay);
+        });
+        (this.segmentOverlayElements || []).forEach(element => {
+            element.parentNode.removeChild(element);
+        });
+
+        this.segmentOverlays = [];
+        this.segmentOverlayElements = [];
     }
 }

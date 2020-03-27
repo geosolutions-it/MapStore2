@@ -12,6 +12,8 @@ const {
     CHANGE_UOM,
     RESET_GEOMETRY,
     CHANGED_GEOMETRY,
+    SET_STYLE,
+    SET_TEXT_LABELS,
     CHANGE_FORMAT,
     CHANGE_COORDINATES,
     UPDATE_MEASURES,
@@ -43,7 +45,8 @@ const defaultState = {
         area: {unit: 'sqm', label: 'm²'}
     },
     lengthFormula: "haversine",
-    showLabel: true
+    showLabel: true,
+    showSegmentLengths: true
 };
 function measurement(state = defaultState, action) {
     switch (action.type) {
@@ -52,10 +55,9 @@ function measurement(state = defaultState, action) {
             lineMeasureEnabled: action.geomType !== state.geomType && action.geomType === 'LineString',
             areaMeasureEnabled: action.geomType !== state.geomType && action.geomType === 'Polygon',
             bearingMeasureEnabled: action.geomType !== state.geomType && action.geomType === 'Bearing',
-            geomType: action.geomType === state.geomType ? null : action.geomType,
-            len: 0,
-            area: 0,
-            bearing: 0,
+            geomType: action.geomType,
+            features: action.geomType === null ? [] : state.features,
+            textLabels: action.geomType === null ? [] : state.textLabels,
             feature: {
                 properties: {
                     disabled: true
@@ -76,12 +78,7 @@ function measurement(state = defaultState, action) {
             areaMeasureEnabled: action.areaMeasureEnabled,
             bearingMeasureEnabled: action.bearingMeasureEnabled,
             geomType: action.geomType,
-            point: action.point,
-            len: action.len,
-            area: action.area,
-            bearing: action.bearing,
-            lenUnit: action.lenUnit,
-            areaUnit: action.areaUnit,
+            values: action.values,
             feature: set("properties.disabled", state.feature.properties.disabled, feature)
         });
     }
@@ -118,13 +115,25 @@ function measurement(state = defaultState, action) {
         });
     }
     case CHANGED_GEOMETRY: {
-        let {feature} = action;
-        feature = set("properties.disabled", false, feature);
+        let {features} = action;
+        features = features.map(feature => set("properties.disabled", false, feature));
         return {
             ...state,
-            feature,
+            features,
             updatedByUI: false,
             isDrawing: false
+        };
+    }
+    case SET_STYLE: {
+        return {
+            ...state,
+            style: action.style
+        };
+    }
+    case SET_TEXT_LABELS: {
+        return {
+            ...state,
+            textLabels: action.textLabels
         };
     }
     case TOGGLE_CONTROL: {
