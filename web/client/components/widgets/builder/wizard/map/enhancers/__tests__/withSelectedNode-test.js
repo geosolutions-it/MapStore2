@@ -5,10 +5,10 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import React from'react';
-import ReactDOM from'react-dom';
-import {createSink} from'recompose';
-import expect from'expect';
+import React from 'react';
+import ReactDOM from 'react-dom';
+import {createSink} from 'recompose';
+import expect from 'expect';
 import withSelectedNode from '../withSelectedNode';
 import {isEmpty, isNull} from 'lodash';
 
