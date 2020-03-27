@@ -12,7 +12,7 @@ import GeoStoreDAO from '../../../../../../api/GeoStoreDAO';
 import axios from '../../../../../../libs/ajax';
 import ConfigUtils from '../../../../../../utils/ConfigUtils';
 import { excludeGoogleBackground, extractTileMatrixFromSources } from '../../../../../../utils/LayersUtils';
-import assign from 'object-assign';
+import '../../../../../../libs/bindings/rxjsRecompose';
 
 const handleMapSelect = compose(
     withState('selected', "setSelected", null),
@@ -37,7 +37,7 @@ const handleMapSelect = compose(
                 // Extract tileMatrix from source and update layers
                 res.layers = res.sources ? res.layers.map(l => {
                     const tileMatrix = extractTileMatrixFromSources(res.sources, l);
-                    return assign({}, l, tileMatrix);
+                    return {... l, ...tileMatrix};
                 }) : res.layers;
                 return onMapSelected({
                     map: res
