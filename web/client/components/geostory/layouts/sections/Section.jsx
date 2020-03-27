@@ -48,7 +48,8 @@ class Section extends React.Component {
         excludeClassName: PropTypes.string,
         cover: PropTypes.bool,
         focusedContent: PropTypes.object,
-        expandableBackgroundMedia: PropTypes.bool
+        expandableBackgroundMedia: PropTypes.bool,
+        storyTheme: PropTypes.object
     };
 
     static defaultProps = {
@@ -90,6 +91,7 @@ class Section extends React.Component {
                 viewWidth={this.props.viewWidth}
                 viewHeight={this.props.viewHeight}
                 focusedContent={this.props.focusedContent}
+                storyTheme={this.props.storyTheme}
             />
         );
     }

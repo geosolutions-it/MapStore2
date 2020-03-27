@@ -24,7 +24,7 @@ require('codemirror/mode/javascript/javascript');
 
 const { getMessageById } = require('../../../../utils/LocaleUtils');
 const tinycolor = require('tinycolor2');
-const ColorPicker = require('../../../style/ColorPicker');
+const ColorPicker = require('../../../style/ColorPicker').default;
 const LoadingView = require('../../../misc/LoadingView');
 const ThemaClassesEditor = require('../../../style/ThemaClassesEditor');
 
