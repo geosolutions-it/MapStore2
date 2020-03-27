@@ -26,6 +26,7 @@ const handleMapSelect = compose(
                 return {
                     ...(mapState && mapState.map || {}),
                     ...(includeMapId ? {id: map.id} : {}),
+                    groups: mapState && [...mapState.groups] || [],
                     layers: excludeGoogleBackground(mapState.layers.map(l => {
                         if (l.group === "background" && (l.type === "ol" || l.type === "OpenLayers.Layer")) {
                             l.type = "empty";
