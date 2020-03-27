@@ -1191,7 +1191,6 @@
             "service": "Service",
             "servicePlaceholder": "type a service",
             "url": "Url",
-            "urlTemplate": "URL Template",
             "urlPlaceholder": "type a URL",
             "type": "Type",
             "serviceTitle": "Title",
