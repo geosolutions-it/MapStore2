@@ -5,10 +5,15 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const expect = require('expect');
-const {map, clone} = require('lodash');
+import expect from 'expect';
+import {map, clone} from 'lodash';
+import { compose, set } from '../ImmutableUtils';
 
-const CatalogUtils = require('../CatalogUtils');
+import CatalogUtils from '../CatalogUtils';
+import ConfigUtils from '../ConfigUtils';
+import TileMapSample from '../../test-resources/tms/TileMapSample';
+
+
 const wmsRecords = [{
     references: [{
         type: "OGC:WMS",
@@ -655,11 +660,11 @@ describe('Test the CatalogUtils', () => {
         expect(esri.references[0].type).toBe("arcgis");
         expect(esri.references[0].params.name).toBe("1-Hurricane Track");
     });
-    describe('tms', () => {
+    describe('tms and tileProvider', () => {
         const TMS_DATA = { records: [{
             title: "TEST_TITLE",
             href: "TEST_HREF",
-            srs: "EPSG:4326",
+            srs: "EPSG:4326"
         }]};
         const TILEPROVIDER_DATA = {
             records: [{
@@ -677,6 +682,7 @@ describe('Test the CatalogUtils', () => {
         const OPTIONS_TILEPROVIDER = {
 
         };
+
         it('getCatalogRecords tileProvider', () => {
             const res = CatalogUtils.getCatalogRecords('tms', TILEPROVIDER_DATA, OPTIONS_TILEPROVIDER);
             const rec = res[0];
@@ -698,11 +704,94 @@ describe('Test the CatalogUtils', () => {
             expect(rec.references[0].version).toBe("1.0.0");
         });
         it('tmsToLayer', () => {
-            const RECORD = {
 
+
+            // constants
+            const RECORD = {
+                tileMapUrl: "TEST"
             };
-            // TODO: tmsToLayer(RECORD, TileMapService, OPTIONS);
+            const OPTIONS = {
+                forceDefaultTileGrid: true
+            };
+
+            const layer = CatalogUtils.tmsToLayer(RECORD, TileMapSample, OPTIONS);
+            const SRS = TileMapSample.TileMap.SRS
+            const { x, y } = TileMapSample.TileMap.Origin.$;
+            const {minx, miny, maxx, maxy} = TileMapSample.TileMap.BoundingBox.$;
+            expect(layer.type).toBe("tms");
+            expect(layer.visibility).toBe(true);
+            expect(layer.hideErrors).toBe(true); // avoid many error that can occour
+            expect(layer.name).toBe(TileMapSample.TileMap.Title)
+            expect(layer.title).toBe(TileMapSample.TileMap.Title);
+            expect(layer.description).toBe(TileMapSample.TileMap.Abstract);
+            expect(layer.srs).toBe(SRS);
+            expect(layer.allowedSRS).toEqual({[SRS]: true});
+            expect(layer.tileMapUrl).toExist(RECORD.tileMapUrl);
+            expect(layer.forceDefaultTileGrid).toBe(OPTIONS.forceDefaultTileGrid);
+            expect(layer.origin).toEqual({x: parseFloat(x), y: parseFloat(y)});
+            expect(layer.bbox).toEqual({
+                crs: SRS,
+                bounds: {minx: parseFloat(minx), miny: parseFloat(miny), maxx: parseFloat(maxx), maxy: parseFloat(maxy)}
+            });
+        });
+        it('tmsToLayer (authentication)', () => {
+            // setup authentication
+            const rules = ConfigUtils.getConfigProp('authenticationRules');
+            ConfigUtils.setConfigProp('authenticationRules', [
+                {
+                    "urlPattern": ".*geoserver.*",
+                    "method": "test",
+                    "authkeyParamName": "authkey",
+                    "token": "mykey"
+                }
+            ]);
+
+            // constants
+            const RECORD = {
+                tileMapUrl: "TEST"
+            };
+            const OPTIONS = {
+                forceDefaultTileGrid: true
+            };
+            // setup authenticated test file
+            const TileMapServiceAuthenticated = compose(
+                set('TileMap.$.tilemapservice', `${TileMapSample.TileMap.$.tilemapservice}?authkey=AUTHKEY`),
+                set('TileMap.TileSets.TileSet', TileMapSample.TileMap.TileSets.TileSet.map(({$}) => {
+                    return {
+                        $: {
+                            ...$,
+                            href: `${$.href}?authkey=AUTHKEY`
+                        }
+                    }
+                }))
+            )(TileMapSample);
+            ConfigUtils.setConfigProp('useAuthenticationRules', true);
+
+            const layer = CatalogUtils.tmsToLayer(RECORD, TileMapServiceAuthenticated, OPTIONS);
+            layer.tileSets.map(({href = ""}) => {
+                expect(href.indexOf("authkey=")).toBe(-1);
+            });
+            expect(layer.tileMapService.indexOf("authkey=")).toBe(-1);
+            expect(layer.tileMapService.indexOf(TileMapSample.TileMap.$.tilemapservice)).toBe(0);
+            // tear down authentication
+            ConfigUtils.setConfigProp('authenticationRules', rules); // restore old values
+            ConfigUtils.setConfigProp('useAuthenticationRules', false);
         });
     });
-
+    it('tileProviderToLayer', ( ) => {
+        const RECORD = {
+            url: "url",
+            title: "title",
+            options: {"options": "something"},
+            provider: "provider"
+        };
+        const layer = CatalogUtils.tileProviderToLayer(RECORD);
+        expect(layer.type).toBe("tileprovider");
+        expect(layer.visibility).toBe(true);
+        expect(layer.url).toBe(RECORD.url);
+        expect(layer.title).toBe(RECORD.title);
+        expect(layer.options).toBe(RECORD.options);
+        expect(layer.provider).toBe(RECORD.provider);
+        expect(layer.name).toBe(RECORD.provider);
+    });
 });

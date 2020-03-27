@@ -554,7 +554,7 @@ const CatalogUtils = {
      * @param object TileMapService a JSON representation of TileMapService resource, see https://wiki.osgeo.org/wiki/Tile_Map_Service_Specification
      * @param service the original catalog service
      */
-    tmsToLayer: ({ tileMapUrl }, { TileMap = {} }, { forceDefaultTileGrid, zoomOffset }) => {
+    tmsToLayer: ({ tileMapUrl }, { TileMap = {} }, { forceDefaultTileGrid }) => {
         const { Title, Abstract, SRS, BoundingBox = {}, Origin, TileFormat = {}, TileSets } = TileMap;
         const { version, tilemapservice } = TileMap.$;
         const { minx, miny, maxx, maxy } = get(BoundingBox, '$', {});
@@ -582,7 +582,6 @@ const CatalogUtils = {
             tileMapUrl,
             // option to force to use the TileGrid of the projection, instead of the one provided by the service. Userful for some GeoServer instances that use default GridSet but provide wrong origin and resolution
             forceDefaultTileGrid,
-            zoomOffset,
             bbox: BoundingBox && {crs: SRS, bounds: {minx: parseFloat(minx), miny: parseFloat(miny), maxx: parseFloat(maxx), maxy: parseFloat(maxy)}},
             tileSets,
             origin: {x: parseFloat(x), y: parseFloat(y)},
