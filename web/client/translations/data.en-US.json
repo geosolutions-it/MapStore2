@@ -2628,7 +2628,7 @@
         "userSession": {
           "saveErrorNotification": {
             "titleContext": "User session saving failed",
-            "categoryError": "Creating missing category \"{categoryName}\" faile",
+            "categoryError": "Creating missing category \"{categoryName}\" failed",
             "defaultMessage": "Unknown error"
           },
           "removeErrorNotification": {
