@@ -11,7 +11,7 @@ const PropTypes = require('prop-types');
 const {Grid, Row, Col, FormControl} = require('react-bootstrap');
 const Combobox = require('react-widgets').Combobox;
 const assign = require('object-assign');
-const ColorSelector = require('./ColorSelector');
+const ColorSelector = require('./ColorSelector').default;
 const StyleCanvas = require('./StyleCanvas');
 const numberLocalizer = require('react-widgets/lib/localizers/simple-number');
 numberLocalizer();
