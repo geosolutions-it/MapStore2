@@ -16,7 +16,7 @@ import MockAdapter from "axios-mock-adapter";
 
 describe('handleMapSelect enhancer', () => {
     let mockAxios;
-    const response = {
+    const mapData = {
         "version": 2,
         "map": {
             "center": {
@@ -25,7 +25,7 @@ describe('handleMapSelect enhancer', () => {
             "layers": [
                 {
                     "id": "layer1",
-                    "url": "source1",
+                    "url": "sourceUrl",
                     "bbox": {
                         "crs": "EPSG:4326"
                     },
@@ -51,17 +51,16 @@ describe('handleMapSelect enhancer', () => {
                     "expanded": true
                 },
                 {
-                    "id": "fe86a3a0-7007-11ea-8af1-9f87b6d6a241",
-                    "title": "POI",
+                    "id": "12345",
+                    "title": "Group2",
                     "expanded": true
                 }
             ],
             "sources": {
-                "source1": {
+                "sourceUrl": {
                     "tileMatrixSet": {
                         "EPSG:4326": {
                             "ows:Identifier": "EPSG:4326",
-                            "ows: SupportedCRS": "urn:ogc:def:crs:EPSG::4326",
                             "TileMatrix": [
                                 {
                                     "ows:Identifier": "EPSG:4326:0"
@@ -86,7 +85,7 @@ describe('handleMapSelect enhancer', () => {
         setTimeout(done);
     });
     it('handleMapSelect enhancer callbacks for map data with source', (done) => {
-        mockAxios.onGet().reply(200, response);
+        mockAxios.onGet().reply(200, mapData);
 
         const actions = {
             onMapSelected: ({map}) => {
@@ -113,8 +112,8 @@ describe('handleMapSelect enhancer', () => {
         ReactDOM.render(<EnhancedSink map={{id: 3}} onMapSelected={actions.onMapSelected} />, document.getElementById("container"));
     });
     it('handleMapSelect enhancer callbacks for map data without source', (done) => {
-        const responseWithoutSource = {...omit(response, ['map.sources', 'map.layers[0].tileMatrixSet'])};
-        mockAxios.onGet().reply(200, responseWithoutSource);
+        const mapDataWithoutSource = {...omit(mapData, ['map.sources', 'map.layers[0].tileMatrixSet'])};
+        mockAxios.onGet().reply(200, mapDataWithoutSource);
 
         const actions = {
             onMapSelected: ({map}) => {
@@ -137,7 +136,7 @@ describe('handleMapSelect enhancer', () => {
     });
 
     it('handleMapSelect enhancer callbacks for map data with groups with locale based title', (done) => {
-        mockAxios.onGet().reply(200, response);
+        mockAxios.onGet().reply(200, mapData);
         const locale = 'it-IT';
 
         const actions = {
@@ -150,7 +149,7 @@ describe('handleMapSelect enhancer', () => {
                 expect(map.groups[0].title).toExist();
                 expect(map.groups[0].title[locale]).toEqual('a');
                 expect(map.groups[0].title.default).toEqual('Default');
-                expect(map.groups[1].title).toEqual('POI');
+                expect(map.groups[1].title).toEqual('Group2');
                 done();
             }
         };
