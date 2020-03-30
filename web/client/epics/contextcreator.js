@@ -27,6 +27,7 @@ import {SAVE_CONTEXT, SAVE_TEMPLATE, LOAD_CONTEXT, LOAD_TEMPLATE, DELETE_TEMPLAT
 import {newContextSelector, resourceSelector, creationStepSelector, mapConfigSelector, mapViewerLoadedSelector, contextNameCheckedSelector,
     editedPluginSelector, editedCfgSelector, validationStatusSelector, parsedCfgSelector, cfgErrorSelector,
     pluginsSelector, initialEnabledPluginsSelector} from '../selectors/contextcreator';
+import {CONTEXTS_LIST_LOADED} from '../actions/contextmanager';
 import {wrapStartStop} from '../observables/epics';
 import {isLoggedIn} from '../selectors/security';
 import {show, error} from '../actions/notifications';
@@ -109,15 +110,6 @@ export const saveContextResource = (action$, store) => action$
         };
 
         return (resource && resource.id ? updateResource : createResource)(newResource)
-            .switchMap(rid => Rx.Observable.of(
-                contextSaved(rid),
-                push(destLocation || `/context/${context.name}`),
-                show({
-                    title: "saveDialog.saveSuccessTitle",
-                    message: "saveDialog.saveSuccessMessage"
-                }),
-                loadExtensions()
-            ))
             .catch(({status, data}) => Rx.Observable.of(error({
                 title: 'contextCreator.saveErrorNotification.titleContext',
                 message: saveContextErrorStatusToMessage(status),
@@ -126,7 +118,25 @@ export const saveContextResource = (action$, store) => action$
                 values: {
                     data
                 }
-            })));
+            }), loading(false, 'contextSaving')))
+            .switchMap(rid => Rx.Observable.merge(
+                // LOCATION_CHANGE triggers notifications clear, need to work around that
+                // can't wait for CLEAR_NOTIFICATIONS, because either in firefox notification action doesn't trigger
+                // or in chrome it triggers too early
+                // (on chrome there is another LOCATION_CHANGE after the first one for unknown reason, that cancels out the first)
+                (destLocation === '/context-manager' ? action$.ofType(CONTEXTS_LIST_LOADED).take(1).switchMap(() => Rx.Observable.of(
+                    show({
+                        title: "saveDialog.saveSuccessTitle",
+                        message: "saveDialog.saveSuccessMessage"
+                    }))) : Rx.Observable.empty()),
+                Rx.Observable.of(
+                    contextSaved(rid),
+                    push(destLocation || `/context/${context.name}`),
+                    loadExtensions(),
+                    loading(false, 'contextSaving')
+                ),
+            ))
+            .startWith(loading(true, 'contextSaving'));
     });
 
 /**
