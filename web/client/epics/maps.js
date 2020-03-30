@@ -12,7 +12,7 @@ const assign = require('object-assign');
 const {push} = require('connected-react-router');
 const {basicError, basicSuccess} = require('../utils/NotificationUtils');
 const GeoStoreApi = require('../api/GeoStoreDAO');
-const { MAP_INFO_LOADED, MAP_SAVED, mapSaveError, mapSaved, loadMapInfo } = require('../actions/config');
+const { MAP_INFO_LOADED, MAP_SAVED, mapSaveError, mapSaved, loadMapInfo, configureMap } = require('../actions/config');
 const {get, isNil, isArray, isEqual, find, pick, omit, keys, zip} = require('lodash');
 const {
     SAVE_DETAILS, SAVE_RESOURCE_DETAILS, MAPS_GET_MAP_RESOURCES_BY_CATEGORY,
@@ -504,6 +504,7 @@ const mapSaveMapResourceEpic = (action$, store) =>
                     }))) : Rx.Observable.of([])).switchMap(() =>
                     Rx.Observable.from([
                         ...(resource.id ? [loadMapInfo(rid)] : []),
+                        ...(resource.id ? [configureMap(resource.data, rid)] : []),
                         resource.id ? toggleControl('mapSave') : toggleControl('mapSaveAs'),
                         mapSaved(),
                         ...(!resource.id ? [
