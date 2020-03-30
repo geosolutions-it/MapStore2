@@ -1204,7 +1204,7 @@
               "forceDefaultTileGridDescription": "Utilizzare la griglia della proiezione globale anziché l'origine e le risoluzioni fornite dal server. Ciò è utile per alcuni servizi TMS che pubblicizzano l'origine o le risoluzioni errate."
             },
             "tileprovider": {
-              "tooltip": "x, y, z sono posizione della piastrella, s è il sottodominio (impostazione predefinita)"
+              "tooltip": "x, y, z sono la posizione della tile, s è il sottodominio (impostazione predefinita)"
             },
             "missingReference": "Metadati di riferimento OGC mancanti",
             "showDescription": "Mostra descrizione completa",
