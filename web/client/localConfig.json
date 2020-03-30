@@ -634,7 +634,19 @@
                 "containerPosition": "header",
                 "className": "navbar shadow navbar-home"
             }
-        }, "Login", "Language", "NavMenu", "DashboardSave", "DashboardSaveAs", "Attribution", "Home", {
+        }, "Login", "Language", "NavMenu",
+          {
+            "name": "DashboardSave",
+            "cfg": {
+              "disablePluginIf": "{!!(state('browser') && state('browser').mobile)}"
+            }
+          },
+          {
+            "name": "DashboardSaveAs",
+            "cfg": {
+              "disablePluginIf": "{!!(state('browser') && state('browser').mobile)}"
+            }
+          }, "Attribution", "Home", {
           "name": "DashboardEditor",
           "cfg": {
             "catalog": {
