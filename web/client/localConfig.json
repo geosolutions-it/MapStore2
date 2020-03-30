@@ -616,6 +616,14 @@
                 "className": "navbar shadow navbar-home"
             }
         }, "Login", "Language", "NavMenu", "DashboardSave", "DashboardSaveAs", "Attribution", "Home", {
+          "name": "Share",
+          "cfg": {
+            "advancedSettings": {
+              "bbox": false
+            }
+          }
+        },
+          {
           "name": "DashboardEditor",
           "cfg": {
              "catalog": {
