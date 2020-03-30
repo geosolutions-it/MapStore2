@@ -58,7 +58,7 @@
 .ms-geostory {
     .ms2-border-layout-content {
         .ms2-border-layout-content {
-            background-color: @ms-story-bg-grey;
+            background-color: inherit;
         }
     }
     .ms-cascade-story.ms-edit {
@@ -78,6 +78,7 @@
     top: unset;
 }
 .ms-geostory-builder {
+    transform: translate(0, 0);
     .ms-geostory-settings {
         padding: 8px;
         .ms-geostory-settings-logo{
@@ -238,11 +239,13 @@
     .ms-section-title {
         .ms-content-text {
             width: 100%;
+            padding-left: @ms-story-padding-small-screen;
+            padding-right: @ms-story-padding-small-screen;
+            &.ms-align-left .ms-content-body,
+            &.ms-align-right .ms-content-body,
             .ms-content-body {
                 margin-left: auto;
                 margin-right: auto;
-                padding-left: @ms-story-padding-small-screen;
-                padding-right: @ms-story-padding-small-screen;
             }
             .ms-content-body,
             .ms-content-body > div {
@@ -283,7 +286,7 @@
         }
     }
     .ms-section.ms-expandable-background {
-        &.ms-section-title .ms-content-text .ms-content-body,
+        &.ms-section-title .ms-content-text,
         &.ms-section-immersive .ms-content-column {
             padding-right: @square-btn-medium-size + 8px;
         }
@@ -298,9 +301,12 @@
         &.ms-size-medium .ms-media { width: @ms-story-size-medium; }
         &.ms-size-small .ms-media { width: @ms-story-size-medium; }
     }
-    .ms-section-title .ms-content-text .ms-content-body {
+    .ms-section-title .ms-content-text {
         padding-left: @ms-story-padding-medium-screen;
         padding-right: @ms-story-padding-medium-screen;
+        &.ms-align-center .ms-content-body { margin-left: auto; margin-right: auto; }
+        &.ms-align-left .ms-content-body { margin-left: 0; margin-right: auto; }
+        &.ms-align-right .ms-content-body { margin-left: auto; margin-right: 0; }
     }
     .ms-section-paragraph {
         padding-left: @ms-story-padding-medium-screen;
@@ -331,7 +337,8 @@
     /////////////
     // SECTIONS
     /////////////
-
+    background-color: @ms-story-bg;
+    transform: translate(0, 0);
     /*
     Main scrollable container of the cascade story
     */
@@ -344,7 +351,19 @@
         overflow-y: auto;
         &.ms-sm { .ms-sections-container-small-screen(); }
         &.ms-md { .ms-sections-container-medium-screen(); }
+        // assign background and color to the parent element
+        background-color: @ms-story-bg;
+        color: contrast(@ms-story-bg);
+        // all children should inherit the parent values from classes or inline
+        .ms-section,
+        .ms-section-background,
+        .ms-section-background-container {
+            color: inherit;
+            background-color: inherit;
+        }
     }
+
+
 
     ////////////
     // SECTION
@@ -353,9 +372,10 @@
     .ms-section {
         position: relative;
         z-index: 1;
-        background-color: @ms-story-bg;
+        background-color: inherit;
         + .ms-section {
             border-top: 1px solid @ms-story-bg-grey;
+            border-color: inherit;
         }
         & > div > .ms-content-toolbar {
             position: absolute;
@@ -381,7 +401,7 @@
                 overflow: hidden;
                 position: relative;
                 pointer-events: auto;
-                background-color: @ms-story-bg-grey;
+                background-color: inherit;
                 .ms-content-toolbar {
                     position: absolute;
                     margin: 8px;
@@ -401,7 +421,7 @@
 
                 /* themes of column container */
                 &.ms-bright {
-                    background-color: @ms-story-bg-grey;
+                    background-color: @ms-story-bg;
                 }
                 &.ms-dark {
                     background-color: contrast(@ms-story-bg);
@@ -413,6 +433,7 @@
         */
         .ms-section-contents {
             pointer-events: none;
+            background: transparent;
             // make contents and popover clickable.
             // TODO: maybe anything inside contents should be clickable
             .add-bar, .popover-content {
@@ -424,8 +445,10 @@
 
             .ms-column-contents {
                 .add-bar {
-                    background-color: transparent;
+                    color: @ms-story-text;
+                    background-color: @ms-story-bg;
                     border: none;
+                    border-radius: 50%;
                     button {
                         color: contrast(@ms-story-bg);
                     }
@@ -479,7 +502,6 @@
                 display: flex;
                 margin: auto;
                 align-self: center;
-                padding: 64px;
             }
             /* floating add section button */
             & > .add-bar {
@@ -497,53 +519,61 @@
             }
             .ms-content-text {
                 display: flex;
+                padding: 64px 0;
                 /* render the toolbar has a floating container at top left corner of title container */
                 .ms-content-toolbar {
                     position: absolute;
-                    transform: translate(-@square-btn-medium-size / 2, -60%);
+                    margin-left: -@square-btn-medium-size / 2;
+                    margin-top: -@square-btn-medium-size * 0.6;
                     padding: 0;
                     z-index: 2;
                     .shadow-soft();
                 }
-                /* text on full size should fill all the width of container */
-                &.ms-size-full {
-                    width: 100%;
-                    .ms-content-body,
-                    .ms-content-body > div {
-                        width: 100%;
-                    }
-                    .ms-content-body .ms-content-toolbar {
-                        width: auto;
-                    }
-                }
+                
                 /*
                 content body needs to be aligned accordingly with the alignment of container,
                 this is needed in particular for size equal to large and short titles
                 where the alignment effect is not visible without this improvement
                 */
                 &.ms-align-center .ms-content-body { margin-left: auto; margin-right: auto; }
-                &.ms-align-left .ms-content-body { margin-left: 0; margin-right: auto; }
-                &.ms-align-right .ms-content-body { margin-left: auto; margin-right: 0; }
+                &.ms-align-left .ms-content-body { margin-left: @square-btn-medium-size + 8px; margin-right: auto; }
+                &.ms-align-right .ms-content-body { margin-left: auto; margin-right: @square-btn-medium-size + 8px; }
+                /* text on full size should fill all the width of container */
+                &.ms-size-full {
+                    width: 100%;
+                    .ms-content-body {
+                        margin-right: 0;
+                        margin-left: 0;
+                    }
+                    .ms-content-body,
+                    .ms-content-body > div {
+                        width: 100%;
+                    }
+                    .ms-content-body .ms-content-toolbar {
+                        width: auto;
+                        margin-left: 8px;
+                    }
+                }
 
                 /* themes of text contents */
-                &.ms-bright .ms-content-body > *:not(.ms-content-toolbar) {
+                &.ms-bright .ms-content-body {
                     .ms-text-placeholder { .ms-story-color-contrast(); }
                     .ms-story-color-contrast();
                     background-color: fade(@ms-story-bg, 75%);
                     .shadow-far();
                 }
-                &.ms-bright-text .ms-content-body > *:not(.ms-content-toolbar) {
+                &.ms-bright-text .ms-content-body {
                     .ms-text-placeholder {.ms-story-color-no-contrast(); }
                     .ms-story-color-no-contrast();
                     background-color: transparent;
                 }
-                &.ms-dark .ms-content-body > *:not(.ms-content-toolbar) {
+                &.ms-dark .ms-content-body {
                     .ms-text-placeholder {.ms-story-color-no-contrast();}
                     .ms-story-color-no-contrast();
                     background-color: fade(contrast(@ms-story-bg), 75%);
                     .shadow-far();
                 }
-                &.ms-dark-text .ms-content-body > *:not(.ms-content-toolbar) {
+                &.ms-dark-text .ms-content-body {
                     .ms-text-placeholder { .ms-story-color-contrast(); }
                     .ms-story-color-contrast();
                     background-color: transparent;
@@ -553,7 +583,7 @@
 
         &.ms-section-paragraph {
             padding: 0 15%;
-            background-color: @ms-story-bg;
+            background-color: inherit;
             /*
             overrides for themes of text content
             - remove shadow */
@@ -600,7 +630,8 @@
                     &>.ms-content-toolbar {
                         position: absolute;
                         z-index: 2;
-                        transform: translate(-@square-btn-medium-size / 2, -60%);
+                        margin-left: -@square-btn-medium-size / 2;
+                        margin-top: -@square-btn-medium-size * 0.6;
                         padding: 0;
                         .shadow-soft();
                     }
@@ -635,9 +666,6 @@
                     .ms-story-color-no-contrast();
                     background-color: fade(contrast(@ms-story-bg), 75%);
                     .shadow-far();
-                    .add-bar button {
-                        color: @ms-story-bg;
-                    }
                 }
                 &.ms-dark-text > .ms-content-body {
                     .ms-text-placeholder { .ms-story-color-contrast(); }
@@ -861,6 +889,7 @@
             }
             .ms-media-description {
                 border-left: 2px solid @ms-story-bg-grey;
+                border-color: inherit;
                 padding-left: 8px;
                 margin-top: 4px;
                 > small {
@@ -888,7 +917,7 @@
         justify-content: center;
     }
     .ms-media-error {
-        background-color: @ms-story-bg-grey;
+        background-color: inherit;
         .glyphicon {
             font-size: @square-btn-size;
         }
@@ -937,7 +966,7 @@
                         border-top: 2px solid @ms-story-fg-guidelines;
                     }
                 }
-                .ms-content-body {
+                .ms-content-text {
                     padding-bottom: 160px;
                 }
             }
@@ -1010,6 +1039,65 @@
     & > * {
         background-color: @ms-story-bg;
     } 
+}
+
+.ms-custom-theme-picker-field {
+    color: @ms-story-text;
+    background: @ms-story-bg;
+    display: flex;
+    align-items: center;
+    margin: 4px 0;
+    min-height: @square-btn-medium-size;
+    & > div {
+        display: flex;
+        position: relative;
+        align-items: center;
+        flex: 1;
+        word-break: break-word;
+        padding: 0 4px;
+    }
+    .mapstore-switch-btn {
+        margin: 0 0 0 auto;
+    }
+    .ms-custom-theme-picker-popover {
+        display: inline-block;
+    }
+    .popover-content * {
+        font-size: @font-size-small;
+    }
+    .glyphicon {
+        color: @ms2-color-danger;
+    }
+}
+// override font size of the geostory for paragraph in popover
+.ms-cascade-story .ms-content.ms-content-text .ms-content-body
+.ms-custom-theme-picker-field .popover-content * {
+    font-size: @font-size-small;
+}
+.ms-custom-theme-picker-alternative-text {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border: 1px solid #000000;
+}
+.ms-custom-theme-picker-menuitem-header {
+    display: flex;
+    align-items: center;
+    color: @ms2-color-text;
+    padding: 8px 8px 0 8px;
+    > div {
+        flex: 1;
+        padding: 0 4px;
+    }
+    .glyphicon {
+        margin: 0;
+    }
+}
+.ms-custom-theme-picker-menuitem {
+    padding: 4px 12px;
+    border: 1px solid @ms2-color-shade-lighter;
+    margin: 8px;
+    min-width: 300px;
 }
 
 .ms-media-map.topLeft .ol-zoom.ol-unselectable.ol-control {

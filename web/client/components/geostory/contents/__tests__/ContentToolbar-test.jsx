@@ -52,7 +52,7 @@ describe('ContentToolbar component', () => {
         name: "theme",
         length: 4,
         totButtons: 1,
-        aTag: ["bright", "bright-text", "dark", "dark-text"]
+        aTag: ["", "bright", "dark", "custom"]
     }];
     testItems.forEach(tool => {
         it(`ContentToolbar rendering ${tool.name} item and click event`, (done) => {
@@ -60,7 +60,11 @@ describe('ContentToolbar component', () => {
                 tools={[tool.name]}
                 update={(t, selected) => {
                     expect(t).toEqual(tool.name);
-                    expect(includes(tool.aTag, selected)).toEqual(true);
+                    if (tool.name === 'theme') {
+                        expect(includes(tool.aTag, selected.value)).toEqual(true);
+                    } else {
+                        expect(includes(tool.aTag, selected)).toEqual(true);
+                    }
                     done();
                 }}
             />, document.getElementById("container"));
@@ -140,10 +144,10 @@ describe('ContentToolbar component', () => {
             const list = document.querySelectorAll('.ms-content-toolbar li a span');
             expect(list).toExist();
             expect(list.length).toBe(4);
-            expect(list[0].innerText).toBe("geostory.contentToolbar.brightThemeLabel");
-            expect(list[1].innerText).toBe("geostory.contentToolbar.brightTextThemeLabel");
+            expect(list[0].innerText).toBe("geostory.contentToolbar.defaultThemeLabel");
+            expect(list[1].innerText).toBe("geostory.contentToolbar.brightThemeLabel");
             expect(list[2].innerText).toBe("geostory.contentToolbar.darkThemeLabel");
-            expect(list[3].innerText).toBe("geostory.contentToolbar.darkTextThemeLabel");
+            expect(list[3].innerText).toBe("geostory.contentToolbar.customizeThemeLabel");
             done();
         });
         it(`remove`, (done) => {

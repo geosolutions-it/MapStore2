@@ -78,4 +78,14 @@ describe('Cascade component', () => {
         expect(smallGeoStoryLayoutNode).toNotExist();
         expect(mediumGeoStoryLayoutNode).toNotExist();
     });
+    it('should apply custom theme on the story', () => {
+        const COLOR = '#ffffff';
+        const BACKGROUND_COLOR = '#000000';
+        ReactDOM.render(<Cascade {...STORY} theme={{ color: COLOR, backgroundColor: BACKGROUND_COLOR }}/>, document.getElementById("container"));
+        const container = document.getElementById('container');
+        const sectionsContainerNode = container.querySelector('.ms-sections-container');
+        expect(sectionsContainerNode).toBeTruthy();
+        expect(sectionsContainerNode.style.color).toBe('rgb(255, 255, 255)');
+        expect(sectionsContainerNode.style.backgroundColor).toBe('rgb(0, 0, 0)');
+    });
 });

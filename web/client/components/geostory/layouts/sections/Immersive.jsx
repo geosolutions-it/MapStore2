@@ -41,7 +41,8 @@ const Immersive = ({
     contentId,
     bubblingTextEditing = () => {},
     textEditorActiveClass = "",
-    expandableMedia = false
+    expandableMedia = false,
+    storyTheme
 }) => {
     const hideContent = focusedContent && focusedContent.hideContent && (get(focusedContent, "target.id") === contentId);
     const visibility = hideContent ? 'hidden' : 'visible';
@@ -77,7 +78,8 @@ const Immersive = ({
             backgroundPlaceholder={{
                 background: `url(${pattern})`,
                 backgroundSize: '600px auto'
-            }}/>
+            }}
+            storyTheme={storyTheme}/>
         <SectionContents
             tools={{
                 [ContentTypes.COLUMN]: ['size', 'align', 'theme']
@@ -102,6 +104,7 @@ const Immersive = ({
             focusedContent={focusedContent}
             bubblingTextEditing={bubblingTextEditing}
             sectionType={sectionType}
+            storyTheme={storyTheme}
         />
         {mode === Modes.EDIT && !hideContent && <AddBar
             containerWidth={viewWidth}

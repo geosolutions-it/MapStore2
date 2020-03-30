@@ -349,7 +349,7 @@ describe('test ThematicLayer module component', () => {
         expect(document.getElementsByClassName('thematic_layer')[0].childNodes.length).toBe(1);
         const strokeToggle = domNode.querySelectorAll('input[type="checkbox"]')[0];
         expect(strokeToggle).toNotExist();
-        const colorPicker = domNode.querySelector('.cp-swatch');
+        const colorPicker = domNode.querySelector('.ms-color-picker-swatch');
         expect(colorPicker).toNotExist();
         const weightPicker = domNode.querySelectorAll('.rw-numberpicker')[1];
         expect(weightPicker).toNotExist();
@@ -445,7 +445,7 @@ describe('test ThematicLayer module component', () => {
         expect(document.getElementsByClassName('thematic_layer')[0].childNodes.length).toBe(1);
         const strokeToggle = domNode.querySelectorAll('input[type="checkbox"]')[0];
         expect(strokeToggle).toExist();
-        const colorPicker = domNode.querySelector('.cp-disabled');
+        const colorPicker = domNode.querySelector('.ms-color-picker.ms-disabled');
         expect(colorPicker).toExist();
         const weightPicker = domNode.querySelectorAll('.rw-numberpicker')[1];
         expect(weightPicker.className.indexOf('rw-state-disabled') !== -1).toBe(true);
@@ -514,12 +514,14 @@ describe('test ThematicLayer module component', () => {
         expect(domNode).toExist();
         expect(document.getElementsByClassName('thematic_layer').length).toBe(1);
         expect(document.getElementsByClassName('thematic_layer')[0].childNodes.length).toBe(1);
-        const colorPicker = domNode.querySelector('.cp-swatch');
+        const colorPicker = domNode.querySelector('.ms-color-picker-swatch');
         expect(colorPicker).toExist();
         TestUtils.Simulate.click(colorPicker);
-        const sampleColor = domNode.querySelector('div[title="#D0021B"]');
+        // query in the document because now the overlay picker container is related to container node (portal)
+        const sampleColor = document.querySelector('div[title="#D0021B"]');
         TestUtils.Simulate.click(sampleColor);
-        TestUtils.Simulate.click(domNode.querySelector('.cp-cover'));
+        // query in the document because now the overlay picker container is related to container node (portal)
+        TestUtils.Simulate.click(document.querySelector('.ms-color-picker-cover'));
         expect(spyChange).toHaveBeenCalled();
         expect(spyChange.calls.length).toBe(2);
         expect(spyChange.calls[1].arguments[0]).toBe('thematic');
@@ -540,10 +542,11 @@ describe('test ThematicLayer module component', () => {
         expect(domNode).toExist();
         expect(document.getElementsByClassName('thematic_layer').length).toBe(1);
         expect(document.getElementsByClassName('thematic_layer')[0].childNodes.length).toBe(1);
-        const colorPicker = domNode.querySelector('.cp-swatch');
+        const colorPicker = domNode.querySelector('.ms-color-picker-swatch');
         expect(colorPicker).toExist();
         TestUtils.Simulate.click(colorPicker);
-        TestUtils.Simulate.click(domNode.querySelector('.cp-cover'));
+        // query in the document because now the cover is a global overlay
+        TestUtils.Simulate.click(document.querySelector('.ms-color-picker-cover'));
         expect(spyChange.calls.length).toBe(1);
     });
 

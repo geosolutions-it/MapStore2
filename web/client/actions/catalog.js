@@ -264,7 +264,7 @@ export function addLayerAndDescribe(layer) {
         dispatch(addNewLayer({...layer, id}));
         if (layer.type === 'wms') {
             // try to describe layer
-            return API.wms.describeLayers(layer.url, layer.name).then((results) => {
+            return API.wms.describeLayers(LayersUtils.getLayerUrl(layer), layer.name).then((results) => {
                 if (results) {
                     let description = find(results, (desc) => desc.name === layer.name );
                     if (description && description.owsType === 'WFS') {

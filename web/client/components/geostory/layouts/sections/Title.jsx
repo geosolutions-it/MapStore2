@@ -47,7 +47,8 @@ export default compose(
     focusedContent,
     bubblingTextEditing = () => {},
     textEditorActiveClass = "",
-    expandableMedia = false
+    expandableMedia = false,
+    storyTheme
 }) => {
 
     const hideContent = get(focusedContent, "target.id") === contentId;
@@ -93,6 +94,7 @@ export default compose(
                         height={height >= viewHeight
                             ? viewHeight
                             : height}
+                        storyTheme={storyTheme}
                     />}
             </ContainerDimensions>
             <SectionContents
@@ -112,6 +114,7 @@ export default compose(
                 }}
                 focusedContent={focusedContent}
                 bubblingTextEditing={bubblingTextEditing}
+                storyTheme={storyTheme}
             />
             {mode === Modes.EDIT && !hideContent && <AddBar
                 containerWidth={viewWidth}

@@ -19,7 +19,7 @@ numberLocalizer();
 
 const Message = require('../../I18N/Message');
 const OpacitySlider = require('../../TOC/fragments/OpacitySlider');
-const ColorSelector = require('../ColorSelector');
+const ColorSelector = require('../ColorSelector').default;
 const {addOpacityToColor} = require('../../../utils/VectorStyleUtils');
 
 /**
