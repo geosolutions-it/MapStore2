@@ -17,6 +17,8 @@ import localConfig from '../../reducers/localConfig';
 import {
     localConfigLoaded
 } from '../../actions/localConfig';
+import LOCAL_CONFIG from '../../localConfig';
+import {filter, includes} from 'lodash';
 
 
 const stateMocker = createStateMocker({localConfig});
@@ -39,5 +41,12 @@ describe('localConfig selectors', () => {
         expect(pluginsSelectorCreator('desktop')(stateMocker(localConfigLoaded(TEST_CONFIG)))).toBe(TEST_CONFIG.plugins.desktop);
     });
 
+    it('pluginSelectorCreator for dashboard', ()=>{
+        const loadedConfig = (pluginsSelectorCreator('dashboard')(stateMocker(localConfigLoaded(LOCAL_CONFIG))));
+        expect(loadedConfig).toEqual(LOCAL_CONFIG.plugins.dashboard);
+        expect(includes(loadedConfig, 'DashboardSave')).toBe(true);
+        expect(includes(loadedConfig, 'DashboardSaveAs')).toBe(true);
+        expect(filter(loadedConfig, { "name": "Share"})[0]).toContain({ "name": "Share"});
+    });
 
 });
