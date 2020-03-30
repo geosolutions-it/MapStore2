@@ -34,8 +34,8 @@
         "errorPage": {
             "title":"Ops, Something has gone wrong",
             "subtitle":"Please click the icon below to reload MapStore",
-            "description":"if you want to report this error you can send an email our ",
-            "descriptionLink":"mailing list"
+            "description":"If you want to report this error you can send an email our mailing list",
+            "descriptionAdmin":"Please contact the administrator"
         },
         "autorefresh": {
             "of": "of",

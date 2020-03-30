@@ -9,12 +9,13 @@
 import React from 'react';
 import { Glyphicon } from 'react-bootstrap';
 import Message from '../I18N/Message';
+import ConfigUtils from '../../utils/ConfigUtils';
 
 /**
  * This component is rendered when a runtime error occurs
  * see https://github.com/geosolutions-it/MapStore2/issues/4491
  */
-const ErrorBoundaryFallbackComponent = () => {
+const ErrorBoundaryFallbackComponent = ({mailingList = ConfigUtils.getConfigProp("mailingList") || ""}) => {
     return (
         <div className="runtime-error-message">
             <div>
@@ -22,21 +23,28 @@ const ErrorBoundaryFallbackComponent = () => {
                     className="exclamation-sign-icon"
                     glyph="exclamation-sign"/>
                 <h1><Message msgId="errorPage.title"/></h1>
-                <p>
+                <p style={{
+                    display: "flex",
+                    flexDirection: "column"
+                }}>
                     <Message msgId="errorPage.subtitle"/>
-                    <p>
-                        <Glyphicon
-                            glyph="refresh"
-                            className="refresh-icon"
-                            onClick={() => {
-                                window.location.href = "/";
-                            }}
-                        />
-                    </p>
+                    <Glyphicon
+                        style={{marginTop: "20px" }}
+                        glyph="refresh"
+                        className="refresh-icon"
+                        onClick={() => {
+                            window.location.href = "/";
+                        }}
+                    />
                 </p>
                 <p>
-                    <Message msgId="errorPage.description"/>
-                    <h6><a target="_blank" href="https://groups.google.com/forum/#!forum/mapstore-users"><Message msgId="errorPage.descriptionLink"/></a></h6>
+                    {
+                        mailingList ?
+                            <a target="_blank" href={mailingList}>
+                                <Message msgId="errorPage.description"/>
+                            </a>
+                            : <Message msgId="errorPage.descriptionAdmin"/>
+                    }
                 </p>
             </div>
         </div>);
@@ -44,3 +52,4 @@ const ErrorBoundaryFallbackComponent = () => {
 
 
 export default ErrorBoundaryFallbackComponent;
+

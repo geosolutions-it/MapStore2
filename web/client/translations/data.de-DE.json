@@ -35,8 +35,8 @@
         "errorPage": {
             "title":"Ups, etwas ist schief gelaufen",
             "subtitle":"Klicken Sie auf das Symbol unten, um MapStore neu zu laden",
-            "description":"Wenn Sie diesen Fehler melden möchten, können Sie eine E-Mail an unsere senden ",
-            "descriptionLink":"Mailingliste"
+            "description":"Wenn Sie diesen Fehler melden möchten, können Sie eine E-Mail an unsere Mailingliste senden",
+            "descriptionAdmin":"Bitte wenden Sie sich an den Administrator"
         },
         "autorefresh": {
             "of": "of",
