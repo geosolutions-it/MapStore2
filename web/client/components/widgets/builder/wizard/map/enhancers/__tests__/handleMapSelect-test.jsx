@@ -11,11 +11,67 @@ import {createSink} from 'recompose';
 import expect from 'expect';
 import handleMapSelect from "../handleMapSelect";
 import axios from '../../../../../../../libs/ajax';
-import {isBoolean, isEmpty, isArray} from 'lodash';
+import {isBoolean, isEmpty, isArray, omit} from 'lodash';
 import MockAdapter from "axios-mock-adapter";
 
 describe('handleMapSelect enhancer', () => {
     let mockAxios;
+    const mapData = {
+        "version": 2,
+        "map": {
+            "center": {
+                "crs": "EPSG:4326"
+            },
+            "layers": [
+                {
+                    "id": "layer1",
+                    "url": "sourceUrl",
+                    "bbox": {
+                        "crs": "EPSG:4326"
+                    },
+                    "allowedSRS": {
+                        "EPSG:4326": true
+                    },
+                    "matrixIds": [
+                        "EPSG:4326"
+                    ],
+                    "tileMatrixSet": true
+                }
+            ],
+            "groups": [
+                {
+                    "id": "Default",
+                    "title": {
+                        "default": "Default",
+                        "it-IT": "a",
+                        "en-US": "a",
+                        "de-DE": "",
+                        "fr-FR": "a"
+                    },
+                    "expanded": true
+                },
+                {
+                    "id": "12345",
+                    "title": "Group2",
+                    "expanded": true
+                }
+            ],
+            "sources": {
+                "sourceUrl": {
+                    "tileMatrixSet": {
+                        "EPSG:4326": {
+                            "ows:Identifier": "EPSG:4326",
+                            "TileMatrix": [
+                                {
+                                    "ows:Identifier": "EPSG:4326:0"
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        }
+    };
 
     beforeEach((done) => {
         mockAxios = new MockAdapter(axios);
@@ -29,7 +85,7 @@ describe('handleMapSelect enhancer', () => {
         setTimeout(done);
     });
     it('handleMapSelect enhancer callbacks for map data with source', (done) => {
-        mockAxios.onGet().reply(200, {"version": 2, "map": {"center": {"crs": "EPSG:4326"}, "layers": [{"id": "layer1", "url": "source1", "bbox": {"crs": "EPSG:4326"}, "allowedSRS": {"EPSG:4326": true}, "matrixIds": ["EPSG:4326"], "tileMatrixSet": true}], "sources": {"source1": {"tileMatrixSet": {"EPSG:4326": {"ows:Identifier": "EPSG:4326", "ows: SupportedCRS": "urn:ogc:def:crs:EPSG::4326", "TileMatrix": [{"ows:Identifier": "EPSG:4326:0"}]}}}}}});
+        mockAxios.onGet().reply(200, mapData);
 
         const actions = {
             onMapSelected: ({map}) => {
@@ -56,7 +112,8 @@ describe('handleMapSelect enhancer', () => {
         ReactDOM.render(<EnhancedSink map={{id: 3}} onMapSelected={actions.onMapSelected} />, document.getElementById("container"));
     });
     it('handleMapSelect enhancer callbacks for map data without source', (done) => {
-        mockAxios.onGet().reply(200, {"version": 2, "map": {"center": {"crs": "EPSG:4326"}, "layers": [{"id": "layer1", "url": "source1", "bbox": {"crs": "EPSG:4326"}, "allowedSRS": {"EPSG:4326": true}, "matrixIds": ["EPSG:4326"]}]}});
+        const mapDataWithoutSource = {...omit(mapData, ['map.sources', 'map.layers[0].tileMatrixSet'])};
+        mockAxios.onGet().reply(200, mapDataWithoutSource);
 
         const actions = {
             onMapSelected: ({map}) => {
@@ -72,6 +129,33 @@ describe('handleMapSelect enhancer', () => {
             expect(props).toExist();
             expect(props.map.id).toExist();
             expect(props.onMapChoice).toExist();
+            props.onMapChoice(props.map);
+        });
+        const EnhancedSink = handleMapSelect(sink);
+        ReactDOM.render(<EnhancedSink map={{id: 3}} onMapSelected={actions.onMapSelected} />, document.getElementById("container"));
+    });
+
+    it('handleMapSelect enhancer callbacks for map data with groups with locale based title', (done) => {
+        mockAxios.onGet().reply(200, mapData);
+        const locale = 'it-IT';
+
+        const actions = {
+            onMapSelected: ({map}) => {
+                expect(map.sources).toExist();
+                expect(map.layers).toExist();
+                expect(map.groups).toExist();
+                expect(map.groups.length > 0).toBe(true);
+                expect(map.groups[0].id).toEqual('Default');
+                expect(map.groups[0].title).toExist();
+                expect(map.groups[0].title[locale]).toEqual('a');
+                expect(map.groups[0].title.default).toEqual('Default');
+                expect(map.groups[1].title).toEqual('Group2');
+                done();
+            }
+        };
+
+        const sink = createSink( props => {
+            expect(props).toExist();
             props.onMapChoice(props.map);
         });
         const EnhancedSink = handleMapSelect(sink);
