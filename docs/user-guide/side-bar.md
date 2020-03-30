@@ -29,25 +29,24 @@ Zooming tools
 
 * **Go back** <img src="../img/button/back-extent.jpg" class="ms-docbutton"/> to the previous map extent in the map navigation history
 
-* **Go forward** <img src="../img/button/forward-extent.jpg" class="ms-docbutton"/> to the last change 
+* **Go forward** <img src="../img/button/forward-extent.jpg" class="ms-docbutton"/> to the next map extent in the map navigation history
 
 * **Zoom to the maximum extent** <img src="../img/button/max-extent.jpg" class="ms-docbutton"/> the map
 
 3D Navigation
 -------------
-
-Based on CesiumJS, a **3D Navigator** <img src="../img/button/3D-icon.jpg" class="ms-docbutton"/> is implemented in [MapStore](https://mapstore.geo-solutions.it/mapstore/#/) that allows the user to display the map contents in 3D mode. In particularly the layers will be overlaid on the globe and it is possible to orbit around the globe trought the compass place in the upper right corner of the map.
+The *3D navigation* in [MapStore](https://mapstore.geo-solutions.it/mapstore/#/) is based on CesiumJS. If the 3D button <img src="../img/button/3D-icon.jpg" class="ms-docbutton"/> in the sidebar is clicked, the map switch in 3D mode so map contents are displayed on a 3D globe and it is possible to orbit around it through the compass place in the upper right corner of the map.
 
 <img src="../img/side-bar/3D-mode.jpg" class="ms-docimage"/>
 
 ## Identify Tool
 
-Getting information about the layers, which have been loaded into the map, is possible thanks to the **Identify** button <img src="../img/button/identify.jpg" class="ms-docbutton"/>, through which the attribute table, where the characteristics of the layer are stored, is queried. 
-The tool is active by default, as suggested by the green of the button. Therefore by clicking on a point on the level opens a modal window on the right side. On the window are dispalyed the requested information and the coordinates of the point.
+The *Identify* tool <img src="../img/button/identify.jpg" class="ms-docbutton"/> allows to retrieve information about layers on the map.
+The tool is active by default (the button is green). Therefore if the user click on a layer in the map, the identify panel opens containing the layers information corresponding to the clicked point in the map (also the coordinates of the clicked point are reported in the identify panel).
 
 <img src="../img/side-bar/identify-tool.jpg" class="ms-docimage"/>
 
-The returned information are viewed in Text plain format by default. It is possible to change the format selecting the <img src="../img/button/setting_button.jpg" class="ms-docbutton"/> option in [Burger Menu](menu-bar.md#burger-menu) where the user can select, from the list menu *Identify response format*, three different formats: **TEXT**, **HTML** and **PROPERTIES**.
+The layers information are reported in plain text by default. It is possible to change the format by selecting the <img src="../img/button/setting_button.jpg" class="ms-docbutton"/> option in [Burger Menu](menu-bar.md#burger-menu) where the user can select, through the *Identify response format* menu, three different formats like: **TEXT**, **HTML** and **PROPERTIES**.
 
 <img src="../img/side-bar/format-options.jpg" class="ms-docimage" style="max-width:400px;"/>
 
@@ -61,7 +60,7 @@ The information will be returned in the format chosen by the user. For exaple wi
 
 In addition to the layers information, the following are provided by the *Identify Tool*: 
 
-* The **point address**  trought the *More Info* button  <img src="../img/button/more_info_icon.jpg" class="ms-docbutton"/>
+* The **point address**  through the *More Info* button  <img src="../img/button/more_info_icon.jpg" class="ms-docbutton"/>
 
 <img src="../img/side-bar/more-info.jpg" class="ms-docimage"/>
 
