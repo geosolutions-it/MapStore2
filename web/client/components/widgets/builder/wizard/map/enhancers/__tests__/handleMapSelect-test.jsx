@@ -74,7 +74,6 @@ describe('handleMapSelect enhancer', () => {
             expect(props.map.id).toExist();
             expect(props.onMapChoice).toExist();
             props.onMapChoice(props.map);
-            done();
         });
         const EnhancedSink = handleMapSelect(sink);
         ReactDOM.render(<EnhancedSink map={{id: 3}} onMapSelected={actions.onMapSelected} />, document.getElementById("container"));
