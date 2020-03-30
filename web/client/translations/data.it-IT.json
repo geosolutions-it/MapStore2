@@ -1200,7 +1200,7 @@
               "urlTemplateHint": "<p> Modello di URL per il tuo servizio TMS personalizzato, con la possibilità di inserire variabili (espresse usando parentesi graffe, ad esempio <code> {var_name} </code>) che saranno sostituite dall'applicazione. <br />. Le variabili <code> {x} </code>, <code> {y} </code> e <code> {z} </code> sono riservate ai valori delle coordinate delle tiles. Puoi anche usare la variabile <code> {s} </code> per sottodomini. Qualsiasi altra variabile specificata nell'URL deve essere specificata anche nelle opzioni in \"Configurazione TMS personalizzata \" (Impostazioni avanzate) </p> ",
               "customTMSConfiguration": "Configurazione TMS personalizzata",
               "customTMSConfigurationHint": "<p> Le opzioni possono contenere: <br/> <ul><li> <code> \" subdomains \": ['a', 'b'] </code>: utilizzato per più domini, sostituendo il <code> {s} </code> nel modello URL </li> <li> <code> \"maxNativeZoom \": 20 </code>: zoom massimo dal server </li> </ul> </p>",
-              "forceDefaultTileGrid": "Force grid tile default",
+              "forceDefaultTileGrid": "Forza default tile grid",
               "forceDefaultTileGridDescription": "Utilizzare la griglia della proiezione globale anziché l'origine e le risoluzioni fornite dal server. Ciò è utile per alcuni servizi TMS che pubblicizzano l'origine o le risoluzioni errate."
             },
             "tileprovider": {
