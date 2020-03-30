@@ -13,10 +13,9 @@ import stickySupport from '../../../misc/enhancers/stickySupport';
 import MediaType, {Media} from '../../media/index';
 import { lists, getClassNameFromProps, Modes } from '../../../../utils/GeoStoryUtils';
 import ContentToolbar from '../../contents/ContentToolbar';
-import Message from '../../../I18N/Message';
 import { Portal } from 'react-overlays';
 import pattern from './patterns/grid.svg';
-import { SectionTypes } from './../../../../utils/GeoStoryUtils';
+import { SectionTypes, getThemeStyleFromProps } from './../../../../utils/GeoStoryUtils';
 
 /**
  * Background.
@@ -48,7 +47,8 @@ class Background extends Component {
         disableToolbarPortal: PropTypes.bool,
         backgroundPlaceholder: PropTypes.object,
         sectionType: PropTypes.string,
-        src: PropTypes.string
+        src: PropTypes.string,
+        theme: PropTypes.string
     };
 
     static defaultProps = {
@@ -63,23 +63,23 @@ class Background extends Component {
     };
 
     render() {
+        const theme = getThemeStyleFromProps(this.props);
         const parentNode = !this.props.disableToolbarPortal && this.refs && this.refs.div && this.refs.div.parentNode;
         const defaultTools = this.props.sectionType === SectionTypes.TITLE ? ['editMedia', 'cover' ] : ['editMedia' ];
         const toolbar = (
             <ContentToolbar
                 {...this.props}
-                themeOptions={[{
-                    value: 'bright',
-                    label: <Message msgId="geostory.contentToolbar.brightThemeLabel"/>
-                }, {
-                    value: 'dark',
-                    label: <Message msgId="geostory.contentToolbar.darkThemeLabel"/>
-                }]}
+                themeProps={{
+                    disableBackgroundAlpha: true,
+                    disableTextColor: true,
+                    disableShadow: true
+                }}
                 tools={this.props.tools && this.props.type && this.props.tools[this.props.type] || defaultTools}
             />
         );
 
         const id = `${this.props.sectionId || "ms"}-media-${(this.props.id || this.props.resourceId)}`;
+
         return (
             <div
                 ref="div"
@@ -89,6 +89,7 @@ class Background extends Component {
                     className={`ms-section-background-container${getClassNameFromProps(this.props)}`}
                     style={{
                         height: this.props.height,
+                        ...theme,
                         ...(!MediaType[this.props.type]
                             ? this.props.backgroundPlaceholder
                             : {})

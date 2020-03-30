@@ -81,4 +81,20 @@ describe('Background component', () => {
         expect(contentToolbar).toExist();
         expect(backgroundContainer.clientHeight).toBe(VIEW_HEIGHT);
     });
+    it('should apply custom theme', () => {
+        const BACKGROUND_COLOR = '#000000';
+        ReactDOM.render(<Background
+            backgroundPlaceholder={{}}
+            theme={{
+                value: 'custom',
+                custom: {
+                    backgroundColor: BACKGROUND_COLOR
+                }
+            }}
+        />, document.getElementById("container"));
+        const container = document.getElementById('container');
+        const backgroundContainer = container.querySelector('.ms-section-background-container');
+        expect(backgroundContainer).toBeTruthy();
+        expect(backgroundContainer.style.backgroundColor).toBe('rgb(0, 0, 0)');
+    });
 });

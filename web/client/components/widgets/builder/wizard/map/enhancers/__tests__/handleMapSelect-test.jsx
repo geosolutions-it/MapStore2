@@ -107,7 +107,6 @@ describe('handleMapSelect enhancer', () => {
             expect(props.onMapChoice).toExist();
             props.onMapChoice(props.map);
             expect(['number', 'string'].includes(typeof props.map.id)).toBe(true);
-            done();
         });
         const EnhancedSink = handleMapSelect(sink);
         ReactDOM.render(<EnhancedSink map={{id: 3}} onMapSelected={actions.onMapSelected} />, document.getElementById("container"));
@@ -131,7 +130,6 @@ describe('handleMapSelect enhancer', () => {
             expect(props.map.id).toExist();
             expect(props.onMapChoice).toExist();
             props.onMapChoice(props.map);
-            done();
         });
         const EnhancedSink = handleMapSelect(sink);
         ReactDOM.render(<EnhancedSink map={{id: 3}} onMapSelected={actions.onMapSelected} />, document.getElementById("container"));
@@ -159,7 +157,6 @@ describe('handleMapSelect enhancer', () => {
         const sink = createSink( props => {
             expect(props).toExist();
             props.onMapChoice(props.map);
-            done();
         });
         const EnhancedSink = handleMapSelect(sink);
         ReactDOM.render(<EnhancedSink map={{id: 3}} onMapSelected={actions.onMapSelected} />, document.getElementById("container"));
