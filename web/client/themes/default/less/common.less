@@ -254,7 +254,7 @@ div#sync-popover.popover {
     .button-variant(@ms-tray-color; @ms-tray-bg; @ms-tray-border);
     border-left: none;
     border-top: none;
-    border-right: none; 
+    border-right: none;
     border-bottom: 3px solid @ms-tray-border;
     &:active, &.active {
         color: @ms-tray-active-color;
@@ -264,5 +264,36 @@ div#sync-popover.popover {
         background-color: @ms-tray-bg;
         color: @ms-tray-color;
         border-bottom: 3px solid @ms-tray-border;
+    }
+}
+.error-container {
+    height: 100%;
+    width: 100%;
+    .runtime-error-message {
+        height: 100%;
+        width: 100%;
+        align-items: center;
+        text-align: center;
+        background-color: @ms2-color-shade-lighter;
+        color: @ms2-color-shade-dark;
+        cursor: help;
+        display: grid;
+            &.inverse {
+                background-color: @ms2-color-shade-dark;
+                color: @ms2-color-shade-lighter;
+            }
+        p {
+            margin: 20px 0 20px;
+        }
+        .exclamation-sign-icon {
+            font-size: 60px
+        }
+        .refresh-icon {
+            font-size: 20px
+        }
+        .refresh-icon:hover {
+            cursor: pointer;
+            color: @ms2-color-primary;
+        }
     }
 }
