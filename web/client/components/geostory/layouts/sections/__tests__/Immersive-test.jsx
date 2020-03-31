@@ -167,7 +167,7 @@ describe('Immersive component', () => {
                 subscribe: () => {},
                 dispatch: () => {}
             }}>
-                <Immersive mode={Modes.EDIT} expandableBackgroundMedia contents={CONTENTS_MAP} />
+                <Immersive mode={Modes.EDIT} expandableMedia contents={CONTENTS_MAP} />
             </Provider>
             , document.getElementById("container"));
         const container = document.getElementById('container');

@@ -6,12 +6,11 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-var expect = require('expect');
-var React = require('react');
-var ReactDOM = require('react-dom');
-var FeatureInfoFormatSelector = require('../FeatureInfoFormatSelector');
-
-const TestUtils = require('react-dom/test-utils');
+import expect from 'expect';
+import React from 'react';
+import ReactDOM from 'react-dom';
+import FeatureInfoFormatSelector from '../FeatureInfoFormatSelector';
+import TestUtils from 'react-dom/test-utils';
 
 describe('FeatureInfoFormatSelector', () => {
     const data = {
@@ -35,51 +34,70 @@ describe('FeatureInfoFormatSelector', () => {
     });
 
     it('test list filling', () => {
-        const cmp = ReactDOM.render(
-            <FeatureInfoFormatSelector
-                availableInfoFormat={data}
-                infoFormat={defaultVal}/>
-            , document.getElementById("container"));
-        expect(cmp).toExist();
+        TestUtils.act(() => {
+            ReactDOM.render(
+                <FeatureInfoFormatSelector
+                    label="Info"
+                    availableInfoFormat={data}
+                    infoFormat={defaultVal}
+                    selectProps={{
+                        // force select menu to open state
+                        ref: (select) => { if (select) select.setState({ isOpen: true }); }
+                    }}/>
+                , document.getElementById("container"));
+        });
+        const cmp = document.querySelector('.form-group');
+        expect(cmp).toBeTruthy();
 
-        const cmpDom = ReactDOM.findDOMNode(cmp);
-        expect(cmpDom).toExist();
+        const selectMenuOptionNodes = cmp.querySelectorAll('.Select-option');
+        expect(selectMenuOptionNodes.length).toBe(3);
 
-        const select = cmpDom.getElementsByTagName("select").item(0);
-        const opts = select.childNodes;
-        expect(opts.length).toBe(3);
-        expect(Array.prototype.reduce.call(opts, (prev, opt, index) => {
-            let val = opt.value;
-            let lbl = opt.innerHTML;
+        expect(selectMenuOptionNodes[0].innerHTML).toBe('k0');
+        expect(!!selectMenuOptionNodes[0].getAttribute('class').match('is-selected')).toBe(false);
 
-            return prev
-                && val === data["k" + index]
-                && lbl === "k" + index;
-        }, true)).toBe(true);
+        expect(selectMenuOptionNodes[1].innerHTML).toBe('k1');
+        expect(!!selectMenuOptionNodes[1].getAttribute('class').match('is-selected')).toBe(true);
 
-        expect(Array.prototype.reduce.call(opts, (prev, opt) => {
-            return prev
-                && opt.value === defaultVal ? opt.selected : !opt.selected;
-        }, true)).toBe(true);
+        expect(selectMenuOptionNodes[2].innerHTML).toBe('k2');
+        expect(!!selectMenuOptionNodes[2].getAttribute('class').match('is-selected')).toBe(false);
     });
 
-    it('test onChange handler', () => {
-        let newFormat;
-        const cmp = ReactDOM.render(
-            <FeatureInfoFormatSelector
-                availableInfoFormat={data}
-                infoFormat={defaultVal}
-                onInfoFormatChange={(format) => {
-                    newFormat = format;
-                }}/>
-            , document.getElementById("container"));
-        const cmpDom = ReactDOM.findDOMNode(cmp);
-        const select = cmpDom.getElementsByTagName("select").item(0);
+    it('test onChange handler', (done) => {
+        TestUtils.act(() => {
+            ReactDOM.render(
+                <FeatureInfoFormatSelector
+                    label="Info"
+                    availableInfoFormat={data}
+                    infoFormat={defaultVal}
+                    onInfoFormatChange={(format) => {
+                        try {
+                            expect(format).toBe('v2');
+                        } catch (e) {
+                            done(e);
+                        }
+                        done();
+                    }}/>
+                , document.getElementById("container"));
+        });
 
-        select.value = "v2";
-        TestUtils.Simulate.change(select, {target: {value: 'v2'}});
+        const cmp = document.querySelector('.form-group');
+        expect(cmp).toBeTruthy();
 
-        expect(newFormat).toBe('v2');
+        const input = cmp.querySelector('input');
+        expect(input).toBeTruthy();
+
+        TestUtils.act(() => {
+            TestUtils.Simulate.focus(input);
+            TestUtils.Simulate.keyDown(input, { key: 'ArrowDown', keyCode: 40 });
+        });
+
+        const selectMenuOptionNodes = cmp.querySelectorAll('.Select-option');
+        expect(selectMenuOptionNodes.length).toBe(3);
+        TestUtils.act(() => {
+            TestUtils.Simulate.mouseDown(selectMenuOptionNodes[2]);
+        });
+        const selectValue = cmp.querySelector('.Select-value');
+        expect(selectValue.children[0].innerHTML).toBe('k2');
     });
 
 });

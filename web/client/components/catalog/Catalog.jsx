@@ -22,7 +22,6 @@ const RecordGrid = require("./RecordGrid");
 const SwitchPanel = require("../misc/switch/SwitchPanel");
 const Loader = require('../misc/Loader');
 
-require('react-select/dist/react-select.css');
 require('react-quill/dist/quill.snow.css');
 
 class Catalog extends React.Component {

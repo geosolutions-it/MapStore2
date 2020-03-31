@@ -158,7 +158,7 @@ describe('Title component', () => {
                 subscribe: () => {},
                 dispatch: () => {}
             }}>
-                <Title contents={CONTENTS} expandableBackgroundMedia viewHeight={VIEW_HEIGHT} cover mode="edit"/>
+                <Title contents={CONTENTS} expandableMedia viewHeight={VIEW_HEIGHT} cover mode="edit"/>
             </Provider>
             , document.getElementById("container"));
         const container = document.getElementById('container');
