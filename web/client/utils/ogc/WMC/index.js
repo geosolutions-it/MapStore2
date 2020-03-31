@@ -7,7 +7,7 @@
  */
 
 import { Parser } from 'xml2js';
-import { keys, values, get, head, mapValues, uniqWith, findIndex, pick, has } from 'lodash';
+import { keys, values, get, head, mapValues, uniqWith, findIndex, pick, has, toPairs, isBoolean } from 'lodash';
 import uuidv1 from 'uuid/v1';
 
 import {
@@ -276,8 +276,44 @@ export const toMapConfig = (wmcString, generateLayersGroup = false) => {
             };
             const zoom = parseFloat(get(msTagExtractor(globalExtensions, 'zoom'), 'charContent'));
 
+            const catalogServices = msTagExtractor(globalExtensions, 'CatalogServices');
+            const selectedService = attrExtractor(catalogServices, 'selectedService');
+            const services = msTagsExtractor(catalogServices, 'Service')
+                .map(catalogService => pickAttributeValues(
+                    catalogService,
+                    'serviceName',
+                    'autoload',
+                    'title',
+                    'type',
+                    'url',
+                    'format',
+                    'metadataTemplate',
+                    'oldService',
+                    'showAdvancedSettings',
+                    'showTemplate',
+                    'hideThumbnail'
+                ))
+                .reduce((resultObj, pickedService) => ({
+                    ...resultObj,
+                    [pickedService.serviceName]: {
+                        autoload: parseBoolean(pickedService.autoload),
+                        title: pickedService.title,
+                        type: pickedService.type,
+                        url: pickedService.url,
+                        format: pickedService.format,
+                        metadataTemplate: pickedService.metadataTemplate,
+                        oldService: pickedService.oldService,
+                        showAdvancedSettings: parseBoolean(pickedService.showAdvancedSettings),
+                        showTemplate: parseBoolean(pickedService.showTemplate),
+                        hideThumbnail: parseBoolean(pickedService.hideThumbnail)
+                    }
+                }), {});
+
             const msMapConfig = {
-                catalogServices: {},
+                catalogServices: catalogServices && {
+                    selectedService,
+                    services
+                },
                 map: {
                     maxExtent,
                     bbox: zoom ? undefined : bbox,
@@ -319,7 +355,7 @@ const layerTypeToService = {
  * @param {number} [newline='\n'] newline to pass to writeXML
  */
 export const toWMC = (
-    {map},
+    {map, catalogServices},
     {
         title = 'MapStore Context',
         abstract = 'This is a map exported from MapStore2.'
@@ -372,7 +408,20 @@ export const toWMC = (
                 expanded: group.expanded
             })
         }))
-    } : null, center && {
+    } : null, catalogServices && {
+        name: 'CatalogServices',
+        attributes: catalogServices.selectedService && objectToAttributes({
+            selectedService: catalogServices.selectedService
+        }),
+        children: toPairs(catalogServices.services).map(([serviceName, service]) => ({
+            name: 'Service',
+            xmlns: namespaces.ms,
+            attributes: objectToAttributes(mapValues({
+                ...service,
+                serviceName
+            }, value => isBoolean(value) ? booleanValueToAttribute(value) : value))
+        }))
+    }, center && {
         name: 'center',
         attributes: objectToAttributes(center)
     }, zoom && {

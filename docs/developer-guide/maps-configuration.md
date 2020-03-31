@@ -777,11 +777,17 @@ MapStore specific:
 - `search` JSON describing a filter that is applied to the layer
 - `DimensionList` contains `Dimension` elements that describe dimensions that cannot be described using standard "Dimension" tag.
 Currently supports dimensions of ***multidim-extension*** type:
+- `CatalogServices` contains `Service` elements that describe services available for use in Catalog.
 
 ```xml
 <ms:DimensionList xmlns:ms="http://geo-solutions.it/mapstore/context">
     <ms:Dimension xmlns:ms="http://geo-solutions.it/mapstore/context" xmlns:xlink="http://www.w3.org/1999/xlink" name="time" type="multidim-extension" xlink:type="simple" xlink:href="https://cloudsdi.geo-solutions.it/geoserver/gwc/service/wmts"/>
 </ms:DimensionList>
+<ms:CatalogServices selectedService="gs_stable_csw">
+    <ms:Service url="https://gs-stable.geo-solutions.it/geoserver/csw" type="csw" title="GeoSolutions GeoServer CSW" autoload="1" serviceName="gs_stable_csw"/>
+    <ms:Service url="https://gs-stable.geo-solutions.it/geoserver/wms" type="wms" title="GeoSolutions GeoServer WMS" autoload="0" serviceName="gs_stable_wms"/>
+    <ms:Service url="https://gs-stable.geo-solutions.it/geoserver/gwc/service/wmts" type="wmts" title="GeoSolutions GeoServer WMTS" autoload="0" serviceName="gs_stable_wmts"/>
+</ms:CatalogServices>
 ```
 
 Note, that during the exporting process, some sort of fallback for dimensions, listed as extensions, is provided inside the standard

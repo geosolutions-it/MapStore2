@@ -194,7 +194,7 @@ export default (API) => ({
             .switchMap(() => {
                 const state = store.getState();
                 const newService = newServiceSelector(state);
-                const services = servicesSelector(state);
+                const services = servicesSelector(state) || {};
                 const errorMessage = error({
                     title: "notification.warning",
                     message: "catalog.notification.errorServiceUrl",

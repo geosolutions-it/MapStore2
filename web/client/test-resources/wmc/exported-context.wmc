@@ -11,6 +11,11 @@
         <ms:Group id="37b5eb60-5189-11ea-8531-a737d86e9a07" title="Some Group" expanded="true"/>
         <ms:Group id="37b5eb60-5189-11ea-8531-a737d86e9a07.44bc9340-5189-11ea-8531-a737d86e9a07" title="Some Group" expanded="true"/>
       </ms:GroupList>
+      <ms:CatalogServices selectedService="gs_stable_csw">
+        <ms:Service url="https://gs-stable.geo-solutions.it/geoserver/csw" type="csw" title="GeoSolutions GeoServer CSW" autoload="1" serviceName="gs_stable_csw"/>
+        <ms:Service url="https://gs-stable.geo-solutions.it/geoserver/wms" type="wms" title="GeoSolutions GeoServer WMS" autoload="0" serviceName="gs_stable_wms"/>
+        <ms:Service url="https://gs-stable.geo-solutions.it/geoserver/gwc/service/wmts" type="wmts" title="GeoSolutions GeoServer WMTS" autoload="0" serviceName="gs_stable_wmts"/>
+      </ms:CatalogServices>
       <ms:center x="-83.01860427856452" y="36.23686543982026" crs="EPSG:4326"/>
       <ms:zoom>3</ms:zoom>
     </Extension>

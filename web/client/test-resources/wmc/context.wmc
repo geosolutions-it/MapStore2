@@ -22,6 +22,10 @@
         <ms:Group id="groupid1.groupid2" title="Group2" expanded="false"/>
         <ms:Group id="groupid3" title="Group3" expanded="true"/>
       </ms:GroupList>
+      <ms:CatalogServices xmlns:ms="http://geo-solutions.it/mapstore/context" selectedService="testservice">
+        <ms:Service url="https://testserver/csw" type="csw" title="Demo CSW Service" autoload="1" oldService="old_service" serviceName="Demo CSW Service"/>
+        <ms:Service url="https://testserver/testservice/csw" type="csw" title="testservice" autoload="0" showAdvancedSettings="1" showTemplate="1" hideThumbnail="0" metadataTemplate="&lt;p>${description}&lt;/p>" format="image/jpeg" serviceName="testservices"/>
+      </ms:CatalogServices>
       <ms:center xmlns:ms="http://geo-solutions.it/mapstore/context" x="1.5" y="2.5" crs="EPSG:3857"/>
       <ms:zoom xmlns:ms="http://geo-solutions.it/mapstore/context">7</ms:zoom>
     </Extension>
