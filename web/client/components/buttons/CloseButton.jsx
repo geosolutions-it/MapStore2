@@ -13,6 +13,7 @@ import ConfirmDialog from '../misc/ConfirmDialog';
 import Portal from '../misc/Portal';
 
 export default ({
+    style,
     showConfirm = false,
     onShowConfirm = () => {},
     onConfirm = () => {},
@@ -25,6 +26,7 @@ export default ({
     bsSize = "sm"
 }) => (<>
         <Button
+            style={style}
             bsSize={bsSize}
             bsStyle={bsStyle}
             className={className}
