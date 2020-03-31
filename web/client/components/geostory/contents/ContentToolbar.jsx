@@ -100,8 +100,8 @@ export default function ContentToolbar({
                     noTooltipWhenDisabled: true
                 }}
                 buttons={tools
-                    .filter((id) => toolButtons[id])
-                    .map(id => toolButtons[id](props))}/>
+                    .filter((tool) => tool?.id && toolButtons[tool.id] || toolButtons[tool])
+                    .map(tool => tool?.id && toolButtons[tool.id]({ ...props, ...tool }) || toolButtons[tool](props))}/>
         </div>
     );
 }
