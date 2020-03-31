@@ -18,8 +18,7 @@ import {
     localConfigLoaded
 } from '../../actions/localConfig';
 import LOCAL_CONFIG from '../../localConfig';
-import {filter, includes} from 'lodash';
-
+import {find} from 'lodash';
 
 const stateMocker = createStateMocker({localConfig});
 const TEST_CONFIG = {
@@ -43,11 +42,15 @@ describe('localConfig selectors', () => {
 
     it('pluginSelectorCreator for dashboard', ()=>{
         const loadedConfig = (pluginsSelectorCreator('dashboard')(stateMocker(localConfigLoaded(LOCAL_CONFIG))));
-        expect(includes(loadedConfig, 'DashboardSave')).toBe(true);
-        expect(includes(loadedConfig, 'DashboardSaveAs')).toBe(true);
-        expect(filter(loadedConfig, { "name": "Share"})[0]).toContain({ "name": "Share"});
-        expect(filter(loadedConfig, { "name": "Share"})[0].cfg).toContain({ "embedPanel": false});
-        expect(filter(loadedConfig, { "name": "Share"})[0].cfg).toContain({ "advancedSettings": false});
+        expect(find(loadedConfig, { "name": 'DashboardSave'})).toContain({ "name": 'DashboardSave'});
+        expect(find(loadedConfig, { "name": 'DashboardSave'}).cfg).toExist();
+        expect(Object.keys(find(loadedConfig, { "name": 'DashboardSave'}).cfg)).toContain("disablePluginIf");
+        expect(find(loadedConfig, { "name": 'DashboardSaveAs'})).toContain({ "name": 'DashboardSaveAs'});
+        expect(find(loadedConfig, { "name": 'DashboardSaveAs'}).cfg).toExist();
+        expect(Object.keys(find(loadedConfig, { "name": 'DashboardSaveAs'}).cfg)).toContain("disablePluginIf");
+        expect(find(loadedConfig, { "name": "Share"})).toContain({ "name": "Share"});
+        expect(find(loadedConfig, { "name": "Share"}).cfg).toContain({ "embedPanel": false});
+        expect(find(loadedConfig, { "name": "Share"}).cfg).toContain({ "advancedSettings": false});
     });
 
 });
