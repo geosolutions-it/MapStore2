@@ -43,10 +43,11 @@ describe('localConfig selectors', () => {
 
     it('pluginSelectorCreator for dashboard', ()=>{
         const loadedConfig = (pluginsSelectorCreator('dashboard')(stateMocker(localConfigLoaded(LOCAL_CONFIG))));
-        expect(loadedConfig).toEqual(LOCAL_CONFIG.plugins.dashboard);
         expect(includes(loadedConfig, 'DashboardSave')).toBe(true);
         expect(includes(loadedConfig, 'DashboardSaveAs')).toBe(true);
         expect(filter(loadedConfig, { "name": "Share"})[0]).toContain({ "name": "Share"});
+        expect(filter(loadedConfig, { "name": "Share"})[0].cfg).toContain({ "embedPanel": false});
+        expect(filter(loadedConfig, { "name": "Share"})[0].cfg).toContain({ "advancedSettings": false});
     });
 
 });
