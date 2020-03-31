@@ -31,6 +31,12 @@
         "version": {
             "label": "Versión"
         },
+        "errorPage": {
+            "title":"Vaya, algo salió mal",
+            "subtitle":"Haga clic en el icono a continuación para volver a cargar MapStore",
+            "description":"Si desea informar este error, puede enviar un correo electrónico a nuestra lista de correo",
+            "descriptionAdmin":"Por favor, póngase en contacto con el administrador"
+        },
         "autorefresh": {
             "of": "de",
             "updating": "actualizando...",

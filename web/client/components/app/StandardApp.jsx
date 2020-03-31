@@ -29,8 +29,6 @@ const urlQuery = url.parse(window.location.href, true).query;
 
 require('./appPolyfill');
 
-const ErrorBoundary = require('react-error-boundary').default;
-
 /**
  * Standard MapStore2 application component
  *
@@ -121,10 +119,11 @@ class StandardApp extends React.Component {
         const {plugins, requires} = this.props.pluginsDef;
         const {pluginsDef, appStore, initialActions, appComponent, mode, ...other} = this.props;
         const App = dragDropContext(html5Backend)(this.props.appComponent);
+
         return this.state.initialized ?
-            <ErrorBoundary><Provider store={this.store}>
+            <Provider store={this.store}>
                 <App {...other} plugins={assign(PluginsUtils.getPlugins(plugins), { requires })} />
-            </Provider></ErrorBoundary>
+            </Provider>
             : (<span><div className="_ms2_init_spinner _ms2_init_center"><div></div></div>
                 <div className="_ms2_init_text _ms2_init_center">Loading MapStore</div></span>);
     }
