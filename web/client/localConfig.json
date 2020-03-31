@@ -637,9 +637,8 @@
         }, "Login", "Language", "NavMenu", "DashboardSave", "DashboardSaveAs", "Attribution", "Home", {
           "name": "Share",
           "cfg": {
-            "advancedSettings": {
-              "bbox": false
-            }
+            "embedPanel": false,
+            "advancedSettings": false
           }
         },
           {
