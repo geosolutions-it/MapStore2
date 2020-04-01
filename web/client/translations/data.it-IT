@@ -31,6 +31,12 @@
         "version": {
             "label": "Versione"
         },
+        "errorPage": {
+            "title":"Ops, Qualcosa è andato storto",
+            "subtitle":"Per favore clicca sull'icona qui sotto per ricaricare MapStore",
+            "description":"Se vuoi segnalare questo problema, puoi mandare una mail alla nostra lista email per utenti",
+            "descriptionAdmin":"Per favore contatta l'amministratore"
+        },
         "autorefresh": {
             "of": "di",
             "updating": "In aggiornamento...",

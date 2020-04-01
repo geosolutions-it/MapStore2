@@ -14,6 +14,8 @@ const {ConnectedRouter} = require('connected-react-router');
 const history = require('../../stores/History').default;
 
 const Localized = require('../I18N/Localized');
+const {ErrorBoundary} = require('react-error-boundary');
+const ErrorBoundaryFallbackComponent = require('./ErrorFallBackComp').default;
 
 const assign = require('object-assign');
 
@@ -64,8 +66,10 @@ class StandardRouter extends React.Component {
                 <Theme {...this.props.themeCfg} version={this.props.version} onLoad={this.themeLoaded}>
                     {this.state.themeLoaded ? (<Localized messages={this.props.locale.messages} locale={this.props.locale.current} loadingError={this.props.locale.localeError}>
                         <ConnectedRouter history={history}>
-                            <div>
-                                {this.renderPages()}
+                            <div className="error-container">
+                                <ErrorBoundary FallbackComponent={ ErrorBoundaryFallbackComponent}>
+                                    {this.renderPages()}
+                                </ErrorBoundary>
                             </div>
                         </ConnectedRouter>
                     </Localized>) :
@@ -82,8 +86,10 @@ class StandardRouter extends React.Component {
                 <Theme {...this.props.themeCfg} version={this.props.version}/>
                 <Localized messages={this.props.locale.messages} locale={this.props.locale.current} loadingError={this.props.locale.localeError}>
                     <ConnectedRouter history={history}>
-                        <div>
-                            {this.renderPages()}
+                        <div className="error-container">
+                            <ErrorBoundary FallbackComponent={ ErrorBoundaryFallbackComponent}>
+                                {this.renderPages()}
+                            </ErrorBoundary>
                         </div>
                     </ConnectedRouter>
                 </Localized>
