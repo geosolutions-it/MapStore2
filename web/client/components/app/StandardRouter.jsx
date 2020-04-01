@@ -15,7 +15,7 @@ const history = require('../../stores/History').default;
 
 const Localized = require('../I18N/Localized');
 const {ErrorBoundary} = require('react-error-boundary');
-const ErrorBoundaryFallbackComponent = require('./ErrorFallBackComp');
+const ErrorBoundaryFallbackComponent = require('./ErrorFallBackComp').default;
 
 const assign = require('object-assign');
 
