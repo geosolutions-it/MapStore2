@@ -18,8 +18,7 @@ import {
     localConfigLoaded
 } from '../../actions/localConfig';
 import LOCAL_CONFIG from '../../localConfig';
-import {filter, includes} from 'lodash';
-
+import {find, includes} from 'lodash';
 
 const stateMocker = createStateMocker({localConfig});
 const TEST_CONFIG = {
@@ -45,9 +44,9 @@ describe('localConfig selectors', () => {
         const loadedConfig = (pluginsSelectorCreator('dashboard')(stateMocker(localConfigLoaded(LOCAL_CONFIG))));
         expect(includes(loadedConfig, 'DashboardSave')).toBe(true);
         expect(includes(loadedConfig, 'DashboardSaveAs')).toBe(true);
-        expect(filter(loadedConfig, { "name": "Share"})[0]).toContain({ "name": "Share"});
-        expect(filter(loadedConfig, { "name": "Share"})[0].cfg).toContain({ "embedPanel": false});
-        expect(filter(loadedConfig, { "name": "Share"})[0].cfg).toContain({ "advancedSettings": false});
+        expect(find(loadedConfig, { "name": "Share"})).toContain({ "name": "Share"});
+        expect(find(loadedConfig, { "name": "Share"}).cfg).toContain({ "embedPanel": false});
+        expect(find(loadedConfig, { "name": "Share"}).cfg).toContain({ "advancedSettings": false});
     });
 
 });

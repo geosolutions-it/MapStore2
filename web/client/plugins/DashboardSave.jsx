@@ -47,6 +47,9 @@ export const DashboardSave = createPlugin('DashboardSave', {
         }
         ))(SaveBaseDialog),
     reducers: {dashboard},
+    options: {
+        disablePluginIf: "{!!(state('browser') && state('browser').mobile)}"
+    },
     containers: {
         BurgerMenu: {
             name: 'dashboardSave',
@@ -66,7 +69,7 @@ export const DashboardSave = createPlugin('DashboardSave', {
     }
 });
 
-export const DashboardSaveAs = createPlugin('DashboardSaveAs', {
+export const DashboardSaveAs = createPlugin('DashboardSaveAs',  {
     component: compose(
         connect(createSelector(
             isShowSaveAsOpen, dashboardResource,
@@ -79,6 +82,9 @@ export const DashboardSaveAs = createPlugin('DashboardSaveAs', {
         }
         ))(SaveBaseDialog),
     reducers: {dashboard},
+    options: {
+        disablePluginIf: "{!!(state('browser') && state('browser').mobile)}"
+    },
     containers: {
         BurgerMenu: {
             name: 'dashboardSaveAs',

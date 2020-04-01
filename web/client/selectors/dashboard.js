@@ -9,8 +9,9 @@ const showConnectionsSelector = state => state && state.dashboard && state.dashb
 const dashboardResource = state => state && state.dashboard && state.dashboard.resource;
 const isDashboardLoading = state => state && state.dashboard && state.dashboard.loading;
 const getDashboardSaveErrors = state => state && state.dashboard && state.dashboard.saveErrors;
-const buttonCanEdit = createSelector(pathnameSelector, dashboardResource,
-    (path, resource) => resource && resource.canEdit || isNaN(path.substr(-4)));
+const isBrowserMobile = state => state && state.browser && state.browser.mobile;
+const buttonCanEdit = createSelector(pathnameSelector, dashboardResource, isBrowserMobile,
+    (path, resource, isMobile) => isMobile ? !isMobile : (resource && resource.canEdit || isNaN(path.substr(-4))));
 
 module.exports = {
     isDashboardAvailable,
@@ -21,5 +22,6 @@ module.exports = {
     dashboardResource,
     isDashboardLoading,
     getDashboardSaveErrors,
+    isBrowserMobile,
     buttonCanEdit
 };
