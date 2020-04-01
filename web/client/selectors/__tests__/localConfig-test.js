@@ -1,5 +1,5 @@
 /*
- * Copyright 2019, GeoSolutions Sas.
+ * Copyright 2020, GeoSolutions Sas.
  * All rights reserved.
  *
  * This source code is licensed under the BSD-style license found in the
@@ -17,6 +17,8 @@ import localConfig from '../../reducers/localConfig';
 import {
     localConfigLoaded
 } from '../../actions/localConfig';
+import LOCAL_CONFIG from '../../localConfig';
+import {includes} from 'lodash';
 
 
 const stateMocker = createStateMocker({localConfig});
@@ -39,5 +41,10 @@ describe('localConfig selectors', () => {
         expect(pluginsSelectorCreator('desktop')(stateMocker(localConfigLoaded(TEST_CONFIG)))).toBe(TEST_CONFIG.plugins.desktop);
     });
 
+    it('pluginSelectorCreator for dashboard', ()=>{
+        const loadedConfig = (pluginsSelectorCreator('dashboard')(stateMocker(localConfigLoaded(LOCAL_CONFIG))));
+        expect(includes(loadedConfig, 'DashboardSave')).toBe(true);
+        expect(includes(loadedConfig, 'DashboardSaveAs')).toBe(true);
+    });
 
 });
