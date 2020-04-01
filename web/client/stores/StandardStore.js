@@ -55,7 +55,7 @@ module.exports = (initialState = {defaultState: {}, mobile: {}}, appReducers = {
         layers: () => {return null; },
         router: storeOpts.noRouter ? undefined : connectRouter(history)
     });
-    const rootEpic = persistEpic(combineEpics(plugins, {...appEpics, ...standardEpics}));
+    const rootEpic = persistEpic(combineEpics(plugins, {...standardEpics, ...appEpics}));
     const optsState = storeOpts.initialState || {defaultState: {}, mobile: {}};
     const defaultState = assign({}, initialState.defaultState, optsState.defaultState);
     const mobileOverride = assign({}, initialState.mobile, optsState.mobile);

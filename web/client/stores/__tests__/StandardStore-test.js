@@ -9,6 +9,8 @@
 import expect from 'expect';
 
 import createStore from "../StandardStore";
+import { Observable } from 'rxjs';
+import {LOAD_MAP_CONFIG} from "../../actions/config";
 
 
 describe('Test StandardStore', () => {
@@ -19,5 +21,23 @@ describe('Test StandardStore', () => {
     it('addActionListener is not available if storeOpts notify is false', () => {
         const store = createStore({}, {}, {}, {}, /* storeOpts */{ notify: false });
         expect(store.addActionListener).toNotExist();
+    });
+    it('appEpics override standard epics', (done) => {
+
+        const store = createStore({}, {}, {
+            loadMapConfigAndConfigureMap: ($action) =>
+                $action.ofType(LOAD_MAP_CONFIG).switchMap(() => Observable.of({type: "PONG"}))
+        });
+        let actions = 0;
+        store.addActionListener((action) => {
+            actions++;
+            if (actions === 2) {
+                expect(action.type).toBe("PONG");
+                done();
+            }
+        });
+        store.dispatch({
+            type: LOAD_MAP_CONFIG
+        });
     });
 });
