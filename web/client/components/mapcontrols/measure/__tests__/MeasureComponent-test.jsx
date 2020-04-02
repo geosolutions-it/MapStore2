@@ -6,6 +6,7 @@
  * LICENSE file in the root directory of this source tree.
 */
 const expect = require('expect');
+const assign = require('object-assign');
 
 const React = require('react');
 const ReactDOM = require('react-dom');
@@ -169,44 +170,100 @@ describe("test the MeasureComponent", () => {
         expect(newMeasureState.geomType).toBe(null);
     });
 
-    //    it('test bearing format', () => {
-    //        let measurement = {
-    //            lineMeasureEnabled: false,
-    //            areaMeasureEnabled: false,
-    //            bearingMeasureEnabled: true,
-    //            geomType: 'LineString',
-    //            len: 0,
-    //            area: 0,
-    //            bearing: 0
-    //        };
-    //        let cmp = ReactDOM.render(
-    //            <MeasureComponent measurement={measurement} bearingMeasureEnabled/>, document.getElementById("container")
-    //        );
-    //        expect(cmp).toExist();
-    //
-    //        const bearingSpan = document.getElementById('measure-bearing-res');
-    //        expect(bearingSpan).toExist();
-    //
-    //        cmp = ReactDOM.render(
-    //            <MeasureComponent measurement={{...measurement, bearing: 45}} bearingMeasureEnabled/>, document.getElementById("container")
-    //        );
-    //        expect(bearingSpan.innerHTML).toBe("<h3><strong>N 45° 0' 0'' E</strong></h3>");
-    //
-    //        cmp = ReactDOM.render(
-    //            <MeasureComponent measurement={assign({}, measurement, {bearing: 135})} bearingMeasureEnabled/>, document.getElementById("container")
-    //        );
-    //        expect(bearingSpan.innerHTML).toBe("<h3><strong>S 45° 0' 0'' E</strong></h3>");
-    //
-    //        cmp = ReactDOM.render(
-    //            <MeasureComponent measurement={assign({}, measurement, {bearing: 225})} bearingMeasureEnabled/>, document.getElementById("container")
-    //        );
-    //        expect(bearingSpan.innerHTML).toBe("<h3><strong>S 45° 0' 0'' W</strong></h3>");
-    //
-    //        cmp = ReactDOM.render(
-    //            <MeasureComponent measurement={assign({}, measurement, {bearing: 315})} bearingMeasureEnabled/>, document.getElementById("container")
-    //        );
-    //        expect(bearingSpan.innerHTML).toBe("<h3><strong>N 45° 0' 0'' W</strong></h3>");
-    //    });
+    it('test bearing format', () => {
+        let measurement = {
+            lineMeasureEnabled: false,
+            areaMeasureEnabled: false,
+            bearingMeasureEnabled: true,
+            geomType: 'LineString',
+            len: 0,
+            area: 0,
+            bearing: 0
+        };
+        let cmp = ReactDOM.render(
+            <MeasureComponent measurement={measurement} bearingMeasureEnabled bearingMeasureValueEnabled/>, document.getElementById("container")
+        );
+        expect(cmp).toExist();
+
+        const bearingSpan = document.getElementById('measure-bearing-res');
+        expect(bearingSpan).toExist();
+
+        cmp = ReactDOM.render(
+            <MeasureComponent measurement={{...measurement, bearing: 45}} bearingMeasureEnabled bearingMeasureValueEnabled/>, document.getElementById("container")
+        );
+        expect(bearingSpan.innerHTML).toBe("<h3><strong>N 45° 0' 0'' E</strong></h3>");
+
+        cmp = ReactDOM.render(
+            <MeasureComponent measurement={assign({}, measurement, {bearing: 135})} bearingMeasureEnabled bearingMeasureValueEnabled/>, document.getElementById("container")
+        );
+        expect(bearingSpan.innerHTML).toBe("<h3><strong>S 45° 0' 0'' E</strong></h3>");
+
+        cmp = ReactDOM.render(
+            <MeasureComponent measurement={assign({}, measurement, {bearing: 225})} bearingMeasureEnabled bearingMeasureValueEnabled/>, document.getElementById("container")
+        );
+        expect(bearingSpan.innerHTML).toBe("<h3><strong>S 45° 0' 0'' W</strong></h3>");
+
+        cmp = ReactDOM.render(
+            <MeasureComponent measurement={assign({}, measurement, {bearing: 315})} bearingMeasureEnabled bearingMeasureValueEnabled/>, document.getElementById("container")
+        );
+        expect(bearingSpan.innerHTML).toBe("<h3><strong>N 45° 0' 0'' W</strong></h3>");
+    });
+
+    it('test uom format area and lenght', () => {
+        let measurement = {
+            lineMeasureEnabled: false,
+            areaMeasureEnabled: false,
+            bearingMeasureEnabled: false,
+            geomType: 'LineString',
+            len: 0,
+            area: 0,
+            bearing: 0
+        };
+        let cmp = ReactDOM.render(
+            <MeasureComponent
+                uom={{
+                    length: {unit: 'km', label: 'km'},
+                    area: {unit: 'sqkm', label: 'km²'}
+                }}
+                measurement={measurement}
+                lineMeasureEnabled
+                lineMeasureValueEnabled
+            />, document.getElementById("container")
+        );
+        expect(cmp).toExist();
+
+        const lenSpan = document.getElementById('measure-len-res');
+        expect(lenSpan).toExist();
+
+        let testDiv = document.createElement("div");
+        document.body.appendChild(testDiv);
+
+        cmp = ReactDOM.render(
+            <MeasureComponent
+                lengthLabel="Length"
+                lineMeasureEnabled
+                lineMeasureValueEnabled
+                uom={{
+                    length: {unit: 'km', label: 'km'},
+                    area: {unit: 'sqkm', label: 'km²'}
+                }}
+                measurement={assign({}, measurement, {len: 10000})}/>, document.getElementById("container")
+        );
+        expect(lenSpan.firstChild.firstChild.firstChild.innerHTML).toBe("10");
+
+        cmp = ReactDOM.render(
+            <MeasureComponent
+                areaMeasureEnabled
+                areaMeasureValueEnabled
+                uom={{
+                    length: {unit: 'km', label: 'km'},
+                    area: {unit: 'sqkm', label: 'km²'}
+                }} measurement={assign({}, measurement, {geomType: 'Polygon', area: 1000000})}/>, document.getElementById("container")
+        );
+        const areaSpan = document.getElementById('measure-area-res');
+        expect(areaSpan).toExist();
+        expect(areaSpan.firstChild.firstChild.firstChild.innerHTML).toBe("1");
+    });
 
     it('test showing coordinate editor', () => {
         let measurement = {

@@ -13,6 +13,7 @@ const {isEqual, round, get} = require('lodash');
 const uuidv1 = require('uuid/v1');
 
 const { download } = require('../../../utils/FileUtils');
+const NumberFormat = require('../../I18N/Number');
 const Message = require('../../I18N/Message');
 const {convertUom, getFormattedBearingValue} = require('../../../utils/MeasureUtils');
 const {convertMeasuresToGeoJSON} = require('../../../utils/MeasurementUtils');
@@ -47,8 +48,11 @@ class MeasureComponent extends React.Component {
         toggleMeasure: PropTypes.func,
         measurement: PropTypes.object,
         lineMeasureEnabled: PropTypes.bool,
+        lineMeasureValueEnabled: PropTypes.bool,
         areaMeasureEnabled: PropTypes.bool,
+        areaMeasureValueEnabled: PropTypes.bool,
         bearingMeasureEnabled: PropTypes.bool,
+        bearingMeasureValueEnabled: PropTypes.bool,
         showButtons: PropTypes.bool,
         showResults: PropTypes.bool,
         mapProjection: PropTypes.string,
@@ -177,10 +181,19 @@ class MeasureComponent extends React.Component {
     };
 
     renderMeasurements = () => {
+        let decimalFormat = {style: "decimal", minimumIntegerDigits: 1, maximumFractionDigits: 2, minimumFractionDigits: 2};
         return (
             <Grid fluid style={{maxHeight: 400}}>
                 {this.props.lineMeasureEnabled && <Row >
                     <FormGroup style={{display: 'flex', alignItems: 'center'}}>
+                        {this.props.lineMeasureValueEnabled && <Col xs={6}>
+                            <span>{this.props.lengthLabel}: </span>
+                            <span id="measure-len-res" className="measure-value">
+                                <h3><strong>
+                                    <NumberFormat key="len" numberParams={decimalFormat} value={this.props.formatLength(this.props.uom.length.unit, this.props.measurement.len)} /> {this.props.uom.length.label}
+                                </strong></h3>
+                            </span>
+                        </Col>}
                         <Col xs={6}>
                             <DropdownList
                                 value={this.props.uom.length.label}
@@ -196,6 +209,14 @@ class MeasureComponent extends React.Component {
                 </Row>}
                 {this.props.areaMeasureEnabled && <Row>
                     <FormGroup style={{display: 'flex', alignItems: 'center'}}>
+                        {this.props.areaMeasureValueEnabled && <Col xs={6}>
+                            <span>{this.props.areaLabel}: </span>
+                            <span id="measure-area-res" className="measure-value">
+                                <h3><strong>
+                                    <NumberFormat key="area" numberParams={decimalFormat} value={this.props.formatArea(this.props.uom.area.unit, this.props.measurement.area)} /> {this.props.uom.area.label}
+                                </strong></h3>
+                            </span>
+                        </Col>}
                         <Col xs={6}>
                             <DropdownList
                                 value={this.props.uom.area.label}
@@ -205,6 +226,14 @@ class MeasureComponent extends React.Component {
                                 data={this.props.uomAreaValues}
                                 textField="label"
                                 valueField="value"/>
+                        </Col>
+                    </FormGroup>
+                </Row>}
+                {this.props.bearingMeasureEnabled && this.props.bearingMeasureValueEnabled && <Row>
+                    <FormGroup style={{display: 'flex', alignItems: 'center', minHeight: 34}}>
+                        <Col xs={6}>
+                            <span>{this.props.bearingLabel}: </span>
+                            <span id="measure-bearing-res" className="measure-value"><h3><strong>{this.props.formatBearing(this.props.measurement.bearing || 0)}</strong></h3></span>
                         </Col>
                     </FormGroup>
                 </Row>}
@@ -290,7 +319,16 @@ class MeasureComponent extends React.Component {
                                             visible: !!this.props.withReset,
                                             tooltip: this.props.resetButtonText,
                                             onClick: () => this.onResetClick()
-                                        },
+                                        }
+                                    ]
+                                }/>
+                            <Toolbar
+                                btnDefaultProps={{
+                                    className: 'square-button-md',
+                                    bsStyle: 'primary'
+                                }}
+                                buttons={
+                                    [
                                         {
                                             glyph: 'ext-json',
                                             disabled: (this.props.measurement.features || []).length === 0,
@@ -303,7 +341,7 @@ class MeasureComponent extends React.Component {
                                                     this.props.uom,
                                                     uuidv1(),
                                                     'MapStore Measurements'
-                                                )), 'measurements.geojson', 'application/geo+json');
+                                                )), 'measurements.json', 'application/geo+json');
                                             }
                                         },
                                         {

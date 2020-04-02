@@ -66,14 +66,14 @@ const convertGeometryToGeoJSON = (feature, uom, measureValueStyle) => {
             title: `${feature.geometry.type} Style`,
             filtering: true
         }].concat(feature.geometry.type === "LineString" ? getStartEndPointsForLinestring() : [])
-    }, ...feature.properties.values.map(({value, type, position}) => ({
+    }, ...feature.properties.values.map(({value, formattedValue, type, position}) => ({
         type: 'Feature',
         geometry: {
             type: 'Point',
             coordinates: position
         },
         properties: {
-            valueText: getFormattedValue(uom, value)[type],
+            valueText: formattedValue || getFormattedValue(uom, value)[type],
             isText: true,
             isValidFeature: true,
             id: uuidv1()

@@ -29,11 +29,17 @@ const selector = (state) => {
             area: {unit: 'sqm', label: 'm²'}
         },
         lineMeasureEnabled: state.measurement && state.measurement.lineMeasureEnabled,
+        lineMeasureValueEnabled: !isOpenlayers(state),
         areaMeasureEnabled: state.measurement && state.measurement.areaMeasureEnabled,
+        areaMeasureValueEnabled: !isOpenlayers(state),
         bearingMeasureEnabled: state.measurement && state.measurement.bearingMeasureEnabled,
+        bearingMeasureValueEnabled: !isOpenlayers(state),
         isCoordinateEditorEnabled: isCoordinateEditorEnabledSelector(state),
         showCoordinateEditor: showCoordinateEditorSelector(state),
+        withReset: isOpenlayers(state),
+        showExportToGeoJSON: isOpenlayers(state),
         showAddAsAnnotation: showAddAsAnnotationSelector(state) && isOpenlayers(state),
+        showAddAsLayer: isOpenlayers(state),
         isCoordEditorEnabled: state.measurement && !state.measurement.isDrawing,
         geomType: state.measurement && state.measurement.geomType,
         format: state.measurement && state.measurement.format || "decimal"
@@ -78,7 +84,7 @@ const Measure = connect(
 
 module.exports = {
     MeasurePlugin: assign(Measure, {
-        disablePluginIf: "{state('mapType') === 'cesium' || state('mapType') === 'leaflet' }",
+        disablePluginIf: "{state('mapType') === 'cesium'}",
         BurgerMenu: {
             name: 'measurement',
             position: 9,

@@ -9,7 +9,6 @@ const CHANGE_MEASUREMENT_TOOL = 'CHANGE_MEASUREMENT_TOOL';
 const CHANGE_MEASUREMENT_STATE = 'CHANGE_MEASUREMENT_STATE';
 const CHANGE_UOM = 'MEASUREMENT:CHANGE_UOM';
 const CHANGED_GEOMETRY = 'MEASUREMENT:CHANGED_GEOMETRY';
-const SET_STYLE = 'MEASUREMENT:SET_STYLE';
 const SET_TEXT_LABELS = 'MEASUREMENT:SET_TEXT_LABELS';
 const ADD_AS_LAYER = 'MEASUREMENT:ADD_AS_LAYER';
 const RESET_GEOMETRY = 'MEASUREMENT:RESET_GEOMETRY';
@@ -65,18 +64,22 @@ function changeGeometry(features) {
         features
     };
 }
-function setStyle(style) {
-    return {
-        type: SET_STYLE,
-        style
-    };
-}
+/**
+ * sets text label descriptions to be used during GeoJSON or layer export
+ * @param {object[]} textLabels text label object
+ */
 function setTextLabels(textLabels) {
     return {
         type: SET_TEXT_LABELS,
         textLabels
     };
 }
+/**
+ * add features to a new vector layer
+ * @param {object[]} features features to add
+ * @param {object[]} textLabels text label descriptions
+ * @param {object} uom current uom
+ */
 function addAsLayer(features, textLabels, uom) {
     return {
         type: ADD_AS_LAYER,
@@ -118,7 +121,13 @@ function changeMeasurementState(measureState) {
         bearingMeasureEnabled: measureState.bearingMeasureEnabled,
         geomType: measureState.geomType,
         values: measureState.values,
-        feature: measureState.feature
+        feature: measureState.feature,
+        point: measureState.point,
+        len: measureState.len,
+        area: measureState.area,
+        bearing: measureState.bearing,
+        lenUnit: measureState.lenUnit,
+        areaUnit: measureState.areaUnit
     };
 }
 function init(defaultOptions = {}) {
@@ -133,7 +142,6 @@ module.exports = {
     CHANGE_MEASUREMENT_STATE,
     changeUom, CHANGE_UOM,
     changeGeometry, CHANGED_GEOMETRY,
-    setStyle, SET_STYLE,
     setTextLabels, SET_TEXT_LABELS,
     addAsLayer, ADD_AS_LAYER,
     changeFormatMeasurement, CHANGE_FORMAT,

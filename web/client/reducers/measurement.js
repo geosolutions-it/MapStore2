@@ -12,7 +12,6 @@ const {
     CHANGE_UOM,
     RESET_GEOMETRY,
     CHANGED_GEOMETRY,
-    SET_STYLE,
     SET_TEXT_LABELS,
     CHANGE_FORMAT,
     CHANGE_COORDINATES,
@@ -62,7 +61,10 @@ function measurement(state = defaultState, action) {
                 properties: {
                     disabled: true
                 }
-            }
+            },
+            len: 0,
+            area: 0,
+            bearing: 0
         });
     }
     case CHANGE_MEASUREMENT_STATE: {
@@ -79,7 +81,13 @@ function measurement(state = defaultState, action) {
             bearingMeasureEnabled: action.bearingMeasureEnabled,
             geomType: action.geomType,
             values: action.values,
-            feature: set("properties.disabled", state.feature.properties.disabled, feature)
+            feature: set("properties.disabled", state.feature.properties.disabled, feature),
+            point: action.point,
+            len: action.len,
+            area: action.area,
+            bearing: action.bearing,
+            lenUnit: action.lenUnit,
+            areaUnit: action.areaUnit
         });
     }
     case UPDATE_MEASURES: {
@@ -122,12 +130,6 @@ function measurement(state = defaultState, action) {
             features,
             updatedByUI: false,
             isDrawing: false
-        };
-    }
-    case SET_STYLE: {
-        return {
-            ...state,
-            style: action.style
         };
     }
     case SET_TEXT_LABELS: {

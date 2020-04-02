@@ -90,7 +90,7 @@ class MeasureDialog extends React.Component {
                         <button key="close" onClick={this.onClose} className="close">{this.props.closeGlyph ? <Glyphicon glyph={this.props.closeGlyph}/> : <span>×</span>}</button>
                     </div>
                     <div key="body" role="body">
-                        <MeasureComponent id="measure-panel" style={{minWidth: "500px"}}{...this.props} disableBearing/>
+                        <MeasureComponent id="measure-panel" style={{minWidth: "500px"}}{...this.props}/>
                     </div>
                 </Dialog>)
         ) : null;
