@@ -1,5 +1,15 @@
 # Change Log
 
+## [2020.01.01](https://github.com/geosolutions-it/MapStore2/tree/v2020.01.01) (2020-03-04)
+
+ - **[Full Changelog](https://github.com/geosolutions-it/MapStore2/compare/v2020.01.00...v2020.01.01)**
+
+ - **[Implemented enhancements](https://github.com/geosolutions-it/MapStore2/issues?q=is%3Aissue+milestone%3A%22020.01.01%22+is%3Aclosed+label%3Aenhancement)**
+
+ - **[Fixed bugs](https://github.com/geosolutions-it/MapStore2/issues?q=is%3Aissue+milestone%3A%222020.01.010%22+is%3Aclosed+label%3Abug)**
+
+ - **[Closed issues](https://github.com/geosolutions-it/MapStore2/issues?q=is%3Aissue+milestone%3A%222020.01.01%22+is%3Aclosed)**
+
 ## [2020.01.00](https://github.com/geosolutions-it/MapStore2/tree/v2020.01.00) (2018-09-11)
 
 - **[Full Changelog](https://github.com/geosolutions-it/MapStore2/compare/v2019.02.01...v2020.01.00)**
