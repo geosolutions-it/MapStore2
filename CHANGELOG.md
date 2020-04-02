@@ -4,7 +4,7 @@
 
  - **[Full Changelog](https://github.com/geosolutions-it/MapStore2/compare/v2020.01.00...v2020.01.01)**
 
- - **[Implemented enhancements](https://github.com/geosolutions-it/MapStore2/issues?q=is%3Aissue+milestone%3A%22020.01.01%22+is%3Aclosed+label%3Aenhancement)**
+ - **[Implemented enhancements](https://github.com/geosolutions-it/MapStore2/issues?q=is%3Aissue+milestone%3A%222020.01.01%22+is%3Aclosed+label%3Aenhancement)**
 
  - **[Fixed bugs](https://github.com/geosolutions-it/MapStore2/issues?q=is%3Aissue+milestone%3A%222020.01.010%22+is%3Aclosed+label%3Abug)**
 
