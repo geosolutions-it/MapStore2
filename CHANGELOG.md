@@ -10,7 +10,7 @@
 
  - **[Closed issues](https://github.com/geosolutions-it/MapStore2/issues?q=is%3Aissue+milestone%3A%222020.01.01%22+is%3Aclosed)**
 
-## [2020.01.00](https://github.com/geosolutions-it/MapStore2/tree/v2020.01.00) (2018-09-11)
+## [2020.01.00](https://github.com/geosolutions-it/MapStore2/tree/v2020.01.00) (2020-01-23)
 
 - **[Full Changelog](https://github.com/geosolutions-it/MapStore2/compare/v2019.02.01...v2020.01.00)**
 
