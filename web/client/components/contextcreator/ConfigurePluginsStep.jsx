@@ -351,6 +351,7 @@ const configurePluginsStep = ({
                 onSelect={items => setSelectedPlugins(pickIds(ignoreMandatory(items)))}
                 onTransfer={(items, direction) => (direction === 'right' ? onEnablePlugins : onDisablePlugins)(pickIds(ignoreMandatory(items)))}/>
             <ResizableModal
+                loading={loading && loadFlags.templateDataLoading}
                 showFullscreen
                 title={<Message msgId="contextCreator.configureTemplates.title"/>}
                 show={showDialog.mapTemplatesConfig}

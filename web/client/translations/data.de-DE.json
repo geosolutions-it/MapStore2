@@ -2451,6 +2451,10 @@
                 "defaultMessage": "Unbekannter Fehler",
                 "categoryError": "Das Erstellen der fehlenden Kategorie \"{categoryName}\" ist fehlgeschlagen"
             },
+            "loadTemplateErrorNotification": {
+                "forbidden": "Konnte nicht auf die Vorlagendaten zugreifen, dem Benutzer fehlen die erforderlichen Berechtigungen!",
+                "defaultMessage": "Ein unerwarteter Fehler ist aufgetreten"
+            },
             "contextNameErrorNotification": {
                 "title": "Falscher Kontextname",
                 "unknownError": "Ein unerwarteter Fehler ist aufgetreten"

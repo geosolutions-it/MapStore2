@@ -7,10 +7,11 @@
 */
 
 import React from 'react';
-import {get, isString} from 'lodash';
+import {get, isString, isObject} from 'lodash';
 import {Glyphicon} from 'react-bootstrap';
 import jsonlint from 'jsonlint-mod';
 
+import FileFormatUtils from '../../utils/FileFormatUtils';
 import Transfer from '../misc/transfer/Transfer';
 import ConfirmDialog from '../misc/ConfirmDialog';
 import Message from '../I18N/Message';
@@ -35,16 +36,21 @@ const templateToItem = (onEditTemplate, onDelete, template) => ({
     preview:
         <div className="configure-map-templates-preview">
             {template.thumbnail && template.thumbnail !== 'NODATA' ? <img src={template.thumbnail}/> : <Glyphicon glyph="1-map"/>}
+        </div>,
+    infoExtra:
+        template.format && <div className="configure-map-templates-formaticon">
+            <Glyphicon glyph={FileFormatUtils.formatToGlyph[template.format]}/>
+            <span>{FileFormatUtils.formatToText[template.format]}</span>
         </div>
 });
 
 const pickIds = items => items && items.map(item => item.id);
 
-const onTemplateDrop = (setParsedTemplate, setFileDropStatus, onError, files) => {
-    const parseJSON = (fileName, data) => {
+const processData = (setParsedTemplate, setFileDropStatus, onError, type, fileName, data) => {
+    const parseJSON = () => {
         try {
             const mapConfig = jsonlint.parse(data);
-            setParsedTemplate(fileName, mapConfig);
+            setParsedTemplate(fileName, mapConfig, 'json');
             setFileDropStatus('accepted');
             onError([]);
         } catch (e) {
@@ -56,26 +62,26 @@ const onTemplateDrop = (setParsedTemplate, setFileDropStatus, onError, files) =>
         }
     };
 
-    const saveXML = (fileName, data) => {
-        setParsedTemplate(fileName, data);
+    const saveXML = () => {
+        setParsedTemplate(fileName, data, 'wmc');
         setFileDropStatus('accepted');
         onError([]);
     };
 
-    const processData = (type, fileName, data) => {
-        if (!isString(type) || !isString(data)) {
-            return;
-        }
-        if (type.indexOf('application/xml') > -1 || type.indexOf('text/xml') > -1 || data.indexOf('<?xml') === 0) {
-            saveXML(fileName, data);
-        } else {
-            parseJSON(fileName, data);
-        }
-    };
+    if (!isString(type) || !isString(data)) {
+        return;
+    }
+    if (type.indexOf('application/xml') > -1 || type.indexOf('text/xml') > -1 || data.indexOf('<?xml') === 0) {
+        saveXML();
+    } else {
+        parseJSON();
+    }
+};
 
+const onTemplateDrop = (setParsedTemplate, setFileDropStatus, onError, files) => {
     if (files && files.length > 0) {
         let fileReader = new FileReader;
-        fileReader.onload = e => processData(files[0].type, files[0].name, e.target.result);
+        fileReader.onload = e => processData(setParsedTemplate, setFileDropStatus, onError, files[0].type, files[0].name, e.target.result);
         fileReader.onerror = () => {
             fileReader.abort();
             setFileDropStatus('clear');
@@ -174,7 +180,8 @@ export default ({
             show={showUploadDialog}
             title={editedTemplate ? undefined : "contextCreator.configureTemplates.uploadDialog.title"}
             data={parsedTemplate.data}
-            enableFileDrop={!editedTemplate}
+            additionalAttributes={{format: parsedTemplate.format}}
+            enableFileDrop
             acceptedDropFileName={parsedTemplate.fileName}
             fileDropStatus={fileDropStatus}
             fileDropLabel="contextCreator.configureTemplates.fileDrop.label"
@@ -185,7 +192,31 @@ export default ({
                 setParsedTemplate();
                 setFileDropStatus();
             }}
-            onSave={onSave}
+            onSave={resource => {
+                let resourceFormat = resource.attributes.format;
+
+                // try to get format information
+                if (!resourceFormat) {
+                    if (isString(resource.data)) {
+                        processData((fileName, config, type) => {
+                            resourceFormat = type;
+                        }, () => {}, () => {}, 'application/text', parsedTemplate.fileName, resource.data);
+                    } else if (isObject(resource.data)) {
+                        resourceFormat = 'json';
+                    }
+                }
+
+                return onSave({
+                    ...resource,
+                    metadata: {
+                        ...resource.metadata,
+                        attributes: {
+                            ...(resource.attributes.thumbnail ? {thumbnail: encodeURIComponent(resource.attributes.thumbnail)} : {}),
+                            ...(resourceFormat ? {format: resourceFormat} : {})
+                        }
+                    }
+                });
+            }}
             onClose={() => onShowUploadDialog(false)}/>
         <ConfirmDialog
             draggable={false}

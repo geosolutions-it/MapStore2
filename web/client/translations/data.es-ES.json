@@ -2450,6 +2450,10 @@
                 "defaultMessage": "Error desconocido",
                 "categoryError": "Error al crear la categoría faltante \"{categoryName}\""
             },
+            "loadTemplateErrorNotification": {
+                "forbidden": "No se pudo acceder a los datos de la plantilla, ¡el usuario carece de los permisos necesarios!",
+                "defaultMessage": "Ocurrió un error inesperado"
+            },
             "contextNameErrorNotification": {
                 "title": "Nombre de contexto incorrecto",
                 "unknownError": "Ocurrió un error inesperado"
