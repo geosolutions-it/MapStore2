@@ -97,6 +97,17 @@ describe('Test the CatalogUtils', () => {
         expect(layer.allowedSRS['EPSG:3857']).toBe(true);
         expect(layer.allowedSRS['EPSG:5041']).toNotExist();
     });
+    it('wms multiple urls', () => {
+        const records = CatalogUtils.getCatalogRecords('wms', {
+            records: [{}]
+        }, { url: 'http://sample1, http://sample2' });
+        expect(records.length).toBe(1);
+        const layer = CatalogUtils.recordToLayer(records[0]);
+        expect(layer.url.length).toBe(2);
+        expect(layer.url[0]).toBe('http://sample1');
+        expect(layer.url[1]).toBe('http://sample2');
+
+    });
 
     it('wms layer options', () => {
         const records = CatalogUtils.getCatalogRecords('wms', {

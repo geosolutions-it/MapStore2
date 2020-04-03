@@ -402,6 +402,14 @@ const getRecordLinks = (record) => {
     }
     return links;
 };
+
+const toURLArray = (url) => {
+    if (url && !isArray(url) && url.indexOf(",") !== -1) {
+        return url.split(',').map(u => u.trim());
+    }
+    return url;
+};
+
 const CatalogUtils = {
     /**
      * Creates a map of SRS based on the record's srs object
@@ -434,7 +442,7 @@ const CatalogUtils = {
         const cleanURL = URL => removeParameters(ConfigUtils.cleanDuplicatedQuestionMarks(URL), ["request", "layer", "layers", "service", "version"].concat(removeParams));
         let originalUrl;
         let params;
-        const urls = ogcServiceReference.url;
+        const urls = toURLArray(ogcServiceReference.url);
 
         // extract additional parameters and alternative URLs.
         if (urls && isArray(urls)) {
