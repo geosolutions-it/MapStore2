@@ -69,30 +69,34 @@ function loadLocale(translationFolder, language) {
         }
         const folders = castArray(translationFolder || ConfigUtils.getConfigProp('translationsPath'));
         Promise.all(folders.map((folder) => {
-            return axios.get(folder + `/data.${locale}.json`);
+            return axios.get(folder + `/data.${locale}.json`).catch(e => e);
         })).then((responses) => {
-            dispatch(changeLocale(responses.reduce((previous, response) => {
-                if (typeof response.data === "string") {
-                    try {
-                        JSON.parse(response.data);
-                    } catch (e) {
-                        dispatch(localeError('Locale file broken  for (' + language + '): ' + e.message));
+            const validResponses = responses.filter(r => r.status === 200);
+            const erroredResponses = responses.filter(r => r.status !== 404 && r.status !== 200);
+            if (erroredResponses.length > 0 || validResponses.length === 0) {
+                const e = responses[0];
+                dispatch(localeError(e));
+                dispatch(error({
+                    title: "notification.warning",
+                    message: validResponses.length === 0 ? "localeErrors.404" : "Error loading locale",
+                    action: {
+                        label: "notification.warning"
+                    },
+                    position: "tc"
+                }));
+            } else {
+                dispatch(changeLocale(validResponses.reduce((previous, response) => {
+                    if (typeof response.data === "string") {
+                        try {
+                            JSON.parse(response.data);
+                        } catch (e) {
+                            dispatch(localeError('Locale file broken  for (' + language + '): ' + e.message));
+                        }
+                        return previous;
                     }
-                    return previous;
-                }
-                return merge(previous, response.data);
-            }, {})));
-        }).catch((e) => {
-            dispatch(localeError(e));
-            dispatch(error({
-                title: "notification.warning",
-                message: e.status === 404 ? "localeErrors.404" : "Error loading locale",
-                action: {
-                    label: "notification.warning"
-                },
-                position: "tc"
-            }));
-
+                    return merge(previous, response.data);
+                }, {})));
+            }
         });
     };
 }
