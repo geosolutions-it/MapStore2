@@ -10,8 +10,10 @@ const {
     getDateTimeFormat,
     getUTCTimePart,
     getUTCDatePart,
-    roundResolution
+    roundResolution,
+    domainsToDimensionsObject
 } = require('../TimeUtils');
+import { describeDomains } from '../../api/MultiDim';
 
 describe('TimeUtils', () => {
     it('roundResolution', () => {
@@ -53,6 +55,26 @@ describe('TimeUtils', () => {
         // date-time
         expect(getDateTimeFormat("en-US", "date-time")).toBe("MM/DD/YYYY HH:mm:SS");
         expect(getDateTimeFormat("it-IT", "date-time")).toBe("DD/MM/YYYY HH:mm:SS");
+    });
+    it('domainsToDimensionsObject', done => {
+        describeDomains('base/web/client/test-resources/wmts/DescribeDomains.xml', "test:layer")
+            .subscribe(result => {
+                const dimensions = domainsToDimensionsObject(result);
+                dimensions.map( ({source}) => expect(source.version).toBeFalsy());
+            },
+            e => done(e),
+            () => done()
+            );
+    });
+    it('domainsToDimensionsObject 1.1', done => {
+        describeDomains('base/web/client/test-resources/wmts/DescribeDomains1.1.xml', "test:layer")
+            .subscribe(result => {
+                const dimensions = domainsToDimensionsObject(result);
+                dimensions.map(({ source }) => expect(source.version).toBe("1.1"));
+            },
+            e => done(e),
+            () => done()
+            );
     });
 
 });

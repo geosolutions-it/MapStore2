@@ -234,7 +234,7 @@ const getDateTimeFormat = (locale, type) => {
  */
 const domainsToDimensionsObject = ({ Domains = {} } = {}, url) => {
     let dimensions = castArray(Domains.DimensionDomain || []).concat();
-    let version = Domains['@version'];
+    let version = Domains['@version'] || Domains.version;
     const bbox = get(Domains, 'SpaceDomain.BoundingBox');
     if (bbox) {
         dimensions.push({
