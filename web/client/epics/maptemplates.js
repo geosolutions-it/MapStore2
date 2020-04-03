@@ -70,7 +70,7 @@ export const openMapTemplatesPanelEpic = (action$, store) => action$
         return Observable.of(setControlProperty('mapTemplates', 'enabled', true, true)).concat(!mapTemplatesLoaded ?
             (contextTemplates.length > 0 ? Observable.defer(() => Api.searchListByAttributes(makeFilter(), {
                 params: {
-                    includeAttributes: false
+                    includeAttributes: true
                 }
             }, '/resources/search/list')) : Observable.of({}))
                 .switchMap((data) => {
