@@ -2394,6 +2394,7 @@
                 },
                 "uploadLabel": "Ziehen Sie ein Erweiterungspaket oder klicken Sie, um es zu durchsuchen und hochzuladen",
                 "uploadTitle": "Installieren Sie ein MapStore-Plugin",
+                "uploadParseError": "Datei index.json con formato errato",
                 "uploadMissingIndexError": "index.json-Datei fehlt in zip",
                 "uploadMissingPluginError": "In index.json sind keine Plugins definiert",
                 "uploadMissingBundleError": "Kein Javascript-Bundle in der hochgeladenen Datei",

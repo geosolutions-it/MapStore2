@@ -2393,6 +2393,7 @@
                 },
                 "uploadLabel": "Arrastre un paquete de extensión o haga clic para navegar y subirlo",
                 "uploadTitle": "Instalar un complemento MapStore",
+                "uploadParseError": "Archivo index.json con formato errato",
                 "uploadMissingIndexError": "falta el archivo index.json en zip",
                 "uploadMissingPluginError": "No hay complementos definidos en index.json",
                 "uploadMissingBundleError": "No hay paquete de JavaScript en el archivo cargado",
