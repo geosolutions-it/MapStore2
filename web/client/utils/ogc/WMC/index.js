@@ -424,8 +424,8 @@ export const toWMC = (
                 serviceName
             }),
             children: keys(service).filter(key =>
-                service[key] !== undefined && service[key] !== null && (
-                    typeof service[key] === 'string' ||
+                service[key] !== undefined && service[key] !== null &&
+                (typeof service[key] === 'string' ||
                 typeof service[key] === 'boolean' ||
                 typeof service[key] === 'number' ||
                 typeof service[key] === 'bigint' ||
