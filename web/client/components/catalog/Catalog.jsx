@@ -16,9 +16,7 @@ const Select = require("react-select").default;
 const BorderLayout = require("../layout/BorderLayout");
 const LocaleUtils = require("../../utils/LocaleUtils");
 const Message = require("../I18N/Message");
-
 const RecordGrid = require("./RecordGrid");
-
 const Loader = require('../misc/Loader');
 
 class Catalog extends React.Component {

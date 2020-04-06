@@ -32,6 +32,12 @@
         "version": {
             "label": "Version"
         },
+        "errorPage": {
+            "title":"Ups, etwas ist schief gelaufen",
+            "subtitle":"Klicken Sie auf das Symbol unten, um MapStore neu zu laden",
+            "description":"Wenn Sie diesen Fehler melden möchten, können Sie eine E-Mail an unsere Mailingliste senden",
+            "descriptionAdmin":"Bitte wenden Sie sich an den Administrator"
+        },
         "autorefresh": {
             "of": "of",
             "updating": "Updating...",
@@ -1994,6 +2000,9 @@
                 "brightTextThemeLabel": "Heller text",
                 "darkThemeLabel": "Dunkel",
                 "darkTextThemeLabel": "Dark text",
+                "defaultThemeLabel": "Standard",
+                "customizeThemeLabel": "Anpassen",
+                "customizeThemeRemoveLabel": "Remove Anpassung",
                 "cover": "Stellen Sie sicher, dass der Hintergrund den gesamten Containerraum bedeckt",
                 "fit": "Machen Sie den gesamten Hintergrund im Container sichtbar",
                 "editMedia": "Ändern Sie die Medienquelle",
@@ -2054,7 +2063,8 @@
                     "autoplayInterval": "Autoplay-Intervall (Sekunden)",
                     "autoplayIntervalPlaceholder": "Aktivieren Sie das Autoplay-Intervall",
                     "navbar": "Navigationsleiste",
-                    "showNavbar": "Navigationsleiste anzeigen"
+                    "showNavbar": "Navigationsleiste anzeigen",
+                    "theme": "Thema"
                 }
             },
             "errors": {
@@ -2087,6 +2097,13 @@
                 "url": {
                     "label": "URL"
                 }
+            },
+            "customizeTheme": {
+                "backgroundColorLabel": "Hintergrund",
+                "textColorLabel": "Text",
+                "shadowLabel": "Schatten",
+                "useAlternativeTextColor": "Verwenden Sie alternative Textfarbe",
+                "alternativeTextColorPopover": "<p>Achtung: die ausgewählte Textfarbe konnte auf diesem Hintergrund nicht lesbar sein.</p> <p>Eine alternative Textfarbe ist {color} &nbsp;<span class=\"ms-custom-theme-picker-alternative-text\" style=\"background-color:{color}\"></span></p>"
             }
         },
         "saveDialog": {
@@ -2632,6 +2649,18 @@
                 "title": "Karten Widget",
                 "text": "<p> Fügen Sie eine neue interaktive Karte zum Dashboard hinzu. Sie können mehr als eine Karte mit der Möglichkeit hinzufügen, andere Widgets mit ihnen zu verbinden. Nach dem Speichern der ersten Karte wird das Legenden-Widget zur Liste hinzugefügt. Das Legenden-Widget zeigt eine Legende zur verbundenen Karte. </p> <p> Schritte: </p> <p> <ul> <li> Wählen Sie eine Karte </li> <li> Verbessern Sie die Karte, indem Sie neue Ebenen hinzufügen </li> <li> Speichern und zum Dashboard hinzufügen </li> </ul> </p>"
             }
+        },
+        "userSession": {
+          "saveErrorNotification": {
+            "titleContext": "Speichern der Benutzersitzung fehlgeschlagen",
+            "categoryError": "Fehlende Kategorie erstellen \"{categoryName}\" faile",
+            "defaultMessage": "Unbekannter Fehler"
+          },
+          "removeErrorNotification": {
+            "titleContext": "Entfernen der Benutzersitzung fehlgeschlagen",
+            "defaultMessage": "Unbekannter Fehler"
+          },
+          "successRemoved": "Benutzersitzung entfernt"
         }
     }
 }

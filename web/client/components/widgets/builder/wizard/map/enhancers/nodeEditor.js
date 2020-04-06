@@ -67,7 +67,7 @@ module.exports = compose(
         element: selectedNode,
         settings: {
             ...settings,
-            nodeType: selectedNode.nodes ? "groups" : "layers",
+            nodeType: selectedNode && selectedNode.nodes ? "groups" : "layers",
             options: {
 
                 opacity: settings.opacity >= 0

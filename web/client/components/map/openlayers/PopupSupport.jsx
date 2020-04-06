@@ -47,12 +47,12 @@ export default class PopupSupport extends React.Component {
         this.props.onPopupClose(id);
     }
     renderPopups = () => {
-        return this.preparePopups().map(({ popup, id, component, content, props, compStyle, containerStyle}) => {
+        return this.preparePopups().map(({ popup, id, component, content, props, containerStyle}) => {
             const context = popup.getElement();
             const PopupContent = isString(component) && popupsComponents[component] || component;
             let El;
             if (!!PopupContent) {
-                El = React.isValidElement(PopupContent) && PopupContent || <PopupContent style={compStyle} {...props}/>;
+                El = React.isValidElement(PopupContent) && PopupContent || <PopupContent {...props}/>;
             } else if (content) {
                 El = Utils.isHTML(content) ? <div dangerouslySetInnerHTML={{__html: content}}/> : content;
             }
@@ -94,7 +94,7 @@ export default class PopupSupport extends React.Component {
         this._popups = popups.map((options) => {
             const margin = 20;
             const maxMapWidth = Math.round(size[0] * 0.9) - margin * 2;
-            const maxMapHeight =  Math.round(size[1] * 0.5) - margin * 2;
+            const maxMapHeight =  Math.round(size[1] * 0.9) - margin * 2;
             const { id, position: { coordinates }, className,
                 maxWidth: maxWidthOption = maxMapWidth,
                 maxHeight: maxHeightOption = maxMapHeight,
@@ -123,9 +123,8 @@ export default class PopupSupport extends React.Component {
             });
             map.addOverlay(popup);
             const observer = addMutationObserver(popup, container, { coordinates });
-            const containerStyle = {maxWidth, maxHeight: maxHeight};
-            const compStyle = {maxWidth: maxWidth - 30, maxHeight: maxHeight - 20};
-            return {popup, observer, compStyle, containerStyle, ...options};
+            const containerStyle = { maxWidth, maxHeight };
+            return { popup, observer, containerStyle, ...options };
         });
         return this._popups;
     }

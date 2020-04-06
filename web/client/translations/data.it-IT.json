@@ -31,6 +31,12 @@
         "version": {
             "label": "Versione"
         },
+        "errorPage": {
+            "title":"Ops, Qualcosa è andato storto",
+            "subtitle":"Per favore clicca sull'icona qui sotto per ricaricare MapStore",
+            "description":"Se vuoi segnalare questo problema, puoi mandare una mail alla nostra lista email per utenti",
+            "descriptionAdmin":"Per favore contatta l'amministratore"
+        },
         "autorefresh": {
             "of": "di",
             "updating": "In aggiornamento...",
@@ -1994,6 +2000,9 @@
                 "brightTextThemeLabel": "Testo chiaro",
                 "darkThemeLabel": "Scuro",
                 "darkTextThemeLabel": "Testo scuro",
+                "defaultThemeLabel": "Predefinito",
+                "customizeThemeLabel": "Personalizza",
+                "customizeThemeRemoveLabel": "Rimuovi il tema personalizzato",
                 "cover": "Fai in modo che lo sfondo copra l'intero spazio del contenitore",
                 "fit": "Rendi visibile tutto lo sfondo all'interno del contenitore",
                 "editMedia": "Cambia la sorgente del media",
@@ -2055,7 +2064,8 @@
                     "autoplayInterval": "Intervallo dell'autoplay (secondi)",
                     "autoplayIntervalPlaceholder": "Abilita l'intervallo dell'autoplay",
                     "navbar": "Barra di navigazione",
-                    "showNavbar": "Mostra barra di navigazione"
+                    "showNavbar": "Mostra barra di navigazione",
+                    "theme": "Tema"
                 }
             },
             "errors": {
@@ -2088,6 +2098,13 @@
                 "url": {
                     "label": "URL"
                 }
+            },
+            "customizeTheme": {
+                "backgroundColorLabel": "Sfondo",
+                "textColorLabel": "Testo",
+                "shadowLabel": "Ombra",
+                "useAlternativeTextColor": "Usa colore testo alternativo",
+                "alternativeTextColorPopover": "<p>Attenzione: il colore del testo selezionato potrebbe non essere leggibile su questo sfondo.</p><p>Un colore alternativo è {color} &nbsp;<span class=\"ms-custom-theme-picker-alternative-text\" style=\"background-color:{color}\"></span></p>"
             }
         },
          "saveDialog": {
@@ -2632,6 +2649,18 @@
                 "title": "Widget Mappa",
                 "text": "<p> Aggiungi una nuova mappa interattiva alla dashboard. È possibile aggiungere più di una mappa con la possibilità di collegare ad esse altri widget. Dopo aver salvato la prima mappa, il widget legenda verrà aggiunto all'elenco. Legend Widget mostrerà una legenda relativa alla mappa connessa. </p> <p> Passaggi: </p> <p> <ul> <li> Seleziona una mappa </li> <li> Migliora la mappa aggiungendo nuovi livelli </li> <li> Salva e aggiungi alla dashboard </li> </ul> </p>"
             }
+        },
+        "userSession": {
+          "saveErrorNotification": {
+            "titleContext": "Salvataggio della sessione utente non riuscita",
+            "categoryError": "Creazione della categoria mancante \"{categoryName}\" non riuscita",
+            "defaultMessage": "Errore sconosciuto"
+          },
+          "removeErrorNotification": {
+            "titleContext": "Cancellazione della sessione utente non riuscita",
+            "defaultMessage": "Errore sconosciuto"
+          },
+          "successRemoved": "Sessione utente cancellata"
         }
     }
 }

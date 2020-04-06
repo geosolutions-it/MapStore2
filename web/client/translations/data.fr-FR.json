@@ -31,6 +31,12 @@
         "version": {
             "label": "Version"
         },
+        "errorPage": {
+            "title":"Oups, quelque chose a mal tourné",
+            "subtitle":"Veuillez cliquer sur l'icône ci-dessous pour recharger MapStore",
+            "description":"Si vous souhaitez signaler cette erreur, vous pouvez envoyer un e-mail à notre liste de diffusion",
+            "descriptionAdmin":"Veuillez contacter l'administrateur"
+        },
         "autorefresh": {
             "of": "de",
             "updating": "Rafraîchissement...",
@@ -1994,6 +2000,9 @@
                 "brightTextThemeLabel": "Texte clair",
                 "darkThemeLabel": "Sombre",
                 "darkTextThemeLabel": "Texte sombre",
+                "defaultThemeLabel": "Défaut",
+                "customizeThemeLabel": "Personnaliser",
+                "customizeThemeRemoveLabel": "Supprimer la personnalisation",
                 "cover": "Faire en sorte que l'arrière-plan couvre tout l'espace du conteneur",
                 "fit": "Rendre tout le fond visible à l'intérieur du conteneur",
                 "editMedia": "Changer de source média",
@@ -2054,7 +2063,8 @@
                     "autoplayInterval": "Intervalle de lecture automatique (secondes)",
                     "autoplayIntervalPlaceholder": "Activer l'intervalle de lecture automatique",
                     "navbar": "Barre de navigation",
-                    "showNavbar": "Afficher la barre de navigation"
+                    "showNavbar": "Afficher la barre de navigation",
+                    "theme": "Thème"
                 }
             },
             "errors": {
@@ -2087,6 +2097,13 @@
                 "url": {
                     "label": "URL"
                 }
+            },
+            "customizeTheme": {
+                "backgroundColorLabel": "Contexte",
+                "textColorLabel": "Texte",
+                "shadowLabel": "Ombre",
+                "useAlternativeTextColor": "Utiliser la couleur de texte alternatif",
+                "alternativeTextColorPopover": "<p>Attention: la couleur du texte sélectionné pourrait être illisible sur ce fond.</p><p>Une couleur de texte alternatif est {color} &nbsp;<span class=\"ms-custom-theme-picker-alternative-text\" style=\"background-color:{color}\"></span></p>"
             }
         },
         "saveDialog": {
@@ -2631,6 +2648,18 @@
                 "title": "Widget Carte",
                 "text": "<p> Ajoutez une nouvelle carte interactive au tableau de bord. Vous pouvez ajouter plusieurs cartes avec la possibilité de leur connecter d'autres widgets. Après avoir enregistré la première carte, le widget légende sera ajouté à la liste. Legend Widget affichera une légende liée à la carte connectée. </p> <p> Étapes: </p> <p> <ul> <li> Sélectionnez une carte </li> <li> Améliorer la carte en ajoutant de nouveaux calques </li> <li> Enregistrer et ajouter au tableau de bord </li> </ul> </p>"
             }
+        },
+        "userSession": {
+          "saveErrorNotification": {
+            "titleContext": "L'enregistrement de la session utilisateur a échoué",
+            "categoryError": "Création d'une catégorie manquante \"{categoryName}\"faile",
+            "defaultMessage": "Erreur inconnue"
+          },
+          "removeErrorNotification": {
+            "titleContext": "La suppression de la session utilisateur a échoué",
+            "defaultMessage": "Erreur inconnue"
+          },
+          "successRemoved": "Session utilisateur supprimée"
         }
     }
 }

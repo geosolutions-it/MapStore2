@@ -31,6 +31,12 @@
         "version": {
             "label": "Versión"
         },
+        "errorPage": {
+            "title":"Vaya, algo salió mal",
+            "subtitle":"Haga clic en el icono a continuación para volver a cargar MapStore",
+            "description":"Si desea informar este error, puede enviar un correo electrónico a nuestra lista de correo",
+            "descriptionAdmin":"Por favor, póngase en contacto con el administrador"
+        },
         "autorefresh": {
             "of": "de",
             "updating": "actualizando...",
@@ -1994,6 +2000,9 @@
                 "brightTextThemeLabel": "Texto brillante",
                 "darkThemeLabel": "Oscuro",
                 "darkTextThemeLabel": "Texto oscuro",
+                "defaultThemeLabel": "Defecto",
+                "customizeThemeLabel": "Personalizar",
+                "customizeThemeRemoveLabel": "Quitar la personalización",
                 "cover": "Haz que el fondo cubra todo el espacio del contenedor",
                 "fit": "Hacer visible todo el fondo dentro del contenedor",
                 "editMedia": "Cambiar fuente de medios",
@@ -2054,7 +2063,8 @@
                     "autoplayInterval": "Intervalo de reproducción automática (segundos)",
                     "autoplayIntervalPlaceholder": "Habilitar intervalo de reproducción automática",
                     "navbar": "Barra de navegación",
-                    "showNavbar": "Mostrar barra de navegación"
+                    "showNavbar": "Mostrar barra de navegación",
+                    "theme": "Tema"
                 }
             },
             "errors": {
@@ -2087,6 +2097,13 @@
                 "url": {
                     "label": "URL"
                 }
+            },
+            "customizeTheme": {
+                "backgroundColorLabel": "Antecedentes",
+                "textColorLabel": "Texto",
+                "shadowLabel": "Sombra",
+                "useAlternativeTextColor": "Utilice el color de texto alternativo",
+                "alternativeTextColorPopover": "<p>Advertencia: el color del texto seleccionado puede no ser legible en este contexto.</p><p>Una alternativa es el color del texto {color} &nbsp;<span class=\"ms-custom-theme-picker-alternative-text\" style=\"background-color:{color}\"></span></p>"
             }
         },
         "saveDialog": {
@@ -2632,6 +2649,18 @@
                 "title": "Widget de mapa",
                 "text": "<p> Agregue un nuevo mapa interactivo al panel de control. Puede agregar más de un mapa con la capacidad de conectar otros widgets a ellos. Después de guardar el primer mapa, el widget de leyenda se agregará a la lista. El widget de leyenda mostrará una leyenda relacionada con el mapa conectado. </p> <p> Pasos: </p> <p> <ul> <li> Seleccione un mapa </li> <li> Mejore el mapa agregando nuevas capas </li> <li> Guarde y agregue al panel de control </li> </ul> </p>"
             }
+        },
+        "userSession": {
+          "saveErrorNotification": {
+            "titleContext": "Error al guardar la sesión del usuario",
+            "categoryError": "Creando categoría faltante \"{categoryName}\"faile",
+            "defaultMessage": "Error desconocido"
+          },
+          "removeErrorNotification": {
+            "titleContext": "Error al eliminar sesión de usuario",
+            "defaultMessage": "Error desconocido"
+          },
+          "successRemoved": "Sesión de usuario eliminada"
         }
     }
 }

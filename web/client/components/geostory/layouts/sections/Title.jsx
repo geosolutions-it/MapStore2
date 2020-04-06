@@ -47,12 +47,13 @@ export default compose(
     focusedContent,
     bubblingTextEditing = () => {},
     textEditorActiveClass = "",
-    expandableBackgroundMedia = false
+    expandableMedia = false,
+    storyTheme
 }) => {
 
     const hideContent = get(focusedContent, "target.id") === contentId;
     const visibility = hideContent ?  'hidden' : 'visible';
-    const expandableBackgroundClassName = expandableBackgroundMedia && background && background.type === 'map' ? ' ms-expandable-background' : '';
+    const expandableBackgroundClassName = expandableMedia && background && background.type === 'map' ? ' ms-expandable-background' : '';
     return (
         <section
             ref={inViewRef}
@@ -76,7 +77,7 @@ export default compose(
                         update={updateBackground}
                         add={add}
                         editMedia={editMedia}
-                        expandable={expandableBackgroundMedia}
+                        expandable={expandableMedia}
                         updateSection={updateSection}
                         cover={cover}
                         remove={remove}
@@ -93,6 +94,7 @@ export default compose(
                         height={height >= viewHeight
                             ? viewHeight
                             : height}
+                        storyTheme={storyTheme}
                     />}
             </ContainerDimensions>
             <SectionContents
@@ -112,6 +114,7 @@ export default compose(
                 }}
                 focusedContent={focusedContent}
                 bubblingTextEditing={bubblingTextEditing}
+                storyTheme={storyTheme}
             />
             {mode === Modes.EDIT && !hideContent && <AddBar
                 containerWidth={viewWidth}
