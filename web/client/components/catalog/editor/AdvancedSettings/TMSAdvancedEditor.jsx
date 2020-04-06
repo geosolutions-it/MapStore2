@@ -29,6 +29,7 @@ const INITIAL_CODE_VALUE = {
 export default ({
     service = {},
     setValid = () => { },
+    onToggleThumbnail = () => {},
     onChangeServiceProperty = () => { }
 }) => {
     const settings = service.options || service.variants ? {
@@ -57,9 +58,15 @@ export default ({
     return (<div>
         <FormGroup controlId="autoload" key="autoload">
             <Col xs={12}>
-                <Checkbox key="autoload" value="autoload" onChange={(e) => onChangeServiceProperty("autoload", e.target.checked)}
+                <Checkbox key="autoload" value="autoload"
+                    onChange={(e) => onChangeServiceProperty("autoload", e.target.checked)}
                     checked={!isNil(service.autoload) ? service.autoload : false}>
                     <Message msgId="catalog.autoload" />
+                </Checkbox>
+                <Checkbox key="thumbnail" value="thumbnail"
+                    onChange={() => onToggleThumbnail()}
+                    checked={!isNil(service.hideThumbnail) ? !service.hideThumbnail : true}>
+                    <Message msgId="catalog.showPreview" />
                 </Checkbox>
                 {service.provider === "tms"
                     ? <Checkbox key="forceDefaultTileGrid" value="forceDefaultTileGrid" onChange={(e) => onChangeServiceProperty("forceDefaultTileGrid", e.target.checked)}
