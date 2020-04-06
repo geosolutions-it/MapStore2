@@ -94,9 +94,9 @@ export default class OpenlayersLayer extends React.Component {
                 return child ? React.cloneElement(child, {container: layer, styleName: this.props.options && this.props.options.styleName}) : null;
             }) : null;
             return (
-                <>
+                <React.Fragment>
                     {children}
-                </>
+                </React.Fragment>
             );
         }
 
@@ -259,11 +259,13 @@ export default class OpenlayersLayer extends React.Component {
                     imageStopStream$.next();
                 }
             });
-            this.imagestoload--;
-            imageLoadEndStream$.next({type: 'imageloaderror', event});
-            if (this.imagestoload === 0) {
-                imageStopStream$.next();
-            }
+            this.layer.getSource().on('imageloaderror', (event) => {
+                this.imagestoload--;
+                imageLoadEndStream$.next({type: 'imageloaderror', event});
+                if (this.imagestoload === 0) {
+                    imageStopStream$.next();
+                }
+            });
 
             imageLoadEndStream$
                 .bufferWhen(() => imageStopStream$)
