@@ -784,9 +784,24 @@ Currently supports dimensions of ***multidim-extension*** type:
     <ms:Dimension xmlns:ms="http://geo-solutions.it/mapstore/context" xmlns:xlink="http://www.w3.org/1999/xlink" name="time" type="multidim-extension" xlink:type="simple" xlink:href="https://cloudsdi.geo-solutions.it/geoserver/gwc/service/wmts"/>
 </ms:DimensionList>
 <ms:CatalogServices selectedService="gs_stable_csw">
-    <ms:Service url="https://gs-stable.geo-solutions.it/geoserver/csw" type="csw" title="GeoSolutions GeoServer CSW" autoload="1" serviceName="gs_stable_csw"/>
-    <ms:Service url="https://gs-stable.geo-solutions.it/geoserver/wms" type="wms" title="GeoSolutions GeoServer WMS" autoload="0" serviceName="gs_stable_wms"/>
-    <ms:Service url="https://gs-stable.geo-solutions.it/geoserver/gwc/service/wmts" type="wmts" title="GeoSolutions GeoServer WMTS" autoload="0" serviceName="gs_stable_wmts"/>
+    <ms:Service serviceName="gs_stable_csw">
+        <ms:Attribute name="url" type="string">https://gs-stable.geo-solutions.it/geoserver/csw</ms:Attribute>
+        <ms:Attribute name="type" type="string">csw</ms:Attribute>
+        <ms:Attribute name="title" type="string">GeoSolutions GeoServer CSW</ms:Attribute>
+        <ms:Attribute name="autoload" type="boolean">true</ms:Attribute>
+    </ms:Service>
+    <ms:Service serviceName="gs_stable_wms">
+        <ms:Attribute name="url" type="string">https://gs-stable.geo-solutions.it/geoserver/wms</ms:Attribute>
+        <ms:Attribute name="type" type="string">wms</ms:Attribute>
+        <ms:Attribute name="title" type="string">GeoSolutions GeoServer WMS</ms:Attribute>
+        <ms:Attribute name="autoload" type="boolean">false</ms:Attribute>
+    </ms:Service>
+    <ms:Service serviceName="gs_stable_wmts">
+        <ms:Attribute name="url" type="string">https://gs-stable.geo-solutions.it/geoserver/gwc/service/wmts</ms:Attribute>
+        <ms:Attribute name="type" type="string">wmts</ms:Attribute>
+        <ms:Attribute name="title" type="string">GeoSolutions GeoServer WMTS</ms:Attribute>
+        <ms:Attribute name="autoload" type="boolean">false</ms:Attribute>
+    </ms:Service>
 </ms:CatalogServices>
 ```
 

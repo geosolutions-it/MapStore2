@@ -25,11 +25,6 @@ describe('WMC tests', () => {
                     title: "Demo CSW Service",
                     type: "csw",
                     url: "https://testserver/csw",
-                    showAdvancedSettings: false,
-                    showTemplate: false,
-                    metadataTemplate: undefined,
-                    format: undefined,
-                    hideThumbnail: false,
                     oldService: "old_service"
                 },
                 "testservices": {
@@ -40,9 +35,7 @@ describe('WMC tests', () => {
                     showAdvancedSettings: true,
                     showTemplate: true,
                     metadataTemplate: "<p>${description}</p>",
-                    format: "image/jpeg",
-                    hideThumbnail: false,
-                    oldService: undefined
+                    format: "image/jpeg"
                 }
             });
             expect(config.map).toExist();
