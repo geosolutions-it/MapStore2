@@ -529,6 +529,23 @@ Options passed in configuration object, if already configured by TileProvider,  
 
 Openlayers' TileProvider at the moment doesn't support `minZoom` configuration property and high resolution map.
 
+In case of missing `provider` or if `provider: "custom"`, the tile provider can be customized and configured internally.
+You can configure the `url` as a template, than you can configure options add specific options (`maxNativeZoom`, `subdomains`).
+
+```javascript
+{
+    "type": "tileprovider",
+    "title": "Title",
+    "provider": "custom", // or undefined
+    "name": "Name",
+    "group": "GroupName",
+    "visibility": false,
+    "url": "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+    "options": {
+        "subdomains": [ "a", "b"]
+    }
+}
+
 ##### Providers and variants
 
 This is a *not maintained* list of providers and variants. For the most updated list check the code [here](https://github.com/geosolutions-it/MapStore2/blob/master/web/client/utils/ConfigProvider.js)

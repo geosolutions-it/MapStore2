@@ -233,7 +233,7 @@ const MetadataExplorerPlugin = connect(metadataExplorerSelector, {
 const API = require('../api/catalog').default;
 
 /**
- * MetadataExplorer (Catalog) plugin. Shows the catalogs results (CSW, WMS and WMTS).
+ * MetadataExplorer (Catalog) plugin. Shows the catalogs results (CSW, WMS, WMTS and TMS).
  * Some useful flags in `localConfig.json`:
  * - `noCreditsFromCatalog`: avoid add credits (attribution) from catalog
  *

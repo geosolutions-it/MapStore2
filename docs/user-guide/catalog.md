@@ -1,7 +1,4 @@
 # Catalog Services
-******************
-
-The Catalog Service for the Web (CSW) is an [OGC Standard](https://www.ogc.org/standards) used to publish and search geospatial data and related metadata on the internet. It describes geospatial services such as Web Map Service (WMS) and Web Map Tile Service (WMTS).
 
 In [MapStore](https://mapstore.geo-solutions.it/mapstore/#/) the Catalog offers the possibility to access CSW, WMS and WMTS Remote Services and to add the related layers to the map. By default, as soon as a user opens the Catalog, a CSW a WMS and a WMTS Demo Services are available, allowing to import layers from the GeoSolutions GeoServer.
 The user can access the Catalog with a click on the <img src="../img/button/catalog-option.jpg" class="ms-docbutton" style="max-height:25px;" /> option present in [Burger Menu](menu-bar.md#burger-menu) <img src="../img/button/burger.jpg" class="ms-docbutton" />. As soon as you open it, the first display is like the following:
@@ -29,53 +26,60 @@ By clicking on the <img src="../img/button/add_to_map_button.jpg" class="ms-docb
 
 ## Managing Remote Services
 
-[MapStore](https://mapstore.geo-solutions.it/mapstore/#/) allows also to add new Remote Services to the map project (<img src="../img/button/+.jpg" class="ms-docbutton"/>) or Edit/Remove the existing ones (<img src="../img/button/edit-service.jpg" class="ms-docbutton" />). 
+[MapStore](https://mapstore.geo-solutions.it/mapstore/#/) allows also to add new Remote Services to the map project (<img src="../img/button/+.jpg" class="ms-docbutton"/>) or Edit/Remove the existing ones (<img src="../img/button/edit-service.jpg" class="ms-docbutton" />).
 
 <img src="../img/catalog/add_edit_services.jpg" class="ms-docimage"  style="max-width:600px;"/>
 
 The adding/editing process is very similar and the only difference is that editing an existing Service the input fields will be already filled with its settings, while adding a new one all the fields will be empty. Moreover only editing an existing Service, it will be possible to remove it from the Services list.<br>
-Editing an existing Service, for example, the first display is the following: 
+Editing an existing Service, for example, the first display is the following:
 
 <img src="../img/catalog/new_service.jpg" class="ms-docimage"  style="max-width:600px;"/>
 
 From here the user is allowed to set the Service options, that can be divided into:
 
-* **General settings**
-
+* **General Settings**
 * **Advanced Settings**
 
-Once the options are properly set, it is possible to <img src="../img/button/save_service.jpg" class="ms-docbutton"/> the Service. If the user wants to discard the edits, instead, there's the <img src="../img/button/cancel_service.jpg" class="ms-docbutton"/> button. 
+Once the options are properly set, it is possible to <img src="../img/button/save_service.jpg" class="ms-docbutton"/> the Service. If the user wants to discard the edits, instead, there's the <img src="../img/button/cancel_service.jpg" class="ms-docbutton"/> button.
 An existing Service can finally be removed from the Services list through the <img src="../img/button/delete_service.jpg" class="ms-docbutton"/> button (this option is not available creating a new Remote Service).
 
-### General settings
-
-The general settings are three mandatory fields that each Remote Service needs to have:
+The **General Settings** contains the mandatory fields that each catalog service needs, depending on the catalog type.
 
 <img src="../img/catalog/general_settings.jpg" class="ms-docimage"  style="max-width:600px;"/>
 
-In particular:
+The following settings are valid for all the catalog service types:
 
-* **Url**
+* **Type** you can select one of *CSW*, *WMS*, *TMS* and *WMTS*.
+* **Title**: The title to assign to the catalog. This text will be used in the service selection dropdown menu for this service.
 
-* **Type** (between *CSW*, *WMS* and *WMTS*)
+Many services like CSW, WMS, WMTS, TMS (provider 1.0.0) catalog services need also the base **URL** to the service you want to query.
 
-* **Title**
-
-### Advanced settings
-
-The Advances settings section opens by clicking on the <img src="../img/button/expand_card_icon.jpg" class="ms-docbutton"/> icon:
+The **Advances Settings** section opens by clicking on the <img src="../img/button/expand_card_icon.jpg" class="ms-docbutton"/> icon:
 
 <img src="../img/catalog/advanced_settings.jpg" class="ms-docimage"  style="max-width:500px;" />
 
-Here the user can set the following options:
+The content of Advanced settings depends on the catalog type, but some options are common to all the services types:
 
-* *Search on service selection* that allow to enable/disable the automatic loading of the catalog records when the user opens that Service 
-
+* *Search on service selection* that allow to enable/disable the automatic loading of the catalog records when the user opens that Service
 * *Show preview* that can show/hide layers thumbnails in Catalog
 
-* Change the *Format* of the image that will be rendered on the map (`png`, `png8`, `jpeg`, `vnd.jpeg-png` or `gif`) for layers belonging to the selected source
+In case of CSW catalogs, the user can edit the following options:
 
-* *Show metadata template* can be enabled when the user wants to insert in the layer description a text with metadata information 
+## Catalog Types
+
+### CSW Catalog
+
+The Catalog Service for the Web (CSW) is an [OGC Standard](https://www.ogc.org/standards) used to publish and search geospatial data and related metadata on the internet. It describes geospatial services such as Web Map Service (WMS), Web Map Tile Service (WMTS) and so on...
+MapStore actually supports only the **Dublin Core** metadata schemas. *ISO Metadata Profile is not supported yet*.
+
+In **general settings of**  CSW service the user can specify the title to assign to this service and the URL of the service.
+
+<img src="../img/catalog/general_settings.jpg" class="ms-docimage"  style="max-width:600px;"/>
+
+#### Advanced Settings
+
+* *Format*: the default image format for the layers added to the map (`png`, `png8`, `jpeg`, `vnd.jpeg-png` or `gif`). Setting this is particularly useful when the user wants to use optimized formats by default (`png8`, `vnd.jpeg-png`) for all the layers, without having to select it for each layer in layer settings.
+* *Show metadata template*: This can be enabled when the user wants to insert in the layer description a text with metadata information
 
 !!! warning
     The *Metadata Template* function is available for **CSW Services** only.
@@ -92,37 +96,35 @@ Enabling the *Show metadata template* option appears a text editor through witch
 
 In this case it is possible to add a text like the following, in order to present desired metadata properties:
 
-```
-title: ${title}
--------------------
-description: ${description}
--------------------
-abstract: ${abstract}
--------------------
-boundingBox: ${boundingBox}
--------------------
-contributor: ${contributor}
--------------------
-creator: ${creator}
--------------------
-format: ${format}
--------------------
-identifier: ${identifier}
--------------------
-references: ${references}
--------------------
-rights: ${rights}
--------------------
-source: ${source}
--------------------
-subject: ${subject}
--------------------
-temporal: ${temporal}
--------------------
-type: ${type}
--------------------
-uri: ${uri}
-```
+    title: ${title}
+    -------------------
+    description: ${description}
+    -------------------
+    abstract: ${abstract}
+    -------------------
+    boundingBox: ${boundingBox}
+    -------------------
+    contributor: ${contributor}
+    -------------------
+    creator: ${creator}
+    -------------------
+    format: ${format}
+    -------------------
+    identifier: ${identifier}
+    -------------------
+    references: ${references}
+    -------------------
+    rights: ${rights}
+    -------------------
+    source: ${source}
+    -------------------
+    subject: ${subject}
+    -------------------
+    temporal: ${temporal}
+    -------------------
+    type: ${type}
+    -------------------
+    uri: ${uri}
 
 Inserting this text and saving, the result should be that each layer will show its properties in catalog with the format we set:
 
@@ -130,3 +132,26 @@ Inserting this text and saving, the result should be that each layer will show i
 
 !!! note
     If some metadata are missing, the server response will be `source Not Available`
+
+### WMS/WMTS Catalog
+
+WMS and WMTS Services are [OGC Standards](https://www.ogc.org/standards) protocol for publishing maps (and tile maps) on the Internet. The user can add these kind of services as catalogs to browse and add to the map the layers published using these protocols.
+
+In **General Settings** the user can set the title he wants to assign to this service and the URL of the service to configure the service.
+
+In **Advanced Settings** the user can set, other than the standard options, also the default format.
+
+### TMS Catalog
+
+TMS Catalog type includes some not official standard protocol for serving maps as tiles (i.e. splitting map up into a pyramid of images at multiple zoom levels). MapStore allows to add to the map the following services:
+
+* Custom TMS service, specifying the URL template.
+* TMS 1.0.0 [Tile Map Service](https://wiki.osgeo.org/wiki/Tile_Map_Service_Specification), setting the URL
+* Select from a list known TMS services, with all the variants.
+
+### Well Known Services
+
+The well known services is a static list of services Coming from `ConfigProvider.js
+
+!!! note
+   Because these services are not standard, using these services is not fully supported switching CRS.
