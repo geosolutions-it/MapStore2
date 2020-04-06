@@ -703,6 +703,20 @@ describe('Test the CatalogUtils', () => {
             expect(rec.references[0].type).toBe("OGC:TMS");
             expect(rec.references[0].version).toBe("1.0.0");
         });
+        it('getCatalogRecords TMS 1.0.0 (optional format in description)', () => {
+            const res = CatalogUtils.getCatalogRecords('tms', {...TMS_DATA, records: [{
+                ...TMS_DATA.records[0],
+                format: "jpg"
+            }]}, OPTIONS_TMS);
+            const rec = res[0];
+            expect(res[0]).toBeTruthy();
+            expect(rec.title).toBe(TMS_DATA.records[0].title);
+            expect(rec.description).toBe(TMS_DATA.records[0].srs + ", jpg");
+            expect(rec.tileMapUrl).toBe(TMS_DATA.records[0].href);
+            expect(rec.references[0].url).toBe(OPTIONS_TMS.url);
+            expect(rec.references[0].type).toBe("OGC:TMS");
+            expect(rec.references[0].version).toBe("1.0.0");
+        });
         it('tmsToLayer', () => {
 
 

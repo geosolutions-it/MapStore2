@@ -333,7 +333,7 @@ const converters = {
                 return data.records.map(record => ({
                     title: record.title,
                     tileMapUrl: record.href,
-                    description: `${record.srs} ${record.format ? ", " + record.format : ""}`,
+                    description: `${record.srs}${record.format ? ", " + record.format : ""}`,
                     tmsUrl: options.tmsUrl,
                     references: [{
                         type: "OGC:TMS",
