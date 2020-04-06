@@ -20,6 +20,7 @@ import expect from 'expect';
 import MockAdapter from "axios-mock-adapter";
 let mockAxios;
 import TILE_MAP_SERVICE_RESPONSE from 'raw-loader!../../../test-resources/tms/TileMapServiceSample.xml';
+import TILE_MAP_SERVICE_RESPONSE_AUTH from 'raw-loader!../../../test-resources/tms/TileMapServiceSample-auth.xml';
 describe('TMS 1.0.0 API', () => {
     beforeEach(done => {
         mockAxios = new MockAdapter(axios);
@@ -44,7 +45,28 @@ describe('TMS 1.0.0 API', () => {
                     expect(result.records[0].profile).toBe("local");
                     expect(result.records[0].href).toBe("http://some-url.org/geoserver/gwc/service/tms/1.0.0/gs%3Atasmania_water_bodies@EPSG%3A4326@png");
                     expect(result.records[0].identifier).toBe("http://some-url.org/geoserver/gwc/service/tms/1.0.0/gs%3Atasmania_water_bodies@EPSG%3A4326@png");
-                    expect(result.records[0].format).toBe(null);
+                    expect(result.records[0].format).toBe("png");
+                    expect(result.records[0].tmsUrl).toBe("someurl");
+                    done();
+                } catch (ex) {
+                    done(ex);
+                }
+            });
+        });
+        it('remove authentication', (done) => {
+            mockAxios.onGet().reply(200, TILE_MAP_SERVICE_RESPONSE_AUTH);
+            textSearch('someurl', 1, 4, "", {}).then((result) => {
+                try {
+                    expect(result).toBeTruthy();
+                    expect(result.numberOfRecordsReturned).toBe(4);
+                    expect(result.numberOfRecordsMatched).toBe(12);
+                    expect(result.records.length).toBe(4);
+                    expect(result.records[0].title).toBe("tasmania_water_bodies");
+                    expect(result.records[0].srs).toBe("EPSG:4326");
+                    expect(result.records[0].profile).toBe("local");
+                    expect(result.records[0].href).toBe("http://some-url.org/geoserver/gwc/service/tms/1.0.0/gs%3Atasmania_water_bodies@EPSG%3A4326@png"); // no authkey
+                    expect(result.records[0].identifier).toBe("http://some-url.org/geoserver/gwc/service/tms/1.0.0/gs%3Atasmania_water_bodies@EPSG%3A4326@png"); // no authkey
+                    expect(result.records[0].format).toBe("png");
                     expect(result.records[0].tmsUrl).toBe("someurl");
                     done();
                 } catch (ex) {

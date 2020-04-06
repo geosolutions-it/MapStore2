@@ -8,7 +8,7 @@
 import ConfigUtils from '../../utils/ConfigUtils';
 import xml2js from 'xml2js';
 import axios from '../../libs/ajax';
-import { get, castArray, find } from 'lodash';
+import { get, castArray, includes } from 'lodash';
 import { cleanAuthParamsFromURL } from '../../utils/SecurityUtils';
 
 const capabilitiesCache = {};
@@ -18,10 +18,12 @@ const isSameSRS = (srs, projection) => srs === projection
     || srs === "EPSG:900913" && projection === "EPSG:3857";
 
 const guessFormat = (url = "") => {
-    const parts = url.split("@");
+    const parts = url
+        .split("?")[0] // remove query string (i.e. if authkey present...)
+        .split("@");
     if (parts.length > 1) {
         const format = parts[parts.length - 1];
-        if (find(["png", "png8", "jpeg", "vnd.jpeg-png", "gif"], format)) {
+        if (includes(["png", "png8", "jpeg", "vnd.jpeg-png", "gif"], format)) { // TODO: get formats from a well known list
             return format;
         }
     }

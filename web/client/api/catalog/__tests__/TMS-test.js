@@ -44,7 +44,7 @@ describe('TMS (Abstraction) API', () => {
                     expect(result.records[0].profile).toBe("local");
                     expect(result.records[0].href).toBe("http://some-url.org/geoserver/gwc/service/tms/1.0.0/gs%3Atasmania_water_bodies@EPSG%3A4326@png");
                     expect(result.records[0].identifier).toBe("http://some-url.org/geoserver/gwc/service/tms/1.0.0/gs%3Atasmania_water_bodies@EPSG%3A4326@png");
-                    expect(result.records[0].format).toBe(null);
+                    expect(result.records[0].format).toBe("png");
                     expect(result.records[0].tmsUrl).toBe("someurl");
                     done();
                 } catch (ex) {
