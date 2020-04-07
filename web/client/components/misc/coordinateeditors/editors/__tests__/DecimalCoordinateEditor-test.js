@@ -12,7 +12,7 @@ const ReactTestUtils = require('react-dom/test-utils');
 const expect = require('expect');
 const DecimalCoordinateEditor = require('../DecimalCoordinateEditor');
 
-describe.only('DecimalCoordinateEditor enhancer', () => {
+describe('DecimalCoordinateEditor enhancer', () => {
     beforeEach((done) => {
         document.body.innerHTML = '<div id="container"></div>';
         setTimeout(done);

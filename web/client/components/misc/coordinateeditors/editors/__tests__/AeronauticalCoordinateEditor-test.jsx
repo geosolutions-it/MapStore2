@@ -76,7 +76,7 @@ describe('AeronauticalCoordinateEditor enhancer', () => {
         expect(elements[1].value).toBe('0');
         expect(elements[2].value).toBe('0');
     });
-    it('Test DecimalCoordinateEditor onKeyDown with enter ', () => {
+    it('Test AeronauticalCoordinateEditor onKeyDown with enter ', () => {
         ReactDOM.render( <AeronauticalCoordinateEditor coordinate="lon" value={10} />, document.getElementById("container"));
         const container = document.getElementById('container');
         const elements = container.querySelectorAll('input');

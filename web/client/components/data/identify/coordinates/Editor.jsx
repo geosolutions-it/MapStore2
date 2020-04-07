@@ -8,7 +8,7 @@
 
 const React = require('react');
 const CoordinatesRow = require('../../../misc/coordinateeditors/CoordinatesRow');
-const {isEmpty} = require('lodash')
+const {isEmpty} = require('lodash');
 
 const Editor = (props) => (
     <CoordinatesRow

@@ -95,7 +95,7 @@ class CoordinatesRow extends React.Component {
                 glyph: "ok",
                 onClick: this.onSubmit
             }
-        ]
+        ];
         const dragButton = (
             <div><Button
                 disabled={!this.props.isDraggableEnabled}
