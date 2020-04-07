@@ -139,7 +139,9 @@ WMS and WMTS Services are [OGC Standards](https://www.ogc.org/standards) protoco
 
 In **General Settings** the user can set the title he wants to assign to this service and the URL of the service to configure the service.
 
-In **Advanced Settings** the user can set, other than the standard options, also the default format.
+In **Advanced Settings** the user can set, other than the standard options, also:
+
+* *Format*: the default image format for the layers added to the map (`png`, `png8`, `jpeg`, `vnd.jpeg-png` or `gif`). Setting this is particularly useful when the user wants to use optimized formats by default (`png8`, `vnd.jpeg-png`) for all the layers, without having to select it for each layer in layer settings.
 
 ### TMS Catalog
 
@@ -178,15 +180,20 @@ Allowed placeholder are:
 
 When the user saves this custom catalog service and clicking on search, he will see only one result, that can be added to the map. (In the future custom provider can provide also variants, where in advanced settings the user can customize some variables, to have multiple results for the given resource).
 
+<img src="../img/catalog/custom_tms_browse.jpg" class="ms-docimage"  style="max-width:400px;"/>
+
 #### TMS 1.0.0
 
 Selecting the "TMS 1.0.0" provider the user can insert the URL of the Tile Map Service (see [TMS Specification](https://wiki.osgeo.org/wiki/Tile_Map_Service_Specification)). For instance, in GeoServer, it is the URL of the "TMS" link in the home page.
 
 <img src="../img/catalog/gs-tms.jpg" class="ms-docimage"  style="max-width:500px;"/>
 
-When saved this
+When saved this, the user will be allowed to browse and add to the map the TMS layers provided by the service. MapStore will filter the layers published showing only the tile maps in the current EPSG.
+
+<img src="../img/catalog/tms100_edit.jpg" class="ms-docimage"  style="max-width:400px;"/>
+
+<img src="../img/catalog/tms100_browse.jpg" class="ms-docimage"  style="max-width:400px;"/>
 
 #### other TMS Known Services
 
 The other known services are listed as providers below "custom" and "TMS 1.0.0". They are a static list configured inside the application. Selecting one of the provider listed and saving the new catalog service allows to browse al the variants known for that service.
-

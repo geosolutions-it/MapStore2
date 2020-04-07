@@ -1,4 +1,12 @@
-import assign from 'object-assign';
+/*
+ * Copyright 2020, GeoSolutions Sas.
+ * All rights reserved.
+ *
+ * This source code is licensed under the BSD-style license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+import { pickBy } from 'lodash';
+
 import CONFIGPROVIDER from './ConfigProvider';
 import CoordinatesUtils from './ConfigUtils';
 
@@ -41,7 +49,7 @@ export default {
             }
             provider = {
                 url: variant.url || provider.url,
-                options: assign({}, provider.options, variantOptions)
+                options: {...provider.options || {}, ...variantOptions}
             };
         } else if (typeof provider.url === 'function') {
             provider.url = provider.url(parts.splice(1, parts.length - 1).join('.'));
@@ -81,7 +89,7 @@ export default {
         }
 
         // Compute final options combining provider options with any user overrides
-        let layerOpts = assign({}, provider.options, options);
+        let layerOpts = { ...provider.options, ...pickBy(options, v => v !== undefined)};
         return [provider.url, layerOpts];
     }
 };
