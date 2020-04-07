@@ -56,7 +56,7 @@ module.exports = props => {
         // coord editor props
         enabledCoordEditorButton,
         showCoordinateEditor,
-        onChangeClickPoint,
+        onSubmitClickPoint,
         onChangeFormat,
         formatCoord
     } = props;
@@ -100,7 +100,7 @@ module.exports = props => {
                         key="coordinate-editor"
                         formatCoord={formatCoord}
                         enabledCoordEditorButton={enabledCoordEditorButton}
-                        onChange={onChangeClickPoint}
+                        onSubmit={onSubmitClickPoint}
                         onChangeFormat={onChangeFormat}
                         edit={showCoordinateEditor}
                         coordinate={{
