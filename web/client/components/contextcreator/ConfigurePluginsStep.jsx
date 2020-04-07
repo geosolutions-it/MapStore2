@@ -23,11 +23,11 @@ import ConfigureMapTemplates from './ConfigureMapTemplates';
 import Dropzone from 'react-dropzone';
 import Spinner from "react-spinkit";
 
-import JSZip from 'jszip';
-import FileUtils from '../../utils/FileUtils';
 import LocaleUtils from '../../utils/LocaleUtils';
 import PropTypes from 'prop-types';
 import ConfirmModal from '../resources/modals/ConfirmModal';
+
+import {ERROR, checkZipBundle} from '../../utils/ExtensionsUtils';
 
 const getEnabledTools = (plugin, isMandatory, editedPlugin, documentationBaseURL, onEditPlugin,
     onShowDialog, changePluginsKey) => {
@@ -222,31 +222,17 @@ const configurePluginsStep = ({
     setFileDropStatus,
     messages = {}
 }) => {
-
+    const uploadErrors = {
+        [ERROR.MISSING_INDEX]: "contextCreator.configurePlugins.uploadMissingIndexError",
+        [ERROR.MALFORMED_INDEX]: "contextCreator.configurePlugins.uploadParseError",
+        [ERROR.MISSING_PLUGIN]: "contextCreator.configurePlugins.uploadMissingPluginError",
+        [ERROR.MISSING_BUNDLE]: "contextCreator.configurePlugins.uploadMissingBundleError",
+        [ERROR.TOO_MANY_BUNDLES]: "contextCreator.configurePlugins.uploadTooManyBundlesError"
+    };
     const checkUpload = (files) => {
         Promise.all(files.map(file => {
-            return FileUtils.readZip(file).then((buffer) => {
-                var zip = new JSZip();
-                return zip.loadAsync(buffer);
-            }).then((zip) => {
-                if (zip.files["index.json"]) {
-                    return zip.files["index.json"].async("text").then((json) => {
-                        try {
-                            const index = JSON.parse(json);
-                            if (index.plugins && index.plugins[0].name) {
-                                return { name: index.plugins[0].name, file };
-                            }
-                        } catch (e) {
-                            throw new Error(LocaleUtils.getMessageById(messages, "contextCreator.configurePlugins.uploadParseError"));
-                        }
-                        throw new Error(LocaleUtils.getMessageById(messages, "contextCreator.configurePlugins.uploadMissingFileError"));
-                    }).catch(e => {
-                        throw e;
-                    });
-                }
-                throw new Error(LocaleUtils.getMessageById(messages, "contextCreator.configurePlugins.uploadMissingFileError"));
-            }).catch(e => {
-                throw e;
+            return checkZipBundle(file).catch(e => {
+                throw new Error(LocaleUtils.getMessageById(messages, uploadErrors[e]));
             });
         })).then((namedFiles) => {
             onUpload(namedFiles);
