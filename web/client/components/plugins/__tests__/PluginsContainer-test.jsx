@@ -12,6 +12,8 @@ const PropTypes = require('prop-types');
 const React = require('react');
 const ReactDOM = require('react-dom');
 const PluginsContainer = require('../PluginsContainer');
+const {Provider} = require('react-redux');
+const {connect} = require('react-redux');
 
 class My extends React.Component {
     render() {
@@ -53,7 +55,15 @@ const plugins = {
         name: 'no-root-plugin',
         position: 1,
         priority: 1
-    }})
+    }}),
+    WithGlobalRefPlugin: connect(
+        null,
+        null,
+        null,
+        {
+            forwardRef: true
+        }
+    )(My)
 };
 
 const pluginsCfg = {
@@ -74,6 +84,17 @@ const pluginsCfg3 = {
 };
 const pluginsCfg4 = {
     desktop: ["Container", "NoRoot"]
+};
+
+const pluginsCfgRef = {
+    desktop: [
+        {
+            'name': 'WithGlobalRef',
+            'cfg': {
+                'withGlobalRef': true
+            }
+        }
+    ]
 };
 
 describe('PluginsContainer', () => {
@@ -134,5 +155,17 @@ describe('PluginsContainer', () => {
         rendered = cmpDom.getElementsByTagName("div");
         expect(document.getElementById('no-impl-item-no-root-plugin')).toNotExist();
         expect(document.getElementById('no-root')).toExist();
+    });
+    it('checks plugin with forwardRef = true connect option', () => {
+        const store = {
+            dispatch: () => {},
+            subscribe: () => {},
+            getState: () => ({})
+        };
+        const app = ReactDOM.render(<Provider store={store}><PluginsContainer mode="desktop" defaultMode="desktop" params={{}}
+            plugins={plugins} pluginsConfig={pluginsCfgRef}/></Provider>, document.getElementById("container"));
+
+        expect(app).toExist();
+        expect(window.WithGlobalRefPlugin.myFunc).toExist();
     });
 });
