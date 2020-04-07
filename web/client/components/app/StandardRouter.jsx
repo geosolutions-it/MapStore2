@@ -69,7 +69,7 @@ class StandardRouter extends React.Component {
                                 <ErrorBoundary
                                     onError={e => {
                                         /* eslint-disable no-console */
-                                        console.log(e);
+                                        console.error(e);
                                         /* eslint-enable no-console */
                                     }}
                                     FallbackComponent={ ErrorBoundaryFallbackComponent}>
@@ -92,7 +92,13 @@ class StandardRouter extends React.Component {
                 <Localized messages={this.props.locale.messages} locale={this.props.locale.current} loadingError={this.props.locale.localeError}>
                     <ConnectedRouter history={history}>
                         <div className="error-container">
-                            <ErrorBoundary FallbackComponent={ ErrorBoundaryFallbackComponent}>
+                            <ErrorBoundary
+                                onError={e => {
+                                    /* eslint-disable no-console */
+                                    console.error(e);
+                                    /* eslint-enable no-console */
+                                }}
+                                FallbackComponent={ ErrorBoundaryFallbackComponent}>
                                 {this.renderPages()}
                             </ErrorBoundary>
                         </div>
