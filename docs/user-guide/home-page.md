@@ -61,7 +61,7 @@ Once logged in as *Administrator*, the [Homepage](https://mapstore.geo-solutions
 
 The admin can see and edit everything. In particular, in addition to what normal user can do, an administrator can also:
 
-* Access the [Accounts Manager](managing-users-and-groups.md) <img src="../img/button/acc-manager.jpg" class="ms-docbutton"/>
+* Access the **Manager** button <img src="../img/button/acc-manager.jpg" class="ms-docbutton"/> for [Manage Accounts](managing-users-and-groups.md) and [Manage Contexts](managing-contexts.md)
 
 * Menage the resources by including <img src="../img/button/featured.jpg" class="ms-docbutton"/> or excluding <img src="../img/button/unfeatured.jpg" class="ms-docbutton"/> them from *Featured* section
 
