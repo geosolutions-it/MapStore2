@@ -17,6 +17,7 @@
           <ms:Attribute name="type" type="string">csw</ms:Attribute>
           <ms:Attribute name="title" type="string">GeoSolutions GeoServer CSW</ms:Attribute>
           <ms:Attribute name="autoload" type="boolean">true</ms:Attribute>
+          <ms:Attribute name="jsObject" type="object">{"parameter1":"value&lt;>","parameter2":1,"parameter3":{"parameter4":2},"parameter6":null}</ms:Attribute>
         </ms:Service>
         <ms:Service serviceName="gs_stable_wms">
           <ms:Attribute name="url" type="string">https://gs-stable.geo-solutions.it/geoserver/wms</ms:Attribute>

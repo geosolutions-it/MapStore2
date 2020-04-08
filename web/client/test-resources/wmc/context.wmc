@@ -39,6 +39,7 @@
           <ms:Attribute name="showTemplate" type="boolean">true</ms:Attribute>
           <ms:Attribute name="metadataTemplate" type="string">&lt;p>${description}&lt;/p></ms:Attribute>
           <ms:Attribute name="format" type="string">image/jpeg</ms:Attribute>
+          <ms:Attribute name="jsObject" type="object">{"parameter1":"value&lt;>","parameter2":1,"parameter3":{"parameter4":2},"parameter6":null}</ms:Attribute>
         </ms:Service>
       </ms:CatalogServices>
       <ms:center xmlns:ms="http://geo-solutions.it/mapstore/context" x="1.5" y="2.5" crs="EPSG:3857"/>

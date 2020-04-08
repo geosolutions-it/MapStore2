@@ -35,7 +35,15 @@ describe('WMC tests', () => {
                     showAdvancedSettings: true,
                     showTemplate: true,
                     metadataTemplate: "<p>${description}</p>",
-                    format: "image/jpeg"
+                    format: "image/jpeg",
+                    jsObject: {
+                        parameter1: "value<>",
+                        parameter2: 1,
+                        parameter3: {
+                            parameter4: 2
+                        },
+                        parameter6: null
+                    }
                 }
             });
             expect(config.map).toExist();
