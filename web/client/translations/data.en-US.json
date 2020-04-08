@@ -2410,7 +2410,10 @@
                 "uploadLabel": "Drag an extension bundle or click to browse and upload it",
                 "uploadTitle": "Install a MapStore plugin",
                 "uploadParseError": "index.json file index.json has a wrong format",
-                "uploadMissingFileError": "index.json file missing in zip",
+                "uploadMissingIndexError": "index.json file missing in zip",
+                "uploadMissingPluginError": "No plugins defined in index.json",
+                "uploadMissingBundleError": "No javascript bundle in uploaded file",
+                "uploadTooManyBundlesError": "Too many javascript bundles in the zip package",
                 "confirmRemovePlugin": "Are you sure you want to remove the extension?",
                 "tooltips": {
                     "enableUserPlugin": "Enable selection of current plugin for user",

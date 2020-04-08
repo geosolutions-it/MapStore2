@@ -2405,8 +2405,11 @@
                 },
                 "uploadLabel": "Ziehen Sie ein Erweiterungspaket oder klicken Sie, um es zu durchsuchen und hochzuladen",
                 "uploadTitle": "Installieren Sie ein MapStore-Plugin",
-                "uploadParseError": "index.json-Datei hat das falsche Format",
-                "uploadMissingFileError": "index.json-Datei fehlt in zip",
+                "uploadParseError": "Datei index.json con formato errato",
+                "uploadMissingIndexError": "index.json-Datei fehlt in zip",
+                "uploadMissingPluginError": "In index.json sind keine Plugins definiert",
+                "uploadMissingBundleError": "Kein Javascript-Bundle in der hochgeladenen Datei",
+                "uploadTooManyBundlesError": "Zu viele Javascript-Bundles im Zip-Paket",
                 "confirmRemovePlugin": "Möchten Sie die Erweiterung wirklich entfernen?",
                 "tooltips": {
                     "enableUserPlugin": "Aktiviert die Auswahl des aktuellen Plugins für den Benutzer",

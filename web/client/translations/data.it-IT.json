@@ -2407,7 +2407,10 @@
                 "uploadLabel": "Trascina qui un pacchetto di estensione o clicca per selezionarne uno",
                 "uploadTitle": "Installa un plugin di MapStore",
                 "uploadParseError": "File index.json con formato errato",
-                "uploadMissingFileError": "File index.json mancante nel file",
+                "uploadMissingIndexError": "File index.json mancante nel file",
+                "uploadMissingPluginError": "Nessun plugin definito in index.json",
+                "uploadMissingBundleError": "Nessun bundle javascript non presente nel file",
+                "uploadTooManyBundlesError": "Troppi bundle javascript contenuti nel pacchetto",
                 "confirmRemovePlugin": "Sei sicuro di voler eliminare l'estensione?",
                 "tooltips": {
                     "enableUserPlugin": "Abilita la selezione del plug-in corrente per l'utente",
