@@ -44,7 +44,7 @@ const identifyHandlers = withHandlers({
     }) => (val) => {
         const lat = !isNil(val.lat) ? parseFloat(val.lat) : 0;
         const lng = !isNil(val.lon) ? parseFloat(val.lon) : 0;
-        let newPoint = set(`latlng.lng`, lng, set(`latlng.lat`, lat, point));
+        let newPoint = set('latlng.lng', lng, set('latlng.lat', lat, point));
         onSubmitClickPoint(newPoint);
     },
     onChangeFormat: ({
