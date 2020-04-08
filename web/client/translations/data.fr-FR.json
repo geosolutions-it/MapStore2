@@ -601,6 +601,7 @@
             "newMeasure": "Nouvelle annotation",
             "selectTool": "Sélectionnez un outil de mesure",
             "exportToGeoJSON": "Exporter vers GeoJSON",
+            "resetTooltip": "Des mesures claires",
             "addAsLayer": "Ajouter comme calque"
         },
         "search": {
@@ -990,7 +991,8 @@
                 "notValidMarker": "Insérer une coordonnée valide (+|- 90° lat, +|-180° lon)",
                 "notValidPolyline": "Toutes les coordonnées doivent être valides (+|- 90° lat, +|-180° lon)",
                 "notValidText": "Insérer une valeur de texte et une coordonnée valide (+|- 90° lat, +|-180° lon)",
-                "notValidCircle": "Entrez un rayon et une coordonnée valide (+|- 90° lat, +|-180° lon)"
+                "notValidCircle": "Entrez un rayon et une coordonnée valide (+|- 90° lat, +|-180° lon)",
+                "newFeature": "Nouveau"
             }
         },
         "user": {

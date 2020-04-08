@@ -9,7 +9,7 @@ const PropTypes = require('prop-types');
 const React = require('react');
 const {DropdownList} = require('react-widgets');
 const {ButtonToolbar, Tooltip, Glyphicon, Grid, Row, Col, FormGroup} = require('react-bootstrap');
-const {isEqual, round, get} = require('lodash');
+const {isEqual, round, get, dropRight} = require('lodash');
 const uuidv1 = require('uuid/v1');
 
 const { download } = require('../../../utils/FileUtils');
@@ -71,6 +71,7 @@ class MeasureComponent extends React.Component {
         format: PropTypes.string,
         onChangeFormat: PropTypes.func,
         onChangeCoordinates: PropTypes.func,
+        onChangeCurrentFeature: PropTypes.func,
         onAddAsLayer: PropTypes.func,
         onHighlightPoint: PropTypes.func,
         geomType: PropTypes.string,
@@ -78,6 +79,8 @@ class MeasureComponent extends React.Component {
         onAddAnnotation: PropTypes.func,
         showAddAsAnnotation: PropTypes.bool,
         showAddAsLayer: PropTypes.bool,
+        showFeatureSelector: PropTypes.bool,
+        useSingleFeature: PropTypes.bool,
         showExportToGeoJSON: PropTypes.bool,
         disableBearing: PropTypes.bool,
         onMount: PropTypes.func,
@@ -267,8 +270,19 @@ class MeasureComponent extends React.Component {
 
 
     render() {
-        const geomType = (get(this.props.measurement, 'feature.geometry.type') || '').toLowerCase();
-        let coords = (get(this.props.measurement, geomType.indexOf('polygon') !== -1 ? 'feature.geometry.coordinates[0]' : 'feature.geometry.coordinates') || []).map(coordinate => ({lon: coordinate[0], lat: coordinate[1]}));
+        let geomType;
+        let coords;
+        const features = get(this.props.measurement, 'features', []);
+        const feature = features[this.props.measurement.currentFeature];
+
+        if (this.props.useSingleFeature) {
+            geomType = (get(this.props.measurement, 'feature.geometry.type') || '').toLowerCase();
+            coords = (get(this.props.measurement, geomType.indexOf('polygon') !== -1 ? 'feature.geometry.coordinates[0]' : 'feature.geometry.coordinates') || []).map(coordinate => ({lon: coordinate[0], lat: coordinate[1]}));
+        } else {
+            geomType = get(feature, 'geometry.type', '').toLowerCase();
+            coords = (get(feature, geomType.indexOf('polygon') !== -1 ? 'geometry.coordinates[0]' : 'geometry.coordinates') || []).map(coordinate => ({lon: coordinate[0], lat: coordinate[1]}));
+        }
+
         return (
             <BorderLayout
                 id={this.props.id}
@@ -315,9 +329,9 @@ class MeasureComponent extends React.Component {
                                 buttons={
                                     [
                                         {
-                                            glyph: 'refresh',
+                                            glyph: 'remove',
                                             visible: !!this.props.withReset,
-                                            tooltip: this.props.resetButtonText,
+                                            tooltip: <Message msgId="measureComponent.resetTooltip"/>,
                                             onClick: () => this.onResetClick()
                                         }
                                     ]
@@ -380,14 +394,18 @@ class MeasureComponent extends React.Component {
                                 isMouseEnterEnabled
                                 isMouseLeaveEnabled
                                 format={this.props.format}
+                                currentFeature={this.props.measurement.currentFeature}
+                                features={this.props.measurement.features}
                                 mapProjection={this.props.mapProjection}
                                 onChangeFormat={this.props.onChangeFormat}
                                 onHighlightPoint={this.props.onHighlightPoint}
                                 onChange={this.props.onChangeCoordinates}
+                                onChangeCurrentFeature={this.props.onChangeCurrentFeature}
+                                showFeatureSelector={this.props.showFeatureSelector}
                                 items={[]}
                                 isDraggable
                                 type={this.props.geomType}
-                                components={coords}/>
+                                components={!this.props.useSingleFeature && geomType.indexOf('polygon') !== -1 ? dropRight(coords) : coords}/>
                         </Row> :
                         <Row>
                             <Col xs={12} className="text-center" style={{padding: 15}}>

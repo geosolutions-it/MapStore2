@@ -12,7 +12,8 @@ const {Glyphicon} = require('react-bootstrap');
 const assign = require('object-assign');
 const {createSelector} = require('reselect');
 const Message = require('./locale/Message');
-const {changeMeasurement, changeUom, changeFormatMeasurement, changeCoordinates, addAnnotation, addAsLayer, init} = require('../actions/measurement');
+const {changeMeasurement, changeUom, changeFormatMeasurement, changeCoordinates, addAnnotation, addAsLayer, init,
+    setCurrentFeature} = require('../actions/measurement');
 const {toggleControl, setControlProperty} = require('../actions/controls');
 const {MeasureDialog} = require('./measure/index');
 
@@ -36,6 +37,8 @@ const selector = (state) => {
         bearingMeasureValueEnabled: !isOpenlayers(state),
         isCoordinateEditorEnabled: isCoordinateEditorEnabledSelector(state),
         showCoordinateEditor: showCoordinateEditorSelector(state),
+        showFeatureSelector: isOpenlayers(state),
+        useSingleFeature: !isOpenlayers(state),
         withReset: isOpenlayers(state),
         showExportToGeoJSON: isOpenlayers(state),
         showAddAsAnnotation: showAddAsAnnotationSelector(state) && isOpenlayers(state),
@@ -58,6 +61,8 @@ const toggleMeasureTool = toggleControl.bind(null, 'measure', null);
  * @prop {boolean} defaultOptions.showAddAsAnnotation if true, shows the button addAsAnnotation in the toolbar
  * @prop {boolean} defaultOptions.geomType geomType for the measure tool, can be "LineString" or "Bearing" or "Polygon", default is "LineString"
  * @prop {boolean} defaultOptions.format "decimal" of "aeronautical" format used for coordinate editor, default is "decimal"
+ * @prop {boolean} defaultOptions.showLabel determines, whether to show measurement labels(like area for polygons)
+ * @prop {boolean} defaultOptions.showSegmentLengths determines, whether to show segment labels(of line segments for LineString, for example)
   */
 const Measure = connect(
     createSelector([
@@ -77,6 +82,7 @@ const Measure = connect(
         onChangeFormat: changeFormatMeasurement,
         onInit: init,
         onChangeCoordinates: changeCoordinates,
+        onChangeCurrentFeature: setCurrentFeature,
         onClose: toggleMeasureTool,
         onMount: (showCoordinateEditor) => setControlProperty("measure", "showCoordinateEditor", showCoordinateEditor),
         onAddAsLayer: addAsLayer

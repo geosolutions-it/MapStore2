@@ -10,6 +10,7 @@ const CHANGE_MEASUREMENT_STATE = 'CHANGE_MEASUREMENT_STATE';
 const CHANGE_UOM = 'MEASUREMENT:CHANGE_UOM';
 const CHANGED_GEOMETRY = 'MEASUREMENT:CHANGED_GEOMETRY';
 const SET_TEXT_LABELS = 'MEASUREMENT:SET_TEXT_LABELS';
+const SET_CURRENT_FEATURE = 'MEASUREMENT:SET_CURRENT_FEATURE';
 const ADD_AS_LAYER = 'MEASUREMENT:ADD_AS_LAYER';
 const RESET_GEOMETRY = 'MEASUREMENT:RESET_GEOMETRY';
 const CHANGE_FORMAT = 'MEASUREMENT:CHANGE_FORMAT';
@@ -72,6 +73,12 @@ function setTextLabels(textLabels) {
     return {
         type: SET_TEXT_LABELS,
         textLabels
+    };
+}
+function setCurrentFeature(featureIndex) {
+    return {
+        type: SET_CURRENT_FEATURE,
+        featureIndex
     };
 }
 /**
@@ -143,6 +150,7 @@ module.exports = {
     changeUom, CHANGE_UOM,
     changeGeometry, CHANGED_GEOMETRY,
     setTextLabels, SET_TEXT_LABELS,
+    setCurrentFeature, SET_CURRENT_FEATURE,
     addAsLayer, ADD_AS_LAYER,
     changeFormatMeasurement, CHANGE_FORMAT,
     updateMeasures, UPDATE_MEASURES,

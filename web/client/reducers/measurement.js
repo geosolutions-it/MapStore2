@@ -13,6 +13,7 @@ const {
     RESET_GEOMETRY,
     CHANGED_GEOMETRY,
     SET_TEXT_LABELS,
+    SET_CURRENT_FEATURE,
     CHANGE_FORMAT,
     CHANGE_COORDINATES,
     UPDATE_MEASURES,
@@ -62,6 +63,7 @@ function measurement(state = defaultState, action) {
                     disabled: true
                 }
             },
+            currentFeature: undefined,
             len: 0,
             area: 0,
             bearing: 0
@@ -124,7 +126,6 @@ function measurement(state = defaultState, action) {
     }
     case CHANGED_GEOMETRY: {
         let {features} = action;
-        features = features.map(feature => set("properties.disabled", false, feature));
         return {
             ...state,
             features,
@@ -136,6 +137,12 @@ function measurement(state = defaultState, action) {
         return {
             ...state,
             textLabels: action.textLabels
+        };
+    }
+    case SET_CURRENT_FEATURE: {
+        return {
+            ...state,
+            currentFeature: action.featureIndex
         };
     }
     case TOGGLE_CONTROL: {
@@ -200,9 +207,15 @@ function measurement(state = defaultState, action) {
         return {...state, ...action.defaultOptions};
     }
     case CHANGE_COORDINATES: {
-        let coordinates = action.coordinates.map(c => ([c.lon, c.lat]));
+        const coordinates = action.coordinates.map(c => ([c.lon, c.lat]));
         // wrap in an array for polygon geom
-        coordinates = state.areaMeasureEnabled ? dropRight(coordinates) : coordinates;
+        const features = state.features || [];
+        const currentFeatureObj = features[state.currentFeature] || {};
+        const invalidCoordinates = coordinates.filter((c) => {
+            const isValid = !isNaN(parseFloat(c[0])) && !isNaN(parseFloat(c[1]));
+            return isValid;
+        }).length !== coordinates.length;
+
         return {
             ...state,
             feature: {
@@ -215,9 +228,24 @@ function measurement(state = defaultState, action) {
                 },
                 geometry: {
                     type: state.bearingMeasureEnabled ? "LineString" : state.geomType,
-                    coordinates: state.areaMeasureEnabled ? [coordinates] : coordinates
+                    coordinates: state.areaMeasureEnabled ? [dropRight(coordinates)] : coordinates
                 }
             },
+            features: [
+                ...features.slice(0, state.currentFeature), {
+                    ...currentFeatureObj,
+                    type: "Feature",
+                    properties: {
+                        ...(currentFeatureObj.properties || {}),
+                        disabled: invalidCoordinates || state.bearingMeasureEnabled && coordinates.length < 2
+                    },
+                    geometry: {
+                        type: state.bearingMeasureEnabled ? "LineString" : state.geomType,
+                        coordinates: state.areaMeasureEnabled ? [[...coordinates, coordinates[0]]] : coordinates
+                    }
+                },
+                ...features.slice(state.currentFeature + 1, features.length)
+            ],
             updatedByUI: true
         };
     }

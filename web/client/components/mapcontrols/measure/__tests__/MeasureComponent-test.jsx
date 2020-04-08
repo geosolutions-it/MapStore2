@@ -326,6 +326,7 @@ describe("test the MeasureComponent", () => {
                     area: {unit: 'sqkm', label: 'km²'}
                 }}
                 measurement={measurement}
+                useSingleFeature
                 showCoordinateEditor
                 format="decimal"
                 isDraggable
