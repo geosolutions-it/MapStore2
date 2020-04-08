@@ -87,7 +87,7 @@ const TmsURLEditor = ({ serviceTypes = [], onChangeServiceProperty, service = {}
                         onChange={(e) => onChangeUrl(e.target.value)} />
                 </React.Fragment>
                 : isTMS
-                    ? <Col xs={12}>
+                    ? <React.Fragment>
                         <ControlLabel><Message msgId="catalog.url" /></ControlLabel>
                         <FormControl
                             type="text"
@@ -97,7 +97,7 @@ const TmsURLEditor = ({ serviceTypes = [], onChangeServiceProperty, service = {}
                             placeholder="catalog.urlPlaceholder"
                             value={service && service.url}
                             onChange={(e) => onChangeUrl(e.target.value)} />
-                    </Col>
+                    </React.Fragment>
                     : null
             }
         </Col>
