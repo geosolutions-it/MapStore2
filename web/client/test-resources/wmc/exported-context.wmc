@@ -11,6 +11,27 @@
         <ms:Group id="37b5eb60-5189-11ea-8531-a737d86e9a07" title="Some Group" expanded="true"/>
         <ms:Group id="37b5eb60-5189-11ea-8531-a737d86e9a07.44bc9340-5189-11ea-8531-a737d86e9a07" title="Some Group" expanded="true"/>
       </ms:GroupList>
+      <ms:CatalogServices selectedService="gs_stable_csw">
+        <ms:Service serviceName="gs_stable_csw">
+          <ms:Attribute name="url" type="string">https://gs-stable.geo-solutions.it/geoserver/csw</ms:Attribute>
+          <ms:Attribute name="type" type="string">csw</ms:Attribute>
+          <ms:Attribute name="title" type="string">GeoSolutions GeoServer CSW</ms:Attribute>
+          <ms:Attribute name="autoload" type="boolean">true</ms:Attribute>
+          <ms:Attribute name="jsObject" type="object">{"parameter1":"value&lt;>","parameter2":1,"parameter3":{"parameter4":2},"parameter6":null}</ms:Attribute>
+        </ms:Service>
+        <ms:Service serviceName="gs_stable_wms">
+          <ms:Attribute name="url" type="string">https://gs-stable.geo-solutions.it/geoserver/wms</ms:Attribute>
+          <ms:Attribute name="type" type="string">wms</ms:Attribute>
+          <ms:Attribute name="title" type="string">GeoSolutions GeoServer WMS</ms:Attribute>
+          <ms:Attribute name="autoload" type="boolean">false</ms:Attribute>
+        </ms:Service>
+        <ms:Service serviceName="gs_stable_wmts">
+          <ms:Attribute name="url" type="string">https://gs-stable.geo-solutions.it/geoserver/gwc/service/wmts</ms:Attribute>
+          <ms:Attribute name="type" type="string">wmts</ms:Attribute>
+          <ms:Attribute name="title" type="string">GeoSolutions GeoServer WMTS</ms:Attribute>
+          <ms:Attribute name="autoload" type="boolean">false</ms:Attribute>
+        </ms:Service>
+      </ms:CatalogServices>
       <ms:center x="-83.01860427856452" y="36.23686543982026" crs="EPSG:4326"/>
       <ms:zoom>3</ms:zoom>
     </Extension>
