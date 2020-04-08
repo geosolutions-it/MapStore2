@@ -31,7 +31,7 @@ This first step allow the Admin to add a **Name** and a **Window title** of the 
 
 ## Configure Map
 
-To create the context viewer, the map configuration (like the one described [here](exploring-map.md)) opens so that the admin can set the initial state of the context. 
+To create the context viewer, the map configuration (like the one described [here](exploring-maps.md)) opens so that the admin can set the initial state of the context. 
 
 <img src="../img/application-context/steptwo_part.jpg" class="ms-docimage"/>
 
@@ -92,17 +92,17 @@ Here the admin, in order to import the plugin, can drag and drop it inside the i
     
     Plugins must be contained in .zip archives  and the folder zip must contain:
 
-    * Plugin file in `json` format
+    * An `index.json` file with a plugin definition
 
-    * Translation available in MapStore (Italian, English, French, German and Spanish)
+    * A plugin file with the extension code in `JavaScript`
 
 Through the **Add** button <img src="../img/button/add_group_confirm_button.jpg" class="ms-docbutton"/> the plugin is inserted in the *Available Plugins* list. 
 
-<plugin on the list>
+<img src="../img/application-context/upload_plugin1.jpg" class="ms-docimage" style="max-width:500px;"/>
 
 Now it is possible added it to the *Enabled Plugins* list or remove it from MapStore through the **Delete** button <img src="../img/button/delete_white_button.jpg" class="ms-docbutton"/>. 
 
-<delete button on plugin>
+<img src="../img/application-context/upload_plugin2.jpg" class="ms-docimage" style="max-width:500px;"/>
 
 ### Optional tools for enabled plugins
 
