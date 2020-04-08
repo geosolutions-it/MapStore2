@@ -99,10 +99,14 @@ describe("test the CoordinatesEditor Panel", () => {
         const hamburgerMenus = TestUtils.scryRenderedDOMComponentsWithClass(editor, "glyphicon-menu-hamburger");
         expect(hamburgerMenus.length).toBe(3);
         const inputs = TestUtils.scryRenderedDOMComponentsWithTag(editor, "input");
+        const submits = TestUtils.scryRenderedDOMComponentsWithClass(editor, "glyphicon-ok");
+        expect(submits).toExist();
+        const submit = submits[0];
         expect(inputs).toExist();
         const input = inputs[0];
         input.value = 15;
         TestUtils.Simulate.change(input);
+        TestUtils.Simulate.click(submit);
         expect(spyOnHighlightPoint).toHaveBeenCalled();
         expect(spyOnHighlightPoint).toHaveBeenCalledWith({ lat: 15, lon: 10 });
         expect(spyOnChange).toHaveBeenCalled();
@@ -115,15 +119,17 @@ describe("test the CoordinatesEditor Panel", () => {
 
         input.value = "";
         TestUtils.Simulate.change(input);
+        TestUtils.Simulate.click(submit);
         expect(spyOnHighlightPoint).toHaveBeenCalled();
         expect(spyOnSetInvalidSelected).toHaveBeenCalled();
         expect(spyOnSetInvalidSelected).toHaveBeenCalledWith("coords", [[10, "" ], [6, 6 ], [6, 6]]);
         expect(spyOnChange).toHaveBeenCalled();
+        expect(spyOnChange.calls.length).toBe(2);
         expect(spyOnChange).toHaveBeenCalledWith([
             { lat: "", lon: 10 },
             { lat: 6, lon: 6 },
             { lat: 6, lon: 6 },
-            { lat: "", lon: 10 }
+            { lat: 6, lon: 6 }
         ], undefined, undefined, undefined);
     });
 
@@ -152,9 +158,13 @@ describe("test the CoordinatesEditor Panel", () => {
 
         const inputs = TestUtils.scryRenderedDOMComponentsWithTag(editor, "input");
         expect(inputs).toExist();
+        const submits = TestUtils.scryRenderedDOMComponentsWithClass(editor, "glyphicon-ok");
+        expect(submits).toExist();
+        const submit = submits[0];
         const input = inputs[0];
         input.value = 15;
         TestUtils.Simulate.change(input);
+        TestUtils.Simulate.click(submit);
         expect(spyOnHighlightPoint).toHaveBeenCalled();
         expect(spyOnHighlightPoint).toHaveBeenCalledWith({ lat: 15, lon: 10 });
         expect(spyOnChange).toHaveBeenCalled();
@@ -165,6 +175,7 @@ describe("test the CoordinatesEditor Panel", () => {
 
         input.value = "";
         TestUtils.Simulate.change(input);
+        TestUtils.Simulate.click(submit);
         expect(spyOnHighlightPoint).toHaveBeenCalled();
         expect(spyOnSetInvalidSelected).toHaveBeenCalled();
         expect(spyOnSetInvalidSelected).toHaveBeenCalledWith("coords", [[10, "" ], [6, 6 ]]);
@@ -200,11 +211,15 @@ describe("test the CoordinatesEditor Panel", () => {
 
         const inputs = TestUtils.scryRenderedDOMComponentsWithTag(editor, "input");
         expect(inputs).toExist();
+        const submits = TestUtils.scryRenderedDOMComponentsWithClass(editor, "glyphicon-ok");
+        expect(submits).toExist();
+        const submit = submits[0];
         const inputRadius = inputs[0];
         inputRadius.value = 1000;
         const inputCoord = inputs[1];
         inputCoord.value = 15;
         TestUtils.Simulate.change(inputCoord);
+        TestUtils.Simulate.click(submit);
         expect(spyOnHighlightPoint).toHaveBeenCalled();
         expect(spyOnHighlightPoint).toHaveBeenCalledWith({ lat: 15, lon: 10 });
         expect(spyOnChange).toHaveBeenCalled();
@@ -214,6 +229,7 @@ describe("test the CoordinatesEditor Panel", () => {
 
         inputCoord.value = "";
         TestUtils.Simulate.change(inputCoord);
+        TestUtils.Simulate.click(submit);
         expect(spyOnHighlightPoint).toHaveBeenCalled();
         expect(spyOnHighlightPoint).toHaveBeenCalledWith(null);
         expect(spyOnSetInvalidSelected).toHaveBeenCalled();
@@ -248,12 +264,16 @@ describe("test the CoordinatesEditor Panel", () => {
 
         const inputs = TestUtils.scryRenderedDOMComponentsWithTag(editor, "input");
         expect(inputs).toExist();
+        const submits = TestUtils.scryRenderedDOMComponentsWithClass(editor, "glyphicon-ok");
+        expect(submits).toExist();
+        const submit = submits[0];
         const inputRadius = inputs[0];
         inputRadius.value = 1000;
         const inputCoord = inputs[1];
 
         inputCoord.value = "";
         TestUtils.Simulate.change(inputCoord);
+        TestUtils.Simulate.click(submit);
         expect(spyOnHighlightPoint).toNotHaveBeenCalled();
         expect(spyOnSetInvalidSelected).toHaveBeenCalled();
         expect(spyOnSetInvalidSelected).toHaveBeenCalledWith("coords", [[10, "" ]]);
@@ -383,11 +403,15 @@ describe("test the CoordinatesEditor Panel", () => {
 
         const inputs = TestUtils.scryRenderedDOMComponentsWithTag(editor, "input");
         expect(inputs).toExist();
+        const submits = TestUtils.scryRenderedDOMComponentsWithClass(editor, "glyphicon-ok");
+        expect(submits).toExist();
+        const submit = submits[0];
         const inputText = inputs[0];
         inputText.value = "myTextAnnotation";
         const inputCoord = inputs[1];
         inputCoord.value = 15;
         TestUtils.Simulate.change(inputCoord);
+        TestUtils.Simulate.click(submit);
         expect(spyOnHighlightPoint).toHaveBeenCalled();
         expect(spyOnHighlightPoint).toHaveBeenCalledWith({ lat: 15, lon: 10 });
         expect(spyOnChange).toHaveBeenCalled();
@@ -398,6 +422,7 @@ describe("test the CoordinatesEditor Panel", () => {
 
         inputCoord.value = "";
         TestUtils.Simulate.change(inputCoord);
+        TestUtils.Simulate.click(submit);
         expect(spyOnHighlightPoint).toHaveBeenCalled();
         expect(spyOnHighlightPoint).toHaveBeenCalledWith(null);
         expect(spyOnSetInvalidSelected).toHaveBeenCalled();
@@ -686,11 +711,12 @@ describe("test the CoordinatesEditor Panel", () => {
         expect(editor).toExist();
 
         const buttons = TestUtils.scryRenderedDOMComponentsWithTag(editor, "button");
-        expect(buttons.length).toBe(11);
+
+        expect(buttons.length).toBe(15);
         expect(buttons[4].disabled).toBe(false);
-        expect(buttons[6].disabled).toBe(true);
-        expect(buttons[8].disabled).toBe(true);
-        expect(buttons[10].disabled).toBe(false);
+        expect(buttons[7].disabled).toBe(true);
+        expect(buttons[10].disabled).toBe(true);
+        expect(buttons[13].disabled).toBe(false);
     });
     it('CoordinatesEditor as Polygon, 5 rows, only invalid rows are not disabled', () => {
         const components = [{
@@ -727,12 +753,12 @@ describe("test the CoordinatesEditor Panel", () => {
         const hamburgerMenus = TestUtils.scryRenderedDOMComponentsWithClass(editor, "glyphicon-menu-hamburger");
         expect(hamburgerMenus.length).toBe(5);
         const buttons = TestUtils.scryRenderedDOMComponentsWithTag(editor, "button");
-        expect(buttons.length).toBe(13);
+        expect(buttons.length).toBe(18);
         expect(buttons[4].disabled).toBe(false);
-        expect(buttons[6].disabled).toBe(true);
-        expect(buttons[8].disabled).toBe(true);
+        expect(buttons[7].disabled).toBe(true);
         expect(buttons[10].disabled).toBe(true);
-        expect(buttons[12].disabled).toBe(false);
+        expect(buttons[13].disabled).toBe(true);
+        expect(buttons[16].disabled).toBe(false);
     });
 
 });

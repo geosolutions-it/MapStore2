@@ -2,6 +2,7 @@ const React = require('react');
 const ReactDOM = require('react-dom');
 const ReactTestUtils = require('react-dom/test-utils');
 const expect = require('expect');
+const {isEmpty} = require('lodash');
 const Editor = require('../Editor');
 describe('Identify Coordinate Editor component', () => {
     beforeEach((done) => {
@@ -21,14 +22,14 @@ describe('Identify Coordinate Editor component', () => {
     });
     it('Test Editor onChange correctly passed and argument mapping', () => {
         const actions = {
-            onChange: () => {}
+            onSubmit: () => {}
         };
-        const spyonChange = expect.spyOn(actions, 'onChange');
-        ReactDOM.render(<Editor onChange={actions.onChange} />, document.getElementById("container"));
-        ReactTestUtils.Simulate.change(document.querySelector('input'), { target: { value: 20} }); // <-- trigger event callback
+        const spyonChange = expect.spyOn(actions, 'onSubmit');
+        ReactDOM.render(<Editor onSubmit={()=>actions.onSubmit({lat: "4", lon: "4"})} />, document.getElementById("container"));
+        ReactTestUtils.Simulate.click(document.querySelector('span > button')); // <-- trigger event callback
         expect(spyonChange).toHaveBeenCalled();
-        expect(spyonChange.calls[0].arguments[0]).toBe('lat');
-        expect(spyonChange.calls[0].arguments[1]).toBe(20);
+        expect(isEmpty(spyonChange.calls[0].arguments[0])).toBe(false);
+        expect(spyonChange.calls[0].arguments[0]).toEqual({lat: "4", lon: "4"});
     });
     it('Test Editor onChangeFormat correctly passed', () => {
         const actions = {
