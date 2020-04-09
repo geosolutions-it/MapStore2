@@ -273,7 +273,7 @@ class MeasureComponent extends React.Component {
         let geomType;
         let coords;
         const features = get(this.props.measurement, 'features', []);
-        const feature = features[this.props.measurement.currentFeature];
+        const feature = features[this.props.measurement.currentFeature || 0];
 
         if (this.props.useSingleFeature) {
             geomType = (get(this.props.measurement, 'feature.geometry.type') || '').toLowerCase();

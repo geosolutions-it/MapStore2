@@ -226,7 +226,7 @@ class CoordinatesEditor extends React.Component {
                     <Col xs={toolbarVisible ? 6 : 12}>
                         <h5><Message msgId={"annotations.editor.title." + this.props.type}/></h5>
                         {this.props.showFeatureSelector ? <Select
-                            value={this.props.currentFeature ?? this.props.features.length}
+                            value={this.props.currentFeature}
                             options={[
                                 ...this.props.features.map((f, i) => {
                                     const values = get(f, 'properties.values', []);

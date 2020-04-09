@@ -206,24 +206,26 @@ export default class MeasurementSupport extends React.Component {
             };
 
             // recalculate segments
-            for (let i = 0; i < coords.length - 1; ++i) {
-                this.createSegmentLengthOverlay();
+            if (!isBearing && !(geomType === 'LineString' && coords.length <= 2)) {
+                for (let i = 0; i < coords.length - 1; ++i) {
+                    this.createSegmentLengthOverlay();
 
-                const segmentLength = isBearing ?
-                    calculateAzimuth(coords[i], coords[i + 1], 'EPSG:4326') :
-                    calculateDistance([coords[i], coords[i + 1]], props.measurement.lengthFormula);
+                    const segmentLength = isBearing ?
+                        calculateAzimuth(coords[i], coords[i + 1], 'EPSG:4326') :
+                        calculateDistance([coords[i], coords[i + 1]], props.measurement.lengthFormula);
 
-                const overlayText = this.formatLengthValue(segmentLength, props.uom, isBearing);
-                last(this.segmentOverlayElements).innerHTML = overlayText;
-                last(this.segmentOverlays).setPosition(midpoint(reprojectedCoords[i], reprojectedCoords[i + 1], true));
-                this.textLabels[this.segmentOverlays.length - 1] = {
-                    text: overlayText,
-                    position: midpoint(coords[i], coords[i + 1], true)
-                };
-                this.segmentLengths[this.segmentOverlays.length - 1] = {
-                    value: segmentLength,
-                    type: isBearing ? 'bearing' : 'length'
-                };
+                    const overlayText = this.formatLengthValue(segmentLength, props.uom, isBearing);
+                    last(this.segmentOverlayElements).innerHTML = overlayText;
+                    last(this.segmentOverlays).setPosition(midpoint(reprojectedCoords[i], reprojectedCoords[i + 1], true));
+                    this.textLabels[this.segmentOverlays.length - 1] = {
+                        text: overlayText,
+                        position: midpoint(coords[i], coords[i + 1], true)
+                    };
+                    this.segmentLengths[this.segmentOverlays.length - 1] = {
+                        value: segmentLength,
+                        type: isBearing ? 'bearing' : 'length'
+                    };
+                }
             }
 
             // recalculate measure values
@@ -530,9 +532,9 @@ export default class MeasurementSupport extends React.Component {
                     const coords = geom.getCoordinates();
                     const lastSegment = [coords[coords.length - 2], coords[coords.length - 1]];
 
-                    if (!this.props.measurement.disableLabels &&
+                    if (!this.props.measurement.disableLabels && !this.props.measurement.bearingMeasureEnabled &&
                         (this.curLineStringLength === undefined || this.curLineStringLength < coords.length)) {
-                        this.createSegmentLengthOverlay(this.props.measurement.bearingMeasureEnabled);
+                        this.createSegmentLengthOverlay();
                         this.curLineStringLength = coords.length;
                     }
 
@@ -542,7 +544,7 @@ export default class MeasurementSupport extends React.Component {
                     output = this.formatLengthValue(length, this.props.uom, this.props.measurement.geomType === 'Bearing');
                     this.tooltipCoord = geom.getLastCoordinate();
 
-                    if (!this.props.measurement.disableLabels) {
+                    if (!this.props.measurement.disableLabels && !this.props.measurement.bearingMeasureEnabled) {
                         const overlayText = this.formatLengthValue(lastSegmentLength, this.props.uom, this.props.measurement.geomType === 'Bearing');
                         last(this.segmentOverlayElements).innerHTML = overlayText;
                         last(this.segmentOverlays).setPosition(midpoint(lastSegment[0], lastSegment[1], true));
@@ -638,21 +640,21 @@ export default class MeasurementSupport extends React.Component {
 
                 if (!this.props.measurement.disableLabels) {
                     // the last overlay is a dummy
-                    this.textLabels.pop();
-                    this.segmentLengths.pop();
-                    this.props.map.removeOverlay(last(this.segmentOverlays));
-                    last(this.segmentOverlayElements).parentNode.removeChild(last(this.segmentOverlayElements));
-                    this.segmentOverlays.pop();
-                    this.segmentOverlayElements.pop();
+                    this.removeLastSegment();
 
-                    // Generate correct textLabels and update segment overlays
-                    for (let i = 0; i < oldCoords.length - 1; ++i) {
-                        const middlePoint = newCoords[100 * i + 50];
-                        if (middlePoint) {
-                            this.textLabels[this.segmentOverlays.length - oldCoords.length + 1 + i].position = middlePoint;
-                            this.segmentOverlays[this.segmentOverlays.length - oldCoords.length + 1 + i].setPosition(
-                                pointObjectToArray(reproject(middlePoint, 'EPSG:4326', getProjectionCode(this.props.map)))
-                            );
+                    // if len is 1 remove the segment label to avoid duplication
+                    if (oldCoords.length <= 2) {
+                        this.removeLastSegment();
+                    } else {
+                        // Generate correct textLabels and update segment overlays
+                        for (let i = 0; i < oldCoords.length - 1; ++i) {
+                            const middlePoint = newCoords[100 * i + 50];
+                            if (middlePoint) {
+                                this.textLabels[this.segmentOverlays.length - oldCoords.length + 1 + i].position = middlePoint;
+                                this.segmentOverlays[this.segmentOverlays.length - oldCoords.length + 1 + i].setPosition(
+                                    pointObjectToArray(reproject(middlePoint, 'EPSG:4326', getProjectionCode(this.props.map)))
+                                );
+                            }
                         }
                     }
                 }
@@ -667,13 +669,6 @@ export default class MeasurementSupport extends React.Component {
                 );
                 this.segmentOverlayElements.splice(this.segmentOverlays.length - 2, 1);
                 this.segmentOverlays.splice(this.segmentOverlays.length - 2, 1);
-            } else if (!this.props.measurement.disableLabels && this.props.measurement.bearingMeasureEnabled) {
-                this.textLabels.pop();
-                this.segmentLengths.pop();
-                this.props.map.removeOverlay(last(this.segmentOverlays));
-                last(this.segmentOverlayElements).parentNode.removeChild(last(this.segmentOverlayElements));
-                this.segmentOverlays.pop();
-                this.segmentOverlayElements.pop();
             }
             this.props.setTextLabels(this.textLabels);
 
@@ -702,6 +697,15 @@ export default class MeasurementSupport extends React.Component {
 
         this.drawInteraction = draw;
         this.measureLayer = this.vector;
+    };
+
+    removeLastSegment = () => {
+        this.textLabels.pop();
+        this.segmentLengths.pop();
+        this.props.map.removeOverlay(last(this.segmentOverlays));
+        last(this.segmentOverlayElements).parentNode.removeChild(last(this.segmentOverlayElements));
+        this.segmentOverlays.pop();
+        this.segmentOverlayElements.pop();
     };
 
     removeDrawInteraction = () => {

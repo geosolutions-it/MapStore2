@@ -46,7 +46,9 @@ const defaultState = {
     },
     lengthFormula: "haversine",
     showLabel: true,
-    showSegmentLengths: true
+    showSegmentLengths: true,
+    currentFeature: 0,
+    features: []
 };
 function measurement(state = defaultState, action) {
     switch (action.type) {
@@ -55,7 +57,7 @@ function measurement(state = defaultState, action) {
             lineMeasureEnabled: action.geomType !== state.geomType && action.geomType === 'LineString',
             areaMeasureEnabled: action.geomType !== state.geomType && action.geomType === 'Polygon',
             bearingMeasureEnabled: action.geomType !== state.geomType && action.geomType === 'Bearing',
-            geomType: action.geomType,
+            geomType: action.geomType === state.geomType ? null : action.geomType,
             features: action.geomType === null ? [] : state.features,
             textLabels: action.geomType === null ? [] : state.textLabels,
             feature: {
@@ -63,7 +65,7 @@ function measurement(state = defaultState, action) {
                     disabled: true
                 }
             },
-            currentFeature: undefined,
+            currentFeature: state.features && state.features.length || 0,
             len: 0,
             area: 0,
             bearing: 0
