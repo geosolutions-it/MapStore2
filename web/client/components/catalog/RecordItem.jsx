@@ -16,7 +16,8 @@ import {
     extractOGCServicesReferences,
     esriToLayer,
     getRecordLinks,
-    recordToLayer
+    recordToLayer,
+    wfsToLayer
 } from '../../utils/CatalogUtils';
 import CoordinatesUtils from '../../utils/CoordinatesUtils';
 import HtmlRenderer from '../misc/HtmlRenderer';
@@ -136,7 +137,7 @@ class RecordItem extends React.Component {
             return null;
         }
         // let's extract the references we need
-        const {wms, wmts, tms} = extractOGCServicesReferences(record);
+        const {wms, wmts, tms ,wfs}  = extractOGCServicesReferences(record);
         // let's extract the esri
         const {esri} = extractEsriReferences(record);
         const background = record && record.background;
@@ -210,6 +211,19 @@ class RecordItem extends React.Component {
                 </AddTMS>
             );
         }
+        if ( wfs ) {
+            buttons.push(<Button
+                tooltipId="catalog.addToMap"
+                key="addWFSLayer"
+                className="square-button-md"
+                bsStyle="primary"
+                bsSize={this.props.buttonSize}
+                onClick={() => {
+                    this.addLayer(wfsToLayer(this.props.record, this.props.layerBaseConfig));
+                }}>
+                <Glyphicon glyph="plus" />
+            </Button>);
+        }
         if (tileProvider) {
             buttons.push(
                 <AddTileProvider
@@ -252,7 +266,7 @@ class RecordItem extends React.Component {
 
     render() {
         const record = this.props.record;
-        const {wms, wmts, tms} = extractOGCServicesReferences(record);
+        const { wms, wmts, tms, wfs } = extractOGCServicesReferences(record);
         const {esri} = extractEsriReferences(record);
         const tileProvider = record && record.type === "tileprovider" && record.provider;
         const background = record && record.background;
@@ -274,7 +288,7 @@ class RecordItem extends React.Component {
                 caption={
                     <div>
                         {!this.props.hideIdentifier && <div className="identifier">{record && record.identifier}</div>}
-                        <div>{!wms && !wmts && !esri && !background && !tms && !tileProvider && <small className="text-danger"><Message msgId="catalog.missingReference"/></small>}</div>
+                        <div>{!wms && !wmts && !esri && !background && !tms && !tileProvider && !wfs && <small className="text-danger"><Message msgId="catalog.missingReference"/></small>}</div>
                         {!this.props.hideExpand &&
                                 <div
                                     className="ms-ruler"
