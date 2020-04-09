@@ -22,6 +22,26 @@
         <ms:Group id="groupid1.groupid2" title="Group2" expanded="false"/>
         <ms:Group id="groupid3" title="Group3" expanded="true"/>
       </ms:GroupList>
+      <ms:CatalogServices xmlns:ms="http://geo-solutions.it/mapstore/context" selectedService="testservice">
+        <ms:Service serviceName="Demo CSW Service">
+          <ms:Attribute name="url" type="string">https://testserver/csw</ms:Attribute>
+          <ms:Attribute name="type" type="string">csw</ms:Attribute>
+          <ms:Attribute name="title" type="string">Demo CSW Service</ms:Attribute>
+          <ms:Attribute name="autoload" type="boolean">true</ms:Attribute>
+          <ms:Attribute name="oldService" type="string">old_service</ms:Attribute>
+        </ms:Service>
+        <ms:Service serviceName="testservices">
+          <ms:Attribute name="url" type="string">https://testserver/testservice/csw</ms:Attribute>
+          <ms:Attribute name="type" type="string">csw</ms:Attribute>
+          <ms:Attribute name="title" type="string">testservice</ms:Attribute>
+          <ms:Attribute name="autoload" type="boolean">false</ms:Attribute>
+          <ms:Attribute name="showAdvancedSettings" type="boolean">true</ms:Attribute>
+          <ms:Attribute name="showTemplate" type="boolean">true</ms:Attribute>
+          <ms:Attribute name="metadataTemplate" type="string">&lt;p>${description}&lt;/p></ms:Attribute>
+          <ms:Attribute name="format" type="string">image/jpeg</ms:Attribute>
+          <ms:Attribute name="jsObject" type="object">{"parameter1":"value&lt;>","parameter2":1,"parameter3":{"parameter4":2},"parameter6":null}</ms:Attribute>
+        </ms:Service>
+      </ms:CatalogServices>
       <ms:center xmlns:ms="http://geo-solutions.it/mapstore/context" x="1.5" y="2.5" crs="EPSG:3857"/>
       <ms:zoom xmlns:ms="http://geo-solutions.it/mapstore/context">7</ms:zoom>
     </Extension>

@@ -819,7 +819,15 @@
         "url": "https://gs-stable.geo-solutions.it/geoserver/csw",
         "type": "csw",
         "title": "GeoSolutions GeoServer CSW",
-        "autoload": true
+        "autoload": true,
+        "jsObject": {
+          "parameter1": "value<>",
+          "parameter2": 1,
+          "parameter3": {
+              "parameter4": 2
+          },
+          "parameter6": null
+        }
       },
       "gs_stable_wms": {
         "url": "https://gs-stable.geo-solutions.it/geoserver/wms",

@@ -795,11 +795,32 @@ MapStore specific:
 - `search` JSON describing a filter that is applied to the layer
 - `DimensionList` contains `Dimension` elements that describe dimensions that cannot be described using standard "Dimension" tag.
 Currently supports dimensions of ***multidim-extension*** type:
+- `CatalogServices` contains `Service` elements that describe services available for use in Catalog.
 
 ```xml
 <ms:DimensionList xmlns:ms="http://geo-solutions.it/mapstore/context">
     <ms:Dimension xmlns:ms="http://geo-solutions.it/mapstore/context" xmlns:xlink="http://www.w3.org/1999/xlink" name="time" type="multidim-extension" xlink:type="simple" xlink:href="https://cloudsdi.geo-solutions.it/geoserver/gwc/service/wmts"/>
 </ms:DimensionList>
+<ms:CatalogServices selectedService="gs_stable_csw">
+    <ms:Service serviceName="gs_stable_csw">
+        <ms:Attribute name="url" type="string">https://gs-stable.geo-solutions.it/geoserver/csw</ms:Attribute>
+        <ms:Attribute name="type" type="string">csw</ms:Attribute>
+        <ms:Attribute name="title" type="string">GeoSolutions GeoServer CSW</ms:Attribute>
+        <ms:Attribute name="autoload" type="boolean">true</ms:Attribute>
+    </ms:Service>
+    <ms:Service serviceName="gs_stable_wms">
+        <ms:Attribute name="url" type="string">https://gs-stable.geo-solutions.it/geoserver/wms</ms:Attribute>
+        <ms:Attribute name="type" type="string">wms</ms:Attribute>
+        <ms:Attribute name="title" type="string">GeoSolutions GeoServer WMS</ms:Attribute>
+        <ms:Attribute name="autoload" type="boolean">false</ms:Attribute>
+    </ms:Service>
+    <ms:Service serviceName="gs_stable_wmts">
+        <ms:Attribute name="url" type="string">https://gs-stable.geo-solutions.it/geoserver/gwc/service/wmts</ms:Attribute>
+        <ms:Attribute name="type" type="string">wmts</ms:Attribute>
+        <ms:Attribute name="title" type="string">GeoSolutions GeoServer WMTS</ms:Attribute>
+        <ms:Attribute name="autoload" type="boolean">false</ms:Attribute>
+    </ms:Service>
+</ms:CatalogServices>
 ```
 
 Note, that during the exporting process, some sort of fallback for dimensions, listed as extensions, is provided inside the standard
