@@ -181,7 +181,7 @@ Allowed placeholder are:
 }
 ```
 
-When the user saves this custom catalog service and clicking on search, he will see only one result, that can be added to the map. (In the future custom provider can provide also variants, where in advanced settings the user can customize some variables, to have multiple results for the given resource).
+When the user saves this custom catalog service and clicks on search, he will see only one result, that can be added on the map: variants are not currently sopported in MapStore for this provider type. 
 
 <img src="../img/catalog/custom_tms_browse.jpg" class="ms-docimage"  style="max-width:400px;"/>
 <p class="ms-doc-caption">Browse custom TMS service. It contains only one result</p>
