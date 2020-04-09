@@ -156,7 +156,7 @@ MapStore allows to add to the map the following services providers:
 <p class="ms-doc-caption">Select provider for TMS. The list of providers contains "custom", "TMS 1.0.0" and other resources</p>
 
 !!! note
-   Because some of these services are not standard, using them in different CRS may cause problems. So please take into account that switching CRS may cause problem when these layers are on the map.
+   Since some of these services are not standard, using them in different CRSs may cause problems. Therefore, keep in mind that [changing CRS](https://mapstore.readthedocs.io/en/latest/user-guide/footer/#crs-selector) can cause problems when these levels are on the map.
 
 #### Custom TMS
 
