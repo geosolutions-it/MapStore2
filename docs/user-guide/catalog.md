@@ -156,7 +156,7 @@ MapStore allows to add to the map the following services providers:
 <p class="ms-doc-caption">Select provider for TMS. The list of providers contains "custom", "TMS 1.0.0" and other resources</p>
 
 !!! note
-   Since some of these services are not standard, using them in different CRSs may cause problems. Therefore, keep in mind that [changing CRS](https://mapstore.readthedocs.io/en/latest/user-guide/footer/#crs-selector) can cause problems when these levels are on the map.
+    Since some of these services are not standard, using them in different CRSs may cause problems. Therefore, keep in mind that [changing CRS](https://mapstore.readthedocs.io/en/latest/user-guide/footer/#crs-selector) can cause problems when these levels are on the map.
 
 #### Custom TMS
 
@@ -181,7 +181,7 @@ Allowed placeholder are:
 }
 ```
 
-When the user saves this custom catalog service and clicks on search, he will see only one result, that can be added on the map: variants are not currently sopported in MapStore for this provider type. 
+When the user saves this custom catalog service and clicks on search, he will see only one result, that can be added on the map: variants are not currently sopported in MapStore for this provider type.
 
 <img src="../img/catalog/custom_tms_browse.jpg" class="ms-docimage"  style="max-width:400px;"/>
 <p class="ms-doc-caption">Browse custom TMS service. It contains only one result</p>
@@ -203,7 +203,7 @@ When saved this, the user will be allowed to browse and add to the map the TMS l
 
 #### TMS Known Services
 
-The other known services are listed as providers below "custom" and "TMS 1.0.0". They are a static list configured inside the application. Selecting one of the provider listed and saving the new catalog service allows to browse al the variants known for that service.
+The other known services are listed as providers below "custom" and "TMS 1.0.0". They are a static list configured inside the application. Selecting one of the provider listed and saving the new catalog service allows to browse al the variants known for that service. For more information about the list of available providers, see the developer documentation about [Tile Providers](../../developer-guide/maps-configuration/#tileprovider)
 
 <img src="../img/catalog/tms_known_edit.jpg" class="ms-docimage"  style="max-width:400px;"/>
 <p class="ms-doc-caption">Select a known TMS provider</p>

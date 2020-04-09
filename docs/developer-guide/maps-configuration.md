@@ -545,6 +545,7 @@ You can configure the `url` as a template, than you can configure options add sp
         "subdomains": [ "a", "b"]
     }
 }
+```
 
 ##### Providers and variants
 
