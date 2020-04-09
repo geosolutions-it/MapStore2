@@ -2466,6 +2466,10 @@
                 "defaultMessage": "Errore sconosciuto",
                 "categoryError": "Creazione della categoria mancante \"{categoryName}\" non riuscita"
             },
+            "loadTemplateErrorNotification": {
+                "forbidden": "Impossibile accedere ai dati del modello, l'utente non dispone delle autorizzazioni necessarie!",
+                "defaultMessage": "Si è verificato un errore imprevisto"
+            },
             "contextNameErrorNotification": {
                 "title": "Nome di contesto errato",
                 "unknownError": "Si è verificato un errore imprevisto"

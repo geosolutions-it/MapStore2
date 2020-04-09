@@ -17,6 +17,7 @@ import BaseFilter from '../misc/Filter';
 import ConfirmDialog from '../misc/ConfirmDialog';
 import emptyState from '../misc/enhancers/emptyState';
 import localizedProps from '../misc/enhancers/localizedProps';
+import FileFormatUtils from '../../utils/FileFormatUtils';
 
 const Filter = localizedProps('filterPlaceholder')(BaseFilter);
 
@@ -77,8 +78,13 @@ export default ({
         preview:
             <div className="map-templates-preview">
                 {template.thumbnail && template.thumbnail !== 'NODATA' ?
-                    <img src={template.thumbnail}/> :
+                    <img src={decodeURIComponent(template.thumbnail)}/> :
                     <Glyphicon glyph="1-map"/>}
+            </div>,
+        infoExtra:
+            template.format && <div className="map-templates-formaticon">
+                <Glyphicon glyph={FileFormatUtils.formatToGlyph[template.format]}/>
+                <span>{FileFormatUtils.formatToText[template.format]}</span>
             </div>,
         tools: <Toolbar
             btnDefaultProps={{

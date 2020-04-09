@@ -2469,6 +2469,10 @@
                 "defaultMessage": "Unknown error",
                 "categoryError": "Creating missing category \"{categoryName}\" failed"
             },
+            "loadTemplateErrorNotification": {
+                "forbidden": "Couldn't access the template data, the user lacks necessary permissions!",
+                "defaultMessage": "Unexpected error occured"
+            },
             "contextNameErrorNotification": {
                 "title": "Bad context name",
                 "unknownError": "Unexpected error occurred"

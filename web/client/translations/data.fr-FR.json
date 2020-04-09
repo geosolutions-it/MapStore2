@@ -2465,6 +2465,10 @@
                 "defaultMessage": "Erreur inconnue",
                 "categoryError": "La création de la catégorie manquante \"{categoryName}\" a échoué"
             },
+            "loadTemplateErrorNotification": {
+                "forbidden": "Impossible d'accéder aux données du modèle, l'utilisateur n'a pas les autorisations nécessaires!",
+                "defaultMessage": "Une erreur inattendue s'est produite"
+            },
             "contextNameErrorNotification": {
                 "title": "Nom de contexte incorrect",
                 "unknownError": "Une erreur inattendue s'est produite"
