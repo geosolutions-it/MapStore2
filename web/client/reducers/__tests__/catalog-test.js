@@ -30,9 +30,8 @@ const serviceNew = {
 };
 const catalog = require('../catalog');
 const {RECORD_LIST_LOADED, ADD_LAYER_ERROR, RESET_CATALOG, RECORD_LIST_LOAD_ERROR, CHANGE_CATALOG_FORMAT, CHANGE_CATALOG_MODE,
-    FOCUS_SERVICES_LIST, CHANGE_TITLE, CHANGE_URL, CHANGE_TYPE, CHANGE_SELECTED_SERVICE, ADD_CATALOG_SERVICE,
-    CHANGE_AUTOLOAD, DELETE_CATALOG_SERVICE, SAVING_SERVICE, CHANGE_METADATA_TEMPLATE, TOGGLE_THUMBNAIL, TOGGLE_TEMPLATE, TOGGLE_ADVANCED_SETTINGS,
-    changeText, changeServiceFormat, setLoading} = require('../../actions/catalog');
+    FOCUS_SERVICES_LIST, CHANGE_TITLE, CHANGE_URL, CHANGE_TYPE, CHANGE_SELECTED_SERVICE, CHANGE_SERVICE_PROPERTY, DELETE_CATALOG_SERVICE, SAVING_SERVICE, CHANGE_METADATA_TEMPLATE, TOGGLE_THUMBNAIL, TOGGLE_TEMPLATE, TOGGLE_ADVANCED_SETTINGS,
+    addCatalogService, changeText, changeServiceFormat, setLoading} = require('../../actions/catalog');
 const {MAP_CONFIG_LOADED} = require('../../actions/config');
 const sampleRecord = {
     boundingBox: {
@@ -108,9 +107,9 @@ describe('Test the catalog reducer', () => {
         expect(state.loadingError).toBe(null);
         expect(state.searchOptions).toBe(null);
     });
-    it('CHANGE_AUTOLOAD', () => {
+    it('CHANGE_SERVICE_PROPERTY', () => {
         let autoload = true;
-        const state = catalog({newService: {}}, {type: CHANGE_AUTOLOAD, autoload});
+        const state = catalog({newService: {}}, {type: CHANGE_SERVICE_PROPERTY, property: "autoload", value: true});
         expect(state.newService.autoload).toBe(autoload);
     });
     it('SAVING_SERVICE', () => {
@@ -196,21 +195,20 @@ describe('Test the catalog reducer', () => {
         const state2 = catalog({selectedService: serviceName}, {type: CHANGE_SELECTED_SERVICE, service: serviceName});
         expect(state2.selectedService).toBe(serviceName);
     });
-    it('ADD_CATALOG_SERVICE', () => {
-        const state = catalog({}, {type: ADD_CATALOG_SERVICE, service});
+    it('addCatalogService', () => {
+        const state = catalog({ selectedService: "X"}, addCatalogService({service}));
         expect(state.result).toBe(null);
         expect(state.loadingError).toBe(null);
         expect(state.layerError).toBe(null);
-        expect(state.selectedService).toBe(title);
+        expect(state.selectedService).toBe(Object.keys(state.services)[0]);
 
         const state2 = catalog({services: {
             [title]: service
-        }}, {type: ADD_CATALOG_SERVICE, service: serviceNew});
+        }
+        }, addCatalogService(serviceNew));
         expect(Object.keys(state2.services).length).toBe(2);
+        expect(Object.keys(state2.services)[1]).toBe(state2.selectedService);
         service.title = "modified";
-        const state3 = catalog(state2, {type: ADD_CATALOG_SERVICE, service});
-        expect(Object.keys(state3.services).length).toBe(2);
-        expect(state3.services.modified.title).toBe("modified");
     });
     it('default reducer ', () => {
         const state = catalog({mode: "edit"}, {type: "default"});

@@ -7,13 +7,14 @@
  */
 
 const assign = require('object-assign');
-const {head, isArray, isString, castArray, isObject, sortBy, uniq, includes} = require('lodash');
+const {head, isArray, isString, castArray, isObject, sortBy, uniq, includes, get} = require('lodash');
 const urlUtil = require('url');
 const CoordinatesUtils = require('./CoordinatesUtils');
 const ConfigUtils = require('./ConfigUtils');
 const LayersUtils = require('./LayersUtils');
 const LocaleUtils = require('./LocaleUtils');
 const WMTSUtils = require('./WMTSUtils');
+const { cleanAuthParamsFromURL } = require('./SecurityUtils');
 
 const WMS = require('../api/WMS');
 
@@ -325,6 +326,37 @@ const converters = {
         }
         return null;
     },
+    tms: (data, options = {}) => {
+        if (data && data.records) {
+            const isTMS100 = options.service && options.service.provider === "tms";
+            if (isTMS100) {
+                return data.records.map(record => ({
+                    title: record.title,
+                    tileMapUrl: record.href,
+                    description: `${record.srs}${record.format ? ", " + record.format : ""}`,
+                    tmsUrl: options.tmsUrl,
+                    references: [{
+                        type: "OGC:TMS",
+                        version: "1.0.0",
+                        url: options.url
+                    }]
+                }));
+            }
+            // custom or static tile provider
+            return data.records.map(record => {
+                return {
+                    title: record.title || record.provider,
+                    url: record.url,
+                    attribution: record.attribution,
+                    options: record.options,
+                    provider: record.provider, // "ProviderName.VariantName"
+                    type: "tileprovider",
+                    references: []
+                };
+            });
+        }
+        return null;
+    },
     backgrounds: (records) => {
         if (records && records.records) {
             return records.records.map(record => {
@@ -365,7 +397,9 @@ const extractOGCServicesReferences = (record = { references: [] }) => ({
     wms: head(record.references.filter(reference => reference.type && (reference.type === "OGC:WMS"
         || reference.type.indexOf("OGC:WMS") > -1 && reference.type.indexOf("http-get-map") > -1))),
     wmts: head(record.references.filter(reference => reference.type && (reference.type === "OGC:WMTS"
-        || reference.type.indexOf("OGC:WMTS") > -1 && reference.type.indexOf("http-get-map") > -1)))
+        || reference.type.indexOf("OGC:WMTS") > -1 && reference.type.indexOf("http-get-map") > -1))),
+    tms: head(record.references.filter(reference => reference.type && (reference.type === "OGC:TMS"
+        || reference.type.indexOf("OGC:TMS") > -1)))
 });
 const extractEsriReferences = (record = { references: [] }) => ({
     esri: head(record.references.filter(reference => reference.type && (reference.type === "ESRI:SERVER"
@@ -519,6 +553,64 @@ const CatalogUtils = {
                 }
             },
             ...baseConfig
+        };
+
+    },
+    /**
+     * tmsToLayer convert Catalog record into a TMS layer for MapStore.
+     * @param {object} record the catalog record
+     * @param object TileMapService a JSON representation of TileMapService resource, see https://wiki.osgeo.org/wiki/Tile_Map_Service_Specification
+     * @param service the original catalog service
+     */
+    tmsToLayer: ({ tileMapUrl }, { TileMap = {} }, { forceDefaultTileGrid }) => {
+        const { Title, Abstract, SRS, BoundingBox = {}, Origin, TileFormat = {}, TileSets } = TileMap;
+        const { version, tilemapservice } = TileMap.$;
+        const { minx, miny, maxx, maxy } = get(BoundingBox, '$', {});
+        const {x, y} = get(Origin, "$");
+        const { width: tileWidth, height: tileHeight, "mime-type": format, extension} = get(TileFormat, "$", {});
+        const tileSize = [parseFloat(tileWidth), parseFloat(tileHeight, 10)];
+        const tileSets = castArray(get(TileSets, "TileSet", []).map(({ $ }) => $)).map(({ href, order, "units-per-pixel": resolution}) => ({
+            href: cleanAuthParamsFromURL(href),
+            order: parseFloat(order),
+            resolution: parseFloat(resolution)
+        }));
+        const profile = get(TileSets, "profile");
+        return {
+            title: Title,
+            visibility: true,
+            hideErrors: true, // TMS can rise a lot of errors of tile not found
+            name: Title,
+            allowedSRS: {[SRS]: true},
+            description: Abstract,
+            srs: SRS,
+            version,
+            tileMapService: tilemapservice ? cleanAuthParamsFromURL(tilemapservice) : undefined,
+            type: 'tms',
+            profile,
+            tileMapUrl,
+            // option to force to use the TileGrid of the projection, instead of the one provided by the service. Userful for some GeoServer instances that use default GridSet but provide wrong origin and resolution
+            forceDefaultTileGrid,
+            bbox: BoundingBox && {crs: SRS, bounds: {minx: parseFloat(minx), miny: parseFloat(miny), maxx: parseFloat(maxx), maxy: parseFloat(maxy)}},
+            tileSets,
+            origin: {x: parseFloat(x), y: parseFloat(y)},
+            format,
+            tileSize,
+            extension
+        };
+    },
+    /**
+     * Converts a record into a layer
+     */
+    tileProviderToLayer: (record) => {
+        return {
+            type: "tileprovider",
+            visibility: true,
+            url: record.url,
+            title: record.title,
+            attribution: record.attribution,
+            options: record.options,
+            provider: record.provider, // "ProviderName.VariantName"
+            name: record.provider
         };
 
     }
