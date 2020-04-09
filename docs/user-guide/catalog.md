@@ -137,7 +137,7 @@ Inserting this text and saving, the result should be that each layer will show i
 
 WMS and WMTS Services are [OGC Standards](https://www.ogc.org/standards) protocol for publishing maps (and tile maps) on the Internet. The user can add these kind of services as catalogs to browse and add to the map the layers published using these protocols.
 
-In **General Settings** the user can set the title he wants to assign to this service and the URL of the service to configure the service.
+In **General Settings** the user can set the title he wants to assign to this service and the URL of the service to configure the service and its URL.
 
 In **Advanced Settings** the user can set, other than the standard options, also:
 
