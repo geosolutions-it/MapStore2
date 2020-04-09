@@ -145,7 +145,7 @@ In **Advanced Settings** the user can set, other than the standard options, also
 
 ### TMS Catalog
 
-TMS Catalog type includes some not official/not standard protocol for serving maps as tiles (i.e. splitting map up into a pyramid of images at multiple zoom levels).
+The Tile Map Service (TMS) specifications include some not official/not standard protocol for serving maps as tiles (i.e. splitting map up into a pyramid of images at multiple zoom levels).
 MapStore allows to add to the map the following services providers:
 
 * Custom TMS service, specifying the URL template for the tiles.
