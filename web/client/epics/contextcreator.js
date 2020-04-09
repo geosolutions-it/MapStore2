@@ -248,7 +248,7 @@ export const editTemplateEpic = (action$, store) => action$
     .ofType(EDIT_TEMPLATE)
     .switchMap(({id}) => {
         const state = store.getState();
-        const template = get(newContextSelector(state), 'templates', []).map(t => t.id === id);
+        const template = find(get(newContextSelector(state), 'templates', []), t => t.id === id) || {};
 
         return (id ? Rx.Observable.defer(() => Api.getData(id)) : Rx.Observable.of(null))
             .switchMap(data => Rx.Observable.of(

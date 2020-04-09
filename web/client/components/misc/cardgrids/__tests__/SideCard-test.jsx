@@ -130,4 +130,20 @@ describe('SideCard component', () => {
         expect(descClassName).toExist();
         expect(previewClassName).toExist();
     });
+    it('SideCard with infoExtra', () => {
+        ReactDOM.render(<SideCard caption="caption" description="desc" title="title" infoExtra={<div className="side-card-test-infoextra"/>}/>,
+            document.getElementById("container"));
+        const container = document.getElementById('container');
+        let body = container.querySelector('.ms-body');
+        let titleClassName = container.querySelector('.mapstore-side-card-title');
+        let descClassName = container.querySelector('.mapstore-side-card-desc');
+
+        const sideCardLeftContainer = container.getElementsByClassName('mapstore-side-card-left-container')[0];
+        expect(sideCardLeftContainer).toExist();
+        let infoExtraClassName = sideCardLeftContainer.querySelector('.side-card-test-infoextra');
+        expect(body).toNotExist();
+        expect(titleClassName).toExist();
+        expect(descClassName).toExist();
+        expect(infoExtraClassName).toExist();
+    });
 });
