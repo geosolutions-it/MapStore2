@@ -23,7 +23,7 @@ import {SAVE_CONTEXT, SAVE_TEMPLATE, LOAD_CONTEXT, LOAD_TEMPLATE, DELETE_TEMPLAT
     contextNameChecked, setCreationStep, contextLoadError, loading, mapViewerLoad, mapViewerLoaded, setEditedPlugin,
     setEditedCfg, setParsedCfg, validateEditedCfg, setValidationStatus, savePluginCfg, enableMandatoryPlugins,
     enablePlugins, disablePlugins, setCfgError, changePluginsKey, changeTemplatesKey, setEditedTemplate, setTemplates, pluginUploaded,
-    pluginUploading, pluginUninstalled, pluginUninstalling, loadExtensions} from '../actions/contextcreator';
+    pluginUploading, pluginUninstalled, pluginUninstalling, loadExtensions, uploadPluginError} from '../actions/contextcreator';
 import {newContextSelector, resourceSelector, creationStepSelector, mapConfigSelector, mapViewerLoadedSelector, contextNameCheckedSelector,
     editedPluginSelector, editedCfgSelector, validationStatusSelector, parsedCfgSelector, cfgErrorSelector,
     pluginsSelector, initialEnabledPluginsSelector} from '../selectors/contextcreator';
@@ -301,12 +301,7 @@ export const uploadPluginEpic = (action$) => action$
             .let(wrapStartStop(
                 pluginUploading(true, files.map(f => f.name)),
                 pluginUploading(false, files.map(f => f.name)),
-                () => Rx.Observable.of(error({
-                    title: "notification.error",
-                    message: "context.errors.plugins.upload",
-                    autoDismiss: 6,
-                    position: "tc"
-                }))
+                (e) => Rx.Observable.of(uploadPluginError(files, e))
             ))
     );
 

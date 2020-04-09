@@ -52,6 +52,8 @@ export const CONTEXT_SAVED = 'CONTEXTCREATOR:CONTEXT_SAVED';
 export const SAVE_CONTEXT = 'CONTEXTCREATOR:SAVE_CONTEXT';
 export const ENABLE_UPLOAD_PLUGIN = 'CONTEXTCREATOR:ENABLE_UPLOAD_PLUGIN';
 export const UPLOAD_PLUGIN = 'CONTEXTCREATOR:UPLOAD_PLUGIN';
+export const ADD_PLUGIN_TO_UPLOAD = 'CONTEXTCREATOR:ADD_PLUGIN_TO_UPLOAD';
+export const REMOVE_PLUGIN_TO_UPLOAD = 'CONTEXTCREATOR:REMOVE_PLUGIN_TO_UPLOAD';
 export const UPLOADING_PLUGIN = 'CONTEXTCREATOR:UPLOADING_PLUGIN';
 export const PLUGIN_UPLOADED = 'CONTEXTCREATOR:PLUGIN_UPLOADED';
 export const UPLOAD_PLUGIN_ERROR = 'CONTEXTCREATOR:UPLOAD_PLUGIN_ERROR';
@@ -407,6 +409,25 @@ export const enableUploadPlugin = (enable = false) => ({
 });
 
 /**
+ * Adds a new plugin to upload in the list.
+ * @param {array} files
+ */
+export const addPluginToUpload = (files) => ({
+    type: ADD_PLUGIN_TO_UPLOAD,
+    files
+});
+
+/**
+ * Removes a plugin from the upload list.
+ * @param {int} index
+ */
+export const removePluginToUpload = (index) => ({
+    type: REMOVE_PLUGIN_TO_UPLOAD,
+    index
+});
+
+
+/**
  * Starts the plugin upload workflow
  */
 export const uploadPlugin = (files) => ({
@@ -425,9 +446,10 @@ export const uninstallPlugin = (plugin) => ({
 /**
  * Receives upload error result
  */
-export const uploadPluginError = (files) => ({
+export const uploadPluginError = (files, error) => ({
     type: UPLOAD_PLUGIN_ERROR,
-    files
+    files,
+    error
 });
 
 /**

@@ -2398,7 +2398,11 @@
                 "uploadMissingPluginError": "No hay complementos definidos en index.json",
                 "uploadMissingBundleError": "No hay paquete de JavaScript en el archivo cargado",
                 "uploadTooManyBundlesError": "Demasiados paquetes de JavaScript en el paquete zip",
-                "confirmRemovePlugin": "Are you sure you want to remove the extension?",
+                "confirmRemovePlugin": "¿Está seguro de que desea eliminar la extensión?",
+                "cancelUpload": "Cancelar",
+                "instalar": "Instalar",
+                "uploadError": "Error al instalar: ",
+                "uploadOk": "La extensión se ha instalado correctamente",
                 "tooltips": {
                     "enableUserPlugin": "Habilitar la selección del complemento actual para el usuario",
                     "disableUserPlugin": "Desactiva la selección del complemento actual para el usuario",
