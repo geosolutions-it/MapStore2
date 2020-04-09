@@ -29,7 +29,7 @@ import { CHANGE_MOUSE_POINTER, CLICK_ON_MAP, zoomToPoint } from '../actions/map'
 import { closeAnnotations } from '../actions/annotations';
 import { MAP_CONFIG_LOADED } from '../actions/config';
 import {addPopup, cleanPopups, removePopup} from '../actions/mapPopups';
-import { CHANGE_MOUSE_POSITION, CHANGE_MOUSE_POSITION_STATE } from '../actions/mousePosition';
+import { CHANGE_FLOATING_IDENTIFY_STATE, CHANGE_FLOATING_IDENTIFY_MOUSE_POSITION } from '../actions/mousePosition';
 import { updateMapLayout } from '../actions/maplayout';
 import { stopGetFeatureInfoSelector, identifyOptionsSelector,
     clickPointSelector, clickLayerSelector,
@@ -278,10 +278,10 @@ export default {
             .filter(() => isMapPopup(getState()))
             .mapTo(cleanPopups()),
     /**
-     * Triggers data load on CHANGE_MOUSE_POSITION events
+     * Triggers data load on CHANGE_FLOATING_IDENTIFY_MOUSE_POSITION events
      */
     changeMousePositionEpic: (action$, {getState}) =>
-        action$.ofType(CHANGE_MOUSE_POSITION)
+        action$.ofType(CHANGE_FLOATING_IDENTIFY_MOUSE_POSITION)
             .debounceTime(500)
             .switchMap(({position, layer}) => {
                 const arePopupsPresent = getState().mapPopups.popups.length;
@@ -292,10 +292,10 @@ export default {
                     .merge(Rx.Observable.of(addPopup(uuid(), { component: IDENTIFY_POPUP, maxWidth: 600, position: {  coordinates: position ? position.rawPos : []}})));
             }),
     /**
-     * Triggers remove popup on CHANGE_MOUSE_POSITION_STATE
+     * Triggers remove popup on CHANGE_FLOATING_IDENTIFY_STATE
      */
     changeMousePositionStateEpic: (action$, {getState}) =>
-        action$.ofType(CHANGE_MOUSE_POSITION_STATE)
+        action$.ofType(CHANGE_FLOATING_IDENTIFY_STATE)
             .switchMap(({enabled}) => {
                 let observable = Rx.Observable.empty();
                 const popups = getState().mapPopups.popups;
@@ -315,7 +315,7 @@ export default {
         action$.ofType(UPDATE_CENTER_TO_MARKER)
             .switchMap(() => {
                 let observable = Rx.Observable.empty();
-                if (getState().mousePosition.enabled) {
+                if (getState().mousePosition.floatingIdentifyEnabled) {
                     observable = Rx.Observable.of(updateMapLayout({layer: {right: 0}}));
                 }
                 return observable;

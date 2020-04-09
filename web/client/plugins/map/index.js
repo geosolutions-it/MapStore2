@@ -12,7 +12,7 @@ const {createSelector} = require('reselect');
 const {creationError, changeMapView, clickOnMap} = require('../../actions/map');
 const {removePopup} = require('../../actions/mapPopups');
 const {layerLoading, layerLoad, layerError} = require('../../actions/layers');
-const {changeMousePosition} = require('../../actions/mousePosition');
+const {changeMousePosition, changeFloatingIdentifyMousePosition} = require('../../actions/mousePosition');
 const {changeMeasurementState, changeGeometry, resetGeometry, updateMeasures} = require('../../actions/measurement');
 const {measurementSelector} = require('../../selectors/measurement');
 const {changeSelectionState} = require('../../actions/selection');
@@ -41,10 +41,12 @@ module.exports = (mapType, actions) => {
         onLayerLoading: layerLoading,
         onLayerLoad: layerLoad,
         onLayerError: layerError,
-        onWarning: warning
+        onWarning: warning,
+        changeFloatingIdentifyMousePosition
     }, actions), (stateProps, dispatchProps, ownProps) => {
         return assign({}, ownProps, stateProps, assign({}, dispatchProps, {
-            onMouseMove: stateProps.mousePosition.enabled ? dispatchProps.onMouseMove : () => {}
+            onMouseMove: stateProps.mousePosition.enabled && dispatchProps.onMouseMove,
+            onFloatingMouseMove: stateProps.mousePosition.floatingIdentifyEnabled && dispatchProps.changeFloatingIdentifyMousePosition
         }));
     })(components.LMap);
 

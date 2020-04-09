@@ -20,7 +20,7 @@ const { generalInfoFormatSelector, clickPointSelector, indexSelector, responsesS
 
 const { hideMapinfoMarker, showMapinfoRevGeocode, hideMapinfoRevGeocode, clearWarning, toggleMapInfoState, changeMapInfoFormat, updateCenterToMarker, closeIdentify, purgeMapInfoResults, featureInfoClick, changeFormat, toggleShowCoordinateEditor, changePage, toggleHighlightFeature} = require('../actions/mapInfo');
 const { changeMousePointer, zoomToExtent} = require('../actions/map');
-const { changeMousePositionState } = require("../actions/mousePosition");
+const { changeFloatingIdentifyState } = require("../actions/mousePosition");
 
 
 const {currentLocaleSelector} = require('../selectors/locale');
@@ -56,7 +56,7 @@ const selector = createStructuredSelector({
     showCoordinateEditor: (state) => state.mapInfo && state.mapInfo.showCoordinateEditor,
     showEmptyMessageGFI: state => showEmptyMessageGFISelector(state),
     isCesium,
-    mousePositionEnabled: (state) => state.mousePosition.enabled
+    floatingIdentifyEnabled: (state) => state.mousePosition.floatingIdentifyEnabled
 });
 // result panel
 
@@ -197,7 +197,7 @@ const IdentifyPlugin = compose(
         ...ownProps,
         ...stateProps,
         ...dispatchProps,
-        enabled: stateProps.enabled && (stateProps.isCesium || !ownProps.showInMapPopup) && !stateProps.mousePositionEnabled
+        enabled: stateProps.enabled && (stateProps.isCesium || !ownProps.showInMapPopup) && !stateProps.floatingIdentifyEnabled
     })),
     // highlight support
     compose(
@@ -229,9 +229,9 @@ const FeatureInfoFormatSelector = connect((state) => ({
 })(require("../components/misc/FeatureInfoFormatSelector"));
 
 const FeatureInfoTriggerSelector = connect((state) => ({
-    trigger: state.mousePosition.enabled ? 'hover' : 'click'
+    trigger: state.mousePosition.floatingIdentifyEnabled ? 'hover' : 'click'
 }), {
-    onTriggerChange: (event) => event.target.value === 'hover' ? changeMousePositionState(true) : changeMousePositionState(false)
+    onTriggerChange: (event) => event.target.value === 'hover' ? changeFloatingIdentifyState(true) : changeFloatingIdentifyState(false)
 })(require("../components/misc/FeatureInfoTriggerSelector"));
 
 module.exports = {
