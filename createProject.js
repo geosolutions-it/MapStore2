@@ -31,8 +31,8 @@ const paramsDesc = [{
 }, {
     label: 'Repository URL: ',
     name: 'repoURL',
-    "default": '',
-    validate: (val) => val !== ''
+    "default": undefined,
+    validate: (val) => true
 }, {
     label: 'Output folder: ',
     name: 'outFolder',
@@ -50,7 +50,10 @@ function doWork(params) {
         version: params.projectVersion,
         description: params.projectDescription || params.projectName,
         repository: params.repoURL,
-        scripts: require('./utility/projects/projectScripts.json')
+        scripts: require('./utility/projects/projectScripts.json'),
+        dependencies: {
+            "mapstore2": "file:MapStore2"
+        }
     };
 
     const projectFolder = './project/' + params.projectType;
