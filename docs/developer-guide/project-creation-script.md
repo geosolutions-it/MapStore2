@@ -72,10 +72,10 @@ In addition to static and templates, the following files from the root MapStore 
 
 ## Update MapStore2 version in a project
 
-To update MapStore2 version enter in the MapStore2 folder and pull desired git version.
+To update MapStore2 version enter the MapStore2 folder and pull desired git version.
 If MapStore2 devDependencies have been changed you can manually update these in the project package.json file or run the script updateDevDeps
 ```sh
-npm run ./updateDevDeps.js
+npm run updateDevDeps
 ```
 The script will automatically copy the devDependencies from MapStore2 package.json to the project package.json file. All the project existing devDependencies will be overwritten.
 
