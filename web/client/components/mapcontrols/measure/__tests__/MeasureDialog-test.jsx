@@ -77,7 +77,7 @@ describe("test the MeasureDialog", () => {
         expect(mc).toExist();
         const dom = ReactDOM.findDOMNode(mc);
         const btnGroups = dom.getElementsByClassName('btn-group');
-        expect(btnGroups.length).toBe(2);
+        expect(btnGroups.length).toBe(3);
 
         const dialog = document.getElementById('measure-dialog');
         expect(dialog).toNotExist();
@@ -117,7 +117,7 @@ describe("test the MeasureDialog", () => {
         expect(mc).toExist();
         const dom = ReactDOM.findDOMNode(mc);
         const btnGroups = dom.getElementsByClassName('btn-group');
-        expect(btnGroups.length).toBe(2);
+        expect(btnGroups.length).toBe(3);
 
         const dialog = document.getElementById('measure-dialog');
         expect(dialog).toNotExist();

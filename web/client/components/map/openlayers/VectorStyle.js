@@ -317,6 +317,9 @@ export const getStyle = (options, isDrawing = false, textValues = []) => {
                 .then(style => olStyleParser.writeStyle(style));
         });
     }
+    if (options.style && options.style.format === 'geostyler') {
+        return olStyleParser.writeStyle(options.style.styleObj);
+    }
     const style = getStyleLegacy(options, isDrawing, textValues);
     if (options.asPromise) {
         return new Promise((resolve) => {

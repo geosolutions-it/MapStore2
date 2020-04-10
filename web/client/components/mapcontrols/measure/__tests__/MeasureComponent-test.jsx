@@ -6,6 +6,7 @@
  * LICENSE file in the root directory of this source tree.
 */
 const expect = require('expect');
+const assign = require('object-assign');
 
 const React = require('react');
 const ReactDOM = require('react-dom');
@@ -13,8 +14,6 @@ const dragDropContext = require('react-dnd').DragDropContext;
 const testBackend = require('react-dnd-test-backend');
 const MeasureComponent = dragDropContext(testBackend)(require('../MeasureComponent'));
 const TestUtils = require('react-dom/test-utils');
-
-const assign = require('object-assign');
 
 describe("test the MeasureComponent", () => {
     beforeEach((done) => {
@@ -42,7 +41,7 @@ describe("test the MeasureComponent", () => {
         expect(domNode).toExist();
         const domButtons = domNode.getElementsByTagName('button');
         expect(domButtons).toExist();
-        expect(domButtons.length).toBe(3);
+        expect(domButtons.length).toBe(4);
     });
 
 
@@ -75,7 +74,7 @@ describe("test the MeasureComponent", () => {
         expect(cmpDom).toExist();
 
         const buttons = cmpDom.getElementsByTagName('button');
-        expect(buttons.length).toBe(3);
+        expect(buttons.length).toBe(4);
 
         const lineBtn = buttons.item(0);
         lineBtn.click();
@@ -103,7 +102,7 @@ describe("test the MeasureComponent", () => {
         expect(cmpDom).toExist();
 
         const buttons = cmpDom.getElementsByTagName('button');
-        expect(buttons.length).toBe(3);
+        expect(buttons.length).toBe(4);
 
         const areaBtn = buttons.item(1);
         areaBtn.click();
@@ -131,7 +130,7 @@ describe("test the MeasureComponent", () => {
         expect(cmpDom).toExist();
 
         const buttons = cmpDom.getElementsByTagName('button');
-        expect(buttons.length).toBe(3);
+        expect(buttons.length).toBe(4);
 
         const bearingBtn = buttons.item(2);
         bearingBtn.click();
@@ -175,14 +174,14 @@ describe("test the MeasureComponent", () => {
         let measurement = {
             lineMeasureEnabled: false,
             areaMeasureEnabled: false,
-            bearingMeasureEnabled: false,
+            bearingMeasureEnabled: true,
             geomType: 'LineString',
             len: 0,
             area: 0,
             bearing: 0
         };
         let cmp = ReactDOM.render(
-            <MeasureComponent measurement={measurement} bearingMeasureEnabled/>, document.getElementById("container")
+            <MeasureComponent measurement={measurement} bearingMeasureEnabled bearingMeasureValueEnabled/>, document.getElementById("container")
         );
         expect(cmp).toExist();
 
@@ -190,25 +189,26 @@ describe("test the MeasureComponent", () => {
         expect(bearingSpan).toExist();
 
         cmp = ReactDOM.render(
-            <MeasureComponent measurement={{...measurement, bearing: 45}} bearingMeasureEnabled/>, document.getElementById("container")
+            <MeasureComponent measurement={{...measurement, bearing: 45}} bearingMeasureEnabled bearingMeasureValueEnabled/>, document.getElementById("container")
         );
         expect(bearingSpan.innerHTML).toBe("<h3><strong>N 45° 0' 0'' E</strong></h3>");
 
         cmp = ReactDOM.render(
-            <MeasureComponent measurement={assign({}, measurement, {bearing: 135})} bearingMeasureEnabled/>, document.getElementById("container")
+            <MeasureComponent measurement={assign({}, measurement, {bearing: 135})} bearingMeasureEnabled bearingMeasureValueEnabled/>, document.getElementById("container")
         );
         expect(bearingSpan.innerHTML).toBe("<h3><strong>S 45° 0' 0'' E</strong></h3>");
 
         cmp = ReactDOM.render(
-            <MeasureComponent measurement={assign({}, measurement, {bearing: 225})} bearingMeasureEnabled/>, document.getElementById("container")
+            <MeasureComponent measurement={assign({}, measurement, {bearing: 225})} bearingMeasureEnabled bearingMeasureValueEnabled/>, document.getElementById("container")
         );
         expect(bearingSpan.innerHTML).toBe("<h3><strong>S 45° 0' 0'' W</strong></h3>");
 
         cmp = ReactDOM.render(
-            <MeasureComponent measurement={assign({}, measurement, {bearing: 315})} bearingMeasureEnabled/>, document.getElementById("container")
+            <MeasureComponent measurement={assign({}, measurement, {bearing: 315})} bearingMeasureEnabled bearingMeasureValueEnabled/>, document.getElementById("container")
         );
         expect(bearingSpan.innerHTML).toBe("<h3><strong>N 45° 0' 0'' W</strong></h3>");
     });
+
     it('test uom format area and lenght', () => {
         let measurement = {
             lineMeasureEnabled: false,
@@ -227,6 +227,7 @@ describe("test the MeasureComponent", () => {
                 }}
                 measurement={measurement}
                 lineMeasureEnabled
+                lineMeasureValueEnabled
             />, document.getElementById("container")
         );
         expect(cmp).toExist();
@@ -241,6 +242,7 @@ describe("test the MeasureComponent", () => {
             <MeasureComponent
                 lengthLabel="Length"
                 lineMeasureEnabled
+                lineMeasureValueEnabled
                 uom={{
                     length: {unit: 'km', label: 'km'},
                     area: {unit: 'sqkm', label: 'km²'}
@@ -252,6 +254,7 @@ describe("test the MeasureComponent", () => {
         cmp = ReactDOM.render(
             <MeasureComponent
                 areaMeasureEnabled
+                areaMeasureValueEnabled
                 uom={{
                     length: {unit: 'km', label: 'km'},
                     area: {unit: 'sqkm', label: 'km²'}
@@ -323,6 +326,7 @@ describe("test the MeasureComponent", () => {
                     area: {unit: 'sqkm', label: 'km²'}
                 }}
                 measurement={measurement}
+                useSingleFeature
                 showCoordinateEditor
                 format="decimal"
                 isDraggable

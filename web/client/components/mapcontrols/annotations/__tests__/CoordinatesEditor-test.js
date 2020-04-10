@@ -90,6 +90,7 @@ describe("test the CoordinatesEditor Panel", () => {
             <CoordinatesEditor
                 {...testHandlers}
                 isMouseEnterEnabled
+                showFeatureSelector={false}
                 type="Polygon"
                 format="decimal"
                 components={components}
@@ -109,8 +110,7 @@ describe("test the CoordinatesEditor Panel", () => {
         expect(spyOnChange).toHaveBeenCalledWith([
             { lat: 15, lon: 10 },
             {lat: 6, lon: 6 },
-            {lat: 6, lon: 6 },
-            { lat: 15, lon: 10 }
+            {lat: 6, lon: 6 }
         ], undefined, undefined, undefined);
 
         input.value = "";
@@ -122,8 +122,7 @@ describe("test the CoordinatesEditor Panel", () => {
         expect(spyOnChange).toHaveBeenCalledWith([
             { lat: "", lon: 10 },
             { lat: 6, lon: 6 },
-            { lat: 6, lon: 6 },
-            { lat: "", lon: 10 }
+            { lat: 6, lon: 6 }
         ], undefined, undefined, undefined);
     });
 

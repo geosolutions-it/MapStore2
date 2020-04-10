@@ -606,7 +606,10 @@
             "showLabel": "Zeige Bezeichnungsetikett",
             "addAsAnnotation": "Als Anmerkung hinzufügen",
             "newMeasure": "Neue Anmerkung",
-            "selectTool": "Wählen Sie ein Messwerkzeug aus"
+            "selectTool": "Wählen Sie ein Messwerkzeug aus",
+            "exportToGeoJSON": "Export nach GeoJSON",
+            "resetTooltip": "Klare Maßnahmen",
+            "addAsLayer": "Als Ebene hinzufügen"
         },
         "search":{
             "decimal": "Dezimal",
@@ -995,7 +998,8 @@
                 "notValidMarker": "Fügen Sie eine gültige Koordinate ein (+|- 90° lat, +|-180° lon)",
                 "notValidPolyline": "Alle Koordinaten müssen gültig sein (+|- 90° lat, +|-180° lon)",
                 "notValidText": "Fügen Sie einen Textwert und eine gültige Koordinate ein (+|- 90° lat, +|-180° lon)",
-                "notValidCircle": "Geben Sie einen Radius und eine gültige Koordinate ein (+|- 90° lat, +|-180° lon)"
+                "notValidCircle": "Geben Sie einen Radius und eine gültige Koordinate ein (+|- 90° lat, +|-180° lon)",
+                "newFeature": "Neu"
             }
         },
         "user":{
