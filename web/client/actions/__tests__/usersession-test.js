@@ -9,7 +9,8 @@
 import expect from 'expect';
 import {SAVE_USER_SESSION, USER_SESSION_SAVED, LOAD_USER_SESSION, USER_SESSION_LOADED, USER_SESSION_LOADING,
     REMOVE_USER_SESSION, USER_SESSION_REMOVED, SAVE_MAP_CONFIG, USER_SESSION_START_SAVING, USER_SESSION_STOP_SAVING,
-    saveUserSession, userSessionSaved, loadUserSession, userSessionLoaded, loading,
+    SET_USER_SESSION,
+    saveUserSession, userSessionSaved, loadUserSession, userSessionLoaded, loading, setUserSession,
     removeUserSession, userSessionRemoved, saveMapConfig, userSessionStartSaving, userSessionStopSaving} from "../usersession";
 
 describe('Test correctness of the usersession actions', () => {
@@ -60,6 +61,14 @@ describe('Test correctness of the usersession actions', () => {
     it('user session stop saving', () => {
         const action = userSessionStopSaving();
         expect(action.type).toBe(USER_SESSION_STOP_SAVING);
+    });
+    it('set user session', () => {
+        const action = setUserSession({
+            map: {}
+        });
+        expect(action.type).toBe(SET_USER_SESSION);
+        expect(action.session).toExist();
+        expect(action.session.map).toExist();
     });
     it('save map config', () => {
         const action = saveMapConfig({});

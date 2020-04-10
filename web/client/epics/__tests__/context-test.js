@@ -37,7 +37,8 @@ import CONTEXT_ATTRIBUTES from '../../test-resources/geostore/resources/resource
 
 import { loadContextAndMap, handleLoginLogoutContextReload } from "../context";
 import MockAdapter from 'axios-mock-adapter';
-
+import ConfigUtils from "../../utils/ConfigUtils";
+import { LOAD_USER_SESSION, userSessionLoaded, SET_USER_SESSION, USER_SESSION_START_SAVING } from '../../actions/usersession';
 
 let mockAxios;
 
@@ -47,6 +48,9 @@ describe('context epics', () => {
     const contextName = 'contextName';
     describe('loadContextAndMap', () => {
         beforeEach(done => {
+            ConfigUtils.setConfigProp("userSessions", {
+                enabled: false
+            });
             mockAxios = new MockAdapter(ajax);
             setTimeout(done);
         });
@@ -91,6 +95,51 @@ describe('context epics', () => {
                 expect(loadEndAction.value).toBe(false);
                 done();
             });
+
+        });
+        it('successful context and map load flow with session', done => {
+            ConfigUtils.setConfigProp("userSessions", {
+                enabled: true
+            });
+            createContextResponse();
+            const act = [
+                loadContext({ mapId, contextName })
+            ];
+            const store = testEpic(loadContextAndMap, 10, act, ([loadingAction, sessionLoadAction,
+                clearMapTemplatesAction, loadMapAction, setUserSessionAction, userSessionSavingAction,
+                setResourceAction, setContextAction, loadFinishedAction, loadEndAction]) => {
+                expect(loadingAction.type).toBe(LOADING);
+                expect(loadingAction.value).toBe(true);
+                expect(sessionLoadAction.type).toBe(LOAD_USER_SESSION);
+                expect(sessionLoadAction.name).toBe("2.1.Saitama");
+                expect(clearMapTemplatesAction.type).toBe(CLEAR_MAP_TEMPLATES);
+                expect(loadMapAction.type).toBe(LOAD_MAP_CONFIG);
+                expect(setUserSessionAction.type).toBe(SET_USER_SESSION);
+                expect(userSessionSavingAction.type).toBe(USER_SESSION_START_SAVING);
+                expect(setResourceAction.type).toBe(SET_RESOURCE);
+                expect(setResourceAction.resource.canDelete).toBe(true); // check one random content of the resource
+                expect(setContextAction.type).toBe(SET_CURRENT_CONTEXT);
+                expect(setContextAction.context.plugins.desktop).toExist(); // check context content
+                expect(loadFinishedAction.type).toBe(LOAD_FINISHED);
+                expect(loadEndAction.type).toBe(LOADING);
+                expect(loadEndAction.value).toBe(false);
+                done();
+            },
+            {
+                security: {
+                    user: {
+                        role: "ADMIN",
+                        name: "Saitama"
+                    }
+                }
+            });
+            setTimeout(() => store.dispatch(
+                userSessionLoaded(100, {
+                    map: {},
+                    context: {
+                        userPlugins: []
+                    }
+                })), 100);
 
         });
         /*

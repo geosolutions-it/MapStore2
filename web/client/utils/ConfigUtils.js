@@ -39,7 +39,10 @@ let defaultConfig = {
     projectionDefs: [],
     themePrefix: "ms2",
     bingApiKey: null,
-    mapquestApiKey: null
+    mapquestApiKey: null,
+    userSessions: {
+        enabled: false
+    }
 };
 
 const getConfigurationOptions = function(query, defaultName, extension, geoStoreBase) {
