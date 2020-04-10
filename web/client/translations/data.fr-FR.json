@@ -2399,7 +2399,7 @@
                 "uploadTooManyBundlesError": "Trop de bundles javascript dans le package zip",
                 "confirmRemovePlugin": "¿Está seguro de que desea eliminar la extensión?",
                 "cancelUpload": "Annuler",
-                "installer": "Installer",
+                "install": "Installer",
                 "uploadError": "Erreur lors de l'installation: ",
                 "uploadOk": "L'extension a été installée correctement",
                 "tooltips": {
