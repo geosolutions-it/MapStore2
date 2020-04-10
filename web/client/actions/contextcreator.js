@@ -127,10 +127,11 @@ export const setSelectedTemplates = (ids) => ({
  * @param {string} fileName file name to display
  * @param {any} data template data
  */
-export const setParsedTemplate = (fileName, data) => ({
+export const setParsedTemplate = (fileName, data, format) => ({
     type: SET_PARSED_TEMPLATE,
     fileName,
-    data
+    data,
+    format
 });
 
 /**

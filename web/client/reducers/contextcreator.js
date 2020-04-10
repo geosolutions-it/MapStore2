@@ -223,9 +223,11 @@ export default (state = {}, action) => {
             set('newContext', {
                 templates: (action.allTemplates || []).map(template => ({
                     ...template,
-                    attributes: template.thumbnail ? {
-                        thumbnail: template.thumbnail
-                    } : undefined,
+                    ...(template.thumbnail ? {thumbnail: decodeURIComponent(template.thumbnail)} : {}),
+                    attributes: {
+                        ...(template.thumbnail ? {thumbnail: decodeURIComponent(template.thumbnail)} : {}),
+                        ...(template.format ? {format: template.format} : {})
+                    },
                     enabled: templates.reduce((result, cur) => result || cur.id === template.id, false),
                     selected: false
                 })),
@@ -267,7 +269,7 @@ export default (state = {}, action) => {
         })), state);
     }
     case SET_PARSED_TEMPLATE: {
-        return set('parsedTemplate', {fileName: action.fileName, data: action.data}, state);
+        return set('parsedTemplate', {fileName: action.fileName, data: action.data, format: action.format}, state);
     }
     case SET_FILE_DROP_STATUS: {
         return set('fileDropStatus', action.status, state);
@@ -322,9 +324,7 @@ export default (state = {}, action) => {
             set(`newContext.${action.key}`, action.value, state);
     }
     case SHOW_DIALOG: {
-        return set('parsedTemplate', undefined,
-            set(`showDialog.${action.dialogName}`, action.show,
-                set(`showDialog.${action.dialogName}Payload`, action.payload, state)));
+        return set(`showDialog.${action.dialogName}`, action.show, set(`showDialog.${action.dialogName}Payload`, action.payload, state));
     }
     case LOADING: {
         // anyway sets loading to true

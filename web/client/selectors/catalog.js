@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const {createSelector} = require('reselect');
+const {createSelector, createStructuredSelector} = require('reselect');
 const {get, pick} = require('lodash');
 
 const staticServicesSelector = (state) => get(state, "catalog.default.staticServices");
@@ -17,6 +17,7 @@ const servicesSelectorWithBackgrounds = createSelector(staticServicesSelector, s
 }));
 const selectedStaticServiceTypeSelector =
     (state) => get(state, `catalog.default.staticServices["${get(state, 'catalog.selectedService')}"].type`, "csw");
+const {projectionSelector} = require('./map');
 
 module.exports = {
     groupSelector: (state) => get(state, "controls.metadataexplorer.group"),
@@ -33,7 +34,6 @@ module.exports = {
     selectedServiceTypeSelector: (state) => get(state, `catalog.services["${get(state, 'catalog.selectedService')}"].type`, selectedStaticServiceTypeSelector(state)),
     selectedServiceLayerOptionsSelector: (state) => get(state, `catalog.services["${get(state, 'catalog.selectedService')}"].layerOptions`, {}),
     searchOptionsSelector: (state) => get(state, "catalog.searchOptions"),
-    formatsSelector: (state) => get(state, "catalog.supportedFormats") || [{name: "csw", label: "CSW"}, {name: "wms", label: "WMS"}, {name: "wmts", label: "WMTS"}],
     loadingErrorSelector: (state) => get(state, "catalog.loadingError"),
     loadingSelector: (state) => get(state, "catalog.loading", false),
     selectedServiceSelector: (state) => get(state, "catalog.selectedService"),
@@ -45,5 +45,9 @@ module.exports = {
         return (get(state, "localConfig.authenticationRules") || []).filter(a => a.method === "authkey").map(r => r.authkeyParamName) || [];
     },
     pageSizeSelector: (state) => get(state, "catalog.pageSize", 4),
-    delayAutoSearchSelector: (state) => get(state, "catalog.delayAutoSearch", 1000)
+    delayAutoSearchSelector: (state) => get(state, "catalog.delayAutoSearch", 1000),
+    // information from the state needed to perform searches on catalog
+    catalogSearchInfoSelector: createStructuredSelector({
+        projection: projectionSelector
+    })
 };

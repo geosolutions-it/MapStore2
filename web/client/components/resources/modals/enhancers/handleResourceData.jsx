@@ -85,11 +85,15 @@ module.exports = compose(
     }),
     // manage save handler
     withHandlers({
-        onSave: ({onSave = () => {}, category = "DASHBOARD", data, linkedResources}) => resource => onSave({
+        onSave: ({onSave = () => {}, category = "DASHBOARD", data, additionalAttributes = {}, linkedResources}) => resource => onSave({
             category,
             linkedResources,
             data,
-            ...resource
+            ...resource,
+            attributes: {
+                ...resource.attributes,
+                ...additionalAttributes
+            }
         })
     })
 );

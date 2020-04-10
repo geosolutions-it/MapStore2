@@ -13,6 +13,7 @@ module.exports = {
     GoogleLayer: require('./GoogleLayer'),
     MapQuest: require('./MapQuest'),
     OSMLayer: require('./OSMLayer'),
+    TMSLayer: require('./TMSLayer'),
     TileProviderLayer: require('./TileProviderLayer'),
     WMSLayer: require('./WMSLayer'),
     WMTSLayer: require('./WMTSLayer'),

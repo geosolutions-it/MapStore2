@@ -1199,6 +1199,18 @@
             "type": "Type",
             "serviceTitle": "Titre",
             "serviceTitlePlaceholder": "tapez un titre",
+            "tms": {
+                "provider": "Provider",
+                "urlTemplate": "Modèle d'URL",
+                "urlTemplateHint": "<p> URL de modèle pour votre service TMS personnalisé, avec la possibilité d'insérer des variables (exprimées à l'aide d'accolades, par exemple <code> {var_name} </code>) qui seront remplacées par l'application. <br />. Les variables <code> {x} </code>, <code> {y} </code> et <code> {z} </code> sont réservées aux valeurs de coordonnées de la grille de tuiles. Vous pouvez également utiliser la variable <code> {s} </code> pour les sous-domaines. Toute autre variable spécifiée dans l'URL doit également être spécifiée dans les options de \"Configuration TMS personnalisée \" (Paramètres avancés) </p>",
+                "customTMSConfiguration": "Configuration TMS personnalisée",
+                "customTMSConfigurationHint": "<p> Les options peuvent contenir: <br/> <ul><li> <code> \" sous-domaines \": ['a', 'b'] </code>: utilisées pour plusieurs domaines, remplacement du <code> {s} </code> dans le modèle d'URL </li> <li> <code> \"maxNativeZoom \": 20 </code>: zoom max du serveur </li> </ul> </p> ",
+                "forceDefaultTileGrid": "Forcer la grille de tuiles par défaut",
+                "forceDefaultTileGridDescription": "Utilisez la grille de tuiles de la projection globale au lieu de l'origine et des résolutions fournies par le serveur. Ceci est utile pour certains services TMS qui annoncent une origine ou des résolutions incorrectes."
+              },
+              "tileprovider": {
+                "tooltip": "x, y, z sont la position des tuiles, s est le sous-domaine (par défaut)"
+            },
             "missingReference": "Les métadonnées des références OGC manquent",
             "showDescription": "Afficher la description complète",
             "hideDescription": "Masquer la description complète",
@@ -2455,6 +2467,10 @@
                 "conflict": "Une ressource portant ce nom existe déjà",
                 "defaultMessage": "Erreur inconnue",
                 "categoryError": "La création de la catégorie manquante \"{categoryName}\" a échoué"
+            },
+            "loadTemplateErrorNotification": {
+                "forbidden": "Impossible d'accéder aux données du modèle, l'utilisateur n'a pas les autorisations nécessaires!",
+                "defaultMessage": "Une erreur inattendue s'est produite"
             },
             "contextNameErrorNotification": {
                 "title": "Nom de contexte incorrect",

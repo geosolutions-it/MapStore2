@@ -94,9 +94,9 @@ export default class OpenlayersLayer extends React.Component {
                 return child ? React.cloneElement(child, {container: layer, styleName: this.props.options && this.props.options.styleName}) : null;
             }) : null;
             return (
-                <>
+                <React.Fragment>
                     {children}
-                </>
+                </React.Fragment>
             );
         }
 
@@ -229,7 +229,7 @@ export default class OpenlayersLayer extends React.Component {
                 .subscribe({
                     next: (tileEvents) => {
                         const errors = tileEvents.filter(e => e.type === 'tileloaderror');
-                        if (errors.length > 0) {
+                        if (errors.length > 0 && (options && !options.hideErrors || !options)) {
                             this.props.onLayerLoad(options.id, {error: true});
                             this.props.onLayerError(options.id, tileEvents.length, errors.length);
                         } else {
@@ -274,7 +274,9 @@ export default class OpenlayersLayer extends React.Component {
                         const errors = imageEvents.filter(e => e.type === 'imageloaderror');
                         if (errors.length > 0) {
                             this.props.onLayerLoad(options.id, {error: true});
-                            this.props.onLayerError(options.id, imageEvents.length, errors.length);
+                            if (options && !options.hideErrors || !options) {
+                                this.props.onLayerError(options.id, imageEvents.length, errors.length);
+                            }
                         } else {
                             this.props.onLayerLoad(options.id);
                         }
