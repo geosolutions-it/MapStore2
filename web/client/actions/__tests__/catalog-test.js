@@ -19,13 +19,13 @@ const {
     addLayersMapViewerUrl, ADD_LAYERS_FROM_CATALOGS, textSearch, TEXT_SEARCH, getRecords, addLayerError, addLayer, ADD_LAYER_ERROR, changeCatalogFormat, CHANGE_CATALOG_FORMAT, changeSelectedService, CHANGE_SELECTED_SERVICE,
     focusServicesList, FOCUS_SERVICES_LIST, changeCatalogMode, CHANGE_CATALOG_MODE, changeTitle, CHANGE_TITLE,
     changeUrl, CHANGE_URL, changeType, CHANGE_TYPE, addService, ADD_SERVICE, addCatalogService, ADD_CATALOG_SERVICE, resetCatalog, RESET_CATALOG,
-    changeAutoload, CHANGE_AUTOLOAD, deleteCatalogService, DELETE_CATALOG_SERVICE, deleteService, DELETE_SERVICE, savingService,
+    changeServiceProperty, CHANGE_SERVICE_PROPERTY, deleteCatalogService, DELETE_CATALOG_SERVICE, deleteService, DELETE_SERVICE, savingService,
     SAVING_SERVICE, DESCRIBE_ERROR, initCatalog, CATALOG_INITED, changeText, CHANGE_TEXT,
     TOGGLE_ADVANCED_SETTINGS, toggleAdvancedSettings, TOGGLE_THUMBNAIL, toggleThumbnail, TOGGLE_TEMPLATE, toggleTemplate, CHANGE_METADATA_TEMPLATE, changeMetadataTemplate, SET_LOADING,
     recordsNotFound
 } = require('../catalog');
-const {CHANGE_LAYER_PROPERTIES, ADD_LAYER} = require('../layers');
-const {SHOW_NOTIFICATION} = require('../notifications');
+const { CHANGE_LAYER_PROPERTIES, ADD_LAYER } = require('../layers');
+const { SHOW_NOTIFICATION } = require('../notifications');
 describe('Test correctness of the catalog actions', () => {
 
     it('addLayersMapViewerUrl', () => {
@@ -45,7 +45,7 @@ describe('Test correctness of the catalog actions', () => {
         const maxRecords = 1;
         const text = "text";
         const options = {};
-        const retval = textSearch({format, url: urlValue, startPosition, maxRecords, text, options});
+        const retval = textSearch({ format, url: urlValue, startPosition, maxRecords, text, options });
 
         expect(retval).toExist();
         expect(retval.type).toBe(TEXT_SEARCH);
@@ -69,13 +69,15 @@ describe('Test correctness of the catalog actions', () => {
         expect(retval).toExist();
         expect(retval.type).toBe(DELETE_SERVICE);
     });
-    it('changeAutoload', () => {
+    it('changeServiceProperty', () => {
         let status = true;
-        var retval = changeAutoload(status);
+        var retval = changeServiceProperty("autoload", status);
 
         expect(retval).toExist();
-        expect(retval.type).toBe(CHANGE_AUTOLOAD);
-        expect(retval.autoload).toBe(status);
+        expect(retval.type).toBe(CHANGE_SERVICE_PROPERTY);
+        expect(retval.property).toBe("autoload");
+        expect(retval.value).toBe(status);
+
     });
     it('savingService', () => {
         let status = true;
@@ -164,7 +166,7 @@ describe('Test correctness of the catalog actions', () => {
     it('initCatalog', (done) => {
         const API = {
             myApi: {
-                reset: () => {}
+                reset: () => { }
             }
         };
         const spyReset = expect.spyOn(API.myApi, 'reset');
@@ -189,7 +191,7 @@ describe('Test correctness of the catalog actions', () => {
             } catch (ex) {
                 done(ex);
             }
-        }, () => {});
+        }, () => { });
     });
     it('getRecords Error', (done) => {
         getRecords('csw', 'base/web/client/test-resources/csw/getRecordsResponseException.xml', 1, 1)((result) => {
@@ -204,7 +206,7 @@ describe('Test correctness of the catalog actions', () => {
             } catch (ex) {
                 done(ex);
             }
-        }, () => {});
+        }, () => { });
     });
     it('getRecords Dublin Core', (done) => {
         getRecords('csw', 'base/web/client/test-resources/csw/getRecordsResponseDC.xml', 1, 2)((actionResult) => {
@@ -229,7 +231,7 @@ describe('Test correctness of the catalog actions', () => {
             } catch (ex) {
                 done(ex);
             }
-        }, () => {});
+        }, () => { });
     });
     it('add layer and describe it', (done) => {
         const verify = (action) => {
@@ -252,7 +254,7 @@ describe('Test correctness of the catalog actions', () => {
             type: 'wms',
             name: 'workspace:vector_layer'
         });
-        callback(verify, () => ({ layers: []}));
+        callback(verify, () => ({ layers: [] }));
     });
     it('add layer with multiple urls', (done) => {
         const verify = (action) => {
@@ -295,7 +297,7 @@ describe('Test correctness of the catalog actions', () => {
             type: 'wms',
             name: 'workspace:vector_layer'
         });
-        callback(verify, () => ({ layers: []}));
+        callback(verify, () => ({ layers: [] }));
     });
     it('sets an error on addLayerError action', () => {
         const action = addLayerError('myerror');
@@ -324,6 +326,6 @@ describe('Test correctness of the catalog actions', () => {
         const action = recordsNotFound("topp:states , topp:states-tasmania");
         expect(action.type).toBe(SHOW_NOTIFICATION);
         expect(action.message).toBe("catalog.notification.errorSearchingRecords");
-        expect(action.values).toEqual({records: "topp:states , topp:states-tasmania"});
+        expect(action.values).toEqual({ records: "topp:states , topp:states-tasmania" });
     });
 });

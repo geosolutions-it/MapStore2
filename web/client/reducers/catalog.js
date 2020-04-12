@@ -16,7 +16,7 @@ const {
     CHANGE_CATALOG_MODE,
     CHANGE_TITLE,
     CHANGE_TEXT,
-    CHANGE_AUTOLOAD,
+    CHANGE_SERVICE_PROPERTY,
     CHANGE_TYPE,
     CHANGE_URL,
     CHANGE_SERVICE_FORMAT,
@@ -37,6 +37,8 @@ const { set } = require('../utils/ImmutableUtils');
 
 const {isNil} = require('lodash');
 const assign = require('object-assign');
+const uuid = require('uuid');
+
 const emptyService = {
     url: "",
     type: "wms",
@@ -124,12 +126,13 @@ function catalog(state = {
         return set("openCatalogServiceList", action.status, state);
     case CHANGE_TEXT:
         return set("searchOptions.text", action.text, state);
+    case CHANGE_SERVICE_PROPERTY: {
+        return  set(`newService["${action.property}"]`, action.value, state);
+    }
     case CHANGE_TITLE:
         return set("newService.title", action.title, state);
     case CHANGE_URL:
         return set("newService.url", action.url, state);
-    case CHANGE_AUTOLOAD:
-        return set("newService.autoload", action.autoload, state);
     case CHANGE_SERVICE_FORMAT:
         return set("newService.format", action.format, state);
     case CHANGE_TYPE: {
@@ -142,28 +145,20 @@ function catalog(state = {
         return assign({}, state, {newService: assign({}, state.newService, {type, ...templateOptions})});
     }
     case ADD_CATALOG_SERVICE: {
-        let newServices;
-        if (action.service.isNew) {
-            let service = assign({}, action.service);
-            delete service.isNew;
-            newServices = assign({}, state.services, {[action.service.title]: service});
-        } else {
-            let services = assign({}, state.services);
-            delete services[action.service.oldService];
-            newServices = assign({}, services, {[action.service.title]: action.service});
-        }
-        return action.service.title !== "" && action.service.url !== "" ?
-            assign({}, state, {
-                services: newServices,
-                selectedService: action.service.title,
-                mode: "view",
-                result: null,
-                loadingError: null,
-                searchOptions: assign({}, state.searchOptions, {
-                    text: ""
-                }),
-                layerError: null
-            }) : state;
+        const { isNew, ...service } = action.service;
+        const selectedService = isNew ? service.title + uuid() : state.selectedService;
+        const newServices = assign({}, state.services, { [selectedService]: service});
+        return assign({}, state, {
+            services: newServices,
+            selectedService,
+            mode: "view",
+            result: null,
+            loadingError: null,
+            searchOptions: assign({}, state.searchOptions, {
+                text: ""
+            }),
+            layerError: null
+        });
     }
     case CHANGE_SELECTED_SERVICE: {
         if (action.service !== state.selectedService) {

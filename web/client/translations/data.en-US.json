@@ -606,7 +606,10 @@
             "showLabel": "Show measurement label",
             "addAsAnnotation": "Add as annotation",
             "newMeasure": "New annotation",
-            "selectTool": "Select a measurement tool"
+            "selectTool": "Select a measurement tool",
+            "exportToGeoJSON": "Export to GeoJSON",
+            "resetTooltip": "Clear measures",
+            "addAsLayer": "Add as layer"
         },
         "search":{
             "decimal": "Decimal",
@@ -996,7 +999,8 @@
                 "notValidMarker": "Insert a valid coordinate (+|- 90° lat, +|-180° lon)",
                 "notValidPolyline": "All coordinate must be valid (+|- 90° lat, +|-180° lon)",
                 "notValidText": "Insert a text value and a valid coordinate (+|- 90° lat, +|-180° lon)",
-                "notValidCircle": "Insert a radius value and a valid coordinate (+|- 90° lat, +|-180° lon)"
+                "notValidCircle": "Insert a radius value and a valid coordinate (+|- 90° lat, +|-180° lon)",
+                "newFeature": "New"
             }
         },
         "user":{
@@ -1202,6 +1206,18 @@
             "type": "Type",
             "serviceTitle": "Title",
             "serviceTitlePlaceholder": "type a title",
+            "tms": {
+              "provider": "Provider",
+              "urlTemplate": "URL Template",
+              "urlTemplateHint": "<p>Template URL for your custom TMS service, with the possibility to insert variables (expressed using curly braces, e.g. <code>{var_name}</code>) that will be replaced by the application.<br/>. The <code>{x}</code>, <code>{y}</code> and <code>{z}</code> variables are reserved for tile grid coordinate values. You can also use variable <code>{s}</code> for subdomains. Any other variable specified in the URL must be specified also in options inside \"Custom TMS Configuration\" (Advanced Settings)</p>",
+              "customTMSConfiguration": "Custom TMS Configuration",
+              "customTMSConfigurationHint": "<p>Options can contain:<br/><ul><li><code>\"subdomains\": ['a', 'b']</code>: used for multiple domains, replacingthe <code>{s}</code> in URL template</li><li><code>\"maxNativeZoom\": 20</code>: max zoom from the server</li></ul></p>",
+              "forceDefaultTileGrid": "Force default tile grid",
+              "forceDefaultTileGridDescription": "Use the global projection's tile grid instead of the origin and resolutions provided by the server. This is useful for some TMS services that advertise wrong origin or resoultions."
+            },
+            "tileprovider": {
+              "tooltip": "x,y,z are tile position, s is the sub-domain (default)"
+            },
             "missingReference": "Missing OGC reference metadata",
             "showDescription": "Show full description",
             "hideDescription": "Hide full description",
@@ -2457,6 +2473,10 @@
                 "conflict": "A resource with this name already exists",
                 "defaultMessage": "Unknown error",
                 "categoryError": "Creating missing category \"{categoryName}\" failed"
+            },
+            "loadTemplateErrorNotification": {
+                "forbidden": "Couldn't access the template data, the user lacks necessary permissions!",
+                "defaultMessage": "Unexpected error occured"
             },
             "contextNameErrorNotification": {
                 "title": "Bad context name",

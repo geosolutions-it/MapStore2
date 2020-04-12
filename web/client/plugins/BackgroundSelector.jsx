@@ -12,8 +12,8 @@ const {find} = require('lodash');
 
 
 const {toggleControl, setControlProperty} = require('../actions/controls');
-const {changeLayerProperties, removeNode, updateNode} = require('../actions/layers');
-const {addBackground, addBackgroundProperties, confirmDeleteBackgroundModal,
+const {changeLayerProperties, removeNode, updateNode, addLayer} = require('../actions/layers');
+const {addBackground, addBackgroundProperties, confirmDeleteBackgroundModal, backgroundAdded,
     updateThumbnail, removeBackground, clearModalParameters, backgroundEdited, setCurrentBackgroundLayer} = require('../actions/backgroundselector');
 
 const {createSelector} = require('reselect');
@@ -97,6 +97,8 @@ compose(
         onLayerChange: setControlProperty.bind(null, 'backgroundSelector'),
         onStartChange: setControlProperty.bind(null, 'backgroundSelector', 'start'),
         onAdd: addBackground,
+        addLayer: addLayer,
+        backgroundAdded,
         onRemove: removeNode,
         onBackgroundEdit: backgroundEdited,
         updateNode,

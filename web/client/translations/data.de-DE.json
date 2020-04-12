@@ -607,7 +607,10 @@
             "showLabel": "Zeige Bezeichnungsetikett",
             "addAsAnnotation": "Als Anmerkung hinzufügen",
             "newMeasure": "Neue Anmerkung",
-            "selectTool": "Wählen Sie ein Messwerkzeug aus"
+            "selectTool": "Wählen Sie ein Messwerkzeug aus",
+            "exportToGeoJSON": "Export nach GeoJSON",
+            "resetTooltip": "Klare Maßnahmen",
+            "addAsLayer": "Als Ebene hinzufügen"
         },
         "search":{
             "decimal": "Dezimal",
@@ -996,7 +999,8 @@
                 "notValidMarker": "Fügen Sie eine gültige Koordinate ein (+|- 90° lat, +|-180° lon)",
                 "notValidPolyline": "Alle Koordinaten müssen gültig sein (+|- 90° lat, +|-180° lon)",
                 "notValidText": "Fügen Sie einen Textwert und eine gültige Koordinate ein (+|- 90° lat, +|-180° lon)",
-                "notValidCircle": "Geben Sie einen Radius und eine gültige Koordinate ein (+|- 90° lat, +|-180° lon)"
+                "notValidCircle": "Geben Sie einen Radius und eine gültige Koordinate ein (+|- 90° lat, +|-180° lon)",
+                "newFeature": "Neu"
             }
         },
         "user":{
@@ -1202,6 +1206,17 @@
             "type": "Typ",
             "serviceTitle": "Titel",
             "serviceTitlePlaceholder": "Geben Sie einen Titel ein",
+            "tms": {
+              "provider": "Anbieter",
+              "urlTemplate": "URL-Vorlage",
+              "urlTemplateHint": "<p> Vorlagen-URL für Ihren benutzerdefinierten TMS-Dienst mit der Möglichkeit, Variablen einzufügen (ausgedrückt in geschweiften Klammern, z. B. <code> {var_name} </ code>), die von der Anwendung ersetzt werden. <br />. Die Variablen <code> {x} </ code>, <code> {y} </ code> und <code> {z} </ code> sind für Kachelgitterkoordinatenwerte reserviert. Sie können auch Variablen verwenden <code> {s} </ code> für Subdomains. Jede andere in der URL angegebene Variable muss auch in den Optionen unter \"Benutzerdefinierte TMS-Konfiguration\" (Erweiterte Einstellungen) angegeben werden.</p>",
+              "customTMSConfiguration": "Benutzerdefinierte TMS-Konfiguration",
+              "customTMSConfigurationHint": "<p> Optionen können Folgendes enthalten: <br/> <ul> <ul> <li> <code>\"subdomains\": ['a', 'b'] </ code>: Wird für mehrere Domains verwendet. Ersetzen des <code> {s} </code> in der URL-Vorlage </li> <li> <code> \"maxNativeZoom\": 20 </code>: Maximaler Zoom vom Server </li> </ul> </p>",                  "forceDefaultTileGrid": "Standard-Kachelraster erzwingen",
+              "forceDefaultTileGridDescription": "Verwenden Sie das Kachelraster der globalen Projektion anstelle des vom Server bereitgestellten Ursprungs und der vom Server bereitgestellten Auflösungen. Dies ist nützlich für einige TMS-Dienste, die falsche Ursprünge oder Ergebnisse anzeigen."
+            },
+            "tileprovider": {
+              "tooltip": "x, y, z sind Kachelpositionen, s ist die Unterdomäne (Standard)"
+            },
             "missingReference": "Fehlende OGC-Referenzmetadaten",
             "showDescription": "Vollständige Beschreibung anzeigen",
             "hideDescription": "Vollständige Beschreibung ausblenden",
@@ -2454,6 +2469,10 @@
                 "conflict": "Eine Ressource mit diesem Namen ist bereits vorhanden",
                 "defaultMessage": "Unbekannter Fehler",
                 "categoryError": "Das Erstellen der fehlenden Kategorie \"{categoryName}\" ist fehlgeschlagen"
+            },
+            "loadTemplateErrorNotification": {
+                "forbidden": "Konnte nicht auf die Vorlagendaten zugreifen, dem Benutzer fehlen die erforderlichen Berechtigungen!",
+                "defaultMessage": "Ein unerwarteter Fehler ist aufgetreten"
             },
             "contextNameErrorNotification": {
                 "title": "Falscher Kontextname",

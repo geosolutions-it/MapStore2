@@ -725,12 +725,7 @@ const TOCPlugin = connect(tocSelector, {
     checkPluginsEnhancer
 )(LayerTree));
 
-const API = {
-    csw: require('../api/CSW'),
-    wms: require('../api/WMS'),
-    wmts: require('../api/WMTS'),
-    backgrounds: require('../api/mapBackground')
-};
+const API = require('../api/catalog').default;
 
 module.exports = {
     TOCPlugin: assign(TOCPlugin, {
@@ -762,5 +757,6 @@ module.exports = {
         queryform: require('../reducers/queryform'),
         query: require('../reducers/query')
     },
+    // TODO: remove this dependency, it is needed only to use getMetadataRecordById and related actions that can be moved in the TOC
     epics: require("../epics/catalog").default(API)
 };

@@ -90,6 +90,7 @@ describe("test the CoordinatesEditor Panel", () => {
             <CoordinatesEditor
                 {...testHandlers}
                 isMouseEnterEnabled
+                showFeatureSelector={false}
                 type="Polygon"
                 format="decimal"
                 components={components}

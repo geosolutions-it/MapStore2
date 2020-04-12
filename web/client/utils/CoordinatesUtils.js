@@ -11,7 +11,7 @@ const Proj4js = require('proj4').default;
 const proj4 = Proj4js;
 const axios = require('../libs/ajax');
 const assign = require('object-assign');
-const {isArray, flattenDeep, chunk, cloneDeep, isNumber, slice, head, last} = require('lodash');
+const {isArray, isObject, flattenDeep, chunk, cloneDeep, isNumber, slice, head, last} = require('lodash');
 const lineIntersect = require('@turf/line-intersect');
 const polygonToLinestring = require('@turf/polygon-to-linestring');
 const greatCircle = require('@turf/great-circle').default;
@@ -854,6 +854,14 @@ const CoordinatesUtils = {
         }
         return value;
     },
+    midpoint: (p1, p2, returnArray = false) => {
+        const pObj1 = isArray(p1) ? {x: p1[0], y: p1[1]} : p1;
+        const pObj2 = isArray(p2) ? {x: p2[0], y: p2[1]} : p2;
+        const result = {x: 0.5 * (pObj1.x + pObj2.x), y: 0.5 * (pObj1.y + pObj2.y)};
+
+        return returnArray ? [result.x, result.y] : result;
+    },
+    pointObjectToArray: p => isObject(p) && isNumber(p.x) && isNumber(p.y) ? [p.x, p.y] : p,
     getExtentFromNormalized,
     getPolygonFromExtent,
     isPointInsideExtent: (point = {lat: 1, lng: 1}, extent) => {

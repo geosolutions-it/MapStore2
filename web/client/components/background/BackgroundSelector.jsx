@@ -123,7 +123,7 @@ class BackgroundSelector extends React.Component {
                                     this.props.onRemoveBackground(true, layer.title || layer.name || '', layer.id);
                                 }}
                             />}
-                            {this.props.mapIsEditable && !this.props.enabledCatalog && !!(layer.type === 'wms' || layer.type === 'wmts') &&
+                            {this.props.mapIsEditable && !this.props.enabledCatalog && !!(layer.type === 'wms' || layer.type === 'wmts' || layer.type === 'tms' || layer.type === 'tileprovider') &&
                                 <ToolbarButton
                                     glyph="wrench"
                                     className="square-button-md background-tool-button edit-button"
@@ -238,11 +238,17 @@ class BackgroundSelector extends React.Component {
                     closeGlyph="1-close">
                     <Message msgId="backgroundSelector.confirmDelete" msgParams={{title: confirmLayerTitle}}/>
                 </ConfirmDialog>
-                {this.props.modalParams && this.props.modalParams.editing && <BackgroundDialog
+                {this.props.modalParams && <BackgroundDialog
                     onClose={this.props.clearModal}
                     onSave={layerToAdd => {
-                        this.props.updateNode(layerToAdd.id, 'layers', layerToAdd);
-                        this.props.onBackgroundEdit(layerToAdd.id);
+                        if (this.props.modalParams.editing) {
+                            this.props.updateNode(layerToAdd.id, 'layers', layerToAdd);
+                            this.props.onBackgroundEdit(layerToAdd.id);
+                        } else {
+                            this.props.addLayer(layerToAdd);
+                            this.props.backgroundAdded(layerToAdd.id);
+                        }
+
                     }}
                     updateThumbnail={this.props.onUpdateThumbnail}
                     {...backgroundDialogParams}

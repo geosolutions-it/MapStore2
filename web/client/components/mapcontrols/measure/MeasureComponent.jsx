@@ -9,11 +9,14 @@ const PropTypes = require('prop-types');
 const React = require('react');
 const {DropdownList} = require('react-widgets');
 const {ButtonToolbar, Tooltip, Glyphicon, Grid, Row, Col, FormGroup} = require('react-bootstrap');
-const {isEqual, round, get} = require('lodash');
+const {isEqual, round, get, dropRight} = require('lodash');
+const uuidv1 = require('uuid/v1');
 
+const { download } = require('../../../utils/FileUtils');
 const NumberFormat = require('../../I18N/Number');
 const Message = require('../../I18N/Message');
 const {convertUom, getFormattedBearingValue} = require('../../../utils/MeasureUtils');
+const {convertMeasuresToGeoJSON} = require('../../../utils/MeasurementUtils');
 const LocaleUtils = require('../../../utils/LocaleUtils');
 const Toolbar = require('../../misc/toolbar/Toolbar');
 const BorderLayout = require('../../layout/BorderLayout');
@@ -45,8 +48,11 @@ class MeasureComponent extends React.Component {
         toggleMeasure: PropTypes.func,
         measurement: PropTypes.object,
         lineMeasureEnabled: PropTypes.bool,
+        lineMeasureValueEnabled: PropTypes.bool,
         areaMeasureEnabled: PropTypes.bool,
+        areaMeasureValueEnabled: PropTypes.bool,
         bearingMeasureEnabled: PropTypes.bool,
+        bearingMeasureValueEnabled: PropTypes.bool,
         showButtons: PropTypes.bool,
         showResults: PropTypes.bool,
         mapProjection: PropTypes.string,
@@ -65,11 +71,18 @@ class MeasureComponent extends React.Component {
         format: PropTypes.string,
         onChangeFormat: PropTypes.func,
         onChangeCoordinates: PropTypes.func,
+        onChangeCurrentFeature: PropTypes.func,
+        onAddAsLayer: PropTypes.func,
         onHighlightPoint: PropTypes.func,
         geomType: PropTypes.string,
         defaultOptions: PropTypes.object,
         onAddAnnotation: PropTypes.func,
         showAddAsAnnotation: PropTypes.bool,
+        showAddAsLayer: PropTypes.bool,
+        showFeatureSelector: PropTypes.bool,
+        useSingleFeature: PropTypes.bool,
+        showExportToGeoJSON: PropTypes.bool,
+        disableBearing: PropTypes.bool,
         onMount: PropTypes.func,
         onUpdateOptions: PropTypes.func,
         showCoordinateEditor: PropTypes.bool,
@@ -112,9 +125,11 @@ class MeasureComponent extends React.Component {
         },
         showResults: true,
         showAddAsAnnotation: false,
+        showAddAsLayer: true,
+        showExportToGeoJSON: true,
         showCoordinateEditor: false,
         isCoordinateEditorEnabled: true,
-        withReset: false,
+        withReset: true,
         lineGlyph: "1-measure-lenght",
         areaGlyph: "1-measure-area",
         bearingGlyph: "1-bearing",
@@ -128,7 +143,8 @@ class MeasureComponent extends React.Component {
         onChangeUom: () => {},
         onChangeFormat: () => {},
         onMount: () => {},
-        onUpdateOptions: () => {}
+        onUpdateOptions: () => {},
+        onAddAsLayer: () => {}
     };
 
     shouldComponentUpdate(nextProps) {
@@ -173,14 +189,14 @@ class MeasureComponent extends React.Component {
             <Grid fluid style={{maxHeight: 400}}>
                 {this.props.lineMeasureEnabled && <Row >
                     <FormGroup style={{display: 'flex', alignItems: 'center'}}>
-                        <Col xs={6}>
+                        {this.props.lineMeasureValueEnabled && <Col xs={6}>
                             <span>{this.props.lengthLabel}: </span>
                             <span id="measure-len-res" className="measure-value">
                                 <h3><strong>
                                     <NumberFormat key="len" numberParams={decimalFormat} value={this.props.formatLength(this.props.uom.length.unit, this.props.measurement.len)} /> {this.props.uom.length.label}
                                 </strong></h3>
                             </span>
-                        </Col>
+                        </Col>}
                         <Col xs={6}>
                             <DropdownList
                                 value={this.props.uom.length.label}
@@ -196,14 +212,14 @@ class MeasureComponent extends React.Component {
                 </Row>}
                 {this.props.areaMeasureEnabled && <Row>
                     <FormGroup style={{display: 'flex', alignItems: 'center'}}>
-                        <Col xs={6}>
+                        {this.props.areaMeasureValueEnabled && <Col xs={6}>
                             <span>{this.props.areaLabel}: </span>
                             <span id="measure-area-res" className="measure-value">
                                 <h3><strong>
                                     <NumberFormat key="area" numberParams={decimalFormat} value={this.props.formatArea(this.props.uom.area.unit, this.props.measurement.area)} /> {this.props.uom.area.label}
                                 </strong></h3>
                             </span>
-                        </Col>
+                        </Col>}
                         <Col xs={6}>
                             <DropdownList
                                 value={this.props.uom.area.label}
@@ -216,7 +232,7 @@ class MeasureComponent extends React.Component {
                         </Col>
                     </FormGroup>
                 </Row>}
-                {this.props.bearingMeasureEnabled && <Row>
+                {this.props.bearingMeasureEnabled && this.props.bearingMeasureValueEnabled && <Row>
                     <FormGroup style={{display: 'flex', alignItems: 'center', minHeight: 34}}>
                         <Col xs={6}>
                             <span>{this.props.bearingLabel}: </span>
@@ -254,8 +270,19 @@ class MeasureComponent extends React.Component {
 
 
     render() {
-        const geomType = (get(this.props.measurement, 'feature.geometry.type') || '').toLowerCase();
-        let coords = (get(this.props.measurement, geomType.indexOf('polygon') !== -1 ? 'feature.geometry.coordinates[0]' : 'feature.geometry.coordinates') || []).map(coordinate => ({lon: coordinate[0], lat: coordinate[1]}));
+        let geomType;
+        let coords;
+        const features = get(this.props.measurement, 'features', []);
+        const feature = features[this.props.measurement.currentFeature || 0];
+
+        if (this.props.useSingleFeature) {
+            geomType = (get(this.props.measurement, 'feature.geometry.type') || '').toLowerCase();
+            coords = (get(this.props.measurement, geomType.indexOf('polygon') !== -1 ? 'feature.geometry.coordinates[0]' : 'feature.geometry.coordinates') || []).map(coordinate => ({lon: coordinate[0], lat: coordinate[1]}));
+        } else {
+            geomType = get(feature, 'geometry.type', '').toLowerCase();
+            coords = (get(feature, geomType.indexOf('polygon') !== -1 ? 'geometry.coordinates[0]' : 'geometry.coordinates') || []).map(coordinate => ({lon: coordinate[0], lat: coordinate[1]}));
+        }
+
         return (
             <BorderLayout
                 id={this.props.id}
@@ -285,6 +312,7 @@ class MeasureComponent extends React.Component {
                                             onClick: () => this.onAreaClick()
                                         },
                                         {
+                                            visible: !this.props.disableBearing,
                                             active: !!this.props.bearingMeasureEnabled,
                                             bsStyle: this.props.bearingMeasureEnabled ? 'success' : 'primary',
                                             glyph: this.props.bearingGlyph,
@@ -301,16 +329,55 @@ class MeasureComponent extends React.Component {
                                 buttons={
                                     [
                                         {
-                                            glyph: 'refresh',
+                                            glyph: 'remove',
                                             visible: !!this.props.withReset,
-                                            tooltip: this.props.resetButtonText,
+                                            tooltip: <Message msgId="measureComponent.resetTooltip"/>,
                                             onClick: () => this.onResetClick()
+                                        }
+                                    ]
+                                }/>
+                            <Toolbar
+                                btnDefaultProps={{
+                                    className: 'square-button-md',
+                                    bsStyle: 'primary'
+                                }}
+                                buttons={
+                                    [
+                                        {
+                                            glyph: 'ext-json',
+                                            disabled: (this.props.measurement.features || []).length === 0,
+                                            visible: !!(this.props.bearingMeasureEnabled || this.props.areaMeasureEnabled || this.props.lineMeasureEnabled) && this.props.showExportToGeoJSON,
+                                            tooltip: <Message msgId="measureComponent.exportToGeoJSON"/>,
+                                            onClick: () => {
+                                                download(JSON.stringify(convertMeasuresToGeoJSON(
+                                                    this.props.measurement.features,
+                                                    this.props.measurement.textLabels,
+                                                    this.props.uom,
+                                                    uuidv1(),
+                                                    'MapStore Measurements'
+                                                )), 'measurements.json', 'application/geo+json');
+                                            }
+                                        },
+                                        {
+                                            glyph: '1-layer',
+                                            visible: !!(this.props.bearingMeasureEnabled || this.props.areaMeasureEnabled || this.props.lineMeasureEnabled) && this.props.showAddAsLayer,
+                                            disabled: (this.props.measurement.features || []).length === 0,
+                                            tooltip: <Message msgId="measureComponent.addAsLayer"/>,
+                                            onClick: () => this.props.onAddAsLayer(
+                                                this.props.measurement.features,
+                                                this.props.measurement.textLabels,
+                                                this.props.uom
+                                            )
                                         },
                                         {
                                             glyph: 'comment',
                                             tooltip: <Message msgId="measureComponent.addAsAnnotation"/>,
-                                            onClick: () => this.addAsAnnotation(),
-                                            disabled: !!(this.props.measurement.feature && this.props.measurement.feature.properties && this.props.measurement.feature.properties.disabled),
+                                            onClick: () => this.props.onAddAnnotation(
+                                                this.props.measurement.features,
+                                                this.props.measurement.textLabels,
+                                                this.props.uom
+                                            ),
+                                            disabled: (this.props.measurement.features || []).length === 0,
                                             visible: !!(this.props.bearingMeasureEnabled || this.props.areaMeasureEnabled || this.props.lineMeasureEnabled) && this.props.showAddAsAnnotation
                                         }
                                     ]
@@ -327,14 +394,18 @@ class MeasureComponent extends React.Component {
                                 isMouseEnterEnabled
                                 isMouseLeaveEnabled
                                 format={this.props.format}
+                                currentFeature={this.props.measurement.currentFeature}
+                                features={this.props.measurement.features}
                                 mapProjection={this.props.mapProjection}
                                 onChangeFormat={this.props.onChangeFormat}
                                 onHighlightPoint={this.props.onHighlightPoint}
                                 onChange={this.props.onChangeCoordinates}
+                                onChangeCurrentFeature={this.props.onChangeCurrentFeature}
+                                showFeatureSelector={this.props.showFeatureSelector}
                                 items={[]}
                                 isDraggable
                                 type={this.props.geomType}
-                                components={coords}/>
+                                components={!this.props.useSingleFeature && geomType.indexOf('polygon') !== -1 ? dropRight(coords) : coords}/>
                         </Row> :
                         <Row>
                             <Col xs={12} className="text-center" style={{padding: 15}}>
@@ -345,17 +416,6 @@ class MeasureComponent extends React.Component {
             </BorderLayout>
         );
     }
-    addAsAnnotation = () => {
-        let value = this.props.measurement.area || this.props.measurement.len || this.props.measurement.bearing;
-        let uom = (this.props.measurement.area && this.props.uom.area.label) ||
-        (this.props.measurement.len && this.props.uom.length.label) ||
-        (this.props.measurement.bearing && "") || "";
-        let measureTool = (this.props.measurement.area && "area") ||
-        (this.props.measurement.len && "length") ||
-        (this.props.measurement.bearing && "bearing") || "";
-
-        this.props.onAddAnnotation(this.props.measurement.feature, value, uom, measureTool);
-    };
 }
 
 module.exports = MeasureComponent;
