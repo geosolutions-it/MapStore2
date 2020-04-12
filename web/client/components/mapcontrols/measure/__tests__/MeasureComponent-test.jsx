@@ -293,6 +293,7 @@ describe("test the MeasureComponent", () => {
                 showCoordinateEditor
                 format="decimal"
                 isDraggable
+                useSingleFeature
                 lineMeasureEnabled
             />, document.getElementById("container")
         );
