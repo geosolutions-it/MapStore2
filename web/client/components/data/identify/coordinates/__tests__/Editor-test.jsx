@@ -25,11 +25,17 @@ describe('Identify Coordinate Editor component', () => {
             onSubmit: () => {}
         };
         const spyonChange = expect.spyOn(actions, 'onSubmit');
-        ReactDOM.render(<Editor onSubmit={()=>actions.onSubmit({lat: "4", lon: "4"})} />, document.getElementById("container"));
-        ReactTestUtils.Simulate.click(document.querySelector('span > button')); // <-- trigger event callback
+        ReactDOM.render(<Editor onSubmit={actions.onSubmit} />, document.getElementById("container"));
+        const button = document.querySelector('span > button');
+        expect(button.disabled).toBe(true);
+        const latLonFields = document.querySelectorAll('input');
+        ReactTestUtils.Simulate.change(latLonFields[0], { target: { value: 20} }); // <-- trigger event callback
+        ReactTestUtils.Simulate.change(latLonFields[1], { target: { value: 10} }); // <-- trigger event callback
+        expect(button.disabled).toBe(false);
+        ReactTestUtils.Simulate.click(button); // <-- trigger event callback
         expect(spyonChange).toHaveBeenCalled();
         expect(isEmpty(spyonChange.calls[0].arguments[0])).toBe(false);
-        expect(spyonChange.calls[0].arguments[0]).toEqual({lat: "4", lon: "4"});
+        expect(spyonChange.calls[0].arguments[0]).toContain({lat: "20", lon: "10"});
     });
     it('Test Editor onChangeFormat correctly passed', () => {
         const actions = {

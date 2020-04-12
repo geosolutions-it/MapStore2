@@ -567,6 +567,7 @@
         "identifyHighlightFeatures": "Highlight features",
         "identifyShowCoordinateEditor": "Show coordinate editor",
         "identifyHideCoordinateEditor": "Hide coordinate editor",
+        "identifyCoordinateApplyChanges": "Apply changes",
         "identifyRevGeocodeModalTitle": "Address",
         "identifyRevGeocodeSubmitText": "More Info",
         "identifyRevGeocodeCloseText": "Close",

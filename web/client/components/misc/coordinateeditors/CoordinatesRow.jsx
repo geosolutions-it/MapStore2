@@ -47,11 +47,15 @@ class CoordinatesRow extends React.Component {
 
     constructor(props) {
         super(props);
-        this.state = {lat: this.props.component.lat, lon: this.props.component.lon};
+        this.state = {lat: this.props.component.lat, lon: this.props.component.lon, disabledApplyChange: true};
     }
 
     onChangeLatLon = (coord, val) => {
-        this.setState({...this.state, [coord]: val});
+        this.setState({...this.state, [coord]: val}, ()=>{
+            const changeLat = parseFloat(this.state.lat) !== parseFloat(this.props.component.lat);
+            const changeLon = parseFloat(this.state.lon) !== parseFloat(this.props.component.lon);
+            this.setState({...this.state, disabledApplyChange: !(changeLat || changeLon)});
+        });
     };
 
     onSubmit = () => {
@@ -93,6 +97,8 @@ class CoordinatesRow extends React.Component {
             },
             {
                 glyph: "ok",
+                disabled: this.state.disabledApplyChange,
+                tooltipId: 'identifyCoordinateApplyChanges',
                 onClick: this.onSubmit
             }
         ];
