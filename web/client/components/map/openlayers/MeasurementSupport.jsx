@@ -541,11 +541,11 @@ export default class MeasurementSupport extends React.Component {
                     const length = this.getLength(coords, this.props);
                     const lastSegmentLength = this.getLength(lastSegment, this.props);
 
-                    output = this.formatLengthValue(length, this.props.uom, this.props.measurement.geomType === 'Bearing');
+                    output = this.formatLengthValue(length, this.props.uom, this.props.measurement.geomType === 'Bearing', this.props.measurement.trueBearing);
                     this.tooltipCoord = geom.getLastCoordinate();
 
                     if (!this.props.measurement.disableLabels && !this.props.measurement.bearingMeasureEnabled) {
-                        const overlayText = this.formatLengthValue(lastSegmentLength, this.props.uom, this.props.measurement.geomType === 'Bearing');
+                        const overlayText = this.formatLengthValue(lastSegmentLength, this.props.uom, this.props.measurement.geomType === 'Bearing', this.props.measurement.trueBearing);
                         last(this.segmentOverlayElements).innerHTML = overlayText;
                         last(this.segmentOverlays).setPosition(midpoint(lastSegment[0], lastSegment[1], true));
                         this.textLabels[this.segmentOverlays.length - 1] = {
@@ -866,9 +866,9 @@ export default class MeasurementSupport extends React.Component {
         this.segmentOverlays.push(segmentOverlay);
     }
 
-    formatLengthValue = (value, uom, isBearing) => {
+    formatLengthValue = (value, uom, isBearing, trueBearing = {}) => {
         if (isBearing) {
-            return getFormattedBearingValue(value);
+            return getFormattedBearingValue(value, trueBearing);
         }
         const {label, unit} = uom && uom.length;
         const output = round(convertUom(value, "m", unit), 2);

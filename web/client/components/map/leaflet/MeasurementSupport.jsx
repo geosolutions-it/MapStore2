@@ -157,7 +157,7 @@ L.Draw.Polyline.prototype._getMeasurementString = function() {
         uom: this.options.uom,
         useTreshold: this.options.useTreshold,
         geomType: this.options.geomType,
-        bearing: this.options.bearing ? getFormattedBearingValue(this.options.bearing) : 0
+        bearing: this.options.bearing ? getFormattedBearingValue(this.options.bearing, this.options.trueBearing) : 0
     };
     return L.GeometryUtil.readableDistance(distance, this.options.metric, this.options.feet, this.options.nautic, this.options.precision, opt);
 };
@@ -520,7 +520,8 @@ class MeasurementSupport extends React.Component {
     }
     updateBearing = () => {
         if (this.props.measurement.geomType === 'Bearing' && this.drawControl._markers && this.drawControl._markers.length > 0) {
-            this.drawControl.setOptions({ bearing: this.calculateBearing() });
+            const trueBearing = this.props.measurement && this.props.measurement.trueBearing;
+            this.drawControl.setOptions({ bearing: this.calculateBearing(), trueBearing });
         }
     }
 }

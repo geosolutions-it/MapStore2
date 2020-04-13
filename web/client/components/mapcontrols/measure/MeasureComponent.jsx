@@ -35,6 +35,7 @@ class MeasureComponent extends React.Component {
         lengthLabel: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
         areaLabel: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
         bearingLabel: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
+        trueBearingLabel: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
         uom: PropTypes.shape({
             length: PropTypes.shape({
                 unit: PropTypes.string.isRequired,
@@ -83,6 +84,7 @@ class MeasureComponent extends React.Component {
         useSingleFeature: PropTypes.bool,
         showExportToGeoJSON: PropTypes.bool,
         disableBearing: PropTypes.bool,
+        trueBearing: PropTypes.object,
         onMount: PropTypes.func,
         onUpdateOptions: PropTypes.func,
         showCoordinateEditor: PropTypes.bool,
@@ -137,9 +139,10 @@ class MeasureComponent extends React.Component {
         lengthLabel: <Message msgId="measureComponent.lengthLabel"/>,
         areaLabel: <Message msgId="measureComponent.areaLabel"/>,
         bearingLabel: <Message msgId="measureComponent.bearingLabel"/>,
+        trueBearingLabel: <Message msgId="measureComponent.trueBearingLabel"/>,
         formatLength: (uom, value) => convertUom(value, "m", uom),
         formatArea: (uom, value) => convertUom(value, "sqm", uom),
-        formatBearing: (value) => getFormattedBearingValue(round(value || 0, 6)),
+        formatBearing: (value, trueBearing = {}) => getFormattedBearingValue(round(value || 0, 6), trueBearing),
         onChangeUom: () => {},
         onChangeFormat: () => {},
         onMount: () => {},
@@ -179,7 +182,7 @@ class MeasureComponent extends React.Component {
         return {
             lineToolTip: <Tooltip id={"tooltip-button.line"}>{this.props.lengthLabel}</Tooltip>,
             areaToolTip: <Tooltip id={"tooltip-button.area"}>{this.props.areaLabel}</Tooltip>,
-            bearingToolTip: <Tooltip id={"tooltip-button.bearing"}>{this.props.bearingLabel}</Tooltip>
+            bearingToolTip: <Tooltip id={"tooltip-button.bearing"}>{this.isTrueBearing() ? this.props.trueBearingLabel : this.props.bearingLabel}</Tooltip>
         };
     };
 
@@ -235,8 +238,8 @@ class MeasureComponent extends React.Component {
                 {this.props.bearingMeasureEnabled && this.props.bearingMeasureValueEnabled && <Row>
                     <FormGroup style={{display: 'flex', alignItems: 'center', minHeight: 34}}>
                         <Col xs={6}>
-                            <span>{this.props.bearingLabel}: </span>
-                            <span id="measure-bearing-res" className="measure-value"><h3><strong>{this.props.formatBearing(this.props.measurement.bearing || 0)}</strong></h3></span>
+                            <span>{this.isTrueBearing() ? this.props.trueBearingLabel : this.props.bearingLabel}: </span>
+                            <span id="measure-bearing-res" className="measure-value"><h3><strong>{this.props.formatBearing((this.props.measurement.bearing || 0), this.isTrueBearing() && this.props.measurement.trueBearing)}</strong></h3></span>
                         </Col>
                     </FormGroup>
                 </Row>}
@@ -316,7 +319,7 @@ class MeasureComponent extends React.Component {
                                             active: !!this.props.bearingMeasureEnabled,
                                             bsStyle: this.props.bearingMeasureEnabled ? 'success' : 'primary',
                                             glyph: this.props.bearingGlyph,
-                                            tooltip: this.renderText(this.props.inlineGlyph && this.props.bearingGlyph, "measureComponent.MeasureBearing"),
+                                            tooltip: this.renderText(this.props.inlineGlyph && this.props.bearingGlyph, this.isTrueBearing() ? "measureComponent.MeasureTrueBearing" : "measureComponent.MeasureBearing"),
                                             onClick: () => this.onBearingClick()
                                         }
                                     ]
@@ -415,6 +418,10 @@ class MeasureComponent extends React.Component {
                 </Grid>)}
             </BorderLayout>
         );
+    }
+
+    isTrueBearing = () =>{
+        return this.props.measurement && this.props.measurement.trueBearing && this.props.measurement.trueBearing.measureTrueBearing;
     }
 }
 

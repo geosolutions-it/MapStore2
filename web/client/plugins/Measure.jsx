@@ -19,7 +19,7 @@ const {MeasureDialog} = require('./measure/index');
 
 const {highlightPoint} = require('../actions/annotations');
 const { isOpenlayers } = require('../selectors/maptype');
-const { isCoordinateEditorEnabledSelector, showAddAsAnnotationSelector } = require('../selectors/measurement');
+const { isCoordinateEditorEnabledSelector, showAddAsAnnotationSelector, isTrueBearingEnabledSelector } = require('../selectors/measurement');
 const { showCoordinateEditorSelector, measureSelector } = require('../selectors/controls');
 
 const selector = (state) => {
@@ -42,6 +42,7 @@ const selector = (state) => {
         withReset: isOpenlayers(state),
         showExportToGeoJSON: isOpenlayers(state),
         showAddAsAnnotation: showAddAsAnnotationSelector(state) && isOpenlayers(state),
+        trueBearing: isTrueBearingEnabledSelector(state),
         showAddAsLayer: isOpenlayers(state),
         isCoordEditorEnabled: state.measurement && !state.measurement.isDrawing,
         geomType: state.measurement && state.measurement.geomType,

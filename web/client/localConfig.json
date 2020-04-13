@@ -363,7 +363,11 @@
                 "name": "Measure",
                 "cfg": {
                   "defaultOptions": {
-                    "showAddAsAnnotation": true
+                    "showAddAsAnnotation": true,
+                    "trueBearing":{
+                      "measureTrueBearing": false,
+                      "fractionDigits": 2
+                    }
                   }
                 }
             }, "Print", "MapImport", {
