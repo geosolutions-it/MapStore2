@@ -84,6 +84,7 @@
     "@geosolutions/proj4": "2.4.7",
     "@geosolutions/react-joyride": "1.10.2",
     "@geosolutions/wkt-parser": "1.2.2",
+    "@google-cloud/translate": "^5.3.0",
     "@mapbox/geojsonhint": "2.0.1",
     "@mapbox/togeojson": "0.16.0",
     "@turf/bbox": "4.1.0",
