@@ -13,6 +13,7 @@ const Toolbar = require('../toolbar/Toolbar');
 const draggableComponent = require('../enhancers/draggableComponent');
 const CoordinateEntry = require('./CoordinateEntry');
 const Message = require('../../I18N/Message');
+const {isEqual, isNumber} = require('lodash');
 const DropdownToolbarOptions = require('../toolbar/DropdownToolbarOptions');
 
 class CoordinatesRow extends React.Component {
@@ -47,11 +48,23 @@ class CoordinatesRow extends React.Component {
 
     constructor(props) {
         super(props);
-        this.state = {lat: this.props.component.lat, lon: this.props.component.lon, disabledApplyChange: true};
+        this.state = {
+            lat: isNumber(this.props.component.lat) ? this.props.component.lat : "",
+            lon: isNumber(this.props.component.lon) ? this.props.component.lon : "",
+            disabledApplyChange: true
+        };
+    }
+
+    UNSAFE_componentWillReceiveProps(newProps) {
+        if (!isEqual(newProps.component, this.props.component)) {
+            const lat = isNumber(newProps.component.lat) ? newProps.component.lat : "";
+            const lon = isNumber(newProps.component.lon) ? newProps.component.lon : "";
+            this.setState({lat, lon, disabledApplyChange: true});
+        }
     }
 
     onChangeLatLon = (coord, val) => {
-        this.setState({...this.state, [coord]: val}, ()=>{
+        this.setState({...this.state, [coord]: parseFloat(val)}, ()=>{
             const changeLat = parseFloat(this.state.lat) !== parseFloat(this.props.component.lat);
             const changeLon = parseFloat(this.state.lon) !== parseFloat(this.props.component.lon);
             this.setState({...this.state, disabledApplyChange: !(changeLat || changeLon)});

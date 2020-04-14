@@ -8,7 +8,7 @@
 
 const {lifecycle, withHandlers, compose} = require('recompose');
 const {set} = require('../../../../utils/ImmutableUtils');
-const {isEqual, isNil} = require('lodash');
+const {isEqual, isNil, isNaN} = require('lodash');
 
 /**
  * Enhancer to enable set index only if Component has header
@@ -42,8 +42,8 @@ const identifyHandlers = withHandlers({
         onSubmitClickPoint = () => {},
         point
     }) => (val) => {
-        const lat = !isNil(val.lat) ? parseFloat(val.lat) : 0;
-        const lng = !isNil(val.lon) ? parseFloat(val.lon) : 0;
+        const lat = !isNil(val.lat) && !isNaN(val.lat) ? parseFloat(val.lat) : 0;
+        const lng = !isNil(val.lon) && !isNaN(val.lon) ? parseFloat(val.lon) : 0;
         let newPoint = set('latlng.lng', lng, set('latlng.lat', lat, point));
         onSubmitClickPoint(newPoint);
     },
