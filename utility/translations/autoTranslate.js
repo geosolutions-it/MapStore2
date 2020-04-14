@@ -24,17 +24,19 @@ const baseFile = 'data.en-US.json';
 
 const TRANSLATIONS_FOLDER = 'web/client/translations/';
 
-const LANGUAGES = [{code: "it", file: "data.it-IT.json", missing: []}, { code: "es", file: "data.es-ES.json", missing: []}, { code: "de", file: "data.de-DE.json",  missing: []}, { code: "fr", file: "data.fr-FR.json",  missing: []}];
+const LANGUAGES = [
+    { code: "it", file: "data.it-IT.json", missing: []},
+    { code: "es", file: "data.es-ES.json", missing: []},
+    { code: "de", file: "data.de-DE.json",  missing: []},
+    { code: "fr", file: "data.fr-FR.json",  missing: []}];
+
 const log = s => process.stdout.write(`${s}\n`);
-const apykey = process.argv[2];
 
-
-// const fs = require('fs');
-// const baseobj = JSON.parse(fs.readFileSync(`${TRANSLATIONS_FOLDER}${baseFile}`, 'utf8'));
+const apyKey = process.argv[2];
 
 const isString = o => typeof o === 'string';
 
-const missingLaguanges = (key) => {
+const missingLanguages = (key) => {
     for (const {data, missing} of LANGUAGES) {
         if (get(data, key) === undefined) {
             missing.push(key);
@@ -76,12 +78,12 @@ async function saveFile(path, data) {
     await writeFile(path, JSON.stringify(data, null, 4));
 }
 
-if (!apykey) {
-    log('Usage: node ./autoTranslate.js projectId');
+if (!apyKey) {
+    log('Usage: node ./autoTranslate.js apyKey');
     throw new Error("Wrong parameters!");
 } else {
-    translate = new Translate({key: apykey});
-    // Open traslations Files
+    translate = new Translate({key: apyKey});
+    // Open translations Files
     log(`Open base language file ${baseFile}`);
     const baseLanguage = require("../../" + TRANSLATIONS_FOLDER + baseFile);
 
@@ -91,13 +93,13 @@ if (!apykey) {
     }
     // Group missing translations by language
     for (const key of flattenObject(baseLanguage)) {
-        missingLaguanges(key);
+        missingLanguages(key);
     }
     // Translate single
     for (const lang of LANGUAGES) {
         translateLanguage(lang, baseLanguage).then(updated => {
             if (updated) {
-                saveFile("./" + TRANSLATIONS_FOLDER  + lang.file, lang.data).then(() => log(`Aggiornata e Salvata lingua ${lang.code}`));
+                saveFile("./" + TRANSLATIONS_FOLDER  + lang.file, lang.data).then(() => log(`Updated and saved locale ${lang.code}`));
             }
         });
     }
