@@ -187,12 +187,36 @@ class General extends React.Component {
                             </Col>
                         </div>
                     }
+                    {console.log("this.props.element", this.props.element)}
+                    <Col xs={12}>
+                        <label key="legend-options-title" className="control-label"><Message msgId="layerProperties.legendOptions.title" /></label>
+                    </Col>
+                    <Col xs={12} sm={6} className="first-selectize">
+                        <FormGroup>
+                            <ControlLabel><Message msgId="layerProperties.legendOptions.legendWidth" /></ControlLabel>
+                            <FormControl
+                                defaultValue={this.props.element.width || ''}
+                                key="legendWidth"
+                                type="text"
+                                onBlur={this.updateEntry.bind(null, "legendWidth")} />
+                        </FormGroup>
+                    </Col>
+                    <Col xs={12} sm={6} className="second-selectize">
+                        <FormGroup>
+                            <ControlLabel><Message msgId="layerProperties.legendOptions.legendHeight" /></ControlLabel>
+                            <FormControl
+                                defaultValue={this.props.element.height || ''}
+                                key="legendHeight"
+                                type="text"
+                                onBlur={(e)=>this.updateEntry({ legendOptions: {"legendHeight": e.target.value}})} />
+                        </FormGroup>
+                    </Col>
                 </form>
             </Grid>
         );
     }
 
-    updateEntry = (key, event) => this.props.onChange(key, event.target.value);
+    updateEntry = (key, event) => isObject(key) ? this.props.onChange(key) : this.props.onChange(key, event.target.value);
 
     updateTranslation = (key, event) => {
         const title = (key === 'default' && isString(this.props.element.title))
