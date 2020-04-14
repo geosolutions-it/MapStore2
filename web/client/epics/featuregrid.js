@@ -20,9 +20,10 @@ const {changeDrawingStatus, GEOMETRY_CHANGED, drawSupportReset} = require('../ac
 const requestBuilder = require('../utils/ogc/WFST/RequestBuilder');
 const {findGeometryProperty} = require('../utils/ogc/WFS/base');
 const { FEATURE_INFO_CLICK, HIDE_MAPINFO_MARKER} = require('../actions/mapInfo');
-const {query, QUERY, QUERY_CREATE, QUERY_RESULT, LAYER_SELECTED_FOR_SEARCH, FEATURE_TYPE_LOADED, UPDATE_QUERY, featureTypeSelected, createQuery, updateQuery, TOGGLE_SYNC_WMS, QUERY_ERROR, FEATURE_LOADING} = require('../actions/wfsquery');
+const {query, QUERY, QUERY_CREATE, QUERY_RESULT, LAYER_SELECTED_FOR_SEARCH, FEATURE_TYPE_LOADED, UPDATE_QUERY, featureTypeSelected, createQuery, updateQuery, toggleSyncWms, TOGGLE_SYNC_WMS, QUERY_ERROR, FEATURE_LOADING} = require('../actions/wfsquery');
 const {reset, QUERY_FORM_SEARCH, loadFilter} = require('../actions/queryform');
-const {zoomToExtent} = require('../actions/map');
+const {zoomToExtent, CLICK_ON_MAP} = require('../actions/map');
+const {projectionSelector} = require('../selectors/map');
 
 
 const { BROWSE_DATA, changeLayerProperties, refreshLayerVersion, CHANGE_LAYER_PARAMS} = require('../actions/layers');
@@ -35,7 +36,7 @@ const {SORT_BY, CHANGE_PAGE, SAVE_CHANGES, SAVE_SUCCESS, DELETE_SELECTED_FEATURE
     SELECT_FEATURES, DESELECT_FEATURES, START_DRAWING_FEATURE, CREATE_NEW_FEATURE,
     CLEAR_CHANGES_CONFIRMED, FEATURE_GRID_CLOSE_CONFIRMED,
     openFeatureGrid, closeFeatureGrid, OPEN_FEATURE_GRID, CLOSE_FEATURE_GRID, CLOSE_FEATURE_GRID_CONFIRM, OPEN_ADVANCED_SEARCH, ZOOM_ALL, UPDATE_FILTER, START_SYNC_WMS,
-    STOP_SYNC_WMS, startSyncWMS, storeAdvancedSearchFilter, fatureGridQueryResult, LOAD_MORE_FEATURES, SET_TIME_SYNC } = require('../actions/featuregrid');
+    STOP_SYNC_WMS, startSyncWMS, storeAdvancedSearchFilter, fatureGridQueryResult, LOAD_MORE_FEATURES, SET_TIME_SYNC, selectFeatures} = require('../actions/featuregrid');
 
 const {TOGGLE_CONTROL, resetControls, setControlProperty, toggleControl} = require('../actions/controls');
 const {queryPanelSelector, showCoordinateEditorSelector, drawerEnabledControlSelector} = require('../selectors/controls');
@@ -49,8 +50,11 @@ const {getSelectedLayer} = require('../selectors/layers');
 
 const {interceptOGCError} = require('../utils/ObservableUtils');
 const {gridUpdateToQueryUpdate, updatePages} = require('../utils/FeatureGridUtils');
-const {queryFormUiStateSelector} = require('../selectors/queryform');
+const {queryFormUiStateSelector, spatialFieldSelector} = require('../selectors/queryform');
 const {composeAttributeFilters} = require('../utils/FilterUtils');
+
+const CoordinatesUtils = require('../utils/CoordinatesUtils');
+const MapUtils = require('../utils/MapUtils');
 
 const setupDrawSupport = (state, original) => {
     const defaultFeatureProj = getDefaultFeatureProjection();
@@ -149,8 +153,7 @@ const createLoadPageFlow = (store) => ({page, size} = {}) => {
     ));
 };
 
-const createInitialQueryFlow = (action$, store, {url, name, id} = {}) => {
-    const filterObj = get(store.getState(), `featuregrid.advancedFilters["${id}"]`);
+const createInitialQueryFlow = (action$, store, filterObj, {url, name} = {}) => {
     const createInitialQuery = () => createQuery(url, filterObj || {
         featureTypeName: name,
         filterType: 'OGC',
@@ -190,7 +193,7 @@ module.exports = {
                 setLayer(layer.id),
                 openFeatureGrid()
             ).merge(
-                createInitialQueryFlow(action$, store, layer)
+                createInitialQueryFlow(action$, store, get(store.getState(), `featuregrid.advancedFilters["${layer.id}"]`), layer)
             )
                 .merge(
                     Rx.Observable.of(reset())
@@ -775,5 +778,81 @@ module.exports = {
                 && getState().browser.mobile
                 && drawerEnabledControlSelector(getState())
             )
-            .mapTo(toggleControl('drawer', 'enabled'))
+            .mapTo(toggleControl('drawer', 'enabled')),
+    handleEditModeFiltering: (action$, store) =>
+        action$
+            .ofType(TOGGLE_MODE)
+            .filter(() => modeSelector(store.getState()) === MODES.EDIT)
+            .flatMap(() => {
+                const selectedLayer = getSelectedLayer(store.getState()) || {};
+                const selectedLayerFilterObj = selectedLayer.filterObj;
+                const advancedFilter = get(store.getState(), `featuregrid.advancedFilters["${selectedLayer.id}"]`);
+                const searchLayer = selectedLayer && {
+                    id: selectedLayer.id,
+                    url: selectedLayer.search.url || selectedLayer.url,
+                    name: selectedLayer.name
+                };
+
+                return Rx.Observable.of(
+                    ...(isSyncWmsActive(store.getState()) ? [toggleSyncWms()] : []),
+                    changeLayerProperties(selectedLayer.id, {filterObj: undefined}),
+                    storeAdvancedSearchFilter()
+                ).concat(Rx.Observable.merge(
+                    createInitialQueryFlow(action$, store, null, searchLayer).concat(action$.ofType(CLICK_ON_MAP)
+                        .switchMap(({point: {latlng: {lat, lng}, pixel}}) => {
+                            const hook = MapUtils.getHook(MapUtils.GET_COORDINATES_FROM_PIXEL_HOOK);
+                            const pixelRadius = 4;
+                            const radiusA = [lng, lat];
+                            const radiusB = hook &&
+                                CoordinatesUtils.pointObjectToArray(CoordinatesUtils.reproject(hook([
+                                    pixel.x,
+                                    pixel.y >= pixelRadius ? pixel.y - pixelRadius : pixel.y + pixelRadius
+                                ]), projectionSelector(store.getState()), 'EPSG:4326'));
+                            const radius = hook ? Math.sqrt((radiusA[0] - radiusB[0]) * (radiusA[0] - radiusB[0]) +
+                                (radiusA[1] - radiusB[1]) * (radiusA[1] - radiusB[1])) :
+                                0.01;
+
+                            return createInitialQueryFlow(action$, store, {
+                                featureTypeName: selectedLayer.name,
+                                filterFields: [],
+                                filterType: "OGC",
+                                groupFileds: {
+                                    id: 1,
+                                    logic: "OR",
+                                    index: 0
+                                },
+                                hits: false,
+                                pagination: {
+                                    startIndex: 0,
+                                    maxFeatures: 20
+                                },
+                                sortOptions: null,
+                                spatialField: {
+                                    attribute: get(spatialFieldSelector(store.getState()), 'attribute'),
+                                    geometry: {
+                                        center: [lng, lat],
+                                        coordinates: CoordinatesUtils.calculateCircleCoordinates({x: lng, y: lat}, radius, 100),
+                                        extent: [lng - radius, lat - radius, lng + radius, lat + radius],
+                                        projection: "EPSG:4326",
+                                        radius,
+                                        type: "Polygon"
+                                    },
+                                    method: "Circle",
+                                    operation: "INTERSECTS"
+                                }
+                            }, searchLayer).concat(action$.ofType(QUERY_RESULT).take(1).switchMap(({result = {}} = {}) => {
+                                const features = result.features || [];
+                                return Rx.Observable.of(selectFeatures(features.length === 1 ? [features[0]] : []));
+                            }));
+                        }))
+                        .takeUntil(action$.ofType(TOGGLE_MODE, CLOSE_FEATURE_GRID, LOCATION_CHANGE)),
+                    action$.ofType(TOGGLE_MODE, CLOSE_FEATURE_GRID, LOCATION_CHANGE).take(1)
+                        .flatMap(() => Rx.Observable.of(
+                            ...(!isSyncWmsActive(store.getState()) ? [toggleSyncWms()] : []),
+                            selectFeatures([]),
+                            changeLayerProperties(selectedLayer.id, {filterObj: selectedLayerFilterObj}),
+                            storeAdvancedSearchFilter(advancedFilter),
+                        ).concat(createInitialQueryFlow(action$, store, advancedFilter, searchLayer)))
+                ));
+            })
 };
