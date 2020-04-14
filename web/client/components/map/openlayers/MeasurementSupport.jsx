@@ -200,7 +200,8 @@ export default class MeasurementSupport extends React.Component {
                 'LineString': () => this.formatLengthValue(
                     isBearing ? calculateAzimuth(coords[0], coords[1], 'EPSG:4326') : calculateDistance(coords, props.measurement.lengthFormula),
                     props.uom,
-                    isBearing
+                    isBearing,
+                    props.measurement.trueBearing
                 ),
                 'Polygon': () => this.formatAreaValue(this.getArea(geometryObj), props.uom)
             };
@@ -314,7 +315,7 @@ export default class MeasurementSupport extends React.Component {
             } else if (type === 'area') {
                 return this.formatAreaValue(value, props.uom);
             }
-            return this.formatLengthValue(value, props.uom, true);
+            return this.formatLengthValue(value, props.uom, true, props.measurement.trueBearing);
         };
 
         for (let i = 0; i < this.outputValues.length; ++i) {
@@ -606,7 +607,8 @@ export default class MeasurementSupport extends React.Component {
                 'Bearing': () => this.formatLengthValue(
                     calculateAzimuth(coords[0], coords[1], getProjectionCode(this.props.map)),
                     this.props.uom,
-                    true
+                    true,
+                    this.props.measurement.trueBearing
                 )
             };
 

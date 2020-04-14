@@ -14,6 +14,7 @@ const dragDropContext = require('react-dnd').DragDropContext;
 const testBackend = require('react-dnd-test-backend');
 const MeasureComponent = dragDropContext(testBackend)(require('../MeasureComponent'));
 const TestUtils = require('react-dom/test-utils');
+const Message = require('../../../I18N/Message');
 
 describe("test the MeasureComponent", () => {
     beforeEach((done) => {
@@ -207,6 +208,52 @@ describe("test the MeasureComponent", () => {
             <MeasureComponent measurement={assign({}, measurement, {bearing: 315})} bearingMeasureEnabled bearingMeasureValueEnabled/>, document.getElementById("container")
         );
         expect(bearingSpan.innerHTML).toBe("<h3><strong>N 45° 0' 0'' W</strong></h3>");
+    });
+
+    it('test true bearing format', () => {
+        let measurement = {
+            lineMeasureEnabled: false,
+            areaMeasureEnabled: false,
+            bearingMeasureEnabled: true,
+            trueBearing: { measureTrueBearing: true, fractionDigits: 0},
+            geomType: 'LineString',
+            len: 0,
+            area: 0,
+            bearing: 0
+        };
+        let cmp = ReactDOM.render(
+            <MeasureComponent measurement={measurement} bearingMeasureEnabled bearingMeasureValueEnabled/>, document.getElementById("container")
+        );
+        expect(cmp).toExist();
+
+        const bearingSpan = document.getElementById('measure-bearing-res');
+        expect(bearingSpan).toExist();
+
+        const bearingTitle = TestUtils.findRenderedDOMComponentWithClass(cmp, 'form-group');
+        expect(bearingTitle.textContent).toContain('trueBearingLabel');
+
+        cmp = ReactDOM.render(
+            <MeasureComponent measurement={{...measurement, bearing: 45}} bearingMeasureEnabled bearingMeasureValueEnabled trueBearingLabel = {<Message msgId="True Bearing"/>}/>, document.getElementById("container")
+        );
+        expect(bearingSpan.innerHTML).toBe("<h3><strong>045° T</strong></h3>");
+
+        const bearingTitleText = TestUtils.findRenderedDOMComponentWithClass(cmp, 'form-group');
+        expect(bearingTitleText.textContent).toContain('True Bearing');
+
+        cmp = ReactDOM.render(
+            <MeasureComponent measurement={{...measurement, bearing: 135.235648, trueBearing: {...measurement.trueBearing, fractionDigits: 4}}} bearingMeasureEnabled bearingMeasureValueEnabled/>, document.getElementById("container")
+        );
+        expect(bearingSpan.innerHTML).toBe("<h3><strong>135.2356° T</strong></h3>");
+
+        cmp = ReactDOM.render(
+            <MeasureComponent measurement={{...measurement, bearing: 225.83202, trueBearing: {...measurement.trueBearing, fractionDigits: 2}}} bearingMeasureEnabled bearingMeasureValueEnabled/>, document.getElementById("container")
+        );
+        expect(bearingSpan.innerHTML).toBe("<h3><strong>225.83° T</strong></h3>");
+
+        cmp = ReactDOM.render(
+            <MeasureComponent measurement={assign({}, measurement, {bearing: 315})} bearingMeasureEnabled bearingMeasureValueEnabled/>, document.getElementById("container")
+        );
+        expect(bearingSpan.innerHTML).toBe("<h3><strong>315° T</strong></h3>");
     });
 
     it('test uom format area and lenght', () => {

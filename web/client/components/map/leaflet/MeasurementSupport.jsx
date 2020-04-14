@@ -409,7 +409,8 @@ class MeasurementSupport extends React.Component {
                 touchIcon: new L.DivIcon({
                     iconSize: new L.Point(8, 8),
                     className: 'leaflet-div-icon leaflet-editing-icon leaflet-touch-icon'
-                })
+                }),
+                trueBearing: newProps.measurement.trueBearing
             });
         } else if (newProps.measurement.geomType === 'Polygon') {
             const uomOptions = this.uomAreaOptions(newProps);
