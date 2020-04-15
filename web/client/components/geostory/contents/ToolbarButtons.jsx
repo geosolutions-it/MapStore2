@@ -22,6 +22,13 @@ const BUTTON_CLASSES = 'square-button-md no-border';
  * these components have been created because it was causing an excessive re-rendering
  */
 
+/**
+ * Size dropdown
+ * @prop {string} size one of `small`, `medium`, `large` and `full`
+ * @prop {string} align one of `left`, `center` and `right`
+ * @prop {function} filterOptions filter dropdown options by value (eg `({ value }) => value !== 'full'` to exclude `full` option)
+ * @prop {function} pullRight pull dropdown right
+ */
 export const SizeButtonToolbar = ({editMap: disabled = false, align, sectionType, size, update = () => {}, filterOptions, pullRight }) =>
     (<ToolbarDropdownButton
         value={size}
