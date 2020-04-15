@@ -558,6 +558,7 @@
     "identifyHighlightFeatures": "Korosta ominaisuuksia",
     "identifyShowCoordinateEditor": "Näytä koordinaattieditori",
     "identifyHideCoordinateEditor": "Piilota koordinaattieditori",
+    "identifyCoordinateApplyChanges": "Ota muutokset käyttöön",
     "identifyRevGeocodeModalTitle": "Osoite",
     "identifyRevGeocodeSubmitText": "Lisätietoja",
     "identifyRevGeocodeCloseText": "Sulje",

@@ -288,7 +288,7 @@ class CoordinatesEditor extends React.Component {
                         formatVisible={false}
                         removeVisible={componentsValidation[type].remove}
                         removeEnabled={this[componentsValidation[type].validation](this.props.components, componentsValidation[type].remove, idx)}
-                        onChange={this.change}
+                        onSubmit={this.change}
                         onMouseEnter={(val) => {
                             if (this.props.isMouseEnterEnabled || this.props.type === "LineString" || this.props.type === "Polygon" || this.props.type === "MultiPoint") {
                                 this.props.onHighlightPoint(val);
@@ -379,10 +379,13 @@ class CoordinatesEditor extends React.Component {
         }
         return components;
     }
-    change = (id, key, value) => {
+    change = (id, value) => {
         let tempComps = this.props.components;
-        tempComps[id][key] = isNaN(parseFloat(value)) ? "" : parseFloat(value);
-        this.props.onChange(tempComps, this.props.properties.radius, this.props.properties.valueText, this.props.mapProjection);
+        const lat = isNaN(parseFloat(value.lat)) ? "" : parseFloat(value.lat);
+        const lon = isNaN(parseFloat(value.lon)) ? "" : parseFloat(value.lon);
+        tempComps[id] = {lat, lon};
+        let validComponents = this.addCoordPolygon(tempComps);
+        this.props.onChange(validComponents, this.props.properties.radius, this.props.properties.valueText, this.props.mapProjection);
         if (!this.isValid(tempComps)) {
             if (this.props.isMouseLeaveEnabled || this.props.type === "LineString" || this.props.type === "Polygon") {
                 this.props.onHighlightPoint(null);

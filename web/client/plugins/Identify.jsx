@@ -182,7 +182,7 @@ const IdentifyPlugin = compose(
     connect(selector, {
         purgeResults: purgeMapInfoResults,
         closeIdentify,
-        onChangeClickPoint: featureInfoClick,
+        onSubmitClickPoint: featureInfoClick,
         onToggleShowCoordinateEditor: toggleShowCoordinateEditor,
         onChangeFormat: changeFormat,
         changeMousePointer,
