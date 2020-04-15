@@ -71,7 +71,7 @@ describe("test the CoordinatesEditor Panel", () => {
         expect(plus.length).toBe(0);
     });
 
-    it('CoordinatesEditor as marker editor with base input coordinates and update coordinates', () => {
+    it('CoordinatesEditor update coordinates when coordinates props changes', () => {
         let editor = ReactDOM.render(
             <CoordinatesEditor
                 type="Point"
