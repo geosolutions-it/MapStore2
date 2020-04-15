@@ -30,6 +30,7 @@ class WMSLegend extends React.Component {
 
     render() {
         let node = this.props.node || {};
+        console.log("this.node", this.props)
         if (this.canShow(node) && node.type === "wms" && node.group !== "background") {
             return (
                 <div style={this.props.legendContainerStyle}>
@@ -38,6 +39,8 @@ class WMSLegend extends React.Component {
                         layer={node}
                         currentZoomLvl={this.props.currentZoomLvl}
                         scales={this.props.scales}
+                        legendHeigth={this.props.node.legendOptions && this.props.node.legendOptions.legendHeight}
+                        legendWidth={this.props.node.legendOptions && this.props.node.legendOptions.legendWidth}
                         legendOptions={this.props.WMSLegendOptions}
                         scaleDependent={this.props.scaleDependent}/>
                 </div>

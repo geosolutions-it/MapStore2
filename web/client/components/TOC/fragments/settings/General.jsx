@@ -195,20 +195,20 @@ class General extends React.Component {
                         <FormGroup>
                             <ControlLabel><Message msgId="layerProperties.legendOptions.legendWidth" /></ControlLabel>
                             <FormControl
-                                defaultValue={this.props.element.width || ''}
+                                defaultValue={this.props.element.legendOptions && this.props.element.legendOptions.legendWidth || ''}
                                 key="legendWidth"
                                 type="text"
-                                onBlur={this.updateEntry.bind(null, "legendWidth")} />
+                                onBlur={(e)=>this.updateEntry({ legendOptions: {"legendHeight": this.props.element.legendOptions && this.props.element.legendOptions.legendHeight || "", "legendWidth": e.target.value}})} />
                         </FormGroup>
                     </Col>
                     <Col xs={12} sm={6} className="second-selectize">
                         <FormGroup>
                             <ControlLabel><Message msgId="layerProperties.legendOptions.legendHeight" /></ControlLabel>
                             <FormControl
-                                defaultValue={this.props.element.height || ''}
+                                defaultValue={this.props.element.legendOptions && this.props.element.legendOptions.legendHeight || ''}
                                 key="legendHeight"
                                 type="text"
-                                onBlur={(e)=>this.updateEntry({ legendOptions: {"legendHeight": e.target.value}})} />
+                                onBlur={(e)=>this.updateEntry({ legendOptions: {"legendWidth": this.props.element.legendOptions && this.props.element.legendOptions.legendWidth || "", "legendHeight": e.target.value}})} />
                         </FormGroup>
                     </Col>
                 </form>
