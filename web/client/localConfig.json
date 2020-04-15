@@ -351,7 +351,9 @@
                     "layerOptions": {
                       "legendOptions": {
                         "WMSLegendOptions": "forceLabels:on;fontSize:30",
-                        "scaleDependent": true
+                        "scaleDependent": true,
+                        "legendWidth": 12,
+                        "legendHeight": 12
                       }
                     }
                 }

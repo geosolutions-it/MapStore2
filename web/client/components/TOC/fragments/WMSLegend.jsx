@@ -8,6 +8,7 @@
 
 const React = require('react');
 const PropTypes = require('prop-types');
+const { isEmpty, isNumber } = require('lodash');
 const Legend = require('./legend/Legend');
 
 class WMSLegend extends React.Component {
@@ -19,7 +20,9 @@ class WMSLegend extends React.Component {
         currentZoomLvl: PropTypes.number,
         scales: PropTypes.array,
         WMSLegendOptions: PropTypes.string,
-        scaleDependent: PropTypes.bool
+        scaleDependent: PropTypes.bool,
+        legendWidth: PropTypes.number,
+        legendHeight: PropTypes.number
     };
 
     static defaultProps = {
@@ -30,8 +33,9 @@ class WMSLegend extends React.Component {
 
     render() {
         let node = this.props.node || {};
-        console.log("this.node", this.props)
-        if (this.canShow(node) && node.type === "wms" && node.group !== "background") {
+        const showLegend = this.canShow(node) && node.type === "wms" && node.group !== "background";
+        const useOptions = showLegend && this.useLegendOptions();
+        if (showLegend) {
             return (
                 <div style={this.props.legendContainerStyle}>
                     <Legend
@@ -39,8 +43,8 @@ class WMSLegend extends React.Component {
                         layer={node}
                         currentZoomLvl={this.props.currentZoomLvl}
                         scales={this.props.scales}
-                        legendHeigth={this.props.node.legendOptions && this.props.node.legendOptions.legendHeight}
-                        legendWidth={this.props.node.legendOptions && this.props.node.legendOptions.legendWidth}
+                        legendHeigth={useOptions && this.props.node.legendOptions && this.props.node.legendOptions.legendHeight || this.props.legendHeight ||  undefined}
+                        legendWidth={useOptions && this.props.node.legendOptions && this.props.node.legendOptions.legendWidth || this.props.legendWidth || undefined}
                         legendOptions={this.props.WMSLegendOptions}
                         scaleDependent={this.props.scaleDependent}/>
                 </div>
@@ -52,6 +56,14 @@ class WMSLegend extends React.Component {
     canShow = (node) => {
         return node.visibility || !this.props.showOnlyIfVisible;
     };
+
+    useLegendOptions = () =>{
+        return (
+            !isEmpty(this.props.node.legendOptions) &&
+            isNumber(this.props.node.legendOptions.legendHeight) &&
+            isNumber(this.props.node.legendOptions.legendWidth)
+        );
+    }
 }
 
 module.exports = WMSLegend;

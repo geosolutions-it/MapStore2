@@ -187,30 +187,49 @@ class General extends React.Component {
                             </Col>
                         </div>
                     }
-                    {console.log("this.props.element", this.props.element)}
-                    <Col xs={12}>
-                        <label key="legend-options-title" className="control-label"><Message msgId="layerProperties.legendOptions.title" /></label>
-                    </Col>
-                    <Col xs={12} sm={6} className="first-selectize">
-                        <FormGroup>
-                            <ControlLabel><Message msgId="layerProperties.legendOptions.legendWidth" /></ControlLabel>
-                            <FormControl
-                                defaultValue={this.props.element.legendOptions && this.props.element.legendOptions.legendWidth || ''}
-                                key="legendWidth"
-                                type="text"
-                                onBlur={(e)=>this.updateEntry({ legendOptions: {"legendHeight": this.props.element.legendOptions && this.props.element.legendOptions.legendHeight || "", "legendWidth": e.target.value}})} />
-                        </FormGroup>
-                    </Col>
-                    <Col xs={12} sm={6} className="second-selectize">
-                        <FormGroup>
-                            <ControlLabel><Message msgId="layerProperties.legendOptions.legendHeight" /></ControlLabel>
-                            <FormControl
-                                defaultValue={this.props.element.legendOptions && this.props.element.legendOptions.legendHeight || ''}
-                                key="legendHeight"
-                                type="text"
-                                onBlur={(e)=>this.updateEntry({ legendOptions: {"legendWidth": this.props.element.legendOptions && this.props.element.legendOptions.legendWidth || "", "legendHeight": e.target.value}})} />
-                        </FormGroup>
-                    </Col>
+                    <div className={"legend-options"}>
+                        <Col xs={12} className={"legend-label"}>
+                            <label key="legend-options-title" className="control-label"><Message msgId="layerProperties.legendOptions.title" /></label>
+                        </Col>
+                        <Col xs={12} sm={6} className="first-selectize">
+                            <FormGroup>
+                                <ControlLabel><Message msgId="layerProperties.legendOptions.legendWidth" /></ControlLabel>
+                                <FormControl
+                                    defaultValue={this.props.element.legendOptions && this.props.element.legendOptions.legendWidth || ''}
+                                    key="legendWidth"
+                                    type="number"
+                                    onKeyPress={(e)=> !RegExp(/^(|\d)+$/).test(String.fromCharCode(e.keyCode || e.which)) && e.preventDefault()}
+                                    onBlur={(e)=>{
+                                        const value = e.target.value && Math.round(e.target.value);
+                                        this.updateEntry({
+                                            legendOptions: {
+                                                "legendHeight": this.props.element.legendOptions && this.props.element.legendOptions.legendHeight || "",
+                                                "legendWidth": value
+                                            }
+                                        });
+                                    }} />
+                            </FormGroup>
+                        </Col>
+                        <Col xs={12} sm={6} className="second-selectize">
+                            <FormGroup>
+                                <ControlLabel><Message msgId="layerProperties.legendOptions.legendHeight" /></ControlLabel>
+                                <FormControl
+                                    defaultValue={this.props.element.legendOptions && this.props.element.legendOptions.legendHeight || ''}
+                                    key="legendHeight"
+                                    type="number"
+                                    onKeyPress={(e)=> !RegExp(/^(|\d)+$/).test(String.fromCharCode(e.keyCode || e.which)) && e.preventDefault()}
+                                    onBlur={(e)=> {
+                                        const value = e.target.value && Math.round(e.target.value);
+                                        this.updateEntry({
+                                            legendOptions: {
+                                                "legendWidth": this.props.element.legendOptions && this.props.element.legendOptions.legendWidth || "",
+                                                "legendHeight": value
+                                            }
+                                        });
+                                    }} />
+                            </FormGroup>
+                        </Col>
+                    </div>
                 </form>
             </Grid>
         );
