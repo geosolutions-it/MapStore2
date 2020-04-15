@@ -80,13 +80,25 @@ const toolButtons = {
 
 /**
  * Toolbar to update properties of content,
- * @prop {array} tools list of tool's names to display in the edit toolbar, available tools `size`, `align` and `theme`
+ * @prop {array} tools list of tool's names or object ({ id: 'toolName' }) to display in the edit toolbar, available tools `size`, `align` and `theme`
  * @prop {string} size one of `small`, `medium`, `large` and `full`
  * @prop {string} align one of `left`, `center` and `right`
  * @prop {string} theme one of `bright`, `bright-text`, `dark` and `dark-text`
  * @prop {string} fit one of `contain` and `cover`
  * @prop {function} update handler for select properties events, parameters (key, value)
  * @example
+ *
+ * // tools prop with string
+ * function Content({ children }) {
+ *  return <div className="test-toolbar"><ContentToolbar tools={[ 'size' ]}/>{children}</div>;
+ * }
+ *
+ * // tools prop with object entry to override default props
+ * function Content({ children }) {
+ *  const size = { id: 'size', pullRight: true }; // override pullRight props of size dropdown
+ *  return <div className="test-toolbar"><ContentToolbar tools={[ size ]}/>{children}</div>;
+ * }
+ *
  */
 export default function ContentToolbar({
     tools = [],
@@ -100,8 +112,8 @@ export default function ContentToolbar({
                     noTooltipWhenDisabled: true
                 }}
                 buttons={tools
-                    .filter((id) => toolButtons[id])
-                    .map(id => toolButtons[id](props))}/>
+                    .filter((tool) => tool?.id && toolButtons[tool.id] || toolButtons[tool])
+                    .map(tool => tool?.id && toolButtons[tool.id]({ ...props, ...tool }) || toolButtons[tool](props))}/>
         </div>
     );
 }

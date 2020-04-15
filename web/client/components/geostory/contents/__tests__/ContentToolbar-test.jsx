@@ -98,6 +98,18 @@ describe('ContentToolbar component', () => {
         expect(buttons.length).toEqual(1);
         ReactTestUtils.Simulate.click(buttons[0]);
     });
+    it('should accept object tool', () => {
+        const filterOptions = ({ value }) => value !== 'full';
+        ReactDOM.render(<ContentToolbar
+            tools={[{ id: 'size', filterOptions }]}
+        />, document.getElementById('container'));
+        const buttons = document.getElementsByTagName('button');
+        expect(buttons).toBeTruthy();
+        expect(buttons.length).toEqual(1);
+        ReactTestUtils.Simulate.click(buttons[0]);
+        const menuItems = document.querySelectorAll('.dropdown-menu > li');
+        expect(menuItems.length).toBe(3);
+    });
     describe('tools', () => {
         // TODO: align, theme, size...
         it(`align`, (done) => {

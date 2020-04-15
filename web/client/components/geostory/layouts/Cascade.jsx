@@ -107,7 +107,7 @@ const Cascade = ({
     isContentFocused = false,
     getSize = defaultGetSize,
     theme = {}
-}) => (<BorderLayout  className={`ms-cascade-story ms-${mode}`} bodyClassName={`ms2-border-layout-body ${isContentFocused ? 'no-overflow' : ''}`}>
+}) => (<BorderLayout  className={`ms-cascade-story ms-${mode}`}>
     <ContainerDimensions
         sections={sections}
         add={add}>
@@ -119,7 +119,10 @@ const Cascade = ({
             return (<div
                 id="ms-sections-container"
                 className={`ms-sections-container${sizeClassName}`}
-                style={storyTheme}>
+                style={{
+                    ...storyTheme,
+                    ...isContentFocused && { overflow: 'hidden' }
+                }}>
                 {
                     sections.map(({ contents = [], id: sectionId, type: sectionType, cover }) => {
                         return (
