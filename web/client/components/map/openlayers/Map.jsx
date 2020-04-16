@@ -67,7 +67,7 @@ class OpenlayersMap extends React.Component {
         onWarning: PropTypes.func,
         maxExtent: PropTypes.array,
         limits: PropTypes.object,
-        onMouseMoveOverTools: PropTypes.func,
+        onMouseOut: PropTypes.func,
         mousePosition: PropTypes.bool,
         isMouseMoveOverTools: PropTypes.bool
     };
@@ -89,7 +89,7 @@ class OpenlayersMap extends React.Component {
         registerHooks: true,
         hookRegister: mapUtils,
         interactive: true,
-        onMouseMoveOverTools: () => {},
+        onMouseOut: () => {},
         mousePosition: false,
         isMouseMoveOverTools: true
     };
@@ -162,6 +162,11 @@ class OpenlayersMap extends React.Component {
         this.map.enableEventListener = (event) => {
             delete this.map.disabledListeners[event];
         };
+        this.map.getViewport().addEventListener('mouseout', () => {
+            if (this.props.mousePosition) {
+                this.props.onMouseOut();
+            }
+        });
         // TODO support disableEventListener
         map.on('moveend', this.updateMapInfoState);
         map.on('singleclick', (event) => {
@@ -243,10 +248,6 @@ class OpenlayersMap extends React.Component {
     }
 
     UNSAFE_componentWillReceiveProps(newProps) {
-        const elements = document.querySelectorAll(':hover');
-        if (this.props.mousePosition && !this.props.isMouseMoveOverTools && !Array.from( elements ).some(el => el.id === 'map')) {
-            this.props.onMouseMoveOverTools();
-        }
         if (newProps.mousePointer !== this.props.mousePointer) {
             this.setMousePointer(newProps.mousePointer);
         }

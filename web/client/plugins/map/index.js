@@ -43,7 +43,7 @@ module.exports = (mapType, actions) => {
         onLayerLoad: layerLoad,
         onLayerError: layerError,
         onWarning: warning,
-        onMouseMoveOverTools: mouseMoveOverTools
+        onMouseOut: mouseMoveOverTools
     }, actions), (stateProps, dispatchProps, ownProps) => {
         return assign({}, ownProps, stateProps, assign({}, dispatchProps, {
             onMouseMove: stateProps.mousePosition ? dispatchProps.onMouseMove : () => {}
