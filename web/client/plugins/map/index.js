@@ -9,7 +9,7 @@
 const React = require('react');
 const {createSelector} = require('reselect');
 
-const {creationError, changeMapView, clickOnMap, mouseMoveMapEvent} = require('../../actions/map');
+const {creationError, changeMapView, clickOnMap, mouseMoveMapEvent, mouseMoveOverTools} = require('../../actions/map');
 const {removePopup} = require('../../actions/mapPopups');
 const {layerLoading, layerLoad, layerError} = require('../../actions/layers');
 const {changeMeasurementState, changeGeometry, resetGeometry, updateMeasures, setTextLabels} = require('../../actions/measurement');
@@ -31,7 +31,8 @@ module.exports = (mapType, actions) => {
 
     const LMap = connect((state) => ({
         projectionDefs: projectionDefsSelector(state),
-        mousePosition: isMouseMoveActiveSelector(state)
+        mousePosition: isMouseMoveActiveSelector(state),
+        isMouseMoveOverTools: state.map.present.mouseMoveOverTools
     }), assign({}, {
         onCreationError: creationError,
         onMapViewChanges: changeMapView,
@@ -40,7 +41,8 @@ module.exports = (mapType, actions) => {
         onLayerLoading: layerLoading,
         onLayerLoad: layerLoad,
         onLayerError: layerError,
-        onWarning: warning
+        onWarning: warning,
+        onMouseMoveOverTools: mouseMoveOverTools
     }, actions), (stateProps, dispatchProps, ownProps) => {
         return assign({}, ownProps, stateProps, assign({}, dispatchProps, {
             onMouseMove: stateProps.mousePosition ? dispatchProps.onMouseMove : () => {}

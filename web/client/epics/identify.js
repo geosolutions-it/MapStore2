@@ -280,12 +280,11 @@ export default {
     /**
      * Triggers data load on MOUSE_MOVE_MAP_EVENT events
      */
-    cmouseMoveMapEventEpic: (action$, {getState}) =>
+    mouseMoveMapEventEpic: (action$, {getState}) =>
         action$.ofType(MOUSE_MOVE_MAP_EVENT)
             .debounceTime(floatingIdentifyDelaySelector(getState()))
             .switchMap(({position, layer}) => {
-                const arePopupsPresent = getState().mapPopups.popups.length;
-                if (arePopupsPresent || !isMouseMoveIdentifyActiveSelector(getState())) {
+                if (!isMouseMoveIdentifyActiveSelector(getState()) || getState().map.present.mouseMoveOverTools) {
                     return Rx.Observable.empty();
                 }
                 return Rx.Observable.of(featureInfoClick(position, layer))

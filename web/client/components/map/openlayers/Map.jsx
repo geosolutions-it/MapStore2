@@ -66,7 +66,10 @@ class OpenlayersMap extends React.Component {
         wpsBounds: PropTypes.object,
         onWarning: PropTypes.func,
         maxExtent: PropTypes.array,
-        limits: PropTypes.object
+        limits: PropTypes.object,
+        onMouseMoveOverTools: PropTypes.func,
+        mousePosition: PropTypes.bool,
+        isMouseMoveOverTools: PropTypes.bool
     };
 
     static defaultProps = {
@@ -85,7 +88,10 @@ class OpenlayersMap extends React.Component {
         resize: 0,
         registerHooks: true,
         hookRegister: mapUtils,
-        interactive: true
+        interactive: true,
+        onMouseMoveOverTools: () => {},
+        mousePosition: false,
+        isMouseMoveOverTools: true
     };
 
     componentDidMount() {
@@ -237,6 +243,10 @@ class OpenlayersMap extends React.Component {
     }
 
     UNSAFE_componentWillReceiveProps(newProps) {
+        const elements = document.querySelectorAll(':hover');
+        if (this.props.mousePosition && !this.props.isMouseMoveOverTools && !Array.from( elements ).some(el => el.id === 'map')) {
+            this.props.onMouseMoveOverTools();
+        }
         if (newProps.mousePointer !== this.props.mousePointer) {
             this.setMousePointer(newProps.mousePointer);
         }
