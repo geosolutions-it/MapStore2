@@ -400,7 +400,6 @@
             },
             "errors": {
                 "loading": {
-                    "title": "Erreur lors du chargement de la carte",
                     "notFound": "Carte introuvable",
                     "notAccessible": "Carte non accessible",
                     "unknownError": "<p> <small> L'une des raisons suivantes pourrait être la cause: </small> <ul><li> vous n'avez pas la permission d'accéder à </li> <li> vous essayez d'accéder à une carte qui n'existe pas </li> <li> la carte a été supprimée </li> <li>the projection of the map is not configured</li></ul> <p>",
@@ -2416,6 +2415,10 @@
                 "uploadMissingBundleError": "Aucun paquet javascript dans le fichier téléchargé",
                 "uploadTooManyBundlesError": "Trop de bundles javascript dans le package zip",
                 "confirmRemovePlugin": "¿Está seguro de que desea eliminar la extensión?",
+                "cancelUpload": "Fermer",
+                "install": "Installer",
+                "uploadError": "Erreur lors de l'installation: ",
+                "uploadOk": "L'extension a été installée correctement",
                 "tooltips": {
                     "enableUserPlugin": "Activer la sélection du plugin actuel pour l'utilisateur",
                     "disableUserPlugin": "Désactiver la sélection du plugin actuel pour l'utilisateur",

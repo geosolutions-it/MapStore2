@@ -83,6 +83,7 @@ export default class ContextCreator extends React.Component {
         newContext: PropTypes.object,
         resource: PropTypes.object,
         pluginsConfig: PropTypes.object,
+        pluginsToUpload: PropTypes.array,
         viewerPlugins: PropTypes.array,
         ignoreViewerPlugins: PropTypes.bool,
         allAvailablePlugins: PropTypes.array,
@@ -123,12 +124,14 @@ export default class ContextCreator extends React.Component {
         onUpdateCfg: PropTypes.func,
         onEnableUploadPlugin: PropTypes.func,
         onUploadPlugin: PropTypes.func,
-        onUploadPluginError: PropTypes.func,
+        onAddUploadPlugin: PropTypes.func,
+        onRemoveUploadPlugin: PropTypes.func,
         uploadEnabled: PropTypes.bool,
         onMapViewerReload: PropTypes.func,
         onReloadConfirm: PropTypes.func,
         saveDestLocation: PropTypes.string,
-        uploading: PropTypes.bool,
+        uploading: PropTypes.array,
+        uploadResult: PropTypes.object,
         onShowDialog: PropTypes.func,
         onRemovePlugin: PropTypes.func,
         onShowBackToPageConfirmation: PropTypes.func,
@@ -194,6 +197,7 @@ export default class ContextCreator extends React.Component {
         onChangeAttribute: () => { },
         onReloadConfirm: () => { },
         uploadEnabled: false,
+        pluginsToUpload: [],
         onShowBackToPageConfirmation: () => { },
         showBackToPageConfirmation: false,
         backToPageDestRoute: '/context-manager',
@@ -281,10 +285,13 @@ export default class ContextCreator extends React.Component {
                             setSelectedPlugins={this.props.setSelectedPlugins}
                             changePluginsKey={this.props.changePluginsKey}
                             uploading={this.props.uploading}
+                            uploadResult={this.props.uploadResult}
                             onEnableUpload={this.props.onEnableUploadPlugin}
                             uploadEnabled={this.props.uploadEnabled}
+                            pluginsToUpload={this.props.pluginsToUpload}
                             onUpload={this.props.onUploadPlugin}
-                            onUploadError={this.props.onUploadPluginError}
+                            onAddUpload={this.props.onAddUploadPlugin}
+                            onRemoveUpload={this.props.onRemoveUploadPlugin}
                             changeTemplatesKey={this.props.changeTemplatesKey}
                             setSelectedTemplates={this.props.setSelectedTemplates}
                             setParsedTemplate={this.props.setParsedTemplate}
