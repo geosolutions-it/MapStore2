@@ -94,7 +94,7 @@ const mapNameSelector = (state) => state.map && state.map.present && state.map.p
 
 const mouseMoveListenerSelector = (state) => get(state, 'map.present.eventListeners.mousemove', []);
 
-const isMouseMoveActiveSelector = (state) => mouseMoveListenerSelector(state) ? !!mouseMoveListenerSelector(state).length : false;
+const isMouseMoveActiveSelector = (state) => !!mouseMoveListenerSelector(state).length;
 
 const isMouseMoveCoordinatesActiveSelector = (state) => mouseMoveListenerSelector(state).includes('mouseposition');
 
@@ -117,6 +117,7 @@ module.exports = {
     mapInfoLoadingSelector,
     mapSaveErrorsSelector,
     mapIsEditableSelector,
+    mouseMoveListenerSelector,
     isMouseMoveActiveSelector,
     isMouseMoveCoordinatesActiveSelector,
     isMouseMoveIdentifyActiveSelector

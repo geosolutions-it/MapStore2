@@ -23,6 +23,10 @@ var {
     CHANGE_MAP_LIMITS,
     ZOOM_TO_POINT,
     SET_MAP_RESOLUTIONS,
+    REGISTER_EVENT_LISTENER,
+    UNREGISTER_EVENT_LISTENER,
+    MOUSE_MOVE_MAP_EVENT,
+    MOUSE_MOVE_OVER_TOOLS,
     zoomToPoint,
     errorLoadingFont,
     changeMapView,
@@ -38,7 +42,11 @@ var {
     zoomToExtent,
     resizeMap,
     changeMapLimits,
-    setMapResolutions
+    setMapResolutions,
+    registerEventListener,
+    unRegisterEventListener,
+    mouseMoveMapEvent,
+    mouseMoveOverTools
 } = require('../map');
 const {
     SHOW_NOTIFICATION
@@ -223,5 +231,35 @@ describe('Test correctness of the map actions', () => {
         expect(retval).toExist();
         expect(retval.type).toEqual(SET_MAP_RESOLUTIONS);
         expect(retval.resolutions).toEqual(resolutions);
+    });
+    it('registerEventListener', () => {
+        const eventName = 'mousemove';
+        const toolName = 'identifyFloatingTool';
+        const retval = registerEventListener(eventName, toolName);
+        expect(retval).toExist();
+        expect(retval.type).toEqual(REGISTER_EVENT_LISTENER);
+        expect(retval.eventName).toEqual(eventName);
+        expect(retval.toolName).toEqual(toolName);
+    });
+    it('unRegisterEventListener', () => {
+        const eventName = 'mousemove';
+        const toolName = 'identifyFloatingTool';
+        const retval = unRegisterEventListener(eventName, toolName);
+        expect(retval).toExist();
+        expect(retval.type).toEqual(UNREGISTER_EVENT_LISTENER);
+        expect(retval.eventName).toEqual(eventName);
+        expect(retval.toolName).toEqual(toolName);
+    });
+    it('mouseMoveMapEvent', () => {
+        const position = {lat: 100, lng: 200};
+        const retval = mouseMoveMapEvent(position);
+        expect(retval).toExist();
+        expect(retval.type).toEqual(MOUSE_MOVE_MAP_EVENT);
+        expect(retval.position).toEqual(position);
+    });
+    it('mouseMoveOverTools', () => {
+        const retval = mouseMoveOverTools();
+        expect(retval).toExist();
+        expect(retval.type).toEqual(MOUSE_MOVE_OVER_TOOLS);
     });
 });

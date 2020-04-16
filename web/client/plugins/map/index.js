@@ -8,6 +8,7 @@
 
 const React = require('react');
 const {createSelector} = require('reselect');
+const {get} = require('lodash');
 
 const {creationError, changeMapView, clickOnMap, mouseMoveMapEvent, mouseMoveOverTools} = require('../../actions/map');
 const {removePopup} = require('../../actions/mapPopups');
@@ -32,7 +33,7 @@ module.exports = (mapType, actions) => {
     const LMap = connect((state) => ({
         projectionDefs: projectionDefsSelector(state),
         mousePosition: isMouseMoveActiveSelector(state),
-        isMouseMoveOverTools: state.map.present.mouseMoveOverTools
+        isMouseMoveOverTools: get(state, 'map.present.mouseMoveOverTools', true)
     }), assign({}, {
         onCreationError: creationError,
         onMapViewChanges: changeMapView,
