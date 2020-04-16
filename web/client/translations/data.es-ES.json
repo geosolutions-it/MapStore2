@@ -2411,7 +2411,7 @@
                 "uploadMissingBundleError": "No hay paquete de JavaScript en el archivo cargado",
                 "uploadTooManyBundlesError": "Demasiados paquetes de JavaScript en el paquete zip",
                 "confirmRemovePlugin": "¿Está seguro de que desea eliminar la extensión?",
-                "cancelUpload": "Cancelar",
+                "cancelUpload": "Cerrar",
                 "install": "Instalar",
                 "uploadError": "Error al instalar: ",
                 "uploadOk": "La extensión se ha instalado correctamente",
