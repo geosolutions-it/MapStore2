@@ -2412,7 +2412,7 @@
                 "uploadMissingBundleError": "Nessun bundle javascript presente nel file",
                 "uploadTooManyBundlesError": "Troppi bundle javascript contenuti nel pacchetto",
                 "confirmRemovePlugin": "Sei sicuro di voler eliminare l'estensione?",
-                "cancelUpload": "Annulla",
+                "cancelUpload": "Chiudi",
                 "install": "Installa",
                 "uploadError": "Errore durante l'installazione: ",
                 "uploadOk": "Intallazione terminata correttamente",
