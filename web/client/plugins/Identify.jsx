@@ -10,8 +10,7 @@ const {Glyphicon} = require('react-bootstrap');
 const {connect} = require('react-redux');
 const { createSelector, createStructuredSelector} = require('reselect');
 const assign = require('object-assign');
-
-const {mapSelector} = require('../selectors/map');
+const {mapSelector, isMouseMoveIdentifyActiveSelector} = require('../selectors/map');
 const {layersSelector} = require('../selectors/layers');
 const { mapTypeSelector, isCesium } = require('../selectors/maptype');
 
@@ -19,8 +18,7 @@ const { generalInfoFormatSelector, clickPointSelector, indexSelector, responsesS
 
 
 const { hideMapinfoMarker, showMapinfoRevGeocode, hideMapinfoRevGeocode, clearWarning, toggleMapInfoState, changeMapInfoFormat, updateCenterToMarker, closeIdentify, purgeMapInfoResults, featureInfoClick, changeFormat, toggleShowCoordinateEditor, changePage, toggleHighlightFeature} = require('../actions/mapInfo');
-const { changeMousePointer, zoomToExtent} = require('../actions/map');
-const { changeFloatingIdentifyState } = require("../actions/mousePosition");
+const { changeMousePointer, zoomToExtent, registerEventListener, unRegisterEventListener} = require('../actions/map');
 
 
 const {currentLocaleSelector} = require('../selectors/locale');
@@ -56,7 +54,7 @@ const selector = createStructuredSelector({
     showCoordinateEditor: (state) => state.mapInfo && state.mapInfo.showCoordinateEditor,
     showEmptyMessageGFI: state => showEmptyMessageGFISelector(state),
     isCesium,
-    floatingIdentifyEnabled: (state) => state.mousePosition.floatingIdentifyEnabled
+    floatingIdentifyEnabled: (state) => isMouseMoveIdentifyActiveSelector(state)
 });
 // result panel
 
@@ -229,9 +227,9 @@ const FeatureInfoFormatSelector = connect((state) => ({
 })(require("../components/misc/FeatureInfoFormatSelector"));
 
 const FeatureInfoTriggerSelector = connect((state) => ({
-    trigger: state.mousePosition.floatingIdentifyEnabled ? 'hover' : 'click'
+    trigger: isMouseMoveIdentifyActiveSelector(state) ? 'hover' : 'click'
 }), {
-    onTriggerChange: (event) => event.target.value === 'hover' ? changeFloatingIdentifyState(true) : changeFloatingIdentifyState(false)
+    onTriggerChange: (event) => event.target.value === 'hover' ? registerEventListener('mousemove', 'identifyFloatingTool') : unRegisterEventListener('mousemove', 'identifyFloatingTool')
 })(require("../components/misc/FeatureInfoTriggerSelector"));
 
 module.exports = {

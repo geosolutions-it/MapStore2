@@ -25,11 +25,10 @@ import {
 import { SET_CONTROL_PROPERTIES, SET_CONTROL_PROPERTY, TOGGLE_CONTROL } from '../actions/controls';
 
 import { closeFeatureGrid } from '../actions/featuregrid';
-import { CHANGE_MOUSE_POINTER, CLICK_ON_MAP, zoomToPoint } from '../actions/map';
+import { CHANGE_MOUSE_POINTER, CLICK_ON_MAP, MOUSE_MOVE_MAP_EVENT, UNREGISTER_EVENT_LISTENER, zoomToPoint } from '../actions/map';
 import { closeAnnotations } from '../actions/annotations';
 import { MAP_CONFIG_LOADED } from '../actions/config';
 import {addPopup, cleanPopups, removePopup} from '../actions/mapPopups';
-import { CHANGE_FLOATING_IDENTIFY_STATE, CHANGE_FLOATING_IDENTIFY_MOUSE_POSITION } from '../actions/mousePosition';
 import { updateMapLayout } from '../actions/maplayout';
 import { stopGetFeatureInfoSelector, identifyOptionsSelector,
     clickPointSelector, clickLayerSelector,
@@ -37,7 +36,7 @@ import { stopGetFeatureInfoSelector, identifyOptionsSelector,
     itemIdSelector, overrideParamsSelector, filterNameListSelector } from '../selectors/mapInfo';
 import { centerToMarkerSelector, queryableLayersSelector, queryableSelectedLayersSelector } from '../selectors/layers';
 import { modeSelector } from '../selectors/featuregrid';
-import { mapSelector, projectionDefsSelector, projectionSelector } from '../selectors/map';
+import { mapSelector, projectionDefsSelector, projectionSelector, isMouseMoveIdentifyActiveSelector } from '../selectors/map';
 import { boundingMapRectSelector } from '../selectors/maplayout';
 import { centerToVisibleArea, isInsideVisibleArea, isPointInsideExtent, reprojectBbox, parseURN} from '../utils/CoordinatesUtils';
 
@@ -278,33 +277,30 @@ export default {
             .filter(() => isMapPopup(getState()))
             .mapTo(cleanPopups()),
     /**
-     * Triggers data load on CHANGE_FLOATING_IDENTIFY_MOUSE_POSITION events
+     * Triggers data load on MOUSE_MOVE_MAP_EVENT events
      */
-    changeMousePositionEpic: (action$, {getState}) =>
-        action$.ofType(CHANGE_FLOATING_IDENTIFY_MOUSE_POSITION)
+    cmouseMoveMapEventEpic: (action$, {getState}) =>
+        action$.ofType(MOUSE_MOVE_MAP_EVENT)
             .debounceTime(500)
             .switchMap(({position, layer}) => {
                 const arePopupsPresent = getState().mapPopups.popups.length;
-                if (arePopupsPresent) {
+                if (arePopupsPresent || !isMouseMoveIdentifyActiveSelector(getState())) {
                     return Rx.Observable.empty();
                 }
                 return Rx.Observable.of(featureInfoClick(position, layer))
                     .merge(Rx.Observable.of(addPopup(uuid(), { component: IDENTIFY_POPUP, maxWidth: 600, position: {  coordinates: position ? position.rawPos : []}})));
             }),
     /**
-     * Triggers remove popup on CHANGE_FLOATING_IDENTIFY_STATE
+     * Triggers remove popup on UNREGISTER_EVENT_LISTENER
      */
-    changeMousePositionStateEpic: (action$, {getState}) =>
-        action$.ofType(CHANGE_FLOATING_IDENTIFY_STATE)
-            .switchMap(({enabled}) => {
+    uregisterEventListenerEpic: (action$, {getState}) =>
+        action$.ofType(UNREGISTER_EVENT_LISTENER)
+            .switchMap(() => {
                 let observable = Rx.Observable.empty();
                 const popups = getState().mapPopups.popups;
-                if (popups.length && !enabled) {
+                if (popups.length && !isMouseMoveIdentifyActiveSelector(getState())) {
                     const activePopupId = popups[0].id;
                     observable = Rx.Observable.of(removePopup(activePopupId));
-                }
-                if (enabled) {
-                    observable = Rx.Observable.of(updateMapLayout({layer: {right: 0}}));
                 }
                 return observable;
             }),
@@ -313,11 +309,5 @@ export default {
      */
     updateCenterToMarkerEpic: (action$, {getState}) =>
         action$.ofType(UPDATE_CENTER_TO_MARKER)
-            .switchMap(() => {
-                let observable = Rx.Observable.empty();
-                if (getState().mousePosition.floatingIdentifyEnabled) {
-                    observable = Rx.Observable.of(updateMapLayout({layer: {right: 0}}));
-                }
-                return observable;
-            })
+            .switchMap(() => isMouseMoveIdentifyActiveSelector(getState()) ? Rx.Observable.of(updateMapLayout({layer: {right: 0}})) : Rx.Observable.empty())
 };

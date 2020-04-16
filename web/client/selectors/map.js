@@ -92,6 +92,14 @@ const mapVersionSelector = (state) => state.map && state.map.present && state.ma
  */
 const mapNameSelector = (state) => state.map && state.map.present && state.map.present.info && state.map.present.info.name || '';
 
+const mouseMoveListenerSelector = (state) => get(state, 'map.present.eventListeners.mousemove', []);
+
+const isMouseMoveActiveSelector = (state) => mouseMoveListenerSelector(state) ? !!mouseMoveListenerSelector(state).length : false;
+
+const isMouseMoveCoordinatesActiveSelector = (state) => mouseMoveListenerSelector(state).includes('mouseposition');
+
+const isMouseMoveIdentifyActiveSelector = (state) =>  mouseMoveListenerSelector(state).includes('identifyFloatingTool');
+
 module.exports = {
     mapInfoDetailsUriFromIdSelector,
     mapSelector,
@@ -108,5 +116,8 @@ module.exports = {
     mapInfoSelector,
     mapInfoLoadingSelector,
     mapSaveErrorsSelector,
-    mapIsEditableSelector
+    mapIsEditableSelector,
+    isMouseMoveActiveSelector,
+    isMouseMoveCoordinatesActiveSelector,
+    isMouseMoveIdentifyActiveSelector
 };

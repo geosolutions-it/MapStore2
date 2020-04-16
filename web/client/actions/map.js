@@ -25,6 +25,9 @@ const RESIZE_MAP = 'RESIZE_MAP';
 const CHANGE_MAP_LIMITS = 'CHANGE_MAP_LIMITS';
 const SET_MAP_RESOLUTIONS = 'SET_MAP_RESOLUTIONS';
 const CHECK_MAP_CHANGES = 'CHECK_MAP_CHANGES';
+const REGISTER_EVENT_LISTENER = 'REGISTER_EVENT_LISTENER';
+const UNREGISTER_EVENT_LISTENER = 'UNREGISTER_EVENT_LISTENER';
+const MOUSE_MOVE_MAP_EVENT = 'MOUSE_MOVE_MAP_EVENT';
 
 function errorLoadingFont(err = {family: ""}) {
     return error({
@@ -187,6 +190,23 @@ const checkMapChanges = (action, source) => ({
     source
 });
 
+const registerEventListener = (eventName, toolName) => ({
+    type: REGISTER_EVENT_LISTENER,
+    eventName,
+    toolName
+});
+
+const unRegisterEventListener = (eventName, toolName) => ({
+    type: UNREGISTER_EVENT_LISTENER,
+    eventName,
+    toolName
+});
+
+const mouseMoveMapEvent = (position) => ({
+    type: MOUSE_MOVE_MAP_EVENT,
+    position
+});
+
 /**
  * Actions for map
  * @name actions.map
@@ -210,6 +230,9 @@ module.exports = {
     CHANGE_MAP_LIMITS,
     SET_MAP_RESOLUTIONS,
     CHECK_MAP_CHANGES,
+    REGISTER_EVENT_LISTENER,
+    UNREGISTER_EVENT_LISTENER,
+    MOUSE_MOVE_MAP_EVENT,
     changeMapView,
     clickOnMap,
     changeMousePointer,
@@ -227,5 +250,8 @@ module.exports = {
     resizeMap,
     changeMapLimits,
     setMapResolutions,
-    checkMapChanges
+    checkMapChanges,
+    registerEventListener,
+    unRegisterEventListener,
+    mouseMoveMapEvent
 };

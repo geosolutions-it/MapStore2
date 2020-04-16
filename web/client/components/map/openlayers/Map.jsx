@@ -66,8 +66,7 @@ class OpenlayersMap extends React.Component {
         wpsBounds: PropTypes.object,
         onWarning: PropTypes.func,
         maxExtent: PropTypes.array,
-        limits: PropTypes.object,
-        onFloatingMouseMove: PropTypes.func
+        limits: PropTypes.object
     };
 
     static defaultProps = {
@@ -76,6 +75,7 @@ class OpenlayersMap extends React.Component {
         onResolutionsChange: () => { },
         onCreationError: () => { },
         onClick: null,
+        onMouseMove: () => { },
         mapOptions: {},
         projection: 'EPSG:3857',
         projectionDefs: [],
@@ -464,36 +464,24 @@ class OpenlayersMap extends React.Component {
             } else if (tLng > 180) {
                 tLng = tLng - 360;
             }
-            if (this.props.onMouseMove && !this.props.onFloatingMouseMove) {
-                this.props.onMouseMove({
-                    y: coords[1] || 0.0,
-                    x: tLng || 0.0,
-                    z: this.map.get('elevationLayer') && this.map.get('elevationLayer').get('getElevation')(pos, event.pixel) || undefined,
-                    crs: "EPSG:4326",
-                    pixel: {
-                        x: event.pixel[0],
-                        y: event.pixel[1]
-                    }
-                });
-            }
-            if (this.props.onFloatingMouseMove) {
-                this.props.onFloatingMouseMove({
-                    y: coords[1] || 0.0,
-                    x: tLng || 0.0,
-                    z: this.map.get('elevationLayer') && this.map.get('elevationLayer').get('getElevation')(pos, event.pixel) || undefined,
-                    crs: "EPSG:4326",
-                    pixel: {
-                        x: event.pixel[0],
-                        y: event.pixel[1]
-                    },
-                    latlng: {
-                        lat: coords[1],
-                        lng: tLng,
-                        z: getElevation && getElevation(pos, event.pixel) || undefined
-                    },
-                    rawPos: event.coordinate.slice()
-                });
-            }
+            this.props.onMouseMove({
+                y: coords[1] || 0.0,
+                x: tLng || 0.0,
+                z: this.map.get('elevationLayer') && this.map.get('elevationLayer').get('getElevation')(pos, event.pixel) || undefined,
+                crs: "EPSG:4326",
+                pixel: {
+                    x: event.pixel[0],
+                    y: event.pixel[1]
+                },
+                latlng: {
+                    lat: coords[1],
+                    lng: tLng,
+                    z: getElevation && getElevation(pos, event.pixel) || undefined
+                },
+                lat: coords[1],
+                lng: tLng,
+                rawPos: event.coordinate.slice()
+            });
         }
     };
 

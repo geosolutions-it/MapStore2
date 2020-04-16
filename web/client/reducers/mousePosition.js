@@ -9,14 +9,12 @@
 var {
     CHANGE_MOUSE_POSITION,
     CHANGE_MOUSE_POSITION_CRS,
-    CHANGE_MOUSE_POSITION_STATE,
-    CHANGE_FLOATING_IDENTIFY_STATE,
-    CHANGE_FLOATING_IDENTIFY_MOUSE_POSITION
+    CHANGE_MOUSE_POSITION_STATE
 } = require('../actions/mousePosition');
 
 const assign = require('object-assign');
 
-function mousePosition(state = {enabled: true, position: null, crs: null, floatingIdentifyEnabled: false, floatingIdentifyMousePosition: null}, action) {
+function mousePosition(state = {enabled: true, position: null, crs: null}, action) {
     switch (action.type) {
     case CHANGE_MOUSE_POSITION_STATE:
         return assign({}, state, {
@@ -29,14 +27,6 @@ function mousePosition(state = {enabled: true, position: null, crs: null, floati
     case CHANGE_MOUSE_POSITION_CRS:
         return assign({}, state, {
             crs: action.crs
-        });
-    case CHANGE_FLOATING_IDENTIFY_STATE:
-        return assign({}, state, {
-            floatingIdentifyEnabled: action.enabled
-        });
-    case CHANGE_FLOATING_IDENTIFY_MOUSE_POSITION:
-        return assign({}, state, {
-            floatingIdentifyMousePosition: action.position
         });
     default:
         return state;

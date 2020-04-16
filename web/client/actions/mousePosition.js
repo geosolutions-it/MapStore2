@@ -8,8 +8,6 @@
 const CHANGE_MOUSE_POSITION = 'CHANGE_MOUSE_POSITION';
 const CHANGE_MOUSE_POSITION_CRS = 'CHANGE_MOUSE_POSITION_CRS';
 const CHANGE_MOUSE_POSITION_STATE = 'CHANGE_MOUSE_POSITION_STATE';
-const CHANGE_FLOATING_IDENTIFY_STATE = 'CHANGE_FLOATING_IDENTIFY_STATE';
-const CHANGE_FLOATING_IDENTIFY_MOUSE_POSITION = 'CHANGE_FLOATING_IDENTIFY_MOUSE_POSITION';
 
 function changeMousePosition(position) {
     return {
@@ -32,29 +30,11 @@ function changeMousePositionState(enabled) {
     };
 }
 
-function changeFloatingIdentifyState(enabled) {
-    return {
-        type: CHANGE_FLOATING_IDENTIFY_STATE,
-        enabled
-    };
-}
-
-function changeFloatingIdentifyMousePosition(position) {
-    return {
-        type: CHANGE_FLOATING_IDENTIFY_MOUSE_POSITION,
-        position
-    };
-}
-
 module.exports = {
     CHANGE_MOUSE_POSITION,
     CHANGE_MOUSE_POSITION_CRS,
     CHANGE_MOUSE_POSITION_STATE,
-    CHANGE_FLOATING_IDENTIFY_STATE,
-    CHANGE_FLOATING_IDENTIFY_MOUSE_POSITION,
     changeMousePosition,
     changeMousePositionCrs,
-    changeMousePositionState,
-    changeFloatingIdentifyState,
-    changeFloatingIdentifyMousePosition
+    changeMousePositionState
 };
