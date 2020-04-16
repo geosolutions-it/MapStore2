@@ -38,6 +38,7 @@ import { centerToMarkerSelector, queryableLayersSelector, queryableSelectedLayer
 import { modeSelector } from '../selectors/featuregrid';
 import { mapSelector, projectionDefsSelector, projectionSelector, isMouseMoveIdentifyActiveSelector } from '../selectors/map';
 import { boundingMapRectSelector } from '../selectors/maplayout';
+import { floatingIdentifyDelaySelector } from '../selectors/localConfig';
 import { centerToVisibleArea, isInsideVisibleArea, isPointInsideExtent, reprojectBbox, parseURN} from '../utils/CoordinatesUtils';
 
 
@@ -281,7 +282,7 @@ export default {
      */
     cmouseMoveMapEventEpic: (action$, {getState}) =>
         action$.ofType(MOUSE_MOVE_MAP_EVENT)
-            .debounceTime(500)
+            .debounceTime(floatingIdentifyDelaySelector(getState()))
             .switchMap(({position, layer}) => {
                 const arePopupsPresent = getState().mapPopups.popups.length;
                 if (arePopupsPresent || !isMouseMoveIdentifyActiveSelector(getState())) {

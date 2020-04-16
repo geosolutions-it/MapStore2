@@ -27,7 +27,8 @@
           "terrainProvider": {
               "type": "ellipsoid"
           }
-      }
+      },
+      "floatingIdentifyDelay": 2000
     },
     "authenticationRules": [{
         "urlPattern": ".*geostore.*",

@@ -29,3 +29,10 @@ export const pluginsObjectSelector = state => get(localConfigSelector(state), `p
  * @param {string} page the page of the plugins for which we want to get the plugins (desktop, mobile, maps...)
  */
 export const pluginsSelectorCreator = (page) => state => get(pluginsObjectSelector(state), page);
+
+/**
+ * Returns a delay for the floating identify tool
+ * @param {object} state the state
+ * @returns {number} the delay in ms
+ */
+export const floatingIdentifyDelaySelector = state => get(localConfigSelector(state), 'defaultMapOptions.floatingIdentifyDelay', 500);
