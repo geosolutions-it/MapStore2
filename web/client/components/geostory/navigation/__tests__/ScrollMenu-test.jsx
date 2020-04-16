@@ -29,9 +29,9 @@ describe('ScrollMenu component', () => {
         const container = document.getElementById('container');
         const el = container.querySelector('.ms-horizontal-menu');
         expect(el).toExist();
-        const buttons = container.querySelectorAll('button.menu-item');
-        expect(buttons).toExist();
-        expect(buttons.length).toBe(4);
+        const menuItems = container.querySelectorAll('.ms-menu-item');
+        expect(menuItems).toExist();
+        expect(menuItems.length).toBe(4);
     });
     it('should fire scrollTo on menu item click', (done) => {
         const ITEMS = [{
@@ -67,7 +67,7 @@ describe('ScrollMenu component', () => {
         const container = document.getElementById('container');
         const scrollMenuNode = container.querySelector('.ms-horizontal-menu');
         expect(scrollMenuNode).toExist();
-        const menuItemNode = scrollMenuNode.querySelectorAll('.menu-item');
+        const menuItemNode = scrollMenuNode.querySelectorAll('.ms-menu-item');
         expect(menuItemNode.length).toBe(5);
         Simulate.click(menuItemNode[0]);
     });
@@ -107,7 +107,7 @@ describe('ScrollMenu component', () => {
         const container = document.getElementById('container');
         const scrollMenuNode = container.querySelector('.ms-horizontal-menu');
         expect(scrollMenuNode).toExist();
-        const menuItemNode = scrollMenuNode.querySelectorAll('.menu-item');
+        const menuItemNode = scrollMenuNode.querySelectorAll('.ms-menu-item');
         const item5Node = menuItemNode[4];
         let item5BoundingClientRect = item5Node.getBoundingClientRect();
         const START_LEFT = item5BoundingClientRect.left;

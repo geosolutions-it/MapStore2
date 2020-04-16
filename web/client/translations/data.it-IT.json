@@ -31,6 +31,12 @@
         "version": {
             "label": "Versione"
         },
+        "errorPage": {
+            "title":"Ops, Qualcosa è andato storto",
+            "subtitle":"Per favore clicca sull'icona qui sotto per ricaricare MapStore",
+            "description":"Se vuoi segnalare questo problema, puoi mandare una mail alla nostra lista email per utenti",
+            "descriptionAdmin":"Per favore contatta l'amministratore"
+        },
         "autorefresh": {
             "of": "di",
             "updating": "In aggiornamento...",
@@ -561,6 +567,7 @@
         "identifyHighlightFeatures": "Evidenzia le features interrogate",
         "identifyShowCoordinateEditor": "Mostra l'editor",
         "identifyHideCoordinateEditor": "Nascondi l'editor",
+        "identifyCoordinateApplyChanges": "Applica i cambiamenti",
         "identifyRevGeocodeModalTitle": "Indirizzo",
         "identifyRevGeocodeSubmitText": "Più informazioni",
         "identifyRevGeocodeCloseText": "Chiudi",
@@ -602,7 +609,10 @@
             "showLabel": "Mostra etichetta di misurazione",
             "addAsAnnotation": "Aggiungi come annotazione",
             "newMeasure": "Nuova annotazione",
-            "selectTool": "Seleziona uno strumento di misura"
+            "selectTool": "Seleziona uno strumento di misura",
+            "exportToGeoJSON": "Esporta in GeoJSON",
+            "resetTooltip": "Misure chiare",
+            "addAsLayer": "Aggiungi come livello"
         },
         "search":{
             "decimal": "Decimali",
@@ -991,7 +1001,8 @@
                 "notValidMarker": "Inserisci una coordinata valida (+|- 90° lat, +|-180° lon)",
                 "notValidPolyline": "Tutte le coordinate devono essere valide (+|- 90° lat, +|-180° lon)",
                 "notValidText": "Inserisci un testo ed una coordinata valida (+|- 90° lat, +|-180° lon)",
-                "notValidCircle": "Inserisci un raggio ed una coordinata valida (+|- 90° lat, +|-180° lon)"
+                "notValidCircle": "Inserisci un raggio ed una coordinata valida (+|- 90° lat, +|-180° lon)",
+                "newFeature": "Nuovo"
             }
         },
         "user":{
@@ -1197,6 +1208,18 @@
             "type": "Tipo",
             "serviceTitle": "Titolo",
             "serviceTitlePlaceholder": "inserisci un titolo",
+            "tms": {
+              "provider": "Provider",
+              "urlTemplate": "Modello URL",
+              "urlTemplateHint": "<p> Modello di URL per il tuo servizio TMS personalizzato, con la possibilità di inserire variabili (espresse usando parentesi graffe, ad esempio <code> {var_name} </code>) che saranno sostituite dall'applicazione. <br />. Le variabili <code> {x} </code>, <code> {y} </code> e <code> {z} </code> sono riservate ai valori delle coordinate delle tiles. Puoi anche usare la variabile <code> {s} </code> per sottodomini. Qualsiasi altra variabile specificata nell'URL deve essere specificata anche nelle opzioni in \"Configurazione TMS personalizzata \" (Impostazioni avanzate) </p> ",
+              "customTMSConfiguration": "Configurazione TMS personalizzata",
+              "customTMSConfigurationHint": "<p> Le opzioni possono contenere: <br/> <ul><li> <code> \" subdomains \": ['a', 'b'] </code>: utilizzato per più domini, sostituendo il <code> {s} </code> nel modello URL </li> <li> <code> \"maxNativeZoom \": 20 </code>: zoom massimo dal server </li> </ul> </p>",
+              "forceDefaultTileGrid": "Forza default tile grid",
+              "forceDefaultTileGridDescription": "Utilizzare la griglia della proiezione globale anziché l'origine e le risoluzioni fornite dal server. Ciò è utile per alcuni servizi TMS che pubblicizzano l'origine o le risoluzioni errate."
+            },
+            "tileprovider": {
+              "tooltip": "x, y, z sono la posizione della tile, s è il sottodominio (impostazione predefinita)"
+            },
             "missingReference": "Metadati di riferimento OGC mancanti",
             "showDescription": "Mostra descrizione completa",
             "hideDescription": "Nascondi descrizione completa",
@@ -1985,6 +2008,9 @@
                 "brightTextThemeLabel": "Testo chiaro",
                 "darkThemeLabel": "Scuro",
                 "darkTextThemeLabel": "Testo scuro",
+                "defaultThemeLabel": "Predefinito",
+                "customizeThemeLabel": "Personalizza",
+                "customizeThemeRemoveLabel": "Rimuovi il tema personalizzato",
                 "cover": "Fai in modo che lo sfondo copra l'intero spazio del contenitore",
                 "fit": "Rendi visibile tutto lo sfondo all'interno del contenitore",
                 "editMedia": "Cambia la sorgente del media",
@@ -2046,7 +2072,8 @@
                     "autoplayInterval": "Intervallo dell'autoplay (secondi)",
                     "autoplayIntervalPlaceholder": "Abilita l'intervallo dell'autoplay",
                     "navbar": "Barra di navigazione",
-                    "showNavbar": "Mostra barra di navigazione"
+                    "showNavbar": "Mostra barra di navigazione",
+                    "theme": "Tema"
                 }
             },
             "errors": {
@@ -2079,6 +2106,13 @@
                 "url": {
                     "label": "URL"
                 }
+            },
+            "customizeTheme": {
+                "backgroundColorLabel": "Sfondo",
+                "textColorLabel": "Testo",
+                "shadowLabel": "Ombra",
+                "useAlternativeTextColor": "Usa colore testo alternativo",
+                "alternativeTextColorPopover": "<p>Attenzione: il colore del testo selezionato potrebbe non essere leggibile su questo sfondo.</p><p>Un colore alternativo è {color} &nbsp;<span class=\"ms-custom-theme-picker-alternative-text\" style=\"background-color:{color}\"></span></p>"
             }
         },
          "saveDialog": {
@@ -2381,7 +2415,10 @@
                 "uploadLabel": "Trascina qui un pacchetto di estensione o clicca per selezionarne uno",
                 "uploadTitle": "Installa un plugin di MapStore",
                 "uploadParseError": "File index.json con formato errato",
-                "uploadMissingFileError": "File index.json mancante nel file",
+                "uploadMissingIndexError": "File index.json mancante nel file",
+                "uploadMissingPluginError": "Nessun plugin definito in index.json",
+                "uploadMissingBundleError": "Nessun bundle javascript non presente nel file",
+                "uploadTooManyBundlesError": "Troppi bundle javascript contenuti nel pacchetto",
                 "confirmRemovePlugin": "Sei sicuro di voler eliminare l'estensione?",
                 "tooltips": {
                     "enableUserPlugin": "Abilita la selezione del plug-in corrente per l'utente",
@@ -2436,6 +2473,10 @@
                 "conflict": "Una risorsa con questo nome esiste già",
                 "defaultMessage": "Errore sconosciuto",
                 "categoryError": "Creazione della categoria mancante \"{categoryName}\" non riuscita"
+            },
+            "loadTemplateErrorNotification": {
+                "forbidden": "Impossibile accedere ai dati del modello, l'utente non dispone delle autorizzazioni necessarie!",
+                "defaultMessage": "Si è verificato un errore imprevisto"
             },
             "contextNameErrorNotification": {
                 "title": "Nome di contesto errato",
@@ -2623,6 +2664,18 @@
                 "title": "Widget Mappa",
                 "text": "<p> Aggiungi una nuova mappa interattiva alla dashboard. È possibile aggiungere più di una mappa con la possibilità di collegare ad esse altri widget. Dopo aver salvato la prima mappa, il widget legenda verrà aggiunto all'elenco. Legend Widget mostrerà una legenda relativa alla mappa connessa. </p> <p> Passaggi: </p> <p> <ul> <li> Seleziona una mappa </li> <li> Migliora la mappa aggiungendo nuovi livelli </li> <li> Salva e aggiungi alla dashboard </li> </ul> </p>"
             }
+        },
+        "userSession": {
+          "saveErrorNotification": {
+            "titleContext": "Salvataggio della sessione utente non riuscita",
+            "categoryError": "Creazione della categoria mancante \"{categoryName}\" non riuscita",
+            "defaultMessage": "Errore sconosciuto"
+          },
+          "removeErrorNotification": {
+            "titleContext": "Cancellazione della sessione utente non riuscita",
+            "defaultMessage": "Errore sconosciuto"
+          },
+          "successRemoved": "Sessione utente cancellata"
         }
     }
 }

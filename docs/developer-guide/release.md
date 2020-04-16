@@ -30,7 +30,7 @@ Replacing:
 - [ ] Test on QA [http://qa.mapstore.geo-solutions.it/mapstore/](http://qa.mapstore.geo-solutions.it/mapstore/)
     * Any fix must be done on **YYYY.XX.mm**. The fixes will be manually merged on master
     * Test **everything**, not only the new features
-- [ ] Test Binary
+- [ ] Test [Binary](https://build.geo-solutions.it/jenkins/view/MapStore2/job/MapStore2-QA-Build/ws/release/target/) (take the mapstore2-QA-<RELEASE_BRANCH>-bin.zip)
 - [ ] Update `CHANGELOG.md`. [Instructions](https://mapstore.readthedocs.io/en/latest/developer-guide/release/#changelog-generation)
 - [ ] Commit the changelog to the release branch
 - [ ] Create a [github draft release](https://github.com/geosolutions-it/MapStore2/releases) pointing to the branch **YYYY.XX.mm**.

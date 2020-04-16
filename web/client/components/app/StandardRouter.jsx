@@ -15,6 +15,8 @@ import history  from '../../stores/History';
 
 import Localized from '../I18N/Localized';
 import Theme from '../theme/Theme';
+import {ErrorBoundary} from 'react-error-boundary';
+import ErrorBoundaryFallbackComponent from './ErrorFallBackComp';
 
 const ThemeProvider = connect((state) => ({
     theme: state.theme?.selectedTheme?.id
@@ -59,11 +61,20 @@ class StandardRouter extends React.Component {
     renderAfterTheme() {
         return (
             <div className={this.props.className}>
+
                 <ThemeProvider {...this.props.themeCfg} version={this.props.version} onLoad={this.props.onThemeLoaded}>
                     {this.props.themeLoaded ? (<Localized messages={this.props.locale.messages} locale={this.props.locale.current} loadingError={this.props.locale.localeError}>
                         <ConnectedRouter history={history}>
-                            <div>
-                                {this.renderPages()}
+                            <div className="error-container">
+                                <ErrorBoundary
+                                    onError={e => {
+                                        /* eslint-disable no-console */
+                                        console.error(e);
+                                        /* eslint-enable no-console */
+                                    }}
+                                    FallbackComponent={ ErrorBoundaryFallbackComponent}>
+                                    {this.renderPages()}
+                                </ErrorBoundary>
                             </div>
                         </ConnectedRouter>
                     </Localized>) :
@@ -80,8 +91,16 @@ class StandardRouter extends React.Component {
                 <Theme {...this.props.themeCfg} version={this.props.version}/>
                 <Localized messages={this.props.locale.messages} locale={this.props.locale.current} loadingError={this.props.locale.localeError}>
                     <ConnectedRouter history={history}>
-                        <div>
-                            {this.renderPages()}
+                        <div className="error-container">
+                            <ErrorBoundary
+                                onError={e => {
+                                    /* eslint-disable no-console */
+                                    console.error(e);
+                                    /* eslint-enable no-console */
+                                }}
+                                FallbackComponent={ ErrorBoundaryFallbackComponent}>
+                                {this.renderPages()}
+                            </ErrorBoundary>
                         </div>
                     </ConnectedRouter>
                 </Localized>

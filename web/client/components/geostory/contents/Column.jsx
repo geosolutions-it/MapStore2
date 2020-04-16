@@ -22,6 +22,13 @@ const ColumnContent = compose(
  * Column is a like a Paragraph section, but as content.
  * has (sub) contents to render like a page.
  */
+
+const size = (pullRight) => ({
+    id: 'size',
+    filterOptions: ({ value }) => value !== 'full',
+    pullRight
+});
+
 export default ({
     viewWidth,
     viewHeight,
@@ -32,7 +39,8 @@ export default ({
     editWebPage = () => {},
     update = () => {},
     remove = () => {},
-    bubblingTextEditing = () => {}
+    bubblingTextEditing = () => {},
+    expandable
 }) => (
     <Contents
         className="ms-column-contents"
@@ -47,12 +55,15 @@ export default ({
         viewWidth={viewWidth}
         viewHeight={viewHeight}
         bubblingTextEditing={bubblingTextEditing}
+        contentProps={{
+            expandable
+        }}
         tools={{
             [ContentTypes.TEXT]: ['remove'],
-            [MediaTypes.IMAGE]: ['editMedia', 'size', 'align', 'remove'],
-            [MediaTypes.MAP]: ['editMedia', 'editMap', 'size', 'align', 'remove'],
+            [MediaTypes.IMAGE]: ['editMedia', size(), 'align', 'remove'],
+            [MediaTypes.MAP]: ['editMedia', 'editMap', size(true), 'remove'],
             [MediaTypes.VIDEO]: ['editMedia', 'remove'], // TODO change this list for video
-            [ContentTypes.WEBPAGE]: ['editURL', 'size', 'align', 'remove']
+            [ContentTypes.WEBPAGE]: ['editURL', size(true), 'remove']
         }}
         addButtons={[{
             glyph: 'sheet',

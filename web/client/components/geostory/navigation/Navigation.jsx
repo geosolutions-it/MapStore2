@@ -12,6 +12,7 @@ import Toolbar from '../../misc/toolbar/Toolbar';
 import ScrollMenu from './ScrollMenu';
 import Home from '../../../components/home/Home';
 import { getQueryParams } from '../../../utils/URLUtils';
+import isObject from 'lodash/isObject';
 
 /**
  * Navigation Bar for view mode of GeoStory
@@ -34,13 +35,31 @@ export default ({
     router,
     buttons = []
 }) => {
+    const theme = settings?.theme?.general;
+    const {
+        borderColor,
+        color,
+        backgroundColor
+    } = isObject(theme) && theme || {};
     return (
-        <div className="ms-geostory-navigation-bar">
-            <div className="progress-bar" key="progress-bar">
+        <div
+            className="ms-geostory-navigation-bar"
+            style={{
+                color,
+                backgroundColor,
+                ...(borderColor && { borderBottom: `1px solid ${borderColor}` })
+            }}>
+            <div
+                className="progress-bar"
+                key="progress-bar"
+                style={{
+                    backgroundColor: borderColor
+                }}>
                 <div
                     className="progress-percent"
                     style={{
-                        width: `${(currentPosition + 1) / totalItems * 100}%`
+                        width: `${(currentPosition + 1) / totalItems * 100}%`,
+                        backgroundColor: color
                     }}
                 />
             </div>
@@ -70,6 +89,15 @@ export default ({
                                 items={navigableItems}
                                 currentPage={currentPage}
                                 scrollTo={scrollTo}
+                                getItemStyle={(isSelected) => !isSelected
+                                    ? {
+                                        outlineColor: color,
+                                        borderColor: color
+                                    }
+                                    : {
+                                        color: backgroundColor,
+                                        backgroundColor: color
+                                    }}
                             />
                         </div>) : null}
                     <div className="ms-geostory-navigation-metadata">

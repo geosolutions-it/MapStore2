@@ -19,6 +19,7 @@ import Message from '../../I18N/Message';
 import {Modes, SectionTypes, SectionTemplates} from '../../../utils/GeoStoryUtils';
 
 import withFocusMask from './sections/enhancers/withFocusMask';
+import isObject from 'lodash/isObject';
 
 const ContainerDimensions = emptyState(
     ({ sections = [] }) => sections.length === 0,
@@ -104,18 +105,24 @@ const Cascade = ({
     remove = () => {},
     focusedContent,
     isContentFocused = false,
-    getSize = defaultGetSize
-}) => (<BorderLayout  className={`ms-cascade-story ms-${mode}`} bodyClassName={`ms2-border-layout-body ${isContentFocused ? 'no-overflow' : ''}`}>
+    getSize = defaultGetSize,
+    theme = {}
+}) => (<BorderLayout  className={`ms-cascade-story ms-${mode}`}>
     <ContainerDimensions
         sections={sections}
         add={add}>
         {({ width, height }) => {
             const containerSize = getSize({ width, height, mode });
             const sizeClassName = containerSize ? ` ms-${containerSize}` : '';
-            const isBackgroundMediaExpandable = containerSize === 'sm';
+            const isMediaExpandable = containerSize === 'sm';
+            const storyTheme = theme && isObject(theme) && theme || {};
             return (<div
                 id="ms-sections-container"
-                className={`ms-sections-container${sizeClassName}`}>
+                className={`ms-sections-container${sizeClassName}`}
+                style={{
+                    ...storyTheme,
+                    ...isContentFocused && { overflow: 'hidden' }
+                }}>
                 {
                     sections.map(({ contents = [], id: sectionId, type: sectionType, cover }) => {
                         return (
@@ -124,7 +131,7 @@ const Cascade = ({
                                 onVisibilityChange={onVisibilityChange}
                                 add={add}
                                 editMedia={editMedia}
-                                expandableBackgroundMedia={isBackgroundMediaExpandable}
+                                expandableMedia={isMediaExpandable}
                                 editWebPage={editWebPage}
                                 updateCurrentPage={updateCurrentPage}
                                 update={update}
@@ -137,6 +144,7 @@ const Cascade = ({
                                 mode={mode}
                                 contents={contents}
                                 cover={cover}
+                                storyTheme={storyTheme}
                             />
                         );
                     })

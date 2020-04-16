@@ -16,8 +16,8 @@ import { withResizeDetector } from 'react-resize-detector';
  * One item component
  * selected prop will be passed
 */
-const MenuItem = ({text, selected}) => {
-    return <Button className={`menu-item ${selected ? 'active' : 'btn-tray'} btn-xs btn-default`} >{text}</Button>;
+const MenuItem = ({ tabindex, text, selected, style }) => {
+    return <Button tabindex={tabindex} className={`${selected ? 'active' : 'btn-tray'} btn-xs btn-default`} style={style} >{text}</Button>;
 };
 
 /**
@@ -59,9 +59,7 @@ const MenuItem = ({text, selected}) => {
  *             <div { ...contentPropsHandlers() }>
  *                 {items.map(({ title, id }) => {
  *                     return (
- *                         <div
- *                             { ...itemPropsHandlers({ id }) } // not required but needed for moveItemInViewById function
- *                             key={id}>
+ *                         <div { ...itemPropsHandlers({ id }) }>
  *                             {title}
  *                         </div>
  *                     );
@@ -88,10 +86,12 @@ export const useSwipeControls = ({
 
     const [canSwipe, setCanSwipe] = useState(false);
     const [positionLabel, setPositionLabel] = useState('start');
+    const [status, setStatus] = useState();
     const contentRef = useRef();
     const itemsRefs = useRef({});
 
     function updateCoordinates(newX, newY) {
+        setStatus('move:start');
         const contentNode = contentRef.current;
         const containerNode = contentNode.parentNode;
         const contentBoundingClientRect = contentNode.getBoundingClientRect();
@@ -130,6 +130,10 @@ export const useSwipeControls = ({
                 setPositionLabel('end');
             }
         }
+
+        setTimeout(() => {
+            setStatus('move:end');
+        }, transition);
     }
 
     function moveToDeltaSize(delta) {
@@ -202,6 +206,27 @@ export const useSwipeControls = ({
         };
     }
 
+    function isItemVisible(id) {
+        const itemNode = itemsRefs.current[id];
+        if (itemNode) {
+            const contentNode = contentRef.current;
+            const containerNode = contentNode && contentNode.parentNode;
+            const containerBoundingClientRect = containerNode.getBoundingClientRect();
+            const itemBoundingClientRect = itemNode.getBoundingClientRect();
+            if (direction === 'horizontal') {
+                const { width: containerWidth, left: containerLeft } = containerBoundingClientRect;
+                const { width: itemWidth, left: itemLeft } = itemBoundingClientRect;
+
+                const containerRight = containerLeft + containerWidth;
+                const itemRight = itemLeft + itemWidth;
+                const isInView = containerLeft <= itemLeft && containerRight >= itemLeft
+                    || containerLeft <= itemRight && containerRight >= itemRight;
+                return isInView;
+            }
+        }
+        return false;
+    }
+
     function moveItemInViewById(id, options = {}) {
         const { margin = 0 } = options;
         const itemNode = itemsRefs.current[id];
@@ -231,6 +256,7 @@ export const useSwipeControls = ({
     const isEndControlActive = canSwipe && (positionLabel === 'start' || positionLabel === 'center');
 
     return {
+        status,
         canSwipe,
         isStartControlActive,
         isEndControlActive,
@@ -258,8 +284,21 @@ export const useSwipeControls = ({
                 ...style
             }
         }),
-        itemPropsHandlers: ({ id } = {}) => ({
-            ref: ref => ref && getItemsRef(id, ref)
+        itemPropsHandlers: ({ id, onClick } = {}) => ({
+            key: id,
+            ref: ref => ref && getItemsRef(id, ref),
+            ...(onClick
+                ? {
+                    onClick,
+                    tabindex: isItemVisible(id) ? 0 : -1,
+                    onKeyDown: (event) => {
+                        if (event.key === 'Enter') {
+                            onClick();
+                        }
+                    }
+                }
+                : { tabindex: -1 }
+            )
         }),
         updateCoordinates,
         moveItemInViewById,
@@ -275,7 +314,8 @@ const ScrollMenu = ({
     height,
     deltaSwipeSize = 200,
     transition = 300,
-    updateTimeDebounceTime = 500
+    updateTimeDebounceTime = 500,
+    getItemStyle = () => ({})
 }) => {
 
     const {
@@ -324,19 +364,24 @@ const ScrollMenu = ({
             className="ms-horizontal-menu">
             <div { ...contentPropsHandlers() }>
                 {items.map(({ title, id }) => {
+                    const itemProps = itemPropsHandlers({
+                        id,
+                        onClick: () => {
+                            if (currentPage && currentPage.sectionId !== id) {
+                                scrollTo(id);
+                            }
+                        }
+                    });
                     return (
                         <div
-                            { ...itemPropsHandlers({ id }) }
-                            key={id}
-                            onClick={() => {
-                                if (currentPage && currentPage.sectionId !== id) {
-                                    scrollTo(id);
-                                }
-                            }}>
+                            { ...itemProps }
+                            className="ms-menu-item">
                             <MenuItem
+                                tabindex="-1"
                                 id={id}
                                 text={title || "title"}
                                 selected={id === selected}
+                                style={getItemStyle(id === selected)}
                             />
                         </div>
                     );

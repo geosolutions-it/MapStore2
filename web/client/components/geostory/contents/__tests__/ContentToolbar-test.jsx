@@ -52,7 +52,7 @@ describe('ContentToolbar component', () => {
         name: "theme",
         length: 4,
         totButtons: 1,
-        aTag: ["bright", "bright-text", "dark", "dark-text"]
+        aTag: ["", "bright", "dark", "custom"]
     }];
     testItems.forEach(tool => {
         it(`ContentToolbar rendering ${tool.name} item and click event`, (done) => {
@@ -60,7 +60,11 @@ describe('ContentToolbar component', () => {
                 tools={[tool.name]}
                 update={(t, selected) => {
                     expect(t).toEqual(tool.name);
-                    expect(includes(tool.aTag, selected)).toEqual(true);
+                    if (tool.name === 'theme') {
+                        expect(includes(tool.aTag, selected.value)).toEqual(true);
+                    } else {
+                        expect(includes(tool.aTag, selected)).toEqual(true);
+                    }
                     done();
                 }}
             />, document.getElementById("container"));
@@ -93,6 +97,18 @@ describe('ContentToolbar component', () => {
         expect(buttons).toExist();
         expect(buttons.length).toEqual(1);
         ReactTestUtils.Simulate.click(buttons[0]);
+    });
+    it('should accept object tool', () => {
+        const filterOptions = ({ value }) => value !== 'full';
+        ReactDOM.render(<ContentToolbar
+            tools={[{ id: 'size', filterOptions }]}
+        />, document.getElementById('container'));
+        const buttons = document.getElementsByTagName('button');
+        expect(buttons).toBeTruthy();
+        expect(buttons.length).toEqual(1);
+        ReactTestUtils.Simulate.click(buttons[0]);
+        const menuItems = document.querySelectorAll('.dropdown-menu > li');
+        expect(menuItems.length).toBe(3);
     });
     describe('tools', () => {
         // TODO: align, theme, size...
@@ -140,10 +156,10 @@ describe('ContentToolbar component', () => {
             const list = document.querySelectorAll('.ms-content-toolbar li a span');
             expect(list).toExist();
             expect(list.length).toBe(4);
-            expect(list[0].innerText).toBe("geostory.contentToolbar.brightThemeLabel");
-            expect(list[1].innerText).toBe("geostory.contentToolbar.brightTextThemeLabel");
+            expect(list[0].innerText).toBe("geostory.contentToolbar.defaultThemeLabel");
+            expect(list[1].innerText).toBe("geostory.contentToolbar.brightThemeLabel");
             expect(list[2].innerText).toBe("geostory.contentToolbar.darkThemeLabel");
-            expect(list[3].innerText).toBe("geostory.contentToolbar.darkTextThemeLabel");
+            expect(list[3].innerText).toBe("geostory.contentToolbar.customizeThemeLabel");
             done();
         });
         it(`remove`, (done) => {

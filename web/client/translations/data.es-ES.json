@@ -31,6 +31,12 @@
         "version": {
             "label": "Versión"
         },
+        "errorPage": {
+            "title":"Vaya, algo salió mal",
+            "subtitle":"Haga clic en el icono a continuación para volver a cargar MapStore",
+            "description":"Si desea informar este error, puede enviar un correo electrónico a nuestra lista de correo",
+            "descriptionAdmin":"Por favor, póngase en contacto con el administrador"
+        },
         "autorefresh": {
             "of": "de",
             "updating": "actualizando...",
@@ -561,6 +567,7 @@
         "identifyHighlightFeatures": "Resaltar features",
         "identifyShowCoordinateEditor": "Mostrar editor de coordenadas",
         "identifyHideCoordinateEditor": "Ocultar editor de coordenadas",
+        "identifyCoordinateApplyChanges": "Aplicar los cambios",
         "identifyRevGeocodeModalTitle": "Dirección",
         "identifyRevGeocodeSubmitText": "Más información",
         "identifyRevGeocodeCloseText": "Cerrar",
@@ -602,7 +609,10 @@
             "showLabel": "Mostrar etiqueta de medición",
             "addAsAnnotation": "Añadir como anotación",
             "newMeasure": "Nueva anotación",
-            "selectTool": "Seleccione una herramienta de medición"
+            "selectTool": "Seleccione una herramienta de medición",
+            "exportToGeoJSON": "Exportar a GeoJSON",
+            "resetTooltip": "Medidas claras",
+            "addAsLayer": "Agregar como capa"
         },
         "search":{
             "decimal": "Decimal",
@@ -991,7 +1001,8 @@
                 "notValidMarker": "Insertar una coordenada válida (+|- 90° lat, +|-180° lon)",
                 "notValidPolyline": "Todas las coordenadas deben ser válidas (+|- 90° lat, +|-180° lon)",
                 "notValidText": "Insertar un valor de texto y una coordenada válida (+|- 90° lat, +|-180° lon)",
-                "notValidCircle": "Ingrese un radio y una coordenada válida (+|- 90° lat, +|-180° lon)"
+                "notValidCircle": "Ingrese un radio y una coordenada válida (+|- 90° lat, +|-180° lon)",
+                "newFeature": "Nuevo"
             }
         },
         "user":{
@@ -1197,6 +1208,18 @@
             "type": "Tipo",
             "serviceTitle": "Título",
             "serviceTitlePlaceholder": "escribe un título",
+            "tms": {
+              "provider": "Proveedor",
+              "urlTemplate": "Plantilla de URL",
+              "urlTemplateHint": "<p> URL de plantilla para su servicio TMS personalizado, con la posibilidad de insertar variables (expresadas con llaves, por ejemplo, <code> {var_name} </code>) que serán reemplazadas por la aplicación. <br />. Las variables <code> {x} </code>, <code> {y} </code> y <code> {z} </code> están reservadas para los valores de coordenadas de la cuadrícula de mosaico. También puede usar variables <code> {s} </code> para subdominios. Cualquier otra variable especificada en la URL debe especificarse también en las opciones dentro de \"Configuración personalizada de TMS\" (Configuración avanzada) </p> ",
+              "customTMSConfiguration": "Configuración personalizada de TMS",
+              "customTMSConfigurationHint": "<p> Las opciones pueden contener: <br/> <ul><li> <code> \"subdomains\": ['a', 'b'] </code>: utilizado para múltiples dominios, reemplazando el <code> {s} </code> en la plantilla URL </li> <li> <code> \"maxNativeZoom \": 20 </code>: zoom máximo desde el servidor </li> </ul> </p>",
+              "forceDefaultTileGrid": "Forzar cuadrícula de mosaico predeterminada",
+              "forceDefaultTileGridDescription": "Utilice la cuadrícula de mosaico de la proyección global en lugar del origen y las resoluciones proporcionadas por el servidor. Esto es útil para algunos servicios de TMS que anuncian origen o revelaciones incorrectos"
+            },
+            "tileprovider": {
+              "tooltip": "x, y, z son la posición del mosaico, s es el subdominio (predeterminado)"
+            },
             "missingReference": "Faltan metadatos de referencia OGC",
             "showDescription": "Mostrar descripción completa",
             "hideDescription": "Ocultar descripción completa",
@@ -1985,6 +2008,9 @@
                 "brightTextThemeLabel": "Texto brillante",
                 "darkThemeLabel": "Oscuro",
                 "darkTextThemeLabel": "Texto oscuro",
+                "defaultThemeLabel": "Defecto",
+                "customizeThemeLabel": "Personalizar",
+                "customizeThemeRemoveLabel": "Quitar la personalización",
                 "cover": "Haz que el fondo cubra todo el espacio del contenedor",
                 "fit": "Hacer visible todo el fondo dentro del contenedor",
                 "editMedia": "Cambiar fuente de medios",
@@ -2045,7 +2071,8 @@
                     "autoplayInterval": "Intervalo de reproducción automática (segundos)",
                     "autoplayIntervalPlaceholder": "Habilitar intervalo de reproducción automática",
                     "navbar": "Barra de navegación",
-                    "showNavbar": "Mostrar barra de navegación"
+                    "showNavbar": "Mostrar barra de navegación",
+                    "theme": "Tema"
                 }
             },
             "errors": {
@@ -2078,6 +2105,13 @@
                 "url": {
                     "label": "URL"
                 }
+            },
+            "customizeTheme": {
+                "backgroundColorLabel": "Antecedentes",
+                "textColorLabel": "Texto",
+                "shadowLabel": "Sombra",
+                "useAlternativeTextColor": "Utilice el color de texto alternativo",
+                "alternativeTextColorPopover": "<p>Advertencia: el color del texto seleccionado puede no ser legible en este contexto.</p><p>Una alternativa es el color del texto {color} &nbsp;<span class=\"ms-custom-theme-picker-alternative-text\" style=\"background-color:{color}\"></span></p>"
             }
         },
         "saveDialog": {
@@ -2379,8 +2413,11 @@
                 },
                 "uploadLabel": "Arrastre un paquete de extensión o haga clic para navegar y subirlo",
                 "uploadTitle": "Instalar un complemento MapStore",
-                "uploadParseError": "el archivo index.json tiene el formato incorrecto",
-                "uploadMissingFileError": "falta el archivo index.json en zip",
+                "uploadParseError": "Archivo index.json con formato errato",
+                "uploadMissingIndexError": "falta el archivo index.json en zip",
+                "uploadMissingPluginError": "No hay complementos definidos en index.json",
+                "uploadMissingBundleError": "No hay paquete de JavaScript en el archivo cargado",
+                "uploadTooManyBundlesError": "Demasiados paquetes de JavaScript en el paquete zip",
                 "confirmRemovePlugin": "Are you sure you want to remove the extension?",
                 "tooltips": {
                     "enableUserPlugin": "Habilitar la selección del complemento actual para el usuario",
@@ -2435,6 +2472,10 @@
                 "conflict": "Ya existe un recurso con este nombre",
                 "defaultMessage": "Error desconocido",
                 "categoryError": "Error al crear la categoría faltante \"{categoryName}\""
+            },
+            "loadTemplateErrorNotification": {
+                "forbidden": "No se pudo acceder a los datos de la plantilla, ¡el usuario carece de los permisos necesarios!",
+                "defaultMessage": "Ocurrió un error inesperado"
             },
             "contextNameErrorNotification": {
                 "title": "Nombre de contexto incorrecto",
@@ -2623,6 +2664,18 @@
                 "title": "Widget de mapa",
                 "text": "<p> Agregue un nuevo mapa interactivo al panel de control. Puede agregar más de un mapa con la capacidad de conectar otros widgets a ellos. Después de guardar el primer mapa, el widget de leyenda se agregará a la lista. El widget de leyenda mostrará una leyenda relacionada con el mapa conectado. </p> <p> Pasos: </p> <p> <ul> <li> Seleccione un mapa </li> <li> Mejore el mapa agregando nuevas capas </li> <li> Guarde y agregue al panel de control </li> </ul> </p>"
             }
+        },
+        "userSession": {
+          "saveErrorNotification": {
+            "titleContext": "Error al guardar la sesión del usuario",
+            "categoryError": "Creando categoría faltante \"{categoryName}\"faile",
+            "defaultMessage": "Error desconocido"
+          },
+          "removeErrorNotification": {
+            "titleContext": "Error al eliminar sesión de usuario",
+            "defaultMessage": "Error desconocido"
+          },
+          "successRemoved": "Sesión de usuario eliminada"
         }
     }
 }

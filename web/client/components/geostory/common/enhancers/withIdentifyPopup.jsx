@@ -121,7 +121,7 @@ export const  withPopupSupport =  branch(({map: {mapInfoControl = false} = {}}) 
         withStateHandlers(({'popups': []}), {
             onClick: (_state, {getFeatureInfoHandler = () => {}}) => ({rawPos: coordinates = [], ...point}, layerInfo) =>  {
                 getFeatureInfoHandler({point, layerInfo});
-                return {popups: [{position: {  coordinates}}]};
+                return {popups: [{ position: {  coordinates}, id: uuidv1() }]};
             },
             onPopupClose: () => () => ({popups: []})
         }),

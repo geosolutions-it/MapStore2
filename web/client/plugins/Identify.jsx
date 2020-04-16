@@ -182,7 +182,7 @@ const IdentifyPlugin = compose(
     connect(selector, {
         purgeResults: purgeMapInfoResults,
         closeIdentify,
-        onChangeClickPoint: featureInfoClick,
+        onSubmitClickPoint: featureInfoClick,
         onToggleShowCoordinateEditor: toggleShowCoordinateEditor,
         onChangeFormat: changeFormat,
         changeMousePointer,
@@ -224,7 +224,7 @@ const FeatureInfoFormatSelector = connect((state) => ({
     infoFormat: generalInfoFormatSelector(state)
 }), {
     onInfoFormatChange: changeMapInfoFormat
-})(require("../components/misc/FeatureInfoFormatSelector"));
+})(require("../components/misc/FeatureInfoFormatSelector").default);
 
 const FeatureInfoTriggerSelector = connect((state) => ({
     trigger: isMouseMoveIdentifyActiveSelector(state) ? 'hover' : 'click'

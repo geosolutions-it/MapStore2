@@ -31,6 +31,12 @@
         "version": {
             "label": "Version"
         },
+        "errorPage": {
+            "title":"Oups, quelque chose a mal tourné",
+            "subtitle":"Veuillez cliquer sur l'icône ci-dessous pour recharger MapStore",
+            "description":"Si vous souhaitez signaler cette erreur, vous pouvez envoyer un e-mail à notre liste de diffusion",
+            "descriptionAdmin":"Veuillez contacter l'administrateur"
+        },
         "autorefresh": {
             "of": "de",
             "updating": "Rafraîchissement...",
@@ -561,6 +567,7 @@
         "identifyHighlightFeatures": "Caractéristiques marquantes",
         "identifyShowCoordinateEditor": "Afficher l'éditeur de coordonnées",
         "identifyHideCoordinateEditor": "Masquer l'éditeur de coordonnées",
+        "identifyCoordinateApplyChanges": "Appliquer les modifications",
         "identifyRevGeocodeModalTitle": "Adresse",
         "identifyRevGeocodeSubmitText": "Plus d'Informations",
         "identifyRevGeocodeCloseText": "Fermer",
@@ -602,7 +609,10 @@
             "showLabel": "Afficher l'étiquette de mesure",
             "addAsAnnotation": "Ajouter comme annotation",
             "newMeasure": "Nouvelle annotation",
-            "selectTool": "Sélectionnez un outil de mesure"
+            "selectTool": "Sélectionnez un outil de mesure",
+            "exportToGeoJSON": "Exporter vers GeoJSON",
+            "resetTooltip": "Des mesures claires",
+            "addAsLayer": "Ajouter comme calque"
         },
         "search": {
             "decimal": "Décimal",
@@ -991,7 +1001,8 @@
                 "notValidMarker": "Insérer une coordonnée valide (+|- 90° lat, +|-180° lon)",
                 "notValidPolyline": "Toutes les coordonnées doivent être valides (+|- 90° lat, +|-180° lon)",
                 "notValidText": "Insérer une valeur de texte et une coordonnée valide (+|- 90° lat, +|-180° lon)",
-                "notValidCircle": "Entrez un rayon et une coordonnée valide (+|- 90° lat, +|-180° lon)"
+                "notValidCircle": "Entrez un rayon et une coordonnée valide (+|- 90° lat, +|-180° lon)",
+                "newFeature": "Nouveau"
             }
         },
         "user": {
@@ -1197,6 +1208,18 @@
             "type": "Type",
             "serviceTitle": "Titre",
             "serviceTitlePlaceholder": "tapez un titre",
+            "tms": {
+                "provider": "Provider",
+                "urlTemplate": "Modèle d'URL",
+                "urlTemplateHint": "<p> URL de modèle pour votre service TMS personnalisé, avec la possibilité d'insérer des variables (exprimées à l'aide d'accolades, par exemple <code> {var_name} </code>) qui seront remplacées par l'application. <br />. Les variables <code> {x} </code>, <code> {y} </code> et <code> {z} </code> sont réservées aux valeurs de coordonnées de la grille de tuiles. Vous pouvez également utiliser la variable <code> {s} </code> pour les sous-domaines. Toute autre variable spécifiée dans l'URL doit également être spécifiée dans les options de \"Configuration TMS personnalisée \" (Paramètres avancés) </p>",
+                "customTMSConfiguration": "Configuration TMS personnalisée",
+                "customTMSConfigurationHint": "<p> Les options peuvent contenir: <br/> <ul><li> <code> \" sous-domaines \": ['a', 'b'] </code>: utilisées pour plusieurs domaines, remplacement du <code> {s} </code> dans le modèle d'URL </li> <li> <code> \"maxNativeZoom \": 20 </code>: zoom max du serveur </li> </ul> </p> ",
+                "forceDefaultTileGrid": "Forcer la grille de tuiles par défaut",
+                "forceDefaultTileGridDescription": "Utilisez la grille de tuiles de la projection globale au lieu de l'origine et des résolutions fournies par le serveur. Ceci est utile pour certains services TMS qui annoncent une origine ou des résolutions incorrectes."
+              },
+              "tileprovider": {
+                "tooltip": "x, y, z sont la position des tuiles, s est le sous-domaine (par défaut)"
+            },
             "missingReference": "Les métadonnées des références OGC manquent",
             "showDescription": "Afficher la description complète",
             "hideDescription": "Masquer la description complète",
@@ -1985,6 +2008,9 @@
                 "brightTextThemeLabel": "Texte clair",
                 "darkThemeLabel": "Sombre",
                 "darkTextThemeLabel": "Texte sombre",
+                "defaultThemeLabel": "Défaut",
+                "customizeThemeLabel": "Personnaliser",
+                "customizeThemeRemoveLabel": "Supprimer la personnalisation",
                 "cover": "Faire en sorte que l'arrière-plan couvre tout l'espace du conteneur",
                 "fit": "Rendre tout le fond visible à l'intérieur du conteneur",
                 "editMedia": "Changer de source média",
@@ -2045,7 +2071,8 @@
                     "autoplayInterval": "Intervalle de lecture automatique (secondes)",
                     "autoplayIntervalPlaceholder": "Activer l'intervalle de lecture automatique",
                     "navbar": "Barre de navigation",
-                    "showNavbar": "Afficher la barre de navigation"
+                    "showNavbar": "Afficher la barre de navigation",
+                    "theme": "Thème"
                 }
             },
             "errors": {
@@ -2078,6 +2105,13 @@
                 "url": {
                     "label": "URL"
                 }
+            },
+            "customizeTheme": {
+                "backgroundColorLabel": "Contexte",
+                "textColorLabel": "Texte",
+                "shadowLabel": "Ombre",
+                "useAlternativeTextColor": "Utiliser la couleur de texte alternatif",
+                "alternativeTextColorPopover": "<p>Attention: la couleur du texte sélectionné pourrait être illisible sur ce fond.</p><p>Une couleur de texte alternatif est {color} &nbsp;<span class=\"ms-custom-theme-picker-alternative-text\" style=\"background-color:{color}\"></span></p>"
             }
         },
         "saveDialog": {
@@ -2379,8 +2413,11 @@
                 },
                 "uploadLabel": "Faites glisser un ensemble d'extensions ou cliquez pour le parcourir et le télécharger",
                 "uploadTitle": "Installer un plugin MapStore",
-                "uploadParseError": "le fichier index.json a le mauvais format",
-                "uploadMissingFileError": "fichier index.json manquant dans le zip",
+                "uploadParseError": "Fichier index.json con formato errato",
+                "uploadMissingIndexError": "fichier index.json manquant dans le zip",
+                "uploadMissingPluginError": "Aucun plugin défini dans index.json",
+                "uploadMissingBundleError": "Aucun paquet javascript dans le fichier téléchargé",
+                "uploadTooManyBundlesError": "Trop de bundles javascript dans le package zip",
                 "confirmRemovePlugin": "¿Está seguro de que desea eliminar la extensión?",
                 "tooltips": {
                     "enableUserPlugin": "Activer la sélection du plugin actuel pour l'utilisateur",
@@ -2435,6 +2472,10 @@
                 "conflict": "Une ressource portant ce nom existe déjà",
                 "defaultMessage": "Erreur inconnue",
                 "categoryError": "La création de la catégorie manquante \"{categoryName}\" a échoué"
+            },
+            "loadTemplateErrorNotification": {
+                "forbidden": "Impossible d'accéder aux données du modèle, l'utilisateur n'a pas les autorisations nécessaires!",
+                "defaultMessage": "Une erreur inattendue s'est produite"
             },
             "contextNameErrorNotification": {
                 "title": "Nom de contexte incorrect",
@@ -2622,6 +2663,18 @@
                 "title": "Widget Carte",
                 "text": "<p> Ajoutez une nouvelle carte interactive au tableau de bord. Vous pouvez ajouter plusieurs cartes avec la possibilité de leur connecter d'autres widgets. Après avoir enregistré la première carte, le widget légende sera ajouté à la liste. Legend Widget affichera une légende liée à la carte connectée. </p> <p> Étapes: </p> <p> <ul> <li> Sélectionnez une carte </li> <li> Améliorer la carte en ajoutant de nouveaux calques </li> <li> Enregistrer et ajouter au tableau de bord </li> </ul> </p>"
             }
+        },
+        "userSession": {
+          "saveErrorNotification": {
+            "titleContext": "L'enregistrement de la session utilisateur a échoué",
+            "categoryError": "Création d'une catégorie manquante \"{categoryName}\"faile",
+            "defaultMessage": "Erreur inconnue"
+          },
+          "removeErrorNotification": {
+            "titleContext": "La suppression de la session utilisateur a échoué",
+            "defaultMessage": "Erreur inconnue"
+          },
+          "successRemoved": "Session utilisateur supprimée"
         }
     }
 }

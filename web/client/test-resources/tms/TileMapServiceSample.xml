@@ -1,0 +1,18 @@
+<TileMapService version="1.0.0" services="http://some-url.org/geoserver/gwc/">
+    <Title>Tile Map Service</Title>
+    <Abstract>A Tile Map Service served by GeoWebCache</Abstract>
+    <TileMaps>
+        <TileMap title="tasmania_water_bodies" srs="EPSG:4326" profile="local" href="http://some-url.org/geoserver/gwc/service/tms/1.0.0/gs%3Atasmania_water_bodies@EPSG%3A4326@png"/>
+        <TileMap title="tasmania_water_bodies" srs="EPSG:4326" profile="local" href="http://some-url.org/geoserver/gwc/service/tms/1.0.0/gs%3Atasmania_water_bodies@EPSG%3A4326@jpeg"/>
+        <TileMap title="tasmania_water_bodies" srs="EPSG:4326" profile="local" href="http://some-url.org/geoserver/gwc/service/tms/1.0.0/gs%3Atasmania_water_bodies@EPSG%3A4326@png8"/>
+        <TileMap title="tasmania_water_bodies" srs="EPSG:900913" profile="local" href="http://some-url.org/geoserver/gwc/service/tms/1.0.0/gs%3Atasmania_water_bodies@EPSG%3A900913@png"/>
+        <TileMap title="tasmania_water_bodies" srs="EPSG:900913" profile="local" href="http://some-url.org/geoserver/gwc/service/tms/1.0.0/gs%3Atasmania_water_bodies@EPSG%3A900913@jpeg"/>
+        <TileMap title="tasmania_water_bodies" srs="EPSG:900913" profile="local" href="http://some-url.org/geoserver/gwc/service/tms/1.0.0/gs%3Atasmania_water_bodies@EPSG%3A900913@png8"/>
+        <TileMap title="tasmania_roads" srs="EPSG:4326" profile="local" href="http://some-url.org/geoserver/gwc/service/tms/1.0.0/gs%3Atasmania_roads@EPSG%3A4326@png"/>
+        <TileMap title="tasmania_roads" srs="EPSG:4326" profile="local" href="http://some-url.org/geoserver/gwc/service/tms/1.0.0/gs%3Atasmania_roads@EPSG%3A4326@jpeg"/>
+        <TileMap title="tasmania_roads" srs="EPSG:4326" profile="local" href="http://some-url.org/geoserver/gwc/service/tms/1.0.0/gs%3Atasmania_roads@EPSG%3A4326@png8"/>
+        <TileMap title="tasmania_roads" srs="EPSG:900913" profile="local" href="http://some-url.org/geoserver/gwc/service/tms/1.0.0/gs%3Atasmania_roads@EPSG%3A900913@png"/>
+        <TileMap title="tasmania_roads" srs="EPSG:900913" profile="local" href="http://some-url.org/geoserver/gwc/service/tms/1.0.0/gs%3Atasmania_roads@EPSG%3A900913@jpeg"/>
+        <TileMap title="tasmania_roads" srs="EPSG:900913" profile="local" href="http://some-url.org/geoserver/gwc/service/tms/1.0.0/gs%3Atasmania_roads@EPSG%3A900913@png8"/>
+    </TileMaps>
+</TileMapService>

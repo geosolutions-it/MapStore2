@@ -47,6 +47,11 @@ export default class PopupSupport extends React.Component {
         return popups !== this.props.popups;
     }
     componentWillUnmount() {
+        // Clean old popups without throwing event
+        (this._popups || []).forEach(({popup}) => {
+            popup.off('remove', this.popupClose);
+            popup && this.props.map?.removeLayer?.(popup);
+        });
         if (this.props.map) {
             this.props.map.off('resize', this.updatePopup);
         }
@@ -54,10 +59,10 @@ export default class PopupSupport extends React.Component {
     renderPopups() {
         return  this.preparePopups()
             .filter(({component}) => !!component)
-            .map(({popup, props = {}, compStyle, component, id}) => {
+            .map(({popup, props = {}, component, id}) => {
                 const context = popup.getContent();
                 const PopupContent = isString(component) && popupsComponents[component] || component;
-                const El = React.isValidElement(PopupContent) && PopupContent || <PopupContent style={compStyle} {...props}/>;
+                const El = React.isValidElement(PopupContent) && PopupContent || <PopupContent {...props}/>;
                 return context ? ReactDOM.createPortal(El, context, id) : null;
             });
     }
@@ -84,7 +89,7 @@ export default class PopupSupport extends React.Component {
         this._popups = popups.map(( options = {}) => {
 
             const maxMapWidth = size.x * 0.9;
-            const maxMapHeight =  size.y * 0.5;
+            const maxMapHeight =  size.y * 0.9;
 
             const { id, position: { coordinates }, component, content, className,
                 maxWidth: maxWidthOption = maxMapWidth,
@@ -106,9 +111,7 @@ export default class PopupSupport extends React.Component {
 
             popup.setLatLng(coordinates);
             map.addLayer(popup); // This is needed to manage multiple popup
-            const compStyle = {maxWidth: maxWidth - 30, maxHeight: maxHeight - 20};
-
-            return {popup, compStyle, ...options};
+            return { popup, ...options };
         });
         return this._popups;
     }

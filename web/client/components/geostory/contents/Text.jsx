@@ -12,7 +12,7 @@ import { EMPTY_CONTENT, Modes, SectionTypes } from '../../../utils/GeoStoryUtils
 import localizedProps from '../../misc/enhancers/localizedProps';
 import editableText from './enhancers/editableText';
 
-const Text = ({ placeholder, id, toggleEditing = () => {}, html, mode}) => {
+const Text = ({ placeholder, placeholderTag = 'p', id, toggleEditing = () => {}, html, mode}) => {
     return (
         <div className="ms-text-wrapper">
             {   // content => render it
@@ -27,7 +27,7 @@ const Text = ({ placeholder, id, toggleEditing = () => {}, html, mode}) => {
                 id={"placeholder" + id}
                 // when opening an empty content by clicking the placeholder, then the "html" should be empty
                 onClick={() => toggleEditing(true, html === EMPTY_CONTENT ? "" : html)}
-                dangerouslySetInnerHTML={{ __html: `<h1>${placeholder}</h1>` }}
+                dangerouslySetInnerHTML={{ __html: `<${placeholderTag}>${placeholder}</${placeholderTag}>` }}
             />
             }
         </div>
@@ -55,7 +55,8 @@ export default compose(
             ["sectionType"],
             ({sectionType}) => {
                 return {
-                    placeholder: SectionTypes.TITLE === sectionType ? "geostory.builder.defaults.htmlTitlePlaceholder" : "geostory.builder.defaults.htmlPlaceholder"
+                    placeholder: SectionTypes.TITLE === sectionType ? "geostory.builder.defaults.htmlTitlePlaceholder" : "geostory.builder.defaults.htmlPlaceholder",
+                    placeholderTag: SectionTypes.TITLE === sectionType ? 'h1' : 'p'
                 };
             }
         ),

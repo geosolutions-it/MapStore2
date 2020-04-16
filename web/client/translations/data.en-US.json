@@ -31,6 +31,12 @@
         "version": {
             "label": "Version"
         },
+        "errorPage": {
+            "title":"Ops, Something has gone wrong",
+            "subtitle":"Please click the icon below to reload MapStore",
+            "description":"If you want to report this error you can send an email our mailing list",
+            "descriptionAdmin":"Please contact the administrator"
+        },
         "autorefresh": {
             "of": "of",
             "updating": "Updating...",
@@ -561,6 +567,7 @@
         "identifyHighlightFeatures": "Highlight features",
         "identifyShowCoordinateEditor": "Show coordinate editor",
         "identifyHideCoordinateEditor": "Hide coordinate editor",
+        "identifyCoordinateApplyChanges": "Apply changes",
         "identifyRevGeocodeModalTitle": "Address",
         "identifyRevGeocodeSubmitText": "More Info",
         "identifyRevGeocodeCloseText": "Close",
@@ -602,7 +609,10 @@
             "showLabel": "Show measurement label",
             "addAsAnnotation": "Add as annotation",
             "newMeasure": "New annotation",
-            "selectTool": "Select a measurement tool"
+            "selectTool": "Select a measurement tool",
+            "exportToGeoJSON": "Export to GeoJSON",
+            "resetTooltip": "Clear measures",
+            "addAsLayer": "Add as layer"
         },
         "search":{
             "decimal": "Decimal",
@@ -992,7 +1002,8 @@
                 "notValidMarker": "Insert a valid coordinate (+|- 90° lat, +|-180° lon)",
                 "notValidPolyline": "All coordinate must be valid (+|- 90° lat, +|-180° lon)",
                 "notValidText": "Insert a text value and a valid coordinate (+|- 90° lat, +|-180° lon)",
-                "notValidCircle": "Insert a radius value and a valid coordinate (+|- 90° lat, +|-180° lon)"
+                "notValidCircle": "Insert a radius value and a valid coordinate (+|- 90° lat, +|-180° lon)",
+                "newFeature": "New"
             }
         },
         "user":{
@@ -1198,6 +1209,18 @@
             "type": "Type",
             "serviceTitle": "Title",
             "serviceTitlePlaceholder": "type a title",
+            "tms": {
+              "provider": "Provider",
+              "urlTemplate": "URL Template",
+              "urlTemplateHint": "<p>Template URL for your custom TMS service, with the possibility to insert variables (expressed using curly braces, e.g. <code>{var_name}</code>) that will be replaced by the application.<br/>. The <code>{x}</code>, <code>{y}</code> and <code>{z}</code> variables are reserved for tile grid coordinate values. You can also use variable <code>{s}</code> for subdomains. Any other variable specified in the URL must be specified also in options inside \"Custom TMS Configuration\" (Advanced Settings)</p>",
+              "customTMSConfiguration": "Custom TMS Configuration",
+              "customTMSConfigurationHint": "<p>Options can contain:<br/><ul><li><code>\"subdomains\": ['a', 'b']</code>: used for multiple domains, replacingthe <code>{s}</code> in URL template</li><li><code>\"maxNativeZoom\": 20</code>: max zoom from the server</li></ul></p>",
+              "forceDefaultTileGrid": "Force default tile grid",
+              "forceDefaultTileGridDescription": "Use the global projection's tile grid instead of the origin and resolutions provided by the server. This is useful for some TMS services that advertise wrong origin or resoultions."
+            },
+            "tileprovider": {
+              "tooltip": "x,y,z are tile position, s is the sub-domain (default)"
+            },
             "missingReference": "Missing OGC reference metadata",
             "showDescription": "Show full description",
             "hideDescription": "Hide full description",
@@ -1989,6 +2012,9 @@
                 "brightTextThemeLabel": "Bright text",
                 "darkThemeLabel": "Dark",
                 "darkTextThemeLabel": "Dark text",
+                "defaultThemeLabel": "Default",
+                "customizeThemeLabel": "Customize",
+                "customizeThemeRemoveLabel": "Remove customization",
                 "cover": "Make the background cover the whole container space",
                 "fit": "Make the whole background visible inside the container",
                 "editMedia": "Change media source",
@@ -2049,7 +2075,8 @@
                     "autoplayInterval" : "Autoplay interval (seconds)",
                     "autoplayIntervalPlaceholder" : "Enable autoplay interval",
                     "navbar" : "Navigation bar",
-                    "showNavbar" : "Show navbar"
+                    "showNavbar" : "Show navbar",
+                    "theme": "Theme"
                 }
             },
             "errors": {
@@ -2082,6 +2109,13 @@
                 "url": {
                     "label": "URL"
                 }
+            },
+            "customizeTheme": {
+                "backgroundColorLabel": "Background",
+                "textColorLabel": "Text",
+                "shadowLabel": "Shadow",
+                "useAlternativeTextColor": "Use alternative text color",
+                "alternativeTextColorPopover": "<p>Warning: the selected text color could be not readable on this background.</p><p>An alternative text color is {color} &nbsp;<span class=\"ms-custom-theme-picker-alternative-text\" style=\"background-color:{color}\"></span></p>"
             }
         },
         "saveDialog": {
@@ -2384,7 +2418,10 @@
                 "uploadLabel": "Drag an extension bundle or click to browse and upload it",
                 "uploadTitle": "Install a MapStore plugin",
                 "uploadParseError": "index.json file index.json has a wrong format",
-                "uploadMissingFileError": "index.json file missing in zip",
+                "uploadMissingIndexError": "index.json file missing in zip",
+                "uploadMissingPluginError": "No plugins defined in index.json",
+                "uploadMissingBundleError": "No javascript bundle in uploaded file",
+                "uploadTooManyBundlesError": "Too many javascript bundles in the zip package",
                 "confirmRemovePlugin": "Are you sure you want to remove the extension?",
                 "tooltips": {
                     "enableUserPlugin": "Enable selection of current plugin for user",
@@ -2439,6 +2476,10 @@
                 "conflict": "A resource with this name already exists",
                 "defaultMessage": "Unknown error",
                 "categoryError": "Creating missing category \"{categoryName}\" failed"
+            },
+            "loadTemplateErrorNotification": {
+                "forbidden": "Couldn't access the template data, the user lacks necessary permissions!",
+                "defaultMessage": "Unexpected error occured"
             },
             "contextNameErrorNotification": {
                 "title": "Bad context name",
@@ -2627,6 +2668,18 @@
                 "title": "Map Widget",
                 "text": "<p>Add a new interactive map to the dashboard. You can add more than one map with the ability to connect other widgets to them. After saving the first map, the legend widget will be added to the list. Legend Widget will show a legend related to the connected map.</p><p>Steps:</p><p><ul><li>Select a map</li><li>Improve map by adding new layers</li><li>Save and add to dashboard</li></ul></p>"
             }
+        },
+        "userSession": {
+          "saveErrorNotification": {
+            "titleContext": "User session saving failed",
+            "categoryError": "Creating missing category \"{categoryName}\" failed",
+            "defaultMessage": "Unknown error"
+          },
+          "removeErrorNotification": {
+            "titleContext": "User session removing failed",
+            "defaultMessage": "Unknown error"
+          },
+          "successRemoved": "User session removed"
         }
     }
 }

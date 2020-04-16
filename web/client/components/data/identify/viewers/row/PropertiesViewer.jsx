@@ -26,22 +26,9 @@ class PropertiesViewer extends React.Component {
 
     static defaultProps = {
         exclude: [],
-        titleStyle: {
-            height: "100%",
-            width: "100%",
-            padding: "4px 0px",
-            background: "rgb(240,240,240)",
-            borderRadius: "4px",
-            textAlign: "center",
-            textOverflow: "ellipsis"
-        },
-        listStyle: {
-            margin: "0px 0px 4px 0px"
-        },
-        componentStyle: {
-            padding: "0px 0px 2px 0px",
-            margin: "2px 0px 0px 0px"
-        }
+        titleStyle: {},
+        listStyle: {},
+        componentStyle: {}
     };
 
     getBodyItems = () => {
@@ -49,7 +36,13 @@ class PropertiesViewer extends React.Component {
             .filter(this.toExclude)
             .map((key) => {
                 const val = this.renderProperty(this.props[key]);
-                return <p key={key} style={this.props.listStyle}><b>{key}</b> {containsHTML(val) ? <span dangerouslySetInnerHTML={{__html: val}}/> : val}</p>;
+                return (
+                    <tr
+                        key={key}
+                        style={this.props.listStyle}>
+                        <td>{key}</td>
+                        <td>{containsHTML(val) ? <span dangerouslySetInnerHTML={{__html: val}}/> : val}</td>
+                    </tr>);
             });
     };
 
@@ -58,9 +51,14 @@ class PropertiesViewer extends React.Component {
             return null;
         }
         return (
-            <div key={this.props.title} style={this.props.titleStyle}>
-                {this.props.title}
-            </div>
+            <thead
+                key={this.props.title}
+                style={this.props.titleStyle}
+                className="ms-properties-viewer-title">
+                <tr>
+                    <th colSpan="2" >{this.props.title}</th>
+                </tr>
+            </thead>
         );
     };
 
@@ -70,13 +68,10 @@ class PropertiesViewer extends React.Component {
             return null;
         }
         return (
-            <div style={{
-                padding: "4px",
-                margin: 0,
-                borderRadius: "4px"
-            }}>
+            <tbody
+                className="ms-properties-viewer-body">
                 {items}
-            </div>
+            </tbody>
         );
     };
 
@@ -89,10 +84,12 @@ class PropertiesViewer extends React.Component {
 
     render() {
         return (
-            <div style={this.props.componentStyle}>
+            <table
+                className="ms-properties-viewer"
+                style={this.props.componentStyle}>
                 {this.renderHeader()}
                 {this.renderBody()}
-            </div>
+            </table>
         );
     }
 

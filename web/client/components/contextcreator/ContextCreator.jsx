@@ -203,6 +203,7 @@ export default class ContextCreator extends React.Component {
     render() {
         return (
             <Stepper
+                loading={this.props.loading && this.props.loadFlags.contextSaving}
                 currentStepId={this.props.curStepId}
                 onSetStep={this.props.onSetStep}
                 onSave={() => this.props.onSave(this.props.saveDestLocation)}

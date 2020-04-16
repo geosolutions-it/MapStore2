@@ -9,7 +9,7 @@ const PropTypes = require('prop-types');
 
 const React = require('react');
 const {Grid, Row, Col} = require('react-bootstrap');
-const ColorPicker = require('./ColorPicker');
+const ColorPicker = require('./ColorPicker').default;
 const StyleCanvas = require('./StyleCanvas');
 const MarkNameSelector = require('./MarkNameSelector');
 

@@ -1,18 +1,43 @@
+
+.ms-popup-close-button {
+    text-decoration: none;
+    position: absolute;
+    top: 0;
+    right: 0;
+    transform: translate(50%, -50%);
+    background: @ms2-color-background;
+    padding: 0;
+    color: #078aa3;
+    font-size: 12px;
+    align-items: center;
+    justify-content: center;
+    display: flex;
+    font-weight: normal;
+    height: 24px;
+    width: 24px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-family: "mapstore2";
+    .shadow-soft();
+}
+
 .map-popup-ol {
     margin-bottom: 15px;
     text-align: left;
 
-    >.ol-popup-content-wrapper {
-        padding: 4px;
+    > .ol-popup-content-wrapper {
+        padding: 0;
         background: @ms2-color-background;
         color: @ms2-color-text;
         .shadow-far;
-        border-radius: 12px;
+        border-radius: 0;
 
-        >.ol-popup-content {
+        > .ol-popup-content {
+            overflow: auto;
             position: relative;
+            display: flex;
             background-color: @ms2-color-background;
-            margin: 20px 20px;
+            margin: 0;
         }
     }
 
@@ -47,55 +72,45 @@
 }
 
 .ol-popup-closer {
-    text-decoration: none;
-    position: absolute;
-    top: 0;
-    right: 0;
-    padding: 4px 6px;
-    color: @ms2-color-primary;
-    font-size: @font-size-base;
-    font-weight: normal;
-    cursor: pointer;
-    font-family: "mapstore2";
-
+    .ms-popup-close-button();
     &:before {
         display: block;
         .glyphicon-1-close-content();
+    }
+    &:hover {
+        opacity: 0.6;
     }
 }
 
 
 .ms-leaflet-popup {
-
+    transition: none !important;
     .leaflet-popup-content-wrapper {
         overflow: hidden;
+        border-radius: 0;
         .shadow-far;
     }
 
     .leaflet-popup-content {
-        margin: 20px 20px;
+        overflow: auto;
+        position: relative; 
+        display: flex;
+        background-color: @ms2-color-background;
+        margin: 0;
     }
 
     a.leaflet-popup-close-button {
-        text-decoration: none;
-        position: absolute;
-        top: 0;
-        right: 0;
-        padding: 4px 6px;
-        width: 28px;
-        height: 32px;
-        display: block;
-        font-size: @font-size-base;
-        font-weight: normal;
-        cursor: pointer;
-        font-family: "mapstore2";
+        -webkit-tap-highlight-color: transparent;
+        .ms-popup-close-button();
         color: transparent;
-
         &:hover {
             color: transparent;
+            opacity: 0.6;
         }
-
         &:before {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
             display: block;
             color: @ms2-color-primary;
             .glyphicon-1-close-content();
@@ -104,21 +119,44 @@
 }
 
 .ms-map-popup {
+    display: flex;
     overflow: visible;
-
+    font-size: @font-size-small;
     .mapstore-identify-viewer {
-        min-width: 100px;
-        min-height: 100px;
-        max-height: inherit;
-        max-width: inherit;
-        overflow: hidden;
-
+        display: flex;
+        flex-direction: column;
+        .ms-identify-swipe-header-title {
+            text-align: center;
+        }
+        .ms-properties-viewer,
+        pre,
+        .alert,
+        .alert h4 {
+            white-space: pre-wrap;
+            font-size: @font-size-small;
+            font-size: @font-size-small;
+        }
+        .alert,
+        .alert h4 {
+            margin: 0;
+        }
+        .alert {
+            max-width: 300px;
+        }
         .panel {
+            display: flex;
+            flex-direction: column;
+            flex: 1;
             -webkit-box-shadow: none;
             box-shadow: none;
+            width: 100%;
+            min-width: 200px;
+            min-height: 100px;
+            max-height: 300px;
+            max-width: 300px;
             overflow: hidden;
             margin: 0 auto;
-
+            border: none;
             .panel-heading {
                 .panel-title {
                     >span {
@@ -128,11 +166,17 @@
                     }
                 }
             }
-
             .panel-body {
-                max-height: 300px;
                 overflow: auto;
+                flex: 1;
+                & > div {
+                    overflow: visible;
+                    margin: auto;
+                }
             }
+        }
+        .ms-template-viewer {
+            font-size: @font-size-small;
         }
     }
 

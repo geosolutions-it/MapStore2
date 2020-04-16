@@ -8,6 +8,7 @@
 
 const React = require('react');
 const CoordinatesRow = require('../../../misc/coordinateeditors/CoordinatesRow');
+const {isEmpty} = require('lodash');
 
 const Editor = (props) => (
     <CoordinatesRow
@@ -19,8 +20,8 @@ const Editor = (props) => (
             }
         }}
         idx={1}
-        onChange={(id, key, value) => {
-            props.onChange(key, value === null || value === "" ? undefined : value);
+        onSubmit={(id, value) => {
+            props.onSubmit(isEmpty(value) ? undefined : value);
         }}
         onChangeFormat={(format) => {
             props.onChangeFormat(format);

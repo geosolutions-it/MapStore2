@@ -39,7 +39,8 @@ export default compose(
     active,
     setActive,
     width,
-    height
+    height,
+    size
 }) => {
 
     const { layers = [], mapOptions = {}, ...m} = (map.data ? map.data : map);
@@ -96,7 +97,7 @@ export default compose(
             map={{
                 ...m,
                 id: `media-${id}`,
-                resize: width + '-' + height,
+                resize: width + '-' + height + '_' + size,
                 style: {
                     width: '100%',
                     height: '100%',

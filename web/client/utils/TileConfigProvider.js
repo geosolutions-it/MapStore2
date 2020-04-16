@@ -1,26 +1,44 @@
-var assign = require('object-assign');
-var CONFIGPROVIDER = require('./ConfigProvider');
-var CoordinatesUtils = require('./ConfigUtils');
+/*
+ * Copyright 2020, GeoSolutions Sas.
+ * All rights reserved.
+ *
+ * This source code is licensed under the BSD-style license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+import { pickBy } from 'lodash';
 
-let TileConfigProvider = {
+import CONFIGPROVIDER from './ConfigProvider';
+import CoordinatesUtils from './ConfigUtils';
+
+export default {
     getLayerConfig: function(layer, options) {
         var providers = CONFIGPROVIDER;
-        var parts = layer.split('.');
-        var providerName = parts[0];
-        var variantName = parts[1];
-        if (!providers[providerName]) {
-            throw new Error('No such provider (' + providerName + ')');
+        let providerConfig;
+        let variantName;
+        let providerName;
+        let parts;
+        if (layer === 'custom') {
+            providerConfig = options;
+        } else {
+            parts = layer.split('.');
+            providerName = parts[0];
+            variantName = parts[1];
+            providerConfig = providers[providerName];
+            if (!providerConfig) {
+                throw new Error('No such provider (' + providerName + ')');
+            }
         }
+
         let provider = {
-            url: providers[providerName].url,
-            options: providers[providerName].options
+            url: providerConfig.url,
+            options: providerConfig.options || {}
         };
             // overwrite values in provider from variant.
-        if (variantName && 'variants' in providers[providerName]) {
-            if (!(variantName in providers[providerName].variants)) {
-                throw new Error('No such variant of ' + providerName + ' (' + variantName + ')');
+        if (variantName && 'variants' in providerConfig) {
+            if (!(variantName in providerConfig.variants)) {
+                throw new Error('No such variant of ' + (providerName || providerConfig.url) + ' (' + variantName + ')');
             }
-            let variant = providers[providerName].variants[variantName];
+            let variant = providerConfig.variants[variantName];
             let variantOptions;
             if (typeof variant === 'string') {
                 variantOptions = {
@@ -31,7 +49,7 @@ let TileConfigProvider = {
             }
             provider = {
                 url: variant.url || provider.url,
-                options: assign({}, provider.options, variantOptions)
+                options: {...provider.options || {}, ...variantOptions}
             };
         } else if (typeof provider.url === 'function') {
             provider.url = provider.url(parts.splice(1, parts.length - 1).join('.'));
@@ -66,13 +84,13 @@ let TileConfigProvider = {
                 }
             );
         };
-        provider.options.attribution = attributionReplacer(provider.options.attribution);
+        if (provider.options.attribution) {
+            provider.options.attribution = attributionReplacer(provider.options.attribution);
+        }
 
         // Compute final options combining provider options with any user overrides
-        let layerOpts = assign({}, provider.options, options);
+        let layerOpts = { ...provider.options, ...pickBy(options, v => v !== undefined)};
         return [provider.url, layerOpts];
     }
 };
 
-
-module.exports = TileConfigProvider;

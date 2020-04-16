@@ -78,6 +78,40 @@ describe('WidgetsView component', () => {
         ReactTestUtils.Simulate.click(container.querySelector('.glyphicon-pencil')); // <-- trigger event callback
         expect(spyEditWidget).toHaveBeenCalled();
     });
+    it('Test widget with and without resource in mobile', () => {
+        const actions = {
+            editWidget: () => {}
+        };
+        const isMobile = [true, false];
+        [{canEdit: true}, null].map((resource, id)=>{
+            const props = {
+                canEdit: isMobile[id] ? !isMobile[id] : resource && !!resource.canEdit
+            };
+            const cmp = ReactDOM.render(<WidgetsView widgets={[dummyWidget]} editWidget={actions.editWidget} {...props} />, document.getElementById("container"));
+            expect(cmp).toExist();
+            const container = document.getElementById('container');
+            expect(container.querySelector('.glyphicon-pencil')).toNotExist();
+        });
+    });
+    it('Test widget with resource in desktop', () => {
+        const actions = {
+            editWidget: () => {}
+        };
+        const resource = {
+            canEdit: true
+        };
+        const isMobile = false;
+        const props = {
+            canEdit: isMobile ? !isMobile : resource && !!resource.canEdit
+        };
+        const spyEditWidget = expect.spyOn(actions, 'editWidget');
+        const cmp = ReactDOM.render(<WidgetsView widgets={[dummyWidget]} editWidget={actions.editWidget} {...props} />, document.getElementById("container"));
+        expect(cmp).toExist();
+        const container = document.getElementById('container');
+        expect(container.querySelector('.glyphicon-pencil')).toExist();
+        ReactTestUtils.Simulate.click(container.querySelector('.glyphicon-pencil'));
+        expect(spyEditWidget).toHaveBeenCalled();
+    });
     it('handler deleteWidget', () => {
         const actions = {
             deleteWidget: () => { }

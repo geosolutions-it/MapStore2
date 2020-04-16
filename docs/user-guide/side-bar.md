@@ -83,7 +83,7 @@ Using the <img src="../img/button/zoom-layer.jpg" class="ms-docbutton"/> button 
 
 ### Using the Coordinates Editor
 
-You might want to search features starting from their coordinates. The **Coordinates Editor** helps you to have more precision than just clicking on the map, so you can query objects by directly typing in their latitude and longitude.
+You might want to search features starting from their coordinates. The **Coordinates Editor** helps you to have more precision than just clicking on the map, so you can query objects by typing in their latitude and longitude and clicking <img src="../img/button/tick_button.jpg" class="ms-docbutton"/> button or by hitting enter from the keyboard.
 
 You can choose between `Decimal` coordinates:
 

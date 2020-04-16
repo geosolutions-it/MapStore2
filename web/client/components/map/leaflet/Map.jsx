@@ -209,8 +209,9 @@ class LeafletMap extends React.Component {
                 });
 
                 event.layer.on('tileloadstart ', () => { event.layer._ms2LoadingTileCount++; });
-                event.layer.on('tileerror', (errorEvent) => { event.layer.layerErrorStream$.next(errorEvent); });
-
+                if (event.layer.options && !event.layer.options.hideErrors || !event.layer.options) {
+                    event.layer.on('tileerror', (errorEvent) => { event.layer.layerErrorStream$.next(errorEvent); });
+                }
             }
         });
 

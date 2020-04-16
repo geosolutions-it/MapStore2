@@ -11,8 +11,8 @@ import { compose, withState, mapPropsStream, withHandlers } from 'recompose';
 import GeoStoreDAO from '../../../../../../api/GeoStoreDAO';
 import axios from '../../../../../../libs/ajax';
 import ConfigUtils from '../../../../../../utils/ConfigUtils';
-import { excludeGoogleBackground } from '../../../../../../utils/LayersUtils';
-
+import { excludeGoogleBackground, extractTileMatrixFromSources } from '../../../../../../utils/LayersUtils';
+import '../../../../../../libs/bindings/rxjsRecompose';
 
 const handleMapSelect = compose(
     withState('selected', "setSelected", null),
@@ -26,6 +26,7 @@ const handleMapSelect = compose(
                 return {
                     ...(mapState && mapState.map || {}),
                     ...(includeMapId ? {id: map.id} : {}),
+                    groups: mapState && mapState.groups || [],
                     layers: excludeGoogleBackground(mapState.layers.map(l => {
                         if (l.group === "background" && (l.type === "ol" || l.type === "OpenLayers.Layer")) {
                             l.type = "empty";
@@ -33,10 +34,16 @@ const handleMapSelect = compose(
                         return l;
                     }))
                 };
-            })
-                .then(res => onMapSelected({
+            }).then(res => {
+                // Extract tileMatrix from source and update layers
+                res.layers = res.sources ? res.layers.map(l => {
+                    const tileMatrix = extractTileMatrixFromSources(res.sources, l);
+                    return {... l, ...tileMatrix};
+                }) : res.layers;
+                return onMapSelected({
                     map: res
-                }))
+                });
+            })
     }),
     mapPropsStream(props$ =>
         props$.distinctUntilKeyChanged('selected').filter(({ selected } = {}) => selected).startWith({})

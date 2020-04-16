@@ -54,14 +54,13 @@ describe('ContentWrapper component', () => {
         expect(el).toExist();
     });
     it('test classes generated from default props', () => {
-        const DEFAULT_THEME_CLASS_NAME = 'ms-bright';
         const DEFAULT_ALIGN_CLASS_NAME = 'ms-align-center';
         const DEFAULT_SIZE_CLASS_NAME = 'ms-size-full';
         ReactDOM.render(<ContentWrapper type="text"/>, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('.ms-content');
         expect(el).toExist();
-        expect(el.getAttribute('class')).toBe(`ms-content ms-content-text ${DEFAULT_THEME_CLASS_NAME} ${DEFAULT_ALIGN_CLASS_NAME} ${DEFAULT_SIZE_CLASS_NAME}`);
+        expect(el.getAttribute('class')).toBe(`ms-content ms-content-text ${DEFAULT_ALIGN_CLASS_NAME} ${DEFAULT_SIZE_CLASS_NAME}`);
     });
     it('test classes generated from theme prop', () => {
         const THEME = 'dark';
@@ -76,34 +75,51 @@ describe('ContentWrapper component', () => {
     });
     it('test classes generated from align prop', () => {
         const ALIGN = 'right';
-        const DEFAULT_THEME_CLASS_NAME = 'ms-bright';
         const ALIGN_CLASS_NAME = `ms-align-${ALIGN}`;
         const DEFAULT_SIZE_CLASS_NAME = 'ms-size-full';
         ReactDOM.render(<ContentWrapper type="text" align={ALIGN}/>, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('.ms-content');
         expect(el).toExist();
-        expect(el.getAttribute('class')).toBe(`ms-content ms-content-text ${DEFAULT_THEME_CLASS_NAME} ${ALIGN_CLASS_NAME} ${DEFAULT_SIZE_CLASS_NAME}`);
+        expect(el.getAttribute('class')).toBe(`ms-content ms-content-text ${ALIGN_CLASS_NAME} ${DEFAULT_SIZE_CLASS_NAME}`);
     });
     it('test classes generated from size prop', () => {
         const SIZE = 'medium';
-        const DEFAULT_THEME_CLASS_NAME = 'ms-bright';
         const DEFAULT_ALIGN_CLASS_NAME = 'ms-align-center';
         const SIZE_CLASS_NAME = `ms-size-${SIZE}`;
         ReactDOM.render(<ContentWrapper type="text" size={SIZE}/>, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('.ms-content');
         expect(el).toExist();
-        expect(el.getAttribute('class')).toBe(`ms-content ms-content-text ${DEFAULT_THEME_CLASS_NAME} ${DEFAULT_ALIGN_CLASS_NAME} ${SIZE_CLASS_NAME}`);
+        expect(el.getAttribute('class')).toBe(`ms-content ms-content-text ${DEFAULT_ALIGN_CLASS_NAME} ${SIZE_CLASS_NAME}`);
     });
     it('test classes generated from size prop', () => {
-        const DEFAULT_THEME_CLASS_NAME = 'ms-bright';
         const DEFAULT_ALIGN_CLASS_NAME = 'ms-align-center';
         const SIZE_CLASS_NAME = 'ms-size-full';
         ReactDOM.render(<ContentWrapper type="text"/>, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('.ms-content');
         expect(el).toExist();
-        expect(el.getAttribute('class')).toBe(`ms-content ms-content-text ${DEFAULT_THEME_CLASS_NAME} ${DEFAULT_ALIGN_CLASS_NAME} ${SIZE_CLASS_NAME}`);
+        expect(el.getAttribute('class')).toBe(`ms-content ms-content-text ${DEFAULT_ALIGN_CLASS_NAME} ${SIZE_CLASS_NAME}`);
+    });
+    it('should apply custom theme', () => {
+        const COLOR = '#ffffff';
+        const BACKGROUND_COLOR = '#000000';
+        ReactDOM.render(
+            <ContentWrapper
+                type="text"
+                theme={{
+                    value: 'custom',
+                    custom: {
+                        color: COLOR,
+                        backgroundColor: BACKGROUND_COLOR
+                    }
+                }}
+            />, document.getElementById("container"));
+        const container = document.getElementById('container');
+        const contentBodyNode = container.querySelector('.ms-content-body');
+        expect(contentBodyNode).toBeTruthy();
+        expect(contentBodyNode.style.backgroundColor).toBe('rgb(0, 0, 0)');
+        expect(contentBodyNode.style.color).toBe('rgb(255, 255, 255)');
     });
 });
