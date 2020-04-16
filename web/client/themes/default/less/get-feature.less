@@ -9,7 +9,7 @@
 
         }
         & .form-group {
-            left: ~'calc(50% - 133px)';
+            width: auto;
             position: relative;
             & .seconds {
                 min-width: 120px;
@@ -17,7 +17,17 @@
             }
         }
     }
+    .coordinateRow.coord-editor.decimal {
+        @media only screen and (max-width: 660px) {
+            display: block;
+            & .form-group {
+                max-width: ~"calc(100% - 80px)";
+                margin-left: 40px;
+            }
+        }
+    }
 }
+
 .ms-identify-swipe-header {
     display: flex;
     align-items: center;
@@ -37,20 +47,23 @@
     display: flex;
     align-items: center;
     box-sizing: border-box;
+    padding: 15px 5px;
 
     input {
         font-size: 12px;
         font-family: Menlo, Monaco, Consolas, Courier New, monospace;
     }
-    .col-xs-5, .col-xs-1, .col-xs-2 {
+    .col-md-4 {
         padding: 0;
         float: unset;
         width: auto;
         margin: 0 4px;
     }
-    .col-xs-5 {
-        display: grid;
-        flex: 1;
+    .col-md-3, .col-md-1 {
+        padding: 0;
+    }
+    .col-xs-12{
+        justify-content: center;
     }
     &.coord-editor .col-xs-2 {
         min-width: unset !important;
@@ -58,8 +71,12 @@
     .form-group {
         margin: 4px 0;
     }
-    &.coord-editor .pull-right.btn-group {
+    &.coord-editor .tools.btn-group {
         margin-top: 20px;
+    }
+    .tools.btn-group span {
+        display: flex;
+        justify-content: center;
     }
 }
 

@@ -544,6 +544,7 @@
         "identifyHighlightFeatures": "Naglašavanje objekata",
         "identifyShowCoordinateEditor": "Prikaži unos koordinata",
         "identifyHideCoordinateEditor": "Sakrij unos koordinata",
+        "identifyCoordinateApplyChanges": "Primijenite promjene",
         "identifyRevGeocodeModalTitle": "Adresa",
         "identifyRevGeocodeSubmitText": "Više informacija",
         "identifyRevGeocodeCloseText": "Zatvori",

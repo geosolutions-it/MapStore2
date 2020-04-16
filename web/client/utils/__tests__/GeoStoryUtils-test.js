@@ -289,6 +289,13 @@ describe("GeoStory Utils", () => {
             expect(data.id).toExist();
             expect(data.type).toBe(ContentTypes.TEXT);
         });
+        it("ContentTypes.MEDIA", () => {
+            const data = getDefaultSectionTemplate(ContentTypes.MEDIA);
+            expect(data.id).toBeTruthy();
+            expect(data.type).toBe(ContentTypes.MEDIA);
+            expect(data.size).toBe('large');
+            expect(data.align).toBe('center');
+        });
     });
     it('test applyDefaults', () => {
         const res = applyDefaults();

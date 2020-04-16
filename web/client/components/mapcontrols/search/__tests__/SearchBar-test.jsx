@@ -227,7 +227,11 @@ describe("test the SearchBar", () => {
         const container = document.getElementById('container');
         const elements = container.querySelectorAll('input');
         TestUtils.Simulate.keyDown(elements[0], {
-            keyCode: 13
+            keyCode: 13,
+            preventDefault: () => {
+                expect(true).toBe(true);
+                done();
+            }
         });
     });
     it('Test SearchBar with not allowed e char for keyDown event', (done) => {

@@ -293,12 +293,22 @@ describe("test the MeasureComponent", () => {
                 showCoordinateEditor
                 format="decimal"
                 isDraggable
+                useSingleFeature
                 lineMeasureEnabled
             />, document.getElementById("container")
         );
         expect(cmp).toExist();
         const coordEditorPanel = TestUtils.findRenderedDOMComponentWithClass(cmp, 'ms2-border-layout-body');
         expect(coordEditorPanel).toExist();
+        const coordinateRows = TestUtils.scryRenderedDOMComponentsWithClass(cmp, 'coordinateRow');
+        const submits = TestUtils.scryRenderedDOMComponentsWithClass(cmp, "glyphicon-ok");
+        const isValid = TestUtils.scryRenderedDOMComponentsWithClass(cmp, "glyphicon-ok-sign");
+        const isInValid = TestUtils.scryRenderedDOMComponentsWithClass(cmp, "glyphicon-exclamation-mark");
+        expect(isValid).toExist();
+        expect(coordinateRows.length).toBe(2);
+        expect(isValid.length).toBe(1);
+        expect(submits.length).toBe(2);
+        expect(isInValid.length).toBe(0);
     });
 
     it('rendering a coordinate editor for Polygons with 4 empty rows', () => {
@@ -337,7 +347,14 @@ describe("test the MeasureComponent", () => {
         const coordEditorPanel = TestUtils.findRenderedDOMComponentWithClass(cmp, 'ms2-border-layout-body');
         const coordinateRows = TestUtils.scryRenderedDOMComponentsWithClass(cmp, 'coordinateRow');
         expect(coordEditorPanel).toExist();
+        const submits = TestUtils.scryRenderedDOMComponentsWithClass(cmp, "glyphicon-ok");
+        const isValid = TestUtils.scryRenderedDOMComponentsWithClass(cmp, "glyphicon-ok-sign");
+        const isInValid = TestUtils.scryRenderedDOMComponentsWithClass(cmp, "glyphicon-exclamation-mark");
+        expect(isValid).toExist();
         expect(coordinateRows.length).toBe(4);
+        expect(isValid.length).toBe(0);
+        expect(submits.length).toBe(4);
+        expect(isInValid.length).toBe(1);
 
     });
 });
