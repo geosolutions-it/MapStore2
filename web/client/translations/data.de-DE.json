@@ -2411,7 +2411,7 @@
                 "uploadMissingBundleError": "Kein Javascript-Bundle in der hochgeladenen Datei",
                 "uploadTooManyBundlesError": "Zu viele Javascript-Bundles im Zip-Paket",
                 "confirmRemovePlugin": "Möchten Sie die Erweiterung wirklich entfernen?",
-                "cancelUpload": "Abbrechen",
+                "cancelUpload": "Schließen",
                 "install": "Install",
                 "uploadError": "Fehler bei der Installation: ",
                 "uploadOk": "Erweiterung wurde korrekt installiert",
