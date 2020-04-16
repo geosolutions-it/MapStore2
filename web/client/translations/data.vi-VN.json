@@ -705,6 +705,11 @@
                 "title": "Tiêu đề",
                 "top": "Hàng đầu"
             },
+            "legendOptions": {
+              "title": "Huyền thoại",
+              "legendWidth": "Chiều rộng",
+              "legendHeight": "Chiều cao"
+            },
             "transparent": "Trong suốt",
             "windowTitle": "Thuộc tính lớp"
         },

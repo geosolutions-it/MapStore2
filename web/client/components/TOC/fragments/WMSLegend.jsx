@@ -43,7 +43,7 @@ class WMSLegend extends React.Component {
                         layer={node}
                         currentZoomLvl={this.props.currentZoomLvl}
                         scales={this.props.scales}
-                        legendHeigth={useOptions && this.props.node.legendOptions && this.props.node.legendOptions.legendHeight || this.props.legendHeight ||  undefined}
+                        legendHeight={useOptions && this.props.node.legendOptions && this.props.node.legendOptions.legendHeight || this.props.legendHeight ||  undefined}
                         legendWidth={useOptions && this.props.node.legendOptions && this.props.node.legendOptions.legendWidth || this.props.legendWidth || undefined}
                         legendOptions={this.props.WMSLegendOptions}
                         scaleDependent={this.props.scaleDependent}/>
@@ -60,8 +60,8 @@ class WMSLegend extends React.Component {
     useLegendOptions = () =>{
         return (
             !isEmpty(this.props.node.legendOptions) &&
-            isNumber(this.props.node.legendOptions.legendHeight) &&
-            isNumber(this.props.node.legendOptions.legendWidth)
+            (isNumber(this.props.node.legendOptions.legendHeight) && this.props.node.legendOptions.legendHeight > 0) &&
+            (isNumber(this.props.node.legendOptions.legendWidth) && this.props.node.legendOptions.legendWidth > 0)
         );
     }
 }

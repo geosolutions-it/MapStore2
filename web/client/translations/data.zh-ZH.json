@@ -100,6 +100,11 @@
                 "right": "Right",
                 "bottom": "Bottom",
                 "top": "Top"
+            },
+            "legendOptions": {
+              "title": "传说",
+              "legendWidth": "宽度",
+              "legendHeight": "高度"
             }
         },
         "longitude": "Longitude",

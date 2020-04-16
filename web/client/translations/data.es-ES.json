@@ -105,6 +105,11 @@
                 "bottom": "Bottom",
                 "top": "Cima"
             },
+            "legendOptions": {
+              "title": "Leyenda",
+              "legendWidth": "Anchura",
+              "legendHeight": "Altura"
+            },
             "templateFormatInfoAlertExample": "La identificación de la característica es ${ properties }",
             "templatePreview": "Vista previa de la plantilla"
         },

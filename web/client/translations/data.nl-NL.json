@@ -99,6 +99,11 @@
                 "right": "Right",
                 "bottom": "Bottom",
                 "top": "Top"
+            },
+            "legendOptions": {
+              "title": "Legende",
+              "legendWidth": "Breedte",
+              "legendHeight": "Hoogte"
             }
         },
         "longitude": "Longitude",
