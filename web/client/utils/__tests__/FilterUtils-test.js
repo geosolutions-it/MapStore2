@@ -218,7 +218,7 @@ describe('FilterUtils', () => {
         expect(filter.indexOf('startIndex="1"') !== -1).toBe(true);
     });
 
-    it('Check  for no oparation', () => {
+    it('Check for no oparation', () => {
         const versionOGC = "1.1.0";
         const nsplaceholder = "ogc";
         const objFilter = {
