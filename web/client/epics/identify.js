@@ -15,7 +15,7 @@ import { LOCATION_CHANGE } from 'connected-react-router';
 import {
     LOAD_FEATURE_INFO, ERROR_FEATURE_INFO, GET_VECTOR_INFO,
     FEATURE_INFO_CLICK, CLOSE_IDENTIFY, TOGGLE_HIGHLIGHT_FEATURE,
-    PURGE_MAPINFO_RESULTS, UPDATE_CENTER_TO_MARKER,
+    PURGE_MAPINFO_RESULTS,
     featureInfoClick, updateCenterToMarker, purgeMapInfoResults,
     exceptionsFeatureInfo, loadFeatureInfo, errorFeatureInfo,
     noQueryableLayers, newMapInfoRequest, getVectorInfo,
@@ -29,7 +29,6 @@ import { CHANGE_MOUSE_POINTER, CLICK_ON_MAP, MOUSE_MOVE_MAP_EVENT, UNREGISTER_EV
 import { closeAnnotations } from '../actions/annotations';
 import { MAP_CONFIG_LOADED } from '../actions/config';
 import {addPopup, cleanPopups, removePopup} from '../actions/mapPopups';
-import { updateMapLayout } from '../actions/maplayout';
 import { stopGetFeatureInfoSelector, identifyOptionsSelector,
     clickPointSelector, clickLayerSelector,
     isMapPopup, isHighlightEnabledSelector,
@@ -233,7 +232,7 @@ export default {
                             top: parseLayoutValue(boundingMapRect.top, map.size.height)
                         };
                         // exclude cesium with cartographic options
-                        if (!map || !layoutBounds || !coords || action.point.cartographic || isInsideVisibleArea(coords, map, layoutBounds, resolution)) {
+                        if (!map || !layoutBounds || !coords || action.point.cartographic || isInsideVisibleArea(coords, map, layoutBounds, resolution) || isMouseMoveIdentifyActiveSelector(state)) {
                             return Rx.Observable.of(updateCenterToMarker('disabled'));
                         }
                         if (reprojectExtent && !isPointInsideExtent(coords, reprojectExtent)) {
@@ -304,12 +303,6 @@ export default {
                 }
                 return observable;
             }),
-    /**
-     * Triggers map layout changes on UPDATE_CENTER_TO_MARKER
-     */
-    updateCenterToMarkerEpic: (action$, {getState}) =>
-        action$.ofType(UPDATE_CENTER_TO_MARKER)
-            .switchMap(() => isMouseMoveIdentifyActiveSelector(getState()) ? Rx.Observable.of(updateMapLayout({layer: {right: 0}})) : Rx.Observable.empty()),
     /**
      * Triggers remove popup on LOCATION_CHANGE
      */

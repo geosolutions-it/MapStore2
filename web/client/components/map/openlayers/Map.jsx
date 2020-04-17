@@ -164,7 +164,7 @@ class OpenlayersMap extends React.Component {
         };
         this.map.getViewport().addEventListener('mouseout', () => {
             if (this.props.mousePosition) {
-                this.props.onMouseOut();
+                setTimeout(() => this.props.onMouseOut(), 150);
             }
         });
         // TODO support disableEventListener
