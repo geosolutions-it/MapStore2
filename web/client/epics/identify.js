@@ -11,7 +11,7 @@ import {get, find, isString, isNil} from 'lodash';
 import axios from '../libs/ajax';
 
 import uuid from 'uuid';
-
+import { LOCATION_CHANGE } from 'connected-react-router';
 import {
     LOAD_FEATURE_INFO, ERROR_FEATURE_INFO, GET_VECTOR_INFO,
     FEATURE_INFO_CLICK, CLOSE_IDENTIFY, TOGGLE_HIGHLIGHT_FEATURE,
@@ -309,5 +309,19 @@ export default {
      */
     updateCenterToMarkerEpic: (action$, {getState}) =>
         action$.ofType(UPDATE_CENTER_TO_MARKER)
-            .switchMap(() => isMouseMoveIdentifyActiveSelector(getState()) ? Rx.Observable.of(updateMapLayout({layer: {right: 0}})) : Rx.Observable.empty())
+            .switchMap(() => isMouseMoveIdentifyActiveSelector(getState()) ? Rx.Observable.of(updateMapLayout({layer: {right: 0}})) : Rx.Observable.empty()),
+    /**
+     * Triggers remove popup on LOCATION_CHANGE
+     */
+    locationChangeEpic: (action$, {getState}) =>
+        action$.ofType(LOCATION_CHANGE)
+            .switchMap(() => {
+                let observable = Rx.Observable.empty();
+                const popups = getState().mapPopups.popups;
+                if (popups.length) {
+                    const activePopupId = popups[0].id;
+                    observable = Rx.Observable.of(removePopup(activePopupId));
+                }
+                return observable;
+            })
 };
