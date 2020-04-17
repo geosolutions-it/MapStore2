@@ -1989,7 +1989,7 @@
             "closeFullscreenMap": "Chiudi mappa",
             "showFullscreenMap": "Visualizza mappa a pieno schermo",
             "contentToolbar": {
-                "contentSize": "Cambia larghezza",
+                "contentSize": "Cambia Dimensione",
                 "contentHeightAuto": "Adatta la sezione all'altezza del contenuto",
                 "contentHeightView": "Adatta la sezione sezione per riempire la vista verticalmente",
                 "smallSizeLabel": "Piccola",
