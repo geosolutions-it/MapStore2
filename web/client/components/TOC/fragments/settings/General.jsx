@@ -201,7 +201,7 @@ class General extends React.Component {
                                     onKeyPress={(e)=> {
                                         const number = parseInt(e.target.value + e.key, 10);
                                         const result = Number.isInteger(number);
-                                        !result || e.key === "." ? e.preventDefault() : result && number > 100 && e.preventDefault();
+                                        !result || e.key === "." ? e.preventDefault() : result && number > 1000 && e.preventDefault();
                                     }}
                                     onBlur={(e)=>{
                                         const value = e.target.value && Math.round(e.target.value);
@@ -224,7 +224,7 @@ class General extends React.Component {
                                     onKeyPress={(e) =>{
                                         const number = parseInt(e.target.value + e.key, 10);
                                         const result = Number.isInteger(number);
-                                        !result || e.key === "." ? e.preventDefault() : result && number > 100 && e.preventDefault();
+                                        !result || e.key === "." ? e.preventDefault() : result && number > 1000 && e.preventDefault();
                                     }}
                                     onBlur={(e)=> {
                                         const value = e.target.value && Math.round(e.target.value);
