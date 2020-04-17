@@ -2425,6 +2425,10 @@
                 "uploadMissingBundleError": "No javascript bundle in uploaded file",
                 "uploadTooManyBundlesError": "Too many javascript bundles in the zip package",
                 "confirmRemovePlugin": "Are you sure you want to remove the extension?",
+                "cancelUpload": "Close",
+                "install": "Install",
+                "uploadError": "Error while installing: ",
+                "uploadOk": "Extension has been installed correctly",
                 "tooltips": {
                     "enableUserPlugin": "Enable selection of current plugin for user",
                     "disableUserPlugin": "Disable selection of current plugin for user",
