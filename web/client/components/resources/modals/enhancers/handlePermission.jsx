@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 const Rx = require('rxjs');
-const { mapPropsStream, compose, withStateHandlers } = require('recompose');
+const { mapPropsStream, compose, branch, withStateHandlers } = require('recompose');
 const GeoStoreDAO = require('../../../../api/GeoStoreDAO');
 
 /**
@@ -68,9 +68,12 @@ const manageLocalPermissionChanges = withStateHandlers(
     }
 );
 
-module.exports = ( API = GeoStoreDAO ) => compose(
-    retrieveGroups(API),
-    retrievePermission(API),
-    manageLocalPermissionChanges
+module.exports = ( API = GeoStoreDAO ) => branch(
+    ({ disablePermission }) => !disablePermission,
+    compose(
+        retrieveGroups(API),
+        retrievePermission(API),
+        manageLocalPermissionChanges
+    )
 );
 

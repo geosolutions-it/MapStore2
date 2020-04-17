@@ -76,6 +76,7 @@ class SaveModal extends React.Component {
         onFileDrop: PropTypes.func,
         onFileDropClear: PropTypes.func,
         metadataChanged: PropTypes.func,
+        disablePermission: PropTypes.bool,
         availablePermissions: PropTypes.arrayOf(PropTypes.string),
         availableGroups: PropTypes.arrayOf(PropTypes.object),
         user: PropTypes.object,
@@ -105,6 +106,7 @@ class SaveModal extends React.Component {
         onUpdate: ()=> {},
         onUpdateLinkedResource: () => {},
         onSave: ()=> {},
+        disablePermission: false,
         availablePermissions: ["canRead", "canWrite"],
         availableGroups: [],
         canSave: true,
@@ -123,7 +125,7 @@ class SaveModal extends React.Component {
      * @return the modal for unsaved changes
     */
     render() {
-        const canEditPermission = canEditResourcePermission(this.props.user, this.props.resource);
+        const canEditPermission = !this.props.disablePermission && canEditResourcePermission(this.props.user, this.props.resource);
 
         return (<Portal key="saveDialog">
             {<ResizableModal
