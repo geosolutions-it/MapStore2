@@ -47,6 +47,8 @@ Setting a tooltip that shows the Title and the Description on the Right, for exa
 
 <img src="../img/layer-settings/custom_tooltip.jpg" class="ms-docimage"/>
 
+* Set the layer *Legend* with custom *Width* and *Height* options. Both of these field values if greater than the default legend's size of 12, then the custom values gets applied on the legend width and height display property.
+
 ## Display
 
 Through the second section of the layer settings panel it is possible to change the display settings:

@@ -89,7 +89,7 @@ describe('test WMSLegend module component', () => {
             storeIndex: 9,
             type: 'wms',
             url: 'fakeurl',
-            legendOptions: {legendWidth: "", legendHeight: 0}
+            legendOptions: {legendWidth: "", legendHeight: 11}
         };
         const comp = ReactDOM.render(<WMSLegend node={l} />, document.getElementById("container"));
 

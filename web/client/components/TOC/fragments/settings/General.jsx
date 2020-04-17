@@ -198,7 +198,11 @@ class General extends React.Component {
                                     defaultValue={this.props.element.legendOptions && this.props.element.legendOptions.legendWidth || ''}
                                     key="legendWidth"
                                     type="number"
-                                    onKeyPress={(e)=> !RegExp(/^(|\d)+$/).test(String.fromCharCode(e.keyCode || e.which)) && e.preventDefault()}
+                                    onKeyPress={(e)=> {
+                                        const number = parseInt(e.target.value + e.key, 10);
+                                        const result = Number.isInteger(number);
+                                        !result || e.key === "." ? e.preventDefault() : result && number > 100 && e.preventDefault();
+                                    }}
                                     onBlur={(e)=>{
                                         const value = e.target.value && Math.round(e.target.value);
                                         this.updateEntry({
@@ -217,7 +221,11 @@ class General extends React.Component {
                                     defaultValue={this.props.element.legendOptions && this.props.element.legendOptions.legendHeight || ''}
                                     key="legendHeight"
                                     type="number"
-                                    onKeyPress={(e)=> !RegExp(/^(|\d)+$/).test(String.fromCharCode(e.keyCode || e.which)) && e.preventDefault()}
+                                    onKeyPress={(e) =>{
+                                        const number = parseInt(e.target.value + e.key, 10);
+                                        const result = Number.isInteger(number);
+                                        !result || e.key === "." ? e.preventDefault() : result && number > 100 && e.preventDefault();
+                                    }}
                                     onBlur={(e)=> {
                                         const value = e.target.value && Math.round(e.target.value);
                                         this.updateEntry({
