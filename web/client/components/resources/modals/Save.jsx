@@ -134,6 +134,7 @@ class SaveModal extends React.Component {
                 show={this.props.show}
                 clickOutEnabled={this.props.clickOutEnabled}
                 bodyClassName="ms-flex modal-properties-container"
+                fitContent={this.props.disablePermission}
                 dialogClassName={this.props.dialogClassName}
                 buttons={[{
                     text: <Message msgId="close"/>,
