@@ -215,6 +215,7 @@
                 "web/client/plugins/FeaturedMaps.jsx",
                 "web/client/plugins/FeatureEditor.jsx",
                 "web/client/plugins/FeedbackMask.jsx",
+                "web/client/plugins/FlexibleLayout.jsx",
                 "web/client/plugins/FloatingLegend.jsx",
                 "web/client/plugins/FullScreen.jsx",
                 "web/client/plugins/GlobeViewSwitcher.jsx",

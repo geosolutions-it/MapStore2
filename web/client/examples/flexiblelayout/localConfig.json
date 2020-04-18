@@ -1,0 +1,91 @@
+{
+  "proxyUrl": {
+    "url": "",
+    "useCORS": [],
+    "autoDetectCORS": true
+  },
+  "translationsPath": "../../translations",
+  "projectionDefs": [],
+  "initialState": {
+    "defaultState": {
+      "maptype": {
+        "mapType": "openlayers"
+      }
+    }
+  },
+  "plugins": {
+    "viewer": [
+      {
+        "name": "FlexibleLayout",
+        "cfg": {
+          "options": {
+            "sm": {
+              "dragMargin": [
+                0,
+                0
+              ],
+              "minLayoutBodySize": [
+                256,
+                256
+              ],
+              "resizeDisabled": false,
+              "steps": [
+                0,
+                0.5,
+                1
+              ],
+              "maxDragThreshold": 0.1,
+              "initialStepIndex": 1
+            },
+            "md": {
+              "dragMargin": [
+                8,
+                8
+              ],
+              "minLayoutBodySize": [
+                256,
+                256
+              ],
+              "resizeDisabled": false
+            },
+            "lg": {
+              "dragMargin": [
+                256,
+                256
+              ],
+              "minLayoutBodySize": [
+                256,
+                256
+              ],
+              "resizeDisabled": false
+            }
+          }
+        }
+      },
+      {
+        "name": "TOC",
+        "override": {
+          "FlexibleLayout": {
+            "priority": 1,
+            "glyph": "1-layer",
+            "position": 4,
+            "size": "auto",
+            "tooltipId": "layers",
+            "container": "left-menu"
+          }
+        }
+      },
+      {
+        "name": "Map",
+        "override": {
+          "FlexibleLayout": {
+            "priority": 1,
+            "container": "background"
+          }
+        }
+      },
+
+      "InfoPanel"
+    ]
+  }
+}
