@@ -2676,7 +2676,7 @@
             "defaultMessage": "Erreur inconnue"
           },
           "successRemoved": "Session utilisateur supprimée",
-          "supprimer": "Réinitialiser la session utilisateur",
+          "remove": "Réinitialiser la session utilisateur",
           "confirmRemove": "Êtes-vous sûr de vouloir restaurer la configuration par défaut?"
         }
     }

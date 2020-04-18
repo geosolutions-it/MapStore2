@@ -2678,7 +2678,7 @@
           },
           "successRemoved": "Benutzersitzung entfernt",
           "remove": "Benutzersitzung zurücksetzen",
-          "verifyRemove": "Möchten Sie die Standardkonfiguration wirklich wiederherstellen?"
+          "confirmRemove": "Möchten Sie die Standardkonfiguration wirklich wiederherstellen?"
         }
     }
 }
