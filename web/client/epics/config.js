@@ -44,26 +44,26 @@ export const loadNewMapEpic = (action$) =>
  * Standard map loading flow.
  */
 const mapFlowWithOverride = (configName, mapId, config, mapInfo, store, overrideConfig = {}) => {
-            // delay here is to postpone map load to ensure that
-            // certain epics always function correctly
-            // i.e. FeedbackMask disables correctly after load
-            // TODO: investigate the root causes of the problem and come up with a better solution, if possible
+    // delay here is to postpone map load to ensure that
+    // certain epics always function correctly
+    // i.e. FeedbackMask disables correctly after load
+    // TODO: investigate the root causes of the problem and come up with a better solution, if possible
     return (
         config ?
             Observable.of({data: merge({}, config, overrideConfig), staticConfig: true}).delay(100) :
             Observable.defer(() => axios.get(configName)))
-                .switchMap(response => {
-                    // added !config in order to avoid showing login modal when a new.json mapConfig is used in a public context
-                    if (configName === "new.json" && !config && !isLoggedIn(store.getState())) {
-                        return Observable.of(configureError({status: 403}));
-                    }
-                    if (typeof response.data === 'object') {
-                        const projectionDefs = projectionDefsSelector(store.getState());
-                        const projection = get(response, "data.map.projection", "EPSG:3857");
-                        if (projectionDefs.concat([{code: "EPSG:4326"}, {code: "EPSG:3857"}, {code: "EPSG:900913"}]).filter(({code}) => code === projection).length === 0) {
-                            return Observable.of(configureError({messageId: `map.errors.loading.projectionError`, errorMessageParams: {projection}}, mapId));
-                        }
-                        const mapConfig = merge({}, response.data, overrideConfig);
+        .switchMap(response => {
+            // added !config in order to avoid showing login modal when a new.json mapConfig is used in a public context
+            if (configName === "new.json" && !config && !isLoggedIn(store.getState())) {
+                return Observable.of(configureError({status: 403}));
+            }
+            if (typeof response.data === 'object') {
+                const projectionDefs = projectionDefsSelector(store.getState());
+                const projection = get(response, "data.map.projection", "EPSG:3857");
+                if (projectionDefs.concat([{code: "EPSG:4326"}, {code: "EPSG:3857"}, {code: "EPSG:900913"}]).filter(({code}) => code === projection).length === 0) {
+                    return Observable.of(configureError({messageId: `map.errors.loading.projectionError`, errorMessageParams: {projection}}, mapId));
+                }
+                const mapConfig = merge({}, response.data, overrideConfig);
                 return mapId ? Observable.of(
                     configureMap(mapConfig, mapId),
                     mapInfo ? mapInfoLoaded(mapInfo) : loadMapInfo(mapId),
@@ -74,20 +74,20 @@ const mapFlowWithOverride = (configName, mapId, config, mapInfo, store, override
                         ...(mapInfo ? [mapInfoLoaded(mapInfo)] : []),
                         ...(response.staticConfig ? [] : [saveMapConfig(response.data)])
                     );
-                    }
-                    try {
-                        const data = JSON.parse(response.data);
-                        const mapConfig = merge({}, data, overrideConfig);
-                        return mapId ? Observable.of(configureMap(mapConfig, mapId), mapInfo ? mapInfoLoaded(mapInfo) : loadMapInfo(mapId)) :
-                            Observable.of(
+            }
+            try {
+                const data = JSON.parse(response.data);
+                const mapConfig = merge({}, data, overrideConfig);
+                return mapId ? Observable.of(configureMap(mapConfig, mapId), mapInfo ? mapInfoLoaded(mapInfo) : loadMapInfo(mapId)) :
+                    Observable.of(
                         configureMap(mapConfig, mapId),
                         ...(mapInfo ? [mapInfoLoaded(mapInfo)] : []),
                         ...(response.staticConfig ? [] : saveMapConfig(data))
                     );
-                    } catch (e) {
-                        return Observable.of(configureError('Configuration file broken (' + configName + '): ' + e.message, mapId));
-                    }
-                })
+            } catch (e) {
+                return Observable.of(configureError('Configuration file broken (' + configName + '): ' + e.message, mapId));
+            }
+        })
         .catch((e) => Observable.of(configureError(e, mapId)));
 };
 
@@ -109,7 +109,7 @@ export const loadMapConfigAndConfigureMap = (action$, store) =>
                         Observable.of(userSessionStartSaving())
                     );
                 })
-        );
+            );
         });
 
 export const zoomToMaxExtentOnConfigureMap = action$ =>
