@@ -638,6 +638,7 @@
             "s_attributes": "Attribute",
             "s_sort": "Sortiere nach",
             "s_max_features": "Max. Objekte",
+            "s_max_zoom": "Max. Zoomstufe",
             "s_wfs_props_label" : "WFS-Service-Eigenschaften",
             "s_wfs_opt_props_label" : "Optionale Eigenschaften",
             "s_result_props_label": "Ergebnisanzeigeeigenschaften",

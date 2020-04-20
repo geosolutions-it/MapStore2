@@ -637,6 +637,7 @@
             "s_attributes": "Attributes",
             "s_sort": "Sort by",
             "s_max_features": "Max features",
+            "s_max_zoom": "Max zoom level",
             "s_wfs_props_label" : "WFS service props",
             "s_wfs_opt_props_label" : "Optional props",
             "s_result_props_label": "Result display properties",

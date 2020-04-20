@@ -637,6 +637,7 @@
             "s_attributes": "Attributi",
             "s_sort": "Ordina per",
             "s_max_features": "Numero massimo di risultati (Max features)",
+            "s_max_zoom": "Livello di zoom massimo",
             "s_wfs_props_label" : "Proprietà del servizio WFS",
             "s_wfs_opt_props_label" : "Proprietà facoltative",
             "s_result_props_label": "Proprietà di visualizzazione dei risultati",
