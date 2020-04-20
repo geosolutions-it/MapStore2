@@ -40,8 +40,15 @@ export default class PopupSupport extends React.Component {
         popups: [],
         onPopupClose: () => {}
     }
+    // See this for the reference https://github.com/openlayers/openlayers/issues/4953
+    componentWillMount() {
+        document.querySelector('.ol-overlaycontainer-stopevent').addEventListener('pointermove', this.stopPropagationOnPointerMove);
+    }
     shouldComponentUpdate({popups}) {
         return popups !== this.props.popups;
+    }
+    componentWillUnmount() {
+        document.removeEventListener('pointermove', this.stopPropagationOnPointerMove);
     }
     onPopupClose = (id) => {
         this.props.onPopupClose(id);
@@ -127,5 +134,8 @@ export default class PopupSupport extends React.Component {
             return { popup, observer, containerStyle, ...options };
         });
         return this._popups;
+    }
+    stopPropagationOnPointerMove = (event) => {
+        event.stopPropagation();
     }
 }
