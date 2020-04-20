@@ -1408,12 +1408,12 @@
                     "default": "Recherche...",
                     "string": "Tapez le texte à filtrer...",
                     "number": "Tapez un nombre ou une expression...",
-                    "date": "Tapez une date ou une expression. Utilisez {format} pour la date."
-                },
-                "geometry": {
-                    "disabled": "Filtre en cliquant sur la carte",
-                    "enabled": "Cliquez sur la carte pour filtrer les résultats",
-                    "applied": "Retirez le filtre par un clic de souris"
+                    "date": "Tapez une date ou une expression. Utilisez {format} pour la date.",
+                    "geometry": {
+                        "disabled": "Filtre en cliquant sur la carte",
+                        "enabled": "Cliquez sur la carte pour filtrer les résultats",
+                        "applied": "Retirez le filtre par un clic de souris"
+                    }
                 }
             },
             "toolbar": {

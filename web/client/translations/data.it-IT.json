@@ -1408,12 +1408,12 @@
                     "default": "Cerca...",
                     "string": "Digita il testo da cercare...",
                     "number": "Digita un numero o una espressione. Esempi: 10, > 2, < 10",
-                    "date":"Digita una data o un'espressione. Utilizza {format} per la data"
-                },
-                "geometry": {
-                    "disabled": "Filtro facendo clic sulla mappa",
-                    "enabled": "Fai clic sulla mappa per filtrare i risultati",
-                    "applied": "Rimuovere il filtro con un clic del mouse"
+                    "date":"Digita una data o un'espressione. Utilizza {format} per la data",
+                    "geometry": {
+                        "disabled": "Filtro facendo clic sulla mappa",
+                        "enabled": "Fai clic sulla mappa per filtrare i risultati",
+                        "applied": "Rimuovere il filtro con un clic del mouse"
+                    }
                 }
             },
             "toolbar": {
