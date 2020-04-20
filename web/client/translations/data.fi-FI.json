@@ -100,11 +100,6 @@
         "right": "Oikea",
         "bottom": "Alaosa",
         "top": "Yläosa"
-      },
-      "legendOptions": {
-        "title": "Legenda",
-        "legendWidth": "Leveys",
-        "legendHeight": "Korkeus"
       }
     },
     "longitude": "Pituusaste",

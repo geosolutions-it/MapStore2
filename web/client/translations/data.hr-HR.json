@@ -99,11 +99,6 @@
                 "right": "Desno",
                 "bottom": "Dno",
                 "top": "Vrh"
-            },
-            "legendOptions": {
-              "title": "Legenda",
-              "legendWidth": "Širina",
-              "legendHeight": "Visina"
             }
         },
         "longitude": "Geografska dužina",

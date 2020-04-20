@@ -72,8 +72,8 @@ class WMSLegend extends React.Component {
     useLegendOptions = () =>{
         return (
             !isEmpty(this.props.node.legendOptions) &&
-            (isNumber(this.props.node.legendOptions.legendHeight) && this.props.node.legendOptions.legendHeight > 12) &&
-            (isNumber(this.props.node.legendOptions.legendWidth) && this.props.node.legendOptions.legendWidth > 12)
+            isNumber(this.props.node.legendOptions.legendHeight) &&
+            isNumber(this.props.node.legendOptions.legendWidth)
         );
     }
 }

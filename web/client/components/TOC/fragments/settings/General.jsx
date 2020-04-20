@@ -187,57 +187,7 @@ class General extends React.Component {
                             </Col>
                         </div>
                     }
-                    <div className={"legend-options"}>
-                        <Col xs={12} className={"legend-label"}>
-                            <label key="legend-options-title" className="control-label"><Message msgId="layerProperties.legendOptions.title" /></label>
-                        </Col>
-                        <Col xs={12} sm={6} className="first-selectize">
-                            <FormGroup>
-                                <ControlLabel><Message msgId="layerProperties.legendOptions.legendWidth" /></ControlLabel>
-                                <FormControl
-                                    defaultValue={this.props.element.legendOptions && this.props.element.legendOptions.legendWidth || ''}
-                                    key="legendWidth"
-                                    type="number"
-                                    onKeyPress={(e)=> {
-                                        const number = parseInt(e.target.value + e.key, 10);
-                                        const result = Number.isInteger(number);
-                                        !result || e.key === "." ? e.preventDefault() : result && number > 1000 && e.preventDefault();
-                                    }}
-                                    onBlur={(e)=>{
-                                        const value = e.target.value && Math.round(e.target.value);
-                                        this.updateEntry({
-                                            legendOptions: {
-                                                "legendHeight": this.props.element.legendOptions && this.props.element.legendOptions.legendHeight || "",
-                                                "legendWidth": value
-                                            }
-                                        });
-                                    }} />
-                            </FormGroup>
-                        </Col>
-                        <Col xs={12} sm={6} className="second-selectize">
-                            <FormGroup>
-                                <ControlLabel><Message msgId="layerProperties.legendOptions.legendHeight" /></ControlLabel>
-                                <FormControl
-                                    defaultValue={this.props.element.legendOptions && this.props.element.legendOptions.legendHeight || ''}
-                                    key="legendHeight"
-                                    type="number"
-                                    onKeyPress={(e) =>{
-                                        const number = parseInt(e.target.value + e.key, 10);
-                                        const result = Number.isInteger(number);
-                                        !result || e.key === "." ? e.preventDefault() : result && number > 1000 && e.preventDefault();
-                                    }}
-                                    onBlur={(e)=> {
-                                        const value = e.target.value && Math.round(e.target.value);
-                                        this.updateEntry({
-                                            legendOptions: {
-                                                "legendWidth": this.props.element.legendOptions && this.props.element.legendOptions.legendWidth || "",
-                                                "legendHeight": value
-                                            }
-                                        });
-                                    }} />
-                            </FormGroup>
-                        </Col>
-                    </div>
+
                 </form>
             </Grid>
         );
