@@ -177,7 +177,7 @@ module.exports = {
                 logic: "AND",
                 index: 0
             }],
-            filterFields: !isNil(value)
+            filterFields: type === 'geometry' ? oldFilterObj.filterFields : !isNil(value)
                 ? upsertFilterField((oldFilterObj.filterFields || []), {attribute: attribute}, {
                     attribute,
                     rowId: Date.now(),

@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 const Rx = require('rxjs');
-const { get, head, isEmpty, find, castArray, includes, reduce} = require('lodash');
+const { get, head, isEmpty, find, castArray, includes, reduce, isArray} = require('lodash');
 const { LOCATION_CHANGE } = require('connected-react-router');
 
 
@@ -274,12 +274,13 @@ module.exports = {
                     const hook = MapUtils.getHook(MapUtils.GET_COORDINATES_FROM_PIXEL_HOOK);
                     const pixelRadius = 4;
                     const radiusA = [lng, lat];
-                    const radiusB = hook &&
-                        CoordinatesUtils.pointObjectToArray(CoordinatesUtils.reproject(hook([
-                            pixel.x,
-                            pixel.y >= pixelRadius ? pixel.y - pixelRadius : pixel.y + pixelRadius
-                        ]), projectionSelector(store.getState()), 'EPSG:4326'));
-                    const radius = hook ? Math.sqrt((radiusA[0] - radiusB[0]) * (radiusA[0] - radiusB[0]) +
+                    const pixelCoords = hook([
+                        pixel.x,
+                        pixel.y >= pixelRadius ? pixel.y - pixelRadius : pixel.y + pixelRadius
+                    ]);
+                    const radiusB = pixelCoords &&
+                        CoordinatesUtils.pointObjectToArray(CoordinatesUtils.reproject(pixelCoords, projectionSelector(store.getState()), 'EPSG:4326'));
+                    const radius = isArray(radiusB) ? Math.sqrt((radiusA[0] - radiusB[0]) * (radiusA[0] - radiusB[0]) +
                         (radiusA[1] - radiusB[1]) * (radiusA[1] - radiusB[1])) :
                         0.01;
 
@@ -289,7 +290,7 @@ module.exports = {
                             attribute: currentFilter.attribute || get(spatialFieldSelector(store.getState()), 'attribute'),
                             geometry: {
                                 center: [lng, lat],
-                                coordinates: CoordinatesUtils.calculateCircleCoordinates({x: lng, y: lat}, radius, 100),
+                                coordinates: CoordinatesUtils.calculateCircleCoordinates({x: lng, y: lat}, radius, 12),
                                 extent: [lng - radius, lat - radius, lng + radius, lat + radius],
                                 projection: "EPSG:4326",
                                 radius,

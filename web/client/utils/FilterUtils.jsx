@@ -20,7 +20,7 @@ const cqlToOgc = (cqlFilter, fOpts) => {
     return toFilter(read(cqlFilter));
 };
 
-const {get, isNil, isUndefined, isArray, find} = require('lodash');
+const {get, isNil, isUndefined, isArray, find, findIndex} = require('lodash');
 const escapeCQLStrings = str => str && str.replace ? str.replace(/\'/g, "''") : str;
 
 const checkOperatorValidity = (value, operator) => {
@@ -651,9 +651,11 @@ const FilterUtils = {
         }
 
         let spatialFilter;
-        if (objFilter.spatialField && objFilter.spatialField.geometry && objFilter.spatialField.operation) {
+        if (objFilter.spatialField) {
             spatialFilter = this.processCQLSpatialFilter(objFilter);
-            filters.push(spatialFilter);
+            if (spatialFilter) {
+                filters.push(spatialFilter);
+            }
         }
         if (objFilter.crossLayerFilter) {
             const {crossLayerFilter} = objFilter;
@@ -743,18 +745,27 @@ const FilterUtils = {
     },
 
     processCQLSpatialFilter: function(objFilter) {
+        let spatialFields = (isArray(objFilter.spatialField) ? objFilter.spatialField : [objFilter.spatialField])
+            .filter(f => f && f.geometry && f.operation);
+        let cql = '';
 
-        let cql = objFilter.spatialField.operation + "(" +
-            objFilter.spatialField.attribute + ",";
-        if (objFilter.spatialField.collectGeometries && objFilter.spatialField.collectGeometries.queryCollection) {
-            cql += cqlCollectGeometries(cqlQueryCollection(objFilter.spatialField.collectGeometries.queryCollection));
-        } else {
-            let crs = objFilter.spatialField.geometry.projection || "";
-            crs = crs.split(":").length === 2 ? "SRID=" + crs.split(":")[1] + ";" : "";
-            cql += crs + this.getCQLGeometryElement(objFilter.spatialField.geometry.coordinates, objFilter.spatialField.geometry.type);
-        }
+        spatialFields.forEach((field, index) => {
+            cql += field.operation + "(" + field.attribute + ",";
+            if (field.collectGeometries && field.collectGeometries.queryCollection) {
+                cql += cqlCollectGeometries(cqlQueryCollection(field.collectGeometries.queryCollection));
+            } else {
+                let crs = field.geometry.projection || "";
+                crs = crs.split(":").length === 2 ? "SRID=" + crs.split(":")[1] + ";" : "";
+                cql += crs + this.getCQLGeometryElement(field.geometry.coordinates, field.geometry.type);
+            }
+            cql += ")";
 
-        return cql + ")";
+            if (index < spatialFields.length - 1) {
+                cql += ` ${objFilter.spatialFieldOperator || "AND"} `;
+            }
+        });
+
+        return cql;
     },
 
     cqlDateField: function(attribute, operator, value) {
@@ -969,7 +980,8 @@ const FilterUtils = {
     isFilterValid: (f = {}) =>
         (f.filterFields && f.filterFields.length > 0)
         || (f.simpleFilterFields && f.simpleFilterFields.length > 0)
-        || (f.spatialField && f.spatialField.geometry && f.spatialField.operation)
+        || (f.spatialField && f.spatialField.geometry && f.spatialField.operation ||
+            isArray(f.spatialField) && findIndex(f.spatialField, field => field.operation && field.geometry) > -1)
         || (f.crossLayerFilter
             && f.crossLayerFilter.collectGeometries
             && f.crossLayerFilter.collectGeometries.queryCollection
