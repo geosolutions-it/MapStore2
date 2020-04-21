@@ -191,6 +191,13 @@ const checkMapChanges = (action, source) => ({
     source
 });
 
+/**
+ * Add a tool to the list of event listeners for the map plugin. 
+ * This can help to trigger actions only if some tool is effectively listen. Useful for 
+ * events that are triggered frequently and so can slow down the application.
+ * @param {string} eventName the event name. One of ``pointermove`, 
+ * @param {string} toolName an identifier for the tool
+ */
 const registerEventListener = (eventName, toolName) => ({
     type: REGISTER_EVENT_LISTENER,
     eventName,
