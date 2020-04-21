@@ -292,7 +292,7 @@ export default {
     /**
      * Triggers remove popup on UNREGISTER_EVENT_LISTENER
      */
-    uregisterEventListenerEpic: (action$, {getState}) =>
+    removePopupOnUnregister: (action$, {getState}) =>
         action$.ofType(UNREGISTER_EVENT_LISTENER)
             .switchMap(() => {
                 let observable = Rx.Observable.empty();
