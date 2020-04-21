@@ -60,7 +60,7 @@ class WFSOptionalProps extends React.Component {
                     </ControlLabel>
                     <Slider key="maxZoomLevel" start={[options.maxZoomLevel || 1]}
                         range={{min: 1, max: 35}}
-                        onSlide={this.updateSliderProps.bind(null, "maxZoomLevel")}
+                        onChange={this.updateSliderProps.bind(null, "maxZoomLevel")}
                     />
                     <Label key="maxZoomLevel-label" className="slider-label" >{options.maxZoomLevel || 1}</Label>
                 </FormGroup>

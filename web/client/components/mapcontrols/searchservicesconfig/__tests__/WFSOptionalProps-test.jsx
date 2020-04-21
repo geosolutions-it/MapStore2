@@ -12,24 +12,7 @@ import ReactDOM from 'react-dom';
 import TestUtils from 'react-dom/test-utils';
 import WFSOptionalProps from '../WFSOptionalProps';
 
-const mouseMove = (x, y, node) => {
-    const doc = node ? node.ownerDocument : document;
-    const evt = doc.createEvent('MouseEvents');
-    evt.initMouseEvent('mousemove', true, true, window,
-        0, 0, 0, x, y, false, false, false, false, 0, null);
-    doc.dispatchEvent(evt);
-    return evt;
-};
-
-const simulateMovementFromTo = (drag, fromX, fromY, toX, toY) => {
-    const node = ReactDOM.findDOMNode(drag);
-    console.log("node", node)
-    TestUtils.Simulate.mouseDown(node, { clientX: fromX, clientY: fromY });
-    mouseMove(toX, toY, node);
-    TestUtils.Simulate.mouseUp(node);
-};
-
-describe.only("test ResultProps component", () => {
+describe("test ResultProps component", () => {
     beforeEach((done) => {
         document.body.innerHTML = '<div id="container"></div>';
         setTimeout(done);
@@ -56,9 +39,7 @@ describe.only("test ResultProps component", () => {
             priority: 3,
             options: {
                 sortBy: "NAME",
-                // maxFeatures: 11
                 srsName: "EPSG:4326"
-                // maxZoomLevel: 8
             }
         };
         let wfsOptionalProps = ReactDOM.render(<WFSOptionalProps.Element service={service}/>, document.getElementById("container"));
@@ -99,4 +80,87 @@ describe.only("test ResultProps component", () => {
         expect(maxZoomLevel).toBe('8');
     });
 
+    it('test WFSOptionalProps onPropertyChange for Sort by', () => {
+        const service = {
+            type: "wfs",
+            name: "Tiger road",
+            subTitle: "Roads",
+            priority: 3,
+            options: {
+                sortBy: "NAME",
+                srsName: "EPSG:4326",
+                maxZoomLevel: 8
+            }
+        };
+
+        const actions = {
+            onPropertyChange: () => { }
+        };
+        const spyOnPropertyChange = expect.spyOn(actions, 'onPropertyChange');
+
+        const wfsOptionalProps = ReactDOM.render(<WFSOptionalProps.Element service={service} onPropertyChange={actions.onPropertyChange}/>, document.getElementById("container"));
+        expect(wfsOptionalProps).toExist();
+        const inputs = TestUtils.scryRenderedDOMComponentsWithClass(wfsOptionalProps, 'form-control');
+        inputs[0].value = 'TEST';
+        TestUtils.Simulate.change(inputs[0]);
+        expect(spyOnPropertyChange).toHaveBeenCalled();
+        expect(spyOnPropertyChange.calls[0].arguments[1].options.sortBy).toBe('TEST');
+    });
+
+    it('test WFSOptionalProps onPropertyChange for Max zoom level', () => {
+        const service = {
+            type: "wfs",
+            name: "Tiger road",
+            subTitle: "Roads",
+            priority: 3,
+            options: {
+                sortBy: "NAME",
+                srsName: "EPSG:4326",
+                maxZoomLevel: 8
+            }
+        };
+
+        const actions = {
+            onPropertyChange: () => { }
+        };
+        const spyOnPropertyChange = expect.spyOn(actions, 'onPropertyChange');
+
+        const wfsOptionalProps = ReactDOM.render(<WFSOptionalProps.Element service={service} onPropertyChange={actions.onPropertyChange}/>, document.getElementById("container"));
+        expect(wfsOptionalProps).toExist();
+        const sliders = TestUtils.scryRenderedDOMComponentsWithClass(wfsOptionalProps, "noUi-target" );
+        expect(sliders).toExist();
+        expect(sliders.length).toBe(2);
+        wfsOptionalProps.updateSliderProps("maxZoomLevel", [23]);
+        expect(spyOnPropertyChange).toHaveBeenCalled();
+        expect(spyOnPropertyChange.calls[0].arguments[1]).toEqual({...service, options: { ...service.options, maxZoomLevel: 23}});
+    });
+
+    it('test WFSOptionalProps onPropertyChange for Max features', () => {
+        const service = {
+            type: "wfs",
+            name: "Tiger road",
+            subTitle: "Roads",
+            priority: 3,
+            options: {
+                sortBy: "NAME",
+                srsName: "EPSG:4326",
+                maxZoomLevel: 21,
+                maxFeatures: 5
+            }
+        };
+
+        const actions = {
+            onPropertyChange: () => { }
+        };
+        const spyOnPropertyChange = expect.spyOn(actions, 'onPropertyChange');
+
+        const wfsOptionalProps = ReactDOM.render(<WFSOptionalProps.Element service={service} onPropertyChange={actions.onPropertyChange}/>, document.getElementById("container"));
+        expect(wfsOptionalProps).toExist();
+        const sliders = TestUtils.scryRenderedDOMComponentsWithClass(wfsOptionalProps, "noUi-target" );
+        expect(sliders).toExist();
+        expect(sliders.length).toBe(2);
+        wfsOptionalProps.updateSliderProps("maxFeatures", [10]);
+        expect(spyOnPropertyChange).toHaveBeenCalled();
+        expect(spyOnPropertyChange.calls[0].arguments[1].options).toEqual({ ...service.options, maxFeatures: 10});
+    });
 });

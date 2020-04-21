@@ -131,6 +131,40 @@ describe('search Epics', () => {
         expect(actions[3].type).toBe(TEXT_SEARCH_ADD_MARKER);
     });
 
+    it('produces the selectSearchItem epic with maxZoomLevel', () => {
+        let action = selectSearchItem({
+            "type": "Feature",
+            "bbox": [125, 10, 126, 11],
+            "geometry": {
+                "type": "Point",
+                "coordinates": [125.6, 10.1]
+            },
+            "properties": {
+                "name": "Dinagat Islands"
+            },
+            "__SERVICE__": {
+                options: {
+                    typeName: "gs:layername",
+                    maxZoomLevel: 20
+                }
+            }
+        }, {
+            size: {
+                width: 200,
+                height: 200
+            },
+            projection: "EPSG:4326"
+        });
+
+        store.dispatch( action );
+
+        let actions = store.getActions();
+        expect(actions.length).toBe(4);
+        expect(actions[1].type).toBe(TEXT_SEARCH_RESULTS_PURGE);
+        expect(actions[2].type).toBe(ZOOM_TO_EXTENT);
+        expect(actions[2].maxZoom).toBe(20);
+        expect(actions[3].type).toBe(TEXT_SEARCH_ADD_MARKER);
+    });
 
     it('produces the selectSearchItem epic and GFI for all layers', () => {
         let action = selectSearchItem({
@@ -170,7 +204,7 @@ describe('search Epics', () => {
     });
 
 
-    it('produces the selectSearchItem epic and GFI for for single layer', () => {
+    it('produces the selectSearchItem epic and GFI for single layer', () => {
         let action = selectSearchItem({
             "id": "Feature_1",
             "type": "Feature",
@@ -230,8 +264,9 @@ describe('search Epics', () => {
             expect(actionsType.indexOf(a)).toNotBe(-1);
         });
 
-        const zoomToExtentAction = actions.find(m => m.type === ZOOM_TO_EXTENT);
+        let zoomToExtentAction = actions.find(m => m.type === ZOOM_TO_EXTENT);
         expect(zoomToExtentAction.maxZoom).toExist();
+        expect(zoomToExtentAction.maxZoom).toBe(21);
         expect(zoomToExtentAction.extent.length).toEqual(4);
 
         let testSearchNestedServicesSelectedAction = actions.filter(m => m.type === TEXT_SEARCH_NESTED_SERVICES_SELECTED)[0];
@@ -247,7 +282,32 @@ describe('search Epics', () => {
             text: TEXT
         });
         expect(actions.filter(m => m.type === TEXT_SEARCH_TEXT_CHANGE)[0].searchText).toBe(TEXT);
+
+        // Zoom level from service
+        action = selectSearchItem({
+            ...item,
+            "__SERVICE__": {
+                ...item.__SERVICE__, options:
+                    {
+                        ...item.__SERVICE__.options,
+                        maxZoomLevel: 15
+                    }
+            }}, {
+            size: {
+                width: 200,
+                height: 200
+            },
+            projection: "EPSG:4326"
+        });
+        store.dispatch( action );
+
+        actions = store.getActions();
+        zoomToExtentAction = actions.filter(m => m.type === ZOOM_TO_EXTENT)[1];
+        expect(zoomToExtentAction.maxZoom).toExist();
+        expect(zoomToExtentAction.maxZoom).toBe(15);
+        expect(zoomToExtentAction.extent.length).toEqual(4);
     });
+
     it('zoomAndAddPointEpic ADD addiditonalLayer and zoom to point', () => {
         let action = zoomAndAddPoint({x: 1, y: 0}, 10, "EPSG:4326");
         store.dispatch( action );
