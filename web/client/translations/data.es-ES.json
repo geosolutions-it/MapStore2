@@ -1414,7 +1414,7 @@
                         "enabled": "Haga clic en el mapa para filtrar los resultados",
                         "applied": "Eliminar el filtro haciendo clic con el mouse"
                     }
-                },
+                }
             },
             "toolbar": {
                 "synchPopoverTitle": "Sincronizar mapa con filtro ",
