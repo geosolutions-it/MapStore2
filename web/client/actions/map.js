@@ -203,6 +203,10 @@ const unRegisterEventListener = (eventName, toolName) => ({
     toolName
 });
 
+/**
+ * Triggered on mouse move. (only if some tool is registered on this event. See `registerEventListener`).
+ * @param {object} position the position of the mouse on the map.
+ */ 
 const mouseMoveMapEvent = (position) => ({
     type: MOUSE_MOVE_MAP_EVENT,
     position
