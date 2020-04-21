@@ -14,7 +14,6 @@ const rowRenderer = require('./renderers/RowRenderer');
 const {isValidValueForPropertyName, isProperty} = require('../../../utils/FeatureGridUtils');
 
 
-require("./featuregrid.css");
 /**
  * A component that gets the describeFeatureType and the features to display
  * attributes

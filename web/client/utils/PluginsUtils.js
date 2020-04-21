@@ -430,7 +430,7 @@ export const getConfiguredPlugin = (pluginDef, loadedPlugins = {}, loaderCompone
 export const setRefToWrappedComponent = (name) => {
     return (connectedComponent) => {
         if (connectedComponent) {
-            window[`${name}Plugin`] = connectedComponent.getWrappedInstance();
+            window[`${name}Plugin`] = connectedComponent;
         }
     };
 };

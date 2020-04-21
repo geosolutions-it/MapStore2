@@ -22,11 +22,11 @@ import {SAVE_CONTEXT, SAVE_TEMPLATE, LOAD_CONTEXT, LOAD_TEMPLATE, DELETE_TEMPLAT
     startResourceLoad, loadFinished, loadTemplate, showDialog, setFileDropStatus, updateTemplate, isValidContextName,
     contextNameChecked, setCreationStep, contextLoadError, loading, mapViewerLoad, mapViewerLoaded, setEditedPlugin,
     setEditedCfg, setParsedCfg, validateEditedCfg, setValidationStatus, savePluginCfg, enableMandatoryPlugins,
-    enablePlugins, disablePlugins, setCfgError, changePluginsKey, changeTemplatesKey, setEditedTemplate, setTemplates, pluginUploaded,
-    pluginUploading, pluginUninstalled, pluginUninstalling, loadExtensions} from '../actions/contextcreator';
+    enablePlugins, disablePlugins, setCfgError, changePluginsKey, changeTemplatesKey, setEditedTemplate, setTemplates, setParsedTemplate,
+    pluginUploaded, pluginUploading, pluginUninstalled, pluginUninstalling, loadExtensions, uploadPluginError} from '../actions/contextcreator';
 import {newContextSelector, resourceSelector, creationStepSelector, mapConfigSelector, mapViewerLoadedSelector, contextNameCheckedSelector,
     editedPluginSelector, editedCfgSelector, validationStatusSelector, parsedCfgSelector, cfgErrorSelector,
-    pluginsSelector, initialEnabledPluginsSelector} from '../selectors/contextcreator';
+    pluginsSelector, initialEnabledPluginsSelector, editedTemplateSelector} from '../selectors/contextcreator';
 import {CONTEXTS_LIST_LOADED} from '../actions/contextmanager';
 import {wrapStartStop} from '../observables/epics';
 import {isLoggedIn} from '../selectors/security';
@@ -38,7 +38,7 @@ import {backgroundListSelector} from '../selectors/backgroundselector';
 import {textSearchConfigSelector} from '../selectors/searchconfig';
 import {mapOptionsToSaveSelector} from '../selectors/mapsave';
 import {loadMapConfig} from '../actions/config';
-import {createResource, createCategory, updateResource, deleteResource, getResource, getResources} from '../api/persistence';
+import {createResource, createCategory, updateResource, deleteResource, getResource} from '../api/persistence';
 import getPluginsConfig from '../observables/config/getPluginsConfig';
 import { upload, uninstall } from '../api/plugins';
 
@@ -48,6 +48,15 @@ const saveContextErrorStatusToMessage = (status) => {
         return 'contextCreator.saveErrorNotification.conflict';
     default:
         return 'contextCreator.saveErrorNotification.defaultMessage';
+    }
+};
+
+const loadTemplateErrorStatusToMessage = (status) => {
+    switch (status) {
+    case 403:
+        return 'contextCreator.loadTemplateErrorNotification.forbidden';
+    default:
+        return 'contextCreator.loadTemplateErrorNotification.defaultMessage';
     }
 };
 
@@ -190,10 +199,19 @@ export const saveTemplateEpic = (action$) => action$
 export const loadTemplateEpic = (action$) => action$
     .ofType(LOAD_TEMPLATE)
     .switchMap(({id}) => getResource(id, {includeAttributes: true, withData: false, withPermissions: false})
-        .switchMap(resource => Rx.Observable.of(updateTemplate({
-            ...resource,
-            thumbnail: get(resource, 'attributes.thumbnail')
-        })))
+        .switchMap(resource => {
+            const thumbnail = get(resource, 'attributes.thumbnail');
+            const format = get(resource, 'attributes.format');
+            return Rx.Observable.of(updateTemplate({
+                ...resource,
+                attributes: {
+                    ...(thumbnail ? {thumbnail: decodeURIComponent(thumbnail)} : {}),
+                    ...(format ? {format} : {})
+                },
+                ...(thumbnail ? {thumbnail: decodeURIComponent(thumbnail)} : {}),
+                ...(format ? {format} : {})
+            }));
+        })
         .let(wrapStartStop(
             loading(true, 'templateLoading'),
             loading(false, 'templateLoading')
@@ -226,9 +244,29 @@ export const deleteTemplateEpic = (action$, store) => action$
  * Trigger template metadata editor
  * @param {observable} action$ manages `EDIT_TEMPLATE`
  */
-export const editTemplateEpic = (action$) => action$
+export const editTemplateEpic = (action$, store) => action$
     .ofType(EDIT_TEMPLATE)
-    .switchMap(({id}) => Rx.Observable.of(setEditedTemplate(id), showDialog('uploadTemplate', true)));
+    .switchMap(({id}) => {
+        const state = store.getState();
+        const template = find(get(newContextSelector(state), 'templates', []), t => t.id === id) || {};
+
+        return (id ? Rx.Observable.defer(() => Api.getData(id)) : Rx.Observable.of(null))
+            .switchMap(data => Rx.Observable.of(
+                setEditedTemplate(id),
+                ...(id ? [setParsedTemplate('Template Data', data, template.format), setFileDropStatus('accepted')] : []),
+                showDialog('uploadTemplate', true)
+            ))
+            .let(wrapStartStop(
+                loading(true, "templateDataLoading"),
+                loading(false, "templateDataLoading"),
+                ({status}) => Rx.Observable.of(error({
+                    title: "notification.error",
+                    message: loadTemplateErrorStatusToMessage(status),
+                    position: "tc",
+                    autoDismiss: 5
+                }))
+            ));
+    });
 
 /**
  * Reset stuff when dialog is shown
@@ -239,10 +277,11 @@ export const resetOnShowDialog = (action$, store) => action$
     .flatMap(({dialogName, show: showDialogBool}) => {
         const state = store.getState();
         const context = newContextSelector(state) || {};
+        const editedTemplateId = editedTemplateSelector(state);
         const templates = context.templates || [];
 
         return showDialogBool ?
-            Rx.Observable.of(...(dialogName === 'uploadTemplate' ? [setFileDropStatus()] : []),
+            Rx.Observable.of(...(dialogName === 'uploadTemplate' && !editedTemplateId ? [setFileDropStatus(), setParsedTemplate()] : []),
                 ...(dialogName === 'mapTemplatesConfig' ? [changeTemplatesKey(templates.map(template => template.id), 'selected', false)] : [])) :
             Rx.Observable.empty();
     });
@@ -258,15 +297,13 @@ export const contextCreatorLoadContext = (action$, store) => action$
     .switchMap(({id, pluginsConfig}) => Rx.Observable.of(startResourceLoad()).concat(
         Rx.Observable.forkJoin(
             Rx.Observable.defer(() => getPluginsConfig(pluginsConfig)),
-            getResources({
-                category: 'TEMPLATE',
-                options: {
-                    params: {
-                        start: 0,
-                        limit: 10000
-                    }
+            Rx.Observable.defer(() => Api.getResourcesByCategory('TEMPLATE', '*', {
+                params: {
+                    start: 0,
+                    limit: 10000,
+                    includeAttributes: true
                 }
-            }).map(response => response.totalCount === 1 ? [response.results] : values(response.results)),
+            })).map(response => response.totalCount === 1 ? [response.results] : values(response.results)),
             id === 'new' ? Rx.Observable.of(null) : getResource(id)
         ).switchMap(([config, templates, resource]) =>
             Rx.Observable.of(setResource(resource, config, templates))
@@ -301,12 +338,7 @@ export const uploadPluginEpic = (action$) => action$
             .let(wrapStartStop(
                 pluginUploading(true, files.map(f => f.name)),
                 pluginUploading(false, files.map(f => f.name)),
-                () => Rx.Observable.of(error({
-                    title: "notification.error",
-                    message: "context.errors.plugins.upload",
-                    autoDismiss: 6,
-                    position: "tc"
-                }))
+                (e) => Rx.Observable.of(uploadPluginError(files, e))
             ))
     );
 

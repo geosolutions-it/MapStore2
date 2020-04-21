@@ -13,8 +13,8 @@ import {SET_CREATION_STEP, MAP_VIEWER_LOADED, SHOW_MAP_VIEWER_RELOAD_CONFIRM, SE
     CONTEXT_NAME_CHECKED, CLEAR_CONTEXT_CREATOR, SET_FILTER_TEXT, SET_SELECTED_PLUGINS, SET_SELECTED_TEMPLATES, SET_PARSED_TEMPLATE,
     SET_FILE_DROP_STATUS, SET_EDITED_TEMPLATE, SET_TEMPLATES, SET_EDITED_PLUGIN, CHANGE_PLUGINS_KEY, CHANGE_TEMPLATES_KEY, CHANGE_ATTRIBUTE,
     LOADING, SHOW_DIALOG, SET_EDITED_CFG, UPDATE_EDITED_CFG, SET_VALIDATION_STATUS, SET_PARSED_CFG,
-    SET_CFG_ERROR, ENABLE_UPLOAD_PLUGIN, UPLOADING_PLUGIN, UPLOAD_PLUGIN_ERROR,
-    PLUGIN_UPLOADED, UNINSTALLING_PLUGIN, UNINSTALL_PLUGIN_ERROR, PLUGIN_UNINSTALLED,
+    SET_CFG_ERROR, ENABLE_UPLOAD_PLUGIN, UPLOADING_PLUGIN, UPLOAD_PLUGIN_ERROR, ADD_PLUGIN_TO_UPLOAD,
+    REMOVE_PLUGIN_TO_UPLOAD, PLUGIN_UPLOADED, UNINSTALLING_PLUGIN, UNINSTALL_PLUGIN_ERROR, PLUGIN_UNINSTALLED,
     BACK_TO_PAGE_SHOW_CONFIRMATION} from "../actions/contextcreator";
 import {set} from '../utils/ImmutableUtils';
 
@@ -129,7 +129,22 @@ export default (state = {}, action) => {
         return {
             ...state,
             uploadPluginEnabled: action.enable,
-            uploadingPlugin: []
+            uploadingPlugin: [],
+            pluginsToUpload: [],
+            uploadResult: null
+        };
+    }
+    case ADD_PLUGIN_TO_UPLOAD: {
+        return {
+            ...state,
+            uploadResult: null,
+            pluginsToUpload: [...(state.pluginsToUpload || []), ...action.files]
+        };
+    }
+    case REMOVE_PLUGIN_TO_UPLOAD: {
+        return {
+            ...state,
+            pluginsToUpload: state.pluginsToUpload.filter((p, idx) => idx !== action.index)
         };
     }
     case UPLOADING_PLUGIN: {
@@ -138,13 +153,21 @@ export default (state = {}, action) => {
         return set('uploadingPlugin', [ ...(state.uploadingPlugin || []).filter(notUpdated), ...uploadingPlugin ], state);
     }
     case UPLOAD_PLUGIN_ERROR: {
-        return set('uploadingPlugin', action.files.map(f => ({name: f.file.name, uploading: false, error: f.error})), state);
+        return set('uploadResult', {
+            result: "error",
+            files: action.files,
+            error: action.error
+        }, state);
     }
     case PLUGIN_UPLOADED: {
         const plugins = action.plugins.map(makeNode);
         const notDuplicate = plugin => plugins.filter(p => p.name === plugin.name).length === 0;
         return {
             ...state,
+            pluginsToUpload: [],
+            uploadResult: {
+                result: "ok"
+            },
             plugins: [...(state.plugins || []).filter(notDuplicate), ...plugins]
         };
     }
@@ -200,9 +223,11 @@ export default (state = {}, action) => {
             set('newContext', {
                 templates: (action.allTemplates || []).map(template => ({
                     ...template,
-                    attributes: template.thumbnail ? {
-                        thumbnail: template.thumbnail
-                    } : undefined,
+                    ...(template.thumbnail ? {thumbnail: decodeURIComponent(template.thumbnail)} : {}),
+                    attributes: {
+                        ...(template.thumbnail ? {thumbnail: decodeURIComponent(template.thumbnail)} : {}),
+                        ...(template.format ? {format: template.format} : {})
+                    },
                     enabled: templates.reduce((result, cur) => result || cur.id === template.id, false),
                     selected: false
                 })),
@@ -244,7 +269,7 @@ export default (state = {}, action) => {
         })), state);
     }
     case SET_PARSED_TEMPLATE: {
-        return set('parsedTemplate', {fileName: action.fileName, data: action.data}, state);
+        return set('parsedTemplate', {fileName: action.fileName, data: action.data, format: action.format}, state);
     }
     case SET_FILE_DROP_STATUS: {
         return set('fileDropStatus', action.status, state);
@@ -299,9 +324,7 @@ export default (state = {}, action) => {
             set(`newContext.${action.key}`, action.value, state);
     }
     case SHOW_DIALOG: {
-        return set('parsedTemplate', undefined,
-            set(`showDialog.${action.dialogName}`, action.show,
-                set(`showDialog.${action.dialogName}Payload`, action.payload, state)));
+        return set(`showDialog.${action.dialogName}`, action.show, set(`showDialog.${action.dialogName}Payload`, action.payload, state));
     }
     case LOADING: {
         // anyway sets loading to true

@@ -567,6 +567,7 @@
         "identifyHighlightFeatures": "Highlight features",
         "identifyShowCoordinateEditor": "Show coordinate editor",
         "identifyHideCoordinateEditor": "Hide coordinate editor",
+        "identifyCoordinateApplyChanges": "Apply changes",
         "identifyRevGeocodeModalTitle": "Address",
         "identifyRevGeocodeSubmitText": "More Info",
         "identifyRevGeocodeCloseText": "Close",
@@ -605,7 +606,10 @@
             "showLabel": "Show measurement label",
             "addAsAnnotation": "Add as annotation",
             "newMeasure": "New annotation",
-            "selectTool": "Select a measurement tool"
+            "selectTool": "Select a measurement tool",
+            "exportToGeoJSON": "Export to GeoJSON",
+            "resetTooltip": "Clear measures",
+            "addAsLayer": "Add as layer"
         },
         "search":{
             "decimal": "Decimal",
@@ -995,7 +999,8 @@
                 "notValidMarker": "Insert a valid coordinate (+|- 90° lat, +|-180° lon)",
                 "notValidPolyline": "All coordinate must be valid (+|- 90° lat, +|-180° lon)",
                 "notValidText": "Insert a text value and a valid coordinate (+|- 90° lat, +|-180° lon)",
-                "notValidCircle": "Insert a radius value and a valid coordinate (+|- 90° lat, +|-180° lon)"
+                "notValidCircle": "Insert a radius value and a valid coordinate (+|- 90° lat, +|-180° lon)",
+                "newFeature": "New"
             }
         },
         "user":{
@@ -1404,7 +1409,12 @@
                     "default": "Search...",
                     "string": "Type text to filter...",
                     "number": "Type a number or an expression. Examples: 10, > 2, < 10",
-                    "date": "Type a date or an expression. Use {format} for the date."
+                    "date": "Type a date or an expression. Use {format} for the date.",
+                    "geometry": {
+                        "disabled": "Filter clicking on the map",
+                        "enabled": "Click on the map to filter the results",
+                        "applied": "Remove the filter by mouse click"
+                    }
                 }
             },
             "toolbar": {
@@ -2415,6 +2425,10 @@
                 "uploadMissingBundleError": "No javascript bundle in uploaded file",
                 "uploadTooManyBundlesError": "Too many javascript bundles in the zip package",
                 "confirmRemovePlugin": "Are you sure you want to remove the extension?",
+                "cancelUpload": "Close",
+                "install": "Install",
+                "uploadError": "Error while installing: ",
+                "uploadOk": "Extension has been installed correctly",
                 "tooltips": {
                     "enableUserPlugin": "Enable selection of current plugin for user",
                     "disableUserPlugin": "Disable selection of current plugin for user",
@@ -2468,6 +2482,10 @@
                 "conflict": "A resource with this name already exists",
                 "defaultMessage": "Unknown error",
                 "categoryError": "Creating missing category \"{categoryName}\" failed"
+            },
+            "loadTemplateErrorNotification": {
+                "forbidden": "Couldn't access the template data, the user lacks necessary permissions!",
+                "defaultMessage": "Unexpected error occured"
             },
             "contextNameErrorNotification": {
                 "title": "Bad context name",

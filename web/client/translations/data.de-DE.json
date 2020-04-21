@@ -565,6 +565,7 @@
         "identifyRevGeocodeHeader": "Koordinaten",
         "identifyShowCoordinateEditor": "Koordinateneditor anzeigen",
         "identifyHideCoordinateEditor": "Koordinateneditor ausblenden",
+        "identifyCoordinateApplyChanges": "Änderungen übernehmen",
         "identifyZoomToFeature": "Auf Objekt zoomen",
         "identifyStopHighlightingFeatures": "Stoppen Sie die Markierung von Objekten",
         "identifyHighlightFeatures": "Markieren Sie Objekte",
@@ -606,7 +607,10 @@
             "showLabel": "Zeige Bezeichnungsetikett",
             "addAsAnnotation": "Als Anmerkung hinzufügen",
             "newMeasure": "Neue Anmerkung",
-            "selectTool": "Wählen Sie ein Messwerkzeug aus"
+            "selectTool": "Wählen Sie ein Messwerkzeug aus",
+            "exportToGeoJSON": "Export nach GeoJSON",
+            "resetTooltip": "Klare Maßnahmen",
+            "addAsLayer": "Als Ebene hinzufügen"
         },
         "search":{
             "decimal": "Dezimal",
@@ -995,7 +999,8 @@
                 "notValidMarker": "Fügen Sie eine gültige Koordinate ein (+|- 90° lat, +|-180° lon)",
                 "notValidPolyline": "Alle Koordinaten müssen gültig sein (+|- 90° lat, +|-180° lon)",
                 "notValidText": "Fügen Sie einen Textwert und eine gültige Koordinate ein (+|- 90° lat, +|-180° lon)",
-                "notValidCircle": "Geben Sie einen Radius und eine gültige Koordinate ein (+|- 90° lat, +|-180° lon)"
+                "notValidCircle": "Geben Sie einen Radius und eine gültige Koordinate ein (+|- 90° lat, +|-180° lon)",
+                "newFeature": "Neu"
             }
         },
         "user":{
@@ -1403,7 +1408,12 @@
                     "default": "Beispiele...",
                     "string": "Geben Sie Text ein, um Ergebnisse zu filtern ...",
                     "number": "Geben Sie eine Zahl oder einen Ausdruck ein. Examples: 10, > 2, < 10",
-                    "date": "Geben Sie ein Datum oder einen Ausdruck ein. Verwenden Sie {format} für das Datum."
+                    "date": "Geben Sie ein Datum oder einen Ausdruck ein. Verwenden Sie {format} für das Datum.",
+                    "geometry": {
+                        "disabled": "Filterklick auf die Karte",
+                        "enabled": "Klicken Sie auf die Karte, um die Ergebnisse zu filtern",
+                        "applied": "Entfernen Sie den Filter per Mausklick"
+                    }
                 }
             },
             "toolbar": {
@@ -2411,6 +2421,10 @@
                 "uploadMissingBundleError": "Kein Javascript-Bundle in der hochgeladenen Datei",
                 "uploadTooManyBundlesError": "Zu viele Javascript-Bundles im Zip-Paket",
                 "confirmRemovePlugin": "Möchten Sie die Erweiterung wirklich entfernen?",
+                "cancelUpload": "Schließen",
+                "install": "Install",
+                "uploadError": "Fehler bei der Installation: ",
+                "uploadOk": "Erweiterung wurde korrekt installiert",
                 "tooltips": {
                     "enableUserPlugin": "Aktiviert die Auswahl des aktuellen Plugins für den Benutzer",
                     "disableUserPlugin": "Deaktivieren Sie die Auswahl des aktuellen Plugins für den Benutzer",
@@ -2464,6 +2478,10 @@
                 "conflict": "Eine Ressource mit diesem Namen ist bereits vorhanden",
                 "defaultMessage": "Unbekannter Fehler",
                 "categoryError": "Das Erstellen der fehlenden Kategorie \"{categoryName}\" ist fehlgeschlagen"
+            },
+            "loadTemplateErrorNotification": {
+                "forbidden": "Konnte nicht auf die Vorlagendaten zugreifen, dem Benutzer fehlen die erforderlichen Berechtigungen!",
+                "defaultMessage": "Ein unerwarteter Fehler ist aufgetreten"
             },
             "contextNameErrorNotification": {
                 "title": "Falscher Kontextname",

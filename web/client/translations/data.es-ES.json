@@ -567,6 +567,7 @@
         "identifyHighlightFeatures": "Resaltar features",
         "identifyShowCoordinateEditor": "Mostrar editor de coordenadas",
         "identifyHideCoordinateEditor": "Ocultar editor de coordenadas",
+        "identifyCoordinateApplyChanges": "Aplicar los cambios",
         "identifyRevGeocodeModalTitle": "Dirección",
         "identifyRevGeocodeSubmitText": "Más información",
         "identifyRevGeocodeCloseText": "Cerrar",
@@ -605,7 +606,10 @@
             "showLabel": "Mostrar etiqueta de medición",
             "addAsAnnotation": "Añadir como anotación",
             "newMeasure": "Nueva anotación",
-            "selectTool": "Seleccione una herramienta de medición"
+            "selectTool": "Seleccione una herramienta de medición",
+            "exportToGeoJSON": "Exportar a GeoJSON",
+            "resetTooltip": "Medidas claras",
+            "addAsLayer": "Agregar como capa"
         },
         "search":{
             "decimal": "Decimal",
@@ -994,7 +998,8 @@
                 "notValidMarker": "Insertar una coordenada válida (+|- 90° lat, +|-180° lon)",
                 "notValidPolyline": "Todas las coordenadas deben ser válidas (+|- 90° lat, +|-180° lon)",
                 "notValidText": "Insertar un valor de texto y una coordenada válida (+|- 90° lat, +|-180° lon)",
-                "notValidCircle": "Ingrese un radio y una coordenada válida (+|- 90° lat, +|-180° lon)"
+                "notValidCircle": "Ingrese un radio y una coordenada válida (+|- 90° lat, +|-180° lon)",
+                "newFeature": "Nuevo"
             }
         },
         "user":{
@@ -1403,7 +1408,12 @@
                     "default": "Buscar...",
                     "string": "Escribe texto para filtrar...",
                     "number": "Escriba el número o la expresión. Ejemplos: 10, > 2, < 10",
-                    "date": "Escriba una fecha o una expresión. Usa {format} para la fecha."
+                    "date": "Escriba una fecha o una expresión. Usa {format} para la fecha.",
+                    "geometry": {
+                        "disabled": "Filtrar haciendo clic en el mapa",
+                        "enabled": "Haga clic en el mapa para filtrar los resultados",
+                        "applied": "Eliminar el filtro haciendo clic con el mouse"
+                    }
                 }
             },
             "toolbar": {
@@ -2410,7 +2420,11 @@
                 "uploadMissingPluginError": "No hay complementos definidos en index.json",
                 "uploadMissingBundleError": "No hay paquete de JavaScript en el archivo cargado",
                 "uploadTooManyBundlesError": "Demasiados paquetes de JavaScript en el paquete zip",
-                "confirmRemovePlugin": "Are you sure you want to remove the extension?",
+                "confirmRemovePlugin": "¿Está seguro de que desea eliminar la extensión?",
+                "cancelUpload": "Cerrar",
+                "install": "Instalar",
+                "uploadError": "Error al instalar: ",
+                "uploadOk": "La extensión se ha instalado correctamente",
                 "tooltips": {
                     "enableUserPlugin": "Habilitar la selección del complemento actual para el usuario",
                     "disableUserPlugin": "Desactiva la selección del complemento actual para el usuario",
@@ -2464,6 +2478,10 @@
                 "conflict": "Ya existe un recurso con este nombre",
                 "defaultMessage": "Error desconocido",
                 "categoryError": "Error al crear la categoría faltante \"{categoryName}\""
+            },
+            "loadTemplateErrorNotification": {
+                "forbidden": "No se pudo acceder a los datos de la plantilla, ¡el usuario carece de los permisos necesarios!",
+                "defaultMessage": "Ocurrió un error inesperado"
             },
             "contextNameErrorNotification": {
                 "title": "Nombre de contexto incorrecto",

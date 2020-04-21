@@ -61,10 +61,13 @@ export const openMapTemplatesPanelEpic = (action$, store) => action$
             }
         });
 
-        const extractThumbnail = (resource) => {
+        const extractAttributes = (resource) => {
             const attribute = get(resource, 'Attributes.attribute', {});
             const attributes = isArray(attribute) ? attribute : [attribute];
-            return get(find(attributes, ({name}) => name === 'thumbnail'), 'value');
+            return attributes.reduce((result, attr) => ({
+                ...result,
+                [attr.name]: attr.value
+            }), {});
         };
 
         return Observable.of(setControlProperty('mapTemplates', 'enabled', true, true)).concat(!mapTemplatesLoaded ?
@@ -78,7 +81,7 @@ export const openMapTemplatesPanelEpic = (action$, store) => action$
                     const resources = isArray(resourceObj) ? resourceObj : [resourceObj];
                     const newTemplates = resources.map(resource => ({
                         ...pick(resource, 'id', 'name', 'description'),
-                        thumbnail: extractThumbnail(resource),
+                        ...extractAttributes(resource),
                         dataLoaded: false,
                         loading: false
                     }));

@@ -9,6 +9,9 @@ const CHANGE_MEASUREMENT_TOOL = 'CHANGE_MEASUREMENT_TOOL';
 const CHANGE_MEASUREMENT_STATE = 'CHANGE_MEASUREMENT_STATE';
 const CHANGE_UOM = 'MEASUREMENT:CHANGE_UOM';
 const CHANGED_GEOMETRY = 'MEASUREMENT:CHANGED_GEOMETRY';
+const SET_TEXT_LABELS = 'MEASUREMENT:SET_TEXT_LABELS';
+const SET_CURRENT_FEATURE = 'MEASUREMENT:SET_CURRENT_FEATURE';
+const ADD_AS_LAYER = 'MEASUREMENT:ADD_AS_LAYER';
 const RESET_GEOMETRY = 'MEASUREMENT:RESET_GEOMETRY';
 const CHANGE_FORMAT = 'MEASUREMENT:CHANGE_FORMAT';
 const CHANGE_COORDINATES = 'MEASUREMENT:CHANGE_COORDINATES';
@@ -19,13 +22,12 @@ const INIT = 'MEASUREMENT:INIT';
 /**
  * trigger the epic to add the measure feature into an annotation.
 */
-function addAnnotation(feature, value, uom, measureTool) {
+function addAnnotation(features, textLabels, uom) {
     return {
         type: ADD_MEASURE_AS_ANNOTATION,
-        feature,
-        value,
-        uom,
-        measureTool
+        features,
+        textLabels,
+        uom
     };
 }
 
@@ -57,12 +59,43 @@ function changeUom(uom, value, previousUom) {
     };
 }
 
-function changeGeometry(feature) {
+function changeGeometry(features) {
     return {
         type: CHANGED_GEOMETRY,
-        feature
+        features
     };
 }
+/**
+ * sets text label descriptions to be used during GeoJSON or layer export
+ * @param {object[]} textLabels text label object
+ */
+function setTextLabels(textLabels) {
+    return {
+        type: SET_TEXT_LABELS,
+        textLabels
+    };
+}
+function setCurrentFeature(featureIndex) {
+    return {
+        type: SET_CURRENT_FEATURE,
+        featureIndex
+    };
+}
+/**
+ * add features to a new vector layer
+ * @param {object[]} features features to add
+ * @param {object[]} textLabels text label descriptions
+ * @param {object} uom current uom
+ */
+function addAsLayer(features, textLabels, uom) {
+    return {
+        type: ADD_AS_LAYER,
+        features,
+        textLabels,
+        uom
+    };
+}
+
 function changeFormatMeasurement(format) {
     return {
         type: CHANGE_FORMAT,
@@ -94,13 +127,14 @@ function changeMeasurementState(measureState) {
         areaMeasureEnabled: measureState.areaMeasureEnabled,
         bearingMeasureEnabled: measureState.bearingMeasureEnabled,
         geomType: measureState.geomType,
+        values: measureState.values,
+        feature: measureState.feature,
         point: measureState.point,
         len: measureState.len,
         area: measureState.area,
         bearing: measureState.bearing,
         lenUnit: measureState.lenUnit,
-        areaUnit: measureState.areaUnit,
-        feature: measureState.feature
+        areaUnit: measureState.areaUnit
     };
 }
 function init(defaultOptions = {}) {
@@ -115,6 +149,9 @@ module.exports = {
     CHANGE_MEASUREMENT_STATE,
     changeUom, CHANGE_UOM,
     changeGeometry, CHANGED_GEOMETRY,
+    setTextLabels, SET_TEXT_LABELS,
+    setCurrentFeature, SET_CURRENT_FEATURE,
+    addAsLayer, ADD_AS_LAYER,
     changeFormatMeasurement, CHANGE_FORMAT,
     updateMeasures, UPDATE_MEASURES,
     changeCoordinates, CHANGE_COORDINATES,

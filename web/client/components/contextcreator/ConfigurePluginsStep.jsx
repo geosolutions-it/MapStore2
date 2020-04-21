@@ -9,7 +9,7 @@
 import React from 'react';
 import {compose, withState, lifecycle, getContext} from 'recompose';
 import {get} from 'lodash';
-import {Glyphicon, Button} from 'react-bootstrap';
+import {Glyphicon, Button, Tooltip, OverlayTrigger, Alert} from 'react-bootstrap';
 import {Controlled as Codemirror} from 'react-codemirror2';
 import 'codemirror/lib/codemirror.css';
 import 'codemirror/mode/javascript/javascript';
@@ -28,6 +28,7 @@ import PropTypes from 'prop-types';
 import ConfirmModal from '../resources/modals/ConfirmModal';
 
 import {ERROR, checkZipBundle} from '../../utils/ExtensionsUtils';
+import Modal from "../misc/Modal";
 
 const getEnabledTools = (plugin, isMandatory, editedPlugin, documentationBaseURL, onEditPlugin,
     onShowDialog, changePluginsKey) => {
@@ -167,11 +168,72 @@ const pluginsToItems = (editedPlugin, editedCfg, cfgError, setEditor, documentat
 const pickIds = items => items && items.map(item => item.id);
 const ignoreMandatory = items => items && items.filter(item => !item.mandatory);
 
+const renderPluginError = (error) => {
+    const tooltip = (<Tooltip>
+        {error.message}
+    </Tooltip>);
+    return (
+        <OverlayTrigger placement="top" overlay={tooltip}>
+            <Glyphicon glyph="warning-sign"/>
+        </OverlayTrigger>
+    );
+};
 
-const renderUploading = (plugin) => {
-    const uploadingStatus = plugin.error ? <Glyphicon glyph="remove" />
-        : (plugin.uploading ? <Spinner spinnerName = "circle" noFadeIn overrideSpinnerClassName = "spinner" /> : <Glyphicon glyph="ok"/>);
-    return <div className="uploading-file">{uploadingStatus}<span className="plugin-name">{plugin.name}</span><span className="upload-error">{plugin.error && plugin.error.message || ""}</span></div>;
+const renderPluginsToUpload = (plugin, onRemove = () => {}) => {
+    const uploadingStatus = plugin.error ? <Glyphicon glyph="remove" /> : <Glyphicon glyph="ok"/>;
+    return (<div className="uploading-file">
+        {uploadingStatus}<span className="plugin-name">{plugin.name}</span>
+        <span className="upload-remove" onClick={onRemove}><Glyphicon glyph="trash" /></span>
+        <span className="upload-error">{plugin.error && renderPluginError(plugin.error)}</span>
+    </div>);
+};
+
+const renderUploadModal = ({
+    toUpload,
+    onClose,
+    onUpload,
+    onInstall,
+    onRemove,
+    isUploading,
+    uploadStatus
+}) => {
+    return (<Modal
+        show>
+        <Modal.Header key="dialogHeader">
+            <Modal.Title><Message msgId="contextCreator.configurePlugins.uploadTitle" /></Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+            {isUploading ? <Spinner/> : <div className="configure-plugins-step-upload">
+                <Dropzone
+                    key="dropzone"
+                    rejectClassName="dropzone-danger"
+                    className="dropzone"
+                    activeClassName="active"
+                    onDrop={onUpload}>
+                    <div style={{
+                        display: "flex",
+                        alignItems: "center",
+                        width: "100%",
+                        height: "100%",
+                        justifyContent: "center"
+                    }}>
+                        <span style={{
+                            textAlign: "center"
+                        }}>
+                            <Message msgId="contextCreator.configurePlugins.uploadLabel"/>
+                        </span>
+                    </div>
+                </Dropzone>
+                <div className="uploads-list">{toUpload.map((plugin, idx) => renderPluginsToUpload(plugin, () => onRemove(idx)))}</div>
+                {uploadStatus && uploadStatus.result === "error" && <Alert bsStyle="danger"><Message msgId="contextCreator.configurePlugins.uploadError"/>{uploadStatus.error.message}</Alert>}
+                {uploadStatus && uploadStatus.result === "ok" && <Alert bsStyle="info"><Message msgId="contextCreator.configurePlugins.uploadOk"/></Alert>}
+            </div>}
+        </Modal.Body>
+        <Modal.Footer>
+            <Button onClick={onClose}><Message msgId="contextCreator.configurePlugins.cancelUpload"/></Button>
+            <Button bsStyle="primary" onClick={onInstall} disabled={toUpload.filter(f => !f.error).length === 0}><Message msgId="contextCreator.configurePlugins.install"/></Button>
+        </Modal.Footer>
+    </Modal>);
 };
 
 const configurePluginsStep = ({
@@ -190,7 +252,9 @@ const configurePluginsStep = ({
     enabledPluginsFilterPlaceholder = "contextCreator.configurePlugins.pluginsFilterPlaceholder",
     documentationBaseURL,
     uploadEnabled = false,
+    pluginsToUpload = [],
     uploading = [],
+    uploadResult,
     showDialog = {},
     mapTemplates,
     availableTemplatesFilterText,
@@ -208,7 +272,8 @@ const configurePluginsStep = ({
     setEditor = () => {},
     onEnableUpload = () => {},
     onUpload = () => {},
-    onUploadError = () => {},
+    onAddUpload = () => {},
+    onRemoveUpload = () => {},
     onShowDialog = () => {},
     onRemovePlugin = () => {},
     onSaveTemplate,
@@ -235,12 +300,15 @@ const configurePluginsStep = ({
                 throw new Error(LocaleUtils.getMessageById(messages, uploadErrors[e]));
             });
         })).then((namedFiles) => {
-            onUpload(namedFiles);
+            onAddUpload(namedFiles);
         }).catch(e => {
-            onUploadError(files.map(f => ({file: f, error: e})));
+            onAddUpload(files.map(f => ({name: f.name, file: f, error: e})));
         });
     };
-
+    const installUploads = () => {
+        const uploads = pluginsToUpload.filter(f => !f.error);
+        onUpload(uploads);
+    };
     const selectedPlugins = allPlugins.filter(plugin => plugin.selected);
     const availablePlugins = allPlugins.filter(plugin => !plugin.enabled);
     const enabledPlugins = allPlugins.filter(plugin => plugin.enabled);
@@ -251,34 +319,7 @@ const configurePluginsStep = ({
     const selectedItems = pluginsToItemsFunc(selectedPlugins, false);
     const availableItems = pluginsToItemsFunc(availablePlugins, true);
     const enabledItems = pluginsToItemsFunc(enabledPlugins, true);
-    if (uploadEnabled) {
-        return (<div className="configure-plugins-step-upload">
-            <div className="title-header"><Message msgId="contextCreator.configurePlugins.uploadTitle" /><Glyphicon glyph="1-close" style={{ cursor: "pointer" }} onClick={(e) => {
-                e.stopPropagation();
-                onEnableUpload(false);
-            }} /></div>
-            <Dropzone
-                key="dropzone"
-                rejectClassName="alert-danger"
-                className="alert alert-info"
-                onDrop={checkUpload}>
-                <div style={{
-                    display: "flex",
-                    alignItems: "center",
-                    width: "100%",
-                    height: "100%",
-                    justifyContent: "center"
-                }}>
-                    <span style={{
-                        textAlign: "center"
-                    }}>
-                        <Message msgId="contextCreator.configurePlugins.uploadLabel"/>
-                    </span>
-                </div>
-            </Dropzone>
-            {uploading.map(plugin => renderUploading(plugin))}
-        </div>);
-    }
+
     return (
         <div className="configure-plugins-step">
             <Transfer
@@ -337,6 +378,7 @@ const configurePluginsStep = ({
                 onSelect={items => setSelectedPlugins(pickIds(ignoreMandatory(items)))}
                 onTransfer={(items, direction) => (direction === 'right' ? onEnablePlugins : onDisablePlugins)(pickIds(ignoreMandatory(items)))}/>
             <ResizableModal
+                loading={loading && loadFlags.templateDataLoading}
                 showFullscreen
                 title={<Message msgId="contextCreator.configureTemplates.title"/>}
                 show={showDialog.mapTemplatesConfig}
@@ -370,6 +412,15 @@ const configurePluginsStep = ({
             <ConfirmModal onClose={onShowDialog.bind(null, 'confirmRemovePlugin', false)} onConfirm={onRemovePlugin.bind(null, showDialog.confirmRemovePluginPayload)} show={showDialog.confirmRemovePlugin} buttonSize="large">
                 <Message msgId="contextCreator.configurePlugins.confirmRemovePlugin"/>
             </ConfirmModal>
+            {uploadEnabled && renderUploadModal({
+                toUpload: pluginsToUpload,
+                onClose: () => onEnableUpload(false),
+                onUpload: checkUpload,
+                onInstall: installUploads,
+                onRemove: onRemoveUpload,
+                isUploading: uploading.filter(u => u.uploading).length > 0,
+                uploadStatus: uploadResult
+            })}
         </div>
     );
 };

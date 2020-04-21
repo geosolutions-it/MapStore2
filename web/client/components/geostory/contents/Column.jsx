@@ -22,6 +22,13 @@ const ColumnContent = compose(
  * Column is a like a Paragraph section, but as content.
  * has (sub) contents to render like a page.
  */
+
+const size = (pullRight) => ({
+    id: 'size',
+    filterOptions: ({ value }) => value !== 'full',
+    pullRight
+});
+
 export default ({
     viewWidth,
     viewHeight,
@@ -53,10 +60,10 @@ export default ({
         }}
         tools={{
             [ContentTypes.TEXT]: ['remove'],
-            [MediaTypes.IMAGE]: ['editMedia', 'size', 'align', 'remove'],
-            [MediaTypes.MAP]: ['editMedia', 'editMap', 'remove'],
+            [MediaTypes.IMAGE]: ['editMedia', size(), 'align', 'remove'],
+            [MediaTypes.MAP]: ['editMedia', 'editMap', size(true), 'remove'],
             [MediaTypes.VIDEO]: ['editMedia', 'remove'], // TODO change this list for video
-            [ContentTypes.WEBPAGE]: ['editURL', 'size', 'align', 'remove']
+            [ContentTypes.WEBPAGE]: ['editURL', size(true), 'remove']
         }}
         addButtons={[{
             glyph: 'sheet',

@@ -128,7 +128,7 @@ class AeronauticalCoordinateEditor extends React.Component {
         const {step: stepSeconds} = this.props.aeronauticalOptions.seconds;
         return (
             <FormGroup style={{display: "inline-flex"}}>
-                <div style={{width: 50, display: 'flex'}}>
+                <div style={{width: 40, display: 'flex'}}>
                     <FormControl
                         key={this.props.coordinate + "degree"}
                         value={this.props.degrees}
@@ -139,14 +139,13 @@ class AeronauticalCoordinateEditor extends React.Component {
                         min={-1}
                         onKeyDown={(event) => {
                             this.verifyOnKeyDownEvent(event);
-                            this.props.onKeyDown(event);
                         }}
                         style={{ width: '100%', ...inputStyle, ...degreesInvalidStyle }}
                         type="number"
                     />
                     <span style={labelStyle}>&deg;</span>
                 </div>
-                <div style={{width: 50, display: 'flex' }}>
+                <div style={{width: 40, display: 'flex' }}>
                     <FormControl
                         key={this.props.coordinate + "minutes"}
                         placeholder={"m"}
@@ -156,7 +155,6 @@ class AeronauticalCoordinateEditor extends React.Component {
                         min={-1}
                         onKeyDown={(event) => {
                             this.verifyOnKeyDownEvent(event);
-                            this.props.onKeyDown(event);
                         }}
                         style={{ width: '100%', ...inputStyle, ...minutesInvalidStyle}}
                         step={1}
@@ -174,7 +172,6 @@ class AeronauticalCoordinateEditor extends React.Component {
                         max={60}
                         onKeyDown={(event) => {
                             this.verifyOnKeyDownEvent(event);
-                            this.props.onKeyDown(event);
                         }}
                         min={-1}
                         style={{ width: '100%', ...inputStyle, ...secondsInvalidStyle}}
@@ -188,7 +185,7 @@ class AeronauticalCoordinateEditor extends React.Component {
                         componentClass="select" placeholder="select"
                         value={this.props.direction}
                         onChange={e => this.onChange("direction", e.target.value)}
-                        style={{ width: 47, paddingLeft: 4, paddingRight: 4 }}>
+                        style={{ width: 40, paddingLeft: 4, paddingRight: 4 }}>
                         {this.props.directions.map((d) => <option key={d} value={d}>{d}</option>)}
                     </FormControl>
                 </div>
@@ -205,7 +202,12 @@ class AeronauticalCoordinateEditor extends React.Component {
         if (event.keyCode === 69) {
             event.preventDefault();
         }
-    }
+        if (event.keyCode === 13 ) {
+            event.preventDefault();
+            event.stopPropagation();
+            this.props.onKeyDown();
+        }
+    };
 
     roundToNextSexagesimalStep = val => {
         return val < 0
@@ -213,7 +215,7 @@ class AeronauticalCoordinateEditor extends React.Component {
             : val >= 60
                 ? val - 60
                 : val;
-    }
+    };
     isValid = (coord) => {
         const { minutes, seconds, degrees, direction } = coord;
         return !isNil(minutes) && minutes > 0 && minutes < 60

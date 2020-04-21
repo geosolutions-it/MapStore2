@@ -22,13 +22,20 @@ const BUTTON_CLASSES = 'square-button-md no-border';
  * these components have been created because it was causing an excessive re-rendering
  */
 
-export const SizeButtonToolbar = ({editMap: disabled = false, align, sectionType, size, update = () => {} }) =>
+/**
+ * Size dropdown
+ * @prop {string} size one of `small`, `medium`, `large` and `full`
+ * @prop {string} align one of `left`, `center` and `right`
+ * @prop {function} filterOptions filter dropdown options by value (eg `({ value }) => value !== 'full'` to exclude `full` option)
+ * @prop {function} pullRight pull dropdown right
+ */
+export const SizeButtonToolbar = ({editMap: disabled = false, align, sectionType, size, update = () => {}, filterOptions, pullRight }) =>
     (<ToolbarDropdownButton
         value={size}
         noTooltipWhenDisabled
         disabled={disabled}
         glyph="resize-horizontal"
-        pullRight={(align === "right" || size === "full" || size === "large") && !sectionType}
+        pullRight={pullRight || (align === "right" || size === "full" || size === "large") && !sectionType}
         tooltipId="geostory.contentToolbar.contentSize"
         options={[{
             value: 'small',
@@ -46,7 +53,7 @@ export const SizeButtonToolbar = ({editMap: disabled = false, align, sectionType
             value: 'full',
             glyph: 'size-extra-large',
             label: <Message msgId="geostory.contentToolbar.fullSizeLabel"/>
-        }]}
+        }].filter((option) => !filterOptions || filterOptions(option))}
         onSelect={(selected) => update('size', selected)}/>
     );
 

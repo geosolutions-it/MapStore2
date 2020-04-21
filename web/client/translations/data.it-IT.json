@@ -567,6 +567,7 @@
         "identifyHighlightFeatures": "Evidenzia le features interrogate",
         "identifyShowCoordinateEditor": "Mostra l'editor",
         "identifyHideCoordinateEditor": "Nascondi l'editor",
+        "identifyCoordinateApplyChanges": "Applica i cambiamenti",
         "identifyRevGeocodeModalTitle": "Indirizzo",
         "identifyRevGeocodeSubmitText": "Più informazioni",
         "identifyRevGeocodeCloseText": "Chiudi",
@@ -605,7 +606,10 @@
             "showLabel": "Mostra etichetta di misurazione",
             "addAsAnnotation": "Aggiungi come annotazione",
             "newMeasure": "Nuova annotazione",
-            "selectTool": "Seleziona uno strumento di misura"
+            "selectTool": "Seleziona uno strumento di misura",
+            "exportToGeoJSON": "Esporta in GeoJSON",
+            "resetTooltip": "Misure chiare",
+            "addAsLayer": "Aggiungi come livello"
         },
         "search":{
             "decimal": "Decimali",
@@ -994,7 +998,8 @@
                 "notValidMarker": "Inserisci una coordinata valida (+|- 90° lat, +|-180° lon)",
                 "notValidPolyline": "Tutte le coordinate devono essere valide (+|- 90° lat, +|-180° lon)",
                 "notValidText": "Inserisci un testo ed una coordinata valida (+|- 90° lat, +|-180° lon)",
-                "notValidCircle": "Inserisci un raggio ed una coordinata valida (+|- 90° lat, +|-180° lon)"
+                "notValidCircle": "Inserisci un raggio ed una coordinata valida (+|- 90° lat, +|-180° lon)",
+                "newFeature": "Nuovo"
             }
         },
         "user":{
@@ -1403,7 +1408,12 @@
                     "default": "Cerca...",
                     "string": "Digita il testo da cercare...",
                     "number": "Digita un numero o una espressione. Esempi: 10, > 2, < 10",
-                    "date":"Digita una data o un'espressione. Utilizza {format} per la data"
+                    "date":"Digita una data o un'espressione. Utilizza {format} per la data",
+                    "geometry": {
+                        "disabled": "Filtra facendo clic sulla mappa",
+                        "enabled": "Fai clic sulla mappa per filtrare i risultati",
+                        "applied": "Rimuovi il filtro applicato con il click sulla mappa"
+                    }
                 }
             },
             "toolbar": {
@@ -1984,7 +1994,7 @@
             "closeFullscreenMap": "Chiudi mappa",
             "showFullscreenMap": "Visualizza mappa a pieno schermo",
             "contentToolbar": {
-                "contentSize": "Cambia larghezza",
+                "contentSize": "Cambia Dimensione",
                 "contentHeightAuto": "Adatta la sezione all'altezza del contenuto",
                 "contentHeightView": "Adatta la sezione sezione per riempire la vista verticalmente",
                 "smallSizeLabel": "Piccola",
@@ -2409,9 +2419,13 @@
                 "uploadParseError": "File index.json con formato errato",
                 "uploadMissingIndexError": "File index.json mancante nel file",
                 "uploadMissingPluginError": "Nessun plugin definito in index.json",
-                "uploadMissingBundleError": "Nessun bundle javascript non presente nel file",
+                "uploadMissingBundleError": "Nessun bundle javascript presente nel file",
                 "uploadTooManyBundlesError": "Troppi bundle javascript contenuti nel pacchetto",
                 "confirmRemovePlugin": "Sei sicuro di voler eliminare l'estensione?",
+                "cancelUpload": "Chiudi",
+                "install": "Installa",
+                "uploadError": "Errore durante l'installazione: ",
+                "uploadOk": "Intallazione terminata correttamente",
                 "tooltips": {
                     "enableUserPlugin": "Abilita la selezione del plug-in corrente per l'utente",
                     "disableUserPlugin": "Disabilita la selezione del plug-in corrente per l'utente",
@@ -2465,6 +2479,10 @@
                 "conflict": "Una risorsa con questo nome esiste già",
                 "defaultMessage": "Errore sconosciuto",
                 "categoryError": "Creazione della categoria mancante \"{categoryName}\" non riuscita"
+            },
+            "loadTemplateErrorNotification": {
+                "forbidden": "Impossibile accedere ai dati del modello, l'utente non dispone delle autorizzazioni necessarie!",
+                "defaultMessage": "Si è verificato un errore imprevisto"
             },
             "contextNameErrorNotification": {
                 "title": "Nome di contesto errato",

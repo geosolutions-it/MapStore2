@@ -84,7 +84,7 @@ describe('tutorial Epics', () => {
 
         testEpic(switchTutorialEpic, 1, [
             onLocationChanged({
-                pathname: '/dashboard/'
+                pathname: '/dashboard'
             }),
             initTutorial('id', [], {}, null, {}, {})
         ], (actions) => {
@@ -92,7 +92,7 @@ describe('tutorial Epics', () => {
             actions.map((action) => {
                 switch (action.type) {
                 case SETUP_TUTORIAL:
-                    expect(action.id).toBe('dashboard');
+                    expect(action.id).toBe('/dashboard');
                     break;
                 default:
                     expect(true).toBe(false);

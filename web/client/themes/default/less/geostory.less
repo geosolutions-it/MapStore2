@@ -20,6 +20,11 @@
 @ms-story-size-large: 85%;
 @ms-story-size-medium: 60%;
 @ms-story-size-small: 40%;
+
+@ms-story-size-height-large: 800px;
+@ms-story-size-height-medium: 575px;
+@ms-story-size-height-small: 350px;
+
 .ms-story-align-center { margin-left: auto; margin-right: auto; }
 /* mixin for align*/
 .ms-story-align-left { margin-left: 0; margin-right: auto; }
@@ -27,9 +32,6 @@
 /* mixin for text color*/
 .ms-story-color-contrast { color: contrast(@ms-story-bg); }
 .ms-story-color-no-contrast { color: @ms-story-bg; }
-
-
-.no-overflow {overflow: hidden !important;}
 
 /* TEXT EDITOR TODO: externalize */
 @import '~draft-js-inline-toolbar-plugin/lib/plugin.css';
@@ -599,11 +601,13 @@
                         width: 100%;
                     }
                 }
-                .ms-media-map {
+                .ms-content.ms-content-webPage,
+                .ms-content.ms-content-map {
+                    width: 100%;
                     height: 350px;
-                    & > div {
-                        position: relative;
-                    }
+                    &.ms-size-large { height: @ms-story-size-height-large; }
+                    &.ms-size-medium { height: @ms-story-size-height-medium; }
+                    &.ms-size-small { height: @ms-story-size-height-small; }
                 }
             }
         }
@@ -680,18 +684,19 @@
                     right: 16px;
                 }
                 .ms-media-map {
-                    height: 350px;
-                    & > div {
-                        position: relative;
-                    }
                     .ms-expand-media-button {
                         margin: 0;
                         top: 20px;
                         right: 20px;
                     }
                 }
+                .ms-content.ms-content-webPage,
                 .ms-content.ms-content-map {
                     width: 100%;
+                    height: 350px;
+                    &.ms-size-large { height: @ms-story-size-height-large; }
+                    &.ms-size-medium { height: @ms-story-size-height-medium; }
+                    &.ms-size-small { height: @ms-story-size-height-small; }
                 }
             }
         }
@@ -708,11 +713,52 @@
         we need to restore the possibility to interact with the content body
         using `pointer-events: auto;`
         */
-
-        .ms-webpage-wrapper > iframe {
-            border: none;
+        .ms-content-webPage {
+            position: relative;
             width: 100%;
-            min-height: 100%;
+            height: 100%;
+            .ms-content-body,
+            .ms-visibility-container,
+            .ms-webpage-wrapper,
+            .ms-webpage-wrapper > iframe {
+                position: relative;
+                width: 100%;
+                height: 100%;
+            }
+            .ms-webpage-wrapper > iframe {
+                border: none;
+            }
+            .ms-content-body {
+                display: flex;
+                flex-direction: column;
+            }
+            .ms-visibility-container {
+                flex: 1;
+            }
+        }
+
+        .ms-content-map {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            .ms-content-body,
+            .ms-visibility-container,
+            .ms-media-map,
+            .ms-media-map > div  {
+                position: relative;
+                width: 100%;
+                height: 100%;
+            }
+            .ms-content-body {
+                display: flex;
+                flex-direction: column;
+            }
+            .ms-visibility-container {
+                flex: 1;
+            }
+            canvas {
+                position: absolute;
+            }
         }
 
         .ms-content-body > * {
@@ -836,6 +882,10 @@
                     padding: 16px;
                 }
             }
+            code {
+                color: inherit;
+                background: #f1f1f1;
+            }
         }
 
         /* size of content */
@@ -850,6 +900,9 @@
         &.ms-align-right { .ms-story-align-right(); }
     }
 
+    .ms-content-column {
+        .ms-content.ms-size-large { width: @ms-story-size-full; }
+    }
 
     //////////
     // MEDIA
