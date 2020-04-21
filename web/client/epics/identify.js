@@ -306,7 +306,7 @@ export default {
     /**
      * Triggers remove popup on LOCATION_CHANGE
      */
-    locationChangeEpic: (action$, {getState}) =>
+    removePopupOnLocationChangeEpic: (action$, {getState}) =>
         action$.ofType(LOCATION_CHANGE)
             .switchMap(() => {
                 let observable = Rx.Observable.empty();
