@@ -197,6 +197,11 @@ const registerEventListener = (eventName, toolName) => ({
     toolName
 });
 
+/**
+ * Remove the listeners added using `registerEventListener` . 
+ * @param {string} eventName the event name. One of ``pointermove`, 
+ * @param {string} toolName an identifier for the tool
+ */
 const unRegisterEventListener = (eventName, toolName) => ({
     type: UNREGISTER_EVENT_LISTENER,
     eventName,
