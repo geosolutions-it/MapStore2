@@ -1408,7 +1408,12 @@
                     "default": "Buscar...",
                     "string": "Escribe texto para filtrar...",
                     "number": "Escriba el número o la expresión. Ejemplos: 10, > 2, < 10",
-                    "date": "Escriba una fecha o una expresión. Usa {format} para la fecha."
+                    "date": "Escriba una fecha o una expresión. Usa {format} para la fecha.",
+                    "geometry": {
+                        "disabled": "Filtrar haciendo clic en el mapa",
+                        "enabled": "Haga clic en el mapa para filtrar los resultados",
+                        "applied": "Eliminar el filtro haciendo clic con el mouse"
+                    }
                 }
             },
             "toolbar": {

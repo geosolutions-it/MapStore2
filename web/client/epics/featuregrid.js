@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 const Rx = require('rxjs');
-const { get, head, isEmpty, find, castArray, includes, reduce} = require('lodash');
+const { get, head, isEmpty, find, castArray, includes, reduce, isArray} = require('lodash');
 const { LOCATION_CHANGE } = require('connected-react-router');
 
 
@@ -20,9 +20,10 @@ const {changeDrawingStatus, GEOMETRY_CHANGED, drawSupportReset} = require('../ac
 const requestBuilder = require('../utils/ogc/WFST/RequestBuilder');
 const {findGeometryProperty} = require('../utils/ogc/WFS/base');
 const { FEATURE_INFO_CLICK, HIDE_MAPINFO_MARKER} = require('../actions/mapInfo');
-const {query, QUERY, QUERY_CREATE, QUERY_RESULT, LAYER_SELECTED_FOR_SEARCH, FEATURE_TYPE_LOADED, UPDATE_QUERY, featureTypeSelected, createQuery, updateQuery, TOGGLE_SYNC_WMS, QUERY_ERROR, FEATURE_LOADING} = require('../actions/wfsquery');
+const {query, QUERY, QUERY_CREATE, QUERY_RESULT, LAYER_SELECTED_FOR_SEARCH, FEATURE_TYPE_LOADED, UPDATE_QUERY, featureTypeSelected, createQuery, updateQuery, TOGGLE_SYNC_WMS, QUERY_ERROR, FEATURE_LOADING, toggleSyncWms} = require('../actions/wfsquery');
 const {reset, QUERY_FORM_SEARCH, loadFilter} = require('../actions/queryform');
-const {zoomToExtent} = require('../actions/map');
+const {zoomToExtent, CLICK_ON_MAP} = require('../actions/map');
+const {projectionSelector} = require('../selectors/map');
 
 
 const { BROWSE_DATA, changeLayerProperties, refreshLayerVersion, CHANGE_LAYER_PARAMS} = require('../actions/layers');
@@ -35,7 +36,8 @@ const {SORT_BY, CHANGE_PAGE, SAVE_CHANGES, SAVE_SUCCESS, DELETE_SELECTED_FEATURE
     SELECT_FEATURES, DESELECT_FEATURES, START_DRAWING_FEATURE, CREATE_NEW_FEATURE,
     CLEAR_CHANGES_CONFIRMED, FEATURE_GRID_CLOSE_CONFIRMED,
     openFeatureGrid, closeFeatureGrid, OPEN_FEATURE_GRID, CLOSE_FEATURE_GRID, CLOSE_FEATURE_GRID_CONFIRM, OPEN_ADVANCED_SEARCH, ZOOM_ALL, UPDATE_FILTER, START_SYNC_WMS,
-    STOP_SYNC_WMS, startSyncWMS, storeAdvancedSearchFilter, fatureGridQueryResult, LOAD_MORE_FEATURES, SET_TIME_SYNC } = require('../actions/featuregrid');
+    STOP_SYNC_WMS, startSyncWMS, storeAdvancedSearchFilter, fatureGridQueryResult, LOAD_MORE_FEATURES, SET_TIME_SYNC,
+    updateFilter } = require('../actions/featuregrid');
 
 const {TOGGLE_CONTROL, resetControls, setControlProperty, toggleControl} = require('../actions/controls');
 const {queryPanelSelector, showCoordinateEditorSelector, drawerEnabledControlSelector} = require('../selectors/controls');
@@ -49,8 +51,11 @@ const {getSelectedLayer} = require('../selectors/layers');
 
 const {interceptOGCError} = require('../utils/ObservableUtils');
 const {gridUpdateToQueryUpdate, updatePages} = require('../utils/FeatureGridUtils');
-const {queryFormUiStateSelector} = require('../selectors/queryform');
+const {queryFormUiStateSelector, spatialFieldSelector} = require('../selectors/queryform');
 const {composeAttributeFilters} = require('../utils/FilterUtils');
+
+const CoordinatesUtils = require('../utils/CoordinatesUtils');
+const MapUtils = require('../utils/MapUtils');
 
 const setupDrawSupport = (state, original) => {
     const defaultFeatureProj = getDefaultFeatureProjection();
@@ -252,14 +257,61 @@ module.exports = {
                     const columnsFilters = reduce(attributesFilter, (cFilters, value, attribute) => {
                         return gridUpdateToQueryUpdate({attribute, ...value}, cFilters);
                     }, {});
-                    const composedFilterFields = composeAttributeFilters([filterObj, columnsFilters]);
+                    const composedFilterFields = composeAttributeFilters([filterObj, columnsFilters], "AND", "AND");
                     const filter = {...filterObj, ...composedFilterFields};
                     return updateQuery(filter);
                 }
                 return updateQuery(gridUpdateToQueryUpdate(update, wfsFilter(store.getState())));
             })
     ),
+    handleClickOnMap: (action$, store) =>
+        action$.ofType(UPDATE_FILTER)
+            .filter(({update = {}}) => update.type === 'geometry' && update.enabled)
+            .switchMap(() =>
+                action$.ofType(CLICK_ON_MAP).switchMap(({point: {latlng: {lat, lng}, pixel}}) => {
+                    const currentFilter = find(getAttributeFilters(store.getState()), f => f.type === 'geometry') || {};
 
+                    const hook = MapUtils.getHook(MapUtils.GET_COORDINATES_FROM_PIXEL_HOOK);
+                    const pixelRadius = 4;
+                    const radiusA = [lng, lat];
+                    const pixelCoords = hook([
+                        pixel.x,
+                        pixel.y >= pixelRadius ? pixel.y - pixelRadius : pixel.y + pixelRadius
+                    ]);
+                    const radiusB = pixelCoords &&
+                        CoordinatesUtils.pointObjectToArray(CoordinatesUtils.reproject(pixelCoords, projectionSelector(store.getState()), 'EPSG:4326'));
+                    const radius = isArray(radiusB) ? Math.sqrt((radiusA[0] - radiusB[0]) * (radiusA[0] - radiusB[0]) +
+                        (radiusA[1] - radiusB[1]) * (radiusA[1] - radiusB[1])) :
+                        0.01;
+
+                    return Rx.Observable.of(updateFilter({
+                        ...currentFilter,
+                        value: {
+                            attribute: currentFilter.attribute || get(spatialFieldSelector(store.getState()), 'attribute'),
+                            geometry: {
+                                center: [lng, lat],
+                                coordinates: CoordinatesUtils.calculateCircleCoordinates({x: lng, y: lat}, radius, 12),
+                                extent: [lng - radius, lat - radius, lng + radius, lat + radius],
+                                projection: "EPSG:4326",
+                                radius,
+                                type: "Polygon"
+                            },
+                            method: "Circle",
+                            operation: "INTERSECTS"
+                        }
+                    }));
+                })
+                    .takeUntil(Rx.Observable.merge(
+                        action$.ofType(UPDATE_FILTER).filter(({update = {}}) => update.type === 'geometry' && !update.enabled),
+                        action$.ofType(CLOSE_FEATURE_GRID, LOCATION_CHANGE)
+                    ))),
+    toggleSyncOnEdit: (action$, store) =>
+        action$.ofType(TOGGLE_MODE)
+            .filter(() => modeSelector(store.getState()) === MODES.EDIT)
+            .flatMap(() => Rx.Observable.merge(
+                Rx.Observable.of(...(isSyncWmsActive(store.getState()) ? [toggleSyncWms()] : [])),
+                action$.ofType(TOGGLE_MODE, CLOSE_FEATURE_GRID, LOCATION_CHANGE).take(1).flatMap(() => Rx.Observable.of(toggleSyncWms()))
+            )),
     /**
      * perform paginated query on page change
      * @memberof epics.featuregrid

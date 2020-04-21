@@ -218,7 +218,7 @@ describe('FilterUtils', () => {
         expect(filter.indexOf('startIndex="1"') !== -1).toBe(true);
     });
 
-    it('Check  for no oparation', () => {
+    it('Check for no oparation', () => {
         const versionOGC = "1.1.0";
         const nsplaceholder = "ogc";
         const objFilter = {
@@ -1567,5 +1567,197 @@ describe('FilterUtils', () => {
         };
         const filter = FilterUtils.toCQLFilter(filterObject);
         expect(filter).toBe(`(NOT ("STATE_NAME" LIKE '%Ar%') AND NOT ("PERSONS" < '1000000') AND NOT (NOT ("LAND_KM" < '5000')))`);
+    });
+    it('toOGCFilterParts with spatialField array', () => {
+        const filterObj = {
+            filterFields: [],
+            groupFields: [{
+                id: 1,
+                index: 0,
+                logic: "OR"
+            }],
+            spatialField: [{
+                attribute: "the_geom",
+                geometry: {
+                    coordinates: [[1, 1], [3, 2]],
+                    projection: "EPSG:4326",
+                    type: "Point"
+                },
+                operation: "INTERSECTS"
+            }, {
+                attribute: "the_geom",
+                geometry: {
+                    coordinates: [[2, 2], [4, 1]],
+                    projection: "EPSG:4326",
+                    type: "Point"
+                },
+                operation: "INTERSECTS"
+            }]
+        };
+
+        const parts = FilterUtils.toOGCFilterParts(filterObj, "1.1.0", "ogc");
+
+        const point1OGC = '<ogc:Intersects>' +
+            '<ogc:PropertyName>the_geom</ogc:PropertyName>' +
+            '<gml:Point srsDimension="2" srsName="EPSG:4326">' +
+            '<gml:pos>1,1 3,2</gml:pos>' +
+            '</gml:Point></ogc:Intersects>';
+        const point2OGC = '<ogc:Intersects>' +
+            '<ogc:PropertyName>the_geom</ogc:PropertyName>' +
+            '<gml:Point srsDimension="2" srsName="EPSG:4326">' +
+            '<gml:pos>2,2 4,1</gml:pos>' +
+            '</gml:Point></ogc:Intersects>';
+
+        expect(parts).toExist();
+        expect(parts.length).toBe(1);
+        expect(parts[0]).toBe('<ogc:And>' + point1OGC + point2OGC + '</ogc:And>');
+    });
+    it('Check if toOGCFilter bbox overrides with spatialField array', () => {
+        const filterObj = {
+            featureTypeName: 'feature',
+            filterFields: [],
+            filterType: 'OGC',
+            groupFields: [{id: 1, index: 0, logic: 'OR'}],
+            hits: false,
+            ogcVersion: '1.1.0',
+            pagination: {
+                maxFeatures: 20,
+                startIndex: 0
+            },
+            sortOptions: null,
+            spatialField: [{
+                attribute: 'the_geom',
+                geometry: {
+                    center: [174.19921875, 24.04052578726085],
+                    coordinates: [
+                        [[[-180, -10.228437266155943], [-180, 58.309488840677645], [-125.33203125, 58.309488840677645], [-125.33203125, -10.228437266155943], [-180, -10.228437266155943]]],
+                        [[[113.73046875, -10.228437266155943], [113.73046875, 58.309488840677645], [180, 58.309488840677645], [180, -10.228437266155943], [113.73046875, -10.228437266155943]]]
+                    ],
+                    extent: [
+                        [-180, 23.200960808078566, -134.47265625, 54.39335222384589],
+                        [160.400390625, 23.200960808078566, 180, 54.39335222384589]
+                    ],
+                    projection: 'EPSG:4326',
+                    radius: 0,
+                    type: 'MultiPolygon'
+                },
+                method: 'Viewport',
+                operation: 'BBOX'
+            }, {
+                attribute: "the_geom",
+                geometry: {
+                    coordinates: [[1, 1], [3, 2]],
+                    projection: "EPSG:4326",
+                    type: "Point"
+                },
+                operation: "INTERSECTS"
+            }, {
+                attribute: "the_geom",
+                geometry: {
+                    coordinates: [[2, 2], [4, 1]],
+                    projection: "EPSG:4326",
+                    type: "Point"
+                },
+                operation: "INTERSECTS"
+            }]
+        };
+
+        const expected = '<wfs:GetFeature ' +
+          'startIndex="0" ' +
+          'maxFeatures="20" ' +
+          'service="WFS" ' +
+          'version="1.1.0" ' +
+          'xmlns:gml="http://www.opengis.net/gml" ' +
+          'xmlns:wfs="http://www.opengis.net/wfs" ' +
+          'xmlns:ogc="http://www.opengis.net/ogc" ' +
+          'xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" ' +
+          'xsi:schemaLocation="http://www.opengis.net/wfs http://schemas.opengis.net/wfs/1.1.0/wfs.xsd">' +
+          '<wfs:Query typeName="feature" srsName="EPSG:4326">' +
+            '<ogc:Filter>' +
+              '<ogc:Or>' +
+                '<ogc:BBOX>' +
+                  '<ogc:PropertyName>the_geom</ogc:PropertyName>' +
+                  '<gml:Envelope srsName="EPSG:4326">' +
+                    '<gml:lowerCorner>-180 23.200960808078566</gml:lowerCorner>' +
+                    '<gml:upperCorner>-134.47265625 54.39335222384589</gml:upperCorner>' +
+                  '</gml:Envelope>' +
+                '</ogc:BBOX>' +
+                '<ogc:BBOX>' +
+                  '<ogc:PropertyName>the_geom</ogc:PropertyName>' +
+                  '<gml:Envelope srsName="EPSG:4326">' +
+                    '<gml:lowerCorner>160.400390625 23.200960808078566</gml:lowerCorner>' +
+                    '<gml:upperCorner>180 54.39335222384589</gml:upperCorner>' +
+                  '</gml:Envelope>' +
+                '</ogc:BBOX>' +
+              '</ogc:Or>' +
+            '</ogc:Filter>' +
+          '</wfs:Query>' +
+        '</wfs:GetFeature>';
+
+        expect(FilterUtils.toOGCFilter(filterObj.featureTypeName, filterObj, filterObj.ogcVersion, filterObj.sortOptions, filterObj.hits)).toEqual(expected);
+    });
+    it('Calculate CQL filter with spatialField array', () => {
+        let filterObj = {
+            filterFields: [{
+                groupId: 1,
+                attribute: "attribute1",
+                exception: null,
+                operator: "=",
+                rowId: "1",
+                type: "list",
+                value: "value1"
+            }],
+            groupFields: [{
+                id: 1,
+                index: 0,
+                logic: "OR"
+            }],
+            spatialField: [{
+                groupId: 1,
+                attribute: "the_geom",
+                geometry: {
+                    center: [1, 1],
+                    coordinates: [[
+                        [1, 2],
+                        [2, 3],
+                        [3, 4]
+                    ]],
+                    extent: [
+                        1, 2, 3
+                    ],
+                    projection: "EPSG:4326",
+                    radius: 1,
+                    type: "Polygon"
+                },
+                method: "BBOX",
+                operation: "INTERSECTS"
+            }, {
+                groupId: 1,
+                attribute: "the_geom",
+                geometry: {
+                    center: [1, 1],
+                    coordinates: [[
+                        [1, 2],
+                        [2, 3],
+                        [3, 4],
+                        [4, 5],
+                        [5, 6]
+                    ]],
+                    extent: [
+                        1, 2, 3, 4, 5
+                    ],
+                    projection: "EPSG:4326",
+                    radius: 1,
+                    type: "Polygon"
+                },
+                method: "BBOX",
+                operation: "INTERSECTS"
+            }]
+        };
+
+        let filter = FilterUtils.toCQLFilter(filterObj);
+        expect(filter).toExist();
+        expect(filter).toBe("(\"attribute1\"='value1') AND " +
+            "(INTERSECTS(the_geom,SRID=4326;Polygon((1 2, 2 3, 3 4, 1 2))) AND INTERSECTS(the_geom,SRID=4326;Polygon((1 2, 2 3, 3 4, 4 5, 5 6, 1 2))))");
     });
 });

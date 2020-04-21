@@ -19,9 +19,9 @@ const {mapLayoutValuesSelector} = require('../../../selectors/maplayout');
 const {chartDisabledSelector, showAgainSelector, showPopoverSyncSelector, selectedLayerNameSelector} = require('../../../selectors/featuregrid');
 const {deleteFeatures, toggleTool, clearChangeConfirmed, closeFeatureGridConfirmed, closeFeatureGrid} = require('../../../actions/featuregrid');
 const {toolbarEvents, pageEvents} = require('../index');
-const {getAttributeFields} = require('../../../utils/FeatureGridUtils');
 const {getFilterRenderer} = require('../../../components/data/featuregrid/filterRenderers');
 const {isDescribeLoaded, isFilterActive} = require('../../../selectors/query');
+const {getFeatureTypeProperties, isGeometryType} = require('../../../utils/ogc/WFS/base');
 
 const filterEditingAllowedUser = (role, editingAllowedRoles = ["ADMIN"]) => {
     return editingAllowedRoles.indexOf(role) !== -1;
@@ -136,7 +136,7 @@ module.exports = {
     },
     getFilterRenderers: createSelector((d) => d,
         (describe) =>
-            describe ? getAttributeFields(describe).reduce( (out, cur) => ({
+            describe ? (getFeatureTypeProperties(describe) || []).reduce( (out, cur) => ({
                 ...out,
                 [cur.name]: connect(
                     createSelector(
@@ -144,15 +144,16 @@ module.exports = {
                         modeSelector,
                         (filter, mode) => {
                             const props = {
-                                value: filter && (filter.rawValue || filter.value)
+                                value: filter && (filter.rawValue || filter.value),
+                                ...(isGeometryType(cur) ? {filterEnabled: filter && filter.enabled} : {})
                             };
-                            const editProps = {
+                            const editProps = !isGeometryType(cur) ? {
                                 disabled: true,
                                 tooltipMsgId: "featuregrid.filter.tooltips.editMode"
-                            };
+                            } : {};
                             return mode === "EDIT" ? {...props, ...editProps} : props;
                         }
-                    ))(getFilterRenderer(cur.localType, {name: cur.name}))
+                    ))(getFilterRenderer(isGeometryType(cur) ? 'geometry' : cur.localType, {name: cur.name}))
             }), {}) : {}),
     getDialogs: (tools = {}) => {
         return Object.keys(tools)
