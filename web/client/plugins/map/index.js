@@ -9,7 +9,7 @@
 const React = require('react');
 const {createSelector} = require('reselect');
 
-const {creationError, changeMapView, clickOnMap, mouseMoveMapEvent, mouseMoveOverTools} = require('../../actions/map');
+const {creationError, changeMapView, clickOnMap, mouseMoveMapEvent, mouseOut} = require('../../actions/map');
 const {removePopup} = require('../../actions/mapPopups');
 const {layerLoading, layerLoad, layerError} = require('../../actions/layers');
 const {changeMeasurementState, changeGeometry, resetGeometry, updateMeasures, setTextLabels} = require('../../actions/measurement');
@@ -41,7 +41,7 @@ module.exports = (mapType, actions) => {
         onLayerLoad: layerLoad,
         onLayerError: layerError,
         onWarning: warning,
-        onMouseOut: mouseMoveOverTools
+        onMouseOut: mouseOut
     }, actions), (stateProps, dispatchProps, ownProps) => {
         return assign({}, ownProps, stateProps, assign({}, dispatchProps, {
             onMouseMove: stateProps.mousePosition ? dispatchProps.onMouseMove : () => {}

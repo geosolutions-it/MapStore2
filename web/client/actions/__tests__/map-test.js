@@ -26,7 +26,7 @@ var {
     REGISTER_EVENT_LISTENER,
     UNREGISTER_EVENT_LISTENER,
     MOUSE_MOVE_MAP_EVENT,
-    MOUSE_MOVE_OVER_TOOLS,
+    MOUSE_OUT,
     zoomToPoint,
     errorLoadingFont,
     changeMapView,
@@ -46,7 +46,7 @@ var {
     registerEventListener,
     unRegisterEventListener,
     mouseMoveMapEvent,
-    mouseMoveOverTools
+    mouseOut
 } = require('../map');
 const {
     SHOW_NOTIFICATION
@@ -257,9 +257,9 @@ describe('Test correctness of the map actions', () => {
         expect(retval.type).toEqual(MOUSE_MOVE_MAP_EVENT);
         expect(retval.position).toEqual(position);
     });
-    it('mouseMoveOverTools', () => {
-        const retval = mouseMoveOverTools();
+    it('mouseOut', () => {
+        const retval = mouseOut();
         expect(retval).toExist();
-        expect(retval.type).toEqual(MOUSE_MOVE_OVER_TOOLS);
+        expect(retval.type).toEqual(MOUSE_OUT);
     });
 });

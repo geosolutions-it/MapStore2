@@ -284,7 +284,7 @@ export default {
         action$.ofType(MOUSE_MOVE_MAP_EVENT)
             .debounceTime(floatingIdentifyDelaySelector(getState()))
             .switchMap(({position, layer}) => {
-                if (!isMouseMoveIdentifyActiveSelector(getState()) || getState().map.present.mouseMoveOverTools) {
+                if (!isMouseMoveIdentifyActiveSelector(getState()) || getState().map.present.mouseOut) {
                     return Rx.Observable.empty();
                 }
                 return Rx.Observable.of(featureInfoClick(position, layer))

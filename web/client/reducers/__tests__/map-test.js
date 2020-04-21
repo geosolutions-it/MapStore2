@@ -265,13 +265,13 @@ describe('Test the map reducer', () => {
             position
         };
         const state = mapConfig({}, action);
-        expect(state).toEqual({position, mouseMoveOverTools: false});
+        expect(state).toEqual({position, mouseOut: false});
     });
-    it('mouse move over tools', () => {
+    it('mouse out', () => {
         const action = {
-            type: 'MOUSE_MOVE_OVER_TOOLS'
+            type: 'MOUSE_OUT'
         };
         const state = mapConfig({}, action);
-        expect(state).toEqual({mouseMoveOverTools: true});
+        expect(state).toEqual({mouseOut: true});
     });
 });

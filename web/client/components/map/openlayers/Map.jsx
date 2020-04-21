@@ -161,9 +161,7 @@ class OpenlayersMap extends React.Component {
             delete this.map.disabledListeners[event];
         };
         this.map.getViewport().addEventListener('mouseout', () => {
-            if (this.props.mousePosition) {
-                setTimeout(() => this.props.onMouseOut(), 150);
-            }
+            setTimeout(() => this.props.onMouseOut(), 150);
         });
         // TODO support disableEventListener
         map.on('moveend', this.updateMapInfoState);

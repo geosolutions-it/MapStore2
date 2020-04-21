@@ -28,7 +28,7 @@ const CHECK_MAP_CHANGES = 'CHECK_MAP_CHANGES';
 const REGISTER_EVENT_LISTENER = 'REGISTER_EVENT_LISTENER';
 const UNREGISTER_EVENT_LISTENER = 'UNREGISTER_EVENT_LISTENER';
 const MOUSE_MOVE_MAP_EVENT = 'MOUSE_MOVE_MAP_EVENT';
-const MOUSE_MOVE_OVER_TOOLS = 'MOUSE_MOVE_OVER_TOOLS';
+const MOUSE_OUT = 'MOUSE_OUT';
 
 function errorLoadingFont(err = {family: ""}) {
     return error({
@@ -224,8 +224,11 @@ const mouseMoveMapEvent = (position) => ({
     position
 });
 
-const mouseMoveOverTools = () => ({
-    type: MOUSE_MOVE_OVER_TOOLS
+/**
+ * Triggered when the mouse goes out from the map
+ */
+const mouseOut = () => ({
+    type: MOUSE_OUT
 });
 
 /**
@@ -254,7 +257,7 @@ module.exports = {
     REGISTER_EVENT_LISTENER,
     UNREGISTER_EVENT_LISTENER,
     MOUSE_MOVE_MAP_EVENT,
-    MOUSE_MOVE_OVER_TOOLS,
+    MOUSE_OUT,
     changeMapView,
     clickOnMap,
     changeMousePointer,
@@ -276,5 +279,5 @@ module.exports = {
     registerEventListener,
     unRegisterEventListener,
     mouseMoveMapEvent,
-    mouseMoveOverTools
+    mouseOut
 };
