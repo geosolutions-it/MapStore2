@@ -1412,7 +1412,7 @@
                     "geometry": {
                         "disabled": "Filtra facendo clic sulla mappa",
                         "enabled": "Fai clic sulla mappa per filtrare i risultati",
-                        "applied": "Rimuovere il filtro con un clic del mouse"
+                        "applied": "Rimuovi il filtro applicato con il click sulla mappa"
                     }
                 }
             },
