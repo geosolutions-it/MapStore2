@@ -40,8 +40,8 @@ export default class PopupSupport extends React.Component {
         popups: [],
         onPopupClose: () => {}
     }
-    // See this for the reference https://github.com/openlayers/openlayers/issues/4953
     componentWillMount() {
+        // This prevent the pointermove to be sent event when stopevent is active. See:  https://github.com/openlayers/openlayers/issues/4953
         document.querySelector('.ol-overlaycontainer-stopevent').addEventListener('pointermove', this.stopPropagationOnPointerMove);
     }
     shouldComponentUpdate({popups}) {
