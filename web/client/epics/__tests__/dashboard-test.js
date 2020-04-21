@@ -236,7 +236,7 @@ describe('openDashboardWidgetEditor epic', () => {
         const newDashboardState = {
             router: {
                 location: {
-                    pathname: "/dashboard/"
+                    pathname: "/dashboard"
                 }
             }
         };
