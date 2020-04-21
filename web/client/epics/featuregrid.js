@@ -44,10 +44,9 @@ const {queryPanelSelector, showCoordinateEditorSelector, drawerEnabledControlSel
 const {setHighlightFeaturesPath} = require('../actions/highlight');
 const {selectedFeaturesSelector, changesMapSelector, newFeaturesSelector, hasChangesSelector, hasNewFeaturesSelector,
     selectedFeatureSelector, selectedFeaturesCount, selectedLayerIdSelector, isDrawingSelector, modeSelector,
-    isFeatureGridOpen, timeSyncActive, hasSupportedGeometry, queryOptionsSelector, getAttributeFilters } = require('../selectors/featuregrid');
+    isFeatureGridOpen, timeSyncActive, hasSupportedGeometry, queryOptionsSelector, getAttributeFilters, selectedLayerSelector } = require('../selectors/featuregrid');
 const {error, warning} = require('../actions/notifications');
 const {describeSelector, isDescribeLoaded, getFeatureById, wfsURL, wfsFilter, featureCollectionResultSelector, isSyncWmsActive, featureLoadingSelector} = require('../selectors/query');
-const {getSelectedLayer} = require('../selectors/layers');
 
 const {interceptOGCError} = require('../utils/ObservableUtils');
 const {gridUpdateToQueryUpdate, updatePages} = require('../utils/FeatureGridUtils');
@@ -250,7 +249,7 @@ module.exports = {
         action$.ofType(UPDATE_FILTER)
             .map( ({update = {}} = {}) => {
                 // If an advanced filter is present it's filterFields should be composed with the action'
-                const {id} = getSelectedLayer(store.getState());
+                const {id} = selectedLayerSelector(store.getState());
                 const filterObj = get(store.getState(), `featuregrid.advancedFilters["${id}"]`);
                 if (filterObj) {
                     const attributesFilter = getAttributeFilters(store.getState()) || {};

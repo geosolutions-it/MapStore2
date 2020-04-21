@@ -14,7 +14,9 @@ module.exports = class extends React.Component {
         format: PropTypes.string,
         viewers: PropTypes.oneOfType([PropTypes.func, PropTypes.object]),
         response: PropTypes.oneOfType([PropTypes.string, PropTypes.object, PropTypes.node]),
-        layer: PropTypes.object
+        layer: PropTypes.object,
+        showEdit: PropTypes.bool,
+        onEditFeature: PropTypes.func
     };
 
     onTouchStart = (event) => {
@@ -60,7 +62,11 @@ module.exports = class extends React.Component {
     renderPage = () => {
         const Viewer = typeof this.props.viewers === 'function' ? this.props.viewers : this.props.viewers[this.props.format];
         if (Viewer) {
-            return <Viewer response={this.props.response} layer={this.props.layer}/>;
+            return (<Viewer
+                response={this.props.response}
+                layer={this.props.layer}
+                showEdit={this.props.showEdit}
+                onEditFeature={this.props.onEditFeature}/>);
         }
         return null;
     };

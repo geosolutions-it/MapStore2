@@ -16,10 +16,11 @@ const {layersSelector} = require('../selectors/layers');
 const { mapTypeSelector, isCesium } = require('../selectors/maptype');
 
 const { generalInfoFormatSelector, clickPointSelector, indexSelector, responsesSelector, validResponsesSelector, showEmptyMessageGFISelector, isHighlightEnabledSelector, currentFeatureSelector, currentFeatureCrsSelector } = require('../selectors/mapInfo');
+const { isEditingAllowedSelector } = require('../selectors/featuregrid');
 
 
-const { hideMapinfoMarker, showMapinfoRevGeocode, hideMapinfoRevGeocode, clearWarning, toggleMapInfoState, changeMapInfoFormat, updateCenterToMarker, closeIdentify, purgeMapInfoResults, featureInfoClick, changeFormat, toggleShowCoordinateEditor, changePage, toggleHighlightFeature} = require('../actions/mapInfo');
-const { changeMousePointer, zoomToExtent} = require('../actions/map');
+const { hideMapinfoMarker, showMapinfoRevGeocode, hideMapinfoRevGeocode, clearWarning, toggleMapInfoState, changeMapInfoFormat, updateCenterToMarker, closeIdentify, purgeMapInfoResults, featureInfoClick, changeFormat, toggleShowCoordinateEditor, changePage, toggleHighlightFeature, editFeature, editLayerFeatures} = require('../actions/mapInfo');
+const { changeMousePointer, zoomToExtent } = require('../actions/map');
 
 
 const {currentLocaleSelector} = require('../selectors/locale');
@@ -54,6 +55,7 @@ const selector = createStructuredSelector({
     formatCoord: (state) => state.mapInfo && state.mapInfo.formatCoord,
     showCoordinateEditor: (state) => state.mapInfo && state.mapInfo.showCoordinateEditor,
     showEmptyMessageGFI: state => showEmptyMessageGFISelector(state),
+    showEdit: isEditingAllowedSelector,
     isCesium
 });
 // result panel
@@ -123,6 +125,7 @@ const identifyDefaultProps = defaultProps({
     showTabs: true,
     showCoords: true,
     showLayerTitle: true,
+    showEdit: false,
     position: 'right',
     size: 660,
     getToolButtons,
@@ -190,7 +193,9 @@ const IdentifyPlugin = compose(
         hideMarker: hideMapinfoMarker,
         showRevGeocode: showMapinfoRevGeocode,
         hideRevGeocode: hideMapinfoRevGeocode,
-        onEnableCenterToMarker: updateCenterToMarker.bind(null, 'enabled')
+        onEnableCenterToMarker: updateCenterToMarker.bind(null, 'enabled'),
+        onEdit: editLayerFeatures,
+        onEditFeature: editFeature
     }, (stateProps, dispatchProps, ownProps) => ({
         ...ownProps,
         ...stateProps,

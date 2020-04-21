@@ -12,8 +12,7 @@ const {bindActionCreators} = require('redux');
 const {createSelector, createStructuredSelector} = require('reselect');
 const {widgetBuilderAvailable, wfsDownloadAvailable} = require('../../../selectors/controls');
 const {paginationInfo, featureLoadingSelector, resultsSelector, isSyncWmsActive, featureCollectionResultSelector} = require('../../../selectors/query');
-const { getTitleSelector, modeSelector, selectedFeaturesCount, hasChangesSelector, hasGeometrySelector, isSimpleGeomSelector, hasNewFeaturesSelector, isSavingSelector, isSavedSelector, isDrawingSelector, canEditSelector, getAttributeFilter, hasSupportedGeometry, editingAllowedRolesSelector, timeSyncActive, showTimeSync} = require('../../../selectors/featuregrid');
-const {userRoleSelector} = require('../../../selectors/security');
+const { getTitleSelector, modeSelector, selectedFeaturesCount, hasChangesSelector, hasGeometrySelector, isSimpleGeomSelector, hasNewFeaturesSelector, isSavingSelector, isSavedSelector, isDrawingSelector, getAttributeFilter, hasSupportedGeometry, timeSyncActive, showTimeSync, isEditingAllowedSelector} = require('../../../selectors/featuregrid');
 const {isCesium} = require('../../../selectors/maptype');
 const {mapLayoutValuesSelector} = require('../../../selectors/maplayout');
 const {chartDisabledSelector, showAgainSelector, showPopoverSyncSelector, selectedLayerNameSelector} = require('../../../selectors/featuregrid');
@@ -23,9 +22,6 @@ const {getFilterRenderer} = require('../../../components/data/featuregrid/filter
 const {isDescribeLoaded, isFilterActive} = require('../../../selectors/query');
 const {getFeatureTypeProperties, isGeometryType} = require('../../../utils/ogc/WFS/base');
 
-const filterEditingAllowedUser = (role, editingAllowedRoles = ["ADMIN"]) => {
-    return editingAllowedRoles.indexOf(role) !== -1;
-};
 const EmptyRowsView = connect(createStructuredSelector({
     loading: featureLoadingSelector
 }))(require('../../../components/data/featuregrid/EmptyRowsView'));
@@ -54,7 +50,7 @@ const Toolbar = connect(
         isColumnsOpen: state => state && state.featuregrid && state.featuregrid.tools && state.featuregrid.tools.settings,
         disableZoomAll: (state) => state && state.featuregrid.virtualScroll || featureCollectionResultSelector(state).features.length === 0,
         isSearchAllowed: (state) => !isCesium(state),
-        isEditingAllowed: (state) => (filterEditingAllowedUser(userRoleSelector(state), editingAllowedRolesSelector(state)) || canEditSelector(state)) && !isCesium(state),
+        isEditingAllowed: isEditingAllowedSelector,
         hasSupportedGeometry,
         isFilterActive,
         showTimeSyncButton: showTimeSync,

@@ -60,3 +60,7 @@
 #mapstore-getfeatureinfo .m-fullscreen-btn {
     cursor: pointer;
 }
+
+.identify-properties-viewer-row-buttons {
+    margin-bottom: 5px;
+}
