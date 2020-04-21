@@ -171,7 +171,7 @@ export const getStyleTabPlugin = ({ settings, items = [], loadedPlugins, onToggl
             // This is connected on TOCItemsSettings close, not on StyleEditor unmount
             // to prevent re-initialization on each tab switch.
             onClose: () => onToggleStyleEditor(null, false),
-            Component: getConfiguredPlugin({ ...item, cfg: { ...item.plugin.cfg, active: true } }, loadedPlugins, <LoadingView width={100} height={100} />),
+            Component: getConfiguredPlugin({ ...item, cfg: { ...(item.cfg || item.plugin.cfg || {}), active: true } }, loadedPlugins, <LoadingView width={100} height={100} />),
             toolbarComponent: item.ToolbarComponent
                 && (
                     item.plugin.cfg && defaultProps(item.plugin.cfg)(item.ToolbarComponent) || item.ToolbarComponent
