@@ -44,7 +44,8 @@ class LeafletMap extends React.Component {
         interactive: PropTypes.bool,
         resolutions: PropTypes.array,
         hookRegister: PropTypes.object,
-        onCreationError: PropTypes.func
+        onCreationError: PropTypes.func,
+        onMouseOut: PropTypes.func
     };
 
     static defaultProps = {
@@ -69,7 +70,8 @@ class LeafletMap extends React.Component {
         hookRegister: mapUtils,
         style: {},
         interactive: true,
-        resolutions: mapUtils.getGoogleMercatorResolutions(0, 23)
+        resolutions: mapUtils.getGoogleMercatorResolutions(0, 23),
+        onMouseOut: () => {}
     };
 
     state = { };
@@ -159,6 +161,9 @@ class LeafletMap extends React.Component {
             if (this.props.onRightClick) {
                 this.props.onRightClick(event.containerPoint);
             }
+        });
+        this.map.on('mouseout', () => {
+            setTimeout(() => this.props.onMouseOut(), 150);
         });
 
         this.updateMapInfoState();
@@ -397,7 +402,13 @@ class LeafletMap extends React.Component {
             pixel: {
                 x: event.containerPoint.x,
                 y: event.containerPoint.x
-            }
+            },
+            latlng: {
+                lat: event.latlng.lat,
+                lng: event.latlng.lng,
+                z: this.elevationLayer && this.elevationLayer.getElevation(event.latlng, event.containerPoint) || undefined
+            },
+            rawPos: [event.latlng.lat, event.latlng.lng]
         });
     };
 
