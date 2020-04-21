@@ -68,8 +68,7 @@ class OpenlayersMap extends React.Component {
         maxExtent: PropTypes.array,
         limits: PropTypes.object,
         onMouseOut: PropTypes.func,
-        mousePosition: PropTypes.bool,
-        isMouseMoveOverTools: PropTypes.bool
+        mousePosition: PropTypes.bool
     };
 
     static defaultProps = {
@@ -90,8 +89,7 @@ class OpenlayersMap extends React.Component {
         hookRegister: mapUtils,
         interactive: true,
         onMouseOut: () => {},
-        mousePosition: false,
-        isMouseMoveOverTools: true
+        mousePosition: false
     };
 
     componentDidMount() {

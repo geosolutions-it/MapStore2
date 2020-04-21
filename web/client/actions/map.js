@@ -192,10 +192,10 @@ const checkMapChanges = (action, source) => ({
 });
 
 /**
- * Add a tool to the list of event listeners for the map plugin. 
- * This can help to trigger actions only if some tool is effectively listen. Useful for 
+ * Add a tool to the list of event listeners for the map plugin.
+ * This can help to trigger actions only if some tool is effectively listen. Useful for
  * events that are triggered frequently and so can slow down the application.
- * @param {string} eventName the event name. One of ``pointermove`, 
+ * @param {string} eventName the event name. One of ``pointermove`,
  * @param {string} toolName an identifier for the tool
  */
 const registerEventListener = (eventName, toolName) => ({
@@ -205,8 +205,8 @@ const registerEventListener = (eventName, toolName) => ({
 });
 
 /**
- * Remove the listeners added using `registerEventListener` . 
- * @param {string} eventName the event name. One of ``pointermove`, 
+ * Remove the listeners added using `registerEventListener` .
+ * @param {string} eventName the event name. One of ``pointermove`,
  * @param {string} toolName an identifier for the tool
  */
 const unRegisterEventListener = (eventName, toolName) => ({
@@ -218,7 +218,7 @@ const unRegisterEventListener = (eventName, toolName) => ({
 /**
  * Triggered on mouse move. (only if some tool is registered on this event. See `registerEventListener`).
  * @param {object} position the position of the mouse on the map.
- */ 
+ */
 const mouseMoveMapEvent = (position) => ({
     type: MOUSE_MOVE_MAP_EVENT,
     position
