@@ -34,7 +34,7 @@ import { stopGetFeatureInfoSelector, identifyOptionsSelector,
     isMapPopup, isHighlightEnabledSelector,
     itemIdSelector, overrideParamsSelector, filterNameListSelector } from '../selectors/mapInfo';
 import { centerToMarkerSelector, queryableLayersSelector, queryableSelectedLayersSelector } from '../selectors/layers';
-import { modeSelector } from '../selectors/featuregrid';
+import { modeSelector, getAttributeFilters } from '../selectors/featuregrid';
 import { mapSelector, projectionDefsSelector, projectionSelector, isMouseMoveIdentifyActiveSelector } from '../selectors/map';
 import { boundingMapRectSelector } from '../selectors/maplayout';
 import { floatingIdentifyDelaySelector } from '../selectors/localConfig';
@@ -46,8 +46,9 @@ import MapInfoUtils from '../utils/MapInfoUtils';
 import { IDENTIFY_POPUP } from '../components/map/popups';
 
 const gridEditingSelector = state => modeSelector(state) === 'EDIT';
+const gridGeometryQuickFilter = state => get(find(getAttributeFilters(state), f => f.type === 'geometry'), 'enabled');
 
-const stopFeatureInfo = state => stopGetFeatureInfoSelector(state) || gridEditingSelector(state);
+const stopFeatureInfo = state => stopGetFeatureInfoSelector(state) || gridEditingSelector(state) || gridGeometryQuickFilter(state);
 
 /**
  * Sends a GetFeatureInfo request and dispatches the right action

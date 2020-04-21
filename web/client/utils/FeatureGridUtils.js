@@ -132,14 +132,22 @@ module.exports = {
      * @param  {array} rows        Data rows
      * @return {array}             Array of the columns to use in react-data-grid, with proper event bindings.
      */
-    getToolColumns: (toolColumns = [], rowGetter = () => {}, describe, actionOpts) => toolColumns.map(tool => ({
-        ...tool,
-        events: tool.events && Object.keys(tool.events).reduce( (events, key) => ({
-            ...events,
-            [key]: (evt, opts) => tool.events[key](rowGetter(opts.rowIdx), opts, describe, actionOpts)
-        }), {})
-    })
-    ),
+    getToolColumns: (toolColumns = [], rowGetter = () => {}, describe, actionOpts, getFilterRenderer = () => {}) => {
+        const geometryProperty = findGeometryProperty(describe);
+
+        return toolColumns.map(tool => ({
+            ...tool,
+            events: tool.events && Object.keys(tool.events).reduce( (events, key) => ({
+                ...events,
+                [key]: (evt, opts) => tool.events[key](rowGetter(opts.rowIdx), opts, describe, actionOpts)
+            }), {}),
+            ...(tool.key === 'geometry' && geometryProperty ? {
+                filterRenderer: getFilterRenderer({...geometryProperty, localType: 'geometry'}, geometryProperty.name),
+                filterable: true,
+                geometryPropName: geometryProperty.name
+            } : {})
+        }));
+    },
     /**
      * Maps every grid event to a function that passes all the arguments, plus the rowgetter, describe and actionOpts passed
      * @param  {Object} [gridEvents={}] The functions to call
@@ -169,7 +177,7 @@ module.exports = {
                 logic: "AND",
                 index: 0
             }],
-            filterFields: !isNil(value)
+            filterFields: type === 'geometry' ? oldFilterObj.filterFields : !isNil(value)
                 ? upsertFilterField((oldFilterObj.filterFields || []), {attribute: attribute}, {
                     attribute,
                     rowId: Date.now(),
@@ -179,7 +187,10 @@ module.exports = {
                     value
 
                 })
-                : (oldFilterObj.filterFields || []).filter(field => field.attribute !== (attribute))
+                : (oldFilterObj.filterFields || []).filter(field => field.attribute !== (attribute)),
+            spatialField: type === 'geometry' ?
+                value :
+                oldFilterObj.spatialField
         };
     },
     toPage: ({startIndex = 0, maxFeatures = 1, totalFeatures = 0, resultSize} = {}) => ({

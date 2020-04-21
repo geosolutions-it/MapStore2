@@ -1411,7 +1411,12 @@
                     "default": "Beispiele...",
                     "string": "Geben Sie Text ein, um Ergebnisse zu filtern ...",
                     "number": "Geben Sie eine Zahl oder einen Ausdruck ein. Examples: 10, > 2, < 10",
-                    "date": "Geben Sie ein Datum oder einen Ausdruck ein. Verwenden Sie {format} für das Datum."
+                    "date": "Geben Sie ein Datum oder einen Ausdruck ein. Verwenden Sie {format} für das Datum.",
+                    "geometry": {
+                        "disabled": "Filterklick auf die Karte",
+                        "enabled": "Klicken Sie auf die Karte, um die Ergebnisse zu filtern",
+                        "applied": "Entfernen Sie den Filter per Mausklick"
+                    }
                 }
             },
             "toolbar": {
@@ -2419,6 +2424,10 @@
                 "uploadMissingBundleError": "Kein Javascript-Bundle in der hochgeladenen Datei",
                 "uploadTooManyBundlesError": "Zu viele Javascript-Bundles im Zip-Paket",
                 "confirmRemovePlugin": "Möchten Sie die Erweiterung wirklich entfernen?",
+                "cancelUpload": "Schließen",
+                "install": "Install",
+                "uploadError": "Fehler bei der Installation: ",
+                "uploadOk": "Erweiterung wurde korrekt installiert",
                 "tooltips": {
                     "enableUserPlugin": "Aktiviert die Auswahl des aktuellen Plugins für den Benutzer",
                     "disableUserPlugin": "Deaktivieren Sie die Auswahl des aktuellen Plugins für den Benutzer",

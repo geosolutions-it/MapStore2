@@ -24,7 +24,9 @@ const {
     pluginUninstalled, PLUGIN_UNINSTALLED,
     pluginUninstalling, UNINSTALLING_PLUGIN,
     showBackToPageConfirmation, BACK_TO_PAGE_SHOW_CONFIRMATION,
-    loadExtensions, LOAD_EXTENSIONS
+    loadExtensions, LOAD_EXTENSIONS,
+    addPluginToUpload, ADD_PLUGIN_TO_UPLOAD,
+    removePluginToUpload, REMOVE_PLUGIN_TO_UPLOAD
 } = require('../contextcreator');
 
 describe('contextcreator actions', () => {
@@ -69,10 +71,11 @@ describe('contextcreator actions', () => {
         expect(retval.files.length).toBe(1);
     });
     it('uploadPluginError', () => {
-        const retval = uploadPluginError([{}]);
+        const retval = uploadPluginError([{}], "myerror");
         expect(retval).toExist();
         expect(retval.type).toBe(UPLOAD_PLUGIN_ERROR);
         expect(retval.files.length).toBe(1);
+        expect(retval.error).toBe("myerror");
     });
     it('pluginUploading', () => {
         const retval = pluginUploading(true, [{}]);
@@ -114,7 +117,16 @@ describe('contextcreator actions', () => {
         expect(retval.type).toBe(PLUGIN_UNINSTALLED);
         expect(retval.plugin).toBe("My");
     });
-
+    it('addPluginToUpload', () => {
+        const retval = addPluginToUpload([{}]);
+        expect(retval.type).toBe(ADD_PLUGIN_TO_UPLOAD);
+        expect(retval.files.length).toBe(1);
+    });
+    it('removePluginToUpload', () => {
+        const retval = removePluginToUpload(1);
+        expect(retval.type).toBe(REMOVE_PLUGIN_TO_UPLOAD);
+        expect(retval.index).toBe(1);
+    });
     it('showBackToPageConfirmation', () => {
         const retval = showBackToPageConfirmation(true);
         expect(retval).toExist();

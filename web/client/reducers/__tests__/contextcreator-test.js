@@ -39,7 +39,9 @@ import {
     uninstallPluginError,
     pluginUninstalled,
     pluginUninstalling,
-    showBackToPageConfirmation
+    showBackToPageConfirmation,
+    addPluginToUpload,
+    removePluginToUpload
 } from '../../actions/contextcreator';
 
 const testContextResource = {
@@ -268,13 +270,13 @@ describe('contextcreator reducer', () => {
         expect(state.uploadingPlugin[0].name).toBe("myplugin");
         expect(state.uploadingPlugin[0].uploading).toBe(true);
     });
-    it('uploadingPluginError', () => {
-        const state = contextcreator(undefined, uploadPluginError([{ file: {name: 'myplugin'}, error: "myerror"}]));
+    it('uploadPluginError', () => {
+        const state = contextcreator(undefined, uploadPluginError([{name: 'myplugin'}], "myerror"));
         expect(state).toExist();
-        expect(state.uploadingPlugin.length).toBe(1);
-        expect(state.uploadingPlugin[0].name).toBe("myplugin");
-        expect(state.uploadingPlugin[0].uploading).toBe(false);
-        expect(state.uploadingPlugin[0].error).toBe("myerror");
+        expect(state.uploadResult.result).toBe("error");
+        expect(state.uploadResult.files.length).toBe(1);
+        expect(state.uploadResult.files[0].name).toBe("myplugin");
+        expect(state.uploadResult.error).toBe("myerror");
     });
     it('disableUploadPlugin', () => {
         const state = contextcreator({ uploadingPlugin: [{}] }, enableUploadPlugin(false));
@@ -286,6 +288,8 @@ describe('contextcreator reducer', () => {
         const state = contextcreator(undefined, pluginUploaded([{ name: 'myplugin' }]));
         expect(state).toExist();
         expect(state.plugins.length).toBe(1);
+        expect(state.uploadResult).toExist();
+        expect(state.uploadResult.result).toBe("ok");
     });
     it('pluginUploaded no duplicates', () => {
         const state = contextcreator({plugins: [{name: "myplugin"}]}, pluginUploaded([{ name: 'myplugin', error: "myerror" }]));
@@ -310,6 +314,16 @@ describe('contextcreator reducer', () => {
         const state = contextcreator({plugins: [{name: "My"}]}, pluginUninstalled('My'));
         expect(state).toExist();
         expect(state.plugins.length).toBe(0);
+    });
+    it('addPluginToUpload', () => {
+        const state = contextcreator({pluginsToUpload: []}, addPluginToUpload([{name: 'My'}]));
+        expect(state).toExist();
+        expect(state.pluginsToUpload.length).toBe(1);
+    });
+    it('removePluginToUpload', () => {
+        const state = contextcreator({pluginsToUpload: [{}]}, removePluginToUpload(0));
+        expect(state).toExist();
+        expect(state.pluginsToUpload.length).toBe(0);
     });
 
     it('showBackToPageConfirmation', () => {
