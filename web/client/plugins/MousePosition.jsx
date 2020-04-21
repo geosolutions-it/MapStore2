@@ -44,7 +44,7 @@ const selector = createSelector([
     (state) => state,
     mapSelector,
     (state) => isMouseMoveCoordinatesActiveSelector(state),
-    (state) => get(state, 'map.present.position') || {},
+    (state) => get(state, 'mousePosition.position') || {},
     (state) => state.mapInfo || {}
 ], (state, map, enabled, mousePosition, mapInfo) => ({
     enabled,

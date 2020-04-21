@@ -10,7 +10,7 @@ var {CHANGE_MAP_VIEW, CHANGE_MOUSE_POINTER,
     CHANGE_ZOOM_LVL, CHANGE_MAP_CRS, CHANGE_MAP_SCALES, PAN_TO,
     CHANGE_MAP_STYLE, CHANGE_ROTATION, UPDATE_VERSION, ZOOM_TO_POINT,
     RESIZE_MAP, CHANGE_MAP_LIMITS, SET_MAP_RESOLUTIONS,
-    TOGGLE_UNSAVED_MAP_CHANGES_DIALOG, REGISTER_EVENT_LISTENER, UNREGISTER_EVENT_LISTENER, MOUSE_MOVE_MAP_EVENT, MOUSE_OUT} = require('../actions/map');
+    TOGGLE_UNSAVED_MAP_CHANGES_DIALOG, REGISTER_EVENT_LISTENER, UNREGISTER_EVENT_LISTENER} = require('../actions/map');
 
 var assign = require('object-assign');
 var MapUtils = require('../utils/MapUtils');
@@ -127,12 +127,6 @@ function mapConfig(state = {eventListeners: {}}, action) {
                     {[action.eventName]: filteredEventNameTools})});
         }
         return data;
-    }
-    case MOUSE_MOVE_MAP_EVENT: {
-        return assign({}, state, {position: action.position, mouseOut: false});
-    }
-    case MOUSE_OUT: {
-        return assign({}, state, {mouseOut: true});
     }
     default:
         return state;

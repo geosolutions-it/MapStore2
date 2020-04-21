@@ -8,6 +8,8 @@
 const CHANGE_MOUSE_POSITION = 'CHANGE_MOUSE_POSITION';
 const CHANGE_MOUSE_POSITION_CRS = 'CHANGE_MOUSE_POSITION_CRS';
 const CHANGE_MOUSE_POSITION_STATE = 'CHANGE_MOUSE_POSITION_STATE';
+const MOUSE_MOVE_MAP_EVENT = 'MOUSE_MOVE_MAP_EVENT';
+const MOUSE_OUT = 'MOUSE_OUT';
 
 function changeMousePosition(position) {
     return {
@@ -30,11 +32,31 @@ function changeMousePositionState(enabled) {
     };
 }
 
+/**
+ * Triggered on mouse move. (only if some tool is registered on this event. See `registerEventListener`).
+ * @param {object} position the position of the mouse on the map.
+ */
+const mouseMoveMapEvent = (position) => ({
+    type: MOUSE_MOVE_MAP_EVENT,
+    position
+});
+
+/**
+ * Triggered when the mouse goes out from the map
+ */
+const mouseOut = () => ({
+    type: MOUSE_OUT
+});
+
 module.exports = {
     CHANGE_MOUSE_POSITION,
     CHANGE_MOUSE_POSITION_CRS,
     CHANGE_MOUSE_POSITION_STATE,
+    MOUSE_MOVE_MAP_EVENT,
+    MOUSE_OUT,
     changeMousePosition,
     changeMousePositionCrs,
-    changeMousePositionState
+    changeMousePositionState,
+    mouseMoveMapEvent,
+    mouseOut
 };

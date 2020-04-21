@@ -25,7 +25,8 @@ import {
 import { SET_CONTROL_PROPERTIES, SET_CONTROL_PROPERTY, TOGGLE_CONTROL } from '../actions/controls';
 
 import { closeFeatureGrid } from '../actions/featuregrid';
-import { CHANGE_MOUSE_POINTER, CLICK_ON_MAP, MOUSE_MOVE_MAP_EVENT, UNREGISTER_EVENT_LISTENER, zoomToPoint } from '../actions/map';
+import { CHANGE_MOUSE_POINTER, CLICK_ON_MAP, UNREGISTER_EVENT_LISTENER, zoomToPoint } from '../actions/map';
+import { MOUSE_MOVE_MAP_EVENT } from '../actions/mousePosition';
 import { closeAnnotations } from '../actions/annotations';
 import { MAP_CONFIG_LOADED } from '../actions/config';
 import {addPopup, cleanPopups, removePopup} from '../actions/mapPopups';
@@ -284,7 +285,7 @@ export default {
         action$.ofType(MOUSE_MOVE_MAP_EVENT)
             .debounceTime(floatingIdentifyDelaySelector(getState()))
             .switchMap(({position, layer}) => {
-                if (!isMouseMoveIdentifyActiveSelector(getState()) || getState().map.present.mouseOut) {
+                if (!isMouseMoveIdentifyActiveSelector(getState()) || getState().mousePosition.mouseOut) {
                     return Rx.Observable.empty();
                 }
                 return Rx.Observable.of(featureInfoClick(position, layer))

@@ -11,9 +11,13 @@ var {
     CHANGE_MOUSE_POSITION,
     CHANGE_MOUSE_POSITION_CRS,
     CHANGE_MOUSE_POSITION_STATE,
+    MOUSE_MOVE_MAP_EVENT,
+    MOUSE_OUT,
     changeMousePosition,
     changeMousePositionCrs,
-    changeMousePositionState
+    changeMousePositionState,
+    mouseMoveMapEvent,
+    mouseOut
 } = require('../mousePosition');
 
 describe('Test correctness of mausePosition actions', () => {
@@ -50,6 +54,18 @@ describe('Test correctness of mausePosition actions', () => {
         expect(retval.type).toBe(CHANGE_MOUSE_POSITION_STATE);
         expect(retval.enabled).toExist();
         expect(retval.enabled).toBe(true);
+    });
+    it('mouseMoveMapEvent', () => {
+        const position = {lat: 100, lng: 200};
+        const retval = mouseMoveMapEvent(position);
+        expect(retval).toExist();
+        expect(retval.type).toEqual(MOUSE_MOVE_MAP_EVENT);
+        expect(retval.position).toEqual(position);
+    });
+    it('mouseOut', () => {
+        const retval = mouseOut();
+        expect(retval).toExist();
+        expect(retval.type).toEqual(MOUSE_OUT);
     });
 
 });

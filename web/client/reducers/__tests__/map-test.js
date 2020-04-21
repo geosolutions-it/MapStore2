@@ -258,20 +258,4 @@ describe('Test the map reducer', () => {
         expect(state.zoom).toEqual(zoom);
         expect(state.mapStateSource).toEqual(null);
     });
-    it('mouse move map event', () => {
-        const position = {lat: 100, lng: 200};
-        const action = {
-            type: 'MOUSE_MOVE_MAP_EVENT',
-            position
-        };
-        const state = mapConfig({}, action);
-        expect(state).toEqual({position, mouseOut: false});
-    });
-    it('mouse out', () => {
-        const action = {
-            type: 'MOUSE_OUT'
-        };
-        const state = mapConfig({}, action);
-        expect(state).toEqual({mouseOut: true});
-    });
 });

@@ -9,8 +9,12 @@
 var {
     CHANGE_MOUSE_POSITION,
     CHANGE_MOUSE_POSITION_CRS,
-    CHANGE_MOUSE_POSITION_STATE
+    CHANGE_MOUSE_POSITION_STATE,
+    MOUSE_MOVE_MAP_EVENT,
+    MOUSE_OUT
 } = require('../actions/mousePosition');
+
+const {  } = require('../actions/map');
 
 const assign = require('object-assign');
 
@@ -28,6 +32,12 @@ function mousePosition(state = {enabled: true, position: null, crs: null}, actio
         return assign({}, state, {
             crs: action.crs
         });
+    case MOUSE_MOVE_MAP_EVENT: {
+        return assign({}, state, {position: action.position, mouseOut: false});
+    }
+    case MOUSE_OUT: {
+        return assign({}, state, {mouseOut: true});
+    }
     default:
         return state;
     }
