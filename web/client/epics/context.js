@@ -34,7 +34,17 @@ function ContextError(error) {
     this.originalError = error;
     this.name = "context";
 }
-const createContextFlow = (id, session = {}, action$, getState) =>
+
+/**
+ * Finalizes the context configuration flow, with session management if enabled.
+ *
+ * @param {String} id context resource identifier
+ * @param {Object} session optional session to integrate with the context configuration
+ * @param {Function} getState state extraction function
+ *
+ * @returns {Observable} context configuration flow
+ */
+const createContextFlow = (id, session = {}, getState) =>
     (id !== "default"
         ? getResource(id)
             // TODO: setContext should put in ConfigUtils some variables
@@ -85,7 +95,17 @@ const errorToMessageId = (name, e, getState = () => {}) => {
     return message;
 };
 
-const flowWithSession = (mapId, contextName, action$, getState) => {
+/**
+ * Creates a context loading flow, including session management, if enabled.
+ *
+ * @param {String} mapId current map identifier, if any
+ * @param {String} contextName name of the context configuration to load
+ * @param {Observable} action$ stream of actions
+ * @param {Function} getState state extraction function
+ *
+ * @returns {Observable} flow to load the current context (with session, if enabled)
+ */
+const createSessionFlow = (mapId, contextName, action$, getState) => {
     return Observable.forkJoin(
         getResourceIdByName('CONTEXT', contextName),
         (mapId ? Observable.of(null) : getResourceDataByName('CONTEXT', contextName))
@@ -101,7 +121,7 @@ const flowWithSession = (mapId, contextName, action$, getState) => {
                 };
                 return Observable.merge(
                     Observable.of(clearMapTemplates()),
-                    createContextFlow(id, contextSession, action$, getState).catch(e => {throw new ContextError(e); }),
+                    createContextFlow(id, contextSession, getState).catch(e => {throw new ContextError(e); }),
                     createMapFlow(mapId, data && data.mapConfig, mapSession, action$, getState).catch(e => { throw new MapError(e); }),
                     Observable.of(setUserSession(session)),
                     Observable.of(userSessionStartSaving())
@@ -119,11 +139,11 @@ const flowWithSession = (mapId, contextName, action$, getState) => {
 export const loadContextAndMap = (action$, { getState = () => { } } = {}) =>
     action$.ofType(LOAD_CONTEXT).switchMap(({ mapId, contextName }) => {
         const sessionsEnabled = userSessionEnabledSelector(getState());
-        const flow = sessionsEnabled ? flowWithSession(mapId, contextName, action$, getState) :
+        const flow = sessionsEnabled ? createSessionFlow(mapId, contextName, action$, getState) :
             Observable.merge(
                 Observable.of(clearMapTemplates()),
                 getResourceIdByName('CONTEXT', contextName)
-                    .switchMap(id => createContextFlow(id, null, action$, getState)).catch(e => {throw new ContextError(e); }),
+                    .switchMap(id => createContextFlow(id, null, getState)).catch(e => {throw new ContextError(e); }),
                 (mapId ? Observable.of(null) : getResourceDataByName('CONTEXT', contextName))
                     .switchMap(data => createMapFlow(mapId, data && data.mapConfig, null, action$, getState)).catch(e => { throw new MapError(e); })
             );

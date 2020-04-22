@@ -42,8 +42,21 @@ export const loadNewMapEpic = (action$) =>
 
 /**
  * Standard map loading flow.
+ *
+ * This is used by loadMapConfigAndConfigureMap to configure the current map, either loading
+ * it from the given configName or using the config and overrideConfig objects.
+ *
+ * @param {String} configName name of the configuration file to load (used if config is not specified)
+ * @param {String} mapId identifier of the current map, if specified allows loading the related mapInfo
+ * @param {Object} config the actual map configuration, if specified it is used instead of loading an external
+ * one.
+ * @param {Object} mapInfo map detail info, if not specified and mapId is, this is lazily loaded
+ * @param {Object} state current redux state
+ * @param {Object} overrideConfig override object of the given or loaded config, allows to apply a
+ * partial override of the main configuration (e.g. for sessions management)
+ * @returns {Observable} map configuration flow
  */
-const mapFlowWithOverride = (configName, mapId, config, mapInfo, store, overrideConfig = {}) => {
+const mapFlowWithOverride = (configName, mapId, config, mapInfo, state, overrideConfig = {}) => {
     // delay here is to postpone map load to ensure that
     // certain epics always function correctly
     // i.e. FeedbackMask disables correctly after load
@@ -54,11 +67,11 @@ const mapFlowWithOverride = (configName, mapId, config, mapInfo, store, override
             Observable.defer(() => axios.get(configName)))
         .switchMap(response => {
             // added !config in order to avoid showing login modal when a new.json mapConfig is used in a public context
-            if (configName === "new.json" && !config && !isLoggedIn(store.getState())) {
+            if (configName === "new.json" && !config && !isLoggedIn(state)) {
                 return Observable.of(configureError({status: 403}));
             }
             if (typeof response.data === 'object') {
-                const projectionDefs = projectionDefsSelector(store.getState());
+                const projectionDefs = projectionDefsSelector(state);
                 const projection = get(response, "data.map.projection", "EPSG:3857");
                 if (projectionDefs.concat([{code: "EPSG:4326"}, {code: "EPSG:3857"}, {code: "EPSG:900913"}]).filter(({code}) => code === projection).length === 0) {
                     return Observable.of(configureError({messageId: `map.errors.loading.projectionError`, errorMessageParams: {projection}}, mapId));
@@ -96,7 +109,7 @@ export const loadMapConfigAndConfigureMap = (action$, store) =>
         .switchMap(({configName, mapId, config, mapInfo, overrideConfig}) => {
             const sessionsEnabled = userSessionEnabledSelector(store.getState());
             if (overrideConfig || !sessionsEnabled) {
-                return mapFlowWithOverride(configName, mapId, config, mapInfo, store, overrideConfig);
+                return mapFlowWithOverride(configName, mapId, config, mapInfo, store.getState(), overrideConfig);
             }
             const userName = userSelector(store.getState())?.name;
             return Observable.of(loadUserSession(buildSessionName(null, mapId, userName))).merge(
@@ -105,7 +118,7 @@ export const loadMapConfigAndConfigureMap = (action$, store) =>
                         map: session.map
                     };
                     return Observable.merge(
-                        mapFlowWithOverride(configName, mapId, config, mapInfo, store, mapSession),
+                        mapFlowWithOverride(configName, mapId, config, mapInfo, store.getState(), mapSession),
                         Observable.of(userSessionStartSaving())
                     );
                 })
