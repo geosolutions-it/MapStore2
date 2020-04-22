@@ -30,6 +30,9 @@ import LoadingView from '../../components/misc/LoadingView';
 import html from 'raw-loader!./featureInfoPreviews/responseHTML.txt';
 import json from 'raw-loader!./featureInfoPreviews/responseJSON.txt';
 import text from 'raw-loader!./featureInfoPreviews/responseText.txt';
+import VectorStyleEditor from './VectorStyleEditor';
+
+
 const responses = {
     html,
     json: JSON.parse(json),
@@ -37,7 +40,9 @@ const responses = {
 };
 
 import { StyleSelector } from '../styleeditor/index';
+
 const StyleList = defaultProps({ readOnly: true })(StyleSelector);
+
 
 const formatCards = {
     TEXT: {
@@ -123,7 +128,12 @@ const getConfiguredPlugin = (plugin, loaded, loadingComp) => {
     return plugin;
 };
 
-export const getStyleTabPlugin = ({ settings, items = [], loadedPlugins, onToggleStyleEditor = () => { }, onUpdateParams = () => { }, ...props }) => {
+export const getStyleTabPlugin = ({ settings, items = [], loadedPlugins, onToggleStyleEditor = () => { }, onUpdateParams = () => { }, element, ...props }) => {
+    if (element.type === "wfs" || element.type === "vector") {
+        return {
+            Component: VectorStyleEditor
+        };
+    }
     // get Higher priority plugin that satisfies requirements.
     const candidatePluginItems =
             sortBy(filter([...items], { target: 'style' }), ["priority"]) // find out plugins with target panel 'style' and sort by priority
@@ -206,7 +216,7 @@ export default ({ showFeatureInfoTab = true, loadedPlugins, items, onToggleStyle
             titleId: 'layerProperties.style',
             tooltipId: 'layerProperties.style',
             glyph: 'dropper',
-            visible: props.settings.nodeType === 'layers' && props.element.type === "wms",
+            visible: props.settings.nodeType === 'layers' && props.element.type === "wms" || props.element.type === "wfs" || props.element.type === "vector",
             Component: StyleList,
             ...getStyleTabPlugin({ items, loadedPlugins, onToggleStyleEditor, ...props })
         },

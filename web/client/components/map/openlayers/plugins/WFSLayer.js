@@ -41,8 +41,6 @@ const createLoader = (source, options) => (extent, resolution, projection) => {
 
 };
 
-
-
 /**
  * WFS Layer for MapStore. Openlayers implementation.
  * Note: WFS Source stores features in the layer internally, to distinguish from vector source.
@@ -67,7 +65,7 @@ Layers.registerType('wfs', {
             opacity: options.opacity
         });
     },
-    update: (layer, newOptions, oldOptions) => {
+    update: (layer, newOptions = {}, oldOptions = {}) => {
         const oldCrs = oldOptions.crs || oldOptions.srs || 'EPSG:3857';
         const newCrs = newOptions.crs || newOptions.srs || 'EPSG:3857';
         const source = layer.getSource();
@@ -80,6 +78,9 @@ Layers.registerType('wfs', {
             source.setLoader(createLoader(source, newOptions));
             source.clear();
             source.refresh();
+        }
+        if (newOptions.style !== oldOptions.style) {
+            layer.setStyle(getStyle(newOptions));
         }
     },
     render: () => {
