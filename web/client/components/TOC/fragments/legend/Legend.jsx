@@ -23,7 +23,7 @@ class Legend extends React.Component {
     static defaultProps = {
         legendHeight: 12,
         legendWidth: 12,
-        legendOptions: "forceLabels:on;fontSize:30",
+        legendOptions: "forceLabels:on",
         style: {maxWidth: "100%"},
         scaleDependent: true
     };

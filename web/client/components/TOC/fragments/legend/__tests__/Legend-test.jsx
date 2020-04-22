@@ -132,7 +132,7 @@ describe("test the Layer legend", () => {
             "format": "image/png"
         };
         const legendComponent = ReactDOM.render(<Legend layer={layer} />, document.getElementById("container"));
-        expect(legendComponent.props.legendOptions).toBe('forceLabels:on;fontSize:30');
+        expect(legendComponent.props.legendOptions).toBe('forceLabels:on');
         expect(legendComponent.props.legendWidth).toBe(12);
         expect(legendComponent.props.legendHeight).toBe(12);
         expect(legendComponent.props.scaleDependent).toBe(true);

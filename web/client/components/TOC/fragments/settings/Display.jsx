@@ -224,7 +224,6 @@ module.exports = class extends React.Component {
                                 <Legend
                                     style={this.setOverFlow() && {} || undefined}
                                     layer={this.props.element}
-                                    legendOptions={this.props.layerOptions && this.props.layerOptions.legendOptions}
                                     legendHeight={
                                         this.useLegendOptions() && this.state.legendOptions.legendHeight || undefined}
                                     legendWidth={
