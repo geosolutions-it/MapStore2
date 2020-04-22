@@ -11,7 +11,8 @@ const PropTypes = require('prop-types');
 const {DropdownList} = require('react-widgets');
 const Message = require('../../../I18N/Message');
 const {Grid, Row, Col, FormGroup, ControlLabel, FormControl, Checkbox} = require('react-bootstrap');
-const {clamp, isNil} = require('lodash');
+const {clamp, isNil, isNumber} = require('lodash');
+const Legend = require('../legend/Legend');
 
 require('react-widgets/lib/less/react-widgets.less');
 
@@ -29,12 +30,19 @@ module.exports = class extends React.Component {
         opacityText: <Message msgId="opacity"/>
     };
 
+    constructor(props) {
+        super(props);
+        this.containerRef = React.createRef();
+    }
+
     state = {
         opacity: 100,
         legendOptions: {
-            legendWidth: 12,
-            legendHeight: 12
-        }
+            legendWidth: "",
+            legendHeight: ""
+        },
+        containerStyle: {overflowX: 'auto'},
+        containerWidth: 0
     };
 
     updateState = (props) =>{
@@ -45,10 +53,11 @@ module.exports = class extends React.Component {
                 legendOptions: {
                     ...this.state.legendOptions,
                     legendHeight: props.element.legendOptions && !isNil(props.element.legendOptions.legendHeight) ?
-                        props.element.legendOptions.legendHeight : Math.round(this.state.legendOptions.legendHeight),
+                        props.element.legendOptions.legendHeight : this.state.legendOptions.legendHeight,
                     legendWidth: props.element.legendOptions && !isNil(props.element.legendOptions.legendWidth) ?
-                        props.element.legendOptions.legendWidth : Math.round(this.state.legendOptions.legendWidth)
-                }
+                        props.element.legendOptions.legendWidth : this.state.legendOptions.legendWidth
+                },
+                containerWidth: this.containerRef.current && this.containerRef.current.clientWidth
             });
         }
     };
@@ -90,10 +99,11 @@ module.exports = class extends React.Component {
     onBlur = (event) => {
         const value = event.target.value && Math.round(event.target.value);
         const name = event.target.name;
+        const defaultSize = 12;
         this.props.onChange({
             legendOptions: {
                 ...this.state.legendOptions,
-                [name]: value > 12 ? value : ""
+                [name]: value >= defaultSize ? value : ""
             }
         });
     };
@@ -105,12 +115,24 @@ module.exports = class extends React.Component {
         return null;
     };
 
+    setOverFlow = () =>{
+        return this.state.legendOptions.legendWidth > this.state.containerWidth;
+    };
+
+    useLegendOptions = () =>{
+        return (
+            this.getValidationState("legendWidth") !== 'error' &&
+            this.getValidationState("legendHeight") !== 'error' &&
+            isNumber(this.state.legendOptions.legendHeight) &&
+            isNumber(this.state.legendOptions.legendWidth)
+        );
+    };
 
     render() {
         return (
             <Grid
                 fluid
-                style={{paddingTop: 15, paddingBottom: 15}}>
+                className={"fluid-container " + (!this.props.containerWidth && "adjust-display")}>
                 {this.props.element.type === "wms" &&
                 <Row>
                     <Col xs={12}>
@@ -195,6 +217,21 @@ module.exports = class extends React.Component {
                                     onBlur={this.onBlur}
                                 />
                             </FormGroup>
+                        </Col>
+                        <Col xs={12} id="legend-preview">
+                            <ControlLabel><Message msgId="layerProperties.legendOptions.legendPreview" /></ControlLabel>
+                            <div style={this.setOverFlow() && this.state.containerStyle || {} } ref={this.containerRef} >
+                                <Legend
+                                    style={this.setOverFlow() && {} || undefined}
+                                    layer={this.props.element}
+                                    legendHeight={
+                                        this.useLegendOptions() &&
+                                        this.state.legendOptions.legendHeight || undefined}
+                                    legendWidth={
+                                        this.useLegendOptions() &&
+                                        this.state.legendOptions.legendWidth || undefined}
+                                />
+                            </div>
                         </Col>
                     </div>
                 </Row>}

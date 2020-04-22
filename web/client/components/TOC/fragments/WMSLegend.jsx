@@ -31,15 +31,29 @@ class WMSLegend extends React.Component {
         scaleDependent: true
     };
 
+    constructor(props) {
+        super(props);
+        this.containerRef = React.createRef();
+    }
+    state = {
+        containerWidth: 0,
+        legendContainerStyle: {overflowX: "auto"}
+    };
+
+    componentDidMount() {
+        const containerWidth = this.containerRef.current && this.containerRef.current.clientWidth;
+        this.setState({ containerWidth, ...this.state });
+    }
+
     render() {
         let node = this.props.node || {};
         const showLegend = this.canShow(node) && node.type === "wms" && node.group !== "background";
         const useOptions = showLegend && this.useLegendOptions();
         if (showLegend) {
             return (
-                <div style={this.props.legendContainerStyle}>
+                <div style={!this.setOverflow() ? this.props.legendContainerStyle : this.state.legendContainerStyle} ref={this.containerRef}>
                     <Legend
-                        style={this.props.legendStyle}
+                        style={!this.setOverflow() ? this.props.legendStyle : {}}
                         layer={node}
                         currentZoomLvl={this.props.currentZoomLvl}
                         scales={this.props.scales}
@@ -75,6 +89,11 @@ class WMSLegend extends React.Component {
             isNumber(this.props.node.legendOptions.legendHeight) &&
             isNumber(this.props.node.legendOptions.legendWidth)
         );
+    };
+
+    setOverflow = () => {
+        return this.useLegendOptions() &&
+            this.props.node.legendOptions.legendWidth > this.state.containerWidth;
     }
 }
 

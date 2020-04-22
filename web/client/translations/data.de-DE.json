@@ -111,7 +111,8 @@
             "legendOptions": {
               "title": "Legende",
               "legendWidth": "Breite",
-              "legendHeight": "Höhe"
+              "legendHeight": "Höhe",
+              "legendPreview": "Vorschau"
             }
         },
         "longitude": "Länge",
