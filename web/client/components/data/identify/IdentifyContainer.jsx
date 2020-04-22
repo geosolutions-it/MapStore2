@@ -57,7 +57,6 @@ module.exports = props => {
         showEmptyMessageGFI,
         showEdit,
         onEdit = () => {},
-        onEditFeature,
         // coord editor props
         enabledCoordEditorButton,
         showCoordinateEditor,
@@ -160,8 +159,6 @@ module.exports = props => {
                     missingResponses={missingResponses}
                     responses={responses}
                     showEmptyMessageGFI={showEmptyMessageGFI}
-                    showEdit={showEdit && responseValidForEdit(responses[index])}
-                    onEditFeature={onEditFeature}
                     {...viewerOptions}/>
             </DockablePanel>
             <Portal>

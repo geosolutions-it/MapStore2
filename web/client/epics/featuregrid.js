@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 const Rx = require('rxjs');
-const { get, head, isEmpty, find, castArray, includes, reduce, isArray} = require('lodash');
+const { get, head, isEmpty, find, castArray, includes, reduce, isArray, isFunction} = require('lodash');
 const { LOCATION_CHANGE } = require('connected-react-router');
 
 
@@ -37,7 +37,7 @@ const {SORT_BY, CHANGE_PAGE, SAVE_CHANGES, SAVE_SUCCESS, DELETE_SELECTED_FEATURE
     CLEAR_CHANGES_CONFIRMED, FEATURE_GRID_CLOSE_CONFIRMED,
     openFeatureGrid, closeFeatureGrid, OPEN_FEATURE_GRID, CLOSE_FEATURE_GRID, CLOSE_FEATURE_GRID_CONFIRM, OPEN_ADVANCED_SEARCH, ZOOM_ALL, UPDATE_FILTER, START_SYNC_WMS,
     STOP_SYNC_WMS, startSyncWMS, storeAdvancedSearchFilter, fatureGridQueryResult, LOAD_MORE_FEATURES, SET_TIME_SYNC,
-    updateFilter } = require('../actions/featuregrid');
+    updateFilter, selectFeatures } = require('../actions/featuregrid');
 
 const {TOGGLE_CONTROL, resetControls, setControlProperty, toggleControl} = require('../actions/controls');
 const {queryPanelSelector, showCoordinateEditorSelector, drawerEnabledControlSelector} = require('../selectors/controls');
@@ -140,7 +140,7 @@ const createDeleteFlow = (features, describeFeatureType, url) => save(
     url,
     createDeleteTransaction(features, requestBuilder(describeFeatureType))
 );
-const createLoadPageFlow = (store) => ({page, size} = {}) => {
+const createLoadPageFlow = (store) => ({page, size, reason} = {}) => {
     const state = store.getState();
     return Rx.Observable.of( query(
         wfsURL(state),
@@ -149,7 +149,8 @@ const createLoadPageFlow = (store) => ({page, size} = {}) => {
         },
         getPagination(state, {page, size})
         ),
-        queryOptionsSelector(state)
+        queryOptionsSelector(state),
+        reason
     ));
 };
 
@@ -258,9 +259,9 @@ module.exports = {
                     }, {});
                     const composedFilterFields = composeAttributeFilters([filterObj, columnsFilters], "AND", "AND");
                     const filter = {...filterObj, ...composedFilterFields};
-                    return updateQuery(filter);
+                    return updateQuery(filter, update.type);
                 }
-                return updateQuery(gridUpdateToQueryUpdate(update, wfsFilter(store.getState())));
+                return updateQuery(gridUpdateToQueryUpdate(update, wfsFilter(store.getState())), update.type);
             })
     ),
     handleClickOnMap: (action$, store) =>
@@ -273,10 +274,10 @@ module.exports = {
                     const hook = MapUtils.getHook(MapUtils.GET_COORDINATES_FROM_PIXEL_HOOK);
                     const pixelRadius = 4;
                     const radiusA = [lng, lat];
-                    const pixelCoords = hook([
+                    const pixelCoords = isFunction(hook) ? hook([
                         pixel.x,
                         pixel.y >= pixelRadius ? pixel.y - pixelRadius : pixel.y + pixelRadius
-                    ]);
+                    ]) : null;
                     const radiusB = pixelCoords &&
                         CoordinatesUtils.pointObjectToArray(CoordinatesUtils.reproject(pixelCoords, projectionSelector(store.getState()), 'EPSG:4326'));
                     const radius = isArray(radiusB) ? Math.sqrt((radiusA[0] - radiusB[0]) * (radiusA[0] - radiusB[0]) +
@@ -304,6 +305,15 @@ module.exports = {
                         action$.ofType(UPDATE_FILTER).filter(({update = {}}) => update.type === 'geometry' && !update.enabled),
                         action$.ofType(CLOSE_FEATURE_GRID, LOCATION_CHANGE)
                     ))),
+    selectFeaturesOnMapClickResult: (action$, store) =>
+        action$.ofType(QUERY_RESULT)
+            .filter(({reason}) => reason === 'geometry')
+            .map(({result}) => {
+                const feature = get(result, 'features[0]');
+                const geometryFilter = find(getAttributeFilters(store.getState()), f => f.type === 'geometry');
+
+                return selectFeatures(feature && geometryFilter && geometryFilter.value ? [feature] : []);
+            }),
     toggleSyncOnEdit: (action$, store) =>
         action$.ofType(TOGGLE_MODE)
             .filter(() => modeSelector(store.getState()) === MODES.EDIT)

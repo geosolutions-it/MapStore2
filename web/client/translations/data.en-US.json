@@ -573,7 +573,6 @@
         "identifyRevGeocodeCloseText": "Close",
         "identifyRevGeocodeError": "Unable to geocode",
         "identifyEdit": "Edit",
-        "identifyEditFeature": "Edit feature",
         "getFeatureInfoError": {
             "title": "Ooops! Something's wrong",
             "text": "An error has occurred during this <b>GetFeatureInfo</b> request"

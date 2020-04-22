@@ -15,7 +15,7 @@ import uuid from 'uuid';
 import {
     LOAD_FEATURE_INFO, ERROR_FEATURE_INFO, GET_VECTOR_INFO,
     FEATURE_INFO_CLICK, CLOSE_IDENTIFY, TOGGLE_HIGHLIGHT_FEATURE,
-    PURGE_MAPINFO_RESULTS, EDIT_FEATURE, EDIT_LAYER_FEATURES,
+    PURGE_MAPINFO_RESULTS, EDIT_LAYER_FEATURES,
     featureInfoClick, updateCenterToMarker, purgeMapInfoResults,
     exceptionsFeatureInfo, loadFeatureInfo, errorFeatureInfo,
     noQueryableLayers, newMapInfoRequest, getVectorInfo,
@@ -280,9 +280,9 @@ export default {
         action$.ofType(PURGE_MAPINFO_RESULTS)
             .filter(() => isMapPopup(getState()))
             .mapTo(cleanPopups()),
-    identifyEditFeatureEpic: (action$, store) =>
-        action$.ofType(EDIT_FEATURE)
-            .exhaustMap(({layer, feature}) => {
+    identifyEditLayerFeaturesEpic: (action$, store) =>
+        action$.ofType(EDIT_LAYER_FEATURES)
+            .exhaustMap(({layer}) => {
                 const currentFilter = find(getAttributeFilters(store.getState()), f => f.type === 'geometry') || {};
                 const clickPoint = clickPointSelector(store.getState());
                 const lng = get(clickPoint, 'latlng.lng');
@@ -292,35 +292,26 @@ export default {
 
                 return isNumber(lng) && isNumber(lat) ? Rx.Observable.of(
                     setEditFeatureQuery({
-                        query: {
-                            type: 'geometry',
-                            enabled: true,
+                        type: 'geometry',
+                        enabled: true,
+                        attribute,
+                        value: {
                             attribute,
-                            value: {
-                                attribute,
-                                geometry: {
-                                    center: [lng, lat],
-                                    coordinates: calculateCircleCoordinates({x: lng, y: lat}, radius, 12),
-                                    extent: [lng - radius, lat - radius, lng + radius, lat + radius],
-                                    projection: "EPSG:4326",
-                                    radius,
-                                    type: "Polygon"
-                                },
-                                method: "Circle",
-                                operation: "INTERSECTS"
-                            }
-                        },
-                        feature
+                            geometry: {
+                                center: [lng, lat],
+                                coordinates: calculateCircleCoordinates({x: lng, y: lat}, radius, 12),
+                                extent: [lng - radius, lat - radius, lng + radius, lat + radius],
+                                projection: "EPSG:4326",
+                                radius,
+                                type: "Polygon"
+                            },
+                            method: "Circle",
+                            operation: "INTERSECTS"
+                        }
                     }),
                     browseData(layer),
                 ) : Rx.Observable.empty();
             }),
-    identifyEditLayerFeaturesEpic: (action$) =>
-        action$.ofType(EDIT_LAYER_FEATURES)
-            .exhaustMap(({layer}) => Rx.Observable.of(
-                setEditFeatureQuery({}),
-                browseData(layer)
-            )),
     switchFeatureGridToEdit: (action$, store) =>
         action$.ofType(QUERY_CREATE)
             .filter(({isLoading}) => !isLoading)
@@ -329,7 +320,7 @@ export default {
                 return queryObj ? Rx.Observable.of(
                     setEditFeatureQuery(),
                     toggleEditMode(),
-                    ...(queryObj.query ? [updateFilter(queryObj.query)] : [])
+                    updateFilter(queryObj)
                 ) : Rx.Observable.empty();
             }),
     resetEditFeatureQuery: (action$) =>

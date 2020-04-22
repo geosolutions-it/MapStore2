@@ -19,7 +19,7 @@ const { generalInfoFormatSelector, clickPointSelector, indexSelector, responsesS
 const { isEditingAllowedSelector } = require('../selectors/featuregrid');
 
 
-const { hideMapinfoMarker, showMapinfoRevGeocode, hideMapinfoRevGeocode, clearWarning, toggleMapInfoState, changeMapInfoFormat, updateCenterToMarker, closeIdentify, purgeMapInfoResults, featureInfoClick, changeFormat, toggleShowCoordinateEditor, changePage, toggleHighlightFeature, editFeature, editLayerFeatures} = require('../actions/mapInfo');
+const { hideMapinfoMarker, showMapinfoRevGeocode, hideMapinfoRevGeocode, clearWarning, toggleMapInfoState, changeMapInfoFormat, updateCenterToMarker, closeIdentify, purgeMapInfoResults, featureInfoClick, changeFormat, toggleShowCoordinateEditor, changePage, toggleHighlightFeature, editLayerFeatures} = require('../actions/mapInfo');
 const { changeMousePointer, zoomToExtent } = require('../actions/map');
 
 
@@ -194,8 +194,7 @@ const IdentifyPlugin = compose(
         showRevGeocode: showMapinfoRevGeocode,
         hideRevGeocode: hideMapinfoRevGeocode,
         onEnableCenterToMarker: updateCenterToMarker.bind(null, 'enabled'),
-        onEdit: editLayerFeatures,
-        onEditFeature: editFeature
+        onEdit: editLayerFeatures
     }, (stateProps, dispatchProps, ownProps) => ({
         ...ownProps,
         ...stateProps,

@@ -574,7 +574,6 @@
         "identifyRevGeocodeCloseText": "Schliessen",
         "identifyRevGeocodeError": "Konnte nicht geocodiert werden",
         "identifyEdit": "Bearbeiten",
-        "identifyEditFeature": "Funktion bearbeiten",
         "getFeatureInfoError": {
             "title": "Ooops! Etwas ist schiefgelaufen.",
             "text": "Ein Fehler ist während dieser <b>GetFeatureInfo</b> Anfrage aufgetreten"

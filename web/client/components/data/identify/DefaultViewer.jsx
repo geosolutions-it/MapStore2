@@ -13,7 +13,7 @@ const HTML = require('../../../components/I18N/HTML');
 const Message = require('../../../components/I18N/Message');
 const {Alert, Panel, Accordion} = require('react-bootstrap');
 const ViewerPage = require('./viewers/ViewerPage');
-const {isEqual, get} = require('lodash');
+const {isEqual} = require('lodash');
 const {getFormatForResponse} = require('../../../utils/IdentifyUtils');
 
 class DefaultViewer extends React.Component {
@@ -31,11 +31,9 @@ class DefaultViewer extends React.Component {
         style: PropTypes.object,
         containerProps: PropTypes.object,
         index: PropTypes.number,
-        showEdit: PropTypes.bool,
         onNext: PropTypes.func,
         onPrevious: PropTypes.func,
         onUpdateIndex: PropTypes.func,
-        onEditFeature: PropTypes.func,
         setIndex: PropTypes.func,
         showEmptyMessageGFI: PropTypes.bool
     };
@@ -58,7 +56,6 @@ class DefaultViewer extends React.Component {
         showEmptyMessageGFI: true,
         onNext: () => {},
         onPrevious: () => {},
-        onEditFeature: () => {},
         setIndex: () => {}
     };
 
@@ -111,7 +108,7 @@ class DefaultViewer extends React.Component {
             );
         }
         return responses.map((res, i) => {
-            const {response, layerMetadata, layer} = res;
+            const {response, layerMetadata} = res;
             const format = getFormatForResponse(res, this.props);
             const PageHeader = this.props.header;
             let customViewer;
@@ -136,13 +133,7 @@ class DefaultViewer extends React.Component {
                         response={response}
                         format={format}
                         viewers={customViewer || this.props.viewers}
-                        layer={layerMetadata}
-                        showEdit={this.props.showEdit}
-                        onEditFeature={this.props.onEditFeature.bind(null, this.props.showEdit ? {
-                            id: layer.id,
-                            name: layer.name,
-                            url: get(layer, 'search.url')
-                        } : null)}/>
+                        layer={layerMetadata}/>
                 </Panel>
             );
         });

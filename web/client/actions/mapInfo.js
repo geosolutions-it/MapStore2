@@ -29,7 +29,6 @@ const CHANGE_PAGE = 'IDENTIFY:CHANGE_PAGE';
 const CLOSE_IDENTIFY = 'IDENTIFY:CLOSE_IDENTIFY';
 const CHANGE_FORMAT = 'IDENTIFY:CHANGE_FORMAT';
 const TOGGLE_SHOW_COORD_EDITOR = 'IDENTIFY:TOGGLE_SHOW_COORD_EDITOR';
-const EDIT_FEATURE = 'IDENTIFY:EDIT_FEATURE';
 const EDIT_LAYER_FEATURES = 'IDENTIFY:EDIT_LAYER_FEATURES';
 const SET_EDIT_FEATURE_QUERY = 'IDENTIFY:EDIT_FEATURE_QUERY';
 
@@ -255,12 +254,6 @@ const editLayerFeatures = (layer) => ({
     layer
 });
 
-const editFeature = (layer, feature) => ({
-    type: EDIT_FEATURE,
-    layer,
-    feature
-});
-
 const setEditFeatureQuery = (query) => ({
     type: SET_EDIT_FEATURE_QUERY,
     query
@@ -309,7 +302,6 @@ module.exports = {
     toggleMapInfoState,
     updateCenterToMarker,
     featureInfoClick,
-    EDIT_FEATURE, editFeature,
     EDIT_LAYER_FEATURES, editLayerFeatures,
     SET_EDIT_FEATURE_QUERY, setEditFeatureQuery
 };
