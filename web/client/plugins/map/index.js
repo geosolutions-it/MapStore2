@@ -9,7 +9,7 @@
 const React = require('react');
 const {createSelector} = require('reselect');
 
-const {creationError, changeMapView, clickOnMap} = require('../../actions/map');
+const {creationError, changeMapView, clickOnMap, mouseMoveMapEvent, mouseOut} = require('../../actions/map');
 const {removePopup} = require('../../actions/mapPopups');
 const {layerLoading, layerLoad, layerError} = require('../../actions/layers');
 const {changeMeasurementState, changeGeometry, resetGeometry, updateMeasures, setTextLabels} = require('../../actions/measurement');
@@ -19,7 +19,6 @@ const {changeLocateState, onLocateError} = require('../../actions/locate');
 const {changeDrawingStatus, endDrawing, setCurrentStyle, geometryChanged, drawStopped, selectFeatures, drawingFeatures} = require('../../actions/draw');
 const {updateHighlighted} = require('../../actions/highlight');
 const {warning} = require('../../actions/notifications');
-const {mouseMoveMapEvent, mouseOut} = require('../../actions/mousePosition');
 const {connect} = require('react-redux');
 const assign = require('object-assign');
 const {projectionDefsSelector, isMouseMoveActiveSelector} = require('../../selectors/map');

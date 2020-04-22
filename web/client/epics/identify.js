@@ -25,11 +25,10 @@ import {
 import { SET_CONTROL_PROPERTIES, SET_CONTROL_PROPERTY, TOGGLE_CONTROL } from '../actions/controls';
 
 import { closeFeatureGrid } from '../actions/featuregrid';
-import { CHANGE_MOUSE_POINTER, CLICK_ON_MAP, UNREGISTER_EVENT_LISTENER, zoomToPoint } from '../actions/map';
-import { MOUSE_MOVE_MAP_EVENT } from '../actions/mousePosition';
+import { CHANGE_MOUSE_POINTER, CLICK_ON_MAP, UNREGISTER_EVENT_LISTENER, MOUSE_MOVE_MAP_EVENT, zoomToPoint } from '../actions/map';
 import { closeAnnotations } from '../actions/annotations';
 import { MAP_CONFIG_LOADED } from '../actions/config';
-import {addPopup, cleanPopups, removePopup} from '../actions/mapPopups';
+import {addPopup, cleanPopups, removePopup, REMOVE_MAP_POPUP} from '../actions/mapPopups';
 import { stopGetFeatureInfoSelector, identifyOptionsSelector,
     clickPointSelector, clickLayerSelector,
     isMapPopup, isHighlightEnabledSelector,
@@ -318,5 +317,11 @@ export default {
                     observable = Rx.Observable.of(removePopup(activePopupId));
                 }
                 return observable;
-            })
+            }),
+    /**
+     * Triggers remove map info marker on REMOVE_MAP_POPUP
+     */
+    removeMapInfoMarkerOnRemoveMapPopupEpic: (action$, {getState}) =>
+        action$.ofType(REMOVE_MAP_POPUP)
+            .switchMap(() => isMouseMoveIdentifyActiveSelector(getState()) ? Rx.Observable.of(hideMapinfoMarker()) : Rx.Observable.empty())
 };

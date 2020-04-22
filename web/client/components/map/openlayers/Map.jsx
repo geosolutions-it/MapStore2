@@ -158,6 +158,7 @@ class OpenlayersMap extends React.Component {
         this.map.enableEventListener = (event) => {
             delete this.map.disabledListeners[event];
         };
+        // The timeout is needed to cover the delay we have for the throttled mouseMove event.
         this.map.getViewport().addEventListener('mouseout', () => {
             setTimeout(() => this.props.onMouseOut(), 150);
         });

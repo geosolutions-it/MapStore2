@@ -27,6 +27,8 @@ const SET_MAP_RESOLUTIONS = 'SET_MAP_RESOLUTIONS';
 const CHECK_MAP_CHANGES = 'CHECK_MAP_CHANGES';
 const REGISTER_EVENT_LISTENER = 'REGISTER_EVENT_LISTENER';
 const UNREGISTER_EVENT_LISTENER = 'UNREGISTER_EVENT_LISTENER';
+const MOUSE_MOVE_MAP_EVENT = 'MOUSE_MOVE_MAP_EVENT';
+const MOUSE_OUT = 'MOUSE_OUT';
 
 function errorLoadingFont(err = {family: ""}) {
     return error({
@@ -214,6 +216,22 @@ const unRegisterEventListener = (eventName, toolName) => ({
 });
 
 /**
+ * Triggered on mouse move. (only if some tool is registered on this event. See `registerEventListener`).
+ * @param {object} position the position of the mouse on the map.
+ */
+const mouseMoveMapEvent = (position) => ({
+    type: MOUSE_MOVE_MAP_EVENT,
+    position
+});
+
+/**
+ * Triggered when the mouse goes out from the map
+ */
+const mouseOut = () => ({
+    type: MOUSE_OUT
+});
+
+/**
  * Actions for map
  * @name actions.map
  */
@@ -238,6 +256,8 @@ module.exports = {
     CHECK_MAP_CHANGES,
     REGISTER_EVENT_LISTENER,
     UNREGISTER_EVENT_LISTENER,
+    MOUSE_MOVE_MAP_EVENT,
+    MOUSE_OUT,
     changeMapView,
     clickOnMap,
     changeMousePointer,
@@ -257,5 +277,7 @@ module.exports = {
     setMapResolutions,
     checkMapChanges,
     registerEventListener,
-    unRegisterEventListener
+    unRegisterEventListener,
+    mouseMoveMapEvent,
+    mouseOut
 };

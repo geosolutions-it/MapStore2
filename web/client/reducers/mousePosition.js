@@ -9,12 +9,13 @@
 var {
     CHANGE_MOUSE_POSITION,
     CHANGE_MOUSE_POSITION_CRS,
-    CHANGE_MOUSE_POSITION_STATE,
-    MOUSE_MOVE_MAP_EVENT,
-    MOUSE_OUT
+    CHANGE_MOUSE_POSITION_STATE
 } = require('../actions/mousePosition');
 
-const {  } = require('../actions/map');
+const {
+    MOUSE_MOVE_MAP_EVENT,
+    MOUSE_OUT
+} = require('../actions/map');
 
 const assign = require('object-assign');
 

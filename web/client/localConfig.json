@@ -28,7 +28,7 @@
               "type": "ellipsoid"
           }
       },
-      "floatingIdentifyDelay": 2000
+      "floatingIdentifyDelay": 1000
     },
     "authenticationRules": [{
         "urlPattern": ".*geostore.*",
