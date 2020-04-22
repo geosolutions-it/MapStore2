@@ -1415,7 +1415,12 @@
                     "default": "Search...",
                     "string": "Type text to filter...",
                     "number": "Type a number or an expression. Examples: 10, > 2, < 10",
-                    "date": "Type a date or an expression. Use {format} for the date."
+                    "date": "Type a date or an expression. Use {format} for the date.",
+                    "geometry": {
+                        "disabled": "Filter clicking on the map",
+                        "enabled": "Click on the map to filter the results",
+                        "applied": "Remove the filter by mouse click"
+                    }
                 }
             },
             "toolbar": {

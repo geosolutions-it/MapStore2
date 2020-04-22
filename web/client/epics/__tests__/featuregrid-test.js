@@ -44,13 +44,15 @@ const {
     GRID_QUERY_RESULT,
     changePage,
     sort,
-    setTimeSync
+    setTimeSync,
+    updateFilter,
+    UPDATE_FILTER
 } = require('../../actions/featuregrid');
 const {SET_HIGHLIGHT_FEATURES_PATH} = require('../../actions/highlight');
 const {CHANGE_DRAWING_STATUS} = require('../../actions/draw');
 const {SHOW_NOTIFICATION} = require('../../actions/notifications');
 const {RESET_CONTROLS, SET_CONTROL_PROPERTY, toggleControl} = require('../../actions/controls');
-const {ZOOM_TO_EXTENT} = require('../../actions/map');
+const {ZOOM_TO_EXTENT, clickOnMap} = require('../../actions/map');
 const { CLOSE_IDENTIFY } = require('../../actions/mapInfo');
 const {CHANGE_LAYER_PROPERTIES, changeLayerParams, browseData} = require('../../actions/layers');
 const {geometryChanged} = require('../../actions/draw');
@@ -93,7 +95,8 @@ const {
     featureGridSort,
     replayOnTimeDimensionChange,
     hideFeatureGridOnDrawerOpenMobile,
-    hideDrawerOnFeatureGridOpenMobile
+    hideDrawerOnFeatureGridOpenMobile,
+    handleClickOnMap
 } = require('../featuregrid');
 const { onLocationChanged } = require('connected-react-router');
 
@@ -1871,5 +1874,40 @@ describe('featuregrid Epics', () => {
 
             testEpic(addTimeoutEpic(hideDrawerOnFeatureGridOpenMobile, 10), 1, featureInfoClick(), epicResult, TEST_STATE_NOT_MOBILE);
         });
+    });
+    it('handleClickOnMap epic', (done) => {
+        const startActions = [updateFilter({
+            type: 'geometry',
+            enabled: true
+        }), clickOnMap({
+            latlng: {
+                lat: 1.0,
+                lng: 8.0
+            },
+            pixel: {
+                x: 10.0,
+                y: 10.0
+            }
+        })];
+
+        testEpic(handleClickOnMap, 1, startActions, actions => {
+            expect(actions.length).toBe(1);
+            expect(actions[0].type).toBe(UPDATE_FILTER);
+            expect(actions[0].update).toExist();
+            expect(actions[0].update.value).toExist();
+            expect(actions[0].update.value.attribute).toBe('the_geom');
+            expect(actions[0].update.value.method).toBe('Circle');
+            expect(actions[0].update.value.geometry).toExist();
+            expect(actions[0].update.value.geometry.type).toBe('Polygon');
+            expect(actions[0].update.value.geometry.radius).toExist();
+        }, {
+            featuregrid: {
+                filters: [{
+                    type: 'geometry',
+                    attribute: 'the_geom',
+                    enabled: true
+                }]
+            }
+        }, done);
     });
 });
