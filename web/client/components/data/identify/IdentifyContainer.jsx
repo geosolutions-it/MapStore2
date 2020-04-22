@@ -56,6 +56,7 @@ module.exports = props => {
         zIndex,
         showEmptyMessageGFI,
         showEdit,
+        isEditingAllowed,
         onEdit = () => {},
         // coord editor props
         enabledCoordEditorButton,
@@ -86,7 +87,7 @@ module.exports = props => {
         lngCorrected,
         validResponses,
         latlng,
-        showEdit: showEdit && !!responses[index] && responseValidForEdit(responses[index]) &&
+        showEdit: showEdit && isEditingAllowed && !!responses[index] && responseValidForEdit(responses[index]) &&
             getFormatForResponse(responses[index], props) !== 'application/json',
         onEdit: onEdit.bind(null, layer && {
             id: layer.id,

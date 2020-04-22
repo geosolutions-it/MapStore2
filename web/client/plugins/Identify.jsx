@@ -55,7 +55,7 @@ const selector = createStructuredSelector({
     formatCoord: (state) => state.mapInfo && state.mapInfo.formatCoord,
     showCoordinateEditor: (state) => state.mapInfo && state.mapInfo.showCoordinateEditor,
     showEmptyMessageGFI: state => showEmptyMessageGFISelector(state),
-    showEdit: isEditingAllowedSelector,
+    isEditingAllowed: isEditingAllowedSelector,
     isCesium
 });
 // result panel
