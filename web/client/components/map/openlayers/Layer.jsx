@@ -33,8 +33,7 @@ export default class OpenlayersLayer extends React.Component {
         position: PropTypes.number,
         observables: PropTypes.array,
         securityToken: PropTypes.string,
-        localizedLayerStyles: PropTypes.string,
-        currentLocale: PropTypes.string
+        env: PropTypes.array
     };
 
     static defaultProps = {
@@ -56,8 +55,7 @@ export default class OpenlayersLayer extends React.Component {
             this.props.options,
             this.props.position,
             this.props.securityToken,
-            this.props.localizedLayerStyles,
-            this.props.currentLocale
+            this.props.env
         );
     }
 
@@ -126,21 +124,20 @@ export default class OpenlayersLayer extends React.Component {
         }
     };
 
-    generateOpts = (options, position, srs, securityToken, localizedLayerStyles, currentLocale) => {
+    generateOpts = (options, position, srs, securityToken, env) => {
         return assign({}, options, isNumber(position) ? {zIndex: position} : null, {
             srs,
             onError: () => {
                 this.props.onCreationError(options);
             },
             securityToken,
-            localizedLayerStyles,
-            currentLocale
+            env
         });
     };
 
-    createLayer = (type, options, position, securityToken, localizedLayerStyles, currentLocale) => {
+    createLayer = (type, options, position, securityToken, env) => {
         if (type) {
-            const layerOptions = this.generateOpts(options, position, CoordinatesUtils.normalizeSRS(this.props.srs), securityToken, localizedLayerStyles, currentLocale);
+            const layerOptions = this.generateOpts(options, position, CoordinatesUtils.normalizeSRS(this.props.srs), securityToken, env);
             this.layer = Layers.createLayer(type, layerOptions, this.props.map, this.props.mapId);
             const compatible = Layers.isCompatible(type, layerOptions);
             if (this.layer && !this.layer.detached) {
@@ -191,8 +188,8 @@ export default class OpenlayersLayer extends React.Component {
         const newLayer = Layers.updateLayer(
             this.props.type,
             this.layer,
-            this.generateOpts(newProps.options, newProps.position, newProps.projection, newProps.securityToken, newProps.localizedLayerStyles, newProps.currentLocale),
-            this.generateOpts(oldProps.options, oldProps.position, oldProps.projection, oldProps.securityToken, oldProps.localizedLayerStyles, oldProps.currentLocale),
+            this.generateOpts(newProps.options, newProps.position, newProps.projection, newProps.securityToken, newProps.env),
+            this.generateOpts(oldProps.options, oldProps.position, oldProps.projection, oldProps.securityToken, oldProps.env),
             this.props.map,
             this.props.mapId);
         if (newLayer) {

@@ -6,7 +6,7 @@
 * LICENSE file in the root directory of this source tree.
 */
 
-const {get} = require('lodash');
+const {has, get} = require('lodash');
 
 /**
  * selects localizedLayerStyles state
@@ -16,13 +16,22 @@ const {get} = require('lodash');
  */
 
 /**
+ * selects localizedLayerStyles from state
+ * @memberof selectors.localizedLayerStyles
+ * @param  {object} state the state
+ * @return {boolean} true if the localizedLayerStyles property is defined
+ */
+const isLocalizedLayerStylesEnabledSelector = (state) => has(state, 'localConfig.localizedLayerStyles');
+
+/**
  * selects localizedLayerStyles name from state
  * @memberof selectors.localizedLayerStyles
  * @param  {object} state the state
  * @return {string} the localizedLayerStyles param name
  */
-const localizedLayerStylesNameSelector = (state) => get(state, 'localConfig.localizedLayerStyles.name', '');
+const localizedLayerStylesNameSelector = (state) => get(state, 'localConfig.localizedLayerStyles.name', 'mapstore_language');
 
 module.exports = {
+    isLocalizedLayerStylesEnabledSelector,
     localizedLayerStylesNameSelector
 };

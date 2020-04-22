@@ -202,7 +202,8 @@ class MapPlugin extends React.Component {
         securityToken: PropTypes.string,
         shouldLoadFont: PropTypes.bool,
         elevationEnabled: PropTypes.bool,
-        localizedLayerStyles: PropTypes.string,
+        isLocalizedLayerStylesEnabled: PropTypes.bool,
+        localizedLayerStylesName: PropTypes.string,
         currentLocale: PropTypes.string
     };
 
@@ -275,8 +276,8 @@ class MapPlugin extends React.Component {
         }
     }
 
-    getHighlightLayer = (projection, index) => {
-        return (<plugins.Layer type="vector" srs={projection} position={index} key="highlight" options={{name: "highlight"}}>
+    getHighlightLayer = (projection, index, env) => {
+        return (<plugins.Layer type="vector" srs={projection} position={index} key="highlight" options={{name: "highlight"}} env={env}>
             {this.props.features.map( (feature) => {
                 return (<plugins.Feature
                     msId={feature.id}
@@ -306,6 +307,15 @@ class MapPlugin extends React.Component {
 
     renderLayers = () => {
         const projection = this.props.map.projection || 'EPSG:3857';
+        const env = [];
+
+        if (this.props.isLocalizedLayerStylesEnabled) {
+            env.push({
+                name: this.props.localizedLayerStylesName,
+                value: this.props.currentLocale
+            });
+        }
+
         return [...this.props.layers, ...this.props.additionalLayers].filter(this.filterLayer).map((layer, index) => {
             return (
                 <plugins.Layer
@@ -315,13 +325,12 @@ class MapPlugin extends React.Component {
                     key={layer.id || layer.name}
                     options={layer}
                     securityToken={this.props.securityToken}
-                    localizedLayerStyles={this.props.localizedLayerStyles}
-                    currentLocale={this.props.currentLocale}
+                    env={env}
                 >
                     {this.renderLayerContent(layer, projection)}
                 </plugins.Layer>
             );
-        }).concat(this.props.features && this.props.features.length && this.getHighlightLayer(projection, this.props.layers.length) || []);
+        }).concat(this.props.features && this.props.features.length && this.getHighlightLayer(projection, this.props.layers.length, env) || []);
     };
 
     renderLayerContent = (layer, projection) => {
@@ -409,7 +418,10 @@ const {layerSelectorWithMarkers} = require('../selectors/layers');
 const {highlighedFeatures} = require('../selectors/highlight');
 const {securityTokenSelector} = require('../selectors/security');
 const {currentLocaleSelector} = require('../selectors/locale');
-const {localizedLayerStylesNameSelector} = require('../selectors/localizedLayerStyles');
+const {
+    isLocalizedLayerStylesEnabledSelector,
+    localizedLayerStylesNameSelector
+} = require('../selectors/localizedLayerStyles');
 
 const selector = createSelector(
     [
@@ -422,6 +434,7 @@ const selector = createSelector(
         securityTokenSelector,
         (state) => state.mousePosition && state.mousePosition.enabled,
         isOpenlayers,
+        isLocalizedLayerStylesEnabledSelector,
         localizedLayerStylesNameSelector,
         (state) => head(currentLocaleSelector(state).split('-'))
     ], (
@@ -434,7 +447,8 @@ const selector = createSelector(
         securityToken,
         elevationEnabled,
         shouldLoadFont,
-        localizedLayerStyles,
+        isLocalizedLayerStylesEnabled,
+        localizedLayerStylesName,
         currentLocale
     ) => ({
         projectionDefs,
@@ -446,7 +460,8 @@ const selector = createSelector(
         securityToken,
         elevationEnabled,
         shouldLoadFont,
-        localizedLayerStyles,
+        isLocalizedLayerStylesEnabled,
+        localizedLayerStylesName,
         currentLocale
     })
 );

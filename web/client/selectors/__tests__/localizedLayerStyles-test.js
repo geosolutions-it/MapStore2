@@ -13,7 +13,7 @@ describe('Test localizedLayerStyles', () => {
     it('test localizedLayerStylesNameSelector default', () => {
         const localizedLayerStyles = localizedLayerStylesNameSelector({});
 
-        expect(localizedLayerStyles).toBe('');
+        expect(localizedLayerStyles).toBe('mapstore_language');
     });
 
     it('test localizedLayerStylesNameSelector', () => {
