@@ -218,18 +218,17 @@ module.exports = class extends React.Component {
                                 />
                             </FormGroup>
                         </Col>
-                        <Col xs={12} id="legend-preview">
+                        <Col xs={12} className="legend-preview">
                             <ControlLabel><Message msgId="layerProperties.legendOptions.legendPreview" /></ControlLabel>
-                            <div style={this.setOverFlow() && this.state.containerStyle || {} } ref={this.containerRef} >
+                            <div style={this.setOverFlow() && this.state.containerStyle || {}} ref={this.containerRef} >
                                 <Legend
                                     style={this.setOverFlow() && {} || undefined}
                                     layer={this.props.element}
+                                    legendOptions={this.props.layerOptions && this.props.layerOptions.legendOptions}
                                     legendHeight={
-                                        this.useLegendOptions() &&
-                                        this.state.legendOptions.legendHeight || undefined}
+                                        this.useLegendOptions() && this.state.legendOptions.legendHeight || undefined}
                                     legendWidth={
-                                        this.useLegendOptions() &&
-                                        this.state.legendOptions.legendWidth || undefined}
+                                        this.useLegendOptions() && this.state.legendOptions.legendWidth || undefined}
                                 />
                             </div>
                         </Col>

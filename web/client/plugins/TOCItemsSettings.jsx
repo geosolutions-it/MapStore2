@@ -21,10 +21,13 @@ import defaultSettingsTabs from './tocitemssettings/defaultSettingsTabs';
 import { initialSettingsSelector, originalSettingsSelector, activeTabSettingsSelector } from '../selectors/controls';
 import {layerSettingSelector, layersSelector, groupsSelector, elementSelector} from '../selectors/layers';
 import {mapLayoutValuesSelector} from '../selectors/maplayout';
+import {pluginsSelectorCreator} from '../selectors/localConfig';
 import {currentLocaleSelector} from '../selectors/locale';
+import {mapSelector} from '../selectors/map';
 import {isAdminUserSelector} from '../selectors/security';
 import {setControlProperty} from '../actions/controls';
 import {toggleStyleEditor} from '../actions/styleeditor';
+const mapUtils = require('../utils/MapUtils');
 
 const tocItemsSettingsSelector = createSelector([
     layerSettingSelector,
@@ -36,8 +39,10 @@ const tocItemsSettingsSelector = createSelector([
     initialSettingsSelector,
     originalSettingsSelector,
     activeTabSettingsSelector,
-    elementSelector
-], (settings, layers, groups, currentLocale, dockStyle, isAdmin, initialSettings, originalSettings, activeTab, element) => ({
+    elementSelector,
+    mapSelector,
+    state => pluginsSelectorCreator("desktop")(state)
+], (settings, layers, groups, currentLocale, dockStyle, isAdmin, initialSettings, originalSettings, activeTab, element, map, plugins) => ({
     settings,
     element,
     groups,
@@ -46,7 +51,13 @@ const tocItemsSettingsSelector = createSelector([
     isAdmin,
     initialSettings,
     originalSettings,
-    activeTab
+    activeTab,
+    currentZoomLvl: map && map.zoom,
+    scales: mapUtils.getScales(
+        map && map.projection || 'EPSG:3857',
+        map && map.mapOptions && map.mapOptions.view && map.mapOptions.view.DPI || null
+    ),
+    layerOptions: ((Object.values(plugins).filter(({name}) => name === "TOC").pop() || {}).cfg || {}).layerOptions || {}
 }));
 
 /**

@@ -350,7 +350,7 @@
                     "activateMetedataTool": false,
                     "layerOptions": {
                       "legendOptions": {
-                        "WMSLegendOptions": "forceLabels:on;fontSize:30",
+                        "WMSLegendOptions": "forceLabels:on",
                         "scaleDependent": true,
                         "legendWidth": 12,
                         "legendHeight": 12
