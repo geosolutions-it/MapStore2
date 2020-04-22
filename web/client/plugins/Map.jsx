@@ -201,7 +201,9 @@ class MapPlugin extends React.Component {
         features: PropTypes.array,
         securityToken: PropTypes.string,
         shouldLoadFont: PropTypes.bool,
-        elevationEnabled: PropTypes.bool
+        elevationEnabled: PropTypes.bool,
+        localizedLayerStyles: PropTypes.string,
+        currentLocale: PropTypes.string
     };
 
     static defaultProps = {
@@ -306,7 +308,16 @@ class MapPlugin extends React.Component {
         const projection = this.props.map.projection || 'EPSG:3857';
         return [...this.props.layers, ...this.props.additionalLayers].filter(this.filterLayer).map((layer, index) => {
             return (
-                <plugins.Layer type={layer.type} srs={projection} position={index} key={layer.id || layer.name} options={layer} securityToken={this.props.securityToken}>
+                <plugins.Layer
+                    type={layer.type}
+                    srs={projection}
+                    position={index}
+                    key={layer.id || layer.name}
+                    options={layer}
+                    securityToken={this.props.securityToken}
+                    localizedLayerStyles={this.props.localizedLayerStyles}
+                    currentLocale={this.props.currentLocale}
+                >
                     {this.renderLayerContent(layer, projection)}
                 </plugins.Layer>
             );
@@ -391,11 +402,14 @@ class MapPlugin extends React.Component {
     };
 }
 
+const {head} = require('lodash');
 const {mapSelector, projectionDefsSelector} = require('../selectors/map');
 const { mapTypeSelector, isOpenlayers } = require('../selectors/maptype');
 const {layerSelectorWithMarkers} = require('../selectors/layers');
 const {highlighedFeatures} = require('../selectors/highlight');
 const {securityTokenSelector} = require('../selectors/security');
+const {currentLocaleSelector} = require('../selectors/locale');
+const {localizedLayerStylesNameSelector} = require('../selectors/localizedLayerStyles');
 
 const selector = createSelector(
     [
@@ -407,8 +421,10 @@ const selector = createSelector(
         (state) => state.mapInitialConfig && state.mapInitialConfig.loadingError && state.mapInitialConfig.loadingError.data,
         securityTokenSelector,
         (state) => state.mousePosition && state.mousePosition.enabled,
-        isOpenlayers
-    ], (projectionDefs, map, mapType, layers, features, loadingError, securityToken, elevationEnabled, shouldLoadFont) => ({
+        isOpenlayers,
+        localizedLayerStylesNameSelector,
+        (state) => head(currentLocaleSelector(state).split('-'))
+    ], (
         projectionDefs,
         map,
         mapType,
@@ -417,7 +433,21 @@ const selector = createSelector(
         loadingError,
         securityToken,
         elevationEnabled,
-        shouldLoadFont
+        shouldLoadFont,
+        localizedLayerStyles,
+        currentLocale
+    ) => ({
+        projectionDefs,
+        map,
+        mapType,
+        layers,
+        features,
+        loadingError,
+        securityToken,
+        elevationEnabled,
+        shouldLoadFont,
+        localizedLayerStyles,
+        currentLocale
     })
 );
 module.exports = {

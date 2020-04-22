@@ -37,12 +37,17 @@ import VectorTileLayer from 'ol/layer/VectorTile';
 import { isVectorFormat } from '../../../../utils/VectorTileUtils';
 import { OL_VECTOR_FORMATS, applyStyle } from '../../../../utils/openlayers/VectorTileUtils';
 
+function getWMSEnvParam(localizedLayerStyles, currentLocale) {
+    return localizedLayerStyles ? `${localizedLayerStyles}:${currentLocale}` : '';
+}
+
 /**
     @param {object} options of the layer
     @return the Openlayers options from the layers ones and/or default.
     tiled params must be tru if not defined
 */
 function wmsToOpenlayersOptions(options) {
+    const {localizedLayerStyles, currentLocale} = options;
     const params = optionsToVendorParams(options);
     // NOTE: can we use opacity to manage visibility?
     const result = assign({}, options.baseParams, {
@@ -53,7 +58,8 @@ function wmsToOpenlayersOptions(options) {
         SRS: CoordinatesUtils.normalizeSRS(options.srs || 'EPSG:3857', options.allowedSRS),
         CRS: CoordinatesUtils.normalizeSRS(options.srs || 'EPSG:3857', options.allowedSRS),
         TILED: options.singleTile ? false : (!isNil(options.tiled) ? options.tiled : true),
-        VERSION: options.version || "1.3.0"
+        VERSION: options.version || "1.3.0",
+        ENV: getWMSEnvParam(localizedLayerStyles, currentLocale)
     }, assign(
         {},
         (options._v_ ? {_v_: options._v_} : {}),
