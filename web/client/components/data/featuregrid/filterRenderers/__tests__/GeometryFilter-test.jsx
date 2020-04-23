@@ -52,6 +52,6 @@ describe('Test for GeometryFilter component', () => {
 
         TestUtils.Simulate.click(el);
         expect(spyOnChange).toHaveBeenCalled();
-        expect(spyOnChange).toHaveBeenCalledWith({enabled: true, type: 'geometry', attribute: undefined});
+        expect(spyOnChange).toHaveBeenCalledWith({enabled: false, type: 'geometry', attribute: undefined, dontUpdateQuery: false});
     });
 });

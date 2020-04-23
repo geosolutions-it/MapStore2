@@ -330,11 +330,11 @@ module.exports = {
                 const hasChanges = hasChangesSelector(store.getState());
                 const hasNewFeatures = hasNewFeaturesSelector(store.getState());
                 return Rx.Observable.of(updateFilter({
-                        ...geometryFilter,
-                        type: 'geometry',
-                        attribute: geometryFilter.attribute || get(spatialFieldSelector(store.getState()), 'attribute'),
-                        deactivated: !hasChanges && !hasNewFeatures ? !geometryFilter.deactivated : true
-                    }, true));
+                    ...geometryFilter,
+                    type: 'geometry',
+                    attribute: geometryFilter.attribute || get(spatialFieldSelector(store.getState()), 'attribute'),
+                    deactivated: !hasChanges && !hasNewFeatures ? !geometryFilter.deactivated : true
+                }, true));
             }),
     deactivateGeometryFilter: (action$, store) =>
         action$.ofType(START_DRAWING_FEATURE, CREATE_NEW_FEATURE, GEOMETRY_CHANGED, DELETE_GEOMETRY)
