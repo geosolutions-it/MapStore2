@@ -575,7 +575,7 @@
             "title": "Ooops! Quelque chose ne fonctionne pas",
             "text": "Une erreur s'est produite au cours de cette requête <b>GetFeatureInfo</b>"
         },
-        "noFeatureInfo": "Aucune information n'est disponible pour le point cliqué",
+        "noFeatureInfo": "Aucune information disponible pour ce point",
         "noInfoForLayers": "Aucun objet n'est trouvé pour les couches suivantes: ",
         "history": {
             "barLabel": "Historique de la carte",
@@ -583,6 +583,9 @@
             "redoBtnTooltip": "Aller en avant"
         },
         "infoFormatLbl": "Informations, format de la réponse",
+        "infoTriggerLabel": "Événement déclencheur pour Identify",
+        "click": "Click",
+        "hover": "Hover",
         "measureSupport": {
             "continueLine": "Cliquez pour continuer à dessiner la ligne",
             "continuePolygon": "Cliquez pour continuer à dessiner le polygone",
