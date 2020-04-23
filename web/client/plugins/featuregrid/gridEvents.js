@@ -1,9 +1,10 @@
+const {omit} = require('lodash');
 const {sort, selectFeatures, deselectFeatures, featureModified, disableToolbar, updateFilter} = require('../../actions/featuregrid');
 
 const range = (start, end) => Array.from({length: (end + 1 - start)}, (v, k) => k + start);
 module.exports = {
     onGridSort: (sortBy, sortOrder) => sort(sortBy, sortOrder),
-    onAddFilter: (update = {}) => updateFilter(update),
+    onAddFilter: (update = {}) => updateFilter(omit(update, 'dontUpdateQuery'), update.dontUpdateQuery),
     onTemporaryChanges: (v) => disableToolbar(v),
     onGridRowsUpdated: ({fromRow, toRow, updated}, rowGetter) => {
 

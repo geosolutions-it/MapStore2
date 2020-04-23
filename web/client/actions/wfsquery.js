@@ -141,6 +141,13 @@ function createQuery(searchUrl, filterObj) {
     };
 }
 
+/**
+ * Trigger a wfs query
+ * @param {string} searchUrl wfs search url
+ * @param {object} filterObj filter to query with
+ * @param {object} queryOptions
+ * @param {any} reason custom parameter that will be supplied to QUERY_RESULT after query completion
+ */
 function query(searchUrl, filterObj, queryOptions, reason) {
     return {
         type: QUERY,

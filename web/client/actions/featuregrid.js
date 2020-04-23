@@ -204,11 +204,11 @@ function setLayer(id) {
         id
     };
 }
-function updateFilter(update) {
+function updateFilter(update, dontUpdateQuery) {
     return {
         type: UPDATE_FILTER,
-        update
-
+        update,
+        dontUpdateQuery
     };
 }
 function toggleTool(tool, value) {

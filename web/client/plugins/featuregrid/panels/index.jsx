@@ -141,7 +141,10 @@ module.exports = {
                         (filter, mode) => {
                             const props = {
                                 value: filter && (filter.rawValue || filter.value),
-                                ...(isGeometryType(cur) ? {filterEnabled: filter && filter.enabled} : {})
+                                ...(isGeometryType(cur) ? {
+                                    filterEnabled: filter?.enabled,
+                                    filterDeactivated: filter?.deactivated
+                                } : {})
                             };
                             const editProps = !isGeometryType(cur) ? {
                                 disabled: true,
