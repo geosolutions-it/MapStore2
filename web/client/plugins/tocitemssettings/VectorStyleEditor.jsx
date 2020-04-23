@@ -60,7 +60,11 @@ const stylers = {
     Point: shapeStyleAdapter(StylePoint)
 };
 
-export default ({ geometryType = "Polygon", element = {}, onChange = () => { } }) => {
+/**
+ * A simple style editor for vector data, similar to the one for the ShapeFile import's one.
+ * Used in TOC for vector data.
+ */
+export default ({ geometryType = "Point", element = {}, onChange = () => { } }) => {
     const CMP = stylers[geometryType];
     return (<CMP
         style={element.style}
