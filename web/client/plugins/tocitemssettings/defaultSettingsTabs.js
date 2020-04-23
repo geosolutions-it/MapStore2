@@ -30,7 +30,7 @@ import LoadingView from '../../components/misc/LoadingView';
 import html from 'raw-loader!./featureInfoPreviews/responseHTML.txt';
 import json from 'raw-loader!./featureInfoPreviews/responseJSON.txt';
 import text from 'raw-loader!./featureInfoPreviews/responseText.txt';
-import VectorStyleEditor from './VectorStyleEditor';
+import SimpleVectorStyleEditor from './SimpleVectorStyleEditor';
 
 
 const responses = {
@@ -131,7 +131,7 @@ const getConfiguredPlugin = (plugin, loaded, loadingComp) => {
 export const getStyleTabPlugin = ({ settings, items = [], loadedPlugins, onToggleStyleEditor = () => { }, onUpdateParams = () => { }, element, ...props }) => {
     if (element.type === "wfs" || element.type === "vector") {
         return {
-            Component: VectorStyleEditor
+            Component: SimpleVectorStyleEditor
         };
     }
     // get Higher priority plugin that satisfies requirements.

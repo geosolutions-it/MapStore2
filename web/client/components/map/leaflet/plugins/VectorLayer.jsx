@@ -63,6 +63,9 @@ Layers.registerType('vector', {
         if (newOptions.opacity !== oldOptions.opacity) {
             layer.opacity = newOptions.opacity;
         }
+        if (newOptions.style !== oldOptions.style) {
+            layer.setStyle(newOptions.nativeStyle || newOptions.style || defaultStyle );
+        }
     },
     render: () => {
         return null;

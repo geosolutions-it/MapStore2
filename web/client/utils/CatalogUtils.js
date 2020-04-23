@@ -617,6 +617,14 @@ const CatalogUtils = {
         };
     },
     wfsToLayer: (record) => {
+        const DEFAULT_VECTOR_STYLE = {
+            "weight": 1,
+            "color": "rgba(0, 0, 255, 1)",
+            "opacity": 1,
+            "fillColor": "rgba(0, 0, 255, 0.1)",
+            "fillOpacity": 0.1,
+            radius: 10
+        };
         return {
             type: record.type || "wfs",
             search: {
@@ -631,6 +639,7 @@ const CatalogUtils = {
             description: record.description || "",
             bbox: record.bbox,
             links: getRecordLinks(record),
+            style: DEFAULT_VECTOR_STYLE,
             ...record.layerOptions
         };
     },

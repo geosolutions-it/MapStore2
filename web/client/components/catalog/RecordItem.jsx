@@ -137,7 +137,7 @@ class RecordItem extends React.Component {
             return null;
         }
         // let's extract the references we need
-        const {wms, wmts, tms ,wfs}  = extractOGCServicesReferences(record);
+        const {wms, wmts, tms, wfs}  = extractOGCServicesReferences(record);
         // let's extract the esri
         const {esri} = extractEsriReferences(record);
         const background = record && record.background;
