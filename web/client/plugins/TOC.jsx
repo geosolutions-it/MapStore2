@@ -653,7 +653,7 @@ const checkPluginsEnhancer = branch(
  * ```
  * "layerOptions": {
  *  "legendOptions": {
- *   "WMSLegendOptions": "forceLabels:on;fontSize:30"
+ *   "WMSLegendOptions": "forceLabels:on"
  *  }
  * }
  * ```

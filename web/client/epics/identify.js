@@ -11,7 +11,7 @@ import {get, find, isString, isNil} from 'lodash';
 import axios from '../libs/ajax';
 
 import uuid from 'uuid';
-
+import { LOCATION_CHANGE } from 'connected-react-router';
 import {
     LOAD_FEATURE_INFO, ERROR_FEATURE_INFO, GET_VECTOR_INFO,
     FEATURE_INFO_CLICK, CLOSE_IDENTIFY, TOGGLE_HIGHLIGHT_FEATURE,
@@ -25,18 +25,19 @@ import {
 import { SET_CONTROL_PROPERTIES, SET_CONTROL_PROPERTY, TOGGLE_CONTROL } from '../actions/controls';
 
 import { closeFeatureGrid } from '../actions/featuregrid';
-import { CHANGE_MOUSE_POINTER, CLICK_ON_MAP, zoomToPoint } from '../actions/map';
+import { CHANGE_MOUSE_POINTER, CLICK_ON_MAP, UNREGISTER_EVENT_LISTENER, MOUSE_MOVE, zoomToPoint } from '../actions/map';
 import { closeAnnotations } from '../actions/annotations';
 import { MAP_CONFIG_LOADED } from '../actions/config';
-import {addPopup, cleanPopups} from '../actions/mapPopups';
+import {addPopup, cleanPopups, removePopup, REMOVE_MAP_POPUP} from '../actions/mapPopups';
 import { stopGetFeatureInfoSelector, identifyOptionsSelector,
     clickPointSelector, clickLayerSelector,
     isMapPopup, isHighlightEnabledSelector,
     itemIdSelector, overrideParamsSelector, filterNameListSelector } from '../selectors/mapInfo';
 import { centerToMarkerSelector, queryableLayersSelector, queryableSelectedLayersSelector } from '../selectors/layers';
 import { modeSelector, getAttributeFilters } from '../selectors/featuregrid';
-import { mapSelector, projectionDefsSelector, projectionSelector } from '../selectors/map';
+import { mapSelector, projectionDefsSelector, projectionSelector, isMouseMoveIdentifyActiveSelector } from '../selectors/map';
 import { boundingMapRectSelector } from '../selectors/maplayout';
+import { floatingIdentifyDelaySelector } from '../selectors/localConfig';
 import { centerToVisibleArea, isInsideVisibleArea, isPointInsideExtent, reprojectBbox, parseURN} from '../utils/CoordinatesUtils';
 
 
@@ -232,7 +233,7 @@ export default {
                             top: parseLayoutValue(boundingMapRect.top, map.size.height)
                         };
                         // exclude cesium with cartographic options
-                        if (!map || !layoutBounds || !coords || action.point.cartographic || isInsideVisibleArea(coords, map, layoutBounds, resolution)) {
+                        if (!map || !layoutBounds || !coords || action.point.cartographic || isInsideVisibleArea(coords, map, layoutBounds, resolution) || isMouseMoveIdentifyActiveSelector(state)) {
                             return Rx.Observable.of(updateCenterToMarker('disabled'));
                         }
                         if (reprojectExtent && !isPointInsideExtent(coords, reprojectExtent)) {
@@ -275,5 +276,52 @@ export default {
     cleanPopupsEpicOnPurge: (action$, {getState}) =>
         action$.ofType(PURGE_MAPINFO_RESULTS)
             .filter(() => isMapPopup(getState()))
-            .mapTo(cleanPopups())
+            .mapTo(cleanPopups()),
+    /**
+     * Triggers data load on MOUSE_MOVE events
+     */
+    mouseMoveMapEventEpic: (action$, {getState}) =>
+        action$.ofType(MOUSE_MOVE)
+            .debounceTime(floatingIdentifyDelaySelector(getState()))
+            .switchMap(({position, layer}) => {
+                if (!isMouseMoveIdentifyActiveSelector(getState()) || getState().mousePosition.mouseOut) {
+                    return Rx.Observable.empty();
+                }
+                return Rx.Observable.of(featureInfoClick(position, layer))
+                    .merge(Rx.Observable.of(addPopup(uuid(), { component: IDENTIFY_POPUP, maxWidth: 600, position: {  coordinates: position ? position.rawPos : []}})));
+            }),
+    /**
+     * Triggers remove popup on UNREGISTER_EVENT_LISTENER
+     */
+    removePopupOnUnregister: (action$, {getState}) =>
+        action$.ofType(UNREGISTER_EVENT_LISTENER)
+            .switchMap(() => {
+                let observable = Rx.Observable.empty();
+                const popups = getState().mapPopups.popups;
+                if (popups.length && !isMouseMoveIdentifyActiveSelector(getState())) {
+                    const activePopupId = popups[0].id;
+                    observable = Rx.Observable.of(removePopup(activePopupId));
+                }
+                return observable;
+            }),
+    /**
+     * Triggers remove popup on LOCATION_CHANGE
+     */
+    removePopupOnLocationChangeEpic: (action$, {getState}) =>
+        action$.ofType(LOCATION_CHANGE)
+            .switchMap(() => {
+                let observable = Rx.Observable.empty();
+                const popups = getState().mapPopups.popups;
+                if (popups.length) {
+                    const activePopupId = popups[0].id;
+                    observable = Rx.Observable.of(removePopup(activePopupId));
+                }
+                return observable;
+            }),
+    /**
+     * Triggers remove map info marker on REMOVE_MAP_POPUP
+     */
+    removeMapInfoMarkerOnRemoveMapPopupEpic: (action$, {getState}) =>
+        action$.ofType(REMOVE_MAP_POPUP)
+            .switchMap(() => isMouseMoveIdentifyActiveSelector(getState()) ? Rx.Observable.of(hideMapinfoMarker()) : Rx.Observable.empty())
 };

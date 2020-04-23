@@ -107,6 +107,12 @@
                 "right": "Recht",
                 "bottom": "Bottom",
                 "top": "Oben"
+            },
+            "legendOptions": {
+              "title": "Legende",
+              "legendWidth": "Breite",
+              "legendHeight": "Höhe",
+              "legendPreview": "Vorschau"
             }
         },
         "longitude": "Länge",
@@ -577,7 +583,7 @@
             "title": "Ooops! Etwas ist schiefgelaufen.",
             "text": "Ein Fehler ist während dieser <b>GetFeatureInfo</b> Anfrage aufgetreten"
         },
-        "noFeatureInfo": "Es sind keine Informationen für den gewählten Punkt verfügbar",
+        "noFeatureInfo": "Zu diesem Punkt sind keine Informationen verfügbar",
         "noInfoForLayers": "Für die folgenden Ebenen gibt es keine Objekte: ",
         "history":{
             "barLabel": "Kartenverlauf",
@@ -585,6 +591,9 @@
             "redoBtnTooltip": "Gehe vorwärts"
         },
         "infoFormatLbl": "Identifiziere das Antwortformat",
+        "infoTriggerLabel": "Auslöseereignis für Identifizieren",
+        "click": "Click",
+        "hover": "Hover",
         "measureSupport": {
             "continueLine": "Klicken Sie auf, um mit dem Zeichnen der Linie fortzufahren",
             "continuePolygon": "Klicken Sie, um mit dem Zeichnen des Polygons fortzufahren",

@@ -82,7 +82,7 @@ Directly from the TOC panel, it is possible to set different types of display op
 
 * Toggle layers visibility by switching on <img src="../img/button/eyeon.jpg" class="ms-docbutton"/> and off <img src="../img/button/eyeoff.jpg" class="ms-docbutton"/> the "eye" icon to the left of the layer name
 
-* Expand or collapse the legend by clicking on the <img src="../img/button/legend-icon.jpg" class="ms-docbutton"/> icon
+* Expand or collapse the legend by clicking on the <img src="../img/button/legend-icon.jpg" class="ms-docbutton"/> icon. The width and height property of the legend can be overridden via Legend options under Display tab.
 
 * Control the transparency in map by scrolling the opacity slider
 

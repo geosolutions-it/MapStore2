@@ -11,7 +11,7 @@ const assign = require('object-assign');
 class Legend extends React.Component {
     static propTypes = {
         layer: PropTypes.object,
-        legendHeigth: PropTypes.number,
+        legendHeight: PropTypes.number,
         legendWidth: PropTypes.number,
         legendOptions: PropTypes.string,
         style: PropTypes.object,
@@ -22,9 +22,9 @@ class Legend extends React.Component {
     };
 
     static defaultProps = {
-        legendHeigth: 12,
+        legendHeight: 12,
         legendWidth: 12,
-        legendOptions: "forceLabels:on;fontSize:30",
+        legendOptions: "forceLabels:on",
         style: {maxWidth: "100%"},
         scaleDependent: true
     };
@@ -55,7 +55,7 @@ class Legend extends React.Component {
                 service: "WMS",
                 request: "GetLegendGraphic",
                 format: "image/png",
-                height: props.legendHeigth,
+                height: props.legendHeight,
                 width: props.legendWidth,
                 layer: layer.name,
                 style: layer.style || null,

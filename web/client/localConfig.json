@@ -27,7 +27,8 @@
           "terrainProvider": {
               "type": "ellipsoid"
           }
-      }
+      },
+      "floatingIdentifyDelay": 1000
     },
     "localizedLayerStyles": {
       "name": "mapstore_language"
@@ -353,8 +354,10 @@
                     "activateMetedataTool": false,
                     "layerOptions": {
                       "legendOptions": {
-                        "WMSLegendOptions": "forceLabels:on;fontSize:30",
-                        "scaleDependent": true
+                        "WMSLegendOptions": "forceLabels:on",
+                        "scaleDependent": true,
+                        "legendWidth": 12,
+                        "legendHeight": 12
                       }
                     }
                 }
