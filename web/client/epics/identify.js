@@ -25,7 +25,7 @@ import {
 import { SET_CONTROL_PROPERTIES, SET_CONTROL_PROPERTY, TOGGLE_CONTROL } from '../actions/controls';
 
 import { closeFeatureGrid } from '../actions/featuregrid';
-import { CHANGE_MOUSE_POINTER, CLICK_ON_MAP, zoomToPoint } from '../actions/map';
+import { CHANGE_MOUSE_POINTER, CLICK_ON_MAP, CHANGE_MAP_VIEW, zoomToPoint, changeMapView } from '../actions/map';
 import { closeAnnotations } from '../actions/annotations';
 import { MAP_CONFIG_LOADED } from '../actions/config';
 import {addPopup, cleanPopups} from '../actions/mapPopups';
@@ -40,7 +40,7 @@ import { boundingMapRectSelector } from '../selectors/maplayout';
 import { centerToVisibleArea, isInsideVisibleArea, isPointInsideExtent, reprojectBbox, parseURN} from '../utils/CoordinatesUtils';
 
 
-import { getCurrentResolution, parseLayoutValue } from '../utils/MapUtils';
+import {getBbox, getCurrentResolution, parseLayoutValue} from '../utils/MapUtils';
 import MapInfoUtils from '../utils/MapInfoUtils';
 import { IDENTIFY_POPUP } from '../components/map/popups';
 
@@ -239,7 +239,14 @@ export default {
                             return Rx.Observable.empty();
                         }
                         const center = centerToVisibleArea(coords, map, layoutBounds, resolution);
-                        return Rx.Observable.of(updateCenterToMarker('enabled'), zoomToPoint(center.pos, center.zoom, center.crs));
+                        return Rx.Observable.of(updateCenterToMarker('enabled'), zoomToPoint(center.pos, center.zoom, center.crs))
+                            .concat(
+                                action$.ofType(CLOSE_IDENTIFY).switchMap(()=>{
+                                    const bbox = getBbox(map.center, map.zoom);
+                                    return Rx.Observable.of(
+                                        changeMapView(map.center, map.zoom, bbox, map.size, null, map.projection));
+                                }).takeUntil(action$.ofType(CHANGE_MAP_VIEW).skip(1))
+                            );
                     })
             ),
     /**
