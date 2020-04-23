@@ -57,7 +57,7 @@ describe("test ResultProps component", () => {
         let maxFeatures = sliders[0].innerText;
         let maxZoomLevel = sliders[1].innerText;
         expect(maxFeatures).toBe('1');
-        expect(maxZoomLevel).toBe('1');
+        expect(maxZoomLevel).toBe('21');
 
         service = {
             type: "wfs",

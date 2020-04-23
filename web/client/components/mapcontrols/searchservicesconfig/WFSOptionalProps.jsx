@@ -58,11 +58,11 @@ class WFSOptionalProps extends React.Component {
                     <ControlLabel>
                         <Message msgId="search.s_max_zoom" />
                     </ControlLabel>
-                    <Slider key="maxZoomLevel" start={[options.maxZoomLevel || 1]}
+                    <Slider key="maxZoomLevel" start={[options.maxZoomLevel || 21]}
                         range={{min: 1, max: 35}}
                         onSlide={this.updateSliderProps.bind(null, "maxZoomLevel")}
                     />
-                    <Label key="maxZoomLevel-label" className="slider-label" >{options.maxZoomLevel || 1}</Label>
+                    <Label key="maxZoomLevel-label" className="slider-label" >{options.maxZoomLevel || 21}</Label>
                 </FormGroup>
             </form>);
     }
