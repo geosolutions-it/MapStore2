@@ -13,7 +13,7 @@ var {
 } = require('../actions/mousePosition');
 
 const {
-    MOUSE_MOVE_MAP_EVENT,
+    MOUSE_MOVE,
     MOUSE_OUT
 } = require('../actions/map');
 
@@ -33,7 +33,7 @@ function mousePosition(state = {enabled: true, position: null, crs: null}, actio
         return assign({}, state, {
             crs: action.crs
         });
-    case MOUSE_MOVE_MAP_EVENT: {
+    case MOUSE_MOVE: {
         return assign({}, state, {position: action.position, mouseOut: false});
     }
     case MOUSE_OUT: {

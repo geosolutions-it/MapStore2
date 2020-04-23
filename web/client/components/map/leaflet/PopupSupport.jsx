@@ -39,9 +39,11 @@ export default class PopupSupport extends React.Component {
         onPopupClose: () => {}
     }
     componentWillMount() {
-        // This prevent the pointermove to be sent event when stopevent is active.
-        document.querySelector('.leaflet-popup-pane').addEventListener('mousemove', this.stopPropagationOnMouseMove);
-        document.querySelector('.leaflet-popup-pane').addEventListener('mouseenter', () => this.props.map.fireEvent('mouseout'));
+        if (this.props.map) {
+            // This prevent the pointermove to be sent event when stopevent is active.
+            this.props.map.getContainer().querySelector('.leaflet-popup-pane').addEventListener('mousemove', this.stopPropagationOnMouseMove);
+            this.props.map.getContainer().querySelector('.leaflet-popup-pane').addEventListener('mouseenter', this.fireMouseOutEvent);
+        }
     }
     componentDidMount() {
         if (this.props.map) {
@@ -59,8 +61,9 @@ export default class PopupSupport extends React.Component {
         });
         if (this.props.map) {
             this.props.map.off('resize', this.updatePopup);
+            this.props.map.getContainer().removeEventListener('mousemove', this.stopPropagationOnMouseMove);
+            this.props.map.getContainer().removeEventListener('mouseenter', this.fireMouseOutEvent);
         }
-        document.removeEventListener('mousemove', this.stopPropagationOnMouseMove);
     }
     renderPopups() {
         return  this.preparePopups()
@@ -123,5 +126,8 @@ export default class PopupSupport extends React.Component {
     }
     stopPropagationOnMouseMove = (event) => {
         event.stopPropagation();
+    }
+    fireMouseOutEvent = () => {
+        this.props.map.fireEvent('mouseout');
     }
 }

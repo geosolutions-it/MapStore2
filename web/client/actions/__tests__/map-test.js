@@ -25,7 +25,7 @@ var {
     SET_MAP_RESOLUTIONS,
     REGISTER_EVENT_LISTENER,
     UNREGISTER_EVENT_LISTENER,
-    MOUSE_MOVE_MAP_EVENT,
+    MOUSE_MOVE,
     MOUSE_OUT,
     zoomToPoint,
     errorLoadingFont,
@@ -45,7 +45,7 @@ var {
     setMapResolutions,
     registerEventListener,
     unRegisterEventListener,
-    mouseMoveMapEvent,
+    mouseMove,
     mouseOut
 } = require('../map');
 const {
@@ -250,11 +250,11 @@ describe('Test correctness of the map actions', () => {
         expect(retval.eventName).toEqual(eventName);
         expect(retval.toolName).toEqual(toolName);
     });
-    it('mouseMoveMapEvent', () => {
+    it('mouseMove', () => {
         const position = {lat: 100, lng: 200};
-        const retval = mouseMoveMapEvent(position);
+        const retval = mouseMove(position);
         expect(retval).toExist();
-        expect(retval.type).toEqual(MOUSE_MOVE_MAP_EVENT);
+        expect(retval.type).toEqual(MOUSE_MOVE);
         expect(retval.position).toEqual(position);
     });
     it('mouseOut', () => {

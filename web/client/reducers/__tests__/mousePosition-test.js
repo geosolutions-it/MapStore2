@@ -49,7 +49,7 @@ describe('Test the mousePosition reducer', () => {
     it('mouse move map event', () => {
         const position = {lat: 100, lng: 200};
         const action = {
-            type: 'MOUSE_MOVE_MAP_EVENT',
+            type: 'MOUSE_MOVE',
             position
         };
         const state = mousePosition({}, action);

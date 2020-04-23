@@ -25,7 +25,7 @@ import {
 import { SET_CONTROL_PROPERTIES, SET_CONTROL_PROPERTY, TOGGLE_CONTROL } from '../actions/controls';
 
 import { closeFeatureGrid } from '../actions/featuregrid';
-import { CHANGE_MOUSE_POINTER, CLICK_ON_MAP, UNREGISTER_EVENT_LISTENER, MOUSE_MOVE_MAP_EVENT, zoomToPoint } from '../actions/map';
+import { CHANGE_MOUSE_POINTER, CLICK_ON_MAP, UNREGISTER_EVENT_LISTENER, MOUSE_MOVE, zoomToPoint } from '../actions/map';
 import { closeAnnotations } from '../actions/annotations';
 import { MAP_CONFIG_LOADED } from '../actions/config';
 import {addPopup, cleanPopups, removePopup, REMOVE_MAP_POPUP} from '../actions/mapPopups';
@@ -278,10 +278,10 @@ export default {
             .filter(() => isMapPopup(getState()))
             .mapTo(cleanPopups()),
     /**
-     * Triggers data load on MOUSE_MOVE_MAP_EVENT events
+     * Triggers data load on MOUSE_MOVE events
      */
     mouseMoveMapEventEpic: (action$, {getState}) =>
-        action$.ofType(MOUSE_MOVE_MAP_EVENT)
+        action$.ofType(MOUSE_MOVE)
             .debounceTime(floatingIdentifyDelaySelector(getState()))
             .switchMap(({position, layer}) => {
                 if (!isMouseMoveIdentifyActiveSelector(getState()) || getState().mousePosition.mouseOut) {
