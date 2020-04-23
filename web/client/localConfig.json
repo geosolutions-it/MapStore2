@@ -27,7 +27,11 @@
           "terrainProvider": {
               "type": "ellipsoid"
           }
-      }
+      },
+      "floatingIdentifyDelay": 1000
+    },
+    "localizedLayerStyles": {
+      "name": "mapstore_language"
     },
     "authenticationRules": [{
         "urlPattern": ".*geostore.*",

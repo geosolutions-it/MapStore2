@@ -11,7 +11,7 @@ import {get, find, isString, isNil, isNumber} from 'lodash';
 import axios from '../libs/ajax';
 
 import uuid from 'uuid';
-
+import { LOCATION_CHANGE } from 'connected-react-router';
 import {
     LOAD_FEATURE_INFO, ERROR_FEATURE_INFO, GET_VECTOR_INFO,
     FEATURE_INFO_CLICK, CLOSE_IDENTIFY, TOGGLE_HIGHLIGHT_FEATURE,
@@ -27,11 +27,11 @@ import { SET_CONTROL_PROPERTIES, SET_CONTROL_PROPERTY, TOGGLE_CONTROL } from '..
 import { closeFeatureGrid, updateFilter, toggleEditMode, CLOSE_FEATURE_GRID } from '../actions/featuregrid';
 import { LOCATION_CHANGE } from 'connected-react-router';
 import { QUERY_CREATE } from '../actions/wfsquery';
-import { CHANGE_MOUSE_POINTER, CLICK_ON_MAP, zoomToPoint } from '../actions/map';
+import { CHANGE_MOUSE_POINTER, CLICK_ON_MAP, UNREGISTER_EVENT_LISTENER, MOUSE_MOVE, zoomToPoint } from '../actions/map';
 import { browseData } from '../actions/layers';
 import { closeAnnotations } from '../actions/annotations';
 import { MAP_CONFIG_LOADED } from '../actions/config';
-import {addPopup, cleanPopups} from '../actions/mapPopups';
+import {addPopup, cleanPopups, removePopup, REMOVE_MAP_POPUP} from '../actions/mapPopups';
 import { stopGetFeatureInfoSelector, identifyOptionsSelector,
     clickPointSelector, clickLayerSelector,
     isMapPopup, isHighlightEnabledSelector,
@@ -39,9 +39,10 @@ import { stopGetFeatureInfoSelector, identifyOptionsSelector,
 import { centerToMarkerSelector, queryableLayersSelector, queryableSelectedLayersSelector } from '../selectors/layers';
 import { modeSelector, getAttributeFilters, isFeatureGridOpen } from '../selectors/featuregrid';
 import { spatialFieldSelector } from '../selectors/queryform';
-import { mapSelector, projectionDefsSelector, projectionSelector } from '../selectors/map';
+import { mapSelector, projectionDefsSelector, projectionSelector, isMouseMoveIdentifyActiveSelector } from '../selectors/map';
 import { boundingMapRectSelector } from '../selectors/maplayout';
 import { centerToVisibleArea, isInsideVisibleArea, isPointInsideExtent, reprojectBbox, parseURN, calculateCircleCoordinates } from '../utils/CoordinatesUtils';
+import { floatingIdentifyDelaySelector } from '../selectors/localConfig';
 
 
 import { getCurrentResolution, parseLayoutValue } from '../utils/MapUtils';
@@ -236,7 +237,7 @@ export default {
                             top: parseLayoutValue(boundingMapRect.top, map.size.height)
                         };
                         // exclude cesium with cartographic options
-                        if (!map || !layoutBounds || !coords || action.point.cartographic || isInsideVisibleArea(coords, map, layoutBounds, resolution)) {
+                        if (!map || !layoutBounds || !coords || action.point.cartographic || isInsideVisibleArea(coords, map, layoutBounds, resolution) || isMouseMoveIdentifyActiveSelector(state)) {
                             return Rx.Observable.of(updateCenterToMarker('disabled'));
                         }
                         if (reprojectExtent && !isPointInsideExtent(coords, reprojectExtent)) {
@@ -325,5 +326,52 @@ export default {
             }),
     resetEditFeatureQuery: (action$) =>
         action$.ofType(CLOSE_FEATURE_GRID, LOCATION_CHANGE)
-            .mapTo(setEditFeatureQuery())
+            .mapTo(setEditFeatureQuery()),
+    /**
+     * Triggers data load on MOUSE_MOVE events
+     */
+    mouseMoveMapEventEpic: (action$, {getState}) =>
+        action$.ofType(MOUSE_MOVE)
+            .debounceTime(floatingIdentifyDelaySelector(getState()))
+            .switchMap(({position, layer}) => {
+                if (!isMouseMoveIdentifyActiveSelector(getState()) || getState().mousePosition.mouseOut) {
+                    return Rx.Observable.empty();
+                }
+                return Rx.Observable.of(featureInfoClick(position, layer))
+                    .merge(Rx.Observable.of(addPopup(uuid(), { component: IDENTIFY_POPUP, maxWidth: 600, position: {  coordinates: position ? position.rawPos : []}})));
+            }),
+    /**
+     * Triggers remove popup on UNREGISTER_EVENT_LISTENER
+     */
+    removePopupOnUnregister: (action$, {getState}) =>
+        action$.ofType(UNREGISTER_EVENT_LISTENER)
+            .switchMap(() => {
+                let observable = Rx.Observable.empty();
+                const popups = getState().mapPopups.popups;
+                if (popups.length && !isMouseMoveIdentifyActiveSelector(getState())) {
+                    const activePopupId = popups[0].id;
+                    observable = Rx.Observable.of(removePopup(activePopupId));
+                }
+                return observable;
+            }),
+    /**
+     * Triggers remove popup on LOCATION_CHANGE
+     */
+    removePopupOnLocationChangeEpic: (action$, {getState}) =>
+        action$.ofType(LOCATION_CHANGE)
+            .switchMap(() => {
+                let observable = Rx.Observable.empty();
+                const popups = getState().mapPopups.popups;
+                if (popups.length) {
+                    const activePopupId = popups[0].id;
+                    observable = Rx.Observable.of(removePopup(activePopupId));
+                }
+                return observable;
+            }),
+    /**
+     * Triggers remove map info marker on REMOVE_MAP_POPUP
+     */
+    removeMapInfoMarkerOnRemoveMapPopupEpic: (action$, {getState}) =>
+        action$.ofType(REMOVE_MAP_POPUP)
+            .switchMap(() => isMouseMoveIdentifyActiveSelector(getState()) ? Rx.Observable.of(hideMapinfoMarker()) : Rx.Observable.empty())
 };

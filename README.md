@@ -43,7 +43,7 @@ Use the default credentials (admin / admin) to login and start creating your map
 
 After downloading the MapStore war file, install it in your java web container (e.g. Tomcat), with usual procedures for the container (normally you only need to copy the war file in the webapps subfolder).
 
-If you don't have a java web container you can download Apache Tomcat from [here](https://tomcat.apache.org/download-70.cgi) and install it. You will also need a Java7 [JRE](http://www.oracle.com/technetwork/java/javase/downloads/jre7-downloads-1880261.html)
+If you don't have a java web container you can download Apache Tomcat from [here](https://tomcat.apache.org/download-70.cgi) and install it. You will also need a Java [JRE](https://www.java.com/it/download/)(minimum version: 8)
 
 Then you can access MapStore using the following URL (assuming the web container is on the standard 8080 port):
 
