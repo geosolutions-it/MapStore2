@@ -19,7 +19,8 @@ class WMSLegend extends React.Component {
         currentZoomLvl: PropTypes.number,
         scales: PropTypes.array,
         WMSLegendOptions: PropTypes.string,
-        scaleDependent: PropTypes.bool
+        scaleDependent: PropTypes.bool,
+        language: PropTypes.string
     };
 
     static defaultProps = {
@@ -39,7 +40,9 @@ class WMSLegend extends React.Component {
                         currentZoomLvl={this.props.currentZoomLvl}
                         scales={this.props.scales}
                         legendOptions={this.props.WMSLegendOptions}
-                        scaleDependent={this.props.scaleDependent}/>
+                        scaleDependent={this.props.scaleDependent}
+                        language={this.props.language}
+                    />
                 </div>
             );
         }

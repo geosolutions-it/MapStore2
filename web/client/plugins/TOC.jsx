@@ -23,10 +23,11 @@ const {zoomToExtent} = require('../actions/map');
 const {error} = require('../actions/notifications');
 const {groupsSelector, layersSelector, selectedNodesSelector, layerFilterSelector, layerSettingSelector, layerMetadataSelector, wfsDownloadSelector} = require('../selectors/layers');
 const {mapSelector, mapNameSelector} = require('../selectors/map');
-const {currentLocaleSelector} = require("../selectors/locale");
+const {currentLocaleSelector, currentLocaleLanguageSelector} = require("../selectors/locale");
 const {widgetBuilderAvailable} = require('../selectors/controls');
 const {generalInfoFormatSelector} = require("../selectors/mapInfo");
 const {userSelector} = require('../selectors/security');
+const {isLocalizedLayerStylesEnabledSelector} = require('../selectors/localizedLayerStyles');
 
 const LayersUtils = require('../utils/LayersUtils');
 const mapUtils = require('../utils/MapUtils');
@@ -80,6 +81,7 @@ const tocSelector = createSelector(
         wfsDownloadSelector,
         mapSelector,
         currentLocaleSelector,
+        currentLocaleLanguageSelector,
         selectedNodesSelector,
         layerFilterSelector,
         layersSelector,
@@ -88,8 +90,9 @@ const tocSelector = createSelector(
         widgetBuilderAvailable,
         generalInfoFormatSelector,
         isCesium,
-        userSelector
-    ], (enabled, groups, settings, layerMetadata, wfsdownload, map, currentLocale, selectedNodes, filterText, layers, mapName, catalogActive, activateWidgetTool, generalInfoFormat, isCesiumActive, user) => ({
+        userSelector,
+        isLocalizedLayerStylesEnabledSelector
+    ], (enabled, groups, settings, layerMetadata, wfsdownload, map, currentLocale, currentLocaleLanguage, selectedNodes, filterText, layers, mapName, catalogActive, activateWidgetTool, generalInfoFormat, isCesiumActive, user, isLocalizedLayerStylesEnabled) => ({
         enabled,
         groups,
         settings,
@@ -101,6 +104,7 @@ const tocSelector = createSelector(
             map && map.mapOptions && map.mapOptions.view && map.mapOptions.view.DPI || null
         ),
         currentLocale,
+        currentLocaleLanguage,
         selectedNodes,
         filterText,
         generalInfoFormat,
@@ -132,7 +136,8 @@ const tocSelector = createSelector(
         ]),
         catalogActive,
         activateWidgetTool,
-        user
+        user,
+        isLocalizedLayerStylesEnabled
     })
 );
 
@@ -202,6 +207,7 @@ class LayerTree extends React.Component {
         spatialMethodOptions: PropTypes.array,
         groupOptions: PropTypes.object,
         currentLocale: PropTypes.string,
+        currentLocaleLanguage: PropTypes.string,
         onFilter: PropTypes.func,
         filterText: PropTypes.string,
         generalInfoFormat: PropTypes.string,
@@ -222,7 +228,8 @@ class LayerTree extends React.Component {
         refreshLayerVersion: PropTypes.func,
         hideOpacityTooltip: PropTypes.bool,
         layerNodeComponent: PropTypes.func,
-        groupNodeComponent: PropTypes.func
+        groupNodeComponent: PropTypes.func,
+        isLocalizedLayerStylesEnabled: PropTypes.bool
     };
 
     static contextTypes = {
@@ -346,7 +353,9 @@ class LayerTree extends React.Component {
                 filterText={this.props.filterText}
                 onUpdateNode={this.props.updateNode}
                 hideOpacityTooltip={this.props.hideOpacityTooltip}
-            />);
+                language={this.props.isLocalizedLayerStylesEnabled ? this.props.currentLocaleLanguage : null}
+            />
+        );
     }
 
     renderTOC = () => {
