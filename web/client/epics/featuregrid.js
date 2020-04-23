@@ -326,23 +326,25 @@ module.exports = {
     handleGeometryFilterActivation: (action$, store) =>
         action$.ofType(START_DRAWING_FEATURE)
             .flatMap(() => {
-                const geometryFilter = find(getAttributeFilters(store.getState()), f => f.type === 'geometry');
+                const geometryFilter = find(getAttributeFilters(store.getState()), f => f.type === 'geometry') || {};
                 const hasChanges = hasChangesSelector(store.getState());
                 const hasNewFeatures = hasNewFeaturesSelector(store.getState());
-                return geometryFilter && geometryFilter.enabled ?
-                    Rx.Observable.of(updateFilter({
+                return Rx.Observable.of(updateFilter({
                         ...geometryFilter,
+                        type: 'geometry',
+                        attribute: geometryFilter.attribute || get(spatialFieldSelector(store.getState()), 'attribute'),
                         deactivated: !hasChanges && !hasNewFeatures ? !geometryFilter.deactivated : true
-                    }, true)) :
-                    Rx.Observable.empty();
+                    }, true));
             }),
     deactivateGeometryFilter: (action$, store) =>
         action$.ofType(START_DRAWING_FEATURE, CREATE_NEW_FEATURE, GEOMETRY_CHANGED, DELETE_GEOMETRY)
             .flatMap(() => {
-                const geometryFilter = find(getAttributeFilters(store.getState()), f => f.type === 'geometry');
-                return geometryFilter && geometryFilter.enabled && !geometryFilter.deactivated ?
+                const geometryFilter = find(getAttributeFilters(store.getState()), f => f.type === 'geometry') || {};
+                return !geometryFilter.deactivated ?
                     Rx.Observable.of(updateFilter({
                         ...geometryFilter,
+                        type: 'geometry',
+                        attribute: geometryFilter.attribute || get(spatialFieldSelector(store.getState()), 'attribute'),
                         deactivated: true
                     }, true)) :
                     Rx.Observable.empty();
@@ -350,10 +352,12 @@ module.exports = {
     activateGeometryFilter: (action$, store) =>
         action$.ofType(SAVE_SUCCESS, CLEAR_CHANGES)
             .flatMap(() => {
-                const geometryFilter = find(getAttributeFilters(store.getState()), f => f.type === 'geometry');
-                return geometryFilter && geometryFilter.enabled && geometryFilter.deactivated ?
+                const geometryFilter = find(getAttributeFilters(store.getState()), f => f.type === 'geometry') || {};
+                return geometryFilter.deactivated ?
                     Rx.Observable.of(updateFilter({
                         ...geometryFilter,
+                        type: 'geometry',
+                        attribute: geometryFilter.attribute || get(spatialFieldSelector(store.getState()), 'attribute'),
                         deactivated: false
                     }, true)) :
                     Rx.Observable.empty();

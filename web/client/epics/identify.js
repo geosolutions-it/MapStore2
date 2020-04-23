@@ -25,7 +25,6 @@ import {
 import { SET_CONTROL_PROPERTIES, SET_CONTROL_PROPERTY, TOGGLE_CONTROL } from '../actions/controls';
 
 import { closeFeatureGrid, updateFilter, toggleEditMode, CLOSE_FEATURE_GRID } from '../actions/featuregrid';
-import { LOCATION_CHANGE } from 'connected-react-router';
 import { QUERY_CREATE } from '../actions/wfsquery';
 import { CHANGE_MOUSE_POINTER, CLICK_ON_MAP, UNREGISTER_EVENT_LISTENER, MOUSE_MOVE, zoomToPoint } from '../actions/map';
 import { browseData } from '../actions/layers';
