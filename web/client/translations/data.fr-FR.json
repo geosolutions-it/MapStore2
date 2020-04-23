@@ -645,6 +645,7 @@
             "s_attributes": "Les attributs",
             "s_sort": "Trier par",
             "s_max_features": "Fonctionnalités Max",
+            "s_max_zoom": "Niveau de zoom max",
             "s_wfs_props_label": "WFS accessoires du service",
             "s_wfs_opt_props_label": "Supports optionnels",
             "s_result_props_label": "Propriétés d'affichage des résultats",
