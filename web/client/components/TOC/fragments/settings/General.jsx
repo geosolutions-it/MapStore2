@@ -187,12 +187,13 @@ class General extends React.Component {
                             </Col>
                         </div>
                     }
+
                 </form>
             </Grid>
         );
     }
 
-    updateEntry = (key, event) => this.props.onChange(key, event.target.value);
+    updateEntry = (key, event) => isObject(key) ? this.props.onChange(key) : this.props.onChange(key, event.target.value);
 
     updateTranslation = (key, event) => {
         const title = (key === 'default' && isString(this.props.element.title))

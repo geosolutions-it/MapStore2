@@ -106,6 +106,12 @@
                 "right": "Right",
                 "bottom": "Bottom",
                 "top": "Top"
+            },
+            "legendOptions": {
+              "title": "Legend",
+              "legendWidth": "Width",
+              "legendHeight": "Height",
+              "legendPreview": "Preview"
             }
         },
         "longitude": "Longitude",
