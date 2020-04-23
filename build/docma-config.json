@@ -132,6 +132,7 @@
             "web/client/components/misc/EmptyView.jsx",
             "web/client/components/misc/ResizableModal.jsx",
             "web/client/components/misc/Slider.jsx",
+            "web/client/components/misc/Thumbnail.jsx",
             "web/client/components/TOC/FloatingLegend.jsx",
             "web/client/components/TOC/TOCItemsSettings.jsx",
             "web/client/components/TOC/fragments/settings/FeatureInfo.jsx",
@@ -198,7 +199,8 @@
             "web/client/utils/ogc/Filter/FilterBuilder.js",
             "web/client/utils/ogc/WFS/RequestBuilder.js",
             "web/client/utils/ogc/WFST/RequestBuilder.js",
-            "web/client/utils/ShareUtils.js"
+            "web/client/utils/ShareUtils.js",
+            "web/client/utils/ThumbnailUtils.js"
           ],
           "jsapi": "web/client/jsapi/MapStore2.js",
             "plugins": [

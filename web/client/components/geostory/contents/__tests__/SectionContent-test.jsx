@@ -60,8 +60,12 @@ describe('Section Content (Container) component', () => {
             </div>
             <div style={{ width: '100%', height: 100 }}>
                 <Content sectionType="immersive" id={ID_2} onVisibilityChange={({ id, visible }) => {
-                    expect(id).toBe(ID_2);
-                    expect(visible).toBe(true);
+                    try {
+                        expect(id).toBe(ID_2);
+                        expect(visible).toBe(true);
+                    } catch (e) {
+                        done(e);
+                    }
                     done();
                 }} type="column"/>
             </div>

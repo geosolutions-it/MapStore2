@@ -5,7 +5,7 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, cloneElement } from 'react';
 import PropTypes from 'prop-types';
 import { useInView } from 'react-intersection-observer';
 import debounce from 'lodash/debounce';
@@ -54,7 +54,7 @@ const VisibilityContainer = ({
             ref={ref}
             className="ms-visibility-container">
             {!loading
-                ? children
+                ? cloneElement(children, { inView })
                 : LoaderComponent
                     ? <LoaderComponent />
                     : null}

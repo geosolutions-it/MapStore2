@@ -10,7 +10,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import expect from 'expect';
 import Background from '../Background';
-import {Provider} from 'react-redux';
+import { Provider } from 'react-redux';
 import { testToolbarButtons } from './testUtils';
 
 describe('Background component', () => {
@@ -38,16 +38,14 @@ describe('Background component', () => {
     it('render background with media (image)', () => {
         const VIEW_HEIGHT = 800;
         ReactDOM.render(
-            <Provider store={{subscribe: () => {}, getState: () => ({mediaEditor: {open: true}})}}>
-                <Background
-                    width={1024}
-                    mode="edit"
-                    height={VIEW_HEIGHT}
-                    type="image"
-                    src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg=="
-                    lazy={false}
-                />
-            </Provider>, document.getElementById("container"));
+            <Background
+                width={1024}
+                mode="edit"
+                height={VIEW_HEIGHT}
+                type="image"
+                src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg=="
+                lazy={false}
+            />, document.getElementById("container"));
         const container = document.getElementById('container');
         const backgroundContainer = container.querySelector('.ms-section-background-container');
         const imageMedia = container.querySelector('.ms-media-image');

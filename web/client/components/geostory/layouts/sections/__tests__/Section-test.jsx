@@ -11,8 +11,6 @@ import ReactDOM from 'react-dom';
 import expect from 'expect';
 import Section from '../Section';
 import STORY from '../../../../../test-resources/geostory/sampleStory_1.json';
-import { lists } from '../../../../../utils/GeoStoryUtils';
-
 
 describe('Section component', () => {
     beforeEach((done) => {
@@ -45,23 +43,56 @@ describe('Section component', () => {
         expect(el.querySelector('.ms-section-contents')).toExist();
     });
     describe('every section type supports onVisibilityChange', () => {
-        lists.SectionTypes.forEach((type) => {
-            it(`${type}`, done => {
-                ReactDOM.render(<Section
-                    type={type}
-                    {...STORY.sections[1]}
-                    mediaType={type}
-                    id={`test-${type}-section`}
-                    onVisibilityChange={({id, visible, entry}) => {
-                        expect(id).toBe(`test-${type}-section`);
-                        expect(visible).toBe(true);
+        it('title', done => {
+            ReactDOM.render(<Section
+                type="title"
+                id={`test-title-section`}
+                onVisibilityChange={({id, visible, entry}) => {
+                    try {
+                        expect(id).toBe(`test-title-section`);
+                        expect(visible).toBe(false);
                         expect(entry).toExist();
-                        expect(entry.intersectionRatio).toExist();
-                        done();
-                    }}
-                />, document.getElementById("container"));
-            });
+                        expect(entry.intersectionRatio).toNotBe(undefined);
+                    } catch (e) {
+                        done(e);
+                    }
+                    done();
+                }}
+            />, document.getElementById("container"));
         });
-
+        it('paragraph', done => {
+            ReactDOM.render(<Section
+                type="paragraph"
+                id={`test-paragraph-section`}
+                onVisibilityChange={({id, visible, entry}) => {
+                    try {
+                        expect(id).toBe(`test-paragraph-section`);
+                        expect(visible).toBe(false);
+                        expect(entry).toExist();
+                        expect(entry.intersectionRatio).toNotBe(undefined);
+                    } catch (e) {
+                        done(e);
+                    }
+                    done();
+                }}
+            />, document.getElementById("container"));
+        });
+        it('immersive', done => {
+            ReactDOM.render(<Section
+                type="immersive"
+                id={`test-immersive-section`}
+                onVisibilityChange={({id, visible, entry}) => {
+                    try {
+                        expect(id).toBe(`test-immersive-section`);
+                        expect(visible).toBe(false);
+                        expect(entry).toExist();
+                        expect(entry.intersectionRatio).toNotBe(undefined);
+                    } catch (e) {
+                        done(e);
+                    }
+                    done();
+                }}
+            />, document.getElementById("container"));
+        });
     });
 });

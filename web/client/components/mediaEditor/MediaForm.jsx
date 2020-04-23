@@ -6,13 +6,15 @@
  * LICENSE file in the root directory of this source tree.
  */
 import React from 'react';
-import {MediaTypes} from '../../utils/GeoStoryUtils';
+import { MediaTypes } from '../../utils/GeoStoryUtils';
 import ImageForm from './image/ImageForm';
 import MapForm from './map/MapForm';
+import VideoForm from './video/VideoForm';
 
 const types = {
     [MediaTypes.IMAGE]: ImageForm,
-    [MediaTypes.MAP]: MapForm
+    [MediaTypes.MAP]: MapForm,
+    [MediaTypes.VIDEO]: VideoForm
 };
 
 

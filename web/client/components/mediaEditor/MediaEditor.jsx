@@ -58,7 +58,6 @@ export default ({
                     onClick: () => {setMediaType("image"); },
                     disabled: saveState && saveState.addingMedia
                 }, {
-                    visible: false, // TODO RESTORE THIS when video is implemented
                     text: <Message msgId= "mediaEditor.videos"/>,
                     active: mediaType === "video",
                     bsStyle: mediaType === "video" ? "primary" : "default",

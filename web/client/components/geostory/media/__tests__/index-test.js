@@ -9,7 +9,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import expect from 'expect';
-import { Media } from '../index';
+import Media from '../index';
+import ReactTestUtils from 'react-dom/test-utils';
 
 describe('Media component', () => {
     beforeEach((done) => {
@@ -22,7 +23,7 @@ describe('Media component', () => {
         setTimeout(done);
     });
     it('scroll in view should render the actual component (lazy loading)', (done) => {
-        const DEBOUNCE_TIME = 25;
+        const DEBOUNCE_TIME = 1;
         ReactDOM.render(
             <div
                 id="scroll-container"
@@ -33,16 +34,22 @@ describe('Media component', () => {
             document.getElementById("container"));
         try {
             let container = document.getElementById('container');
-            expect(container.querySelector('.ms-visibility-container')).toExist();
-            expect(container.querySelector('.ms-media-loader')).toExist();
+            expect(container.querySelector('.ms-visibility-container')).toBeTruthy();
+            expect(container.querySelector('.ms-media-loader')).toBeTruthy();
             const scrollContainer =  document.getElementById('scroll-container');
-            scrollContainer.scrollTo(0, scrollContainer.scrollHeight);
+            ReactTestUtils.act(() => {
+                scrollContainer.scrollTo(0, scrollContainer.scrollHeight);
+            });
             setTimeout(() => {
-                container = document.getElementById('container');
-                expect(container.querySelector('.ms-media-loader')).toBe(null);
-                expect(container.querySelector('.empty-state-container')).toExist();
+                try {
+                    container = document.getElementById('container');
+                    expect(container.querySelector('.ms-media-loader')).toBeFalsy();
+                    expect(container.querySelector('.ms-media-image')).toBeTruthy();
+                } catch (e) {
+                    done(e);
+                }
                 done();
-            }, DEBOUNCE_TIME * 2);
+            }, 50);
         } catch (e) {
             done(e);
         }
@@ -62,11 +69,13 @@ describe('Media component', () => {
             expect(container.querySelector('.ms-visibility-container')).toExist();
             expect(container.querySelector('.ms-media-loader')).toExist();
             const scrollContainer =  document.getElementById('scroll-container');
-            scrollContainer.scrollTo(0, scrollContainer.scrollHeight);
+            ReactTestUtils.act(() => {
+                scrollContainer.scrollTo(0, scrollContainer.scrollHeight);
+            });
             setTimeout(() => {
                 scrollContainer.scrollTo(0, 0);
-                expect(container.querySelector('.ms-media-loader')).toExist();
-                expect(container.querySelector('.empty-state-container')).toBe(null);
+                expect(container.querySelector('.ms-media-loader')).toBeTruthy();
+                expect(container.querySelector('.ms-media-image')).toBeFalsy();
                 done();
             }, DEBOUNCE_TIME / 2);
         } catch (e) {

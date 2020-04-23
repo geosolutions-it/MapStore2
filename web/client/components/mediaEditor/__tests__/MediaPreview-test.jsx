@@ -43,6 +43,6 @@ describe('MediaPreview component', () => {
         ReactDOM.render(<MediaPreview mediaType={MediaTypes.VIDEO} />, document.getElementById("container"));
         const container = document.getElementById('container');
         expect(container.querySelector('.ms-media-preview')).toExist();
-        expect(container.querySelector('.glyphicon-playback')).toExist();
+        expect(container.querySelector('.glyphicon-play')).toExist();
     });
 });

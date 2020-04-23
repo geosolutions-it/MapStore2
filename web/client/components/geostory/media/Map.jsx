@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 import React from 'react';
-import { compose, branch, withState } from 'recompose';
+import { compose, withState } from 'recompose';
 import { Button as ButtonRB, Glyphicon } from 'react-bootstrap';
 
 import MapView from '../common/MapView';
@@ -14,18 +14,11 @@ import { applyDefaults } from '../../../utils/GeoStoryUtils';
 import {defaultLayerMapPreview} from '../../../utils/MediaEditorUtils';
 import Portal from '../../../components/misc/Portal';
 import tooltip from '../../../components/misc/enhancers/tooltip';
-import connectMap, {withLocalMapState, withMapEditingAndLocalMapState} from '../common/enhancers/map';
 import { withResizeDetector } from 'react-resize-detector';
 
 const Button = tooltip(ButtonRB);
 
 export default compose(
-    branch(
-        ({ resourceId }) => resourceId,
-        connectMap,
-    ),
-    withLocalMapState,
-    withMapEditingAndLocalMapState,
     withState('active', 'setActive', false),
     withResizeDetector
 )(({

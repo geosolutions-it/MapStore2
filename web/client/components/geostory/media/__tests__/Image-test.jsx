@@ -26,7 +26,7 @@ describe('Image component', () => {
     it('Image rendering with defaults', () => {
         ReactDOM.render(<Image />, document.getElementById("container"));
         const container = document.getElementById('container');
-        expect(container.querySelector('.glyphicon-picture')).toExist(); // empty state
+        expect(container.querySelector('.ms-media-image')).toBeTruthy();
     });
     it('Image rendering with to contain', () => {
         ReactDOM.render(<Image

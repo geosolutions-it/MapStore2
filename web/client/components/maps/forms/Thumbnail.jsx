@@ -1,4 +1,3 @@
-const PropTypes = require('prop-types');
 /**
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
@@ -8,12 +7,10 @@ const PropTypes = require('prop-types');
  */
 
 const React = require('react');
-const {Glyphicon} = require('react-bootstrap');
-const Dropzone = require('react-dropzone');
-const Spinner = require('react-spinkit');
+const PropTypes = require('prop-types');
 const Message = require('../../../components/I18N/Message');
 const { getResourceIdFromURL } = require('../../../utils/ResourceUtils');
-
+const Thumbnail = require('../../misc/Thumbnail').default;
 
 const errorMessages = {
     "FORMAT": <Message msgId="map.errorFormat" />,
@@ -23,7 +20,7 @@ const errorMessages = {
  * A Dropzone area for a thumbnail.
  */
 
-class Thumbnail extends React.Component {
+class MapThumbnail extends React.Component {
     static propTypes = {
         glyphiconRemove: PropTypes.string,
         style: PropTypes.object,
@@ -71,26 +68,11 @@ class Thumbnail extends React.Component {
 
     state = {};
 
-    onRemoveThumbnail = (event) => {
-        if (event !== null) {
-            event.stopPropagation();
-        }
-
-        this.files = null;
-        this.props.onUpdate(null, null);
-        this.props.onRemoveThumbnail();
-        this.props.onError([], this.props.map.id);
-    };
-
     getThumbnailUrl = () => {
         return this.props.map && this.props.map.newThumbnail && this.props.map.newThumbnail !== "NODATA"
             // this decode is for backward compatibility with old linked resources`rest%2Fgeostore%2Fdata%2F2%2Fraw%3Fdecode%3Ddatauri` not needed for new ones `rest/geostore/data/2/raw?decode=datauri`
             ? decodeURIComponent(this.props.map.newThumbnail)
             : null;
-    };
-
-    isImage = (images) => {
-        return images && images[0].type === "image/png" || images && images[0].type === "image/jpeg" || images && images[0].type === "image/jpg";
     };
 
     getDataUri = (images, callback) => {
@@ -104,30 +86,63 @@ class Thumbnail extends React.Component {
         return callback(null);
     };
 
-    onDrop = (images) => {
-        // check formats and sizes
-        const isAnImage = this.isImage(images);
-        let errors = [];
-        this.getDataUri(images, (data, size) => {
-            if (isAnImage && data && size < this.props.maxFileSize) {
-                // without errors
-                this.props.onError([], this.props.map.id);
-                this.files = images;
-                this.props.onUpdate(data, images && images[0].preview);
-            } else {
-                // with at least one error
-                if (!isAnImage) {
-                    errors.push("FORMAT");
-                }
-                if (data && size >= this.props.maxFileSize) {
-                    errors.push("SIZE");
-                }
-                this.props.onError(errors, this.props.map.id);
-                this.files = images;
-                this.props.onUpdate(null, null);
-            }
-        });
+    getThumbnailDataUri = (callback) => {
+        this.getDataUri(this.files, callback);
     };
+
+    renderThumbnailErrors() {
+
+        return this.props.thumbnailErrors && this.props.thumbnailErrors.length > 0 ? (
+            <div className="dropzone-errorBox alert-danger">
+                <p><Message msgId="map.error"/></p>
+                {(this.props.thumbnailErrors.map(err =>
+                    <div id={"error" + err} key={"error" + err} className={"error" + err}>
+                        {errorMessages[err]}
+                    </div>
+                ))}
+            </div>
+        ) : null;
+    }
+
+    render() {
+        return (
+            <Thumbnail
+                ref="imgThumbnail"
+                thumbnail={this.getThumbnailUrl()}
+                className={null}
+                dropZoneProps={{
+                    className: 'dropzone alert alert-info',
+                    rejectClassName: 'alert-danger'
+                }}
+                loading={this.props.loading}
+                maxFileSize={this.props.maxFileSize}
+                style={{
+                    pointerEvents: this.props.map.saving ? "none" : "auto"
+                }}
+                label={this.props.withLabel && <label className="control-label"><Message msgId="map.thumbnail"/></label>}ù
+                message={<>{this.props.message}<br/>{this.props.suggestion}</>}
+                error={this.renderThumbnailErrors()}
+                onUpdate={(data, files) => {
+                    // without errors
+                    this.props.onError([], this.props.map.id);
+                    this.files  = files;
+                    this.props.onUpdate(data, files?.[0]?.preview);
+                }}
+                onError={(errors, files) => {
+                    // with at least one error
+                    this.props.onError(errors, this.props.map.id);
+                    this.files  = files;
+                    this.props.onUpdate(null, null);
+                }}
+                onRemove={() => {
+                    this.files = null;
+                    this.props.onUpdate(null, null);
+                    this.props.onRemoveThumbnail();
+                    this.props.onError([], this.props.map.id);
+                }}
+            />
+        );
+    }
 
     generateUUID = () => {
         // TODO this function should be removed when the unique rule of name of a resource will be dropped
@@ -184,10 +199,6 @@ class Thumbnail extends React.Component {
         }
     };
 
-    getThumbnailDataUri = (callback) => {
-        this.getDataUri(this.files, callback);
-    };
-
     deleteThumbnail = (thumbnail, mapId) => {
         if (thumbnail && thumbnail.indexOf("geostore") !== -1) {
             const idThumbnail = getResourceIdFromURL(thumbnail);
@@ -198,48 +209,6 @@ class Thumbnail extends React.Component {
             }
         }
     };
-    renderThumbnailErrors() {
-
-        return this.props.thumbnailErrors && this.props.thumbnailErrors.length > 0 ? (
-            <div className="dropzone-errorBox alert-danger">
-                <p><Message msgId="map.error"/></p>
-                {(this.props.thumbnailErrors.map(err =>
-                    <div id={"error" + err} key={"error" + err} className={"error" + err}>
-                        {errorMessages[err]}
-                    </div>
-                ))}
-            </div>
-        ) : null;
-    }
-    render() {
-        const withoutThumbnail = (<div className="dropzone-content-image">
-            {this.props.message}<br/>{this.props.suggestion}
-            <div className="dropzone-errors">
-                {this.renderThumbnailErrors()}
-            </div>
-        </div>);
-        return (
-            this.props.loading ? <div className="btn btn-info" style={{"float": "center"}}> <Spinner spinnerName="circle" overrideSpinnerClassName="spinner"/></div> :
-
-                <div className="dropzone-thumbnail-container" style={{
-                    pointerEvents: this.props.map.saving ? "none" : "auto"
-                }}>
-                    {this.props.withLabel && <label className="control-label"><Message msgId="map.thumbnail"/></label>}
-                    <Dropzone multiple={false} className="dropzone alert alert-info" rejectClassName="alert-danger" onDrop={this.onDrop}>
-                        { this.getThumbnailUrl() ?
-                            <div>
-                                <img src={this.getThumbnailUrl()} ref="imgThumbnail"/>
-                                <div className="dropzone-content-image-added">{this.props.message}<br/>{this.props.suggestion}</div>
-                                <div className="dropzone-remove" onClick={this.onRemoveThumbnail}>
-                                    <Glyphicon glyph={this.props.glyphiconRemove} />
-                                </div>
-                            </div> : withoutThumbnail
-                        }
-                    </Dropzone>
-                </div>
-
-        );
-    }
 }
 
-module.exports = Thumbnail;
+module.exports = MapThumbnail;

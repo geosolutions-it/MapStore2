@@ -2171,7 +2171,8 @@
                 "videoFilter": "Filter videos",
                 "imageFilter": "Filter images",
                 "import": "Import resource to local store",
-                "trash": "Remove resource"
+                "trash": "Remove resource",
+                "autoplay": "Autoplay"
             },
             "mediaform": {
                 "confirmExitTitle": "Close Media Form",

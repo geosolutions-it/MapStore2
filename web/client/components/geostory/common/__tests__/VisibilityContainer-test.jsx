@@ -9,6 +9,8 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import expect from 'expect';
 import VisibilityContainer from '../VisibilityContainer';
+import { act } from 'react-dom/test-utils';
+
 describe('VisibilityContainer component', () => {
     beforeEach((done) => {
         document.body.innerHTML = '<div id="container"></div>';
@@ -25,62 +27,58 @@ describe('VisibilityContainer component', () => {
         const el = container.querySelector('.ms-visibility-container');
         expect(el).toExist();
     });
-    it('test changing of loading state based on debounce time (in view)', (done) => {
-        const DEBOUNCE_TIME = 50;
-        const Loader = () => <div id="loader"></div>;
-        const Component = () => <div id="component"></div>;
-        ReactDOM.render(
-            <VisibilityContainer
-                loaderComponent={Loader}
-                debounceTime={DEBOUNCE_TIME}>
-                <Component />
-            </VisibilityContainer>, document.getElementById("container"));
-        const container = document.getElementById('container');
-        const el = container.querySelector('.ms-visibility-container');
-        expect(el).toExist();
-        let loader = container.querySelector('#loader');
-        expect(loader).toExist();
-        let component = container.querySelector('#component');
-        expect(component).toBe(null);
-        done();
-        setTimeout(() => {
-            loader = container.querySelector('#loader');
-            expect(loader).toBe(null);
-            component = container.querySelector('#component');
-            expect(component).toExist();
-            done();
-        }, DEBOUNCE_TIME * 2);
-    });
     it('test changing of loading state based on debounce time (out of view)', (done) => {
-        const DEBOUNCE_TIME = 50;
+        const DEBOUNCE_TIME = 5;
         const Loader = () => <div id="loader"></div>;
         const Component = () => <div id="component"></div>;
-        ReactDOM.render(
-            <div
-                id="scroll-container"
-                style={{ width: 512, height: 512, overflow: 'scroll' }}>
-                <div style={{ height: 1024 }}></div>
+        act(() => {
+            ReactDOM.render(
                 <VisibilityContainer
+                    id="content-01"
+                    loading
+                    loaderComponent={Loader}
+                    debounceTime={DEBOUNCE_TIME}
+                    onLoad={(loadedId) => {
+                        try {
+                            expect(loadedId).toBe('content-01');
+                        } catch (e) {
+                            done(e);
+                        }
+                        done();
+                    }}>
+                    <Component />
+                </VisibilityContainer>, document.getElementById("container"));
+        });
+        // start second render cycle to ensure on load has been called
+        act(() => {
+            ReactDOM.render(
+                <VisibilityContainer
+                    id="content-01"
+                    loading
                     loaderComponent={Loader}
                     debounceTime={DEBOUNCE_TIME}>
                     <Component />
+                </VisibilityContainer>, document.getElementById("container"));
+        });
+    });
+    it('should assign in view prop to children', () => {
+        const DEBOUNCE_TIME = 0;
+        const Loader = () => <div id="loader"></div>;
+        const Component = ({ inView }) => <div id="component" className={inView !== undefined ? 'in-view-prop' : ''}></div>;
+        act(() => {
+            ReactDOM.render(
+                <VisibilityContainer
+                    loaderComponent={Loader}
+                    debounceTime={DEBOUNCE_TIME}
+                    loading={false}>
+                    <Component />
                 </VisibilityContainer>
-            </div>
-            , document.getElementById("container"));
-
+                , document.getElementById("container"));
+        });
         const container = document.getElementById('container');
         const el = container.querySelector('.ms-visibility-container');
-        expect(el).toExist();
-        let loader = container.querySelector('#loader');
-        expect(loader).toExist();
-        let component = container.querySelector('#component');
-        expect(component).toBe(null);
-        setTimeout(() => {
-            loader = container.querySelector('#loader');
-            expect(loader).toExist();
-            component = container.querySelector('#component');
-            expect(component).toBe(null);
-            done();
-        }, DEBOUNCE_TIME * 2);
+        expect(el).toBeTruthy();
+        const component = container.querySelector('#component.in-view-prop');
+        expect(component).toBeTruthy();
     });
 });

@@ -6,18 +6,10 @@
  * LICENSE file in the root directory of this source tree.
  */
 import React, { Component } from 'react';
-import { find } from 'lodash';
-import { createSelector } from 'reselect';
 import PropTypes from 'prop-types';
 import Lightbox from 'react-image-lightbox';
 import objectFitImages from 'object-fit-images';
-import { connect } from "react-redux";
-import { compose, withState, withProps, branch } from 'recompose';
-
-import emptyState from '../../misc/enhancers/emptyState';
-import { resourcesSelector } from '../../../selectors/geostory';
-import { SectionTypes } from '../../../utils/GeoStoryUtils';
-
+import { compose, withState } from 'recompose';
 
 /**
  * Image media component
@@ -112,24 +104,6 @@ class Image extends Component {
 }
 
 export default compose(
-    branch(
-        ({resourceId}) => resourceId,
-        compose(
-            connect(createSelector(resourcesSelector, (resources) => ({resources}))),
-            withProps(
-                ({ resources, resourceId: id }) => {
-                    const resource = find(resources, { id }) || {};
-                    return resource.data;
-                }
-            )
-        ),
-        emptyState(
-            ({src = "", sectionType} = {}) => !src && (sectionType !== SectionTypes.TITLE && sectionType !== SectionTypes.IMMERSIVE),
-            () => ({
-                glyph: "picture"
-            })
-        )
-    ),
     withState('fullscreen', 'onClick', false),
     withState('status', 'onChangeStatus', '')
 )(Image);
