@@ -242,7 +242,7 @@ export default {
                         return Rx.Observable.of(updateCenterToMarker('enabled'), zoomToPoint(center.pos, center.zoom, center.crs))
                             .concat(
                                 action$.ofType(CLOSE_IDENTIFY).switchMap(()=>{
-                                    const bbox = getBbox(map.center, map.zoom);
+                                    const bbox = map && getBbox(map.center, map.zoom);
                                     return Rx.Observable.of(
                                         changeMapView(map.center, map.zoom, bbox, map.size, null, map.projection));
                                 }).takeUntil(action$.ofType(CHANGE_MAP_VIEW).skip(1))
