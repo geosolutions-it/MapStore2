@@ -41,6 +41,16 @@
                       "defaultOption": "FOREST",
                       "allowEmpty": true
                     }
+                  }, {
+                      "regex": {
+                          "attribute": "att_integer_constr",
+                          "typeName": "test:mapstore_test"
+                      },
+                      "editor": "NumberEditor",
+                      "editorProps": {
+                          "min": 0,
+                          "max": 5
+                      }
                   }]
                 }
               }

@@ -330,7 +330,43 @@
                         "alwaysVisible": true
                     }
                 }
-            }, "Home", "FeatureEditor",
+            }, "Home", {
+                "name": "FeatureEditor",
+                "cfg": {
+                    "customEditorsOptions": {
+                        "rules": [
+                            {
+                                "regex": {
+                                    "attribute": "att_integer_constr",
+                                    "typeName": "test:mapstore_test"
+                                },
+                                "editor": "NumberEditor",
+                                "editorProps": {
+                                    "maxValue": 5
+                                }
+                            },
+                            {
+                                "regex": {
+                                    "attribute": "att_integer",
+                                    "typeName": "test:mapstore_test"
+                                },
+                                "editor": "NumberEditor",
+                                "editorProps": {}
+                            },
+                            {
+                                "regex": {
+                                    "attribute": "att_varchar_constr",
+                                    "typeName": "test:mapstore_test"
+                                },
+                                "editor": "FormatEditor",
+                                "editorProps": {
+                                    "formatRegex": "^[0-9]+$"
+                                }
+                            }
+                        ]
+                    }
+                }
+            },
             "WFSDownload",
             {
               "name": "QueryPanel",
