@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 const Rx = require('rxjs');
-const { get, head, isEmpty, find, castArray, includes, reduce, isArray, isFunction} = require('lodash');
+const { get, head, isEmpty, find, castArray, includes, reduce, isArray, isFunction } = require('lodash');
 const { LOCATION_CHANGE } = require('connected-react-router');
 
 
@@ -180,6 +180,22 @@ const removeFilterFromWMSLayer = ({featuregrid: f} = {}) => {
     return changeLayerProperties(f.selectedLayer, {filterObj: undefined});
 };
 
+const updateFilterFunc = (store) => ({update = {}} = {}) => {
+    // If an advanced filter is present it's filterFields should be composed with the action'
+    const {id} = selectedLayerSelector(store.getState());
+    const filterObj = get(store.getState(), `featuregrid.advancedFilters["${id}"]`);
+    if (filterObj) {
+        const attributesFilter = getAttributeFilters(store.getState()) || {};
+        const columnsFilters = reduce(attributesFilter, (cFilters, value, attribute) => {
+            return gridUpdateToQueryUpdate({attribute, ...value}, cFilters);
+        }, {});
+        const composedFilterFields = composeAttributeFilters([filterObj, columnsFilters], "AND", "AND");
+        const filter = {...filterObj, ...composedFilterFields};
+        return updateQuery(filter, update.type);
+    }
+    return updateQuery(gridUpdateToQueryUpdate(update, wfsFilter(store.getState())), update.type);
+};
+
 
 /**
  * Epìcs for feature grid
@@ -242,29 +258,23 @@ module.exports = {
                         .take(1)
                     )
             ),
+    featureGridUpdateGeometryFilter: (action$, store) =>
+        action$.ofType(UPDATE_FILTER)
+            .filter(({update = {}}) => update.type === 'geometry')
+            .distinctUntilChanged(({update: update1}, {update: update2}) => {
+                return !update1.enabled && update2.enabled && !update1.value && !update2.value ||
+                    update1.value === update2.value;
+            })
+            .skip(1)
+            .map(updateFilterFunc(store)),
     /**
      * Performs the query when the text filter is updated
      * @memberof epics.featuregrid
      */
-    featureGridUpdateFilter: (action$, store) => action$.ofType(QUERY_CREATE).switchMap( () =>
+    featureGridUpdateFilter: (action$, store) => action$.ofType(QUERY_CREATE).switchMap(() =>
         action$.ofType(UPDATE_FILTER)
-            .flatMap( ({update = {}, dontUpdateQuery} = {}) => {
-                // If an advanced filter is present it's filterFields should be composed with the action'
-                const {id} = selectedLayerSelector(store.getState());
-                const filterObj = get(store.getState(), `featuregrid.advancedFilters["${id}"]`);
-                if (filterObj) {
-                    const attributesFilter = getAttributeFilters(store.getState()) || {};
-                    const columnsFilters = reduce(attributesFilter, (cFilters, value, attribute) => {
-                        return gridUpdateToQueryUpdate({attribute, ...value}, cFilters);
-                    }, {});
-                    const composedFilterFields = composeAttributeFilters([filterObj, columnsFilters], "AND", "AND");
-                    const filter = {...filterObj, ...composedFilterFields};
-                    return dontUpdateQuery ? Rx.Observable.empty() : Rx.Observable.of(updateQuery(filter, update.type));
-                }
-                return dontUpdateQuery ?
-                    Rx.Observable.empty() :
-                    Rx.Observable.of(updateQuery(gridUpdateToQueryUpdate(update, wfsFilter(store.getState())), update.type));
-            })
+            .filter(({update = {}}) => update.type !== 'geometry')
+            .map(updateFilterFunc(store))
     ),
     handleClickOnMap: (action$, store) =>
         action$.ofType(UPDATE_FILTER)
@@ -334,7 +344,7 @@ module.exports = {
                     type: 'geometry',
                     attribute: geometryFilter.attribute || get(spatialFieldSelector(store.getState()), 'attribute'),
                     deactivated: !hasChanges && !hasNewFeatures ? !geometryFilter.deactivated : true
-                }, true));
+                }));
             }),
     deactivateGeometryFilter: (action$, store) =>
         action$.ofType(START_DRAWING_FEATURE, CREATE_NEW_FEATURE, GEOMETRY_CHANGED, DELETE_GEOMETRY)
@@ -346,7 +356,7 @@ module.exports = {
                         type: 'geometry',
                         attribute: geometryFilter.attribute || get(spatialFieldSelector(store.getState()), 'attribute'),
                         deactivated: true
-                    }, true)) :
+                    })) :
                     Rx.Observable.empty();
             }),
     activateGeometryFilter: (action$, store) =>
@@ -359,7 +369,7 @@ module.exports = {
                         type: 'geometry',
                         attribute: geometryFilter.attribute || get(spatialFieldSelector(store.getState()), 'attribute'),
                         deactivated: false
-                    }, true)) :
+                    })) :
                     Rx.Observable.empty();
             }),
     /**

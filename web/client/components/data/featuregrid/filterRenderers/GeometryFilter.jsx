@@ -34,8 +34,7 @@ export default ({
                 onChange({
                     enabled: !filterEnabled,
                     type: 'geometry',
-                    attribute: column.geometryPropName,
-                    dontUpdateQuery: !filterEnabled
+                    attribute: column.geometryPropName
                 });
             }}
         >

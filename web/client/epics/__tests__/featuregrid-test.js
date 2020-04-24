@@ -98,7 +98,7 @@ const {
     hideFeatureGridOnDrawerOpenMobile,
     hideDrawerOnFeatureGridOpenMobile,
     handleClickOnMap,
-    featureGridUpdateFilter
+    featureGridUpdateGeometryFilter
 } = require('../featuregrid');
 const { onLocationChanged } = require('connected-react-router');
 
@@ -1916,8 +1916,12 @@ describe('featuregrid Epics', () => {
         const startActions = [createQuery(), updateFilter({
             type: 'geometry',
             enabled: true
+        }), updateFilter({
+            type: 'geometry',
+            enabled: true,
+            value: {}
         })];
-        testEpic(featureGridUpdateFilter, 1, startActions, actions => {
+        testEpic(featureGridUpdateGeometryFilter, 1, startActions, actions => {
             expect(actions.length).toBe(1);
             expect(actions[0].type).toBe(UPDATE_QUERY);
             expect(actions[0].reason).toBe('geometry');
