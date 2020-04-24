@@ -314,4 +314,43 @@ describe('Openlayers MeasurementSupport', () => {
         expect(cmp.segmentOverlays.length).toBe(2);
         expect(cmp.measureTooltips.length).toBe(1);
     });
+    it('test drawInteraction callbacks for a distance (Bearing)', () => {
+        const spyOnChangeMeasurementState = expect.spyOn(testHandlers, "changeMeasurementState");
+        const spyOnChangeGeometry = expect.spyOn(testHandlers, "changeGeometry");
+        let cmp = renderMeasurement();
+        cmp = renderMeasurement({
+            measurement: {
+                geomType: "Bearing",
+                updatedByUI: false,
+                disableLabels: true,
+                bearingMeasureEnabled: true,
+                trueBearing: {measureTrueBearing: true}
+            },
+            uom
+        });
+
+        cmp.drawInteraction.dispatchEvent({
+            type: 'drawstart',
+            feature: new Feature({
+                geometry: new LineString([[13.0, 43.0], [13.0, 43.0]]),
+                name: 'Line with 2 points'
+            })
+        });
+        cmp.drawInteraction.dispatchEvent({
+            type: 'drawend',
+            feature: new Feature({
+                geometry: new LineString([[13.0, 43.0], [13.0, 40.0]]),
+                name: '2 points'
+            })
+        });
+
+        expect(spyOnChangeMeasurementState).toNotHaveBeenCalled();
+        expect(spyOnChangeGeometry).toHaveBeenCalled();
+        const changedFeatures = spyOnChangeGeometry.calls[0].arguments[0];
+        expect(changedFeatures.length).toBe(1);
+        expect(changedFeatures[0].type).toBe("Feature");
+        expect(changedFeatures[0].geometry.coordinates.length).toBe(2);
+        expect(changedFeatures[0].properties.values[0].formattedValue).toContain("T");
+        expect(changedFeatures[0].properties.values[0].type).toContain("bearing");
+    });
 });
