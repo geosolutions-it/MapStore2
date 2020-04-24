@@ -241,6 +241,7 @@ export default {
                         }
                         const center = centerToVisibleArea(coords, map, layoutBounds, resolution);
                         return Rx.Observable.of(updateCenterToMarker('enabled'), zoomToPoint(center.pos, center.zoom, center.crs))
+                            // restore initial position
                             .concat(
                                 action$.ofType(CLOSE_IDENTIFY).switchMap(()=>{
                                     const bbox = map && getBbox(map.center, map.zoom);
