@@ -247,7 +247,7 @@ export default {
                                     const bbox = map && getBbox(map.center, map.zoom);
                                     return Rx.Observable.of(
                                         changeMapView(map.center, map.zoom, bbox, map.size, null, map.projection));
-                                }).takeUntil(action$.ofType(CHANGE_MAP_VIEW).skip(1))
+                                }).takeUntil(action$.ofType(CHANGE_MAP_VIEW).skip(1)) // do not restore if user changes position (skip first caused by the zoomToPoint)
                             );
                     })
             ),
