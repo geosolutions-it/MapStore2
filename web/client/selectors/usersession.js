@@ -45,6 +45,7 @@ export const userSessionBackupFrequencySelector = () =>
     ConfigUtils.getConfigProp("userSessions")?.backupFrequency ?? 6;
 export const originalConfigSelector = state => state?.usersession?.config;
 
+export const isAutoSaveEnabled = state => state?.usersession?.autoSave;
 export const buildSessionName = (contextId, mapId, userName) =>
     getMapName(contextId, mapId) + "." + userName;
 

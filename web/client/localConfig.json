@@ -47,7 +47,7 @@
       {"name": "geostorymode", "path": "geostory.mode"},
       {"name": "featuregridmode", "path": "featuregrid.mode"}],
     "userSessions": {
-      "enabled": false
+      "enabled": true
     },
     "projectionDefs": [],
     "initialState": {
@@ -179,7 +179,7 @@
                     },
                     "tools": ["locate"]
                 }
-            }, "UserSession", "Version", "DrawerMenu",
+            }, "Version", "DrawerMenu",
             {
                 "name": "BackgroundSelector",
                 "cfg": {
@@ -273,7 +273,7 @@
             },
             "FeedbackMask"
         ],
-        "desktop": [ "UserSession", "Details",
+        "desktop": [ "Details",
           {
             "name": "Map",
             "cfg": {

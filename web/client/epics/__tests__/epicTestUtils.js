@@ -14,20 +14,31 @@ module.exports = {
      */
     testEpic: (epic, count, action, callback, state = {}, done, withCompleteAction = false) => {
         const actions = new Rx.Subject();
+        const emitStream$ = new Rx.Subject();
         const actions$ = new ActionsObservable(actions);
-        const store = { getState: () => isFunction(state) ? state() : state, dispatch: (a) => {
-            actions.next(a);
-        }};
-        epic(actions$, store)[isFunction(count) ? "takeWhile" : "take"](count, true).concat( withCompleteAction ? Rx.Observable.of({ type: "EPIC_COMPLETED"}) : [])
+        const store = {
+            getState: () => isFunction(state) ? state() : state,
+            // subscribes to the actions and allow to react to them.
+            getActionsStream: () => emitStream$,
+            dispatch: (a) => {
+                actions.next(a);
+            }
+        };
+        epic(actions$, store)
+            .do(a => {
+                emitStream$.next(a);
+            })
+            [isFunction(count) ? "takeWhile" : "take"](count, true).concat( withCompleteAction ? Rx.Observable.of({ type: "EPIC_COMPLETED"}) : [])
             .toArray()
-            .subscribe(done ? (x) => {
+            .subscribe((x) => {
                 try {
+                    emitStream$.complete();
                     callback(x);
-                    done();
+                    done && done();
                 } catch (e) {
-                    done(e);
+                    done && done(e);
                 }
-            } : callback);
+            }, done ? e => done(e) : undefined);
         if (action.length) {
             action.map(act => actions.next(act));
         } else {

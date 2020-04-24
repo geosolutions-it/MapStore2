@@ -112,7 +112,7 @@ const createSessionFlow = (mapId, contextName, action$, getState) => {
     ).flatMap(([id, data]) => {
         const userName = userSelector(getState())?.name;
         return Observable.of(loadUserSession(buildSessionName(id, mapId, userName))).merge(
-            action$.ofType(USER_SESSION_LOADED).flatMap(({session}) => {
+            action$.do(console.log).ofType(USER_SESSION_LOADED).exhaustMap(({session}) => {
                 const mapSession = session?.map && {
                     map: session.map
                 };
@@ -126,7 +126,7 @@ const createSessionFlow = (mapId, contextName, action$, getState) => {
                     Observable.of(setUserSession(session)),
                     Observable.of(userSessionStartSaving())
                 );
-            }).take(6)
+            })
         );
     });
 };
@@ -139,8 +139,9 @@ const createSessionFlow = (mapId, contextName, action$, getState) => {
 export const loadContextAndMap = (action$, { getState = () => { } } = {}) =>
     action$.ofType(LOAD_CONTEXT).switchMap(({ mapId, contextName }) => {
         const sessionsEnabled = userSessionEnabledSelector(getState());
-        const flow = sessionsEnabled ? createSessionFlow(mapId, contextName, action$, getState) :
-            Observable.merge(
+        const flow = sessionsEnabled
+            ? createSessionFlow(mapId, contextName, action$, getState)
+            : Observable.merge(
                 Observable.of(clearMapTemplates()),
                 getResourceIdByName('CONTEXT', contextName)
                     .switchMap(id => createContextFlow(id, null, getState)).catch(e => {throw new ContextError(e); }),

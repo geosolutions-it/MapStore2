@@ -97,7 +97,7 @@ describe('context epics', () => {
             });
 
         });
-        it('successful context and map load flow with session', done => {
+        it.only('successful context and map load flow with session', done => {
             ConfigUtils.setConfigProp("userSessions", {
                 enabled: true
             });
@@ -132,14 +132,19 @@ describe('context epics', () => {
                         name: "Saitama"
                     }
                 }
-            });
-            setTimeout(() => store.dispatch(
-                userSessionLoaded(100, {
-                    map: {},
-                    context: {
-                        userPlugins: []
+            }, done);
+            store.getActionsStream().subscribe(
+                (e) => {
+                    if (e.type === LOAD_USER_SESSION) {
+                        setTimeout(store.dispatch(
+                            userSessionLoaded(150, {
+                                map: {},
+                                context: {
+                                    userPlugins: []
+                                }
+                            })), 250);
                     }
-                })), 100);
+                });
 
         });
         /*

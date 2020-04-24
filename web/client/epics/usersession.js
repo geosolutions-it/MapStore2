@@ -17,7 +17,7 @@ import {loadMapConfig} from "../actions/config";
 import {userSelector} from '../selectors/security';
 import { wrapStartStop } from '../observables/epics';
 import {originalConfigSelector, userSessionNameSelector, userSessionIdSelector,
-    userSessionSaveFrequencySelector, userSessionToSaveSelector} from "../selectors/usersession";
+    userSessionSaveFrequencySelector, userSessionToSaveSelector, isAutoSaveEnabled} from "../selectors/usersession";
 
 const {getSession, writeSession, removeSession} = UserSession;
 
@@ -83,9 +83,11 @@ export const saveUserSessionEpicCreator = (sessionSelector = userSessionToSaveSe
  */
 export const autoSaveSessionEpicCreator = (frequency, finalAction, startAction = USER_SESSION_START_SAVING, endAction = USER_SESSION_STOP_SAVING) =>
     (action$, store) => action$.ofType(startAction)
-        .switchMap(() => Rx.Observable.interval(frequency || userSessionSaveFrequencySelector(store.getState()))
-            .switchMap(() => Rx.Observable.of(saveUserSession()))
-            .takeUntil(action$.ofType(endAction)).concat(finalAction ? Rx.Observable.of(finalAction()) : Rx.Observable.empty())
+        .switchMap(() =>
+            Rx.Observable.interval(frequency || userSessionSaveFrequencySelector(store.getState()))
+                .filter(() => isAutoSaveEnabled(store.getState()))
+                .switchMap(() => Rx.Observable.of(saveUserSession()))
+                .takeUntil(action$.ofType(endAction)).concat(finalAction ? Rx.Observable.of(finalAction()) : Rx.Observable.empty())
         );
 
 /**
