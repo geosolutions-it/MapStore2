@@ -15,6 +15,7 @@ const {SHOW_SETTINGS, HIDE_SETTINGS} = require('../actions/layers');
 const {isMapInfoOpen} = require('../selectors/mapInfo');
 const {showCoordinateEditorSelector} = require('../selectors/controls');
 const ConfigUtils = require('../utils/ConfigUtils');
+const {isMouseMoveIdentifyActiveSelector} = require('../selectors/map');
 
 /**
  * Epìcs for feature grid
@@ -96,7 +97,7 @@ const updateMapLayoutEpic = (action$, store) =>
                 get(state, "controls.userExtensions.enabled") && { right: mapLayout.right.md } || null,
                 get(state, "controls.mapTemplates.enabled") && { right: mapLayout.right.md } || null,
                 get(state, "controls.mapCatalog.enabled") && { right: mapLayout.right.md } || null,
-                get(state, "mapInfo.enabled") && isMapInfoOpen(state) && {right: mapLayout.right.md} || null
+                get(state, "mapInfo.enabled") && isMapInfoOpen(state) && !isMouseMoveIdentifyActiveSelector(state) && {right: mapLayout.right.md} || null
             ].filter(panel => panel)) || {right: 0};
 
             const dockSize = getDockSize(state) * 100;

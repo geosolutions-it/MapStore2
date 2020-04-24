@@ -96,6 +96,8 @@ Here the user can choose:
 
 * The **Max** number of **features** (items) displayed in the custom search results
 
+* The **Max** level of **zoom** to be set for the map when opening from the custom search result
+
 After the <img src="../img/button/save-update-button.jpg" class="ms-docbutton"/> it is possible to see the custom WFS search service inside the *Available services* list:
 
 <img src="../img/menu-bar/wfs-services-list.jpg" class="ms-docimage"  style="max-width:500px;"/>

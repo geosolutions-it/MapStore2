@@ -66,7 +66,8 @@ class OpenlayersMap extends React.Component {
         wpsBounds: PropTypes.object,
         onWarning: PropTypes.func,
         maxExtent: PropTypes.array,
-        limits: PropTypes.object
+        limits: PropTypes.object,
+        onMouseOut: PropTypes.func
     };
 
     static defaultProps = {
@@ -85,7 +86,8 @@ class OpenlayersMap extends React.Component {
         resize: 0,
         registerHooks: true,
         hookRegister: mapUtils,
-        interactive: true
+        interactive: true,
+        onMouseOut: () => {}
     };
 
     componentDidMount() {
@@ -156,6 +158,10 @@ class OpenlayersMap extends React.Component {
         this.map.enableEventListener = (event) => {
             delete this.map.disabledListeners[event];
         };
+        // The timeout is needed to cover the delay we have for the throttled mouseMove event.
+        this.map.getViewport().addEventListener('mouseout', () => {
+            setTimeout(() => this.props.onMouseOut(), 150);
+        });
         // TODO support disableEventListener
         map.on('moveend', this.updateMapInfoState);
         map.on('singleclick', (event) => {
@@ -455,6 +461,7 @@ class OpenlayersMap extends React.Component {
 
     mouseMoveEvent = (event) => {
         if (!event.dragging && event.coordinate) {
+            const getElevation = this.map.get('elevationLayer') && this.map.get('elevationLayer').get('getElevation');
             let pos = event.coordinate.slice();
             let coords = toLonLat(pos, this.props.projection);
             let tLng = coords[0] / 360 % 1 * 360;
@@ -471,7 +478,15 @@ class OpenlayersMap extends React.Component {
                 pixel: {
                     x: event.pixel[0],
                     y: event.pixel[1]
-                }
+                },
+                latlng: {
+                    lat: coords[1],
+                    lng: tLng,
+                    z: getElevation && getElevation(pos, event.pixel) || undefined
+                },
+                lat: coords[1],
+                lng: tLng,
+                rawPos: event.coordinate.slice()
             });
         }
     };

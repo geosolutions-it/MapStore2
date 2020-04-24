@@ -105,6 +105,12 @@
                 "bottom": "Bottom",
                 "top": "Cima"
             },
+            "legendOptions": {
+              "title": "Leyenda",
+              "legendWidth": "Anchura",
+              "legendHeight": "Altura",
+              "legendPreview": "Avance"
+            },
             "templateFormatInfoAlertExample": "La identificación de la característica es ${ properties }",
             "templatePreview": "Vista previa de la plantilla"
         },
@@ -576,7 +582,7 @@
             "title": "Ooops! Algo va mal",
             "text": "Un error se ha producido durante esta <b>GetFeatureInfo</b> petición"
         },
-        "noFeatureInfo": "No hay información disponible en el punto señalado",
+        "noFeatureInfo": "No hay información disponible para este punto",
         "noInfoForLayers": "No hay características para las siguientes capas: ",
         "history":{
             "barLabel": "Histórico  del mapa",
@@ -584,6 +590,9 @@
             "redoBtnTooltip": "Ir hacia adelante"
         },
         "infoFormatLbl": "Identificar el formato de respuesta",
+        "infoTriggerLabel": "Evento desencadenante para identificar",
+        "click": "Click",
+        "hover": "Hover",
         "measureSupport": {
             "continueLine": "Haga clic para seguir dibujando la línea",
             "continuePolygon": "Haga clic para continuar dibujando el polígono",
@@ -637,6 +646,7 @@
             "s_attributes": "Atributos",
             "s_sort": "Ordenado por",
             "s_max_features": "Máximo de características",
+            "s_max_zoom": "Nivel máximo de zoom",
             "s_wfs_props_label" : "Propiedades del servicio WFS",
             "s_wfs_opt_props_label" : "Propiedades opcionales",
             "s_result_props_label": "Resultados de la visualización de las propiedades",

@@ -37,6 +37,10 @@ import VectorTileLayer from 'ol/layer/VectorTile';
 import { isVectorFormat } from '../../../../utils/VectorTileUtils';
 import { OL_VECTOR_FORMATS, applyStyle } from '../../../../utils/openlayers/VectorTileUtils';
 
+function getWMSEnvParam(env) {
+    return env.map(({ name, value }) => `${name}:${value}`).join(';');
+}
+
 /**
     @param {object} options of the layer
     @return the Openlayers options from the layers ones and/or default.
@@ -53,7 +57,8 @@ function wmsToOpenlayersOptions(options) {
         SRS: CoordinatesUtils.normalizeSRS(options.srs || 'EPSG:3857', options.allowedSRS),
         CRS: CoordinatesUtils.normalizeSRS(options.srs || 'EPSG:3857', options.allowedSRS),
         TILED: options.singleTile ? false : (!isNil(options.tiled) ? options.tiled : true),
-        VERSION: options.version || "1.3.0"
+        VERSION: options.version || "1.3.0",
+        ENV: options.env && options.env.length ? getWMSEnvParam(options.env) : ''
     }, assign(
         {},
         (options._v_ ? {_v_: options._v_} : {}),

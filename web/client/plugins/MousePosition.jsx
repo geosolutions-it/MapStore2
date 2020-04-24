@@ -8,6 +8,7 @@
 const React = require('react');
 
 const {connect} = require('react-redux');
+const {get} = require('lodash');
 const {mapSelector, projectionDefsSelector} = require('../selectors/map');
 const Message = require('../components/I18N/Message');
 const {Tooltip} = require('react-bootstrap');
@@ -16,7 +17,9 @@ const {createSelector} = require('reselect');
 const assign = require('object-assign');
 const PropTypes = require('prop-types');
 
-const {changeMousePositionCrs, changeMousePositionState} = require('../actions/mousePosition');
+const {changeMousePositionCrs} = require('../actions/mousePosition');
+const {registerEventListener, unRegisterEventListener} = require('../actions/map');
+const {isMouseMoveCoordinatesActiveSelector} = require('../selectors/map');
 
 const getDesiredPosition = (map, mousePosition, mapInfo) => {
     if (mousePosition.showCenter && map) {
@@ -34,24 +37,25 @@ const getDesiredPosition = (map, mousePosition, mapInfo) => {
             crs: "EPSG:4326"
         };
     }
-    return mousePosition.position;
+    return mousePosition;
 };
 
 const selector = createSelector([
     (state) => state,
     mapSelector,
-    (state) => state.mousePosition || {},
+    (state) => isMouseMoveCoordinatesActiveSelector(state),
+    (state) => get(state, 'mousePosition.position') || {},
     (state) => state.mapInfo || {}
-], (state, map, mousePosition, mapInfo) => ({
-    enabled: mousePosition.enabled,
+], (state, map, enabled, mousePosition, mapInfo) => ({
+    enabled,
     mousePosition: getDesiredPosition(map, mousePosition, mapInfo),
     projectionDefs: projectionDefsSelector(state),
     crs: mousePosition.crs || 'EPSG:4326'
 }));
 
 const MousePositionButton = connect((state) => ({
-    pressed: state.mousePosition && state.mousePosition.enabled,
-    active: state.mousePosition && state.mousePosition.enabled,
+    pressed: isMouseMoveCoordinatesActiveSelector(state),
+    active: isMouseMoveCoordinatesActiveSelector(state),
     tooltip: <Tooltip id="showMousePositionCoordinates"><Message msgId="showMousePositionCoordinates"/></Tooltip>,
     tooltipPlace: 'left',
     pressedStyle: "success active",
@@ -59,8 +63,8 @@ const MousePositionButton = connect((state) => ({
     glyphicon: "mouse",
     btnConfig: {
         bsSize: "small"}
-}), {
-    onClick: changeMousePositionState
+}), {registerEventListener, unRegisterEventListener}, (stateProps, dispatchProps) => {
+    return {...stateProps, onClick: () => stateProps.active ? dispatchProps.unRegisterEventListener('mousemove', 'mouseposition') : dispatchProps.registerEventListener('mousemove', 'mouseposition')};
 })(require('../components/buttons/ToggleButton'));
 
 const MousePositionComponent = require('../components/mapcontrols/mouseposition/MousePosition');
