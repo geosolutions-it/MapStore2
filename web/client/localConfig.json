@@ -47,7 +47,7 @@
       {"name": "geostorymode", "path": "geostory.mode"},
       {"name": "featuregridmode", "path": "featuregrid.mode"}],
     "userSessions": {
-      "enabled": true
+      "enabled": false
     },
     "projectionDefs": [],
     "initialState": {
