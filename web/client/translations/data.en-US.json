@@ -106,6 +106,12 @@
                 "right": "Right",
                 "bottom": "Bottom",
                 "top": "Top"
+            },
+            "legendOptions": {
+              "title": "Legend",
+              "legendWidth": "Width",
+              "legendHeight": "Height",
+              "legendPreview": "Preview"
             }
         },
         "longitude": "Longitude",
@@ -598,6 +604,7 @@
             "MeasureLength": "Measure Distance",
             "MeasureArea": "Measure Area",
             "MeasureBearing": "Measure Bearing",
+            "MeasureTrueBearing": "Measure True Bearing",
             "tooltip": "Measure length and area",
             "title": "Measure",
             "lengthButtonText": "Line",
@@ -606,6 +613,7 @@
             "lengthLabel": "Length",
             "areaLabel": "Area",
             "bearingLabel": "Bearing",
+            "trueBearingLabel": "True Bearing",
             "formula": "Formula for distance calculation",
             "showLabel": "Show measurement label",
             "addAsAnnotation": "Add as annotation",
@@ -641,6 +649,7 @@
             "s_attributes": "Attributes",
             "s_sort": "Sort by",
             "s_max_features": "Max features",
+            "s_max_zoom": "Max zoom level",
             "s_wfs_props_label" : "WFS service props",
             "s_wfs_opt_props_label" : "Optional props",
             "s_result_props_label": "Result display properties",

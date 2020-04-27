@@ -53,6 +53,11 @@ This is the main structure:
   }],
   // flag for postponing mapstore 2 load time after theme
   "loadAfterTheme": false,
+  // if defined, WMS layer styles localization will be added
+  "localizedLayerStyles": {
+      // name of the ENV parameter variable that is needed for localization proposes
+      "name": "mapstore_language"
+  },
   // flag for abandon map edit confirm popup, by default is enabled
   "unsavedMapChangesDialog": false,
   // optional state initializer (it will override the one defined in appConfig.js)

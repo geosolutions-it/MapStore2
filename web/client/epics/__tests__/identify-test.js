@@ -8,7 +8,7 @@
 
 const expect = require('expect');
 
-const { ZOOM_TO_POINT, clickOnMap } = require('../../actions/map');
+const { ZOOM_TO_POINT, clickOnMap, CHANGE_MAP_VIEW } = require('../../actions/map');
 const { FEATURE_INFO_CLICK, UPDATE_CENTER_TO_MARKER, PURGE_MAPINFO_RESULTS, NEW_MAPINFO_REQUEST, LOAD_FEATURE_INFO, NO_QUERYABLE_LAYERS, ERROR_FEATURE_INFO, EXCEPTIONS_FEATURE_INFO, SHOW_MAPINFO_MARKER, HIDE_MAPINFO_MARKER, GET_VECTOR_INFO, SET_EDIT_FEATURE_QUERY, loadFeatureInfo, featureInfoClick, closeIdentify, toggleHighlightFeature, editLayerFeatures } = require('../../actions/mapInfo');
 const { getFeatureInfoOnFeatureInfoClick, zoomToVisibleAreaEpic, onMapClick, closeFeatureAndAnnotationEditing, handleMapInfoMarker, featureInfoClickOnHighligh, closeFeatureInfoOnCatalogOpenEpic, identifyEditLayerFeaturesEpic } = require('../identify').default;
 const { CLOSE_ANNOTATIONS } = require('../../actions/annotations');
@@ -23,6 +23,7 @@ const TEST_MAP_STATE = {
             width: 1581,
             height: 946
         },
+        center: { crs: "EPSG:4326", x: "17", y: "40"},
         zoom: 4,
         projection: 'EPSG:3857',
         bbox: {
@@ -482,6 +483,61 @@ describe('identify Epics', () => {
         };
 
         testEpic(zoomToVisibleAreaEpic, 1, sentActions, expectedAction, state);
+    });
+
+    it('test zoomToVisibleAreaEpic reset map to initial position on close identify', (done) => {
+        // remove previous hook
+        registerHook('RESOLUTION_HOOK', undefined);
+
+        const state = {
+            mapInfo: {
+                centerToMarker: true
+            },
+            map: TEST_MAP_STATE,
+            maplayout: {
+                boundingMapRect: {
+                    left: 500,
+                    bottom: 250
+                }
+            }
+        };
+
+        const sentActions = [
+            featureInfoClick({ latlng: { lat: 36.95, lng: -79.84 } }),
+            loadFeatureInfo(),
+            closeIdentify()
+        ];
+
+        const expectedAction = actions => {
+            try {
+                expect(actions.length).toBe(3);
+                actions.map((action) => {
+                    switch (action.type) {
+                    case ZOOM_TO_POINT:
+                        done();
+                        break;
+                    case UPDATE_CENTER_TO_MARKER:
+                        expect(action.status).toBe('enabled');
+                        break;
+                    case CHANGE_MAP_VIEW:
+                        expect(action.zoom).toBe(4);
+                        expect(action.bbox).toBe(null);
+                        expect(action.size).toEqual({"width": 1581, "height": 946});
+                        expect(action.mapStateSource).toBe(null);
+                        expect(action.projection).toBe("EPSG:3857");
+                        expect(action.center).toEqual({ crs: "EPSG:4326", x: "17", y: "40"});
+                        break;
+                    default:
+                        expect(true).toBe(false);
+                    }
+                });
+            } catch (ex) {
+                done(ex);
+            }
+            done();
+        };
+
+        testEpic(zoomToVisibleAreaEpic,  3, sentActions, expectedAction, state);
     });
 
     it('onMapClick triggers featureinfo when selected', done => {

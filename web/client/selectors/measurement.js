@@ -28,6 +28,14 @@ const isCoordinateEditorEnabledSelector = (state) => showCoordinateEditorSelecto
 const showAddAsAnnotationSelector = (state) => state && state.measurement && state.measurement.showAddAsAnnotation;
 
 /**
+ * selects the trueBearing object from state
+ * @memberof selectors.measurement
+ * @param  {object} state the state
+ * @return {object} the trueBearing in the state
+ */
+const isTrueBearingEnabledSelector = (state) => state && state.measurement && state.measurement.trueBearing && state.measurement.trueBearing.measureTrueBearing;
+
+/**
  * validating feature that can contain invalid coordinates
  * polygons needs to be closed fro being drawing
  * if the number of valid coords is < min for that geomType then
@@ -52,5 +60,6 @@ module.exports = {
     measurementSelector,
     getValidFeatureSelector,
     isCoordinateEditorEnabledSelector,
-    showAddAsAnnotationSelector
+    showAddAsAnnotationSelector,
+    isTrueBearingEnabledSelector
 };

@@ -107,6 +107,12 @@
                 "right": "Recht",
                 "bottom": "Bottom",
                 "top": "Oben"
+            },
+            "legendOptions": {
+              "title": "Legende",
+              "legendWidth": "Breite",
+              "legendHeight": "Höhe",
+              "legendPreview": "Vorschau"
             }
         },
         "longitude": "Länge",
@@ -599,6 +605,7 @@
             "MeasureLength": "Distanz messen",
             "MeasureArea": "Fläche messen",
             "MeasureBearing": "Richtung messen",
+            "MeasureTrueBearing": "Richtung (True Bearing) messen",
             "tooltip": "Länge und Fläche messen",
             "title": "Messen",
             "lengthButtonText": "Linie",
@@ -607,6 +614,7 @@
             "lengthLabel": "Länge",
             "areaLabel": "Fläche",
             "bearingLabel": "Richtung",
+            "trueBearingLabel": "Richtung (True Bearing)",
             "formula": "Formel zur Entfernungsberechnung",
             "showLabel": "Zeige Bezeichnungsetikett",
             "addAsAnnotation": "Als Anmerkung hinzufügen",
@@ -642,6 +650,7 @@
             "s_attributes": "Attribute",
             "s_sort": "Sortiere nach",
             "s_max_features": "Max. Objekte",
+            "s_max_zoom": "Max. Zoomstufe",
             "s_wfs_props_label" : "WFS-Service-Eigenschaften",
             "s_wfs_opt_props_label" : "Optionale Eigenschaften",
             "s_result_props_label": "Ergebnisanzeigeeigenschaften",

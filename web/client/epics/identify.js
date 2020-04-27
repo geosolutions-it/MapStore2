@@ -26,7 +26,7 @@ import { SET_CONTROL_PROPERTIES, SET_CONTROL_PROPERTY, TOGGLE_CONTROL } from '..
 
 import { closeFeatureGrid, updateFilter, toggleEditMode, CLOSE_FEATURE_GRID } from '../actions/featuregrid';
 import { QUERY_CREATE } from '../actions/wfsquery';
-import { CHANGE_MOUSE_POINTER, CLICK_ON_MAP, UNREGISTER_EVENT_LISTENER, MOUSE_MOVE, zoomToPoint } from '../actions/map';
+import { CHANGE_MOUSE_POINTER, CLICK_ON_MAP, UNREGISTER_EVENT_LISTENER, CHANGE_MAP_VIEW, MOUSE_MOVE, zoomToPoint, changeMapView } from '../actions/map';
 import { browseData } from '../actions/layers';
 import { closeAnnotations } from '../actions/annotations';
 import { MAP_CONFIG_LOADED } from '../actions/config';
@@ -44,7 +44,7 @@ import { centerToVisibleArea, isInsideVisibleArea, isPointInsideExtent, reprojec
 import { floatingIdentifyDelaySelector } from '../selectors/localConfig';
 
 
-import { getCurrentResolution, parseLayoutValue } from '../utils/MapUtils';
+import {getBbox, getCurrentResolution, parseLayoutValue} from '../utils/MapUtils';
 import MapInfoUtils from '../utils/MapInfoUtils';
 import { IDENTIFY_POPUP } from '../components/map/popups';
 
@@ -243,7 +243,15 @@ export default {
                             return Rx.Observable.empty();
                         }
                         const center = centerToVisibleArea(coords, map, layoutBounds, resolution);
-                        return Rx.Observable.of(updateCenterToMarker('enabled'), zoomToPoint(center.pos, center.zoom, center.crs));
+                        return Rx.Observable.of(updateCenterToMarker('enabled'), zoomToPoint(center.pos, center.zoom, center.crs))
+                            // restore initial position
+                            .concat(
+                                action$.ofType(CLOSE_IDENTIFY).switchMap(()=>{
+                                    const bbox = map && getBbox(map.center, map.zoom);
+                                    return Rx.Observable.of(
+                                        changeMapView(map.center, map.zoom, bbox, map.size, null, map.projection));
+                                }).takeUntil(action$.ofType(CHANGE_MAP_VIEW).skip(1)) // do not restore if user changes position (skip first caused by the zoomToPoint)
+                            );
                     })
             ),
     /**

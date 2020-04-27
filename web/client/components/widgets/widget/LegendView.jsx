@@ -19,7 +19,8 @@ module.exports = ({
     currentZoomLvl,
     disableOpacitySlider = true,
     disableVisibility = true,
-    scales
+    scales,
+    language
 }) => <SideGrid
     className="compact-legend-grid"
     size="sm"
@@ -43,6 +44,7 @@ module.exports = ({
                                     node={{ ...layer }}
                                     currentZoomLvl={currentZoomLvl}
                                     scales={scales}
+                                    language={language}
                                     {...legendProps} />
                             </Col>
                         </Row>

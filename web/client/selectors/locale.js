@@ -6,10 +6,18 @@
 * LICENSE file in the root directory of this source tree.
 */
 
+const {createSelector} = require('reselect');
+const {head} = require('lodash');
+
 const currentLocaleSelector = (state) => state.locale && state.locale.current || 'en-US';
 const currentMessagesSelector = (state) => state.locale && state.locale.messages || {};
 
+const currentLocaleLanguageSelector = createSelector([
+    currentLocaleSelector
+], (currentLocale) => head(currentLocale.split('-')));
+
 module.exports = {
     currentLocaleSelector,
+    currentLocaleLanguageSelector,
     currentMessagesSelector
 };

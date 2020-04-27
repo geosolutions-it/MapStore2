@@ -105,6 +105,12 @@
                 "bottom": "Bottom",
                 "top": "Cima"
             },
+            "legendOptions": {
+              "title": "Leyenda",
+              "legendWidth": "Anchura",
+              "legendHeight": "Altura",
+              "legendPreview": "Avance"
+            },
             "templateFormatInfoAlertExample": "La identificación de la característica es ${ properties }",
             "templatePreview": "Vista previa de la plantilla"
         },
@@ -598,6 +604,7 @@
             "MeasureLength": "Medir distancia",
             "MeasureArea": "Medir área",
             "MeasureBearing": "Medir azimut",
+            "MeasureTrueBearing": "Medir azimut verdadero",
             "tooltip": "Medir distancias, áreas y azimut",
             "title": "Medir",
             "lengthButtonText": "Línea",
@@ -606,6 +613,7 @@
             "lengthLabel": "Longitud",
             "areaLabel": "Área",
             "bearingLabel": "Azimut",
+            "trueBearingLabel": "Azimut verdadero",
             "formula": "Fórmula para cálculo de distancia",
             "showLabel": "Mostrar etiqueta de medición",
             "addAsAnnotation": "Añadir como anotación",
@@ -641,6 +649,7 @@
             "s_attributes": "Atributos",
             "s_sort": "Ordenado por",
             "s_max_features": "Máximo de características",
+            "s_max_zoom": "Nivel máximo de zoom",
             "s_wfs_props_label" : "Propiedades del servicio WFS",
             "s_wfs_opt_props_label" : "Propiedades opcionales",
             "s_result_props_label": "Resultados de la visualización de las propiedades",

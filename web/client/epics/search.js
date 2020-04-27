@@ -126,7 +126,7 @@ export const searchItemSelected = action$ =>
                     // if so, then do it with a point inside the geometry
                     let bbox = item.bbox || item.properties.bbox || toBbox(item);
                     let actions = [
-                        zoomToExtent([bbox[0], bbox[1], bbox[2], bbox[3]], "EPSG:4326", 21),
+                        zoomToExtent([bbox[0], bbox[1], bbox[2], bbox[3]], "EPSG:4326", item.__SERVICE__ && item.__SERVICE__.options && item.__SERVICE__.options.maxZoomLevel || 21),
                         addMarker(item)
                     ];
                     if (item.__SERVICE__ && !isNil(item.__SERVICE__.launchInfoPanel) && item.__SERVICE__.options && item.__SERVICE__.options.typeName) {

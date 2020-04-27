@@ -106,6 +106,12 @@
                 "right": "Destra",
                 "bottom": "Sotto",
                 "top": "Sopra"
+            },
+            "legendOptions": {
+              "title": "Legenda",
+              "legendWidth": "Larghezza",
+              "legendHeight": "Altezza",
+              "legendPreview": "Anteprima"
             }
         },
         "longitude": "Longitudine",
@@ -598,6 +604,7 @@
             "MeasureLength": "Misura Distanza",
             "MeasureArea": "Misura Area",
             "MeasureBearing": "Misura Direzione",
+            "MeasureTrueBearing": "Misura vera Direzione",
             "tooltip": "Misurazione lunghezza e l'area",
             "title": "Misurazione",
             "lengthButtonText": "Linea",
@@ -606,6 +613,7 @@
             "lengthLabel": "Lunghezza",
             "areaLabel": "Area",
             "bearingLabel": "Direzione",
+            "trueBearingLabel": "Vera Direzione",
             "formula": "Formula per il calcolo della distanza",
             "showLabel": "Mostra etichetta di misurazione",
             "addAsAnnotation": "Aggiungi come annotazione",
@@ -641,6 +649,7 @@
             "s_attributes": "Attributi",
             "s_sort": "Ordina per",
             "s_max_features": "Numero massimo di risultati (Max features)",
+            "s_max_zoom": "Livello di zoom massimo",
             "s_wfs_props_label" : "Proprietà del servizio WFS",
             "s_wfs_opt_props_label" : "Proprietà facoltative",
             "s_result_props_label": "Proprietà di visualizzazione dei risultati",
