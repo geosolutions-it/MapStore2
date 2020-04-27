@@ -21,6 +21,7 @@ class WMSLegend extends React.Component {
         scales: PropTypes.array,
         WMSLegendOptions: PropTypes.string,
         scaleDependent: PropTypes.bool,
+        language: PropTypes.string,
         legendWidth: PropTypes.number,
         legendHeight: PropTypes.number
     };
@@ -72,7 +73,9 @@ class WMSLegend extends React.Component {
                             undefined
                         }
                         legendOptions={this.props.WMSLegendOptions}
-                        scaleDependent={this.props.scaleDependent}/>
+                        scaleDependent={this.props.scaleDependent}
+                        language={this.props.language}
+                    />
                 </div>
             );
         }

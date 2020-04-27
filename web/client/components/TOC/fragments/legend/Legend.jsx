@@ -17,7 +17,8 @@ class Legend extends React.Component {
         style: PropTypes.object,
         currentZoomLvl: PropTypes.number,
         scales: PropTypes.array,
-        scaleDependent: PropTypes.bool
+        scaleDependent: PropTypes.bool,
+        language: PropTypes.string
     };
 
     static defaultProps = {
@@ -60,7 +61,8 @@ class Legend extends React.Component {
                 style: layer.style || null,
                 version: layer.version || "1.3.0",
                 SLD_VERSION: "1.1.0",
-                LEGEND_OPTIONS: props.legendOptions
+                LEGEND_OPTIONS: props.legendOptions,
+                LANGUAGE: props.language
             }, layer.legendParams || {},
             SecurityUtils.addAuthenticationToSLD(cleanParams || {}, props.layer),
             cleanParams && cleanParams.SLD_BODY ? {SLD_BODY: cleanParams.SLD_BODY} : {},
