@@ -7,6 +7,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+
 /**
   * Buttons for Identify Tool Toolbar
   */
@@ -16,6 +17,7 @@ module.exports = ({
     highlight,
     toggleHighlightFeature = () => {},
     zoomToFeature = () => {},
+    onEdit = () => {},
     ...props
 }) => [
     {
@@ -50,5 +52,10 @@ module.exports = ({
             && currentFeature.reduce((hasGeometries, { geometry } = {}) => hasGeometries || !!geometry, false),
         tooltipId: "identifyZoomToFeature",
         onClick: zoomToFeature
+    }, {
+        glyph: 'pencil',
+        visible: props.showEdit,
+        tooltipId: "identifyEdit",
+        onClick: () => onEdit()
     }
 ].filter(btn => btn && btn.visible);

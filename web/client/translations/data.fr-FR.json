@@ -577,6 +577,7 @@
         "identifyRevGeocodeSubmitText": "Plus d'Informations",
         "identifyRevGeocodeCloseText": "Fermer",
         "identifyRevGeocodeError": "Geocodage impossible",
+        "identifyEdit": "Éditer",
         "getFeatureInfoError": {
             "title": "Ooops! Quelque chose ne fonctionne pas",
             "text": "Une erreur s'est produite au cours de cette requête <b>GetFeatureInfo</b>"

@@ -91,13 +91,14 @@ function featureError(typeName, error) {
     };
 }
 
-function querySearchResponse(result, searchUrl, filterObj, queryOptions) {
+function querySearchResponse(result, searchUrl, filterObj, queryOptions, reason) {
     return {
         type: QUERY_RESULT,
         searchUrl,
         filterObj,
         result,
-        queryOptions
+        queryOptions,
+        reason
     };
 }
 function queryError(error) {
@@ -106,10 +107,11 @@ function queryError(error) {
         error
     };
 }
-function updateQuery(updates) {
+function updateQuery(updates, reason) {
     return {
         type: UPDATE_QUERY,
-        updates
+        updates,
+        reason
     };
 }
 function loadFeature(baseUrl, typeName) {
@@ -139,12 +141,20 @@ function createQuery(searchUrl, filterObj) {
     };
 }
 
-function query(searchUrl, filterObj, queryOptions) {
+/**
+ * Trigger a wfs query
+ * @param {string} searchUrl wfs search url
+ * @param {object} filterObj filter to query with
+ * @param {object} queryOptions
+ * @param {any} reason custom parameter that will be supplied to QUERY_RESULT after query completion
+ */
+function query(searchUrl, filterObj, queryOptions, reason) {
     return {
         type: QUERY,
         searchUrl,
         filterObj,
-        queryOptions
+        queryOptions,
+        reason
     };
 }
 

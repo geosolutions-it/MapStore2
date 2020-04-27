@@ -15,6 +15,7 @@ import Message from '../../../I18N/Message';
 export default ({
     value,
     filterEnabled = false,
+    filterDeactivated = false,
     column = {},
     tooltipPlace = 'top',
     tooltipDisabled = 'featuregrid.filter.tooltips.geometry.disabled',
@@ -22,21 +23,28 @@ export default ({
     tooltipApplied = 'featuregrid.filter.tooltips.geometry.applied',
     onChange = () => {}
 }) => {
-    const tooltip = filterEnabled && !!value ? tooltipApplied :
-        filterEnabled && !value ? tooltipEnabled :
-            tooltipDisabled;
+    const tooltip = filterDeactivated ? undefined :
+        filterEnabled && !!value ? tooltipApplied :
+            filterEnabled && !value ? tooltipEnabled :
+                tooltipDisabled;
 
-    return (
-        <OverlayTrigger placement={tooltipPlace} overlay={<Tooltip id="gofull-tooltip"><Message msgId={tooltip}/></Tooltip>}>
-            <div className={`featuregrid-geometry-filter${filterEnabled ? ' filter-enabled' : ''}`} onClick={() => {
+    const div = (
+        <div className={`featuregrid-geometry-filter${filterEnabled ? ' filter-enabled' : ''}${filterDeactivated ? ' filter-deactivated' : ''}`}
+            onClick={filterDeactivated ? () => {} : () => {
                 onChange({
-                    enabled: !!value ? filterEnabled : !filterEnabled,
+                    enabled: !filterEnabled,
                     type: 'geometry',
                     attribute: column.geometryPropName
                 });
-            }}>
-                <Glyphicon glyph={!!value ? "remove-sign" : "map-marker"}/>
-            </div>
-        </OverlayTrigger>
+            }}
+        >
+            <Glyphicon glyph={!!value ? "remove-sign" : "map-marker"}/>
+        </div>
+    );
+
+    return (
+        tooltip ? <OverlayTrigger placement={tooltipPlace} overlay={<Tooltip id="gofull-tooltip"><Message msgId={tooltip}/></Tooltip>}>
+            {div}
+        </OverlayTrigger> : div
     );
 };
