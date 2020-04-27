@@ -258,6 +258,10 @@ module.exports = {
                         .take(1)
                     )
             ),
+    /**
+     * Performs the query when the geometry filter is updated
+     * @memberof epics.featuregrid
+     */
     featureGridUpdateGeometryFilter: (action$, store) =>
         action$.ofType(UPDATE_FILTER)
             .filter(({update = {}}) => update.type === 'geometry')
@@ -268,10 +272,10 @@ module.exports = {
             .skip(1)
             .map(updateFilterFunc(store)),
     /**
-     * Performs the query when the text filter is updated
+     * Performs the query when the text filters are updated
      * @memberof epics.featuregrid
      */
-    featureGridUpdateFilter: (action$, store) => action$.ofType(QUERY_CREATE).switchMap(() =>
+    featureGridUpdateTextFilters: (action$, store) => action$.ofType(QUERY_CREATE).switchMap(() =>
         action$.ofType(UPDATE_FILTER)
             .filter(({update = {}}) => update.type !== 'geometry')
             .map(updateFilterFunc(store))
