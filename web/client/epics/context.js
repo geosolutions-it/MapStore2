@@ -112,7 +112,7 @@ const createSessionFlow = (mapId, contextName, action$, getState) => {
     ).flatMap(([id, data]) => {
         const userName = userSelector(getState())?.name;
         return Observable.of(loadUserSession(buildSessionName(id, mapId, userName))).merge(
-            action$.do(console.log).ofType(USER_SESSION_LOADED).exhaustMap(({session}) => {
+            action$.do(console.log).ofType(USER_SESSION_LOADED).take(1).switchMap(({session}) => {
                 const mapSession = session?.map && {
                     map: session.map
                 };

@@ -19,6 +19,9 @@ describe('usersession Epics', () => {
         sample1: "sample1",
         sample2: "sample2",
         id: "1",
+        usersession: {
+            autoSave: true
+        },
         security: {
             user: {
                 name: "myuser"
@@ -68,6 +71,14 @@ describe('usersession Epics', () => {
             expect(actions[0].type).toBe(SAVE_USER_SESSION);
             expect(actions[actions.length - 1].type).toBe("EPIC_COMPLETED");
         }, initialState, done, true);
+        setTimeout(() => {
+            store.dispatch({ type: 'STOP' });
+        }, 100);
+    });
+    it('disable autoSave do not allow session saving', (done) => {
+        const store = testEpic(autoSaveSessionEpicCreator(10, () => ({ type: 'END' }), 'START', 'STOP', 10), (action) => action.type !== "END", { type: 'START' }, (actions) => {
+            expect(actions[0].type).toBe("EPIC_COMPLETED");
+        }, { ...initialState, usersession: { autoSave: false } }, done, true);
         setTimeout(() => {
             store.dispatch({ type: 'STOP' });
         }, 100);
