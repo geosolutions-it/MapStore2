@@ -57,4 +57,26 @@ describe('test WMSLegend module component', () => {
         const domNode = ReactDOM.findDOMNode(comp);
         expect(domNode).toNotExist();
     });
+
+    it('tests WMSLegend component language property with value', () => {
+        const l = {
+            name: 'layer00',
+            title: 'Layer',
+            visibility: true,
+            storeIndex: 9,
+            type: 'wms',
+            url: 'fakeurl'
+        };
+        const language = 'example_language';
+        const comp = ReactDOM.render(<WMSLegend node={l} language={language} />, document.getElementById("container"));
+
+        const domNode = ReactDOM.findDOMNode(comp);
+        expect(domNode).toExist();
+
+        const image = domNode.getElementsByTagName('img');
+        expect(image).toExist();
+        expect(image.length).toBe(1);
+        const params = new URLSearchParams(image[0].src);
+        expect(params.get("LANGUAGE")).toBe(language);
+    });
 });

@@ -49,6 +49,11 @@ This is the main structure:
   }],
   // flag for postponing mapstore 2 load time after theme
   "loadAfterTheme": false,
+  // if defined, WMS layer styles localization will be added
+  "localizedLayerStyles": {
+      // name of the ENV parameter variable that is needed for localization proposes
+      "name": "mapstore_language"
+  },
   // optional state initializer (it will override the one defined in appConfig.js)
   "initialState": {
       // default initial state for every mode (will override initialState imposed by plugins reducers)
