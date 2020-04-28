@@ -14,7 +14,16 @@ Through this window it is possible to:
 
 * Measure Bearing <img src="../img/button/measure-bearing.jpg" class="ms-docbutton"/>
 
+* Clear measures <img src="../img/button/x_button.jpg" class="ms-docbutton"/>
+
+* Export the measures to *GeoJSON* <img src="../img/button/json_export_button.jpg" class="ms-docbutton"/>
+
+* Add the measure as layer in [TOC](toc.md) <img src="../img/button/layers_button.jpg" class="ms-docbutton"/>
+
 * Add the measure as [Annotation](annotations.md) <img src="../img/button/add-as-annotation.jpg" class="ms-docbutton"/>
+
+!!! note
+    The user can perform more than one measurement simultaneously on the map and then cancel it with the ** Clear Measures ** button <img src="../img/button/x_button.jpg" class="ms-docbutton"/>
 
 ## Measure distance
 
@@ -26,6 +35,9 @@ The available units of measure are:
 
 <img src="../img/measure/distance-uom.jpg" class="ms-docimage" style="max-width:300px;"/>
 
+!!! note
+    The distance between different points, drawn by the user, is shown on the map together with the measurement of the overall distance of all segments.
+
 ## Measure area
 
 Once the **Measure Area** button is selected <img src="../img/button/measure-area-green.jpg" class="ms-docbutton"/>, it is possible to start the drawing session (in this case at least 3 vertices need to be indicated). Same as measuring the distance, each click correspond to a vertex and the double click will indicate the last one.
@@ -36,12 +48,25 @@ In this case the available units of measure are:
 
 <img src="../img/measure/area-uom.jpg" class="ms-docimage" style="max-width:300px;"/>
 
+!!! note
+    Each length of the sides of the polygon and the overall perimeter bust, drawn by the user, are shown on the map together with the area of the polygon.
+
 ## Measure bearing
 
 Bearing measurements allows you to measure directions and angles. In the quadrant bearing system, the bearing of a line is measured as an angle from the reference meridian, either the north or the south, toward the east or the west. Bearings in the quadrant bearing system are written as a meridian, an angle and a direction. For example, a bearing of N 30 W defines an angle of 30 degrees west measured from north. A bearing of S 15 E defines an angle of 15 degrees east measured from the south.<br>
 After selecting the **Measure Bearing** button <img src="../img/button/measure-bearing-green.jpg" class="ms-docbutton"/> the user can draw a line with only two vertices that indicates respectively the starting and the ending point. 
 
 <img src="../img/measure/measure-bearing-ex.gif" class="ms-docimage" style="max-width:600px;"/>
+
+## Export the measure
+
+Measurements drawn on the map can be exported in `json` format through the <img src="../img/button/json_export_button.jpg" class="ms-docbutton"/> button.  
+
+## Add the measure as layer 
+
+Once a measure is drawn, it gets possible to add it as layer through the <img src="../img/button/layers_button.jpg" class="ms-docbutton"/> button. The created layer is added to the [Table of Contents](toc.md) as follows:
+
+<img src="../img/measure/as_layer.jpg" class="ms-docimage"/>
 
 ## Add measure as annotation
 
