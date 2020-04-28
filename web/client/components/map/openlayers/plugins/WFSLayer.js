@@ -13,9 +13,9 @@ import VectorSource from 'ol/source/Vector';
 import VectorLayer from 'ol/layer/Vector';
 import GeoJSON from 'ol/format/GeoJSON';
 
-import { getFeature } from '../../../../api/WFS';
+import { getFeature, describeFeatureType } from '../../../../api/WFS';
 import { optionsToVendorParams } from '../../../../utils/VendorParamsUtils';
-import { needsReload } from '../../../../utils/WFSLayerUtils';
+import { needsReload, extractGeometryType } from '../../../../utils/WFSLayerUtils';
 
 const createLoader = (source, options) => (extent, resolution, projection) => {
     const params = optionsToVendorParams(options);
@@ -38,8 +38,29 @@ const createLoader = (source, options) => (extent, resolution, projection) => {
     }).catch(e => {
         onError(e);
     });
-
 };
+/**
+ * Generate the OL style from options and geometryType. It workarounds some issues
+ * @param {object} options MapStore's layer options
+ * @param {string} geometryType the geometry type
+ */
+const getWFSStyle = (options, geometryType) => {
+    return getStyle({ ...options, style: { ...(options.style || {}), type: geometryType } });
+};
+
+/**
+ * Fetch describeFeatureType if missing and set the style accordingly with the geometry type.
+ * @param {object} layer the openlayers layer
+ * @param {object} options MapStore layer configuration
+ */
+const updateStyle = (layer, options) => layer.geometryType
+    ? layer.setStyle(getWFSStyle(options, layer.geometryType))
+    : describeFeatureType(options.url, options.name)
+        .then(extractGeometryType)
+        .then(geometryType => {
+            layer.geometryType = geometryType;
+            layer.setStyle(getWFSStyle(options, geometryType));
+        });
 
 /**
  * WFS Layer for MapStore. Openlayers implementation.
@@ -56,7 +77,7 @@ Layers.registerType('wfs', {
         source.setLoader(createLoader(source, options));
         const style = getStyle(options);
 
-        return new VectorLayer({
+        const layer = new VectorLayer({
             msId: options.id,
             source: source,
             visible: options.visibility !== false,
@@ -64,23 +85,25 @@ Layers.registerType('wfs', {
             style,
             opacity: options.opacity
         });
+        updateStyle(layer, options);
+        return layer;
     },
-    update: (layer, newOptions = {}, oldOptions = {}) => {
+    update: (layer, options = {}, oldOptions = {}) => {
         const oldCrs = oldOptions.crs || oldOptions.srs || 'EPSG:3857';
-        const newCrs = newOptions.crs || newOptions.srs || 'EPSG:3857';
+        const newCrs = options.crs || options.srs || 'EPSG:3857';
         const source = layer.getSource();
         if (newCrs !== oldCrs) {
             source.forEachFeature((f) => {
                 f.getGeometry().transform(oldCrs, newCrs);
             });
         }
-        if (needsReload(oldOptions, newOptions)) {
-            source.setLoader(createLoader(source, newOptions));
+        if (needsReload(oldOptions, options)) {
+            source.setLoader(createLoader(source, options));
             source.clear();
             source.refresh();
         }
-        if (newOptions.style !== oldOptions.style) {
-            layer.setStyle(getStyle(newOptions));
+        if (options.style !== oldOptions.style || options.styleName !== oldOptions.styleName) {
+            updateStyle(layer, options);
         }
     },
     render: () => {

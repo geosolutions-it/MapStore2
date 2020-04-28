@@ -7,6 +7,9 @@
  */
 
 import { optionsToVendorParams } from './VendorParamsUtils';
+import urlUtil from 'url';
+import {get, head} from 'lodash';
+
 
 export const needsReload = (oldOptions, newOptions) => {
     const oldParams = { ...(optionsToVendorParams(oldOptions) || {}), _v_: oldOptions._v_ };
@@ -17,4 +20,33 @@ export const needsReload = (oldOptions, newOptions) => {
         }
         return found;
     }, false);
+};
+
+export const toDescribeURL = ({ name, search = {}, url, describeFeatureTypeURL } = {}) => {
+    const parsed = urlUtil.parse(describeFeatureTypeURL || search.url || url, true);
+    return urlUtil.format(
+        {
+            ...parsed,
+            search: undefined, // this allows to merge parameters correctly
+            query: {
+                ...parsed.query,
+
+                service: "WFS",
+                version: "1.1.0",
+                typeName: name,
+                outputFormat: 'application/json',
+                request: "DescribeFeatureType"
+            }
+        });
+};
+
+/**
+ * Extract GeometryType from JSON DescribeFeatureType
+ */
+export const extractGeometryType = describeFeatureType => {
+    const properties = get(describeFeatureType, "featureTypes[0].properties") || [];
+    return properties && head(properties
+        .filter(elem => elem.type.indexOf("gml:") === 0) // find fields of geometric type
+        .map(elem => elem.type.split(":")[1]) // extract the geometry name. E.g. from gml:Point extract the "Point" string
+    );
 };

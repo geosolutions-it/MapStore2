@@ -129,7 +129,7 @@ const getConfiguredPlugin = (plugin, loaded, loadingComp) => {
 };
 
 export const getStyleTabPlugin = ({ settings, items = [], loadedPlugins, onToggleStyleEditor = () => { }, onUpdateParams = () => { }, element, ...props }) => {
-    if (element.type === "wfs" || element.type === "vector") {
+    if (element.type === "wfs" || element.type === "vector" && element.id !== "annotations") {
         return {
             Component: SimpleVectorStyleEditor
         };

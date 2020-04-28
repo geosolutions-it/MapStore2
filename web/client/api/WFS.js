@@ -8,6 +8,24 @@
 import axios from '../libs/ajax';
 import urlUtil from 'url';
 import assign from 'object-assign';
+
+const toDescribeURL = (url, typeName) => {
+    const parsed = urlUtil.parse(url, true);
+    return urlUtil.format(
+        {
+            ...parsed,
+            search: undefined, // this allows to merge parameters correctly
+            query: {
+                ...parsed.query,
+
+                service: "WFS",
+                version: "1.1.0",
+                typeName,
+                outputFormat: 'application/json',
+                request: "DescribeFeatureType"
+            }
+        });
+};
 /**
  * Simple getFeature using http GET method with json format
  */
@@ -55,7 +73,10 @@ export const getFeature = (url, typeName, params ) => {
 export const getCapabilities = function(url) {
     return axios.get(getCapabilitiesURL(url));
 };
-export const  describeFeatureType = function(url, typeName) {
+/**
+ * @deprecated
+ */
+export const describeFeatureTypeOGCSchemas = function(url, typeName) {
     const parsed = urlUtil.parse(url, true);
     const describeLayerUrl = urlUtil.format(assign({}, parsed, {
         query: assign({
@@ -75,5 +96,9 @@ export const  describeFeatureType = function(url, typeName) {
             }));
         });
     });
+};
+
+export const describeFeatureType = function(url, typeName) {
+    return axios.get(toDescribeURL(url, typeName)).then(({data}) => data);
 };
 

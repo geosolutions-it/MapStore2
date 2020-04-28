@@ -240,9 +240,7 @@ class ShapeFileUploadAndStyle extends React.Component {
     addToMap = () => {
         this.props.shapeLoading(true);
         let styledLayer = this.props.selected;
-        if (!this.state.useDefaultStyle) {
-            styledLayer = StyleUtils.toVectorStyle(styledLayer, this.props.shapeStyle);
-        }
+
         Promise.resolve(this.props.addShapeLayer( styledLayer )).then(() => {
             this.props.shapeLoading(false);
             let bbox = [];

@@ -1,6 +1,5 @@
 import React from 'react';
 import { compose, branch, withProps, withHandlers, mapPropsStream } from 'recompose';
-import { get, head} from 'lodash';
 
 import loadingState from '../../components/misc/enhancers/loadingState';
 import emptyState from '../../components/misc/enhancers/emptyState';
@@ -13,7 +12,37 @@ import { colorToRgbaStr } from '../../utils/ColorUtils';
 import StylePoint from '../../components/style/StylePoint';
 import StylePolygon from '../../components/style/StylePolygon';
 import StylePolyline from '../../components/style/StylePolyline';
+import { extractGeometryType } from '../../utils/WFSLayerUtils';
 
+
+/*
+ * Converts the style properties and handlers to re-use the shapefile styler.
+ *
+ * shapeStyle (internal for panel) is defined as:
+ * ```json
+ * {
+ *  "marker": true,
+ *  "radius": 2,
+ *  "width": 2,
+ *  "fill": "rgba(1,2,3,0.1)",
+ *  "color": "rgba(1,2,3,0.1)",
+ * }
+ * ```
+ * while MapStore Vector layer style is defined as :
+ * ```json
+ * {
+ *   styleName: "marker" ,// opt
+ *   style: {
+ *      opacity: 0.1, // also stroke
+ *      color: "rgba(1,2,3,0.1)",
+ *      fillOpacity: 0.1,
+ *      fillColor: "rgba(1,2,3, 0.1)",
+ *      weight: 2, // width
+ *      radius: 2
+ *   }
+ * }
+ * ```
+ */
 const shapeStyleAdapter = compose(
     withProps(({ style = {}, styleName }) => {
         const { fillColor, fillOpacity, color, opacity, shapeStyle, weight, radius } = style;
@@ -36,7 +65,7 @@ const shapeStyleAdapter = compose(
                 const { r, g, b, a } = value;
                 onChange( "style", {
                     ...style,
-                    "fillColor": { r, g, b, a },
+                    "fillColor": `rgba(${r}, ${g}, ${b})`,
                     "fillOpacity": a
                 });
                 break;
@@ -45,7 +74,7 @@ const shapeStyleAdapter = compose(
                 const { r, g, b, a } = value;
                 onChange("style", {
                     ...style,
-                    "color": `rgba(${r}, ${g}, ${b}, ${a})`,
+                    "color": `rgba(${r}, ${g}, ${b})`,
                     "opacity": a
                 });
                 break;
@@ -74,17 +103,6 @@ const stylers = {
     MultiLineString: shapeStyleAdapter(StylePolyline),
     MultiPoint: shapeStyleAdapter(StylePoint),
     Point: shapeStyleAdapter(StylePoint)
-};
-
-/**
- * Extract GeometryType from JSON DescribeFeatureType
- */
-const extractGeometryType = describeFeatureType => {
-    const properties = get(describeFeatureType, "featureTypes[0].properties") || [];
-    return properties && head(properties
-        .filter(elem => elem.type.indexOf("gml:") === 0) // find fields of geometric type
-        .map( elem => elem.type.split(":")[1]) // extract the geometry name. E.g. from gml:Point extract the "Point" string
-    );
 };
 
 const withGeometryType = branch(

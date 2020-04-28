@@ -41,7 +41,7 @@ Layers.registerType('vector', {
             });
         }
 
-        if (!isEqual(oldOptions.style, newOptions.style)) {
+        if (!isEqual(oldOptions.style, newOptions.style) || oldOptions.styleName !== newOptions.styleName) {
             layer.setStyle(getStyle(newOptions));
         }
     },

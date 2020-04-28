@@ -392,7 +392,21 @@ const getValidStyle = (geomType, options = { style: defaultStyles}, isDrawing, t
 };
 
 export function getStyle(options, isDrawing = false, textValues = []) {
-
+    if ((options.styleName && !options.overrideOLStyle)) {
+        return (feature) => {
+            if (options.styleName === "marker") {
+                const type = feature.getGeometry().getType();
+                switch (type) {
+                case "Point":
+                case "MultiPoint":
+                    return defaultOLStyles.marker(options);
+                default:
+                    break;
+                }
+            }
+            return defaultOLStyles[options.styleName](options);
+        };
+    }
     // this is causing max call stack size exceeded because it contains ol functions and it comes from the store
     // we suggest to remove this behaviour
     let style = options.nativeStyle;
@@ -527,18 +541,6 @@ export function getStyle(options, isDrawing = false, textValues = []) {
     }
     // *************************************************************************
 
-    return (options.styleName && !options.overrideOLStyle) ? (feature) => {
-        if (options.styleName === "marker") {
-            type = feature.getGeometry().getType();
-            switch (type) {
-            case "Point":
-            case "MultiPoint":
-                return defaultOLStyles.marker(options);
-            default:
-                break;
-            }
-        }
-        return defaultOLStyles[options.styleName](options);
-    } : style || styleFunction;
+    return style || styleFunction;
 }
 
