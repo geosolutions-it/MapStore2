@@ -308,7 +308,7 @@ const testSpec = {
     }
 };
 let rules;
-describe.only('PrintUtils', () => {
+describe('PrintUtils', () => {
     beforeEach(() => {
         rules = ConfigUtils.getConfigProp('authenticationRules');
         ConfigUtils.setConfigProp('useAuthenticationRules', false);
