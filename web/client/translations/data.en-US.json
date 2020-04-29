@@ -494,7 +494,6 @@
                 "country": "Country",
                 "URL": "URL",
                 "role": "Role",
-                "protocol": "Protocol",
                 "hoursOfService": "Hours of Service",
                 "electronicMailAddress": "Email Address",
                 "subject": "Subject",

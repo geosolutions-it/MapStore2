@@ -72,8 +72,9 @@ class MetadataTemplate extends React.Component {
                 if (!field.length) {
                     fieldContent = null;
                 } else {
-                    const messagesFieldItemTitle = LocaleUtils.getMessageById(this.context.messages, `toc.layerMetadata.itemTitles.${key}`);
-                    const fieldItemTitle = !messagesFieldItemTitle ?
+                    const fieldItemTitleId = `toc.layerMetadata.itemTitles.${key}`;
+                    const messagesFieldItemTitle = LocaleUtils.getMessageById(this.context.messages, fieldItemTitleId);
+                    const fieldItemTitle = messagesFieldItemTitle === fieldItemTitleId ?
                         LocaleUtils.getMessageById(this.context.messages, 'toc.layerMetadata.itemTitles.default') :
                         messagesFieldItemTitle;
                     const renderedElements = field.map((fieldElement, i) => {

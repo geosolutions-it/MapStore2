@@ -479,6 +479,23 @@
                 "identifier": "Identificador",
                 "title": "Título",
                 "abstract": "Resumen",
+                "purpose": "Propósito",
+                "source": "Fuente",
+                "createdDate": "Fecha de creación",
+                "lastRevisionDate": "Fecha de última revisión",
+                "pointsOfContact": "Puntos de contacto",
+                "individualName": "Nombre individual",
+                "organisationName": "Nombre de la organización",
+                "contactInfo": "Información de contacto",
+                "phone": "Número de teléfono",
+                "deliveryPoints": "Puntos de entrega",
+                "city": "Ciudad",
+                "postalCode": "Código postal",
+                "country": "País",
+                "URL": "URL",
+                "role": "Papel",
+                "hoursOfService": "Horas de servicio",
+                "electronicMailAddress": "Dirección de correo electrónico",
                 "subject": "Asunto",
                 "type": "Tipo",
                 "creator": "Autor",
@@ -486,7 +503,12 @@
                 "layerMetadataPanelTitle": "Metadatos de capa",
                 "notification": {
                     "warnigGetMetadataRecordById": "Error en la búsqueda de metadatos"
-                }
+                },
+                "itemTitles": {
+                    "pointsOfContact": "Contacto",
+                    "default": "Articulo"
+                },
+                "emptyMetadata": "No hay metadatos disponibles."
             },
             "thematic": {
                 "classification_field": "Campo para clasificar:",
