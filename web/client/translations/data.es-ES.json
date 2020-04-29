@@ -2375,6 +2375,10 @@
             "description": "Permite al usuario habilitar / deshabilitar extensiones de usuario",
             "title": "User Extensions"
           },
+          "UserSession": {
+            "title": "Sesión de usuario",
+            "description": "Habilita una sesión de usuario guardada automáticamente para cada contexto"
+          },
           "Version": {
             "description": "Muestra la versión de MapStore en la herramienta de configuración de mapas",
             "descriptionGeorchestra": "Muestra la versión de GeOrchestra en la herramienta de configuración de mapas",
@@ -2694,7 +2698,9 @@
             "titleContext": "Error al eliminar sesión de usuario",
             "defaultMessage": "Error desconocido"
           },
-          "successRemoved": "Sesión de usuario eliminada"
+          "successRemoved": "Sesión de usuario eliminada",
+          "remove": "Restablecer sesión de usuario",
+          "confirmRemove": "¿Está seguro de que desea restaurar la configuración predeterminada?"
         }
     }
 }

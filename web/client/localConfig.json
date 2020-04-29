@@ -50,6 +50,9 @@
       {"name": "browser", "path": "browser"},
       {"name": "geostorymode", "path": "geostory.mode"},
       {"name": "featuregridmode", "path": "featuregrid.mode"}],
+    "userSessions": {
+      "enabled": true
+    },
     "projectionDefs": [],
     "initialState": {
       "defaultState": {

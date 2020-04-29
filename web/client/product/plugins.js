@@ -115,6 +115,7 @@ module.exports = {
         UndoPlugin: require('../plugins/History'),
         UserManagerPlugin: require('../plugins/manager/UserManager'),
         UserExtensionsPlugin: require('../plugins/UserExtensions').default,
+        UserSessionPlugin: require('../plugins/UserSession').default,
         VersionPlugin: require('../plugins/Version'),
         WFSDownloadPlugin: require('../plugins/WFSDownload'),
         WidgetsBuilderPlugin: require('../plugins/WidgetsBuilder').default,

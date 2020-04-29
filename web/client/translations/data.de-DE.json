@@ -2375,6 +2375,10 @@
             "description": "Ermöglicht dem Benutzer das Aktivieren / Deaktivieren von Benutzererweiterungen",
             "title": "User Extensions"
           },
+          "UserSession": {
+            "title": "User Session",
+            "description": "Aktiviert eine automatisch gespeicherte Benutzersitzung für jeden Kontext."
+          },
           "Version": {
             "description": "Zeigt die Version von MapStore in den Karteneinstellungen an",
             "descriptionGeorchestra": "Zeigt die Version von GeOrchestra in den Karteneinstellungen an",
@@ -2694,7 +2698,9 @@
             "titleContext": "Entfernen der Benutzersitzung fehlgeschlagen",
             "defaultMessage": "Unbekannter Fehler"
           },
-          "successRemoved": "Benutzersitzung entfernt"
+          "successRemoved": "Benutzersitzung entfernt",
+          "remove": "Benutzersitzung zurücksetzen",
+          "confirmRemove": "Möchten Sie die Standardkonfiguration wirklich wiederherstellen?"
         }
     }
 }

@@ -2379,6 +2379,10 @@
             "description": "Allows the user to enable/disable user extensions",
             "title": "User Extensions"
           },
+          "UserSession": {
+            "title": "User Session",
+            "description": "Enables an automatically saved user session for every context"
+          },
           "Version": {
             "description": "Shows the version of MapStore in map settings tool",
             "descriptionGeorchestra": "Shows the version of GeOrchestra in map settings tool",
@@ -2698,7 +2702,9 @@
             "titleContext": "User session removing failed",
             "defaultMessage": "Unknown error"
           },
-          "successRemoved": "User session removed"
+          "successRemoved": "User session removed",
+          "remove": "Reset User Session",
+          "confirmRemove": "Are you sure you want to restore the default configuration?"
         }
     }
 }
