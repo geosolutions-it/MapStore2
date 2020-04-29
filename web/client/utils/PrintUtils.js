@@ -12,8 +12,10 @@ const MapUtils = require('./MapUtils');
 const {optionsToVendorParams} = require('./VendorParamsUtils');
 const AnnotationsUtils = require("./AnnotationsUtils");
 const {colorToHexStr} = require("./ColorUtils");
+const {getLayerConfig} = require('./TileConfigProvider').default;
+const {get} = require("ol/proj");
 
-const {isArray} = require('lodash');
+const {isArray, isEmpty, toNumber, random} = require('lodash');
 
 const url = require('url');
 
@@ -342,7 +344,71 @@ const PrintUtils = {
                     0.5971642833948135
                 ]
             })
+        },
+        wmts: {
+            map: (layer) => ({
+                "baseURL": layer.capabilitiesURL,
+                "dimensions": isEmpty(layer.dimensions) && layer.dimensions || null,
+                "format": layer.format || "image/png",
+                "type": "WMTS",
+                "layer": layer.name,
+                "customParams ": SecurityUtils.addAuthenticationParameter(layer.capabilitiesURL, assign({
+                    "TRANSPARENT": true
+                })),
+                "matrixIds": PrintUtils.getWMTSMatrixIds(layer),
+                "matrixSet": CoordinatesUtils.normalizeSRS(layer.srs || 'EPSG:3857', layer.allowedSRS),
+                "style": layer.style || '',
+                "name": layer.name,
+                "requestEncoding": layer.requestEncoding,
+                "opacity": layer.opacity || 1.0,
+                "version": layer.version || "1.0.0"
+            })
+        },
+        tileprovider: {
+            map: (layer) => ({
+                ...PrintUtils.getTileProviderLayerSpec(layer)
+            })
         }
+    },
+    getTileProviderLayerSpec: (layer) => {
+        const layerConfig = getLayerConfig(layer.provider, layer)[1];
+        if (!isEmpty(layerConfig)) {
+            let baseURL = layerConfig && layerConfig.url;
+            if (baseURL.indexOf("{s}") > 0) {
+                const subdomains = layerConfig && layerConfig.subdomains;
+                baseURL = baseURL.replace("{s}", typeof subdomains === "string" ? subdomains : subdomains[random(0, subdomains.length - 1)]);
+            }
+            return {
+                "baseURL": baseURL.indexOf('{z}') > 0 ? baseURL.substring(0, baseURL.indexOf('{z}') - 1) : baseURL,
+                "type": 'xyz',
+                "maxExtent": [-20037508.3392, -20037508.3392, 20037508.3392, 20037508.3392],
+                "tileSize": [256, 256],
+                "resolutions": MapUtils.getResolutions(),
+                "extension": baseURL.split('.').pop() || "png",
+                "opacity": 1
+            };
+        }
+        return {};
+    },
+    getWMTSMatrixIds: (layer) => {
+        let modifiedTileMatrixSet = [];
+        const srs = CoordinatesUtils.normalizeSRS(layer.srs || 'EPSG:3857', layer.allowedSRS);
+        const projection = get(srs);
+        const identifierText = "ows:Identifier";
+        const metersPerUnit = projection.getMetersPerUnit();
+        const scaleToResolution = s => s * 0.28E-3 / metersPerUnit;
+        const [tileMatrixSet] =  layer.tileMatrixSet.filter(tile=> tile[identifierText] === srs);
+
+        tileMatrixSet && tileMatrixSet.TileMatrix.map(tileMatrix => {
+            const identifier = tileMatrix[identifierText];
+            const resolution = scaleToResolution(tileMatrix.ScaleDenominator);
+            const tileSize = [toNumber(tileMatrix.TileWidth), toNumber(tileMatrix.TileHeight)];
+            const topLeftCorner = tileMatrix.TopLeftCorner && tileMatrix.TopLeftCorner.split(" ").map(v => toNumber(v));
+            const matrixSize = [toNumber(tileMatrix.MatrixWidth), toNumber(tileMatrix.MatrixHeight)];
+
+            return modifiedTileMatrixSet.push({ identifier, matrixSize, resolution, tileSize, topLeftCorner});
+        });
+        return modifiedTileMatrixSet;
     },
     rgbaTorgb: (rgba = "") => {
         return rgba.indexOf("rgba") !== -1 ? `rgb${rgba.slice(rgba.indexOf("("), rgba.lastIndexOf(","))})` : rgba;

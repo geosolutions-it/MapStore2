@@ -154,6 +154,116 @@ const mapFishVectorLayer = {
     }
 };
 
+const tileProviderLayer = {
+    "type": "tileprovider",
+    "visibility": true,
+    "url": "https://nls-{s}.tileserver.com/nls/{z}/{x}/{y}.jpg",
+    "title": "NLS_API",
+    "options": {
+        "subdomains": [
+            "0",
+            "1",
+            "2",
+            "3"
+        ]
+    },
+    "provider": "custom",
+    "name": "custom",
+    "id": "custom__7",
+    "loading": false,
+    "previousLoadingError": false,
+    "loadingError": false
+};
+const wmtsLayer = {
+    "type": "wmts",
+    "requestEncoding": "KVP",
+    "style": "poi",
+    "format": "image/png",
+    "url": "https://gs-stable.geo-solutions.it/geoserver/gwc/service/wmts",
+    "capabilitiesURL": "https://gs-stable.geo-solutions.it/geoserver/gwc/service/wmts",
+    "dimensions": [],
+    "name": "gs:ny_poi",
+    "title": "poi",
+    "matrixIds": {
+        "EPSG:4326": [
+            {
+                "identifier": "EPSG:4326:0",
+                "ranges": {
+                    "cols": {
+                        "min": "0",
+                        "max": "0"
+                    },
+                    "rows": {
+                        "min": "0",
+                        "max": "0"
+                    }
+                }
+            }
+        ]
+    },
+    "description": "poi",
+    "tileMatrixSet": [
+        {
+            "ows:Identifier": "EPSG:4326",
+            "ows:SupportedCRS": "urn:ogc:def:crs:EPSG::4326",
+            "TileMatrix": [
+                {
+                    "ows:Identifier": "EPSG:4326:0",
+                    "ScaleDenominator": "2.795411320143589E8",
+                    "TopLeftCorner": "90.0 -180.0",
+                    "TileWidth": "256",
+                    "TileHeight": "256",
+                    "MatrixWidth": "2",
+                    "MatrixHeight": "1"
+                }
+            ]
+        },
+        {
+            "ows:Identifier": "EPSG:900913",
+            "ows:SupportedCRS": "urn:ogc:def:crs:EPSG::900913",
+            "TileMatrix": [
+                {
+                    "ows:Identifier": "EPSG:900913:0",
+                    "ScaleDenominator": "5.590822639508929E8",
+                    "TopLeftCorner": "-2.003750834E7 2.0037508E7",
+                    "TileWidth": "256",
+                    "TileHeight": "256",
+                    "MatrixWidth": "1",
+                    "MatrixHeight": "1"
+                },
+                {
+                    "ows:Identifier": "EPSG:900913:1",
+                    "ScaleDenominator": "2.7954113197544646E8",
+                    "TopLeftCorner": "-2.003750834E7 2.0037508E7",
+                    "TileWidth": "256",
+                    "TileHeight": "256",
+                    "MatrixWidth": "2",
+                    "MatrixHeight": "2"
+                }
+            ]
+        }
+    ],
+    "bbox": {
+        "crs": "EPSG:4326",
+        "bounds": {
+            "minx": "-74.0118315772888",
+            "miny": "40.70754683896324",
+            "maxx": "-74.00153046439813",
+            "maxy": "40.719885123828675"
+        }
+    },
+    "links": [],
+    "params": {},
+    "allowedSRS": {
+        "EPSG:4326": true,
+        "EPSG:900913": true
+    },
+    "id": "gs:ny_poi__8",
+    "loading": false,
+    "previousLoadingError": false,
+    "loadingError": false
+};
+
 const testSpec = {
     "antiAliasing": true,
     "iconSize": 24,
@@ -198,7 +308,7 @@ const testSpec = {
     }
 };
 let rules;
-describe('PrintUtils', () => {
+describe.only('PrintUtils', () => {
     beforeEach(() => {
         rules = ConfigUtils.getConfigProp('authenticationRules');
         ConfigUtils.setConfigProp('useAuthenticationRules', false);
@@ -363,5 +473,67 @@ describe('PrintUtils', () => {
         const rgb = PrintUtils.rgbaTorgb("rgba(255, 255, 255, 0.1)");
         expect(rgb).toExist();
         expect(rgb).toBe("rgb(255, 255, 255)");
+    });
+    it('WMTS layer generation for print', () => {
+        const printSpec = PrintUtils.getMapfishLayersSpecification([wmtsLayer], {projection: "EPSG:900913"}, 'map');
+        expect(printSpec.length).toBe(1);
+        const [spec] = printSpec;
+        expect(spec.matrixIds).toExist();
+        expect(spec.matrixIds[0].identifier).toContain("EPSG:900913");
+        expect(spec.matrixSet).toExist();
+        expect(spec.matrixSet).toBe("EPSG:900913");
+        expect(spec.requestEncoding).toExist();
+        expect(spec.requestEncoding).toBe('KVP');
+    });
+    it('get MatrixIds for WMTS', () => {
+        const matrixIds = PrintUtils.getWMTSMatrixIds(wmtsLayer);
+        expect(matrixIds.length > 0).toBe(true);
+        const [matrixId] = matrixIds;
+        expect(matrixId.identifier).toExist();
+        expect(matrixId.identifier).toContain("EPSG:900913");
+        expect(matrixId.matrixSize).toExist();
+        expect(matrixId.matrixSize).toEqual([1, 1]);
+        expect(matrixId.resolution).toExist();
+        expect(matrixId.tileSize).toExist();
+        expect(matrixId.tileSize).toEqual([256, 256]);
+        expect(matrixId.topLeftCorner).toExist();
+    });
+    it('Tile provider layer generation for print', () => {
+        const printSpec = PrintUtils.getMapfishLayersSpecification([tileProviderLayer], {projection: "EPSG:900913"}, 'map');
+        expect(printSpec.length).toBe(1);
+        const [spec] = printSpec;
+        expect(spec.baseURL).toNotContain("/{z}/{x}/{y}");
+        expect(spec.type).toBe('xyz');
+        expect(spec.maxExtent.length > 0).toBe(true);
+        expect(spec.tileSize).toExist();
+        expect(spec.tileSize).toEqual([256, 256]);
+        expect(spec.resolutions.length > 0).toBe(true);
+        expect(spec.extension).toEqual("jpg");
+    });
+    it('get TileProvider layer specification from custom provider', () => {
+        const customTileProviderLayer = {
+            url: "https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png",
+            options: {"subdomains": ["0", "1", "2", "3"]},
+            provider: "custom"
+        };
+        const tileProviderLayerSpec = PrintUtils.getTileProviderLayerSpec(customTileProviderLayer);
+        expect(tileProviderLayerSpec.baseURL).toNotContain("/{z}/{x}/{y}");
+        expect(tileProviderLayerSpec.tileSize).toExist();
+        expect(tileProviderLayerSpec.resolutions.length > 0).toBe(true);
+        expect(tileProviderLayerSpec.extension).toEqual("png");
+        expect(tileProviderLayerSpec.type).toEqual("xyz");
+    });
+    it('get TileProvider layer specification for existing provider', () => {
+        const customTileProviderLayer = {
+            url: "https://tile.opentopomap.org/{z}/{x}/{y}.png",
+            provider: "Stamen.Watercolor"
+        };
+        const tileProviderLayerSpec = PrintUtils.getTileProviderLayerSpec(customTileProviderLayer);
+        expect(()=> { throw new URL(tileProviderLayerSpec);}).toExist();
+        expect(tileProviderLayerSpec.baseURL).toNotContain("/{z}/{x}/{y}");
+        expect(tileProviderLayerSpec.tileSize).toExist();
+        expect(tileProviderLayerSpec.resolutions.length > 0).toBe(true);
+        expect(tileProviderLayerSpec.extension).toEqual("png");
+        expect(tileProviderLayerSpec.type).toEqual("xyz");
     });
 });
