@@ -479,6 +479,24 @@
                 "identifier": "Identifier",
                 "title": "Title",
                 "abstract": "Abstract",
+                "purpose": "Purpose",
+                "source": "Source",
+                "createdDate": "Created Date",
+                "lastRevisionDate": "Last Revision Date",
+                "pointsOfContact": "Points of Contact",
+                "individualName": "Individual Name",
+                "organisationName": "Organisation Name",
+                "contactInfo": "Contact Info",
+                "phone": "Phone Number",
+                "deliveryPoints": "Delivery Points",
+                "city": "City",
+                "postalCode": "Postal Code",
+                "country": "Country",
+                "URL": "URL",
+                "role": "Role",
+                "protocol": "Protocol",
+                "hoursOfService": "Hours of Service",
+                "electronicMailAddress": "Email Address",
                 "subject": "Subject",
                 "type": "Type",
                 "creator": "Creator",
@@ -486,7 +504,12 @@
                 "layerMetadataPanelTitle": "Layer metadata",
                 "notification": {
                     "warnigGetMetadataRecordById": "Error in metadata search"
-                }
+                },
+                "itemTitles": {
+                    "pointsOfContact": "Contact",
+                    "default": "Item"
+                },
+                "emptyMetadata": "No metadata available"
             },
             "thematic": {
                 "classification_field": "Classification Field:",

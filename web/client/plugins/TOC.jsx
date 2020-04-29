@@ -203,6 +203,7 @@ class LayerTree extends React.Component {
         currentZoomLvl: PropTypes.number,
         scales: PropTypes.array,
         layerOptions: PropTypes.object,
+        metadataOptions: PropTypes.object,
         spatialOperations: PropTypes.array,
         spatialMethodOptions: PropTypes.array,
         groupOptions: PropTypes.object,
@@ -279,6 +280,7 @@ class LayerTree extends React.Component {
             showFeatureInfoTab: true
         },
         layerOptions: {},
+        metadataOptions: {},
         groupOptions: {},
         spatialOperations: [
             {"id": "INTERSECTS", "name": "queryform.spatialfilter.operations.intersects"},
@@ -403,6 +405,7 @@ class LayerTree extends React.Component {
                             }}
                             options={{
                                 modalOptions: {},
+                                metadataOptions: this.props.metadataOptions,
                                 settingsOptions: this.props.settingsOptions
                             }}
                             style={{

@@ -298,9 +298,10 @@ export function addLayerError(error) {
         error
     };
 }
-export function getMetadataRecordById() {
+export function getMetadataRecordById(metadataOptions) {
     return {
-        type: GET_METADATA_RECORD_BY_ID
+        type: GET_METADATA_RECORD_BY_ID,
+        metadataOptions
     };
 }
 export const changeMetadataTemplate = (metadataTemplate) => ({type: CHANGE_METADATA_TEMPLATE, metadataTemplate});

@@ -293,12 +293,12 @@ describe('TOCPlugin Plugin', () => {
         const SETTINGS_SELECTOR = `${TOOL_BUTTON_SELECTOR} .glyphicon-wrench`;
         const FILTER_LAYER_SELECTOR = `${TOOL_BUTTON_SELECTOR} .glyphicon-filter-layer`;
         const WIDGET_BUILDER_SELECTOR = `${TOOL_BUTTON_SELECTOR} .glyphicon-stats`;
-        it('render default tools (zoomToLayer and remove layer, for selected layer', () => {
+        it('render default tools (zoomToLayer, remove layer, for selected layer, metadata tool', () => {
             const { Plugin } = getPluginForTest(TOCPlugin, SELECTED_LAYER_STATE);
             const WrappedPlugin = dndContext(Plugin);
             ReactDOM.render(<WrappedPlugin />, document.getElementById("container"));
             // check zoom and remove selector
-            expect(document.querySelectorAll(TOOL_BUTTON_SELECTOR).length).toBe(2);
+            expect(document.querySelectorAll(TOOL_BUTTON_SELECTOR).length).toBe(3);
             expect(document.querySelector(ZOOM_TO_SELECTOR)).toExist();
             expect(document.querySelector(REMOVE_SELECTOR)).toExist();
 
@@ -310,7 +310,7 @@ describe('TOCPlugin Plugin', () => {
                 name: "FeatureEditor"
             }]} />, document.getElementById("container"));
             // check tools
-            expect(document.querySelectorAll(TOOL_BUTTON_SELECTOR).length).toBe(3);
+            expect(document.querySelectorAll(TOOL_BUTTON_SELECTOR).length).toBe(4);
             expect(document.querySelector(ZOOM_TO_SELECTOR)).toExist();
             expect(document.querySelector(FEATURES_GRID_SELECTOR)).toExist();
             expect(document.querySelector(REMOVE_SELECTOR)).toExist();
@@ -322,7 +322,7 @@ describe('TOCPlugin Plugin', () => {
                 name: "TOCItemsSettings"
             }]} />, document.getElementById("container"));
             // check tools
-            expect(document.querySelectorAll(TOOL_BUTTON_SELECTOR).length).toBe(3);
+            expect(document.querySelectorAll(TOOL_BUTTON_SELECTOR).length).toBe(4);
             expect(document.querySelector(ZOOM_TO_SELECTOR)).toExist();
             expect(document.querySelector(SETTINGS_SELECTOR)).toExist();
             expect(document.querySelector(REMOVE_SELECTOR)).toExist();
@@ -334,7 +334,7 @@ describe('TOCPlugin Plugin', () => {
                 name: "FilterLayer"
             }]} />, document.getElementById("container"));
             // check tools
-            expect(document.querySelectorAll(TOOL_BUTTON_SELECTOR).length).toBe(3);
+            expect(document.querySelectorAll(TOOL_BUTTON_SELECTOR).length).toBe(4);
             expect(document.querySelector(ZOOM_TO_SELECTOR)).toExist();
             expect(document.querySelector(FILTER_LAYER_SELECTOR)).toExist();
             expect(document.querySelector(REMOVE_SELECTOR)).toExist();
