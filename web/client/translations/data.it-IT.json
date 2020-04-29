@@ -578,6 +578,7 @@
         "identifyRevGeocodeSubmitText": "Più informazioni",
         "identifyRevGeocodeCloseText": "Chiudi",
         "identifyRevGeocodeError": "Impossibile eseguire il geocoding",
+        "identifyEdit": "Modifica",
         "getFeatureInfoError": {
             "title": "Ooops! Qualcosa non va",
             "text": "Si è verificato un errore nel fare questa richiesta <b>GetFeatureInfo</b>"
@@ -2375,6 +2376,10 @@
             "description": "Consente all'utente di abilitare / disabilitare le estensioni utente",
             "title": "Estensioni Utente"
           },
+          "UserSession": {
+            "title": "Sessione Utente",
+            "description": "Permette di avere una sessione utente per contesto automaticamente salvata"
+          },
           "Version": {
             "description": "Mostra la versione di MapStore nellla finestra di settings",
             "descriptionGeorchestra": "Mostra la versione di GeOrchestra nellla finestra di settings",
@@ -2693,7 +2698,9 @@
             "titleContext": "Cancellazione della sessione utente non riuscita",
             "defaultMessage": "Errore sconosciuto"
           },
-          "successRemoved": "Sessione utente cancellata"
+          "successRemoved": "Sessione utente cancellata",
+          "remove": "Reset Sessione Utente",
+          "confirmRemove": "Sei sicuro di voler ripristinare la configurazione di default?"
         }
     }
 }

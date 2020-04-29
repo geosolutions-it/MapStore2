@@ -147,7 +147,7 @@ const wfsQueryEpic = (action$, store) =>
             };
             return Rx.Observable.merge(
                 (typeof filterObj === 'object' && getJSONFeatureWA(queryUrl, filterObj, options) || getLayerJSONFeature(layer, filterObj, options))
-                    .map(data => querySearchResponse(data, action.searchUrl, action.filterObj, action.queryOptions))
+                    .map(data => querySearchResponse(data, action.searchUrl, action.filterObj, action.queryOptions, action.reason))
                     .catch(error => Rx.Observable.of(queryError(error)))
                     .startWith(featureLoading(true))
                     .concat(Rx.Observable.of(featureLoading(false)))

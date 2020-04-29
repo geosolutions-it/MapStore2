@@ -187,6 +187,8 @@ const clickedPointWithFeaturesSelector = createSelector(
 
 );
 
+const editFeatureQuerySelector = state => state.mapInfo?.editFeatureQuery;
+
 
 module.exports = {
     isMapInfoOpen,
@@ -209,5 +211,6 @@ module.exports = {
     itemIdSelector,
     overrideParamsSelector,
     filterNameListSelector,
-    isMapPopup
+    isMapPopup,
+    editFeatureQuerySelector
 };

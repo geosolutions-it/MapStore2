@@ -551,6 +551,12 @@
       "hidden": true,
       "description": "plugins.UserExtensions.description",
       "dependencies": ["BurgerMenu"]
+    }, {
+      "name": "UserSession",
+      "glyph": "floppy-save",
+      "title": "plugins.UserSession.title",
+      "description": "plugins.UserSession.description",
+      "dependencies": ["BurgerMenu"]
     }
   ]
 }

@@ -28,7 +28,8 @@ const {
     UPDATE_CENTER_TO_MARKER,
     TOGGLE_EMPTY_MESSAGE_GFI,
     CHANGE_FORMAT,
-    TOGGLE_SHOW_COORD_EDITOR
+    TOGGLE_SHOW_COORD_EDITOR,
+    SET_EDIT_FEATURE_QUERY
 } = require('../actions/mapInfo');
 const {
     MAP_CONFIG_LOADED
@@ -46,7 +47,8 @@ function receiveResponse(state, action, type) {
             responses: [...responses, {
                 response: action[type],
                 queryParams: action.requestParams,
-                layerMetadata: action.layerMetadata
+                layerMetadata: action.layerMetadata,
+                layer: action.layer
             }]
         });
     }
@@ -355,6 +357,12 @@ function mapInfo(state = initState, action) {
         return {
             ...state,
             showCoordinateEditor: !action.showCoordinateEditor
+        };
+    }
+    case SET_EDIT_FEATURE_QUERY: {
+        return {
+            ...state,
+            editFeatureQuery: action.query
         };
     }
     default:

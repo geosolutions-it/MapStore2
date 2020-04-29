@@ -29,6 +29,8 @@ const CHANGE_PAGE = 'IDENTIFY:CHANGE_PAGE';
 const CLOSE_IDENTIFY = 'IDENTIFY:CLOSE_IDENTIFY';
 const CHANGE_FORMAT = 'IDENTIFY:CHANGE_FORMAT';
 const TOGGLE_SHOW_COORD_EDITOR = 'IDENTIFY:TOGGLE_SHOW_COORD_EDITOR';
+const EDIT_LAYER_FEATURES = 'IDENTIFY:EDIT_LAYER_FEATURES';
+const SET_EDIT_FEATURE_QUERY = 'IDENTIFY:EDIT_FEATURE_QUERY';
 
 const TOGGLE_EMPTY_MESSAGE_GFI = "IDENTIFY:TOGGLE_EMPTY_MESSAGE_GFI";
 const toggleEmptyMessageGFI = () => ({type: TOGGLE_EMPTY_MESSAGE_GFI});
@@ -37,13 +39,14 @@ const toggleEmptyMessageGFI = () => ({type: TOGGLE_EMPTY_MESSAGE_GFI});
  * Private
  * @return a LOAD_FEATURE_INFO action with the response data to a wms GetFeatureInfo
  */
-function loadFeatureInfo(reqId, data, rParams, lMetaData) {
+function loadFeatureInfo(reqId, data, rParams, lMetaData, layer) {
     return {
         type: LOAD_FEATURE_INFO,
         data: data,
         reqId: reqId,
         requestParams: rParams,
-        layerMetadata: lMetaData
+        layerMetadata: lMetaData,
+        layer
     };
 }
 
@@ -246,6 +249,16 @@ const toggleShowCoordinateEditor = (showCoordinateEditor) => ({
     showCoordinateEditor
 });
 
+const editLayerFeatures = (layer) => ({
+    type: EDIT_LAYER_FEATURES,
+    layer
+});
+
+const setEditFeatureQuery = (query) => ({
+    type: SET_EDIT_FEATURE_QUERY,
+    query
+});
+
 module.exports = {
     ERROR_FEATURE_INFO,
     EXCEPTIONS_FEATURE_INFO,
@@ -288,5 +301,7 @@ module.exports = {
     loadFeatureInfo,
     toggleMapInfoState,
     updateCenterToMarker,
-    featureInfoClick
+    featureInfoClick,
+    EDIT_LAYER_FEATURES, editLayerFeatures,
+    SET_EDIT_FEATURE_QUERY, setEditFeatureQuery
 };

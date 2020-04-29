@@ -208,7 +208,6 @@ function updateFilter(update) {
     return {
         type: UPDATE_FILTER,
         update
-
     };
 }
 function toggleTool(tool, value) {

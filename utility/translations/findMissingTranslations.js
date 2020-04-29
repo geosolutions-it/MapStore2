@@ -76,25 +76,24 @@ files.forEach(file => {
         const obj = JSON.parse(fs.readFileSync(filePath, 'utf8'));
         compare(baseobj.messages, obj.messages, 'messages', (path, mess, type = 'info') => {
             switch (type) {
-                case 'warning':
-                    warning++;
-                    log(`\t${path} ${mess}\n`);
-                    break;
-                case 'error':
-                    error++;
-                    log(`-->\t${path} ${mess}\n`);
-                    break;
-                default:
-                    break;
+            case 'warning':
+                warning++;
+                log(`\t${path} ${mess}\n`);
+                break;
+            case 'error':
+                error++;
+                log(`-->\t${path} ${mess}\n`);
+                break;
+            default:
+                break;
             }
         });
         if (!error && !warning) {
             log("OK!\n");
-        }
-        fail = fail || (error && isMandatory(file));
-        if (fail) {
+        } else {
             log(`--> ${file} FAILED\n`);
         }
+        fail = fail || (error && isMandatory(file));
         log(`---------------------------\n`);
     }
 });
