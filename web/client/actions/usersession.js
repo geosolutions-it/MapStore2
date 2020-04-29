@@ -17,6 +17,7 @@ export const SAVE_MAP_CONFIG = "USER_SESSION:ORIGINAL_CONFIG";
 export const USER_SESSION_START_SAVING = "USER_SESSION:START_SAVING";
 export const USER_SESSION_STOP_SAVING = "USER_SESSION:STOP_SAVING";
 export const SET_USER_SESSION = "USER_SESSION:SET";
+export const ENABLE_AUTO_SAVE = "USER_SESSION:ENABLE_AUTO_SAVE";
 
 export const saveUserSession = () => ({type: SAVE_USER_SESSION});
 export const userSessionSaved = (id, session) => ({type: USER_SESSION_SAVED, id, session});
@@ -28,6 +29,12 @@ export const userSessionStartSaving = () => ({type: USER_SESSION_START_SAVING});
 export const userSessionStopSaving = () => ({type: USER_SESSION_STOP_SAVING});
 export const saveMapConfig = (config) => ({type: SAVE_MAP_CONFIG, config});
 export const setUserSession = (session) => ({type: SET_USER_SESSION, session});
+/**
+ * Action to enable/disable the auto-save functionality.
+ * @param {boolean} enabled flag to enable/disable the auto-save for session
+ */
+export const enableAutoSave = (enabled) => ({ type: ENABLE_AUTO_SAVE, enabled });
+
 export const loading = (value, name = "loading") => ({
     type: USER_SESSION_LOADING,
     name,
