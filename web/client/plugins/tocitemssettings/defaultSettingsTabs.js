@@ -43,6 +43,13 @@ import { StyleSelector } from '../styleeditor/index';
 
 const StyleList = defaultProps({ readOnly: true })(StyleSelector);
 
+const isLayerNode = ({settings = {}} = {}) => settings.nodeType === 'layers';
+const isVectorStylableLayer = ({element = {}} = {}) => element.type === "wfs" || element.type === "vector" && element.id !== "annotations";
+const isWMS = ({element = {}} = {}) => element.type === "wms";
+const isStylableLayer = (props) =>
+    isLayerNode(props)
+    && (isWMS(props) || isVectorStylableLayer(props));
+
 
 const formatCards = {
     TEXT: {
@@ -129,7 +136,7 @@ const getConfiguredPlugin = (plugin, loaded, loadingComp) => {
 };
 
 export const getStyleTabPlugin = ({ settings, items = [], loadedPlugins, onToggleStyleEditor = () => { }, onUpdateParams = () => { }, element, ...props }) => {
-    if (element.type === "wfs" || element.type === "vector" && element.id !== "annotations") {
+    if (isVectorStylableLayer({element})) {
         return {
             Component: SimpleVectorStyleEditor
         };
@@ -208,7 +215,7 @@ export default ({ showFeatureInfoTab = true, loadedPlugins, items, onToggleStyle
             titleId: 'layerProperties.display',
             tooltipId: 'layerProperties.display',
             glyph: 'eye-open',
-            visible: props.settings.nodeType === 'layers',
+            visible: isLayerNode(props),
             Component: Display
         },
         {
@@ -216,7 +223,7 @@ export default ({ showFeatureInfoTab = true, loadedPlugins, items, onToggleStyle
             titleId: 'layerProperties.style',
             tooltipId: 'layerProperties.style',
             glyph: 'dropper',
-            visible: props.settings.nodeType === 'layers' && props.element.type === "wms" || props.element.type === "wfs" || props.element.type === "vector",
+            visible: isStylableLayer(props),
             Component: StyleList,
             ...getStyleTabPlugin({ items, loadedPlugins, onToggleStyleEditor, ...props })
         },
@@ -225,7 +232,7 @@ export default ({ showFeatureInfoTab = true, loadedPlugins, items, onToggleStyle
             titleId: 'layerProperties.featureInfo',
             tooltipId: 'layerProperties.featureInfo',
             glyph: 'map-marker',
-            visible: showFeatureInfoTab && props.settings.nodeType === 'layers' && props.element.type === "wms" && !(props.element.featureInfo && props.element.featureInfo.viewer),
+            visible: showFeatureInfoTab && isLayerNode(props) && isWMS(props) && !(props.element.featureInfo && props.element.featureInfo.viewer),
             Component: FeatureInfo,
             toolbar: [
                 {
@@ -241,7 +248,7 @@ export default ({ showFeatureInfoTab = true, loadedPlugins, items, onToggleStyle
             titleId: 'layerProperties.elevation',
             tooltipId: 'layerProperties.elevation',
             glyph: '1-vector',
-            visible: props.settings.nodeType === 'layers' && props.element.type === "wms" && props.element.dimensions && props.getDimension && props.getDimension(props.element.dimensions, 'elevation'),
+            visible: isLayerNode(props) && isWMS(props) && props.element.dimensions && props.getDimension && props.getDimension(props.element.dimensions, 'elevation'),
             Component: Elevation
         }
     ].filter(tab => tab.visible);

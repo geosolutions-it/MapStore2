@@ -13,7 +13,7 @@ import StylePoint from '../../components/style/StylePoint';
 import StylePolygon from '../../components/style/StylePolygon';
 import StylePolyline from '../../components/style/StylePolyline';
 import { extractGeometryType } from '../../utils/WFSLayerUtils';
-
+import Message from '../../components/I18N/Message';
 
 /*
  * Converts the style properties and handlers to re-use the shapefile styler.
@@ -65,7 +65,7 @@ const shapeStyleAdapter = compose(
                 const { r, g, b, a } = value;
                 onChange( "style", {
                     ...style,
-                    "fillColor": `rgba(${r}, ${g}, ${b})`,
+                    "fillColor": `rgb(${r}, ${g}, ${b})`,
                     "fillOpacity": a
                 });
                 break;
@@ -74,7 +74,7 @@ const shapeStyleAdapter = compose(
                 const { r, g, b, a } = value;
                 onChange("style", {
                     ...style,
-                    "color": `rgba(${r}, ${g}, ${b})`,
+                    "color": `rgb(${r}, ${g}, ${b})`,
                     "opacity": a
                 });
                 break;
@@ -139,15 +139,19 @@ const withGeometryType = branch(
  * A simple style editor for vector data, similar to the one for the ShapeFile import's one.
  * Used in TOC for vector data.
  */
-export default compose(
+const SimpleVectorStyleEditor = compose(
     withGeometryType,
     loadingState(),
     emptyState(({ geometryType }) => !geometryType)
 )(({ geometryType, element = {}, onChange = () => { } }) => {
     const CMP = stylers[geometryType];
-    return (<CMP
-        styleName={element.styleName}
-        style={element.style}
-        onChange={onChange}
-    />);
+    return (<React.Fragment>
+        <h4>&nbsp;&nbsp;&nbsp;&nbsp;<Message msgId="layerProperties.style"/></h4>
+        <CMP
+            styleName={element.styleName}
+            style={element.style}
+            onChange={onChange}
+        />
+    </React.Fragment>);
 });
+export default SimpleVectorStyleEditor;

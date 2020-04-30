@@ -6,6 +6,7 @@ import head from 'lodash/head';
 import trim from 'lodash/trim';
 import isString from 'lodash/isString';
 import isArray from 'lodash/isArray';
+import isNil from 'lodash/isNil';
 
 import assign from 'object-assign';
 
@@ -444,12 +445,12 @@ export function getStyle(options, isDrawing = false, textValues = []) {
     if (!style && options.style) {
         style = {
             stroke: new Stroke( options.style.stroke ? options.style.stroke : {
-                color: colorToRgbaStr(options.style && options.style.color || "#0000FF", options.style.opacity || 1),
+                color: colorToRgbaStr(options.style && options.style.color || "#0000FF", isNil(options.style.opacity) ? 1 : options.style.opacity),
                 lineDash: options.style.highlight ? [10] : [0],
                 width: options.style.weight || 1
             }),
             fill: new Fill(options.style.fill ? options.style.fill : {
-                color: colorToRgbaStr(options.style && options.style.fillColor || "#0000FF", options.style.fillOpacity || 1)
+                color: colorToRgbaStr(options.style && options.style.fillColor || "#0000FF", isNil(options.style.fillOpacity) ? 1 : options.style.fillOpacity)
             })
         };
 
