@@ -637,7 +637,7 @@ const CatalogUtils = {
             name: record.name,
             title: record.title || record.name,
             description: record.description || "",
-            bbox: record.bbox,
+            bbox: record.boundingBox,
             links: getRecordLinks(record),
             style: DEFAULT_VECTOR_STYLE,
             ...record.layerOptions
