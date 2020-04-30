@@ -68,7 +68,7 @@ public class ConfigController {
     }
     
     @Value("${datadir.location:}") private String dataDir = "";
-    @Value("${allowed.resources:localConfig,pluginsConfig,extensions}") private String allowedResources = "localConfig,pluginsConfig,extensions";
+    @Value("${allowed.resources:localConfig,pluginsConfig,extensions,config,new}") private String allowedResources = "localConfig,pluginsConfig,extensions,config,new";
     @Value("${overrides.mappings:}") private String mappings;
     @Value("${overrides.config:}") private String overrides = "";
     

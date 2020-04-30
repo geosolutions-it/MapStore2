@@ -102,6 +102,8 @@ By default the following resources are allowed:
 * `localConfig.json`
 * `pluginsConfig.json`
 * `extensions.json`
+* `config.json`
+* `new.json`
 
 The list of allowed resources can be changed, via the allowed.resources JVM environment variable:
 
@@ -117,6 +119,14 @@ Change `app.jsx` to include the following statement:
 
 ```javascript
 ConfigUtils.setLocalConfigurationFile("rest/config/load/localConfig.json");
+```
+
+### Externalize static map configurations (new.json and config.json)
+
+Change `app.jsx` to include the following statement:
+
+```javascript
+ConfigUtils.setConfigProp("configurationFolder", "rest/config/load/");
 ```
 
 ### Externalize the extensions configuration
