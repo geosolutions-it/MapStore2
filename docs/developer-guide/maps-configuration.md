@@ -121,6 +121,7 @@ Every layer has it's own properties. Anyway there are some options valid for eve
 - `thumbURL`: `{string}`: the URL of the thumbnail for the layer, used in the background switcher ( if the layer is a background layer )
 - `visibility`: `{boolean}`: indicates if the layer is visible or not
 - `queriable`: `{boolean}`: Indicates if the layer is queriable (e.g. getFeatureInfo). If not present the default is true for every layer that have some implementation available (WMS, WMTS). Usually used to set it explicitly to false, where the query service is not available.
+- `hideLoading`: {boolean}. If true, loading events will be ignored ( useful to hide loading with some layers that have problems or trigger errors loading some tiles or if they do not have any kind of loading.).
 
 i.e.
 
@@ -667,6 +668,80 @@ PDOK.brtachtergrondkaartpastel
 PDOK.brtachtergrondkaartwater
 PDOK.luchtfotoRGB
 PDOK.luchtfotoIR
+```
+
+#### Vector
+
+The layer type vector is the type used for imported data (geojson, shapefile) or for annotations. Generally speaking, any vector data added directly to the map.
+This is the typical fields of a vector layer
+
+```json
+{
+    "type":"vector",
+    "features":[
+        {
+            "type":"Feature",
+            "geometry":{
+                "type":"Point",
+                "coordinates":[
+                12.516431808471681,
+                41.89817370656741
+                ]
+            },
+            "properties":{
+            },
+            "id":0
+        }
+    ],
+    "style":{
+        "weight":5,
+        "radius":10,
+        "opacity":1,
+        "fillOpacity":0.1,
+        "color":"rgba(0, 0, 255, 1)",
+        "fillColor":"rgba(0, 0, 255, 0.1)"
+    },
+    "hideLoading":true
+}
+```
+
+- `features`: features in GeoJSON format.
+- `style`: the style object.
+- `styleName`: name of a style to use (e.g. "marker").
+- `hideLoading`: boolean. if true, the loading will not be taken into account.
+
+#### Vector Style
+
+The `style` or `styleName` properties of vector layers (wfs, vector...) allow to apply a style the local data on the map.
+
+- `style`: a style object/array. It can have different format. In the simplest case thus is an object that uses some leaflet-like style properties:
+  - `weight`: width in pixel of the border / line.
+  - `radius`: radius of the circle (valid only for Point types)
+  - `opacity`: opacity of the border / line.
+  - `color`: color of the border / line.
+  - `fillOpacity`: opacity of the fill if any. (Polygons, Point)
+  - `fillColor`: color of the fill, if any. (Polygons, Point)
+- `styleName`: if set to `marker`, the `style` object will be ignored and it will use the default marker.
+
+In case of `vector` layer, style can be added also to the specific features. Other ways of defining the style for a vector layer have to be documented.
+
+#### WFS Layer
+
+A vector layer, and it adds to the map contents coming from WFS service. As the configuration point of view is somehow a mix between WMS and vector layer. it contains the search entry that allows to browse the data on the server side. The styling system is the same of the vector layer.
+
+This layer differs from the "vector" because all the loading/filtering/querying operations are applied directly using the WFS service, without storing anything locally.
+
+```json
+{
+    "type":"wfs",
+    "search":{
+        "url":"https://myserver.org/geoserver/wfs",
+        "type":"wfs"
+    },
+    "name":"workspace:layer",
+    "styleName":"marker",
+    "url":"https://myserver.org/geoserver/wfs"
+}
 ```
 
 ## Other supported formats
