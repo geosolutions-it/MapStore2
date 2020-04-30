@@ -18,7 +18,7 @@ import { get, castArray } from 'lodash';
 const capabilitiesCache = {};
 
 
-const searchAndPaginate = (json = {}, startPosition, maxRecords, text, info = {}) => {
+const searchAndPaginate = (json = {}, startPosition, maxRecords, text) => {
 
     const layers = castArray(get(json, '["wfs:WFS_Capabilities"].FeatureTypeList.FeatureType', []));
 
@@ -90,4 +90,4 @@ export const getRecords = (url, startPosition, maxRecords, text, info) => {
         return searchAndPaginate(json, startPosition, maxRecords, text, info);
     });
 };
-export const textSearch = (...args) => getRecords(...args)
+export const textSearch = (...args) => getRecords(...args);

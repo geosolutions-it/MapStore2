@@ -8,7 +8,7 @@
 
 const PropTypes = require('prop-types');
 const React = require('react');
-const {isEqual, isArray, isObject, castArray} = require('lodash');
+const {isEqual, isArray, castArray} = require('lodash');
 const assign = require('object-assign');
 const axios = require('axios');
 

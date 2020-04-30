@@ -403,7 +403,7 @@ module.exports = {
                                 this.props.onPrint(this.props.capabilities.createURL, { ...spec, ...this.props.overrideOptions });
                             })
                             .catch(e => {
-                                this.props.printError("Error pre-loading data", e.message);
+                                this.props.printError("Error pre-loading data:" + e.message);
                             });
                     };
                 }

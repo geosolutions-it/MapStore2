@@ -25,8 +25,8 @@ const defaultStyle = {
 
 const loadFeatures = (layer, options) => {
     const params = optionsToVendorParams(options);
-    const onError = (e) => {
-        // layer.clearLayers();
+    const onError = () => {
+        // // TODO: notify error
     };
     return getFeature(options.url, options.name, {
         // bbox: extent.join(',') + ',' + proj,

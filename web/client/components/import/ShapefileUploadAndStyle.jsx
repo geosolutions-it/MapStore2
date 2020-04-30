@@ -12,7 +12,6 @@ const Message = require('../../components/I18N/Message');
 const LayersUtils = require('../../utils/LayersUtils');
 const LocaleUtils = require('../../utils/LocaleUtils');
 const FileUtils = require('../../utils/FileUtils');
-let StyleUtils;
 const {Grid, Row, Col, Button} = require('react-bootstrap');
 const {isString} = require('lodash');
 const Combobox = require('react-widgets').DropdownList;
@@ -97,10 +96,6 @@ class ShapeFileUploadAndStyle extends React.Component {
         useDefaultStyle: false,
         zoomOnShapefiles: true
     };
-
-    UNSAFE_componentWillMount() {
-        StyleUtils = require('../../utils/StyleUtils')(this.props.mapType);
-    }
 
     getGeometryType = (geometry) => {
         if (geometry && geometry.type === 'GeometryCollection') {
