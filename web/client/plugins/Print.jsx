@@ -19,7 +19,7 @@ const Dialog = require('../components/misc/Dialog');
 const {Grid, Row, Col, Panel, Accordion, Glyphicon} = require('react-bootstrap');
 
 const {toggleControl, setControlProperty} = require('../actions/controls');
-const {printSubmit, printSubmitting, configurePrintMap} = require('../actions/print');
+const { printSubmit, printError, printSubmitting, configurePrintMap} = require('../actions/print');
 
 const {mapSelector} = require('../selectors/map');
 const {layersSelector} = require('../selectors/layers');
@@ -128,7 +128,9 @@ module.exports = {
                         onBeforePrint: PropTypes.func,
                         setPage: PropTypes.func,
                         onPrint: PropTypes.func,
+                        printError: PropTypes.func,
                         configurePrintMap: PropTypes.func,
+                        preloadData: PropTypes.func,
                         getPrintSpecification: PropTypes.func,
                         getLayoutName: PropTypes.func,
                         error: PropTypes.string,
@@ -163,6 +165,7 @@ module.exports = {
                         onPrint: () => {},
                         configurePrintMap: () => {},
                         printSpecTemplate: {},
+                        preloadData: PrintUtils.preloadData,
                         getPrintSpecification: PrintUtils.getMapfishPrintSpecification,
                         getLayoutName: PrintUtils.getLayoutName,
                         getZoomForExtent: MapUtils.defaultGetZoomForExtent,
@@ -392,10 +395,16 @@ module.exports = {
                     };
 
                     print = () => {
-                        const spec = this.props.getPrintSpecification(this.props.printSpec);
                         this.props.setPage(0);
                         this.props.onBeforePrint();
-                        this.props.onPrint(this.props.capabilities.createURL, {...spec, ...this.props.overrideOptions});
+                        this.props.preloadData(this.props.printSpec)
+                            .then(printSpec => {
+                                const spec = this.props.getPrintSpecification(printSpec);
+                                this.props.onPrint(this.props.capabilities.createURL, { ...spec, ...this.props.overrideOptions });
+                            })
+                            .catch(e => {
+                                this.props.printError("Error pre-loading data", e.message);
+                            });
                     };
                 }
 
@@ -428,6 +437,7 @@ module.exports = {
                 const PrintPlugin = connect(selector, {
                     toggleControl: toggleControl.bind(null, 'print', null),
                     onPrint: printSubmit,
+                    printError: printError,
                     onBeforePrint: printSubmitting,
                     setPage: setControlProperty.bind(null, 'print', 'currentPage'),
                     configurePrintMap
