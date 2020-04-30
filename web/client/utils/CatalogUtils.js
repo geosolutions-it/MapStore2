@@ -7,7 +7,7 @@
  */
 
 const assign = require('object-assign');
-const {head, isArray, isString, castArray, isObject, sortBy, uniq, includes, get} = require('lodash');
+const {head, isArray, isString, castArray, isObject, sortBy, uniq, includes, get, isNil} = require('lodash');
 const urlUtil = require('url');
 const CoordinatesUtils = require('./CoordinatesUtils');
 const ConfigUtils = require('./ConfigUtils');
@@ -463,7 +463,7 @@ const CatalogUtils = {
      *  - `removeParameters` if you didn't provided an `url` option and you want to use record's one, you can remove some params (typically authkey params) using this.
      *  - `url`, if you already have the correct service URL (typically when you want to use you URL already stripped from some parameters, e.g. authkey params)
      */
-    recordToLayer: (record, type = "wms", {removeParams = [], format, catalogURL, url} = {}, baseConfig = {}) => {
+    recordToLayer: (record, type = "wms", {removeParams = [], format, catalogURL, url} = {}, baseConfig = {}, localizedLayerStyles) => {
         if (!record || !record.references) {
             // we don't have a valid record so no buttons to add
             return null;
@@ -524,7 +524,8 @@ const CatalogUtils = {
             allowedSRS: allowedSRS,
             catalogURL,
             ...baseConfig,
-            ...record.layerOptions
+            ...record.layerOptions,
+            localizedLayerStyles: !isNil(localizedLayerStyles) ? localizedLayerStyles : undefined
         };
     },
     getCatalogRecords: (format, records, options, locales) => {

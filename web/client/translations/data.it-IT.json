@@ -112,7 +112,8 @@
               "legendWidth": "Larghezza",
               "legendHeight": "Altezza",
               "legendPreview": "Anteprima"
-            }
+            },
+            "enableLocalizedLayerStyles": "Abilita stili di livello localizzati"
         },
         "longitude": "Longitudine",
         "latitude": "Latitudine",
@@ -1247,7 +1248,8 @@
                 "serviceDeletedCorrectly": "Il servizio è stato eliminato correttamente",
                 "errorServiceUrl": "Servizio non disponibile. Verifica l'url inserito."
             },
-            "backgroundAlreadyAdded": "Aggiunto al selettore di sfondo"
+            "backgroundAlreadyAdded": "Aggiunto al selettore di sfondo",
+            "enableLocalizedLayerStyles": "Abilita stili di livello localizzati"
         },
         "uploader": {
             "filename": "File Name",

@@ -54,12 +54,14 @@ function wmsToOpenlayersOptions(options) {
         SRS: CoordinatesUtils.normalizeSRS(options.srs || 'EPSG:3857', options.allowedSRS),
         CRS: CoordinatesUtils.normalizeSRS(options.srs || 'EPSG:3857', options.allowedSRS),
         TILED: options.singleTile ? false : (!isNil(options.tiled) ? options.tiled : true),
-        VERSION: options.version || "1.3.0",
-        ENV: options.env && options.env.length ? generateEnvString(options.env) : ''
+        VERSION: options.version || "1.3.0"
     }, assign(
         {},
         (options._v_ ? {_v_: options._v_} : {}),
-        (params || {})
+        (params || {}),
+        (options.localizedLayerStyles &&
+            options.env && options.env.length &&
+            options.group !== 'background' ? {ENV: generateEnvString(options.env) } : {})
     ));
     return SecurityUtils.addAuthenticationToSLD(result, options);
 }
@@ -215,6 +217,7 @@ const mustCreateNewLayer = (oldOptions, newOptions) => {
         || oldOptions.credits !== newOptions.credits && !newOptions.credits
         || isVectorFormat(oldOptions.format) !== isVectorFormat(newOptions.format)
         || isVectorFormat(oldOptions.format) && isVectorFormat(newOptions.format) && oldOptions.format !== newOptions.format
+        || oldOptions.localizedLayerStyles !== newOptions.localizedLayerStyles
     );
 };
 

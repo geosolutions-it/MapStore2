@@ -330,6 +330,8 @@ class RecordItem extends React.Component {
             return null;
         }
 
+        const localizedLayerStyles = this.props.service.localizedLayerStyles;
+
         return recordToLayer(
             this.props.record,
             type,
@@ -354,7 +356,8 @@ class RecordItem extends React.Component {
                         )
                     })
             },
-            this.props.layerBaseConfig
+            this.props.layerBaseConfig,
+            localizedLayerStyles
         );
     }
 

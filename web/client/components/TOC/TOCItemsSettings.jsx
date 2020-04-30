@@ -53,7 +53,8 @@ const TOCItemSettings = (props) => {
         draggable,
         position = 'left',
         tabs = [],
-        tabsConfig = {}
+        tabsConfig = {},
+        isLocalizedLayerStylesEnabled = false
     } = props;
 
 
@@ -131,7 +132,8 @@ const TOCItemSettings = (props) => {
                         nodeType={settings.nodeType}
                         settings={settings}
                         retrieveLayerData={onRetrieveLayerData}
-                        onChange={(key, value) => isObject(key) ? onUpdateParams(key, realtimeUpdate) : onUpdateParams({[key]: value}, realtimeUpdate)}/>
+                        onChange={(key, value) => isObject(key) ? onUpdateParams(key, realtimeUpdate) : onUpdateParams({[key]: value}, realtimeUpdate)}
+                        isLocalizedLayerStylesEnabled={isLocalizedLayerStylesEnabled}/>
                 ))}
             </DockablePanel>
             <Portal>

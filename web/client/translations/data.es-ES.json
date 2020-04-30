@@ -112,7 +112,8 @@
               "legendPreview": "Avance"
             },
             "templateFormatInfoAlertExample": "La identificación de la característica es ${ properties }",
-            "templatePreview": "Vista previa de la plantilla"
+            "templatePreview": "Vista previa de la plantilla",
+            "enableLocalizedLayerStyles": "Habilitar estilos de capa localizados"
         },
         "longitude": "Longitud",
         "latitude": "Latitud",
@@ -1247,7 +1248,8 @@
                 "serviceDeletedCorrectly": "El servicio se ha eliminado correctamente",
                 "errorServiceUrl": "Servicio no disponible. Por favor, compruebe la url proporcionada"
             },
-            "backgroundAlreadyAdded": "Agregado al selector de fondo"
+            "backgroundAlreadyAdded": "Agregado al selector de fondo",
+            "enableLocalizedLayerStyles": "Habilitar estilos de capa localizados"
         },
         "uploader": {
             "filename": "Nombre del fichero",

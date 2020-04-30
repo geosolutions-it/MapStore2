@@ -23,6 +23,7 @@ import {layerSettingSelector, layersSelector, groupsSelector, elementSelector} f
 import {mapLayoutValuesSelector} from '../selectors/maplayout';
 import {currentLocaleSelector} from '../selectors/locale';
 import {isAdminUserSelector} from '../selectors/security';
+import {isLocalizedLayerStylesEnabledSelector} from '../selectors/localizedLayerStyles';
 import {setControlProperty} from '../actions/controls';
 import {toggleStyleEditor} from '../actions/styleeditor';
 
@@ -36,8 +37,9 @@ const tocItemsSettingsSelector = createSelector([
     initialSettingsSelector,
     originalSettingsSelector,
     activeTabSettingsSelector,
-    elementSelector
-], (settings, layers, groups, currentLocale, dockStyle, isAdmin, initialSettings, originalSettings, activeTab, element) => ({
+    elementSelector,
+    isLocalizedLayerStylesEnabledSelector
+], (settings, layers, groups, currentLocale, dockStyle, isAdmin, initialSettings, originalSettings, activeTab, element, isLocalizedLayerStylesEnabled) => ({
     settings,
     element,
     groups,
@@ -46,7 +48,8 @@ const tocItemsSettingsSelector = createSelector([
     isAdmin,
     initialSettings,
     originalSettings,
-    activeTab
+    activeTab,
+    isLocalizedLayerStylesEnabled
 }));
 
 /**

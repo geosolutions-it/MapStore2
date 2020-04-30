@@ -112,7 +112,8 @@
               "legendWidth": "Largeur",
               "legendHeight": "Hauteur",
               "legendPreview": "Aperçu"
-            }
+            },
+            "enableLocalizedLayerStyles": "Activer les styles de calques localisés"
         },
         "longitude": "Longitude",
         "latitude": "Latitude",
@@ -1246,7 +1247,8 @@
                 "serviceDeletedCorrectly": "Le service a été correctement effacé",
                 "errorServiceUrl": "Service non disponible. Veuillez vérifier l'URL fournie"
             },
-            "backgroundAlreadyAdded": "Ajouté au sélecteur de fond"
+            "backgroundAlreadyAdded": "Ajouté au sélecteur de fond",
+            "enableLocalizedLayerStyles": "Activer les styles de calques localisés"
         },
         "uploader": {
             "filename": "Nom du fichier",

@@ -19,6 +19,7 @@ import { FormGroup, Checkbox, Col, ControlLabel } from "react-bootstrap";
 export default ({
     formatOptions,
     service,
+    isLocalizedLayerStylesEnabled,
     onChangeServiceFormat = () => { },
     onChangeMetadataTemplate = () => { },
     onChangeServiceProperty = () => { },
@@ -43,6 +44,15 @@ export default ({
                 </Checkbox>
             </Col>
         </FormGroup>
+        {(isLocalizedLayerStylesEnabled && !isNil(service.type) ? service.type === "wms" : false) && (<FormGroup controlId="localized-styles" key="localized-styles">
+            <Col xs={12}>
+                <Checkbox
+                    onChange={(e) => onChangeServiceProperty("localizedLayerStyles", e.target.checked)}
+                    checked={!isNil(service.localizedLayerStyles) ? service.localizedLayerStyles : false}>
+                    <Message msgId="catalog.enableLocalizedLayerStyles" />
+                </Checkbox>
+            </Col>
+        </FormGroup>)}
         {(!isNil(service.type) ? service.type === "csw" : false) && (<FormGroup controlId="metadata-template" key="metadata-template" className="metadata-template-editor">
             <Col xs={12}>
                 <Checkbox

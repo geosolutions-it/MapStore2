@@ -22,7 +22,8 @@ module.exports = class extends React.Component {
         element: PropTypes.object,
         formats: PropTypes.array,
         settings: PropTypes.object,
-        onChange: PropTypes.func
+        onChange: PropTypes.func,
+        isLocalizedLayerStylesEnabled: PropTypes.bool
     };
 
     static defaultProps = {
@@ -182,6 +183,12 @@ module.exports = class extends React.Component {
                                 onChange={(e) => this.props.onChange("singleTile", e.target.checked)}>
                                 <Message msgId="layerProperties.singleTile"/>
                             </Checkbox>
+                            {(this.props.isLocalizedLayerStylesEnabled && (
+                                <Checkbox key="localizedLayerStyles" value="localizedLayerStyles"
+                                    checked={this.props.element && (this.props.element.localizedLayerStyles !== undefined ? this.props.element.localizedLayerStyles : false )}
+                                    onChange={(e) => this.props.onChange("localizedLayerStyles", e.target.checked)}>
+                                    <Message msgId="layerProperties.enableLocalizedLayerStyles" />
+                                </Checkbox>))}
                         </FormGroup>
                     </Col>
                     <div className={"legend-options"}>
