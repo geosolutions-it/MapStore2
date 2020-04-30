@@ -1260,11 +1260,11 @@
         },
         "importer": {
             "title": "Importer des données",
-            "imports": "Processus d'importation",
+            "imports": "Processus d'import",
             "importN": "Processus {id}",
-            "creatingImportProcess": "Création d'importation ...",
-            "dropfile": "faire glisser des fichiers ici pour créer un nouveau processus d'importation",
-            "dropfileImport": "faites glisser les fichiers ici pour ajouter à ce processus",
+            "creatingImportProcess": "Création d'import ...",
+            "dropfile": "faire glisser des fichiers ici pour créer un nouveau processus d'import",
+            "dropfileImport": "faites glisser les fichiers ici pour les ajouter à ce processus",
             "process": "Processus",
             "number": "#",
             "workspace": {
@@ -1277,16 +1277,16 @@
                 "new": "Nom..."
             },
             "import": {
-                "actions": "Actes",
+                "actions": "Actions",
                 "tasks": "paquet",
                 "runImport": "Début",
                 "deleteImport": "Supprimer le processus",
                 "deleteTask": "Supprimer",
                 "status": "Statut",
                 "archive": "Archives",
-                "deleting": "Clearing ...",
-                "analyzing": "Analyzing package...",
-                "applyingPreset": "Presets d'application ..."
+                "deleting": "Nettoyage en cours ...",
+                "analyzing": "Analyse du paquet...",
+                "applyingPreset": "Pré-réglages d'application ..."
             },
             "task": {
                 "panelTitle": "Paquet {id}",
