@@ -347,6 +347,7 @@ class MetadataModal extends React.Component {
             }
             return (
                 <PermissionEditor
+                    style={{padding: '0 10px 0 10px'}}
                     disabled={!!this.props.map.saving}
                     map={this.props.map}
                     user={this.props.user}
@@ -423,6 +424,7 @@ class MetadataModal extends React.Component {
                                 </div>
                                 : null}
                         </Row>
+                        {!this.props.map.hideGroupProperties && this.props.displayPermissionEditor && this.renderPermissionEditor()}
                         <Row>
                             <Col xs={12}>
                                 <Thumbnail
@@ -450,9 +452,6 @@ class MetadataModal extends React.Component {
                             </Col>
                         </Row>
                         {this.props.showDetailsRow && get(this.props.map, "category.name") !== "DASHBOARD" ? this.renderDetailsRow() : null}
-
-                        {!this.props.map.hideGroupProperties && this.props.displayPermissionEditor && this.renderPermissionEditor()}
-
                     </div></Grid>
             </ResizableModal>
         </Portal>);

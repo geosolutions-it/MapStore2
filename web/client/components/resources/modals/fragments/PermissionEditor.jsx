@@ -171,7 +171,7 @@ class PermissionEditor extends React.Component {
     }
     render() {
         return (
-            <div>
+            <div style={this.props.style}>
                 <Table className="permissions-table" stripped condensed hover>
                     <thead>
                         <tr>

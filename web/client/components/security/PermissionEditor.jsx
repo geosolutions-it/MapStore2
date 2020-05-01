@@ -199,7 +199,7 @@ class PermissionEditor extends React.Component {
             this.localGroups = this.props.groups;
         }
         return (
-            <div>
+            <div style={this.props.style}>
                 <Table className="permissions-table" stripped condensed hover>
                     <thead>
                         <tr>

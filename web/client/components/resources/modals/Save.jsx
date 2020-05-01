@@ -150,6 +150,14 @@ class SaveModal extends React.Component {
                 <Grid fluid>
                     <div className="ms-map-properties">
                         <ErrorBox errors={this.props.errors} />
+                        {
+                            !!canEditPermission &&  <PermissionEditor
+                                style={{padding: '0 10px 0 10px'}}
+                                rules={this.props.rules}
+                                onUpdateRules={this.props.onUpdateRules}
+                                availableGroups={this.props.availableGroups}
+                            />
+                        }
                         <MainForm
                             resource={this.props.resource}
                             onUpdateLinkedResource={this.props.onUpdateLinkedResource}
@@ -166,13 +174,6 @@ class SaveModal extends React.Component {
                             onError={this.props.onError}
                             nameFieldFilter={this.props.nameFieldFilter}
                             onUpdate={this.props.onUpdate} />
-                        {
-                            !!canEditPermission &&  <PermissionEditor
-                                rules={this.props.rules}
-                                onUpdateRules={this.props.onUpdateRules}
-                                availableGroups={this.props.availableGroups}
-                            />
-                        }
                     </div>
                 </Grid>
             </ResizableModal>}
