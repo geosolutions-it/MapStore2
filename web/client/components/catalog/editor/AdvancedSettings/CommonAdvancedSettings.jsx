@@ -46,7 +46,7 @@ export default ({
         </FormGroup>
         {(isLocalizedLayerStylesEnabled && !isNil(service.type) ? service.type === "wms" : false) && (<FormGroup controlId="localized-styles" key="localized-styles">
             <Col xs={12}>
-                <Checkbox
+                <Checkbox data-qa="service-lacalized-layer-styles-option"
                     onChange={(e) => onChangeServiceProperty("localizedLayerStyles", e.target.checked)}
                     checked={!isNil(service.localizedLayerStyles) ? service.localizedLayerStyles : false}>
                     <Message msgId="catalog.enableLocalizedLayerStyles" />

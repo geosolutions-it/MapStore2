@@ -185,6 +185,7 @@ module.exports = class extends React.Component {
                             </Checkbox>
                             {(this.props.isLocalizedLayerStylesEnabled && (
                                 <Checkbox key="localizedLayerStyles" value="localizedLayerStyles"
+                                    data-qa="display-lacalized-layer-styles-option"
                                     checked={this.props.element && (this.props.element.localizedLayerStyles !== undefined ? this.props.element.localizedLayerStyles : false )}
                                     onChange={(e) => this.props.onChange("localizedLayerStyles", e.target.checked)}>
                                     <Message msgId="layerProperties.enableLocalizedLayerStyles" />

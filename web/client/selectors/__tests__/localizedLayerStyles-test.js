@@ -7,7 +7,16 @@
 */
 
 const expect = require('expect');
-const {localizedLayerStylesNameSelector} = require('../localizedLayerStyles');
+const {isLocalizedLayerStylesEnabledSelector, localizedLayerStylesNameSelector} = require('../localizedLayerStyles');
+
+const givenName = 'example';
+const givenState = {
+    localConfig: {
+        localizedLayerStyles: {
+            name: givenName
+        }
+    }
+};
 
 describe('Test localizedLayerStyles', () => {
     it('test localizedLayerStylesNameSelector default', () => {
@@ -17,9 +26,18 @@ describe('Test localizedLayerStyles', () => {
     });
 
     it('test localizedLayerStylesNameSelector', () => {
-        const name = 'example';
-        const localizedLayerStyles = localizedLayerStylesNameSelector({localConfig: {localizedLayerStyles: {name}}});
+        const localizedLayerStyles = localizedLayerStylesNameSelector(givenState);
 
-        expect(localizedLayerStyles).toBe(name);
+        expect(localizedLayerStyles).toBe(givenName);
+    });
+
+    it('test isLocalizedLayerStylesEnabledSelector', () => {
+        let isLocalizedLayerStylesEnabled;
+
+        isLocalizedLayerStylesEnabled = isLocalizedLayerStylesEnabledSelector({});
+        expect(isLocalizedLayerStylesEnabled).toBe(false);
+
+        isLocalizedLayerStylesEnabled = isLocalizedLayerStylesEnabledSelector(givenState);
+        expect(isLocalizedLayerStylesEnabled).toBe(true);
     });
 });
