@@ -8,9 +8,9 @@
 
 const PropTypes = require('prop-types');
 const React = require('react');
-const {Row, Col, FormControl} = require('react-bootstrap');
+const {Row, Col} = require('react-bootstrap');
 const Combobox = require('react-widgets').Combobox;
-
+const FormControlIntl = require('../../I18N/FormControlIntl');
 const numberLocalizer = require('react-widgets/lib/localizers/simple-number');
 // not sure this is needed, TODO check!
 numberLocalizer();
@@ -96,7 +96,7 @@ class Text extends React.Component {
                     <Message msgId="draw.font.size"/>
                 </Col>
                 <Col xs={4} style={{position: 'static'}}>
-                    <FormControl
+                    <FormControlIntl
                         value={style.fontSize || 14}
                         placeholder=""
                         onChange={(e) => {

@@ -8,8 +8,9 @@
 
 const React = require('react');
 const PropTypes = require('prop-types');
-const {FormGroup, FormControl} = require('react-bootstrap');
+const {FormGroup} = require('react-bootstrap');
 const {capitalize} = require('lodash');
+const FormControlIntl = require('../../../I18N/FormControlIntl');
 
 /**
  This component renders a coordiante inpout for decimal degrees
@@ -51,7 +52,7 @@ class DecimalCoordinateEditor extends React.Component {
         return (
             <FormGroup
                 validationState={this[validateNameFunc](value)}>
-                <FormControl
+                <FormControlIntl
                     key={coordinate}
                     value={value}
                     placeholder={coordinate}
@@ -64,11 +65,29 @@ class DecimalCoordinateEditor extends React.Component {
                             onChange(e.target.value);
                         }
                     }}
+                    onKeyDown={this.verifyOnKeyDownEvent}
+                    step={1}
+                    validateNameFunc={this[validateNameFunc]}
+                />
+                {/* <FormControl
+                    key={coordinate}
+                    value={value.toLocaleString("de-DE", {minimumFractionDigits: 0, maximumFractionDigits: 10})}
+                    placeholder={coordinate}
+                    onChange={e => {
+                        // when inserting 4eee5 as number here it comes "" that makes the re-render fail
+                        if (e.target.value === "") {
+                            onChange("");
+                        }
+                        if (this[validateNameFunc](e.target.value) === null) {
+                            e.target.value = toNumber(e.target.value.replace(".", "").replace(",", "."));
+                            onChange(e.target.value);
+                        }
+                    }}
                     onKeyDown={(event) => {
                         this.verifyOnKeyDownEvent(event);
                     }}
                     step={1}
-                    type="number"/>
+                    type="text"/> */}
             </FormGroup>
         );
     }

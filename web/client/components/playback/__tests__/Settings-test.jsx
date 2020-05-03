@@ -55,6 +55,7 @@ describe('Timeline/Playback Settings component', () => {
         const spyonChangeSetting = expect.spyOn(actions, 'onSettingChange');
         ReactDOM.render(<Settings onSettingChange={actions.onSettingChange} />, document.getElementById("container"));
         const element = document.querySelector('#frameDuration');
+        ReactTestUtils.Simulate.focus(element);
         ReactTestUtils.Simulate.change(element, { target: { value: "2" } });
         expect(spyonChangeSetting).toHaveBeenCalled();
         expect(spyonChangeSetting.calls[0].arguments[0]).toBe("frameDuration");
@@ -67,6 +68,7 @@ describe('Timeline/Playback Settings component', () => {
         const spyonChangeSetting = expect.spyOn(actions, 'onSettingChange');
         ReactDOM.render(<Settings onSettingChange={actions.onSettingChange} />, document.getElementById("container"));
         const element = document.querySelector('#frameDuration');
+        ReactTestUtils.Simulate.focus(element);
         ReactTestUtils.Simulate.change(element, { target: { value: "-2" } });
         expect(spyonChangeSetting).toHaveBeenCalled();
         expect(spyonChangeSetting.calls[0].arguments[1]).toBe(1);

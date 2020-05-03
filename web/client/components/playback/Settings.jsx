@@ -17,6 +17,7 @@ const InfoPopover = require('../widgets/widget/InfoPopover');
 const InlineDateTimeSelector = require('../time/InlineDateTimeSelector');
 const SwitchButton = require('../misc/switch/SwitchButton');
 const SwitchPanel = require('../misc/switch/SwitchPanel');
+const FormControlIntl = require('../I18N/FormControlIntl');
 
 /**
  *
@@ -90,7 +91,7 @@ module.exports = ({
     <FormGroup controlId="frameDuration" >
         <ControlLabel><Message msgId="playback.settings.frameDuration" /></ControlLabel>
         <InputGroup>
-            <FormControl
+            <FormControlIntl
                 componentClass="input"
                 type="number"
                 value={frameDuration}
@@ -109,7 +110,7 @@ module.exports = ({
     </ControlLabel>
     <FormGroup controlId="formPlaybackStep">
         <Form componentClass="fieldset" inline>
-            <FormControl
+            <FormControlIntl
                 disabled={!fixedStep}
                 componentClass="input"
                 type="number"

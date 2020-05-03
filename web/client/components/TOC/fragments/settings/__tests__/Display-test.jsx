@@ -45,6 +45,8 @@ describe('test Layer Properties Display module component', () => {
         const inputs = ReactTestUtils.scryRenderedDOMComponentsWithTag( comp, "input" );
         expect(inputs).toExist();
         expect(inputs.length).toBe(1);
+        expect(inputs[0].getAttribute('type')).toBe('text');
+        ReactTestUtils.Simulate.focus(inputs[0]);
         expect(inputs[0].getAttribute('type')).toBe('number');
         expect(inputs[0].value).toBe('100');
     });
@@ -71,6 +73,8 @@ describe('test Layer Properties Display module component', () => {
         const inputs = ReactTestUtils.scryRenderedDOMComponentsWithTag( comp, "input" );
         expect(inputs).toExist();
         expect(inputs.length).toBe(6);
+        expect(inputs[0].getAttribute('type')).toBe('text');
+        ReactTestUtils.Simulate.focus(inputs[0]);
         expect(inputs[0].getAttribute('type')).toBe('number');
         expect(inputs[0].value).toBe('70');
         inputs[1].click();
@@ -141,11 +145,13 @@ describe('test Layer Properties Display module component', () => {
         expect(params.get("height")).toBe('15');
 
         // With valid values
+        ReactTestUtils.Simulate.focus(legendWidth);
         legendWidth.value = 20;
         ReactTestUtils.Simulate.change(legendWidth);
         ReactTestUtils.Simulate.blur(legendWidth);
         expect(spy).toHaveBeenCalled();
         expect(spy.calls[0].arguments[0]).toEqual({ legendOptions: { legendWidth: 20, legendHeight: 15 } });
+        ReactTestUtils.Simulate.focus(legendHeight);
         legendHeight.value = 20;
         ReactTestUtils.Simulate.change(legendHeight);
         ReactTestUtils.Simulate.blur(legendHeight);
@@ -159,11 +165,13 @@ describe('test Layer Properties Display module component', () => {
         expect(params.get("height")).toBe('20');
 
         // With Invalid values
+        ReactTestUtils.Simulate.focus(legendWidth);
         legendWidth.value = 1.2;
         ReactTestUtils.Simulate.change(legendWidth);
         ReactTestUtils.Simulate.blur(legendWidth);
         expect(spy).toHaveBeenCalled();
         expect(spy.calls[4].arguments[0]).toEqual({ legendOptions: { legendWidth: 1, legendHeight: 20 } });
+        ReactTestUtils.Simulate.focus(legendHeight);
         legendHeight.value = 25.2;
         ReactTestUtils.Simulate.change(legendHeight);
         ReactTestUtils.Simulate.blur(legendHeight);

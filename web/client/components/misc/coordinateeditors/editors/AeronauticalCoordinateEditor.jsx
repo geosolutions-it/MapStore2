@@ -6,11 +6,13 @@
  * LICENSE file in the root directory of this source tree.
 */
 
+
 const React = require('react');
 const PropTypes = require('prop-types');
 const {compose} = require('recompose');
 const { FormGroup, FormControl } = require('react-bootstrap');
 const {isNil} = require('lodash');
+const FormControlIntl = require('../../../I18N/FormControlIntl');
 
 /**
  * This component renders a coordiante inpout for aetronautical degrees
@@ -129,7 +131,21 @@ class AeronauticalCoordinateEditor extends React.Component {
         return (
             <FormGroup style={{display: "inline-flex"}}>
                 <div style={{width: 40, display: 'flex'}}>
-                    <FormControl
+                    {/* <FormControl*/}
+                    {/*    key={this.props.coordinate + "degree"}*/}
+                    {/*    value={this.props.degrees}*/}
+                    {/*    placeholder="d"*/}
+                    {/*    onChange={e => this.onChange("degrees", parseInt(e.target.value, 10))}*/}
+                    {/*    step={1}*/}
+                    {/*    max={this.props.maxDegrees}*/}
+                    {/*    min={-1}*/}
+                    {/*    onKeyDown={(event) => {*/}
+                    {/*        this.verifyOnKeyDownEvent(event);*/}
+                    {/*    }}*/}
+                    {/*    style={{ width: '100%', ...inputStyle, ...degreesInvalidStyle }}*/}
+                    {/*    type="number"*/}
+                    {/* />*/}
+                    <FormControlIntl
                         key={this.props.coordinate + "degree"}
                         value={this.props.degrees}
                         placeholder="d"
@@ -146,7 +162,7 @@ class AeronauticalCoordinateEditor extends React.Component {
                     <span style={labelStyle}>&deg;</span>
                 </div>
                 <div style={{width: 40, display: 'flex' }}>
-                    <FormControl
+                    <FormControlIntl
                         key={this.props.coordinate + "minutes"}
                         placeholder={"m"}
                         value={this.props.minutes}
@@ -163,7 +179,7 @@ class AeronauticalCoordinateEditor extends React.Component {
                     <span style={labelStyle}>&prime;</span>
                 </div>
                 <div className="seconds" style={{display: 'flex'}}>
-                    <FormControl
+                    <FormControlIntl
                         key={this.props.coordinate + "seconds"}
                         value={this.props.seconds}
                         placeholder="s"

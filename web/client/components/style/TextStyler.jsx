@@ -8,7 +8,7 @@
 
 const React = require('react');
 const PropTypes = require('prop-types');
-const {Grid, Row, Col, FormControl} = require('react-bootstrap');
+const {Grid, Row, Col} = require('react-bootstrap');
 const Combobox = require('react-widgets').Combobox;
 const assign = require('object-assign');
 const ColorSelector = require('./ColorSelector').default;
@@ -20,6 +20,7 @@ const LocaleUtils = require('../../utils/LocaleUtils');
 const {createFont} = require('../../utils/AnnotationsUtils');
 const Message = require('../I18N/Message');
 const tinycolor = require("tinycolor2");
+const FormControlIntl = require('../I18N/FormControlIntl');
 
 class TextStyler extends React.Component {
     static propTypes = {
@@ -123,7 +124,7 @@ class TextStyler extends React.Component {
                     <Message msgId="draw.font.size"/>
                 </Col>
                 <Col xs={4} style={{position: 'static'}}>
-                    <FormControl
+                    <FormControlIntl
                         value={style.fontSize || 14}
                         placeholder=""
                         onChange={(e) => {

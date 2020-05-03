@@ -7,11 +7,12 @@
 */
 const React = require("react");
 const PropTypes = require("prop-types");
-const {FormControl, FormGroup, Row, Col} = require("react-bootstrap");
+const {FormGroup, Row, Col} = require("react-bootstrap");
 const Message = require('../../../../I18N/Message');
 const {toNumber, isNumber} = require("lodash");
 const withLocalized = require("../../../../misc/enhancers/localizedProps");
 const {compose, defaultProps} = require("recompose");
+const FormControlIntl = require('../../../../I18N/FormControlIntl');
 
 class Priority extends React.Component {
     static propTypes = {
@@ -39,7 +40,7 @@ class Priority extends React.Component {
                 </Col>
                 <Col xs={12} sm={6}>
                     <FormGroup validationState={this.getValidationState()}>
-                        <FormControl
+                        <FormControlIntl
                             min="0"
                             type="number"
                             value={selected}
