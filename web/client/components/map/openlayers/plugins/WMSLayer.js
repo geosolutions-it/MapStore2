@@ -55,7 +55,7 @@ function wmsToOpenlayersOptions(options) {
         CRS: CoordinatesUtils.normalizeSRS(options.srs || 'EPSG:3857', options.allowedSRS),
         TILED: options.singleTile ? false : (!isNil(options.tiled) ? options.tiled : true),
         VERSION: options.version || "1.3.0",
-        ENV: options.env && options.env.length ? generateEnvString(options.env) : ''
+        ENV: generateEnvString(options.env)
     }, assign(
         {},
         (options._v_ ? {_v_: options._v_} : {}),

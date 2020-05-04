@@ -32,7 +32,7 @@ const {head} = require('lodash');
 
 const {scalesSelector} = require('../selectors/map');
 const {currentLocaleSelector, currentLocaleLanguageSelector} = require('../selectors/locale');
-const {isLocalizedLayerStylesEnabledSelector, localizedLayerStylesNameSelector} = require('../selectors/localizedLayerStyles');
+const {isLocalizedLayerStylesEnabledSelector, localizedLayerStylesEnvSelector} = require('../selectors/localizedLayerStyles');
 const {mapTypeSelector} = require('../selectors/maptype');
 
 const Message = require('../components/I18N/Message');
@@ -150,7 +150,7 @@ module.exports = {
                         currentLocaleLanguage: PropTypes.string,
                         overrideOptions: PropTypes.object,
                         isLocalizedLayerStylesEnabled: PropTypes.bool,
-                        localizedLayerStylesName: PropTypes.string
+                        localizedLayerStylesEnv: PropTypes.object
                     };
 
                     static contextTypes = {
@@ -277,7 +277,6 @@ module.exports = {
                         const layout = this.getLayout();
                         const layoutName = this.props.getLayoutName(this.props.printSpec);
                         const mapSize = this.getMapSize(layout);
-                        const env = this.generateEnv();
                         return (
                             <Grid fluid role="body">
                                 {this.renderError()}
@@ -311,7 +310,7 @@ module.exports = {
                                             layoutSize={layout && layout.map || {width: 10, height: 10}}
                                             resolutions={MapUtils.getResolutions()}
                                             useFixedScales={this.props.useFixedScales}
-                                            env={env}
+                                            env={this.props.localizedLayerStylesEnv}
                                             {...this.props.mapPreviewOptions}
                                         />
                                         {this.isBackgroundIgnored() ? <DefaultBackgroundOption label={LocaleUtils.getMessageById(this.context.messages, "print.defaultBackground")}/> : null}
@@ -353,17 +352,6 @@ module.exports = {
                             return this.renderBody();
                         }
                         return null;
-                    }
-
-                    generateEnv = () => {
-                        const env = [];
-                        if (this.props.isLocalizedLayerStylesEnabled) {
-                            env.push({
-                                name: this.props.localizedLayerStylesName,
-                                value: this.props.currentLocaleLanguage
-                            });
-                        }
-                        return env;
                     }
 
                     isAllowed = (layer) => {
@@ -411,7 +399,7 @@ module.exports = {
                     print = () => {
                         let printSpec = this.props.printSpec;
                         if (this.props.isLocalizedLayerStylesEnabled) {
-                            printSpec = {...printSpec, env: this.generateEnv(), language: this.props.currentLocaleLanguage};
+                            printSpec = {...printSpec, env: this.props.localizedLayerStylesEnv, language: this.props.currentLocaleLanguage};
                         }
                         const spec = this.props.getPrintSpecification(printSpec);
                         this.props.setPage(0);
@@ -434,8 +422,8 @@ module.exports = {
                     currentLocaleLanguageSelector,
                     mapTypeSelector,
                     isLocalizedLayerStylesEnabledSelector,
-                    localizedLayerStylesNameSelector
-                ], (open, capabilities, printSpec, pdfUrl, error, map, layers, scales, usePreview, currentLocale, currentLocaleLanguage, mapType, isLocalizedLayerStylesEnabled, localizedLayerStylesName) => ({
+                    localizedLayerStylesEnvSelector
+                ], (open, capabilities, printSpec, pdfUrl, error, map, layers, scales, usePreview, currentLocale, currentLocaleLanguage, mapType, isLocalizedLayerStylesEnabled, localizedLayerStylesEnv) => ({
                     open,
                     capabilities,
                     printSpec,
@@ -449,7 +437,7 @@ module.exports = {
                     currentLocaleLanguage,
                     mapType,
                     isLocalizedLayerStylesEnabled,
-                    localizedLayerStylesName
+                    localizedLayerStylesEnv
                 }));
 
                 const PrintPlugin = connect(selector, {
