@@ -727,7 +727,7 @@ In case of `vector` layer, style can be added also to the specific features. Oth
 
 #### WFS Layer
 
-A vector layer, and it adds to the map contents coming from WFS service. As the configuration point of view is somehow a mix between WMS and vector layer. it contains the search entry that allows to browse the data on the server side. The styling system is the same of the vector layer.
+A vector layer, whose data source is a WFS service. The configuration has properties in common with both WMS and vector layers. it contains the search entry that allows to browse the data on the server side. The styling system is the same of the vector layer.
 
 This layer differs from the "vector" because all the loading/filtering/querying operations are applied directly using the WFS service, without storing anything locally.
 
