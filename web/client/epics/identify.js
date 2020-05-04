@@ -43,6 +43,7 @@ import { boundingMapRectSelector } from '../selectors/maplayout';
 import { centerToVisibleArea, isInsideVisibleArea, isPointInsideExtent, reprojectBbox, parseURN, calculateCircleCoordinates } from '../utils/CoordinatesUtils';
 import { floatingIdentifyDelaySelector } from '../selectors/localConfig';
 import { createControlEnabledSelector, measureSelector } from '../selectors/controls';
+import { localizedLayerStylesEnvSelector } from '../selectors/localizedLayerStyles';
 
 import {getBbox, getCurrentResolution, parseLayoutValue} from '../utils/MapUtils';
 import MapInfoUtils from '../utils/MapInfoUtils';
@@ -122,7 +123,8 @@ export default {
                     return filterNameList.length ? (filterNameList.filter(name => name.indexOf(l.name) !== -1).length > 0) : true;
                 })))
                     .mergeMap(layer => {
-                        let { url, request, metadata } = MapInfoUtils.buildIdentifyRequest(layer, identifyOptionsSelector(getState()));
+                        let env = localizedLayerStylesEnvSelector(getState());
+                        let { url, request, metadata } = MapInfoUtils.buildIdentifyRequest(layer, {...identifyOptionsSelector(getState()), env});
                         // request override
                         if (itemIdSelector(getState()) && overrideParamsSelector(getState())) {
                             request = {...request, ...overrideParamsSelector(getState())[layer.name]};

@@ -7,6 +7,9 @@
 */
 
 const {has, get} = require('lodash');
+const {createSelector} = require('reselect');
+
+const {currentLocaleLanguageSelector} = require('./locale');
 
 /**
  * selects localizedLayerStyles state
@@ -31,7 +34,30 @@ const isLocalizedLayerStylesEnabledSelector = (state) => has(state, 'localConfig
  */
 const localizedLayerStylesNameSelector = (state) => get(state, 'localConfig.localizedLayerStyles.name', 'mapstore_language');
 
+/**
+ * generates localizedLayerStyles env object
+ * @memberof selectors.localizedLayerStyles
+ * @param  {object} state the state
+ * @return {object} object that represents ENV param
+ */
+const localizedLayerStylesEnvSelector = createSelector(
+    isLocalizedLayerStylesEnabledSelector,
+    localizedLayerStylesNameSelector,
+    currentLocaleLanguageSelector,
+    (isLocalizedLayerStylesEnabled, localizedLayerStylesName, currentLocaleLanguage) => {
+        const env = [];
+        if (isLocalizedLayerStylesEnabled) {
+            env.push({
+                name: localizedLayerStylesName,
+                value: currentLocaleLanguage
+            });
+        }
+        return env;
+    }
+);
+
 module.exports = {
     isLocalizedLayerStylesEnabledSelector,
-    localizedLayerStylesNameSelector
+    localizedLayerStylesNameSelector,
+    localizedLayerStylesEnvSelector
 };
