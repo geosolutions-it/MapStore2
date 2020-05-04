@@ -1,5 +1,5 @@
 /**
- * Copyright 2015, GeoSolutions Sas.
+ * Copyright 2020, GeoSolutions Sas.
  * All rights reserved.
  *
  * This source code is licensed under the BSD-style license found in the
@@ -68,7 +68,7 @@ class FormControlIntl extends React.Component {
     }
 
     formattedValue(number) {
-        const locale = this.context && this.context.intl && this.context.intl.locale;
+        const locale = this.context && this.context.intl && this.context.intl.locale || "en-US";
         return number && number.toLocaleString(locale, {minimumFractionDigits: 0, maximumFractionDigits: 20});
     }
 
