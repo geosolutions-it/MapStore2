@@ -712,7 +712,7 @@ This is the typical fields of a vector layer
 
 #### Vector Style
 
-The `style` or `styleName` properties of vector layers (wfs, vector...) allow to apply a style the local data on the map.
+The `style` or `styleName` properties of vector layers (wfs, vector...) allow to apply a style to the local data on the map.
 
 - `style`: a style object/array. It can have different format. In the simplest case thus is an object that uses some leaflet-like style properties:
   - `weight`: width in pixel of the border / line.
@@ -727,7 +727,7 @@ In case of `vector` layer, style can be added also to the specific features. Oth
 
 #### WFS Layer
 
-A vector layer, and it adds to the map contents coming from WFS service. As the configuration point of view is somehow a mix between WMS and vector layer. it contains the search entry that allows to browse the data on the server side. The styling system is the same of the vector layer.
+A vector layer, whose data source is a WFS service. The configuration has properties in common with both WMS and vector layers. it contains the search entry that allows to browse the data on the server side. The styling system is the same of the vector layer.
 
 This layer differs from the "vector" because all the loading/filtering/querying operations are applied directly using the WFS service, without storing anything locally.
 
