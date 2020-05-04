@@ -9,7 +9,7 @@
 const React = require('react');
 const PropTypes = require('prop-types');
 const {Button, Glyphicon} = require('react-bootstrap');
-const {keys, isArray, isObject} = require('lodash');
+const {keys, isArray, isObject, isString} = require('lodash');
 const Message = require('../../../I18N/Message');
 const {Table} = require('react-bootstrap');
 
@@ -60,8 +60,14 @@ class MetadataTemplate extends React.Component {
             const fieldPath = `${path}.${key}`;
             let fieldContent;
 
+            const localizedPropNameId = `toc.layerMetadata.${key}`;
+            const localizedPropName = LocaleUtils.getMessageById(this.context.messages, localizedPropNameId);
+            const propNameElement = localizedPropName === localizedPropNameId ?
+                <Message msgId="toc.layerMetadata.defaultPropName" msgParams={{propName: key}}/> :
+                <Message msgId={localizedPropNameId}/>;
+
             const rowWithTitleCell = (content) => (<tr>
-                <td><Message msgId={`toc.layerMetadata.${key}`}/></td>
+                <td>{propNameElement}</td>
                 <td>{content}</td>
             </tr>);
             const rowSimple = (content) => (<tr>
@@ -93,13 +99,13 @@ class MetadataTemplate extends React.Component {
                     fieldContent = isObject(field[0]) ?
                         rowSimple(
                             <div>
-                                {withCollapseButton(<h4><Message msgId={`toc.layerMetadata.${key}`}/></h4>, fieldPath)}
+                                {withCollapseButton(<h4>{propNameElement}</h4>, fieldPath)}
                                 {!this.state.collapsed[fieldPath] ? <div>{renderedElements}</div> : null}
                             </div>
                         ) :
                         rowWithTitleCell(<ul>{renderedElements}</ul>);
                 }
-            } else {
+            } else if (isString(field)) {
                 const cellContent = key === 'URL' || key === 'electronicMailAddress' ?
                     <a target="_blank" rel="noopener noreferrer" href={key === 'URL' ? field : `mailto:${field}`}>{field}</a> :
                     field;
@@ -108,7 +114,7 @@ class MetadataTemplate extends React.Component {
             }
 
             return fieldContent;
-        });
+        }).filter(element => !!element);
 
         return (
             <div style={path ? {padding: '8px'} : {}}>

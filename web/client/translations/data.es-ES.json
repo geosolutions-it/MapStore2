@@ -499,6 +499,7 @@
                 "subject": "Asunto",
                 "type": "Tipo",
                 "creator": "Autor",
+                "defaultPropName": "Propiedad=\"{propName}\"",
                 "toolLayerMetadataTooltip": "Mostrar los metadatos de la capa seleccionada",
                 "layerMetadataPanelTitle": "Metadatos de capa",
                 "notification": {

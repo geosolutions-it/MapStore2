@@ -499,6 +499,7 @@
                 "subject": "Subject",
                 "type": "Type",
                 "creator": "Creator",
+                "defaultPropName": "Property=\"{propName}\"",
                 "toolLayerMetadataTooltip": "Show the selected layer's metadata",
                 "layerMetadataPanelTitle": "Layer metadata",
                 "notification": {

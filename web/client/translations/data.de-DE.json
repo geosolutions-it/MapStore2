@@ -500,6 +500,7 @@
                 "subject": "Betreff",
                 "type": "Typ",
                 "creator": "Ersteller",
+                "defaultPropName": "Eigentum=\"{propName}\"",
                 "toolLayerMetadataTooltip": "Zeigen Sie die Metadaten der ausgewählten Ebene an",
                 "layerMetadataPanelTitle": "Ebenenmetadaten",
                 "notification": {

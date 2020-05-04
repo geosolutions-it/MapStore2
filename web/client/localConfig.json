@@ -8,8 +8,7 @@
           "https://nominatim.openstreetmap.org",
           "http://cloudsdi.geo-solutions.it",
           "https://gs-stable.geo-solutions.it/geoserver",
-          "https://gs-stable.geo-solutions.it:443/geoserver",
-          "https://public.sig.rennesmetropole.fr/geonetwork"
+          "https://gs-stable.geo-solutions.it:443/geoserver"
         ]
     },
     "geoStoreUrl": "rest/geostore/",
@@ -360,49 +359,6 @@
                         "legendWidth": 12,
                         "legendHeight": 12
                       }
-                    },
-                    "metadataOptions": {
-                        "xmlNamespaces": {
-                            "gmd": "http://www.isotc211.org/2005/gmd",
-                            "srv": "http://www.isotc211.org/2005/srv",
-                            "gco": "http://www.isotc211.org/2005/gco",
-                            "gmx": "http://www.isotc211.org/2005/gmx",
-                            "gfc": "http://www.isotc211.org/2005/gfc",
-                            "gts": "http://www.isotc211.org/2005/gts",
-                            "gml": "http://www.opengis.net/gml"
-                        },
-                        "extractors": [{
-                            "properties": {
-                                "title": "/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:title/gco:CharacterString",
-                                "abstract": "/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:abstract/gco:CharacterString",
-                                "purpose": "/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:purpose/gco:CharacterString",
-                                "source": "/gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:lineage/gmd:LI_Lineage/gmd:statement/gco:CharacterString",
-                                "createdDate": "/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:date/gmd:CI_Date/gmd:date/gco:Date[../../gmd:dateType/gmd:CI_DateTypeCode[@codeListValue='creation']]",
-                                "lastRevisionDate": "/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:date/gmd:CI_Date/gmd:date/gco:Date[../../gmd:dateType/gmd:CI_DateTypeCode[@codeListValue='revision']]",
-                                "pointsOfContact": {
-                                    "xpath": "/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:pointOfContact/gmd:CI_ResponsibleParty",
-                                    "properties": {
-                                        "individualName": "gmd:individualName/gco:CharacterString",
-                                        "organisationName": "gmd:organisationName/gco:CharacterString",
-                                        "contactInfo": {
-                                            "xpath": "gmd:contactInfo/gmd:CI_Contact",
-                                            "properties": {
-                                                "phone": "gmd:phone/gmd:CI_Telephone/gmd:voice/gco:CharacterString",
-                                                "deliveryPoints": "gmd:address/gmd:CI_Address/gmd:deliveryPoint/gco:CharacterString",
-                                                "city": "gmd:address/gmd:CI_Address/gmd:city/gco:CharacterString",
-                                                "postalCode": "gmd:address/gmd:CI_Address/gmd:postalCode/gco:CharacterString",
-                                                "country": "gmd:address/gmd:CI_Address/gmd:country/gco:CharacterString",
-                                                "electronicMailAddress": "gmd:address/gmd:CI_Address/gmd:electronicMailAddress/gco:CharacterString",
-                                                "URL": "gmd:onlineResource/gmd:CI_OnlineResource/gmd:linkage/gmd:URL",
-                                                "hoursOfService": "gmd:hoursOfService/gco:CharacterString"
-                                            }
-                                        },
-                                        "role": "gmd:role/gmd:CI_RoleCode/@codeListValue"
-                                    }
-                                }
-                            },
-                            "layersRegex": "^espub_mob:gev_ajeu$"
-                        }]
                     }
                 }
             },

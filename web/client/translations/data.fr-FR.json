@@ -498,6 +498,7 @@
                 "subject": "Sujet",
                 "type": "Type",
                 "creator": "Créateur",
+                "defaultPropName": "Propriété=\"{propName}\"",
                 "toolLayerMetadataTooltip": "Afficher les métadonnées de la couche sélectionnée",
                 "layerMetadataPanelTitle": "Métadonnées de couche",
                 "notification": {
