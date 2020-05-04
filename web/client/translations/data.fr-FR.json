@@ -1296,20 +1296,20 @@
                 "originalData": "fichier d'origine",
                 "file": "Nom de fichier",
                 "format": "Format",
-                "targetStore": "target store",
-                "storeType": "Type de store",
-                "storeName": "Le nom du store",
+                "targetStore": "Entrepôt destination",
+                "storeType": "Type d'entrepôt",
+                "storeName": "Le nom de l'entrepôt",
                 "layer": "Couche",
                 "transforms": "Chaîne de transformations",
                 "update": "Mettre à jour",
-                "run": "Importez ce forfait",
+                "run": "Importez ce lot",
                 "edit": "Modifier le style par défaut",
-                "delete": "Supprimer Ce forfait"
+                "delete": "Supprimer ce lot"
             },
             "transform": {
                 "panelTitle": "Transformation {id}",
                 "type": "Type de transformation",
-                "actions": "Actes",
+                "actions": "Actions",
                 "options": "transformations des options",
                 "overviewlevels": "Vue d'ensemble des niveaux",
                 "delete": "Supprimer cette transformation"
@@ -1363,7 +1363,7 @@
             "color": "Couleur",
             "quantity": "Quantité",
             "label": "Label",
-            "minmaxerror": "La valeur doit être comprise entre les valeurs des cellules précédente et suivante"
+            "minmaxerror": "La valeur doit être comprise entre les valeurs des cellules précédentes et suivantes"
         },
         "pseudocolorsettings": {
             "type": "Type",
@@ -1400,7 +1400,7 @@
             "errorSaving": "Une erreur s'est produite lors de l'enregistrement de l'opération",
             "errorProjFetch": "Erreur lors de la récuperation de la définition de la chaîne proj4 depuis spatialreference.org. L'outil de synchronisation ne peut pas appliquer le filtre spatial.",
             "notSupportedGeometryTitle": "Type de géométrie non supporté ",
-            "notSupportedGeometry": "Le type de géométrie de la couche actuel n'est pas pris en charge par l'édition, mais vous pouvez toujours modifier les attributs",
+            "notSupportedGeometry": "Le type de géométrie de la couche actuelle n'est pas pris en charge par l'édition, mais vous pouvez toujours modifier les attributs",
             "yesButton": "Oui",
             "noButton": "Non",
             "deleteButton": "Effacer",
@@ -1422,9 +1422,9 @@
                     "number": "Tapez un nombre ou une expression...",
                     "date": "Tapez une date ou une expression. Utilisez {format} pour la date.",
                     "geometry": {
-                        "disabled": "Filtre en cliquant sur la carte",
+                        "disabled": "Retirez le filtre par un clic de souris",
                         "enabled": "Cliquez sur la carte pour filtrer les résultats",
-                        "applied": "Retirez le filtre par un clic de souris"
+                        "applied": "Filtrez en cliquant sur la carte"
                     }
                 }
             },
@@ -1458,11 +1458,11 @@
             "title": "Exporter des données",
             "format": "Format de fichier",
             "srs": "Système de référence spatiale",
-            "export": "Exportations",
+            "export": "Export",
             "downloadonlycurrentpage": "Télécharger uniquement la page actuelle",
             "error": {
-                "title": "Erreur lors de l'exportation",
-                "invalidOutputFormat": "Le format d'exportation sélectionné n'est pas disponible"
+                "title": "Erreur lors de l'export",
+                "invalidOutputFormat": "Le format d'export sélectionné n'est pas disponible"
             }
         },
         "widgets": {
@@ -1484,7 +1484,7 @@
                     "caption": "ajouter une zone de texte"
                 },
                 "table": {
-                    "title": "Table",
+                    "title": "Tableau",
                     "caption": "ajouter un tableau"
                 },
                 "counter": {
@@ -1528,9 +1528,9 @@
                     "backToLayerSelection": "Retour à la sélection du calque",
                     "backToMapSelection": "Retour à la sélection de la carte",
                     "backToPreview": "Retour à l'aperçu",
-                    "backToChartOptions": "retour aux options de graphique",
+                    "backToChartOptions": "Retour aux options de graphique",
                     "selectALayer": "Sélectionner une couche",
-                    "selectAMap": "Sélectionnez une carte",
+                    "selectAMap": "Sélectionner une carte",
                     "configureChartOptions": "Configurer les options de graphique",
                     "configureWidgetOptions": "Configurer les options du widget",
                     "backToTableOptions": "Retour à l'option de table",
@@ -1717,28 +1717,28 @@
                 "loading": {
                     "title": "Erreur du contexte de chargement",
                     "notAccessible": "Ressource non accessible",
-                    "pleaseLogin": "Certaines ressources ne peut pas être public. S'il vous plaît essayer de vous connecter",
-                    "unknownError": "Il y avait une erreur de chargement de la carte ou le contexte. S'il vous plaît contacter l'administrateur",
+                    "pleaseLogin": "Certaines ressources ne sont pas publiques. S'il vous plaît essayer de vous connecter",
+                    "unknownError": "Il y avait une erreur de chargement de la carte ou du contexte. S'il vous plaît, contactez l'administrateur",
                     "notFound": "Ressource introuvable"
                 },
                 "context": {
-                    "notAccessible": "Vous ne disposez pas de l'autorisation droit d'accès à ce contexte. S'il vous plaît contacter l'administrateur pour obtenir l'accès",
-                    "pleaseLogin": "Ce contexte n'est pas publique. S'il vous plaît essayer de vous connecter",
-                    "unknownError": "Il y avait une erreur de chargement du contexte. S'il vous plaît contacter l'administrateur",
-                    "notFound": "Le contexte que vous essayez d'accéder n'existe pas"
+                    "notAccessible": "Vous ne disposez pas de l'autorisation pour accéder à ce contexte. S'il vous plaît, contactez l'administrateur pour obtenir l'accès",
+                    "pleaseLogin": "Ce contexte n'est pas public. S'il vous plaît, essayez de vous connecter",
+                    "unknownError": "Il y avait une erreur de chargement du contexte. S'il vous plaît, contactez l'administrateur",
+                    "notFound": "Le contexte auquel vous essayez d'accéder n'existe pas"
                 },
                 "template": {
                     "title": "Erreur lors du chargement du modèle",
                     "notAccessible": "Vous n'êtes pas autorisé à accéder à ce modèle. Veuillez contacter le propriétaire de la ressource",
                     "pleaseLogin": "Ce modèle n'est pas public. Veuillez essayer de vous connecter",
-                    "unknownError": "This template is not public. Please try to login",
+                    "unknownError": "Erreur inconnue",
                     "notFound": "Le modèle auquel vous essayez d'accéder n'existe pas"
                 },
                 "map": {
-                    "notAccessible": "Vous ne disposez pas de l'autorisation droit d'accès à cette carte. S'il vous plaît contacter l'administrateur pour obtenir l'accès",
-                    "pleaseLogin": "Cette carte ou la carte ne sont pas publiques. S'il vous plaît essayer de vous connecter",
-                    "unknownError": "Il y avait une erreur de chargement de la carte. S'il vous plaît contacter l'administrateur",
-                    "notFound": "La carte que vous essayez d'accéder n'existe pas"
+                    "notAccessible": "Vous ne disposez pas de l'autorisation pour accéder à cette carte. S'il vous plaît, contactez l'administrateur pour obtenir l'accès",
+                    "pleaseLogin": "Cette carte ou la carte ne sont pas publiques. S'il vous plaît, essayez de vous connecter",
+                    "unknownError": "Il y avait une erreur de chargement de la carte. S'il vous plaît, contactez l'administrateur",
+                    "notFound": "La carte à laquelle vous essayez d'accéder n'existe pas"
                 },
                 "plugins": {
                   "upload": "Erreur lors du téléchargement du plugin",
@@ -1788,12 +1788,12 @@
         "styleeditor": {
             "styleListfilterPlaceholder": "Filtrer les styles par nom, titre ou résumé",
             "templateFilterPlaceholder": "Filtrer les modèles de styles par titre",
-            "createStyleFromTemplate": "Sélectionnez un modèle pour créer un nouveau style",
+            "createStyleFromTemplate": "Sélectionner un modèle pour créer un nouveau style",
             "titleRequired": "<div> Un titre est requis! </ div> <div> Le titre et le résumé doivent être alphanumériques </ div>.",
             "titleSettings": "Titre",
             "titleSettingsplaceholder": "Entrez le titre (alphanumérique)",
-            "abstractSettings": "Abstrait",
-            "abstractSettingsplaceholder": "Entrez abstract (alphanumeric)",
+            "abstractSettings": "Résumé",
+            "abstractSettingsplaceholder": "Entrez le résumé (alphanumérique)",
             "createStyleModalTitle": "Créer un nouveau style",
             "filterMatchNotFound": "Aucun style ne correspond au filtre de texte saisi",
             "backToList": "Retour à la liste de style",
@@ -1822,14 +1822,14 @@
             "createTmpErrorTitle": "Nouveau style temporaire",
             "createTmpStyleErrorMessage": "Le style temporaire n'a pas pu être créé. Cela pourrait être dû à un format de style non pris en charge sur le service de styles.",
             "updateTmpErrorTitle": "Mise à jour de style temporaire",
-            "updateTmpStyleErrorMessage": "Le style temporaire n'a pas pu être mis à jour. Cela pourrait être sur un format de style non pris en charge ou un problème de connexion.",
+            "updateTmpStyleErrorMessage": "Le style temporaire n'a pas pu être mis à jour. Cela pourrait être lié à un format de style non pris en charge ou un problème de connexion.",
             "createStyleErrorTitle": "Nouveau style",
-            "createStyleErrorMessage": "Le style n'a pas pu être enregistré sur le service de style. Cela pourrait être sur un format de style non pris en charge ou un problème de connexion.",
+            "createStyleErrorMessage": "Le style n'a pas pu être enregistré sur le service de style. Cela pourrait être lié à un format de style non pris en charge ou un problème de connexion.",
             "updateStyleErrorTitle": "Modifier le style",
-            "updateStyleErrorMessage": "Le style n'a pas pu être mis à jour sur le service de style. Cela pourrait être sur un format de style non pris en charge ou un problème de connexion.",
+            "updateStyleErrorMessage": "Le style n'a pas pu être mis à jour sur le service de style. Cela pourrait être lié à un format de style non pris en charge ou un problème de connexion.",
             "validationErrorTitle": "Erreur de validation",
             "genericValidationError": "Le style n'est pas valide et il n'a pas pu être appliqué.",
-            "setDefaultStyle": "Définir le style sélectionné par défaut pour le calque actuel",
+            "setDefaultStyle": "Définir le style sélectionné par défaut pour la couche actuelle",
             "setDefaultStyleSuccessTitle": "Succès sur le style par défaut",
             "setDefaultStyleSuccessMessage": "Le style par défaut a été appliqué avec succès",
             "setDefaultStyleErrorTitle": "Erreur sur le style par défaut",
@@ -1885,8 +1885,8 @@
             "currentTime": "Aller à l'heure actuelle",
             "rangeStart": "Aller à la plage de temps actuelle",
             "rangeEnd": "Aller à la plage de temps actuelle",
-            "hideLayerName": "Masquer les noms de calques",
-            "showLayerName": "Afficher les noms de calques",
+            "hideLayerName": "Masquer les noms de couches",
+            "showLayerName": "Afficher les noms de couches",
             "enableRange": "Activer la plage de temps",
             "disableRange": "Désactiver la plage de temps",
             "enablePlayBack": "Activer les contrôles de lecture",
@@ -1918,7 +1918,7 @@
                 "service": "Tapez pour rechercher des services",
                 "request": "Tapez pour rechercher des demandes",
                 "workspace": "Tapez pour rechercher des espaces de travail",
-                "layer": "Tapez pour rechercher des calques",
+                "layer": "Tapez pour rechercher des couches",
                 "access": "Tapez pour rechercher Access",
                 "ip": "###.###.###.###/##",
                 "priority": "Sélectionnez Priorité"
@@ -2071,7 +2071,7 @@
                     "tooltip": "Réglages",
                     "back": "Retour au constructeur",
                     "backConfirmTitle": "Paramètres modifiés",
-                    "backConfirmBody": "Êtes-vous sûr de fermer le panneau de configuration sans enregistrer vos modifications",
+                    "backConfirmBody": "Êtes-vous sûr de fermer le panneau de configuration sans enregistrer vos modifications ?",
                     "backConfirmNo": "Non",
                     "backConfirmYes": "Oui",
                     "save": "Enregistrer les paramètres",
@@ -2183,7 +2183,7 @@
             },
             "mediaform": {
                 "confirmExitTitle": "Fermer Media Form",
-                "confirmExitContent": "Supprimer les modifications en attente?"
+                "confirmExitContent": "Supprimer les modifications en attente ?"
             },
             "mapForm": {
                 "thumbnailMessage": "La taille des images doit être un carré de 98px x 98px, maximum 100 Ko.",
@@ -2240,7 +2240,7 @@
           },
           "Annotations": {
             "description": "Outil pour dessiner des annotations sur la carte",
-            "title": "annotations"
+            "title": "Annotations"
           },
           "AutoMapUpdate": {
             "description": "Permet à l'utilisateur de mettre à jour la carte (ancienne version de mapstore)",
@@ -2259,7 +2259,7 @@
             "title": "Sélecteur CRS"
           },
           "Details": {
-            "description": "Permettre d'afficher la carte de détail d'une carte, le cas échéant",
+            "description": "Permettre d'afficher les détails d'une carte, le cas échéant",
             "title": "Détails de la carte"
           },
           "Expander": {
@@ -2271,7 +2271,7 @@
             "title": "Tableau d'attributs"
           },
           "FilterLayer": {
-            "description": "Permet d'ajouter un filtre à un calque",
+            "description": "Permet d'ajouter un filtre à une couche",
             "title": "Couche de filtre"
           },
           "HelpLink": {
@@ -2291,7 +2291,7 @@
             "title": "Outil de localisation"
           },
           "Login": {
-            "description": "Login Tool",
+            "description": "Authentification",
             "title": "Login"
           },
           "MapCatalog": {
@@ -2300,11 +2300,11 @@
           },
           "MapExport": {
             "description": "Permet d'exporter la carte dans un fichier",
-            "title": "Exportation de carte"
+            "title": "Export de carte"
           },
           "MapImport": {
             "description": "Permet d'importer des données (SHP, KML / KMZ, GeoJSON, GPX) ou de recharger des cartes exportées.",
-            "title": "Importation"
+            "title": "Import de données ou de cartes"
           },
           "MapLoading": {
             "description": "Une flèche dans la barre latérale qui indique si la carte est en cours de chargement",
@@ -2351,16 +2351,16 @@
             "title": "Outil de partage"
           },
           "StyleEditor": {
-            "description": "Éditeur de style de calque",
+            "description": "Éditeur de style de couche",
             "title": "Éditeur de style"
           },
           "TOC": {
-            "description": "Fournit une liste de couches avec une possibilité de les trier",
+            "description": "Fournit une liste de couches avec la possibilité de les trier",
             "title": "Liste des couches"
           },
           "TOCItemsSettings": {
-            "description": "Autoriser la modification des paramètres du calque",
-            "title": "Paramètres de calque"
+            "description": "Autoriser la modification des paramètres de la couche",
+            "title": "Paramètres de couche"
           },
           "Timeline": {
             "description": "Permet un voyage dans le temps pour les données avec dimension temporelle",
@@ -2431,12 +2431,12 @@
                 },
                 "uploadLabel": "Faites glisser un ensemble d'extensions ou cliquez pour le parcourir et le télécharger",
                 "uploadTitle": "Installer un plugin MapStore",
-                "uploadParseError": "Fichier index.json con formato errato",
-                "uploadMissingIndexError": "fichier index.json manquant dans le zip",
+                "uploadParseError": "Fichier index.json avec une erreur de format",
+                "uploadMissingIndexError": "Fichier index.json manquant dans le zip",
                 "uploadMissingPluginError": "Aucun plugin défini dans index.json",
                 "uploadMissingBundleError": "Aucun paquet javascript dans le fichier téléchargé",
                 "uploadTooManyBundlesError": "Trop de bundles javascript dans le package zip",
-                "confirmRemovePlugin": "¿Está seguro de que desea eliminar la extensión?",
+                "confirmRemovePlugin": "Etes-vous sûr de vouloir supprimer l'extension ?",
                 "cancelUpload": "Fermer",
                 "install": "Installer",
                 "uploadError": "Erreur lors de l'installation: ",
@@ -2450,7 +2450,7 @@
                     "pluginDocumentation": "Ouvrir la documentation de configuration du plugin",
                     "uploadPlugin": "Ajouter une extension à MapStore",
                     "removePlugin": "Supprimer cette extension de MapStore",
-                    "mapTemplatesConfig": "Configurer le modèles"
+                    "mapTemplatesConfig": "Configurer le modèle de carte"
                 },
                 "saveCfgErrorNotification":  {
                     "title": "Erreur de syntaxe dans la configuration du plugin",
@@ -2458,7 +2458,7 @@
                 }
             },
             "configureTemplates": {
-                "title": "Configurer le modèles",
+                "title": "Configurer les modèles de carte",
                 "availableTemplates": "Modèles disponibles",
                 "enabledTemplates": "Modèles activés",
                 "templatesFilterPlaceholder": "Filtrer les modèles par nom...",
@@ -2486,7 +2486,7 @@
             "configureMap": {
                 "label": "Configurer la carte",
                 "reload": "Recharger la carte",
-                "confirm": "Cela va annuler toutes les modifications actuelles de la carte. Procéder?"
+                "confirm": "Cela va annuler toutes les modifications actuelles de la carte. Procéder ?"
             },
             "saveErrorNotification": {
                 "titleContext": "L'enregistrement de contexte a échoué",
@@ -2496,14 +2496,14 @@
                 "categoryError": "La création de la catégorie manquante \"{categoryName}\" a échoué"
             },
             "loadTemplateErrorNotification": {
-                "forbidden": "Impossible d'accéder aux données du modèle, l'utilisateur n'a pas les autorisations nécessaires!",
+                "forbidden": "Impossible d'accéder aux données du modèle, l'utilisateur n'a pas les autorisations nécessaires !",
                 "defaultMessage": "Une erreur inattendue s'est produite"
             },
             "contextNameErrorNotification": {
                 "title": "Nom de contexte incorrect",
                 "unknownError": "Une erreur inattendue s'est produite"
             },
-            "undo": "Êtes-vous sûr de vouloir abandonner la session de modification de contexte?"
+            "undo": "Êtes-vous sûr de vouloir abandonner la session de modification de contexte ?"
         },
         "contextManager": {
             "title": "Gérer les contextes",
