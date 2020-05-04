@@ -20,6 +20,8 @@ const getColor = function(color) {
 const getGeomType = function(layer) {
     return layer.features && layer.features[0] ? layer.features[0].geometry.type : undefined;
 };
+//
+const DUMMY_COLOR = {r: 255, g: 0, b: 0, a: 1}; // This style should never be applied, is only a default for tests and to prevent failures
 export const toVectorStyle = function(layer, style) {
     let newLayer = assign({}, layer);
     let geomT = getGeomType(layer);
@@ -27,13 +29,14 @@ export const toVectorStyle = function(layer, style) {
         newLayer.styleName = "marker";
         newLayer.handleClickOnLayer = true;
     }
+    const {color = DUMMY_COLOR, fill = DUMMY_COLOR} = style || {};
     newLayer.style = {
         weight: style.width,
         radius: style.radius,
-        opacity: style.color.a,
-        fillOpacity: style.fill.a,
-        color: getColor(style.color),
-        fillColor: getColor(style.fill)
+        opacity: color.a,
+        fillOpacity: fill.a,
+        color: getColor(color),
+        fillColor: getColor(fill)
     };
     return newLayer;
 };
