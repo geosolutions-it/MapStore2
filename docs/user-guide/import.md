@@ -14,7 +14,7 @@ Here the user, in order to import a file, can drag and drop it inside the import
 !!! warning
     Shapefiles must be contained in .zip archives.
 
-## Import map context files
+## Export and Import map context files
 
 A map context is, for example, the file that an user download selecting the <img src="../img/button/export.jpg" class="ms-docbutton"/> option in [Burger Menu](menu-bar.md#burger-menu). Map contexts can be exported in two different format:
 
