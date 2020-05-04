@@ -61,12 +61,13 @@ const searchAndPaginate = (json = {}, startPosition, maxRecords, text) => {
             || name.toLowerCase().indexOf(text.toLowerCase()) !== -1
             || description.toLowerCase().indexOf(text.toLowerCase()) !== -1
         );
+    const records = filteredLayers
+        .filter((layer, index) => index >= startPosition - 1 && index < startPosition - 1 + maxRecords);
     return {
         numberOfRecordsMatched: filteredLayers.length,
-        numberOfRecordsReturned: Math.min(maxRecords, filteredLayers.length),
+        numberOfRecordsReturned: Math.min(maxRecords, records.length),
         nextRecord: startPosition + Math.min(maxRecords, filteredLayers.length) + 1,
-        records: filteredLayers
-            .filter((layer, index) => index >= startPosition - 1 && index < startPosition - 1 + maxRecords)
+        records
     };
 };
 
@@ -90,4 +91,4 @@ export const getRecords = (url, startPosition, maxRecords, text, info) => {
         return searchAndPaginate(json, startPosition, maxRecords, text, info);
     });
 };
-export const textSearch = (...args) => getRecords(...args);
+export const textSearch = (url, startPosition, maxRecords, text, info) => getRecords(url, startPosition, maxRecords, text, info);
