@@ -351,7 +351,7 @@
             }, {
                 "name": "TOC",
                 "cfg": {
-                    "activateMetedataTool": true,
+                    "activateMetedataTool": false,
                     "layerOptions": {
                       "legendOptions": {
                         "WMSLegendOptions": "forceLabels:on",
