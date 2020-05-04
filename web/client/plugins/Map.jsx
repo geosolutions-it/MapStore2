@@ -204,7 +204,7 @@ class MapPlugin extends React.Component {
         elevationEnabled: PropTypes.bool,
         isLocalizedLayerStylesEnabled: PropTypes.bool,
         localizedLayerStylesName: PropTypes.string,
-        currentLocale: PropTypes.string
+        currentLocaleLanguage: PropTypes.string
     };
 
     static defaultProps = {
@@ -312,7 +312,7 @@ class MapPlugin extends React.Component {
         if (this.props.isLocalizedLayerStylesEnabled) {
             env.push({
                 name: this.props.localizedLayerStylesName,
-                value: this.props.currentLocale
+                value: this.props.currentLocaleLanguage
             });
         }
 
@@ -374,7 +374,8 @@ class MapPlugin extends React.Component {
                     {...this.props.map}
                     mapOptions={assign({}, mapOptions, this.getMapOptions())}
                     zoomControl={this.props.zoomControl}
-                    onResolutionsChange={this.props.onResolutionsChange}>
+                    onResolutionsChange={this.props.onResolutionsChange}
+                >
                     {this.renderLayers()}
                     {this.renderSupportTools()}
                 </plugins.Map>
@@ -411,13 +412,12 @@ class MapPlugin extends React.Component {
     };
 }
 
-const {head} = require('lodash');
 const {mapSelector, projectionDefsSelector} = require('../selectors/map');
 const { mapTypeSelector, isOpenlayers } = require('../selectors/maptype');
 const {layerSelectorWithMarkers} = require('../selectors/layers');
 const {highlighedFeatures} = require('../selectors/highlight');
 const {securityTokenSelector} = require('../selectors/security');
-const {currentLocaleSelector} = require('../selectors/locale');
+const {currentLocaleLanguageSelector} = require('../selectors/locale');
 const {
     isLocalizedLayerStylesEnabledSelector,
     localizedLayerStylesNameSelector
@@ -436,7 +436,7 @@ const selector = createSelector(
         isOpenlayers,
         isLocalizedLayerStylesEnabledSelector,
         localizedLayerStylesNameSelector,
-        (state) => head(currentLocaleSelector(state).split('-'))
+        currentLocaleLanguageSelector
     ], (
         projectionDefs,
         map,
@@ -449,7 +449,7 @@ const selector = createSelector(
         shouldLoadFont,
         isLocalizedLayerStylesEnabled,
         localizedLayerStylesName,
-        currentLocale
+        currentLocaleLanguage
     ) => ({
         projectionDefs,
         map,
@@ -462,7 +462,7 @@ const selector = createSelector(
         shouldLoadFont,
         isLocalizedLayerStylesEnabled,
         localizedLayerStylesName,
-        currentLocale
+        currentLocaleLanguage
     })
 );
 module.exports = {
