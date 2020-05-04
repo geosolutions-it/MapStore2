@@ -27,7 +27,11 @@
           "terrainProvider": {
               "type": "ellipsoid"
           }
-      }
+      },
+      "floatingIdentifyDelay": 1000
+    },
+    "localizedLayerStyles": {
+      "name": "mapstore_language"
     },
     "authenticationRules": [{
         "urlPattern": ".*geostore.*",
@@ -46,6 +50,9 @@
       {"name": "browser", "path": "browser"},
       {"name": "geostorymode", "path": "geostory.mode"},
       {"name": "featuregridmode", "path": "featuregrid.mode"}],
+    "userSessions": {
+      "enabled": true
+    },
     "projectionDefs": [],
     "initialState": {
       "defaultState": {
@@ -311,7 +318,8 @@
                     "showHighlightFeatureButton": true,
                     "viewerOptions": {
                         "container": "{context.ReactSwipe}"
-                    }
+                    },
+                    "showEdit": true
                 },
                 "override": {
                   "Toolbar": {
@@ -350,8 +358,10 @@
                     "activateMetedataTool": false,
                     "layerOptions": {
                       "legendOptions": {
-                        "WMSLegendOptions": "forceLabels:on;fontSize:30",
-                        "scaleDependent": true
+                        "WMSLegendOptions": "forceLabels:on",
+                        "scaleDependent": true,
+                        "legendWidth": 12,
+                        "legendHeight": 12
                       }
                     }
                 }

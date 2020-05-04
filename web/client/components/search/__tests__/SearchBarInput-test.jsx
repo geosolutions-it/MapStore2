@@ -11,6 +11,7 @@ import ReactDOM from 'react-dom';
 import expect from 'expect';
 import TestUtils from 'react-dom/test-utils';
 
+import Localized from '../../I18N/Localized';
 import SearchBarInput from '../SearchBarInput';
 
 describe('SearchBarInput tests', () => {
@@ -80,5 +81,16 @@ describe('SearchBarInput tests', () => {
             expect(spyOnFocus.calls.length).toEqual(1);
             done();
         }, 210);
+    });
+    it('test placeholderMsgId', () => {
+        const comp = (
+            <Localized messages={{'testMessage': 'testmessage'}} locale="en-US">
+                <SearchBarInput show delay={0} typeAhead blurResetDelay={0} placeholderMsgId={'testMessage'}/>
+            </Localized>
+        );
+        ReactDOM.render(comp, document.getElementById("container"));
+        const input = document.getElementsByTagName("input")[0];
+        expect(input).toExist();
+        expect(input.placeholder).toBe('testmessage');
     });
 });

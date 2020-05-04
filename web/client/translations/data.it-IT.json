@@ -106,6 +106,12 @@
                 "right": "Destra",
                 "bottom": "Sotto",
                 "top": "Sopra"
+            },
+            "legendOptions": {
+              "title": "Legenda",
+              "legendWidth": "Larghezza",
+              "legendHeight": "Altezza",
+              "legendPreview": "Anteprima"
             }
         },
         "longitude": "Longitudine",
@@ -572,11 +578,12 @@
         "identifyRevGeocodeSubmitText": "Più informazioni",
         "identifyRevGeocodeCloseText": "Chiudi",
         "identifyRevGeocodeError": "Impossibile eseguire il geocoding",
+        "identifyEdit": "Modifica",
         "getFeatureInfoError": {
             "title": "Ooops! Qualcosa non va",
             "text": "Si è verificato un errore nel fare questa richiesta <b>GetFeatureInfo</b>"
         },
-        "noFeatureInfo": "Non ci sono informazioni disponibili per il punto selezionato",
+        "noFeatureInfo": "Non ci sono informazioni disponibili per questo punto",
         "noInfoForLayers": "Non ci sono features per i seguenti layers: ",
         "history":{
             "barLabel": "Storia Mappa",
@@ -584,6 +591,9 @@
             "redoBtnTooltip": "Vai avanti"
         },
         "infoFormatLbl": "Formato risposte interrogazioni su mappa",
+        "infoTriggerLabel": "Evento trigger interrogazioni su mappa",
+        "click": "Click",
+        "hover": "Hover",
         "measureSupport": {
             "continueLine": "Clicca per continuare a disegnare la linea",
             "continuePolygon": "Clicca per continuare a disegnare il poligono",
@@ -594,6 +604,7 @@
             "MeasureLength": "Misura Distanza",
             "MeasureArea": "Misura Area",
             "MeasureBearing": "Misura Direzione",
+            "MeasureTrueBearing": "Misura vera Direzione",
             "tooltip": "Misurazione lunghezza e l'area",
             "title": "Misurazione",
             "lengthButtonText": "Linea",
@@ -602,6 +613,7 @@
             "lengthLabel": "Lunghezza",
             "areaLabel": "Area",
             "bearingLabel": "Direzione",
+            "trueBearingLabel": "Vera Direzione",
             "formula": "Formula per il calcolo della distanza",
             "showLabel": "Mostra etichetta di misurazione",
             "addAsAnnotation": "Aggiungi come annotazione",
@@ -637,6 +649,7 @@
             "s_attributes": "Attributi",
             "s_sort": "Ordina per",
             "s_max_features": "Numero massimo di risultati (Max features)",
+            "s_max_zoom": "Livello di zoom massimo",
             "s_wfs_props_label" : "Proprietà del servizio WFS",
             "s_wfs_opt_props_label" : "Proprietà facoltative",
             "s_result_props_label": "Proprietà di visualizzazione dei risultati",
@@ -2363,6 +2376,10 @@
             "description": "Consente all'utente di abilitare / disabilitare le estensioni utente",
             "title": "Estensioni Utente"
           },
+          "UserSession": {
+            "title": "Sessione Utente",
+            "description": "Permette di avere una sessione utente per contesto automaticamente salvata"
+          },
           "Version": {
             "description": "Mostra la versione di MapStore nellla finestra di settings",
             "descriptionGeorchestra": "Mostra la versione di GeOrchestra nellla finestra di settings",
@@ -2681,7 +2698,9 @@
             "titleContext": "Cancellazione della sessione utente non riuscita",
             "defaultMessage": "Errore sconosciuto"
           },
-          "successRemoved": "Sessione utente cancellata"
+          "successRemoved": "Sessione utente cancellata",
+          "remove": "Reset Sessione Utente",
+          "confirmRemove": "Sei sicuro di voler ripristinare la configurazione di default?"
         }
     }
 }

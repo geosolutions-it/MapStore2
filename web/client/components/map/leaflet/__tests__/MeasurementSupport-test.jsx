@@ -6,11 +6,12 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-var expect = require('expect');
-var React = require('react');
-var ReactDOM = require('react-dom');
-var L = require('leaflet');
-var MeasurementSupport = require('../MeasurementSupport');
+const expect = require('expect');
+const React = require('react');
+const ReactDOM = require('react-dom');
+const L = require('leaflet');
+const MeasurementSupport = require('../MeasurementSupport');
+const {getFormattedBearingValue} = require("../../../../utils/MeasureUtils");
 let defaultPrecision = {
     km: 2,
     ha: 2,
@@ -321,6 +322,27 @@ describe('Leaflet MeasurementSupport', () => {
         let distanceStr = L.GeometryUtil.readableDistance(distance, isMetric, isFeet, isNauticalMile, precision, options);
         expect(distanceStr).toBe("5° N 4° E");
     });
+    it('test L.GeometryUtil.readableDistance with Bearing', () => {
+        const distance = 1;
+        const isMetric = true;
+        const isFeet = false;
+        const isNauticalMile = false;
+        const precision = null;
+        const trueBearing =  { measureTrueBearing: true};
+        const options = {
+            geomType: "Bearing",
+            bearing: getFormattedBearingValue(80.9, trueBearing),
+            useTreshold: true,
+            uom: {
+                length: {
+                    unit: "m",
+                    label: "m"
+                }
+            }
+        };
+        let distanceStr = L.GeometryUtil.readableDistance(distance, isMetric, isFeet, isNauticalMile, precision, options);
+        expect(distanceStr).toBe("080° T");
+    });
     it('test L.GeometryUtil.readableDistance length with trehsold', () => {
         const distance = 1;
         const isMetric = true;
@@ -509,6 +531,35 @@ describe('Leaflet MeasurementSupport', () => {
         expect(distanceStr).toBe("222.39 km");
 
     });
+    it('test L.Draw.Polyline.prototype._getMeasurementString', () => {
+        L.Draw.Polyline.prototype.options = {
+            metric: true,
+            feet: false,
+            nautic: false,
+            showLength: true,
+            useTreshold: true,
+            geomType: "Bearing",
+            bearing: 84.82388445,
+            uom: {
+                length: {
+                    unit: "m",
+                    label: "m"
+                }
+            },
+            trueBearing: { measureTrueBearing: true, fractionDigits: 4}
+        };
+        let map = L.map("map", {
+            center: [51.505, -0.09],
+            zoom: 13
+        });
+        L.Draw.Polyline.prototype._map = map;
+        L.Draw.Polyline.prototype._measurementRunningTotal = 0;
+        L.Draw.Polyline.prototype._currentLatLng = L.latLng([50.5, 30.5]);
+        L.Draw.Polyline.prototype._markers = [L.marker([50.5, 30.5]), L.marker([52.5, 30.5])];
 
+        let distanceStr = L.Draw.Polyline.prototype._getMeasurementString();
+        expect(distanceStr).toBe("084.8239° T");
+
+    });
 
 });

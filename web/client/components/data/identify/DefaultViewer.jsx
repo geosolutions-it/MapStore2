@@ -9,12 +9,12 @@
 const React = require('react');
 const PropTypes = require('prop-types');
 const MapInfoUtils = require('../../../utils/MapInfoUtils');
-const FeatureInfoUtils = require('../../../utils/FeatureInfoUtils');
 const HTML = require('../../../components/I18N/HTML');
 const Message = require('../../../components/I18N/Message');
 const {Alert, Panel, Accordion} = require('react-bootstrap');
 const ViewerPage = require('./viewers/ViewerPage');
 const {isEqual} = require('lodash');
+const {getFormatForResponse} = require('../../../utils/IdentifyUtils');
 
 class DefaultViewer extends React.Component {
     static propTypes = {
@@ -108,11 +108,8 @@ class DefaultViewer extends React.Component {
             );
         }
         return responses.map((res, i) => {
-            const {response, layerMetadata, format, queryParams} = res;
-            let infoFormat;
-            if (queryParams && queryParams.hasOwnProperty('info_format')) {
-                infoFormat = queryParams.info_format;
-            }
+            const {response, layerMetadata} = res;
+            const format = getFormatForResponse(res, this.props);
             const PageHeader = this.props.header;
             let customViewer;
             if (layerMetadata.viewer && layerMetadata.viewer.type) {
@@ -132,7 +129,11 @@ class DefaultViewer extends React.Component {
                         onPrevious={() => this.props.onPrevious()}/></span> : null
                     }
                     style={this.props.style}>
-                    <ViewerPage response={response} format={infoFormat || format && FeatureInfoUtils.INFO_FORMATS[format] || this.props.format} viewers={customViewer || this.props.viewers} layer={layerMetadata}/>
+                    <ViewerPage
+                        response={response}
+                        format={format}
+                        viewers={customViewer || this.props.viewers}
+                        layer={layerMetadata}/>
                 </Panel>
             );
         });

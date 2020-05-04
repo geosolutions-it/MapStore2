@@ -14,6 +14,7 @@ const { set } = require('../../utils/ImmutableUtils');
 
 const CoordinatesUtils = require('../../utils/CoordinatesUtils');
 const { hideMapinfoMarker, featureInfoClick, HIDE_MAPINFO_MARKER} = require('../../actions/mapInfo');
+const { createQuery } = require('../../actions/wfsquery');
 
 const {
     toggleEditMode,
@@ -96,7 +97,8 @@ const {
     replayOnTimeDimensionChange,
     hideFeatureGridOnDrawerOpenMobile,
     hideDrawerOnFeatureGridOpenMobile,
-    handleClickOnMap
+    handleClickOnMap,
+    featureGridUpdateGeometryFilter
 } = require('../featuregrid');
 const { onLocationChanged } = require('connected-react-router');
 
@@ -1908,6 +1910,29 @@ describe('featuregrid Epics', () => {
                     enabled: true
                 }]
             }
+        }, done);
+    });
+    it('featureGridUpdateFilter with geometry filter', (done) => {
+        const startActions = [createQuery(), updateFilter({
+            type: 'geometry',
+            enabled: true
+        }), updateFilter({
+            type: 'geometry',
+            enabled: true,
+            value: {}
+        })];
+        testEpic(featureGridUpdateGeometryFilter, 1, startActions, actions => {
+            expect(actions.length).toBe(1);
+            expect(actions[0].type).toBe(UPDATE_QUERY);
+            expect(actions[0].reason).toBe('geometry');
+        }, {
+            featuregrid: {
+                selectedLayer: 'layer'
+            },
+            layers: [{
+                id: 'layer',
+                name: 'layer'
+            }]
         }, done);
     });
 });

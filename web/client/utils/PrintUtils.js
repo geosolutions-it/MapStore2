@@ -13,7 +13,7 @@ const {optionsToVendorParams} = require('./VendorParamsUtils');
 const AnnotationsUtils = require("./AnnotationsUtils");
 const {colorToHexStr} = require("./ColorUtils");
 const { getFeature } = require('../api/WFS');
-
+const {generateEnvString} = require('./LayerLocalizationUtils');
 
 const {isArray, filter, find} = require('lodash');
 
@@ -232,7 +232,7 @@ const PrintUtils = {
     },
     specCreators: {
         wms: {
-            map: (layer) => ({
+            map: (layer, spec) => ({
                 "baseURL": PrintUtils.normalizeUrl(layer.url) + '?',
                 "opacity": layer.opacity || 1.0,
                 "singleTile": false,
@@ -248,7 +248,8 @@ const PrintUtils = {
                     "TRANSPARENT": true,
                     "TILED": true,
                     "EXCEPTIONS": "application/vnd.ogc.se_inimage",
-                    "scaleMethod": "accurate"
+                    "scaleMethod": "accurate",
+                    "ENV": generateEnvString(spec.env)
                 }, layer.baseParams || {}, layer.params || {}, {
                     ...optionsToVendorParams({
                         layerFilter: layer.layerFilter,
@@ -270,6 +271,7 @@ const PrintUtils = {
                                     SERVICE: "WMS",
                                     REQUEST: "GetLegendGraphic",
                                     LAYER: layer.name,
+                                    LANGUAGE: spec.language || '',
                                     STYLE: layer.style || '',
                                     SCALE: spec.scale,
                                     height: spec.iconSize,

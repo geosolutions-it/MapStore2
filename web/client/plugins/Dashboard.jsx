@@ -13,6 +13,8 @@ const { createSelector } = require('reselect');
 const { getDashboardWidgets, dependenciesSelector, getDashboardWidgetsLayout, isWidgetSelectionActive, getEditingWidget, getWidgetsDependenciesGroups } = require('../selectors/widgets');
 const { editWidget, updateWidgetProperty, deleteWidget, changeLayout, exportCSV, exportImage, selectWidget } = require('../actions/widgets');
 const { showConnectionsSelector, dashboardResource, isDashboardLoading, isBrowserMobile } = require('../selectors/dashboard');
+const { currentLocaleLanguageSelector } = require('../selectors/locale');
+const { isLocalizedLayerStylesEnabledSelector } = require('../selectors/localizedLayerStyles');
 const ContainerDimensions = require('react-container-dimensions').default;
 
 const PropTypes = require('prop-types');
@@ -29,7 +31,9 @@ const WidgetsView = compose(
             showConnectionsSelector,
             isDashboardLoading,
             isBrowserMobile,
-            (resource, widgets, layouts, dependencies, selectionActive, editingWidget, groups, showGroupColor, loading, isMobile) => ({
+            currentLocaleLanguageSelector,
+            isLocalizedLayerStylesEnabledSelector,
+            (resource, widgets, layouts, dependencies, selectionActive, editingWidget, groups, showGroupColor, loading, isMobile, currentLocaleLanguage, isLocalizedLayerStylesEnabled) => ({
                 resource,
                 loading,
                 canEdit: isMobile ? !isMobile : resource && !!resource.canEdit,
@@ -39,7 +43,8 @@ const WidgetsView = compose(
                 editingWidget,
                 widgets,
                 groups,
-                showGroupColor
+                showGroupColor,
+                language: isLocalizedLayerStylesEnabled ? currentLocaleLanguage : null
             })
         ), {
             editWidget,

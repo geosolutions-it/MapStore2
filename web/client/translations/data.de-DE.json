@@ -107,6 +107,12 @@
                 "right": "Recht",
                 "bottom": "Bottom",
                 "top": "Oben"
+            },
+            "legendOptions": {
+              "title": "Legende",
+              "legendWidth": "Breite",
+              "legendHeight": "Höhe",
+              "legendPreview": "Vorschau"
             }
         },
         "longitude": "Länge",
@@ -573,11 +579,12 @@
         "identifyRevGeocodeSubmitText": "Mehr Informationen",
         "identifyRevGeocodeCloseText": "Schliessen",
         "identifyRevGeocodeError": "Konnte nicht geocodiert werden",
+        "identifyEdit": "Bearbeiten",
         "getFeatureInfoError": {
             "title": "Ooops! Etwas ist schiefgelaufen.",
             "text": "Ein Fehler ist während dieser <b>GetFeatureInfo</b> Anfrage aufgetreten"
         },
-        "noFeatureInfo": "Es sind keine Informationen für den gewählten Punkt verfügbar",
+        "noFeatureInfo": "Zu diesem Punkt sind keine Informationen verfügbar",
         "noInfoForLayers": "Für die folgenden Ebenen gibt es keine Objekte: ",
         "history":{
             "barLabel": "Kartenverlauf",
@@ -585,6 +592,9 @@
             "redoBtnTooltip": "Gehe vorwärts"
         },
         "infoFormatLbl": "Identifiziere das Antwortformat",
+        "infoTriggerLabel": "Auslöseereignis für Identifizieren",
+        "click": "Click",
+        "hover": "Hover",
         "measureSupport": {
             "continueLine": "Klicken Sie auf, um mit dem Zeichnen der Linie fortzufahren",
             "continuePolygon": "Klicken Sie, um mit dem Zeichnen des Polygons fortzufahren",
@@ -595,6 +605,7 @@
             "MeasureLength": "Distanz messen",
             "MeasureArea": "Fläche messen",
             "MeasureBearing": "Richtung messen",
+            "MeasureTrueBearing": "Richtung (True Bearing) messen",
             "tooltip": "Länge und Fläche messen",
             "title": "Messen",
             "lengthButtonText": "Linie",
@@ -603,6 +614,7 @@
             "lengthLabel": "Länge",
             "areaLabel": "Fläche",
             "bearingLabel": "Richtung",
+            "trueBearingLabel": "Richtung (True Bearing)",
             "formula": "Formel zur Entfernungsberechnung",
             "showLabel": "Zeige Bezeichnungsetikett",
             "addAsAnnotation": "Als Anmerkung hinzufügen",
@@ -638,6 +650,7 @@
             "s_attributes": "Attribute",
             "s_sort": "Sortiere nach",
             "s_max_features": "Max. Objekte",
+            "s_max_zoom": "Max. Zoomstufe",
             "s_wfs_props_label" : "WFS-Service-Eigenschaften",
             "s_wfs_opt_props_label" : "Optionale Eigenschaften",
             "s_result_props_label": "Ergebnisanzeigeeigenschaften",
@@ -2362,6 +2375,10 @@
             "description": "Ermöglicht dem Benutzer das Aktivieren / Deaktivieren von Benutzererweiterungen",
             "title": "User Extensions"
           },
+          "UserSession": {
+            "title": "User Session",
+            "description": "Aktiviert eine automatisch gespeicherte Benutzersitzung für jeden Kontext."
+          },
           "Version": {
             "description": "Zeigt die Version von MapStore in den Karteneinstellungen an",
             "descriptionGeorchestra": "Zeigt die Version von GeOrchestra in den Karteneinstellungen an",
@@ -2681,7 +2698,9 @@
             "titleContext": "Entfernen der Benutzersitzung fehlgeschlagen",
             "defaultMessage": "Unbekannter Fehler"
           },
-          "successRemoved": "Benutzersitzung entfernt"
+          "successRemoved": "Benutzersitzung entfernt",
+          "remove": "Benutzersitzung zurücksetzen",
+          "confirmRemove": "Möchten Sie die Standardkonfiguration wirklich wiederherstellen?"
         }
     }
 }

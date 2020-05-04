@@ -50,9 +50,19 @@ class WFSOptionalProps extends React.Component {
                     </ControlLabel>
                     <Slider key="maxFeatures" start={[options.maxFeatures || 1]}
                         range={{min: 1, max: 50}}
-                        onSlide={this.updateMaxFeatures}
+                        onSlide={this.updateSliderProps.bind(null, "maxFeatures")}
                     />
-                    <Label key="maxFeatures-labeel" className="slider-label" >{options.maxFeatures || 1}</Label>
+                    <Label key="maxFeatures-label" className="slider-label" >{options.maxFeatures || 1}</Label>
+                </FormGroup>
+                <FormGroup>
+                    <ControlLabel>
+                        <Message msgId="search.s_max_zoom" />
+                    </ControlLabel>
+                    <Slider key="maxZoomLevel" start={[options.maxZoomLevel || 21]}
+                        range={{min: 1, max: 35}}
+                        onSlide={this.updateSliderProps.bind(null, "maxZoomLevel")}
+                    />
+                    <Label key="maxZoomLevel-label" className="slider-label" >{options.maxZoomLevel || 21}</Label>
                 </FormGroup>
             </form>);
     }
@@ -63,9 +73,9 @@ class WFSOptionalProps extends React.Component {
         this.props.onPropertyChange("service", assign({}, this.props.service, {options}));
     };
 
-    updateMaxFeatures = (val) => {
-        const options = assign({}, this.props.service.options, {maxFeatures: parseInt(val[0], 10)});
-        this.props.onPropertyChange("service", assign({}, this.props.service, {options}));
+    updateSliderProps = (props, val) => {
+        const options = {...this.props.service.options, [props]: parseInt(val[0], 10)};
+        this.props.onPropertyChange("service", {...this.props.service, options});
     };
 }
 

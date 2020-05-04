@@ -11,19 +11,20 @@ const assign = require('object-assign');
 class Legend extends React.Component {
     static propTypes = {
         layer: PropTypes.object,
-        legendHeigth: PropTypes.number,
+        legendHeight: PropTypes.number,
         legendWidth: PropTypes.number,
         legendOptions: PropTypes.string,
         style: PropTypes.object,
         currentZoomLvl: PropTypes.number,
         scales: PropTypes.array,
-        scaleDependent: PropTypes.bool
+        scaleDependent: PropTypes.bool,
+        language: PropTypes.string
     };
 
     static defaultProps = {
-        legendHeigth: 12,
+        legendHeight: 12,
         legendWidth: 12,
-        legendOptions: "forceLabels:on;fontSize:30",
+        legendOptions: "forceLabels:on",
         style: {maxWidth: "100%"},
         scaleDependent: true
     };
@@ -54,13 +55,14 @@ class Legend extends React.Component {
                 service: "WMS",
                 request: "GetLegendGraphic",
                 format: "image/png",
-                height: props.legendHeigth,
+                height: props.legendHeight,
                 width: props.legendWidth,
                 layer: layer.name,
                 style: layer.style || null,
                 version: layer.version || "1.3.0",
                 SLD_VERSION: "1.1.0",
-                LEGEND_OPTIONS: props.legendOptions
+                LEGEND_OPTIONS: props.legendOptions,
+                LANGUAGE: props.language
             }, layer.legendParams || {},
             SecurityUtils.addAuthenticationToSLD(cleanParams || {}, props.layer),
             cleanParams && cleanParams.SLD_BODY ? {SLD_BODY: cleanParams.SLD_BODY} : {},

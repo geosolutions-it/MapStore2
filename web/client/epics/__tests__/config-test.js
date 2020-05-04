@@ -9,6 +9,7 @@
 import expect from 'expect';
 import {head} from 'lodash';
 import { loadMapConfigAndConfigureMap, loadMapInfoEpic } from '../config';
+import {LOAD_USER_SESSION} from '../../actions/usersession';
 import {
     loadMapConfig,
     MAP_CONFIG_LOADED,
@@ -25,6 +26,7 @@ import MockAdapter from 'axios-mock-adapter';
 import axios from '../../libs/ajax';
 import configBroken from "raw-loader!../../test-resources/testConfig.broken.json.txt";
 import testConfigEPSG31468 from "raw-loader!../../test-resources/testConfigEPSG31468.json.txt";
+import ConfigUtils from "../../utils/ConfigUtils";
 
 const api = {
     getResource: () => Promise.resolve({mapId: 1234})
@@ -34,6 +36,9 @@ let mockAxios;
 describe('config epics', () => {
     describe('loadMapConfigAndConfigureMap', () => {
         beforeEach(done => {
+            ConfigUtils.setConfigProp("userSessions", {
+                enabled: false
+            });
             mockAxios = new MockAdapter(axios);
             setTimeout(done);
         });
@@ -83,6 +88,31 @@ describe('config epics', () => {
                 2,
                 [loadMapConfig('base/web/client/test-resources/testConfig.json', 1398)],
                 checkActions
+            );
+        });
+        it('load existing configuration file with mapId and usersession', (done) => {
+            ConfigUtils.setConfigProp("userSessions", {
+                enabled: true
+            });
+            mockAxios.onGet("/base/web/client/test-resources/testConfig.json").reply(() => ([ 200, {} ]));
+            mockAxios.onGet("/base/web/client/test-resources/testConfig.json").reply(() => ([ 200, {} ]));
+            const checkActions = ([a]) => {
+                expect(a).toExist();
+                expect(a.type).toBe(LOAD_USER_SESSION);
+                done();
+            };
+            testEpic(loadMapConfigAndConfigureMap,
+                1,
+                [loadMapConfig('base/web/client/test-resources/testConfig.json', 1398)],
+                checkActions,
+                {
+                    security: {
+                        user: {
+                            role: "ADMIN",
+                            name: "Saitama"
+                        }
+                    }
+                }
             );
         });
         it('does not load a missing configuration file', (done) => {

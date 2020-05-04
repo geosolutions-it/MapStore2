@@ -31,7 +31,8 @@ const assign = require('object-assign');
 const {head} = require('lodash');
 
 const {scalesSelector} = require('../selectors/map');
-const {currentLocaleSelector} = require('../selectors/locale');
+const {currentLocaleSelector, currentLocaleLanguageSelector} = require('../selectors/locale');
+const {isLocalizedLayerStylesEnabledSelector, localizedLayerStylesEnvSelector} = require('../selectors/localizedLayerStyles');
 const {mapTypeSelector} = require('../selectors/maptype');
 
 const Message = require('../components/I18N/Message');
@@ -148,7 +149,10 @@ module.exports = {
                         submitConfig: PropTypes.object,
                         previewOptions: PropTypes.object,
                         currentLocale: PropTypes.string,
-                        overrideOptions: PropTypes.object
+                        currentLocaleLanguage: PropTypes.string,
+                        overrideOptions: PropTypes.object,
+                        isLocalizedLayerStylesEnabled: PropTypes.bool,
+                        localizedLayerStylesEnv: PropTypes.object
                     };
 
                     static contextTypes = {
@@ -309,6 +313,7 @@ module.exports = {
                                             layoutSize={layout && layout.map || {width: 10, height: 10}}
                                             resolutions={MapUtils.getResolutions()}
                                             useFixedScales={this.props.useFixedScales}
+                                            env={this.props.localizedLayerStylesEnv}
                                             {...this.props.mapPreviewOptions}
                                         />
                                         {this.isBackgroundIgnored() ? <DefaultBackgroundOption label={LocaleUtils.getMessageById(this.context.messages, "print.defaultBackground")}/> : null}
@@ -395,9 +400,14 @@ module.exports = {
                     };
 
                     print = () => {
+                        // localize
+                        let pSpec = this.props.printSpec;
+                        if (this.props.isLocalizedLayerStylesEnabled) {
+                            pSpec = { ...pSpec, env: this.props.localizedLayerStylesEnv, language: this.props.currentLocaleLanguage};
+                        }
                         this.props.setPage(0);
                         this.props.onBeforePrint();
-                        this.props.preloadData(this.props.printSpec)
+                        this.props.preloadData(pSpec)
                             .then(printSpec => {
                                 const spec = this.props.getPrintSpecification(printSpec);
                                 this.props.onPrint(this.props.capabilities.createURL, { ...spec, ...this.props.overrideOptions });
@@ -419,8 +429,11 @@ module.exports = {
                     scalesSelector,
                     (state) => state.browser && (!state.browser.ie || state.browser.ie11),
                     currentLocaleSelector,
-                    mapTypeSelector
-                ], (open, capabilities, printSpec, pdfUrl, error, map, layers, scales, usePreview, currentLocale, mapType) => ({
+                    currentLocaleLanguageSelector,
+                    mapTypeSelector,
+                    isLocalizedLayerStylesEnabledSelector,
+                    localizedLayerStylesEnvSelector
+                ], (open, capabilities, printSpec, pdfUrl, error, map, layers, scales, usePreview, currentLocale, currentLocaleLanguage, mapType, isLocalizedLayerStylesEnabled, localizedLayerStylesEnv) => ({
                     open,
                     capabilities,
                     printSpec,
@@ -431,7 +444,10 @@ module.exports = {
                     scales,
                     usePreview,
                     currentLocale,
-                    mapType
+                    currentLocaleLanguage,
+                    mapType,
+                    isLocalizedLayerStylesEnabled,
+                    localizedLayerStylesEnv
                 }));
 
                 const PrintPlugin = connect(selector, {

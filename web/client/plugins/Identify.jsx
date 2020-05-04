@@ -10,16 +10,16 @@ const {Glyphicon} = require('react-bootstrap');
 const {connect} = require('react-redux');
 const { createSelector, createStructuredSelector} = require('reselect');
 const assign = require('object-assign');
-
-const {mapSelector} = require('../selectors/map');
+const {mapSelector, isMouseMoveIdentifyActiveSelector} = require('../selectors/map');
 const {layersSelector} = require('../selectors/layers');
 const { mapTypeSelector, isCesium } = require('../selectors/maptype');
 
 const { generalInfoFormatSelector, clickPointSelector, indexSelector, responsesSelector, validResponsesSelector, showEmptyMessageGFISelector, isHighlightEnabledSelector, currentFeatureSelector, currentFeatureCrsSelector } = require('../selectors/mapInfo');
+const { isEditingAllowedSelector } = require('../selectors/featuregrid');
 
 
-const { hideMapinfoMarker, showMapinfoRevGeocode, hideMapinfoRevGeocode, clearWarning, toggleMapInfoState, changeMapInfoFormat, updateCenterToMarker, closeIdentify, purgeMapInfoResults, featureInfoClick, changeFormat, toggleShowCoordinateEditor, changePage, toggleHighlightFeature} = require('../actions/mapInfo');
-const { changeMousePointer, zoomToExtent} = require('../actions/map');
+const { hideMapinfoMarker, showMapinfoRevGeocode, hideMapinfoRevGeocode, clearWarning, toggleMapInfoState, changeMapInfoFormat, updateCenterToMarker, closeIdentify, purgeMapInfoResults, featureInfoClick, changeFormat, toggleShowCoordinateEditor, changePage, toggleHighlightFeature, editLayerFeatures} = require('../actions/mapInfo');
+const { changeMousePointer, zoomToExtent, registerEventListener, unRegisterEventListener} = require('../actions/map');
 
 
 const {currentLocaleSelector} = require('../selectors/locale');
@@ -54,7 +54,9 @@ const selector = createStructuredSelector({
     formatCoord: (state) => state.mapInfo && state.mapInfo.formatCoord,
     showCoordinateEditor: (state) => state.mapInfo && state.mapInfo.showCoordinateEditor,
     showEmptyMessageGFI: state => showEmptyMessageGFISelector(state),
-    isCesium
+    isEditingAllowed: isEditingAllowedSelector,
+    isCesium,
+    floatingIdentifyEnabled: (state) => isMouseMoveIdentifyActiveSelector(state)
 });
 // result panel
 
@@ -123,6 +125,7 @@ const identifyDefaultProps = defaultProps({
     showTabs: true,
     showCoords: true,
     showLayerTitle: true,
+    showEdit: false,
     position: 'right',
     size: 660,
     getToolButtons,
@@ -190,12 +193,13 @@ const IdentifyPlugin = compose(
         hideMarker: hideMapinfoMarker,
         showRevGeocode: showMapinfoRevGeocode,
         hideRevGeocode: hideMapinfoRevGeocode,
-        onEnableCenterToMarker: updateCenterToMarker.bind(null, 'enabled')
+        onEnableCenterToMarker: updateCenterToMarker.bind(null, 'enabled'),
+        onEdit: editLayerFeatures
     }, (stateProps, dispatchProps, ownProps) => ({
         ...ownProps,
         ...stateProps,
         ...dispatchProps,
-        enabled: stateProps.enabled && (stateProps.isCesium || !ownProps.showInMapPopup)
+        enabled: stateProps.enabled && (stateProps.isCesium || !ownProps.showInMapPopup) && !stateProps.floatingIdentifyEnabled
     })),
     // highlight support
     compose(
@@ -226,6 +230,12 @@ const FeatureInfoFormatSelector = connect((state) => ({
     onInfoFormatChange: changeMapInfoFormat
 })(require("../components/misc/FeatureInfoFormatSelector").default);
 
+const FeatureInfoTriggerSelector = connect((state) => ({
+    trigger: isMouseMoveIdentifyActiveSelector(state) ? 'hover' : 'click'
+}), {
+    onTriggerChange: (event) => event.target.value === 'hover' ? registerEventListener('mousemove', 'identifyFloatingTool') : unRegisterEventListener('mousemove', 'identifyFloatingTool')
+})(require("../components/misc/FeatureInfoTriggerSelector"));
+
 module.exports = {
     IdentifyPlugin: assign(IdentifyPlugin, {
         Toolbar: {
@@ -241,10 +251,11 @@ module.exports = {
             })
         },
         Settings: {
-            tool: <FeatureInfoFormatSelector
+            tool: [<FeatureInfoFormatSelector
                 key="featureinfoformat"
                 label={<Message msgId="infoFormatLbl" />
-                }/>,
+                }/>, <FeatureInfoTriggerSelector
+                key="featureinfotrigger" />],
             position: 3
         }
     }),

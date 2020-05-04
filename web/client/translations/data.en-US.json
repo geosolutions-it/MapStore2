@@ -106,6 +106,12 @@
                 "right": "Right",
                 "bottom": "Bottom",
                 "top": "Top"
+            },
+            "legendOptions": {
+              "title": "Legend",
+              "legendWidth": "Width",
+              "legendHeight": "Height",
+              "legendPreview": "Preview"
             }
         },
         "longitude": "Longitude",
@@ -572,11 +578,12 @@
         "identifyRevGeocodeSubmitText": "More Info",
         "identifyRevGeocodeCloseText": "Close",
         "identifyRevGeocodeError": "Unable to geocode",
+        "identifyEdit": "Edit",
         "getFeatureInfoError": {
             "title": "Ooops! Something's wrong",
             "text": "An error has occurred during this <b>GetFeatureInfo</b> request"
         },
-        "noFeatureInfo": "There is no information available for the point you clicked",
+        "noFeatureInfo": "There is no information available for this point",
         "noInfoForLayers": "There are no features for the following layers: ",
         "history":{
             "barLabel": "Map history",
@@ -584,6 +591,9 @@
             "redoBtnTooltip": "Go forward"
         },
         "infoFormatLbl": "Identify response format",
+        "infoTriggerLabel": "Trigger event for Identify",
+        "click": "Click",
+        "hover": "Hover",
         "measureSupport": {
             "continueLine": "Click to continue drawing the line",
             "continuePolygon": "Click to continue drawing the polygon",
@@ -594,6 +604,7 @@
             "MeasureLength": "Measure Distance",
             "MeasureArea": "Measure Area",
             "MeasureBearing": "Measure Bearing",
+            "MeasureTrueBearing": "Measure True Bearing",
             "tooltip": "Measure length and area",
             "title": "Measure",
             "lengthButtonText": "Line",
@@ -602,6 +613,7 @@
             "lengthLabel": "Length",
             "areaLabel": "Area",
             "bearingLabel": "Bearing",
+            "trueBearingLabel": "True Bearing",
             "formula": "Formula for distance calculation",
             "showLabel": "Show measurement label",
             "addAsAnnotation": "Add as annotation",
@@ -637,6 +649,7 @@
             "s_attributes": "Attributes",
             "s_sort": "Sort by",
             "s_max_features": "Max features",
+            "s_max_zoom": "Max zoom level",
             "s_wfs_props_label" : "WFS service props",
             "s_wfs_opt_props_label" : "Optional props",
             "s_result_props_label": "Result display properties",
@@ -2366,6 +2379,10 @@
             "description": "Allows the user to enable/disable user extensions",
             "title": "User Extensions"
           },
+          "UserSession": {
+            "title": "User Session",
+            "description": "Enables an automatically saved user session for every context"
+          },
           "Version": {
             "description": "Shows the version of MapStore in map settings tool",
             "descriptionGeorchestra": "Shows the version of GeOrchestra in map settings tool",
@@ -2685,7 +2702,9 @@
             "titleContext": "User session removing failed",
             "defaultMessage": "Unknown error"
           },
-          "successRemoved": "User session removed"
+          "successRemoved": "User session removed",
+          "remove": "Reset User Session",
+          "confirmRemove": "Are you sure you want to restore the default configuration?"
         }
     }
 }

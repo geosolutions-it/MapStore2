@@ -96,6 +96,17 @@ describe('MeasureUtils', () => {
         val = getFormattedBearingValue(281.111);
         expect(val).toBe("N 78° 53' 20'' W");
     });
+    it('test true bearing getFormattedBearingValue', () => {
+        const trueBearing = {measureTrueBearing: true, fractionDigits: 0};
+        let val = getFormattedBearingValue(1.111, trueBearing);
+        expect(val).toBe("001° T");
+        val = getFormattedBearingValue(91.111, trueBearing);
+        expect(val).toBe("091° T");
+        val = getFormattedBearingValue(181.111, {...trueBearing, fractionDigits: 2});
+        expect(val).toBe("181.11° T");
+        val = getFormattedBearingValue(320.58921, {...trueBearing, fractionDigits: 4});
+        expect(val).toBe("320.5892° T");
+    });
     it('testing isValidGeometry() with all valid coords (line geom)', () => {
         const isValid = isValidGeometry(lineFeature.geometry);
         expect(isValid).toBe(true);
