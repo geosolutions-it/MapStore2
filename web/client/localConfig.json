@@ -50,6 +50,9 @@
       {"name": "browser", "path": "browser"},
       {"name": "geostorymode", "path": "geostory.mode"},
       {"name": "featuregridmode", "path": "featuregrid.mode"}],
+    "userSessions": {
+      "enabled": true
+    },
     "projectionDefs": [],
     "initialState": {
       "defaultState": {
@@ -315,7 +318,8 @@
                     "showHighlightFeatureButton": true,
                     "viewerOptions": {
                         "container": "{context.ReactSwipe}"
-                    }
+                    },
+                    "showEdit": true
                 },
                 "override": {
                   "Toolbar": {
@@ -330,7 +334,54 @@
                         "alwaysVisible": true
                     }
                 }
-            }, "Home", "FeatureEditor",
+            }, "Home",
+            {
+                "name": "FeatureEditor",
+                "cfg": {
+                    "customEditorsOptions": {
+                        "rules": [{
+                            "regex": {
+                                "attribute": "^att_integer$",
+                                "typeName": "^test:mapstore_test$"
+                            },
+                            "editor": "NumberEditor"
+                        }, {
+                            "regex": {
+                                "attribute": "^att_integer_constr$",
+                                "typeName": "^test:mapstore_test$"
+                            },
+                            "editor": "NumberEditor",
+                            "editorProps": {
+                                "maxValue": 5
+                            }
+                        }, {
+                            "regex": {
+                                "attribute": "^att_long$",
+                                "typeName": "^test:mapstore_test$"
+                            },
+                            "editor": "NumberEditor"
+                        }, {
+                            "regex": {
+                                "attribute": "^att_varchar_constr$",
+                                "typeName": "^test:mapstore_test$"
+                            },
+                            "editor": "DropDownEditor",
+                            "editorProps": {
+                                "values": ["Non renseigné", "Publicité", "Pré-enseigne", "Enseigne"]
+                            }
+                        }, {
+                            "regex": {
+                                "attribute": "^att_text_constr$",
+                                "typeName": "^test:mapstore_test$"
+                            },
+                            "editor": "DropDownEditor",
+                            "editorProps": {
+                                "values": ["non renseigné", "permanent", "temporaire"]
+                            }
+                        }]
+                    }
+                }
+            },
             "WFSDownload",
             {
               "name": "QueryPanel",
@@ -354,8 +405,10 @@
                     "activateMetedataTool": false,
                     "layerOptions": {
                       "legendOptions": {
-                        "WMSLegendOptions": "forceLabels:on;fontSize:30",
-                        "scaleDependent": true
+                        "WMSLegendOptions": "forceLabels:on",
+                        "scaleDependent": true,
+                        "legendWidth": 12,
+                        "legendHeight": 12
                       }
                     }
                 }
