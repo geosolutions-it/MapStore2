@@ -2461,6 +2461,7 @@
                 "uploadMissingPluginError": "Nessun plugin definito in index.json",
                 "uploadMissingBundleError": "Nessun bundle javascript presente nel file",
                 "uploadTooManyBundlesError": "Troppi bundle javascript contenuti nel pacchetto",
+                "uploadWrongFileFormatError": "File con formato errato, non si tratta di un file zip",
                 "confirmRemovePlugin": "Sei sicuro di voler eliminare l'estensione?",
                 "cancelUpload": "Chiudi",
                 "install": "Installa",

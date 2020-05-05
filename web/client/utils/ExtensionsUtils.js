@@ -9,6 +9,7 @@ import JSZip from 'jszip';
 import FileUtils from './FileUtils';
 
 export const ERROR = {
+    WRONG_FORMAT: 'WRONG_FORMAT',
     MISSING_INDEX: 'MISSING_INDEX',
     MALFORMED_INDEX: 'MALFORMED_INDEX',
     MISSING_PLUGIN: 'MISSING_PLUGIN',
@@ -19,7 +20,9 @@ export const ERROR = {
 export const checkZipBundle = (file) => {
     return FileUtils.readZip(file).then((buffer) => {
         var zip = new JSZip();
-        return zip.loadAsync(buffer);
+        return zip.loadAsync(buffer).catch(() => {
+            throw ERROR.WRONG_FORMAT;
+        });
     }).then((zip) => {
         if (!zip.files["index.json"]) {
             throw ERROR.MISSING_INDEX;

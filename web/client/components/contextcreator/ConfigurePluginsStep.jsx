@@ -293,6 +293,7 @@ const configurePluginsStep = ({
     messages = {}
 }) => {
     const uploadErrors = {
+        [ERROR.WRONG_FORMAT]: "contextCreator.configurePlugins.uploadWrongFileFormatError",
         [ERROR.MISSING_INDEX]: "contextCreator.configurePlugins.uploadMissingIndexError",
         [ERROR.MALFORMED_INDEX]: "contextCreator.configurePlugins.uploadParseError",
         [ERROR.MISSING_PLUGIN]: "contextCreator.configurePlugins.uploadMissingPluginError",
