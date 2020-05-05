@@ -78,7 +78,6 @@ pages:
       - Building and Deploying: 'developer-guide/building-and-deploying.md'
       - Front End Technologies: 'developer-guide/reactjs-and-redux-introduction.md'
       - Plugins architecture: 'developer-guide/plugins-architecture.md'
-
       - Internationalization: 'developer-guide/internationalization.md'
       - Custom dependencies: 'developer-guide/custom-dependencies.md'
       - Styling and theming: 'developer-guide/customize-theme.md'
@@ -99,6 +98,7 @@ pages:
       - Application Configuration: 'developer-guide/local-config.md'
       - Configuring plugins: 'developer-guide/plugins-documentation.md'
       - Map Configuration: 'developer-guide/maps-configuration.md'
+      - How to change background list: 'developer-guide/how-to-change-background-list.md'
       - Externalize Configuration: 'developer-guide/externalized-configuration.md'
     - Database Setup: 'developer-guide/database-setup.md'
     - Integrations:

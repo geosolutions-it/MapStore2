@@ -31,7 +31,8 @@ This is used for the **new map**. If you're logged in and allowed to create maps
 http://localhost:8081/#viewer/openlayers/new
 ```
 
-This is a special context that uses the `new.json` file in the root of the project. (`web/client` for standard mapstore, root for custom projects). You can edit `new.json` to customize the initial template for new maps (for instance, you can change the backgrounds).
+This is a special context that uses the `new.json` file in the root of the project. (`web/client` for standard mapstore, root for custom projects). You can edit `new.json` to customize the initial template for new maps. For instance, checkout [this guide if you want to change the backgrounds](../how-to-change-background-list).
+
 
 `new.json` and `config.json` are special cases, but you can configure your own static map context creating these json files in the root of the project, for instance `mycontext.json` and accessing them at the URL:
 
