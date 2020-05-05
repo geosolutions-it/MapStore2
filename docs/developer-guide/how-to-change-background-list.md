@@ -14,7 +14,7 @@ An important thing is that the layer group must be **"background"** and only one
 ```
 "layers": [
     ...
-    {same as above},
+    ...
 	{
 	    "type": "osm",
 		"title": "Open Street Map",
