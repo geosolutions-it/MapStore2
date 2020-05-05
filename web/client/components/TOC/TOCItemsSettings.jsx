@@ -34,6 +34,7 @@ const TOCItemSettings = (props) => {
         className = '',
         activeTab = 'general',
         currentLocale = 'en-US',
+        currentLocaleLanguage = 'en',
         width = 500,
         groups = [],
         element = {},
@@ -133,7 +134,8 @@ const TOCItemSettings = (props) => {
                         settings={settings}
                         retrieveLayerData={onRetrieveLayerData}
                         onChange={(key, value) => isObject(key) ? onUpdateParams(key, realtimeUpdate) : onUpdateParams({[key]: value}, realtimeUpdate)}
-                        isLocalizedLayerStylesEnabled={isLocalizedLayerStylesEnabled}/>
+                        isLocalizedLayerStylesEnabled={isLocalizedLayerStylesEnabled}
+                        currentLocaleLanguage={currentLocaleLanguage}/>
                 ))}
             </DockablePanel>
             <Portal>

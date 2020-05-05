@@ -114,7 +114,10 @@
               "legendHeight": "Höhe",
               "legendPreview": "Vorschau"
             },
-            "enableLocalizedLayerStyles": "Aktivieren Sie lokalisierte Ebenenstile"
+            "enableLocalizedLayerStyles": {
+                "label": "Aktivieren Sie lokalisierte Ebenenstile",
+                "tooltip": "Opmerking: deze parameter vereist specifieke configuraties op GeoServer"
+            }
         },
         "longitude": "Länge",
         "latitude": "Breite",
@@ -1249,7 +1252,10 @@
                 "errorServiceUrl": "Service nicht verfügbar. Bitte überprüfen Sie die angegebene URL"
             },
             "backgroundAlreadyAdded": "Zur Hintergrundauswahl hinzugefügt",
-            "enableLocalizedLayerStyles": "Aktivieren Sie lokalisierte Ebenenstile"
+            "enableLocalizedLayerStyles": {
+                "label": "Aktivieren Sie lokalisierte Ebenenstile",
+                "tooltip": "Opmerking: deze parameter vereist specifieke configuraties op GeoServer"
+            }
         },
         "uploader": {
             "filename": "Dateiname",

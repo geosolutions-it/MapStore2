@@ -113,7 +113,10 @@
             },
             "templateFormatInfoAlertExample": "La identificación de la característica es ${ properties }",
             "templatePreview": "Vista previa de la plantilla",
-            "enableLocalizedLayerStyles": "Habilitar estilos de capa localizados"
+            "enableLocalizedLayerStyles": {
+                "label": "Habilitar estilos de capa localizados",
+                "tooltip": "Nota: este parámetro requiere configuraciones específicas en GeoServer"
+            }
         },
         "longitude": "Longitud",
         "latitude": "Latitud",
@@ -1249,7 +1252,10 @@
                 "errorServiceUrl": "Servicio no disponible. Por favor, compruebe la url proporcionada"
             },
             "backgroundAlreadyAdded": "Agregado al selector de fondo",
-            "enableLocalizedLayerStyles": "Habilitar estilos de capa localizados"
+            "enableLocalizedLayerStyles": {
+                "label": "Habilitar estilos de capa localizados",
+                "tooltip": "Nota: este parámetro requiere configuraciones específicas en GeoServer"
+            }
         },
         "uploader": {
             "filename": "Nombre del fichero",

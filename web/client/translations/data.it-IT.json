@@ -113,7 +113,10 @@
               "legendHeight": "Altezza",
               "legendPreview": "Anteprima"
             },
-            "enableLocalizedLayerStyles": "Abilita stili di livello localizzati"
+            "enableLocalizedLayerStyles": {
+                "label": "Abilita stili di livello localizzati",
+                "tooltip": "Nota: questo parametro richiede configurazioni specifiche su GeoServer"
+            }
         },
         "longitude": "Longitudine",
         "latitude": "Latitudine",
@@ -1249,7 +1252,10 @@
                 "errorServiceUrl": "Servizio non disponibile. Verifica l'url inserito."
             },
             "backgroundAlreadyAdded": "Aggiunto al selettore di sfondo",
-            "enableLocalizedLayerStyles": "Abilita stili di livello localizzati"
+            "enableLocalizedLayerStyles": {
+                "label": "Abilita stili di livello localizzati",
+                "tooltip": "Nota: questo parametro richiede configurazioni specifiche su GeoServer"
+            }
         },
         "uploader": {
             "filename": "File Name",

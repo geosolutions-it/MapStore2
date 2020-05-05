@@ -113,7 +113,10 @@
               "legendHeight": "Hauteur",
               "legendPreview": "Aperçu"
             },
-            "enableLocalizedLayerStyles": "Activer les styles de calques localisés"
+            "enableLocalizedLayerStyles": {
+                "label": "Activer les styles de calques localisés",
+                "tooltip": "Remarque: ce paramètre nécessite des configurations spécifiques sur GeoServer"
+            }
         },
         "longitude": "Longitude",
         "latitude": "Latitude",

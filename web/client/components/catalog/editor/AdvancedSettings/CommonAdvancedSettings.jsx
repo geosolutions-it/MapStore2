@@ -8,9 +8,10 @@
 import React from 'react';
 import { isNil } from 'lodash';
 import ReactQuill from "react-quill";
+import { FormGroup, Checkbox, Col } from "react-bootstrap";
 
 import Message from "../../../I18N/Message";
-import { FormGroup, Checkbox, Col } from "react-bootstrap";
+import InfoPopover from '../../../widgets/widget/InfoPopover';
 
 /**
  * Common Advanced settings form, used by WMS/CSW/WMTS
@@ -47,7 +48,7 @@ export default ({
                 <Checkbox data-qa="service-lacalized-layer-styles-option"
                     onChange={(e) => onChangeServiceProperty("localizedLayerStyles", e.target.checked)}
                     checked={!isNil(service.localizedLayerStyles) ? service.localizedLayerStyles : false}>
-                    <Message msgId="catalog.enableLocalizedLayerStyles" />
+                    <Message msgId="catalog.enableLocalizedLayerStyles.label" />&nbsp;<InfoPopover text={<Message msgId="catalog.enableLocalizedLayerStyles.tooltip" />} />
                 </Checkbox>
             </Col>
         </FormGroup>)}

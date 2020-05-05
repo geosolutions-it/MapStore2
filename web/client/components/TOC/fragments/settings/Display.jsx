@@ -13,6 +13,7 @@ const Message = require('../../../I18N/Message');
 const {Grid, Row, Col, FormGroup, ControlLabel, FormControl, Checkbox} = require('react-bootstrap');
 const {clamp, isNil, isNumber} = require('lodash');
 const Legend = require('../legend/Legend');
+const InfoPopover = require('../../../widgets/widget/InfoPopover');
 
 require('react-widgets/lib/less/react-widgets.less');
 
@@ -188,7 +189,7 @@ module.exports = class extends React.Component {
                                     data-qa="display-lacalized-layer-styles-option"
                                     checked={this.props.element && (this.props.element.localizedLayerStyles !== undefined ? this.props.element.localizedLayerStyles : false )}
                                     onChange={(e) => this.props.onChange("localizedLayerStyles", e.target.checked)}>
-                                    <Message msgId="layerProperties.enableLocalizedLayerStyles" />
+                                    <Message msgId="layerProperties.enableLocalizedLayerStyles.label" />&nbsp;<InfoPopover text={<Message msgId="layerProperties.enableLocalizedLayerStyles.tooltip" />} />
                                 </Checkbox>))}
                         </FormGroup>
                     </Col>
@@ -236,6 +237,8 @@ module.exports = class extends React.Component {
                                         this.useLegendOptions() && this.state.legendOptions.legendHeight || undefined}
                                     legendWidth={
                                         this.useLegendOptions() && this.state.legendOptions.legendWidth || undefined}
+                                    language={
+                                        this.props.isLocalizedLayerStylesEnabled ? this.props.currentLocaleLanguage : undefined}
                                 />
                             </div>
                         </Col>
