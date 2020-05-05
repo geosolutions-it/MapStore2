@@ -13,7 +13,7 @@ An important thing is that the layer group must be **"background"** and only one
 
 ```
 "layers": [
-    {this can be another background layer or a layer that is stored in TOC},
+    ...
     {same as above},
 	{
 	    "type": "osm",
