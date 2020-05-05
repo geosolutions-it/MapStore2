@@ -13,15 +13,13 @@ An important thing is that the layer group must be **"background"** and only one
 
 ```
 "layers": [
-    ...
-    ...
 	{
-	    "type": "osm",
-		"title": "Open Street Map",
-		"name": "mapnik",
+        "type": "osm",
+        "title": "Open Street Map",
+        "name": "mapnik",
         "source": "osm",
-		"group": "background", <--- see here
-        "visibility": true     <--- only this one is visible by default
+        "group": "background",
+        "visibility": true
 	},
     {
         "type": "tileprovider",
@@ -29,8 +27,8 @@ An important thing is that the layer group must be **"background"** and only one
         "provider": "NASAGIBS.ViirsEarthAtNight2012",
         "name": "Night2012",
         "source": "nasagibs",
-        "group": "background",  <--- see here
-        "visibility": false     <--- see here
+        "group": "background",
+        "visibility": false
       }
 ]
 ```
