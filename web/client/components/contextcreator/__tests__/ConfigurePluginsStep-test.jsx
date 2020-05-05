@@ -202,4 +202,21 @@ describe('ConfigurePluginsStep component', () => {
         TestUtils.Simulate.click(confirmButton);
         expect(spy).toHaveBeenCalled();
     });
+    it('ConfigurePluginsStep description tooltip', () => {
+        const plugins = [{
+            name: "TestPlugin",
+            title: "TestPlugin"
+        }];
+
+        ReactDOM.render(<ConfigurePluginsStep descriptionTooltipDelay={0} allPlugins={plugins}/>,
+            document.getElementById("container"));
+        const descSpan = document.querySelector('.mapstore-side-card-desc > span');
+        expect(descSpan).toExist();
+
+        TestUtils.Simulate.focus(descSpan);
+
+        const tooltip = document.getElementById('TestPlugin');
+        expect(tooltip).toExist();
+        expect(tooltip.getAttribute('role')).toBe('tooltip');
+    });
 });

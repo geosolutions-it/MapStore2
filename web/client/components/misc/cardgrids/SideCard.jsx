@@ -8,6 +8,7 @@
 
 
 const React = require('react');
+const { isObject } = require('lodash');
 
 const Loader = require('../Loader');
 
@@ -80,7 +81,7 @@ module.exports = ({
                                 <span>{title}</span>
                             </div>}
                             {description && <div className="mapstore-side-card-desc">
-                                <span>{description}</span>
+                                {isObject(description) ? description : <span>{description}</span>}
                             </div>}
                             {caption && <div className="mapstore-side-card-caption">
                                 <span>{caption}</span>
