@@ -82,13 +82,9 @@ Clone the repository:
 
 `git clone https://github.com/geosolutions-it/MapStore2.git`
 
-Install latest NodeJS, if needed, from <a href="https://nodejs.org/en/download/releases/" target="_blank">here</a>.
-- recommended versions: NodeJS >= 12, npm >= 6
-- minimal versions:     NodeJS >= 10, npm >= 5
-- deprecated versions:  NodeJS <10
+Install NodeJS and npm (npm it will come with NodeJS)
 
-If you are using Node >= 12 you can remove the -max_old_space_size=2048 config for the compile *script*
-
+Checkout <a href="https://mapstore.readthedocs.io/en/latest/developer-guide/requirements/" target="_blank">here</a> what are the recommended versions of NodeJS and npm
 
 Install docma to build the documentation
 
