@@ -714,7 +714,7 @@ This is the typical fields of a vector layer
 
 The `style` or `styleName` properties of vector layers (wfs, vector...) allow to apply a style to the local data on the map.
 
-- `style`: a style object/array. It can have different format. In the simplest case thus is an object that uses some leaflet-like style properties:
+- `style`: a style object/array. It can have different formats. In the simplest case it is an object that uses some leaflet-like style properties:
   - `weight`: width in pixel of the border / line.
   - `radius`: radius of the circle (valid only for Point types)
   - `opacity`: opacity of the border / line.
