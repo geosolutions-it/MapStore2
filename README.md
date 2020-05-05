@@ -66,7 +66,6 @@ MapStore is Free and Open Source software, it is based on OpenLayers, Leaflet an
 Demo Instances
 ---------------
 We have the following instances:
-<a href="" target="_blank"></a>
 
 1. a DEV instance, which can be accessed <a href="http://dev.mapstore.geo-solutions.it" target="_blank">here</a>, where all the changes are deployed once they are published on the Master branch of our repo
 2. a QA instance, which can be accessed  <a href="http://qa.mapstore.geo-solutions.it" target="_blank">here</a>, that becomes active 1 week before any release, during the hardening phase, and deploys the release branch whenever a fix is pushed onto it.
