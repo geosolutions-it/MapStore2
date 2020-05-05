@@ -186,6 +186,27 @@ When the user saves this custom catalog service and clicks on search, he will se
 <img src="../img/catalog/custom_tms_browse.jpg" class="ms-docimage"  style="max-width:400px;"/>
 <p class="ms-doc-caption">Browse custom TMS service. It contains only one result</p>
 
+*Sample custom*
+```
+url: https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png
+```
+
+*Sample custom with advanced options*
+```
+url: https://nls-{s}.tileserver.com/nls/{z}/{x}/{y}.jpg    
+```
+```
+{
+  "options": {
+    "subdomains": [
+      "0",
+      "1",
+      "2",
+      "3"
+    ]
+  }
+}
+```
 #### TMS 1.0.0
 
 Selecting the "TMS 1.0.0" provider the user can insert the URL of the Tile Map Service (see [TMS Specification](https://wiki.osgeo.org/wiki/Tile_Map_Service_Specification)). For instance, in GeoServer, it is the URL of the "TMS" link in the home page.
@@ -201,6 +222,13 @@ When saved this, the user will be allowed to browse and add to the map the TMS l
 <img src="../img/catalog/tms100_browse.jpg" class="ms-docimage"  style="max-width:400px;"/>
 <p class="ms-doc-caption">Browse TMS 1.0.0 layers</p>
 
+*sample TMS 1.0.0 services*
+
+```
+https://public.sig.rennesmetropole.fr/geowebcache/service/tms/1.0.0
+https://osm.geobretagne.fr/gwc01/service/tms/1.0.0
+http://gs-stable.geo-solutions.it/geoserver/gwc/service/tms/1.0.0
+```
 #### TMS Known Services
 
 The other known services are listed as providers below "custom" and "TMS 1.0.0". They are a static list configured inside the application. Selecting one of the provider listed and saving the new catalog service allows to browse al the variants known for that service. For more information about the list of available providers, see the developer documentation about [Tile Providers](../../developer-guide/maps-configuration/#tileprovider)
