@@ -5,7 +5,7 @@ In order to edit the background list of the new map configuration you have to:
 - open **new.json** file
 - edit the **layers** property
 
-You can add new background layer by adding a new entry in the layers list (array).
+You can add a new background layer by adding an entry in the layers list (array).
 
 The important thing is the layer group must be **"background"** and only one *background* layer must have visibility set to `true`
 
