@@ -636,14 +636,14 @@
             "lengthLabel": "Lunghezza",
             "areaLabel": "Area",
             "bearingLabel": "Direzione",
-            "trueBearingLabel": "Vera Direzione",
+            "trueBearingLabel": "Direzione (ISO true bearing)",
             "formula": "Formula per il calcolo della distanza",
-            "showLabel": "Mostra etichetta di misurazione",
+            "showLabel": "Mostra etichette di misurazione",
             "addAsAnnotation": "Aggiungi come annotazione",
             "newMeasure": "Nuova annotazione",
             "selectTool": "Seleziona uno strumento di misura",
             "exportToGeoJSON": "Esporta in GeoJSON",
-            "resetTooltip": "Misure chiare",
+            "resetTooltip": "Rimuovi Misurazioni",
             "addAsLayer": "Aggiungi come livello"
         },
         "search":{
