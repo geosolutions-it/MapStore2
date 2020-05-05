@@ -478,14 +478,37 @@
                 "identifier": "Identifiant",
                 "title": "Titre",
                 "abstract": "Résumé",
+                "purpose": "Objectif",
+                "source": "La source",
+                "createdDate": "Date de création",
+                "lastRevisionDate": "Date de dernière révision",
+                "pointsOfContact": "Points de contact",
+                "individualName": "Nom individuel",
+                "organisationName": "Nom de l'organisme",
+                "contactInfo": "Coordonnées",
+                "phone": "Numéro de téléphone",
+                "deliveryPoints": "Points de livraison",
+                "city": "Ville",
+                "postalCode": "Code postal",
+                "country": "Pays",
+                "URL": "URL",
+                "role": "Rôle",
+                "hoursOfService": "Heures de service",
+                "electronicMailAddress": "Adresse électronique",
                 "subject": "Sujet",
                 "type": "Type",
                 "creator": "Créateur",
+                "defaultPropName": "Propriété=\"{propName}\"",
                 "toolLayerMetadataTooltip": "Afficher les métadonnées de la couche sélectionnée",
                 "layerMetadataPanelTitle": "Métadonnées de couche",
                 "notification": {
                     "warnigGetMetadataRecordById": "Erreur dans la recherche de métadonnées"
-                }
+                },
+                "itemTitles": {
+                    "pointsOfContact": "Contact",
+                    "default": "Article"
+                },
+                "emptyMetadata": "Aucune métadonnée disponible"
             },
             "thematic": {
                 "classification_field": "Champ de classification:",

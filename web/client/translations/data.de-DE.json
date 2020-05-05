@@ -480,14 +480,37 @@
                 "identifier": "Kennung",
                 "title": "Titel",
                 "abstract": "Zusammenfassung",
+                "purpose": "Zweck",
+                "source": "Quelle",
+                "createdDate": "Erstellungsdatum",
+                "lastRevisionDate": "Datum der letzten Überarbeitung",
+                "pointsOfContact": "Ansprechpartner",
+                "individualName": "Individueller Name",
+                "organisationName": "Name der Organisation",
+                "contactInfo": "Kontaktinformationen",
+                "phone": "Telefonnummer",
+                "deliveryPoints": "Lieferpunkte",
+                "city": "Stadt",
+                "postalCode": "Postleitzahl",
+                "country": "Land",
+                "URL": "URL",
+                "role": "Rolle",
+                "hoursOfService": "Öffnungszeiten",
+                "electronicMailAddress": "E-Mail-Addresse",
                 "subject": "Betreff",
                 "type": "Typ",
                 "creator": "Ersteller",
+                "defaultPropName": "Eigentum=\"{propName}\"",
                 "toolLayerMetadataTooltip": "Zeigen Sie die Metadaten der ausgewählten Ebene an",
                 "layerMetadataPanelTitle": "Ebenenmetadaten",
                 "notification": {
                     "warnigGetMetadataRecordById": "Fehler bei der Metadatensuche"
-                }
+                },
+                "itemTitles": {
+                    "pointsOfContact": "Kontakt",
+                    "default": "Artikel"
+                },
+                "emptyMetadata": "Keine Metadaten verfügbar"
             },
             "thematic": {
                 "classification_field": "Klassifizierungsfeld:",
