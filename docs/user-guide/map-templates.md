@@ -1,7 +1,7 @@
 # Map Templates
 *******************
 
-This extension allows to browse **Map Templates** in a MapStore's viewer. Supported Map Templates formats in MapStore are [WMC](https://mapstore.readthedocs.io/en/latest/developer-guide/maps-configuration/#web-map-context) and [MapStore's native JSON](https://mapstore.readthedocs.io/en/latest/developer-guide/maps-configuration/#map-options). The <img src="../img/button/map-templates-button.jpg" class="ms-docbutton"/> button, present in *Burger Menu* <img src="../img/button/burger.jpg" class="ms-docbutton" />, provide to the user the list of the available templates. 
+This extension allows to browse **Map Templates** in a MapStore's viewer. Supported Map Templates formats in MapStore are [WMC](https://mapstore.readthedocs.io/en/latest/developer-guide/maps-configuration/#web-map-context) and [MapStore's native JSON](https://mapstore.readthedocs.io/en/latest/developer-guide/maps-configuration/#map-options). The <img src="../img/button/map-templates-button.jpg" class="ms-docbutton"/> button, present in *Burger Menu* <img src="../img/button/burger.jpg" class="ms-docbutton" />, provides to the user the list of the available templates. 
 
 <img src="../img/map-templates/map-templates-panel.jpg" class="ms-docimage"/>
 

@@ -24,7 +24,7 @@ This first step allows to configure the **Name** and the **Window title** of the
 <img src="../img/application-context/stepone.jpg" class="ms-docimage"/>
 
 !!! warning
-    The name and the window title are both mandatory fields. Nothe that it is not allowed to choose a name that has already been assigned to another MapStore's resource (like maps, dashboards, stories): a warning message appears in this case to notify the user.
+    The name and the window title are both mandatory fields. Note that it is not allowed to choose a name that has already been assigned to another MapStore's resource (like maps, dashboards, stories): a warning message appears in this case to notify the user.
 
 !!! note
     The **Window title** is the name of the browser window.
@@ -58,11 +58,11 @@ An example of a context viewer with a new background and a layer, added to the m
 ## Configure Plugins
 
 This wizard step allows to select the extensions that will be available in the context viewer: the user of a context will use only the plugins enabled by the administrator.
-Within this wizard step, all the available plugins in MapStore are available in the left side list ready to be selected for the context . The right side list contains the list of plugins selected by the administrator for the context.
+Within this wizard step, all the available plugins in MapStore are present in the left side list ready to be selected for the context . The right side list contains the list of plugins selected by the administrator for the context.
 
 <img src="../img/application-context/stepthree.jpg" class="ms-docimage" style="max-width:500px;"/> 
 
-Through the central vertical bar the administrator can select the plugins to include in the context viewer by moving the plugins from the **Available Plugins**  list to the **Enabled Plugins** list.
+Through the central vertical bar the administrator can select the plugins to include in the context viewer by moving them from the **Available Plugins**  list to the **Enabled Plugins** list.
 
 <img src="../img/application-context/stepthree-bar.jpg" class="ms-docimage" style="max-width:500px;"/>
 
@@ -86,7 +86,6 @@ The MapStore administrator can also install a custom plugin by using the **Add e
 
 Here the admin, in order to upload the plugin's package, can drag and drop it inside the import screen or select it from the folders of the local machine through the <img src="../img/button/select-files.jpg" class="ms-docbutton"/> button.
 
-
 !!! warning
     
     A plugins package must be provided as .zip archives that contains:
@@ -95,6 +94,8 @@ Here the admin, in order to upload the plugin's package, can drag and drop it in
 
     * A plugin file with the extension code in `JavaScript`
 
+    * All mandatory translations files in MapStore.
+    
 Through the **Add** button <img src="../img/button/add_group_confirm_button.jpg" class="ms-docbutton"/> the plugin is inserted in the *Available Plugins* list. 
 
 <img src="../img/application-context/upload_plugin1.jpg" class="ms-docimage" style="max-width:500px;"/>
@@ -120,3 +121,5 @@ In the *Enabled Plugins* list, the following buttons are displayed for each exte
 <img src="../img/application-context/plugin-config.jpg" class="ms-docimage" style="max-width:300px;"/>
 
 * The **Open plugin configuration documentation** button <img src="../img/button/docu-plugin.jpg" class="ms-docbutton"/> opens the [Plugins Documentation](https://mapstore.geo-solutions.it/mapstore/docs/api/plugins#plugins) in another page.
+
+

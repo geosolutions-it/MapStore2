@@ -1,7 +1,7 @@
 # Managing Contexts
 *******************
 
-On [MapStore](https://mapstore.geo-solutions.it/mapstore/#/) the **Application Context Manager** is an administrative tool designed to build and configure MapStore's viewers: the administrator is able to configure a custom MapStore viewer by choosing:
+In [MapStore](https://mapstore.geo-solutions.it/mapstore/#/) the **Application Context Manager** is an administrative tool designed to build and configure MapStore's viewers: the administrator is able to configure a custom MapStore viewer by choosing:
 
 * The name of the context (the viewer will have its own specific URL)
 * The default map configuration and map contents (like layers, backgrounds, catalogs, CRSs etc)
