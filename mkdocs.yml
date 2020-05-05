@@ -69,6 +69,7 @@ pages:
       - Adding widgets: 'user-guide/adding-widgets.md'
       - Connecting widgets: 'user-guide/connecting-widgets.md'
   - Developer Guide:
+    - Requirements: 'developer-guide/requirements.md'
     - Quick Setup and Run: 'developer-guide/index.md'
     - Infrastructure: 'developer-guide/infrastructure-and-general-architecture.md'
     - Developing with MapStore:
