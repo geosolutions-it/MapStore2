@@ -205,7 +205,7 @@ const PrintUtils = {
                     "TILED": true,
                     "EXCEPTIONS": "application/vnd.ogc.se_inimage",
                     "scaleMethod": "accurate",
-                    "ENV": spec.env && spec.env.length ? generateEnvString(spec.env) : ''
+                    "ENV": generateEnvString(spec.env)
                 }, layer.baseParams || {}, layer.params || {}, {
                     ...optionsToVendorParams({
                         layerFilter: layer.layerFilter,
