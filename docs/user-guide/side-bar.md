@@ -92,13 +92,13 @@ An example of search with `Aeronautical` coordinates as follows:
 
 ### Identify Tool with more than one layer
 
-On a map it is possible to have several overlapping layers. With the *Identify* tool the user can have information on one layer or on all overlapping layers in the same time.
+On a map it is possible to have several overlapping layers. With the *Identify* tool the user can retrieve information on one or more overlapping layers at the same time.
 
-If the user had the information of all the layers present on the map, he can click on the layers in the map and the identify panel opens. The panel contains a sheet with the layer's information. The user can navigate different layers information through the **Next** button <img src="../img/button/next.jpg" class="ms-docbutton"/> and **Previous** button <img src="../img/button/style_editor_back_button.jpg" class="ms-docbutton"/> in the top right corner of the panel. 
+If the user clicks on the map where one or more overlapping layers are present, the identify panel opens. The panel provides the layers information, therefore the user can navigate different layers information through the **Next** button <img src="../img/button/next.jpg" class="ms-docbutton"/> and **Previous** button <img src="../img/button/style_editor_back_button.jpg" class="ms-docbutton"/> present in the top right corner of the Identify panel.
 
 <img src="../img/side-bar/layers.jpg" class="ms-docimage"/>
 
-In order to have information about one layer only the user can select the layer on the [Table of Contents](toc.md), through the *TOC* button <img src="../img/button/show-layers.jpg" class="ms-docbutton"/>, and clicking on the layer in the map, the identify panel opens containing the layer information corresponding to the clicked point in the map, as follows:
+In order to have information about one layer only the user can select the layer on the [Table of Contents](toc.md), through the *TOC* button <img src="../img/button/show-layers.jpg" class="ms-docbutton"/>, and then click on the layer in the map to perform the identify operation only for that selected layer in TOC. The identify panel opens containing the layer information corresponding to the clicked point in the map, as follows:
 
 <img src="../img/side-bar/layer.gif" class="ms-docimage"/>
 
