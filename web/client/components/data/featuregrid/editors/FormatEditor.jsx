@@ -9,6 +9,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
+/**
+ * @memberof components.data.featuregrid.editors
+ * @name FormatEditor
+ * @class
+ * @prop {string} editorProps.formatRegex regular expression that a value must match to be considered valid
+ */
 export default class FormatEditor extends React.Component {
     static propTypes = {
         value: PropTypes.string,

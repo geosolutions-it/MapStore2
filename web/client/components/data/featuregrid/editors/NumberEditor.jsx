@@ -15,6 +15,13 @@ const parsers = {
     "number": v => parseFloat(v, 10)
 };
 
+/**
+ * @memberof components.data.featuregrid.editors
+ * @name NumberEditor
+ * @class
+ * @prop {number} editorProps.minValue the lower boundary of valid numbers
+ * @prop {number} editorProps.maxValue the upper boundary of valid numbers
+ */
 export default class NumberEditor extends React.Component {
     static propTypes = {
         value: PropTypes.oneOfType([

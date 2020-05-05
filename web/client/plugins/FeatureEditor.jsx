@@ -45,7 +45,8 @@ const Dock = connect(createSelector(
   * @name FeatureEditor
   * @memberof plugins
   * @class
-  * @prop {object} cfg.customEditorsOptions Set of options used to connect the custom editors to the featuregrid
+  * @prop {object} cfg.customEditorsOptions Set of options used to connect the custom editors to the featuregrid.
+  * For more information about custom editors, see {@link api/framework#components.data.featuregrid.Editors}
   * @prop {object} cfg.editingAllowedRoles array of user roles allowed to enter in edit mode
   * @prop {boolean} cfg.virtualScroll default true. Activates virtualScroll. When false the grid uses normal pagination
   * @prop {number} cfg.maxStoredPages default 5. In virtual Scroll mode determines the size of the loaded pages cache
