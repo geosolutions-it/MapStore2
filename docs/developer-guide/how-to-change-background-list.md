@@ -7,7 +7,7 @@ In order to edit the background list of the new map configuration you have to:
 
 You can add a new background layer by adding an entry in the layers list (array).
 
-The important thing is the layer group must be **"background"** and only one *background* layer must have visibility set to `true`
+An important thing is that the layer group must be **"background"** and only one *background* layer must have visibility set to `true`
 
 [Here](../maps-configuration/#layers-options) you can find more info on how a layer can be configured.
 
