@@ -28,6 +28,10 @@ const getGeomType = function(layer) {
     return layer.features && layer.features[0] && layer.features[0].geometry ? layer.features[0].geometry.type :
         layer.features && layer.features[0].features && layer.features[0].style && layer.features[0].style.type ? layer.features[0].style.type : undefined;
 };
+
+const isAnnotationLayer = (layer) => {
+    return layer.id === "annotations" || layer.isAnnotation;
+};
 /**
  * Utilities for Print
  * @memberof utils
@@ -302,7 +306,7 @@ const PrintUtils = {
                 },
                 geoJson: CoordinatesUtils.reprojectGeoJson({
                     type: "FeatureCollection",
-                    features: layer.id === "annotations" && AnnotationsUtils.annotationsToPrint(layer.features) ||
+                    features: isAnnotationLayer(layer) && AnnotationsUtils.annotationsToPrint(layer.features) ||
                                     layer.features.map( f => ({...f, properties: {...f.properties, ms_style: f && f.geometry && f.geometry.type && f.geometry.type.replace("Multi", "") || 1}}))
                 },
                 "EPSG:4326",
