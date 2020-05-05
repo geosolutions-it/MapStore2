@@ -10,6 +10,7 @@ var expect = require('expect');
 var React = require('react');
 var ReactDOM = require('react-dom');
 var SearchBar = require('../SearchBar').default;
+const {defaultCoordinateFormatSelector} = require("../../../../selectors/config");
 
 const TestUtils = require('react-dom/test-utils');
 
@@ -292,5 +293,24 @@ describe("test the SearchBar", () => {
         expect(reset).toExist();
         expect(cog.length).toBe(0);
         expect(zoom.length).toBe(0);
+    });
+
+    it('test default coordinate format from localConfig', () => {
+        const state = {localConfig: {defaultCoordinateFormat: "aeronautical"}};
+        const defaultFormat = defaultCoordinateFormatSelector(state);
+        let format;
+        ReactDOM.render(
+            <SearchBar
+                format={format || defaultFormat || "decimal"}
+                activeSearchTool="coordinatesSearch"
+                showOptions
+                searchText={"va"}
+                delay={0}
+                typeAhead={false} />, document.getElementById("container"));
+        let inputs = document.getElementsByTagName("input");
+        expect(inputs.length).toBe(6);
+        expect(inputs[0].placeholder).toBe('d');
+        expect(inputs[1].placeholder).toBe('m');
+        expect(inputs[2].placeholder).toBe('s');
     });
 });

@@ -13,6 +13,9 @@ const dragDropContext = require('react-dnd').DragDropContext;
 const testBackend = require('react-dnd-test-backend');
 const CoordinatesEditor = dragDropContext(testBackend)(require('../CoordinatesEditor'));
 const TestUtils = require('react-dom/test-utils');
+import {
+    defaultCoordinateFormatSelector
+} from '../../../../selectors/config';
 
 const testHandlers = {
     onChange: () => {},
@@ -43,10 +46,12 @@ describe("test the CoordinatesEditor Panel", () => {
     });
 
     it('CoordinatesEditor as marker editor with base input coordinates', () => {
-        const editor = ReactDOM.render(
+        const state = {localConfig: {defaultCoordinateFormat: "aeronautical"}};
+        const defaultFormat = defaultCoordinateFormatSelector(state);
+        let editor = ReactDOM.render(
             <CoordinatesEditor
                 type="Point"
-                format="decimal"
+                format= {"decimal" || defaultFormat}
                 components={[{
                     lat: "",
                     lon: ""
@@ -64,11 +69,30 @@ describe("test the CoordinatesEditor Panel", () => {
         const exclamationMark = TestUtils.findRenderedDOMComponentWithClass(editor, "glyphicon-exclamation-mark");
         expect(exclamationMark).toExist();
 
-        const format = TestUtils.findRenderedDOMComponentWithClass(editor, "glyphicon-cog");
-        expect(format).toExist();
+        const formatBtn = TestUtils.findRenderedDOMComponentWithClass(editor, "glyphicon-cog");
+        expect(formatBtn).toExist();
 
         const plus = TestUtils.scryRenderedDOMComponentsWithClass(editor, "glyphicon-plus");
         expect(plus.length).toBe(0);
+
+        // Default format from localConfig
+        let format;
+        editor = ReactDOM.render(
+            <CoordinatesEditor
+                type="Point"
+                format= {format || defaultFormat || "decimal"}
+                components={[{
+                    lat: "",
+                    lon: ""
+                }]}
+            />, document.getElementById("container")
+        );
+        expect(editor).toExist();
+        const inputs = TestUtils.scryRenderedDOMComponentsWithTag(editor, "input");
+        expect(inputs.length).toBe(6);
+        expect(inputs[0].placeholder).toBe("d");
+        expect(inputs[1].placeholder).toBe("m");
+        expect(inputs[2].placeholder).toBe("s");
     });
 
     it('CoordinatesEditor update coordinates when coordinates props changes', () => {

@@ -8,7 +8,15 @@
 
 const loadAfterThemeSelector = (state) => state.localConfig && state.localConfig.loadAfterTheme;
 
+/**
+ * Returns the default coordinate format for coordinate editor
+ * @param {object} state the state
+ * @returns {number} the format as string
+ */
+const defaultCoordinateFormatSelector = (state) => state.localConfig && state.localConfig.defaultCoordinateFormat;
+
 
 module.exports = {
-    loadAfterThemeSelector
+    loadAfterThemeSelector,
+    defaultCoordinateFormatSelector
 };

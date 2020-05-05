@@ -36,18 +36,20 @@ const {
 const {
     removeAdditionalLayer
 } = require("../actions/additionallayers");
+const { defaultCoordinateFormatSelector } = require("../selectors/config");
 
 const searchSelector = createSelector([
     state => state.search || null,
-    state => state .controls && state.controls.searchservicesconfig || null
-], (searchState, searchservicesconfigControl) => ({
+    state => state .controls && state.controls.searchservicesconfig || null,
+    state => defaultCoordinateFormatSelector(state)
+], (searchState, searchservicesconfigControl, defaultCoordinateFormat) => ({
     enabledSearchServicesConfig: searchservicesconfigControl && searchservicesconfigControl.enabled || false,
     error: searchState && searchState.error,
     coordinate: searchState && searchState.coordinate || {},
     loading: searchState && searchState.loading,
     searchText: searchState ? searchState.searchText : "",
     activeSearchTool: get(searchState, "activeSearchTool", "addressSearch"),
-    format: get(searchState, "format", "decimal"),
+    format: get(searchState, "format") || defaultCoordinateFormat,
     selectedItems: searchState && searchState.selectedItems
 }));
 
