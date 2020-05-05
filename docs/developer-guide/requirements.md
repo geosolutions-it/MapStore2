@@ -1,6 +1,12 @@
 # Requirements
 In this section you can have a glance of the minimum and recommended versions of the tools needed to build/debug/install MapStore
 
+## War Installation
+
+You can download a java web container like Apache Tomcat from [here](https://tomcat.apache.org/download-70.cgi) and install it.
+
+You will also need a Java [JRE](https://www.java.com/it/download/)(minimum version: 8)
+
 ## Debug / Build
 
 These tools needs to be installed:
@@ -15,9 +21,3 @@ These tools needs to be installed:
 Python is only needed for building documentation.
 
 If you are using Node >= 12 you can remove the -max_old_space_size=2048 config for the compile *script*
-
-## War Installation
-
-You can download a java web container like Apache Tomcat from [here](https://tomcat.apache.org/download-70.cgi) and install it.
-
-You will also need a Java [JRE](https://www.java.com/it/download/)(minimum version: 8)
