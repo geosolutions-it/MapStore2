@@ -155,6 +155,7 @@ module.exports = {
     changePrintZoomLevel,
     changeMapPrintPreview,
     printSubmit,
+    printError,
     printSubmitting,
     printCancel
 };

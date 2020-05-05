@@ -90,7 +90,8 @@ const getAvailableTools = (plugin, onShowDialog) => {
  * @param {object} cfgError object describing current cfg editing error
  * @param {function} setEditor editor instance setter
  * @param {string} documentationBaseURL base url for plugin documentation
- * @param {boolean} showMapTemplatesConfig
+ * @param {boolean} showDescriptionTooltip show a tooltip when hovering over plugin's description
+ * @param {number} descriptionTooltipDelay description tooltip show delay
  * @param {function} onEditPlugin edit plugin configuration callback
  * @param {function} onEnablePlugins enable plugins callback
  * @param {function} onDisablePlugins disable plugins callback
@@ -102,8 +103,8 @@ const getAvailableTools = (plugin, onShowDialog) => {
  * @param {boolean} processChildren if true this function will recursively convert the children
  * @param {boolean} parentIsEnabled true if 'enabled' property of parent plugin object is true
  */
-const pluginsToItems = (editedPlugin, editedCfg, cfgError, setEditor, documentationBaseURL, onEditPlugin,
-    onEnablePlugins, onDisablePlugins, onUpdateCfg, onShowDialog, changePluginsKey, isRoot, plugins = [],
+const pluginsToItems = (editedPlugin, editedCfg, cfgError, setEditor, documentationBaseURL, showDescriptionTooltip, descriptionTooltipDelay,
+    onEditPlugin, onEnablePlugins, onDisablePlugins, onUpdateCfg, onShowDialog, changePluginsKey, isRoot, plugins = [],
     processChildren, parentIsEnabled) =>
     plugins.filter(plugin => !plugin.hidden).map(plugin => {
         const enableTools = (isRoot || parentIsEnabled);
@@ -113,6 +114,8 @@ const pluginsToItems = (editedPlugin, editedCfg, cfgError, setEditor, documentat
             title: plugin.title || plugin.label || plugin.name,
             cardSize: 'sm',
             description: plugin.description || 'plugin name: ' + plugin.name,
+            showDescriptionTooltip,
+            descriptionTooltipDelay,
             mandatory: isMandatory,
             className: !isRoot && parentIsEnabled && !plugin.enabled ? 'plugin-card-disabled' : '',
             tools: enableTools ? (plugin.enabled ? getEnabledTools(plugin, isMandatory, editedPlugin, documentationBaseURL, onEditPlugin,
@@ -159,9 +162,9 @@ const pluginsToItems = (editedPlugin, editedCfg, cfgError, setEditor, documentat
                     {plugin.glyph ? <Glyphicon key="icon" glyph={plugin.glyph} /> : <Glyphicon key="icon" glyph="plug" />}
                 </React.Fragment>),
             children: processChildren &&
-                pluginsToItems(editedPlugin, editedCfg, cfgError, setEditor, documentationBaseURL, onEditPlugin,
-                    onEnablePlugins, onDisablePlugins, onUpdateCfg, onShowDialog, changePluginsKey, false, plugin.children,
-                    true, plugin.enabled) || []
+                pluginsToItems(editedPlugin, editedCfg, cfgError, setEditor, documentationBaseURL, showDescriptionTooltip,
+                    descriptionTooltipDelay, onEditPlugin, onEnablePlugins, onDisablePlugins, onUpdateCfg, onShowDialog,
+                    changePluginsKey, false, plugin.children, true, plugin.enabled) || []
         };
     });
 
@@ -251,6 +254,8 @@ const configurePluginsStep = ({
     availablePluginsFilterPlaceholder = "contextCreator.configurePlugins.pluginsFilterPlaceholder",
     enabledPluginsFilterPlaceholder = "contextCreator.configurePlugins.pluginsFilterPlaceholder",
     documentationBaseURL,
+    showDescriptionTooltip = true,
+    descriptionTooltipDelay = 600,
     uploadEnabled = false,
     pluginsToUpload = [],
     uploading = [],
@@ -314,6 +319,7 @@ const configurePluginsStep = ({
     const enabledPlugins = allPlugins.filter(plugin => plugin.enabled);
 
     const pluginsToItemsFunc = pluginsToItems.bind(null, editedPlugin, editedCfg, cfgError, setEditor, documentationBaseURL,
+        showDescriptionTooltip, descriptionTooltipDelay,
         onEditPlugin, onEnablePlugins, onDisablePlugins, onUpdateCfg, onShowDialog, changePluginsKey, true);
 
     const selectedItems = pluginsToItemsFunc(selectedPlugins, false);

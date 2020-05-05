@@ -11,6 +11,7 @@ import csw from '../CSW';
 import wms from '../WMS';
 import wmts from '../WMTS';
 import * as tms from './TMS';
+import * as wfs from './WFS';
 import backgrounds from '../mapBackground';
 import { validate, testService } from './common';
 
@@ -36,13 +37,18 @@ import { validate, testService } from './common';
  * @name catalog
  */
 export default {
-    // TODO: we should separate catalog specific API from OGC services API, to define better the real intrefaces of each API.
+    // TODO: we should separate catalog specific API from OGC services API, to define better the real interfaces of each API.
     // TODO: validate could be converted in a simple function
     // TODO: testService could be converted in a simple Promise
     csw: {
         validate,
         testService: testService(csw),
         ...csw
+    },
+    wfs: {
+        validate,
+        testService: testService(wfs),
+        ...wfs
     },
     wms: {
         validate,

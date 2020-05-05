@@ -69,7 +69,7 @@ export default ({
     const [templateToReplace, setTemplateToReplace] = useState();
     const [showConfirm, onShowConfirm] = useState(false);
 
-    const templateToItem = template => ({
+    const templateToItem = (template, isFavouriteList) => ({
         template,
         title: template.name,
         description: template.description,
@@ -82,7 +82,7 @@ export default ({
                     <Glyphicon glyph="1-map"/>}
             </div>,
         infoExtra:
-            template.format && <div className="map-templates-formaticon">
+            template.format && <div className={`map-templates-formaticon${isFavouriteList ? " map-templates-favourite" : ""}`}>
                 <Glyphicon glyph={FileFormatUtils.formatToGlyph[template.format]}/>
                 <span>{FileFormatUtils.formatToText[template.format]}</span>
             </div>,
@@ -121,8 +121,8 @@ export default ({
     const sortedTemplates = templates.slice().sort((t1, t2) => t1.name > t2.name ? 1 : t1.name === t2.name ? 0 : -1);
 
     const filteredTemplates = sortedTemplates.filter(match.bind(null, filterText));
-    const items = filteredTemplates.map(templateToItem);
-    const favouriteItems = filteredTemplates.filter(template => template.favourite).map(templateToItem);
+    const items = filteredTemplates.map(template => templateToItem(template, false));
+    const favouriteItems = filteredTemplates.filter(template => template.favourite).map(template => templateToItem(template, true));
 
     return (
         <>

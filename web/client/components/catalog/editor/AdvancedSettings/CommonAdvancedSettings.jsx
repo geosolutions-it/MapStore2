@@ -9,18 +9,16 @@ import React from 'react';
 import { isNil } from 'lodash';
 import ReactQuill from "react-quill";
 
-import Select from "react-select";
 import Message from "../../../I18N/Message";
-import { FormGroup, Checkbox, Col, ControlLabel } from "react-bootstrap";
+import { FormGroup, Checkbox, Col } from "react-bootstrap";
 
 /**
  * Common Advanced settings form, used by WMS/CSW/WMTS
  */
 export default ({
-    formatOptions,
+    children,
     service,
     isLocalizedLayerStylesEnabled,
-    onChangeServiceFormat = () => { },
     onChangeMetadataTemplate = () => { },
     onChangeServiceProperty = () => { },
     onToggleTemplate = () => { },
@@ -96,17 +94,6 @@ export default ({
                 }
             </Col>
         </FormGroup>)}
-        <FormGroup style={{ display: 'flex', alignItems: 'center', paddingTop: 15, borderTop: '1px solid #ddd' }}>
-            <Col xs={6}>
-                <ControlLabel>Format</ControlLabel>
-            </Col >
-            <Col xs={6}>
-                <Select
-                    value={service && service.format}
-                    clearable
-                    options={formatOptions}
-                    onChange={event => onChangeServiceFormat(event && event.value)} />
-            </Col >
-        </FormGroup>
+        {children}
     </div>
 );
