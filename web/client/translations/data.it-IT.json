@@ -628,7 +628,7 @@
             "MeasureArea": "Misura Area",
             "MeasureBearing": "Misura Direzione",
             "MeasureTrueBearing": "Misura vera Direzione",
-            "tooltip": "Misurazione lunghezza e l'area",
+            "tooltip": "Misura distanze, aree ed angoli sulla mappa",
             "title": "Misurazione",
             "lengthButtonText": "Linea",
             "areaButtonText": "Area",
