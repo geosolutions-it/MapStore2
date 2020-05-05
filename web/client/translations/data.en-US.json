@@ -114,7 +114,7 @@
               "legendPreview": "Preview"
             },
             "enableLocalizedLayerStyles": {
-                "label": "Enable localized layer styles",
+                "label": "Enable localized style",
                 "tooltip": "Note: This parameter requires specific configurations on GeoServer"
             }
         },
@@ -1254,7 +1254,7 @@
             },
             "backgroundAlreadyAdded": "Added to background selector",
             "enableLocalizedLayerStyles": {
-                "label": "Enable localized layer styles",
+                "label": "Enable localized styles",
                 "tooltip": "Note: This parameter requires specific configurations on GeoServer"
             }
         },

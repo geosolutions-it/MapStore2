@@ -115,7 +115,7 @@
               "legendPreview": "Vorschau"
             },
             "enableLocalizedLayerStyles": {
-                "label": "Aktivieren Sie lokalisierte Ebenenstile",
+                "label": "Schakel gelokaliseerde stijl in",
                 "tooltip": "Opmerking: deze parameter vereist specifieke configuraties op GeoServer"
             }
         },
@@ -1253,7 +1253,7 @@
             },
             "backgroundAlreadyAdded": "Zur Hintergrundauswahl hinzugefügt",
             "enableLocalizedLayerStyles": {
-                "label": "Aktivieren Sie lokalisierte Ebenenstile",
+                "label": "Schakel gelokaliseerde stijlen in",
                 "tooltip": "Opmerking: deze parameter vereist specifieke configuraties op GeoServer"
             }
         },

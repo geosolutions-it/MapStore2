@@ -114,7 +114,7 @@
             "templateFormatInfoAlertExample": "La identificación de la característica es ${ properties }",
             "templatePreview": "Vista previa de la plantilla",
             "enableLocalizedLayerStyles": {
-                "label": "Habilitar estilos de capa localizados",
+                "label": "Habilitar estilo localizado",
                 "tooltip": "Nota: este parámetro requiere configuraciones específicas en GeoServer"
             }
         },
@@ -1253,7 +1253,7 @@
             },
             "backgroundAlreadyAdded": "Agregado al selector de fondo",
             "enableLocalizedLayerStyles": {
-                "label": "Habilitar estilos de capa localizados",
+                "label": "Habilitar estilos localizados",
                 "tooltip": "Nota: este parámetro requiere configuraciones específicas en GeoServer"
             }
         },

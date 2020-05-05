@@ -114,7 +114,7 @@
               "legendPreview": "Aperçu"
             },
             "enableLocalizedLayerStyles": {
-                "label": "Activer les styles de calques localisés",
+                "label": "Activer le style localisé",
                 "tooltip": "Remarque: ce paramètre nécessite des configurations spécifiques sur GeoServer"
             }
         },
@@ -1251,7 +1251,10 @@
                 "errorServiceUrl": "Service non disponible. Veuillez vérifier l'URL fournie"
             },
             "backgroundAlreadyAdded": "Ajouté au sélecteur de fond",
-            "enableLocalizedLayerStyles": "Activer les styles de calques localisés"
+            "enableLocalizedLayerStyles": {
+                "label": "Activer les styles localisés",
+                "tooltip": "Remarque: ce paramètre nécessite des configurations spécifiques sur GeoServer"
+            }
         },
         "uploader": {
             "filename": "Nom du fichier",

@@ -114,7 +114,7 @@
               "legendPreview": "Anteprima"
             },
             "enableLocalizedLayerStyles": {
-                "label": "Abilita stili di livello localizzati",
+                "label": "Abilita stile localizzato",
                 "tooltip": "Nota: questo parametro richiede configurazioni specifiche su GeoServer"
             }
         },
