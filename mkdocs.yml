@@ -45,6 +45,12 @@ pages:
       - Overview: 'user-guide/managing-users-and-groups.md'
       - Managing Users: 'user-guide/managing-users.md'
       - Managing Groups: 'user-guide/managing-groups.md'
+    - Managing Contexts:
+      - Overview: 'user-guide/managing-contexts.md'
+      - Application Context: 'user-guide/application-context.md'
+      - Extension Library: 'user-guide/extension-library.md'
+      - Map Catalog: 'user-guide/map-catalog.md'
+      - Map Templates: 'user-guide/map-templates.md'
     - Resources Properties: 'user-guide/resources-properties.md'
     - Sharing Resources: 'user-guide/share.md'
     - Exploring Maps:
