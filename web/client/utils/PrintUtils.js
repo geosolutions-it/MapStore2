@@ -155,7 +155,7 @@ const PrintUtils = {
      * @return {number}                          the index that best approximates the current map scale
      */
     getNearestZoom: (zoom, scales, mapScales = defaultScales) => {
-        const mapScale = mapScales[zoom];
+        const mapScale = mapScales[Math.round(zoom)];
         return scales.reduce((previous, current, index) => {
             return current < mapScale ? previous : index;
         }, 0);
