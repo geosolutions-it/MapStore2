@@ -93,6 +93,38 @@ const featurePoint = {
     },
     "id": 0
 };
+
+const featureLine = {
+    "type": "Feature",
+    "geometry": {
+        "type": "LineString",
+        "coordinates": [
+            -112.50042920000001,
+            42.22829164089942,
+            -113.50042920000001,
+            42.22829164089942,
+            -114.50042920000001,
+            42.22829164089942
+        ]
+    },
+    "properties": {
+        "serial_num": "12C324776"
+    },
+    "id": 0
+};
+
+const featureCollection = {
+    "type": "FeatureCollection",
+    "features": [featureLine],
+    "style": {
+        "weight": 3,
+        "radius": 10,
+        "opacity": 1,
+        "fillOpacity": 0.1,
+        "color": "rgb(0, 0, 255)",
+        "fillColor": "rgb(0, 0, 255)"
+    }
+};
 const vectorLayer = {
     "type": "vector",
     "visibility": true,
@@ -101,6 +133,25 @@ const vectorLayer = {
     "name": "web2014all_mv",
     "hideLoading": true,
     "features": [ featurePoint ],
+    "style": {
+        "weight": 3,
+        "radius": 10,
+        "opacity": 1,
+        "fillOpacity": 0.1,
+        "color": "rgb(0, 0, 255)",
+        "fillColor": "rgb(0, 0, 255)"
+    }
+};
+
+var annotationsVectorLayer = {
+    "type": "vector",
+    "visibility": true,
+    "group": "Local shape",
+    "id": "web2014all_mv__14",
+    "name": "web2014all_mv",
+    "hideLoading": true,
+    "isAnnotation": true,
+    "features": [ featureCollection ],
     "style": {
         "weight": 3,
         "radius": 10,
@@ -220,6 +271,12 @@ describe('PrintUtils', () => {
         expect(specs).toExist();
         expect(specs.length).toBe(1);
         expect(specs[0].geoJson.features[0].geometry.coordinates[0], mapFishVectorLayer).toBe(mapFishVectorLayer.geoJson.features[0].geometry.coordinates[0]);
+    });
+    it('vector layer from annotations are preprocessed for printing', () => {
+        const specs = PrintUtils.getMapfishLayersSpecification([annotationsVectorLayer], {projection: "EPSG:3857"}, 'map');
+        expect(specs).toExist();
+        expect(specs.length).toBe(1);
+        expect(specs[0].geoJson.features[0].properties.ms_style.strokeColor).toBe("rgb(0, 0, 255)");
     });
     it('wms layer generation for legend', () => {
         const specs = PrintUtils.getMapfishLayersSpecification([layer], {projection: "EPSG:3857"}, 'legend');
