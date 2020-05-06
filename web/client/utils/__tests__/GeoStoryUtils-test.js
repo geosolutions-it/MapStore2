@@ -260,7 +260,7 @@ describe("GeoStory Utils", () => {
             expect(content.type).toBe(ContentTypes.COLUMN);
             const mediaContent = content.contents[0];
             expect(mediaContent.type).toBe(ContentTypes.MEDIA);
-            expect(mediaContent.size).toBe("medium");
+            expect(mediaContent.size).toBe("large");
             expect(mediaContent.align).toBe("center");
             expect(mediaContent.id.length).toBe(uuid().length);
             expect(mediaContent.resourceId).toNotExist();

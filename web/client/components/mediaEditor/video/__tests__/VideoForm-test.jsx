@@ -38,7 +38,7 @@ describe('VideoForm component', () => {
         expect([...inputsNodes].map(input => input.getAttribute('placeholder')))
             .toEqual([
                 null, // thumbnail
-                'mediaEditor.mediaPicker.sourcePlaceholder',
+                'mediaEditor.mediaPicker.videoUrlPlaceholder',
                 'mediaEditor.mediaPicker.titlePlaceholder',
                 'mediaEditor.mediaPicker.descriptionPlaceholder',
                 'mediaEditor.mediaPicker.creditsPlaceholder',

@@ -10,7 +10,7 @@ import React, { Component } from "react";
 import PropTypes from 'prop-types';
 
 import stickySupport from '../../../misc/enhancers/stickySupport';
-import Media from '../../media';
+import Media, { typesMap } from '../../media';
 import { lists, getClassNameFromProps, Modes } from '../../../../utils/GeoStoryUtils';
 import ContentToolbar from '../../contents/ContentToolbar';
 import { Portal } from 'react-overlays';
@@ -49,7 +49,7 @@ class Background extends Component {
         sectionType: PropTypes.string,
         src: PropTypes.string,
         theme: PropTypes.string,
-        mediaTypesMap: PropTypes.object
+        mediaViewer: PropTypes.object
     };
 
     static defaultProps = {
@@ -91,7 +91,7 @@ class Background extends Component {
                     style={{
                         height: this.props.height,
                         ...theme,
-                        ...(!this.props.mediaTypesMap?.[this.props.type]
+                        ...(!typesMap?.[this.props.type]
                             ? this.props.backgroundPlaceholder
                             : {})
                     }}>
@@ -100,8 +100,7 @@ class Background extends Component {
                         {...this.props}
                         enableFullscreen={false}
                         descriptionEnabled={false}
-                        fitContainer
-                        mediaTypesMap={this.props.mediaTypesMap}
+                        mediaViewer={this.props.mediaViewer}
                     />
                     { this.props.mode === Modes.EDIT && (
                         parentNode

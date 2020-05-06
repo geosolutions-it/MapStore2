@@ -20,10 +20,10 @@ import { getVideoThumbnail } from '../../../utils/ThumbnailUtils';
 
 const form = [
     {
-        placeholder: "mediaEditor.mediaPicker.sourcePlaceholder",
+        placeholder: "mediaEditor.mediaPicker.videoUrlPlaceholder",
         type: "text",
         id: "src",
-        label: <Message msgId = "mediaEditor.mediaPicker.source"/>,
+        label: <Message msgId = "mediaEditor.mediaPicker.videoUrl"/>,
         validation: ({ src }) => src !== undefined && src === "" ?
             "error"
             : src
@@ -107,7 +107,7 @@ const VideoThumbnail = ({
                 quality: 0.5
             }}
             loading={loading}
-            message={<Message msgId="geostory.builder.settings.logoPlaceholder"/>}
+            message={<Message msgId="mediaEditor.mediaPicker.thumbnail"/>}
             onUpdate={(newImageData) => {
                 onUpdate(newImageData);
                 setErrors(undefined);

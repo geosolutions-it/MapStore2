@@ -15,7 +15,7 @@ import { Glyphicon } from 'react-bootstrap';
  * Video component
  * @prop {string} src source of the video
  * @prop {number} resolution resolution of the video
- * @prop {boolean} fitContainer video fit in the container
+ * @prop {string} fit one of `cover`, `contain` or undefined
  * @prop {string} thumbnail source of thumbnail
  * @prop {boolean} controls enable/disable video controls
  * @prop {boolean} play play/stop the video
@@ -27,18 +27,20 @@ const Video = withResizeDetector(({
     width,
     height,
     resolution,
-    fitContainer,
     thumbnail,
     controls,
     play,
     onPlay = () => {},
-    onStart = () => {}
+    onStart = () => {},
+    fit
 }) => {
 
     const playing = play;
     const [started, setStarted] = useState(playing);
     const [error, setError] = useState();
     const [loading, setLoading] = useState(play);
+
+    const isCover = fit === 'cover';
 
     useEffect(() => {
         if (!started && playing) {
@@ -50,13 +52,24 @@ const Video = withResizeDetector(({
         }
     }, [started, playing]);
 
-    const containerResolution = width / height;
-    const size = !fitContainer
-        ? [ width, width / resolution]
-        : containerResolution < resolution
-            ? [ width, width / resolution]
-            : [ height * resolution, height];
-    const containerHeight = fitContainer ? height : size[1];
+    function getSize() {
+        const containerResolution = width / height;
+        if (isCover) {
+            return containerResolution < resolution
+                ? [ height * resolution, height]
+                : [ width, width / resolution ];
+        }
+        if (fit === 'contain') {
+            return containerResolution < resolution
+                ? [ width, width / resolution]
+                : [ height * resolution, height];
+        }
+        return [ width, width / resolution];
+    }
+
+    const size = getSize();
+
+    const containerHeight = (fit === 'contain' || fit === 'cover') ? height : size[1];
 
     return (
         <div
@@ -67,7 +80,13 @@ const Video = withResizeDetector(({
                 height: containerHeight,
                 display: 'flex',
                 alignItems: 'center',
-                justifyContent: 'center'
+                justifyContent: 'center',
+                ...(isCover && { cursor: 'pointer '})
+            }}
+            onClick={() => {
+                if (started && isCover) {
+                    onPlay(!playing);
+                }
             }}>
             {src &&
             <>
@@ -76,7 +95,14 @@ const Video = withResizeDetector(({
                 width={size[0]}
                 height={size[1]}
                 playing={playing}
-                controls={controls}
+                style={isCover
+                    ? {
+                        left: '50%',
+                        top: '50%',
+                        transform: 'translate(-50%, -50%)',
+                        position: 'absolute'
+                    } : {}}
+                controls={controls && !isCover}
                 pip={false}
                 fileConfig={{
                     attributes: {
@@ -143,7 +169,7 @@ const Video = withResizeDetector(({
  * @prop {number} resolution resolution of the video
  * @prop {boolean} autoplay play the video when is in view
  * @prop {boolean} inView define if the video si in the window view
- * @prop {boolean} fitContainer video fit in the container
+ * @prop {string} fit one of `cover`, `contain` or undefined
  * @prop {string} description video description
  * @prop {boolean} descriptionEnabled display/hide description
  * @prop {string} thumbnail source of thumbnail
@@ -159,10 +185,10 @@ const VideoMedia = ({
     inView,
     description,
     descriptionEnabled = true,
-    fitContainer,
     thumbnail,
     credits,
     controls = true,
+    fit,
     onPlay = () => {}
 }) => {
 
@@ -195,11 +221,11 @@ const VideoMedia = ({
                 src={src}
                 play={playing}
                 resolution={resolution}
-                fitContainer={fitContainer}
                 thumbnail={thumbnail}
                 controls={controls}
                 onPlay={handleOnPlay}
                 onStart={setStarted}
+                fit={fit}
             />
             {credits && <div className="ms-media-credits">
                 <small>

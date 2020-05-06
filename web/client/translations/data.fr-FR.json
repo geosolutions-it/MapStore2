@@ -2167,7 +2167,10 @@
                 "imageFilter": "Filtrer les images",
                 "import": "Importer une ressource dans un magasin local",
                 "trash": "Supprimer la ressource",
-                "autoplay": "Lecture automatique"
+                "autoplay": "Lecture automatique",
+                "videoUrl": "URL de la vidéo",
+                "videoUrlPlaceholder": "Entrez une URL de vidéo",
+                "thumbnail": "Ajouter une vignette (taille maximale 500 Kb)"
             },
             "mediaform": {
                 "confirmExitTitle": "Fermer Media Form",

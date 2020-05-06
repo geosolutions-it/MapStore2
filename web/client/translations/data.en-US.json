@@ -2172,7 +2172,10 @@
                 "imageFilter": "Filter images",
                 "import": "Import resource to local store",
                 "trash": "Remove resource",
-                "autoplay": "Autoplay"
+                "autoplay": "Autoplay",
+                "videoUrl": "Video URL",
+                "videoUrlPlaceholder": "Enter a video url",
+                "thumbnail": "Add thumbnail (maximum size 500kb)"
             },
             "mediaform": {
                 "confirmExitTitle": "Close Media Form",

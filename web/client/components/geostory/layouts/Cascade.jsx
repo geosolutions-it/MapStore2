@@ -107,7 +107,7 @@ const Cascade = ({
     isContentFocused = false,
     getSize = defaultGetSize,
     theme = {},
-    mediaTypesMap
+    mediaViewer
 }) => (<BorderLayout  className={`ms-cascade-story ms-${mode}`}>
     <ContainerDimensions
         sections={sections}
@@ -146,7 +146,7 @@ const Cascade = ({
                                 contents={contents}
                                 cover={cover}
                                 storyTheme={storyTheme}
-                                mediaTypesMap={mediaTypesMap}
+                                mediaViewer={mediaViewer}
                             />
                         );
                     })

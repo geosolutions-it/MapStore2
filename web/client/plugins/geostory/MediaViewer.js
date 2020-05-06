@@ -6,6 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+import React from 'react';
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
 import { compose, branch, withProps } from 'recompose';
@@ -71,4 +72,12 @@ const mediaTypesMap = {
     video
 };
 
-export default mediaTypesMap;
+const MediaViewer = ({ type, ...props }) => {
+    const Media = mediaTypesMap[type];
+    if (!Media) {
+        return null;
+    }
+    return <Media { ...props }/>;
+};
+
+export default MediaViewer;

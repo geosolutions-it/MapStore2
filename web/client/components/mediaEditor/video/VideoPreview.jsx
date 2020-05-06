@@ -25,7 +25,7 @@ const Preview = ({
                 <Video
                     key={src}
                     thumbnail={thumbnail}
-                    fitContainer
+                    fit="contain"
                     src={src}
                     inView
                 />}

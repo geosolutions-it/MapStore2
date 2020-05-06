@@ -2169,7 +2169,10 @@
                 "imageFilter": "Filtra immagini",
                 "import": "Importa la risorsa localmente",
                 "trash": "Elimina la risorsa",
-                "autoplay": "Riproduzione automatica"
+                "autoplay": "Riproduzione automatica",
+                "videoUrl": "Video URL",
+                "videoUrlPlaceholder": "Inserisci video url",
+                "thumbnail": "Aggiungi thumbnail (dimensione massima 500kb)"
             },
             "mediaform": {
                 "confirmExitTitle": "Chiudi Media From",

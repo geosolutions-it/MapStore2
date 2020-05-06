@@ -29,7 +29,7 @@ export default ({
     viewWidth,
     viewHeight,
     expandableMedia,
-    mediaTypesMap
+    mediaViewer
 }) => (
     <section
         className="ms-section ms-section-paragraph"
@@ -50,7 +50,7 @@ export default ({
             viewHeight={viewHeight}
             contentProps={{
                 expandable: expandableMedia,
-                mediaTypesMap
+                mediaViewer
             }}
         />
         {mode === Modes.EDIT && <AddBar

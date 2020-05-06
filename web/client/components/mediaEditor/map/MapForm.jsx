@@ -164,7 +164,7 @@ export const MapForm = ({
                     type: 'image/jpeg',
                     quality: 0.5
                 }}
-                message={<Message msgId="geostory.builder.settings.logoPlaceholder"/>}
+                message={<Message msgId="mediaEditor.mediaPicker.thumbnail"/>}
                 onUpdate={(newImageData) => {
                     updateThumb(newImageData);
                     setErrors(undefined);

@@ -61,7 +61,7 @@ const Thumbnail = forwardRef(({
     thumbnail,
     removeGlyph = 'trash',
     style = {},
-    maxFileSize = 100000,
+    maxFileSize = 500000,
     supportedImageTypes = ['image/png', 'image/jpeg', 'image/jpg'],
     thumbnailOptions,
     dropZoneProps = {

@@ -242,7 +242,7 @@ export const getDefaultSectionTemplate = (type, localize = v => v) => {
                     contents: [{
                         id: uuid(),
                         type: ContentTypes.MEDIA,
-                        size: 'medium',
+                        size: 'large',
                         align: 'center'
                     }]
                 }

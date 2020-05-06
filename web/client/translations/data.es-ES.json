@@ -2168,7 +2168,10 @@
                 "imageFilter": "Filtrar imágenes",
                 "import": "Importar recurso a store locale",
                 "trash": "Eliminar recurso",
-                "autoplay": "Auto-reproducción"
+                "autoplay": "Auto-reproducción",
+                "videoUrl": "URL de video",
+                "videoUrlPlaceholder": "Ingrese una url de video",
+                "thumbnail": "Añadir miniatura (tamaño máximo 500kb)"
             },
             "mediaform": {
                 "confirmExitTitle": "Cerrar el Media Form",

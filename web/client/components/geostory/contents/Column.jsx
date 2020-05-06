@@ -41,7 +41,7 @@ export default ({
     remove = () => {},
     bubblingTextEditing = () => {},
     expandable,
-    mediaTypesMap
+    mediaViewer
 }) => (
     <Contents
         className="ms-column-contents"
@@ -58,7 +58,7 @@ export default ({
         bubblingTextEditing={bubblingTextEditing}
         contentProps={{
             expandable,
-            mediaTypesMap
+            mediaViewer
         }}
         tools={{
             [ContentTypes.TEXT]: ['remove'],
