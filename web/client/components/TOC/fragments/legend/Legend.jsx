@@ -61,9 +61,9 @@ class Legend extends React.Component {
                 style: layer.style || null,
                 version: layer.version || "1.3.0",
                 SLD_VERSION: "1.1.0",
-                LEGEND_OPTIONS: props.legendOptions,
-                LANGUAGE: props.language
+                LEGEND_OPTIONS: props.legendOptions
             }, layer.legendParams || {},
+            props.language && layer.localizedLayerStyles ? {LANGUAGE: props.language} : {},
             SecurityUtils.addAuthenticationToSLD(cleanParams || {}, props.layer),
             cleanParams && cleanParams.SLD_BODY ? {SLD_BODY: cleanParams.SLD_BODY} : {},
             props.scales && props.currentZoomLvl && props.scaleDependent ? {SCALE: Math.round(props.scales[props.currentZoomLvl])} : {});
