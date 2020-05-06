@@ -138,7 +138,7 @@ const featuresToGrid = compose(
                             };
                             const regexProps = {attribute: desc.name, url: props.url, typeName: props.typeName};
                             const rules = props.customEditorsOptions && props.customEditorsOptions.rules || [];
-                            const editorProps = {type: desc.localType, props};
+                            const editorProps = {type: desc.localType, generalProps, props};
                             const editor = EditorRegistry.getCustomEditor(regexProps, rules, editorProps);
 
                             if (!isNil(editor)) {

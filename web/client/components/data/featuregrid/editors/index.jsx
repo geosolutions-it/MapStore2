@@ -1,6 +1,6 @@
 const React = require('react');
 const Editor = require('./AttributeEditor');
-const NumberEditor = require('./NumberEditor');
+const NumberEditor = require('./NumberEditor').default;
 const AutocompleteEditor = require('./AutocompleteEditor');
 const DropDownEditor = require('./DropDownEditor');
 
