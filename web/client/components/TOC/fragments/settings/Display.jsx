@@ -13,6 +13,7 @@ const Message = require('../../../I18N/Message');
 const {Grid, Row, Col, FormGroup, ControlLabel, FormControl, Checkbox} = require('react-bootstrap');
 const {clamp, isNil, isNumber} = require('lodash');
 const Legend = require('../legend/Legend');
+const InfoPopover = require('../../../widgets/widget/InfoPopover');
 
 require('react-widgets/lib/less/react-widgets.less');
 
@@ -22,7 +23,8 @@ module.exports = class extends React.Component {
         element: PropTypes.object,
         formats: PropTypes.array,
         settings: PropTypes.object,
-        onChange: PropTypes.func
+        onChange: PropTypes.func,
+        isLocalizedLayerStylesEnabled: PropTypes.bool
     };
 
     static defaultProps = {
@@ -182,6 +184,13 @@ module.exports = class extends React.Component {
                                 onChange={(e) => this.props.onChange("singleTile", e.target.checked)}>
                                 <Message msgId="layerProperties.singleTile"/>
                             </Checkbox>
+                            {(this.props.isLocalizedLayerStylesEnabled && (
+                                <Checkbox key="localizedLayerStyles" value="localizedLayerStyles"
+                                    data-qa="display-lacalized-layer-styles-option"
+                                    checked={this.props.element && (this.props.element.localizedLayerStyles !== undefined ? this.props.element.localizedLayerStyles : false )}
+                                    onChange={(e) => this.props.onChange("localizedLayerStyles", e.target.checked)}>
+                                    <Message msgId="layerProperties.enableLocalizedLayerStyles.label" />&nbsp;<InfoPopover text={<Message msgId="layerProperties.enableLocalizedLayerStyles.tooltip" />} />
+                                </Checkbox>))}
                         </FormGroup>
                     </Col>
                     <div className={"legend-options"}>
@@ -228,6 +237,8 @@ module.exports = class extends React.Component {
                                         this.useLegendOptions() && this.state.legendOptions.legendHeight || undefined}
                                     legendWidth={
                                         this.useLegendOptions() && this.state.legendOptions.legendWidth || undefined}
+                                    language={
+                                        this.props.isLocalizedLayerStylesEnabled ? this.props.currentLocaleLanguage : undefined}
                                 />
                             </div>
                         </Col>

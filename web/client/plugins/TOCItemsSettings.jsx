@@ -21,8 +21,9 @@ import defaultSettingsTabs from './tocitemssettings/defaultSettingsTabs';
 import { initialSettingsSelector, originalSettingsSelector, activeTabSettingsSelector } from '../selectors/controls';
 import {layerSettingSelector, layersSelector, groupsSelector, elementSelector} from '../selectors/layers';
 import {mapLayoutValuesSelector} from '../selectors/maplayout';
-import {currentLocaleSelector} from '../selectors/locale';
+import {currentLocaleSelector, currentLocaleLanguageSelector} from '../selectors/locale';
 import {isAdminUserSelector} from '../selectors/security';
+import {isLocalizedLayerStylesEnabledSelector} from '../selectors/localizedLayerStyles';
 import {setControlProperty} from '../actions/controls';
 import {toggleStyleEditor} from '../actions/styleeditor';
 
@@ -31,22 +32,26 @@ const tocItemsSettingsSelector = createSelector([
     layersSelector,
     groupsSelector,
     currentLocaleSelector,
+    currentLocaleLanguageSelector,
     state => mapLayoutValuesSelector(state, {height: true}),
     isAdminUserSelector,
     initialSettingsSelector,
     originalSettingsSelector,
     activeTabSettingsSelector,
-    elementSelector
-], (settings, layers, groups, currentLocale, dockStyle, isAdmin, initialSettings, originalSettings, activeTab, element) => ({
+    elementSelector,
+    isLocalizedLayerStylesEnabledSelector
+], (settings, layers, groups, currentLocale, currentLocaleLanguage, dockStyle, isAdmin, initialSettings, originalSettings, activeTab, element, isLocalizedLayerStylesEnabled) => ({
     settings,
     element,
     groups,
     currentLocale,
+    currentLocaleLanguage,
     dockStyle,
     isAdmin,
     initialSettings,
     originalSettings,
-    activeTab
+    activeTab,
+    isLocalizedLayerStylesEnabled
 }));
 
 /**

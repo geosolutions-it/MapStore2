@@ -159,7 +159,8 @@ describe('test WMSLegend module component', () => {
             visibility: true,
             storeIndex: 9,
             type: 'wms',
-            url: 'fakeurl'
+            url: 'fakeurl',
+            localizedLayerStyles: true
         };
         const language = 'example_language';
         const comp = ReactDOM.render(<WMSLegend node={l} language={language} />, document.getElementById("container"));

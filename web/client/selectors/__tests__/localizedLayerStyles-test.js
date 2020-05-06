@@ -7,8 +7,22 @@
 */
 
 const expect = require('expect');
-const {localizedLayerStylesNameSelector, localizedLayerStylesEnvSelector} = require('../localizedLayerStyles');
+
+const {
+    isLocalizedLayerStylesEnabledSelector,
+    localizedLayerStylesNameSelector,
+    localizedLayerStylesEnvSelector
+} = require('../localizedLayerStyles');
 const {currentLocaleLanguageSelector} = require('../locale');
+
+const givenName = 'example';
+const givenState = {
+    localConfig: {
+        localizedLayerStyles: {
+            name: givenName
+        }
+    }
+};
 
 describe('Test localizedLayerStyles', () => {
     it('test localizedLayerStylesNameSelector default', () => {
@@ -18,10 +32,19 @@ describe('Test localizedLayerStyles', () => {
     });
 
     it('test localizedLayerStylesNameSelector', () => {
-        const name = 'example';
-        const localizedLayerStyles = localizedLayerStylesNameSelector({localConfig: {localizedLayerStyles: {name}}});
+        const localizedLayerStyles = localizedLayerStylesNameSelector(givenState);
 
-        expect(localizedLayerStyles).toBe(name);
+        expect(localizedLayerStyles).toBe(givenName);
+    });
+
+    it('test isLocalizedLayerStylesEnabledSelector', () => {
+        let isLocalizedLayerStylesEnabled;
+
+        isLocalizedLayerStylesEnabled = isLocalizedLayerStylesEnabledSelector({});
+        expect(isLocalizedLayerStylesEnabled).toBe(false);
+
+        isLocalizedLayerStylesEnabled = isLocalizedLayerStylesEnabledSelector(givenState);
+        expect(isLocalizedLayerStylesEnabled).toBe(true);
     });
 
     it('test localizedLayerStylesEnvSelector default', () => {
@@ -31,11 +54,12 @@ describe('Test localizedLayerStyles', () => {
     });
 
     it('test localizedLayerStylesEnvSelector', () => {
-        const name = 'example';
-        const store = {localConfig: {localizedLayerStyles: {name}}};
-        const env = localizedLayerStylesEnvSelector(store);
-        const language = currentLocaleLanguageSelector(store);
+        const env = localizedLayerStylesEnvSelector(givenState);
+        const language = currentLocaleLanguageSelector(givenState);
 
-        expect(env).toEqual([ {name, value: language} ]);
+        expect(env).toEqual([{
+            name: givenName,
+            value: language
+        }]);
     });
 });
