@@ -37,7 +37,7 @@ const {SORT_BY, CHANGE_PAGE, SAVE_CHANGES, SAVE_SUCCESS, DELETE_SELECTED_FEATURE
     CLEAR_CHANGES_CONFIRMED, FEATURE_GRID_CLOSE_CONFIRMED,
     openFeatureGrid, closeFeatureGrid, OPEN_FEATURE_GRID, CLOSE_FEATURE_GRID, CLOSE_FEATURE_GRID_CONFIRM, OPEN_ADVANCED_SEARCH, ZOOM_ALL, UPDATE_FILTER, START_SYNC_WMS,
     STOP_SYNC_WMS, startSyncWMS, storeAdvancedSearchFilter, fatureGridQueryResult, LOAD_MORE_FEATURES, SET_TIME_SYNC,
-    updateFilter, selectFeatures, DEACTIVATE_GEOMETRY_FILTER, ACTIVATE_TEMPORARY_CHANGES, disableToolbar,
+    updateFilter, selectFeatures, DEACTIVATE_GEOMETRY_FILTER, ACTIVATE_TEMPORARY_CHANGES, disableToolbar, FEATURES_MODIFIED,
     deactivateGeometryFilter } = require('../actions/featuregrid');
 
 const {TOGGLE_CONTROL, resetControls, setControlProperty, toggleControl} = require('../actions/controls');
@@ -359,7 +359,7 @@ module.exports = {
             }),
     deactivateGeometryFilter: (action$, store) =>
         Rx.Observable.merge(
-            action$.ofType(START_DRAWING_FEATURE, CREATE_NEW_FEATURE, GEOMETRY_CHANGED, DELETE_GEOMETRY),
+            action$.ofType(CREATE_NEW_FEATURE, GEOMETRY_CHANGED, DELETE_GEOMETRY, FEATURES_MODIFIED),
             action$.ofType(DEACTIVATE_GEOMETRY_FILTER).filter(({deactivated}) => !!deactivated)
         )
             .flatMap(() => {
@@ -380,7 +380,9 @@ module.exports = {
         )
             .flatMap(() => {
                 const geometryFilter = find(getAttributeFilters(store.getState()), f => f.type === 'geometry') || {};
-                return geometryFilter.deactivated ?
+                const hasChanges = hasChangesSelector(store.getState());
+                const hasNewFeatures = hasNewFeaturesSelector(store.getState());
+                return geometryFilter.deactivated && !hasChanges && !hasNewFeatures ?
                     Rx.Observable.of(updateFilter({
                         ...geometryFilter,
                         type: 'geometry',
