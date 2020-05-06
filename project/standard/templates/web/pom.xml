@@ -299,17 +299,11 @@
                         <goal>copy-resources</goal>
                     </goals>
                     <configuration>
-                        <outputDirectory>${basedir}/target/__PROJECTNAME__/MapStore2/web/client</outputDirectory>
+                        <outputDirectory>${basedir}/target/__PROJECTNAME__/</outputDirectory>
                         <encoding>UTF-8</encoding>
                         <resources>
                             <resource>
-                                <directory>${basedir}/../js</directory>
-                                <includes>
-                                    <include>translations/*</include>
-                                </includes>
-                            </resource>
-                            <resource>
-                                <directory>${basedir}/../MapStore2/web/client</directory>
+                                <directory>${basedir}/../</directory>
                                 <includes>
                                     <include>translations/*</include>
                                 </includes>
