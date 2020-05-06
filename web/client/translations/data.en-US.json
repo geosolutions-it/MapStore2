@@ -479,14 +479,37 @@
                 "identifier": "Identifier",
                 "title": "Title",
                 "abstract": "Abstract",
+                "purpose": "Purpose",
+                "source": "Source",
+                "createdDate": "Created Date",
+                "lastRevisionDate": "Last Revision Date",
+                "pointsOfContact": "Points of Contact",
+                "individualName": "Individual Name",
+                "organisationName": "Organisation Name",
+                "contactInfo": "Contact Info",
+                "phone": "Phone Number",
+                "deliveryPoints": "Delivery Points",
+                "city": "City",
+                "postalCode": "Postal Code",
+                "country": "Country",
+                "URL": "URL",
+                "role": "Role",
+                "hoursOfService": "Hours of Service",
+                "electronicMailAddress": "Email Address",
                 "subject": "Subject",
                 "type": "Type",
                 "creator": "Creator",
+                "defaultPropName": "Property=\"{propName}\"",
                 "toolLayerMetadataTooltip": "Show the selected layer's metadata",
                 "layerMetadataPanelTitle": "Layer metadata",
                 "notification": {
                     "warnigGetMetadataRecordById": "Error in metadata search"
-                }
+                },
+                "itemTitles": {
+                    "pointsOfContact": "Contact",
+                    "default": "Item"
+                },
+                "emptyMetadata": "No metadata available"
             },
             "thematic": {
                 "classification_field": "Classification Field:",
@@ -2441,6 +2464,7 @@
                 "uploadMissingPluginError": "No plugins defined in index.json",
                 "uploadMissingBundleError": "No javascript bundle in uploaded file",
                 "uploadTooManyBundlesError": "Too many javascript bundles in the zip package",
+                "uploadWrongFileFormatError": "Wrong file format, zip file expected",
                 "confirmRemovePlugin": "Are you sure you want to remove the extension?",
                 "cancelUpload": "Close",
                 "install": "Install",

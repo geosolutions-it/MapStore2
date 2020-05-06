@@ -42,7 +42,8 @@ import { mapSelector, projectionDefsSelector, projectionSelector, isMouseMoveIde
 import { boundingMapRectSelector } from '../selectors/maplayout';
 import { centerToVisibleArea, isInsideVisibleArea, isPointInsideExtent, reprojectBbox, parseURN, calculateCircleCoordinates } from '../utils/CoordinatesUtils';
 import { floatingIdentifyDelaySelector } from '../selectors/localConfig';
-
+import { createControlEnabledSelector, measureSelector } from '../selectors/controls';
+import { localizedLayerStylesEnvSelector } from '../selectors/localizedLayerStyles';
 
 import {getBbox, getCurrentResolution, parseLayoutValue} from '../utils/MapUtils';
 import MapInfoUtils from '../utils/MapInfoUtils';
@@ -122,7 +123,8 @@ export default {
                     return filterNameList.length ? (filterNameList.filter(name => name.indexOf(l.name) !== -1).length > 0) : true;
                 })))
                     .mergeMap(layer => {
-                        let { url, request, metadata } = MapInfoUtils.buildIdentifyRequest(layer, identifyOptionsSelector(getState()));
+                        let env = localizedLayerStylesEnvSelector(getState());
+                        let { url, request, metadata } = MapInfoUtils.buildIdentifyRequest(layer, {...identifyOptionsSelector(getState()), env});
                         // request override
                         if (itemIdSelector(getState()) && overrideParamsSelector(getState())) {
                             request = {...request, ...overrideParamsSelector(getState())[layer.name]};
@@ -191,6 +193,9 @@ export default {
     onMapClick: (action$, store) =>
         action$.ofType(CLICK_ON_MAP).filter(() => {
             const {disableAlwaysOn = false} = (store.getState()).mapInfo;
+            if (isMouseMoveIdentifyActiveSelector(store.getState())) {
+                return false;
+            }
             return disableAlwaysOn || !stopFeatureInfo(store.getState() || {});
         })
             .switchMap(({point, layer}) => Rx.Observable.of(featureInfoClick(point, layer))
@@ -341,11 +346,15 @@ export default {
         action$.ofType(MOUSE_MOVE)
             .debounceTime(floatingIdentifyDelaySelector(getState()))
             .switchMap(({position, layer}) => {
-                if (!isMouseMoveIdentifyActiveSelector(getState()) || getState().mousePosition.mouseOut) {
+                const isAnnotationsEnabled = createControlEnabledSelector('annotations')(getState());
+                const isMeasureEnabled = measureSelector(getState());
+                const isMouseOut = getState().mousePosition.mouseOut;
+                const isMouseMoveIdentifyDisabled = !isMouseMoveIdentifyActiveSelector(getState());
+                if (isMouseMoveIdentifyDisabled || isAnnotationsEnabled || isMeasureEnabled || isMouseOut) {
                     return Rx.Observable.empty();
                 }
                 return Rx.Observable.of(featureInfoClick(position, layer))
-                    .merge(Rx.Observable.of(addPopup(uuid(), { component: IDENTIFY_POPUP, maxWidth: 600, position: {  coordinates: position ? position.rawPos : []}})));
+                    .merge(Rx.Observable.of(addPopup(uuid(), { component: IDENTIFY_POPUP, maxWidth: 600, position: {  coordinates: position ? position.rawPos : []}, autoPanMargin: 70, autoPan: true})));
             }),
     /**
      * Triggers remove popup on UNREGISTER_EVENT_LISTENER
@@ -362,10 +371,10 @@ export default {
                 return observable;
             }),
     /**
-     * Triggers remove popup on LOCATION_CHANGE
+     * Triggers remove popup on LOCATION_CHANGE or PURGE_MAPINFO_RESULTS
      */
     removePopupOnLocationChangeEpic: (action$, {getState}) =>
-        action$.ofType(LOCATION_CHANGE)
+        action$.ofType(LOCATION_CHANGE, PURGE_MAPINFO_RESULTS)
             .switchMap(() => {
                 let observable = Rx.Observable.empty();
                 const popups = getState().mapPopups.popups;

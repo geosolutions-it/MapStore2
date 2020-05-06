@@ -357,6 +357,22 @@ const converters = {
         }
         return null;
     },
+    wfs: ({records} = {}) => {
+        if (records) {
+            return records.map(r => ({
+                ...r,
+                references: [{
+                    type: "OGC:WFS-1.1.0-http-get-capabilities",
+                    url: r.url
+                },
+                {
+                    type: "OGC:WFS-1.1.0-http-get-feature",
+                    url: r.url
+                }]
+            }));
+        }
+        return null;
+    },
     backgrounds: (records) => {
         if (records && records.records) {
             return records.records.map(record => {
@@ -393,24 +409,26 @@ const removeParameters = (url, skip) => {
     }
     return {url: urlparts[0], params};
 };
-const extractOGCServicesReferences = (record = { references: [] }) => ({
-    wms: head(record.references.filter(reference => reference.type && (reference.type === "OGC:WMS"
+const extractOGCServicesReferences = ({ references = [] } = {}) => ({
+    wfs: head(references.filter(reference => reference.type && (reference.type === "OGC:WFS"
+        || reference.type.indexOf("OGC:WFS") > -1 && reference.type.indexOf("http-get-feature") > -1))),
+    wms: head(references.filter(reference => reference.type && (reference.type === "OGC:WMS"
         || reference.type.indexOf("OGC:WMS") > -1 && reference.type.indexOf("http-get-map") > -1))),
-    wmts: head(record.references.filter(reference => reference.type && (reference.type === "OGC:WMTS"
+    wmts: head(references.filter(reference => reference.type && (reference.type === "OGC:WMTS"
         || reference.type.indexOf("OGC:WMTS") > -1 && reference.type.indexOf("http-get-map") > -1))),
-    tms: head(record.references.filter(reference => reference.type && (reference.type === "OGC:TMS"
+    tms: head(references.filter(reference => reference.type && (reference.type === "OGC:TMS"
         || reference.type.indexOf("OGC:TMS") > -1)))
 });
 const extractEsriReferences = (record = { references: [] }) => ({
     esri: head(record.references.filter(reference => reference.type && (reference.type === "ESRI:SERVER"
         || reference.type === "arcgis" )))
 });
-const getRecordLinks = (record) => {
-    let wmsGetCap = head(record.references.filter(reference => reference.type &&
+const getRecordLinks = ({ references = [] } = {}) => {
+    let wmsGetCap = head(references.filter(reference => reference.type &&
         reference.type.indexOf("OGC:WMS") > -1 && reference.type.indexOf("http-get-capabilities") > -1));
-    let wfsGetCap = head(record.references.filter(reference => reference.type &&
+    let wfsGetCap = head(references.filter(reference => reference.type &&
         reference.type.indexOf("OGC:WFS") > -1 && reference.type.indexOf("http-get-capabilities") > -1));
-    let wmtsGetCap = head(record.references.filter(reference => reference.type &&
+    let wmtsGetCap = head(references.filter(reference => reference.type &&
         reference.type.indexOf("OGC:WMTS") > -1 && reference.type.indexOf("http-get-capabilities") > -1));
     let links = [];
     if (wmsGetCap) {
@@ -598,6 +616,34 @@ const CatalogUtils = {
             extension
         };
     },
+    wfsToLayer: (record) => {
+        const DEFAULT_VECTOR_STYLE = {
+            "weight": 1,
+            "color": "rgba(0, 0, 255, 1)",
+            "opacity": 1,
+            "fillColor": "rgba(0, 0, 255, 0.1)",
+            "fillOpacity": 0.1,
+            radius: 10
+        };
+        return {
+            type: record.type || "wfs",
+            search: {
+                url: record.url,
+                type: "wfs"
+            },
+            url: record.url,
+            queryable: record.queryable,
+            visibility: true,
+            name: record.name,
+            title: record.title || record.name,
+            description: record.description || "",
+            bbox: record.boundingBox,
+            links: getRecordLinks(record),
+            style: DEFAULT_VECTOR_STYLE,
+            ...record.layerOptions
+        };
+    },
+
     /**
      * Converts a record into a layer
      */

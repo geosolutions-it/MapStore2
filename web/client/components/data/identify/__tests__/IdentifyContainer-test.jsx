@@ -130,7 +130,7 @@ describe("test IdentifyContainer", () => {
                 enabledCoordEditorButton
                 showCoordinateEditor
                 point={point}
-                formatCoord = {format || defaultFormat || "decimal"}
+                formatCoord={format || defaultFormat || "decimal"}
             />, document.getElementById("container"));
         const inputs = document.getElementsByClassName('form-control');
         expect(inputs.length).toBe(8);
@@ -140,5 +140,41 @@ describe("test IdentifyContainer", () => {
         expect(inputs[1].value).toBe('52');
         expect(inputs[2].placeholder).toBe("s");
         expect(inputs[2].value).toBe('9.3881');
+    });
+
+    it('test edit button with PROPERTIES response', () => {
+        const funcs = {
+            getToolButtons: () => {}
+        };
+
+        const getToolButtonsSpy = expect.spyOn(funcs, 'getToolButtons');
+        ReactDOM.render(<IdentifyContainer
+            enabled
+            showEdit
+            isEditingAllowed
+            getToolButtons={funcs.getToolButtons}
+            index={0}
+            requests={{}}
+            responses={[{format: 'PROPERTIES', layer: {search: {url: 'search_url'}}}]}/>, document.getElementById("container"));
+        expect(getToolButtonsSpy).toHaveBeenCalled();
+        expect(getToolButtonsSpy.calls[0].arguments[0].showEdit).toBe(true);
+    });
+
+    it('test edit button with TEMPLATE response', () => {
+        const funcs = {
+            getToolButtons: () => {}
+        };
+
+        const getToolButtonsSpy = expect.spyOn(funcs, 'getToolButtons');
+        ReactDOM.render(<IdentifyContainer
+            enabled
+            showEdit
+            isEditingAllowed
+            getToolButtons={funcs.getToolButtons}
+            index={0}
+            requests={{}}
+            responses={[{format: 'TEMPLATE', layer: {search: {url: 'search_url'}}}]}/>, document.getElementById("container"));
+        expect(getToolButtonsSpy).toHaveBeenCalled();
+        expect(getToolButtonsSpy.calls[0].arguments[0].showEdit).toBe(true);
     });
 });

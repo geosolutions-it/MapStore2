@@ -7,7 +7,10 @@
 */
 
 import * as Rx from 'rxjs';
-import { head, isArray, isString, isObject, keys } from 'lodash';
+import axios from 'axios';
+import xpathlib from 'xpath';
+import { DOMParser } from 'xmldom';
+import { head, get, find, isArray, isString, isObject, keys, toPairs } from 'lodash';
 import {
     ADD_SERVICE,
     ADD_LAYERS_FROM_CATALOGS,
@@ -58,6 +61,7 @@ import {
     recordToLayer
 } from '../utils/CatalogUtils';
 import CoordinatesUtils from '../utils/CoordinatesUtils';
+import LayersUtils from '../utils/LayersUtils';
 
 
 /**
@@ -256,12 +260,11 @@ export default (API) => ({
             }),
     getMetadataRecordById: (action$, store) =>
         action$.ofType(GET_METADATA_RECORD_BY_ID)
-            .switchMap(() => {
+            .switchMap(({metadataOptions = {}}) => {
                 const state = store.getState();
                 const layer = getSelectedLayer(state);
-                return Rx.Observable.fromPromise(
-                    API.csw.getRecordById(layer.catalogURL)
-                )
+
+                const cswDCFlow = Rx.Observable.defer(() => API.csw.getRecordById(layer.catalogURL))
                     .switchMap((action) => {
                         if (action && action.error) {
                             return Rx.Observable.of(error({
@@ -277,6 +280,67 @@ export default (API) => ({
                             );
                         }
                         return Rx.Observable.empty();
+                    });
+
+                return Rx.Observable.defer(() => API.wms.getCapabilities(LayersUtils.getCapabilitiesUrl(layer)))
+                    .switchMap((caps) => {
+                        const layersXml = get(caps, 'capability.layer.layer', []);
+                        const metadataUrls = layersXml.length === 1 ? layersXml[0].metadataURL : find(layersXml, l => l.name === layer.name.split(':')[1]);
+                        const metadataUrl = get(find(metadataUrls, mUrl => isString(mUrl.type) &&
+                            mUrl.type.toLowerCase() === 'iso19115:2003' &&
+                            (mUrl.format === 'application/xml' || mUrl.format === 'text/xml')), 'onlineResource.href');
+                        const extractor = find(get(metadataOptions, 'extractors', []),
+                            ({properties, layersRegex}) => {
+                                const rxp = layersRegex ? new RegExp(layersRegex) : null;
+                                return isObject(properties) && (layersRegex ? rxp.test(layer.name) : true);
+                            }
+                        );
+
+                        const metadataFlow = Rx.Observable.defer(() => axios.get(metadataUrl))
+                            .pluck('data')
+                            .map(metadataXml => new DOMParser().parseFromString(metadataXml))
+                            .map(metadataDoc => {
+                                const selectXpath = xpathlib.useNamespaces(metadataOptions.xmlNamespaces || {});
+
+                                const processProperties = (properties = {}, doc) => toPairs(properties).reduce((result, [propName, xpath]) => {
+                                    let finalProp;
+
+                                    if (isObject(xpath) &&
+                                        isString(xpath.xpath) &&
+                                        isObject(xpath.properties) &&
+                                        keys(xpath.properties).length > 0
+                                    ) {
+                                        const newDocs = selectXpath(xpath.xpath, doc);
+                                        finalProp = newDocs.map(newDoc => processProperties(xpath.properties, newDoc));
+
+                                        if (finalProp.length === 0) {
+                                            finalProp = null;
+                                        }
+                                    } else {
+                                        const selectedNodes = selectXpath(xpath, doc);
+
+                                        if (selectedNodes.length === 1) {
+                                            finalProp =  get(selectedNodes[0], 'nodeValue') ?? get(selectedNodes[0], 'childNodes[0].nodeValue');
+                                        } else if (selectedNodes.length > 1) {
+                                            finalProp = selectedNodes.map(selectedNode => get(selectedNode, 'childNodes[0].nodeValue'))
+                                                .filter(selectedNode => !!selectedNode);
+                                        }
+                                    }
+
+                                    return {
+                                        ...result,
+                                        ...(finalProp ? {[propName]: finalProp} : {})
+                                    };
+                                }, {});
+
+                                return processProperties(extractor.properties, metadataDoc);
+                            })
+                            .switchMap((result) => {
+                                return Rx.Observable.of(showLayerMetadata(result, false));
+                            });
+
+                        return metadataUrl && extractor ? metadataFlow :
+                            layer.catalogURL ? cswDCFlow : Rx.Observable.of(showLayerMetadata({}, false));
                     })
                     .startWith(
                         showLayerMetadata({}, true)

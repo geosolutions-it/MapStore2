@@ -19,7 +19,7 @@ const Dialog = require('../components/misc/Dialog');
 const {Grid, Row, Col, Panel, Accordion, Glyphicon} = require('react-bootstrap');
 
 const {toggleControl, setControlProperty} = require('../actions/controls');
-const {printSubmit, printSubmitting, configurePrintMap} = require('../actions/print');
+const { printSubmit, printError, printSubmitting, configurePrintMap} = require('../actions/print');
 
 const {mapSelector} = require('../selectors/map');
 const {layersSelector} = require('../selectors/layers');
@@ -31,7 +31,8 @@ const assign = require('object-assign');
 const {head} = require('lodash');
 
 const {scalesSelector} = require('../selectors/map');
-const {currentLocaleSelector} = require('../selectors/locale');
+const {currentLocaleSelector, currentLocaleLanguageSelector} = require('../selectors/locale');
+const {isLocalizedLayerStylesEnabledSelector, localizedLayerStylesEnvSelector} = require('../selectors/localizedLayerStyles');
 const {mapTypeSelector} = require('../selectors/maptype');
 
 const Message = require('../components/I18N/Message');
@@ -128,7 +129,9 @@ module.exports = {
                         onBeforePrint: PropTypes.func,
                         setPage: PropTypes.func,
                         onPrint: PropTypes.func,
+                        printError: PropTypes.func,
                         configurePrintMap: PropTypes.func,
+                        preloadData: PropTypes.func,
                         getPrintSpecification: PropTypes.func,
                         getLayoutName: PropTypes.func,
                         error: PropTypes.string,
@@ -146,7 +149,10 @@ module.exports = {
                         submitConfig: PropTypes.object,
                         previewOptions: PropTypes.object,
                         currentLocale: PropTypes.string,
-                        overrideOptions: PropTypes.object
+                        currentLocaleLanguage: PropTypes.string,
+                        overrideOptions: PropTypes.object,
+                        isLocalizedLayerStylesEnabled: PropTypes.bool,
+                        localizedLayerStylesEnv: PropTypes.object
                     };
 
                     static contextTypes = {
@@ -163,6 +169,7 @@ module.exports = {
                         onPrint: () => {},
                         configurePrintMap: () => {},
                         printSpecTemplate: {},
+                        preloadData: PrintUtils.preloadData,
                         getPrintSpecification: PrintUtils.getMapfishPrintSpecification,
                         getLayoutName: PrintUtils.getLayoutName,
                         getZoomForExtent: MapUtils.defaultGetZoomForExtent,
@@ -306,6 +313,7 @@ module.exports = {
                                             layoutSize={layout && layout.map || {width: 10, height: 10}}
                                             resolutions={MapUtils.getResolutions()}
                                             useFixedScales={this.props.useFixedScales}
+                                            env={this.props.localizedLayerStylesEnv}
                                             {...this.props.mapPreviewOptions}
                                         />
                                         {this.isBackgroundIgnored() ? <DefaultBackgroundOption label={LocaleUtils.getMessageById(this.context.messages, "print.defaultBackground")}/> : null}
@@ -392,10 +400,21 @@ module.exports = {
                     };
 
                     print = () => {
-                        const spec = this.props.getPrintSpecification(this.props.printSpec);
+                        // localize
+                        let pSpec = this.props.printSpec;
+                        if (this.props.isLocalizedLayerStylesEnabled) {
+                            pSpec = { ...pSpec, env: this.props.localizedLayerStylesEnv, language: this.props.currentLocaleLanguage};
+                        }
                         this.props.setPage(0);
                         this.props.onBeforePrint();
-                        this.props.onPrint(this.props.capabilities.createURL, {...spec, ...this.props.overrideOptions});
+                        this.props.preloadData(pSpec)
+                            .then(printSpec => {
+                                const spec = this.props.getPrintSpecification(printSpec);
+                                this.props.onPrint(this.props.capabilities.createURL, { ...spec, ...this.props.overrideOptions });
+                            })
+                            .catch(e => {
+                                this.props.printError("Error pre-loading data:" + e.message);
+                            });
                     };
                 }
 
@@ -410,8 +429,11 @@ module.exports = {
                     scalesSelector,
                     (state) => state.browser && (!state.browser.ie || state.browser.ie11),
                     currentLocaleSelector,
-                    mapTypeSelector
-                ], (open, capabilities, printSpec, pdfUrl, error, map, layers, scales, usePreview, currentLocale, mapType) => ({
+                    currentLocaleLanguageSelector,
+                    mapTypeSelector,
+                    isLocalizedLayerStylesEnabledSelector,
+                    localizedLayerStylesEnvSelector
+                ], (open, capabilities, printSpec, pdfUrl, error, map, layers, scales, usePreview, currentLocale, currentLocaleLanguage, mapType, isLocalizedLayerStylesEnabled, localizedLayerStylesEnv) => ({
                     open,
                     capabilities,
                     printSpec,
@@ -422,12 +444,16 @@ module.exports = {
                     scales,
                     usePreview,
                     currentLocale,
-                    mapType
+                    currentLocaleLanguage,
+                    mapType,
+                    isLocalizedLayerStylesEnabled,
+                    localizedLayerStylesEnv
                 }));
 
                 const PrintPlugin = connect(selector, {
                     toggleControl: toggleControl.bind(null, 'print', null),
                     onPrint: printSubmit,
+                    printError: printError,
                     onBeforePrint: printSubmitting,
                     setPage: setControlProperty.bind(null, 'print', 'currentPage'),
                     configurePrintMap
