@@ -43,7 +43,6 @@ export const addAsLayerEpic = (action$) =>
                 addLayer({
                     type: 'vector',
                     id: uuidv1(),
-                    isAnnotation: true,
                     name: 'Measurements',
                     hideLoading: true,
                     features: [layerFeature],
