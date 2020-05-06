@@ -47,7 +47,10 @@ const {
     sort,
     setTimeSync,
     updateFilter,
-    UPDATE_FILTER
+    UPDATE_FILTER,
+    activateTemporaryChanges,
+    DISABLE_TOOLBAR,
+    DEACTIVATE_GEOMETRY_FILTER
 } = require('../../actions/featuregrid');
 const {SET_HIGHLIGHT_FEATURES_PATH} = require('../../actions/highlight');
 const {CHANGE_DRAWING_STATUS} = require('../../actions/draw');
@@ -98,7 +101,8 @@ const {
     hideFeatureGridOnDrawerOpenMobile,
     hideDrawerOnFeatureGridOpenMobile,
     handleClickOnMap,
-    featureGridUpdateGeometryFilter
+    featureGridUpdateGeometryFilter,
+    activateTemporaryChangesEpic
 } = require('../featuregrid');
 const { onLocationChanged } = require('connected-react-router');
 
@@ -1934,5 +1938,15 @@ describe('featuregrid Epics', () => {
                 name: 'layer'
             }]
         }, done);
+    });
+    it('activateTemporaryChangesEpic', (done) => {
+        const startActions = [activateTemporaryChanges(true)];
+        testEpic(activateTemporaryChangesEpic, 2, startActions, actions => {
+            expect(actions.length).toBe(2);
+            expect(actions[0].type).toBe(DISABLE_TOOLBAR);
+            expect(actions[0].disabled).toBe(true);
+            expect(actions[1].type).toBe(DEACTIVATE_GEOMETRY_FILTER);
+            expect(actions[1].deactivated).toBe(true);
+        }, {}, done);
     });
 });
