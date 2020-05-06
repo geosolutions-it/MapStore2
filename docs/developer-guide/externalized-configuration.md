@@ -49,6 +49,27 @@ java -Dgeostore-ovr=file:<path to the override file> ...
 But this is not enough. Currently usage of the datadir must be enabled for every configuration file that can be externalized.
 We will see how to enable externalization for each of them in the following sections.
 
+### Multiple data directory locations
+
+It is possible to specify more than one datadir location path, separated by commas. This can be useful if you
+need to have different places for static configuration and dynamic one.
+A dynamic configuration file is one that is updated by MapStore using the UI, while static ones can only updated manually
+by an administrator of the server. An example are uploaded extensions, and their configuration files.
+
+MapStore looks for configuration resources in these places in order:
+
+ * the first datadir.location path
+ * other datadir.location paths, if any, in order
+ * the application root folder
+
+Dynamic files will always be written by the UI in the first location in the list, so the first path is for dynamic stuff.
+
+**Example**
+
+```sh
+-Ddatadir.location=/etc/mapstore_extensions,/etc/mapstore_static_config
+```
+
 ## Externalize the proxy configuration
 
 This must be done in the WEB-INF web.xml file:
