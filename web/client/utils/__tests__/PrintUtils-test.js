@@ -406,8 +406,12 @@ describe('PrintUtils', () => {
         expect(PrintUtils.getMapSize({rotation: true, map: {width: 200, height: 100}}, 200).height).toBe(400);
     });
     it('getNearestZoom', () => {
-        const scales = [1000, 1000, 1000000, 10000000];
-        expect(PrintUtils.getNearestZoom(0, scales)).toBe(0);
+        const scales = [10000000, 1000000, 10000, 1000];
+        expect(PrintUtils.getNearestZoom(18, scales)).toBe(2);
+    });
+    it('getNearestZoom fractional zoom', () => {
+        const scales = [10000000, 1000000, 10000, 1000];
+        expect(PrintUtils.getNearestZoom(18.3, scales)).toBe(2);
     });
     it('getMapfishPrintSpecification', () => {
         const printSpec = PrintUtils.getMapfishPrintSpecification(testSpec);
