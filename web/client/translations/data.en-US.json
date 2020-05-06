@@ -2464,6 +2464,7 @@
                 "uploadMissingPluginError": "No plugins defined in index.json",
                 "uploadMissingBundleError": "No javascript bundle in uploaded file",
                 "uploadTooManyBundlesError": "Too many javascript bundles in the zip package",
+                "uploadWrongFileFormatError": "Wrong file format, zip file expected",
                 "confirmRemovePlugin": "Are you sure you want to remove the extension?",
                 "cancelUpload": "Close",
                 "install": "Install",
