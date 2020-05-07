@@ -56,7 +56,8 @@ const convertGeometryToGeoJSON = (feature, uom, measureValueStyle) => {
         properties: {
             id: uuidv1(),
             isValidFeature: true,
-            geometryGeodesic: feature.geometry.type === 'LineString' ? {type: "LineString", coordinates: transformLineToArcs(feature.geometry.coordinates)} : null
+            geometryGeodesic: feature.geometry.type === 'LineString' ? {type: "LineString", coordinates: transformLineToArcs(feature.geometry.coordinates)} : null,
+            useGeodesicLines: feature.geometry.type === 'LineString'
         },
         style: [{
             ...DEFAULT_ANNOTATIONS_STYLES[feature.geometry.type],
