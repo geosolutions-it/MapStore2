@@ -11,6 +11,7 @@ const Joyride = require('react-joyride').default;
 const I18N = require('../I18N/I18N');
 const assign = require('object-assign');
 const {head} = require('lodash');
+const Portal = require('../misc/Portal');
 
 require('react-joyride/lib/react-joyride-compiled.css');
 require('./style/tutorial.css');
@@ -217,10 +218,12 @@ class Tutorial extends React.Component {
             joy = <div className="tutorial-joyride-placeholder" />;
         }
         return (
-            <div>
-                {joy}
-                <div id="intro-tutorial" className="tutorial-presentation-position" style={{top: this.props.introPosition}}></div>
-            </div>
+            <Portal>
+                <div>
+                    {joy}
+                    <div id="intro-tutorial" className="tutorial-presentation-position" style={{top: this.props.introPosition}}></div>
+                </div>
+            </Portal>
 
         );
     }
