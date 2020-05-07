@@ -30,7 +30,7 @@ const getGeomType = function(layer) {
 };
 
 const isAnnotationLayer = (layer) => {
-    return layer.id === "annotations" || layer.isAnnotation;
+    return layer.id === "annotations" || layer.name === "Measurements";
 };
 /**
  * Utilities for Print
@@ -168,7 +168,7 @@ const PrintUtils = {
      * @return {number}                          the index that best approximates the current map scale
      */
     getMapZoom: (scaleZoom, scales, mapScales = defaultScales) => {
-        const scale = scales[scaleZoom];
+        const scale = scales[Math.round(scaleZoom)];
         return mapScales.reduce((previous, current, index) => {
             return current < scale ? previous : index;
         }, 0) + 1;
@@ -216,7 +216,7 @@ const PrintUtils = {
                         projectedCenter.x,
                         projectedCenter.y
                     ],
-                    "scale": spec.scale || defaultScales[spec.scaleZoom],
+                    "scale": spec.scale || defaultScales[Math.round(spec.scaleZoom)],
                     "rotation": 0
                 }
             ],

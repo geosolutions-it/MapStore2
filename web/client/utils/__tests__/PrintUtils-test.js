@@ -147,10 +147,27 @@ var annotationsVectorLayer = {
     "type": "vector",
     "visibility": true,
     "group": "Local shape",
-    "id": "web2014all_mv__14",
+    "id": "annotations",
     "name": "web2014all_mv",
     "hideLoading": true,
-    "isAnnotation": true,
+    "features": [ featureCollection ],
+    "style": {
+        "weight": 3,
+        "radius": 10,
+        "opacity": 1,
+        "fillOpacity": 0.1,
+        "color": "rgb(0, 0, 255)",
+        "fillColor": "rgb(0, 0, 255)"
+    }
+};
+
+var measurementVectorLayer = {
+    "type": "vector",
+    "visibility": true,
+    "group": "Local shape",
+    "id": "aaa",
+    "name": "Measurements",
+    "hideLoading": true,
     "features": [ featureCollection ],
     "style": {
         "weight": 3,
@@ -274,6 +291,12 @@ describe('PrintUtils', () => {
     });
     it('vector layer from annotations are preprocessed for printing', () => {
         const specs = PrintUtils.getMapfishLayersSpecification([annotationsVectorLayer], {projection: "EPSG:3857"}, 'map');
+        expect(specs).toExist();
+        expect(specs.length).toBe(1);
+        expect(specs[0].geoJson.features[0].properties.ms_style.strokeColor).toBe("rgb(0, 0, 255)");
+    });
+    it('vector layer from measurements are preprocessed for printing', () => {
+        const specs = PrintUtils.getMapfishLayersSpecification([measurementVectorLayer], {projection: "EPSG:3857"}, 'map');
         expect(specs).toExist();
         expect(specs.length).toBe(1);
         expect(specs[0].geoJson.features[0].properties.ms_style.strokeColor).toBe("rgb(0, 0, 255)");
