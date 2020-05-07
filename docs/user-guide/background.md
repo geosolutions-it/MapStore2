@@ -22,7 +22,7 @@ A new background can be added through the <img src="../img/button/+++.jpg" class
 <img src="../img/background/bck-catalog.jpg" class="ms-docimage" style="max-width:500px;"/>
 
 !!! warning
-    *Default Backgrounds* service is available only accessing the [Catalog](catalog.md) from the background selector, but if you add a new Remote Service from there, it will be available also accessing [Catalog](catalog.md) from [Buger Menu](burger-menu.md) or from [TOC](toc.md). *Default Backgrounds* represent a list of backgrounds that can be configured from MapStore's configuration files (more information about that can be found in Developer Guide's [Map Configuration](../developer-guide/maps-configuration.md) section).
+    *Default Backgrounds* service is available only accessing the [Catalog](catalog.md) from the background selector, but if you add a new Remote Service from there, it will be available also accessing [Catalog](catalog.md) from [Buger Menu](menu-bar.md#burger-menu) or from [TOC](toc.md). *Default Backgrounds* represent a list of backgrounds that can be configured from MapStore's configuration files (more information about that can be found in Developer Guide's [Map Configuration](../developer-guide/maps-configuration.md) section).
 
 From the [Catalog](catalog.md) the user can choose the layers to add to the list of backgrounds:
 
