@@ -2007,7 +2007,7 @@
             "showFullscreenMap": "Montrer la carte en plein écran",
             "contentToolbar": {
                 "contentSize": "Changer la taille",
-                "contentHeightAuto": S'adapter à la hauteur du contenu",
+                "contentHeightAuto": "S'adapter à la hauteur du contenu",
                 "contentHeightView": "S'adapter la vue verticalement",
                 "smallSizeLabel": "Petit",
                 "mediumSizeLabel": "Moyen",
