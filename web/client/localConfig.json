@@ -12,6 +12,7 @@
         ]
     },
     "geoStoreUrl": "rest/geostore/",
+    "mailingList": "https://groups.google.com/forum/#!forum/mapstore-users",
     "printUrl": "pdf/info.json",
     "bingApiKey": "AhuXBu7ipR1gNbBfXhtUAyCZ6rkC5PkWpxs2MnMRZ1ZupxQfivjLCch22ozKSCAn",
     "mapquestApiKey": "__API_KEY_MAPQUEST__",
@@ -26,7 +27,11 @@
           "terrainProvider": {
               "type": "ellipsoid"
           }
-      }
+      },
+      "floatingIdentifyDelay": 1000
+    },
+    "localizedLayerStyles": {
+      "name": "mapstore_language"
     },
     "authenticationRules": [{
         "urlPattern": ".*geostore.*",
@@ -45,6 +50,9 @@
       {"name": "browser", "path": "browser"},
       {"name": "geostorymode", "path": "geostory.mode"},
       {"name": "featuregridmode", "path": "featuregrid.mode"}],
+    "userSessions": {
+      "enabled": true
+    },
     "projectionDefs": [],
     "initialState": {
       "defaultState": {
@@ -310,7 +318,8 @@
                     "showHighlightFeatureButton": true,
                     "viewerOptions": {
                         "container": "{context.ReactSwipe}"
-                    }
+                    },
+                    "showEdit": true
                 },
                 "override": {
                   "Toolbar": {
@@ -346,7 +355,15 @@
             }, {
                 "name": "TOC",
                 "cfg": {
-                    "activateMetedataTool": false
+                    "activateMetedataTool": false,
+                    "layerOptions": {
+                      "legendOptions": {
+                        "WMSLegendOptions": "forceLabels:on",
+                        "scaleDependent": true,
+                        "legendWidth": 12,
+                        "legendHeight": 12
+                      }
+                    }
                 }
             },
             "FilterLayer",
@@ -359,7 +376,9 @@
                     "showAddAsAnnotation": true
                   }
                 }
-            }, "Print", "MapImport", "MapExport", {
+            }, "Print", "MapImport", {
+                "name": "MapExport"
+            }, {
                 "name": "Settings",
                 "cfg": {
                     "wrap": true
@@ -627,6 +646,13 @@
                 "className": "navbar shadow navbar-home"
             }
         }, "Login", "Language", "NavMenu", "DashboardSave", "DashboardSaveAs", "Attribution", "Home", {
+          "name": "Share",
+          "cfg": {
+            "embedPanel": false,
+            "advancedSettings": false
+          }
+        },
+          {
           "name": "DashboardEditor",
           "cfg": {
             "catalog": {
@@ -682,6 +708,7 @@
           {
             "name": "GeoStoryEditor",
             "cfg": {
+              "disablePluginIf": "{!!(state('browser') && state('browser').mobile)}",
               "containerPosition": "columns"
             }
           },
@@ -722,16 +749,11 @@
           "NavMenu",
           "Attribution",
           {
-            "name": "BackToPage",
-            "cfg": {
-              "destRoute": "/context-manager",
-              "confirmMessage": "contextCreator.undo"
-            }
-          },
-          {
               "name": "ContextCreator",
               "cfg": {
-                  "documentationBaseURL": "https://mapstore.geo-solutions.it/mapstore/docs/api/plugins"
+                  "documentationBaseURL": "https://mapstore.geo-solutions.it/mapstore/docs/api/plugins",
+                  "backToPageDestRoute": "/context-manager",
+                  "backToPageConfirmationMessage": "contextCreator.undo"
               }
           },
           "Notifications",

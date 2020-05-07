@@ -11,7 +11,6 @@ const {
     activeSelector,
     authkeyParamNameSelector,
     delayAutoSearchSelector,
-    formatsSelector,
     groupSelector,
     layerErrorSelector,
     loadingErrorSelector,
@@ -169,11 +168,7 @@ describe('Test catalog selectors', () => {
         expect(retVal).toExist();
         expect(retVal.url).toBe(url);
     });
-    it('test formatsSelector', () => {
-        const retVal = formatsSelector(state);
-        expect(retVal).toExist();
-        expect(retVal.length).toBe(3);
-    });
+
     it('test loadingErrorSelector', () => {
         const retVal = loadingErrorSelector(state);
         expect(retVal).toBe(null);

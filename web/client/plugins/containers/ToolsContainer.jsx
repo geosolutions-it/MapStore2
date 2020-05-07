@@ -51,6 +51,7 @@ class ToolsContainer extends React.Component {
     static propTypes = {
         id: PropTypes.string.isRequired,
         container: PropTypes.func,
+        containerWrapperStyle: PropTypes.object,
         tool: PropTypes.func,
         className: PropTypes.string,
         style: PropTypes.object,
@@ -129,24 +130,33 @@ class ToolsContainer extends React.Component {
         })(this.props.tool);
     };
 
+    renderTool = (tool, i) => {
+        if (tool.element) {
+            return tool.element;
+        }
+        const help = tool.help ? <HelpBadge className="mapstore-helpbadge" helpText={tool.help}/> : <span/>;
+        const tooltip = tool.tooltip ? <Message msgId={tool.tooltip}/> : null;
+
+        const Tool = this.getTool(tool);
+        const toolCfg = this.getToolConfig(tool);
+        const toolChildren = tool.childTools || [];
+
+        return this.addTooltip(
+            <Tool {...toolCfg} pluginCfg={tool.cfg} tooltip={tooltip} style={tool.style} btnSize={this.props.toolSize} bsStyle={this.props.toolStyle} help={help} key={tool.name || "tool" + i} mapType={this.props.mapType}
+                {...tool.cfg} items={tool.items || []}>
+                {tool.cfg && tool.cfg.glyph ? <Glyphicon glyph={tool.cfg.glyph}/> : tool.icon}{help} {tool.text}
+                {toolChildren.length > 0 && <ToolsContainer
+                    {...tool.innerProps}
+                    mapType={this.props.mapType}
+                    tools={toolChildren}
+                    panels={tool.childPanels}/>}
+            </Tool>,
+            tool
+        );
+    }
+
     renderTools = () => {
-        return this.props.tools.map((tool, i) => {
-            if (tool.element) {
-                return tool.element;
-            }
-            const help = tool.help ? <HelpBadge className="mapstore-helpbadge" helpText={tool.help}/> : <span/>;
-            const tooltip = tool.tooltip ? <Message msgId={tool.tooltip}/> : null;
-
-            const Tool = this.getTool(tool);
-            const toolCfg = this.getToolConfig(tool);
-
-            return this.addTooltip(
-                <Tool {...toolCfg} pluginCfg={tool.cfg} tooltip={tooltip} btnSize={this.props.toolSize} bsStyle={this.props.toolStyle} help={help} key={tool.name || "tool" + i} mapType={this.props.mapType}
-                    {...tool.cfg} items={tool.items || []}>
-                    {tool.cfg && tool.cfg.glyph ? <Glyphicon glyph={tool.cfg.glyph}/> : tool.icon}{help} {tool.text}
-                </Tool>,
-                tool);
-        });
+        return this.props.tools.map(this.renderTool);
     };
 
     renderPanels = () => {
@@ -173,7 +183,7 @@ class ToolsContainer extends React.Component {
     render() {
         const Container = this.props.container;
         return (
-            <span id={this.props.id}>
+            <span id={this.props.id} style={this.props.containerWrapperStyle}>
                 <Container id={this.props.id + "-container"} style={this.props.style} className={this.props.className}>
                     {this.renderTools()}
                 </Container>

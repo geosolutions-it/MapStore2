@@ -14,6 +14,7 @@ import { getPluginForTest } from './pluginsTestUtils';
 
 import { INIT_MAP } from '../../actions/map';
 import { RESET_CONTROLS } from '../../actions/controls';
+import MapUtils from '../../utils/MapUtils';
 
 const map = {
     center: {
@@ -33,6 +34,7 @@ describe('Map Plugin', () => {
         ReactDOM.unmountComponentAtNode(document.getElementById("container"));
         document.body.innerHTML = '';
         setTimeout(done);
+        MapUtils.clearHooks();
     });
 
     it('creates a Map plugin with default configuration (leaflet)', () => {

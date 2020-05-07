@@ -37,6 +37,12 @@ const SAVE_MAP = 'SAVE_MAP';
 const PERMISSIONS_LIST_LOADING = 'PERMISSIONS_LIST_LOADING';
 const PERMISSIONS_LIST_LOADED = 'PERMISSIONS_LIST_LOADED';
 const MAPS_SEARCH_TEXT_CHANGED = 'MAPS_SEARCH_TEXT_CHANGED';
+const SEARCH_FILTER_CHANGED = 'MAPS:SEARCH_FILTER_CHANGED';
+const SET_SEARCH_FILTER = 'MAPS:SET_SEARCH_FILTER';
+const SEARCH_FILTER_CLEAR_ALL = 'MAPS:SEARCH_FILTER_CLEAR_ALL';
+const LOAD_CONTEXTS = 'MAPS:LOAD_CONTEXTS';
+const SET_CONTEXTS = 'MAPS:SET_CONTEXTS';
+const LOADING = 'MAPS:LOADING';
 const METADATA_CHANGED = 'METADATA_CHANGED';
 const TOGGLE_DETAILS_SHEET = 'MAPS:TOGGLE_DETAILS_SHEET';
 const TOGGLE_GROUP_PROPERTIES = 'MAPS:TOGGLE_GROUP_PROPERTIES';
@@ -117,12 +123,13 @@ function loadMaps(geoStoreUrl, searchText = "*", params = {start: 0, limit: 12})
  * @param {Object} opts options
  * @return {action}    type `MAPS_GET_MAP_RESOURCES_BY_CATEGORY` with searchText, map and opts
  */
-function getMapResourcesByCategory(map, searchText, opts) {
+function getMapResourcesByCategory(map, searchText, opts, searchFilter) {
     return {
         type: MAPS_GET_MAP_RESOURCES_BY_CATEGORY,
         map,
         searchText,
-        opts
+        opts,
+        searchFilter
     };
 }
 
@@ -136,6 +143,52 @@ function mapsSearchTextChanged(text) {
     return {
         type: MAPS_SEARCH_TEXT_CHANGED,
         text
+    };
+}
+
+function searchFilterChanged(filter, filterData) {
+    return {
+        type: SEARCH_FILTER_CHANGED,
+        filter,
+        filterData
+    };
+}
+
+function searchFilterClearAll() {
+    return {
+        type: SEARCH_FILTER_CLEAR_ALL
+    };
+}
+
+function setSearchFilter(searchFilter) {
+    return {
+        type: SET_SEARCH_FILTER,
+        searchFilter
+    };
+}
+
+function loadContexts(searchText, options, delayLoad, force) {
+    return {
+        type: LOAD_CONTEXTS,
+        searchText,
+        options,
+        delayLoad,
+        force
+    };
+}
+
+function setContexts(contexts) {
+    return {
+        type: SET_CONTEXTS,
+        contexts
+    };
+}
+
+function loading(value, name = "loading") {
+    return {
+        type: LOADING,
+        name,
+        value
     };
 }
 
@@ -939,6 +992,12 @@ module.exports = {
     metadataChanged,
     loadMaps, MAPS_LOAD_MAP,
     getMapResourcesByCategory, MAPS_GET_MAP_RESOURCES_BY_CATEGORY,
+    searchFilterChanged, SEARCH_FILTER_CHANGED,
+    setSearchFilter, SET_SEARCH_FILTER,
+    searchFilterClearAll, SEARCH_FILTER_CLEAR_ALL,
+    loadContexts, LOAD_CONTEXTS,
+    setContexts, SET_CONTEXTS,
+    loading, LOADING,
     mapsLoading,
     mapsLoaded,
     mapCreated,

@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ViewContext xmlns="http://www.opengis.net/context" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:ol="http://openlayers.org/context" xmlns:ms="http://geo-solutions.it/mapstore/context" version="1.1.0" xsi:schemaLocation="http://www.opengis.net/context http://schemas.opengis.net/context/1.1.0/context.xsd">
+  <General>
+    <Title>MapStore Context</Title>
+    <Abstract>This is a map exported from MapStore2.</Abstract>
+    <BoundingBox minx="-20037508.34" miny="-20037508.34" maxx="20037508.34" maxy="20037508.34" SRS="EPSG:900913"/>
+    <Extension>
+      <ol:maxExtent minx="-20037508.34" miny="-20037508.34" maxx="20037508.34" maxy="20037508.34"/>
+      <ms:GroupList>
+        <ms:Group id="Default" title="Default" expanded="true"/>
+        <ms:Group id="37b5eb60-5189-11ea-8531-a737d86e9a07" title="Some Group" expanded="true"/>
+        <ms:Group id="37b5eb60-5189-11ea-8531-a737d86e9a07.44bc9340-5189-11ea-8531-a737d86e9a07" title="Some Group" expanded="true"/>
+      </ms:GroupList>
+      <ms:CatalogServices selectedService="gs_stable_csw">
+        <ms:Service serviceName="gs_stable_csw">
+          <ms:Attribute name="url" type="string">https://gs-stable.geo-solutions.it/geoserver/csw</ms:Attribute>
+          <ms:Attribute name="type" type="string">csw</ms:Attribute>
+          <ms:Attribute name="title" type="string">GeoSolutions GeoServer CSW</ms:Attribute>
+          <ms:Attribute name="autoload" type="boolean">true</ms:Attribute>
+          <ms:Attribute name="jsObject" type="object">{"parameter1":"value&lt;>","parameter2":1,"parameter3":{"parameter4":2},"parameter6":null}</ms:Attribute>
+        </ms:Service>
+        <ms:Service serviceName="gs_stable_wms">
+          <ms:Attribute name="url" type="string">https://gs-stable.geo-solutions.it/geoserver/wms</ms:Attribute>
+          <ms:Attribute name="type" type="string">wms</ms:Attribute>
+          <ms:Attribute name="title" type="string">GeoSolutions GeoServer WMS</ms:Attribute>
+          <ms:Attribute name="autoload" type="boolean">false</ms:Attribute>
+        </ms:Service>
+        <ms:Service serviceName="gs_stable_wmts">
+          <ms:Attribute name="url" type="string">https://gs-stable.geo-solutions.it/geoserver/gwc/service/wmts</ms:Attribute>
+          <ms:Attribute name="type" type="string">wmts</ms:Attribute>
+          <ms:Attribute name="title" type="string">GeoSolutions GeoServer WMTS</ms:Attribute>
+          <ms:Attribute name="autoload" type="boolean">false</ms:Attribute>
+        </ms:Service>
+      </ms:CatalogServices>
+      <ms:center x="-83.01860427856452" y="36.23686543982026" crs="EPSG:4326"/>
+      <ms:zoom>3</ms:zoom>
+    </Extension>
+  </General>
+  <LayerList>
+    <Layer queryable="0" hidden="1">
+      <Name>s2cloudless:s2cloudless</Name>
+      <Title>Sentinel 2 Cloudless</Title>
+      <Server service="OGC:WMS" version="1.3.0">
+        <OnlineResource xlink:type="simple" xlink:href="https://1maps.geo-solutions.it/geoserver/wms"/>
+      </Server>
+      <FormatList>
+        <Format current="1">image/jpeg</Format>
+      </FormatList>
+      <Extension>
+        <ol:singleTile>false</ol:singleTile>
+        <ol:transparent>true</ol:transparent>
+        <ol:isBaseLayer>true</ol:isBaseLayer>
+        <ol:opacity>1</ol:opacity>
+        <ms:group>background</ms:group>
+      </Extension>
+    </Layer>
+    <Layer queryable="0" hidden="0">
+      <Name>gs:ETOPO_Shadow</Name>
+      <Title>ETOPO Shadow</Title>
+      <Server service="OGC:WMS" version="1.3.0">
+        <OnlineResource xlink:type="simple" xlink:href="https://gs-stable.geo-solutions.it/geoserver/wms"/>
+      </Server>
+      <StyleList>
+        <Style>
+          <Name>stylename</Name>
+          <Title>A boring default style</Title>
+        </Style>
+      </StyleList>
+      <Extension>
+        <ol:maxExtent minx="20036580.680365965" miny="0" maxx="-20036580.68036596" maxy="0"/>
+        <ol:singleTile>false</ol:singleTile>
+        <ol:transparent>true</ol:transparent>
+        <ol:isBaseLayer>false</ol:isBaseLayer>
+        <ol:opacity>1</ol:opacity>
+        <ms:group>37b5eb60-5189-11ea-8531-a737d86e9a07.44bc9340-5189-11ea-8531-a737d86e9a07</ms:group>
+      </Extension>
+    </Layer>
+    <Layer queryable="0" hidden="0">
+      <Name>mapstore:Meteorite_Landings_from_NASA_Open_Data_Portal</Name>
+      <Title>Meteorite Landings from NASA Open Data Portal</Title>
+      <Server service="OGC:WMS" version="1.3.0">
+        <OnlineResource xlink:type="simple" xlink:href="https://gs-stable.geo-solutions.it/geoserver/wms"/>
+      </Server>
+      <DimensionList>
+        <Dimension name="time" units="ISO8601" default="2101-01-01T00:00:00Z">1583-01-01T00:00:00.000Z/2101-01-01T00:00:00.000Z/PT1S</Dimension>
+      </DimensionList>
+      <StyleList>
+        <Style>
+          <Name>mapstore:meteorites</Name>
+          <Title>Meteorite</Title>
+        </Style>
+      </StyleList>
+      <Extension>
+        <ol:maxExtent minx="0" miny="0" maxx="0" maxy="0"/>
+        <ol:singleTile>true</ol:singleTile>
+        <ol:transparent>true</ol:transparent>
+        <ol:isBaseLayer>false</ol:isBaseLayer>
+        <ol:opacity>1</ol:opacity>
+        <ms:group>37b5eb60-5189-11ea-8531-a737d86e9a07</ms:group>
+        <ms:search type="wfs" xlink:type="simple" xlink:href="https://gs-stable.geo-solutions.it/geoserver/wfs"/>
+        <ms:DimensionList>
+          <ms:Dimension name="time" type="multidim-extension" xlink:type="simple" xlink:href="https://gs-stable.geo-solutions.it/geoserver/gwc/service/wmts"/>
+        </ms:DimensionList>
+      </Extension>
+    </Layer>
+    <Layer queryable="0" hidden="0">
+      <Name>mapstore:states</Name>
+      <Title>states</Title>
+      <Server service="OGC:WMS" version="1.3.0">
+        <OnlineResource xlink:type="simple" xlink:href="https://gs-stable.geo-solutions.it/geoserver/wms"/>
+      </Server>
+      <FormatList>
+        <Format current="1">image/png</Format>
+      </FormatList>
+      <Extension>
+        <ol:maxExtent minx="-13917188.693592682" miny="2855355.382299433" maxx="-7422899.184910233" maxy="6359070.895688462"/>
+        <ol:singleTile>false</ol:singleTile>
+        <ol:transparent>true</ol:transparent>
+        <ol:isBaseLayer>false</ol:isBaseLayer>
+        <ol:opacity>1</ol:opacity>
+        <ms:group>37b5eb60-5189-11ea-8531-a737d86e9a07</ms:group>
+        <ms:search type="wfs" xlink:type="simple" xlink:href="https://gs-stable.geo-solutions.it/geoserver/wfs"/>
+        <ms:filter>{"searchUrl":null,"featureTypeConfigUrl":null,"showGeneratedFilter":false,"attributePanelExpanded":true,"spatialPanelExpanded":true,"crossLayerExpanded":true,"showDetailsPanel":false,"groupLevels":5,"useMapProjection":false,"toolbarEnabled":true,"groupFields":[{"id":1,"logic":"OR","index":0}],"maxFeaturesWPS":5,"filterFields":[{"rowId":1581959068162,"groupId":1,"attribute":"land_km","operator":">","value":100000,"type":"number","fieldOptions":{"valuesCount":0,"currentPage":1},"exception":null}],"spatialField":{"method":"Circle","operation":"INTERSECTS","geometry":{"id":"8c6ea070-51a7-11ea-82fe-2bce7d4e64fe","type":"Polygon","extent":[-10247583.345629543,3521681.013624397,-7950544.348505222,5818720.010748717],"center":[-9099063.847067382,4670200.512186557],"coordinates":[[[-7950544.348505222,4670200.512186557],[-7952810.689381311,4742316.6481908215],[-7959600.767797531,4814148.174753006],[-7970887.786416465,4885411.605654472],[-7986627.200532176,4955825.696690616],[-8006756.893867798,5025112.555613257],[-8031197.42372012,5092998.738844383],[-8059852.334483632,5159216.330633026],[-8092608.538316733,5223504.000396337],[-8129336.761447779,5285608.034072003],[-8169892.054359602,5345283.3354117405],[-8214114.363839028,5402294.393264214],[-8261829.164633797,5456416.211029952],[-8312848.148223987,5507435.194620143],[-8366969.965989726,5555149.995414911],[-8423981.023842199,5599372.304894337],[-8483656.325181935,5639927.59780616],[-8545760.358857602,5676655.820937207],[-8610048.028620914,5709412.024770307],[-8676265.620409556,5738066.935533819],[-8744151.803640682,5762507.465386141],[-8813438.662563324,5782637.158721764],[-8883852.753599467,5798376.572837473],[-8955116.184500933,5809663.591456408],[-9026947.711063117,5816453.6698726285],[-9099063.847067382,5818720.010748717],[-9171179.983071648,5816453.6698726285],[-9243011.509633832,5809663.591456409],[-9314274.940535298,5798376.572837474],[-9384689.031571442,5782637.158721764],[-9453975.890494082,5762507.465386141],[-9521862.073725209,5738066.935533819],[-9588079.66551385,5709412.024770306],[-9652367.335277162,5676655.820937206],[-9714471.36895283,5639927.59780616],[-9774146.670292566,5599372.304894337],[-9831157.728145039,5555149.995414911],[-9885279.545910778,5507435.194620143],[-9936298.529500967,5456416.211029952],[-9984013.330295736,5402294.393264214],[-10028235.639775163,5345283.335411741],[-10068790.932686985,5285608.034072004],[-10105519.155818032,5223504.000396337],[-10138275.359651132,5159216.330633027],[-10166930.270414643,5092998.7388443835],[-10191370.800266966,5025112.555613258],[-10211500.493602589,4955825.696690617],[-10227239.907718299,4885411.605654472],[-10238526.926337233,4814148.174753007],[-10245317.004753454,4742316.6481908215],[-10247583.345629543,4670200.512186557],[-10245317.004753454,4598084.376182293],[-10238526.926337233,4526252.8496201085],[-10227239.907718299,4454989.418718642],[-10211500.493602589,4384575.327682498],[-10191370.800266966,4315288.468759857],[-10166930.270414643,4247402.2855287315],[-10138275.359651132,4181184.6937400885],[-10105519.155818032,4116897.0239767767],[-10068790.932686985,4054792.990301111],[-10028235.639775163,3995117.6889613736],[-9984013.330295736,3938106.6311089005],[-9936298.529500969,3883984.813343162],[-9885279.545910778,3832965.8297529714],[-9831157.728145039,3785251.0289582037],[-9774146.670292566,3741028.7194787767],[-9714471.368952828,3700473.426566954],[-9652367.335277162,3663745.2034359076],[-9588079.66551385,3630988.9996028068],[-9521862.073725209,3602334.0888392953],[-9453975.890494082,3577893.5589869726],[-9384689.03157144,3557763.8656513495],[-9314274.940535298,3542024.4515356408],[-9243011.509633832,3530737.432916706],[-9171179.983071646,3523947.3545004856],[-9099063.847067382,3521681.013624397],[-9026947.711063119,3523947.3545004856],[-8955116.184500933,3530737.4329167055],[-8883852.753599469,3542024.4515356408],[-8813438.662563322,3557763.86565135],[-8744151.803640682,3577893.5589869726],[-8676265.620409558,3602334.0888392953],[-8610048.028620914,3630988.9996028068],[-8545760.358857602,3663745.203435908],[-8483656.325181935,3700473.4265669542],[-8423981.023842199,3741028.7194787767],[-8366969.965989726,3785251.0289582033],[-8312848.148223988,3832965.829752971],[-8261829.1646337975,3883984.8133431617],[-8214114.363839028,3938106.6311089005],[-8169892.054359602,3995117.6889613727],[-8129336.76144778,4054792.99030111],[-8092608.538316733,4116897.023976776],[-8059852.334483633,4181184.6937400876],[-8031197.42372012,4247402.2855287315],[-8006756.893867798,4315288.468759856],[-7986627.200532176,4384575.327682497],[-7970887.786416465,4454989.418718643],[-7959600.767797532,4526252.849620108],[-7952810.689381311,4598084.376182293],[-7950544.348505222,4670200.512186557]]],"radius":1148519.49856216,"style":{},"projection":"EPSG:3857"},"attribute":"geom"},"simpleFilterFields":[],"crossLayerFilter":null,"autocompleteEnabled":true}</ms:filter>
+      </Extension>
+    </Layer>
+    <Layer queryable="0" hidden="0">
+      <Name>gs:ne_110m_ocean</Name>
+      <Title>Ocean</Title>
+      <Server service="OGC:WMS" version="1.3.0">
+        <OnlineResource xlink:type="simple" xlink:href="https://gs-stable.geo-solutions.it/geoserver/wms"/>
+      </Server>
+      <Extension>
+        <ol:maxExtent minx="-20037508.342789244" miny="-20801248.80884599" maxx="0" maxy="0"/>
+        <ol:singleTile>false</ol:singleTile>
+        <ol:transparent>true</ol:transparent>
+        <ol:isBaseLayer>false</ol:isBaseLayer>
+        <ol:opacity>0.8</ol:opacity>
+        <ms:group>Default</ms:group>
+        <ms:search type="wfs" xlink:type="simple" xlink:href="https://gs-stable.geo-solutions.it/geoserver/wfs"/>
+      </Extension>
+    </Layer>
+    <Layer queryable="0" hidden="0">
+      <Name>mapstore:Types</Name>
+      <Title>Types</Title>
+      <Server service="OGC:WMS" version="1.3.0">
+        <OnlineResource xlink:type="simple" xlink:href="https://gs-stable.geo-solutions.it/geoserver/wms"/>
+      </Server>
+      <FormatList>
+        <Format current="1">image/png</Format>
+      </FormatList>
+      <Extension>
+        <ol:maxExtent minx="0" miny="0" maxx="0" maxy="0"/>
+        <ol:singleTile>false</ol:singleTile>
+        <ol:transparent>true</ol:transparent>
+        <ol:isBaseLayer>false</ol:isBaseLayer>
+        <ol:opacity>1</ol:opacity>
+        <ms:group>Default</ms:group>
+        <ms:search type="wfs" xlink:type="simple" xlink:href="https://gs-stable.geo-solutions.it/geoserver/wfs"/>
+      </Extension>
+    </Layer>
+  </LayerList>
+</ViewContext>

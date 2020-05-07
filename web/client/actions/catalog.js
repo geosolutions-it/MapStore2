@@ -18,6 +18,8 @@ var API = {
 };
 
 import {addLayer as addNewLayer, changeLayerProperties} from './layers';
+import { zoomToExtent } from './map';
+
 
 import * as LayersUtils from '../utils/LayersUtils';
 import * as ConfigUtils from '../utils/ConfigUtils';
@@ -41,7 +43,7 @@ export const CHANGE_METADATA_TEMPLATE = 'CATALOG:CHANGE_METADATA_TEMPLATE';
 export const CHANGE_TITLE = 'CATALOG:CHANGE_TITLE';
 export const CHANGE_TEXT = 'CATALOG:CHANGE_TEXT';
 export const CHANGE_TYPE = 'CATALOG:CHANGE_TYPE';
-export const CHANGE_AUTOLOAD = 'CATALOG:CHANGE_AUTOLOAD';
+export const CHANGE_SERVICE_PROPERTY = "CATALOG:CHANGE_SERVICE_PROPERTY";
 export const CHANGE_SERVICE_FORMAT = 'CATALOG:CHANGE_SERVICE_FORMAT';
 export const FOCUS_SERVICES_LIST = 'CATALOG:FOCUS_SERVICES_LIST';
 export const CHANGE_URL = 'CATALOG:CHANGE_URL';
@@ -146,10 +148,12 @@ export function changeText(text) {
         text
     };
 }
-export function changeAutoload(autoload) {
+
+export function changeServiceProperty(property, value) {
     return {
-        type: CHANGE_AUTOLOAD,
-        autoload
+        type: CHANGE_SERVICE_PROPERTY,
+        property,
+        value
     };
 }
 export function changeServiceFormat(format) {
@@ -256,15 +260,18 @@ export function describeError(layer, error) {
     };
 }
 
-export function addLayerAndDescribe(layer) {
+export function addLayerAndDescribe(layer, {zoomToLayer = false} = {}) {
     return (dispatch, getState) => {
         const state = getState();
         const layers = layersSelector(state);
         const id = LayersUtils.getLayerId(layer, layers || []);
         dispatch(addNewLayer({...layer, id}));
+        if (zoomToLayer && layer.bbox) {
+            dispatch(zoomToExtent(layer.bbox.bounds, layer.bbox.crs));
+        }
         if (layer.type === 'wms') {
             // try to describe layer
-            return API.wms.describeLayers(layer.url, layer.name).then((results) => {
+            return API.wms.describeLayers(LayersUtils.getLayerUrl(layer), layer.name).then((results) => {
                 if (results) {
                     let description = find(results, (desc) => desc.name === layer.name );
                     if (description && description.owsType === 'WFS') {
@@ -280,6 +287,7 @@ export function addLayerAndDescribe(layer) {
 
             }).catch((e) => dispatch(describeError(layer, e)));
         }
+
         return null;
     };
 }
@@ -290,9 +298,10 @@ export function addLayerError(error) {
         error
     };
 }
-export function getMetadataRecordById() {
+export function getMetadataRecordById(metadataOptions) {
     return {
-        type: GET_METADATA_RECORD_BY_ID
+        type: GET_METADATA_RECORD_BY_ID,
+        metadataOptions
     };
 }
 export const changeMetadataTemplate = (metadataTemplate) => ({type: CHANGE_METADATA_TEMPLATE, metadataTemplate});

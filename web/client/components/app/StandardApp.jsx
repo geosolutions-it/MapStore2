@@ -33,7 +33,7 @@ require('./appPolyfill');
 
 const { augmentStore } = require('../../utils/StateUtils');
 
-const ErrorBoundary = require('react-error-boundary').default;
+const {LOAD_EXTENSIONS} = require('../../actions/contextcreator');
 
 /**
  * Standard MapStore2 application component
@@ -128,12 +128,11 @@ class StandardApp extends React.Component {
         const {plugins, requires} = this.props.pluginsDef;
         const {appStore, initialActions, appComponent, mode, ...other} = this.props;
         const App = dragDropContext(html5Backend)(this.props.appComponent);
+
         return this.state.initialized ?
-            <ErrorBoundary onError={e => {
-                console.error(e); // eslint-disable-line no-console
-            }}><Provider store={this.store}>
-                    <App {...other} plugins={assign(PluginsUtils.getPlugins({...plugins, ...this.state.pluginsRegistry}), { requires })} />
-                </Provider></ErrorBoundary>
+            <Provider store={this.store}>
+                <App {...other} plugins={assign(PluginsUtils.getPlugins({...plugins, ...this.state.pluginsRegistry}), { requires })} />
+            </Provider>
             : (<span><div className="_ms2_init_spinner _ms2_init_center"><div></div></div>
                 <div className="_ms2_init_text _ms2_init_center">Loading MapStore</div></span>);
     }
@@ -148,12 +147,16 @@ class StandardApp extends React.Component {
             initialized: true
         });
     };
+    getAssetPath =(asset) => {
+        return ConfigUtils.getConfigProp("extensionsFolder") + asset;
+    };
     loadExtensions = (path, callback) => {
         if (this.props.enableExtensions) {
             return axios.get(path).then((response) => {
                 const plugins = response.data;
                 Promise.all(Object.keys(plugins).map((pluginName) => {
-                    return PluginsUtils.loadPlugin(plugins[pluginName].bundle).then((loaded) => {
+                    const bundlePath = this.getAssetPath(plugins[pluginName].bundle);
+                    return PluginsUtils.loadPlugin(bundlePath).then((loaded) => {
                         return loaded.plugin.loadPlugin().then((impl) => {
                             augmentStore({ reducers: impl.reducers || {}, epics: impl.epics || {} });
                             const pluginDef = {
@@ -181,19 +184,29 @@ class StandardApp extends React.Component {
         }
         return callback({}, []);
     };
+    onPluginsLoaded = (plugins, translations) => {
+        this.setState({
+            pluginsRegistry: plugins
+        });
+        if (translations.length > 0) {
+            ConfigUtils.setConfigProp("translationsPath", [...castArray(ConfigUtils.getConfigProp("translationsPath")), ...translations.map(this.getAssetPath)]);
+        }
+        const locale = LocaleUtils.getUserLocale();
+        this.store.dispatch(loadLocale(null, locale));
+    };
     init = (config) => {
         this.store.dispatch(changeBrowserProperties(ConfigUtils.getBrowserProperties()));
         this.store.dispatch(localConfigLoaded(config));
-        this.addProjDefinitions(config);
-        const locale = LocaleUtils.getUserLocale();
-        this.loadExtensions(ConfigUtils.getConfigProp('extensionsRegistry'), (plugins, translations) => {
-            this.setState({
-                pluginsRegistry: plugins
+        if (this.store.addActionListener) {
+            this.store.addActionListener((action) => {
+                if (action.type === LOAD_EXTENSIONS) {
+                    this.loadExtensions(ConfigUtils.getConfigProp('extensionsRegistry'), this.onPluginsLoaded);
+                }
             });
-            if (translations.length > 0) {
-                ConfigUtils.setConfigProp("translationsPath", [...castArray(ConfigUtils.getConfigProp("translationsPath")), ...translations]);
-            }
-            this.store.dispatch(loadLocale(null, locale));
+        }
+        this.addProjDefinitions(config);
+        this.loadExtensions(ConfigUtils.getConfigProp('extensionsRegistry'), (plugins, translations) => {
+            this.onPluginsLoaded(plugins, translations);
             if (this.props.onInit) {
                 this.props.onInit(this.store, this.afterInit.bind(this, [config]), config);
             } else {

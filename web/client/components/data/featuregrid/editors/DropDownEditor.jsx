@@ -13,6 +13,12 @@ const {forceSelection} = require('../../../../utils/FeatureGridEditorUtils');
 const {head} = require('lodash');
 const assign = require('object-assign');
 
+/**
+ * @memberof components.data.featuregrid.editors
+ * @name DropDownEditor
+ * @class
+ * @prop {string[]} editorProps.values list of valid values
+ */
 class DropDownEditor extends AttributeEditor {
     static propTypes = {
         column: PropTypes.object,

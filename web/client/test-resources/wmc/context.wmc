@@ -16,6 +16,34 @@
     </KeywordList>
     <Extension>
       <ol:maxExtent xmlns:ol="http://openlayers.org/context" minx="-1.00" miny="1.00" maxx="-1.00" maxy="1.00" />
+      <ms:GroupList xmlns:ms="http://geo-solutions.it/mapstore/context">
+        <ms:Group id="Default" title="Default" expanded="true"/>
+        <ms:Group id="groupid1" title="Group1" expanded="true"/>
+        <ms:Group id="groupid1.groupid2" title="Group2" expanded="false"/>
+        <ms:Group id="groupid3" title="Group3" expanded="true"/>
+      </ms:GroupList>
+      <ms:CatalogServices xmlns:ms="http://geo-solutions.it/mapstore/context" selectedService="testservice">
+        <ms:Service serviceName="Demo CSW Service">
+          <ms:Attribute name="url" type="string">https://testserver/csw</ms:Attribute>
+          <ms:Attribute name="type" type="string">csw</ms:Attribute>
+          <ms:Attribute name="title" type="string">Demo CSW Service</ms:Attribute>
+          <ms:Attribute name="autoload" type="boolean">true</ms:Attribute>
+          <ms:Attribute name="oldService" type="string">old_service</ms:Attribute>
+        </ms:Service>
+        <ms:Service serviceName="testservices">
+          <ms:Attribute name="url" type="string">https://testserver/testservice/csw</ms:Attribute>
+          <ms:Attribute name="type" type="string">csw</ms:Attribute>
+          <ms:Attribute name="title" type="string">testservice</ms:Attribute>
+          <ms:Attribute name="autoload" type="boolean">false</ms:Attribute>
+          <ms:Attribute name="showAdvancedSettings" type="boolean">true</ms:Attribute>
+          <ms:Attribute name="showTemplate" type="boolean">true</ms:Attribute>
+          <ms:Attribute name="metadataTemplate" type="string">&lt;p>${description}&lt;/p></ms:Attribute>
+          <ms:Attribute name="format" type="string">image/jpeg</ms:Attribute>
+          <ms:Attribute name="jsObject" type="object">{"parameter1":"value&lt;>","parameter2":1,"parameter3":{"parameter4":2},"parameter6":null}</ms:Attribute>
+        </ms:Service>
+      </ms:CatalogServices>
+      <ms:center xmlns:ms="http://geo-solutions.it/mapstore/context" x="1.5" y="2.5" crs="EPSG:3857"/>
+      <ms:zoom xmlns:ms="http://geo-solutions.it/mapstore/context">7</ms:zoom>
     </Extension>
   </General>
   <LayerList>
@@ -47,6 +75,10 @@
         <Format>image/tiff</Format>
         <Format>image/tiff8</Format>
       </FormatList>
+      <DimensionList>
+        <Dimension name="elevation" units="EPSG:5030" unitSymbol="m" default="0.0" multipleValues="1">0.0,200.0,400.0</Dimension>
+        <Dimension name="time" units="ISO8601" default="current" multipleValues="1">2016-02-23T03:00:00.000Z,2016-02-23T06:00:00.000Z,2016-02-23T09:00:00.000Z,2016-02-23T12:00:00.000Z,2016-02-23T15:00:00.000Z,2016-02-23T18:00:00.000Z,2016-02-23T21:00:00.000Z,2016-02-24T00:00:00.000Z,2016-02-24T03:00:00.000Z,2016-02-24T06:00:00.000Z,2016-02-24T09:00:00.000Z,2016-02-24T12:00:00.000Z,2016-02-24T15:00:00.000Z,2016-02-24T18:00:00.000Z,2016-02-24T21:00:00.000Z,2016-02-25T00:00:00.000Z,2016-02-25T03:00:00.000Z,2016-02-25T06:00:00.000Z,2016-02-25T09:00:00.000Z,2016-02-25T12:00:00.000Z,2016-02-25T15:00:00.000Z,2016-02-25T18:00:00.000Z,2016-02-25T21:00:00.000Z,2016-02-26T00:00:00.000Z</Dimension>
+      </DimensionList>
       <StyleList>
         <Style current="1">
           <Name />
@@ -64,6 +96,12 @@
         <ol:singleTile xmlns:ol="http://openlayers.org/context">true</ol:singleTile>
         <ol:transitionEffect xmlns:ol="http://openlayers.org/context">resize</ol:transitionEffect>
         <ol:gutter xmlns:ol="http://openlayers.org/context">0</ol:gutter>
+        <ol:opacity xmlns:ol="http://openlayers.org/context">0.5</ol:opacity>
+        <ms:group xmlns:ms="http://geo-solutions.it/mapstore/context">groupid1</ms:group>
+        <ms:search xmlns:ms="http://geo-solutions.it/mapstore/context" xmlns:xlink="http://www.w3.org/1999/xlink" type="wfs" xlink:type="simple" xlink:href="https://server.com/wfs"/>
+        <ms:DimensionList xmlns:ms="http://geo-solutions.it/mapstore/context">
+          <ms:Dimension xmlns:ms="http://geo-solutions.it/mapstore/context" xmlns:xlink="http://www.w3.org/1999/xlink" name="time" type="multidim-extension" xlink:type="simple" xlink:href="https://server.com/service/wmts"/>
+        </ms:DimensionList>
       </Extension>
     </Layer>
     <Layer queryable="0" hidden="1">

@@ -12,6 +12,11 @@ const ReactDOM = require('react-dom');
 const StandardApp = require('../StandardApp');
 
 const ConfigUtils = require('../../../utils/ConfigUtils');
+const {LOAD_EXTENSIONS} = require('../../../actions/contextcreator');
+const MockAdapter = require("axios-mock-adapter");
+const axios = require("../../../libs/ajax");
+
+let mockAxios;
 
 class mycomponent extends React.Component {
     static propTypes = {
@@ -36,14 +41,20 @@ class mycomponent extends React.Component {
 describe('StandardApp', () => {
     beforeEach((done) => {
         document.body.innerHTML = '<div id="container"></div>';
+        ConfigUtils.setConfigProp("extensionsFolder", "");
         ConfigUtils.setLocalConfigurationFile('base/web/client/test-resources/localConfig.json');
         setTimeout(done);
     });
 
     afterEach((done) => {
+        if (mockAxios) {
+            mockAxios.restore();
+        }
+        mockAxios = null;
         ReactDOM.unmountComponentAtNode(document.getElementById("container"));
         document.body.innerHTML = '';
         ConfigUtils.setLocalConfigurationFile('localConfig.json');
+        ConfigUtils.setConfigProp("persisted.reduxStore", undefined);
         setTimeout(done);
     });
 
@@ -255,5 +266,105 @@ describe('StandardApp', () => {
         } finally {
             ConfigUtils.loadConfiguration = oldLoad;
         }
+    });
+    it('extensions.json is loaded if extensions are enabled', (done) => {
+        mockAxios = new MockAdapter(axios);
+        mockAxios.onGet().reply(200, {});
+        const store = () => ({
+            dispatch() { },
+            getState() {
+                return {};
+            },
+            subscribe() {
+            }
+        });
+
+
+        const app = ReactDOM.render(<StandardApp appStore={store} enableExtensions />, document.getElementById("container"));
+        expect(app).toExist();
+        setTimeout(() => {
+            expect(mockAxios.history.get.length).toBe(2);
+            expect(mockAxios.history.get[1].url).toBe("extensions.json");
+            done();
+        }, 0);
+    });
+    it('extensions.json is not loaded if extensions are not enabled', (done) => {
+        mockAxios = new MockAdapter(axios);
+        mockAxios.onGet().reply(200, {});
+        const store = () => ({
+            dispatch() { },
+            getState() {
+                return {};
+            },
+            subscribe() {
+            }
+        });
+
+
+        const app = ReactDOM.render(<StandardApp appStore={store} enableExtensions={false} />, document.getElementById("container"));
+        expect(app).toExist();
+        setTimeout(() => {
+            expect(mockAxios.history.get.length).toBe(1);
+            expect(mockAxios.history.get[0].url).toNotBe("extensions.json");
+            done();
+        }, 0);
+    });
+    it('LOAD_EXTENSIONS actions triggers reloading the extensions.json registry', (done) => {
+        mockAxios = new MockAdapter(axios);
+        mockAxios.onGet().reply(200, {});
+        const store = () => ({
+            dispatch() {},
+            getState() {
+                return {};
+            },
+            subscribe() {
+            },
+            addActionListener(listener) {
+                listener({
+                    type: LOAD_EXTENSIONS
+                });
+            }
+        });
+
+
+        const app = ReactDOM.render(<StandardApp appStore={store} enableExtensions/>, document.getElementById("container"));
+        expect(app).toExist();
+        setTimeout(() => {
+            expect(mockAxios.history.get.length).toBe(3);
+            expect(mockAxios.history.get[1].url).toBe("extensions.json");
+            expect(mockAxios.history.get[2].url).toBe("extensions.json");
+            done();
+        }, 0);
+    });
+    it('extensions assets are loaded from external folder if configured', (done) => {
+        ConfigUtils.setConfigProp("extensionsFolder", "myfolder/");
+        mockAxios = new MockAdapter(axios);
+        mockAxios.onGet(/localConfig/).reply(200, {});
+        mockAxios.onGet(/extensions/).reply(200, {
+            My: {
+                bundle: "myplugin.js",
+                translations: "translations"
+            }
+        });
+        mockAxios.onGet(/myplugin/).reply(200, "window.webpackJsonp.push([[\"myplugin\"], {\"a\": function(e, n, t) {n.default={}} }])");
+        mockAxios.onGet(/translations/).reply(200, {});
+        const store = () => ({
+            dispatch() { },
+            getState() {
+                return {};
+            },
+            subscribe() {
+            },
+            replaceReducer() {}
+        });
+        ConfigUtils.setConfigProp("persisted.reduxStore", store());
+
+        const app = ReactDOM.render(<StandardApp appStore={store} enableExtensions />, document.getElementById("container"));
+        expect(app).toExist();
+        setTimeout(() => {
+            expect(mockAxios.history.get.length).toBe(3);
+            expect(mockAxios.history.get[2].url).toBe("myfolder/myplugin.js");
+            done();
+        }, 0);
     });
 });

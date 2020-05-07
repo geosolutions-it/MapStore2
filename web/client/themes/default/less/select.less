@@ -1,12 +1,12 @@
 .rw-widget {
-	color: @ms2-color-primary !important;
-	background-color: @ms2-color-background !important;
-	border: 1px solid @ms2-color-shade-lighter !important;
+    color: @ms2-color-primary  !important;
+    background-color: @ms2-color-background  !important;
+    border: 1px solid @ms2-color-shade-lighter  !important;
 }
 
 .rw-list-option:hover {
-	color: @ms2-color-background !important;
-	background-color: @ms2-color-primary !important;
+    color: @ms2-color-background  !important;
+    background-color: @ms2-color-primary  !important;
 }
 
 .rw-list-option:focus {
@@ -14,130 +14,70 @@
 }
 
 .rw-state-focus {
-	color: @ms2-color-primary !important;
-	background-color: transparent !important;
-    border: 1px solid @ms2-color-primary !important;
+    color: @ms2-color-primary  !important;
+    background-color: transparent !important;
+    border: 1px solid @ms2-color-primary  !important;
     outline: none;
 }
 
 .rw-i {
-	color: @ms2-color-primary !important;
+    color: @ms2-color-primary  !important;
 }
 
 
 .rw-placeholder {
-	color:   !important;
-	background-color: @ms2-color-background !important;
+    color: @ms2-color-text  !important;
+    background-color: @ms2-color-background  !important;
 }
+
 .rw-input {
     color: @ms2-color-text;
 }
 
 .rw-filter-input {
-	border: 1px solid @ms2-color-primary !important;
+    border: 1px solid @ms2-color-primary  !important;
 }
 
 .rw-select {
-	border-left: 1px solid @ms2-color-shade-lighter !important;
+    border-left: 1px solid @ms2-color-shade-lighter  !important;
 }
+
 .rw-combo-clearable {
-    background-color: @ms2-color-background !important;
+    background-color: @ms2-color-background  !important;
 }
-.rw-combo-clearable input.rw-input{
+
+.rw-combo-clearable input.rw-input {
     -webkit-box-shadow: inset 0 1px rgba(0, 0, 0, 0.075);
     box-shadow: inset 0 1px rgba(0, 0, 0, 0.075);
 }
-.rw-combo-clearable button{
+
+.rw-combo-clearable button {
     border: none !important;
     -webkit-box-shadow: inset 0 1px rgba(0, 0, 0, 0.075);
     box-shadow: inset 0 1px rgba(0, 0, 0, 0.075);
 }
-.rw-combo-clear .hidden{ 
+
+.rw-combo-clear .hidden {
     display: none;
 }
+
 .rw-combo-clear {
     position: relative;
     float: right;
     bottom: 2em;
     right: 2.3em;
-    color: @ms2-color-primary !important;
+    color: @ms2-color-primary  !important;
     cursor: pointer;
 }
-.rw-combo-clearable.disabled .rw-combo-clear{
+
+.rw-combo-clearable.disabled .rw-combo-clear {
     cursor: not-allowed;
-    color:  fadeout(@ms2-color-primary, 30) !important;
-}
-.Select-placeholder {
-    background-color: @ms2-color-background;
-    border: 1px solid @ms2-color-shade-lighter;
-    color: @ms2-color-text-placeholder !important;
-}
-
-.Select-control {
-    color: @text-color !important;
-    background-color: @ms2-color-background !important;
-    border: 1px solid @ms2-color-shade-lighter !important;
-}
-
-.Select-arrow {
-    border-color: @ms2-color-primary transparent transparent !important;
-}
-
-.Select-menu-outer {
-    background-color: @ms2-color-background !important;
-    border: 1px solid @ms2-color-shade-lighter !important;
-}
-
-.Select-option {
-    color: @text-color !important;
-    background-color: @ms2-color-background !important;
-}
-.Select-option {
-    &:focus {
-        color: @text-color !important;
-        background-color: @ms2-color-background !important;
-    }
-	&:hover {
-	    background-color: @ms2-color-primary !important;
-	    color: @ms2-color-background !important;
-	}
-}/*
-.Select-option.is-selected{
-    color: @ms2-color-text-primary !important;
-    background-color: darken(@ms2-color-primary, 10%) !important;
-}*/
-.Select-option.is-focused{
-    background-color: @ms2-color-primary !important;
-    color: @ms2-color-background !important;
-}
-
-.Select-value-label{
-    color: @text-color !important;
-    background-color: @ms2-color-background !important;
-
-}
-
-.Select--multi {
-    .Select-value {
-        background-color: @ms2-color-background !important;
-        border: 1px solid @text-color !important;
-        color: @text-color !important;
-    }
-
-
-    .Select-value-icon {
-        border-right: 1px solid @text-color !important;
-        &:hover,
-        &:focus {
-            background-color: @text-color !important;
-            color: @ms2-color-background !important;
-        }
-    }
-
+    color: fadeout(@ms2-color-primary, 30) !important;
 }
 
 select.form-control {
     border: 1px solid @ms2-color-shade-lighter;
+
     option {
         color: @ms2-color-text;
         background-color: darken(@ms2-color-background, 5%);
@@ -147,6 +87,7 @@ select.form-control {
 select {
     background-color: @ms2-color-background;
     border: 1px solid @ms2-color-shade-lighter;
+
     option {
         color: @ms2-color-text;
         background-color: darken(@ms2-color-background, 5%);
@@ -173,9 +114,9 @@ select {
         color: @ms2-color-text;
     }
 
-	.form-control {
-		height: 25px;
-		padding: 0 0 0 4px;
-		margin-bottom: 17px;
-	}
+    .form-control {
+        height: 25px;
+        padding: 0 0 0 4px;
+        margin-bottom: 17px;
+    }
 }

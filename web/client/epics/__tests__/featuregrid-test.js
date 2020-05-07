@@ -14,6 +14,7 @@ const { set } = require('../../utils/ImmutableUtils');
 
 const CoordinatesUtils = require('../../utils/CoordinatesUtils');
 const { hideMapinfoMarker, featureInfoClick, HIDE_MAPINFO_MARKER} = require('../../actions/mapInfo');
+const { createQuery } = require('../../actions/wfsquery');
 
 const {
     toggleEditMode,
@@ -44,13 +45,18 @@ const {
     GRID_QUERY_RESULT,
     changePage,
     sort,
-    setTimeSync
+    setTimeSync,
+    updateFilter,
+    UPDATE_FILTER,
+    activateTemporaryChanges,
+    DISABLE_TOOLBAR,
+    DEACTIVATE_GEOMETRY_FILTER
 } = require('../../actions/featuregrid');
 const {SET_HIGHLIGHT_FEATURES_PATH} = require('../../actions/highlight');
 const {CHANGE_DRAWING_STATUS} = require('../../actions/draw');
 const {SHOW_NOTIFICATION} = require('../../actions/notifications');
 const {RESET_CONTROLS, SET_CONTROL_PROPERTY, toggleControl} = require('../../actions/controls');
-const {ZOOM_TO_EXTENT} = require('../../actions/map');
+const {ZOOM_TO_EXTENT, clickOnMap} = require('../../actions/map');
 const { CLOSE_IDENTIFY } = require('../../actions/mapInfo');
 const {CHANGE_LAYER_PROPERTIES, changeLayerParams, browseData} = require('../../actions/layers');
 const {geometryChanged} = require('../../actions/draw');
@@ -93,7 +99,10 @@ const {
     featureGridSort,
     replayOnTimeDimensionChange,
     hideFeatureGridOnDrawerOpenMobile,
-    hideDrawerOnFeatureGridOpenMobile
+    hideDrawerOnFeatureGridOpenMobile,
+    handleClickOnMap,
+    featureGridUpdateGeometryFilter,
+    activateTemporaryChangesEpic
 } = require('../featuregrid');
 const { onLocationChanged } = require('connected-react-router');
 
@@ -1871,5 +1880,73 @@ describe('featuregrid Epics', () => {
 
             testEpic(addTimeoutEpic(hideDrawerOnFeatureGridOpenMobile, 10), 1, featureInfoClick(), epicResult, TEST_STATE_NOT_MOBILE);
         });
+    });
+    it('handleClickOnMap epic', (done) => {
+        const startActions = [updateFilter({
+            type: 'geometry',
+            enabled: true
+        }), clickOnMap({
+            latlng: {
+                lat: 1.0,
+                lng: 8.0
+            },
+            pixel: {
+                x: 10.0,
+                y: 10.0
+            }
+        })];
+
+        testEpic(handleClickOnMap, 1, startActions, actions => {
+            expect(actions.length).toBe(1);
+            expect(actions[0].type).toBe(UPDATE_FILTER);
+            expect(actions[0].update).toExist();
+            expect(actions[0].update.value).toExist();
+            expect(actions[0].update.value.attribute).toBe('the_geom');
+            expect(actions[0].update.value.method).toBe('Circle');
+            expect(actions[0].update.value.geometry).toExist();
+            expect(actions[0].update.value.geometry.type).toBe('Polygon');
+            expect(actions[0].update.value.geometry.radius).toExist();
+        }, {
+            featuregrid: {
+                filters: [{
+                    type: 'geometry',
+                    attribute: 'the_geom',
+                    enabled: true
+                }]
+            }
+        }, done);
+    });
+    it('featureGridUpdateFilter with geometry filter', (done) => {
+        const startActions = [createQuery(), updateFilter({
+            type: 'geometry',
+            enabled: true
+        }), updateFilter({
+            type: 'geometry',
+            enabled: true,
+            value: {}
+        })];
+        testEpic(featureGridUpdateGeometryFilter, 1, startActions, actions => {
+            expect(actions.length).toBe(1);
+            expect(actions[0].type).toBe(UPDATE_QUERY);
+            expect(actions[0].reason).toBe('geometry');
+        }, {
+            featuregrid: {
+                selectedLayer: 'layer'
+            },
+            layers: [{
+                id: 'layer',
+                name: 'layer'
+            }]
+        }, done);
+    });
+    it('activateTemporaryChangesEpic', (done) => {
+        const startActions = [activateTemporaryChanges(true)];
+        testEpic(activateTemporaryChangesEpic, 2, startActions, actions => {
+            expect(actions.length).toBe(2);
+            expect(actions[0].type).toBe(DISABLE_TOOLBAR);
+            expect(actions[0].disabled).toBe(true);
+            expect(actions[1].type).toBe(DEACTIVATE_GEOMETRY_FILTER);
+            expect(actions[1].deactivated).toBe(true);
+        }, {}, done);
     });
 });

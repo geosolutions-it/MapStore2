@@ -20,7 +20,7 @@ const cqlToOgc = (cqlFilter, fOpts) => {
     return toFilter(read(cqlFilter));
 };
 
-const {get, isNil, isUndefined, isArray} = require('lodash');
+const {get, isNil, isUndefined, isArray, find, findIndex} = require('lodash');
 const escapeCQLStrings = str => str && str.replace ? str.replace(/\'/g, "''") : str;
 
 const checkOperatorValidity = (value, operator) => {
@@ -284,23 +284,47 @@ const FilterUtils = {
         }
 
         let spatialFilter;
-        if (objFilter.spatialField && objFilter.spatialField.geometry && objFilter.spatialField.operation) {
-            if (objFilter.spatialField.operation === 'BBOX' && isArray(objFilter.spatialField.geometry && objFilter.spatialField.geometry.extent[0])) {
+        let spatialFields;
+        let bboxField;
+
+        if (isArray(objFilter.spatialField)) {
+            bboxField = find(objFilter.spatialField, field => field.operation === 'BBOX');
+            if (!bboxField) {
+                spatialFields = objFilter.spatialField;
+            }
+        } else if (objFilter.spatialField) {
+            if (objFilter.spatialField.operation === 'BBOX') {
+                bboxField = objFilter.spatialField;
+            } else {
+                spatialFields = [objFilter.spatialField];
+            }
+        }
+
+        if (bboxField) {
+            if (isArray(bboxField.geometry && bboxField.geometry.extent[0])) {
                 const OP = "OR";
-                const bBoxFilter = objFilter.spatialField.geometry.extent.reduce((a, extent) => {
-                    let filter = Object.assign({}, objFilter);
-                    filter.spatialField.geometry.extent = extent;
-                    return a + this.processOGCSpatialFilter(versionOGC, filter, nsplaceholder);
+                const bBoxFilter = bboxField.geometry.extent.reduce((a, extent) => {
+                    let field = Object.assign({}, bboxField);
+                    bboxField.geometry.extent = extent;
+                    return a + this.processOGCSpatialFilter(versionOGC, field, nsplaceholder);
                 }, '');
 
                 spatialFilter = ogcLogicalOperators[OP](nsplaceholder, bBoxFilter);
-
-            } else {
-                spatialFilter = this.processOGCSpatialFilter(versionOGC, objFilter, nsplaceholder);
             }
-
             filters.push(spatialFilter);
+        } else if (spatialFields) {
+            spatialFields = spatialFields.filter(field => field && field.geometry && field.operation);
+            if (spatialFields.length > 0) {
+                const processedSpatialFilters = spatialFields.map(field => {
+                    return this.processOGCSpatialFilter(versionOGC, field, nsplaceholder);
+                }).join('');
+                spatialFilter = spatialFields.length > 1 ?
+                    ogcLogicalOperators[objFilter.spatialFieldOperator || "AND"](nsplaceholder, processedSpatialFilters) :
+                    processedSpatialFilters;
+                filters.push(spatialFilter);
+            }
         }
+
         if (objFilter.crossLayerFilter && objFilter.crossLayerFilter.operation) {
             let crossLayerFilter = {
                 ...objFilter.crossLayerFilter,
@@ -448,38 +472,38 @@ const FilterUtils = {
     getGmlPolygonElement: (c, srs, v) => polygonElement(c, srs, wfsToGmlVersion(v)),
     getGmlLineStringElement: (c, srs, v) => lineStringElement(c, srs, wfsToGmlVersion(v)),
     processOGCGeometry: (v, geom) => processOGCGeometry(wfsToGmlVersion(v), geom),
-    processOGCSpatialFilter: function(version, objFilter, nsplaceholder) {
+    processOGCSpatialFilter: function(version, spatialField, nsplaceholder) {
         // collectGeometries has priority on the geometry
         // if it is present in the spatialField
         // the geometry have to be ignored in favor of crossLayer
-        if (objFilter.spatialField.collectGeometries) {
-            return FilterUtils.processOGCCrossLayerFilter(objFilter.spatialField);
+        if (spatialField.collectGeometries) {
+            return FilterUtils.processOGCCrossLayerFilter(spatialField);
         }
         let ogc =
             propertyTagReference[nsplaceholder].startTag +
-                objFilter.spatialField.attribute +
+                spatialField.attribute +
             propertyTagReference[nsplaceholder].endTag;
 
-        switch (objFilter.spatialField.operation) {
+        switch (spatialField.operation) {
         case "INTERSECTS":
         case "DWITHIN":
         case "WITHIN":
         case "CONTAINS": {
-            ogc += processOGCGeometry(wfsToGmlVersion(version), objFilter.spatialField.geometry);
+            ogc += processOGCGeometry(wfsToGmlVersion(version), spatialField.geometry);
 
-            if (objFilter.spatialField.operation === "DWITHIN") {
-                ogc += '<' + nsplaceholder + ':Distance units="m">' + (objFilter.spatialField.geometry.distance || 0) + '</' + nsplaceholder + ':Distance>';
+            if (spatialField.operation === "DWITHIN") {
+                ogc += '<' + nsplaceholder + ':Distance units="m">' + (spatialField.geometry.distance || 0) + '</' + nsplaceholder + ':Distance>';
             }
 
             break;
 
         }
         case "BBOX": {
-            let lowerCorner = objFilter.spatialField.geometry.extent[0] + " " + objFilter.spatialField.geometry.extent[1];
-            let upperCorner = objFilter.spatialField.geometry.extent[2] + " " + objFilter.spatialField.geometry.extent[3];
+            let lowerCorner = spatialField.geometry.extent[0] + " " + spatialField.geometry.extent[1];
+            let upperCorner = spatialField.geometry.extent[2] + " " + spatialField.geometry.extent[3];
 
             ogc +=
-                        '<gml:Envelope' + ' srsName="' + objFilter.spatialField.geometry.projection + '">' +
+                        '<gml:Envelope' + ' srsName="' + spatialField.geometry.projection + '">' +
                             '<gml:lowerCorner>' + lowerCorner + '</gml:lowerCorner>' +
                             '<gml:upperCorner>' + upperCorner + '</gml:upperCorner>' +
                         '</gml:Envelope>';
@@ -490,7 +514,7 @@ const FilterUtils = {
             break;
         }
 
-        return ogcSpatialOperators[objFilter.spatialField.operation](nsplaceholder, ogc);
+        return ogcSpatialOperators[spatialField.operation](nsplaceholder, ogc);
     },
     getGetFeatureBase: function(version, pagination, hits, format, options = {}) {
         let ver = normalizeVersion(version);
@@ -627,9 +651,11 @@ const FilterUtils = {
         }
 
         let spatialFilter;
-        if (objFilter.spatialField && objFilter.spatialField.geometry && objFilter.spatialField.operation) {
+        if (objFilter.spatialField) {
             spatialFilter = this.processCQLSpatialFilter(objFilter);
-            filters.push(spatialFilter);
+            if (spatialFilter) {
+                filters.push(spatialFilter);
+            }
         }
         if (objFilter.crossLayerFilter) {
             const {crossLayerFilter} = objFilter;
@@ -719,18 +745,27 @@ const FilterUtils = {
     },
 
     processCQLSpatialFilter: function(objFilter) {
+        let spatialFields = (isArray(objFilter.spatialField) ? objFilter.spatialField : [objFilter.spatialField])
+            .filter(f => f && f.geometry && f.operation);
+        let cql = '';
 
-        let cql = objFilter.spatialField.operation + "(" +
-            objFilter.spatialField.attribute + ",";
-        if (objFilter.spatialField.collectGeometries && objFilter.spatialField.collectGeometries.queryCollection) {
-            cql += cqlCollectGeometries(cqlQueryCollection(objFilter.spatialField.collectGeometries.queryCollection));
-        } else {
-            let crs = objFilter.spatialField.geometry.projection || "";
-            crs = crs.split(":").length === 2 ? "SRID=" + crs.split(":")[1] + ";" : "";
-            cql += crs + this.getCQLGeometryElement(objFilter.spatialField.geometry.coordinates, objFilter.spatialField.geometry.type);
-        }
+        spatialFields.forEach((field, index) => {
+            cql += field.operation + "(" + field.attribute + ",";
+            if (field.collectGeometries && field.collectGeometries.queryCollection) {
+                cql += cqlCollectGeometries(cqlQueryCollection(field.collectGeometries.queryCollection));
+            } else {
+                let crs = field.geometry.projection || "";
+                crs = crs.split(":").length === 2 ? "SRID=" + crs.split(":")[1] + ";" : "";
+                cql += crs + this.getCQLGeometryElement(field.geometry.coordinates, field.geometry.type);
+            }
+            cql += ")";
 
-        return cql + ")";
+            if (index < spatialFields.length - 1) {
+                cql += ` ${objFilter.spatialFieldOperator || "AND"} `;
+            }
+        });
+
+        return cql;
     },
 
     cqlDateField: function(attribute, operator, value) {
@@ -945,23 +980,27 @@ const FilterUtils = {
     isFilterValid: (f = {}) =>
         (f.filterFields && f.filterFields.length > 0)
         || (f.simpleFilterFields && f.simpleFilterFields.length > 0)
-        || (f.spatialField && f.spatialField.geometry && f.spatialField.operation)
+        || (f.spatialField && f.spatialField.geometry && f.spatialField.operation ||
+            isArray(f.spatialField) && findIndex(f.spatialField, field => field.operation && field.geometry) > -1)
         || (f.crossLayerFilter
             && f.crossLayerFilter.collectGeometries
             && f.crossLayerFilter.collectGeometries.queryCollection
             && f.crossLayerFilter.collectGeometries.queryCollection.geometryName
             && f.crossLayerFilter.collectGeometries.queryCollection.typeName),
-    composeAttributeFilters: (filters, logic = "AND") => {
+    composeAttributeFilters: (filters, logic = "AND", spatialFieldOperator = "AND") => {
         const rootGroup = {
             id: new Date().getTime(),
             index: 0,
             logic
         };
-        return filters.reduce((filter, {filterFields = [], groupFields = []} = {}, idx) => {
+        return filters.reduce((filter, {filterFields = [], groupFields = [], spatialField} = {}, idx) => {
             return ({
                 groupFields: filter.groupFields.concat(filterFields.length > 0 && groupFields.map(g => ({groupId: g.index === 0 && rootGroup.id || `${g.groupId}_${idx}`, logic: g.logic, id: `${g.id}_${idx}`, index: 1 + g.index })) || []),
-                filterFields: filter.filterFields.concat(filterFields.map(f => ({...f, groupId: `${f.groupId}_${idx}`})))});
-        }, {groupFields: [rootGroup], filterFields: []});
+                filterFields: filter.filterFields.concat(filterFields.map(f => ({...f, groupId: `${f.groupId}_${idx}`}))),
+                spatialField: spatialField ? [...filter.spatialField, spatialField] : filter.spatialField,
+                spatialFieldOperator
+            });
+        }, {groupFields: [rootGroup], filterFields: [], spatialField: []});
     },
     /**
      @return a spatial filter with coordinates reprojected to nativeCrs

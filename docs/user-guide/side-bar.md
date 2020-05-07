@@ -89,7 +89,6 @@ An example of search with `Aeronautical` coordinates as follows:
 
 <img src="../img/side-bar/areonautical-ex.gif" class="ms-docimage"  style="max-width:700px;"/>
 
-
 ### Identify Tool with more than one layer
 
 On a map it is possible to have several overlapping layers. With the *Identify* tool the user can retrieve information on one or more overlapping layers at the same time.

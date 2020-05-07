@@ -12,14 +12,14 @@ const {find} = require('lodash');
 
 
 const {toggleControl, setControlProperty} = require('../actions/controls');
-const {changeLayerProperties, removeNode, updateNode} = require('../actions/layers');
-const {addBackground, addBackgroundProperties, confirmDeleteBackgroundModal,
+const {changeLayerProperties, removeNode, updateNode, addLayer} = require('../actions/layers');
+const {addBackground, addBackgroundProperties, confirmDeleteBackgroundModal, backgroundAdded,
     updateThumbnail, removeBackground, clearModalParameters, backgroundEdited, setCurrentBackgroundLayer} = require('../actions/backgroundselector');
 
 const {createSelector} = require('reselect');
 const {allBackgroundLayerSelector, backgroundControlsSelector,
     currentBackgroundSelector, tempBackgroundSelector} = require('../selectors/layers');
-const {mapSelector, mapInfoSelector, projectionSelector} = require('../selectors/map');
+const {mapSelector, mapIsEditableSelector, projectionSelector} = require('../selectors/map');
 const {modalParamsSelector, isDeletedIdSelector, backgroundListSelector,
     backgroundLayersSelector, confirmDeleteBackgroundModalSelector, allowBackgroundsDeletionSelector} = require('../selectors/backgroundselector');
 const {mapLayoutValuesSelector} = require('../selectors/maplayout');
@@ -33,7 +33,7 @@ const backgroundSelector = createSelector([
     isDeletedIdSelector,
     allBackgroundLayerSelector,
     mapSelector,
-    mapInfoSelector,
+    mapIsEditableSelector,
     backgroundLayersSelector,
     backgroundControlsSelector,
     currentBackgroundSelector,
@@ -43,14 +43,14 @@ const backgroundSelector = createSelector([
     state => state.browser && state.browser.mobile ? 'mobile' : 'desktop',
     confirmDeleteBackgroundModalSelector,
     allowBackgroundsDeletionSelector],
-(projection, modalParams, backgroundList, deletedId, backgrounds, map, mapInfo, layers, controls, currentLayer, tempLayer, style, enabledCatalog, mode, confirmDeleteBackgroundModalObj, allowDeletion) => ({
+(projection, modalParams, backgroundList, deletedId, backgrounds, map, mapIsEditable, layers, controls, currentLayer, tempLayer, style, enabledCatalog, mode, confirmDeleteBackgroundModalObj, allowDeletion) => ({
     mode,
     modalParams,
     backgroundList,
     deletedId,
     backgrounds,
     size: map && map.size || {width: 0, height: 0},
-    mapIsEditable: mapInfo && mapInfo.canEdit,
+    mapIsEditable,
     layers,
     tempLayer,
     currentLayer,
@@ -97,6 +97,8 @@ compose(
         onLayerChange: setControlProperty.bind(null, 'backgroundSelector'),
         onStartChange: setControlProperty.bind(null, 'backgroundSelector', 'start'),
         onAdd: addBackground,
+        addLayer: addLayer,
+        backgroundAdded,
         onRemove: removeNode,
         onBackgroundEdit: backgroundEdited,
         updateNode,

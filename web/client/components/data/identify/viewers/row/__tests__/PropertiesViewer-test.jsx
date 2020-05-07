@@ -32,14 +32,10 @@ describe('PropertiesViewer', () => {
         expect(cmpDom.childNodes.length).toBe(0);
     });
     it('test title rendering', () => {
-        const cmp = ReactDOM.render(<PropertiesViewer title="testTitle"/>, document.getElementById("container"));
-        expect(cmp).toExist();
-
-        const cmpDom = ReactDOM.findDOMNode(cmp);
-        expect(cmpDom).toExist();
-
-        expect(cmpDom.childNodes.length).toBe(1);
-        expect(cmpDom.childNodes.item(0).innerHTML).toBe("testTitle");
+        ReactDOM.render(<PropertiesViewer title="testTitle"/>, document.getElementById("container"));
+        const titleNode = document.querySelector('.ms-properties-viewer-title');
+        expect(titleNode).toBeTruthy();
+        expect(titleNode.querySelector('th').innerHTML).toBe("testTitle");
     });
     it('test body rendering', () => {
         const testProps = {
@@ -48,10 +44,10 @@ describe('PropertiesViewer', () => {
             k2: "v2"
         };
         const cmp = ReactDOM.render(<PropertiesViewer {...testProps}/>, document.getElementById("container"));
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
 
         const cmpDom = ReactDOM.findDOMNode(cmp);
-        expect(cmpDom).toExist();
+        expect(cmpDom).toBeTruthy();
 
         expect(cmpDom.childNodes.length).toBe(1);
 
@@ -62,8 +58,11 @@ describe('PropertiesViewer', () => {
         expect(Array.prototype.reduce.call(body.childNodes, (prev, child, i) => {
             let testKey = testKeys[i];
             let testVal = testProps[testKey];
+            const rowData = child.querySelectorAll('td');
+            const key = rowData[0].innerHTML;
+            const value = rowData[1].innerHTML;
             return prev
-                && child.innerText === testKey + " " + testVal;
+                && key === testKey && value === testVal;
         }, true)).toBe(true);
     });
 
@@ -83,16 +82,17 @@ describe('PropertiesViewer', () => {
             withHtml: "<div> some text </div>"
         };
         const cmp = ReactDOM.render(<PropertiesViewer {...testProps}/>, document.getElementById("container"));
-        expect(cmp).toExist();
+        expect(cmp).toBeTruthy();
 
         const cmpDom = ReactDOM.findDOMNode(cmp);
-        expect(cmpDom).toExist();
-        expect(cmpDom.childNodes.length).toBe(1);
+        expect(cmpDom).toBeTruthy();
+        expect(cmpDom.children.length).toBe(1);
 
-        const body = cmpDom.childNodes.item(0);
-        const pChild = body.childNodes.item(0);
-        const spanChild = pChild.childNodes.item(2);
-        expect(spanChild).toExist();
-        expect(spanChild.childNodes.item(0).outerHTML).toBe(testProps.withHtml);
+        const body = cmpDom.children[0];
+
+        const tdChildren = body.querySelectorAll('td');
+        const spanChild = tdChildren[1].querySelector('span');
+        expect(spanChild).toBeTruthy();
+        expect(spanChild.innerHTML).toBe(testProps.withHtml);
     });
 });

@@ -12,23 +12,24 @@ const configureMockStore = require('redux-mock-store').default;
 const {createEpicMiddleware, combineEpics } = require('redux-observable');
 const {CALL_HISTORY_METHOD} = require('connected-react-router');
 const {
-    saveDetails, SET_DETAILS_CHANGED, MAPS_LIST_LOADING, MAPS_LIST_LOADED,
+    saveDetails, SET_DETAILS_CHANGED, MAPS_LIST_LOADING, MAPS_LIST_LOADED, MAPS_LIST_LOAD_ERROR,
     CLOSE_DETAILS_PANEL, closeDetailsPanel, loadMaps, MAPS_GET_MAP_RESOURCES_BY_CATEGORY,
     openDetailsPanel, UPDATE_DETAILS, DETAILS_LOADED, getMapResourcesByCategory,
     MAP_DELETING, MAP_DELETED, deleteMap, mapDeleted, TOGGLE_DETAILS_SHEET,
-    saveMapResource, MAP_CREATED, SAVING_MAP, MAP_UPDATING, MAPS_LOAD_MAP
+    saveMapResource, MAP_CREATED, SAVING_MAP, MAP_UPDATING, MAPS_LOAD_MAP, LOADING, LOAD_CONTEXTS
 } = require('../../actions/maps');
-const { mapInfoLoaded, MAP_SAVED, LOAD_MAP_INFO } = require('../../actions/config');
+const { mapInfoLoaded, MAP_SAVED, LOAD_MAP_INFO, MAP_CONFIG_LOADED } = require('../../actions/config');
 const {SHOW_NOTIFICATION} = require('../../actions/notifications');
-const {TOGGLE_CONTROL} = require('../../actions/controls');
+const {TOGGLE_CONTROL, SET_CONTROL_PROPERTY} = require('../../actions/controls');
 const {RESET_CURRENT_MAP, editMap} = require('../../actions/currentMap');
 const {CLOSE_FEATURE_GRID} = require('../../actions/featuregrid');
+const {loginSuccess, logout} = require('../../actions/security');
 
 const {
     setDetailsChangedEpic, loadMapsEpic, getMapsResourcesByCategoryEpic,
     closeDetailsPanelEpic, fetchDataForDetailsPanel,
-    fetchDetailsFromResourceEpic, deleteMapAndAssociatedResourcesEpic,
-    storeDetailsInfoEpic, mapSaveMapResourceEpic, reloadMapsEpic } = require('../maps');
+    fetchDetailsFromResourceEpic, deleteMapAndAssociatedResourcesEpic, mapsSetupFilterOnLogin,
+    storeDetailsInfoEpic, mapSaveMapResourceEpic, reloadMapsEpic} = require('../maps');
 const rootEpic = combineEpics(setDetailsChangedEpic, closeDetailsPanelEpic);
 const epicMiddleware = createEpicMiddleware(rootEpic);
 const mockStore = configureMockStore([epicMiddleware]);
@@ -99,6 +100,29 @@ const testMap = {
             "lastUpdate": "2017-05-17 10:18:11.455",
             "description": "",
             "id": 464,
+            "context": "2100",
+            "contextName": "test-context",
+            "name": "TEST MAP",
+            "thumbnail": "base%2Fweb%2Fclient%2Ftest-resources%2Fimg%2Fblank.jpg",
+            "owner": "mapstore"
+        }
+    ]
+};
+
+const testMap2 = {
+    "success": true,
+    "totalCount": 13,
+    "results": [
+        {
+            "canDelete": false,
+            "canEdit": false,
+            "canCopy": true,
+            "creation": "2014-04-04 12:14:21.17",
+            "lastUpdate": "2017-05-17 10:18:11.455",
+            "description": "",
+            "id": 464,
+            "context": "2134",
+            "contextName": null,
             "name": "TEST MAP",
             "thumbnail": "base%2Fweb%2Fclient%2Ftest-resources%2Fimg%2Fblank.jpg",
             "owner": "mapstore"
@@ -547,36 +571,104 @@ describe('maps Epics', () => {
         });
         done();
     });
+    it('mapsSetupFilterOnLogin on LOGIN_SUCCESS', (done) => {
+        testEpic(mapsSetupFilterOnLogin, 2, loginSuccess({}, '', ''), actions => {
+            expect(actions.length).toBe(2);
+            expect(actions[0].type).toBe(SET_CONTROL_PROPERTY);
+            expect(actions[0].control).toBe('advancedsearchpanel');
+            expect(actions[0].property).toBe('enabled');
+            expect(actions[0].value).toBe(false);
+            expect(actions[1].type).toBe(LOAD_CONTEXTS);
+        }, {}, done);
+    });
+    it('mapsSetupFilterOnLogin on LOGOUT', (done) => {
+        testEpic(mapsSetupFilterOnLogin, 2, logout(), actions => {
+            expect(actions.length).toBe(2);
+            expect(actions[0].type).toBe(SET_CONTROL_PROPERTY);
+            expect(actions[0].control).toBe('advancedsearchpanel');
+            expect(actions[0].property).toBe('enabled');
+            expect(actions[0].value).toBe(false);
+            expect(actions[1].type).toBe(LOAD_CONTEXTS);
+        }, {}, done);
+    });
 });
 describe('Get Map Resource By Category Epic', () => {
-    const oldGetDefaults = ConfigUtils.getDefaults;
-    beforeEach(() => {
-        let customUrl = "base/web/client/test-resources/geostore/extjs/search/category/MAP/test.json#";
-        ConfigUtils.getDefaults = () => ({
-            geoStoreUrl: customUrl
-        });
-    });
-    afterEach(() => {
-        ConfigUtils.getDefaults = oldGetDefaults;
-    });
-    it('test getMapsResourcesByCategoryEpic ', done => {
-
-        testEpic(addTimeoutEpic(getMapsResourcesByCategoryEpic), 1, getMapResourcesByCategory('MAP', 'test', {
+    it('test getMapsResourcesByCategoryEpic', () =>
+        axios.get('base/web/client/test-resources/geostore/extjs/search/category/MAP/test.json').then(({data: testJson}) => new Promise(resolve => {
+            const mock = new MockAdapter(axios);
+            mock.onGet('/extjs/resource/2100').reply(200, {
+                ShortResource: {
+                    canDelete: true,
+                    canEdit: true,
+                    creation: "2020-01-09T11:29:17.935+01:00",
+                    description: "",
+                    id: 2100,
+                    lastUpdate: "2020-01-09T15:26:57.611+01:00",
+                    name: "test-context"
+                }
+            });
+            mock.onGet().reply(200, testJson);
+            testEpic(addTimeoutEpic(getMapsResourcesByCategoryEpic), 3, getMapResourcesByCategory('MAP', 'test', {
+                baseUrl,
+                params: { start: 0, limit: 12 }
+            }), actions => {
+                expect(actions.length).toBe(3);
+                expect(actions[0].type).toBe(LOADING);
+                expect(actions[0].value).toBe(true);
+                expect(actions[0].name).toBe('loadingMaps');
+                expect(actions[1].type).toBe(MAPS_LIST_LOADED);
+                expect(actions[1].maps).toEqual(testMap);
+                expect(actions[1].params).toEqual(params);
+                expect(actions[1].searchText).toBe('test');
+                expect(actions[2].type).toBe(LOADING);
+                expect(actions[2].value).toBe(false);
+                expect(actions[2].name).toBe('loadingMaps');
+                mock.restore();
+                resolve();
+            });
+        }))
+    );
+    it('test getMapsResourcesByCategoryEpic with a map that belongs to a deleted context', () =>
+        axios.get('base/web/client/test-resources/geostore/extjs/search/category/MAP/test2.json').then(({data: testJson}) => new Promise(resolve => {
+            const mock = new MockAdapter(axios);
+            mock.onGet('/extjs/resource/2134').reply(404);
+            mock.onGet().reply(200, testJson);
+            testEpic(addTimeoutEpic(getMapsResourcesByCategoryEpic), 3, getMapResourcesByCategory('MAP', 'test', {
+                baseUrl,
+                params: { start: 0, limit: 12 }
+            }), actions => {
+                expect(actions.length).toBe(3);
+                expect(actions[0].type).toBe(LOADING);
+                expect(actions[0].value).toBe(true);
+                expect(actions[0].name).toBe('loadingMaps');
+                expect(actions[1].type).toBe(MAPS_LIST_LOADED);
+                expect(actions[1].maps).toEqual(testMap2);
+                expect(actions[1].params).toEqual(params);
+                expect(actions[1].searchText).toBe('test');
+                expect(actions[2].type).toBe(LOADING);
+                expect(actions[2].value).toBe(false);
+                expect(actions[2].name).toBe('loadingMaps');
+                mock.restore();
+                resolve();
+            });
+        }))
+    );
+    it('test getMapsResourcesByCategoryEpic with an error', (done) => {
+        const mock = new MockAdapter(axios);
+        mock.onPost().reply(404);
+        testEpic(addTimeoutEpic(getMapsResourcesByCategoryEpic), 3, getMapResourcesByCategory('MAP', 'test', {
             baseUrl,
             params: { start: 0, limit: 12 }
         }), actions => {
-            expect(actions.length).toBe(1);
-            actions.map((action) => {
-                switch (action.type) {
-                case MAPS_LIST_LOADED:
-                    expect(action.maps).toEqual(testMap);
-                    expect(action.params).toEqual(params);
-                    expect(action.searchText).toBe('test');
-                    break;
-                default:
-                    expect(true).toBe(false);
-                }
-            });
+            expect(actions.length).toBe(3);
+            expect(actions[0].type).toBe(LOADING);
+            expect(actions[0].value).toBe(true);
+            expect(actions[0].name).toBe('loadingMaps');
+            expect(actions[1].type).toBe(MAPS_LIST_LOAD_ERROR);
+            expect(actions[2].type).toBe(LOADING);
+            expect(actions[2].value).toBe(false);
+            expect(actions[2].name).toBe('loadingMaps');
+            mock.restore();
             done();
         });
     });
@@ -616,8 +708,8 @@ describe('Create and update flow using persistence api', () => {
         });
     });
     it('test update flow ', done => {
-        testEpic(addTimeoutEpic(mapSaveMapResourceEpic), 5, saveMapResource( {id: 10}), actions => {
-            expect(actions.length).toBe(5);
+        testEpic(addTimeoutEpic(mapSaveMapResourceEpic), 6, saveMapResource( {id: 10}), actions => {
+            expect(actions.length).toBe(6);
             actions.map((action) => {
                 switch (action.type) {
                 case MAP_UPDATING:
@@ -625,6 +717,26 @@ describe('Create and update flow using persistence api', () => {
                 case MAP_SAVED:
                 case SHOW_NOTIFICATION:
                 case LOAD_MAP_INFO:
+                case MAP_CONFIG_LOADED:
+                    break;
+                default:
+                    expect(true).toBe(false);
+                }
+            });
+            done();
+        });
+    });
+    it('test create with a null attribute', done => {
+        testEpic(addTimeoutEpic(mapSaveMapResourceEpic), 6, saveMapResource({id: 10, attributes: {context: null}}), actions => {
+            expect(actions.length).toBe(6);
+            actions.map((action) => {
+                switch (action.type) {
+                case MAP_UPDATING:
+                case TOGGLE_CONTROL:
+                case MAP_SAVED:
+                case SHOW_NOTIFICATION:
+                case LOAD_MAP_INFO:
+                case MAP_CONFIG_LOADED:
                     break;
                 default:
                     expect(true).toBe(false);

@@ -79,7 +79,7 @@ export default class FocusMask extends React.Component {
             <div style={{ position: "fixed", height: "100vh", width: "100vw", top: 0, left: 0, zIndex: 1000000, pointerEvents: 'none' }}>
                 <ContainerDimensions>
                     {({ width, height }) =>
-                        <svg width="100%" height="100%" width={width} height={height} xmlns="http://www.w3.org/2000/svg">
+                        <svg width={width} height={height} xmlns="http://www.w3.org/2000/svg">
                             <path
                                 d={this.getPath(height, width)}
                                 fill="rgba(0,0,0,0.7)"

@@ -10,13 +10,11 @@ const React = require('react');
 const PropTypes = require('prop-types');
 const assign = require('object-assign');
 const _ = require('lodash');
-const Select = require('react-select');
+const Select = require('react-select').default;
 const Spinner = require('react-spinkit');
 const { Table, Button, Glyphicon } = require('react-bootstrap');
 const Message = require('../../../I18N/Message');
 const LocaleUtils = require('../../../../utils/LocaleUtils');
-
-require('react-select/dist/react-select.css');
 
 class PermissionEditor extends React.Component {
     static propTypes = {

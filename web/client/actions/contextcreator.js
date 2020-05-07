@@ -52,9 +52,17 @@ export const CONTEXT_SAVED = 'CONTEXTCREATOR:CONTEXT_SAVED';
 export const SAVE_CONTEXT = 'CONTEXTCREATOR:SAVE_CONTEXT';
 export const ENABLE_UPLOAD_PLUGIN = 'CONTEXTCREATOR:ENABLE_UPLOAD_PLUGIN';
 export const UPLOAD_PLUGIN = 'CONTEXTCREATOR:UPLOAD_PLUGIN';
-export const UPLOAD_PLUGIN_ERROR = 'CONTEXTCREATOR:UPLOAD_PLUGIN_ERROR';
+export const ADD_PLUGIN_TO_UPLOAD = 'CONTEXTCREATOR:ADD_PLUGIN_TO_UPLOAD';
+export const REMOVE_PLUGIN_TO_UPLOAD = 'CONTEXTCREATOR:REMOVE_PLUGIN_TO_UPLOAD';
 export const UPLOADING_PLUGIN = 'CONTEXTCREATOR:UPLOADING_PLUGIN';
 export const PLUGIN_UPLOADED = 'CONTEXTCREATOR:PLUGIN_UPLOADED';
+export const UPLOAD_PLUGIN_ERROR = 'CONTEXTCREATOR:UPLOAD_PLUGIN_ERROR';
+export const UNINSTALL_PLUGIN = 'CONTEXTCREATOR:UNINSTALL_PLUGIN';
+export const UNINSTALLING_PLUGIN = 'CONTEXTCREATOR:UNINSTALLING_PLUGIN';
+export const PLUGIN_UNINSTALLED = 'CONTEXTCREATOR:PLUGIN_UNINSTALLED';
+export const UNINSTALL_PLUGIN_ERROR = 'CONTEXTCREATOR:UNINSTALL_PLUGIN_ERROR';
+export const BACK_TO_PAGE_SHOW_CONFIRMATION = 'CONTEXTCREATOR:BACK_TO_PAGE_SHOW_CONFIRMATION';
+export const LOAD_EXTENSIONS = 'CONTEXTCREATOR:LOAD_EXTENSIONS';
 
 export const setCreationStep = (stepId) => ({
     type: SET_CREATION_STEP,
@@ -85,10 +93,11 @@ export const changeAttribute = (key, value) => ({
     value
 });
 
-export const showDialog = (dialogName, show) => ({
+export const showDialog = (dialogName, show, payload = {}) => ({
     type: SHOW_DIALOG,
     dialogName,
-    show
+    show,
+    payload
 });
 
 /**
@@ -118,10 +127,11 @@ export const setSelectedTemplates = (ids) => ({
  * @param {string} fileName file name to display
  * @param {any} data template data
  */
-export const setParsedTemplate = (fileName, data) => ({
+export const setParsedTemplate = (fileName, data, format) => ({
     type: SET_PARSED_TEMPLATE,
     fileName,
-    data
+    data,
+    format
 });
 
 /**
@@ -400,6 +410,25 @@ export const enableUploadPlugin = (enable = false) => ({
 });
 
 /**
+ * Adds a new plugin to upload in the list.
+ * @param {array} files
+ */
+export const addPluginToUpload = (files) => ({
+    type: ADD_PLUGIN_TO_UPLOAD,
+    files
+});
+
+/**
+ * Removes a plugin from the upload list.
+ * @param {int} index
+ */
+export const removePluginToUpload = (index) => ({
+    type: REMOVE_PLUGIN_TO_UPLOAD,
+    index
+});
+
+
+/**
  * Starts the plugin upload workflow
  */
 export const uploadPlugin = (files) => ({
@@ -408,11 +437,20 @@ export const uploadPlugin = (files) => ({
 });
 
 /**
- * Starts the plugin upload workflow
+ * Starts the plugin uninstall workflow
  */
-export const uploadPluginError = (files) => ({
+export const uninstallPlugin = (plugin) => ({
+    type: UNINSTALL_PLUGIN,
+    plugin
+});
+
+/**
+ * Receives upload error result
+ */
+export const uploadPluginError = (files, error) => ({
     type: UPLOAD_PLUGIN_ERROR,
-    files
+    files,
+    error
 });
 
 /**
@@ -425,9 +463,43 @@ export const pluginUploading = (status = false, plugins) => ({
 });
 
 /**
+ * Starts/ends plugin uninstall workflow
+ */
+export const pluginUninstalling = (status = false, plugin) => ({
+    type: UNINSTALLING_PLUGIN,
+    status,
+    plugin
+});
+
+export const loadExtensions = () => ({ type: LOAD_EXTENSIONS });
+
+/**
  * Receives uploaded plugin(s) result
  */
 export const pluginUploaded = (plugins) => ({
     type: PLUGIN_UPLOADED,
     plugins
+});
+
+/**
+ * Receives uninstalled plugin result
+ */
+export const pluginUninstalled = (plugin, cfg) => ({
+    type: PLUGIN_UNINSTALLED,
+    plugin,
+    cfg
+});
+
+/**
+ * Receives uninstall error result
+ */
+export const uninstallPluginError = (plugin, error) => ({
+    type: UNINSTALL_PLUGIN_ERROR,
+    plugin,
+    error
+});
+
+export const showBackToPageConfirmation = (show) => ({
+    type: BACK_TO_PAGE_SHOW_CONFIRMATION,
+    show
 });

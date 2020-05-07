@@ -14,8 +14,11 @@ import {
     enablePluginsEpic,
     disablePluginsEpic,
     uploadPluginEpic,
+    uninstallPluginEpic,
     saveTemplateEpic,
-    checkIfContextExists
+    saveContextResource,
+    checkIfContextExists,
+    editTemplateEpic
 } from '../contextcreator';
 import {
     editPlugin,
@@ -24,7 +27,10 @@ import {
     changePluginsKey,
     changeAttribute,
     uploadPlugin,
+    uninstallPlugin,
     saveTemplate,
+    saveNewContext,
+    editTemplate,
     SET_EDITED_PLUGIN,
     SET_EDITED_CFG,
     SET_CFG_ERROR,
@@ -32,11 +38,18 @@ import {
     ENABLE_MANDATORY_PLUGINS,
     PLUGIN_UPLOADED,
     UPLOADING_PLUGIN,
+    UNINSTALLING_PLUGIN,
+    PLUGIN_UNINSTALLED,
     LOADING,
     LOAD_TEMPLATE,
     SHOW_DIALOG,
     IS_VALID_CONTEXT_NAME,
-    CONTEXT_NAME_CHECKED
+    CONTEXT_NAME_CHECKED,
+    LOAD_EXTENSIONS,
+    CONTEXT_SAVED,
+    SET_EDITED_TEMPLATE,
+    SET_PARSED_TEMPLATE,
+    SET_FILE_DROP_STATUS
 } from '../../actions/contextcreator';
 import {
     SHOW_NOTIFICATION
@@ -430,6 +443,68 @@ describe('contextcreator epics', () => {
             }
         }, done);
     });
+    it('disablePluginsEpic with dependencies when value of the enabledDependentPlugins of one of the dependent children is []', (done) => {
+        const pluginsToDisable = ['WidgetsBuilder'];
+        const startActions = [disablePlugins(pluginsToDisable)];
+        testEpic(disablePluginsEpic, 2, startActions, actions => {
+            expect(actions.length).toBe(2);
+            expect(actions[0].type).toBe(CHANGE_PLUGINS_KEY);
+            expect(actions[0].ids.sort()).toEqual(['WidgetsBuilder', 'WidgetsTray']);
+            expect(actions[0].key).toBe('enabled');
+            expect(actions[0].value).toBe(false);
+            expect(actions[1].type).toBe(CHANGE_PLUGINS_KEY);
+            expect(actions[1].ids).toEqual(['WidgetsTray']);
+            expect(actions[1].key).toBe('forcedMandatory');
+            expect(actions[1].value).toBe(false);
+        }, {
+            contextcreator: {
+                plugins: [{
+                    name: 'Widgets',
+                    dependencies: [],
+                    enabledDependentPlugins: [],
+                    enabled: true,
+                    isUserPlugin: false,
+                    active: false,
+                    children: [{
+                        name: 'WidgetsBuilder',
+                        dependencies: ['WidgetsTray'],
+                        enabledDependentPlugins: [],
+                        children: [],
+                        parent: 'Widgets',
+                        enabled: true,
+                        isUserPlugin: false,
+                        active: false
+                    }, {
+                        name: 'WidgetsTray',
+                        dependencies: [],
+                        children: [],
+                        enabledDependentPlugins: [],
+                        forcedMandatory: true,
+                        parent: 'Widgets',
+                        enabled: true,
+                        isUserPlugin: false,
+                        active: false
+                    }]
+                }, {
+                    name: 'ZoomIn',
+                    dependencies: [],
+                    enabledDependentPlugins: [],
+                    children: [],
+                    enabled: true,
+                    isUserPlugin: true,
+                    active: false
+                }, {
+                    name: 'ZoomOut',
+                    dependencies: [],
+                    enabledDependentPlugins: [],
+                    children: [],
+                    enabled: false,
+                    isUserPlugin: false,
+                    active: false
+                }]
+            }
+        }, done);
+    });
     it('disablePluginsEpic with transitive dependencies', (done) => {
         const pluginsToDisable = ['Widgets'];
         const startActions = [disablePlugins(pluginsToDisable)];
@@ -624,6 +699,28 @@ describe('contextcreator epics', () => {
             contextcreator: {}
         });
     });
+    it('uninstall plugin', (done) => {
+        mockAxios.onDelete().reply(200, { "myplugin": {}});
+        const startActions = [uninstallPlugin("My")];
+        testEpic(uninstallPluginEpic, 4, startActions, actions => {
+            expect(actions.length).toBe(4);
+            expect(actions[0].type).toBe(UNINSTALLING_PLUGIN);
+            expect(actions[0].status).toBe(true);
+            expect(actions[0].plugin).toBe("My");
+            expect(actions[1].type).toBe(PLUGIN_UNINSTALLED);
+            expect(actions[1].plugin).toBe("My");
+            expect(actions[1].cfg).toExist();
+            expect(actions[2].type).toBe(SHOW_DIALOG);
+            expect(actions[2].dialogName).toBe("confirmRemovePlugin");
+            expect(actions[2].show).toBe(false);
+            expect(actions[3].type).toBe(UNINSTALLING_PLUGIN);
+            expect(actions[3].status).toBe(false);
+            expect(actions[3].plugin).toBe("My");
+            done();
+        }, {
+            contextcreator: {}
+        });
+    });
     it('saveTemplateEpic', (done) => {
         mockAxios.onPut().reply(200, {});
         const startActions = [saveTemplate({id: 1, metadata: {}})];
@@ -640,7 +737,6 @@ describe('contextcreator epics', () => {
             expect(actions[3].type).toBe(SHOW_NOTIFICATION);
             expect(actions[4].type).toBe(LOADING);
             expect(actions[4].name).toBe('templateSaving');
-            expect(actions[4].value).toBe(false);
         }, {
             contextcreator: {}
         }, done);
@@ -758,6 +854,74 @@ describe('contextcreator epics', () => {
             contextcreator: {
                 resource: {
                     name: 'context'
+                }
+            }
+        }, done);
+    });
+    it('saveContextResource saves a context', (done) => {
+        mockAxios.onPost().reply(200, "1");
+        mockAxios.onGet().reply(200, {});
+        const startActions = [saveNewContext("/")];
+        testEpic(saveContextResource, 5, startActions, actions => {
+            expect(actions.length).toBe(5);
+            expect(actions[0].type).toBe(LOADING);
+            expect(actions[1].type).toBe(CONTEXT_SAVED);
+            expect(actions[1].id).toBe(1);
+            expect(actions[2].type).toBe("@@router/CALL_HISTORY_METHOD");
+            expect(actions[3].type).toBe(LOAD_EXTENSIONS);
+            expect(actions[4].type).toBe(LOADING);
+        }, {
+            contextcreator: {
+                resource: {
+                    name: 'context'
+                }
+            },
+            map: {}
+        }, done);
+    });
+    it('editTemplateEpic with id', (done) => {
+        mockAxios.onGet().reply(200, 'data');
+        const startActions = [editTemplate(1)];
+        testEpic(editTemplateEpic, 6, startActions, actions => {
+            expect(actions.length).toBe(6);
+            expect(actions[0].type).toBe(LOADING);
+            expect(actions[1].type).toBe(SET_EDITED_TEMPLATE);
+            expect(actions[1].id).toBe(1);
+            expect(actions[2].type).toBe(SET_PARSED_TEMPLATE);
+            expect(actions[2].data).toBe('data');
+            expect(actions[2].format).toBe('json');
+            expect(actions[3].type).toBe(SET_FILE_DROP_STATUS);
+            expect(actions[3].status).toBe('accepted');
+            expect(actions[4].type).toBe(SHOW_DIALOG);
+            expect(actions[4].dialogName).toBe('uploadTemplate');
+            expect(actions[4].show).toBe(true);
+            expect(actions[5].type).toBe(LOADING);
+        }, {
+            contextcreator: {
+                newContext: {
+                    templates: [{
+                        id: 1,
+                        format: 'json'
+                    }]
+                }
+            }
+        }, done);
+    });
+    it('editTemplateEpic without id', (done) => {
+        const startActions = [editTemplate()];
+        testEpic(editTemplateEpic, 4, startActions, actions => {
+            expect(actions.length).toBe(4);
+            expect(actions[0].type).toBe(LOADING);
+            expect(actions[1].type).toBe(SET_EDITED_TEMPLATE);
+            expect(actions[1].id).toNotExist();
+            expect(actions[2].type).toBe(SHOW_DIALOG);
+            expect(actions[2].dialogName).toBe('uploadTemplate');
+            expect(actions[2].show).toBe(true);
+            expect(actions[3].type).toBe(LOADING);
+        }, {
+            contextcreator: {
+                newContext: {
+                    templates: []
                 }
             }
         }, done);

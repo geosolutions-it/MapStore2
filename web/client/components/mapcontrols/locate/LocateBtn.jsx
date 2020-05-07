@@ -11,6 +11,7 @@ var React = require('react');
 var {Button, Glyphicon, Tooltip} = require('react-bootstrap');
 const OverlayTrigger = require('../../misc/OverlayTrigger');
 const defaultIcon = require('../../misc/spinners/InlineSpinner/img/spinner.gif');
+const Message = require('../../I18N/Message');
 require('./css/locate.css');
 let checkingGeoLocation = false;
 let geoLocationAllowed = false;
@@ -94,9 +95,9 @@ class LocateBtn extends React.Component {
     };
 
     addTooltip = (btn) => {
-        let tooltip = <Tooltip id="locate-tooltip">{this.props.tooltip}</Tooltip>;
+        const tooltip = <Tooltip id="locate-tooltip"><Message msgId={this.props.tooltip} /></Tooltip>;
         return (
-            <OverlayTrigger placement={this.props.tooltipPlace} key={"overlay-trigger." + this.props.id} overlay={tooltip}>
+            <OverlayTrigger placement={this.props.tooltipPlace} key={`{overlay-trigger.${this.props.id}-${this.props.tooltip}}`} overlay={tooltip}>
                 {btn}
             </OverlayTrigger>
         );
@@ -131,11 +132,10 @@ class LocateBtn extends React.Component {
     }
 
     getBtnStyle = () => {
-        let style = this.props.bsStyle;
-        if (this.props.locate === "FOLLOWING") {
+        const {locate, bsStyle} = this.props;
+        let style = bsStyle;
+        if (locate === "FOLLOWING" || locate === "ENABLED") {
             style = "success active";
-        } else if (this.props.locate === "ENABLED") {
-            style = "info";
         }
         return style;
     };

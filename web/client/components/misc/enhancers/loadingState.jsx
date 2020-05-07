@@ -27,4 +27,4 @@ const defaultTest = ({loading, isLoading}) => loading || isLoading && ((typeof i
 module.exports = (isLoading = defaultTest, loaderProps = {}, LoadingComponent = DefaultLoadingComponent) => branch(
     isLoading,
     // TODO return proper HOC
-    () => () => <LoadingComponent {...loaderProps} />);
+    () => ({loaderProps: dynamicLoaderProps}) => <LoadingComponent {...loaderProps} {...dynamicLoaderProps}/>);

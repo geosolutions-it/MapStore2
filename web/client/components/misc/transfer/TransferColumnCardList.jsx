@@ -7,10 +7,12 @@
 */
 
 import React from 'react';
+import { Tooltip } from 'react-bootstrap';
 
 import SideCard from '../cardgrids/SideCard';
 import Toolbar from '../toolbar/Toolbar';
 import emptyState from '../enhancers/emptyState';
+import OverlayTrigger from '../OverlayTrigger';
 
 const TransferColumnCardList = ({
     items = [],
@@ -25,16 +27,16 @@ const TransferColumnCardList = ({
         {items.map((item, idx) => {
             const isSelected = item.id && selectedItems.reduce((result, selectedItem) => result || selectedItem.id === item.id, false);
             return (<SideCard
-                {...item}
-                key={item.id || idx}
-                size={item.cardSize}
-                className={(item.className ? `${item.className} ` : ' ') + (idx === items.length - 1 ? 'ms2-transfer-lastcard' : '')}
-                selected={isSelected}
                 onClick={(_, event) => isRoot ? onSelect(isSelected ?
                     selectedItems.filter(selectedItem => selectedItem.id !== item.id) :
                     allowCtrlMultiSelect && event.ctrlKey && side === selectedSide ?
                         [...selectedItems, item] :
                         [item], side) : {}}
+                {...item}
+                key={item.id || idx}
+                size={item.cardSize}
+                className={(item.className ? `${item.className} ` : ' ') + (idx === items.length - 1 ? 'ms2-transfer-lastcard' : '')}
+                selected={isSelected}
                 tools={item.tools && <Toolbar
                     buttons={item.tools.map(tool => ({
                         ...tool,
@@ -48,6 +50,11 @@ const TransferColumnCardList = ({
                     }))}/>
                 }
                 preview={item.preview}
+                description={item.showDescriptionTooltip && item.description ?
+                    <OverlayTrigger delayShow={item.descriptionTooltipDelay} placement="top" overlay={<Tooltip id={item.id}>{item.description}</Tooltip>}>
+                        <span>{item.description}</span>
+                    </OverlayTrigger> :
+                    item.description}
                 body={
                     <div className="ms2-transfer-body-container">
                         {item.component && <div

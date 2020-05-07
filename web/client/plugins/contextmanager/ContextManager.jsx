@@ -11,7 +11,7 @@ import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 import {createStructuredSelector} from 'reselect';
 import {Grid, Button} from 'react-bootstrap';
-import SearchBar from "../../components/mapcontrols/search/SearchBar";
+import SearchBar from "../../components/search/SearchBar";
 import Message from '../../components/I18N/Message';
 
 import {createPlugin} from '../../utils/PluginsUtils';

@@ -46,4 +46,46 @@ describe('Cascade component', () => {
         const el = container.querySelector('.ms-edit');
         expect(el).toExist();
     });
+    it('should apply layout class name on small devices', () => {
+        ReactDOM.render(<div style={{ width: 400 }}><Cascade {...STORY} /></div>, document.getElementById("container"));
+        const container = document.getElementById('container');
+        const smallGeoStoryLayoutNode = container.querySelector('.ms-sections-container.ms-sm');
+        const mediumGeoStoryLayoutNode = container.querySelector('.ms-sections-container.ms-md');
+        expect(smallGeoStoryLayoutNode).toExist();
+        expect(mediumGeoStoryLayoutNode).toNotExist();
+    });
+    it('should apply layout class name on medium devices', () => {
+        ReactDOM.render(<div style={{ width: 1000 }}><Cascade {...STORY} /></div>, document.getElementById("container"));
+        const container = document.getElementById('container');
+        const smallGeoStoryLayoutNode = container.querySelector('.ms-sections-container.ms-sm');
+        const mediumGeoStoryLayoutNode = container.querySelector('.ms-sections-container.ms-md');
+        expect(smallGeoStoryLayoutNode).toNotExist();
+        expect(mediumGeoStoryLayoutNode).toExist();
+    });
+    it('should not apply layout class name on large devices', () => {
+        ReactDOM.render(<div style={{ width: 1920 }}><Cascade {...STORY} /></div>, document.getElementById("container"));
+        const container = document.getElementById('container');
+        const smallGeoStoryLayoutNode = container.querySelector('.ms-sections-container.ms-sm');
+        const mediumGeoStoryLayoutNode = container.querySelector('.ms-sections-container.ms-md');
+        expect(smallGeoStoryLayoutNode).toNotExist();
+        expect(mediumGeoStoryLayoutNode).toNotExist();
+    });
+    it('should not apply layout class name with edit mode', () => {
+        ReactDOM.render(<div style={{ width: 400 }}><Cascade {...STORY} mode="edit" /></div>, document.getElementById("container"));
+        const container = document.getElementById('container');
+        const smallGeoStoryLayoutNode = container.querySelector('.ms-sections-container.ms-sm');
+        const mediumGeoStoryLayoutNode = container.querySelector('.ms-sections-container.ms-md');
+        expect(smallGeoStoryLayoutNode).toNotExist();
+        expect(mediumGeoStoryLayoutNode).toNotExist();
+    });
+    it('should apply custom theme on the story', () => {
+        const COLOR = '#ffffff';
+        const BACKGROUND_COLOR = '#000000';
+        ReactDOM.render(<Cascade {...STORY} theme={{ color: COLOR, backgroundColor: BACKGROUND_COLOR }}/>, document.getElementById("container"));
+        const container = document.getElementById('container');
+        const sectionsContainerNode = container.querySelector('.ms-sections-container');
+        expect(sectionsContainerNode).toBeTruthy();
+        expect(sectionsContainerNode.style.color).toBe('rgb(255, 255, 255)');
+        expect(sectionsContainerNode.style.backgroundColor).toBe('rgb(0, 0, 0)');
+    });
 });

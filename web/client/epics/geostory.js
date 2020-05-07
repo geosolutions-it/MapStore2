@@ -73,7 +73,7 @@ import { resourceIdSelectorCreator, createPathSelector, currentStorySelector, re
 import { currentMediaTypeSelector, sourceIdSelector} from '../selectors/mediaEditor';
 
 import { wrapStartStop } from '../observables/epics';
-import { scrollToContent, ContentTypes, isMediaSection, Controls, getEffectivePath, getFlatPath, isWebPageSection, MediaTypes } from '../utils/GeoStoryUtils';
+import { scrollToContent, ContentTypes, isMediaSection, Controls, getEffectivePath, getFlatPath, isWebPageSection, MediaTypes, Modes } from '../utils/GeoStoryUtils';
 
 import { SourceTypes } from './../utils/MediaEditorUtils';
 
@@ -265,7 +265,7 @@ export const loadGeostoryEpic = (action$, {getState = () => {}}) => action$
                 return axios.get(`configs/${id}.json`)
                     // not return anything else that data in this case
                     // to match with data/resource object structure of getResource
-                    .then(({data}) => ({data, canEdit: true}));
+                    .then(({data}) => ({ data, isStatic: true, canEdit: true }));
             }
             return getResource(id);
         })
@@ -275,15 +275,24 @@ export const loadGeostoryEpic = (action$, {getState = () => {}}) => action$
                 }
                 return true;
             })
-            .switchMap(({ data, ...resource }) => {
-                const isAdmin = isAdminUserSelector(getState());
-                const user = isLoggedIn(getState());
+            .switchMap(({ data, isStatic = false, ...resource }) => {
+                const state = getState();
+                const isAdmin = isAdminUserSelector(state);
+                const user = isLoggedIn(state);
+
                 const story = isString(data) ? JSON.parse(data) : data;
                 if (!user && isNaN(parseInt(id, 10))) {
                     return Observable.of(loadGeostoryError({status: 403}));
                 }
+
+                const isEditMode = modeSelector(state) === Modes.EDIT;
+
                 return Observable.from([
-                    setEditing(resource && resource.canEdit || isAdmin),
+                    // initialize editing only for new or static sources
+                    // or verify if user can edit when current mode is equal to EDIT
+                    ...(isStatic || isEditMode
+                        ? [ setEditing((resource && resource.canEdit || isAdmin)) ]
+                        : []),
                     geostoryLoaded(id),
                     setCurrentStory(story),
                     setResource(resource)

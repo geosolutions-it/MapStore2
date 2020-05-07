@@ -1,0 +1,48 @@
+.map-catalog-dock-panel .ms2-border-layout-body > .ms2-border-layout-content {
+    display: flex;
+}
+
+.map-catalog-dock-panel .ms2-border-layout-body > .ms2-border-layout-content > div {
+    flex-grow: 1;
+}
+
+.map-catalog-panel {
+    height: 100%;
+
+    .loader-container {
+        height: 100%;
+        display: flex;
+    }
+
+    .ms2-border-layout-body > .ms2-border-layout-content {
+        display: block;
+    }
+
+    .msSideGrid {
+        position: relative;
+    }
+
+    .map-catalog > .mapstore-filter {
+        margin-bottom: 8px;
+        padding: 0 15px 0 15px;
+    }
+
+    .map-catalog-preview {
+        display: flex;
+        position: relative;
+        width: 100%;
+        height: 100%;
+        background-color: #ddd;
+
+        img {
+            width: 100%;
+            height: 100%;
+        }
+
+        .glyphicon {
+            font-size: @square-btn-size;
+            margin: auto;
+            color: white;
+        }
+    }
+}

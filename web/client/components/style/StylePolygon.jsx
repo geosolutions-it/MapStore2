@@ -9,7 +9,7 @@ const PropTypes = require('prop-types');
 
 const React = require('react');
 const {Grid, Row, Col} = require('react-bootstrap');
-const ColorPicker = require('./ColorPicker');
+const ColorPicker = require('./ColorPicker').default;
 const StyleCanvas = require('./StyleCanvas');
 const numberLocalizer = require('react-widgets/lib/localizers/simple-number');
 numberLocalizer();
@@ -46,7 +46,14 @@ class StylePolygon extends React.Component {
                                 onChangeColor={(color) => {if (color) { this.props.setStyleParameter("color", color); } }} />
                         </Col>
                         <Col xs={8} style={{paddingRight: 0, paddingLeft: 30}}>
-                            <NumberPicker onChange={(number) => {this.props.setStyleParameter("width", number); }} min={1} max={15} step={1} value={this.props.shapeStyle.width}/>
+                            <NumberPicker
+                                min={1} max={15} step={1}
+                                value={this.props.shapeStyle.width}
+                                onChange={(number) => {
+                                    if (number !== this.props.shapeStyle.width) {
+                                        this.props.setStyleParameter("width", number);
+                                    }
+                                }}  />
                         </Col>
                     </Row>
                     <Row style={{marginTop: 4}}>

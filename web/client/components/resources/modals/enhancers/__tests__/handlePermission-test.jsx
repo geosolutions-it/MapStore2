@@ -61,11 +61,20 @@ describe('handlePermission enhancer', () => {
         };
 
         const Sink = handlePermission(DUMMY_API)(createSink(props => {
+            expect(props.onUpdateRules).toBeTruthy(); // check that the handler is present
             if (props.rules && props.rules.length > 0) {
                 expect(props.rules.length).toBe(1);
                 done();
             }
         }));
         ReactDOM.render(<Sink resource={{id: 1}} />, document.getElementById("container"));
+    });
+    it('test disablePermission', (done) => {
+        const Sink = handlePermission()(createSink( props => {
+            expect(props).toExist();
+            expect(props.onUpdateRules).toBeFalsy(); // check that the enhancer is not applied at all (verifying one of the properties added by it)
+            done();
+        }));
+        ReactDOM.render(<Sink disablePermission />, document.getElementById("container"));
     });
 });

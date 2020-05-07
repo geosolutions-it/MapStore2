@@ -74,7 +74,7 @@ class SettingsButton extends React.Component {
             minWidth: "300px",
             zIndex: 1996,
             position: "absolute",
-            overflow: "auto",
+            overflow: "visible",
             top: "90px",
             left: "calc(50% - 150px)",
             backgroundColor: "white"

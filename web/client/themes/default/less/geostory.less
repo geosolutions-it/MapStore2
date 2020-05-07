@@ -20,6 +20,11 @@
 @ms-story-size-large: 85%;
 @ms-story-size-medium: 60%;
 @ms-story-size-small: 40%;
+
+@ms-story-size-height-large: 800px;
+@ms-story-size-height-medium: 575px;
+@ms-story-size-height-small: 350px;
+
 .ms-story-align-center { margin-left: auto; margin-right: auto; }
 /* mixin for align*/
 .ms-story-align-left { margin-left: 0; margin-right: auto; }
@@ -27,9 +32,6 @@
 /* mixin for text color*/
 .ms-story-color-contrast { color: contrast(@ms-story-bg); }
 .ms-story-color-no-contrast { color: @ms-story-bg; }
-
-
-.no-overflow {overflow: hidden !important;}
 
 /* TEXT EDITOR TODO: externalize */
 @import '~draft-js-inline-toolbar-plugin/lib/plugin.css';
@@ -58,7 +60,7 @@
 .ms-geostory {
     .ms2-border-layout-content {
         .ms2-border-layout-content {
-            background-color: @ms-story-bg-grey;
+            background-color: inherit;
         }
     }
     .ms-cascade-story.ms-edit {
@@ -78,6 +80,7 @@
     top: unset;
 }
 .ms-geostory-builder {
+    transform: translate(0, 0);
     .ms-geostory-settings {
         padding: 8px;
         .ms-geostory-settings-logo{
@@ -226,25 +229,143 @@
     }
     padding: 8px;
 }
+
+.ms-sections-container-small-screen {
+    @ms-story-padding-small-screen: @square-btn-medium-size / 2 + 8px;
+    .ms-section .ms-section-background .ms-section-background-container .ms-media {
+        /* alignment of content */
+        .ms-story-align-center();
+        /* size of content */
+        width: @ms-story-size-full;
+    }
+    .ms-section-title {
+        .ms-content-text {
+            width: 100%;
+            padding-left: @ms-story-padding-small-screen;
+            padding-right: @ms-story-padding-small-screen;
+            &.ms-align-left .ms-content-body,
+            &.ms-align-right .ms-content-body,
+            .ms-content-body {
+                margin-left: auto;
+                margin-right: auto;
+            }
+            .ms-content-body,
+            .ms-content-body > div {
+                width: 100%;
+            }
+            .ms-content-body .ms-content-toolbar {
+                width: auto;
+            }
+        }
+    }
+    .ms-section-paragraph {
+        padding-left: @ms-story-padding-small-screen;
+        padding-right: @ms-story-padding-small-screen;
+    }
+    .ms-section-immersive {
+        .ms-content-column {
+            padding-left: @ms-story-padding-small-screen;
+            padding-right: @ms-story-padding-small-screen;
+            min-width: auto;
+        }
+    }
+    .ms-content {
+        /* size of content */
+        width: @ms-story-size-full;
+        /* alignment of content */
+        .ms-story-align-center();
+        &.ms-content-text {
+            .ms-content-body {
+                /* font size for all the main classes in text content */
+                p { font-size: @ms-story-font-size-base * 0.75; }
+                h1 { font-size: @ms-story-font-size-h1 * 0.75; }
+                h2 { font-size: @ms-story-font-size-h2 * 0.75; }
+                h3 { font-size: @ms-story-font-size-h3 * 0.75; }
+                h4 { font-size: @ms-story-font-size-h4 * 0.75; }
+                h5 { font-size: @ms-story-font-size-h5 * 0.75; }
+                h6 { font-size: @ms-story-font-size-h6 * 0.75; }
+            }
+        }
+    }
+    .ms-section.ms-expandable-background {
+        &.ms-section-title .ms-content-text,
+        &.ms-section-immersive .ms-content-column {
+            padding-right: @square-btn-medium-size + 8px;
+        }
+    }
+}
+.ms-sections-container-medium-screen {
+    @ms-story-padding-medium-screen: @square-btn-medium-size * 1.5;
+    .ms-section .ms-section-background .ms-section-background-container {
+        /* size of content */
+        &.ms-size-full .ms-media { width: @ms-story-size-full; }
+        &.ms-size-large .ms-media { width: @ms-story-size-large; }
+        &.ms-size-medium .ms-media { width: @ms-story-size-medium; }
+        &.ms-size-small .ms-media { width: @ms-story-size-medium; }
+    }
+    .ms-section-title .ms-content-text {
+        padding-left: @ms-story-padding-medium-screen;
+        padding-right: @ms-story-padding-medium-screen;
+        &.ms-align-center .ms-content-body { margin-left: auto; margin-right: auto; }
+        &.ms-align-left .ms-content-body { margin-left: 0; margin-right: auto; }
+        &.ms-align-right .ms-content-body { margin-left: auto; margin-right: 0; }
+    }
+    .ms-section-paragraph {
+        padding-left: @ms-story-padding-medium-screen;
+        padding-right: @ms-story-padding-medium-screen;
+    }
+    .ms-content {
+        &.ms-content-text {
+            .ms-content-body {
+                p { font-size: @ms-story-font-size-base * 0.80; }
+                h1 { font-size: @ms-story-font-size-h1 * 0.80; }
+                h2 { font-size: @ms-story-font-size-h2 * 0.80; }
+                h3 { font-size: @ms-story-font-size-h3 * 0.80; }
+                h4 { font-size: @ms-story-font-size-h4 * 0.80; }
+                h5 { font-size: @ms-story-font-size-h5 * 0.80; }
+                h6 { font-size: @ms-story-font-size-h6 * 0.80; }
+            }
+        }
+        /* size of content */
+        &.ms-size-full { width: @ms-story-size-full; }
+        &.ms-size-large { width: @ms-story-size-large; }
+        &.ms-size-medium { width: @ms-story-size-medium; }
+        &.ms-size-small { width: @ms-story-size-medium; }
+    }
+}
+
 .ms-cascade-story {
 
     /////////////
     // SECTIONS
     /////////////
-
-    .ms-sections {
-        /*
-        Main scrollable container of the cascade story
-        */
-        .ms-sections-container {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            overflow-y: auto;
+    background-color: @ms-story-bg;
+    transform: translate(0, 0);
+    /*
+    Main scrollable container of the cascade story
+    */
+    .ms-sections-container {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        overflow-y: auto;
+        &.ms-sm { .ms-sections-container-small-screen(); }
+        &.ms-md { .ms-sections-container-medium-screen(); }
+        // assign background and color to the parent element
+        background-color: @ms-story-bg;
+        color: contrast(@ms-story-bg);
+        // all children should inherit the parent values from classes or inline
+        .ms-section,
+        .ms-section-background,
+        .ms-section-background-container {
+            color: inherit;
+            background-color: inherit;
         }
     }
+
+
 
     ////////////
     // SECTION
@@ -253,9 +374,10 @@
     .ms-section {
         position: relative;
         z-index: 1;
-        background-color: @ms-story-bg;
+        background-color: inherit;
         + .ms-section {
             border-top: 1px solid @ms-story-bg-grey;
+            border-color: inherit;
         }
         & > div > .ms-content-toolbar {
             position: absolute;
@@ -281,7 +403,7 @@
                 overflow: hidden;
                 position: relative;
                 pointer-events: auto;
-                background-color: @ms-story-bg-grey;
+                background-color: inherit;
                 .ms-content-toolbar {
                     position: absolute;
                     margin: 8px;
@@ -301,7 +423,7 @@
 
                 /* themes of column container */
                 &.ms-bright {
-                    background-color: @ms-story-bg-grey;
+                    background-color: @ms-story-bg;
                 }
                 &.ms-dark {
                     background-color: contrast(@ms-story-bg);
@@ -313,6 +435,7 @@
         */
         .ms-section-contents {
             pointer-events: none;
+            background: transparent;
             // make contents and popover clickable.
             // TODO: maybe anything inside contents should be clickable
             .add-bar, .popover-content {
@@ -324,8 +447,10 @@
 
             .ms-column-contents {
                 .add-bar {
-                    background-color: transparent;
+                    color: @ms-story-text;
+                    background-color: @ms-story-bg;
                     border: none;
+                    border-radius: 50%;
                     button {
                         color: contrast(@ms-story-bg);
                     }
@@ -379,7 +504,6 @@
                 display: flex;
                 margin: auto;
                 align-self: center;
-                padding: 64px;
             }
             /* floating add section button */
             & > .add-bar {
@@ -397,53 +521,61 @@
             }
             .ms-content-text {
                 display: flex;
+                padding: 64px 0;
                 /* render the toolbar has a floating container at top left corner of title container */
                 .ms-content-toolbar {
                     position: absolute;
-                    transform: translate(-@square-btn-medium-size / 2, -60%);
+                    margin-left: -@square-btn-medium-size / 2;
+                    margin-top: -@square-btn-medium-size * 0.6;
                     padding: 0;
                     z-index: 2;
                     .shadow-soft();
                 }
-                /* text on full size should fill all the width of container */
-                &.ms-size-full {
-                    width: 100%;
-                    .ms-content-body,
-                    .ms-content-body > div {
-                        width: 100%;
-                    }
-                    .ms-content-body .ms-content-toolbar {
-                        width: auto;
-                    }
-                }
+                
                 /*
                 content body needs to be aligned accordingly with the alignment of container,
                 this is needed in particular for size equal to large and short titles
                 where the alignment effect is not visible without this improvement
                 */
                 &.ms-align-center .ms-content-body { margin-left: auto; margin-right: auto; }
-                &.ms-align-left .ms-content-body { margin-left: 0; margin-right: auto; }
-                &.ms-align-right .ms-content-body { margin-left: auto; margin-right: 0; }
+                &.ms-align-left .ms-content-body { margin-left: @square-btn-medium-size + 8px; margin-right: auto; }
+                &.ms-align-right .ms-content-body { margin-left: auto; margin-right: @square-btn-medium-size + 8px; }
+                /* text on full size should fill all the width of container */
+                &.ms-size-full {
+                    width: 100%;
+                    .ms-content-body {
+                        margin-right: 0;
+                        margin-left: 0;
+                    }
+                    .ms-content-body,
+                    .ms-content-body > div {
+                        width: 100%;
+                    }
+                    .ms-content-body .ms-content-toolbar {
+                        width: auto;
+                        margin-left: 8px;
+                    }
+                }
 
                 /* themes of text contents */
-                &.ms-bright .ms-content-body > *:not(.ms-content-toolbar) {
+                &.ms-bright .ms-content-body {
                     .ms-text-placeholder { .ms-story-color-contrast(); }
                     .ms-story-color-contrast();
                     background-color: fade(@ms-story-bg, 75%);
                     .shadow-far();
                 }
-                &.ms-bright-text .ms-content-body > *:not(.ms-content-toolbar) {
+                &.ms-bright-text .ms-content-body {
                     .ms-text-placeholder {.ms-story-color-no-contrast(); }
                     .ms-story-color-no-contrast();
                     background-color: transparent;
                 }
-                &.ms-dark .ms-content-body > *:not(.ms-content-toolbar) {
+                &.ms-dark .ms-content-body {
                     .ms-text-placeholder {.ms-story-color-no-contrast();}
                     .ms-story-color-no-contrast();
                     background-color: fade(contrast(@ms-story-bg), 75%);
                     .shadow-far();
                 }
-                &.ms-dark-text .ms-content-body > *:not(.ms-content-toolbar) {
+                &.ms-dark-text .ms-content-body {
                     .ms-text-placeholder { .ms-story-color-contrast(); }
                     .ms-story-color-contrast();
                     background-color: transparent;
@@ -453,13 +585,30 @@
 
         &.ms-section-paragraph {
             padding: 0 15%;
-            background-color: @ms-story-bg;
+            background-color: inherit;
             /*
             overrides for themes of text content
             - remove shadow */
             .ms-content.ms-content-text.ms-bright .ms-content-body > *,
             .ms-content.ms-content-text.ms-dark .ms-content-body > * {
                 box-shadow: none;
+            }
+            .ms-content-column {
+                .ms-content:not(.ms-content-text) {
+                    padding-top: 16px;
+                    padding-bottom: 16px;
+                    &.ms-content-map {
+                        width: 100%;
+                    }
+                }
+                .ms-content.ms-content-webPage,
+                .ms-content.ms-content-map {
+                    width: 100%;
+                    height: 350px;
+                    &.ms-size-large { height: @ms-story-size-height-large; }
+                    &.ms-size-medium { height: @ms-story-size-height-medium; }
+                    &.ms-size-small { height: @ms-story-size-height-small; }
+                }
             }
         }
         // overrides and specific styles for immersive section layout
@@ -472,9 +621,10 @@
             }
             // column contents overrides
             .ms-content-column {
+                min-width: 500px;
                     display: flex; // align vertically the content
                     pointer-events: none; // pass pointer events to background (this div takes full width and height)
-                    padding: 64px 24px;
+                    padding: 64px @square-btn-medium-size + 6px;
                     padding-top: 164px;
                 &>.ms-content-body {
                     // override background of paragraph (or title) content.
@@ -484,7 +634,8 @@
                     &>.ms-content-toolbar {
                         position: absolute;
                         z-index: 2;
-                        transform: translate(-@square-btn-medium-size / 2, -60%);
+                        margin-left: -@square-btn-medium-size / 2;
+                        margin-top: -@square-btn-medium-size * 0.6;
                         padding: 0;
                         .shadow-soft();
                     }
@@ -519,9 +670,6 @@
                     .ms-story-color-no-contrast();
                     background-color: fade(contrast(@ms-story-bg), 75%);
                     .shadow-far();
-                    .add-bar button {
-                        color: @ms-story-bg;
-                    }
                 }
                 &.ms-dark-text > .ms-content-body {
                     .ms-text-placeholder { .ms-story-color-contrast(); }
@@ -534,6 +682,21 @@
                 }
                 .ms-media-credits {
                     right: 16px;
+                }
+                .ms-media-map {
+                    .ms-expand-media-button {
+                        margin: 0;
+                        top: 20px;
+                        right: 20px;
+                    }
+                }
+                .ms-content.ms-content-webPage,
+                .ms-content.ms-content-map {
+                    width: 100%;
+                    height: 350px;
+                    &.ms-size-large { height: @ms-story-size-height-large; }
+                    &.ms-size-medium { height: @ms-story-size-height-medium; }
+                    &.ms-size-small { height: @ms-story-size-height-small; }
                 }
             }
         }
@@ -550,11 +713,52 @@
         we need to restore the possibility to interact with the content body
         using `pointer-events: auto;`
         */
-
-        .ms-webpage-wrapper > iframe {
-            border: none;
+        .ms-content-webPage {
+            position: relative;
             width: 100%;
-            min-height: 100%;
+            height: 100%;
+            .ms-content-body,
+            .ms-visibility-container,
+            .ms-webpage-wrapper,
+            .ms-webpage-wrapper > iframe {
+                position: relative;
+                width: 100%;
+                height: 100%;
+            }
+            .ms-webpage-wrapper > iframe {
+                border: none;
+            }
+            .ms-content-body {
+                display: flex;
+                flex-direction: column;
+            }
+            .ms-visibility-container {
+                flex: 1;
+            }
+        }
+
+        .ms-content-map {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            .ms-content-body,
+            .ms-visibility-container,
+            .ms-media-map,
+            .ms-media-map > div  {
+                position: relative;
+                width: 100%;
+                height: 100%;
+            }
+            .ms-content-body {
+                display: flex;
+                flex-direction: column;
+            }
+            .ms-visibility-container {
+                flex: 1;
+            }
+            canvas {
+                position: absolute;
+            }
         }
 
         .ms-content-body > * {
@@ -581,7 +785,6 @@
                 }
 
                 .ms-text-wrapper {
-                    min-width: 200px;
                     min-height: 40px;
                 }
 
@@ -679,6 +882,10 @@
                     padding: 16px;
                 }
             }
+            code {
+                color: inherit;
+                background: #f1f1f1;
+            }
         }
 
         /* size of content */
@@ -693,6 +900,9 @@
         &.ms-align-right { .ms-story-align-right(); }
     }
 
+    .ms-content-column {
+        .ms-content.ms-size-large { width: @ms-story-size-full; }
+    }
 
     //////////
     // MEDIA
@@ -732,6 +942,7 @@
             }
             .ms-media-description {
                 border-left: 2px solid @ms-story-bg-grey;
+                border-color: inherit;
                 padding-left: 8px;
                 margin-top: 4px;
                 > small {
@@ -744,8 +955,8 @@
         &.ms-media-map {
             .ol-zoom {
                 top: 50px;
+                left: 6px;
             }
-
         }
     }
 
@@ -759,7 +970,7 @@
         justify-content: center;
     }
     .ms-media-error {
-        background-color: @ms-story-bg-grey;
+        background-color: inherit;
         .glyphicon {
             font-size: @square-btn-size;
         }
@@ -808,7 +1019,7 @@
                         border-top: 2px solid @ms-story-fg-guidelines;
                     }
                 }
-                .ms-content-body {
+                .ms-content-text {
                     padding-bottom: 160px;
                 }
             }
@@ -825,6 +1036,28 @@
         width: 100%;
         height: 100%;
     }
+    /////////////////////
+    // VIEW
+    /////////////////////
+    &.ms-view {
+        .ms-section {
+            &.ms-section-paragraph {
+                padding-top: 32px;
+                padding-bottom: 32px;
+            }
+        }
+        .ms-media.ms-media-map .ol-zoom {
+            top: 6px;
+        }
+        .ms-media.ms-media-map .leaflet-control-zoom {
+            top: 6px;
+            left: 6px;
+            margin: 0;
+        }
+        .ms-section.ms-section-immersive .ms-content-column {
+            padding-top: 64px;
+        }
+    }
 
     /////////////////////
     // LIBRARIES FIX
@@ -834,16 +1067,100 @@
     .public-DraftStyleDefault-ltr {
         text-align: inherit;
     }
+
+    .ol-viewport {
+        cursor: unset !important;
+    }
+}
+
+.ms-expand-media-button {
+    .square-button-md();
+    .shadow-soft();
+    .no-border();
+    position: absolute;
+    z-index: 500;
+    top: 0;
+    right: 0;
+    margin: 4px;
+}
+.ms-expanded-media-container {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    padding: 4px;
+    background-color: rgba(0, 0, 0, 0.25);
+    & > * {
+        background-color: @ms-story-bg;
+    } 
+}
+
+.ms-custom-theme-picker-field {
+    color: @ms-story-text;
+    background: @ms-story-bg;
+    display: flex;
+    align-items: center;
+    margin: 4px 0;
+    min-height: @square-btn-medium-size;
+    & > div {
+        display: flex;
+        position: relative;
+        align-items: center;
+        flex: 1;
+        word-break: break-word;
+        padding: 0 4px;
+    }
+    .mapstore-switch-btn {
+        margin: 0 0 0 auto;
+    }
+    .ms-custom-theme-picker-popover {
+        display: inline-block;
+    }
+    .popover-content * {
+        font-size: @font-size-small;
+    }
+    .glyphicon {
+        color: @ms2-color-danger;
+    }
+}
+// override font size of the geostory for paragraph in popover
+.ms-cascade-story .ms-content.ms-content-text .ms-content-body
+.ms-custom-theme-picker-field .popover-content * {
+    font-size: @font-size-small;
+}
+.ms-custom-theme-picker-alternative-text {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border: 1px solid #000000;
+}
+.ms-custom-theme-picker-menuitem-header {
+    display: flex;
+    align-items: center;
+    color: @ms2-color-text;
+    padding: 8px 8px 0 8px;
+    > div {
+        flex: 1;
+        padding: 0 4px;
+    }
+    .glyphicon {
+        margin: 0;
+    }
+}
+.ms-custom-theme-picker-menuitem {
+    padding: 4px 12px;
+    border: 1px solid @ms2-color-shade-lighter;
+    margin: 8px;
+    min-width: 300px;
 }
 
 .ms-media-map.topLeft .ol-zoom.ol-unselectable.ol-control {
-    top: 50px;
+    top: 6px;
     right: unset;
     bottom: unset;
     left: 10px;
 }
 .ms-media-map.topRight .ol-zoom.ol-unselectable.ol-control {
-    top: 50px;
+    top: 6px;
     right: 10px;
     bottom: unset;
     left: unset;

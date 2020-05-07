@@ -99,11 +99,13 @@ pages:
       - Writing Plugins: 'developer-guide/plugins-howto.md'
       - Writing Epics: 'developer-guide/writing-epics.md'
       - Writing Actions and Reducers: 'developer-guide/writing-actions-reducers.md'
+      - Implement User Sessions: 'developer-guide/user-sessions.md'
     - Configuration:
       - Configuration Files: 'developer-guide/configuration-files.md'
       - Application Configuration: 'developer-guide/local-config.md'
       - Configuring plugins: 'developer-guide/plugins-documentation.md'
       - Map Configuration: 'developer-guide/maps-configuration.md'
+      - Externalize Configuration: 'developer-guide/externalized-configuration.md'
     - Database Setup: 'developer-guide/database-setup.md'
     - Integrations:
       - users:

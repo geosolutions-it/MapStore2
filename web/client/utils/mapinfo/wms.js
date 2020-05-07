@@ -8,8 +8,10 @@
 
 const MapUtils = require('../MapUtils');
 const CoordinatesUtils = require('../CoordinatesUtils');
-const {isArray, isObject, head} = require('lodash');
+const {getLayerUrl} = require('../LayersUtils');
+const {isObject} = require('lodash');
 const { optionsToVendorParams } = require('../VendorParamsUtils');
+const { generateEnvString } = require('../LayerLocalizationUtils');
 
 const SecurityUtils = require('../SecurityUtils');
 const assign = require('object-assign');
@@ -23,7 +25,7 @@ module.exports = {
      * @param {string} viewer
      * @return {object} an object with `request`, containing request paarams, `metadata` with some info about the layer and the request, and `url` to send the request to.
      */
-    buildRequest: (layer, { sizeBBox, map = {}, point, currentLocale, params: defaultParams, maxItems = 10} = {}, infoFormat, viewer, featureInfo) => {
+    buildRequest: (layer, { sizeBBox, map = {}, point, currentLocale, params: defaultParams, maxItems = 10, env } = {}, infoFormat, viewer, featureInfo) => {
         /* In order to create a valid feature info request
          * we create a bbox of 101x101 pixel that wrap the point.
          * center point is re-projected then is built a box of 101x101pixel around it
@@ -44,8 +46,7 @@ module.exports = {
             queryLayers = layer.queryLayers.join(",");
         }
 
-        const locale = currentLocale ? head(currentLocale.split('-')) : null;
-        const ENV = locale ? 'locale:' + locale : '';
+        const ENV = generateEnvString(env);
         const params = optionsToVendorParams({
             layerFilter: layer.layerFilter,
             filterObj: layer.filterObj,
@@ -81,9 +82,7 @@ module.exports = {
                 viewer,
                 featureInfo
             },
-            url: isArray(layer.url) ?
-                layer.url[0] :
-                layer.url.replace(/[?].*$/g, '')
+            url: getLayerUrl(layer).replace(/[?].*$/g, '')
         };
     }
 };

@@ -149,4 +149,29 @@ describe('Immersive component', () => {
         expect(contentToolbar).toExist();
         testToolbarButtons(["pencil", "map-edit", "size-extra-large", "align-center", "dropper"], container);
     });
+    it('should apply expandable background class on media map', () => {
+        const CONTENTS_MAP = [{
+            id: '000',
+            type: 'column',
+            background: {
+                type: 'map'
+            },
+            contents: [{
+                type: 'text',
+                html: '<p>column</p>'
+            }]
+        }];
+        ReactDOM.render(
+            <Provider store={{
+                getState: () => {},
+                subscribe: () => {},
+                dispatch: () => {}
+            }}>
+                <Immersive mode={Modes.EDIT} expandableMedia contents={CONTENTS_MAP} />
+            </Provider>
+            , document.getElementById("container"));
+        const container = document.getElementById('container');
+        const el = container.querySelector('.ms-section-immersive.ms-expandable-background');
+        expect(el).toExist();
+    });
 });

@@ -10,19 +10,13 @@ const React = require('react');
 const {template} = require('lodash');
 const TemplateUtils = require('../../../../utils/TemplateUtils');
 const HtmlRenderer = require('../../../misc/HtmlRenderer');
-const {Row, Col, Grid} = require('react-bootstrap');
 
 module.exports = ({layer = {}, response}) => (
-    <Grid fluid>
+    <div className="ms-template-viewer">
         {response.features.map((feature, i) =>
-            <Row key={i}>
-                <Col xs={12}>
-                    <HtmlRenderer html={template(TemplateUtils.getCleanTemplate(layer.featureInfo && layer.featureInfo.template || '', feature, /\$\{.*?\}/g, 2, 1))(feature)}/>
-                </Col>
-                <Col xs={12}>
-                    <hr/>
-                </Col>
-            </Row>
+            <div key={i}>
+                <HtmlRenderer html={template(TemplateUtils.getCleanTemplate(layer.featureInfo && layer.featureInfo.template || '', feature, /\$\{.*?\}/g, 2, 1))(feature)}/>
+            </div>
         )}
-    </Grid>
+    </div>
 );

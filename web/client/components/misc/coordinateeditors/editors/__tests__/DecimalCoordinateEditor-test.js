@@ -57,4 +57,21 @@ describe('DecimalCoordinateEditor enhancer', () => {
             }
         });
     });
+    it('Test DecimalCoordinateEditor onKeyDown with enter ', () => {
+        ReactDOM.render( <DecimalCoordinateEditor value={2} />, document.getElementById("container"));
+        const container = document.getElementById('container');
+        const elements = container.querySelectorAll('input');
+        expect(elements.length).toBe(1);
+        expect(elements[0].value).toBe('2');
+
+        ReactTestUtils.Simulate.keyDown(elements[0], {
+            keyCode: 13,
+            preventDefault: () => {
+                expect(true).toBe(true);
+            },
+            stopPropagation: () => {
+                expect(true).toBe(true);
+            }
+        });
+    });
 });

@@ -57,7 +57,7 @@ const PAGE_SIZE = 10;
  */
 const loadPage = ({text, catalog = {}}, page = 0) => Rx.Observable
     .fromPromise(API[catalog.type].textSearch(catalog.url, page * PAGE_SIZE + (catalog.type === "csw" ? 1 : 0), PAGE_SIZE, text))
-    .map((result) => ({result, records: getCatalogRecords(catalog.type, result || [], {url: catalog && catalog.url })}))
+    .map((result) => ({ result, records: getCatalogRecords(catalog.type, result || [], { url: catalog && catalog.url, service: catalog })}))
     .map(resToProps);
 const scrollSpyOptions = {querySelector: ".ms2-border-layout-body", pageSize: PAGE_SIZE};
 /**

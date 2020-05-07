@@ -42,6 +42,8 @@ const CLEAR_CHANGES_CONFIRMED = 'FEATUREGRID:CLEAR_CHANGES_CONFIRMED';
 const FEATURE_GRID_CLOSE_CONFIRMED = 'FEATUREGRID:FEATURE_GRID_CLOSE_CONFIRMED';
 const SET_PERMISSION = 'FEATUREGRID:SET_PERMISSION';
 const DISABLE_TOOLBAR = 'FEATUREGRID:DISABLE_TOOLBAR';
+const ACTIVATE_TEMPORARY_CHANGES = 'FEATUREGRID:ACTIVATE_TEMPORARY_CHANGES';
+const DEACTIVATE_GEOMETRY_FILTER = 'FEATUREGRID:DEACTIVATE_GEOMETRY_FILTER';
 const OPEN_ADVANCED_SEARCH = 'FEATUREGRID:ADVANCED_SEARCH';
 const ZOOM_ALL = 'FEATUREGRID:ZOOM_ALL';
 const INIT_PLUGIN = 'FEATUREGRID:INIT_PLUGIN';
@@ -208,7 +210,6 @@ function updateFilter(update) {
     return {
         type: UPDATE_FILTER,
         update
-
     };
 }
 function toggleTool(tool, value) {
@@ -342,6 +343,14 @@ const moreFeatures = (pages) => {
         pages
     };
 };
+const activateTemporaryChanges = (activated) => ({
+    type: ACTIVATE_TEMPORARY_CHANGES,
+    activated
+});
+const deactivateGeometryFilter = (deactivated) => ({
+    type: DEACTIVATE_GEOMETRY_FILTER,
+    deactivated
+});
 
 /**
  * Enables/Disables time sync for feature grid.
@@ -423,6 +432,8 @@ module.exports = {
     STOP_SYNC_WMS,
     storeAdvancedSearchFilter, STORE_ADVANCED_SEARCH_FILTER,
     moreFeatures, LOAD_MORE_FEATURES,
+    activateTemporaryChanges, ACTIVATE_TEMPORARY_CHANGES,
+    deactivateGeometryFilter, DEACTIVATE_GEOMETRY_FILTER,
     fatureGridQueryResult, GRID_QUERY_RESULT,
     setTimeSync, SET_TIME_SYNC
 };

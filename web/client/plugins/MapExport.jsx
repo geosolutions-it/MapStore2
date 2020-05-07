@@ -6,25 +6,27 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const React = require('react');
-const { connect } = require('react-redux');
-const { compose, withState, defaultProps } = require('recompose');
-const { createStructuredSelector } = require('reselect');
-const Message = require('./locale/Message');
+import React from 'react';
+import { Glyphicon } from 'react-bootstrap';
+import assign from 'object-assign';
+import { pick, get } from 'lodash';
+import { connect } from 'react-redux';
+import { compose, withState, defaultProps } from 'recompose';
+import { createStructuredSelector } from 'reselect';
 
-const { toggleControl } = require('../actions/controls');
-const { exportMap } = require('../actions/mapexport');
+import Message from '../components/I18N/Message';
+import HTML from '../components/I18N/HTML';
 
+import { toggleControl } from '../actions/controls';
+import { exportMap } from '../actions/mapexport';
 
-const { createControlEnabledSelector } = require('../selectors/controls');
-const isEnabled = createControlEnabledSelector('export');
+import { createControlEnabledSelector } from '../selectors/controls';
 
-const assign = require('object-assign');
-const { Glyphicon, Button } = require('react-bootstrap');
-
-const Dialog = require('../components/misc/StandardDialog');
-const Select = require('react-select');
+import ExportPanel from '../components/export/ExportPanel';
 import * as epics from '../epics/mapexport';
+
+const DEFAULTS = ["mapstore2", "wmc"];
+const isEnabled = createControlEnabledSelector('export');
 
 const enhanceExport = compose(
     connect(
@@ -36,12 +38,21 @@ const enhanceExport = compose(
         }
     ),
     defaultProps({
-        formatOptions: [
-            { value: 'mapstore2', label: <Message msgId="mapExport.formats.legacyMapStore2" /> },
-            { value: 'OWSContext', label: <Message msgId="mapExport.formats.OWSContext" /> }
-        ]
+        formats: {
+            mapstore2: {
+                label: <Message msgId="mapExport.formats.mapstore2.label"/>,
+                description: <HTML msgId="mapExport.formats.mapstore2.description"/>,
+                glyph: 'ext-json'
+            },
+            wmc: {
+                label: <Message msgId="mapExport.formats.wmc.label"/>,
+                description: <HTML msgId="mapExport.formats.wmc.description"/>,
+                note: <HTML msgId="mapExport.formats.wmc.note"/>,
+                glyph: 'ext-wmc'
+            }
+        }
     }),
-    withState('format', 'setFormat', 'mapstore2'),
+    withState('format', 'setFormat', 'mapstore2')
 
 );
 
@@ -50,37 +61,46 @@ const MapExport = enhanceExport(
     ({
         enabled,
         format,
-        formatOptions,
+        formats,
+        enabledFormats = DEFAULTS,
         setFormat = () => { },
         onExport = () => { },
         onClose = () => { }
-    }) => <Dialog
-        modal
-        draggable={false}
-        style={{ width: 450 }}
-        footer={<Button onClick={() => onExport(format)}>Export</Button>}
-        show={enabled} onClose={onClose} >
-        <Select
-            value={format}
-            onChange={opt => setFormat(opt.value)}
-            name="form-field-name"
-            options={formatOptions}
-        />
-    </Dialog>
+    }) => {
+        return (
+            <ExportPanel
+                show={enabled}
+                formats={pick(formats, ...enabledFormats)}
+                selectedFormat={format}
+                onSelect={setFormat}
+                onExport={onExport}
+                onClose={onClose}/>
+        );
+    }
 );
 
+/**
+ * Allows the user to export the current map in a file.
+ * @memberof plugins
+ * @name MapExport
+ * @property {string[]} cfg.enabledFormats the list of allowed formats. By default ["mapstore2", "wmc"]
+ */
 const MapExportPlugin = {
     MapExportPlugin: assign(MapExport, {
         disablePluginIf: "{state('mapType') === 'cesium'}",
-        BurgerMenu: {
-            name: 'export',
-            position: 4,
-            text: <Message msgId="mapExport.title" />,
-            icon: <Glyphicon glyph="download" />,
-            // action: toggleControl.bind(null, 'export', null),
-            action: () => exportMap(),
-            priority: 2,
-            doNotHide: true
+        BurgerMenu: config => {
+            const enabledFormats = get(config, 'cfg.enabledFormats', DEFAULTS);
+            return {
+                name: 'export',
+                position: 4,
+                text: <Message msgId="mapExport.title" />,
+                icon: <Glyphicon glyph="download" />,
+                action: enabledFormats.length > 1 ?
+                    () => toggleControl('export') :
+                    () => exportMap(enabledFormats[0] || 'mapstore2'),
+                priority: 2,
+                doNotHide: true
+            };
         }
     }),
     epics: epics

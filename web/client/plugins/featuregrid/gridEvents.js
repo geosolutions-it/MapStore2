@@ -1,10 +1,10 @@
-const {sort, selectFeatures, deselectFeatures, featureModified, disableToolbar, updateFilter} = require('../../actions/featuregrid');
+const {sort, selectFeatures, deselectFeatures, featureModified, updateFilter, activateTemporaryChanges} = require('../../actions/featuregrid');
 
 const range = (start, end) => Array.from({length: (end + 1 - start)}, (v, k) => k + start);
 module.exports = {
     onGridSort: (sortBy, sortOrder) => sort(sortBy, sortOrder),
-    onAddFilter: (update) => updateFilter(update),
-    onTemporaryChanges: (v) => disableToolbar(v),
+    onAddFilter: (update = {}) => updateFilter(update),
+    onTemporaryChanges: (v) => activateTemporaryChanges(v),
     onGridRowsUpdated: ({fromRow, toRow, updated}, rowGetter) => {
 
         let features = range(fromRow, toRow).map(r => rowGetter(r)).filter(f =>

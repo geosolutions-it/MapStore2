@@ -1,0 +1,21 @@
+<Domains xmlns="http://demo.geo-solutions.it/share/wmts-multidim/wmts_multi_dimensional.xsd"
+    xmlns:ows="http://www.opengis.net/ows/1.1" version="1.1">
+    <SpaceDomain>
+        <BoundingBox CRS="EPSG:4326" maxx="179.875" maxy="89.9375" minx="-180.125" miny="-90.125"/>
+    </SpaceDomain>
+    <DimensionDomain>
+        <ows:Identifier>elevation</ows:Identifier>
+        <Domain>0.0,200.0,400.0,600.0,800.0,1000.0</Domain>
+        <Size>6</Size>
+    </DimensionDomain>
+    <DimensionDomain>
+        <ows:Identifier>REFERENCE_TIME</ows:Identifier>
+        <Domain>2016-02-23T00:00:00.000Z,2016-02-24T00:00:00.000Z</Domain>
+        <Size>2</Size>
+    </DimensionDomain>
+    <DimensionDomain>
+        <ows:Identifier>time</ows:Identifier>
+        <Domain>2016-02-23T03:00:00.000Z,2016-02-23T06:00:00.000Z</Domain>
+        <Size>2</Size>
+    </DimensionDomain>
+</Domains>

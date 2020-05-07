@@ -141,4 +141,28 @@ describe('Title component', () => {
         expect(contentToolbar).toExist();
         testToolbarButtons(["pencil", "height-auto", "map-edit", "size-extra-large", "align-center", "dropper"], container);
     });
+    it('should apply expandable background class on media map', () => {
+        const VIEW_HEIGHT = 834;
+        const CONTENTS = [
+            {
+                id: '000',
+                type: "text",
+                background: {
+                    type: 'map'
+                }
+            }
+        ];
+        ReactDOM.render(
+            <Provider store={{
+                getState: () => {},
+                subscribe: () => {},
+                dispatch: () => {}
+            }}>
+                <Title contents={CONTENTS} expandableMedia viewHeight={VIEW_HEIGHT} cover mode="edit"/>
+            </Provider>
+            , document.getElementById("container"));
+        const container = document.getElementById('container');
+        const el = container.querySelector('.ms-section-title.ms-expandable-background');
+        expect(el).toExist();
+    });
 });

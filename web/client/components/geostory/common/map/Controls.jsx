@@ -15,17 +15,19 @@ import { applyDefaults } from '../../../../utils/GeoStoryUtils';
 
 import SwitchButton from '../../../misc/switch/SwitchButton';
 import localizedProps from '../../../misc/enhancers/localizedProps';
+import FeatureInfoFormatSelector from '../../../misc/FeatureInfoFormatSelector';
 
 const SelectLocalized = localizedProps(["placeholder", "options"])(Select);
 
 export const Controls = ({
-    map = {zoomControl: true},
+    map = {zoomControl: true, mapInfoControl: false},
     onChangeMap = () => {}
 } = {}) => {
     const mapOptions = map && map.mapOptions || {};
     const options = applyDefaults({
         mapOptions,
-        zoomControl: !isNil(map.zoomControl) ? map.zoomControl : true
+        zoomControl: !isNil(map.zoomControl) ? map.zoomControl : true,
+        mapInfoControl: !isNil(map.mapInfoControl) ? map.mapInfoControl : false
     });
     return (<Form className="ms-geostory-map-controls">
         <FormGroup>
@@ -71,6 +73,24 @@ export const Controls = ({
                 className="ms-geostory-map-controls-switch"
                 checked={options.mapOptions && options.mapOptions.interactions && options.mapOptions.interactions.dragPan}
             />
+        </FormGroup>
+        <FormGroup>
+            <ControlLabel><Message msgId="geostory.mapEditor.identify"/></ControlLabel>
+            <SwitchButton
+                onChange={() => {
+                    let newMapInfoStatus = !options.mapInfoControl;
+                    onChangeMap("mapInfoControl", newMapInfoStatus);
+                }}
+                className="ms-geostory-map-controls-switch"
+                checked={options.mapInfoControl}
+            />
+            {options.mapInfoControl && <FeatureInfoFormatSelector
+                disabled={!options.mapInfoControl}
+                infoFormat={options.mapOptions && options.mapOptions.mapInfoFormat || "application/json"}
+                onInfoFormatChange={(format) => onChangeMap("mapOptions.mapInfoFormat", format)}
+                selectProps={{
+                    wrapperStyle: { marginTop: 10 }
+                }}/>}
         </FormGroup>
     </Form>);
 };

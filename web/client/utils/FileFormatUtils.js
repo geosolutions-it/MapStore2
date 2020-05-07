@@ -5,6 +5,17 @@ const getFormatByName = (outF) => {
     return extension ? {outputFormat: outF, extension: extension.toLowerCase()} : undefined;
 
 };
+
+const formatToGlyph = {
+    json: 'ext-json',
+    wmc: 'ext-wmc'
+};
+
+const formatToText = {
+    json: 'JSON',
+    wmc: 'WMC'
+};
+
 const formats = [{
     outputFormat: "shape-zip",
     extension: "zip"
@@ -70,5 +81,7 @@ const formats = [{
 
 module.exports = {
     formats,
+    formatToGlyph,
+    formatToText,
     getByOutputFormat: (outF) => head(formats.filter(format => format.outputFormat === outF)) || getFormatByName(outF)
 };

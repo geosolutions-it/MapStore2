@@ -54,7 +54,7 @@ class UserDialog extends React.Component {
         useModal: true,
         closeGlyph: "",
         style: {},
-        buttonSize: "large",
+        buttonSize: "small",
         includeCloseButton: true,
         attributes: [{
             name: "email"
@@ -197,7 +197,7 @@ class UserDialog extends React.Component {
     renderButtons = () => {
         let CloseBtn = <CloseConfirmButton status={this.props.user && this.props.user.status} onClick={this.close}/>;
         return [
-            <Button key="save" bsSize={this.props.buttonSize} bsSize="small"
+            <Button key="save" bsSize={this.props.buttonSize}
                 bsStyle={this.isSaved() ? "success" : "primary" }
                 onClick={() => this.props.onSave(this.props.user)}
                 disabled={!this.isValid() || this.isSaving()}>

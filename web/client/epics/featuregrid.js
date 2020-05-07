@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 const Rx = require('rxjs');
-const { get, head, isEmpty, find, castArray, includes, reduce} = require('lodash');
+const { get, head, isEmpty, find, castArray, includes, reduce, isArray, isFunction } = require('lodash');
 const { LOCATION_CHANGE } = require('connected-react-router');
 
 
@@ -20,9 +20,10 @@ const {changeDrawingStatus, GEOMETRY_CHANGED, drawSupportReset} = require('../ac
 const requestBuilder = require('../utils/ogc/WFST/RequestBuilder');
 const {findGeometryProperty} = require('../utils/ogc/WFS/base');
 const { FEATURE_INFO_CLICK, HIDE_MAPINFO_MARKER} = require('../actions/mapInfo');
-const {query, QUERY, QUERY_CREATE, QUERY_RESULT, LAYER_SELECTED_FOR_SEARCH, FEATURE_TYPE_LOADED, UPDATE_QUERY, featureTypeSelected, createQuery, updateQuery, TOGGLE_SYNC_WMS, QUERY_ERROR, FEATURE_LOADING} = require('../actions/wfsquery');
+const {query, QUERY, QUERY_CREATE, QUERY_RESULT, LAYER_SELECTED_FOR_SEARCH, FEATURE_TYPE_LOADED, UPDATE_QUERY, featureTypeSelected, createQuery, updateQuery, TOGGLE_SYNC_WMS, QUERY_ERROR, FEATURE_LOADING, toggleSyncWms} = require('../actions/wfsquery');
 const {reset, QUERY_FORM_SEARCH, loadFilter} = require('../actions/queryform');
-const {zoomToExtent} = require('../actions/map');
+const {zoomToExtent, CLICK_ON_MAP} = require('../actions/map');
+const {projectionSelector} = require('../selectors/map');
 
 
 const { BROWSE_DATA, changeLayerProperties, refreshLayerVersion, CHANGE_LAYER_PARAMS} = require('../actions/layers');
@@ -35,22 +36,26 @@ const {SORT_BY, CHANGE_PAGE, SAVE_CHANGES, SAVE_SUCCESS, DELETE_SELECTED_FEATURE
     SELECT_FEATURES, DESELECT_FEATURES, START_DRAWING_FEATURE, CREATE_NEW_FEATURE,
     CLEAR_CHANGES_CONFIRMED, FEATURE_GRID_CLOSE_CONFIRMED,
     openFeatureGrid, closeFeatureGrid, OPEN_FEATURE_GRID, CLOSE_FEATURE_GRID, CLOSE_FEATURE_GRID_CONFIRM, OPEN_ADVANCED_SEARCH, ZOOM_ALL, UPDATE_FILTER, START_SYNC_WMS,
-    STOP_SYNC_WMS, startSyncWMS, storeAdvancedSearchFilter, fatureGridQueryResult, LOAD_MORE_FEATURES, SET_TIME_SYNC } = require('../actions/featuregrid');
+    STOP_SYNC_WMS, startSyncWMS, storeAdvancedSearchFilter, fatureGridQueryResult, LOAD_MORE_FEATURES, SET_TIME_SYNC,
+    updateFilter, selectFeatures, DEACTIVATE_GEOMETRY_FILTER, ACTIVATE_TEMPORARY_CHANGES, disableToolbar, FEATURES_MODIFIED,
+    deactivateGeometryFilter } = require('../actions/featuregrid');
 
 const {TOGGLE_CONTROL, resetControls, setControlProperty, toggleControl} = require('../actions/controls');
 const {queryPanelSelector, showCoordinateEditorSelector, drawerEnabledControlSelector} = require('../selectors/controls');
 const {setHighlightFeaturesPath} = require('../actions/highlight');
 const {selectedFeaturesSelector, changesMapSelector, newFeaturesSelector, hasChangesSelector, hasNewFeaturesSelector,
     selectedFeatureSelector, selectedFeaturesCount, selectedLayerIdSelector, isDrawingSelector, modeSelector,
-    isFeatureGridOpen, timeSyncActive, hasSupportedGeometry, queryOptionsSelector, getAttributeFilters } = require('../selectors/featuregrid');
+    isFeatureGridOpen, timeSyncActive, hasSupportedGeometry, queryOptionsSelector, getAttributeFilters, selectedLayerSelector} = require('../selectors/featuregrid');
 const {error, warning} = require('../actions/notifications');
 const {describeSelector, isDescribeLoaded, getFeatureById, wfsURL, wfsFilter, featureCollectionResultSelector, isSyncWmsActive, featureLoadingSelector} = require('../selectors/query');
-const {getSelectedLayer} = require('../selectors/layers');
 
 const {interceptOGCError} = require('../utils/ObservableUtils');
 const {gridUpdateToQueryUpdate, updatePages} = require('../utils/FeatureGridUtils');
-const {queryFormUiStateSelector} = require('../selectors/queryform');
+const {queryFormUiStateSelector, spatialFieldSelector} = require('../selectors/queryform');
 const {composeAttributeFilters} = require('../utils/FilterUtils');
+
+const CoordinatesUtils = require('../utils/CoordinatesUtils');
+const MapUtils = require('../utils/MapUtils');
 
 const setupDrawSupport = (state, original) => {
     const defaultFeatureProj = getDefaultFeatureProjection();
@@ -136,7 +141,7 @@ const createDeleteFlow = (features, describeFeatureType, url) => save(
     url,
     createDeleteTransaction(features, requestBuilder(describeFeatureType))
 );
-const createLoadPageFlow = (store) => ({page, size} = {}) => {
+const createLoadPageFlow = (store) => ({page, size, reason} = {}) => {
     const state = store.getState();
     return Rx.Observable.of( query(
         wfsURL(state),
@@ -145,7 +150,8 @@ const createLoadPageFlow = (store) => ({page, size} = {}) => {
         },
         getPagination(state, {page, size})
         ),
-        queryOptionsSelector(state)
+        queryOptionsSelector(state),
+        reason
     ));
 };
 
@@ -173,6 +179,22 @@ const addFilterToWMSLayer = (layer, filter) => {
 
 const removeFilterFromWMSLayer = ({featuregrid: f} = {}) => {
     return changeLayerProperties(f.selectedLayer, {filterObj: undefined});
+};
+
+const updateFilterFunc = (store) => ({update = {}} = {}) => {
+    // If an advanced filter is present it's filterFields should be composed with the action'
+    const {id} = selectedLayerSelector(store.getState());
+    const filterObj = get(store.getState(), `featuregrid.advancedFilters["${id}"]`);
+    if (filterObj) {
+        const attributesFilter = getAttributeFilters(store.getState()) || {};
+        const columnsFilters = reduce(attributesFilter, (cFilters, value, attribute) => {
+            return gridUpdateToQueryUpdate({attribute, ...value}, cFilters);
+        }, {});
+        const composedFilterFields = composeAttributeFilters([filterObj, columnsFilters], "AND", "AND");
+        const filter = {...filterObj, ...composedFilterFields};
+        return updateQuery(filter, update.type);
+    }
+    return updateQuery(gridUpdateToQueryUpdate(update, wfsFilter(store.getState())), update.type);
 };
 
 
@@ -238,28 +260,137 @@ module.exports = {
                     )
             ),
     /**
-     * Performs the query when the text filter is updated
+     * Performs the query when the geometry filter is updated
      * @memberof epics.featuregrid
      */
-    featureGridUpdateFilter: (action$, store) => action$.ofType(QUERY_CREATE).switchMap( () =>
+    featureGridUpdateGeometryFilter: (action$, store) =>
         action$.ofType(UPDATE_FILTER)
-            .map( ({update = {}} = {}) => {
-                // If an advanced filter is present it's filterFields should be composed with the action'
-                const {id} = getSelectedLayer(store.getState());
-                const filterObj = get(store.getState(), `featuregrid.advancedFilters["${id}"]`);
-                if (filterObj) {
-                    const attributesFilter = getAttributeFilters(store.getState()) || {};
-                    const columnsFilters = reduce(attributesFilter, (cFilters, value, attribute) => {
-                        return gridUpdateToQueryUpdate({attribute, ...value}, cFilters);
-                    }, {});
-                    const composedFilterFields = composeAttributeFilters([filterObj, columnsFilters]);
-                    const filter = {...filterObj, ...composedFilterFields};
-                    return updateQuery(filter);
-                }
-                return updateQuery(gridUpdateToQueryUpdate(update, wfsFilter(store.getState())));
+            .filter(({update = {}}) => update.type === 'geometry')
+            .distinctUntilChanged(({update: update1}, {update: update2}) => {
+                return !update1.enabled && update2.enabled && !update1.value && !update2.value ||
+                    update1.value === update2.value;
             })
+            .skip(1)
+            .map(updateFilterFunc(store)),
+    /**
+     * Performs the query when the text filters are updated
+     * @memberof epics.featuregrid
+     */
+    featureGridUpdateTextFilters: (action$, store) => action$.ofType(QUERY_CREATE).switchMap(() =>
+        action$.ofType(UPDATE_FILTER)
+            .filter(({update = {}}) => update.type !== 'geometry')
+            .map(updateFilterFunc(store))
     ),
+    handleClickOnMap: (action$, store) =>
+        action$.ofType(UPDATE_FILTER)
+            .filter(({update = {}}) => update.type === 'geometry' && update.enabled)
+            .switchMap(() =>
+                action$.ofType(CLICK_ON_MAP).switchMap(({point: {latlng: {lat, lng}, pixel}}) => {
+                    const currentFilter = find(getAttributeFilters(store.getState()), f => f.type === 'geometry') || {};
 
+                    const hook = MapUtils.getHook(MapUtils.GET_COORDINATES_FROM_PIXEL_HOOK);
+                    const pixelRadius = 4;
+                    const radiusA = [lng, lat];
+                    const pixelCoords = isFunction(hook) ? hook([
+                        pixel.x,
+                        pixel.y >= pixelRadius ? pixel.y - pixelRadius : pixel.y + pixelRadius
+                    ]) : null;
+                    const radiusB = pixelCoords &&
+                        CoordinatesUtils.pointObjectToArray(CoordinatesUtils.reproject(pixelCoords, projectionSelector(store.getState()), 'EPSG:4326'));
+                    const radius = isArray(radiusB) ? Math.sqrt((radiusA[0] - radiusB[0]) * (radiusA[0] - radiusB[0]) +
+                        (radiusA[1] - radiusB[1]) * (radiusA[1] - radiusB[1])) :
+                        0.01;
+
+                    return currentFilter.deactivated ? Rx.Observable.empty() : Rx.Observable.of(updateFilter({
+                        ...currentFilter,
+                        value: {
+                            attribute: currentFilter.attribute || get(spatialFieldSelector(store.getState()), 'attribute'),
+                            geometry: {
+                                center: [lng, lat],
+                                coordinates: CoordinatesUtils.calculateCircleCoordinates({x: lng, y: lat}, radius, 12),
+                                extent: [lng - radius, lat - radius, lng + radius, lat + radius],
+                                projection: "EPSG:4326",
+                                radius,
+                                type: "Polygon"
+                            },
+                            method: "Circle",
+                            operation: "INTERSECTS"
+                        }
+                    }));
+                })
+                    .takeUntil(Rx.Observable.merge(
+                        action$.ofType(UPDATE_FILTER).filter(({update = {}}) => update.type === 'geometry' && !update.enabled),
+                        action$.ofType(CLOSE_FEATURE_GRID, LOCATION_CHANGE)
+                    ))),
+    selectFeaturesOnMapClickResult: (action$, store) =>
+        action$.ofType(QUERY_RESULT)
+            .filter(({reason}) => reason === 'geometry')
+            .map(({result}) => {
+                const feature = get(result, 'features[0]');
+                const geometryFilter = find(getAttributeFilters(store.getState()), f => f.type === 'geometry');
+
+                return selectFeatures(feature && geometryFilter && geometryFilter.value ? [feature] : []);
+            }),
+    toggleSyncOnEdit: (action$, store) =>
+        action$.ofType(TOGGLE_MODE)
+            .filter(() => modeSelector(store.getState()) === MODES.EDIT)
+            .flatMap(() => Rx.Observable.merge(
+                Rx.Observable.of(...(isSyncWmsActive(store.getState()) ? [toggleSyncWms()] : [])),
+                action$.ofType(TOGGLE_MODE, CLOSE_FEATURE_GRID, LOCATION_CHANGE).take(1).flatMap(() => Rx.Observable.of(toggleSyncWms()))
+            )),
+    activateTemporaryChangesEpic: (action$) =>
+        action$.ofType(ACTIVATE_TEMPORARY_CHANGES)
+            .flatMap(({activated}) => Rx.Observable.of(
+                disableToolbar(activated),
+                deactivateGeometryFilter(activated)
+            )),
+    handleGeometryFilterActivation: (action$, store) =>
+        action$.ofType(START_DRAWING_FEATURE)
+            .flatMap(() => {
+                const geometryFilter = find(getAttributeFilters(store.getState()), f => f.type === 'geometry') || {};
+                const hasChanges = hasChangesSelector(store.getState());
+                const hasNewFeatures = hasNewFeaturesSelector(store.getState());
+                return Rx.Observable.of(updateFilter({
+                    ...geometryFilter,
+                    type: 'geometry',
+                    attribute: geometryFilter.attribute || get(spatialFieldSelector(store.getState()), 'attribute'),
+                    deactivated: !hasChanges && !hasNewFeatures ? !geometryFilter.deactivated : true
+                }));
+            }),
+    deactivateGeometryFilter: (action$, store) =>
+        Rx.Observable.merge(
+            action$.ofType(CREATE_NEW_FEATURE, GEOMETRY_CHANGED, DELETE_GEOMETRY, FEATURES_MODIFIED),
+            action$.ofType(DEACTIVATE_GEOMETRY_FILTER).filter(({deactivated}) => !!deactivated)
+        )
+            .flatMap(() => {
+                const geometryFilter = find(getAttributeFilters(store.getState()), f => f.type === 'geometry') || {};
+                return !geometryFilter.deactivated ?
+                    Rx.Observable.of(updateFilter({
+                        ...geometryFilter,
+                        type: 'geometry',
+                        attribute: geometryFilter.attribute || get(spatialFieldSelector(store.getState()), 'attribute'),
+                        deactivated: true
+                    })) :
+                    Rx.Observable.empty();
+            }),
+    activateGeometryFilter: (action$, store) =>
+        Rx.Observable.merge(
+            action$.ofType(SAVE_SUCCESS, CLEAR_CHANGES),
+            action$.ofType(DEACTIVATE_GEOMETRY_FILTER).filter(({deactivated}) => !deactivated)
+        )
+            .flatMap(() => {
+                const geometryFilter = find(getAttributeFilters(store.getState()), f => f.type === 'geometry') || {};
+                const hasChanges = hasChangesSelector(store.getState());
+                const hasNewFeatures = hasNewFeaturesSelector(store.getState());
+                return geometryFilter.deactivated && !hasChanges && !hasNewFeatures ?
+                    Rx.Observable.of(updateFilter({
+                        ...geometryFilter,
+                        type: 'geometry',
+                        attribute: geometryFilter.attribute || get(spatialFieldSelector(store.getState()), 'attribute'),
+                        deactivated: false
+                    })) :
+                    Rx.Observable.empty();
+            }),
     /**
      * perform paginated query on page change
      * @memberof epics.featuregrid

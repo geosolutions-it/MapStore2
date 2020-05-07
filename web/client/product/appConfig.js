@@ -21,6 +21,10 @@ module.exports = {
         component: require('./pages/MapViewer')
     }, {
         name: "mapviewer",
+        path: "/viewer/:mapType/:mapId/context/:contextId",
+        component: require('./pages/MapViewer')
+    }, {
+        name: "mapviewer",
         path: "/viewer/:mapId",
         component: require('./pages/MapViewer')
     }, {

@@ -83,6 +83,7 @@ export default class ContextCreator extends React.Component {
         newContext: PropTypes.object,
         resource: PropTypes.object,
         pluginsConfig: PropTypes.object,
+        pluginsToUpload: PropTypes.array,
         viewerPlugins: PropTypes.array,
         ignoreViewerPlugins: PropTypes.bool,
         allAvailablePlugins: PropTypes.array,
@@ -98,6 +99,8 @@ export default class ContextCreator extends React.Component {
         availableTemplatesFilterText: PropTypes.string,
         enabledTemplatesFilterText: PropTypes.string,
         documentationBaseURL: PropTypes.string,
+        showPluginDescriptionTooltip: PropTypes.bool,
+        pluginDescriptionTooltipDelay: PropTypes.number,
         onFilterAvailablePlugins: PropTypes.func,
         onFilterEnabledPlugins: PropTypes.func,
         onFilterAvailableTemplates: PropTypes.func,
@@ -123,18 +126,26 @@ export default class ContextCreator extends React.Component {
         onUpdateCfg: PropTypes.func,
         onEnableUploadPlugin: PropTypes.func,
         onUploadPlugin: PropTypes.func,
-        onUploadPluginError: PropTypes.func,
+        onAddUploadPlugin: PropTypes.func,
+        onRemoveUploadPlugin: PropTypes.func,
         uploadEnabled: PropTypes.bool,
         onMapViewerReload: PropTypes.func,
         onReloadConfirm: PropTypes.func,
         saveDestLocation: PropTypes.string,
-        uploading: PropTypes.bool,
-        onShowDialog: PropTypes.func
+        uploading: PropTypes.array,
+        uploadResult: PropTypes.object,
+        onShowDialog: PropTypes.func,
+        onRemovePlugin: PropTypes.func,
+        onShowBackToPageConfirmation: PropTypes.func,
+        showBackToPageConfirmation: PropTypes.bool,
+        backToPageDestRoute: PropTypes.string,
+        backToPageConfirmationMessage: PropTypes.string
     };
 
     static contextTypes = {
         messages: PropTypes.object,
-        plugins: PropTypes.object
+        plugins: PropTypes.object,
+        router: PropTypes.object
     };
 
     static defaultProps = {
@@ -187,15 +198,25 @@ export default class ContextCreator extends React.Component {
         onSetStep: () => { },
         onChangeAttribute: () => { },
         onReloadConfirm: () => { },
-        uploadEnabled: false
+        uploadEnabled: false,
+        pluginsToUpload: [],
+        onShowBackToPageConfirmation: () => { },
+        showBackToPageConfirmation: false,
+        backToPageDestRoute: '/context-manager',
+        backToPageConfirmationMessage: 'contextCreator.undo'
     };
 
     render() {
         return (
             <Stepper
+                loading={this.props.loading && this.props.loadFlags.contextSaving}
                 currentStepId={this.props.curStepId}
                 onSetStep={this.props.onSetStep}
                 onSave={() => this.props.onSave(this.props.saveDestLocation)}
+                onShowBackToPageConfirmation={this.props.onShowBackToPageConfirmation}
+                showBackToPageConfirmation={this.props.showBackToPageConfirmation}
+                backToPageConfirmationMessage={this.props.backToPageConfirmationMessage}
+                onConfirmBackToPage={() => this.context.router.history.push(this.props.backToPageDestRoute)}
                 steps={[{
                     id: 'general-settings',
                     label: 'contextCreator.generalSettings.label',
@@ -211,54 +232,6 @@ export default class ContextCreator extends React.Component {
                             loading={this.props.loading && this.props.loadFlags.contextNameCheck}
                             context={this.context}
                             onChange={this.props.onChangeAttribute} />
-                }, {
-                    id: 'configure-plugins',
-                    label: 'contextCreator.configurePlugins.label',
-                    disableNext: !this.props.allAvailablePlugins.filter(
-                        plugin => plugin.enabled && get(plugin, 'pluginConfig.cfg.containerPosition') === undefined).length ||
-                        !!this.props.cfgError ||
-                        !this.props.isCfgValidated,
-                    component:
-                        <ConfigurePlugins
-                            loading={this.props.loading}
-                            loadFlags={this.props.loadFlags}
-                            allPlugins={this.props.allAvailablePlugins}
-                            editedPlugin={this.props.editedPlugin}
-                            editedCfg={this.props.editedCfg}
-                            cfgError={this.props.cfgError}
-                            availablePluginsFilterText={this.props.availablePluginsFilterText}
-                            enabledPluginsFilterText={this.props.enabledPluginsFilterText}
-                            documentationBaseURL={this.props.documentationBaseURL}
-                            showDialog={this.props.showDialog}
-                            mapTemplates={this.props.newContext.templates}
-                            parsedTemplate={this.props.parsedTemplate}
-                            editedTemplate={this.props.editedTemplate}
-                            fileDropStatus={this.props.fileDropStatus}
-                            availableTemplatesFilterText={this.props.availableTemplatesFilterText}
-                            enabledTemplatesFilterText={this.props.enabledTemplatesFilterText}
-                            onFilterAvailablePlugins={this.props.onFilterAvailablePlugins}
-                            onFilterEnabledPlugins={this.props.onFilterEnabledPlugins}
-                            onEditPlugin={this.props.onEditPlugin}
-                            onEnablePlugins={this.props.onEnablePlugins}
-                            onDisablePlugins={this.props.onDisablePlugins}
-                            onUpdateCfg={this.props.onUpdateCfg}
-                            setSelectedPlugins={this.props.setSelectedPlugins}
-                            changePluginsKey={this.props.changePluginsKey}
-                            uploading={this.props.uploading}
-                            onEnableUpload={this.props.onEnableUploadPlugin}
-                            uploadEnabled={this.props.uploadEnabled}
-                            onUpload={this.props.onUploadPlugin}
-                            onUploadError={this.props.onUploadPluginError}
-                            changeTemplatesKey={this.props.changeTemplatesKey}
-                            setSelectedTemplates={this.props.setSelectedTemplates}
-                            setParsedTemplate={this.props.setParsedTemplate}
-                            setFileDropStatus={this.props.setFileDropStatus}
-                            onShowDialog={this.props.onShowDialog}
-                            onSaveTemplate={this.props.onSaveTemplate}
-                            onDeleteTemplate={this.props.onDeleteTemplate}
-                            onEditTemplate={this.props.onEditTemplate}
-                            onFilterAvailableTemplates={this.props.onFilterAvailableTemplates}
-                            onFilterEnabledTemplates={this.props.onFilterEnabledTemplates}/>
                 }, {
                     id: 'configure-map',
                     label: 'contextCreator.configureMap.label',
@@ -280,6 +253,60 @@ export default class ContextCreator extends React.Component {
                             showConfirm={this.props.showReloadConfirm}
                             onReloadConfirm={this.props.onReloadConfirm}
                             onMapViewerReload={this.props.onMapViewerReload} />
+                }, {
+                    id: 'configure-plugins',
+                    label: 'contextCreator.configurePlugins.label',
+                    disableNext: !this.props.allAvailablePlugins.filter(
+                        plugin => plugin.enabled && get(plugin, 'pluginConfig.cfg.containerPosition') === undefined).length ||
+                        !!this.props.cfgError ||
+                        !this.props.isCfgValidated,
+                    component:
+                        <ConfigurePlugins
+                            loading={this.props.loading}
+                            loadFlags={this.props.loadFlags}
+                            allPlugins={this.props.allAvailablePlugins}
+                            editedPlugin={this.props.editedPlugin}
+                            editedCfg={this.props.editedCfg}
+                            cfgError={this.props.cfgError}
+                            availablePluginsFilterText={this.props.availablePluginsFilterText}
+                            enabledPluginsFilterText={this.props.enabledPluginsFilterText}
+                            documentationBaseURL={this.props.documentationBaseURL}
+                            showDescriptionTooltip={this.props.showPluginDescriptionTooltip}
+                            descriptionTooltipDelay={this.props.pluginDescriptionTooltipDelay}
+                            showDialog={this.props.showDialog}
+                            mapTemplates={this.props.newContext.templates}
+                            parsedTemplate={this.props.parsedTemplate}
+                            editedTemplate={this.props.editedTemplate}
+                            fileDropStatus={this.props.fileDropStatus}
+                            availableTemplatesFilterText={this.props.availableTemplatesFilterText}
+                            enabledTemplatesFilterText={this.props.enabledTemplatesFilterText}
+                            onFilterAvailablePlugins={this.props.onFilterAvailablePlugins}
+                            onFilterEnabledPlugins={this.props.onFilterEnabledPlugins}
+                            onEditPlugin={this.props.onEditPlugin}
+                            onEnablePlugins={this.props.onEnablePlugins}
+                            onDisablePlugins={this.props.onDisablePlugins}
+                            onUpdateCfg={this.props.onUpdateCfg}
+                            setSelectedPlugins={this.props.setSelectedPlugins}
+                            changePluginsKey={this.props.changePluginsKey}
+                            uploading={this.props.uploading}
+                            uploadResult={this.props.uploadResult}
+                            onEnableUpload={this.props.onEnableUploadPlugin}
+                            uploadEnabled={this.props.uploadEnabled}
+                            pluginsToUpload={this.props.pluginsToUpload}
+                            onUpload={this.props.onUploadPlugin}
+                            onAddUpload={this.props.onAddUploadPlugin}
+                            onRemoveUpload={this.props.onRemoveUploadPlugin}
+                            changeTemplatesKey={this.props.changeTemplatesKey}
+                            setSelectedTemplates={this.props.setSelectedTemplates}
+                            setParsedTemplate={this.props.setParsedTemplate}
+                            setFileDropStatus={this.props.setFileDropStatus}
+                            onShowDialog={this.props.onShowDialog}
+                            onRemovePlugin={this.props.onRemovePlugin}
+                            onSaveTemplate={this.props.onSaveTemplate}
+                            onDeleteTemplate={this.props.onDeleteTemplate}
+                            onEditTemplate={this.props.onEditTemplate}
+                            onFilterAvailableTemplates={this.props.onFilterAvailableTemplates}
+                            onFilterEnabledTemplates={this.props.onFilterEnabledTemplates}/>
                 }]} />
         );
     }

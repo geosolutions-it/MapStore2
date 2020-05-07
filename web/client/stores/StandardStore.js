@@ -47,7 +47,7 @@ module.exports = (initialState = {defaultState: {}, mobile: {}}, appReducers = {
         locales: () => {return null; },
         browser: require('../reducers/browser'),
         controls: require('../reducers/controls'),
-        theme: require('../reducers/theme'),
+        theme: require('../reducers/theme').default,
         help: require('../reducers/help'),
         map: () => {return null; },
         mapInitialConfig: () => {return null; },
@@ -55,7 +55,7 @@ module.exports = (initialState = {defaultState: {}, mobile: {}}, appReducers = {
         layers: () => {return null; },
         router: storeOpts.noRouter ? undefined : connectRouter(history)
     });
-    const rootEpic = persistEpic(combineEpics(plugins, {...appEpics, ...standardEpics}));
+    const rootEpic = persistEpic(combineEpics(plugins, {...standardEpics, ...appEpics}));
     const optsState = storeOpts.initialState || {defaultState: {}, mobile: {}};
     const defaultState = assign({}, initialState.defaultState, optsState.defaultState);
     const mobileOverride = assign({}, initialState.mobile, optsState.mobile);
@@ -80,7 +80,7 @@ module.exports = (initialState = {defaultState: {}, mobile: {}}, appReducers = {
     };
     let store;
     let enhancer;
-    if (storeOpts && storeOpts.notify) {
+    if (storeOpts && storeOpts.notify !== false) {
         enhancer = ListenerEnhancer;
     }
     if (storeOpts && storeOpts.persist) {

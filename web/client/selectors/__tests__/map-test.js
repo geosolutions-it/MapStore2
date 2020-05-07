@@ -17,7 +17,12 @@ const {
     mapInfoDetailsUriFromIdSelector,
     configuredRestrictedExtentSelector,
     configuredExtentCrsSelector,
-    configuredMinZoomSelector
+    configuredMinZoomSelector,
+    mapIsEditableSelector,
+    mouseMoveListenerSelector,
+    isMouseMoveActiveSelector,
+    isMouseMoveCoordinatesActiveSelector,
+    isMouseMoveIdentifyActiveSelector
 } = require('../map');
 const center = {x: 1, y: 1};
 let state = {
@@ -135,5 +140,30 @@ describe('Test map selectors', () => {
             }
         });
         expect(minZoom).toBe(14);
+    });
+    it('test mapIsEditableSelector for map', () => {
+        const mapIsEditable = mapIsEditableSelector({map: {present: {info: {canEdit: true}}}});
+        expect(mapIsEditable).toBe(true);
+    });
+    it('test mapIsEditableSelector for context', () => {
+        const mapIsEditable = mapIsEditableSelector({context: {resource: {canEdit: true}}});
+        expect(mapIsEditable).toBe(true);
+    });
+    it('test mouseMoveListenerSelector', () => {
+        const identifyFloatingTool = ['identifyFloatingTool'];
+        const mouseMoveListener = mouseMoveListenerSelector({map: {present: {eventListeners: {mousemove: identifyFloatingTool}}}});
+        expect(mouseMoveListener).toBe(identifyFloatingTool);
+    });
+    it('test isMouseMoveActiveSelector', () => {
+        const isMouseMoveActive = isMouseMoveActiveSelector({map: {present: {eventListeners: {mousemove: ['identifyFloatingTool']}}}});
+        expect(isMouseMoveActive).toBe(true);
+    });
+    it('test isMouseMoveCoordinatesActiveSelector', () => {
+        const isMouseMoveCoordinatesActive = isMouseMoveCoordinatesActiveSelector({map: {present: {eventListeners: {mousemove: ['mouseposition']}}}});
+        expect(isMouseMoveCoordinatesActive).toBe(true);
+    });
+    it('test isMouseMoveIdentifyActiveSelector', () => {
+        const isMouseMoveIdentifyActive = isMouseMoveIdentifyActiveSelector({map: {present: {eventListeners: {mousemove: ['identifyFloatingTool']}}}});
+        expect(isMouseMoveIdentifyActive).toBe(true);
     });
 });

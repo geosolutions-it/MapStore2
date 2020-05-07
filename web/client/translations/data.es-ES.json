@@ -31,6 +31,12 @@
         "version": {
             "label": "Versión"
         },
+        "errorPage": {
+            "title":"Vaya, algo salió mal",
+            "subtitle":"Haga clic en el icono a continuación para volver a cargar MapStore",
+            "description":"Si desea informar este error, puede enviar un correo electrónico a nuestra lista de correo",
+            "descriptionAdmin":"Por favor, póngase en contacto con el administrador"
+        },
         "autorefresh": {
             "of": "de",
             "updating": "actualizando...",
@@ -99,8 +105,18 @@
                 "bottom": "Bottom",
                 "top": "Cima"
             },
+            "legendOptions": {
+              "title": "Leyenda",
+              "legendWidth": "Anchura",
+              "legendHeight": "Altura",
+              "legendPreview": "Avance"
+            },
             "templateFormatInfoAlertExample": "La identificación de la característica es ${ properties }",
-            "templatePreview": "Vista previa de la plantilla"
+            "templatePreview": "Vista previa de la plantilla",
+            "enableLocalizedLayerStyles": {
+                "label": "Habilitar estilo localizado",
+                "tooltip": "Nota: este parámetro requiere configuraciones específicas en GeoServer"
+            }
         },
         "longitude": "Longitud",
         "latitude": "Latitud",
@@ -254,6 +270,8 @@
             "featuredMaps": "Mapas Destacados"
         },
         "newMap": "Nuevo mapa",
+        "newMapEmpty": "Mapa vacío",
+        "newMapContext": "Contexto existente",
 		"maps": {
             "title": "Mapas",
             "addToFeaturedMaps": "Agregar a los mapas destacados",
@@ -279,7 +297,8 @@
                 "errorWhenSaving": "Se produjo un error durante el proceso de guardado",
                 "errorWhenUpdating": "Se produjo un error durante el proceso de actualización",
                 "errorWhenDeleting": "Se produjo un error durante el proceso de eliminación",
-                "errorSizeExceeded": "Por favor, reduzca el tamaño de los detalles o la calidad de las imágenes"
+                "errorSizeExceeded": "Por favor, reduzca el tamaño de los detalles o la calidad de las imágenes",
+                "errorLoadingContexts": "Se produjo un error durante la carga de contextos"
             },
             "search": "buscar..."
         },
@@ -464,14 +483,37 @@
                 "identifier": "Identificador",
                 "title": "Título",
                 "abstract": "Resumen",
+                "purpose": "Propósito",
+                "source": "Fuente",
+                "createdDate": "Fecha de creación",
+                "lastRevisionDate": "Fecha de última revisión",
+                "pointsOfContact": "Puntos de contacto",
+                "individualName": "Nombre individual",
+                "organisationName": "Nombre de la organización",
+                "contactInfo": "Información de contacto",
+                "phone": "Número de teléfono",
+                "deliveryPoints": "Puntos de entrega",
+                "city": "Ciudad",
+                "postalCode": "Código postal",
+                "country": "País",
+                "URL": "URL",
+                "role": "Papel",
+                "hoursOfService": "Horas de servicio",
+                "electronicMailAddress": "Dirección de correo electrónico",
                 "subject": "Asunto",
                 "type": "Tipo",
                 "creator": "Autor",
+                "defaultPropName": "Propiedad=\"{propName}\"",
                 "toolLayerMetadataTooltip": "Mostrar los metadatos de la capa seleccionada",
                 "layerMetadataPanelTitle": "Metadatos de capa",
                 "notification": {
                     "warnigGetMetadataRecordById": "Error en la búsqueda de metadatos"
-                }
+                },
+                "itemTitles": {
+                    "pointsOfContact": "Contacto",
+                    "default": "Articulo"
+                },
+                "emptyMetadata": "No hay metadatos disponibles."
             },
             "thematic": {
                 "classification_field": "Campo para clasificar:",
@@ -558,15 +600,17 @@
         "identifyHighlightFeatures": "Resaltar features",
         "identifyShowCoordinateEditor": "Mostrar editor de coordenadas",
         "identifyHideCoordinateEditor": "Ocultar editor de coordenadas",
+        "identifyCoordinateApplyChanges": "Aplicar los cambios",
         "identifyRevGeocodeModalTitle": "Dirección",
         "identifyRevGeocodeSubmitText": "Más información",
         "identifyRevGeocodeCloseText": "Cerrar",
         "identifyRevGeocodeError": "Geocodificación imposible",
+        "identifyEdit": "Editar",
         "getFeatureInfoError": {
             "title": "Ooops! Algo va mal",
             "text": "Un error se ha producido durante esta <b>GetFeatureInfo</b> petición"
         },
-        "noFeatureInfo": "No hay información disponible en el punto señalado",
+        "noFeatureInfo": "No hay información disponible para este punto",
         "noInfoForLayers": "No hay características para las siguientes capas: ",
         "history":{
             "barLabel": "Histórico  del mapa",
@@ -574,6 +618,9 @@
             "redoBtnTooltip": "Ir hacia adelante"
         },
         "infoFormatLbl": "Identificar el formato de respuesta",
+        "infoTriggerLabel": "Evento desencadenante para identificar",
+        "click": "Click",
+        "hover": "Hover",
         "measureSupport": {
             "continueLine": "Haga clic para seguir dibujando la línea",
             "continuePolygon": "Haga clic para continuar dibujando el polígono",
@@ -584,6 +631,7 @@
             "MeasureLength": "Medir distancia",
             "MeasureArea": "Medir área",
             "MeasureBearing": "Medir azimut",
+            "MeasureTrueBearing": "Medir azimut verdadero",
             "tooltip": "Medir distancias, áreas y azimut",
             "title": "Medir",
             "lengthButtonText": "Línea",
@@ -592,11 +640,15 @@
             "lengthLabel": "Longitud",
             "areaLabel": "Área",
             "bearingLabel": "Azimut",
+            "trueBearingLabel": "Azimut verdadero",
             "formula": "Fórmula para cálculo de distancia",
             "showLabel": "Mostrar etiqueta de medición",
             "addAsAnnotation": "Añadir como anotación",
             "newMeasure": "Nueva anotación",
-            "selectTool": "Seleccione una herramienta de medición"
+            "selectTool": "Seleccione una herramienta de medición",
+            "exportToGeoJSON": "Exportar a GeoJSON",
+            "resetTooltip": "Medidas claras",
+            "addAsLayer": "Agregar como capa"
         },
         "search":{
             "decimal": "Decimal",
@@ -624,6 +676,7 @@
             "s_attributes": "Atributos",
             "s_sort": "Ordenado por",
             "s_max_features": "Máximo de características",
+            "s_max_zoom": "Nivel máximo de zoom",
             "s_wfs_props_label" : "Propiedades del servicio WFS",
             "s_wfs_opt_props_label" : "Propiedades opcionales",
             "s_result_props_label": "Resultados de la visualización de las propiedades",
@@ -643,6 +696,16 @@
                 "no_info_description": "El panel de identificación no aparecerá en la búsqueda",
                 "all_layers_description": "El panel Identificar aparecerá mostrando información de todas las capas visibles en el mapa",
                 "single_layer_description": "El panel de identificación aparecerá con los datos ya disponibles a través de la búsqueda de WFS"
+            },
+            "advancedSearchPanel": {
+                "title": "Filtros de busqueda avanzada",
+                "context": {
+                    "title": "Contexto"
+                },
+                "showTooltip": "Mostrar filtros avanzados",
+                "showTooltipActive": "Mostrar filtros avanzados (activo)",
+                "hideTooltip": "Ocultar filtros avanzados",
+                "hideTooltipActive": "Ocultar filtros avanzados (activo)"
             }
         },
         "draw": {
@@ -762,7 +825,8 @@
             }
         },
         "locate": {
-            "tooltip": "Localízame",
+            "tooltip": "Mostrar mi posición",
+            "tooltipDeactivate": "Deja de mostrar mi posición",
             "metersUnit": "metros",
             "feetUnit": "pies",
             "popup": "Usted está a {distance} {unit} de este punto",
@@ -974,7 +1038,8 @@
                 "notValidMarker": "Insertar una coordenada válida (+|- 90° lat, +|-180° lon)",
                 "notValidPolyline": "Todas las coordenadas deben ser válidas (+|- 90° lat, +|-180° lon)",
                 "notValidText": "Insertar un valor de texto y una coordenada válida (+|- 90° lat, +|-180° lon)",
-                "notValidCircle": "Ingrese un radio y una coordenada válida (+|- 90° lat, +|-180° lon)"
+                "notValidCircle": "Ingrese un radio y una coordenada válida (+|- 90° lat, +|-180° lon)",
+                "newFeature": "Nuevo"
             }
         },
         "user":{
@@ -1116,7 +1181,7 @@
             "dropZone": {
                 "heading": "<p> <h4> Suelta contextos de mapas o archivos vectoriales aquí </h4> <small> o </small> </p>",
                 "selectFiles": "Selecciona archivos...",
-                "infoSupported": "<p> <small> Archivos de contexto de mapas admitidos: formato heredado MapStore<br /> Archivos de capa vectorial soportados: shapefiles (deben estar en archivos comprimidos), KML / KMZ, GPX o GeoJSON </small> </p>",
+                "infoSupported": "<p> <small> Archivos de contexto de mapas admitidos: formato heredado MapStore, WMC<br /> Archivos de capa vectorial soportados: shapefiles (deben estar en archivos comprimidos), KML / KMZ, GPX o GeoJSON </small> </p>",
                 "note": "<p> <small> <i> <strong> nota </strong>: el mapa actual se sobrescribe en el caso de nuevos contextos de mapa </i> </small> </p>"
             },
             "errors": {
@@ -1126,7 +1191,24 @@
             }
         },
         "mapExport": {
-            "title": "Exportar el mapa"
+            "title": "Exportar el mapa",
+            "exportPanel": {
+                "title": "<p><h4>Seleccione su formato</h4></p>",
+                "exportButtonLabel": "Exportar"
+            },
+            "formats": {
+                "mapstore2": {
+                    "label": "MapStore",
+                    "description": "<p><small>Formato de configuración del mapa MapStore</small></p>"
+                },
+                "wmc": {
+                    "label": "WMC",
+                    "description": "<p><small>Formato OGC Web Map Context</small></p>",
+                    "note": "<p><small><i><strong>nota</strong>: el formato WMC admite <strong>solo capas WMS</strong></i></small></p>"
+                }
+            },
+            "errorTitle": "La exportación del mapa falló",
+            "wmcNoLayersError": "Se necesita al menos una capa WMS para exportar a WMC, se encontró cero"
         },
         "catalog": {
             "start": "Fecha de inicio ",
@@ -1163,6 +1245,18 @@
             "type": "Tipo",
             "serviceTitle": "Título",
             "serviceTitlePlaceholder": "escribe un título",
+            "tms": {
+              "provider": "Proveedor",
+              "urlTemplate": "Plantilla de URL",
+              "urlTemplateHint": "<p> URL de plantilla para su servicio TMS personalizado, con la posibilidad de insertar variables (expresadas con llaves, por ejemplo, <code> {var_name} </code>) que serán reemplazadas por la aplicación. <br />. Las variables <code> {x} </code>, <code> {y} </code> y <code> {z} </code> están reservadas para los valores de coordenadas de la cuadrícula de mosaico. También puede usar variables <code> {s} </code> para subdominios. Cualquier otra variable especificada en la URL debe especificarse también en las opciones dentro de \"Configuración personalizada de TMS\" (Configuración avanzada) </p> ",
+              "customTMSConfiguration": "Configuración personalizada de TMS",
+              "customTMSConfigurationHint": "<p> Las opciones pueden contener: <br/> <ul><li> <code> \"subdomains\": ['a', 'b'] </code>: utilizado para múltiples dominios, reemplazando el <code> {s} </code> en la plantilla URL </li> <li> <code> \"maxNativeZoom \": 20 </code>: zoom máximo desde el servidor </li> </ul> </p>",
+              "forceDefaultTileGrid": "Forzar cuadrícula de mosaico predeterminada",
+              "forceDefaultTileGridDescription": "Utilice la cuadrícula de mosaico de la proyección global en lugar del origen y las resoluciones proporcionadas por el servidor. Esto es útil para algunos servicios de TMS que anuncian origen o revelaciones incorrectos"
+            },
+            "tileprovider": {
+              "tooltip": "x, y, z son la posición del mosaico, s es el subdominio (predeterminado)"
+            },
             "missingReference": "Faltan metadatos de referencia OGC",
             "showDescription": "Mostrar descripción completa",
             "hideDescription": "Ocultar descripción completa",
@@ -1180,7 +1274,11 @@
                 "serviceDeletedCorrectly": "El servicio se ha eliminado correctamente",
                 "errorServiceUrl": "Servicio no disponible. Por favor, compruebe la url proporcionada"
             },
-            "backgroundAlreadyAdded": "Agregado al selector de fondo"
+            "backgroundAlreadyAdded": "Agregado al selector de fondo",
+            "enableLocalizedLayerStyles": {
+                "label": "Habilitar estilos localizados",
+                "tooltip": "Nota: este parámetro requiere configuraciones específicas en GeoServer"
+            }
         },
         "uploader": {
             "filename": "Nombre del fichero",
@@ -1354,7 +1452,12 @@
                     "default": "Buscar...",
                     "string": "Escribe texto para filtrar...",
                     "number": "Escriba el número o la expresión. Ejemplos: 10, > 2, < 10",
-                    "date": "Escriba una fecha o una expresión. Usa {format} para la fecha."
+                    "date": "Escriba una fecha o una expresión. Usa {format} para la fecha.",
+                    "geometry": {
+                        "disabled": "Filtrar haciendo clic en el mapa",
+                        "enabled": "Haga clic en el mapa para filtrar los resultados",
+                        "applied": "Eliminar el filtro haciendo clic con el mouse"
+                    }
                 }
             },
             "toolbar": {
@@ -1669,6 +1772,10 @@
                     "unknownError": "Hubo un error al cargar el mapa. Por favor, póngase en contacto con el administrador",
                     "notFound": "El mapa que está intentando acceder no existe"
                 },
+                "plugins": {
+                  "upload": "Error durante la carga del complemento",
+                  "uninstall": "Error durante la desinstalación del complemento"
+                },
                 "resourceAlreadyExists": "Ya existe un recurso con este nombre"
             }
         },
@@ -1928,6 +2035,8 @@
             "addWebPageContent": "Agregar contenido de página web",
             "emptyTitle": "Esta historia esta vacia",
             "emptyDescription": "Comience a crear una increíble geografía agregando nuevo contenido",
+            "closeFullscreenMap": "Cerrar mapa a pantalla completa",
+            "showFullscreenMap": "Ver mapa en pantalla completa",
             "contentToolbar": {
                 "contentSize": "Cambiar tamaño",
                 "contentHeightAuto": "Haga esta sección para adaptarse a la altura del contenido",
@@ -1945,6 +2054,9 @@
                 "brightTextThemeLabel": "Texto brillante",
                 "darkThemeLabel": "Oscuro",
                 "darkTextThemeLabel": "Texto oscuro",
+                "defaultThemeLabel": "Defecto",
+                "customizeThemeLabel": "Personalizar",
+                "customizeThemeRemoveLabel": "Quitar la personalización",
                 "cover": "Haz que el fondo cubra todo el espacio del contenedor",
                 "fit": "Hacer visible todo el fondo dentro del contenedor",
                 "editMedia": "Cambiar fuente de medios",
@@ -2005,7 +2117,8 @@
                     "autoplayInterval": "Intervalo de reproducción automática (segundos)",
                     "autoplayIntervalPlaceholder": "Habilitar intervalo de reproducción automática",
                     "navbar": "Barra de navegación",
-                    "showNavbar": "Mostrar barra de navegación"
+                    "showNavbar": "Mostrar barra de navegación",
+                    "theme": "Tema"
                 }
             },
             "errors": {
@@ -2028,7 +2141,8 @@
                 "topLeft": "Arriba a la izquierda",
                 "topRight": "Parte superior derecha",
                 "bottomLeft": "Abajo a la izquierda",
-                "bottomRight": "Abajo a la derecha"
+                "bottomRight": "Abajo a la derecha",
+                "identify": "Identificar"
             },
             "webPageCreator": {
                 "title": "Página web",
@@ -2037,6 +2151,13 @@
                 "url": {
                     "label": "URL"
                 }
+            },
+            "customizeTheme": {
+                "backgroundColorLabel": "Antecedentes",
+                "textColorLabel": "Texto",
+                "shadowLabel": "Sombra",
+                "useAlternativeTextColor": "Utilice el color de texto alternativo",
+                "alternativeTextColorPopover": "<p>Advertencia: el color del texto seleccionado puede no ser legible en este contexto.</p><p>Una alternativa es el color del texto {color} &nbsp;<span class=\"ms-custom-theme-picker-alternative-text\" style=\"background-color:{color}\"></span></p>"
             }
         },
         "saveDialog": {
@@ -2135,6 +2256,11 @@
             "back": "Atrás",
             "next": "Siguiente"
         },
+        "newMapDialog": {
+            "title": "Selecciona un contexto",
+            "noContexts": "No se encontraron contextos",
+            "filterPlaceholder": "Contextos de búsqueda..."
+        },
         "plugins": {
           "About": {
             "description": "Herramienta que muestra la ventana Acerca de",
@@ -2199,6 +2325,10 @@
           "Login": {
             "description": "Login Tool",
             "title": "Login"
+          },
+          "MapCatalog": {
+            "description": "Permite navegar, editar, borrar y cargar mapas que están disponibles en el servidor",
+            "title": "Catálogo de mapas"
           },
           "MapExport": {
             "description": "Permite exportar el mapa en un archivo",
@@ -2276,6 +2406,10 @@
             "description": "Permite al usuario habilitar / deshabilitar extensiones de usuario",
             "title": "User Extensions"
           },
+          "UserSession": {
+            "title": "Sesión de usuario",
+            "description": "Habilita una sesión de usuario guardada automáticamente para cada contexto"
+          },
           "Version": {
             "description": "Muestra la versión de MapStore en la herramienta de configuración de mapas",
             "descriptionGeorchestra": "Muestra la versión de GeOrchestra en la herramienta de configuración de mapas",
@@ -2329,6 +2463,17 @@
                 },
                 "uploadLabel": "Arrastre un paquete de extensión o haga clic para navegar y subirlo",
                 "uploadTitle": "Instalar un complemento MapStore",
+                "uploadParseError": "Archivo index.json con formato errato",
+                "uploadMissingIndexError": "falta el archivo index.json en zip",
+                "uploadMissingPluginError": "No hay complementos definidos en index.json",
+                "uploadMissingBundleError": "No hay paquete de JavaScript en el archivo cargado",
+                "uploadTooManyBundlesError": "Demasiados paquetes de JavaScript en el paquete zip",
+                "uploadWrongFileFormatError": "Formato de archivo incorrecto, archivo zip esperado",
+                "confirmRemovePlugin": "¿Está seguro de que desea eliminar la extensión?",
+                "cancelUpload": "Cerrar",
+                "install": "Instalar",
+                "uploadError": "Error al instalar: ",
+                "uploadOk": "La extensión se ha instalado correctamente",
                 "tooltips": {
                     "enableUserPlugin": "Habilitar la selección del complemento actual para el usuario",
                     "disableUserPlugin": "Desactiva la selección del complemento actual para el usuario",
@@ -2337,6 +2482,7 @@
                     "editConfiguration": "Editar configuración del complemento",
                     "pluginDocumentation": "Abrir la documentación de configuración del complemento",
                     "uploadPlugin": "Agregar una extensión a MapStore",
+                    "removePlugin": "Eliminar esta extensión de MapStore",
                     "mapTemplatesConfig": "Configurar plantillas"
                 },
                 "saveCfgErrorNotification":  {
@@ -2382,6 +2528,10 @@
                 "defaultMessage": "Error desconocido",
                 "categoryError": "Error al crear la categoría faltante \"{categoryName}\""
             },
+            "loadTemplateErrorNotification": {
+                "forbidden": "No se pudo acceder a los datos de la plantilla, ¡el usuario carece de los permisos necesarios!",
+                "defaultMessage": "Ocurrió un error inesperado"
+            },
             "contextNameErrorNotification": {
                 "title": "Nombre de contexto incorrecto",
                 "unknownError": "Ocurrió un error inesperado"
@@ -2419,6 +2569,26 @@
             "confirmReplaceTitle": "Reemplazar contenido del mapa",
             "confirmReplaceMessage": "Reemplazará todas las capas y la configuración del mapa con la plantilla seleccionada haciendo clic en el botón Reemplazar",
             "confirmReplaceConfirmButton": "Reemplazar"
+        },
+        "mapCatalog": {
+            "title": "Catálogo de mapas",
+            "filterPlaceholder": "Buscar mapas...",
+            "deleteConfirmContent": "¿Estás seguro de que quieres eliminar el mapa \"{mapName}\"?",
+            "tooltips": {
+                "edit": "Editar propiedades",
+                "delete": "Eliminar recurso",
+                "share": "Compartir"
+            },
+            "deletedMap": {
+                "title": "Mapa eliminado",
+                "message": "El mapa se eliminó correctamente"
+            },
+            "updatedMap": {
+                "title": "Mapa guardado",
+                "message": "El mapa se guardó correctamente"
+            },
+            "deleteError": "Se produjo un error inesperado al eliminar el mapa",
+            "updateError": "Se produjo un error inesperado al guardar el mapa"
         },
         "tutorial": {
             "title": "Tutorial",
@@ -2549,6 +2719,20 @@
                 "title": "Widget de mapa",
                 "text": "<p> Agregue un nuevo mapa interactivo al panel de control. Puede agregar más de un mapa con la capacidad de conectar otros widgets a ellos. Después de guardar el primer mapa, el widget de leyenda se agregará a la lista. El widget de leyenda mostrará una leyenda relacionada con el mapa conectado. </p> <p> Pasos: </p> <p> <ul> <li> Seleccione un mapa </li> <li> Mejore el mapa agregando nuevas capas </li> <li> Guarde y agregue al panel de control </li> </ul> </p>"
             }
+        },
+        "userSession": {
+          "saveErrorNotification": {
+            "titleContext": "Error al guardar la sesión del usuario",
+            "categoryError": "Creando categoría faltante \"{categoryName}\"faile",
+            "defaultMessage": "Error desconocido"
+          },
+          "removeErrorNotification": {
+            "titleContext": "Error al eliminar sesión de usuario",
+            "defaultMessage": "Error desconocido"
+          },
+          "successRemoved": "Sesión de usuario eliminada",
+          "remove": "Restablecer sesión de usuario",
+          "confirmRemove": "¿Está seguro de que desea restaurar la configuración predeterminada?"
         }
     }
 }

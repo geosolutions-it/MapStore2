@@ -1,4 +1,3 @@
-const PropTypes = require('prop-types');
 /**
  * Copyright 2015, GeoSolutions Sas.
  * All rights reserved.
@@ -7,62 +6,75 @@ const PropTypes = require('prop-types');
  * LICENSE file in the root directory of this source tree.
  */
 
-const React = require('react');
-const ReactDOM = require('react-dom');
-const MapInfoUtils = require('../../utils/MapInfoUtils');
+import React from 'react';
+import PropTypes from 'prop-types';
+import MapInfoUtils from '../../utils/MapInfoUtils';
+import Select from "react-select";
+import { FormGroup, ControlLabel } from 'react-bootstrap';
 
-const {FormControl, FormGroup, ControlLabel} = require('react-bootstrap');
+function FeatureInfoFormatSelector({
+    id,
+    label,
+    infoFormat,
+    availableInfoFormat,
+    disabled,
+    onInfoFormatChange,
+    selectProps
+}) {
+    const filtered = Object.keys(availableInfoFormat).reduce((acc, key) => {
+        const values = Object.keys(acc).map(item => acc[item]);
+        const exist = values.some(item => item === availableInfoFormat[key]);
+        if (!exist) {
+            return {
+                ...acc,
+                [key]: availableInfoFormat[key]
+            };
+        }
+        return acc;
+    }, {});
+    const options = Object.keys(filtered).map((format) => ({
+        value: filtered[format],
+        label: format
+    }));
 
-class FeatureInfoFormatSelector extends React.Component {
-    static propTypes = {
-        id: PropTypes.string,
-        label: PropTypes.oneOfType([PropTypes.func, PropTypes.string, PropTypes.object]),
-        availableInfoFormat: PropTypes.object,
-        infoFormat: PropTypes.string,
-        onInfoFormatChange: PropTypes.func
-    };
+    const select = (
+        <Select
+            { ...selectProps }
+            id={id}
+            value={infoFormat}
+            clearable={false}
+            disabled={disabled}
+            options={options}
+            onChange={(selected) => onInfoFormatChange(selected?.value)}
+        />
+    );
 
-    static defaultProps = {
-        id: "mapstore-feature-format-selector",
-        availableInfoFormat: MapInfoUtils.getAvailableInfoFormat(),
-        infoFormat: MapInfoUtils.getDefaultInfoFormatValue(),
-        onInfoFormatChange: function() {}
-    };
-
-    render() {
-        const filtered = Object.keys(this.props.availableInfoFormat).reduce((acc, key) => {
-            const values = Object.keys(acc).map(item => acc[item]);
-            const exist = values.some(item => item === this.props.availableInfoFormat[key]);
-            if (!exist) {
-                acc[key] = this.props.availableInfoFormat[key];
-            }
-            return acc;
-        }, {});
-        var list = Object.keys(filtered).map((infoFormat) => {
-            let val = filtered[infoFormat];
-            let label = infoFormat;
-            return <option value={val} key={val}>{label}</option>;
-        });
-
-        return (
+    return label
+        ? (
             <FormGroup bsSize="small">
-                <ControlLabel>{this.props.label}</ControlLabel>
-                <FormControl
-                    id={this.props.id}
-                    value={this.props.infoFormat}
-                    componentClass="select"
-                    onChange={this.launchChangeInfoFormatAction}>
-                    {list}
-                </FormControl>
+                <ControlLabel>{label}</ControlLabel>
+                {select}
             </FormGroup>
-        );
-    }
-
-    launchChangeInfoFormatAction = () => {
-        var element = ReactDOM.findDOMNode(this);
-        var selectNode = element.getElementsByTagName('select').item(0);
-        this.props.onInfoFormatChange(selectNode.value);
-    };
+        )
+        : select;
 }
 
-module.exports = FeatureInfoFormatSelector;
+FeatureInfoFormatSelector.propTypes = {
+    id: PropTypes.string,
+    label: PropTypes.oneOfType([PropTypes.func, PropTypes.string, PropTypes.object]),
+    availableInfoFormat: PropTypes.object,
+    infoFormat: PropTypes.string,
+    onInfoFormatChange: PropTypes.func,
+    disabled: PropTypes.bool,
+    selectProps: PropTypes.object
+};
+
+FeatureInfoFormatSelector.defaultProps = {
+    id: "mapstore-feature-format-selector",
+    availableInfoFormat: MapInfoUtils.getAvailableInfoFormat(),
+    infoFormat: MapInfoUtils.getDefaultInfoFormatValue(),
+    onInfoFormatChange: function() {},
+    selectProps: {}
+};
+
+export default FeatureInfoFormatSelector;

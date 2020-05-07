@@ -1,0 +1,854 @@
+{
+  "version": 2,
+  "map": {
+    "center": {
+      "x": -83.01860427856452,
+      "y": 36.23686543982026,
+      "crs": "EPSG:4326"
+    },
+    "maxExtent": [
+      -20037508.34,
+      -20037508.34,
+      20037508.34,
+      20037508.34
+    ],
+    "projection": "EPSG:900913",
+    "units": "m",
+    "zoom": 3,
+    "mapOptions": {},
+    "layers": [
+      {
+        "id": "mapnik__0",
+        "group": "background",
+        "source": "osm",
+        "name": "mapnik",
+        "title": "Open Street Map",
+        "type": "osm",
+        "visibility": true,
+        "singleTile": false,
+        "dimensions": [],
+        "hideLoading": false,
+        "handleClickOnLayer": false,
+        "useForElevation": false,
+        "hidden": false
+      },
+      {
+        "id": "Night2012__1",
+        "group": "background",
+        "source": "nasagibs",
+        "name": "Night2012",
+        "provider": "NASAGIBS.ViirsEarthAtNight2012",
+        "title": "NASAGIBS Night 2012",
+        "type": "tileprovider",
+        "visibility": false,
+        "singleTile": false,
+        "dimensions": [],
+        "hideLoading": false,
+        "handleClickOnLayer": false,
+        "useForElevation": false,
+        "hidden": false
+      },
+      {
+        "id": "OpenTopoMap__2",
+        "group": "background",
+        "source": "OpenTopoMap",
+        "name": "OpenTopoMap",
+        "provider": "OpenTopoMap",
+        "title": "OpenTopoMap",
+        "type": "tileprovider",
+        "visibility": false,
+        "singleTile": false,
+        "dimensions": [],
+        "hideLoading": false,
+        "handleClickOnLayer": false,
+        "useForElevation": false,
+        "hidden": false
+      },
+      {
+        "id": "s2cloudless:s2cloudless__3",
+        "format": "image/jpeg",
+        "group": "background",
+        "source": "s2cloudless",
+        "name": "s2cloudless:s2cloudless",
+        "opacity": 1,
+        "title": "Sentinel 2 Cloudless",
+        "type": "wms",
+        "url": [
+          "https://1maps.geo-solutions.it/geoserver/wms",
+          "https://2maps.geo-solutions.it/geoserver/wms",
+          "https://3maps.geo-solutions.it/geoserver/wms",
+          "https://4maps.geo-solutions.it/geoserver/wms",
+          "https://5maps.geo-solutions.it/geoserver/wms",
+          "https://6maps.geo-solutions.it/geoserver/wms"
+        ],
+        "visibility": false,
+        "singleTile": false,
+        "dimensions": [],
+        "hideLoading": false,
+        "handleClickOnLayer": false,
+        "useForElevation": false,
+        "hidden": false
+      },
+      {
+        "id": "undefined__4",
+        "group": "background",
+        "source": "ol",
+        "title": "Empty Background",
+        "type": "empty",
+        "visibility": false,
+        "singleTile": false,
+        "dimensions": [],
+        "hideLoading": false,
+        "handleClickOnLayer": false,
+        "useForElevation": false,
+        "hidden": false
+      },
+      {
+        "id": "gs:ETOPO_Shadow__5",
+        "group": "37b5eb60-5189-11ea-8531-a737d86e9a07.44bc9340-5189-11ea-8531-a737d86e9a07",
+        "name": "gs:ETOPO_Shadow",
+        "opacity": 1,
+        "description": "ETOPO_Shadow",
+        "title": "ETOPO Shadow",
+        "type": "wms",
+        "url": "https://gs-stable.geo-solutions.it/geoserver/wms",
+        "bbox": {
+          "crs": "EPSG:4326",
+          "bounds": {
+            "minx": "-180.00833333333333",
+            "miny": "-90.00833333333331",
+            "maxx": "180.00833333333338",
+            "maxy": "90.00833333333334"
+          }
+        },
+        "visibility": true,
+        "singleTile": false,
+        "allowedSRS": {
+          "EPSG:3857": true,
+          "EPSG:900913": true
+        },
+        "dimensions": [],
+        "hideLoading": false,
+        "handleClickOnLayer": false,
+        "catalogURL": null,
+        "useForElevation": false,
+        "hidden": false,
+        "params": {},
+        "capabilities": {
+            "style": [{
+                "name": "stylename",
+                "title": "A boring default style"
+            }]
+        }
+      },
+      {
+        "id": "mapstore:Meteorite_Landings_from_NASA_Open_Data_Portal__6",
+        "group": "37b5eb60-5189-11ea-8531-a737d86e9a07",
+        "search": {
+          "url": "https://gs-stable.geo-solutions.it/geoserver/wfs",
+          "type": "wfs"
+        },
+        "name": "mapstore:Meteorite_Landings_from_NASA_Open_Data_Portal",
+        "opacity": 1,
+        "description": "Meteorite_Landings_from_NASA_Open_Data_Portal",
+        "title": "Meteorite Landings from NASA Open Data Portal",
+        "type": "wms",
+        "url": "https://gs-stable.geo-solutions.it/geoserver/wms",
+        "bbox": {
+          "crs": "EPSG:4326",
+          "bounds": {
+            "minx": "-180.0",
+            "miny": "-90.0",
+            "maxx": "180.0",
+            "maxy": "90.0"
+          }
+        },
+        "visibility": true,
+        "singleTile": true,
+        "allowedSRS": {
+          "EPSG:3857": true,
+          "EPSG:900913": true
+        },
+        "dimensions": [
+          {
+            "source": {
+              "type": "multidim-extension",
+              "url": "https://gs-stable.geo-solutions.it/geoserver/gwc/service/wmts"
+            },
+            "name": "time"
+          }
+        ],
+        "hideLoading": false,
+        "handleClickOnLayer": false,
+        "catalogURL": null,
+        "useForElevation": false,
+        "hidden": false,
+        "params": {
+          "time": "2013-01-01T00:00:00.000Z"
+        },
+        "capabilities": {
+            "style": [{
+                "name": "mapstore:meteorites",
+                "title": "Meteorite"
+            }],
+            "dimension": [{
+                "name": "time",
+                "units": "ISO8601",
+                "_default": "2101-01-01T00:00:00Z",
+                "value": "1583-01-01T00:00:00.000Z/2101-01-01T00:00:00.000Z/PT1S"
+            }]
+        }
+      },
+      {
+        "id": "mapstore:states__9",
+        "format": "image/png",
+        "group": "37b5eb60-5189-11ea-8531-a737d86e9a07",
+        "search": {
+          "url": "https://gs-stable.geo-solutions.it/geoserver/wfs",
+          "type": "wfs"
+        },
+        "name": "mapstore:states",
+        "description": "",
+        "layerFilter": {
+          "searchUrl": null,
+          "featureTypeConfigUrl": null,
+          "showGeneratedFilter": false,
+          "attributePanelExpanded": true,
+          "spatialPanelExpanded": true,
+          "crossLayerExpanded": true,
+          "showDetailsPanel": false,
+          "groupLevels": 5,
+          "useMapProjection": false,
+          "toolbarEnabled": true,
+          "groupFields": [
+            {
+              "id": 1,
+              "logic": "OR",
+              "index": 0
+            }
+          ],
+          "maxFeaturesWPS": 5,
+          "filterFields": [
+            {
+              "rowId": 1581959068162,
+              "groupId": 1,
+              "attribute": "land_km",
+              "operator": ">",
+              "value": 100000,
+              "type": "number",
+              "fieldOptions": {
+                "valuesCount": 0,
+                "currentPage": 1
+              },
+              "exception": null
+            }
+          ],
+          "spatialField": {
+            "method": "Circle",
+            "operation": "INTERSECTS",
+            "geometry": {
+              "id": "8c6ea070-51a7-11ea-82fe-2bce7d4e64fe",
+              "type": "Polygon",
+              "extent": [
+                -10247583.345629543,
+                3521681.013624397,
+                -7950544.348505222,
+                5818720.010748717
+              ],
+              "center": [
+                -9099063.847067382,
+                4670200.512186557
+              ],
+              "coordinates": [
+                [
+                  [
+                    -7950544.348505222,
+                    4670200.512186557
+                  ],
+                  [
+                    -7952810.689381311,
+                    4742316.6481908215
+                  ],
+                  [
+                    -7959600.767797531,
+                    4814148.174753006
+                  ],
+                  [
+                    -7970887.786416465,
+                    4885411.605654472
+                  ],
+                  [
+                    -7986627.200532176,
+                    4955825.696690616
+                  ],
+                  [
+                    -8006756.893867798,
+                    5025112.555613257
+                  ],
+                  [
+                    -8031197.42372012,
+                    5092998.738844383
+                  ],
+                  [
+                    -8059852.334483632,
+                    5159216.330633026
+                  ],
+                  [
+                    -8092608.538316733,
+                    5223504.000396337
+                  ],
+                  [
+                    -8129336.761447779,
+                    5285608.034072003
+                  ],
+                  [
+                    -8169892.054359602,
+                    5345283.3354117405
+                  ],
+                  [
+                    -8214114.363839028,
+                    5402294.393264214
+                  ],
+                  [
+                    -8261829.164633797,
+                    5456416.211029952
+                  ],
+                  [
+                    -8312848.148223987,
+                    5507435.194620143
+                  ],
+                  [
+                    -8366969.965989726,
+                    5555149.995414911
+                  ],
+                  [
+                    -8423981.023842199,
+                    5599372.304894337
+                  ],
+                  [
+                    -8483656.325181935,
+                    5639927.59780616
+                  ],
+                  [
+                    -8545760.358857602,
+                    5676655.820937207
+                  ],
+                  [
+                    -8610048.028620914,
+                    5709412.024770307
+                  ],
+                  [
+                    -8676265.620409556,
+                    5738066.935533819
+                  ],
+                  [
+                    -8744151.803640682,
+                    5762507.465386141
+                  ],
+                  [
+                    -8813438.662563324,
+                    5782637.158721764
+                  ],
+                  [
+                    -8883852.753599467,
+                    5798376.572837473
+                  ],
+                  [
+                    -8955116.184500933,
+                    5809663.591456408
+                  ],
+                  [
+                    -9026947.711063117,
+                    5816453.6698726285
+                  ],
+                  [
+                    -9099063.847067382,
+                    5818720.010748717
+                  ],
+                  [
+                    -9171179.983071648,
+                    5816453.6698726285
+                  ],
+                  [
+                    -9243011.509633832,
+                    5809663.591456409
+                  ],
+                  [
+                    -9314274.940535298,
+                    5798376.572837474
+                  ],
+                  [
+                    -9384689.031571442,
+                    5782637.158721764
+                  ],
+                  [
+                    -9453975.890494082,
+                    5762507.465386141
+                  ],
+                  [
+                    -9521862.073725209,
+                    5738066.935533819
+                  ],
+                  [
+                    -9588079.66551385,
+                    5709412.024770306
+                  ],
+                  [
+                    -9652367.335277162,
+                    5676655.820937206
+                  ],
+                  [
+                    -9714471.36895283,
+                    5639927.59780616
+                  ],
+                  [
+                    -9774146.670292566,
+                    5599372.304894337
+                  ],
+                  [
+                    -9831157.728145039,
+                    5555149.995414911
+                  ],
+                  [
+                    -9885279.545910778,
+                    5507435.194620143
+                  ],
+                  [
+                    -9936298.529500967,
+                    5456416.211029952
+                  ],
+                  [
+                    -9984013.330295736,
+                    5402294.393264214
+                  ],
+                  [
+                    -10028235.639775163,
+                    5345283.335411741
+                  ],
+                  [
+                    -10068790.932686985,
+                    5285608.034072004
+                  ],
+                  [
+                    -10105519.155818032,
+                    5223504.000396337
+                  ],
+                  [
+                    -10138275.359651132,
+                    5159216.330633027
+                  ],
+                  [
+                    -10166930.270414643,
+                    5092998.7388443835
+                  ],
+                  [
+                    -10191370.800266966,
+                    5025112.555613258
+                  ],
+                  [
+                    -10211500.493602589,
+                    4955825.696690617
+                  ],
+                  [
+                    -10227239.907718299,
+                    4885411.605654472
+                  ],
+                  [
+                    -10238526.926337233,
+                    4814148.174753007
+                  ],
+                  [
+                    -10245317.004753454,
+                    4742316.6481908215
+                  ],
+                  [
+                    -10247583.345629543,
+                    4670200.512186557
+                  ],
+                  [
+                    -10245317.004753454,
+                    4598084.376182293
+                  ],
+                  [
+                    -10238526.926337233,
+                    4526252.8496201085
+                  ],
+                  [
+                    -10227239.907718299,
+                    4454989.418718642
+                  ],
+                  [
+                    -10211500.493602589,
+                    4384575.327682498
+                  ],
+                  [
+                    -10191370.800266966,
+                    4315288.468759857
+                  ],
+                  [
+                    -10166930.270414643,
+                    4247402.2855287315
+                  ],
+                  [
+                    -10138275.359651132,
+                    4181184.6937400885
+                  ],
+                  [
+                    -10105519.155818032,
+                    4116897.0239767767
+                  ],
+                  [
+                    -10068790.932686985,
+                    4054792.990301111
+                  ],
+                  [
+                    -10028235.639775163,
+                    3995117.6889613736
+                  ],
+                  [
+                    -9984013.330295736,
+                    3938106.6311089005
+                  ],
+                  [
+                    -9936298.529500969,
+                    3883984.813343162
+                  ],
+                  [
+                    -9885279.545910778,
+                    3832965.8297529714
+                  ],
+                  [
+                    -9831157.728145039,
+                    3785251.0289582037
+                  ],
+                  [
+                    -9774146.670292566,
+                    3741028.7194787767
+                  ],
+                  [
+                    -9714471.368952828,
+                    3700473.426566954
+                  ],
+                  [
+                    -9652367.335277162,
+                    3663745.2034359076
+                  ],
+                  [
+                    -9588079.66551385,
+                    3630988.9996028068
+                  ],
+                  [
+                    -9521862.073725209,
+                    3602334.0888392953
+                  ],
+                  [
+                    -9453975.890494082,
+                    3577893.5589869726
+                  ],
+                  [
+                    -9384689.03157144,
+                    3557763.8656513495
+                  ],
+                  [
+                    -9314274.940535298,
+                    3542024.4515356408
+                  ],
+                  [
+                    -9243011.509633832,
+                    3530737.432916706
+                  ],
+                  [
+                    -9171179.983071646,
+                    3523947.3545004856
+                  ],
+                  [
+                    -9099063.847067382,
+                    3521681.013624397
+                  ],
+                  [
+                    -9026947.711063119,
+                    3523947.3545004856
+                  ],
+                  [
+                    -8955116.184500933,
+                    3530737.4329167055
+                  ],
+                  [
+                    -8883852.753599469,
+                    3542024.4515356408
+                  ],
+                  [
+                    -8813438.662563322,
+                    3557763.86565135
+                  ],
+                  [
+                    -8744151.803640682,
+                    3577893.5589869726
+                  ],
+                  [
+                    -8676265.620409558,
+                    3602334.0888392953
+                  ],
+                  [
+                    -8610048.028620914,
+                    3630988.9996028068
+                  ],
+                  [
+                    -8545760.358857602,
+                    3663745.203435908
+                  ],
+                  [
+                    -8483656.325181935,
+                    3700473.4265669542
+                  ],
+                  [
+                    -8423981.023842199,
+                    3741028.7194787767
+                  ],
+                  [
+                    -8366969.965989726,
+                    3785251.0289582033
+                  ],
+                  [
+                    -8312848.148223988,
+                    3832965.829752971
+                  ],
+                  [
+                    -8261829.1646337975,
+                    3883984.8133431617
+                  ],
+                  [
+                    -8214114.363839028,
+                    3938106.6311089005
+                  ],
+                  [
+                    -8169892.054359602,
+                    3995117.6889613727
+                  ],
+                  [
+                    -8129336.76144778,
+                    4054792.99030111
+                  ],
+                  [
+                    -8092608.538316733,
+                    4116897.023976776
+                  ],
+                  [
+                    -8059852.334483633,
+                    4181184.6937400876
+                  ],
+                  [
+                    -8031197.42372012,
+                    4247402.2855287315
+                  ],
+                  [
+                    -8006756.893867798,
+                    4315288.468759856
+                  ],
+                  [
+                    -7986627.200532176,
+                    4384575.327682497
+                  ],
+                  [
+                    -7970887.786416465,
+                    4454989.418718643
+                  ],
+                  [
+                    -7959600.767797532,
+                    4526252.849620108
+                  ],
+                  [
+                    -7952810.689381311,
+                    4598084.376182293
+                  ],
+                  [
+                    -7950544.348505222,
+                    4670200.512186557
+                  ]
+                ]
+              ],
+              "radius": 1148519.49856216,
+              "style": {},
+              "projection": "EPSG:3857"
+            },
+            "attribute": "geom"
+          },
+          "simpleFilterFields": [],
+          "crossLayerFilter": null,
+          "autocompleteEnabled": true
+        },
+        "title": "states",
+        "type": "wms",
+        "url": "https://gs-stable.geo-solutions.it/geoserver/wms",
+        "bbox": {
+          "crs": "EPSG:4326",
+          "bounds": {
+            "minx": -125.020233154297,
+            "miny": 24.8338890075684,
+            "maxx": -66.681037902832,
+            "maxy": 49.4938163757324
+          }
+        },
+        "visibility": true,
+        "singleTile": false,
+        "allowedSRS": {},
+        "dimensions": [],
+        "hideLoading": false,
+        "handleClickOnLayer": false,
+        "catalogURL": "https://gs-stable.geo-solutions.it/geoserver/csw?request=GetRecordById&service=CSW&version=2.0.2&elementSetName=full&id=mapstore:states",
+        "useForElevation": false,
+        "hidden": false,
+        "params": {}
+      },
+      {
+        "id": "gs:ne_110m_ocean__7",
+        "search": {
+          "url": "https://gs-stable.geo-solutions.it/geoserver/wfs",
+          "type": "wfs"
+        },
+        "name": "gs:ne_110m_ocean",
+        "opacity": 0.8,
+        "description": "",
+        "availableStyles": [
+          {
+            "TYPE_NAME": "WMS_1_3_0.Style",
+            "name": "polygon",
+            "title": "A boring default style",
+            "_abstract": "A sample style that just prints out a transparent red interior with a red outline",
+            "legendURL": [
+              {
+                "TYPE_NAME": "WMS_1_3_0.LegendURL",
+                "width": 20,
+                "height": 20,
+                "format": "image/png",
+                "onlineResource": {
+                  "TYPE_NAME": "WMS_1_3_0.OnlineResource",
+                  "type": "simple",
+                  "href": "https://gs-stable.geo-solutions.it/geoserver/gs/ne_110m_ocean/ows?service=WMS&request=GetLegendGraphic&format=image%2Fpng&width=20&height=20&layer=ne_110m_ocean&authkey=8441cd44-72bb-404a-a69e-411625b77202"
+                }
+              }
+            ],
+            "format": "sld",
+            "languageVersion": {
+              "version": "1.0.0"
+            },
+            "filename": "default_polygon.sld"
+          }
+        ],
+        "title": "Ocean",
+        "type": "wms",
+        "url": "https://gs-stable.geo-solutions.it/geoserver/wms",
+        "bbox": {
+          "crs": "EPSG:4326",
+          "bounds": {
+            "minx": "-180.0",
+            "miny": "-85.60903777459777",
+            "maxx": "180.00000000000014",
+            "maxy": "90.00000000000003"
+          }
+        },
+        "visibility": true,
+        "singleTile": false,
+        "allowedSRS": {
+          "EPSG:3857": true,
+          "EPSG:900913": true
+        },
+        "dimensions": [],
+        "hideLoading": false,
+        "handleClickOnLayer": false,
+        "catalogURL": null,
+        "useForElevation": false,
+        "hidden": false,
+        "params": {}
+      },
+      {
+        "id": "mapstore:Types__8",
+        "format": "image/png",
+        "search": {
+          "url": "https://gs-stable.geo-solutions.it/geoserver/wfs",
+          "type": "wfs"
+        },
+        "name": "mapstore:Types",
+        "description": "A simple layer with all the existing supported attriute types",
+        "title": "Types",
+        "type": "wms",
+        "url": "https://gs-stable.geo-solutions.it/geoserver/wms",
+        "bbox": {
+          "crs": "EPSG:4326",
+          "bounds": {
+            "minx": -180,
+            "miny": -90,
+            "maxx": 180,
+            "maxy": 90
+          }
+        },
+        "visibility": true,
+        "singleTile": false,
+        "allowedSRS": {},
+        "dimensions": [],
+        "hideLoading": false,
+        "handleClickOnLayer": false,
+        "catalogURL": "https://gs-stable.geo-solutions.it/geoserver/csw?request=GetRecordById&service=CSW&version=2.0.2&elementSetName=full&id=mapstore:Types",
+        "useForElevation": false,
+        "hidden": false,
+        "params": {}
+      }
+    ],
+    "groups": [
+      {
+        "id": "Default",
+        "title": "Default",
+        "expanded": true
+      },
+      {
+        "id": "37b5eb60-5189-11ea-8531-a737d86e9a07",
+        "title": "Some Group",
+        "expanded": true
+      },
+      {
+        "id": "37b5eb60-5189-11ea-8531-a737d86e9a07.44bc9340-5189-11ea-8531-a737d86e9a07",
+        "title": "Some Group",
+        "expanded": true
+      }
+    ],
+    "backgrounds": []
+  },
+  "catalogServices": {
+    "services": {
+      "gs_stable_csw": {
+        "url": "https://gs-stable.geo-solutions.it/geoserver/csw",
+        "type": "csw",
+        "title": "GeoSolutions GeoServer CSW",
+        "autoload": true,
+        "jsObject": {
+          "parameter1": "value<>",
+          "parameter2": 1,
+          "parameter3": {
+              "parameter4": 2
+          },
+          "parameter6": null
+        }
+      },
+      "gs_stable_wms": {
+        "url": "https://gs-stable.geo-solutions.it/geoserver/wms",
+        "type": "wms",
+        "title": "GeoSolutions GeoServer WMS",
+        "autoload": false
+      },
+      "gs_stable_wmts": {
+        "url": "https://gs-stable.geo-solutions.it/geoserver/gwc/service/wmts",
+        "type": "wmts",
+        "title": "GeoSolutions GeoServer WMTS",
+        "autoload": false
+      }
+    },
+    "selectedService": "gs_stable_csw"
+  },
+  "widgetsConfig": {
+    "layouts": {
+      "md": [],
+      "xxs": []
+    }
+  },
+  "mapInfoConfiguration": {}
+}

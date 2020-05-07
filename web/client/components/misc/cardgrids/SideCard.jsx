@@ -8,6 +8,7 @@
 
 
 const React = require('react');
+const { isObject } = require('lodash');
 
 const Loader = require('../Loader');
 
@@ -18,6 +19,7 @@ const Loader = require('../Loader');
  * @class
  * @prop {node}         body            add a node to the bottom of card
  * @prop {node|string}  caption         text for caption
+ * @prop {node}         infoExtra       add a node under info
  * @prop {string}       className       custom class
  * @prop {node|string}  description     text for description
  * @prop {bool}         fullText        add full-text className
@@ -37,6 +39,7 @@ const Loader = require('../Loader');
 module.exports = ({
     body,
     caption,
+    infoExtra,
     className = '',
     description,
     fullText,
@@ -72,24 +75,29 @@ module.exports = ({
             </div>}
             <div className="mapstore-side-card-container">
                 <div className="mapstore-side-card-inner">
-                    <div className="mapstore-side-card-info">
-                        {title && <div className="mapstore-side-card-title">
-                            <span>{title}</span>
-                        </div>}
-                        {description && <div className="mapstore-side-card-desc">
-                            <span>{description}</span>
-                        </div>}
-                        {caption && <div className="mapstore-side-card-caption">
-                            <span>{caption}</span>
-                        </div>}
+                    <div className="mapstore-side-card-left-container">
+                        <div className="mapstore-side-card-info">
+                            {title && <div className="mapstore-side-card-title">
+                                <span>{title}</span>
+                            </div>}
+                            {description && <div className="mapstore-side-card-desc">
+                                {isObject(description) ? description : <span>{description}</span>}
+                            </div>}
+                            {caption && <div className="mapstore-side-card-caption">
+                                <span>{caption}</span>
+                            </div>}
+                        </div>
+                        {infoExtra}
                     </div>
-                    <div className="mapstore-side-card-tool text-center" style={styleTools}>
-                        {tools}
+                    <div className="mapstore-side-card-right-container">
+                        <div className="mapstore-side-card-tool text-center" style={styleTools}>
+                            {tools}
+                        </div>
+                        {size !== 'sm' && <div className="mapstore-side-card-loading">
+                            <Loader className="mapstore-side-card-loader" size={12} hidden={!loading}/>
+                        </div>}
                     </div>
                 </div>
-                {size !== 'sm' && <div className="mapstore-side-card-loading">
-                    <Loader className="mapstore-side-card-loader" size={12} hidden={!loading}/>
-                </div>}
             </div>
         </div>
         {body && <div className="ms-body">

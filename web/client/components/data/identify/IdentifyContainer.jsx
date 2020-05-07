@@ -8,6 +8,7 @@
 
 const React = require('react');
 const {Row, Col} = require('react-bootstrap');
+const {get} = require('lodash');
 const Toolbar = require('../../misc/toolbar/Toolbar');
 const Message = require('../../I18N/Message');
 const DockablePanel = require('../../misc/panels/DockablePanel');
@@ -15,6 +16,7 @@ const GeocodeViewer = require('./GeocodeViewer');
 const ResizableModal = require('../../misc/ResizableModal');
 const Portal = require('../../misc/Portal');
 const Coordinate = require('./coordinates/Coordinate');
+const {responseValidForEdit} = require('../../../utils/IdentifyUtils');
 /**
  * Component for rendering Identify Container inside a Dockable container
  * @memberof components.data.identify
@@ -53,15 +55,19 @@ module.exports = props => {
         clearWarning,
         zIndex,
         showEmptyMessageGFI,
+        showEdit,
+        isEditingAllowed,
+        onEdit = () => {},
         // coord editor props
         enabledCoordEditorButton,
         showCoordinateEditor,
-        onChangeClickPoint,
+        onSubmitClickPoint,
         onChangeFormat,
         formatCoord
     } = props;
 
     const latlng = point && point.latlng || null;
+    const {layer} = responses[index] || {};
 
     let lngCorrected = null;
     if (latlng) {
@@ -76,7 +82,18 @@ module.exports = props => {
     }
     const Viewer = viewer;
     // TODO: put all the header (Toolbar, navigation, coordinate editor) outside the container
-    const toolButtons = getToolButtons({...props, lngCorrected, validResponses, latlng});
+    const toolButtons = getToolButtons({
+        ...props,
+        lngCorrected,
+        validResponses,
+        latlng,
+        showEdit: showEdit && isEditingAllowed && !!responses[index] && responseValidForEdit(responses[index]),
+        onEdit: onEdit.bind(null, layer && {
+            id: layer.id,
+            name: layer.name,
+            url: get(layer, 'search.url')
+        })
+    });
     const missingResponses = requests.length - responses.length;
     const revGeocodeDisplayName = reverseGeocodeData.error ? <Message msgId="identifyRevGeocodeError"/> : reverseGeocodeData.display_name;
     return (
@@ -100,7 +117,7 @@ module.exports = props => {
                         key="coordinate-editor"
                         formatCoord={formatCoord}
                         enabledCoordEditorButton={enabledCoordEditorButton}
-                        onChange={onChangeClickPoint}
+                        onSubmit={onSubmitClickPoint}
                         onChangeFormat={onChangeFormat}
                         edit={showCoordinateEditor}
                         coordinate={{
@@ -134,8 +151,7 @@ module.exports = props => {
                             />
                         </div>
                     </Row>
-                ].filter(headRow => headRow)}
-                noResize>
+                ].filter(headRow => headRow)}>
                 <Viewer
                     index={index}
                     setIndex={setIndex}

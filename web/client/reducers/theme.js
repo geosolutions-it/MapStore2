@@ -6,18 +6,23 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const {THEME_SELECTED} = require('../actions/theme');
-const assign = require('object-assign');
+import { THEME_SELECTED, THEME_LOADED } from '../actions/theme';
 
-function controls(state = {}, action) {
+function theme(state = {}, action) {
     switch (action.type) {
     case THEME_SELECTED:
-        return assign({}, state, {
+        return {
+            ...state,
             selectedTheme: action.theme
-        });
+        };
+    case THEME_LOADED:
+        return {
+            ...state,
+            loaded: true
+        };
     default:
         return state;
     }
 }
 
-module.exports = controls;
+export default theme;

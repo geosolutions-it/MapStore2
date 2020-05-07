@@ -27,10 +27,15 @@ describe('ContextCreator component', () => {
         setTimeout(done);
     });
     it('default', () => {
+        const plugins = [
+            {enabled: true, title: 'title', pluginConfig: {cfg: {}}},
+            {enabled: false, title: 'title', pluginConfig: {cfg: {}}}
+        ];
         const { Plugin, actions } = getPluginForTest(ContextCreator, {
             contextcreator: {
-                stepId: 'configure-map',
-                newContext: {}
+                stepId: 'configure-plugins',
+                newContext: {},
+                plugins
             },
             map: {}
         });
@@ -41,13 +46,18 @@ describe('ContextCreator component', () => {
         expect(button.childNodes[0].innerHTML).toBe('save');
         ReactTestUtils.Simulate.click(button); // <-- trigger event callback
         // check destination path
-        expect(actions.length).toBe(1);
+        expect(actions.length).toBeGreaterThanOrEqualTo(1);
         expect(actions[0].destLocation).toBe("/context-manager");
     });
     it('custom destination', () => {
+        const plugins = [
+            {enabled: true, title: 'title', pluginConfig: {cfg: {}}},
+            {enabled: false, title: 'title', pluginConfig: {cfg: {}}}
+        ];
         const { Plugin, actions } = getPluginForTest(ContextCreator, {
             contextcreator: {
-                stepId: 'configure-map'
+                stepId: 'configure-plugins',
+                plugins
             },
             map: {}
         });
@@ -58,7 +68,7 @@ describe('ContextCreator component', () => {
         expect(button.childNodes[0].innerHTML).toBe('save');
         ReactTestUtils.Simulate.click(button); // <-- trigger event callback
         // check customization of destination path
-        expect(actions.length).toBe(1);
+        expect(actions.length).toBeGreaterThanOrEqualTo(1);
         expect(actions[0].destLocation).toBe("MY_DESTINATION");
     });
 });

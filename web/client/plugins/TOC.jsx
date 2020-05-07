@@ -23,10 +23,11 @@ const {zoomToExtent} = require('../actions/map');
 const {error} = require('../actions/notifications');
 const {groupsSelector, layersSelector, selectedNodesSelector, layerFilterSelector, layerSettingSelector, layerMetadataSelector, wfsDownloadSelector} = require('../selectors/layers');
 const {mapSelector, mapNameSelector} = require('../selectors/map');
-const {currentLocaleSelector} = require("../selectors/locale");
+const {currentLocaleSelector, currentLocaleLanguageSelector} = require("../selectors/locale");
 const {widgetBuilderAvailable} = require('../selectors/controls');
 const {generalInfoFormatSelector} = require("../selectors/mapInfo");
 const {userSelector} = require('../selectors/security');
+const {isLocalizedLayerStylesEnabledSelector} = require('../selectors/localizedLayerStyles');
 
 const LayersUtils = require('../utils/LayersUtils');
 const mapUtils = require('../utils/MapUtils');
@@ -80,6 +81,7 @@ const tocSelector = createSelector(
         wfsDownloadSelector,
         mapSelector,
         currentLocaleSelector,
+        currentLocaleLanguageSelector,
         selectedNodesSelector,
         layerFilterSelector,
         layersSelector,
@@ -88,8 +90,9 @@ const tocSelector = createSelector(
         widgetBuilderAvailable,
         generalInfoFormatSelector,
         isCesium,
-        userSelector
-    ], (enabled, groups, settings, layerMetadata, wfsdownload, map, currentLocale, selectedNodes, filterText, layers, mapName, catalogActive, activateWidgetTool, generalInfoFormat, isCesiumActive, user) => ({
+        userSelector,
+        isLocalizedLayerStylesEnabledSelector
+    ], (enabled, groups, settings, layerMetadata, wfsdownload, map, currentLocale, currentLocaleLanguage, selectedNodes, filterText, layers, mapName, catalogActive, activateWidgetTool, generalInfoFormat, isCesiumActive, user, isLocalizedLayerStylesEnabled) => ({
         enabled,
         groups,
         settings,
@@ -101,6 +104,7 @@ const tocSelector = createSelector(
             map && map.mapOptions && map.mapOptions.view && map.mapOptions.view.DPI || null
         ),
         currentLocale,
+        currentLocaleLanguage,
         selectedNodes,
         filterText,
         generalInfoFormat,
@@ -132,7 +136,8 @@ const tocSelector = createSelector(
         ]),
         catalogActive,
         activateWidgetTool,
-        user
+        user,
+        isLocalizedLayerStylesEnabled
     })
 );
 
@@ -198,10 +203,12 @@ class LayerTree extends React.Component {
         currentZoomLvl: PropTypes.number,
         scales: PropTypes.array,
         layerOptions: PropTypes.object,
+        metadataOptions: PropTypes.object,
         spatialOperations: PropTypes.array,
         spatialMethodOptions: PropTypes.array,
         groupOptions: PropTypes.object,
         currentLocale: PropTypes.string,
+        currentLocaleLanguage: PropTypes.string,
         onFilter: PropTypes.func,
         filterText: PropTypes.string,
         generalInfoFormat: PropTypes.string,
@@ -222,7 +229,8 @@ class LayerTree extends React.Component {
         refreshLayerVersion: PropTypes.func,
         hideOpacityTooltip: PropTypes.bool,
         layerNodeComponent: PropTypes.func,
-        groupNodeComponent: PropTypes.func
+        groupNodeComponent: PropTypes.func,
+        isLocalizedLayerStylesEnabled: PropTypes.bool
     };
 
     static contextTypes = {
@@ -272,6 +280,7 @@ class LayerTree extends React.Component {
             showFeatureInfoTab: true
         },
         layerOptions: {},
+        metadataOptions: {},
         groupOptions: {},
         spatialOperations: [
             {"id": "INTERSECTS", "name": "queryform.spatialfilter.operations.intersects"},
@@ -346,7 +355,9 @@ class LayerTree extends React.Component {
                 filterText={this.props.filterText}
                 onUpdateNode={this.props.updateNode}
                 hideOpacityTooltip={this.props.hideOpacityTooltip}
-            />);
+                language={this.props.isLocalizedLayerStylesEnabled ? this.props.currentLocaleLanguage : null}
+            />
+        );
     }
 
     renderTOC = () => {
@@ -394,6 +405,7 @@ class LayerTree extends React.Component {
                             }}
                             options={{
                                 modalOptions: {},
+                                metadataOptions: this.props.metadataOptions,
                                 settingsOptions: this.props.settingsOptions
                             }}
                             style={{
@@ -409,6 +421,7 @@ class LayerTree extends React.Component {
                                 confirmDeleteMessage: <Message msgId="layerProperties.deleteLayerMessage" />,
                                 confirmDeleteLayerGroupText: <Message msgId="layerProperties.deleteLayerGroup" />,
                                 confirmDeleteLayerGroupMessage: <Message msgId="layerProperties.deleteLayerGroupMessage" />,
+                                confirmDeleteConfirmText: <Message msgId="layerProperties.delete"/>,
                                 confirmDeleteCancelText: <Message msgId="cancel"/>,
                                 addLayer: <Message msgId="toc.addLayer"/>,
                                 addLayerTooltip: <Message msgId="toc.addLayer" />,
@@ -582,8 +595,6 @@ const checkPluginsEnhancer = branch(
  * @prop {boolean} cfg.showFullTitleOnExpand shows full length title in the legend. default `false`.
  * @prop {boolean} cfg.hideOpacityTooltip hide toolip on opacity sliders
  * @prop {string[]|string|object|function} cfg.metadataTemplate custom template for displaying metadata
- * @prop {element} cfg.groupNodeComponent render a custom component for group node
- * @prop {element} cfg.layerNodeComponent render a custom component for layer node
  * example :
  * ```
  * {
@@ -622,6 +633,8 @@ const checkPluginsEnhancer = branch(
  *  }
  * ```
  *
+ * @prop {element} cfg.groupNodeComponent render a custom component for group node
+ * @prop {element} cfg.layerNodeComponent render a custom component for layer node
  * @prop {object} cfg.layerOptions: options to pass to the layer.
  * Some of the layerOptions are: `legendContainerStyle`, `legendStyle`. These 2 allow to customize the legend:
  * For instance you can pass some styling props to the legend.
@@ -638,12 +651,30 @@ const checkPluginsEnhancer = branch(
  *   }
  *  }
  * ```
+ * Another legendOptions entry can be `WMSLegendOptions` it is styling prop for the wms legend.
+ * example:
+ * ```
+ * "layerOptions": {
+ *  "legendOptions": {
+ *   "WMSLegendOptions": "forceLabels:on"
+ *  }
+ * }
+ * ```
+ * Another one legendOptions entry is `scaleDependent`, this option activates / deactivates scale dependency.
+ * example:
+ * ```
+ * "layerOptions": {
+ *  "legendOptions": {
+ *   "scaleDependent": true
+ *  }
+ * }
+ * ```
  * Another layerOptions entry can be `indicators`. `indicators` is an array of icons to add to the TOC. They must satisfy a condition to be shown in the TOC.
  * For the moment only indicators of type `dimension` are supported.
  * example :
  * ```
  * "layerOptions" : {
- *   "indicators: [{
+ *   "indicators": [{
  *      "key": "dimension", // key: required id for the entry to render
  *      "type": "dimension", // type: only one supported is dimension
  *      "glyph": "calendar", // glyph to use
@@ -674,6 +705,79 @@ const checkPluginsEnhancer = branch(
  *   }
  * }
  * ```
+ * @prop {object} cfg.metadataOptions options to pass to iso19139 xml metadata parser
+ * @prop {object} cfg.metadataOptions.xmlNamespaces namespaces that are used in the metadata xml
+ * ```
+ * "xmlNamespaces": {
+ *     "gmd": "http://www.isotc211.org/2005/gmd",
+ *     "srv": "http://www.isotc211.org/2005/srv",
+ *     "gco": "http://www.isotc211.org/2005/gco",
+ *     "gmx": "http://www.isotc211.org/2005/gmx",
+ *     "gfc": "http://www.isotc211.org/2005/gfc",
+ *     "gts": "http://www.isotc211.org/2005/gts",
+ *     "gml": "http://www.opengis.net/gml"
+ * }
+ * ```
+ * @prop {object[]} cfg.metadataOptions.extractors metadata properties extractor definitions
+ * ```
+ * "extractors": [{
+ *     "properties": {
+ *         "title": "/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:title/gco:CharacterString",
+ *         "lastRevisionDate": "/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:date/gmd:CI_Date/gmd:date/gco:Date[../../gmd:dateType/gmd:CI_DateTypeCode[@codeListValue='revision']]",
+ *         "pointsOfContact": {
+ *             "xpath": "/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:pointOfContact/gmd:CI_ResponsibleParty",
+ *             "properties": {
+ *                 "individualName": "gmd:individualName/gco:CharacterString",
+ *                 "organisationName": "gmd:organisationName/gco:CharacterString",
+ *                 "contactInfo": {
+ *                     "xpath": "gmd:contactInfo/gmd:CI_Contact",
+ *                     "properties": {
+ *                         "phone": "gmd:phone/gmd:CI_Telephone/gmd:voice/gco:CharacterString",
+ *                         "hoursOfService": "gmd:hoursOfService/gco:CharacterString"
+ *                     }
+ *                 },
+ *                 "role": "gmd:role/gmd:CI_RoleCode/@codeListValue"
+ *             }
+ *         }
+ *     },
+ *     "layersRegex": "^espub_mob:gev_ajeu$"
+ * }]
+ * ```
+ *
+ * Each extractor is an object, that has two props: "properties" and "layersRegex". "layersRegex" allows to define a regular exression
+ * that would be use to determine the names of the layers that the extractor should be used with.
+ * "properties" is an object that contains a description of what metadata info should be displayed and how.
+ * Each property of this object must be in the following form:
+ *
+ * ```
+ * {
+ *   [localizedPropKey]: "xpath string"
+ * }
+ * ```
+ *
+ * or
+ *
+ * ```
+ * {
+ *   [localizedPropKey]: {
+ *     "xpath": "base xpath string",
+ *     "properties": {
+ *       ...
+ *     }
+ *   }
+ * }
+ * ```
+ *
+ * "localizedPropKey" is a value that is going to be used to compute a localized string id in the default metadata template like this:
+ * "toc.layerMetadata.${localizedPropKey}". If the translation is missing a default string will be shown containing localizedPropKey.
+ * The value of each "properties" object's prop can be either a string containing an xpath string that will be used to extract
+ * a string from metadata xml to be displayed as a value of the corresponding prop in the ui, or an object
+ * that describes a subtable, if metadata prop cannot be displayed just as a singular string value. That object has two properties:
+ * "xpath", and "properties". "xpath" defines a relative xpath to be used as a base for all properties in "properties". This "properties" object
+ * adheres to the same structure described here.
+ *
+ * If there are multiple extractors which "layersRegex" matches layer's name, the one that occures in the array first will be used for
+ * metadata processing.
  */
 const TOCPlugin = connect(tocSelector, {
     groupPropertiesChangeHandler: changeGroupProperties,
@@ -706,12 +810,7 @@ const TOCPlugin = connect(tocSelector, {
     checkPluginsEnhancer
 )(LayerTree));
 
-const API = {
-    csw: require('../api/CSW'),
-    wms: require('../api/WMS'),
-    wmts: require('../api/WMTS'),
-    backgrounds: require('../api/mapBackground')
-};
+const API = require('../api/catalog').default;
 
 module.exports = {
     TOCPlugin: assign(TOCPlugin, {
@@ -743,5 +842,6 @@ module.exports = {
         queryform: require('../reducers/queryform'),
         query: require('../reducers/query')
     },
+    // TODO: remove this dependency, it is needed only to use getMetadataRecordById and related actions that can be moved in the TOC
     epics: require("../epics/catalog").default(API)
 };

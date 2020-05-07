@@ -10,13 +10,20 @@ import React from 'react';
 import {Button, ButtonToolbar, Label} from 'react-bootstrap';
 import Message from '../I18N/Message';
 import BorderLayout from '../layout/BorderLayout';
+import CloseButton from '../buttons/CloseButton';
+import Loader from '../misc/Loader';
 
 export default ({
+    loading = false,
     steps = [],
     hideNamesExceptCurrent = false,
     currentStepId,
     onSetStep = () => {},
-    onSave = () => {}
+    onSave = () => {},
+    onShowBackToPageConfirmation = () => { },
+    showBackToPageConfirmation = false,
+    backToPageConfirmationMessage = 'contextCreator.undo',
+    onConfirmBackToPage = () => { }
 }) => {
     const curStepIndex = steps.findIndex(step => step.id === currentStepId);
 
@@ -34,17 +41,27 @@ export default ({
                     <Button
                         bsStyle="primary"
                         bsSize="sm"
-                        disabled={steps[curStepIndex].disableNext}
+                        disabled={steps[curStepIndex].disableNext || loading}
                         onClick={() => curStepIndex < steps.length - 1 ? onSetStep(steps[curStepIndex + 1].id) : onSave()}>
                         <Message msgId={curStepIndex < steps.length - 1 ? "stepper.next" : "save"}/>
                     </Button>
                     <Button
+                        style={{height: '100%'}}
                         bsSize="sm"
                         className="no-border"
-                        disabled={curStepIndex === 0}
+                        disabled={curStepIndex === 0 || loading}
                         onClick={() => onSetStep(steps[curStepIndex - 1].id)}>
                         <Message msgId="stepper.back"/>
                     </Button>
+                    <CloseButton
+                        style={{height: '100%'}}
+                        className="no-border"
+                        title={loading ? <Loader size={14}/> : <Message msgId="close"/>}
+                        showConfirm={showBackToPageConfirmation}
+                        onShowConfirm={onShowBackToPageConfirmation}
+                        onConfirm={onConfirmBackToPage}
+                        onClick={() => onShowBackToPageConfirmation(true)}
+                        confirmMessage={backToPageConfirmationMessage}/>
                 </ButtonToolbar>
             </div>
             <div className="footer-step-bar">

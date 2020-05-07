@@ -19,6 +19,7 @@ import Message from '../../I18N/Message';
 import {Modes, SectionTypes, SectionTemplates} from '../../../utils/GeoStoryUtils';
 
 import withFocusMask from './sections/enhancers/withFocusMask';
+import isObject from 'lodash/isObject';
 
 const ContainerDimensions = emptyState(
     ({ sections = [] }) => sections.length === 0,
@@ -78,6 +79,20 @@ const ContainerDimensions = emptyState(
     )
 )(ContainerDimensionsBase);
 
+const defaultGetSize = ({ width, mode }) => {
+    // don't apply custom style while editing
+    if (mode === Modes.EDIT) {
+        return '';
+    }
+    if (width < 640) {
+        return 'sm';
+    }
+    if (width >= 640 && width < 1024) {
+        return 'md';
+    }
+    return '';
+};
+
 const Cascade = ({
     mode = Modes.VIEW,
     sections = [],
@@ -89,15 +104,25 @@ const Cascade = ({
     update = () => {},
     remove = () => {},
     focusedContent,
-    isContentFocused = false
-}) => (<BorderLayout  className={`ms-cascade-story ms-${mode}`} bodyClassName={`ms2-border-layout-body ${isContentFocused ? 'no-overflow' : ''}`}>
+    isContentFocused = false,
+    getSize = defaultGetSize,
+    theme = {}
+}) => (<BorderLayout  className={`ms-cascade-story ms-${mode}`}>
     <ContainerDimensions
         sections={sections}
         add={add}>
-        {({ width, height }) =>
-            <div
+        {({ width, height }) => {
+            const containerSize = getSize({ width, height, mode });
+            const sizeClassName = containerSize ? ` ms-${containerSize}` : '';
+            const isMediaExpandable = containerSize === 'sm';
+            const storyTheme = theme && isObject(theme) && theme || {};
+            return (<div
                 id="ms-sections-container"
-                className="ms-sections-container">
+                className={`ms-sections-container${sizeClassName}`}
+                style={{
+                    ...storyTheme,
+                    ...isContentFocused && { overflow: 'hidden' }
+                }}>
                 {
                     sections.map(({ contents = [], id: sectionId, type: sectionType, cover }) => {
                         return (
@@ -106,6 +131,7 @@ const Cascade = ({
                                 onVisibilityChange={onVisibilityChange}
                                 add={add}
                                 editMedia={editMedia}
+                                expandableMedia={isMediaExpandable}
                                 editWebPage={editWebPage}
                                 updateCurrentPage={updateCurrentPage}
                                 update={update}
@@ -118,11 +144,13 @@ const Cascade = ({
                                 mode={mode}
                                 contents={contents}
                                 cover={cover}
+                                storyTheme={storyTheme}
                             />
                         );
                     })
                 }
-            </div>}
+            </div>);
+        }}
     </ContainerDimensions>
 </BorderLayout>);
 

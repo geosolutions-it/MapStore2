@@ -47,7 +47,9 @@ class Section extends React.Component {
         inViewRef: PropTypes.func,
         excludeClassName: PropTypes.string,
         cover: PropTypes.bool,
-        focusedContent: PropTypes.object
+        focusedContent: PropTypes.object,
+        expandableMedia: PropTypes.bool,
+        storyTheme: PropTypes.object
     };
 
     static defaultProps = {
@@ -61,7 +63,8 @@ class Section extends React.Component {
         storyType: StoryTypes.CASCADE,
         viewHeight: 0,
         viewWidth: 0,
-        mode: Modes.VIEW
+        mode: Modes.VIEW,
+        expandableMedia: false
     };
 
     state = {
@@ -78,6 +81,7 @@ class Section extends React.Component {
                 update={this.props.update}
                 inViewRef={this.props.inViewRef}
                 editMedia={this.props.editMedia}
+                expandableMedia={this.props.expandableMedia}
                 editWebPage={this.props.editWebPage}
                 updateCurrentPage={this.props.updateCurrentPage}
                 remove={this.props.remove}
@@ -87,6 +91,7 @@ class Section extends React.Component {
                 viewWidth={this.props.viewWidth}
                 viewHeight={this.props.viewHeight}
                 focusedContent={this.props.focusedContent}
+                storyTheme={this.props.storyTheme}
             />
         );
     }
@@ -100,4 +105,4 @@ const DEFAULT_THRESHOLD = [0, 0.25, 0.5, 0.75, 1];
  * negative rootMargin allows to get the top element highlighted (trigger visibility event)
  * if it's present in the viewport after initial 100px
 */
-export default visibilityHandler({ threshold: DEFAULT_THRESHOLD, rootMargin: "-200px" })(Section);
+export default visibilityHandler({ threshold: DEFAULT_THRESHOLD, rootMargin: "-200px 0px 0px 0px" })(Section);

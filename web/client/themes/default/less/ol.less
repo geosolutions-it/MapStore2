@@ -81,6 +81,25 @@ div.ol-scale-line-inner {
         pointer-events: none;
     }
 
+    .segment-overlay {
+        z-index: 0;
+        position: relative;
+        background: rgba(0, 0, 0, 0.5);
+        border-radius: 4px;
+        color: white;
+        padding: 4px 8px;
+        white-space: nowrap;
+        font-size: @font-size-small;
+    }
+
+    .segment-overlay-static {
+        background-color: transparent;
+        border: none;
+        color: black;
+        text-shadow: -1px 0 #ffa332, 0 1px #ffa332, 1px 0 #ffa332, 0 -1px #ffa332;
+        opacity: 1;
+    }
+
     .tooltip {
         z-index: 0;
         position: relative;

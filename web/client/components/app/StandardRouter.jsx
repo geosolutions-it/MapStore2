@@ -5,23 +5,22 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
 */
-const React = require('react');
-const {connect} = require('react-redux');
-const PropTypes = require('prop-types');
-const Debug = require('../development/Debug');
-const {Route} = require('react-router');
-const {ConnectedRouter} = require('connected-react-router');
-const history = require('../../stores/History').default;
+import React from 'react';
+import {connect} from 'react-redux';
+import PropTypes from 'prop-types';
+import Debug from '../development/Debug';
+import {Route} from 'react-router';
+import {ConnectedRouter} from 'connected-react-router';
+import history  from '../../stores/History';
 
-const Localized = require('../I18N/Localized');
+import Localized from '../I18N/Localized';
+import Theme from '../theme/Theme';
+import {ErrorBoundary} from 'react-error-boundary';
+import ErrorBoundaryFallbackComponent from './ErrorFallBackComp';
 
-const assign = require('object-assign');
-
-const Theme = connect((state) => ({
-    theme: state.theme && state.theme.selectedTheme && state.theme.selectedTheme.id
-}), {}, (stateProps, dispatchProps, ownProps) => {
-    return assign({}, stateProps, dispatchProps, ownProps);
-})(require('../theme/Theme'));
+const ThemeProvider = connect((state) => ({
+    theme: state.theme?.selectedTheme?.id
+}))(Theme);
 
 class StandardRouter extends React.Component {
     static propTypes = {
@@ -31,7 +30,9 @@ class StandardRouter extends React.Component {
         className: PropTypes.string,
         themeCfg: PropTypes.object,
         version: PropTypes.string,
-        loadAfterTheme: PropTypes.bool
+        loadAfterTheme: PropTypes.bool,
+        themeLoaded: PropTypes.bool,
+        onThemeLoaded: PropTypes.func
     };
 
     static defaultProps = {
@@ -42,11 +43,10 @@ class StandardRouter extends React.Component {
         themeCfg: {
             path: 'dist/themes'
         },
-        loadAfterTheme: false
+        loadAfterTheme: false,
+        themeLoaded: false,
+        onThemeLoaded: () => {}
     };
-    state = {
-        themeLoaded: false
-    }
     renderPages = () => {
         return this.props.pages.map((page, i) => {
             const pageConfig = page.pageConfig || {};
@@ -61,17 +61,26 @@ class StandardRouter extends React.Component {
     renderAfterTheme() {
         return (
             <div className={this.props.className}>
-                <Theme {...this.props.themeCfg} version={this.props.version} onLoad={this.themeLoaded}>
-                    {this.state.themeLoaded ? (<Localized messages={this.props.locale.messages} locale={this.props.locale.current} loadingError={this.props.locale.localeError}>
+
+                <ThemeProvider {...this.props.themeCfg} version={this.props.version} onLoad={this.props.onThemeLoaded}>
+                    {this.props.themeLoaded ? (<Localized messages={this.props.locale.messages} locale={this.props.locale.current} loadingError={this.props.locale.localeError}>
                         <ConnectedRouter history={history}>
-                            <div>
-                                {this.renderPages()}
+                            <div className="error-container">
+                                <ErrorBoundary
+                                    onError={e => {
+                                        /* eslint-disable no-console */
+                                        console.error(e);
+                                        /* eslint-enable no-console */
+                                    }}
+                                    FallbackComponent={ ErrorBoundaryFallbackComponent}>
+                                    {this.renderPages()}
+                                </ErrorBoundary>
                             </div>
                         </ConnectedRouter>
                     </Localized>) :
                         (<span><div className="_ms2_init_spinner _ms2_init_center"><div></div></div>
                             <div className="_ms2_init_text _ms2_init_center">Loading MapStore</div></span>)}
-                </Theme>
+                </ThemeProvider>
                 <Debug/>
             </div>
         );
@@ -82,8 +91,16 @@ class StandardRouter extends React.Component {
                 <Theme {...this.props.themeCfg} version={this.props.version}/>
                 <Localized messages={this.props.locale.messages} locale={this.props.locale.current} loadingError={this.props.locale.localeError}>
                     <ConnectedRouter history={history}>
-                        <div>
-                            {this.renderPages()}
+                        <div className="error-container">
+                            <ErrorBoundary
+                                onError={e => {
+                                    /* eslint-disable no-console */
+                                    console.error(e);
+                                    /* eslint-enable no-console */
+                                }}
+                                FallbackComponent={ ErrorBoundaryFallbackComponent}>
+                                {this.renderPages()}
+                            </ErrorBoundary>
                         </div>
                     </ConnectedRouter>
                 </Localized>
@@ -93,11 +110,6 @@ class StandardRouter extends React.Component {
     render() {
         return this.props.loadAfterTheme ? this.renderAfterTheme() : this.renderWithTheme();
     }
-    themeLoaded = () => {
-        this.setState({
-            themeLoaded: true
-        });
-    }
 }
 
-module.exports = StandardRouter;
+export default StandardRouter;

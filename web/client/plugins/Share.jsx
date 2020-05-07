@@ -81,14 +81,17 @@ const Share = connect(createSelector([
     embedOptions: {
         showTOCToggle: !context
     },
-    settings
+    settings,
+    advancedSettings: {
+        bbox: true
+    }
 })), {
     onClose: toggleControl.bind(null, 'share', null),
     onUpdateSettings: setControlProperty.bind(null, 'share', 'settings')
 })(SharePanel);
 
 export const SharePlugin = assign(Share, {
-    disablePluginIf: "{state('router') && (state('router').endsWith('new') || state('router').includes('newgeostory'))}",
+    disablePluginIf: "{state('router') && (state('router').endsWith('new') || state('router').includes('newgeostory') || state('router').endsWith('dashboard'))}",
     BurgerMenu: {
         name: 'share',
         position: 1000,

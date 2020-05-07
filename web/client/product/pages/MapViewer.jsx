@@ -11,7 +11,7 @@ const {connect} = require('react-redux');
 const url = require('url');
 const urlQuery = url.parse(window.location.href, true).query;
 const MapViewerCmp = require('../components/viewer/MapViewerCmp');
-const {loadMapConfig} = require('../../actions/config');
+const {loadNewMap, loadMapConfig} = require('../../actions/config');
 const {initMap} = require('../../actions/map');
 const MapViewerContainer = require('../../containers/MapViewer');
 
@@ -19,6 +19,7 @@ class MapViewerPage extends React.Component {
     static propTypes = {
         mode: PropTypes.string,
         match: PropTypes.object,
+        loadNewMap: PropTypes.func,
         loadMapConfig: PropTypes.func,
         onInit: PropTypes.func,
         plugins: PropTypes.object,
@@ -44,6 +45,7 @@ module.exports = connect((state) => ({
     mode: urlQuery.mobile || state.browser && state.browser.mobile ? 'mobile' : 'desktop'
 }),
 {
+    loadNewMap,
     loadMapConfig,
     onInit: initMap
 })(MapViewerPage);

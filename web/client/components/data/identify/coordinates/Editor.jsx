@@ -8,10 +8,10 @@
 
 const React = require('react');
 const CoordinatesRow = require('../../../misc/coordinateeditors/CoordinatesRow');
+const {isEmpty} = require('lodash');
 
 const Editor = (props) => (
     <CoordinatesRow
-        key="IdentifyEditor"
         format={props.formatCoord || "decimal"}
         aeronauticalOptions={{
             seconds: {
@@ -20,13 +20,13 @@ const Editor = (props) => (
             }
         }}
         idx={1}
-        onChange={(id, key, value) => {
-            props.onChange(key, value === null || value === "" ? undefined : value);
+        onSubmit={(id, value) => {
+            props.onSubmit(isEmpty(value) ? undefined : value);
         }}
         onChangeFormat={(format) => {
             props.onChangeFormat(format);
         }}
-        key={"GFI row coord editor"}
+        key="GFI row coord editor"
         component={props.coordinate || {}}
         customClassName="coord-editor"
         isDraggable={false}

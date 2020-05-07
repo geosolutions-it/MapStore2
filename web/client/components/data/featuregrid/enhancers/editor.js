@@ -114,39 +114,44 @@ const featuresToGrid = compose(
     withHandlers({rowGetter: props => props.virtualScroll && (i => getRowVirtual(i, props.rows, props.pages, props.size)) || (i => getRow(i, props.rows))}),
     withPropsOnChange(
         ["describeFeatureType", "columnSettings", "tools", "actionOpts", "mode", "isFocused", "sortable"],
-        props => ({
-            columns: getToolColumns(props.tools, props.rowGetter, props.describeFeatureType, props.actionOpts)
-                .concat(featureTypeToGridColumns(props.describeFeatureType, props.columnSettings, {
-                    editable: props.mode === "EDIT",
-                    sortable: props.sortable && !props.isFocused,
-                    defaultSize: props.defaultSize
-                }, {
-                    getEditor: (desc) => {
-                        const generalProps = {
-                            onTemporaryChanges: props.gridEvents && props.gridEvents.onTemporaryChanges,
-                            autocompleteEnabled: props.autocompleteEnabled,
-                            url: props.url,
-                            typeName: props.typeName
-                        };
-                        const regexProps = {attribute: desc.name, url: props.url, typeName: props.typeName};
-                        const rules = props.customEditorsOptions && props.customEditorsOptions.rules || [];
-                        const editorProps = {type: desc.localType, props};
-                        const editor = EditorRegistry.getCustomEditor(regexProps, rules, editorProps);
+        props => {
+            const getFilterRendererFunc = ({localType = ""} = {}, name) => {
+                if (props.filterRenderers && props.filterRenderers[name]) {
+                    return props.filterRenderers[name];
+                }
+                return manageFilterRendererState(getFilterRenderer(localType));
+            };
 
-                        if (!isNil(editor)) {
-                            return editor;
-                        }
-                        return props.editors(desc.localType, generalProps);
-                    },
-                    getFilterRenderer: ({localType = ""} = {}, name) => {
-                        if (props.filterRenderers && props.filterRenderers[name]) {
-                            return props.filterRenderers[name];
-                        }
-                        return manageFilterRendererState(getFilterRenderer(localType));
-                    },
-                    getFormatter: (desc) => getFormatter(desc)
-                }))
-        })
+            const result = ({
+                columns: getToolColumns(props.tools, props.rowGetter, props.describeFeatureType, props.actionOpts, getFilterRendererFunc)
+                    .concat(featureTypeToGridColumns(props.describeFeatureType, props.columnSettings, {
+                        editable: props.mode === "EDIT",
+                        sortable: props.sortable && !props.isFocused,
+                        defaultSize: props.defaultSize
+                    }, {
+                        getEditor: (desc) => {
+                            const generalProps = {
+                                onTemporaryChanges: props.gridEvents && props.gridEvents.onTemporaryChanges,
+                                autocompleteEnabled: props.autocompleteEnabled,
+                                url: props.url,
+                                typeName: props.typeName
+                            };
+                            const regexProps = {attribute: desc.name, url: props.url, typeName: props.typeName};
+                            const rules = props.customEditorsOptions && props.customEditorsOptions.rules || [];
+                            const editorProps = {type: desc.localType, generalProps, props};
+                            const editor = EditorRegistry.getCustomEditor(regexProps, rules, editorProps);
+
+                            if (!isNil(editor)) {
+                                return editor;
+                            }
+                            return props.editors(desc.localType, generalProps);
+                        },
+                        getFilterRenderer: getFilterRendererFunc,
+                        getFormatter: (desc) => getFormatter(desc)
+                    }))
+            });
+            return result;
+        }
     ),
     withPropsOnChange(
         ["gridOpts", "describeFeatureType", "actionOpts", "mode", "select", "columns"],

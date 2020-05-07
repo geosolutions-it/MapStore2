@@ -12,20 +12,16 @@ const {bindActionCreators} = require('redux');
 const {createSelector, createStructuredSelector} = require('reselect');
 const {widgetBuilderAvailable, wfsDownloadAvailable} = require('../../../selectors/controls');
 const {paginationInfo, featureLoadingSelector, resultsSelector, isSyncWmsActive, featureCollectionResultSelector} = require('../../../selectors/query');
-const { getTitleSelector, modeSelector, selectedFeaturesCount, hasChangesSelector, hasGeometrySelector, isSimpleGeomSelector, hasNewFeaturesSelector, isSavingSelector, isSavedSelector, isDrawingSelector, canEditSelector, getAttributeFilter, hasSupportedGeometry, editingAllowedRolesSelector, timeSyncActive, showTimeSync} = require('../../../selectors/featuregrid');
-const {userRoleSelector} = require('../../../selectors/security');
+const { getTitleSelector, modeSelector, selectedFeaturesCount, hasChangesSelector, hasGeometrySelector, isSimpleGeomSelector, hasNewFeaturesSelector, isSavingSelector, isSavedSelector, isDrawingSelector, getAttributeFilter, hasSupportedGeometry, timeSyncActive, showTimeSync, isEditingAllowedSelector} = require('../../../selectors/featuregrid');
 const {isCesium} = require('../../../selectors/maptype');
 const {mapLayoutValuesSelector} = require('../../../selectors/maplayout');
 const {chartDisabledSelector, showAgainSelector, showPopoverSyncSelector, selectedLayerNameSelector} = require('../../../selectors/featuregrid');
 const {deleteFeatures, toggleTool, clearChangeConfirmed, closeFeatureGridConfirmed, closeFeatureGrid} = require('../../../actions/featuregrid');
 const {toolbarEvents, pageEvents} = require('../index');
-const {getAttributeFields} = require('../../../utils/FeatureGridUtils');
 const {getFilterRenderer} = require('../../../components/data/featuregrid/filterRenderers');
 const {isDescribeLoaded, isFilterActive} = require('../../../selectors/query');
+const {getFeatureTypeProperties, isGeometryType} = require('../../../utils/ogc/WFS/base');
 
-const filterEditingAllowedUser = (role, editingAllowedRoles = ["ADMIN"]) => {
-    return editingAllowedRoles.indexOf(role) !== -1;
-};
 const EmptyRowsView = connect(createStructuredSelector({
     loading: featureLoadingSelector
 }))(require('../../../components/data/featuregrid/EmptyRowsView'));
@@ -54,7 +50,7 @@ const Toolbar = connect(
         isColumnsOpen: state => state && state.featuregrid && state.featuregrid.tools && state.featuregrid.tools.settings,
         disableZoomAll: (state) => state && state.featuregrid.virtualScroll || featureCollectionResultSelector(state).features.length === 0,
         isSearchAllowed: (state) => !isCesium(state),
-        isEditingAllowed: (state) => (filterEditingAllowedUser(userRoleSelector(state), editingAllowedRolesSelector(state)) || canEditSelector(state)) && !isCesium(state),
+        isEditingAllowed: isEditingAllowedSelector,
         hasSupportedGeometry,
         isFilterActive,
         showTimeSyncButton: showTimeSync,
@@ -136,7 +132,7 @@ module.exports = {
     },
     getFilterRenderers: createSelector((d) => d,
         (describe) =>
-            describe ? getAttributeFields(describe).reduce( (out, cur) => ({
+            describe ? (getFeatureTypeProperties(describe) || []).reduce( (out, cur) => ({
                 ...out,
                 [cur.name]: connect(
                     createSelector(
@@ -144,15 +140,19 @@ module.exports = {
                         modeSelector,
                         (filter, mode) => {
                             const props = {
-                                value: filter && (filter.rawValue || filter.value)
+                                value: filter && (filter.rawValue || filter.value),
+                                ...(isGeometryType(cur) ? {
+                                    filterEnabled: filter?.enabled,
+                                    filterDeactivated: filter?.deactivated
+                                } : {})
                             };
-                            const editProps = {
+                            const editProps = !isGeometryType(cur) ? {
                                 disabled: true,
                                 tooltipMsgId: "featuregrid.filter.tooltips.editMode"
-                            };
+                            } : {};
                             return mode === "EDIT" ? {...props, ...editProps} : props;
                         }
-                    ))(getFilterRenderer(cur.localType, {name: cur.name}))
+                    ))(getFilterRenderer(isGeometryType(cur) ? 'geometry' : cur.localType, {name: cur.name}))
             }), {}) : {}),
     getDialogs: (tools = {}) => {
         return Object.keys(tools)

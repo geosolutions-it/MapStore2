@@ -33,6 +33,13 @@ const mapInfoSelector = state => get(mapSelector(state), "info");
 const mapInfoLoadingSelector = state => get(mapSelector(state), "loadingInfo", false);
 const mapSaveErrorsSelector = state => get(mapSelector(state), "mapSaveErrors");
 const mapInfoDetailsUriFromIdSelector = state => get(mapInfoSelector(state), "details");
+const mapIsEditableSelector = state => {
+    const mapInfoCanEdit = get(mapInfoSelector(state), 'canEdit');
+    if (mapInfoCanEdit === undefined) {
+        return get(state, 'context.resource.canEdit');
+    }
+    return mapInfoCanEdit;
+};
 
 // TODO: move these in selectors/localConfig.js or selectors/config.js
 const projectionDefsSelector = (state) => state.localConfig && state.localConfig.projectionDefs || [];
@@ -85,6 +92,14 @@ const mapVersionSelector = (state) => state.map && state.map.present && state.ma
  */
 const mapNameSelector = (state) => state.map && state.map.present && state.map.present.info && state.map.present.info.name || '';
 
+const mouseMoveListenerSelector = (state) => get(state, 'map.present.eventListeners.mousemove', []);
+
+const isMouseMoveActiveSelector = (state) => !!mouseMoveListenerSelector(state).length;
+
+const isMouseMoveCoordinatesActiveSelector = (state) => mouseMoveListenerSelector(state).includes('mouseposition');
+
+const isMouseMoveIdentifyActiveSelector = (state) =>  mouseMoveListenerSelector(state).includes('identifyFloatingTool');
+
 module.exports = {
     mapInfoDetailsUriFromIdSelector,
     mapSelector,
@@ -100,5 +115,10 @@ module.exports = {
     configuredRestrictedExtentSelector,
     mapInfoSelector,
     mapInfoLoadingSelector,
-    mapSaveErrorsSelector
+    mapSaveErrorsSelector,
+    mapIsEditableSelector,
+    mouseMoveListenerSelector,
+    isMouseMoveActiveSelector,
+    isMouseMoveCoordinatesActiveSelector,
+    isMouseMoveIdentifyActiveSelector
 };

@@ -6,6 +6,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+const {themeLoaded} = require('../actions/theme');
+
 module.exports = (config = {}, pluginsDef, overrideConfig = cfg => cfg) => {
     const React = require('react');
     const ReactDOM = require('react-dom');
@@ -36,8 +38,11 @@ module.exports = (config = {}, pluginsDef, overrideConfig = cfg => cfg) => {
             pages,
             themeCfg,
             version: versionSelector(state),
-            loadAfterTheme: loadAfterThemeSelector(state)
-        }))(require('../components/app/StandardRouter'));
+            loadAfterTheme: loadAfterThemeSelector(state),
+            themeLoaded: state.theme && state.theme.loaded
+        }), {
+            onThemeLoaded: themeLoaded
+        })(require('../components/app/StandardRouter').default);
 
         const {updateMapLayoutEpic} = require('../epics/maplayout');
         const {setSupportedLocales} = require('../epics/localconfig');
@@ -58,6 +63,7 @@ module.exports = (config = {}, pluginsDef, overrideConfig = cfg => cfg) => {
                 maps: require('../reducers/maps'),
                 maplayout: require('../reducers/maplayout'),
                 version: require('../reducers/version'),
+                mapPopups: require('../reducers/mapPopups').default,
                 ...appReducers
             },
             baseEpics || {

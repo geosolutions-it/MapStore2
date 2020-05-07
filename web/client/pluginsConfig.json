@@ -281,6 +281,15 @@
       ]
     },
     {
+      "name": "MapCatalog",
+      "glyph": "maps-catalog",
+      "title": "plugins.MapCatalog.title",
+      "description": "plugins.MapCatalog.description",
+      "dependencies": [
+        "BurgerMenu"
+      ]
+    },
+    {
       "name": "MapImport",
       "glyph": "upload",
       "title": "plugins.MapImport.title",
@@ -541,6 +550,12 @@
       "title": "plugins.UserExtensions.title",
       "hidden": true,
       "description": "plugins.UserExtensions.description",
+      "dependencies": ["BurgerMenu"]
+    }, {
+      "name": "UserSession",
+      "glyph": "floppy-save",
+      "title": "plugins.UserSession.title",
+      "description": "plugins.UserSession.description",
       "dependencies": ["BurgerMenu"]
     }
   ]

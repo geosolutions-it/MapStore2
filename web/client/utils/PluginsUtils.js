@@ -8,7 +8,7 @@
 
 import React from 'react';
 import assign from 'object-assign';
-import { omit, isObject, head, isArray, isString, memoize, get, endsWith } from 'lodash';
+import { omit, isObject, head, isArray, isString, isFunction, memoize, get, endsWith } from 'lodash';
 import {connect as originalConnect} from 'react-redux';
 import axios from '../libs/ajax';
 import url from 'url';
@@ -211,14 +211,25 @@ const isValidConfiguration = (cfg) => {
     return cfg && isString(cfg) || (isObject(cfg) && cfg.name);
 };
 
+const executeDeferredProp = (pluginImpl, pluginConfig, name) => pluginImpl && isFunction(pluginImpl[name]) ?
+    ({...pluginImpl, [name]: pluginImpl[name](pluginConfig)}) :
+    pluginImpl;
+
 export const getPluginItems = (state, plugins, pluginsConfig, containerName, containerId, isDefault, loadedPlugins, filter) => {
     return Object.keys(plugins)
     // extract basic info for each plugins (name, implementation and config)
-        .map(pluginName => ({
-            name: pluginName,
-            impl: includeLoaded(getPluginSimpleName(pluginName), loadedPlugins, plugins[pluginName]),
-            config: getPluginConfiguration(pluginsConfig, pluginName)
-        }))
+        .map(pluginName => {
+            const config = getPluginConfiguration(pluginsConfig, pluginName);
+            return {
+                name: pluginName,
+                impl: executeDeferredProp(
+                    includeLoaded(getPluginSimpleName(pluginName), loadedPlugins, plugins[pluginName]),
+                    config,
+                    containerName
+                ),
+                config
+            };
+        })
     // include only plugins that are configured for the current mode
         .filter((plugin) => isValidConfiguration(plugin.config))
     // include only plugins that support container as a parent
@@ -419,7 +430,7 @@ export const getConfiguredPlugin = (pluginDef, loadedPlugins = {}, loaderCompone
 export const setRefToWrappedComponent = (name) => {
     return (connectedComponent) => {
         if (connectedComponent) {
-            window[`${name}Plugin`] = connectedComponent.getWrappedInstance();
+            window[`${name}Plugin`] = connectedComponent;
         }
     };
 };

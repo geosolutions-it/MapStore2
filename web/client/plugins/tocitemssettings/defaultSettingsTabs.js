@@ -30,6 +30,9 @@ import LoadingView from '../../components/misc/LoadingView';
 import html from 'raw-loader!./featureInfoPreviews/responseHTML.txt';
 import json from 'raw-loader!./featureInfoPreviews/responseJSON.txt';
 import text from 'raw-loader!./featureInfoPreviews/responseText.txt';
+import SimpleVectorStyleEditor from './SimpleVectorStyleEditor';
+
+
 const responses = {
     html,
     json: JSON.parse(json),
@@ -37,7 +40,16 @@ const responses = {
 };
 
 import { StyleSelector } from '../styleeditor/index';
+
 const StyleList = defaultProps({ readOnly: true })(StyleSelector);
+
+const isLayerNode = ({settings = {}} = {}) => settings.nodeType === 'layers';
+const isVectorStylableLayer = ({element = {}} = {}) => element.type === "wfs" || element.type === "vector" && element.id !== "annotations";
+const isWMS = ({element = {}} = {}) => element.type === "wms";
+const isStylableLayer = (props) =>
+    isLayerNode(props)
+    && (isWMS(props) || isVectorStylableLayer(props));
+
 
 const formatCards = {
     TEXT: {
@@ -123,7 +135,12 @@ const getConfiguredPlugin = (plugin, loaded, loadingComp) => {
     return plugin;
 };
 
-export const getStyleTabPlugin = ({ settings, items = [], loadedPlugins, onToggleStyleEditor = () => { }, onUpdateParams = () => { }, ...props }) => {
+export const getStyleTabPlugin = ({ settings, items = [], loadedPlugins, onToggleStyleEditor = () => { }, onUpdateParams = () => { }, element, ...props }) => {
+    if (isVectorStylableLayer({element})) {
+        return {
+            Component: SimpleVectorStyleEditor
+        };
+    }
     // get Higher priority plugin that satisfies requirements.
     const candidatePluginItems =
             sortBy(filter([...items], { target: 'style' }), ["priority"]) // find out plugins with target panel 'style' and sort by priority
@@ -171,7 +188,7 @@ export const getStyleTabPlugin = ({ settings, items = [], loadedPlugins, onToggl
             // This is connected on TOCItemsSettings close, not on StyleEditor unmount
             // to prevent re-initialization on each tab switch.
             onClose: () => onToggleStyleEditor(null, false),
-            Component: getConfiguredPlugin({ ...item, cfg: { ...item.plugin.cfg, active: true } }, loadedPlugins, <LoadingView width={100} height={100} />),
+            Component: getConfiguredPlugin({ ...item, cfg: { ...(item.cfg || item.plugin.cfg || {}), active: true } }, loadedPlugins, <LoadingView width={100} height={100} />),
             toolbarComponent: item.ToolbarComponent
                 && (
                     item.plugin.cfg && defaultProps(item.plugin.cfg)(item.ToolbarComponent) || item.ToolbarComponent
@@ -198,7 +215,7 @@ export default ({ showFeatureInfoTab = true, loadedPlugins, items, onToggleStyle
             titleId: 'layerProperties.display',
             tooltipId: 'layerProperties.display',
             glyph: 'eye-open',
-            visible: props.settings.nodeType === 'layers',
+            visible: isLayerNode(props),
             Component: Display
         },
         {
@@ -206,7 +223,7 @@ export default ({ showFeatureInfoTab = true, loadedPlugins, items, onToggleStyle
             titleId: 'layerProperties.style',
             tooltipId: 'layerProperties.style',
             glyph: 'dropper',
-            visible: props.settings.nodeType === 'layers' && props.element.type === "wms",
+            visible: isStylableLayer(props),
             Component: StyleList,
             ...getStyleTabPlugin({ items, loadedPlugins, onToggleStyleEditor, ...props })
         },
@@ -215,7 +232,7 @@ export default ({ showFeatureInfoTab = true, loadedPlugins, items, onToggleStyle
             titleId: 'layerProperties.featureInfo',
             tooltipId: 'layerProperties.featureInfo',
             glyph: 'map-marker',
-            visible: showFeatureInfoTab && props.settings.nodeType === 'layers' && props.element.type === "wms" && !(props.element.featureInfo && props.element.featureInfo.viewer),
+            visible: showFeatureInfoTab && isLayerNode(props) && isWMS(props) && !(props.element.featureInfo && props.element.featureInfo.viewer),
             Component: FeatureInfo,
             toolbar: [
                 {
@@ -231,7 +248,7 @@ export default ({ showFeatureInfoTab = true, loadedPlugins, items, onToggleStyle
             titleId: 'layerProperties.elevation',
             tooltipId: 'layerProperties.elevation',
             glyph: '1-vector',
-            visible: props.settings.nodeType === 'layers' && props.element.type === "wms" && props.element.dimensions && props.getDimension && props.getDimension(props.element.dimensions, 'elevation'),
+            visible: isLayerNode(props) && isWMS(props) && props.element.dimensions && props.getDimension && props.getDimension(props.element.dimensions, 'elevation'),
             Component: Elevation
         }
     ].filter(tab => tab.visible);

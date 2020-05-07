@@ -66,7 +66,8 @@ class OpenlayersMap extends React.Component {
         wpsBounds: PropTypes.object,
         onWarning: PropTypes.func,
         maxExtent: PropTypes.array,
-        limits: PropTypes.object
+        limits: PropTypes.object,
+        onMouseOut: PropTypes.func
     };
 
     static defaultProps = {
@@ -85,7 +86,8 @@ class OpenlayersMap extends React.Component {
         resize: 0,
         registerHooks: true,
         hookRegister: mapUtils,
-        interactive: true
+        interactive: true,
+        onMouseOut: () => {}
     };
 
     componentDidMount() {
@@ -143,6 +145,7 @@ class OpenlayersMap extends React.Component {
             layers: [],
             controls: controls,
             interactions: interactions,
+            maxTilesLoading: Infinity,
             target: `${this.props.id}`,
             view: this.createView(center, Math.round(this.props.zoom), this.props.projection, this.props.mapOptions && this.props.mapOptions.view, this.props.limits)
         });
@@ -155,6 +158,10 @@ class OpenlayersMap extends React.Component {
         this.map.enableEventListener = (event) => {
             delete this.map.disabledListeners[event];
         };
+        // The timeout is needed to cover the delay we have for the throttled mouseMove event.
+        this.map.getViewport().addEventListener('mouseout', () => {
+            setTimeout(() => this.props.onMouseOut(), 150);
+        });
         // TODO support disableEventListener
         map.on('moveend', this.updateMapInfoState);
         map.on('singleclick', (event) => {
@@ -210,6 +217,7 @@ class OpenlayersMap extends React.Component {
                             lng: tLng,
                             z: getElevation && getElevation(pos, event.pixel) || undefined
                         },
+                        rawPos: event.coordinate.slice(),
                         modifiers: {
                             alt: event.originalEvent.altKey,
                             ctrl: event.originalEvent.ctrlKey,
@@ -453,6 +461,7 @@ class OpenlayersMap extends React.Component {
 
     mouseMoveEvent = (event) => {
         if (!event.dragging && event.coordinate) {
+            const getElevation = this.map.get('elevationLayer') && this.map.get('elevationLayer').get('getElevation');
             let pos = event.coordinate.slice();
             let coords = toLonLat(pos, this.props.projection);
             let tLng = coords[0] / 360 % 1 * 360;
@@ -469,7 +478,15 @@ class OpenlayersMap extends React.Component {
                 pixel: {
                     x: event.pixel[0],
                     y: event.pixel[1]
-                }
+                },
+                latlng: {
+                    lat: coords[1],
+                    lng: tLng,
+                    z: getElevation && getElevation(pos, event.pixel) || undefined
+                },
+                lat: coords[1],
+                lng: tLng,
+                rawPos: event.coordinate.slice()
             });
         }
     };
@@ -588,7 +605,7 @@ class OpenlayersMap extends React.Component {
         this.props.hookRegister.registerHook(mapUtils.GET_COORDINATES_FROM_PIXEL_HOOK, (pixel) => {
             return this.map.getCoordinateFromPixel(pixel);
         });
-        this.props.hookRegister.registerHook(mapUtils.ZOOM_TO_EXTENT_HOOK, (extent, { padding, crs, maxZoom: zoomLevel, duration } = {}) => {
+        this.props.hookRegister.registerHook(mapUtils.ZOOM_TO_EXTENT_HOOK, (extent, { padding, crs, maxZoom: zoomLevel, duration} = {}) => {
             let bounds = CoordinatesUtils.reprojectBbox(extent, crs, this.props.projection);
             // if EPSG:4326 with max extent (-180, -90, 180, 90) bounds are 0,0,0,0. In this case zoom to max extent
             // TODO: improve this to manage all degenerated bounding boxes.
@@ -600,7 +617,9 @@ class OpenlayersMap extends React.Component {
             if (bounds && bounds[0] === bounds[2] && bounds[1] === bounds[3] && isNil(maxZoom)) {
                 maxZoom = 21; // TODO: allow to this maxZoom to be customizable
             }
+
             this.map.getView().fit(bounds, {
+                size: this.map.getSize(),
                 padding: padding && [padding.top || 0, padding.right || 0, padding.bottom || 0, padding.left || 0],
                 maxZoom,
                 duration

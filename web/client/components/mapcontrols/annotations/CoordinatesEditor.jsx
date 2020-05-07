@@ -9,11 +9,13 @@
 const React = require('react');
 const PropTypes = require('prop-types');
 const {Grid, Row, Col, FormGroup, ControlLabel, FormControl, MenuItem, DropdownButton: DropdownButtonRB, Glyphicon: GlyphiconRB} = require('react-bootstrap');
+const Select = require('react-select').default;
 
 const tooltip = require('../../misc/enhancers/tooltip');
 const Glyphicon = tooltip(GlyphiconRB);
 const DropdownButton = tooltip(DropdownButtonRB);
-const {head, isNaN} = require('lodash');
+const {head, isNaN, get} = require('lodash');
+const LocaleUtils = require('../../../utils/LocaleUtils');
 const Toolbar = require('../../misc/toolbar/Toolbar');
 const draggableContainer = require('../../misc/enhancers/draggableContainer');
 const Message = require('../../I18N/Message');
@@ -54,16 +56,24 @@ class CoordinatesEditor extends React.Component {
         onHighlightPoint: PropTypes.func,
         onChangeText: PropTypes.func,
         onChangeFormat: PropTypes.func,
+        onChangeCurrentFeature: PropTypes.func,
         format: PropTypes.string,
         aeronauticalOptions: PropTypes.object,
         componentsValidation: PropTypes.object,
         transitionProps: PropTypes.object,
         properties: PropTypes.object,
         mapProjection: PropTypes.string,
+        features: PropTypes.array,
+        currentFeature: PropTypes.number,
+        showFeatureSelector: PropTypes.bool,
         type: PropTypes.string,
         isDraggable: PropTypes.bool,
         isMouseEnterEnabled: PropTypes.bool,
         isMouseLeaveEnabled: PropTypes.bool
+    };
+
+    static contextTypes = {
+        messages: PropTypes.object
     };
 
     static defaultProps = {
@@ -74,6 +84,7 @@ class CoordinatesEditor extends React.Component {
         onHighlightPoint: () => {},
         onChangeFormat: () => {},
         onChangeText: () => {},
+        onChangeCurrentFeature: () => {},
         onSetInvalidSelected: () => {},
         componentsValidation: {
             "Bearing": {min: 2, max: 2, add: true, remove: true, validation: "validateCoordinates", notValid: "annotations.editor.notValidPolyline"},
@@ -89,6 +100,7 @@ class CoordinatesEditor extends React.Component {
             transitionEnterTimeout: 300,
             transitionLeaveTimeout: 300
         },
+        features: [],
         isDraggable: true,
         isMouseEnterEnabled: false,
         isMouseLeaveEnabled: false,
@@ -203,9 +215,6 @@ class CoordinatesEditor extends React.Component {
                 onClick: () => {
                     let tempComps = [...this.props.components];
                     tempComps = tempComps.concat([{lat: "", lon: ""}]);
-                    if (this.props.type === "Polygon") {
-                        tempComps = this.addCoordPolygon(tempComps);
-                    }
                     this.props.onChange(tempComps, this.props.properties.radius, this.props.properties.valueText, this.props.mapProjection);
                 }
             }
@@ -216,6 +225,30 @@ class CoordinatesEditor extends React.Component {
                 <Row style={{display: 'flex', alignItems: 'center', marginBottom: 8}}>
                     <Col xs={toolbarVisible ? 6 : 12}>
                         <h5><Message msgId={"annotations.editor.title." + this.props.type}/></h5>
+                        {this.props.showFeatureSelector ? <Select
+                            value={this.props.currentFeature}
+                            options={[
+                                ...this.props.features.map((f, i) => {
+                                    const values = get(f, 'properties.values', []);
+                                    const geomType = (values[0] || {}).type === 'bearing' ? 'Bearing' : f.geometry.type;
+                                    if (geomType !== this.props.type) {
+                                        return null;
+                                    }
+                                    const measureName = geomType === 'LineString' ? 'Length' : geomType === 'Bearing' ? 'Bearing' : 'Area';
+                                    const valueLabel = values.length > 0 ?
+                                        `${measureName} ${values[0].formattedValue}` :
+                                        '';
+                                    const secondValueLabel =
+                                        values.length > 1 && geomType === 'Polygon' ?
+                                            `, Perimeter: ${values[1].formattedValue}` :
+                                            '';
+                                    return {label: `${geomType} (${valueLabel}${secondValueLabel})`, value: i};
+                                }), {
+                                    label: LocaleUtils.getMessageById(this.context.messages, 'annotations.editor.newFeature'),
+                                    value: this.props.features.length
+                                }
+                            ].filter(f => !!f)}
+                            onChange={e => this.props.onChangeCurrentFeature(e?.value)}/> : null}
                     </Col>
                     <Col xs={6}>
                         <Toolbar
@@ -255,7 +288,7 @@ class CoordinatesEditor extends React.Component {
                         formatVisible={false}
                         removeVisible={componentsValidation[type].remove}
                         removeEnabled={this[componentsValidation[type].validation](this.props.components, componentsValidation[type].remove, idx)}
-                        onChange={this.change}
+                        onSubmit={this.change}
                         onMouseEnter={(val) => {
                             if (this.props.isMouseEnterEnabled || this.props.type === "LineString" || this.props.type === "Polygon" || this.props.type === "MultiPoint") {
                                 this.props.onHighlightPoint(val);
@@ -281,8 +314,7 @@ class CoordinatesEditor extends React.Component {
                             }, []).filter(val => val);
 
                             if (this.isValid(components)) {
-                                const validComponents = this.addCoordPolygon(components);
-                                this.props.onChange(validComponents);
+                                this.props.onChange(components);
                             } else if (this.props.properties.isValidFeature) {
                                 this.props.onSetInvalidSelected("coords", this.props.components.map(coordToArray));
                             }
@@ -292,13 +324,12 @@ class CoordinatesEditor extends React.Component {
                         onRemove={() => {
                             const components = this.props.components.filter((cmp, i) => i !== idx);
                             if (this.isValid(components)) {
-                                const validComponents = this.addCoordPolygon(components);
                                 if (this.props.isMouseEnterEnabled || this.props.type === "LineString" && idx !== components.length || this.props.type === "Polygon") {
                                     this.props.onHighlightPoint(components[idx]);
                                 } else {
                                     this.props.onHighlightPoint(null);
                                 }
-                                this.props.onChange(validComponents);
+                                this.props.onChange(components);
                             } else if (this.props.properties.isValidFeature) {
                                 this.props.onSetInvalidSelected("coords", this.props.components.map(coordToArray));
                             }
@@ -348,9 +379,11 @@ class CoordinatesEditor extends React.Component {
         }
         return components;
     }
-    change = (id, key, value) => {
+    change = (id, value) => {
         let tempComps = this.props.components;
-        tempComps[id][key] = isNaN(parseFloat(value)) ? "" : parseFloat(value);
+        const lat = isNaN(parseFloat(value.lat)) ? "" : parseFloat(value.lat);
+        const lon = isNaN(parseFloat(value.lon)) ? "" : parseFloat(value.lon);
+        tempComps[id] = {lat, lon};
         let validComponents = this.addCoordPolygon(tempComps);
         this.props.onChange(validComponents, this.props.properties.radius, this.props.properties.valueText, this.props.mapProjection);
         if (!this.isValid(tempComps)) {

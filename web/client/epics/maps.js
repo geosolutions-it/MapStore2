@@ -12,29 +12,33 @@ const assign = require('object-assign');
 const {push} = require('connected-react-router');
 const {basicError, basicSuccess} = require('../utils/NotificationUtils');
 const GeoStoreApi = require('../api/GeoStoreDAO');
-const { MAP_INFO_LOADED, MAP_SAVED, mapSaveError, mapSaved, loadMapInfo } = require('../actions/config');
-const {isNil, find} = require('lodash');
+const { MAP_INFO_LOADED, MAP_SAVED, mapSaveError, mapSaved, loadMapInfo, configureMap } = require('../actions/config');
+const {get, isNil, isArray, isEqual, find, pick, omit, keys, zip} = require('lodash');
 const {
     SAVE_DETAILS, SAVE_RESOURCE_DETAILS, MAPS_GET_MAP_RESOURCES_BY_CATEGORY,
     DELETE_MAP, OPEN_DETAILS_PANEL, MAPS_LOAD_MAP,
     CLOSE_DETAILS_PANEL, NO_DETAILS_AVAILABLE, SAVE_MAP_RESOURCE, MAP_DELETED,
+    SEARCH_FILTER_CHANGED, SEARCH_FILTER_CLEAR_ALL, LOAD_CONTEXTS,
     setDetailsChanged, updateDetails, mapsLoading, mapsLoaded,
     mapDeleting, toggleDetailsEditability, mapDeleted, loadError,
     doNothing, detailsLoaded, detailsSaving, onDisplayMetadataEdit,
     RESET_UPDATING, resetUpdating, toggleDetailsSheet, getMapResourcesByCategory,
-    mapUpdating, savingMap, mapCreated, loadMaps
+    mapUpdating, savingMap, mapCreated, loadMaps, loadContexts, setContexts, setSearchFilter, loading
 } = require('../actions/maps');
 const {
     resetCurrentMap, EDIT_MAP
 } = require('../actions/currentMap');
 const {closeFeatureGrid} = require('../actions/featuregrid');
-const {toggleControl} = require('../actions/controls');
+const {toggleControl, setControlProperty} = require('../actions/controls');
+const {setTabsHidden} = require('../actions/contenttabs');
 const {
     mapPermissionsFromIdSelector, mapThumbnailsUriFromIdSelector,
     mapDetailsUriFromIdSelector,
     searchTextSelector,
     searchParamsSelector,
-    totalCountSelector
+    totalCountSelector,
+    contextsSelector,
+    searchFilterSelector
 } = require('../selectors/maps');
 const {
     mapIdSelector, mapInfoDetailsUriFromIdSelector
@@ -45,14 +49,19 @@ const {
     currentMapDetailsUriSelector, currentMapSelector,
     currentMapDetailsChangedSelector, currentMapOriginalDetailsTextSelector
 } = require('../selectors/currentmap');
-const {userParamsSelector} = require('../selectors/security');
+const {userParamsSelector, userRoleSelector} = require('../selectors/security');
+const {
+    LOGIN_SUCCESS,
+    LOGOUT
+} = require('../actions/security');
 const {deleteResourceById, createAssociatedResource, deleteAssociatedResource, updateAssociatedResource} = require('../utils/ObservableUtils');
 
 const {getIdFromUri} = require('../utils/MapUtils');
 
 const {getErrorMessage} = require('../utils/LocaleUtils');
 const { EMPTY_RESOURCE_VALUE } = require('../utils/MapInfoUtils');
-const {createResource, updateResource} = require("../api/persistence");
+const {createResource, updateResource, getResource, searchListByAttributes, updateResourceAttribute} = require("../api/persistence");
+const {wrapStartStop} = require('../observables/epics');
 
 
 const calculateNewParams = state => {
@@ -210,17 +219,164 @@ const reloadMapsEpic = (action$, { getState = () => { } }) =>
             calculateNewParams(getState())
         )));
 
-const getMapsResourcesByCategoryEpic = (action$) =>
+const getMapsResourcesByCategoryEpic = (action$, store) =>
     action$.ofType(MAPS_GET_MAP_RESOURCES_BY_CATEGORY)
         .switchMap((action) => {
-            let {map, searchText, opts } = action;
-            return Rx.Observable.fromPromise(GeoStoreApi.getResourcesByCategory(map, searchText, opts)
-                .then(data => data))
-                .switchMap((response) => Rx.Observable.of(
-                    mapsLoaded(response, opts.params, searchText)
-                ))
-                .catch((e) => loadError(e));
+            const state = store.getState();
+            const searchFilter = searchFilterSelector(state) || {};
+            const userRole = userRoleSelector(state);
+            let {map, searchText, opts = {}} = action;
+            const searchFilterContexts = searchFilter.contexts && searchFilter.contexts.length > 0;
+            const actualSearchText = searchFilterContexts && searchText === '*' ? '' : searchText;
+            const makeFilter = () => ({
+                AND: {
+                    FIELD: [{
+                        field: ['NAME'],
+                        operator: ['ILIKE'],
+                        value: ['%' + actualSearchText + '%']
+                    }],
+                    OR: searchFilterContexts && {
+                        ATTRIBUTE: (searchFilter.contexts || []).map(context => ({
+                            name: ['context'],
+                            operator: ['EQUAL_TO'],
+                            type: ['STRING'],
+                            value: [context.id]
+                        }))
+                    }
+                }
+            });
+            const getContextNames = ({results, ...other}) => {
+                const maps = isArray(results) ? results : (results === "" ? [] : [results]);
+                return maps.length === 0 ?
+                    Rx.Observable.of({results, ...other}) :
+                    Rx.Observable.forkJoin(
+                        maps.map(({context}) => context ?
+                            getResource(context, {includeAttributes: false, withData: false, withPermissions: false})
+                                .switchMap(resource => Rx.Observable.of(resource.name))
+                                .catch(() => Rx.Observable.of(null)) :
+                            Rx.Observable.of(null))
+                    ).map(contextNames => ({
+                        results: zip(maps, contextNames).map(
+                            ([curMap, contextName]) => ({...curMap, contextName})),
+                        ...other
+                    }));
+            };
+
+            return (searchFilterContexts ? searchListByAttributes(makeFilter(), {
+                ...opts,
+                params: {
+                    ...(opts.params || {}),
+                    includeAttributes: true
+                }
+            })
+                .switchMap(({results, totalCount}) => {
+                    const maps = {
+                        results: results.map(result => ({
+                            ...omit(result, 'attributes', 'permissions'),
+                            ...pick(result.attributes, 'thumbnail', 'context'),
+                            canCopy: userRole === 'ADMIN',
+                            canEdit: userRole === 'ADMIN',
+                            canDelete: userRole === 'ADMIN'
+                        })),
+                        totalCount,
+                        success: true
+                    };
+                    return getContextNames(maps).switchMap(mapsWithContext =>
+                        Rx.Observable.of(mapsLoaded(mapsWithContext, opts.params, actualSearchText)));
+                }) :
+                Rx.Observable.fromPromise(GeoStoreApi.getResourcesByCategory(map, actualSearchText, {
+                    ...opts,
+                    params: {
+                        ...(opts.params || {}),
+                        includeAttributes: true
+                    }
+                })
+                    .then(data => data))
+                    .switchMap((response) => getContextNames(response).switchMap(responseWithContext => Rx.Observable.of(
+                        mapsLoaded(responseWithContext, opts.params, searchText)
+                    )))
+            )
+                .let(wrapStartStop(
+                    loading(true, 'loadingMaps'),
+                    loading(false, 'loadingMaps'),
+                    e => Rx.Observable.of(loadError(e))
+                ));
         });
+
+const loadMapsOnSearchFilterChange = (action$, store) =>
+    action$.ofType(SEARCH_FILTER_CHANGED, SEARCH_FILTER_CLEAR_ALL)
+        .filter(({filter}) => !filter || filter === 'contexts')
+        .switchMap(({type}) => {
+            const state = store.getState();
+            const searchFilter = searchFilterSelector(state);
+            const searchText = searchTextSelector(state);
+            const {limit = 12, ...params} = searchParamsSelector(state) || {};
+
+            return Rx.Observable.of(
+                ...(type === SEARCH_FILTER_CLEAR_ALL ? [setSearchFilter({})] : []),
+                ...(type === SEARCH_FILTER_CLEAR_ALL && (!searchFilter || (searchFilter.contexts || []).length === 0) ?
+                    [] :
+                    [loadMaps(null, searchText, {start: 0, limit, ...omit(params, 'start')})])
+            );
+        });
+
+const hideTabsOnSearchFilterChange = (action$) =>
+    action$.ofType(SEARCH_FILTER_CHANGED, SEARCH_FILTER_CLEAR_ALL)
+        .filter(({filter}) => !filter || filter === 'contexts')
+        .switchMap(({filterData}) => Rx.Observable.of(
+            setTabsHidden(
+                (filterData || []).length === 0 ? {
+                    geostories: false,
+                    dashboards: false
+                } : {
+                    geostories: true,
+                    dashboards: true
+                }
+            )
+        ));
+
+const mapsLoadContextsEpic = (action$) =>
+    action$.ofType(LOAD_CONTEXTS)
+        .distinctUntilChanged((prev, cur) =>
+            (prev.searchText || '*') === (cur.searchText || '*') &&
+            isEqual(prev.options, cur.options) &&
+            !cur.force
+        )
+        .switchMap(({searchText, options = {}, delayLoad = 0}) => {
+            const curSearchText = searchText || '*';
+            return Rx.Observable.of(null).delay(delayLoad).switchMap(() =>
+                Rx.Observable.defer(() => GeoStoreApi.getResourcesByCategory('CONTEXT', curSearchText, options))
+                    .switchMap(response => {
+                        return Rx.Observable.of(setContexts({
+                            results: (isArray(response.results) ? response.results : [response.results]).filter(r => !!r),
+                            totalCount: response.totalCount,
+                            searchText: curSearchText,
+                            start: get(options, 'params.start'),
+                            limit: get(options, 'params.limit')
+                        }));
+                    })
+                    .let(wrapStartStop(
+                        loading(true, 'loadingContexts'),
+                        loading(false, 'loadingContexts'),
+                        () => Rx.Observable.of(basicError({
+                            message: 'maps.feedback.errorLoadingContexts'
+                        }))
+                    ))
+            );
+        });
+
+const mapsSetupFilterOnLogin = (action$, store) =>
+    action$.ofType(LOGIN_SUCCESS, LOGOUT)
+        .switchMap(() => {
+            const state = store.getState();
+            const contexts = contextsSelector(state) || {};
+            return Rx.Observable.of(setControlProperty('advancedsearchpanel', 'enabled', false), loadContexts(contexts.searchText,
+                {params: {start: get(contexts, 'start', 0), limit: get(contexts, 'limit', 12)}},
+                0,
+                true
+            ));
+        });
+
 const deleteMapAndAssociatedResourcesEpic = (action$, store) =>
     action$.ofType(DELETE_MAP)
         .switchMap((action) => {
@@ -328,33 +484,56 @@ const storeDetailsInfoEpic = (action$, store) =>
  */
 const mapSaveMapResourceEpic = (action$, store) =>
     action$.ofType(SAVE_MAP_RESOURCE)
-        .exhaustMap(({resource}) => (!resource.id ? createResource(resource) : updateResource(resource))
-            .switchMap((rid) => Rx.Observable.from([
-                ...(resource.id ? [loadMapInfo(rid)] : []),
-                resource.id ? toggleControl('mapSave') : toggleControl('mapSaveAs'),
-                mapSaved(),
-                ...(!resource.id ? [
-                    mapCreated(rid, assign({id: rid, canDelete: true, canEdit: true, canCopy: true}, resource.metadata), resource.data),
-                    push(`/viewer/${mapTypeSelector(store.getState())}/${rid}`)]
-                    : [])
-            ])
-                .merge(
-                    Rx.Observable.of(basicSuccess({
-                        title: 'map.savedMapTitle',
-                        message: 'map.savedMapMessage',
+        .exhaustMap(({resource}) => {
+            // filter out invalid attributes
+            const validAttributesNames = keys(resource.attributes)
+                .filter(attrName => resource.attributes[attrName] !== undefined && resource.attributes[attrName] !== null);
+            return Rx.Observable.forkJoin(
+                (() => {
+                    // get a context information using the id in the attribute
+                    const contextId = get(resource, 'attributes.context');
+                    return contextId ? getResource(contextId, {withData: false}) : Rx.Observable.of(null);
+                })(),
+                !resource.id ? createResource(resource) : updateResource(resource))
+                .switchMap(([contextResource, rid]) => (validAttributesNames.length > 0 ?
+                    // update valid attributes
+                    Rx.Observable.forkJoin(validAttributesNames.map(attrName => updateResourceAttribute({
+                        id: rid,
+                        name: attrName,
+                        value: resource.attributes[attrName]
+                    }))) : Rx.Observable.of([])).switchMap(() =>
+                    Rx.Observable.from([
+                        ...(resource.id ? [loadMapInfo(rid)] : []),
+                        ...(resource.id ? [configureMap(resource.data, rid)] : []),
+                        resource.id ? toggleControl('mapSave') : toggleControl('mapSaveAs'),
+                        mapSaved(),
+                        ...(!resource.id ? [
+                            mapCreated(rid, assign({id: rid, canDelete: true, canEdit: true, canCopy: true}, resource.metadata), resource.data),
+                            // if we got a valid context information redirect to a context, instead of the default viewer
+                            push(contextResource ?
+                                `/context/${contextResource.name}/${rid}` :
+                                `/viewer/${mapTypeSelector(store.getState())}/${rid}`)]
+                            : [])
+                    ])
+                        .merge(
+                            Rx.Observable.of(basicSuccess({
+                                title: 'map.savedMapTitle',
+                                message: 'map.savedMapMessage',
+                                autoDismiss: 6,
+                                position: 'tc'
+                            }))
+                        )
+                ))
+                .catch((e) => {
+                    const { status, statusText, data, message, ...other} = e;
+                    return Rx.Observable.of(mapSaveError(status ? { status, statusText, data } : message || other), basicError({
+                        ...getErrorMessage(e, 'geostore', 'mapsError'),
                         autoDismiss: 6,
                         position: 'tc'
-                    }))
-                ))
-            .catch((e) => {
-                const { status, statusText, data, message, ...other} = e;
-                return Rx.Observable.of(mapSaveError(status ? { status, statusText, data } : message || other), basicError({
-                    ...getErrorMessage(e, 'geostore', 'mapsError'),
-                    autoDismiss: 6,
-                    position: 'tc'
-                }));
-            })
-            .startWith(!resource.id ? savingMap(resource.metadata) : mapUpdating(resource.metadata)));
+                    }));
+                })
+                .startWith(!resource.id ? savingMap(resource.metadata) : mapUpdating(resource.metadata));
+        });
 
 module.exports = {
     loadMapsEpic,
@@ -364,6 +543,10 @@ module.exports = {
     fetchDataForDetailsPanel,
     deleteMapAndAssociatedResourcesEpic,
     getMapsResourcesByCategoryEpic,
+    loadMapsOnSearchFilterChange,
+    hideTabsOnSearchFilterChange,
+    mapsLoadContextsEpic,
+    mapsSetupFilterOnLogin,
     setDetailsChangedEpic,
     fetchDetailsFromResourceEpic,
     saveResourceDetailsEpic,

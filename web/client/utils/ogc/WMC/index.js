@@ -1,5 +1,5 @@
 /**
- * Copyright 2019, GeoSolutions Sas.
+ * Copyright 2020, GeoSolutions Sas.
  * All rights reserved.
  *
  * This source code is licensed under the BSD-style license found in the
@@ -7,8 +7,22 @@
  */
 
 import { Parser } from 'xml2js';
-import { keys, values, omit, get, head, isString, flatten, mapValues } from 'lodash';
+import { keys, values, get, head, mapValues, uniqWith, findIndex, pick, has, toPairs } from 'lodash';
 import uuidv1 from 'uuid/v1';
+
+import {
+    extractTag,
+    extractTags,
+    extractAttributeValue,
+    pickAttributeValues,
+    writeXML,
+    removeEmptyNodes,
+    objectToAttributes,
+    assignNamespace
+} from '../../XMLUtils';
+import {getLayerUrl} from '../../LayersUtils';
+
+import { reprojectBbox } from '../../CoordinatesUtils';
 
 // object for default values
 const defaultValues = {
@@ -22,6 +36,28 @@ const defaultValues = {
     layerType: 'wms'
 };
 
+const namespaces = {
+    root: {
+        ns: 'http://www.opengis.net/context'
+    },
+    xsi: {
+        ns: 'http://www.w3.org/2001/XMLSchema-instance',
+        prefix: 'xsi'
+    },
+    xlink: {
+        ns: 'http://www.w3.org/1999/xlink',
+        prefix: 'xlink'
+    },
+    ol: {
+        ns: 'http://openlayers.org/context',
+        prefix: 'ol'
+    },
+    ms: {
+        ns: 'http://geo-solutions.it/mapstore/context',
+        prefix: 'ms'
+    }
+};
+
 const emptyBackground = {
     group: 'background',
     id: 'empty_background',
@@ -30,61 +66,6 @@ const emptyBackground = {
     type: 'empty',
     visibility: true
 };
-
-/**
- * Extracts params and character content of a all tags with a specified from a specific namespace
- * @param {string} xmlNameSpace xml namespace uri
- * @param {object} xmlObj xml node represented by an object
- * @param {string} tagName local tag name to extract
- */
-const extractTags = (xmlNameSpace, xmlObj = {}, tagName) => {
-    const tagsObj = get(xmlObj, 'childObject', xmlObj);
-    return keys(tagsObj).filter(tag => tag !== '$' && tag !== '_' && tag !== '$ns').reduce((result, key) => [
-        ...result,
-        ...flatten(tagsObj[key].map(tag => {
-            const ns = get(tag, '$ns', {});
-            return ns.uri !== xmlNameSpace || ns.local !== tagName ?
-                [] : [{
-                    params: get(tag, '$', {}),
-                    charContent: get(tag, '_'),
-                    childObject: omit(tag, '$', '_', '$ns')
-                }];
-        }))
-    ], []);
-};
-
-/**
- * A version of extractTags that returns just one element instead of an array
- * @param {string} xmlNameSpace xml namespace uri
- * @param {object} xmlObj xml node represented by an object
- * @param {string} tagName local tag name to extract
- */
-const extractTag = (xmlNameSpace, xmlObj, tagName) => head(extractTags(xmlNameSpace, xmlObj, tagName));
-
-/**
- * Extract the value of an attribute from a tag
- * @param {string} xmlNameSpace namespace uri of an attribute
- * @param {object} tagObj xml node represented by an object
- * @param {string} attrName attribute name
- */
-const extractAttributeValue = (xmlNameSpace, tagObj, attrName) => values(get(tagObj, 'params', {})).reduce(
-    (result, attribute) => result || attribute.local === attrName && attribute.uri === xmlNameSpace && attribute.value, undefined);
-
-/**
- * Make an object out of attribute values: {[attrName]: attrValue}
- * @param {object} tagObj xml node represented by an object
- * @param {...(string|object)} attrNames an array of attribute names to extract. If an attribute name is a string then it is also used as
- * a prop name in the resulting object and it is assumed that the attribute does not belong to any namespace, otherwise attribute names
- * can be represented with an object {local, uri, paramName}, where local is an attribute name, uri is a namespace and paramName is a prop
- * name in the resulting object
- */
-const pickAttributeValues = (tagObj, ...attrNames) => values(get(tagObj, 'params', {})).reduce((finalObj, param) => {
-    const attrName = attrNames.reduce((result, curAttrName) => {
-        const {local, uri, paramName} = isString(curAttrName) ? {local: curAttrName, paramName: curAttrName, uri: ''} : curAttrName;
-        return result || local === param.local && uri === param.uri && paramName;
-    }, null);
-    return attrName ? {...finalObj, [attrName]: param.value} : finalObj;
-}, {});
 
 const serviceToLayerType = (service) => {
     switch (service) {
@@ -104,9 +85,10 @@ const parseBoolean = (string = '') => {
 const removeEmptyProps = (obj) => keys(obj).filter(key => obj[key] !== undefined).reduce((result, key) => ({...result, [key]: obj[key]}), {});
 
 const isValidMaxExtentObject = (obj) => !!(obj && obj.minx && obj.miny && obj.maxx && obj.maxy);
+const isValidBboxObject = (obj) => !!(obj && isValidMaxExtentObject(obj.bounds) && obj.crs);
 
 /**
- * Generates MapStore map configuration object from a WMC string
+ * Generates MapStore map configuration object from a WMC string.
  * List of WMC features to consider:
  * * FormatList and StyleList are lists of all possible formats and styles. Also styles can be in SLD(Style Layer Descriptor)
  * which is represented in a wmc file by a link to an SLD document.
@@ -116,7 +98,8 @@ const isValidMaxExtentObject = (obj) => !!(obj && obj.minx && obj.miny && obj.ma
  * * Layers can also have DataURL and MetadataURL that point to data or descriptive metadata respectively, corresponding to the layer.
  * Both are optional
  * @param {string} wmcString wmc string
- * @param {bool} generateLayersGroup when true put all layers in a group with context's title
+ * @param {bool} generateLayersGroup when true put all layers in a group with context's title, unless wmc context contains GroupList mapstore
+ * extension, in which case groups defined in GroupList are used
  */
 export const toMapConfig = (wmcString, generateLayersGroup = false) => {
     const parser = new Parser({
@@ -130,15 +113,39 @@ export const toMapConfig = (wmcString, generateLayersGroup = false) => {
                 throw new Error('General XML parsing error');
             }
 
-            const rootNamespace = 'http://www.opengis.net/context'; // default namespace of WMC context
-            const openlayersNamespace = 'http://openlayers.org/context'; // namespace of openlayers
-            const xlinkNamespace = 'http://www.w3.org/1999/xlink'; // standard namespace for hyperlinks
-
             // extractor functions for different namespaces
-            const rootTagExtractor = extractTag.bind(null, rootNamespace);
-            const rootTagsExtractor = extractTags.bind(null, rootNamespace);
-            const olTagExtractor = extractTag.bind(null, openlayersNamespace);
+            const rootTagExtractor = extractTag.bind(null, namespaces.root.ns);
+            const rootTagsExtractor = extractTags.bind(null, namespaces.root.ns);
+            const olTagExtractor = extractTag.bind(null, namespaces.ol.ns);
+            const msTagExtractor = extractTag.bind(null, namespaces.ms.ns);
+            const msTagsExtractor = extractTags.bind(null, namespaces.ms.ns);
             const attrExtractor = extractAttributeValue.bind(null, '');
+            const xlinkExtractor = extractAttributeValue.bind(null, namespaces.xlink.ns);
+
+            const parseAttribute = attribute => {
+                const {name, type} = pickAttributeValues(attribute, 'name', 'type');
+                let value;
+
+                switch (type) {
+                case 'number':
+                    value = parseFloat(attribute.charContent);
+                    break;
+                case 'object':
+                    value = JSON.parse(attribute.charContent);
+                    break;
+                case 'boolean':
+                    value = parseBoolean(attribute.charContent);
+                    break;
+                default:
+                    value = attribute.charContent;
+                }
+
+                return {
+                    name,
+                    type,
+                    value
+                };
+            };
 
             const viewContext = rootTagExtractor({root: [result]}, 'ViewContext'); // the root element
             const general = rootTagExtractor(viewContext, 'General'); // General element
@@ -155,18 +162,28 @@ export const toMapConfig = (wmcString, generateLayersGroup = false) => {
             const globalExtensions = rootTagExtractor(general, 'Extension');
 
             const maxExtentExtension = olTagExtractor(globalExtensions, 'maxExtent');
-            const bbox = rootTagExtractor(general, 'BoundingBox');
+            const bboxTag = rootTagExtractor(general, 'BoundingBox');
 
             // if we have maxExtent in Extension then use that otherwise use bbox information
             const maxExtentObj = mapValues(
                 maxExtentExtension && pickAttributeValues(maxExtentExtension, 'minx', 'miny', 'maxx', 'maxy') ||
-                pickAttributeValues(bbox, 'minx', 'miny', 'maxx', 'maxy'),
+                pickAttributeValues(bboxTag, 'minx', 'miny', 'maxx', 'maxy'),
                 parseFloat
             );
             const maxExtent = isValidMaxExtentObject(maxExtentObj) &&
                 [maxExtentObj.minx, maxExtentObj.miny, maxExtentObj.maxx, maxExtentObj.maxy] ||
                 defaultValues.maxExtent;
-            const projection = attrExtractor(bbox, 'SRS') || defaultValues.projection; // from bbox or default
+            const projection = attrExtractor(bboxTag, 'SRS') || defaultValues.projection; // from bbox or default
+
+            // extract bbox
+            const bboxObj = {
+                bounds: mapValues(
+                    pickAttributeValues(bboxTag, 'minx', 'miny', 'maxx', 'maxy'),
+                    parseFloat
+                ),
+                crs: attrExtractor(bboxTag, 'SRS')
+            };
+            const bbox = isValidBboxObject(bboxObj) ? bboxObj : undefined;
 
             const layerGroup = generateLayersGroup ? uuidv1() : undefined;
 
@@ -175,8 +192,9 @@ export const toMapConfig = (wmcString, generateLayersGroup = false) => {
                 const server = rootTagExtractor(layer, 'Server');
                 const styleTag = head(rootTagsExtractor(rootTagExtractor(layer, 'StyleList'), 'Style')
                     .filter(style => parseBoolean(attrExtractor(style, 'current'))));
-                const transparentValue = get(olTagExtractor(layerExtensions, 'transparent'), 'charContent');
 
+                const transparentValue = get(olTagExtractor(layerExtensions, 'transparent'), 'charContent');
+                const opacityValue = get(olTagExtractor(layerExtensions, 'opacity'), 'charContent');
                 const olParameters = {
                     maxExtent: mapValues(
                         pickAttributeValues(olTagExtractor(layerExtensions, 'maxExtent'), 'minx', 'maxx', 'miny', 'maxy'),
@@ -184,16 +202,50 @@ export const toMapConfig = (wmcString, generateLayersGroup = false) => {
                     tileSize: mapValues(pickAttributeValues(olTagExtractor(layerExtensions, 'tileSize'), 'width', 'height'), parseInt),
                     transparent: transparentValue && parseBoolean(transparentValue),
                     isBaseLayer: parseBoolean(get(olTagExtractor(layerExtensions, 'isBaseLayer'), 'charContent')),
-                    singleTile: parseBoolean(get(olTagExtractor(layerExtensions, 'singleTile'), 'charContent'))
+                    singleTile: parseBoolean(get(olTagExtractor(layerExtensions, 'singleTile'), 'charContent')),
+                    opacity: opacityValue && parseFloat(opacityValue)
                     // other additional openlayers parameters go here
                 };
+
+                const searchTag = msTagExtractor(layerExtensions, 'search');
+                const dimensions = msTagsExtractor(msTagExtractor(layerExtensions, 'DimensionList'), 'Dimension');
+                const filterJSON = get(msTagExtractor(layerExtensions, 'filter'), 'charContent');
+                const msParameters = {
+                    group: get(msTagExtractor(layerExtensions, 'group'), 'charContent'),
+                    search: searchTag && {
+                        url: xlinkExtractor(searchTag, 'href'),
+                        type: attrExtractor(searchTag, 'type')
+                    },
+                    dimensions: dimensions.map(dim => ({
+                        name: attrExtractor(dim, 'name'),
+                        source: {
+                            type: attrExtractor(dim, 'type'),
+                            url: xlinkExtractor(dim, 'href')
+                        }
+                    })),
+                    filter: filterJSON && (() => {
+                        try {
+                            return JSON.parse(filterJSON);
+                        } catch (e) {
+                            return null;
+                        }
+                    })() || undefined
+                };
+
+                const rootDimensions = rootTagsExtractor(rootTagExtractor(layer, 'DimensionList'), 'Dimension').map(dim => ({
+                    name: attrExtractor(dim, 'name'),
+                    units: attrExtractor(dim, 'units'),
+                    unitSymbol: attrExtractor(dim, 'unitSymbol'),
+                    'default': attrExtractor(dim, 'default'),
+                    values: get(dim, 'charContent', '').split(',')
+                }));
 
                 // constructed ms layer object
                 const msLayerBase = {
                     id: uuidv1(),
                     visibility: !parseBoolean(attrExtractor(layer, 'hidden')),
                     type: serviceToLayerType(attrExtractor(server, 'service')),
-                    url: extractAttributeValue(xlinkNamespace, rootTagExtractor(server, 'OnlineResource'), 'href'),
+                    url: xlinkExtractor(rootTagExtractor(server, 'OnlineResource'), 'href'),
                     name: get(rootTagExtractor(layer, 'Name'), 'charContent'),
                     title: get(rootTagExtractor(layer, 'Title'), 'charContent'),
                     format: get(head(rootTagsExtractor(rootTagExtractor(layer, 'FormatList'), 'Format')
@@ -205,7 +257,11 @@ export const toMapConfig = (wmcString, generateLayersGroup = false) => {
                         bounds: olParameters.maxExtent,
                         crs: projection
                     } : undefined,
-                    group: olParameters.isBaseLayer ? 'background' : layerGroup
+                    group: msParameters.group || (olParameters.isBaseLayer ? 'background' : layerGroup),
+                    opacity: olParameters.opacity,
+                    search: msParameters.search,
+                    layerFilter: msParameters.filter,
+                    dimensions: uniqWith([...msParameters.dimensions, ...rootDimensions], ({name: name1}, {name: name2}) => name1 === name2)
                 };
 
                 return {...removeEmptyProps(msLayerBase), params: removeEmptyProps(msLayerBase.params)};
@@ -217,12 +273,19 @@ export const toMapConfig = (wmcString, generateLayersGroup = false) => {
                 ...msLayers.filter(layer => layer.group !== 'background')
             ];
 
-            // if there are no background layers, add an empty background
-            const layers = baseLayers.filter(layer => layer.group === 'background').length === 0 ?
+            // if there are no visible background layers, add an empty background
+            const layers = baseLayers.filter(layer => layer.group === 'background' && layer.visibility).length === 0 ?
                 [emptyBackground, ...baseLayers] :
                 baseLayers;
 
-            const groups = [...(layers.filter(layer => !layer.group || layer.group === 'Default').length > 0 ? [{
+            const msGroupsTag = msTagExtractor(globalExtensions, 'GroupList');
+            const msGroups = msTagsExtractor(msGroupsTag, 'Group').map(group => ({
+                id: attrExtractor(group, 'id'),
+                title: attrExtractor(group, 'title'),
+                expanded: parseBoolean(attrExtractor(group, 'expanded'))
+            }));
+
+            const groups = msGroupsTag && msGroups || [...(layers.filter(layer => !layer.group || layer.group === 'Default').length > 0 ? [{
                 id: 'Default',
                 title: 'Default',
                 expanded: true
@@ -231,14 +294,39 @@ export const toMapConfig = (wmcString, generateLayersGroup = false) => {
                 title: viewContextTitle || layerGroup
             }] : [])];
 
+            const msCenter = msTagExtractor(globalExtensions, 'center');
+            const center = {
+                ...mapValues(pickAttributeValues(msCenter, 'x', 'y'), parseFloat),
+                crs: attrExtractor(msCenter, 'crs')
+            };
+            const zoom = parseFloat(get(msTagExtractor(globalExtensions, 'zoom'), 'charContent'));
+
+            const catalogServices = msTagExtractor(globalExtensions, 'CatalogServices');
+            const selectedService = attrExtractor(catalogServices, 'selectedService');
+            const services = msTagsExtractor(catalogServices, 'Service')
+                .map(catalogService => [attrExtractor(catalogService, 'serviceName'), msTagsExtractor(catalogService, 'Attribute')])
+                .reduce((resultObj, [serviceName, attributes]) => ({
+                    ...resultObj,
+                    [serviceName]: attributes.map(parseAttribute).reduce((resultServiceObj, {name, value}) => ({
+                        ...resultServiceObj,
+                        [name]: value
+                    }), {})
+                }), {});
+
             const msMapConfig = {
-                catalogServices: {},
+                catalogServices: catalogServices && {
+                    selectedService,
+                    services
+                },
                 map: {
                     maxExtent,
+                    bbox: zoom ? undefined : bbox,
                     projection,
                     backgrounds: [],
                     groups,
-                    layers
+                    layers,
+                    center: has(center, 'x', 'y', 'crs') ? center : undefined,
+                    zoom
                 },
                 version: 2
             };
@@ -246,4 +334,296 @@ export const toMapConfig = (wmcString, generateLayersGroup = false) => {
             resolve(msMapConfig);
         });
     });
+};
+
+const booleanValueToAttribute = value => value ? '1' : '0';
+
+const layerTypeToService = {
+    'wms': 'OGC:WMS'
+};
+
+/**
+ * Makes a WMC string from mapstore map config
+ * Note: the function expects each layer's capabilities in capabilities prop, i.e. each layer should look like this:
+ * ```
+ * {
+ *   id: 'layer',
+ *   name: 'layername',
+ *   capabilities: {capabilities object},
+ *   ... // other properties
+ * }
+ * ```
+ * @param {object} config mapstore map config
+ * @param {object} params context parameters
+ * @param {number} [tabSize=2] tabSize to pass to writeXML
+ * @param {number} [newline='\n'] newline to pass to writeXML
+ */
+export const toWMC = (
+    {map, catalogServices},
+    {
+        title = 'MapStore Context',
+        abstract = 'This is a map exported from MapStore2.'
+    },
+    tabSize = 2,
+    newline = '\n'
+) => {
+    const makeSimpleXlink = href => objectToAttributes({
+        type: 'simple',
+        href
+    }, namespaces.xlink);
+
+    const makeOnlineResource = href => ({
+        name: 'OnlineResource',
+        attributes: makeSimpleXlink(href)
+    });
+
+    const {maxExtent, bbox, projection, layers, groups, center, zoom} = map;
+
+    const makeMaxExtentFromBbox = bboxObj => {
+        const reprojectedBbox = reprojectBbox(bboxObj.bounds, bboxObj.crs, projection);
+        return {
+            name: 'maxExtent',
+            attributes: objectToAttributes({
+                minx: reprojectedBbox[0],
+                miny: reprojectedBbox[1],
+                maxx: reprojectedBbox[2],
+                maxy: reprojectedBbox[3]
+            })
+        };
+    };
+
+    const olExtensionsGeneral = assignNamespace([{
+        name: 'maxExtent',
+        attributes: objectToAttributes({
+            minx: maxExtent[0],
+            miny: maxExtent[1],
+            maxx: maxExtent[2],
+            maxy: maxExtent[3]
+        })
+    }], namespaces.ol);
+    const msExtensionsGeneral = assignNamespace([groups.length > 0 ? {
+        name: 'GroupList',
+        children: groups.map(group => ({
+            name: 'Group',
+            xmlns: namespaces.ms,
+            attributes: objectToAttributes({
+                id: group.id,
+                title: group.title,
+                expanded: group.expanded
+            })
+        }))
+    } : null, catalogServices && {
+        name: 'CatalogServices',
+        attributes: catalogServices.selectedService && objectToAttributes({
+            selectedService: catalogServices.selectedService
+        }),
+        children: toPairs(catalogServices.services).map(([serviceName, service]) => ({
+            name: 'Service',
+            xmlns: namespaces.ms,
+            attributes: objectToAttributes({
+                serviceName
+            }),
+            children: keys(service).filter(key =>
+                service[key] !== undefined && service[key] !== null &&
+                (typeof service[key] === 'string' ||
+                typeof service[key] === 'boolean' ||
+                typeof service[key] === 'number' ||
+                typeof service[key] === 'bigint' ||
+                typeof service[key] === 'object')).map(key => ({
+                name: 'Attribute',
+                xmlns: namespaces.ms,
+                attributes: objectToAttributes({
+                    name: key,
+                    type: typeof service[key]
+                }),
+                textContent: typeof service[key] === 'object' ?
+                    JSON.stringify(service[key]) :
+                    service[key].toString()
+            }))
+        }))
+    }, center && {
+        name: 'center',
+        attributes: objectToAttributes(center)
+    }, zoom && {
+        name: 'zoom',
+        textContent: zoom.toString()
+    }], namespaces.ms);
+
+    const layerList = {
+        name: 'LayerList',
+        children: layers.filter(({type}) => type === 'wms').map(layer => {
+            const layerCaps = layer.capabilities || {};
+            const dimensionsSource = (layer.dimensions || []).filter(({source}) => !!source);
+            const dimensionsWMS = [
+                ...(layer.dimensions || []).filter(({source}) => !source),
+                ...get(layerCaps, 'dimension', []).filter(({name}) => findIndex(dimensionsSource, dim => dim.name === name) > -1)
+                    .map(({_default, name, units, unitSymbol, value = ''}) => ({
+                        name,
+                        units,
+                        unitSymbol,
+                        values: value.split(','),
+                        'default': _default
+                    }))
+            ];
+            const styles = get(layerCaps, 'style', []).map(({name, title: styleTitle, legendURL = []}) => ({
+                name,
+                title: styleTitle,
+                legendURL: legendURL[0] && pick(legendURL[0], 'width', 'height', 'format', 'onlineResource'),
+                current: name === layer.style
+            }));
+
+            const olExtensions = assignNamespace([
+                layer.bbox ? makeMaxExtentFromBbox(layer.bbox) : null, {
+                    name: 'singleTile',
+                    textContent: (layer.singleTile || false).toString()
+                }, {
+                    name: 'transparent',
+                    textContent: (layer.transparent === undefined ? true : layer.transparent).toString()
+                }, {
+                    name: 'isBaseLayer',
+                    textContent: (layer.group === 'background').toString()
+                }, {
+                    name: 'opacity',
+                    textContent: (layer.opacity === undefined ? 1 : layer.opacity).toString()
+                }
+            ], namespaces.ol);
+
+            const msExtensions = assignNamespace([{
+                name: 'group',
+                textContent: layer.group || 'Default'
+            }, layer.search && {
+                name: 'search',
+                attributes: [{
+                    name: 'type',
+                    value: layer.search.type
+                }, ...makeSimpleXlink(layer.search.url)]
+            }, layer.layerFilter && {
+                name: 'filter',
+                textContent: JSON.stringify(layer.layerFilter)
+            }, dimensionsSource.length > 0 && {
+                name: 'DimensionList',
+                children: dimensionsSource.map(({source: {type, url}, name}) => ({
+                    name: 'Dimension',
+                    xmlns: namespaces.ms,
+                    attributes: [...objectToAttributes({
+                        name,
+                        type
+                    }), ...makeSimpleXlink(url)]
+                }))
+            }], namespaces.ms);
+
+            return {
+                name: 'Layer',
+                attributes: objectToAttributes(mapValues({
+                    queryable: layer.queryable,
+                    hidden: !layer.visibility
+                }, booleanValueToAttribute)),
+                children: [{
+                    name: 'Name',
+                    textContent: layer.name
+                }, {
+                    name: 'Title',
+                    textContent: layer.title
+                }, {
+                    name: 'Server',
+                    attributes: objectToAttributes({
+                        service: layerTypeToService[layer.type],
+                        version: '1.3.0'
+                    }),
+                    children: [makeOnlineResource(getLayerUrl(layer))]
+                }, dimensionsWMS.length > 0 && {
+                    name: 'DimensionList',
+                    children: dimensionsWMS.map(dimension => {
+                        const {name, units, unitSymbol, values: valuesArray = []} = dimension;
+                        const defaultValue = dimension.default;
+
+                        return {
+                            name: 'Dimension',
+                            attributes: objectToAttributes({
+                                name,
+                                units,
+                                unitSymbol,
+                                'default': defaultValue,
+                                multipleValues: valuesArray.length > 1 && '1' || undefined
+                            }),
+                            textContent: valuesArray.toString()
+                        };
+                    })
+                }, layer.format && {
+                    name: 'FormatList',
+                    children: [{
+                        name: 'Format',
+                        attributes: [{
+                            name: 'current',
+                            value: '1'
+                        }],
+                        textContent: layer.format
+                    }]
+                }, styles.length > 0 && {
+                    name: 'StyleList',
+                    children: styles.map(({name, title: styleTitle, current, legendURL}) => {
+                        const href = get(legendURL, 'onlineResource.href');
+                        return {
+                            name: 'Style',
+                            attributes: current && objectToAttributes({current}) || [],
+                            children: [{
+                                name: 'Name',
+                                textContent: name
+                            }, {
+                                name: "Title",
+                                textContent: styleTitle
+                            }, legendURL && {
+                                name: "LegendURL",
+                                attributes: objectToAttributes({
+                                    ...pick(legendURL, 'width', 'height', 'format')
+                                }),
+                                children: href && [makeOnlineResource(href)]
+                            }]
+                        };
+                    })
+                }, {
+                    name: 'Extension',
+                    children: [...olExtensions, ...msExtensions]
+                }]
+            };
+        })
+    };
+
+    return writeXML(removeEmptyNodes({
+        name: 'ViewContext',
+        xmlns: namespaces.root,
+        attributes: [{
+            name: 'version',
+            value: '1.1.0'
+        }, {
+            name: 'schemaLocation',
+            value: 'http://www.opengis.net/context http://schemas.opengis.net/context/1.1.0/context.xsd',
+            xmlns: namespaces.xsi
+        }],
+        children: [{
+            name: 'General',
+            children: [{
+                name: 'Title',
+                textContent: title
+            }, {
+                name: 'Abstract',
+                textContent: abstract
+            }, {
+                name: 'BoundingBox',
+                attributes: objectToAttributes(isValidBboxObject(bbox) ? {
+                    ...bbox.bounds,
+                    SRS: bbox.crs
+                } : {
+                    minx: maxExtent[0],
+                    miny: maxExtent[1],
+                    maxx: maxExtent[2],
+                    maxy: maxExtent[3],
+                    SRS: projection
+                })
+            }, {
+                name: 'Extension',
+                children: [...olExtensionsGeneral, ...msExtensionsGeneral]
+            }]
+        }, layerList]
+    }), values(namespaces), tabSize, newline);
 };

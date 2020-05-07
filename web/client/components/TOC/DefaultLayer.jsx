@@ -58,7 +58,8 @@ class DefaultLayer extends React.Component {
         connectDropTarget: PropTypes.func,
         isDraggable: PropTypes.bool,
         isDragging: PropTypes.bool,
-        isOver: PropTypes.bool
+        isOver: PropTypes.bool,
+        language: PropTypes.string
     };
 
     static defaultProps = {
@@ -110,7 +111,7 @@ class DefaultLayer extends React.Component {
                     {this.props.activateLegendTool ?
                         <Row>
                             <Col xs={12}>
-                                <WMSLegend node={this.props.node} currentZoomLvl={this.props.currentZoomLvl} scales={this.props.scales} {...this.props.legendOptions} />
+                                <WMSLegend node={this.props.node} currentZoomLvl={this.props.currentZoomLvl} scales={this.props.scales} language={this.props.language} {...this.props.legendOptions} />
                             </Col>
                         </Row> : null}
                 </Grid>

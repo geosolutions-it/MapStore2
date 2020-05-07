@@ -13,7 +13,9 @@ module.exports = {
     GoogleLayer: require('./GoogleLayer'),
     MapQuest: require('./MapQuest'),
     OSMLayer: require('./OSMLayer'),
+    TMSLayer: require('./TMSLayer'),
     TileProviderLayer: require('./TileProviderLayer'),
+    WFSLayer: require('./WFSLayer').default,
     WMSLayer: require('./WMSLayer'),
     WMTSLayer: require('./WMTSLayer'),
     VectorLayer: require('./VectorLayer')

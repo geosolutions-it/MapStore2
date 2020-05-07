@@ -1,0 +1,123 @@
+
+.ms-geostory-navigation-btn(@color; @background; @border) {
+        color: @color;
+        background-color: @background;
+        border-color: @border;
+        &.active:focus,
+        &.active.focus,
+        &:focus,
+        &.focus,
+        &:active,
+        &.active,
+        &.active:hover {
+            color: @color;
+            background-color: @background;
+            border-color: @border;
+            outline: 1px auto @ms2-color-primary !important;
+            outline-color: inherit !important;
+        }
+    
+        &:active:hover {
+            color: @color;
+            background-color: @background;
+            border-color: @border;
+        }
+        &:hover {
+            color: @color;
+            background-color: @background;
+            border-color: @border;
+            outline: 2px auto @ms2-color-primary !important;
+            outline-color: inherit !important;
+        }
+}
+
+.ms-geostory-navigation {
+    height: @square-btn-size;
+    background-color: @ms-story-bg;
+    .btn-default {
+        .ms-geostory-navigation-btn(inherit; inherit; transparent);
+    }
+    .ms-geostory-navigation-bar {
+        position: relative;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        background-color: inherit;
+        .progress-bar {
+            background-color: @ms-story-bg-grey;
+            height: 4px;
+            width: 100%;
+            .progress-percent {
+                background-color: @ms2-color-primary;
+                height: 4px;
+                transition: width 0.3s;
+            }
+        }
+        .ms-geostory-navigation-tools {
+            align-items: center;
+            display: flex;
+            flex: 1;
+            padding: 0 4px;
+            background-color: inherit;
+            .ms-geostory-navigation-elements {
+                
+                flex: 1;
+                display: flex;
+                background-color: inherit;
+                .ms-geostory-navigation-navigable-items {
+                    flex: 1;
+                    min-height: @square-btn-medium-size;
+                    max-width: 50%;
+                    background-color: inherit;
+                }
+            }
+
+            .ms-geostory-navigation-metadata {
+                display: flex;
+                align-items: center;
+                margin-right: 0;
+                margin-left: auto;
+                max-width: 50%;
+                .ms-geostory-navigation-logo,
+                .ms-geostory-navigation-title {
+                    white-space: nowrap;
+                    margin-left: 10px;
+                    margin-right: 10px;
+                    align-items: center;
+                }
+                .ms-geostory-navigation-title {
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                }
+            }
+
+            @media all and (max-width: 600px) {
+                .ms-geostory-navigation-elements .ms-geostory-navigation-navigable-items {
+                    max-width: 100%;
+                }
+                .ms-geostory-navigation-metadata {
+                    display: none;
+                }
+            }
+        }
+    }
+    .ms-horizontal-menu {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        background-color: inherit;
+        .ms-menu-item {
+            margin: 0 6px;
+            .active {
+                background-color: @ms2-color-primary;
+                color: @ms2-color-background;
+            }
+        }
+    }
+}

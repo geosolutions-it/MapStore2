@@ -9,11 +9,9 @@ const PropTypes = require('prop-types');
 
 const React = require('react');
 // const Message = require('../I18N/Message');
-const Select = require('react-select');
+const Select = require('react-select').default;
 const Message = require('../../I18N/Message');
 const {findIndex} = require('lodash');
-
-require('react-select/dist/react-select.css');
 
 // const ConfirmModal = require('./modals/ConfirmModal');
 // const GroupManager = require('./GroupManager');

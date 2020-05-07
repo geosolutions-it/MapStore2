@@ -1,0 +1,187 @@
+
+.ms-popup-close-button {
+    text-decoration: none;
+    position: absolute;
+    top: 0;
+    right: 0;
+    transform: translate(50%, -50%);
+    background: @ms2-color-background;
+    padding: 0;
+    color: #078aa3;
+    font-size: 12px;
+    align-items: center;
+    justify-content: center;
+    display: flex;
+    font-weight: normal;
+    height: 24px;
+    width: 24px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-family: "mapstore2";
+    .shadow-soft();
+}
+
+.map-popup-ol {
+    margin-bottom: 15px;
+    text-align: left;
+
+    > .ol-popup-content-wrapper {
+        padding: 0;
+        background: @ms2-color-background;
+        color: @ms2-color-text;
+        .shadow-far;
+        border-radius: 0;
+
+        > .ol-popup-content {
+            overflow: auto;
+            position: relative;
+            display: flex;
+            background-color: @ms2-color-background;
+            margin: 0;
+        }
+    }
+
+    * {
+        user-select: text !important;
+    }
+}
+
+.map-popup-ol:after,
+.map-popup-ol:before {
+    border: solid transparent;
+    content: " ";
+    height: 0;
+    width: 0;
+    position: absolute;
+    pointer-events: none;
+    bottom: -11px;
+}
+
+.map-popup-ol:after {
+    border-top-color: @ms2-color-background;
+    border-width: 13px;
+    left: 50%;
+    margin-left: -13px;
+}
+
+.map-popup-ol:before {
+    border-top-color: @ms2-color-shade-lighter;
+    border-width: 13px;
+    left: 50%;
+    margin-left: -13px;
+}
+
+.ol-popup-closer {
+    .ms-popup-close-button();
+    &:before {
+        display: block;
+        .glyphicon-1-close-content();
+    }
+    &:hover {
+        opacity: 0.6;
+    }
+}
+
+
+.ms-leaflet-popup {
+    transition: none !important;
+    .leaflet-popup-content-wrapper {
+        overflow: hidden;
+        border-radius: 0;
+        .shadow-far;
+    }
+
+    .leaflet-popup-content {
+        overflow: auto;
+        position: relative; 
+        display: flex;
+        background-color: @ms2-color-background;
+        margin: 0;
+    }
+
+    a.leaflet-popup-close-button {
+        -webkit-tap-highlight-color: transparent;
+        .ms-popup-close-button();
+        color: transparent;
+        &:hover {
+            color: transparent;
+            opacity: 0.6;
+        }
+        &:before {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            display: block;
+            color: @ms2-color-primary;
+            .glyphicon-1-close-content();
+        }
+    }
+}
+
+.ms-map-popup {
+    display: flex;
+    overflow: visible;
+    font-size: @font-size-small;
+    .mapstore-identify-viewer {
+        display: flex;
+        flex-direction: column;
+        .ms-identify-swipe-header-title {
+            text-align: center;
+        }
+        .ms-properties-viewer,
+        pre,
+        .alert,
+        .alert h4 {
+            white-space: pre-wrap;
+            font-size: @font-size-small;
+            font-size: @font-size-small;
+        }
+        .alert,
+        .alert h4 {
+            margin: 0;
+        }
+        .alert {
+            max-width: 300px;
+        }
+        .panel {
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+            -webkit-box-shadow: none;
+            box-shadow: none;
+            width: 100%;
+            min-width: 200px;
+            min-height: 100px;
+            max-height: 300px;
+            max-width: 300px;
+            overflow: hidden;
+            margin: 0 auto;
+            border: none;
+            .panel-heading {
+                .panel-title {
+                    >span {
+                        display: flex;
+                        justify-content: space-between;
+                        align-items: center;
+                    }
+                }
+            }
+            .panel-body {
+                overflow: auto;
+                flex: 1;
+                & > div {
+                    overflow: visible;
+                    margin: auto;
+                }
+            }
+        }
+        .ms-template-viewer {
+            font-size: @font-size-small;
+        }
+    }
+
+    .loader-container {
+        min-width: 50px;
+        min-height: 50px;
+    }
+}

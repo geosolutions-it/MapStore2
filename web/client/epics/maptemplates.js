@@ -15,7 +15,6 @@ import { error as showError } from '../actions/notifications';
 import { isLoggedIn } from '../selectors/security';
 import { setTemplates, setMapTemplatesLoaded, setTemplateData, setTemplateLoading, CLEAR_MAP_TEMPLATES, OPEN_MAP_TEMPLATES_PANEL,
     MERGE_TEMPLATE, REPLACE_TEMPLATE } from '../actions/maptemplates';
-import { zoomToExtent } from '../actions/map';
 import { templatesSelector, mapTemplatesLoadedSelector } from '../selectors/maptemplates';
 import { templatesSelector as contextTemplatesSelector } from '../selectors/context';
 import { mapSelector } from '../selectors/map';
@@ -62,10 +61,13 @@ export const openMapTemplatesPanelEpic = (action$, store) => action$
             }
         });
 
-        const extractThumbnail = (resource) => {
+        const extractAttributes = (resource) => {
             const attribute = get(resource, 'Attributes.attribute', {});
             const attributes = isArray(attribute) ? attribute : [attribute];
-            return get(find(attributes, ({name}) => name === 'thumbnail'), 'value');
+            return attributes.reduce((result, attr) => ({
+                ...result,
+                [attr.name]: attr.value
+            }), {});
         };
 
         return Observable.of(setControlProperty('mapTemplates', 'enabled', true, true)).concat(!mapTemplatesLoaded ?
@@ -79,7 +81,7 @@ export const openMapTemplatesPanelEpic = (action$, store) => action$
                     const resources = isArray(resourceObj) ? resourceObj : [resourceObj];
                     const newTemplates = resources.map(resource => ({
                         ...pick(resource, 'id', 'name', 'description'),
-                        thumbnail: extractThumbnail(resource),
+                        ...extractAttributes(resource),
                         dataLoaded: false,
                         loading: false
                     }));
@@ -153,11 +155,10 @@ export const replaceTemplateEpic = (action$, store) => action$
                                 ...config.map,
 
                                 // if no zoom or center provided keep the current ones
-                                zoom: config.zoom || zoom,
-                                center: config.center || center
+                                zoom: config.map.zoom || zoom,
+                                center: config.map.center || center
                             }
-                        }), null),
-                        ...(config.zoom === undefined ? [zoomToExtent(config.map.maxExtent, config.map.projection)] : [])
+                        }), null, !config.map.zoom && (config.map.bbox || config.map.maxExtent))
                     ] : []))))
             .let(wrapStartStop(
                 setTemplateLoading(id, true),

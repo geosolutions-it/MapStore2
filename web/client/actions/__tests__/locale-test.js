@@ -36,6 +36,33 @@ describe('Test locale related actions', () => {
         });
     });
 
+    it('does load translation files from multiple folders, if at least one exists', (done) => {
+        loadLocale(['base/web/client/test-resources/a', 'base/web/client/test-resources/missing'], 'it-IT')((e) => {
+            try {
+                expect(e).toExist();
+                expect(e.type).toBe('CHANGE_LOCALE');
+                expect(e.messages).toExist();
+                expect(e.messages.a).toExist();
+                expect(e.messages.b).toNotExist();
+                done();
+            } catch (ex) {
+                done(ex);
+            }
+        });
+    });
+
+    it('errors out  if no translations path exist', (done) => {
+        loadLocale(['base/web/client/test-resources/missing1', 'base/web/client/test-resources/missing2'], 'it-IT')((e) => {
+            try {
+                expect(e).toExist();
+                expect(e.type).toBe('LOCALE_LOAD_ERROR');
+                done();
+            } catch (ex) {
+                done(ex);
+            }
+        });
+    });
+
     it('loads an existing it-IT translation file', (done) => {
         loadLocale('base/web/client/translations', 'it-IT')((e) => {
             try {

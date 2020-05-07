@@ -1,5 +1,5 @@
 /*
- * Copyright 2017, GeoSolutions Sas.
+ * Copyright 2020, GeoSolutions Sas.
  * All rights reserved.
  *
  * This source code is licensed under the BSD-style license found in the
@@ -12,7 +12,9 @@ const { compose, withProps, withHandlers } = require('recompose');
 const { createSelector } = require('reselect');
 const { getDashboardWidgets, dependenciesSelector, getDashboardWidgetsLayout, isWidgetSelectionActive, getEditingWidget, getWidgetsDependenciesGroups } = require('../selectors/widgets');
 const { editWidget, updateWidgetProperty, deleteWidget, changeLayout, exportCSV, exportImage, selectWidget } = require('../actions/widgets');
-const { showConnectionsSelector, dashboardResource, isDashboardLoading } = require('../selectors/dashboard');
+const { showConnectionsSelector, dashboardResource, isDashboardLoading, isBrowserMobile } = require('../selectors/dashboard');
+const { currentLocaleLanguageSelector } = require('../selectors/locale');
+const { isLocalizedLayerStylesEnabledSelector } = require('../selectors/localizedLayerStyles');
 const ContainerDimensions = require('react-container-dimensions').default;
 
 const PropTypes = require('prop-types');
@@ -28,17 +30,21 @@ const WidgetsView = compose(
             getWidgetsDependenciesGroups,
             showConnectionsSelector,
             isDashboardLoading,
-            (resource, widgets, layouts, dependencies, selectionActive, editingWidget, groups, showGroupColor, loading) => ({
+            isBrowserMobile,
+            currentLocaleLanguageSelector,
+            isLocalizedLayerStylesEnabledSelector,
+            (resource, widgets, layouts, dependencies, selectionActive, editingWidget, groups, showGroupColor, loading, isMobile, currentLocaleLanguage, isLocalizedLayerStylesEnabled) => ({
                 resource,
                 loading,
-                canEdit: (resource ? !!resource.canEdit : true),
+                canEdit: isMobile ? !isMobile : resource && !!resource.canEdit,
                 layouts,
                 dependencies,
                 selectionActive,
                 editingWidget,
                 widgets,
                 groups,
-                showGroupColor
+                showGroupColor,
+                language: isLocalizedLayerStylesEnabled ? currentLocaleLanguage : null
             })
         ), {
             editWidget,
@@ -75,12 +81,13 @@ const WidgetsView = compose(
 
 /**
  * Dashboard Plugin
+ * @static
  * @memberof plugins
  * @name Dashboard
- * @class
- * @prop {boolean} enabled if true, render the plugin
- * @prop {number} rowHeight Rows have a static height
- * @prop {object} cols Number of columns in this layout. default { lg: 6, md: 6, sm: 4, xs: 2, xxs: 1 }
+ * @class Dashboard
+ * @prop {boolean} cfg.enabled if true, render the plugin
+ * @prop {number} cfg.rowHeight Rows have a static height
+ * @prop {object} cfg.cols Number of columns in this layout. default { lg: 6, md: 6, sm: 4, xs: 2, xxs: 1 }
  * for more info about rowHeight and cols, see https://github.com/STRML/react-grid-layout#grid-layout-props
  */
 class DashboardPlugin extends React.Component {

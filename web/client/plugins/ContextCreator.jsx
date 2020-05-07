@@ -15,12 +15,12 @@ import {newContextSelector, resourceSelector, creationStepSelector, reloadConfir
     loadFlagsSelector, isValidContextNameSelector, contextNameCheckedSelector, pluginsSelector, editedPluginSelector, editedCfgSelector,
     validationStatusSelector, cfgErrorSelector, parsedTemplateSelector, fileDropStatusSelector, editedTemplateSelector,
     availablePluginsFilterTextSelector, availableTemplatesFilterTextSelector, enabledPluginsFilterTextSelector,
-    enabledTemplatesFilterTextSelector} from '../selectors/contextcreator';
+    enabledTemplatesFilterTextSelector, showBackToPageConfirmationSelector} from '../selectors/contextcreator';
 import {mapTypeSelector} from '../selectors/maptype';
 import {setCreationStep, changeAttribute, saveNewContext, saveTemplate, mapViewerReload, showMapViewerReloadConfirm, showDialog, setFilterText,
     setSelectedPlugins, setSelectedTemplates, setParsedTemplate, setFileDropStatus, editPlugin, editTemplate, deleteTemplate, updateEditedCfg,
-    changePluginsKey, changeTemplatesKey, enablePlugins, disablePlugins, enableUploadPlugin, uploadPlugin,
-    uploadPluginError} from '../actions/contextcreator';
+    changePluginsKey, changeTemplatesKey, enablePlugins, disablePlugins, enableUploadPlugin, uploadPlugin, uninstallPlugin,
+    addPluginToUpload, removePluginToUpload, showBackToPageConfirmation} from '../actions/contextcreator';
 import contextcreator from '../reducers/contextcreator';
 import * as epics from '../epics/contextcreator';
 import ContextCreator from '../components/contextcreator/ContextCreator';
@@ -58,7 +58,10 @@ export default createPlugin('ContextCreator', {
         contextNameChecked: contextNameCheckedSelector,
         uploadEnabled: state => state.contextcreator && state.contextcreator.uploadPluginEnabled,
         uploading: state => state.contextcreator && state.contextcreator.uploadingPlugin,
-        pluginsConfig: () => ConfigUtils.getConfigProp('plugins')
+        uploadResult: state => state.contextcreator && state.contextcreator.uploadResult,
+        pluginsToUpload: state => state.contextcreator?.pluginsToUpload,
+        pluginsConfig: () => ConfigUtils.getConfigProp('plugins'),
+        showBackToPageConfirmation: showBackToPageConfirmationSelector
     }), {
         onFilterAvailablePlugins: setFilterText.bind(null, 'availablePlugins'),
         onFilterEnabledPlugins: setFilterText.bind(null, 'enabledPlugins'),
@@ -84,8 +87,11 @@ export default createPlugin('ContextCreator', {
         onReloadConfirm: showMapViewerReloadConfirm,
         onEnableUploadPlugin: enableUploadPlugin,
         onUploadPlugin: uploadPlugin,
-        onUploadPluginError: uploadPluginError,
-        onShowDialog: showDialog
+        onAddUploadPlugin: addPluginToUpload,
+        onRemoveUploadPlugin: removePluginToUpload,
+        onShowDialog: showDialog,
+        onRemovePlugin: uninstallPlugin,
+        onShowBackToPageConfirmation: showBackToPageConfirmation
     })(ContextCreator),
     reducers: {
         contextcreator

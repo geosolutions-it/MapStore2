@@ -69,6 +69,7 @@ class Toolbar extends React.Component {
             closeText: '',
             confirmDeleteText: '',
             confirmDeleteMessage: '',
+            confirmDeleteConfirmText: '',
             confirmDeleteCancelText: '',
             createWidgetTooltip: '',
             addLayerTooltip: '',
@@ -115,6 +116,7 @@ class Toolbar extends React.Component {
         },
         options: {
             modalOptions: {},
+            metadataOptions: {},
             settingsOptions: {}
         },
         style: {
@@ -302,7 +304,7 @@ class Toolbar extends React.Component {
                             </Button>
                         </OverlayTrigger>
                         : null}
-                    {this.props.activateTool.activateMetedataTool && (status === 'LAYER') && this.props.selectedLayers[0].catalogURL && !this.props.settings.expanded && !this.props.wfsdownload.expanded ?
+                    {this.props.activateTool.activateMetedataTool && (status === 'LAYER') && !this.props.settings.expanded && !this.props.wfsdownload.expanded ?
                         <OverlayTrigger
                             key="layerMetadata"
                             placement="top"
@@ -324,6 +326,7 @@ class Toolbar extends React.Component {
                     onClose={this.closeDeleteDialog}
                     onConfirm={this.removeNodes}
                     titleText={this.props.selectedGroups && this.props.selectedGroups.length ? this.props.text.confirmDeleteLayerGroupText : this.props.text.confirmDeleteText}
+                    confirmText={this.props.text.confirmDeleteConfirmText}
                     cancelText={this.props.text.confirmDeleteCancelText}
                     body={this.props.selectedGroups && this.props.selectedGroups.length ? this.props.text.confirmDeleteLayerGroupMessage : this.props.text.confirmDeleteMessage} />
                 {layerMetadataModal}
@@ -380,7 +383,7 @@ class Toolbar extends React.Component {
 
     showMetadata = () => {
         if (!this.props.layerMetadata.expanded) {
-            this.props.onToolsActions.onGetMetadataRecord();
+            this.props.onToolsActions.onGetMetadataRecord(this.props.options.metadataOptions);
         } else {
             this.props.onToolsActions.onHideLayerMetadata();
         }

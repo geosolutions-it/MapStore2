@@ -14,7 +14,9 @@ const { mapSelector } = require('./map');
 const { isPluginInContext } = require('./context');
 const { currentLocaleSelector } = require('./locale');
 const MapInfoUtils = require('../utils/MapInfoUtils');
+const {isCesium} = require('./maptype');
 
+const {pluginsSelectorCreator} = require('./localConfig');
 /**
  * selects mapinfo state
  * @name mapinfo
@@ -22,6 +24,13 @@ const MapInfoUtils = require('../utils/MapInfoUtils');
  * @static
  */
 
+const isMapPopup =  createSelector(
+    (state) => pluginsSelectorCreator("desktop")(state) || {},
+    isCesium,
+    (plugins, cesium) => {
+        return !cesium && !!((Object.values(plugins).filter(({name}) => name === "Identify").pop() || {}).cfg || {}).showInMapPopup;
+    }
+);
 /**
   * Get mapinfo requests from state
   * @function
@@ -33,7 +42,8 @@ const mapInfoRequestsSelector = state => get(state, "mapInfo.requests") || [];
 const isMapInfoOpen = createSelector(
     mapInfoRequestsSelector,
     isPluginInContext('Identify'),
-    (mapInfoRequests, isIdentifyInContext) => !!mapInfoRequests && mapInfoRequests.length > 0 && isIdentifyInContext
+    isMapPopup,
+    (mapInfoRequests, isIdentifyInContext, showInMapPopup) => !showInMapPopup && !!mapInfoRequests && mapInfoRequests.length > 0 && isIdentifyInContext
 );
 
 /**
@@ -177,6 +187,8 @@ const clickedPointWithFeaturesSelector = createSelector(
 
 );
 
+const editFeatureQuerySelector = state => state.mapInfo?.editFeatureQuery;
+
 
 module.exports = {
     isMapInfoOpen,
@@ -198,5 +210,7 @@ module.exports = {
     isHighlightEnabledSelector,
     itemIdSelector,
     overrideParamsSelector,
-    filterNameListSelector
+    filterNameListSelector,
+    isMapPopup,
+    editFeatureQuerySelector
 };

@@ -89,7 +89,7 @@ describe("GeoStory Utils", () => {
     });
     it('test getClassNameFromProps class creator', () => {
         let classes = getClassNameFromProps({}); // defaults
-        expect(classes).toBe(" ms-bright ms-align-center ms-size-full");
+        expect(classes).toBe(" ms-align-center ms-size-full");
 
         classes = getClassNameFromProps({
             theme: "dark",
@@ -97,6 +97,15 @@ describe("GeoStory Utils", () => {
             size: "medium"
         }); // with custom params
         expect(classes).toBe(" ms-dark ms-align-left ms-size-medium");
+    });
+
+    it('should not apply theme value if object', () => {
+        const classes = getClassNameFromProps({
+            theme: { backgroundColor: '#000000' },
+            align: "left",
+            size: "medium"
+        }); // with custom params
+        expect(classes).toBe(" ms-align-left ms-size-medium");
     });
 
     it("test StoryTypes", () => {
@@ -191,7 +200,7 @@ describe("GeoStory Utils", () => {
             expect(content.align).toBe("center");
             expect(content.theme).toBe("bright");
             const background = data.contents[0].background;
-            expect(background.theme).toBe("bright");
+            expect(background.theme).toBe(undefined);
             expect(background.fit).toBe("cover");
             expect(background.size).toBe("full");
             expect(background.align).toBe("center");
@@ -236,7 +245,7 @@ describe("GeoStory Utils", () => {
             expect(background.type).toBe(undefined);
             expect(background.size).toBe("full");
             expect(background.fit).toBe("cover");
-            expect(background.theme).toBe("bright");
+            expect(background.theme).toBe(undefined);
             expect(background.align).toBe("center");
         });
         it("SectionTemplates.MEDIA", () => {
@@ -271,7 +280,7 @@ describe("GeoStory Utils", () => {
             expect(background.type).toBe(undefined);
             expect(background.size).toBe("full");
             expect(background.fit).toBe("cover");
-            expect(background.theme).toBe("bright");
+            expect(background.theme).toBe(undefined);
             expect(background.align).toBe("center");
         });
 
@@ -279,6 +288,13 @@ describe("GeoStory Utils", () => {
             const data = getDefaultSectionTemplate(ContentTypes.TEXT);
             expect(data.id).toExist();
             expect(data.type).toBe(ContentTypes.TEXT);
+        });
+        it("ContentTypes.MEDIA", () => {
+            const data = getDefaultSectionTemplate(ContentTypes.MEDIA);
+            expect(data.id).toBeTruthy();
+            expect(data.type).toBe(ContentTypes.MEDIA);
+            expect(data.size).toBe('large');
+            expect(data.align).toBe('center');
         });
     });
     it('test applyDefaults', () => {
@@ -288,8 +304,9 @@ describe("GeoStory Utils", () => {
     it('test createMapObject', () => {
         const merged = {
             zoomControl: true,
-            style: {width: "100%", height: "100%"},
+            mapInfoControl: false,
             mapOptions: {
+                scrollWheelZoom: false,
                 interactions: {
                     mouseWheelZoom: false,
                     mouseClick: false,

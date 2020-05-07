@@ -40,12 +40,15 @@ const Immersive = ({
     focusedContent,
     contentId,
     bubblingTextEditing = () => {},
-    textEditorActiveClass = ""
+    textEditorActiveClass = "",
+    expandableMedia = false,
+    storyTheme
 }) => {
     const hideContent = focusedContent && focusedContent.hideContent && (get(focusedContent, "target.id") === contentId);
     const visibility = hideContent ? 'hidden' : 'visible';
+    const expandableBackgroundClassName = expandableMedia && background && background.type === 'map' ? ' ms-expandable-background' : '';
     return (<section
-        className="ms-section ms-section-immersive"
+        className={`ms-section ms-section-immersive${expandableBackgroundClassName}`}
         id={id}
         ref={inViewRef}
     >
@@ -61,6 +64,7 @@ const Immersive = ({
             scrollContainerSelector="#ms-sections-container"
             add={add}
             editMedia={editMedia}
+            expandable={expandableMedia}
             path={path}
             update={updateBackground}
             updateCurrentPage={updateCurrentPage}
@@ -74,7 +78,8 @@ const Immersive = ({
             backgroundPlaceholder={{
                 background: `url(${pattern})`,
                 backgroundSize: '600px auto'
-            }}/>
+            }}
+            storyTheme={storyTheme}/>
         <SectionContents
             tools={{
                 [ContentTypes.COLUMN]: ['size', 'align', 'theme']
@@ -93,11 +98,13 @@ const Immersive = ({
             viewHeight={viewHeight}
             contentProps={{
                 onVisibilityChange,
-                contentWrapperStyle: { minHeight: viewHeight, visibility }
+                contentWrapperStyle: { minHeight: viewHeight, visibility },
+                expandable: expandableMedia
             }}
             focusedContent={focusedContent}
             bubblingTextEditing={bubblingTextEditing}
             sectionType={sectionType}
+            storyTheme={storyTheme}
         />
         {mode === Modes.EDIT && !hideContent && <AddBar
             containerWidth={viewWidth}

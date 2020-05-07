@@ -9,7 +9,7 @@
 const React = require('react');
 const PropTypes = require('prop-types');
 const { Grid, Row, Col, FormGroup} = require('react-bootstrap');
-const ColorPicker = require('./ColorPicker');
+const ColorPicker = require('./ColorPicker').default;
 const numberLocalizer = require('react-widgets/lib/localizers/simple-number');
 numberLocalizer();
 const {NumberPicker} = require('react-widgets');

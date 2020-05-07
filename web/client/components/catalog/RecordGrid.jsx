@@ -17,7 +17,6 @@ class RecordGrid extends React.Component {
         recordItem: PropTypes.element,
         catalogURL: PropTypes.string,
         catalogType: PropTypes.string,
-        onZoomToExtent: PropTypes.func,
         zoomToLayer: PropTypes.bool,
         onLayerAdd: PropTypes.func,
         onPropertiesChange: PropTypes.func,
@@ -36,10 +35,10 @@ class RecordGrid extends React.Component {
         onAddBackgroundProperties: PropTypes.func,
         modalParams: PropTypes.object,
         layers: PropTypes.object,
-        onUpdateThumbnail: PropTypes.func,
         clearModal: PropTypes.func,
         onAddBackground: PropTypes.func,
         showTemplate: PropTypes.bool,
+        service: PropTypes.object,
         defaultFormat: PropTypes.string,
         formatOptions: PropTypes.array,
         layerBaseConfig: PropTypes.object
@@ -66,13 +65,11 @@ class RecordGrid extends React.Component {
                     clearModal={this.props.clearModal}
                     layers={this.props.layers}
                     modalParams={this.props.modalParams}
-                    onUpdateThumbnail={this.props.onUpdateThumbnail}
                     onAddBackgroundProperties={this.props.onAddBackgroundProperties}
                     onAddBackground={this.props.onAddBackground}
                     source={this.props.source}
                     onLayerAdd={this.props.onLayerAdd}
                     onPropertiesChange={this.props.onPropertiesChange}
-                    onZoomToExtent={this.props.onZoomToExtent}
                     zoomToLayer={this.props.zoomToLayer}
                     hideThumbnail={this.props.hideThumbnail}
                     hideIdentifier={this.props.hideIdentifier}
@@ -80,6 +77,7 @@ class RecordGrid extends React.Component {
                     onError={this.props.onError}
                     catalogURL={this.props.catalogURL}
                     catalogType={this.props.catalogType}
+                    service={this.props.service}
                     showTemplate={this.props.showTemplate}
                     record={record}
                     authkeyParamNames={this.props.authkeyParamNames}

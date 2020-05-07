@@ -510,6 +510,116 @@ describe('Geostory Epics', () => {
                 }
             });
         });
+        it('should not change mode on story with id number, if user has permission with loadGeostoryEpic', (done) => {
+            const NUM_ACTIONS = 5;
+            mockAxios.onGet().reply(200, TEST_STORY);
+            testEpic(
+                loadGeostoryEpic,
+                NUM_ACTIONS,
+                loadGeostory(100),
+                (actions) => {
+                    try {
+                        expect(actions.length).toBe(NUM_ACTIONS);
+                        expect(actions.map(({ type }) => type)).toEqual([
+                            LOADING_GEOSTORY,
+                            GEOSTORY_LOADED,
+                            SET_CURRENT_STORY,
+                            SET_RESOURCE,
+                            LOADING_GEOSTORY
+                        ]);
+                    } catch (e) {
+                        done(e);
+                    }
+                    done();
+                },
+                {
+                    geostory: {},
+                    security: {
+                        user: {
+                            role: "USER"
+                        }
+                    }
+                }
+            );
+        });
+        it('should change mode to VIEW on story with id number, if user has not permission and current mode is EDIT with loadGeostoryEpic', (done) => {
+            const NUM_ACTIONS = 6;
+            mockAxios.onGet().reply(200, TEST_STORY);
+            testEpic(
+                loadGeostoryEpic,
+                NUM_ACTIONS,
+                loadGeostory(100),
+                (actions) => {
+                    try {
+                        expect(actions.length).toBe(NUM_ACTIONS);
+                        expect(actions.map(({ type }) => type)).toEqual([
+                            LOADING_GEOSTORY,
+                            CHANGE_MODE,
+                            GEOSTORY_LOADED,
+                            SET_CURRENT_STORY,
+                            SET_RESOURCE,
+                            LOADING_GEOSTORY
+                        ]);
+
+                        const changeModeAction = actions[1];
+                        expect(changeModeAction.mode).toBe(Modes.VIEW);
+
+                    } catch (e) {
+                        done(e);
+                    }
+                    done();
+                },
+                {
+                    geostory: {
+                        mode: Modes.EDIT
+                    },
+                    security: {
+                        user: {
+                            role: "USER"
+                        }
+                    }
+                }
+            );
+        });
+        it('should change mode to VIEW on story with id number, if user has permission and current mode is EDIT with loadGeostoryEpic', (done) => {
+            const NUM_ACTIONS = 6;
+            mockAxios.onGet().reply(200, { ...TEST_STORY, ShortResource: { canEdit: true } });
+            testEpic(
+                loadGeostoryEpic,
+                NUM_ACTIONS,
+                loadGeostory(100),
+                (actions) => {
+                    try {
+                        expect(actions.length).toBe(NUM_ACTIONS);
+                        expect(actions.map(({ type }) => type)).toEqual([
+                            LOADING_GEOSTORY,
+                            CHANGE_MODE,
+                            GEOSTORY_LOADED,
+                            SET_CURRENT_STORY,
+                            SET_RESOURCE,
+                            LOADING_GEOSTORY
+                        ]);
+
+                        const changeModeAction = actions[1];
+                        expect(changeModeAction.mode).toBe(Modes.EDIT);
+
+                    } catch (e) {
+                        done(e);
+                    }
+                    done();
+                },
+                {
+                    geostory: {
+                        mode: Modes.EDIT
+                    },
+                    security: {
+                        user: {
+                            role: "USER"
+                        }
+                    }
+                }
+            );
+        });
     });
     it('test openMediaEditorForNewMedia, adding a media content and choosing an image already present in resources', (done) => {
         const NUM_ACTIONS = 2;

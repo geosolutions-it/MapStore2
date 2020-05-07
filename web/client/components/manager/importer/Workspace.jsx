@@ -7,12 +7,10 @@ const PropTypes = require('prop-types');
  * LICENSE file in the root directory of this source tree.
  */
 const React = require('react');
-const Select = require('react-select');
+const Select = require('react-select').default;
 const {FormControl, Button, Alert} = require('react-bootstrap');
 const Message = require('../../I18N/Message');
 const LocaleUtils = require('../../../utils/LocaleUtils');
-
-require('react-select/dist/react-select.css');
 
 module.exports = class extends React.Component {
     static propTypes = {

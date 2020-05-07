@@ -20,7 +20,9 @@ import java.util.Properties;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
+
 import javax.servlet.ServletContext;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -31,6 +33,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
+
+import it.geosolutions.mapstore.utils.ResourceUtils;
 import net.sf.json.JSONObject;
 
 /**
@@ -64,7 +68,7 @@ public class ConfigController {
     }
     
     @Value("${datadir.location:}") private String dataDir = "";
-    @Value("${allowed.resources:localConfig,pluginsConfig,extensions}") private String allowedResources = "localConfig,pluginsConfig,extensions";
+    @Value("${allowed.resources:localConfig,pluginsConfig,extensions,config,new}") private String allowedResources = "localConfig,pluginsConfig,extensions,config,new";
     @Value("${overrides.mappings:}") private String mappings;
     @Value("${overrides.config:}") private String overrides = "";
     
@@ -85,31 +89,29 @@ public class ConfigController {
         }
         throw new ResourceNotAllowedException("Resource is not allowed");
     }
-
-    private Optional<String> findExisting(String[] candidates) {
-        return Stream.of(candidates)
-        .filter(new Predicate<String>() {
-            @Override
-            public boolean test(String path) {
-                return path != null && new File(path).exists();
-            }
-            
-        })
-        .findFirst();
+    
+    /**
+     * Loads an asset from the datadir, if defined, from the webapp root folder otherwise.
+     * Allows loading externalized assets (javascript bundles, translation files, and so on.
+     * @param resourceName path of the asset to load
+     */
+    @RequestMapping(value="/loadasset", method = RequestMethod.GET)
+    public @ResponseBody String loadAsset(@RequestParam("resource") String resourceName) throws IOException {
+		return readResource(resourceName, false);
     }
     
     private String readResource(String resourceName, boolean applyOverrides) throws IOException {
-        Optional<String> resource = findExisting(new String[] {dataDir + "/" + resourceName, context.getRealPath(resourceName)});
+    	Optional<File> resource = ResourceUtils.findResource(dataDir, context, resourceName);
         if (!resource.isPresent()) {
             throw new ResourceNotFoundException(resourceName);
         }
         return readResourceFromFile(resource.get(), applyOverrides);
     }
 
-    private String readResourceFromFile(String filePath, boolean applyOverrides) throws IOException {
+    private String readResourceFromFile(File file, boolean applyOverrides) throws IOException {
         
         try (Stream<String> stream =
-                Files.lines( Paths.get(filePath), StandardCharsets.UTF_8); ) {
+                Files.lines( Paths.get(file.getAbsolutePath()), StandardCharsets.UTF_8); ) {
             Properties props = readOverrides();
             if (applyOverrides && !"".equals(mappings) && props != null) {
                 return resourceWithOverrides(stream, props);
@@ -136,7 +138,7 @@ public class ConfigController {
     
     private Properties readOverrides() throws FileNotFoundException, IOException {
         if (!"".equals(overrides)) {
-            Optional<String> resource = findExisting(new String[] {dataDir + "/" + overrides, context.getRealPath(overrides)});
+        	Optional<File> resource = ResourceUtils.findResource(dataDir, context, overrides);
             if (resource.isPresent()) {
                 try (FileReader reader = new FileReader(resource.get())) {
                     Properties props = new Properties();
@@ -180,12 +182,10 @@ public class ConfigController {
         if(path.length == 1) {
             if (jsonObject.containsKey(path[0])) {
                 jsonObject.replace(path[0], value);
-            } else {
-                jsonObject.element(path[0], value);
             }
         } else {
             String[] newPath = Arrays.copyOfRange(path, 1, path.length);
-            JSONObject rootObject;
+            JSONObject rootObject = null;
             if (jsonObject.containsKey(path[0])) {
                 if (jsonObject.get(path[0]) instanceof JSONObject) {
                     rootObject = jsonObject.getJSONObject(path[0]);
@@ -193,11 +193,10 @@ public class ConfigController {
                     jsonObject.replace(path[0], new JSONObject());
                     rootObject = jsonObject.getJSONObject(path[0]);
                 }
-            } else {
-                rootObject = new JSONObject();
-                jsonObject.element(path[0], rootObject);
             }
-            setJsonProperty(rootObject, newPath, value);
+            if (rootObject != null) {
+            	setJsonProperty(rootObject, newPath, value);
+            }
         }
         
     }

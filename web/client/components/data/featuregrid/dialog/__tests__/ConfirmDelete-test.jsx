@@ -19,6 +19,7 @@ describe('Test for ConfirmDelete component', () => {
     afterEach((done) => {
         ReactDOM.unmountComponentAtNode(document.getElementById("container"));
         document.body.innerHTML = '';
+        document.body.className = "";
         setTimeout(done);
     });
     it('test portal of dialog', () => {

@@ -65,6 +65,10 @@ In particular, the user is allowed to:
 
 * Decide to display the image as a single tile or as multiple tiles
 
+* Set the layer *Legend* with custom *Width* and *Height* options. Both of these field values if greater than the default legend's size of 12, then the custom values gets applied on the legend width and height display property
+
+* A preview of the legend is shown with the applied custom values from Legend fields above.
+
 ## Style
 
 The third section, dedicated to the layer style, displays like the following:

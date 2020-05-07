@@ -6,6 +6,7 @@
  * LICENSE file in the root directory of this source tree.
 */
 const expect = require('expect');
+const assign = require('object-assign');
 
 const React = require('react');
 const ReactDOM = require('react-dom');
@@ -13,8 +14,7 @@ const dragDropContext = require('react-dnd').DragDropContext;
 const testBackend = require('react-dnd-test-backend');
 const MeasureComponent = dragDropContext(testBackend)(require('../MeasureComponent'));
 const TestUtils = require('react-dom/test-utils');
-
-const assign = require('object-assign');
+const Message = require('../../../I18N/Message');
 
 describe("test the MeasureComponent", () => {
     beforeEach((done) => {
@@ -42,7 +42,7 @@ describe("test the MeasureComponent", () => {
         expect(domNode).toExist();
         const domButtons = domNode.getElementsByTagName('button');
         expect(domButtons).toExist();
-        expect(domButtons.length).toBe(3);
+        expect(domButtons.length).toBe(4);
     });
 
 
@@ -75,7 +75,7 @@ describe("test the MeasureComponent", () => {
         expect(cmpDom).toExist();
 
         const buttons = cmpDom.getElementsByTagName('button');
-        expect(buttons.length).toBe(3);
+        expect(buttons.length).toBe(4);
 
         const lineBtn = buttons.item(0);
         lineBtn.click();
@@ -103,7 +103,7 @@ describe("test the MeasureComponent", () => {
         expect(cmpDom).toExist();
 
         const buttons = cmpDom.getElementsByTagName('button');
-        expect(buttons.length).toBe(3);
+        expect(buttons.length).toBe(4);
 
         const areaBtn = buttons.item(1);
         areaBtn.click();
@@ -131,7 +131,7 @@ describe("test the MeasureComponent", () => {
         expect(cmpDom).toExist();
 
         const buttons = cmpDom.getElementsByTagName('button');
-        expect(buttons.length).toBe(3);
+        expect(buttons.length).toBe(4);
 
         const bearingBtn = buttons.item(2);
         bearingBtn.click();
@@ -175,14 +175,14 @@ describe("test the MeasureComponent", () => {
         let measurement = {
             lineMeasureEnabled: false,
             areaMeasureEnabled: false,
-            bearingMeasureEnabled: false,
+            bearingMeasureEnabled: true,
             geomType: 'LineString',
             len: 0,
             area: 0,
             bearing: 0
         };
         let cmp = ReactDOM.render(
-            <MeasureComponent measurement={measurement} bearingMeasureEnabled/>, document.getElementById("container")
+            <MeasureComponent measurement={measurement} bearingMeasureEnabled bearingMeasureValueEnabled/>, document.getElementById("container")
         );
         expect(cmp).toExist();
 
@@ -190,25 +190,72 @@ describe("test the MeasureComponent", () => {
         expect(bearingSpan).toExist();
 
         cmp = ReactDOM.render(
-            <MeasureComponent measurement={{...measurement, bearing: 45}} bearingMeasureEnabled/>, document.getElementById("container")
+            <MeasureComponent measurement={{...measurement, bearing: 45}} bearingMeasureEnabled bearingMeasureValueEnabled/>, document.getElementById("container")
         );
         expect(bearingSpan.innerHTML).toBe("<h3><strong>N 45° 0' 0'' E</strong></h3>");
 
         cmp = ReactDOM.render(
-            <MeasureComponent measurement={assign({}, measurement, {bearing: 135})} bearingMeasureEnabled/>, document.getElementById("container")
+            <MeasureComponent measurement={assign({}, measurement, {bearing: 135})} bearingMeasureEnabled bearingMeasureValueEnabled/>, document.getElementById("container")
         );
         expect(bearingSpan.innerHTML).toBe("<h3><strong>S 45° 0' 0'' E</strong></h3>");
 
         cmp = ReactDOM.render(
-            <MeasureComponent measurement={assign({}, measurement, {bearing: 225})} bearingMeasureEnabled/>, document.getElementById("container")
+            <MeasureComponent measurement={assign({}, measurement, {bearing: 225})} bearingMeasureEnabled bearingMeasureValueEnabled/>, document.getElementById("container")
         );
         expect(bearingSpan.innerHTML).toBe("<h3><strong>S 45° 0' 0'' W</strong></h3>");
 
         cmp = ReactDOM.render(
-            <MeasureComponent measurement={assign({}, measurement, {bearing: 315})} bearingMeasureEnabled/>, document.getElementById("container")
+            <MeasureComponent measurement={assign({}, measurement, {bearing: 315})} bearingMeasureEnabled bearingMeasureValueEnabled/>, document.getElementById("container")
         );
         expect(bearingSpan.innerHTML).toBe("<h3><strong>N 45° 0' 0'' W</strong></h3>");
     });
+
+    it('test true bearing format', () => {
+        let measurement = {
+            lineMeasureEnabled: false,
+            areaMeasureEnabled: false,
+            bearingMeasureEnabled: true,
+            trueBearing: { measureTrueBearing: true, fractionDigits: 0},
+            geomType: 'LineString',
+            len: 0,
+            area: 0,
+            bearing: 0
+        };
+        let cmp = ReactDOM.render(
+            <MeasureComponent measurement={measurement} bearingMeasureEnabled bearingMeasureValueEnabled/>, document.getElementById("container")
+        );
+        expect(cmp).toExist();
+
+        const bearingSpan = document.getElementById('measure-bearing-res');
+        expect(bearingSpan).toExist();
+
+        const bearingTitle = TestUtils.findRenderedDOMComponentWithClass(cmp, 'form-group');
+        expect(bearingTitle.textContent).toContain('trueBearingLabel');
+
+        cmp = ReactDOM.render(
+            <MeasureComponent measurement={{...measurement, bearing: 45}} bearingMeasureEnabled bearingMeasureValueEnabled trueBearingLabel = {<Message msgId="True Bearing"/>}/>, document.getElementById("container")
+        );
+        expect(bearingSpan.innerHTML).toBe("<h3><strong>045° T</strong></h3>");
+
+        const bearingTitleText = TestUtils.findRenderedDOMComponentWithClass(cmp, 'form-group');
+        expect(bearingTitleText.textContent).toContain('True Bearing');
+
+        cmp = ReactDOM.render(
+            <MeasureComponent measurement={{...measurement, bearing: 135.235648, trueBearing: {...measurement.trueBearing, fractionDigits: 4}}} bearingMeasureEnabled bearingMeasureValueEnabled/>, document.getElementById("container")
+        );
+        expect(bearingSpan.innerHTML).toBe("<h3><strong>135.2356° T</strong></h3>");
+
+        cmp = ReactDOM.render(
+            <MeasureComponent measurement={{...measurement, bearing: 225.83202, trueBearing: {...measurement.trueBearing, fractionDigits: 2}}} bearingMeasureEnabled bearingMeasureValueEnabled/>, document.getElementById("container")
+        );
+        expect(bearingSpan.innerHTML).toBe("<h3><strong>225.83° T</strong></h3>");
+
+        cmp = ReactDOM.render(
+            <MeasureComponent measurement={assign({}, measurement, {bearing: 315})} bearingMeasureEnabled bearingMeasureValueEnabled/>, document.getElementById("container")
+        );
+        expect(bearingSpan.innerHTML).toBe("<h3><strong>315° T</strong></h3>");
+    });
+
     it('test uom format area and lenght', () => {
         let measurement = {
             lineMeasureEnabled: false,
@@ -227,6 +274,7 @@ describe("test the MeasureComponent", () => {
                 }}
                 measurement={measurement}
                 lineMeasureEnabled
+                lineMeasureValueEnabled
             />, document.getElementById("container")
         );
         expect(cmp).toExist();
@@ -241,6 +289,7 @@ describe("test the MeasureComponent", () => {
             <MeasureComponent
                 lengthLabel="Length"
                 lineMeasureEnabled
+                lineMeasureValueEnabled
                 uom={{
                     length: {unit: 'km', label: 'km'},
                     area: {unit: 'sqkm', label: 'km²'}
@@ -252,6 +301,7 @@ describe("test the MeasureComponent", () => {
         cmp = ReactDOM.render(
             <MeasureComponent
                 areaMeasureEnabled
+                areaMeasureValueEnabled
                 uom={{
                     length: {unit: 'km', label: 'km'},
                     area: {unit: 'sqkm', label: 'km²'}
@@ -290,12 +340,22 @@ describe("test the MeasureComponent", () => {
                 showCoordinateEditor
                 format="decimal"
                 isDraggable
+                useSingleFeature
                 lineMeasureEnabled
             />, document.getElementById("container")
         );
         expect(cmp).toExist();
         const coordEditorPanel = TestUtils.findRenderedDOMComponentWithClass(cmp, 'ms2-border-layout-body');
         expect(coordEditorPanel).toExist();
+        const coordinateRows = TestUtils.scryRenderedDOMComponentsWithClass(cmp, 'coordinateRow');
+        const submits = TestUtils.scryRenderedDOMComponentsWithClass(cmp, "glyphicon-ok");
+        const isValid = TestUtils.scryRenderedDOMComponentsWithClass(cmp, "glyphicon-ok-sign");
+        const isInValid = TestUtils.scryRenderedDOMComponentsWithClass(cmp, "glyphicon-exclamation-mark");
+        expect(isValid).toExist();
+        expect(coordinateRows.length).toBe(2);
+        expect(isValid.length).toBe(1);
+        expect(submits.length).toBe(2);
+        expect(isInValid.length).toBe(0);
     });
 
     it('rendering a coordinate editor for Polygons with 4 empty rows', () => {
@@ -323,6 +383,7 @@ describe("test the MeasureComponent", () => {
                     area: {unit: 'sqkm', label: 'km²'}
                 }}
                 measurement={measurement}
+                useSingleFeature
                 showCoordinateEditor
                 format="decimal"
                 isDraggable
@@ -333,7 +394,14 @@ describe("test the MeasureComponent", () => {
         const coordEditorPanel = TestUtils.findRenderedDOMComponentWithClass(cmp, 'ms2-border-layout-body');
         const coordinateRows = TestUtils.scryRenderedDOMComponentsWithClass(cmp, 'coordinateRow');
         expect(coordEditorPanel).toExist();
+        const submits = TestUtils.scryRenderedDOMComponentsWithClass(cmp, "glyphicon-ok");
+        const isValid = TestUtils.scryRenderedDOMComponentsWithClass(cmp, "glyphicon-ok-sign");
+        const isInValid = TestUtils.scryRenderedDOMComponentsWithClass(cmp, "glyphicon-exclamation-mark");
+        expect(isValid).toExist();
         expect(coordinateRows.length).toBe(4);
+        expect(isValid.length).toBe(0);
+        expect(submits.length).toBe(4);
+        expect(isInValid.length).toBe(1);
 
     });
 });

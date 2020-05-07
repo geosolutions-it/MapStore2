@@ -21,6 +21,8 @@ import '../plugins/MapQuest';
 import '../plugins/VectorLayer';
 import '../plugins/GraticuleLayer';
 import '../plugins/OverlayLayer';
+import '../plugins/TMSLayer';
+import '../plugins/WFSLayer';
 import '../plugins/WFS3Layer';
 
 import SecurityUtils from '../../../../utils/SecurityUtils';
@@ -726,6 +728,76 @@ describe('Openlayers layer', () => {
         expect(wmtsLayer.getSource().getTileGrid().getFullTileRange(2).maxX).toBe(3);
         expect(wmtsLayer.getSource().getTileGrid().getFullTileRange(2).minY).toBe(0);
         expect(wmtsLayer.getSource().getTileGrid().getFullTileRange(2).maxY).toBe(3);
+    });
+    it('test wmts layer extent', () => {
+        var options = {
+            "type": "wmts",
+            "visibility": true,
+            "name": "nurc:Arc_Sample",
+            "group": "Meteo",
+            "format": "image/png",
+            "bbox": {
+                crs: "EPSG:4326",
+                bounds: {
+                    minx: 10,
+                    maxx: 15,
+                    miny: 40,
+                    maxy: 45
+                }
+            },
+            ...sampleTileMatrixConfig900913,
+            "url": "http://sample.server/geoserver/gwc/service/wmts"
+        };
+        // create layers
+        const layer = ReactDOM.render(
+            <OpenlayersLayer type="wmts"
+                options={options} map={map} />, document.getElementById("container"));
+
+
+        expect(layer).toExist();
+        // count layers
+        expect(map.getLayers().getLength()).toBe(1);
+
+        const wmtsLayer = map.getLayers().item(0);
+        expect(Math.floor(wmtsLayer.getSource().getTileGrid().getExtent()[0])).toBe(1113194);
+        expect(Math.floor(wmtsLayer.getSource().getTileGrid().getExtent()[1])).toBe(4865942);
+        expect(Math.floor(wmtsLayer.getSource().getTileGrid().getExtent()[2])).toBe(1669792);
+        expect(Math.floor(wmtsLayer.getSource().getTileGrid().getExtent()[3])).toBe(5621521);
+    });
+    it('test wmts layer extent out of bounds', () => {
+        var options = {
+            "type": "wmts",
+            "visibility": true,
+            "name": "nurc:Arc_Sample",
+            "group": "Meteo",
+            "format": "image/png",
+            "bbox": {
+                crs: "EPSG:4326",
+                bounds: {
+                    minx: -360,
+                    maxx: 360,
+                    miny: -90,
+                    maxy: 90
+                }
+            },
+            ...sampleTileMatrixConfig900913,
+            "url": "http://sample.server/geoserver/gwc/service/wmts"
+        };
+        // create layers
+        const layer = ReactDOM.render(
+            <OpenlayersLayer type="wmts"
+                options={options} map={map} />, document.getElementById("container"));
+
+
+        expect(layer).toExist();
+        // count layers
+        expect(map.getLayers().getLength()).toBe(1);
+
+        const wmtsLayer = map.getLayers().item(0);
+        expect(Math.floor(wmtsLayer.getSource().getTileGrid().getExtent()[0])).toBe(-20037509);
+        expect(Math.floor(wmtsLayer.getSource().getTileGrid().getExtent()[1])).toBe(-20037509);
+        expect(Math.floor(wmtsLayer.getSource().getTileGrid().getExtent()[2])).toBe(20037508);
+        expect(Math.floor(wmtsLayer.getSource().getTileGrid().getExtent()[3])).toBe(20037508);
     });
     it('test fix for OL draw image (remove when OL > 5.3.0) ', () => {
         // see https://github.com/openlayers/openlayers/issues/8700
@@ -2271,6 +2343,157 @@ describe('Openlayers layer', () => {
         expect(layer.layer.getType()).toBe('VECTOR_TILE');
         expect(layer.layer.getSource().format_.constructor.name).toBe('TopoJSON');
 
+    });
+    // ******************************
+    // WFS
+    // ******************************
+    const SAMPLE_FEATURE_COLLECTION = {
+        "type": "FeatureCollection",
+        "totalFeatures": 6,
+        "features": [
+            {
+                "type": "Feature",
+                "id": "poi.1",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        -74.0104611,
+                        40.70758763
+                    ]
+                },
+                "properties": {
+                    "NAME": "museam"
+                }
+            }
+        ],
+        "crs": {
+            "type": "name",
+            "properties": {
+                "name": "urn:ogc:def:crs:EPSG::4326"
+            }
+        }
+    };
+    it('render wfs layer', (done) => {
+        mockAxios.onGet().reply(r => {
+            expect(r.url.indexOf('SAMPLE_URL') >= 0 ).toBeTruthy();
+            return [200, SAMPLE_FEATURE_COLLECTION];
+        });
+        const options = {
+            type: 'wfs',
+            visibility: true,
+            url: 'SAMPLE_URL',
+            name: 'osm:vector_tile'
+        };
+        let layer;
+        map.on('rendercomplete', () => {
+            if (layer.layer.getSource().getFeatures().length > 0) {
+                const f = layer.layer.getSource().getFeatures()[0];
+                expect(f.getGeometry().getCoordinates()[0]).toBe(SAMPLE_FEATURE_COLLECTION.features[0].geometry.coordinates[0]);
+                expect(f.getGeometry().getCoordinates()[1]).toBe(SAMPLE_FEATURE_COLLECTION.features[0].geometry.coordinates[1]);
+                done();
+            }
+        });
+        // first render
+        layer = ReactDOM.render(<OpenlayersLayer
+            type="wfs"
+            options={{
+                ...options
+            }}
+            map={map} />, document.getElementById("container"));
+        expect(layer.layer.getSource()).toExist();
+    });
+    it('test second render wfs layer', (done) => {
+        let clearCalled = false;
+        mockAxios.onGet().reply(r => {
+            // catch second rendering with params
+            if (r.url.indexOf("CQL_FILTER=INCLUDE") > 0) {
+                expect(clearCalled).toBeTruthy();
+                return [200, SAMPLE_FEATURE_COLLECTION];
+            }
+            // first render returns empty features
+            return [200, { ...SAMPLE_FEATURE_COLLECTION, features: []}];
+        });
+        const options = {
+            type: 'wfs',
+            visibility: true,
+            url: 'SAMPLE_URL',
+            name: 'osm:vector_tile'
+        };
+        // first render
+        let layer = ReactDOM.render(<OpenlayersLayer
+            type="wfs"
+            options={{
+                ...options
+            }}
+            map={map} />, document.getElementById("container"));
+        expect(layer.layer.getSource()).toExist();
+        layer.layer.getSource().on('clear', (a) => {
+            expect(a).toExist();
+            clearCalled = true;
+        });
+        map.on('rendercomplete', () => {
+            if (layer.layer.getSource().getFeatures().length > 0) {
+                const f = layer.layer.getSource().getFeatures()[0];
+                expect(f.getGeometry().getCoordinates()[0]).toBe(SAMPLE_FEATURE_COLLECTION.features[0].geometry.coordinates[0]);
+                expect(f.getGeometry().getCoordinates()[1]).toBe(SAMPLE_FEATURE_COLLECTION.features[0].geometry.coordinates[1]);
+                done();
+            }
+        });
+        // second render with custom params
+        layer = ReactDOM.render(<OpenlayersLayer
+            type="wfs"
+            options={{
+                ...options,
+                params: { "CQL_FILTER": "INCLUDE" }
+            }}
+            map={map} />, document.getElementById("container"));
+    });
+    it('render wfs layer with FilterObj', (done) => {
+        mockAxios.onGet().reply(r => {
+            expect(r.url.indexOf('SAMPLE_URL') >= 0).toBeTruthy();
+            const params = r.url.split("?")[1].split("&");
+            const filterParam = params.filter(p => p.indexOf("CQL_FILTER") === 0)[0];
+            if (filterParam) {
+                const filterValue = decodeURIComponent(filterParam.split("=")[1]);
+                expect(filterValue).toEqual((`("prop2" = 'value2')`));
+                setTimeout( () => done(), 10);
+                return [200, { ...SAMPLE_FEATURE_COLLECTION, features: [] }];
+            }
+            return [200, SAMPLE_FEATURE_COLLECTION];
+        });
+        const options = {
+            type: 'wfs',
+            visibility: true,
+            url: 'SAMPLE_URL',
+            name: 'osm:vector_tile',
+            filterObj: {
+                filterFields: [
+                    {
+                        groupId: 1,
+                        attribute: "prop2",
+                        exception: null,
+                        operator: "=",
+                        rowId: "3",
+                        type: "number",
+                        value: "value2"
+                    }],
+                groupFields: [{
+                    id: 1,
+                    index: 0,
+                    logic: "OR"
+                }]
+            }
+        };
+        let layer;
+
+        // first render
+        layer = ReactDOM.render(<OpenlayersLayer
+            type="wfs"
+            options={{
+                ...options
+            }}
+            map={map} />, document.getElementById("container"));
+        expect(layer.layer.getSource()).toExist();
     });
 
     it('test render a wfs3 layer', () => {

@@ -7,7 +7,7 @@
 */
 
 import Url from "url";
-import { isArray, isString, isEqual, sortBy } from 'lodash';
+import { isArray, isString, isEqual, sortBy, find } from 'lodash';
 import queryString from 'query-string';
 
 export const urlParts = (url) => {
@@ -90,4 +90,24 @@ export const getQueryParams = (url) => {
 export const isValidURL = (url, regexp = /^(http(s{0,1}):\/\/)+?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$/) => {
     const regex = new RegExp(regexp);
     return regex.test(url);
+};
+
+/**
+ * Check url templates. It accepts URL in this format
+ */
+export const isValidURLTemplate = (url, params, regexp = /^(http(s{0,1}):\/\/)+?[\w.\-{}]+(?:\.[\w\.-]+)+[\w\-\._~\/\;\.\%\:\&\=\?{}]+$/) => {
+    const regex = new RegExp(regexp);
+    const match = regex.test(url);
+    if (!match) {
+        return false;
+    }
+    if (match && !params) {
+        return true;
+    }
+    if (match && params) {
+        const foundParams = /\{(.*?)\}/.test(url);
+        return params.filter(p => find(foundParams, p)).length === 0;
+    }
+    return false;
+
 };

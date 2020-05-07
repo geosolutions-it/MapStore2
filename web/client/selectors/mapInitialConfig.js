@@ -14,6 +14,8 @@ const {get} = require('lodash');
  * @return {object} error object
  */
 const hasMapAccessLoadingError = (state) => get(state, "mapInitialConfig.loadingError");
+const mapIdSelector = (state) => state.mapInitialConfig?.mapId;
 module.exports = {
-    hasMapAccessLoadingError
+    hasMapAccessLoadingError,
+    mapIdSelector
 };

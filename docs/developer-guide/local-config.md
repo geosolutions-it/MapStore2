@@ -1,5 +1,5 @@
 # Application configuration
-The application will load by default it will load the `localConfig.js`
+The application will load by default it will load the `localConfig.json`
 
 You can load a custom configuration by passing the `localConfig` argument in query string:
 
@@ -24,6 +24,10 @@ This is the main structure:
     // useCORS array contains a list of services that support CORS and so do not need a proxy
     "useCORS": ["http://nominatim.openstreetmap.org", "https://nominatim.openstreetmap.org"]
   },
+  // JSON file where uploaded extensions are configured
+  "extensionsRegistry": "extensions.json",
+  // URL of the folder from where extensions bundles and other assets are loaded
+  "extensionsFolder": "",
   // API keys for bing and mapquest services
   "bingApiKey",
   // force dates to be in this specified format. use moment js format pattern
@@ -49,6 +53,11 @@ This is the main structure:
   }],
   // flag for postponing mapstore 2 load time after theme
   "loadAfterTheme": false,
+  // if defined, WMS layer styles localization will be added
+  "localizedLayerStyles": {
+      // name of the ENV parameter variable that is needed for localization proposes
+      "name": "mapstore_language"
+  },
   // flag for abandon map edit confirm popup, by default is enabled
   "unsavedMapChangesDialog": false,
   // optional state initializer (it will override the one defined in appConfig.js)
