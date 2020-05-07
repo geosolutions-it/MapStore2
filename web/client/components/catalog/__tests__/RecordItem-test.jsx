@@ -847,4 +847,14 @@ describe('This test for RecordItem', () => {
         expect(actionsSpy.calls.length).toBe(1);
         expect(actionsSpy.calls[0].arguments[0].format).toBe(defaultFormat);
     });
+    it('check description is wrapped in span', () => {
+        ReactDOM.render(<RecordItem record={sampleRecord}/>, document.getElementById("container"));
+
+        const recordItemDiv = document.getElementsByClassName('mapstore-side-card')[0];
+        expect(recordItemDiv).toExist();
+        const descDiv = recordItemDiv.getElementsByClassName('mapstore-side-card-desc')[0];
+        expect(descDiv).toExist();
+        expect(descDiv.hasChildNodes()).toBe(true);
+        expect(descDiv.firstElementChild.tagName).toBe('SPAN');
+    });
 });
