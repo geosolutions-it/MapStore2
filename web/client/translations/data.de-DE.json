@@ -498,6 +498,7 @@
                 "postalCode": "Postleitzahl",
                 "country": "Land",
                 "URL": "URL",
+                "metadataUrl": "Metadaten-URL",
                 "role": "Rolle",
                 "hoursOfService": "Öffnungszeiten",
                 "electronicMailAddress": "E-Mail-Addresse",
