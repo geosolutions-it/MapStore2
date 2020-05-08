@@ -13,8 +13,13 @@ import FeatureInfoUtils from './FeatureInfoUtils';
 export const getFormatForResponse = (res, props) => {
     const {format, queryParams} = res;
     let infoFormat;
+    // handle WMS/WMTS..,
     if (queryParams && queryParams.hasOwnProperty('info_format')) {
         infoFormat = queryParams.info_format;
+    }
+    // handle WFS
+    if (queryParams && queryParams.hasOwnProperty('outputFormat')) {
+        infoFormat = queryParams.outputFormat;
     }
 
     return infoFormat || format && FeatureInfoUtils.INFO_FORMATS[format] || props.format;

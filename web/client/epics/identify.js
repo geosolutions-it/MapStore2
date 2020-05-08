@@ -7,8 +7,7 @@
 */
 import Rx from 'rxjs';
 
-import {get, find, isString, isNil, isNumber} from 'lodash';
-import axios from '../libs/ajax';
+import {get, find, isNumber} from 'lodash';
 
 import uuid from 'uuid';
 import { LOCATION_CHANGE } from 'connected-react-router';
@@ -40,7 +39,7 @@ import { modeSelector, getAttributeFilters, isFeatureGridOpen } from '../selecto
 import { spatialFieldSelector } from '../selectors/queryform';
 import { mapSelector, projectionDefsSelector, projectionSelector, isMouseMoveIdentifyActiveSelector } from '../selectors/map';
 import { boundingMapRectSelector } from '../selectors/maplayout';
-import { centerToVisibleArea, isInsideVisibleArea, isPointInsideExtent, reprojectBbox, parseURN, calculateCircleCoordinates } from '../utils/CoordinatesUtils';
+import { centerToVisibleArea, isInsideVisibleArea, isPointInsideExtent, reprojectBbox, calculateCircleCoordinates } from '../utils/CoordinatesUtils';
 import { floatingIdentifyDelaySelector } from '../selectors/localConfig';
 import { createControlEnabledSelector, measureSelector } from '../selectors/controls';
 import { localizedLayerStylesEnvSelector } from '../selectors/localizedLayerStyles';
@@ -54,41 +53,7 @@ const gridGeometryQuickFilter = state => get(find(getAttributeFilters(state), f 
 
 const stopFeatureInfo = state => stopGetFeatureInfoSelector(state) || isFeatureGridOpen(state) && (gridEditingSelector(state) || gridGeometryQuickFilter(state));
 
-/**
- * Sends a GetFeatureInfo request and dispatches the right action
- * in case of success, error or exceptions.
- *
- * @param basePath {string} base path to the service
- * @param requestParams {object} map of params for a getfeatureinfo request.
- */
-export const getFeatureInfo = (basePath, param, attachJSON, itemId = null) => {
-    const retrieveFlow = (params) => Rx.Observable.defer(() => axios.get(basePath, { params }));
-    return ((
-        attachJSON && param.info_format !== "application/json" )
-    // add the flow to get the for highlight/zoom
-        ? Rx.Observable.forkJoin(
-            retrieveFlow(param),
-            retrieveFlow({ ...param, info_format: "application/json"})
-                .map(res => res.data)
-                .catch(() => Rx.Observable.of({})) // errors on geometry retrieval are ignored
-        ).map(([response, data ]) => ({
-            ...response,
-            features: data && data.features && data.features.filter(f => !isNil(itemId) ? f.id === itemId : true),
-            featuresCrs: data && data.crs && parseURN(data.crs)
-        }))
-    // simply get the feature info, geometry is already there
-        : retrieveFlow(param)
-            .map(res => res.data)
-            .map( ( data = {} ) => ({
-                data: isString(data) ? data : {
-                    ...data,
-                    features: data.features && data.features.filter(f => itemId ? f.id === itemId : true)
-                },
-                features: data.features && data.features.filter(f => itemId ? f.id === itemId : true),
-                featuresCrs: data && data.crs && parseURN(data.crs)
-            }))
-    );
-};
+import {getFeatureInfo} from '../api/identify';
 
 /**
  * Epics for Identify and map info
@@ -141,7 +106,7 @@ export default {
                             const itemId = itemIdSelector(getState());
                             const reqId = uuid.v1();
                             const param = { ...appParams, ...requestParams };
-                            return getFeatureInfo(basePath, param, attachJSON, itemId)
+                            return getFeatureInfo(basePath, param, attachJSON, itemId, layer)
                                 .map((response) =>
                                     response.data.exceptions
                                         ? exceptionsFeatureInfo(reqId, response.data.exceptions, requestParams, lMetaData)
@@ -302,7 +267,6 @@ export default {
                 const lat = get(clickPoint, 'latlng.lat');
                 const radius = 0.2;
                 const attribute = currentFilter.attribute || get(spatialFieldSelector(store.getState()), 'attribute');
-
                 return isNumber(lng) && isNumber(lat) ? Rx.Observable.of(
                     setEditFeatureQuery({
                         type: 'geometry',
