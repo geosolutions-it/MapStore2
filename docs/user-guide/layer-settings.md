@@ -47,7 +47,6 @@ Setting a tooltip that shows the Title and the Description on the Right, for exa
 
 <img src="../img/layer-settings/custom_tooltip.jpg" class="ms-docimage"/>
 
-
 ## Display
 
 Through the second section of the layer settings panel it is possible to change the display settings:

@@ -1,114 +1,104 @@
 # Timeline
 **********
 
-The Timeline is an useful tool for managing layers with a time dimension.
+The Timeline is a [MapStore](https://mapstore.geo-solutions.it/mapstore/#/) tool for managing layers with a time dimension.
 It makes possible to observe the layers' evolution over time, to inspect the layer configuration at a specific time instant (or in a time range) and to view different layer configurations time by time dynamically through animations.<br>
 
-!!! warning
-    Timeline actually works only with [**WMTS-Multidim extension**](https://docs.geoserver.org/stable/en/user/community/wmts-multidimensional/index.html) (WMS time in capabilities is not fully supported) and at least **GeoServer 2.14.5**. Anyway to support all the functionality you need **GeoServer 2.15.2**.
-    From now on, the layers that the Timeline can manage will be addressed as ***time layers***.
+!!! Warning
+    Timeline actually works only with [WMTS-Multidim extension](https://docs.geoserver.org/stable/en/user/community/wmts-multidimensional/index.html) (WMS time in capabilities is not fully supported) and at least **GeoServer 2.14.5**. Anyway to support all the functionality you need **GeoServer 2.15.2**.
+    From now on, the layers that the Timeline can manage will be addressed as *time layers*.
 
-When you load ***time layers*** the Timeline panel becomes automatically visible and allows you to take a look at the main functionalities.
+
+When a layer with a time dimension is added to the map, the Timeline panel becomes automatically visible and it allows the user to browse the layer over time.
 
 <img src="../img/timeline/timeline-base.jpg" class="ms-docimage"/>
 
-Widgets and Timeline cannot be expanded on the same map at the same time. See [this section](widgets.md#widgets-tray) to learn more about this.
+!!! Note
+    Widgets and Timeline cannot be expanded on the same map at the same time. See [this section](widgets.md#widgets-tray) to learn more about this. 
 
-Timeline histogram
-------------------
+## Timeline histogram
 
-The Timeline panel can be expanded through the **Expand time slider** button <img src="../img/button/timeline-expand-button.jpg" class="ms-docbutton"/>. By clicking it another section appears under the main panel.
+The Histogram panel opens through the **Expand time slider** button <img src="../img/button/timeline-expand-button.jpg" class="ms-docbutton"/>.
 
 <img src="../img/timeline/timeline-histogram.jpg" class="ms-docimage"/>
 
-The ***time layers***' list, on the left, can be shown/hidden by clicking the **Show/Hide layers names** button <img src="../img/button/timeline-layers-list-button.jpg" class="ms-docbutton"/>.
-Once a layer is loaded, a new row is added in the list and its relative histogram appears in the right side.
-<br>
-The histogram shows the layers' data for each time in which they are defined. You can zoom on the histogram, scroll the time axis and drag the current time cursor along it.
+In the Histogram panel some of the most relevant elements are the following ones:
 
-Handling the time
------------------
+* A list of layers present in map with the time dimension available. It is possible to hide this list with the **Hide layers names** button <img src="../img/button/timeline-layers-list-button.jpg" class="ms-docbutton"/>
 
-In the left side of the main panel there are some control cells in which you can set the date/time of interest and watch the layers' configurations at that specific instant.
+* The relative histogram that shows the layer' data for each time in which it is defined. In order to manage the panel the user can zoom in/out on the histogram, scroll the time axis and drag the current time cursor along it
+
+!!! Note
+    The highlighted layer is the one whose histogram is displayed on the panel.
+
+!!! Note
+    The highlighted layer in the *time layers* ' list drives the time management, from now on it will be addressed as *guide layer* (See in the [Animation Settings](#animation-settings) > **Timeline Settings** >  **Snap to guide layer** option ).
+
+## Set a Time Range
+
+In order to see a layer in a specific time instant the user can insert a data and a time in the panel, as follows:
 
 <img src="../img/timeline/timeline-current-time.jpg" class="ms-docimage"/>
 
-The current time cursor changes its position according to the selected date and viceversa: when you drag that cursor along the time axis the date/time cells will update their values.
-
 !!! Note
-    The highlighted layer in the ***time layers***' list drives the time management, from now on it will be addressed as ***guide layer*** (See the [Animation Settings](#animation-settings) > ***Timeline Settings*** > **Snap to guide layer** option).
-    When you move the current time cursor to a time value for which no data are available the cursor is snapped to the closest time with data.
+    The current time cursor changes its position according to the selected date and viceversa: when the user drag that cursor along the time axis the date/time cells will update their values.
 
-If you want to observe the layers in a finite fixed time interval you can set a *time range* by clicking the **Enable time range** button <img src="../img/button/timeline-range-button.jpg" class="ms-docbutton"/>. This will opens an extra panel with date/time control cells so you can set the range limits either by directly entering values in those cells or by dragging the limits cursors along the histogram time axis.
+In order to observe the layers in a finite fixed time interval the user can set a time range through the **Time range** button <img src="../img/button/timeline-range-button.jpg" class="ms-docbutton"/>. A date/time control panel opens to set the range limits either by directly entering values in those cells or by dragging the limits cursors along the histogram time axis, as follows:
 
 <img src="../img/timeline/timeline-current-time-range.jpg" class="ms-docimage"/>
 
-Sometimes you may be interested to show on the timeline only the times actually visible on the map, especially when you are exploring a big data set. This feature can be enabled by clicking the **Map Sync Button** <img src="../img/button/timeline-sync-button.jpg" class="ms-docbutton"/>. When this tool is active the timeline will show only the times of the features available in the current map viewport.
+## Show times available on map
 
-!!! Note
-    Map Sync feature need at least **GeoServer 2.15.2**
+Sometimes you might be interested to show in the timeline histogram only the times instants currently visible on the map, especially when you are exploring a big data set. This feature can be enabled by clicking the **Map Sync** button <img src="../img/button/timeline-sync-button.jpg" class="ms-docbutton"/> . When this tool is active the timeline will show only the times of the features available in the current map viewport.
 
 <img src="../img/timeline/timeline-sync-example.jpg" class="ms-docimage"/>
 
-Animations
-----------
+!!! Note
+    Map Sync feature need at least GeoServer 2.15.2
 
-Animations are based on ordered sequences of steps, by default each step represents a configuration of the selected layer (***guide layer***).<br>
-The right side of the main panel contains the buttons responsible for managing the animations.
+## Animations
 
-<img src="../img/timeline/timeline-animation-buttons.jpg" class="ms-docimage"  style="max-width:500px;"/>
+The user can start a time animation by using the timeline tool through the following buttons (by default the animation of layers in map is based on time values related the **guide layer**, see the [Animation Settings](#animation-settings) section > **Timeline Settings** > **Snap to guide layer** option):
 
-The following list describes the functions performed by each button.
+<img src="../img/timeline/timeline-animation-buttons.jpg" class="ms-docimage"/>
 
-* **Step backward** <img src="../img/button/timeline-step-backward-button.jpg" class="ms-docbutton"/> : return to the previous step
-
-* **Play** <img src="../img/button/timeline-play-button.jpg" class="ms-docbutton"/> : play the animation
-
-* **Stop** <img src="../img/button/timeline-stop-button.jpg" class="ms-docbutton"/> : stop the animation
-
-* **Step forward** <img src="../img/button/timeline-step-forward-button.jpg" class="ms-docbutton"/> : go ahead to the next step
-
-* **Settings** <img src="../img/button/timeline-playback-settings-button.jpg" class="ms-docbutton"/> : open the [Animation Settings](#animation-settings) panel
-
-Clicking the **Play** button, by default, the current time cursor reach the initial time of the ***guide layer*** and the animation starts. You will see the layers' configurations changes on the map and the time progress on the histogram. Following the step sequence, the cursor will shift each time to the next step in a certain time interval, the *frame duration*.
+In order to start the animation the user can click on **Play** button <img src="../img/button/timeline-play-button.jpg" class="ms-docbutton"/>.  Once the animation is started, the temporal layers in map are updated accordingly and the user can see the animation progress also in the timeline histogram. Following the sequence of steps, the cursor will shift each time to the next step in a certain time interval, the *frame duration*.
 <br>
-The **Stop** button obviously stops the animation and the current time cursor remains in the last position reached.
+Through the **Stop** button <img src="../img/button/timeline-stop-button.jpg" class="ms-docbutton"/> the user can stop the animation and the current time cursor remains in the last position reached.
 <br>
-The **Step backward** or the **Step forward** buttons allow you to statically change the current time, so by clicking on one of them the cursor changes its position (to the previous or the next step) on the histogram and the date/time values of the control cells will be update accordingly.
+The **Step backward** button <img src="../img/button/timeline-step-backward-button.jpg" class="ms-docbutton"/> and the **Step forward** button <img src="../img/button/timeline-step-forward-button.jpg" class="ms-docbutton"/> allow the user to change the current time. Therefore, by clicking on one of them, the cursor changes its position (to the previous or the next step) on the histogram, the date/time values of the control cells will be updated accordingly and the layers in map are updated too.
 <br>
-You can pause the animation with the **Pause** button <img src="../img/button/timeline-pause-button.jpg" class="ms-docbutton"/>.
+The user can pause the animation through the **Pause** button <img src="../img/button/timeline-pause-button.jpg" class="ms-docbutton"/>, as follows:
 
 <img src="../img/timeline/timeline-animation.gif" class="ms-docimage"  style="max-width:700px;" />
 
-You can also specify a *time range*. During the animation, the whole range will be shifted step by step along the time axis and in each step the layers' configurations will be consider the total amount of data in that range.
 
-<img src="../img/timeline/timeline-animation-range.gif" class="ms-docimage"  style="max-width:700px;"/>
+!!! Note
+    The user can also specify a *time range*. During the animation, the whole range will be shifted step by step along the time axis and, in each step, the layers in map will show data corresponding to that range of time.
+    <img src="../img/timeline/timeline-animation-range.gif" class="ms-docimage"  style="max-width:700px;"/>
 
 ### Animation Settings
 
-The animation behavior can be customized through the **Settings**. If you click on the button <img src="../img/button/timeline-playback-settings-button.jpg" class="ms-docbutton"/> a panel with two different sections appears.
+The animation behavior can be customized through the **Settings** button <img src="../img/button/timeline-playback-settings-button.jpg" class="ms-docbutton"/>. It allows the user to tune the *Timeline* and the *Playback* options. 
 
 <img src="../img/timeline/timeline-animation-settings.jpg" class="ms-docimage"  style="max-width:500px;" />
 
-***Timeline Settings***
+By default, the **Snap to guide layer** is enabled. It allows to force the time cursor to snap to the selected layer's data. The user can disable *Snap to guide level* to select the preferred time step through the **Animation Step** option. For example, the process could be similar to the following one: 
 
-* **Snap to guide layer**: this option is active by default. It forces the time cursor to snap to the selected layer's data. Disabling this option the **Animation Step** selection in the ***Playback Settings*** section becomes available.
+<img src="../img/timeline/animation-passage.jpg" class="ms-docimage"/>
 
-***Playback Settings***
+The user can set the number of second between one animation frame and another through the **Frame Duration** and enable the **Follow the animation** to visualize the animation process also inside the histogram: the histogram will automatically move to follow the animation.
 
-* **Frame Duration**: it indicates how fast the time cursor switch to the next step in the steps sequence
+<img src="../img/timeline/frame-duration.jpg" class="ms-docimage"/>
 
-* **Animation Step**: it defines the step width and so all the steps positions along the time axis. By default this option is disabled and the step sequence is defined by the ***guide layer***'s data. If activated, a fixed time unit (in terms of seconds, minutes, hours, days, months or years) can be defined as the step width and the whole steps sequence will be reconfigured.
+Enabling the  **Animation Range** the user can bound the animation execution to a fixed time interval, the *green range*. The *green range* can be defined both dragging the *play/stop cursors* directly on the histogram or filling the *date/time control cells* of the extra panel displayed, as follows:
 
-* **Animation Range**: if activated, it basically bounds the animation execution to a fixed time interval, the *green range*. The *green range* can be defined both dragging the *play/stop cursors* directly on the histogram or filling the *date/time control cells* of the extra panel displayed.
-    <br>Other settings:
+<img src="../img/timeline/timeline-animation-green-range.gif" class="ms-docimage"/>
 
-    * **Zoom to the current playback range** <img src="../img/button/timeline-zoom-playback-range.jpg" class="ms-docbutton"/> : zoom the histogram until it fits the animation's *green range* time extension.
+In order to properly set the Animation Ranger, some controls are available to help the user:
 
-    * **Set to current view range** <img src="../img/button/timeline-zoom-current-view-range.jpg" class="ms-docbutton"/> : extend the animation's *green range* until it fits the current view range of the histogram.
+* Zoom the histogram until it fits the animation's *green range* time extension through the  **Zoom to the current playback range** button <img src="../img/button/timeline-zoom-playback-range.jpg" class="ms-docbutton"/>
 
-    * **Fit to selected layer's range** <img src="../img/button/timeline-fit-layer-range.jpg" class="ms-docbutton"/> : extend the animation's *green range* until it fits the ***guide layer*** time extension
+* Extend the animation's *green range* until it fits the current view range of the histogram through the **Set to current view range** button <img src="../img/button/timeline-zoom-current-view-range.jpg" class="ms-docbutton"/>
 
-<img src="../img/timeline/timeline-animation-green-range.gif" class="ms-docimage"  style="max-width:700px;"/>
-
-* **Follow the animation**: if activated the histogram is always centered on the time cursor during the animation.
+* Extend the animation's green range until it fits the guide layer time extension through the **Fit to selected layer's range** button <img src="../img/button/timeline-fit-layer-range.jpg" class="ms-docbutton"/>
