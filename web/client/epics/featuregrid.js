@@ -295,7 +295,7 @@ module.exports = {
 
                     const {lat, lng} = latlng;
                     const hook = MapUtils.getHook(MapUtils.GET_COORDINATES_FROM_PIXEL_HOOK);
-                    const radius = CoordinatesUtils.calclateCircleRadiusFromPixel(hook, projectionSelector(store.getState()), pixel, latlng, 4);
+                    const radius = CoordinatesUtils.calculateCircleRadiusFromPixel(hook, projectionSelector(store.getState()), pixel, latlng, 4);
 
                     return currentFilter.deactivated ? Rx.Observable.empty() : Rx.Observable.of(updateFilter({
                         ...currentFilter,

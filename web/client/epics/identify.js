@@ -42,7 +42,7 @@ import { spatialFieldSelector } from '../selectors/queryform';
 import { mapSelector, projectionDefsSelector, projectionSelector, isMouseMoveIdentifyActiveSelector } from '../selectors/map';
 import { boundingMapRectSelector } from '../selectors/maplayout';
 import { centerToVisibleArea, isInsideVisibleArea, isPointInsideExtent, reprojectBbox, parseURN, calculateCircleCoordinates,
-    calclateCircleRadiusFromPixel } from '../utils/CoordinatesUtils';
+    calculateCircleRadiusFromPixel } from '../utils/CoordinatesUtils';
 import { floatingIdentifyDelaySelector } from '../selectors/localConfig';
 import { createControlEnabledSelector, measureSelector } from '../selectors/controls';
 import { localizedLayerStylesEnvSelector } from '../selectors/localizedLayerStyles';
@@ -205,7 +205,7 @@ export default {
                 const lng = get(point, 'latlng.lng');
                 const lat = get(point, 'latlng.lat');
                 const hook = getHook(GET_COORDINATES_FROM_PIXEL_HOOK);
-                const radius = calclateCircleRadiusFromPixel(
+                const radius = calculateCircleRadiusFromPixel(
                     hook,
                     projectionSelector(store.getState()),
                     get(point, 'pixel'),

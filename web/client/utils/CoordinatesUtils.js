@@ -844,7 +844,7 @@ const CoordinatesUtils = {
             crs: 'EPSG:4326'
         };
     },
-    calclateCircleRadiusFromPixel: (coordinatesFromPixelConverter, projection, pixel = {}, latlng = {}, pixelRadius, defaultRadius = 0.01) => {
+    calculateCircleRadiusFromPixel: (coordinatesFromPixelConverter, projection, pixel = {}, latlng = {}, pixelRadius, defaultRadius = 0.01) => {
         const {lat, lng} = latlng;
 
         if (isNumber(lat) && !isNaN(lat) &&
