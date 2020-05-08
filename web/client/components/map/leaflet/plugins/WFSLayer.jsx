@@ -8,6 +8,7 @@
 
 import { isNil, isEqual } from 'lodash';
 import L from 'leaflet';
+import { colorToRgbaStr } from '../../../../utils/ColorUtils';
 
 import CoordinatesUtils from '../../../../utils/CoordinatesUtils';
 import Layers from '../../../../utils/leaflet/Layers';
@@ -42,8 +43,28 @@ const loadFeatures = (layer, options) => {
 
 };
 
+const toSingleOpacityStyle = style => {
+    const {
+        color,
+        fillColor,
+        ...other
+    } = style || {};
+    return {
+        ...other,
+        color: colorToRgbaStr(color, 1),
+        fillColor: colorToRgbaStr(fillColor, 1)
+    };
+};
+const getStyle = (options = {}) => {
+    const style = options.style && options.style[0] || options.style;
+    return toSingleOpacityStyle(style);
+
+};
 const setStyle = (layer, options) => {
-    layer.setStyle(options.style);
+    const style = getStyle(options);
+    layer.setStyle(style);
+    layer.options.style = (style);
+    layer.styleName = options.styleName;
 };
 
 const setOpacity = (layer, opacity) => {
@@ -55,12 +76,6 @@ const setOpacity = (layer, opacity) => {
             setOpacity(l, opacity);
         });
     }
-};
-
-const getStyle = options => {
-    const style = options.style && options.style[0] || options.style;
-    return style;
-
 };
 
 var createVectorLayer = function(options, features = []) {
@@ -76,17 +91,19 @@ var createVectorLayer = function(options, features = []) {
         // hideLoading: hideLoading,
         style: style // TODO: ol nativeStyle should not be taken from the store
     });
-    layer.styleName = options.styleName;
-    layer.setOpacity = function(opacity) {
+    layer.setOpacity = function(layerOpacity = 1) {
+        const originalStyle = { ...layer.options.style || {}};
+        const {fillOpacity = 1, opacity = 1 } = originalStyle;
         const opacityStyle = {
-            ...(layer.options.style || {}),
-            opacity: opacity,
-            fillOpacity: opacity
+            ...originalStyle,
+            opacity: opacity * layerOpacity,
+            fillOpacity: fillOpacity * layerOpacity
         };
-        layer.setStyle(opacityStyle);
-        setOpacity(layer, opacity);
+        layer.setStyle(toSingleOpacityStyle(opacityStyle));
+        setOpacity(layer, layerOpacity);
     };
     layer.on('layeradd', () => {
+        setStyle(layer, options);
         layer.setOpacity(!isNil(layer.opacity) ? layer.opacity : options.opacity);
     });
     return layer;
