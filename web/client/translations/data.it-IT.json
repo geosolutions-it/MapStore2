@@ -497,6 +497,7 @@
                 "postalCode": "Codice postale",
                 "country": "Nazione",
                 "URL": "URL",
+                "metadataUrl": "Metadata URL",
                 "role": "Ruolo",
                 "hoursOfService": "Orari di servizio",
                 "electronicMailAddress": "Indirizzo email",
