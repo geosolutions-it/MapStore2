@@ -19,8 +19,10 @@ import { needsReload } from '../../../../utils/WFSLayerUtils';
 
 
 const loadFeatures = (layer, options) => {
+    layer.fireEvent('loading');
     const params = optionsToVendorParams(options);
     const onError = () => {
+        layer.fireEvent('loadError');
         // // TODO: notify error
     };
     return getFeature(options.url, options.name, {
@@ -33,6 +35,7 @@ const loadFeatures = (layer, options) => {
         if (response.status === 200) {
             layer.clearLayers();
             layer.addData(response.data);
+            layer.fireEvent('load');
         } else {
             console.error(response);// eslint-disable-line
             onError(new Error("status code of response:" + response.status));
