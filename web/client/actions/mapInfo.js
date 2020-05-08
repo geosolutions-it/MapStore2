@@ -31,6 +31,7 @@ const CHANGE_FORMAT = 'IDENTIFY:CHANGE_FORMAT';
 const TOGGLE_SHOW_COORD_EDITOR = 'IDENTIFY:TOGGLE_SHOW_COORD_EDITOR';
 const EDIT_LAYER_FEATURES = 'IDENTIFY:EDIT_LAYER_FEATURES';
 const SET_EDIT_FEATURE_QUERY = 'IDENTIFY:EDIT_FEATURE_QUERY';
+const SET_CURRENT_EDIT_FEATURE_QUERY = 'IDENTIFY:CURRENT_EDIT_FEATURE_QUERY';
 
 const TOGGLE_EMPTY_MESSAGE_GFI = "IDENTIFY:TOGGLE_EMPTY_MESSAGE_GFI";
 const toggleEmptyMessageGFI = () => ({type: TOGGLE_EMPTY_MESSAGE_GFI});
@@ -259,6 +260,11 @@ const setEditFeatureQuery = (query) => ({
     query
 });
 
+const setCurrentEditFeatureQuery = (query) => ({
+    type: SET_CURRENT_EDIT_FEATURE_QUERY,
+    query
+});
+
 module.exports = {
     ERROR_FEATURE_INFO,
     EXCEPTIONS_FEATURE_INFO,
@@ -303,5 +309,6 @@ module.exports = {
     updateCenterToMarker,
     featureInfoClick,
     EDIT_LAYER_FEATURES, editLayerFeatures,
-    SET_EDIT_FEATURE_QUERY, setEditFeatureQuery
+    SET_EDIT_FEATURE_QUERY, setEditFeatureQuery,
+    SET_CURRENT_EDIT_FEATURE_QUERY, setCurrentEditFeatureQuery
 };

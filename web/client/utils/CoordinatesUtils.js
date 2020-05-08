@@ -844,20 +844,27 @@ const CoordinatesUtils = {
             crs: 'EPSG:4326'
         };
     },
-    calclateCircleRadiusFromPixel: (coordinatesFromPixelConverter, projection, pixel, latlng, pixelRadius, defaultRadius = 0.01) => {
+    calclateCircleRadiusFromPixel: (coordinatesFromPixelConverter, projection, pixel = {}, latlng = {}, pixelRadius, defaultRadius = 0.01) => {
         const {lat, lng} = latlng;
 
-        const radiusA = [lng, lat];
-        const pixelCoords = isFunction(coordinatesFromPixelConverter) ? coordinatesFromPixelConverter([
-            pixel.x,
-            pixel.y >= pixelRadius ? pixel.y - pixelRadius : pixel.y + pixelRadius
-        ]) : null;
-        const radiusB = pixelCoords &&
-            CoordinatesUtils.pointObjectToArray(CoordinatesUtils.reproject(pixelCoords, projection, 'EPSG:4326'));
+        if (isNumber(lat) && !isNaN(lat) &&
+            isNumber(lng) && !isNaN(lng) &&
+            isNumber(pixel.x) && !isNaN(pixel.x) &&
+            isNumber(pixel.y) && !isNaN(pixel.y)) {
+            const radiusA = [lng, lat];
+            const pixelCoords = isFunction(coordinatesFromPixelConverter) ? coordinatesFromPixelConverter([
+                pixel.x,
+                pixel.y >= pixelRadius ? pixel.y - pixelRadius : pixel.y + pixelRadius
+            ]) : null;
+            const radiusB = pixelCoords &&
+                CoordinatesUtils.pointObjectToArray(CoordinatesUtils.reproject(pixelCoords, projection, 'EPSG:4326'));
 
-        return isArray(radiusB) ? Math.sqrt((radiusA[0] - radiusB[0]) * (radiusA[0] - radiusB[0]) +
-            (radiusA[1] - radiusB[1]) * (radiusA[1] - radiusB[1])) :
-            defaultRadius;
+            return isArray(radiusB) ? Math.sqrt((radiusA[0] - radiusB[0]) * (radiusA[0] - radiusB[0]) +
+                (radiusA[1] - radiusB[1]) * (radiusA[1] - radiusB[1])) :
+                defaultRadius;
+        }
+
+        return defaultRadius;
     },
     /**
      * choose to round or floor value incase of 0 fractional digits
