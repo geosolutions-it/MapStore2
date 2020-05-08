@@ -11,7 +11,7 @@ const Proj4js = require('proj4').default;
 const proj4 = Proj4js;
 const axios = require('../libs/ajax');
 const assign = require('object-assign');
-const {isArray, isObject, flattenDeep, chunk, cloneDeep, isNumber, slice, head, last} = require('lodash');
+const {isArray, isObject, isFunction, flattenDeep, chunk, cloneDeep, isNumber, slice, head, last} = require('lodash');
 const lineIntersect = require('@turf/line-intersect');
 const polygonToLinestring = require('@turf/polygon-to-linestring');
 const greatCircle = require('@turf/great-circle').default;
@@ -843,6 +843,21 @@ const CoordinatesUtils = {
             zoom: map.zoom,
             crs: 'EPSG:4326'
         };
+    },
+    calclateCircleRadiusFromPixel: (coordinatesFromPixelConverter, projection, pixel, latlng, pixelRadius, defaultRadius = 0.01) => {
+        const {lat, lng} = latlng;
+
+        const radiusA = [lng, lat];
+        const pixelCoords = isFunction(coordinatesFromPixelConverter) ? coordinatesFromPixelConverter([
+            pixel.x,
+            pixel.y >= pixelRadius ? pixel.y - pixelRadius : pixel.y + pixelRadius
+        ]) : null;
+        const radiusB = pixelCoords &&
+            CoordinatesUtils.pointObjectToArray(CoordinatesUtils.reproject(pixelCoords, projection, 'EPSG:4326'));
+
+        return isArray(radiusB) ? Math.sqrt((radiusA[0] - radiusB[0]) * (radiusA[0] - radiusB[0]) +
+            (radiusA[1] - radiusB[1]) * (radiusA[1] - radiusB[1])) :
+            defaultRadius;
     },
     /**
      * choose to round or floor value incase of 0 fractional digits

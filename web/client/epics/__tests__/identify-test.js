@@ -719,6 +719,10 @@ describe('identify Epics', () => {
                     latlng: {
                         lat: 1,
                         lng: 1
+                    },
+                    pixel: {
+                        x: 10.0,
+                        y: 10.0
                     }
                 }
             }

@@ -40,12 +40,13 @@ import { modeSelector, getAttributeFilters, isFeatureGridOpen } from '../selecto
 import { spatialFieldSelector } from '../selectors/queryform';
 import { mapSelector, projectionDefsSelector, projectionSelector, isMouseMoveIdentifyActiveSelector } from '../selectors/map';
 import { boundingMapRectSelector } from '../selectors/maplayout';
-import { centerToVisibleArea, isInsideVisibleArea, isPointInsideExtent, reprojectBbox, parseURN, calculateCircleCoordinates } from '../utils/CoordinatesUtils';
+import { centerToVisibleArea, isInsideVisibleArea, isPointInsideExtent, reprojectBbox, parseURN, calculateCircleCoordinates,
+    calclateCircleRadiusFromPixel } from '../utils/CoordinatesUtils';
 import { floatingIdentifyDelaySelector } from '../selectors/localConfig';
 import { createControlEnabledSelector, measureSelector } from '../selectors/controls';
 import { localizedLayerStylesEnvSelector } from '../selectors/localizedLayerStyles';
 
-import {getBbox, getCurrentResolution, parseLayoutValue} from '../utils/MapUtils';
+import {getBbox, getCurrentResolution, parseLayoutValue, getHook, GET_COORDINATES_FROM_PIXEL_HOOK} from '../utils/MapUtils';
 import MapInfoUtils from '../utils/MapInfoUtils';
 import { IDENTIFY_POPUP } from '../components/map/popups';
 
@@ -296,20 +297,23 @@ export default {
     identifyEditLayerFeaturesEpic: (action$, store) =>
         action$.ofType(EDIT_LAYER_FEATURES)
             .exhaustMap(({layer}) => {
-                const currentFilter = find(getAttributeFilters(store.getState()), f => f.type === 'geometry') || {};
                 const clickPoint = clickPointSelector(store.getState());
                 const lng = get(clickPoint, 'latlng.lng');
                 const lat = get(clickPoint, 'latlng.lat');
-                const radius = 0.2;
-                const attribute = currentFilter.attribute || get(spatialFieldSelector(store.getState()), 'attribute');
+                const hook = getHook(GET_COORDINATES_FROM_PIXEL_HOOK);
+                const radius = calclateCircleRadiusFromPixel(
+                    hook,
+                    projectionSelector(store.getState()),
+                    get(clickPoint, 'pixel'),
+                    get(clickPoint, 'latlng'),
+                    10
+                );
 
                 return isNumber(lng) && isNumber(lat) ? Rx.Observable.of(
                     setEditFeatureQuery({
                         type: 'geometry',
                         enabled: true,
-                        attribute,
                         value: {
-                            attribute,
                             geometry: {
                                 center: [lng, lat],
                                 coordinates: calculateCircleCoordinates({x: lng, y: lat}, radius, 12),
@@ -330,10 +334,20 @@ export default {
             .filter(({isLoading}) => !isLoading)
             .switchMap(() => {
                 const queryObj = editFeatureQuerySelector(store.getState());
+                const currentFilter = find(getAttributeFilters(store.getState()), f => f.type === 'geometry') || {};
+                const attribute = currentFilter.attribute || get(spatialFieldSelector(store.getState()), 'attribute');
+
                 return queryObj ? Rx.Observable.of(
                     setEditFeatureQuery(),
                     toggleEditMode(),
-                    updateFilter(queryObj)
+                    updateFilter({
+                        ...queryObj,
+                        attribute,
+                        value: {
+                            ...queryObj.value,
+                            attribute
+                        }
+                    })
                 ) : Rx.Observable.empty();
             }),
     resetEditFeatureQuery: (action$) =>

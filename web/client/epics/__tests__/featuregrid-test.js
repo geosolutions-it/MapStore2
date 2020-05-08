@@ -1913,7 +1913,7 @@ describe('featuregrid Epics', () => {
         }, done);
     });
     it('featureGridUpdateFilter with geometry filter', (done) => {
-        const startActions = [createQuery(), updateFilter({
+        const startActions = [openFeatureGrid(), createQuery(), updateFilter({
             type: 'geometry',
             enabled: true
         }), updateFilter({

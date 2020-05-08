@@ -91,7 +91,7 @@ const featureTypeSelectedEpic = (action$, store) =>
                     if (typeof response.data === 'object' && response.data.featureTypes && response.data.featureTypes[0]) {
                         const info = extractInfo(response.data);
                         const geometry = info.geometry[0] && info.geometry[0].attribute ? info.geometry[0].attribute : 'the_geom';
-                        return Rx.Observable.from([featureTypeLoaded(action.typeName, info), changeSpatialAttribute(geometry)]);
+                        return Rx.Observable.from([changeSpatialAttribute(geometry), featureTypeLoaded(action.typeName, info)]);
                     }
                     try {
                         JSON.parse(response.data);
