@@ -26,6 +26,7 @@ const loadFeatures = (layer, options) => {
     return getFeature(options.url, options.name, {
         // bbox: extent.join(',') + ',' + proj,
         outputFormat: "application/json",
+        maxFeatures: 1000,
         srsname: CoordinatesUtils.normalizeSRS( 'EPSG:4326'),
         ...params
     }).then(response => {
