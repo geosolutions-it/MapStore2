@@ -5,6 +5,7 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
+const uuid = require('uuid');
 
 module.exports = [
     {
@@ -38,7 +39,7 @@ module.exports = [
     },
     {
         translation: "geostoryViewEditButton",
-        selector: ".ms-geostory-navigation-toolbar > div > span > button",
+        selector: ".ms-geostory-navigation-toolbar #edit-story",
         position: "bottom",
         action: {
             back: {
@@ -108,20 +109,20 @@ module.exports = [
         action: {
             next: {
                 type: 'GEOSTORY:ADD',
-                id: 'ac60fc28-fcb1-4500-99e5-06213bcbaca8',
+                id: uuid(),
                 path: 'sections',
                 position: 'title_section_id1',
                 element: {
-                    id: 'dc9dcad7-1af3-41ea-9a3c-c31d1fc6e361',
+                    id: uuid(),
                     type: 'paragraph',
                     title: 'Media Section',
                     contents: [
                         {
-                            id: 'cff45afc-98c3-4280-845d-7455129f6c1b',
+                            id: uuid(),
                             type: 'column',
                             contents: [
                                 {
-                                    id: 'ffa8e8a8-8947-4c11-833d-cfdf5ead12d3',
+                                    id: uuid(),
                                     type: 'media',
                                     size: 'medium',
                                     align: 'center'
