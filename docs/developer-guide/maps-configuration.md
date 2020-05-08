@@ -31,7 +31,8 @@ This is used for the **new map**. If you're logged in and allowed to create maps
 http://localhost:8081/#viewer/openlayers/new
 ```
 
-this is a special map identifier that uses the `new.json` file in the root of the project. (`web/client` for standard mapstore, root for custom projects). You can edit `new.json` to customize the initial template for new maps. For instance, checkout [this guide if you want to change the backgrounds](../how-to-change-background-list).
+This page uses the `new.json` file as a template configuration to start creating a new map. You can find this file in `web/client` directory for standard MapStore or in the root for a custom projects. 
+You can edit `new.json` to customize this initial template. It typically contains the map backgrounds you want to use for all the new maps (identified by the special property `"group": "background"`).  
 
 
 `new.json` and `config.json` are special cases, but you can configure your own static map context creating these json files in the root of the project, for instance `mycontext.json` and accessing them at the URL:
