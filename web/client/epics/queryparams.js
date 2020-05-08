@@ -8,16 +8,19 @@
 
 import * as Rx from 'rxjs';
 import { LOCATION_CHANGE } from 'connected-react-router';
-import { get, head, isNaN, isString, includes } from 'lodash';
+import {get, head, isNaN, isString, includes, size, toNumber, isNil} from 'lodash';
 import url from 'url';
 
-import { CHANGE_MAP_VIEW, zoomToExtent, ZOOM_TO_EXTENT } from '../actions/map';
+import { CHANGE_MAP_VIEW, zoomToExtent, ZOOM_TO_EXTENT, CLICK_ON_MAP, changeMapView } from '../actions/map';
 import { ADD_LAYERS_FROM_CATALOGS } from '../actions/catalog';
 import { SEARCH_LAYER_WITH_FILTER } from '../actions/search';
 import { warning } from '../actions/notifications';
 
 import { isValidExtent } from '../utils/CoordinatesUtils';
-import { getConfigProp } from '../utils/ConfigUtils';
+import { getConfigProp, getCenter } from '../utils/ConfigUtils';
+import {featureInfoClick, showMapinfoMarker, toggleMapInfoState} from "../actions/mapInfo";
+import {getBbox} from "../utils/MapUtils";
+import {mapSelector} from '../selectors/map';
 
 /*
 it maps params key to function.
@@ -43,6 +46,24 @@ const paramActions = {
                 position: "tc"
             })
         ];
+    },
+    center: ({value = {}, state}) => {
+        const map = mapSelector(state);
+        const center = getCenter(value.center.split(',').map(val => toNumber(val)));
+        const zoom = toNumber(value.zoom || 21);
+        const bbox =  getBbox(center, zoom);
+        return [changeMapView(center, zoom, bbox, map.size, null, map.projection)];
+    },
+    marker: ({value = {}, state}) => {
+        const map = mapSelector(state);
+        const marker = value.marker.split(',').map(val => toNumber(val));
+        const lng = marker[0] || 0;
+        const lat = marker[1] || 0;
+        const center = getCenter(value.marker.split(',').map(val => toNumber(val)));
+        const zoom = toNumber(value.zoom || 21);
+        const bbox =  getBbox(center, zoom);
+        let point =  {latlng: {lng, lat}};
+        return [ changeMapView(center, zoom, bbox, map.size, null, map.projection), featureInfoClick(point)];
     },
     actions: ({value = ''}) => {
         const whiteList = (getConfigProp("initialActionsWhiteList") || []).concat([
@@ -77,7 +98,7 @@ const readQueryParamsOnMapEpic = (action$, store) =>
                         .reduce((actions, param) => {
                             return [
                                 ...actions,
-                                ...(paramActions[param] && paramActions[param]({ value: query[param] }) || [])
+                                ...(paramActions[param] && paramActions[param]({ value: size(query) === 1 ? query[param] : query, state }) || [])
                             ];
                         }, []);
                     return head(queryActions)
@@ -86,6 +107,12 @@ const readQueryParamsOnMapEpic = (action$, store) =>
                 })
         );
 
+const onMapClickForShareEpic = (action$) =>
+    action$.ofType(CLICK_ON_MAP).
+        switchMap(({point, layer}) =>
+            Rx.Observable.of(featureInfoClick(point, layer)));
+
 export {
-    readQueryParamsOnMapEpic
+    readQueryParamsOnMapEpic,
+    onMapClickForShareEpic
 };

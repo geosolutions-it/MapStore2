@@ -10,6 +10,7 @@ import React from 'react';
 import { connect } from '../utils/PluginsUtils';
 import assign from 'object-assign';
 import { Glyphicon } from 'react-bootstrap';
+const { compose, withHandlers } = require('recompose');
 import Message from '../components/I18N/Message';
 import { toggleControl, setControlProperty } from '../actions/controls';
 import ConfigUtils from '../utils/ConfigUtils';
@@ -23,6 +24,8 @@ import { currentContextSelector } from '../selectors/context';
 import { reprojectBbox, getViewportGeometry } from '../utils/CoordinatesUtils';
 import { get } from 'lodash';
 import controls from '../reducers/controls';
+import {featureInfoClick, changeFormat, toggleMapInfoState, purgeMapInfoResults, hideMapinfoMarker} from '../actions/mapInfo';
+import { clickPointSelector} from '../selectors/mapInfo';
 
 /**
  * Get wider and valid extent in viewport
@@ -64,31 +67,53 @@ const getExtentFromViewport = ({ bounds, crs } = {}, dest = 'EPSG:4326') => {
  * @prop {object} [advancedSettings] show advanced settings (bbox param or home button) f.e {bbox: true, homeButton: true}
  */
 
-const Share = connect(createSelector([
-    state => state.controls && state.controls.share && state.controls.share.enabled,
-    versionSelector,
-    mapSelector,
-    currentContextSelector,
-    state => get(state, 'controls.share.settings', {})
-], (isVisible, version, map, context, settings) => ({
-    isVisible,
-    shareUrl: location.href,
-    shareApiUrl: ShareUtils.getApiUrl(location.href),
-    shareConfigUrl: ShareUtils.getConfigUrl(location.href, ConfigUtils.getConfigProp('geoStoreUrl')),
-    version,
-    bbox: isVisible && map && map.bbox && getExtentFromViewport(map.bbox),
-    showAPI: !context,
-    embedOptions: {
-        showTOCToggle: !context
-    },
-    settings,
-    advancedSettings: {
-        bbox: true
-    }
-})), {
-    onClose: toggleControl.bind(null, 'share', null),
-    onUpdateSettings: setControlProperty.bind(null, 'share', 'settings')
-})(SharePanel);
+const Share = compose(
+    connect(createSelector([
+        state => state.controls && state.controls.share && state.controls.share.enabled,
+        versionSelector,
+        mapSelector,
+        currentContextSelector,
+        state => get(state, 'controls.share.settings', {}),
+        (state) => state.mapInfo && state.mapInfo.formatCoord,
+        clickPointSelector
+    ], (isVisible, version, map, context, settings, formatCoords, point) => ({
+        isVisible,
+        shareUrl: location.href,
+        shareApiUrl: ShareUtils.getApiUrl(location.href),
+        shareConfigUrl: ShareUtils.getConfigUrl(location.href, ConfigUtils.getConfigProp('geoStoreUrl')),
+        version,
+        bbox: isVisible && map && map.bbox && getExtentFromViewport(map.bbox),
+        center: map && ConfigUtils.getCenter(map.center),
+        zoom: map && map.zoom,
+        showAPI: !context,
+        embedOptions: {
+            showTOCToggle: !context
+        },
+        settings,
+        advancedSettings: {
+            bbox: true,
+            centerAndZoom: true
+        },
+        formatCoords: formatCoords,
+        point
+    })), {
+        closeSharePanel: toggleControl.bind(null, 'share', null),
+        purgeResults: purgeMapInfoResults,
+        hideMarker: hideMapinfoMarker,
+        onUpdateSettings: setControlProperty.bind(null, 'share', 'settings'),
+        identifyDisable: toggleMapInfoState,
+        onSubmitClickPoint: featureInfoClick,
+        onChangeFormat: changeFormat
+    }),
+    withHandlers({
+        onClose: ({hideMarker = () => {}, purgeResults = () => {}, closeSharePanel = () => {}, identifyDisable = () => {}, settings = {}}) => () => {
+            closeSharePanel();
+            hideMarker();
+            purgeResults();
+            settings.centerAndZoomEnabled && identifyDisable();
+        }
+    })
+)(SharePanel);
 
 export const SharePlugin = assign(Share, {
     disablePluginIf: "{state('router') && (state('router').endsWith('new') || state('router').includes('newgeostory') || state('router').endsWith('dashboard'))}",

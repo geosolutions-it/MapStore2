@@ -1137,6 +1137,10 @@
             "sharedTitle": "Check out my new map: ",
             "advancedOptions": "Advanced Options",
             "addBboxParam": "Add bbox param to sharing link",
+            "addCenterAndZoomParam": "Add center and zoom to sharing link",
+            "zoom": "Zoom",
+            "marker": "Add Marker",
+            "coordinate": "Coordinates",
             "wrongBboxParamTitle": "Invalid bbox param",
             "wrongBboxParamMessage": "bbox params must be in EPSG:4326 and wrote as bbox=minx,miny,maxx,maxy",
             "showHomeButton": "Link to MapStore home"

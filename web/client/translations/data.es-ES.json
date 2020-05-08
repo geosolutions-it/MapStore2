@@ -1138,7 +1138,11 @@
             "addBboxParam": "Añadir bbox param al enlace de compartir",
             "wrongBboxParamTitle": "Bbox no válido",
             "wrongBboxParamMessage": "bbox params debe estar en EPSG:4326 y escrito como bbox=minx,miny,maxx,maxy",
-            "showHomeButton": "Enlace al inicio de MapStore"
+            "showHomeButton": "Enlace al inicio de MapStore",
+            "addCenterAndZoomParam": "Agregar centro y hacer zoom para compartir el enlace",
+            "zoom": "Enfocar",
+            "marker": "Agregar marcador",
+            "coordinate": "Coordenadas"
         },
         "snapshot": {
             "title": "Previsualización de la captura del mapa",

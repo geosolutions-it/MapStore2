@@ -1137,7 +1137,11 @@
             "addBboxParam": "Ajouter un paramètre bbox au lien de partage",
             "wrongBboxParamTitle": "Param bbox invalide",
             "wrongBboxParamMessage": "Les paramètres bbox doivent être en EPSG:4326 et écrit comme bbox=minx,miny,maxx,maxy",
-            "showHomeButton": "Lien vers l'accueil MapStore"
+            "showHomeButton": "Lien vers l'accueil MapStore",
+            "addCenterAndZoomParam": "Ajouter le centre et zoomer sur le lien de partage",
+            "zoom": "Zoom",
+            "marker": "Ajouter un marqueur",
+            "coordinate": "Coordonnés"
         },
         "snapshot": {
             "title": "Prévisualisation de la capture de la carte",

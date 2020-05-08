@@ -1139,7 +1139,11 @@
             "addBboxParam": "Fügen Sie einen bbox param zum Freigabeverlink hinzu",
             "wrongBboxParamTitle": "Ungültiger Bbox-Parameter",
             "wrongBboxParamMessage": "bbox-Parameter müssen in EPSG:4326 sein und als bbox=minx,miny,maxx,maxy angegeben werden",
-            "showHomeButton": "Link zur MapStore-Startseite"
+            "showHomeButton": "Link zur MapStore-Startseite",
+            "addCenterAndZoomParam": "Fügen Sie die Mitte hinzu und zoomen Sie zum Freigabelink",
+            "zoom": "Zoomen",
+            "marker": "Marker hinzufügen",
+            "coordinate": "Koordinaten"
         },
         "snapshot": {
             "title": "Snapshot Vorschau",

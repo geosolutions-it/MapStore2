@@ -15,11 +15,13 @@ import ShareLink from './ShareLink';
 import ShareEmbed from './ShareEmbed';
 import ShareApi from './ShareApi';
 import ShareQRCode from './ShareQRCode';
-import { Glyphicon, Tabs, Tab, Checkbox } from 'react-bootstrap';
+import {Glyphicon, Tabs, Tab, Checkbox, FormControl, FormGroup, ControlLabel} from 'react-bootstrap';
 import Message from '../../components/I18N/Message';
-import { join } from 'lodash';
+import { join, isNil, reverse, values } from 'lodash';
 import { removeQueryFromUrl, getSharedGeostoryUrl } from '../../utils/ShareUtils';
 import SwitchPanel from '../misc/switch/SwitchPanel';
+import Editor from '../data/identify/coordinates/Editor';
+const {set} = require('../../utils/ImmutableUtils');
 
 /**
  * SharePanel allow to share the current map in some different ways.
@@ -63,11 +65,14 @@ class SharePanel extends React.Component {
         bbox: PropTypes.object,
         advancedSettings: PropTypes.shape({
             bbox: PropTypes.bool,
-            homeButton: PropTypes.bool
+            homeButton: PropTypes.bool,
+            centerAndZoom: PropTypes.bool
         }),
         settings: PropTypes.object,
         onUpdateSettings: PropTypes.func,
-        selectedTab: PropTypes.string
+        selectedTab: PropTypes.string,
+        formatCoords: PropTypes.string,
+        point: PropTypes.object
     };
 
     static defaultProps = {
@@ -82,7 +87,8 @@ class SharePanel extends React.Component {
         showAPI: true,
         closeGlyph: "1-close",
         settings: {},
-        onUpdateSettings: () => {}
+        onUpdateSettings: () => {},
+        formatCoords: "decimal"
     };
 
     state = {
@@ -97,20 +103,36 @@ class SharePanel extends React.Component {
             embed: 3
         };
         const bbox = join(this.props.bbox, ',');
+        const coordinate = this.getCoordinates(this.props);
         this.setState({
             bbox,
-            eventKey: tabs[this.props.selectedTab] || 1
+            eventKey: tabs[this.props.selectedTab] || 1,
+            zoom: this.props.zoom,
+            coordinate
         });
     }
 
     UNSAFE_componentWillReceiveProps(newProps) {
-        const bbox = join(this.props.bbox, ',');
         const newBbox = join(newProps.bbox, ',');
-        if (bbox !== newBbox) {
+        if (this.props !== newProps) {
+            const coordinate = this.getCoordinates(newProps);
             this.setState({
-                bbox: newBbox
+                bbox: newBbox,
+                zoom: newProps.zoom,
+                coordinate
             });
         }
+    }
+
+
+    getLatLng = (point) =>{
+        const latlng = point && point.latlng || null;
+        let lngCorrected = null;
+        if (latlng) {
+            lngCorrected = latlng && Math.round(latlng.lng * 100000000000000000) / 100000000000000000;
+            lngCorrected = lngCorrected - 360 * Math.floor(lngCorrected / 360 + 0.5);
+        }
+        return { lat: latlng && latlng.lat, lon: lngCorrected};
     }
 
     getShareUrl = () => {
@@ -118,6 +140,14 @@ class SharePanel extends React.Component {
         let shareUrl = getSharedGeostoryUrl(removeQueryFromUrl(this.props.shareUrl));
         if (settings.bboxEnabled && advancedSettings && advancedSettings.bbox && this.state.bbox) shareUrl = `${shareUrl}?bbox=${this.state.bbox}`;
         if (settings.showHome && advancedSettings && advancedSettings.homeButton) shareUrl = `${shareUrl}?showHome=true`;
+        if (settings.centerAndZoomEnabled && advancedSettings && advancedSettings.centerAndZoom) {
+            const centerOrMarker = reverse(values(this.state.coordinate)).join(',');
+            if (settings.markerEnabled) {
+                shareUrl = `${shareUrl}?marker=${centerOrMarker}&zoom=${this.state.zoom}`;
+            } else {
+                shareUrl = `${shareUrl}?center=${centerOrMarker}&zoom=${this.state.zoom}`;
+            }
+        }
         return shareUrl;
     };
 
@@ -174,6 +204,12 @@ class SharePanel extends React.Component {
         return this.props.isVisible ? sharePanel : null;
     }
 
+    getCoordinates = (props) => {
+        const latLng = this.getLatLng(props.point);
+        const {x, y} = props.center || {x: "", y: ""};
+        return latLng && latLng.lat !== null ? latLng : {lat: y, lon: x} || {lat: "", lon: ""};
+    }
+
     renderAdvancedSettings = () => {
         return (
             <SwitchPanel
@@ -181,7 +217,7 @@ class SharePanel extends React.Component {
                 expanded={this.state.showAdvanced}
                 onSwitch={() => this.setState({ showAdvanced: !this.state.showAdvanced })}>
                 {this.props.advancedSettings.bbox && <Checkbox
-                    checked={this.props.settings.bboxEnabled ? true : false}
+                    checked={this.props.settings.bboxEnabled}
                     onChange={() =>
                         this.props.onUpdateSettings({
                             ...this.props.settings,
@@ -189,8 +225,20 @@ class SharePanel extends React.Component {
                         })}>
                     <Message msgId="share.addBboxParam" />
                 </Checkbox>}
+                {this.props.advancedSettings.centerAndZoom && <Checkbox
+                    checked={this.props.settings && this.props.settings.centerAndZoomEnabled}
+                    onChange={() => {
+                        this.props.identifyDisable();
+                        this.props.onUpdateSettings({
+                            ...this.props.settings,
+                            centerAndZoomEnabled: !this.props.settings.centerAndZoomEnabled
+                        });
+                    }
+                    }>
+                    <Message msgId="share.addCenterAndZoomParam" />
+                </Checkbox>}
                 {this.props.advancedSettings.homeButton && <Checkbox
-                    checked={this.props.settings.showHome ? true : false}
+                    checked={this.props.settings.showHome}
                     onChange={() =>
                         this.props.onUpdateSettings({
                             ...this.props.settings,
@@ -198,6 +246,45 @@ class SharePanel extends React.Component {
                         })}>
                     <Message msgId="share.showHomeButton" />
                 </Checkbox>}
+                {this.props.settings.centerAndZoomEnabled && <div>
+                    <FormGroup id={"share-container"}>
+                        <ControlLabel><Message msgId="share.coordinate" /></ControlLabel>
+                        <Editor
+                            removeVisible={false}
+                            formatCoord={this.props.formatCoords}
+                            coordinate={this.state.coordinate}
+                            onSubmit={(val)=>{
+                                const lat = !isNil(val.lat) && !isNaN(val.lat) ? parseFloat(val.lat) : 0;
+                                const lng = !isNil(val.lon) && !isNaN(val.lon) ? parseFloat(val.lon) : 0;
+                                let newPoint = set('latlng.lng', lng, set('latlng.lat', lat, this.props.point));
+                                this.props.onSubmitClickPoint(newPoint);
+                            }}
+                            onChangeFormat={this.props.onChangeFormat}
+                        />
+                    </FormGroup>
+                    <FormGroup>
+                        <ControlLabel><Message msgId="share.zoom" /></ControlLabel>
+                        <FormControl
+                            type="number"
+                            min={0}
+                            max={100}
+                            name={"zoom"}
+                            value={this.state.zoom || this.props.zoom}
+                            onChange={(event)=>this.setState({...this.state, zoom: event.target.value})}/>
+                    </FormGroup>
+                    <Checkbox
+                        checked={this.props.settings && this.props.settings.markerEnabled}
+                        onChange={() => {
+                            this.props.onUpdateSettings({
+                                ...this.props.settings,
+                                markerEnabled: !this.props.settings.markerEnabled
+                            });
+                        }
+                        }>
+                        <Message msgId="share.marker" />
+                    </Checkbox>
+                </div>
+                }
             </SwitchPanel>
         );
     }

@@ -38,7 +38,9 @@ const Message = require('./locale/Message');
 require('./identify/identify.css');
 
 const selector = createStructuredSelector({
-    enabled: (state) => state.mapInfo && state.mapInfo.enabled || state.controls && state.controls.info && state.controls.info.enabled || false,
+    enabled: (state) => {
+        return !(state.controls && state.controls.share && state.controls.share.settings && state.controls.share.settings.centerAndZoomEnabled) || state.mapInfo && state.mapInfo.enabled || state.controls && state.controls.info && state.controls.info.enabled || false;
+    },
     responses: responsesSelector,
     validResponses: validResponsesSelector,
     requests: (state) => state.mapInfo && state.mapInfo.requests || [],

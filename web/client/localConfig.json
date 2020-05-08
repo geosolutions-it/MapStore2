@@ -308,7 +308,8 @@
               "name": "Share",
               "cfg": {
                 "advancedSettings": {
-                  "bbox": true
+                  "bbox": true,
+                  "centerAndZoom": true
                 }
               }
             },
