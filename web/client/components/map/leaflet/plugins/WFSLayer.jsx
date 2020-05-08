@@ -136,6 +136,7 @@ Layers.registerType('wfs', {
             const {features} = layer.toGeoJSON();
             return createVectorLayer(newOptions, features);
         }
+        return null;
     },
     render: () => {
         return null;
