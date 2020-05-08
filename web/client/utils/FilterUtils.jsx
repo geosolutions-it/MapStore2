@@ -750,7 +750,7 @@ const FilterUtils = {
         let cql = '';
 
         spatialFields.forEach((field, index) => {
-            cql += field.operation + "(" + field.attribute + ",";
+            cql += field.operation + "(\"" + field.attribute + "\",";
             if (field.collectGeometries && field.collectGeometries.queryCollection) {
                 cql += cqlCollectGeometries(cqlQueryCollection(field.collectGeometries.queryCollection));
             } else {
