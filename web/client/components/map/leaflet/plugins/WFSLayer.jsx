@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import {isNil} from 'lodash';
+import { isNil, isEqual } from 'lodash';
 import L from 'leaflet';
 
 import CoordinatesUtils from '../../../../utils/CoordinatesUtils';
@@ -15,13 +15,7 @@ import { optionsToVendorParams } from '../../../../utils/VendorParamsUtils';
 
 import { getFeature } from '../../../../api/WFS';
 import { needsReload } from '../../../../utils/WFSLayerUtils';
-const defaultStyle = {
-    radius: 5,
-    color: "red",
-    weight: 1,
-    opacity: 1,
-    fillOpacity: 1
-};
+
 
 const loadFeatures = (layer, options) => {
     const params = optionsToVendorParams(options);
@@ -31,7 +25,7 @@ const loadFeatures = (layer, options) => {
     return getFeature(options.url, options.name, {
         // bbox: extent.join(',') + ',' + proj,
         outputFormat: "application/json",
-        srsname: CoordinatesUtils.normalizeSRS(options.srs || 'EPSG:3857', options.allowedSRS),
+        srsname: CoordinatesUtils.normalizeSRS( 'EPSG:4326'),
         ...params
     }).then(response => {
         if (response.status === 200) {
@@ -48,6 +42,10 @@ const loadFeatures = (layer, options) => {
 
 };
 
+const setStyle = (layer, options) => {
+    layer.setStyle(options.style);
+};
+
 const setOpacity = (layer, opacity) => {
     if (layer.eachLayer) {
         layer.eachLayer(l => {
@@ -59,27 +57,33 @@ const setOpacity = (layer, opacity) => {
     }
 };
 
-var createVectorLayer = function(options) {
-    const layer = new L.GeoJSON([{
-        "type": "Feature",
-        "geometry": {
-            "type": "Point",
-            "coordinates": [125.6, 10.1]
-        },
-        "properties": {
-            "name": "Dinagat Islands"
+const getStyle = options => {
+    const style = options.style && options.style[0] || options.style;
+    return style;
+
+};
+
+var createVectorLayer = function(options, features = []) {
+    const style = getStyle(options);
+    const pointToLayer = function(feature, latlng) {
+        if (options.styleName === "marker") {
+            return L.marker(latlng, style);
         }
-    }], {
+        return L.circleMarker(latlng, style);
+    };
+    const layer = new L.GeoJSON(features, {
+        pointToLayer,
         // hideLoading: hideLoading,
-        style: options.nativeStyle || options.style || defaultStyle // TODO: ol nativeStyle should not be taken from the store
+        style: style // TODO: ol nativeStyle should not be taken from the store
     });
-    layer.setOpacity = (opacity) => {
-        const style = {
-            ...(layer.options.style || defaultStyle),
+    layer.styleName = options.styleName;
+    layer.setOpacity = function(opacity) {
+        const opacityStyle = {
+            ...(layer.options.style || {}),
             opacity: opacity,
             fillOpacity: opacity
         };
-        layer.setStyle(style);
+        layer.setStyle(opacityStyle);
         setOpacity(layer, opacity);
     };
     layer.on('layeradd', () => {
@@ -103,6 +107,13 @@ Layers.registerType('wfs', {
         }
         if (needsReload(oldOptions, newOptions)) {
             loadFeatures(layer, newOptions);
+        }
+        if (!isEqual(newOptions.style, oldOptions.style) ) {
+            setStyle(layer, newOptions);
+        }
+        if (newOptions.styleName !== oldOptions.styleName) {
+            const {features} = layer.toGeoJSON();
+            return createVectorLayer(newOptions, features);
         }
     },
     render: () => {
