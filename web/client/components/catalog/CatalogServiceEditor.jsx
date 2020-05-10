@@ -44,7 +44,8 @@ export default ({
     onToggleThumbnail = () => {},
     onAddService = () => {},
     onDeleteService = () => {},
-    onChangeCatalogMode = () => {}
+    onChangeCatalogMode = () => {},
+    isLocalizedLayerStylesEnabled
 }) => {
     const [valid, setValid] = useState(true);
     return (<BorderLayout
@@ -75,6 +76,7 @@ export default ({
                 onChangeServiceProperty={onChangeServiceProperty}
                 onToggleTemplate={onToggleTemplate}
                 onToggleThumbnail={onToggleThumbnail}
+                isLocalizedLayerStylesEnabled={isLocalizedLayerStylesEnabled}
             />
             <FormGroup controlId="buttons" key="buttons">
                 <Col xs={12}>
