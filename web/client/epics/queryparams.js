@@ -135,6 +135,12 @@ const readQueryParamsOnMapEpic = (action$, store) =>
                 })
         );
 
+/**
+ * Intercept on `CLICK_ON_MAP` to get point and layer information to allow featureInfoClick.
+ * @param {external:Observable} action$ manages `CLICK_ON_MAP`
+ * @memberof epics.share
+ * @return {external:Observable}
+ */
 const onMapClickForShareEpic = (action$, { getState = () => { } }) =>
     action$.ofType(CLICK_ON_MAP).
         switchMap(({point, layer}) =>{
@@ -142,6 +148,12 @@ const onMapClickForShareEpic = (action$, { getState = () => { } }) =>
             return allowClick && Rx.Observable.of(featureInfoClick(point, layer));
         });
 
+/**
+ * Intercept on `TOGGLE_CONTROL` to perform toggleMapInfoState and clean up on share panel close.
+ * @param {external:Observable} action$ manages `TOGGLE_CONTROL`
+ * @memberof epics.share
+ * @return {external:Observable}
+ */
 const disableGFIForShareEpic = (action$, { getState = () => { } }) =>
     action$.ofType(TOGGLE_CONTROL).
         switchMap(()=>{
