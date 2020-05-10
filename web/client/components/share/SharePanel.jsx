@@ -22,6 +22,8 @@ import { removeQueryFromUrl, getSharedGeostoryUrl } from '../../utils/ShareUtils
 import SwitchPanel from '../misc/switch/SwitchPanel';
 import Editor from '../data/identify/coordinates/Editor';
 const {set} = require('../../utils/ImmutableUtils');
+const OverlayTrigger = require('../misc/OverlayTrigger');
+const {Tooltip} = require('react-bootstrap');
 
 /**
  * SharePanel allow to share the current map in some different ways.
@@ -229,12 +231,12 @@ class SharePanel extends React.Component {
                 {this.props.advancedSettings.centerAndZoom && <Checkbox
                     checked={this.props.settings && this.props.settings.centerAndZoomEnabled}
                     onChange={() => {
-                        this.props.identifyDisable();
                         this.props.onUpdateSettings({
                             ...this.props.settings,
                             centerAndZoomEnabled: !this.props.settings.centerAndZoomEnabled,
                             bboxEnabled: false
                         });
+                        this.props.hideMarker();
                     }
                     }>
                     <Message msgId="share.addCenterAndZoomParam" />
@@ -251,6 +253,9 @@ class SharePanel extends React.Component {
                 {this.props.settings.centerAndZoomEnabled && <div>
                     <FormGroup id={"share-container"}>
                         <ControlLabel><Message msgId="share.coordinate" /></ControlLabel>
+                        <OverlayTrigger placement="top" overlay={<Tooltip id="share-coordinate"><Message msgId="share.coordTooltip"/></Tooltip>}>
+                            <Glyphicon style={{marginLeft: 5}} glyph="info-sign" />
+                        </OverlayTrigger>
                         <Editor
                             removeVisible={false}
                             formatCoord={this.props.formatCoords}

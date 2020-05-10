@@ -1141,6 +1141,7 @@
             "zoom": "Zoom",
             "marker": "Add Marker",
             "coordinate": "Coordinates",
+            "coordTooltip": "Click on map to grab the coordinates",
             "wrongCenterAndZoomParamTitle": "Invalid center and zoom param",
             "wrongCenterAndZoomParamMessage": "Center and Zoom param must be center=lon,lat&zoom=value and (+|- 90° lat, +|-180° lon)",
             "wrongMarkerAndZoomParamTitle": "Invalid marker and zoom param",

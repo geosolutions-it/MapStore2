@@ -1145,7 +1145,8 @@
             "addCenterAndZoomParam": "Ajouter le centre et zoomer sur le lien de partage",
             "zoom": "Zoom",
             "marker": "Ajouter un marqueur",
-            "coordinate": "Coordonnés"
+            "coordinate": "Coordonnés",
+            "coordTooltip": "Cliquez sur la carte pour saisir les coordonnées"
         },
         "snapshot": {
             "title": "Prévisualisation de la capture de la carte",

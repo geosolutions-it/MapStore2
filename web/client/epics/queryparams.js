@@ -8,17 +8,18 @@
 
 import * as Rx from 'rxjs';
 import { LOCATION_CHANGE } from 'connected-react-router';
-import {get, head, isNaN, isString, includes, size, toNumber, isEmpty, isObject} from 'lodash';
+import {get, head, isNaN, isString, includes, size, toNumber, isEmpty, isObject, isUndefined} from 'lodash';
 import url from 'url';
 
 import { CHANGE_MAP_VIEW, zoomToExtent, ZOOM_TO_EXTENT, CLICK_ON_MAP, changeMapView } from '../actions/map';
 import { ADD_LAYERS_FROM_CATALOGS } from '../actions/catalog';
 import { SEARCH_LAYER_WITH_FILTER } from '../actions/search';
+import { TOGGLE_CONTROL } from '../actions/controls';
 import { warning } from '../actions/notifications';
 
 import { isValidExtent } from '../utils/CoordinatesUtils';
 import { getConfigProp, getCenter } from '../utils/ConfigUtils';
-import {featureInfoClick} from "../actions/mapInfo";
+import {featureInfoClick, hideMapinfoMarker, purgeMapInfoResults, toggleMapInfoState} from "../actions/mapInfo";
 import {getBbox} from "../utils/MapUtils";
 import {mapSelector} from '../selectors/map';
 
@@ -134,12 +135,25 @@ const readQueryParamsOnMapEpic = (action$, store) =>
                 })
         );
 
-const onMapClickForShareEpic = (action$) =>
+const onMapClickForShareEpic = (action$, { getState = () => { } }) =>
     action$.ofType(CLICK_ON_MAP).
-        switchMap(({point, layer}) =>
-            Rx.Observable.of(featureInfoClick(point, layer)));
+        switchMap(({point, layer}) =>{
+            const allowClick = get(getState(), 'controls.share.settings.centerAndZoomEnabled');
+            return allowClick && Rx.Observable.of(featureInfoClick(point, layer));
+        });
+
+const disableGFIForShareEpic = (action$, { getState = () => { } }) =>
+    action$.ofType(TOGGLE_CONTROL).
+        switchMap(()=>{
+            const shareEnabled = get(getState(), 'controls.share.enabled');
+            return !isUndefined(shareEnabled) &&
+            shareEnabled ?
+                Rx.Observable.of(toggleMapInfoState()) :
+                Rx.Observable.of(hideMapinfoMarker(), purgeMapInfoResults(), toggleMapInfoState());
+        });
 
 export {
     readQueryParamsOnMapEpic,
-    onMapClickForShareEpic
+    onMapClickForShareEpic,
+    disableGFIForShareEpic
 };

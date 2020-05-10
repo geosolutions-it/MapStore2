@@ -8,11 +8,12 @@
 
 import expect from 'expect';
 import { addTimeoutEpic, testEpic, TEST_TIMEOUT } from './epicTestUtils';
-import {onMapClickForShareEpic, readQueryParamsOnMapEpic} from '../queryparams';
+import {disableGFIForShareEpic, onMapClickForShareEpic, readQueryParamsOnMapEpic} from '../queryparams';
 import { changeMapView, ZOOM_TO_EXTENT, CHANGE_MAP_VIEW, clickOnMap } from '../../actions/map';
 import { FEATURE_INFO_CLICK } from '../../actions/mapInfo';
 import { SHOW_NOTIFICATION } from '../../actions/notifications';
 import { onLocationChanged } from 'connected-react-router';
+import {toggleControl} from "../../actions/controls";
 
 describe('queryparam epics', () => {
     it('test readQueryParamsOnMapEpic without params in url search', (done) => {
@@ -81,6 +82,15 @@ describe('queryparam epics', () => {
         const point = {latlng: {lat: 39.01, lng: -89.97}};
         const layer = "layer01";
         const NUMBER_OF_ACTIONS = 1;
+        const state = {
+            controls: {
+                share: {
+                    settings: {
+                        centerAndZoomEnabled: true
+                    }
+                }
+            }
+        };
 
         testEpic(
             addTimeoutEpic(onMapClickForShareEpic, 10),
@@ -96,7 +106,45 @@ describe('queryparam epics', () => {
                     done(e);
                 }
                 done();
-            }, null);
+            }, state);
+    });
+
+    it('test disableGFIForShareEpic', (done)=>{
+
+        let NUMBER_OF_ACTIONS = 1;
+        let state = {controls: {share: {enabled: true}}};
+
+        testEpic(
+            addTimeoutEpic(disableGFIForShareEpic, 10),
+            NUMBER_OF_ACTIONS, [
+                toggleControl()
+            ], actions => {
+                expect(actions.length).toBe(NUMBER_OF_ACTIONS);
+                try {
+                    expect(actions[0].type).toBe("TOGGLE_MAPINFO_STATE");
+                } catch (e) {
+                    done(e);
+                }
+                done();
+            }, state);
+
+        state = {controls: {share: { enabled: false }}};
+        NUMBER_OF_ACTIONS = 3;
+        testEpic(
+            addTimeoutEpic(disableGFIForShareEpic, 10),
+            NUMBER_OF_ACTIONS, [
+                toggleControl()
+            ], actions => {
+                expect(actions.length).toBe(NUMBER_OF_ACTIONS);
+                try {
+                    expect(actions[0].type).toBe("HIDE_MAPINFO_MARKER");
+                    expect(actions[1].type).toBe("PURGE_MAPINFO_RESULTS");
+                    expect(actions[2].type).toBe("TOGGLE_MAPINFO_STATE");
+                } catch (e) {
+                    done(e);
+                }
+                done();
+            }, state);
     });
 
     it('test readQueryParamsOnMapEpic with wrong bbox param in url search', (done) => {

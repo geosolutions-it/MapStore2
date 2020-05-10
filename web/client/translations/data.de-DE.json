@@ -1147,7 +1147,8 @@
             "addCenterAndZoomParam": "Fügen Sie die Mitte hinzu und zoomen Sie zum Freigabelink",
             "zoom": "Zoomen",
             "marker": "Marker hinzufügen",
-            "coordinate": "Koordinaten"
+            "coordinate": "Koordinaten",
+            "coordTooltip": "Klicken Sie auf die Karte, um die Koordinaten zu erfassen"
         },
         "snapshot": {
             "title": "Snapshot Vorschau",

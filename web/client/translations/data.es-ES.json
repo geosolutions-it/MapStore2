@@ -1146,7 +1146,8 @@
             "addCenterAndZoomParam": "Agregar centro y hacer zoom para compartir el enlace",
             "zoom": "Enfocar",
             "marker": "Agregar marcador",
-            "coordinate": "Coordenadas"
+            "coordinate": "Coordenadas",
+            "coordTooltip": "Haga clic en el mapa para tomar las coordenadas."
         },
         "snapshot": {
             "title": "Previsualización de la captura del mapa",

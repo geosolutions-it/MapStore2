@@ -1146,7 +1146,8 @@
             "addCenterAndZoomParam": "Aggiungi centro e zoom al link di condivisione",
             "zoom": "Ingrandisci",
             "marker": "Aggiungi marcatore",
-            "coordinate": "Coordinates"
+            "coordinate": "Coordinates",
+            "coordTooltip": "Clicca sulla mappa per afferrare le coordinate"
         },
         "snapshot": {
             "title": "Istantanea",
