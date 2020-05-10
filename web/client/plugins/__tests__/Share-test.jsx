@@ -9,11 +9,12 @@ import expect from 'expect';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import url from 'url';
-import { join } from 'lodash';
+import { join, toNumber } from 'lodash';
 import * as SharePlugin from '../Share';
 import { getPluginForTest } from './pluginsTestUtils';
 import ReactTestUtils from 'react-dom/test-utils';
 import { TOGGLE_CONTROL } from '../../actions/controls';
+import { PURGE_MAPINFO_RESULTS, HIDE_MAPINFO_MARKER } from '../../actions/mapInfo';
 
 describe('Share Plugin', () => {
     beforeEach((done) => {
@@ -60,6 +61,8 @@ describe('Share Plugin', () => {
         const closeButton = document.getElementsByClassName('share-panel-close')[0];
         ReactTestUtils.Simulate.click(closeButton);
         expect(actions[0].type).toBe(TOGGLE_CONTROL);
+        expect(actions[1].type).toBe(HIDE_MAPINFO_MARKER);
+        expect(actions[2].type).toBe(PURGE_MAPINFO_RESULTS);
         setTimeout(() => {
             expect(document.getElementById('share-panel-dialog')).toNotExist();
             done();
@@ -204,7 +207,7 @@ describe('Share Plugin', () => {
         }, 1000);
     });
 
-    it('test Share plugin advanced options is active by default and add bbox param checkbox is unchecked, EPSG:4326', (done) => {
+    it('test Share plugin advanced options is active by default and add bbox param and center and zoom param checkbox is unchecked', (done) => {
         try {
             const controls = {
                 share: {
@@ -230,14 +233,219 @@ describe('Share Plugin', () => {
                 const switchButton = sharePanelDialog.querySelector('.mapstore-switch-btn input[type=\'checkbox\']');
                 expect(switchButton).toExist();
                 expect(switchButton.checked).toBe(true);
-                const bboxCheckbox = sharePanelDialog.querySelector('.panel-body .checkbox input[type=\'checkbox\']');
+                const checkBoxes = sharePanelDialog.querySelectorAll('.panel-body .checkbox input[type=\'checkbox\']');
+                const bboxCheckbox = checkBoxes[0];
+                const centerAndZoomCheckbox = checkBoxes[1];
                 expect(bboxCheckbox).toExist();
+                expect(centerAndZoomCheckbox).toExist();
                 expect(bboxCheckbox.checked).toBe(false);
+                expect(centerAndZoomCheckbox.checked).toBe(false);
                 done();
             }, 500);
         } catch (e) {
             done(e);
         }
+    });
+
+    it('test Share plugin only one param option is checked at a time', (done) => {
+        try {
+            let controls = {
+                share: {
+                    enabled: true,
+                    settings: {
+                        bboxEnabled: true
+                    }
+                }
+            };
+            const map = {
+                bbox: { bounds: {}, crs: 'EPSG:4326'},
+                center: {x: 0, y: 0, crs: 'EPSG:4326'},
+                zoom: 5
+            };
+            const { Plugin } = getPluginForTest(SharePlugin, { controls, map });
+            ReactDOM.render(<Plugin />, document.getElementById("container"));
+            setTimeout(() => {
+                const sharePanelDialog = document.getElementById('share-panel-dialog');
+                expect(sharePanelDialog).toExist();
+                const switchButton = sharePanelDialog.querySelector('.mapstore-switch-btn input[type=\'checkbox\']');
+                expect(switchButton).toExist();
+                expect(switchButton.checked).toBe(true);
+                const checkBoxes = sharePanelDialog.querySelectorAll('.panel-body .checkbox input[type=\'checkbox\']');
+                const bboxCheckbox = checkBoxes[0];
+                const centerAndZoomCheckbox = checkBoxes[1];
+                expect(bboxCheckbox).toExist();
+                expect(centerAndZoomCheckbox).toExist();
+                expect(bboxCheckbox.checked).toBe(true);
+                expect(centerAndZoomCheckbox.checked).toBe(false);
+                done();
+            }, 500);
+
+            controls = {
+                share: {
+                    enabled: true,
+                    settings: {
+                        centerAndZoomEnabled: true
+                    }
+                }
+            };
+            const { Plugin: PluginModified } = getPluginForTest(SharePlugin, { controls, map });
+            ReactDOM.render(<PluginModified />, document.getElementById("container"));
+            setTimeout(() => {
+                const sharePanelDialog = document.getElementById('share-panel-dialog');
+                expect(sharePanelDialog).toExist();
+                const switchButton = sharePanelDialog.querySelector('.mapstore-switch-btn input[type=\'checkbox\']');
+                expect(switchButton).toExist();
+                expect(switchButton.checked).toBe(true);
+                const checkBoxes = sharePanelDialog.querySelectorAll('.panel-body .checkbox input[type=\'checkbox\']');
+                const bboxCheckbox = checkBoxes[0];
+                const centerAndZoomCheckbox = checkBoxes[1];
+                expect(bboxCheckbox).toExist();
+                expect(centerAndZoomCheckbox).toExist();
+                expect(bboxCheckbox.checked).toBe(false);
+                expect(centerAndZoomCheckbox.checked).toBe(true);
+                done();
+            }, 500);
+        } catch (e) {
+            done(e);
+        }
+    });
+
+    it('test Share plugin center and zoom params', (done) => {
+        const controls = {
+            share: {
+                enabled: true,
+                settings: {
+                    centerAndZoomEnabled: true
+                }
+            }
+        };
+        const map = {
+            center: {crs: "EPSG:4326",
+                x: -86.25,
+                y: 38.07
+            },
+            zoom: 5
+        };
+        const props = {
+            advancedSettings: {
+                centerAndZoom: true
+            }
+        };
+        const { Plugin } = getPluginForTest(SharePlugin, { controls, map });
+        ReactDOM.render(<Plugin {...props}/>, document.getElementById("container"));
+
+        setTimeout(() => {
+            expect(document.getElementById('share-panel-dialog')).toExist();
+            const inputLink = document.querySelector('input[type=\'text\']');
+            const shareUrl = inputLink.value;
+            const splitUrl = shareUrl.split('?');
+            const query = splitUrl[splitUrl.length - 1];
+            const { query: hashQuery } = url.parse(`?${query}`, true);
+            const center = hashQuery.center.split(',').map((val) => Math.floor(parseFloat(val)));
+            const zoom = hashQuery.zoom;
+            expect(center[0]).toBe(-87);
+            expect(center[1]).toBe(38);
+            expect(zoom).toBe("5");
+            done();
+        }, 500);
+
+    });
+
+    it('test Share plugin marker param', (done) => {
+        const controls = {
+            share: {
+                enabled: true,
+                settings: {
+                    centerAndZoomEnabled: true,
+                    markerEnabled: true
+                }
+            }
+        };
+
+        const map = {
+            center: {
+                crs: "EPSG:4326",
+                x: -86.25,
+                y: 38.07
+            },
+            zoom: 5
+        };
+        const props = {
+            advancedSettings: {
+                centerAndZoom: true
+            }
+        };
+        const {Plugin} = getPluginForTest(SharePlugin, {controls, map});
+        ReactDOM.render(<Plugin {...props}/>, document.getElementById("container"));
+
+        setTimeout(() => {
+            expect(document.getElementById('share-panel-dialog')).toExist();
+            const inputLink = document.querySelector('input[type=\'text\']');
+            const shareUrl = inputLink.value;
+            const splitUrl = shareUrl.split('?');
+            const query = splitUrl[splitUrl.length - 1];
+            const {query: hashQuery} = url.parse(`?${query}`, true);
+            const marker = hashQuery.marker.split(',').map((val) => Math.floor(parseFloat(val)));
+            const zoom = hashQuery.zoom;
+            expect(marker[0]).toBe(-87);
+            expect(marker[1]).toBe(38);
+            expect(zoom).toBe("5");
+            done();
+        }, 500);
+    });
+
+    it('test Share plugin center and zoom field validation', (done) => {
+        const controls = {
+            share: {
+                enabled: true,
+                settings: {
+                    centerAndZoomEnabled: true
+                }
+            }
+        };
+        const map = {
+            center: {crs: "EPSG:4326",
+                x: -86.25,
+                y: 38.07
+            },
+            zoom: 5
+        };
+        const props = {
+            advancedSettings: {
+                centerAndZoom: true
+            }
+        };
+        const { Plugin } = getPluginForTest(SharePlugin, { controls, map });
+        ReactDOM.render(<Plugin {...props}/>, document.getElementById("container"));
+
+        setTimeout(() => {
+            expect(document.getElementById('share-panel-dialog')).toExist();
+            const inputLink = document.querySelectorAll('input.form-control');
+            let lat = inputLink[1];
+            let lon = inputLink[2];
+            let zoom = inputLink[3];
+            expect(toNumber(lat.value)).toBe(38.07);
+            expect(toNumber(lon.value)).toBe(-86.25);
+            expect(toNumber(zoom.value)).toBe(5);
+            let inputText = document.querySelector('input[type=\'text\']');
+            let shareUrl = inputText.value;
+            let splitUrl = shareUrl.split('?');
+            let query = splitUrl[splitUrl.length - 1];
+            const {query: hashQuery1} = url.parse(`?${query}`, true);
+            let center = hashQuery1.center.split(',').map((val) => Math.floor(parseFloat(val)));
+            expect(center[0]).toBe(-87);
+            expect(center[1]).toBe(38);
+            ReactTestUtils.Simulate.focus(lat);
+            ReactTestUtils.Simulate.change(lat, {target: {value: 42.01}});
+            ReactTestUtils.Simulate.focus(lon);
+            ReactTestUtils.Simulate.change(lon, {target: {value: -89.01}});
+            const button = document.querySelectorAll('button');
+            ReactTestUtils.Simulate.click(button[3]);
+            const inputLinks = document.querySelectorAll('input.form-control');
+            expect(toNumber(inputLinks[1].value)).toBe(42.01);
+            expect(toNumber(inputLinks[2].value)).toBe(-89.01);
+            done();
+        }, 500);
     });
 
 });

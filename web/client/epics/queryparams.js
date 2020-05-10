@@ -8,7 +8,7 @@
 
 import * as Rx from 'rxjs';
 import { LOCATION_CHANGE } from 'connected-react-router';
-import {get, head, isNaN, isString, includes, size, toNumber, isNil} from 'lodash';
+import {get, head, isNaN, isString, includes, size, toNumber, isEmpty, isObject} from 'lodash';
 import url from 'url';
 
 import { CHANGE_MAP_VIEW, zoomToExtent, ZOOM_TO_EXTENT, CLICK_ON_MAP, changeMapView } from '../actions/map';
@@ -18,7 +18,7 @@ import { warning } from '../actions/notifications';
 
 import { isValidExtent } from '../utils/CoordinatesUtils';
 import { getConfigProp, getCenter } from '../utils/ConfigUtils';
-import {featureInfoClick, showMapinfoMarker, toggleMapInfoState} from "../actions/mapInfo";
+import {featureInfoClick} from "../actions/mapInfo";
 import {getBbox} from "../utils/MapUtils";
 import {mapSelector} from '../selectors/map';
 
@@ -49,21 +49,47 @@ const paramActions = {
     },
     center: ({value = {}, state}) => {
         const map = mapSelector(state);
-        const center = getCenter(value.center.split(',').map(val => toNumber(val)));
-        const zoom = toNumber(value.zoom || 21);
+        const validCenter = value && !isEmpty(value.center) && value.center.split(',').map(val => !isEmpty(val) && toNumber(val));
+        const center = validCenter && validCenter.indexOf(false) === -1 && getCenter(validCenter);
+        const zoom = toNumber(value.zoom);
         const bbox =  getBbox(center, zoom);
-        return [changeMapView(center, zoom, bbox, map.size, null, map.projection)];
+        const mapSize = map && map.size;
+        const projection = map && map.projection;
+        const isValid = center && isObject(center) && (center.y >= -90 && center.y <= 90) && (center.x >= -180 && center.x <= 180) && zoom;
+
+        if (isValid) {
+            return [changeMapView(center, zoom, bbox, mapSize, null, projection)];
+        }
+        return [
+            warning({
+                title: "share.wrongCenterAndZoomParamTitle",
+                message: "share.wrongCenterAndZoomParamMessage",
+                position: "tc"
+            })
+        ];
     },
     marker: ({value = {}, state}) => {
         const map = mapSelector(state);
-        const marker = value.marker.split(',').map(val => toNumber(val));
-        const lng = marker[0] || 0;
-        const lat = marker[1] || 0;
-        const center = getCenter(value.marker.split(',').map(val => toNumber(val)));
-        const zoom = toNumber(value.zoom || 21);
+        const marker = value && !isEmpty(value.marker) && value.marker.split(',').map(val => !isEmpty(val) && toNumber(val));
+        const center = marker && marker.length === 2 && marker.indexOf(false) === -1 && getCenter(marker);
+        const zoom = toNumber(value.zoom);
         const bbox =  getBbox(center, zoom);
-        let point =  {latlng: {lng, lat}};
-        return [ changeMapView(center, zoom, bbox, map.size, null, map.projection), featureInfoClick(point)];
+        const lng = marker && marker[0];
+        const lat = marker && marker[1];
+        const mapSize = map && map.size;
+        const projection = map && map.projection;
+        const isValid = center && marker && isObject(marker) && ((lat >= -90 && lat <= 90) && (lng >= -180 && lng <= 180)) && zoom;
+
+        if (isValid) {
+            return [changeMapView(center, zoom, bbox, mapSize, null, projection), featureInfoClick({latlng: {lng, lat}})];
+        }
+        return [
+            warning({
+                title: "share.wrongMarkerAndZoomParamTitle",
+                message: "share.wrongMarkerAndZoomParamMessage",
+                position: "tc"
+            })
+        ];
     },
     actions: ({value = ''}) => {
         const whiteList = (getConfigProp("initialActionsWhiteList") || []).concat([
@@ -78,6 +104,7 @@ const paramActions = {
         return [];
     }
 };
+
 /**
  * Intercept on `LOCATION_CHANGE` to get query params from router.location.search string.
  * It needs to wait the first `CHANGE_MAP_VIEW` to ensure that width and height of map are in the state.

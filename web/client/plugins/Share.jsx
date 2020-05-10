@@ -83,7 +83,7 @@ const Share = compose(
         shareConfigUrl: ShareUtils.getConfigUrl(location.href, ConfigUtils.getConfigProp('geoStoreUrl')),
         version,
         bbox: isVisible && map && map.bbox && getExtentFromViewport(map.bbox),
-        center: map && ConfigUtils.getCenter(map.center),
+        center: map && map.center && ConfigUtils.getCenter(map.center),
         zoom: map && map.zoom,
         showAPI: !context,
         embedOptions: {

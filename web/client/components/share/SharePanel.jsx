@@ -221,7 +221,8 @@ class SharePanel extends React.Component {
                     onChange={() =>
                         this.props.onUpdateSettings({
                             ...this.props.settings,
-                            bboxEnabled: !this.props.settings.bboxEnabled
+                            bboxEnabled: !this.props.settings.bboxEnabled,
+                            centerAndZoomEnabled: false
                         })}>
                     <Message msgId="share.addBboxParam" />
                 </Checkbox>}
@@ -231,7 +232,8 @@ class SharePanel extends React.Component {
                         this.props.identifyDisable();
                         this.props.onUpdateSettings({
                             ...this.props.settings,
-                            centerAndZoomEnabled: !this.props.settings.centerAndZoomEnabled
+                            centerAndZoomEnabled: !this.props.settings.centerAndZoomEnabled,
+                            bboxEnabled: false
                         });
                     }
                     }>
@@ -266,10 +268,10 @@ class SharePanel extends React.Component {
                         <ControlLabel><Message msgId="share.zoom" /></ControlLabel>
                         <FormControl
                             type="number"
-                            min={0}
-                            max={100}
+                            min={1}
+                            max={35}
                             name={"zoom"}
-                            value={this.state.zoom || this.props.zoom}
+                            value={this.state.zoom || this.props.zoom || 21}
                             onChange={(event)=>this.setState({...this.state, zoom: event.target.value})}/>
                     </FormGroup>
                     <Checkbox

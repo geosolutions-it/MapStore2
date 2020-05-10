@@ -1141,6 +1141,10 @@
             "zoom": "Zoom",
             "marker": "Add Marker",
             "coordinate": "Coordinates",
+            "wrongCenterAndZoomParamTitle": "Invalid center and zoom param",
+            "wrongCenterAndZoomParamMessage": "Center and Zoom param must be center=lon,lat&zoom=value and (+|- 90° lat, +|-180° lon)",
+            "wrongMarkerAndZoomParamTitle": "Invalid marker and zoom param",
+            "wrongMarkerAndZoomParamMessage": "Marker and Zoom param must be marker=lon,lat&zoom=value and (+|- 90° lat, +|-180° lon)",
             "wrongBboxParamTitle": "Invalid bbox param",
             "wrongBboxParamMessage": "bbox params must be in EPSG:4326 and wrote as bbox=minx,miny,maxx,maxy",
             "showHomeButton": "Link to MapStore home"
