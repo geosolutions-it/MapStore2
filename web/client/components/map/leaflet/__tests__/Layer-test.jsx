@@ -1354,14 +1354,6 @@ describe('Leaflet layer', () => {
             name: 'osm:vector_tile'
         };
         let layer;
-
-        map.on('rendercomplete', () => {
-            if (layer.layer.getSource().getFeatures().length > 0) {
-                const f = layer.layer.getSource().getFeatures()[0];
-
-                done();
-            }
-        });
         // first render
         layer = ReactDOM.render(<LeafLetLayer
             type="wfs"
@@ -1372,6 +1364,9 @@ describe('Leaflet layer', () => {
         expect(layer.layer.getLayers().length).toBe(0);
         layer.layer.on('load', function() {
             expect(layer.layer.getLayers().length).toBe(1);
+            const f = layer.layer.getLayers()[0];
+            expect(f.getLatLng().lat).toEqual(40.70758763);
+            expect(f.getLatLng().lng).toEqual(-74.0104611,);
             done();
         });
     });
