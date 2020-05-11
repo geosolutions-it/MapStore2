@@ -11,18 +11,12 @@ import { get } from 'lodash';
 import FeatureInfoUtils from './FeatureInfoUtils';
 
 export const getFormatForResponse = (res, props) => {
-    const {format, queryParams} = res;
-    let infoFormat;
-    // handle WMS/WMTS..,
-    if (queryParams && queryParams.hasOwnProperty('info_format')) {
-        infoFormat = queryParams.info_format;
-    }
-    // handle WFS
-    if (queryParams && queryParams.hasOwnProperty('outputFormat')) {
-        infoFormat = queryParams.outputFormat;
-    }
-
-    return infoFormat || format && FeatureInfoUtils.INFO_FORMATS[format] || props.format;
+    const {format, queryParams = {}} = res;
+    // handle WMS/WMTS.., and also WFS
+    return queryParams.info_format
+        || queryParams.outputFormat
+        || format && FeatureInfoUtils.INFO_FORMATS[format]
+        || props.format;
 };
 
 export const responseValidForEdit = (res) => !!get(res, 'layer.search.url');
