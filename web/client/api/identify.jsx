@@ -17,12 +17,16 @@ import {parseURN} from '../utils/CoordinatesUtils';
  * Sends a GetFeatureInfo request and dispatches the right action
  * in case of success, error or exceptions.
  *
- * @param basePath {string} base path to the service
- * @param requestParams {object} map of params for a getfeatureinfo request.
+ * @param {string} basePath base path to the service
+ * @param {object} param object map of params for a getFeatureInfo request.
+ * @param {object} layer the layer object.
+ * @param {object} options. object of other options for the request.
+ *  - `attachJSON` do, if needed, an additional request to get data in JSON format, that can be parsed and used to add functionalities (zoom to feature, highlight)
+ *  - `itemId` if present, data will be filtered to get only the specific itemID. Useful to create a unique response (only JSON format is supported)
  */
-export const getFeatureInfo = (basePath, param, attachJSON, itemId = null, layer) => {
+export const getFeatureInfo = (basePath, param, layer, {attachJSON, itemId = null} = {}) => {
     const retrieveFlow = (params) => Observable.defer(() => axios.get(basePath, { params }));
-    // TODO: move getRetrieveFlow in specific a
+    // TODO: We should move MapInfoUtils parts of the API here, with specific implementations.
     return MapInfoUtils.getIdentifyFlow(layer, basePath, param) ||
         (
         // default identify flow, valid for WMS/WMTS. It attach json data, if missing, for advanced features. TODO: make this specific by service, using layer info.

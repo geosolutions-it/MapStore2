@@ -106,7 +106,7 @@ export default {
                             const itemId = itemIdSelector(getState());
                             const reqId = uuid.v1();
                             const param = { ...appParams, ...requestParams };
-                            return getFeatureInfo(basePath, param, attachJSON, itemId, layer)
+                            return getFeatureInfo(basePath, param, layer, {attachJSON, itemId})
                                 .map((response) =>
                                     response.data.exceptions
                                         ? exceptionsFeatureInfo(reqId, response.data.exceptions, requestParams, lMetaData)

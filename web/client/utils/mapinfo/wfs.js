@@ -43,7 +43,6 @@ const buildRequest = (layer, { map = {}, point, currentLocale, params, maxItems 
             typeName: layer.name,
             srs: CoordinatesUtils.normalizeSRS(map.projection) || 'EPSG:4326',
             feature_count: maxItems,
-            info_format: infoFormat,
             ...assign({ params })
         }, layer),
         metadata: {

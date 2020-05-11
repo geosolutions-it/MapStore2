@@ -59,7 +59,7 @@ export const withIdentifyRequest  = mapPropsStream(props$ => {
                     const appParams = filterRequestParams(layer, includeOptions, excludeParams);
                     const param = { ...appParams, ...requestParams };
                     const reqId = uuidv1();
-                    return getFeatureInfo(basePath, param, false, undefined, layer)
+                    return getFeatureInfo(basePath, param, layer)
                         .map((response) =>
                             response.data.exceptions
                                 ? ({
