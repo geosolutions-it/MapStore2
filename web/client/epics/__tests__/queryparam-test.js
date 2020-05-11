@@ -129,7 +129,7 @@ describe('queryparam epics', () => {
             }, state);
 
         state = {controls: {share: { enabled: false }}};
-        NUMBER_OF_ACTIONS = 3;
+        NUMBER_OF_ACTIONS = 4;
         testEpic(
             addTimeoutEpic(disableGFIForShareEpic, 10),
             NUMBER_OF_ACTIONS, [
@@ -140,6 +140,7 @@ describe('queryparam epics', () => {
                     expect(actions[0].type).toBe("HIDE_MAPINFO_MARKER");
                     expect(actions[1].type).toBe("PURGE_MAPINFO_RESULTS");
                     expect(actions[2].type).toBe("TOGGLE_MAPINFO_STATE");
+                    expect(actions[3].type).toBe("SET_CONTROL_PROPERTY");
                 } catch (e) {
                     done(e);
                 }

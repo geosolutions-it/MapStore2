@@ -14,7 +14,7 @@ import url from 'url';
 import { CHANGE_MAP_VIEW, zoomToExtent, ZOOM_TO_EXTENT, CLICK_ON_MAP, changeMapView } from '../actions/map';
 import { ADD_LAYERS_FROM_CATALOGS } from '../actions/catalog';
 import { SEARCH_LAYER_WITH_FILTER } from '../actions/search';
-import { TOGGLE_CONTROL } from '../actions/controls';
+import { TOGGLE_CONTROL, setControlProperty } from '../actions/controls';
 import { warning } from '../actions/notifications';
 
 import { isValidExtent } from '../utils/CoordinatesUtils';
@@ -138,6 +138,7 @@ const readQueryParamsOnMapEpic = (action$, store) =>
 /**
  * Intercept on `CLICK_ON_MAP` to get point and layer information to allow featureInfoClick.
  * @param {external:Observable} action$ manages `CLICK_ON_MAP`
+ * @param getState
  * @memberof epics.share
  * @return {external:Observable}
  */
@@ -145,12 +146,15 @@ const onMapClickForShareEpic = (action$, { getState = () => { } }) =>
     action$.ofType(CLICK_ON_MAP).
         switchMap(({point, layer}) =>{
             const allowClick = get(getState(), 'controls.share.settings.centerAndZoomEnabled');
-            return allowClick && Rx.Observable.of(featureInfoClick(point, layer));
+            return allowClick
+                ? Rx.Observable.of(featureInfoClick(point, layer))
+                : Rx.Observable.empty();
         });
 
 /**
  * Intercept on `TOGGLE_CONTROL` to perform toggleMapInfoState and clean up on share panel close.
  * @param {external:Observable} action$ manages `TOGGLE_CONTROL`
+ * @param getState
  * @memberof epics.share
  * @return {external:Observable}
  */
@@ -158,10 +162,14 @@ const disableGFIForShareEpic = (action$, { getState = () => { } }) =>
     action$.ofType(TOGGLE_CONTROL).
         switchMap(()=>{
             const shareEnabled = get(getState(), 'controls.share.enabled');
+            const shareParams = {bboxEnabled: false, centerAndZoomEnabled: false};
             return !isUndefined(shareEnabled) &&
-            shareEnabled ?
-                Rx.Observable.of(toggleMapInfoState()) :
-                Rx.Observable.of(hideMapinfoMarker(), purgeMapInfoResults(), toggleMapInfoState());
+            shareEnabled
+                ? Rx.Observable.of(toggleMapInfoState())
+                : Rx.Observable.of(hideMapinfoMarker(),
+                    purgeMapInfoResults(),
+                    toggleMapInfoState(),
+                    setControlProperty("share", "settings", shareParams));
         });
 
 export {
