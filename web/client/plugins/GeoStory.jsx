@@ -23,6 +23,7 @@ import geostory from '../reducers/geostory';
 import BorderLayout from '../components/layout/BorderLayout';
 import Story from '../components/geostory/Story';
 import MapEditor from '../components/geostory/common/MapEditor';
+import MediaViewer from './geostory/MediaViewer';
 
 const GeoStory = ({
     story,
@@ -35,6 +36,7 @@ const GeoStory = ({
         {...story}
         {...props} // add actions
         mode={mode}
+        mediaViewer={MediaViewer}
     />
 </BorderLayout>
 );
