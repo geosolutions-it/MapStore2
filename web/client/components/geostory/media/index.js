@@ -11,12 +11,15 @@ import VisibilityContainer from '../common/VisibilityContainer';
 import { Glyphicon } from 'react-bootstrap';
 import image from './Image';
 import map from './Map';
+import video from './Video';
 import Loader from '../../misc/Loader';
 
 export const Image = image;
-const typesMap = {
+
+export const typesMap = {
     image,
-    map
+    map,
+    video
 };
 
 const ErrorComponent = () => <div className="ms-media-error"><Glyphicon glyph="exclamation-sign"/></div>;
@@ -30,14 +33,16 @@ const LoaderComponent = () => <div className="ms-media-loader"><Loader size={52}
  * @prop {string} type one of 'image' or 'map' (used when mediaType is equal to undefined)
  * @prop {number} debounceTime debounce time for lazy loading
  */
-export const Media = ({ debounceTime, ...props }) => {
+const Media = ({ debounceTime, mediaViewer, ...props }) => {
     // store all ids inside an immersive section
     // in this way every media is loaded only when in view
     const [loading, onLoad] = useState({});
     const isLoading = loading[props.id] === undefined
         ? true
         : loading[props.id];
-    const MediaType = typesMap[props.mediaType || props.type] || Image;
+
+    const MediaType = mediaViewer || typesMap[props.mediaType || props.type] || Image;
+
     return props.lazy
         ? (
             <VisibilityContainer
@@ -50,6 +55,7 @@ export const Media = ({ debounceTime, ...props }) => {
                 loaderComponent={LoaderComponent}>
                 <MediaType
                     {...props}
+                    type={props.mediaType || props.type}
                     loaderComponent={LoaderComponent}
                     errorComponent={ErrorComponent}/>
             </VisibilityContainer>
@@ -58,6 +64,7 @@ export const Media = ({ debounceTime, ...props }) => {
             <MediaType
                 {...props}
                 key={props.id}
+                type={props.mediaType || props.type}
                 loaderComponent={LoaderComponent}
                 errorComponent={ErrorComponent}/>
         );
@@ -78,4 +85,4 @@ Media.defaultProps = {
     type: ''
 };
 
-export default typesMap;
+export default Media;

@@ -264,24 +264,6 @@ export default (API) => ({
                 const state = store.getState();
                 const layer = getSelectedLayer(state);
 
-                const cswDCFlow = Rx.Observable.defer(() => API.csw.getRecordById(layer.catalogURL))
-                    .switchMap((action) => {
-                        if (action && action.error) {
-                            return Rx.Observable.of(error({
-                                title: "notification.warning",
-                                message: "toc.layerMetadata.notification.warnigGetMetadataRecordById",
-                                autoDismiss: 6,
-                                position: "tc"
-                            }), showLayerMetadata({}, false));
-                        }
-                        if (action && action.dc) {
-                            return Rx.Observable.of(
-                                showLayerMetadata(action.dc, false)
-                            );
-                        }
-                        return Rx.Observable.empty();
-                    });
-
                 return Rx.Observable.defer(() => API.wms.getCapabilities(LayersUtils.getCapabilitiesUrl(layer)))
                     .switchMap((caps) => {
                         const layersXml = get(caps, 'capability.layer.layer', []);
@@ -289,12 +271,34 @@ export default (API) => ({
                         const metadataUrl = get(find(metadataUrls, mUrl => isString(mUrl.type) &&
                             mUrl.type.toLowerCase() === 'iso19115:2003' &&
                             (mUrl.format === 'application/xml' || mUrl.format === 'text/xml')), 'onlineResource.href');
+                        const metadataUrlHTML = get(find(metadataUrls, mUrl => isString(mUrl.type) &&
+                            mUrl.type.toLowerCase() === 'iso19115:2003' &&
+                            mUrl.format === 'text/html'), 'onlineResource.href');
                         const extractor = find(get(metadataOptions, 'extractors', []),
                             ({properties, layersRegex}) => {
                                 const rxp = layersRegex ? new RegExp(layersRegex) : null;
                                 return isObject(properties) && (layersRegex ? rxp.test(layer.name) : true);
                             }
                         );
+                        const defaultMetadata = metadataUrlHTML ? {metadataUrl: metadataUrlHTML} : {};
+
+                        const cswDCFlow = Rx.Observable.defer(() => API.csw.getRecordById(layer.catalogURL))
+                            .switchMap((action) => {
+                                if (action && action.error) {
+                                    return Rx.Observable.of(error({
+                                        title: "notification.warning",
+                                        message: "toc.layerMetadata.notification.warnigGetMetadataRecordById",
+                                        autoDismiss: 6,
+                                        position: "tc"
+                                    }), showLayerMetadata(defaultMetadata, false));
+                                }
+                                if (action && action.dc) {
+                                    return Rx.Observable.of(
+                                        showLayerMetadata({...defaultMetadata, ...action.dc}, false)
+                                    );
+                                }
+                                return Rx.Observable.empty();
+                            });
 
                         const metadataFlow = Rx.Observable.defer(() => axios.get(metadataUrl))
                             .pluck('data')
@@ -336,11 +340,11 @@ export default (API) => ({
                                 return processProperties(extractor.properties, metadataDoc);
                             })
                             .switchMap((result) => {
-                                return Rx.Observable.of(showLayerMetadata(result, false));
+                                return Rx.Observable.of(showLayerMetadata({...defaultMetadata, ...result}, false));
                             });
 
                         return metadataUrl && extractor ? metadataFlow :
-                            layer.catalogURL ? cswDCFlow : Rx.Observable.of(showLayerMetadata({}, false));
+                            layer.catalogURL ? cswDCFlow : Rx.Observable.of(showLayerMetadata(defaultMetadata, false));
                     })
                     .startWith(
                         showLayerMetadata({}, true)
