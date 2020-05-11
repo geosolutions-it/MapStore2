@@ -84,7 +84,7 @@ const MediaModal = ({
                     {
                         text: <Message msgId="mediaEditor.apply"/>,
                         bsSize: 'sm',
-                        disabled: adding || editing,
+                        disabled: adding || editing || !selectedItem,
                         onClick: () => chooseMedia(selectedItem)
                     }
                 ]}>

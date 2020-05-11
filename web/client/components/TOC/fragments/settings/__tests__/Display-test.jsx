@@ -77,6 +77,23 @@ describe('test Layer Properties Display module component', () => {
         expect(spy.calls.length).toBe(1);
     });
 
+    it('tests Display component for wms with localized layer styles enabled', () => {
+        const l = {
+            name: 'layer00',
+            title: 'Layer',
+            visibility: true,
+            storeIndex: 9,
+            type: 'wms',
+            url: 'fakeurl'
+        };
+        const settings = {
+            options: {opacity: 0.7}
+        };
+        ReactDOM.render(<Display isLocalizedLayerStylesEnabled element={l} settings={settings}/>, document.getElementById("container"));
+        const isLocalizedLayerStylesOption = document.querySelector('[data-qa="display-lacalized-layer-styles-option"]');
+        expect(isLocalizedLayerStylesOption).toExist();
+    });
+
     it('tests Layer Properties Legend component', () => {
         const l = {
             name: 'layer00',

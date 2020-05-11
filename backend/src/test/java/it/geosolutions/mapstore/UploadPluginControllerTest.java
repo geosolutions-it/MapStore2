@@ -125,7 +125,30 @@ public class UploadPluginControllerTest {
         tempConfig.delete();
         tempExtensions.delete();
     }
-    
+
+    @Test
+    public void testUploadValidBundleWithMultipleDataDir() throws IOException {
+        File dataDir1 = TestUtils.getDataDir();
+        File dataDir2 = TestUtils.getDataDir();
+        controller.setDataDir(dataDir1.getAbsolutePath() + "," + dataDir2.getAbsolutePath());
+        ServletContext context = Mockito.mock(ServletContext.class);
+        controller.setContext(context);
+        // we load from dataDir2 (less priority)
+        File tempConfig = TestUtils.copyTo(
+                UploadPluginControllerTest.class.getResourceAsStream("/pluginsConfig.json"),
+                dataDir2, "pluginsConfig.json");
+        File tempExtensions = TestUtils.copyTo(
+                UploadPluginControllerTest.class.getResourceAsStream("/extensions.json"), dataDir2,
+                "extensions.json");
+        InputStream zipStream = UploadPluginControllerTest.class.getResourceAsStream("/plugin.zip");
+        controller.uploadPlugin(zipStream);
+        // we save to dataDir1
+        assertTrue(new File(dataDir1.getAbsolutePath() + File.separator + "dist" + File.separator
+                + "extensions" + File.separator + "My" + File.separator + "myplugin.js").exists());
+        tempConfig.delete();
+        tempExtensions.delete();
+    }
+
     @Test
     public void testUninstallPlugin() throws IOException {
         ServletContext context = Mockito.mock(ServletContext.class);

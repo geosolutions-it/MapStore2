@@ -17,6 +17,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Predicate;
+import java.util.stream.Stream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import javax.servlet.ServletContext;
@@ -122,50 +123,53 @@ public class UploadPluginController {
     
     /**
      * Removes an installed plugin extension.
+     * 
      * @param pluginName name of the extension to be removed
      */
-    @Secured({ "ROLE_ADMIN" })
-    @RequestMapping(value="/uninstallPlugin/{pluginName}", method = RequestMethod.DELETE)
-    public @ResponseBody String uninstallPlugin(@PathVariable String pluginName) throws IOException {
-    	JSONObject configObj = getExtensionConfig();
-    	JSONObject pluginsConfigObj = getPluginsConfiguration();
-    	String key = pluginName + "Plugin";
-		if (configObj.containsKey(key)) {
-    		JSONObject pluginConfig = configObj.getJSONObject(key);
-    		String pluginBundle = pluginConfig.getString("bundle");
-    		String pluginFolder = pluginBundle.substring(0, pluginBundle.lastIndexOf("/"));
-    		removeFolder(pluginFolder);
-    		
-    		JSONArray plugins = pluginsConfigObj.getJSONArray("plugins");
-    		JSONObject toRemove = null;
-    		for(int i = 0; i < plugins.size(); i++) {
-    			JSONObject plugin = plugins.getJSONObject(i);
-    			String name = plugin.getString("name");
-    			if (name.contentEquals(pluginName)) {
-    				toRemove = plugin;
-    			}
-    		}
-    		if (toRemove != null) {
-    			plugins.remove(toRemove);
-    		}
-    		
-    		
-    		configObj.remove(key);
-    		storeJSONConfig(configObj, extensionsConfig);
-    		storeJSONConfig(pluginsConfigObj, pluginsConfig);
-    		return pluginConfig.toString();
-    	} else {
-    		return new JSONObject().toString();
-    	}
+    @Secured({"ROLE_ADMIN"})
+    @RequestMapping(value = "/uninstallPlugin/{pluginName}", method = RequestMethod.DELETE)
+    public @ResponseBody String uninstallPlugin(@PathVariable String pluginName)
+            throws IOException {
+        JSONObject configObj = getExtensionConfig();
+        JSONObject pluginsConfigObj = getPluginsConfiguration();
+        String key = pluginName + "Plugin";
+        if (configObj.containsKey(key)) {
+            JSONObject pluginConfig = configObj.getJSONObject(key);
+            String pluginBundle = pluginConfig.getString("bundle");
+            String pluginFolder = pluginBundle.substring(0, pluginBundle.lastIndexOf("/"));
+            removeFolder(pluginFolder);
+
+            JSONArray plugins = pluginsConfigObj.getJSONArray("plugins");
+            JSONObject toRemove = null;
+            for (int i = 0; i < plugins.size(); i++) {
+                JSONObject plugin = plugins.getJSONObject(i);
+                String name = plugin.getString("name");
+                if (name.contentEquals(pluginName)) {
+                    toRemove = plugin;
+                }
+            }
+            if (toRemove != null) {
+                plugins.remove(toRemove);
+            }
+
+
+            configObj.remove(key);
+            storeJSONConfig(configObj, extensionsConfig);
+            storeJSONConfig(pluginsConfigObj, pluginsConfig);
+            return pluginConfig.toString();
+        } else {
+            return new JSONObject().toString();
+        }
     }
 
     private void removeFolder(String pluginFolder) throws IOException {
-    	File folderPath = new File(ResourceUtils.getResourcePath(dataDir, context, pluginFolder));
-    	if (folderPath.exists()) {
-			FileUtils.cleanDirectory(folderPath);
-			folderPath.delete();
-    	}
-	}
+        File folderPath =
+                new File(ResourceUtils.getResourcePath(getWriteStorage(), context, pluginFolder));
+        if (folderPath.exists()) {
+            FileUtils.cleanDirectory(folderPath);
+            folderPath.delete();
+        }
+    }
 
 	public void setBundlesPath(String bundlesPath) {
         this.bundlesPath = bundlesPath;
@@ -183,16 +187,28 @@ public class UploadPluginController {
     	return ResourceUtils.findResource(dataDir, context, resourceName);
     }
 
-    private void moveAsset(File tempAsset, String finalAsset) throws FileNotFoundException, IOException {
-    	String assetPath = ResourceUtils.getResourcePath(dataDir, context, finalAsset);
+    private void moveAsset(File tempAsset, String finalAsset)
+            throws FileNotFoundException, IOException {
+        String assetPath = ResourceUtils.getResourcePath(getWriteStorage(), context, finalAsset);
         new File(assetPath).getParentFile().mkdirs();
-        try (FileInputStream input = new FileInputStream(tempAsset); FileOutputStream output = new FileOutputStream(assetPath)) {
+        try (FileInputStream input = new FileInputStream(tempAsset);
+                FileOutputStream output = new FileOutputStream(assetPath)) {
             IOUtils.copy(input, output);
         }
         tempAsset.delete();
     }
 
-    private void addPluginConfiguration(JSONObject json) throws IOException {
+    private String getWriteStorage() {
+        return dataDir.isEmpty() ? ""
+                : Stream.of(dataDir.split(",")).filter(new Predicate<String>() {
+                    @Override
+                    public boolean test(String folder) {
+                        return !folder.trim().isEmpty();
+                    }
+                }).findFirst().orElse("");
+    }
+
+	private void addPluginConfiguration(JSONObject json) throws IOException {
         JSONObject config = null;
         Optional<File> pluginsConfigFile = findResource(pluginsConfig);
         if (pluginsConfigFile.isPresent()) {
@@ -231,32 +247,34 @@ public class UploadPluginController {
         }
     }
 
-    private void storeJSONConfig(JSONObject config, String configName) throws FileNotFoundException, IOException {
-    	ResourceUtils.storeJSONConfig(dataDir, context, config, configName);
+    private void storeJSONConfig(JSONObject config, String configName)
+            throws FileNotFoundException, IOException {
+        ResourceUtils.storeJSONConfig(getWriteStorage(), context, config, configName);
     }
     
-    private void addExtension(String pluginName, String pluginBundle, String translations) throws FileNotFoundException, IOException {
+    private void addExtension(String pluginName, String pluginBundle, String translations)
+            throws FileNotFoundException, IOException {
         JSONObject config = null;
         Optional<File> extensionsConfigFile = findResource(extensionsConfig);
         if (extensionsConfigFile.isPresent()) {
-	        try (FileInputStream input = new FileInputStream(extensionsConfigFile.get())) {
-	            config = readJSON(input);
-	        } catch (FileNotFoundException e) {
-	            config = new JSONObject();
-	        }
+            try (FileInputStream input = new FileInputStream(extensionsConfigFile.get())) {
+                config = readJSON(input);
+            } catch (FileNotFoundException e) {
+                config = new JSONObject();
+            }
         } else {
-        	config = new JSONObject();
+            config = new JSONObject();
         }
         if (config != null) {
             JSONObject extension = new JSONObject();
             extension.accumulate("bundle", pluginBundle);
             if (translations != null) {
-            	extension.accumulate("translations", translations);
+                extension.accumulate("translations", translations);
             }
             if (config.containsKey(pluginName)) {
-                config.replace(pluginName,extension);
+                config.replace(pluginName, extension);
             } else {
-                config.accumulate(pluginName,extension);
+                config.accumulate(pluginName, extension);
             }
             storeJSONConfig(config, extensionsConfig);
         }
@@ -265,11 +283,11 @@ public class UploadPluginController {
     private JSONObject getExtensionConfig() throws IOException {
         Optional<File> extensionsConfigFile = findResource(extensionsConfig);
         if (extensionsConfigFile.isPresent()) {
-	        try (FileInputStream input = new FileInputStream(extensionsConfigFile.get())) {
-	            return readJSON(input);
-	        }
+            try (FileInputStream input = new FileInputStream(extensionsConfigFile.get())) {
+                return readJSON(input);
+            }
         } else {
-        	throw new FileNotFoundException(extensionsConfig);
+            throw new FileNotFoundException(extensionsConfig);
         }
     }
 

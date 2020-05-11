@@ -12,6 +12,8 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Optional;
+import java.util.function.Function;
+import java.util.function.IntFunction;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
@@ -32,12 +34,34 @@ public class ResourceUtils {
         .findFirst();
     }
 	
-	public static Optional<File> findResource(String baseFolder, ServletContext context, String resourceName) {
-    	Optional<String> resourcePath = findExisting(new String[] {baseFolder + "/" + resourceName, context.getRealPath(resourceName)});
-    	if (resourcePath.isPresent()) {
-    		return Optional.of(new File(resourcePath.get()));
-        }
-    	return Optional.empty();
+	/**
+	 * Finds a resource, recursively looking at a list of folders, and at last at
+	 * the web application context path.
+	 * 
+	 * @param baseFolders  comma delimited list of folders, in order of search
+	 * @param context      web application context (last resource)
+	 * @param resourceName name of the resource to be found
+	 * @return
+	 */
+	public static Optional<File> findResource(String baseFolders, ServletContext context, String resourceName) {
+		String[] candidates = Stream.concat(Stream.of(baseFolders.split(",")).map(new Function<String, String>() {
+
+			@Override
+			public String apply(String f) {
+				return f + "/" + resourceName;
+			}
+
+		}), Stream.of(new String[] { context.getRealPath(resourceName) })).toArray(new IntFunction<String[]>() {
+			@Override
+			public String[] apply(int size) {
+				return new String[size];
+			}
+		});
+		Optional<String> resourcePath = findExisting(candidates);
+		if (resourcePath.isPresent()) {
+			return Optional.of(new File(resourcePath.get()));
+		}
+		return Optional.empty();
 	}
 	
 	public static String getResourcePath(String baseFolder, ServletContext context, String path) {
