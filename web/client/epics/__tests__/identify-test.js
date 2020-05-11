@@ -9,7 +9,7 @@
 const expect = require('expect');
 
 const { ZOOM_TO_POINT, clickOnMap, CHANGE_MAP_VIEW } = require('../../actions/map');
-const { FEATURE_INFO_CLICK, UPDATE_CENTER_TO_MARKER, PURGE_MAPINFO_RESULTS, NEW_MAPINFO_REQUEST, LOAD_FEATURE_INFO, NO_QUERYABLE_LAYERS, ERROR_FEATURE_INFO, EXCEPTIONS_FEATURE_INFO, SHOW_MAPINFO_MARKER, HIDE_MAPINFO_MARKER, GET_VECTOR_INFO, SET_EDIT_FEATURE_QUERY, loadFeatureInfo, featureInfoClick, closeIdentify, toggleHighlightFeature, editLayerFeatures } = require('../../actions/mapInfo');
+const { FEATURE_INFO_CLICK, UPDATE_CENTER_TO_MARKER, PURGE_MAPINFO_RESULTS, NEW_MAPINFO_REQUEST, LOAD_FEATURE_INFO, NO_QUERYABLE_LAYERS, ERROR_FEATURE_INFO, EXCEPTIONS_FEATURE_INFO, SHOW_MAPINFO_MARKER, HIDE_MAPINFO_MARKER, GET_VECTOR_INFO, SET_CURRENT_EDIT_FEATURE_QUERY, loadFeatureInfo, featureInfoClick, closeIdentify, toggleHighlightFeature, editLayerFeatures } = require('../../actions/mapInfo');
 const { getFeatureInfoOnFeatureInfoClick, zoomToVisibleAreaEpic, onMapClick, closeFeatureAndAnnotationEditing, handleMapInfoMarker, featureInfoClickOnHighligh, closeFeatureInfoOnCatalogOpenEpic, identifyEditLayerFeaturesEpic } = require('../identify').default;
 const { CLOSE_ANNOTATIONS } = require('../../actions/annotations');
 const { testEpic, TEST_TIMEOUT, addTimeoutEpic } = require('./epicTestUtils');
@@ -541,13 +541,18 @@ describe('identify Epics', () => {
     });
 
     it('onMapClick triggers featureinfo when selected', done => {
-        testEpic(onMapClick, 1, [clickOnMap()], ([action]) => {
+        testEpic(onMapClick, 1, [clickOnMap({latlng: {lat: 8, lng: 8}})], ([action]) => {
             expect(action.type === FEATURE_INFO_CLICK);
             done();
         }, {
             mapInfo: {
                 enabled: true,
                 disableAlwaysOn: false
+            },
+            map: {
+                present: {
+                    projection: 'EPSG:3857'
+                }
             }
         });
     });
@@ -583,7 +588,7 @@ describe('identify Epics', () => {
         });
     });
     it('onMapClick trigger when mapinfo is not enabled', done => {
-        testEpic(onMapClick, 1, [clickOnMap()], ([action]) => {
+        testEpic(onMapClick, 1, [clickOnMap({latlng: {lat: 8, lng: 8}})], ([action]) => {
             if (action.type === FEATURE_INFO_CLICK) {
                 done();
             }
@@ -597,6 +602,11 @@ describe('identify Epics', () => {
                     plugins: {
                         desktop: [{name: "Identify"}]
                     }
+                }
+            },
+            map: {
+                present: {
+                    projection: 'EPSG:3857'
                 }
             }
         });
@@ -710,16 +720,20 @@ describe('identify Epics', () => {
         const startActions = [editLayerFeatures({id: 'layer'})];
         testEpic(identifyEditLayerFeaturesEpic, 2, startActions, actions => {
             expect(actions.length).toBe(2);
-            expect(actions[0].type).toBe(SET_EDIT_FEATURE_QUERY);
-            expect(actions[0].query).toExist();
+            expect(actions[0].type).toBe(SET_CURRENT_EDIT_FEATURE_QUERY);
+            expect(actions[0].query).toEqual({type: 'geometry'});
             expect(actions[1].type).toBe(BROWSE_DATA);
         }, {
             mapInfo: {
                 clickPoint: {
-                    latlng: {
-                        lat: 1,
-                        lng: 1
+                    editFeatureQuery: {
+                        type: 'geometry'
                     }
+                }
+            },
+            map: {
+                present: {
+                    projection: 'EPSG:3857'
                 }
             }
         }, done);
