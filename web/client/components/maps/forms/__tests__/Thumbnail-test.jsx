@@ -28,12 +28,12 @@ describe('This test for Thumbnail', () => {
     // test DEFAULTS
     it('creates the component with defaults, loading=true', () => {
         const thumbnailItem = ReactDOM.render(<Thumbnail loading/>, document.getElementById("container"));
-        expect(thumbnailItem).toExist();
+        expect(thumbnailItem).toBeTruthy();
 
         const thumbnailItemDom = ReactDOM.findDOMNode(thumbnailItem);
-        expect(thumbnailItemDom).toExist();
+        expect(thumbnailItemDom).toBeTruthy();
 
-        expect(thumbnailItemDom.className).toBe('btn btn-info');
+        expect(thumbnailItemDom.className).toBe('dropzone-thumbnail-container ms-loading');
     });
 
     it('creates the component with defaults, loading=false', () => {
@@ -139,7 +139,7 @@ describe('This test for Thumbnail', () => {
         expect(content).toExist();
     });
 
-    it('creates the component with a thumbnail, onDrop files=null', () => {
+    it('creates the component with a thumbnail, onDrop files=null', (done) => {
         let thumbnail = "http://localhost:8081/%2Fgeostore%2Frest%2Fdata%2F2214%2Fraw%3Fdecode%3Ddatauri";
         let map = {
             name: "nameMap",
@@ -151,27 +151,46 @@ describe('This test for Thumbnail', () => {
             errors: []
         };
 
-        const thumbnailItem = ReactDOM.render(<Thumbnail map={map}/>, document.getElementById("container"));
+        const thumbnailItem = ReactDOM.render(
+            <Thumbnail
+                map={map}
+                onError={(error, mapId) => {
+                    try {
+                        expect(error).toEqual([]);
+                        expect(mapId).toEqual(123);
+                    } catch (e) {
+                        done(e);
+                    }
+                }}
+                onUpdate={(data) => {
+                    try {
+                        expect(data).toBeTruthy();
+                        const content = document.querySelector('.dropzone-content-image-added');
+                        expect(content).toBeTruthy();
+                    } catch (e) {
+                        done(e);
+                    }
+                    done();
+                }}
+            />, document.getElementById("container"));
         expect(thumbnailItem).toExist();
-
-        /* let files = [{
-            type: "image/png",
-            preview: "blob:http://dev.mapstore.geo-solutions.it/6b67787f-0654-4107-94bf-165adf386259"
-        }];*/
-
-        // map, metadata
-        thumbnailItem.onDrop(null);
-        // thumbnailItem.onDrop(files);
-
         const thumbnailItemDom = ReactDOM.findDOMNode(thumbnailItem);
-        expect(thumbnailItemDom).toExist();
+        expect(thumbnailItemDom).toBeTruthy();
 
-        const content = TestUtils.findRenderedDOMComponentWithClass(thumbnailItem, 'dropzone-content-image-added');
-        expect(content).toExist();
+        const file = new Blob([null], { type: 'image/png' });
+
+        const input = document.querySelector('input');
+        TestUtils.Simulate.drop(input, { dataTransfer: { files: [file] } });
+
+        const content = thumbnailItemDom.querySelector('.dropzone-content-image-added');
+        expect(content).toBeFalsy();
+
+        const loadingNode = document.querySelector('.ms-loading');
+        expect(loadingNode).toBeTruthy();
     });
 
 
-    it('creates the component with a thumbnail, onRemoveThumbnail', () => {
+    it('creates the component with a thumbnail, onRemoveThumbnail', (done) => {
         let thumbnail = "http://localhost:8081/%2Fgeostore%2Frest%2Fdata%2F2214%2Fraw%3Fdecode%3Ddatauri";
         let map = {
             name: "nameMap",
@@ -183,17 +202,32 @@ describe('This test for Thumbnail', () => {
             errors: []
         };
 
-        const thumbnailItem = ReactDOM.render(<Thumbnail map={map}/>, document.getElementById("container"));
-        expect(thumbnailItem).toExist();
+        const thumbnailItem = ReactDOM.render(<Thumbnail
+            map={map}
+            onUpdate={(data) => {
+                try {
+                    expect(data).toBe(null);
+                } catch (e) {
+                    done(e);
+                }
+            }}
+            onError={(error, mapId) => {
+                try {
+                    expect(error).toEqual([]);
+                    expect(mapId).toEqual(123);
+                    const content = document.querySelector('.dropzone-content-image-added');
+                    expect(content).toBeTruthy();
+                } catch (e) {
+                    done(e);
+                }
+                done();
+            }}
+        />, document.getElementById("container"));
+        expect(thumbnailItem).toBeTruthy();
 
-        // map, metadata
-        thumbnailItem.onRemoveThumbnail(null);
-
-        const thumbnailItemDom = ReactDOM.findDOMNode(thumbnailItem);
-        expect(thumbnailItemDom).toExist();
-
-        const content = TestUtils.findRenderedDOMComponentWithClass(thumbnailItem, 'dropzone-content-image-added');
-        expect(content).toExist();
+        const removeNode = document.querySelector('.dropzone-remove');
+        expect(removeNode).toBeTruthy();
+        TestUtils.Simulate.click(removeNode);
     });
 
     it('creates the component with a thumbnail, deleteThumbnail(thumbnail, mapId)', () => {
