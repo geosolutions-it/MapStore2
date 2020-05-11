@@ -293,19 +293,20 @@ module.exports = {
                 action$.ofType(CLICK_ON_MAP).switchMap(({point: {latlng, pixel}}) => {
                     const currentFilter = find(getAttributeFilters(store.getState()), f => f.type === 'geometry') || {};
 
-                    const {lat, lng} = latlng;
+                    const projection = projectionSelector(store.getState());
+                    const center = CoordinatesUtils.reproject([latlng.lng, latlng.lat], 'EPSG:4326', projection);
                     const hook = MapUtils.getHook(MapUtils.GET_COORDINATES_FROM_PIXEL_HOOK);
-                    const radius = CoordinatesUtils.calculateCircleRadiusFromPixel(hook, projectionSelector(store.getState()), pixel, latlng, 4);
+                    const radius = CoordinatesUtils.calculateCircleRadiusFromPixel(hook, pixel, center, 4);
 
                     return currentFilter.deactivated ? Rx.Observable.empty() : Rx.Observable.of(updateFilter({
                         ...currentFilter,
                         value: {
                             attribute: currentFilter.attribute || get(spatialFieldSelector(store.getState()), 'attribute'),
                             geometry: {
-                                center: [lng, lat],
-                                coordinates: CoordinatesUtils.calculateCircleCoordinates({x: lng, y: lat}, radius, 12),
-                                extent: [lng - radius, lat - radius, lng + radius, lat + radius],
-                                projection: "EPSG:4326",
+                                center: [center.x, center.y],
+                                coordinates: CoordinatesUtils.calculateCircleCoordinates(center, radius, 12),
+                                extent: [center.x - radius, center.y - radius, center.x + radius, center.y + radius],
+                                projection,
                                 radius,
                                 type: "Polygon"
                             },

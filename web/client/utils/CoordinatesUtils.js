@@ -844,20 +844,18 @@ const CoordinatesUtils = {
             crs: 'EPSG:4326'
         };
     },
-    calculateCircleRadiusFromPixel: (coordinatesFromPixelConverter, projection, pixel = {}, latlng = {}, pixelRadius, defaultRadius = 0.01) => {
-        const {lat, lng} = latlng;
+    calculateCircleRadiusFromPixel: (coordinatesFromPixelConverter, pixel = {}, center = [], pixelRadius, defaultRadius = 0.01) => {
+        const radiusA = isArray(center) ? center : [center.x, center.y];
 
-        if (isNumber(lat) && !isNaN(lat) &&
-            isNumber(lng) && !isNaN(lng) &&
+        if (isNumber(radiusA[0]) && !isNaN(radiusA[0]) &&
+            isNumber(radiusA[1]) && !isNaN(radiusA[1]) &&
             isNumber(pixel.x) && !isNaN(pixel.x) &&
             isNumber(pixel.y) && !isNaN(pixel.y)) {
-            const radiusA = [lng, lat];
             const pixelCoords = isFunction(coordinatesFromPixelConverter) ? coordinatesFromPixelConverter([
                 pixel.x,
                 pixel.y >= pixelRadius ? pixel.y - pixelRadius : pixel.y + pixelRadius
             ]) : null;
-            const radiusB = pixelCoords &&
-                CoordinatesUtils.pointObjectToArray(CoordinatesUtils.reproject(pixelCoords, projection, 'EPSG:4326'));
+            const radiusB = pixelCoords && (isArray(pixelCoords) ? pixelCoords : [pixelCoords.x, pixelCoords.y]);
 
             return isArray(radiusB) ? Math.sqrt((radiusA[0] - radiusB[0]) * (radiusA[0] - radiusB[0]) +
                 (radiusA[1] - radiusB[1]) * (radiusA[1] - radiusB[1])) :

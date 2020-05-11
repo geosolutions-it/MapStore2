@@ -19,7 +19,7 @@ import {
     featureInfoClick, updateCenterToMarker, purgeMapInfoResults,
     exceptionsFeatureInfo, loadFeatureInfo, errorFeatureInfo,
     noQueryableLayers, newMapInfoRequest, getVectorInfo,
-    showMapinfoMarker, hideMapinfoMarker, setEditFeatureQuery, setCurrentEditFeatureQuery
+    showMapinfoMarker, hideMapinfoMarker, setCurrentEditFeatureQuery
 } from '../actions/mapInfo';
 
 import { SET_CONTROL_PROPERTIES, SET_CONTROL_PROPERTY, TOGGLE_CONTROL } from '../actions/controls';
@@ -34,14 +34,14 @@ import {addPopup, cleanPopups, removePopup, REMOVE_MAP_POPUP} from '../actions/m
 import { stopGetFeatureInfoSelector, identifyOptionsSelector,
     clickPointSelector, clickLayerSelector,
     isMapPopup, isHighlightEnabledSelector,
-    itemIdSelector, overrideParamsSelector, filterNameListSelector, editFeatureQuerySelector,
+    itemIdSelector, overrideParamsSelector, filterNameListSelector,
     currentEditFeatureQuerySelector } from '../selectors/mapInfo';
 import { centerToMarkerSelector, queryableLayersSelector, queryableSelectedLayersSelector } from '../selectors/layers';
 import { modeSelector, getAttributeFilters, isFeatureGridOpen } from '../selectors/featuregrid';
 import { spatialFieldSelector } from '../selectors/queryform';
 import { mapSelector, projectionDefsSelector, projectionSelector, isMouseMoveIdentifyActiveSelector } from '../selectors/map';
 import { boundingMapRectSelector } from '../selectors/maplayout';
-import { centerToVisibleArea, isInsideVisibleArea, isPointInsideExtent, reprojectBbox, parseURN, calculateCircleCoordinates,
+import { centerToVisibleArea, isInsideVisibleArea, isPointInsideExtent, reproject, reprojectBbox, parseURN, calculateCircleCoordinates,
     calculateCircleRadiusFromPixel } from '../utils/CoordinatesUtils';
 import { floatingIdentifyDelaySelector } from '../selectors/localConfig';
 import { createControlEnabledSelector, measureSelector } from '../selectors/controls';
@@ -204,31 +204,33 @@ export default {
                 // calculate a query for edit
                 const lng = get(point, 'latlng.lng');
                 const lat = get(point, 'latlng.lat');
+                const projection = projectionSelector(store.getState());
+                const pos = reproject([lng, lat], 'EPSG:4326', projection);
                 const hook = getHook(GET_COORDINATES_FROM_PIXEL_HOOK);
                 const radius = calculateCircleRadiusFromPixel(
                     hook,
-                    projectionSelector(store.getState()),
                     get(point, 'pixel'),
-                    get(point, 'latlng'),
-                    10
+                    pos,
+                    5
                 );
-
-                return Rx.Observable.of(setEditFeatureQuery({
+                const editFeatureQuery = {
                     type: 'geometry',
                     enabled: true,
                     value: {
                         geometry: {
-                            center: [lng, lat],
-                            coordinates: calculateCircleCoordinates({x: lng, y: lat}, radius, 12),
-                            extent: [lng - radius, lat - radius, lng + radius, lat + radius],
-                            projection: "EPSG:4326",
+                            center: [pos.x, pos.y],
+                            coordinates: calculateCircleCoordinates(pos, radius, 12),
+                            extent: [pos.x - radius, pos.y - radius, pos.x + radius, pos.y + radius],
+                            projection,
                             radius,
                             type: "Polygon"
                         },
                         method: "Circle",
                         operation: "INTERSECTS"
                     }
-                }), featureInfoClick(point, layer))
+                };
+
+                return Rx.Observable.of(featureInfoClick({...point, editFeatureQuery}, layer))
                     .merge(Rx.Observable.of(addPopup(uuid(),
                         { component: IDENTIFY_POPUP, maxWidth: 600, position: {  coordinates: point ? point.rawPos : []}}))
                         .filter(() => isMapPopup(store.getState()))
@@ -327,7 +329,8 @@ export default {
             .mapTo(cleanPopups()),
     identifyEditLayerFeaturesEpic: (action$, store) =>
         action$.ofType(EDIT_LAYER_FEATURES)
-            .exhaustMap(({layer}) => Rx.Observable.of(setCurrentEditFeatureQuery(editFeatureQuerySelector(store.getState())), browseData(layer))),
+            .exhaustMap(({layer}) => Rx.Observable.of(
+                setCurrentEditFeatureQuery(clickPointSelector(store.getState())?.editFeatureQuery), browseData(layer))),
     switchFeatureGridToEdit: (action$, store) =>
         action$.ofType(QUERY_CREATE)
             .switchMap(() => {
@@ -348,9 +351,6 @@ export default {
                     })
                 ) : Rx.Observable.empty();
             }),
-    resetEditFeatureQuery: (action$) =>
-        action$.ofType(CLOSE_IDENTIFY, LOCATION_CHANGE)
-            .mapTo(setEditFeatureQuery()),
     resetCurrentEditFeatureQuery: (action$) =>
         action$.ofType(CLOSE_FEATURE_GRID, LOCATION_CHANGE)
             .mapTo(setCurrentEditFeatureQuery()),

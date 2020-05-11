@@ -1909,6 +1909,11 @@ describe('featuregrid Epics', () => {
                     attribute: 'the_geom',
                     enabled: true
                 }]
+            },
+            map: {
+                present: {
+                    projection: 'EPSG:3857'
+                }
             }
         }, done);
     });
