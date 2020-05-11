@@ -61,6 +61,14 @@ Also this filter is applied through the [Query Panel](filtering-layers.md#query-
 
 ### Quick Filter
 
+The user can performance two type of quick filters:
+
+* Filter by **attributes** 
+
+* Filter by **geometries**
+
+#### Quick Filter by attributes
+
 This filter, applicable directly in the [Attribute Table](attributes-table.md) just below the field names, can be also used in combination with other filter applied:
 
 <img src="../img/filtering-layers/filtered_quick_filter.gif" class="ms-docimage"/>
@@ -89,7 +97,16 @@ In order to filter a numerical filed matching the records *greater than* or *equ
 
 <img src="../img/filtering-layers/attribute-table-quick-filter-3.jpg" class="ms-docimage"/>
 
-The *Quick Filter* remains active as long as the [Attribute Table](attributes-table.md) is open but, unlike the *Advanced Search*, closing the [Attribute Table](attributes-table.md) it will not reappear anymore if the [Attribute Table](attributes-table.md) is re-opened in a second time.
+#### Quick Filter by geometries
+
+If the user wants to filter by geometries, he must activate the **Filter clicking on the map** <img src="../img/button/filter_geometry_button.jpg" class="ms-docbutton"/> button (the button became blue) and select the geometry he wants to filter. The list of records in the [Attribute Table](attributes-table.md) will be automatically filtered by matching with the selected geometry. 
+
+<img src="../img/filtering-layers/filter_geometry.gif" class="ms-docimage"/>
+
+The user can disable the geometry filter through the **Remove filter** <img src="../img/button/remove_filter_geometry.jpg" class="ms-docbutton"/> button.
+
+!!! note
+    The *Quick Filter* remains active as long as the [Attribute Table](attributes-table.md) is open but, unlike the *Advanced Search*, closing the [Attribute Table](attributes-table.md) it will not reappear anymore if the [Attribute Table](attributes-table.md) is re-opened in a second time.
 
 ## Query Panel
 
