@@ -14,7 +14,7 @@ const Select = require('react-select').default;
 const tooltip = require('../../misc/enhancers/tooltip');
 const Glyphicon = tooltip(GlyphiconRB);
 const DropdownButton = tooltip(DropdownButtonRB);
-const {head, isNaN, get} = require('lodash');
+const {head, isNaN, get, isEmpty} = require('lodash');
 const LocaleUtils = require('../../../utils/LocaleUtils');
 const Toolbar = require('../../misc/toolbar/Toolbar');
 const draggableContainer = require('../../misc/enhancers/draggableContainer');
@@ -174,7 +174,22 @@ class CoordinatesEditor extends React.Component {
             </Col>
         </Row>);
     }
+
+    renderLabelTexts = (index, textValues) =>{
+        const {textLabels, featurePropValue} = textValues;
+        if (this.props.type === "Polygon") {
+            return !isEmpty(textLabels) && textLabels[index].text;
+        }
+        return index !== 0 ?
+            !isEmpty(textLabels) ? textLabels[index - 1].text :
+                !isEmpty(featurePropValue) && featurePropValue[0].formattedValue :
+            null;
+    }
+
     render() {
+        const feature = this.props.features[this.props.currentFeature || 0];
+        const textLabels = get(feature, "geometry.textLabels", []);
+        const featurePropValue = get(feature, "properties.values", []);
         const {componentsValidation, type} = this.props;
         const actualComponents = [...this.props.components];
         const actualValidComponents = actualComponents.filter(validateCoords);
@@ -277,63 +292,69 @@ class CoordinatesEditor extends React.Component {
                          <Col xs={1}/>
                      </Row>}
                 <Row style={{flex: 1, flexBasis: 'auto', overflowY: 'auto', overflowX: 'hidden'}}>
-                    {this.props.components.map((component, idx) => <CoordinatesRow
-                        format={this.props.format}
-                        aeronauticalOptions={this.props.aeronauticalOptions}
-                        sortId={idx}
-                        key={idx + " key"}
-                        isDraggable={this.props.isDraggable}
-                        isDraggableEnabled={this.props.isDraggable && this[componentsValidation[type].validation]()}
-                        showDraggable={this.props.isDraggable && !(this.props.type === "Point" || this.props.type === "Text" || this.props.type === "Circle")}
-                        formatVisible={false}
-                        removeVisible={componentsValidation[type].remove}
-                        removeEnabled={this[componentsValidation[type].validation](this.props.components, componentsValidation[type].remove, idx)}
-                        onSubmit={this.change}
-                        onMouseEnter={(val) => {
-                            if (this.props.isMouseEnterEnabled || this.props.type === "LineString" || this.props.type === "Polygon" || this.props.type === "MultiPoint") {
-                                this.props.onHighlightPoint(val);
-                            }
-                        }}
-                        onMouseLeave={() => {
-                            if (this.props.isMouseLeaveEnabled || this.props.type === "LineString" || this.props.type === "Polygon" || this.props.type === "MultiPoint") {
-                                this.props.onHighlightPoint(null);
-                            }
-                        }}
-                        onSort={(targetId, currentId) => {
-                            const components = this.props.components.reduce((allCmp, cmp, id) => {
-                                if (targetId === id) {
-                                    return targetId > currentId ?
-                                        [...allCmp, {...cmp}, head(this.props.components.filter((cm, i) => i === currentId))]
-                                        :
-                                        [...allCmp, head(this.props.components.filter((cm, i) => i === currentId)), {...cmp}];
+                    {this.props.components.map((component, idx) => <>
+                        <div style={{display: "flex", flexDirection: "column", alignItems: "center", fontWeight: 600}}>
+                            <span>
+                                {this.renderLabelTexts(idx, {textLabels, featurePropValue})}
+                            </span>
+                        </div>
+                        <CoordinatesRow
+                            format={this.props.format}
+                            aeronauticalOptions={this.props.aeronauticalOptions}
+                            sortId={idx}
+                            key={idx + " key"}
+                            isDraggable={this.props.isDraggable}
+                            isDraggableEnabled={this.props.isDraggable && this[componentsValidation[type].validation]()}
+                            showDraggable={this.props.isDraggable && !(this.props.type === "Point" || this.props.type === "Text" || this.props.type === "Circle")}
+                            formatVisible={false}
+                            removeVisible={componentsValidation[type].remove}
+                            removeEnabled={this[componentsValidation[type].validation](this.props.components, componentsValidation[type].remove, idx)}
+                            onSubmit={this.change}
+                            onMouseEnter={(val) => {
+                                if (this.props.isMouseEnterEnabled || this.props.type === "LineString" || this.props.type === "Polygon" || this.props.type === "MultiPoint") {
+                                    this.props.onHighlightPoint(val);
                                 }
-                                if (currentId === id) {
-                                    return [...allCmp];
-                                }
-                                return [...allCmp, {...cmp}];
-                            }, []).filter(val => val);
-
-                            if (this.isValid(components)) {
-                                this.props.onChange(components);
-                            } else if (this.props.properties.isValidFeature) {
-                                this.props.onSetInvalidSelected("coords", this.props.components.map(coordToArray));
-                            }
-                        }}
-                        idx={idx}
-                        component={component}
-                        onRemove={() => {
-                            const components = this.props.components.filter((cmp, i) => i !== idx);
-                            if (this.isValid(components)) {
-                                if (this.props.isMouseEnterEnabled || this.props.type === "LineString" && idx !== components.length || this.props.type === "Polygon") {
-                                    this.props.onHighlightPoint(components[idx]);
-                                } else {
+                            }}
+                            onMouseLeave={() => {
+                                if (this.props.isMouseLeaveEnabled || this.props.type === "LineString" || this.props.type === "Polygon" || this.props.type === "MultiPoint") {
                                     this.props.onHighlightPoint(null);
                                 }
-                                this.props.onChange(components);
-                            } else if (this.props.properties.isValidFeature) {
-                                this.props.onSetInvalidSelected("coords", this.props.components.map(coordToArray));
-                            }
-                        }}/>)}
+                            }}
+                            onSort={(targetId, currentId) => {
+                                const components = this.props.components.reduce((allCmp, cmp, id) => {
+                                    if (targetId === id) {
+                                        return targetId > currentId ?
+                                            [...allCmp, {...cmp}, head(this.props.components.filter((cm, i) => i === currentId))]
+                                            :
+                                            [...allCmp, head(this.props.components.filter((cm, i) => i === currentId)), {...cmp}];
+                                    }
+                                    if (currentId === id) {
+                                        return [...allCmp];
+                                    }
+                                    return [...allCmp, {...cmp}];
+                                }, []).filter(val => val);
+
+                                if (this.isValid(components)) {
+                                    this.props.onChange(components);
+                                } else if (this.props.properties.isValidFeature) {
+                                    this.props.onSetInvalidSelected("coords", this.props.components.map(coordToArray));
+                                }
+                            }}
+                            idx={idx}
+                            component={component}
+                            onRemove={() => {
+                                const components = this.props.components.filter((cmp, i) => i !== idx);
+                                if (this.isValid(components)) {
+                                    if (this.props.isMouseEnterEnabled || this.props.type === "LineString" && idx !== components.length || this.props.type === "Polygon") {
+                                        this.props.onHighlightPoint(components[idx]);
+                                    } else {
+                                        this.props.onHighlightPoint(null);
+                                    }
+                                    this.props.onChange(components);
+                                } else if (this.props.properties.isValidFeature) {
+                                    this.props.onSetInvalidSelected("coords", this.props.components.map(coordToArray));
+                                }
+                            }}/></>)}
                 </Row>
                 {(!this.props.components || this.props.components.length === 0) &&
                      <Row><Col xs={12} className="text-center" style={{padding: 15, paddingBottom: 30}}>
