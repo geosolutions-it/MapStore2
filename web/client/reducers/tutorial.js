@@ -81,7 +81,7 @@ function tutorial(state = initialState, action) {
         });
 
 
-        const isDisabled = localStorage.getItem('mapstore.plugin.tutorial.' + action.id + '.disabled');
+        const isDisabled = localStorage.getItem('mapstore.plugin.tutorial.' + action.id + '.disabled') && !action.ignoreDisabled;
         let hasIntro = false;
         setup.steps.forEach((step) => {
             if (step.selector === '#intro-tutorial') {
@@ -93,7 +93,7 @@ function tutorial(state = initialState, action) {
         setup.start = true;
         setup.status = 'run';
 
-        if (isDisabled === 'true' || !hasIntro || action.stop) {
+        if (isDisabled || !hasIntro || action.stop) {
             setup.steps = setup.steps.filter((step) => {
                 return step.selector !== '#intro-tutorial';
             }).map((step, index) => {

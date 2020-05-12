@@ -19,6 +19,7 @@ import ResizableModal from '../misc/ResizableModal';
 import ToolbarButton from '../misc/toolbar/ToolbarButton';
 import Message from '../I18N/Message';
 import ConfigureMapTemplates from './ConfigureMapTemplates';
+import tutorialEnhancer from './enhancers/tutorialEnhancer';
 
 import Dropzone from 'react-dropzone';
 import Spinner from "react-spinkit";
@@ -452,5 +453,6 @@ export default compose(
                 }
             }
         }
-    })
+    }),
+    tutorialEnhancer('configureplugins-initial')
 )(configurePluginsStep);

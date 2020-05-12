@@ -2481,6 +2481,12 @@
                     "removePlugin": "Remove this extension from MapStore",
                     "mapTemplatesConfig": "Configure templates"
                 },
+                "tutorialPlugins": {
+                    "availableTitle": "Available Plugin",
+                    "availableDescription": "This plugin is disabled",
+                    "enabledTitle": "Enabled Plugin",
+                    "enabledDescription": "This plugin is enabled"
+                },
                 "saveCfgErrorNotification":  {
                     "title": "Syntax error in plugin configuration",
                     "message": "Plugin \"{pluginName}\" contains an error in configuration. Please fix before proceeding"
@@ -2532,7 +2538,8 @@
                 "title": "Bad context name",
                 "unknownError": "Unexpected error occurred"
             },
-            "undo": "Are you sure you want to abandon the context editing session?"
+            "undo": "Are you sure you want to abandon the context editing session?",
+            "showTutorial": "Show Tutorial"
         },
         "contextManager": {
             "title": "Manage Contexts",
@@ -2714,6 +2721,100 @@
             "dashboardAddMap": {
                 "title": "Map Widget",
                 "text": "<p>Add a new interactive map to the dashboard. You can add more than one map with the ability to connect other widgets to them. After saving the first map, the legend widget will be added to the list. Legend Widget will show a legend related to the connected map.</p><p>Steps:</p><p><ul><li>Select a map</li><li>Improve map by adding new layers</li><li>Save and add to dashboard</li></ul></p>"
+            },
+            "contextCreator": {
+                "generalSettings": {
+                    "intro": {
+                        "title": "Context Creator Tutorial",
+                        "text": "Context Creator is a step-by-step wizard to create and edit MapStore contexts"
+                    },
+                    "stepsOverview": {
+                        "title": "Context Creator Steps",
+                        "text": "<p>Every context is created in three steps:</p><p><ul><li>General Settings</li><li>Configure Map</li><li>Configure Plugins</li></ul></p>"
+                    },
+                    "navigation": {
+                        "next": {
+                            "title": "Navigation: Next",
+                            "text": "<p>Press this button to go to the next step. If the button is disabled, it means that either the data you configured is being validated, or it is invalid.</p>"
+                        },
+                        "back": {
+                            "title": "Navigation: Back",
+                            "text": "<p>Press this button to go to the previous step.</p>"
+                        },
+                        "close": {
+                            "title": "Navigation: Close",
+                            "text": "<p>Press this button to leave the context creation process without saving. This can be done at any point in the creation process.</p>"
+                        }
+                    },
+                    "fields": {
+                        "title": "General Settings",
+                        "text": "<p>The first creation step is to specify name of the context and title that should be set as the title of the window, when context is opened and active. Note, that context name can only contain latin letters, digits 0-9 and underscore character. Window title cannot be empty.</p>"
+                    },
+                    "showTutorial": {
+                        "title": "Show Tutorial",
+                        "text": "<p>If you wish to go through the tutorial for a step again, you can do it at any time by pressing this button.</p>"
+                    }
+                },
+                "configureMap": {
+                    "intro": {
+                        "title": "Configure Map",
+                        "text": "<p>In this step using MapStore map viewer tools you can configure a default map that will be opened upon accessing the context.</p>"
+                    },
+                    "reloadMap": {
+                        "title": "Reload Map Button",
+                        "text": "<p>If you wish to discard all the changes you've made to the map so far and start over, you can do so by pressing this button.</p>"
+                    }
+                },
+                "configurePlugins": {
+                    "intro": {
+                        "title": "Configure Plugins",
+                        "text": "<p>This step allows you to configure plugins that will be present in a context.</p>"
+                    },
+                    "availablePlugins": {
+                        "title": "Available Plugins",
+                        "text": "<p>This list contains MapStore plugins that can be added to a context. To select a plugin simply right click on it's card. Also, if you hold down your CTRL key, you can select multiple plugins.</p>"
+                    },
+                    "pluginManipulation": {
+                        "title": "Plugin Manipulation",
+                        "text": "<p>Once selected, available plugins can be moved into the right column, making them enabled in the context. Some plugins require other plugins to function, in that case they will be enabled automatically alongside plugins you explicitly enabled.</p><p>Plugins can also be moved from enabled column into available column to remove plugins from the context. If you remove a plugin, all the plugins it requires to function will be disalbed as well, unless there are currently enabled plugins that also require such a plugin.</p>"
+                    },
+                    "enabledPlugins": {
+                        "title": "Enabled Plugins",
+                        "text": "<p>This list contains MapStore plugins that are in the context. Each plugin here can be further configured using tool buttons.</p>"
+                    },
+                    "userPlugin": {
+                        "title": "Plugin Tools: User Plugins",
+                        "text": "<p>By pressing this button, you can allow a plugin to be enabled/disabled by users, making it a user plugin. Such plugins will be shown within User Extensions plugin. This plugin is automatically added to the context if there is at least one enabled user plugin.</p>"
+                    },
+                    "userPluginCheckbox": {
+                        "title": "Plugin Tools: User Plugins",
+                        "text": "<p>If a plugin is a user plugin, then this checkbox controls whether a user plugin should be enabled automatically on context load.</p>"
+                    },
+                    "cfgTool": {
+                        "title": "Plugin Tools: Configuration Tool",
+                        "text": "<p>Pressing this button makes an editor appear, where you can edit the plugin's default configuration.</p>"
+                    },
+                    "cfgEditor": {
+                        "title": "Plugin Tools: Configuration Editor",
+                        "text": "<p>The editor supports syntax highlight. All your changes will be saved continuously as you edit. If the configuration contains a syntax error, you will be informed appropriately. The error must be fixed before proceeding.</p>"
+                    },
+                    "documentationTool": {
+                        "title": "Plugin Tools: Documentation",
+                        "text": "<p>Pressing this button will take you to the plugin's documentation page where you can look up info on what the plugin does, what configuration parameters it supports.</p>"
+                    },
+                    "mapTemplatesTool": {
+                        "title": "Plugin Tools: Map Templates",
+                        "text": "<p>Map Templates plugin also has a special tool that allows you to configure map templates that will be accessible within the context.</p>"
+                    },
+                    "extensions": {
+                        "title": "Extensions",
+                        "text": "<p>MapStore also supports uploading custom extenion bundles. You can do so by clicking this button.</p>"
+                    },
+                    "extensionsDelete": {
+                        "title": "Extensions",
+                        "text": "<p>Already uploaded extensions can be deleted at any time by pressing this button.</p>"
+                    }
+                }
             }
         },
         "userSession": {

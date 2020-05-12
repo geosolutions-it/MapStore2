@@ -2477,6 +2477,12 @@
                     "removePlugin": "Entfernen Sie diese Erweiterung aus MapStore",
                     "mapTemplatesConfig": "Vorlagen konfigurieren"
                 },
+                "tutorialPlugins": {
+                    "availableTitle": "Verfügbares Plugin",
+                    "availableDescription": "Dieses Plugin ist deaktiviert",
+                    "enabledTitle": "Aktiviertes Plugin",
+                    "enabledDescription": "Dieses Plugin ist aktiviert"
+                },
                 "saveCfgErrorNotification":  {
                     "title": "Syntaxfehler in der Plugin-Konfiguration",
                     "message": "Plugin \"{pluginName}\" enthält einen Konfigurationsfehler. Bitte korrigieren, bevor Sie fortfahren"
@@ -2528,7 +2534,8 @@
                 "title": "Falscher Kontextname",
                 "unknownError": "Ein unerwarteter Fehler ist aufgetreten"
             },
-            "undo": "Möchten Sie die Kontextbearbeitungssitzung wirklich abbrechen?"
+            "undo": "Möchten Sie die Kontextbearbeitungssitzung wirklich abbrechen?",
+            "showTutorial": "Tutorial anzeigen"
         },
         "contextManager": {
             "title": "Kontexte verwalten",
@@ -2710,6 +2717,100 @@
             "dashboardAddMap": {
                 "title": "Karten Widget",
                 "text": "<p> Fügen Sie eine neue interaktive Karte zum Dashboard hinzu. Sie können mehr als eine Karte mit der Möglichkeit hinzufügen, andere Widgets mit ihnen zu verbinden. Nach dem Speichern der ersten Karte wird das Legenden-Widget zur Liste hinzugefügt. Das Legenden-Widget zeigt eine Legende zur verbundenen Karte. </p> <p> Schritte: </p> <p> <ul> <li> Wählen Sie eine Karte </li> <li> Verbessern Sie die Karte, indem Sie neue Ebenen hinzufügen </li> <li> Speichern und zum Dashboard hinzufügen </li> </ul> </p>"
+            },
+            "contextCreator": {
+                "generalSettings": {
+                    "intro": {
+                        "title": "Tutorial zum Erstellen von Kontexten",
+                        "text": "Context Creator ist ein schrittweiser Assistent zum Erstellen und Bearbeiten von MapStore-Kontexten"
+                    },
+                    "stepsOverview": {
+                        "title": "Schritte zur Kontexterstellung",
+                        "text": "<p>Jeder Kontext wird in drei Schritten erstellt:</p><p><ul><li>Allgemeine Einstellungen</li><li>Karte konfigurieren</li><li>Plugins konfigurieren</li></ul></p>"
+                    },
+                    "navigation": {
+                        "next": {
+                            "title": "Navigation: Weiter",
+                            "text": "<p>Drücken Sie diese Taste, um zum nächsten Schritt zu gelangen. Wenn die Schaltfläche deaktiviert ist, bedeutet dies, dass entweder die von Ihnen konfigurierten Daten überprüft werden oder sie ungültig sind.</p>"
+                        },
+                        "back": {
+                            "title": "Navigation: Zurück",
+                            "text": "<p>Drücken Sie diese Taste, um zum vorherigen Schritt zu gelangen.</p>"
+                        },
+                        "close": {
+                            "title": "Navigation: Schließen",
+                            "text": "<p>Drücken Sie diese Taste, um den Kontexterstellungsprozess ohne Speichern zu verlassen. Dies kann zu jedem Zeitpunkt im Erstellungsprozess erfolgen.</p>"
+                        }
+                    },
+                    "fields": {
+                        "title": "Allgemeine Einstellungen",
+                        "text": "<p>Der erste Erstellungsschritt besteht darin, den Namen des Kontexts und den Titel anzugeben, der als Titel des Fensters festgelegt werden soll, wenn der Kontext geöffnet und aktiv ist. Beachten Sie, dass der Kontextname nur lateinische Buchstaben, Ziffern 0-9 und Unterstriche enthalten darf. Der Fenstertitel darf nicht leer sein.</p>"
+                    },
+                    "showTutorial": {
+                        "title": "Tutorial anzeigen",
+                        "text": "<p>Wenn Sie das Tutorial noch einmal für einen Schritt durchgehen möchten, können Sie dies jederzeit durch Drücken dieser Taste tun.</p>"
+                    }
+                },
+                "configureMap": {
+                    "intro": {
+                        "title": "Karte konfigurieren",
+                        "text": "<p>In diesem Schritt können Sie mit den MapStore Map Viewer-Tools eine Standardkarte konfigurieren, die beim Zugriff auf den Kontext geöffnet wird.</p>"
+                    },
+                    "reloadMap": {
+                        "title": "Schaltfläche \"Karte neu laden\"",
+                        "text": "<p>Wenn Sie alle Änderungen, die Sie bisher an der Karte vorgenommen haben, verwerfen und von vorne beginnen möchten, können Sie dies tun, indem Sie auf diese Schaltfläche klicken.</p>"
+                    }
+                },
+                "configurePlugins": {
+                    "intro": {
+                        "title": "Plugins konfigurieren",
+                        "text": "<p>In diesem Schritt können Sie Plugins konfigurieren, die in einem Kontext vorhanden sind.</p>"
+                    },
+                    "availablePlugins": {
+                        "title": "Verfügbare Plugins",
+                        "text": "<p>Diese Liste enthält MapStore-Plugins, die einem Kontext hinzugefügt werden können. Um ein Plugin auszuwählen, klicken Sie einfach mit der rechten Maustaste auf die Karte. Wenn Sie die STRG-Taste gedrückt halten, können Sie auch mehrere Plugins auswählen.</p>"
+                    },
+                    "pluginManipulation": {
+                        "title": "Plugin-Manipulation",
+                        "text": "<p>Einmal ausgewählt, können verfügbare Plugins in die rechte Spalte verschoben werden, sodass sie im Kontext aktiviert werden. Für einige Plugins sind andere Plugins erforderlich. In diesem Fall werden sie neben den explizit aktivierten Plugins automatisch aktiviert.</p><p>Plugins können auch von der aktivierten Spalte in die verfügbare Spalte verschoben werden, um Plugins aus dem Kontext zu entfernen. Wenn Sie ein Plugin entfernen, werden alle Plugins, die für die Funktion erforderlich sind, ebenfalls deaktiviert, es sei denn, es gibt derzeit aktivierte Plugins, für die ebenfalls ein solches Plugin erforderlich ist.</p>"
+                    },
+                    "enabledPlugins": {
+                        "title": "Aktivierte Plugins",
+                        "text": "<p>Diese Liste enthält MapStore-Plugins, die sich im Kontext befinden. Jedes Plugin hier kann mithilfe von Tool-Schaltflächen weiter konfiguriert werden.</p>"
+                    },
+                    "userPlugin": {
+                        "title": "Plugin-Tools: Benutzer-Plugins",
+                        "text": "<p>Durch Drücken dieser Taste können Sie zulassen, dass ein Plugin von Benutzern aktiviert / deaktiviert wird, sodass es zu einem Benutzer-Plugin wird. Solche Plugins werden im User Extensions-Plugin angezeigt. Dieses Plugin wird automatisch zum Kontext hinzugefügt, wenn mindestens ein Benutzer-Plugin aktiviert ist.</p>"
+                    },
+                    "userPluginCheckbox": {
+                        "title": "Plugin-Tools: Benutzer-Plugins",
+                        "text": "<p>Wenn ein Plugin ein Benutzer-Plugin ist, steuert dieses Kontrollkästchen, ob ein Benutzer-Plugin beim Laden des Kontexts automatisch aktiviert werden soll.</p>"
+                    },
+                    "cfgTool": {
+                        "title": "Plugin-Tools: Konfigurationstool",
+                        "text": "<p>Durch Drücken dieser Taste wird ein Editor angezeigt, in dem Sie die Standardkonfiguration des Plugins bearbeiten können.</p>"
+                    },
+                    "cfgEditor": {
+                        "title": "Plugin Tools: Konfigurationseditor",
+                        "text": "<p>Der Editor unterstützt die Syntaxhervorhebung. Alle Ihre Änderungen werden beim Bearbeiten kontinuierlich gespeichert. Wenn die Konfiguration einen Syntaxfehler enthält, werden Sie entsprechend informiert. Der Fehler muss behoben sein, bevor Sie fortfahren.</p>"
+                    },
+                    "documentationTool": {
+                        "title": "Plugin Tools: Dokumentation",
+                        "text": "<p>Durch Drücken dieser Taste gelangen Sie zur Dokumentationsseite des Plugins, auf der Sie Informationen darüber abrufen können, was das Plugin tut und welche Konfigurationsparameter es unterstützt.</p>"
+                    },
+                    "mapTemplatesTool": {
+                        "title": "Plugin-Tools: Kartenvorlagen",
+                        "text": "<p>Das Plugin für Kartenvorlagen verfügt außerdem über ein spezielles Tool, mit dem Sie Kartenvorlagen konfigurieren können, auf die im Kontext zugegriffen werden kann.</p>"
+                    },
+                    "extensions": {
+                        "title": "Erweiterungen",
+                        "text": "<p>MapStore unterstützt auch das Hochladen von benutzerdefinierten Erweiterungspaketen. Klicken Sie dazu auf diese Schaltfläche.</p>"
+                    },
+                    "extensionsDelete": {
+                        "title": "Erweiterungen",
+                        "text": "<p>Bereits hochgeladene Erweiterungen können jederzeit durch Drücken dieser Schaltfläche gelöscht werden.</p>"
+                    }
+                }
             }
         },
         "userSession": {

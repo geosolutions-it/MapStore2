@@ -12,5 +12,8 @@ module.exports = {
     home_tutorial: require('./preset/home_tutorial'),
     cesium_tutorial: require('./preset/cesium_tutorial'),
     cesium_mobile_tutorial: require('./preset/cesium_mobile_tutorial'),
-    dashboard_tutorial: require('./preset/dashboard_tutorial')
+    dashboard_tutorial: require('./preset/dashboard_tutorial'),
+    contextcreator_generalsettings_tutorial: require('./preset/contextcreator_generalsettings_tutorial').default,
+    contextcreator_configuremap_tutorial: require('./preset/contextcreator_configuremap_tutorial').default,
+    contextcreator_configureplugins_tutorial: require('./preset/contextcreator_configureplugins_tutorial').default
 };

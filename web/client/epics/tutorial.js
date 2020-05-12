@@ -7,7 +7,7 @@
  */
 
 const Rx = require('rxjs');
-const {START_TUTORIAL, UPDATE_TUTORIAL, INIT_TUTORIAL, closeTutorial, setupTutorial} = require('../actions/tutorial');
+const {START_TUTORIAL, UPDATE_TUTORIAL, INIT_TUTORIAL, CHANGE_PRESET, closeTutorial, setupTutorial} = require('../actions/tutorial');
 const {CHANGE_MAP_VIEW} = require('../actions/map');
 const {MAPS_LIST_LOADED} = require('../actions/maps');
 const {TOGGLE_3D} = require('../actions/globeswitcher');
@@ -62,6 +62,19 @@ const switchTutorialEpic = (action$, store) =>
                 })
         );
 
+const changePresetEpic = (action$, store) =>
+    action$.ofType(CHANGE_PRESET)
+        .switchMap(({preset, ignoreDisabled}) => {
+            const state = store.getState();
+            const presetList = state.tutorial && state.tutorial.presetList || {};
+            const checkbox = state.tutorial && state.tutorial.checkbox;
+            const tutorial = presetList[preset];
+
+            return tutorial ?
+                Rx.Observable.of(setupTutorial(preset, tutorial, null, checkbox, null, false, ignoreDisabled)) :
+                Rx.Observable.empty();
+        });
+
 /**
  * Get actions from tutorial steps
  * @memberof epics.tutorial
@@ -87,5 +100,6 @@ const getActionsFromStepEpic = (action$) =>
 module.exports = {
     closeTutorialEpic,
     switchTutorialEpic,
-    getActionsFromStepEpic
+    getActionsFromStepEpic,
+    changePresetEpic
 };

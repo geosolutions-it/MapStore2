@@ -2477,6 +2477,12 @@
                     "removePlugin": "Eliminar esta extensión de MapStore",
                     "mapTemplatesConfig": "Configurar plantillas"
                 },
+                "tutorialPlugins": {
+                    "availableTitle": "Complemento disponible",
+                    "availableDescription": "Este complemento está deshabilitado",
+                    "enabledTitle": "Complemento habilitado",
+                    "enabledDescription": "Este complemento está habilitado"
+                },
                 "saveCfgErrorNotification":  {
                     "title": "Error de sintaxis en la configuración del complemento",
                     "message": "El complemento \"{pluginName}\" contiene un error en la configuración. Por favor arregle antes de continuar"
@@ -2528,7 +2534,8 @@
                 "title": "Nombre de contexto incorrecto",
                 "unknownError": "Ocurrió un error inesperado"
             },
-            "undo": "¿Seguro que quieres abandonar la sesión de edición de contexto?"
+            "undo": "¿Seguro que quieres abandonar la sesión de edición de contexto?",
+            "showTutorial": "Tutorial de presentación"
         },
         "contextManager": {
             "title": "Administrar contextos",
@@ -2710,6 +2717,100 @@
             "dashboardAddMap": {
                 "title": "Widget de mapa",
                 "text": "<p> Agregue un nuevo mapa interactivo al panel de control. Puede agregar más de un mapa con la capacidad de conectar otros widgets a ellos. Después de guardar el primer mapa, el widget de leyenda se agregará a la lista. El widget de leyenda mostrará una leyenda relacionada con el mapa conectado. </p> <p> Pasos: </p> <p> <ul> <li> Seleccione un mapa </li> <li> Mejore el mapa agregando nuevas capas </li> <li> Guarde y agregue al panel de control </li> </ul> </p>"
+            },
+            "contextCreator": {
+                "generalSettings": {
+                    "intro": {
+                        "title": "Tutorial de creador de contexto",
+                        "text": "Context Creator es un asistente paso a paso para crear y editar contextos de MapStore"
+                    },
+                    "stepsOverview": {
+                        "title": "Pasos del creador de contexto",
+                        "text": "<p>Cada contexto se crea en tres pasos:</p><p><ul><li>Configuración general</li><li>Configurar mapa</li><li>Configurar complementos</li></ul></p>"
+                    },
+                    "navigation": {
+                        "next": {
+                            "title": "Navegación: Siguiente",
+                            "text": "<p>Presione este botón para ir al siguiente paso. Si el botón está desactivado, significa que los datos que configuró se están validando o que no son válidos.</p>"
+                        },
+                        "back": {
+                            "title": "Navegación: Volver",
+                            "text": "<p>Presione este botón para ir al paso anterior.</p>"
+                        },
+                        "close": {
+                            "title": "Navegación: Cerrar",
+                            "text": "<p>Presione este botón para salir del proceso de creación de contexto sin guardar. Esto se puede hacer en cualquier momento del proceso de creación.</p>"
+                        }
+                    },
+                    "fields": {
+                        "title": "Configuración general",
+                        "text": "<p>El primer paso de creación es especificar el nombre del contexto y el título que debe establecerse como el título de la ventana, cuando el contexto está abierto y activo. Tenga en cuenta que ese nombre de contexto solo puede contener letras latinas, dígitos 0-9 y caracteres de subrayado. El título de la ventana no puede estar vacío.</p>"
+                    },
+                    "showTutorial": {
+                        "title": "Tutorial de presentación",
+                        "text": "<p>Si desea volver a seguir el tutorial por un paso, puede hacerlo en cualquier momento presionando este botón.</p>"
+                    }
+                },
+                "configureMap": {
+                    "intro": {
+                        "title": "Configurar mapa",
+                        "text": "<p>En este paso, utilizando las herramientas del visor de mapas MapStore, puede configurar un mapa predeterminado que se abrirá al acceder al contexto.</p>"
+                    },
+                    "reloadMap": {
+                        "title": "Botón Recargar mapa",
+                        "text": "<p>Si desea descartar todos los cambios que ha realizado en el mapa hasta ahora y comenzar de nuevo, puede hacerlo presionando este botón.</p>"
+                    }
+                },
+                "configurePlugins": {
+                    "intro": {
+                        "title": "Configurar complementos",
+                        "text": "<p>Este paso le permite configurar complementos que estarán presentes en un contexto.</p>"
+                    },
+                    "availablePlugins": {
+                        "title": "Complementos disponibles",
+                        "text": "<p>Esta lista contiene complementos de MapStore que se pueden agregar a un contexto. Para seleccionar un complemento, simplemente haga clic derecho en su tarjeta. Además, si mantiene presionada la tecla CTRL, puede seleccionar varios complementos.</p>"
+                    },
+                    "pluginManipulation": {
+                        "title": "Manipulación de complementos",
+                        "text": "<p>Una vez seleccionados, los complementos disponibles se pueden mover a la columna derecha, habilitándolos en el contexto. Algunos complementos requieren otros complementos para funcionar, en ese caso se habilitarán automáticamente junto con los complementos que usted habilitó explícitamente.</p><p>Los complementos también se pueden mover de la columna habilitada a la columna disponible para eliminar complementos del contexto. Si elimina un complemento, todos los complementos que necesita para funcionar también se deshabilitarán, a menos que actualmente haya complementos habilitados que también requieran dicho complemento.</p>"
+                    },
+                    "enabledPlugins": {
+                        "title": "Complementos habilitados",
+                        "text": "<p>Esta lista contiene complementos de MapStore que están en el contexto. Cada complemento aquí se puede configurar aún más mediante botones de herramientas.</p>"
+                    },
+                    "userPlugin": {
+                        "title": "Herramientas de complementos: complementos de usuario",
+                        "text": "<p>Al presionar este botón, puede permitir que los usuarios habiliten / deshabiliten un complemento, convirtiéndolo en un complemento de usuario. Dichos complementos se mostrarán dentro del complemento Extensiones de usuario. Este complemento se agrega automáticamente al contexto si hay al menos un complemento de usuario habilitado.</p>"
+                    },
+                    "userPluginCheckbox": {
+                        "title": "Herramientas de complementos: complementos de usuario",
+                        "text": "<p>Si un complemento es un complemento de usuario, entonces esta casilla de verificación controla si un complemento de usuario debe habilitarse automáticamente en la carga de contexto.</p>"
+                    },
+                    "cfgTool": {
+                        "title": "Herramientas de complementos: herramienta de configuración",
+                        "text": "<p>Al presionar este botón aparece un editor, donde puede editar la configuración predeterminada del complemento.</p>"
+                    },
+                    "cfgEditor": {
+                        "title": "Herramientas de complementos: Editor de configuración",
+                        "text": "<p>El editor admite resaltado de sintaxis. Todos sus cambios se guardarán continuamente a medida que edita. Si la configuración contiene un error de sintaxis, se le informará adecuadamente. El error debe repararse antes de continuar.</p>"
+                    },
+                    "documentationTool": {
+                        "title": "Herramientas de complementos: documentación",
+                        "text": "<p>Al presionar este botón, accederá a la página de documentación del complemento, donde podrá buscar información sobre lo que hace el complemento y qué parámetros de configuración admite.</p>"
+                    },
+                    "mapTemplatesTool": {
+                        "title": "Herramientas de complementos: plantillas de mapas",
+                        "text": "<p>El complemento de plantillas de mapas también tiene una herramienta especial que le permite configurar plantillas de mapas que serán accesibles dentro del contexto.</p>"
+                    },
+                    "extensions": {
+                        "title": "Extensiones",
+                        "text": "<p>MapStore también admite la carga de paquetes de extensión personalizados. Puede hacerlo haciendo clic en este botón.</p>"
+                    },
+                    "extensionsDelete": {
+                        "title": "Extensiones",
+                        "text": "<p>Las extensiones ya cargadas se pueden eliminar en cualquier momento presionando este botón.</p>"
+                    }
+                }
             }
         },
         "userSession": {

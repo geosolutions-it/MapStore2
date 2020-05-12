@@ -14,6 +14,7 @@ const DISABLE_TUTORIAL = 'DISABLE_TUTORIAL';
 const RESET_TUTORIAL = 'RESET_TUTORIAL';
 const CLOSE_TUTORIAL = 'CLOSE_TUTORIAL';
 const TOGGLE_TUTORIAL = 'TOGGLE_TUTORIAL';
+const CHANGE_PRESET = 'CHANGE_PRESET';
 
 function startTutorial() {
     return {
@@ -33,7 +34,7 @@ function initTutorial(id, steps, style, checkbox, defaultStep, presetList) {
     };
 }
 
-function setupTutorial(id, steps, style, checkbox, defaultStep, stop) {
+function setupTutorial(id, steps, style, checkbox, defaultStep, stop, ignoreDisabled) {
     return {
         type: SETUP_TUTORIAL,
         id,
@@ -41,7 +42,8 @@ function setupTutorial(id, steps, style, checkbox, defaultStep, stop) {
         style,
         checkbox,
         defaultStep,
-        stop
+        stop,
+        ignoreDisabled
     };
 }
 
@@ -78,6 +80,12 @@ function toggleTutorial() {
     };
 }
 
+const changePreset = (preset, ignoreDisabled) => ({
+    type: CHANGE_PRESET,
+    preset,
+    ignoreDisabled
+});
+
 module.exports = {
     START_TUTORIAL,
     INIT_TUTORIAL,
@@ -87,6 +95,7 @@ module.exports = {
     RESET_TUTORIAL,
     CLOSE_TUTORIAL,
     TOGGLE_TUTORIAL,
+    CHANGE_PRESET,
     startTutorial,
     initTutorial,
     setupTutorial,
@@ -94,5 +103,6 @@ module.exports = {
     disableTutorial,
     resetTutorial,
     closeTutorial,
-    toggleTutorial
+    toggleTutorial,
+    changePreset
 };
