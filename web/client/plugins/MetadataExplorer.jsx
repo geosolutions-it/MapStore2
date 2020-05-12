@@ -33,6 +33,7 @@ const {resultSelector, serviceListOpenSelector, newServiceSelector,
     searchTextSelector, groupSelector, pageSizeSelector, loadingSelector, selectedServiceLayerOptionsSelector
 } = require("../selectors/catalog");
 const {projectionSelector} = require('../selectors/map');
+const {isLocalizedLayerStylesEnabledSelector} = require('../selectors/localizedLayerStyles');
 
 const {mapLayoutValuesSelector} = require('../selectors/maplayout');
 const {metadataSourceSelector, modalParamsSelector} = require('../selectors/backgroundselector');
@@ -70,7 +71,8 @@ const metadataExplorerSelector = createStructuredSelector({
     locales: currentMessagesSelector,
     pageSize: pageSizeSelector,
     loading: loadingSelector,
-    crs: projectionSelector
+    crs: projectionSelector,
+    isLocalizedLayerStylesEnabled: isLocalizedLayerStylesEnabledSelector
 });
 
 
@@ -127,6 +129,7 @@ class MetadataExplorerComponent extends React.Component {
         style: PropTypes.object,
         dockProps: PropTypes.object,
         zoomToLayer: PropTypes.bool,
+        isLocalizedLayerStylesEnabled: PropTypes.bool,
 
         // side panel properties
         width: PropTypes.number,

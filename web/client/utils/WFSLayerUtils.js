@@ -50,3 +50,13 @@ export const extractGeometryType = describeFeatureType => {
         .map(elem => elem.type.split(":")[1]) // extract the geometry name. E.g. from gml:Point extract the "Point" string
     );
 };
+/**
+ * Extract GeometryType from JSON DescribeFeatureType
+ */
+export const extractGeometryAttributeName = describeFeatureType => {
+    const properties = get(describeFeatureType, "featureTypes[0].properties") || [];
+    return properties && head(properties
+        .filter(elem => elem.type.indexOf("gml:") === 0) // find fields of geometric type
+        .map(elem => elem.name) // extract the geometry attribute name. E.g. from gml:Point extract the "Point" string
+    );
+};

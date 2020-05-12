@@ -11,14 +11,14 @@ import ReactDOM from 'react-dom';
 import expect from 'expect';
 import {Provider} from 'react-redux';
 import MediaModal from '../MediaModal';
-// TODO: it fails on travis and not locally
-describe.skip('MediaModal component', () => {
+
+describe('MediaModal component', () => {
     beforeEach((done) => {
-        document.body.innerHTML = '<div id="container"></div>';
+        document.body.innerHTML = '<div><div id="myContainer"></div></div>';
         setTimeout(done);
     });
     afterEach((done) => {
-        ReactDOM.unmountComponentAtNode(document.getElementById("container"));
+        ReactDOM.unmountComponentAtNode(document.getElementById("myContainer"));
         document.body.innerHTML = '';
         setTimeout(done);
     });
@@ -26,10 +26,44 @@ describe.skip('MediaModal component', () => {
         ReactDOM.render(
             <Provider store={{subscribe: () => {}, getState: () => ({mediaEditor: {open: true}})}}>
                 <MediaModal open/>
-            </Provider>, document.getElementById("container"));
-        const container = document.getElementById('container');
-        expect(container.querySelector('.modal-fixed')).toNotExist();
+            </Provider>, document.getElementById("myContainer")
+        );
+        const myContainer = document.getElementById("myContainer");
+        expect(myContainer.querySelector('.modal-fixed')).toNotExist();
         expect(document.querySelector('.modal-fixed')).toExist();
+
+    });
+    describe('tests disabled state of apply button', () => {
+        it('when no item is selected', () => {
+            ReactDOM.render(
+                <Provider store={{subscribe: () => {}, getState: () => ({mediaEditor: {open: true}})}}>
+                    <MediaModal open selectedItem={null}/>
+                </Provider>, document.getElementById("myContainer"));
+            const buttons = document.querySelectorAll("button");
+            expect(buttons.length).toBe(4);
+            const applyBtn = buttons[3];
+            expect(applyBtn.disabled).toBe(true);
+        });
+        it('when is adding a new resource', () => {
+            ReactDOM.render(
+                <Provider store={{subscribe: () => {}, getState: () => ({mediaEditor: {open: true}})}}>
+                    <MediaModal open adding/>
+                </Provider>, document.getElementById("myContainer"));
+            const buttons = document.querySelectorAll("button");
+            expect(buttons.length).toBe(4);
+            const applyBtn = buttons[3];
+            expect(applyBtn.disabled).toBe(true);
+        });
+        it('when is editing a resource', () => {
+            ReactDOM.render(
+                <Provider store={{subscribe: () => {}, getState: () => ({mediaEditor: {open: true}})}}>
+                    <MediaModal open editing/>
+                </Provider>, document.getElementById("myContainer"));
+            const buttons = document.querySelectorAll("button");
+            expect(buttons.length).toBe(4);
+            const applyBtn = buttons[3];
+            expect(applyBtn.disabled).toBe(true);
+        });
     });
 });
 

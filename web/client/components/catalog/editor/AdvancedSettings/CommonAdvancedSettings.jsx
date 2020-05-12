@@ -8,9 +8,10 @@
 import React from 'react';
 import { isNil } from 'lodash';
 import ReactQuill from "react-quill";
+import { FormGroup, Checkbox, Col } from "react-bootstrap";
 
 import Message from "../../../I18N/Message";
-import { FormGroup, Checkbox, Col } from "react-bootstrap";
+import InfoPopover from '../../../widgets/widget/InfoPopover';
 
 /**
  * Common Advanced settings form, used by WMS/CSW/WMTS
@@ -18,6 +19,7 @@ import { FormGroup, Checkbox, Col } from "react-bootstrap";
 export default ({
     children,
     service,
+    isLocalizedLayerStylesEnabled,
     onChangeMetadataTemplate = () => { },
     onChangeServiceProperty = () => { },
     onToggleTemplate = () => { },
@@ -41,6 +43,15 @@ export default ({
                 </Checkbox>
             </Col>
         </FormGroup>
+        {(isLocalizedLayerStylesEnabled && !isNil(service.type) ? service.type === "wms" : false) && (<FormGroup controlId="localized-styles" key="localized-styles">
+            <Col xs={12}>
+                <Checkbox data-qa="service-lacalized-layer-styles-option"
+                    onChange={(e) => onChangeServiceProperty("localizedLayerStyles", e.target.checked)}
+                    checked={!isNil(service.localizedLayerStyles) ? service.localizedLayerStyles : false}>
+                    <Message msgId="catalog.enableLocalizedLayerStyles.label" />&nbsp;<InfoPopover text={<Message msgId="catalog.enableLocalizedLayerStyles.tooltip" />} />
+                </Checkbox>
+            </Col>
+        </FormGroup>)}
         {(!isNil(service.type) ? service.type === "csw" : false) && (<FormGroup controlId="metadata-template" key="metadata-template" className="metadata-template-editor">
             <Col xs={12}>
                 <Checkbox

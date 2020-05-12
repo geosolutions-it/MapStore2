@@ -7,8 +7,8 @@
 */
 import Rx from 'rxjs';
 
-import {get, find, isString, isNil, isNumber} from 'lodash';
-import axios from '../libs/ajax';
+import { get, find} from 'lodash';
+
 
 import uuid from 'uuid';
 import { LOCATION_CHANGE } from 'connected-react-router';
@@ -19,7 +19,7 @@ import {
     featureInfoClick, updateCenterToMarker, purgeMapInfoResults,
     exceptionsFeatureInfo, loadFeatureInfo, errorFeatureInfo,
     noQueryableLayers, newMapInfoRequest, getVectorInfo,
-    showMapinfoMarker, hideMapinfoMarker, setEditFeatureQuery
+    showMapinfoMarker, hideMapinfoMarker, setCurrentEditFeatureQuery
 } from '../actions/mapInfo';
 
 import { SET_CONTROL_PROPERTIES, SET_CONTROL_PROPERTY, TOGGLE_CONTROL } from '../actions/controls';
@@ -34,18 +34,20 @@ import {addPopup, cleanPopups, removePopup, REMOVE_MAP_POPUP} from '../actions/m
 import { stopGetFeatureInfoSelector, identifyOptionsSelector,
     clickPointSelector, clickLayerSelector,
     isMapPopup, isHighlightEnabledSelector,
-    itemIdSelector, overrideParamsSelector, filterNameListSelector, editFeatureQuerySelector } from '../selectors/mapInfo';
+    itemIdSelector, overrideParamsSelector, filterNameListSelector,
+    currentEditFeatureQuerySelector } from '../selectors/mapInfo';
 import { centerToMarkerSelector, queryableLayersSelector, queryableSelectedLayersSelector } from '../selectors/layers';
 import { modeSelector, getAttributeFilters, isFeatureGridOpen } from '../selectors/featuregrid';
 import { spatialFieldSelector } from '../selectors/queryform';
 import { mapSelector, projectionDefsSelector, projectionSelector, isMouseMoveIdentifyActiveSelector } from '../selectors/map';
 import { boundingMapRectSelector } from '../selectors/maplayout';
-import { centerToVisibleArea, isInsideVisibleArea, isPointInsideExtent, reprojectBbox, parseURN, calculateCircleCoordinates } from '../utils/CoordinatesUtils';
+import { centerToVisibleArea, isInsideVisibleArea, isPointInsideExtent, reproject, reprojectBbox, calculateCircleCoordinates,
+    calculateCircleRadiusFromPixel } from '../utils/CoordinatesUtils';
 import { floatingIdentifyDelaySelector } from '../selectors/localConfig';
 import { createControlEnabledSelector, measureSelector } from '../selectors/controls';
 import { localizedLayerStylesEnvSelector } from '../selectors/localizedLayerStyles';
 
-import {getBbox, getCurrentResolution, parseLayoutValue} from '../utils/MapUtils';
+import {getBbox, getCurrentResolution, parseLayoutValue, getHook, GET_COORDINATES_FROM_PIXEL_HOOK} from '../utils/MapUtils';
 import MapInfoUtils from '../utils/MapInfoUtils';
 import { IDENTIFY_POPUP } from '../components/map/popups';
 
@@ -54,41 +56,7 @@ const gridGeometryQuickFilter = state => get(find(getAttributeFilters(state), f 
 
 const stopFeatureInfo = state => stopGetFeatureInfoSelector(state) || isFeatureGridOpen(state) && (gridEditingSelector(state) || gridGeometryQuickFilter(state));
 
-/**
- * Sends a GetFeatureInfo request and dispatches the right action
- * in case of success, error or exceptions.
- *
- * @param basePath {string} base path to the service
- * @param requestParams {object} map of params for a getfeatureinfo request.
- */
-export const getFeatureInfo = (basePath, param, attachJSON, itemId = null) => {
-    const retrieveFlow = (params) => Rx.Observable.defer(() => axios.get(basePath, { params }));
-    return ((
-        attachJSON && param.info_format !== "application/json" )
-    // add the flow to get the for highlight/zoom
-        ? Rx.Observable.forkJoin(
-            retrieveFlow(param),
-            retrieveFlow({ ...param, info_format: "application/json"})
-                .map(res => res.data)
-                .catch(() => Rx.Observable.of({})) // errors on geometry retrieval are ignored
-        ).map(([response, data ]) => ({
-            ...response,
-            features: data && data.features && data.features.filter(f => !isNil(itemId) ? f.id === itemId : true),
-            featuresCrs: data && data.crs && parseURN(data.crs)
-        }))
-    // simply get the feature info, geometry is already there
-        : retrieveFlow(param)
-            .map(res => res.data)
-            .map( ( data = {} ) => ({
-                data: isString(data) ? data : {
-                    ...data,
-                    features: data.features && data.features.filter(f => itemId ? f.id === itemId : true)
-                },
-                features: data.features && data.features.filter(f => itemId ? f.id === itemId : true),
-                featuresCrs: data && data.crs && parseURN(data.crs)
-            }))
-    );
-};
+import {getFeatureInfo} from '../api/identify';
 
 /**
  * Epics for Identify and map info
@@ -141,7 +109,7 @@ export default {
                             const itemId = itemIdSelector(getState());
                             const reqId = uuid.v1();
                             const param = { ...appParams, ...requestParams };
-                            return getFeatureInfo(basePath, param, attachJSON, itemId)
+                            return getFeatureInfo(basePath, param, layer, {attachJSON, itemId})
                                 .map((response) =>
                                     response.data.exceptions
                                         ? exceptionsFeatureInfo(reqId, response.data.exceptions, requestParams, lMetaData)
@@ -198,10 +166,44 @@ export default {
             }
             return disableAlwaysOn || !stopFeatureInfo(store.getState() || {});
         })
-            .switchMap(({point, layer}) => Rx.Observable.of(featureInfoClick(point, layer))
-                .merge(Rx.Observable.of(addPopup(uuid(), { component: IDENTIFY_POPUP, maxWidth: 600, position: {  coordinates: point ? point.rawPos : []}}))
-                    .filter(() => isMapPopup(store.getState()))
-                )),
+            .switchMap(({point, layer}) => {
+                // calculate a query for edit
+                const lng = get(point, 'latlng.lng');
+                const lat = get(point, 'latlng.lat');
+                const projection = projectionSelector(store.getState());
+                const pos = reproject([lng, lat], 'EPSG:4326', projection);
+                const hook = getHook(GET_COORDINATES_FROM_PIXEL_HOOK);
+                const radius = calculateCircleRadiusFromPixel(
+                    hook,
+                    get(point, 'pixel'),
+                    pos,
+                    3
+                );
+                // emulation of feature info filter to query WFS services (edit and/or WFS layer)
+                // TODO: evaluate to do this calculation at map level, so we can use this filter also in popups
+                const geometricFilter = {
+                    type: 'geometry',
+                    enabled: true,
+                    value: {
+                        geometry: {
+                            center: [pos.x, pos.y],
+                            coordinates: calculateCircleCoordinates(pos, radius, 12),
+                            extent: [pos.x - radius, pos.y - radius, pos.x + radius, pos.y + radius],
+                            projection,
+                            radius,
+                            type: "Polygon"
+                        },
+                        method: "Circle",
+                        operation: "INTERSECTS"
+                    }
+                };
+
+                return Rx.Observable.of(featureInfoClick({ ...point, geometricFilter}, layer))
+                    .merge(Rx.Observable.of(addPopup(uuid(),
+                        { component: IDENTIFY_POPUP, maxWidth: 600, position: {  coordinates: point ? point.rawPos : []}}))
+                        .filter(() => isMapPopup(store.getState()))
+                    );
+            }),
     /**
      * triggers click again when highlight feature is enabled, to download the feature.
      */
@@ -211,7 +213,16 @@ export default {
                 enabled
                 && clickPointSelector(getState())
             )
-            .switchMap( () => Rx.Observable.from([featureInfoClick(clickPointSelector(getState()), clickLayerSelector(getState()), filterNameListSelector(getState()), overrideParamsSelector(getState()), itemIdSelector(getState())), showMapinfoMarker()])),
+            .switchMap( () => Rx.Observable.from([
+                featureInfoClick(
+                    clickPointSelector(getState()),
+                    clickLayerSelector(getState()),
+                    filterNameListSelector(getState()),
+                    overrideParamsSelector(getState()),
+                    itemIdSelector(getState())
+                ),
+                showMapinfoMarker()])
+            ),
     /**
      * Centers marker on visible map if it's hidden by layout
      * @param {external:Observable} action$ manages `FEATURE_INFO_CLICK` and `LOAD_FEATURE_INFO`.
@@ -295,50 +306,31 @@ export default {
             .mapTo(cleanPopups()),
     identifyEditLayerFeaturesEpic: (action$, store) =>
         action$.ofType(EDIT_LAYER_FEATURES)
-            .exhaustMap(({layer}) => {
-                const currentFilter = find(getAttributeFilters(store.getState()), f => f.type === 'geometry') || {};
-                const clickPoint = clickPointSelector(store.getState());
-                const lng = get(clickPoint, 'latlng.lng');
-                const lat = get(clickPoint, 'latlng.lat');
-                const radius = 0.2;
-                const attribute = currentFilter.attribute || get(spatialFieldSelector(store.getState()), 'attribute');
-
-                return isNumber(lng) && isNumber(lat) ? Rx.Observable.of(
-                    setEditFeatureQuery({
-                        type: 'geometry',
-                        enabled: true,
-                        attribute,
-                        value: {
-                            attribute,
-                            geometry: {
-                                center: [lng, lat],
-                                coordinates: calculateCircleCoordinates({x: lng, y: lat}, radius, 12),
-                                extent: [lng - radius, lat - radius, lng + radius, lat + radius],
-                                projection: "EPSG:4326",
-                                radius,
-                                type: "Polygon"
-                            },
-                            method: "Circle",
-                            operation: "INTERSECTS"
-                        }
-                    }),
-                    browseData(layer),
-                ) : Rx.Observable.empty();
-            }),
+            .exhaustMap(({layer}) => Rx.Observable.of(
+                setCurrentEditFeatureQuery(clickPointSelector(store.getState())?.geometricFilter), browseData(layer))),
     switchFeatureGridToEdit: (action$, store) =>
         action$.ofType(QUERY_CREATE)
-            .filter(({isLoading}) => !isLoading)
             .switchMap(() => {
-                const queryObj = editFeatureQuerySelector(store.getState());
+                const queryObj = currentEditFeatureQuerySelector(store.getState());
+                const currentFilter = find(getAttributeFilters(store.getState()), f => f.type === 'geometry') || {};
+                const attribute = currentFilter.attribute || get(spatialFieldSelector(store.getState()), 'attribute');
+
                 return queryObj ? Rx.Observable.of(
-                    setEditFeatureQuery(),
+                    setCurrentEditFeatureQuery(),
                     toggleEditMode(),
-                    updateFilter(queryObj)
+                    updateFilter({
+                        ...queryObj,
+                        attribute,
+                        value: {
+                            ...queryObj.value,
+                            attribute
+                        }
+                    })
                 ) : Rx.Observable.empty();
             }),
-    resetEditFeatureQuery: (action$) =>
+    resetCurrentEditFeatureQuery: (action$) =>
         action$.ofType(CLOSE_FEATURE_GRID, LOCATION_CHANGE)
-            .mapTo(setEditFeatureQuery()),
+            .mapTo(setCurrentEditFeatureQuery()),
     /**
      * Triggers data load on MOUSE_MOVE events
      */

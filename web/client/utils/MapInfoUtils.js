@@ -129,7 +129,7 @@ const MapInfoUtils = {
         };
     },
     /**
-     *
+     * Creates GFI request and metadata for specific layer.
      * @param {object} layer the layer object
      * @param {object} options the options for the request
      * @param {string} options.format the format to use
@@ -145,6 +145,18 @@ const MapInfoUtils = {
         }
         return {};
     },
+    /**
+     * Returns an Observable that emits the response when ready.
+     * @param {object} layer the layer
+     * @param {string} baseURL the URL for the request
+     * @param {object} params for the request
+     */
+    getIdentifyFlow(layer, baseURL, params) {
+        if (MapInfoUtils.services[layer.type] && MapInfoUtils.services[layer.type].getIdentifyFlow) {
+            return MapInfoUtils.services[layer.type].getIdentifyFlow(layer, baseURL, params);
+        }
+        return null;
+    },
     getValidator(format) {
         const defaultValidator = {
             getValidResponses: (responses) => responses,
@@ -154,8 +166,13 @@ const MapInfoUtils = {
             getValidResponses: (responses) => {
                 return responses.reduce((previous, current) => {
                     let infoFormat;
+                    // Handle WMS, WMTS
                     if (current.queryParams && current.queryParams.hasOwnProperty('info_format')) {
                         infoFormat = current.queryParams.info_format;
+                    }
+                    // handle WFS
+                    if (current.queryParams && current.queryParams.hasOwnProperty('outputFormat')) {
+                        infoFormat = current.queryParams.outputFormat;
                     }
                     const valid = (FeatureInfoUtils.Validator[current.format || INFO_FORMATS_BY_MIME_TYPE[infoFormat] || INFO_FORMATS_BY_MIME_TYPE[format]] || defaultValidator).getValidResponses([current]);
                     return [...previous, ...valid];
@@ -166,6 +183,9 @@ const MapInfoUtils = {
                     let infoFormat;
                     if (current.queryParams && current.queryParams.hasOwnProperty('info_format')) {
                         infoFormat = current.queryParams.info_format;
+                    }
+                    if (current.queryParams && current.queryParams.hasOwnProperty('outputFormat')) {
+                        infoFormat = current.queryParams.outputFormat;
                     }
                     const valid = (FeatureInfoUtils.Validator[current.format || INFO_FORMATS_BY_MIME_TYPE[infoFormat] || INFO_FORMATS_BY_MIME_TYPE[format]] || defaultValidator).getNoValidResponses([current]);
                     return [...previous, ...valid];
@@ -189,6 +209,7 @@ const MapInfoUtils = {
         ;
     },
     services: {
+        wfs: require('./mapinfo/wfs'),
         wms: require('./mapinfo/wms'),
         wmts: require('./mapinfo/wmts'),
         vector: require('./mapinfo/vector')

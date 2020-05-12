@@ -15,5 +15,6 @@ module.exports = {
     dashboard_tutorial: require('./preset/dashboard_tutorial'),
     contextcreator_generalsettings_tutorial: require('./preset/contextcreator_generalsettings_tutorial').default,
     contextcreator_configuremap_tutorial: require('./preset/contextcreator_configuremap_tutorial').default,
-    contextcreator_configureplugins_tutorial: require('./preset/contextcreator_configureplugins_tutorial').default
+    contextcreator_configureplugins_tutorial: require('./preset/contextcreator_configureplugins_tutorial').default,
+    geostory_tutorial: require('./preset/geostory_tutorial')
 };

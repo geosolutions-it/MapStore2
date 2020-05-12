@@ -67,7 +67,9 @@ module.exports = props => {
     } = props;
 
     const latlng = point && point.latlng || null;
-    const {layer} = responses[index] || {};
+
+    const targetResponse = validResponses.length < 1 ? validResponses[0] : responses[index];
+    const {layer} = targetResponse || {};
 
     let lngCorrected = null;
     if (latlng) {
@@ -87,7 +89,7 @@ module.exports = props => {
         lngCorrected,
         validResponses,
         latlng,
-        showEdit: showEdit && isEditingAllowed && !!responses[index] && responseValidForEdit(responses[index]),
+        showEdit: showEdit && isEditingAllowed && !!targetResponse && responseValidForEdit(targetResponse),
         onEdit: onEdit.bind(null, layer && {
             id: layer.id,
             name: layer.name,

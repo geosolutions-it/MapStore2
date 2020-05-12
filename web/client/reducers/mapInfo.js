@@ -29,7 +29,7 @@ const {
     TOGGLE_EMPTY_MESSAGE_GFI,
     CHANGE_FORMAT,
     TOGGLE_SHOW_COORD_EDITOR,
-    SET_EDIT_FEATURE_QUERY
+    SET_CURRENT_EDIT_FEATURE_QUERY
 } = require('../actions/mapInfo');
 const {
     MAP_CONFIG_LOADED
@@ -359,10 +359,10 @@ function mapInfo(state = initState, action) {
             showCoordinateEditor: !action.showCoordinateEditor
         };
     }
-    case SET_EDIT_FEATURE_QUERY: {
+    case SET_CURRENT_EDIT_FEATURE_QUERY: {
         return {
             ...state,
-            editFeatureQuery: action.query
+            currentEditFeatureQuery: action.query
         };
     }
     default:
