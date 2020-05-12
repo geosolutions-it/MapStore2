@@ -34,13 +34,6 @@ const getQueryParam = (param, url) => {
 };
 
 describe('identify API', () => {
-    afterEach((done) => {
-        if (mockAxios) {
-            mockAxios.restore();
-        }
-        mockAxios = null;
-        setTimeout(done);
-    });
     describe('WMS', () => {
         const SAMPLE_LAYER = {
             type: "wms",
@@ -62,6 +55,13 @@ describe('identify API', () => {
                     return [404, "NOT FOUND"];
                 }
             });
+            mockAxios = null;
+            setTimeout(done);
+        });
+        afterEach((done) => {
+            if (mockAxios) {
+                mockAxios.restore();
+            }
             mockAxios = null;
             setTimeout(done);
         });
@@ -108,7 +108,8 @@ describe('identify API', () => {
                     expect(n.features).toBeFalsy();
                     done();
                 },
-                error => done(error)
+                error => done(error),
+                () => done()
             );
         });
         it('HTML INFO FORMAT with attachJSON', (done) => {
@@ -136,7 +137,8 @@ describe('identify API', () => {
                     expect(n.features).toBeTruthy(); // data is present, anyway, even if attachJSON missing
                     done();
                 },
-                error => done(error)
+                error => done(error),
+                () => done()
             );
         });
         it('JSON INFO FORMAT with attachJSON', (done) => {
@@ -148,9 +150,9 @@ describe('identify API', () => {
                 n => {
                     expect(n.data.features).toBeTruthy();
                     expect(n.features).toBeTruthy();
-                    done();
                 },
-                error => done(error)
+                error => done(error),
+                () => done()
             );
         });
     });
@@ -162,6 +164,13 @@ describe('identify API', () => {
         };
         beforeEach((done) => {
             mockAxios = new MockAdapter(axios);
+            setTimeout(done);
+        });
+        afterEach((done) => {
+            if (mockAxios) {
+                mockAxios.restore();
+            }
+            mockAxios = null;
             setTimeout(done);
         });
         it('Info Request emulation', (done) => {
