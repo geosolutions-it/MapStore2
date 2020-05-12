@@ -154,6 +154,9 @@ export default {
                 ? Rx.Observable.of(closeAnnotations())
                 : Rx.Observable.of(purgeMapInfoResults())
         ),
+    hideMarkerOnIdentifyClose: (action$) =>
+        action$.ofType(CLOSE_IDENTIFY)
+            .flatMap(() => Rx.Observable.of(hideMapinfoMarker())),
     changeMapPointer: (action$, store) =>
         action$.ofType(CHANGE_MOUSE_POINTER)
             .filter(() => !(store.getState()).map)
