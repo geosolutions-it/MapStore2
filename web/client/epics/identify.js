@@ -41,7 +41,7 @@ import { modeSelector, getAttributeFilters, isFeatureGridOpen } from '../selecto
 import { spatialFieldSelector } from '../selectors/queryform';
 import { mapSelector, projectionDefsSelector, projectionSelector, isMouseMoveIdentifyActiveSelector } from '../selectors/map';
 import { boundingMapRectSelector } from '../selectors/maplayout';
-import { centerToVisibleArea, isInsideVisibleArea, isPointInsideExtent, reproject, reprojectBbox, parseURN, calculateCircleCoordinates,
+import { centerToVisibleArea, isInsideVisibleArea, isPointInsideExtent, reproject, reprojectBbox, calculateCircleCoordinates,
     calculateCircleRadiusFromPixel } from '../utils/CoordinatesUtils';
 import { floatingIdentifyDelaySelector } from '../selectors/localConfig';
 import { createControlEnabledSelector, measureSelector } from '../selectors/controls';
@@ -177,9 +177,11 @@ export default {
                     hook,
                     get(point, 'pixel'),
                     pos,
-                    5
+                    3
                 );
-                const editFeatureQuery = {
+                // emulation of feature info filter to query WFS services (edit and/or WFS layer)
+                // TODO: evaluate to do this calculation at map level, so we can use this filter also in popups
+                const geometricFilter = {
                     type: 'geometry',
                     enabled: true,
                     value: {
@@ -196,7 +198,7 @@ export default {
                     }
                 };
 
-                return Rx.Observable.of(featureInfoClick({...point, editFeatureQuery}, layer))
+                return Rx.Observable.of(featureInfoClick({ ...point, geometricFilter}, layer))
                     .merge(Rx.Observable.of(addPopup(uuid(),
                         { component: IDENTIFY_POPUP, maxWidth: 600, position: {  coordinates: point ? point.rawPos : []}}))
                         .filter(() => isMapPopup(store.getState()))
@@ -211,7 +213,16 @@ export default {
                 enabled
                 && clickPointSelector(getState())
             )
-            .switchMap( () => Rx.Observable.from([featureInfoClick(clickPointSelector(getState()), clickLayerSelector(getState()), filterNameListSelector(getState()), overrideParamsSelector(getState()), itemIdSelector(getState())), showMapinfoMarker()])),
+            .switchMap( () => Rx.Observable.from([
+                featureInfoClick(
+                    clickPointSelector(getState()),
+                    clickLayerSelector(getState()),
+                    filterNameListSelector(getState()),
+                    overrideParamsSelector(getState()),
+                    itemIdSelector(getState())
+                ),
+                showMapinfoMarker()])
+            ),
     /**
      * Centers marker on visible map if it's hidden by layout
      * @param {external:Observable} action$ manages `FEATURE_INFO_CLICK` and `LOAD_FEATURE_INFO`.
@@ -296,7 +307,7 @@ export default {
     identifyEditLayerFeaturesEpic: (action$, store) =>
         action$.ofType(EDIT_LAYER_FEATURES)
             .exhaustMap(({layer}) => Rx.Observable.of(
-                setCurrentEditFeatureQuery(clickPointSelector(store.getState())?.editFeatureQuery), browseData(layer))),
+                setCurrentEditFeatureQuery(clickPointSelector(store.getState())?.geometricFilter), browseData(layer))),
     switchFeatureGridToEdit: (action$, store) =>
         action$.ofType(QUERY_CREATE)
             .switchMap(() => {

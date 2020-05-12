@@ -726,7 +726,7 @@ describe('identify Epics', () => {
         }, {
             mapInfo: {
                 clickPoint: {
-                    editFeatureQuery: {
+                    geometricFilter: {
                         type: 'geometry'
                     }
                 }

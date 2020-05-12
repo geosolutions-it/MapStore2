@@ -55,29 +55,38 @@ const buildRequest = (layer, { map = {}, point, currentLocale, params, maxItems 
     };
 };
 
+
+const getIdentifyGeometry = point => {
+    const geometry = point?.geometricFilter?.value?.geometry;
+    if (geometry) {
+        return geometry;
+    }
+    // Create a simple point filter if the geometryFilter (typically an emulation of the feature info click filter) is not present.
+    let wrongLng = point.latlng.lng;
+    // longitude restricted to the [-180°,+180°] range
+    let lngCorrected = wrongLng - 360 * Math.floor(wrongLng / 360 + 0.5);
+    return {
+        coordinates: [lngCorrected, point.latlng.lat],
+        projection: "EPSG:4326",
+        type: "Point"
+    };
+};
+
 module.exports = {
     buildRequest,
     getIdentifyFlow: (layer, baseURL, defaultParams) => {
         const { point, ...baseParams} = defaultParams;
-        let wrongLng = point.latlng.lng;
-        // longitude restricted to the [-180°,+180°] range
-        let lngCorrected = wrongLng - 360 * Math.floor(wrongLng / 360 + 0.5);
-        const center = { x: lngCorrected, y: point.latlng.lat };
+        const geometry = getIdentifyGeometry(point);
         return Observable.defer( () => describeFeatureType(layer.url, layer.name) // TODO: cache this
             .then(describe => {
                 const attribute = extractGeometryAttributeName(describe);
-                const radius = 0.01; // TODO: use the correct radius for resolution
                 const params = optionsToVendorParams({
                     layerFilter: layer.layerFilter,
                     filterObj: {
                         spatialField: {
                             attribute,
                             operation: "INTERSECTS",
-                            geometry: {
-                                coordinates: CoordinatesUtils.calculateCircleCoordinates(center, radius, 4),
-                                projection: "EPSG:4326",
-                                type: "Polygon"
-                            }
+                            geometry: geometry
                         }
 
                     },

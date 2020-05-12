@@ -25,33 +25,36 @@ import {parseURN} from '../utils/CoordinatesUtils';
  *  - `itemId` if present, data will be filtered to get only the specific itemID. Useful to create a unique response (only JSON format is supported)
  */
 export const getFeatureInfo = (basePath, param, layer, {attachJSON, itemId = null} = {}) => {
-    const retrieveFlow = (params) => Observable.defer(() => axios.get(basePath, { params }));
+    const defaultIdentifyFlow = (params) => Observable.defer(() => axios.get(basePath, { params }));
+    const specificIdentifyFlow = (params) => MapInfoUtils.getIdentifyFlow(layer, basePath, params);
+    const retrieveFlow = MapInfoUtils.getIdentifyFlow(layer, basePath, param)
+        ? specificIdentifyFlow
+        : defaultIdentifyFlow;
     // TODO: We should move MapInfoUtils parts of the API here, with specific implementations.
-    return MapInfoUtils.getIdentifyFlow(layer, basePath, param) ||
-        (
+    return (
         // default identify flow, valid for WMS/WMTS. It attach json data, if missing, for advanced features. TODO: make this specific by service, using layer info.
-            (attachJSON && param.info_format !== "application/json")
-            // add to the flow data in JSON format for highlight/zoom to feature
-                ? Observable.forkJoin(
-                    retrieveFlow(param),
-                    retrieveFlow({ ...param, info_format: "application/json" })
-                        .map(res => res.data)
-                        .catch(() => Observable.of({})) // errors on geometry retrieval are ignored
-                ).map(([response, data]) => ({
-                    ...response,
-                    features: data && data.features && data.features.filter(f => !isNil(itemId) ? f.id === itemId : true),
+        (attachJSON && param.info_format !== "application/json" && param.outputFormat !== "application/json")
+        // add to the flow data in JSON format for highlight/zoom to feature
+            ? Observable.forkJoin(
+                retrieveFlow(param),
+                retrieveFlow({ ...param, info_format: "application/json" })
+                    .map(res => res.data)
+                    .catch(() => Observable.of({})) // errors on geometry retrieval are ignored
+            ).map(([response, data]) => ({
+                ...response,
+                features: data && data.features && data.features.filter(f => !isNil(itemId) ? f.id === itemId : true),
+                featuresCrs: data && data.crs && parseURN(data.crs)
+            }))
+            // simply get the feature info, geometry is already there
+            : retrieveFlow(param)
+                .map(res => res.data)
+                .map((data = {}) => ({
+                    data: isString(data) ? data : {
+                        ...data,
+                        features: data.features && data.features.filter(f => itemId ? f.id === itemId : true)
+                    },
+                    features: data.features && data.features.filter(f => itemId ? f.id === itemId : true),
                     featuresCrs: data && data.crs && parseURN(data.crs)
                 }))
-                // simply get the feature info, geometry is already there
-                : retrieveFlow(param)
-                    .map(res => res.data)
-                    .map((data = {}) => ({
-                        data: isString(data) ? data : {
-                            ...data,
-                            features: data.features && data.features.filter(f => itemId ? f.id === itemId : true)
-                        },
-                        features: data.features && data.features.filter(f => itemId ? f.id === itemId : true),
-                        featuresCrs: data && data.crs && parseURN(data.crs)
-                    }))
-        );
+    );
 };
