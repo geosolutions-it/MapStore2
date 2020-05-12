@@ -55,7 +55,6 @@ describe('identify API', () => {
                     return [404, "NOT FOUND"];
                 }
             });
-            mockAxios = null;
             setTimeout(done);
         });
         afterEach((done) => {
@@ -190,7 +189,6 @@ describe('identify API', () => {
                     return [404, "NOT FOUND"];
                 }
             });
-            mockAxios = null;
             // TODO: check only one request to be performed
             getFeatureInfo(
                 "TEST_URL", {
@@ -240,7 +238,6 @@ describe('identify API', () => {
                     return [404, "NOT FOUND"];
                 }
             });
-            mockAxios = null;
             // TODO: check only one request to be performed
             getFeatureInfo(
                 "TEST_URL", {
