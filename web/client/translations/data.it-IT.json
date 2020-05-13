@@ -104,6 +104,7 @@
                 "none": "Nessun Tooltip",
                 "labelPlacement": "Posizione",
                 "right": "Destra",
+                "left": "Sinistra",
                 "bottom": "Sotto",
                 "top": "Sopra"
             },
@@ -362,9 +363,9 @@
             "saveText": "Salvare la mappa corrente?",
             "thumbnail": "Thumbnail",
             "message": "Clicca o trascina un'immagine",
-            "suggestion": "(best 300px X 180px, max 500kb)",
+            "suggestion": "(best 300 px X 180 px, max 500 kb)",
             "errorFormat": "Formati supportati: png/jpg",
-            "errorSize": "Dimensione massima consentita: 500kb",
+            "errorSize": "Dimensione massima consentita: 500 kb",
             "errorCustomSize": "Dimensione massima consentita: {maxFileSize}",
             "error": "L'immagine fornita non è valida",
             "savedMapTitle": "Mappa Salvata",
@@ -456,12 +457,12 @@
             "statusIconClose": "Apri gruppo",
             "grabLayerIcon": "Trascina e ordina i livelli",
             "grabGroupIcon": "Trascina e ordina i gruppi",
-            "toggleLayerVisibilityWarning": "Attiva o disattiva la visibilità del livello, Attenzione: il livello non è stato caricato correttamente",
+            "toggleLayerVisibilityWarning": "Attiva o disattiva la visibilità del livello. Attenzione: il livello non è stato caricato correttamente",
             "createWidget": "Crea un widget per il livello selezionato",
             "editLayerProperties": "Modifica proprietà dal livello",
             "browseData": "Apri tabella degli attributi",
             "removeLayer": "Rimuovi livello",
-            "loadingerror": "Il livello non è stato caricato correttamente o non disponible",
+            "loadingerror": "Il livello non è stato caricato correttamente o non disponible.",
             "measure": "Misure",
             "backgroundSwitcher": "Sfondi",
             "layers": "Livelli",
@@ -592,8 +593,8 @@
         "expandtoolbar": {
             "tooltip": "Espandi / Collassa"
         },
-        "getFeatureInfoTitle": "Informazioni Sulle Feature",
-        "identifyTitle": "Informazioni Sulle Feature",
+        "getFeatureInfoTitle": "Informazioni sull'oggetto",
+        "identifyTitle": "Informazioni sull'oggetto",
         "identifyNoQueryableLayers": "Nessun livello interrogabile attivo",
         "identifyRevGeocodeHeader": "Coordinate",
         "identifyZoomToFeature": "Zoom alla feature",
@@ -1155,12 +1156,12 @@
             "layers": "Livelli",
             "size": "Dimensione",
             "notsupported": "Snapshot non supportato",
-            "taintedMessage": "La funzionalità di salvataggio dell'istantanea è limitata a causa di alcune regole di sicurezza. Per un risultato migliore cliccare con il tasto destro sull'anteprima e selezionare  'Salva immagine con nome' (supportato solo da Mozilla Firefox e Google Chrome)"
+            "taintedMessage": "La funzionalità di salvataggio dell'istantanea è limitata a causa di alcune regole di sicurezza. Per un risultato migliore cliccare con il tasto destro sull'anteprima e selezionare  'Salva immagine con nome...' (supportato solo da Mozilla Firefox e Google Chrome)"
         },
         "shapefile": {
             "title": "Carica files vettoriali",
             "tooltip": "Aggiungi uno file vettoriale alla mappa.",
-            "placeholder": "Trascina qui i file o fai click per selezionare i file vettoriali da importare.(file supportati: SHAPEFILES contenuti in archivi zip, KML/KMZ e GPX)",
+            "placeholder": "Trascina qui i file o fai click per selezionare i file vettoriali da importare.(file supportati: SHAPEFILES contenuti in archivi zip, KML/KMZ, GPX)",
             "defaultStyle": "Stile di default",
             "zoom": "Zoom sui file",
             "error": {

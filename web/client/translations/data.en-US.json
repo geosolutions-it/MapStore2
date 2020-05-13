@@ -22,7 +22,7 @@
         "layers": "Layers",
         "warning": "Warning",
         "errorTitleDefault": "Error",
-        "errorDefault": "An error occurred",
+        "errorDefault": "An error occurred.",
         "pageInfoShowMore": "Results {count} of {total}",
         "showMore": "Show more...",
         "collapse": "Collapse",
@@ -32,7 +32,7 @@
             "label": "Version"
         },
         "errorPage": {
-            "title":"Ops, Something has gone wrong",
+            "title":"Ops, Something has gone wrong.",
             "subtitle":"Please click the icon below to reload MapStore",
             "description":"If you want to report this error you can send an email our mailing list",
             "descriptionAdmin":"Please contact the administrator"
@@ -68,7 +68,7 @@
             "format": "Format",
             "delete": "Delete",
             "deleteLayer":"Delete Layer",
-            "deleteLayerMessage": "Do you really want to delete this Layer?",
+            "deleteLayerMessage": "Do you really want to delete this layer?",
             "deleteLayerGroup":"Delete Group",
             "deleteLayerGroupMessage": "Do you really want to delete this group and all of its layers?",
             "confirmDelete": "Are you sure?",
@@ -104,6 +104,7 @@
                 "none": "No Tooltip",
                 "labelPlacement": "Placement",
                 "right": "Right",
+                "left": "Left",
                 "bottom": "Bottom",
                 "top": "Top"
             },
@@ -126,11 +127,11 @@
             "success": "Success",
             "backgroundLayerNotSupported": "The previously selected background is not supported for this type of map. The first one available is then used.",
             "noBackgroundLayerSupported": "There are no supported background layers for this type of map.",
-            "updateOldMap": "This is an old map, thus not all the functionalities can be enabled. Click on update button in order to update the map or simply dismiss this notification if you don't want to update it.",
-            "warningSaveUpdatedMap": "Some layers haven't been updated correctly",
-            "saveUpdatedMap": "All the layers have been successfully updated",
-            "incompatibleBackgroundAndProjection":"The Projection you selected is not compatible with background, switch to a compatible -or an empty- background, then select this projection!",
-            "incompatibleDataAndProjection":"the current layer(s) and map projection are not completely compatible. Parts or all of the data might not appear in the map"
+            "updateOldMap": "This is an old map, thus not all the functionalities can be enabled. Click on upgrade button in order to upgrade the map or simply dismiss this notification if you don't want to upgrade it.",
+            "warningSaveUpdatedMap": "Some layers haven't been updated correctly.",
+            "saveUpdatedMap": "All the layers have been successfully updated.",
+            "incompatibleBackgroundAndProjection":"The Projection you selected is not compatible with background. Switch to a compatible -or an empty- background, then select this projection.",
+            "incompatibleDataAndProjection":"The current layer(s) and map projection are not completely compatible. Parts or all of the data might not appear in the map."
         },
         "dock": {
             "row": "{rowsSelected} row selected",
@@ -148,7 +149,7 @@
         },
         "background": "Background",
         "language": "Language",
-        "mousePositionCoordinates": "Coordinates indicator",
+        "mousePositionCoordinates": "Cursor coordinates",
         "mouseCoordinates": "Coordinates:",
         "mousePositionCRS": "CRS:",
         "mousePositionElevation": "Elev.:",
@@ -157,7 +158,7 @@
         "elevationLoadingError": "Error",
         "elevationNotAvailable": "N/A",
         "mapScale": "Scale:",
-        "showMousePositionCoordinates": "Show/Hide Coordinates",
+        "showMousePositionCoordinates": "Show/Hide coordinates",
         "menu": "Menu",
         "options": "Options",
         "settings": "Settings",
@@ -178,7 +179,7 @@
         "yes": "Yes",
         "confirm": "Confirm",
         "confirmTitle": "Do you confirm?",
-        "pageInfo": "{total, plural, =0 {No items} =1 {{total} Item of {total}} other {Items {start}-{end} of {total}}}",
+        "pageInfo": "{total, plural, =0 {No items} =1 {{total} item of {total}} other {Items {start}-{end} of {total}}}",
         "loading": "Loading...",
         "group": "Group",
         "groups": "Groups",
@@ -198,9 +199,9 @@
         },
         "home":{
             "open": "Open",
-            "shortDescription": "Modern webmapping with OpenLayers, Leaflet and React<br/><small>visit the <a href=\"https://mapstore.readthedocs.io/en/latest/\">documentation</a> page</small>",
+            "shortDescription": "Modern webmapping with OpenLayers, Leaflet and ReactJS.<br/> <small>Visit the <a href=\"https://mapstore.readthedocs.io/en/latest/\">documentation</a> page</small>",
             "forkMeOnGitHub": "Fork me on GitHub",
-            "description": "MapStore has been developed to create, save and share in a simple and intuitive way maps and mashups created selecting contents coming from well-known sources like Google Maps and OpenStreetMap or from services provided by organizations using open protocols like OGC WMS, WFS, WMTS or TMS and so on.<br/>Visit the <a href=\"https://mapstore.readthedocs.io/en/latest/\">home page</a> for more details.",
+            "description": "MapStore has been developed to create, save and share in a simple and intuitive way maps and mashups created selecting contents coming from well-known sources like OpenStreetMap, Google Maps or from services provided by organizations using open protocols like OGC WMS, WFS, WMTS or TMS and so on...<br/>Visit the <a href=\"https://mapstore.readthedocs.io/en/latest/\">home page</a> for more details.",
             "Applications": "Applications",
             "Examples": "Examples",
             "LinkedinGroup": "Mapstore Linkedin Group",
@@ -222,7 +223,7 @@
                     "html":"<h3>3D Viewer</h3><p>Simple CesiumJS based 3D Viewer</p>"
                 },
                 "manager":{
-                    "html":"<h3>Manager</h3><p>Browse MapStore Maps</p>"
+                    "html":"<h3>Manager</h3><p>Browse MapStore maps</p>"
                 },
                 "mouseposition":{
                     "html":"<h3>Mouse Position Control</h3><p>Custom examples</p>"
@@ -262,22 +263,22 @@
             "openInANewTab":"Open map",
             "deleteMap":"Delete Map",
             "deleteMapMessage": "Do you really want to delete this map?",
-            "editMapMetadata":"Edit Map Properties",
-            "mapTypes_combo": "Select Map Viewer: ",
-            "theme_combo": "Select Theme:",
+            "editMapMetadata":"Edit map properties",
+            "mapTypes_combo": "Select map viewer: ",
+            "theme_combo": "Select theme:",
             "maps_title": "Maps",
             "locales_combo": "Language:",
             "featuredMaps": "Featured"
         },
-        "newMap": "New Map",
-        "newMapEmpty": "Empty Map",
-        "newMapContext": "Existing Context",
+        "newMap": "New map",
+        "newMapEmpty": "Empty map",
+        "newMapContext": "Existing context",
 		"maps": {
             "title": "Maps",
             "addToFeaturedMaps": "Add to featured maps",
             "removeFromFeaturedMaps": "Remove from featured maps",
             "feedback": {
-                "noDetailsAvailable": "Details not available",
+                "noDetailsAvailable": "Map details not available",
                 "successSavedMap": "The map has been created correctly",
                 "errorDeletingMap": "Error when deleting this map",
                 "errorDeletingThumbnailOfMap": "Error when deleting thumbnail for this map",
@@ -297,7 +298,7 @@
                 "errorWhenSaving": "An error occurred during saving process",
                 "errorWhenUpdating": "An error occurred during updating process",
                 "errorWhenDeleting": "An error occurred during deleting process",
-                "errorSizeExceeded": "Please, reduce the size of the details or the quality of the images",
+                "errorSizeExceeded": "Please, reduce the size or the quality of the images",
                 "errorLoadingContexts": "An error occurred during contexts loading"
             },
 			"search": "search..."
@@ -320,55 +321,55 @@
                 "title": "Contents"
             },
             "dashboards": {
-                "newDashboard": "New Dashboard",
+                "newDashboard": "New dashboard",
                 "title": "Dashboards ({count})",
                 "titleNoCount": "Dashboards",
-                "create": "Create Dashboard",
+                "create": "Create dashboard",
                 "noDashboardAvailable": "No dashboard available",
                 "createANewOne": "Create a new one",
-                "deleteError": "There was an error deleting the resource",
-                "errorLoadingDashboards": "There was an error loading dashboards"
+                "deleteError": "There was an error deleting the dashboard.",
+                "errorLoadingDashboards": "There was an error loading dashboards."
             },
             "maps": {
                 "title": "Maps ({count})",
                 "noMapAvailable": "No map available",
-                "createNewOne": "Create a new one",
+                "createNewOne": "Create a new dashboard",
                 "unsavedMapConfirmTitle": "Unsaved changes",
                 "unsavedMapConfirmMessage": "Are you sure you want to leave unsaved changes?",
                 "unsavedMapConfirmButtonText": "Leave",
                 "unsavedMapCancelButtonText": "Close"
             },
             "geostories": {
-                "newGeostory": "New Story",
-                "title": "Stories ({count})",
-                "titleNoCount": "Stories",
-                "create": "Create Story",
-                "noGeostoryAvailable": "No story available",
-                "createANewOne": "Create a new one",
-                "deleteError": "There was an error deleting the resource",
-                "errorLoadingGeostories": "There was an error loading stories"
+                "newGeostory": "New StoryMap",
+                "title": "StoryMaps ({count})",
+                "titleNoCount": "StoryMaps",
+                "create": "Create StoryMap",
+                "noGeostoryAvailable": "No StoryMap available",
+                "createANewOne": "Create a new StoryMap",
+                "deleteError": "There was an error deleting the StoryMap",
+                "errorLoadingGeostories": "There was an error loading StoryMaps"
             }
         },
         "map": {
-            "errorLoadingFont": "The font family {family} is not correctly loaded. Some elements (like symbols in markers) can have rendering problems",
+            "errorLoadingFont": "The font family {family} is not correctly loaded. Some elements (like symbols in markers) can have rendering problems.",
             "loading": "Loading...",
-            "loadingSpinner": "Loading Map",
-            "loadingerror": "Error during loading",
+            "loadingSpinner": "Loading map",
+            "loadingerror": "Error during map loading",
             "name": "Name",
             "description": "Description",
-            "namePlaceholder": "Map Name",
-            "descriptionPlaceholder": "Map Description",
+            "namePlaceholder": "Map name",
+            "descriptionPlaceholder": "Map description",
             "saveTitle": "Save map",
             "saveText": "Save current map?",
             "thumbnail": "Thumbnail",
             "message": "Drop or click to import an image",
-            "suggestion": "(best 300px X 180px, max 500kb)",
+            "suggestion": "(best 300 px X 180 px, max 500 kb)",
             "errorFormat": "Supported formats: png/jpg",
-            "errorSize": "Max allowed size: 500kb",
+            "errorSize": "Max allowed size: 500 kb",
             "errorCustomSize": "Max allowed size: {maxFileSize}",
             "error": "The provided image is invalid",
             "savedMapTitle": "Saved Map",
-            "savedMapMessage": "Map has been saved correctly",
+            "savedMapMessage": "Map has been saved correctly.",
             "thumbnailError": {
                 "error403": "You are not allowed to update the thumbnail",
                 "error404": "An error occurred while creating the thumbnail",
@@ -376,9 +377,9 @@
                 "errorDefault": "Network error"
             },
             "mapError": {
-                "errorTitle": "Cannot save current map",
+                "errorTitle": "Cannot save the current map",
                 "error403": "You are not allowed to update the map",
-                "error404": "An error occurred while creating the map",
+                "error404": "An error occurred while creating the map on the server",
                 "error409": "A resource with this name already exists",
                 "error500": "Internal Server Error. Verify if map configuration file size exceeds fixed limit",
                 "errorDefault": "Network error"
@@ -390,15 +391,15 @@
                 "canView": "can view",
                 "canWrite": "can edit",
                 "noResult": "no results found",
-                "title": "Permissions Groups"
+                "title": "Groups permissions"
             },
             "details": {
                 "back": "Back",
                 "save": "Save",
                 "show": "Show details sheet",
-                "add": "Add New Details",
-                "edit": "Edit Details",
-                "rowTitle": "Details Sheet",
+                "add": "Add new details",
+                "edit": "Edit details",
+                "rowTitle": "Details sheet",
                 "title": "Details Sheet - {name}",
                 "undo": "Undo remove",
                 "showPreview": "Show preview",
@@ -406,14 +407,14 @@
                 "delete": "Delete details sheet",
                 "titleUnsavedChanges": "Are you sure to close without save your changes?",
                 "sureToClose": "Are you sure to close without save your changes?",
-                "fieldsChanged": "Some fields has been changed"
+                "fieldsChanged": "Some attributes has been changed"
             },
             "errors": {
                 "loading": {
                     "title": "Error loading map",
                     "notFound": "Map not found",
                     "notAccessible": "Map not accessible",
-                    "unknownError": "<p><small>One of the following reason could be the cause:</small> <ul><li>you don't have permission to access</li> <li>you are trying to access a map that doesn't exist</li> <li>the map has been removed</li> <li>the projection of the map is not configured</li></ul> <p>",
+                    "unknownError": "<p><small>One of the following reason could be the cause:</small> <ul><li>you don't have permission to access the map</li> <li>you are trying to access a map that doesn't exist</li> <li>the map has been removed</li> <li>the projection of the map is not configured</li></ul> <p>",
                     "projectionError": "The projection {projection} of the map is not configured",
                     "title" : "Map cannot be viewed"
                 }
@@ -433,10 +434,10 @@
             "toggleGroupVisibility": "Toggle group visibility",
             "displayLegendAndTools": "Display legend and tools",
             "zoomToLayerExtent": "Zoom to layer extent",
-            "addLayer": "Add Layer",
+            "addLayer": "Add layer",
             "addLayerToGroup": "Add layer to selected group",
-            "addGroup": "Add Group",
-            "addSubGroup": "Add sub group to the selected group",
+            "addGroup": "Add group",
+            "addSubGroup": "Add subgroup to the selected group",
             "toolZoomToLayerTooltip": "Zoom to selected layer extent",
             "toolZoomToLayersTooltip": "Zoom to selected layers extent",
             "toolLayerSettingsTooltip": "Selected layer settings",
@@ -444,8 +445,8 @@
             "toolTrashLayerTooltip": "Remove selected layer",
             "toolTrashLayersTooltip": "Remove selected layers",
             "toolTrashGroupTooltip": "Remove selected group",
-            "toolFeaturesGridTooltip": "Open Attribute Table",
-            "layerFilterTooltip": "Filter Layer",
+            "toolFeaturesGridTooltip": "Open attribute table",
+            "layerFilterTooltip": "Filter layer",
             "toolDownloadTooltip": "Export layer data",
             "noFilteredResults": "No results",
             "filterPlaceholder": "Filter layers",
@@ -456,12 +457,12 @@
             "statusIconClose": "Open group",
             "grabLayerIcon": "Grab and sort layer",
             "grabGroupIcon": "Grab and sort group",
-            "toggleLayerVisibilityWarning": "Toggle layer visibility, Warning: layer didn't load correctly",
+            "toggleLayerVisibilityWarning": "Toggle layer visibility. Warning: layer didn't load correctly",
             "createWidget": "Create a widget for the selected layer",
             "editLayerProperties": "Edit layer properties",
             "browseData": "Open Attribute Table",
             "removeLayer": "Remove layer",
-            "loadingerror": "The layer has not been loaded correctly or not available",
+            "loadingerror": "The layer has not been loaded correctly or not available.",
             "measure": "Measure",
             "backgroundSwitcher": "Backgrounds",
             "layers": "Layers",
@@ -485,22 +486,22 @@
                 "abstract": "Abstract",
                 "purpose": "Purpose",
                 "source": "Source",
-                "createdDate": "Created Date",
-                "lastRevisionDate": "Last Revision Date",
-                "pointsOfContact": "Points of Contact",
-                "individualName": "Individual Name",
-                "organisationName": "Organisation Name",
-                "contactInfo": "Contact Info",
-                "phone": "Phone Number",
-                "deliveryPoints": "Delivery Points",
+                "createdDate": "Creation date",
+                "lastRevisionDate": "Last revision date",
+                "pointsOfContact": "Points of contact",
+                "individualName": "Individual name",
+                "organisationName": "Organisation name",
+                "contactInfo": "Contact info",
+                "phone": "Phone number",
+                "deliveryPoints": "Delivery points",
                 "city": "City",
-                "postalCode": "Postal Code",
+                "postalCode": "Postal code",
                 "country": "Country",
                 "URL": "URL",
                 "metadataUrl": "Metadata URL",
                 "role": "Role",
-                "hoursOfService": "Hours of Service",
-                "electronicMailAddress": "Email Address",
+                "hoursOfService": "Hours of service",
+                "electronicMailAddress": "Email address",
                 "subject": "Subject",
                 "type": "Type",
                 "creator": "Creator",
@@ -517,17 +518,17 @@
                 "emptyMetadata": "No metadata available"
             },
             "thematic": {
-                "classification_field": "Classification Field:",
-                "classification_method": "Classification Method:",
-                "classification_aggregate": "Aggregate Function:",
-                "classification_colors": "Color Ramp:",
+                "classification_field": "Classification field:",
+                "classification_method": "Classification method:",
+                "classification_aggregate": "Aggregate function:",
+                "classification_colors": "Color ramp:",
                 "classification_intervals": "Intervals:",
                 "preview": "Preview",
-                "remove_thematic": "Back to Simple Style",
+                "remove_thematic": "Back to simple style",
                 "values": {
-                    "equalInterval": "Equal Intervals",
+                    "equalInterval": "Equal intervals",
                     "quantile": "Quantile",
-                    "jenks": "Natural Breaks",
+                    "jenks": "Natural breaks",
                     "sum": "Sum",
                     "avg": "Average",
                     "count": "Count",
@@ -592,8 +593,8 @@
         "expandtoolbar": {
             "tooltip": "Expand / Collapse"
         },
-        "getFeatureInfoTitle": "Feature Info",
-        "identifyTitle": "Feature Info",
+        "getFeatureInfoTitle": "Feature info",
+        "identifyTitle": "Feature info",
         "identifyNoQueryableLayers": "No active queryable layer",
         "identifyRevGeocodeHeader": "Coordinates",
         "identifyZoomToFeature": "Zoom to feature",
@@ -603,7 +604,7 @@
         "identifyHideCoordinateEditor": "Hide coordinate editor",
         "identifyCoordinateApplyChanges": "Apply changes",
         "identifyRevGeocodeModalTitle": "Address",
-        "identifyRevGeocodeSubmitText": "More Info",
+        "identifyRevGeocodeSubmitText": "More info",
         "identifyRevGeocodeCloseText": "Close",
         "identifyRevGeocodeError": "Unable to geocode",
         "identifyEdit": "Edit",
@@ -618,10 +619,10 @@
             "undoBtnTooltip": "Go back",
             "redoBtnTooltip": "Go forward"
         },
-        "infoFormatLbl": "Identify response format",
-        "infoTriggerLabel": "Trigger event for Identify",
-        "click": "Click",
-        "hover": "Hover",
+        "infoFormatLbl": "Information sheet format",
+        "infoTriggerLabel": "Trigger event for the display of the information sheet",
+        "click": "On click on the feature",
+        "hover": "Hover the feature",
         "measureSupport": {
             "continueLine": "Click to continue drawing the line",
             "continuePolygon": "Click to continue drawing the polygon",
@@ -629,10 +630,10 @@
         },
         "measureComponent": {
             "Measure": "Measure",
-            "MeasureLength": "Measure Distance",
-            "MeasureArea": "Measure Area",
-            "MeasureBearing": "Measure Bearing",
-            "MeasureTrueBearing": "Measure True Bearing",
+            "MeasureLength": "Measure distance",
+            "MeasureArea": "Measure area",
+            "MeasureBearing": "Measure bearing",
+            "MeasureTrueBearing": "Measure true bearing",
             "tooltip": "Measure length and area",
             "title": "Measure",
             "lengthButtonText": "Line",
@@ -641,7 +642,7 @@
             "lengthLabel": "Length",
             "areaLabel": "Area",
             "bearingLabel": "Bearing",
-            "trueBearingLabel": "True Bearing",
+            "trueBearingLabel": "True bearing",
             "formula": "Formula for distance calculation",
             "showLabel": "Show measurement label",
             "addAsAnnotation": "Add as annotation",
@@ -678,22 +679,22 @@
             "s_sort": "Sort by",
             "s_max_features": "Max features",
             "s_max_zoom": "Max zoom level",
-            "s_wfs_props_label" : "WFS service props",
-            "s_wfs_opt_props_label" : "Optional props",
+            "s_wfs_props_label" : "WFS service properties",
+            "s_wfs_opt_props_label" : "Optional properties",
             "s_result_props_label": "Result display properties",
             "s_priority_info": "Used to sort search results, lower values first. Nominatim results have priority = 5",
             "serviceslistempty": "No custom services defined",
             "service_missing": "{serviceType} service is not configured",
             "generic_error": "An error occurred during search. Error details: {message}",
             "errors": {
-                "nonQueriableLayers": "The layer provided in the url is not queriable or not visible in map",
-                "serverError": "The server has return an error when performing the GetFeatureInfo request. Check if the params are correct"
+                "nonQueriableLayers": "The layer provided in the URL is not queriable or not visible in map.",
+                "serverError": "The server has return an error when performing the GetFeatureInfo request. Check if the params are correct."
             },
             "s_launch_info_panel": {
-                "label": "Launch Info panel",
+                "label": "Launch info panel",
                 "no_info": "No Info",
                 "all_layers": "All Layers",
-                "single_layer": "Search Layer",
+                "single_layer": "Single Layer",
                 "no_info_description": "Identify panel will not show up on search",
                 "all_layers_description": "Identify panel will show up displaying information of all layers visible in map",
                 "single_layer_description": "Identify panel will show up with the data already available through the WFS search"
@@ -814,7 +815,7 @@
                     "edit": {
                         "tooltip": {
                             "text": "Drag handles or marker to edit feature.",
-                            "subtext": "Click cancel to undo changes."
+                            "subtext": "Click Cancel to undo changes."
                         }
                     },
                     "remove": {
@@ -834,14 +835,14 @@
             "outsideMapBoundsMsg": "You seem located outside the boundaries of the map"
         },
         "zoombuttons": {
-            "zoomInTooltip": "Increase Zoom",
-            "zoomOutTooltip": "Decrease Zoom",
-            "zoomAllTooltip": "Zoom To Max Extent"
+            "zoomInTooltip": "Increase zoom",
+            "zoomOutTooltip": "Decrease zoom",
+            "zoomAllTooltip": "Zoom to max extent"
         },
         "fullscreen": {
-            "tooltipActivate": "Switch to Full Screen",
+            "tooltipActivate": "Switch to full screen",
             "tooltipDeactivate": "Exit full screen",
-            "viewLargerMap": "View Larger Map"
+            "viewLargerMap": "View larger map"
         },
         "helptexts": {
             "scaleBox": "This is the helptext for the ScaleBox",
@@ -868,19 +869,19 @@
             "styler": "Add rule and generate a new styled layer"
         },
         "queryform": {
-            "title": "Advanced Search",
+            "title": "Advanced search",
             "query": "Search",
             "apply": "Apply",
             "reset": "Reset",
             "save": "Save",
             "discard": "Undo",
-            "query_request_exception": "Request Error",
+            "query_request_exception": "Request error",
             "config": {
-                "load_config_exception": "Error Loading Configuration"
+                "load_config_exception": "Error loading configuration"
             },
             "comboField": {
                 "default_placeholder": "Select...",
-                "drop_down": "Open Dropdown"
+                "drop_down": "Open Dropdown menu"
             },
             "form": {
                 "header": "Find in the dataset",
@@ -919,13 +920,13 @@
                 "filterType": "Filter type",
                 "geometric_operation": "Geometric operation",
                 "combo_placeholder": "Select...",
-                "spatial_filter_header": "Region of interest",
+                "spatial_filter_header": "Area of interest",
                 "remove": "Remove",
                 "draw_start_label": "Draw the region of interest on the map",
                 "dwithin_label": "meters",
                 "details": {
                     "detail_button_label": "Details",
-                    "details_header": "Selection Details",
+                    "details_header": "Selection details",
                     "details_bbox_label": "Edit the coordinates to modify the area",
                     "details_circle_label": "Edit the numeric fields to modify the radius and center of the circle",
                     "reset_bbox": "Reset",
@@ -958,7 +959,7 @@
                 "operation": "Operation",
                 "placeholder": "Select layer",
                 "errors": {
-                    "noCrossLayerAvailable": "Cross Layer Filtering is not available for the selected layer"
+                    "noCrossLayerAvailable": "Cross layer filtering is not available for the selected layer"
                 }
             },
             "changedFilter": "Filter Changed",
@@ -966,11 +967,10 @@
             "resetFilter": "Remove filter",
             "confirmReset": "Confirm",
             "loadingError": "The current filter caused a rendering problem for the layer on map. Please check the layer configuration on the server or fix the filter",
-            "changedFilterWithErrorAlert": "Filter is causing layer rendering error, do you want to save it anyway ?"
-
+            "changedFilterWithErrorAlert": "Filter is causing layer rendering error, do you want to save it anyway?"
         },
         "annotations": {
-            "errorLoadingSymbols": "There was a problem loading the symbol list. Please, contact the administrator in order to check the configuration options",
+            "errorLoadingSymbols": "There was a problem loading the symbol list. Please, contact the administrator in order to check the configuration options.",
             "edit": "Edit",
             "remove": "Delete",
             "save": "Save",
@@ -1001,10 +1001,10 @@
             "downloadcurrenttooltip": "Download current annotation",
             "downloadError": "Export error",
             "loadtooltip": "Import annotations",
-            "loadtitle": "Import Annotations",
-            "selectfiletext": "Drop your file here or click to select the Annotation File to import. (supported files: JSON)",
+            "loadtitle": "Import annotations",
+            "selectfiletext": "Drop your file here or click to select the annotation file to import. (supported files: JSON)",
             "loadoverride": "Replace annotations",
-            "loaderror": "Select one or more annotations files. (supported files: json)",
+            "loaderror": "Select one or more annotations files. (supported files: JSON)",
             "defaulttitle": "Edit default title",
             "field": {
                 "title": "Title",
@@ -1026,12 +1026,12 @@
                     "Bearing": "Bearing editor",
                     "Circle": "Circle editor",
                     "Point": "Marker editor",
-                    "MultiPoint": "LineString editor",
+                    "MultiPoint": "Multipoint editor",
                     "Text": "Text editor"
                 },
                 "center": "Center",
                 "add": "Add new coordinates",
-                "addByClick": "Add new coordinates by clicking the plus button or on the map",
+                "addByClick": "Add new coordinates by clicking the 'plus' button or on the map",
                 "valid": "Geometry is valid",
                 "radius": "Radius",
                 "text": "Text",
@@ -1136,37 +1136,37 @@
             "code": "Embed",
             "forceDrawer": "Show TOC",
             "apiLinkTitle": "Using APIs",
-            "QRCodeLinkTitle": "qr code",
+            "QRCodeLinkTitle": "QR code",
             "msgCopiedUrl": "Copied",
             "msgToCopyUrl": "Click to copy",
             "sharedTitle": "Check out my new map: ",
-            "advancedOptions": "Advanced Options",
-            "addBboxParam": "Add bbox param to sharing link",
-            "wrongBboxParamTitle": "Invalid bbox param",
-            "wrongBboxParamMessage": "bbox params must be in EPSG:4326 and wrote as bbox=minx,miny,maxx,maxy",
+            "advancedOptions": "Advanced options",
+            "addBboxParam": "Add bounding box param to sharing link",
+            "wrongBboxParamTitle": "Invalid bounding box param",
+            "wrongBboxParamMessage": "Bounding box params must be in EPSG:4326 and wrote as bbox=minx,miny,maxx,maxy",
             "showHomeButton": "Link to MapStore home"
         },
         "snapshot": {
             "title": "Snapshot Preview",
             "save": "Save",
             "tooltip": "Save a snapshot of the map.",
-            "googleBingError": "Google and Bing layers aren't available for the snapshot, due to copyright restrictions.",
+            "googleBingError": "Google and Bing layers are not available for the snapshot, due to copyright restrictions.",
             "downloadingSnapshots": "pending snapshot generation",
             "date": "Date",
             "layers": "Layers",
             "size": "Size",
             "notsupported": "Snapshot not supported",
-            "taintedMessage": "Save snapshot functionality is limited due to some browser security rules. For better results right-click on the preview and select 'Save image as' (supported by Firefox and Chrome)."
+            "taintedMessage": "Save snapshot functionality is limited due to some browser security rules. For better results right-click on the preview and select 'Save image as...' (supported by Firefox and Chrome)."
         },
         "shapefile": {
-            "title": "Add Local Vector Files",
-            "tooltip": "Add a local Vector Files to the map.",
-            "placeholder": "Drop your files here or click to select the Vector Files to import. (supported files: shapefiles must be contained in zip archives, KML/KMZ e GPX)",
+            "title": "Add local vector files",
+            "tooltip": "Add a local vector files to the map.",
+            "placeholder": "Drop your files here or click to select the vector files to import. (supported files: shapefiles (as zip archive), KML/KMZ, GPX)",
             "defaultStyle": "Default style",
             "zoom": "Zoom on the vector files",
             "error": {
-                "select": "Select one or more files. (supported files: shapefiles must be contained in zip archives, KML/KMZ e GPX)",
-                "shapeFileParsingError": "Cannot load the vector file. The file could be damaged or not well formed",
+                "select": "Select one or more files. (supported files: shapefiles (as zip archive), KML/KMZ, GPX)",
+                "shapeFileParsingError": "Cannot load the vector file. The file could be damaged or not well formed.",
                 "genericLoadError": "Cannot load the vector file on map",
                 "missingPrj": "Missing projection info (.prj), coordinate system is  supposed to be EPSG:4326"
             },
@@ -1182,7 +1182,7 @@
             "title": "Import",
             "dropZone": {
                 "heading": "<p><h4>Drop your map context or vector files here</h4><small>or</small></p>",
-                "selectFiles": "Select Files...",
+                "selectFiles": "Select files...",
                 "infoSupported": "<p><small>Supported map context files: MapStore legacy format, WMC<br />Supported vector layer files: shapefiles (must be contained in zip archives), KML/KMZ, GeoJSON or GPX</small></p>",
                 "note": "<p><small><i><strong>note</strong>: current map will be overridden in case of map context files</i></small></p>"
             },
@@ -1193,7 +1193,7 @@
             }
         },
         "mapExport": {
-            "title": "Export Map",
+            "title": "Export map",
             "exportPanel": {
                 "title": "<p><h4>Select your format</h4></p>",
                 "exportButtonLabel": "Export"
@@ -1242,7 +1242,7 @@
             "add": "Add",
             "service": "Service",
             "servicePlaceholder": "type a service",
-            "url": "Url",
+            "url": "URL",
             "urlPlaceholder": "type a URL",
             "type": "Type",
             "serviceTitle": "Title",
@@ -1254,7 +1254,7 @@
               "customTMSConfiguration": "Custom TMS Configuration",
               "customTMSConfigurationHint": "<p>Options can contain:<br/><ul><li><code>\"subdomains\": ['a', 'b']</code>: used for multiple domains, replacingthe <code>{s}</code> in URL template</li><li><code>\"maxNativeZoom\": 20</code>: max zoom from the server</li></ul></p>",
               "forceDefaultTileGrid": "Force default tile grid",
-              "forceDefaultTileGridDescription": "Use the global projection's tile grid instead of the origin and resolutions provided by the server. This is useful for some TMS services that advertise wrong origin or resoultions."
+              "forceDefaultTileGridDescription": "Use the global projection's tile grid instead of the origin and resolutions provided by the server. This is useful for some TMS services that advertise wrong origin or resolutions."
             },
             "tileprovider": {
               "tooltip": "x,y,z are tile position, s is the sub-domain (default)"
@@ -1269,12 +1269,12 @@
             "templateMetadataAvailable": "Metadata available from Dublin Core format: abstract, boundingBox, contributor, creator, description, format, identifier, references, rights, source, subject, temporal, title, type, uri",
             "notification": {
                 "errorTitle": "Error",
-                "errorSearchingRecords": "Some records have not been found: {records} Please check the query param url",
-                "warningAddCatalogService": "Insert a valid url and title",
+                "errorSearchingRecords": "Some records have not been found: {records} Please check the query URL and its parameters.",
+                "warningAddCatalogService": "Insert a valid URL and title",
                 "addCatalogService": "Service added correctly",
                 "duplicatedServiceTitle": "A service with that title already exists. Please, change title",
                 "serviceDeletedCorrectly": "The service was deleted correctly",
-                "errorServiceUrl": "Service not available. Please, check the provided url"
+                "errorServiceUrl": "Service not available. Please, check the provided URL"
             },
             "backgroundAlreadyAdded": "Added to background selector",
             "enableLocalizedLayerStyles": {
