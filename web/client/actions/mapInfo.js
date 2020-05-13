@@ -22,6 +22,7 @@ const GET_VECTOR_INFO = 'GET_VECTOR_INFO';
 const NO_QUERYABLE_LAYERS = 'NO_QUERYABLE_LAYERS';
 const CLEAR_WARNING = 'CLEAR_WARNING';
 const FEATURE_INFO_CLICK = 'FEATURE_INFO_CLICK';
+const UPDATE_FEATURE_INFO_CLICK_POINT  = 'IDENTIFY:UPDATE_FEATURE_INFO_CLICK_POINT';
 const TOGGLE_HIGHLIGHT_FEATURE = "IDENTIFY:TOGGLE_HIGHLIGHT_FEATURE";
 const TOGGLE_MAPINFO_STATE = 'TOGGLE_MAPINFO_STATE';
 const UPDATE_CENTER_TO_MARKER = 'UPDATE_CENTER_TO_MARKER';
@@ -208,6 +209,13 @@ function featureInfoClick(point, layer, filterNameList = [], overrideParams = {}
     };
 }
 
+function updateFeatureInfoClickPoint(point) {
+    return {
+        type: UPDATE_FEATURE_INFO_CLICK_POINT,
+        point
+    };
+}
+
 function toggleHighlightFeature(enabled) {
     return {
         type: TOGGLE_HIGHLIGHT_FEATURE,
@@ -302,6 +310,7 @@ module.exports = {
     toggleMapInfoState,
     updateCenterToMarker,
     featureInfoClick,
+    UPDATE_FEATURE_INFO_CLICK_POINT, updateFeatureInfoClickPoint,
     EDIT_LAYER_FEATURES, editLayerFeatures,
     SET_CURRENT_EDIT_FEATURE_QUERY, setCurrentEditFeatureQuery
 };
