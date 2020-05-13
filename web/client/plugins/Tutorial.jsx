@@ -16,7 +16,7 @@ const I18N = require('../components/I18N/I18N');
 const {Glyphicon} = require('react-bootstrap');
 const {createSelector} = require('reselect');
 const {tutorialSelector} = require('../selectors/tutorial');
-const {closeTutorialEpic, switchTutorialEpic, getActionsFromStepEpic} = require('../epics/tutorial');
+const {closeTutorialEpic, switchTutorialEpic, switchGeostoryTutorialEpic, getActionsFromStepEpic} = require('../epics/tutorial');
 
 /**
  * Tutorial plugin. Enables the steps of tutorial.
@@ -166,6 +166,7 @@ module.exports = {
     },
     epics: {
         closeTutorialEpic,
+        switchGeostoryTutorialEpic,
         switchTutorialEpic,
         getActionsFromStepEpic
     }

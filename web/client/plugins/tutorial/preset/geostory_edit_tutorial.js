@@ -1,62 +1,26 @@
 /**
- * Copyright 2018, GeoSolutions Sas.
+ * Copyright 2020, GeoSolutions Sas.
  * All rights reserved.
  *
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const uuid = require('uuid');
 
+const uuid = require('uuid');
 module.exports = [
     {
         translation: "geostoryIntro",
         selector: "#intro-tutorial"
-    },
+    }, /*
     {
         translation: "geostoryViewHeader",
         selector: "#mapstore-navbar",
         position: "bottom"
     },
     {
-        translation: "geostoryViewNavItems",
-        selector: ".ms-geostory-navigation-navigable-items",
-        position: "bottom"
-    },
-    {
-        translation: "geostoryViewNavTitle",
-        selector: ".ms-geostory-navigation-title",
-        position: "bottom"
-    },
-    {
-        translation: "geostoryViewNavLogo",
-        selector: ".ms-geostory-navigation-logo",
-        position: "bottom"
-    },
-    {
-        translation: "geostoryViewContent",
-        selector: ".ms-geostory",
-        position: "auto"
-    },
-    {
-        translation: "geostoryViewEditButton",
-        selector: ".ms-geostory-navigation-toolbar #edit-story",
-        position: "bottom",
-        action: {
-            back: {
-                type: "GEOSTORY:CHANGE_MODE",
-                mode: "view"
-            }
-        }
-    }, {
         translationHTML: "geostoryEditSidebar",
         selector: ".ms-geostory-builder",
-        position: "right",
-        action: {
-            next: {
-                type: "GEOSTORY:CHANGE_MODE",
-                mode: "edit"
-            }
-        }
+        position: "right"
     }, {
         translationHTML: "geostoryEditSidebarToolbar",
         selector: ".ms-geostory-builder-header",
@@ -82,16 +46,16 @@ module.exports = [
                 withSave: false
             }
         }
-    }, {
-        translation: "geostoryEditContainer",
+    }, */ {
+        translationHTML: "geostoryEditContainer",
         selector: ".ms-geostory",
-        position: "auto",
+        position: "auto"/* ,
         action: {
             next: {
                 type: 'GEOSTORY:TOGGLE_SETTINGS_PANEL',
                 withSave: false
             }
-        }
+        }*/
     }, {
         translationHTML: "geostoryEditAddbar",
         selector: ".ms-sections-container > section",

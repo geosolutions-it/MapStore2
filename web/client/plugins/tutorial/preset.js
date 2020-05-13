@@ -13,5 +13,6 @@ module.exports = {
     cesium_tutorial: require('./preset/cesium_tutorial'),
     cesium_mobile_tutorial: require('./preset/cesium_mobile_tutorial'),
     dashboard_tutorial: require('./preset/dashboard_tutorial'),
-    geostory_tutorial: require('./preset/geostory_tutorial')
+    geostory_view_tutorial: require('./preset/geostory_view_tutorial'),
+    geostory_edit_tutorial: require('./preset/geostory_edit_tutorial')
 };
