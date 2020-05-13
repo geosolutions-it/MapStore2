@@ -102,6 +102,7 @@
                 "none": "Sin información sobre herramientas",
                 "labelPlacement": "Colocación",
                 "right": "Derecha",
+                "left": "Izquierda",
                 "bottom": "Bottom",
                 "top": "Cima"
             },

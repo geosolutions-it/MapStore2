@@ -104,6 +104,7 @@
                 "none": "Kein Tooltip",
                 "labelPlacement": "Platzierung",
                 "right": "Recht",
+                "left": "Links",
                 "bottom": "Bottom",
                 "top": "Oben"
             },
