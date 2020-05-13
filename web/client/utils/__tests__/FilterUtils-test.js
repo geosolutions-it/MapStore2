@@ -139,7 +139,7 @@ describe('FilterUtils', () => {
 
         let filter = FilterUtils.toCQLFilter(filterObj);
         expect(filter).toExist();
-        expect(filter).toBe("(\"attribute1\"='value1') AND (INTERSECTS(the_geom,SRID=4326;Polygon((1 2, 2 3, 3 4, 4 5, 5 6, 1 2))))");
+        expect(filter).toBe("(\"attribute1\"='value1') AND (INTERSECTS(\"the_geom\",SRID=4326;Polygon((1 2, 2 3, 3 4, 4 5, 5 6, 1 2))))");
     });
     it('Calculate CQL filter without filter projection', () => {
         let filterObj = {
@@ -182,7 +182,7 @@ describe('FilterUtils', () => {
 
         let filter = FilterUtils.toCQLFilter(filterObj);
         expect(filter).toExist();
-        expect(filter).toBe("(\"attribute1\"='value1') AND (INTERSECTS(the_geom,Polygon((1 2, 2 3, 3 4, 4 5, 5 6, 1 2))))");
+        expect(filter).toBe("(\"attribute1\"='value1') AND (INTERSECTS(\"the_geom\",Polygon((1 2, 2 3, 3 4, 4 5, 5 6, 1 2))))");
     });
     it('Check for pagination wfs 1.1.0', () => {
         let filterObj = {
@@ -1011,7 +1011,7 @@ describe('FilterUtils', () => {
         };
 
         let filter = FilterUtils.toCQLFilter(filterObj);
-        expect(filter).toEqual('(INTERSECTS(geometry,collectGeometries(queryCollection(\'TEST\', \'GEOMETRY\',\'INCLUDE\'))))');
+        expect(filter).toEqual('(INTERSECTS("geometry",collectGeometries(queryCollection(\'TEST\', \'GEOMETRY\',\'INCLUDE\'))))');
     });
     it('Check SpatialFilterField cql', () => {
         let filterObj = {
@@ -1758,6 +1758,6 @@ describe('FilterUtils', () => {
         let filter = FilterUtils.toCQLFilter(filterObj);
         expect(filter).toExist();
         expect(filter).toBe("(\"attribute1\"='value1') AND " +
-            "(INTERSECTS(the_geom,SRID=4326;Polygon((1 2, 2 3, 3 4, 1 2))) AND INTERSECTS(the_geom,SRID=4326;Polygon((1 2, 2 3, 3 4, 4 5, 5 6, 1 2))))");
+            "(INTERSECTS(\"the_geom\",SRID=4326;Polygon((1 2, 2 3, 3 4, 1 2))) AND INTERSECTS(\"the_geom\",SRID=4326;Polygon((1 2, 2 3, 3 4, 4 5, 5 6, 1 2))))");
     });
 });

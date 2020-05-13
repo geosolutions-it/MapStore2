@@ -30,7 +30,7 @@ describe('StylePanel component', () => {
         ReactDOM.render(<StylePanel layers={[L1, L2]} selected={L1} stylers={{"Point": <div></div>}}/>, document.getElementById("container"));
         const container = document.getElementById('container');
         expect(container.querySelector('h4')).toExist();
-        const checkBoxes = Array.slice(container.querySelectorAll('input[type=checkbox]'));
+        const checkBoxes = [].slice.call(container.querySelectorAll('input[type=checkbox]'));
         expect(checkBoxes.length).toBe(2);
         expect(checkBoxes.filter(e => e.checked).length).toBe(1);
     });

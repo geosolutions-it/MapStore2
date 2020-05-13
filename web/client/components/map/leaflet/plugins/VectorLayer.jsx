@@ -7,18 +7,8 @@
  */
 
 const Layers = require('../../../../utils/leaflet/Layers');
-const {isNil} = require('lodash');
+const { isNil } = require('lodash');
 const L = require('leaflet');
-
-const defaultStyle = {
-    radius: 5,
-    color: "red",
-    weight: 1,
-    opacity: 1,
-    fillOpacity: 0
-};
-
-const assign = require('object-assign');
 
 const setOpacity = (layer, opacity) => {
     if (layer.eachLayer) {
@@ -35,18 +25,15 @@ var createVectorLayer = function(options) {
     const { hideLoading } = options;
     const layer = L.geoJson([]/* options.features */, {
         pointToLayer: options.styleName !== "marker" ? function(feature, latlng) {
-            return L.circleMarker(latlng, options.style || defaultStyle);
+            return L.circleMarker(latlng, feature.style || options.style);
         } : null,
-        hideLoading: hideLoading,
-        style: options.nativeStyle || options.style || defaultStyle // TODO ol nativeStyle should not be taken from the store
+        hideLoading: hideLoading
     });
     layer.setOpacity = (opacity) => {
-        const style = assign({}, layer.options.style || defaultStyle, { opacity: opacity, fillOpacity: opacity });
-        layer.setStyle(style);
         setOpacity(layer, opacity);
     };
-    layer.on('layeradd', () => {
-        layer.setOpacity(!isNil(layer.opacity) ? layer.opacity : options.opacity);
+    layer.on('layeradd', ({layer: featureLayer}) => {
+        layer.setOpacity(!isNil(layer.opacity) ? layer.opacity : options.opacity, featureLayer);
     });
     return layer;
 };
@@ -55,7 +42,6 @@ Layers.registerType('vector', {
     create: (options) => {
         const layer = createVectorLayer(options);
         // layer.opacity will store the opacity value
-        // to be applied to layer style once the layer is ready
         layer.opacity = !isNil(options.opacity) ? options.opacity : 1.0;
         return layer;
     },

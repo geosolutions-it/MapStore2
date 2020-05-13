@@ -7,10 +7,12 @@
 */
 
 import React from 'react';
+import { Tooltip } from 'react-bootstrap';
 
 import SideCard from '../cardgrids/SideCard';
 import Toolbar from '../toolbar/Toolbar';
 import emptyState from '../enhancers/emptyState';
+import OverlayTrigger from '../OverlayTrigger';
 
 const TransferColumnCardList = ({
     items = [],
@@ -48,6 +50,11 @@ const TransferColumnCardList = ({
                     }))}/>
                 }
                 preview={item.preview}
+                description={item.showDescriptionTooltip && item.description ?
+                    <OverlayTrigger delayShow={item.descriptionTooltipDelay} placement="top" overlay={<Tooltip id={item.id}>{item.description}</Tooltip>}>
+                        <span>{item.description}</span>
+                    </OverlayTrigger> :
+                    item.description}
                 body={
                     <div className="ms2-transfer-body-container">
                         {item.component && <div

@@ -1,61 +1,121 @@
-const React = require('react');
-const PropTypes = require('prop-types');
-const AttributeEditor = require('./AttributeEditor');
-const nanToNull = v => isNaN(v) ? null : v;
-const processValue = (obj, func) => Object.keys(obj).reduce((acc, curr) => ({
-    ...acc,
-    [curr]: nanToNull(func(obj[curr]))}),
-{});
+/*
+ * Copyright 2020, GeoSolutions Sas.
+ * All rights reserved.
+ *
+ * This source code is licensed under the BSD-style license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
+import React from 'react';
+import PropTypes from 'prop-types';
+import {isNumber} from 'lodash';
+
 const parsers = {
     "int": v => parseInt(v, 10),
     "number": v => parseFloat(v, 10)
 };
-class NumberEditor extends AttributeEditor {
+
+/**
+ * @memberof components.data.featuregrid.editors
+ * @name NumberEditor
+ * @class
+ * @prop {number} editorProps.minValue the lower boundary of valid numbers
+ * @prop {number} editorProps.maxValue the upper boundary of valid numbers
+ */
+export default class NumberEditor extends React.Component {
     static propTypes = {
         value: PropTypes.oneOfType([
             PropTypes.string,
             PropTypes.number]),
-        onBlur: PropTypes.func,
         inputProps: PropTypes.object,
         dataType: PropTypes.string,
-        isValid: PropTypes.func,
-        column: PropTypes.object
+        minValue: PropTypes.number,
+        maxValue: PropTypes.number,
+        column: PropTypes.object,
+        onTemporaryChanges: PropTypes.func
     };
+
     static defaultProps = {
-        isValid: () => true,
-        dataType: "number"
+        dataType: "number",
+        column: {}
     };
+
     constructor(props) {
         super(props);
-        this.validate = (value) => {
-            try {
-                if (parsers[this.props.dataType] || parsers.number) {
-                    return this.props.isValid(value[this.props.column && this.props.column.key]);
-                }
-                return false;
-            } catch (e) {
-                return false;
-            }
-        };
-        this.getValue = () => {
-            const updated = super.getValue();
-            try {
-                return processValue(updated, parsers[this.props.dataType] || parsers.number);
-            } catch (e) {
-                return updated;
-            }
-        };
+
+        this.state = {inputText: props.value?.toString?.() ?? ''};
+        this.inputRef = React.createRef();
+    }
+
+    state = {inputText: ''};
+
+    componentDidMount() {
+        this.props.onTemporaryChanges?.(true);
+    }
+
+    componentWillUnmount() {
+        this.props.onTemporaryChanges?.(false);
+
+    }
+
+    getValue() {
+        try {
+            const numberValue = parsers[this.props.dataType](this.state.inputText);
+            return {
+                [this.props.column.key]: this.validateNumberValue(numberValue) ? numberValue : this.props.value
+            };
+        } catch (e) {
+            return {
+                [this.props.column.key]: this.props.value
+            };
+        }
+    }
+
+    getInputNode() {
+        return this.inputRef.current;
     }
 
     render() {
         return (<input
             {...this.props.inputProps}
-            ref={(node) => {this.input = node;}}
+            style={!this.state.validated || this.state.isValid ? {} : {
+                borderColor: 'red'
+            }}
+            value={this.state.inputText}
+            ref={this.inputRef}
             type="number"
+            min={this.props.minValue}
+            max={this.props.maxValue}
             className="form-control"
             defaultValue={this.props.value}
+            onChange={(e) => {
+                this.setState({
+                    inputText: e.target.value,
+                    isValid: this.validateTextValue(e.target.value),
+                    validated: true
+                });
+            }}
         />);
     }
-}
 
-module.exports = NumberEditor;
+    validateTextValue = (value) => {
+        if (!parsers[this.props.dataType]) {
+            return false;
+        }
+
+        try {
+            const numberValue = parsers[this.props.dataType](value);
+
+            return this.validateNumberValue(numberValue);
+        } catch (e) {
+            return false;
+        }
+    };
+
+    validateNumberValue = (value) => {
+        return isNumber(value) &&
+            !isNaN(value) &&
+            (!isNumber(this.props.minValue) || this.props.minValue <= value) &&
+            (!isNumber(this.props.maxValue) || this.props.maxValue >= value);
+    };
+}

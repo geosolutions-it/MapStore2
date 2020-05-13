@@ -10,6 +10,14 @@ import {checkZipBundle, ERROR} from "../ExtensionsUtils";
 import axios from '../../libs/ajax';
 
 describe('checkZipBundle', () => {
+    it('throws an error if uploaded file is not a zip file', (done) => {
+        axios.get("base/web/client/test-resources/extensions/this_is_not_a_zip_file.zip", { responseType: "blob" }).then(({data}) => {
+            checkZipBundle(data).catch(e => {
+                expect(e).toBe(ERROR.WRONG_FORMAT);
+                done();
+            });
+        });
+    });
     it('throws an error if uploaded zip does not contain index.json', (done) => {
         axios.get("base/web/client/test-resources/extensions/myplugin_no_index.zip", { responseType: "blob" }).then(({data}) => {
             checkZipBundle(data).catch(e => {

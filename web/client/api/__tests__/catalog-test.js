@@ -21,5 +21,6 @@ describe('Catalog API', () => {
         expect(catalog.wms.validate).toBe(validate);
         expect(catalog.wmts.validate).toBe(validate);
         expect(catalog.csw.validate).toBe(validate);
+        expect(catalog.wfs.validate).toBe(validate);
     });
 });

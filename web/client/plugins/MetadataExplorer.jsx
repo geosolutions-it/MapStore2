@@ -33,6 +33,7 @@ const {resultSelector, serviceListOpenSelector, newServiceSelector,
     searchTextSelector, groupSelector, pageSizeSelector, loadingSelector, selectedServiceLayerOptionsSelector
 } = require("../selectors/catalog");
 const {projectionSelector} = require('../selectors/map');
+const {isLocalizedLayerStylesEnabledSelector} = require('../selectors/localizedLayerStyles');
 
 const {mapLayoutValuesSelector} = require('../selectors/maplayout');
 const {metadataSourceSelector, modalParamsSelector} = require('../selectors/backgroundselector');
@@ -70,7 +71,8 @@ const metadataExplorerSelector = createStructuredSelector({
     locales: currentMessagesSelector,
     pageSize: pageSizeSelector,
     loading: loadingSelector,
-    crs: projectionSelector
+    crs: projectionSelector,
+    isLocalizedLayerStylesEnabled: isLocalizedLayerStylesEnabledSelector
 });
 
 
@@ -127,6 +129,7 @@ class MetadataExplorerComponent extends React.Component {
         style: PropTypes.object,
         dockProps: PropTypes.object,
         zoomToLayer: PropTypes.bool,
+        isLocalizedLayerStylesEnabled: PropTypes.bool,
 
         // side panel properties
         width: PropTypes.number,
@@ -136,7 +139,7 @@ class MetadataExplorerComponent extends React.Component {
 
     static defaultProps = {
         id: "mapstore-metadata-explorer",
-        serviceTypes: [{ name: "csw", label: "CSW" }, { name: "wms", label: "WMS" }, { name: "wmts", label: "WMTS" }, { name: "tms", label: "TMS", allowedProviders: DEFAULT_ALLOWED_PROVIDERS }],
+        serviceTypes: [{ name: "csw", label: "CSW" }, { name: "wms", label: "WMS" }, { name: "wmts", label: "WMTS" }, { name: "tms", label: "TMS", allowedProviders: DEFAULT_ALLOWED_PROVIDERS }, {name: "wfs", label: "WFS"}],
         active: false,
         wrap: false,
         modal: true,
@@ -233,7 +236,7 @@ const MetadataExplorerPlugin = connect(metadataExplorerSelector, {
 const API = require('../api/catalog').default;
 
 /**
- * MetadataExplorer (Catalog) plugin. Shows the catalogs results (CSW, WMS, WMTS and TMS).
+ * MetadataExplorer (Catalog) plugin. Shows the catalogs results (CSW, WMS, WMTS, TMS and WFS).
  * Some useful flags in `localConfig.json`:
  * - `noCreditsFromCatalog`: avoid add credits (attribution) from catalog
  *
@@ -241,7 +244,7 @@ const API = require('../api/catalog').default;
  * @name MetadataExplorer
  * @memberof plugins
  * @prop {string} cfg.hideThumbnail shows/hides thumbnail
- * @prop {object[]} cfg.serviceTypes Service types available to add a new catalog. default: `[{ name: "csw", label: "CSW" }, { name: "wms", label: "WMS" }, { name: "wmts", label: "WMTS" }, { name: "tms", label: "TMS", allowedProviders }]`.
+ * @prop {object[]} cfg.serviceTypes Service types available to add a new catalog. default: `[{ name: "csw", label: "CSW" }, { name: "wms", label: "WMS" }, { name: "wmts", label: "WMTS" }, { name: "tms", label: "TMS", allowedProviders },{ name: "wfs", label: "WFS" }]`.
  * `allowedProviders` is a whitelist of tileProviders from ConfigProvider.js. you can set a global variable allowedProviders in localConfig.json to set it up globally. You can configure it to "ALL" to get all the list (at your own risk, some services could change or not be available anymore)
  * @prop {object} cfg.hideIdentifier shows/hides identifier
  * @prop {boolean} cfg.hideExpand shows/hides full description button

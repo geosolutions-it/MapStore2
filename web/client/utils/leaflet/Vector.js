@@ -63,7 +63,7 @@ const VectorUtils = {
         if (pointToLayer) {
             return pointToLayer(geojson, latlng);
         }
-        return VectorUtils.pointToLayer(latlng, geojson, {...options.style, highlight: options.highlight});
+        return VectorUtils.pointToLayer(latlng, geojson, {...options.style, styleName: options.styleName, highlight: options.highlight});
     },
     pointToLayer: (latlng, geojson, style) => {
         const newStyle = style.Point || style.MultiPoint || style;
@@ -117,24 +117,17 @@ const VectorUtils = {
         return new L.Polygon(latlngs, style);
     },
     geometryToLayer: function(geojson, options) {
-        var geometry = geojson.type === 'Feature' ? geojson.geometry : geojson;
-        var coords = geometry ? geometry.coordinates : null;
-        var layers = [];
-        var props = {style: options.style && options.style[0] || options.style, ...geojson};
-        var pointToLayer = options && !isMarker(props) ? function(feature, latlng) {
-            // probably this need a fix
-            return L.circleMarker(latlng, props.style && props.style[0] || {
-                radius: 5,
-                color: "red",
-                weight: 1,
-                opacity: 1,
-                fillOpacity: 0
-            });
+        const geometry = geojson.type === 'Feature' ? geojson.geometry : geojson;
+        const coords = geometry ? geometry.coordinates : null;
+        const layers = [];
+        const props = {styleName: options.styleName, style: options.style && options.style[0] || options.style, ...geojson};
+        const pointToLayer = options && !isMarker(props) ? function(feature, latlng) {
+            if (props.styleName === "marker") {
+                return L.marker(latlng, props.style);
+            }
+            return L.circleMarker(latlng, props.style && props.style[0] || props.style );
         } : null;
-        var latlng;
-        var latlngs;
-        var i;
-        var len;
+
         let coordsToLatLng = options && options.coordsToLatLng || VectorUtils.coordsToLatLngF;
 
         if (!coords && !geometry) {
@@ -143,6 +136,10 @@ const VectorUtils = {
         let layer;
         let style = props.style || assign({}, options.style && options.style[geometry.type] || options.style, {highlight: options.style && options.style.highlight});
 
+        let latlng;
+        let latlngs;
+        let i;
+        let len;
         switch (geometry.type) {
         case 'Point':
             latlng = coordsToLatLng(coords);

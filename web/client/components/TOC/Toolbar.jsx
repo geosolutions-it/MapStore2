@@ -116,6 +116,7 @@ class Toolbar extends React.Component {
         },
         options: {
             modalOptions: {},
+            metadataOptions: {},
             settingsOptions: {}
         },
         style: {
@@ -303,7 +304,7 @@ class Toolbar extends React.Component {
                             </Button>
                         </OverlayTrigger>
                         : null}
-                    {this.props.activateTool.activateMetedataTool && (status === 'LAYER') && this.props.selectedLayers[0].catalogURL && !this.props.settings.expanded && !this.props.wfsdownload.expanded ?
+                    {this.props.activateTool.activateMetedataTool && (status === 'LAYER') && !this.props.settings.expanded && !this.props.wfsdownload.expanded ?
                         <OverlayTrigger
                             key="layerMetadata"
                             placement="top"
@@ -382,7 +383,7 @@ class Toolbar extends React.Component {
 
     showMetadata = () => {
         if (!this.props.layerMetadata.expanded) {
-            this.props.onToolsActions.onGetMetadataRecord();
+            this.props.onToolsActions.onGetMetadataRecord(this.props.options.metadataOptions);
         } else {
             this.props.onToolsActions.onHideLayerMetadata();
         }

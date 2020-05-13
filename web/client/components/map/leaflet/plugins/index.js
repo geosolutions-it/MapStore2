@@ -15,6 +15,7 @@ module.exports = {
     OSMLayer: require('./OSMLayer'),
     TMSLayer: require('./TMSLayer'),
     TileProviderLayer: require('./TileProviderLayer'),
+    WFSLayer: require('./WFSLayer').default,
     WMSLayer: require('./WMSLayer'),
     WMTSLayer: require('./WMTSLayer'),
     VectorLayer: require('./VectorLayer')

@@ -10,6 +10,14 @@ import ReactDOM from 'react-dom';
 import expect from 'expect';
 import CatalogServiceEditor from '../CatalogServiceEditor';
 
+const givenWmsService = {
+    url: "url",
+    type: "wms",
+    title: "wms",
+    oldService: "gs_stable_wms",
+    showAdvancedSettings: true
+};
+
 describe('Test CatalogServiceEditor', () => {
     beforeEach((done) => {
         document.body.innerHTML = '<div id="container"></div>';
@@ -59,5 +67,45 @@ describe('Test CatalogServiceEditor', () => {
         expect(formatSelect).toExist();
         expect(formatSelect.textContent).toBe('image/png8');
         // expect(formatSelect.props.options).toEqual(formatOptions); TODO: test properties are passed to select
+    });
+    it('test localized layer styles option enabled and switched off for WMS service', () => {
+        ReactDOM.render(<CatalogServiceEditor
+            formatOptions={[{
+                label: "image/jpeg",
+                value: "image/jpeg"
+            }]}
+            service={givenWmsService}
+            isLocalizedLayerStylesEnabled
+        />, document.getElementById("container"));
+
+        const isLocalizedLayerStylesOption = document.querySelector('[data-qa="service-lacalized-layer-styles-option"]');
+        expect(isLocalizedLayerStylesOption).toExist();
+        expect(isLocalizedLayerStylesOption.checked).toBe(false);
+    });
+    it('test localized layer styles option enabled and switched on for WMS service', () => {
+        ReactDOM.render(<CatalogServiceEditor
+            formatOptions={[{
+                label: "image/jpeg",
+                value: "image/jpeg"
+            }]}
+            service={{...givenWmsService, localizedLayerStyles: true}}
+            isLocalizedLayerStylesEnabled
+        />, document.getElementById("container"));
+
+        const isLocalizedLayerStylesOption = document.querySelector('[data-qa="service-lacalized-layer-styles-option"]');
+        expect(isLocalizedLayerStylesOption).toExist();
+        expect(isLocalizedLayerStylesOption.checked).toBe(true);
+    });
+    it('test localized layer styles option disabled for WMS service', () => {
+        ReactDOM.render(<CatalogServiceEditor
+            formatOptions={[{
+                label: "image/jpeg",
+                value: "image/jpeg"
+            }]}
+            service={givenWmsService}
+        />, document.getElementById("container"));
+
+        const isLocalizedLayerStylesOption = document.querySelector('[data-qa="service-lacalized-layer-styles-option"]');
+        expect(isLocalizedLayerStylesOption).toBeNull;
     });
 });

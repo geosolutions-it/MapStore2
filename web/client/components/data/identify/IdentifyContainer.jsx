@@ -16,7 +16,7 @@ const GeocodeViewer = require('./GeocodeViewer');
 const ResizableModal = require('../../misc/ResizableModal');
 const Portal = require('../../misc/Portal');
 const Coordinate = require('./coordinates/Coordinate');
-const {getFormatForResponse, responseValidForEdit} = require('../../../utils/IdentifyUtils');
+const {responseValidForEdit} = require('../../../utils/IdentifyUtils');
 /**
  * Component for rendering Identify Container inside a Dockable container
  * @memberof components.data.identify
@@ -67,7 +67,9 @@ module.exports = props => {
     } = props;
 
     const latlng = point && point.latlng || null;
-    const {layer} = responses[index] || {};
+
+    const targetResponse = validResponses.length < 1 ? validResponses[0] : responses[index];
+    const {layer} = targetResponse || {};
 
     let lngCorrected = null;
     if (latlng) {
@@ -87,8 +89,7 @@ module.exports = props => {
         lngCorrected,
         validResponses,
         latlng,
-        showEdit: showEdit && isEditingAllowed && !!responses[index] && responseValidForEdit(responses[index]) &&
-            getFormatForResponse(responses[index], props) !== 'application/json',
+        showEdit: showEdit && isEditingAllowed && !!targetResponse && responseValidForEdit(targetResponse),
         onEdit: onEdit.bind(null, layer && {
             id: layer.id,
             name: layer.name,

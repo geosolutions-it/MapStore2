@@ -118,4 +118,22 @@ describe('Test for FeatureGrid component', () => {
         TestUtils.Simulate.click(domNode);
         expect(events.onRowsDeselected).toHaveBeenCalled();
     });
+    it('temporary changes on field edit', () => {
+        const events = {
+            onTemporaryChanges: () => {}
+        };
+        spyOn(events, 'onTemporaryChanges');
+        ReactDOM.render(<FeatureGrid virtualScroll={false}
+            gridEvents={events}
+            mode="EDIT"
+            describeFeatureType={describePois}
+            features={museam.features}
+        />, document.getElementById("container"));
+        let domNode = Array.prototype.filter.call(document.getElementsByClassName('react-grid-Cell'),
+            element => element.getAttribute('value') === 'museam')[0];
+        expect(domNode).toExist();
+        TestUtils.Simulate.doubleClick(domNode);
+        expect(events.onTemporaryChanges).toHaveBeenCalled();
+        expect(events.onTemporaryChanges).toHaveBeenCalledWith(true);
+    });
 });
