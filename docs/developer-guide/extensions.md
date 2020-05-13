@@ -117,3 +117,54 @@ You will find both the index.json file and a sample translation folder in build/
     ]
 }
 ```
+
+### Extensions uploading service
+
+Extensions can be uploaded using the context creator UI of MapStore. The storage and configuration of the uploaded zip bundle as
+a proper extension is managed by a dedicated MapStore backend service, the ***Upload Service***.
+The Upload Service is responsible of unzipping the bundle, storing javascript and the other extension assets in the extensions folder and updating the configuration files needed by MapStore to use the extension:
+
+ * extensions.json (the extensions registry)
+ * pluginsConfig.json (the context creator plugins catalog)
+
+### Extensions and datadir
+
+Extensions work better if you use a [datadir](externalized-configuration), because when a datadir is configured,
+extensions are uploaded there, can ***live*** outside of the application main folder (so you don't risk to overwrite them when
+you upgrade MapStore to a newer version).
+
+To enable extensions to work with the datadir the following is needed:
+
+#### Externalize the extensions configuration ####
+
+Change `app.jsx` to include the following statement:
+
+```javascript
+ConfigUtils.setConfigProp("extensionsRegistry", "rest/config/load/extensions.json");
+```
+
+#### Externalize the context plugins configuration ####
+
+Change `app.jsx` to include the following statement:
+
+```javascript
+ConfigUtils.setConfigProp("contextPluginsConfiguration", "rest/config/load/pluginsConfig.json");
+```
+
+#### Externalize the extensions assets folder ####
+
+Change `app.jsx` to include the following statement:
+
+```javascript
+ConfigUtils.setConfigProp("extensionsFolder", "rest/config/loadasset?resource=");
+```
+
+Assets are loaded using a different service, /rest/config/loadasset.
+
+#### Upload Service and datadir ####
+
+When a datadir is configured, the **Upload Service** will use it properly, to store uploaded extensions there.
+
+It will also use the datadir to store, after any upload:
+ * the updated extensions registry (**extensions.json**) file
+ * a patch of the context creator plugins catalog (**pluginsConfig.json.patch**)
