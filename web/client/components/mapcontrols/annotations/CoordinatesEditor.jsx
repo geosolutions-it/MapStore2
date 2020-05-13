@@ -293,7 +293,7 @@ class CoordinatesEditor extends React.Component {
                      </Row>}
                 <Row style={{flex: 1, flexBasis: 'auto', overflowY: 'auto', overflowX: 'hidden'}}>
                     {this.props.components.map((component, idx) => <>
-                        <div style={{display: "flex", flexDirection: "column", alignItems: "center", fontWeight: 600}}>
+                        <div id={"label-texts"} style={{display: "flex", flexDirection: "column", alignItems: "center", fontWeight: 600}}>
                             <span>
                                 {this.renderLabelTexts(idx, {textLabels, featurePropValue})}
                             </span>
