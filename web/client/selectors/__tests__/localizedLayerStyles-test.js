@@ -62,4 +62,19 @@ describe('Test localizedLayerStyles', () => {
             value: language
         }]);
     });
+
+    it('test localizedLayerStylesEnvSelector default', () => {
+        const env = localizedLayerStylesEnvSelector({});
+
+        expect(env).toEqual([]);
+    });
+
+    it('test localizedLayerStylesEnvSelector', () => {
+        const name = 'example';
+        const store = {localConfig: {localizedLayerStyles: {name}}};
+        const env = localizedLayerStylesEnvSelector(store);
+        const language = currentLocaleLanguageSelector(store);
+
+        expect(env).toEqual([ {name, value: language} ]);
+    });
 });

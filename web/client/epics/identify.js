@@ -34,6 +34,7 @@ const { modeSelector } = require('../selectors/featuregrid');
 const { mapSelector, projectionDefsSelector, projectionSelector } = require('../selectors/map');
 const { boundingMapRectSelector } = require('../selectors/maplayout');
 const { centerToVisibleArea, isInsideVisibleArea, isPointInsideExtent, reprojectBbox } = require('../utils/CoordinatesUtils');
+const { localizedLayerStylesEnvSelector } = require('../selectors/localizedLayerStyles');
 
 const { isHighlightEnabledSelector, itemIdSelector, overrideParamsSelector, filterNameListSelector } = require('../selectors/mapInfo');
 
@@ -118,7 +119,8 @@ module.exports = {
                     return filterNameList.length ? (filterNameList.filter(name => name.indexOf(l.name) !== -1).length > 0) : true;
                 })))
                     .mergeMap(layer => {
-                        let { url, request, metadata } = MapInfoUtils.buildIdentifyRequest(layer, identifyOptionsSelector(getState()));
+                        let env = localizedLayerStylesEnvSelector(getState());
+                        let { url, request, metadata } = MapInfoUtils.buildIdentifyRequest(layer, {...identifyOptionsSelector(getState()), env});
                         // request override
                         if (itemIdSelector(getState()) && overrideParamsSelector(getState())) {
                             request = {...request, ...overrideParamsSelector(getState())[layer.name]};
