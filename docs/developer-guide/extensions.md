@@ -136,7 +136,7 @@ The Upload Service is responsible of unzipping the bundle, storing javascript an
 
 ### Extensions and datadir
 
-Extensions work better if you use a [datadir](externalized-configuration), because when a datadir is configured,
+Extensions work better if you use a [datadir](externalized-configuration.md), because when a datadir is configured,
 extensions are uploaded there, can ***live*** outside of the application main folder (so you don't risk to overwrite them when
 you upgrade MapStore to a newer version).
 
