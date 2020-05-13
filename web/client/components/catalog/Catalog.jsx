@@ -21,6 +21,7 @@ const OverlayTrigger = require('../misc/OverlayTrigger');
 const RecordGrid = require("./RecordGrid");
 const SwitchPanel = require("../misc/switch/SwitchPanel");
 const Loader = require('../misc/Loader');
+const InfoPopover = require('../widgets/widget/InfoPopover');
 
 require('react-select/dist/react-select.css');
 require('react-quill/dist/quill.snow.css');
@@ -44,6 +45,7 @@ class Catalog extends React.Component {
         newService: PropTypes.object,
         onAddService: PropTypes.func,
         onChangeAutoload: PropTypes.func,
+        onChangeLocalizedLayerStyles: PropTypes.func,
         onChangeCatalogMode: PropTypes.func,
         onChangeServiceFormat: PropTypes.func,
         onChangeMetadataTemplate: PropTypes.func,
@@ -85,7 +87,8 @@ class Catalog extends React.Component {
         onUpdateThumbnail: PropTypes.func,
         clearModal: PropTypes.func,
         formatOptions: PropTypes.array,
-        layerBaseConfig: PropTypes.object
+        layerBaseConfig: PropTypes.object,
+        isLocalizedLayerStylesEnabled: PropTypes.bool
     };
 
     static contextTypes = {
@@ -112,6 +115,7 @@ class Catalog extends React.Component {
         },
         onAddService: () => {},
         onChangeAutoload: () => {},
+        onChangeLocalizedLayerStyles: () => {},
         onChangeCatalogMode: () => {},
         onChangeFormat: () => {},
         onChangeMetadataTemplate: () => {},
@@ -156,7 +160,8 @@ class Catalog extends React.Component {
             value: 'image/gif'
         }],
         layerBaseConfig: {},
-        crs: "EPSG:3857"
+        crs: "EPSG:3857",
+        isLocalizedLayerStylesEnabled: false
     };
 
     state = {
@@ -309,6 +314,7 @@ class Catalog extends React.Component {
                 onAdd={() => {
                     this.search({services: this.props.services, selectedService: this.props.selectedService});
                 }}
+                localizedLayerStyles={this.props.services[this.props.selectedService] && this.props.services[this.props.selectedService].localizedLayerStyles}
             />
         </div>);
     };
@@ -479,6 +485,17 @@ class Catalog extends React.Component {
                                         </Checkbox>
                                     </Col>
                                 </FormGroup>
+                                {(this.props.isLocalizedLayerStylesEnabled && !isNil(this.props.newService.type) ? this.props.newService.type === "wms" : false) && (
+                                    <FormGroup controlId="localized-styles" key="localized-styles">
+                                        <Col xs={12}>
+                                            <Checkbox
+                                                onChange={(e) => this.props.onChangeLocalizedLayerStyles(e.target.checked)}
+                                                checked={!isNil(this.props.newService.localizedLayerStyles) ? this.props.newService.localizedLayerStyles : false}>
+                                                <Message msgId="catalog.enableLocalizedLayerStyles.label" />&nbsp;<InfoPopover text={<Message msgId="catalog.enableLocalizedLayerStyles.tooltip" />} />
+                                            </Checkbox>
+                                        </Col>
+                                    </FormGroup>
+                                )}
                                 {(!isNil(this.props.newService.type) ? this.props.newService.type === "csw" : false) && (<FormGroup controlId="metadata-template" key="metadata-template" className="metadata-template-editor">
                                     <Col xs={12}>
                                         <Checkbox

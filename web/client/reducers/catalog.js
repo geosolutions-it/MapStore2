@@ -17,6 +17,7 @@ const {
     CHANGE_TITLE,
     CHANGE_TEXT,
     CHANGE_AUTOLOAD,
+    CHANGE_LOCALIZED_LAYER_STYLES,
     CHANGE_TYPE,
     CHANGE_URL,
     CHANGE_SERVICE_FORMAT,
@@ -130,6 +131,8 @@ function catalog(state = {
         return set("newService.url", action.url, state);
     case CHANGE_AUTOLOAD:
         return set("newService.autoload", action.autoload, state);
+    case CHANGE_LOCALIZED_LAYER_STYLES:
+        return set("newService.localizedLayerStyles", action.localizedLayerStyles, state);
     case CHANGE_SERVICE_FORMAT:
         return set("newService.format", action.format, state);
     case CHANGE_TYPE: {

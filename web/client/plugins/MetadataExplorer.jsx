@@ -15,7 +15,7 @@ const {Glyphicon, Panel} = require('react-bootstrap');
 const ContainerDimensions = require('react-container-dimensions').default;
 const {changeLayerProperties} = require('../actions/layers');
 const {addService, deleteService, textSearch, changeCatalogFormat, changeCatalogMode,
-    changeUrl, changeTitle, changeAutoload, changeType, changeServiceFormat, changeSelectedService,
+    changeUrl, changeTitle, changeAutoload, changeLocalizedLayerStyles, changeType, changeServiceFormat, changeSelectedService,
     addLayer, addLayerError, focusServicesList, changeText,
     changeMetadataTemplate, toggleAdvancedSettings, toggleThumbnail, toggleTemplate, catalogClose} = require("../actions/catalog");
 const {zoomToExtent} = require("../actions/map");
@@ -30,6 +30,7 @@ const {resultSelector, serviceListOpenSelector, newServiceSelector,
     searchTextSelector, groupSelector, pageSizeSelector, loadingSelector
 } = require("../selectors/catalog");
 const {projectionSelector} = require('../selectors/map');
+const {isLocalizedLayerStylesEnabledSelector} = require('../selectors/localizedLayerStyles');
 
 const {mapLayoutValuesSelector} = require('../selectors/maplayout');
 const {metadataSourceSelector, modalParamsSelector} = require('../selectors/backgroundselector');
@@ -105,6 +106,7 @@ class MetadataExplorerComponent extends React.Component {
         style: PropTypes.object,
         dockProps: PropTypes.object,
         zoomToLayer: PropTypes.bool,
+        isLocalizedLayerStylesEnabled: PropTypes.bool,
 
         // side panel properties
         width: PropTypes.number,
@@ -194,8 +196,9 @@ const metadataExplorerSelector = createSelector([
     state => mapLayoutValuesSelector(state, {height: true}),
     searchTextSelector,
     groupSelector,
-    metadataSourceSelector
-], (searchOptions, formats, result, loadingError, selectedService, mode, services, servicesWithBackgrounds, layerError, active, dockStyle, searchText, group, source) => ({
+    metadataSourceSelector,
+    isLocalizedLayerStylesEnabledSelector
+], (searchOptions, formats, result, loadingError, selectedService, mode, services, servicesWithBackgrounds, layerError, active, dockStyle, searchText, group, source, isLocalizedLayerStylesEnabled) => ({
     searchOptions,
     formats,
     result,
@@ -207,7 +210,8 @@ const metadataExplorerSelector = createSelector([
     dockStyle,
     searchText,
     group,
-    source
+    source,
+    isLocalizedLayerStylesEnabled
 }));
 
 const MetadataExplorerPlugin = connect(metadataExplorerSelector, {
@@ -223,6 +227,7 @@ const MetadataExplorerPlugin = connect(metadataExplorerSelector, {
     onChangeMetadataTemplate: changeMetadataTemplate,
     onChangeText: changeText,
     onChangeAutoload: changeAutoload,
+    onChangeLocalizedLayerStyles: changeLocalizedLayerStyles,
     onChangeSelectedService: changeSelectedService,
     onChangeCatalogMode: changeCatalogMode,
     onAddService: addService,

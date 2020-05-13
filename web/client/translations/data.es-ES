@@ -106,7 +106,11 @@
                 "top": "Cima"
             },
             "templateFormatInfoAlertExample": "La identificación de la característica es ${ properties }",
-            "templatePreview": "Vista previa de la plantilla"
+            "templatePreview": "Vista previa de la plantilla",
+            "enableLocalizedLayerStyles": {
+                "label": "Habilitar estilo localizado",
+                "tooltip": "Nota: este parámetro requiere configuraciones específicas en GeoServer"
+            }
         },
         "longitude": "Longitud",
         "latitude": "Latitud",
@@ -1181,7 +1185,11 @@
                 "serviceDeletedCorrectly": "El servicio se ha eliminado correctamente",
                 "errorServiceUrl": "Servicio no disponible. Por favor, compruebe la url proporcionada"
             },
-            "backgroundAlreadyAdded": "Agregado al selector de fondo"
+            "backgroundAlreadyAdded": "Agregado al selector de fondo",
+            "enableLocalizedLayerStyles": {
+                "label": "Habilitar estilos localizados",
+                "tooltip": "Nota: este parámetro requiere configuraciones específicas en GeoServer"
+            }
         },
         "uploader": {
             "filename": "Nombre del fichero",
