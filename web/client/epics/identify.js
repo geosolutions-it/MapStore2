@@ -87,7 +87,6 @@ const updatePointWithGeometricFilter = (point, projection) => {
         5
     );
     // emulation of feature info filter to query WFS services (edit and/or WFS layer)
-    // TODO: evaluate to do this calculation at map level, so we can use this filter also in popups
     const geometricFilter = {
         type: 'geometry',
         enabled: true,
