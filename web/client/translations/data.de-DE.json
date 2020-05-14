@@ -2118,7 +2118,8 @@
                     "autoplayIntervalPlaceholder": "Aktivieren Sie das Autoplay-Intervall",
                     "navbar": "Navigationsleiste",
                     "showNavbar": "Navigationsleiste anzeigen",
-                    "theme": "Thema"
+                    "theme": "Thema",
+                    "templateTooltip":"Mit dem erweiterten Karteneditor kann eine benutzerdefinierte Vorlage für jede Ebene konfiguriert werden (siehe Stiftsymbol).Weitere Informationen finden Sie in der <a href='https://mapstore.readthedocs.io/en/latest/user-guide/layer-settings/#templates' target='_blank'>Bedienungsanleitung</a>"
                 }
             },
             "errors": {

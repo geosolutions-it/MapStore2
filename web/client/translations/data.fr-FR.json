@@ -2118,7 +2118,8 @@
                     "autoplayIntervalPlaceholder": "Activer l'intervalle de lecture automatique",
                     "navbar": "Barre de navigation",
                     "showNavbar": "Afficher la barre de navigation",
-                    "theme": "Thème"
+                    "theme": "Thème",
+                    "templateTooltip":"Il est possible de configurer un modèle personnalisé pour chaque couche à l'aide de l'éditeur de carte avancé (voir l'icône crayon). Pour plus d'informations, consultez le <a href='https://mapstore.readthedocs.io/en/latest/user-guide/layer-settings/#templates' target='_blank'>guide de l'utilisateur</a>"
                 }
             },
             "errors": {
