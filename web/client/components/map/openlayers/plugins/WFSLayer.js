@@ -26,6 +26,7 @@ const createLoader = (source, options) => (extent, resolution, projection) => {
     getFeature(options.url, options.name, {
         // bbox: extent.join(',') + ',' + proj,
         outputFormat: "application/json",
+        // maxFeatures: 3600, // This looks the internal openlayers limit. TODO: investigate more
         srsname: proj,
         ...params
     }).then(response => {

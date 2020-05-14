@@ -1913,11 +1913,16 @@ describe('featuregrid Epics', () => {
                     attribute: 'the_geom',
                     enabled: true
                 }]
+            },
+            map: {
+                present: {
+                    projection: 'EPSG:3857'
+                }
             }
         }, done);
     });
     it('featureGridUpdateFilter with geometry filter', (done) => {
-        const startActions = [createQuery(), updateFilter({
+        const startActions = [openFeatureGrid(), createQuery(), updateFilter({
             type: 'geometry',
             enabled: true
         }), updateFilter({

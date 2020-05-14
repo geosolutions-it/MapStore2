@@ -9,11 +9,11 @@
 const expect = require('expect');
 
 const { ZOOM_TO_POINT, clickOnMap, CHANGE_MAP_VIEW } = require('../../actions/map');
-const { FEATURE_INFO_CLICK, UPDATE_CENTER_TO_MARKER, PURGE_MAPINFO_RESULTS, NEW_MAPINFO_REQUEST, LOAD_FEATURE_INFO, NO_QUERYABLE_LAYERS, ERROR_FEATURE_INFO, EXCEPTIONS_FEATURE_INFO, SHOW_MAPINFO_MARKER, HIDE_MAPINFO_MARKER, GET_VECTOR_INFO, SET_EDIT_FEATURE_QUERY, loadFeatureInfo, featureInfoClick, closeIdentify, toggleHighlightFeature, editLayerFeatures } = require('../../actions/mapInfo');
-const { getFeatureInfoOnFeatureInfoClick, zoomToVisibleAreaEpic, onMapClick, closeFeatureAndAnnotationEditing, handleMapInfoMarker, featureInfoClickOnHighligh, closeFeatureInfoOnCatalogOpenEpic, identifyEditLayerFeaturesEpic } = require('../identify').default;
+const { FEATURE_INFO_CLICK, UPDATE_CENTER_TO_MARKER, PURGE_MAPINFO_RESULTS, NEW_MAPINFO_REQUEST, LOAD_FEATURE_INFO, NO_QUERYABLE_LAYERS, ERROR_FEATURE_INFO, EXCEPTIONS_FEATURE_INFO, SHOW_MAPINFO_MARKER, HIDE_MAPINFO_MARKER, GET_VECTOR_INFO, SET_CURRENT_EDIT_FEATURE_QUERY, loadFeatureInfo, featureInfoClick, closeIdentify, toggleHighlightFeature, editLayerFeatures, updateFeatureInfoClickPoint } = require('../../actions/mapInfo');
+const { getFeatureInfoOnFeatureInfoClick, zoomToVisibleAreaEpic, onMapClick, closeFeatureAndAnnotationEditing, handleMapInfoMarker, featureInfoClickOnHighligh, closeFeatureInfoOnCatalogOpenEpic, identifyEditLayerFeaturesEpic, hideMarkerOnIdentifyClose, onUpdateFeatureInfoClickPoint } = require('../identify').default;
 const { CLOSE_ANNOTATIONS } = require('../../actions/annotations');
 const { testEpic, TEST_TIMEOUT, addTimeoutEpic } = require('./epicTestUtils');
-const { registerHook } = require('../../utils/MapUtils');
+const { registerHook, GET_COORDINATES_FROM_PIXEL_HOOK, GET_PIXEL_FROM_COORDINATES_HOOK } = require('../../utils/MapUtils');
 const { setControlProperties } = require('../../actions/controls');
 const { BROWSE_DATA } = require('../../actions/layers');
 
@@ -541,17 +541,26 @@ describe('identify Epics', () => {
     });
 
     it('onMapClick triggers featureinfo when selected', done => {
-        testEpic(onMapClick, 1, [clickOnMap()], ([action]) => {
+        registerHook(GET_COORDINATES_FROM_PIXEL_HOOK, undefined);
+        registerHook(GET_PIXEL_FROM_COORDINATES_HOOK, undefined);
+        testEpic(onMapClick, 1, [clickOnMap({latlng: {lat: 8, lng: 8}})], ([action]) => {
             expect(action.type === FEATURE_INFO_CLICK);
             done();
         }, {
             mapInfo: {
                 enabled: true,
                 disableAlwaysOn: false
+            },
+            map: {
+                present: {
+                    projection: 'EPSG:3857'
+                }
             }
         });
     });
     it('onMapClick do not trigger when mapinfo is not enabled', done => {
+        registerHook(GET_COORDINATES_FROM_PIXEL_HOOK, undefined);
+        registerHook(GET_PIXEL_FROM_COORDINATES_HOOK, undefined);
         testEpic(addTimeoutEpic(onMapClick, 10), 1, [clickOnMap()], ([action]) => {
             if (action.type === TEST_TIMEOUT) {
                 done();
@@ -583,7 +592,7 @@ describe('identify Epics', () => {
         });
     });
     it('onMapClick trigger when mapinfo is not enabled', done => {
-        testEpic(onMapClick, 1, [clickOnMap()], ([action]) => {
+        testEpic(onMapClick, 1, [clickOnMap({latlng: {lat: 8, lng: 8}})], ([action]) => {
             if (action.type === FEATURE_INFO_CLICK) {
                 done();
             }
@@ -597,6 +606,59 @@ describe('identify Epics', () => {
                     plugins: {
                         desktop: [{name: "Identify"}]
                     }
+                }
+            },
+            map: {
+                present: {
+                    projection: 'EPSG:3857'
+                }
+            }
+        });
+
+    });
+    it('onMapClick generates geometricFilter', done => {
+        const cleanUp = () => {
+            registerHook(GET_COORDINATES_FROM_PIXEL_HOOK, undefined);
+            registerHook(GET_PIXEL_FROM_COORDINATES_HOOK, undefined);
+        };
+        registerHook(GET_COORDINATES_FROM_PIXEL_HOOK, ([x, y]) => {
+            expect(x).toBe(0);
+            expect(y).toBe(5); // 5 is the radius
+            return [0, 5];
+
+        });
+        registerHook(GET_PIXEL_FROM_COORDINATES_HOOK, () => {
+            return [0, 0];
+        });
+
+        testEpic(onMapClick, 1, [clickOnMap({ latlng: { lat: 0, lng: 0 } })], ([action]) => {
+            if (action.type === FEATURE_INFO_CLICK) {
+                expect(action.point).toBeTruthy();
+                expect(action.point.geometricFilter).toBeTruthy();
+                const geometry = action.point.geometricFilter.value.geometry;
+                // due to mock data coordinates of the extent should be ,ore or less -5 + 5, not check the coordinates of the circle to avoid float issues with test
+                expect(Math.round(geometry.extent[0])).toEqual(-5);
+                expect(Math.round(geometry.extent[1])).toEqual(-5);
+                expect(Math.round(geometry.extent[2])).toEqual(5);
+                expect(Math.round(geometry.extent[3])).toEqual(5);
+                cleanUp();
+                done();
+            }
+        }, {
+            mapInfo: {
+                enabled: true,
+                disableAlwaysOn: false
+            },
+            context: {
+                currentContext: {
+                    plugins: {
+                        desktop: [{ name: "Identify" }]
+                    }
+                }
+            },
+            map: {
+                present: {
+                    projection: 'EPSG:3857'
                 }
             }
         });
@@ -710,18 +772,70 @@ describe('identify Epics', () => {
         const startActions = [editLayerFeatures({id: 'layer'})];
         testEpic(identifyEditLayerFeaturesEpic, 2, startActions, actions => {
             expect(actions.length).toBe(2);
-            expect(actions[0].type).toBe(SET_EDIT_FEATURE_QUERY);
-            expect(actions[0].query).toExist();
+            expect(actions[0].type).toBe(SET_CURRENT_EDIT_FEATURE_QUERY);
+            expect(actions[0].query).toEqual({type: 'geometry'});
             expect(actions[1].type).toBe(BROWSE_DATA);
         }, {
             mapInfo: {
                 clickPoint: {
-                    latlng: {
-                        lat: 1,
-                        lng: 1
+                    geometricFilter: {
+                        type: 'geometry'
                     }
+                }
+            },
+            map: {
+                present: {
+                    projection: 'EPSG:3857'
                 }
             }
         }, done);
+    });
+
+    it('hideMapMarkerOnIdentifyClose', (done) => {
+        const startActions = [closeIdentify()];
+        testEpic(hideMarkerOnIdentifyClose, 1, startActions, actions => {
+            expect(actions.length).toBe(1);
+            expect(actions[0].type).toBe(HIDE_MAPINFO_MARKER);
+        }, {}, done);
+    });
+    it('onUpdateFeatureInfoClickPoint', done => {
+        const cleanUp = () => {
+            registerHook(GET_COORDINATES_FROM_PIXEL_HOOK, undefined);
+            registerHook(GET_PIXEL_FROM_COORDINATES_HOOK, undefined);
+        };
+        registerHook(GET_COORDINATES_FROM_PIXEL_HOOK, ([x, y]) => {
+            expect(x).toBe(0);
+            expect(y).toBe(5);
+            return [0, 5];
+
+        });
+        registerHook(GET_PIXEL_FROM_COORDINATES_HOOK, ([x, y]) => {
+            expect(x).toBe(0);
+            expect(y).toBe(0);
+            return [0, 0];
+        });
+        const LAYER_NAME = "This is one sample additional argument of featureInfoClick that have to be replicated";
+        const PROJECTION = 'EPSG:4326';
+        testEpic(onUpdateFeatureInfoClickPoint, 1, [
+            featureInfoClick({ latlng: { lat: 36.95, lng: -79.84 }}, LAYER_NAME),
+            updateFeatureInfoClickPoint({latlng: {lat: 0, lng: 0}})
+        ], ([{point, layer}]) => {
+            expect(point.latlng.lat).toEqual(0);
+            expect(point.latlng.lng).toEqual(0);
+            expect(point.geometricFilter.type).toEqual('geometry');
+            expect(point.geometricFilter.value.operation).toEqual("INTERSECTS");
+            expect(point.geometricFilter.value.geometry.center).toEqual([0, 0]); // some checks to verify that a circle is created
+            expect(point.geometricFilter.value.geometry.projection).toEqual(PROJECTION); // some checks to verify that a circle is created
+            expect(point.geometricFilter.value.geometry.extent).toEqual([-5, -5, 5, 5]); // not check the coordinate to avoid issue with float, but the extent should be this accordingly with the mock data
+            expect(layer).toBe(LAYER_NAME);
+            cleanUp();
+            done();
+        }, {
+            map: {
+                present: {
+                    projection: PROJECTION
+                }
+            }
+        });
     });
 });

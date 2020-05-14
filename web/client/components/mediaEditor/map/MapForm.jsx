@@ -7,7 +7,7 @@
  */
 
 import React from 'react';
-import { ControlLabel, Form, FormControl, FormGroup} from 'react-bootstrap';
+import { ControlLabel, Form, FormControl, FormGroup, Alert } from 'react-bootstrap';
 import { compose, getContext, withState, withHandlers, defaultProps, withPropsOnChange} from 'recompose';
 import {connect} from 'react-redux';
 import {isEqual} from 'lodash';
@@ -21,7 +21,7 @@ import Toolbar from '../../misc/toolbar/Toolbar';
 import ToolbarButton from '../../misc/toolbar/ToolbarButton';
 
 import {isMediaResourceUsed} from '../../../selectors/geostory';
-import Thumbnail from '../../maps/forms/Thumbnail';
+import Thumbnail from '../../misc/Thumbnail';
 import withConfirm from '../../misc/withConfirm';
 
 const SaveButton = withConfirm(ToolbarButton);
@@ -156,29 +156,31 @@ export const MapForm = ({
         }>
 
         <Form style={{ padding: 8 }}>
-            {
-                thumbnailErrors.length > 0 ? (
-                    <div className="dropzone-errorBox alert-danger">
-                        <p><Message msgId="map.error"/></p>
-                        {(thumbnailErrors.map(err =>
-                            <div id={"error" + err} key={"error" + err} className={"error" + err}>
-                                {errorMessages[err]}
-                            </div>
-                        ))}
-                    </div>
-                ) : null}
             <Thumbnail
-                onUpdate={updateThumb}
-                withLabel={false}
-                onError={setErrors}
-                message={<Message msgId="mediaEditor.mapForm.thumbnailMessage"/>}
                 thumbnail={properties.thumbnail}
-                suggestion=""
-                maxFileSize={50000}
-                map={{
-                    newThumbnail: properties.thumbnail || "NODATA"
+                thumbnailOptions={{
+                    width: 300,
+                    height: 180,
+                    type: 'image/jpeg',
+                    quality: 0.5
                 }}
+                message={<Message msgId="mediaEditor.mediaPicker.thumbnail"/>}
+                onUpdate={(newImageData) => {
+                    updateThumb(newImageData);
+                    setErrors(undefined);
+                }}
+                onRemove={() => {
+                    updateThumb(undefined);
+                    setErrors(undefined);
+                }}
+                onError={(err) => setErrors(err)}
             />
+            {thumbnailErrors && thumbnailErrors.length > 0 &&
+            <Alert bsStyle="danger" className="text-center">
+                <div><Message msgId="map.error"/></div>
+                {(thumbnailErrors.map(err => (<div> {errorMessages[err]}</div>)
+                ))}
+            </Alert>}
             {form.map((field) => (
                 <FormGroup
                     key={field.id}

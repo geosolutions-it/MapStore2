@@ -16,6 +16,8 @@
  - [ ] CI related changes
  - [ ] Other... Please describe:
 
+<!-- add here the ReadTheDocs link (if needed) -->
+
 ## Issue
 
 **What is the current behavior?**
