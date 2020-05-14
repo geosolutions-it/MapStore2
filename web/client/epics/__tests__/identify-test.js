@@ -541,6 +541,8 @@ describe('identify Epics', () => {
     });
 
     it('onMapClick triggers featureinfo when selected', done => {
+        registerHook(GET_COORDINATES_FROM_PIXEL_HOOK, undefined);
+        registerHook(GET_PIXEL_FROM_COORDINATES_HOOK, undefined);
         testEpic(onMapClick, 1, [clickOnMap({latlng: {lat: 8, lng: 8}})], ([action]) => {
             expect(action.type === FEATURE_INFO_CLICK);
             done();
@@ -557,6 +559,8 @@ describe('identify Epics', () => {
         });
     });
     it('onMapClick do not trigger when mapinfo is not enabled', done => {
+        registerHook(GET_COORDINATES_FROM_PIXEL_HOOK, undefined);
+        registerHook(GET_PIXEL_FROM_COORDINATES_HOOK, undefined);
         testEpic(addTimeoutEpic(onMapClick, 10), 1, [clickOnMap()], ([action]) => {
             if (action.type === TEST_TIMEOUT) {
                 done();
