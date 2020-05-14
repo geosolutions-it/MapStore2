@@ -209,9 +209,10 @@ export default class MeasurementSupport extends React.Component {
 
                     const segmentLengthBearing = calculateAzimuth(coords[i], coords[i + 1], 'EPSG:4326');
                     const segmentLengthDistance = calculateDistance([coords[i], coords[i + 1]], props.measurement.lengthFormula);
-
-                    const overlayText = this.formatLengthValue(segmentLengthDistance, props.uom, isBearing) + " | " + getFormattedBearingValue(segmentLengthBearing, this.props.measurement.trueBearing);
+                    const bearingText = this.props.measurement && this.props.measurement.showLengthAndBearingLabel && " | " + getFormattedBearingValue(segmentLengthBearing, this.props.measurement.trueBearing) || "";
+                    const overlayText = this.formatLengthValue(segmentLengthDistance, props.uom, isBearing) + bearingText;
                     last(this.segmentOverlayElements).innerHTML = overlayText;
+                    last(this.segmentOverlayElements).style.cssText += this.alignTextLabels([coords[i], coords[i + 1]]);
                     last(this.segmentOverlays).setPosition(midpoint(reprojectedCoords[i], reprojectedCoords[i + 1], true));
                     this.textLabels[this.segmentOverlays.length - 1] = {
                         text: overlayText,
@@ -384,6 +385,18 @@ export default class MeasurementSupport extends React.Component {
         this.props.resetGeometry();
     };
 
+    alignTextLabels = (segment) =>{
+        let deg = calculateAzimuth(segment[0], segment[1], getProjectionCode(this.props.map));
+        if (deg >= 180 && deg <= 360) {
+            deg = 270 - Math.ceil(deg);
+        } else if (deg >= 0 && deg <= 180) {
+            deg = 90 - Math.ceil(deg);
+            deg = deg - 10; // correction
+        }
+        // css style for overlay texts
+        return `transform: rotate(calc(360deg - ${deg}deg));padding:unset;top:10px;left:10px;`;
+    }
+
     addDrawInteraction = (newProps) => {
         let draw;
         let geometryType;
@@ -522,9 +535,10 @@ export default class MeasurementSupport extends React.Component {
                             for (let i = 0; i < segments.length; ++i) {
                                 const segment = coords.slice(coords.length - 2 - i, coords.length - i);
                                 const length = this.getLength(segment, this.props);
-                                const text = this.formatLengthValue(length, this.props.uom, false) + " | " + getFormattedBearingValue(calculateAzimuth(segment[0], segment[1], getProjectionCode(this.props.map)), this.props.measurement.trueBearing);
-
+                                const bearingText = this.props.measurement && this.props.measurement.showLengthAndBearingLabel && " | " + getFormattedBearingValue(calculateAzimuth(segment[0], segment[1], getProjectionCode(this.props.map)), this.props.measurement.trueBearing) || "";
+                                const text = this.formatLengthValue(length, this.props.uom, false) + bearingText;
                                 this.segmentOverlayElements[this.segmentOverlays.length - i - 1].innerHTML = text;
+                                this.segmentOverlayElements[this.segmentOverlays.length - i - 1].style.cssText  += this.alignTextLabels(segment);
                                 this.segmentOverlays[this.segmentOverlays.length - i - 1].setPosition(segments[i]);
                                 this.segmentLengths[this.segmentOverlays.length - i - 1] = {
                                     value: length,
@@ -555,9 +569,12 @@ export default class MeasurementSupport extends React.Component {
                     this.tooltipCoord = geom.getLastCoordinate();
 
                     if (!this.props.measurement.disableLabels && !this.props.measurement.bearingMeasureEnabled) {
-                        const overlayText = this.formatLengthValue(lastSegmentLength, this.props.uom, this.props.measurement.geomType === 'Bearing', this.props.measurement.trueBearing) + " | " +
-                            getFormattedBearingValue(calculateAzimuth(lastSegment[0], lastSegment[1], getProjectionCode(this.props.map)), this.props.measurement.trueBearing);
+                        const bearingText = this.props.measurement && this.props.measurement.showLengthAndBearingLabel && " | " +
+                            getFormattedBearingValue(calculateAzimuth(lastSegment[0], lastSegment[1], getProjectionCode(this.props.map)), this.props.measurement.trueBearing) || "";
+                        const overlayText = this.formatLengthValue(lastSegmentLength, this.props.uom, this.props.measurement.geomType === 'Bearing', this.props.measurement.trueBearing) + bearingText;
+
                         last(this.segmentOverlayElements).innerHTML = overlayText;
+                        last(this.segmentOverlayElements).style.cssText  += this.alignTextLabels(lastSegment);
                         last(this.segmentOverlays).setPosition(midpoint(lastSegment[0], lastSegment[1], true));
                         this.textLabels[this.segmentOverlays.length - 1] = {
                             text: overlayText,
@@ -686,7 +703,9 @@ export default class MeasurementSupport extends React.Component {
             this.props.setTextLabels(this.textLabels);
             const labelsLength = this.textLabels.length;
             newFeature.geometry = newFeature.geometry || {};
-            newFeature.geometry.textLabels = this.textLabels.slice(labelsLength - (newFeature.geometry.type === "Polygon" ? 3 : 2), labelsLength);
+            newFeature.geometry.coordinates = newFeature.geometry.coordinates || [];
+            const coordinatesLength = newFeature.geometry.coordinates.length;
+            newFeature.geometry.textLabels = this.textLabels.slice(labelsLength - (newFeature.geometry.type === "Polygon" ? 3 : coordinatesLength - 1), labelsLength);
             this.props.changeGeometry([...currentFeatures, newFeature]);
 
             this.addFeature(clonedNewFeature);

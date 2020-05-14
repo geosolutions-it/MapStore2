@@ -69,7 +69,8 @@ class CoordinatesEditor extends React.Component {
         type: PropTypes.string,
         isDraggable: PropTypes.bool,
         isMouseEnterEnabled: PropTypes.bool,
-        isMouseLeaveEnabled: PropTypes.bool
+        isMouseLeaveEnabled: PropTypes.bool,
+        showLengthAndBearingLabel: PropTypes.bool
     };
 
     static contextTypes = {
@@ -104,6 +105,7 @@ class CoordinatesEditor extends React.Component {
         isDraggable: true,
         isMouseEnterEnabled: false,
         isMouseLeaveEnabled: false,
+        showLengthAndBearingLabel: false,
         properties: {},
         type: "Point"
     };
@@ -293,11 +295,12 @@ class CoordinatesEditor extends React.Component {
                      </Row>}
                 <Row style={{flex: 1, flexBasis: 'auto', overflowY: 'auto', overflowX: 'hidden'}}>
                     {this.props.components.map((component, idx) => <>
-                        <div id={"label-texts"} style={{display: "flex", flexDirection: "column", alignItems: "center", fontWeight: 600}}>
+                        {this.props.showLengthAndBearingLabel && <div className={'label-texts'}>
                             <span>
                                 {this.renderLabelTexts(idx, {textLabels, featurePropValue})}
                             </span>
                         </div>
+                        }
                         <CoordinatesRow
                             format={this.props.format}
                             aeronauticalOptions={this.props.aeronauticalOptions}

@@ -373,7 +373,12 @@
                 "name": "Measure",
                 "cfg": {
                   "defaultOptions": {
-                    "showAddAsAnnotation": true
+                    "showAddAsAnnotation": true,
+                    "showCoordinateEditor": true,
+                    "showLengthAndBearingLabel": true,
+                    "trueBearing": {
+                      "measureTrueBearing": true,
+                       "fractionDigits": 2}
                   }
                 }
             }, "Print", "MapImport", {

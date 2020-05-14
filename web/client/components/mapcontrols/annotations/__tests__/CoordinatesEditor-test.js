@@ -128,6 +128,24 @@ describe("test the CoordinatesEditor Panel", () => {
             lon: 6
         }];
 
+        const features = [
+            {type: 'Feature',
+                geometry: {
+                    type: 'Polygon',
+                    coordinates: [[10, 10], [6, 6], [6, 6]],
+                    textLabels: [
+                        {text: '2 m | 060° T', position: [10, 10]},
+                        {text: '3 m | 078° T', position: [6, 6]},
+                        {text: '3 m | 090° T', position: [6, 6]}]},
+                properties: {
+                    values: [{
+                        value: 100,
+                        formattedValue: '10 m | 070° T',
+                        position: [10, 10],
+                        type: 'length'
+                    }]}
+            }];
+
         const spyOnChange = expect.spyOn(testHandlers, "onChange");
         const spyOnHighlightPoint = expect.spyOn(testHandlers, "onHighlightPoint");
         const spyOnSetInvalidSelected = expect.spyOn(testHandlers, "onSetInvalidSelected");
@@ -139,12 +157,20 @@ describe("test the CoordinatesEditor Panel", () => {
                 type="Polygon"
                 format="decimal"
                 components={components}
+                currentFeature={0}
+                features={features}
+                showLengthAndBearingLabel
             />, document.getElementById("container")
         );
         expect(editor).toExist();
         const hamburgerMenus = TestUtils.scryRenderedDOMComponentsWithClass(editor, "glyphicon-menu-hamburger");
         expect(hamburgerMenus.length).toBe(3);
         const inputs = TestUtils.scryRenderedDOMComponentsWithTag(editor, "input");
+        const labelTexts = TestUtils.scryRenderedDOMComponentsWithClass(editor, "label-texts");
+        expect(labelTexts).toExist();
+        expect(labelTexts[0].innerText).toBe("2 m | 060° T");
+        expect(labelTexts[1].innerText).toBe("3 m | 078° T");
+        expect(labelTexts[2].innerText).toBe("3 m | 090° T");
         const submits = TestUtils.scryRenderedDOMComponentsWithClass(editor, "glyphicon-ok");
         expect(submits).toExist();
         const submit = submits[0];
@@ -209,6 +235,21 @@ describe("test the CoordinatesEditor Panel", () => {
             lat: 6,
             lon: 6
         }];
+        const features = [
+            {type: 'Feature',
+                geometry: {
+                    type: 'LineString',
+                    coordinates: [[10, 10], [6, 6]],
+                    textLabels: [
+                    ]},
+                properties: {
+                    values: [{
+                        value: 100,
+                        formattedValue: '10 m | 070° T',
+                        position: [10, 10],
+                        type: 'length'
+                    }]}
+            }];
 
         const spyOnChange = expect.spyOn(testHandlers, "onChange");
         const spyOnHighlightPoint = expect.spyOn(testHandlers, "onHighlightPoint");
@@ -220,12 +261,18 @@ describe("test the CoordinatesEditor Panel", () => {
                 type="LineString"
                 format="decimal"
                 components={components}
+                features={features}
+                currentFeature={0}
+                showLengthAndBearingLabel
             />, document.getElementById("container")
         );
         expect(editor).toExist();
 
         const inputs = TestUtils.scryRenderedDOMComponentsWithTag(editor, "input");
         expect(inputs).toExist();
+        let labelTexts = TestUtils.scryRenderedDOMComponentsWithClass(editor, "label-texts");
+        expect(labelTexts).toExist();
+        expect(labelTexts[1].innerText).toBe("10 m | 070° T");
         const submits = TestUtils.scryRenderedDOMComponentsWithClass(editor, "glyphicon-ok");
         expect(submits).toExist();
         const submit = submits[0];
@@ -268,11 +315,15 @@ describe("test the CoordinatesEditor Panel", () => {
                     lat: 20.4,
                     lon: 3.09
                 }]}
+                features={features}
+                showLengthAndBearingLabel={false} // Hide label
             />, document.getElementById("container")
         );
         const inputs1 = TestUtils.scryRenderedDOMComponentsWithTag(editor, "input");
         expect(inputs1[0].value).toBe("20.4");
         expect(inputs1[1].value).toBe("3.09");
+        labelTexts = TestUtils.scryRenderedDOMComponentsWithClass(editor, "label-texts");
+        expect(labelTexts.length).toBe(0);
     });
 
     it('CoordinatesEditor as Circle editor, valid input coordinate, changing coords, isMouseLeaveEnabled=true', () => {

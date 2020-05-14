@@ -217,7 +217,8 @@ describe('Openlayers MeasurementSupport', () => {
                 geomType: "LineString",
                 lineMeasureEnabled: true,
                 updatedByUI: false,
-                showLabel: true
+                showLabel: true,
+                showLengthAndBearingLabel: true
             },
             uom
         });
@@ -254,7 +255,8 @@ describe('Openlayers MeasurementSupport', () => {
                 geomType: "LineString",
                 lineMeasureEnabled: true,
                 updatedByUI: true,
-                showLabel: true
+                showLabel: true,
+                showLengthAndBearingLabel: true
             },
             uom: {
                 length: {unit: 'km', label: 'km'},
@@ -286,7 +288,8 @@ describe('Openlayers MeasurementSupport', () => {
             measurement: {
                 geomType: "LineString",
                 lineMeasureEnabled: true,
-                updatedByUI: false
+                updatedByUI: false,
+                showLengthAndBearingLabel: true
             },
             uom
         });
@@ -334,7 +337,7 @@ describe('Openlayers MeasurementSupport', () => {
                 geomType: "LineString",
                 lineMeasureEnabled: true,
                 updatedByUI: false,
-                // bearingMeasureEnabled: true,
+                showLengthAndBearingLabel: true,
                 trueBearing: {measureTrueBearing: true}
             },
             uom
@@ -368,6 +371,86 @@ describe('Openlayers MeasurementSupport', () => {
         expect(changedFeatures[0].geometry.textLabels[0].text).toBe("4.99 m | 180° T");
         expect(changedFeatures[0].geometry.textLabels[1].text).toBe("5.09 m | 168° T");
     });
+    it('test showLengthAndBearingLabel', ()=>{
+        const spyOnChangeGeometry = expect.spyOn(testHandlers, "changeGeometry");
+        let cmp = renderMeasurement();
+        cmp = renderMeasurement({
+            measurement: {
+                geomType: "LineString",
+                lineMeasureEnabled: true,
+                updatedByUI: false,
+                showLengthAndBearingLabel: true,
+                trueBearing: {measureTrueBearing: true}
+            },
+            uom
+        });
+
+        let geometry = new LineString([[15.0, 45.0], [15.0, 45.0]]);
+        let feature = new Feature({
+            geometry,
+            name: 'My line'
+        });
+
+        cmp.drawInteraction.dispatchEvent({
+            type: 'drawstart',
+            feature
+        });
+        expect(cmp.sketchFeature).toExist();
+        cmp.sketchFeature.getGeometry().setCoordinates([[15.0, 45.0], [15.0, 40.0]]);
+        cmp.sketchFeature.getGeometry().appendCoordinate([16.0, 35.0]);
+        cmp.sketchFeature.getGeometry().appendCoordinate([16.0, 35.0]);
+        cmp.drawInteraction.dispatchEvent({
+            type: 'drawend',
+            feature: new Feature({
+                geometry: new LineString([[15.0, 45.0], [15.0, 40.0], [16.0, 35.0]]),
+                name: 'My line'
+            })
+        });
+        expect(spyOnChangeGeometry).toHaveBeenCalled();
+        let changedFeatures = spyOnChangeGeometry.calls[0].arguments[0];
+        expect(changedFeatures[0].geometry.textLabels).toExist();
+        expect(changedFeatures[0].geometry.textLabels[0].text).toBe("4.99 m | 180° T");
+        expect(changedFeatures[0].geometry.textLabels[1].text).toBe("5.09 m | 168° T");
+
+        // Hide show length and bearing combination label
+        cmp = renderMeasurement({
+            measurement: {
+                geomType: "LineString",
+                lineMeasureEnabled: true,
+                updatedByUI: false,
+                showLengthAndBearingLabel: false
+            },
+            uom
+        });
+
+        geometry = new LineString([[15.0, 45.0], [15.0, 45.0]]);
+        feature = new Feature({
+            geometry,
+            name: 'My line'
+        });
+
+        cmp.drawInteraction.dispatchEvent({
+            type: 'drawstart',
+            feature
+        });
+        expect(cmp.sketchFeature).toExist();
+        cmp.sketchFeature.getGeometry().setCoordinates([[15.0, 45.0], [15.0, 40.0]]);
+        cmp.sketchFeature.getGeometry().appendCoordinate([16.0, 35.0]);
+        cmp.sketchFeature.getGeometry().appendCoordinate([16.0, 35.0]);
+        cmp.drawInteraction.dispatchEvent({
+            type: 'drawend',
+            feature: new Feature({
+                geometry: new LineString([[15.0, 45.0], [15.0, 40.0], [16.0, 35.0]]),
+                name: 'My line'
+            })
+        });
+        expect(spyOnChangeGeometry).toHaveBeenCalled();
+        changedFeatures = spyOnChangeGeometry.calls[1].arguments[0];
+        expect(changedFeatures[0].geometry.textLabels).toExist();
+        expect(changedFeatures[0].geometry.textLabels[0].text).toBe("4.99 m");
+        expect(changedFeatures[0].geometry.textLabels[1].text).toBe("5.09 m");
+    });
+
     it('test drawInteraction callbacks for a distance (Bearing)', () => {
         const spyOnChangeMeasurementState = expect.spyOn(testHandlers, "changeMeasurementState");
         const spyOnChangeGeometry = expect.spyOn(testHandlers, "changeGeometry");
