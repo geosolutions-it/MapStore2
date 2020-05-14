@@ -67,7 +67,7 @@ For more info see the related [issue](https://github.com/geosolutions-it/MapStor
 
 Moreover a new category has been added for future features, called GEOSTORY.
 
-you can add it by running on the database the following script
+It is not necessary for this release, but, to follow the update sequence, you can add it by executing the following line.
 
 ```sql
 INSERT into geostore.gs_category (id ,name) values (nextval('geostore.hibernate_sequence'),  'GEOSTORY') ON CONFLICT DO NOTHING;
