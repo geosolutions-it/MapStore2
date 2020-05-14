@@ -91,7 +91,7 @@ export default compose(
                         tools={{
                             [MediaTypes.IMAGE]: ['editMedia', 'cover', 'fit', 'size', 'align', 'theme'],
                             [MediaTypes.MAP]: ['editMedia', 'cover', 'editMap', 'size', 'align', 'theme'],
-                            [MediaTypes.VIDEO]: ['editMedia', 'cover', 'fit', 'size', 'align', 'theme']
+                            [MediaTypes.VIDEO]: ['editMedia', 'cover', 'fit', 'size', 'align', 'theme', 'muted', 'autoplay', 'loop']
                         }}
                         height={height >= viewHeight
                             ? viewHeight

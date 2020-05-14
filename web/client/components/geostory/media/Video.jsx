@@ -10,14 +10,20 @@ import ReactPlayer from 'react-player';
 import Loader from '../../misc/Loader';
 import { withResizeDetector } from 'react-resize-detector';
 import { Glyphicon } from 'react-bootstrap';
+import { Modes } from '../../../utils/GeoStoryUtils';
 
 /**
  * Video component
  * @prop {string} src source of the video
  * @prop {number} resolution resolution of the video
  * @prop {string} fit one of `cover`, `contain` or undefined
+ * (`cover` provides a video covering the available space provided by its own container
+ * and it has loop enabled and controls disabled by default)
+ * @prop {string} loop loop the video (loop has no effect for fit equal to `cover`)
+ * @prop {string} volume change the volume of video, value between 0.0 and 1.0
+ * @prop {string} muted mute the video audio
  * @prop {string} thumbnail source of thumbnail
- * @prop {boolean} controls enable/disable video controls
+ * @prop {boolean} controls enable/disable video controls (controls has no effect for fit equal to `cover`)
  * @prop {boolean} play play/stop the video
  * @prop {function} onPlay on playing event callback
  * @prop {function} onStart on start event callback
@@ -32,15 +38,16 @@ const Video = withResizeDetector(({
     play,
     onPlay = () => {},
     onStart = () => {},
-    fit
+    fit,
+    loop,
+    volume = 1,
+    muted
 }) => {
 
     const playing = play;
     const [started, setStarted] = useState(playing);
     const [error, setError] = useState();
     const [loading, setLoading] = useState(play);
-
-    const isCover = fit === 'cover';
 
     useEffect(() => {
         if (!started && playing) {
@@ -54,7 +61,7 @@ const Video = withResizeDetector(({
 
     function getSize() {
         const containerResolution = width / height;
-        if (isCover) {
+        if (fit === 'cover') {
             return containerResolution < resolution
                 ? [ height * resolution, height]
                 : [ width, width / resolution ];
@@ -71,6 +78,9 @@ const Video = withResizeDetector(({
 
     const containerHeight = (fit === 'contain' || fit === 'cover') ? height : size[1];
 
+    const showControls = fit === 'cover' ? false : controls;
+    const forceLoop = fit === 'cover' ? true : loop;
+
     return (
         <div
             className="ms-video"
@@ -81,12 +91,7 @@ const Video = withResizeDetector(({
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                ...(isCover && { cursor: 'pointer '})
-            }}
-            onClick={() => {
-                if (started && isCover) {
-                    onPlay(!playing);
-                }
+                overflow: 'hidden'
             }}>
             {src &&
             <>
@@ -95,14 +100,17 @@ const Video = withResizeDetector(({
                 width={size[0]}
                 height={size[1]}
                 playing={playing}
-                style={isCover
+                loop={forceLoop}
+                volume={volume}
+                muted={muted}
+                style={fit === 'cover'
                     ? {
                         left: '50%',
                         top: '50%',
                         transform: 'translate(-50%, -50%)',
                         position: 'absolute'
                     } : {}}
-                controls={controls && !isCover}
+                controls={showControls}
                 pip={false}
                 fileConfig={{
                     attributes: {
@@ -112,9 +120,10 @@ const Video = withResizeDetector(({
                 }}
                 youtubeConfig={{
                     playerVars: {
-                        controls: controls ? 2 : 0,
+                        controls: showControls ? 2 : 0,
                         modestbranding: 1,
-                        rel: 0
+                        rel: 0,
+                        showinfo: fit === 'cover' ? 0 : 1
                     }
                 }}
                 onReady={() => setLoading(false)}
@@ -135,7 +144,7 @@ const Video = withResizeDetector(({
                     ...(!(loading || error) && { cursor: 'pointer' }),
                     ...(!playing && thumbnail && {
                         backgroundImage: `url(${thumbnail})`,
-                        backgroundSize: '640px auto',
+                        backgroundSize: fit === 'cover' ? 'cover' : '640px auto',
                         backgroundPosition: 'center',
                         backgroundRepeat: 'no-repeat'
                     })
@@ -158,6 +167,14 @@ const Video = withResizeDetector(({
                     />}
             </div>}
             </>}
+            {!showControls && <div
+                className="ms-video-mask-cover"
+                style={{
+                    position: 'absolute',
+                    width: size[0],
+                    height: size[1]
+                }}>
+            </div>}
         </div>
     );
 });
@@ -189,7 +206,10 @@ const VideoMedia = ({
     credits,
     controls = true,
     fit,
-    onPlay = () => {}
+    loop,
+    muted,
+    onPlay = () => {},
+    mode
 }) => {
 
     const [playing, setPlaying] = useState(false);
@@ -201,31 +221,42 @@ const VideoMedia = ({
     };
 
     useEffect(() => {
-        if (inView && autoplay && !started) {
-            handleOnPlay(true);
+        if (mode === Modes.EDIT) {
+            setPlaying(false);
+            setStarted(false);
         }
-    }, [ inView, autoplay, started ]);
+    }, [ mode ]);
 
     useEffect(() => {
-        if (!inView && playing) {
+        if (mode === Modes.VIEW
+        && inView
+        && (fit === 'cover' || autoplay && !started)) {
+            handleOnPlay(true);
+        }
+    }, [ inView, autoplay, started, fit, mode ]);
+
+    useEffect(() => {
+        if (mode === Modes.VIEW && !inView && playing) {
             handleOnPlay(false);
         }
-    }, [inView, playing]);
+    }, [inView, playing, mode]);
 
     return (
         <div
             id={id}
-            key={id}
+            key={`${id}-${fit}-${mode}`}
             className="ms-media ms-media-video">
             <Video
                 src={src}
-                play={playing}
+                play={playing && mode === Modes.VIEW}
                 resolution={resolution}
                 thumbnail={thumbnail}
-                controls={controls}
+                controls={controls && mode === Modes.VIEW}
                 onPlay={handleOnPlay}
                 onStart={setStarted}
                 fit={fit}
+                loop={loop}
+                muted={muted}
             />
             {credits && <div className="ms-media-credits">
                 <small>

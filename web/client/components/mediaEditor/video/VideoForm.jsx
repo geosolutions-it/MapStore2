@@ -15,7 +15,6 @@ import BorderLayout from '../../layout/BorderLayout';
 import Toolbar from '../../misc/toolbar/Toolbar';
 import withConfirm from '../../misc/withConfirm';
 import Thumbnail from '../../misc/Thumbnail';
-import SwitchButton from '../../misc/switch/SwitchButton';
 import { getVideoThumbnail } from '../../../utils/ThumbnailUtils';
 
 const form = [
@@ -196,14 +195,6 @@ const VideoForm = ({
                             }} />
                     </FormGroup>
                 ))}
-                <FormGroup key="autoplay">
-                    <ControlLabel><Message msgId="mediaEditor.mediaPicker.autoplay"/></ControlLabel>
-                    <SwitchButton
-                        onChange={() => setProperties({ ...properties, autoplay: !properties.autoplay })}
-                        className="ms-geostory-settings-switch"
-                        checked={properties.autoplay}
-                    />
-                </FormGroup>
             </Form>
         </BorderLayout>
     );
