@@ -61,7 +61,7 @@ import {getFeatureInfo} from '../api/identify';
 
 /**
  * Recalculates pixel and geometric filter to allow also GFI emulation for WFS.
- * This information is used also to switch to edit bode from GFI applying the same filter
+ * This information is used also to switch to edit mode (feature grid) from GFI applying the same filter
  * @param {object} point the point clicked, emitted by featureInfoClick action
  * @param {string} projection map projection
  */
