@@ -7,7 +7,6 @@
  */
 
 import React, {useState, useRef} from 'react';
-import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 import {
     Popover,
@@ -52,7 +51,7 @@ const ControlledPopover = ({
                 }}
                 className={`text-${bsStyle}`}
                 glyph={glyph} />
-            <Overlay placement={placement} show={show} target={() => ReactDOM.findDOMNode(trigger.current)}>
+            <Overlay placement={placement} show={show} target={() => trigger.current}>
                 <Popover
                     id={id}
                     placement={placement}
