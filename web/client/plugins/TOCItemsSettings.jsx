@@ -18,32 +18,37 @@ const LayersUtils = require('../utils/LayersUtils');
 const { initialSettingsSelector, originalSettingsSelector, activeTabSettingsSelector } = require('../selectors/controls');
 const {layerSettingSelector, layersSelector, groupsSelector, elementSelector} = require('../selectors/layers');
 const {mapLayoutValuesSelector} = require('../selectors/maplayout');
-const {currentLocaleSelector} = require('../selectors/locale');
+const {currentLocaleSelector, currentLocaleLanguageSelector} = require('../selectors/locale');
 const {isAdminUserSelector} = require('../selectors/security');
 const {setControlProperty} = require('../actions/controls');
 const {toggleStyleEditor} = require('../actions/styleeditor');
+const {isLocalizedLayerStylesEnabledSelector} = require('../selectors/localizedLayerStyles');
 
 const tocItemsSettingsSelector = createSelector([
     layerSettingSelector,
     layersSelector,
     groupsSelector,
     currentLocaleSelector,
+    currentLocaleLanguageSelector,
     state => mapLayoutValuesSelector(state, {height: true}),
     isAdminUserSelector,
     initialSettingsSelector,
     originalSettingsSelector,
     activeTabSettingsSelector,
-    elementSelector
-], (settings, layers, groups, currentLocale, dockStyle, isAdmin, initialSettings, originalSettings, activeTab, element) => ({
+    elementSelector,
+    isLocalizedLayerStylesEnabledSelector
+], (settings, layers, groups, currentLocale, currentLocaleLanguage, dockStyle, isAdmin, initialSettings, originalSettings, activeTab, element, isLocalizedLayerStylesEnabled) => ({
     settings,
     element,
     groups,
     currentLocale,
+    currentLocaleLanguage,
     dockStyle,
     isAdmin,
     initialSettings,
     originalSettings,
-    activeTab
+    activeTab,
+    isLocalizedLayerStylesEnabled
 }));
 
 /**

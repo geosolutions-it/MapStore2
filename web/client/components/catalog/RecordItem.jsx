@@ -67,7 +67,8 @@ class RecordItem extends React.Component {
         clearModal: PropTypes.func,
         showTemplate: PropTypes.bool,
         defaultFormat: PropTypes.string,
-        formatOptions: PropTypes.array
+        formatOptions: PropTypes.array,
+        localizedLayerStyles: PropTypes.bool
     };
 
     static defaultProps = {
@@ -326,7 +327,7 @@ class RecordItem extends React.Component {
             ...(type === 'wms' ? {catalogURL: this.props.catalogType === 'csw' && this.props.catalogURL ?
                 this.props.catalogURL + "?request=GetRecordById&service=CSW&version=2.0.2&elementSetName=full&id=" +
                 this.props.record.identifier : null, format: this.props.defaultFormat} : {format: this.props.defaultFormat})
-        }, this.props.layerBaseConfig);
+        }, this.props.layerBaseConfig, this.props.localizedLayerStyles);
     }
 
     addLayer = (layer) => {

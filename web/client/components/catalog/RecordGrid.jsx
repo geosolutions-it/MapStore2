@@ -42,7 +42,8 @@ class RecordGrid extends React.Component {
         showTemplate: PropTypes.bool,
         defaultFormat: PropTypes.string,
         formatOptions: PropTypes.array,
-        layerBaseConfig: PropTypes.object
+        layerBaseConfig: PropTypes.object,
+        localizedLayerStyles: PropTypes.bool
     };
 
     static defaultProps = {
@@ -90,6 +91,7 @@ class RecordGrid extends React.Component {
                     defaultFormat={this.props.defaultFormat}
                     formatOptions={this.props.formatOptions}
                     layerBaseConfig={this.props.layerBaseConfig}
+                    localizedLayerStyles={this.props.localizedLayerStyles}
                 />
             </Col>
         );

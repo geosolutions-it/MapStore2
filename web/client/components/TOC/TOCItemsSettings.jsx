@@ -34,6 +34,7 @@ const TOCItemSettings = (props, context) => {
         className = '',
         activeTab = 'general',
         currentLocale = 'en-US',
+        currentLocaleLanguage = 'en',
         width = 500,
         groups = [],
         element = {},
@@ -53,7 +54,8 @@ const TOCItemSettings = (props, context) => {
         showFullscreen,
         draggable,
         position = 'left',
-        tabsConfig = {}
+        tabsConfig = {},
+        isLocalizedLayerStylesEnabled = false
     } = props;
 
     const tabs = getTabs(props, context);
@@ -131,7 +133,9 @@ const TOCItemSettings = (props, context) => {
                         nodeType={settings.nodeType}
                         settings={settings}
                         retrieveLayerData={onRetrieveLayerData}
-                        onChange={(key, value) => isObject(key) ? onUpdateParams(key, realtimeUpdate) : onUpdateParams({[key]: value}, realtimeUpdate)}/>
+                        onChange={(key, value) => isObject(key) ? onUpdateParams(key, realtimeUpdate) : onUpdateParams({[key]: value}, realtimeUpdate)}
+                        isLocalizedLayerStylesEnabled={isLocalizedLayerStylesEnabled}
+                        currentLocaleLanguage={currentLocaleLanguage}/>
                 ))}
             </DockablePanel>
             <Portal>

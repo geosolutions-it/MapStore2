@@ -106,6 +106,10 @@
                 "right": "Recht",
                 "bottom": "Bottom",
                 "top": "Oben"
+            },
+            "enableLocalizedLayerStyles": {
+                "label": "Schakel gelokaliseerde stijl in",
+                "tooltip": "Opmerking: deze parameter vereist specifieke configuraties op GeoServer"
             }
         },
         "longitude": "Länge",
@@ -1181,7 +1185,11 @@
                 "serviceDeletedCorrectly": "Der Service wurde korrekt gelöscht",
                 "errorServiceUrl": "Service nicht verfügbar. Bitte überprüfen Sie die angegebene URL"
             },
-            "backgroundAlreadyAdded": "Zur Hintergrundauswahl hinzugefügt"
+            "backgroundAlreadyAdded": "Zur Hintergrundauswahl hinzugefügt",
+            "enableLocalizedLayerStyles": {
+                "label": "Schakel gelokaliseerde stijlen in",
+                "tooltip": "Opmerking: deze parameter vereist specifieke configuraties op GeoServer"
+            }
         },
         "uploader": {
             "filename": "Datei Name",
