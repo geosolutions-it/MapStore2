@@ -184,11 +184,12 @@ function addLayer(layer, foreground = true) {
     };
 }
 
-function addGroup(group, parent) {
+function addGroup(group, parent, options) {
     return {
         type: ADD_GROUP,
         group,
-        parent
+        parent,
+        options
     };
 }
 
