@@ -10,8 +10,7 @@ import React, {useState, useRef} from 'react';
 import PropTypes from 'prop-types';
 import {
     Popover,
-    Glyphicon,
-    Button
+    Glyphicon
 } from 'react-bootstrap';
 
 import Overlay from '../../misc/Overlay';
