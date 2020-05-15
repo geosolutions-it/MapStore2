@@ -41,7 +41,7 @@ const ControlledPopover = ({
     const trigger = useRef();
     const [show, setShow] = useState(false);
     return (
-        <span className="mapstore-info-popover">
+        <span className="mapstore-info-popover" onMouseLeave={() => setShow(false)}>
             <Glyphicon
                 onMouseEnter={() => {
                     setShow(true);
@@ -59,11 +59,7 @@ const ControlledPopover = ({
                     positionTop={top}
                     title={title}>
                     <div style={{display: "flex"}}>
-                        <div>{text}</div>
-                        <Button className="no-border" style={{alignSelf: "flex-start"}} onClick={() => {
-                            setShow(false);
-                        }}><Glyphicon glyph="1-close"/></Button>
-
+                        {text}
                     </div>
                 </Popover>
             </Overlay>
