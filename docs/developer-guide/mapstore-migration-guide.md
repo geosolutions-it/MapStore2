@@ -1,12 +1,22 @@
 # General Migration Guidelines
 
-This is a list of things to do if you want to update from a previous version valid for every version.
+Updating MapStore could mean:
+
+- updating an existing installation
+- updating a MapStore project created for a previous version
+
+To update an existing installation you usually have to do nothing except eventually to execute queries on your database to update the changes to the database schema. 
+
+In case of a project the it becomes a little more complicated, depending on the customization.
+
+This is a list of things to check if you want to update from a previous version valid for every version.
 
 - Take a list to migration notes below for your version
 - Take a look to the release notes
 - update your `package.json` to latest libs versions
 - take a look at your custom files to see if there are some changes (e.g. `localConfig.js`, `proxy.properties`)
-- Follow the instructions, in order
+- Optionally check also accessory files like `.eslinrc`, if you want to keep aligned with lint standards.
+- Follow the instructions below, in order, from your version to the one you want to update to.
 
 ## Migration from 2020.01.00 to 2020.02.00
 
