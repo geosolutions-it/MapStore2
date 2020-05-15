@@ -9,16 +9,26 @@ import React from "react";
 
 import { MediaTypes } from '../../../utils/GeoStoryUtils';
 import emptyState from '../../misc/enhancers/emptyState';
+import Video from '../../geostory/media/Video';
 
 const Preview = ({
     selectedItem
 }) => {
-    const src = selectedItem && selectedItem.data && selectedItem.data.src;
+    const src = selectedItem?.data?.src;
+    const thumbnail = selectedItem?.data?.thumbnail;
     return (
-        <div key="preview" style = {{ width: '100%', height: '100%', boxShadow: "inset 0px 0px 30px -5px rgba(0,0,0,0.16)" }}>
-            {
-                src && <video src={src}/>
-            }
+        <div
+            key="preview"
+            className="ms-video-preview"
+            style = {{ width: '100%', height: '100%', boxShadow: "inset 0px 0px 30px -5px rgba(0,0,0,0.16)" }}>
+            {src &&
+                <Video
+                    key={src}
+                    thumbnail={thumbnail}
+                    fit="contain"
+                    src={src}
+                    inView
+                />}
         </div>
     );
 };
@@ -28,7 +38,7 @@ export default emptyState(
     {
         style: { width: '100%', height: '100%', boxShadow: "inset 0px 0px 30px -5px rgba(0,0,0,0.16)" },
         iconFit: true,
-        glyph: "playback",
+        glyph: "play",
         imageStyle: {display: "flex", flexDirection: "column", justifyContent: "center"}
     }
 )(Preview);

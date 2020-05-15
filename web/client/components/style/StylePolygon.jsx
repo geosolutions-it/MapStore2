@@ -46,7 +46,14 @@ class StylePolygon extends React.Component {
                                 onChangeColor={(color) => {if (color) { this.props.setStyleParameter("color", color); } }} />
                         </Col>
                         <Col xs={8} style={{paddingRight: 0, paddingLeft: 30}}>
-                            <NumberPicker onChange={(number) => {this.props.setStyleParameter("width", number); }} min={1} max={15} step={1} value={this.props.shapeStyle.width}/>
+                            <NumberPicker
+                                min={1} max={15} step={1}
+                                value={this.props.shapeStyle.width}
+                                onChange={(number) => {
+                                    if (number !== this.props.shapeStyle.width) {
+                                        this.props.setStyleParameter("width", number);
+                                    }
+                                }}  />
                         </Col>
                     </Row>
                     <Row style={{marginTop: 4}}>

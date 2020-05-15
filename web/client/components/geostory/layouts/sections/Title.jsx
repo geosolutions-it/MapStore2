@@ -48,7 +48,8 @@ export default compose(
     bubblingTextEditing = () => {},
     textEditorActiveClass = "",
     expandableMedia = false,
-    storyTheme
+    storyTheme,
+    mediaViewer
 }) => {
 
     const hideContent = get(focusedContent, "target.id") === contentId;
@@ -89,12 +90,14 @@ export default compose(
                         }}
                         tools={{
                             [MediaTypes.IMAGE]: ['editMedia', 'cover', 'fit', 'size', 'align', 'theme'],
-                            [MediaTypes.MAP]: ['editMedia', 'cover', 'editMap', 'size', 'align', 'theme']
+                            [MediaTypes.MAP]: ['editMedia', 'cover', 'editMap', 'size', 'align', 'theme'],
+                            [MediaTypes.VIDEO]: ['editMedia', 'cover', 'fit', 'size', 'align', 'theme']
                         }}
                         height={height >= viewHeight
                             ? viewHeight
                             : height}
                         storyTheme={storyTheme}
+                        mediaViewer={mediaViewer}
                     />}
             </ContainerDimensions>
             <SectionContents
@@ -107,7 +110,8 @@ export default compose(
                 remove={remove}
                 sectionId={id}
                 contentProps={{
-                    contentWrapperStyle: cover ? { minHeight: viewHeight, visibility} : {visibility}
+                    contentWrapperStyle: cover ? { minHeight: viewHeight, visibility} : {visibility},
+                    mediaViewer
                 }}
                 tools={{
                     [ContentTypes.TEXT]: ['size', 'align', 'theme', 'remove']

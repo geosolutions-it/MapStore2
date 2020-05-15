@@ -694,6 +694,14 @@
               "className": "navbar shadow navbar-home"
             }
           },
+          {
+            "name": "Tutorial",
+            "cfg": {
+              "allowClicksThruHole": false,
+              "containerPosition": "header",
+              "preset": "geostory_tutorial"
+            }
+          },
           "Login",
           "BurgerMenu",
           "Language",

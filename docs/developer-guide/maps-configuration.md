@@ -31,7 +31,10 @@ This is used for the **new map**. If you're logged in and allowed to create maps
 http://localhost:8081/#viewer/openlayers/new
 ```
 
-This is a special context that uses the `new.json` file in the root of the project. (`web/client` for standard mapstore, root for custom projects). You can edit `new.json` to customize the initial template for new maps (for instance, you can change the backgrounds).
+This page uses the `new.json` file as a template configuration to start creating a new map. You can find this file in `web/client` directory for standard MapStore or in the root for a custom projects. 
+You can edit `new.json` to customize this initial template. It typically contains the map backgrounds you want to use for all the new maps (identified by the special property `"group": "background"`).  
+
+If you have enabled the datadir, then you can externalize the new.json or config.json files. (see [here](../externalized-configuration) for more details)
 
 `new.json` and `config.json` are special cases, but you can configure your own static map context creating these json files in the root of the project, for instance `mycontext.json` and accessing them at the URL:
 
@@ -121,6 +124,7 @@ Every layer has it's own properties. Anyway there are some options valid for eve
 - `thumbURL`: `{string}`: the URL of the thumbnail for the layer, used in the background switcher ( if the layer is a background layer )
 - `visibility`: `{boolean}`: indicates if the layer is visible or not
 - `queriable`: `{boolean}`: Indicates if the layer is queriable (e.g. getFeatureInfo). If not present the default is true for every layer that have some implementation available (WMS, WMTS). Usually used to set it explicitly to false, where the query service is not available.
+- `hideLoading`: {boolean}. If true, loading events will be ignored ( useful to hide loading with some layers that have problems or trigger errors loading some tiles or if they do not have any kind of loading.).
 
 i.e.
 
@@ -667,6 +671,80 @@ PDOK.brtachtergrondkaartpastel
 PDOK.brtachtergrondkaartwater
 PDOK.luchtfotoRGB
 PDOK.luchtfotoIR
+```
+
+#### Vector
+
+The layer type vector is the type used for imported data (geojson, shapefile) or for annotations. Generally speaking, any vector data added directly to the map.
+This is the typical fields of a vector layer
+
+```json
+{
+    "type":"vector",
+    "features":[
+        {
+            "type":"Feature",
+            "geometry":{
+                "type":"Point",
+                "coordinates":[
+                12.516431808471681,
+                41.89817370656741
+                ]
+            },
+            "properties":{
+            },
+            "id":0
+        }
+    ],
+    "style":{
+        "weight":5,
+        "radius":10,
+        "opacity":1,
+        "fillOpacity":0.1,
+        "color":"rgba(0, 0, 255, 1)",
+        "fillColor":"rgba(0, 0, 255, 0.1)"
+    },
+    "hideLoading":true
+}
+```
+
+- `features`: features in GeoJSON format.
+- `style`: the style object.
+- `styleName`: name of a style to use (e.g. "marker").
+- `hideLoading`: boolean. if true, the loading will not be taken into account.
+
+#### Vector Style
+
+The `style` or `styleName` properties of vector layers (wfs, vector...) allow to apply a style to the local data on the map.
+
+- `style`: a style object/array. It can have different formats. In the simplest case it is an object that uses some leaflet-like style properties:
+  - `weight`: width in pixel of the border / line.
+  - `radius`: radius of the circle (valid only for Point types)
+  - `opacity`: opacity of the border / line.
+  - `color`: color of the border / line.
+  - `fillOpacity`: opacity of the fill if any. (Polygons, Point)
+  - `fillColor`: color of the fill, if any. (Polygons, Point)
+- `styleName`: if set to `marker`, the `style` object will be ignored and it will use the default marker.
+
+In case of `vector` layer, style can be added also to the specific features. Other ways of defining the style for a vector layer have to be documented.
+
+#### WFS Layer
+
+A vector layer, whose data source is a WFS service. The configuration has properties in common with both WMS and vector layers. it contains the search entry that allows to browse the data on the server side. The styling system is the same of the vector layer.
+
+This layer differs from the "vector" because all the loading/filtering/querying operations are applied directly using the WFS service, without storing anything locally.
+
+```json
+{
+    "type":"wfs",
+    "search":{
+        "url":"https://myserver.org/geoserver/wfs",
+        "type":"wfs"
+    },
+    "name":"workspace:layer",
+    "styleName":"marker",
+    "url":"https://myserver.org/geoserver/wfs"
+}
 ```
 
 ## Other supported formats

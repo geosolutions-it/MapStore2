@@ -14,6 +14,7 @@ import { SourceTypes } from '../../utils/MediaEditorUtils';
 import Toolbar from '../misc/toolbar/Toolbar';
 import MapList from './map/MapList';
 import ImageList from './image/ImageList';
+import VideoList from './video/VideoList';
 import withMapEditing from  './enhancers/withMapEditing';
 import withRemoveResource from  './enhancers/withRemoveResource';
 
@@ -89,6 +90,15 @@ export default compose(withMapEditing, withRemoveResource)(({
         }
         { mediaType === MediaTypes.IMAGE &&
             <ImageList
+                selectedItem={selectedItem}
+                resources={resources}
+                onMapChoice={onMapChoice}
+                selectItem={selectItem}
+                selectedSource={selectedSource}
+            />
+        }
+        { mediaType === MediaTypes.VIDEO &&
+            <VideoList
                 selectedItem={selectedItem}
                 resources={resources}
                 onMapChoice={onMapChoice}

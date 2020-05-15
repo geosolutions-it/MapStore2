@@ -54,10 +54,11 @@ module.exports = {
     clean: () => {
         Editors = {};
     },
-    getCustomEditor: ({attribute, url, typeName}, rules = [], {type, props}) => {
+    getCustomEditor: ({attribute, url, typeName}, rules = [], {type, generalProps = {}, props}) => {
         const editor = find(rules, (r) => testRule(r.regex, {attribute, url, typeName }));
         if (!!editor) {
-            return getEditor(type, editor.editor, {...props, ...editor.editorProps || {}});
+            const result = getEditor(type, editor.editor, {...props, ...generalProps, ...editor.editorProps || {}});
+            return result;
         }
         return null;
     }

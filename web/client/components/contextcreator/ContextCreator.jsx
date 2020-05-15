@@ -99,6 +99,8 @@ export default class ContextCreator extends React.Component {
         availableTemplatesFilterText: PropTypes.string,
         enabledTemplatesFilterText: PropTypes.string,
         documentationBaseURL: PropTypes.string,
+        showPluginDescriptionTooltip: PropTypes.bool,
+        pluginDescriptionTooltipDelay: PropTypes.number,
         onFilterAvailablePlugins: PropTypes.func,
         onFilterEnabledPlugins: PropTypes.func,
         onFilterAvailableTemplates: PropTypes.func,
@@ -269,6 +271,8 @@ export default class ContextCreator extends React.Component {
                             availablePluginsFilterText={this.props.availablePluginsFilterText}
                             enabledPluginsFilterText={this.props.enabledPluginsFilterText}
                             documentationBaseURL={this.props.documentationBaseURL}
+                            showDescriptionTooltip={this.props.showPluginDescriptionTooltip}
+                            descriptionTooltipDelay={this.props.pluginDescriptionTooltipDelay}
                             showDialog={this.props.showDialog}
                             mapTemplates={this.props.newContext.templates}
                             parsedTemplate={this.props.parsedTemplate}

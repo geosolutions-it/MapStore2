@@ -37,7 +37,8 @@ class MapPreview extends React.Component {
         printRatio: PropTypes.number,
         layout: PropTypes.string,
         layoutSize: PropTypes.object,
-        useFixedScales: PropTypes.bool
+        useFixedScales: PropTypes.bool,
+        env: PropTypes.object
     };
 
     static defaultProps = {
@@ -136,7 +137,9 @@ class MapPreview extends React.Component {
             >
                 {this.props.layers.map((layer, index) =>
                     (<Layer key={layer.id || layer.name} position={index} type={layer.type}
-                        options={assign({}, this.adjustResolution(layer), {srs: projection})}>
+                        options={assign({}, this.adjustResolution(layer), {srs: projection})}
+                        env={this.props.env}
+                    >
                         {this.renderLayerContent(layer, projection)}
                     </Layer>)
 

@@ -7,6 +7,7 @@
  */
 
 import Layers from '../../../../utils/openlayers/Layers';
+
 import {getStyle} from '../VectorStyle';
 import isEqual from 'lodash/isEqual';
 import VectorSource from 'ol/source/Vector';
@@ -40,7 +41,7 @@ Layers.registerType('vector', {
             });
         }
 
-        if (!isEqual(oldOptions.style, newOptions.style)) {
+        if (!isEqual(oldOptions.style, newOptions.style) || oldOptions.styleName !== newOptions.styleName) {
             layer.setStyle(getStyle(newOptions));
         }
     },
@@ -48,3 +49,4 @@ Layers.registerType('vector', {
         return null;
     }
 });
+

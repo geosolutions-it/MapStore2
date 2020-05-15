@@ -28,7 +28,8 @@ export default ({
     inViewRef,
     viewWidth,
     viewHeight,
-    expandableMedia
+    expandableMedia,
+    mediaViewer
 }) => (
     <section
         className="ms-section ms-section-paragraph"
@@ -48,7 +49,8 @@ export default ({
             viewWidth={viewWidth}
             viewHeight={viewHeight}
             contentProps={{
-                expandable: expandableMedia
+                expandable: expandableMedia,
+                mediaViewer
             }}
         />
         {mode === Modes.EDIT && <AddBar

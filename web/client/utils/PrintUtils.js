@@ -14,8 +14,9 @@ const AnnotationsUtils = require("./AnnotationsUtils");
 const {colorToHexStr} = require("./ColorUtils");
 const {getLayerConfig} = require('./TileConfigProvider').default;
 const {get} = require("ol/proj");
-
-const {isArray, isEmpty, toNumber, random} = require('lodash');
+const {isArray, filter, find, isEmpty, toNumber, random} = require('lodash');
+const { getFeature } = require('../api/WFS');
+const {generateEnvString} = require('./LayerLocalizationUtils');
 
 const url = require('url');
 
@@ -28,11 +29,58 @@ const getGeomType = function(layer) {
     return layer.features && layer.features[0] && layer.features[0].geometry ? layer.features[0].geometry.type :
         layer.features && layer.features[0].features && layer.features[0].style && layer.features[0].style.type ? layer.features[0].style.type : undefined;
 };
+
+const isAnnotationLayer = (layer) => {
+    return layer.id === "annotations" || layer.name === "Measurements";
+};
 /**
  * Utilities for Print
  * @memberof utils
  */
 const PrintUtils = {
+    /**
+     * Preload data (e.g. WFS) before to sent it to the print tool.
+     *
+     */
+    preloadData: (spec) => {
+        // check if remote data
+        const wfsLayers = filter(spec.layers, {type: "wfs"});
+        if (wfsLayers.length > 0) {
+            // get data from WFS
+            return Promise.all(
+                wfsLayers.map(l =>
+                    getFeature(l.url, l.name, {
+                        outputFormat: "application/json",
+                        srsName: spec.projection,
+                        ...(optionsToVendorParams(l) || {})
+                    })
+                        .then(({data}) => ({
+                            id: l.id,
+                            geoJson: data
+                        }))
+                )
+            // set geoJson in layer's spec
+            ).then(replies => {
+                return {
+                    ...spec,
+                    layers: (spec.layers || []).map(l => {
+                        const layerData = find(replies, {id: l.id});
+                        if (l.type === "wfs" && layerData) {
+                            return {
+                                ...l,
+                                ...layerData
+
+                            };
+                        }
+                        return l;
+                    })
+                };
+            });
+        }
+        return new Promise((resolve) => {
+            resolve(spec);
+        });
+    },
     /**
      * Given a static resource, returns the resource's absolute
      * URL. Supports file paths with or without origin/protocol.
@@ -108,7 +156,7 @@ const PrintUtils = {
      * @return {number}                          the index that best approximates the current map scale
      */
     getNearestZoom: (zoom, scales, mapScales = defaultScales) => {
-        const mapScale = mapScales[zoom];
+        const mapScale = mapScales[Math.round(zoom)];
         return scales.reduce((previous, current, index) => {
             return current < mapScale ? previous : index;
         }, 0);
@@ -121,7 +169,7 @@ const PrintUtils = {
      * @return {number}                          the index that best approximates the current map scale
      */
     getMapZoom: (scaleZoom, scales, mapScales = defaultScales) => {
-        const scale = scales[scaleZoom];
+        const scale = scales[Math.round(scaleZoom)];
         return mapScales.reduce((previous, current, index) => {
             return current < scale ? previous : index;
         }, 0) + 1;
@@ -169,7 +217,7 @@ const PrintUtils = {
                         projectedCenter.x,
                         projectedCenter.y
                     ],
-                    "scale": spec.scale || defaultScales[spec.scaleZoom],
+                    "scale": spec.scale || defaultScales[Math.round(spec.scaleZoom)],
                     "rotation": 0
                 }
             ],
@@ -189,7 +237,7 @@ const PrintUtils = {
     },
     specCreators: {
         wms: {
-            map: (layer) => ({
+            map: (layer, spec) => ({
                 "baseURL": PrintUtils.normalizeUrl(layer.url) + '?',
                 "opacity": layer.opacity || 1.0,
                 "singleTile": false,
@@ -205,7 +253,8 @@ const PrintUtils = {
                     "TRANSPARENT": true,
                     "TILED": true,
                     "EXCEPTIONS": "application/vnd.ogc.se_inimage",
-                    "scaleMethod": "accurate"
+                    "scaleMethod": "accurate",
+                    "ENV": generateEnvString(spec.env)
                 }, layer.baseParams || {}, layer.params || {}, {
                     ...optionsToVendorParams({
                         layerFilter: layer.layerFilter,
@@ -227,6 +276,7 @@ const PrintUtils = {
                                     SERVICE: "WMS",
                                     REQUEST: "GetLegendGraphic",
                                     LAYER: layer.name,
+                                    LANGUAGE: spec.language || '',
                                     STYLE: layer.style || '',
                                     SCALE: spec.scale,
                                     height: spec.iconSize,
@@ -257,11 +307,32 @@ const PrintUtils = {
                 },
                 geoJson: CoordinatesUtils.reprojectGeoJson({
                     type: "FeatureCollection",
-                    features: layer.id === "annotations" && AnnotationsUtils.annotationsToPrint(layer.features) ||
+                    features: isAnnotationLayer(layer) && AnnotationsUtils.annotationsToPrint(layer.features) ||
                                     layer.features.map( f => ({...f, properties: {...f.properties, ms_style: f && f.geometry && f.geometry.type && f.geometry.type.replace("Multi", "") || 1}}))
                 },
                 "EPSG:4326",
                 spec.projection)
+            }
+            )
+        },
+        wfs: {
+            map: (layer) => ({
+                type: 'Vector',
+                name: layer.name,
+                "opacity": layer.opacity || 1.0,
+                styleProperty: "ms_style",
+                styles: {
+                    1: PrintUtils.toOpenLayers2Style(layer, layer.style),
+                    "Polygon": PrintUtils.toOpenLayers2Style(layer, layer.style, "Polygon"),
+                    "LineString": PrintUtils.toOpenLayers2Style(layer, layer.style, "LineString"),
+                    "Point": PrintUtils.toOpenLayers2Style(layer, layer.style, "Point"),
+                    "FeatureCollection": PrintUtils.toOpenLayers2Style(layer, layer.style, "FeatureCollection")
+                },
+                // NOTE: data in this case have to be pre-loaded, in the correct projection
+                geoJson: layer.geoJson && {
+                    type: "FeatureCollection",
+                    features: layer.geoJson.features.map(f => ({ ...f, properties: { ...f.properties, ms_style: f && f.geometry && f.geometry.type && f.geometry.type.replace("Multi", "") || 1 } }))
+                }
             }
             )
         },
@@ -419,7 +490,7 @@ const PrintUtils = {
      * http://dev.openlayers.org/docs/files/OpenLayers/Feature/Vector-js.html#OpenLayers.Feature.Vector.OpenLayers.Feature.Vector.style
      */
     toOpenLayers2Style: function(layer, style, styleType) {
-        if (!style) {
+        if (!style || layer.styleName === "marker") {
             return PrintUtils.getOlDefaultStyle(layer, styleType);
         }
         // commented the available options.

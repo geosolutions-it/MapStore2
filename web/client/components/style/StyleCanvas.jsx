@@ -8,6 +8,8 @@
 
 const React = require('react');
 const PropTypes = require('prop-types');
+const {isString} = require('lodash');
+
 const defaultIcon = require('../map/openlayers/img/marker-icon.png');
 
 const {createSvgUrl, isSymbolStyle} = require('../../utils/VectorStyleUtils');
@@ -52,8 +54,16 @@ class StyleCanvas extends React.Component {
         ctx.beginPath();
         const {color, fill} = this.props.shapeStyle;
 
-        ctx.fillStyle = fill ? `rgba(${ fill.r }, ${ fill.g }, ${ fill.b }, ${ fill.a })` : null;
-        ctx.strokeStyle = color ? `rgba(${ color.r }, ${ color.g }, ${ color.b }, ${ color.a })` : null;
+        ctx.fillStyle = fill
+            ? isString(fill)
+                ? fill
+                : `rgba(${ fill.r }, ${ fill.g }, ${ fill.b }, ${ fill.a })`
+            : null;
+        ctx.strokeStyle = color
+            ? isString(color)
+                ? color
+                : `rgba(${ color.r }, ${ color.g }, ${ color.b }, ${ color.a })`
+            : null;
         ctx.lineWidth = this.props.shapeStyle.width || this.props.shapeStyle.weight;
         if (this.props.shapeStyle.dashArray && this.props.shapeStyle.dashArray.length) {
             ctx.setLineDash(this.props.shapeStyle.dashArray);

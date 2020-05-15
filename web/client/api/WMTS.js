@@ -25,7 +25,7 @@ const parseUrl = (url) => {
         query: assign({
             SERVICE: "WMTS",
             VERSION: "1.0.0",
-            REQUEST: "getcapabilities"
+            REQUEST: "GetCapabilities"
         }, parsed.query)
     }));
 };
