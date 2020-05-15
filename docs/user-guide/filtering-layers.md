@@ -61,15 +61,15 @@ Also this filter is applied through the [Query Panel](filtering-layers.md#query-
 
 ### Quick Filter
 
-The user can performance two type of quick filters:
+The user can perform two type of quick filters:
 
 * Filter by **attributes** 
 
-* Filter by **geometries**
+* Filter by **clicked point in the map**
 
 #### Quick Filter by attributes
 
-This filter, applicable directly in the [Attribute Table](attributes-table.md) just below the field names, can be also used in combination with other filter applied:
+This filter is available for each colum in the [Attribute Table](attributes-table.md) just below the field names and it can be also used in combination with other filter applied:
 
 <img src="../img/filtering-layers/filtered_quick_filter.gif" class="ms-docimage"/>
 
@@ -97,9 +97,9 @@ In order to filter a numerical filed matching the records *greater than* or *equ
 
 <img src="../img/filtering-layers/attribute-table-quick-filter-3.jpg" class="ms-docimage"/>
 
-#### Quick Filter by geometries
+#### Quick Filter by clicked point
 
-If the user wants to filter by geometries, he must activate the **Filter clicking on the map** <img src="../img/button/filter_geometry_button.jpg" class="ms-docbutton"/> button (the button became blue) and select the geometry he wants to filter. The list of records in the [Attribute Table](attributes-table.md) will be automatically filtered by matching with the selected geometry. 
+If the user wants to filter records in the Attribute Table simply by clicking on the map, he can activate the  **Filter clicking on the map** <img src="../img/button/filter_geometry_button.jpg" class="ms-docbutton"/> button (the button became blue) and then click on the map over the features he need to select. The list of records in the [Attribute Table](attributes-table.md) will be automatically filtered by matching with the selected point in the map.
 
 <img src="../img/filtering-layers/filter_geometry.gif" class="ms-docimage"/>
 
