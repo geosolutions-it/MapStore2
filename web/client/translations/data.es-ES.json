@@ -102,6 +102,7 @@
                 "none": "Sin información sobre herramientas",
                 "labelPlacement": "Colocación",
                 "right": "Derecha",
+                "left": "Izquierda",
                 "bottom": "Bottom",
                 "top": "Cima"
             },
@@ -2221,7 +2222,11 @@
                 "videoFilter": "Filtrar videos",
                 "imageFilter": "Filtrar imágenes",
                 "import": "Importar recurso a store locale",
-                "trash": "Eliminar recurso"
+                "trash": "Eliminar recurso",
+                "autoplay": "Auto-reproducción",
+                "videoUrl": "URL de video",
+                "videoUrlPlaceholder": "Ingrese una url de video",
+                "thumbnail": "Añadir miniatura (tamaño máximo 500kb)"
             },
             "mediaform": {
                 "confirmExitTitle": "Cerrar el Media Form",

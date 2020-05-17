@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 const Rx = require('rxjs');
-const { get, head, isEmpty, find, castArray, includes, reduce, isArray, isFunction } = require('lodash');
+const { get, head, isEmpty, find, castArray, includes, reduce } = require('lodash');
 const { LOCATION_CHANGE } = require('connected-react-router');
 
 
@@ -208,16 +208,13 @@ module.exports = {
         action$.ofType(BROWSE_DATA).switchMap( ({layer}) => {
             const currentTypeName = get(store.getState(), "query.typeName");
             return Rx.Observable.of(
+                ...(currentTypeName !== layer.name ? [reset()] : []),
                 setControlProperty('drawer', 'enabled', false),
                 setLayer(layer.id),
                 openFeatureGrid()
             ).merge(
                 createInitialQueryFlow(action$, store, layer)
-            )
-                .merge(
-                    Rx.Observable.of(reset())
-                        .filter(() => currentTypeName !== layer.name)
-                );
+            );
         }),
     /**
      * Intercepts layer selection to set it's id in the status and retrieve it later
@@ -264,14 +261,20 @@ module.exports = {
      * @memberof epics.featuregrid
      */
     featureGridUpdateGeometryFilter: (action$, store) =>
-        action$.ofType(UPDATE_FILTER)
-            .filter(({update = {}}) => update.type === 'geometry')
-            .distinctUntilChanged(({update: update1}, {update: update2}) => {
-                return !update1.enabled && update2.enabled && !update1.value && !update2.value ||
-                    update1.value === update2.value;
-            })
-            .skip(1)
-            .map(updateFilterFunc(store)),
+        action$.ofType(OPEN_FEATURE_GRID).flatMap(() => Rx.Observable.merge(
+            action$.ofType(UPDATE_FILTER)
+                .take(1)
+                .filter(({update = {}}) => !!update.value)
+                .map(updateFilterFunc(store)),
+            action$.ofType(UPDATE_FILTER)
+                .filter(({update = {}}) => update.type === 'geometry')
+                .distinctUntilChanged(({update: update1}, {update: update2}) => {
+                    return !update1.enabled && update2.enabled && !update1.value && !update2.value ||
+                        update1.value === update2.value;
+                })
+                .skip(1)
+                .map(updateFilterFunc(store))
+        ).takeUntil(action$.ofType(CLOSE_FEATURE_GRID))),
     /**
      * Performs the query when the text filters are updated
      * @memberof epics.featuregrid
@@ -285,31 +288,23 @@ module.exports = {
         action$.ofType(UPDATE_FILTER)
             .filter(({update = {}}) => update.type === 'geometry' && update.enabled)
             .switchMap(() =>
-                action$.ofType(CLICK_ON_MAP).switchMap(({point: {latlng: {lat, lng}, pixel}}) => {
+                action$.ofType(CLICK_ON_MAP).switchMap(({point: {latlng, pixel}}) => {
                     const currentFilter = find(getAttributeFilters(store.getState()), f => f.type === 'geometry') || {};
 
+                    const projection = projectionSelector(store.getState());
+                    const center = CoordinatesUtils.reproject([latlng.lng, latlng.lat], 'EPSG:4326', projection);
                     const hook = MapUtils.getHook(MapUtils.GET_COORDINATES_FROM_PIXEL_HOOK);
-                    const pixelRadius = 4;
-                    const radiusA = [lng, lat];
-                    const pixelCoords = isFunction(hook) ? hook([
-                        pixel.x,
-                        pixel.y >= pixelRadius ? pixel.y - pixelRadius : pixel.y + pixelRadius
-                    ]) : null;
-                    const radiusB = pixelCoords &&
-                        CoordinatesUtils.pointObjectToArray(CoordinatesUtils.reproject(pixelCoords, projectionSelector(store.getState()), 'EPSG:4326'));
-                    const radius = isArray(radiusB) ? Math.sqrt((radiusA[0] - radiusB[0]) * (radiusA[0] - radiusB[0]) +
-                        (radiusA[1] - radiusB[1]) * (radiusA[1] - radiusB[1])) :
-                        0.01;
+                    const radius = CoordinatesUtils.calculateCircleRadiusFromPixel(hook, pixel, center, 4);
 
                     return currentFilter.deactivated ? Rx.Observable.empty() : Rx.Observable.of(updateFilter({
                         ...currentFilter,
                         value: {
                             attribute: currentFilter.attribute || get(spatialFieldSelector(store.getState()), 'attribute'),
                             geometry: {
-                                center: [lng, lat],
-                                coordinates: CoordinatesUtils.calculateCircleCoordinates({x: lng, y: lat}, radius, 12),
-                                extent: [lng - radius, lat - radius, lng + radius, lat + radius],
-                                projection: "EPSG:4326",
+                                center: [center.x, center.y],
+                                coordinates: CoordinatesUtils.calculateCircleCoordinates(center, radius, 12),
+                                extent: [center.x - radius, center.y - radius, center.x + radius, center.y + radius],
+                                projection,
                                 radius,
                                 type: "Polygon"
                             },

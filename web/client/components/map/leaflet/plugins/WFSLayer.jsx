@@ -6,8 +6,9 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import {isNil} from 'lodash';
+import { isNil, isEqual } from 'lodash';
 import L from 'leaflet';
+import { colorToRgbaStr } from '../../../../utils/ColorUtils';
 
 import CoordinatesUtils from '../../../../utils/CoordinatesUtils';
 import Layers from '../../../../utils/leaflet/Layers';
@@ -15,28 +16,26 @@ import { optionsToVendorParams } from '../../../../utils/VendorParamsUtils';
 
 import { getFeature } from '../../../../api/WFS';
 import { needsReload } from '../../../../utils/WFSLayerUtils';
-const defaultStyle = {
-    radius: 5,
-    color: "red",
-    weight: 1,
-    opacity: 1,
-    fillOpacity: 1
-};
+
 
 const loadFeatures = (layer, options) => {
+    layer.fireEvent('loading');
     const params = optionsToVendorParams(options);
     const onError = () => {
+        layer.fireEvent('loadError');
         // // TODO: notify error
     };
     return getFeature(options.url, options.name, {
         // bbox: extent.join(',') + ',' + proj,
         outputFormat: "application/json",
-        srsname: CoordinatesUtils.normalizeSRS(options.srs || 'EPSG:3857', options.allowedSRS),
+        maxFeatures: 1000,
+        srsname: CoordinatesUtils.normalizeSRS( 'EPSG:4326'),
         ...params
     }).then(response => {
         if (response.status === 200) {
             layer.clearLayers();
             layer.addData(response.data);
+            layer.fireEvent('load');
         } else {
             console.error(response);// eslint-disable-line
             onError(new Error("status code of response:" + response.status));
@@ -46,6 +45,30 @@ const loadFeatures = (layer, options) => {
         onError(e);
     });
 
+};
+
+const toSingleOpacityStyle = style => {
+    const {
+        color,
+        fillColor,
+        ...other
+    } = style || {};
+    return {
+        ...other,
+        color: colorToRgbaStr(color, 1),
+        fillColor: colorToRgbaStr(fillColor, 1)
+    };
+};
+const getStyle = (options = {}) => {
+    const style = options.style && options.style[0] || options.style;
+    return toSingleOpacityStyle(style);
+
+};
+const setStyle = (layer, options) => {
+    const style = getStyle(options);
+    layer.setStyle(style);
+    layer.options.style = (style);
+    layer.styleName = options.styleName;
 };
 
 const setOpacity = (layer, opacity) => {
@@ -59,30 +82,32 @@ const setOpacity = (layer, opacity) => {
     }
 };
 
-var createVectorLayer = function(options) {
-    const layer = new L.GeoJSON([{
-        "type": "Feature",
-        "geometry": {
-            "type": "Point",
-            "coordinates": [125.6, 10.1]
-        },
-        "properties": {
-            "name": "Dinagat Islands"
+var createVectorLayer = function(options, features = []) {
+    const style = getStyle(options);
+    const pointToLayer = function(feature, latlng) {
+        if (options.styleName === "marker") {
+            return L.marker(latlng, style);
         }
-    }], {
+        return L.circleMarker(latlng, style);
+    };
+    const layer = new L.GeoJSON(features, {
+        pointToLayer,
         // hideLoading: hideLoading,
-        style: options.nativeStyle || options.style || defaultStyle // TODO: ol nativeStyle should not be taken from the store
+        style: style // TODO: ol nativeStyle should not be taken from the store
     });
-    layer.setOpacity = (opacity) => {
-        const style = {
-            ...(layer.options.style || defaultStyle),
-            opacity: opacity,
-            fillOpacity: opacity
+    layer.setOpacity = function(layerOpacity = 1) {
+        const originalStyle = { ...layer.options.style || {}};
+        const {fillOpacity = 1, opacity = 1 } = originalStyle;
+        const opacityStyle = {
+            ...originalStyle,
+            opacity: opacity * layerOpacity,
+            fillOpacity: fillOpacity * layerOpacity
         };
-        layer.setStyle(style);
-        setOpacity(layer, opacity);
+        layer.setStyle(toSingleOpacityStyle(opacityStyle));
+        setOpacity(layer, layerOpacity);
     };
     layer.on('layeradd', () => {
+        setStyle(layer, options);
         layer.setOpacity(!isNil(layer.opacity) ? layer.opacity : options.opacity);
     });
     return layer;
@@ -104,6 +129,14 @@ Layers.registerType('wfs', {
         if (needsReload(oldOptions, newOptions)) {
             loadFeatures(layer, newOptions);
         }
+        if (!isEqual(newOptions.style, oldOptions.style) ) {
+            setStyle(layer, newOptions);
+        }
+        if (newOptions.styleName !== oldOptions.styleName) {
+            const {features} = layer.toGeoJSON();
+            return createVectorLayer(newOptions, features);
+        }
+        return null;
     },
     render: () => {
         return null;

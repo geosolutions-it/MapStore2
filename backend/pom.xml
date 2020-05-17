@@ -76,6 +76,12 @@
         <version>2.4</version>
         <classifier>jdk15</classifier>
     </dependency>
+    <!-- json-patch -->
+    <dependency>
+        <groupId>com.github.java-json-tools</groupId>
+        <artifactId>json-patch</artifactId>
+        <version>1.12</version>
+    </dependency>
 
   </dependencies>
 

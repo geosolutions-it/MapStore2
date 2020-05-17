@@ -612,10 +612,10 @@ describe('featuregrid Epics', () => {
         };
         it('browseData action initializes featuregrid', done => {
             testEpic(featureGridBrowseData, 5, browseData(LAYER), ([ a1, a2, a3, a4, a5 ]) => {
-                checkInitActions([a1, a2, a3]);
+                expect(a1.type).toBe(QUERY_FORM_RESET);
+                checkInitActions([a2, a3, a4]);
                 // sets the feature type selected for search
-                expect(a4.type).toBe(FEATURE_TYPE_SELECTED);
-                expect(a5.type).toBe(QUERY_FORM_RESET);
+                expect(a5.type).toBe(FEATURE_TYPE_SELECTED);
                 done();
             }, state);
         });
@@ -1913,11 +1913,16 @@ describe('featuregrid Epics', () => {
                     attribute: 'the_geom',
                     enabled: true
                 }]
+            },
+            map: {
+                present: {
+                    projection: 'EPSG:3857'
+                }
             }
         }, done);
     });
     it('featureGridUpdateFilter with geometry filter', (done) => {
-        const startActions = [createQuery(), updateFilter({
+        const startActions = [openFeatureGrid(), createQuery(), updateFilter({
             type: 'geometry',
             enabled: true
         }), updateFilter({

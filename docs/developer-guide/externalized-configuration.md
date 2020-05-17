@@ -17,6 +17,8 @@ This is a list of frontend configuration files that can be externalized in the d
 * app configuration (`localConfig.json`)
 * extensions configuration (`extensions.json`)
 * context plugins configuration (`pluginsConfig.json`)
+* demo map configuration (`config.json`)
+* new map template configuration (`new.json`)
 * base folder for extensions bundles and assets
 
 ## Configuration environment variables
@@ -204,3 +206,19 @@ geoserverUrl=https://demo.geo-solutions.it/geoserver/wms
 ```
 
 This allows to have in `env.properties` a set of variables that can be used in overrides (even in different places). that are indicated by `overrides.mappings`.
+
+## Patching frontend configuration
+
+Another option is to patch the frontend configuration files, instead of overriding them completely, using a patch file
+in [json-patch](http://jsonpatch.com/) format.
+
+To patch one of the allowed resources you can put a file with a **.patch** extension in the datadir folder (e.g. localConfig.json.patch) and that file will be merged with the main localConfig.json to produce the final resource.
+
+This allows easier migration to a new MapStore version. Please notice that when you use a patch file, any new configuration from
+the newer version will be applied automatically. This can be good or bad: the good part is that new plugins and features will be available without further configuration after the migration, the bad part is that you won't be aware that new plugins and features will be automatically exposed to the final user.
+
+**Example: adding a plugin to the localConfig.json configuration file**
+
+```json
+[{"op": "add", "path": "/plugins/desktop/-", "value": "MyAwesomePlugin"}]
+```

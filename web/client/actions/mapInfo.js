@@ -22,6 +22,7 @@ const GET_VECTOR_INFO = 'GET_VECTOR_INFO';
 const NO_QUERYABLE_LAYERS = 'NO_QUERYABLE_LAYERS';
 const CLEAR_WARNING = 'CLEAR_WARNING';
 const FEATURE_INFO_CLICK = 'FEATURE_INFO_CLICK';
+const UPDATE_FEATURE_INFO_CLICK_POINT  = 'IDENTIFY:UPDATE_FEATURE_INFO_CLICK_POINT';
 const TOGGLE_HIGHLIGHT_FEATURE = "IDENTIFY:TOGGLE_HIGHLIGHT_FEATURE";
 const TOGGLE_MAPINFO_STATE = 'TOGGLE_MAPINFO_STATE';
 const UPDATE_CENTER_TO_MARKER = 'UPDATE_CENTER_TO_MARKER';
@@ -30,7 +31,7 @@ const CLOSE_IDENTIFY = 'IDENTIFY:CLOSE_IDENTIFY';
 const CHANGE_FORMAT = 'IDENTIFY:CHANGE_FORMAT';
 const TOGGLE_SHOW_COORD_EDITOR = 'IDENTIFY:TOGGLE_SHOW_COORD_EDITOR';
 const EDIT_LAYER_FEATURES = 'IDENTIFY:EDIT_LAYER_FEATURES';
-const SET_EDIT_FEATURE_QUERY = 'IDENTIFY:EDIT_FEATURE_QUERY';
+const SET_CURRENT_EDIT_FEATURE_QUERY = 'IDENTIFY:CURRENT_EDIT_FEATURE_QUERY';
 
 const TOGGLE_EMPTY_MESSAGE_GFI = "IDENTIFY:TOGGLE_EMPTY_MESSAGE_GFI";
 const toggleEmptyMessageGFI = () => ({type: TOGGLE_EMPTY_MESSAGE_GFI});
@@ -208,6 +209,13 @@ function featureInfoClick(point, layer, filterNameList = [], overrideParams = {}
     };
 }
 
+function updateFeatureInfoClickPoint(point) {
+    return {
+        type: UPDATE_FEATURE_INFO_CLICK_POINT,
+        point
+    };
+}
+
 function toggleHighlightFeature(enabled) {
     return {
         type: TOGGLE_HIGHLIGHT_FEATURE,
@@ -254,8 +262,8 @@ const editLayerFeatures = (layer) => ({
     layer
 });
 
-const setEditFeatureQuery = (query) => ({
-    type: SET_EDIT_FEATURE_QUERY,
+const setCurrentEditFeatureQuery = (query) => ({
+    type: SET_CURRENT_EDIT_FEATURE_QUERY,
     query
 });
 
@@ -302,6 +310,7 @@ module.exports = {
     toggleMapInfoState,
     updateCenterToMarker,
     featureInfoClick,
+    UPDATE_FEATURE_INFO_CLICK_POINT, updateFeatureInfoClickPoint,
     EDIT_LAYER_FEATURES, editLayerFeatures,
-    SET_EDIT_FEATURE_QUERY, setEditFeatureQuery
+    SET_CURRENT_EDIT_FEATURE_QUERY, setCurrentEditFeatureQuery
 };

@@ -104,6 +104,7 @@
                 "none": "Kein Tooltip",
                 "labelPlacement": "Platzierung",
                 "right": "Recht",
+                "left": "Links",
                 "bottom": "Bottom",
                 "top": "Oben"
             },
@@ -2220,7 +2221,11 @@
                 "videoFilter": "Filtern Sie Videos",
                 "imageFilter": "Filtern Sie Bilder",
                 "import": "Ressource in lokalen Speicher importieren",
-                "trash": "Remove resource"
+                "trash": "Remove resource",
+                "autoplay": "Automatisches Abspielen",
+                "videoUrl": "Video URL",
+                "videoUrlPlaceholder": "Geben Sie eine Video-URL ein",
+                "thumbnail": "Miniaturbild hinzufügen (maximale Größe 500 KB)"
             },
             "mediaform": {
                 "confirmExitTitle": "Schließen Media Form",

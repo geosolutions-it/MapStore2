@@ -65,11 +65,23 @@ public class ResourceUtils {
 	}
 	
 	public static String getResourcePath(String baseFolder, ServletContext context, String path) {
-		return baseFolder.isEmpty() ? context.getRealPath(path) : baseFolder + "/" + path;
+        return getResourcePath(baseFolder, context, path, false);
+    }
+	
+	public static String getResourcePath(String baseFolder, ServletContext context, String path, boolean write) {
+		return baseFolder.isEmpty() ? getContextPath(context, path, write) : baseFolder + "/" + path;
 	}
 	
-	public static void storeJSONConfig(String baseFolder, ServletContext context, JSONObject config, String configName) throws FileNotFoundException, IOException {
-		String outputFile = getResourcePath(baseFolder, context, configName);
+	private static String getContextPath(ServletContext context, String path, boolean write) {
+	    String candidate = context.getRealPath(path);
+	    if (candidate == null && write) {
+	        candidate = context.getRealPath("") + "/" + path;
+	    }
+        return candidate;
+    }
+
+    public static void storeJSONConfig(String baseFolder, ServletContext context, Object config, String configName) throws FileNotFoundException, IOException {
+		String outputFile = getResourcePath(baseFolder, context, configName, true);
         try (FileOutputStream output = new FileOutputStream(outputFile)) {
             output.write(config.toString().getBytes());
         }
