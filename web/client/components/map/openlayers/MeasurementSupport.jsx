@@ -203,7 +203,9 @@ export default class MeasurementSupport extends React.Component {
             };
 
             // recalculate segments
-            if (!isBearing && !(geomType === 'LineString' && coords.length <= 2)) {
+            if (!isBearing
+            // && !(geomType === 'LineString' && coords.length <= 2)
+            ) {
                 for (let i = 0; i < coords.length - 1; ++i) {
                     this.createSegmentLengthOverlay();
 
@@ -672,19 +674,14 @@ export default class MeasurementSupport extends React.Component {
                     // the last overlay is a dummy
                     this.removeLastSegment();
 
-                    // if len is 1 remove the segment label to avoid duplication
-                    if (oldCoords.length <= 2) {
-                        this.removeLastSegment();
-                    } else {
-                        // Generate correct textLabels and update segment overlays
-                        for (let i = 0; i < oldCoords.length - 1; ++i) {
-                            const middlePoint = newCoords[100 * i + 50];
-                            if (middlePoint) {
-                                this.textLabels[this.segmentOverlays.length - oldCoords.length + 1 + i].position = middlePoint;
-                                this.segmentOverlays[this.segmentOverlays.length - oldCoords.length + 1 + i].setPosition(
-                                    pointObjectToArray(reproject(middlePoint, 'EPSG:4326', getProjectionCode(this.props.map)))
-                                );
-                            }
+                    // Generate correct textLabels and update segment overlays
+                    for (let i = 0; i < oldCoords.length - 1; ++i) {
+                        const middlePoint = newCoords[100 * i + 50];
+                        if (middlePoint) {
+                            this.textLabels[this.segmentOverlays.length - oldCoords.length + 1 + i].position = middlePoint;
+                            this.segmentOverlays[this.segmentOverlays.length - oldCoords.length + 1 + i].setPosition(
+                                pointObjectToArray(reproject(middlePoint, 'EPSG:4326', getProjectionCode(this.props.map)))
+                            );
                         }
                     }
                 }
