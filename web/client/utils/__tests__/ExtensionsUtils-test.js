@@ -58,6 +58,14 @@ describe('checkZipBundle', () => {
             });
         });
     });
+    it('throws an error if uploaded zip an already installed plugin', (done) => {
+        axios.get("base/web/client/test-resources/extensions/myplugin.zip", { responseType: "blob" }).then(({data}) => {
+            checkZipBundle(data, ["My"]).catch(e => {
+                expect(e).toBe(ERROR.ALREADY_INSTALLED);
+                done();
+            });
+        });
+    });
     it('return the file to upload if everything is ok', (done) => {
         axios.get("base/web/client/test-resources/extensions/myplugin.zip", { responseType: "blob" }).then(({data}) => {
             checkZipBundle(data).then(extension => {
