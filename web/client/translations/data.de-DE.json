@@ -2072,7 +2072,13 @@
                 "confirmCloseMapEditing": "Schließen Sie die Kartenbearbeitung",
                 "pendingChangesDiscardConfirm": "Aktuelle Kartenänderungen verwerfen?",
                 "editURL": "Webseiten-URL bearbeiten",
-                "advancedMapEditor": "Öffnen Sie den erweiterten Karteneditor"
+                "advancedMapEditor": "Öffnen Sie den erweiterten Karteneditor",
+                "enableAudio": "Audio aktivieren",
+                "disableAudio": "Video stumm schalten",
+                "enableAutoplay": "Aktivieren autoplay",
+                "disableAutoplay": "Deaktiviere autoplay",
+                "enableLoop": "Schleife aktivieren",
+                "disableLoop": "Schleife deaktivieren"
             },
             "navigation": {
                 "edit": "Bearbeiten Sie die Geschichte"
@@ -2212,7 +2218,6 @@
                 "imageFilter": "Filtern Sie Bilder",
                 "import": "Ressource in lokalen Speicher importieren",
                 "trash": "Remove resource",
-                "autoplay": "Automatisches Abspielen",
                 "videoUrl": "Video URL",
                 "videoUrlPlaceholder": "Geben Sie eine Video-URL ein",
                 "thumbnail": "Miniaturbild hinzufügen (maximale Größe 500 KB)"

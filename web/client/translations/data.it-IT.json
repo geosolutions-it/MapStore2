@@ -2073,7 +2073,13 @@
                 "confirmCloseMapEditing": "Chiudi editing mappa",
                 "pendingChangesDiscardConfirm": "Vuoi scartare le modifiche?",
                 "editURL": "Modifica l'URL della pagina web",
-                "advancedMapEditor": "Apri editor di mappe avanzato"
+                "advancedMapEditor": "Apri editor di mappe avanzato",
+                "enableAudio": "Abilita audio",
+                "disableAudio": "Disabilita audio",
+                "enableAutoplay": "Abilita riproduzione automatica",
+                "disableAutoplay": "Disabilita riproduzione automatica",
+                "enableLoop": "Abilita loop",
+                "disableLoop": "Disabilita loop"
             },
             "navigation": {
                 "edit": "Modifica storia"
@@ -2214,7 +2220,6 @@
                 "imageFilter": "Filtra immagini",
                 "import": "Importa la risorsa localmente",
                 "trash": "Elimina la risorsa",
-                "autoplay": "Riproduzione automatica",
                 "videoUrl": "Video URL",
                 "videoUrlPlaceholder": "Inserisci video url",
                 "thumbnail": "Aggiungi thumbnail (dimensione massima 500kb)"

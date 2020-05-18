@@ -2077,7 +2077,13 @@
                 "confirmCloseMapEditing": "Close Map Editing",
                 "pendingChangesDiscardConfirm": "Discard current map changes?",
                 "editURL": "Edit web page URL",
-                "advancedMapEditor": "Open advanced map editor"
+                "advancedMapEditor": "Open advanced map editor",
+                "enableAudio": "Enable audio",
+                "disableAudio": "Mute video",
+                "enableAutoplay": "Enable autoplay",
+                "disableAutoplay": "Disable autoplay",
+                "enableLoop": "Enable loop",
+                "disableLoop": "Disable loop"
             },
             "navigation": {
                 "edit": "Edit story"
@@ -2217,7 +2223,6 @@
                 "imageFilter": "Filter images",
                 "import": "Import resource to local store",
                 "trash": "Remove resource",
-                "autoplay": "Autoplay",
                 "videoUrl": "Video URL",
                 "videoUrlPlaceholder": "Enter a video url",
                 "thumbnail": "Add thumbnail (maximum size 500kb)"

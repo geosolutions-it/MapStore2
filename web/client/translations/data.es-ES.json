@@ -2073,7 +2073,13 @@
                 "confirmCloseMapEditing": "Cerrar edición de mapas",
                 "pendingChangesDiscardConfirm": "¿Descartar los cambios actuales en el mapa?",
                 "editURL": "Editar URL de página web",
-                "advancedMapEditor": "Abrir editor de mapas avanzado"
+                "advancedMapEditor": "Abrir editor de mapas avanzado",
+                "enableAudio": "Habilitar audio",
+                "disableAudio": "Video mudo",
+                "enableAutoplay": "Habilitar reproducción automática",
+                "disableAutoplay": "Desactivar reproducción automática",
+                "enableLoop": "Habilitar bucle",
+                "disableLoop": "Desactivar bucle"
             },
             "navigation": {
                 "edit": "Editar historia"
@@ -2213,7 +2219,6 @@
                 "imageFilter": "Filtrar imágenes",
                 "import": "Importar recurso a store locale",
                 "trash": "Eliminar recurso",
-                "autoplay": "Auto-reproducción",
                 "videoUrl": "URL de video",
                 "videoUrlPlaceholder": "Ingrese una url de video",
                 "thumbnail": "Añadir miniatura (tamaño máximo 500kb)"
