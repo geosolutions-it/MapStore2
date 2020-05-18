@@ -290,7 +290,7 @@ describe('StandardApp', () => {
         const MyApp = ({plugins}) => {
             expect(plugins.MyPlugin).toExist();
             done();
-        }
+        };
 
         const app = ReactDOM.render(<StandardApp appComponent={MyApp} appStore={store} enableExtensions />, document.getElementById("container"));
         expect(app).toExist();
@@ -396,9 +396,9 @@ describe('StandardApp', () => {
             expect(plugins.OtherPlugin).toExist();
             expect(plugins.MyPlugin).toNotExist();
             done();
-        }
+        };
         ReactDOM.render(<StandardApp appStore={store} appComponent={MyApp} enableExtensions/>, document.getElementById("container"));
-    })
+    });
     it('extensions assets are loaded from external folder if configured', (done) => {
         ConfigUtils.setConfigProp("extensionsFolder", "myfolder/");
         mockAxios = new MockAdapter(axios);

@@ -164,7 +164,7 @@ class StandardApp extends React.Component {
     removeExtension = (plugin) => {
         this.setState({
             removedPlugins: [...this.state.removedPlugins, plugin + "Plugin"]
-        })
+        });
     };
     filterRemoved = (registry, removed) => {
         return Object.keys(registry).reduce((acc, p) => {
@@ -174,7 +174,7 @@ class StandardApp extends React.Component {
             return {
                 ...acc,
                 [p]: registry[p]
-            }
+            };
         }, {});
     };
     loadExtensions = (path, callback) => {
@@ -230,7 +230,7 @@ class StandardApp extends React.Component {
                     this.loadExtensions(ConfigUtils.getConfigProp('extensionsRegistry'), this.onPluginsLoaded);
                 }
                 if (action.type === PLUGIN_UNINSTALLED) {
-                    this.removeExtension(action.plugin)
+                    this.removeExtension(action.plugin);
                 }
             });
         }

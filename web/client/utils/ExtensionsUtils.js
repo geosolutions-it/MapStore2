@@ -25,15 +25,14 @@ const parseIndex = (json, plugins) => {
             const name = index.plugins[0].name;
             if (plugins.indexOf(name) !== -1) {
                 return {error: ERROR.ALREADY_INSTALLED};
-            } else {
-                return { name };
             }
+            return { name };
         }
         return {error: ERROR.MISSING_PLUGIN};
     } catch (e) {
         return {error: ERROR.MALFORMED_INDEX};
     }
-}
+};
 
 export const checkZipBundle = (file, plugins = []) => {
     return FileUtils.readZip(file).then((buffer) => {
