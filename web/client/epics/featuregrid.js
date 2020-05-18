@@ -208,16 +208,13 @@ module.exports = {
         action$.ofType(BROWSE_DATA).switchMap( ({layer}) => {
             const currentTypeName = get(store.getState(), "query.typeName");
             return Rx.Observable.of(
+                ...(currentTypeName !== layer.name ? [reset()] : []),
                 setControlProperty('drawer', 'enabled', false),
                 setLayer(layer.id),
                 openFeatureGrid()
             ).merge(
                 createInitialQueryFlow(action$, store, layer)
-            )
-                .merge(
-                    Rx.Observable.of(reset())
-                        .filter(() => currentTypeName !== layer.name)
-                );
+            );
         }),
     /**
      * Intercepts layer selection to set it's id in the status and retrieve it later
