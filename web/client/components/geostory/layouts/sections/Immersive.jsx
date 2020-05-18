@@ -43,7 +43,8 @@ const Immersive = ({
     textEditorActiveClass = "",
     expandableMedia = false,
     storyTheme,
-    mediaViewer
+    mediaViewer,
+    inView
 }) => {
     const hideContent = focusedContent && focusedContent.hideContent && (get(focusedContent, "target.id") === contentId);
     const visibility = hideContent ? 'hidden' : 'visible';
@@ -82,7 +83,8 @@ const Immersive = ({
                 backgroundSize: '600px auto'
             }}
             storyTheme={storyTheme}
-            mediaViewer={mediaViewer}/>
+            mediaViewer={mediaViewer}
+            inView={inView}/>
         <SectionContents
             tools={{
                 [ContentTypes.COLUMN]: ['size', 'align', 'theme']

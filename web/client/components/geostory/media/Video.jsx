@@ -187,12 +187,18 @@ const Video = withResizeDetector(({
  * @prop {boolean} autoplay play the video when is in view
  * @prop {boolean} inView define if the video si in the window view
  * @prop {string} fit one of `cover`, `contain` or undefined
+ * (`cover` provides a video covering the available space provided by its own container
+ * and it has loop enabled and controls disabled by default)
+ * @prop {string} loop loop the video (loop has no effect for fit equal to `cover`)
+ * @prop {string} muted mute the video audio
  * @prop {string} description video description
  * @prop {boolean} descriptionEnabled display/hide description
  * @prop {string} thumbnail source of thumbnail
  * @prop {string} credits source of thumbnail
- * @prop {boolean} controls enable/disable video controls
+ * @prop {boolean} controls enable/disable video controls (controls has no effect for fit equal to `cover`)
  * @prop {function} onPlay on play callback
+ * @prop {string} mode one of 'view' or 'edit'
+ * @prop {boolean} containerInView define if the container is in view, useful for scrollable container with content with position sticky eg. Backgrounds
  */
 const VideoMedia = ({
     id,
@@ -209,8 +215,12 @@ const VideoMedia = ({
     loop,
     muted,
     onPlay = () => {},
-    mode
+    mode,
+    containerInView = true
 }) => {
+
+    // ensure both container and content are visible
+    const isVisible = containerInView && inView;
 
     const [playing, setPlaying] = useState(false);
     const [started, setStarted] = useState(false);
@@ -220,6 +230,7 @@ const VideoMedia = ({
         onPlay(newPlaying);
     };
 
+    // reset player after switching from view to edit mode
     useEffect(() => {
         if (mode === Modes.EDIT) {
             setPlaying(false);
@@ -227,19 +238,22 @@ const VideoMedia = ({
         }
     }, [ mode ]);
 
+    // enable autoplay only the first time the video is in view for fit undefined or contained
+    // while fit cover should always trigger autoplay when in view
     useEffect(() => {
         if (mode === Modes.VIEW
-        && inView
+        && isVisible
         && (fit === 'cover' || autoplay && !started)) {
             handleOnPlay(true);
         }
-    }, [ inView, autoplay, started, fit, mode ]);
+    }, [ isVisible, autoplay, started, fit, mode ]);
 
+    // video should stop after when not in view
     useEffect(() => {
-        if (mode === Modes.VIEW && !inView && playing) {
+        if (mode === Modes.VIEW && !isVisible && playing) {
             handleOnPlay(false);
         }
-    }, [inView, playing, mode]);
+    }, [isVisible, playing, mode]);
 
     return (
         <div
