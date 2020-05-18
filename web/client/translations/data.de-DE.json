@@ -2474,6 +2474,7 @@
                 "uploadMissingBundleError": "Kein Javascript-Bundle in der hochgeladenen Datei",
                 "uploadTooManyBundlesError": "Zu viele Javascript-Bundles im Zip-Paket",
                 "uploadWrongFileFormatError": "Falsches Dateiformat, Zip-Datei erwartet",
+                "uploadAlreadyInstalledError": "Erweiterung bereits installiert. Aktuelle Erweiterung vor Neuinstallation entfernen",
                 "confirmRemovePlugin": "Möchten Sie die Erweiterung wirklich entfernen?",
                 "cancelUpload": "Schließen",
                 "install": "Install",

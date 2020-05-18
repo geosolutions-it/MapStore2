@@ -2475,6 +2475,7 @@
                 "uploadMissingBundleError": "No hay paquete de JavaScript en el archivo cargado",
                 "uploadTooManyBundlesError": "Demasiados paquetes de JavaScript en el paquete zip",
                 "uploadWrongFileFormatError": "Formato de archivo incorrecto, archivo zip esperado",
+                "uploadAlreadyInstalledError": "Extensión ya instalada. Eliminando la extensión actual antes de reinstalar",
                 "confirmRemovePlugin": "¿Está seguro de que desea eliminar la extensión?",
                 "cancelUpload": "Cerrar",
                 "install": "Instalar",

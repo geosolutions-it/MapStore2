@@ -2476,6 +2476,7 @@
                 "uploadMissingBundleError": "Nessun bundle javascript presente nel file",
                 "uploadTooManyBundlesError": "Troppi bundle javascript contenuti nel pacchetto",
                 "uploadWrongFileFormatError": "File con formato errato, non si tratta di un file zip",
+                "uploadAlreadyInstalledError": "L'estensione è già installata. Rimuovere l'estensione esistente prima di installare la nuova",
                 "confirmRemovePlugin": "Sei sicuro di voler eliminare l'estensione?",
                 "cancelUpload": "Chiudi",
                 "install": "Installa",
