@@ -233,7 +233,7 @@ const VideoMedia = ({
     // reset player after switching from view to edit mode
     useEffect(() => {
         if (mode === Modes.EDIT) {
-            setPlaying(false);
+            handleOnPlay(false);
             setStarted(false);
         }
     }, [ mode ]);
