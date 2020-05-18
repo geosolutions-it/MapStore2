@@ -33,7 +33,7 @@ require('./appPolyfill');
 
 const { augmentStore } = require('../../utils/StateUtils');
 
-const {LOAD_EXTENSIONS} = require('../../actions/contextcreator');
+const {LOAD_EXTENSIONS, PLUGIN_UNINSTALLED} = require('../../actions/contextcreator');
 
 /**
  * Standard MapStore2 application component
@@ -77,7 +77,8 @@ class StandardApp extends React.Component {
 
     state = {
         initialized: false,
-        pluginsRegistry: {}
+        pluginsRegistry: {},
+        removedPlugins: []
     };
 
     addProjDefinitions(config) {
@@ -87,6 +88,16 @@ class StandardApp extends React.Component {
             });
 
         }
+    }
+
+    shouldComponentUpdate(nextProps, nextState) {
+        if (this.state.initialized !== nextState.initialized || this.state.pluginsRegistry !== nextState.pluginsRegistry) {
+            return true;
+        }
+        if (this.props.pluginsDef !== nextProps.pluginsDef) {
+            return true;
+        }
+        return false;
     }
 
     UNSAFE_componentWillMount() {
@@ -131,7 +142,7 @@ class StandardApp extends React.Component {
 
         return this.state.initialized ?
             <Provider store={this.store}>
-                <App {...other} plugins={assign(PluginsUtils.getPlugins({...plugins, ...this.state.pluginsRegistry}), { requires })} />
+                <App {...other} plugins={assign(PluginsUtils.getPlugins({...plugins, ...this.filterRemoved(this.state.pluginsRegistry, this.state.removedPlugins)}), { requires })} />
             </Provider>
             : (<span><div className="_ms2_init_spinner _ms2_init_center"><div></div></div>
                 <div className="_ms2_init_text _ms2_init_center">Loading MapStore</div></span>);
@@ -147,8 +158,24 @@ class StandardApp extends React.Component {
             initialized: true
         });
     };
-    getAssetPath =(asset) => {
+    getAssetPath = (asset) => {
         return ConfigUtils.getConfigProp("extensionsFolder") + asset;
+    };
+    removeExtension = (plugin) => {
+        this.setState({
+            removedPlugins: [...this.state.removedPlugins, plugin + "Plugin"]
+        });
+    };
+    filterRemoved = (registry, removed) => {
+        return Object.keys(registry).reduce((acc, p) => {
+            if (removed.indexOf(p) !== -1) {
+                return acc;
+            }
+            return {
+                ...acc,
+                [p]: registry[p]
+            };
+        }, {});
     };
     loadExtensions = (path, callback) => {
         if (this.props.enableExtensions) {
@@ -201,6 +228,9 @@ class StandardApp extends React.Component {
             this.store.addActionListener((action) => {
                 if (action.type === LOAD_EXTENSIONS) {
                     this.loadExtensions(ConfigUtils.getConfigProp('extensionsRegistry'), this.onPluginsLoaded);
+                }
+                if (action.type === PLUGIN_UNINSTALLED) {
+                    this.removeExtension(action.plugin);
                 }
             });
         }

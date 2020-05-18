@@ -9,6 +9,9 @@
 const L = require('leaflet');
 const React = require('react');
 const ReactDOM = require('react-dom');
+const MockAdapter = require('axios-mock-adapter');
+const axios = require('axios');
+
 const LeafLetLayer = require('../Layer.jsx');
 const Feature = require('../Feature.jsx');
 const expect = require('expect');
@@ -23,7 +26,10 @@ require('../plugins/WMTSLayer');
 require('../plugins/GoogleLayer');
 require('../plugins/BingLayer');
 require('../plugins/MapQuest');
+require('../plugins/WFSLayer');
 require('../plugins/VectorLayer');
+
+let mockAxios;
 
 const SecurityUtils = require('../../../../utils/SecurityUtils');
 const {DEFAULT_ANNOTATIONS_STYLES} = require('../../../../utils/AnnotationsUtils');
@@ -33,12 +39,14 @@ describe('Leaflet layer', () => {
     let map;
 
     beforeEach((done) => {
+        mockAxios = new MockAdapter(axios);
         document.body.innerHTML = '<div id="map"></div><div id="container"></div>';
         map = L.map('map');
         setTimeout(done);
     });
 
     afterEach((done) => {
+        mockAxios.restore();
         ReactDOM.unmountComponentAtNode(document.getElementById("map"));
         ReactDOM.unmountComponentAtNode(document.getElementById("container"));
         document.body.innerHTML = '';
@@ -1304,5 +1312,149 @@ describe('Leaflet layer', () => {
             expect(newLayer.layer.options.opacity).toEqual(opacity);
             done();
         });
+    });
+    // ******************************
+    // WFS
+    // ******************************
+    const SAMPLE_FEATURE_COLLECTION = {
+        "type": "FeatureCollection",
+        "totalFeatures": 6,
+        "features": [
+            {
+                "type": "Feature",
+                "id": "poi.1",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        -74.0104611,
+                        40.70758763
+                    ]
+                },
+                "properties": {
+                    "NAME": "museam"
+                }
+            }
+        ],
+        "crs": {
+            "type": "name",
+            "properties": {
+                "name": "urn:ogc:def:crs:EPSG::4326"
+            }
+        }
+    };
+    it('render wfs layer', (done) => {
+        mockAxios.onGet().reply(r => {
+            expect(r.url.indexOf('SAMPLE_URL') >= 0).toBeTruthy();
+            return [200, SAMPLE_FEATURE_COLLECTION];
+        });
+        const options = {
+            type: 'wfs',
+            visibility: true,
+            url: 'SAMPLE_URL',
+            name: 'osm:vector_tile'
+        };
+        let layer;
+        // first render
+        layer = ReactDOM.render(<LeafLetLayer
+            type="wfs"
+            options={{
+                ...options
+            }}
+            map={map} />, document.getElementById("container"));
+        expect(layer.layer.getLayers().length).toBe(0);
+        layer.layer.on('load', function() {
+            expect(layer.layer.getLayers().length).toBe(1);
+            const f = layer.layer.getLayers()[0];
+            expect(f.getLatLng().lat).toEqual(40.70758763);
+            expect(f.getLatLng().lng).toEqual(-74.0104611,);
+            done();
+        });
+    });
+    it('test second render wfs layer', (done) => {
+        let firstCall = false;
+        mockAxios.onGet().reply(r => {
+            // catch second rendering with params
+            if (r.url.indexOf("CQL_FILTER=INCLUDE") > 0) {
+
+                return [200, SAMPLE_FEATURE_COLLECTION];
+            }
+            // first render returns empty features
+            return [200, { ...SAMPLE_FEATURE_COLLECTION, features: [] }];
+        });
+        const options = {
+            type: 'wfs',
+            visibility: true,
+            url: 'SAMPLE_URL',
+            name: 'osm:vector_tile'
+        };
+        // first render
+        let layer = ReactDOM.render(<LeafLetLayer
+            type="wfs"
+            options={{
+                ...options
+            }}
+            map={map} />, document.getElementById("container"));
+
+        layer.layer.on('load', () => {
+            if (layer.layer.getLayers().length > 0) {
+                expect(firstCall).toBeTruthy();
+                done();
+            } else {
+                firstCall = true;
+            }
+        });
+        // second render with custom params
+        layer = ReactDOM.render(<LeafLetLayer
+            type="wfs"
+            options={{
+                ...options,
+                params: { "CQL_FILTER": "INCLUDE" }
+            }}
+            map={map} />, document.getElementById("container"));
+    });
+    it('render wfs layer with FilterObj', (done) => {
+        mockAxios.onGet().reply(r => {
+            expect(r.url.indexOf('SAMPLE_URL') >= 0).toBeTruthy();
+            const params = r.url.split("?")[1].split("&");
+            const filterParam = params.filter(p => p.indexOf("CQL_FILTER") === 0)[0];
+            if (filterParam) {
+                const filterValue = decodeURIComponent(filterParam.split("=")[1]);
+                expect(filterValue).toEqual((`("prop2" = 'value2')`));
+                setTimeout(() => done(), 10);
+                return [200, { ...SAMPLE_FEATURE_COLLECTION, features: [] }];
+            }
+            return [200, SAMPLE_FEATURE_COLLECTION];
+        });
+        const options = {
+            type: 'wfs',
+            visibility: true,
+            url: 'SAMPLE_URL',
+            name: 'osm:vector_tile',
+            filterObj: {
+                filterFields: [
+                    {
+                        groupId: 1,
+                        attribute: "prop2",
+                        exception: null,
+                        operator: "=",
+                        rowId: "3",
+                        type: "number",
+                        value: "value2"
+                    }],
+                groupFields: [{
+                    id: 1,
+                    index: 0,
+                    logic: "OR"
+                }]
+            }
+        };
+
+        // first render
+        ReactDOM.render(<LeafLetLayer
+            type="wfs"
+            options={{
+                ...options
+            }}
+            map={map} />, document.getElementById("container"));
     });
 });

@@ -116,4 +116,42 @@ describe("test IdentifyContainer", () => {
         expect(sidePanel.length).toBe(1);
         expect(sidePanel[0].children[0].style.zIndex).toBe('7777');
     });
+
+    it('test edit button with PROPERTIES response', () => {
+        const funcs = {
+            getToolButtons: () => {}
+        };
+
+        const getToolButtonsSpy = expect.spyOn(funcs, 'getToolButtons');
+        ReactDOM.render(<IdentifyContainer
+            enabled
+            showEdit
+            isEditingAllowed
+            getToolButtons={funcs.getToolButtons}
+            index={0}
+            requests={{}}
+            validResponses={[{format: 'PROPERTIES', layer: {search: {url: 'search_url'}}}]}
+            responses={[{format: 'PROPERTIES', layer: {search: {url: 'search_url'}}}]}/>, document.getElementById("container"));
+        expect(getToolButtonsSpy).toHaveBeenCalled();
+        expect(getToolButtonsSpy.calls[0].arguments[0].showEdit).toBe(true);
+    });
+
+    it('test edit button with TEMPLATE response', () => {
+        const funcs = {
+            getToolButtons: () => {}
+        };
+
+        const getToolButtonsSpy = expect.spyOn(funcs, 'getToolButtons');
+        ReactDOM.render(<IdentifyContainer
+            enabled
+            showEdit
+            isEditingAllowed
+            getToolButtons={funcs.getToolButtons}
+            index={0}
+            requests={{}}
+            validResponses={[{format: 'TEMPLATE', layer: {search: {url: 'search_url'}}}]}
+            responses={[{format: 'TEMPLATE', layer: {search: {url: 'search_url'}}}]}/>, document.getElementById("container"));
+        expect(getToolButtonsSpy).toHaveBeenCalled();
+        expect(getToolButtonsSpy.calls[0].arguments[0].showEdit).toBe(true);
+    });
 });

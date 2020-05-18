@@ -19,7 +19,7 @@ function getDescribeLayer(url, layer, options) {
     return (dispatch /* , getState */) => {
         return WMS.describeLayer(url, layer.name, options).then((describeLayer) => {
             if (describeLayer && describeLayer.owsType === "WFS") {
-                return WFS.describeFeatureType(url, describeLayer.name).then((describeFeatureType) => {
+                return WFS.describeFeatureTypeOGCSchemas(url, describeLayer.name).then((describeFeatureType) => {
                     // TODO move the management of this geometryType in the proper components, getting the describeFeatureType entry:
                     let types = get(describeFeatureType, "complexType[0].complexContent.extension.sequence.element");
                     let geometryType = head(types && types.filter( elem => elem.name === "the_geom" || elem.type.prefix.indexOf("gml") === 0));

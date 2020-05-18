@@ -45,6 +45,12 @@ pages:
       - Overview: 'user-guide/managing-users-and-groups.md'
       - Managing Users: 'user-guide/managing-users.md'
       - Managing Groups: 'user-guide/managing-groups.md'
+    - Managing Contexts:
+      - Overview: 'user-guide/managing-contexts.md'
+      - Application Context: 'user-guide/application-context.md'
+      - Extension Library: 'user-guide/extension-library.md'
+      - Map Catalog: 'user-guide/map-catalog.md'
+      - Map Templates: 'user-guide/map-templates.md'
     - Resources Properties: 'user-guide/resources-properties.md'
     - Sharing Resources: 'user-guide/share.md'
     - Exploring Maps:
@@ -56,7 +62,7 @@ pages:
       - Widgets: 'user-guide/widgets.md'
       - Menu Bar: 'user-guide/menu-bar.md'
       - Printing a Map: 'user-guide/print.md'
-      - Import Files: 'user-guide/import.md'
+      - Importing and Exporting Files: 'user-guide/import.md'
       - Catalog Services: 'user-guide/catalog.md'
       - Performing Measurments: 'user-guide/measure.md'
       - Adding Annotations: 'user-guide/annotations.md'
@@ -69,6 +75,7 @@ pages:
       - Adding widgets: 'user-guide/adding-widgets.md'
       - Connecting widgets: 'user-guide/connecting-widgets.md'
   - Developer Guide:
+    - Requirements: 'developer-guide/requirements.md'
     - Quick Setup and Run: 'developer-guide/index.md'
     - Infrastructure: 'developer-guide/infrastructure-and-general-architecture.md'
     - Developing with MapStore:
@@ -78,7 +85,6 @@ pages:
       - Building and Deploying: 'developer-guide/building-and-deploying.md'
       - Front End Technologies: 'developer-guide/reactjs-and-redux-introduction.md'
       - Plugins architecture: 'developer-guide/plugins-architecture.md'
-
       - Internationalization: 'developer-guide/internationalization.md'
       - Custom dependencies: 'developer-guide/custom-dependencies.md'
       - Styling and theming: 'developer-guide/customize-theme.md'

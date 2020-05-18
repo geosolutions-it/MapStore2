@@ -69,7 +69,15 @@ class StylePoint extends React.Component {
                                     onChangeColor={(color) => {if (color) { this.props.setStyleParameter("color", color); } }} />
                             </Col>
                             <Col xs={8} style={{paddingRight: 0, paddingLeft: 30}}>
-                                <NumberPicker disabled={this.props.shapeStyle.marker} onChange={(number) => {this.props.setStyleParameter("width", number); }} min={1} max={15} step={1} value={this.props.shapeStyle.width}/>
+                                <NumberPicker
+                                    disabled={this.props.shapeStyle.marker}
+                                    min={1} max={15} step={1}
+                                    value={this.props.shapeStyle.width}
+                                    onChange={(number) => {
+                                        if (this.props.shapeStyle.width !== number) {
+                                            this.props.setStyleParameter("width", number);
+                                        }
+                                    }}  />
                             </Col>
                         </Row>
                         <Row style={{marginTop: 4}}>
@@ -82,7 +90,15 @@ class StylePoint extends React.Component {
                                     onChangeColor={(color) => { if (color) { this.props.setStyleParameter("fill", color); } }} />
                             </Col>
                             <Col xs={8} style={{paddingRight: 0, paddingLeft: 30}}>
-                                <NumberPicker disabled={this.props.shapeStyle.marker} onChange={(number) => {this.props.setStyleParameter("radius", number); }} min={1} max={50} step={1} value={this.props.shapeStyle.radius}/>
+                                <NumberPicker
+                                    disabled={this.props.shapeStyle.marker}
+                                    min={1} max={50} step={1}
+                                    value={this.props.shapeStyle.radius}
+                                    onChange={(number) => {
+                                        if (this.props.shapeStyle.radius !== number) {
+                                            this.props.setStyleParameter("radius", number);
+                                        }
+                                    }} />
                             </Col>
                         </Row>
                     </Col>

@@ -70,19 +70,16 @@ describe("test identify enhancers", () => {
         const Component = identifyLifecycle(({onClose = () => {}}) => <div id="test-component" onClick={() => onClose()}></div>);
         const testHandlers = {
             closeIdentify: () => {},
-            purgeResults: () => {},
-            hideMarker: () => {}
+            purgeResults: () => {}
         };
         const spyCloseIdentify = expect.spyOn(testHandlers, 'closeIdentify');
         const spyPurgeResults = expect.spyOn(testHandlers, 'purgeResults');
-        const spyHideMarker = expect.spyOn(testHandlers, 'hideMarker');
         ReactDOM.render(
             <Component
                 enabled
                 responses={[{}]}
                 closeIdentify={testHandlers.closeIdentify}
-                purgeResults={testHandlers.purgeResults}
-                hideMarker={testHandlers.hideMarker}/>,
+                purgeResults={testHandlers.purgeResults}/>,
             document.getElementById("container")
         );
 
@@ -90,7 +87,6 @@ describe("test identify enhancers", () => {
         TestUtils.Simulate.click(testComponent);
         expect(spyCloseIdentify).toHaveBeenCalled();
         expect(spyPurgeResults).toHaveBeenCalled();
-        expect(spyHideMarker).toHaveBeenCalled();
     });
     it("test reset on unmount", () => {
         const Component = identifyLifecycle(({ onClose = () => { } }) => <div id="test-component" onClick={() => onClose()}></div>);

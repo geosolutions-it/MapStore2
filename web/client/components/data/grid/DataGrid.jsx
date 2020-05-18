@@ -47,7 +47,7 @@ class DataGrid extends Grid {
                 this.setCanvasListener();
             }
             // When exiting feature editing we reset previous scroll
-            if (oldProps.isFocused && !this.props.isFocused ) {
+            if (this.canvas && oldProps.isFocused && !this.props.isFocused ) {
                 this.canvas.scrollTop = this.scroll;
             } else if (this.canvas && this.props.minHeight !== oldProps.minHeight) {
                 this.scrollListener(); // Emit scroll on  grid resize

@@ -1,0 +1,246 @@
+<wfs:WFS_Capabilities xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns="http://www.opengis.net/wfs"
+    xmlns:wfs="http://www.opengis.net/wfs"
+    xmlns:ows="http://www.opengis.net/ows"
+    xmlns:gml="http://www.opengis.net/gml"
+    xmlns:ogc="http://www.opengis.net/ogc"
+    xmlns:xlink="http://www.w3.org/1999/xlink"
+    xmlns:topp="http://www.openplans.org/topp" version="1.1.0" xsi:schemaLocation="http://www.opengis.net/wfs https://mydomain.com:443/geoserver/schemas/wfs/1.1.0/wfs.xsd" updateSequence="856">
+    <ows:ServiceIdentification>
+        <ows:Title>Simple WFS getCapabilities with some layers</ows:Title>
+        <ows:Abstract>
+Sample capabilities document with some layers</ows:Abstract>
+        <ows:Keywords>
+            <ows:Keyword>WFS</ows:Keyword>
+            <ows:Keyword>WMS</ows:Keyword>
+            <ows:Keyword>GEOSERVER</ows:Keyword>
+        </ows:Keywords>
+        <ows:ServiceType>WFS</ows:ServiceType>
+        <ows:ServiceTypeVersion>1.1.0</ows:ServiceTypeVersion>
+        <ows:Fees>NONE</ows:Fees>
+        <ows:AccessConstraints>NONE</ows:AccessConstraints>
+    </ows:ServiceIdentification>
+    <ows:ServiceProvider>
+        <ows:ProviderName>The ancient geographes INC</ows:ProviderName>
+        <ows:ServiceContact>
+            <ows:IndividualName>Claudius Ptolomaeus</ows:IndividualName>
+            <ows:PositionName>Chief geographer</ows:PositionName>
+            <ows:ContactInfo>
+                <ows:Phone>
+                    <ows:Voice/>
+                    <ows:Facsimile/>
+                </ows:Phone>
+                <ows:Address>
+                    <ows:DeliveryPoint/>
+                    <ows:City>Alexandria</ows:City>
+                    <ows:AdministrativeArea/>
+                    <ows:PostalCode/>
+                    <ows:Country>Egypt</ows:Country>
+                    <ows:ElectronicMailAddress>claudius.ptolomaeus@gmail.com</ows:ElectronicMailAddress>
+                </ows:Address>
+            </ows:ContactInfo>
+        </ows:ServiceContact>
+    </ows:ServiceProvider>
+    <ows:OperationsMetadata>
+        <ows:Operation name="GetCapabilities">
+            <ows:DCP>
+                <ows:HTTP>
+                    <ows:Get xlink:href="https://mydomain.com:443/geoserver/wfs"/>
+                    <ows:Post xlink:href="https://mydomain.com:443/geoserver/wfs"/>
+                </ows:HTTP>
+            </ows:DCP>
+            <ows:Parameter name="AcceptVersions">
+                <ows:Value>1.0.0</ows:Value>
+                <ows:Value>1.1.0</ows:Value>
+            </ows:Parameter>
+            <ows:Parameter name="AcceptFormats">
+                <ows:Value>text/xml</ows:Value>
+            </ows:Parameter>
+        </ows:Operation>
+        <ows:Operation name="DescribeFeatureType">
+            <ows:DCP>
+                <ows:HTTP>
+                    <ows:Get xlink:href="https://mydomain.com:443/geoserver/wfs"/>
+                    <ows:Post xlink:href="https://mydomain.com:443/geoserver/wfs"/>
+                </ows:HTTP>
+            </ows:DCP>
+            <ows:Parameter name="outputFormat">
+                <ows:Value>text/xml; subtype=gml/3.1.1</ows:Value>
+            </ows:Parameter>
+        </ows:Operation>
+        <ows:Operation name="GetFeature">
+            <ows:DCP>
+                <ows:HTTP>
+                    <ows:Get xlink:href="https://mydomain.com:443/geoserver/wfs"/>
+                    <ows:Post xlink:href="https://mydomain.com:443/geoserver/wfs"/>
+                </ows:HTTP>
+            </ows:DCP>
+            <ows:Parameter name="resultType">
+                <ows:Value>results</ows:Value>
+                <ows:Value>hits</ows:Value>
+            </ows:Parameter>
+            <ows:Parameter name="outputFormat">
+                <ows:Value>text/xml; subtype=gml/3.1.1</ows:Value>
+                <ows:Value>application/gml+xml; version=3.2</ows:Value>
+                <ows:Value>application/json</ows:Value>
+                <ows:Value>application/x-gpkg</ows:Value>
+                <ows:Value>csv</ows:Value>
+                <ows:Value>gml3</ows:Value>
+                <ows:Value>gml32</ows:Value>
+                <ows:Value>json</ows:Value>
+                <ows:Value>text/xml; subtype=gml/2.1.2</ows:Value>
+                <ows:Value>text/xml; subtype=gml/3.2</ows:Value>
+            </ows:Parameter>
+            <ows:Constraint name="LocalTraverseXLinkScope">
+                <ows:Value>2</ows:Value>
+            </ows:Constraint>
+        </ows:Operation>
+        <ows:Operation name="GetGmlObject">
+            <ows:DCP>
+                <ows:HTTP>
+                    <ows:Get xlink:href="https://mydomain.com:443/geoserver/wfs"/>
+                    <ows:Post xlink:href="https://mydomain.com:443/geoserver/wfs"/>
+                </ows:HTTP>
+            </ows:DCP>
+        </ows:Operation>
+        <ows:Operation name="Transaction">
+            <ows:DCP>
+                <ows:HTTP>
+                    <ows:Get xlink:href="https://mydomain.com:443/geoserver/wfs"/>
+                    <ows:Post xlink:href="https://mydomain.com:443/geoserver/wfs"/>
+                </ows:HTTP>
+            </ows:DCP>
+            <ows:Parameter name="inputFormat">
+                <ows:Value>text/xml; subtype=gml/3.1.1</ows:Value>
+            </ows:Parameter>
+            <ows:Parameter name="idgen">
+                <ows:Value>GenerateNew</ows:Value>
+                <ows:Value>UseExisting</ows:Value>
+                <ows:Value>ReplaceDuplicate</ows:Value>
+            </ows:Parameter>
+            <ows:Parameter name="releaseAction">
+                <ows:Value>ALL</ows:Value>
+                <ows:Value>SOME</ows:Value>
+            </ows:Parameter>
+        </ows:Operation>
+    </ows:OperationsMetadata>
+    <FeatureTypeList>
+        <Operations>
+            <Operation>Query</Operation>
+            <Operation>Insert</Operation>
+            <Operation>Update</Operation>
+            <Operation>Delete</Operation>
+        </Operations>
+        <FeatureType xmlns:topp="http://www.openplans.org/workspace">
+            <Name>workspace:layer_1</Name>
+            <Title>layer_1</Title>
+            <Abstract>Some description</Abstract>
+            <ows:Keywords>
+                <ows:Keyword>census</ows:Keyword>
+            </ows:Keywords>
+            <DefaultSRS>urn:x-ogc:def:crs:EPSG:4326</DefaultSRS>
+            <ows:WGS84BoundingBox>
+                <ows:LowerCorner>-124.731422 24.955967</ows:LowerCorner>
+                <ows:UpperCorner>-66.969849 49.371735</ows:UpperCorner>
+            </ows:WGS84BoundingBox>
+        </FeatureType>
+        <FeatureType xmlns:topp="http://www.openplans.org/workspace">
+            <Name>workspace:layer_2</Name>
+            <Title>layer_2</Title>
+            <Abstract>Some description</Abstract>
+            <ows:Keywords>
+                <ows:Keyword>census</ows:Keyword>
+            </ows:Keywords>
+            <DefaultSRS>urn:x-ogc:def:crs:EPSG:4326</DefaultSRS>
+            <ows:WGS84BoundingBox>
+                <ows:LowerCorner>-124.731422 24.955967</ows:LowerCorner>
+                <ows:UpperCorner>-66.969849 49.371735</ows:UpperCorner>
+            </ows:WGS84BoundingBox>
+        </FeatureType>
+        <FeatureType xmlns:topp="http://www.openplans.org/workspace">
+            <Name>workspace:layer_3</Name>
+            <Title>layer_3</Title>
+            <Abstract>Some description</Abstract>
+            <ows:Keywords>
+                <ows:Keyword>census</ows:Keyword>
+            </ows:Keywords>
+            <DefaultSRS>urn:x-ogc:def:crs:EPSG:4326</DefaultSRS>
+            <ows:WGS84BoundingBox>
+                <ows:LowerCorner>-124.731422 24.955967</ows:LowerCorner>
+                <ows:UpperCorner>-66.969849 49.371735</ows:UpperCorner>
+            </ows:WGS84BoundingBox>
+        </FeatureType>
+        <FeatureType xmlns:topp="http://www.openplans.org/workspace">
+            <Name>workspace:layer_4</Name>
+            <Title>layer_4</Title>
+            <Abstract>Some description</Abstract>
+            <ows:Keywords>
+                <ows:Keyword>census</ows:Keyword>
+            </ows:Keywords>
+            <DefaultSRS>urn:x-ogc:def:crs:EPSG:4326</DefaultSRS>
+            <ows:WGS84BoundingBox>
+                <ows:LowerCorner>-124.731422 24.955967</ows:LowerCorner>
+                <ows:UpperCorner>-66.969849 49.371735</ows:UpperCorner>
+            </ows:WGS84BoundingBox>
+        </FeatureType>
+        <FeatureType xmlns:topp="http://www.openplans.org/workspace">
+            <Name>workspace:layer_5</Name>
+            <Title>layer_5</Title>
+            <Abstract>Some description</Abstract>
+            <ows:Keywords>
+                <ows:Keyword>census</ows:Keyword>
+            </ows:Keywords>
+            <DefaultSRS>urn:x-ogc:def:crs:EPSG:4326</DefaultSRS>
+            <ows:WGS84BoundingBox>
+                <ows:LowerCorner>-124.731422 24.955967</ows:LowerCorner>
+                <ows:UpperCorner>-66.969849 49.371735</ows:UpperCorner>
+            </ows:WGS84BoundingBox>
+        </FeatureType>
+        <FeatureType xmlns:topp="http://www.openplans.org/workspace">
+            <Name>workspace:layer_6</Name>
+            <Title>layer_6</Title>
+            <Abstract>Some description</Abstract>
+            <ows:Keywords>
+                <ows:Keyword>census</ows:Keyword>
+            </ows:Keywords>
+            <DefaultSRS>urn:x-ogc:def:crs:EPSG:4326</DefaultSRS>
+            <ows:WGS84BoundingBox>
+                <ows:LowerCorner>-124.731422 24.955967</ows:LowerCorner>
+                <ows:UpperCorner>-66.969849 49.371735</ows:UpperCorner>
+            </ows:WGS84BoundingBox>
+        </FeatureType>
+    </FeatureTypeList>
+    <ogc:Filter_Capabilities>
+        <ogc:Spatial_Capabilities>
+            <ogc:GeometryOperands>
+                <ogc:GeometryOperand>gml:Envelope</ogc:GeometryOperand>
+                <ogc:GeometryOperand>gml:Point</ogc:GeometryOperand>
+                <ogc:GeometryOperand>gml:LineString</ogc:GeometryOperand>
+                <ogc:GeometryOperand>gml:Polygon</ogc:GeometryOperand>
+            </ogc:GeometryOperands>
+            <ogc:SpatialOperators>
+                <ogc:SpatialOperator name="Disjoint"/>
+                <ogc:SpatialOperator name="BBOX"/>
+            </ogc:SpatialOperators>
+        </ogc:Spatial_Capabilities>
+        <ogc:Scalar_Capabilities>
+            <ogc:LogicalOperators/>
+            <ogc:ComparisonOperators>
+                <ogc:ComparisonOperator>LessThan</ogc:ComparisonOperator>
+                <ogc:ComparisonOperator>NullCheck</ogc:ComparisonOperator>
+            </ogc:ComparisonOperators>
+            <ogc:ArithmeticOperators>
+                <ogc:SimpleArithmetic/>
+                <ogc:Functions>
+                    <ogc:FunctionNames>
+                        <ogc:FunctionName nArgs="1">abs</ogc:FunctionName>
+                    </ogc:FunctionNames>
+                </ogc:Functions>
+            </ogc:ArithmeticOperators>
+        </ogc:Scalar_Capabilities>
+        <ogc:Id_Capabilities>
+            <ogc:FID/>
+            <ogc:EID/>
+        </ogc:Id_Capabilities>
+    </ogc:Filter_Capabilities>
+</wfs:WFS_Capabilities>

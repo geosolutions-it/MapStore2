@@ -35,6 +35,7 @@ let defaultConfig = {
     translationsPath: "translations",
     extensionsRegistry: "extensions.json",
     extensionsFolder: "",
+    configurationFolder: "",
     contextPluginsConfiguration: 'pluginsConfig.json',
     projectionDefs: [],
     themePrefix: "ms2",
@@ -51,7 +52,7 @@ const getConfigurationOptions = function(query, defaultName, extension, geoStore
     if (mapId) {
         configUrl = ( geoStoreBase || defaultConfig.geoStoreUrl ) + "data/" + mapId;
     } else {
-        configUrl = (query.config || defaultName || 'config') + '.' + (extension || 'json');
+        configUrl = defaultConfig.configurationFolder + (query.config || defaultName || 'config') + '.' + (extension || 'json');
     }
     return {
         configUrl: configUrl,

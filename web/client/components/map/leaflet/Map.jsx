@@ -218,6 +218,10 @@ class LeafletMap extends React.Component {
                 if (event.layer.options && !event.layer.options.hideErrors || !event.layer.options) {
                     event.layer.on('tileerror', (errorEvent) => { event.layer.layerErrorStream$.next(errorEvent); });
                 }
+                // WFS data
+                event.layer.on('loaderror', (error) => {
+                    this.props.onLayerError(error.target.layerId);
+                });
             }
         });
 

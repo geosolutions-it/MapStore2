@@ -1,26 +1,23 @@
 # Footer
 ********
 
-Located at the bottom of the Data Frame, the Footer can be expanded by clicking on the mouse icon <img src="../img/button/mouse-icon.jpg" class="ms-docbutton"/> and it contains a scale bar, a map scale switcher, the coordinates of the mouse pointer and a coordinate reference system switcher.
+In [MapStore](https://mapstore.geo-solutions.it/mapstore/#/) some of the map information are reported in the *Footer*. By default, as soon as the user opens the map, the scale bar and the scale switcher are showed so that the user can change the scale bar by zooming in/out the map or by selecting a map scale through the scale switcher.
 
-<img src="../img/footer/footer.jpg" class="ms-docimage" />
+<img src="../img/footer/show_scale1.jpg" class="ms-docimage" />
 
-CRS Selector
-------------
+In order to visualize the map coordinates corresponding to the mouse pointer in the selected *Coordinate Reference System* of the map, the user can click on the button <img src="../img/button/mouse-icon.jpg" class="ms-docbutton"/>  
 
-[MapStore](https://mapstore.geo-solutions.it/mapstore/#/) provides a *CRS Selector* through which you are able to switch the *Coordinate Reference System* of your map. In the bottom-right corner of the screen you should see this icon <img src="../img/button/crs_selector_icon.jpg" class="ms-docbutton" />.
+<img src="../img/footer/show_coordinates1.jpg" class="ms-docimage" />
 
-<img src="../img/footer/crs_selector.jpg" class="ms-docimage"  style="max-width:500px;"/>
+## CRS Selector
 
-Switching *CRS* is very simple:
-
-* **Click** on the *CRS Selector* icon <img src="../img/button/crs_selector_icon.jpg" class="ms-docbutton" />.
-
-* **Select** the *CRS* and **click** on it.
+ [MapStore](https://mapstore.geo-solutions.it/mapstore/#/) allows also to change the *Coordinate Reference System* of the map by clicking on the **Select Projection** button <img src="../img/button/crs_selector_icon.jpg" class="ms-docbutton"/>. A CRS selector opens to select one of the available CRSs, as follows:
 
 <img src="../img/footer/CRS_selector.gif" class="ms-docimage"/>
 
-In order to identify the desired CRS, you can also filter the CRS list by typing in a search input field located in the bottom part of the selector. This selection will be saved along with the map.
+!!! Note
+    The list of available CRSs depends on the [CRS Selector configuration](https://mapstore.readthedocs.io/en/latest/developer-guide/local-config/#crs-selector-configuration).
 
-!!! note
-    The list of CRSs is customizable by MapStore's configuiration.
+In order to search a desired CRS, the user can also filter the CRS list by typing in a search input field.
+
+<img src="../img/footer/searchCRS.jpg" class="ms-docimage" style="max-width:200px;"/>

@@ -13,13 +13,22 @@ import CommonAdvancedSettings from './CommonAdvancedSettings';
 import SwitchPanel from "../../../misc/switch/SwitchPanel";
 import TMSAdvancedEditor from './TMSAdvancedEditor';
 import Message from '../../../I18N/Message';
+import RasterAdvancedSettings from './RasterAdvancedSettings';
 
 
 const getPanel = (type) => {
-    if (type === "tms") {
+    switch (type) {
+    case "tms":
         return TMSAdvancedEditor;
+    case "wfs":
+        return CommonAdvancedSettings;
+    case "wms":
+    case "wmts":
+    case "csw":
+        return RasterAdvancedSettings;
+    default:
+        return CommonAdvancedSettings;
     }
-    return CommonAdvancedSettings;
 };
 
 /**

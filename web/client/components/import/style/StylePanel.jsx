@@ -11,7 +11,7 @@ const React = require('react');
 
 const Message = require('../../I18N/Message');
 const LocaleUtils = require('../../../utils/LocaleUtils');
-let StyleUtils;
+let { toVectorStyle } = require('../../../utils/StyleUtils');
 const { Grid, Row, Col, Button, Alert, ButtonToolbar} = require('react-bootstrap');
 
 const {Promise} = require('es6-promise');
@@ -64,10 +64,6 @@ class StylePanel extends React.Component {
         zoomOnShapefiles: true,
         initialLayers: []
     };
-
-    UNSAFE_componentWillMount() {
-        StyleUtils = require('../../../utils/StyleUtils')(this.props.mapType);
-    }
 
     componentDidMount() {
         this.setState({initialLayers: [...this.props.layers]});
@@ -185,7 +181,7 @@ class StylePanel extends React.Component {
     addToMap = () => {
         let styledLayer = this.props.selected;
         if (!this.state.useDefaultStyle) {
-            styledLayer = StyleUtils.toVectorStyle(styledLayer, this.props.shapeStyle);
+            styledLayer = toVectorStyle(styledLayer, this.props.shapeStyle);
         }
         Promise.resolve(this.props.addLayer( styledLayer )).then(() => {
             let bbox = [];
