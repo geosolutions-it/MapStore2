@@ -25,15 +25,14 @@ describe('VideoForm component', () => {
         ReactDOM.render(<VideoForm/>, document.getElementById("container"));
         const container = document.getElementById('container');
         const inputsNodes = container.querySelectorAll('input');
-        expect(inputsNodes.length).toBe(6);
+        expect(inputsNodes.length).toBe(5);
         expect([...inputsNodes].map(input => input.getAttribute('type')))
             .toEqual([
                 'file', // thumbnail
                 'text',
                 'text',
                 'text',
-                'text',
-                'checkbox' // autoplay
+                'text'
             ]);
         expect([...inputsNodes].map(input => input.getAttribute('placeholder')))
             .toEqual([
@@ -41,8 +40,7 @@ describe('VideoForm component', () => {
                 'mediaEditor.mediaPicker.videoUrlPlaceholder',
                 'mediaEditor.mediaPicker.titlePlaceholder',
                 'mediaEditor.mediaPicker.descriptionPlaceholder',
-                'mediaEditor.mediaPicker.creditsPlaceholder',
-                null // autoplay
+                'mediaEditor.mediaPicker.creditsPlaceholder'
             ]);
     });
 });

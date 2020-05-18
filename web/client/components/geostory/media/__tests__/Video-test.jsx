@@ -11,6 +11,7 @@ import ReactDOM from 'react-dom';
 import expect from 'expect';
 import Video from '../Video';
 import { act } from 'react-dom/test-utils';
+import { Modes } from '../../../../utils/GeoStoryUtils';
 
 describe('Video component', () => {
     beforeEach((done) => {
@@ -51,12 +52,13 @@ describe('Video component', () => {
         expect(creditsNode).toBeTruthy();
         expect(creditsNode.innerHTML).toBe('Credits');
     });
-    it('should play if in view and autoplay is enabled', (done) => {
+    it('should play if in view and autoplay is enabled and mode is VIEW', (done) => {
         ReactDOM.render(
             <Video
                 src="path/to/video.mp4"
                 autoplay
                 inView
+                mode={Modes.VIEW}
                 onPlay={(playing) => {
                     try {
                         expect(playing).toBe(true);
@@ -72,9 +74,9 @@ describe('Video component', () => {
         const thumbnailNode = document.querySelector('.ms-video-cover');
         expect(thumbnailNode).toBeTruthy();
     });
-    it('should stop if not view', (done) => {
+    it('should stop if not view and mode is VIEW', (done) => {
         act(() => {
-            ReactDOM.render(<Video key="video" src="path/to/video.mp4" autoplay inView/>, document.getElementById("container"));
+            ReactDOM.render(<Video key="video" src="path/to/video.mp4" autoplay inView mode={Modes.VIEW} />, document.getElementById("container"));
         });
         const mediaVideoNode = document.querySelector('.ms-media-video');
         expect(mediaVideoNode).toBeTruthy();
@@ -86,6 +88,7 @@ describe('Video component', () => {
                 src="path/to/video.mp4"
                 autoplay
                 inView={false}
+                mode={Modes.VIEW}
                 onPlay={(playing) => {
                     try {
                         expect(playing).toBe(false);
