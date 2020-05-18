@@ -2114,14 +2114,14 @@
                     "title": "Titolo",
                     "titlePlaceholder": "Inserisci titolo",
                     "logo": "Logo",
-                    "logoPlaceholder": "Inserisci sorgente del logo (formato immagine)",
                     "autoplay": "Autoplay",
                     "enableAutoplay": "Abilita Autoplay",
                     "autoplayInterval": "Intervallo dell'autoplay (secondi)",
                     "autoplayIntervalPlaceholder": "Abilita l'intervallo dell'autoplay",
                     "navbar": "Barra di navigazione",
                     "showNavbar": "Mostra barra di navigazione",
-                    "theme": "Tema"
+                    "theme": "Tema",
+                    "templateTooltip":"E' possibile configurare un modello custom per ogni livello usando l'edito di mappa avanzato (vedi icona matita). Per maggiori informazioni vedi la <a href='https://mapstore.readthedocs.io/en/latest/user-guide/layer-settings/#templates' target='_blank'>guida utente</a>"
                 }
             },
             "errors": {

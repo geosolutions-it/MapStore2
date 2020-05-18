@@ -2120,7 +2120,8 @@
                     "autoplayIntervalPlaceholder": "Habilitar intervalo de reproducción automática",
                     "navbar": "Barra de navegación",
                     "showNavbar": "Mostrar barra de navegación",
-                    "theme": "Tema"
+                    "theme": "Tema",
+                    "templateTooltip":"Es posible configurar una plantilla personalizada para cada capa utilizando el editor de mapas avanzado (ver icono de lápiz). Para más información consulte la <a href='https://mapstore.readthedocs.io/en/latest/user-guide/layer-settings/#templates' target='_blank'>guía del usuario</a>"
                 }
             },
             "errors": {

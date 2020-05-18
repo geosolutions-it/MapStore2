@@ -2123,7 +2123,8 @@
                     "autoplayIntervalPlaceholder" : "Enable autoplay interval",
                     "navbar" : "Navigation bar",
                     "showNavbar" : "Show navbar",
-                    "theme": "Theme"
+                    "theme": "Theme",
+                    "templateTooltip":"It is possible to configure a custom template for each layer using the advanced map editor (see pencil icon). For more info check the <a href='https://mapstore.readthedocs.io/en/latest/user-guide/layer-settings/#templates' target='_blank'>user guide</a>"
                 }
             },
             "errors": {
