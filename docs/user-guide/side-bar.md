@@ -107,12 +107,12 @@ In order to have information about one layer only the user can select the layer 
 
 ### Floating Identify Tool 
 
-On [MapStore](https://mapstore.geo-solutions.it/mapstore/#/) the user can set the Identify tool in floating mode (**Floating Identify tool**) instead of having the default one available through a click on the map. In that case an identify popup will appears on the map as soon as the user hover over a layer in the map.
+In [MapStore](https://mapstore.geo-solutions.it/mapstore/#/) the user can set the Identify tool in floating mode (**Floating Identify tool**) instead of having the default one available through a click on the map. In that case an identify popup will appears on the map as soon as the user hover over a layer in the map.
 
 In order to activate the *Floating Identify Tool* the user can select the <img src="../img/button/setting_button.jpg" class="ms-docbutton"/> option in [Burger Menu](menu-bar.md#burger-menu) <img src="../img/button/burger.jpg" class="ms-docbutton" />. Here he can select the **Hover** option through the *Trigger event for Identify* dropdown menu.
 
 <img src="../img/side-bar/setting-hover.jpg" class="ms-docimage"/>
 
-As soon as the option Hover is selected, the user can hover the mouse over a layer in the map in order to show the popup containing the identify information.
+As soon as the option *Hover* is selected, the user can hover the mouse over a layer in the map in order to show the popup containing the identify information.
 
 <img src="../img/side-bar/hover-over-map.gif" class="ms-docimage"/>
