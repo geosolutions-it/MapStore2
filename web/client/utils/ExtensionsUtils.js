@@ -14,10 +14,27 @@ export const ERROR = {
     MALFORMED_INDEX: 'MALFORMED_INDEX',
     MISSING_PLUGIN: 'MISSING_PLUGIN',
     MISSING_BUNDLE: 'MISSING_BUNDLE',
-    TOO_MANY_PLUGINS: 'TOO_MANY_BUNDLES'
+    TOO_MANY_PLUGINS: 'TOO_MANY_BUNDLES',
+    ALREADY_INSTALLED: 'ALREADY_INSTALLED'
 };
 
-export const checkZipBundle = (file) => {
+const parseIndex = (json, plugins) => {
+    try {
+        const index = JSON.parse(json);
+        if (index.plugins && index.plugins.length && index.plugins[0].name) {
+            const name = index.plugins[0].name;
+            if (plugins.indexOf(name) !== -1) {
+                return {error: ERROR.ALREADY_INSTALLED};
+            }
+            return { name };
+        }
+        return {error: ERROR.MISSING_PLUGIN};
+    } catch (e) {
+        return {error: ERROR.MALFORMED_INDEX};
+    }
+};
+
+export const checkZipBundle = (file, plugins = []) => {
     return FileUtils.readZip(file).then((buffer) => {
         var zip = new JSZip();
         return zip.loadAsync(buffer).catch(() => {
@@ -30,15 +47,14 @@ export const checkZipBundle = (file) => {
         const bundles = zip.file(/\.js$/);
         if (bundles.length === 1) {
             return zip.files["index.json"].async("text").then((json) => {
-                try {
-                    const index = JSON.parse(json);
-                    if (index.plugins && index.plugins.length && index.plugins[0].name) {
-                        return { name: index.plugins[0].name, file };
-                    }
-                } catch (e) {
-                    throw ERROR.MALFORMED_INDEX;
+                const index = parseIndex(json, plugins);
+                if (index.error) {
+                    throw index.error;
                 }
-                throw ERROR.MISSING_PLUGIN;
+                return {
+                    ...index,
+                    file
+                };
             });
         }
         if (bundles.length === 0) {

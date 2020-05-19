@@ -300,11 +300,12 @@ const configurePluginsStep = ({
         [ERROR.MALFORMED_INDEX]: "contextCreator.configurePlugins.uploadParseError",
         [ERROR.MISSING_PLUGIN]: "contextCreator.configurePlugins.uploadMissingPluginError",
         [ERROR.MISSING_BUNDLE]: "contextCreator.configurePlugins.uploadMissingBundleError",
-        [ERROR.TOO_MANY_BUNDLES]: "contextCreator.configurePlugins.uploadTooManyBundlesError"
+        [ERROR.TOO_MANY_BUNDLES]: "contextCreator.configurePlugins.uploadTooManyBundlesError",
+        [ERROR.ALREADY_INSTALLED]: "contextCreator.configurePlugins.uploadAlreadyInstalledError"
     };
     const checkUpload = (files) => {
         Promise.all(files.map(file => {
-            return checkZipBundle(file).catch(e => {
+            return checkZipBundle(file, allPlugins.map(p => p.name)).catch(e => {
                 throw new Error(LocaleUtils.getMessageById(messages, uploadErrors[e]));
             });
         })).then((namedFiles) => {

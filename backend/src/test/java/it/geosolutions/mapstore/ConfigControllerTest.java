@@ -117,12 +117,28 @@ public class ConfigControllerTest {
         File tempResource = TestUtils.copyToTemp(ConfigControllerTest.class.getResourceAsStream("/localConfigFull.json"));
         File tempProperties = TestUtils.copyToTemp(ConfigControllerTest.class.getResourceAsStream("/mapstore.properties"));
         ServletContext context = Mockito.mock(ServletContext.class);
-        Mockito.when(context.getRealPath(Mockito.anyString())).thenReturn(tempResource.getAbsolutePath());
+        Mockito.when(context.getRealPath(Mockito.endsWith(".json"))).thenReturn(tempResource.getAbsolutePath());
         controller.setContext(context);
         controller.setOverrides(tempProperties.getAbsolutePath());
         controller.setMappings("header.height=headerHeight,header.url=headerUrl");
         String resource = controller.loadResource("localConfig", true);
         assertEquals("{\"header\":{\"height\":\"200\",\"url\":\"https://mapstore2.geo-solutions.it\"}}", resource.trim());
         tempResource.delete();
+    }
+    
+    @Test
+    public void testPatch() throws IOException {
+        File dataDir = TestUtils.getDataDir();
+        controller.setDataDir(dataDir.getAbsolutePath());
+        File tempResource = TestUtils.copyToTemp(ConfigControllerTest.class.getResourceAsStream("/pluginsConfig.json"));
+        File tempPatch = TestUtils.copyTo(ConfigControllerTest.class.getResourceAsStream("/pluginsConfig.json.patch"), dataDir,
+                "/pluginsConfig.json.patch");
+        ServletContext context = Mockito.mock(ServletContext.class);
+        Mockito.when(context.getRealPath(Mockito.endsWith(".json"))).thenReturn(tempResource.getAbsolutePath());
+        controller.setContext(context);
+        String resource = controller.loadResource("pluginsConfig", true);
+        assertEquals("{\"plugins\":[{\"name\":\"My\",\"dependencies\":[\"Toolbar\"],\"extension\":true}]}", resource.trim());
+        tempResource.delete();
+        tempPatch.delete();
     }
 }

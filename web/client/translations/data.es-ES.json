@@ -102,6 +102,7 @@
                 "none": "Sin información sobre herramientas",
                 "labelPlacement": "Colocación",
                 "right": "Derecha",
+                "left": "Izquierda",
                 "bottom": "Bottom",
                 "top": "Cima"
             },
@@ -2119,7 +2120,8 @@
                     "autoplayIntervalPlaceholder": "Habilitar intervalo de reproducción automática",
                     "navbar": "Barra de navegación",
                     "showNavbar": "Mostrar barra de navegación",
-                    "theme": "Tema"
+                    "theme": "Tema",
+                    "templateTooltip":"Es posible configurar una plantilla personalizada para cada capa utilizando el editor de mapas avanzado (ver icono de lápiz). Para más información consulte la <a href='https://mapstore.readthedocs.io/en/latest/user-guide/layer-settings/#templates' target='_blank'>guía del usuario</a>"
                 }
             },
             "errors": {
@@ -2474,6 +2476,7 @@
                 "uploadMissingBundleError": "No hay paquete de JavaScript en el archivo cargado",
                 "uploadTooManyBundlesError": "Demasiados paquetes de JavaScript en el paquete zip",
                 "uploadWrongFileFormatError": "Formato de archivo incorrecto, archivo zip esperado",
+                "uploadAlreadyInstalledError": "Extensión ya instalada. Eliminando la extensión actual antes de reinstalar",
                 "confirmRemovePlugin": "¿Está seguro de que desea eliminar la extensión?",
                 "cancelUpload": "Cerrar",
                 "install": "Instalar",

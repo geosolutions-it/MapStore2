@@ -104,6 +104,7 @@
                 "none": "Kein Tooltip",
                 "labelPlacement": "Platzierung",
                 "right": "Recht",
+                "left": "Links",
                 "bottom": "Bottom",
                 "top": "Oben"
             },
@@ -2118,7 +2119,8 @@
                     "autoplayIntervalPlaceholder": "Aktivieren Sie das Autoplay-Intervall",
                     "navbar": "Navigationsleiste",
                     "showNavbar": "Navigationsleiste anzeigen",
-                    "theme": "Thema"
+                    "theme": "Thema",
+                    "templateTooltip":"Mit dem erweiterten Karteneditor kann eine benutzerdefinierte Vorlage für jede Ebene konfiguriert werden (siehe Stiftsymbol).Weitere Informationen finden Sie in der <a href='https://mapstore.readthedocs.io/en/latest/user-guide/layer-settings/#templates' target='_blank'>Bedienungsanleitung</a>"
                 }
             },
             "errors": {
@@ -2473,6 +2475,7 @@
                 "uploadMissingBundleError": "Kein Javascript-Bundle in der hochgeladenen Datei",
                 "uploadTooManyBundlesError": "Zu viele Javascript-Bundles im Zip-Paket",
                 "uploadWrongFileFormatError": "Falsches Dateiformat, Zip-Datei erwartet",
+                "uploadAlreadyInstalledError": "Erweiterung bereits installiert. Aktuelle Erweiterung vor Neuinstallation entfernen",
                 "confirmRemovePlugin": "Möchten Sie die Erweiterung wirklich entfernen?",
                 "cancelUpload": "Schließen",
                 "install": "Install",

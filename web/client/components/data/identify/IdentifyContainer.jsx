@@ -68,7 +68,7 @@ module.exports = props => {
 
     const latlng = point && point.latlng || null;
 
-    const targetResponse = validResponses.length < 1 ? validResponses[0] : responses[index];
+    const targetResponse = validResponses[index];
     const {layer} = targetResponse || {};
 
     let lngCorrected = null;

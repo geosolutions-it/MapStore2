@@ -16,6 +16,7 @@ import {
     LOAD_FEATURE_INFO, ERROR_FEATURE_INFO, GET_VECTOR_INFO,
     FEATURE_INFO_CLICK, CLOSE_IDENTIFY, TOGGLE_HIGHLIGHT_FEATURE,
     PURGE_MAPINFO_RESULTS, EDIT_LAYER_FEATURES,
+    UPDATE_FEATURE_INFO_CLICK_POINT,
     featureInfoClick, updateCenterToMarker, purgeMapInfoResults,
     exceptionsFeatureInfo, loadFeatureInfo, errorFeatureInfo,
     noQueryableLayers, newMapInfoRequest, getVectorInfo,
@@ -47,7 +48,7 @@ import { floatingIdentifyDelaySelector } from '../selectors/localConfig';
 import { createControlEnabledSelector, measureSelector } from '../selectors/controls';
 import { localizedLayerStylesEnvSelector } from '../selectors/localizedLayerStyles';
 
-import {getBbox, getCurrentResolution, parseLayoutValue, getHook, GET_COORDINATES_FROM_PIXEL_HOOK} from '../utils/MapUtils';
+import {getBbox, getCurrentResolution, parseLayoutValue, getHook, GET_COORDINATES_FROM_PIXEL_HOOK, GET_PIXEL_FROM_COORDINATES_HOOK} from '../utils/MapUtils';
 import MapInfoUtils from '../utils/MapInfoUtils';
 import { IDENTIFY_POPUP } from '../components/map/popups';
 
@@ -57,6 +58,57 @@ const gridGeometryQuickFilter = state => get(find(getAttributeFilters(state), f 
 const stopFeatureInfo = state => stopGetFeatureInfoSelector(state) || isFeatureGridOpen(state) && (gridEditingSelector(state) || gridGeometryQuickFilter(state));
 
 import {getFeatureInfo} from '../api/identify';
+
+/**
+ * Recalculates pixel and geometric filter to allow also GFI emulation for WFS.
+ * This information is used also to switch to edit mode (feature grid) from GFI applying the same filter
+ * @param {object} point the point clicked, emitted by featureInfoClick action
+ * @param {string} projection map projection
+ */
+const updatePointWithGeometricFilter = (point, projection) => {
+    // calculate a query for edit
+    const lng = get(point, 'latlng.lng');
+    const lat = get(point, 'latlng.lat');
+    // update pixel if changed
+    const pos = reproject([lng, lat], 'EPSG:4326', projection);
+    const getPixel = getHook(GET_PIXEL_FROM_COORDINATES_HOOK);
+    let pixel;
+    if (getPixel) {
+        const [x, y] = getPixel([pos.x, pos.y]);
+        pixel = { x, y };
+    } else {
+        pixel = point.pixel;
+    }
+    const hook = getHook(GET_COORDINATES_FROM_PIXEL_HOOK);
+    const radius = calculateCircleRadiusFromPixel(
+        hook,
+        pixel,
+        pos,
+        5
+    );
+    // emulation of feature info filter to query WFS services (edit and/or WFS layer)
+    const geometricFilter = {
+        type: 'geometry',
+        enabled: true,
+        value: {
+            geometry: {
+                center: [pos.x, pos.y],
+                coordinates: calculateCircleCoordinates(pos, radius, 12),
+                extent: [pos.x - radius, pos.y - radius, pos.x + radius, pos.y + radius],
+                projection,
+                radius,
+                type: "Polygon"
+            },
+            method: "Circle",
+            operation: "INTERSECTS"
+        }
+    };
+    return {
+        ...point,
+        pixel,
+        geometricFilter
+    };
+};
 
 /**
  * Epics for Identify and map info
@@ -154,6 +206,9 @@ export default {
                 ? Rx.Observable.of(closeAnnotations())
                 : Rx.Observable.of(purgeMapInfoResults())
         ),
+    hideMarkerOnIdentifyClose: (action$) =>
+        action$.ofType(CLOSE_IDENTIFY)
+            .flatMap(() => Rx.Observable.of(hideMapinfoMarker())),
     changeMapPointer: (action$, store) =>
         action$.ofType(CHANGE_MOUSE_POINTER)
             .filter(() => !(store.getState()).map)
@@ -167,43 +222,29 @@ export default {
             return disableAlwaysOn || !stopFeatureInfo(store.getState() || {});
         })
             .switchMap(({point, layer}) => {
-                // calculate a query for edit
-                const lng = get(point, 'latlng.lng');
-                const lat = get(point, 'latlng.lat');
                 const projection = projectionSelector(store.getState());
-                const pos = reproject([lng, lat], 'EPSG:4326', projection);
-                const hook = getHook(GET_COORDINATES_FROM_PIXEL_HOOK);
-                const radius = calculateCircleRadiusFromPixel(
-                    hook,
-                    get(point, 'pixel'),
-                    pos,
-                    3
-                );
-                // emulation of feature info filter to query WFS services (edit and/or WFS layer)
-                // TODO: evaluate to do this calculation at map level, so we can use this filter also in popups
-                const geometricFilter = {
-                    type: 'geometry',
-                    enabled: true,
-                    value: {
-                        geometry: {
-                            center: [pos.x, pos.y],
-                            coordinates: calculateCircleCoordinates(pos, radius, 12),
-                            extent: [pos.x - radius, pos.y - radius, pos.x + radius, pos.y + radius],
-                            projection,
-                            radius,
-                            type: "Polygon"
-                        },
-                        method: "Circle",
-                        operation: "INTERSECTS"
-                    }
-                };
-
-                return Rx.Observable.of(featureInfoClick({ ...point, geometricFilter}, layer))
+                return Rx.Observable.of(featureInfoClick(updatePointWithGeometricFilter(point, projection), layer))
                     .merge(Rx.Observable.of(addPopup(uuid(),
                         { component: IDENTIFY_POPUP, maxWidth: 600, position: {  coordinates: point ? point.rawPos : []}}))
                         .filter(() => isMapPopup(store.getState()))
                     );
             }),
+    /**
+     * Reacts to an update of FeatureInfo coordinates recalculating geometry filter from the map and re-trigger the feature info.
+     */
+    onUpdateFeatureInfoClickPoint: (action$, {getState = () => {}} = {}) =>
+        action$.ofType(UPDATE_FEATURE_INFO_CLICK_POINT)
+            .map(({ point }) => {
+                const projection = projectionSelector(getState());
+                return {
+                    point: updatePointWithGeometricFilter(point, projection)
+                };
+            })
+            // recover old parameters of last featureInfoClick and re-trigger the action
+            .withLatestFrom(action$.ofType(FEATURE_INFO_CLICK), ({point}, lastAction) => ({
+                ...lastAction,
+                point
+            })),
     /**
      * triggers click again when highlight feature is enabled, to download the feature.
      */

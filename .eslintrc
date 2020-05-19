@@ -2,7 +2,8 @@
   "parser": "babel-eslint",          // https://github.com/babel/babel-eslint
   "plugins": [
     "no-only-tests",                 // https://github.com/levibuzolic/eslint-plugin-no-only-tests
-    "react"                          // https://github.com/yannickcr/eslint-plugin-react
+    "react",                         // https://github.com/yannickcr/eslint-plugin-react
+    "import"                         // https://github.com/benmosher/eslint-plugin-import
   ],
   "env": {                           // http://eslint.org/docs/user-guide/configuring.html#specifying-environments
     "browser": true,                 // browser global variables
@@ -86,6 +87,7 @@
     "eqeqeq": 2,                     // http://eslint.org/docs/rules/eqeqeq
     "guard-for-in": 2,               // http://eslint.org/docs/rules/guard-for-in
     "no-caller": 2,                  // http://eslint.org/docs/rules/no-caller
+    "import/named": 2,               // https://github.com/benmosher/eslint-plugin-import/blob/HEAD/docs/rules/named.md
     "no-else-return": 2,             // http://eslint.org/docs/rules/no-else-return
     "no-eq-null": 2,                 // http://eslint.org/docs/rules/no-eq-null
     "no-eval": 2,                    // http://eslint.org/docs/rules/no-eval

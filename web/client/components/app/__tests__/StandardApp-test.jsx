@@ -12,9 +12,10 @@ const ReactDOM = require('react-dom');
 const StandardApp = require('../StandardApp');
 
 const ConfigUtils = require('../../../utils/ConfigUtils');
-const {LOAD_EXTENSIONS} = require('../../../actions/contextcreator');
+const {LOAD_EXTENSIONS, PLUGIN_UNINSTALLED} = require('../../../actions/contextcreator');
 const MockAdapter = require("axios-mock-adapter");
 const axios = require("../../../libs/ajax");
+const {setStore} = require('../../../utils/StateUtils');
 
 let mockAxios;
 
@@ -267,6 +268,34 @@ describe('StandardApp', () => {
             ConfigUtils.loadConfiguration = oldLoad;
         }
     });
+    it('extensions plugins are available if extensions are enabled', (done) => {
+        mockAxios = new MockAdapter(axios);
+        mockAxios.onGet(/localconfig/i).reply(200, {});
+        mockAxios.onGet(/extensions\.json/i).reply(200, {
+            MyPlugin: {
+                bundle: "myplugin.js"
+            }
+        });
+        mockAxios.onGet(/myplugin/i).reply(200, "(window.webpackJsonp = window.webpackJsonp || []).push([[\"myplugin\"], {\"Extension.jsx\": function(e, n, t) {n.default = {name: \"My\"};}}]);");
+        const store = () => ({
+            dispatch() { },
+            getState() {
+                return {};
+            },
+            subscribe() {
+            },
+            replaceReducer: () => {}
+        });
+        setStore(store());
+        const MyApp = ({plugins}) => {
+            expect(plugins.MyPlugin).toExist();
+            done();
+        };
+
+        const app = ReactDOM.render(<StandardApp appComponent={MyApp} appStore={store} enableExtensions />, document.getElementById("container"));
+        expect(app).toExist();
+    });
+
     it('extensions.json is loaded if extensions are enabled', (done) => {
         mockAxios = new MockAdapter(axios);
         mockAxios.onGet().reply(200, {});
@@ -278,7 +307,6 @@ describe('StandardApp', () => {
             subscribe() {
             }
         });
-
 
         const app = ReactDOM.render(<StandardApp appStore={store} enableExtensions />, document.getElementById("container"));
         expect(app).toExist();
@@ -326,7 +354,6 @@ describe('StandardApp', () => {
             }
         });
 
-
         const app = ReactDOM.render(<StandardApp appStore={store} enableExtensions/>, document.getElementById("container"));
         expect(app).toExist();
         setTimeout(() => {
@@ -335,6 +362,42 @@ describe('StandardApp', () => {
             expect(mockAxios.history.get[2].url).toBe("extensions.json");
             done();
         }, 0);
+    });
+    it('PLUGIN_UNINSTALLED action triggers removing an extension from available plugins', (done) => {
+        mockAxios = new MockAdapter(axios);
+        mockAxios.onGet(/localconfig/i).reply(200, {});
+        mockAxios.onGet(/extensions\.json/i).reply(200, {
+            OtherPlugin: {
+                bundle: "myplugin.js"
+            },
+            MyPlugin: {
+                bundle: "myplugin.js"
+            }
+        });
+        mockAxios.onGet(/myplugin/i).reply(200, "(window.webpackJsonp = window.webpackJsonp || []).push([[\"myplugin\"], {\"Extension.jsx\": function(e, n, t) {n.default = {name: \"My\"};}}]);");
+        const store = () => ({
+            dispatch() {},
+            getState() {
+                return {};
+            },
+            subscribe() {
+            },
+            addActionListener(listener) {
+                listener({
+                    type: PLUGIN_UNINSTALLED,
+                    plugin: "My"
+                });
+            },
+            replaceReducer: () => {}
+
+        });
+        setStore(store());
+        const MyApp = ({plugins}) => {
+            expect(plugins.OtherPlugin).toExist();
+            expect(plugins.MyPlugin).toNotExist();
+            done();
+        };
+        ReactDOM.render(<StandardApp appStore={store} appComponent={MyApp} enableExtensions/>, document.getElementById("container"));
     });
     it('extensions assets are loaded from external folder if configured', (done) => {
         ConfigUtils.setConfigProp("extensionsFolder", "myfolder/");
