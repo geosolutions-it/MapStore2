@@ -1,13 +1,13 @@
 # Configure the map
 **********************
 
-With the **Edit map configuration** button <img src="../img/button/configure-map-button.jpg" class="ms-docbutton"/>  the **Configure map** opens on the builder giving the user the opportunity to change the background map.
+With the Edit map configuration button <img src="../img/button/configure-map-button.jpg" class="ms-docbutton"/> the **Map Inline Editor** opens to give the opportunity to do quick customizations (like basic map settings, order of layers, layer opacity and something more) to the map (more advanced customizations then, are allowed only through the *Advanced Map Editor*).
 
 <img src="../img/configure-map/configure-map.jpg" class="ms-docimage"/>
 
 ## Layers 
 
-The configure map opens with the *Layers section* where it is possible setting the layers present on the map and:
+The Map Inline Editor opens with the Layers section available, where it is possible to edit the layers settings (by selecting a layer in the TOC) and visibility of layers present in the map:
 
 <img src="../img/configure-map/layers-conf.jpg" class="ms-docimage"/>
 
@@ -17,13 +17,13 @@ The configure map opens with the *Layers section* where it is possible setting t
 
 ## Setting 
 
-The *Setting section* allow the user to:
+The *Setting section* allows the user to:
 
 <img src="../img/configure-map/setting-conf.jpg" class="ms-docimage"/>
 
 * Enable/disable the **Zoom in/out** on the map
 
-* Change the position of the **Zoom in/out** choosing the options on the dropdown menu
+* Change the position of the **Zoom in/out** by choosing one of the options available in the dropdown menu
 
 <img src="../img/configure-map/position-zoom.jpg" class="ms-docimage"/>
 
@@ -31,26 +31,22 @@ The *Setting section* allow the user to:
 
 ## Advanced map editor
 
-On the Configure Map Toolbar there is the **Advanced map editor** button <img src="../img/button/edit_button.jpg" class="ms-docbutton"/> through which a new window opens allow the user to modify the background map.
+Inside the Configure Map Toolbar the **Advanced map editor** button <img src="../img/button/edit_button.jpg" class="ms-docbutton"/>is also available allow advanced customization to the map: clicking on that button, a MapStore viewer opens for this purpose.
 
 <img src="../img/configure-map/ad-edit-map.jpg" class="ms-docimage"/>
 
-The tool for modify the map are:
+The available tools to modify the map are the following:
 
-* Adding the **Layers** choosing from the <img src="../img/button/catalog-option.jpg" class="ms-docbutton" style="max-height:20px;"/> button in the *Option menu* <img src="../img/button/burger.jpg" class="ms-docbutton"/>. As it is explained in the [Catalog Services](catalog.md).
+* Adding the **Layers** by using the <img src="../img/button/catalog-option.jpg" class="ms-docbutton" style="max-height:20px;"/> button in the *Option menu* <img src="../img/button/burger.jpg" class="ms-docbutton"/> as it is explained in the [Catalog Services](catalog.md).
 
-* Adding  **Annotations** choosing from the <img src="../img/button/annotation-option.jpg" class="ms-docbutton" style="max-height:20px;"/> button in the *Option menu* <img src="../img/button/burger.jpg" class="ms-docbutton"/>. As it is explained in the [Adding Annotations](annotations.md).
+* Adding  **Annotations** by clicking on the <img src="../img/button/annotation-option.jpg" class="ms-docbutton" style="max-height:20px;"/> button in the *Option menu* <img src="../img/button/burger.jpg" class="ms-docbutton"/> as it is explained in the [Adding Annotations](annotations.md).
 
-* **Import** a map choosing from the <img src="../img/button/import-button.jpg" class="ms-docbutton" style="max-height:20px;"/> button in the *Option menu* <img src="../img/button/burger.jpg" class="ms-docbutton"/>. As it is explained in the [Import files](import.md).
+* **Import** a map by clicking on the <img src="../img/button/import-button.jpg" class="ms-docbutton" style="max-height:20px;"/> button in the *Option menu* <img src="../img/button/burger.jpg" class="ms-docbutton"/> as it is explained in the [Import files](import.md).
 
-* **Change Background** just as it is explained in the [Basemap switcher](basemap.md)
+* **Change Background** as it is explained in the [Background Selector](background.md)
 
-* **Edit Layers** just clicking on the Layers button <img src="../img/button/show-layers.jpg" class="ms-docbutton"/>  as it is explained in the [Table of Contents](toc.md)
+* **Edit Layers** by clicking on the Layers button <img src="../img/button/show-layers.jpg" class="ms-docbutton"/> as it is explained in the [Table of Contents](toc.md)
 
-Once the changes have been made it is possible click on **Apply** for see the result.
+Once the changes have been made it is possible click on **Apply** to see the final result in the story.
 
 <img src="../img/configure-map/map-backg-inline.jpg" class="ms-docimage"/>
-
-
-
-

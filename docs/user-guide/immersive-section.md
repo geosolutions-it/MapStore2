@@ -7,43 +7,43 @@ The immersive section is composed of two elements: the background and the immers
 
 ## Content
 
-Inside an Immersive Section the user can customize the content area through the Immersive Content Toolbar:
+Inside an *Immersive Section* the story editor can customize the content area through the **Immersive Content Toolbar**:
 
 <img src="../img/immersive-section/imm-content-toolbar.jpg" class="ms-docimage" style="width:400px"/>
 
 In particular, it possible to:
 
-* **Change size** (*Small*, *Medium*, *Large* or *Full*)
+* The **Change size** button <img src="../img/button/change-size.jpg" class="ms-docbutton"/>  allows to change the size of the text window in *Small*, *Medium*, *Large* or *Full*.
 
-* **Align content** (*Left*, *Center* or *Right*)
+* The **Align content** button <img src="../img/button/align-content.jpg" class="ms-docbutton"/>  allows to align the text window, inside the Container, on the *Left*, *Center* or *Right*.
 
-* **Change field theme** (*Bright*, *Bright text*, *Dark* or *Dark text*)
+* The **Change field theme** button <img src="../img/button/change-theme.jpg" class="ms-docbutton"/> allows to change the text window theme in *Default* (same default theme settings of the story, see [Story Settings](story-setting.ms)), *Bright*, *Dark* or *Custom* (allows to customize background and text colors and enable or disable the shadow)
 
-An example of an Immersive Content with *Small* size, aligned to the *Right* and with *Dark* field theme can be like the following:
+Below is an example of a small Immersive Content, aligned to the *Right* and with a *Dark* field theme:
 
 <img src="../img/immersive-section/imm-content-edit.jpg" class="ms-docimage"/>
 
-The immersive content can hos text, media contents or web page. A new content can be added inside the immersive content through the <img src="../img/button/++++.jpg" class="ms-docbutton"/> button, or can be removed through the <img src="../img/button/remove2.jpg" class="ms-docbutton"/> button. 
-
-<img src="../img/immersive-section/add-remove.jpg" class="ms-docimage"/>
-
-As soon as you add a text content, it appears just below the current content, and with a simple click inside it, the user is allow to write his text and formatting it through the [Text Editor Toolbar](text-editor-toolbar.md). An example of a text content can be the following:
+As soon as you add a text content, it appears available just below the current one. With a simple click inside it, the user can write the text and customize the text formatting through the [Text Editor Toolbar](text-editor-toolbar.md). An example of a text content can be the following: 
 
 <img src="../img/immersive-section/is-text-content.jpg" class="ms-docimage" width="550px"/>
 
-Adding a media content the [Media Editor Window](media-editor-window.md) appears, allowing the user to add an Image or a Map. It is also possible adding a web page content as it is explained in the [Web Page Section](web-section.md). An example of immersive content with text and image can be the following:
+The immersive content can include text, media contents or web pages. A new content can be added inside the immersive content column through the <img src="../img/button/++++.jpg" class="ms-docbutton"/> button, or it can be removed through the <img src="../img/button/remove2.jpg" class="ms-docbutton"/> button. 
+
+<img src="../img/immersive-section/add-remove.jpg" class="ms-docimage"/>
+
+Adding a media content, the [Media Editor Window](media-editor-window.md) appears to allow the story editor to add an Image, a Map or a Video. It is also possible to add a Web Page content as it is explained in the [Web Page Section](web-section.md).  An example of immersive content with a text and an image can be the following:
 
 <img src="../img/immersive-section/test-image.jpg" class="ms-docimage" width="550px"/>
 
 ## Background
 
-For Immersive sections, it is possible to customize the background through the background editor toolbar:
+For Immersive sections, it is possible to customize the background through the background editing toolbar:
 
 <img src="../img/immersive-section/bck-toolbar.jpg" class="ms-docimage" width="550px"/>
 
-The background editor toolbar, when no media are applied, allows the user to:
+The background editing toolbar, when no media are applied, allows to:
 
-* Add a media as background, with the **Change media source** button <img src="../img/button/change-media.jpg" class="ms-docbutton"/> that opens the [Media Editor Window](media-editor-window.md)
+* Add a media as a background of the section, with the **Change media source** button <img src="../img/button/change-media.jpg" class="ms-docbutton"/> that opens the [Media Editor Window](media-editor-window.md)
 
 !!! note
     Only for Immersive Section, when the user try to add another section of the same type just below the current one, the added section is actually another immersive content, that fits inside the same immersive section. 

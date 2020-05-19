@@ -76,11 +76,18 @@ pages:
       - Connecting widgets: 'user-guide/connecting-widgets.md'
     - Exploring Stories:
       - Overview: 'user-guide/exploring-stories.md'
+      - Story Settings: 'user-guide/story-setting.md'
       - Title Section: 'user-guide/title-section.md'
       - Paragraph Section: 'user-guide/paragraph-section.md'
       - Immersive Section: 'user-guide/immersive-section.md'
       - Media Section: 'user-guide/media-section.md'
       - Web Page section: 'user-guide/web-section.md'
+      - Content Image Toolbar: 'user-guide/content-image-toolbar.md'
+      - Content Map Toolbar: 'user-guide/content-map-toolbar.md'
+      - Content Wwb Page Toolbar: 'user-guide/content-web-toolbar.md'
+      - Media Editor: 'user-guide/media-editor-window.md'
+      - Configue the map: 'user-guide/configure-map.md'
+      
   - Developer Guide:
     - Quick Setup and Run: 'developer-guide/index.md'
     - Infrastructure: 'developer-guide/infrastructure-and-general-architecture.md'
