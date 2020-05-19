@@ -75,6 +75,10 @@ In addition to the layers information, the following are provided by the *Identi
 
 <img src="../img/side-bar/hightlight-point1.gif" class="ms-docimage"/>
 
+* The **Edit** button <img src="../img/button/edit_button.jpg" class="ms-docbutton"/> allows the user to open the [Attribute Table](attributes-table.md)  in edit mode showing only layers records corresponding to the clicked point on the map. 
+
+<img src="../img/side-bar/edit_identify.gif" class="ms-docimage"/>
+
 ### Using the Coordinates Editor
 
 In order to Identify layers features by typing coordinates instead of clicking on the map, you can use the **Coordinate Editor**. 
@@ -91,7 +95,7 @@ An example of search with `Aeronautical` coordinates as follows:
 
 ### Identify Tool with more than one layer
 
-On a map it is possible to have several overlapping layers. With the *Identify* tool the user can retrieve information on one or more overlapping layers at the same time.
+In a map it is possible to have several overlapping layers. With the *Identify* tool the user can retrieve information on one or more overlapping layers at the same time in a certain point.
 
 If the user clicks on the map where one or more overlapping layers are present, the identify panel opens. The panel provides the layers information, therefore the user can navigate different layers information through the **Next** button <img src="../img/button/next.jpg" class="ms-docbutton"/> and **Previous** button <img src="../img/button/style_editor_back_button.jpg" class="ms-docbutton"/> present in the top right corner of the Identify panel.
 
@@ -101,3 +105,14 @@ In order to have information about one layer only the user can select the layer 
 
 <img src="../img/side-bar/layer.gif" class="ms-docimage"/>
 
+### Floating Identify Tool 
+
+In [MapStore](https://mapstore.geo-solutions.it/mapstore/#/) the user can set the Identify tool in floating mode (**Floating Identify tool**) instead of having the default one available through a click on the map. In that case an identify popup will appears on the map as soon as the user hover over a layer in the map.
+
+In order to activate the *Floating Identify Tool* the user can select the <img src="../img/button/setting_button.jpg" class="ms-docbutton"/> option in [Burger Menu](menu-bar.md#burger-menu) <img src="../img/button/burger.jpg" class="ms-docbutton" />. Here he can select the **Hover** option through the *Trigger event for Identify* dropdown menu.
+
+<img src="../img/side-bar/setting-hover.jpg" class="ms-docimage"/>
+
+As soon as the option *Hover* is selected, the user can hover the mouse over a layer in the map in order to show the popup containing the identify information.
+
+<img src="../img/side-bar/hover-over-map.gif" class="ms-docimage"/>
