@@ -7,10 +7,12 @@
  */
 
 import React from 'react';
+import { isFunction } from 'lodash';
+
 import Confirm from './ConfirmDialog';
 import Portal from './Portal';
 import Message from '../I18N/Message';
-import { compose, withHandlers, withState, withProps} from 'recompose';
+import { compose, withHandlers, withState, withProps } from 'recompose';
 
 const ConfirmModal = compose(
     withProps(({setConfirming}) => ({onClose: () => setConfirming(false)})))(({
@@ -75,6 +77,38 @@ export default (Component) => compose(
         onConfirm: ({ onClick = () => {}, setConfirming = () => {} }) => (...args) => {
             setConfirming(false);
             onClick(...args);
+        }
+    }),
+    addConfirmModal
+)(Component);
+
+export const withConfirmOverride = (...overrideActions) => (Component) => compose(
+    withState('confirming', 'setConfirming', false),
+    withState('originalArgs', 'setOriginalArgs', []),
+    withState('actionSuccess', 'setActionSuccess'),
+    withHandlers({
+        ...overrideActions.reduce((result, overrideAction) => ({
+            ...result,
+            [overrideAction]: ({ setConfirming = () => {}, setOriginalArgs = () => {}, setActionSuccess = () => {}, [overrideAction]: overrideActionFunc = () => {}, confirmPredicate = true }) => (...args) => {
+                if (confirmPredicate) {
+                    setOriginalArgs([...args]);
+                    setActionSuccess(overrideAction);
+                    setConfirming(true);
+                } else if (isFunction(overrideActionFunc)) {
+                    overrideActionFunc(...args);
+                }
+            }
+        }), {}),
+        onConfirm: ({ setConfirming = () => {}, setOriginalArgs = () => {}, setActionSuccess = () => {}, originalArgs = [], actionSuccess, ...other }) => () => {
+            const overrideActionFunc = other[actionSuccess];
+
+            setConfirming(false);
+            if (isFunction(overrideActionFunc)) {
+                overrideActionFunc(originalArgs);
+            }
+
+            setActionSuccess();
+            setOriginalArgs();
         }
     }),
     addConfirmModal

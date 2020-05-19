@@ -46,7 +46,19 @@
             "404": "File di traduzione non trovato"
         },
         "details": {
-            "title": "Info su questa mappa"
+            "title": "Info su questa mappa",
+            "cancel": "Annulla",
+            "save": "Salva",
+            "edit": "Modifica",
+            "settings": "Impostazioni",
+            "showAtStartup": "Mostra all'avvio",
+            "showAsModal": "Mostra come modale",
+            "feedback": {
+                "settingsSavedSuccessfully": "Le impostazioni sono state salvate correttamente",
+                "savedSuccessfully": "I dettagli sono stati salvati correttamente",
+                "savingError": "C'è stato un errore durante il salvataggio"
+            },
+            "confirmClose": "Sei sicuro di voler uscire senza salvare?"
         },
         "showEmptyMessageGFI": "Mostra il messaggio: Nessuna feature per gli altri layer",
         "remove": "Rimuovi",

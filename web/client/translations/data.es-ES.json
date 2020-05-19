@@ -46,7 +46,19 @@
             "404": "Archivo de traducción no encontrado"
         },
         "details": {
-            "title": "Información en este mapa"
+            "title": "Información en este mapa",
+            "cancel": "Cancelar",
+            "save": "Guardar",
+            "edit": "Editar",
+            "settings": "Ajustes",
+            "showAtStartup": "Mostrar al inicio",
+            "showAsModal": "Mostrar como modal",
+            "feedback": {
+                "settingsSavedSuccessfully": "La configuración se ha guardado correctamente",
+                "savedSuccessfully": "Los detalles han sido eliminados correctamente",
+                "savingError": "Se produjo un error durante el proceso de guardado"
+            },
+            "confirmClose": "¿Estás seguro de que quieres salir sin guardar?"
         },
         "showEmptyMessageGFI": "Mostrar mensaje de resultados vacío en el panel de GFI",
         "remove": "Borrar",

@@ -14,3 +14,27 @@
 .details-panel .panel-body {
     height: ~'calc(100% - 31px)'
 }
+
+#mapstore-details {
+    .ms-details-panel-editor {
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+
+        .ms-quill-details-editor {
+            flex-grow: 1;
+
+            .quill {
+                display: flex;
+                flex-direction: column;
+                height: 100%;
+
+                .ql-container {
+                    overflow-y: auto;
+                    flex-basis: 0;
+                    flex-grow: 1;
+                }
+            }
+        }
+    }
+}

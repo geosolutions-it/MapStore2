@@ -7,6 +7,7 @@
 */
 
 const React = require('react');
+const {findIndex} = require('lodash');
 const {Glyphicon} = require('react-bootstrap');
 const Dialog = require('./Dialog');
 const Toolbar = require('./toolbar/Toolbar');
@@ -58,6 +59,7 @@ const fullscreen = {
  * @prop {bool} draggable enable modal drag.
  * @prop {bool} fitContent try to fit content if modal height is less than maximum size
  * @prop {string} dialogClassName custom class for the dialog component
+ * @prop {bool} hideFooterIfEmpty hide footer when it has no content
  */
 
 const ResizableModal = ({
@@ -80,7 +82,8 @@ const ResizableModal = ({
     fade = false,
     fitContent,
     modalClassName = '',
-    dialogClassName = ''
+    dialogClassName = '',
+    hideFooterIfEmpty = false
 }) => {
     const sizeClassName = sizes[size] || '';
     const fullscreenClassName = showFullscreen && fullscreenState === 'expanded' && fullscreen.className[fullscreenType] || '';
@@ -115,7 +118,7 @@ const ResizableModal = ({
                 <div role="body" className={bodyClassName}>
                     {children}
                 </div>
-                <div role="footer">
+                {!hideFooterIfEmpty || buttons && buttons.length && findIndex(buttons, ({visible = true}) => visible) > -1 || loading ? <div role="footer">
                     {loading ? <LoadingSpinner style={{
                         position: "absolute",
                         left: 0,
@@ -123,7 +126,7 @@ const ResizableModal = ({
                         margin: 18
                     }}/> : null}
                     <Toolbar buttons={buttons}/>
-                </div>
+                </div> : null}
             </Dialog>
         </div>) : null;
     return fade ?

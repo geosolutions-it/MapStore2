@@ -46,7 +46,19 @@
             "404": "Übersetzungsdatei nicht gefunden"
         },
         "details": {
-            "title": "Infos zu dieser Karte"
+            "title": "Infos zu dieser Karte",
+            "cancel": "Abbrechen",
+            "save": "Speichern",
+            "edit": "Bearbeiten",
+            "settings": "Einstellungen",
+            "showAtStartup": "Beim Start anzeigen",
+            "showAsModal": "Als modal anzeigen",
+            "feedback": {
+                "settingsSavedSuccessfully": "Die Einstellungen wurden korrekt gespeichert",
+                "savedSuccessfully": "Die Details wurden korrekt entfernt",
+                "savingError": "Beim Speichern ist ein Fehler aufgetreten"
+            },
+            "confirmClose": "Möchten Sie wirklich beenden, ohne zu speichern?"
         },
         "showEmptyMessageGFI": "Nachricht mit leeren Ergebnissen anzeigen",
         "remove": "Löschen",

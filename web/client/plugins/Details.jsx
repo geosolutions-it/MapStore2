@@ -6,17 +6,40 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const React = require('react');
-const {connect} = require('react-redux');
-const assign = require('object-assign');
-const {Glyphicon} = require('react-bootstrap');
-const Message = require('../components/I18N/Message');
-const {mapFromIdSelector} = require('../selectors/maps');
-const {mapIdSelector, mapInfoDetailsUriFromIdSelector} = require('../selectors/map');
-const {mapLayoutValuesSelector} = require('../selectors/maplayout');
-const {currentMapDetailsTextSelector} = require('../selectors/currentmap');
-const {openDetailsPanel, closeDetailsPanel} = require("../actions/maps");
-const {get} = require("lodash");
+import React from 'react';
+import { Glyphicon } from 'react-bootstrap';
+import { connect } from 'react-redux';
+import { get } from "lodash";
+
+import {
+    save,
+    edit,
+    cancelEdit,
+    setEditedContent,
+    changeSetting
+} from '../actions/details';
+import {
+    contentSelector,
+    editedContentSelector,
+    contentChangedSelector,
+    editingSelector,
+    settingsSelector,
+    loadingSelector,
+    loadFlagsSelector,
+    editedSettingsSelector
+} from '../selectors/details';
+import { setControlProperty } from '../actions/controls';
+import { mapFromIdSelector } from '../selectors/maps';
+import { mapInfoSelector, mapIdSelector, mapInfoDetailsUriFromIdSelector } from '../selectors/map';
+import { mapLayoutValuesSelector } from '../selectors/maplayout';
+import { isLoggedIn } from '../selectors/security';
+
+import Message from '../components/I18N/Message';
+import Details from '../components/details/Details';
+import { createPlugin } from '../utils/PluginsUtils';
+
+import details from '../reducers/details';
+import * as epics from '../epics/details';
 
 /**
  * Details plugin used for fetching details of the map
@@ -24,30 +47,77 @@ const {get} = require("lodash");
  * @memberof plugins
  */
 
-module.exports = {
-    DetailsPlugin: connect((state) => ({
-        active: get(state, "controls.details.enabled"),
+export default createPlugin('Details', {
+    component: connect((state) => ({
+        show: get(state, "controls.details.enabled"),
+        loading: loadingSelector(state),
+        loadFlags: loadFlagsSelector(state),
+        mapInfo: mapInfoSelector(state),
+        canEdit: isLoggedIn(state) && get(mapInfoSelector(state), 'canEdit'),
+        settings: settingsSelector(state),
         map: mapFromIdSelector(state, mapIdSelector(state)),
-        dockStyle: mapLayoutValuesSelector(state, {height: true}),
-        detailsText: currentMapDetailsTextSelector(state)
+        content: contentSelector(state),
+        editedContent: editedContentSelector(state),
+        contentChanged: contentChangedSelector(state),
+        editedSettings: editedSettingsSelector(state),
+        editing: editingSelector(state),
+        dockStyle: mapLayoutValuesSelector(state, {height: true})
     }), {
-        onClose: closeDetailsPanel
-    })(assign(require('../components/details/DetailsPanel'), {
+        onSave: save,
+        onEdit: edit.bind(null, 'content'),
+        onEditSettings: edit.bind(null, 'settings'),
+        onCancelEdit: cancelEdit,
+        onClose: setControlProperty.bind(null, 'details', 'enabled', false),
+        onSettingsChange: changeSetting,
+        onEditorUpdate: setEditedContent
+    }, (stateProps, dispatchProps, ownProps) => ({
+        ...stateProps,
+        ...ownProps,
+        ...dispatchProps,
+        editorProps: {
+            ...(stateProps.editorProps || {}),
+            ...(ownProps.editorProps || {}),
+            onUpdate: dispatchProps.onEditorUpdate
+        }
+    }))(Details),
+    containers: {
         BurgerMenu: {
             name: 'details',
             position: 1000,
             text: <Message msgId="details.title"/>,
             icon: <Glyphicon glyph="sheet"/>,
-            action: openDetailsPanel,
+            action: setControlProperty.bind(null, 'details', 'enabled', true),
             selector: (state) => {
                 const mapId = mapIdSelector(state);
                 const detailsUri = mapId && mapInfoDetailsUriFromIdSelector(state, mapId);
-                if (detailsUri) {
+                const settings = settingsSelector(state) || {};
+                if (detailsUri && !settings.showAsModal) {
+                    return {};
+                }
+                return { style: {display: "none"} };
+            }
+        },
+        Toolbar: {
+            name: 'details',
+            position: 1,
+            priority: 1,
+            alwaysVisible: true,
+            doNotHide: true,
+            icon: <Glyphicon glyph="sheet"/>,
+            action: setControlProperty.bind(null, 'details', 'enabled', true),
+            selector: (state) => {
+                const mapId = mapIdSelector(state);
+                const detailsUri = mapId && mapInfoDetailsUriFromIdSelector(state, mapId);
+                const settings = settingsSelector(state) || {};
+                if (detailsUri && settings.showAsModal) {
                     return {};
                 }
                 return { style: {display: "none"} };
             }
         }
-    }))
-
-};
+    },
+    reducers: {
+        details
+    },
+    epics
+});

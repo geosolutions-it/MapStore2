@@ -24,8 +24,6 @@ const {
     undoDetails, UNDO_DETAILS,
     doNothing, DO_NOTHING,
     setUnsavedChanged, SET_UNSAVED_CHANGES,
-    openDetailsPanel, OPEN_DETAILS_PANEL,
-    closeDetailsPanel, CLOSE_DETAILS_PANEL,
     MAP_UPDATING, mapUpdating,
     DETAILS_LOADED, detailsLoaded,
     PERMISSIONS_UPDATED, permissionsUpdated,
@@ -384,14 +382,6 @@ describe('Test correctness of the maps actions', () => {
         const a = setUnsavedChanged(value);
         expect(a.type).toBe(SET_UNSAVED_CHANGES);
         expect(a.value).toBe(value);
-    });
-    it('openDetailsPanel', () => {
-        const a = openDetailsPanel();
-        expect(a.type).toBe(OPEN_DETAILS_PANEL);
-    });
-    it('closeDetailsPanel', () => {
-        const a = closeDetailsPanel();
-        expect(a.type).toBe(CLOSE_DETAILS_PANEL);
     });
     it('doNothing', () => {
         const a = doNothing();

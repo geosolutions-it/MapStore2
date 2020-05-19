@@ -58,8 +58,6 @@ const DELETE_MAP = 'MAPS:DELETE_MAP';
 const BACK_DETAILS = 'MAPS:BACK_DETAILS';
 const UNDO_DETAILS = 'MAPS:UNDO_DETAILS';
 const SET_UNSAVED_CHANGES = 'MAPS:SET_UNSAVED_CHANGES';
-const OPEN_DETAILS_PANEL = 'DETAILS:OPEN_DETAILS_PANEL';
-const CLOSE_DETAILS_PANEL = 'DETAILS:CLOSE_DETAILS_PANEL';
 const TOGGLE_DETAILS_EDITABILITY = 'DETAILS:TOGGLE_DETAILS_EDITABILITY';
 const DETAILS_LOADED = 'DETAILS:DETAILS_LOADED';
 const DETAILS_SAVING = 'DETAILS:DETAILS_SAVING';
@@ -857,35 +855,16 @@ function setUnsavedChanged(value) {
     };
 }
 /**
- * openDetailsPanel
- * @memberof actions.maps
- * @return {action}        type `OPEN_DETAILS_PANEL`
-*/
-function openDetailsPanel() {
-    return {
-        type: OPEN_DETAILS_PANEL
-    };
-}
-/**
- * closeDetailsPanel
- * @memberof actions.maps
- * @return {action}        type `CLOSE_DETAILS_PANEL`
-*/
-function closeDetailsPanel() {
-    return {
-        type: CLOSE_DETAILS_PANEL
-    };
-}
-/**
  * detailsLoaded
  * @memberof actions.maps
  * @return {action}        type `DETAILS_LOADED`
 */
-function detailsLoaded(mapId, detailsUri) {
+function detailsLoaded(mapId, detailsUri, detailsSettings) {
     return {
         type: DETAILS_LOADED,
         mapId,
-        detailsUri
+        detailsUri,
+        detailsSettings
     };
 }
 /**
@@ -981,8 +960,6 @@ module.exports = {
     undoDetails, UNDO_DETAILS,
     doNothing, DO_NOTHING,
     setUnsavedChanged, SET_UNSAVED_CHANGES,
-    openDetailsPanel, OPEN_DETAILS_PANEL,
-    closeDetailsPanel, CLOSE_DETAILS_PANEL,
     deleteMap, DELETE_MAP,
     detailsLoaded, DETAILS_LOADED,
     detailsSaving, DETAILS_SAVING,

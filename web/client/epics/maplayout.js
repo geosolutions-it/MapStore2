@@ -16,6 +16,7 @@ const {isMapInfoOpen} = require('../selectors/mapInfo');
 const {showCoordinateEditorSelector} = require('../selectors/controls');
 const ConfigUtils = require('../utils/ConfigUtils');
 const {isMouseMoveIdentifyActiveSelector} = require('../selectors/map');
+const {settingsSelector} = require('../selectors/details');
 
 /**
  * Epìcs for feature grid
@@ -90,7 +91,7 @@ const updateMapLayoutEpic = (action$, store) =>
             ].filter(panel => panel)) || {left: 0};
 
             const rightPanels = head([
-                get(state, "controls.details.enabled") && {right: mapLayout.right.md} || null,
+                get(state, "controls.details.enabled") && !get(settingsSelector(state), 'showAsModal') && {right: mapLayout.right.md} || null,
                 get(state, "controls.annotations.enabled") && {right: mapLayout.right.md} || null,
                 get(state, "controls.metadataexplorer.enabled") && {right: mapLayout.right.md} || null,
                 get(state, "controls.measure.enabled") && showCoordinateEditorSelector(state) && {right: mapLayout.right.md} || null,

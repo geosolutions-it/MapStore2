@@ -13,24 +13,22 @@ const {createEpicMiddleware, combineEpics } = require('redux-observable');
 const {CALL_HISTORY_METHOD} = require('connected-react-router');
 const {
     saveDetails, SET_DETAILS_CHANGED, MAPS_LIST_LOADING, MAPS_LIST_LOADED, MAPS_LIST_LOAD_ERROR,
-    CLOSE_DETAILS_PANEL, closeDetailsPanel, loadMaps, MAPS_GET_MAP_RESOURCES_BY_CATEGORY,
-    openDetailsPanel, UPDATE_DETAILS, DETAILS_LOADED, getMapResourcesByCategory,
+    loadMaps, MAPS_GET_MAP_RESOURCES_BY_CATEGORY,
+    UPDATE_DETAILS, DETAILS_LOADED, getMapResourcesByCategory,
     MAP_DELETING, MAP_DELETED, deleteMap, mapDeleted, TOGGLE_DETAILS_SHEET,
     saveMapResource, MAP_CREATED, SAVING_MAP, MAP_UPDATING, MAPS_LOAD_MAP, LOADING, LOAD_CONTEXTS
 } = require('../../actions/maps');
 const { mapInfoLoaded, MAP_SAVED, LOAD_MAP_INFO, MAP_CONFIG_LOADED } = require('../../actions/config');
 const {SHOW_NOTIFICATION} = require('../../actions/notifications');
 const {TOGGLE_CONTROL, SET_CONTROL_PROPERTY} = require('../../actions/controls');
-const {RESET_CURRENT_MAP, editMap} = require('../../actions/currentMap');
-const {CLOSE_FEATURE_GRID} = require('../../actions/featuregrid');
+const {editMap} = require('../../actions/currentMap');
 const {loginSuccess, logout} = require('../../actions/security');
 
 const {
     setDetailsChangedEpic, loadMapsEpic, getMapsResourcesByCategoryEpic,
-    closeDetailsPanelEpic, fetchDataForDetailsPanel,
     fetchDetailsFromResourceEpic, deleteMapAndAssociatedResourcesEpic, mapsSetupFilterOnLogin,
     storeDetailsInfoEpic, mapSaveMapResourceEpic, reloadMapsEpic} = require('../maps');
-const rootEpic = combineEpics(setDetailsChangedEpic, closeDetailsPanelEpic);
+const rootEpic = combineEpics(setDetailsChangedEpic);
 const epicMiddleware = createEpicMiddleware(rootEpic);
 const mockStore = configureMockStore([epicMiddleware]);
 const {testEpic, addTimeoutEpic, TEST_TIMEOUT} = require('./epicTestUtils');
@@ -71,21 +69,6 @@ let map2 = {
 let map8 = {
     id: mapId8,
     name: "name"
-};
-const mapsState = {
-    maps: {
-        results: [map1]
-    },
-    mapInitialConfig: {
-        mapId
-    },
-    map: {
-        present: {
-            info: {
-                details: encodeURIComponent(detailsUri)
-            }
-        }
-    }
 };
 
 const testMap = {
@@ -206,86 +189,6 @@ describe('maps Epics', () => {
         });
     });
 
-    it('test closeDetailsPanel', (done) => {
-
-        store.dispatch(closeDetailsPanel());
-
-        setTimeout( () => {
-            try {
-                const actions = store.getActions();
-                expect(actions.length).toBe(3);
-                expect(actions[0].type).toBe(CLOSE_DETAILS_PANEL);
-                expect(actions[1].type).toBe(TOGGLE_CONTROL);
-                expect(actions[2].type).toBe(RESET_CURRENT_MAP);
-            } catch (e) {
-                done(e);
-            }
-            done();
-        }, 50);
-
-    });
-    it('test fetchDataForDetailsPanel', (done) => {
-        map1.details = encodeURIComponent(detailsUri);
-        testEpic(addTimeoutEpic(fetchDataForDetailsPanel), 3, openDetailsPanel(), actions => {
-            expect(actions.length).toBe(3);
-            actions.map((action) => {
-                switch (action.type) {
-                case TOGGLE_CONTROL:
-                    expect(action.control).toBe("details");
-                    expect(action.property).toBe("enabled");
-                    break;
-                case CLOSE_FEATURE_GRID:
-                    expect(action.type).toBe(CLOSE_FEATURE_GRID);
-                    break;
-                case UPDATE_DETAILS:
-                    expect(action.detailsText.indexOf(detailsText)).toNotBe(-1);
-                    expect(action.originalDetails.indexOf(detailsText)).toNotBe(-1);
-                    expect(action.doBackup).toBe(true);
-                    break;
-                default:
-                    expect(true).toBe(false);
-                }
-            });
-            done();
-        }, mapsState);
-    });
-    it('test fetchDataForDetailsPanel with Error', (done) => {
-        testEpic(addTimeoutEpic(fetchDataForDetailsPanel), 2, openDetailsPanel(), actions => {
-            expect(actions.length).toBe(2);
-            actions.map((action) => {
-                switch (action.type) {
-                case TOGGLE_CONTROL:
-                    expect(action.control).toBe("details");
-                    expect(action.property).toBe("enabled");
-                    break;
-                case SHOW_NOTIFICATION:
-                    expect(action.message).toBe("maps.feedback.errorFetchingDetailsOfMap");
-                    break;
-                default:
-                    expect(true).toBe(false);
-                }
-            });
-            done();
-        }, {
-            locale: {
-                messages: {
-                    maps: {
-                        feedback: {
-                            errorFetchingDetailsOfMap: "maps.feedback.errorFetchingDetailsOfMap"
-                        }
-                    }
-                }
-            },
-            mapInitialConfig: {
-                mapId
-            },
-            map: {
-                present: {
-                    info: {}
-                }
-            }
-        });
-    });
     it('test fetchDetailsFromResourceEpic, map without saved Details', (done) => {
         delete map1.details;
         testEpic(addTimeoutEpic(fetchDetailsFromResourceEpic), 1, editMap({}, true), actions => {

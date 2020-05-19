@@ -46,7 +46,19 @@
             "404": "Translation file not found"
         },
         "details": {
-            "title": "About this map"
+            "title": "About this map",
+            "cancel": "Cancel",
+            "save": "Save",
+            "edit": "Edit",
+            "settings": "Settings",
+            "showAtStartup": "Show at startup",
+            "showAsModal": "Show as modal",
+            "feedback": {
+                "settingsSavedSuccessfully": "Settings have been saved correctly",
+                "savedSuccessfully": "The details have been saved correctly",
+                "savingError": "An error occurred during saving process"
+            },
+            "confirmClose": "Are you sure you want to exit without saving?"
         },
         "showEmptyMessageGFI": "Show empty results message in GetFeatureInfo panel",
         "remove": "Delete",

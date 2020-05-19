@@ -13,11 +13,11 @@ const {push} = require('connected-react-router');
 const {basicError, basicSuccess} = require('../utils/NotificationUtils');
 const GeoStoreApi = require('../api/GeoStoreDAO');
 const { MAP_INFO_LOADED, MAP_SAVED, mapSaveError, mapSaved, loadMapInfo, configureMap } = require('../actions/config');
-const {get, isNil, isArray, isEqual, find, pick, omit, keys, zip} = require('lodash');
+const {get, isNil, isArray, isEqual, isString, find, pick, omit, keys, zip} = require('lodash');
 const {
     SAVE_DETAILS, SAVE_RESOURCE_DETAILS, MAPS_GET_MAP_RESOURCES_BY_CATEGORY,
-    DELETE_MAP, OPEN_DETAILS_PANEL, MAPS_LOAD_MAP,
-    CLOSE_DETAILS_PANEL, NO_DETAILS_AVAILABLE, SAVE_MAP_RESOURCE, MAP_DELETED,
+    DELETE_MAP, MAPS_LOAD_MAP,
+    NO_DETAILS_AVAILABLE, SAVE_MAP_RESOURCE, MAP_DELETED,
     SEARCH_FILTER_CHANGED, SEARCH_FILTER_CLEAR_ALL, LOAD_CONTEXTS,
     setDetailsChanged, updateDetails, mapsLoading, mapsLoaded,
     mapDeleting, toggleDetailsEditability, mapDeleted, loadError,
@@ -28,7 +28,6 @@ const {
 const {
     resetCurrentMap, EDIT_MAP
 } = require('../actions/currentMap');
-const {closeFeatureGrid} = require('../actions/featuregrid');
 const {toggleControl, setControlProperty} = require('../actions/controls');
 const {setTabsHidden} = require('../actions/contenttabs');
 const {
@@ -41,7 +40,7 @@ const {
     searchFilterSelector
 } = require('../selectors/maps');
 const {
-    mapIdSelector, mapInfoDetailsUriFromIdSelector
+    mapIdSelector
 } = require('../selectors/map');
 const {mapTypeSelector} = require('../selectors/maptype');
 const {
@@ -423,36 +422,6 @@ const deleteMapAndAssociatedResourcesEpic = (action$, store) =>
             }).startWith(mapDeleting(mapId));
         });
 
-const fetchDataForDetailsPanel = (action$, store) =>
-    action$.ofType(OPEN_DETAILS_PANEL)
-        .switchMap(() => {
-            const state = store.getState();
-            const detailsUri = mapInfoDetailsUriFromIdSelector(state);
-            const detailsId = getIdFromUri(detailsUri);
-            return Rx.Observable.fromPromise(GeoStoreApi.getData(detailsId)
-                .then(data => data))
-                .switchMap((details) => {
-                    return Rx.Observable.from( [
-                        closeFeatureGrid(),
-                        updateDetails(details, true, details
-                        )]
-                    );
-                }).startWith(toggleControl("details", "enabled"))
-                .catch(() => {
-                    return Rx.Observable.of(
-                        basicError({message: "maps.feedback.errorFetchingDetailsOfMap"}),
-                        updateDetails(NO_DETAILS_AVAILABLE, true, NO_DETAILS_AVAILABLE)
-                    );
-                });
-        });
-
-const closeDetailsPanelEpic = (action$) =>
-    action$.ofType(CLOSE_DETAILS_PANEL)
-        .switchMap(() => Rx.Observable.from( [
-            toggleControl("details", "enabled"),
-            resetCurrentMap()
-        ])
-        );
 const resetCurrentMapEpic = (action$) =>
     action$.ofType(RESET_UPDATING)
         .switchMap(() => Rx.Observable.from( [
@@ -471,11 +440,12 @@ const storeDetailsInfoEpic = (action$, store) =>
                 )
                     .switchMap((attributes) => {
                         let details = find(attributes, {name: 'details'});
+                        let detailsSettings = find(attributes, {name: 'detailsSettings'});
                         if (!details || details.value === EMPTY_RESOURCE_VALUE) {
                             return Rx.Observable.empty();
                         }
                         return Rx.Observable.of(
-                            detailsLoaded(mapId, details.value)
+                            detailsLoaded(mapId, details.value, isString(detailsSettings?.value) ? JSON.parse(detailsSettings.value) : null)
                         );
                     });
         });
@@ -539,8 +509,6 @@ module.exports = {
     loadMapsEpic,
     resetCurrentMapEpic,
     storeDetailsInfoEpic,
-    closeDetailsPanelEpic,
-    fetchDataForDetailsPanel,
     deleteMapAndAssociatedResourcesEpic,
     getMapsResourcesByCategoryEpic,
     loadMapsOnSearchFilterChange,

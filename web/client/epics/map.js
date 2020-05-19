@@ -18,6 +18,9 @@ const {
     changeMapView,
     changeMapLimits
 } = require('../actions/map');
+const {
+    reset: resetDetails
+} = require('../actions/details');
 const {configuredExtentCrsSelector, configuredRestrictedExtentSelector, configuredMinZoomSelector, mapSelector, mapIdSelector} = require('../selectors/map');
 
 
@@ -113,7 +116,8 @@ const resetMapOnInit = action$ =>
         removeAllAdditionalLayers(),
         resetControls(),
         clearLayers(),
-        clearMapInfoWarning()
+        clearMapInfoWarning(),
+        resetDetails()
     ));
 
 /**

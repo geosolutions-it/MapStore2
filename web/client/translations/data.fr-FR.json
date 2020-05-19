@@ -46,7 +46,19 @@
             "404": "Fichier de traduction introuvable"
         },
         "details": {
-            "title": "À propos de cette carte"
+            "title": "À propos de cette carte",
+            "cancel": "Annuler",
+            "save": "Enregistrer",
+            "edit": "Éditer",
+            "settings": "Réglages",
+            "showAtStartup": "Afficher au démarrage",
+            "showAsModal": "Afficher comme modal",
+            "feedback": {
+                "settingsSavedSuccessfully": "Les paramètres ont été enregistrés correctement",
+                "savedSuccessfully": "Les détails ont été créés correctement",
+                "savingError": "Une erreur est survenue lors du processus d'enregistrement"
+            },
+            "confirmClose": "Voulez-vous vraiment quitter sans enregistrer?"
         },
         "showEmptyMessageGFI": "Afficher un message de résultat vide dans le panneau GetFeatureInfo",
         "remove": "Supprimer",
