@@ -39,9 +39,11 @@ const configurePluginsBasePlugins = [{
 
 const stepToTutorialProps = {
     'configureplugins-initial': {
+        disablePluginSort: true,
         allPlugins: configurePluginsBasePlugins
     },
     "configureplugins-cfgeditor": {
+        disablePluginSort: true,
         allPlugins: [{
             name: 'TestPlugin1',
             title: 'contextCreator.configurePlugins.tutorialPlugins.enabledTitle',

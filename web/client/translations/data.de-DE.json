@@ -2733,8 +2733,8 @@
             "contextCreator": {
                 "generalSettings": {
                     "intro": {
-                        "title": "Tutorial zum Erstellen von Kontexten",
-                        "text": "Context Creator ist ein schrittweiser Assistent zum Erstellen und Bearbeiten von MapStore-Kontexten"
+                        "title": "Tutorial zur Kontexterstellung",
+                        "text": "Dies ist ein schrittweiser Assistent zum Erstellen und Bearbeiten von MapStore-Kontexten"
                     },
                     "stepsOverview": {
                         "title": "Schritte zur Kontexterstellung",
@@ -2756,7 +2756,7 @@
                     },
                     "fields": {
                         "title": "Allgemeine Einstellungen",
-                        "text": "<p>Der erste Erstellungsschritt besteht darin, den Namen des Kontexts und den Titel anzugeben, der als Titel des Fensters festgelegt werden soll, wenn der Kontext geöffnet und aktiv ist. Beachten Sie, dass der Kontextname nur lateinische Buchstaben, Ziffern 0-9 und Unterstriche enthalten darf. Der Fenstertitel darf nicht leer sein.</p>"
+                        "text": "<p>Im ersten Erstellungsschritt müssen Sie den Namen des Kontexts angeben, der auch seine eindeutige URL definiert, und den Titel, der als Titel des Browserfensters verwendet wird, wenn der Kontext geöffnet und aktiv ist. Hinweis: Der Kontextname darf nur lateinische Buchstaben, Ziffern 0-9 und Unterstriche enthalten. Der Fenstertitel darf nicht leer sein.</p>"
                     },
                     "showTutorial": {
                         "title": "Tutorial anzeigen",
@@ -2766,7 +2766,7 @@
                 "configureMap": {
                     "intro": {
                         "title": "Karte konfigurieren",
-                        "text": "<p>In diesem Schritt können Sie mit den MapStore Map Viewer-Tools eine Standardkarte konfigurieren, die beim Zugriff auf den Kontext geöffnet wird.</p>"
+                        "text": "<p>In diesem Schritt können Sie mithilfe der MapStore Map Viewer-Tools die Standardkarte konfigurieren, die beim Zugriff auf den Kontext geöffnet wird.</p>"
                     },
                     "reloadMap": {
                         "title": "Schaltfläche \"Karte neu laden\"",
@@ -2776,15 +2776,15 @@
                 "configurePlugins": {
                     "intro": {
                         "title": "Plugins konfigurieren",
-                        "text": "<p>In diesem Schritt können Sie Plugins konfigurieren, die in einem Kontext vorhanden sind.</p>"
+                        "text": "<p>In diesem Schritt können Sie Plugins konfigurieren, die im Kontext vorhanden sind.</p>"
                     },
                     "availablePlugins": {
                         "title": "Verfügbare Plugins",
-                        "text": "<p>Diese Liste enthält MapStore-Plugins, die einem Kontext hinzugefügt werden können. Um ein Plugin auszuwählen, klicken Sie einfach mit der rechten Maustaste auf die Karte. Wenn Sie die STRG-Taste gedrückt halten, können Sie auch mehrere Plugins auswählen.</p>"
+                        "text": "<p>Diese Liste enthält MapStore-Plugins, die einem Kontext hinzugefügt werden können. Um ein Plugin auszuwählen, klicken Sie einfach auf die Karte. Wenn Sie die STRG-Taste gedrückt halten, können Sie auch mehrere Plugins auswählen.</p>"
                     },
                     "pluginManipulation": {
-                        "title": "Plugin-Manipulation",
-                        "text": "<p>Einmal ausgewählt, können verfügbare Plugins in die rechte Spalte verschoben werden, sodass sie im Kontext aktiviert werden. Für einige Plugins sind andere Plugins erforderlich. In diesem Fall werden sie neben den explizit aktivierten Plugins automatisch aktiviert.</p><p>Plugins können auch von der aktivierten Spalte in die verfügbare Spalte verschoben werden, um Plugins aus dem Kontext zu entfernen. Wenn Sie ein Plugin entfernen, werden alle Plugins, die für die Funktion erforderlich sind, ebenfalls deaktiviert, es sei denn, es gibt derzeit aktivierte Plugins, für die ebenfalls ein solches Plugin erforderlich ist.</p>"
+                        "title": "Plugins verschieben",
+                        "text": "<p>Einmal ausgewählt, können verfügbare Plugins in die rechte Spalte verschoben werden, sodass sie im Kontext aktiviert werden. Für einige Plugins müssen andere Plugins funktionieren. In diesem Fall werden sie neben den explizit aktivierten Plugins automatisch aktiviert.</p><p>Plugins können auch von der Spalte \"aktiviert\" in die Spalte \"verfügbar\" verschoben werden, um sie zu entfernen Plugins aus dem Kontext. Wenn Sie ein Plugin entfernen, werden auch alle Plugins deaktiviert, die für die Funktion erforderlich sind, es sei denn, es gibt derzeit aktivierte Plugins, für die ebenfalls ein solches Plugin erforderlich ist.</p>"
                     },
                     "enabledPlugins": {
                         "title": "Aktivierte Plugins",

@@ -64,14 +64,14 @@ const switchTutorialEpic = (action$, store) =>
 
 const changePresetEpic = (action$, store) =>
     action$.ofType(CHANGE_PRESET)
-        .switchMap(({preset, ignoreDisabled}) => {
+        .switchMap(({preset, presetGroup, ignoreDisabled}) => {
             const state = store.getState();
             const presetList = state.tutorial && state.tutorial.presetList || {};
             const checkbox = state.tutorial && state.tutorial.checkbox;
             const tutorial = presetList[preset];
 
             return tutorial ?
-                Rx.Observable.of(setupTutorial(preset, tutorial, null, checkbox, null, false, ignoreDisabled)) :
+                Rx.Observable.of(setupTutorial(preset, tutorial, null, checkbox, null, false, presetGroup, ignoreDisabled)) :
                 Rx.Observable.empty();
         });
 

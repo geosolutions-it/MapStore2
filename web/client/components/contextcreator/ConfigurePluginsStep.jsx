@@ -267,6 +267,7 @@ const configurePluginsStep = ({
     enabledTemplatesFilterText,
     availableTemplatesFilterPlaceholder,
     enabledTemplatesFilterPlaceholder,
+    disablePluginSort = false,
     onFilterAvailablePlugins = () => {},
     onFilterEnabledPlugins = () => {},
     onEditPlugin = () => {},
@@ -372,6 +373,10 @@ const configurePluginsStep = ({
                     'left'
                 }
                 sortStrategy={items => {
+                    if (disablePluginSort) {
+                        return items;
+                    }
+
                     const recursiveSort = curItems => curItems && curItems.map(item => ({...item, children: recursiveSort(item.children)}))
                         .sort((x, y) => x.title < y.title ? -1 : 1);
                     return recursiveSort(items);

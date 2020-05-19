@@ -2732,8 +2732,8 @@
             "contextCreator": {
                 "generalSettings": {
                     "intro": {
-                        "title": "Didacticiel du créateur de contexte",
-                        "text": "Context Creator est un assistant étape par étape pour créer et modifier des contextes MapStore"
+                        "title": "Tutoriel de création de contexte",
+                        "text": "Il s'agit d'un assistant étape par étape pour créer et modifier des contextes MapStore"
                     },
                     "stepsOverview": {
                         "title": "Étapes du créateur de contexte",
@@ -2755,7 +2755,7 @@
                     },
                     "fields": {
                         "title": "Réglages Généraux",
-                        "text": "<p>La première étape de création consiste à spécifier le nom du contexte et le titre qui doivent être définis comme titre de la fenêtre, lorsque le contexte est ouvert et actif. Notez que ce nom de contexte ne peut contenir que des lettres latines, des chiffres 0 à 9 et un caractère de soulignement. Le titre de la fenêtre ne peut pas être vide.</p>"
+                        "text": "<p>La première étape de création nécessite de spécifier le nom du contexte, qui définit également son URL unique, et le titre qui sera utilisé comme titre de la fenêtre du navigateur lorsque le contexte sera ouvert et actif. Remarque: Le nom du contexte ne peut contenir que des lettres latines, des chiffres 0 à 9 et un caractère de soulignement. Le titre de la fenêtre ne peut pas être vide.</p>"
                     },
                     "showTutorial": {
                         "title": "Afficher le didacticiel",
@@ -2765,7 +2765,7 @@
                 "configureMap": {
                     "intro": {
                         "title": "Configurer la carte",
-                        "text": "<p>Dans cette étape, à l'aide des outils de visualisation de carte MapStore, vous pouvez configurer une carte par défaut qui sera ouverte lors de l'accès au contexte.</p>"
+                        "text": "<p>Dans cette étape, à l'aide des outils de visualisation de carte MapStore, vous pouvez configurer la carte par défaut qui sera ouverte lors de l'accès au contexte.</p>"
                     },
                     "reloadMap": {
                         "title": "Bouton Recharger la carte",
@@ -2775,15 +2775,15 @@
                 "configurePlugins": {
                     "intro": {
                         "title": "Configurer les plugins",
-                        "text": "<p>Cette étape vous permet de configurer des plugins qui seront présents dans un contexte.</p>"
+                        "text": "<p>Cette étape vous permet de configurer les plugins qui seront présents dans le contexte.</p>"
                     },
                     "availablePlugins": {
                         "title": "Plugins disponibles",
-                        "text": "<p>Cette liste contient des plugins MapStore qui peuvent être ajoutés à un contexte. Pour sélectionner un plugin, faites simplement un clic droit sur sa carte. De plus, si vous maintenez la touche CTRL enfoncée, vous pouvez sélectionner plusieurs plug-ins.</p>"
+                        "text": "<p>Cette liste contient des plugins MapStore qui peuvent être ajoutés à un contexte. Pour sélectionner un plugin, cliquez simplement sur sa carte. De plus, si vous maintenez la touche CTRL enfoncée, vous pouvez sélectionner plusieurs plug-ins.</p>"
                     },
                     "pluginManipulation": {
-                        "title": "Manipulation du plugin",
-                        "text": "<p>Une fois sélectionnés, les plugins disponibles peuvent être déplacés dans la colonne de droite, les rendant activés dans le contexte. Certains plugins nécessitent d'autres plugins pour fonctionner, dans ce cas, ils seront activés automatiquement aux côtés des plugins que vous avez explicitement activés.</p><p>Les plugins peuvent également être déplacés de la colonne activée vers la colonne disponible pour supprimer les plugins du contexte. Si vous supprimez un plugin, tous les plugins dont il a besoin pour fonctionner seront également désactivés, sauf s'il existe des plugins actuellement activés qui nécessitent également un tel plugin.</p>"
+                        "title": "Déplacer des plugins",
+                        "text": "<p>Une fois sélectionnés, les plugins disponibles peuvent être déplacés dans la colonne de droite, les rendant activés dans le contexte. Certains plugins nécessitent d'autres plugins pour fonctionner, dans ce cas ils seront activés automatiquement aux côtés des plugins que vous avez explicitement activés.</p><p>Les plugins peuvent également être déplacés de la colonne \"enabled\" vers la colonne \"available\" pour les supprimer. plugins du contexte. Si vous supprimez un plugin, tous les plugins dont il a besoin pour fonctionner seront également désactivés, sauf s'il existe des plugins actuellement activés qui nécessitent également un tel plugin.</p>"
                     },
                     "enabledPlugins": {
                         "title": "Plugins activés",
@@ -2807,7 +2807,7 @@
                     },
                     "documentationTool": {
                         "title": "Plugin Tools: Documentation",
-                        "text": "<p>En appuyant sur ce bouton, vous accédez à la page de documentation du plugin où vous pouvez rechercher des informations sur ce que fait le plugin, les paramètres de configuration qu'il prend en charge.</p>"
+                        "text": "<p>En appuyant sur ce bouton, vous accédez à la page de documentation du plugin où vous pouvez rechercher des informations sur ce que fait le plugin et les paramètres de configuration qu'il prend en charge.</p>"
                     },
                     "mapTemplatesTool": {
                         "title": "Outils de plug-in: modèles de carte",

@@ -60,6 +60,6 @@ export default [{
     position: 'right'
 }, {
     translationHTML: 'contextCreator.configurePlugins.extensionsDelete',
-    selector: '.ms2-transfer-left .mapstore-side-card:nth-child(1) .btn-group > span > button:nth-child(1)',
+    selector: '.ms2-transfer-left .mapstore-side-card:nth-child(2) .btn-group > span > button:nth-child(1)',
     position: 'right'
 }];

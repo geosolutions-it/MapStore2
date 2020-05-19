@@ -2734,8 +2734,8 @@
             "contextCreator": {
                 "generalSettings": {
                     "intro": {
-                        "title": "Tutorial per il creatore di contesto",
-                        "text": "Context Creator è una procedura guidata passo-passo per creare e modificare contesti MapStore"
+                        "title": "Tutorial sulla creazione del contesto",
+                        "text": "Questa è una procedura guidata passo-passo per creare e modificare i contesti di MapStore"
                     },
                     "stepsOverview": {
                         "title": "Passaggi del creatore di contesto",
@@ -2757,7 +2757,7 @@
                     },
                     "fields": {
                         "title": "Impostazioni Generali",
-                        "text": "<p>Il primo passo della creazione è specificare il nome del contesto e il titolo che dovrebbe essere impostato come titolo della finestra, quando il contesto è aperto e attivo. Si noti che quel nome di contesto può contenere solo lettere latine, cifre 0-9 e carattere di sottolineatura. Il titolo della finestra non può essere vuoto.</p>"
+                        "text": "<p>Il primo passaggio di creazione richiede di specificare il nome del contesto, che definisce anche il suo URL univoco, e il titolo che verrà utilizzato come titolo della finestra del browser quando il contesto è aperto e attivo. Nota: il nome del contesto può contenere solo lettere latine, cifre 0-9 e carattere di sottolineatura. Il titolo della finestra non può essere vuoto.</p>"
                     },
                     "showTutorial": {
                         "title": "Mostra tutorial",
@@ -2767,7 +2767,7 @@
                 "configureMap": {
                     "intro": {
                         "title": "Configura mappa",
-                        "text": "<p>In questo passaggio utilizzando gli strumenti di visualizzazione mappe MapStore è possibile configurare una mappa predefinita che verrà aperta all'accesso al contesto.</p>"
+                        "text": "<p>In questo passaggio, utilizzando gli strumenti di visualizzazione mappe MapStore è possibile configurare la mappa predefinita che verrà aperta all'accesso al contesto.</p>"
                     },
                     "reloadMap": {
                         "title": "Pulsante Ricarica mappa",
@@ -2777,15 +2777,15 @@
                 "configurePlugins": {
                     "intro": {
                         "title": "Configura plugin",
-                        "text": "<p>Questo passaggio consente di configurare plug-in che saranno presenti in un contesto.</p>"
+                        "text": "<p>Questo passaggio consente di configurare plug-in che saranno presenti nel contesto.</p>"
                     },
                     "availablePlugins": {
                         "title": "Plugin disponibili",
-                        "text": "<p>Questo elenco contiene plug-in MapStore che possono essere aggiunti a un contesto. Per selezionare un plug-in, fai semplicemente clic con il tasto destro sulla sua scheda. Inoltre, se tieni premuto il tasto CTRL, puoi selezionare più plug-in.</p>"
+                        "text": "<p>Questo elenco contiene plug-in MapStore che possono essere aggiunti a un contesto. Per selezionare un plugin è sufficiente fare clic sulla sua scheda. Inoltre, se tieni premuto il tasto CTRL, puoi selezionare più plug-in.</p>"
                     },
                     "pluginManipulation": {
-                        "title": "Manipolazione del plugin",
-                        "text": "<p>Una volta selezionati, i plugin disponibili possono essere spostati nella colonna di destra, rendendoli abilitati nel contesto. Alcuni plug-in richiedono altri plug-in per funzionare, in tal caso verranno abilitati automaticamente insieme ai plug-in esplicitamente abilitati.</p><p>I plug-in possono anche essere spostati dalla colonna abilitata nella colonna disponibile per rimuovere i plug-in dal contesto. Se rimuovi un plug-in, anche tutti i plug-in necessari per funzionare verranno disalimentati, a meno che non ci siano plug-in attualmente abilitati che richiedono tale plug-in.</p>"
+                        "title": "Spostamento di plugin",
+                        "text": "<p>Una volta selezionati, i plugin disponibili possono essere spostati nella colonna di destra, rendendoli abilitati nel contesto. Alcuni plugin richiedono altri plugin per funzionare, in tal caso verranno abilitati automaticamente insieme ai plugin esplicitamente abilitati.</p><p>I plugin possono anche essere spostati dalla colonna \"enabled\" alla colonna \"available\" per rimuovere plugin dal contesto. Se rimuovi un plug-in, anche tutti i plug-in necessari per funzionare verranno disabilitati, a meno che non ci siano plug-in attualmente abilitati che richiedono tale plug-in.</p>"
                     },
                     "enabledPlugins": {
                         "title": "Plugin abilitati",
@@ -2809,7 +2809,7 @@
                     },
                     "documentationTool": {
                         "title": "Strumenti plug-in: documentazione",
-                        "text": "<p>Premendo questo pulsante si accede alla pagina della documentazione del plug-in in cui è possibile cercare informazioni su cosa fa il plug-in, quali parametri di configurazione supporta.</p>"
+                        "text": "<p>Premendo questo pulsante si accederà alla pagina della documentazione del plug-in in cui è possibile cercare informazioni su cosa fa il plug-in e quali parametri di configurazione supporta.</p>"
                     },
                     "mapTemplatesTool": {
                         "title": "Strumenti plug-in: modelli di mappe",

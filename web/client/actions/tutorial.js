@@ -34,7 +34,7 @@ function initTutorial(id, steps, style, checkbox, defaultStep, presetList) {
     };
 }
 
-function setupTutorial(id, steps, style, checkbox, defaultStep, stop, ignoreDisabled) {
+function setupTutorial(id, steps, style, checkbox, defaultStep, stop, presetGroup, ignoreDisabled) {
     return {
         type: SETUP_TUTORIAL,
         id,
@@ -43,6 +43,7 @@ function setupTutorial(id, steps, style, checkbox, defaultStep, stop, ignoreDisa
         checkbox,
         defaultStep,
         stop,
+        presetGroup,
         ignoreDisabled
     };
 }
@@ -80,9 +81,10 @@ function toggleTutorial() {
     };
 }
 
-const changePreset = (preset, ignoreDisabled) => ({
+const changePreset = (preset, presetGroup, ignoreDisabled) => ({
     type: CHANGE_PRESET,
     preset,
+    presetGroup,
     ignoreDisabled
 });
 

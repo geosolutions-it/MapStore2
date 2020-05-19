@@ -452,12 +452,16 @@ export const loadMapViewerOnStepChange = (action$) => action$
  */
 export const loadTutorialOnStepChange = (action$, store) => action$
     .ofType(SET_CREATION_STEP)
-    .switchMap(({stepId}) => !wasTutorialShownSelector(stepId)(store.getState()) ?
-        Rx.Observable.of(
-            changePreset((tutorialsSelector(store.getState()) || {})[stepId]),
-            setWasTutorialShown(stepId)
-        ) :
-        Rx.Observable.empty());
+    .switchMap(({stepId}) => {
+        const tutorials = tutorialsSelector(store.getState()) || {};
+
+        return !wasTutorialShownSelector(stepId)(store.getState()) ?
+            Rx.Observable.of(
+                changePreset(tutorials[stepId], values(tutorials)),
+                setWasTutorialShown(stepId)
+            ) :
+            Rx.Observable.empty();
+    });
 
 /**
  * Handles SHOW_TUTORIAL action
@@ -466,10 +470,13 @@ export const loadTutorialOnStepChange = (action$, store) => action$
  */
 export const contextCreatorShowTutorialEpic = (action$, store) => action$
     .ofType(SHOW_TUTORIAL)
-    .switchMap(({stepId}) => Rx.Observable.of(
-        setTutorialStep(),
-        changePreset((tutorialsSelector(store.getState()) || {})[stepId], true)
-    ));
+    .switchMap(({stepId}) => {
+        const tutorials = tutorialsSelector(store.getState()) || {};
+        return Rx.Observable.of(
+            setTutorialStep(),
+            changePreset(tutorials[stepId], values(tutorials), true)
+        );
+    });
 
 /**
  * Initiates context map load

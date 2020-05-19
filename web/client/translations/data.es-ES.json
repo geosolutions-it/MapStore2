@@ -2734,8 +2734,8 @@
             "contextCreator": {
                 "generalSettings": {
                     "intro": {
-                        "title": "Tutorial de creador de contexto",
-                        "text": "Context Creator es un asistente paso a paso para crear y editar contextos de MapStore"
+                        "title": "Tutorial de creación de contexto",
+                        "text": "Este es un asistente paso a paso para crear y editar contextos de MapStore"
                     },
                     "stepsOverview": {
                         "title": "Pasos del creador de contexto",
@@ -2757,7 +2757,7 @@
                     },
                     "fields": {
                         "title": "Configuración general",
-                        "text": "<p>El primer paso de creación es especificar el nombre del contexto y el título que debe establecerse como el título de la ventana, cuando el contexto está abierto y activo. Tenga en cuenta que ese nombre de contexto solo puede contener letras latinas, dígitos 0-9 y caracteres de subrayado. El título de la ventana no puede estar vacío.</p>"
+                        "text": "<p>El primer paso de creación requiere especificar el nombre del contexto, que define también su URL única, y el título que se utilizará como título de la ventana del navegador cuando el contexto esté abierto y activo. Nota: El nombre del contexto solo puede contener letras latinas, dígitos 0-9 y caracteres de subrayado. El título de la ventana no puede estar vacío.</p>"
                     },
                     "showTutorial": {
                         "title": "Tutorial de presentación",
@@ -2767,7 +2767,7 @@
                 "configureMap": {
                     "intro": {
                         "title": "Configurar mapa",
-                        "text": "<p>En este paso, utilizando las herramientas del visor de mapas MapStore, puede configurar un mapa predeterminado que se abrirá al acceder al contexto.</p>"
+                        "text": "<p>En este paso, utilizando las herramientas del visor de mapas MapStore, puede configurar el mapa predeterminado que se abrirá al acceder al contexto.</p>"
                     },
                     "reloadMap": {
                         "title": "Botón Recargar mapa",
@@ -2777,15 +2777,15 @@
                 "configurePlugins": {
                     "intro": {
                         "title": "Configurar complementos",
-                        "text": "<p>Este paso le permite configurar complementos que estarán presentes en un contexto.</p>"
+                        "text": "<p>Este paso le permite configurar complementos que estarán presentes en el contexto.</p>"
                     },
                     "availablePlugins": {
                         "title": "Complementos disponibles",
-                        "text": "<p>Esta lista contiene complementos de MapStore que se pueden agregar a un contexto. Para seleccionar un complemento, simplemente haga clic derecho en su tarjeta. Además, si mantiene presionada la tecla CTRL, puede seleccionar varios complementos.</p>"
+                        "text": "<p>Esta lista contiene complementos de MapStore que se pueden agregar a un contexto. Para seleccionar un complemento, simplemente haga clic en su tarjeta. Además, si mantiene presionada la tecla CTRL, puede seleccionar varios complementos.</p>"
                     },
                     "pluginManipulation": {
-                        "title": "Manipulación de complementos",
-                        "text": "<p>Una vez seleccionados, los complementos disponibles se pueden mover a la columna derecha, habilitándolos en el contexto. Algunos complementos requieren otros complementos para funcionar, en ese caso se habilitarán automáticamente junto con los complementos que usted habilitó explícitamente.</p><p>Los complementos también se pueden mover de la columna habilitada a la columna disponible para eliminar complementos del contexto. Si elimina un complemento, todos los complementos que necesita para funcionar también se deshabilitarán, a menos que actualmente haya complementos habilitados que también requieran dicho complemento.</p>"
+                        "title": "Mover complementos",
+                        "text": "<p>Una vez seleccionados, los complementos disponibles se pueden mover a la columna derecha, habilitándolos en el contexto. Algunos complementos requieren otros complementos para funcionar, en ese caso se habilitarán automáticamente junto con los complementos que usted habilitó explícitamente.</p><p>Los complementos también se pueden mover de la columna \"habilitada\" a la columna \"disponible\" para eliminar complementos del contexto. Si elimina un complemento, todos los complementos que necesita para funcionar también se deshabilitarán, a menos que actualmente haya complementos habilitados que también requieran dicho complemento.</p>"
                     },
                     "enabledPlugins": {
                         "title": "Complementos habilitados",
@@ -2809,7 +2809,7 @@
                     },
                     "documentationTool": {
                         "title": "Herramientas de complementos: documentación",
-                        "text": "<p>Al presionar este botón, accederá a la página de documentación del complemento, donde podrá buscar información sobre lo que hace el complemento y qué parámetros de configuración admite.</p>"
+                        "text": "<p>Al presionar este botón, accederá a la página de documentación del complemento, donde podrá buscar información sobre qué hace el complemento y qué parámetros de configuración admite.</p>"
                     },
                     "mapTemplatesTool": {
                         "title": "Herramientas de complementos: plantillas de mapas",
