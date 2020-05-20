@@ -12,7 +12,7 @@ import plugins from "./plugins";
 import rootTranslations from "../../web/client/translations/data.en-US.json";
 import bundleTranslations from "./bundle/translations/data.en-US.json";
 
-const pluginsConfig = ["Map", "Toolbar", "ZoomIn", "ZoomOut", "Extension"];
+const pluginsConfig = ["Map", "Toolbar", "ZoomIn", "ZoomOut", "SampleExtension"];
 const LOCALE = "en-US";
 
 const startApp = (messages) => {
