@@ -50,7 +50,6 @@ describe('AeronauticalCoordinateEditor enhancer', () => {
         expect(elements[0].value).toBe('19');
         expect(elements[1].value).toBe('0');
         expect(elements[2].value).toBe('0');
-        ReactTestUtils.Simulate.focus(elements[0]);
         ReactTestUtils.Simulate.change(elements[0], { target: { value: "20" } });
         expect(spyonChange).toHaveBeenCalled();
         expect(parseFloat(spyonChange.calls[0].arguments[0])).toBe(20);
@@ -70,13 +69,10 @@ describe('AeronauticalCoordinateEditor enhancer', () => {
         expect(elements[0].value).toBe('180');
         expect(elements[1].value).toBe('0');
         expect(elements[2].value).toBe('0');
-        ReactTestUtils.Simulate.focus(elements[1]);
         ReactTestUtils.Simulate.change(elements[1], { target: { value: "20" } });
+        ReactTestUtils.Simulate.blur(elements[1]);
         expect(spyonChange).toHaveBeenCalled();
         expect(parseFloat(spyonChange.calls[0].arguments[0])).toBe(180);
-        expect(elements[0].value).toBe('180');
-        expect(elements[1].value).toBe('0');
-        expect(elements[2].value).toBe('0');
     });
     it('Test AeronauticalCoordinateEditor onKeyDown with enter ', () => {
         ReactDOM.render( <AeronauticalCoordinateEditor coordinate="lon" value={10} />, document.getElementById("container"));

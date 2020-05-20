@@ -53,11 +53,10 @@ describe('FeatureGrid NumberEditor/IntegerEditor component', () => {
             maxValue={1.5}
             column={testColumn}/>, document.getElementById("container"));
         expect(cmp).toExist();
-
-        let inputElement = cmp.getInputNode();
+        const container = document.getElementById('container');
+        const inputElement = container.querySelector('input');
         expect(inputElement).toExist();
         expect(inputElement.value).toBe('1.1');
-
         TestUtils.Simulate.change(inputElement, {target: {value: '1.6'}});
 
         expect(cmp.getValue().columnKey).toBe(1.1);
@@ -71,7 +70,8 @@ describe('FeatureGrid NumberEditor/IntegerEditor component', () => {
             column={testColumn}/>, document.getElementById("container"));
         expect(cmp).toExist();
 
-        let inputElement = cmp.getInputNode();
+        const container = document.getElementById('container');
+        const inputElement = container.querySelector('input');
         expect(inputElement).toExist();
         expect(inputElement.value).toBe('1.1');
 

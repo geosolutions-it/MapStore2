@@ -9,10 +9,10 @@ import expect from 'expect';
 
 import React from 'react';
 import ReactDOM from 'react-dom';
-import FormControlIntl from '../FormControlIntl';
+import IntlNumberFormControl from '../../I18N/IntlNumberFormControl';
 import {compose, withContext} from 'recompose';
 
-describe('FormControlIntl', () => {
+describe('IntlNumberFormControl', () => {
 
     beforeEach((done) => {
         document.body.innerHTML = '<div id="container"></div>';
@@ -25,13 +25,13 @@ describe('FormControlIntl', () => {
         setTimeout(done);
     });
 
-    const formControlIntlWithContext = (intl) => compose(
+    const intlNumberFormControlWithContext = (intl) => compose(
         withContext({
             intl: {}},
         () => ({
             intl
         })
-        ))(FormControlIntl);
+        ))(IntlNumberFormControl);
 
     it('checks if the component renders value in default locale', () => {
         const intl = {};
@@ -39,7 +39,7 @@ describe('FormControlIntl', () => {
             name: "name",
             value: 1899.01
         };
-        const InputIntl = formControlIntlWithContext(intl);
+        const InputIntl = intlNumberFormControlWithContext(intl);
 
         const cmp = ReactDOM.render(
             <InputIntl {...formProps}/>, document.getElementById("container"));
@@ -54,7 +54,7 @@ describe('FormControlIntl', () => {
             name: "name",
             value: 1899.01
         };
-        const InputIntl = formControlIntlWithContext(intl);
+        const InputIntl = intlNumberFormControlWithContext(intl);
         const cmp = ReactDOM.render(
             <InputIntl {...formProps}/>, document.getElementById("container"));
         expect(cmp).toExist();
@@ -68,7 +68,7 @@ describe('FormControlIntl', () => {
             name: "name",
             value: 1899.01
         };
-        const InputIntl = formControlIntlWithContext(intl);
+        const InputIntl = intlNumberFormControlWithContext(intl);
         const cmp = ReactDOM.render(
             <InputIntl {...formProps}/>, document.getElementById("container"));
         expect(cmp).toExist();
@@ -82,7 +82,7 @@ describe('FormControlIntl', () => {
             name: "name",
             value: 1899.01
         };
-        const InputIntl = formControlIntlWithContext(intl);
+        const InputIntl = intlNumberFormControlWithContext(intl);
         const cmp = ReactDOM.render(
             <InputIntl {...formProps}/>, document.getElementById("container"));
         expect(cmp).toExist();
@@ -96,7 +96,7 @@ describe('FormControlIntl', () => {
             name: "name",
             value: 1899.01
         };
-        const InputIntl = formControlIntlWithContext(intl);
+        const InputIntl = intlNumberFormControlWithContext(intl);
         const cmp = ReactDOM.render(
             <InputIntl {...formProps}/>, document.getElementById("container"));
         expect(cmp).toExist();

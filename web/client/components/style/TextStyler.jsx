@@ -20,7 +20,7 @@ const LocaleUtils = require('../../utils/LocaleUtils');
 const {createFont} = require('../../utils/AnnotationsUtils');
 const Message = require('../I18N/Message');
 const tinycolor = require("tinycolor2");
-const FormControlIntl = require('../I18N/FormControlIntl');
+const IntlNumberFormControl = require('../I18N/IntlNumberFormControl');
 
 class TextStyler extends React.Component {
     static propTypes = {
@@ -124,11 +124,11 @@ class TextStyler extends React.Component {
                     <Message msgId="draw.font.size"/>
                 </Col>
                 <Col xs={4} style={{position: 'static'}}>
-                    <FormControlIntl
+                    <IntlNumberFormControl
                         value={style.fontSize || 14}
                         placeholder=""
-                        onChange={(e) => {
-                            const fontSize = e.target.value;
+                        onChange={(val) => {
+                            const fontSize = val;
                             const font = createFont({...style, fontSize});
                             const newStyle = assign({}, shapeStyle, {
                                 [styleType]: assign({}, style, {fontSize, font})

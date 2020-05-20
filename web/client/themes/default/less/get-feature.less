@@ -12,7 +12,8 @@
             width: auto;
             position: relative;
             & .seconds {
-                min-width: 120px;
+                min-width: 80px;
+                max-width: 100px;
                 flex: unset !important;
             }
         }
@@ -50,7 +51,7 @@
     padding: 15px 5px;
 
     input {
-        font-size: 12px;
+        font-size: 12px !important;
         font-family: Menlo, Monaco, Consolas, Courier New, monospace;
     }
     .col-md-4 {
@@ -146,4 +147,11 @@
         padding-top: 8px;
         border-top: 1px solid @ms2-color-shade-lighter;
     }
+}
+
+.react-numeric-input b {
+    width: 2.06ex !important;
+    background: unset !important;
+    box-shadow: unset !important;
+    z-index: 100;
 }

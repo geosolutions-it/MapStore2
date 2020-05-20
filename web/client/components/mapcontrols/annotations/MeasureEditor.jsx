@@ -10,7 +10,7 @@ const { FormControl, FormGroup } = require('react-bootstrap');
 const { isNumber } = require('lodash');
 const { convertUom } = require('../../../utils/MeasureUtils');
 const { getUnits } = require('../../../utils/CoordinatesUtils');
-const FormControlIntl = require('../../I18N/FormControlIntl');
+const IntlNumberFormControl = require('../../I18N/IntlNumberFormControl');
 
 // convert to valueUom if it is a valid number
 const toValue = (value, uom, valueUom) => (isNumber(parseFloat(value)) && !isNaN(parseFloat(value)))
@@ -80,11 +80,11 @@ module.exports = compose(
 }) => {
     const unitsFromCrs = getUnits(projection);
     return (<FormGroup style={style}>
-        <FormControlIntl
+        <IntlNumberFormControl
             value={value}
             placeholder="radius"
             name="radius"
-            onChange={e => onChange(e.target.value, uom)}
+            onChange={val => onChange(val, uom)}
             step={1}
             type="number" />
         <FormControl

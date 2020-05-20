@@ -12,7 +12,7 @@ const Message = require('../../../../I18N/Message');
 const {toNumber, isNumber} = require("lodash");
 const withLocalized = require("../../../../misc/enhancers/localizedProps");
 const {compose, defaultProps} = require("recompose");
-const FormControlIntl = require('../../../../I18N/FormControlIntl');
+const IntlNumberFormControl = require('../../../../I18N/IntlNumberFormControl');
 
 class Priority extends React.Component {
     static propTypes = {
@@ -40,7 +40,7 @@ class Priority extends React.Component {
                 </Col>
                 <Col xs={12} sm={6}>
                     <FormGroup validationState={this.getValidationState()}>
-                        <FormControlIntl
+                        <IntlNumberFormControl
                             min="0"
                             type="number"
                             value={selected}
@@ -52,8 +52,8 @@ class Priority extends React.Component {
             </Row>
         );
     }
-    handleChange = (e) => {
-        this.props.setOption({key: "priority", value: e.target.value});
+    handleChange = (value) => {
+        this.props.setOption({key: "priority", value});
     }
 }
 

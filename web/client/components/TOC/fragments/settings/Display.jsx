@@ -13,7 +13,7 @@ const Message = require('../../../I18N/Message');
 const {Grid, Row, Col, FormGroup, ControlLabel, Checkbox} = require('react-bootstrap');
 const {clamp, isNil, isNumber} = require('lodash');
 const Legend = require('../legend/Legend');
-const FormControlIntl = require('../../../I18N/FormControlIntl');
+const IntlNumberFormControl = require('../../../I18N/IntlNumberFormControl');
 const InfoPopover = require('../../../widgets/widget/InfoPopover');
 require('react-widgets/lib/less/react-widgets.less');
 
@@ -74,9 +74,7 @@ module.exports = class extends React.Component {
         }
     }
 
-    onChange = (event) =>{
-        const value = event.target.value;
-        const name = event.target.name;
+    onChange = (name, value) =>{
         if (name === 'opacity') {
             const opacity = value && clamp(Math.round(value), 0, 100);
             this.setState({opacity, ...this.state});
@@ -155,13 +153,13 @@ module.exports = class extends React.Component {
                     <Col xs={12}>
                         <FormGroup>
                             <ControlLabel>{this.props.opacityText} %</ControlLabel>
-                            <FormControlIntl
+                            <IntlNumberFormControl
                                 type="number"
                                 min={0}
                                 max={100}
                                 name={"opacity"}
                                 value={this.state.opacity}
-                                onChange={this.onChange}/>
+                                onChange={(val)=> this.onChange("opacity", val)}/>
                         </FormGroup>
                     </Col>
                 </Row>
@@ -200,14 +198,15 @@ module.exports = class extends React.Component {
                         <Col xs={12} sm={6} className="first-selectize">
                             <FormGroup validationState={this.getValidationState("legendWidth")}>
                                 <ControlLabel><Message msgId="layerProperties.legendOptions.legendWidth" /></ControlLabel>
-                                <FormControlIntl
+                                <IntlNumberFormControl
                                     value={this.state.legendOptions.legendWidth}
                                     name="legendWidth"
                                     type="number"
                                     min={12}
                                     max={1000}
-                                    onChange={this.onChange}
+                                    onChange={(val)=> this.onChange("legendWidth", val)}
                                     onKeyPress={(e)=> e.key === "-" && e.preventDefault()}
+                                    allowNegative={false}
                                     onBlur={this.onBlur}
                                 />
                             </FormGroup>
@@ -215,14 +214,15 @@ module.exports = class extends React.Component {
                         <Col xs={12} sm={6} className="second-selectize">
                             <FormGroup validationState={this.getValidationState("legendHeight")}>
                                 <ControlLabel><Message msgId="layerProperties.legendOptions.legendHeight" /></ControlLabel>
-                                <FormControlIntl
+                                <IntlNumberFormControl
                                     value={this.state.legendOptions.legendHeight}
                                     name="legendHeight"
                                     type="number"
                                     min={12}
                                     max={1000}
-                                    onChange={this.onChange}
+                                    onChange={(val)=> this.onChange("legendHeight", val)}
                                     onKeyPress={(e)=> e.key === "-" && e.preventDefault()}
+                                    allowNegative={false}
                                     onBlur={this.onBlur}
                                 />
                             </FormGroup>

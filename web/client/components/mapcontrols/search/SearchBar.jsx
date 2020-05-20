@@ -169,7 +169,7 @@ export default ({
                     onPurgeResults={onPurgeResults}/>
                 {activeTool !== "addressSearch" && showCoordinatesSearchOption &&
                     <div className="coordinateEditor">
-                        <Row className="entryRow">
+                        <Row className={`entryRow ${format}`}>
                             <Col xs={3} className="coordinateLabel">
                                 <Message msgId="latitude"/>
                             </Col>
@@ -190,7 +190,7 @@ export default ({
                                 />
                             </Col>
                         </Row>
-                        <Row className="entryRow">
+                        <Row className={`entryRow ${format}`}>
                             <Col xs={3} className="coordinateLabel">
                                 <Message msgId="longitude"/>
                             </Col>

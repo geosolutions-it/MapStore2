@@ -152,7 +152,6 @@ describe("test the CoordinatesEditor Panel", () => {
         const input = inputs[0];
         expect(inputs[0].value).toBe("10");
         expect(inputs[1].value).toBe("10");
-        TestUtils.Simulate.focus(input);
         input.value = 15;
         TestUtils.Simulate.change(input);
         TestUtils.Simulate.click(submit);
@@ -166,13 +165,12 @@ describe("test the CoordinatesEditor Panel", () => {
             {lat: 6, lon: 6 },
             { lat: 15, lon: 10 }
         ], undefined, undefined, undefined);
-        TestUtils.Simulate.focus(input);
         input.value = "";
         TestUtils.Simulate.change(input);
         TestUtils.Simulate.click(submit);
+
         expect(spyOnHighlightPoint).toHaveBeenCalled();
         expect(spyOnSetInvalidSelected).toHaveBeenCalled();
-
         expect(spyOnSetInvalidSelected).toHaveBeenCalledWith("coords", [[10, "" ], [6, 6 ], [6, 6]]);
         expect(spyOnChange).toHaveBeenCalled();
         expect(spyOnChange.calls.length).toBe(2);
@@ -235,7 +233,6 @@ describe("test the CoordinatesEditor Panel", () => {
         expect(inputs[1].value).toBe("10");
         expect(inputs[2].value).toBe("6");
         expect(inputs[3].value).toBe("6");
-        TestUtils.Simulate.focus(input);
         input.value = 15;
         TestUtils.Simulate.change(input);
         TestUtils.Simulate.click(submit);
@@ -247,7 +244,6 @@ describe("test the CoordinatesEditor Panel", () => {
             {lat: 6, lon: 6 }
         ], undefined, undefined, undefined);
 
-        TestUtils.Simulate.focus(input);
         input.value = "";
         TestUtils.Simulate.change(input);
         TestUtils.Simulate.click(submit);
@@ -311,7 +307,6 @@ describe("test the CoordinatesEditor Panel", () => {
         const inputRadius = inputs[0];
         inputRadius.value = 1000;
         const inputCoord = inputs[1];
-        TestUtils.Simulate.focus(inputCoord);
         inputCoord.value = 15;
         TestUtils.Simulate.change(inputCoord);
         TestUtils.Simulate.click(submit);
@@ -322,7 +317,6 @@ describe("test the CoordinatesEditor Panel", () => {
             { lat: 15, lon: 10 }
         ], 1000, undefined, mapProjection);
 
-        TestUtils.Simulate.focus(inputCoord);
         inputCoord.value = "";
         TestUtils.Simulate.change(inputCoord);
         TestUtils.Simulate.click(submit);
@@ -387,7 +381,6 @@ describe("test the CoordinatesEditor Panel", () => {
         inputRadius.value = 1000;
         const inputCoord = inputs[1];
 
-        TestUtils.Simulate.focus(inputCoord);
         inputCoord.value = "";
         TestUtils.Simulate.change(inputCoord);
         TestUtils.Simulate.click(submit);
@@ -422,7 +415,6 @@ describe("test the CoordinatesEditor Panel", () => {
         const inputs = TestUtils.scryRenderedDOMComponentsWithTag(editor, "input");
         expect(inputs).toExist();
         const inputRadius = inputs[0];
-        TestUtils.Simulate.focus(inputRadius);
         inputRadius.value = 10000;
         TestUtils.Simulate.change(inputRadius);
         expect(spyOnChangeRadius).toHaveBeenCalled();
@@ -455,7 +447,6 @@ describe("test the CoordinatesEditor Panel", () => {
         const inputs = TestUtils.scryRenderedDOMComponentsWithTag(editor, "input");
         expect(inputs).toExist();
         const inputRadius = inputs[0];
-        TestUtils.Simulate.focus(inputRadius);
         inputRadius.value = 10000;
         TestUtils.Simulate.change(inputRadius);
         expect(spyOnChangeRadius).toHaveBeenCalled();
@@ -490,7 +481,6 @@ describe("test the CoordinatesEditor Panel", () => {
         const inputs = TestUtils.scryRenderedDOMComponentsWithTag(editor, "input");
         expect(inputs).toExist();
         const inputRadius = inputs[0];
-        TestUtils.Simulate.focus(inputRadius);
         inputRadius.value = "";
         TestUtils.Simulate.change(inputRadius);
         expect(spyOnChangeRadius).toHaveBeenCalled();
@@ -529,7 +519,6 @@ describe("test the CoordinatesEditor Panel", () => {
         const inputText = inputs[0];
         inputText.value = "myTextAnnotation";
         const inputCoord = inputs[1];
-        TestUtils.Simulate.focus(inputCoord);
         inputCoord.value = 15;
         TestUtils.Simulate.change(inputCoord);
         TestUtils.Simulate.click(submit);
@@ -541,7 +530,6 @@ describe("test the CoordinatesEditor Panel", () => {
             { lat: 15, lon: 10 }
         ], undefined, "myTextAnnotation", undefined);
 
-        TestUtils.Simulate.focus(inputCoord);
         inputCoord.value = "";
         TestUtils.Simulate.change(inputCoord);
         TestUtils.Simulate.click(submit);
@@ -581,7 +569,6 @@ describe("test the CoordinatesEditor Panel", () => {
         const inputs = TestUtils.scryRenderedDOMComponentsWithTag(editor, "input");
         expect(inputs).toExist();
         const inputText = inputs[0];
-        TestUtils.Simulate.focus(inputText);
         inputText.value = "my new Text Annotation";
         TestUtils.Simulate.change(inputText);
 
@@ -618,7 +605,6 @@ describe("test the CoordinatesEditor Panel", () => {
         const inputs = TestUtils.scryRenderedDOMComponentsWithTag(editor, "input");
         expect(inputs).toExist();
         const inputText = inputs[0];
-        TestUtils.Simulate.focus(inputText);
         inputText.value = "my new Text Annotation";
         TestUtils.Simulate.change(inputText);
 
@@ -655,7 +641,6 @@ describe("test the CoordinatesEditor Panel", () => {
         const inputs = TestUtils.scryRenderedDOMComponentsWithTag(editor, "input");
         expect(inputs).toExist();
         const inputText = inputs[0];
-        TestUtils.Simulate.focus(inputText);
         inputText.value = "";
         TestUtils.Simulate.change(inputText);
 
