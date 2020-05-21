@@ -60,6 +60,8 @@ This is the main structure:
   },
   // flag for abandon map edit confirm popup, by default is enabled
   "unsavedMapChangesDialog": false,
+  // optional flag to set default coordinate format (decimal, aeronautical)
+  "defaultCoordinateFormat": "aeronautical",
   // optional state initializer (it will override the one defined in appConfig.js)
   "initialState": {
       // default initial state for every mode (will override initialState imposed by plugins reducers)
