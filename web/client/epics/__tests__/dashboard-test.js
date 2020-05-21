@@ -7,34 +7,43 @@
  */
 import axios from "../../libs/ajax";
 import MockAdapter from "axios-mock-adapter";
-
-var expect = require('expect');
-const {addTimeoutEpic, TEST_TIMEOUT, testEpic } = require('./epicTestUtils');
-const dashboardActions = require('../../actions/dashboard');
-const {
+import expect from 'expect';
+import {addTimeoutEpic, TEST_TIMEOUT, testEpic } from './epicTestUtils';
+import  {
+    SET_EDITING,
+    DASHBOARD_LOAD_ERROR,
+    DASHBOARD_LOADING,
+    DASHBOARD_SAVED,
+    TRIGGER_SAVE_MODAL,
+    LOAD_DASHBOARD,
+    SAVE_ERROR,
+    saveDashboard
+} from '../../actions/dashboard';
+import {
     handleDashboardWidgetsFilterPanel,
     openDashboardWidgetEditor,
     initDashboardEditorOnNew,
     closeDashboardWidgetEditorOnFinish,
     filterAnonymousUsersForDashboard,
-    saveDashboard
-} = require('../dashboard');
-const {
+    saveDashboard as saveDashboardMethod
+} from '../dashboard';
+
+import {
     createWidget, insertWidget,
     openFilterEditor,
     EDIT_NEW,
     EDITOR_CHANGE
-} = require('../../actions/widgets');
-const { SHOW_NOTIFICATION } = require('../../actions/notifications');
+} from '../../actions/widgets';
+import { SHOW_NOTIFICATION } from '../../actions/notifications';
 
-const {checkLoggedUser, logout} = require('../../actions/security');
+import {checkLoggedUser, logout} from '../../actions/security';
 
-const { FEATURE_TYPE_SELECTED } = require('../../actions/wfsquery');
-const { LOAD_FILTER, search } = require('../../actions/queryform');
-const {
+import { FEATURE_TYPE_SELECTED } from '../../actions/wfsquery';
+import { LOAD_FILTER, search } from '../../actions/queryform';
+import {
     CHANGE_DRAWING_STATUS
-} = require('../../actions/draw');
-const { SET_CONTROL_PROPERTY } = require('../../actions/controls');
+} from '../../actions/draw';
+import { SET_CONTROL_PROPERTY } from '../../actions/controls';
 
 const BASE_STATE = {
     controls: {
@@ -99,7 +108,7 @@ describe('openDashboardWidgetEditor epic', () => {
             expect(actions.length).toBe(1);
             actions.map((action) => {
                 switch (action.type) {
-                case dashboardActions.SET_EDITING:
+                case SET_EDITING:
                     expect(action.editing).toBe(true);
                     done();
                     break;
@@ -132,7 +141,7 @@ describe('openDashboardWidgetEditor epic', () => {
             expect(actions.length).toBe(1);
             actions.map((action) => {
                 switch (action.type) {
-                case dashboardActions.SET_EDITING:
+                case SET_EDITING:
                     expect(action.editing).toBe(false);
                     done();
                     break;
@@ -264,7 +273,7 @@ describe('openDashboardWidgetEditor epic', () => {
                 expect(actions.length).toBe(NUM_ACTIONS);
                 const [a] = actions;
                 expect(a).toExist();
-                expect(a.type).toBe(dashboardActions.DASHBOARD_LOAD_ERROR);
+                expect(a.type).toBe(DASHBOARD_LOAD_ERROR);
                 expect(a.error.status).toBe(403);
             },
             newDashboardState);
@@ -274,7 +283,7 @@ describe('openDashboardWidgetEditor epic', () => {
                 expect(actions.length).toBe(NUM_ACTIONS);
                 const [a] = actions;
                 expect(a).toExist();
-                expect(a.type).toBe(dashboardActions.DASHBOARD_LOAD_ERROR);
+                expect(a.type).toBe(DASHBOARD_LOAD_ERROR);
             },
             newDashboardState);
         });
@@ -296,20 +305,20 @@ describe('saveDashboard', () => {
         mockAxios.onPut().reply(200, 'resource');
         mockAxios.onGet().reply(200, 'resource');
 
-        const startActions = [dashboardActions.saveDashboard(RESOURCE)];
-        testEpic(saveDashboard, actionsCount, startActions, actions => {
+        const startActions = [saveDashboard(RESOURCE)];
+        testEpic(saveDashboardMethod, actionsCount, startActions, actions => {
             expect(actions.length).toBe(actionsCount);
-            expect(actions[0].type).toBe(dashboardActions.DASHBOARD_LOADING);
+            expect(actions[0].type).toBe(DASHBOARD_LOADING);
             expect(actions[0].value).toBe(true);
-            expect(actions[1].type).toBe(dashboardActions.DASHBOARD_SAVED);
+            expect(actions[1].type).toBe(DASHBOARD_SAVED);
             expect(actions[1].id).toBe(RESOURCE.id);
-            expect(actions[2].type).toBe(dashboardActions.TRIGGER_SAVE_MODAL);
+            expect(actions[2].type).toBe(TRIGGER_SAVE_MODAL);
             expect(actions[2].show).toBe(false);
-            expect(actions[3].type).toBe(dashboardActions.LOAD_DASHBOARD);
+            expect(actions[3].type).toBe(LOAD_DASHBOARD);
             expect(actions[3].id).toBe(RESOURCE.id);
             expect(actions[4].type).toBe(SHOW_NOTIFICATION);
             expect(actions[4].id).toBe('DASHBOARD_SAVE_SUCCESS');
-            expect(actions[5].type).toBe(dashboardActions.DASHBOARD_LOADING);
+            expect(actions[5].type).toBe(DASHBOARD_LOADING);
             expect(actions[5].value).toBe(false);
         }, BASE_STATE, done);
     });
@@ -321,23 +330,23 @@ describe('saveDashboard', () => {
         mockAxios.onPut().reply(404, 'resource');
         mockAxios.onGet().reply(200, 'resource');
 
-        const startActions = [dashboardActions.saveDashboard(RESOURCE)];
-        testEpic(saveDashboard, actionsCount, startActions, actions => {
+        const startActions = [saveDashboard(RESOURCE)];
+        testEpic(saveDashboardMethod, actionsCount, startActions, actions => {
             expect(actions.length).toBe(actionsCount);
-            expect(actions[0].type).toBe(dashboardActions.DASHBOARD_LOADING);
+            expect(actions[0].type).toBe(DASHBOARD_LOADING);
             expect(actions[0].value).toBe(true);
-            expect(actions[1].type).toBe(dashboardActions.SAVE_ERROR);
+            expect(actions[1].type).toBe(SAVE_ERROR);
             expect(
                 actions[1].error.status === 403
                  || actions[1].error.status === 404
             ).toBeTruthy();
-            expect(actions[2].type).toBe(dashboardActions.DASHBOARD_LOADING);
+            expect(actions[2].type).toBe(DASHBOARD_LOADING);
             expect(actions[2].value).toBe(false);
         }, BASE_STATE, done);
     });
 
     it('test save should invoke error if no metadata passed', (done) => {
-        const withoutMetada = {
+        const withoutMetadata = {
             ...RESOURCE,
             metadata: null
         };
@@ -347,14 +356,14 @@ describe('saveDashboard', () => {
         mockAxios.onPut().reply(200, 'resource');
         mockAxios.onGet().reply(200, 'resource');
 
-        const startActions = [dashboardActions.saveDashboard(withoutMetada)];
-        testEpic(saveDashboard, actionsCount, startActions, actions => {
+        const startActions = [saveDashboard(withoutMetadata)];
+        testEpic(saveDashboardMethod, actionsCount, startActions, actions => {
             expect(actions.length).toBe(3);
-            expect(actions[0].type).toBe(dashboardActions.DASHBOARD_LOADING);
+            expect(actions[0].type).toBe(DASHBOARD_LOADING);
             expect(actions[0].value).toBe(true);
-            expect(actions[1].type).toBe(dashboardActions.SAVE_ERROR);
+            expect(actions[1].type).toBe(SAVE_ERROR);
             expect(typeof(actions[1].error) === 'string').toBeTruthy();
-            expect(actions[2].type).toBe(dashboardActions.DASHBOARD_LOADING);
+            expect(actions[2].type).toBe(DASHBOARD_LOADING);
             expect(actions[2].value).toBe(false);
         }, BASE_STATE, done);
     });
