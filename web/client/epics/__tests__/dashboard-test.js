@@ -5,14 +5,19 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
+import axios from "../../libs/ajax";
+import MockAdapter from "axios-mock-adapter";
+
 var expect = require('expect');
 const {addTimeoutEpic, TEST_TIMEOUT, testEpic } = require('./epicTestUtils');
+const dashboardActions = require('../../actions/dashboard');
 const {
     handleDashboardWidgetsFilterPanel,
     openDashboardWidgetEditor,
     initDashboardEditorOnNew,
     closeDashboardWidgetEditorOnFinish,
-    filterAnonymousUsersForDashboard
+    filterAnonymousUsersForDashboard,
+    saveDashboard
 } = require('../dashboard');
 const {
     createWidget, insertWidget,
@@ -20,10 +25,8 @@ const {
     EDIT_NEW,
     EDITOR_CHANGE
 } = require('../../actions/widgets');
-const {
-    DASHBOARD_LOAD_ERROR,
-    SET_EDITING
-} = require('../../actions/dashboard');
+const { SHOW_NOTIFICATION } = require('../../actions/notifications');
+
 const {checkLoggedUser, logout} = require('../../actions/security');
 
 const { FEATURE_TYPE_SELECTED } = require('../../actions/wfsquery');
@@ -74,6 +77,20 @@ const FILTER_BUILDER_STATE = {
     }
 };
 
+const RESOURCE = {
+    attributes: {context: undefined},
+    category: "DASHBOARD",
+    createdAt: null,
+    data: {
+        layouts: {md: [{}]},
+        widgets: []
+    },
+    id: 1,
+    linkedResources: undefined,
+    metadata: {name: "test save", description: ""},
+    modifiedAt: null,
+    permission: null
+};
 
 describe('openDashboardWidgetEditor epic', () => {
     it('openDashboardWidgetEditor with New', (done) => {
@@ -82,7 +99,7 @@ describe('openDashboardWidgetEditor epic', () => {
             expect(actions.length).toBe(1);
             actions.map((action) => {
                 switch (action.type) {
-                case SET_EDITING:
+                case dashboardActions.SET_EDITING:
                     expect(action.editing).toBe(true);
                     done();
                     break;
@@ -115,7 +132,7 @@ describe('openDashboardWidgetEditor epic', () => {
             expect(actions.length).toBe(1);
             actions.map((action) => {
                 switch (action.type) {
-                case SET_EDITING:
+                case dashboardActions.SET_EDITING:
                     expect(action.editing).toBe(false);
                     done();
                     break;
@@ -247,7 +264,7 @@ describe('openDashboardWidgetEditor epic', () => {
                 expect(actions.length).toBe(NUM_ACTIONS);
                 const [a] = actions;
                 expect(a).toExist();
-                expect(a.type).toBe(DASHBOARD_LOAD_ERROR);
+                expect(a.type).toBe(dashboardActions.DASHBOARD_LOAD_ERROR);
                 expect(a.error.status).toBe(403);
             },
             newDashboardState);
@@ -257,9 +274,88 @@ describe('openDashboardWidgetEditor epic', () => {
                 expect(actions.length).toBe(NUM_ACTIONS);
                 const [a] = actions;
                 expect(a).toExist();
-                expect(a.type).toBe(DASHBOARD_LOAD_ERROR);
+                expect(a.type).toBe(dashboardActions.DASHBOARD_LOAD_ERROR);
             },
             newDashboardState);
         });
+    });
+});
+
+describe('saveDashboard', () => {
+    let mockAxios;
+    beforeEach(() => {
+        mockAxios = new MockAdapter(axios);
+    });
+    afterEach(() => {
+        mockAxios.restore();
+    });
+    it('test save dashboard', (done) => {
+        const actionsCount = 6;
+
+        mockAxios.onPost().reply(200, 'resource');
+        mockAxios.onPut().reply(200, 'resource');
+        mockAxios.onGet().reply(200, 'resource');
+
+        const startActions = [dashboardActions.saveDashboard(RESOURCE)];
+        testEpic(saveDashboard, actionsCount, startActions, actions => {
+            expect(actions.length).toBe(actionsCount);
+            expect(actions[0].type).toBe(dashboardActions.DASHBOARD_LOADING);
+            expect(actions[0].value).toBe(true);
+            expect(actions[1].type).toBe(dashboardActions.DASHBOARD_SAVED);
+            expect(actions[1].id).toBe(RESOURCE.id);
+            expect(actions[2].type).toBe(dashboardActions.TRIGGER_SAVE_MODAL);
+            expect(actions[2].show).toBe(false);
+            expect(actions[3].type).toBe(dashboardActions.LOAD_DASHBOARD);
+            expect(actions[3].id).toBe(RESOURCE.id);
+            expect(actions[4].type).toBe(SHOW_NOTIFICATION);
+            expect(actions[4].id).toBe('DASHBOARD_SAVE_SUCCESS');
+            expect(actions[5].type).toBe(dashboardActions.DASHBOARD_LOADING);
+            expect(actions[5].value).toBe(false);
+        }, BASE_STATE, done);
+    });
+
+    it('test save should invoke error if response return error', (done) => {
+        const actionsCount = 3;
+
+        mockAxios.onPost().reply(403, 'resource');
+        mockAxios.onPut().reply(404, 'resource');
+        mockAxios.onGet().reply(200, 'resource');
+
+        const startActions = [dashboardActions.saveDashboard(RESOURCE)];
+        testEpic(saveDashboard, actionsCount, startActions, actions => {
+            expect(actions.length).toBe(actionsCount);
+            expect(actions[0].type).toBe(dashboardActions.DASHBOARD_LOADING);
+            expect(actions[0].value).toBe(true);
+            expect(actions[1].type).toBe(dashboardActions.SAVE_ERROR);
+            expect(
+                actions[1].error.status === 403
+                 || actions[1].error.status === 404
+            ).toBeTruthy();
+            expect(actions[2].type).toBe(dashboardActions.DASHBOARD_LOADING);
+            expect(actions[2].value).toBe(false);
+        }, BASE_STATE, done);
+    });
+
+    it('test save should invoke error if no metadata passed', (done) => {
+        const withoutMetada = {
+            ...RESOURCE,
+            metadata: null
+        };
+        const actionsCount = 3;
+
+        mockAxios.onPost().reply(200, 'resource');
+        mockAxios.onPut().reply(200, 'resource');
+        mockAxios.onGet().reply(200, 'resource');
+
+        const startActions = [dashboardActions.saveDashboard(withoutMetada)];
+        testEpic(saveDashboard, actionsCount, startActions, actions => {
+            expect(actions.length).toBe(3);
+            expect(actions[0].type).toBe(dashboardActions.DASHBOARD_LOADING);
+            expect(actions[0].value).toBe(true);
+            expect(actions[1].type).toBe(dashboardActions.SAVE_ERROR);
+            expect(typeof(actions[1].error) === 'string').toBeTruthy();
+            expect(actions[2].type).toBe(dashboardActions.DASHBOARD_LOADING);
+            expect(actions[2].value).toBe(false);
+        }, BASE_STATE, done);
     });
 });
