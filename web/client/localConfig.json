@@ -756,6 +756,7 @@
           "Language",
           "NavMenu",
           "Attribution",
+          "Tutorial",
           {
               "name": "ContextCreator",
               "cfg": {

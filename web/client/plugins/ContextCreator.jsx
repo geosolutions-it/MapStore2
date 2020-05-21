@@ -15,12 +15,13 @@ import {newContextSelector, resourceSelector, creationStepSelector, reloadConfir
     loadFlagsSelector, isValidContextNameSelector, contextNameCheckedSelector, pluginsSelector, editedPluginSelector, editedCfgSelector,
     validationStatusSelector, cfgErrorSelector, parsedTemplateSelector, fileDropStatusSelector, editedTemplateSelector,
     availablePluginsFilterTextSelector, availableTemplatesFilterTextSelector, enabledPluginsFilterTextSelector,
-    enabledTemplatesFilterTextSelector, showBackToPageConfirmationSelector} from '../selectors/contextcreator';
+    enabledTemplatesFilterTextSelector, showBackToPageConfirmationSelector, tutorialStepSelector} from '../selectors/contextcreator';
 import {mapTypeSelector} from '../selectors/maptype';
-import {setCreationStep, changeAttribute, saveNewContext, saveTemplate, mapViewerReload, showMapViewerReloadConfirm, showDialog, setFilterText,
+import {tutorialSelector} from '../selectors/tutorial';
+import {init, setCreationStep, changeAttribute, saveNewContext, saveTemplate, mapViewerReload, showMapViewerReloadConfirm, showDialog, setFilterText,
     setSelectedPlugins, setSelectedTemplates, setParsedTemplate, setFileDropStatus, editPlugin, editTemplate, deleteTemplate, updateEditedCfg,
     changePluginsKey, changeTemplatesKey, enablePlugins, disablePlugins, enableUploadPlugin, uploadPlugin, uninstallPlugin,
-    addPluginToUpload, removePluginToUpload, showBackToPageConfirmation} from '../actions/contextcreator';
+    addPluginToUpload, removePluginToUpload, showBackToPageConfirmation, showTutorial} from '../actions/contextcreator';
 import contextcreator from '../reducers/contextcreator';
 import * as epics from '../epics/contextcreator';
 import ContextCreator from '../components/contextcreator/ContextCreator';
@@ -35,6 +36,8 @@ import ContextCreator from '../components/contextcreator/ContextCreator';
 export default createPlugin('ContextCreator', {
     component: connect(createStructuredSelector({
         curStepId: creationStepSelector,
+        tutorialStatus: state => tutorialSelector(state)?.status,
+        tutorialStep: tutorialStepSelector,
         newContext: newContextSelector,
         resource: resourceSelector,
         allAvailablePlugins: pluginsSelector,
@@ -78,7 +81,9 @@ export default createPlugin('ContextCreator', {
         changeTemplatesKey,
         onEnablePlugins: enablePlugins,
         onDisablePlugins: disablePlugins,
+        onInit: init,
         onSetStep: setCreationStep,
+        onShowTutorial: showTutorial,
         onChangeAttribute: changeAttribute,
         onSave: saveNewContext,
         onSaveTemplate: saveTemplate,

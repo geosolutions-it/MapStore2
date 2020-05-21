@@ -2493,6 +2493,12 @@
                     "removePlugin": "Supprimer cette extension de MapStore",
                     "mapTemplatesConfig": "Configurer le modèle de carte"
                 },
+                "tutorialPlugins": {
+                    "availableTitle": "Plugin disponible",
+                    "availableDescription": "Ce plugin est désactivé",
+                    "enabledTitle": "Plugin activé",
+                    "enabledDescription": "Ce plugin est activé"
+                },
                 "saveCfgErrorNotification":  {
                     "title": "Erreur de syntaxe dans la configuration du plugin",
                     "message": "Le plugin \"{pluginName}\" contient une erreur de configuration. Veuillez corriger avant de continuer"
@@ -2544,7 +2550,8 @@
                 "title": "Nom de contexte incorrect",
                 "unknownError": "Une erreur inattendue s'est produite"
             },
-            "undo": "Êtes-vous sûr de vouloir abandonner la session de modification de contexte ?"
+            "undo": "Êtes-vous sûr de vouloir abandonner la session de modification de contexte ?",
+            "showTutorial": "Afficher le didacticiel"
         },
         "contextManager": {
             "title": "Gérer les contextes",
@@ -2725,6 +2732,100 @@
             "dashboardAddMap": {
                 "title": "Widget Carte",
                 "text": "<p> Ajoutez une nouvelle carte interactive au tableau de bord. Vous pouvez ajouter plusieurs cartes avec la possibilité de leur connecter d'autres widgets. Après avoir enregistré la première carte, le widget légende sera ajouté à la liste. Legend Widget affichera une légende liée à la carte connectée. </p> <p> Étapes: </p> <p> <ul> <li> Sélectionnez une carte </li> <li> Améliorer la carte en ajoutant de nouveaux calques </li> <li> Enregistrer et ajouter au tableau de bord </li> </ul> </p>"
+            },
+            "contextCreator": {
+                "generalSettings": {
+                    "intro": {
+                        "title": "Tutoriel de création de contexte",
+                        "text": "Il s'agit d'un assistant étape par étape pour créer et modifier des contextes MapStore"
+                    },
+                    "stepsOverview": {
+                        "title": "Étapes du créateur de contexte",
+                        "text": "<p>Chaque contexte est créé en trois étapes:</p><p><ul><li>Paramètres généraux</li><li>Configurer la carte</li><li>Configurer les plugins</li></ul></p>"
+                    },
+                    "navigation": {
+                        "next": {
+                            "title": "Navigation: Suivant",
+                            "text": "<p>Appuyez sur ce bouton pour passer à l'étape suivante. Si le bouton est désactivé, cela signifie que les données que vous avez configurées sont en cours de validation ou qu'elles ne sont pas valides.</p>"
+                        },
+                        "back": {
+                            "title": "Navigation: Retour",
+                            "text": "<p>Appuyez sur ce bouton pour passer à l'étape précédente.</p>"
+                        },
+                        "close": {
+                            "title": "Navigation: Fermer",
+                            "text": "<p>Appuyez sur ce bouton pour quitter le processus de création de contexte sans enregistrer. Cela peut être fait à tout moment du processus de création.</p>"
+                        }
+                    },
+                    "fields": {
+                        "title": "Réglages Généraux",
+                        "text": "<p>La première étape de création nécessite de spécifier le nom du contexte, qui définit également son URL unique, et le titre qui sera utilisé comme titre de la fenêtre du navigateur lorsque le contexte sera ouvert et actif. Remarque: Le nom du contexte ne peut contenir que des lettres latines, des chiffres 0 à 9 et un caractère de soulignement. Le titre de la fenêtre ne peut pas être vide.</p>"
+                    },
+                    "showTutorial": {
+                        "title": "Afficher le didacticiel",
+                        "text": "<p>Si vous souhaitez recommencer le tutoriel pour une étape, vous pouvez le faire à tout moment en appuyant sur ce bouton.</p>"
+                    }
+                },
+                "configureMap": {
+                    "intro": {
+                        "title": "Configurer la carte",
+                        "text": "<p>Dans cette étape, à l'aide des outils de visualisation de carte MapStore, vous pouvez configurer la carte par défaut qui sera ouverte lors de l'accès au contexte.</p>"
+                    },
+                    "reloadMap": {
+                        "title": "Bouton Recharger la carte",
+                        "text": "<p>Si vous souhaitez annuler toutes les modifications que vous avez apportées à la carte jusqu'à présent et recommencer, vous pouvez le faire en appuyant sur ce bouton.</p>"
+                    }
+                },
+                "configurePlugins": {
+                    "intro": {
+                        "title": "Configurer les plugins",
+                        "text": "<p>Cette étape vous permet de configurer les plugins qui seront présents dans le contexte.</p>"
+                    },
+                    "availablePlugins": {
+                        "title": "Plugins disponibles",
+                        "text": "<p>Cette liste contient des plugins MapStore qui peuvent être ajoutés à un contexte. Pour sélectionner un plugin, cliquez simplement sur sa carte. De plus, si vous maintenez la touche CTRL enfoncée, vous pouvez sélectionner plusieurs plug-ins.</p>"
+                    },
+                    "pluginManipulation": {
+                        "title": "Déplacer des plugins",
+                        "text": "<p>Une fois sélectionnés, les plugins disponibles peuvent être déplacés dans la colonne de droite, les rendant activés dans le contexte. Certains plugins nécessitent d'autres plugins pour fonctionner, dans ce cas ils seront activés automatiquement aux côtés des plugins que vous avez explicitement activés.</p><p>Les plugins peuvent également être déplacés de la colonne \"enabled\" vers la colonne \"available\" pour les supprimer. plugins du contexte. Si vous supprimez un plugin, tous les plugins dont il a besoin pour fonctionner seront également désactivés, sauf s'il existe des plugins actuellement activés qui nécessitent également un tel plugin.</p>"
+                    },
+                    "enabledPlugins": {
+                        "title": "Plugins activés",
+                        "text": "<p>Cette liste contient les plugins MapStore qui sont dans le contexte. Chaque plugin ici peut être configuré davantage à l'aide des boutons d'outils.</p>"
+                    },
+                    "userPlugin": {
+                        "title": "Plugin Tools: Plugins utilisateur",
+                        "text": "<p>En appuyant sur ce bouton, vous pouvez autoriser un plugin à être activé / désactivé par les utilisateurs, ce qui en fait un plugin utilisateur. Ces plugins seront affichés dans le plugin User Extensions. Ce plugin est automatiquement ajouté au contexte s'il existe au moins un plugin utilisateur activé.</p>"
+                    },
+                    "userPluginCheckbox": {
+                        "title": "Plugin Tools: Plugins utilisateur",
+                        "text": "<p>Si un plugin est un plugin utilisateur, cette case à cocher contrôle si un plugin utilisateur doit être activé automatiquement lors du chargement du contexte.</p>"
+                    },
+                    "cfgTool": {
+                        "title": "Plugin Tools: Outil de configuration",
+                        "text": "<p>En appuyant sur ce bouton, un éditeur apparaît, où vous pouvez modifier la configuration par défaut du plugin.</p>"
+                    },
+                    "cfgEditor": {
+                        "title": "Plugin Tools: Éditeur de configuration",
+                        "text": "<p>L'éditeur prend en charge la coloration syntaxique. Toutes vos modifications seront enregistrées en continu au fur et à mesure de vos modifications. Si la configuration contient une erreur de syntaxe, vous en serez informé de manière appropriée. L'erreur doit être corrigée avant de continuer.</p>"
+                    },
+                    "documentationTool": {
+                        "title": "Plugin Tools: Documentation",
+                        "text": "<p>En appuyant sur ce bouton, vous accédez à la page de documentation du plugin où vous pouvez rechercher des informations sur ce que fait le plugin et les paramètres de configuration qu'il prend en charge.</p>"
+                    },
+                    "mapTemplatesTool": {
+                        "title": "Outils de plug-in: modèles de carte",
+                        "text": "<p>Le plugin Map Templates dispose également d'un outil spécial qui vous permet de configurer des modèles de carte qui seront accessibles dans le contexte.</p>"
+                    },
+                    "extensions": {
+                        "title": "Extensions",
+                        "text": "<p>MapStore prend également en charge le téléchargement de bundles d'extensions personnalisés. Vous pouvez le faire en cliquant sur ce bouton.</p>"
+                    },
+                    "extensionsDelete": {
+                        "title": "Extensions",
+                        "text": "<p>Les extensions déjà téléchargées peuvent être supprimées à tout moment en appuyant sur ce bouton.</p>"
+                    }
+                }
             },
             "geostoryIntro": {
               "title": "Tutoriel de l'histoire",
