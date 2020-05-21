@@ -51,7 +51,7 @@ export default {
     },
     containers: {
         Toolbar: {
-            name: "sampleExtension",
+            name: "SampleExtension",
             position: 10,
             text: "INC",
             doNotHide: true,
