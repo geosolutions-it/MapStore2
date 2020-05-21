@@ -742,9 +742,8 @@ The following options are available for a SVG symbol.
 - `symbolUrl`: a URL (also a data URL is ok) for the symbol to use (SVG format).
     You can anchor the symbol using:
   - `iconAnchor`: array of x,y position of the offset of the symbol from top left corner.
-  - `anchorXUnits`, `anchorYUnits` unit pf tje `iconAnchor` (`fraction` or `pixels`).
-- `color`: overrides the current symbol color (SVG)
-- `fillColor`: overrides the current symbol fill color (SVG)
+  - `anchorXUnits`, `anchorYUnits` unit of the `iconAnchor` (`fraction` or `pixels`).
+  - `size`: the size in pixel of the square that contains the symbol to draw. The size is used to center and to cut the original svg, so it must fit the svg.
 - `dashArray`: Array of line, space size, in pixels. ["6","6"] Will draw the border of the symbol dashed. It is applied also to a generic line or polygon geometry.
 
 ##### Markers and glyphs
@@ -755,7 +754,6 @@ These are the available options for makers. These are specific of annotations fo
 - `iconShape`: e.g. "circle"
 - `iconColor`: e.g. "red"
 - `iconAnchor`: [0.5,0.5]
-                  }
 
 ##### Multiple rules and filtering
 
@@ -784,7 +782,7 @@ Here an example of a layer with:
             "type": "Feature",
             "geometry": {
               "type": "Point",
-              "coordinates": [0,0]
+              "coordinates": [2,0]
             },
             "properties": {},
             "style": [
@@ -792,11 +790,8 @@ Here an example of a layer with:
                 "iconAnchor": [0.5,0.5],
                 "anchorXUnits": "fraction",
                 "anchorYUnits": "fraction",
-                "color": "#8b572a",
-                "fillColor": "#f8e71c",
                 "opacity": 1,
-                "size": 64,
-                "fillOpacity": 0.46,
+                "size": 30,
                 "symbolUrl": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='30' height='30'%3E%3Crect  x='5' y='5' width='20' height='20' style='fill:rgb(255,0,0);stroke-width:5;stroke:rgb(0,0,0)' /%3E%3C/svg%3E",
                 "shape": "triangle",
                 "id": "c65cadc0-9b46-11ea-a138-dd5f1faf9a0d",
