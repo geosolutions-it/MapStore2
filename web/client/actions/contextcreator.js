@@ -69,7 +69,7 @@ export const BACK_TO_PAGE_SHOW_CONFIRMATION = 'CONTEXTCREATOR:BACK_TO_PAGE_SHOW_
 export const LOAD_EXTENSIONS = 'CONTEXTCREATOR:LOAD_EXTENSIONS';
 
 /**
- * Merges initState into context creator state. Designed to be called on ContextCreator component mount
+ * Merges initState into context creator state. Meant to be called on ContextCreator component mount
  * @param {object} initState state to merge
  */
 export const init = (initState) => ({
@@ -82,6 +82,10 @@ export const setCreationStep = (stepId) => ({
     stepId
 });
 
+/**
+ * Set tutorial as shown, so that when the user goes back to that step the tutorial doesn't pop up again
+ * @param {string} stepId step id
+ */
 export const setWasTutorialShown = (stepId) => ({
     type: SET_WAS_TUTORIAL_SHOWN,
     stepId
@@ -89,13 +93,17 @@ export const setWasTutorialShown = (stepId) => ({
 
 /**
  * Shows a tutorial for a step regardless of whether it's been shown earlier or not
- * @param {string} stepId
+ * @param {string} stepId step id
  */
 export const showTutorial = (stepId) => ({
     type: SHOW_TUTORIAL,
     stepId
 });
 
+/**
+ * Set tutorial step to inform components that specific tutorial props should be used (see tutorialEnhancer.js)
+ * @param {string} stepId step id
+ */
 export const setTutorialStep = (stepId) => ({
     type: SET_TUTORIAL_STEP,
     stepId

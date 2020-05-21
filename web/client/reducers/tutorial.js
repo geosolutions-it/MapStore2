@@ -59,7 +59,7 @@ function tutorial(state = initialState, action) {
         setup.disabled = false;
         setup.presetGroup = action.presetGroup;
 
-        const isActuallyDisabled = localStorage.getItem('mapstore.plugin.tutorial.' + action.id + '.disabled');
+        const isActuallyDisabled = localStorage.getItem('mapstore.plugin.tutorial.' + action.id + '.disabled') === 'true';
 
         setup.steps = setup.steps.filter((step) => {
             return step.selector && step.selector.substring(0, 1) === '#' || step.selector.substring(0, 1) === '.';

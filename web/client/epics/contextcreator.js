@@ -465,7 +465,7 @@ export const loadTutorialOnStepChange = (action$, store) => action$
 
 /**
  * Handles SHOW_TUTORIAL action
- * @param {observables} action$ manages `SHOW_TUTORIAL
+ * @param {observables} action$ manages `SHOW_TUTORIAL`
  * @param {object} store
  */
 export const contextCreatorShowTutorialEpic = (action$, store) => action$

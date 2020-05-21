@@ -34,6 +34,18 @@ function initTutorial(id, steps, style, checkbox, defaultStep, presetList) {
     };
 }
 
+/**
+ * Setup a tutorial for showing
+ * @param {any} id tutorial unique id
+ * @param {array} steps tutorial steps
+ * @param {any} style
+ * @param {element} checkbox 'don't show this again' checkbox element
+ * @param {object} defaultStep default step object
+ * @param {boolean} stop if true stops the tutorial
+ * @param {array} presetGroup array of tutorial ids that will all be disabled if the user checks the checkbox to
+ * not show a tutorial again in any of the tutorials in the array
+ * @param {boolean} ignoreDisabled setup the tutorial even if it is disabled
+ */
 function setupTutorial(id, steps, style, checkbox, defaultStep, stop, presetGroup, ignoreDisabled) {
     return {
         type: SETUP_TUTORIAL,
@@ -81,6 +93,13 @@ function toggleTutorial() {
     };
 }
 
+/**
+ * Programmaticaly change the current tutorial preset, setups it for showing
+ * @param {string} preset tutorial id
+ * @param {array} presetGroup array of tutorial ids that will all be disabled if the user checks the checkbox to
+ * not show a tutorial again in any of the tutorials in the array
+ * @param {boolean} ignoreDisabled if true will show the tutorial even if it is disabled
+ */
 const changePreset = (preset, presetGroup, ignoreDisabled) => ({
     type: CHANGE_PRESET,
     preset,

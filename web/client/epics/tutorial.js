@@ -62,6 +62,11 @@ const switchTutorialEpic = (action$, store) =>
                 })
         );
 
+/**
+ * Handle changePreset action
+ * @param {external:Observable} action$ manages `CHANGE_PRESET`
+ * @param {external:Observable} store
+ */
 const changePresetEpic = (action$, store) =>
     action$.ofType(CHANGE_PRESET)
         .switchMap(({preset, presetGroup, ignoreDisabled}) => {
