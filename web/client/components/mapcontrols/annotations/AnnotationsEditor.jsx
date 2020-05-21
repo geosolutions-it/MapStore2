@@ -607,7 +607,6 @@ class AnnotationsEditor extends React.Component {
     }
 
     render() {
-        console.log("this.props.format", this.props.format);
         const editing = this.props.editing && (this.props.editing.properties.id === this.props.id);
         let mouseHoverEvents = this.props.mouseHoverEvents ? {
             onMouseEnter: () => {
