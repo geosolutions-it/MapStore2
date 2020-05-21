@@ -497,7 +497,8 @@ const LayersUtils = {
             legendOptions: layer.legendOptions
         },
         layer.params ? { params: layer.params } : {},
-        layer.credits ? { credits: layer.credits } : {});
+        layer.credits ? { credits: layer.credits } : {},
+        layer.localizedLayerStyles ? { localizedLayerStyles: layer.localizedLayerStyles } : {});
     },
     /**
     * default initial constant regex rule for searching for a /geoserver/ string in a url

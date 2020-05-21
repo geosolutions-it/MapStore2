@@ -7,10 +7,10 @@
  */
 
 import React, { useState } from 'react';
-import {Form, FormControl, FormGroup, ControlLabel} from 'react-bootstrap';
+import {Form, FormControl, FormGroup, ControlLabel, Alert} from 'react-bootstrap';
 import Message from '../../I18N/Message';
 import SwitchButton from '../../misc/switch/SwitchButton';
-import Thumbnail from '../../maps/forms/Thumbnail';
+import Thumbnail from '../../misc/Thumbnail';
 import CheckboxTree from 'react-checkbox-tree';
 import 'react-checkbox-tree/lib/react-checkbox-tree.css';
 import localizedProps from '../../misc/enhancers/localizedProps';
@@ -72,18 +72,34 @@ export default ({
                     checked={settings.isLogoEnabled}
                 />
             </div>
-            {   settings.isLogoEnabled && (<Thumbnail
-                className="ms-geostory-settings-logo"
-                withLabel={false}
-                onUpdate={(data, url) => onUpdateSettings("thumbnail", {data, url})}
-                onError={(errors) => onUpdateSettings("thumbnailErrors", errors)}
-                message={<Message msgId="geostory.builder.settings.logoPlaceholder"/>}
-                suggestion=""
-                thumbnailErrors={settings.thumbnailErrors}
-                map={{
-                    newThumbnail: settings.thumbnail && (settings.thumbnail.data || settings.thumbnail.url) || "NODATA"
-                }}
-            />)
+            {settings.isLogoEnabled && (
+                <>
+                <Thumbnail
+                    thumbnail={settings?.thumbnail?.data || settings?.thumbnail?.url}
+                    onUpdate={(data, files) => {
+                        onUpdateSettings("thumbnail", { data, url: files?.[0]?.preview });
+                        onUpdateSettings("thumbnailErrors", undefined);
+                    }}
+                    onRemove={() => {
+                        onUpdateSettings("thumbnail", undefined);
+                        onUpdateSettings("thumbnailErrors", undefined);
+                    }}
+                    onError={(errors) => onUpdateSettings("thumbnailErrors", errors)}
+                    message={<Message msgId="geostory.builder.settings.logoPlaceholder"/>}
+                    thumbnailOptions={{
+                        width: 300,
+                        height: 150,
+                        type: 'image/png',
+                        contain: true
+                    }}
+                />
+                {settings.thumbnailErrors && settings.thumbnailErrors.length > 0 &&
+                    <Alert bsStyle="danger" className="text-center">
+                        <div><Message msgId="map.error"/></div>
+                        {settings.thumbnailErrors.indexOf('FORMAT') !== -1 && <div><Message msgId="map.errorFormat" /></div>}
+                        {settings.thumbnailErrors.indexOf('SIZE') !== -1 && <div><Message msgId="map.errorSize" /></div>}
+                    </Alert>}
+                </>)
             }
         </FormGroup>
         <FormGroup>

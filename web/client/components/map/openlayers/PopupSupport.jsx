@@ -11,6 +11,7 @@ import PropTypes from 'prop-types';
 import { Overlay } from 'ol';
 import isString from 'lodash/isString';
 import * as Utils from '../../../utils/PopupUtils';
+
 import popupsComponents from '../popups';
 
 const addMutationObserver = (popup, container, options = {}) => {
@@ -109,7 +110,7 @@ export default class PopupSupport extends React.Component {
             const { id, position: { coordinates }, className,
                 maxWidth: maxWidthOption = maxMapWidth,
                 maxHeight: maxHeightOption = maxMapHeight,
-                autoPan = true,
+                autoPan = false,
                 autoPanMargin = margin,
                 offset = [0, 0],
                 autoPanAnimation = {

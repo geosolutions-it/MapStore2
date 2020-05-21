@@ -86,6 +86,7 @@ export const Controls = ({
             />
             {options.mapInfoControl && <FeatureInfoFormatSelector
                 disabled={!options.mapInfoControl}
+                popoverMessage="geostory.builder.settings.templateTooltip"
                 infoFormat={options.mapOptions && options.mapOptions.mapInfoFormat || "application/json"}
                 onInfoFormatChange={(format) => onChangeMap("mapOptions.mapInfoFormat", format)}
                 selectProps={{
