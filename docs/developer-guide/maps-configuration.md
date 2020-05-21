@@ -31,8 +31,8 @@ This is used for the **new map**. If you're logged in and allowed to create maps
 http://localhost:8081/#viewer/openlayers/new
 ```
 
-This page uses the `new.json` file as a template configuration to start creating a new map. You can find this file in `web/client` directory for standard MapStore or in the root for a custom projects. 
-You can edit `new.json` to customize this initial template. It typically contains the map backgrounds you want to use for all the new maps (identified by the special property `"group": "background"`).  
+This page uses the `new.json` file as a template configuration to start creating a new map. You can find this file in `web/client` directory for standard MapStore or in the root for a custom projects.
+You can edit `new.json` to customize this initial template. It typically contains the map backgrounds you want to use for all the new maps (identified by the special property `"group": "background"`).
 
 If you have enabled the datadir, then you can externalize the new.json or config.json files. (see [here](../externalized-configuration) for more details)
 
@@ -727,6 +727,149 @@ The `style` or `styleName` properties of vector layers (wfs, vector...) allow to
 - `styleName`: if set to `marker`, the `style` object will be ignored and it will use the default marker.
 
 In case of `vector` layer, style can be added also to the specific features. Other ways of defining the style for a vector layer have to be documented.
+
+#### Advanced Vector Styles
+
+To support advanced styles (like multiple rules, symbols, dashed lines, start point, end point) the style can be configured also in a different format, as an array of objects and you can define them feature by feature, adding a "style" property.
+
+!!!warning
+    This advanced style functionality has been implemented to support annotations, at the moment this kind of advanced style options is supported **only** as a property of the single feature object, not as global style.
+
+##### SVG Symbol
+
+The following options are available for a SVG symbol.
+
+- `symbolUrl`: a URL (also a data URL is ok) for the symbol to use (SVG format).
+    You can anchor the symbol using:
+  - `iconAnchor`: array of x,y position of the offset of the symbol from top left corner.
+  - `anchorXUnits`, `anchorYUnits` unit pf tje `iconAnchor` (`fraction` or `pixels`).
+- `color`: overrides the current symbol color (SVG)
+- `fillColor`: overrides the current symbol fill color (SVG)
+- `dashArray`: Array of line, space size, in pixels. ["6","6"] Will draw the border of the symbol dashed. It is applied also to a generic line or polygon geometry.
+
+##### Markers and glyphs
+
+These are the available options for makers. These are specific of annotations for now, so allowed values have to be documented.
+
+- `iconGlyph`: e.g. "shopping-cart"
+- `iconShape`: e.g. "circle"
+- `iconColor`: e.g. "red"
+- `iconAnchor`: [0.5,0.5]
+                  }
+
+##### Multiple rules and filtering
+
+In order to support start point and end point symbols, you could find in the style these entries:
+
+- `geometry`: "endPoint"|"startPoint", identify how to get the geometry from
+- `filtering`: if true, the geometry filter is applied.
+
+#### Example
+
+Here an example of a layer with:
+
+- a point styled with SVG symbol,
+- a polygon with dashed style
+- a line with start-end point styles as markers with icons
+
+```json
+{
+        "type": "vector",
+        "visibility": true,
+        "id": "1234",
+        "name": "1234",
+        "hideLoading": true,
+        "features": [
+          {
+            "type": "Feature",
+            "geometry": {
+              "type": "Point",
+              "coordinates": [0,0]
+            },
+            "properties": {},
+            "style": [
+              {
+                "iconAnchor": [0.5,0.5],
+                "anchorXUnits": "fraction",
+                "anchorYUnits": "fraction",
+                "color": "#8b572a",
+                "fillColor": "#f8e71c",
+                "opacity": 1,
+                "size": 64,
+                "fillOpacity": 0.46,
+                "symbolUrl": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='30' height='30'%3E%3Crect  x='5' y='5' width='20' height='20' style='fill:rgb(255,0,0);stroke-width:5;stroke:rgb(0,0,0)' /%3E%3C/svg%3E",
+                "shape": "triangle",
+                "id": "c65cadc0-9b46-11ea-a138-dd5f1faf9a0d",
+                "highlight": false,
+                "weight": 4
+              }
+            ]
+          },{
+            "type": "Feature",
+            "geometry": {
+              "type": "Polygon",
+              "coordinates": [[[0, 0],[1, 0],[1, 1],[0,1],[ 0,0]]]
+            },
+            "properties": {},
+            "style": [
+              {
+                "color": "#d0021b",
+                "opacity": 1,
+                "weight": 3,
+                "fillColor": "#4a90e2",
+                "fillOpacity": 0.5,
+                "highlight": false,
+                "dashArray": ["6","6"]
+              }
+            ]
+          },{
+            "type": "Feature",
+            "geometry": {
+              "coordinates": [[0, 2],[ 0,3]],
+              "type": "LineString"
+            },
+            "properties": {},
+            "style": [
+              {
+                "color": "#ffcc33",
+                "opacity": 1,
+                "weight": 3,
+                "editing": {
+                  "fill": 1
+                },
+                "highlight": false
+              },
+              {
+                "iconGlyph": "comment",
+                "iconShape": "square",
+                "iconColor": "blue",
+                "highlight": false,
+                "iconAnchor": [ 0.5,0.5],
+                "type": "Point",
+                "title": "StartPoint Style",
+                "geometry": "startPoint",
+                "filtering": true
+              },
+              {
+                "iconGlyph": "shopping-cart",
+                "iconShape": "circle",
+                "iconColor": "red",
+                "highlight": false,
+                "iconAnchor": [ 0.5,0.5 ],
+                "type": "Point",
+                "title": "EndPoint Style",
+                "geometry": "endPoint",
+                "filtering": true
+              }
+            ]
+          }
+        ]
+      }
+```
+
+*Result:*
+
+<img src="../img/vector-style-annotations.jpg" class="ms-docimage"  style="max-width:600px;"/>
 
 #### WFS Layer
 
