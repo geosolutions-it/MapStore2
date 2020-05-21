@@ -9,7 +9,7 @@
 import { createPlugin } from "../../web/client/utils/PluginsUtils";
 
 export default {
-    Extension: createPlugin('SampleExtension', {
+    SampleExtension: createPlugin('SampleExtension', {
         lazy: true,
         loader: () => import(/* webpackChunkName: "extensions/sampleExtension" */`./plugins/SampleExtension`)
     })
