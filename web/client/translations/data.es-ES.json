@@ -2239,6 +2239,9 @@
             },
             "mapList": {
                 "emptyList": "Haga clic en el botón más para crear un mapa o seleccione un servicio de mapas diferente."
+            },
+            "videoList": {
+                "emptyList": "Haga clic en el botón más para agregar un nuevo video"
             }
         },
         "backgroundDialog": {

@@ -2243,6 +2243,9 @@
             },
             "mapList": {
                 "emptyList": "Click on the plus button to create a map or select a different map service."
+            },
+            "videoList": {
+                "emptyList": "Click on the plus button to add a new video"
             }
         },
         "backgroundDialog": {

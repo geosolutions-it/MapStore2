@@ -2238,6 +2238,9 @@
             },
             "mapList": {
                 "emptyList": "Klicken Sie auf die Plus-Schaltfläche, um eine Karte zu erstellen oder einen anderen Kartendienst auszuwählen."
+            },
+            "videoList": {
+                "emptyList": "Klicken Sie auf das Pluszeichen, um ein neues Video hinzuzufügen"
             }
         },
         "backgroundDialog": {

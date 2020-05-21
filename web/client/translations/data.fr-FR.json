@@ -2238,6 +2238,9 @@
             },
             "mapList": {
                 "emptyList": "Cliquez sur le bouton plus pour créer une carte ou sélectionnez un autre service de carte."
+            },
+            "videoList": {
+                "emptyList": "Cliquez sur le bouton plus pour ajouter une nouvelle vidéo"
             }
         },
         "backgroundDialog": {
