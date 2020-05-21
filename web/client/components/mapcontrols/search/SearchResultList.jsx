@@ -1,4 +1,3 @@
-const PropTypes = require('prop-types');
 /**
  * Copyright 2017, GeoSolutions Sas.
  * All rights reserved.
@@ -7,15 +6,19 @@ const PropTypes = require('prop-types');
  * LICENSE file in the root directory of this source tree.
  */
 
-var React = require('react');
-var SearchResult = require('./SearchResult');
+const React = require('react');
+const PropTypes = require('prop-types');
+const { find } = require('lodash');
+const assign = require('object-assign');
+
+const SearchResult = require('./SearchResult');
 const I18N = require('../../I18N/I18N');
-var assign = require('object-assign');
 
 
 class SearchResultList extends React.Component {
     static propTypes = {
         results: PropTypes.array,
+        layers: PropTypes.array,
         searchOptions: PropTypes.object,
         mapConfig: PropTypes.object,
         fitToMapSize: PropTypes.bool,
@@ -24,10 +27,12 @@ class SearchResultList extends React.Component {
         onItemClick: PropTypes.func,
         addMarker: PropTypes.func,
         afterItemClick: PropTypes.func,
+        showGFI: PropTypes.func,
         notFoundMessage: PropTypes.oneOfType([PropTypes.object, PropTypes.string])
     };
 
     static defaultProps = {
+        layers: [],
         sizeAdjustment: {
             width: 0,
             height: 110
@@ -37,7 +42,8 @@ class SearchResultList extends React.Component {
         },
         onItemClick: () => {},
         addMarker: () => {},
-        afterItemClick: () => {}
+        afterItemClick: () => {},
+        showGFI: () => {}
     };
 
     onItemClick = (item) => {
@@ -51,7 +57,21 @@ class SearchResultList extends React.Component {
                 subTitle={service.subTitle}
                 idField={service.idField}
                 displayName={service.displayName}
-                key={item.osm_id || "res_" + idx} item={item} onItemClick={this.onItemClick}/>);
+                key={item.osm_id || "res_" + idx}
+                item={item}
+                onItemClick={this.onItemClick}
+                tools={[{
+                    id: 'open-gfi',
+                    visible: service.launchInfoPanel === 'single_layer' &&
+                        !!service.openFeatureInfoButtonEnabled &&
+                        (service.forceSearchLayerVisibility || !!find(this.props.layers, {name: service.options?.typeName})?.visibility),
+                    glyph: 'info-sign',
+                    tooltipId: 'search.showGFI',
+                    onClick: e => {
+                        e.stopPropagation();
+                        this.props.showGFI(item);
+                    }
+                }]}/>);
         });
     };
 

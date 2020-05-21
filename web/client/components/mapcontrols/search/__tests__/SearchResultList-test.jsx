@@ -148,5 +148,44 @@ describe("test the SearchResultList", () => {
         expect(spy).toHaveBeenCalledWith(items[0], mapConfig);
     });
 
+    it('test showGFI button when it is enabled', () => {
+        const tb = ReactDOM.render(<SearchResultList searchOptions={{
+            services: [{
+                id: "S1",
+                displayName: "S1",
+                subTitle: "S1",
+                launchInfoPanel: 'single_layer',
+                openFeatureInfoButtonEnabled: true,
+                forceSearchLayerVisibility: true
+            }]
+        }} results={[{
+            id: "ID",
+            properties: {
+                prop1: 1
+            },
+            __SERVICE__: "S1"
+        }]} notFoundMessage="not found"/>, document.getElementById("container"));
+        expect(tb).toExist();
+        const button = document.querySelector('.search-result button');
+        expect(button).toExist();
+    });
 
+    it('test showGFI button when it is disabled', () => {
+        const tb = ReactDOM.render(<SearchResultList searchOptions={{
+            services: [{
+                id: "S1",
+                displayName: "S1",
+                subTitle: "S1"
+            }]
+        }} results={[{
+            id: "ID",
+            properties: {
+                prop1: 1
+            },
+            __SERVICE__: "S1"
+        }]} notFoundMessage="not found"/>, document.getElementById("container"));
+        expect(tb).toExist();
+        const button = document.querySelector('.search-result button');
+        expect(button).toNotExist();
+    });
 });

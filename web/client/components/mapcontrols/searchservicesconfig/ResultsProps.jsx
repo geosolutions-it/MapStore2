@@ -7,7 +7,8 @@
  */
 
 const React = require('react');
-const {FormGroup, ControlLabel, FormControl, Label} = require('react-bootstrap');
+const { get } = require('lodash');
+const { FormGroup, ControlLabel, FormControl, Label, Checkbox } = require('react-bootstrap');
 const Slider = require('react-nouislider');
 const assign = require('object-assign');
 const PropTypes = require('prop-types');
@@ -25,6 +26,7 @@ class ResultsProps extends React.Component {
         service: PropTypes.object,
         launchInfoPanelOptions: PropTypes.array,
         launchInfoPanelDefault: PropTypes.string,
+        launchInfoPanelSelectOptions: PropTypes.object,
         onPropertyChange: PropTypes.func
     };
 
@@ -35,6 +37,7 @@ class ResultsProps extends React.Component {
     static defaultProps = {
         service: {},
         launchInfoPanelDefault: "no_info",
+        launchInfoPanelSelectOptions: {},
         onPropertyChange: () => {}
     };
 
@@ -54,6 +57,8 @@ class ResultsProps extends React.Component {
                 value: "single_layer"
             }
         ];
+        const currentLaunchInfoPanel = service?.launchInfoPanel || this.props.launchInfoPanelDefault;
+
         return (
             <form>
                 <span className="wfs-required-props-title"><Message msgId="search.s_result_props_label" /></span>
@@ -66,7 +71,7 @@ class ResultsProps extends React.Component {
                         key="displayName"
                         type="text"
                         placeholder={'e.g. "${properties.name}\"'}
-                        onChange={this.updateProp.bind(null, "displayName")}/>
+                        onChange={this.updateProp.bind(null, "displayName", null)}/>
                 </FormGroup>
                 <FormGroup>
                     <ControlLabel>
@@ -76,7 +81,7 @@ class ResultsProps extends React.Component {
                         value={service.subTitle}
                         key="subTitle"
                         type="text"
-                        onChange={this.updateProp.bind(null, "subTitle")}/>
+                        onChange={this.updateProp.bind(null, "subTitle", null)}/>
                 </FormGroup>
                 <FormGroup>
                     <ControlLabel>
@@ -98,18 +103,27 @@ class ResultsProps extends React.Component {
                     <Select
                         options={launchInfoPanelOptions}
                         clearable={false}
-                        value={service && service.launchInfoPanel || this.props.launchInfoPanelDefault}
+                        value={currentLaunchInfoPanel}
                         onChange={this.updateLaunchInfoPanel}
+                        {...this.props.launchInfoPanelSelectOptions}
                     />
+                    {currentLaunchInfoPanel === 'single_layer' ? <FormGroup>
+                        <Checkbox checked={service?.openFeatureInfoButtonEnabled ?? false} onChange={this.updateProp.bind(null, 'openFeatureInfoButtonEnabled', 'target.checked')}>
+                            <Message msgId="search.s_launch_info_panel.openFeatureInfoButtonCheckbox"/>
+                        </Checkbox>
+                        <Checkbox checked={service?.forceSearchLayerVisibility ?? false} onChange={this.updateProp.bind(null, 'forceSearchLayerVisibility', 'target.checked')}>
+                            <Message msgId="search.s_launch_info_panel.forceSearchLayerVisibility"/>
+                        </Checkbox>
+                    </FormGroup> : null}
                     <span className="priority-info with-top-margin">
-                        <Message msgId={`search.s_launch_info_panel.${service && service.launchInfoPanel || this.props.launchInfoPanelDefault}_description`} />
+                        <Message msgId={`search.s_launch_info_panel.${currentLaunchInfoPanel}_description`} />
                     </span>
                 </FormGroup>
             </form>);
     }
 
-    updateProp = (prop, event) => {
-        const value = event.target.value;
+    updateProp = (prop, path, event) => {
+        const value = get(event, path || 'target.value');
         this.props.onPropertyChange("service", assign({}, this.props.service, {[prop]: value}));
     };
 
@@ -123,7 +137,12 @@ class ResultsProps extends React.Component {
             // avoid to use a value for default behaviour i.e. without record search
             launchInfoPanel = undefined;
         }
-        this.props.onPropertyChange("service", {...this.props.service, launchInfoPanel});
+        this.props.onPropertyChange("service", {
+            ...this.props.service,
+            launchInfoPanel,
+            openFeatureInfoButtonEnabled: false,
+            forceSearchLayerVisibility: false
+        });
     };
 }
 
