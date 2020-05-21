@@ -74,7 +74,7 @@ The extension definition will import or define all the needed dependencies (comp
 ### Testing your extension
 
 The extension source code has to be stored *INSIDE* the MapStore source code tree. We suggest to modify the sample app in the `build/extensions` folder.
-Edit the `plugins/SampleExample.jsx` file to create your own extension (and add any additional files you may need).
+Edit the `plugins/SampleExtension.jsx` file to create your own extension (and add any additional files you may need).
 
 To run the sample app (with your extension) in developer mode, use the following command:
 
