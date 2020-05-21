@@ -18,19 +18,22 @@ import MapUtils from '../utils/MapUtils';
 
 import {SAVE_CONTEXT, SAVE_TEMPLATE, LOAD_CONTEXT, LOAD_TEMPLATE, DELETE_TEMPLATE, EDIT_TEMPLATE, SHOW_DIALOG, SET_CREATION_STEP, MAP_VIEWER_LOAD,
     MAP_VIEWER_RELOAD, CHANGE_ATTRIBUTE, ENABLE_MANDATORY_PLUGINS, ENABLE_PLUGINS, DISABLE_PLUGINS, SAVE_PLUGIN_CFG,
-    EDIT_PLUGIN, CHANGE_PLUGINS_KEY, UPDATE_EDITED_CFG, VALIDATE_EDITED_CFG, SET_RESOURCE, UPLOAD_PLUGIN, UNINSTALL_PLUGIN, contextSaved, setResource,
-    startResourceLoad, loadFinished, loadTemplate, showDialog, setFileDropStatus, updateTemplate, isValidContextName,
-    contextNameChecked, setCreationStep, contextLoadError, loading, mapViewerLoad, mapViewerLoaded, setEditedPlugin,
+    EDIT_PLUGIN, CHANGE_PLUGINS_KEY, UPDATE_EDITED_CFG, VALIDATE_EDITED_CFG, SET_RESOURCE, UPLOAD_PLUGIN, UNINSTALL_PLUGIN,
+    SHOW_TUTORIAL, contextSaved, setResource, startResourceLoad, loadFinished, loadTemplate, showDialog, setFileDropStatus, updateTemplate,
+    isValidContextName, contextNameChecked, setCreationStep, contextLoadError, loading, mapViewerLoad, mapViewerLoaded, setEditedPlugin,
     setEditedCfg, setParsedCfg, validateEditedCfg, setValidationStatus, savePluginCfg, enableMandatoryPlugins,
     enablePlugins, disablePlugins, setCfgError, changePluginsKey, changeTemplatesKey, setEditedTemplate, setTemplates, setParsedTemplate,
-    pluginUploaded, pluginUploading, pluginUninstalled, pluginUninstalling, loadExtensions, uploadPluginError} from '../actions/contextcreator';
+    pluginUploaded, pluginUploading, pluginUninstalled, pluginUninstalling, loadExtensions, uploadPluginError,
+    setWasTutorialShown, setTutorialStep} from '../actions/contextcreator';
 import {newContextSelector, resourceSelector, creationStepSelector, mapConfigSelector, mapViewerLoadedSelector, contextNameCheckedSelector,
     editedPluginSelector, editedCfgSelector, validationStatusSelector, parsedCfgSelector, cfgErrorSelector,
-    pluginsSelector, initialEnabledPluginsSelector, editedTemplateSelector} from '../selectors/contextcreator';
+    pluginsSelector, initialEnabledPluginsSelector, editedTemplateSelector, tutorialsSelector,
+    wasTutorialShownSelector} from '../selectors/contextcreator';
 import {CONTEXTS_LIST_LOADED} from '../actions/contextmanager';
 import {wrapStartStop} from '../observables/epics';
 import {isLoggedIn} from '../selectors/security';
 import {show, error} from '../actions/notifications';
+import {changePreset} from '../actions/tutorial';
 import {initMap} from '../actions/map';
 import {mapSelector} from '../selectors/map';
 import {layersSelector, groupsSelector} from '../selectors/layers';
@@ -440,6 +443,40 @@ export const loadMapViewerOnStepChange = (action$) => action$
     .ofType(SET_CREATION_STEP)
     .filter(({stepId}) => stepId === 'configure-map')
     .switchMap(() => Rx.Observable.of(mapViewerLoad()));
+
+/**
+ * Changes tutorial on creation step changes
+ * @memberof epics.contextcreator
+ * @param {observable} action$ manages `SET_CREATION_STEP`
+ * @param {object} store
+ */
+export const loadTutorialOnStepChange = (action$, store) => action$
+    .ofType(SET_CREATION_STEP)
+    .switchMap(({stepId}) => {
+        const tutorials = tutorialsSelector(store.getState()) || {};
+
+        return !wasTutorialShownSelector(stepId)(store.getState()) ?
+            Rx.Observable.of(
+                changePreset(tutorials[stepId], values(tutorials)),
+                setWasTutorialShown(stepId)
+            ) :
+            Rx.Observable.empty();
+    });
+
+/**
+ * Handles SHOW_TUTORIAL action
+ * @param {observables} action$ manages `SHOW_TUTORIAL`
+ * @param {object} store
+ */
+export const contextCreatorShowTutorialEpic = (action$, store) => action$
+    .ofType(SHOW_TUTORIAL)
+    .switchMap(({stepId}) => {
+        const tutorials = tutorialsSelector(store.getState()) || {};
+        return Rx.Observable.of(
+            setTutorialStep(),
+            changePreset(tutorials[stepId], values(tutorials), true)
+        );
+    });
 
 /**
  * Initiates context map load

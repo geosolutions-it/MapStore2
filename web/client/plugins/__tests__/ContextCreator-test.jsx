@@ -16,7 +16,7 @@ import expect from 'expect';
 import { getPluginForTest } from './pluginsTestUtils';
 import ContextCreator from '../ContextCreator';
 
-describe('ContextCreator component', () => {
+describe('ContextCreator plugin', () => {
     beforeEach((done) => {
         document.body.innerHTML = '<div id="container"></div>';
         setTimeout(done);
@@ -47,7 +47,7 @@ describe('ContextCreator component', () => {
         ReactTestUtils.Simulate.click(button); // <-- trigger event callback
         // check destination path
         expect(actions.length).toBeGreaterThanOrEqualTo(1);
-        expect(actions[0].destLocation).toBe("/context-manager");
+        expect(actions[1].destLocation).toBe("/context-manager");
     });
     it('custom destination', () => {
         const plugins = [
@@ -69,6 +69,6 @@ describe('ContextCreator component', () => {
         ReactTestUtils.Simulate.click(button); // <-- trigger event callback
         // check customization of destination path
         expect(actions.length).toBeGreaterThanOrEqualTo(1);
-        expect(actions[0].destLocation).toBe("MY_DESTINATION");
+        expect(actions[1].destLocation).toBe("MY_DESTINATION");
     });
 });

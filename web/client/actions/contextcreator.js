@@ -6,7 +6,11 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+export const INIT = 'CONTEXTCREATOR:INIT';
 export const SET_CREATION_STEP = 'CONTEXTCREATOR:SET_CREATION_STEP';
+export const SET_WAS_TUTORIAL_SHOWN = 'CONTEXTCREATOR:SET_WAS_TUTORIAL_SHOWN';
+export const SHOW_TUTORIAL = 'CONTEXTCREATOR:SHOW_TUTORIAL';
+export const SET_TUTORIAL_STEP = 'CONTEXTCREATOR:SET_TUTORIAL_STEP';
 export const MAP_VIEWER_LOAD = 'CONTEXTCREATOR:MAP_VIEWER_LOAD';
 export const MAP_VIEWER_LOADED = 'CONTEXTCREATOR:MAP_VIEWER_LOADED';
 export const MAP_VIEWER_RELOAD = 'CONTEXTCREATOR:MAP_VIEWER_RELOAD';
@@ -64,8 +68,44 @@ export const UNINSTALL_PLUGIN_ERROR = 'CONTEXTCREATOR:UNINSTALL_PLUGIN_ERROR';
 export const BACK_TO_PAGE_SHOW_CONFIRMATION = 'CONTEXTCREATOR:BACK_TO_PAGE_SHOW_CONFIRMATION';
 export const LOAD_EXTENSIONS = 'CONTEXTCREATOR:LOAD_EXTENSIONS';
 
+/**
+ * Merges initState into context creator state. Meant to be called on ContextCreator component mount
+ * @param {object} initState state to merge
+ */
+export const init = (initState) => ({
+    type: INIT,
+    initState
+});
+
 export const setCreationStep = (stepId) => ({
     type: SET_CREATION_STEP,
+    stepId
+});
+
+/**
+ * Set tutorial as shown, so that when the user goes back to that step the tutorial doesn't pop up again
+ * @param {string} stepId step id
+ */
+export const setWasTutorialShown = (stepId) => ({
+    type: SET_WAS_TUTORIAL_SHOWN,
+    stepId
+});
+
+/**
+ * Shows a tutorial for a step regardless of whether it's been shown earlier or not
+ * @param {string} stepId step id
+ */
+export const showTutorial = (stepId) => ({
+    type: SHOW_TUTORIAL,
+    stepId
+});
+
+/**
+ * Set tutorial step to inform components that specific tutorial props should be used (see tutorialEnhancer.js)
+ * @param {string} stepId step id
+ */
+export const setTutorialStep = (stepId) => ({
+    type: SET_TUTORIAL_STEP,
     stepId
 });
 
