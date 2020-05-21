@@ -65,7 +65,7 @@ export default ({
             [MediaTypes.IMAGE]: ['editMedia', size(), 'align', 'remove'],
             [MediaTypes.MAP]: ['editMedia', 'editMap', size(true), 'remove'],
             [ContentTypes.WEBPAGE]: ['editURL', size(true), 'remove'],
-            [MediaTypes.VIDEO]: ['editMedia', 'remove', 'muted', 'autoplay', 'loop']
+            [MediaTypes.VIDEO]: ['editMedia', 'muted', 'autoplay', 'loop', 'remove']
         }}
         addButtons={[{
             glyph: 'sheet',

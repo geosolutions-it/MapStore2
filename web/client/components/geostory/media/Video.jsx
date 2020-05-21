@@ -18,7 +18,7 @@ import { Modes } from '../../../utils/GeoStoryUtils';
  * @prop {number} resolution resolution of the video
  * @prop {string} fit one of `cover`, `contain` or undefined
  * (`cover` provides a video covering the available space provided by its own container
- * and it has loop enabled and controls disabled by default)
+ * and it has loop and autoplay enabled and controls not visible by default)
  * @prop {string} loop loop the video (loop has no effect for fit equal to `cover`)
  * @prop {string} volume change the volume of video, value between 0.0 and 1.0
  * @prop {string} muted mute the video audio
@@ -49,6 +49,8 @@ const Video = withResizeDetector(({
     const [error, setError] = useState();
     const [loading, setLoading] = useState(play);
 
+    const isCover = fit === 'cover';
+
     useEffect(() => {
         if (!started && playing) {
             setStarted(true);
@@ -61,7 +63,7 @@ const Video = withResizeDetector(({
 
     function getSize() {
         const containerResolution = width / height;
-        if (fit === 'cover') {
+        if (isCover) {
             return containerResolution < resolution
                 ? [ height * resolution, height]
                 : [ width, width / resolution ];
@@ -76,10 +78,10 @@ const Video = withResizeDetector(({
 
     const size = getSize();
 
-    const containerHeight = (fit === 'contain' || fit === 'cover') ? height : size[1];
+    const containerHeight = (fit === 'contain' || isCover) ? height : size[1];
 
-    const showControls = fit === 'cover' ? false : controls;
-    const forceLoop = fit === 'cover' ? true : loop;
+    const showControls = isCover ? false : controls;
+    const forceLoop = isCover ? true : loop;
 
     return (
         <div
@@ -103,7 +105,7 @@ const Video = withResizeDetector(({
                 loop={forceLoop}
                 volume={volume}
                 muted={muted}
-                style={fit === 'cover'
+                style={isCover
                     ? {
                         left: '50%',
                         top: '50%',
@@ -122,8 +124,7 @@ const Video = withResizeDetector(({
                     playerVars: {
                         controls: showControls ? 2 : 0,
                         modestbranding: 1,
-                        rel: 0,
-                        showinfo: fit === 'cover' ? 0 : 1
+                        rel: 0
                     }
                 }}
                 onReady={() => setLoading(false)}
@@ -144,7 +145,7 @@ const Video = withResizeDetector(({
                     ...(!(loading || error) && { cursor: 'pointer' }),
                     ...(!playing && thumbnail && {
                         backgroundImage: `url(${thumbnail})`,
-                        backgroundSize: fit === 'cover' ? 'cover' : '640px auto',
+                        backgroundSize: isCover ? 'cover' : '640px auto',
                         backgroundPosition: 'center',
                         backgroundRepeat: 'no-repeat'
                     })
@@ -188,7 +189,7 @@ const Video = withResizeDetector(({
  * @prop {boolean} inView define if the video si in the window view
  * @prop {string} fit one of `cover`, `contain` or undefined
  * (`cover` provides a video covering the available space provided by its own container
- * and it has loop enabled and controls disabled by default)
+ * and it has loop and autoplay enabled and controls not visible by default)
  * @prop {string} loop loop the video (loop has no effect for fit equal to `cover`)
  * @prop {string} muted mute the video audio
  * @prop {string} description video description

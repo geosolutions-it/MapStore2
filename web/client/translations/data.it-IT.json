@@ -2078,8 +2078,8 @@
                 "disableAudio": "Disabilita audio",
                 "enableAutoplay": "Abilita riproduzione automatica",
                 "disableAutoplay": "Disabilita riproduzione automatica",
-                "enableLoop": "Abilita loop",
-                "disableLoop": "Disabilita loop"
+                "enableLoop": "Abilita riproduzione continua",
+                "disableLoop": "Disabilita riproduzione continua"
             },
             "navigation": {
                 "edit": "Modifica storia"
