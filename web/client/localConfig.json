@@ -368,12 +368,7 @@
             },
             "FilterLayer",
             "AddGroup",
-            {
-                "name": "TOCItemsSettings",
-                "cfg": {
-                    "initialActiveTab": "general"
-                }
-            },
+            "TOCItemsSettings",
             "Tutorial", "MapFooter", {
                 "name": "Measure",
                 "cfg": {
