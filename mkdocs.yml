@@ -74,6 +74,21 @@ pages:
       - Overview: 'user-guide/exploring-dashboards.md'
       - Adding widgets: 'user-guide/adding-widgets.md'
       - Connecting widgets: 'user-guide/connecting-widgets.md'
+    - Exploring Stories:
+      - Overview: 'user-guide/exploring-stories.md'
+      - Story Settings: 'user-guide/story-setting.md'
+      - Title Section: 'user-guide/title-section.md'
+      - Paragraph Section: 'user-guide/paragraph-section.md'
+      - Immersive Section: 'user-guide/immersive-section.md'
+      - Media Section: 'user-guide/media-section.md'
+      - Web Page section: 'user-guide/web-section.md'
+      - Text Editor Toolbar: 'user-guide/text-editor-toolbar.md'
+      - Image Toolbar: 'user-guide/content-image-toolbar.md'
+      - Map Toolbar: 'user-guide/content-map-toolbar.md'
+      - Web Page Toolbar: 'user-guide/content-web-toolbar.md'
+      - Media Editor: 'user-guide/media-editor-window.md'
+      - Configue the map: 'user-guide/configure-map.md'
+      
   - Developer Guide:
     - Requirements: 'developer-guide/requirements.md'
     - Quick Setup and Run: 'developer-guide/index.md'
