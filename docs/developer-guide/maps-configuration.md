@@ -774,8 +774,8 @@ Here an example of a layer with:
 {
         "type": "vector",
         "visibility": true,
-        "id": "1234",
-        "name": "1234",
+        "id": "styled-vector-layer",
+        "name": "styled-vector-layer",
         "hideLoading": true,
         "features": [
           {
