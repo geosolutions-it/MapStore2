@@ -798,7 +798,138 @@ describe('Leaflet layer', () => {
 
         expect(layer.layer.wmsParams['ms2-authkey']).toBe("########-####-$$$$-####-###########");
     });
-
+    it('tile matrix set and ids must be sorted to match each other', () => {
+        const tileMatrix = [{
+            "ows:Identifier": "0",
+            "ScaleDenominator": "17471320.75089746",
+            "TopLeftCorner": "-46133.17 6301219.54",
+            "TileWidth": "256",
+            "TileHeight": "256",
+            "MatrixWidth": "1",
+            "MatrixHeight": "1"
+        },
+        {
+            "ows:Identifier": "2",
+            "ScaleDenominator": "4367830.187724365",
+            "TopLeftCorner": "-46133.17 6301219.54",
+            "TileWidth": "256",
+            "TileHeight": "256",
+            "MatrixWidth": "4",
+            "MatrixHeight": "4"
+        },
+        {
+            "ows:Identifier": "1",
+            "ScaleDenominator": "8735660.37544873",
+            "TopLeftCorner": "-46133.17 6301219.54",
+            "TileWidth": "256",
+            "TileHeight": "256",
+            "MatrixWidth": "2",
+            "MatrixHeight": "2"
+        },
+        {
+            "ows:Identifier": "3",
+            "ScaleDenominator": "2183915.0938621825",
+            "TopLeftCorner": "-46133.17 6301219.54",
+            "TileWidth": "256",
+            "TileHeight": "256",
+            "MatrixWidth": "8",
+            "MatrixHeight": "8"
+        }];
+        const options = {
+            type: 'wmts',
+            visibility: false,
+            name: 'nurc:Arc_Sample',
+            group: 'Meteo',
+            format: 'image/png',
+            requestEncoding: "RESTful",
+            tileMatrixSet: [
+                {
+                    'ows:Identifier': 'EPSG:3857',
+                    'ows:SupportedCRS': 'urn:ogc:def:crs:EPSG::3857',
+                    TileMatrix: tileMatrix
+                }
+            ],
+            url: 'http://sample.server/geoserver/gwc/service/wmts'
+        };
+        const layer = ReactDOM.render(<LeafLetLayer
+            type="wmts"
+            options={options}
+            map={map}
+        />, document.getElementById("container"));
+        const sortedTileMatrix = [...tileMatrix].sort((a, b) => Number(b.ScaleDenominator) - Number(a.ScaleDenominator));
+        sortedTileMatrix.map((v, i) => expect("EPSG:3857:" + v["ows:Identifier"]).toEqual(layer.layer.matrixIds[i].identifier));
+        layer.layer.matrixSet.map((v, i) => expect(v["ows:Identifier"]).toEqual(sortedTileMatrix[i]["ows:Identifier"]));
+    });
+    it('limited Ids array should provide the same number resolutions, sizes (that have to match), even with wrong sorting...', () => {
+        const tileMatrix = [{
+            "ows:Identifier": "0",
+            "ScaleDenominator": "17471320.75089746",
+            "TopLeftCorner": "-46133.17 6301219.54",
+            "TileWidth": "256",
+            "TileHeight": "256",
+            "MatrixWidth": "1",
+            "MatrixHeight": "1"
+        },
+        {
+            "ows:Identifier": "2",
+            "ScaleDenominator": "4367830.187724365",
+            "TopLeftCorner": "-46133.17 6301219.54",
+            "TileWidth": "256",
+            "TileHeight": "256",
+            "MatrixWidth": "4",
+            "MatrixHeight": "4"
+        },
+        {
+            "ows:Identifier": "1",
+            "ScaleDenominator": "8735660.37544873",
+            "TopLeftCorner": "-46133.17 6301219.54",
+            "TileWidth": "256",
+            "TileHeight": "256",
+            "MatrixWidth": "2",
+            "MatrixHeight": "2"
+        },
+        {
+            "ows:Identifier": "3",
+            "ScaleDenominator": "2183915.0938621825",
+            "TopLeftCorner": "-46133.17 6301219.54",
+            "TileWidth": "256",
+            "TileHeight": "256",
+            "MatrixWidth": "8",
+            "MatrixHeight": "8"
+        }];
+        const options = {
+            type: 'wmts',
+            visibility: false,
+            name: 'nurc:Arc_Sample',
+            group: 'Meteo',
+            format: 'image/png',
+            requestEncoding: "RESTful",
+            matrixIds: {
+                'EPSG:3857': [{
+                    identifier: '0'
+                }, {
+                    identifier: '1'
+                }]
+            },
+            tileMatrixSet: [
+                {
+                    'ows:Identifier': 'EPSG:3857',
+                    'ows:SupportedCRS': 'urn:ogc:def:crs:EPSG::3857',
+                    TileMatrix: tileMatrix
+                }
+            ],
+            url: 'http://sample.server/geoserver/gwc/service/wmts'
+        };
+        const layer = ReactDOM.render(<LeafLetLayer
+            type="wmts"
+            options={options}
+            map={map}
+        />, document.getElementById("container"));
+        const sortedTileMatrix = [...tileMatrix].sort((a, b) => Number(b.ScaleDenominator) - Number(a.ScaleDenominator));
+        // they should have the same order and be a sub set
+        layer.layer.matrixIds.map((v, i) => expect(v.identifier).toEqual(sortedTileMatrix[i]["ows:Identifier"]));
+        layer.layer.matrixSet.map((v, i) => expect(v["ows:Identifier"]).toEqual(sortedTileMatrix[i]["ows:Identifier"]));
+    });
     it('test wmts security token', () => {
         const options = {
             type: 'wmts',

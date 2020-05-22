@@ -11,7 +11,6 @@ import Layers from '../../../../utils/openlayers/Layers';
 import castArray from 'lodash/castArray';
 import head from 'lodash/head';
 import last from 'lodash/last';
-import sortBy from 'lodash/sortBy';
 
 
 import SecurityUtils from '../../../../utils/SecurityUtils';
@@ -53,7 +52,7 @@ const createLayer = options => {
     const projection = get(srs);
     const metersPerUnit = projection.getMetersPerUnit();
     const { tileMatrixSetName, tileMatrixSet, matrixIds } = WMTSUtils.getTileMatrix(options, srs);
-    const scales = tileMatrixSet && tileMatrixSet.TileMatrix.map(t => Number(t.ScaleDenominator));
+    const scales = tileMatrixSet && tileMatrixSet?.TileMatrix.map(t => Number(t.ScaleDenominator));
     const mapResolutions = MapUtils.getResolutions();
     /*
      * WMTS assumes a DPI 90.7 instead of 96 as documented in the WMTSCapabilities document:
@@ -125,7 +124,7 @@ const createLayer = options => {
             origins,
             origin: !origins ? [20037508.3428, -20037508.3428] : undefined, // Either origin or origins must be configured, never both.
             resolutions,
-            matrixIds: WMTSUtils.limitMatrix(matrixIds || WMTSUtils.getDefaultMatrixId(options), resolutions.length),
+            matrixIds: WMTSUtils.limitMatrix((matrixIds || WMTSUtils.getDefaultMatrixId(options) || []).map((el) => el.identifier), resolutions.length),
             sizes,
             extent,
             tileSizes,

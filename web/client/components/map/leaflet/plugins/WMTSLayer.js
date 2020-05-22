@@ -13,7 +13,7 @@ import assign from 'object-assign';
 import SecurityUtils from '../../../../utils/SecurityUtils';
 import WMTSUtils from '../../../../utils/WMTSUtils';
 import WMTS from '../../../../utils/leaflet/WMTS';
-import { isArray, isObject, head } from 'lodash';
+import { isArray } from 'lodash';
 import { isVectorFormat } from '../../../../utils/VectorTileUtils';
 
 L.tileLayer.wmts = function(urls, options, matrixOptions) {
@@ -42,10 +42,6 @@ function getWMSURLs(urls) {
     return urls.map((url) => url.split("\?")[0]);
 }
 
-function getMatrixIds(matrix, srs) {
-    return isObject(matrix) && matrix[srs] || matrix;
-}
-
 const createLayer = options => {
     const urls = getWMSURLs(isArray(options.url) ? options.url : [options.url]);
     const queryParameters = wmtsToLeafletOptions(options) || {};
@@ -58,7 +54,7 @@ const createLayer = options => {
         originX: options.originX || -20037508.3428,
         ignoreErrors: options.ignoreErrors || false,
         // TODO: use matrix IDs sorted from getTileMatrix
-        matrixIds: options.matrixIds && getMatrixIds(options.matrixIds, queryParameters.tileMatrixSet || srs) || null,
+        matrixIds: matrixIds,
         matrixSet: tileMatrixSet
     });
 };
