@@ -13,26 +13,30 @@ During this tutorial, you will learn how to create and build a plugin as an exte
 
 A MapStore extension is a plugin, with some additional features.
 
-### build/extensions/plugins/Extension.jsx
+`build/extensions/plugins/SampleExtension.jsx`
 
 ```javascript
 import {connect} from "react-redux";
+
 import Extension from "../components/Extension";
 import Rx from "rxjs";
+import { changeZoomLevel } from "../../../web/client/actions/map";
 
 export default {
-    name: "Extension",
+    name: "SampleExtension",
     component: connect(state => ({
-        value: state.extension && state.extension.value
-    }), {onIncrease: () => {
-        return {
-            type: 'INCREASE_COUNTER'
-        };
-    }})(Extension),
+        value: state.sampleExtension && state.sampleExtension.value
+    }), {
+        onIncrease: () => {
+            return {
+                type: 'INCREASE_COUNTER'
+            };
+        }, changeZoomLevel
+    })(Extension),
     reducers: {
-        extension: (state = {value: 1}, action) => {
+        sampleExtension: (state = { value: 1 }, action) => {
             if (action.type === 'INCREASE_COUNTER') {
-                return {value: state.value + 1};
+                return { value: state.value + 1 };
             }
             return state;
         }
@@ -40,47 +44,37 @@ export default {
     epics: {
         logCounterValue: (action$, store) => action$.ofType('INCREASE_COUNTER').switchMap(() => {
             /* eslint-disable */
-            console.log('CURRENT VALUE: ' + store.getState().extension.value);
+            console.log('CURRENT VALUE: ' + store.getState().sampleExtension.value);
             /* eslint-enable */
             return Rx.Observable.empty();
         })
     },
     containers: {
         Toolbar: {
-            name: "extension",
+            name: "SampleExtension",
             position: 10,
-            tooltip: "",
-            help: "",
-            tool: true,
+            text: "INC",
+            doNotHide: true,
+            action: () => {
+                return {
+                    type: 'INCREASE_COUNTER'
+                };
+            },
             priority: 1
         }
     }
 };
+
 ```
 
-As you can see from the code, the most important difference is that you need to export the plugin descriptor **WITHOUT** invoking *createPlugin* on it.
+As you can see from the code, the most important difference is that you need to export the plugin descriptor **WITHOUT** invoking `createPlugin` on it (this is done in `extensions.js` in dev environment and when installed it will be done by the extensions load system).
 The extension definition will import or define all the needed dependencies (components, reducers, epics) as well as the plugin configuration elements
 (e.g. containers).
 
-Let's see also the component code, so that we have a working example:
-
-### build/extensions/components/Extension.jsx
-
-```javascript
-import React from "react";
-import Message from "../../../web/client/components/I18N/Message";
-
-const Extension = ({ value = 0, onIncrease }) => {
-    return <div style={{ top: "600px", zIndex: 1000 }}><span><Message msgId="extension.message"/>{value}</span><button onClick={onIncrease}>+</button></div>;
-};
-
-export default Extension;
-```
-
 ### Testing your extension
 
-The extension source code has to be stored *INSIDE* the MapStore source code tree. We suggest to modify the sample app in the build/extensions folder.
-Edit the plugins/Extension.jsx file to create your own extension (and add any additional files you may need).
+The extension source code has to be stored *INSIDE* the MapStore source code tree. We suggest to modify the sample app in the `build/extensions` folder.
+Edit the `plugins/SampleExtension.jsx` file to create your own extension (and add any additional files you may need).
 
 To run the sample app (with your extension) in developer mode, use the following command:
 
@@ -98,49 +92,36 @@ To build an extension a specific npm run task can be used:
 npm run build-extension
 ```
 
-You will find the built javascript in build/extensions/dist/extension.js
+You will find the built javascript in `build/extensions/dist/extension.js`
 
 ### Distributing your extension as an uploadable module
 
 To distribute your extension so that it can be uploaded to a running MapStore instance and included in a context, you have to create a zip file with the following content:
 
-* the js bundle built above, renamed to a convenient file name (e.g. my-wornderful-extension.js)
-* an index.json file that describes the extension, an example follows
+* the js bundle built above, renamed to a convenient file name (e.g. `my-wonderful-extension.js`)
+* an `index.json` file that describes the extension, an example follows
 * optionally, a translations folder with localized message files used by the extension (in one or more languages of your choice)
 
-You will find both the index.json file and a sample translation folder in build/extensions/bundle.
+You will find both the `index.json` file and a sample translation folder in `build/extensions/bundle`.
 
-#### index.json example
+### Installing Extensions
 
-```javascript
-{
-    "plugins": [
-        {
-            "name": "Extension",
-            "dependencies": [
-                "Toolbar"
-            ]
-        }
-    ]
-}
-```
-
-### Extensions uploading service
-
-Extensions can be uploaded using the context creator UI of MapStore. The storage and configuration of the uploaded zip bundle as
-a proper extension is managed by a dedicated MapStore backend service, the ***Upload Service***.
+Extensions can be uploaded using the context creator UI of MapStore. The storage and configuration of the uploaded zip bundle is managed by a dedicated MapStore backend service, the ***Upload Service***.
 The Upload Service is responsible of unzipping the bundle, storing javascript and the other extension assets in the extensions folder and updating the configuration files needed by MapStore to use the extension:
 
-* extensions.json (the extensions registry)
-* pluginsConfig.json (the context creator plugins catalog)
+* `extensions.json` (the extensions registry)
+* `pluginsConfig.json.patch` (the context creator plugins catalog patch file)
 
 ### Extensions and datadir
 
 Extensions work better if you use a [datadir](externalized-configuration.md), because when a datadir is configured,
-extensions are uploaded there, can ***live*** outside of the application main folder (so you don't risk to overwrite them when
+extensions are uploaded inside it so they can ***live*** outside of the application main folder (and you don't risk to overwrite them when
 you upgrade MapStore to a newer version).
 
-To enable extensions to work with the datadir the following is needed:
+### Extensions for dependent projects
+
+Extensions build in MapStore actually can run only in MapStore product. They can not be installed in dependent projects. If you have a custom project and you want to add support for extensions, you will have to create your build system for extensions dedicated to your application, to build the Javascript with the correct paths.
+Moreover, to enable extensions to work with the datadir in a dependent project (MapStore product is already configured to use it) you need to configure (or customize) the following configuration properties in your `app.jsx`:
 
 #### Externalize the extensions configuration
 
@@ -166,13 +147,4 @@ Change `app.jsx` to include the following statement:
 ConfigUtils.setConfigProp("extensionsFolder", "rest/config/loadasset?resource=");
 ```
 
-Assets are loaded using a different service, /rest/config/loadasset.
-
-#### Upload Service and datadir
-
-When a datadir is configured, the **Upload Service** will use it properly, to store uploaded extensions there.
-
-It will also use the datadir to store, after any upload:
-
-* the updated extensions registry (**extensions.json**) file
-* a patch of the context creator plugins catalog (**pluginsConfig.json.patch**)
+Assets are loaded using a different service, `/rest/config/loadasset`.
