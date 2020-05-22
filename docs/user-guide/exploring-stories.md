@@ -68,7 +68,7 @@ Both in edit mode and in preview mode, the story editor can save the story throu
 
 ## Share a Story
 
-The user can share the story as usual with the direct link or through the support social network links supported by MapStore. With the Option menu <img src="../img/button/burger.jpg" class="ms-docbutton"/>the Share tool <img src="../img/button/share.jpg" class="ms-docbutton"style="max-height:20px;"/> is available.
+The user can share the story as usual with the direct link or through the social network links supported by MapStore. With the Option menu <img src="../img/button/burger.jpg" class="ms-docbutton"/>the Share tool <img src="../img/button/share.jpg" class="ms-docbutton"style="max-height:20px;"/> is available.
 
 Inside the **Link** section the story's URL is available so that the user can copy it in the clipboard. As usual also the QR code share option is available.
 

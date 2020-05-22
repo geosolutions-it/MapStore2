@@ -1,7 +1,7 @@
 # Paragraph Section
 **********************
 
-The Paragraph Section allows to insert a textual content to the story. The story editor can also click on the <img src="../img/button/++++.jpg" class="ms-docbutton"/> button to add additional contents to this section (like media, other paragraphs or embed third party contens). It is possible to chose between:
+The Paragraph Section allows to insert a textual content to the story. The story editor can also click on the <img src="../img/button/++++.jpg" class="ms-docbutton"/> button to add additional contents to this section (like media, other paragraphs or embed third party contens). It is possible to choose between:
 
 <img src="../img/paragraph-section/add-paragraph.jpg" class="ms-docimage"/>
 
