@@ -8,18 +8,18 @@
 
 import * as Rx from 'rxjs';
 import { LOCATION_CHANGE } from 'connected-react-router';
-import {get, head, isNaN, isString, includes, size, toNumber, isEmpty, isObject, isUndefined} from 'lodash';
+import {get, head, isNaN, isString, includes, size, toNumber, isEmpty, isObject, isUndefined, inRange} from 'lodash';
 import url from 'url';
 
 import { CHANGE_MAP_VIEW, zoomToExtent, ZOOM_TO_EXTENT, CLICK_ON_MAP, changeMapView } from '../actions/map';
 import { ADD_LAYERS_FROM_CATALOGS } from '../actions/catalog';
-import { SEARCH_LAYER_WITH_FILTER } from '../actions/search';
+import { SEARCH_LAYER_WITH_FILTER, addMarker, resetSearch } from '../actions/search';
 import { TOGGLE_CONTROL, setControlProperty } from '../actions/controls';
 import { warning } from '../actions/notifications';
 
 import { isValidExtent } from '../utils/CoordinatesUtils';
 import { getConfigProp, getCenter } from '../utils/ConfigUtils';
-import {featureInfoClick, hideMapinfoMarker, purgeMapInfoResults, toggleMapInfoState} from "../actions/mapInfo";
+import {featureInfoClick, hideMapinfoMarker, purgeMapInfoResults, toggleMapInfoState } from "../actions/mapInfo";
 import {getBbox} from "../utils/MapUtils";
 import {mapSelector} from '../selectors/map';
 
@@ -56,7 +56,7 @@ const paramActions = {
         const bbox =  getBbox(center, zoom);
         const mapSize = map && map.size;
         const projection = map && map.projection;
-        const isValid = center && isObject(center) && (center.y >= -90 && center.y <= 90) && (center.x >= -180 && center.x <= 180) && zoom;
+        const isValid = center && isObject(center) && inRange(center.y, -90, 91) && inRange(center.x, -180, 181) && inRange(zoom, 1, 36);
 
         if (isValid) {
             return [changeMapView(center, zoom, bbox, mapSize, null, projection)];
@@ -79,10 +79,12 @@ const paramActions = {
         const lat = marker && marker[1];
         const mapSize = map && map.size;
         const projection = map && map.projection;
-        const isValid = center && marker && isObject(marker) && ((lat >= -90 && lat <= 90) && (lng >= -180 && lng <= 180)) && zoom;
+        const isValid = center && marker && isObject(marker) && (inRange(lat, -90, 91) && inRange(lng, -180, 181)) && inRange(zoom, 1, 36);
 
         if (isValid) {
-            return [changeMapView(center, zoom, bbox, mapSize, null, projection), featureInfoClick({latlng: {lng, lat}})];
+            return [changeMapView(center, zoom, bbox, mapSize, null, projection),
+                addMarker({lat, lng})
+            ];
         }
         return [
             warning({
@@ -147,7 +149,7 @@ const onMapClickForShareEpic = (action$, { getState = () => { } }) =>
         switchMap(({point, layer}) =>{
             const allowClick = get(getState(), 'controls.share.settings.centerAndZoomEnabled');
             return allowClick
-                ? Rx.Observable.of(featureInfoClick(point, layer))
+                ? Rx.Observable.of(resetSearch(), featureInfoClick(point, layer))
                 : Rx.Observable.empty();
         });
 
@@ -162,10 +164,11 @@ const disableGFIForShareEpic = (action$, { getState = () => { } }) =>
     action$.ofType(TOGGLE_CONTROL).
         switchMap(()=>{
             const shareEnabled = get(getState(), 'controls.share.enabled');
+            const mapInfoEnabled = get(getState(), 'mapInfo.enabled');
             const shareParams = {bboxEnabled: false, centerAndZoomEnabled: false};
             return !isUndefined(shareEnabled) &&
             shareEnabled
-                ? Rx.Observable.of(toggleMapInfoState())
+                ? mapInfoEnabled ? Rx.Observable.of(toggleMapInfoState()) : Rx.Observable.empty()
                 : Rx.Observable.of(hideMapinfoMarker(),
                     purgeMapInfoResults(),
                     toggleMapInfoState(),

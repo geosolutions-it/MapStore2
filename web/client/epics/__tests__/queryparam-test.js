@@ -10,7 +10,6 @@ import expect from 'expect';
 import { addTimeoutEpic, testEpic, TEST_TIMEOUT } from './epicTestUtils';
 import {disableGFIForShareEpic, onMapClickForShareEpic, readQueryParamsOnMapEpic} from '../queryparams';
 import { changeMapView, ZOOM_TO_EXTENT, CHANGE_MAP_VIEW, clickOnMap } from '../../actions/map';
-import { FEATURE_INFO_CLICK } from '../../actions/mapInfo';
 import { SHOW_NOTIFICATION } from '../../actions/notifications';
 import { onLocationChanged } from 'connected-react-router';
 import {toggleControl} from "../../actions/controls";
@@ -81,7 +80,7 @@ describe('queryparam epics', () => {
 
         const point = {latlng: {lat: 39.01, lng: -89.97}};
         const layer = "layer01";
-        const NUMBER_OF_ACTIONS = 1;
+        const NUMBER_OF_ACTIONS = 2;
         const state = {
             controls: {
                 share: {
@@ -99,9 +98,10 @@ describe('queryparam epics', () => {
             ], actions => {
                 expect(actions.length).toBe(NUMBER_OF_ACTIONS);
                 try {
-                    expect(actions[0].type).toBe("FEATURE_INFO_CLICK");
-                    expect(actions[0].point).toEqual({"latlng": {"lat": 39.01, "lng": -89.97}});
-                    expect(actions[0].layer).toBe("layer01");
+                    expect(actions[0].type).toBe("TEXT_SEARCH_RESET");
+                    expect(actions[1].type).toBe("FEATURE_INFO_CLICK");
+                    expect(actions[1].point).toEqual({"latlng": {"lat": 39.01, "lng": -89.97}});
+                    expect(actions[1].layer).toBe("layer01");
                 } catch (e) {
                     done(e);
                 }
@@ -239,11 +239,10 @@ describe('queryparam epics', () => {
                     expect(actions[0].center.x).toBe(-90);
                     expect(actions[0].center.y).toBe(38);
                     expect(actions[0].zoom).toBe(4);
-                    expect(actions[1].type).toBe(FEATURE_INFO_CLICK);
-                    expect(actions[1].point).toExist();
-                    expect(actions[1].point.latlng).toExist();
-                    expect(actions[1].point.latlng.lng).toBe(-90);
-                    expect(actions[1].point.latlng.lat).toBe(38);
+                    expect(actions[1].type).toContain("ADD_MARKER");
+                    expect(actions[1].markerPosition).toExist();
+                    expect(actions[1].markerPosition.lat).toBe(38);
+                    expect(actions[1].markerPosition.lng).toBe(-90);
                 } catch (e) {
                     done(e);
                 }
