@@ -31,7 +31,7 @@ The immersive content can include text, media contents or web pages. A new conte
 
 <img src="../img/immersive-section/add-remove.jpg" class="ms-docimage"/>
 
-Adding a media content, the [Media Editor Window](media-editor-window.md) appears to allow the story editor to add an Image, a Map or a Video. It is also possible to add a Web Page content as it is explained in the [Web Page Section](web-section.md).  An example of immersive content with a text and an image can be the following:
+Adding a media content, the [Media Editor](media-editor-window.md) appears to allow the story editor to add an Image, a Map or a Video. It is also possible to add a Web Page content as it is explained in the [Web Page Section](web-section.md).  An example of immersive content with a text and an image can be the following:
 
 <img src="../img/immersive-section/test-image.jpg" class="ms-docimage" width="550px"/>
 
@@ -43,7 +43,7 @@ For Immersive sections, it is possible to customize the background through the b
 
 The background editing toolbar, when no media are applied, allows to:
 
-* Add a media as a background of the section, with the **Change media source** button <img src="../img/button/change-media.jpg" class="ms-docbutton"/> that opens the [Media Editor Window](media-editor-window.md)
+* Add a media as a background of the section, with the **Change media source** button <img src="../img/button/change-media.jpg" class="ms-docbutton"/> that opens the [Media Editor](media-editor-window.md)
 
 !!! note
     Only for Immersive Section, when the user try to add another section of the same type just below the current one, the added section is actually another immersive content, that fits inside the same immersive section. 

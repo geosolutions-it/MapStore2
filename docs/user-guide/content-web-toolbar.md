@@ -1,6 +1,6 @@
-# Web Page Toolbar
+# Web Page Content Toolbar
 
-As soon as an web page content is added, the new toolbar appears at the top of the content itself:
+As soon as a web page content is added, the toolbar appears on top of the content itself:
 
 <img src="../img/web-section/web-toolbar.jpg" class="ms-docimage"/>
 

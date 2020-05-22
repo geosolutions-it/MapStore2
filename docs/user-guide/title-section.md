@@ -28,7 +28,7 @@ The text window toolbar allows the user to change the following settings:
 * The **Remove** button <img src="../img/button/remove.jpg" class="ms-docbutton"/> allows delete the title section.
 
 !!! note
-    When a section has only a content, and the story editor remove that content, the entire section will be also automatically deleted.
+    When a section has only one content, and the story editor remove that content, the entire section will be also automatically deleted.
 
 Setting a title with *Large* size, aligned on the *Center* of the Container and with a *Bright* theme, the result is something like: 
 
@@ -42,7 +42,7 @@ For a Title sections it is possible to customize the background through the back
 
 In case of an empty background, the background editing toolbar allows to:
 
-* Add a media content as a background, with the **Change media source** button <img src="../img/button/change-media.jpg" class="ms-docbutton"/> that opens the [Media Editor Window](media-editor-window.md)
+* Add a media content as a background, with the **Change media source** button <img src="../img/button/change-media.jpg" class="ms-docbutton"/> that opens the [Media Editor](media-editor-window.md)
 
 * Change the height of the section through the **Fit/adapt content** button <img src="../img/button/fit-adapt-content.jpg" class="ms-docbutton"/>
 
@@ -58,7 +58,7 @@ In this case the background editing toolbar allows to customize the image backgr
 
 <img src="../img/title-section/img-bck-toolbar.jpg" class="ms-docimage"/>
 
-* **Change media source** <img src="../img/button/change-media.jpg" class="ms-docbutton"/> allows to select the media content to use for the section, clicking on this button the [Media Editor Window](media-editor-window.md) opens
+* **Change media source** <img src="../img/button/change-media.jpg" class="ms-docbutton"/> allows to select the media content to use for the section, clicking on this button the [Media Editor](media-editor-window.md) opens
 
 * Change the content height through the **Fit/adapt content** button <img src="../img/button/fit-adapt-content.jpg" class="ms-docbutton"/>
 

@@ -1,7 +1,7 @@
 # Paragraph Section
 **********************
 
-The Paragraph Section allows to insert a textual content to the story. The story editor can also click on the <img src="../img/button/++++.jpg" class="ms-docbutton"/> button to add additional contents to this section (like media, other parafraphs or embed third party contens). It is possible to chose between:
+The Paragraph Section allows to insert a textual content to the story. The story editor can also click on the <img src="../img/button/++++.jpg" class="ms-docbutton"/> button to add additional contents to this section (like media, other paragraphs or embed third party contens). It is possible to chose between:
 
 <img src="../img/paragraph-section/add-paragraph.jpg" class="ms-docimage"/>
 
@@ -25,22 +25,22 @@ The user can delete the text content with the Remove button  <img src="../img/bu
 
 ## Media Content
 
-Adding a media content, the [Media Editor Window](media-editor-window.md) opens to allow adding the supported media (like Image, Map or Video). 
+Adding a media content, the [Media Editor](media-editor-window.md) opens to allow adding the supported media (like Image, Map or Video). 
 
 ### Images
 
-An image added inside the paragraph section can be customized through the [Content Image Toolbar](content-image-toolbar.md). Below is an example of a small, center-aligned image, just below a text content:
+An image added inside the paragraph section can be customized through the [Image Content Toolbar](content-image-toolbar.md). Below is an example of a small, center-aligned image, just below a text content:
 
 <img src="../img/paragraph-section/text-image.jpg" class="ms-docimage"/>
 
 ### Maps
 
-A map added inside the paragraph section can be customized through the [Content Map Toolbar](content-map-toolbar.md). Below is an example of a large, center-aligned map, just below an Image content:
+A map added inside the paragraph section can be customized through the [Map Content Toolbar](content-map-toolbar.md). Below is an example of a large, center-aligned map, just below an Image content:
 
 <img src="../img/paragraph-section/image-map.jpg" class="ms-docimage"/>
 
 ## Web Page Content 
 
-Adding a web page content, the Web Page Windows opens allowing the user to add the URL of an extenal web page. A web page added inside the paragraph section can be customized through the [Content Web Page Toolbar](content-web-toolbar.md). Below is an example of a medium, center-aligned web content, just below a map one:
+Adding a web page content, the Web Page Windows opens allowing the user to add the URL of an extenal web page. A web page added inside the paragraph section can be customized through the [Web Page Content Toolbar](content-web-toolbar.md). Below is an example of a medium, center-aligned web content, just below a map one:
 
 <img src="../img/paragraph-section/map-web.jpg" class="ms-docimage"/>

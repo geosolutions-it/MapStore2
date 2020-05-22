@@ -82,9 +82,10 @@ pages:
       - Immersive Section: 'user-guide/immersive-section.md'
       - Media Section: 'user-guide/media-section.md'
       - Web Page section: 'user-guide/web-section.md'
-      - Content Image Toolbar: 'user-guide/content-image-toolbar.md'
-      - Content Map Toolbar: 'user-guide/content-map-toolbar.md'
-      - Content Wwb Page Toolbar: 'user-guide/content-web-toolbar.md'
+      - Text Editor Toolbar: 'user-guide/text-editor-toolbar.md'
+      - Image Toolbar: 'user-guide/content-image-toolbar.md'
+      - Map Toolbar: 'user-guide/content-map-toolbar.md'
+      - Web Page Toolbar: 'user-guide/content-web-toolbar.md'
       - Media Editor: 'user-guide/media-editor-window.md'
       - Configue the map: 'user-guide/configure-map.md'
       
