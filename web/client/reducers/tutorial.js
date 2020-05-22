@@ -57,6 +57,9 @@ function tutorial(state = initialState, action) {
         setup.style = action.style ? action.style : assign({}, state.style);
         setup.defaultStep = action.defaultStep ? action.defaultStep : assign({}, state.defaultStep);
         setup.disabled = false;
+        setup.presetGroup = action.presetGroup;
+
+        const isActuallyDisabled = localStorage.getItem('mapstore.plugin.tutorial.' + action.id + '.disabled') === 'true';
 
         setup.steps = setup.steps.filter((step) => {
             return step.selector && step.selector.substring(0, 1) === '#' || step.selector.substring(0, 1) === '.';
@@ -67,7 +70,7 @@ function tutorial(state = initialState, action) {
             let text = step.text ? step.text : '';
             text = step.translation ? <I18N.Message msgId = {"tutorial." + step.translation + ".text"}/> : text;
             text = step.translationHTML ? <I18N.HTML msgId = {"tutorial." + step.translationHTML + ".text"}/> : text;
-            text = (step.selector === '#intro-tutorial') ? <div><div>{text}</div>{setup.checkbox}</div> : text;
+            text = (step.selector === '#intro-tutorial') && !isActuallyDisabled ? <div><div>{text}</div>{setup.checkbox}</div> : text;
             let style = (step.selector === '#intro-tutorial') ? setup.style : {};
             let isFixed = (step.selector === '#intro-tutorial') ? true : step.isFixed || false;
             assign(style, step.style);
@@ -80,8 +83,7 @@ function tutorial(state = initialState, action) {
             });
         });
 
-
-        const isDisabled = localStorage.getItem('mapstore.plugin.tutorial.' + action.id + '.disabled');
+        const isDisabled = isActuallyDisabled && !action.ignoreDisabled;
         let hasIntro = false;
         setup.steps.forEach((step) => {
             if (step.selector === '#intro-tutorial') {
@@ -93,7 +95,7 @@ function tutorial(state = initialState, action) {
         setup.start = true;
         setup.status = 'run';
 
-        if (isDisabled === 'true' || !hasIntro || action.stop) {
+        if (isDisabled || !hasIntro || action.stop) {
             setup.steps = setup.steps.filter((step) => {
                 return step.selector !== '#intro-tutorial';
             }).map((step, index) => {
@@ -134,7 +136,12 @@ function tutorial(state = initialState, action) {
         return assign({}, state, update);
     case DISABLE_TUTORIAL:
         let disabled = !state.disabled;
-        localStorage.setItem('mapstore.plugin.tutorial.' + state.id + '.disabled', disabled);
+        const presetGroup = state.presetGroup || [state.id];
+
+        presetGroup.forEach(curId => {
+            localStorage.setItem('mapstore.plugin.tutorial.' + curId + '.disabled', disabled);
+        });
+
         return assign({}, state, {
             disabled
         });

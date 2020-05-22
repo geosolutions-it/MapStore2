@@ -36,3 +36,6 @@ export const enabledPluginsFilterTextSelector = createSelector(filterTextSelecto
 export const availableTemplatesFilterTextSelector = createSelector(filterTextSelector, filterText => get(filterText, 'availableTemplates'));
 export const enabledTemplatesFilterTextSelector = createSelector(filterTextSelector, filterText => get(filterText, 'enabledTemplates'));
 export const showBackToPageConfirmationSelector = state => get(state, 'contextcreator.showBackToPageConfirmation', false);
+export const tutorialsSelector = state => state.contextcreator?.tutorials;
+export const wasTutorialShownSelector = stepId => state => state.contextcreator?.wasTutorialShown?.[stepId] || false;
+export const tutorialStepSelector = state => state.contextcreator?.tutorialStep;

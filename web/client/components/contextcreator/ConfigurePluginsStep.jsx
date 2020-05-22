@@ -19,6 +19,7 @@ import ResizableModal from '../misc/ResizableModal';
 import ToolbarButton from '../misc/toolbar/ToolbarButton';
 import Message from '../I18N/Message';
 import ConfigureMapTemplates from './ConfigureMapTemplates';
+import tutorialEnhancer from './enhancers/tutorialEnhancer';
 
 import Dropzone from 'react-dropzone';
 import Spinner from "react-spinkit";
@@ -266,6 +267,7 @@ const configurePluginsStep = ({
     enabledTemplatesFilterText,
     availableTemplatesFilterPlaceholder,
     enabledTemplatesFilterPlaceholder,
+    disablePluginSort = false,
     onFilterAvailablePlugins = () => {},
     onFilterEnabledPlugins = () => {},
     onEditPlugin = () => {},
@@ -372,6 +374,10 @@ const configurePluginsStep = ({
                     'left'
                 }
                 sortStrategy={items => {
+                    if (disablePluginSort) {
+                        return items;
+                    }
+
                     const recursiveSort = curItems => curItems && curItems.map(item => ({...item, children: recursiveSort(item.children)}))
                         .sort((x, y) => x.title < y.title ? -1 : 1);
                     return recursiveSort(items);
@@ -453,5 +459,6 @@ export default compose(
                 }
             }
         }
-    })
+    }),
+    tutorialEnhancer('configureplugins-initial')
 )(configurePluginsStep);

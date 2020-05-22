@@ -2493,6 +2493,12 @@
                     "removePlugin": "Rimuovi questa estensione da MapStore",
                     "mapTemplatesConfig": "Configura modelli"
                 },
+                "tutorialPlugins": {
+                    "availableTitle": "Plugin disponibile",
+                    "availableDescription": "Questo plugin è disabilitato",
+                    "enabledTitle": "Plug-in abilitato",
+                    "enabledDescription": "Questo plugin è abilitato"
+                },
                 "saveCfgErrorNotification":  {
                     "title": "Errore di sintassi nella configurazione del plug-in",
                     "message": "Il plugin \"{pluginName}\" contiene un errore nella configurazione. Correggi prima di procedere"
@@ -2544,7 +2550,8 @@
                 "title": "Nome di contesto errato",
                 "unknownError": "Si è verificato un errore imprevisto"
             },
-            "undo": "Sei sicuro di voler abbandonare la sessione di modifica del contesto?"
+            "undo": "Sei sicuro di voler abbandonare la sessione di modifica del contesto?",
+            "showTutorial": "Mostra tutorial"
         },
         "contextManager": {
             "title": "Gestisci contesti",
@@ -2725,6 +2732,100 @@
             "dashboardAddMap": {
                 "title": "Widget Mappa",
                 "text": "<p> Aggiungi una nuova mappa interattiva alla dashboard. È possibile aggiungere più di una mappa con la possibilità di collegare ad esse altri widget. Dopo aver salvato la prima mappa, il widget legenda verrà aggiunto all'elenco. Legend Widget mostrerà una legenda relativa alla mappa connessa. </p> <p> Passaggi: </p> <p> <ul> <li> Seleziona una mappa </li> <li> Migliora la mappa aggiungendo nuovi livelli </li> <li> Salva e aggiungi alla dashboard </li> </ul> </p>"
+            },
+            "contextCreator": {
+                "generalSettings": {
+                    "intro": {
+                        "title": "Tutorial sulla creazione del contesto",
+                        "text": "Questa è una procedura guidata passo-passo per creare e modificare i contesti di MapStore"
+                    },
+                    "stepsOverview": {
+                        "title": "Passaggi del creatore di contesto",
+                        "text": "<p>Ogni contesto viene creato in tre passaggi:</p><p><ul><li>Impostazioni generali</li><li>Configura mappa</li><li>Configura plugin</li></ul></p>"
+                    },
+                    "navigation": {
+                        "next": {
+                            "title": "Navigazione: successiva",
+                            "text": "<p>Premere questo pulsante per andare al passaggio successivo. Se il pulsante è disabilitato, significa che i dati configurati vengono convalidati o non sono validi.</p>"
+                        },
+                        "back": {
+                            "title": "Navigazione: indietro",
+                            "text": "<p>Premi questo pulsante per andare al passaggio precedente.</p>"
+                        },
+                        "close": {
+                            "title": "Navigazione: Chiudi",
+                            "text": "<p>Premere questo pulsante per abbandonare il processo di creazione del contesto senza salvare. Questo può essere fatto in qualsiasi momento del processo di creazione.</p>"
+                        }
+                    },
+                    "fields": {
+                        "title": "Impostazioni Generali",
+                        "text": "<p>Il primo passaggio di creazione richiede di specificare il nome del contesto, che definisce anche il suo URL univoco, e il titolo che verrà utilizzato come titolo della finestra del browser quando il contesto è aperto e attivo. Nota: il nome del contesto può contenere solo lettere latine, cifre 0-9 e carattere di sottolineatura. Il titolo della finestra non può essere vuoto.</p>"
+                    },
+                    "showTutorial": {
+                        "title": "Mostra tutorial",
+                        "text": "<p>Se desideri ripetere il tutorial per un passaggio, puoi farlo in qualsiasi momento premendo questo pulsante.</p>"
+                    }
+                },
+                "configureMap": {
+                    "intro": {
+                        "title": "Configura mappa",
+                        "text": "<p>In questo passaggio, utilizzando gli strumenti di visualizzazione mappe MapStore è possibile configurare la mappa predefinita che verrà aperta all'accesso al contesto.</p>"
+                    },
+                    "reloadMap": {
+                        "title": "Pulsante Ricarica mappa",
+                        "text": "<p>Se desideri annullare tutte le modifiche apportate alla mappa finora e ricominciare da capo, puoi farlo premendo questo pulsante.</p>"
+                    }
+                },
+                "configurePlugins": {
+                    "intro": {
+                        "title": "Configura plugin",
+                        "text": "<p>Questo passaggio consente di configurare plug-in che saranno presenti nel contesto.</p>"
+                    },
+                    "availablePlugins": {
+                        "title": "Plugin disponibili",
+                        "text": "<p>Questo elenco contiene plug-in MapStore che possono essere aggiunti a un contesto. Per selezionare un plugin è sufficiente fare clic sulla sua scheda. Inoltre, se tieni premuto il tasto CTRL, puoi selezionare più plug-in.</p>"
+                    },
+                    "pluginManipulation": {
+                        "title": "Spostamento di plugin",
+                        "text": "<p>Una volta selezionati, i plugin disponibili possono essere spostati nella colonna di destra, rendendoli abilitati nel contesto. Alcuni plugin richiedono altri plugin per funzionare, in tal caso verranno abilitati automaticamente insieme ai plugin esplicitamente abilitati.</p><p>I plugin possono anche essere spostati dalla colonna \"enabled\" alla colonna \"available\" per rimuovere plugin dal contesto. Se rimuovi un plug-in, anche tutti i plug-in necessari per funzionare verranno disabilitati, a meno che non ci siano plug-in attualmente abilitati che richiedono tale plug-in.</p>"
+                    },
+                    "enabledPlugins": {
+                        "title": "Plugin abilitati",
+                        "text": "<p>Questo elenco contiene plugin MapStore che si trovano nel contesto. Ogni plugin qui può essere ulteriormente configurato utilizzando i pulsanti degli strumenti.</p>"
+                    },
+                    "userPlugin": {
+                        "title": "Strumenti plug-in: Plugin utente",
+                        "text": "<p>Premendo questo pulsante, è possibile consentire agli utenti di abilitare / disabilitare un plug-in, rendendolo un plug-in utente. Tali plug-in verranno visualizzati nel plug-in Estensioni utente. Questo plug-in viene automaticamente aggiunto al contesto se è presente almeno un plug-in utente abilitato.</p>"
+                    },
+                    "userPluginCheckbox": {
+                        "title": "Strumenti plug-in: Plugin utente",
+                        "text": "<p>Se un plug-in è un plug-in utente, questa casella di controllo controlla se un plug-in utente deve essere abilitato automaticamente al caricamento del contesto.</p>"
+                    },
+                    "cfgTool": {
+                        "title": "Strumenti plug-in: Strumento di configurazione",
+                        "text": "<p>Premendo questo pulsante viene visualizzato un editor, in cui è possibile modificare la configurazione predefinita del plug-in.</p>"
+                    },
+                    "cfgEditor": {
+                        "title": "Strumenti plug-in: Editor di configurazione",
+                        "text": "<p>L'editor supporta l'evidenziazione della sintassi. Tutte le modifiche verranno salvate continuamente durante la modifica. Se la configurazione contiene un errore di sintassi, verrai informato in modo appropriato. L'errore deve essere corretto prima di procedere.</p>"
+                    },
+                    "documentationTool": {
+                        "title": "Strumenti plug-in: documentazione",
+                        "text": "<p>Premendo questo pulsante si accederà alla pagina della documentazione del plug-in in cui è possibile cercare informazioni su cosa fa il plug-in e quali parametri di configurazione supporta.</p>"
+                    },
+                    "mapTemplatesTool": {
+                        "title": "Strumenti plug-in: modelli di mappe",
+                        "text": "<p>Il plug-in Modelli mappa ha anche uno strumento speciale che consente di configurare modelli mappa che saranno accessibili nel contesto.</p>"
+                    },
+                    "extensions": {
+                        "title": "Estensioni",
+                        "text": "<p>MapStore supporta anche il caricamento di bundle di estensioni personalizzati. Puoi farlo facendo clic su questo pulsante.</p>"
+                    },
+                    "extensionsDelete": {
+                        "title": "Estensioni",
+                        "text": "<p>Le estensioni già caricate possono essere eliminate in qualsiasi momento premendo questo pulsante.</p>"
+                    }
+                }
             },
             "geostoryIntro": {
               "title": "Guida alla Storia",
