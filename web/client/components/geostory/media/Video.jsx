@@ -224,7 +224,6 @@ const VideoMedia = ({
     const isVisible = containerInView && inView;
 
     const [playing, setPlaying] = useState(false);
-    const [started, setStarted] = useState(false);
 
     const handleOnPlay = (newPlaying) => {
         setPlaying(newPlaying);
@@ -235,21 +234,19 @@ const VideoMedia = ({
     useEffect(() => {
         if (mode === Modes.EDIT) {
             handleOnPlay(false);
-            setStarted(false);
         }
     }, [ mode ]);
 
-    // enable autoplay only the first time the video is in view for fit undefined or contained
-    // while fit cover should always trigger autoplay when in view
+    // every time the video is in view it should play if autoplay is enabled or fit equal to cover
     useEffect(() => {
         if (mode === Modes.VIEW
         && isVisible
-        && (fit === 'cover' || autoplay && !started)) {
+        && (autoplay || fit === 'cover')) {
             handleOnPlay(true);
         }
-    }, [ isVisible, autoplay, started, fit, mode ]);
+    }, [ isVisible, autoplay, fit, mode ]);
 
-    // video should stop after when not in view
+    // video should stop when it is not in view
     useEffect(() => {
         if (mode === Modes.VIEW && !isVisible && playing) {
             handleOnPlay(false);
@@ -268,7 +265,6 @@ const VideoMedia = ({
                 thumbnail={thumbnail}
                 controls={controls && mode === Modes.VIEW}
                 onPlay={handleOnPlay}
-                onStart={setStarted}
                 fit={fit}
                 loop={loop}
                 muted={muted}

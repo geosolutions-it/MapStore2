@@ -166,6 +166,51 @@ describe('Video component', () => {
         });
     });
 
+    it('should play if returns in view and autoplay is enabled (VIEW mode)', (done) => {
+        act(() => {
+            ReactDOM.render(<Video
+                key="video"
+                src="path/to/video.mp4"
+                fit="contain"
+                autoplay
+                inView
+                mode={Modes.VIEW}
+            />, document.getElementById("container"));
+        });
+        const mediaVideoNode = document.querySelector('.ms-media-video');
+        expect(mediaVideoNode).toBeTruthy();
+        const thumbnailNode = document.querySelector('.ms-video-cover');
+        expect(thumbnailNode).toBeTruthy();
+        act(() => {
+            ReactDOM.render(<Video
+                key="video"
+                src="path/to/video.mp4"
+                fit="contain"
+                autoplay
+                inView={false}
+                mode={Modes.VIEW}
+            />, document.getElementById("container"));
+        });
+        act(() => {
+            ReactDOM.render(<Video
+                key="video"
+                src="path/to/video.mp4"
+                fit="contain"
+                autoplay
+                inView
+                mode={Modes.VIEW}
+                onPlay={(playing) => {
+                    try {
+                        expect(playing).toBe(true);
+                    } catch (e) {
+                        done(e);
+                    }
+                    done();
+                }}
+            />, document.getElementById("container"));
+        });
+    });
+
     it('should stop and reset the player while switching deom VIEW to EDIT mode', (done) => {
         act(() => {
             ReactDOM.render(
