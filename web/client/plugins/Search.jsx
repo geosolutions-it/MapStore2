@@ -85,7 +85,7 @@ const SearchResultList = connect(selector, {
     onItemClick: selectSearchItem,
     addMarker,
     showGFI
-})(require('../components/mapcontrols/search/SearchResultList'));
+})(require('../components/mapcontrols/search/SearchResultList').default);
 
 const ToggleButton = require('./searchbar/ToggleButton');
 

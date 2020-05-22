@@ -6,16 +6,16 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const React = require('react');
-const PropTypes = require('prop-types');
-const { find } = require('lodash');
-const assign = require('object-assign');
+import React from 'react';
+import PropTypes from 'prop-types';
+import { find } from 'lodash';
+import assign from 'object-assign';
 
-const SearchResult = require('./SearchResult');
-const I18N = require('../../I18N/I18N');
+import SearchResult from './SearchResult';
+import I18N from '../../I18N/I18N';
 
 
-class SearchResultList extends React.Component {
+export default class SearchResultList extends React.Component {
     static propTypes = {
         results: PropTypes.array,
         layers: PropTypes.array,
@@ -124,5 +124,3 @@ class SearchResultList extends React.Component {
         return null;
     };
 }
-
-module.exports = SearchResultList;
