@@ -183,7 +183,14 @@ function addLayer(layer, foreground = true) {
         foreground
     };
 }
-
+/**
+ * Add a new group
+ * @memberof actions.layers
+ * @function
+ * @param {string} group title of group
+ * @param {string} parent parent group described with dot notation (eg parent.nested )
+ * @param {object} options override all option of a group while adding it
+ */
 function addGroup(group, parent, options) {
     return {
         type: ADD_GROUP,
