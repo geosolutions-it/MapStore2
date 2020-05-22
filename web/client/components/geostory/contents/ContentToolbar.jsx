@@ -75,6 +75,33 @@ const toolButtons = {
         onClick: () => {
             editWebPage({path});
         }
+    }),
+    muted: ({ update, muted }) => ({
+        glyph: muted ? 'muted' : 'audio',
+        visible: true,
+        active: !muted,
+        tooltipId: muted ? 'geostory.contentToolbar.enableAudio' : 'geostory.contentToolbar.disableAudio',
+        onClick: () => {
+            update('muted', !muted);
+        }
+    }),
+    autoplay: ({ update, autoplay, fit }) => ({
+        glyph: 'play-circle',
+        visible: !!(fit !== 'cover'),
+        active: autoplay,
+        tooltipId: autoplay ? 'geostory.contentToolbar.disableAutoplay' : 'geostory.contentToolbar.enableAutoplay',
+        onClick: () => {
+            update('autoplay', !autoplay);
+        }
+    }),
+    loop: ({ update, loop, fit }) => ({
+        glyph: 'loop',
+        visible: !!(fit !== 'cover'),
+        active: loop,
+        tooltipId: loop ? 'geostory.contentToolbar.disableLoop' : 'geostory.contentToolbar.enableLoop',
+        onClick: () => {
+            update('loop', !loop);
+        }
     })
 };
 

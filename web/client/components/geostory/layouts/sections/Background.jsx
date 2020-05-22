@@ -49,7 +49,8 @@ class Background extends Component {
         sectionType: PropTypes.string,
         src: PropTypes.string,
         theme: PropTypes.string,
-        mediaViewer: PropTypes.object
+        mediaViewer: PropTypes.object,
+        inView: PropTypes.bool
     };
 
     static defaultProps = {
@@ -101,6 +102,7 @@ class Background extends Component {
                         enableFullscreen={false}
                         descriptionEnabled={false}
                         mediaViewer={this.props.mediaViewer}
+                        containerInView={this.props.inView}
                     />
                     { this.props.mode === Modes.EDIT && (
                         parentNode

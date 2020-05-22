@@ -6,6 +6,9 @@
 @ms-story-bg-guidelines: #0571b0; // background guidelines color
 @ms-story-fg-guidelines: #ca0020; // foreground guidelines color
 
+@ms-story-active-button-text: @ms2-color-text-primary;
+@ms-story-active-button-bg: lighten(@ms2-color-success, 15%);
+
 @ms-story-font-size-base: 21px;
 @ms-story-font-size-large: ceil(@ms-story-font-size-base * 1.5);
 @ms-story-font-size-small: ceil(@ms-story-font-size-base* 0.75);
@@ -610,6 +613,9 @@
                     &.ms-size-medium { height: @ms-story-size-height-medium; }
                     &.ms-size-small { height: @ms-story-size-height-small; }
                 }
+                .ms-content.ms-content-video {
+                    width: 100%;
+                }
             }
         }
         // overrides and specific styles for immersive section layout
@@ -699,8 +705,18 @@
                     &.ms-size-medium { height: @ms-story-size-height-medium; }
                     &.ms-size-small { height: @ms-story-size-height-small; }
                 }
+
+                .ms-content.ms-content-video {
+                    width: 100%;
+                }
             }
         }
+    }
+
+    // style for active button in toolbar
+    .ms-content-toolbar > .btn-group > span > .btn.active {
+        background-color: @ms-story-active-button-bg;
+        color: @ms-story-active-button-text;
     }
 
     ////////////
