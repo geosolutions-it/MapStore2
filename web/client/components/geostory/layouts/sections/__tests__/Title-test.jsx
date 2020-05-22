@@ -165,4 +165,60 @@ describe('Title component', () => {
         const el = container.querySelector('.ms-section-title.ms-expandable-background');
         expect(el).toExist();
     });
+    it('should render video toolbar on background (fit cover)', () => {
+        const CONTENTS = [{
+            id: '000',
+            type: 'column',
+            background: {
+                type: 'video',
+                fit: 'cover'
+            },
+            contents: [{
+                type: 'text',
+                html: '<p>column</p>'
+            }]
+        }];
+        ReactDOM.render(
+            <Provider store={{
+                getState: () => {},
+                subscribe: () => {},
+                dispatch: () => {}
+            }}>
+                <Title mode="edit" contents={CONTENTS} />
+            </Provider>
+            , document.getElementById("container"));
+        const container = document.getElementById('container');
+
+        const contentToolbar = container.querySelector('.ms-content-toolbar');
+        expect(contentToolbar).toExist();
+        testToolbarButtons(['pencil', 'height-view', 'fit-contain', 'size-extra-large', 'align-center', 'dropper', 'audio'], container);
+    });
+    it('should render video toolbar on background (fit contain)', () => {
+        const CONTENTS = [{
+            id: '000',
+            type: 'column',
+            background: {
+                type: 'video',
+                fit: 'contain'
+            },
+            contents: [{
+                type: 'text',
+                html: '<p>column</p>'
+            }]
+        }];
+        ReactDOM.render(
+            <Provider store={{
+                getState: () => {},
+                subscribe: () => {},
+                dispatch: () => {}
+            }}>
+                <Title mode="edit" contents={CONTENTS} />
+            </Provider>
+            , document.getElementById("container"));
+        const container = document.getElementById('container');
+
+        const contentToolbar = container.querySelector('.ms-content-toolbar');
+        expect(contentToolbar).toExist();
+        testToolbarButtons(['pencil', 'height-view', 'fit-cover', 'size-extra-large', 'align-center', 'dropper', 'audio', 'play-circle', 'loop'], container);
+    });
 });

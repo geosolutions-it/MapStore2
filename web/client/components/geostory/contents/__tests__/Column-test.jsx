@@ -70,5 +70,21 @@ describe('Column component', () => {
             expect(mediaToolbar.querySelector('button .glyphicon-align-center')).toExist(); // align tool
             expect(mediaToolbar.querySelector('button .glyphicon-trash')).toExist(); // delete tool
         });
+
+        it('video', () => {
+            ReactDOM.render(<Column mode={Modes.EDIT} contents={[{ type: MediaTypes.VIDEO }]} />, document.getElementById("container"));
+            let mediaToolbar = document.querySelector('.ms-content-toolbar .btn-group');
+            expect(mediaToolbar).toExist();
+            const buttons = mediaToolbar.querySelectorAll('.ms-content-toolbar .btn-group button');
+            expect(buttons.length).toBe(5);
+            expect([...mediaToolbar.querySelectorAll('button .glyphicon')].map(glyphicon => glyphicon.getAttribute('class')))
+                .toEqual([
+                    'glyphicon glyphicon-pencil', // edit tool
+                    'glyphicon glyphicon-audio', // muted tool
+                    'glyphicon glyphicon-play-circle', // autoplay tool
+                    'glyphicon glyphicon-loop', // loop tool
+                    'glyphicon glyphicon-trash' // delete tool
+                ]);
+        });
     });
 });

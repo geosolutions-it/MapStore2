@@ -49,9 +49,9 @@ export default compose(
     textEditorActiveClass = "",
     expandableMedia = false,
     storyTheme,
-    mediaViewer
+    mediaViewer,
+    inView
 }) => {
-
     const hideContent = get(focusedContent, "target.id") === contentId;
     const visibility = hideContent ?  'hidden' : 'visible';
     const expandableBackgroundClassName = expandableMedia && background && background.type === 'map' ? ' ms-expandable-background' : '';
@@ -91,13 +91,14 @@ export default compose(
                         tools={{
                             [MediaTypes.IMAGE]: ['editMedia', 'cover', 'fit', 'size', 'align', 'theme'],
                             [MediaTypes.MAP]: ['editMedia', 'cover', 'editMap', 'size', 'align', 'theme'],
-                            [MediaTypes.VIDEO]: ['editMedia', 'cover', 'fit', 'size', 'align', 'theme']
+                            [MediaTypes.VIDEO]: ['editMedia', 'cover', 'fit', 'size', 'align', 'theme', 'muted', 'autoplay', 'loop']
                         }}
                         height={height >= viewHeight
                             ? viewHeight
                             : height}
                         storyTheme={storyTheme}
                         mediaViewer={mediaViewer}
+                        inView={inView}
                     />}
             </ContainerDimensions>
             <SectionContents
