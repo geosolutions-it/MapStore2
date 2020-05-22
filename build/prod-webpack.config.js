@@ -31,7 +31,7 @@ module.exports = require('./buildConfig')(
         new HtmlWebpackPlugin({
             template: path.join(paths.framework, 'indexTemplate.html'),
             chunks: ['mapstore2'],
-            inject: true,
+            inject: "body",
             hash: true
         }),
         new HtmlWebpackPlugin({

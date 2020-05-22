@@ -31,6 +31,10 @@
         "version": {
             "label": "Version"
         },
+        "browser": {
+          "unsupported":"Le navigateur actuel n'est pas pris en charge",
+          "supported": "Ce sont ceux que nous soutenons"
+        },
         "errorPage": {
             "title":"Oups, quelque chose a mal tourné.",
             "subtitle":"Veuillez cliquer sur l'icône ci-dessous pour recharger MapStore",

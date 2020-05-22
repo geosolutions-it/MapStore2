@@ -31,6 +31,10 @@
         "version": {
             "label": "Versione"
         },
+        "browser": {
+          "unsupported":"Il tuo browser non è supportato",
+          "supported": "Questi sono i browser supportati"
+        },
         "errorPage": {
             "title":"Ops, Qualcosa è andato storto",
             "subtitle":"Per favore clicca sull'icona qui sotto per ricaricare MapStore",

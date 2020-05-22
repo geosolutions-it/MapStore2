@@ -31,6 +31,10 @@
         "version": {
             "label": "Versión"
         },
+        "browser": {
+          "unsupported":"El navegador actual no es compatible",
+          "supported": "Estos son los que apoyamos"
+        },
         "errorPage": {
             "title":"Vaya, algo salió mal",
             "subtitle":"Haga clic en el icono a continuación para volver a cargar MapStore",

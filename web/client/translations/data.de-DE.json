@@ -31,6 +31,10 @@
         "version": {
             "label": "Version"
         },
+        "browser": {
+          "unsupported":"Der aktuelle Browser wird nicht unterstützt",
+          "supported": "Dies sind diejenigen, die wir unterstützen"
+        },
         "errorPage": {
             "title":"Ups, etwas ist schief gelaufen",
             "subtitle":"Klicken Sie auf das Symbol unten, um MapStore neu zu laden",
@@ -2122,6 +2126,10 @@
                     "theme": "Thema",
                     "templateTooltip":"Mit dem erweiterten Karteneditor kann eine benutzerdefinierte Vorlage für jede Ebene konfiguriert werden (siehe Stiftsymbol).Weitere Informationen finden Sie in der <a href='https://mapstore.readthedocs.io/en/latest/user-guide/layer-settings/#templates' target='_blank'>Bedienungsanleitung</a>"
                 }
+            },
+            "browser": {
+              "unsupported":"Current Browser is not supported",
+              "supported": "These are the ones we support"
             },
             "errors": {
                 "loading": {
