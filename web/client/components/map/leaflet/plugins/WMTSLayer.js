@@ -51,13 +51,15 @@ const createLayer = options => {
     const queryParameters = wmtsToLeafletOptions(options) || {};
     urls.forEach(url => SecurityUtils.addAuthenticationParameter(url, queryParameters, options.securityToken));
     const srs = CoordinatesUtils.normalizeSRS(options.srs || 'EPSG:3857', options.allowedSRS);
+    const { tileMatrixSet, matrixIds } = WMTSUtils.getTileMatrix(options, srs);
     return L.tileLayer.wmts(urls, queryParameters, {
         tileMatrixPrefix: options.tileMatrixPrefix || queryParameters.tileMatrixSet + ':' || srs + ':',
         originY: options.originY || 20037508.3428,
         originX: options.originX || -20037508.3428,
         ignoreErrors: options.ignoreErrors || false,
+        // TODO: use matrix IDs sorted from getTileMatrix
         matrixIds: options.matrixIds && getMatrixIds(options.matrixIds, queryParameters.tileMatrixSet || srs) || null,
-        matrixSet: head(options.tileMatrixSet.filter(t => t['ows:Identifier'] === queryParameters.tileMatrixSet)) || null
+        matrixSet: tileMatrixSet
     });
 };
 

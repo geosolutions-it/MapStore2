@@ -8,7 +8,7 @@
 
 
 const CoordinatesUtils = require('./CoordinatesUtils');
-const {isString, isArray, isObject, head, castArray, slice } = require('lodash');
+const { isString, isArray, isObject, head, castArray, slice, sortBy } = require('lodash');
 
 const WMTSUtils = {
     getDefaultMatrixId: (options) => {
@@ -107,7 +107,34 @@ const WMTSUtils = {
     /**
      * gets the first format available in the list
      */
-    getDefaultFormat: layer => head(castArray(layer.Format))
+    getDefaultFormat: layer => head(castArray(layer.Format)),
+    /**
+     * This avoid https://openlayers.org/en/v5.3.0/doc/errors/#17 in case the scale tilematrix
+     * is not naturally sorted by scale denominator.
+     * for instance https://wxs.ign.fr/choisirgeoportail/geoportail/wmts
+     */
+    sortTileMatrix: (tileMatrixSet)  => {
+        if (!tileMatrixSet) {
+            return tileMatrixSet;
+        }
+        return {
+            ...tileMatrixSet,
+            TileMatrix: sortBy(tileMatrixSet?.TileMatrix.map(t => ({ ...t, ScaleDenominator: Number(t.ScaleDenominator) })), "ScaleDenominator").reverse()
+        };
+    },
+
+    getTileMatrix: (options, srs) => {
+        const tileMatrixSetName = WMTSUtils.getTileMatrixSet(options.tileMatrixSet, srs, options.allowedSRS, options.matrixIds);
+        const tileMatrixSet = WMTSUtils.sortTileMatrix(head(options.tileMatrixSet.filter(tM => tM['ows:Identifier'] === tileMatrixSetName)));
+        // identifiers are in the same order of scales and resolutions
+        const optionsMatrixIds = options.matrixIds && WMTSUtils.getMatrixIds(options.matrixIds, tileMatrixSetName || srs);
+        const identifiers = tileMatrixSet?.TileMatrix.map?.(t => t["ows:Identifier"]);
+        // use same order of matrixIds in TileMatrix, if present.
+        const matrixIds = identifiers && optionsMatrixIds
+            ? identifiers.filter(t => optionsMatrixIds.indexOf(t) >= 0)
+            : optionsMatrixIds;
+        return { matrixIds, tileMatrixSetName, tileMatrixSet: tileMatrixSet };
+    }
 };
 
 
