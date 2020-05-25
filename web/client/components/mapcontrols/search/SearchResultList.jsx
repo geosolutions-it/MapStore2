@@ -14,6 +14,7 @@ import assign from 'object-assign';
 import SearchResult from './SearchResult';
 import I18N from '../../I18N/I18N';
 
+import { showGFIForService } from '../../../utils/SearchUtils';
 
 export default class SearchResultList extends React.Component {
     static propTypes = {
@@ -62,9 +63,7 @@ export default class SearchResultList extends React.Component {
                 onItemClick={this.onItemClick}
                 tools={[{
                     id: 'open-gfi',
-                    visible: service.launchInfoPanel === 'single_layer' &&
-                        !!service.openFeatureInfoButtonEnabled &&
-                        (service.forceSearchLayerVisibility || !!find(this.props.layers, {name: service.options?.typeName})?.visibility),
+                    visible: showGFIForService(find(this.props.layers, {name: service.options?.typeName}), service),
                     glyph: 'info-sign',
                     tooltipId: 'search.showGFI',
                     onClick: e => {

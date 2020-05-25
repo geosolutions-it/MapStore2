@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 const expect = require('expect');
-const {defaultIconStyle} = require('../SearchUtils');
+const {defaultIconStyle, showGFIForService} = require('../SearchUtils');
 
 
 describe('SearchUtils test', () => {
@@ -19,5 +19,20 @@ describe('SearchUtils test', () => {
             popupAnchor: [1, -34],
             shadowSize: [41, 41]
         });
+    });
+    it('showGFIForService with feature info button enabled', () => {
+        expect(showGFIForService({visibility: true}, {launchInfoPanel: 'single_layer', openFeatureInfoButtonEnabled: true})).toBe(true);
+    });
+    it('showGFIForService with feature info button disabled', () => {
+        expect(showGFIForService({visibility: true}, {launchInfoPanel: 'single_layer', openFeatureInfoButtonEnabled: false})).toBe(false);
+    });
+    it('showGFIForService wrong launch info panel', () => {
+        expect(showGFIForService({visibility: true}, {launchInfoPanel: 'all_layers', openFeatureInfoButtonEnabled: true})).toBe(false);
+    });
+    it('showGFIForService layer hidden no force visibility', () => {
+        expect(showGFIForService({visibility: false}, {launchInfoPanel: 'single_layer', openFeatureInfoButtonEnabled: true})).toBe(false);
+    });
+    it('showGFIForService layer hidden with force visibility', () => {
+        expect(showGFIForService({visibility: false}, {launchInfoPanel: 'single_layer', openFeatureInfoButtonEnabled: true, forceSearchLayerVisibility: true})).toBe(true);
     });
 });

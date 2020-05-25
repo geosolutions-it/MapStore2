@@ -38,7 +38,7 @@ import {
 } from '../actions/search';
 
 import CoordinatesUtils from '../utils/CoordinatesUtils';
-import {defaultIconStyle} from '../utils/SearchUtils';
+import {defaultIconStyle, showGFIForService} from '../utils/SearchUtils';
 import {generateTemplateString} from '../utils/TemplateUtils';
 
 import {API} from '../api/searchText';
@@ -200,9 +200,7 @@ export const textSearchShowGFIEpic = (action$, store) =>
             const latlng = { lng: coord[0], lat: coord[1] };
 
             return !!coord &&
-                item?.__SERVICE__?.launchInfoPanel === 'single_layer' &&
-                item?.__SERVICE__?.openFeatureInfoButtonEnabled &&
-                (item?.__SERVICE__?.forceSearchLayerVisibility || layerObj?.visibility) ?
+                showGFIForService(layerObj, item?.__SERVICE__) ?
                 Rx.Observable.of(
                     ...(item?.__SERVICE__?.forceSearchLayerVisibility && layerObj ? [changeLayerProperties(layerObj.id, {visibility: true})] : []),
                     featureInfoClick({ latlng }, typeName, [typeName], { [typeName]: { info_format: "application/json" } }, item.id),
