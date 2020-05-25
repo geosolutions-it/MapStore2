@@ -31,10 +31,6 @@
         "version": {
             "label": "Version"
         },
-        "browser": {
-          "unsupported":"Current Browser is not supported",
-          "supported": "These are the ones we support"
-        },
         "errorPage": {
             "title":"Ops, Something has gone wrong.",
             "subtitle":"Please click the icon below to reload MapStore",

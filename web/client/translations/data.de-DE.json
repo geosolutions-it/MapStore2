@@ -31,10 +31,6 @@
         "version": {
             "label": "Version"
         },
-        "browser": {
-          "unsupported":"Der aktuelle Browser wird nicht unterstützt",
-          "supported": "Dies sind diejenigen, die wir unterstützen"
-        },
         "errorPage": {
             "title":"Ups, etwas ist schief gelaufen",
             "subtitle":"Klicken Sie auf das Symbol unten, um MapStore neu zu laden",
