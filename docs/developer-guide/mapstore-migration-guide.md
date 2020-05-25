@@ -29,7 +29,7 @@ This is a list of things to check if you want to update from a previous version 
 Database schema has changed. To update your database you need to apply this SQL scripts to your database
 
 - Update the user schema
-tun the script available [here](https://github.com/geosolutions-it/geostore/tree/master/doc/sql/migration/postgresql):
+run the script available [here](https://github.com/geosolutions-it/geostore/tree/master/doc/sql/migration/postgresql):
 ```sql
 
 -- Update the geostore database from 1.4.2 model to 1.5.0
