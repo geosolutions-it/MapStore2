@@ -719,6 +719,7 @@
             "stroke": "Bordo",
             "opacity": "Opacità",
             "width": "Larghezza",
+            "textRotation": "Rotazione",
             "font": {
                 "textColor": "Colore",
                 "family": "Famiglia",

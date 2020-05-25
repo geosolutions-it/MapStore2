@@ -113,6 +113,7 @@ export const getTextStyle = (style = {}, stroke = null, fill = null, feature) =>
     return isTextStyle(style) ? new Text({
         fill,
         offsetY: style.offsetY || -( 4 * Math.sqrt(style.fontSize)), // TODO improve this for high font values > 100px
+        rotation: style.textRotation,
         textAlign: style.textAlign || "center",
         text: style.label || feature && feature.properties && feature.properties.valueText || "New",
         font: style.font || "Arial",

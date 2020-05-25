@@ -10,6 +10,7 @@ const PropTypes = require('prop-types');
 const React = require('react');
 const {Row, Col, FormControl} = require('react-bootstrap');
 const Combobox = require('react-widgets').Combobox;
+const Slider = require('react-nouislider');
 
 const numberLocalizer = require('react-widgets/lib/localizers/simple-number');
 // not sure this is needed, TODO check!
@@ -194,8 +195,37 @@ class Text extends React.Component {
                     />
                 </Col>
             </Row>
+            <Row>
+                <Col xs={6}>
+                    <Message msgId="draw.textRotation"/>
+                </Col>
+                <Col xs={6} style={{position: "static"}}>
+                    <div className="mapstore-slider with-tooltip">
+                        <Slider
+                            tooltips
+                            step={2}
+                            start={[style.textRotationDeg || 0]}
+                            format={{
+                                from: value => Math.round(parseFloat(value)),
+                                to: value => Math.round(value) + ' &deg;'
+                            }}
+                            range={{
+                                min: 0,
+                                max: 359
+                            }}
+                            onChange={(values) => {
+                                const rotationDeg = parseInt(values[0].replace(' &deg;', ''), 10);
+                                this.props.onChange(style.id, {textRotation: this.toRad(rotationDeg), textRotationDeg: rotationDeg});
+                            }}
+                        />
+                    </div>
+                </Col>
+            </Row>
         </div>);
     }
+
+    toRad = deg => deg / 180 * Math.PI;
+    toDeg = rad => rad / Math.PI * 180;
 }
 
 module.exports = Text;

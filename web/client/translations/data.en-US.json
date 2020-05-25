@@ -719,6 +719,7 @@
             "stroke": "Stroke",
             "opacity": "Opacity",
             "width": "Width",
+            "textRotation": "Rotation",
             "font": {
                 "textColor": "Color",
                 "family": "Family",

@@ -719,6 +719,7 @@
             "stroke": "Línea",
             "opacity": "Opacidad",
             "width": "Anchura",
+            "textRotation": "Rotación",
             "font": {
                 "textColor": "Color",
                 "family": "Familia",
