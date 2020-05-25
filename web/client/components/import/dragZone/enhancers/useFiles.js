@@ -3,7 +3,8 @@ const {compose, mapPropsStream, withHandlers} = require('recompose');
 
 module.exports = compose(
     withHandlers({
-        useFiles: ({ currentMap, loadMap = () => { }, onClose = () => { }, setLayers = () => { } }) =>
+        useFiles: ({ currentMap, loadMap = () => { }, onClose = () => { }, setLayers = () => { },
+            annotationsLayer, loadAnnotations = () => {} }) =>
             ({ layers = [], maps = [] }, warnings) => {
                 const map = maps[0]; // only 1 map is allowed
                 if (map) {
@@ -17,13 +18,15 @@ module.exports = compose(
                             center: map.map.center || center
                         }
                     }, null, !map.map.zoom && (map.map.bbox || {bounds: map.map.maxExtent}));
+                    onClose(); // close if loaded the map
                 }
                 if (layers.length > 0) {
-                    setLayers(layers, warnings); // TODO: warnings
-                } else {
-                    // close if loaded only the map
-                    if (map) {
-                        onClose();
+                    const isAnnotation = layers && layers[0].name === "Annotations";
+                    if (!annotationsLayer && isAnnotation) {
+                        loadAnnotations(layers[0].features, false);
+                        onClose(); // close if loaded a new annotation layer
+                    } else {
+                        setLayers(layers, warnings); // TODO: warnings
                     }
                 }
             }

@@ -1170,6 +1170,8 @@
                 "genericLoadError": "Cannot load the vector file on map",
                 "missingPrj": "Missing projection info (.prj), coordinate system is  supposed to be EPSG:4326"
             },
+            "merge": "Merge with the existing annotation layer",
+            "replace": "Replace the existing annotation layer",
             "add": "Add",
             "cancel": "Cancel",
             "success": " correctly imported",

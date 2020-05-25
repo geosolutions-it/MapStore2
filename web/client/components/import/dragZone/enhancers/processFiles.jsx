@@ -107,6 +107,7 @@ const readFile = (onWarnings) => (file) => {
 };
 
 const isGeoJSON = json => json && json.features && json.features.length !== 0;
+const isAnnotation = json => json && json.type && json.type === "ms2-annotations";
 const isMap = json => json && json.version && json.map;
 
 /**
@@ -128,7 +129,11 @@ module.exports = compose(
                             layers: (result.layers || [])
                                 .concat(
                                     jsonObjects.filter(json => isGeoJSON(json))
-                                        .map(json => ({...LayersUtils.geoJSONToLayer(json), filename: json.filename}))
+                                        .map(json => (isAnnotation(json) ?
+                                            // annotation GeoJSON to layers
+                                            { name: "Annotations", features: json && json.features, filename: json.filename} :
+                                            // other GeoJSON to layers
+                                            {...LayersUtils.geoJSONToLayer(json), filename: json.filename}))
                                 ),
                             maps: (result.maps || [])
                                 .concat(

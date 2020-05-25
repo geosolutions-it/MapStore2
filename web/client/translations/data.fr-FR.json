@@ -1172,6 +1172,8 @@
             },
             "add": "Ajouter",
             "cancel": "Annuler",
+            "merge": "Fusionner avec la couche d'annotation existante",
+            "replace": "Remplacer le calque d'annotation existant",
             "success": " importé correctement",
             "next": "Suivant",
             "skip": "Passer",

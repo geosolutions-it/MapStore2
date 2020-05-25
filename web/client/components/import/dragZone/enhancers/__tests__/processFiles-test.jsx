@@ -19,7 +19,8 @@ const {
     getGpxFile,
     getGeoJsonFile,
     getMapFile,
-    getUnsupportedMapFile
+    getUnsupportedMapFile,
+    getAnnotationGeoJsonFile
 } = require('./testData');
 
 const rxjsConfig = require('recompose/rxjsObservableConfig').default;
@@ -129,6 +130,24 @@ describe('processFiles enhancer', () => {
             expect(props).toExist();
             if (props.files) {
                 expect(props.files.layers.length).toBe(1);
+                done();
+            }
+        }));
+        ReactDOM.render(<Sink />, document.getElementById("container"));
+    });
+    it('processFiles read annotation geojson', (done) => {
+        const Sink = compose(
+            processFiles,
+            mapPropsStream(props$ => props$.merge(
+                props$
+                    .take(1)
+                    .switchMap(({ onDrop = () => { } }) => getAnnotationGeoJsonFile().map((file) => onDrop([file]))).ignoreElements()))
+        )(createSink(props => {
+            expect(props).toExist();
+            if (props.files) {
+                expect(props.files.layers.length).toBe(1);
+                expect(props.files.layers[0].name).toBe("Annotations");
+                expect(props.files.layers[0].features).toExist();
                 done();
             }
         }));

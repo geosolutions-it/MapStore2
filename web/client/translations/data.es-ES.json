@@ -1172,6 +1172,8 @@
             },
             "add": "Añadir",
             "cancel": "Cancelar",
+            "merge": "Fusionar con la capa de anotación existente",
+            "replace": "Reemplazar la capa de anotación existente",
             "success": " Importación correcta",
             "next": "Siguiente",
             "skip": "Saltar",

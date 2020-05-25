@@ -18,7 +18,7 @@ const getColor = function(color) {
     return `rgba(${color.r}, ${color.g}, ${color.b}, ${color.a})`;
 };
 const getGeomType = function(layer) {
-    return layer.features && layer.features[0] ? layer.features[0].geometry.type : undefined;
+    return layer.features && layer.features[0] ? layer.features[0].geometry && layer.features[0].geometry.type : undefined;
 };
 //
 const DUMMY_COLOR = {r: 255, g: 0, b: 0, a: 1}; // This style should never be applied, is only a default for tests and to prevent failures
