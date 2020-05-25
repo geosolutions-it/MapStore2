@@ -7,7 +7,7 @@ Updating MapStore could mean:
 
 To update an existing installation you usually have to do nothing except eventually to execute queries on your database to update the changes to the database schema. 
 
-In case of a project the it becomes a little more complicated, depending on the customization.
+In case of a project it becomes a little more complicated, depending on the customization.
 
 This is a list of things to check if you want to update from a previous version valid for every version.
 
