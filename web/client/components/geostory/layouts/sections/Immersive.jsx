@@ -44,6 +44,7 @@ const Immersive = ({
     expandableMedia = false,
     storyTheme,
     mediaViewer,
+    contentToolbar,
     inView
 }) => {
     const hideContent = focusedContent && focusedContent.hideContent && (get(focusedContent, "target.id") === contentId);
@@ -84,6 +85,7 @@ const Immersive = ({
             }}
             storyTheme={storyTheme}
             mediaViewer={mediaViewer}
+            contentToolbar={contentToolbar}
             inView={inView}/>
         <SectionContents
             tools={{
@@ -105,7 +107,8 @@ const Immersive = ({
                 onVisibilityChange,
                 contentWrapperStyle: { minHeight: viewHeight, visibility },
                 expandable: expandableMedia,
-                mediaViewer
+                mediaViewer,
+                contentToolbar
             }}
             focusedContent={focusedContent}
             bubblingTextEditing={bubblingTextEditing}

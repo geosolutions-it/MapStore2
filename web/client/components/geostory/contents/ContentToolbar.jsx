@@ -102,6 +102,15 @@ const toolButtons = {
         onClick: () => {
             update('loop', !loop);
         }
+    }),
+    showDescription: ({ update, showDescription, description }) => ({
+        glyph: 'description',
+        visible: !!description,
+        active: !!showDescription,
+        tooltipId: showDescription ? 'geostory.contentToolbar.hideDescription' : 'geostory.contentToolbar.showDescription',
+        onClick: () => {
+            update('showDescription', !showDescription);
+        }
     })
 };
 
@@ -112,6 +121,10 @@ const toolButtons = {
  * @prop {string} align one of `left`, `center` and `right`
  * @prop {string} theme one of `bright`, `bright-text`, `dark` and `dark-text`
  * @prop {string} fit one of `contain` and `cover`
+ * @prop {boolean} muted enable/disable muted property (video)
+ * @prop {boolean} autoplay enable/disable autoplay property (video)
+ * @prop {boolean} loop enable/disable loop property (video)
+ * @prop {boolean} showDescription show/hide description under media content
  * @prop {function} update handler for select properties events, parameters (key, value)
  * @example
  *

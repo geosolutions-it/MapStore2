@@ -24,7 +24,7 @@ import BorderLayout from '../components/layout/BorderLayout';
 import Story from '../components/geostory/Story';
 import MapEditor from '../components/geostory/common/MapEditor';
 import MediaViewer from './geostory/MediaViewer';
-
+import MediaContentToolbar from './geostory/MediaContentToolbar';
 const GeoStory = ({
     story,
     mode = Modes.VIEW,
@@ -37,6 +37,7 @@ const GeoStory = ({
         {...props} // add actions
         mode={mode}
         mediaViewer={MediaViewer}
+        contentToolbar={MediaContentToolbar}
     />
 </BorderLayout>
 );

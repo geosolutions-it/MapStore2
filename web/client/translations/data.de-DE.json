@@ -2079,7 +2079,9 @@
                 "enableAutoplay": "Aktivieren autoplay",
                 "disableAutoplay": "Deaktiviere autoplay",
                 "enableLoop": "Schleife aktivieren",
-                "disableLoop": "Schleife deaktivieren"
+                "disableLoop": "Schleife deaktivieren",
+                "hideDescription": "Beschreibung ausblenden",
+                "showDescription": "Beschreibung anzeigen"
             },
             "navigation": {
                 "edit": "Bearbeiten Sie die Geschichte"

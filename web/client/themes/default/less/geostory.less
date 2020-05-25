@@ -605,16 +605,30 @@
                         width: 100%;
                     }
                 }
-                .ms-content.ms-content-webPage,
-                .ms-content.ms-content-map {
+                .ms-content.ms-content-webPage {
                     width: 100%;
                     height: 350px;
                     &.ms-size-large { height: @ms-story-size-height-large; }
                     &.ms-size-medium { height: @ms-story-size-height-medium; }
                     &.ms-size-small { height: @ms-story-size-height-small; }
                 }
+                // change size of internal map
+                .ms-content.ms-content-map {
+                    width: 100%;
+                    .ms-media-map > div:not(.ms-media-description) {
+                        width: 100%;
+                        height: 350px;
+                    }
+                    &.ms-size-large .ms-media-map > div:not(.ms-media-description) { height: @ms-story-size-height-large; }
+                    &.ms-size-medium .ms-media-map > div:not(.ms-media-description) { height: @ms-story-size-height-medium; }
+                    &.ms-size-small .ms-media-map > div:not(.ms-media-description) { height: @ms-story-size-height-small; }
+                }
                 .ms-content.ms-content-video {
                     width: 100%;
+                }
+                .ms-content-toolbar {
+                    padding-left: 0;
+                    padding-right: 0;
                 }
             }
         }
@@ -697,15 +711,24 @@
                         right: 20px;
                     }
                 }
-                .ms-content.ms-content-webPage,
-                .ms-content.ms-content-map {
+                .ms-content.ms-content-webPage {
                     width: 100%;
                     height: 350px;
                     &.ms-size-large { height: @ms-story-size-height-large; }
                     &.ms-size-medium { height: @ms-story-size-height-medium; }
                     &.ms-size-small { height: @ms-story-size-height-small; }
                 }
-
+                // change size of internal map
+                .ms-content.ms-content-map {
+                    width: 100%;
+                    .ms-media-map > div:not(.ms-media-description) {
+                        width: 100%;
+                        height: 350px;
+                    }
+                    &.ms-size-large .ms-media-map > div:not(.ms-media-description) { height: @ms-story-size-height-large; }
+                    &.ms-size-medium .ms-media-map > div:not(.ms-media-description) { height: @ms-story-size-height-medium; }
+                    &.ms-size-small .ms-media-map > div:not(.ms-media-description) { height: @ms-story-size-height-small; }
+                }
                 .ms-content.ms-content-video {
                     width: 100%;
                 }
@@ -761,7 +784,7 @@
             .ms-content-body,
             .ms-visibility-container,
             .ms-media-map,
-            .ms-media-map > div  {
+            .ms-media-map > div:not(.ms-media-description)  {
                 position: relative;
                 width: 100%;
                 height: 100%;
@@ -967,6 +990,11 @@
             }
         }
         &.ms-media-map {
+            & > div:not(.ms-media-description) {
+                position: relative;
+                width: 100%;
+                height: 100%;
+            }
             .ol-zoom {
                 top: 50px;
                 left: 6px;

@@ -36,6 +36,7 @@ describe('Video component', () => {
                 description="Description"
                 credits="Credits"
                 mode={Modes.VIEW}
+                showDescription
             />, document.getElementById("container"));
         const mediaVideoNode = document.querySelector('.ms-media-video');
         expect(mediaVideoNode).toBeTruthy();

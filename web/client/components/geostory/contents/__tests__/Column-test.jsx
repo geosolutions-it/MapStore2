@@ -86,5 +86,73 @@ describe('Column component', () => {
                     'glyphicon glyphicon-trash' // delete tool
                 ]);
         });
+
+        it('should render image content with show description tool', () => {
+
+            // image with description
+            ReactDOM.render(<Column mode={Modes.EDIT} contents={[{
+                type: MediaTypes.IMAGE,
+                description: 'Description'
+            }]} />, document.getElementById("container"));
+
+            const mediaToolbar = document.querySelector('.ms-content-toolbar .btn-group');
+            expect(mediaToolbar).toExist();
+            const buttons = mediaToolbar.querySelectorAll('.ms-content-toolbar .btn-group button');
+            expect(buttons.length).toBe(5);
+
+            expect([...mediaToolbar.querySelectorAll('button .glyphicon')].map(glyphicon => glyphicon.getAttribute('class')))
+                .toEqual([
+                    'glyphicon glyphicon-pencil', // edit tool
+                    'glyphicon glyphicon-resize-horizontal', // resize tool
+                    'glyphicon glyphicon-align-center', // align tool
+                    'glyphicon glyphicon-description', // show description tool
+                    'glyphicon glyphicon-trash' // delete tool
+                ]);
+        });
+
+        it('should render video content with show description tool ', () => {
+            // video with description
+            ReactDOM.render(<Column mode={Modes.EDIT} contents={[{
+                type: MediaTypes.VIDEO,
+                description: 'Description'
+            }]} />, document.getElementById("container"));
+
+            const mediaToolbar = document.querySelector('.ms-content-toolbar .btn-group');
+            expect(mediaToolbar).toExist();
+            const buttons = mediaToolbar.querySelectorAll('.ms-content-toolbar .btn-group button');
+            expect(buttons.length).toBe(6);
+
+            expect([...mediaToolbar.querySelectorAll('button .glyphicon')].map(glyphicon => glyphicon.getAttribute('class')))
+                .toEqual([
+                    'glyphicon glyphicon-pencil', // edit tool
+                    'glyphicon glyphicon-audio', // muted tool
+                    'glyphicon glyphicon-play-circle', // autoplay tool
+                    'glyphicon glyphicon-loop', // loop tool
+                    'glyphicon glyphicon-description', // show description tool
+                    'glyphicon glyphicon-trash' // delete tool
+                ]);
+        });
+
+        it('should render map content with show description tool ', () => {
+            // video with description
+            ReactDOM.render(<Column mode={Modes.EDIT} contents={[{
+                type: MediaTypes.MAP,
+                description: 'Description'
+            }]} />, document.getElementById("container"));
+
+            const mediaToolbar = document.querySelector('.ms-content-toolbar .btn-group');
+            expect(mediaToolbar).toExist();
+            const buttons = mediaToolbar.querySelectorAll('.ms-content-toolbar .btn-group button');
+            expect(buttons.length).toBe(5);
+
+            expect([...mediaToolbar.querySelectorAll('button .glyphicon')].map(glyphicon => glyphicon.getAttribute('class')))
+                .toEqual([
+                    'glyphicon glyphicon-pencil', // edit tool
+                    'glyphicon glyphicon-map-edit', // map edit tool
+                    'glyphicon glyphicon-resize-horizontal', // resize tool
+                    'glyphicon glyphicon-description', // show description tool
+                    'glyphicon glyphicon-trash' // delete tool
+                ]);
+        });
     });
 });
