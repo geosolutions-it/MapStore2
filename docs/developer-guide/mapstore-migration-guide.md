@@ -15,6 +15,7 @@ This is a list of things to check if you want to update from a previous version 
 - Take a look to the release notes
 - update your `package.json` to latest libs versions
 - take a look at your custom files to see if there are some changes (e.g. `localConfig.js`, `proxy.properties`)
+- Some changes that may need to be ported could be present also in `pom.xml` files and in `configs` directory.
 - Optionally check also accessory files like `.eslinrc`, if you want to keep aligned with lint standards.
 - Follow the instructions below, in order, from your version to the one you want to update to.
 
