@@ -15,24 +15,35 @@
     height: ~'calc(100% - 31px)'
 }
 
-#mapstore-details {
-    .ms-details-panel-editor {
+.ms-details-dialog-contents {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+#mapstore-details, .ms-details-dialog-body {
+    .ms-details-preview-container, .ms-details-dialog-contents-body {
         display: flex;
         flex-direction: column;
         height: 100%;
 
-        .ms-quill-details-editor {
+        .ms-details-component {
             flex-grow: 1;
+            display: flex;
 
-            .quill {
-                display: flex;
-                flex-direction: column;
-                height: 100%;
+            .ms-quill-details-editor {
+                flex-grow: 1;
 
-                .ql-container {
-                    overflow-y: auto;
-                    flex-basis: 0;
-                    flex-grow: 1;
+                .quill {
+                    display: flex;
+                    flex-direction: column;
+                    height: 100%;
+
+                    .ql-container {
+                        overflow-y: auto;
+                        flex-basis: 0;
+                        flex-grow: 1;
+                    }
                 }
             }
         }

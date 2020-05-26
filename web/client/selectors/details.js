@@ -6,6 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+export const detailsControlEnabledSelector = state => state.controls?.details?.enabled;
 export const contentSelector = state => state.details?.content;
 export const editedContentSelector = state => state.details?.editedContent;
 export const contentChangedSelector = state => state.details?.contentChanged;

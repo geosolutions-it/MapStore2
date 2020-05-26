@@ -23,10 +23,9 @@ export default (state = {}, action) => {
     case EDIT: {
         return {
             ...state,
-            editing: action.mode,
-            editedContent: state.editing !== 'content' && action.mode === 'content' ? state.content : state.editedContent,
-            editedSettings: state.editing !== 'settings' && action.mode === 'settings' ? state.settings : state.editedSettings,
-            contentChanged: state.editing === 'content' && action.mode !== 'content' ? false : state.contentChanged
+            editing: action.active,
+            editedContent: !state.editing && action.active ? state.content : state.editedContent,
+            contentChanged: state.editing && !action.active ? false : state.contentChanged
         };
     }
     case SET_CONTENT: {

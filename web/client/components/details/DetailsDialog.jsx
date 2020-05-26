@@ -12,42 +12,26 @@ import Message from '../I18N/Message';
 
 export default ({
     show,
-    loadFlags = {},
-    canEdit,
+    loading = false,
     editing,
     title = <Message msgId="details.title"/>,
     children,
-    onEdit = () => {},
-    onEditSettings = () => {},
-    onCancelEdit = () => {},
-    onSave = () => {},
+    header,
     onClose = () => {}
 }) => <ResizableModal
-    loading={loadFlags.detailsSaving}
-    hideFooterIfEmpty
+    loading={loading}
     clickOutEnabled={false}
+    hideFooterIfEmpty
     show={show}
     title={title}
     bodyClassName={editing === 'content' ? 'ms-details-dialog-editor-container' : 'ms-details-dialog-body'}
-    onClose={onClose}
-    buttons={canEdit ? [...(editing ? [{
-        visible: !loadFlags.detailsSaving,
-        text: <Message msgId="details.cancel"/>,
-        bsStyle: 'primary',
-        onClick: () => onCancelEdit()
-    }, {
-        visible: !loadFlags.detailsSaving,
-        text: <Message msgId="details.save"/>,
-        bsStyle: 'primary',
-        onClick: () => onSave()
-    }] : [{
-        text: <Message msgId="details.edit"/>,
-        bsStyle: 'primary',
-        onClick: () => onEdit()
-    }, {
-        text: <Message msgId="details.settings"/>,
-        bsStyle: 'primary',
-        onClick: () => onEditSettings()
-    }])] : []}>
-    {children}
+    onClose={onClose}>
+    <div className="ms-details-dialog-contents">
+        <div className="ms-details-dialog-header">
+            {header}
+        </div>
+        <div className="ms-details-dialog-contents-body">
+            {children}
+        </div>
+    </div>
 </ResizableModal>;

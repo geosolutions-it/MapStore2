@@ -10,6 +10,7 @@ export const SAVE = 'DETAILS:SAVE';
 export const SAVE_SUCCESS = 'DETAILS:SAVE_SUCCESS';
 export const EDIT = 'DETAILS:EDIT';
 export const CANCEL_EDIT = 'DETAILS:CANCEL_EDIT';
+export const CLOSE = 'DETAILS:CLOSE';
 export const SET_CONTENT = 'DETAILS:SET_CONTENT';
 export const SET_EDITED_CONTENT = 'DETAILS:SET_EDITED_CONTENT';
 export const SET_SETTINGS = 'DETAILS:SET_SETTINGS';
@@ -26,13 +27,17 @@ export const saveSuccess = () => ({
     type: SAVE_SUCCESS
 });
 
-export const edit = (mode) => ({
+export const edit = (active) => ({
     type: EDIT,
-    mode
+    active
 });
 
 export const cancelEdit = () => ({
     type: CANCEL_EDIT
+});
+
+export const close = () => ({
+    type: CLOSE
 });
 
 export const setContent = (content) => ({

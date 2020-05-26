@@ -7,7 +7,7 @@
  */
 
 import { Observable } from 'rxjs';
-import { get } from 'lodash';
+import { get, has, isEqual } from 'lodash';
 import uuidv1 from 'uuid/v1';
 
 import GeoStoreApi from '../api/GeoStoreDAO';
@@ -19,6 +19,7 @@ import {
     setEditedSettings,
     saveSuccess,
     loading,
+    CLOSE,
     SAVE,
     SAVE_SUCCESS,
     CANCEL_EDIT
@@ -32,10 +33,12 @@ import {
 } from '../actions/controls';
 import { closeFeatureGrid } from '../actions/featuregrid';
 import {
+    detailsControlEnabledSelector,
     contentSelector,
     editedContentSelector,
     editedSettingsSelector,
-    editingSelector
+    editingSelector,
+    settingsSelector
 } from '../selectors/details';
 import {
     mapInfoDetailsUriFromIdSelector,
@@ -53,15 +56,18 @@ const defaultSettings = {
     showAtStartup: true
 };
 
-export const setEditedContentOnEditEpic = (action$, store) => action$
-    .ofType(TOGGLE_CONTROL, SET_CONTROL_PROPERTY, SET_CONTROL_PROPERTIES)
-    .filter(({control}) => control === 'details')
+export const onDetailsControlEnabledChangeEpic = (action$, store) => Observable.merge(
+    action$.ofType(TOGGLE_CONTROL, SET_CONTROL_PROPERTY).filter(({control, property}) => control === 'details' && property === 'enabled'),
+    action$.ofType(SET_CONTROL_PROPERTIES).filter(({control, properties}) => control === 'details' && has(properties, 'enabled'))
+)
     .switchMap(() => {
         const state = store.getState();
         const content = contentSelector(state);
         const editedContent = editedContentSelector(state);
         const detailsUri = mapInfoDetailsUriFromIdSelector(state);
         const detailsId = getIdFromUri(detailsUri);
+        const detailsEnabled = detailsControlEnabledSelector(state);
+        const settings = settingsSelector(state);
 
         const loadDataFlow = Observable.defer(() => GeoStoreApi.getData(detailsId).then(data => data))
             .switchMap((details) => {
@@ -81,7 +87,32 @@ export const setEditedContentOnEditEpic = (action$, store) => action$
             Observable.of(setEditedContent(content)) :
             Observable.empty();
 
-        return Observable.of(edit()).concat(content === null || content === undefined ? loadDataFlow : dataLoadedFlow);
+        return detailsEnabled ?
+            Observable.of(edit(), setEditedSettings(settings)).concat(content === null || content === undefined ? loadDataFlow : dataLoadedFlow) :
+            Observable.of(setEditedSettings());
+    });
+
+export const mapCloseDetailsEpic = (action$, store) => action$
+    .ofType(CLOSE)
+    .switchMap(() => {
+        const state = store.getState();
+        const settings = settingsSelector(state);
+        const editedSettings = editedSettingsSelector(state);
+        const mapId = mapIdSelector(state);
+
+        return editedSettings && !isEqual(settings, editedSettings) ?
+            Observable.defer(() => GeoStoreApi.updateResourceAttribute(mapId, 'detailsSettings', JSON.stringify(editedSettings), 'STRING', {}))
+                .switchMap(() => Observable.of(
+                    basicSuccess({message: "details.feedback.settingsSavedSuccessfully"}),
+                    setSettings(editedSettings),
+                    setControlProperty('details', 'enabled', false)
+                ))
+                .let(wrapStartStop(
+                    loading(true, 'settingsSaving'),
+                    loading(false, 'settingsSaving'),
+                    () => Observable.of(basicError({message: 'details.feedback.savingError'}))
+                )) :
+            Observable.of(setControlProperty('details', 'enabled', false));
     });
 
 export const mapSaveDetailsEpic = (action$, store) => action$
@@ -90,14 +121,9 @@ export const mapSaveDetailsEpic = (action$, store) => action$
         const state = store.getState();
         const editing = editingSelector(state);
         const editedContent = editedContentSelector(state);
-        const editedSettings = editedSettingsSelector(state);
         const detailsUri = mapInfoDetailsUriFromIdSelector(state);
         const detailsId = getIdFromUri(detailsUri);
         const mapId = mapIdSelector(state);
-
-        const editingSettingsFlow =
-            Observable.defer(() => GeoStoreApi.updateResourceAttribute(mapId, 'detailsSettings', JSON.stringify(editedSettings), 'STRING', {}))
-                .switchMap(() => Observable.of(basicSuccess({message: "details.feedback.settingsSavedSuccessfully"}), saveSuccess()));
 
         const editingFlow = Observable.defer(() => GeoStoreApi.getPermissions(mapId)).switchMap(permissions => {
             const createOrUpdateDetailsFlow =
@@ -116,7 +142,7 @@ export const mapSaveDetailsEpic = (action$, store) => action$
             ).switchMap(() => Observable.of(basicSuccess({message: "details.feedback.savedSuccessfully"}), saveSuccess())));
         });
 
-        return (editing === 'content' ? editingFlow : editing === 'settings' ? editingSettingsFlow : Observable.empty())
+        return (editing ? editingFlow : Observable.empty())
             .let(wrapStartStop(
                 loading(true, 'detailsSaving'),
                 loading(false, 'detailsSaving'),
@@ -138,9 +164,7 @@ export const processDetailsSettingsEpic = (action$) => action$
 export const mapOnSaveDetailsSuccess = (action$, store) => action$
     .ofType(SAVE_SUCCESS)
     .flatMap(() => Observable.of(
-        ...(editingSelector(store.getState()) === 'content' ?
-            [setContent(editedContentSelector(store.getState())), setEditedContent()] :
-            [setSettings(editedSettingsSelector(store.getState())), setEditedSettings()]),
+        ...(editingSelector(store.getState()) ? [setContent(editedContentSelector(store.getState())), setEditedContent()] : []),
         edit()
     ));
 
@@ -148,6 +172,5 @@ export const mapDetailsCancelEditEpic = (action$) => action$
     .ofType(CANCEL_EDIT)
     .flatMap(() => Observable.of(
         setEditedContent(),
-        setEditedSettings(),
         edit()
     ));

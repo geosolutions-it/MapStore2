@@ -9,16 +9,19 @@
 import React from 'react';
 import { Glyphicon } from 'react-bootstrap';
 import { connect } from 'react-redux';
+import { compose } from 'recompose';
 import { get } from "lodash";
 
 import {
     save,
     edit,
+    close,
     cancelEdit,
     setEditedContent,
     changeSetting
 } from '../actions/details';
 import {
+    detailsControlEnabledSelector,
     contentSelector,
     editedContentSelector,
     contentChangedSelector,
@@ -31,15 +34,63 @@ import {
 import { setControlProperty } from '../actions/controls';
 import { mapFromIdSelector } from '../selectors/maps';
 import { mapInfoSelector, mapIdSelector, mapInfoDetailsUriFromIdSelector } from '../selectors/map';
-import { mapLayoutValuesSelector } from '../selectors/maplayout';
 import { isLoggedIn } from '../selectors/security';
 
-import Message from '../components/I18N/Message';
+import DetailsDialog from '../components/details/DetailsDialog';
+import DetailsPanel from '../components/details/DetailsPanel';
+import DetailsHeader from '../components/details/DetailsHeader';
 import Details from '../components/details/Details';
+import { withConfirmOverride } from '../components/misc/withConfirm';
+
+import Message from '../components/I18N/Message';
 import { createPlugin } from '../utils/PluginsUtils';
 
 import details from '../reducers/details';
 import * as epics from '../epics/details';
+
+const DetailsPlugin = ({
+    show,
+    editing,
+    canEdit,
+    editorProps,
+    editedSettings,
+    loading,
+    content,
+    editedContent,
+    contentChanged,
+    onSave,
+    onEdit,
+    onCancelEdit,
+    onClose,
+    onSettingsChange
+}) => {
+    const Container = editedSettings?.showAsModal ? DetailsDialog : DetailsPanel;
+
+    return (
+        <Container
+            loading={loading}
+            show={show}
+            header={<DetailsHeader
+                editing={editing}
+                canEdit={canEdit}
+                contentChanged={contentChanged}
+                settings={editedSettings}
+                loading={loading}
+                onEdit={onEdit}
+                onCancelEdit={onCancelEdit}
+                onSave={onSave}
+                onSettingsChange={onSettingsChange}/>}
+            onClose={onClose}>
+            <Details
+                editing={editing}
+                loading={loading}
+                editorProps={editorProps}
+                detailsText={editing ? editedContent : content}
+                contentChanged={contentChanged}/>
+        </Container>
+    );
+};
+
 
 /**
  * Details plugin used for fetching details of the map
@@ -48,42 +99,50 @@ import * as epics from '../epics/details';
  */
 
 export default createPlugin('Details', {
-    component: connect((state) => ({
-        show: get(state, "controls.details.enabled"),
-        loading: loadingSelector(state),
-        loadFlags: loadFlagsSelector(state),
-        mapInfo: mapInfoSelector(state),
-        canEdit: isLoggedIn(state) && get(mapInfoSelector(state), 'canEdit'),
-        settings: settingsSelector(state),
-        map: mapFromIdSelector(state, mapIdSelector(state)),
-        content: contentSelector(state),
-        editedContent: editedContentSelector(state),
-        contentChanged: contentChangedSelector(state),
-        editedSettings: editedSettingsSelector(state),
-        editing: editingSelector(state),
-        dockStyle: mapLayoutValuesSelector(state, {height: true})
-    }), {
-        onSave: save,
-        onEdit: edit.bind(null, 'content'),
-        onEditSettings: edit.bind(null, 'settings'),
-        onCancelEdit: cancelEdit,
-        onClose: setControlProperty.bind(null, 'details', 'enabled', false),
-        onSettingsChange: changeSetting,
-        onEditorUpdate: setEditedContent
-    }, (stateProps, dispatchProps, ownProps) => ({
-        ...stateProps,
-        ...ownProps,
-        ...dispatchProps,
-        editorProps: {
-            ...(stateProps.editorProps || {}),
-            ...(ownProps.editorProps || {}),
-            onUpdate: dispatchProps.onEditorUpdate
-        }
-    }))(Details),
+    component: compose(
+        connect((state) => ({
+            show: detailsControlEnabledSelector(state),
+            loading: loadingSelector(state),
+            loadFlags: loadFlagsSelector(state),
+            mapInfo: mapInfoSelector(state),
+            canEdit: isLoggedIn(state) && get(mapInfoSelector(state), 'canEdit'),
+            settings: settingsSelector(state),
+            editedSettings: editedSettingsSelector(state),
+            map: mapFromIdSelector(state, mapIdSelector(state)),
+            content: contentSelector(state),
+            editedContent: editedContentSelector(state),
+            contentChanged: contentChangedSelector(state),
+            editing: editingSelector(state)
+        }), {
+            onSave: save,
+            onEdit: edit.bind(null, true),
+            onCancelEdit: cancelEdit,
+            onClose: close,
+            onSettingsChange: changeSetting,
+            onEditorUpdate: setEditedContent
+        }, (stateProps, dispatchProps, ownProps) => ({
+            ...stateProps,
+            ...ownProps,
+            ...dispatchProps,
+            editorProps: {
+                ...(stateProps.editorProps || {}),
+                ...(ownProps.editorProps || {}),
+                onUpdate: dispatchProps.onEditorUpdate
+            }
+        })),
+        Component => props => (
+            <Component
+                confirmPredicate={!!props.editing && !!props.contentChanged}
+                confirmContent={<Message msgId="details.confirmClose"/>}
+                {...props}/>
+        ),
+        withConfirmOverride('onClose', 'onCancelEdit')
+    )(DetailsPlugin),
     containers: {
         BurgerMenu: {
             name: 'details',
             position: 1000,
+            doNotHide: true,
             text: <Message msgId="details.title"/>,
             icon: <Glyphicon glyph="sheet"/>,
             action: setControlProperty.bind(null, 'details', 'enabled', true),
@@ -100,7 +159,6 @@ export default createPlugin('Details', {
         Toolbar: {
             name: 'details',
             position: 1,
-            priority: 1,
             alwaysVisible: true,
             doNotHide: true,
             icon: <Glyphicon glyph="sheet"/>,
