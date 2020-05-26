@@ -573,7 +573,8 @@
         "maps": ["HomeDescription", "Fork", "MapSearch", {
           "name": "CreateNewMap",
           "cfg": {
-            "showNewGeostory": false
+            "showNewGeostory": false,
+            "showNewContext": false
           }
         }, "FeaturedMaps", "ContentTabs",
 
@@ -643,45 +644,6 @@
                 "containerPosition": "header"
             }
         }],
-        "geostory": [
-          {
-            "name": "OmniBar",
-            "cfg": {
-              "containerPosition": "header",
-              "className": "navbar shadow navbar-home"
-            }
-          },
-          "Login",
-          "BurgerMenu",
-          "Language",
-          "NavMenu",
-          "Attribution",
-          "Home",
-          "GeoStory",
-          "GeoStorySave",
-          "GeoStorySaveAs",
-          "MapEditor",
-          "MediaEditor",
-          {
-            "name": "GeoStoryEditor",
-            "cfg": {
-              "containerPosition": "columns"
-            }
-          },
-          {
-            "name": "GeoStoryNavigation",
-            "cfg": {
-              "containerPosition": "header"
-            }
-          },
-          "Notifications",
-          {
-            "name": "FeedbackMask",
-            "cfg": {
-              "containerPosition": "header"
-            }
-          }
-        ],
         "manager": ["Header", "Redirect", "Manager", "Home", "UserManager", "GroupManager", "Footer"]
     }
 }
