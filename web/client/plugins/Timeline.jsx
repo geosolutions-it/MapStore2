@@ -16,7 +16,7 @@ const { offsetEnabledSelector, currentTimeSelector } = require('../selectors/dim
 const { currentTimeRangeSelector, isVisible, rangeSelector, timelineLayersSelector, isMapSync } = require('../selectors/timeline');
 const { mapLayoutValuesSelector } = require('../selectors/maplayout');
 
-const { withState, compose, branch, renderNothing, withStateHandlers, withProps, defaultProps } = require('recompose');
+const { withState, compose, branch, renderNothing, withStateHandlers, withProps, defaultProps, setDisplayName } = require('recompose');
 const withResizeSpy = require('../components/misc/enhancers/withResizeSpy');
 
 const { selectTime, enableOffset, onRangeChanged, setMapSync } = require('../actions/timeline');
@@ -126,7 +126,8 @@ const TimelinePlugin = compose(
             }
         ),
         // effective hide
-        branch(({ hide }) => hide, renderNothing)
+        branch(({ hide }) => hide, renderNothing),
+        setDisplayName("TimelinePlugin")
     )
 )(
     ({
@@ -266,11 +267,11 @@ const TimelinePlugin = compose(
 
                             }
                         ]} />
-                    <Playback
+                    {Playback && <Playback
                         {...playbackItem}
                         settingsStyle={{
                             right: (collapsed || compactToolbar) ? 40 : 'unset'
-                        }}/>
+                        }}/>}
                 </div>
 
                 <Button
