@@ -6,9 +6,9 @@
  * LICENSE file in the root directory of this source tree.
  */
 import { testEpic } from './epicTestUtils';
-import { saveUserSessionEpicCreator, autoSaveSessionEpicCreator, loadUserSessionEpicCreator, stopSaveSessionEpic } from "../usersession";
+import { saveUserSessionEpicCreator, autoSaveSessionEpicCreator, loadUserSessionEpicCreator } from "../usersession";
 import { saveUserSession, loadUserSession,
-    USER_SESSION_SAVED, USER_SESSION_LOADING, SAVE_USER_SESSION, USER_SESSION_LOADED, USER_SESSION_START_SAVING, USER_SESSION_STOP_SAVING, userSessionStartSaving, userSessionStopSaving } from "../../actions/usersession";
+    USER_SESSION_SAVED, USER_SESSION_LOADING, SAVE_USER_SESSION, USER_SESSION_LOADED, userSessionStartSaving, userSessionStopSaving } from "../../actions/usersession";
 import expect from "expect";
 import {Providers} from  "../../api/usersession";
 import {Observable} from "rxjs";
