@@ -259,8 +259,8 @@ describe('context epics', () => {
         });
         // this could not be needed because logged in users has usually more access privileges to a resource than a
         // not logged user. Anyway, this allows to reload eventually also the user session
-        it('reload when loaded, then the user logout and re-login (this if you have user session to reload)', done => {
-            const actions = [loadContext({ mapId, contextName }), loadFinished(), logout(), loginSuccess()];
+        it('reload when loaded, then the user logout and re-login ', done => {
+            const actions = [loadContext({ mapId, contextName }), loadFinished(), logout(), loadContext({ mapId, contextName }), loadFinished(), loginSuccess()];
             testEpic(handleLoginLogoutContextReload, 2, actions, ([logoutReload, loginReload]) => {
                 expect(logoutReload.type).toBe(LOAD_CONTEXT);
                 expect(logoutReload.mapId).toBe(mapId);
