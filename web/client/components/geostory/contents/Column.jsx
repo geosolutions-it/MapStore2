@@ -64,7 +64,7 @@ export default ({
         }}
         tools={{
             [ContentTypes.TEXT]: ['remove'],
-            [MediaTypes.IMAGE]: ['editMedia', size(), 'align', 'showDescription', 'remove'],
+            [MediaTypes.IMAGE]: ['editMedia', size(), 'showDescription', 'remove'],
             [MediaTypes.MAP]: ['editMedia', 'editMap', size(true), 'showDescription', 'remove'],
             [ContentTypes.WEBPAGE]: ['editURL', size(true), 'remove'],
             [MediaTypes.VIDEO]: ['editMedia', 'muted', 'autoplay', 'loop', 'showDescription', 'remove']

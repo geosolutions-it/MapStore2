@@ -290,9 +290,11 @@ export const createCategory = (category, API = GeoStoreDAO) =>
  * @param {object} API the API to use
  * @return an observable that emits the id of the updated resource
  */
+
 export const updateResource = ({ id, data, permission, metadata, linkedResources = {} } = {}, API = GeoStoreDAO) =>
+// update metadata
     Observable.forkJoin([
-        // update metadata
+        // update data and permissions after data updated
         Observable.defer(
             () => API.putResourceMetadataAndAttributes(id, metadata)
         ).switchMap(res =>
@@ -301,18 +303,19 @@ export const updateResource = ({ id, data, permission, metadata, linkedResources
                 ? Observable.defer(
                     () => API.putResource(id, data)
                 )
-                : Observable.of(res)),
-        // update data
-        // update permission
-        ...(permission ? [updateResourcePermissions(id, permission, API)] : []),
-        ...(permission ? [updateOtherLinkedResourcesPermissions(id, linkedResources, permission, API)] : []),
-        // update linkedResources
+                : Observable.of(res))
+            .switchMap((res)=> permission ? Observable.defer(()=>updateResourcePermissions(id, permission, API)) : Observable.of(res)),
+        // update linkedResources and permissions after linkedResources updated
         ...(
             Object.keys(linkedResources).map(
                 attributeName => updateLinkedResource(id, attributeName, linkedResources[attributeName], permission, API)
+                    .switchMap((res)=>permission ?
+                        Observable.defer(()=> updateOtherLinkedResourcesPermissions(id, linkedResources, permission, API))
+                        : Observable.of(res))
             )
         )
     ]).map(() => id);
+
 /**
  * Deletes a resource and Its linked attributes
  * @param {object} resource the resource with the id
