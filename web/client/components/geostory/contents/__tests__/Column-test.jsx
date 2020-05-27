@@ -64,10 +64,9 @@ describe('Column component', () => {
             let mediaToolbar = document.querySelector('.ms-content-toolbar .btn-group');
             expect(mediaToolbar).toExist();
             const buttons = mediaToolbar.querySelectorAll('.ms-content-toolbar .btn-group button');
-            expect(buttons.length).toBe(4);
+            expect(buttons.length).toBe(3);
             expect(mediaToolbar.querySelector('button .glyphicon-pencil')).toExist(); // edit tool
             expect(mediaToolbar.querySelector('button .glyphicon-resize-horizontal')).toExist(); // resize tool
-            expect(mediaToolbar.querySelector('button .glyphicon-align-center')).toExist(); // align tool
             expect(mediaToolbar.querySelector('button .glyphicon-trash')).toExist(); // delete tool
         });
 
