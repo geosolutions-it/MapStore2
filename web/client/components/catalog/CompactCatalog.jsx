@@ -10,6 +10,7 @@ const {compose, mapPropsStream} = require('recompose');
 const {isNil} = require('lodash');
 const Message = require('../I18N/Message');
 const Rx = require('rxjs');
+const { isObject } = require('lodash');
 
 const API = {
     "csw": require('../../api/CSW'),
@@ -43,7 +44,7 @@ const SideGrid = compose(
  */
 const resToProps = ({records, result = {}}) => ({
     items: (records || []).map((record = {}) => ({
-        title: record.title,
+        title: record.title && isObject(record.title) && record.title.default || record.title,
         caption: record.identifier,
         description: record.description,
         preview: record.thumbnail ? <img src="thumbnail" /> : defaultPreview,
