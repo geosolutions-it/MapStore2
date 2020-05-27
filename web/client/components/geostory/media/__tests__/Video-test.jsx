@@ -28,7 +28,7 @@ describe('Video component', () => {
         const container = document.getElementById('container');
         expect(container.querySelector('.ms-media-video')).toBeTruthy();
     });
-    it('should render description and credits and thumbnail', () => {
+    it('should render caption and credits and thumbnail', () => {
         ReactDOM.render(
             <Video
                 src="path/to/video.mp4"
@@ -36,7 +36,7 @@ describe('Video component', () => {
                 description="Description"
                 credits="Credits"
                 mode={Modes.VIEW}
-                showDescription
+                showCaption
             />, document.getElementById("container"));
         const mediaVideoNode = document.querySelector('.ms-media-video');
         expect(mediaVideoNode).toBeTruthy();
@@ -46,9 +46,9 @@ describe('Video component', () => {
             .match('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAC0lEQVQYV2NgAAIAAAUAAarVyFEAAAAASUVORK5CYII=')
         ).toBeTruthy();
 
-        const descriptionNode = mediaVideoNode.querySelector('.ms-media-description > small');
-        expect(descriptionNode).toBeTruthy();
-        expect(descriptionNode.innerHTML).toBe('Description');
+        const captionNode = mediaVideoNode.querySelector('.ms-media-caption > small');
+        expect(captionNode).toBeTruthy();
+        expect(captionNode.innerHTML).toBe('Description');
 
         const creditsNode = mediaVideoNode.querySelector('.ms-media-credits > small');
         expect(creditsNode).toBeTruthy();

@@ -64,10 +64,10 @@ export default ({
         }}
         tools={{
             [ContentTypes.TEXT]: ['remove'],
-            [MediaTypes.IMAGE]: ['editMedia', size(), 'showDescription', 'remove'],
-            [MediaTypes.MAP]: ['editMedia', 'editMap', size(true), 'showDescription', 'remove'],
+            [MediaTypes.IMAGE]: ['editMedia', size(), 'showCaption', 'remove'],
+            [MediaTypes.MAP]: ['editMedia', 'editMap', size(true), 'showCaption', 'remove'],
             [ContentTypes.WEBPAGE]: ['editURL', size(true), 'remove'],
-            [MediaTypes.VIDEO]: ['editMedia', 'muted', 'autoplay', 'loop', 'showDescription', 'remove']
+            [MediaTypes.VIDEO]: ['editMedia', 'muted', 'autoplay', 'loop', 'showCaption', 'remove']
         }}
         addButtons={[{
             glyph: 'sheet',

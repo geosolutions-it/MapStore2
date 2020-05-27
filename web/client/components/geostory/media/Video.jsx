@@ -192,8 +192,9 @@ const Video = withResizeDetector(({
  * and it has loop and autoplay enabled and controls not visible by default)
  * @prop {string} loop loop the video (loop has no effect for fit equal to `cover`)
  * @prop {string} muted mute the video audio
- * @prop {string} description video description
- * @prop {boolean} showDescription display/hide description
+ * @prop {string} caption caption of current content
+ * @prop {string} description description of video resource
+ * @prop {boolean} showCaption display/hide caption
  * @prop {string} thumbnail source of thumbnail
  * @prop {string} credits source of thumbnail
  * @prop {boolean} controls enable/disable video controls (controls has no effect for fit equal to `cover`)
@@ -208,7 +209,8 @@ const VideoMedia = ({
     autoplay,
     inView,
     description,
-    showDescription,
+    showCaption,
+    caption = description,
     thumbnail,
     credits,
     controls = true,
@@ -274,9 +276,9 @@ const VideoMedia = ({
                     {credits}
                 </small>
             </div>}
-            {showDescription && description && <div className="ms-media-description">
+            {showCaption && caption && <div className="ms-media-caption">
                 <small>
-                    {description}
+                    {caption}
                 </small>
             </div>}
         </div>

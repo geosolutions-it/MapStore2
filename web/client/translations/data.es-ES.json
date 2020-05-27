@@ -2081,8 +2081,8 @@
                 "disableAutoplay": "Desactivar reproducción automática",
                 "enableLoop": "Habilitar bucle",
                 "disableLoop": "Desactivar bucle",
-                "hideDescription": "Ocultar descripción",
-                "showDescription": "Mostrar descripcion"
+                "hideCaption": "Ocultar subtítulo",
+                "showCaption": "Use la descripción como subtítulo"
             },
             "navigation": {
                 "edit": "Editar historia"

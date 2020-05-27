@@ -103,13 +103,13 @@ const toolButtons = {
             update('loop', !loop);
         }
     }),
-    showDescription: ({ update, showDescription, description }) => ({
-        glyph: 'description',
-        visible: !!description,
-        active: !!showDescription,
-        tooltipId: showDescription ? 'geostory.contentToolbar.hideDescription' : 'geostory.contentToolbar.showDescription',
+    showCaption: ({ update, showCaption, caption, description }) => ({
+        glyph: 'caption',
+        visible: !!(caption || description),
+        active: !!showCaption,
+        tooltipId: showCaption ? 'geostory.contentToolbar.hideCaption' : 'geostory.contentToolbar.showCaption',
         onClick: () => {
-            update('showDescription', !showDescription);
+            update('showCaption', !showCaption);
         }
     })
 };
@@ -124,7 +124,7 @@ const toolButtons = {
  * @prop {boolean} muted enable/disable muted property (video)
  * @prop {boolean} autoplay enable/disable autoplay property (video)
  * @prop {boolean} loop enable/disable loop property (video)
- * @prop {boolean} showDescription show/hide description under media content
+ * @prop {boolean} showCaption show/hide caption under media content
  * @prop {function} update handler for select properties events, parameters (key, value)
  * @example
  *

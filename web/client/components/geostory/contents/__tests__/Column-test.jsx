@@ -86,7 +86,7 @@ describe('Column component', () => {
                 ]);
         });
 
-        it('should render image content with show description tool', () => {
+        it('should render image content with show caption tool using media description', () => {
 
             // image with description
             ReactDOM.render(<Column mode={Modes.EDIT} contents={[{
@@ -103,12 +103,12 @@ describe('Column component', () => {
                 .toEqual([
                     'glyphicon glyphicon-pencil', // edit tool
                     'glyphicon glyphicon-resize-horizontal', // resize tool
-                    'glyphicon glyphicon-description', // show description tool
+                    'glyphicon glyphicon-caption', // show caption tool
                     'glyphicon glyphicon-trash' // delete tool
                 ]);
         });
 
-        it('should render video content with show description tool ', () => {
+        it('should render video content with show caption tool using media description', () => {
             // video with description
             ReactDOM.render(<Column mode={Modes.EDIT} contents={[{
                 type: MediaTypes.VIDEO,
@@ -126,13 +126,13 @@ describe('Column component', () => {
                     'glyphicon glyphicon-audio', // muted tool
                     'glyphicon glyphicon-play-circle', // autoplay tool
                     'glyphicon glyphicon-loop', // loop tool
-                    'glyphicon glyphicon-description', // show description tool
+                    'glyphicon glyphicon-caption', // show caption tool
                     'glyphicon glyphicon-trash' // delete tool
                 ]);
         });
 
-        it('should render map content with show description tool ', () => {
-            // video with description
+        it('should render map content with show caption tool using media description', () => {
+            // map with description
             ReactDOM.render(<Column mode={Modes.EDIT} contents={[{
                 type: MediaTypes.MAP,
                 description: 'Description'
@@ -148,7 +148,7 @@ describe('Column component', () => {
                     'glyphicon glyphicon-pencil', // edit tool
                     'glyphicon glyphicon-map-edit', // map edit tool
                     'glyphicon glyphicon-resize-horizontal', // resize tool
-                    'glyphicon glyphicon-description', // show description tool
+                    'glyphicon glyphicon-caption', // show caption tool
                     'glyphicon glyphicon-trash' // delete tool
                 ]);
         });

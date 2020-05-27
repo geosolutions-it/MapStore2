@@ -2081,8 +2081,8 @@
                 "disableAutoplay": "Disabilita riproduzione automatica",
                 "enableLoop": "Abilita riproduzione continua",
                 "disableLoop": "Disabilita riproduzione continua",
-                "hideDescription": "Nascondi descrizione",
-                "showDescription": "Mostra descrizione"
+                "hideCaption": "Nascondi didascalia",
+                "showCaption": "Usa descrizione come didascalia"
             },
             "navigation": {
                 "edit": "Modifica storia"

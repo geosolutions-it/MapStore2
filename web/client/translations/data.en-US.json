@@ -2084,8 +2084,8 @@
                 "disableAutoplay": "Disable autoplay",
                 "enableLoop": "Enable loop",
                 "disableLoop": "Disable loop",
-                "hideDescription": "Hide description",
-                "showDescription": "Show description"
+                "hideCaption": "Hide caption",
+                "showCaption": "Use description as caption"
             },
             "navigation": {
                 "edit": "Edit story"

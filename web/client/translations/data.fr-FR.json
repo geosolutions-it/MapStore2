@@ -2081,8 +2081,8 @@
                 "disableAutoplay": "Désactiver la lecture automatique",
                 "enableLoop": "Activer la boucle",
                 "disableLoop": "Désactiver la boucle",
-                "hideDescription": "Masquer la description",
-                "showDescription": "Montrer la description"
+                "hideCaption": "Masquer la didascalie",
+                "showCaption": "Utiliser la description comme didascalie"
             },
             "navigation": {
                 "edit": "Modifier la story"

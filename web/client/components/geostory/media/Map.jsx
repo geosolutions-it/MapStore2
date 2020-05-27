@@ -34,10 +34,13 @@ export default compose(
     width,
     height,
     size,
-    showDescription
+    showCaption,
+    caption: contentCaption
 }) => {
 
     const { layers = [], mapOptions = {}, description, ...m} = (map.data ? map.data : map);
+
+    const caption = contentCaption || description;
 
     const expandedMapOptions = active
         ? {
@@ -125,9 +128,9 @@ export default compose(
                 </div>
             </Portal>
             : mapView}
-        {showDescription && description && <div className="ms-media-description">
+        {showCaption && caption && <div className="ms-media-caption">
             <small>
-                {description}
+                {caption}
             </small>
         </div>}
     </div>);

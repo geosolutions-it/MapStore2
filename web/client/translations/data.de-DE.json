@@ -2080,8 +2080,8 @@
                 "disableAutoplay": "Deaktiviere autoplay",
                 "enableLoop": "Schleife aktivieren",
                 "disableLoop": "Schleife deaktivieren",
-                "hideDescription": "Beschreibung ausblenden",
-                "showDescription": "Beschreibung anzeigen"
+                "hideCaption": "Beschriftung ausblenden",
+                "showCaption": "Verwenden Sie die Beschreibung als Beschriftung"
             },
             "navigation": {
                 "edit": "Bearbeiten Sie die Geschichte"
