@@ -73,6 +73,21 @@ In this case the background editing toolbar allows to customize the image backgr
 !!! warning
     The *Align content* and the *Change field theme* buttons are disabled if the image size is full screen
 
+### Videos
+
+Once a video is added for the background, the result is something like this:
+
+<img src="../img/title-section/video-applied.jpg" class="ms-docimage"/>
+
+The background toolbar, in this case, changes a little bit by including an additional button:
+
+<img src="../img/title-section/video-bck-toolbar.jpg" class="ms-docimage" style="width:300px"/>
+
+* The **Audio**, enabled by default, through which you can enable or mute the video.
+
+!!! note
+    The video play based on the selected options only in *View Mode*.
+
 ### Maps
 
 In this case, adding a map as background, the result will be like this:
@@ -83,6 +98,4 @@ The background toolbar, in this case, changes a little bit by including an addit
 
 <img src="../img/title-section/map-toolbar.jpg" class="ms-docimage" style="width:300px"/>
 
-* the **Edit map configuration** through which is possible to [Configure the Map](configure-map.md)
-
-
+* The **Edit map configuration** through which is possible to [Configure the Map](configure-map.md)

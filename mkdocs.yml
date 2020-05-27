@@ -84,6 +84,7 @@ pages:
       - Web Page section: 'user-guide/web-section.md'
       - Text Editor Toolbar: 'user-guide/text-editor-toolbar.md'
       - Image Toolbar: 'user-guide/content-image-toolbar.md'
+      - Video Toolbar: 'user-guide/content-video-toolbar.md'
       - Map Toolbar: 'user-guide/content-map-toolbar.md'
       - Web Page Toolbar: 'user-guide/content-web-toolbar.md'
       - Media Editor: 'user-guide/media-editor-window.md'

@@ -29,6 +29,13 @@ The *Setting section* allows the user to:
 
 * Enable/disable the **Pan interaction** on the map
 
+* Enable/disable the **Identify** on the map and decide the information format (*TEXT*, *HTML* or *PROPERTIES*) that appears querying a layer with the Identify Tool.
+
+<img src="../img/configure-map/identify-format.jpg" class="ms-docimage"/>
+
+!!! note
+    The Identify tool is activated when the user clicks on the layer in the map, as follows: <img src="../img/configure-map/identify-on-map.gif" class="ms-docimage"/>
+
 ## Advanced map editor
 
 Inside the Map Inline Editor Toolbar the **Advanced map editor** button <img src="../img/button/edit_button.jpg" class="ms-docbutton"/>is also available to allow advanced customization to the map: clicking on that button, a MapStore viewer opens for this purpose.

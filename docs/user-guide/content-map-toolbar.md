@@ -9,7 +9,7 @@ In particular, through this toolbar, the story editor is able to perform the fol
 
 * **Change media source** <img src="../img/button/change-media2.jpg" class="ms-docbutton"/> accessing the [Media Editor](media-editor-window.md)
 
-* **Edit map configuration** through which is possible [Configure the map](configure-map.md)
+* **Edit map configuration** <img src="../img/button/map-configuration.jpg" class="ms-docbutton"/> through which is possible [Configure the map](configure-map.md)
 
 * **Change size** <img src="../img/button/change-size2.jpg" class="ms-docbutton"/> choosing between *Small*, *Medium*, *Large*
 
