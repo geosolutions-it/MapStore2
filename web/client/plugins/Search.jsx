@@ -10,11 +10,10 @@ const React = require('react');
 const {connect} = require('react-redux');
 const {createSelector} = require('reselect');
 const assign = require('object-assign');
-const HelpWrapper = require('./help/HelpWrapper');
-const Message = require('./locale/Message');
 const {get, isArray} = require('lodash');
 const {searchEpic, searchOnStartEpic, searchItemSelected, zoomAndAddPointEpic} = require('../epics/search');
 const {defaultIconStyle} = require('../utils/SearchUtils');
+const {mapSelector} = require('../selectors/map');
 
 const {
     resultsPurge,
@@ -39,9 +38,11 @@ const {
 
 const searchSelector = createSelector([
     state => state.search || null,
-    state => state .controls && state.controls.searchservicesconfig || null
-], (searchState, searchservicesconfigControl) => ({
+    state => state.controls && state.controls.searchservicesconfig || null,
+    state => state.controls && state.controls.searchBookmarkConfig || null
+], (searchState, searchservicesconfigControl, searchBookmarkConfigControl) => ({
     enabledSearchServicesConfig: searchservicesconfigControl && searchservicesconfigControl.enabled || false,
+    enabledSearchBookmarkConfig: searchBookmarkConfigControl && searchBookmarkConfigControl.enabled || false,
     error: searchState && searchState.error,
     coordinate: searchState && searchState.coordinate || {},
     loading: searchState && searchState.loading,
@@ -64,8 +65,6 @@ const SearchBar = connect(searchSelector, {
     onSearchTextChange: searchTextChanged,
     onCancelSelectedItem: cancelSelectedItem
 })(require("../components/mapcontrols/search/SearchBar").default);
-
-const {mapSelector} = require('../selectors/map');
 
 const MediaQuery = require('react-responsive');
 
@@ -274,12 +273,7 @@ const SearchPlugin = connect((state) => ({
 
     render() {
         return (<span>
-            <HelpWrapper
-                id="search-help"
-                key="seachBar-help"
-                helpText={<Message msgId="helptexts.searchBar"/>}>
-                {this.getSearchAndToggleButton()}
-            </HelpWrapper>
+            {this.getSearchAndToggleButton()}
             <SearchResultList
                 fitToMapSize={this.props.fitResultsToMapSize}
                 searchOptions={this.props.searchOptions}

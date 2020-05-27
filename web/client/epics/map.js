@@ -48,7 +48,7 @@ const {feedbackMaskSelector} = require('../selectors/feedbackmask');
 const { isLoggedIn } = require('../selectors/security');
 const {pathnameSelector} = require('../selectors/router');
 const { push } = require('connected-react-router');
-const textSearchConfigSelector = state => state.searchconfig && state.searchconfig.textSearchConfig;
+const {textSearchConfigSelector, bookmarkSearchConfigSelector} = require('../selectors/searchconfig');
 
 const handleCreationBackgroundError = (action$, store) =>
     action$.ofType(CREATION_ERROR_LAYER)
@@ -247,6 +247,7 @@ const compareMapChanges = (action$, { getState = () => {} }) =>
                 groupsSelector(state),
                 backgroundListSelector(state),
                 textSearchConfigSelector(state),
+                bookmarkSearchConfigSelector(state),
                 mapOptionsToSaveSelector(state)
             );
             const isEqual = MapUtils.compareMapChanges(mapConfigRawData, updatedMap);

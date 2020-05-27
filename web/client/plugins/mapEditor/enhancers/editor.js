@@ -46,9 +46,9 @@ export default compose(
         onClick: ({hide, owner}) => () => {
             hide(owner);
         },
-        save: ({save, owner, map, layers, groups, backgrounds, textSearchConfig, additionalOptions}) => () => {
+        save: ({save, owner, map, layers, groups, backgrounds, textSearchConfig, bookmarkSearchConfig, additionalOptions}) => () => {
             const mapData = MapUtils.saveMapConfiguration(map, layers, groups,
-                backgrounds, textSearchConfig, additionalOptions);
+                backgrounds, textSearchConfig, bookmarkSearchConfig, additionalOptions);
 
             return save({...mapData.map, layers: mapData.map.layers.map(l => pickBy(l, (p) => p !== undefined && !isNull(p)))}, owner);
         }

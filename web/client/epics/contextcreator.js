@@ -38,7 +38,7 @@ import {initMap} from '../actions/map';
 import {mapSelector} from '../selectors/map';
 import {layersSelector, groupsSelector} from '../selectors/layers';
 import {backgroundListSelector} from '../selectors/backgroundselector';
-import {textSearchConfigSelector} from '../selectors/searchconfig';
+import {textSearchConfigSelector, bookmarkSearchConfigSelector} from '../selectors/searchconfig';
 import {mapOptionsToSaveSelector} from '../selectors/mapsave';
 import {loadMapConfig} from '../actions/config';
 import {createResource, createCategory, updateResource, deleteResource, getResource} from '../api/persistence';
@@ -90,10 +90,11 @@ export const saveContextResource = (action$, store) => action$
         const groups = groupsSelector(state);
         const backgrounds = backgroundListSelector(state);
         const textSearchConfig = textSearchConfigSelector(state);
+        const bookmarkSearchConfig = bookmarkSearchConfigSelector(state);
         const additionalOptions = mapOptionsToSaveSelector(state);
         const plugins = pluginsSelector(state);
 
-        const mapConfig = MapUtils.saveMapConfiguration(map, layers, groups, backgrounds, textSearchConfig, additionalOptions);
+        const mapConfig = MapUtils.saveMapConfiguration(map, layers, groups, backgrounds, textSearchConfig, bookmarkSearchConfig, additionalOptions);
 
         const pluginsArray = flattenPluginTree(plugins).filter(plugin => plugin.enabled);
         const unselectablePlugins = makePlugins(pluginsArray.filter(plugin => !plugin.isUserPlugin));

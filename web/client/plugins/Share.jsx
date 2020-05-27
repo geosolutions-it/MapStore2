@@ -14,6 +14,7 @@ import Message from '../components/I18N/Message';
 import { toggleControl, setControlProperty } from '../actions/controls';
 import ConfigUtils from '../utils/ConfigUtils';
 import ShareUtils from '../utils/ShareUtils';
+import MapUtils from '../utils/MapUtils';
 import { versionSelector } from '../selectors/version';
 import * as shareEpics from '../epics/queryparams';
 import SharePanel from '../components/share/SharePanel';
@@ -23,27 +24,6 @@ import { currentContextSelector } from '../selectors/context';
 import { reprojectBbox, getViewportGeometry } from '../utils/CoordinatesUtils';
 import { get } from 'lodash';
 import controls from '../reducers/controls';
-
-/**
- * Get wider and valid extent in viewport
- * @private
- * @param bbox {object} viewport bbox
- * @param bbox.bounds {object} bounds of bbox {minx, miny, maxx, maxy}
- * @param bbox.crs {string} bbox crs
- * @param dest {string} SRS of the returned extent
- * @return {array} [ minx, miny, maxx, maxy ]
-*/
-const getExtentFromViewport = ({ bounds, crs } = {}, dest = 'EPSG:4326') => {
-    if (!bounds || !crs) return null;
-    const { extent } = getViewportGeometry(bounds, crs);
-    if (extent.length === 4) {
-        return reprojectBbox(extent, crs, dest);
-    }
-    const [ rightExtentWidth, leftExtentWidth ] = extent.map((bbox) => bbox[2] - bbox[0]);
-    return rightExtentWidth > leftExtentWidth
-        ? reprojectBbox(extent[0], crs, dest)
-        : reprojectBbox(extent[1], crs, dest);
-};
 
 /**
  * Share Plugin allows to share the current URL (location.href) in some different ways.
@@ -76,7 +56,7 @@ const Share = connect(createSelector([
     shareApiUrl: ShareUtils.getApiUrl(location.href),
     shareConfigUrl: ShareUtils.getConfigUrl(location.href, ConfigUtils.getConfigProp('geoStoreUrl')),
     version,
-    bbox: isVisible && map && map.bbox && getExtentFromViewport(map.bbox),
+    bbox: isVisible && map && map.bbox && MapUtils.getExtentFromViewport(map.bbox),
     showAPI: !context,
     embedOptions: {
         showTOCToggle: !context
