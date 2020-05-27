@@ -17,7 +17,7 @@ const getSaveMessageId = ({saving, saved}) => {
     return "featuregrid.toolbar.saveChanges";
 };
 /**
- * Standard Toobar for the FeatureGrid plugin.
+ * Standard Toolbar for the FeatureGrid plugin.
  *
  * @param {bool} showAdvancedFilterButton shows / hide the advanced filter button (defaults to true)
  * @param {bool} showSyncOnMapButton shows / hide the show on map button (defaults to true)
