@@ -341,7 +341,7 @@ describe('Test correctness of the layers actions', () => {
         const action = addGroup(options.id, undefined, options);
         expect(action.type).toBe(ADD_GROUP);
         expect(action.group).toBe(options.id);
-        expect(action.parent).toNotExist();
-        expect(action.options).toBe(options);
+        expect(action.parent).toBeFalsy();
+        expect(action.options).toEqual(options);
     });
 });
