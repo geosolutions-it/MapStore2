@@ -41,6 +41,7 @@ export default class DetailsPanel extends React.Component {
             height: "100%",
             marginBottom: 0
         },
+        editing: false,
         loading: false,
         onClose: () => {},
         show: false,

@@ -82,6 +82,16 @@ export default (Component) => compose(
     addConfirmModal
 )(Component);
 
+/**
+ * This function returns a HOC that will override specific actions passed in props
+ * to the Component, with showing a confimation modal. If user confirms,
+ * the overriden action will be executed with the original arguments.
+ * For example, withConfirmOverride('onClose', 'onClick') will override onClose and onClick props,
+ * so that whenever they are called in the component(e.g. this.props.onClose('arg') somewhere),
+ * it will trigger a confirmation modal first. If user confirms, the original onClose or onClick
+ * action will be executed with arguments the overriding action was called with.
+ * @param  {string[]} overrideActions actions to override
+ */
 export const withConfirmOverride = (...overrideActions) => (Component) => compose(
     withState('confirming', 'setConfirming', false),
     withState('originalArgs', 'setOriginalArgs', []),
@@ -91,7 +101,7 @@ export const withConfirmOverride = (...overrideActions) => (Component) => compos
             ...result,
             [overrideAction]: ({ setConfirming = () => {}, setOriginalArgs = () => {}, setActionSuccess = () => {}, [overrideAction]: overrideActionFunc = () => {}, confirmPredicate = true }) => (...args) => {
                 if (confirmPredicate) {
-                    setOriginalArgs([...args]);
+                    setOriginalArgs(args);
                     setActionSuccess(overrideAction);
                     setConfirming(true);
                 } else if (isFunction(overrideActionFunc)) {
@@ -104,7 +114,7 @@ export const withConfirmOverride = (...overrideActions) => (Component) => compos
 
             setConfirming(false);
             if (isFunction(overrideActionFunc)) {
-                overrideActionFunc(originalArgs);
+                overrideActionFunc(...originalArgs);
             }
 
             setActionSuccess();

@@ -7,7 +7,7 @@
  */
 
 import { Observable } from 'rxjs';
-import { get, has, isEqual } from 'lodash';
+import { has, isEqual } from 'lodash';
 import uuidv1 from 'uuid/v1';
 
 import GeoStoreApi from '../api/GeoStoreDAO';
@@ -53,7 +53,7 @@ import { wrapStartStop } from '../observables/epics';
 
 const defaultSettings = {
     showAsModal: false,
-    showAtStartup: true
+    showAtStartup: false
 };
 
 export const onDetailsControlEnabledChangeEpic = (action$, store) => Observable.merge(
@@ -72,7 +72,6 @@ export const onDetailsControlEnabledChangeEpic = (action$, store) => Observable.
         const loadDataFlow = Observable.defer(() => GeoStoreApi.getData(detailsId).then(data => data))
             .switchMap((details) => {
                 return Observable.of(
-                    closeFeatureGrid(),
                     setContent(details)
                 );
             })
@@ -83,12 +82,12 @@ export const onDetailsControlEnabledChangeEpic = (action$, store) => Observable.
                 );
             });
 
-        const dataLoadedFlow = get(state, 'controls.details.enabled') && (editedContent === null || editedContent === undefined) ?
+        const dataLoadedFlow = detailsEnabled && (editedContent === null || editedContent === undefined) ?
             Observable.of(setEditedContent(content)) :
             Observable.empty();
 
         return detailsEnabled ?
-            Observable.of(edit(), setEditedSettings(settings)).concat(content === null || content === undefined ? loadDataFlow : dataLoadedFlow) :
+            Observable.of(edit(), setEditedSettings(settings), closeFeatureGrid()).concat(content === null || content === undefined ? loadDataFlow : dataLoadedFlow) :
             Observable.of(setEditedSettings());
     });
 

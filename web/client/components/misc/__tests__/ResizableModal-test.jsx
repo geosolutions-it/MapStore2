@@ -100,4 +100,44 @@ describe('ResizableModal component', () => {
         const modalWithFitContent = document.querySelector('.ms-fit-content');
         expect(modalWithFitContent).toExist();
     });
+
+    it('ResizableModal with hideFooterIfEmpty=true and buttons', () => {
+        ReactDOM.render(<ResizableModal show hideFooterIfEmpty buttons={[{text: 'text'}]}/>, document.getElementById('container'));
+
+        const modalEl = document.getElementById('ms-resizable-modal');
+        expect(modalEl).toExist();
+
+        const footer = modalEl.querySelector('div[role="footer"]');
+        expect(footer).toExist();
+    });
+
+    it('ResizableModal with hideFooterIfEmpty=true and no buttons', () => {
+        ReactDOM.render(<ResizableModal show hideFooterIfEmpty/>, document.getElementById('container'));
+
+        const modalEl = document.getElementById('ms-resizable-modal');
+        expect(modalEl).toExist();
+
+        const footer = modalEl.querySelector('div[role="footer"]');
+        expect(footer).toNotExist();
+    });
+
+    it('ResizableModal with hideFooterIfEmpty=true and loading=true', () => {
+        ReactDOM.render(<ResizableModal show loading hideFooterIfEmpty/>, document.getElementById('container'));
+
+        const modalEl = document.getElementById('ms-resizable-modal');
+        expect(modalEl).toExist();
+
+        const footer = modalEl.querySelector('div[role="footer"]');
+        expect(footer).toExist();
+    });
+
+    it('ResizableModal with hideFooterIfEmpty=false and no buttons', () => {
+        ReactDOM.render(<ResizableModal show/>, document.getElementById('container'));
+
+        const modalEl = document.getElementById('ms-resizable-modal');
+        expect(modalEl).toExist();
+
+        const footer = modalEl.querySelector('div[role="footer"]');
+        expect(footer).toExist();
+    });
 });

@@ -68,6 +68,7 @@ const DetailsPlugin = ({
 
     return (
         <Container
+            editing={editing}
             loading={loading}
             show={show}
             header={<DetailsHeader
@@ -149,8 +150,7 @@ export default createPlugin('Details', {
             selector: (state) => {
                 const mapId = mapIdSelector(state);
                 const detailsUri = mapId && mapInfoDetailsUriFromIdSelector(state, mapId);
-                const settings = settingsSelector(state) || {};
-                if (detailsUri && !settings.showAsModal) {
+                if (detailsUri) {
                     return {};
                 }
                 return { style: {display: "none"} };
