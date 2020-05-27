@@ -97,13 +97,12 @@ describe('Column component', () => {
             const mediaToolbar = document.querySelector('.ms-content-toolbar .btn-group');
             expect(mediaToolbar).toExist();
             const buttons = mediaToolbar.querySelectorAll('.ms-content-toolbar .btn-group button');
-            expect(buttons.length).toBe(5);
+            expect(buttons.length).toBe(4);
 
             expect([...mediaToolbar.querySelectorAll('button .glyphicon')].map(glyphicon => glyphicon.getAttribute('class')))
                 .toEqual([
                     'glyphicon glyphicon-pencil', // edit tool
                     'glyphicon glyphicon-resize-horizontal', // resize tool
-                    'glyphicon glyphicon-align-center', // align tool
                     'glyphicon glyphicon-description', // show description tool
                     'glyphicon glyphicon-trash' // delete tool
                 ]);
