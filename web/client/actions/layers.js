@@ -189,7 +189,7 @@ function addLayer(layer, foreground = true) {
  * @function
  * @param {string} group title of group
  * @param {string} parent parent group described with dot notation (eg parent.nested )
- * @param {object} options override all option of a group while adding it
+ * @param {object} options Additional properties to assign to the group. They will override the default ones.
  */
 function addGroup(group, parent, options) {
     return {
