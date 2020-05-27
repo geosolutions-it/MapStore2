@@ -7,7 +7,7 @@ module.exports = {
     /**
      * Utility to test an epic
      * @param  {function}   epic       the epic to test
-     * @param  {number}   count      the number of actions to wait (note, the stream)
+     * @param  {number|function}   count      the number of actions to wait. If a function, it represents a check to do on the next action to stop.
      * @param  {object|object[]}   action     the action(s) to trigger
      * @param  {function} callback   The check function, called after `count` actions received
      * @param  {Object|function}   [state={}] the state or a function that return it
