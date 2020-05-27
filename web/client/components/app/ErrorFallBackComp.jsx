@@ -33,7 +33,7 @@ const ErrorBoundaryFallbackComponent = ({mailingList = ConfigUtils.getConfigProp
                         glyph="refresh"
                         className="refresh-icon"
                         onClick={() => {
-                            window.location.href = "/";
+                            window.location.reload();
                         }}
                     />
                 </p>
