@@ -28,6 +28,10 @@
 @ms-story-size-height-medium: 575px;
 @ms-story-size-height-small: 350px;
 
+@ms-web-page-size-height-large: 1080px;
+@ms-web-page-size-height-medium: 900px;
+@ms-web-page-size-height-small: 720px;
+
 .ms-story-align-center { margin-left: auto; margin-right: auto; }
 /* mixin for align*/
 .ms-story-align-left { margin-left: 0; margin-right: auto; }
@@ -373,10 +377,7 @@
         position: relative;
         z-index: 1;
         background-color: inherit;
-        + .ms-section {
-            border-top: 1px solid @ms-story-bg-grey;
-            border-color: inherit;
-        }
+
         & > div > .ms-content-toolbar {
             position: absolute;
             margin: 8px;
@@ -605,7 +606,6 @@
                         width: 100%;
                     }
                 }
-                .ms-content.ms-content-webPage,
                 .ms-content.ms-content-map {
                     width: 100%;
                     height: 350px;
@@ -620,6 +620,13 @@
                         margin-left: auto;
                         margin-right: auto;
                     }
+                }
+                .ms-content.ms-content-webPage {
+                    width: 100%;
+                    height: @ms-web-page-size-height-small;
+                    &.ms-size-large { height: @ms-web-page-size-height-large; }
+                    &.ms-size-medium { height: @ms-web-page-size-height-medium; }
+                    &.ms-size-small { height: @ms-web-page-size-height-small; }
                 }
                 .ms-content.ms-content-video {
                     width: 100%;
@@ -705,7 +712,6 @@
                         right: 20px;
                     }
                 }
-                .ms-content.ms-content-webPage,
                 .ms-content.ms-content-map {
                     width: 100%;
                     height: 350px;
@@ -720,6 +726,14 @@
                         margin-left: auto;
                         margin-right: auto;
                     }
+                }
+
+                .ms-content.ms-content-webPage {
+                    width: 100%;
+                    height: @ms-web-page-size-height-small;
+                    &.ms-size-large { height: @ms-web-page-size-height-large; }
+                    &.ms-size-medium { height: @ms-web-page-size-height-medium; }
+                    &.ms-size-small { height: @ms-web-page-size-height-small; }
                 }
                 .ms-content.ms-content-video {
                     width: 100%;

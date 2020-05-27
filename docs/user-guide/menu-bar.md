@@ -65,7 +65,7 @@ In particular, the information to be entered are:
 
 * **Layer** to be queried
 
-* Specific **Attributes** (fileds) the user wants to query
+* Specific **Attributes** (comma separeted fields) the user wants to query
 
 When all the options are set, by clicking on the <img src="../img/button/next-txt.jpg" class="ms-docbutton"/> button a new panel opens, where it is possible to choose the properties for the displayed results:
 

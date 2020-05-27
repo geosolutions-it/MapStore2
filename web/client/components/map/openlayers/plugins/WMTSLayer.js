@@ -12,6 +12,7 @@ import castArray from 'lodash/castArray';
 import head from 'lodash/head';
 import last from 'lodash/last';
 
+
 import SecurityUtils from '../../../../utils/SecurityUtils';
 import WMTSUtils from '../../../../utils/WMTSUtils';
 import CoordinatesUtils from '../../../../utils/CoordinatesUtils';
@@ -42,12 +43,6 @@ function getWMSURLs(urls, requestEncoding) {
     return urls.map((url) => requestEncoding === 'REST' ? url : url.split("\?")[0]);
 }
 
-const getTileMatrix = (options, srs) => {
-    const tileMatrixSetName = WMTSUtils.getTileMatrixSet(options.tileMatrixSet, srs, options.allowedSRS, options.matrixIds);
-    const tileMatrixSet = head(options.tileMatrixSet.filter(tM => tM['ows:Identifier'] === tileMatrixSetName));
-    return {tileMatrixSetName, tileMatrixSet};
-};
-
 const createLayer = options => {
     // options.urls is an alternative name of URL.
     // WMTS Capabilities has "RESTful"/"KVP", OpenLayers uses "REST"/"KVP";
@@ -56,8 +51,8 @@ const createLayer = options => {
     const srs = CoordinatesUtils.normalizeSRS(options.srs || 'EPSG:3857', options.allowedSRS);
     const projection = get(srs);
     const metersPerUnit = projection.getMetersPerUnit();
-    const { tileMatrixSetName, tileMatrixSet } = getTileMatrix(options, srs);
-    const scales = tileMatrixSet && tileMatrixSet.TileMatrix.map(t => Number(t.ScaleDenominator));
+    const { tileMatrixSetName, tileMatrixSet, matrixIds } = WMTSUtils.getTileMatrix(options, srs);
+    const scales = tileMatrixSet && tileMatrixSet?.TileMatrix.map(t => Number(t.ScaleDenominator));
     const mapResolutions = MapUtils.getResolutions();
     /*
      * WMTS assumes a DPI 90.7 instead of 96 as documented in the WMTSCapabilities document:
@@ -67,8 +62,6 @@ const createLayer = options => {
     const scaleToResolution = s => s * 0.28E-3 / metersPerUnit;
     const matrixResolutions = options.resolutions || scales && scales.map(scaleToResolution);
     const resolutions = matrixResolutions || mapResolutions;
-
-    const matrixIds = WMTSUtils.limitMatrix(options.matrixIds && WMTSUtils.getMatrixIds(options.matrixIds, tileMatrixSetName || srs) || WMTSUtils.getDefaultMatrixId(options), resolutions.length);
 
     /* - enu - the default easting, north-ing, elevation
     * - neu - north-ing, easting, up - useful for "lat/long" geographic coordinates, or south orientated transverse mercator
@@ -131,7 +124,7 @@ const createLayer = options => {
             origins,
             origin: !origins ? [20037508.3428, -20037508.3428] : undefined, // Either origin or origins must be configured, never both.
             resolutions,
-            matrixIds,
+            matrixIds: WMTSUtils.limitMatrix((matrixIds || WMTSUtils.getDefaultMatrixId(options) || []).map((el) => el.identifier), resolutions.length),
             sizes,
             extent,
             tileSizes,
@@ -174,7 +167,7 @@ const updateLayer = (layer, newOptions, oldOptions) => {
 };
 
 const hasSRS = (srs, layer) => {
-    const { tileMatrixSetName, tileMatrixSet } = getTileMatrix(layer, srs);
+    const { tileMatrixSetName, tileMatrixSet } = WMTSUtils.getTileMatrix(layer, srs);
     if (tileMatrixSet) {
         return CoordinatesUtils.getEPSGCode(tileMatrixSet["ows:SupportedCRS"]) === srs;
     }
