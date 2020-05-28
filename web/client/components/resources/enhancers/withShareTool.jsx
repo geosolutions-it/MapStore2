@@ -11,19 +11,25 @@ import {compose, withState} from 'recompose';
 import ConfigUtils from '../../../utils/ConfigUtils';
 import SharePanel from '../../share/SharePanel';
 import ShareUtils from '../../../utils/ShareUtils';
-import {isString} from 'lodash';
+import {isString, isNil} from 'lodash';
 
 export const addSharePanel = Component => props => {
-    const { showShareModal, onShowShareModal, shareModalSettings, setShareModalSettings, editedResource, setEditedResource, shareOptions = {}, getLocationObject = () => window.location, ...other } = props;
+    const { showAPIShare, showShareModal, onShowShareModal, shareModalSettings, setShareModalSettings, editedResource, setEditedResource, shareOptions = {}, getLocationObject = () => window.location, ...other } = props;
     const { getShareUrl = () => { }, shareApi = false } = other;
     const options = editedResource && typeof shareOptions === 'function' ? shareOptions(editedResource) : shareOptions;
     const shareUrlResult = editedResource ? getShareUrl(editedResource) : '';
     const resourceUrl = isString(shareUrlResult) ? shareUrlResult : shareUrlResult.url;
-    const showAPI = isString(shareUrlResult) ? shareApi : shareUrlResult.shareApi;
     // window.location
     const location = getLocationObject();
     const baseURL = location && (location.origin + location.pathname);
     const fullUrl = editedResource ? baseURL + '#/' + resourceUrl : '';
+
+    let showAPI;
+    if (!isNil(showAPIShare)) {
+        showAPI = showAPIShare;
+    } else if (isString(shareUrlResult)) {
+        showAPI = shareApi;
+    } else showAPI = shareUrlResult.shareApi;
 
     return (<div>
         <Component onShare={resource => {
