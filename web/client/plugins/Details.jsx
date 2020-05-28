@@ -143,6 +143,7 @@ export default createPlugin('Details', {
         BurgerMenu: {
             name: 'details',
             position: 1000,
+            priority: 1,
             doNotHide: true,
             text: <Message msgId="details.title"/>,
             icon: <Glyphicon glyph="sheet"/>,
@@ -159,6 +160,7 @@ export default createPlugin('Details', {
         Toolbar: {
             name: 'details',
             position: 1,
+            priority: 4,
             alwaysVisible: true,
             doNotHide: true,
             icon: <Glyphicon glyph="sheet"/>,
@@ -167,7 +169,7 @@ export default createPlugin('Details', {
                 const mapId = mapIdSelector(state);
                 const detailsUri = mapId && mapInfoDetailsUriFromIdSelector(state, mapId);
                 const settings = settingsSelector(state) || {};
-                if (detailsUri && settings.showAsModal) {
+                if (detailsUri) {
                     return {};
                 }
                 return { style: {display: "none"} };
