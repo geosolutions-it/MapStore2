@@ -75,7 +75,6 @@ const LoginNav = connect((state) => ({
     renderUnsavedMapChangesDialog: ConfigUtils.getConfigProp('unsavedMapChangesDialog'),
     displayUnsavedDialog: unsavedMapSelector(state)
         && unsavedMapSourceSelector(state) === 'logout'
-        // && pathnameSelector(state).indexOf("viewer") >= 0
 
 }), {
     onShowLogin: setControlProperty.bind(null, "LoginForm", "enabled", true, true),
