@@ -168,7 +168,6 @@ export default createPlugin('Details', {
             selector: (state) => {
                 const mapId = mapIdSelector(state);
                 const detailsUri = mapId && mapInfoDetailsUriFromIdSelector(state, mapId);
-                const settings = settingsSelector(state) || {};
                 if (detailsUri) {
                     return {};
                 }
