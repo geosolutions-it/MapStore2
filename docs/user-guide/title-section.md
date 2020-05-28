@@ -85,6 +85,14 @@ The background toolbar, in this case, changes a little bit by including an addit
 
 * The **Audio**, enabled by default, through which you can enable or mute the video.
 
+By clicking on the *Make the whole background visible inside the container* button <img src="../img/button/fit-img-container.jpg" class="ms-docbutton"/> other two buttons appear to perform the following operations:
+
+<img src="../img/title-section/viedo-toolbar.jpg" class="ms-docimage" style="width:400px"/>
+
+* **Enable Autoplay** <img src="../img/button/autoplay-button.jpg" class="ms-docbutton"/> to play the video automatically once the user is on it
+
+* **Enable Loop** <img src="../img/button/loop-botton.jpg" class="ms-docbutton"/> to continuously repeat the video
+
 !!! note
     The video play based on the selected options only in *View Mode*.
 
