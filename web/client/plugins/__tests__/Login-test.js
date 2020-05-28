@@ -77,7 +77,6 @@ describe('Login Plugin', () => {
                 loginSuccess({  User: { name: "Test", access_token: "some-token"}}),
                 setControlProperty('unsavedMap', 'enabled', true),
                 setControlProperty('unsavedMap', 'source', 'logout')
-                // TODO: not sure about why this is required, investigate.
             );
             const { PluginImpl } = getPluginForTest(Login, storeState);
             const { Plugin: OmniBarPlugin } = getPluginForTest(OmniBar, storeState, { LoginPlugin: Login }, [
