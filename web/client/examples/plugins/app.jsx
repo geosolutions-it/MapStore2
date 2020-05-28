@@ -25,6 +25,10 @@ const startApp = () => {
     const PluginsContainer = connect((state) => ({
         pluginsState: state && state.controls || {}
     }))(require('../../components/plugins/PluginsContainer'));
+    const dragDropContext = require('react-dnd').DragDropContext;
+    const html5Backend = require('react-dnd-html5-backend');
+
+    const dragAndDrop = dragDropContext(html5Backend);
 
     const ThemeSwitcher = connect((state) => ({
         selectedTheme: state.theme && state.theme.selectedTheme || 'default',
@@ -231,44 +235,48 @@ const startApp = () => {
     };
 
     const renderPage = () => {
+        const AppComponent = () => {
+            return (<div style={{width: "100%", height: "100%"}}>
+                <div id="plugins-list" style={{position: "absolute", zIndex: "10000", width: "300px", left: 0, height: "100%", overflow: "auto"}}>
+                    <h5>Configure application plugins</h5>
+                    <ul>
+                        <FormGroup bsSize="small">
+                            <label>Choose a map library</label>
+                            <FormControl value={mapType} componentClass="select" onChange={onChangeMapType.bind(null, renderPage)}>
+                                <option value="leaflet" key="leaflet">Leaflet</option>
+                                <option value="openlayers" key="openlayer">OpenLayers</option>
+                                <option value="cesium" key="cesium">CesiumJS</option>
+                            </FormControl>
+                            <Theme path="../../dist/themes" version="no_version"/>
+                            <label>Choose a theme</label>
+                            <ThemeSwitcher style={{width: "275px", marginTop: "5px"}}/>
+                        </FormGroup>
+                    </ul>
+                    <ul>
+                        <ThemeCreator themeCode={customStyle || themeSample} onApplyTheme={customTheme.bind(null, renderPage)}/>
+                    </ul>
+                    <ul>
+                        <label>Save &amp; Load</label>
+                        <SaveAndLoad onSave={save.bind(null, renderPage)} onLoad={load.bind(null, renderPage)}/>
+                    </ul>
+                    <ul>
+                        <label>Plugins</label>
+                        <PluginCreator pluginCode={codeSample} onApplyCode={customPlugin.bind(null, renderPage)}/>
+                        {renderPlugins(renderPage)}
+                    </ul>
+                </div>
+                <div style={{ position: "absolute", right: 0, left: "300px", height: "100%", overflow: "hidden" }}>
+                    <PluginsContainer params={{ mapType }} plugins={PluginsUtils.getPlugins(getPlugins())} pluginsConfig={getPluginsConfiguration()} mode="standard" />
+                </div>
+                <Debug/>
+            </div>);
+        };
+        const App = dragAndDrop(AppComponent);
         ReactDOM.render(
 
             <Provider store={store}>
                 <Localized>
-                    <div style={{width: "100%", height: "100%"}}>
-                        <div id="plugins-list" style={{position: "absolute", zIndex: "10000", width: "300px", left: 0, height: "100%", overflow: "auto"}}>
-                            <h5>Configure application plugins</h5>
-                            <ul>
-                                <FormGroup bsSize="small">
-                                    <label>Choose a map library</label>
-                                    <FormControl value={mapType} componentClass="select" onChange={onChangeMapType.bind(null, renderPage)}>
-                                        <option value="leaflet" key="leaflet">Leaflet</option>
-                                        <option value="openlayers" key="openlayer">OpenLayers</option>
-                                        <option value="cesium" key="cesium">CesiumJS</option>
-                                    </FormControl>
-                                    <Theme path="../../dist/themes" version="no_version"/>
-                                    <label>Choose a theme</label>
-                                    <ThemeSwitcher style={{width: "275px", marginTop: "5px"}}/>
-                                </FormGroup>
-                            </ul>
-                            <ul>
-                                <ThemeCreator themeCode={customStyle || themeSample} onApplyTheme={customTheme.bind(null, renderPage)}/>
-                            </ul>
-                            <ul>
-                                <label>Save &amp; Load</label>
-                                <SaveAndLoad onSave={save.bind(null, renderPage)} onLoad={load.bind(null, renderPage)}/>
-                            </ul>
-                            <ul>
-                                <label>Plugins</label>
-                                <PluginCreator pluginCode={codeSample} onApplyCode={customPlugin.bind(null, renderPage)}/>
-                                {renderPlugins(renderPage)}
-                            </ul>
-                        </div>
-                        <div style={{ position: "absolute", right: 0, left: "300px", height: "100%", overflow: "hidden" }}>
-                            <PluginsContainer params={{ mapType }} plugins={PluginsUtils.getPlugins(getPlugins())} pluginsConfig={getPluginsConfiguration()} mode="standard" />
-                        </div>
-                        <Debug/>
-                    </div>
+                    <App/>
                 </Localized>
             </Provider>
             ,
