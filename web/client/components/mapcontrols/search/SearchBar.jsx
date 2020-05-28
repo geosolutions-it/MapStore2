@@ -7,7 +7,7 @@
 */
 
 import React from 'react';
-import { FormGroup, Glyphicon, Row, Col } from 'react-bootstrap';
+import { InputGroup, FormGroup, Glyphicon, Row } from 'react-bootstrap';
 import { isNumber, isEmpty, some, isUndefined } from 'lodash';
 
 import CoordinateEntry from '../../misc/coordinateeditors/CoordinateEntry';
@@ -100,7 +100,6 @@ export default ({
 
     const searchByBookmark = () => {
         const {bookmarkConfig, onLayerVisibilityLoad, mapInitial, onZoomToExtent} = props;
-        console.log("bookmarkConfig.selected", bookmarkConfig.selected);
         const {options: bbox = [], layerVisibilityReload = false} = bookmarkConfig && bookmarkConfig.selected;
         if (layerVisibilityReload) {
             onLayerVisibilityLoad({
@@ -223,7 +222,7 @@ export default ({
 
     return (<SearchBarBase>
         <FormGroup>
-            <div className="input-group">
+            <div className="input-group" style={{display: "flex"}}>
                 {selectedItems && selectedItems.map((item, index) =>
                     <span key={"selected-item" + index} className="input-group-addon"><div className="selectedItem-text">{item.text}</div></span>
                 )}
@@ -241,48 +240,48 @@ export default ({
                     onCancelSelectedItem={onCancelSelectedItem}
                     onPurgeResults={onPurgeResults}/>
                 {activeTool === "coordinatesSearch" && showCoordinatesSearchOption &&
-                    <div className="coordinateEditor">
+                    <div className="coordinateEditor" style={{flexWrap: format === "decimal" ? "no-wrap" : "wrap" }}>
                         <Row className="entryRow">
-                            <Col xs={3} className="coordinateLabel">
-                                <Message msgId="latitude"/>
-                            </Col>
-                            <Col xs={9}>
-                                <CoordinateEntry
-                                    format={format}
-                                    aeronauticalOptions={aeronauticalOptions}
-                                    coordinate="lat"
-                                    idx={1}
-                                    value={coordinate.lat}
-                                    constraints={constraintsCoordEditor}
-                                    onChange={(dd) => changeCoord("lat", dd)}
-                                    onKeyDown={(e) => {
-                                        if (areValidCoordinates() && e.keyCode === 13) {
-                                            zoomToPoint();
-                                        }
-                                    }}
-                                />
-                            </Col>
+                            <FormGroup>
+                                <InputGroup >
+                                    <InputGroup.Addon style={{minWidth: 45}}><Message msgId="search.latitude"/></InputGroup.Addon>
+                                    <CoordinateEntry
+                                        format={format}
+                                        aeronauticalOptions={aeronauticalOptions}
+                                        coordinate="lat"
+                                        idx={1}
+                                        value={coordinate.lat}
+                                        constraints={constraintsCoordEditor}
+                                        onChange={(dd) => changeCoord("lat", dd)}
+                                        onKeyDown={(e) => {
+                                            if (areValidCoordinates() && e.keyCode === 13) {
+                                                zoomToPoint();
+                                            }
+                                        }}
+                                    />
+                                </InputGroup>
+                            </FormGroup>
                         </Row>
                         <Row className="entryRow">
-                            <Col xs={3} className="coordinateLabel">
-                                <Message msgId="longitude"/>
-                            </Col>
-                            <Col xs={9}>
-                                <CoordinateEntry
-                                    format={format}
-                                    aeronauticalOptions={aeronauticalOptions}
-                                    coordinate="lon"
-                                    idx={2}
-                                    value={coordinate.lon}
-                                    constraints={constraintsCoordEditor}
-                                    onChange={(dd) => changeCoord("lon", dd)}
-                                    onKeyDown={(e) => {
-                                        if (areValidCoordinates() && e.keyCode === 13) {
-                                            zoomToPoint();
-                                        }
-                                    }}
-                                />
-                            </Col>
+                            <FormGroup>
+                                <InputGroup>
+                                    <InputGroup.Addon style={{minWidth: 45}}><Message msgId="search.longitude"/></InputGroup.Addon>
+                                    <CoordinateEntry
+                                        format={format}
+                                        aeronauticalOptions={aeronauticalOptions}
+                                        coordinate="lon"
+                                        idx={2}
+                                        value={coordinate.lon}
+                                        constraints={constraintsCoordEditor}
+                                        onChange={(dd) => changeCoord("lon", dd)}
+                                        onKeyDown={(e) => {
+                                            if (areValidCoordinates() && e.keyCode === 13) {
+                                                zoomToPoint();
+                                            }
+                                        }}
+                                    />
+                                </InputGroup>
+                            </FormGroup>
                         </Row>
                     </div>
                 }

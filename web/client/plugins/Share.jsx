@@ -21,7 +21,6 @@ import SharePanel from '../components/share/SharePanel';
 import { createSelector } from 'reselect';
 import { mapSelector } from '../selectors/map';
 import { currentContextSelector } from '../selectors/context';
-import { reprojectBbox, getViewportGeometry } from '../utils/CoordinatesUtils';
 import { get } from 'lodash';
 import controls from '../reducers/controls';
 
