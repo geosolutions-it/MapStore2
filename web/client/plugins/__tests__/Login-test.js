@@ -77,7 +77,6 @@ describe('Login Plugin', () => {
                 loginSuccess({  User: { name: "Test", access_token: "some-token"}}),
                 setControlProperty('unsavedMap', 'enabled', true),
                 setControlProperty('unsavedMap', 'source', 'logout')
-                // TODO: not sure about why this is required, investigate.
             );
             const { PluginImpl } = getPluginForTest(Login, storeState);
             const { Plugin: OmniBarPlugin } = getPluginForTest(OmniBar, storeState, { LoginPlugin: Login }, [
@@ -98,7 +97,7 @@ describe('Login Plugin', () => {
             // click on confirm button
             TestUtils.Simulate.click(buttons[0]);
         });
-        it('confirm dialog closes dialog', done => {
+        it('not confirm closes dialog', done => {
             const storeState = stateMocker(
                 loginSuccess({ User: { name: "Test", access_token: "some-token" } }),
                 setControlProperty('unsavedMap', 'enabled', true),
