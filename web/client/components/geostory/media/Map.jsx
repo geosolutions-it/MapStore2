@@ -33,10 +33,14 @@ export default compose(
     setActive,
     width,
     height,
-    size
+    size,
+    showCaption,
+    caption: contentCaption
 }) => {
 
-    const { layers = [], mapOptions = {}, ...m} = (map.data ? map.data : map);
+    const { layers = [], mapOptions = {}, description, ...m} = (map.data ? map.data : map);
+
+    const caption = contentCaption || description;
 
     const expandedMapOptions = active
         ? {
@@ -91,9 +95,10 @@ export default compose(
                 ...m,
                 id: `media-${id}`,
                 resize: width + '-' + height + '_' + size,
+                className: 'aaaa',
                 style: {
-                    width: '100%',
-                    height: '100%',
+                    // removed width and height from style and added to .less
+                    // to use different sizes in story sections
                     cursor: isMapInfoControlActive ? 'pointer' : 'default'
                 }
             }} // if map id is passed as number, the resource id, ol throws an error
@@ -123,5 +128,10 @@ export default compose(
                 </div>
             </Portal>
             : mapView}
+        {showCaption && caption && <div className="ms-media-caption">
+            <small>
+                {caption}
+            </small>
+        </div>}
     </div>);
 });
