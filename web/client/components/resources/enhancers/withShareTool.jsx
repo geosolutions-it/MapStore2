@@ -14,7 +14,7 @@ import ShareUtils from '../../../utils/ShareUtils';
 import {isString} from 'lodash';
 
 export const addSharePanel = Component => props => {
-    const { showAPIShare, showShareModal, onShowShareModal, shareModalSettings, setShareModalSettings, editedResource, setEditedResource, shareOptions = {}, getLocationObject = () => window.location, ...other } = props;
+    const { showShareModal, onShowShareModal, shareModalSettings, setShareModalSettings, editedResource, setEditedResource, shareOptions = {}, getLocationObject = () => window.location, ...other } = props;
     const { getShareUrl = () => { }, shareApi = false } = other;
     const options = editedResource && typeof shareOptions === 'function' ? shareOptions(editedResource) : shareOptions;
     const shareUrlResult = editedResource ? getShareUrl(editedResource) : '';
