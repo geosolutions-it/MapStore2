@@ -2074,7 +2074,13 @@
                 "confirmCloseMapEditing": "Chiudi editing mappa",
                 "pendingChangesDiscardConfirm": "Vuoi scartare le modifiche?",
                 "editURL": "Modifica l'URL della pagina web",
-                "advancedMapEditor": "Apri editor di mappe avanzato"
+                "advancedMapEditor": "Apri editor di mappe avanzato",
+                "enableAudio": "Abilita audio",
+                "disableAudio": "Disabilita audio",
+                "enableAutoplay": "Abilita riproduzione automatica",
+                "disableAutoplay": "Disabilita riproduzione automatica",
+                "enableLoop": "Abilita riproduzione continua",
+                "disableLoop": "Disabilita riproduzione continua"
             },
             "navigation": {
                 "edit": "Modifica storia"
@@ -2215,7 +2221,6 @@
                 "imageFilter": "Filtra immagini",
                 "import": "Importa la risorsa localmente",
                 "trash": "Elimina la risorsa",
-                "autoplay": "Riproduzione automatica",
                 "videoUrl": "Video URL",
                 "videoUrlPlaceholder": "Inserisci video url",
                 "thumbnail": "Aggiungi thumbnail (dimensione massima 500kb)"
@@ -2236,6 +2241,9 @@
             },
             "mapList": {
                 "emptyList": "Premere il pulsante più per creare una mappa o selezionare un altro servizio di mappe."
+            },
+            "videoList": {
+                "emptyList": "Premere il pulsante più per aggiungere un nuovo video"
             }
         },
         "backgroundDialog": {

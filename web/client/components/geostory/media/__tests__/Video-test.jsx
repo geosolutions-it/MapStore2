@@ -11,6 +11,7 @@ import ReactDOM from 'react-dom';
 import expect from 'expect';
 import Video from '../Video';
 import { act } from 'react-dom/test-utils';
+import { Modes } from '../../../../utils/GeoStoryUtils';
 
 describe('Video component', () => {
     beforeEach((done) => {
@@ -34,6 +35,7 @@ describe('Video component', () => {
                 thumbnail="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAC0lEQVQYV2NgAAIAAAUAAarVyFEAAAAASUVORK5CYII="
                 description="Description"
                 credits="Credits"
+                mode={Modes.VIEW}
             />, document.getElementById("container"));
         const mediaVideoNode = document.querySelector('.ms-media-video');
         expect(mediaVideoNode).toBeTruthy();
@@ -51,12 +53,13 @@ describe('Video component', () => {
         expect(creditsNode).toBeTruthy();
         expect(creditsNode.innerHTML).toBe('Credits');
     });
-    it('should play if in view and autoplay is enabled', (done) => {
+    it('should play if in view and autoplay is enabled (VIEW mode)', (done) => {
         ReactDOM.render(
             <Video
                 src="path/to/video.mp4"
                 autoplay
                 inView
+                mode={Modes.VIEW}
                 onPlay={(playing) => {
                     try {
                         expect(playing).toBe(true);
@@ -72,9 +75,9 @@ describe('Video component', () => {
         const thumbnailNode = document.querySelector('.ms-video-cover');
         expect(thumbnailNode).toBeTruthy();
     });
-    it('should stop if not view', (done) => {
+    it('should stop if not view (VIEW mode)', (done) => {
         act(() => {
-            ReactDOM.render(<Video key="video" src="path/to/video.mp4" autoplay inView/>, document.getElementById("container"));
+            ReactDOM.render(<Video key="video" src="path/to/video.mp4" autoplay inView mode={Modes.VIEW} />, document.getElementById("container"));
         });
         const mediaVideoNode = document.querySelector('.ms-media-video');
         expect(mediaVideoNode).toBeTruthy();
@@ -86,6 +89,7 @@ describe('Video component', () => {
                 src="path/to/video.mp4"
                 autoplay
                 inView={false}
+                mode={Modes.VIEW}
                 onPlay={(playing) => {
                     try {
                         expect(playing).toBe(false);
@@ -96,5 +100,147 @@ describe('Video component', () => {
                 }}
             />, document.getElementById("container"));
         });
+    });
+    it('should play if in view and fit is equal to cover (VIEW mode)', (done) => {
+        ReactDOM.render(
+            <Video
+                src="path/to/video.mp4"
+                fit="cover"
+                inView
+                mode={Modes.VIEW}
+                onPlay={(playing) => {
+                    try {
+                        expect(playing).toBe(true);
+                    } catch (e) {
+                        done(e);
+                    }
+                    done();
+                }}
+            />
+            , document.getElementById("container"));
+        const mediaVideoNode = document.querySelector('.ms-media-video');
+        expect(mediaVideoNode).toBeTruthy();
+        const thumbnailNode = document.querySelector('.ms-video-cover');
+        expect(thumbnailNode).toBeTruthy();
+    });
+
+    it('should play if returns in view and fit equal to cover (VIEW mode)', (done) => {
+        act(() => {
+            ReactDOM.render(<Video
+                key="video"
+                src="path/to/video.mp4"
+                fit="cover"
+                inView
+                mode={Modes.VIEW}
+            />, document.getElementById("container"));
+        });
+        const mediaVideoNode = document.querySelector('.ms-media-video');
+        expect(mediaVideoNode).toBeTruthy();
+        const thumbnailNode = document.querySelector('.ms-video-cover');
+        expect(thumbnailNode).toBeTruthy();
+        act(() => {
+            ReactDOM.render(<Video
+                key="video"
+                src="path/to/video.mp4"
+                fit="cover"
+                inView={false}
+                mode={Modes.VIEW}
+            />, document.getElementById("container"));
+        });
+        act(() => {
+            ReactDOM.render(<Video
+                key="video"
+                src="path/to/video.mp4"
+                fit="cover"
+                inView
+                mode={Modes.VIEW}
+                onPlay={(playing) => {
+                    try {
+                        expect(playing).toBe(true);
+                    } catch (e) {
+                        done(e);
+                    }
+                    done();
+                }}
+            />, document.getElementById("container"));
+        });
+    });
+
+    it('should play if returns in view and autoplay is enabled (VIEW mode)', (done) => {
+        act(() => {
+            ReactDOM.render(<Video
+                key="video"
+                src="path/to/video.mp4"
+                fit="contain"
+                autoplay
+                inView
+                mode={Modes.VIEW}
+            />, document.getElementById("container"));
+        });
+        const mediaVideoNode = document.querySelector('.ms-media-video');
+        expect(mediaVideoNode).toBeTruthy();
+        const thumbnailNode = document.querySelector('.ms-video-cover');
+        expect(thumbnailNode).toBeTruthy();
+        act(() => {
+            ReactDOM.render(<Video
+                key="video"
+                src="path/to/video.mp4"
+                fit="contain"
+                autoplay
+                inView={false}
+                mode={Modes.VIEW}
+            />, document.getElementById("container"));
+        });
+        act(() => {
+            ReactDOM.render(<Video
+                key="video"
+                src="path/to/video.mp4"
+                fit="contain"
+                autoplay
+                inView
+                mode={Modes.VIEW}
+                onPlay={(playing) => {
+                    try {
+                        expect(playing).toBe(true);
+                    } catch (e) {
+                        done(e);
+                    }
+                    done();
+                }}
+            />, document.getElementById("container"));
+        });
+    });
+
+    it('should stop and reset the player while switching deom VIEW to EDIT mode', (done) => {
+        act(() => {
+            ReactDOM.render(
+                <Video
+                    src="path/to/video.mp4"
+                    inView
+                    mode={Modes.VIEW}
+                />, document.getElementById("container"));
+        });
+
+        act(() => {
+            ReactDOM.render(
+                <Video
+                    src="path/to/video.mp4"
+                    inView
+                    mode={Modes.EDIT}
+                    onPlay={(playing) => {
+                        try {
+                            expect(playing).toBe(false);
+                        } catch (e) {
+                            done(e);
+                        }
+                        done();
+                    }}
+                />, document.getElementById("container"));
+        });
+
+        const mediaVideoNode = document.querySelector('.ms-media-video');
+        expect(mediaVideoNode).toBeTruthy();
+        const thumbnailNode = document.querySelector('.ms-video-cover');
+        expect(thumbnailNode).toBeTruthy();
     });
 });
