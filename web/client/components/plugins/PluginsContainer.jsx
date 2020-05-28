@@ -172,10 +172,9 @@ class PluginsContainer extends React.Component {
     filterLoaded = (plugin) => plugin && !plugin.impl.loadPlugin;
 
     filterRoot = (plugin) => {
-        const cfg = PluginsUtils.getPluginConfiguration(this.getPluginsConfig(this.props), plugin.name);
         const container = PluginsUtils.getMorePrioritizedContainer(
             plugin.impl,
-            cfg,
+            PluginsUtils.getPluginConfiguration(this.getPluginsConfig(this.props), plugin.name).override,
             this.getPluginsConfig(this.props),
             0
         );
