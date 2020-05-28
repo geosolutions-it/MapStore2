@@ -8,7 +8,7 @@
 
 import React from 'react';
 import { FormGroup, Glyphicon, Row, Col } from 'react-bootstrap';
-import { isNumber, isEmpty, some } from 'lodash';
+import { isNumber, isEmpty, some, isUndefined } from 'lodash';
 
 import CoordinateEntry from '../../misc/coordinateeditors/CoordinateEntry';
 import Message from '../../I18N/Message';
@@ -76,7 +76,8 @@ export default ({
     onToggleControl = () => {},
     onZoomToPoint = () => {},
     onPurgeResults,
-    items = []
+    items = [],
+    ...props
 }) => {
     const search = defaultSearchWrapper({searchText, selectedItems, searchOptions, maxResults, onSearch, onSearchReset});
 
@@ -95,6 +96,23 @@ export default ({
             x: parseFloat(coordinate.lon),
             y: parseFloat(coordinate.lat)
         }, defaultZoomLevel, "EPSG:4326");
+    };
+
+    const searchByBookmark = () => {
+        const {bookmarkConfig, onLayerVisibilityLoad, mapInitial, onZoomToExtent} = props;
+        console.log("bookmarkConfig.selected", bookmarkConfig.selected);
+        const {options: bbox = [], layerVisibilityReload = false} = bookmarkConfig && bookmarkConfig.selected;
+        if (layerVisibilityReload) {
+            onLayerVisibilityLoad({
+                ...mapInitial,
+                map: {
+                    ...mapInitial.map,
+                    bookmark_search_config: bookmarkConfig && bookmarkConfig.bookmarkSearchConfig
+                }
+            }, null, [bbox.west, bbox.south, bbox.east, bbox.north]);
+        } else if (bbox && !isEmpty(bbox)) {
+            onZoomToExtent([bbox.west, bbox.south, bbox.east, bbox.north], "EPSG:4326");
+        }
     };
 
     const getActiveTool = () => {
@@ -151,12 +169,18 @@ export default ({
         });
     }
 
+    let searchByBookmarkConfig;
     // Search by bookmark option
-    if (showBookMarkSearchOption && !isEmpty(items) && some(items, "menuItem")) {
+    if (showBookMarkSearchOption && !isEmpty(items)) {
         const [item] = items;
-        searchMenuOptions.push(
-            item.menuItem(onChangeActiveSearchTool, activeTool)
-        );
+        if (some(items, "menuItem")) {
+            searchMenuOptions.push(
+                item.menuItem(onChangeActiveSearchTool, activeTool)
+            );
+        }
+        if (some(items, "bookmarkConfig")) {
+            searchByBookmarkConfig = item.bookmarkConfig(onToggleControl, enabledSearchBookmarkConfig, activeTool);
+        }
     }
 
     const searchConfig = {
@@ -172,21 +196,6 @@ export default ({
         bsStyle: "default",
         pullRight: true,
         visible: activeTool === "addressSearch"
-    };
-
-    const searchByBookmarkConfig = {
-        onClick: () => {
-            if (!enabledSearchBookmarkConfig) {
-                onToggleControl("searchBookmarkConfig");
-            }
-        },
-        glyph: "cog",
-        className: "square-button-md no-border ",
-        tooltip: <Message msgId="search.searchByBookmark"/>,
-        tooltipPosition: "bottom",
-        bsStyle: "default",
-        pullRight: true,
-        visible: activeTool === "searchByBookmark"
     };
 
     const coordinateFormatChange = {
@@ -279,11 +288,10 @@ export default ({
                 }
                 {
                     activeTool === "searchByBookmark" && showBookMarkSearchOption &&
-                        <BookmarkSelect/>
+                        <BookmarkSelect {...props}/>
                 }
                 <SearchBarToolbar
                     splitTools={false}
-                    loading={loading}
                     toolbarButtons={[
                         activeTool === "addressSearch" ? searchConfig :
                             showOptions && activeTool === "coordinatesSearch" ? coordinateFormatChange :
@@ -293,7 +301,8 @@ export default ({
                             className: "square-button-md no-border",
                             bsStyle: "default",
                             pullRight: true,
-                            visible: activeTool === "addressSearch" && !loading &&
+                            loading: !isUndefined(loading) && loading,
+                            visible: activeTool === "addressSearch" &&
                             (searchText !== "" || selectedItems && selectedItems.length > 0) ||
                             activeTool === "coordinatesSearch" && (isNumber(coordinate.lon) || isNumber(coordinate.lat)),
                             onClick: () => {
@@ -309,9 +318,10 @@ export default ({
                             (isSearchClickable || activeTool !== "addressSearch" ? "magnifying-glass clickable" : "magnifying-glass"),
                             bsStyle: "default",
                             pullRight: true,
-                            visible: activeTool === "addressSearch" &&
+                            visible: !loading && activeTool === "addressSearch" &&
                             (!(searchText !== "" || selectedItems && selectedItems.length > 0) || !splitTools) ||
                             activeTool === "coordinatesSearch" || activeTool === "searchByBookmark",
+                            disabled: activeTool === "searchByBookmark" && props && props.bookmarkConfig && !props.bookmarkConfig.selected,
                             onClick: () => {
                                 if (activeTool === "coordinatesSearch" && areValidCoordinates()) {
                                     zoomToPoint();
@@ -320,7 +330,7 @@ export default ({
                                     search();
                                 }
                                 if (activeTool === "searchByBookmark") {
-                                    // Zoom to Extent
+                                    searchByBookmark();
                                 }
                             }
                         }, {

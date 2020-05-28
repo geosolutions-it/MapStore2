@@ -114,11 +114,26 @@ const SearchByBookmarkPanel = (props) => {
 
 };
 
-const SearchMenuItem = (onClick, activeTool) => ({
+const searchMenuItem = (onClick, activeTool) => ({
     active: activeTool === "searchByBookmark",
     onClick: () => onClick('searchByBookmark'),
     glyph: "bookmark",
     text: <Message msgId="search.searchByBookmark"/>
+});
+
+const searchByBookmarkConfig = (toggleConfig, enabled, activeTool) => ({
+    onClick: () => {
+        if (!enabled) {
+            toggleConfig("searchBookmarkConfig");
+        }
+    },
+    glyph: "cog",
+    className: "square-button-md no-border ",
+    tooltipId: "search.searchByBookmark",
+    tooltipPosition: "bottom",
+    bsStyle: "default",
+    pullRight: true,
+    visible: activeTool === "searchByBookmark"
 });
 
 const selector = createSelector([
@@ -143,7 +158,6 @@ const SearchByBookmarkPlugin = connect(selector, {
     updateBookmark,
     onFilter: filterBookmarks})(SearchByBookmarkPanel);
 
-
 export default createPlugin('SearchByBookmark', {
     component: SearchByBookmarkPlugin,
     options: {
@@ -151,7 +165,8 @@ export default createPlugin('SearchByBookmark', {
     },
     containers: {
         Search: {
-            menuItem: SearchMenuItem
+            menuItem: searchMenuItem,
+            bookmarkConfig: searchByBookmarkConfig
         }
     },
     reducers: {

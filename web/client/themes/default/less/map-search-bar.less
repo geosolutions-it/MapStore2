@@ -13,6 +13,19 @@ div.MapSearchBar .form-control:focus {
 	box-shadow: none;
 }
 
+#mapstore-navbar .MapSearchBar {
+    .square-button-md {
+        .ms-loader {
+            > div{
+                border-top-color: rgba(7, 138, 163, 0.2);
+                border-right-color: rgba(7, 138, 163, 0.2);
+                border-bottom-color: rgba(7, 138, 163, 0.2);
+                border-left-color: #078aa3;
+            }
+        }
+    }
+}
+
 div.MapSearchBar .input-group-addon {
 	height: @square-btn-size;
 	width: @square-btn-size;
@@ -185,7 +198,6 @@ div.MapSearchBar .input-group-addon {
             //display: block;
             [disabled]{
                 background-color: @ms2-color-background;
-                color: @ms2-color-primary;
                 opacity: 0.75;
             }
             &.btn-group {

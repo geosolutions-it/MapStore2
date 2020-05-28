@@ -1,17 +1,13 @@
 import React, {useState, useEffect} from 'react';
-import {connect} from 'react-redux';
+import PropTypes from 'prop-types';
 import Select from 'react-select';
 import {isEmpty} from 'lodash';
-import {createSelector} from "reselect";
-import {zoomToExtent} from '../../../actions/map';
-import {configureMap} from '../../../actions/config';
 
 const BookmarkSelect = (props) => {
-    const [selectedValue, setSelectedValue] = useState("");
-    const [options, setOptions] = useState([]);
-    const {bookmarks, onZoom, loadMap, mapInitial} = props;
-
-    console.log("bookmarks", bookmarks);
+    const [ options, setOptions ] = useState([]);
+    const { bookmarkConfig: config, onPropertyChange } = props;
+    const { selected = {}, bookmarkSearchConfig = {} } = config || {};
+    const { bookmarks = [] } = bookmarkSearchConfig;
 
     useEffect(()=>{
         if (!isEmpty(bookmarks)) {
@@ -21,15 +17,8 @@ const BookmarkSelect = (props) => {
 
     const onChange = (event) => {
         const value = event && event.value || "";
-        setSelectedValue(value);
-        const [{options: bbox = [], layerVisibilityReload = false}] = bookmarks.filter((b, id)=> (b.title === value &&  id === event.idx));
-        if (layerVisibilityReload) {
-            loadMap({
-                ...mapInitial
-            }, null, [bbox.west, bbox.south, bbox.east, bbox.north]);
-        } else if (bbox && !isEmpty(bbox)) {
-            onZoom([bbox.west, bbox.south, bbox.east, bbox.north], "EPSG:4326");
-        }
+        const [selectedBookmark] = bookmarks.filter((b, id)=> (b.title === value &&  id === event.idx));
+        onPropertyChange("selected", selectedBookmark);
     };
 
     return (
@@ -38,7 +27,7 @@ const BookmarkSelect = (props) => {
                 <Select
                     onChange={onChange}
                     clearable
-                    value={selectedValue}
+                    value={selected && selected.title || ""}
                     isSearchable
                     isClearable
                     hasValue
@@ -48,15 +37,9 @@ const BookmarkSelect = (props) => {
     );
 };
 
-const selectors = createSelector([
-    state=> state.mapConfigRawData || {},
-    state => state.searchbookmarkconfig || {}
-], (mapInitial, bookmarkconfig)=>({
-    mapInitial,
-    bookmarks: bookmarkconfig && bookmarkconfig.bookmarkSearchConfig && bookmarkconfig.bookmarkSearchConfig.bookmarks || []
-}));
+BookmarkSelect.propTypes = {
+    bookmarkConfig: PropTypes.object.isRequired,
+    onPropertyChange: PropTypes.func.isRequired
+};
 
-export default connect(selectors, {
-    onZoom: zoomToExtent,
-    loadMap: configureMap
-})(BookmarkSelect);
+export default BookmarkSelect;

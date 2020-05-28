@@ -5,6 +5,7 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
 */
+
 const PropTypes = require('prop-types');
 const React = require('react');
 const {connect} = require('react-redux');
@@ -14,6 +15,9 @@ const {get, isArray} = require('lodash');
 const {searchEpic, searchOnStartEpic, searchItemSelected, zoomAndAddPointEpic} = require('../epics/search');
 const {defaultIconStyle} = require('../utils/SearchUtils');
 const {mapSelector} = require('../selectors/map');
+const {setSearchBookmarkConfig} = require('../actions/searchbookmarkconfig');
+const {zoomToExtent} = require( "../actions/map");
+const {configureMap} = require( "../actions/config");
 
 const {
     resultsPurge,
@@ -39,8 +43,10 @@ const {
 const searchSelector = createSelector([
     state => state.search || null,
     state => state.controls && state.controls.searchservicesconfig || null,
-    state => state.controls && state.controls.searchBookmarkConfig || null
-], (searchState, searchservicesconfigControl, searchBookmarkConfigControl) => ({
+    state => state.controls && state.controls.searchBookmarkConfig || null,
+    state=> state.mapConfigRawData || {},
+    state => state.searchbookmarkconfig || {}
+], (searchState, searchservicesconfigControl, searchBookmarkConfigControl, mapInitial, bookmarkConfig) => ({
     enabledSearchServicesConfig: searchservicesconfigControl && searchservicesconfigControl.enabled || false,
     enabledSearchBookmarkConfig: searchBookmarkConfigControl && searchBookmarkConfigControl.enabled || false,
     error: searchState && searchState.error,
@@ -49,7 +55,9 @@ const searchSelector = createSelector([
     searchText: searchState ? searchState.searchText : "",
     activeSearchTool: get(searchState, "activeSearchTool", "addressSearch"),
     format: get(searchState, "format", "decimal"),
-    selectedItems: searchState && searchState.selectedItems
+    selectedItems: searchState && searchState.selectedItems,
+    mapInitial,
+    bookmarkConfig: bookmarkConfig || {}
 }));
 
 const SearchBar = connect(searchSelector, {
@@ -63,7 +71,10 @@ const SearchBar = connect(searchSelector, {
     onPurgeResults: resultsPurge,
     onSearchReset: resetSearch,
     onSearchTextChange: searchTextChanged,
-    onCancelSelectedItem: cancelSelectedItem
+    onCancelSelectedItem: cancelSelectedItem,
+    onPropertyChange: setSearchBookmarkConfig,
+    onZoomToExtent: zoomToExtent,
+    onLayerVisibilityLoad: configureMap
 })(require("../components/mapcontrols/search/SearchBar").default);
 
 const MediaQuery = require('react-responsive');

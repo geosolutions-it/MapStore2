@@ -19,8 +19,6 @@ const AddNewBookmark = (props) => {
     const {onPropertyChange, bookmark = {}, bbox: currentBBox} = props;
     const {options: bboxAttributes = {}, title, layerVisibilityReload = false} = bookmark;
 
-    console.log("AddNewBookmark", props);
-
     const onChange = (event) => {
         const {value, name} = event.target;
         const options = {...bookmark.options,  [name]: parseFloat(value)};
@@ -62,11 +60,12 @@ const AddNewBookmark = (props) => {
     };
 
     return (
-        <div>
+        <div id={"add-new-bookmark"}>
             <Col>
                 <FormGroup validationState={validateFunc("title")}>
                     <ControlLabel><Message msgId="search.b_title" /></ControlLabel>
                     <FormControl
+                        className={"bookmark-title"}
                         value={title}
                         name="title"
                         type="text"
@@ -103,38 +102,72 @@ const AddNewBookmark = (props) => {
                     </div>
                 </FormGroup>
             </Col>
-            <div style={{display: "flex", flexDirection: "column", alignItems: "center", textAlign: "center", fontFamily: '"Helvetica Neue", Helvetica, Arial, sans-serif'}}>
+            <div className={"bbox-field-group"}>
 
-                <div style={{width: "100%", padding: 4, maxWidth: 200}}>
+                <div className={"field-top-bottom"}>
                     <FormGroup validationState={validateFunc("north")}>
                         <span><Message msgId={"search.b_bbox_north"}/></span>
-                        <FormControl placeholder="search.b_bbox_north_placeholder" min={-90} max={90} name={"north"} type="number" onChange={onChange} value={bboxAttributes.north || ""}/>
+                        <FormControl
+                            placeholder="search.b_bbox_north_placeholder"
+                            min={-90} max={90}
+                            name={"north"}
+                            type="number"
+                            onChange={onChange}
+                            value={bboxAttributes.north || ""}
+                        />
                     </FormGroup>
                 </div>
-                <div style={{display: "flex", justifyContent: "space-between", width: "100%", flexWrap: "wrap"}}>
-                    <div style={{flex: "1 1 0%", padding: 4, maxWidth: 200, minWidth: 200}}>
+                <div className={"field-center-group"}>
+                    <div className={"field-left-right"}>
                         <FormGroup validationState={validateFunc("west")}>
                             <span><Message msgId={"search.b_bbox_west"}/></span>
-                            <FormControl placeholder="search.b_bbox_west_placeholder" min={-180} max={180} name={"west"} type="number" onChange={onChange} value={bboxAttributes.west || ""}/>
+                            <FormControl
+                                placeholder="search.b_bbox_west_placeholder"
+                                min={-180} max={180}
+                                name={"west"}
+                                type="number"
+                                onChange={onChange}
+                                value={bboxAttributes.west || ""}
+                            />
                         </FormGroup>
                     </div>
-                    <div style={{flex: "1 1 0%", padding: 4, maxWidth: 200, minWidth: 200}}>
+                    <div className={"field-left-right"}>
                         <FormGroup validationState={validateFunc("east")}>
                             <span><Message msgId={"search.b_bbox_east"}/></span>
-                            <FormControl placeholder="search.b_bbox_east_placeholder" min={-180} max={180} name={"east"} type="number" onChange={onChange} value={bboxAttributes.east || ""}/>
+                            <FormControl
+                                placeholder="search.b_bbox_east_placeholder"
+                                min={-180} max={180}
+                                name={"east"}
+                                type="number"
+                                onChange={onChange}
+                                value={bboxAttributes.east || ""}
+                            />
                         </FormGroup>
                     </div>
                 </div>
-                <div style={{width: "100%", padding: 4, maxWidth: 200}}>
+                <div className={"field-top-bottom"}>
                     <FormGroup validationState={validateFunc("south")}>
                         <span><Message msgId={"search.b_bbox_south"}/></span>
-                        <FormControl placeholder="search.b_bbox_south_placeholder" min={-90} max={90} name={"south"} type="number" onChange={onChange} value={bboxAttributes.south || ""}/>
+                        <FormControl
+                            placeholder="search.b_bbox_south_placeholder"
+                            min={-90} max={90}
+                            name={"south"}
+                            type="number"
+                            onChange={onChange}
+                            value={bboxAttributes.south || ""}
+                        />
                     </FormGroup>
                 </div>
 
             </div>
         </div>
     );
+};
+
+AddNewBookmark.propTypes = {
+    onPropertyChange: PropTypes.func.isRequired,
+    bookmark: PropTypes.object,
+    bbox: PropTypes.array.isRequired
 };
 
 export default {Element: AddNewBookmark, validate};
