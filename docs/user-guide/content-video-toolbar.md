@@ -15,6 +15,8 @@ Through this toolbar, the story editor is able to perform the following operatio
 
 * **Enable Loop** <img src="../img/button/loop-botton.jpg" class="ms-docbutton"/> to continuously repeat the video
 
+* **Hide caption** button <img src="../img/button/hide-caption.jpg" class="ms-docbutton"/> to show/hide the description under the image. (It is available if the description is added to the image on the [Media Editor](media-editor-window.md))
+
 * **Remove** <img src="../img/button/remove2.jpg" class="ms-docbutton"/> the video content
 
 !!! note

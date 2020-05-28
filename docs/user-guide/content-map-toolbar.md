@@ -13,4 +13,6 @@ In particular, through this toolbar, the story editor is able to perform the fol
 
 * **Change size** <img src="../img/button/change-size2.jpg" class="ms-docbutton"/> choosing between *Small*, *Medium*, *Large*
 
+* **Hide caption** button <img src="../img/button/hide-caption.jpg" class="ms-docbutton"/> to show/hide the description under the image. (It is available if the description is added to the image on the [Media Editor](media-editor-window.md))
+
 * **Remove** <img src="../img/button/remove2.jpg" class="ms-docbutton"/> the map content
