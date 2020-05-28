@@ -2123,10 +2123,6 @@
                     "templateTooltip":"Mit dem erweiterten Karteneditor kann eine benutzerdefinierte Vorlage für jede Ebene konfiguriert werden (siehe Stiftsymbol).Weitere Informationen finden Sie in der <a href='https://mapstore.readthedocs.io/en/latest/user-guide/layer-settings/#templates' target='_blank'>Bedienungsanleitung</a>"
                 }
             },
-            "browser": {
-              "unsupported":"Current Browser is not supported",
-              "supported": "These are the ones we support"
-            },
             "errors": {
                 "loading": {
                     "title": "Error",
