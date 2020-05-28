@@ -60,7 +60,7 @@ export const addSharePanel = Component => props => {
 * @prop {boolean} shareApi: controls, whether Share Dialog should include an option if embedding with APIs
 * @prop {object} [shareOptions] options to pass to the SharePanel
 * @prop {function} [getLocationObject] method to retrieve window.location. If not passed, window.location will be used.  (Overridable by unit tests)
-* @prop {boolean} showAPIShare: controls, whether Share Dialog should show API in the Maps grid
+* @prop {boolean} showAPIShare: controls, whether Share Dialog should show API (it wins over the other flags)
 */
 export default compose(
     withState('showShareModal', 'onShowShareModal', false),
