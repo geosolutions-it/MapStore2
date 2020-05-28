@@ -87,7 +87,7 @@ describe('Login Plugin', () => {
                     done();
                     return  Rx.Observable.empty();
                 })
-            ]);
+            ], { security, controls });
             ReactDOM.render(<OmniBarPlugin items={[{ ...PluginImpl.OmniBar, plugin: PluginImpl}]} />, document.getElementById("container"));
             expect(document.querySelector('#mapstore-navbar-container .glyphicon-user')).toBeTruthy();
             // show modal
@@ -115,7 +115,7 @@ describe('Login Plugin', () => {
                     done();
                     return Rx.Observable.empty();
                 })
-            ]);
+            ], { security, controls });
             ReactDOM.render(<OmniBarPlugin items={[{ ...PluginImpl.OmniBar, plugin: PluginImpl }]} />, document.getElementById("container"));
             expect(document.querySelector('#mapstore-navbar-container .glyphicon-user')).toBeTruthy();
             // show modal

@@ -56,7 +56,7 @@ const createRegisterActionsMiddleware = (actions) => {
  * import MyPlugin from './MyPlugin';
  * const { Plugin, store, actions, containers } = getPluginForTest(MyPlugin, {}, {ContainerPlugin: {}});
  */
-export const getPluginForTest = (pluginDef, storeState, plugins, testEpics = [] ) => {
+export const getPluginForTest = (pluginDef, storeState, plugins, testEpics = [], containersReducers ) => {
     const PluginImpl = Object.keys(pluginDef).reduce((previous, key) => {
         if (endsWith(key, 'Plugin')) {
             return pluginDef[key];
@@ -68,7 +68,8 @@ export const getPluginForTest = (pluginDef, storeState, plugins, testEpics = [] 
         .reduce((previous, key) => {
             return { ...previous, [key]: PluginImpl[key]};
         }, {});
-    const containersReducers = Object.keys(plugins || {}).map(k => plugins[k]).reduce((acc, { reducers = {} }) => ({ ...acc, ...reducers }), {});
+    // TODO: The following commented code causes this error (probably for TOC plugins) in tests:  Disconnected (0 times)reconnect failed before timeout of 2000ms (ping timeout) so reducers have to be passed manually
+    // const containersReducers = Object.keys(plugins || {}).map(k => plugins[k]).reduce((acc, { reducers = {} }) => ({ ...acc, ...reducers }), {});
     const reducer = combineReducers({
         ...(pluginDef.reducers || {}),
         ...containersReducers,
