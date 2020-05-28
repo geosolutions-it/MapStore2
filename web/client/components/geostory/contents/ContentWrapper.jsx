@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 import React from "react";
-import ContentToolbar from './ContentToolbar';
+import DefaultContentToolbar from './ContentToolbar';
 import { Modes, getClassNameFromProps, getThemeStyleFromProps } from "../../../utils/GeoStoryUtils";
 
 /**
@@ -14,7 +14,8 @@ import { Modes, getClassNameFromProps, getThemeStyleFromProps } from "../../../u
  *  - center the content accordingly.
  *  - Add inViewRef property, to apply IntersectionObserver
  */
-export default ({ id, inViewRef, children, type, contentWrapperStyle, mode, ...props }) => {
+export default ({ id, inViewRef, children, type, contentWrapperStyle, contentToolbar, mode, ...props }) => {
+    const ContentToolbar = contentToolbar || DefaultContentToolbar;
     return (<div
         id={id}
         ref={inViewRef}
