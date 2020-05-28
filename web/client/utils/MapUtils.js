@@ -482,6 +482,14 @@ const mergeMapConfigs = (cfg1 = {}, cfg2 = {}) => {
                     ]
                 }), {}),
             widgets: [...get(widgetsConfig1, 'widgets', []), ...get(widgetsConfig2, 'widgets', [])]
+        },
+        timelineData: {
+            ...get(cfg1, 'timelineData', {}),
+            ...get(cfg2Fixed, 'timelineData', {})
+        },
+        dimensionData: {
+            ...get(cfg1, 'dimensionData', {}),
+            ...get(cfg2Fixed, 'dimensionData', {})
         }
     };
 };

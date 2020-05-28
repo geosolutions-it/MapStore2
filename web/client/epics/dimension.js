@@ -11,7 +11,8 @@ const { updateLayerDimension, changeLayerProperties, ADD_LAYER} = require('../ac
 const {MAP_CONFIG_LOADED} = require('../actions/config');
 const { error } = require('../actions/notifications');
 
-const { SET_CURRENT_TIME, MOVE_TIME, SET_OFFSET_TIME, updateLayerDimensionData} = require('../actions/dimension');
+const { SET_CURRENT_TIME, MOVE_TIME, SET_OFFSET_TIME, updateLayerDimensionData, setCurrentTime, setCurrentOffset} = require('../actions/dimension');
+const { selectLayer } = require('../actions/timeline');
 const { layersWithTimeDataSelector, offsetTimeSelector, currentTimeSelector } = require('../selectors/dimension');
 const {describeDomains} = require('../api/MultiDim');
 const {
@@ -92,31 +93,43 @@ module.exports = {
      * Updates dimension state for layers that has multidimensional extension.
      */
     updateLayerDimensionDataOnMapLoad: (action$, {getState = () => {}} = {}) =>
-        action$.ofType(MAP_CONFIG_LOADED).switchMap( () => {
+        action$.ofType(MAP_CONFIG_LOADED).switchMap( ({config = {}}) => {
             const layers = layersWithTimeDataSelector(getState());
-            return Observable.from(
-                // layers with dimension and multidimensional extension
-                layers.filter(l =>
-                    l
+            const selectedLayer = config.timelineData?.selectedLayer;
+            const currentTime = config.dimensionData?.currentTime;
+            const offsetTime = config.dimensionData?.offsetTime;
+            return (selectedLayer && currentTime ?
+                Observable.of(
+                    // restore states of timeline and dimension from map config
+                    selectLayer(selectedLayer),
+                    setCurrentTime(currentTime),
+                    setCurrentOffset(offsetTime)
+                ) : Observable.empty()
+            )
+                .concat(Observable.from(
+                    // layers with dimension and multidimensional extension
+                    layers.filter(l =>
+                        l
                             && l.dimensions
                             && find(l.dimensions, d => d && d.source && d.source.type === "multidim-extension")
+                    )
                 )
-            )
-            // one flow for each dimension
-                .mergeMap(l =>
-                    describeDomains(getTimeMultidimURL(l), l.name, undefined, DESCRIBE_DOMAIN_OPTIONS)
-                        .switchMap( domains =>
-                            Observable.from(domainsToDimensionsObject(domains, getTimeMultidimURL(l))
-                                .map(d => updateLayerDimensionData(l.id, d.name, d))
+                    // one flow for each dimension
+                    .mergeMap(l =>
+                        describeDomains(getTimeMultidimURL(l), l.name, undefined, DESCRIBE_DOMAIN_OPTIONS)
+                            .switchMap( domains =>
+                                Observable.from(domainsToDimensionsObject(domains, getTimeMultidimURL(l))
+                                    .map(d => updateLayerDimensionData(l.id, d.name, d))
+                                )
                             )
-                        )
-                        .catch(() =>
-                            Observable.of(error({
-                                uid: "error_with_timeline_update",
-                                title: "timeline.errors.multidim_error_title",
-                                message: "timeline.errors.multidim_error_message"
-                            })).delay(2000)
-                        )
+                            .catch(() =>
+                                Observable.of(error({
+                                    uid: "error_with_timeline_update",
+                                    title: "timeline.errors.multidim_error_title",
+                                    message: "timeline.errors.multidim_error_message"
+                                })).delay(2000)
+                            )
+                    )
                 );
         })
 };
