@@ -87,7 +87,6 @@ class FeaturedMaps extends React.Component {
                 className={this.props.className}
                 title={<h3><Message msgId="manager.featuredMaps" /></h3>}
                 maps={items}
-                showAPIShare={this.props.showAPIShare}
                 colProps={this.props.colProps}
                 viewerUrl={(res) => this.context.router.history.push('/' + this.makeShareUrl(res).url)}
                 getShareUrl={this.makeShareUrl}
@@ -115,7 +114,8 @@ class FeaturedMaps extends React.Component {
             url: res.contextName ?
                 "context/" + res.contextName + "/" + res.id :
                 "viewer/" + this.props.mapType + "/" + res.id,
-            shareApi: true
+            shareApi: this.props.showAPIShare
+
         };
     }
 }

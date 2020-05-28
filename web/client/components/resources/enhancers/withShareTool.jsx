@@ -11,7 +11,7 @@ import {compose, withState} from 'recompose';
 import ConfigUtils from '../../../utils/ConfigUtils';
 import SharePanel from '../../share/SharePanel';
 import ShareUtils from '../../../utils/ShareUtils';
-import {isString, isNil} from 'lodash';
+import {isString} from 'lodash';
 
 export const addSharePanel = Component => props => {
     const { showAPIShare, showShareModal, onShowShareModal, shareModalSettings, setShareModalSettings, editedResource, setEditedResource, shareOptions = {}, getLocationObject = () => window.location, ...other } = props;
@@ -23,13 +23,7 @@ export const addSharePanel = Component => props => {
     const location = getLocationObject();
     const baseURL = location && (location.origin + location.pathname);
     const fullUrl = editedResource ? baseURL + '#/' + resourceUrl : '';
-
-    let showAPI;
-    if (!isNil(showAPIShare)) {
-        showAPI = showAPIShare;
-    } else if (isString(shareUrlResult)) {
-        showAPI = shareApi;
-    } else showAPI = shareUrlResult.shareApi;
+    const showAPI = isString(shareUrlResult) ? shareApi : shareUrlResult.shareApi;
 
     return (<div>
         <Component onShare={resource => {
@@ -60,7 +54,6 @@ export const addSharePanel = Component => props => {
 * @prop {boolean} shareApi: controls, whether Share Dialog should include an option if embedding with APIs
 * @prop {object} [shareOptions] options to pass to the SharePanel
 * @prop {function} [getLocationObject] method to retrieve window.location. If not passed, window.location will be used.  (Overridable by unit tests)
-* @prop {boolean} showAPIShare: controls, whether Share Dialog should show API (it wins over the other flags)
 */
 export default compose(
     withState('showShareModal', 'onShowShareModal', false),

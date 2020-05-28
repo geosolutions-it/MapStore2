@@ -119,8 +119,7 @@ class Maps extends React.Component {
                 }
             }}
             getShareUrl={(map) => map.contextName ? `context/${map.contextName}/${map.id}` : `viewer/${this.props.mapType}/${map.id}`}
-            shareApi
-            showAPIShare={this.props.showAPIShare}
+            shareApi={this.props.showAPIShare}
             bottom={<PaginationToolbar />}
             metadataModal={MetadataModal}
         />);
