@@ -44,7 +44,8 @@ class FeaturedMaps extends React.Component {
         bottom: PropTypes.node,
         className: PropTypes.string,
         previousItems: PropTypes.array,
-        enableFeaturedMaps: PropTypes.func
+        enableFeaturedMaps: PropTypes.func,
+        showAPIShare: PropTypes.bool
     };
 
     static contextTypes = {
@@ -86,6 +87,7 @@ class FeaturedMaps extends React.Component {
                 className={this.props.className}
                 title={<h3><Message msgId="manager.featuredMaps" /></h3>}
                 maps={items}
+                showAPIShare={this.props.showAPIShare}
                 colProps={this.props.colProps}
                 viewerUrl={(res) => this.context.router.history.push('/' + this.makeShareUrl(res).url)}
                 getShareUrl={this.makeShareUrl}
@@ -174,6 +176,7 @@ const FeaturedMapsPlugin = compose(
             md: 4,
             className: 'ms-map-card-col'
         },
+        showAPIShare: true,
         items: [],
         pageSize: PAGE_SIZE,
         skip: 0,
