@@ -68,7 +68,12 @@ export const getPluginForTest = (pluginDef, storeState, plugins, testEpics = [] 
         .reduce((previous, key) => {
             return { ...previous, [key]: PluginImpl[key]};
         }, {});
-    const reducer = combineReducers({ ...(pluginDef.reducers || {}), ...rootReducers });
+    const containersReducers = Object.keys(plugins || {}).map(k => plugins[k]).reduce((acc, { reducers = {} }) => ({ ...acc, ...reducers }), {});
+    const reducer = combineReducers({
+        ...(pluginDef.reducers || {}),
+        ...containersReducers,
+        ...rootReducers
+    });
     const pluginEpics = Object.keys(pluginDef.epics || {}).map(key => pluginDef.epics[key]) || [];
 
     const pluginsEpics = flatten( // converts array of epics [[epic1, epic2..], [epic3, epic4...], ...] into a flat array [epic1, epic2, epic3, epic4]
@@ -81,6 +86,7 @@ export const getPluginForTest = (pluginDef, storeState, plugins, testEpics = [] 
 
     const store = applyMiddleware(thunkMiddleware, epicMiddleware, createRegisterActionsMiddleware(actions))(createStore)(reducer, storeState);
     return {
+        PluginImpl,
         Plugin: (props) => <Provider store={store}><PluginImpl {...props} /></Provider>,
         store,
         actions,
