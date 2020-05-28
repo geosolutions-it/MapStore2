@@ -19,11 +19,11 @@ export const addSharePanel = Component => props => {
     const options = editedResource && typeof shareOptions === 'function' ? shareOptions(editedResource) : shareOptions;
     const shareUrlResult = editedResource ? getShareUrl(editedResource) : '';
     const resourceUrl = isString(shareUrlResult) ? shareUrlResult : shareUrlResult.url;
-    const showAPI = isString(shareUrlResult) ? shareApi : shareUrlResult.shareApi;
     // window.location
     const location = getLocationObject();
     const baseURL = location && (location.origin + location.pathname);
     const fullUrl = editedResource ? baseURL + '#/' + resourceUrl : '';
+    const showAPI = isString(shareUrlResult) ? shareApi : shareUrlResult.shareApi;
 
     return (<div>
         <Component onShare={resource => {

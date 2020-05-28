@@ -78,7 +78,8 @@ class Maps extends React.Component {
         searchText: PropTypes.string,
         mapsOptions: PropTypes.object,
         colProps: PropTypes.object,
-        fluid: PropTypes.bool
+        fluid: PropTypes.bool,
+        showAPIShare: PropTypes.bool
     };
 
     static contextTypes = {
@@ -100,7 +101,8 @@ class Maps extends React.Component {
             md: 4,
             className: 'ms-map-card-col'
         },
-        maps: []
+        maps: [],
+        showAPIShare: true
     };
 
     render() {
@@ -111,7 +113,7 @@ class Maps extends React.Component {
             colProps={this.props.colProps}
             viewerUrl={(map) => {this.context.router.history.push("/viewer/" + this.props.mapType + "/" + map.id);}}
             getShareUrl={(map) => `viewer/${this.props.mapType}/${map.id}`}
-            shareApi
+            shareApi={this.props.showAPIShare}
             bottom={<PaginationToolbar />}
             metadataModal={MetadataModal}
         />);
