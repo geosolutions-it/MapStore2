@@ -112,13 +112,12 @@ describe('Immersive component', () => {
         expect(columnToolbar.querySelector('button .glyphicon-align-center')).toExist(); // align tool
         expect(columnToolbar.querySelector('button .glyphicon-dropper')).toExist(); // theme
 
-        // inner media and image contents must have edit, resize and align tools
+        // inner media and image contents must have edit and resize
         const innerMediaToolbar = document.querySelector('.ms-column-contents .ms-content-image .ms-content-toolbar .btn-group');
         expect(innerMediaToolbar).toExist();
-        expect(innerMediaToolbar.querySelectorAll('button').length).toBe(4);
+        expect(innerMediaToolbar.querySelectorAll('button').length).toBe(3);
         expect(innerMediaToolbar.querySelector('button .glyphicon-pencil')).toExist(); // edit tool
         expect(innerMediaToolbar.querySelector('button .glyphicon-resize-horizontal')).toExist(); // resize tool
-        expect(innerMediaToolbar.querySelector('button .glyphicon-align-center')).toExist(); // align tool
         expect(innerMediaToolbar.querySelector('button .glyphicon-trash')).toExist(); // delete tool
     });
 
