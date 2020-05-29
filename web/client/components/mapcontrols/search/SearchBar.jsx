@@ -100,7 +100,7 @@ export default ({
 
     const searchByBookmark = () => {
         const {bookmarkConfig, onLayerVisibilityLoad, mapInitial, onZoomToExtent} = props;
-        const {options: bbox = [], layerVisibilityReload = false} = bookmarkConfig && bookmarkConfig.selected;
+        const {options: bbox = {}, layerVisibilityReload = false} = bookmarkConfig && bookmarkConfig.selected;
         if (layerVisibilityReload) {
             onLayerVisibilityLoad({
                 ...mapInitial,
@@ -294,7 +294,7 @@ export default ({
                     toolbarButtons={[
                         activeTool === "addressSearch" ? searchConfig :
                             showOptions && activeTool === "coordinatesSearch" ? coordinateFormatChange :
-                                activeTool === "searchByBookmark" ? searchByBookmarkConfig : null,
+                                showOptions && activeTool === "searchByBookmark" ? searchByBookmarkConfig : null,
                         {
                             glyph: removeIcon,
                             className: "square-button-md no-border",
@@ -317,7 +317,7 @@ export default ({
                             (isSearchClickable || activeTool !== "addressSearch" ? "magnifying-glass clickable" : "magnifying-glass"),
                             bsStyle: "default",
                             pullRight: true,
-                            visible: !loading && activeTool === "addressSearch" &&
+                            visible: activeTool === "addressSearch" &&
                             (!(searchText !== "" || selectedItems && selectedItems.length > 0) || !splitTools) ||
                             activeTool === "coordinatesSearch" || activeTool === "searchByBookmark",
                             disabled: activeTool === "searchByBookmark" && props && props.bookmarkConfig && !props.bookmarkConfig.selected,

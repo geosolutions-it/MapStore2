@@ -27,7 +27,7 @@ const searchbookmarkconfig = (state = null, action) => {
     }
     case RESET_CONTROLS:
     case RESET_BOOKMARK_CONFIG: {
-        return assign({}, state, {bookmark: undefined, page: action.page, editIdx: undefined});
+        return assign({}, state, {bookmark: undefined, page: 0, editIdx: undefined});
     }
     case UPDATE_BOOKMARK: {
         let newBookmarks = (state.bookmarkSearchConfig && state.bookmarkSearchConfig.bookmarks || []).slice();

@@ -2,12 +2,14 @@ import React, {useState, useEffect} from 'react';
 import PropTypes from 'prop-types';
 import Select from 'react-select';
 import {isEmpty} from 'lodash';
+import localizedProps from '../../misc/enhancers/localizedProps';
+const SelectLocalized = localizedProps(['placeholder', 'clearValueText', 'noResultsText'])(Select);
 
-const BookmarkSelect = (props) => {
+const BookmarkSelect = ({ bookmarkConfig: config, onPropertyChange }) => {
     const [ options, setOptions ] = useState([]);
-    const { bookmarkConfig: config, onPropertyChange } = props;
     const { selected = {}, bookmarkSearchConfig = {} } = config || {};
     const { bookmarks = [] } = bookmarkSearchConfig;
+    const selectProps = {clearable: true, isSearchable: true, isClearable: true};
 
     useEffect(()=>{
         if (!isEmpty(bookmarks)) {
@@ -24,14 +26,15 @@ const BookmarkSelect = (props) => {
     return (
         <div className={"search-select"}>
             <div style={{flex: "1 1 0%", padding: "0px 4px"}}>
-                <Select
+                <SelectLocalized
+                    {...selectProps}
                     onChange={onChange}
-                    clearable
-                    value={selected && selected.title || ""}
-                    isSearchable
-                    isClearable
-                    hasValue
-                    options={(options).map((name, idx) => ({label: name, value: name, idx}))}/>
+                    value={selected?.title || ""}
+                    options={(options).map((name, idx) => ({label: name, value: name, idx}))}
+                    placeholder="search.b_placeholder"
+                    clearValueText="search.b_clearvalue"
+                    noResultsText="search.b_noresult"
+                />
             </div>
         </div>
     );

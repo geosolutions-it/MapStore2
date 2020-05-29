@@ -23,7 +23,7 @@ const SearchByBookmarkPanel = (props) => {
 
     const onClose = () => {
         props.toggleControl("searchBookmarkConfig");
-        props.resetBookmarkConfig(0);
+        props.resetBookmarkConfig();
     };
 
     const addBookmark = () => {
@@ -35,7 +35,7 @@ const SearchByBookmarkPanel = (props) => {
         if (page > 1) {
             onPropertyChange("page", page - 1);
         } else if (page === 1 ) {
-            props.resetBookmarkConfig(0);
+            props.resetBookmarkConfig();
         }
     };
 
@@ -114,6 +114,7 @@ const SearchByBookmarkPanel = (props) => {
 
 };
 
+// Search by bookmark menu item for Search bar
 const searchMenuItem = (onClick, activeTool) => ({
     active: activeTool === "searchByBookmark",
     onClick: () => onClick('searchByBookmark'),
@@ -121,6 +122,7 @@ const searchMenuItem = (onClick, activeTool) => ({
     text: <Message msgId="search.searchByBookmark"/>
 });
 
+// Search by bookmark config for settings(configuration) button in Search bar
 const searchByBookmarkConfig = (toggleConfig, enabled, activeTool) => ({
     onClick: () => {
         if (!enabled) {
@@ -161,7 +163,7 @@ const SearchByBookmarkPlugin = connect(selector, {
 export default createPlugin('SearchByBookmark', {
     component: SearchByBookmarkPlugin,
     options: {
-        disablePluginIf: "{state('userrole') !== 'ADMIN' }"
+        disablePluginIf: "{state('userrole') !== 'ADMIN' }" // Plugin should be visible only to admin users
     },
     containers: {
         Search: {

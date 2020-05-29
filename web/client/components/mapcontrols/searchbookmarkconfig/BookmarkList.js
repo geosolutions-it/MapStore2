@@ -26,6 +26,7 @@ const BookmarkList = (props) => {
         return bookmarkTitle && bookmarkTitle.toLowerCase().indexOf(filter.toLowerCase()) !== -1;
     };
 
+
     const getBookmarks = () => {
         if (bookmarks.length === 0) {
             return (<div className="search-bookmark-name">

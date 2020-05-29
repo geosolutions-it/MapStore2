@@ -453,6 +453,7 @@ describe('Test the MapUtils', () => {
                 maxExtent: [-20037508.34, -20037508.34, 20037508.34, 20037508.34],
                 projection: 'EPSG:900913',
                 text_search_config: '',
+                bookmark_search_config: {},
                 units: 'm',
                 zoom: 10
             },
@@ -889,6 +890,7 @@ describe('Test the MapUtils', () => {
                 maxExtent: [-20037508.34, -20037508.34, 20037508.34, 20037508.34],
                 projection: 'EPSG:900913',
                 text_search_config: '',
+                bookmark_search_config: {},
                 units: 'm',
                 zoom: 10
             },
@@ -1186,6 +1188,7 @@ describe('Test the MapUtils', () => {
                 maxExtent: [-20037508.34, -20037508.34, 20037508.34, 20037508.34],
                 projection: 'EPSG:900913',
                 text_search_config: '',
+                bookmark_search_config: {},
                 units: 'm',
                 zoom: 10
             },
@@ -1442,6 +1445,7 @@ describe('Test the MapUtils', () => {
                 maxExtent: [-20037508.34, -20037508.34, 20037508.34, 20037508.34],
                 projection: 'EPSG:900913',
                 text_search_config: '',
+                bookmark_search_config: {},
                 units: 'm',
                 zoom: 10,
                 sources: {
@@ -1626,7 +1630,7 @@ describe('Test the MapUtils', () => {
                 }, {
                     id: 'custom.nested001', title: 'nested001', expanded: true
                 } ],
-                text_search_config: '' }
+                text_search_config: '', bookmark_search_config: {} }
         });
     });
 
@@ -1681,7 +1685,7 @@ describe('Test the MapUtils', () => {
             units: 'm',
             zoom: 10
         };
-        const saved = saveMapConfiguration(mapConfig, flat, groups, [], '', { mapInfoConfiguration: {infoFormat: "text/html", showEmptyMessageGFI: false}});
+        const saved = saveMapConfiguration(mapConfig, flat, groups, [], '', {}, { mapInfoConfiguration: {infoFormat: "text/html", showEmptyMessageGFI: false}});
         expect(saved).toEqual({
             map: {
                 center: {crs: 'EPSG:4326', x: 0, y: 0},
@@ -1750,6 +1754,7 @@ describe('Test the MapUtils', () => {
                 maxExtent: [-20037508.34, -20037508.34, 20037508.34, 20037508.34],
                 projection: 'EPSG:900913',
                 text_search_config: '',
+                bookmark_search_config: {},
                 units: 'm',
                 zoom: 10,
                 sources: {
@@ -1825,7 +1830,7 @@ describe('Test the MapUtils', () => {
             units: 'm',
             zoom: 10
         };
-        const saved = saveMapConfiguration(mapConfig, flat, groups, [], '', { mapInfoConfiguration: {infoFormat: "text/html", showEmptyMessageGFI: false}});
+        const saved = saveMapConfiguration(mapConfig, flat, groups, [], '', {}, { mapInfoConfiguration: {infoFormat: "text/html", showEmptyMessageGFI: false}});
         expect(saved).toEqual({
             map: {
                 center: {crs: 'EPSG:4326', x: 0, y: 0},
@@ -1894,6 +1899,7 @@ describe('Test the MapUtils', () => {
                 maxExtent: [-20037508.34, -20037508.34, 20037508.34, 20037508.34],
                 projection: 'EPSG:900913',
                 text_search_config: '',
+                bookmark_search_config: {},
                 units: 'm',
                 zoom: 10,
                 sources: {

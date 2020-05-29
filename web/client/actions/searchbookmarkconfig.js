@@ -26,12 +26,24 @@ function setSearchBookmarkConfig(property, value) {
     };
 }
 
-function resetBookmarkConfig(page = 0 ) {
+/**
+ * Resets a property
+ * @memberof actions.search
+ * @return {object} of type `RESET_BOOKMARK_CONFIG` with property and value params
+ */
+function resetBookmarkConfig() {
     return {
-        type: RESET_BOOKMARK_CONFIG,
-        page
+        type: RESET_BOOKMARK_CONFIG
     };
 }
+
+/**
+ * Updates a property
+ * @memberof actions.search
+ * @param {object} bookmark the property to set
+ * @param {number} idx the value to set
+ * @return {object} of type `UPDATE_BOOKMARK` with property and value params
+ */
 function updateBookmark(bookmark, idx = -1) {
     return {
         type: UPDATE_BOOKMARK,
@@ -40,6 +52,12 @@ function updateBookmark(bookmark, idx = -1) {
     };
 }
 
+/**
+ * Set filter property
+ * @memberof actions.search
+ * @param {string} filter the property to set
+ * @return {object} of type `FILTER_BOOKMARKS` with property and value params
+ */
 function filterBookmarks(filter) {
     return {
         type: FILTER_BOOKMARKS,

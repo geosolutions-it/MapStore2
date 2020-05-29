@@ -44,13 +44,10 @@ const AddNewBookmark = (props) => {
 
     const validateFunc = (name) =>{
         if (bboxAttributes[name]) {
-            let inValid = null;
             if (['north', 'south'].includes(name)) {
-                inValid = bboxAttributes[name] && !inRange(bboxAttributes[name], -90, 91) && "error";
-            } else {
-                inValid = bboxAttributes[name] && !inRange(bboxAttributes[name], -180, 181) && "error";
+                return bboxAttributes[name] && !inRange(bboxAttributes[name], -90, 91) ? "error" : null;
             }
-            return inValid;
+            return bboxAttributes[name] && !inRange(bboxAttributes[name], -180, 181) ? "error" : null;
         }
         return null;
     };
@@ -106,7 +103,7 @@ const AddNewBookmark = (props) => {
 
                 <div className={"field-top-bottom"}>
                     <FormGroup validationState={validateFunc("north")}>
-                        <span><Message msgId={"search.b_bbox_north"}/></span>
+                        <ControlLabel><Message msgId={"search.b_bbox_north"}/></ControlLabel>
                         <FormControl
                             placeholder="search.b_bbox_north_placeholder"
                             min={-90} max={90}
@@ -120,7 +117,7 @@ const AddNewBookmark = (props) => {
                 <div className={"field-center-group"}>
                     <div className={"field-left-right"}>
                         <FormGroup validationState={validateFunc("west")}>
-                            <span><Message msgId={"search.b_bbox_west"}/></span>
+                            <ControlLabel><Message msgId={"search.b_bbox_west"}/></ControlLabel>
                             <FormControl
                                 placeholder="search.b_bbox_west_placeholder"
                                 min={-180} max={180}
@@ -133,7 +130,7 @@ const AddNewBookmark = (props) => {
                     </div>
                     <div className={"field-left-right"}>
                         <FormGroup validationState={validateFunc("east")}>
-                            <span><Message msgId={"search.b_bbox_east"}/></span>
+                            <ControlLabel><Message msgId={"search.b_bbox_east"}/></ControlLabel>
                             <FormControl
                                 placeholder="search.b_bbox_east_placeholder"
                                 min={-180} max={180}
@@ -147,7 +144,7 @@ const AddNewBookmark = (props) => {
                 </div>
                 <div className={"field-top-bottom"}>
                     <FormGroup validationState={validateFunc("south")}>
-                        <span><Message msgId={"search.b_bbox_south"}/></span>
+                        <ControlLabel><Message msgId={"search.b_bbox_south"}/></ControlLabel>
                         <FormControl
                             placeholder="search.b_bbox_south_placeholder"
                             min={-90} max={90}
@@ -165,9 +162,9 @@ const AddNewBookmark = (props) => {
 };
 
 AddNewBookmark.propTypes = {
-    onPropertyChange: PropTypes.func.isRequired,
+    onPropertyChange: PropTypes.func,
     bookmark: PropTypes.object,
-    bbox: PropTypes.array.isRequired
+    bbox: PropTypes.array
 };
 
 export default {Element: AddNewBookmark, validate};

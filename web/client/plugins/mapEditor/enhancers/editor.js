@@ -30,9 +30,10 @@ const saveSelector = createSelector(
     backgroundListSelector,
     mapOptionsToSaveSelector,
     state => state.searchconfig && state.searchconfig.textSearchConfig,
+    state => state.searchbookmarkconfig && state.searchbookmarkconfig.bookmarkSearchConfig,
     mapSelector,
-    (layers, groups, backgrounds, additionalOptions, textSearchConfig, map) =>
-        ({layers, groups, backgrounds, additionalOptions, textSearchConfig, map})
+    (layers, groups, backgrounds, additionalOptions, textSearchConfig, bookmarkSearchConfig, map) =>
+        ({layers, groups, backgrounds, additionalOptions, textSearchConfig, bookmarkSearchConfig, map})
 );
 
 
