@@ -2080,7 +2080,9 @@
                 "enableAutoplay": "Abilita riproduzione automatica",
                 "disableAutoplay": "Disabilita riproduzione automatica",
                 "enableLoop": "Abilita riproduzione continua",
-                "disableLoop": "Disabilita riproduzione continua"
+                "disableLoop": "Disabilita riproduzione continua",
+                "hideCaption": "Nascondi didascalia",
+                "showCaption": "Usa descrizione come didascalia"
             },
             "navigation": {
                 "edit": "Modifica storia"
