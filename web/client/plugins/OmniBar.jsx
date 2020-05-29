@@ -35,7 +35,7 @@ class OmniBar extends React.Component {
                 current.tools.map((tool, index) => ({
                     name: current.name + index,
                     panel: tool,
-                    cfg: current.cfg.toolsCfg ? current.cfg.toolsCfg[index] : {}
+                    cfg: current?.cfg?.toolsCfg?.[index] || {}
                 }))
             );
         }, []);

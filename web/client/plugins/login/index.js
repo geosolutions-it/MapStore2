@@ -12,7 +12,6 @@ const {setControlProperty} = require('../../actions/controls');
 const {checkMapChanges} = require('../../actions/map');
 const {Glyphicon} = require('react-bootstrap');
 const {unsavedMapSelector, unsavedMapSourceSelector} = require('../../selectors/controls');
-const {feedbackMaskSelector} = require('../../selectors/feedbackmask');
 const ConfigUtils = require('../../utils/ConfigUtils');
 
 
@@ -76,8 +75,6 @@ const LoginNav = connect((state) => ({
     renderUnsavedMapChangesDialog: ConfigUtils.getConfigProp('unsavedMapChangesDialog'),
     displayUnsavedDialog: unsavedMapSelector(state)
         && unsavedMapSourceSelector(state) === 'logout'
-        && feedbackMaskSelector(state).currentPage === 'viewer'
-
 }), {
     onShowLogin: setControlProperty.bind(null, "LoginForm", "enabled", true, true),
     onShowAccountInfo: setControlProperty.bind(null, "AccountInfo", "enabled", true, true),
@@ -85,7 +82,7 @@ const LoginNav = connect((state) => ({
     onLogout: logoutWithReload,
     onCheckMapChanges: checkUnsavedMapChanges,
     onCloseUnsavedDialog: setControlProperty.bind(null, "unsavedMap", "enabled", false),
-    onLogoutWithRedirect: logout.bind(null, '/')
+    onLogoutConfirm: logout.bind(null, undefined)
 
 })(require('../../components/security/UserMenu'));
 
