@@ -71,7 +71,8 @@ const Thumbnail = forwardRef(({
     },
     onUpdate = () => {},
     onError = () => {},
-    onRemove
+    onRemove,
+    toolbar
 }, ref) => {
 
     const mounted = useRef();
@@ -154,14 +155,17 @@ const Thumbnail = forwardRef(({
                                 }}
                             />
                             <div className="dropzone-content-image-added">{message}</div>
-                            {onRemove && <div className="dropzone-remove" onClick={handleRemove}>
-                                <Glyphicon glyph={removeGlyph} />
-                            </div>}
+                            {toolbar
+                                ? toolbar
+                                : onRemove && <div className="dropzone-remove" onClick={handleRemove}>
+                                    <Glyphicon glyph={removeGlyph} />
+                                </div>}
                         </div>
                     )
                     : (
                         <div className="dropzone-content-image">
                             {message}
+                            {toolbar}
                             {error && <div className="dropzone-errors">
                                 {error}
                             </div>}
