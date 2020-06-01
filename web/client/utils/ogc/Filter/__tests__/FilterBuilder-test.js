@@ -24,7 +24,7 @@ describe('FilterBuilder', () => {
             .toBe("<ogc:PropertyIsLessThanOrEqualTo><ogc:PropertyName>PROPERTY</ogc:PropertyName><ogc:Literal>1</ogc:Literal></ogc:PropertyIsLessThanOrEqualTo>");
         expect(b.property("PROPERTY").notEqualTo("VALUE"))
             .toBe("<ogc:PropertyIsNotEqualTo><ogc:PropertyName>PROPERTY</ogc:PropertyName><ogc:Literal>VALUE</ogc:Literal></ogc:PropertyIsNotEqualTo>");
-        expect(b.property("PROPERTY").between(1, 2)).toBe("<ogc:PropertyIsBetween><ogc:PropertyName>PROPERTY</ogc:PropertyName><ogc:Literal>1</ogc:Literal><ogc:Literal>2</ogc:Literal></ogc:PropertyIsBetween>");
+        expect(b.property("PROPERTY").between(1, 2)).toBe("<ogc:PropertyIsBetween><ogc:PropertyName>PROPERTY</ogc:PropertyName><ogc:LowerBoundary><ogc:Literal>1</ogc:Literal></ogc:LowerBoundary><ogc:UpperBoundary><ogc:Literal>2</ogc:Literal></ogc:UpperBoundary></ogc:PropertyIsBetween>");
         expect(b.property("PROPERTY").like("VALUE"))
             .toBe('<ogc:PropertyIsLike matchCase="true" wildCard="*" singleChar="." escapeChar="!"><ogc:PropertyName>PROPERTY</ogc:PropertyName><ogc:Literal>VALUE</ogc:Literal></ogc:PropertyIsLike>');
         expect(b.property("PROPERTY").ilike("VALUE"))

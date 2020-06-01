@@ -5,7 +5,7 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const {logical, spatial, comparison, literal, propertyName, valueReference, distance} = require('./operators');
+const {logical, spatial, comparison, literal, propertyName, valueReference, distance, lower, upper} = require('./operators');
 const {filter, fidFilter} = require('./filter');
 const {processOGCGeometry} = require("../GML");
 // const isValidXML = (value, {filterNS, gmlNS}) => value.indexOf(`<${filterNS}:` === 0) || value.indexOf(`<${gmlNS}:`) === 0;
@@ -105,7 +105,7 @@ module.exports = function({filterNS = "ogc", gmlVersion, wfsVersion = "1.1.0"} =
                 lessThen: (value) => comparison.less(filterNS, propName(filterNS, name), getValue(value)),
                 lessThenOrEqualTo: (value) => comparison.lessOrEqual(filterNS, propName(filterNS, name), getValue(value)),
                 notEqualTo: (value) => comparison.notEqual(filterNS, propName(filterNS, name), getValue(value)),
-                between: (value1, value2) => comparison.between(filterNS, propName(filterNS, name), getValue(value1), getValue(value2)),
+                between: (value1, value2) => comparison.between(filterNS, propName(filterNS, name), lower(filterNS, getValue(value1)), upper(filterNS, getValue(value2))),
                 like: (value, options) => comparison.like(filterNS, propName(filterNS, name), getValue(value), options),
                 ilike: (value, options) => comparison.ilike(filterNS, propName(filterNS, name), getValue(value), options),
                 isNull: () => comparison.isNull(filterNS, propName(filterNS, name)),
