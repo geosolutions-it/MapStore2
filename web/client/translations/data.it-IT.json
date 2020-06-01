@@ -2839,7 +2839,7 @@
             },
             "geostoryIntro": {
               "title": "Guida alla Storia",
-              "text": "Panoramica delle funzionalità"
+              "text": "<p> Panoramica delle funzionalità </p> <p> Esplora la guida utente <a target = '_blank' href='https://mapstore.readthedocs.io/en/latest/user-guide/exploring-stories/'> qui </a>"
             },
             "geostoryViewHeader": {
               "title": "Barra di navigazione",
@@ -2875,7 +2875,7 @@
             },
             "geostoryEditSidebarSettings": {
               "title": "Impostazioni della storia",
-              "text": "<p>Qui puoi:</p><ul><li>Mostrare/nascondere/modificare il titolo</li><li>Modificare il tema</li><li>Mostrare/nascondere/modificare il logo</li><li>Modificare la composizione della barra di navigazione</li></ul>"
+              "text": "<p>Qui puoi:</p><ul><li>Mostrare/nascondere/modificare il titolo</li><li>Modificare il tema</li><li>Mostrare/nascondere/modificare il logo</li><li>Modificare la composizione della barra di navigazione</li></ul><p> Per maggiori informazioni consulta la guida relativa <a target='_blank' href='https://mapstore.readthedocs.io/en/latest/user-guide/story-setting/'>qui</a>"
             },
             "geostoryEditContainer": {
               "title": "Contenuto della storia",
@@ -2887,7 +2887,7 @@
             },
             "geostoryEditMediaEditor": {
               "title": "Editor delle risorse",
-              "text": "Qui puoi selezionare immagini o mappe da aggiungere alla storia"
+              "text": "Qui puoi selezionare immagini o mappe da aggiungere alla storia<p> Per maggiori informazioni consulta la relativa guida <a target='_blank' href='https://mapstore.readthedocs.io/en/latest/media-editor-window/story-setting/'>qui</a>"
             }
         },
         "userSession": {

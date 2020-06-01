@@ -2839,7 +2839,7 @@
             },
             "geostoryIntro": {
               "title": "Story Tutorial",
-              "text": "Übersicht über die Story-Funktionen"
+              "text": "<p>Übersicht über die Story-Funktionen</p><p>Lesen Sie das zugehörige Benutzerhandbuch.<a target = '_blank' href='https://mapstore.readthedocs.io/en/latest/user-guide/exploring-stories/'> hier </a>"
             },
             "geostoryViewHeader": {
               "title": "Header",
@@ -2875,7 +2875,7 @@
             },
             "geostoryEditSidebarSettings": {
               "title": "Story-Einstellungen",
-              "text": "<p> Von links nach rechts: </p> <ul> <li> Ausgewählten Abschnitt löschen </li> <li> In den Ansichtsmodus wechseln </li> <li> Einstellungen bearbeiten </li> <li> Reduzieren / Alle erweitern </li> </ul>"
+              "text": "<p> Von links nach rechts: </p> <ul> <li> Ausgewählten Abschnitt löschen </li> <li> In den Ansichtsmodus wechseln </li> <li> Einstellungen bearbeiten </li> <li> Reduzieren / Alle erweitern </li> </ul><p> Weitere Informationen finden Sie im zugehörigen Benutzerhandbuch <a target='_blank' href='https://mapstore.readthedocs.io/en/latest/user-guide/story-setting/'> hier </a>"
             },
             "geostoryEditContainer": {
               "title": "Inhalt der Geschichte",
@@ -2887,7 +2887,7 @@
             },
             "geostoryEditMediaEditor": {
               "title": "Medieneditor",
-              "text": "Hier können Sie Bilder oder Karten auswählen, die der Geschichte hinzugefügt werden sollen"
+              "text": "<p> Mit dem Medieneditor können Sie verschiedene Arten von Medieninhalten in die Geschichte aufnehmen: <ul> <li> Bilder </li> <li> Videos </li> <li> Karten </li> </ul> </p><p> Weitere Informationen finden Sie im zugehÃ¶rigen Benutzerhandbuch <a target='_blank' href='https://mapstore.readthedocs.io/en/latest/user-guide/media-editor-window/'> hier </a>"
             }
         },
         "userSession": {

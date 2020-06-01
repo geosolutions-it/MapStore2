@@ -49,7 +49,7 @@ const switchTutorialEpic = (action$, store) =>
             action$.ofType(MAPS_LIST_LOADED, CHANGE_MAP_VIEW, INIT_TUTORIAL)
                 .take(1)
                 .switchMap( () => {
-                    const id = findTutorialId(action.payload.location.pathname);
+                    let id = findTutorialId(action.payload.location.pathname);
                     const state = store.getState();
                     const presetList = state.tutorial && state.tutorial.presetList || {};
                     const browser = state.browser;
@@ -57,8 +57,12 @@ const switchTutorialEpic = (action$, store) =>
                     const defaultName = id ? 'default' : action.payload && action.payload.location && action.payload.location.pathname || 'default';
                     const prevTutorialId = state.tutorial && state.tutorial.id;
                     const geostoryMode = id?.indexOf("geostory") !== -1 ? `_${modeSelector(state)}` : "";
-
-                    const presetName = id + geostoryMode + mobile + '_tutorial';
+                    let presetName = id + geostoryMode + mobile + '_tutorial';
+                    if (id?.indexOf("geostory") !== -1) {
+                        // this is needed to setup correct geostory tutorial based on the current mode and page
+                        presetName = `geostory${id?.indexOf("newgeostory") !== -1 ? "_edit" : geostoryMode}${mobile}_tutorial`;
+                        id  = "geostory"; // unify on one id the tutorial for the two modes in geostory
+                    }
                     return !isEmpty(presetList) ? Rx.Observable.of(presetList[presetName] ?
                         setupTutorial(id + mobile, presetList[presetName], null, null, null, prevTutorialId === (id + geostoryMode + mobile)) :
                         setupTutorial(defaultName + mobile, presetList['default' + mobile + '_tutorial'], null, null, null, prevTutorialId === (defaultName + mobile))
@@ -66,7 +70,7 @@ const switchTutorialEpic = (action$, store) =>
                 })
         );
 /**
- * this epic is needed to change the geostory tutorial when changing mode
+ * It changes the Geostory tutorial when changing mode only once per time a story is loaded (in view or edit mode)
 */
 const switchGeostoryTutorialEpic = (action$, store) =>
     action$.ofType(GEOSTORY_LOADED)
@@ -78,10 +82,11 @@ const switchGeostoryTutorialEpic = (action$, store) =>
                     const state = store.getState();
                     const presetList = state.tutorial && state.tutorial.presetList || {};
                     const geostoryMode = `_${action.mode}`;
-                    const steps = presetList[id + geostoryMode + '_tutorial'];
-                    const isGeostoryTutorialDisabled = !!localStorage.getItem("mapstore.plugin.tutorial.geostory.disabled");
+                    const steps = !isEmpty(presetList) ? presetList[id + geostoryMode + '_tutorial'] : null;
+                    const isGeostoryTutorialDisabled = localStorage.getItem("mapstore.plugin.tutorial.geostory.disabled") === "true";
 
-                    return !isEmpty(presetList) && steps && !isGeostoryTutorialDisabled ? Rx.Observable.from(
+                    // if no steps are found then do nothing
+                    return steps && !isGeostoryTutorialDisabled ? Rx.Observable.from(
                         [
                             setupTutorial(id, steps, null, null, null, false)
                         ]

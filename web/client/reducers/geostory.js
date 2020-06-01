@@ -33,7 +33,6 @@ import {
     UPDATE_SETTING,
     REMOVE_RESOURCE
 } from '../actions/geostory';
-import { CLOSE_TUTORIAL } from '../actions/tutorial';
 
 
 /**
@@ -322,12 +321,6 @@ export default (state = INITIAL_STATE, action) => {
         const {status, target, selector = "", hideContent = false, path} = action;
         const focusedContent = status ? {target, selector, hideContent, path} : undefined;
         return set(`focusedContent`, focusedContent, state);
-    }
-    case CLOSE_TUTORIAL: {
-        return {
-            ...state,
-            isSettingsEnabled: false
-        };
     }
     default:
         return state;

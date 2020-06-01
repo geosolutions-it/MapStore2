@@ -2843,7 +2843,7 @@
             },
             "geostoryIntro": {
               "title": "Story Tutorial",
-              "text": "Overview of story functionalities"
+              "text": "<p>Overview of story functionalities</p><p> Explore the related user guide <a target='_blank' href='https://mapstore.readthedocs.io/en/latest/user-guide/exploring-stories/'>here</a>"
             },
             "geostoryViewHeader": {
               "title": "Header",
@@ -2879,7 +2879,7 @@
             },
             "geostoryEditSidebarSettings": {
               "title": "Story Settings",
-              "text": "<p>Here you can:</p><ul><li>Show/hide/edit the story title</li><li>Edit the theme of the story</li><li>Show/hide/edit the story logo</li><li>Customize the navigation bar in view mode</li></ul>"
+              "text": "<p>Here you can:</p><ul><li>Show/hide/edit the story title</li><li>Edit the theme of the story</li><li>Show/hide/edit the story logo</li><li>Customize the navigation bar in view mode</li></ul><p> For more info see the related user guide <a target='_blank' href='https://mapstore.readthedocs.io/en/latest/user-guide/story-setting/'>here</a>"
             },
             "geostoryEditContainer": {
               "title": "Story Content",
@@ -2891,7 +2891,7 @@
             },
             "geostoryEditMediaEditor": {
               "title": "Media Editor",
-              "text": "Here you can select images or maps to add to the story"
+              "text": "<p>Using the the Media Editor you can include in the story different kind of media contents like: <ul> <li>images</li><li>videos</li><li>maps</li></ul></p><p> For more info see the related user guide <a target='_blank' href='https://mapstore.readthedocs.io/en/latest/user-guide/media-editor-window/'>here</a>"
             }
         },
         "userSession": {

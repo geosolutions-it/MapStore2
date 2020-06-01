@@ -8,7 +8,7 @@
 
 module.exports = [
     {
-        translation: "geostoryIntro",
+        translationHTML: "geostoryIntro",
         selector: "#intro-tutorial"
     },
     {
@@ -23,45 +23,23 @@ module.exports = [
     }, {
         translationHTML: "geostoryEditSidebarToolbar",
         selector: ".ms-geostory-builder-header",
-        position: "bottom",
-        action: {
-            back: {
-                type: 'GEOSTORY:TOGGLE_SETTINGS_PANEL',
-                withSave: false
-            }
-        }
+        position: "bottom"
     },
     {
         translationHTML: "geostoryEditSidebarSettings",
         selector: ".ms-geostory-builder",
-        position: "right",
-        action: {
-            next: {
-                type: 'GEOSTORY:TOGGLE_SETTINGS_PANEL',
-                withSave: false
-            },
-            back: {
-                type: 'GEOSTORY:TOGGLE_SETTINGS_PANEL',
-                withSave: false
-            }
-        }
+        position: "right"
     }, {
         translationHTML: "geostoryEditContainer",
         selector: ".ms-geostory",
-        position: "auto",
-        action: {
-            next: {
-                type: 'GEOSTORY:TOGGLE_SETTINGS_PANEL',
-                withSave: false
-            }
-        }
+        position: "auto"
     }, {
         translationHTML: "geostoryEditAddbar",
         selector: ".ms-sections-container > section",
         position: "auto"
     }, {
         translationHTML: "geostoryEditMediaEditor",
-        selector: ".ms-geostory",
+        selector: ".ms-geostory .ms-sections-container .ms-content-toolbar > div > span > button:nth-child(1)",
         position: "bottom"
     }
 ];

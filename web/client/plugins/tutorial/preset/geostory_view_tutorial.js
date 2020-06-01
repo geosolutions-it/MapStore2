@@ -8,7 +8,7 @@
 
 module.exports = [
     {
-        translation: "geostoryIntro",
+        translationHTML: "geostoryIntro",
         selector: "#intro-tutorial"
     },
     {

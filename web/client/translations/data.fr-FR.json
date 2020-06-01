@@ -2839,7 +2839,7 @@
             },
             "geostoryIntro": {
               "title": "Tutoriel de l'histoire",
-              "text": "Vue d'ensemble des fonctionnalités de l'histoire"
+              "text": "<p> Vue d'ensemble des fonctionnalités de l'histoire </p> <p> Explorez le guide de l'utilisateur connexe <a target='_blank' href='https://mapstore.readthedocs.io/en/latest/user-guide/exploring-stories/'> ici </a>"
             },
             "geostoryViewHeader": {
               "title": "En-tête",
@@ -2875,7 +2875,7 @@
             },
             "geostoryEditSidebarSettings": {
               "title": "Paramètres de l'histoire",
-              "text": "<p> Ici, vous pouvez: </p> <ul> <li> Afficher / masquer / modifier le titre de l'histoire </li> <li> Modifier le thème de l'histoire </li> <li> Afficher / masquer / modifier le logo de l'histoire </li> <li> Personnalisez la barre de navigation en mode affichage </li> </ul>"
+              "text": "<p> Ici, vous pouvez: </p> <ul> <li> Afficher / masquer / modifier le titre de l'histoire </li> <li> Modifier le thème de l'histoire </li> <li> Afficher / masquer / modifier le logo de l'histoire </li> <li> Personnalisez la barre de navigation en mode affichage </li> </ul><p> Pour plus d'informations, consultez le guide d'utilisation correspondant <a target='_blank' href='https://mapstore.readthedocs.io/en/latest/user-guide/story-setting/'> ici </a>"
             },
             "geostoryEditContainer": {
               "title": "Contenu de l'histoire",
@@ -2887,7 +2887,7 @@
             },
             "geostoryEditMediaEditor": {
               "title": "Éditeur de média",
-              "text": "Ici vous pouvez sélectionner des images ou des cartes à ajouter à l'histoire"
+              "text": "<p> À l'aide de l'éditeur de médias, vous pouvez inclure dans l'histoire différents types de contenus multimédias tels que: <ul> <li>images</li> <li> vidéos </li> <li> cartes </li> </ul> </p><p> Pour plus d'informations, consultez le guide d'utilisation correspondant <a target='_blank' href='https://mapstore.readthedocs.io/en/latest/user-guide/media-editor-window/'> ici </a>"
             }
         },
         "userSession": {

@@ -20,7 +20,6 @@ import {
     SET_MEDIA_TYPE,
     SHOW
 } from '../actions/mediaEditor';
-import { CLOSE_TUTORIAL } from '../actions/tutorial';
 import {LOCATION_CHANGE} from 'connected-react-router';
 import { compose, set, unset} from '../utils/ImmutableUtils';
 import {
@@ -84,7 +83,7 @@ export default (state = DEFAULT_STATE, action) => {
     }
     // hide resets the media editor as well as selected
     // resets all media editor settings
-    case HIDE: case CLOSE_TUTORIAL:
+    case HIDE:
         return compose(
             set('open', false),
             set('owner', undefined),
