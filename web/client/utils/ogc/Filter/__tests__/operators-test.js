@@ -7,7 +7,8 @@
  */
 // Disable ESLint because some of the names to include are not in camel case
 const expect = require('expect');
-const {ogcComparisonOperators, ogcLogicalOperators, ogcSpatialOperators, logical, spatial, comparison, literal, propertyName} = require('../operators');
+const {ogcComparisonOperators, ogcLogicalOperators, ogcSpatialOperators, logical, spatial, comparison, literal, propertyName,
+    lower, upper} = require('../operators');
 
 describe('OGC Operators', () => {
     it('comparison object', () => {
@@ -17,6 +18,7 @@ describe('OGC Operators', () => {
         expect(ogcComparisonOperators[">="]("ogc", "TEST")).toBe("<ogc:PropertyIsGreaterThanOrEqualTo>TEST</ogc:PropertyIsGreaterThanOrEqualTo>");
         expect(ogcComparisonOperators["<="]("ogc", "TEST")).toBe("<ogc:PropertyIsLessThanOrEqualTo>TEST</ogc:PropertyIsLessThanOrEqualTo>");
         expect(ogcComparisonOperators["<>"]("ogc", "TEST")).toBe("<ogc:PropertyIsNotEqualTo>TEST</ogc:PropertyIsNotEqualTo>");
+        expect(ogcComparisonOperators["><"]("ogc", "TEST")).toBe("<ogc:PropertyIsBetween>TEST</ogc:PropertyIsBetween>");
         expect(ogcComparisonOperators.like("ogc", "TEST")).toBe('<ogc:PropertyIsLike matchCase="true" wildCard="*" singleChar="." escapeChar="!">TEST</ogc:PropertyIsLike>');
         expect(ogcComparisonOperators.ilike("ogc", "TEST")).toBe('<ogc:PropertyIsLike matchCase="false" wildCard="*" singleChar="." escapeChar="!">TEST</ogc:PropertyIsLike>');
         expect(ogcComparisonOperators.isNull("ogc", "TEST")).toBe('<ogc:PropertyIsNull>TEST</ogc:PropertyIsNull>');
@@ -90,8 +92,8 @@ describe('OGC Operators', () => {
             .toBe("<ogc:PropertyIsLessThanOrEqualTo><ogc:PropertyName>PROPERTY</ogc:PropertyName><ogc:Literal>VALUE</ogc:Literal></ogc:PropertyIsLessThanOrEqualTo>");
         expect(comparison.notEqual("ogc", propertyName("ogc", "PROPERTY"), literal("ogc", "VALUE")))
             .toBe("<ogc:PropertyIsNotEqualTo><ogc:PropertyName>PROPERTY</ogc:PropertyName><ogc:Literal>VALUE</ogc:Literal></ogc:PropertyIsNotEqualTo>");
-        expect(comparison.between("ogc", propertyName("ogc", "PROPERTY"), literal("ogc", "VALUE")))
-            .toBe("<ogc:PropertyIsBetween><ogc:PropertyName>PROPERTY</ogc:PropertyName><ogc:Literal>VALUE</ogc:Literal></ogc:PropertyIsBetween>");
+        expect(comparison.between("ogc", propertyName("ogc", "PROPERTY"), lower("ogc", literal("ogc", "VALUE1")), upper("ogc", literal("ogc", "VALUE2"))))
+            .toBe("<ogc:PropertyIsBetween><ogc:PropertyName>PROPERTY</ogc:PropertyName><ogc:LowerBoundary><ogc:Literal>VALUE1</ogc:Literal></ogc:LowerBoundary><ogc:UpperBoundary><ogc:Literal>VALUE2</ogc:Literal></ogc:UpperBoundary></ogc:PropertyIsBetween>");
         expect(comparison.like("ogc", propertyName("ogc", "PROPERTY"), literal("ogc", "VALUE")))
             .toBe('<ogc:PropertyIsLike matchCase="true" wildCard="*" singleChar="." escapeChar="!"><ogc:PropertyName>PROPERTY</ogc:PropertyName><ogc:Literal>VALUE</ogc:Literal></ogc:PropertyIsLike>');
         expect(comparison.ilike("ogc", propertyName("ogc", "PROPERTY"), literal("ogc", "VALUE")))

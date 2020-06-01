@@ -40,7 +40,7 @@ const COMPARISON_TESTS = [
     },
     {
         cql: "PROP between 1 and 3",
-        expected: '<ogc:PropertyIsBetween><ogc:PropertyName>PROP</ogc:PropertyName><ogc:Literal>1</ogc:Literal><ogc:Literal>3</ogc:Literal></ogc:PropertyIsBetween>'
+        expected: '<ogc:PropertyIsBetween><ogc:PropertyName>PROP</ogc:PropertyName><ogc:LowerBoundary><ogc:Literal>1</ogc:Literal></ogc:LowerBoundary><ogc:UpperBoundary><ogc:Literal>3</ogc:Literal></ogc:UpperBoundary></ogc:PropertyIsBetween>'
     }
 ];
 
