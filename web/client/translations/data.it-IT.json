@@ -1290,7 +1290,7 @@
             "templateFormatDescriptionExample": "La descrizione del layer è",
             "showTemplate": "Mostra il modello dei metadati",
             "showPreview": "Mostra la preview",
-            "advancedSettings": "Impostazioni avanzante",
+            "advancedSettings": "Impostazioni avanzate",
             "templateMetadataAvailable": "Metadati disponibili del formato Dublin Core: abstract, boundingBox, contributor, creator, description, format, identifier, references, rights, source, subject, temporal, title, type, uri",
             "notification": {
                 "errorTitle": "Errore",
@@ -2105,7 +2105,9 @@
                 "enableAutoplay": "Abilita riproduzione automatica",
                 "disableAutoplay": "Disabilita riproduzione automatica",
                 "enableLoop": "Abilita riproduzione continua",
-                "disableLoop": "Disabilita riproduzione continua"
+                "disableLoop": "Disabilita riproduzione continua",
+                "hideCaption": "Nascondi didascalia",
+                "showCaption": "Usa descrizione come didascalia"
             },
             "navigation": {
                 "edit": "Modifica storia"

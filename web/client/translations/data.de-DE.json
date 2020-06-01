@@ -2104,7 +2104,9 @@
                 "enableAutoplay": "Aktivieren autoplay",
                 "disableAutoplay": "Deaktiviere autoplay",
                 "enableLoop": "Schleife aktivieren",
-                "disableLoop": "Schleife deaktivieren"
+                "disableLoop": "Schleife deaktivieren",
+                "hideCaption": "Beschriftung ausblenden",
+                "showCaption": "Verwenden Sie die Beschreibung als Beschriftung"
             },
             "navigation": {
                 "edit": "Bearbeiten Sie die Geschichte"

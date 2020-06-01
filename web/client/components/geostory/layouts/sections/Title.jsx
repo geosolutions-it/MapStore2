@@ -50,6 +50,7 @@ export default compose(
     expandableMedia = false,
     storyTheme,
     mediaViewer,
+    contentToolbar,
     inView
 }) => {
     const hideContent = get(focusedContent, "target.id") === contentId;
@@ -98,6 +99,7 @@ export default compose(
                             : height}
                         storyTheme={storyTheme}
                         mediaViewer={mediaViewer}
+                        contentToolbar={contentToolbar}
                         inView={inView}
                     />}
             </ContainerDimensions>
@@ -112,7 +114,8 @@ export default compose(
                 sectionId={id}
                 contentProps={{
                     contentWrapperStyle: cover ? { minHeight: viewHeight, visibility} : {visibility},
-                    mediaViewer
+                    mediaViewer,
+                    contentToolbar
                 }}
                 tools={{
                     [ContentTypes.TEXT]: ['size', 'align', 'theme', 'remove']

@@ -18,6 +18,9 @@ import { compose, withState } from 'recompose';
  * @prop {string} src source of the image
  * @prop {string} fit one of 'cover' or 'contain'
  * @prop {boolean} enableFullscreen enable fullscreen preview with pan and zoom options
+ * @prop {string} description description of media resource
+ * @prop {string} caption caption of current content
+ * @prop {boolean} showCaption display/hide caption
  * @prop {element} loaderComponent render loader component
  * @prop {element} errorComponent render error component
  */
@@ -28,7 +31,7 @@ class Image extends Component {
         id: PropTypes.string,
         fit: PropTypes.string,
         description: PropTypes.string,
-        descriptionEnabled: PropTypes.bool,
+        showCaption: PropTypes.bool,
         credits: PropTypes.string,
         altText: PropTypes.string,
         enableFullscreen: PropTypes.bool,
@@ -37,7 +40,8 @@ class Image extends Component {
         onChangeStatus: PropTypes.func,
         status: PropTypes.string,
         loaderComponent: PropTypes.element,
-        errorComponent: PropTypes.element
+        errorComponent: PropTypes.element,
+        caption: PropTypes.string
     };
 
     componentDidMount() {
@@ -59,7 +63,8 @@ class Image extends Component {
             fullscreen,
             onClick,
             description,
-            descriptionEnabled = true,
+            showCaption,
+            caption = description,
             credits
         } = this.props;
 
@@ -88,9 +93,9 @@ class Image extends Component {
                         {credits}
                     </small>
                 </div>}
-                {descriptionEnabled && description && <div className="ms-media-description">
+                {showCaption && caption && <div className="ms-media-caption">
                     <small>
-                        {description}
+                        {caption}
                     </small>
                 </div>}
                 {enableFullscreen && fullscreen ?

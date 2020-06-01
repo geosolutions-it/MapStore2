@@ -36,6 +36,34 @@ describe('Featuregrid toolbar component', () => {
         expect(isVisibleButton(downloadBtn)).toBe(false);
         expect(isVisibleButton(editButton)).toBe(false);
     });
+    it('check showAdvancedFilterButton false', () => {
+        ReactDOM.render(<Toolbar showAdvancedFilterButton={false} />, document.getElementById("container"));
+        const el = document.getElementsByClassName("featuregrid-toolbar")[0];
+        expect(el).toExist();
+        const advFilterButton = document.getElementById("fg-search");
+        expect(isVisibleButton(advFilterButton)).toBe(false);
+    });
+    it('check showAdvancedFilterButton default', () => {
+        ReactDOM.render(<Toolbar />, document.getElementById("container"));
+        const el = document.getElementsByClassName("featuregrid-toolbar")[0];
+        expect(el).toExist();
+        const advFilterButton = document.getElementById("fg-search");
+        expect(isVisibleButton(advFilterButton)).toBe(true);
+    });
+    it('check showSyncOnMapButton false', () => {
+        ReactDOM.render(<Toolbar showSyncOnMapButton={false} />, document.getElementById("container"));
+        const el = document.getElementsByClassName("featuregrid-toolbar")[0];
+        expect(el).toExist();
+        const advFilterButton = document.getElementById("fg-grid-map-filter");
+        expect(isVisibleButton(advFilterButton)).toBe(false);
+    });
+    it('check showSyncOnMapButton default', () => {
+        ReactDOM.render(<Toolbar />, document.getElementById("container"));
+        const el = document.getElementsByClassName("featuregrid-toolbar")[0];
+        expect(el).toExist();
+        const advFilterButton = document.getElementById("fg-grid-map-filter");
+        expect(isVisibleButton(advFilterButton)).toBe(true);
+    });
     it('check download displayDownload', () => {
         ReactDOM.render(<Toolbar displayDownload />, document.getElementById("container"));
         const el = document.getElementsByClassName("featuregrid-toolbar")[0];
