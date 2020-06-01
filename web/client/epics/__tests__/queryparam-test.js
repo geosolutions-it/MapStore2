@@ -109,15 +109,15 @@ describe('queryparam epics', () => {
             }, state);
     });
 
-    it('test disableGFIForShareEpic', (done)=>{
+    it('test disableGFIForShareEpic, on share panel open with mapInfo enabled', (done)=>{
 
-        let NUMBER_OF_ACTIONS = 1;
-        let state = {controls: {share: {enabled: true}}};
+        const NUMBER_OF_ACTIONS = 1;
+        const state = {controls: {share: {enabled: true}}, mapInfo: {enabled: true}};
 
         testEpic(
             addTimeoutEpic(disableGFIForShareEpic, 10),
             NUMBER_OF_ACTIONS, [
-                toggleControl()
+                toggleControl('share', null)
             ], actions => {
                 expect(actions.length).toBe(NUMBER_OF_ACTIONS);
                 try {
@@ -127,13 +127,14 @@ describe('queryparam epics', () => {
                 }
                 done();
             }, state);
-
-        state = {controls: {share: { enabled: false }}};
-        NUMBER_OF_ACTIONS = 4;
+    });
+    it('test disableGFIForShareEpic, on share panel close', (done)=>{
+        const state = {controls: {share: { enabled: false }}};
+        const NUMBER_OF_ACTIONS = 4;
         testEpic(
             addTimeoutEpic(disableGFIForShareEpic, 10),
             NUMBER_OF_ACTIONS, [
-                toggleControl()
+                toggleControl('share', null)
             ], actions => {
                 expect(actions.length).toBe(NUMBER_OF_ACTIONS);
                 try {
