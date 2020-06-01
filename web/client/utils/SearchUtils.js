@@ -14,6 +14,11 @@ const defaultIconStyle = {
     shadowSize: [41, 41]
 };
 
+const showGFIForService = (searchLayerObj, service) => service?.launchInfoPanel === 'single_layer' &&
+    !!service?.openFeatureInfoButtonEnabled &&
+    (service?.forceSearchLayerVisibility || !!searchLayerObj?.visibility);
+
 module.exports = {
-    defaultIconStyle
+    defaultIconStyle,
+    showGFIForService
 };

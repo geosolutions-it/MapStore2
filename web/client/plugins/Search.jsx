@@ -13,7 +13,7 @@ const assign = require('object-assign');
 const HelpWrapper = require('./help/HelpWrapper');
 const Message = require('./locale/Message');
 const {get, isArray} = require('lodash');
-const {searchEpic, searchOnStartEpic, searchItemSelected, zoomAndAddPointEpic} = require('../epics/search');
+const {searchEpic, searchOnStartEpic, searchItemSelected, zoomAndAddPointEpic, textSearchShowGFIEpic} = require('../epics/search');
 const {defaultIconStyle} = require('../utils/SearchUtils');
 
 const {
@@ -28,7 +28,8 @@ const {
     zoomAndAddPoint,
     changeFormat,
     changeCoord,
-    updateResultsStyle
+    updateResultsStyle,
+    showGFI
 } = require("../actions/search");
 const {
     toggleControl
@@ -66,21 +67,25 @@ const SearchBar = connect(searchSelector, {
 })(require("../components/mapcontrols/search/SearchBar").default);
 
 const {mapSelector} = require('../selectors/map');
+const {layersSelector} = require('../selectors/layers');
 
 const MediaQuery = require('react-responsive');
 
 const selector = createSelector([
     mapSelector,
+    layersSelector,
     state => state.search || null
-], (mapConfig, searchState) => ({
+], (mapConfig, layers, searchState) => ({
     mapConfig,
+    layers,
     results: searchState ? searchState.results : null
 }));
 
 const SearchResultList = connect(selector, {
     onItemClick: selectSearchItem,
-    addMarker: addMarker
-})(require('../components/mapcontrols/search/SearchResultList'));
+    addMarker,
+    showGFI
+})(require('../components/mapcontrols/search/SearchResultList').default);
 
 const ToggleButton = require('./searchbar/ToggleButton');
 
@@ -299,7 +304,7 @@ module.exports = {
             priority: 1
         }
     }),
-    epics: {searchEpic, searchOnStartEpic, searchItemSelected, zoomAndAddPointEpic},
+    epics: {searchEpic, searchOnStartEpic, searchItemSelected, zoomAndAddPointEpic, textSearchShowGFIEpic},
     reducers: {
         search: require('../reducers/search'),
         mapInfo: require('../reducers/mapInfo')
