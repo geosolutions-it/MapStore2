@@ -68,14 +68,12 @@ const VideoThumbnail = ({
         };
     }, []);
 
-    const [loading, setLoading] = useState(false);
     const [errors, setErrors] = useState();
     // try to automatically create a thumbnail from video source
     // when thumbnail is missing
     const [createThumbnail, setCreateThumbnail] = useState(!thumbnail);
     useEffect(() => {
-        if (src && !loading && createThumbnail) {
-            setLoading(true);
+        if (src && createThumbnail) {
             setErrors(undefined);
             getVideoThumbnail(src, {
                 width: 640,
@@ -85,19 +83,16 @@ const VideoThumbnail = ({
             }).then((response) => {
                 if (mounted.current) {
                     onUpdate(response);
-                    setLoading(false);
                     setCreateThumbnail(false);
                 }
             }).catch(() => {
                 if (mounted.current) {
-                    setLoading(false);
                     setCreateThumbnail(false);
                     setErrors([ 'CREATE' ]);
                 }
             });
         }
-    }, [ src, loading, createThumbnail ]);
-
+    }, [ src, createThumbnail ]);
 
     return (
         <>
@@ -109,36 +104,34 @@ const VideoThumbnail = ({
                 type: 'image/jpeg',
                 quality: 0.5
             }}
-            loading={loading}
+            loading={createThumbnail}
             message={<Message msgId="mediaEditor.mediaPicker.thumbnail"/>}
             onUpdate={(newImageData) => {
                 onUpdate(newImageData);
                 setErrors(undefined);
             }}
             onError={(err) => setErrors(err)}
-            toolbar={
-                <Toolbar
-                    buttons={[
-                        {
-                            glyph: 'refresh',
-                            visible: !thumbnail,
-                            onClick: (event) => {
-                                event.stopPropagation();
-                                setCreateThumbnail(true);
-                            }
-                        },
-                        {
-                            glyph: 'trash',
-                            visible: !!thumbnail,
-                            onClick: (event) => {
-                                event.stopPropagation();
-                                onUpdate(undefined);
-                                setErrors(undefined);
-                            }
-                        }
-                    ]}
-                />
-            }
+            toolbarButtons={[
+                {
+                    glyph: 'refresh',
+                    tooltipId: 'mediaEditor.mediaPicker.createVideoThumbnail',
+                    visible: !thumbnail,
+                    onClick: (event) => {
+                        event.stopPropagation();
+                        setCreateThumbnail(true);
+                    }
+                },
+                {
+                    glyph: 'trash',
+                    tooltipId: 'removeThumbnail',
+                    visible: !!thumbnail,
+                    onClick: (event) => {
+                        event.stopPropagation();
+                        onUpdate(undefined);
+                        setErrors(undefined);
+                    }
+                }
+            ]}
         />
         {errors && errors.length > 0 &&
         <Alert bsStyle="danger" className="text-center">

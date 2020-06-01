@@ -10,6 +10,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import expect from 'expect';
 import VideoForm from '../VideoForm';
+import { Simulate, act } from 'react-dom/test-utils';
 
 describe('VideoForm component', () => {
     beforeEach((done) => {
@@ -21,8 +22,15 @@ describe('VideoForm component', () => {
         document.body.innerHTML = '';
         setTimeout(done);
     });
-    it('should render with empty preview', () => {
-        ReactDOM.render(<VideoForm/>, document.getElementById("container"));
+    it('should render with thumbnail', () => {
+        ReactDOM.render(<VideoForm
+            editing
+            selectedItem={ {
+                data: {
+                    thumbnail: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAC0lEQVQYV2NgAAIAAAUAAarVyFEAAAAASUVORK5CYII='
+                }
+            }}
+        />, document.getElementById("container"));
         const container = document.getElementById('container');
         const inputsNodes = container.querySelectorAll('input');
         expect(inputsNodes.length).toBe(5);
@@ -42,5 +50,31 @@ describe('VideoForm component', () => {
                 'mediaEditor.mediaPicker.descriptionPlaceholder',
                 'mediaEditor.mediaPicker.creditsPlaceholder'
             ]);
+    });
+
+    it('should render refresh button to create thumbnail from video source', () => {
+        ReactDOM.render(<VideoForm
+            editing
+            selectedItem={ {
+                data: {
+                    thumbnail: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAC0lEQVQYV2NgAAIAAAUAAarVyFEAAAAASUVORK5CYII='
+                }
+            }}
+        />, document.getElementById("container"));
+        const container = document.getElementById('container');
+
+        const thumbnailNode = container.querySelector('.ms-thumbnail');
+        expect(thumbnailNode).toBeTruthy();
+
+        const removeButtonNode = thumbnailNode.querySelector('.btn');
+        expect(removeButtonNode.querySelector('.glyphicon-trash')).toBeTruthy();
+
+        act(() => {
+            Simulate.click(removeButtonNode);
+        });
+
+        const refreshButtonNode = thumbnailNode.querySelector('.btn');
+        expect(refreshButtonNode.querySelector('.glyphicon-refresh')).toBeTruthy();
+
     });
 });
