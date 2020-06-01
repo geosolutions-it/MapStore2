@@ -1,7 +1,7 @@
 {
     "plugins": [
         {
-            "name": "Extension",
+            "name": "SampleExtension",
             "dependencies": [
                 "Toolbar"
             ]
