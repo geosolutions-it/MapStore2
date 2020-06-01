@@ -670,6 +670,7 @@
             "confirmremove": "Delete?",
             "cancelconfirm": "Are you sure?",
             "searchByBookmark": "Search by bookmark",
+            "bookmarksettings": "Bookmark settings",
             "bookmarkFilter": "Filter bookmarks",
             "editBookmark": "Edit bookmark",
             "deleteBookmark": "Delete bookmark",

@@ -13,6 +13,16 @@ const {setSearchBookmarkConfig, resetBookmarkConfig, updateBookmark, filterBookm
 const BookmarkList = require('../components/mapcontrols/searchbookmarkconfig/BookmarkList').default;
 const AddNewBookmark = require('../components/mapcontrols/searchbookmarkconfig/AddNewBookmark').default;
 
+/**
+ * Bookmark search configuration Plugin. Allow to add and edit additional
+ * bookmarks used by search by bookmark plugin. User has to
+ * save the map to persist service changes.
+ *
+ * @class SearchByBookmarkPanel
+ * @memberof plugins
+ * @static
+ *
+ */
 const SearchByBookmarkPanel = (props) => {
     const { enabled, pages, page,
         onPropertyChange,
@@ -116,8 +126,8 @@ const SearchByBookmarkPanel = (props) => {
 
 // Search by bookmark menu item for Search bar
 const searchMenuItem = (onClick, activeTool) => ({
-    active: activeTool === "searchByBookmark",
-    onClick: () => onClick('searchByBookmark'),
+    active: activeTool === "bookmarkSearch",
+    onClick: () => onClick('bookmarkSearch'),
     glyph: "bookmark",
     text: <Message msgId="search.searchByBookmark"/>
 });
@@ -131,11 +141,11 @@ const searchByBookmarkConfig = (toggleConfig, enabled, activeTool) => ({
     },
     glyph: "cog",
     className: "square-button-md no-border ",
-    tooltipId: "search.searchByBookmark",
+    tooltipId: "search.bookmarksettings",
     tooltipPosition: "bottom",
     bsStyle: "default",
     pullRight: true,
-    visible: activeTool === "searchByBookmark"
+    visible: activeTool === "bookmarkSearch"
 });
 
 const selector = createSelector([

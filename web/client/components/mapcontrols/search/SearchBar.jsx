@@ -22,7 +22,7 @@ import { defaultSearchWrapper } from '../../search/SearchBarUtils';
 import BookmarkSelect from "../searchbookmarkconfig/BookmarkSelect";
 
 export default ({
-    activeSearchTool = 'addressSearch',
+    activeSearchTool: activeTool = 'addressSearch',
     removeIcon = '1-close',
     searchIcon = 'search',
     isSearchClickable = true,
@@ -114,17 +114,6 @@ export default ({
         }
     };
 
-    const getActiveTool = () => {
-        let activeTool = activeSearchTool;
-        if (showAddressSearchOption && !showCoordinatesSearchOption) {
-            activeTool = "addressSearch";
-        }
-        if (!showAddressSearchOption && showCoordinatesSearchOption) {
-            activeTool = "coordinatesSearch";
-        }
-        return activeTool;
-    };
-
     const areValidCoordinates = () => isNumber(coordinate.lon) && isNumber(coordinate.lat);
 
     const changeCoord = (coord, value) => {
@@ -143,9 +132,8 @@ export default ({
         return null;
     };
 
-    let activeTool = getActiveTool();
     let searchMenuOptions = [];
-    if (showAddressSearchOption && showCoordinatesSearchOption) {
+    if (showAddressSearchOption) {
         searchMenuOptions.push({
             active: activeTool === "addressSearch",
             onClick: () => {
@@ -155,6 +143,8 @@ export default ({
             glyph: searchIcon,
             text: <Message msgId="search.addressSearch"/>
         });
+    }
+    if (showCoordinatesSearchOption) {
         searchMenuOptions.push({
             active: activeTool === "coordinatesSearch",
             onClick: () => {
@@ -240,7 +230,7 @@ export default ({
                     onCancelSelectedItem={onCancelSelectedItem}
                     onPurgeResults={onPurgeResults}/>
                 {activeTool === "coordinatesSearch" && showCoordinatesSearchOption &&
-                    <div className="coordinateEditor" style={{flexWrap: format === "decimal" ? "no-wrap" : "wrap" }}>
+                    <div className="coordinateEditor" style={{flexWrap: format === "decimal" ? "nowrap" : "wrap" }}>
                         <Row className="entryRow">
                             <FormGroup>
                                 <InputGroup >
@@ -286,7 +276,7 @@ export default ({
                     </div>
                 }
                 {
-                    activeTool === "searchByBookmark" && showBookMarkSearchOption &&
+                    activeTool === "bookmarkSearch" && showBookMarkSearchOption &&
                         <BookmarkSelect {...props}/>
                 }
                 <SearchBarToolbar
@@ -294,7 +284,7 @@ export default ({
                     toolbarButtons={[
                         activeTool === "addressSearch" ? searchConfig :
                             showOptions && activeTool === "coordinatesSearch" ? coordinateFormatChange :
-                                showOptions && activeTool === "searchByBookmark" ? searchByBookmarkConfig : null,
+                                showOptions && activeTool === "bookmarkSearch" ? searchByBookmarkConfig : null,
                         {
                             glyph: removeIcon,
                             className: "square-button-md no-border",
@@ -319,8 +309,8 @@ export default ({
                             pullRight: true,
                             visible: activeTool === "addressSearch" &&
                             (!(searchText !== "" || selectedItems && selectedItems.length > 0) || !splitTools) ||
-                            activeTool === "coordinatesSearch" || activeTool === "searchByBookmark",
-                            disabled: activeTool === "searchByBookmark" && props && props.bookmarkConfig && !props.bookmarkConfig.selected,
+                            activeTool === "coordinatesSearch" || activeTool === "bookmarkSearch",
+                            disabled: activeTool === "bookmarkSearch" && props && props.bookmarkConfig && !props.bookmarkConfig.selected,
                             onClick: () => {
                                 if (activeTool === "coordinatesSearch" && areValidCoordinates()) {
                                     zoomToPoint();
@@ -328,7 +318,7 @@ export default ({
                                 if (isSearchClickable) {
                                     search();
                                 }
-                                if (activeTool === "searchByBookmark") {
+                                if (activeTool === "bookmarkSearch") {
                                     searchByBookmark();
                                 }
                             }

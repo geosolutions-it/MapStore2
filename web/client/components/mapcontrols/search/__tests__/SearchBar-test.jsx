@@ -297,7 +297,7 @@ describe("test the SearchBar", () => {
     });
 
     it('test searchByBookmark options under menu', () => {
-        ReactDOM.render(<SearchBar showOptions showBookMarkSearchOption activeSearchTool="searchByBookmark" items={items}  />, document.getElementById("container"));
+        ReactDOM.render(<SearchBar showOptions showBookMarkSearchOption activeSearchTool="bookmarkSearch" items={items}  />, document.getElementById("container"));
         const container = document.getElementById('container');
         const buttons = container.querySelectorAll('button');
         expect(buttons.length).toBe(3);
@@ -309,7 +309,7 @@ describe("test the SearchBar", () => {
         expect(links[2].innerText).toBe('Search by bookmark');
     });
     it('test searchByBookmark, search button disabled', () => {
-        ReactDOM.render(<SearchBar showOptions showBookMarkSearchOption activeSearchTool="searchByBookmark" items={items} bookmarkConfig={{}}  />, document.getElementById("container"));
+        ReactDOM.render(<SearchBar showOptions showBookMarkSearchOption activeSearchTool="bookmarkSearch" items={items} bookmarkConfig={{}}  />, document.getElementById("container"));
         const container = document.getElementById('container');
         const buttons = container.querySelectorAll('button');
         const cog = document.getElementsByClassName("glyphicon-cog");
@@ -323,7 +323,7 @@ describe("test the SearchBar", () => {
     });
     it('test searchByBookmark, with bookmark selected', () => {
         const bookmarkConfig = {selected: {title: "Bookmark1"}, bookmarkSearchConfig: {bookmarks: [{title: "Bookmark 1"}, {title: "Bookmark 2"}]}};
-        ReactDOM.render(<SearchBar showOptions showBookMarkSearchOption activeSearchTool="searchByBookmark" items={items} bookmarkConfig={bookmarkConfig}  />, document.getElementById("container"));
+        ReactDOM.render(<SearchBar showOptions showBookMarkSearchOption activeSearchTool="bookmarkSearch" items={items} bookmarkConfig={bookmarkConfig}  />, document.getElementById("container"));
         const cmp = document.getElementById('container');
         expect(cmp).toExist();
         const bookmarkSelect = cmp.querySelector('.search-select');
@@ -342,7 +342,7 @@ describe("test the SearchBar", () => {
             showOptions: true,
             showBookMarkSearchOption: true,
             enabledSearchBookmarkConfig: false,
-            activeSearchTool: "searchByBookmark",
+            activeSearchTool: "bookmarkSearch",
             onToggleControl: actions.onToggleControl,
             items: itemsProps,
             bookmarkConfig
@@ -368,7 +368,7 @@ describe("test the SearchBar", () => {
             showOptions: true,
             showBookMarkSearchOption: true,
             enabledSearchBookmarkConfig: false,
-            activeSearchTool: "searchByBookmark",
+            activeSearchTool: "bookmarkSearch",
             onLayerVisibilityLoad: actions.onLayerVisibilityLoad,
             items: itemsProps,
             bookmarkConfig,
@@ -398,7 +398,7 @@ describe("test the SearchBar", () => {
             showOptions: true,
             showBookMarkSearchOption: true,
             enabledSearchBookmarkConfig: false,
-            activeSearchTool: "searchByBookmark",
+            activeSearchTool: "bookmarkSearch",
             onZoomToExtent: actions.onZoomToExtent,
             items: itemsProps,
             bookmarkConfig,

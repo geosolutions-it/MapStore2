@@ -670,6 +670,7 @@
             "confirmremove": "Effacer ?",
             "cancelconfirm": "Êtes-vous sûr ?",
             "searchByBookmark": "Recherche par signet",
+            "bookmarksettings": "Paramètres des signets",
             "bookmarkFilter": "Filtrer les signets",
             "editBookmark": "Modifier le signet",
             "deleteBookmark": "Supprimer le signet",

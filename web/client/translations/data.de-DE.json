@@ -670,6 +670,7 @@
             "confirmremove": "Löschen?",
             "cancelconfirm": "Bist du sicher?",
             "searchByBookmark": "Suche nach Lesezeichen",
+            "bookmarksettings": "Lesezeicheneinstellungen",
             "bookmarkFilter": "Lesezeichen filtern",
             "editBookmark": "Lesezeichen bearbeiten",
             "deleteBookmark": "Lesezeichen löschen",
