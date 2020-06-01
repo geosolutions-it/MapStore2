@@ -82,6 +82,7 @@ ReactDOM.render(
  * create a **myapp.jsx** component inside the **containers** folder, that will contain the all-in-one Smart Component of the application
 
 ```javascript
+var PropTypes = require('prop-types');
 var React = require('react');
 var connect = require('react-redux').connect;
 var LMap = require('../../../components/map/leaflet/Map');

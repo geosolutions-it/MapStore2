@@ -711,6 +711,7 @@
             "serviceslistempty": "No se ha definido ningún servicio personalizado",
             "service_missing": "el servicio {serviceType} no está configurado",
             "generic_error": "Se ha producido un error durante la búsqueda. Error de detalles: {message}",
+            "showGFI": "Mostrar GFI",
             "errors": {
                 "nonQueriableLayers": "La capa proporcionada en la url no es intercambiable o no es visible en el mapa",
                 "serverError": "El servidor ha devuelto un error al realizar la solicitud GetFeatureInfo. Compruebe si los parámetros son correctos"
@@ -722,7 +723,9 @@
                 "single_layer": "Una sola capa",
                 "no_info_description": "El panel de identificación no aparecerá en la búsqueda",
                 "all_layers_description": "El panel Identificar aparecerá mostrando información de todas las capas visibles en el mapa",
-                "single_layer_description": "El panel de identificación aparecerá con los datos ya disponibles a través de la búsqueda de WFS"
+                "single_layer_description": "El panel de identificación aparecerá con los datos ya disponibles a través de la búsqueda de WFS",
+                "openFeatureInfoButtonCheckbox": "Use el botón para abrir la información de la función",
+                "forceSearchLayerVisibility": "Forzar la visibilidad de la capa de búsqueda"
             },
             "advancedSearchPanel": {
                 "title": "Filtros de busqueda avanzada",

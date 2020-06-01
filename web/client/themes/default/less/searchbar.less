@@ -40,7 +40,9 @@
     overflow: auto;
 }
 
-.search-result-list .search-result{
+.search-result-list .search-result {
+    display: flex;
+    flex-direction: row;
     padding: 15px;
     border-bottom: 1px solid lightgray;
     cursor: pointer;
@@ -54,6 +56,9 @@
     display: block;
     vertical-align: middle;
     float: left;
+}
+.search-result-list .search-result .search-result-left-container {
+    flex-grow: 1
 }
 
 .search-result-list .search-result:last-child{

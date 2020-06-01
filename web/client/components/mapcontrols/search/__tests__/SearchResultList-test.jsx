@@ -5,13 +5,13 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const expect = require('expect');
+import expect from 'expect';
 
-const React = require('react');
-const ReactDOM = require('react-dom');
-const SearchResultList = require('../SearchResultList');
-const SearchResult = require('../SearchResult');
-const TestUtils = require('react-dom/test-utils');
+import React from 'react';
+import ReactDOM from 'react-dom';
+import SearchResultList from '../SearchResultList';
+import SearchResult from '../SearchResult';
+import TestUtils from 'react-dom/test-utils';
 
 const results = [{
     id: "ID",
@@ -148,5 +148,44 @@ describe("test the SearchResultList", () => {
         expect(spy).toHaveBeenCalledWith(items[0], mapConfig);
     });
 
+    it('test showGFI button when it is enabled', () => {
+        const tb = ReactDOM.render(<SearchResultList searchOptions={{
+            services: [{
+                id: "S1",
+                displayName: "S1",
+                subTitle: "S1",
+                launchInfoPanel: 'single_layer',
+                openFeatureInfoButtonEnabled: true,
+                forceSearchLayerVisibility: true
+            }]
+        }} results={[{
+            id: "ID",
+            properties: {
+                prop1: 1
+            },
+            __SERVICE__: "S1"
+        }]} notFoundMessage="not found"/>, document.getElementById("container"));
+        expect(tb).toExist();
+        const button = document.querySelector('.search-result button');
+        expect(button).toExist();
+    });
 
+    it('test showGFI button when it is disabled', () => {
+        const tb = ReactDOM.render(<SearchResultList searchOptions={{
+            services: [{
+                id: "S1",
+                displayName: "S1",
+                subTitle: "S1"
+            }]
+        }} results={[{
+            id: "ID",
+            properties: {
+                prop1: 1
+            },
+            __SERVICE__: "S1"
+        }]} notFoundMessage="not found"/>, document.getElementById("container"));
+        expect(tb).toExist();
+        const button = document.querySelector('.search-result button');
+        expect(button).toNotExist();
+    });
 });

@@ -711,6 +711,7 @@
             "serviceslistempty": "Keine benutzerdefinierten Services definiert",
             "service_missing": "{serviceType} dienst ist nicht konfiguriert",
             "generic_error": "Bei der Suche ist ein Fehler aufgetreten. Fehlerdetails: {message}",
+            "showGFI": "GFI anzeigen",
             "errors": {
                 "nonQueriableLayers": "Der in der URL angegebene Layer ist nicht abfragbar oder in der Karte nicht sichtbar.",
                 "serverError": "Der Server hat beim Ausführen der GetFeatureInfo-Anforderung einen Fehler zurückgegeben. Überprüfen Sie, ob die Parameter korrekt sind"
@@ -722,7 +723,9 @@
                 "single_layer": "Einzelne Schicht",
                 "no_info_description": "Das Identifizierungsfeld wird bei der Suche nicht angezeigt",
                 "all_layers_description": "Das Fenster Identifizieren zeigt Informationen zu allen in der Karte sichtbaren Layern an",
-                "single_layer_description": "Das Fenster Identifizieren wird mit den Daten angezeigt, die bereits über die WFS-Suche verfügbar sind"
+                "single_layer_description": "Das Fenster Identifizieren wird mit den Daten angezeigt, die bereits über die WFS-Suche verfügbar sind",
+                "openFeatureInfoButtonCheckbox": "Verwenden Sie die Schaltfläche, um Funktionsinformationen zu öffnen",
+                "forceSearchLayerVisibility": "Sichtbarkeit der Suchebene erzwingen"
             },
             "advancedSearchPanel": {
                 "title": "Erweiterte Suchfilter",
