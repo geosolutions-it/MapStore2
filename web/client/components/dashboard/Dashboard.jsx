@@ -17,7 +17,9 @@ module.exports =
         pure,
         defaultProps({
             breakpoints: { md: 480, xxs: 0 },
-            cols: { md: 6, xxs: 1 }
+            cols: { md: 6, xxs: 1 },
+            tools: ["popup"],
+            mapType: 'openlayers'
         }),
         widthProvider({ overrideWidthProvider: true}),
         emptyState(

@@ -27,7 +27,7 @@ import { SET_CONTROL_PROPERTIES, SET_CONTROL_PROPERTY, TOGGLE_CONTROL } from '..
 
 import { closeFeatureGrid, updateFilter, toggleEditMode, CLOSE_FEATURE_GRID } from '../actions/featuregrid';
 import { QUERY_CREATE } from '../actions/wfsquery';
-import { CHANGE_MOUSE_POINTER, CLICK_ON_MAP, UNREGISTER_EVENT_LISTENER, CHANGE_MAP_VIEW, MOUSE_MOVE, zoomToPoint, changeMapView } from '../actions/map';
+import { CHANGE_MOUSE_POINTER, CLICK_ON_MAP, CLICK_ON_MAP_DASHBOARD, UNREGISTER_EVENT_LISTENER, CHANGE_MAP_VIEW, MOUSE_MOVE, zoomToPoint, changeMapView } from '../actions/map';
 import { browseData } from '../actions/layers';
 import { closeAnnotations } from '../actions/annotations';
 import { MAP_CONFIG_LOADED } from '../actions/config';
@@ -121,14 +121,19 @@ export default {
      */
     getFeatureInfoOnFeatureInfoClick: (action$, { getState = () => { } }) =>
         action$.ofType(FEATURE_INFO_CLICK)
-            .switchMap(({ point, filterNameList = [], overrideParams = {} }) => {
-                let queryableLayers = queryableLayersSelector(getState());
-                const queryableSelectedLayers = queryableSelectedLayersSelector(getState());
-                if (queryableSelectedLayers.length) {
-                    queryableLayers = queryableSelectedLayers;
-                }
-                if (queryableLayers.length === 0) {
-                    return Rx.Observable.of(purgeMapInfoResults(), noQueryableLayers());
+            .switchMap(({ point, filterNameList = [], overrideParams = {}, dashboardQueryableLayers = null, dashboardMapData = null }) => {
+                let queryableLayers;
+                if (dashboardQueryableLayers) {
+                    queryableLayers = [dashboardQueryableLayers];
+                } else {
+                    queryableLayers = queryableLayersSelector(getState());
+                    const queryableSelectedLayers = queryableSelectedLayersSelector(getState());
+                    if (queryableSelectedLayers.length) {
+                        queryableLayers = queryableSelectedLayers;
+                    }
+                    if (queryableLayers.length === 0) {
+                        return Rx.Observable.of(purgeMapInfoResults(), noQueryableLayers());
+                    }
                 }
                 // TODO: make it in the application getState()
                 const excludeParams = ["SLD_BODY"];
@@ -144,7 +149,10 @@ export default {
                 })))
                     .mergeMap(layer => {
                         let env = localizedLayerStylesEnvSelector(getState());
-                        let { url, request, metadata } = MapInfoUtils.buildIdentifyRequest(layer, {...identifyOptionsSelector(getState()), env});
+                        let { url, request, metadata } = MapInfoUtils.buildIdentifyRequest(layer,
+                            {...identifyOptionsSelector(getState()), env,
+                                map: dashboardQueryableLayers ? {...dashboardMapData} : {...identifyOptionsSelector(getState()).map}
+                            });
                         // request override
                         if (itemIdSelector(getState()) && overrideParamsSelector(getState())) {
                             request = {...request, ...overrideParamsSelector(getState())[layer.name]};
@@ -229,6 +237,17 @@ export default {
                         .filter(() => isMapPopup(store.getState()))
                     );
             }),
+    onMapDashboardClick: (action$) =>
+        action$.ofType(CLICK_ON_MAP_DASHBOARD).switchMap(({point, layer, map = {}, id}) => {
+            const MIN_HEIGHT_CLICK_MAP = 300;
+            const MIN_WIDTH_CLICK_MAP = 400;
+            const {width, height} = map.size;
+            if (width < MIN_WIDTH_CLICK_MAP || height < MIN_HEIGHT_CLICK_MAP) return Rx.Observable.empty();
+            const dashboardQueryableLayers = map.layers.find(mapLayer => mapLayer.url && mapLayer.visibility);
+            return Rx.Observable.of(featureInfoClick(updatePointWithGeometricFilter(point, map.projection || "EPSG:3857"), layer, [], {}, null, dashboardQueryableLayers, map))
+                .merge(Rx.Observable.of(addPopup(id,
+                    { component: IDENTIFY_POPUP, maxWidth: 600, position: {  coordinates: point ? point.rawPos : []}})));
+        }),
     /**
      * Reacts to an update of FeatureInfo coordinates recalculating geometry filter from the map and re-trigger the feature info.
      */
@@ -277,7 +296,7 @@ export default {
                 action$.ofType(LOAD_FEATURE_INFO, ERROR_FEATURE_INFO)
                     .switchMap(() => {
                         const state = store.getState();
-                        const map = mapSelector(state);
+                        let map = action.dashboardMapData || mapSelector(state);
                         const mapProjection = projectionSelector(state);
                         const projectionDefs = projectionDefsSelector(state);
                         const currentprojectionDefs = find(projectionDefs, {'code': mapProjection});

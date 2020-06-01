@@ -198,14 +198,16 @@ function updateCenterToMarker(status) {
  * @param {object} [overrideParams={}] a map based on name as key and objec as value for overriding request params
  * @param {string} [itemId=null] id of the item needed for filtering results
  */
-function featureInfoClick(point, layer, filterNameList = [], overrideParams = {}, itemId = null) {
+function featureInfoClick(point, layer, filterNameList = [], overrideParams = {}, itemId = null, dashboardQueryableLayers = null, dashboardMapData = null) {
     return {
         type: FEATURE_INFO_CLICK,
         point,
         layer,
         filterNameList,
         overrideParams,
-        itemId
+        itemId,
+        dashboardQueryableLayers,
+        dashboardMapData
     };
 }
 

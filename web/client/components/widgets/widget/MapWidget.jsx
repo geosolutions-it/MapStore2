@@ -15,6 +15,11 @@ const MapView = withHandlers({
 })(require('./MapView'));
 const LoadingSpinner = require('../../misc/LoadingSpinner');
 
+const {removePopup} = require('../../../actions/mapPopups');
+const {createSelector} = require('reselect');
+const Empty = () => { return <span/>; };
+const {connect} = require('react-redux');
+
 module.exports = ({
     updateProperty = () => { },
     toggleDeleteConfirm = () => { },
@@ -27,9 +32,28 @@ module.exports = ({
     confirmDelete = false,
     loading = false,
     onDelete = () => {},
-    headerStyle
-} = {}) =>
-    (<WidgetContainer id={`widget-text-${id}`} title={title} confirmDelete={confirmDelete} onDelete={onDelete} toggleDeleteConfirm={toggleDeleteConfirm} headerStyle={headerStyle}
+    headerStyle,
+    onClickMap = () => {},
+    tools = [],
+    mapType = 'openlayers'
+} = {}) => {
+
+    const components = require(`../../../plugins/map/${mapType}/index`);
+    const EMPTY_POPUPS = [];
+    const PopupSupport = connect(
+        createSelector(
+            (state) => state.mapPopups
+            && state.mapPopups.popups
+            && state.mapPopups.popups.filter(popup => popup.id === id)
+                || EMPTY_POPUPS,
+            (popups) => ({
+                popups
+            })), {
+            onPopupClose: removePopup
+        }
+    )(components.PopupSupport || Empty);
+
+    return (<WidgetContainer id={`widget-text-${id}`} title={title} confirmDelete={confirmDelete} onDelete={onDelete} toggleDeleteConfirm={toggleDeleteConfirm} headerStyle={headerStyle}
         icons={icons}
         topRightItems={topRightItems}
     >
@@ -46,8 +70,12 @@ module.exports = ({
                 mapStateSource={mapStateSource}
                 hookRegister={hookRegister}
                 layers={map && map.layers}
+                plugins={tools.includes('popup') ? {tools: {popup: PopupSupport}} : null}
+                onClick={onClickMap}
+                tools={tools}
                 options={{ style: { margin: 10, height: 'calc(100% - 20px)' }}}
             />
         </BorderLayout>
 
     </WidgetContainer>);
+};

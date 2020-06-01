@@ -9,6 +9,7 @@
 const {error} = require('./notifications');
 const CHANGE_MAP_VIEW = 'CHANGE_MAP_VIEW';
 const CLICK_ON_MAP = 'CLICK_ON_MAP';
+const CLICK_ON_MAP_DASHBOARD = 'CLICK_ON_MAP_DASHBOARD';
 const CHANGE_MOUSE_POINTER = 'CHANGE_MOUSE_POINTER';
 const CHANGE_ZOOM_LVL = 'CHANGE_ZOOM_LVL';
 const PAN_TO = 'PAN_TO';
@@ -87,6 +88,16 @@ function clickOnMap(point, layer) {
     return {
         type: CLICK_ON_MAP,
         point: point,
+        layer
+    };
+}
+
+function clickOnMapDashboard(map, id, point, layer, ) {
+    return {
+        type: CLICK_ON_MAP_DASHBOARD,
+        map,
+        id,
+        point,
         layer
     };
 }
@@ -238,6 +249,7 @@ const mouseOut = () => ({
 module.exports = {
     CHANGE_MAP_VIEW,
     CLICK_ON_MAP,
+    CLICK_ON_MAP_DASHBOARD,
     CHANGE_MOUSE_POINTER,
     CHANGE_ZOOM_LVL,
     PAN_TO,
@@ -260,6 +272,7 @@ module.exports = {
     MOUSE_OUT,
     changeMapView,
     clickOnMap,
+    clickOnMapDashboard,
     changeMousePointer,
     changeZoomLevel,
     changeMapCrs,

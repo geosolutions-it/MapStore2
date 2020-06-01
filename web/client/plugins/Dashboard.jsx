@@ -16,6 +16,8 @@ const { showConnectionsSelector, dashboardResource, isDashboardLoading, isBrowse
 const { currentLocaleLanguageSelector } = require('../selectors/locale');
 const { isLocalizedLayerStylesEnabledSelector } = require('../selectors/localizedLayerStyles');
 const ContainerDimensions = require('react-container-dimensions').default;
+const { mapTypeSelector } = require('../selectors/maptype');
+const { clickOnMapDashboard } = require('../actions/map');
 
 const PropTypes = require('prop-types');
 const WidgetsView = compose(
@@ -33,7 +35,8 @@ const WidgetsView = compose(
             isBrowserMobile,
             currentLocaleLanguageSelector,
             isLocalizedLayerStylesEnabledSelector,
-            (resource, widgets, layouts, dependencies, selectionActive, editingWidget, groups, showGroupColor, loading, isMobile, currentLocaleLanguage, isLocalizedLayerStylesEnabled) => ({
+            mapTypeSelector,
+            (resource, widgets, layouts, dependencies, selectionActive, editingWidget, groups, showGroupColor, loading, isMobile, currentLocaleLanguage, isLocalizedLayerStylesEnabled, mapType) => ({
                 resource,
                 loading,
                 canEdit: isMobile ? !isMobile : resource && !!resource.canEdit,
@@ -44,7 +47,8 @@ const WidgetsView = compose(
                 widgets,
                 groups,
                 showGroupColor,
-                language: isLocalizedLayerStylesEnabled ? currentLocaleLanguage : null
+                language: isLocalizedLayerStylesEnabled ? currentLocaleLanguage : null,
+                mapType
             })
         ), {
             editWidget,
@@ -53,7 +57,8 @@ const WidgetsView = compose(
             exportImage,
             deleteWidget,
             onWidgetSelected: selectWidget,
-            onLayoutChange: changeLayout
+            onLayoutChange: changeLayout,
+            onClickMap: clickOnMapDashboard
         }
     ),
     withProps(() => ({
