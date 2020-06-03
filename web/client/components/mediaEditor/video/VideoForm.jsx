@@ -69,12 +69,14 @@ const VideoThumbnail = ({
     }, []);
 
     const [errors, setErrors] = useState();
+    const [loading, setLoading] = useState();
     // try to automatically create a thumbnail from video source
     // when thumbnail is missing
     const [createThumbnail, setCreateThumbnail] = useState(!thumbnail);
     useEffect(() => {
         if (src && createThumbnail) {
             setErrors(undefined);
+            setLoading(true);
             getVideoThumbnail(src, {
                 width: 640,
                 height: 360,
@@ -84,11 +86,13 @@ const VideoThumbnail = ({
                 if (mounted.current) {
                     onUpdate(response);
                     setCreateThumbnail(false);
+                    setLoading(false);
                 }
             }).catch(() => {
                 if (mounted.current) {
                     setCreateThumbnail(false);
                     setErrors([ 'CREATE' ]);
+                    setLoading(false);
                 }
             });
         }
@@ -104,7 +108,7 @@ const VideoThumbnail = ({
                 type: 'image/jpeg',
                 quality: 0.5
             }}
-            loading={createThumbnail}
+            loading={loading}
             message={<Message msgId="mediaEditor.mediaPicker.thumbnail"/>}
             onUpdate={(newImageData) => {
                 onUpdate(newImageData);
