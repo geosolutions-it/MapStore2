@@ -63,7 +63,7 @@ const mapFlowWithOverride = (configName, mapId, config, mapInfo, state, override
     // TODO: investigate the root causes of the problem and come up with a better solution, if possible
 
     // mapstore recognizes alphanumeric map id as static json
-    // avoid map info requests if the configuration is static 
+    // avoid map info requests if the configuration is static
     const isNumberId = !isNaN(parseFloat(mapId));
     return (
         config ?
