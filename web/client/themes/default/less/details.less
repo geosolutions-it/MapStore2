@@ -24,8 +24,83 @@
         overflow-y: auto;
 
         .ms-details-component {
-            padding: 0 6px 0 6px;
+            padding: 15px;
+
+            .ms-details-preview {
+                width: 100%;
+            }
         }
+    }
+}
+
+.ms-details-draftjseditor-container {
+    .ms-details-component {
+        flex-direction: column;
+
+        & > div {
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+
+            .public-DraftEditor-content > div {
+                position: absolute;
+            }
+
+            .rdw-link-modal {
+                height: auto;
+            }
+
+            .ms-text-editor-main {
+                flex-grow: 1;
+                flex-basis: 0;
+
+                .rdw-image-left {
+                    display: flex;
+                    justify-content: left;
+                    float: left;
+                }
+                .rdw-image-right {
+                    display: flex;
+                    justify-content: left;
+                    float: right;
+                }
+                .rdw-image-center {
+                    display: flex;
+                    justify-content: left;
+                    float: none;
+                }
+                .rdw-image-alignment {
+                    z-index: 1
+                }
+            }
+        }
+    }
+}
+
+.ms-details-dialog-modal.ms-details-draftjseditor-container {
+    justify-content: center;
+
+    #ms-resizable-modal {
+        overflow: visible;
+
+        .modal-body {
+            overflow: visible;
+
+            .ms-details-dialog-body {
+                overflow: visible;
+
+                .ms-details-dialog-contents-body {
+                    overflow: visible;
+
+                }
+            }
+        }
+    }
+}
+
+.ms-side-panel.ms-details-draftjseditor-container {
+    .rdw-colorpicker-modal {
+        left: -145px;
     }
 }
 

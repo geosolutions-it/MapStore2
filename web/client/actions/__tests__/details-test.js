@@ -15,7 +15,8 @@ import {
     cancelEdit, CANCEL_EDIT,
     close, CLOSE,
     setContent, SET_CONTENT,
-    setEditedContent, SET_EDITED_CONTENT,
+    setEditorState, SET_EDITOR_STATE,
+    setContentChanged, SET_CONTENT_CHANGED,
     setSettings, SET_SETTINGS,
     setEditedSettings, SET_EDITED_SETTINGS,
     changeSetting, CHANGE_SETTING,
@@ -25,8 +26,9 @@ import {
 
 describe('details actions', () => {
     it('save', () => {
-        const retval = save();
+        const retval = save('content');
         expect(retval.type).toBe(SAVE);
+        expect(retval.content).toBe('content');
     });
     it('saveSuccess', () => {
         const retval = saveSuccess();
@@ -50,10 +52,14 @@ describe('details actions', () => {
         expect(retval.type).toBe(SET_CONTENT);
         expect(retval.content).toBe('content');
     });
-    it('setEditedContent', () => {
-        const retval = setEditedContent('content', true);
-        expect(retval.type).toBe(SET_EDITED_CONTENT);
-        expect(retval.content).toBe('content');
+    it('setEditorState', () => {
+        const retval = setEditorState('editorState');
+        expect(retval.type).toBe(SET_EDITOR_STATE);
+        expect(retval.editorState).toBe('editorState');
+    });
+    it('setContentChanged', () => {
+        const retval = setContentChanged(true);
+        expect(retval.type).toBe(SET_CONTENT_CHANGED);
         expect(retval.setChanged).toBe(true);
     });
     it('setSettings', () => {

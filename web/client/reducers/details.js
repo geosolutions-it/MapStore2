@@ -9,7 +9,8 @@
 import {
     EDIT,
     SET_CONTENT,
-    SET_EDITED_CONTENT,
+    SET_EDITOR_STATE,
+    SET_CONTENT_CHANGED,
     SET_SETTINGS,
     SET_EDITED_SETTINGS,
     CHANGE_SETTING,
@@ -24,17 +25,18 @@ export default (state = {}, action) => {
         return {
             ...state,
             editing: action.active,
-            editedContent: !state.editing && action.active ? state.content : state.editedContent,
             contentChanged: state.editing && !action.active ? false : state.contentChanged
         };
     }
     case SET_CONTENT: {
         return set('content', action.content, state);
     }
-    case SET_EDITED_CONTENT: {
+    case SET_EDITOR_STATE: {
+        return set('editorState', action.editorState, state);
+    }
+    case SET_CONTENT_CHANGED: {
         return {
             ...state,
-            editedContent: action.content,
             contentChanged: action.setChanged
         };
     }

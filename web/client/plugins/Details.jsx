@@ -17,19 +17,20 @@ import {
     edit,
     close,
     cancelEdit,
-    setEditedContent,
+    setEditorState,
+    setContentChanged,
     changeSetting
 } from '../actions/details';
 import {
     detailsControlEnabledSelector,
     contentSelector,
-    editedContentSelector,
     contentChangedSelector,
     editingSelector,
     settingsSelector,
     loadingSelector,
     loadFlagsSelector,
-    editedSettingsSelector
+    editedSettingsSelector,
+    editorStateSelector
 } from '../selectors/details';
 import { setControlProperty } from '../actions/controls';
 import { mapFromIdSelector } from '../selectors/maps';
@@ -40,6 +41,7 @@ import DetailsDialog from '../components/details/DetailsDialog';
 import DetailsPanel from '../components/details/DetailsPanel';
 import DetailsHeader from '../components/details/DetailsHeader';
 import Details from '../components/details/Details';
+import editors from '../components//details/editors';
 import { withConfirmOverride } from '../components/misc/withConfirm';
 
 import Message from '../components/I18N/Message';
@@ -52,11 +54,11 @@ const DetailsPlugin = ({
     show,
     editing,
     canEdit,
+    editor = 'DraftJSEditor',
     editorProps,
     editedSettings,
     loading,
     content,
-    editedContent,
     contentChanged,
     onSave,
     onEdit,
@@ -71,6 +73,7 @@ const DetailsPlugin = ({
             editing={editing}
             loading={loading}
             show={show}
+            containerClassName={editing && editors[editor].containerClassName}
             header={<DetailsHeader
                 editing={editing}
                 canEdit={canEdit}
@@ -79,15 +82,15 @@ const DetailsPlugin = ({
                 loading={loading}
                 onEdit={onEdit}
                 onCancelEdit={onCancelEdit}
-                onSave={onSave}
+                onSave={() => onSave(editors[editor].fromEditorState(editorProps?.editorState))}
                 onSettingsChange={onSettingsChange}/>}
             onClose={onClose}>
             <Details
                 editing={editing}
+                editor={editor}
                 loading={loading}
                 editorProps={editorProps}
-                detailsText={editing ? editedContent : content}
-                contentChanged={contentChanged}/>
+                detailsText={content}/>
         </Container>
     );
 };
@@ -111,24 +114,32 @@ export default createPlugin('Details', {
             editedSettings: editedSettingsSelector(state),
             map: mapFromIdSelector(state, mapIdSelector(state)),
             content: contentSelector(state),
-            editedContent: editedContentSelector(state),
             contentChanged: contentChangedSelector(state),
-            editing: editingSelector(state)
+            editing: editingSelector(state),
+            editorProps: {
+                editorState: editorStateSelector(state)
+            }
         }), {
             onSave: save,
             onEdit: edit.bind(null, true),
             onCancelEdit: cancelEdit,
             onClose: close,
             onSettingsChange: changeSetting,
-            onEditorUpdate: setEditedContent
+            onEditorUpdate: setEditorState,
+            setContentChanged
         }, (stateProps, dispatchProps, ownProps) => ({
             ...stateProps,
             ...ownProps,
-            ...dispatchProps,
+            onSave: dispatchProps.onSave,
+            onEdit: dispatchProps.onEdit,
+            onCancelEdit: dispatchProps.onCancelEdit,
+            onClose: dispatchProps.onClose,
+            onSettingsChange: dispatchProps.onSettingsChange,
             editorProps: {
                 ...(stateProps.editorProps || {}),
                 ...(ownProps.editorProps || {}),
-                onUpdate: dispatchProps.onEditorUpdate
+                onUpdate: dispatchProps.onEditorUpdate,
+                setContentChanged: dispatchProps.setContentChanged
             }
         })),
         Component => props => (

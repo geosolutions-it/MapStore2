@@ -83,6 +83,7 @@ const ResizableModal = ({
     fitContent,
     modalClassName = '',
     dialogClassName = '',
+    containerClassName,
     hideFooterIfEmpty = false
 }) => {
     const sizeClassName = sizes[size] || '';
@@ -93,7 +94,7 @@ const ResizableModal = ({
                 id="ms-resizable-modal"
                 style={{display: 'flex'}}
                 onClickOut={clickOutEnabled ? onClose : () => {}}
-                containerClassName="ms-resizable-modal"
+                containerClassName={`ms-resizable-modal${containerClassName ? ` ${containerClassName}` : ''}`}
                 draggable={draggable}
                 modal
                 className={'modal-dialog modal-content' + sizeClassName + fullscreenClassName + dialogClassName + (fitContent ? ' ms-fit-content' : '')}>

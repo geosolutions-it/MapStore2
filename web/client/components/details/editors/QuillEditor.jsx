@@ -20,15 +20,29 @@ export default ({
             [{ 'color': [] }, { 'background': [] }, 'clean'], ['image', 'link']
         ]
     },
-    onUpdate = () => {}
-}) => <div className="ms-quill-details-editor">
-    <ReactQuill
-        bounds=".ms-quill-details-editor"
-        value={detailsText}
-        modules={modules}
-        onChange={(details) => {
-            if (details && details !== '<p><br></p>') {
-                onUpdate(details, true);
-            }
-        }}/>
-</div>;
+    editorState,
+    onUpdate = () => {},
+    setContentChanged = () => {}
+}) => {
+    const [initialUpdate, setInitialUpdate] = React.useState(false);
+
+    React.useEffect(() => {
+        onUpdate(detailsText);
+        setInitialUpdate(true);
+    }, [detailsText]);
+
+    return (
+        <div className="ms-quill-details-editor">
+            <ReactQuill
+                bounds=".ms-quill-details-editor"
+                value={editorState || detailsText}
+                modules={modules}
+                onChange={(details) => {
+                    if (initialUpdate && details && details !== '<p><br></p>') {
+                        onUpdate(details);
+                        setContentChanged(true);
+                    }
+                }}/>
+        </div>
+    );
+};

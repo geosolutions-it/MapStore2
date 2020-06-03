@@ -8,7 +8,7 @@
 
 export const detailsControlEnabledSelector = state => state.controls?.details?.enabled;
 export const contentSelector = state => state.details?.content;
-export const editedContentSelector = state => state.details?.editedContent;
+export const editorStateSelector = state => state.details?.editorState;
 export const contentChangedSelector = state => state.details?.contentChanged;
 export const editingSelector = state => state.details?.editing;
 export const settingsSelector = state => state.details?.settings;

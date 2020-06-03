@@ -14,7 +14,7 @@ import GeoStoreApi from '../api/GeoStoreDAO';
 import {
     edit,
     setContent,
-    setEditedContent,
+    setEditorState,
     setSettings,
     setEditedSettings,
     saveSuccess,
@@ -35,7 +35,6 @@ import { closeFeatureGrid } from '../actions/featuregrid';
 import {
     detailsControlEnabledSelector,
     contentSelector,
-    editedContentSelector,
     editedSettingsSelector,
     editingSelector,
     settingsSelector
@@ -63,7 +62,6 @@ export const onDetailsControlEnabledChangeEpic = (action$, store) => Observable.
     .switchMap(() => {
         const state = store.getState();
         const content = contentSelector(state);
-        const editedContent = editedContentSelector(state);
         const detailsUri = mapInfoDetailsUriFromIdSelector(state);
         const detailsId = getIdFromUri(detailsUri);
         const detailsEnabled = detailsControlEnabledSelector(state);
@@ -82,12 +80,8 @@ export const onDetailsControlEnabledChangeEpic = (action$, store) => Observable.
                 );
             });
 
-        const dataLoadedFlow = detailsEnabled && (editedContent === null || editedContent === undefined) ?
-            Observable.of(setEditedContent(content)) :
-            Observable.empty();
-
         return detailsEnabled ?
-            Observable.of(edit(), setEditedSettings(settings), closeFeatureGrid()).concat(content === null || content === undefined ? loadDataFlow : dataLoadedFlow) :
+            Observable.of(edit(), setEditedSettings(settings), closeFeatureGrid()).concat(content === null || content === undefined ? loadDataFlow : Observable.empty()) :
             Observable.of(setEditedSettings());
     });
 
@@ -116,10 +110,9 @@ export const mapCloseDetailsEpic = (action$, store) => action$
 
 export const mapSaveDetailsEpic = (action$, store) => action$
     .ofType(SAVE)
-    .switchMap(() => {
+    .switchMap(({content}) => {
         const state = store.getState();
         const editing = editingSelector(state);
-        const editedContent = editedContentSelector(state);
         const detailsUri = mapInfoDetailsUriFromIdSelector(state);
         const detailsId = getIdFromUri(detailsUri);
         const mapId = mapIdSelector(state);
@@ -127,8 +120,8 @@ export const mapSaveDetailsEpic = (action$, store) => action$
         const editingFlow = Observable.defer(() => GeoStoreApi.getPermissions(mapId)).switchMap(permissions => {
             const createOrUpdateDetailsFlow =
                 detailsUri && detailsId ?
-                    Observable.defer(() => GeoStoreApi.putResource(detailsId, editedContent, {})).map(res => res.data) :
-                    Observable.defer(() => GeoStoreApi.createResource({name: uuidv1()}, editedContent, 'DETAILS', {}))
+                    Observable.defer(() => GeoStoreApi.putResource(detailsId, content, {})).map(res => res.data) :
+                    Observable.defer(() => GeoStoreApi.createResource({name: uuidv1()}, content, 'DETAILS', {}))
                         .map(res => res.data)
                         .switchMap(resId => {
                             const uri = ConfigUtils.getDefaults().geoStoreUrl + "data/" + resId + "/raw?decode=datauri";
@@ -138,7 +131,7 @@ export const mapSaveDetailsEpic = (action$, store) => action$
                         });
             return createOrUpdateDetailsFlow.switchMap(resId => Observable.defer(
                 () => GeoStoreApi.updateResourcePermissions(resId, fixPermissions(permissions))
-            ).switchMap(() => Observable.of(basicSuccess({message: "details.feedback.savedSuccessfully"}), saveSuccess())));
+            ).switchMap(() => Observable.of(basicSuccess({message: "details.feedback.savedSuccessfully"}), setContent(content), saveSuccess())));
         });
 
         return (editing ? editingFlow : Observable.empty())
@@ -160,16 +153,15 @@ export const processDetailsSettingsEpic = (action$) => action$
         );
     });
 
-export const mapOnSaveDetailsSuccess = (action$, store) => action$
+export const mapOnSaveDetailsSuccess = (action$) => action$
     .ofType(SAVE_SUCCESS)
     .flatMap(() => Observable.of(
-        ...(editingSelector(store.getState()) ? [setContent(editedContentSelector(store.getState())), setEditedContent()] : []),
         edit()
     ));
 
 export const mapDetailsCancelEditEpic = (action$) => action$
     .ofType(CANCEL_EDIT)
     .flatMap(() => Observable.of(
-        setEditedContent(),
+        setEditorState(),
         edit()
     ));

@@ -26,6 +26,7 @@ export default class DetailsPanel extends React.Component {
         closeGlyph: PropTypes.string,
         panelStyle: PropTypes.object,
         panelClassName: PropTypes.string,
+        containerClassName: PropTypes.string,
         style: PropTypes.object,
         dockProps: PropTypes.object,
         width: PropTypes.number,
@@ -73,6 +74,7 @@ export default class DetailsPanel extends React.Component {
                             title={<Message msgId="details.title"/>}
                             onClose={() => this.props.onClose()}
                             glyph="sheet"
+                            className={this.props.containerClassName}
                             style={this.props.dockStyle}>
                             <Panel id={this.props.id} style={this.props.panelStyle} className={this.props.panelClassName}>
                                 <BorderLayout

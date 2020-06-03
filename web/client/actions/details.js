@@ -12,15 +12,17 @@ export const EDIT = 'DETAILS:EDIT';
 export const CANCEL_EDIT = 'DETAILS:CANCEL_EDIT';
 export const CLOSE = 'DETAILS:CLOSE';
 export const SET_CONTENT = 'DETAILS:SET_CONTENT';
-export const SET_EDITED_CONTENT = 'DETAILS:SET_EDITED_CONTENT';
+export const SET_EDITOR_STATE = 'DETAILS:SET_EDITOR_STATE';
+export const SET_CONTENT_CHANGED = 'DETAILS:SET_CONTENT_CHANGED';
 export const SET_SETTINGS = 'DETAILS:SET_SETTINGS';
 export const SET_EDITED_SETTINGS = 'DETAILS:SET_EDITED_SETTINGS';
 export const CHANGE_SETTING = 'DETAILS:CHANGE_SETTING';
 export const RESET = 'DETAILS:RESET';
 export const LOADING = 'DETAILS:LOADING';
 
-export const save = () => ({
-    type: SAVE
+export const save = (content) => ({
+    type: SAVE,
+    content
 });
 
 export const saveSuccess = () => ({
@@ -45,9 +47,13 @@ export const setContent = (content) => ({
     content
 });
 
-export const setEditedContent = (content, setChanged) => ({
-    type: SET_EDITED_CONTENT,
-    content,
+export const setEditorState = (editorState) => ({
+    type: SET_EDITOR_STATE,
+    editorState
+});
+
+export const setContentChanged = (setChanged) => ({
+    type: SET_CONTENT_CHANGED,
     setChanged
 });
 

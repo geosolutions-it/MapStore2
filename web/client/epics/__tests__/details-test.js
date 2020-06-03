@@ -28,7 +28,6 @@ import {
     EDIT,
     SET_EDITED_SETTINGS,
     SET_CONTENT,
-    SET_EDITED_CONTENT,
     SET_SETTINGS,
     SAVE_SUCCESS
 } from '../../actions/details';
@@ -78,15 +77,12 @@ describe('details epics', () => {
     it('onDetailsControlEnabledChangeEpic enable with content', (done) => {
         const startActions = [setControlProperty('details', 'enabled', true)];
 
-        testEpic(onDetailsControlEnabledChangeEpic, 4, startActions, actions => {
-            expect(actions.length).toBe(4);
+        testEpic(onDetailsControlEnabledChangeEpic, 3, startActions, actions => {
+            expect(actions.length).toBe(3);
             expect(actions[0].type).toBe(EDIT);
             expect(actions[0].active).toNotExist();
             expect(actions[1].type).toBe(SET_EDITED_SETTINGS);
             expect(actions[2].type).toBe(CLOSE_FEATURE_GRID);
-            expect(actions[3].type).toBe(SET_EDITED_CONTENT);
-            expect(actions[3].content).toBe('content');
-            expect(actions[3].setChanged).toNotExist();
         }, {
             map: {
                 present: {
@@ -181,12 +177,13 @@ describe('details epics', () => {
         mockAxios.onPut('/data/12383').reply(200, 12383);
         mockAxios.onPost('/resources/resource/12383/permissions').reply(200, {});
 
-        testEpic(mapSaveDetailsEpic, 4, startActions, actions => {
-            expect(actions.length).toBe(4);
+        testEpic(mapSaveDetailsEpic, 5, startActions, actions => {
+            expect(actions.length).toBe(5);
             expect(actions[0].type).toBe(LOADING);
             expect(actions[1].type).toBe(SHOW_NOTIFICATION);
-            expect(actions[2].type).toBe(SAVE_SUCCESS);
-            expect(actions[3].type).toBe(LOADING);
+            expect(actions[2].type).toBe(SET_CONTENT);
+            expect(actions[3].type).toBe(SAVE_SUCCESS);
+            expect(actions[4].type).toBe(LOADING);
         }, {
             map: {
                 present: {
@@ -219,12 +216,13 @@ describe('details epics', () => {
         });
         mockAxios.onPost('/resources/resource/12383/permissions').reply(200, {});
 
-        testEpic(mapSaveDetailsEpic, 4, startActions, actions => {
-            expect(actions.length).toBe(4);
+        testEpic(mapSaveDetailsEpic, 5, startActions, actions => {
+            expect(actions.length).toBe(5);
             expect(actions[0].type).toBe(LOADING);
             expect(actions[1].type).toBe(SHOW_NOTIFICATION);
-            expect(actions[2].type).toBe(SAVE_SUCCESS);
-            expect(actions[3].type).toBe(LOADING);
+            expect(actions[2].type).toBe(SET_CONTENT);
+            expect(actions[3].type).toBe(SAVE_SUCCESS);
+            expect(actions[4].type).toBe(LOADING);
         }, {
             map: {
                 present: {

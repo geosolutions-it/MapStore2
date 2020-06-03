@@ -9,17 +9,20 @@
 import React from 'react';
 
 import DefaultViewer from './viewers/DefaultViewer';
-import QuillEditor from './editors/QuillEditor';
+import editors from './editors';
 
 export default ({
     editing,
+    editor = 'DraftJSEditor',
     className = '',
     detailsText,
     editorProps = {}
 }) => {
+    const EditorComponent = editors[editor].editor;
+
     const detailsViewer = (<DefaultViewer
         detailsText={detailsText}/>);
-    const detailsEditor = (<QuillEditor
+    const detailsEditor = (<EditorComponent
         detailsText={detailsText}
         {...editorProps}/>);
 

@@ -12,7 +12,8 @@ import { createStateMocker } from './reducersTestUtils';
 import {
     edit,
     setContent,
-    setEditedContent,
+    setEditorState,
+    setContentChanged,
     setSettings,
     setEditedSettings,
     changeSetting,
@@ -22,7 +23,7 @@ import {
 import {
     editingSelector,
     contentSelector,
-    editedContentSelector,
+    editorStateSelector,
     contentChangedSelector,
     settingsSelector,
     editedSettingsSelector,
@@ -39,9 +40,13 @@ describe('details reducer', () => {
         const state = stateMocker(setContent('content'));
         expect(contentSelector(state)).toBe('content');
     });
-    it('setEditedContent', () => {
-        const state = stateMocker(setEditedContent('content'));
-        expect(editedContentSelector(state)).toBe('content');
+    it('setEditorState', () => {
+        const state = stateMocker(setEditorState('editorState'));
+        expect(editorStateSelector(state)).toBe('editorState');
+    });
+    it('setContentChanged', () => {
+        const state = stateMocker(setContentChanged(true));
+        expect(contentChangedSelector(state)).toBe(true);
     });
     it('setSettings', () => {
         const state = stateMocker(setSettings('settings'));
@@ -76,13 +81,11 @@ describe('details reducer', () => {
     it('edit enable', () => {
         const state = stateMocker(setContent('content'), edit(true));
         expect(editingSelector(state)).toBe(true);
-        expect(editedContentSelector(state)).toBe('content');
         expect(contentChangedSelector(state)).toNotExist();
     });
     it('edit disable', () => {
-        const state = stateMocker(setContent('content'), edit(true), setEditedContent('contentEdited'), edit(false));
+        const state = stateMocker(setContent('content'), edit(true), edit(false));
         expect(editingSelector(state)).toBe(false);
-        expect(editedContentSelector(state)).toBe('contentEdited');
         expect(contentChangedSelector(state)).toBe(false);
     });
 });

@@ -10,7 +10,6 @@ const React = require('react');
 const Metadata = require('../forms/Metadata');
 const Thumbnail = require('../forms/Thumbnail');
 const PermissionEditor = require('../../security/PermissionEditor');
-const ReactQuill = require('react-quill');
 const Portal = require('../../misc/Portal');
 const ResizableModal = require('../../misc/ResizableModal');
 require('react-quill/dist/quill.snow.css');
@@ -23,6 +22,11 @@ const Toolbar = require('../../misc/toolbar/Toolbar');
 const { NO_DETAILS_AVAILABLE } = require('../../../actions/maps');
 const LocaleUtils = require('../../../utils/LocaleUtils');
 const ConfirmModal = require('../../resources/modals/ConfirmModal');
+
+const Details = require('../../details/Details').default;
+const DetailsDialog = require('../../details/DetailsDialog').default;
+
+const { draftJSEditorStateToHtml } = require('../../../utils/EditorUtils');
 
 
 /**
@@ -195,29 +199,20 @@ class MetadataModal extends React.Component {
     renderDetailsSheet = (readOnly) => {
         return (
             <Portal>
-                {readOnly ? (
-                    <ResizableModal size="lg"
-                        showFullscreen
-                        onClose={() => {
-                            this.props.onResetCurrentMap();
-                        }}
-                        title={<Message msgId="map.details.title" msgParams={{ name: this.props.map.name }} />}
-                        show
-                    >
-                        <div className="ms-detail-body">
-                            {!this.props.map.detailsText ? <Spinner spinnerName="circle" noFadeIn overrideSpinnerClassName="spinner" /> : <div className="ql-editor" dangerouslySetInnerHTML={{ __html: this.props.map.detailsText || '' }} />}
-                        </div>
-                    </ResizableModal>
-                ) : (<ResizableModal
+                <DetailsDialog
                     show={!!this.props.map.showDetailEditor}
                     title={<Message msgId="map.details.title" msgParams={{ name: this.props.map.name }} />}
-                    bodyClassName="ms-modal-quill-container"
-                    size="lg"
-                    clickOutEnabled={false}
+                    containerClassName={!readOnly ? "ms-details-draftjseditor-container" : undefined}
                     showFullscreen
                     fullscreenType="full"
-                    onClose={() => { this.props.detailsSheetActions.onBackDetails(this.props.map.detailsBackup); }}
-                    buttons={[{
+                    onClose={() => {
+                        if (readOnly) {
+                            this.props.onResetCurrentMap();
+                        } else {
+                            this.props.detailsSheetActions.onBackDetails(this.props.map.detailsBackup);
+                        }
+                    }}
+                    buttons={!readOnly ? [{
                         text: <Message msgId="map.details.back" />,
                         onClick: () => {
                             this.props.detailsSheetActions.onBackDetails(this.props.map.detailsBackup);
@@ -225,21 +220,23 @@ class MetadataModal extends React.Component {
                     }, {
                         text: <Message msgId="map.details.save" />,
                         onClick: () => {
-                            this.props.detailsSheetActions.onSaveDetails(this.props.map.detailsText);
+                            this.props.detailsSheetActions.onSaveDetails(draftJSEditorStateToHtml(this.state.editorState));
                         }
-                    }]}>
-                    <div id="ms-details-editor">
-                        <ReactQuill
-                            bounds={"#ms-details-editor"}
-                            value={this.props.map.detailsText}
-                            onChange={(details) => {
-                                if (details && details !== '<p><br></p>') {
-                                    this.props.detailsSheetActions.onUpdateDetails(details, false);
-                                }
-                            }}
-                            modules={this.props.modules} />
-                    </div>
-                </ResizableModal>)}
+                    }] : []}>
+                    <Details
+                        editing={!readOnly}
+                        editor="DraftJSEditor"
+                        editorProps={{
+                            editorState: this.state.editorState,
+                            onUpdate: (editorState) => {
+                                this.setState({
+                                    ...this.state,
+                                    editorState
+                                });
+                            }
+                        }}
+                        detailsText={this.props.map.detailsText}/>
+                </DetailsDialog>
             </Portal>);
     }
     /**

@@ -13,19 +13,27 @@ import Message from '../I18N/Message';
 export default ({
     show,
     loading = false,
-    editing,
     title = <Message msgId="details.title"/>,
     children,
     header,
+    containerClassName,
+    showFullscreen,
+    fullscreenType,
+    buttons,
     onClose = () => {}
 }) => <ResizableModal
+    size="lg"
     loading={loading}
     clickOutEnabled={false}
     hideFooterIfEmpty
+    containerClassName={`ms-details-dialog-modal${containerClassName ? ` ${containerClassName}` : ''}`}
     show={show}
     title={title}
-    bodyClassName={editing === 'content' ? 'ms-details-dialog-editor-container' : 'ms-details-dialog-body'}
-    onClose={onClose}>
+    bodyClassName={'ms-details-dialog-body'}
+    onClose={onClose}
+    showFullscreen={showFullscreen}
+    fullscreenType={fullscreenType}
+    buttons={buttons}>
     <div className="ms-details-dialog-contents">
         <div className="ms-details-dialog-header">
             {header}
