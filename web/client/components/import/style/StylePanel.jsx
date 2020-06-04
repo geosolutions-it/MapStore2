@@ -182,6 +182,14 @@ class StylePanel extends React.Component {
         let styledLayer = this.props.selected;
         if (!this.state.useDefaultStyle) {
             styledLayer = toVectorStyle(styledLayer, this.props.shapeStyle);
+            styledLayer.features.forEach(feature => {
+                Array.isArray(feature.style) ? feature.style[0] = {
+                    ...styledLayer.features[0].style[0],
+                    ...styledLayer.style,
+                    radius: null
+                } : null;
+            }
+            );
         }
         Promise.resolve(this.props.addLayer( styledLayer )).then(() => {
             let bbox = [];
