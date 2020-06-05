@@ -50,6 +50,7 @@
         },
         "showEmptyMessageGFI": "Show empty results message in GetFeatureInfo panel",
         "remove": "Delete",
+        "removeThumbnail": "Remove thumbnail",
         "layerProperties": {
             "windowTitle": "Layer Properties",
             "title": "Title",
@@ -2231,7 +2232,9 @@
                 "trash": "Remove resource",
                 "videoUrl": "Video URL",
                 "videoUrlPlaceholder": "Enter a video url",
-                "thumbnail": "Add thumbnail (maximum size 500kb)"
+                "thumbnail": "Add thumbnail (maximum size 500kb)",
+                "createVideoThumbnail": "Create a thumbnail from video source",
+                "thumbnailCreateError": "It's not possible to create a thumbnail from the current video source. Click or drop an image in the thumbnail input to upload it manually"
             },
             "mediaform": {
                 "confirmExitTitle": "Close Media Form",
