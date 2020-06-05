@@ -27,7 +27,7 @@ module.exports = [
     },
     {
         translationHTML: "geostoryEditSidebarSettings",
-        selector: ".ms-geostory-builder",
+        selector: "#geostory-builder-settings-button",
         position: "right"
     }, {
         translationHTML: "geostoryEditContainer",
