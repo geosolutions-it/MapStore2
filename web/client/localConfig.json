@@ -699,7 +699,7 @@
             "cfg": {
               "allowClicksThruHole": false,
               "containerPosition": "header",
-              "preset": "geostory_tutorial"
+              "preset": "geostory_view_tutorial"
             }
           },
           "Login",
