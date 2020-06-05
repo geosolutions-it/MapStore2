@@ -2251,7 +2251,7 @@
                 "emptyList": "Premere il pulsante più per creare una mappa o selezionare un altro servizio di mappe. Per maggiori informazioni consulta <a href='https://mapstore.readthedocs.io/en/latest/user-guide/media-editor-window/#maps' target='_blank'/>questa</a> guida"
             },
             "videoList": {
-                "emptyList": "Premere il pulsante più per aggiungere un nuovo video. Per maggiori informazioni consulta <a href='https://mapstore.readthedocs.io/en/latest/user-guide/media-editor-window/#videos' target='_blank'/>questa<a/> guida"
+                "emptyList": "Premere il pulsante più per aggiungere un nuovo video. Per maggiori informazioni consulta <a href='https://mapstore.readthedocs.io/en/latest/user-guide/media-editor-window/#videos' target='_blank'/>questa</a> guida"
             }
         },
         "backgroundDialog": {
