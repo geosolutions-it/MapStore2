@@ -101,9 +101,6 @@ export default compose(
                         component: undefined,
                         dropdownClassName: undefined
                     },
-                    fontSize: {
-                        defaultFontSize: 24
-                    },
                     inline: {
                         options: ['bold', 'italic', 'underline', 'strikethrough', 'monospace'],
                         bold: { className: `${className}-toolbar-btn` },
