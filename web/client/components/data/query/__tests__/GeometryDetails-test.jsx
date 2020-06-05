@@ -137,10 +137,10 @@ describe('GeometryDetails', () => {
     it('creates the GeometryDetails component with BBOX selection', () => {
         let geometry = {
             extent: [
-                -1335833.8895192828,
-                5212046.6457833825,
-                -543239.115071175,
-                5785158.045300978
+                -12080719.446415536,
+                3035467.26726092,
+                -11112109.423985783,
+                6146760.066580733
             ],
             projection: "EPSG:900913",
             type: "Polygon"
@@ -172,5 +172,16 @@ describe('GeometryDetails', () => {
         let panelBodyRows = pb.getElementsByClassName('row');
         expect(panelBodyRows).toExist();
         expect(panelBodyRows.length).toBe(3);
+
+        const panelBodyInputs = pb.querySelectorAll('input');
+        expect(panelBodyInputs.length).toBe(4);
+
+        [...panelBodyInputs].forEach(input => {
+            const [mainValue, decimals] = input.value.split('.');
+
+            expect(mainValue.length + decimals.length <= 10 && mainValue.length + decimals.length >= 7).toBeTruthy();
+            expect(mainValue.length <= 4).toBeTruthy(); // can be ranged from 180 to -180
+            expect(decimals.length === 6).toBeTruthy(); // always must be 6 digits
+        });
     });
 });
