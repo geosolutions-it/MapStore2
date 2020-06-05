@@ -19,6 +19,8 @@ const DropdownFeatureType = ({
     onStartDrawing = () => {},
     onAddText = () => {},
     onSetStyle = () => {},
+    defaultStyles = {},
+    defaultPointType = 'marker',
     titles = {},
     glyph = "",
     bsStyle = "primary",
@@ -35,7 +37,7 @@ const DropdownFeatureType = ({
 
         <MenuItem eventKey="1" onClick={() => {
             onClick("Point");
-            onSetStyle([{ ...DEFAULT_ANNOTATIONS_STYLES.Point, highlight: true, id: uuidv1()}]);
+            onSetStyle([{ ...defaultStyles.POINT?.[defaultPointType], highlight: true, id: uuidv1()}]);
             onStartDrawing();
         }}>
             <Glyphicon glyph="point"/>{titles.marker}

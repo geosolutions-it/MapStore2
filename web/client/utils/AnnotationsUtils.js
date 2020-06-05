@@ -24,10 +24,20 @@ const STYLE_CIRCLE = {
     fillColor: '#ffffff',
     fillOpacity: 0.2
 };
-const STYLE_POINT = {
+const STYLE_POINT_MARKER = {
     iconGlyph: 'comment',
     iconShape: 'square',
     iconColor: 'blue'
+};
+const STYLE_POINT_SYMBOL = {
+    iconAnchor: [0.5, 0.5],
+    anchorXUnits: 'fraction',
+    anchorYUnits: 'fraction',
+    color: "#000000",
+    fillColor: "#000000",
+    opacity: 1,
+    size: 64,
+    fillOpacity: 1
 };
 const STYLE_TEXT = {
     fontStyle: 'normal',
@@ -63,9 +73,9 @@ const STYLE_POLYGON = {
 
 const DEFAULT_ANNOTATIONS_STYLES = {
     "Text": STYLE_TEXT,
-    "Point": STYLE_POINT,
+    "Point": STYLE_POINT_MARKER,
     "Circle": STYLE_CIRCLE,
-    "MultiPoint": STYLE_POINT,
+    "MultiPoint": STYLE_POINT_MARKER,
     "LineString": STYLE_LINE,
     "MultiLineString": STYLE_LINE,
     "Polygon": STYLE_POLYGON,
@@ -337,7 +347,8 @@ const AnnotationsUtils = {
     */
     DEFAULT_ANNOTATIONS_STYLES,
     STYLE_CIRCLE,
-    STYLE_POINT,
+    STYLE_POINT_MARKER,
+    STYLE_POINT_SYMBOL,
     STYLE_TEXT,
     STYLE_LINE,
     STYLE_POLYGON,

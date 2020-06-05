@@ -7,6 +7,7 @@
  */
 
 const Rx = require('rxjs');
+const axios = require('axios');
 const {saveAs} = require('file-saver');
 const {MAP_CONFIG_LOADED} = require('../actions/config');
 const {TOGGLE_CONTROL, toggleControl, setControlProperty} = require('../actions/controls');
@@ -20,21 +21,24 @@ const {queryPanelSelector, measureSelector} = require('../selectors/controls');
 const { hideMapinfoMarker, purgeMapInfoResults, closeIdentify} = require('../actions/mapInfo');
 
 const {updateAnnotationGeometry, setStyle, toggleStyle, cleanHighlight, toggleAdd,
-    showAnnotation, editAnnotation,
+    showAnnotation, editAnnotation, setDefaultStyle, setErrorSymbol, loading,
     CONFIRM_REMOVE_ANNOTATION, SAVE_ANNOTATION, EDIT_ANNOTATION, CANCEL_EDIT_ANNOTATION,
     SET_STYLE, RESTORE_STYLE, HIGHLIGHT, CLEAN_HIGHLIGHT, CONFIRM_CLOSE_ANNOTATIONS, START_DRAWING,
     CANCEL_CLOSE_TEXT, SAVE_TEXT, DOWNLOAD, LOAD_ANNOTATIONS, CHANGED_SELECTED, RESET_COORD_EDITOR, CHANGE_RADIUS,
-    ADD_NEW_FEATURE, SET_EDITING_FEATURE, CHANGE_TEXT, NEW_ANNOTATION, TOGGLE_STYLE, CONFIRM_DELETE_FEATURE, OPEN_EDITOR
+    ADD_NEW_FEATURE, SET_EDITING_FEATURE, CHANGE_TEXT, NEW_ANNOTATION, TOGGLE_STYLE, CONFIRM_DELETE_FEATURE, OPEN_EDITOR,
+    LOAD_DEFAULT_STYLES
 } = require('../actions/annotations');
 
 const uuidv1 = require('uuid/v1');
 const {FEATURES_SELECTED, GEOMETRY_CHANGED, DRAWING_FEATURE} = require('../actions/draw');
 const {PURGE_MAPINFO_RESULTS} = require('../actions/mapInfo');
 
-const {head, findIndex, castArray, isArray, find} = require('lodash');
+const {head, findIndex, castArray, isArray, find, values} = require('lodash');
 const assign = require('object-assign');
-const {annotationsLayerSelector, multiGeometrySelector} = require('../selectors/annotations');
-const {normalizeAnnotation, removeDuplicate, validateCoordsArray, getStartEndPointsForLinestring, DEFAULT_ANNOTATIONS_STYLES} = require('../utils/AnnotationsUtils');
+const {annotationsLayerSelector, multiGeometrySelector, symbolErrorsSelector} = require('../selectors/annotations');
+const {normalizeAnnotation, removeDuplicate, validateCoordsArray, getStartEndPointsForLinestring, DEFAULT_ANNOTATIONS_STYLES,
+    STYLE_POINT_MARKER, STYLE_POINT_SYMBOL, DEFAULT_SHAPE, DEFAULT_PATH} = require('../utils/AnnotationsUtils');
+const {createSvgUrl} = require('../utils/VectorStyleUtils');
 
 const {mapNameSelector} = require('../selectors/map');
 const {changeDrawingStatus} = require('../actions/draw');
@@ -699,6 +703,44 @@ module.exports = (viewer) => ({
                 addClickCallback: true
             }, assign({}, style, {highlight: false}));
             return Rx.Observable.of(action);
+        }),
+    loadDefaultAnnotationsStylesEpic: (action$, store) => action$.ofType(LOAD_DEFAULT_STYLES)
+        .switchMap(({shape = DEFAULT_SHAPE, size = 64, fillColor = '#000000', strokeColor = '#000000', symbolsPath = DEFAULT_PATH}) => {
+            const symbolErrors = symbolErrorsSelector(store.getState()) || [];
+
+            const pointTypesFlows = {
+                symbol: () => {
+                    const defaultSymbolStyle = {
+                        ...STYLE_POINT_SYMBOL,
+                        shape,
+                        size,
+                        fillColor,
+                        color: strokeColor,
+                        symbolUrl: symbolsPath + shape + ".svg"
+                    };
+                    return Rx.Observable.defer(() => axios.get(defaultSymbolStyle.symbolUrl)
+                        .then(() => createSvgUrl(defaultSymbolStyle, defaultSymbolStyle.symbolUrlCustomized || defaultSymbolStyle.symbolUrl)))
+                        .map((symbolUrlCustomized) => setDefaultStyle('POINT.symbol', {...defaultSymbolStyle, symbolUrlCustomized}))
+                        .catch(() => {
+                            return Rx.Observable.of(
+                                setErrorSymbol(symbolErrors.concat(['loading_symbol' + shape])),
+                                setDefaultStyle('POINT.symbol', {
+                                    ...defaultSymbolStyle,
+                                    symbolUrlCustomized: require('../product/assets/symbols/symbolMissing.svg'),
+                                    symbolUrl: symbolsPath + shape + ".svg",
+                                    shape
+                                })
+                            );
+                        });
+                },
+                marker: () => {
+                    return Rx.Observable.of(setDefaultStyle('POINT.marker', STYLE_POINT_MARKER));
+                }
+            };
+
+            return Rx.Observable.merge(...values(pointTypesFlows).map(flowFunc => flowFunc()))
+                .startWith(loading(true))
+                .concat(Rx.Observable.of(loading(false)));
         })
 
 });
