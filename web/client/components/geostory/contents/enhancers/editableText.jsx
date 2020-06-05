@@ -74,7 +74,7 @@ export default compose(
                 toolbarStyle,
                 toolbar: {
                     // [here](https://jpuri.github.io/react-draft-wysiwyg/#/docs) you can find some examples (hard to find them in the official draft-js doc)
-                    options: ['fontFamily', 'blockType', 'inline', 'textAlign', 'colorPicker', 'list', 'link', 'remove'],
+                    options: ['fontFamily', 'blockType', 'fontSize', 'inline', 'textAlign', 'colorPicker', 'list', 'link', 'remove'],
                     fontFamily: {
                         options: ['inherit', 'Arial', 'Georgia', 'Impact', 'Tahoma', 'Times New Roman', 'Verdana'],
                         className: undefined,
@@ -100,6 +100,9 @@ export default compose(
                         className: undefined,
                         component: undefined,
                         dropdownClassName: undefined
+                    },
+                    fontSize: {
+                        defaultFontSize: 24
                     },
                     inline: {
                         options: ['bold', 'italic', 'underline', 'strikethrough', 'monospace'],
