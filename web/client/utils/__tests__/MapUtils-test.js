@@ -1926,7 +1926,7 @@ describe('Test the MapUtils', () => {
                 version: 2
             });
         });
-    })
+    });
 
     it('test getIdFromUri ', () => {
         // /mapstore2/rest/geostore/data/578/raw?decode=datauri
