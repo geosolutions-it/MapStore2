@@ -2245,7 +2245,7 @@
                 "confirmRemoveUsedResource": "Questa risorsa sarà rimossa anche da tutte le sezioni/contenuti che rimarrano vuoti. La vuoi rimuovere dalla storia?"
             },
             "imageList": {
-                "emptyList": "Premere il pulsante più per aggiungere una nuova immagine. Per maggiori informazioni consulta <a href='https://mapstore.readthedocs.io/en/latest/user-guide/media-editor-window/#images' target='_blank'/>questa<a/> guida"
+                "emptyList": "Premere il pulsante più per aggiungere una nuova immagine. Per maggiori informazioni consulta <a href='https://mapstore.readthedocs.io/en/latest/user-guide/media-editor-window/#images' target='_blank'/>questa</a> guida"
             },
             "mapList": {
                 "emptyList": "Premere il pulsante più per creare una mappa o selezionare un altro servizio di mappe. Per maggiori informazioni consulta <a href='https://mapstore.readthedocs.io/en/latest/user-guide/media-editor-window/#maps' target='_blank'/>questa<a/> guida"
