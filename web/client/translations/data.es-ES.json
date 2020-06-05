@@ -2244,11 +2244,14 @@
                 "confirmRemoveResource": "¿Desea eliminar este recurso de medios de la historia?",
                 "confirmRemoveUsedResource": "Este recurso también se eliminará de todas las secciones / contenidos donde se usa dejándolos vacíos. ¿Quieres eliminarlo de la historia?"
             },
+            "imageList": {
+                "emptyList": "Haga clic en el botón más para agregar una nueva imagen. Consulte la guía del usuario <a href='https://mapstore.readthedocs.io/en/latest/user-guide/media-editor-window/#images' target='_blank'/> aquí <a/>"
+            },
             "mapList": {
-                "emptyList": "Haga clic en el botón más para crear un mapa o seleccione un servicio de mapas diferente."
+                "emptyList": "Haga clic en el botón más para crear un mapa o seleccione un servicio de mapas diferente. Consulte la guía del usuario <a href='https://mapstore.readthedocs.io/en/latest/user-guide/media-editor-window/#maps' target='_blank'/> aquí <a/>"
             },
             "videoList": {
-                "emptyList": "Haga clic en el botón más para agregar un nuevo video"
+                "emptyList": "Haga clic en el botón más para agregar un nuevo video. Consulte la guía del usuario <a href='https://mapstore.readthedocs.io/en/latest/user-guide/media-editor-window/#videos' target='_blank'/> aquí <a/>"
             }
         },
         "backgroundDialog": {
