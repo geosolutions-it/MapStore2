@@ -180,7 +180,7 @@ describe('GeometryDetails', () => {
             const [mainValue, decimals] = input.value.split('.');
 
             expect(mainValue.length + decimals.length <= 10 && mainValue.length + decimals.length >= 7).toBeTruthy();
-            expect(mainValue.length <= 4).toBeTruthy(); // can be ranged from 999 to -999
+            expect(mainValue.length <= 4).toBeTruthy(); // can be ranged from 180 to -180
             expect(decimals.length === 6).toBeTruthy(); // always must be 6 digits
         });
     });
