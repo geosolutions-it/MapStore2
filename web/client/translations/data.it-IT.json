@@ -50,6 +50,7 @@
         },
         "showEmptyMessageGFI": "Mostra il messaggio: Nessuna feature per gli altri layer",
         "remove": "Rimuovi",
+        "removeThumbnail": "Rimuovi anteprima",
         "layerProperties": {
             "windowTitle": "Proprietà del livello",
             "title": "Titolo",
@@ -2225,7 +2226,9 @@
                 "trash": "Elimina la risorsa",
                 "videoUrl": "Video URL",
                 "videoUrlPlaceholder": "Inserisci video url",
-                "thumbnail": "Aggiungi thumbnail (dimensione massima 500kb)"
+                "thumbnail": "Aggiungi thumbnail (dimensione massima 500kb)",
+                "createVideoThumbnail": "Crea un'anteprima dalla risorsa video",
+                "thumbnailCreateError": "Non è possibile creare un'anteprima dalla risorsa video. Clicca o rilascia un'immagine nel input dell'anteprima per caricarne una manualmente"
             },
             "mediaform": {
                 "confirmExitTitle": "Chiudi Media From",

@@ -50,6 +50,7 @@
         },
         "showEmptyMessageGFI": "Nachricht mit leeren Ergebnissen anzeigen",
         "remove": "Löschen",
+        "removeThumbnail": "Miniaturbild entfernen",
         "layerProperties": {
             "windowTitle": "Ebenen Eigenschaften",
             "title": "Titel",
@@ -2224,7 +2225,9 @@
                 "trash": "Remove resource",
                 "videoUrl": "Video URL",
                 "videoUrlPlaceholder": "Geben Sie eine Video-URL ein",
-                "thumbnail": "Miniaturbild hinzufügen (maximale Größe 500 KB)"
+                "thumbnail": "Miniaturbild hinzufügen (maximale Größe 500 KB)",
+                "createVideoThumbnail": "Erstellen Sie eine Miniaturansicht aus einer Videoquelle",
+                "thumbnailCreateError": "Es ist nicht möglich, ein Miniaturbild aus der aktuellen Videoquelle zu erstellen. Klicken oder löschen Sie ein Bild in der Miniaturansicht, um es manuell hochzuladen"
             },
             "mediaform": {
                 "confirmExitTitle": "Schließen Media Form",
