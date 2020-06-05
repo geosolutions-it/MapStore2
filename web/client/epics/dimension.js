@@ -95,25 +95,22 @@ module.exports = {
     updateLayerDimensionDataOnMapLoad: (action$, {getState = () => {}} = {}) =>
         action$.ofType(MAP_CONFIG_LOADED).switchMap( ({config = {}}) => {
             const layers = layersWithTimeDataSelector(getState());
-            const selectedLayer = config.timelineData?.selectedLayer;
+            const layersWithMultidim = layers.filter(l =>
+                l && l.dimensions && find(l.dimensions, d => d && d.source && d.source.type === "multidim-extension")); // layers with dimension and multidimensional extension
+
+            const selectedLayer = config.timelineData?.selectedLayer ?? layersWithMultidim[0]?.id;
             const currentTime = config.dimensionData?.currentTime;
             const offsetTime = config.dimensionData?.offsetTime;
-            return (selectedLayer && currentTime ?
+
+            return (currentTime ?
                 Observable.of(
                     // restore states of timeline and dimension from map config
-                    selectLayer(selectedLayer),
+                    ...(selectedLayer ? [selectLayer(selectedLayer)] : []),
                     setCurrentTime(currentTime),
                     setCurrentOffset(offsetTime)
                 ) : Observable.empty()
             )
-                .concat(Observable.from(
-                    // layers with dimension and multidimensional extension
-                    layers.filter(l =>
-                        l
-                            && l.dimensions
-                            && find(l.dimensions, d => d && d.source && d.source.type === "multidim-extension")
-                    )
-                )
+                .concat(Observable.from(layersWithMultidim)
                     // one flow for each dimension
                     .mergeMap(l =>
                         describeDomains(getTimeMultidimURL(l), l.name, undefined, DESCRIBE_DOMAIN_OPTIONS)
