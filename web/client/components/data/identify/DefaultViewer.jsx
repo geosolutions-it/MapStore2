@@ -13,7 +13,7 @@ const HTML = require('../../../components/I18N/HTML');
 const Message = require('../../../components/I18N/Message');
 const {Alert, Panel, Accordion} = require('react-bootstrap');
 const ViewerPage = require('./viewers/ViewerPage');
-const {isEqual} = require('lodash');
+const {isEqual, isEmpty} = require('lodash');
 const {getFormatForResponse} = require('../../../utils/IdentifyUtils');
 
 class DefaultViewer extends React.Component {
@@ -71,9 +71,8 @@ class DefaultViewer extends React.Component {
     }
 
     renderEmptyLayers = (validator) => {
-        const notEmptyResponses = validator.getValidResponses(this.props.responses).length;
         const invalidResponses = validator.getNoValidResponses(this.props.responses);
-        if (this.props.missingResponses === 0 && notEmptyResponses === 0) {
+        if (this.props.missingResponses === 0 && this.isEmptyResponses(invalidResponses)) {
             return null;
         }
         if (invalidResponses.length !== 0) {
@@ -108,7 +107,8 @@ class DefaultViewer extends React.Component {
             );
         }
         return responses.map((res, i) => {
-            const {response, layerMetadata} = res;
+            let {response, layerMetadata} = res;
+            response = this.adjustedResponse(response);
             const format = getFormatForResponse(res, this.props);
             const PageHeader = this.props.header;
             let customViewer;
@@ -129,11 +129,12 @@ class DefaultViewer extends React.Component {
                         onPrevious={() => this.props.onPrevious()}/></span> : null
                     }
                     style={this.props.style}>
-                    <ViewerPage
+                    {!isEmpty(response) && <ViewerPage
                         response={response}
                         format={format}
                         viewers={customViewer || this.props.viewers}
                         layer={layerMetadata}/>
+                    }
                 </Panel>
             );
         });
@@ -150,7 +151,9 @@ class DefaultViewer extends React.Component {
     render() {
         const Container = this.props.container;
         const validator = this.props.validator(this.props.format);
-        const validResponses = validator.getValidResponses(this.props.responses);
+        let validResponses = validator.getValidResponses(this.props.responses);
+        const noValidResponses = validator.getNoValidResponses(this.props.responses);
+        validResponses = !this.isEmptyResponses(noValidResponses) ? validResponses : [];
         return (<div className="mapstore-identify-viewer">
             <Container {...this.props.containerProps}
                 onChangeIndex={(index) => { this.props.setIndex(index); }}
@@ -164,6 +167,14 @@ class DefaultViewer extends React.Component {
             {this.renderAdditionalInfo()}
         </div>)
         ;
+    }
+
+    isEmptyResponses = (responses) =>{
+        return responses.length === this.props.requests.length;
+    }
+
+    adjustedResponse = (response) =>{
+        return response.indexOf("no features were found") !== 0 ? response : "";
     }
 }
 

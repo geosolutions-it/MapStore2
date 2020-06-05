@@ -7,7 +7,7 @@
  */
 
 const React = require('react');
-const {Row, Col} = require('react-bootstrap');
+const {Row, Col, Button, Glyphicon, ButtonGroup} = require('react-bootstrap');
 const {get} = require('lodash');
 const Toolbar = require('../../misc/toolbar/Toolbar');
 const Message = require('../../I18N/Message');
@@ -17,6 +17,7 @@ const ResizableModal = require('../../misc/ResizableModal');
 const Portal = require('../../misc/Portal');
 const Coordinate = require('./coordinates/Coordinate');
 const {responseValidForEdit} = require('../../../utils/IdentifyUtils');
+const LayerSelector = require('./LayerSelector').default;
 /**
  * Component for rendering Identify Container inside a Dockable container
  * @memberof components.data.identify
@@ -44,7 +45,7 @@ module.exports = props => {
         validResponses = [],
         viewer = () => null,
         getToolButtons = () => [],
-        getNavigationButtons = () => [],
+        getFeatureButtons = () => [],
         showFullscreen,
         reverseGeocodeData = {},
         point,
@@ -67,7 +68,8 @@ module.exports = props => {
     } = props;
 
     const latlng = point && point.latlng || null;
-
+    console.log("validResponses", validResponses);
+    console.log("responsesIdentifyContainer", responses);
     const targetResponse = validResponses[index];
     const {layer} = targetResponse || {};
 
@@ -103,7 +105,6 @@ module.exports = props => {
             <DockablePanel
                 bsStyle="primary"
                 glyph="map-marker"
-                title={!viewerOptions.header ? validResponses[index] && validResponses[index].layerMetadata && validResponses[index].layerMetadata.title || '' : <Message msgId="identifyTitle" />}
                 open={enabled && requests.length !== 0}
                 size={size}
                 fluid={fluid}
@@ -115,43 +116,40 @@ module.exports = props => {
                 showFullscreen={showFullscreen}
                 zIndex={zIndex}
                 header={[
-                    <Coordinate
-                        key="coordinate-editor"
-                        formatCoord={formatCoord}
-                        enabledCoordEditorButton={enabledCoordEditorButton}
-                        onSubmit={onSubmitClickPoint}
-                        onChangeFormat={onChangeFormat}
-                        edit={showCoordinateEditor}
-                        coordinate={{
-                            lat: latlng && latlng.lat,
-                            lon: lngCorrected
-                        }}
-                    />,
-                    <GeocodeViewer latlng={latlng} revGeocodeDisplayName={revGeocodeDisplayName} {...props}/>,
-                    <Row key="button-row" className="text-center" style={{position: 'relative'}}>
-                        <Col key="tools" xs={12}>
+                    <Row className="layer-select-row">
+                        <div className="layer-col">
+                            <span className="identify-icon glyphicon glyphicon-1-layer"/>
+                            <LayerSelector responses={validResponses} index={index} setIndex={setIndex}/>
                             <Toolbar
                                 btnDefaultProps={{ bsStyle: 'primary', className: 'square-button-md' }}
-                                buttons={toolButtons}
-                                transitionProps={null
-                                    /* transitions was causing a bad rendering of toolbar present in the identify panel
-                                         * for this reason they ahve been disabled
-                                        */
-                                }/>
-                        </Col>
-                        <div key="navigation" style={{
-                            zIndex: 1,
-                            position: "absolute",
-                            right: 0,
-                            top: 0,
-                            margin: "0 10px"
-                        }}>
-                            <Toolbar
-                                btnDefaultProps={{ bsStyle: 'primary', className: 'square-button-md' }}
-                                buttons={getNavigationButtons(props)}
-                                transitionProps={null /* same here */}
+                                buttons={getFeatureButtons(props)}
+                                transitionProps={null}
                             />
                         </div>
+                    </Row>,
+                    <Row className="coordinates-edit-row">
+                        <span className="identify-icon glyphicon glyphicon-point"/>
+                        <Coordinate
+                            key="coordinate-editor"
+                            formatCoord={formatCoord}
+                            enabledCoordEditorButton={enabledCoordEditorButton}
+                            onSubmit={onSubmitClickPoint}
+                            onChangeFormat={onChangeFormat}
+                            edit={showCoordinateEditor}
+                            coordinate={{
+                                lat: latlng && latlng.lat,
+                                lon: lngCorrected
+                            }}
+                        />
+                        <GeocodeViewer latlng={latlng} revGeocodeDisplayName={revGeocodeDisplayName} {...props}/>
+                        <Toolbar
+                            btnDefaultProps={{ bsStyle: 'primary', className: 'square-button-md' }}
+                            buttons={toolButtons}
+                            transitionProps={null
+                            /* transitions was causing a bad rendering of toolbar present in the identify panel
+                                 * for this reason they ahve been disabled
+                                */
+                            }/>
                     </Row>
                 ].filter(headRow => headRow)}>
                 <Viewer
@@ -160,6 +158,7 @@ module.exports = props => {
                     format={format}
                     missingResponses={missingResponses}
                     responses={responses}
+                    requests={requests}
                     showEmptyMessageGFI={showEmptyMessageGFI}
                     {...viewerOptions}/>
             </DockablePanel>

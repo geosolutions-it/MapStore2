@@ -1,5 +1,22 @@
 
 #identify-container {
+    .layer-select-row{
+        margin-top: unset;
+        .layer-col{
+            display: flex;
+            align-items: center;
+            padding: 8px 8px 0px;
+            z-index: 10;
+        }
+    }
+    .coordinates-edit-row {
+        display: flex;
+        align-items: center;
+        padding: 8px;
+        margin-top: 8px;
+        border-top: 1px solid rgb(221, 221, 221);
+        border-bottom: 1px solid rgb(221, 221, 221);
+    }
     .coordinateRow.coord-editor.aeronautical {
         @media screen and (max-width: 660px) {
             display: block;
@@ -146,4 +163,14 @@
         padding-top: 8px;
         border-top: 1px solid @ms2-color-shade-lighter;
     }
+}
+
+.coordinates-text {
+    flex: 1 1 0%;
+    margin-left: 8px;
+    font-family: @font-family-monospace;
+}
+.identify-icon{
+    display: inline-block;
+    margin-top: 4px;
 }

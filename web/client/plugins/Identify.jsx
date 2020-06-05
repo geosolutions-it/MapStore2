@@ -33,6 +33,7 @@ const {identifyLifecycle} = require('../components/data/identify/enhancers/ident
 const zoomToFeatureHandler = require('..//components/data/identify/enhancers/zoomToFeatureHandler');
 const getToolButtons = require('./identify/toolButtons');
 const getNavigationButtons = require('./identify/navigationButtons');
+const getFeatureButtons = require('./identify/featureButtons');
 const Message = require('./locale/Message');
 
 require('./identify/identify.css');
@@ -41,6 +42,7 @@ const selector = createStructuredSelector({
     enabled: (state) => state.mapInfo && state.mapInfo.enabled || state.controls && state.controls.info && state.controls.info.enabled || false,
     responses: responsesSelector,
     validResponses: validResponsesSelector,
+    // validResponses: responsesSelector,
     requests: (state) => state.mapInfo && state.mapInfo.requests || [],
     format: generalInfoFormatSelector,
     map: mapSelector,
@@ -130,6 +132,7 @@ const identifyDefaultProps = defaultProps({
     size: 660,
     getToolButtons,
     getNavigationButtons,
+    getFeatureButtons,
     showFullscreen: false,
     validResponses: [],
     validator: MapInfoUtils.getValidator, // TODO: move all validation from the components to the selectors

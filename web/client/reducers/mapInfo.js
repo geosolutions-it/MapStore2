@@ -37,19 +37,23 @@ const {
 const {RESET_CONTROLS} = require('../actions/controls');
 
 const assign = require('object-assign');
-const {head} = require('lodash');
+const {head, findIndex, find, isUndefined} = require('lodash');
 
 function receiveResponse(state, action, type) {
     const request = head((state.requests || []).filter((req) => req.reqId === action.reqId));
     if (request) {
         const responses = state.responses || [];
+        const index = findIndex(responses, {title: action.layerMetadata?.title});
+        const updateIndexFlag = find(responses, "response");
+        responses[index] = {
+            response: action[type],
+            queryParams: action.requestParams,
+            layerMetadata: action.layerMetadata,
+            layer: action.layer
+        };
         return assign({}, state, {
-            responses: [...responses, {
-                response: action[type],
-                queryParams: action.requestParams,
-                layerMetadata: action.layerMetadata,
-                layer: action.layer
-            }]
+            responses: [...responses],
+            ...(isUndefined(updateIndexFlag) && index)
         });
     }
     return state;
@@ -199,10 +203,12 @@ function mapInfo(state = initState, action) {
         });
     }
     case NEW_MAPINFO_REQUEST: {
-        const {reqId, request} = action;
+        const {reqId, request, metaData} = action;
         const requests = state.requests || [];
+        const responses = state.responses || [];
         return assign({}, state, {
-            requests: [...requests, {request, reqId}]
+            requests: [...requests, {request, reqId}],
+            responses: [...responses, {title: metaData?.title || "", disabled: true}] // Change to isDisabled when react-select upgraded to v3
         });
     }
     case PURGE_MAPINFO_RESULTS:

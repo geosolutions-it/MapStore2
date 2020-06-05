@@ -92,11 +92,12 @@ function clearWarning() {
     };
 }
 
-function newMapInfoRequest(reqId, reqConfig) {
+function newMapInfoRequest(reqId, reqConfig, metaData) {
     return {
         type: NEW_MAPINFO_REQUEST,
         reqId: reqId,
-        request: reqConfig
+        request: reqConfig,
+        metaData
     };
 }
 

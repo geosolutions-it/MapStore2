@@ -7,7 +7,7 @@
 */
 import Rx from 'rxjs';
 
-import { get, find} from 'lodash';
+import { get, find, reverse} from 'lodash';
 
 
 import uuid from 'uuid';
@@ -122,7 +122,7 @@ export default {
     getFeatureInfoOnFeatureInfoClick: (action$, { getState = () => { } }) =>
         action$.ofType(FEATURE_INFO_CLICK)
             .switchMap(({ point, filterNameList = [], overrideParams = {} }) => {
-                let queryableLayers = queryableLayersSelector(getState());
+                let queryableLayers = reverse(queryableLayersSelector(getState()));
                 const queryableSelectedLayers = queryableSelectedLayersSelector(getState());
                 if (queryableSelectedLayers.length) {
                     queryableLayers = queryableSelectedLayers;
@@ -156,6 +156,7 @@ export default {
                             const basePath = url;
                             const requestParams = request;
                             const lMetaData = metadata;
+                            console.log("lMetaData", lMetaData);
                             const appParams = MapInfoUtils.filterRequestParams(layer, includeOptions, excludeParams);
                             const attachJSON = isHighlightEnabledSelector(getState());
                             const itemId = itemIdSelector(getState());
@@ -168,7 +169,7 @@ export default {
                                         : loadFeatureInfo(reqId, response.data, requestParams, { ...lMetaData, features: response.features, featuresCrs: response.featuresCrs }, layer)
                                 )
                                 .catch((e) => Rx.Observable.of(errorFeatureInfo(reqId, e.data || e.statusText || e.status, requestParams, lMetaData)))
-                                .startWith(newMapInfoRequest(reqId, param));
+                                .startWith(newMapInfoRequest(reqId, param, lMetaData));
                         }
                         return Rx.Observable.of(getVectorInfo(layer, request, metadata));
                     });

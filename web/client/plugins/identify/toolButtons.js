@@ -15,8 +15,6 @@ module.exports = ({
     showHighlightFeatureButton,
     currentFeature,
     highlight,
-    toggleHighlightFeature = () => {},
-    zoomToFeature = () => {},
     onEdit = () => {},
     ...props
 }) => [
@@ -36,22 +34,6 @@ module.exports = ({
         onClick: () => {
             props.onToggleShowCoordinateEditor(props.showCoordinateEditor);
         }
-    }, {
-        glyph: 'map-filter',
-        visible: showHighlightFeatureButton,
-        tooltipId: highlight ? "identifyStopHighlightingFeatures" : "identifyHighlightFeatures",
-        bsStyle: highlight ? "success" : "primary",
-        onClick: () => toggleHighlightFeature(!highlight)
-    }, {
-        glyph: 'zoom-to',
-        visible:
-            highlight
-            && !!currentFeature
-            && currentFeature.length > 0
-            // has at least 1 geometry
-            && currentFeature.reduce((hasGeometries, { geometry } = {}) => hasGeometries || !!geometry, false),
-        tooltipId: "identifyZoomToFeature",
-        onClick: zoomToFeature
     }, {
         glyph: 'pencil',
         visible: props.showEdit,
