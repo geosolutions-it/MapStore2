@@ -137,10 +137,10 @@ describe('GeometryDetails', () => {
     it('creates the GeometryDetails component with BBOX selection', () => {
         let geometry = {
             extent: [
-                -1335833.8895192828,
-                5212046.6457833825,
-                -543239.115071175,
-                5785158.045300978
+                -10691400.02030417,
+                4424786.693372282,
+                -10006524.24686899,
+                5613535.357263343
             ],
             projection: "EPSG:900913",
             type: "Polygon"
@@ -172,5 +172,9 @@ describe('GeometryDetails', () => {
         let panelBodyRows = pb.getElementsByClassName('row');
         expect(panelBodyRows).toExist();
         expect(panelBodyRows.length).toBe(3);
+
+        [...panelBodyRows].forEach(row => {
+            expect(row.querySelector('input').value.length).toBe(9);
+        });
     });
 });
