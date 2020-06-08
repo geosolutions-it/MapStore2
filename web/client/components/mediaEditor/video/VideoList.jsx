@@ -10,7 +10,7 @@ import React from "react";
 import withFilter from '../enhancers/withFilter';
 import withLocal from "../../misc/enhancers/localizedProps";
 import Filter from '../../misc/Filter';
-import Message from '../../I18N/Message';
+import HTML from '../../I18N/HTML';
 import SideGrid from '../../misc/cardgrids/SideGrid';
 import { filterResources } from '../../../utils/GeoStoryUtils';
 const Icon = require('../../misc/FitIcon');
@@ -51,6 +51,6 @@ export default withFilter(({
                     description: data.description
                 }))} />
             : <div className="msEmptyListMessage">
-                <Message msgId="mediaEditor.videoList.emptyList"/>
+                <HTML msgId="mediaEditor.videoList.emptyList"/>
             </div>}
     </div>));
