@@ -49,10 +49,25 @@ module.exports = withHandlers({
     changeGroupProperty:
         ({ onChange = () => { }, map = [] }) =>
             (id, key, value) => {
+
+                const EXPANDED = 'expanded';
                 const index = findIndex(map.groups || [], {
                     id
                 });
-                onChange(`map.groups[${index}].${key}`, value);
+
+                if (key === EXPANDED) {
+                    if (!Array.isArray(map.groups)) {
+                        onChange(`map.groups`, []);
+                        onChange(`map.groups[${index === -1 ? 0 : index}].${key}`, value);
+                        onChange(`map.groups[${index === -1 ? 0 : index}].id`, id);
+                    } else {
+                        (!map.groups[index === -1 ? map.groups.length : index]
+                        || (map.groups[index === -1 ? map.groups.length : index] && !map.groups[index === -1 ? 0 : index].id)
+                        )
+                        && onChange(`map.groups[${index === -1 ? map.groups.length : index}].id`, id);
+                        onChange(`map.groups[${index === -1 ? map.groups.length : index}].${key}`, value);
+                    }
+                } else onChange(`map.groups[${index}].${key}`, value);
             },
     updateMapEntries: ({ onChange = () => { } }) => (obj = {}) => Object.keys(obj).map(k => onChange(`map[${k}]`, obj[k]))
 });
