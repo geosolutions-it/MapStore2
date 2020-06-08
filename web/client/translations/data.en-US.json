@@ -2247,11 +2247,14 @@
                 "confirmRemoveResource": "Do you want to remove this media resource from the story?",
                 "confirmRemoveUsedResource": "This resource will also be removed from all the sections/contents where It's used leaving them empty. Do you want to remove It from the story?"
             },
+            "imageList": {
+                "emptyList": "Click on the plus button to add a new image. See the user guide <a href='https://mapstore.readthedocs.io/en/latest/user-guide/media-editor-window/#images' target='_blank'/>here</a>"
+            },
             "mapList": {
-                "emptyList": "Click on the plus button to create a map or select a different map service."
+                "emptyList": "Click on the plus button to create a map or select a different map service. See the user guide <a href='https://mapstore.readthedocs.io/en/latest/user-guide/media-editor-window/#maps' target='_blank'/>here</a>"
             },
             "videoList": {
-                "emptyList": "Click on the plus button to add a new video"
+                "emptyList": "Click on the plus button to add a new video. See the user guide <a href='https://mapstore.readthedocs.io/en/latest/user-guide/media-editor-window/#videos' target='_blank'/>here</a>"
             }
         },
         "backgroundDialog": {
