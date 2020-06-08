@@ -769,7 +769,7 @@ A group entry has this shape:
 - `expanded`: boolean that keeps the status (expanded/collapsed) of the group.
 - `title`: a string or an object (for i18n) with the title of the group. i18n object format is the same of layer's title.
 
-```javascript
+```json
 "title": {
         "default": "Root Group",
         "it-IT": "Gruppo radice",
