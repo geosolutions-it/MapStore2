@@ -31,8 +31,8 @@ This is used for the **new map**. If you're logged in and allowed to create maps
 http://localhost:8081/#viewer/openlayers/new
 ```
 
-This page uses the `new.json` file as a template configuration to start creating a new map. You can find this file in `web/client` directory for standard MapStore or in the root for a custom projects. 
-You can edit `new.json` to customize this initial template. It typically contains the map backgrounds you want to use for all the new maps (identified by the special property `"group": "background"`).  
+This page uses the `new.json` file as a template configuration to start creating a new map. You can find this file in `web/client` directory for standard MapStore or in the root for a custom projects.
+You can edit `new.json` to customize this initial template. It typically contains the map backgrounds you want to use for all the new maps (identified by the special property `"group": "background"`).
 
 If you have enabled the datadir, then you can externalize the new.json or config.json files. (see [here](../externalized-configuration) for more details)
 
@@ -65,6 +65,7 @@ The following options define the map options (projection, position, layers):
 - `resolutions: {number[]}` resolutions for each level of zoom
 - `maxExtent: {number[]}` max bbox of the map expressed [minx, miny, maxx, maxy]
 - `layers: {object[]}` list of layers to be loaded on the map
+- `groups {object[]}`: contains information about the layer groups
 
 i.e.
 
@@ -128,7 +129,7 @@ Every layer has it's own properties. Anyway there are some options valid for eve
 
 i.e.
 
-```javascript
+```json
 {
     "title": "Open Street Map",
     "name": "mapnik",
@@ -136,6 +137,17 @@ i.e.
     "visibility": false,
     "hidden": true
 }
+```
+
+**Localized titles**: In these configuration files you can localize titles using an object instead of a string in the `title` entry. In this case the `title` object has this shape:
+
+```javascript
+title: {
+      'default': 'Meteorite Landings from NASA Open Data Portal', // default title, used in case the localized entry is not present
+      'it-IT': 'Atterraggi meteoriti', // one string for each IETF language tag you want to support.
+      'en-US': 'Meteorite Landings',
+      'fr-FR': 'Débarquements de météorites'
+    },
 ```
 
 ### Layer types
@@ -744,6 +756,37 @@ This layer differs from the "vector" because all the loading/filtering/querying 
     "name":"workspace:layer",
     "styleName":"marker",
     "url":"https://myserver.org/geoserver/wfs"
+}
+```
+
+## Layer groups
+
+Inside the map configuration, near the `layers` entry, you can find also the `groups` entry. This array contains information about the groups in the TOC.
+A group entry has this shape:
+
+
+- `id`: the id of the group.
+- `expanded`: boolean that keeps the status (expanded/collapsed) of the group.
+- `title`: a string or an object (for i18n) with the title of the group. i18n object format is the same of layer's title.
+
+```json
+"title": {
+        "default": "Root Group",
+        "it-IT": "Gruppo radice",
+        "en-US": "Root Group",
+        "de-DE": "Wurzelgruppe",
+        "fr-FR": "Groupe Racine",
+        "es-ES": "Grupo Raíz"
+      },
+```
+
+i.e.
+
+```json
+{
+  "id": "GROUP_ID",
+  "title": "Some default title"
+  "expanded": true
 }
 ```
 
