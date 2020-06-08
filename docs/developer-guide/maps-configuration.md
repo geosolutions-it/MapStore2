@@ -782,7 +782,7 @@ A group entry has this shape:
 
 i.e.
 
-```javascript
+```json
 {
   "id": "GROUP_ID",
   "title": "Some default title"
