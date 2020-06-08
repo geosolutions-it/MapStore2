@@ -10,6 +10,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 /**
+ * Editor of the FeatureGrid that uses a regex passed as prop to validate the input.
  * @memberof components.data.featuregrid.editors
  * @name FormatEditor
  * @class
