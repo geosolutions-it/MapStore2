@@ -39,7 +39,7 @@ module.exports = [
         position: "auto"
     }, {
         translationHTML: "geostoryEditMediaEditor",
-        selector: ".ms-geostory .ms-sections-container .ms-content-toolbar > div > span > button:nth-child(1)",
+        selector: ".ms-geostory .ms-sections-container .ms-content-toolbar > div > span > button[data-button=pencil]",
         position: "bottom"
     }
 ];
