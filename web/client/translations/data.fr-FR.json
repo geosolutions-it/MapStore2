@@ -50,6 +50,7 @@
         },
         "showEmptyMessageGFI": "Afficher un message de résultat vide dans le panneau GetFeatureInfo",
         "remove": "Supprimer",
+        "removeThumbnail": "Supprimer la miniature",
         "layerProperties": {
             "windowTitle": "Propriétés de la couche",
             "title": "Titre",
@@ -2225,7 +2226,9 @@
                 "trash": "Supprimer la ressource",
                 "videoUrl": "URL de la vidéo",
                 "videoUrlPlaceholder": "Entrez une URL d'une vidéo",
-                "thumbnail": "Ajouter une vignette (taille maximale 500 Kb)"
+                "thumbnail": "Ajouter une vignette (taille maximale 500 Kb)",
+                "createVideoThumbnail": "Créer une miniature à partir de la source vidéo",
+                "thumbnailCreateError": "Il n'est pas possible de créer une miniature à partir de la source vidéo actuelle. Cliquez ou déposez une image dans la vignette pour la télécharger manuellement"
             },
             "mediaform": {
                 "confirmExitTitle": "Fermer le formulaire de médias",

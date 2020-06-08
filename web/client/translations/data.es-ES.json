@@ -50,6 +50,7 @@
         },
         "showEmptyMessageGFI": "Mostrar mensaje de resultados vacío en el panel de GFI",
         "remove": "Borrar",
+        "removeThumbnail": "Eliminar miniatura",
         "layerProperties": {
             "windowTitle": "Propiedades de la capa",
             "title": "Título",
@@ -2225,7 +2226,9 @@
                 "trash": "Eliminar recurso",
                 "videoUrl": "URL de video",
                 "videoUrlPlaceholder": "Ingrese una url de video",
-                "thumbnail": "Añadir miniatura (tamaño máximo 500kb)"
+                "thumbnail": "Añadir miniatura (tamaño máximo 500kb)",
+                "createVideoThumbnail": "Crea una miniatura de la fuente de video",
+                "thumbnailCreateError": "No es posible crear una miniatura desde la fuente de video actual. Haga clic o suelte una imagen en la entrada en miniatura para cargarla manualmente"
             },
             "mediaform": {
                 "confirmExitTitle": "Cerrar el Media Form",
