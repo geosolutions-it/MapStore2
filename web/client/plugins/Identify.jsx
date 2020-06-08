@@ -14,7 +14,7 @@ const {mapSelector, isMouseMoveIdentifyActiveSelector} = require('../selectors/m
 const {layersSelector} = require('../selectors/layers');
 const { mapTypeSelector, isCesium } = require('../selectors/maptype');
 
-const { generalInfoFormatSelector, clickPointSelector, indexSelector, responsesSelector, validResponsesSelector, showEmptyMessageGFISelector, isHighlightEnabledSelector, currentFeatureSelector, currentFeatureCrsSelector } = require('../selectors/mapInfo');
+const { generalInfoFormatSelector, clickPointSelector, indexSelector, responsesSelector, requestsSelector, emptyResponsesSelector, validResponsesSelector, showEmptyMessageGFISelector, isHighlightEnabledSelector, currentFeatureSelector, currentFeatureCrsSelector } = require('../selectors/mapInfo');
 const { isEditingAllowedSelector } = require('../selectors/featuregrid');
 
 
@@ -32,7 +32,6 @@ const {defaultViewerHandlers, defaultViewerDefaultProps} = require('../component
 const {identifyLifecycle} = require('../components/data/identify/enhancers/identify');
 const zoomToFeatureHandler = require('..//components/data/identify/enhancers/zoomToFeatureHandler');
 const getToolButtons = require('./identify/toolButtons');
-const getNavigationButtons = require('./identify/navigationButtons');
 const getFeatureButtons = require('./identify/featureButtons');
 const Message = require('./locale/Message');
 
@@ -42,8 +41,8 @@ const selector = createStructuredSelector({
     enabled: (state) => state.mapInfo && state.mapInfo.enabled || state.controls && state.controls.info && state.controls.info.enabled || false,
     responses: responsesSelector,
     validResponses: validResponsesSelector,
-    // validResponses: responsesSelector,
-    requests: (state) => state.mapInfo && state.mapInfo.requests || [],
+    requests: requestsSelector,
+    emptyResponses: emptyResponsesSelector,
     format: generalInfoFormatSelector,
     map: mapSelector,
     layers: layersSelector,
@@ -127,11 +126,11 @@ const identifyDefaultProps = defaultProps({
     showTabs: true,
     showCoords: true,
     showLayerTitle: true,
+    showMoreInfo: true,
     showEdit: false,
     position: 'right',
     size: 660,
     getToolButtons,
-    getNavigationButtons,
     getFeatureButtons,
     showFullscreen: false,
     validResponses: [],
@@ -167,6 +166,7 @@ const identifyDefaultProps = defaultProps({
  * @prop cfg.disableCenterToMarker {bool} disable zoom to marker action
  * @prop cfg.zIndex {number} component z index order
  * @prop cfg.showInMapPopup {boolean} if true show the identify as popup
+ * @prop cfg.showMoreInfo {boolean} if true shows the more info icon which allow user to show/hide Geocode viewer as popup (true by default)
  *
  * @example
  * {

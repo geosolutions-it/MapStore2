@@ -5,19 +5,19 @@ import {isEmpty} from 'lodash';
 import localizedProps from '../../misc/enhancers/localizedProps';
 const SelectLocalized = localizedProps(['placeholder', 'clearValueText', 'noResultsText'])(Select);
 
-const LayerSelector = ({ responses, index, setIndex }) => {
-    const selectProps = {clearable: true, isSearchable: true, isClearable: true};
+const LayerSelector = ({ responses, index, setIndex, missingResponses, emptyResponses }) => {
+    const selectProps = {clearable: false, isSearchable: true};
     const [options, setOptions] = useState([]);
     const [title, setTitle] = useState("");
 
     useEffect(()=>{
         if (!isEmpty(responses)) {
-            setOptions(responses.map(opt=> opt?.layerMetadata?.title || opt?.title));
+            setOptions(responses.map(opt=> opt?.layerMetadata?.title));
         }
-    }, [responses, index]);
+    }, [responses]);
 
     useEffect(()=>{
-        setTitle(responses[index]?.layerMetadata?.title || responses[index]?.title || "");
+        setTitle(responses[index]?.layerMetadata?.title || "");
     }, [responses, index]);
 
     const onChange = (event) => {
@@ -32,10 +32,8 @@ const LayerSelector = ({ responses, index, setIndex }) => {
                 onChange={onChange}
                 value={title || ""}
                 options={(options).map((name, idx) => ({label: name, value: name, idx }))}
-                // isDisabled={false}
-                // placeholder="search.b_placeholder"
-                // clearValueText="search.b_clearvalue"
-                // noResultsText="search.b_noresult"
+                disabled={missingResponses !== 0 || responses.length === 0 || emptyResponses}
+                noResultsText="identifyLayerSelectNoResult"
             />
         </div>
     );
@@ -44,7 +42,8 @@ const LayerSelector = ({ responses, index, setIndex }) => {
 LayerSelector.propTypes = {
     responses: PropTypes.array,
     setIndex: PropTypes.func,
-    index: PropTypes.number
+    index: PropTypes.number,
+    emptyResponses: PropTypes.bool
 };
 
 export default LayerSelector;

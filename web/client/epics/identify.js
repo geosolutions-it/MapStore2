@@ -5,11 +5,9 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
 */
+
 import Rx from 'rxjs';
-
 import { get, find, reverse} from 'lodash';
-
-
 import uuid from 'uuid';
 import { LOCATION_CHANGE } from 'connected-react-router';
 import {
@@ -156,7 +154,6 @@ export default {
                             const basePath = url;
                             const requestParams = request;
                             const lMetaData = metadata;
-                            console.log("lMetaData", lMetaData);
                             const appParams = MapInfoUtils.filterRequestParams(layer, includeOptions, excludeParams);
                             const attachJSON = isHighlightEnabledSelector(getState());
                             const itemId = itemIdSelector(getState());
@@ -169,7 +166,7 @@ export default {
                                         : loadFeatureInfo(reqId, response.data, requestParams, { ...lMetaData, features: response.features, featuresCrs: response.featuresCrs }, layer)
                                 )
                                 .catch((e) => Rx.Observable.of(errorFeatureInfo(reqId, e.data || e.statusText || e.status, requestParams, lMetaData)))
-                                .startWith(newMapInfoRequest(reqId, param, lMetaData));
+                                .startWith(newMapInfoRequest(reqId, param));
                         }
                         return Rx.Observable.of(getVectorInfo(layer, request, metadata));
                     });
@@ -179,7 +176,6 @@ export default {
                     return out$;
                 }
                 return out$.startWith(purgeMapInfoResults());
-
             }),
     /**
      * if `clickLayer` is present, this means that `handleClickOnLayer` is true for the clicked layer, so the marker have to be hidden, because

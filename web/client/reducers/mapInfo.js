@@ -37,15 +37,15 @@ const {
 const {RESET_CONTROLS} = require('../actions/controls');
 
 const assign = require('object-assign');
-const {head, findIndex, find, isUndefined} = require('lodash');
+const {findIndex} = require('lodash');
 
 function receiveResponse(state, action, type) {
-    const request = head((state.requests || []).filter((req) => req.reqId === action.reqId));
-    if (request) {
+    const requestIndex = findIndex((state.requests || []), (req) => req.reqId === action.reqId);
+    if (requestIndex !== -1) {
         const responses = state.responses || [];
-        const index = findIndex(responses, {title: action.layerMetadata?.title});
-        const updateIndexFlag = find(responses, "response");
-        responses[index] = {
+        const indexUpdated = state.indexUpdated || false;
+        const firstUpdate = !indexUpdated && type === "data" && action[type].indexOf("no features were found") !== 0;
+        responses[requestIndex] = {
             response: action[type],
             queryParams: action.requestParams,
             layerMetadata: action.layerMetadata,
@@ -53,7 +53,7 @@ function receiveResponse(state, action, type) {
         };
         return assign({}, state, {
             responses: [...responses],
-            ...(isUndefined(updateIndexFlag) && index)
+            ...(firstUpdate && {index: requestIndex, indexUpdated: true})
         });
     }
     return state;
@@ -203,18 +203,17 @@ function mapInfo(state = initState, action) {
         });
     }
     case NEW_MAPINFO_REQUEST: {
-        const {reqId, request, metaData} = action;
+        const {reqId, request} = action;
         const requests = state.requests || [];
-        const responses = state.responses || [];
         return assign({}, state, {
-            requests: [...requests, {request, reqId}],
-            responses: [...responses, {title: metaData?.title || "", disabled: true}] // Change to isDisabled when react-select upgraded to v3
+            requests: [...requests, {request, reqId}]
         });
     }
     case PURGE_MAPINFO_RESULTS:
         return assign({}, state, {
             responses: [],
-            requests: []
+            requests: [],
+            indexUpdated: false
         });
     case LOAD_FEATURE_INFO: {
         return receiveResponse(state, action, 'data');

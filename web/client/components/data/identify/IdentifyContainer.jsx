@@ -7,7 +7,7 @@
  */
 
 const React = require('react');
-const {Row, Col, Button, Glyphicon, ButtonGroup} = require('react-bootstrap');
+const {Row} = require('react-bootstrap');
 const {get} = require('lodash');
 const Toolbar = require('../../misc/toolbar/Toolbar');
 const Message = require('../../I18N/Message');
@@ -64,12 +64,11 @@ module.exports = props => {
         showCoordinateEditor,
         onSubmitClickPoint,
         onChangeFormat,
-        formatCoord
+        formatCoord,
+        emptyResponses = false
     } = props;
-
+    console.log("showMoreInfo", props.showMoreInfo);
     const latlng = point && point.latlng || null;
-    console.log("validResponses", validResponses);
-    console.log("responsesIdentifyContainer", responses);
     const targetResponse = validResponses[index];
     const {layer} = targetResponse || {};
 
@@ -119,7 +118,7 @@ module.exports = props => {
                     <Row className="layer-select-row">
                         <div className="layer-col">
                             <span className="identify-icon glyphicon glyphicon-1-layer"/>
-                            <LayerSelector responses={validResponses} index={index} setIndex={setIndex}/>
+                            <LayerSelector {...props} missingResponses={missingResponses}/>
                             <Toolbar
                                 btnDefaultProps={{ bsStyle: 'primary', className: 'square-button-md' }}
                                 buttons={getFeatureButtons(props)}
@@ -157,6 +156,7 @@ module.exports = props => {
                     setIndex={setIndex}
                     format={format}
                     missingResponses={missingResponses}
+                    emptyResponses={emptyResponses}
                     responses={responses}
                     requests={requests}
                     showEmptyMessageGFI={showEmptyMessageGFI}

@@ -21,7 +21,7 @@ module.exports = ({
     {
         glyph: 'info-sign',
         tooltipId: 'identifyRevGeocodeSubmitText',
-        visible: props.latlng && props.enableRevGeocode && props.lngCorrected,
+        visible: props.latlng && props.enableRevGeocode && props.lngCorrected && props.showMoreInfo,
         onClick: () => {
             props.showRevGeocode({lat: props.latlng.lat, lng: props.lngCorrected});
         }
