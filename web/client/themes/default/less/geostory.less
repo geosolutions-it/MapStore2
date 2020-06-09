@@ -44,6 +44,11 @@
 @import '~draft-js-inline-toolbar-plugin/lib/plugin.css';
 @import '~react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 
+
+// needed to assure the fontsize numbers to be correctly displayed (2 sided digits )
+.rdw-fontsize-dropdown {
+    min-width: 50px !important;
+}
 /* mixin for position sticky */
 .ms-position-sticky {
     position: -webkit-sticky;
@@ -536,7 +541,7 @@
                     z-index: 2;
                     .shadow-soft();
                 }
-                
+
                 /*
                 content body needs to be aligned accordingly with the alignment of container,
                 this is needed in particular for size equal to large and short titles
@@ -944,7 +949,9 @@
                     h4 span { font-size: @ms-story-font-size-h4; }
                     h5 span { font-size: @ms-story-font-size-h5; }
                     h6 span { font-size: @ms-story-font-size-h6; }
-
+                    span > span {
+                        font-size: inherit;
+                    }
                     /*
                     headers and paragraph tags have a div children with `margin: 1em 0;`
                     this style increases the size of the text container and it's different from the plain html
@@ -1181,7 +1188,7 @@
     background-color: rgba(0, 0, 0, 0.25);
     & > * {
         background-color: @ms-story-bg;
-    } 
+    }
 }
 
 .ms-custom-theme-picker-field {
