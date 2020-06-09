@@ -604,6 +604,7 @@
         "identifyShowCoordinateEditor": "Afficher l'éditeur de coordonnées",
         "identifyHideCoordinateEditor": "Masquer l'éditeur de coordonnées",
         "identifyCoordinateApplyChanges": "Appliquer les modifications",
+        "identifyChangeCoordinateFormat": "Changer le format des coordonnées",
         "identifyRevGeocodeModalTitle": "Adresse",
         "identifyRevGeocodeSubmitText": "Plus d'informations",
         "identifyRevGeocodeCloseText": "Fermer",
@@ -1145,10 +1146,21 @@
             "msgToCopyUrl": "Cliquer pour copier",
             "sharedTitle": "Regardez ma nouvelle carte : ",
             "advancedOptions": "Options avancées",
+
+            "wrongCenterAndZoomParamTitle": "Paramètre de centre et de zoom non valide",
+            "wrongCenterAndZoomParamMessage": "Les paramètres Centre et Zoom doivent être center=lon,lat&zoom=value et (+|- 90° lat, +|-180° lon, <=+35 zoom)",
+            "wrongMarkerAndZoomParamTitle": "Marqueur et paramètre de zoom non valides",
+            "wrongMarkerAndZoomParamMessage": "Les paramètres Marker et Zoom doivent être marker=lon,lat&zoom=value et (+|- 90° lat, +|-180° lon, <=+35 zoom)",
+            "showHomeButton": "Lien vers l'accueil MapStore",
+            "addCenterAndZoomParam": "Ajouter le centre et zoomer sur le lien de partage",
+            "zoom": "Zoom",
+            "marker": "Ajouter un marqueur sur la carte chargée",
+            "coordinate": "Coordonner",
+            "coordTooltip": "Cliquez sur la carte pour saisir les coordonnées",
+            "zoomToolTip": "Min: 1 et Max: 35",
             "addBboxParam": "Ajouter un paramètre de rectangle englobant au lien de partage",
             "wrongBboxParamTitle": "Paramètre de rectangle englobant invalide",
-            "wrongBboxParamMessage": "Les paramètres du rectangle englobant doivent être en EPSG:4326 et écrit de cette façon : bbox=minx,miny,maxx,maxy",
-            "showHomeButton": "Lien vers l'accueil MapStore"
+            "wrongBboxParamMessage": "Les paramètres du rectangle englobant doivent être en EPSG:4326 et écrit de cette façon : bbox=minx,miny,maxx,maxy"
         },
         "snapshot": {
             "title": "Prévisualisation de la capture de la carte",

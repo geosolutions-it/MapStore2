@@ -604,6 +604,7 @@
         "identifyShowCoordinateEditor": "Mostrar editor de coordenadas",
         "identifyHideCoordinateEditor": "Ocultar editor de coordenadas",
         "identifyCoordinateApplyChanges": "Aplicar los cambios",
+        "identifyChangeCoordinateFormat": "Cambiar formato de coordenadas",
         "identifyRevGeocodeModalTitle": "Dirección",
         "identifyRevGeocodeSubmitText": "Más información",
         "identifyRevGeocodeCloseText": "Cerrar",
@@ -1148,7 +1149,17 @@
             "addBboxParam": "Añadir bbox param al enlace de compartir",
             "wrongBboxParamTitle": "Bbox no válido",
             "wrongBboxParamMessage": "bbox params debe estar en EPSG:4326 y escrito como bbox=minx,miny,maxx,maxy",
-            "showHomeButton": "Enlace al inicio de MapStore"
+            "wrongCenterAndZoomParamTitle": "Centro inválido y parámetro de zoom",
+            "wrongCenterAndZoomParamMessage": "El parámetro Center y Zoom debe ser center=lon,lat&zoom=value y (+|- 90° lat, +|-180° lon, <=+35 zoom)",
+            "wrongMarkerAndZoomParamTitle": "Marcador y parámetro de zoom no válidos",
+            "wrongMarkerAndZoomParamMessage": "El parámetro de marcador y zoom debe ser marker=lon,lat&zoom=value y (+|- 90° lat, +|-180° lon, <=+35 zoom)",
+            "showHomeButton": "Enlace al inicio de MapStore",
+            "addCenterAndZoomParam": "Agregar centro y hacer zoom para compartir el enlace",
+            "zoom": "Enfocar",
+            "marker": "Agregar marcador en el mapa cargado",
+            "coordinate": "Coordinar",
+            "coordTooltip": "Haga clic en el mapa para tomar las coordenadas.",
+            "zoomToolTip": "Min: 1 y Max: 35"
         },
         "snapshot": {
             "title": "Previsualización de la captura del mapa",

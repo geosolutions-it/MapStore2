@@ -601,6 +601,7 @@
         "identifyShowCoordinateEditor": "Koordinateneditor anzeigen",
         "identifyHideCoordinateEditor": "Koordinateneditor ausblenden",
         "identifyCoordinateApplyChanges": "Änderungen übernehmen",
+        "identifyChangeCoordinateFormat": "Koordinatenformat ändern",
         "identifyZoomToFeature": "Auf Objekt zoomen",
         "identifyStopHighlightingFeatures": "Stoppen Sie die Markierung von Objekten",
         "identifyHighlightFeatures": "Markieren Sie Objekte",
@@ -1148,7 +1149,17 @@
             "addBboxParam": "Fügen Sie einen bbox param zum Freigabeverlink hinzu",
             "wrongBboxParamTitle": "Ungültiger Bbox-Parameter",
             "wrongBboxParamMessage": "bbox-Parameter müssen in EPSG:4326 sein und als bbox=minx,miny,maxx,maxy angegeben werden",
-            "showHomeButton": "Link zur MapStore-Startseite"
+            "wrongCenterAndZoomParamTitle": "Ungültiger Mittel und Zoomparameter",
+            "wrongCenterAndZoomParamMessage": "Center und Zoom parameter müssen sein center=lon,lat&zoom=value und (+|- 90° lat, +|-180° lon, <=+35 zoom)",
+            "wrongMarkerAndZoomParamTitle": "Ungültiger Marker und Zoomparameter",
+            "wrongMarkerAndZoomParamMessage": "Marker und Zoomparameter müssen sein marker=lon,lat&zoom=value und (+|- 90° lat, +|-180° lon, <=+35 zoom)",
+            "showHomeButton": "Link zur MapStore-Startseite",
+            "addCenterAndZoomParam": "Fügen Sie die Mitte hinzu und zoomen Sie zum Freigabelink",
+            "zoom": "Zoomen",
+            "marker": "Markierung auf geladener Karte hinzufügen",
+            "coordinate": "Koordinate",
+            "coordTooltip": "Klicken Sie auf die Karte, um die Koordinaten zu erfassen",
+            "zoomToolTip": "Min: 1 und Max: 35"
         },
         "snapshot": {
             "title": "Snapshot Vorschau",
