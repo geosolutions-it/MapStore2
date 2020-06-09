@@ -8,6 +8,7 @@
 
 const React = require('react');
 const { connect } = require('react-redux');
+const {createSelector} = require('reselect');
 const {get} = require('lodash');
 const { compose, renameProps, mapPropsStream, withProps } = require('recompose');
 const InfoPopover = require('../../components/widgets/widget/InfoPopover');
@@ -22,6 +23,14 @@ const withExitButton = require('./enhancers/withExitButton');
 const withConnectButton = require('./enhancers/connection/withConnectButton');
 const withMapConnect = require('./enhancers/connection/withMapConnect');
 const withValidMap = withProps(({ availableDependencies = [], editorData }) => ({ valid: availableDependencies.length > 0 && editorData.mapSync }));
+const {currentLocaleSelector} = require('../../selectors/locale');
+
+const localeSelector = createSelector(
+    currentLocaleSelector,
+    (locale) => ({
+        currentLocale: locale
+    })
+);
 
 const {
     wizardStateToProps,
@@ -38,6 +47,7 @@ const Builder = compose(
         },
         wizardStateToProps
     ),
+    connect(localeSelector),
     withValidMap,
     renameProps({
         editorData: "data",
