@@ -95,7 +95,7 @@ export const withIdentifyRequest  = mapPropsStream(props$ => {
                         const {reqId, request} = action;
                         return {requests: requests.concat({ reqId, request }), responses, validResponses};
                     }
-                    const {data, queryParams, layerMetadata} = action; // TODO DEBUG THIS queryParams Action
+                    const {data, queryParams, layerMetadata} = action;
                     const validator = getValidator(mapInfoFormat);
                     const newResponses = responses.concat({response: data, queryParams, layerMetadata});
                     const newValidResponses = validator.getValidResponses(newResponses);
