@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 const React = require('react');
-const { isNil } = require('lodash');
+const { isNil, isObject } = require('lodash');
 const SideGrid = require('../../misc/cardgrids/SideGrid');
 const { Glyphicon, Grid, Row, Col} = require('react-bootstrap');
 const Slider = require('../../misc/Slider');
@@ -20,12 +20,13 @@ module.exports = ({
     disableOpacitySlider = true,
     disableVisibility = true,
     scales,
-    language
+    language,
+    currentLocale
 }) => <SideGrid
     className="compact-legend-grid"
     size="sm"
     items={layers.map(layer => ({
-        title: layer.title,
+        title: layer.title && isObject(layer.title) && (layer.title[currentLocale] || layer.title.default) || layer.title,
         preview: disableVisibility
             ? null
             : <Glyphicon className="text-primary"

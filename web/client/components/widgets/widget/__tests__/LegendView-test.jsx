@@ -45,4 +45,52 @@ describe('LegendView component', () => {
         const container = document.getElementById('container');
         expect(container.querySelector('.mapstore-side-card')).toExist();
     });
+
+    it('LegendView rendering with title as object and currentLocale', () => {
+        const LAYERS = [{
+            name: 'layer:00',
+            title: {'en-EN': 'test1',
+                'default': 'default'},
+            visibility: true,
+            type: 'wms'
+        },
+        {
+            name: 'layer:01',
+            title: {'en-EN': 'test1',
+                'default': 'default'},
+            visibility: true,
+            type: 'wms',
+            opacity: 0.5
+        }
+        ];
+        const currentLocale = 'en-EN';
+
+        ReactDOM.render(<LegendView layers={LAYERS} currentLocale={currentLocale} />, document.getElementById("container"));
+        const container = document.getElementById('container');
+        expect(container.querySelector('.mapstore-side-card-title').textContent).toBe('test1');
+    });
+
+    it('LegendView rendering with title as object and missing currentLocale', () => {
+        const LAYERS = [{
+            name: 'layer:00',
+            title: {'en-EN': 'test1',
+                'default': 'default'},
+            visibility: true,
+            type: 'wms'
+        },
+        {
+            name: 'layer:01',
+            title: {'en-EN': 'test1',
+                'default': 'default'},
+            visibility: false,
+            type: 'wms',
+            opacity: 0.5
+        }
+        ];
+        const currentLocale = undefined;
+
+        ReactDOM.render(<LegendView layers={LAYERS} currentLocale={currentLocale}/>, document.getElementById("container"));
+        const container = document.getElementById('container');
+        expect(container.querySelector('.mapstore-side-card-title').textContent).toBe('default');
+    });
 });
