@@ -28,7 +28,7 @@ const enhancePreview = compose(
             description: <Message msgId="widgets.builder.errors.noMapAvailableForLegendDescription" />
         }
     ),
-    emptyLegendState(false),
+    emptyLegendState(false)
 );
 const LegendPreview = enhancePreview(require('../../widget/LegendView'));
 module.exports = ({
