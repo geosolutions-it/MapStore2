@@ -7,10 +7,7 @@
  */
 const React = require('react');
 const {compose} = require('recompose');
-const { connect } = require('react-redux');
-const {createSelector} = require('reselect');
 const emptyState = require('../../../misc/enhancers/emptyState');
-
 
 const {wizardHandlers} = require('../../../misc/wizard/enhancers');
 const {Row, Col} = require('react-bootstrap');
@@ -21,14 +18,6 @@ const Wizard = wizardHandlers(require('../../../misc/wizard/WizardContainer'));
 const StepHeader = require('../../../misc/wizard/StepHeader');
 const Message = require('../../../I18N/Message');
 const emptyLegendState = require('../../enhancers/emptyLegendState');
-const {currentLocaleSelector} = require('../../../../selectors/locale');
-
-const localeSelector = createSelector(
-    currentLocaleSelector,
-    (locale) => ({
-        currentLocale: locale
-    })
-);
 
 const enhancePreview = compose(
     legendWidget,
@@ -40,7 +29,6 @@ const enhancePreview = compose(
         }
     ),
     emptyLegendState(false),
-    connect(localeSelector),
 );
 const LegendPreview = enhancePreview(require('../../widget/LegendView'));
 module.exports = ({
@@ -48,7 +36,8 @@ module.exports = ({
     step = 0,
     dependencies,
     valid,
-    data = {}
+    data = {},
+    currentLocale
 } = {}) => (
     <Wizard
         step={step}
@@ -65,6 +54,7 @@ module.exports = ({
                         dependenciesMap={data.dependenciesMap}
                         key="widget-options"
                         onChange={onChange}
+                        currentLocale={currentLocale}
                     />
                 </div>
             </Col>
