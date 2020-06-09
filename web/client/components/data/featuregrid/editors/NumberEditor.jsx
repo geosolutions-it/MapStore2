@@ -16,6 +16,7 @@ const parsers = {
 };
 
 /**
+ * Editor of the FeatureGrid, that allows to insert a number, limited by `minValue` and `maxValue`
  * @memberof components.data.featuregrid.editors
  * @name NumberEditor
  * @class
