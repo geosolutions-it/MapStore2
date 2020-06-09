@@ -8,8 +8,16 @@
 
 const React = require('react');
 const ReactDOM = require('react-dom');
-
+import { createStore, combineReducers } from 'redux';
 const expect = require('expect');
+import  {Provider} from 'react-redux';
+const reducer = combineReducers({
+    locale: require('../../../../../reducers/locale')
+});
+const  store = createStore(reducer, {
+    locale: {}
+});
+
 const LegendWizard = require('../LegendWizard');
 describe('LegendWizard component', () => {
     beforeEach((done) => {
@@ -44,7 +52,7 @@ describe('LegendWizard component', () => {
         }
         ];
         const dependencies = { layers: LAYERS };
-        ReactDOM.render(<LegendWizard valid dependencies={dependencies} />, document.getElementById("container"));
+        ReactDOM.render(<Provider store={store}><LegendWizard valid dependencies={dependencies} /></Provider>, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('.ms-wizard');
         expect(el).toExist();
