@@ -125,6 +125,7 @@ describe("test updateSettingsLifecycle", () => {
         const Component = settingsLifecycle(() => <div></div>);
 
         ReactDOM.render(<Component
+            initialActiveTab="display"
             settings={{expanded: false}}
             onUpdateOriginalSettings={testHandlers.onUpdateOriginalSettings}
             onUpdateInitialSettings={testHandlers.onUpdateInitialSettings}
@@ -132,6 +133,7 @@ describe("test updateSettingsLifecycle", () => {
         />, document.getElementById("container"));
 
         ReactDOM.render(<Component
+            initialActiveTab="display"
             element={{type: 'wms', description: 'description'}}
             settings={{expanded: true}}
             onUpdateOriginalSettings={testHandlers.onUpdateOriginalSettings}
@@ -142,7 +144,7 @@ describe("test updateSettingsLifecycle", () => {
         expect(spyOnUpdateOriginalSettings).toHaveBeenCalled();
         expect(spyOnUpdateInitialSettings).toHaveBeenCalled();
         expect(spyOnSetTab).toHaveBeenCalled();
-        expect(spyOnSetTab).toHaveBeenCalledWith('general');
+        expect(spyOnSetTab).toHaveBeenCalledWith("display");
     });
 
     it('test component on save', () => {
