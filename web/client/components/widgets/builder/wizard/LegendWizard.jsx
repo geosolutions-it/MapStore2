@@ -7,6 +7,8 @@
  */
 const React = require('react');
 const {compose} = require('recompose');
+const { connect } = require('react-redux');
+const {createSelector} = require('reselect');
 const emptyState = require('../../../misc/enhancers/emptyState');
 
 
@@ -19,6 +21,14 @@ const Wizard = wizardHandlers(require('../../../misc/wizard/WizardContainer'));
 const StepHeader = require('../../../misc/wizard/StepHeader');
 const Message = require('../../../I18N/Message');
 const emptyLegendState = require('../../enhancers/emptyLegendState');
+const {currentLocaleSelector} = require('../../../../selectors/locale');
+
+const localeSelector = createSelector(
+    currentLocaleSelector,
+    (locale) => ({
+        currentLocale: locale
+    })
+);
 
 const enhancePreview = compose(
     legendWidget,
@@ -29,7 +39,8 @@ const enhancePreview = compose(
             description: <Message msgId="widgets.builder.errors.noMapAvailableForLegendDescription" />
         }
     ),
-    emptyLegendState(false)
+    emptyLegendState(false),
+    connect(localeSelector),
 );
 const LegendPreview = enhancePreview(require('../../widget/LegendView'));
 module.exports = ({
