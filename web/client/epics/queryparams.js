@@ -161,21 +161,19 @@ const onMapClickForShareEpic = (action$, { getState = () => { } }) =>
  * @return {external:Observable}
  */
 const disableGFIForShareEpic = (action$, { getState = () => { } }) =>
-    action$.ofType(TOGGLE_CONTROL).
-        switchMap((action) => {
-            if (action.control === "share") {
-                const shareEnabled = get(getState(), 'controls.share.enabled');
-                const mapInfoEnabled = get(getState(), 'mapInfo.enabled');
-                const shareParams = {bboxEnabled: false, centerAndZoomEnabled: false};
-                if (!isUndefined(shareEnabled) && shareEnabled) {
-                    return mapInfoEnabled ? Rx.Observable.of(toggleMapInfoState()) : Rx.Observable.empty();
-                }
-                return Rx.Observable.of(hideMapinfoMarker(),
-                    purgeMapInfoResults(),
-                    toggleMapInfoState(),
-                    setControlProperty("share", "settings", shareParams));
+    action$.ofType(TOGGLE_CONTROL)
+        .filter(({control}) => control === "share")
+        .switchMap(() => {
+            const shareEnabled = get(getState(), 'controls.share.enabled');
+            const mapInfoEnabled = get(getState(), 'mapInfo.enabled');
+            const shareParams = {bboxEnabled: false, centerAndZoomEnabled: false};
+            if (!isUndefined(shareEnabled) && shareEnabled) {
+                return mapInfoEnabled ? Rx.Observable.of(toggleMapInfoState()) : Rx.Observable.empty();
             }
-            return Rx.Observable.empty();
+            return Rx.Observable.of(hideMapinfoMarker(),
+                purgeMapInfoResults(),
+                toggleMapInfoState(),
+                setControlProperty("share", "settings", shareParams));
         });
 
 export {
