@@ -128,7 +128,7 @@ class AeronauticalCoordinateEditor extends React.Component {
         const {step: stepSeconds} = this.props.aeronauticalOptions.seconds;
         return (
             <FormGroup style={{display: "inline-flex"}}>
-                <div style={{width: 40, display: 'flex'}}>
+                <div style={{minWidth: 45, display: 'flex', flex: "1 1 0%"}}>
                     <FormControl
                         key={this.props.coordinate + "degree"}
                         value={this.props.degrees}
@@ -145,7 +145,7 @@ class AeronauticalCoordinateEditor extends React.Component {
                     />
                     <span style={labelStyle}>&deg;</span>
                 </div>
-                <div style={{width: 40, display: 'flex' }}>
+                <div style={{minWidth: 45, display: 'flex', flex: "1 1 0%"}}>
                     <FormControl
                         key={this.props.coordinate + "minutes"}
                         placeholder={"m"}
@@ -162,7 +162,7 @@ class AeronauticalCoordinateEditor extends React.Component {
                     />
                     <span style={labelStyle}>&prime;</span>
                 </div>
-                <div className="seconds" style={{display: 'flex'}}>
+                <div className="seconds" style={{display: 'flex', flex: "1 1 0%"}}>
                     <FormControl
                         key={this.props.coordinate + "seconds"}
                         value={this.props.seconds}
@@ -179,13 +179,13 @@ class AeronauticalCoordinateEditor extends React.Component {
                     />
                     <span style={labelStyle}>&Prime;</span>
                 </div>
-                <div >
+                <div style={{minWidth: 45}}>
 
                     <FormControl
                         componentClass="select" placeholder="select"
                         value={this.props.direction}
                         onChange={e => this.onChange("direction", e.target.value)}
-                        style={{ width: 40, paddingLeft: 4, paddingRight: 4 }}>
+                        style={{ minWidth: 45, paddingLeft: 4, paddingRight: 4, flex: "1 1 0%" }}>
                         {this.props.directions.map((d) => <option key={d} value={d}>{d}</option>)}
                     </FormControl>
                 </div>

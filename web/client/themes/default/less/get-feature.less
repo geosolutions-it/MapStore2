@@ -18,30 +18,29 @@
         border-bottom: 1px solid rgb(221, 221, 221);
     }
     .coordinateRow.coord-editor.aeronautical {
-        @media screen and (max-width: 660px) {
-            display: block;
-            & .col-xs-1 .pull-right.btn-group {
-                margin-top: -70px;
-            }
-
-        }
+        //@media screen and (max-width: 660px) {
+        //    display: block;
+        //    & .col-xs-1 .pull-right.btn-group {
+        //        margin-top: -70px;
+        //    }
+        //
+        //}
         & .form-group {
-            width: auto;
+            width: 100%;
             position: relative;
             & .seconds {
-                min-width: 120px;
-                flex: unset !important;
+                min-width: 75px;
             }
         }
     }
     .coordinateRow.coord-editor.decimal {
-        @media only screen and (max-width: 660px) {
-            display: block;
-            & .form-group {
-                max-width: ~"calc(100% - 80px)";
-                margin-left: 40px;
-            }
-        }
+        //@media only screen and (max-width: 660px) {
+        //    display: block;
+        //    & .form-group {
+        //        max-width: ~"calc(100% - 80px)";
+        //        margin-left: 40px;
+        //    }
+        //}
     }
 }
 
@@ -57,14 +56,20 @@
     }
 }
 
+#identify-layer-select .Select .Select-menu-outer {
+    z-index: 3;
+}
+
 .coordinateRow {
-    margin: 8px 0px;
-    border: 1px solid #dddddd;
+    margin: 0;
+    border: 0;
     text-align: center;
     display: flex;
     align-items: center;
     box-sizing: border-box;
-    padding: 15px 5px;
+    padding: 0;
+    color: #333333 !important;
+    background-color: transparent !important;
 
     input {
         font-size: 12px;
@@ -86,10 +91,10 @@
         min-width: unset !important;
     }
     .form-group {
-        margin: 4px 0;
+        margin: 0;
     }
     &.coord-editor .tools.btn-group {
-        margin-top: 20px;
+        margin-top: 0;
     }
     .tools.btn-group span {
         display: flex;
@@ -168,6 +173,8 @@
 .coordinates-text {
     flex: 1 1 0%;
     margin-left: 8px;
+    color: #333333 !important;
+    background-color: #ffffff !important;
     font-family: @font-family-monospace;
 }
 .identify-icon{

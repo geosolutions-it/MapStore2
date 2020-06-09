@@ -97,13 +97,36 @@ describe('DefaultViewer', () => {
 
     it('creates the DefaultViewer component with no results', () => {
         const viewer = ReactDOM.render(
-            <DefaultViewer/>,
+            <DefaultViewer emptyResponses/>,
             document.getElementById("container")
         );
 
         expect(viewer).toExist();
         const dom = ReactDOM.findDOMNode(viewer);
         expect(dom.getElementsByClassName("alert").length).toBe(1);
+    });
+
+    it('creates the DefaultViewer component with an empty and an non empty layer results', () => {
+        const responses = [{
+            response: "A",
+            layerMetadata: {
+                title: 'a'
+            }
+        }, {
+            response: "no features were found",
+            layerMetadata: {
+                title: 'b'
+            }
+        }];
+        const viewer = ReactDOM.render(
+            <DefaultViewer responses={responses}/>,
+            document.getElementById("container")
+        );
+
+        expect(viewer).toExist();
+        const dom = ReactDOM.findDOMNode(viewer);
+        expect(dom.getElementsByClassName("alert").length).toBe(1);
+        expect(dom.getElementsByClassName("panel").length).toBe(1);
     });
 
     it('creates the DefaultViewer component with some results', () => {

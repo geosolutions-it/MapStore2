@@ -67,7 +67,6 @@ module.exports = props => {
         formatCoord,
         emptyResponses = false
     } = props;
-    console.log("showMoreInfo", props.showMoreInfo);
     const latlng = point && point.latlng || null;
     const targetResponse = validResponses[index];
     const {layer} = targetResponse || {};
@@ -128,18 +127,20 @@ module.exports = props => {
                     </Row>,
                     <Row className="coordinates-edit-row">
                         <span className="identify-icon glyphicon glyphicon-point"/>
-                        <Coordinate
-                            key="coordinate-editor"
-                            formatCoord={formatCoord}
-                            enabledCoordEditorButton={enabledCoordEditorButton}
-                            onSubmit={onSubmitClickPoint}
-                            onChangeFormat={onChangeFormat}
-                            edit={showCoordinateEditor}
-                            coordinate={{
-                                lat: latlng && latlng.lat,
-                                lon: lngCorrected
-                            }}
-                        />
+                        <div style={{flex: "1 1 0%", fontFamily: "monospace", padding: "0px 4px"}}>
+                            <Coordinate
+                                key="coordinate-editor"
+                                formatCoord={formatCoord}
+                                enabledCoordEditorButton={enabledCoordEditorButton}
+                                onSubmit={onSubmitClickPoint}
+                                onChangeFormat={onChangeFormat}
+                                edit={showCoordinateEditor}
+                                coordinate={{
+                                    lat: latlng && latlng.lat,
+                                    lon: lngCorrected
+                                }}
+                            />
+                        </div>
                         <GeocodeViewer latlng={latlng} revGeocodeDisplayName={revGeocodeDisplayName} {...props}/>
                         <Toolbar
                             btnDefaultProps={{ bsStyle: 'primary', className: 'square-button-md' }}

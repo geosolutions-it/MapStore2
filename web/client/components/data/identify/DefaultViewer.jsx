@@ -73,7 +73,9 @@ class DefaultViewer extends React.Component {
     }
 
     renderEmptyLayers = (validator) => {
+        console.log("emptyLayer");
         const invalidResponses = validator.getNoValidResponses(this.props.responses);
+        console.log("invalidResponses", invalidResponses);
         if (this.props.missingResponses === 0 && this.props.emptyResponses) {
             return null;
         }
@@ -101,6 +103,7 @@ class DefaultViewer extends React.Component {
     };
 
     renderEmptyPages = () => {
+        console.log("emptyPage");
         if (this.props.missingResponses === 0 && this.props.emptyResponses) {
             return (
                 <Alert bsStyle={"danger"}>
@@ -114,7 +117,7 @@ class DefaultViewer extends React.Component {
     renderPages = (responses) => {
         return responses.map((res, i) => {
             let {response, layerMetadata} = res;
-            response = this.adjustedResponse(response);
+            response = typeof response === "object" ? response : this.adjustedResponse(response);
             const format = getFormatForResponse(res, this.props);
             const PageHeader = this.props.header;
             let customViewer;
@@ -168,6 +171,7 @@ class DefaultViewer extends React.Component {
                             ref="container"
                             index={this.props.index || 0}
                             key={"swiper"}
+                            style={{maxHeight: 450}}
                             className="swipeable-view">
                             {this.renderPages(validResponses)}
                         </Container>

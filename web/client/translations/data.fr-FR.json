@@ -119,8 +119,8 @@
                 "tooltip": "Remarque: ce paramètre nécessite des configurations spécifiques sur GeoServer"
             }
         },
-        "longitude": "Longitude",
-        "latitude": "Latitude",
+        "longitude": "Lon",
+        "latitude": "Lat",
         "notification": {
             "update": "Mise à jour",
             "warning": "Avertissement",
@@ -608,6 +608,7 @@
         "identifyRevGeocodeCloseText": "Fermer",
         "identifyRevGeocodeError": "Géocodage impossible",
         "identifyEdit": "Éditer",
+        "identifyLayerSelectNoResult": "Aucun calque trouvé",
         "getFeatureInfoError": {
             "title": "Ooops! Quelque chose ne fonctionne pas",
             "text": "Une erreur s'est produite au cours de cette requête <b>GetFeatureInfo</b>"

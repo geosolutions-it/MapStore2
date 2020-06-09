@@ -119,8 +119,8 @@
                 "tooltip": "Note: This parameter requires specific configurations on GeoServer"
             }
         },
-        "longitude": "Longitude",
-        "latitude": "Latitude",
+        "longitude": "Lon",
+        "latitude": "Lat",
         "notification": {
             "update": "Update",
             "warning": "Warning",

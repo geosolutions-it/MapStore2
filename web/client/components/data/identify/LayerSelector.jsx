@@ -5,7 +5,7 @@ import {isEmpty} from 'lodash';
 import localizedProps from '../../misc/enhancers/localizedProps';
 const SelectLocalized = localizedProps(['placeholder', 'clearValueText', 'noResultsText'])(Select);
 
-const LayerSelector = ({ responses, index, setIndex, missingResponses, emptyResponses }) => {
+const LayerSelector = ({ responses = [], index = 0, setIndex, missingResponses = 0, emptyResponses = false }) => {
     const selectProps = {clearable: false, isSearchable: true};
     const [options, setOptions] = useState([]);
     const [title, setTitle] = useState("");
@@ -26,7 +26,7 @@ const LayerSelector = ({ responses, index, setIndex, missingResponses, emptyResp
     };
 
     return (
-        <div style={{flex: "1 1 0%", padding: "0px 4px"}}>
+        <div id="identify-layer-select" style={{flex: "1 1 0%", padding: "0px 4px"}}>
             <SelectLocalized
                 {...selectProps}
                 onChange={onChange}
