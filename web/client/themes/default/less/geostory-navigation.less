@@ -32,7 +32,6 @@
 }
 
 .ms-geostory-navigation {
-    height: @square-btn-size;
     background-color: @ms-story-bg;
     .btn-default {
         .ms-geostory-navigation-btn(inherit; inherit; transparent);
@@ -57,11 +56,15 @@
             }
         }
         .ms-geostory-navigation-tools {
+            height: auto;
             align-items: center;
             display: flex;
             flex: 1;
             padding: 0 4px;
             background-color: inherit;
+            .ms-geostory-navigation-toolbar > .btn-group {
+                display: block;
+            }
             .ms-geostory-navigation-elements {
                 
                 flex: 1;
@@ -72,6 +75,7 @@
                     min-height: @square-btn-medium-size;
                     max-width: 50%;
                     background-color: inherit;
+                    margin: 4px 0;
                 }
             }
 
@@ -84,8 +88,7 @@
                 .ms-geostory-navigation-logo,
                 .ms-geostory-navigation-title {
                     white-space: nowrap;
-                    margin-left: 10px;
-                    margin-right: 10px;
+                    margin: 4px 10px;
                     align-items: center;
                 }
                 .ms-geostory-navigation-title {

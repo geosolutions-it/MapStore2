@@ -50,6 +50,7 @@
         },
         "showEmptyMessageGFI": "Mostrar mensaje de resultados vacío en el panel de GFI",
         "remove": "Borrar",
+        "removeThumbnail": "Eliminar miniatura",
         "layerProperties": {
             "windowTitle": "Propiedades de la capa",
             "title": "Título",
@@ -2080,7 +2081,9 @@
                 "enableAutoplay": "Habilitar reproducción automática",
                 "disableAutoplay": "Desactivar reproducción automática",
                 "enableLoop": "Habilitar bucle",
-                "disableLoop": "Desactivar bucle"
+                "disableLoop": "Desactivar bucle",
+                "hideCaption": "Ocultar subtítulo",
+                "showCaption": "Use la descripción como subtítulo"
             },
             "navigation": {
                 "edit": "Editar historia"
@@ -2223,7 +2226,9 @@
                 "trash": "Eliminar recurso",
                 "videoUrl": "URL de video",
                 "videoUrlPlaceholder": "Ingrese una url de video",
-                "thumbnail": "Añadir miniatura (tamaño máximo 500kb)"
+                "thumbnail": "Añadir miniatura (tamaño máximo 500kb)",
+                "createVideoThumbnail": "Crea una miniatura de la fuente de video",
+                "thumbnailCreateError": "No es posible crear una miniatura desde la fuente de video actual. Haga clic o suelte una imagen en la entrada en miniatura para cargarla manualmente"
             },
             "mediaform": {
                 "confirmExitTitle": "Cerrar el Media Form",
@@ -2239,11 +2244,14 @@
                 "confirmRemoveResource": "¿Desea eliminar este recurso de medios de la historia?",
                 "confirmRemoveUsedResource": "Este recurso también se eliminará de todas las secciones / contenidos donde se usa dejándolos vacíos. ¿Quieres eliminarlo de la historia?"
             },
+            "imageList": {
+                "emptyList": "Haga clic en el botón más para agregar una nueva imagen. Consulte la guía del usuario <a href='https://mapstore.readthedocs.io/en/latest/user-guide/media-editor-window/#images' target='_blank'/> aquí </a>"
+            },
             "mapList": {
-                "emptyList": "Haga clic en el botón más para crear un mapa o seleccione un servicio de mapas diferente."
+                "emptyList": "Haga clic en el botón más para crear un mapa o seleccione un servicio de mapas diferente. Consulte la guía del usuario <a href='https://mapstore.readthedocs.io/en/latest/user-guide/media-editor-window/#maps' target='_blank'/> aquí </a>"
             },
             "videoList": {
-                "emptyList": "Haga clic en el botón más para agregar un nuevo video"
+                "emptyList": "Haga clic en el botón más para agregar un nuevo video. Consulte la guía del usuario <a href='https://mapstore.readthedocs.io/en/latest/user-guide/media-editor-window/#videos' target='_blank'/> aquí </a>"
             }
         },
         "backgroundDialog": {

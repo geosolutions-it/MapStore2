@@ -7,10 +7,10 @@
  */
 
 import React, { forwardRef, useState, useRef, useEffect } from 'react';
-import { Glyphicon } from 'react-bootstrap';
 import Dropzone from 'react-dropzone';
 import Loader from './Loader';
 import { createBase64Thumbnail } from '../../utils/ThumbnailUtils';
+import Toolbar from './toolbar/Toolbar';
 
 const getThumbnail = (files, options) => {
     return new Promise((resolve) => {
@@ -48,9 +48,10 @@ const getThumbnail = (files, options) => {
  * @prop {array} supportedImageTypes array of images supported mime types
  * @prop {options} thumbnailOptions options to scale the thumbnail to fit a specific size
  * @prop {object} dropZoneProps props for dropzone component
- * @prop {function} onUpdate
- * @prop {function} onError
- * @prop {function} onRemove
+ * @prop {function} onUpdate return updated data after add/drop an image
+ * @prop {function} onError return errors after add/drop an image
+ * @prop {function} onRemove callback on removing thumbnail
+ * @prop {array} toolbarButtons array of buttons objects (see Toolbar)
  */
 const Thumbnail = forwardRef(({
     className = 'ms-thumbnail',
@@ -60,6 +61,7 @@ const Thumbnail = forwardRef(({
     error,
     thumbnail,
     removeGlyph = 'trash',
+    removeTooltipId = 'removeThumbnail',
     style = {},
     maxFileSize = 500000,
     supportedImageTypes = ['image/png', 'image/jpeg', 'image/jpg'],
@@ -71,7 +73,8 @@ const Thumbnail = forwardRef(({
     },
     onUpdate = () => {},
     onError = () => {},
-    onRemove
+    onRemove,
+    toolbarButtons
 }, ref) => {
 
     const mounted = useRef();
@@ -124,6 +127,24 @@ const Thumbnail = forwardRef(({
         );
     }
 
+    const toolbar = (
+        <Toolbar
+            btnDefaultProps={{
+                className: 'square-button-md no-border'
+            }}
+            buttons={toolbarButtons
+                ? toolbarButtons
+                : [
+                    {
+                        glyph: removeGlyph,
+                        visible: !!(onRemove && thumbnail),
+                        tooltipId: removeTooltipId,
+                        onClick: handleRemove
+                    }
+                ]}
+        />
+    );
+
     return (
         <div
             className={`dropzone-thumbnail-container${className ? ` ${className}` : ''}`}
@@ -154,14 +175,13 @@ const Thumbnail = forwardRef(({
                                 }}
                             />
                             <div className="dropzone-content-image-added">{message}</div>
-                            {onRemove && <div className="dropzone-remove" onClick={handleRemove}>
-                                <Glyphicon glyph={removeGlyph} />
-                            </div>}
+                            {toolbar}
                         </div>
                     )
                     : (
                         <div className="dropzone-content-image">
                             {message}
+                            {toolbar}
                             {error && <div className="dropzone-errors">
                                 {error}
                             </div>}

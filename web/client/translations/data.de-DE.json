@@ -50,6 +50,7 @@
         },
         "showEmptyMessageGFI": "Nachricht mit leeren Ergebnissen anzeigen",
         "remove": "Löschen",
+        "removeThumbnail": "Miniaturbild entfernen",
         "layerProperties": {
             "windowTitle": "Ebenen Eigenschaften",
             "title": "Titel",
@@ -2079,7 +2080,9 @@
                 "enableAutoplay": "Aktivieren autoplay",
                 "disableAutoplay": "Deaktiviere autoplay",
                 "enableLoop": "Schleife aktivieren",
-                "disableLoop": "Schleife deaktivieren"
+                "disableLoop": "Schleife deaktivieren",
+                "hideCaption": "Beschriftung ausblenden",
+                "showCaption": "Verwenden Sie die Beschreibung als Beschriftung"
             },
             "navigation": {
                 "edit": "Bearbeiten Sie die Geschichte"
@@ -2222,7 +2225,9 @@
                 "trash": "Remove resource",
                 "videoUrl": "Video URL",
                 "videoUrlPlaceholder": "Geben Sie eine Video-URL ein",
-                "thumbnail": "Miniaturbild hinzufügen (maximale Größe 500 KB)"
+                "thumbnail": "Miniaturbild hinzufügen (maximale Größe 500 KB)",
+                "createVideoThumbnail": "Erstellen Sie eine Miniaturansicht aus einer Videoquelle",
+                "thumbnailCreateError": "Es ist nicht möglich, ein Miniaturbild aus der aktuellen Videoquelle zu erstellen. Klicken oder löschen Sie ein Bild in der Miniaturansicht, um es manuell hochzuladen"
             },
             "mediaform": {
                 "confirmExitTitle": "Schließen Media Form",
@@ -2238,11 +2243,14 @@
                 "confirmRemoveResource": "Möchten Sie diese Medienressource aus der Story entfernen?",
                 "confirmRemoveUsedResource": "Diese Ressource wird auch aus allen Abschnitten / Inhalten entfernt, in denen sie verwendet wird und sie bleiben leer. Möchten Sie es aus der Geschichte entfernen?"
             },
+            "imageList": {
+                "emptyList": "Klicken Sie auf das Pluszeichen, um ein neues Bild hinzuzufügen. Weitere Informationen finden Sie im Benutzerhandbuch <a href='https://mapstore.readthedocs.io/en/latest/user-guide/media-editor-window/#images' target='_blank'/> hier </a>"
+            },
             "mapList": {
-                "emptyList": "Klicken Sie auf die Plus-Schaltfläche, um eine Karte zu erstellen oder einen anderen Kartendienst auszuwählen."
+                "emptyList": "Klicken Sie auf die Plus-Schaltfläche, um eine Karte zu erstellen oder einen anderen Kartendienst auszuwählen. Weitere Informationen finden Sie im Benutzerhandbuch <a href='https://mapstore.readthedocs.io/en/latest/user-guide/media-editor-window/#maps' target='_blank'/> hier </a>"
             },
             "videoList": {
-                "emptyList": "Klicken Sie auf das Pluszeichen, um ein neues Video hinzuzufügen"
+                "emptyList": "Klicken Sie auf das Pluszeichen, um ein neues Video hinzuzufügen. Weitere Informationen finden Sie im Benutzerhandbuch <a href='https://mapstore.readthedocs.io/en/latest/user-guide/media-editor-window/#videos' target='_blank'/> hier </a>"
             }
         },
         "backgroundDialog": {

@@ -50,6 +50,7 @@
         },
         "showEmptyMessageGFI": "Show empty results message in GetFeatureInfo panel",
         "remove": "Delete",
+        "removeThumbnail": "Remove thumbnail",
         "layerProperties": {
             "windowTitle": "Layer Properties",
             "title": "Title",
@@ -2083,7 +2084,9 @@
                 "enableAutoplay": "Enable autoplay",
                 "disableAutoplay": "Disable autoplay",
                 "enableLoop": "Enable loop",
-                "disableLoop": "Disable loop"
+                "disableLoop": "Disable loop",
+                "hideCaption": "Hide caption",
+                "showCaption": "Use description as caption"
             },
             "navigation": {
                 "edit": "Edit story"
@@ -2226,7 +2229,9 @@
                 "trash": "Remove resource",
                 "videoUrl": "Video URL",
                 "videoUrlPlaceholder": "Enter a video url",
-                "thumbnail": "Add thumbnail (maximum size 500kb)"
+                "thumbnail": "Add thumbnail (maximum size 500kb)",
+                "createVideoThumbnail": "Create a thumbnail from video source",
+                "thumbnailCreateError": "It's not possible to create a thumbnail from the current video source. Click or drop an image in the thumbnail input to upload it manually"
             },
             "mediaform": {
                 "confirmExitTitle": "Close Media Form",
@@ -2242,11 +2247,14 @@
                 "confirmRemoveResource": "Do you want to remove this media resource from the story?",
                 "confirmRemoveUsedResource": "This resource will also be removed from all the sections/contents where It's used leaving them empty. Do you want to remove It from the story?"
             },
+            "imageList": {
+                "emptyList": "Click on the plus button to add a new image. See the user guide <a href='https://mapstore.readthedocs.io/en/latest/user-guide/media-editor-window/#images' target='_blank'/>here</a>"
+            },
             "mapList": {
-                "emptyList": "Click on the plus button to create a map or select a different map service."
+                "emptyList": "Click on the plus button to create a map or select a different map service. See the user guide <a href='https://mapstore.readthedocs.io/en/latest/user-guide/media-editor-window/#maps' target='_blank'/>here</a>"
             },
             "videoList": {
-                "emptyList": "Click on the plus button to add a new video"
+                "emptyList": "Click on the plus button to add a new video. See the user guide <a href='https://mapstore.readthedocs.io/en/latest/user-guide/media-editor-window/#videos' target='_blank'/>here</a>"
             }
         },
         "backgroundDialog": {

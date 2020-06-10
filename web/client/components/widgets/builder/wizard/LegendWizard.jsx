@@ -9,7 +9,6 @@ const React = require('react');
 const {compose} = require('recompose');
 const emptyState = require('../../../misc/enhancers/emptyState');
 
-
 const {wizardHandlers} = require('../../../misc/wizard/enhancers');
 const {Row, Col} = require('react-bootstrap');
 const legendWidget = require('../../enhancers/legendWidget');
@@ -37,7 +36,8 @@ module.exports = ({
     step = 0,
     dependencies,
     valid,
-    data = {}
+    data = {},
+    currentLocale
 } = {}) => (
     <Wizard
         step={step}
@@ -54,6 +54,7 @@ module.exports = ({
                         dependenciesMap={data.dependenciesMap}
                         key="widget-options"
                         onChange={onChange}
+                        currentLocale={currentLocale}
                     />
                 </div>
             </Col>

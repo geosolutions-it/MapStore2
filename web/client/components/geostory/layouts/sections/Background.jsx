@@ -12,7 +12,7 @@ import PropTypes from 'prop-types';
 import stickySupport from '../../../misc/enhancers/stickySupport';
 import Media, { typesMap } from '../../media';
 import { lists, getClassNameFromProps, Modes } from '../../../../utils/GeoStoryUtils';
-import ContentToolbar from '../../contents/ContentToolbar';
+import DefaultContentToolbar from '../../contents/ContentToolbar';
 import { Portal } from 'react-overlays';
 import pattern from './patterns/grid.svg';
 import { SectionTypes, getThemeStyleFromProps } from './../../../../utils/GeoStoryUtils';
@@ -49,7 +49,8 @@ class Background extends Component {
         sectionType: PropTypes.string,
         src: PropTypes.string,
         theme: PropTypes.string,
-        mediaViewer: PropTypes.object,
+        mediaViewer: PropTypes.func,
+        contentToolbar: PropTypes.func,
         inView: PropTypes.bool
     };
 
@@ -68,6 +69,7 @@ class Background extends Component {
         const theme = getThemeStyleFromProps(this.props);
         const parentNode = !this.props.disableToolbarPortal && this.refs && this.refs.div && this.refs.div.parentNode;
         const defaultTools = this.props.sectionType === SectionTypes.TITLE ? ['editMedia', 'cover' ] : ['editMedia' ];
+        const ContentToolbar = this.props.contentToolbar || DefaultContentToolbar;
         const toolbar = (
             <ContentToolbar
                 {...this.props}

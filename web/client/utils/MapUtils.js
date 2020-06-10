@@ -316,6 +316,7 @@ function saveMapConfiguration(currentMap, currentLayers, currentGroups, currentB
         maxExtent: currentMap.maxExtent,
         projection: currentMap.projection,
         units: currentMap.units,
+        mapInfoControl: currentMap.mapInfoControl,
         zoom: currentMap.zoom,
         mapOptions: currentMap.mapOptions || {}
     };
