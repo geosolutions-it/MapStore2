@@ -359,14 +359,16 @@ describe('tutorial Epics', () => {
         it('tests the correct tutorial setup when passing from edit to view (switchGeostoryTutorialEpic)', (done) => {
             const IS_GOING_TO_EDIT_MODE = false;
 
-            testEpic(addTimeoutEpic(switchGeostoryTutorialEpic, 50), NUM_ACTIONS, [
-                geostoryLoaded(ID_STORY),
+            testEpic(switchGeostoryTutorialEpic, NUM_ACTIONS, [
                 setEditing(IS_GOING_TO_EDIT_MODE)
             ], (actions) => {
                 expect(actions.length).toBe(NUM_ACTIONS);
                 actions.map((action) => {
                     switch (action.type) {
-                    case TEST_TIMEOUT:
+                    case SETUP_TUTORIAL:
+                        expect(action.steps).toEqual(GEOSTORY_VIEW_STEPS);
+                        expect(action.stop).toEqual(true);
+                        expect(action.id).toBe(GEOSTORY_TUTORIAL_ID);
                         break;
                     default:
                         expect(true).toBe(false);

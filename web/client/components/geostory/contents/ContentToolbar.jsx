@@ -43,6 +43,7 @@ const toolButtons = {
     editMedia: ({editMap: disabled = false, path, editMedia = () => {} }) => ({
         // using normal ToolbarButton because this has no options
         glyph: "pencil",
+        "data-button": "pencil",
         visible: true,
         disabled,
         tooltipId: "geostory.contentToolbar.editMedia",
