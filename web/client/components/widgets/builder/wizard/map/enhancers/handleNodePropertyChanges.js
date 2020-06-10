@@ -8,7 +8,7 @@
 // handle property changes
 const { withHandlers } = require('recompose');
 const {belongsToGroup} = require('../../../../../../utils/LayersUtils');
-const { findIndex } = require('lodash');
+const { findIndex, isArray } = require('lodash');
 /**
  * Add to the TOC or the Node editor some handlers for TOC nodes
  * add to the wrapped component the following methods:
@@ -56,7 +56,7 @@ module.exports = withHandlers({
                 });
 
                 if (key === EXPANDED) {
-                    if (!Array.isArray(map.groups)) {
+                    if (!isArray(map.groups)) {
                         onChange(`map.groups`, []);
                         onChange(`map.groups[${index === -1 ? 0 : index}].${key}`, value);
                         onChange(`map.groups[${index === -1 ? 0 : index}].id`, id);
