@@ -7,12 +7,12 @@
  */
 
 const Rx = require('rxjs');
-const {START_TUTORIAL, CLOSE_TUTORIAL, UPDATE_TUTORIAL, INIT_TUTORIAL, CHANGE_PRESET, closeTutorial, setupTutorial} = require('../actions/tutorial');
+const {START_TUTORIAL, UPDATE_TUTORIAL, INIT_TUTORIAL, CHANGE_PRESET, closeTutorial, setupTutorial} = require('../actions/tutorial');
 const {CHANGE_MAP_VIEW} = require('../actions/map');
 const {MAPS_LIST_LOADED} = require('../actions/maps');
 const {TOGGLE_3D} = require('../actions/globeswitcher');
 const {modeSelector} = require('../selectors/geostory');
-const {GEOSTORY_LOADED, CHANGE_MODE} = require('../actions/geostory');
+const {CHANGE_MODE} = require('../actions/geostory');
 
 const findTutorialId = path => path.match(/\/(viewer)\/(\w+)\/(\d+)/) && path.replace(/\/(viewer)\/(\w+)\/(\d+)/, "$2")
     || path.match(/\/(\w+)\/(\d+)/) && path.replace(/\/(\w+)\/(\d+)/, "$1")
@@ -62,8 +62,9 @@ const switchTutorialEpic = (action$, store) =>
                         if (modeSelector(state) === "edit" || id && id?.indexOf("newgeostory") !== -1) {
                             id  = "geostory";
                             presetName = `geostory_edit_tutorial`;
-                            return Rx.Observable.of(
+                            return Rx.Observable.from([
                                 setupTutorial(id, presetList[presetName], null, null, null, false)
+                            ]
                             );
                         }
                         presetName = `geostory_view_tutorial`;
@@ -75,30 +76,28 @@ const switchTutorialEpic = (action$, store) =>
                     ) : Rx.Observable.empty();
                 })
         );
+
 /**
- * It changes the Geostory tutorial when changing mode only once per time a story is loaded (in view or edit mode)
+ * It changes the Geostory tutorial when changing mode only
+ * when changing to edit the tutorial is shown if not disabled
 */
 const switchGeostoryTutorialEpic = (action$, store) =>
-    action$.ofType(GEOSTORY_LOADED)
-        .switchMap(() =>
-            action$.ofType(CHANGE_MODE)
-                .filter(({mode}) => mode === "edit")
-                .take(1)
-                .switchMap( (action) => {
-                    const id = "geostory";
-                    const state = store.getState();
-                    const presetList = state.tutorial && state.tutorial.presetList || {};
-                    const geostoryMode = `_${action.mode}`;
-                    const steps = !isEmpty(presetList) ? presetList[id + geostoryMode + '_tutorial'] : null;
-                    const isGeostoryTutorialDisabled = localStorage.getItem("mapstore.plugin.tutorial.geostory.disabled") === "true";
-                    // if no steps are found then do nothing
-                    return steps && !isGeostoryTutorialDisabled ? Rx.Observable.from(
-                        [
-                            setupTutorial(id, steps, null, null, null, false)
-                        ]
-                    ) : Rx.Observable.empty();
-                }).takeUntil(action$.ofType(CLOSE_TUTORIAL))
-        );
+    action$.ofType(CHANGE_MODE)
+        .switchMap( ({mode}) => {
+            const id = "geostory";
+            const state = store.getState();
+            const presetList = state.tutorial && state.tutorial.presetList || {};
+            const geostoryMode = `_${mode}`;
+            const steps = !isEmpty(presetList) ? presetList[id + geostoryMode + '_tutorial'] : null;
+            const isGeostoryTutorialDisabled = localStorage.getItem("mapstore.plugin.tutorial.geostory.disabled") === "true";
+            // if no steps are found then do nothing
+            return steps ? Rx.Observable.from(
+                [
+                    setupTutorial(id, steps, null, null, null, mode === "view" || isGeostoryTutorialDisabled)
+                ]
+            ) : Rx.Observable.empty();
+        });
+
 
 /**
  * Handle changePreset action
