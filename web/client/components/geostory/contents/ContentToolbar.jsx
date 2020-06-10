@@ -103,10 +103,11 @@ const toolButtons = {
             update('loop', !loop);
         }
     }),
-    showCaption: ({ update, showCaption, caption, description }) => ({
+    showCaption: ({ editMap: disabled = false, update, showCaption, caption, description }) => ({
         glyph: 'caption',
         visible: !!(caption || description),
-        active: !!showCaption,
+        disabled,
+        active: !!(showCaption && !disabled),
         tooltipId: showCaption ? 'geostory.contentToolbar.hideCaption' : 'geostory.contentToolbar.showCaption',
         onClick: () => {
             update('showCaption', !showCaption);
