@@ -13,8 +13,10 @@ const Message = require('../../I18N/Message');
 const LocaleUtils = require('../../../utils/LocaleUtils');
 let { toVectorStyle } = require('../../../utils/StyleUtils');
 const { Grid, Row, Col, Button, Alert, ButtonToolbar} = require('react-bootstrap');
+const { set, arrayUpdate } = require('../../../utils/ImmutableUtils');
 
 const {Promise} = require('es6-promise');
+const {castArray, isArray} = require('lodash');
 
 class StylePanel extends React.Component {
     static propTypes = {
@@ -182,16 +184,29 @@ class StylePanel extends React.Component {
         let styledLayer = this.props.selected;
         if (!this.state.useDefaultStyle) {
             styledLayer = toVectorStyle(styledLayer, this.props.shapeStyle);
-            Array.isArray(styledLayer.features) && styledLayer.features.forEach(feature => {
-                feature.type === 'Feature'
-                && (feature.geometry && (feature.geometry.type === 'MultiPoint' || feature.geometry.type === "Polygon"))
-                && feature.style && Array.isArray(feature.style) ? feature.style[0] = {
-                        ...styledLayer.features[0].style[0],
+            const features = castArray(styledLayer.features).map(feature => {
+                /**
+                 * only the MultiPoint or Polygon needs the override of the style in case it is an array
+                 * because the first object in the style is usually used for defining style lines
+                 * MultiPoint can be misleading. If used together with geometry: "lineToArc"
+                 * it needs to apply stroke styles, that's why the override occurs
+                */
+                if (
+                    feature.type === 'Feature' &&
+                    isArray(feature.style) &&
+                    (feature?.geometry?.type === 'MultiPoint' || feature?.geometry?.type === "Polygon")
+                ) {
+                    const newFeature = arrayUpdate("style", {
+                        ...feature.style[0],
                         ...styledLayer.style,
                         radius: null
-                    } : null;
-            }
-            );
+                    }, (item, index) => index === 0, feature);
+                    return newFeature;
+
+                }
+                return feature;
+            });
+            styledLayer = set("features", features, styledLayer);
         }
         Promise.resolve(this.props.addLayer( styledLayer )).then(() => {
             let bbox = [];
@@ -212,7 +227,7 @@ class StylePanel extends React.Component {
                 ? this.props.layers[0].name + LocaleUtils.getMessageById(this.context.messages, "shapefile.success")
                 : undefined);
 
-            this.props.onLayerAdded(this.props.selected);
+            this.props.onLayerAdded(styledLayer);
         }).catch(e => {
             this.props.onError({ type: "error", name: this.props.layers[0].name, error: e, message: 'shapefile.error.genericLoadError'});
         });
