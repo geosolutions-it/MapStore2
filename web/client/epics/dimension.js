@@ -12,14 +12,14 @@ const {MAP_CONFIG_LOADED} = require('../actions/config');
 const { error } = require('../actions/notifications');
 
 const { SET_CURRENT_TIME, MOVE_TIME, SET_OFFSET_TIME, updateLayerDimensionData, setCurrentTime, setCurrentOffset} = require('../actions/dimension');
-const { selectLayer } = require('../actions/timeline');
+const { selectLayer, autoselect } = require('../actions/timeline');
 const { layersWithTimeDataSelector, offsetTimeSelector, currentTimeSelector } = require('../selectors/dimension');
 const {describeDomains} = require('../api/MultiDim');
 const {
     domainsToDimensionsObject
 } = require('../utils/TimeUtils');
 
-const { pick, find, replace, endsWith, get } = require('lodash');
+const { pick, find, replace, endsWith, get, flatten } = require('lodash');
 /**
  * Tries to get the layer's information form the URL.
  * TODO: find out a better way to do this
@@ -81,7 +81,7 @@ module.exports = {
                                     changeLayerProperties(layer.id, {
                                         dimensions: newDimensions
                                     }),
-                                    ...dimensions.map(d => updateLayerDimensionData(layer.id, d.name, d)));
+                                    ...flatten(dimensions.map(d => [updateLayerDimensionData(layer.id, d.name, d), autoselect()])));
                             }
 
                         }
@@ -98,7 +98,7 @@ module.exports = {
             const layersWithMultidim = layers.filter(l =>
                 l && l.dimensions && find(l.dimensions, d => d && d.source && d.source.type === "multidim-extension")); // layers with dimension and multidimensional extension
 
-            const selectedLayer = config.timelineData?.selectedLayer ?? layersWithMultidim[0]?.id;
+            const selectedLayer = config.timelineData?.selectedLayer;
             const currentTime = config.dimensionData?.currentTime;
             const offsetTime = config.dimensionData?.offsetTime;
 
@@ -115,8 +115,11 @@ module.exports = {
                     .mergeMap(l =>
                         describeDomains(getTimeMultidimURL(l), l.name, undefined, DESCRIBE_DOMAIN_OPTIONS)
                             .switchMap( domains =>
-                                Observable.from(domainsToDimensionsObject(domains, getTimeMultidimURL(l))
-                                    .map(d => updateLayerDimensionData(l.id, d.name, d))
+                                Observable.from(flatten(domainsToDimensionsObject(domains, getTimeMultidimURL(l))
+                                    .map(d => [
+                                        updateLayerDimensionData(l.id, d.name, d),
+                                        ...(!currentTime ? [autoselect()] : [])
+                                    ]))
                                 )
                             )
                             .catch(() =>

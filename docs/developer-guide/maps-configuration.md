@@ -124,7 +124,7 @@ Map configuration also contains the following additional options:
     - `currentTime` currently selected time; the beginning of a time range if offsetTime is set
     - `offsetTime` the end of a time range
 - `timelineData` timeline options
-    - `selectedLayer` selected layer id; if not present, the first available layer with multidim-extension time information will be selected on map load
+    - `selectedLayer` selected layer id; if not present time cursor will be unlocked
 
 ## Layers options
 
