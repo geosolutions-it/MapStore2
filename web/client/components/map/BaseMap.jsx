@@ -41,7 +41,8 @@ class BaseMap extends React.Component {
         projectionDefs: PropTypes.array,
         plugins: PropTypes.any,
         tools: PropTypes.array,
-        getLayerProps: PropTypes.func
+        getLayerProps: PropTypes.func,
+        env: PropTypes.array
     };
 
     static defaultProps = {
@@ -57,7 +58,8 @@ class BaseMap extends React.Component {
             onMouseMove: () => {},
             onLayerLoading: () => {},
             onLayerError: () => {}
-        }
+        },
+        env: []
     };
 
     getTool = (tool) => {
@@ -87,6 +89,7 @@ class BaseMap extends React.Component {
                     position={index}
                     key={layer.id || layer.name}
                     options={layer}
+                    env={layer.localizedLayerStyles ? this.props.env : []}
                 >
                     {this.renderLayerContent(layer, projection)}
                 </Layer>
