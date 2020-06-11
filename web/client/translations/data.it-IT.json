@@ -2893,7 +2893,7 @@
             },
             "geostoryEditMediaEditor": {
               "title": "Editor delle risorse",
-              "text": "Qui puoi selezionare immagini o mappe da aggiungere alla storia<p> Per maggiori informazioni consulta la relativa guida <a target='_blank' href='https://mapstore.readthedocs.io/en/latest/media-editor-window/story-setting/'>qui</a>"
+              "text": "Qui puoi selezionare immagini o mappe da aggiungere alla storia<p> Per maggiori informazioni consulta la relativa guida <a target='_blank' href='https://mapstore.readthedocs.io/en/latest/user-guide/media-editor-window/'>qui</a>"
             }
         },
         "userSession": {
