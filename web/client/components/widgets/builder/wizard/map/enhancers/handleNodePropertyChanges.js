@@ -8,7 +8,7 @@
 // handle property changes
 const { withHandlers } = require('recompose');
 const {belongsToGroup} = require('../../../../../../utils/LayersUtils');
-const { findIndex, isArray } = require('lodash');
+const { findIndex, castArray } = require('lodash');
 /**
  * Add to the TOC or the Node editor some handlers for TOC nodes
  * add to the wrapped component the following methods:
@@ -51,23 +51,16 @@ module.exports = withHandlers({
             (id, key, value) => {
 
                 const EXPANDED = 'expanded';
-                const index = findIndex(map.groups || [], {
-                    id
-                });
+                const groups = map.groups ? castArray(map.groups) : [];
+                const groupIndex = findIndex(groups, (group) => id === group.id);
+                // if no group is found, then we add a new group
+                let correctGroupIndex = groupIndex === -1 ? groups.length : groupIndex;
 
-                if (key === EXPANDED) {
-                    if (!isArray(map.groups)) {
-                        onChange(`map.groups`, []);
-                        onChange(`map.groups[${index === -1 ? 0 : index}].${key}`, value);
-                        onChange(`map.groups[${index === -1 ? 0 : index}].id`, id);
-                    } else {
-                        (!map.groups[index === -1 ? map.groups.length : index]
-                        || (map.groups[index === -1 ? map.groups.length : index] && !map.groups[index === -1 ? 0 : index].id)
-                        )
-                        && onChange(`map.groups[${index === -1 ? map.groups.length : index}].id`, id);
-                        onChange(`map.groups[${index === -1 ? map.groups.length : index}].${key}`, value);
-                    }
-                } else onChange(`map.groups[${index}].${key}`, value);
+                if (key === EXPANDED && !groups?.[correctGroupIndex]?.id) {
+                    // add id if missing
+                    onChange(`map.groups[${correctGroupIndex}].id`, id);
+                }
+                onChange(`map.groups[${correctGroupIndex}].${key}`, value);
             },
     updateMapEntries: ({ onChange = () => { } }) => (obj = {}) => Object.keys(obj).map(k => onChange(`map[${k}]`, obj[k]))
 });
