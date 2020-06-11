@@ -53,13 +53,13 @@ In order to add a video, the stroy editor can click on the **Video** tab <img sr
 
 In particular, it is possible to insert the following parameters:
 
-* The **Video URL** of the video
+* The **URL** of the video
 
 * The **Title** of the video
 
-* A **Description**, used to explain the contents of the video. The description is available in the viedos preview list and, if the video is added as content in the *Pharagraph section*, in the *Immersive section* or in the *Media section*, under the video
+* A **Description**, used to explain the contents of the video. The description is available in the viedos preview list  and it can appear under the video itself if the video is added as a content of a section (*Pharagraph section*, *Immersive section* or *Media section*)
 
-* The **Credits**, displayed on the bottom-right of the image
+* The **Credits**, displayed on the bottom-right of the video
 
 !!! warning
     **Video URL** and **Title** are mandatory fields.
@@ -76,12 +76,12 @@ To add a map to the story, the story editor can click on the **Maps** tab <img s
 
 <img src="../img/media-editor-window/edit-map.jpg" class="ms-docimage"/>
 
-Once the map is ready, the editor can click on Ok to proceed with the next step and therefore insert the related map metadata like **Thumbnail**, the **Title** and the **Description**.
+Once the map is ready, the story editor can click on **Ok** button <img src="../img/button/ok_button.jpg" class="ms-docbutton"/> to proceed with the next step and therefore insert the related map metadata like **Thumbnail**, **Title** and **Description**.
 
 <img src="../img/media-editor-window/save-map-backg.jpg" class="ms-docimage"/>
 
 !!! note
-    The description is available in the maps preview list and, if the map is added as content in the *Pharagraph section*, in the *Immersive section* or in the *Media section*, under the map.
+    The description is available in the maps preview list and it can appear under the map itself if the map is added as a content of a section (*Pharagraph section*, *Immersive section* or *Media section*).
 
 With a click on **Save** button <img src="../img/button/save_button.jpg" class="ms-docbutton"/> the map is saved and it will be available in the list of the *Current Story* maps. The story editor can select it to be used as a map component in the story by clicking on **Apply** button <img src="../img/button/apply-button2.jpg" class="ms-docbutton"/>.
 

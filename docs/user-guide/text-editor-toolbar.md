@@ -7,7 +7,7 @@ With the *Text Editor Toolbar* it is possible to customize the text by modifying
 
 * **Font** to choose the text font (*Inherit*, *Arial*, *Georgia*, *Impact*, *Tahoma*, *Time New Roman*, *Verdana*)
 
-* **Block Type** to change the text size (*Normal*, *H1*, *H2*, *H3*, *H4*, *H5*, *H6*, *Blockquote*, *Code*)
+* **Block Type** by choosing between the available ones (*Normal*, *H1*, *H2*, *H3*, *H4*, *H5*, *H6*, *Blockquote*, *Code*)
 
 * **Text style** to insert text in *Bold* <img src="../img/button/bold.jpg" class="ms-docbutton" style="max-height:15px;"/>, *Italic* <img src="../img/button/italic.jpg" class="ms-docbutton" style="max-height:15px;"/>, *Underline* <img src="../img/button/underline.jpg" class="ms-docbutton" style="max-height:15px;"/> or *Strikethrough* <img src="../img/button/strike.jpg" class="ms-docbutton" style="max-height:15px;"/>
 
@@ -23,7 +23,7 @@ With the *Text Editor Toolbar* it is possible to customize the text by modifying
 
 * **Link** <img src="../img/button/link.jpg" class="ms-docbutton" style="max-height:15px;"/> to convert in hyperlink the selected portion of text
 
-* **Remove** <img src="../img/button/remove4.jpg" class="ms-docbutton" style="max-height:15px;"/> to remove the formatting 
-
 !!! note
-    In order to connect to a website external to [Mapstore](https://mapstore.geo-solutions.it/mapstore/#/), the protocol must be specified (e.g., `http://` or `https://`).
+    In order to setup an hyperlink to an external website, the protocol must be specified (e.g., `http://` or `https://`).
+
+* **Remove** <img src="../img/button/remove4.jpg" class="ms-docbutton" style="max-height:15px;"/> to remove the formatting 

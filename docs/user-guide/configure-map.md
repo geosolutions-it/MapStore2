@@ -29,12 +29,12 @@ The *Setting section* allows the user to:
 
 * Enable/disable the **Pan interaction** on the map
 
-* Enable/disable the **Identify** on the map and decide the information format (*TEXT*, *HTML* or *PROPERTIES*) that appears querying a layer with the Identify Tool.
+* Enable/disable the **Identify** on the map. As reported in the [Identify tool](side-bar.md#identify-tool) section, also for map sections in a story it is possible to enable the *Identify tool* in one of the format supported by MapStore (*TEXT*, *HTML* or *PROPERTIES*)
 
 <img src="../img/configure-map/identify-format.jpg" class="ms-docimage"/>
 
 !!! note
-    The Identify tool is activated when the user clicks on the layer in the map, as follows: <img src="../img/configure-map/identify-on-map.gif" class="ms-docimage"/>
+    The Identify tool is performed as usual when the user clicks on a layer in the map, as follows: <img src="../img/configure-map/identify-on-map.gif" class="ms-docimage"/>
 
 ## Advanced map editor
 

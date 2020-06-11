@@ -94,7 +94,7 @@ By clicking on the *Make the whole background visible inside the container* butt
 * **Enable Loop** <img src="../img/button/loop-botton.jpg" class="ms-docbutton"/> to continuously repeat the video
 
 !!! note
-    The video play based on the selected options only in *View Mode*.
+    The video play will be available only in *View Mode* of the story: it is not available in edit mode except in the media editor as a preview.
 
 ### Maps
 
@@ -106,4 +106,4 @@ The background toolbar, in this case, changes a little bit by including an addit
 
 <img src="../img/title-section/map-toolbar.jpg" class="ms-docimage" style="width:300px"/>
 
-* The **Edit map configuration** through which is possible to [Configure the Map](configure-map.md)
+* The **Edit map configuration** through which it is possible to [Configure the Map](configure-map.md)

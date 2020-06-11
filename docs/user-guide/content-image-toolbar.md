@@ -11,6 +11,6 @@ Through this toolbar, the story editor is able to perform the following operatio
 
 * **Change size** <img src="../img/button/change-size2.jpg" class="ms-docbutton"/> choosing between *Small*, *Medium*, *Large*
 
-* **Hide caption** button <img src="../img/button/hide-caption.jpg" class="ms-docbutton"/> to show/hide the description under the image. (It is available if the description is added to the image on the [Media Editor](media-editor-window.md))
+* **Hide caption** button <img src="../img/button/hide-caption.jpg" class="ms-docbutton"/> to show/hide the description under the image: this button is present only if a description has been provided for the image resource (see the [Media Editor](media-editor-window.md) tool for example)
 
 * **Remove** <img src="../img/button/remove2.jpg" class="ms-docbutton"/> the image content 
