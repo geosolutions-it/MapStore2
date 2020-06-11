@@ -15,7 +15,7 @@ const PropTypes = require('prop-types');
 const { isDashboardEditing } = require('../selectors/dashboard');
 const { dashboardHasWidgets, getWidgetsDependenciesGroups } = require('../selectors/widgets');
 const { showConnectionsSelector, isDashboardLoading, buttonCanEdit } = require('../selectors/dashboard');
-const { dashboardSelector } = require('./widgetbuilder/commons');
+const { dashboardSelector, dashboardsSelectorIsLocalizedLayerStylesEnabled } = require('./widgetbuilder/commons');
 
 const { createWidget, toggleConnection } = require('../actions/widgets');
 const { triggerShowConnections } = require('../actions/dashboard');
@@ -26,6 +26,7 @@ const LoadingSpinner = require('../components/misc/LoadingSpinner');
 const Builder =
     compose(
         connect(dashboardSelector, { toggleConnection, triggerShowConnections }),
+        connect(dashboardsSelectorIsLocalizedLayerStylesEnabled),
         withProps(({ availableDependencies = [] }) => ({
             availableDependencies: availableDependencies.filter(d => d !== "map")
         })),

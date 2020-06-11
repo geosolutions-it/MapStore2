@@ -22,7 +22,8 @@ module.exports = ({
     editorData = {},
     editNode,
     setEditNode = () => {},
-    closeNodeEditor = () => {}
+    closeNodeEditor = () => {},
+    isLocalizedLayerStylesEnabled
 } = {}) => (
     <Wizard
         step={step}
@@ -36,6 +37,7 @@ module.exports = ({
             onNodeSelect={onNodeSelect}
             selectedNodes={selectedNodes}
             onChange={onChange}
+            isLocalizedLayerStylesEnabled={isLocalizedLayerStylesEnabled}
             preview={<Preview
                 onChange={onChange}
                 layers={editorData.map && editorData.map.layers}

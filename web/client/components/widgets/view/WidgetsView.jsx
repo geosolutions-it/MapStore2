@@ -51,6 +51,7 @@ module.exports = pure(({
     editWidget = () => { },
     onLayoutChange = () => { },
     language,
+    env,
     ...actions
 } = {}) => {
     // checking if this widget appears among other dependenciesMap of other widgets (i.e. it is a parent table)
@@ -116,7 +117,8 @@ module.exports = pure(({
                 toggleCollapse= {() => toggleCollapse(w)}
                 onDelete={() => deleteWidget(w)}
                 onEdit={() => editWidget(w)}
-                language={language} /></div>))
+                language={language}
+                env={env} /></div>))
         }
     </ResponsiveReactGridLayout>);
 });
