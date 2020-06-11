@@ -120,6 +120,7 @@ export default {
     getFeatureInfoOnFeatureInfoClick: (action$, { getState = () => { } }) =>
         action$.ofType(FEATURE_INFO_CLICK)
             .switchMap(({ point, filterNameList = [], overrideParams = {} }) => {
+                // Reverse - To query layer in same order as in TOC
                 let queryableLayers = reverse(queryableLayersSelector(getState()));
                 const queryableSelectedLayers = queryableSelectedLayersSelector(getState());
                 if (queryableSelectedLayers.length) {

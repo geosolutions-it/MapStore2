@@ -37,14 +37,15 @@ const {
 const {RESET_CONTROLS} = require('../actions/controls');
 
 const assign = require('object-assign');
-const {findIndex} = require('lodash');
+const {findIndex, find} = require('lodash');
 
 function receiveResponse(state, action, type) {
     const requestIndex = findIndex((state.requests || []), (req) => req.reqId === action.reqId);
     if (requestIndex !== -1) {
         const responses = state.responses || [];
-        const indexUpdated = state.indexUpdated || false;
-        const firstUpdate = !indexUpdated && type === "data" && action[type].indexOf("no features were found") !== 0;
+        // Update index when first response is received
+        const updateIndex = find(responses, "response") === undefined;
+        // Add response in same order it was requested
         responses[requestIndex] = {
             response: action[type],
             queryParams: action.requestParams,
@@ -53,7 +54,7 @@ function receiveResponse(state, action, type) {
         };
         return assign({}, state, {
             responses: [...responses],
-            ...(firstUpdate && {index: requestIndex, indexUpdated: true})
+            ...(updateIndex && {index: requestIndex})
         });
     }
     return state;
@@ -212,8 +213,7 @@ function mapInfo(state = initState, action) {
     case PURGE_MAPINFO_RESULTS:
         return assign({}, state, {
             responses: [],
-            requests: [],
-            indexUpdated: false
+            requests: []
         });
     case LOAD_FEATURE_INFO: {
         return receiveResponse(state, action, 'data');
@@ -319,20 +319,22 @@ function mapInfo(state = initState, action) {
             }
 
         );
-        const responses = state.responses || [];
+        let responses = state.responses || [];
+        // Add response such that it doesn't replace other layer response's index
+        responses[state.requests.length] = {
+            response: {
+                crs: null,
+                features: intersected,
+                totalFeatures: "unknown",
+                type: "FeatureCollection"
+            },
+            queryParams: action.request,
+            layerMetadata: action.metadata,
+            format: 'JSON'
+        };
         return assign({}, state, {
             requests: [...state.requests, {}],
-            responses: [...responses, {
-                response: {
-                    crs: null,
-                    features: intersected,
-                    totalFeatures: "unknown",
-                    type: "FeatureCollection"
-                },
-                queryParams: action.request,
-                layerMetadata: action.metadata,
-                format: 'JSON'
-            }]
+            responses: [...responses]
         });
     }
     case UPDATE_CENTER_TO_MARKER: {

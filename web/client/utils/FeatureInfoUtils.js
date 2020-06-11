@@ -77,7 +77,7 @@ const Validator = {
          *Parse the JSON to get only the valid json responses
          */
         getValidResponses(responses) {
-            return responses.filter((res) => res.response && res.response.features && res.response.features.length);
+            return responses.filter((res) => res.response && res.response.features);
         },
         /**
          * Parse the JSON to get only the NOT valid json responses
@@ -91,7 +91,7 @@ const Validator = {
          *Parse the JSON to get only the valid json responses
          */
         getValidResponses(responses) {
-            return responses.filter((res) => res.response && res.response.features && res.response.features.length);
+            return responses.filter((res) => res.response && res.response.features);
         },
         /**
          * Parse the JSON to get only the NOT valid json responses
@@ -119,7 +119,7 @@ const Validator = {
          *Parse the JSON to get only the valid json responses
          */
         getValidResponses(responses) {
-            return responses.filter((res) => res.response && res.response.features && res.response.features.length);
+            return responses.filter((res) => res.response && res.response.features);
         },
         /**
          * Parse the JSON to get only the NOT valid json responses

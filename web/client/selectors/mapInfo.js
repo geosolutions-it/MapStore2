@@ -124,6 +124,9 @@ const validResponsesSelector = createSelector(
         return requests.length === responses.length && validatorFormat.getValidResponses(responses);
     });
 
+/**
+ * Checks whether all the received responses are invalid
+ */
 const emptyResponsesSelector = createSelector(
     responsesSelector,
     requestsSelector,

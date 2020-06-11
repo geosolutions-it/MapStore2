@@ -73,9 +73,7 @@ class DefaultViewer extends React.Component {
     }
 
     renderEmptyLayers = (validator) => {
-        console.log("emptyLayer");
         const invalidResponses = validator.getNoValidResponses(this.props.responses);
-        console.log("invalidResponses", invalidResponses);
         if (this.props.missingResponses === 0 && this.props.emptyResponses) {
             return null;
         }
@@ -103,7 +101,6 @@ class DefaultViewer extends React.Component {
     };
 
     renderEmptyPages = () => {
-        console.log("emptyPage");
         if (this.props.missingResponses === 0 && this.props.emptyResponses) {
             return (
                 <Alert bsStyle={"danger"}>
@@ -117,7 +114,7 @@ class DefaultViewer extends React.Component {
     renderPages = (responses) => {
         return responses.map((res, i) => {
             let {response, layerMetadata} = res;
-            response = typeof response === "object" ? response : this.adjustedResponse(response);
+            response = this.formattedResponse(response);
             const format = getFormatForResponse(res, this.props);
             const PageHeader = this.props.header;
             let customViewer;
@@ -160,6 +157,7 @@ class DefaultViewer extends React.Component {
         const Container = this.props.container;
         const validator = this.props.validator(this.props.format);
         let validResponses = validator.getValidResponses(this.props.responses);
+        const currResponse = this.formattedResponse(validResponses[this.props.index]?.response);
         return (
             <div className="mapstore-identify-viewer">
                 {!this.props.emptyResponses ?
@@ -171,7 +169,7 @@ class DefaultViewer extends React.Component {
                             ref="container"
                             index={this.props.index || 0}
                             key={"swiper"}
-                            style={{maxHeight: 450}}
+                            style={{display: isEmpty(currResponse) ? "none" : "block"}}
                             className="swipeable-view">
                             {this.renderPages(validResponses)}
                         </Container>
@@ -184,8 +182,9 @@ class DefaultViewer extends React.Component {
     }
 
     // Display empty content when layer has no features
-    adjustedResponse = (response) =>{
-        return response.indexOf("no features were found") !== 0 ? response : "";
+    formattedResponse = (response) =>{
+        return typeof response === "object" ? response :
+            typeof response === "string" && response.indexOf("no features were found") !== 0 ? response : "";
     }
 }
 

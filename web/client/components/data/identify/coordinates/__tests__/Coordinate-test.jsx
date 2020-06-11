@@ -24,7 +24,7 @@ describe('Identify Coordinate component', () => {
     it('Coordinate rendering with defaults', () => {
         ReactDOM.render(<Coordinate />, document.getElementById("container"));
         const container = document.getElementById('container');
-        const el = container.querySelector('.text-center');
+        const el = container.querySelectorAll('.coordinates-text');
         expect(el).toExist();
     });
     it('Coordinate rendering with content', () => {

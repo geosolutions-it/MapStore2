@@ -27,7 +27,7 @@ const LayerSelector = require('./LayerSelector').default;
  * @prop {function} viewer component that will be used as viewer of Identify
  * @prop {object} viewerOptions options to use with the viewer, eg { header: MyHeader, container: MyContainer }
  * @prop {function} getToolButtons must return an array of object representing the toolbar buttons, eg (props) => [{ glyph: 'info-sign', tooltip: 'hello!'}]
- * @prop {function} getNavigationButtons must return an array of navigation buttons, eg (props) => [{ glyph: 'info-sign', tooltip: 'hello!'}]
+ * @prop {function} getFeatureButtons must return an array of buttons relating to feature interaction, eg (props) => [{ glyph: 'zoom-to', tooltip: 'Zoom to Extent'}]
  */
 module.exports = props => {
     const {
