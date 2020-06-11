@@ -9,6 +9,7 @@ const React = require('react');
 const ReactDOM = require('react-dom');
 const ReactTestUtils = require('react-dom/test-utils');
 const expect = require('expect');
+const { isEqual } = require('lodash');
 const StylePanel = require('../StylePanel');
 
 const MY_JSON = require('../../../../test-resources/wfs/museam.json');
@@ -43,6 +44,50 @@ describe('StylePanel component', () => {
         ReactDOM.render(<StylePanel success={"TEST"} layers={[L1, L2]} selected={L1} stylers={{ "Point": <div></div> }} />, document.getElementById("container"));
         const container = document.getElementById('container');
         expect(container.querySelector('.alert')).toExist();
+    });
+    it('Test StylePanel addLayer to have been called with overrided style properties in feature layer', (done) => {
+        const actions = {
+            addLayer: () => {
+            }
+        };
+        const spyCallBack = expect.spyOn(actions, 'addLayer');
+        const testLayer = {
+            type: "FeatureCollection",
+            totalFeatures: 6,
+            features: [
+                {
+                    type: "Feature",
+                    id: "poi.1",
+                    geometry: {
+                        type: "MultiPoint",
+                        coordinates: [
+                            -74.0104611,
+                            40.70758763
+                        ]
+                    },
+                    style: [{}],
+                    geometry_name: "the_geom",
+                    properties: {
+                        NAME: "museam",
+                        THUMBNAIL: "pics/22037827-Ti.jpg",
+                        MAINPAGE: "pics/22037827-L.jpg"
+                    }
+                }
+            ],
+            crs: {
+                type: "name",
+                properties: {
+                    name: "urn:ogc:def:crs:EPSG::4326"
+                }
+            }
+        };
+
+        const cmp = ReactDOM.render(<StylePanel shapeStyle={{marker: true}} errors={[W1]} layers={[L1, testLayer]} selected={testLayer} stylers={{ "Point": <div></div> }} addLayer={actions.addLayer} />, document.getElementById("container"));
+        expect(cmp).toExist();
+        const btn = document.querySelectorAll('button')[2];
+        ReactTestUtils.Simulate.click(btn); // <-- trigger event callback
+        expect(isEqual(spyCallBack.calls[0].arguments[0].features[0].style[0], {...spyCallBack.calls[0].arguments[0].style, radius: null})).toBe(true);
+        done();
     });
     it('Test StylePanel onSuccess to have been called on NEXT / FINISH button click', (done) => {
         const actions = {
