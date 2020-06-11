@@ -91,7 +91,8 @@ class CoordinatesRow extends React.Component {
                 buttonConfig: {
                     title: <Glyphicon glyph="cog"/>,
                     className: "square-button-md no-border",
-                    pullRight: true
+                    pullRight: true,
+                    tooltipId: "identifyChangeCoordinateFormat"
                 },
                 menuOptions: [
                     {

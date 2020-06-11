@@ -1,4 +1,4 @@
-const PropTypes = require('prop-types');
+
 /**
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
@@ -8,10 +8,10 @@ const PropTypes = require('prop-types');
  */
 
 const React = require('react');
-const {Glyphicon} = require('react-bootstrap');
-const Dropzone = require('react-dropzone');
-const Spinner = require('react-spinkit');
+const PropTypes = require('prop-types');
 const Message = require('../../../components/I18N/Message');
+const BaseThumbnail = require('../../../components/misc/Thumbnail').default;
+
 /**
  * A Dropzone area for a thumbnail.
  */
@@ -26,6 +26,7 @@ class Thumbnail extends React.Component {
         onError: PropTypes.func,
         onUpdate: PropTypes.func,
         onRemove: PropTypes.func,
+        maxFileSize: PropTypes.number,
         // I18N
         message: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
         suggestion: PropTypes.oneOfType([PropTypes.string, PropTypes.element])
@@ -37,7 +38,7 @@ class Thumbnail extends React.Component {
 
     static defaultProps = {
         loading: false,
-        glyphiconRemove: "remove-circle",
+        glyphiconRemove: "trash",
         resource: {},
         // CALLBACKS
         onError: () => {},
@@ -46,30 +47,17 @@ class Thumbnail extends React.Component {
         onRemove: () => {},
         // I18N
         message: <Message msgId="map.message"/>,
-        suggestion: <Message msgId="map.suggestion"/>
+        suggestion: <Message msgId="map.suggestion"/>,
+        maxFileSize: 500000
     };
 
     state = {};
-
-    onRemoveThumbnail = (event) => {
-        if (event !== null) {
-            event.stopPropagation();
-        }
-
-        this.files = null;
-        this.props.onError([]);
-        this.props.onRemove();
-    };
 
     getThumbnailUrl = () => {
         return this.props.thumbnail && this.props.thumbnail !== "NODATA"
             // this decode is for backward compatibility with old linked resources`rest%2Fgeostore%2Fdata%2F2%2Fraw%3Fdecode%3Ddatauri` not needed for new ones `rest/geostore/data/2/raw?decode=datauri`
             ? decodeURIComponent(this.props.thumbnail)
             : null;
-    };
-
-    isImage = (images) => {
-        return images && images[0].type === "image/png" || images && images[0].type === "image/jpeg" || images && images[0].type === "image/jpg";
     };
 
     getDataUri = (images, callback) => {
@@ -83,56 +71,44 @@ class Thumbnail extends React.Component {
         return callback(null);
     };
 
-    onDrop = (images) => {
-        // check formats and sizes
-        const isAnImage = this.isImage(images);
-        let errors = [];
-
-        this.getDataUri(images, (data) => {
-            if (isAnImage && data && data.length < 500000) {
-                // without errors
-                this.props.onError([], this.props.resource.id);
-                this.files = images;
-                this.props.onUpdate(data, images && images[0].preview);
-            } else {
-                // with at least one error
-                if (!isAnImage) {
-                    errors.push("FORMAT");
-                }
-                if (data && data.length >= 500000) {
-                    errors.push("SIZE");
-                }
-                this.props.onError(errors, this.props.resource.id);
-                this.files = images;
-                this.props.onUpdate(null, null);
-            }
-        });
-    };
     getThumbnailDataUri = (callback) => {
         this.getDataUri(this.files, callback);
     };
     render() {
         return (
-            this.props.loading ? <div className="btn btn-info" style={{"float": "center"}}> <Spinner spinnerName="circle" overrideSpinnerClassName="spinner"/></div> :
-
-                <div className="dropzone-thumbnail-container" style={{
+            <BaseThumbnail
+                thumbnail={this.getThumbnailUrl()}
+                className={null}
+                dropZoneProps={{
+                    className: 'dropzone alert alert-info',
+                    rejectClassName: 'alert-danger'
+                }}
+                loading={this.props.loading}
+                message={<>{this.props.message}<br />{this.props.suggestion}</>}
+                maxFileSize={this.props.maxFileSize}
+                style={{
                     pointerEvents: this.props.resource.saving ? "none" : "auto"
-                }}>
-                    <label className="control-label"><Message msgId="map.thumbnail"/></label>
-                    <Dropzone multiple={false} className="dropzone alert alert-info" rejectClassName="alert-danger" onDrop={this.onDrop}>
-                        { this.getThumbnailUrl()
-                            ? <div>
-                                <img src={this.getThumbnailUrl()} />
-                                <div className="dropzone-content-image-added">{this.props.message}<br/>{this.props.suggestion}</div>
-                                <div className="dropzone-remove" onClick={this.onRemoveThumbnail}>
-                                    <Glyphicon glyph={this.props.glyphiconRemove} />
-                                </div>
-                            </div>
-                            : <div className="dropzone-content-image">{this.props.message}<br />{this.props.suggestion}</div>
-                        }
-                    </Dropzone>
-                </div>
-
+                }}
+                label={<label className="control-label"><Message msgId="map.thumbnail"/></label>}
+                onUpdate={(data, files) => {
+                    // without errors
+                    this.props.onError([], this.props.resource.id);
+                    this.files  = files;
+                    this.props.onUpdate(data, files?.[0]?.preview);
+                }}
+                onError={(errors, files) => {
+                    // with at least one error
+                    this.props.onError(errors, this.props.resource.id);
+                    this.files  = files;
+                    this.props.onUpdate(null, null);
+                }}
+                onRemove={() => {
+                    this.files = null;
+                    this.props.onUpdate(null, null);
+                    this.props.onRemove();
+                    this.props.onError([], this.props.resource.id);
+                }}
+            />
         );
     }
 }

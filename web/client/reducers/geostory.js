@@ -34,6 +34,7 @@ import {
     REMOVE_RESOURCE
 } from '../actions/geostory';
 
+
 /**
  * Return the index of the where to place an item.
  * If the position is a string, return the index after the item found inside the array (0 if not found)

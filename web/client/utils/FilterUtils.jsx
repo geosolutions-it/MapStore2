@@ -535,8 +535,8 @@ const FilterUtils = {
                     'xmlns:wfs="http://www.opengis.net/wfs" ' +
                     'xmlns:ogc="http://www.opengis.net/ogc" ' +
                     'xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" ' +
-                    'xsi:schemaLocation="http://www.opengis.net/wfs ' +
-                        'http://schemas.opengis.net/wfs/1.0.0/WFS-basic.xsd">';
+                    (options.noSchemaLocation ? "" : 'xsi:schemaLocation="http://www.opengis.net/wfs http://schemas.opengis.net/wfs/1.0.0/WFS-basic.xsd"') +
+                '>';
             break;
         case "1.1.0":
             getFeature += pagination && pagination.maxFeatures ? 'maxFeatures="' + pagination.maxFeatures + '" ' : "";
@@ -548,8 +548,8 @@ const FilterUtils = {
                     'xmlns:wfs="http://www.opengis.net/wfs" ' +
                     'xmlns:ogc="http://www.opengis.net/ogc" ' +
                     'xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" ' +
-                    'xsi:schemaLocation="http://www.opengis.net/wfs ' +
-                        'http://schemas.opengis.net/wfs/1.1.0/wfs.xsd">';
+                    (options.noSchemaLocation ? "" : 'xsi:schemaLocation="http://www.opengis.net/wfs http://schemas.opengis.net/wfs/1.1.0/wfs.xsd"') +
+                    '>';
             break;
         default: // default is wfs 2.0
             getFeature += pagination && pagination.maxFeatures ? 'count="' + pagination.maxFeatures + '" ' : "";
@@ -561,10 +561,11 @@ const FilterUtils = {
                     'xmlns:fes="http://www.opengis.net/fes/2.0" ' +
                     'xmlns:gml="http://www.opengis.net/gml/3.2" ' +
                     'xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" ' +
-                    'xsi:schemaLocation="http://www.opengis.net/wfs/2.0 ' +
+                    (options.noSchemaLocation ? "" : ('xsi:schemaLocation="http://www.opengis.net/wfs/2.0 ' +
                         'http://schemas.opengis.net/wfs/2.0/wfs.xsd ' +
                         'http://www.opengis.net/gml/3.2 ' +
-                        'http://schemas.opengis.net/gml/3.2.1/gml.xsd">';
+                        'http://schemas.opengis.net/gml/3.2.1/gml.xsd"')) +
+                    '>';
         }
 
         return getFeature;

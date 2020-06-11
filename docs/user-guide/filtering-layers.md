@@ -63,7 +63,7 @@ Also this filter is applied through the [Query Panel](filtering-layers.md#query-
 
 The user can perform two type of quick filters:
 
-* Filter by **attributes** 
+* Filter by **attributes**
 
 * Filter by **clicked point in the map**
 
@@ -123,11 +123,11 @@ This tool is used to define advanced filters in [MapStore](https://mapstore.geo-
 ### Attribute filter
 
 This filter allows to set one or more conditions referred to the [Attribute Table](attributes-table.md) fields. <br>
-First of all it is possible to choose if the filter will match: 
+First of all it is possible to choose if the filter will match:
 
 * **Any** conditions
 
-* **All** conditions 
+* **All** conditions
 
 * **None** conditions
 
@@ -139,6 +139,9 @@ A condition can be set by selecting a value for each of the three input boxes:
 * In the second input box it is possible to choose the operation to perform (selecting a text field can be **=**, **like**, **ilike** or **isNull**, selecting a numerical field, can be **=**, **>**, **<**, **>=**, **<=**, **<>** or **><**)
 
 * The third input box (in case of fields of type String) provides a paginated list of available field values already present in the layer's dataset (a GeoServer WPS process is used for this). In case of numeric fields the user can simply type a value to use for the filter.
+
+!!! Note
+    the "paginated list of available field values" above is available only if the server provides the WPS process `gs:PagedUnique`
 
 A simple *Attribute Filter* applied for a numerical field can be, for example:
 
@@ -162,7 +165,7 @@ Once this filter is set, it is always possible to edit the coordinates and the d
 
 ### Layer filter
 
-This tool allows to set [cross-layer filters](https://docs.geoserver.org/stable/en/user/extensions/querylayer/index.html) for a layer by using another layer or even the same one. 
+This tool allows to set [cross-layer filters](https://docs.geoserver.org/stable/en/user/extensions/querylayer/index.html) for a layer by using another layer or even the same one.
 
 !!!warning
     This filter tool requires the [Query Layer plugin](https://docs.geoserver.org/stable/en/user/extensions/querylayer/index.html#installing-the-querylayer-module) installed in GeoServer
@@ -171,7 +174,7 @@ In order to set up a cross-layer filter the options below are required:
 
 * *Target layer* (between those present in the [TOC](toc.md))
 
-* *Operation* to be chosen between **Intersects**, **Is contained** or **Contains** 
+* *Operation* to be chosen between **Intersects**, **Is contained** or **Contains**
 
 * Optionally some *Conditions* (see [Attribute filter](filtering-layers.md#attribute-filter))
 

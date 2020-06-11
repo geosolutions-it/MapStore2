@@ -1,4 +1,3 @@
-const PropTypes = require('prop-types');
 /**
  * Copyright 2017, GeoSolutions Sas.
  * All rights reserved.
@@ -8,7 +7,10 @@ const PropTypes = require('prop-types');
  */
 
 const React = require('react');
+const PropTypes = require('prop-types');
 const {get} = require('lodash');
+
+const Toolbar = require('../../misc/toolbar/Toolbar');
 
 const {generateTemplateString} = require('../../../utils/TemplateUtils');
 
@@ -27,13 +29,15 @@ class SearchResult extends React.Component {
         displayName: PropTypes.string,
         idField: PropTypes.string,
         icon: PropTypes.string,
-        onItemClick: PropTypes.func
+        onItemClick: PropTypes.func,
+        tools: PropTypes.array
     };
 
     static defaultProps = {
         displayName: "properties.display_name",
         idField: "id",
-        icon: "properties.icon"
+        icon: "properties.icon",
+        tools: []
     };
 
     onClick = () => {
@@ -48,9 +52,21 @@ class SearchResult extends React.Component {
         let item = this.props.item;
         return (
             <div key={item.osm_id} className="search-result" style={item.resultCssStyle} onClick={this.onClick}>
-                <div className="icon"> <img src={item.icon} /></div>
-                <div className="text-result-title">{get(item, this.props.displayName) || generateTemplateString(this.props.displayName || "")(item) }</div>
-                <small className="text-info">{this.props.subTitle && get(item, this.props.subTitle) || generateTemplateString(this.props.subTitle || "")(item) }</small>
+                <div className="search-result-left-container">
+                    <div className="icon"> <img src={item.icon} /></div>
+                    <div className="text-result-title">{get(item, this.props.displayName) || generateTemplateString(this.props.displayName || "")(item) }</div>
+                    <small className="text-info">{this.props.subTitle && get(item, this.props.subTitle) || generateTemplateString(this.props.subTitle || "")(item) }</small>
+                </div>
+                <div className="search-result-right-container">
+                    <div className="search-result-tools">
+                        <Toolbar
+                            btnDefaultProps={{
+                                className: 'square-button-md',
+                                bsStyle: 'primary'
+                            }}
+                            buttons={this.props.tools}/>
+                    </div>
+                </div>
             </div>
         );
     }

@@ -63,4 +63,19 @@ describe("test the NominatimResult", () => {
         ReactDOM.findDOMNode(elem).click();
         expect(spy.calls.length).toEqual(1);
     });
+
+    it('test tools', () => {
+        let called = false;
+        const tools = [{
+            glyph: 'plus',
+            onClick: (e) => {e.stopPropagation(); called = true;}
+        }];
+        ReactDOM.render(<SearchResult item={item} tools={tools}/>, document.getElementById('container'));
+        const searchResultElem = document.getElementsByClassName('search-result')[0];
+        expect(searchResultElem).toExist();
+        const toolButton = document.querySelector('.search-result button');
+        expect(toolButton).toExist();
+        TestUtils.Simulate.click(toolButton);
+        expect(called).toBe(true);
+    });
 });

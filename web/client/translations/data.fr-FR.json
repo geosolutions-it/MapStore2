@@ -50,6 +50,7 @@
         },
         "showEmptyMessageGFI": "Afficher un message de résultat vide dans le panneau GetFeatureInfo",
         "remove": "Supprimer",
+        "removeThumbnail": "Supprimer la miniature",
         "layerProperties": {
             "windowTitle": "Propriétés de la couche",
             "title": "Titre",
@@ -603,6 +604,7 @@
         "identifyShowCoordinateEditor": "Afficher l'éditeur de coordonnées",
         "identifyHideCoordinateEditor": "Masquer l'éditeur de coordonnées",
         "identifyCoordinateApplyChanges": "Appliquer les modifications",
+        "identifyChangeCoordinateFormat": "Changer le format des coordonnées",
         "identifyRevGeocodeModalTitle": "Adresse",
         "identifyRevGeocodeSubmitText": "Plus d'informations",
         "identifyRevGeocodeCloseText": "Fermer",
@@ -687,6 +689,7 @@
             "serviceslistempty": "Aucun service personnalisé n'a été défini",
             "service_missing": "Le service {serviceType} n'est pas configuré",
             "generic_error": "Une erreur s'est produite lors de la recherche. Détails de l'erreur : {message}",
+            "showGFI": "Afficher GFI",
             "errors": {
                 "nonQueriableLayers": "La couche fournie dans l'URL n'est pas interrogeable ou invisible sur la carte.",
                 "serverError": "Le serveur a renvoyé une erreur lors de l'exécution de la requête GetFeatureInfo. Vérifiez si les paramètres sont corrects."
@@ -698,7 +701,9 @@
                 "single_layer": "Une seule couche",
                 "no_info_description": "Le panneau d'identification n'apparaîtra pas lors de la recherche",
                 "all_layers_description": "Le panneau d'identification affichera des informations sur toutes les couches visibles sur la carte",
-                "single_layer_description": "Le panneau d'identification apparaîtra avec les données déjà disponibles via la recherche WFS"
+                "single_layer_description": "Le panneau d'identification apparaîtra avec les données déjà disponibles via la recherche WFS",
+                "openFeatureInfoButtonCheckbox": "Utilisez le bouton pour ouvrir les informations sur les fonctionnalités",
+                "forceSearchLayerVisibility": "Forcer la visibilité de la couche de recherche"
             },
             "advancedSearchPanel": {
                 "title": "Filtres de recherche avancée",
@@ -1142,10 +1147,21 @@
             "msgToCopyUrl": "Cliquer pour copier",
             "sharedTitle": "Regardez ma nouvelle carte : ",
             "advancedOptions": "Options avancées",
+
+            "wrongCenterAndZoomParamTitle": "Paramètre de centre et de zoom non valide",
+            "wrongCenterAndZoomParamMessage": "Les paramètres Centre et Zoom doivent être center=lon,lat&zoom=value et (+|- 90° lat, +|-180° lon, <=+35 zoom)",
+            "wrongMarkerAndZoomParamTitle": "Marqueur et paramètre de zoom non valides",
+            "wrongMarkerAndZoomParamMessage": "Les paramètres Marker et Zoom doivent être marker=lon,lat&zoom=value et (+|- 90° lat, +|-180° lon, <=+35 zoom)",
+            "showHomeButton": "Lien vers l'accueil MapStore",
+            "addCenterAndZoomParam": "Ajouter le centre et zoomer sur le lien de partage",
+            "zoom": "Zoom",
+            "marker": "Ajouter un marqueur sur la carte chargée",
+            "coordinate": "Coordonner",
+            "coordTooltip": "Cliquez sur la carte pour saisir les coordonnées",
+            "zoomToolTip": "Min: 1 et Max: 35",
             "addBboxParam": "Ajouter un paramètre de rectangle englobant au lien de partage",
             "wrongBboxParamTitle": "Paramètre de rectangle englobant invalide",
-            "wrongBboxParamMessage": "Les paramètres du rectangle englobant doivent être en EPSG:4326 et écrit de cette façon : bbox=minx,miny,maxx,maxy",
-            "showHomeButton": "Lien vers l'accueil MapStore"
+            "wrongBboxParamMessage": "Les paramètres du rectangle englobant doivent être en EPSG:4326 et écrit de cette façon : bbox=minx,miny,maxx,maxy"
         },
         "snapshot": {
             "title": "Prévisualisation de la capture de la carte",
@@ -2226,7 +2242,9 @@
                 "trash": "Supprimer la ressource",
                 "videoUrl": "URL de la vidéo",
                 "videoUrlPlaceholder": "Entrez une URL d'une vidéo",
-                "thumbnail": "Ajouter une vignette (taille maximale 500 Kb)"
+                "thumbnail": "Ajouter une vignette (taille maximale 500 Kb)",
+                "createVideoThumbnail": "Créer une miniature à partir de la source vidéo",
+                "thumbnailCreateError": "Il n'est pas possible de créer une miniature à partir de la source vidéo actuelle. Cliquez ou déposez une image dans la vignette pour la télécharger manuellement"
             },
             "mediaform": {
                 "confirmExitTitle": "Fermer le formulaire de médias",
@@ -2242,11 +2260,14 @@
                 "confirmRemoveResource": "Voulez-vous supprimer cette ressource multimédia de la story ?",
                 "confirmRemoveUsedResource": "Cette ressource sera également supprimée de toutes les sections / contenus où elle est utilisée les laissant vides. Voulez-vous la supprimer de la story ?"
             },
+            "imageList": {
+                "emptyList": "Cliquez sur le bouton plus pour ajouter une nouvelle image. Voir le guide de l'utilisateur <a href='https://mapstore.readthedocs.io/en/latest/user-guide/media-editor-window/#images' target='_blank'/> ici </a>"
+            },
             "mapList": {
-                "emptyList": "Cliquez sur le bouton plus pour créer une carte ou sélectionnez un autre service de carte."
+                "emptyList": "Cliquez sur le bouton plus pour créer une carte ou sélectionnez un autre service de carte. Voir le guide de l'utilisateur <a href='https://mapstore.readthedocs.io/en/latest/user-guide/media-editor-window/#maps' target='_blank'/> ici </a>"
             },
             "videoList": {
-                "emptyList": "Cliquez sur le bouton plus pour ajouter une nouvelle vidéo"
+                "emptyList": "Cliquez sur le bouton plus pour ajouter une nouvelle vidéo. Voir le guide de l'utilisateur <a href='https://mapstore.readthedocs.io/en/latest/user-guide/media-editor-window/#videos' target='_blank'/> ici </a>"
             }
         },
         "backgroundDialog": {
@@ -2840,7 +2861,7 @@
             },
             "geostoryIntro": {
               "title": "Tutoriel de l'histoire",
-              "text": "Vue d'ensemble des fonctionnalités de l'histoire"
+              "text": "<p> Vue d'ensemble des fonctionnalités de l'histoire </p> <p> Explorez le guide de l'utilisateur connexe <a target='_blank' href='https://mapstore.readthedocs.io/en/latest/user-guide/exploring-stories/'> ici </a>"
             },
             "geostoryViewHeader": {
               "title": "En-tête",
@@ -2852,11 +2873,11 @@
             },
             "geostoryViewNavTitle": {
               "title": "Titre de l'histoire",
-              "text": "Vous pouvez afficher et configurer un titre pour chaque histoire"
+              "text": "Ici vous pouvez voir le titre de l'histoire"
             },
             "geostoryViewNavLogo": {
               "title": "Logo de l'histoire",
-              "text": "Vous pouvez afficher et configurer un logo pour chaque histoire"
+              "text": "Ici vous pouvez voir le logo de l'histoire"
             },
             "geostoryViewContent": {
               "title": "Contenu de l'histoire",
@@ -2876,11 +2897,11 @@
             },
             "geostoryEditSidebarSettings": {
               "title": "Paramètres de l'histoire",
-              "text": "<p> Ici, vous pouvez: </p> <ul> <li> Afficher / masquer / modifier le titre de l'histoire </li> <li> Modifier le thème de l'histoire </li> <li> Afficher / masquer / modifier le logo de l'histoire </li> <li> Personnalisez la barre de navigation en mode affichage </li> </ul>"
+              "text": "<p> Ici, vous pouvez: </p> <ul> <li> Afficher / masquer / modifier le titre de l'histoire </li> <li> Modifier le thème de l'histoire </li> <li> Afficher / masquer / modifier le logo de l'histoire </li> <li> Personnalisez la barre de navigation en mode affichage </li> </ul><p> Pour plus d'informations, consultez le guide d'utilisation correspondant <a target='_blank' href='https://mapstore.readthedocs.io/en/latest/user-guide/story-setting/'> ici </a>"
             },
             "geostoryEditContainer": {
               "title": "Contenu de l'histoire",
-              "text": "Ici, vous pouvez voir le contenu de l'histoire, le modifier en ajoutant ou en supprimant des sections, des paragraphes, etc."
+              "text": "<p>Ici, vous pouvez voir le contenu de l'histoire, le modifier en ajoutant ou en supprimant des sections, des paragraphes, etc.</p><p>Chaque barre d'outils vous permet de manipuler le contenu de l'histoire, par exemple:</p><img src='data:image/png;base64,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'/><ul><li>changer la source média</li><li>faire la section pour s'adapter à la hauteur du contenu ou pour adapter la vue verticalement</li><li>faire le fond pour couvrir ou non l'espace du conteneur</li><li>changer la taille</li><li>aligner le conteneur (disponible si la taille n'est pas pleine)</li><li>change le thème</li></ul><img src='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACIAAAAgCAYAAAB3j6rJAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsIAAA7CARUoSoAAAAASdEVYdFNvZnR3YXJlAEdyZWVuc2hvdF5VCAUAAAIwSURBVFhHY/wPBAyDADBB6QEHow5BB1R3yIWX7xiOP30N5REPqJJY/wKN2HLnCYMwBztD+YGzYLF+F1OGV19/MHgqSzMwMzKCxfABqjjk4ccvDJ6r9jLc+/AZKgIBSgK8DNvDnBnk+XmgIrgBVaKGg4WZgYuVmYGfnZWh39mUYbanJYMQJzsDEzAgWJiIs4KgKlCwf/z5G8rDBM++fGOwWbKD4crrDwzOCpIMGYbqDLE6ygzO8hIMd95/ZnBYthOshhAg6JCXX78zmCzYwiA/bS1D3OYjDPsfvmD49vsPw4ZbjxjqDl1gYGdmZljgbc0gxs3BcPr5W4bzr94xXHvzgeHci3dgMZCcODcn1DTcgOioATlo1Y0HDPMu3Wa4ArQofcdxhp5TVxmmnrvBoC7ExyABtOzxp68MVou2MRjN38JwF5heQGIgOWISK0Vp5B8w2q69+cjAycrC4KMsw9BsZ8ggw8sFxiC2jYwYAwszldIIIbD59mOGiWeuM1Rb6zGUmmsDsQ5Dg40BmN0HTLgC7GxQlfgBxQ4BJeb5l+4w3H73CewgN0UpBmtgSIDYn37hTuTogGKHIANQAtacvQGMQWxSAFUdQgkYdQg6GDoOYQOWnLJ83DgLJS5gGWIkLgSsZ9iAtDDR2RUdEF37/vr7j+HG24/gElNfTJDhyONX4LpFioeLAd2NL4ClMKjuAWVjTmCFSAwYbTyjg1GHoINRh6CDUYegg1GHoINB4hAGBgDB977viofL1wAAAABJRU5ErkJggg=='/><p>cette icône vous permettra de modifier la carte associée</p><img src=''/><b>Pointe: </b>Chaque outil a une info-bulle, passez la souris dessus pour en voir plus"
             },
             "geostoryEditAddbar": {
               "title": "Ajouter du nouveau contenu",
@@ -2888,7 +2909,7 @@
             },
             "geostoryEditMediaEditor": {
               "title": "Éditeur de média",
-              "text": "Ici vous pouvez sélectionner des images ou des cartes à ajouter à l'histoire"
+              "text": "<p> À l'aide de l'éditeur de médias, vous pouvez inclure dans l'histoire différents types de contenus multimédias tels que: <ul> <li>images</li> <li> vidéos </li> <li> cartes </li> </ul> </p><p> Pour plus d'informations, consultez le guide d'utilisation correspondant <a target='_blank' href='https://mapstore.readthedocs.io/en/latest/user-guide/media-editor-window/'> ici </a>"
             }
         },
         "userSession": {
