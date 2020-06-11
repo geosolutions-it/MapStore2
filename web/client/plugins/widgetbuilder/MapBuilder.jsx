@@ -87,7 +87,7 @@ module.exports = mapBuilder(({
     enabled, onClose = () => {},
     toggleLayerSelector = () => {},
     editorData = {},
-    editNode, setEditNode, closeNodeEditor, selectedGroups = [], exitButton, selectedLayers = [], selectedNodes, onNodeSelect = () => {},
+    editNode, setEditNode, closeNodeEditor, isLocalizedLayerStylesEnabled, selectedGroups = [], exitButton, selectedLayers = [], selectedNodes, onNodeSelect = () => {},
     availableDependencies = [], toggleConnection = () => {}
 } = {}) =>
     (<BorderLayout
@@ -109,5 +109,6 @@ module.exports = mapBuilder(({
             editNode={editNode}
             closeNodeEditor={closeNodeEditor}
             onNodeSelect={onNodeSelect}
+            isLocalizedLayerStylesEnabled={isLocalizedLayerStylesEnabled}
             selectedNodes={selectedNodes}/> : null}
     </BorderLayout>));
