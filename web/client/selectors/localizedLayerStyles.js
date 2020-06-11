@@ -6,7 +6,7 @@
 * LICENSE file in the root directory of this source tree.
 */
 
-const {has, get, isArray} = require('lodash');
+const {has, get} = require('lodash');
 const {createSelector} = require('reselect');
 
 const {currentLocaleLanguageSelector} = require('./locale');
@@ -33,8 +33,9 @@ const isLocalizedLayerStylesEnabledSelector = (state) => has(state, 'localConfig
  * @return {boolean} boolean if the localizedLayerStyles property is defined
  */
 const isLocalizedLayerStylesEnabledDashboardsSelector = (state) => {
-    return isArray(state?.localConfig?.plugins?.dashboard)
-    && state.localConfig.plugins.dashboard.find(item => item.name === 'DashboardEditor').cfg.catalog.localizedLayerStyles;
+    const dashboardPlugins = get(state, "localConfig.plugins.dashboard", []);
+    const dashboardEditorPlugin = dashboardPlugins.find(item => item.name === 'DashboardEditor') || {};
+    return get(dashboardEditorPlugin, "cfg.catalog.localizedLayerStyles", false); // get of lodash
 };
 
 /**
