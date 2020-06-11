@@ -6,7 +6,9 @@
  * LICENSE file in the root directory of this source tree.
  */
 const {createSelector} = require('reselect');
+const {isNil} = require('lodash');
 const { getEditingWidget, dependenciesSelector, getEditorSettings, getWidgetLayer, getFloatingWidgets, availableDependenciesForEditingWidgetSelector} = require('../../selectors/widgets');
+const { isLocalizedLayerStylesEnabledDashboardsSelector } = require('../../selectors/localizedLayerStyles');
 const { showConnectionsSelector } = require('../../selectors/dashboard');
 
 const wizardStateToProps = ( stateProps = {}, dispatchProps = {}, ownProps = {}) => ({
@@ -45,10 +47,18 @@ const dashboardSelector = createSelector(
         ...dependencyConnectProps
     }));
 
+const dashboardsSelectorIsLocalizedLayerStylesEnabled =   createSelector(
+    isLocalizedLayerStylesEnabledDashboardsSelector,
+    (isLocalizedLayerStylesEnabled) => ({
+        isLocalizedLayerStylesEnabled: !isNil(isLocalizedLayerStylesEnabled)
+    })
+);
+
 module.exports = {
     getWidgetLayer,
     availableDependenciesForEditingWidgetSelector,
     dashboardSelector,
+    dashboardsSelectorIsLocalizedLayerStylesEnabled,
     wizardStateToProps,
     wizardSelector
 };

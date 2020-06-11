@@ -17,6 +17,7 @@ const NavItem = tooltip(BSNavItem);
  */
 module.exports = ({
     settings, element = {}, tabs = [], activeTab, width, groups,
+    isLocalizedLayerStylesEnabled,
     setActiveTab = () => { }, onUpdateParams = () => { }, onRetrieveLayerData = () => { }, realtimeUpdate, ...props} = {}) =>
     (<Row key="ms-toc-settings-navbar" className="ms-row-tab">
         <Col xs={12}>
@@ -43,6 +44,7 @@ module.exports = ({
                     nodeType={settings.nodeType}
                     settings={settings}
                     retrieveLayerData={onRetrieveLayerData}
+                    isLocalizedLayerStylesEnabled={isLocalizedLayerStylesEnabled}
                     onChange={(key, value) => onUpdateParams({ [key]: value }, realtimeUpdate)} />
             ))}</Col>
     </Row>);
