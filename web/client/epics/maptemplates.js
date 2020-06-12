@@ -111,10 +111,10 @@ export const mergeTemplateEpic = (action$, store) => action$
 
                 const currentConfig = MapUtils.saveMapConfiguration(map, layers, groups, backgrounds, textSearchConfig, additionalOptions);
 
-                return (isString(data) ? Observable.defer(() => toMapConfig(data, true)) : Observable.of(data))
+                return (isString(data) ? Observable.defer(() => toMapConfig(data, false)) : Observable.of(data))
                     .switchMap(config => Observable.of(
                         ...(!template.dataLoaded ? [setTemplateData(id, data)] : []),
-                        configureMap(cloneDeep(omit(MapUtils.mergeMapConfigs(currentConfig, config), 'widgetsConfig')), null)
+                        configureMap(cloneDeep(omit(MapUtils.mergeMapConfigs(currentConfig, MapUtils.addRootParentGroup(config, template.name)), 'widgetsConfig')), null)
                     ));
             }
 

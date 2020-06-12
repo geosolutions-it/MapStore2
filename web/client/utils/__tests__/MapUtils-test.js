@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 var expect = require('expect');
-const { keys } = require('lodash');
+const { keys, sortBy } = require('lodash');
 
 var {
     RESOLUTIONS_HOOK,
@@ -34,7 +34,8 @@ var {
     prepareMapObjectToCompare,
     updateObjectFieldKey,
     compareMapChanges,
-    mergeMapConfigs
+    mergeMapConfigs,
+    addRootParentGroup
 } = require('../MapUtils');
 
 const POINT = "Point";
@@ -2392,5 +2393,98 @@ describe('Test the MapUtils', () => {
         expect(cfg.widgetsConfig.layouts.xxs).toExist();
         expect(cfg.widgetsConfig.layouts.lg[0].i).toBe(cfg.widgetsConfig.widgets[0].id);
         expect(cfg.widgetsConfig.layouts.xxs[0].i).toBe(cfg.widgetsConfig.widgets[0].id);
+    });
+
+    it('addRootParentGroup', () => {
+        const cfg = {
+            catalogServices: {
+                services: {
+                    "Demo CSW Service": {
+                        autoload: true,
+                        title: "Demo CSW Service",
+                        type: "csw",
+                        url: "url"
+                    }
+                }
+            },
+            map: {
+                backgrounds: [],
+                center: {
+                    x: 20.942519296828383,
+                    y: 40.953969320283846,
+                    crs: "EPSG:4326"
+                },
+                groups: [{
+                    id: "Default",
+                    title: "Default",
+                    expanded: true
+                }, {
+                    id: "group",
+                    title: "group"
+                }, {
+                    id: "group.group2",
+                    title: "group2"
+                }],
+                layers: [{
+                    id: "layer1",
+                    group: "group"
+                }, {
+                    id: "layer2",
+                    group: "group.group2"
+                }, {
+                    id: "layer3",
+                    group: "background"
+                }, {
+                    id: "annotations"
+                }, {
+                    id: "layer4"
+                }, {
+                    id: "layer5"
+                }],
+                projection: "EPSG:4326",
+                units: "m"
+            }
+        };
+
+        const newCfg = addRootParentGroup(cfg, 'ARootGroup');
+
+        expect(newCfg).toExist();
+        expect(newCfg.catalogServices).toEqual(cfg.catalogServices);
+        expect(newCfg.map).toExist();
+        expect(newCfg.map.backgrounds).toEqual(cfg.map.backgrounds);
+        expect(newCfg.map.center).toEqual(cfg.map.center);
+        expect(newCfg.map.projection).toEqual(cfg.map.projection);
+        expect(newCfg.map.units).toEqual(cfg.map.units);
+        expect(newCfg.map.groups).toExist();
+        expect(newCfg.map.groups.length).toBe(3);
+
+        const sortedGroups = sortBy(newCfg.map.groups, ['title']);
+
+        expect(sortedGroups[0].id).toExist();
+        expect(sortedGroups[0].id.length).toBe(36);
+        expect(sortedGroups[0].title).toBe('ARootGroup');
+        expect(sortedGroups[0].expanded).toBe(true);
+        expect(sortedGroups[1].id).toBe(`${sortedGroups[0].id}.group`);
+        expect(sortedGroups[1].title).toBe('group');
+        expect(sortedGroups[2].id).toBe(`${sortedGroups[0].id}.group.group2`);
+        expect(sortedGroups[2].title).toBe('group2');
+
+        expect(newCfg.map.layers).toExist();
+        expect(newCfg.map.layers.length).toBe(6);
+
+        const sortedLayers = sortBy(newCfg.map.layers, ['id']);
+
+        expect(sortedLayers[0].id).toBe('annotations');
+        expect(sortedLayers[0].group).toBe(sortedGroups[0].id);
+        expect(sortedLayers[1].id).toBe('layer1');
+        expect(sortedLayers[1].group).toBe(`${sortedGroups[0].id}.group`);
+        expect(sortedLayers[2].id).toBe('layer2');
+        expect(sortedLayers[2].group).toBe(`${sortedGroups[0].id}.group.group2`);
+        expect(sortedLayers[3].id).toBe('layer3');
+        expect(sortedLayers[3].group).toBe('background');
+        expect(sortedLayers[4].id).toBe('layer4');
+        expect(sortedLayers[4].group).toBe(sortedGroups[0].id);
+        expect(sortedLayers[5].id).toBe('layer5');
+        expect(sortedLayers[5].group).toBe(sortedGroups[0].id);
     });
 });
