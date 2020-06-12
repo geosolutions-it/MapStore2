@@ -2237,7 +2237,14 @@ describe('Test the MapUtils', () => {
                 projection: "EPSG:4326",
                 units: "m"
             },
-            widgetsConfig: {}
+            widgetsConfig: {},
+            timelineData: {
+                selectedLayer: 'timelineLayer1'
+            },
+            dimensionData: {
+                currentTime: '1996-04-08T08:02:01.425Z',
+                offsetTime: '2016-06-07T02:17:23.197Z'
+            }
         };
         const cfg2 = {
             catalogServices: {
@@ -2332,6 +2339,13 @@ describe('Test the MapUtils', () => {
                         group: "group2"
                     }
                 }]
+            },
+            timelineData: {
+                selectedLayer: 'timelineLayer2'
+            },
+            dimensionData: {
+                currentTime: '1997-04-08T08:02:01.425Z',
+                offsetTime: '2017-06-07T02:17:23.197Z'
             }
         };
 
@@ -2402,5 +2416,11 @@ describe('Test the MapUtils', () => {
         expect(cfg.widgetsConfig.layouts.xxs).toExist();
         expect(cfg.widgetsConfig.layouts.lg[0].i).toBe(cfg.widgetsConfig.widgets[0].id);
         expect(cfg.widgetsConfig.layouts.xxs[0].i).toBe(cfg.widgetsConfig.widgets[0].id);
+
+        expect(cfg.timelineData).toExist();
+        expect(cfg.timelineData.selectedLayer).toBe('timelineLayer2');
+        expect(cfg.dimensionData).toExist();
+        expect(cfg.dimensionData.currentTime).toBe('1997-04-08T08:02:01.425Z');
+        expect(cfg.dimensionData.offsetTime).toBe('2017-06-07T02:17:23.197Z');
     });
 });
