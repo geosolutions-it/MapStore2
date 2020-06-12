@@ -6,12 +6,12 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-var React = require('react');
-var ReactDOM = require('react-dom');
-var ReactTestUtils = require('react-dom/test-utils');
-var Display = require('../Display');
+const React = require('react');
+const ReactDOM = require('react-dom');
+const ReactTestUtils = require('react-dom/test-utils');
+const expect = require('expect');
 
-var expect = require('expect');
+const Display = require('../Display');
 
 describe('test Layer Properties Display module component', () => {
     beforeEach((done) => {
@@ -112,6 +112,12 @@ describe('test Layer Properties Display module component', () => {
         const comp = ReactDOM.render(<Display element={l} settings={settings} onChange={handlers.onChange}/>, document.getElementById("container"));
         expect(comp).toExist();
         const labels = ReactTestUtils.scryRenderedDOMComponentsWithClass( comp, "control-label" );
+        const inputs = ReactTestUtils.scryRenderedDOMComponentsWithTag( comp, "input" );
+        const legendWidth = inputs[4];
+        const legendHeight = inputs[5];
+        // Default legend values
+        expect(legendWidth.value).toBe('12');
+        expect(legendHeight.value).toBe('12');
         expect(labels.length).toBe(6);
         expect(labels[2].innerText).toBe("layerProperties.legendOptions.title");
         expect(labels[3].innerText).toBe("layerProperties.legendOptions.legendWidth");
