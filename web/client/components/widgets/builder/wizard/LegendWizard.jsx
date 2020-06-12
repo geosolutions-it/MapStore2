@@ -37,7 +37,8 @@ module.exports = ({
     dependencies,
     valid,
     data = {},
-    currentLocale
+    currentLocale,
+    language
 } = {}) => (
     <Wizard
         step={step}
@@ -55,6 +56,7 @@ module.exports = ({
                         key="widget-options"
                         onChange={onChange}
                         currentLocale={currentLocale}
+                        language={language}
                     />
                 </div>
             </Col>
