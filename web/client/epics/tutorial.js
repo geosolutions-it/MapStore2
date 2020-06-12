@@ -11,6 +11,8 @@ const {START_TUTORIAL, UPDATE_TUTORIAL, INIT_TUTORIAL, CHANGE_PRESET, closeTutor
 const {CHANGE_MAP_VIEW} = require('../actions/map');
 const {MAPS_LIST_LOADED} = require('../actions/maps');
 const {TOGGLE_3D} = require('../actions/globeswitcher');
+const {modeSelector} = require('../selectors/geostory');
+const {CHANGE_MODE} = require('../actions/geostory');
 
 const findTutorialId = path => path.match(/\/(viewer)\/(\w+)\/(\d+)/) && path.replace(/\/(viewer)\/(\w+)\/(\d+)/, "$2")
     || path.match(/\/(\w+)\/(\d+)/) && path.replace(/\/(\w+)\/(\d+)/, "$1")
@@ -47,20 +49,55 @@ const switchTutorialEpic = (action$, store) =>
             action$.ofType(MAPS_LIST_LOADED, CHANGE_MAP_VIEW, INIT_TUTORIAL)
                 .take(1)
                 .switchMap( () => {
-                    const id = findTutorialId(action.payload.location.pathname);
+                    let id = findTutorialId(action.payload.location.pathname);
                     const state = store.getState();
                     const presetList = state.tutorial && state.tutorial.presetList || {};
                     const browser = state.browser;
                     const mobile = browser && browser.mobile ? '_mobile' : '';
                     const defaultName = id ? 'default' : action.payload && action.payload.location && action.payload.location.pathname || 'default';
                     const prevTutorialId = state.tutorial && state.tutorial.id;
-
-                    return !isEmpty(presetList) ? Rx.Observable.of(presetList[id + mobile + '_tutorial'] ?
-                        setupTutorial(id + mobile, presetList[id + mobile + '_tutorial'], null, null, null, prevTutorialId === (id + mobile)) :
+                    let presetName = id + mobile + '_tutorial';
+                    if (id && id?.indexOf("geostory") !== -1) {
+                        // this is needed to setup correct geostory tutorial based on the current mode and page
+                        if (modeSelector(state) === "edit" || id && id?.indexOf("newgeostory") !== -1) {
+                            id  = "geostory";
+                            presetName = `geostory_edit_tutorial`;
+                            return Rx.Observable.from([
+                                setupTutorial(id, presetList[presetName], null, null, null, false)
+                            ]
+                            );
+                        }
+                        presetName = `geostory_view_tutorial`;
+                        return Rx.Observable.of(setupTutorial(id, presetList[presetName], null, null, null, true));
+                    }
+                    return !isEmpty(presetList) ? Rx.Observable.of(presetList[presetName] ?
+                        setupTutorial(id + mobile, presetList[presetName], null, null, null, prevTutorialId === (id + mobile)) :
                         setupTutorial(defaultName + mobile, presetList['default' + mobile + '_tutorial'], null, null, null, prevTutorialId === (defaultName + mobile))
                     ) : Rx.Observable.empty();
                 })
         );
+
+/**
+ * It changes the Geostory tutorial when changing mode only
+ * when changing to edit the tutorial is shown if not disabled
+*/
+const switchGeostoryTutorialEpic = (action$, store) =>
+    action$.ofType(CHANGE_MODE)
+        .switchMap( ({mode}) => {
+            const id = "geostory";
+            const state = store.getState();
+            const presetList = state.tutorial && state.tutorial.presetList || {};
+            const geostoryMode = `_${mode}`;
+            const steps = !isEmpty(presetList) ? presetList[id + geostoryMode + '_tutorial'] : null;
+            const isGeostoryTutorialDisabled = localStorage.getItem("mapstore.plugin.tutorial.geostory.disabled") === "true";
+            // if no steps are found then do nothing
+            return steps ? Rx.Observable.from(
+                [
+                    setupTutorial(id, steps, null, null, null, mode === "view" || isGeostoryTutorialDisabled)
+                ]
+            ) : Rx.Observable.empty();
+        });
+
 
 /**
  * Handle changePreset action
@@ -106,5 +143,6 @@ module.exports = {
     closeTutorialEpic,
     switchTutorialEpic,
     getActionsFromStepEpic,
-    changePresetEpic
+    changePresetEpic,
+    switchGeostoryTutorialEpic
 };
