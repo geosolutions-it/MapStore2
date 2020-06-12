@@ -113,6 +113,19 @@ i.e.
 !!! warning
     Actually the custom resolution values are valid for one single CRS. It's therefore suggested to avoid to add this parameter when multiple CRSs in the same map configuration are needed.
 
+## Additional map configuration options
+
+Map configuration also contains the following additional options:
+
+- `catalogServices` object describing services configuration for Catalog
+- `widgetsConfig` configuration of map widgets
+- `mapInfoConfiguration` map info configuration options
+- `dimensionData` contains map time information
+    - `currentTime` currently selected time; the beginning of a time range if offsetTime is set
+    - `offsetTime` the end of a time range
+- `timelineData` timeline options
+    - `selectedLayer` selected layer id; if not present time cursor will be unlocked
+
 ## Layers options
 
 Every layer has it's own properties. Anyway there are some options valid for every layer:
