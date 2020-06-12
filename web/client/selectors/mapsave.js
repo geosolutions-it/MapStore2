@@ -10,6 +10,8 @@ const {createStructuredSelector} = require('reselect');
 const {servicesSelector, selectedServiceSelector} = require('./catalog');
 const {getFloatingWidgets, getCollapsedState, getFloatingWidgetsLayout} = require('./widgets');
 const { mapInfoConfigurationSelector } = require('./mapInfo');
+const { currentTimeSelector, offsetTimeSelector } = require('./dimension');
+const { selectedLayerSelector } = require('./timeline');
 
 const customSaveHandlers = {};
 
@@ -31,7 +33,14 @@ const basicMapOptionsToSaveSelector = createStructuredSelector({
         layouts: getFloatingWidgetsLayout,
         collapsed: getCollapsedState
     }),
-    mapInfoConfiguration: mapInfoConfigurationSelector
+    mapInfoConfiguration: mapInfoConfigurationSelector,
+    dimensionData: createStructuredSelector({
+        currentTime: currentTimeSelector,
+        offsetTime: offsetTimeSelector
+    }),
+    timelineData: createStructuredSelector({
+        selectedLayer: selectedLayerSelector
+    })
 });
 
 const mapOptionsToSaveSelector = (state) => {
