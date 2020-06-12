@@ -33,6 +33,12 @@ An image added inside the paragraph section can be customized through the [Image
 
 <img src="../img/paragraph-section/text-image.jpg" class="ms-docimage"/>
 
+### Videos
+
+A video added inside the paragraph section can be customized through the [Video Content Toolbar](content-video-toolbar.md). Below is an example of a video, just below an image content:
+
+<img src="../img/paragraph-section/image-video.gif" class="ms-docimage"/>
+
 ### Maps
 
 A map added inside the paragraph section can be customized through the [Map Content Toolbar](content-map-toolbar.md). Below is an example of a large, center-aligned map, just below an Image content:
