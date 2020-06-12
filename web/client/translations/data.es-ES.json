@@ -2144,7 +2144,7 @@
                     "navbar": "Barra de navegación",
                     "showNavbar": "Mostrar barra de navegación",
                     "theme": "Tema",
-                    "templateTooltip":"Es posible configurar una plantilla personalizada para cada capa utilizando el editor de mapas avanzado (ver icono de lápiz). Para más información consulte la <a href='https://mapstore.readthedocs.io/en/latest/user-guide/layer-settings/#templates' target='_blank'>guía del usuario</a>"
+                    "templateTooltip":"Es posible configurar una plantilla personalizada para cada capa utilizando el editor de mapas avanzado (ver icono de lápiz). Para más información consulte la <a href='https://mapstore.readthedocs.io/en/latest/user-guide/layer-settings/#templates' target='_blank'>guía del usuario</a>. Si una capa tiene un formato de información personalizado definido, se usará en lugar de este más general"
                 }
             },
             "errors": {

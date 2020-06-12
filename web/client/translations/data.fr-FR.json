@@ -2145,7 +2145,7 @@
                     "navbar": "Barre de navigation",
                     "showNavbar": "Afficher la barre de navigation",
                     "theme": "Thème",
-                    "templateTooltip":"Il est possible de configurer un modèle personnalisé pour chaque couche à l'aide de l'éditeur de carte avancé (voir l'icône crayon). Pour plus d'informations, consultez le <a href='https://mapstore.readthedocs.io/en/latest/user-guide/layer-settings/#templates' target='_blank'>guide de l'utilisateur</a>"
+                    "templateTooltip":"Il est possible de configurer un modèle personnalisé pour chaque couche à l'aide de l'éditeur de carte avancé (voir l'icône crayon). Pour plus d'informations, consultez le <a href='https://mapstore.readthedocs.io/en/latest/user-guide/layer-settings/#templates' target='_blank'>guide de l'utilisateur</a>. Si un calque a un info_format personnalisé défini, il sera utilisé à la place de celui-ci plus général"
                 }
             },
             "errors": {

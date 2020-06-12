@@ -2147,7 +2147,7 @@
                     "navbar" : "Navigation bar",
                     "showNavbar" : "Show navbar",
                     "theme": "Theme",
-                    "templateTooltip":"It is possible to configure a custom template for each layer using the advanced map editor (see pencil icon). For more info check the <a href='https://mapstore.readthedocs.io/en/latest/user-guide/layer-settings/#templates' target='_blank'>user guide</a>"
+                    "templateTooltip":"It is possible to configure a custom template for each layer using the advanced map editor (see pencil icon). For more info check the <a href='https://mapstore.readthedocs.io/en/latest/user-guide/layer-settings/#templates' target='_blank'>user guide</a>. If a layer has a custom info_format defined it will be used instead of this more general one"
                 }
             },
             "errors": {

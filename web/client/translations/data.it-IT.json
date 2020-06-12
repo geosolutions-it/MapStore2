@@ -2144,7 +2144,7 @@
                     "navbar": "Barra di navigazione",
                     "showNavbar": "Mostra barra di navigazione",
                     "theme": "Tema",
-                    "templateTooltip":"E' possibile configurare un modello custom per ogni livello usando l'edito di mappa avanzato (vedi icona matita). Per maggiori informazioni vedi la <a href='https://mapstore.readthedocs.io/en/latest/user-guide/layer-settings/#templates' target='_blank'>guida utente</a>"
+                    "templateTooltip":"E' possibile configurare un modello custom per ogni livello usando l'edito di mappa avanzato (vedi icona matita). Per maggiori informazioni vedi la <a href='https://mapstore.readthedocs.io/en/latest/user-guide/layer-settings/#templates' target='_blank'>guida utente</a>. Se un layer ha definito un suo info_format, esso verrà usato al posto di quello più generale"
                 }
             },
             "errors": {
