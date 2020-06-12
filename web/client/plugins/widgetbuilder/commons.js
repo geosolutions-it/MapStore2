@@ -8,7 +8,8 @@
 const {createSelector} = require('reselect');
 const {isNil} = require('lodash');
 const { getEditingWidget, dependenciesSelector, getEditorSettings, getWidgetLayer, getFloatingWidgets, availableDependenciesForEditingWidgetSelector} = require('../../selectors/widgets');
-const { isLocalizedLayerStylesEnabledDashboardsSelector } = require('../../selectors/localizedLayerStyles');
+const { isLocalizedLayerStylesEnabledDashboardsSelector, localizedLayerStylesEnvSelector} = require('../../selectors/localizedLayerStyles');
+const { currentLocaleLanguageSelector } = require('../../selectors/locale');
 const { showConnectionsSelector } = require('../../selectors/dashboard');
 
 const wizardStateToProps = ( stateProps = {}, dispatchProps = {}, ownProps = {}) => ({
@@ -47,10 +48,14 @@ const dashboardSelector = createSelector(
         ...dependencyConnectProps
     }));
 
-const dashboardsSelectorIsLocalizedLayerStylesEnabled =   createSelector(
+const dashboardsLocalizedSelector = createSelector(
     isLocalizedLayerStylesEnabledDashboardsSelector,
-    (isLocalizedLayerStylesEnabled) => ({
-        isLocalizedLayerStylesEnabled: !isNil(isLocalizedLayerStylesEnabled)
+    currentLocaleLanguageSelector,
+    localizedLayerStylesEnvSelector,
+    (isLocalizedLayerStylesEnabled, language, env) => ({
+        isLocalizedLayerStylesEnabled: !isNil(isLocalizedLayerStylesEnabled),
+        language,
+        env
     })
 );
 
@@ -58,7 +63,7 @@ module.exports = {
     getWidgetLayer,
     availableDependenciesForEditingWidgetSelector,
     dashboardSelector,
-    dashboardsSelectorIsLocalizedLayerStylesEnabled,
+    dashboardsLocalizedSelector,
     wizardStateToProps,
     wizardSelector
 };
