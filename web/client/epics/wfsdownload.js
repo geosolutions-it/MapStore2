@@ -25,7 +25,8 @@ const {getLayerWFSCapabilities} = require('../observables/wfs');
 
 const DOWNLOAD_FORMATS_LOOKUP = {
 	        "gml3": "GML3.1",
-	        "GML2": "GML2",
+            "GML2": "GML2",
+            "DXF-ZIP": "DXF-ZIP",
 	        "application/vnd.google-earth.kml+xml": "KML",
 	        "OGR-CSV": "OGR-CSV",
 	        "OGR-FileGDB": "OGR-GeoDatabase",
