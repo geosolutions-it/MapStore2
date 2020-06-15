@@ -27,7 +27,7 @@ const { pick, find, replace, endsWith, get, flatten } = require('lodash');
  */
 const getMultidimURL = ({url} = {}) =>
     endsWith(url, "/wms")
-        ? replace(url, "/wms", "/gwc/service/wmts")
+        ? replace(url, /wms$/, "gwc/service/wmts")
         : endsWith(url, "/ows")
             ? replace(url, "/ows", "/gwc/service/wmts")
             : url;
