@@ -73,6 +73,29 @@ In this case the background editing toolbar allows to customize the image backgr
 !!! warning
     The *Align content* and the *Change field theme* buttons are disabled if the image size is full screen
 
+### Videos
+
+Once a video is added for the background, the result is something like this:
+
+<img src="../img/title-section/video-applied.jpg" class="ms-docimage"/>
+
+The background toolbar, in this case, changes a little bit by including an additional button:
+
+<img src="../img/title-section/video-bck-toolbar.jpg" class="ms-docimage" style="width:300px"/>
+
+* The **Audio**, enabled by default, through which you can enable or mute the video.
+
+By clicking on the *Make the whole background visible inside the container* button <img src="../img/button/fit-img-container.jpg" class="ms-docbutton"/> other two buttons appear to perform the following operations:
+
+<img src="../img/title-section/viedo-toolbar.jpg" class="ms-docimage" style="width:400px"/>
+
+* **Enable Autoplay** <img src="../img/button/autoplay-button.jpg" class="ms-docbutton"/> to play the video automatically once the user is on it
+
+* **Enable Loop** <img src="../img/button/loop-botton.jpg" class="ms-docbutton"/> to continuously repeat the video
+
+!!! note
+    The video play will be available only in *View Mode* of the story: it is not available in edit mode except in the media editor as a preview.
+
 ### Maps
 
 In this case, adding a map as background, the result will be like this:
@@ -83,6 +106,4 @@ The background toolbar, in this case, changes a little bit by including an addit
 
 <img src="../img/title-section/map-toolbar.jpg" class="ms-docimage" style="width:300px"/>
 
-* the **Edit map configuration** through which is possible to [Configure the Map](configure-map.md)
-
-
+* The **Edit map configuration** through which it is possible to [Configure the Map](configure-map.md)
