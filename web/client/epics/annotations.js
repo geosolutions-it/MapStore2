@@ -24,14 +24,15 @@ const {updateAnnotationGeometry, setStyle, toggleStyle, cleanHighlight, toggleAd
     CONFIRM_REMOVE_ANNOTATION, SAVE_ANNOTATION, EDIT_ANNOTATION, CANCEL_EDIT_ANNOTATION,
     SET_STYLE, RESTORE_STYLE, HIGHLIGHT, CLEAN_HIGHLIGHT, CONFIRM_CLOSE_ANNOTATIONS, START_DRAWING,
     CANCEL_CLOSE_TEXT, SAVE_TEXT, DOWNLOAD, LOAD_ANNOTATIONS, CHANGED_SELECTED, RESET_COORD_EDITOR, CHANGE_RADIUS,
-    ADD_NEW_FEATURE, SET_EDITING_FEATURE, CHANGE_TEXT, NEW_ANNOTATION, TOGGLE_STYLE, CONFIRM_DELETE_FEATURE, OPEN_EDITOR
+    ADD_NEW_FEATURE, SET_EDITING_FEATURE, CHANGE_TEXT, NEW_ANNOTATION, TOGGLE_STYLE, CONFIRM_DELETE_FEATURE, OPEN_EDITOR,
+    TOGGLE_ANNOTATION_VISIBILITY
 } = require('../actions/annotations');
 
 const uuidv1 = require('uuid/v1');
 const {FEATURES_SELECTED, GEOMETRY_CHANGED, DRAWING_FEATURE} = require('../actions/draw');
 const {PURGE_MAPINFO_RESULTS} = require('../actions/mapInfo');
 
-const {head, findIndex, castArray, isArray, find} = require('lodash');
+const {head, findIndex, castArray, isArray, find, isUndefined} = require('lodash');
 const assign = require('object-assign');
 const {annotationsLayerSelector, multiGeometrySelector} = require('../selectors/annotations');
 const {normalizeAnnotation, removeDuplicate, validateCoordsArray, getStartEndPointsForLinestring, DEFAULT_ANNOTATIONS_STYLES} = require('../utils/AnnotationsUtils');
@@ -408,6 +409,16 @@ module.exports = (viewer) => ({
                                 highlight: true
                             }))
                         })) || []
+                    }) : f)
+                })
+            );
+        }),
+    showHideAnnotationEpic: (action$, store) => action$.ofType(TOGGLE_ANNOTATION_VISIBILITY)
+        .switchMap((action) => {
+            return Rx.Observable.of(
+                updateNode('annotations', 'layer', {
+                    features: annotationsLayerSelector(store.getState()).features.map(f => f.properties.id === action.id ? assign({}, f, {
+                        properties: {...f.properties, visibility: !isUndefined(f.properties.visibility) ? !f.properties.visibility : false}
                     }) : f)
                 })
             );

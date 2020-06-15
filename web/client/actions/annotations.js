@@ -32,6 +32,7 @@ const CONFIRM_CLOSE_ANNOTATIONS = 'ANNOTATIONS:CONFIRM_CLOSE';
 const CANCEL_CLOSE_ANNOTATIONS = 'ANNOTATIONS:CANCEL_CLOSE';
 const START_DRAWING = 'ANNOTATIONS:START_DRAWING';
 const UNSAVED_CHANGES = 'ANNOTATIONS:UNSAVED_CHANGES';
+const TOGGLE_ANNOTATION_VISIBILITY = 'ANNOTATIONS:VISIBILITY';
 const TOGGLE_CHANGES_MODAL = 'ANNOTATIONS:TOGGLE_CHANGES_MODAL';
 const TOGGLE_GEOMETRY_MODAL = 'ANNOTATIONS:TOGGLE_GEOMETRY_MODAL';
 const CHANGED_PROPERTIES = 'ANNOTATIONS:CHANGED_PROPERTIES';
@@ -151,6 +152,14 @@ function addText() {
         type: ADD_TEXT
     };
 }
+
+function toggleVisibilityAnnotation(id) {
+    return {
+        type: TOGGLE_ANNOTATION_VISIBILITY,
+        id
+    };
+}
+
 function changedProperties(field, value) {
     return {
         type: CHANGED_PROPERTIES,
@@ -365,6 +374,7 @@ module.exports = {
     START_DRAWING, startDrawing,
     UNSAVED_CHANGES, setUnsavedChanges,
     UNSAVED_STYLE, setUnsavedStyle,
+    TOGGLE_ANNOTATION_VISIBILITY, toggleVisibilityAnnotation,
     TOGGLE_CHANGES_MODAL, toggleUnsavedChangesModal,
     TOGGLE_STYLE_MODAL, toggleUnsavedStyleModal,
     CHANGED_PROPERTIES, changedProperties,

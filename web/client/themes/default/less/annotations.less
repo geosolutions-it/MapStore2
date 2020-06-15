@@ -74,8 +74,7 @@
     margin-bottom: 0;
 }
 #mapstore-annotations-panel .items-list.row {
-    margin-left: 5px;
-    margin-right: 5px;
+    margin: 5px 10px;
 }
 
 .mapstore-annotations-panel-cards {
@@ -85,6 +84,46 @@
 
 .mapstore-annotations-panel {
     height: 100%;
+}
+
+#ms-annotations-panel-card{
+    .msSideGrid{
+        margin: 0;
+        width: 100%;
+    }
+    .col-xs-12{
+        padding-left: 0;
+        padding-right: 0;
+    }
+    .mapstore-side-preview{
+        align-items: center;
+    }
+    .mapstore-annotations-panel-card{
+        width: 32px;
+        height: 32px;
+        margin: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 21px;
+    }
+    .mapstore-side-card-info{
+        padding: 0;
+    }
+    .mapstore-side-card-title{
+        font-weight: normal;
+        margin-bottom: 0;
+    }
+    .mapstore-annotations-panel-card-title{
+        margin-top: 5px;
+    }
+    .mapstore-side-card-desc{
+        border-bottom: none;
+        height: auto;
+    }
+    .mapstore-annotations-panel-card-description p{
+        margin: 5px 0 0;
+    }
 }
 
 .mapstore-annotations-panel-card-thumbnail {

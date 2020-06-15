@@ -23,7 +23,7 @@ const {cancelRemoveAnnotation, confirmRemoveAnnotation, editAnnotation, newAnnot
     changedProperties, setUnsavedStyle, toggleUnsavedStyleModal, addText, download, loadAnnotations,
     changeSelected, resetCoordEditor, changeRadius, changeText, toggleUnsavedGeometryModal, addNewFeature, setInvalidSelected,
     highlightPoint, confirmDeleteFeature, toggleDeleteFtModal, changeFormat, openEditor, updateSymbols, changePointType,
-    setErrorSymbol
+    setErrorSymbol, toggleVisibilityAnnotation
 } = require('../actions/annotations');
 
 const { zoomToExtent } = require('../actions/map');
@@ -97,6 +97,7 @@ const Annotations = connect(panelSelector, {
     onToggleUnsavedStyleModal: toggleUnsavedStyleModal,
     onToggleUnsavedGeometryModal: toggleUnsavedGeometryModal,
     onConfirmRemove: confirmRemoveAnnotation,
+    onToggleVisibility: toggleVisibilityAnnotation,
     onCancelClose: cancelCloseAnnotations,
     onConfirmClose: confirmCloseAnnotations,
     onAdd: newAnnotation,
@@ -105,6 +106,7 @@ const Annotations = connect(panelSelector, {
     onDetail: showAnnotation,
     onFilter: filterAnnotations,
     onDownload: download,
+    onZoom: zoomToExtent,
     onLoadAnnotations: loadAnnotations
 })(require('../components/mapcontrols/annotations/Annotations'));
 
@@ -146,7 +148,7 @@ class AnnotationsPanel extends React.Component {
         closeGlyph: "1-close",
 
         // side panel properties
-        width: 660,
+        width: 330,
         dockProps: {
             dimMode: "none",
             size: 0.30,
