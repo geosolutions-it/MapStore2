@@ -57,15 +57,14 @@ const switchTutorialEpic = (action$, store) =>
                     const defaultName = id ? 'default' : action.payload && action.payload.location && action.payload.location.pathname || 'default';
                     const prevTutorialId = state.tutorial && state.tutorial.id;
                     let presetName = id + mobile + '_tutorial';
-                    if (id && id?.indexOf("geostory") !== -1) {
+                    if (id && id?.indexOf("geostory") !== -1 && !isEmpty(presetList)) {
                         // this is needed to setup correct geostory tutorial based on the current mode and page
                         if (modeSelector(state) === "edit" || id && id?.indexOf("newgeostory") !== -1) {
                             id  = "geostory";
                             presetName = `geostory_edit_tutorial`;
                             return Rx.Observable.from([
                                 setupTutorial(id, presetList[presetName], null, null, null, false)
-                            ]
-                            );
+                            ]);
                         }
                         presetName = `geostory_view_tutorial`;
                         return Rx.Observable.of(setupTutorial(id, presetList[presetName], null, null, null, true));
