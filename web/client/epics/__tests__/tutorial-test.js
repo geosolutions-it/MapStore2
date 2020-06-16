@@ -321,6 +321,33 @@ describe('tutorial Epics', () => {
         });
 
     });
+    it('switchTutorialEpic selecting geostory_view_tutorial preset for story viewer page, missing presetList', (done) => {
+        const NUM_ACTIONS = 1;
+        testEpic(addTimeoutEpic(switchTutorialEpic, 50), NUM_ACTIONS, [
+            onLocationChanged({
+                pathname: '/geostory/newgeostory'
+            }),
+            initTutorial("", [], {}, null, {}, {})
+        ], (actions) => {
+            expect(actions.length).toBe(NUM_ACTIONS);
+            actions.map((action) => {
+                switch (action.type) {
+                case TEST_TIMEOUT:
+                    break;
+                default:
+                    expect(true).toBe(false);
+                }
+            });
+            done();
+        }, {
+            tutorial: {
+                presetList: {
+                }
+            },
+            geostory: {mode: "view"}
+        });
+
+    });
     describe("tests for switchGeostoryTutorialEpic", () => {
         beforeEach(() => {
             localStorage.setItem("mapstore.plugin.tutorial.geostory.disabled", "false");
