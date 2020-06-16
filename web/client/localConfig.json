@@ -49,7 +49,9 @@
       {"name": "router", "path": "router.location.pathname"},
       {"name": "browser", "path": "browser"},
       {"name": "geostorymode", "path": "geostory.mode"},
-      {"name": "featuregridmode", "path": "featuregrid.mode"}],
+      {"name": "featuregridmode", "path": "featuregrid.mode"},
+      {"name": "printEnabled", "path": "print.capabilities"}
+    ],
     "userSessions": {
       "enabled": true
     },
