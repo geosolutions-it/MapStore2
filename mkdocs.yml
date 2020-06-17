@@ -105,6 +105,7 @@ pages:
       - Custom dependencies: 'developer-guide/custom-dependencies.md'
       - Styling and theming: 'developer-guide/customize-theme.md'
       - FAQ: 'developer-guide/dev-faq.md'
+      - Application tutorial: 'developer-guide/application-tutorial.md'
     - Guidelines:
       - Code Conventions: 'developer-guide/code-conventions.md'
       - Documentation: 'developer-guide/documentation-guidelines.md'
