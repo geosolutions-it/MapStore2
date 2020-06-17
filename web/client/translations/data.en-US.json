@@ -986,7 +986,7 @@
             "styleGeometry": "Change style",
             "deleteGeometry": "Remove all annotation geometries",
             "removeannotation": "Do you want to remove the annotation with title: {title}?",
-            "removegeometry": "Do you want to remove all annotation features?",
+            "removegeometry": "Do you want to remove the annotation feature?",
             "confirm": "Confirm",
             "mandatory": "Mandatory field",
             "emptygeometry": "Geometry cannot be empty",

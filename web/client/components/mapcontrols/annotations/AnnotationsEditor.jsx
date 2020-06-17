@@ -24,7 +24,7 @@ const ConfirmDialog = require('../../misc/ConfirmDialog');
 const assign = require('object-assign');
 const PluginsUtils = require('../../../utils/PluginsUtils');
 const defaultConfig = require('./AnnotationsConfig');
-const bbox = require('@turf/bbox');
+const FeaturesList = require('./FeaturesList');
 
 /**
  * (Default) Viewer / Editor for Annotations.
@@ -171,7 +171,7 @@ class AnnotationsEditor extends React.Component {
         showDeleteFeatureModal: PropTypes.bool,
         showUnsavedGeometryModal: PropTypes.bool,
         config: PropTypes.object,
-        feature: PropTypes.object,
+        features: PropTypes.object,
         selected: PropTypes.object,
         mode: PropTypes.string,
         maxZoom: PropTypes.number,
@@ -225,15 +225,15 @@ class AnnotationsEditor extends React.Component {
                 const isError = editing && this.props.errors[field.name];
                 const additionalCls = isError ? 'field-error' : '';
                 return (
-                    <span key={field.name}><div key={field.name} className={"mapstore-annotations-info-viewer-item mapstore-annotations-info-viewer-" + field.name + ' ' + additionalCls}>
+                    <div key={field.name} className={"mapstore-annotations-info-viewer-item mapstore-annotations-info-viewer-" + field.name + ' ' + additionalCls}>
                         {field.showLabel ? <label><Message msgId={"annotations.field." + field.name} /></label> : null}
                         {isError ? this.renderErrorOn(field.name) : ''}
                         {this.renderProperty(field, this.props[field.name] || field.value, editing)}
                     </div>
-                    </span>
                 );
             });
     };
+
 
     getValidator = (validator) => {
         if (isFunction(validator)) {
@@ -255,11 +255,6 @@ class AnnotationsEditor extends React.Component {
                                 visible: this.props.showBack,
                                 onClick: () => { this.props.onCancel(); this.props.onCleanHighlight(); }
                             }, {
-                                glyph: 'zoom-to',
-                                tooltipId: "annotations.zoomTo",
-                                visible: true,
-                                onClick: () => { this.zoom(); }
-                            }, {
                                 glyph: "pencil",
                                 tooltipId: "annotations.edit",
                                 visible: this.props.showEdit,
@@ -278,7 +273,7 @@ class AnnotationsEditor extends React.Component {
                                 glyph: 'download',
                                 tooltip: <Message msgId="annotations.downloadcurrenttooltip" />,
                                 visible: true,
-                                onClick: () => { this.props.onDownload(this.props.feature); }
+                                onClick: () => { this.props.onDownload(this.props.features); }
                             }
                             ]} />
                     </Col>
@@ -303,31 +298,6 @@ class AnnotationsEditor extends React.Component {
                                     this.cancelEdit();
                                 }
                             }
-                        }, {
-                            glyph: "pencil-add",
-                            Element: DropdownFeatureType,
-                            tooltipId: "annotations.addMarker",
-                            visible: true,
-                            onClick: this.props.onAddGeometry,
-                            onAddText: this.props.onAddText,
-                            onSetStyle: this.props.onSetStyle,
-                            style: this.props.selected && this.props.selected.style || this.props.editing.style,
-                            onStartDrawing: this.props.onStartDrawing,
-                            disabled: !this.props.config.multiGeometry && this.props.editing && this.props.editing.features && this.props.editing.features.length,
-                            drawing: this.props.drawing,
-                            titles: {
-                                marker: <Message msgId="annotations.titles.marker" />,
-                                line: <Message msgId="annotations.titles.line" />,
-                                polygon: <Message msgId="annotations.titles.polygon" />,
-                                circle: <Message msgId="annotations.titles.circle" />,
-                                text: <Message msgId="annotations.titles.text" />
-                            },
-                            bsStyle: this.props.drawing ? "success" : "primary"
-                        }, {
-                            glyph: 'polygon-trash',
-                            tooltipId: "annotations.deleteGeometry",
-                            visible: this.props.editing && this.props.editing.features && this.props.editing.features.length,
-                            onClick: this.props.onDeleteGeometry
                         }, {
                             glyph: 'floppy-disk',
                             tooltipId: "annotations.save",
@@ -410,10 +380,11 @@ class AnnotationsEditor extends React.Component {
         if (editing) {
             switch (field.type) {
             case 'html':
-                return <ReactQuill value={fieldValue || ''} onChange={(val) => { this.change(field.name, val); if (!this.props.unsavedChanges) { this.props.onSetUnsavedChanges(true); } }} />;
+                return (<ReactQuill value={fieldValue || ''} onChange={(val) => { this.change(field.name, val); if (!this.props.unsavedChanges) { this.props.onSetUnsavedChanges(true); } }}
+                />);
             case 'component':
                 const Component = fieldValue;
-                return <prop editing value={<Component annotation={this.props.feature} />} onChange={(e) => { this.change(field.name, e.target.value); if (!this.props.unsavedChanges) { this.props.onSetUnsavedChanges(true); } }} />;
+                return <prop editing value={<Component annotation={this.props.features} />} onChange={(e) => { this.change(field.name, e.target.value); if (!this.props.unsavedChanges) { this.props.onSetUnsavedChanges(true); } }} />;
             default:
                 return <FormControl value={fieldValue || ''} onChange={(e) => { this.change(field.name, e.target.value); if (!this.props.unsavedChanges) { this.props.onSetUnsavedChanges(true); } }} />;
             }
@@ -424,7 +395,7 @@ class AnnotationsEditor extends React.Component {
             return <span dangerouslySetInnerHTML={{ __html: fieldValue }} />;
         case 'component':
             const Component = fieldValue;
-            return <Component annotation={this.props.feature} />;
+            return <Component annotation={this.props.features} />;
         default:
             return (<p>{fieldValue}</p>);
         }
@@ -484,12 +455,12 @@ class AnnotationsEditor extends React.Component {
         }
         return (<div className={"mapstore-annotations-info-viewer-items" + (this.props.styling ? " mapstore-annotations-info-viewer-styler" : "")}>
             {this.props.styling ? this.renderStyler() : (
-                <Grid fluid>
-                    {!this.props.coordinateEditorEnabled && <Row>
-                        <Col xs={12}>
+                <>
+                    {!this.props.coordinateEditorEnabled &&
+                        <div>
                             {items}
-                        </Col>
-                    </Row>
+                            <FeaturesList {...this.props}/>
+                        </div>
                     }
                     {this.props.coordinateEditorEnabled && <Row>
                         <Col xs={12}>
@@ -510,7 +481,7 @@ class AnnotationsEditor extends React.Component {
                             />
                         </Col>
                     </Row>}
-                </Grid>
+                </>
             )}
         </div>);
     };
@@ -520,7 +491,7 @@ class AnnotationsEditor extends React.Component {
             .filter(field => this.getConfig().fields.filter(f => f.name === field).length === 0).map(field => this.renderErrorOn(field))) : null;
     };
 
-    renderModals = () => {
+    renderModals = (editing) => {
         if (this.props.closing) {
             return (<Portal><ConfirmDialog
                 show
@@ -582,25 +553,29 @@ class AnnotationsEditor extends React.Component {
                 closeText={<Message msgId="annotations.cancel" />}>
                 <Message msgId="annotations.undoDeleteFeature" />
             </ConfirmDialog></Portal>);
-        } else if (this.state.removing) {
-            return (<Portal><ConfirmDialog
+        } else if (this.state.removing || this.props.removing) {
+            return (<ConfirmDialog
                 show
                 modal
-                onClose={() => {
-                    this.setState({removing: null});
+                onClose={()=>{
+                    this.state.removing && this.setState({removing: null});
                     this.props.onCancelRemove();
                 }}
                 onConfirm={() => {
-                    this.setState({removing: null});
-                    this.props.onConfirmRemove(this.state.removing);
+                    if (this.state.removing) {
+                        this.setState({removing: null});
+                        this.props.onConfirmRemove(this.state.removing, "features");
+                    } else {
+                        this.props.onConfirmRemove(this.props.removing, "geometry");
+                    }
                 }}
                 confirmButtonBSStyle="default"
                 closeGlyph="1-close"
                 confirmButtonContent={<Message msgId="annotations.confirm" />}
                 closeText={<Message msgId="annotations.cancel" />}>
                 {this.props.mode === 'editing' ? <Message msgId="annotations.removegeometry"/> :
-                    <Message msgId="annotations.removeannotation" msgParams={{title: this.props.feature && this.props.feature.properties && this.props.feature.properties.title}}/>}
-            </ConfirmDialog></Portal>);
+                    <Message msgId="annotations.removeannotation" msgParams={{title: editing?.properties?.title}}/>}
+            </ConfirmDialog>);
         }
         return null;
     }
@@ -619,15 +594,10 @@ class AnnotationsEditor extends React.Component {
             <div className={"mapstore-annotations-info-viewer" + (this.props.mouseHoverEvents ? " hover-background" : "")} {...mouseHoverEvents}>
                 {this.renderButtons(editing, this.props.coordinateEditorEnabled)}
                 {this.renderError(editing)}
-                {this.renderModals()}
+                {this.renderModals(editing)}
                 {this.renderBody(editing)}
             </div>
         );
-    }
-
-    zoom = () => {
-        const extent = bbox(this.props.feature);
-        this.props.onZoom(extent, 'EPSG:4326', this.props.maxZoom);
     }
 
     cancelEdit = () => {

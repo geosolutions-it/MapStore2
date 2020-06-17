@@ -101,6 +101,7 @@ const Annotations = connect(panelSelector, {
     onCancelClose: cancelCloseAnnotations,
     onConfirmClose: confirmCloseAnnotations,
     onAdd: newAnnotation,
+    onEdit: editAnnotation,
     onHighlight: highlight,
     onCleanHighlight: cleanHighlight,
     onDetail: showAnnotation,

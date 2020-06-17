@@ -173,15 +173,17 @@ function removeAnnotation(id) {
         id
     };
 }
-function removeAnnotationGeometry() {
+function removeAnnotationGeometry(id) {
     return {
-        type: REMOVE_ANNOTATION_GEOMETRY
+        type: REMOVE_ANNOTATION_GEOMETRY,
+        id
     };
 }
-function confirmRemoveAnnotation(id) {
+function confirmRemoveAnnotation(id, attribute) {
     return {
         type: CONFIRM_REMOVE_ANNOTATION,
-        id
+        id,
+        attribute
     };
 }
 function cancelRemoveAnnotation() {

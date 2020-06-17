@@ -239,7 +239,7 @@ module.exports = (viewer) => ({
         }),
     removeAnnotationEpic: (action$, store) => action$.ofType(CONFIRM_REMOVE_ANNOTATION)
         .switchMap((action) => {
-            if (action.id === 'geometry') {
+            if (action.attribute === 'geometry') {
                 let state = store.getState();
                 const feature = state.annotations.editing;
                 const drawing = state.annotations.drawing;
@@ -257,7 +257,7 @@ module.exports = (viewer) => ({
 
                 return Rx.Observable.from([
                     changeDrawingStatus("replace", store.getState().annotations.featureType, "annotations", [store.getState().annotations.editing], {}),
-                    changeDrawingStatus("drawOrEdit", type, "annotations", [feature], drawOptions, assign({}, feature.style, {highlight: false}))
+                    changeDrawingStatus("drawOrEdit", CONFIRM_REMOVE_ANNOTATION, "annotations", [feature], drawOptions, assign({}, feature.style, {highlight: false}))
                 ]);
             }
             const newFeatures = annotationsLayerSelector(store.getState()).features.filter(f => f.properties.id !== action.id);

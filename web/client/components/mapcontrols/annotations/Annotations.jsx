@@ -126,6 +126,7 @@ class Annotations extends React.Component {
         onUpdateSymbols: PropTypes.func,
         onSetErrorSymbol: PropTypes.func,
         onToggleVisibility: PropTypes.func,
+        onEdit: PropTypes.func,
         symbolErrors: PropTypes.array,
         lineDashOptions: PropTypes.array,
         symbolList: PropTypes.array,
@@ -232,7 +233,7 @@ class Annotations extends React.Component {
         const cardActions = {
             onMouseEnter: () => {this.props.onHighlight(properties.id); },
             onMouseLeave: this.props.onCleanHighlight,
-            onClick: () => this.props.onDetail(properties.id)
+            onClick: () => this.props.onEdit(properties.id)
         };
         const annotationVisibility = properties && !isUndefined(properties.visibility) ? properties.visibility : true;
         return {
@@ -317,10 +318,13 @@ class Annotations extends React.Component {
         const annotation = this.props.annotations && head(this.props.annotations.filter(a => a.properties.id === this.props.current));
         const Editor = this.props.editor;
         if (this.props.mode === 'detail') {
-            return <Editor feature={annotation} showBack id={this.props.current} config={this.props.config} width={this.props.width} {...annotation.properties}/>;
+            return (<Editor features={annotation} showBack id={this.props.current} config={this.props.config} width={this.props.width}
+                {...annotation.properties}
+            />);
         }
         // mode = editing
-        return this.props.editing && <Editor feature={annotation} id={this.props.editing.properties && this.props.editing.properties.id || uuidv1()} width={this.props.width} config={this.props.config} {...this.props.editing.properties} lineDashOptions={this.props.lineDashOptions}
+        return this.props.editing && <Editor
+            feature={annotation} id={this.props.editing.properties && this.props.editing.properties.id || uuidv1()} width={this.props.width} config={this.props.config} {...this.props.editing.properties} lineDashOptions={this.props.lineDashOptions}
             symbolsPath={this.props.symbolsPath}
             onUpdateSymbols={this.props.onUpdateSymbols}
             onSetErrorSymbol={this.props.onSetErrorSymbol}
@@ -389,19 +393,6 @@ class Annotations extends React.Component {
                 confirmButtonContent={<Message msgId="annotations.confirm" />}
                 closeText={<Message msgId="annotations.cancel" />}>
                 <Message msgId="annotations.undo"/>
-            </ConfirmDialog>);
-        } else if (this.props.removing) {
-            body = (<ConfirmDialog
-                show
-                modal
-                onClose={this.props.onCancelRemove}
-                onConfirm={() => this.props.onConfirmRemove(this.props.removing)}
-                confirmButtonBSStyle="default"
-                closeGlyph="1-close"
-                confirmButtonContent={<Message msgId="annotations.confirm" />}
-                closeText={<Message msgId="annotations.cancel" />}>
-                {this.props.mode === 'editing' ? <Message msgId="annotations.removegeometry"/> :
-                    <Message msgId="annotations.removeannotation" msgParams={{title: this.props.editing && this.props.editing.properties && this.props.editing.properties.title}}/>}
             </ConfirmDialog>);
         } else if (this.state.selectFile) {
             body = (

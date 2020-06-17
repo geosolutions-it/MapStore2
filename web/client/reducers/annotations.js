@@ -392,7 +392,7 @@ function annotations(state = { validationErrors: {} }, action) {
 
     case REMOVE_ANNOTATION_GEOMETRY:
         return assign({}, state, {
-            removing: 'geometry',
+            removing: action.id,
             unsavedChanges: true
         });
     case EDIT_ANNOTATION: {
@@ -429,12 +429,13 @@ function annotations(state = { validationErrors: {} }, action) {
             originalStyle: null
         });
     case CONFIRM_REMOVE_ANNOTATION:
+        const features = state.editing.features.filter(feature=> feature.properties.id !== action.id);
         return assign({}, state, {
             removing: null,
             stylerType: "",
             current: null,
             editing: state.editing ? assign({}, state.editing, {
-                features: [],
+                features,
                 style: {
                     type: state.featureType
                 }
