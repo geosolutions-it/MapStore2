@@ -40,8 +40,8 @@ module.exports = class extends React.Component {
     state = {
         opacity: 100,
         legendOptions: {
-            legendWidth: "",
-            legendHeight: ""
+            legendWidth: 12,
+            legendHeight: 12
         },
         containerStyle: {overflowX: 'auto'},
         containerWidth: 0

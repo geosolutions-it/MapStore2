@@ -331,4 +331,17 @@ describe('Test correctness of the layers actions', () => {
         expect(action.group).toBe('newgroup');
         expect(action.parent).toBe('group1.group2');
     });
+
+    it('add group with options', () => {
+        const options = {
+            id: 'uuid',
+            title: 'My title',
+            expanded: true
+        };
+        const action = addGroup(options.id, undefined, options);
+        expect(action.type).toBe(ADD_GROUP);
+        expect(action.group).toBe(options.id);
+        expect(action.parent).toBeFalsy();
+        expect(action.options).toEqual(options);
+    });
 });

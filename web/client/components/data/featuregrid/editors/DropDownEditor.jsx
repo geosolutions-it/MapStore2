@@ -14,9 +14,10 @@ const {head} = require('lodash');
 const assign = require('object-assign');
 
 /**
+ * Editor that provides a DropDown menu of a list of elements passed.
  * @memberof components.data.featuregrid.editors
- * @name DropDownEditor
  * @class
+ * @name DropDownEditor
  * @prop {string[]} editorProps.values list of valid values
  */
 class DropDownEditor extends AttributeEditor {

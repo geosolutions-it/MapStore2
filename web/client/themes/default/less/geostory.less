@@ -6,6 +6,9 @@
 @ms-story-bg-guidelines: #0571b0; // background guidelines color
 @ms-story-fg-guidelines: #ca0020; // foreground guidelines color
 
+@ms-story-active-button-text: @ms2-color-text-primary;
+@ms-story-active-button-bg: lighten(@ms2-color-success, 15%);
+
 @ms-story-font-size-base: 21px;
 @ms-story-font-size-large: ceil(@ms-story-font-size-base * 1.5);
 @ms-story-font-size-small: ceil(@ms-story-font-size-base* 0.75);
@@ -25,6 +28,10 @@
 @ms-story-size-height-medium: 575px;
 @ms-story-size-height-small: 350px;
 
+@ms-web-page-size-height-large: 1080px;
+@ms-web-page-size-height-medium: 900px;
+@ms-web-page-size-height-small: 720px;
+
 .ms-story-align-center { margin-left: auto; margin-right: auto; }
 /* mixin for align*/
 .ms-story-align-left { margin-left: 0; margin-right: auto; }
@@ -37,6 +44,11 @@
 @import '~draft-js-inline-toolbar-plugin/lib/plugin.css';
 @import '~react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 
+
+// needed to assure the fontsize numbers to be correctly displayed (2 sided digits )
+.rdw-fontsize-dropdown {
+    min-width: 50px !important;
+}
 /* mixin for position sticky */
 .ms-position-sticky {
     position: -webkit-sticky;
@@ -370,10 +382,7 @@
         position: relative;
         z-index: 1;
         background-color: inherit;
-        + .ms-section {
-            border-top: 1px solid @ms-story-bg-grey;
-            border-color: inherit;
-        }
+
         & > div > .ms-content-toolbar {
             position: absolute;
             margin: 8px;
@@ -532,7 +541,7 @@
                     z-index: 2;
                     .shadow-soft();
                 }
-                
+
                 /*
                 content body needs to be aligned accordingly with the alignment of container,
                 this is needed in particular for size equal to large and short titles
@@ -602,13 +611,38 @@
                         width: 100%;
                     }
                 }
-                .ms-content.ms-content-webPage,
+                // change size of internal map
                 .ms-content.ms-content-map {
                     width: 100%;
-                    height: 350px;
-                    &.ms-size-large { height: @ms-story-size-height-large; }
-                    &.ms-size-medium { height: @ms-story-size-height-medium; }
-                    &.ms-size-small { height: @ms-story-size-height-small; }
+                    .ms-media-map > div:not(.ms-media-caption) {
+                        width: 100%;
+                        height: 350px;
+                    }
+                    &.ms-size-large .ms-media-map > div:not(.ms-media-caption) { height: @ms-story-size-height-large; }
+                    &.ms-size-medium .ms-media-map > div:not(.ms-media-caption) { height: @ms-story-size-height-medium; }
+                    &.ms-size-small .ms-media-map > div:not(.ms-media-caption) { height: @ms-story-size-height-small; }
+                }
+                .ms-content.ms-content-image {
+                    &.ms-align-center,
+                    &.ms-align-left,
+                    &.ms-align-right {
+                        margin-left: auto;
+                        margin-right: auto;
+                    }
+                }
+                .ms-content.ms-content-webPage {
+                    width: 100%;
+                    height: @ms-web-page-size-height-small;
+                    &.ms-size-large { height: @ms-web-page-size-height-large; }
+                    &.ms-size-medium { height: @ms-web-page-size-height-medium; }
+                    &.ms-size-small { height: @ms-web-page-size-height-small; }
+                }
+                .ms-content.ms-content-video {
+                    width: 100%;
+                }
+                .ms-content-toolbar {
+                    padding-left: 0;
+                    padding-right: 0;
                 }
             }
         }
@@ -691,16 +725,44 @@
                         right: 20px;
                     }
                 }
-                .ms-content.ms-content-webPage,
+                // change size of internal map
                 .ms-content.ms-content-map {
                     width: 100%;
-                    height: 350px;
-                    &.ms-size-large { height: @ms-story-size-height-large; }
-                    &.ms-size-medium { height: @ms-story-size-height-medium; }
-                    &.ms-size-small { height: @ms-story-size-height-small; }
+                    .ms-media-map > div:not(.ms-media-caption) {
+                        width: 100%;
+                        height: 350px;
+                    }
+                    &.ms-size-large .ms-media-map > div:not(.ms-media-caption) { height: @ms-story-size-height-large; }
+                    &.ms-size-medium .ms-media-map > div:not(.ms-media-caption) { height: @ms-story-size-height-medium; }
+                    &.ms-size-small .ms-media-map > div:not(.ms-media-caption) { height: @ms-story-size-height-small; }
+                }
+                .ms-content.ms-content-image {
+                    &.ms-align-center,
+                    &.ms-align-left,
+                    &.ms-align-right {
+                        margin-left: auto;
+                        margin-right: auto;
+                    }
+                }
+
+                .ms-content.ms-content-webPage {
+                    width: 100%;
+                    height: @ms-web-page-size-height-small;
+                    &.ms-size-large { height: @ms-web-page-size-height-large; }
+                    &.ms-size-medium { height: @ms-web-page-size-height-medium; }
+                    &.ms-size-small { height: @ms-web-page-size-height-small; }
+                }
+                .ms-content.ms-content-video {
+                    width: 100%;
                 }
             }
         }
+    }
+
+    // style for active button in toolbar
+    .ms-content-toolbar > .btn-group > span > .btn.active {
+        background-color: @ms-story-active-button-bg;
+        color: @ms-story-active-button-text;
     }
 
     ////////////
@@ -745,7 +807,7 @@
             .ms-content-body,
             .ms-visibility-container,
             .ms-media-map,
-            .ms-media-map > div  {
+            .ms-media-map > div:not(.ms-media-caption)  {
                 position: relative;
                 width: 100%;
                 height: 100%;
@@ -887,7 +949,9 @@
                     h4 span { font-size: @ms-story-font-size-h4; }
                     h5 span { font-size: @ms-story-font-size-h5; }
                     h6 span { font-size: @ms-story-font-size-h6; }
-
+                    span > span {
+                        font-size: inherit;
+                    }
                     /*
                     headers and paragraph tags have a div children with `margin: 1em 0;`
                     this style increases the size of the text container and it's different from the plain html
@@ -951,6 +1015,11 @@
             }
         }
         &.ms-media-map {
+            & > div:not(.ms-media-caption) {
+                position: relative;
+                width: 100%;
+                height: 100%;
+            }
             .ol-zoom {
                 top: 50px;
                 left: 6px;
@@ -963,7 +1032,7 @@
         }
     }
 
-    .ms-media-description {
+    .ms-media-caption {
         border-left: 2px solid @ms-story-bg-grey;
         border-color: inherit;
         padding-left: 8px;
@@ -1117,9 +1186,12 @@
     height: 100%;
     padding: 4px;
     background-color: rgba(0, 0, 0, 0.25);
-    & > * {
+    & > *:not(button) {
         background-color: @ms-story-bg;
-    } 
+        position: relative;
+        width: 100%;
+        height: 100%;
+    }
 }
 
 .ms-custom-theme-picker-field {

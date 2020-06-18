@@ -43,7 +43,7 @@ class UserMenu extends React.Component {
         onCheckMapChanges: PropTypes.func,
         className: PropTypes.string,
         renderUnsavedMapChangesDialog: PropTypes.bool,
-        onLogoutWithRedirect: PropTypes.func
+        onLogoutConfirm: PropTypes.func
     };
 
     static defaultProps = {
@@ -132,7 +132,7 @@ class UserMenu extends React.Component {
                     buttons={[{
                         bsStyle: "primary",
                         text: <Message msgId="resources.maps.unsavedMapConfirmButtonText" />,
-                        onClick: this.props.onLogoutWithRedirect
+                        onClick: this.props.onLogoutConfirm
                     }, {
                         text: <Message msgId="resources.maps.unsavedMapCancelButtonText" />,
                         onClick: this.props.onCloseUnsavedDialog

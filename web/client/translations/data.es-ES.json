@@ -50,6 +50,7 @@
         },
         "showEmptyMessageGFI": "Mostrar mensaje de resultados vacío en el panel de GFI",
         "remove": "Borrar",
+        "removeThumbnail": "Eliminar miniatura",
         "layerProperties": {
             "windowTitle": "Propiedades de la capa",
             "title": "Título",
@@ -603,6 +604,7 @@
         "identifyShowCoordinateEditor": "Mostrar editor de coordenadas",
         "identifyHideCoordinateEditor": "Ocultar editor de coordenadas",
         "identifyCoordinateApplyChanges": "Aplicar los cambios",
+        "identifyChangeCoordinateFormat": "Cambiar formato de coordenadas",
         "identifyRevGeocodeModalTitle": "Dirección",
         "identifyRevGeocodeSubmitText": "Más información",
         "identifyRevGeocodeCloseText": "Cerrar",
@@ -686,6 +688,7 @@
             "serviceslistempty": "No se ha definido ningún servicio personalizado",
             "service_missing": "el servicio {serviceType} no está configurado",
             "generic_error": "Se ha producido un error durante la búsqueda. Error de detalles: {message}",
+            "showGFI": "Mostrar GFI",
             "errors": {
                 "nonQueriableLayers": "La capa proporcionada en la url no es intercambiable o no es visible en el mapa",
                 "serverError": "El servidor ha devuelto un error al realizar la solicitud GetFeatureInfo. Compruebe si los parámetros son correctos"
@@ -697,7 +700,9 @@
                 "single_layer": "Una sola capa",
                 "no_info_description": "El panel de identificación no aparecerá en la búsqueda",
                 "all_layers_description": "El panel Identificar aparecerá mostrando información de todas las capas visibles en el mapa",
-                "single_layer_description": "El panel de identificación aparecerá con los datos ya disponibles a través de la búsqueda de WFS"
+                "single_layer_description": "El panel de identificación aparecerá con los datos ya disponibles a través de la búsqueda de WFS",
+                "openFeatureInfoButtonCheckbox": "Use el botón para abrir la información de la función",
+                "forceSearchLayerVisibility": "Forzar la visibilidad de la capa de búsqueda"
             },
             "advancedSearchPanel": {
                 "title": "Filtros de busqueda avanzada",
@@ -1144,7 +1149,17 @@
             "addBboxParam": "Añadir bbox param al enlace de compartir",
             "wrongBboxParamTitle": "Bbox no válido",
             "wrongBboxParamMessage": "bbox params debe estar en EPSG:4326 y escrito como bbox=minx,miny,maxx,maxy",
-            "showHomeButton": "Enlace al inicio de MapStore"
+            "wrongCenterAndZoomParamTitle": "Centro inválido y parámetro de zoom",
+            "wrongCenterAndZoomParamMessage": "El parámetro Center y Zoom debe ser center=lon,lat&zoom=value y (+|- 90° lat, +|-180° lon, <=+35 zoom)",
+            "wrongMarkerAndZoomParamTitle": "Marcador y parámetro de zoom no válidos",
+            "wrongMarkerAndZoomParamMessage": "El parámetro de marcador y zoom debe ser marker=lon,lat&zoom=value y (+|- 90° lat, +|-180° lon, <=+35 zoom)",
+            "showHomeButton": "Enlace al inicio de MapStore",
+            "addCenterAndZoomParam": "Agregar centro y hacer zoom para compartir el enlace",
+            "zoom": "Enfocar",
+            "marker": "Agregar marcador en el mapa cargado",
+            "coordinate": "Coordinar",
+            "coordTooltip": "Haga clic en el mapa para tomar las coordenadas.",
+            "zoomToolTip": "Min: 1 y Max: 35"
         },
         "snapshot": {
             "title": "Previsualización de la captura del mapa",
@@ -2074,7 +2089,15 @@
                 "confirmCloseMapEditing": "Cerrar edición de mapas",
                 "pendingChangesDiscardConfirm": "¿Descartar los cambios actuales en el mapa?",
                 "editURL": "Editar URL de página web",
-                "advancedMapEditor": "Abrir editor de mapas avanzado"
+                "advancedMapEditor": "Abrir editor de mapas avanzado",
+                "enableAudio": "Habilitar audio",
+                "disableAudio": "Video mudo",
+                "enableAutoplay": "Habilitar reproducción automática",
+                "disableAutoplay": "Desactivar reproducción automática",
+                "enableLoop": "Habilitar bucle",
+                "disableLoop": "Desactivar bucle",
+                "hideCaption": "Ocultar subtítulo",
+                "showCaption": "Use la descripción como subtítulo"
             },
             "navigation": {
                 "edit": "Editar historia"
@@ -2121,7 +2144,7 @@
                     "navbar": "Barra de navegación",
                     "showNavbar": "Mostrar barra de navegación",
                     "theme": "Tema",
-                    "templateTooltip":"Es posible configurar una plantilla personalizada para cada capa utilizando el editor de mapas avanzado (ver icono de lápiz). Para más información consulte la <a href='https://mapstore.readthedocs.io/en/latest/user-guide/layer-settings/#templates' target='_blank'>guía del usuario</a>"
+                    "templateTooltip":"Esta configuración le permite habilitar la función Identificar en el mapa definiendo un formato genérico para todas las capas. Es posible configurar un formato diferente para cada nivel usando el editor de mapas avanzado (icono de lápiz). Para obtener más información, consulte la <a href='https://mapstore.readthedocs.io/en/latest/user-guide/layer-settings/#templates' target='_blank'> guía del usuario </a>. Si una capa ha definido su propio formato de identificación, se utilizará en lugar del genérico establecido en el nivel del mapa."
                 }
             },
             "errors": {
@@ -2215,10 +2238,11 @@
                 "imageFilter": "Filtrar imágenes",
                 "import": "Importar recurso a store locale",
                 "trash": "Eliminar recurso",
-                "autoplay": "Auto-reproducción",
                 "videoUrl": "URL de video",
                 "videoUrlPlaceholder": "Ingrese una url de video",
-                "thumbnail": "Añadir miniatura (tamaño máximo 500kb)"
+                "thumbnail": "Añadir miniatura (tamaño máximo 500kb)",
+                "createVideoThumbnail": "Crea una miniatura de la fuente de video",
+                "thumbnailCreateError": "No es posible crear una miniatura desde la fuente de video actual. Haga clic o suelte una imagen en la entrada en miniatura para cargarla manualmente"
             },
             "mediaform": {
                 "confirmExitTitle": "Cerrar el Media Form",
@@ -2234,8 +2258,14 @@
                 "confirmRemoveResource": "¿Desea eliminar este recurso de medios de la historia?",
                 "confirmRemoveUsedResource": "Este recurso también se eliminará de todas las secciones / contenidos donde se usa dejándolos vacíos. ¿Quieres eliminarlo de la historia?"
             },
+            "imageList": {
+                "emptyList": "Haga clic en el botón más para agregar una nueva imagen. Consulte la guía del usuario <a href='https://mapstore.readthedocs.io/en/latest/user-guide/media-editor-window/#images' target='_blank'/> aquí </a>"
+            },
             "mapList": {
-                "emptyList": "Haga clic en el botón más para crear un mapa o seleccione un servicio de mapas diferente."
+                "emptyList": "Haga clic en el botón más para crear un mapa o seleccione un servicio de mapas diferente. Consulte la guía del usuario <a href='https://mapstore.readthedocs.io/en/latest/user-guide/media-editor-window/#maps' target='_blank'/> aquí </a>"
+            },
+            "videoList": {
+                "emptyList": "Haga clic en el botón más para agregar un nuevo video. Consulte la guía del usuario <a href='https://mapstore.readthedocs.io/en/latest/user-guide/media-editor-window/#videos' target='_blank'/> aquí </a>"
             }
         },
         "backgroundDialog": {
@@ -2493,6 +2523,12 @@
                     "removePlugin": "Eliminar esta extensión de MapStore",
                     "mapTemplatesConfig": "Configurar plantillas"
                 },
+                "tutorialPlugins": {
+                    "availableTitle": "Complemento disponible",
+                    "availableDescription": "Este complemento está deshabilitado",
+                    "enabledTitle": "Complemento habilitado",
+                    "enabledDescription": "Este complemento está habilitado"
+                },
                 "saveCfgErrorNotification":  {
                     "title": "Error de sintaxis en la configuración del complemento",
                     "message": "El complemento \"{pluginName}\" contiene un error en la configuración. Por favor arregle antes de continuar"
@@ -2544,7 +2580,8 @@
                 "title": "Nombre de contexto incorrecto",
                 "unknownError": "Ocurrió un error inesperado"
             },
-            "undo": "¿Seguro que quieres abandonar la sesión de edición de contexto?"
+            "undo": "¿Seguro que quieres abandonar la sesión de edición de contexto?",
+            "showTutorial": "Tutorial de presentación"
         },
         "contextManager": {
             "title": "Administrar contextos",
@@ -2727,9 +2764,103 @@
                 "title": "Widget de mapa",
                 "text": "<p> Agregue un nuevo mapa interactivo al panel de control. Puede agregar más de un mapa con la capacidad de conectar otros widgets a ellos. Después de guardar el primer mapa, el widget de leyenda se agregará a la lista. El widget de leyenda mostrará una leyenda relacionada con el mapa conectado. </p> <p> Pasos: </p> <p> <ul> <li> Seleccione un mapa </li> <li> Mejore el mapa agregando nuevas capas </li> <li> Guarde y agregue al panel de control </li> </ul> </p>"
             },
+            "contextCreator": {
+                "generalSettings": {
+                    "intro": {
+                        "title": "Tutorial de creación de contexto",
+                        "text": "Este es un asistente paso a paso para crear y editar contextos de MapStore"
+                    },
+                    "stepsOverview": {
+                        "title": "Pasos del creador de contexto",
+                        "text": "<p>Cada contexto se crea en tres pasos:</p><p><ul><li>Configuración general</li><li>Configurar mapa</li><li>Configurar complementos</li></ul></p>"
+                    },
+                    "navigation": {
+                        "next": {
+                            "title": "Navegación: Siguiente",
+                            "text": "<p>Presione este botón para ir al siguiente paso. Si el botón está desactivado, significa que los datos que configuró se están validando o que no son válidos.</p>"
+                        },
+                        "back": {
+                            "title": "Navegación: Volver",
+                            "text": "<p>Presione este botón para ir al paso anterior.</p>"
+                        },
+                        "close": {
+                            "title": "Navegación: Cerrar",
+                            "text": "<p>Presione este botón para salir del proceso de creación de contexto sin guardar. Esto se puede hacer en cualquier momento del proceso de creación.</p>"
+                        }
+                    },
+                    "fields": {
+                        "title": "Configuración general",
+                        "text": "<p>El primer paso de creación requiere especificar el nombre del contexto, que define también su URL única, y el título que se utilizará como título de la ventana del navegador cuando el contexto esté abierto y activo. Nota: El nombre del contexto solo puede contener letras latinas, dígitos 0-9 y caracteres de subrayado. El título de la ventana no puede estar vacío.</p>"
+                    },
+                    "showTutorial": {
+                        "title": "Tutorial de presentación",
+                        "text": "<p>Si desea volver a seguir el tutorial por un paso, puede hacerlo en cualquier momento presionando este botón.</p>"
+                    }
+                },
+                "configureMap": {
+                    "intro": {
+                        "title": "Configurar mapa",
+                        "text": "<p>En este paso, utilizando las herramientas del visor de mapas MapStore, puede configurar el mapa predeterminado que se abrirá al acceder al contexto.</p>"
+                    },
+                    "reloadMap": {
+                        "title": "Botón Recargar mapa",
+                        "text": "<p>Si desea descartar todos los cambios que ha realizado en el mapa hasta ahora y comenzar de nuevo, puede hacerlo presionando este botón.</p>"
+                    }
+                },
+                "configurePlugins": {
+                    "intro": {
+                        "title": "Configurar complementos",
+                        "text": "<p>Este paso le permite configurar complementos que estarán presentes en el contexto.</p>"
+                    },
+                    "availablePlugins": {
+                        "title": "Complementos disponibles",
+                        "text": "<p>Esta lista contiene complementos de MapStore que se pueden agregar a un contexto. Para seleccionar un complemento, simplemente haga clic en su tarjeta. Además, si mantiene presionada la tecla CTRL, puede seleccionar varios complementos.</p>"
+                    },
+                    "pluginManipulation": {
+                        "title": "Mover complementos",
+                        "text": "<p>Una vez seleccionados, los complementos disponibles se pueden mover a la columna derecha, habilitándolos en el contexto. Algunos complementos requieren otros complementos para funcionar, en ese caso se habilitarán automáticamente junto con los complementos que usted habilitó explícitamente.</p><p>Los complementos también se pueden mover de la columna \"habilitada\" a la columna \"disponible\" para eliminar complementos del contexto. Si elimina un complemento, todos los complementos que necesita para funcionar también se deshabilitarán, a menos que actualmente haya complementos habilitados que también requieran dicho complemento.</p>"
+                    },
+                    "enabledPlugins": {
+                        "title": "Complementos habilitados",
+                        "text": "<p>Esta lista contiene complementos de MapStore que están en el contexto. Cada complemento aquí se puede configurar aún más mediante botones de herramientas.</p>"
+                    },
+                    "userPlugin": {
+                        "title": "Herramientas de complementos: complementos de usuario",
+                        "text": "<p>Al presionar este botón, puede permitir que los usuarios habiliten / deshabiliten un complemento, convirtiéndolo en un complemento de usuario. Dichos complementos se mostrarán dentro del complemento Extensiones de usuario. Este complemento se agrega automáticamente al contexto si hay al menos un complemento de usuario habilitado.</p>"
+                    },
+                    "userPluginCheckbox": {
+                        "title": "Herramientas de complementos: complementos de usuario",
+                        "text": "<p>Si un complemento es un complemento de usuario, entonces esta casilla de verificación controla si un complemento de usuario debe habilitarse automáticamente en la carga de contexto.</p>"
+                    },
+                    "cfgTool": {
+                        "title": "Herramientas de complementos: herramienta de configuración",
+                        "text": "<p>Al presionar este botón aparece un editor, donde puede editar la configuración predeterminada del complemento.</p>"
+                    },
+                    "cfgEditor": {
+                        "title": "Herramientas de complementos: Editor de configuración",
+                        "text": "<p>El editor admite resaltado de sintaxis. Todos sus cambios se guardarán continuamente a medida que edita. Si la configuración contiene un error de sintaxis, se le informará adecuadamente. El error debe repararse antes de continuar.</p>"
+                    },
+                    "documentationTool": {
+                        "title": "Herramientas de complementos: documentación",
+                        "text": "<p>Al presionar este botón, accederá a la página de documentación del complemento, donde podrá buscar información sobre qué hace el complemento y qué parámetros de configuración admite.</p>"
+                    },
+                    "mapTemplatesTool": {
+                        "title": "Herramientas de complementos: plantillas de mapas",
+                        "text": "<p>El complemento de plantillas de mapas también tiene una herramienta especial que le permite configurar plantillas de mapas que serán accesibles dentro del contexto.</p>"
+                    },
+                    "extensions": {
+                        "title": "Extensiones",
+                        "text": "<p>MapStore también admite la carga de paquetes de extensión personalizados. Puede hacerlo haciendo clic en este botón.</p>"
+                    },
+                    "extensionsDelete": {
+                        "title": "Extensiones",
+                        "text": "<p>Las extensiones ya cargadas se pueden eliminar en cualquier momento presionando este botón.</p>"
+                    }
+                }
+            },
             "geostoryIntro": {
               "title": "Tutorial de historia",
-              "text": "Descripción general de las funcionalidades de la historia"
+              "text": "<p>Descripción general de las funcionalidades de la historia </p> <p> Explore la guía del usuario relacionada <a target='_blank' href='https://mapstore.readthedocs.io/en/latest/user-guide/exploring-stories/'> aquí </a>"
             },
             "geostoryViewHeader": {
               "title": "Encabezamiento",
@@ -2741,11 +2872,11 @@
             },
             "geostoryViewNavTitle": {
               "title": "Título de la historia",
-              "text": "Puedes mostrar y configurar un título para cada historia"
+              "text": "Aquí puedes ver el título de la historia"
             },
             "geostoryViewNavLogo": {
               "title": "Logotipo de la historia",
-              "text": "Puedes mostrar y configurar un logotipo para cada historia"
+              "text": "Aquí puedes ver el logo de la historia"
             },
             "geostoryViewContent": {
               "title": "Contenido de la historia",
@@ -2765,11 +2896,11 @@
             },
             "geostoryEditSidebarSettings": {
               "title": "Configuración de la historia",
-              "text": "<p> De izquierda a derecha: </p> <ul> <li> Eliminar una sección seleccionada </li> <li> Ir al modo de vista </li> <li> Editar configuración </li> <li> Contraer / expandir todo </li> </ul>"
+              "text": "<p> De izquierda a derecha: </p> <ul> <li> Eliminar una sección seleccionada </li> <li> Ir al modo de vista </li> <li> Editar configuración </li> <li> Contraer / expandir todo </li> </ul><p> Para obtener más información, consulte la guía del usuario relacionada <a target='_blank' href='https://mapstore.readthedocs.io/en/latest/user-guide/story-setting/'> aquí </a>"
             },
             "geostoryEditContainer": {
               "title": "Contenido de la historia",
-              "text": "Aquí puede ver el contenido de la historia, editarla agregando o eliminando secciones, párrafos, etc."
+              "text": "<p>Aquí puede ver el contenido de la historia, editarla agregando o eliminando secciones, párrafos, etc.</p><p>Cada barra de herramientas le permite manipular el contenido de la historia, por ejemplo:</p><img src='data:image/png;base64,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'/><ul><li>cambiar fuente de medios</li><li>hacer que la sección se adapte a la altura del contenido o que se ajuste verticalmente a la vista</li><li>hacer que el fondo cubra o no el espacio del contenedor</li><li>cambiar tamaño</li><li>alinear el contenedor (disponible si el tamaño no está lleno)</li><li>cambiar de tema</li></ul><img src='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACIAAAAgCAYAAAB3j6rJAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsIAAA7CARUoSoAAAAASdEVYdFNvZnR3YXJlAEdyZWVuc2hvdF5VCAUAAAIwSURBVFhHY/wPBAyDADBB6QEHow5BB1R3yIWX7xiOP30N5REPqJJY/wKN2HLnCYMwBztD+YGzYLF+F1OGV19/MHgqSzMwMzKCxfABqjjk4ccvDJ6r9jLc+/AZKgIBSgK8DNvDnBnk+XmgIrgBVaKGg4WZgYuVmYGfnZWh39mUYbanJYMQJzsDEzAgWJiIs4KgKlCwf/z5G8rDBM++fGOwWbKD4crrDwzOCpIMGYbqDLE6ygzO8hIMd95/ZnBYthOshhAg6JCXX78zmCzYwiA/bS1D3OYjDPsfvmD49vsPw4ZbjxjqDl1gYGdmZljgbc0gxs3BcPr5W4bzr94xXHvzgeHci3dgMZCcODcn1DTcgOioATlo1Y0HDPMu3Wa4ArQofcdxhp5TVxmmnrvBoC7ExyABtOzxp68MVou2MRjN38JwF5heQGIgOWISK0Vp5B8w2q69+cjAycrC4KMsw9BsZ8ggw8sFxiC2jYwYAwszldIIIbD59mOGiWeuM1Rb6zGUmmsDsQ5Dg40BmN0HTLgC7GxQlfgBxQ4BJeb5l+4w3H73CewgN0UpBmtgSIDYn37hTuTogGKHIANQAtacvQGMQWxSAFUdQgkYdQg6GDoOYQOWnLJ83DgLJS5gGWIkLgSsZ9iAtDDR2RUdEF37/vr7j+HG24/gElNfTJDhyONX4LpFioeLAd2NL4ClMKjuAWVjTmCFSAwYbTyjg1GHoINRh6CDUYegg1GHoINB4hAGBgDB977viofL1wAAAABJRU5ErkJggg=='/><p>este ícono le permitirá editar el mapa relacionado</p><img src=''/><b>Propina: </b>Cada herramienta tiene información sobre herramientas, desplace el mouse sobre ella para ver más"
             },
             "geostoryEditAddbar": {
               "title": "Agregar nuevo contenido",
@@ -2777,7 +2908,7 @@
             },
             "geostoryEditMediaEditor": {
               "title": "Editor de medios",
-              "text": "Aquí puede seleccionar imágenes o mapas para agregar a la historia"
+              "text": "<p> Usando el Editor de Medios puede incluir en la historia diferentes tipos de contenido de medios como: <ul> <li>images</li> <li> videos </li> <li> mapas </li> </ul> </p><p> Para obtener más información, consulte la guía del usuario relacionada <a target='_blank' href='https://mapstore.readthedocs.io/en/latest/user-guide/media-editor-window/'> aquí </a>"
             }
         },
         "userSession": {

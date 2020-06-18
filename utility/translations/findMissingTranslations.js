@@ -63,6 +63,7 @@ const compare = (a, b, path, callback) => {
 
 const files = fs.readdirSync(TRANSLATIONS_FOLDER);
 let fail = false;
+let failureCauses = [];
 log("##############################\n");
 log("# Check i18n mandatory files #\n");
 log("##############################\n");
@@ -71,6 +72,7 @@ files.forEach(file => {
     const stat = fs.statSync(filePath);
     let warning = 0;
     let error = 0;
+    let errorLog = [];
     if (stat.isFile()) {
         log(`${file}\n`);
         const obj = JSON.parse(fs.readFileSync(filePath, 'utf8'));
@@ -82,7 +84,9 @@ files.forEach(file => {
                 break;
             case 'error':
                 error++;
-                log(`-->\t${path} ${mess}\n`);
+                const e = `-->\t${path} ${mess}\n`;
+                log(e);
+                errorLog.push(e);
                 break;
             default:
                 break;
@@ -93,11 +97,16 @@ files.forEach(file => {
         } else {
             log(`--> ${file} FAILED\n`);
         }
-        fail = fail || (error && isMandatory(file));
+        const thisFails = (error && isMandatory(file));
+        fail = fail || thisFails;
+        if (thisFails) {
+
+            failureCauses.push(`file ${file} had ${error} errors. \n ${errorLog}`);
+        }
         log(`---------------------------\n`);
     }
 });
 if (fail) {
-    throw Error("i18n files failed");
+    throw Error(`i18n check failure caused by: \n "${failureCauses.concat('\n')}`);
 }
 log('## mandatory translations checks passed!! ##\n');

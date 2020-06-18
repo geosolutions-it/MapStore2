@@ -27,13 +27,13 @@ module.exports = require('./MapStore2/build/buildConfig')(
         new HtmlWebpackPlugin({
             template: path.join(__dirname, 'indexTemplate.html'),
             chunks: ['__PROJECTNAME__'],
-            inject: true,
+            inject: "body",
             hash: true
         }),
         new HtmlWebpackPlugin({
             template: path.join(__dirname, 'embeddedTemplate.html'),
             chunks: ['__PROJECTNAME__-embedded'],
-            inject: true,
+            inject: "body",
             hash: true,
             filename: 'embedded.html'
         }),

@@ -23,6 +23,8 @@ import { currentContextSelector } from '../selectors/context';
 import { reprojectBbox, getViewportGeometry } from '../utils/CoordinatesUtils';
 import { get } from 'lodash';
 import controls from '../reducers/controls';
+import {featureInfoClick, changeFormat, hideMapinfoMarker} from '../actions/mapInfo';
+import { clickPointSelector} from '../selectors/mapInfo';
 
 /**
  * Get wider and valid extent in viewport
@@ -69,25 +71,35 @@ const Share = connect(createSelector([
     versionSelector,
     mapSelector,
     currentContextSelector,
-    state => get(state, 'controls.share.settings', {})
-], (isVisible, version, map, context, settings) => ({
+    state => get(state, 'controls.share.settings', {}),
+    (state) => state.mapInfo && state.mapInfo.formatCoord,
+    clickPointSelector
+], (isVisible, version, map, context, settings, formatCoords, point) => ({
     isVisible,
     shareUrl: location.href,
     shareApiUrl: ShareUtils.getApiUrl(location.href),
     shareConfigUrl: ShareUtils.getConfigUrl(location.href, ConfigUtils.getConfigProp('geoStoreUrl')),
     version,
     bbox: isVisible && map && map.bbox && getExtentFromViewport(map.bbox),
+    center: map && map.center && ConfigUtils.getCenter(map.center),
+    zoom: map && map.zoom,
     showAPI: !context,
     embedOptions: {
         showTOCToggle: !context
     },
     settings,
     advancedSettings: {
-        bbox: true
-    }
+        bbox: true,
+        centerAndZoom: true
+    },
+    formatCoords: formatCoords,
+    point
 })), {
     onClose: toggleControl.bind(null, 'share', null),
-    onUpdateSettings: setControlProperty.bind(null, 'share', 'settings')
+    hideMarker: hideMapinfoMarker,
+    onUpdateSettings: setControlProperty.bind(null, 'share', 'settings'),
+    onSubmitClickPoint: featureInfoClick,
+    onChangeFormat: changeFormat
 })(SharePanel);
 
 export const SharePlugin = assign(Share, {

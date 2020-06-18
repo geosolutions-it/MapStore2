@@ -8,6 +8,7 @@
 		<param-name>contextConfigLocation</param-name>
 		<param-value>
             classpath*:applicationContext.xml
+            classpath*:applicationContext-print.xml
         </param-value>
 	</context-param>
 
@@ -76,7 +77,7 @@
         <servlet-name>dispatcher</servlet-name>
         <url-pattern>/rest/config/*</url-pattern>
     </servlet-mapping>
-    
+
 	<!-- CXF Servlet -->
 	<servlet>
 		<servlet-name>CXFServlet</servlet-name>
@@ -112,7 +113,7 @@
       <servlet-name>mapfish.print</servlet-name>
       <url-pattern>/pdf/*</url-pattern>
     </servlet-mapping>
-    
+
 	<!-- Default page to serve -->
 	<welcome-file-list>
 		<welcome-file>index.html</welcome-file>

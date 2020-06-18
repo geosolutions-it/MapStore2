@@ -23,14 +23,14 @@ const FormatEditor = require('./FormatEditor').default;
  *
  * Currently custom editors available by default are:
  *
- * * DropDownEditor - editor that allows to choose a value from a preconfigured values list
- * * NumberEditor - editor that supports numeric data, setting min/max bounds on a value
- * * FormatEditor - editor that checks if data matches a particular regular expression
+ * * {@link #components.data.featuregrid.editors.DropDownEditor | DropDownEditor} - editor that allows to choose a value from a preconfigured values list
+ * * {@link #components.data.featuregrid.editors.NumberEditor | NumberEditor} - editor that supports numeric data, setting min/max bounds on a value
+ * * {@link #components.data.featuregrid.editors.FormatEditor | FormatEditor} - editor that checks if data matches a particular regular expression
  *
  * Each editor has a specific section in framework documentation with available properties.
  *
- * @name Editors
- * @memberof components.data.featuregrid
+ * @name customEditors
+ * @memberof components.data.featuregrid.editors
  * @type {Object}
  */
 const Editors = {

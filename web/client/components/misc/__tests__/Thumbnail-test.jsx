@@ -84,7 +84,7 @@ describe('Thumbnail component', () => {
         const container = document.getElementById('container');
         expect(container.querySelector('.ms-thumbnail-dropzone')).toBeTruthy();
 
-        const removeNode = document.querySelector('.dropzone-remove');
+        const removeNode = document.querySelector('.btn');
         expect(removeNode).toBeTruthy();
         Simulate.click(removeNode);
         const loadingNode = document.querySelector('.ms-loading');

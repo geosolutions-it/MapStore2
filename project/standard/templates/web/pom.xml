@@ -39,12 +39,7 @@
       <type>war</type>
       <scope>runtime</scope>
     </dependency>
-    <!-- mapfish-print -->
-    <dependency>
-      <groupId>org.mapfish.print</groupId>
-      <artifactId>print-lib</artifactId>
-      <version>geosolutions-2.0-SNAPSHOT</version>
-    </dependency>
+
 
     <dependency>
       <groupId>org.geotools</groupId>
@@ -60,11 +55,6 @@
       <groupId>com.vividsolutions</groupId>
       <artifactId>jts</artifactId>
       <version>1.8</version>
-    </dependency>
-    <dependency>
-      <groupId>org.mapfish.geo</groupId>
-      <artifactId>mapfish-geo-lib</artifactId>
-      <version>1.2.0</version>
     </dependency>
     <dependency>
       <groupId>javax.media</groupId>
@@ -431,6 +421,50 @@
         </plugin>
     </plugins>
   </build>
+    <profiles>
+        <profile>
+            <id>printing</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>com.coderplus.maven.plugins</groupId>
+                        <artifactId>copy-rename-maven-plugin</artifactId>
+                        <version>1.0</version>
+                        <executions>
+                            <execution>
+                                <id>rename-context</id>
+                                <phase>prepare-package</phase>
+                                <goals>
+                                <goal>copy</goal>
+                                </goals>
+                                <configuration>
+                                <overWrite>true</overWrite>
+                                <sourceFile>src/printing/applicationContext-print.xml</sourceFile>
+                                <destinationFile>target/__PROJECTNAME__/WEB-INF/classes/applicationContext-print.xml</destinationFile>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+            <dependencies>
+                <!-- mapfish-print -->
+                <dependency>
+                    <groupId>org.mapfish.print</groupId>
+                    <artifactId>print-lib</artifactId>
+                    <version>geosolutions-2.0-SNAPSHOT</version>
+                </dependency>
+                <dependency>
+                    <groupId>org.mapfish.geo</groupId>
+                    <artifactId>mapfish-geo-lib</artifactId>
+                    <version>1.2.0</version>
+                </dependency>
+            </dependencies>
+            </profile>
+    </profiles>
 
 	<repositories>
         <!-- GeoSolutions -->

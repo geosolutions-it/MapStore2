@@ -8,7 +8,7 @@
 
 
 const CoordinatesUtils = require('./CoordinatesUtils');
-const {isString, isArray, isObject, head, castArray, slice } = require('lodash');
+const { isString, isArray, isObject, head, castArray, slice, sortBy } = require('lodash');
 
 const WMTSUtils = {
     getDefaultMatrixId: (options) => {
@@ -20,7 +20,7 @@ const WMTSUtils = {
         return matrixIds;
     },
     getMatrixIds: (matrix, srs) => {
-        return ((isObject(matrix) && isArray(matrix[srs]) && matrix[srs]) || (isArray(matrix) && matrix) || []).map((el) => el.identifier);
+        return ((isObject(matrix) && isArray(matrix[srs]) && matrix[srs]) || (isArray(matrix) && matrix) || []);
     },
     limitMatrix: (matrix, len) => {
         if (matrix.length > len) {
@@ -107,7 +107,53 @@ const WMTSUtils = {
     /**
      * gets the first format available in the list
      */
-    getDefaultFormat: layer => head(castArray(layer.Format))
+    getDefaultFormat: layer => head(castArray(layer.Format)),
+    /**
+     * This avoid https://openlayers.org/en/v5.3.0/doc/errors/#17 in case the scale tilematrix
+     * is not naturally sorted by scale denominator.
+     * for instance https://wxs.ign.fr/choisirgeoportail/geoportail/wmts
+     */
+    sortTileMatrix: (tileMatrixSet, ids)  => {
+        if (!tileMatrixSet) {
+            return tileMatrixSet;
+        }
+        return {
+            ...tileMatrixSet,
+            TileMatrix:
+                // sort by scale denominator, decendent
+                sortBy(tileMatrixSet?.TileMatrix
+                    .map(t => ({ ...t, ScaleDenominator: Number(t.ScaleDenominator) })), "ScaleDenominator"
+                )
+                    .reverse()
+                    // return only the Ids allowed to match array indexes
+                    .filter(t => ids ? ids.map(({ identifier } = {}) => identifier).indexOf(t["ows:Identifier"]) >= 0 : true)
+        };
+    },
+    /**
+     * Parse layer options to get back the tile matrix sub-set that can be used.
+     * This allows to have matrixIds and tileMatrixSet correctly sorted and filtered to match
+     */
+    getTileMatrix: (options, srs) => {
+        const tileMatrixSetName = WMTSUtils.getTileMatrixSet(options.tileMatrixSet, srs, options.allowedSRS, options.matrixIds);
+        const ids = options.matrixIds && WMTSUtils.getMatrixIds(options.matrixIds, tileMatrixSetName || srs);
+        const tileMatrixSet = WMTSUtils.sortTileMatrix(
+            head(options.tileMatrixSet.filter(tM => tM['ows:Identifier'] === tileMatrixSetName)),
+            ids);
+        // identifiers are in the same order of scales and resolutions
+
+        const identifiers = tileMatrixSet?.TileMatrix.map?.(t => t["ows:Identifier"]);
+        // use same order of matrixIds in TileMatrix, if present.
+        const matrixIds = identifiers && ids
+            ? ids.sort((a, b) => {
+                return identifiers.indexOf(a.identifier) - identifiers.indexOf(b.identifier);
+            })
+            : ids;
+        return {
+            matrixIds,
+            tileMatrixSetName,
+            tileMatrixSet: tileMatrixSet
+        };
+    }
 };
 
 

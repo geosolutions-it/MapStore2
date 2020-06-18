@@ -43,7 +43,9 @@ const Immersive = ({
     textEditorActiveClass = "",
     expandableMedia = false,
     storyTheme,
-    mediaViewer
+    mediaViewer,
+    contentToolbar,
+    inView
 }) => {
     const hideContent = focusedContent && focusedContent.hideContent && (get(focusedContent, "target.id") === contentId);
     const visibility = hideContent ? 'hidden' : 'visible';
@@ -60,7 +62,7 @@ const Immersive = ({
             tools={{
                 [MediaTypes.IMAGE]: ['editMedia', 'fit', 'size', 'align', 'theme'],
                 [MediaTypes.MAP]: ['editMedia', 'editMap', 'size', 'align', 'theme'],
-                [MediaTypes.VIDEO]: ['editMedia', 'fit', 'cover', 'size', 'align', 'theme']
+                [MediaTypes.VIDEO]: ['editMedia', 'fit', 'size', 'align', 'theme', 'muted', 'autoplay', 'loop']
             }}
             // selector used by sticky polyfill to detect scroll events
             scrollContainerSelector="#ms-sections-container"
@@ -82,7 +84,9 @@ const Immersive = ({
                 backgroundSize: '600px auto'
             }}
             storyTheme={storyTheme}
-            mediaViewer={mediaViewer}/>
+            mediaViewer={mediaViewer}
+            contentToolbar={contentToolbar}
+            inView={inView}/>
         <SectionContents
             tools={{
                 [ContentTypes.COLUMN]: ['size', 'align', 'theme']
@@ -103,7 +107,8 @@ const Immersive = ({
                 onVisibilityChange,
                 contentWrapperStyle: { minHeight: viewHeight, visibility },
                 expandable: expandableMedia,
-                mediaViewer
+                mediaViewer,
+                contentToolbar
             }}
             focusedContent={focusedContent}
             bubblingTextEditing={bubblingTextEditing}
