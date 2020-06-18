@@ -1,17 +1,26 @@
+/*
+ * Copyright 2020, GeoSolutions Sas.
+ * All rights reserved.
+ *
+ * This source code is licensed under the BSD-style license found in the
+ * LICENSE file in the root directory of this source tree.
+*/
+
 import React from 'react';
 import { createPlugin } from '../utils/PluginsUtils';
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
-import MapUtils from "../utils/MapUtils";
-const {Glyphicon, Button} = require('react-bootstrap');
-const ConfirmButton = require('../components/buttons/ConfirmButton');
-const Dialog = require('../components/misc/Dialog');
-const Message = require('./locale/Message');
-const {mapSelector} = require('../selectors/map');
-const {toggleControl} = require('../actions/controls');
-const {setSearchBookmarkConfig, resetBookmarkConfig, updateBookmark, filterBookmarks} = require('../actions/searchbookmarkconfig');
-const BookmarkList = require('../components/mapcontrols/searchbookmarkconfig/BookmarkList').default;
-const AddNewBookmark = require('../components/mapcontrols/searchbookmarkconfig/AddNewBookmark').default;
+import {getExtentFromViewport} from "../utils/CoordinatesUtils";
+import {Glyphicon, Button} from 'react-bootstrap';
+import ConfirmButton from '../components/buttons/ConfirmButton';
+import Dialog from '../components/misc/Dialog';
+import Message from './locale/Message';
+import {mapSelector} from '../selectors/map';
+import {toggleControl} from '../actions/controls';
+import {setSearchBookmarkConfig, resetBookmarkConfig, updateBookmark, filterBookmarks} from '../actions/searchbookmarkconfig';
+import BookmarkList from '../components/mapcontrols/searchbookmarkconfig/BookmarkList';
+import AddNewBookmark from '../components/mapcontrols/searchbookmarkconfig/AddNewBookmark';
+import searchbookmarkconfig from '../reducers/searchbookmarkconfig';
 
 /**
  * Bookmark search configuration Plugin. Allow to add and edit additional
@@ -153,7 +162,7 @@ const selector = createSelector([
     state => state.controls || {},
     state => state.searchbookmarkconfig || {}
 ], (map, controls, bookmarkconfig) => ({
-    bbox: map && map.bbox && MapUtils.getExtentFromViewport(map.bbox),
+    bbox: map && map.bbox && getExtentFromViewport(map.bbox),
     enabled: controls.searchBookmarkConfig && controls.searchBookmarkConfig.enabled || false,
     pages: [BookmarkList, AddNewBookmark],
     page: bookmarkconfig && bookmarkconfig.page || 0,
@@ -182,6 +191,6 @@ export default createPlugin('SearchByBookmark', {
         }
     },
     reducers: {
-        searchbookmarkconfig: require('../reducers/searchbookmarkconfig')
+        searchbookmarkconfig
     }
 });

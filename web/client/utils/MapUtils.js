@@ -6,7 +6,6 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const {getViewportGeometry, reprojectBbox} = require("../utils/CoordinatesUtils");
 const {isString, trim, isNumber, pick, get, find, mapKeys, mapValues, keys, uniq, uniqWith, isEqual} = require('lodash');
 const uuidv1 = require('uuid/v1');
 
@@ -304,27 +303,6 @@ function transformExtent(projection, center, width, height) {
     }
     return {width, height};
 }
-
-/**
- * Get wider and valid extent in viewport
- * @private
- * @param bbox {object} viewport bbox
- * @param bbox.bounds {object} bounds of bbox {minx, miny, maxx, maxy}
- * @param bbox.crs {string} bbox crs
- * @param dest {string} SRS of the returned extent
- * @return {array} [ minx, miny, maxx, maxy ]
- */
-const getExtentFromViewport = ({ bounds, crs } = {}, dest = 'EPSG:4326') => {
-    if (!bounds || !crs) return null;
-    const { extent } = getViewportGeometry(bounds, crs);
-    if (extent.length === 4) {
-        return reprojectBbox(extent, crs, dest);
-    }
-    const [ rightExtentWidth, leftExtentWidth ] = extent.map((bbox) => bbox[2] - bbox[0]);
-    return rightExtentWidth > leftExtentWidth
-        ? reprojectBbox(extent[0], crs, dest)
-        : reprojectBbox(extent[1], crs, dest);
-};
 
 const groupSaveFormatted = (node) => {
     return {id: node.id, title: node.title, expanded: node.expanded};
@@ -675,7 +653,6 @@ module.exports = {
     mapUpdated,
     getCurrentResolution,
     transformExtent,
-    getExtentFromViewport,
     saveMapConfiguration,
     generateNewUUIDs,
     mergeMapConfigs,

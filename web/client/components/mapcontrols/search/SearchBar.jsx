@@ -277,7 +277,7 @@ export default ({
                 }
                 {
                     activeTool === "bookmarkSearch" && showBookMarkSearchOption &&
-                        <BookmarkSelect {...props}/>
+                        <BookmarkSelect bookmarkConfig={props.bookmarkConfig} onPropertyChange={props.onPropertyChange}/>
                 }
                 <SearchBarToolbar
                     splitTools={false}
@@ -313,7 +313,7 @@ export default ({
                         visible: activeTool === "addressSearch" &&
                             (!(searchText !== "" || selectedItems && selectedItems.length > 0) || !splitTools) ||
                             activeTool === "coordinatesSearch" || activeTool === "bookmarkSearch",
-                        disabled: activeTool === "bookmarkSearch" && props && props.bookmarkConfig && !props.bookmarkConfig.selected,
+                        disabled: activeTool === "bookmarkSearch" && props.bookmarkConfig && !props.bookmarkConfig.selected,
                         onClick: () => {
                             if (activeTool === "coordinatesSearch" && areValidCoordinates()) {
                                 zoomToPoint();

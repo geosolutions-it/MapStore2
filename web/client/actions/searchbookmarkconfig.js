@@ -13,7 +13,7 @@ const FILTER_BOOKMARKS = 'FILTER_BOOKMARKS';
 
 /**
 * Sets a property
-* @memberof actions.search
+* @memberof actions.searchbookmarkconfig
 * @param {string} property the property to set
 * @param {string|number|boolean|object} value the value to set or to check for toggling
 * @return {object} of type `SET_SEARCH_BOOKMARK_CONFIG` with property and value params
@@ -28,7 +28,7 @@ function setSearchBookmarkConfig(property, value) {
 
 /**
  * Resets a property
- * @memberof actions.search
+ * @memberof actions.searchbookmarkconfig
  * @return {object} of type `RESET_BOOKMARK_CONFIG` with property and value params
  */
 function resetBookmarkConfig() {
@@ -39,7 +39,7 @@ function resetBookmarkConfig() {
 
 /**
  * Updates a property
- * @memberof actions.search
+ * @memberof actions.searchbookmarkconfig
  * @param {object} bookmark the property to set
  * @param {number} idx the value to set
  * @return {object} of type `UPDATE_BOOKMARK` with property and value params
@@ -54,7 +54,7 @@ function updateBookmark(bookmark, idx = -1) {
 
 /**
  * Set filter property
- * @memberof actions.search
+ * @memberof actions.searchbookmarkconfig
  * @param {string} filter the property to set
  * @return {object} of type `FILTER_BOOKMARKS` with property and value params
  */

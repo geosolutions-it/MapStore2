@@ -14,7 +14,7 @@ import Message from '../components/I18N/Message';
 import { toggleControl, setControlProperty } from '../actions/controls';
 import ConfigUtils from '../utils/ConfigUtils';
 import ShareUtils from '../utils/ShareUtils';
-import {getExtentFromViewport} from '../utils/MapUtils';
+import {getExtentFromViewport} from '../utils/CoordinatesUtils';
 import { versionSelector } from '../selectors/version';
 import * as shareEpics from '../epics/queryparams';
 import SharePanel from '../components/share/SharePanel';
