@@ -437,7 +437,6 @@ export const handlePendingGeoStoryChanges = action$ =>
         Observable.merge(
             // when load an existing geostory
             action$.ofType(LOAD_GEOSTORY).switchMap(() => action$.ofType(SET_RESOURCE))
-            // TODO: add ... or load new geostory
         ).switchMap( () =>
             // listen to modification events
             action$.ofType(
