@@ -2,9 +2,9 @@
 const {compose, mapPropsStream, withHandlers} = require('recompose');
 
 /**
- * Enhancers for the component to process map and layer object from the processed file
- * Recognizes the object is a map or a layer
- * Then respective action of loading a map or a layer is performed and throws warning if any
+ * Enhancer for processing map configuration and layers object
+ * Recognizes if the file dropped is a map or a layer
+ * Then a related action for loading a map or a layer is performed and throws warning if any error occurs
  */
 module.exports = compose(
     withHandlers({
