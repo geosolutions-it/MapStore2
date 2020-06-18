@@ -38,7 +38,7 @@ describe('processFiles enhancer', () => {
     });
     it('processFiles rendering with defaults', (done) => {
         const Sink = processFiles(createSink( props => {
-            expect(props).toExist();
+            expect(props).toBeTruthy();
             done();
         }));
         ReactDOM.render(<Sink />, document.getElementById("container"));
@@ -48,7 +48,7 @@ describe('processFiles enhancer', () => {
             processFiles,
             mapPropsStream(props$ => props$.merge(props$.take(1).do(({ onDrop = () => { } }) => onDrop(["ABC"])).ignoreElements()))
         )(createSink( props => {
-            expect(props).toExist();
+            expect(props).toBeTruthy();
             if (props.error) {
                 done();
             }
@@ -63,7 +63,7 @@ describe('processFiles enhancer', () => {
                     .take(1)
                     .switchMap(({ onDrop = () => { } }) => getShapeFile().map((file) => onDrop([file]))).ignoreElements()))
         )(createSink(props => {
-            expect(props).toExist();
+            expect(props).toBeTruthy();
             if (props.files) {
                 expect(props.files.layers.length).toBe(1);
                 done();
@@ -79,7 +79,7 @@ describe('processFiles enhancer', () => {
                     .take(1)
                     .switchMap(({ onDrop = () => { } }) => getKmzFile().map((file) => onDrop([file]))).ignoreElements()))
         )(createSink(props => {
-            expect(props).toExist();
+            expect(props).toBeTruthy();
             if (props.files) {
                 expect(props.files.layers.length).toBe(1);
                 done();
@@ -95,7 +95,7 @@ describe('processFiles enhancer', () => {
                     .take(1)
                     .switchMap(({ onDrop = () => { } }) => getGpxFile().map((file) => onDrop([file]))).ignoreElements()))
         )(createSink(props => {
-            expect(props).toExist();
+            expect(props).toBeTruthy();
             if (props.files) {
                 expect(props.files.layers.length).toBe(1);
                 done();
@@ -111,7 +111,7 @@ describe('processFiles enhancer', () => {
                     .take(1)
                     .switchMap(({ onDrop = () => { } }) => getKmlFile().map((file) => onDrop([file]))).ignoreElements()))
         )(createSink(props => {
-            expect(props).toExist();
+            expect(props).toBeTruthy();
             if (props.files) {
                 expect(props.files.layers.length).toBe(1);
                 done();
@@ -127,7 +127,7 @@ describe('processFiles enhancer', () => {
                     .take(1)
                     .switchMap(({ onDrop = () => { } }) => getGeoJsonFile().map((file) => onDrop([file]))).ignoreElements()))
         )(createSink(props => {
-            expect(props).toExist();
+            expect(props).toBeTruthy();
             if (props.files) {
                 expect(props.files.layers.length).toBe(1);
                 done();
@@ -143,11 +143,11 @@ describe('processFiles enhancer', () => {
                     .take(1)
                     .switchMap(({ onDrop = () => { } }) => getAnnotationGeoJsonFile().map((file) => onDrop([file]))).ignoreElements()))
         )(createSink(props => {
-            expect(props).toExist();
+            expect(props).toBeTruthy();
             if (props.files) {
                 expect(props.files.layers.length).toBe(1);
                 expect(props.files.layers[0].name).toBe("Annotations");
-                expect(props.files.layers[0].features).toExist();
+                expect(props.files.layers[0].features).toBeTruthy();
                 done();
             }
         }));
@@ -161,7 +161,7 @@ describe('processFiles enhancer', () => {
                     .take(1)
                     .switchMap(({ onDrop = () => { } }) => getGeoJsonFile("file.geojson").map((file) => onDrop([file]))).ignoreElements()))
         )(createSink(props => {
-            expect(props).toExist();
+            expect(props).toBeTruthy();
             if (props.files) {
                 expect(props.files.layers.length).toBe(1);
                 done();
@@ -177,7 +177,7 @@ describe('processFiles enhancer', () => {
                     .take(1)
                     .switchMap(({ onDrop = () => { } }) => getMapFile().map((file) => onDrop([file]))).ignoreElements()))
         )(createSink(props => {
-            expect(props).toExist();
+            expect(props).toBeTruthy();
             if (props.files) {
                 expect(props.files.layers.length).toBe(0);
                 expect(props.files.maps.length).toBe(1);
@@ -194,7 +194,7 @@ describe('processFiles enhancer', () => {
                     .take(1)
                     .switchMap(({ onDrop = () => { } }) => getUnsupportedMapFile().map((file) => onDrop([file]))).ignoreElements()))
         )(createSink(props => {
-            expect(props).toExist();
+            expect(props).toBeTruthy();
             if (props.error) {
                 done();
             }

@@ -72,6 +72,8 @@ const DEFAULT_ANNOTATIONS_STYLES = {
     "MultiPolygon": STYLE_POLYGON
 };
 
+const ANNOTATION_TYPE = "ms2-annotations";
+
 /**
  * return two styles object for start and end point.
  * usually added to a LineString
@@ -199,6 +201,10 @@ const annStyleToOlStyle = (type, tempStyle, label = "") => {
 };
 
 const AnnotationsUtils = {
+    /**
+     * The constant for annotation type
+     */
+    ANNOTATION_TYPE,
     /**
      * function used to convert a geojson into a internal model.
      * if it finds some textValues in the properties it will return this as Text
@@ -582,7 +588,14 @@ const AnnotationsUtils = {
         const validCoords = coords[0].filter(AnnotationsUtils.validateCoordsArray);
         return validCoords.length > 3 && head(validCoords)[0] === last(validCoords)[0] && head(validCoords)[1] === last(validCoords)[1];
     },
-    getDashArrayFromStyle
+    getDashArrayFromStyle,
+    /**
+     * utility to check if the GeoJSON has the annotation model structure i.e. {"type": "ms2-annotations", "features": [list of FeatureCollection]}
+     * or the imported annotation object's name is of "Annotations"
+     * @param {object} json GeoJSON/plain object
+     * @returns {boolean} if the GeoJSON passes is a ms2-annotation or if the name property of the object passed is Annotations
+     */
+    isAnnotation: (json) => json?.type === ANNOTATION_TYPE || json?.name === "Annotations"
 };
 
 module.exports = AnnotationsUtils;

@@ -11,6 +11,7 @@ const React = require('react');
 
 const Message = require('../../I18N/Message');
 const LocaleUtils = require('../../../utils/LocaleUtils');
+const {isAnnotation} = require('../../../utils/AnnotationsUtils');
 let { toVectorStyle } = require('../../../utils/StyleUtils');
 const { Grid, Row, Col, Button, Alert, ButtonToolbar} = require('react-bootstrap');
 
@@ -150,7 +151,7 @@ class StylePanel extends React.Component {
                     {this.state.useDefaultStyle ? null : this.props.stylers[this.getGeomType(this.props.selected)]}
                 </Row>
                 <Row key="options">
-                    {this.props.selected && this.props.selected.name === "Annotations" ?
+                    {isAnnotation(this.props.selected) ?
                         this.annotationOptions()
                         :
                         <>
@@ -192,10 +193,10 @@ class StylePanel extends React.Component {
         if (!this.state.useDefaultStyle) {
             styledLayer = toVectorStyle(styledLayer, this.props.shapeStyle);
         }
-        const isAnnotation = styledLayer.name === "Annotations";
-        Promise.resolve(isAnnotation ? this.props.loadAnnotations(styledLayer.features, this.state.overrideAnnotation) :
+        const isAnnotationLayer = isAnnotation(styledLayer);
+        Promise.resolve(isAnnotationLayer ? this.props.loadAnnotations(styledLayer.features, this.state.overrideAnnotation) :
             this.props.addLayer( styledLayer )).then(() => {
-            if (!isAnnotation) {
+            if (!isAnnotationLayer) {
                 let bbox = [];
                 if (this.props.layers[0].bbox && this.props.bbox) {
                     bbox = [
@@ -211,12 +212,12 @@ class StylePanel extends React.Component {
                 }
             }
             this.props.onSuccess(this.props.layers.length > 1
-                ? isAnnotation ? "Annotation" : this.props.layers[0].name + LocaleUtils.getMessageById(this.context.messages, "shapefile.success")
+                ? isAnnotationLayer ? "Annotation" : this.props.layers[0].name + LocaleUtils.getMessageById(this.context.messages, "shapefile.success")
                 : undefined);
 
             this.props.onLayerAdded(this.props.selected);
         }).catch(e => {
-            this.props.onError({ type: "error", name: isAnnotation ? "Annotation" : this.props.layers[0].name, error: e, message: 'shapefile.error.genericLoadError'});
+            this.props.onError({ type: "error", name: isAnnotationLayer ? "Annotation" : this.props.layers[0].name, error: e, message: 'shapefile.error.genericLoadError'});
         });
     };
 

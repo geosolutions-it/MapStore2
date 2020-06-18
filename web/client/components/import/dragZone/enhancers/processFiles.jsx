@@ -11,6 +11,7 @@ const { get, some, every } = require('lodash');
 const FileUtils = require('../../../../utils/FileUtils');
 const LayersUtils = require('../../../../utils/LayersUtils');
 const ConfigUtils = require('../../../../utils/ConfigUtils');
+const {isAnnotation} = require('../../../../utils/AnnotationsUtils');
 
 const JSZip = require('jszip');
 
@@ -107,7 +108,6 @@ const readFile = (onWarnings) => (file) => {
 };
 
 const isGeoJSON = json => json && json.features && json.features.length !== 0;
-const isAnnotation = json => json && json.type && json.type === "ms2-annotations";
 const isMap = json => json && json.version && json.map;
 
 /**
@@ -131,7 +131,7 @@ module.exports = compose(
                                     jsonObjects.filter(json => isGeoJSON(json))
                                         .map(json => (isAnnotation(json) ?
                                             // annotation GeoJSON to layers
-                                            { name: "Annotations", features: json && json.features, filename: json.filename} :
+                                            { name: "Annotations", features: json?.features || [], filename: json.filename} :
                                             // other GeoJSON to layers
                                             {...LayersUtils.geoJSONToLayer(json), filename: json.filename}))
                                 ),

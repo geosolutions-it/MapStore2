@@ -1,6 +1,11 @@
 
 const {compose, mapPropsStream, withHandlers} = require('recompose');
 
+/**
+ * Enhancers for the component to process map and layer object from the processed file
+ * Recognizes the object is a map or a layer
+ * Then respective action of loading a map or a layer is performed and throws warning if any
+ */
 module.exports = compose(
     withHandlers({
         useFiles: ({ currentMap, loadMap = () => { }, onClose = () => { }, setLayers = () => { },

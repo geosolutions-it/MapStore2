@@ -26,7 +26,7 @@ module.exports = {
     getKmlFile: () => getFile(KML_FILE_URL, "file.kml"),
     getKmzFile: () => getFile(KMZ_FILE_URL, "file.kmz"),
     getGeoJsonFile: (name = "file.json") => getFile(GEO_JSON_FILE_URL, name),
-    getAnnotationGeoJsonFile: () => getFile(ANNOTATION_GEO_JSON_FILE_URL, "file.json"),
+    getAnnotationGeoJsonFile: () => getFile(ANNOTATION_GEO_JSON_FILE_URL, "annotation.json"),
     getMapFile: () => getFile(MAP_FILE, "map.json"),
     getUnsupportedMapFile: () => getFile(UNSUPPORTED_MAP_FILE, "unsupportedMap.json")
 };
