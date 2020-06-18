@@ -63,6 +63,12 @@ const ENABLE_OFFSET = "TIMELINE:ENABLE_OFFSET";
  */
 const enableOffset = enabled => ({ type: ENABLE_OFFSET, enabled});
 
+const AUTOSELECT = "TIMELINE:AUTOSELECT";
+/**
+ * Triggers autoselect setup behaviour
+ */
+const autoselect = () => ({ type: AUTOSELECT });
+
 const SET_COLLAPSED = "TIMELINE:SET_COLLAPSED";
 const setCollapsed = collapsed => ({ type: SET_COLLAPSED, collapsed});
 const SET_MAP_SYNC = 'TIMELINE:SET_MAP_SYNC';
@@ -84,6 +90,8 @@ module.exports = {
     selectLayer,
     ENABLE_OFFSET,
     enableOffset,
+    AUTOSELECT,
+    autoselect,
     SET_COLLAPSED,
     setCollapsed,
     SET_MAP_SYNC,

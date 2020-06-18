@@ -50,7 +50,8 @@
       {"name": "browser", "path": "browser"},
       {"name": "geostorymode", "path": "geostory.mode"},
       {"name": "featuregridmode", "path": "featuregrid.mode"},
-      {"name": "userrole", "path": "security.user.role"}
+      {"name": "userrole", "path": "security.user.role"},
+      {"name": "printEnabled", "path": "print.capabilities"}
     ],
     "userSessions": {
       "enabled": true
@@ -310,7 +311,8 @@
               "name": "Share",
               "cfg": {
                 "advancedSettings": {
-                  "bbox": true
+                  "bbox": true,
+                  "centerAndZoom": true
                 }
               }
             },
@@ -701,7 +703,7 @@
             "cfg": {
               "allowClicksThruHole": false,
               "containerPosition": "header",
-              "preset": "geostory_tutorial"
+              "preset": "geostory_view_tutorial"
             }
           },
           "Login",

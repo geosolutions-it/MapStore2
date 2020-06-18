@@ -50,6 +50,7 @@
         },
         "showEmptyMessageGFI": "Show empty results message in GetFeatureInfo panel",
         "remove": "Delete",
+        "removeThumbnail": "Remove thumbnail",
         "layerProperties": {
             "windowTitle": "Layer Properties",
             "title": "Title",
@@ -603,6 +604,7 @@
         "identifyShowCoordinateEditor": "Show coordinate editor",
         "identifyHideCoordinateEditor": "Hide coordinate editor",
         "identifyCoordinateApplyChanges": "Apply changes",
+        "identifyChangeCoordinateFormat": "Change coordinate format",
         "identifyRevGeocodeModalTitle": "Address",
         "identifyRevGeocodeSubmitText": "More info",
         "identifyRevGeocodeCloseText": "Close",
@@ -1169,6 +1171,16 @@
             "msgCopiedUrl": "Copied",
             "msgToCopyUrl": "Click to copy",
             "sharedTitle": "Check out my new map: ",
+            "addCenterAndZoomParam": "Add center and zoom to sharing link",
+            "zoom": "Zoom",
+            "marker": "Add marker on loaded map",
+            "coordinate": "Coordinate",
+            "coordTooltip": "Click on map to grab the coordinates",
+            "zoomToolTip": "Min: 1 and Max: 35",
+            "wrongCenterAndZoomParamTitle": "Invalid center and zoom param",
+            "wrongCenterAndZoomParamMessage": "Center and Zoom param must be center=lon,lat&zoom=value and (+|- 90° lat, +|-180° lon, <=+35 zoom)",
+            "wrongMarkerAndZoomParamTitle": "Invalid marker and zoom param",
+            "wrongMarkerAndZoomParamMessage": "Marker and Zoom param must be marker=lon,lat&zoom=value and (+|- 90° lat, +|-180° lon, <=+35 zoom)",
             "advancedOptions": "Advanced options",
             "addBboxParam": "Add bounding box param to sharing link",
             "wrongBboxParamTitle": "Invalid bounding box param",
@@ -2161,7 +2173,7 @@
                     "navbar" : "Navigation bar",
                     "showNavbar" : "Show navbar",
                     "theme": "Theme",
-                    "templateTooltip":"It is possible to configure a custom template for each layer using the advanced map editor (see pencil icon). For more info check the <a href='https://mapstore.readthedocs.io/en/latest/user-guide/layer-settings/#templates' target='_blank'>user guide</a>"
+                    "templateTooltip":"This setting allows you to enable the Identify function on the map by defining a generic format for all the layers. It is possible to configure a different format for each single layer using the advanced map editor (pencil icon). For more information, see the <a href='https://mapstore.readthedocs.io/en/latest/user-guide/layer-settings/#templates' target='_blank'> user guide </a>. If a layer has defined its own Identify format, it will be used instead of the generic one set at the map level."
                 }
             },
             "errors": {
@@ -2257,7 +2269,9 @@
                 "trash": "Remove resource",
                 "videoUrl": "Video URL",
                 "videoUrlPlaceholder": "Enter a video url",
-                "thumbnail": "Add thumbnail (maximum size 500kb)"
+                "thumbnail": "Add thumbnail (maximum size 500kb)",
+                "createVideoThumbnail": "Create a thumbnail from video source",
+                "thumbnailCreateError": "It's not possible to create a thumbnail from the current video source. Click or drop an image in the thumbnail input to upload it manually"
             },
             "mediaform": {
                 "confirmExitTitle": "Close Media Form",
@@ -2273,11 +2287,14 @@
                 "confirmRemoveResource": "Do you want to remove this media resource from the story?",
                 "confirmRemoveUsedResource": "This resource will also be removed from all the sections/contents where It's used leaving them empty. Do you want to remove It from the story?"
             },
+            "imageList": {
+                "emptyList": "Click on the plus button to add a new image. See the user guide <a href='https://mapstore.readthedocs.io/en/latest/user-guide/media-editor-window/#images' target='_blank'/>here</a>"
+            },
             "mapList": {
-                "emptyList": "Click on the plus button to create a map or select a different map service."
+                "emptyList": "Click on the plus button to create a map or select a different map service. See the user guide <a href='https://mapstore.readthedocs.io/en/latest/user-guide/media-editor-window/#maps' target='_blank'/>here</a>"
             },
             "videoList": {
-                "emptyList": "Click on the plus button to add a new video"
+                "emptyList": "Click on the plus button to add a new video. See the user guide <a href='https://mapstore.readthedocs.io/en/latest/user-guide/media-editor-window/#videos' target='_blank'/>here</a>"
             }
         },
         "backgroundDialog": {
@@ -2872,7 +2889,7 @@
             },
             "geostoryIntro": {
               "title": "Story Tutorial",
-              "text": "Overview of story functionalities"
+              "text": "<p>Overview of story functionalities</p><p> Explore the related user guide <a target='_blank' href='https://mapstore.readthedocs.io/en/latest/user-guide/exploring-stories/'>here</a>"
             },
             "geostoryViewHeader": {
               "title": "Header",
@@ -2884,11 +2901,11 @@
             },
             "geostoryViewNavTitle": {
               "title": "Story Title",
-              "text": "You can show story title"
+              "text": "Here you can see the story title"
             },
             "geostoryViewNavLogo": {
               "title": "Story Logo",
-              "text": "You can show a story logo"
+              "text": "Here you can see the story logo"
             },
             "geostoryViewContent": {
               "title": "Story Content",
@@ -2908,11 +2925,11 @@
             },
             "geostoryEditSidebarSettings": {
               "title": "Story Settings",
-              "text": "<p>Here you can:</p><ul><li>Show/hide/edit the story title</li><li>Edit the theme of the story</li><li>Show/hide/edit the story logo</li><li>Customize the navigation bar in view mode</li></ul>"
+              "text": "<p>Here you can:</p><ul><li>Show/hide/edit the story title</li><li>Edit the theme of the story</li><li>Show/hide/edit the story logo</li><li>Customize the navigation bar in view mode</li></ul><p> For more info see the related user guide <a target='_blank' href='https://mapstore.readthedocs.io/en/latest/user-guide/story-setting/'>here</a>"
             },
             "geostoryEditContainer": {
               "title": "Story Content",
-              "text": "Here you can see the content of the story, edit it by adding or removing sections, paragraphs etc."
+              "text": "<p>Here you can see the content of the story, edit it by adding or removing sections, paragraphs etc.</p><p>Each toolbar allows you to manipulate the story content, for example:</p><img src='data:image/png;base64,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'/><ul><li>change media source</li><li>make the section to adapt to content height or to fit the view vertically</li><li>make the background to cover or not the container space</li><li>change size</li><li>align the container (available if size is not full)</li><li>change theme</li></ul><img src='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACIAAAAgCAYAAAB3j6rJAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsIAAA7CARUoSoAAAAASdEVYdFNvZnR3YXJlAEdyZWVuc2hvdF5VCAUAAAIwSURBVFhHY/wPBAyDADBB6QEHow5BB1R3yIWX7xiOP30N5REPqJJY/wKN2HLnCYMwBztD+YGzYLF+F1OGV19/MHgqSzMwMzKCxfABqjjk4ccvDJ6r9jLc+/AZKgIBSgK8DNvDnBnk+XmgIrgBVaKGg4WZgYuVmYGfnZWh39mUYbanJYMQJzsDEzAgWJiIs4KgKlCwf/z5G8rDBM++fGOwWbKD4crrDwzOCpIMGYbqDLE6ygzO8hIMd95/ZnBYthOshhAg6JCXX78zmCzYwiA/bS1D3OYjDPsfvmD49vsPw4ZbjxjqDl1gYGdmZljgbc0gxs3BcPr5W4bzr94xXHvzgeHci3dgMZCcODcn1DTcgOioATlo1Y0HDPMu3Wa4ArQofcdxhp5TVxmmnrvBoC7ExyABtOzxp68MVou2MRjN38JwF5heQGIgOWISK0Vp5B8w2q69+cjAycrC4KMsw9BsZ8ggw8sFxiC2jYwYAwszldIIIbD59mOGiWeuM1Rb6zGUmmsDsQ5Dg40BmN0HTLgC7GxQlfgBxQ4BJeb5l+4w3H73CewgN0UpBmtgSIDYn37hTuTogGKHIANQAtacvQGMQWxSAFUdQgkYdQg6GDoOYQOWnLJ83DgLJS5gGWIkLgSsZ9iAtDDR2RUdEF37/vr7j+HG24/gElNfTJDhyONX4LpFioeLAd2NL4ClMKjuAWVjTmCFSAwYbTyjg1GHoINRh6CDUYegg1GHoINB4hAGBgDB977viofL1wAAAABJRU5ErkJggg=='/><p>this icon will allow you to edit the related map</p><img src=''/><b>Tip: </b>Each tool has a tooltip, hover on it with the mouse to see more"
             },
             "geostoryEditAddbar": {
               "title": "Add New Content",
@@ -2920,7 +2937,7 @@
             },
             "geostoryEditMediaEditor": {
               "title": "Media Editor",
-              "text": "Here you can select images or maps to add to the story"
+              "text": "<p>Using the the Media Editor you can include in the story different kind of media contents like: <ul> <li>images</li><li>videos</li><li>maps</li></ul></p><p> For more info see the related user guide <a target='_blank' href='https://mapstore.readthedocs.io/en/latest/user-guide/media-editor-window/'>here</a>"
             }
         },
         "userSession": {

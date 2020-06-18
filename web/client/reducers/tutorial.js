@@ -62,7 +62,7 @@ function tutorial(state = initialState, action) {
         const isActuallyDisabled = localStorage.getItem('mapstore.plugin.tutorial.' + action.id + '.disabled') === 'true';
 
         setup.steps = setup.steps.filter((step) => {
-            return step.selector && step.selector.substring(0, 1) === '#' || step.selector.substring(0, 1) === '.';
+            return step?.selector?.substring(0, 1) === '#' || step?.selector?.substring(0, 1) === '.';
         }).map((step, index) => {
             let title = step.title ? step.title : '';
             title = step.translation ? <I18N.Message msgId = {"tutorial." + step.translation + ".title"}/> : title;

@@ -14,7 +14,7 @@ import Message from '../components/I18N/Message';
 import { toggleControl, setControlProperty } from '../actions/controls';
 import ConfigUtils from '../utils/ConfigUtils';
 import ShareUtils from '../utils/ShareUtils';
-import MapUtils from '../utils/MapUtils';
+import {getExtentFromViewport} from '../utils/MapUtils';
 import { versionSelector } from '../selectors/version';
 import * as shareEpics from '../epics/queryparams';
 import SharePanel from '../components/share/SharePanel';
@@ -23,6 +23,8 @@ import { mapSelector } from '../selectors/map';
 import { currentContextSelector } from '../selectors/context';
 import { get } from 'lodash';
 import controls from '../reducers/controls';
+import {featureInfoClick, changeFormat, hideMapinfoMarker} from '../actions/mapInfo';
+import { clickPointSelector} from '../selectors/mapInfo';
 
 /**
  * Share Plugin allows to share the current URL (location.href) in some different ways.
@@ -48,25 +50,35 @@ const Share = connect(createSelector([
     versionSelector,
     mapSelector,
     currentContextSelector,
-    state => get(state, 'controls.share.settings', {})
-], (isVisible, version, map, context, settings) => ({
+    state => get(state, 'controls.share.settings', {}),
+    (state) => state.mapInfo && state.mapInfo.formatCoord,
+    clickPointSelector
+], (isVisible, version, map, context, settings, formatCoords, point) => ({
     isVisible,
     shareUrl: location.href,
     shareApiUrl: ShareUtils.getApiUrl(location.href),
     shareConfigUrl: ShareUtils.getConfigUrl(location.href, ConfigUtils.getConfigProp('geoStoreUrl')),
     version,
-    bbox: isVisible && map && map.bbox && MapUtils.getExtentFromViewport(map.bbox),
+    bbox: isVisible && map && map.bbox && getExtentFromViewport(map.bbox),
+    center: map && map.center && ConfigUtils.getCenter(map.center),
+    zoom: map && map.zoom,
     showAPI: !context,
     embedOptions: {
         showTOCToggle: !context
     },
     settings,
     advancedSettings: {
-        bbox: true
-    }
+        bbox: true,
+        centerAndZoom: true
+    },
+    formatCoords: formatCoords,
+    point
 })), {
     onClose: toggleControl.bind(null, 'share', null),
-    onUpdateSettings: setControlProperty.bind(null, 'share', 'settings')
+    hideMarker: hideMapinfoMarker,
+    onUpdateSettings: setControlProperty.bind(null, 'share', 'settings'),
+    onSubmitClickPoint: featureInfoClick,
+    onChangeFormat: changeFormat
 })(SharePanel);
 
 export const SharePlugin = assign(Share, {

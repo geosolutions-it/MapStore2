@@ -111,6 +111,7 @@
             "web/client/components/notifications/NotificationContainer.jsx",
             "web/client/components/buttons/ToggleButton.jsx",
             "web/client/components/data/featuregrid/FeatureGrid.jsx",
+            "web/client/components/data/featuregrid/editors/index.jsdoc",
             "web/client/components/data/featuregrid/editors/customEditors.jsx",
             "web/client/components/data/featuregrid/editors/DropDownEditor.jsx",
             "web/client/components/data/featuregrid/editors/FormatEditor.jsx",

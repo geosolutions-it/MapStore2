@@ -50,6 +50,7 @@
         },
         "showEmptyMessageGFI": "Mostra il messaggio: Nessuna feature per gli altri layer",
         "remove": "Rimuovi",
+        "removeThumbnail": "Rimuovi anteprima",
         "layerProperties": {
             "windowTitle": "Proprietà del livello",
             "title": "Titolo",
@@ -603,6 +604,7 @@
         "identifyShowCoordinateEditor": "Mostra l'editor",
         "identifyHideCoordinateEditor": "Nascondi l'editor",
         "identifyCoordinateApplyChanges": "Applica i cambiamenti",
+        "identifyChangeCoordinateFormat": "Cambia formato coordinate",
         "identifyRevGeocodeModalTitle": "Indirizzo",
         "identifyRevGeocodeSubmitText": "Più informazioni",
         "identifyRevGeocodeCloseText": "Chiudi",
@@ -1173,7 +1175,17 @@
             "addBboxParam": "Aggiungi il parametro bbox al link di condivisione",
             "wrongBboxParamTitle": "Parametro bbox non valido",
             "wrongBboxParamMessage": "i parametri bbox devono essere in EPSG:4326 e scritti come segue bbox=minx,miny,maxx,maxy",
-            "showHomeButton": "Link alla home di MapStore"
+            "wrongCenterAndZoomParamTitle": "Parametro centro e zoom non sono validi",
+            "wrongCenterAndZoomParamMessage": "I parametri Centro e Zoom devono essere center=lon,lat&zoom=value e (+|- 90° lat, +|-180° lon, <=+35 zoom)",
+            "wrongMarkerAndZoomParamTitle": "i Parametri marker e zoom non sono validi",
+            "wrongMarkerAndZoomParamMessage": "I parametri marker e zoom devono essere marker=lon,lat&zoom=value e (+|- 90° lat, +|-180° lon, <=+35 zoom)",
+            "showHomeButton": "Link alla home di MapStore",
+            "addCenterAndZoomParam": "Aggiungi centro e zoom al link di condivisione",
+            "zoom": "Ingrandisci",
+            "marker": "Aggiungi marcatore sulla mappa caricata",
+            "coordinate": "Coordinate",
+            "coordTooltip": "Clicca sulla mappa per ottenere le coordinate del centro",
+            "zoomToolTip": "Min: 1 e Max: 35"
         },
         "snapshot": {
             "title": "Istantanea",
@@ -2158,7 +2170,7 @@
                     "navbar": "Barra di navigazione",
                     "showNavbar": "Mostra barra di navigazione",
                     "theme": "Tema",
-                    "templateTooltip":"E' possibile configurare un modello custom per ogni livello usando l'edito di mappa avanzato (vedi icona matita). Per maggiori informazioni vedi la <a href='https://mapstore.readthedocs.io/en/latest/user-guide/layer-settings/#templates' target='_blank'>guida utente</a>"
+                    "templateTooltip":"Questa impostazione consente di abilitare la funzione di Identify sulla mappa definendo un formato generico per tutti i layer. E' possibile configurare un formato differente per ogni singolo livello usando l'editor di mappa avanzato (icona matita). Per maggiori informazioni si consulti la <a href='https://mapstore.readthedocs.io/en/latest/user-guide/layer-settings/#templates' target='_blank'>guida utente</a>. Se un layer ha definito il proprio formato di Identify, questo esso verrà usato al posto di quello generico impostato a livello di mappa."
                 }
             },
             "errors": {
@@ -2254,7 +2266,9 @@
                 "trash": "Elimina la risorsa",
                 "videoUrl": "Video URL",
                 "videoUrlPlaceholder": "Inserisci video url",
-                "thumbnail": "Aggiungi thumbnail (dimensione massima 500kb)"
+                "thumbnail": "Aggiungi thumbnail (dimensione massima 500kb)",
+                "createVideoThumbnail": "Crea un'anteprima dalla risorsa video",
+                "thumbnailCreateError": "Non è possibile creare un'anteprima dalla risorsa video. Clicca o rilascia un'immagine nel input dell'anteprima per caricarne una manualmente"
             },
             "mediaform": {
                 "confirmExitTitle": "Chiudi Media From",
@@ -2270,11 +2284,14 @@
                 "confirmRemoveResource": "Vuoi rimuovere questa risorsa multimediale dalla storia?",
                 "confirmRemoveUsedResource": "Questa risorsa sarà rimossa anche da tutte le sezioni/contenuti che rimarrano vuoti. La vuoi rimuovere dalla storia?"
             },
+            "imageList": {
+                "emptyList": "Premere il pulsante più per aggiungere una nuova immagine. Per maggiori informazioni consulta <a href='https://mapstore.readthedocs.io/en/latest/user-guide/media-editor-window/#images' target='_blank'/>questa</a> guida"
+            },
             "mapList": {
-                "emptyList": "Premere il pulsante più per creare una mappa o selezionare un altro servizio di mappe."
+                "emptyList": "Premere il pulsante più per creare una mappa o selezionare un altro servizio di mappe. Per maggiori informazioni consulta <a href='https://mapstore.readthedocs.io/en/latest/user-guide/media-editor-window/#maps' target='_blank'/>questa</a> guida"
             },
             "videoList": {
-                "emptyList": "Premere il pulsante più per aggiungere un nuovo video"
+                "emptyList": "Premere il pulsante più per aggiungere un nuovo video. Per maggiori informazioni consulta <a href='https://mapstore.readthedocs.io/en/latest/user-guide/media-editor-window/#videos' target='_blank'/>questa</a> guida"
             }
         },
         "backgroundDialog": {
@@ -2868,7 +2885,7 @@
             },
             "geostoryIntro": {
               "title": "Guida alla Storia",
-              "text": "Panoramica delle funzionalità"
+              "text": "<p> Panoramica delle funzionalità </p> <p> Esplora la guida utente <a target = '_blank' href='https://mapstore.readthedocs.io/en/latest/user-guide/exploring-stories/'> qui </a>"
             },
             "geostoryViewHeader": {
               "title": "Barra di navigazione",
@@ -2880,15 +2897,15 @@
             },
             "geostoryViewNavTitle": {
               "title": "Titolo della Storia",
-              "text": "Puoi mostrare un titolo della storia"
+              "text": "Qui puoi vedere il titolo della storia"
             },
             "geostoryViewNavLogo": {
               "title": "Logo della Storia",
-              "text": "Puoi mostrare un logo della storia"
+              "text": "Qui puoi vedere il logo della storia"
             },
             "geostoryViewContent": {
               "title": "Contenuto della storia",
-              "text": "Qui vedrai il contenuto della storia"
+              "text": "Qui puoi vedere il contenuto della storia"
             },
             "geostoryViewEditButton": {
               "title": "Modifica Storia",
@@ -2904,11 +2921,11 @@
             },
             "geostoryEditSidebarSettings": {
               "title": "Impostazioni della storia",
-              "text": "<p>Qui puoi:</p><ul><li>Mostrare/nascondere/modificare il titolo</li><li>Modificare il tema</li><li>Mostrare/nascondere/modificare il logo</li><li>Modificare la composizione della barra di navigazione</li></ul>"
+              "text": "<p>Qui puoi:</p><ul><li>Mostrare/nascondere/modificare il titolo</li><li>Modificare il tema</li><li>Mostrare/nascondere/modificare il logo</li><li>Modificare la composizione della barra di navigazione</li></ul><p> Per maggiori informazioni consulta la guida relativa <a target='_blank' href='https://mapstore.readthedocs.io/en/latest/user-guide/story-setting/'>qui</a>"
             },
             "geostoryEditContainer": {
               "title": "Contenuto della storia",
-              "text": "Qui puoi vedere la storia e puoi modificarla aggiungendo o togliendo sezioni, paragrafi, ecc."
+              "text": "<p>Qui puoi vedere la storia e puoi modificarla aggiungendo o togliendo sezioni, paragrafi</p><p>Ogni barra degli strumenti di permette di manipolare il contenuto della storia, per esempio:</p><img src='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAALsAAAAfCAIAAAAwfyvFAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAWqSURBVHhe7ZhJbFtFGIB9Q0gIsUiUVWxFXBAcuCCQANEDSBxBQqxCSOXQAwIJcaHc4EApRG3SNKjQQps4zUqd0jRRQkOSJk1CkpKN7Iuz76ljx4mdOOGTZvT0YsfPb7xEocynX5bnzf/s53nf/DPPDo9Go4LDr9Go4AhqNCo4NjQaFRwhjUYFx2YshpeW19Y3ZCMZ+AJBV5/b2TVE5HcPz/j8smM7ox4vaSTLtib1MNqlA2NVI1ProZA8FIFjy5KywYn70/O/rG4NbITkoYSZ8K48+eNvj2QWPn6yiDcX+kZlx3aKe937s4pJlm3bdMwu5f4zLKJ2dGZzUx4X0OSgkUCy7NhLeALBw9WtH12qCwsO0iWTks28f+0VZ/ktR84RB0vrg6Gd77iVMejy6vmK7M7B5EqDBC/nlMVUIW5jvq5r23csDx2JN4qrwoaY5gcXa0UvaSTLjr0Ev5rfLm6eOeIbEAvE/Lk+vWDWxfqLohqDLvel57+YXTbp9fOhSZSGS7E2ZtrnP1TecLqtn+su6Bn5qvp6WJ2wBglsemA/c5dhE/Cne9oohEZwkC6ZlAxaphf2Hc+759j5x04WGboQz58tXVoLyKTt7GyMN7D+1oVqcXLSpZny+Q84yy2MaZ9dxBUWrLvSch86UfBmRJ2wJtXGLK4G5lZWI28cI9M2s0hpHF9eSeptTSFc86eVTbd+l224QjDyFot11BqDYpR08RGpqDTWXBufpcLx1bgVTfZofHutgxhb9oVN0LAgQWTK02zzXkkNNTJM4qtjMw9mFIjhIl7Lq1C9bEHMyxZBmjwhMVaC6x/+fvXhE4WGNNa6gNU+JqXSMAuZqVQaI6g95o/lu6gu8Y07MNfFlUcLEmSqIpHGjHp8T51yMURuj49V42zHwO3fOzNaumW3CtS8sOvcMeK+eDNCF+LGWtCoNJktPbI7ClbGwHIg+I6rRlxlcqVhxBl38ckiWE0bJ+dkd8LspjFFPW4WUDYZook0vuC6eK/KrtUYQxfeMHu/qW+/4wcn0vBAMHzDK5N2IoYxkCJpbiZjKAzGxWe19oonYd6I3j1IpC4v5ZQhyhdXmgnr2xrbGAiTJq2p64msYh5N87qHZYY6N5Mxv7QPMEFFjUEUnt7Z05AmelWhRPG0aF6vzUFXgo9Lhi6M9qm/+w5Xt6ILhUB2x8KWMWCW5t7jeexM8cbiGSwmwVCocnjSXGkLe0bm/Wuye2traMnL3I27jO2mMQOLyzydvl9Sy82gyU199szFuI3hRjJ5wq7WiATnldCFEujqGxXPFmLdkN02sGsMCGlYsKvcUzTZqD79k+tMe7/oTS7o8szPJSyrB0vrVaU53dZPNE/Ni9UhWpAgMuVptkEFNrYoIv4G/KSikYOU2zvTcqm7HKeX9/HtfKFv0fPCuVLx4ZFBFwkyVZHEdQEFYwBpKLl3p+V+VtnEBpsy89yvl+ZMhcEO5DMdmYiyHQG/gV/C6N92NIfvUt0w2f+XxX6mmfrxWXNppCmOs2RgyaHyBmfXkOqY7ALGYkRxjVsXUDMGWEMZI0RhGj2QUUAZUC0zjCxVnVfZjqB3wXPAWX60sXN/VjGv77pq9pQx/1HYYD2aWZTe3J2ILqBsjABvroxMsVrz3SwfFgUjkpjGALscpgLG8BiputFDgrdd1aIAlA9NhNlm3j+RtqeMKekfNf5Jsw7SSJan2YNfapwety4QpzEC7uXlwXF2M5grD9kAVziFu8WC+vHl+tbpBdmxHWGMtVg7wlAam5UjDZ1hxtDkoJGgOu4ppW5sxmLPaw7SSJan2cAXXH89v1KcS/2OWxdIyBgB3vQseNY2NmQ7Fourgc//+EvcMAtj2JmSRrJsaxKD59CW6QVvIM6/Fg2SYIzmf4U2RqOGNkajhjZGo4Y2RqOGNkajhjZGo4Y2RqOGNkajwtbWv+UsZ02x4CaBAAAAAElFTkSuQmCC'/><ul><li>Cambio sorgente risorsa</li><li>rende la sezione adattabile in altezza al contenuto</li><li>modifica il riempimento dello sfondo</li><li>cambia taglia</li><li>allinea il contenitore (disponibile se la taglia non è piena)</li><li>cambia tema</li></ul><img src='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACIAAAAgCAYAAAB3j6rJAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsIAAA7CARUoSoAAAAASdEVYdFNvZnR3YXJlAEdyZWVuc2hvdF5VCAUAAAIwSURBVFhHY/wPBAyDADBB6QEHow5BB1R3yIWX7xiOP30N5REPqJJY/wKN2HLnCYMwBztD+YGzYLF+F1OGV19/MHgqSzMwMzKCxfABqjjk4ccvDJ6r9jLc+/AZKgIBSgK8DNvDnBnk+XmgIrgBVaKGg4WZgYuVmYGfnZWh39mUYbanJYMQJzsDEzAgWJiIs4KgKlCwf/z5G8rDBM++fGOwWbKD4crrDwzOCpIMGYbqDLE6ygzO8hIMd95/ZnBYthOshhAg6JCXX78zmCzYwiA/bS1D3OYjDPsfvmD49vsPw4ZbjxjqDl1gYGdmZljgbc0gxs3BcPr5W4bzr94xXHvzgeHci3dgMZCcODcn1DTcgOioATlo1Y0HDPMu3Wa4ArQofcdxhp5TVxmmnrvBoC7ExyABtOzxp68MVou2MRjN38JwF5heQGIgOWISK0Vp5B8w2q69+cjAycrC4KMsw9BsZ8ggw8sFxiC2jYwYAwszldIIIbD59mOGiWeuM1Rb6zGUmmsDsQ5Dg40BmN0HTLgC7GxQlfgBxQ4BJeb5l+4w3H73CewgN0UpBmtgSIDYn37hTuTogGKHIANQAtacvQGMQWxSAFUdQgkYdQg6GDoOYQOWnLJ83DgLJS5gGWIkLgSsZ9iAtDDR2RUdEF37/vr7j+HG24/gElNfTJDhyONX4LpFioeLAd2NL4ClMKjuAWVjTmCFSAwYbTyjg1GHoINRh6CDUYegg1GHoINB4hAGBgDB977viofL1wAAAABJRU5ErkJggg=='/><p>Questa icona ti permette di modificare la mappa relativa</p><img src=''/><b>Suggerimento: </b>Ogni strumento ha una spiegazione, passa sopra con il mouse per scoprirne di più"
             },
             "geostoryEditAddbar": {
               "title": "Aggiungi nuova sezione",
@@ -2916,7 +2933,7 @@
             },
             "geostoryEditMediaEditor": {
               "title": "Editor delle risorse",
-              "text": "Qui puoi selezionare immagini o mappe da aggiungere alla storia"
+              "text": "Qui puoi selezionare immagini o mappe da aggiungere alla storia<p> Per maggiori informazioni consulta la relativa guida <a target='_blank' href='https://mapstore.readthedocs.io/en/latest/user-guide/media-editor-window/'>qui</a>"
             }
         },
         "userSession": {

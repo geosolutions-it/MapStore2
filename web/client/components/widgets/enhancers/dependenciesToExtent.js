@@ -53,6 +53,14 @@ module.exports = compose(
                         }
                         const featureTypeName = dependencies && dependencies.layer && dependencies.layer.name;
                         if (!isEmpty(filterObjCollection)) {
+                            // remove xsi:schemaLocation for performance improvements.
+                            filterObjCollection = {
+                                ...filterObjCollection,
+                                options: {
+                                    ...(filterObjCollection.options || {}),
+                                    noSchemaLocation: true
+                                }
+                            };
                             const wfsGetFeature = FilterUtils.toOGCFilter(featureTypeName, filterObjCollection, "1.1.0");
                             return wpsBounds(getWpsUrl(dependencies.layer), {wfsGetFeature })
                                 .switchMap(response => {
