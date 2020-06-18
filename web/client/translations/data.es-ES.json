@@ -671,6 +671,7 @@
             "cancelconfirm": "¿Está usted seguro?",
             "searchByBookmark": "Buscar por marcador",
             "bookmarksettings": "Configuración de marcadores",
+            "zoomToBookmark": "Zoom al marcador seleccionado",
             "bookmarkFilter": "Filtrar marcadores",
             "editBookmark": "Editar marcador",
             "deleteBookmark": "Eliminar marcador",

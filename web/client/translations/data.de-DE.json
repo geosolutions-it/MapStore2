@@ -671,6 +671,7 @@
             "cancelconfirm": "Bist du sicher?",
             "searchByBookmark": "Suche nach Lesezeichen",
             "bookmarksettings": "Lesezeicheneinstellungen",
+            "zoomToBookmark": "Zoomen Sie auf das ausgewählte Lesezeichen",
             "bookmarkFilter": "Lesezeichen filtern",
             "editBookmark": "Lesezeichen bearbeiten",
             "deleteBookmark": "Lesezeichen löschen",

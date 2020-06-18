@@ -281,70 +281,73 @@ export default ({
                 }
                 <SearchBarToolbar
                     splitTools={false}
-                    toolbarButtons={[
-                        activeTool === "addressSearch" ? searchConfig :
+                    toolbarButtons={[{
+                        ...(activeTool === "addressSearch" ? searchConfig :
                             showOptions && activeTool === "coordinatesSearch" ? coordinateFormatChange :
-                                showOptions && activeTool === "bookmarkSearch" ? searchByBookmarkConfig : null,
-                        {
-                            glyph: removeIcon,
-                            className: "square-button-md no-border",
-                            bsStyle: "default",
-                            pullRight: true,
-                            loading: !isUndefined(loading) && loading,
-                            visible: activeTool === "addressSearch" &&
+                                showOptions && activeTool === "bookmarkSearch" ? searchByBookmarkConfig : {})
+                    },
+                    {
+                        glyph: removeIcon,
+                        className: "square-button-md no-border",
+                        bsStyle: "default",
+                        pullRight: true,
+                        loading: !isUndefined(loading) && loading,
+                        visible: activeTool === "addressSearch" &&
                             (searchText !== "" || selectedItems && selectedItems.length > 0) ||
                             activeTool === "coordinatesSearch" && (isNumber(coordinate.lon) || isNumber(coordinate.lat)),
-                            onClick: () => {
-                                if (activeTool === "addressSearch") {
-                                    clearSearch();
-                                } else {
-                                    clearCoordinates();
-                                }
+                        onClick: () => {
+                            if (activeTool === "addressSearch") {
+                                clearSearch();
+                            } else {
+                                clearCoordinates();
                             }
-                        }, {
-                            glyph: searchIcon,
-                            className: "square-button-md no-border " +
+                        }
+                    }, {
+                        glyph: searchIcon,
+                        className: "square-button-md no-border " +
                             (isSearchClickable || activeTool !== "addressSearch" ? "magnifying-glass clickable" : "magnifying-glass"),
-                            bsStyle: "default",
-                            pullRight: true,
-                            visible: activeTool === "addressSearch" &&
+                        bsStyle: "default",
+                        pullRight: true,
+                        tooltipId: activeTool === "bookmarkSearch" ? "search.zoomToBookmark" : "",
+                        tooltipPosition: "bottom",
+                        visible: activeTool === "addressSearch" &&
                             (!(searchText !== "" || selectedItems && selectedItems.length > 0) || !splitTools) ||
                             activeTool === "coordinatesSearch" || activeTool === "bookmarkSearch",
-                            disabled: activeTool === "bookmarkSearch" && props && props.bookmarkConfig && !props.bookmarkConfig.selected,
-                            onClick: () => {
-                                if (activeTool === "coordinatesSearch" && areValidCoordinates()) {
-                                    zoomToPoint();
-                                }
-                                if (isSearchClickable) {
-                                    search();
-                                }
-                                if (activeTool === "bookmarkSearch") {
-                                    searchByBookmark();
-                                }
+                        disabled: activeTool === "bookmarkSearch" && props && props.bookmarkConfig && !props.bookmarkConfig.selected,
+                        onClick: () => {
+                            if (activeTool === "coordinatesSearch" && areValidCoordinates()) {
+                                zoomToPoint();
                             }
-                        }, {
-                            tooltip: getError(error),
+                            if (isSearchClickable) {
+                                search();
+                            }
+                            if (activeTool === "bookmarkSearch") {
+                                searchByBookmark();
+                            }
+                        }
+                    }, {
+                        tooltip: getError(error),
+                        tooltipPosition: "bottom",
+                        className: "square-button-md no-border",
+                        glyph: "warning-sign",
+                        bsStyle: "danger",
+                        glyphClassName: "searcherror",
+                        visible: !!error,
+                        onClick: clearSearch
+                    }, {
+                        buttonConfig: {
+                            title: <Glyphicon glyph="menu-hamburger"/>,
+                            tooltipId: "search.changeSearchInputField",
                             tooltipPosition: "bottom",
                             className: "square-button-md no-border",
-                            glyph: "warning-sign",
-                            bsStyle: "danger",
-                            glyphClassName: "searcherror",
-                            visible: !!error,
-                            onClick: clearSearch
-                        }, {
-                            buttonConfig: {
-                                title: <Glyphicon glyph="menu-hamburger"/>,
-                                tooltipId: "search.changeSearchInputField",
-                                tooltipPosition: "bottom",
-                                className: "square-button-md no-border",
-                                pullRight: true
-                            },
-                            menuOptions: [
-                                ...searchMenuOptions
-                            ],
-                            visible: showOptions,
-                            Element: DropdownToolbarOptions
-                        }]}
+                            pullRight: true
+                        },
+                        menuOptions: [
+                            ...searchMenuOptions
+                        ],
+                        visible: showOptions,
+                        Element: DropdownToolbarOptions
+                    }]}
                 />
             </div>
         </FormGroup>

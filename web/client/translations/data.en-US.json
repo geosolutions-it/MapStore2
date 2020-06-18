@@ -671,6 +671,7 @@
             "cancelconfirm": "Are you sure?",
             "searchByBookmark": "Search by bookmark",
             "bookmarksettings": "Bookmark settings",
+            "zoomToBookmark": "Zoom to selected bookmark",
             "bookmarkFilter": "Filter bookmarks",
             "editBookmark": "Edit bookmark",
             "deleteBookmark": "Delete bookmark",

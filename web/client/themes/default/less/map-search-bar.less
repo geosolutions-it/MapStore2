@@ -16,6 +16,9 @@ div.MapSearchBar .form-control:focus {
 }
 
 #mapstore-navbar .MapSearchBar {
+    -webkit-box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+    -moz-box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+    box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
     .square-button-md {
         .ms-loader {
             > div{
@@ -167,12 +170,13 @@ div.MapSearchBar .form-control:focus {
         display: flex;
         flex: 1 1 0%;
         justify-content: space-between;
-        padding: 0 8px;
+        padding: 0 6px;
 
         .entryRow {
             margin-left: unset;
             margin-right: unset;
             padding: 5px;
+            flex: 1 1 0%;
             .coordinateLabel {
                 margin-top: 9px;
             }
@@ -182,8 +186,12 @@ div.MapSearchBar .form-control:focus {
             input {
                 font-family: inherit;
             }
-            .degrees, .minutes, .seconds {
-                min-width: 90px;
+            .degrees, .minutes {
+                display: flex;
+                flex: 1 1 0%;
+            }
+            .seconds {
+                min-width: 80px;
                 display: flex;
                 flex: 1 1 0%;
             }

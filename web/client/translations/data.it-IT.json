@@ -671,6 +671,7 @@
             "savebtn": "Salva/Aggiorna",
             "searchByBookmark": "Cerca per segnalibro",
             "bookmarksettings": "Impostazioni dei segnalibri",
+            "zoomToBookmark": "Zoom sul segnalibro selezionato",
             "bookmarkFilter": "Filtra segnalibri",
             "editBookmark": "Modifica segnalibro",
             "deleteBookmark": "Elimina segnalibro",
