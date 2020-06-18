@@ -277,7 +277,7 @@
             },
             "FeedbackMask"
         ],
-        "desktop": [ "Details", "Snapshot",
+        "desktop": [ "Details",
           {
             "name": "Map",
             "cfg": {
