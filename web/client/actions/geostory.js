@@ -38,6 +38,7 @@ export const UPDATE = "GEOSTORY:UPDATE";
 export const UPDATE_SETTING = "GEOSTORY:UPDATE_SETTING";
 export const UPDATE_CURRENT_PAGE = "GEOSTORY:UPDATE_CURRENT_PAGE";
 export const REMOVE_RESOURCE = "GEOSTORY:REMOVE_RESOURCE";
+export const SET_PENDING_CHANGES = "GEOSTORY:SET_PENDING_CHANGES";
 
 /**
  * Adds an entry to current story. The entry can be a section, a content or anything to append in an array (even sub-content)
@@ -227,3 +228,8 @@ export const editWebPage = ({ path }, owner = 'GEOSTORY') => ({ type: EDIT_WEBPA
  * Removes a resource in the current story
  */
 export const removeResource = ( id, mediaType) => ({type: REMOVE_RESOURCE, id, mediaType});
+
+/**
+ * Sets pending changes
+ */
+export const setPendingChanges = value => ({type: SET_PENDING_CHANGES, value});
