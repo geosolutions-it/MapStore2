@@ -11,6 +11,7 @@ const React = require('react');
 
 const Message = require('../../I18N/Message');
 const LocaleUtils = require('../../../utils/LocaleUtils');
+const {isAnnotation} = require('../../../utils/AnnotationsUtils');
 let { toVectorStyle } = require('../../../utils/StyleUtils');
 const { Grid, Row, Col, Button, Alert, ButtonToolbar} = require('react-bootstrap');
 
@@ -27,6 +28,7 @@ class StylePanel extends React.Component {
         onSuccess: PropTypes.func,
         setLayers: PropTypes.func,
         addLayer: PropTypes.func,
+        loadAnnotations: PropTypes.func,
         onSelectLayer: PropTypes.func,
         onLayerAdded: PropTypes.func,
         onLayerSkipped: PropTypes.func,
@@ -53,6 +55,7 @@ class StylePanel extends React.Component {
         buttonSize: "small",
         setLayers: () => {},
         addLayer: () => {},
+        loadAnnotations: () => {},
         updateBBox: () => {},
         onZoomSelected: () => {},
         stylers: {},
@@ -62,6 +65,7 @@ class StylePanel extends React.Component {
     state = {
         useDefaultStyle: false,
         zoomOnShapefiles: true,
+        overrideAnnotation: false,
         initialLayers: []
     };
 
@@ -147,19 +151,26 @@ class StylePanel extends React.Component {
                     {this.state.useDefaultStyle ? null : this.props.stylers[this.getGeomType(this.props.selected)]}
                 </Row>
                 <Row key="options">
-                    <Col xs={2}>
-                        <input aria-label="..." type="checkbox" defaultChecked={this.state.useDefaultStyle} onChange={(e) => { this.setState({ useDefaultStyle: e.target.checked }); }} />
-                    </Col>
-                    <Col style={{ paddingLeft: 0, paddingTop: 1 }} xs={10}>
-                        <label><Message msgId="shapefile.defaultStyle" /></label>
-                    </Col>
+                    {isAnnotation(this.props.selected) ?
+                        this.annotationOptions()
+                        :
+                        <>
+                            <Col xs={2}>
+                                <input aria-label="..." type="checkbox" defaultChecked={this.state.useDefaultStyle} onChange={(e) => { this.setState({ useDefaultStyle: e.target.checked }); }} />
+                            </Col>
+                            <Col style={{ paddingLeft: 0, paddingTop: 1 }} xs={10}>
+                                <label><Message msgId="shapefile.defaultStyle" /></label>
+                            </Col>
 
-                    <Col xs={2}>
-                        <input aria-label="..." type="checkbox" defaultChecked={this.state.zoomOnShapefiles} onChange={(e) => { this.setState({ zoomOnShapefiles: e.target.checked }); }} />
-                    </Col>
-                    <Col style={{ paddingLeft: 0, paddingTop: 1 }} xs={10}>
-                        <label><Message msgId="shapefile.zoom" /></label>
-                    </Col>
+                            <Col xs={2}>
+                                <input aria-label="..." type="checkbox" defaultChecked={this.state.zoomOnShapefiles} onChange={(e) => { this.setState({ zoomOnShapefiles: e.target.checked }); }} />
+                            </Col>
+                            <Col style={{ paddingLeft: 0, paddingTop: 1 }} xs={10}>
+                                <label><Message msgId="shapefile.zoom" /></label>
+                            </Col>
+                        </>
+                    }
+
                 </Row>
                 <Row>
                     <ButtonToolbar style={{display: 'flex', justifyContent: 'flex-end'}}>
@@ -174,8 +185,7 @@ class StylePanel extends React.Component {
 
     findLayerSerialNumber = ({name}) => {
         const {initialLayers} = this.state;
-        const serialNumber = initialLayers.findIndex(initLayer => initLayer.name === name) + 1;
-        return serialNumber;
+        return initialLayers.findIndex(initLayer => initLayer.name === name) + 1;
     }
 
     addToMap = () => {
@@ -183,30 +193,51 @@ class StylePanel extends React.Component {
         if (!this.state.useDefaultStyle) {
             styledLayer = toVectorStyle(styledLayer, this.props.shapeStyle);
         }
-        Promise.resolve(this.props.addLayer( styledLayer )).then(() => {
-            let bbox = [];
-            if (this.props.layers[0].bbox && this.props.bbox) {
-                bbox = [
-                    Math.min(this.props.bbox[0], this.props.layers[0].bbox.bounds.minx),
-                    Math.min(this.props.bbox[1], this.props.layers[0].bbox.bounds.miny),
-                    Math.max(this.props.bbox[2], this.props.layers[0].bbox.bounds.maxx),
-                    Math.max(this.props.bbox[3], this.props.layers[0].bbox.bounds.maxy)
-                ];
+        const isAnnotationLayer = isAnnotation(styledLayer);
+        Promise.resolve(isAnnotationLayer ? this.props.loadAnnotations(styledLayer.features, this.state.overrideAnnotation) :
+            this.props.addLayer( styledLayer )).then(() => {
+            if (!isAnnotationLayer) {
+                let bbox = [];
+                if (this.props.layers[0].bbox && this.props.bbox) {
+                    bbox = [
+                        Math.min(this.props.bbox[0], this.props.layers[0].bbox.bounds.minx),
+                        Math.min(this.props.bbox[1], this.props.layers[0].bbox.bounds.miny),
+                        Math.max(this.props.bbox[2], this.props.layers[0].bbox.bounds.maxx),
+                        Math.max(this.props.bbox[3], this.props.layers[0].bbox.bounds.maxy)
+                    ];
+                }
+                if (this.state.zoomOnShapefiles) {
+                    this.props.updateBBox(bbox && bbox.length ? bbox : this.props.bbox);
+                    this.props.onZoomSelected(bbox && bbox.length ? bbox : this.props.bbox, "EPSG:4326");
+                }
             }
-            if (this.state.zoomOnShapefiles) {
-                this.props.updateBBox(bbox && bbox.length ? bbox : this.props.bbox);
-                this.props.onZoomSelected(bbox && bbox.length ? bbox : this.props.bbox, "EPSG:4326");
-            }
-
             this.props.onSuccess(this.props.layers.length > 1
-                ? this.props.layers[0].name + LocaleUtils.getMessageById(this.context.messages, "shapefile.success")
+                ? isAnnotationLayer ? "Annotation" : this.props.layers[0].name + LocaleUtils.getMessageById(this.context.messages, "shapefile.success")
                 : undefined);
 
             this.props.onLayerAdded(this.props.selected);
         }).catch(e => {
-            this.props.onError({ type: "error", name: this.props.layers[0].name, error: e, message: 'shapefile.error.genericLoadError'});
+            this.props.onError({ type: "error", name: isAnnotationLayer ? "Annotation" : this.props.layers[0].name, error: e, message: 'shapefile.error.genericLoadError'});
         });
     };
+
+    annotationOptions = () => (
+        <>
+            <Col xs={2}>
+                <input type="radio" checked={!this.state.overrideAnnotation} onChange={() => { this.setState({ overrideAnnotation: false }); }} />
+            </Col>
+            <Col style={{ paddingLeft: 0, paddingTop: 1 }} xs={10}>
+                <label><Message msgId="shapefile.merge" /></label>
+            </Col>
+
+            <Col xs={2}>
+                <input type="radio" checked={this.state.overrideAnnotation} onChange={() => { this.setState({ overrideAnnotation: true }); }} />
+            </Col>
+            <Col style={{ paddingLeft: 0, paddingTop: 1 }} xs={10}>
+                <label><Message msgId="shapefile.replace" /></label>
+            </Col>
+        </>
+    );
 }
 
 

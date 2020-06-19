@@ -1187,6 +1187,8 @@
             },
             "add": "Hinzufügen",
             "cancel": "Abbrechen",
+            "merge": "Mit der vorhandenen Annotationsebene zusammenführen",
+            "replace": "Ersetzen Sie die vorhandene Anmerkungsebene",
             "success": " erfolgreich importiert",
             "next": "Nächster",
             "skip": "springen",
@@ -1198,7 +1200,7 @@
                 "dropZone": {
                     "heading": "<p> <h4> Legen Sie hier Ihre Kartenkontexte oder Vektordateien ab </h4> <small> oder </small> </p>",
                     "selectFiles": "Dateien auswählen...",
-                    "infoSupported": "<p> <small> Unterstützte Kartenkontextdateien: MapStore Legacy-Format, WMC. Unterstützte Vektor-Layer-Dateien: Shapefiles müssen in Zip-Archiven, KML / KMZ, GPX oder GeoJSON </small> </p> vorliegen",
+                    "infoSupported": "<p> <small> Unterstützte Kartenkontextdateien: MapStore Legacy-Format, WMC. Unterstützte Vektor-Layer-Dateien: Shapefiles müssen in Zip-Archiven, KML / KMZ, GPX, GeoJSON oder Annotations </small> </p> vorliegen",
                     "note": "<p> <small> <i> <strong> Hinweis </strong>: Die aktuelle Map wird bei der Verwendung von Kartenkontextdateien überschrieben </i> </small> </p>"
                 },
                 "errors": {
