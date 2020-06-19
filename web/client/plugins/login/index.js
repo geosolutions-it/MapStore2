@@ -9,7 +9,7 @@ const React = require('react');
 const {connect} = require('../../utils/PluginsUtils');
 const {login, loginFail, logoutWithReload, changePassword, resetError, logout} = require('../../actions/security');
 const {setControlProperty} = require('../../actions/controls');
-const {checkMapChanges} = require('../../actions/map');
+const { checkPendingChanges } = require('../../actions/pendingChanges');
 const {Glyphicon} = require('react-bootstrap');
 const {unsavedMapSelector, unsavedMapSourceSelector} = require('../../selectors/controls');
 const ConfigUtils = require('../../utils/ConfigUtils');
@@ -24,7 +24,7 @@ const closeLogin = () => {
 
 const checkUnsavedMapChanges = (action) => {
     return dispatch => {
-        dispatch(checkMapChanges(action, 'logout'));
+        dispatch(checkPendingChanges(action, 'logout'));
     };
 };
 
