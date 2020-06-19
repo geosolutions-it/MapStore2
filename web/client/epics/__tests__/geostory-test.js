@@ -10,7 +10,8 @@ import expect from 'expect';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import MockAdapter from 'axios-mock-adapter';
-import { CALL_HISTORY_METHOD } from 'connected-react-router';
+import { LOCATION_CHANGE, CALL_HISTORY_METHOD } from 'connected-react-router';
+
 
 import TEST_STORY from "../../test-resources/geostory/sampleStory_1.json";
 import axios from '../../libs/ajax';
@@ -30,7 +31,8 @@ import {
     inlineEditorEditMap,
     closeShareOnGeostoryChangeMode,
     openWebPageComponentCreator,
-    editWebPageComponent
+    editWebPageComponent,
+    handlePendingGeoStoryChanges
 } from '../geostory';
 import {
     ADD,
@@ -52,7 +54,9 @@ import {
     CHANGE_MODE,
     TOGGLE_CONTENT_FOCUS,
     SET_WEBPAGE_URL,
-    editWebPage
+    editWebPage,
+    setResource,
+    SET_PENDING_CHANGES
 } from '../../actions/geostory';
 import { SET_CONTROL_PROPERTY } from '../../actions/controls';
 import {
@@ -1336,5 +1340,33 @@ describe('Geostory Epics', () => {
         };
 
         testEpic(editWebPageComponent, 1, editWebPage({ path }), callback);
+    });
+    describe('handlePendingGeoStoryChanges', () => {
+        it('pending changes flag is triggered when some modification is applied a geostory', done => {
+            testEpic(handlePendingGeoStoryChanges, 1, [loadGeostory(1, {}), setResource({ canEdit: true }), add("something", 0, {})], ([setDirtyAction]) => {
+                expect(setDirtyAction.type).toBe(SET_PENDING_CHANGES);
+                expect(setDirtyAction.value).toBe(true);
+                done();
+            });
+        });
+        it('pending changes flag is reset when logout', done => {
+            testEpic(handlePendingGeoStoryChanges, 2, [loadGeostory(1, {}), setResource({ canEdit: true }), add("something", 0, {}), logout()], ([setDirtyAction, resetDirtyAction]) => {
+                expect(setDirtyAction.type).toBe(SET_PENDING_CHANGES);
+                expect(setDirtyAction.value).toBe(true);
+                expect(resetDirtyAction.type).toBe(SET_PENDING_CHANGES);
+                expect(resetDirtyAction.value).toBe(false);
+                done();
+            });
+        });
+        it('pending changes flag is reset when location changes', done => {
+            testEpic(handlePendingGeoStoryChanges, 2, [loadGeostory(1, {}), setResource({ canEdit: true }), add("something", 0, {}), { type: LOCATION_CHANGE } ], ([setDirtyAction, resetDirtyAction]) => {
+                expect(setDirtyAction.type).toBe(SET_PENDING_CHANGES);
+                expect(setDirtyAction.value).toBe(true);
+                expect(resetDirtyAction.type).toBe(SET_PENDING_CHANGES);
+                expect(resetDirtyAction.value).toBe(false);
+                done();
+            });
+        });
+
     });
 });
