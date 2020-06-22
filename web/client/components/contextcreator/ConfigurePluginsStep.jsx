@@ -241,6 +241,7 @@ const renderUploadModal = ({
 };
 
 const configurePluginsStep = ({
+    user,
     loading,
     loadFlags,
     allPlugins = [],
@@ -401,6 +402,7 @@ const configurePluginsStep = ({
                 size="lg"
                 onClose={() => onShowDialog('mapTemplatesConfig', false)}>
                 <ConfigureMapTemplates
+                    user={user}
                     loading={loading}
                     loadFlags={loadFlags}
                     mapTemplates={mapTemplates}
