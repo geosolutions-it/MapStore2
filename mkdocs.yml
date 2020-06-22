@@ -89,7 +89,7 @@ pages:
       - Web Page Toolbar: 'user-guide/content-web-toolbar.md'
       - Media Editor: 'user-guide/media-editor-window.md'
       - Configue the map: 'user-guide/configure-map.md'
-      
+
   - Developer Guide:
     - Requirements: 'developer-guide/requirements.md'
     - Quick Setup and Run: 'developer-guide/index.md'
@@ -116,7 +116,6 @@ pages:
       - Writing Plugins: 'developer-guide/plugins-howto.md'
       - Writing Epics: 'developer-guide/writing-epics.md'
       - Writing Actions and Reducers: 'developer-guide/writing-actions-reducers.md'
-      - Implement User Sessions: 'developer-guide/user-sessions.md'
     - Configuration:
       - Configuration Files: 'developer-guide/configuration-files.md'
       - Application Configuration: 'developer-guide/local-config.md'
