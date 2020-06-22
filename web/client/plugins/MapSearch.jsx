@@ -22,11 +22,13 @@ const ConfigUtils = require('../utils/ConfigUtils');
 <br>if true and with text => search is substituted with remove
 <br>if false and without text => you see only search
 <br>if false and with text => you see both (search and remove)
+* @param {boolean} [showContextSearchOption=true] used to show context search option
 * @example
 * {
 *   "name": "MapSearch",
 *   "cfg": {
-*     "splitTools": true
+*     "splitTools": true,
+ *     "showContextSearchOption": false
 *   }
 * }
 */
