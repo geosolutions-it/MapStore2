@@ -34,25 +34,18 @@
 }
 
 #share-container {
-    .coordinateRow.aeronautical.coord-editor.row {
-        border: none !important;
-        margin: unset !important;
-        padding: unset !important;
-    }
-    .coordinateRow.decimal.coord-editor.row {
-        border: none !important;
-        margin: unset !important;
-        padding: unset !important;
-    }
     .coordinateRow {
         .coordinate {
             .input-group {
-                display: flex;
                 .input-group-addon {
                     min-width: 45px;
                 }
                 .form-group {
-                    flex: 1;
+                    width: 100%;
+                    position: relative;
+                }
+                .direction-select {
+                    width: 45px
                 }
             }
         }
