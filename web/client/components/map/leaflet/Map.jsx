@@ -110,7 +110,7 @@ class LeafletMap extends React.Component {
             maxZoom: limits && limits.maxZoom || 23
         }, this.props.mapOptions, this.crs ? {crs: this.crs} : {});
 
-        const map = L.map(this.props.document?.getElementById(this.props.id) || this.props.id, assign({ zoomControl: false }, mapOptions) ).setView([this.props.center.y, this.props.center.x],
+        const map = L.map(this.getDocument().getElementById(this.props.id), assign({ zoomControl: false }, mapOptions) ).setView([this.props.center.y, this.props.center.x],
             Math.round(this.props.zoom));
 
         this.map = map;

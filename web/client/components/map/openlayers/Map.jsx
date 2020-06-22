@@ -138,7 +138,7 @@ class OpenlayersMap extends React.Component {
             attributionOptions: assign({
                 collapsible: false
             }, this.props.mapOptions.attribution && this.props.mapOptions.attribution.container ? {
-                target: (this.props.document || document).querySelector(this.props.mapOptions.attribution.container)
+                target: this.getDocument().querySelector(this.props.mapOptions.attribution.container)
             } : {})
         }, this.props.mapOptions.controls));
 
@@ -147,7 +147,7 @@ class OpenlayersMap extends React.Component {
             controls: controls,
             interactions: interactions,
             maxTilesLoading: Infinity,
-            target: this.props.document?.getElementById(this.props.id) || `${this.props.id}`,
+            target: this.getDocument().getElementById(this.props.id) || `${this.props.id}`,
             view: this.createView(center, Math.round(this.props.zoom), this.props.projection, this.props.mapOptions && this.props.mapOptions.view, this.props.limits)
         });
 
@@ -317,7 +317,7 @@ class OpenlayersMap extends React.Component {
 
     componentWillUnmount() {
         const attributionContainer = this.props.mapOptions.attribution && this.props.mapOptions.attribution.container
-            && (this.props.document || document).querySelector(this.props.mapOptions.attribution.container);
+            && this.getDocument().querySelector(this.props.mapOptions.attribution.container);
         if (attributionContainer && attributionContainer.querySelector('.ol-attribution')) {
             try {
                 attributionContainer.removeChild(attributionContainer.querySelector('.ol-attribution'));
@@ -330,6 +330,9 @@ class OpenlayersMap extends React.Component {
             this.map.setTarget(null);
         }
     }
+    getDocument = () => {
+        return this.props.document || document;
+    };
     /**
      * Calculates resolutions accordingly with default algorithm in GeoWebCache.
      * See this: https://github.com/GeoWebCache/geowebcache/blob/5e913193ff50a61ef9dd63a87887189352fa6b21/geowebcache/core/src/main/java/org/geowebcache/grid/GridSetFactory.java#L196
