@@ -24,6 +24,8 @@ import {init, setCreationStep, changeAttribute, saveNewContext, saveTemplate, ma
     addPluginToUpload, removePluginToUpload, showBackToPageConfirmation, showTutorial} from '../actions/contextcreator';
 import contextcreator from '../reducers/contextcreator';
 import * as epics from '../epics/contextcreator';
+import { userSelector } from '../selectors/security';
+
 import ContextCreator from '../components/contextcreator/ContextCreator';
 
 /**
@@ -35,6 +37,7 @@ import ContextCreator from '../components/contextcreator/ContextCreator';
  */
 export default createPlugin('ContextCreator', {
     component: connect(createStructuredSelector({
+        user: userSelector,
         curStepId: creationStepSelector,
         tutorialStatus: state => tutorialSelector(state)?.status,
         tutorialStep: tutorialStepSelector,
