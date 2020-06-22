@@ -309,7 +309,7 @@ const groupSaveFormatted = (node) => {
 };
 
 
-function saveMapConfiguration(currentMap, currentLayers, currentGroups, currentBackgrounds, textSearchConfig, additionalOptions) {
+function saveMapConfiguration(currentMap, currentLayers, currentGroups, currentBackgrounds, textSearchConfig, bookmarkSearchConfig, additionalOptions) {
 
     const map = {
         center: currentMap.center,
@@ -371,7 +371,7 @@ function saveMapConfiguration(currentMap, currentLayers, currentGroups, currentB
     return {
         version: 2,
         // layers are defined inside the map object
-        map: assign({}, map, {layers: formattedLayers, groups, backgrounds, text_search_config: textSearchConfig},
+        map: assign({}, map, {layers: formattedLayers, groups, backgrounds, text_search_config: textSearchConfig, bookmark_search_config: bookmarkSearchConfig},
             !isEmpty(sources) && {sources} || {}),
         ...additionalOptions
     };
@@ -585,6 +585,7 @@ const compareMapChanges = (map1 = {}, map2 = {}) => {
         'map.layers',
         'map.backgrounds',
         'map.text_search_config',
+        'map.bookmark_search_config',
         'map.text_serch_config',
         'map.zoom',
         'widgetsConfig'

@@ -5,6 +5,7 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
+
 const MapUtils = require('../utils/MapUtils');
 const {mapSelector} = require('./map');
 const {createStructuredSelector} = require('reselect');
@@ -15,7 +16,7 @@ const { currentTimeSelector, offsetTimeSelector } = require('./dimension');
 const { selectedLayerSelector } = require('./timeline');
 const { layersSelector, groupsSelector } = require('../selectors/layers');
 const { backgroundListSelector } = require('../selectors/backgroundselector');
-const { textSearchConfigSelector } = require('./searchconfig');
+const { textSearchConfigSelector, bookmarkSearchConfigSelector } = require('./searchconfig');
 
 const customSaveHandlers = {};
 
@@ -68,8 +69,9 @@ const mapSaveSelector = state => {
     const groups = groupsSelector(state);
     const backgrounds = backgroundListSelector(state);
     const textSearchConfig = textSearchConfigSelector(state);
+    const bookmarkSearchConfig = bookmarkSearchConfigSelector(state);
     const additionalOptions = mapOptionsToSaveSelector(state);
-    return MapUtils.saveMapConfiguration(map, layers, groups, backgrounds, textSearchConfig, additionalOptions);
+    return MapUtils.saveMapConfiguration(map, layers, groups, backgrounds, textSearchConfig, bookmarkSearchConfig, additionalOptions);
 };
 /**
  * Selector to identify pending changes.

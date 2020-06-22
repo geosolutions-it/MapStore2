@@ -34,7 +34,6 @@ import {isLoggedIn} from '../selectors/security';
 import {show, error} from '../actions/notifications';
 import {changePreset} from '../actions/tutorial';
 import {initMap} from '../actions/map';
-
 import {mapSaveSelector} from '../selectors/mapsave';
 import {loadMapConfig} from '../actions/config';
 import {createResource, createCategory, updateResource, deleteResource, getResource} from '../api/persistence';

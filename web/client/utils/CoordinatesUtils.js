@@ -683,6 +683,26 @@ const CoordinatesUtils = {
     },
     getProjUrl,
     /**
+     * Get wider and valid extent in viewport
+     * @private
+     * @param bbox {object} viewport bbox
+     * @param bbox.bounds {object} bounds of bbox {minx, miny, maxx, maxy}
+     * @param bbox.crs {string} bbox crs
+     * @param dest {string} SRS of the returned extent
+     * @return {array} [ minx, miny, maxx, maxy ]
+     */
+    getExtentFromViewport: ({ bounds, crs } = {}, dest = 'EPSG:4326') => {
+        if (!bounds || !crs) return null;
+        const { extent } = CoordinatesUtils.getViewportGeometry(bounds, crs);
+        if (extent.length === 4) {
+            return CoordinatesUtils.reprojectBbox(extent, crs, dest);
+        }
+        const [ rightExtentWidth, leftExtentWidth ] = extent.map((bbox) => bbox[2] - bbox[0]);
+        return rightExtentWidth > leftExtentWidth
+            ? CoordinatesUtils.reprojectBbox(extent[0], crs, dest)
+            : CoordinatesUtils.reprojectBbox(extent[1], crs, dest);
+    },
+    /**
      * @param crs in the form EPSG:4326
      * @return {Object} a promise for fetching the proj4 definition
     */
