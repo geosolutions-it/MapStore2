@@ -127,7 +127,7 @@ module.exports = props => {
                     </Row>,
                     <Row className="coordinates-edit-row">
                         <span className="identify-icon glyphicon glyphicon-point"/>
-                        <div style={{flex: "1 1 0%", fontFamily: "monospace", padding: "0px 4px"}}>
+                        <div className={"coordinate-editor"}>
                             <Coordinate
                                 key="coordinate-editor"
                                 formatCoord={formatCoord}

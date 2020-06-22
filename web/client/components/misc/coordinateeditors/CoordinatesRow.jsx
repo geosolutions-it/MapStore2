@@ -136,15 +136,11 @@ class CoordinatesRow extends React.Component {
                     this.props.onMouseLeave();
                 }
             }}>
-                {/* <Col xs md={1}>*/}
                 <Col>
                     {this.props.showDraggable ? this.props.isDraggable ? this.props.connectDragSource(dragButton) : dragButton : null}
                 </Col>
-                {/* <div style={{flexWrap: this.props.format === "decimal" ? "nowrap" : "wrap"}}>*/}
-                <div className="coordinate lat" style={{width: "100%", display: "flex", flex: "1 1 0%", justifyContent: "space-between", flexWrap: "wrap"}}>
-                    {/* <Col xs md={4}>*/}
-                    {/* <Col>*/}
-                    <InputGroup style={{flex: "1 1 0%", padding: "4px 0px", marginRight: 8}} >
+                <div className="coordinate lat">
+                    <InputGroup>
                         {this.props.showLabels && <InputGroup.Addon><Message msgId="latitude"/></InputGroup.Addon>}
                         <CoordinateEntry
                             format={this.props.format}
@@ -168,12 +164,7 @@ class CoordinatesRow extends React.Component {
                             onKeyDown={this.onSubmit}
                         />
                     </InputGroup>
-                    {/* </Col>*/}
-                    {/* </div>*/}
-                    {/* <div className="coordinate lon" style={{width: "100%"}}>*/}
-                    {/* <Col xs md={4}>*/}
-                    {/* <Col>*/}
-                    <InputGroup style={{flex: "1 1 0%", padding: "4px 0px", marginRight: 8}}>
+                    <InputGroup>
                         {this.props.showLabels && <InputGroup.Addon><Message msgId="longitude"/></InputGroup.Addon>}
                         <CoordinateEntry
                             format={this.props.format}
@@ -197,10 +188,7 @@ class CoordinatesRow extends React.Component {
                             onKeyDown={this.onSubmit}
                         />
                     </InputGroup>
-                    {/* </Col>*/}
                 </div>
-                {/* </div>*/}
-                {/* <Col key="tools" xs md={3}>*/}
                 <div key="tools">
                     <Toolbar
                         btnGroupProps={{ className: 'tools' }}
