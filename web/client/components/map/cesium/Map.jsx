@@ -21,6 +21,7 @@ const {throttle} = require('lodash');
 class CesiumMap extends React.Component {
     static propTypes = {
         id: PropTypes.string,
+        document: PropTypes.object,
         center: ConfigUtils.PropTypes.center,
         zoom: PropTypes.number.isRequired,
         mapStateSource: ConfigUtils.PropTypes.mapStateSource,
@@ -69,11 +70,11 @@ class CesiumMap extends React.Component {
          won't allow you to disable pinch to zoom with the user-scalable attribute.
          see https://stackoverflow.com/questions/4389932/how-do-you-disable-viewport-zooming-on-mobile-safari/39711930#39711930
          */
-        document.addEventListener('gesturestart', this.gestureStartListener );
+        (this.props.document || document).addEventListener('gesturestart', this.gestureStartListener );
     }
 
     componentDidMount() {
-        var map = new Cesium.Viewer(this.props.id, assign({
+        var map = new Cesium.Viewer(this.props.document?.getElementById(this.props.id) || this.props.id, assign({
             baseLayerPicker: false,
             animation: false,
             fullscreenButton: false,
