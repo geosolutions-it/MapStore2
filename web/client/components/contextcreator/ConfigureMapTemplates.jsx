@@ -92,6 +92,7 @@ const onTemplateDrop = (setParsedTemplate, setFileDropStatus, onError, files) =>
 };
 
 export default ({
+    user,
     loading,
     loadFlags,
     mapTemplates = [],
@@ -173,6 +174,7 @@ export default ({
             onSelect={items => setSelectedTemplates(pickIds(items))}
             onTransfer={(items, direction) => changeTemplatesKey(pickIds(items), 'enabled', direction === 'right')}/>
         <SaveDialog
+            user={user}
             loading={loading && (loadFlags.templateSaving || loadFlags.templateLoading)}
             resource={editedTemplate}
             clickOutEnabled={false}
