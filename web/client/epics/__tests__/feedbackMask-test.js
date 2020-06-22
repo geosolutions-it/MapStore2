@@ -188,7 +188,7 @@ describe('feedbackMask Epics', () => {
         },
         {});
     });
-    it.only('test feedbackMaskPromptLogin on geostory 403 with new story', done => {
+    it('test feedbackMaskPromptLogin on geostory 403 with new story', done => {
         const ACTIONS_EMITTED = 1;
         const error = { status: 403, statusText: 'Forbidden' };
         testEpic(feedbackMaskPromptLogin, ACTIONS_EMITTED, loadGeostoryError(error), actions => {
