@@ -275,3 +275,5 @@ export const isMediaResourceUsed = (state, resId) => !!find(sectionsSelector(sta
  * @param {object} state application state
  */
 export const isSharedStory = (state = {}) => pathnameSelector(state).includes("geostory/shared");
+
+export const hasPendingChanges = (state = {}) => state?.geostory?.pendingChanges;
