@@ -7,11 +7,8 @@
  */
 
 const expect = require('expect');
-const { set } = require('../../utils/ImmutableUtils');
-const { LOCATION_CHANGE } = require('connected-react-router');
 
-
-const { resetLimitsOnInit, zoomToExtentEpic, checkMapPermissions, compareMapChanges, redirectUnauthorizedUserOnNewMap} = require('../map');
+const { resetLimitsOnInit, zoomToExtentEpic, checkMapPermissions, redirectUnauthorizedUserOnNewMap} = require('../map');
 const { CHANGE_MAP_LIMITS, changeMapCrs } = require('../../actions/map');
 
 const { LOAD_MAP_INFO, configureMap, configureError} = require('../../actions/config');
@@ -21,13 +18,11 @@ const MapUtils = require('../../utils/MapUtils');
 
 const {
     CHANGE_MAP_VIEW,
-    zoomToExtent,
-    checkMapChanges
+    zoomToExtent
 } = require('../../actions/map');
 
 
-const { LOGIN_SUCCESS, logout } = require('../../actions/security');
-const {SET_CONTROL_PROPERTY} = require('../../actions/controls');
+const { LOGIN_SUCCESS } = require('../../actions/security');
 
 const LAYOUT_STATE = {
     layout: {
@@ -248,167 +243,6 @@ describe('map epics', () => {
             expect(minZoom).toBe(2);
             done();
         }, state);
-    });
-    describe('compareMapChanges', () => {
-        const SAME_MAP_STATE = {
-            map: {
-                present: {
-                    mapId: '1',
-                    info: {
-                        canEdit: true
-                    }
-                }
-            },
-            feedbackMask: {
-                currentPage: 'viewer'
-            },
-            layers: [
-                {
-                    allowedSRS: {},
-                    bbox: {},
-                    dimensions: [],
-                    id: "layer001",
-                    loading: true,
-                    name: "layer001",
-                    params: {},
-                    search: {},
-                    singleTile: false,
-                    thumbURL: "THUMB_URL",
-                    title: "layer001",
-                    type: "wms",
-                    url: "",
-                    visibility: true,
-                    catalogURL: "url"
-                }
-            ],
-            backgroundSelector: {
-                backgrounds: [
-                    { id: 'layer005', thumbnail: 'data' },
-                    { id: 'layer006', thumbnail: null }
-                ]
-            },
-            mapConfigRawData: {
-                "version": 2,
-                "map": {
-                    "mapOptions": {},
-                    "layers": [
-                        {
-                            "id": "layer001",
-                            "thumbURL": "THUMB_URL",
-                            "search": {},
-                            "name": "layer001",
-                            "title": "layer001",
-                            "type": "wms",
-                            "url": "",
-                            "bbox": {},
-                            "visibility": true,
-                            "singleTile": false,
-                            "allowedSRS": {},
-                            "dimensions": [],
-                            "hideLoading": false,
-                            "handleClickOnLayer": false,
-                            "catalogURL": "url",
-                            "useForElevation": false,
-                            "hidden": false,
-                            "params": {}
-                        }
-                    ],
-                    "groups": [],
-                    "backgrounds": [
-                        {
-                            "id": "layer005",
-                            "thumbnail": "data"
-                        }
-                    ]
-                },
-                "catalogServices": {},
-                "widgetsConfig": {},
-                "mapInfoConfiguration": {}
-            }
-        };
-        const CHANGED_MAP_STATE = set("map.present.zoom", 10, SAME_MAP_STATE);
-        const NOT_EDITABLE_STATE = set("map.present.info.canEdit", false, SAME_MAP_STATE);
-        it('shouldn\'t do anything if current view is different than map', (done) => {
-            const state = {
-                feedbackMask: {
-                    currentPage: ''
-                }
-            };
-
-            const epicResponse = (actions) => {
-                expect(actions.length).toBe(1);
-                expect(actions[0].type).toBe(TEST_TIMEOUT);
-                done();
-            };
-
-            testEpic(addTimeoutEpic(compareMapChanges, 10), 1, checkMapChanges(), epicResponse, state);
-        });
-        it('shouldn\'t do anything if map not editable', (done) => {
-            const epicResponse = (actions) => {
-                expect(actions.length).toBe(1);
-                expect(actions[0].type).toBe(TEST_TIMEOUT);
-                done();
-            };
-            testEpic(addTimeoutEpic(compareMapChanges, 10), 1, checkMapChanges(), epicResponse, NOT_EDITABLE_STATE);
-        });
-        it('shouldn\'t do anything if map is same', (done) => {
-            const epicResponse = (actions) => {
-                expect(actions.length).toBe(1);
-                expect(actions[0].type).toBe(TEST_TIMEOUT);
-                done();
-            };
-
-            testEpic(addTimeoutEpic(compareMapChanges, 10), 1, checkMapChanges(), epicResponse, SAME_MAP_STATE);
-        });
-
-        it('should show confirm prompt if anything changed', (done) => {
-
-            const epicResponse = (actions) => {
-                expect(actions.length).toBe(2);
-                expect(actions[0].type).toBe(SET_CONTROL_PROPERTY);
-                expect(actions[0].property).toBe('enabled');
-                expect(actions[1].type).toBe(SET_CONTROL_PROPERTY);
-                expect(actions[1].property).toBe('source');
-                done();
-            };
-            testEpic(compareMapChanges, 2, checkMapChanges(), epicResponse, CHANGED_MAP_STATE);
-        });
-        it('On logout the controls should be reset', (done) => {
-
-            const epicResponse = (actions) => {
-                expect(actions.length).toBe(4);
-                expect(actions[0].type).toBe(SET_CONTROL_PROPERTY);
-                expect(actions[0].property).toBe('enabled');
-                expect(actions[0].value).toBe(true);
-                expect(actions[1].type).toBe(SET_CONTROL_PROPERTY);
-                expect(actions[1].property).toBe('source');
-                expect(actions[2].type).toBe(SET_CONTROL_PROPERTY);
-                expect(actions[2].property).toBe('enabled');
-                expect(actions[2].value).toBe(false);
-                expect(actions[3].type).toBe(SET_CONTROL_PROPERTY);
-                expect(actions[3].property).toBe('source');
-                done();
-            };
-            testEpic(compareMapChanges, 4, [checkMapChanges(), logout()], epicResponse, CHANGED_MAP_STATE);
-        });
-        it('On location change the controls should be reset', (done) => {
-
-            const epicResponse = (actions) => {
-                expect(actions.length).toBe(4);
-                expect(actions[0].type).toBe(SET_CONTROL_PROPERTY);
-                expect(actions[0].property).toBe('enabled');
-                expect(actions[0].value).toBe(true);
-                expect(actions[1].type).toBe(SET_CONTROL_PROPERTY);
-                expect(actions[1].property).toBe('source');
-                expect(actions[2].type).toBe(SET_CONTROL_PROPERTY);
-                expect(actions[2].property).toBe('enabled');
-                expect(actions[2].value).toBe(false);
-                expect(actions[3].type).toBe(SET_CONTROL_PROPERTY);
-                expect(actions[3].property).toBe('source');
-                done();
-            };
-            testEpic(compareMapChanges, 4, [checkMapChanges(), {type: LOCATION_CHANGE}], epicResponse, CHANGED_MAP_STATE);
-        });
     });
 
     describe('redirectUnauthorizedUserOnNewMap', () => {

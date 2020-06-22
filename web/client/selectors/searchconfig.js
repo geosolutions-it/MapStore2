@@ -7,3 +7,5 @@
  */
 
 export const textSearchConfigSelector = state => state.searchconfig && state.searchconfig.textSearchConfig;
+
+export const bookmarkSearchConfigSelector = state => state.searchbookmarkconfig && state.searchbookmarkconfig.bookmarkSearchConfig;

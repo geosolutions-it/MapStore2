@@ -31,20 +31,6 @@
             }
         }
     }
-    .coordinateRow {
-        .coordinate {
-            width: 100%;
-            display: flex;
-            flex: 1 1 0%;
-            justify-content: space-between;
-            flex-wrap: wrap;
-            .input-group {
-                flex: 1 1 0%;
-                padding: 4px 0px;
-                margin-right: 8px;
-            }
-        }
-    }
 }
 
 #share-container {
@@ -57,6 +43,46 @@
         border: none !important;
         margin: unset !important;
         padding: unset !important;
+    }
+    .coordinateRow {
+        .coordinate {
+            .input-group {
+                display: flex;
+                .input-group-addon {
+                    min-width: 45px;
+                }
+                .form-group {
+                    flex: 1;
+                }
+            }
+        }
+    }
+}
+
+#share-container, #identify-container {
+    .coordinateRow {
+        .coordinate {
+            width: 100%;
+            display: flex;
+            flex: 1;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            .input-group {
+                flex: 1;
+                padding: 4px 0;
+                margin-right: 8px;
+            }
+            .degrees, .minutes {
+                display: flex;
+                flex: 1;
+                min-width: 45px;
+            }
+            .seconds {
+                display: flex;
+                flex: 1;
+                min-width: 75px;
+            }
+        }
     }
 }
 

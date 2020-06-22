@@ -31,7 +31,8 @@ import {
     UPDATE,
     UPDATE_CURRENT_PAGE,
     UPDATE_SETTING,
-    REMOVE_RESOURCE
+    REMOVE_RESOURCE,
+    SET_PENDING_CHANGES
 } from '../actions/geostory';
 
 
@@ -321,6 +322,9 @@ export default (state = INITIAL_STATE, action) => {
         const {status, target, selector = "", hideContent = false, path} = action;
         const focusedContent = status ? {target, selector, hideContent, path} : undefined;
         return set(`focusedContent`, focusedContent, state);
+    }
+    case SET_PENDING_CHANGES: {
+        return set(`pendingChanges`, action.value, state);
     }
     default:
         return state;

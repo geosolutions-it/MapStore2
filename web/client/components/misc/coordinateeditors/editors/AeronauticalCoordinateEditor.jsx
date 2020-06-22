@@ -128,7 +128,7 @@ class AeronauticalCoordinateEditor extends React.Component {
         const {step: stepSeconds} = this.props.aeronauticalOptions.seconds;
         return (
             <FormGroup style={{display: "inline-flex"}}>
-                <div style={{minWidth: 45, display: 'flex', flex: "1 1 0%"}}>
+                <div className={"degrees"}>
                     <FormControl
                         key={this.props.coordinate + "degree"}
                         value={this.props.degrees}
@@ -145,7 +145,7 @@ class AeronauticalCoordinateEditor extends React.Component {
                     />
                     <span style={labelStyle}>&deg;</span>
                 </div>
-                <div style={{minWidth: 45, display: 'flex', flex: "1 1 0%"}}>
+                <div className={"minutes"}>
                     <FormControl
                         key={this.props.coordinate + "minutes"}
                         placeholder={"m"}
@@ -162,7 +162,7 @@ class AeronauticalCoordinateEditor extends React.Component {
                     />
                     <span style={labelStyle}>&prime;</span>
                 </div>
-                <div className="seconds" style={{display: 'flex', flex: "1 1 0%"}}>
+                <div className="seconds">
                     <FormControl
                         key={this.props.coordinate + "seconds"}
                         value={this.props.seconds}
@@ -179,7 +179,7 @@ class AeronauticalCoordinateEditor extends React.Component {
                     />
                     <span style={labelStyle}>&Prime;</span>
                 </div>
-                <div style={{minWidth: 45}}>
+                <div className={"direction-select"}>
 
                     <FormControl
                         componentClass="select" placeholder="select"

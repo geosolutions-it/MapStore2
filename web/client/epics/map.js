@@ -8,15 +8,12 @@
 
 const Rx = require('rxjs');
 const {changeLayerProperties} = require('../actions/layers');
-const { LOCATION_CHANGE } = require('connected-react-router');
-
 
 const {
     CREATION_ERROR_LAYER,
     INIT_MAP,
     ZOOM_TO_EXTENT,
     CHANGE_MAP_CRS,
-    CHECK_MAP_CHANGES,
     changeMapView,
     changeMapLimits
 } = require('../actions/map');
@@ -24,7 +21,7 @@ const {configuredExtentCrsSelector, configuredRestrictedExtentSelector, configur
 
 
 const { loadMapInfo} = require('../actions/config');
-const {LOGIN_SUCCESS, LOGOUT} = require('../actions/security');
+const {LOGIN_SUCCESS} = require('../actions/security');
 
 const {currentBackgroundLayerSelector, allBackgroundLayerSelector, getLayerFromId} = require('../selectors/layers');
 const {mapTypeSelector} = require('../selectors/maptype');
@@ -43,14 +40,9 @@ const {clearWarning: clearMapInfoWarning} = require('../actions/mapInfo');
 const {removeAllAdditionalLayers} = require('../actions/additionallayers');
 const { head, isArray, isObject, mapValues } = require('lodash');
 
-const {layersSelector, groupsSelector} = require('../selectors/layers');
-const {backgroundListSelector} = require('../selectors/backgroundselector');
-const {mapOptionsToSaveSelector} = require('../selectors/mapsave');
-const {feedbackMaskSelector} = require('../selectors/feedbackmask');
 const { isLoggedIn } = require('../selectors/security');
 const {pathnameSelector} = require('../selectors/router');
 const { push } = require('connected-react-router');
-const textSearchConfigSelector = state => state.searchconfig && state.searchconfig.textSearchConfig;
 
 const handleCreationBackgroundError = (action$, store) =>
     action$.ofType(CREATION_ERROR_LAYER)
@@ -230,54 +222,6 @@ const checkMapPermissions = (action$, {getState = () => {} }) =>
             return loadMapInfo(mapId);
         });
 
-/**
- * When CHECK_MAP_CHANGES is triggered, checks current status of the map for temporary changes
- * If any, triggers to show confirm message.
- * Otherwise, if any, triggers the action passed in CHECK_MAP_CHANGES action.
- * TODO: move this out of map epics (confirm modals are now rendered by home and login plugins)
- * they should be externalized in a separated plug-in (or in Save plugin).
- */
-const compareMapChanges = (action$, { getState = () => {} }) =>
-    action$
-        .ofType(CHECK_MAP_CHANGES)
-        .switchMap(({ action, source }) => {
-            const state = getState();
-            const currentMap = mapSelector(state) || {};
-            const { canEdit } = currentMap.info || {};
-            const { currentPage } = feedbackMaskSelector(state);
-            const { mapConfigRawData } = state;
-            // TODO: Find out a better way to check
-            // if we are in the map. Maybe is a good idea to
-            // monitor map changes and save "dirty" in a flag,
-            // that will be reset on Save plugin(s) unmount.
-            if ((currentPage) !== 'viewer' || (!canEdit && currentMap.mapId)) {
-                return action ? Rx.Observable.of(action) : Rx.Observable.empty();
-            }
-            const updatedMap = MapUtils.saveMapConfiguration(
-                currentMap,
-                layersSelector(state),
-                groupsSelector(state),
-                backgroundListSelector(state),
-                textSearchConfigSelector(state),
-                mapOptionsToSaveSelector(state)
-            );
-            const isEqual = MapUtils.compareMapChanges(mapConfigRawData, updatedMap);
-            if (!isEqual) {
-                return Rx.Observable.of(
-                    setControlProperty('unsavedMap', 'enabled', true, false),
-                    setControlProperty('unsavedMap', 'source', source, false)
-                ).merge(
-                    // reset on location change
-                    action$.ofType(LOCATION_CHANGE, LOGOUT).take(1).switchMap(() =>
-                        Rx.Observable.of(
-                            setControlProperty('unsavedMap', 'enabled', false),
-                            setControlProperty('unsavedMap', 'source', undefined)
-                        )
-                    ));
-            }
-            return action ? Rx.Observable.of(action) : Rx.Observable.empty();
-        });
-
 const redirectUnauthorizedUserOnNewMap = (action$, { getState = () => {}}) =>
     action$.ofType(MAP_CONFIG_LOAD_ERROR)
         .filter((action) => action.error && action.error.status === 403 && pathnameSelector(getState()).indexOf("new") !== -1)
@@ -291,6 +235,5 @@ module.exports = {
     resetMapOnInit,
     resetLimitsOnInit,
     zoomToExtentEpic,
-    compareMapChanges,
     redirectUnauthorizedUserOnNewMap
 };

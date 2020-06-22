@@ -456,6 +456,7 @@ describe('Test the MapUtils', () => {
                     maxExtent: [-20037508.34, -20037508.34, 20037508.34, 20037508.34],
                     projection: 'EPSG:900913',
                     text_search_config: '',
+                    bookmark_search_config: {},
                     units: 'm',
                     zoom: 10
                 },
@@ -893,6 +894,7 @@ describe('Test the MapUtils', () => {
                     maxExtent: [-20037508.34, -20037508.34, 20037508.34, 20037508.34],
                     projection: 'EPSG:900913',
                     text_search_config: '',
+                    bookmark_search_config: {},
                     units: 'm',
                     zoom: 10
                 },
@@ -1000,7 +1002,6 @@ describe('Test the MapUtils', () => {
                     }
                 }
             };
-
             const saved = saveMapConfiguration(mapConfig, flat, groups, [], '', {});
             expect(saved).toEqual({
                 map: {
@@ -1191,6 +1192,7 @@ describe('Test the MapUtils', () => {
                     maxExtent: [-20037508.34, -20037508.34, 20037508.34, 20037508.34],
                     projection: 'EPSG:900913',
                     text_search_config: '',
+                    bookmark_search_config: {},
                     units: 'm',
                     zoom: 10
                 },
@@ -1448,6 +1450,7 @@ describe('Test the MapUtils', () => {
                     maxExtent: [-20037508.34, -20037508.34, 20037508.34, 20037508.34],
                     projection: 'EPSG:900913',
                     text_search_config: '',
+                    bookmark_search_config: {},
                     units: 'm',
                     zoom: 10,
                     sources: {
@@ -1633,7 +1636,7 @@ describe('Test the MapUtils', () => {
                     }, {
                         id: 'custom.nested001', title: 'nested001', expanded: true
                     } ],
-                    text_search_config: '' }
+                    text_search_config: '', bookmark_search_config: {} }
             });
         });
 
@@ -1685,10 +1688,11 @@ describe('Test the MapUtils', () => {
                 center: {x: 0, y: 0, crs: 'EPSG:4326'},
                 maxExtent: [-20037508.34, -20037508.34, 20037508.34, 20037508.34],
                 projection: 'EPSG:900913',
+                text_search_config: '',
                 units: 'm',
                 zoom: 10
             };
-            const saved = saveMapConfiguration(mapConfig, flat, groups, [], '', { mapInfoConfiguration: {infoFormat: "text/html", showEmptyMessageGFI: false}});
+            const saved = saveMapConfiguration(mapConfig, flat, groups, [], '',  {}, { mapInfoConfiguration: {infoFormat: "text/html", showEmptyMessageGFI: false}});
             expect(saved).toEqual({
                 map: {
                     center: {crs: 'EPSG:4326', x: 0, y: 0},
@@ -1758,6 +1762,7 @@ describe('Test the MapUtils', () => {
                     maxExtent: [-20037508.34, -20037508.34, 20037508.34, 20037508.34],
                     projection: 'EPSG:900913',
                     text_search_config: '',
+                    bookmark_search_config: {},
                     units: 'm',
                     zoom: 10,
                     sources: {
@@ -1830,10 +1835,11 @@ describe('Test the MapUtils', () => {
                 center: {x: 0, y: 0, crs: 'EPSG:4326'},
                 maxExtent: [-20037508.34, -20037508.34, 20037508.34, 20037508.34],
                 projection: 'EPSG:900913',
+                text_search_config: '',
                 units: 'm',
                 zoom: 10
             };
-            const saved = saveMapConfiguration(mapConfig, flat, groups, [], '', { mapInfoConfiguration: {infoFormat: "text/html", showEmptyMessageGFI: false}});
+            const saved = saveMapConfiguration(mapConfig, flat, groups, [], '', {}, { mapInfoConfiguration: {infoFormat: "text/html", showEmptyMessageGFI: false}});
             expect(saved).toEqual({
                 map: {
                     center: {crs: 'EPSG:4326', x: 0, y: 0},
@@ -1903,6 +1909,7 @@ describe('Test the MapUtils', () => {
                     maxExtent: [-20037508.34, -20037508.34, 20037508.34, 20037508.34],
                     projection: 'EPSG:900913',
                     text_search_config: '',
+                    bookmark_search_config: {},
                     units: 'm',
                     zoom: 10,
                     sources: {
@@ -1922,6 +1929,322 @@ describe('Test the MapUtils', () => {
                 mapInfoConfiguration: {
                     infoFormat: "text/html",
                     showEmptyMessageGFI: false
+                },
+                version: 2
+            });
+        });
+
+        it('save map configuration with bookmark config', () => {
+
+            const flat = [
+                {
+                    allowedSRS: {},
+                    bbox: {},
+                    dimensions: [],
+                    id: "layer001",
+                    loading: true,
+                    name: "layer001",
+                    params: {},
+                    search: {},
+                    singleTile: false,
+                    thumbURL: "THUMB_URL",
+                    title: "layer001",
+                    type: "wms",
+                    url: "",
+                    visibility: true,
+                    catalogURL: "url"
+                },
+                {
+                    allowedSRS: {},
+                    bbox: {},
+                    dimensions: [],
+                    id: "layer002",
+                    loading: true,
+                    name: "layer002",
+                    params: {},
+                    search: {},
+                    singleTile: false,
+                    title: "layer002",
+                    type: "wms",
+                    url: "",
+                    visibility: true,
+                    catalogURL: "url"
+                },
+                {
+                    allowedSRS: {},
+                    bbox: {},
+                    dimensions: [],
+                    id: "layer003",
+                    loading: true,
+                    name: "layer003",
+                    params: {},
+                    search: {},
+                    singleTile: false,
+                    title: "layer003",
+                    type: "wms",
+                    url: "",
+                    visibility: true,
+                    catalogURL: "url"
+                },
+                {
+                    allowedSRS: {},
+                    bbox: {},
+                    dimensions: [],
+                    id: "layer004",
+                    loading: true,
+                    name: "layer004",
+                    params: {},
+                    search: {},
+                    singleTile: false,
+                    title: "layer004",
+                    type: "wms",
+                    url: "",
+                    visibility: true,
+                    catalogURL: "url",
+                    origin: [100000, 100000]
+                }
+            ];
+
+            const groups = [
+                {expanded: true, id: 'Default', name: 'Default', title: 'Default', nodes: ['layer001', 'layer002']},
+                {expanded: false, id: 'custom', name: 'custom', title: 'custom',
+                    nodes: [{expanded: true, id: 'custom.nested001', name: 'nested001', title: 'nested001', nodes: ['layer003']}
+                    ]}
+            ];
+
+            const mapConfig = {
+                center: {x: 0, y: 0, crs: 'EPSG:4326'},
+                maxExtent: [-20037508.34, -20037508.34, 20037508.34, 20037508.34],
+                projection: 'EPSG:900913',
+                text_search_config: '',
+                units: 'm',
+                mapInfoControl: true,
+                zoom: 10
+            };
+
+            const saved = saveMapConfiguration(mapConfig, flat, groups, [], '', {
+                bookmarks: [{
+                    options: {west: -123, south: 42, east: -60, north: 53},
+                    title: 'Vancover', layerVisibilityReload: true
+                }]});
+            expect(saved).toEqual({
+                map: {
+                    center: {crs: 'EPSG:4326', x: 0, y: 0},
+                    backgrounds: [],
+                    mapInfoControl: true,
+                    groups: [{
+                        id: 'Default',
+                        title: 'Default',
+                        expanded: true
+                    }, {
+                        id: 'custom',
+                        title: 'custom',
+                        expanded: false
+                    }, {
+                        id: 'custom.nested001',
+                        title: 'nested001',
+                        expanded: true
+                    }],
+                    layers: [{
+                        allowedSRS: {},
+                        thumbURL: "THUMB_URL",
+                        availableStyles: undefined,
+                        layerFilter: undefined,
+                        bbox: {},
+                        requestEncoding: undefined,
+                        capabilitiesURL: undefined,
+                        description: undefined,
+                        dimensions: [],
+                        features: undefined,
+                        queryable: undefined,
+                        featureInfo: undefined,
+                        format: undefined,
+                        group: undefined,
+                        hideLoading: false,
+                        handleClickOnLayer: false,
+                        id: "layer001",
+                        matrixIds: undefined,
+                        maxZoom: undefined,
+                        maxNativeZoom: undefined,
+                        name: "layer001",
+                        opacity: undefined,
+                        params: {},
+                        provider: undefined,
+                        search: {},
+                        singleTile: false,
+                        source: undefined,
+                        style: undefined,
+                        styleName: undefined,
+                        styles: undefined,
+                        tileMatrixSet: undefined,
+                        tiled: undefined,
+                        title: "layer001",
+                        transparent: undefined,
+                        type: "wms",
+                        url: "",
+                        visibility: true,
+                        catalogURL: "url",
+                        hidden: false,
+                        useForElevation: false,
+                        origin: undefined,
+                        thematic: undefined,
+                        tooltipOptions: undefined,
+                        tooltipPlacement: undefined,
+                        legendOptions: undefined
+                    },
+                    {
+                        allowedSRS: {},
+                        thumbURL: undefined,
+                        availableStyles: undefined,
+                        layerFilter: undefined,
+                        bbox: {},
+                        requestEncoding: undefined,
+                        capabilitiesURL: undefined,
+                        description: undefined,
+                        dimensions: [],
+                        features: undefined,
+                        queryable: undefined,
+                        featureInfo: undefined,
+                        format: undefined,
+                        group: undefined,
+                        hideLoading: false,
+                        handleClickOnLayer: false,
+                        id: "layer002",
+                        matrixIds: undefined,
+                        maxZoom: undefined,
+                        maxNativeZoom: undefined,
+                        name: "layer002",
+                        opacity: undefined,
+                        params: {},
+                        provider: undefined,
+                        search: {},
+                        singleTile: false,
+                        source: undefined,
+                        style: undefined,
+                        styleName: undefined,
+                        styles: undefined,
+                        tileMatrixSet: undefined,
+                        tiled: undefined,
+                        title: "layer002",
+                        transparent: undefined,
+                        type: "wms",
+                        url: "",
+                        visibility: true,
+                        catalogURL: "url",
+                        hidden: false,
+                        useForElevation: false,
+                        origin: undefined,
+                        thematic: undefined,
+                        tooltipOptions: undefined,
+                        tooltipPlacement: undefined,
+                        legendOptions: undefined
+                    },
+                    {
+                        allowedSRS: {},
+                        thumbURL: undefined,
+                        availableStyles: undefined,
+                        layerFilter: undefined,
+                        bbox: {},
+                        requestEncoding: undefined,
+                        capabilitiesURL: undefined,
+                        description: undefined,
+                        dimensions: [],
+                        features: undefined,
+                        queryable: undefined,
+                        featureInfo: undefined,
+                        format: undefined,
+                        group: undefined,
+                        hideLoading: false,
+                        handleClickOnLayer: false,
+                        id: "layer003",
+                        matrixIds: undefined,
+                        maxZoom: undefined,
+                        maxNativeZoom: undefined,
+                        name: "layer003",
+                        opacity: undefined,
+                        params: {},
+                        provider: undefined,
+                        search: {},
+                        singleTile: false,
+                        source: undefined,
+                        style: undefined,
+                        styleName: undefined,
+                        styles: undefined,
+                        tileMatrixSet: undefined,
+                        tiled: undefined,
+                        title: "layer003",
+                        transparent: undefined,
+                        type: "wms",
+                        url: "",
+                        visibility: true,
+                        catalogURL: "url",
+                        hidden: false,
+                        useForElevation: false,
+                        origin: undefined,
+                        thematic: undefined,
+                        tooltipOptions: undefined,
+                        tooltipPlacement: undefined,
+                        legendOptions: undefined
+                    },
+                    {
+                        allowedSRS: {},
+                        thumbURL: undefined,
+                        availableStyles: undefined,
+                        layerFilter: undefined,
+                        bbox: {},
+                        requestEncoding: undefined,
+                        capabilitiesURL: undefined,
+                        description: undefined,
+                        dimensions: [],
+                        features: undefined,
+                        queryable: undefined,
+                        featureInfo: undefined,
+                        format: undefined,
+                        group: undefined,
+                        hideLoading: false,
+                        handleClickOnLayer: false,
+                        id: "layer004",
+                        matrixIds: undefined,
+                        maxZoom: undefined,
+                        maxNativeZoom: undefined,
+                        name: "layer004",
+                        opacity: undefined,
+                        params: {},
+                        provider: undefined,
+                        search: {},
+                        singleTile: false,
+                        source: undefined,
+                        style: undefined,
+                        styleName: undefined,
+                        styles: undefined,
+                        tileMatrixSet: undefined,
+                        tiled: undefined,
+                        title: "layer004",
+                        transparent: undefined,
+                        type: "wms",
+                        url: "",
+                        visibility: true,
+                        catalogURL: "url",
+                        hidden: false,
+                        useForElevation: false,
+                        origin: [100000, 100000],
+                        thematic: undefined,
+                        tooltipOptions: undefined,
+                        tooltipPlacement: undefined,
+                        legendOptions: undefined
+                    }],
+                    mapOptions: {},
+                    maxExtent: [-20037508.34, -20037508.34, 20037508.34, 20037508.34],
+                    projection: 'EPSG:900913',
+                    text_search_config: '',
+                    bookmark_search_config: {
+                        bookmarks: [{
+                            options: {west: -123, south: 42, east: -60, north: 53},
+                            title: 'Vancover', layerVisibilityReload: true
+                        }]
+                    },
+                    units: 'm',
+                    zoom: 10
                 },
                 version: 2
             });
@@ -2237,7 +2560,14 @@ describe('Test the MapUtils', () => {
                 projection: "EPSG:4326",
                 units: "m"
             },
-            widgetsConfig: {}
+            widgetsConfig: {},
+            timelineData: {
+                selectedLayer: 'timelineLayer1'
+            },
+            dimensionData: {
+                currentTime: '1996-04-08T08:02:01.425Z',
+                offsetTime: '2016-06-07T02:17:23.197Z'
+            }
         };
         const cfg2 = {
             catalogServices: {
@@ -2332,6 +2662,13 @@ describe('Test the MapUtils', () => {
                         group: "group2"
                     }
                 }]
+            },
+            timelineData: {
+                selectedLayer: 'timelineLayer2'
+            },
+            dimensionData: {
+                currentTime: '1997-04-08T08:02:01.425Z',
+                offsetTime: '2017-06-07T02:17:23.197Z'
             }
         };
 
@@ -2402,5 +2739,11 @@ describe('Test the MapUtils', () => {
         expect(cfg.widgetsConfig.layouts.xxs).toExist();
         expect(cfg.widgetsConfig.layouts.lg[0].i).toBe(cfg.widgetsConfig.widgets[0].id);
         expect(cfg.widgetsConfig.layouts.xxs[0].i).toBe(cfg.widgetsConfig.widgets[0].id);
+
+        expect(cfg.timelineData).toExist();
+        expect(cfg.timelineData.selectedLayer).toBe('timelineLayer2');
+        expect(cfg.dimensionData).toExist();
+        expect(cfg.dimensionData.currentTime).toBe('1997-04-08T08:02:01.425Z');
+        expect(cfg.dimensionData.offsetTime).toBe('2017-06-07T02:17:23.197Z');
     });
 });
