@@ -28,6 +28,40 @@ import { userSelector } from '../selectors/security';
 
 import ContextCreator from '../components/contextcreator/ContextCreator';
 
+export const contextCreatorSelector = createStructuredSelector({
+    user: userSelector,
+    curStepId: creationStepSelector,
+    tutorialStatus: state => tutorialSelector(state)?.status,
+    tutorialStep: tutorialStepSelector,
+    newContext: newContextSelector,
+    resource: resourceSelector,
+    allAvailablePlugins: pluginsSelector,
+    editedPlugin: editedPluginSelector,
+    editedCfg: editedCfgSelector,
+    isCfgValidated: validationStatusSelector,
+    cfgError: cfgErrorSelector,
+    parsedTemplate: parsedTemplateSelector,
+    editedTemplate: editedTemplateSelector,
+    fileDropStatus: fileDropStatusSelector,
+    availablePluginsFilterText: availablePluginsFilterTextSelector,
+    enabledPluginsFilterText: enabledPluginsFilterTextSelector,
+    availableTemplatesFilterText: availableTemplatesFilterTextSelector,
+    enabledTemplatesFilterText: enabledTemplatesFilterTextSelector,
+    mapType: mapTypeSelector,
+    showReloadConfirm: reloadConfirmSelector,
+    showDialog: showDialogSelector,
+    loading: isLoadingSelector,
+    loadFlags: loadFlagsSelector,
+    isValidContextName: isValidContextNameSelector,
+    contextNameChecked: contextNameCheckedSelector,
+    uploadEnabled: state => state.contextcreator && state.contextcreator.uploadPluginEnabled,
+    uploading: state => state.contextcreator && state.contextcreator.uploadingPlugin,
+    uploadResult: state => state.contextcreator && state.contextcreator.uploadResult,
+    pluginsToUpload: state => state.contextcreator?.pluginsToUpload,
+    pluginsConfig: () => ConfigUtils.getConfigProp('plugins'),
+    showBackToPageConfirmation: showBackToPageConfirmationSelector
+});
+
 /**
  * Plugin for creation of Contexts.
  * @memberof plugins
@@ -36,39 +70,7 @@ import ContextCreator from '../components/contextcreator/ContextCreator';
  * @prop {string} cfg.saveDestLocation router path when the application is redirected when a context is saved
  */
 export default createPlugin('ContextCreator', {
-    component: connect(createStructuredSelector({
-        user: userSelector,
-        curStepId: creationStepSelector,
-        tutorialStatus: state => tutorialSelector(state)?.status,
-        tutorialStep: tutorialStepSelector,
-        newContext: newContextSelector,
-        resource: resourceSelector,
-        allAvailablePlugins: pluginsSelector,
-        editedPlugin: editedPluginSelector,
-        editedCfg: editedCfgSelector,
-        isCfgValidated: validationStatusSelector,
-        cfgError: cfgErrorSelector,
-        parsedTemplate: parsedTemplateSelector,
-        editedTemplate: editedTemplateSelector,
-        fileDropStatus: fileDropStatusSelector,
-        availablePluginsFilterText: availablePluginsFilterTextSelector,
-        enabledPluginsFilterText: enabledPluginsFilterTextSelector,
-        availableTemplatesFilterText: availableTemplatesFilterTextSelector,
-        enabledTemplatesFilterText: enabledTemplatesFilterTextSelector,
-        mapType: mapTypeSelector,
-        showReloadConfirm: reloadConfirmSelector,
-        showDialog: showDialogSelector,
-        loading: isLoadingSelector,
-        loadFlags: loadFlagsSelector,
-        isValidContextName: isValidContextNameSelector,
-        contextNameChecked: contextNameCheckedSelector,
-        uploadEnabled: state => state.contextcreator && state.contextcreator.uploadPluginEnabled,
-        uploading: state => state.contextcreator && state.contextcreator.uploadingPlugin,
-        uploadResult: state => state.contextcreator && state.contextcreator.uploadResult,
-        pluginsToUpload: state => state.contextcreator?.pluginsToUpload,
-        pluginsConfig: () => ConfigUtils.getConfigProp('plugins'),
-        showBackToPageConfirmation: showBackToPageConfirmationSelector
-    }), {
+    component: connect(contextCreatorSelector, {
         onFilterAvailablePlugins: setFilterText.bind(null, 'availablePlugins'),
         onFilterEnabledPlugins: setFilterText.bind(null, 'enabledPlugins'),
         onFilterAvailableTemplates: setFilterText.bind(null, 'availableTemplates'),
