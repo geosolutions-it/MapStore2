@@ -188,6 +188,30 @@ describe('feedbackMask Epics', () => {
         },
         {});
     });
+    it.only('test feedbackMaskPromptLogin on geostory 403 with new story', done => {
+        const ACTIONS_EMITTED = 1;
+        const error = { status: 403, statusText: 'Forbidden' };
+        testEpic(feedbackMaskPromptLogin, ACTIONS_EMITTED, loadGeostoryError(error), actions => {
+            expect(actions.length).toBe(ACTIONS_EMITTED);
+            actions.map((action) => {
+                switch (action.type) {
+                case LOGIN_REQUIRED:
+                    done();
+                    break;
+                default:
+                    done(new Error("Action not recognized"));
+                }
+            });
+            done();
+        },
+        {
+            router: {
+                location: {
+                    pathname: '/geostory/newgeostory'
+                }
+            }
+        });
+    });
     it('test feedbackMaskPromptLogin on geostory 403 with shared story', done => {
         const ACTIONS_EMITTED = 1;
         const error = {status: 403, statusText: 'Forbidden'};
