@@ -175,14 +175,15 @@ const detectNewPage = (action$, store) =>
         ));
 
 /**
- * Prompts login when page some resource is not accessible and you're not logged in
+ * Prompts login when page some resource is not accessible and you're not logged in.
  * @param {stream} action$ the action stream
  */
 const feedbackMaskPromptLogin = (action$, store) => // TODO: separate login required logic (403) condition from feedback mask
     action$.ofType(MAP_CONFIG_LOAD_ERROR, DASHBOARD_LOAD_ERROR, LOAD_GEOSTORY_ERROR, CONTEXT_LOAD_ERROR, CONTEXT_LOAD_ERROR_CONTEXTCREATOR)
-        .filter((action) => action.error &&
-            action.error.status === 403 &&
-            pathnameSelector(store.getState()).indexOf("new") === -1)
+        .filter((action) => action.error
+            && action.error.status === 403
+            && (pathnameSelector(store.getState()).indexOf("new") === -1 // new map has different handling (see redirectUnauthorizedUserOnNewMap, TODO: uniform different behaviour)
+                || pathnameSelector(store.getState()).indexOf("newgeostory") >= 0)) // geostory can use this (that is the same of the dashboard)
         .filter(() => !isLoggedIn(store.getState()) && !isSharedStory(store.getState()))
         .exhaustMap(
             () =>
