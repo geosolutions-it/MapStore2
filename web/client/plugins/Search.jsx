@@ -102,7 +102,8 @@ const ToggleButton = require('./searchbar/ToggleButton');
 
 /**
  * Search plugin. Provides search functionalities for the map.
- * Allows to display results and place them on the map. Supports nominatim and WFS as search protocols
+ * <br> Allows to display results and place them on the map. Supports nominatim and WFS as search protocols
+ * <br> You can configure the services and each service can trigger a nested search.
  * @example
  * {
  *  "name": "Search",
@@ -138,18 +139,17 @@ const ToggleButton = require('./searchbar/ToggleButton');
  * }
  * @class Search
  * @memberof plugins
- * @prop {boolean} [showOptions=true] shows the burger menu in the input field
- * @prop {string} [activeSearchTool=addressSearch] default search tool. Values are "addressSearch", "coordinatesSearch", "bookmarkSearch"
- * @prop {boolean} [showCoordinatesSearchOption=true] shows the menu item to switch to the coordinate editor
- * @prop {boolean} [showAddressSearchOption=true]  shows the menu item to switch to the address editor
- * @prop {boolean} [showBookMarkSearchOption=true]  shows the menu item to switch to the bookmark selector
+ * @prop {boolean} [cfg.showOptions=true] shows the burger menu in the input field
+ * @prop {string} [cfg.activeSearchTool=addressSearch] default search tool. Values are "addressSearch", "coordinatesSearch", "bookmarkSearch"
+ * @prop {boolean} [cfg.showCoordinatesSearchOption=true] shows the menu item to switch to the coordinate editor
+ * @prop {boolean} [cfg.showAddressSearchOption=true]  shows the menu item to switch to the address editor
+ * @prop {boolean} [cfg.showBookMarkSearchOption=true]  shows the menu item to switch to the bookmark selector
  * You can configure the bookmarks and each bookmark can trigger a zoomToExtent or Layer visibility reload based on the options set while configuring
  * @prop {object} cfg.searchOptions initial search options
  * @prop {object} cfg.maxResults number of max items present in the result list
  * @prop {object} cfg.resultsStyle custom style for search results
  * @prop {bool} cfg.fitResultsToMapSize true by default, fits the result list to the mapSize (can be disabled, for custom uses)
  * @prop {searchService[]} cfg.searchOptions.services a list of services to perform search.
- * You can configure the services and each service can trigger a nested search.
  * a **nominatim** search service look like this:
  * ```
  * {
