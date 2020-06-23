@@ -9,7 +9,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Rx from 'rxjs';
-import { isArray, zip } from 'lodash';
+import { isArray, zip, split, isNil } from 'lodash';
 import { compose, getContext } from 'recompose';
 import { Glyphicon } from 'react-bootstrap';
 
@@ -69,6 +69,21 @@ const loadPage = ({searchText = '', limit = 12} = {}, page = 0) => searchMaps({
     }
 });
 
+const onClickHandler = (map, router, mapType) => {
+    // reload if the same context was selected from catalog
+    const {location} = router.history;
+    if (!isNil(location.pathname)
+    && (map.contextName === split(location.pathname, '/')[2])
+    && (map.id === Number(split(location.pathname, '/')[3]))) {
+        window.location.reload();
+    } else {
+        router.history.push(map.contextName ?
+            "/context/" + map.contextName + "/" + map.id :
+            "/viewer/" + mapType + "/" + map.id
+        );
+    }
+};
+
 const MapCatalogPanel = ({
     loading,
     mapType,
@@ -122,10 +137,7 @@ const MapCatalogPanel = ({
                     <img src={decodeURIComponent(map.thumbnail)}/> :
                     <Glyphicon glyph="1-map"/>}
             </div>,
-        onClick: () => router.history.push(map.contextName ?
-            "/context/" + map.contextName + "/" + map.id :
-            "/viewer/" + mapType + "/" + map.id
-        )
+        onClick: () => onClickHandler(map, router, mapType)
     });
 
     return (
