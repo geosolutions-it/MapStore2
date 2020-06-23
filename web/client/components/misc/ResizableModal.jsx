@@ -47,6 +47,8 @@ const fullscreen = {
  * @memberof components.ResizableModal
  * @class
  * @prop {bool} show show modal. Default false
+ * @prop {bool} loading enable loading spinner
+ * @prop {element} loadingText if loading is true display this element next to the loading spinner
  * @prop {bool} showFullscreen enable fullscreen. Default false
  * @prop {bool} clickOutEnabled click on background overlay to close modal. Default true
  * @prop {string} fullscreenType type of fullscreen sm, lg or md/empty.
@@ -63,6 +65,7 @@ const fullscreen = {
 const ResizableModal = ({
     show = false,
     loading,
+    loadingText,
     onClose = () => {},
     title = '',
     clickOutEnabled = true,
@@ -115,13 +118,13 @@ const ResizableModal = ({
                 <div role="body" className={bodyClassName}>
                     {children}
                 </div>
-                <div role="footer">
-                    {loading ? <LoadingSpinner style={{
-                        position: "absolute",
-                        left: 0,
-                        bottom: 0,
-                        margin: 18
-                    }}/> : null}
+                <div style={{display: 'flex'}} role="footer">
+                    <div className="ms-resizable-modal-loading-spinner-container">
+                        {loading ? <LoadingSpinner/> : null}
+                    </div>
+                    <div className="ms-resizable-modal-loading-text">
+                        {loading ? loadingText : null}
+                    </div>
                     <Toolbar buttons={buttons}/>
                 </div>
             </Dialog>

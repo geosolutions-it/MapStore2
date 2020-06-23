@@ -481,6 +481,7 @@
                 "title": "Titel aktualisieren",
                 "dimensions": "Dimensionen aktualisieren"
             },
+            "layerInfoTooltip": "Aktualisieren Sie den Layertitel und die Beschreibung",
             "layerMetadata": {
                 "identifier": "Kennung",
                 "title": "Titel",
@@ -2661,6 +2662,30 @@
             },
             "deleteError": "Beim Löschen der Karte ist ein unerwarteter Fehler aufgetreten",
             "updateError": "Beim Speichern der Karte ist ein unerwarteter Fehler aufgetreten"
+        },
+        "layerInfo": {
+            "title": "Aktualisieren Sie den Layertitel und die Beschreibung",
+            "noLayers": "Keine Schichten gefunden",
+            "syncButton": "Titel und Beschreibungen synchronisieren",
+            "selectAll": "Wählen Sie Alle",
+            "deselectAll": "Alle abwählen",
+            "loadingText": {
+                "updatingLayers": "Aktualisieren von Layern {updatedCount}/{totalCount}",
+                "savingToServer": "Speichern aktualisierter Daten auf dem Server"
+            },
+            "tooltips": {
+                "syncSuccess": "Titel und Beschreibung wurden für diese Ebene erfolgreich aktualisiert",
+                "syncError": "Es ist nicht möglich, den Titel und die Beschreibung dieser Ebene zu aktualisieren. Sie können im Einstellungsfeld überprüfen, ob alle Ebenenoptionen korrekt sind"
+            },
+            "syncingLayersSavingToServerError": {
+                "title": "Server-Speicherfehler",
+                "message": "Beim Speichern aktualisierter Layer auf dem Server ist ein unerwarteter Fehler aufgetreten"
+            },
+            "syncingLayersGeneralError": {
+                "title": "Allgemeiner Fehler",
+                "message": "Während der Ebenensynchronisierung ist ein unerwarteter Fehler aufgetreten. Es gibt wahrscheinlich einen Fehler im MapStore"
+            },
+            "layerType": "Typ: {type}"
         },
         "tutorial": {
             "title": "Anleitung",

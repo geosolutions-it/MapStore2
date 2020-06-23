@@ -481,6 +481,7 @@
                 "title": "Refrescar el título",
                 "dimensions": "Refrescar las dimensiones"
             },
+            "layerInfoTooltip": "Actualizar el título y la descripción de la capa",
             "layerMetadata": {
                 "identifier": "Identificador",
                 "title": "Título",
@@ -2662,6 +2663,30 @@
             },
             "deleteError": "Se produjo un error inesperado al eliminar el mapa",
             "updateError": "Se produjo un error inesperado al guardar el mapa"
+        },
+        "layerInfo": {
+            "title": "Actualizar el título y la descripción de la capa",
+            "noLayers": "No se encontraron capas",
+            "syncButton": "Sincronizar título y descripciones",
+            "selectAll": "Seleccionar todo",
+            "deselectAll": "Deseleccionar todo",
+            "loadingText": {
+                "updatingLayers": "Actualización de capas {updatedCount}/{totalCount}",
+                "savingToServer": "Guardar datos actualizados en el servidor"
+            },
+            "tooltips": {
+                "syncSuccess": "El título y la descripción se actualizaron correctamente para esta capa",
+                "syncError": "No es posible actualizar el título y la descripción de esta capa. Puede verificar si todas las opciones de capa son correctas en el panel de configuración"
+            },
+            "syncingLayersSavingToServerError": {
+                "title": "Error al guardar el servidor",
+                "message": "Se produjo un error inesperado al guardar capas actualizadas en el servidor"
+            },
+            "syncingLayersGeneralError": {
+                "title": "General Error",
+                "message": "Se produjo un error inesperado durante la sincronización de capas. Probablemente hay un error en MapStore"
+            },
+            "layerType": "tipo: {type}"
         },
         "tutorial": {
             "title": "Tutorial",
