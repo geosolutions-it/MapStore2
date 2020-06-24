@@ -34,7 +34,8 @@ class Text extends React.Component {
         fontStyleValues: PropTypes.array,
         fontWeightValues: PropTypes.array,
         fontFamilyValues: PropTypes.array,
-        shapeStyle: PropTypes.object
+        shapeStyle: PropTypes.object,
+        rotationStep: PropTypes.number
     };
 
     static contextTypes = {
@@ -49,7 +50,8 @@ class Text extends React.Component {
         alignValues: [{value: "start", label: "left"}, {value: "center", label: "center"}, {value: "end", label: "right"}],
         fontStyleValues: [{value: "normal"}, {value: "italic"}],
         fontFamilyValues: [{value: "Arial"}, {value: "Helvetica"}, {value: "sans-serif"}, {value: "Courier"}],
-        shapeStyle: {}
+        shapeStyle: {},
+        rotationStep: 5
     };
 
     state = {
@@ -203,7 +205,7 @@ class Text extends React.Component {
                     <div className="mapstore-slider with-tooltip">
                         <Slider
                             tooltips
-                            step={2}
+                            step={this.props.rotationStep}
                             start={[style.textRotationDeg || 0]}
                             format={{
                                 from: value => Math.round(parseFloat(value)),
@@ -215,7 +217,7 @@ class Text extends React.Component {
                             }}
                             onChange={(values) => {
                                 const rotationDeg = parseInt(values[0].replace(' &deg;', ''), 10);
-                                this.props.onChange(style.id, {textRotation: this.toRad(rotationDeg), textRotationDeg: rotationDeg});
+                                this.props.onChange(style.id, {textRotationDeg: rotationDeg});
                             }}
                         />
                     </div>
@@ -223,9 +225,6 @@ class Text extends React.Component {
             </Row>
         </div>);
     }
-
-    toRad = deg => deg / 180 * Math.PI;
-    toDeg = rad => rad / Math.PI * 180;
 }
 
 module.exports = Text;

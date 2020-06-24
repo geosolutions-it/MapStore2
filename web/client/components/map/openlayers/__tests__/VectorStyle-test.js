@@ -458,12 +458,12 @@ describe('Test VectorStyle', () => {
     });
     it('getTextStyle, with a rotation', () => {
         const textStyle = {
-            textRotation: 3.14
+            textRotationDeg: 180
         };
         const olStyle = getTextStyle(textStyle);
         expect(typeof olStyle).toBe("object");
         expect(isArray(olStyle)).toBe(false);
-        expect(olStyle.getRotation()).toBe(3.14);
+        expect(olStyle.getRotation()).toBe(Math.PI);
     });
     it('getGeometryTrasformation, with marker style, no geometry', () => {
         const markerStyle = {
