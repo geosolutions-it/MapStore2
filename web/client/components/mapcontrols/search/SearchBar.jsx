@@ -184,7 +184,7 @@ export default ({
         tooltipPosition: "bottom",
         bsStyle: "default",
         pullRight: true,
-        visible: activeTool === "addressSearch"
+        visible: showOptions && activeTool === "addressSearch"
     };
 
     const coordinateFormatChange = {
