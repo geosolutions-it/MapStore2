@@ -5,7 +5,7 @@ const LMap = require('../../../components/map/cesium/Map');
 const LLayer = require('../../../components/map/cesium/Layer');
 
 const SearchBar = require("../../../components/mapcontrols/search/SearchBar");
-const SearchResultList = require("../../../components/mapcontrols/search/SearchResultList");
+const SearchResultList = require("../../../components/mapcontrols/search/SearchResultList").default;
 const MousePosition = require("../../../components/mapcontrols/mouseposition/MousePosition");
 const pointOnSurface = require('turf-point-on-surface');
 

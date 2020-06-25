@@ -10,6 +10,7 @@ const {compose, mapPropsStream} = require('recompose');
 const {isNil} = require('lodash');
 const Message = require('../I18N/Message');
 const Rx = require('rxjs');
+const { isObject } = require('lodash');
 
 const API = {
     "csw": require('../../api/CSW'),
@@ -23,6 +24,7 @@ const LoadingSpinner = require('../misc/LoadingSpinner');
 const withVirtualScroll = require('../misc/enhancers/infiniteScroll/withInfiniteScroll');
 const loadingState = require('../misc/enhancers/loadingState');
 const emptyState = require('../misc/enhancers/emptyState');
+const errorState = require('../misc/enhancers/emptyState');
 const withControllableState = require('../misc/enhancers/withControllableState');
 const CatalogForm = require('./CatalogForm');
 const {getCatalogRecords} = require('../../utils/CatalogUtils');
@@ -30,6 +32,12 @@ const Icon = require('../misc/FitIcon');
 const defaultPreview = <Icon glyph="geoserver" padding={20}/>;
 const SideGrid = compose(
     loadingState(({loading, items = []} ) => items.length === 0 && loading),
+    errorState(
+        ({loading, error} ) => !loading && error,
+        {
+            title: <Message msgId="catalog.error" />,
+            style: { transform: "translateY(50%)"}
+        }),
     emptyState(
         ({loading, items = []} ) => items.length === 0 && !loading,
         {
@@ -43,7 +51,7 @@ const SideGrid = compose(
  */
 const resToProps = ({records, result = {}}) => ({
     items: (records || []).map((record = {}) => ({
-        title: record.title,
+        title: record.title && isObject(record.title) && record.title.default || record.title,
         caption: record.identifier,
         description: record.description,
         preview: record.thumbnail ? <img src="thumbnail" /> : defaultPreview,
@@ -88,7 +96,7 @@ module.exports = compose(
                 .ignoreElements() // don't want to emit props
         )))
 
-)(({ setSearchText = () => { }, selected, onRecordSelected, loading, searchText, items = [], total, catalog, services, title, showCatalogSelector}) => {
+)(({ setSearchText = () => { }, selected, onRecordSelected, loading, searchText, items = [], total, catalog, services, title, showCatalogSelector, error}) => {
     return (<BorderLayout
         className="compat-catalog"
         header={<CatalogForm services={services ? services : [catalog]} showCatalogSelector={showCatalogSelector} title={title} searchText={searchText} onSearchTextChange={setSearchText}/>}
@@ -105,6 +113,7 @@ module.exports = compose(
                     ? {...i, selected: true}
                     : i)}
             loading={loading}
+            error={error}
             onItemClick={({record} = {}) => onRecordSelected(record, catalog)}/>
     </BorderLayout>);
 });

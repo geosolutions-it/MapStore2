@@ -214,6 +214,19 @@ describe('config epics', () => {
                 }
             });
         });
+        it('load existing configuration file with alphanumeric mapId', (done) => {
+            mockAxios.onGet("/base/web/client/test-resources/testConfig.json").reply(() => ([ 200, {} ]));
+            const checkActions = ([a]) => {
+                expect(a).toBeTruthy();
+                expect(a.type).toBe(MAP_CONFIG_LOADED);
+                done();
+            };
+            testEpic(loadMapConfigAndConfigureMap,
+                1,
+                [loadMapConfig('base/web/client/test-resources/testConfig.json', 'testConfig')],
+                checkActions
+            );
+        });
     });
 
     describe('loadMapInfo', () => {

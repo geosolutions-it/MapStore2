@@ -55,9 +55,9 @@ export const withIdentifyRequest  = mapPropsStream(props$ => {
                         point,
                         currentLocale: "en-US"});
                     const basePath = url;
-                    const requestParams = request;
+                    const queryParams = request;
                     const appParams = filterRequestParams(layer, includeOptions, excludeParams);
-                    const param = { ...appParams, ...requestParams };
+                    const param = { ...appParams, ...queryParams };
                     const reqId = uuidv1();
                     return getFeatureInfo(basePath, param, layer)
                         .map((response) =>
@@ -65,13 +65,13 @@ export const withIdentifyRequest  = mapPropsStream(props$ => {
                                 ? ({
                                     reqId,
                                     exceptions: response.data.exceptions,
-                                    requestParams,
+                                    queryParams,
                                     layerMetadata: metadata
                                 })
                                 : ({
                                     data: response.data,
                                     reqId: reqId,
-                                    requestParams,
+                                    queryParams,
                                     layerMetadata: {
                                         ...metadata,
                                         features: response.features,
@@ -82,7 +82,7 @@ export const withIdentifyRequest  = mapPropsStream(props$ => {
                         .catch((e) => ({
                             error: e.data || e.statusText || e.status,
                             reqId,
-                            requestParams,
+                            queryParams,
                             layerMetadata: metadata
                         }))
                         .startWith(({
@@ -95,9 +95,9 @@ export const withIdentifyRequest  = mapPropsStream(props$ => {
                         const {reqId, request} = action;
                         return {requests: requests.concat({ reqId, request }), responses, validResponses};
                     }
-                    const {data, requestParams, layerMetadata} = action;
+                    const {data, queryParams, layerMetadata} = action;
                     const validator = getValidator(mapInfoFormat);
-                    const newResponses = responses.concat({response: data, requestParams, layerMetadata});
+                    const newResponses = responses.concat({response: data, queryParams, layerMetadata});
                     const newValidResponses = validator.getValidResponses(newResponses);
                     return {requests, validResponses: newValidResponses, responses: newResponses};
                 }, {requests: [], responses: [], validResponses: []});

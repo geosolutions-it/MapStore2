@@ -104,6 +104,7 @@ const bbox = require('@turf/bbox');
  * @prop {object[]} symbolList list of symbols
  * @prop {string} defaultShape default shape for symbol
  * @prop {string} symbolsPath path to the svg folder
+ * @prop {number} textRotationStep rotation step of text styler
  *
  * In addition, as the Identify viewer interface mandates, every feature attribute is mapped as a component property (in addition to the feature object).
  */
@@ -189,7 +190,8 @@ class AnnotationsEditor extends React.Component {
         symbolErrors: PropTypes.array,
         lineDashOptions: PropTypes.array,
         symbolList: PropTypes.array,
-        defaultShape: PropTypes.string
+        defaultShape: PropTypes.string,
+        textRotationStep: PropTypes.number
     };
 
     static defaultProps = {
@@ -467,6 +469,7 @@ class AnnotationsEditor extends React.Component {
             defaultShape={this.props.defaultShape}
             lineDashOptions={this.props.lineDashOptions}
             markersOptions={this.getConfig()}
+            textRotationStep={this.props.textRotationStep}
         />);
     };
 

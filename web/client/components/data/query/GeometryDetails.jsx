@@ -157,8 +157,8 @@ class GeometryDetails extends React.Component {
                     style={{minWidth: '105px', margin: 'auto'}}
                     type="number"
                     id={"queryform_bbox_" + name}
-                    step={!this.isWGS84() ? 1 : this.getStep(this.props.zoom)}
-                    defaultValue={this.roundValue(value, !this.isWGS84() ? 100 : 1000000)}
+                    step={this.getStep(this.props.zoom)}
+                    defaultValue={this.roundValue(value, 1000000)}
                     onChange={(evt) => this.onUpdateBBOX(evt.target.value, name)}/>
             </div>
         );
@@ -323,7 +323,7 @@ class GeometryDetails extends React.Component {
         for (let prop in this.extent) {
             if (prop) {
                 let coordinateInput = document.getElementById("queryform_bbox_" + prop);
-                coordinateInput.value = this.roundValue(this.extent[prop], !this.isWGS84() ? 100 : 1000000);
+                coordinateInput.value = this.roundValue(this.extent[prop], 1000000);
                 this.onUpdateBBOX(this.extent[prop], prop);
             }
         }

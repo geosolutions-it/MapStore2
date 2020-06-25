@@ -9,7 +9,7 @@ import React from "react";
 import {compose, withProps, withHandlers, mapPropsStream} from 'recompose';
 
 import MapCatalogComp from '../../maps/MapCatalog';
-import Message from '../../I18N/Message';
+import HTML from '../../I18N/HTML';
 import mapCatalog from '../../maps/enhancers/mapCatalog';
 import handleMapSelect from '../../widgets/builder/wizard/map/enhancers/handleMapSelect';
 import Filter from '../../misc/Filter';
@@ -91,7 +91,7 @@ const MapList = ({
                     }))}
                 />) || (
                 <div className="msEmptyListMessage">
-                    <Message msgId="mediaEditor.mapList.emptyList"/>
+                    <HTML msgId="mediaEditor.mapList.emptyList"/>
                 </div>)
             }
         </div>);

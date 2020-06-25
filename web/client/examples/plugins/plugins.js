@@ -33,7 +33,7 @@ module.exports = {
         SharePlugin: require('../../plugins/Share'),
         HomePlugin: require('../../plugins/Home'),
         LoginPlugin: require('../../plugins/Login'),
-        TOCItemsSettingsPlugin: require('../../plugins/TOCItemsSettings'),
+        TOCItemsSettingsPlugin: require('../../plugins/TOCItemsSettings').default,
         MapFooterPlugin: require('../../plugins/MapFooter')
     },
     requires: {}

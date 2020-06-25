@@ -37,6 +37,10 @@ const COMPARISON_TESTS = [
     {
         cql: "PROP like 'a'",
         expected: '<ogc:PropertyIsLike matchCase="true" wildCard="*" singleChar="." escapeChar="!"><ogc:PropertyName>PROP</ogc:PropertyName><ogc:Literal>a</ogc:Literal></ogc:PropertyIsLike>'
+    },
+    {
+        cql: "PROP between 1 and 3",
+        expected: '<ogc:PropertyIsBetween><ogc:PropertyName>PROP</ogc:PropertyName><ogc:LowerBoundary><ogc:Literal>1</ogc:Literal></ogc:LowerBoundary><ogc:UpperBoundary><ogc:Literal>3</ogc:Literal></ogc:UpperBoundary></ogc:PropertyIsBetween>'
     }
 ];
 

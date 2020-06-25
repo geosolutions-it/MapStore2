@@ -14,6 +14,8 @@ var SearchBar = require('../SearchBar').default;
 const TestUtils = require('react-dom/test-utils');
 
 describe("test the SearchBar", () => {
+    const items = [{bookmarkConfig: () =>({glyph: "cog", visible: true}), menuItem: () => ({active: true, glyph: "bookmark", text: "Search by bookmark"})}];
+
     beforeEach((done) => {
         document.body.innerHTML = '<div id="container"></div>';
         setTimeout(done);
@@ -194,7 +196,7 @@ describe("test the SearchBar", () => {
         let cog = document.getElementsByClassName("glyphicon-cog");
         expect(reset.length).toBe(1);
         expect(search.length).toBe(2);
-        expect(cog.length).toBe(2);
+        expect(cog.length).toBe(1);
     });
 
     it('test zoomToPoint, with search, with aeronautical, with reset', () => {
@@ -205,7 +207,7 @@ describe("test the SearchBar", () => {
         let inputs = document.getElementsByTagName("input");
         expect(reset.length).toBe(0);
         expect(search.length).toBe(2);
-        expect(cog.length).toBe(2);
+        expect(cog.length).toBe(1);
         expect(inputs.length).toBe(6);
     });
 
@@ -292,5 +294,125 @@ describe("test the SearchBar", () => {
         expect(reset).toExist();
         expect(cog.length).toBe(0);
         expect(zoom.length).toBe(0);
+    });
+
+    it('test searchByBookmark options under menu', () => {
+        ReactDOM.render(<SearchBar showOptions showBookMarkSearchOption activeSearchTool="bookmarkSearch" items={items}  />, document.getElementById("container"));
+        const container = document.getElementById('container');
+        const buttons = container.querySelectorAll('button');
+        expect(buttons.length).toBe(3);
+        TestUtils.Simulate.click(buttons[2]);
+        const links = container.querySelectorAll('a');
+        const bookmark = container.getElementsByClassName('glyphicon-bookmark');
+        expect(links.length).toBe(3);
+        expect(bookmark).toExist();
+        expect(links[2].innerText).toBe('Search by bookmark');
+    });
+    it('test searchByBookmark, search button disabled', () => {
+        ReactDOM.render(<SearchBar showOptions showBookMarkSearchOption activeSearchTool="bookmarkSearch" items={items} bookmarkConfig={{}}  />, document.getElementById("container"));
+        const container = document.getElementById('container');
+        const buttons = container.querySelectorAll('button');
+        const cog = document.getElementsByClassName("glyphicon-cog");
+        const bookmarkSelect = container.querySelector('.search-select');
+        expect(bookmarkSelect).toExist();
+        expect(buttons.length).toBe(3);
+        const searchButton = buttons[1];
+        expect(searchButton).toExist();
+        expect(searchButton.disabled).toBe(true);
+        expect(cog).toExist();
+    });
+    it('test searchByBookmark, with bookmark selected', () => {
+        const bookmarkConfig = {selected: {title: "Bookmark1"}, bookmarkSearchConfig: {bookmarks: [{title: "Bookmark 1"}, {title: "Bookmark 2"}]}};
+        ReactDOM.render(<SearchBar showOptions showBookMarkSearchOption activeSearchTool="bookmarkSearch" items={items} bookmarkConfig={bookmarkConfig}  />, document.getElementById("container"));
+        const cmp = document.getElementById('container');
+        expect(cmp).toExist();
+        const bookmarkSelect = cmp.querySelector('.search-select');
+        expect(bookmarkSelect).toExist();
+        const buttons = cmp.querySelectorAll('button');
+        expect(buttons[1].disabled).toBeFalsy();
+    });
+    it('test searchByBookmark, open view bookmarks onToggleControl', () => {
+        const bookmarkConfig = {selected: {title: "Bookmark1"}, bookmarkSearchConfig: {bookmarks: [{title: "Bookmark 1"}, {title: "Bookmark 2"}]}};
+        const actions = {
+            onToggleControl: () =>{}
+        };
+        const itemsProps = [{bookmarkConfig: (toggleConfig) =>({onClick: () => toggleConfig("searchBookmarkConfig"), glyph: "cog", visible: true}), menuItem: () => ({active: true, glyph: "bookmark", text: "Search by bookmark"})}];
+        const spyOnToggleControl = expect.spyOn(actions, 'onToggleControl');
+        const props = {
+            showOptions: true,
+            showBookMarkSearchOption: true,
+            enabledSearchBookmarkConfig: false,
+            activeSearchTool: "bookmarkSearch",
+            onToggleControl: actions.onToggleControl,
+            items: itemsProps,
+            bookmarkConfig
+        };
+        ReactDOM.render(<SearchBar {...props}/>, document.getElementById("container"));
+        const cmp = document.getElementById('container');
+        expect(cmp).toExist();
+        const bookmarkSelect = cmp.querySelector('.search-select');
+        expect(bookmarkSelect).toExist();
+        const buttons = cmp.querySelectorAll('button');
+        TestUtils.Simulate.click(buttons[0]); // Bookmark config button
+        expect(spyOnToggleControl).toHaveBeenCalled();
+        expect(spyOnToggleControl.calls[0].arguments[0]).toBe("searchBookmarkConfig");
+    });
+    it('test searchByBookmark, load a bookmark with onLayerVisibilityLoad', () => {
+        const bookmarkConfig = {selected: {title: "Bookmark1", layerVisibilityReload: true, options: {west: 5, south: 10, east: 20, north: 30}}, bookmarkSearchConfig: {bookmarks: [{title: "Bookmark 1"}, {title: "Bookmark 2"}]}};
+        const actions = {
+            onLayerVisibilityLoad: () =>{}
+        };
+        const itemsProps = [{bookmarkConfig: () =>({glyph: "cog", visible: true}), menuItem: () => ({active: true, glyph: "bookmark", text: "Search by bookmark"})}];
+        const spyOnLayerVisibilityLoad = expect.spyOn(actions, 'onLayerVisibilityLoad');
+        const props = {
+            showOptions: true,
+            showBookMarkSearchOption: true,
+            enabledSearchBookmarkConfig: false,
+            activeSearchTool: "bookmarkSearch",
+            onLayerVisibilityLoad: actions.onLayerVisibilityLoad,
+            items: itemsProps,
+            bookmarkConfig,
+            mapInitial: {map: {layers: "Tests"}}
+        };
+        ReactDOM.render(<SearchBar {...props}/>, document.getElementById("container"));
+        const cmp = document.getElementById('container');
+        expect(cmp).toExist();
+        const bookmarkSelect = cmp.querySelector('.search-select');
+        expect(bookmarkSelect).toExist();
+        const buttons = cmp.querySelectorAll('button');
+        TestUtils.Simulate.click(buttons[1]); // Bookmark config button
+        expect(spyOnLayerVisibilityLoad).toHaveBeenCalled();
+        expect(spyOnLayerVisibilityLoad.calls.length).toBe(1);
+        expect(spyOnLayerVisibilityLoad.calls[0].arguments[0]).toEqual({map: {layers: "Tests", bookmark_search_config: {bookmarks: [{title: "Bookmark 1"}, {title: "Bookmark 2"}]}}});
+        expect(spyOnLayerVisibilityLoad.calls[0].arguments[1]).toEqual(null);
+        expect(spyOnLayerVisibilityLoad.calls[0].arguments[2]).toEqual([5, 10, 20, 30]);
+    });
+    it('test searchByBookmark, load a bookmark with zoomToExtent', () => {
+        const bookmarkConfig = {selected: {title: "Bookmark1", layerVisibilityReload: false, options: {west: 5, south: 10, east: 20, north: 30}}};
+        const actions = {
+            onZoomToExtent: () => {}
+        };
+        const itemsProps = [{bookmarkConfig: () =>({glyph: "cog", visible: true}), menuItem: () => ({active: true, glyph: "bookmark", text: "Search by bookmark"})}];
+        const spyOnZoomToExtent = expect.spyOn(actions, 'onZoomToExtent');
+        const props = {
+            showOptions: true,
+            showBookMarkSearchOption: true,
+            enabledSearchBookmarkConfig: false,
+            activeSearchTool: "bookmarkSearch",
+            onZoomToExtent: actions.onZoomToExtent,
+            items: itemsProps,
+            bookmarkConfig,
+            mapInitial: {map: {layers: "Tests"}}
+        };
+        ReactDOM.render(<SearchBar {...props}/>, document.getElementById("container"));
+        const cmp = document.getElementById('container');
+        expect(cmp).toExist();
+        const bookmarkSelect = cmp.querySelector('.search-select');
+        expect(bookmarkSelect).toExist();
+        const buttons = cmp.querySelectorAll('button');
+        TestUtils.Simulate.click(buttons[1]); // Bookmark config button
+        expect(spyOnZoomToExtent).toHaveBeenCalled();
+        expect(spyOnZoomToExtent.calls.length).toBe(1);
+        expect(spyOnZoomToExtent.calls[0].arguments[0]).toEqual([ 5, 10, 20, 30 ]);
     });
 });

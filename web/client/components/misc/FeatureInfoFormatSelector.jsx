@@ -11,12 +11,15 @@ import PropTypes from 'prop-types';
 import MapInfoUtils from '../../utils/MapInfoUtils';
 import Select from "react-select";
 import { FormGroup, ControlLabel } from 'react-bootstrap';
+import ControlledPopover from '../widgets/widget/ControlledPopover';
+import HTML from '../I18N/HTML';
 
 function FeatureInfoFormatSelector({
     id,
     label,
     infoFormat,
     availableInfoFormat,
+    popoverMessage,
     disabled,
     onInfoFormatChange,
     selectProps
@@ -38,6 +41,8 @@ function FeatureInfoFormatSelector({
     }));
 
     const select = (
+        <>
+        &nbsp;  {popoverMessage && <ControlledPopover text={<HTML msgId={popoverMessage} />} /> }
         <Select
             { ...selectProps }
             id={id}
@@ -46,7 +51,7 @@ function FeatureInfoFormatSelector({
             disabled={disabled}
             options={options}
             onChange={(selected) => onInfoFormatChange(selected?.value)}
-        />
+        /></>
     );
 
     return label
@@ -64,6 +69,7 @@ FeatureInfoFormatSelector.propTypes = {
     label: PropTypes.oneOfType([PropTypes.func, PropTypes.string, PropTypes.object]),
     availableInfoFormat: PropTypes.object,
     infoFormat: PropTypes.string,
+    popoverMessage: PropTypes.string,
     onInfoFormatChange: PropTypes.func,
     disabled: PropTypes.bool,
     selectProps: PropTypes.object
@@ -73,6 +79,7 @@ FeatureInfoFormatSelector.defaultProps = {
     id: "mapstore-feature-format-selector",
     availableInfoFormat: MapInfoUtils.getAvailableInfoFormat(),
     infoFormat: MapInfoUtils.getDefaultInfoFormatValue(),
+    popoverMessage: "",
     onInfoFormatChange: function() {},
     selectProps: {}
 };

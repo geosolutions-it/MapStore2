@@ -34,6 +34,17 @@
 
     </profile>
     <profile>
+        <id>printingbundle</id>
+        <activation>
+        <property>
+          <name>printingbundle</name>
+        </property>
+      </activation>
+      <modules>
+        <module>printing</module>
+      </modules>
+    </profile>
+    <profile>
       <id>release</id>
       <activation>
         <property>
@@ -44,6 +55,7 @@
         <module>backend</module>
         <module>web</module>
         <module>release</module>
+        <module>printing</module>
       </modules>
     </profile>
   </profiles>

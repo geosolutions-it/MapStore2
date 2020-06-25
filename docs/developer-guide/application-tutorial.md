@@ -6,7 +6,10 @@ Writing a new MapStore based application can be done following these steps:
     +-- index.html
     +-- config.json
     +-- webpack.config.js
+    +-- babel.config.js
     +-- app.jsx
+    +-- actions
+        +-- config.js
     +-- containers
     |   +-- myapp.jsx
     +-- stores
@@ -50,10 +53,10 @@ var ReactDOM = require('react-dom');
 var Provider = require('react-redux').Provider;
 
 // include application component
-var MyApp = require('./containers/MyApp');
+var MyApp = require('./containers/myapp');
 var url = require('url');
 
-var loadMapConfig = require('../../actions/config').loadMapConfig;
+var loadMapConfig = require('./actions/config').loadMapConfig;
 var ConfigUtils = require('../../utils/ConfigUtils');
 
 // initializes Redux store
@@ -79,6 +82,7 @@ ReactDOM.render(
  * create a **myapp.jsx** component inside the **containers** folder, that will contain the all-in-one Smart Component of the application
 
 ```javascript
+var PropTypes = require('prop-types');
 var React = require('react');
 var connect = require('react-redux').connect;
 var LMap = require('../../../components/map/leaflet/Map');
@@ -146,6 +150,42 @@ let finalCreateStore = applyMiddleware(thunkMiddleware)(createStore);
 module.exports = finalCreateStore(reducers, {});
 ```
 
+ * create a **config.js** actions file inside the **actions** folder, that will contain the redux action (thunk) used to load the map configuration
+
+```javascript
+const axios = require('../../../libs/ajax');
+const {configureMap, configureError} = require('../../../actions/config');
+
+/**
+ * Map configuration loader action.
+ * ReduxJS thunk.
+ */
+function loadMapConfig(configName, legacy) {
+    return (dispatch) => {
+        // loads the configuration file and dispatches configureMap or configureError
+        return axios.get(configName).then((response) => {
+            if (typeof response.data === 'object') {
+                dispatch(configureMap(response.data, legacy));
+            } else {
+                try {
+                    JSON.parse(response.data);
+                } catch (e) {
+                    dispatch(configureError('Configuration file broken (' + configName + '): ' + e.message));
+                }
+
+            }
+
+        }).catch((e) => {
+            dispatch(configureError(e));
+        });
+    };
+}
+
+module.exports = {
+    loadMapConfig
+};
+```
+
  * create a **config.json** file with basic map configuration
 
 ```javascript
@@ -189,12 +229,12 @@ module.exports = {
         myapp: path.join(__dirname, "app")
     },
     output: {
-      path: path.join(__dirname, "dist"),
+        path: path.join(__dirname, "dist"),
         publicPath: "/dist/",
         filename: "myapp.js"
     },
     resolve: {
-      extensions: [".js", ".jsx"]
+        extensions: [".js", ".jsx"]
     },
     module: {
         rules: [
@@ -202,7 +242,10 @@ module.exports = {
                 test: /\.jsx?$/,
                 exclude: /node_modules/,
                 use: [{
-                    loader: "babel-loader"
+                    loader: "babel-loader",
+                    options: {
+                        configFile: path.join(__dirname, 'babel.config.js')
+                    }
                 }]
 
             }
@@ -216,7 +259,24 @@ module.exports = {
     ]
 };
 
+```
 
+* create a **babel.config.js** file with babel presets
+
+```javascript
+module.exports = function(api) {
+    api.cache(true);
+    return {
+        "presets": [
+            "@babel/env",
+            "@babel/preset-react"
+        ],
+        "plugins": [
+            "@babel/plugin-proposal-class-properties",
+            "@babel/plugin-syntax-dynamic-import"
+        ]
+    };
+};
 ```
 
 Now the application is ready, to launch it in development mode, you can use the following command (launch it from the MapStore main folder):

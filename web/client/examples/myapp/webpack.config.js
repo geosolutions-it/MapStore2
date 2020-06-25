@@ -19,7 +19,10 @@ module.exports = {
                 test: /\.jsx?$/,
                 exclude: /node_modules/,
                 use: [{
-                    loader: "babel-loader"
+                    loader: "babel-loader",
+                    options: {
+                        configFile: path.join(__dirname, 'babel.config.js')
+                    }
                 }]
 
             }

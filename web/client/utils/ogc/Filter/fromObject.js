@@ -1,15 +1,16 @@
-const {includes} = require('lodash');
+const {includes, isNil} = require('lodash');
 const logical = ["and", "or", "not"];
 const operators = {
     '=': "equalTo",
     "<>": "notEqualTo",
+    "><": "between",
     '<': "lessThen",
     '<=': "lessThenOrEqualTo",
     '>': "greaterThen",
     '>=': "greaterThenOrEqualTo",
     'like': "like",
     'ilike': "ilike"
-    // TODO: support ternary operators like between '><' or unary like isNull
+    // TODO: support unary operators like isNull
     // TODO: support geometry operations
 };
 /**
@@ -24,13 +25,13 @@ const operators = {
  * const ogcFilter = toOgcFiler(filterObject);
  * // ogcFilter --> "<ogc:PropertyIsEqualTo><ogc:PropertyName>property</ogc:PropertyName><ogc:Literal>value</ogc:Literal></ogc:PropertyIsEqualTo>"
  */
-const fromObject = (filterBuilder = {}) => ({type, filters = [], value, property }) => {
+const fromObject = (filterBuilder = {}) => ({type, filters = [], value, property, lowerBoundary, upperBoundary }) => {
     if (includes(logical, type)) {
         return filterBuilder[type](
             ...filters.map(fromObject(filterBuilder))
         );
     }
-    return filterBuilder.property(property)[operators[type]](value);
+    return filterBuilder.property(property)[operators[type]](isNil(value) ? lowerBoundary : value, upperBoundary);
 };
 
 module.exports = fromObject;

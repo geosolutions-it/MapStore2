@@ -10,6 +10,8 @@ const PropTypes = require('prop-types');
 const React = require('react');
 const assign = require('object-assign');
 const {UserDetails, PasswordReset, UserMenu, Login, LoginNav } = require('./login/index');
+const epics = require('../epics/login');
+const { comparePendingChanges } = require('../epics/pendingChanges');
 
 require('./login/login.css');
 
@@ -63,5 +65,8 @@ module.exports = {
         }
     }),
     reducers: {security: require('../reducers/security')},
-    epics: require('../epics/login')
+    epics: {
+        ...epics,
+        comparePendingChanges
+    }
 };

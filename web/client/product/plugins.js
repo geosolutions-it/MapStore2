@@ -101,6 +101,7 @@ module.exports = {
         ScrollTopPlugin: require('../plugins/ScrollTop'),
         SearchPlugin: require('../plugins/Search'),
         SearchServicesConfigPlugin: require('../plugins/SearchServicesConfig'),
+        SearchByBookmarkPlugin: require('../plugins/SearchByBookmark').default,
         SettingsPlugin: require('../plugins/Settings'),
         SharePlugin: require('../plugins/Share'),
         SnapshotPlugin: require('../plugins/Snapshot'),

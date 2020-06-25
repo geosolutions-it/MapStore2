@@ -43,6 +43,7 @@ const toolButtons = {
     editMedia: ({editMap: disabled = false, path, editMedia = () => {} }) => ({
         // using normal ToolbarButton because this has no options
         glyph: "pencil",
+        "data-button": "pencil",
         visible: true,
         disabled,
         tooltipId: "geostory.contentToolbar.editMedia",
@@ -75,6 +76,43 @@ const toolButtons = {
         onClick: () => {
             editWebPage({path});
         }
+    }),
+    muted: ({ update, muted }) => ({
+        glyph: muted ? 'muted' : 'audio',
+        visible: true,
+        active: !muted,
+        tooltipId: muted ? 'geostory.contentToolbar.enableAudio' : 'geostory.contentToolbar.disableAudio',
+        onClick: () => {
+            update('muted', !muted);
+        }
+    }),
+    autoplay: ({ update, autoplay, fit }) => ({
+        glyph: 'play-circle',
+        visible: !!(fit !== 'cover'),
+        active: autoplay,
+        tooltipId: autoplay ? 'geostory.contentToolbar.disableAutoplay' : 'geostory.contentToolbar.enableAutoplay',
+        onClick: () => {
+            update('autoplay', !autoplay);
+        }
+    }),
+    loop: ({ update, loop, fit }) => ({
+        glyph: 'loop',
+        visible: !!(fit !== 'cover'),
+        active: loop,
+        tooltipId: loop ? 'geostory.contentToolbar.disableLoop' : 'geostory.contentToolbar.enableLoop',
+        onClick: () => {
+            update('loop', !loop);
+        }
+    }),
+    showCaption: ({ editMap: disabled = false, update, showCaption, caption, description }) => ({
+        glyph: 'caption',
+        visible: !!(caption || description),
+        disabled,
+        active: !!(showCaption && !disabled),
+        tooltipId: showCaption ? 'geostory.contentToolbar.hideCaption' : 'geostory.contentToolbar.showCaption',
+        onClick: () => {
+            update('showCaption', !showCaption);
+        }
     })
 };
 
@@ -85,6 +123,10 @@ const toolButtons = {
  * @prop {string} align one of `left`, `center` and `right`
  * @prop {string} theme one of `bright`, `bright-text`, `dark` and `dark-text`
  * @prop {string} fit one of `contain` and `cover`
+ * @prop {boolean} muted enable/disable muted property (video)
+ * @prop {boolean} autoplay enable/disable autoplay property (video)
+ * @prop {boolean} loop enable/disable loop property (video)
+ * @prop {boolean} showCaption show/hide caption under media content
  * @prop {function} update handler for select properties events, parameters (key, value)
  * @example
  *

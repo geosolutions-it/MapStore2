@@ -27,7 +27,8 @@ import {
     update,
     updateCurrentPage,
     updateSetting,
-    removeResource
+    removeResource,
+    setPendingChanges
 } from '../../actions/geostory';
 import geostory from '../../reducers/geostory';
 import {
@@ -47,7 +48,8 @@ import {
     resourcesSelector,
     sectionAtIndexSelectorCreator,
     sectionsSelector,
-    settingsSelector
+    settingsSelector,
+    hasPendingChanges
 } from '../../selectors/geostory';
 import TEST_STORY from "../../test-resources/geostory/sampleStory_1.json";
 import TEST_STORY_1 from "../../test-resources/geostory/story_state.json";
@@ -409,5 +411,10 @@ describe('geostory reducer', () => {
         expect(contC).toExist();
         expect(contC.resourceId).toNotExist();
         expect(contC.map).toNotExist();
+    });
+    it('setPendingChanges', () => {
+        expect(hasPendingChanges( { geostory: geostory(undefined, setCurrentStory(TEST_STORY)) } )).toBeFalsy();
+        expect(hasPendingChanges( { geostory: geostory(undefined, setPendingChanges(true)) } )).toBeTruthy();
+        expect(hasPendingChanges( { geostory: geostory(undefined, setPendingChanges(false)) } )).toBeFalsy();
     });
 });
