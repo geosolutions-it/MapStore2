@@ -59,7 +59,6 @@ class Manager extends React.Component {
         defaultStyles: PropTypes.object,
         symbolList: PropTypes.array,
         symbolErrors: PropTypes.array,
-        markersOptions: PropTypes.object,
         defaultSymbol: PropTypes.object,
         defaultMarker: PropTypes.object,
         markersOptions: PropTypes.object,
