@@ -14,7 +14,7 @@ import Stepper from '../misc/Stepper';
 import GeneralSettings from './GeneralSettingsStep';
 import ConfigurePlugins from './ConfigurePluginsStep';
 import ConfigureMap from './ConfigureMapStep';
-
+import {CONTEXT_TUTORIALS} from '../../actions/contextcreator';
 /**
  * Filters plugins and applies overrides.
  * The resulting array will filter the pluginsConfig returning only the ones present in viewerPlugins.
@@ -212,11 +212,7 @@ export default class ContextCreator extends React.Component {
         showBackToPageConfirmation: false,
         backToPageDestRoute: '/context-manager',
         backToPageConfirmationMessage: 'contextCreator.undo',
-        tutorials: {
-            "general-settings": "contextcreator_generalsettings_tutorial",
-            "configure-map": "contextcreator_configuremap_tutorial",
-            "configure-plugins": "contextcreator_configureplugins_tutorial"
-        }
+        tutorials: CONTEXT_TUTORIALS
     };
 
     componentDidMount() {
