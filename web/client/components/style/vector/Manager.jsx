@@ -59,7 +59,11 @@ class Manager extends React.Component {
         defaultStyles: PropTypes.object,
         symbolList: PropTypes.array,
         symbolErrors: PropTypes.array,
-        markersOptions: PropTypes.object
+        markersOptions: PropTypes.object,
+        defaultSymbol: PropTypes.object,
+        defaultMarker: PropTypes.object,
+        markersOptions: PropTypes.object,
+        textRotationStep: PropTypes.number
     };
 
     static defaultProps = {
@@ -133,7 +137,7 @@ class Manager extends React.Component {
         (checkSymbolsError(this.props.symbolErrors) ||
         checkSymbolsError(this.props.symbolErrors, "loading_symbol" + style.shape))
             ? null : isFillStyle(style) && <Fill {...stylerProps} defaultColor={this.props.defaultShapeFillColor} key={"fill" + i}/> || null;
-        const text = isTextStyle(style) && <Text {...stylerProps} /> || null;
+        const text = isTextStyle(style) && <Text {...stylerProps} rotationStep={this.props.textRotationStep}/> || null;
         const markerType = (isMarkerStyle(style) || isSymbolStyle(style)) && <MarkerType {...stylerProps} pointType={isSymbolStyle(style) ? "symbol" : "marker"} onChangeType={this.changeSymbolType}/> || null;
         const markerGlyph = isMarkerStyle(style) && <MarkerGlyph {...stylerProps} markersOptions={this.props.markersOptions}/> || null;
         const symbolLayout = isSymbolStyle(style) && (

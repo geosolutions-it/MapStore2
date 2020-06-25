@@ -1,16 +1,6 @@
 {
   "type": "cascade",
-  "resources": [{
-    "id": "3025f52e-8d57-48df-9a56-8e21ac252282",
-    "type": "image",
-    "data": {
-      "src": "https://images.unsplash.com/photo-1566305828756-cacc74d3dd20?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60",
-      "title": "Lorem ipsum dolor sit amet, consectetur adipiscing elit",
-      "credits": "Lorem Ipsum and Internation Spatial Agency",
-      "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-      "altText": "Lorem ipsum dolor sit amet, consectetur adipiscing elit"
-    }
-  }],
+  "resources": [],
   "settings": {
     "theme": {
       "general": {

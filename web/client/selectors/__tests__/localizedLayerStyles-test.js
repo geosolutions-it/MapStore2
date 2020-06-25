@@ -10,6 +10,7 @@ const expect = require('expect');
 
 const {
     isLocalizedLayerStylesEnabledSelector,
+    isLocalizedLayerStylesEnabledDashboardsSelector,
     localizedLayerStylesNameSelector,
     localizedLayerStylesEnvSelector
 } = require('../localizedLayerStyles');
@@ -20,6 +21,16 @@ const givenState = {
     localConfig: {
         localizedLayerStyles: {
             name: givenName
+        },
+        plugins: {
+            dashboard: [{
+                name: "DashboardEditor",
+                cfg: {
+                    catalog: {
+                        localizedLayerStyles: true
+                    }
+                }
+            }]
         }
     }
 };
@@ -44,6 +55,16 @@ describe('Test localizedLayerStyles', () => {
         expect(isLocalizedLayerStylesEnabled).toBe(false);
 
         isLocalizedLayerStylesEnabled = isLocalizedLayerStylesEnabledSelector(givenState);
+        expect(isLocalizedLayerStylesEnabled).toBe(true);
+    });
+
+    it('test isLocalizedLayerStylesEnabledDashboardsSelector', () => {
+        let isLocalizedLayerStylesEnabled;
+
+        isLocalizedLayerStylesEnabled = isLocalizedLayerStylesEnabledDashboardsSelector({});
+        expect(isLocalizedLayerStylesEnabled).toBe(false);
+
+        isLocalizedLayerStylesEnabled = isLocalizedLayerStylesEnabledDashboardsSelector(givenState);
         expect(isLocalizedLayerStylesEnabled).toBe(true);
     });
 

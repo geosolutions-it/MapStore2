@@ -1,0 +1,6 @@
+/**
+ * Available Attribute Editors for FeatureGrid.
+ * Here you can find the default editors for the various data types and the {@link #components.data.featuregrid.editors.customEditors | Custom Editors} that can be used to force editing constraints to certain attributes.
+ * @name editors
+ * @memberof components.data.featuregrid
+ */

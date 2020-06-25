@@ -88,6 +88,7 @@ const defaultConfig = require('./AnnotationsConfig');
  * @prop {string} defaultShapeFillColor default symbol fill color
  * @prop {string} defaultShapeSize default symbol shape size in px
  * @prop {object} defaultStyles object with default symbol styles
+ * @prop {number} textRotationStep rotation step of text styler
  *
  * the annotation's attributes.
  */
@@ -140,7 +141,8 @@ class Annotations extends React.Component {
         defaultShapeFillColor: PropTypes.string,
         defaultShapeStrokeColor: PropTypes.string,
         defaultStyles: PropTypes.object,
-        onLoadDefaultStyles: PropTypes.func
+        onLoadDefaultStyles: PropTypes.func,
+        textRotationStep: PropTypes.number
     };
 
     static contextTypes = {
@@ -269,6 +271,7 @@ class Annotations extends React.Component {
             defaultShapeFillColor={this.props.defaultShapeFillColor}
             defaultShapeStrokeColor={this.props.defaultShapeStrokeColor}
             defaultStyles={this.props.defaultStyles}
+            textRotationStep={this.props.textRotationStep}
         />;
     };
 

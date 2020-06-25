@@ -75,6 +75,7 @@ export const pluginsFilterOverride = (pluginsConfigs, viewerPlugins) => {
 
 export default class ContextCreator extends React.Component {
     static propTypes = {
+        user: PropTypes.object,
         loading: PropTypes.bool,
         loadFlags: PropTypes.object,
         isValidContextName: PropTypes.bool,
@@ -288,6 +289,7 @@ export default class ContextCreator extends React.Component {
                         !this.props.isCfgValidated,
                     component:
                         <ConfigurePlugins
+                            user={this.props.user}
                             loading={this.props.loading}
                             loadFlags={this.props.loadFlags}
                             tutorialMode={this.props.tutorialStatus === 'run'}

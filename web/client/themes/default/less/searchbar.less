@@ -4,7 +4,7 @@
     right: 55px;
     top: 10px;
 }
-.MapSearchBar .input-group-addon{
+.maps-search .input-group-addon{
     background-color:white;
     border-top: 1px solid lightgrey;
     border-bottom: 1px solid lightgrey;
@@ -149,7 +149,11 @@
 }
 .maps-search.MapSearchBar .input-group {
     width: 100%;
-
+    display: flex;
+}
+.maps-search .search-toolbar-options {
+    display: flex;
+    align-items: center;
 }
 @media (min-width: 768px) {
     .maps-search.MapSearchBar {
@@ -169,7 +173,12 @@
 }
 .user-search.MapSearchBar .input-group {
     width: 100%;
+    display: flex;
+}
 
+.user-search .search-toolbar-options {
+    display: flex;
+    align-items: center;
 }
 .MapSearchBar.user-search input {
     z-index: 0

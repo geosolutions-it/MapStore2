@@ -49,7 +49,10 @@
       {"name": "router", "path": "router.location.pathname"},
       {"name": "browser", "path": "browser"},
       {"name": "geostorymode", "path": "geostory.mode"},
-      {"name": "featuregridmode", "path": "featuregrid.mode"}],
+      {"name": "featuregridmode", "path": "featuregrid.mode"},
+      {"name": "userrole", "path": "security.user.role"},
+      {"name": "printEnabled", "path": "print.capabilities"}
+    ],
     "userSessions": {
       "enabled": true
     },
@@ -308,7 +311,8 @@
               "name": "Share",
               "cfg": {
                 "advancedSettings": {
-                  "bbox": true
+                  "bbox": true,
+                  "centerAndZoom": true
                 }
               }
             },
@@ -462,7 +466,7 @@
                 "declineUrl" : "http://www.google.com"
                 }
             },
-            "OmniBar", "Login", "Save", "SaveAs", "BurgerMenu", "Expander", "Undo", "Redo", "FullScreen", "GlobeViewSwitcher", "SearchServicesConfig", "WidgetsBuilder", "Widgets",
+            "OmniBar", "Login", "Save", "SaveAs", "BurgerMenu", "Expander", "Undo", "Redo", "FullScreen", "GlobeViewSwitcher", "SearchServicesConfig", "SearchByBookmark", "WidgetsBuilder", "Widgets",
             "WidgetsTray",
             "Timeline",
             "Playback",
@@ -699,7 +703,7 @@
             "cfg": {
               "allowClicksThruHole": false,
               "containerPosition": "header",
-              "preset": "geostory_tutorial"
+              "preset": "geostory_view_tutorial"
             }
           },
           "Login",

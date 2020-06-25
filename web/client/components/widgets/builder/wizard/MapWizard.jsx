@@ -22,7 +22,9 @@ module.exports = ({
     editorData = {},
     editNode,
     setEditNode = () => {},
-    closeNodeEditor = () => {}
+    closeNodeEditor = () => {},
+    isLocalizedLayerStylesEnabled,
+    env
 } = {}) => (
     <Wizard
         step={step}
@@ -36,10 +38,12 @@ module.exports = ({
             onNodeSelect={onNodeSelect}
             selectedNodes={selectedNodes}
             onChange={onChange}
+            isLocalizedLayerStylesEnabled={isLocalizedLayerStylesEnabled}
             preview={<Preview
                 onChange={onChange}
                 layers={editorData.map && editorData.map.layers}
                 map={editorData.map}
+                env={env}
                 options={{ style: { margin: 10, height: 'calc(100% - 20px)' } }} /> }
             map={editorData.map}
         />

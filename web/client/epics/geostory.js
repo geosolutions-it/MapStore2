@@ -27,10 +27,13 @@ const {
 
 import {
     ADD,
+    ADD_RESOURCE,
     LOAD_GEOSTORY,
+    SET_RESOURCE,
     MOVE,
     REMOVE,
     SAVE,
+    SAVED,
     addResource,
     add,
     geostoryLoaded,
@@ -46,11 +49,14 @@ import {
     storySaved,
     update,
     setFocusOnContent,
+    setPendingChanges,
     UPDATE,
     CHANGE_MODE,
     SET_WEBPAGE_URL,
     EDIT_WEBPAGE,
-    UPDATE_CURRENT_PAGE
+    EDIT_RESOURCE,
+    UPDATE_CURRENT_PAGE,
+    UPDATE_SETTING
 } from '../actions/geostory';
 import { setControlProperty } from '../actions/controls';
 
@@ -424,6 +430,37 @@ export const closeShareOnGeostoryChangeMode = action$ =>
     action$.ofType(CHANGE_MODE)
         .switchMap(() => Observable.of(setControlProperty('share', 'enabled', false)));
 
+/**
+ * Handles changes on GeoStory to show the pending changes prompt
+ */
+export const handlePendingGeoStoryChanges = action$ =>
+        Observable.merge(
+            // when load an existing geostory
+            action$.ofType(LOAD_GEOSTORY).switchMap(() => action$.ofType(SET_RESOURCE))
+        ).switchMap( () =>
+            // listen to modification events
+            action$.ofType(
+                    ADD,
+                    UPDATE,
+                    REMOVE,
+                    ADD_RESOURCE,
+                    EDIT_RESOURCE,
+                    UPDATE_SETTING
+                )
+                // TODO: compare to exclude no-ops (e.g. update by click)
+                .take(1)
+                .switchMap( () =>
+                    // set the flag for pending changes
+                    Observable.of(setPendingChanges(true)).concat(
+                        // and reset it when one of these actions is performed.
+                        action$.ofType(
+                            SAVED, LOCATION_CHANGE, LOGOUT
+                        )
+                        .take(1)
+                            .switchMap(() => Observable.of(setPendingChanges(false)))
+                    )
+            )
+    );
 /**
  * Handle the scroll of section preview in the sidebar
  * @memberof epics.mediaEditor

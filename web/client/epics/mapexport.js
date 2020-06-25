@@ -24,7 +24,7 @@ const { backgroundListSelector } = require('../selectors/backgroundselector');
 const { mapOptionsToSaveSelector } = require('../selectors/mapsave');
 const { basicError } = require('../utils/NotificationUtils');
 const { getErrorMessage } = require('../utils/LocaleUtils');
-const textSearchConfigSelector = state => state.searchconfig && state.searchconfig.textSearchConfig;
+import {textSearchConfigSelector, bookmarkSearchConfigSelector} from '../selectors/searchconfig';
 
 function MapExportError(title, message) {
     this.title = title;
@@ -38,6 +38,7 @@ const saveMap = (state, addBbox = false) => {
         groupsSelector(state),
         backgroundListSelector(state),
         textSearchConfigSelector(state),
+        bookmarkSearchConfigSelector(state),
         mapOptionsToSaveSelector(state)
     );
 

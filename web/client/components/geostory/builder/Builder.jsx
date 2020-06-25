@@ -125,6 +125,7 @@ class Builder extends React.Component {
                             {
                                 tooltipId: "geostory.builder.settings.tooltip",
                                 glyph: "cog",
+                                id: "geostory-builder-settings-button",
                                 visible: !isSettingsEnabled,
                                 onClick: () => onToggleSettingsPanel()
                             },

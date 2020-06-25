@@ -14,7 +14,7 @@ import ReactTestUtils from 'react-dom/test-utils';
 
 import expect from 'expect';
 import { getPluginForTest } from './pluginsTestUtils';
-import ContextCreator from '../ContextCreator';
+import ContextCreator, { contextCreatorSelector } from '../ContextCreator';
 
 describe('ContextCreator plugin', () => {
     beforeEach((done) => {
@@ -70,5 +70,34 @@ describe('ContextCreator plugin', () => {
         // check customization of destination path
         expect(actions.length).toBeGreaterThanOrEqualTo(1);
         expect(actions[1].destLocation).toBe("MY_DESTINATION");
+    });
+});
+describe('contextCreatorSelector', () => {
+    const ADMIN_LOGGED_STATE = {
+        security: {
+            user: {
+                attribute: [
+                ],
+                enabled: true,
+                groups: {
+                    group: [
+                        {
+                            description: 'description',
+                            enabled: true,
+                            groupName: 'everyone',
+                            id: 479
+                        }
+                    ]
+                },
+                id: 3,
+                name: 'admin',
+                role: 'ADMIN'
+            }
+        }
+    };
+    // MapTemplates
+    it('user is passed as prop to provide role and so API to use to SaveModal', () => {
+        const props = contextCreatorSelector(ADMIN_LOGGED_STATE);
+        expect(props.user).toBe(ADMIN_LOGGED_STATE.security.user);
     });
 });

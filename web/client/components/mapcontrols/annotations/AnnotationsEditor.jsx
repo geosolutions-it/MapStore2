@@ -109,6 +109,7 @@ const bbox = require('@turf/bbox');
  * @prop {string} defaultShapeSize default symbol shape size in px
  * @prop {string} defaultPointType default point type
  * @prop {object} defaultStyles object with default symbol styles
+ * @prop {number} textRotationStep rotation step of text styler
  *
  * In addition, as the Identify viewer interface mandates, every feature attribute is mapped as a component property (in addition to the feature object).
  */
@@ -199,7 +200,8 @@ class AnnotationsEditor extends React.Component {
         defaultShapeFillColor: PropTypes.string,
         defaultShapeStrokeColor: PropTypes.string,
         defaultPointType: PropTypes.string,
-        defaultStyles: PropTypes.object
+        defaultStyles: PropTypes.object,
+        textRotationStep: PropTypes.number
     };
 
     static defaultProps = {
@@ -484,6 +486,7 @@ class AnnotationsEditor extends React.Component {
             defaultStyles={this.props.defaultStyles}
             lineDashOptions={this.props.lineDashOptions}
             markersOptions={this.getConfig()}
+            textRotationStep={this.props.textRotationStep}
         />);
     };
 

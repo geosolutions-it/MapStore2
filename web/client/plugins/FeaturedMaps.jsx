@@ -20,6 +20,7 @@ const Message = require("../components/I18N/Message");
 const maptypeEpics = require('../epics/maptype');
 const mapsEpics = require('../epics/maps');
 const {userRoleSelector} = require('../selectors/security');
+const {versionSelector} = require('../selectors/version');
 const {mapTypeSelector} = require('../selectors/maptype');
 const {resourceSelector, searchTextSelector, isFeaturedMapsEnabled} = require('../selectors/featuredmaps');
 const {loadPage, updateItemsLifecycle} = require('../components/maps/enhancers/featuredMaps');
@@ -45,6 +46,7 @@ class FeaturedMaps extends React.Component {
         className: PropTypes.string,
         previousItems: PropTypes.array,
         enableFeaturedMaps: PropTypes.func,
+        version: PropTypes.string,
         showAPIShare: PropTypes.bool
     };
 
@@ -88,6 +90,7 @@ class FeaturedMaps extends React.Component {
                 title={<h3><Message msgId="manager.featuredMaps" /></h3>}
                 maps={items}
                 colProps={this.props.colProps}
+                version={this.props.version}
                 viewerUrl={(res) => this.context.router.history.push('/' + this.makeShareUrl(res).url)}
                 getShareUrl={this.makeShareUrl}
                 shareOptions={this.getShareOptions} // TODO: share options depending on the content type
@@ -126,15 +129,17 @@ const featuredMapsPluginSelector = createSelector([
     state => state.browser && state.browser.mobile,
     searchTextSelector,
     resourceSelector,
-    isFeaturedMapsEnabled
-], (mapType, role, isMobile, searchText, resource, isFeaturedEnabled) => ({
+    isFeaturedMapsEnabled,
+    versionSelector
+], (mapType, role, isMobile, searchText, resource, isFeaturedEnabled, version) => ({
     mapType,
     role,
     permission: role === 'ADMIN',
     pagination: isMobile ? 'virtual-scroll-horizontal' : 'show-more',
     searchText,
     resource,
-    isFeaturedEnabled
+    isFeaturedEnabled,
+    version
 }));
 
 const updateFeaturedMapsStream = mapPropsStream(props$ =>

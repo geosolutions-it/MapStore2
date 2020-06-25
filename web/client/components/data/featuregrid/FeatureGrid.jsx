@@ -18,6 +18,7 @@ const {isValidValueForPropertyName, isProperty} = require('../../../utils/Featur
  * A component that gets the describeFeatureType and the features to display
  * attributes
  * @class
+ * @name FeatureGrid
  * @memberof components.data.featuregrid
  * @prop {geojson[]} features array of geojson features
  * @prop {object} describeFeatureType the describeFeatureType in json format

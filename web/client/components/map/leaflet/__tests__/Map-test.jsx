@@ -124,6 +124,24 @@ describe('LeafletMap', () => {
         expect(document.getElementsByClassName('leaflet-layer').length).toBe(1);
     });
 
+    it('renders a map on an external window', () => {
+        const popup = window.open("", "", "width=300,height=300,left=200,top=200");
+        try {
+            const container = document.createElement("div");
+            popup.document.body.appendChild(container);
+            const Comp = () => {
+                return ReactDOM.createPortal(<LeafletMap center={{ y: 43.9, x: 10.3 }} zoom={11} document={popup.document}
+                />, container);
+            };
+            ReactDOM.render(<Comp/>, document.getElementById("container"));
+            const map = popup.document.getElementById("map");
+            expect(map).toExist();
+            expect(map.querySelectorAll(".leaflet-map-pane").length).toBe(1);
+        } finally {
+            popup.close();
+        }
+    });
+
     it('check layers for elevation', () => {
         var options = {
             "url": "http://fake",

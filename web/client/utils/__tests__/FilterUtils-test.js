@@ -606,6 +606,14 @@ describe('FilterUtils', () => {
         expect(base.indexOf('viewParams="a:b"') > 0).toBeTruthy();
         expect(FilterUtils.getGetFeatureBase(version, null, false, "application/json", { cql_filter: "a:b" }).indexOf('viewParams="a:b"') > 0).toBeFalsy();
     });
+    it('getGetFeatureBase excludes xsi:schemaLocation when option noSchemaLocation=true', () => {
+        const version = "2.0";
+        // use noSchemaLocation
+        const base = FilterUtils.getGetFeatureBase(version, null, false, "application/json", { noSchemaLocation: true });
+        expect(base.indexOf('xsi:schemaLocation=') >= 0).toBeFalsy();
+        // default includes
+        expect(FilterUtils.getGetFeatureBase(version, null, false, "application/json", {}).indexOf('xsi:schemaLocation=') > 0).toBeTruthy();
+    });
     it('Check for undefined or null values for string and number and list in ogc filter', () => {
         let filterObj = {
             filterFields: [{

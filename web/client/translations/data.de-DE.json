@@ -50,6 +50,7 @@
         },
         "showEmptyMessageGFI": "Nachricht mit leeren Ergebnissen anzeigen",
         "remove": "Löschen",
+        "removeThumbnail": "Miniaturbild entfernen",
         "layerProperties": {
             "windowTitle": "Ebenen Eigenschaften",
             "title": "Titel",
@@ -600,6 +601,7 @@
         "identifyShowCoordinateEditor": "Koordinateneditor anzeigen",
         "identifyHideCoordinateEditor": "Koordinateneditor ausblenden",
         "identifyCoordinateApplyChanges": "Änderungen übernehmen",
+        "identifyChangeCoordinateFormat": "Koordinatenformat ändern",
         "identifyZoomToFeature": "Auf Objekt zoomen",
         "identifyStopHighlightingFeatures": "Stoppen Sie die Markierung von Objekten",
         "identifyHighlightFeatures": "Markieren Sie Objekte",
@@ -669,6 +671,32 @@
             "cancelbtn": "Abbrechen",
             "confirmremove": "Löschen?",
             "cancelconfirm": "Bist du sicher?",
+            "searchByBookmark": "Suche nach Lesezeichen",
+            "bookmarksettings": "Lesezeicheneinstellungen",
+            "zoomToBookmark": "Zoomen Sie auf das ausgewählte Lesezeichen",
+            "bookmarkFilter": "Lesezeichen filtern",
+            "editBookmark": "Lesezeichen bearbeiten",
+            "deleteBookmark": "Lesezeichen löschen",
+            "b_listpaneltitle": "Lesezeichen anzeigen",
+            "b_newpaneltitle": "Neues Lesezeichen hinzufügen",
+            "latitude": "Lat",
+            "longitude": "Lon",
+            "b_title": "Titel",
+            "b_layer_tooltip": "Deaktivieren Sie das Neuladen der Ebenensichtbarkeit",
+            "b_bbox": "Begrenzungsrahmen",
+            "b_bbox_tooltip": "Verwenden Sie die aktuelle Ansicht als Begrenzungsrahmen",
+            "b_bbox_south": "Süden",
+            "b_bbox_south_placeholder": "Betreten Sie den Süden",
+            "b_bbox_west": "Westen",
+            "b_bbox_west_placeholder": "Betreten Sie den Westen",
+            "b_bbox_east": "East",
+            "b_bbox_east_placeholder": "Enter East",
+            "b_bbox_north": "Norden",
+            "b_bbox_north_placeholder": "Betreten Sie den Norden",
+            "bookmarkslistempty": "Kein Lesezeichen definiert",
+            "b_placeholder": "Lesezeichen auswählen ...",
+            "b_clearvalue": "Lesezeichen löschen",
+            "b_noresult": "Keine Lesezeichen gefunden",
             "s_name": "Name",
             "s_title": "Titel",
             "s_description": "Beschreibung",
@@ -722,6 +750,7 @@
             "stroke": "Linie",
             "opacity": "Opacity",
             "width": "Linienbreite",
+            "textRotation": "Drehung",
             "font": {
                 "textColor": "Farbe",
                 "family": "Familie",
@@ -1147,7 +1176,17 @@
             "addBboxParam": "Fügen Sie einen bbox param zum Freigabeverlink hinzu",
             "wrongBboxParamTitle": "Ungültiger Bbox-Parameter",
             "wrongBboxParamMessage": "bbox-Parameter müssen in EPSG:4326 sein und als bbox=minx,miny,maxx,maxy angegeben werden",
-            "showHomeButton": "Link zur MapStore-Startseite"
+            "wrongCenterAndZoomParamTitle": "Ungültiger Mittel und Zoomparameter",
+            "wrongCenterAndZoomParamMessage": "Center und Zoom parameter müssen sein center=lon,lat&zoom=value und (+|- 90° lat, +|-180° lon, <=+35 zoom)",
+            "wrongMarkerAndZoomParamTitle": "Ungültiger Marker und Zoomparameter",
+            "wrongMarkerAndZoomParamMessage": "Marker und Zoomparameter müssen sein marker=lon,lat&zoom=value und (+|- 90° lat, +|-180° lon, <=+35 zoom)",
+            "showHomeButton": "Link zur MapStore-Startseite",
+            "addCenterAndZoomParam": "Fügen Sie die Mitte hinzu und zoomen Sie zum Freigabelink",
+            "zoom": "Zoomen",
+            "marker": "Markierung auf geladener Karte hinzufügen",
+            "coordinate": "Koordinate",
+            "coordTooltip": "Klicken Sie auf die Karte, um die Koordinaten zu erfassen",
+            "zoomToolTip": "Min: 1 und Max: 35"
         },
         "snapshot": {
             "title": "Snapshot Vorschau",
@@ -1175,6 +1214,8 @@
             },
             "add": "Hinzufügen",
             "cancel": "Abbrechen",
+            "merge": "Mit der vorhandenen Annotationsebene zusammenführen",
+            "replace": "Ersetzen Sie die vorhandene Anmerkungsebene",
             "success": " erfolgreich importiert",
             "next": "Nächster",
             "skip": "springen",
@@ -1186,7 +1227,7 @@
                 "dropZone": {
                     "heading": "<p> <h4> Legen Sie hier Ihre Kartenkontexte oder Vektordateien ab </h4> <small> oder </small> </p>",
                     "selectFiles": "Dateien auswählen...",
-                    "infoSupported": "<p> <small> Unterstützte Kartenkontextdateien: MapStore Legacy-Format, WMC. Unterstützte Vektor-Layer-Dateien: Shapefiles müssen in Zip-Archiven, KML / KMZ, GPX oder GeoJSON </small> </p> vorliegen",
+                    "infoSupported": "<p> <small> Unterstützte Kartenkontextdateien: MapStore Legacy-Format, WMC. Unterstützte Vektor-Layer-Dateien: Shapefiles müssen in Zip-Archiven, KML / KMZ, GPX, GeoJSON oder Annotations </small> </p> vorliegen",
                     "note": "<p> <small> <i> <strong> Hinweis </strong>: Die aktuelle Map wird bei der Verwendung von Kartenkontextdateien überschrieben </i> </small> </p>"
                 },
                 "errors": {
@@ -2131,7 +2172,7 @@
                     "navbar": "Navigationsleiste",
                     "showNavbar": "Navigationsleiste anzeigen",
                     "theme": "Thema",
-                    "templateTooltip":"Mit dem erweiterten Karteneditor kann eine benutzerdefinierte Vorlage für jede Ebene konfiguriert werden (siehe Stiftsymbol).Weitere Informationen finden Sie in der <a href='https://mapstore.readthedocs.io/en/latest/user-guide/layer-settings/#templates' target='_blank'>Bedienungsanleitung</a>"
+                    "templateTooltip":"Mit dieser Einstellung können Sie die Identifizierungsfunktion auf der Karte aktivieren, indem Sie ein generisches Format für alle Ebenen definieren. Mit dem erweiterten Karteneditor (Stiftsymbol) kann für jede Ebene ein anderes Format konfiguriert werden. Weitere Informationen finden Sie im <a href='https://mapstore.readthedocs.io/en/latest/user-guide/layer-settings/#templates' target='_blank'> Benutzerhandbuch </a>. Wenn ein Layer sein eigenes Identifizierungsformat definiert hat, wird er anstelle des auf Kartenebene festgelegten generischen Formats verwendet."
                 }
             },
             "errors": {
@@ -2227,7 +2268,9 @@
                 "trash": "Remove resource",
                 "videoUrl": "Video URL",
                 "videoUrlPlaceholder": "Geben Sie eine Video-URL ein",
-                "thumbnail": "Miniaturbild hinzufügen (maximale Größe 500 KB)"
+                "thumbnail": "Miniaturbild hinzufügen (maximale Größe 500 KB)",
+                "createVideoThumbnail": "Erstellen Sie eine Miniaturansicht aus einer Videoquelle",
+                "thumbnailCreateError": "Es ist nicht möglich, ein Miniaturbild aus der aktuellen Videoquelle zu erstellen. Klicken oder löschen Sie ein Bild in der Miniaturansicht, um es manuell hochzuladen"
             },
             "mediaform": {
                 "confirmExitTitle": "Schließen Media Form",
@@ -2243,11 +2286,14 @@
                 "confirmRemoveResource": "Möchten Sie diese Medienressource aus der Story entfernen?",
                 "confirmRemoveUsedResource": "Diese Ressource wird auch aus allen Abschnitten / Inhalten entfernt, in denen sie verwendet wird und sie bleiben leer. Möchten Sie es aus der Geschichte entfernen?"
             },
+            "imageList": {
+                "emptyList": "Klicken Sie auf das Pluszeichen, um ein neues Bild hinzuzufügen. Weitere Informationen finden Sie im Benutzerhandbuch <a href='https://mapstore.readthedocs.io/en/latest/user-guide/media-editor-window/#images' target='_blank'/> hier </a>"
+            },
             "mapList": {
-                "emptyList": "Klicken Sie auf die Plus-Schaltfläche, um eine Karte zu erstellen oder einen anderen Kartendienst auszuwählen."
+                "emptyList": "Klicken Sie auf die Plus-Schaltfläche, um eine Karte zu erstellen oder einen anderen Kartendienst auszuwählen. Weitere Informationen finden Sie im Benutzerhandbuch <a href='https://mapstore.readthedocs.io/en/latest/user-guide/media-editor-window/#maps' target='_blank'/> hier </a>"
             },
             "videoList": {
-                "emptyList": "Klicken Sie auf das Pluszeichen, um ein neues Video hinzuzufügen"
+                "emptyList": "Klicken Sie auf das Pluszeichen, um ein neues Video hinzuzufügen. Weitere Informationen finden Sie im Benutzerhandbuch <a href='https://mapstore.readthedocs.io/en/latest/user-guide/media-editor-window/#videos' target='_blank'/> hier </a>"
             }
         },
         "backgroundDialog": {
@@ -2842,7 +2888,7 @@
             },
             "geostoryIntro": {
               "title": "Story Tutorial",
-              "text": "Übersicht über die Story-Funktionen"
+              "text": "<p>Übersicht über die Story-Funktionen</p><p>Lesen Sie das zugehörige Benutzerhandbuch.<a target = '_blank' href='https://mapstore.readthedocs.io/en/latest/user-guide/exploring-stories/'> hier </a>"
             },
             "geostoryViewHeader": {
               "title": "Header",
@@ -2854,11 +2900,11 @@
             },
             "geostoryViewNavTitle": {
               "title": "Titel der Geschichte",
-              "text": "Sie können für jede Geschichte einen Titel anzeigen und konfigurieren"
+              "text": "Hier sehen Sie den Titel der Geschichte"
             },
             "geostoryViewNavLogo": {
               "title": "Story-Logo",
-              "text": "Sie können für jede Story ein Logo anzeigen und konfigurieren"
+              "text": "Hier sehen Sie das Story-Logo"
             },
             "geostoryViewContent": {
               "title": "Inhalt der Geschichte",
@@ -2878,11 +2924,11 @@
             },
             "geostoryEditSidebarSettings": {
               "title": "Story-Einstellungen",
-              "text": "<p> Von links nach rechts: </p> <ul> <li> Ausgewählten Abschnitt löschen </li> <li> In den Ansichtsmodus wechseln </li> <li> Einstellungen bearbeiten </li> <li> Reduzieren / Alle erweitern </li> </ul>"
+              "text": "<p> Von links nach rechts: </p> <ul> <li> Ausgewählten Abschnitt löschen </li> <li> In den Ansichtsmodus wechseln </li> <li> Einstellungen bearbeiten </li> <li> Reduzieren / Alle erweitern </li> </ul><p> Weitere Informationen finden Sie im zugehörigen Benutzerhandbuch <a target='_blank' href='https://mapstore.readthedocs.io/en/latest/user-guide/story-setting/'> hier </a>"
             },
             "geostoryEditContainer": {
               "title": "Inhalt der Geschichte",
-              "text": "Hier können Sie den Inhalt der Geschichte sehen, sie bearbeiten, indem Sie Abschnitte, Absätze usw. hinzufügen oder entfernen."
+              "text": "Hier können Sie den Inhalt der Geschichte sehen, sie bearbeiten, indem Sie Abschnitte, Absätze usw. hinzufügen oder entfernen.</p><p>Mit jeder Symbolleiste können Sie beispielsweise den Inhalt der Story bearbeiten:</p><img src='data:image/png;base64,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'/><ul><li>Medienquelle wechseln</li><li>Passen Sie den Abschnitt an die Höhe des Inhalts an oder passen Sie ihn vertikal an die Ansicht an</li><li>Stellen Sie den Hintergrund so ein, dass er den Containerraum bedeckt oder nicht</li><li>Größe ändern</li><li>Richten Sie den Container aus (verfügbar, wenn die Größe nicht voll ist).</li><li>Thema wechseln</li></ul><img src='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACIAAAAgCAYAAAB3j6rJAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsIAAA7CARUoSoAAAAASdEVYdFNvZnR3YXJlAEdyZWVuc2hvdF5VCAUAAAIwSURBVFhHY/wPBAyDADBB6QEHow5BB1R3yIWX7xiOP30N5REPqJJY/wKN2HLnCYMwBztD+YGzYLF+F1OGV19/MHgqSzMwMzKCxfABqjjk4ccvDJ6r9jLc+/AZKgIBSgK8DNvDnBnk+XmgIrgBVaKGg4WZgYuVmYGfnZWh39mUYbanJYMQJzsDEzAgWJiIs4KgKlCwf/z5G8rDBM++fGOwWbKD4crrDwzOCpIMGYbqDLE6ygzO8hIMd95/ZnBYthOshhAg6JCXX78zmCzYwiA/bS1D3OYjDPsfvmD49vsPw4ZbjxjqDl1gYGdmZljgbc0gxs3BcPr5W4bzr94xXHvzgeHci3dgMZCcODcn1DTcgOioATlo1Y0HDPMu3Wa4ArQofcdxhp5TVxmmnrvBoC7ExyABtOzxp68MVou2MRjN38JwF5heQGIgOWISK0Vp5B8w2q69+cjAycrC4KMsw9BsZ8ggw8sFxiC2jYwYAwszldIIIbD59mOGiWeuM1Rb6zGUmmsDsQ5Dg40BmN0HTLgC7GxQlfgBxQ4BJeb5l+4w3H73CewgN0UpBmtgSIDYn37hTuTogGKHIANQAtacvQGMQWxSAFUdQgkYdQg6GDoOYQOWnLJ83DgLJS5gGWIkLgSsZ9iAtDDR2RUdEF37/vr7j+HG24/gElNfTJDhyONX4LpFioeLAd2NL4ClMKjuAWVjTmCFSAwYbTyjg1GHoINRh6CDUYegg1GHoINB4hAGBgDB977viofL1wAAAABJRU5ErkJggg=='/><p>Mit diesem Symbol können Sie die zugehörige Karte bearbeiten</p><img src=''/><b>Trinkgeld: </b>Jedes Werkzeug verfügt über einen Tooltip. Bewegen Sie den Mauszeiger darüber, um weitere Informationen anzuzeigen"
             },
             "geostoryEditAddbar": {
               "title": "Neuen Inhalt hinzufügen",
@@ -2890,7 +2936,7 @@
             },
             "geostoryEditMediaEditor": {
               "title": "Medieneditor",
-              "text": "Hier können Sie Bilder oder Karten auswählen, die der Geschichte hinzugefügt werden sollen"
+              "text": "<p> Mit dem Medieneditor können Sie verschiedene Arten von Medieninhalten in die Geschichte aufnehmen: <ul> <li> Bilder </li> <li> Videos </li> <li> Karten </li> </ul> </p><p> Weitere Informationen finden Sie im zugehÃ¶rigen Benutzerhandbuch <a target='_blank' href='https://mapstore.readthedocs.io/en/latest/user-guide/media-editor-window/'> hier </a>"
             }
         },
         "userSession": {
