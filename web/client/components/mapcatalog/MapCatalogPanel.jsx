@@ -69,7 +69,8 @@ const loadPage = ({searchText = '', limit = 12} = {}, page = 0) => searchMaps({
     }
 });
 
-const onClickHandler = (map, router, mapType) => {
+const onClickHandler = (map, router, mapType, toggleCatalog) => {
+    toggleCatalog();
     // reload if the same context was selected from catalog
     const {location} = router.history;
     if (!isNil(location.pathname)
@@ -94,7 +95,8 @@ const MapCatalogPanel = ({
     onEdit = () => {},
     onShare = () => {},
     messages = {},
-    router = {}
+    router = {},
+    toggleCatalog = () => {}
 }) => {
     const mapToItem = (map) => ({
         title: map.name,
@@ -137,7 +139,7 @@ const MapCatalogPanel = ({
                     <img src={decodeURIComponent(map.thumbnail)}/> :
                     <Glyphicon glyph="1-map"/>}
             </div>,
-        onClick: () => onClickHandler(map, router, mapType)
+        onClick: () => onClickHandler(map, router, mapType, toggleCatalog)
     });
 
     return (
