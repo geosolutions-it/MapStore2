@@ -7,10 +7,25 @@
  */
 
 const expect = require('expect');
+const { LOCATION_CHANGE } = require('connected-react-router');
+const { ZOOM_TO_POINT, clickOnMap, CHANGE_MAP_VIEW, UNREGISTER_EVENT_LISTENER} = require('../../actions/map');
+const { FEATURE_INFO_CLICK, UPDATE_CENTER_TO_MARKER, PURGE_MAPINFO_RESULTS, NEW_MAPINFO_REQUEST, LOAD_FEATURE_INFO, NO_QUERYABLE_LAYERS, ERROR_FEATURE_INFO, EXCEPTIONS_FEATURE_INFO, SHOW_MAPINFO_MARKER, HIDE_MAPINFO_MARKER, GET_VECTOR_INFO, SET_CURRENT_EDIT_FEATURE_QUERY, loadFeatureInfo, featureInfoClick, closeIdentify, toggleHighlightFeature, editLayerFeatures, updateFeatureInfoClickPoint, purgeMapInfoResults } = require('../../actions/mapInfo');
+const { REMOVE_MAP_POPUP } = require('../../actions/mapPopups');
 
-const { ZOOM_TO_POINT, clickOnMap, CHANGE_MAP_VIEW } = require('../../actions/map');
-const { FEATURE_INFO_CLICK, UPDATE_CENTER_TO_MARKER, PURGE_MAPINFO_RESULTS, NEW_MAPINFO_REQUEST, LOAD_FEATURE_INFO, NO_QUERYABLE_LAYERS, ERROR_FEATURE_INFO, EXCEPTIONS_FEATURE_INFO, SHOW_MAPINFO_MARKER, HIDE_MAPINFO_MARKER, GET_VECTOR_INFO, SET_CURRENT_EDIT_FEATURE_QUERY, loadFeatureInfo, featureInfoClick, closeIdentify, toggleHighlightFeature, editLayerFeatures, updateFeatureInfoClickPoint } = require('../../actions/mapInfo');
-const { getFeatureInfoOnFeatureInfoClick, zoomToVisibleAreaEpic, onMapClick, closeFeatureAndAnnotationEditing, handleMapInfoMarker, featureInfoClickOnHighligh, closeFeatureInfoOnCatalogOpenEpic, identifyEditLayerFeaturesEpic, hideMarkerOnIdentifyClose, onUpdateFeatureInfoClickPoint } = require('../identify').default;
+const {
+    getFeatureInfoOnFeatureInfoClick,
+    zoomToVisibleAreaEpic,
+    onMapClick,
+    closeFeatureAndAnnotationEditing,
+    handleMapInfoMarker,
+    featureInfoClickOnHighligh,
+    closeFeatureInfoOnCatalogOpenEpic,
+    identifyEditLayerFeaturesEpic,
+    hideMarkerOnIdentifyClose,
+    onUpdateFeatureInfoClickPoint,
+    removePopupOnLocationChangeEpic,
+    removePopupOnUnregister
+} = require('../identify').default;
 const { CLOSE_ANNOTATIONS } = require('../../actions/annotations');
 const { testEpic, TEST_TIMEOUT, addTimeoutEpic } = require('./epicTestUtils');
 const { registerHook, GET_COORDINATES_FROM_PIXEL_HOOK, GET_PIXEL_FROM_COORDINATES_HOOK } = require('../../utils/MapUtils');
@@ -836,6 +851,79 @@ describe('identify Epics', () => {
                     projection: PROJECTION
                 }
             }
+        });
+    });
+    describe("removePopupOnLocationChangeEpic", () => {
+        it('removePopupOnLocationChangeEpic with purgeMapInfoResults as trigger', done => {
+            const NUM_ACTIONS = 1;
+            testEpic(addTimeoutEpic(removePopupOnLocationChangeEpic, 50), NUM_ACTIONS, purgeMapInfoResults(), (actions) => {
+                expect(actions.length).toBe(1);
+                const [{type}] = actions;
+                expect(type).toBe(TEST_TIMEOUT);
+                done();
+            }, {});
+        });
+        it('checks that all works with some popups with purgeMapInfoResults as trigger', done => {
+            const NUM_ACTIONS = 1;
+            testEpic(removePopupOnLocationChangeEpic, NUM_ACTIONS, purgeMapInfoResults(), (actions) => {
+                expect(actions.length).toBe(1);
+                const [{id, type}] = actions;
+                expect(type).toBe(REMOVE_MAP_POPUP);
+                expect(id).toBe("id");
+                done();
+            }, {
+                mapPopups: {
+                    popups: [{id: "id"}]
+                }
+            });
+        });
+        it('removePopupOnLocationChangeEpic with LOCATION_CHANGE as trigger', done => {
+            const NUM_ACTIONS = 1;
+            testEpic(addTimeoutEpic(removePopupOnLocationChangeEpic, 50), NUM_ACTIONS, {type: LOCATION_CHANGE}, (actions) => {
+                expect(actions.length).toBe(1);
+                const [{type}] = actions;
+                expect(type).toBe(TEST_TIMEOUT);
+                done();
+            }, {});
+        });
+        it('checks that all works with some popups with LOCATION_CHANGE as trigger', done => {
+            const NUM_ACTIONS = 1;
+            testEpic(removePopupOnLocationChangeEpic, NUM_ACTIONS, {type: LOCATION_CHANGE}, (actions) => {
+                expect(actions.length).toBe(1);
+                const [{id, type}] = actions;
+                expect(type).toBe(REMOVE_MAP_POPUP);
+                expect(id).toBe("id");
+                done();
+            }, {
+                mapPopups: {
+                    popups: [{id: "id"}]
+                }
+            });
+        });
+    });
+    describe("removePopupOnUnregister", () => {
+        it('checks that all works with no popups', done => {
+            const NUM_ACTIONS = 1;
+            testEpic(addTimeoutEpic(removePopupOnUnregister, 50), NUM_ACTIONS, {type: UNREGISTER_EVENT_LISTENER}, (actions) => {
+                expect(actions.length).toBe(1);
+                const [{type}] = actions;
+                expect(type).toBe(TEST_TIMEOUT);
+                done();
+            }, {});
+        });
+        it('checks that all works with some popups', done => {
+            const NUM_ACTIONS = 1;
+            testEpic(removePopupOnUnregister, NUM_ACTIONS, {type: UNREGISTER_EVENT_LISTENER}, (actions) => {
+                expect(actions.length).toBe(1);
+                const [{id, type}] = actions;
+                expect(type).toBe(REMOVE_MAP_POPUP);
+                expect(id).toBe("id");
+                done();
+            }, {
+                mapPopups: {
+                    popups: [{id: "id"}]
+                }
+            });
         });
     });
 });
