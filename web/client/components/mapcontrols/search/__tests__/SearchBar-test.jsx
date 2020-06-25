@@ -292,7 +292,7 @@ describe("test the SearchBar", () => {
         let cog = document.getElementsByClassName("glyphicon-cog");
         let zoom = document.getElementsByClassName("glyphicon-zoom-to");
         expect(reset).toExist();
-        expect(cog.length).toBe(1);
+        expect(cog.length).toBe(0);
         expect(zoom.length).toBe(0);
     });
 
