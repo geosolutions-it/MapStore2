@@ -161,6 +161,9 @@ const extractTileMatrixFromSources = (sources, layer) => {
     if (!sources || !layer) {
         return {};
     }
+    if (!isArray(layer.matrixIds) && isObject(layer.matrixIds)) {
+        layer.matrixIds = [...Object.keys(layer.matrixIds)];
+    }
     const sourceId = getSourceId(layer);
     const matrixIds = layer.matrixIds && layer.matrixIds.reduce((a, mI) => {
         const ids = sources[sourceId] && sources[sourceId].tileMatrixSet && sources[sourceId].tileMatrixSet[mI] && sources[sourceId].tileMatrixSet[mI].TileMatrix.map(i => ({identifier: i['ows:Identifier'], ranges: i.ranges})) || [];
