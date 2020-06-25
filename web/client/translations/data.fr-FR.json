@@ -750,6 +750,7 @@
             "stroke": "Ligne",
             "opacity": "Opacité",
             "width": "Largeur",
+            "textRotation": "Rotation",
             "font": {
                 "textColor": "Couleur",
                 "family": "Famille",
