@@ -598,7 +598,7 @@ const stateWithGmlGeometry = {
     }
 };
 
-describe.only('featuregrid Epics', () => {
+describe('featuregrid Epics', () => {
 
     describe('featureGridBrowseData epic', () => {
         const LAYER = state.layers.flat[0];
