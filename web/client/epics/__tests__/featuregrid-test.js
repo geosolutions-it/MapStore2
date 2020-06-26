@@ -9,10 +9,8 @@ import { LOCATION_CHANGE } from 'connected-react-router';
 
 const expect = require('expect');
 const assign = require('object-assign');
-const Rx = require('rxjs');
 
 const { set } = require('../../utils/ImmutableUtils');
-const { LOCATION_CHANGE } = require('connected-react-router');
 
 
 const CoordinatesUtils = require('../../utils/CoordinatesUtils');
