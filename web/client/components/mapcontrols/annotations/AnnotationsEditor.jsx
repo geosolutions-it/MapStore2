@@ -107,7 +107,6 @@ const bbox = require('@turf/bbox');
  * @prop {string} defaultShapeStrokeColor default symbol stroke color
  * @prop {string} defaultShapeFillColor default symbol fill color
  * @prop {string} defaultShapeSize default symbol shape size in px
- * @prop {string} defaultPointType default point type
  * @prop {object} defaultStyles object with default symbol styles
  * @prop {number} textRotationStep rotation step of text styler
  *
@@ -482,7 +481,7 @@ class AnnotationsEditor extends React.Component {
             defaultShapeSize={this.props.defaultShapeSize}
             defaultShapeFillColor={this.props.defaultShapeFillColor}
             defaultShapeStrokeColor={this.props.defaultShapeStrokeColor}
-            defaultPointType={this.props.defaultPointType}
+            defaultPointType={this.getConfig().defaultPointType}
             defaultStyles={this.props.defaultStyles}
             lineDashOptions={this.props.lineDashOptions}
             markersOptions={this.getConfig()}

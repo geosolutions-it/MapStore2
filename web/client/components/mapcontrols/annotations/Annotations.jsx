@@ -266,7 +266,6 @@ class Annotations extends React.Component {
             symbolErrors={this.props.symbolErrors}
             symbolList={this.props.symbolList}
             defaultShape={this.props.defaultShape}
-            defaultPointType={this.getConfig().defaultPointType}
             defaultShapeSize={this.props.defaultShapeSize}
             defaultShapeFillColor={this.props.defaultShapeFillColor}
             defaultShapeStrokeColor={this.props.defaultShapeStrokeColor}

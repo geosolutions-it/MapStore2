@@ -705,6 +705,10 @@ module.exports = (viewer) => ({
             }, assign({}, style, {highlight: false}));
             return Rx.Observable.of(action);
         }),
+    /**
+     * Fetches style information from server and sets default styles using specified parameters.
+     * Currently handles symbol and marker point type styles.
+     */
     loadDefaultAnnotationsStylesEpic: (action$, store) => action$.ofType(LOAD_DEFAULT_STYLES)
         .switchMap(({shape = DEFAULT_SHAPE, size = 64, fillColor = '#000000', strokeColor = '#000000', symbolsPath = DEFAULT_PATH}) => {
             const symbolErrors = symbolErrorsSelector(store.getState()) || [];
