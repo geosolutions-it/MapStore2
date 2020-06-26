@@ -105,10 +105,9 @@ const {
     featureGridUpdateGeometryFilter,
     activateTemporaryChangesEpic
 } = require('../featuregrid');
-const { hideMarkerOnIdentifyClose } = require('../identify').default;
 const { onLocationChanged } = require('connected-react-router');
 
-const {TEST_TIMEOUT, testEpic, testCombinedEpicStream, addTimeoutEpic} = require('./epicTestUtils');
+const {TEST_TIMEOUT, testEpic, addTimeoutEpic} = require('./epicTestUtils');
 const {isEmpty, isNil} = require('lodash');
 const filterObj = {
     featureTypeName: 'TEST',
@@ -596,7 +595,7 @@ const stateWithGmlGeometry = {
     }
 };
 
-describe.only('featuregrid Epics', () => {
+describe('featuregrid Epics', () => {
 
     describe('featureGridBrowseData epic', () => {
         const LAYER = state.layers.flat[0];
