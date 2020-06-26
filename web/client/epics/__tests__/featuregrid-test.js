@@ -1,5 +1,4 @@
 /*
-import { LOCATION_CHANGE } from 'connected-react-router';
  * Copyright 2017, GeoSolutions Sas.
  * All rights reserved.
  *
