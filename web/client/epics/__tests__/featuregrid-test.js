@@ -1,4 +1,5 @@
 /*
+import { LOCATION_CHANGE } from 'connected-react-router';
  * Copyright 2017, GeoSolutions Sas.
  * All rights reserved.
  *
@@ -59,7 +60,7 @@ const {CHANGE_DRAWING_STATUS} = require('../../actions/draw');
 const {SHOW_NOTIFICATION} = require('../../actions/notifications');
 const {RESET_CONTROLS, SET_CONTROL_PROPERTY, toggleControl} = require('../../actions/controls');
 const {ZOOM_TO_EXTENT, clickOnMap} = require('../../actions/map');
-const { CLOSE_IDENTIFY, closeIdentify } = require('../../actions/mapInfo');
+const { CLOSE_IDENTIFY } = require('../../actions/mapInfo');
 const {CHANGE_LAYER_PROPERTIES, changeLayerParams, browseData} = require('../../actions/layers');
 const {geometryChanged} = require('../../actions/draw');
 const { TOGGLE_CONTROL } = require('../../actions/controls');
@@ -597,7 +598,7 @@ const stateWithGmlGeometry = {
     }
 };
 
-describe('featuregrid Epics', () => {
+describe.only('featuregrid Epics', () => {
 
     describe('featureGridBrowseData epic', () => {
         const LAYER = state.layers.flat[0];
@@ -1590,6 +1591,14 @@ describe('featuregrid Epics', () => {
         };
         testEpic(autoReopenFeatureGridOnFeatureInfoClose, 1, [openFeatureGrid(), featureInfoClick(), hideMapinfoMarker(), closeFeatureGrid()], epicResult );
     });
+    it('autoReopenFeatureGridOnFeatureInfoClose: cancel ability to reopen feature grid on drawer toggle control', done => {
+        const epicResult = actions => {
+            expect(actions.length).toBe(1);
+            expect(actions[0].type).toBe(TEST_TIMEOUT);
+            done();
+        };
+        testEpic(addTimeoutEpic(autoReopenFeatureGridOnFeatureInfoClose), 1, [openFeatureGrid(), featureInfoClick(), toggleControl('drawer'), hideMapinfoMarker(), closeFeatureGrid()], epicResult);
+    });
     it('autoReopenFeatureGridOnFeatureInfoClose flow restarts on new open feature grid ', done => {
         // This prevents event loops with other epics
         // that trigger feature info hideMarker
@@ -1603,7 +1612,6 @@ describe('featuregrid Epics', () => {
         };
         testEpic(addTimeoutEpic(autoReopenFeatureGridOnFeatureInfoClose), 1, [openFeatureGrid(), featureInfoClick(), openFeatureGrid(), hideMapinfoMarker(), closeFeatureGrid()], epicResult);
     });
-
     it('autoReopenFeatureGridOnFeatureInfoClose: other toggle control apart from drawer cannot cancel ability to open feature grid', done => {
         const epicResult = actions => {
             expect(actions.length).toBe(1);
