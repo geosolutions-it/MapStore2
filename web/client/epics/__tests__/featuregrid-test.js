@@ -1,4 +1,5 @@
 /*
+import { LOCATION_CHANGE } from 'connected-react-router';
  * Copyright 2017, GeoSolutions Sas.
  * All rights reserved.
  *
@@ -8,8 +9,10 @@
 
 const expect = require('expect');
 const assign = require('object-assign');
+const Rx = require('rxjs');
 
 const { set } = require('../../utils/ImmutableUtils');
+const { LOCATION_CHANGE } = require('connected-react-router');
 
 
 const CoordinatesUtils = require('../../utils/CoordinatesUtils');
@@ -104,9 +107,10 @@ const {
     featureGridUpdateGeometryFilter,
     activateTemporaryChangesEpic
 } = require('../featuregrid');
+const { hideMarkerOnIdentifyClose } = require('../identify').default;
 const { onLocationChanged } = require('connected-react-router');
 
-const {TEST_TIMEOUT, testEpic, addTimeoutEpic} = require('./epicTestUtils');
+const {TEST_TIMEOUT, testEpic, testCombinedEpicStream, addTimeoutEpic} = require('./epicTestUtils');
 const {isEmpty, isNil} = require('lodash');
 const filterObj = {
     featureTypeName: 'TEST',
@@ -594,7 +598,7 @@ const stateWithGmlGeometry = {
     }
 };
 
-describe('featuregrid Epics', () => {
+describe.only('featuregrid Epics', () => {
 
     describe('featureGridBrowseData epic', () => {
         const LAYER = state.layers.flat[0];
@@ -1586,8 +1590,45 @@ describe('featuregrid Epics', () => {
             });
         };
         testEpic(autoReopenFeatureGridOnFeatureInfoClose, 1, [openFeatureGrid(), featureInfoClick(), hideMapinfoMarker(), closeFeatureGrid()], epicResult );
-    });
+    });/*
+    it('autoReopenFeatureGridOnFeatureInfoClose avoiding loop', (done) => {
 
+        const actions = [];
+        const testActions = () => {
+            // expect(true).toBeFalsy();
+            expect(true).toBeTruthy();
+        };
+        const spyEpic = a$ => a$.do(a => actions.push(a)).ignoreElements();
+        const startEpic = () => Rx.Observable.of(openFeatureGrid());
+        testCombinedEpicStream([
+            spyEpic,
+            startEpic,
+            autoReopenFeatureGridOnFeatureInfoClose,
+            closeIdentifyWhenOpenFeatureGrid,
+            hideMarkerOnIdentifyClose
+        ],
+        action$ => action$.filter(({ type }) => type === LOCATION_CHANGE),
+        {
+            onNext: () => actions.push(),
+            onError: e => done(e),
+            onComplete: () => {
+                testActions();
+                done();
+            }
+        });
+    });
+    */
+    it('autoReopenFeatureGridOnFeatureInfoClose avoiding loop', (done) => {
+
+        const actions = [];
+        const testActions = () => {
+            // expect(true).toBeFalsy();
+            expect(true).toBeTruthy();
+        };
+        const spyEpic = a$ => a$.do(a => actions.push(a)).ignoreElements();
+        const startEpic = () => Rx.Observable.of(openFeatureGrid());
+        testEpic(addTimeoutEpic(autoReopenFeatureGridOnFeatureInfoClose), 1, [openFeatureGrid(), featureInfoClick(), toggleControl('drawer'), hideMapinfoMarker(), closeFeatureGrid()], epicResult );
+    });
     it('autoReopenFeatureGridOnFeatureInfoClose: cancel ability to reopen feature grid on drawer toggle control', done => {
         const epicResult = actions => {
             expect(actions.length).toBe(1);
