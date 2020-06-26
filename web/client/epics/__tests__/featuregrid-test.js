@@ -1587,16 +1587,27 @@ describe('featuregrid Epics', () => {
         };
         testEpic(autoReopenFeatureGridOnFeatureInfoClose, 1, [openFeatureGrid(), featureInfoClick(), hideMapinfoMarker(), closeFeatureGrid()], epicResult );
     });
-
     it('autoReopenFeatureGridOnFeatureInfoClose: cancel ability to reopen feature grid on drawer toggle control', done => {
         const epicResult = actions => {
             expect(actions.length).toBe(1);
             expect(actions[0].type).toBe(TEST_TIMEOUT);
             done();
         };
-        testEpic(addTimeoutEpic(autoReopenFeatureGridOnFeatureInfoClose), 1, [openFeatureGrid(), featureInfoClick(), toggleControl('drawer'), hideMapinfoMarker(), closeFeatureGrid()], epicResult );
+        testEpic(addTimeoutEpic(autoReopenFeatureGridOnFeatureInfoClose), 1, [openFeatureGrid(), featureInfoClick(), toggleControl('drawer'), hideMapinfoMarker(), closeFeatureGrid()], epicResult);
     });
-
+    it('autoReopenFeatureGridOnFeatureInfoClose flow restarts on new open feature grid ', done => {
+        // This prevents event loops with other epics
+        // that trigger feature info hideMarker
+        const epicResult = actions => {
+            expect(actions.length).toBe(1);
+            actions.map((action) => {
+                if (action.type === TEST_TIMEOUT) {
+                    done();
+                }
+            });
+        };
+        testEpic(addTimeoutEpic(autoReopenFeatureGridOnFeatureInfoClose), 1, [openFeatureGrid(), featureInfoClick(), openFeatureGrid(), hideMapinfoMarker(), closeFeatureGrid()], epicResult);
+    });
     it('autoReopenFeatureGridOnFeatureInfoClose: other toggle control apart from drawer cannot cancel ability to open feature grid', done => {
         const epicResult = actions => {
             expect(actions.length).toBe(1);
