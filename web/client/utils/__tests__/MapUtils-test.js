@@ -34,7 +34,8 @@ var {
     prepareMapObjectToCompare,
     updateObjectFieldKey,
     compareMapChanges,
-    mergeMapConfigs
+    mergeMapConfigs,
+    mapUpdated
 } = require('../MapUtils');
 
 const POINT = "Point";
@@ -2745,5 +2746,47 @@ describe('Test the MapUtils', () => {
         expect(cfg.dimensionData).toExist();
         expect(cfg.dimensionData.currentTime).toBe('1997-04-08T08:02:01.425Z');
         expect(cfg.dimensionData.offsetTime).toBe('2017-06-07T02:17:23.197Z');
+    });
+    describe("mapUpdated tests", () => {
+        it("mapUpdated invalid values, means falsy", () => {
+            expect(mapUpdated()).toBeFalsy();
+            expect(mapUpdated({}, {})).toBeFalsy();
+            expect(mapUpdated(null, null)).toBeFalsy();
+            expect(mapUpdated(null, undefined)).toBeFalsy();
+            expect(mapUpdated(undefined, undefined)).toBeFalsy();
+        });
+        it("mapUpdated is true when zoom changes", () => {
+            const MAP_1 = {
+                center: {x: 1.123456789012345, y: 1.123456789012345},
+                zoom: 4
+            };
+            const MAP_1_ZOOM_CHANGED = {
+                center: {x: 1.123456789012345, y: 1.123456789012345},
+                zoom: 6
+            };
+            expect(mapUpdated(MAP_1, MAP_1_ZOOM_CHANGED)).toBeTruthy();
+        });
+        it("mapUpdated is true when center changes", () => {
+            const MAP_1 = {
+                center: {x: 1.123456789012345, y: 1.123456789012345},
+                zoom: 4
+            };
+            const MAP_1_CENTER_CHANGED = {
+                center: {x: 1.123456789012345, y: 1.123456749012345},
+                zoom: 4
+            };
+            expect(mapUpdated(MAP_1, MAP_1_CENTER_CHANGED)).toBeTruthy();
+        });
+        it("mapUpdated is true when center changes but for a little values, beyond configured precision", () => {
+            const MAP_1 = {
+                center: {x: 1.123456789012345, y: 1.123456789012345},
+                zoom: 4
+            };
+            const MAP_1_CENTER_CHANGED_BUTSIMILAR = {
+                center: {x: 1.12345678901234567, y: 1.12345678901234566},
+                zoom: 4
+            };
+            expect(mapUpdated(MAP_1, MAP_1_CENTER_CHANGED_BUTSIMILAR)).toBeFalsy();
+        });
     });
 });
