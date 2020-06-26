@@ -282,10 +282,19 @@ const isNearlyEqual = function(a, b) {
     return a.toFixed(12) - b.toFixed(12) === 0;
 };
 
+/**
+ * checks if maps has changed by looking at center or zoom
+ * @param {object} oldMap map object
+ * @param {object} newMap map object
+ */
 function mapUpdated(oldMap, newMap) {
-    const centersEqual = isNearlyEqual(newMap.center.x, oldMap.center.x) &&
-                          isNearlyEqual(newMap.center.y, oldMap.center.y);
-    return !centersEqual || newMap.zoom !== oldMap.zoom;
+    if (oldMap && !isEmpty(oldMap) &&
+        newMap && !isEmpty(newMap)) {
+        const centersEqual = isNearlyEqual(newMap?.center?.x, oldMap?.center?.x) &&
+                              isNearlyEqual(newMap?.center?.y, oldMap?.center?.y);
+        return !centersEqual || newMap?.zoom !== oldMap?.zoom;
+    }
+    return false;
 }
 
 /* Transform width and height specified in meters to the units of the specified projection */
