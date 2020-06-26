@@ -60,7 +60,7 @@ const {CHANGE_DRAWING_STATUS} = require('../../actions/draw');
 const {SHOW_NOTIFICATION} = require('../../actions/notifications');
 const {RESET_CONTROLS, SET_CONTROL_PROPERTY, toggleControl} = require('../../actions/controls');
 const {ZOOM_TO_EXTENT, clickOnMap} = require('../../actions/map');
-const { CLOSE_IDENTIFY } = require('../../actions/mapInfo');
+const { CLOSE_IDENTIFY, closeIdentify } = require('../../actions/mapInfo');
 const {CHANGE_LAYER_PROPERTIES, changeLayerParams, browseData} = require('../../actions/layers');
 const {geometryChanged} = require('../../actions/draw');
 const { TOGGLE_CONTROL } = require('../../actions/controls');
@@ -1590,52 +1590,19 @@ describe.only('featuregrid Epics', () => {
             });
         };
         testEpic(autoReopenFeatureGridOnFeatureInfoClose, 1, [openFeatureGrid(), featureInfoClick(), hideMapinfoMarker(), closeFeatureGrid()], epicResult );
-    });/*
-    it('autoReopenFeatureGridOnFeatureInfoClose avoiding loop', (done) => {
-
-        const actions = [];
-        const testActions = () => {
-            // expect(true).toBeFalsy();
-            expect(true).toBeTruthy();
-        };
-        const spyEpic = a$ => a$.do(a => actions.push(a)).ignoreElements();
-        const startEpic = () => Rx.Observable.of(openFeatureGrid());
-        testCombinedEpicStream([
-            spyEpic,
-            startEpic,
-            autoReopenFeatureGridOnFeatureInfoClose,
-            closeIdentifyWhenOpenFeatureGrid,
-            hideMarkerOnIdentifyClose
-        ],
-        action$ => action$.filter(({ type }) => type === LOCATION_CHANGE),
-        {
-            onNext: () => actions.push(),
-            onError: e => done(e),
-            onComplete: () => {
-                testActions();
-                done();
-            }
-        });
     });
-    */
-    it('autoReopenFeatureGridOnFeatureInfoClose avoiding loop', (done) => {
-
-        const actions = [];
-        const testActions = () => {
-            // expect(true).toBeFalsy();
-            expect(true).toBeTruthy();
-        };
-        const spyEpic = a$ => a$.do(a => actions.push(a)).ignoreElements();
-        const startEpic = () => Rx.Observable.of(openFeatureGrid());
-        testEpic(addTimeoutEpic(autoReopenFeatureGridOnFeatureInfoClose), 1, [openFeatureGrid(), featureInfoClick(), toggleControl('drawer'), hideMapinfoMarker(), closeFeatureGrid()], epicResult );
-    });
-    it('autoReopenFeatureGridOnFeatureInfoClose: cancel ability to reopen feature grid on drawer toggle control', done => {
+    it('autoReopenFeatureGridOnFeatureInfoClose flow restarts on new open feature grid ', done => {
+        // This prevents event loops with other epics
+        // that trigger feature info hideMarker
         const epicResult = actions => {
             expect(actions.length).toBe(1);
-            expect(actions[0].type).toBe(TEST_TIMEOUT);
-            done();
+            actions.map((action) => {
+                if (action.type === TEST_TIMEOUT) {
+                    done();
+                }
+            });
         };
-        testEpic(addTimeoutEpic(autoReopenFeatureGridOnFeatureInfoClose), 1, [openFeatureGrid(), featureInfoClick(), toggleControl('drawer'), hideMapinfoMarker(), closeFeatureGrid()], epicResult );
+        testEpic(addTimeoutEpic(autoReopenFeatureGridOnFeatureInfoClose), 1, [openFeatureGrid(), featureInfoClick(), openFeatureGrid(), hideMapinfoMarker(), closeFeatureGrid()], epicResult);
     });
 
     it('autoReopenFeatureGridOnFeatureInfoClose: other toggle control apart from drawer cannot cancel ability to open feature grid', done => {
