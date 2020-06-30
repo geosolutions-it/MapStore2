@@ -9,7 +9,7 @@
 const assign = require('object-assign');
 const toBbox = require('turf-bbox');
 const uuidv1 = require('uuid/v1');
-const { isString, isObject, isArray, head, castArray, isEmpty, findIndex, pick, isNil} = require('lodash');
+const { isString, isObject, isArray, head, castArray, isEmpty, findIndex, pick, isNil, initial, last, tail, map, clone} = require('lodash');
 
 let regGeoServerRule = /\/[\w- ]*geoserver[\w- ]*\//;
 
@@ -133,6 +133,53 @@ const getNestedGroupTitle = (id, groups = []) => {
         const nodeObj = getNode(group.nodes, id);
         return nodeObj ? nodeObj.title : null;
     }));
+};
+
+const sortNestedGroups = (groups, configGroups) => {
+    let nestedNodesObjects = {};
+    const copyGroups = map(groups, clone);
+    tail(configGroups).filter(groupObj => groupObj.id.includes('Default')).map((nestedGroup, index) => {
+        nestedNodesObjects = {...nestedNodesObjects, [0]: { node: nestedGroup, index: index}};
+    });
+    if (Object.keys(nestedNodesObjects).length) {
+        copyGroups.forEach((group, groupIndex) => {
+            Object.keys(nestedNodesObjects).map(nodeParentIndex => {
+                if (Number(nodeParentIndex) === groupIndex) {
+                    const lastItem = last(group.nodes);
+                    if (isObject(lastItem)) {
+                        group.nodes = initial(group.nodes);
+                        group.nodes.splice(nestedNodesObjects[nodeParentIndex].index, 0, lastItem);
+                    }
+                }
+            });
+        });
+        return copyGroups;
+    }
+
+    if (!Object.keys(nestedNodesObjects).length) {
+        let nestedOnload = {};
+        isObject(head(configGroups))
+        && isArray(head(configGroups).nodes)
+        && head(configGroups).nodes.map((node, index) => {
+            isObject(node) && isArray(node.nodes) ? nestedOnload = {...nestedOnload, [0]: {node: node, index: index }} : null;
+        });
+        if (Object.keys(nestedOnload).length) {
+            copyGroups.forEach((group, groupIndex) => {
+                Object.keys(nestedOnload).map(nodeParentIndex => {
+                    if (Number(nodeParentIndex) === groupIndex) {
+                        const firstItem = head(group.nodes);
+                        if (isObject(firstItem)) {
+                            group.nodes = tail(group.nodes);
+                            group.nodes.splice(nestedOnload[nodeParentIndex].index, 0, firstItem);
+                        }
+                    }
+                });
+            });
+            return copyGroups;
+        }
+    }
+
+    return groups;
 };
 /**
  * adds or update node property in a nested node
@@ -302,8 +349,8 @@ const LayersUtils = {
      */
     normalizeMap: (rawMap = {}) =>
         [
-            (map) => (map.layers || []).filter(({ id } = {}) => !id).length > 0 ? {...map, layers: (map.layers || []).map(l => LayersUtils.normalizeLayer(l))} : map,
-            (map) => map.groups ? map : {...map, groups: {id: "Default", expanded: true}}
+            (mapItem) => (mapItem.layers || []).filter(({ id } = {}) => !id).length > 0 ? {...mapItem, layers: (mapItem.layers || []).map(l => LayersUtils.normalizeLayer(l))} : mapItem,
+            (mapItem) => mapItem.groups ? mapItem : {...mapItem, groups: {id: "Default", expanded: true}}
         // this is basically a compose
         ].reduce((f, g) => (...args) => f(g(...args)))(rawMap),
     /**
@@ -332,7 +379,7 @@ const LayersUtils = {
                 }
                 return group.nodes;
             }, groups);
-            return groups;
+            return sortNestedGroups(groups, configGroups);
         }, []);
     },
     removeEmptyGroups: (groups) => {
