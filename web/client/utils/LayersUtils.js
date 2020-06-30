@@ -9,7 +9,7 @@
 const assign = require('object-assign');
 const toBbox = require('turf-bbox');
 const uuidv1 = require('uuid/v1');
-const { isString, isObject, isArray, head, castArray, isEmpty, findIndex, pick, isNil} = require('lodash');
+const { isString, isObject, isArray, head, castArray, isEmpty, findIndex, pick, isNil, initial, last, tail, map, clone} = require('lodash');
 
 let regGeoServerRule = /\/[\w- ]*geoserver[\w- ]*\//;
 
@@ -125,6 +125,52 @@ const getGroupNodes = (node) => {
 };
 
 
+const sortNestedGroups = (groups, configGroups) => {
+    let nestedNodesObjects = {};
+    const copyGroups = map(groups, clone);
+    tail(configGroups).filter(groupObj => groupObj.id.includes('Default')).map((nestedGroup, index) => {
+        nestedNodesObjects = {...nestedNodesObjects, [0]: { node: nestedGroup, index: index}};
+    });
+    if (Object.keys(nestedNodesObjects).length) {
+        copyGroups.forEach((group, groupIndex) => {
+            Object.keys(nestedNodesObjects).map(nodeParentIndex => {
+                if (Number(nodeParentIndex) === groupIndex) {
+                    const lastItem = last(group.nodes);
+                    if (isObject(lastItem)) {
+                        group.nodes = initial(group.nodes);
+                        group.nodes.splice(nestedNodesObjects[nodeParentIndex].index, 0, lastItem);
+                    }
+                }
+            });
+        });
+        return copyGroups;
+    }
+
+    if (!Object.keys(nestedNodesObjects).length) {
+        let nestedOnload = {};
+        isObject(head(configGroups))
+        && isArray(head(configGroups).nodes)
+        && head(configGroups).nodes.map((node, index) => {
+            isObject(node) && isArray(node.nodes) ? nestedOnload = {...nestedOnload, [0]: {node: node, index: index }} : null;
+        });
+        if (Object.keys(nestedOnload).length) {
+            copyGroups.forEach((group, groupIndex) => {
+                Object.keys(nestedOnload).map(nodeParentIndex => {
+                    if (Number(nodeParentIndex) === groupIndex) {
+                        const firstItem = head(group.nodes);
+                        if (isObject(firstItem)) {
+                            group.nodes = tail(group.nodes);
+                            group.nodes.splice(nestedOnload[nodeParentIndex].index, 0, firstItem);
+                        }
+                    }
+                });
+            });
+            return copyGroups;
+        }
+    }
+
+    return groups;
+};
 /**
  * adds or update node property in a nested node
  * if propName is an object it overrides a whole group of options instead of one
@@ -296,8 +342,8 @@ const LayersUtils = {
      */
     normalizeMap: (rawMap = {}) =>
         [
-            (map) => (map.layers || []).filter(({ id } = {}) => !id).length > 0 ? {...map, layers: (map.layers || []).map(l => LayersUtils.normalizeLayer(l))} : map,
-            (map) => map.groups ? map : {...map, groups: {id: "Default", expanded: true}}
+            (mapItem) => (mapItem.layers || []).filter(({ id } = {}) => !id).length > 0 ? {...mapItem, layers: (mapItem.layers || []).map(l => LayersUtils.normalizeLayer(l))} : mapItem,
+            (mapItem) => mapItem.groups ? mapItem : {...mapItem, groups: {id: "Default", expanded: true}}
         // this is basically a compose
         ].reduce((f, g) => (...args) => f(g(...args)))(rawMap),
     /**
@@ -305,13 +351,12 @@ const LayersUtils = {
      * @return function that filter by group
      */
     belongsToGroup: (gid) => l => (l.group || "Default") === gid || (l.group || "").indexOf(`${gid}.`) === 0,
-    getLayersByGroup: (configLayers) => {
+    getLayersByGroup: (configLayers, configGroups) => {
         let i = 0;
         let mapLayers = configLayers.map((layer) => assign({}, layer, {storeIndex: i++}));
         let groupNames = mapLayers.reduce((groups, layer) => {
             return groups.indexOf(layer.group || 'Default') === -1 ? groups.concat([layer.group || 'Default']) : groups;
         }, []).filter((group) => group !== 'background').reverse();
-
         return groupNames.reduce((groups, names)=> {
             let name = names || 'Default';
             name.split('.').reduce((subGroups, groupName, idx, array)=> {
@@ -326,7 +371,7 @@ const LayersUtils = {
                 }
                 return group.nodes;
             }, groups);
-            return groups;
+            return sortNestedGroups(groups, configGroups);
         }, []);
     },
     removeEmptyGroups: (groups) => {
@@ -386,7 +431,7 @@ const LayersUtils = {
     },
     splitMapAndLayers: (mapState) => {
         if (mapState && isArray(mapState.layers)) {
-            let groups = LayersUtils.getLayersByGroup(mapState.layers);
+            let groups = LayersUtils.getLayersByGroup(mapState.layers, mapState.groups);
             // additional params from saved configuration
             if (isArray(mapState.groups)) {
                 groups = mapState.groups.reduce((g, group) => {
