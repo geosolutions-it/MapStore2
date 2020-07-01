@@ -2071,6 +2071,7 @@
             "selectworkspace": "You need to select the workspace to enable advanced options"
         },
         "geostory": {
+            "geostoreMap": "MapStore Maps",
             "loadingSpinner": "Loading Story",
             "addTitleSection": "Add Title Section",
             "addParagraphSection": "Add Paragraph Section",
