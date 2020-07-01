@@ -2025,6 +2025,7 @@
             "selectworkspace": "Vous devez sélectionner l'espace de travail pour activer les options avancées"
         },
         "geostory": {
+            "geostoreMap": "Cartes de MapStore",
             "loadingSpinner": "Chargement de story",
             "addTitleSection": "Ajouter une section de titre",
             "addParagraphSection": "Ajouter une section de paragraphe",
