@@ -58,7 +58,7 @@ export const DEFAULT_STATE = {
                 type: SourceTypes.GEOSTORY // determines the type related to the API
             },
             geostoreMap: {
-                name: "Geostore Dev",
+                name: "geostory.geostoreMap", // id for Message comp
                 type: SourceTypes.GEOSTORE,
                 baseURL: "rest/geostore/",
                 category: "MAP"
