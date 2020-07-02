@@ -10,6 +10,7 @@ const {Glyphicon} = require('react-bootstrap');
 const {connect} = require('react-redux');
 const { createSelector, createStructuredSelector} = require('reselect');
 const assign = require('object-assign');
+const {isNil} = require('lodash');
 const {mapSelector, isMouseMoveIdentifyActiveSelector} = require('../selectors/map');
 const {layersSelector} = require('../selectors/layers');
 const { mapTypeSelector, isCesium } = require('../selectors/maptype');
@@ -18,7 +19,8 @@ const { generalInfoFormatSelector, clickPointSelector, indexSelector, responsesS
 const { isEditingAllowedSelector } = require('../selectors/featuregrid');
 
 
-const { hideMapinfoMarker, showMapinfoRevGeocode, hideMapinfoRevGeocode, clearWarning, toggleMapInfoState, changeMapInfoFormat, updateCenterToMarker, closeIdentify, purgeMapInfoResults, updateFeatureInfoClickPoint, changeFormat, toggleShowCoordinateEditor, changePage, toggleHighlightFeature, editLayerFeatures} = require('../actions/mapInfo');
+const { hideMapinfoMarker, showMapinfoRevGeocode, hideMapinfoRevGeocode, clearWarning, toggleMapInfoState, changeMapInfoFormat, updateCenterToMarker, closeIdentify, purgeMapInfoResults, updateFeatureInfoClickPoint, changeFormat, toggleShowCoordinateEditor, changePage, toggleHighlightFeature, editLayerFeatures,
+    setDefaultIdentify} = require('../actions/mapInfo');
 const { changeMousePointer, zoomToExtent, registerEventListener, unRegisterEventListener} = require('../actions/map');
 
 
@@ -38,7 +40,7 @@ const Message = require('./locale/Message');
 require('./identify/identify.css');
 
 const selector = createStructuredSelector({
-    enabled: (state) => state.mapInfo && state.mapInfo.enabled || state.controls && state.controls.info && state.controls.info.enabled || false,
+    enabled: (state) => state.mapInfo && state.mapInfo.enabled || state.controls && state.controls.info && state.controls.info.enabled,
     responses: responsesSelector,
     validResponses: validResponsesSelector,
     requests: (state) => state.mapInfo && state.mapInfo.requests || [],
@@ -194,12 +196,25 @@ const IdentifyPlugin = compose(
         showRevGeocode: showMapinfoRevGeocode,
         hideRevGeocode: hideMapinfoRevGeocode,
         onEnableCenterToMarker: updateCenterToMarker.bind(null, 'enabled'),
-        onEdit: editLayerFeatures
+        onEdit: editLayerFeatures,
+        setDefaultIdentify: setDefaultIdentify
     }, (stateProps, dispatchProps, ownProps) => ({
         ...ownProps,
         ...stateProps,
         ...dispatchProps,
-        enabled: stateProps.enabled && (stateProps.isCesium || !ownProps.showInMapPopup) && !stateProps.floatingIdentifyEnabled
+        enabled: (
+            isNil(ownProps.enabled)
+            && isNil((stateProps.enabled && (stateProps.isCesium || !ownProps.showInMapPopup) && !stateProps.floatingIdentifyEnabled))
+            && true
+        )
+        || (
+            isNil(ownProps.enabled)
+            && (stateProps.enabled
+            && (stateProps.isCesium
+            || !ownProps.showInMapPopup)
+            && !stateProps.floatingIdentifyEnabled)
+        )
+        || ownProps.enabled
     })),
     // highlight support
     compose(

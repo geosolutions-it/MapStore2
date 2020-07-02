@@ -5,6 +5,7 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
+const {isNil} = require('lodash');
 
 const {
     ERROR_FEATURE_INFO,
@@ -29,7 +30,8 @@ const {
     TOGGLE_EMPTY_MESSAGE_GFI,
     CHANGE_FORMAT,
     TOGGLE_SHOW_COORD_EDITOR,
-    SET_CURRENT_EDIT_FEATURE_QUERY
+    SET_CURRENT_EDIT_FEATURE_QUERY,
+    SET_DEFAULT_IDENTIFY
 } = require('../actions/mapInfo');
 const {
     MAP_CONFIG_LOADED
@@ -55,7 +57,6 @@ function receiveResponse(state, action, type) {
     return state;
 }
 const initState = {
-    enabled: true,
     configuration: {}
 };
 
@@ -344,7 +345,10 @@ function mapInfo(state = initState, action) {
     case MAP_CONFIG_LOADED: {
         return {
             ...state,
-            configuration: action.config.mapInfoConfiguration || state.configuration || {}
+            configuration: {
+                ...state.configuration,
+                ...action.config.mapInfoConfiguration
+            }
         };
     }
     case CHANGE_FORMAT: {
@@ -363,6 +367,18 @@ function mapInfo(state = initState, action) {
         return {
             ...state,
             currentEditFeatureQuery: action.query
+        };
+    }
+    case SET_DEFAULT_IDENTIFY: {
+        const { cfg } = action;
+        return {
+            ...state,
+            ...(!isNil(cfg.enabled) && {enabled: cfg.enabled}),
+            ...(!isNil(cfg.disabledAlwaysOn) && {disabledAlwaysOn: cfg.disabledAlwaysOn}),
+            configuration: {
+                ...state.configuration,
+                ...cfg.defaultConfiguration
+            }
         };
     }
     default:

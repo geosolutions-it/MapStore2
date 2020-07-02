@@ -6,8 +6,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-var expect = require('expect');
-var {
+import expect from 'expect';
+import {
     CHANGE_MAPINFO_STATE,
     NEW_MAPINFO_REQUEST,
     PURGE_MAPINFO_RESULTS,
@@ -31,8 +31,9 @@ var {
     TOGGLE_SHOW_COORD_EDITOR, toggleShowCoordinateEditor,
     CHANGE_FORMAT, changeFormat,
     CHANGE_PAGE, changePage,
-    TOGGLE_HIGHLIGHT_FEATURE, toggleHighlightFeature
-} = require('../mapInfo');
+    TOGGLE_HIGHLIGHT_FEATURE, toggleHighlightFeature,
+    SET_DEFAULT_IDENTIFY, setDefaultIdentify
+} from '../mapInfo';
 
 describe('Test correctness of the map actions', () => {
 
@@ -151,5 +152,17 @@ describe('Test correctness of the map actions', () => {
         expect(retVal.type).toBe(CHANGE_PAGE);
         expect(changePage().index).toBeFalsy();
         expect(changePage(1).index).toBe(1);
+    });
+    it('setDefaultIdentify', () => {
+        const defaultConfig = {
+            enabled: true,
+            defaultConfiguration: {
+                infoFormat: 'test'
+            }
+        };
+        const retVal = setDefaultIdentify(defaultConfig);
+        expect(retVal).toExist();
+        expect(retVal.type).toBe(SET_DEFAULT_IDENTIFY);
+        expect(retVal.cfg).toBe(defaultConfig);
     });
 });
