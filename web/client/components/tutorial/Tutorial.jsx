@@ -167,7 +167,7 @@ class Tutorial extends React.Component {
 
     onTour = (tour) => {
         if (this.props.steps.length > 0 && tour && tour.type) {
-            document.querySelector(tour?.step?.selector)?.scrollIntoView();
+            document.querySelector(tour?.step?.selector)?.scrollIntoView({block: "end"});
             const type = tour.type.split(':');
             if (type[0] !== 'tooltip' && type[1] === 'before'
             || tour.action === 'start'
