@@ -1,6 +1,6 @@
 {
     "ExtResourceList": {
-        "ResourceCount": 1,
+        "ResourceCount": 2,
         "Resource": [
             {
                 "Attributes": {
@@ -14,6 +14,16 @@
                             "@type": "STRING",
                             "name": "featured",
                             "value": true
+                        },
+                        {
+                            "@type": "STRING",
+                            "name": "details",
+                            "value": "somedetailspath"
+                        },
+                        {
+                            "@type": "STRING",
+                            "name": "thumbnail",
+                            "value": "pathtothumbnail"
                         }
                     ]
                 },
@@ -26,6 +36,40 @@
                 "id": 2,
                 "lastUpdate": "2018-02-12T11:42:31.676+01:00",
                 "name": "Map"
+            }, {
+                "Attributes": {
+                    "attribute": [
+                        {
+                            "@type": "STRING",
+                            "name": "owner",
+                            "value": "admin"
+                        },
+                        {
+                            "@type": "STRING",
+                            "name": "featured",
+                            "value": true
+                        },
+                        {
+                            "@type": "STRING",
+                            "name": "context",
+                            "value": "context_id"
+                        },
+                        {
+                            "@type": "STRING",
+                            "name": "thumbnail",
+                            "value": "pathtothumbnail"
+                        }
+                    ]
+                },
+                "category": {
+                    "id": 2,
+                    "name": "CONTEXT"
+                },
+                "creation": "2017-11-10T14:26:34.167+01:00",
+                "description": "a context",
+                "id": 3,
+                "lastUpdate": "2018-02-12T11:42:31.676+01:00",
+                "name": "a context"
             }
         ]
     }
