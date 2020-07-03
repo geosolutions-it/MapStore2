@@ -105,6 +105,7 @@ const resultToProps = ({result = {}, permission}) => ({
         canEdit: permission,
         creation: record.creation,
         description: record.description,
+        details: record.details,
         lastUpdate: record.lastUpdate,
         context: record.context,
         contextName: record.contextName,
@@ -126,7 +127,7 @@ const loadPage = ({permission, viewSize = 4, searchText = '', pageSize = 4} = {}
         .map(resultToProps);
 
 /*
- * add viewSize and previousItems props to control previus and current items in the grid view
+ * add viewSize and previousItems props to control previous and current items in the grid view
  */
 const updateItemsLifecycle = compose(
     withState('viewSize', 'onChangeSize', 4),

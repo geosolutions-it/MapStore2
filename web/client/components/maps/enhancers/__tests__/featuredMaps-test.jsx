@@ -57,6 +57,7 @@ describe('featuredMaps enhancher', () => {
                     canEdit: true,
                     creation: '2017-11-10T14:26:34.167+01:00',
                     description: 'Map',
+                    details: 'somedetailspath',
                     lastUpdate: '2018-02-12T11:42:31.676+01:00',
                     context: undefined,
                     contextName: null,
