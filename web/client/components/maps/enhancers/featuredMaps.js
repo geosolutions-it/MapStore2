@@ -105,11 +105,9 @@ const resultToProps = ({result = {}, permission}) => ({
         canEdit: permission,
         creation: record.creation,
         description: record.description,
-        details: record.details,
         lastUpdate: record.lastUpdate,
-        context: record.context,
+        ...parseAttributes(record),
         contextName: record.contextName,
-        thumbnail: record.thumbnail,
         owner: record.owner,
         featured: 'added',
         featuredEnabled: true

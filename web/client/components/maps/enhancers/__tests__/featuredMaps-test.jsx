@@ -59,14 +59,34 @@ describe('featuredMaps enhancher', () => {
                     description: 'Map',
                     details: 'somedetailspath',
                     lastUpdate: '2018-02-12T11:42:31.676+01:00',
-                    context: undefined,
                     contextName: null,
-                    thumbnail: undefined,
+                    thumbnail: "pathtothumbnail",
+                    owner: 'admin',
+                    featured: 'added',
+                    featuredEnabled: true
+                },
+                {
+                    id: 3,
+                    name: 'a context',
+                    category: {
+                        id: 2,
+                        name: "CONTEXT"
+                    },
+                    icon: null,
+                    canCopy: true,
+                    canDelete: true,
+                    canEdit: true,
+                    creation: '2017-11-10T14:26:34.167+01:00',
+                    description: 'a context',
+                    lastUpdate: '2018-02-12T11:42:31.676+01:00',
+                    context: "context_id",
+                    contextName: null,
+                    thumbnail: "pathtothumbnail",
                     owner: 'admin',
                     featured: 'added',
                     featuredEnabled: true
                 }],
-                total: 1,
+                total: 2,
                 loading: false
             });
             done();
