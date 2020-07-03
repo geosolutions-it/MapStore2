@@ -88,6 +88,7 @@ const mapsState = {
     }
 };
 
+// category is required to support details map
 const testMap = {
     "success": true,
     "totalCount": 13,
@@ -101,7 +102,6 @@ const testMap = {
             "description": "",
             "id": 464,
             "context": "2100",
-            // category is required to support details map
             "category": {name: "MAP"},
             "contextName": "test-context",
             "name": "TEST MAP",
