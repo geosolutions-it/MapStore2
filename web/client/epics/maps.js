@@ -293,7 +293,7 @@ const getMapsResourcesByCategoryEpic = (action$, store) =>
                 })
                     .then(data => data))
                     .switchMap((response) => getContextNames(response).switchMap(responseWithContext => Rx.Observable.of(
-                        mapsLoaded(responseWithContext, opts.params, searchText)
+                        mapsLoaded({...responseWithContext, results: responseWithContext?.results?.map(res => ({...res, category: {name: "MAP"}}))}, opts.params, searchText)
                     )))
             )
                 .let(wrapStartStop(
