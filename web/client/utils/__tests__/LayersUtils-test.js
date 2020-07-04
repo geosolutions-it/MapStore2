@@ -1106,4 +1106,20 @@ describe('LayersUtils', () => {
         expect(LayersUtils.getCapabilitiesUrl(layer)).toEqual(EXPECTED_CAPABILITIES_URL);
 
     });
+
+    it('test sortNestedGroups', () => {
+        const groups = [
+            {id: 'default', nodes: ['layer001', 'layer002', 'layer003', 'layer004', { id: 'Default.layer005', nodes: ['nested001', 'nested002']}]}
+        ];
+        const previousGroups = [
+            {id: 'default', nodes: [{ id: 'Default.layer005', nodes: ['nested001', 'nested002']}, {id: 'layer003'}, {id: 'layer004'}]}
+        ];
+        const sortedNodes = LayersUtils.sortNestedGroups(groups, previousGroups);
+
+        expect(sortedNodes).toExist();
+        expect(sortedNodes).toEqual([
+            {id: 'default', nodes: [ 'layer001', 'layer002', { id: 'Default.layer005', nodes: ['nested001', 'nested002']}, 'layer003', 'layer004']}
+        ]);
+
+    });
 });

@@ -265,6 +265,7 @@ describe('Test the MapUtils', () => {
                         title: 'nested001',
                         expanded: true
                     }],
+                    previousGroups: groups,
                     layers: [{
                         allowedSRS: {},
                         thumbURL: "THUMB_URL",
@@ -609,6 +610,7 @@ describe('Test the MapUtils', () => {
                         title: 'nested001',
                         expanded: true
                     }],
+                    previousGroups: groups,
                     layers: [{
                         allowedSRS: {},
                         thumbURL: "THUMB_URL",
@@ -1022,6 +1024,7 @@ describe('Test the MapUtils', () => {
                         title: 'nested001',
                         expanded: true
                     }],
+                    previousGroups: groups,
                     layers: [{
                         allowedSRS: {},
                         thumbURL: "THUMB_URL",
@@ -1309,6 +1312,7 @@ describe('Test the MapUtils', () => {
                         title: 'nested001',
                         expanded: true
                     }],
+                    previousGroups: groups,
                     layers: [{
                         allowedSRS: {},
                         thumbURL: undefined,
@@ -1572,6 +1576,7 @@ describe('Test the MapUtils', () => {
                     },
                     mapInfoControl: undefined,
                     backgrounds: [],
+                    previousGroups: groups,
                     layers: [{
                         id: 'annotations',
                         features: [ {
@@ -1712,6 +1717,7 @@ describe('Test the MapUtils', () => {
                         title: 'nested001',
                         expanded: true
                     }],
+                    previousGroups: groups,
                     layers: [{
                         allowedSRS: {},
                         thumbURL: undefined,
@@ -1859,6 +1865,7 @@ describe('Test the MapUtils', () => {
                         title: 'nested001',
                         expanded: true
                     }],
+                    previousGroups: groups,
                     layers: [{
                         allowedSRS: {},
                         thumbURL: undefined,
@@ -2046,6 +2053,7 @@ describe('Test the MapUtils', () => {
                         title: 'nested001',
                         expanded: true
                     }],
+                    previousGroups: groups,
                     layers: [{
                         allowedSRS: {},
                         thumbURL: "THUMB_URL",
