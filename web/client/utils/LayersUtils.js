@@ -124,6 +124,12 @@ const getGroupNodes = (node) => {
     return [];
 };
 
+/**
+ * Gets title of nested groups from Default
+ * @param {string} id of group
+ * @param {array} groups groups of map
+ * @return {string} title of the group
+ */
 const getNestedGroupTitle = (id, groups = []) => {
     return isArray(groups) && head(groups.map(group => {
         const groupObj = group.id === id ? group : null;
@@ -591,6 +597,7 @@ const LayersUtils = {
     },
     getNode,
     getGroupNodes,
+    getNestedGroupTitle,
     deepChange,
     extractDataFromSources,
     extractTileMatrixFromSources,
