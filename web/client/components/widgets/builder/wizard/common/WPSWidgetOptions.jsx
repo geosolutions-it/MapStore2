@@ -11,7 +11,7 @@ const { Row, Col, Form, FormGroup, FormControl, ControlLabel, Glyphicon} = requi
 const Message = require('../../../../I18N/Message');
 const Select = require('react-select').default;
 const Slider = require('react-nouislider');
-const ColorRangeSelector = require('../../../../style/ColorRangeSelector');
+const ColorRamp = require('../../../../styleeditor/ColorRamp').default;
 const StepHeader = require('../../../../misc/wizard/StepHeader');
 const SwitchPanel = require('../../../../misc/switch/SwitchPanel');
 const SwitchButton = require('../../../../misc/switch/SwitchButton');
@@ -145,7 +145,7 @@ module.exports = ({
                             <Message msgId={getLabelMessageId("colorRamp", data)} />
                         </Col>
                         <Col sm={6}>
-                            <ColorRangeSelector
+                            <ColorRamp
                                 items={getColorRangeItems(data.type)}
                                 value={head(getColorRangeItems(data.type).filter(c => data.autoColorOptions && c.name === data.autoColorOptions.name ))}
                                 samples={data.type === "pie" ? 5 : 1}
