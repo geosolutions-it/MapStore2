@@ -176,7 +176,7 @@ export const fields = {
             multi
         } = selectProps;
 
-        function updateOptions(options, newValue) {
+        function updateOptions(options = [], newValue) {
             const optionsValues = options.map(option => option.value);
             const isMissing = newValue?.value && optionsValues.indexOf(newValue.value) === -1;
             return isMissing

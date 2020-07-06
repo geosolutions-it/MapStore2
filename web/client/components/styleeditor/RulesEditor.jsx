@@ -7,6 +7,7 @@
  */
 
 import React, { useRef } from 'react';
+import PropTypes from 'prop-types';
 import { Glyphicon, FormControl as FormControlRB, FormGroup, Button as ButtonRB, Alert } from 'react-bootstrap';
 import Fields from './Fields';
 import uuidv1 from 'uuid/v1';
@@ -18,6 +19,7 @@ import ClassificationSymbolizer from './ClassificationSymbolizer';
 import localizedProps from '../misc/enhancers/localizedProps';
 import tooltip from '../misc/enhancers/tooltip';
 import Message from '../I18N/Message';
+import getBlocks from './config/blocks';
 
 const Button = tooltip(ButtonRB);
 const FormControl = localizedProps('placeholder')(FormControlRB);
@@ -49,6 +51,12 @@ export function Rule({
     );
 }
 
+Rule.propTypes = {
+    title: PropTypes.oneOfType([PropTypes.node, PropTypes.string]),
+    tools: PropTypes.node,
+    errorId: PropTypes.string
+};
+
 function EmptyRules() {
     return (
         <div style={{
@@ -67,7 +75,7 @@ function EmptyRules() {
         </div>);
 }
 
-export default function RulesEditor({
+function RulesEditor({
     rules = [],
     loading,
     toolbar,
@@ -333,3 +341,30 @@ export default function RulesEditor({
         </div>
     );
 }
+
+const {
+    symbolizerBlock: defaultSymbolizerBlock,
+    ruleBlock: defaultRuleBlock
+} = getBlocks();
+
+RulesEditor.propTypes = {
+    rules: PropTypes.array,
+    loading: PropTypes.bool,
+    toolbar: PropTypes.node,
+    config: PropTypes.object,
+    ruleBlock: PropTypes.object,
+    symbolizerBlock: PropTypes.object,
+    onUpdate: PropTypes.func,
+    onChange: PropTypes.func
+};
+
+RulesEditor.defaultProps = {
+    rules: [],
+    config: {},
+    ruleBlock: defaultRuleBlock,
+    symbolizerBlock: defaultSymbolizerBlock,
+    onUpdate: () => {},
+    onChange: () => {}
+};
+
+export default RulesEditor;

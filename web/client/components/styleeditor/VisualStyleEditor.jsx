@@ -7,6 +7,7 @@
  */
 
 import React, { useEffect, useRef, useReducer, useState } from 'react';
+import PropTypes from 'prop-types';
 import debounce from 'lodash/debounce';
 import identity from 'lodash/identity';
 
@@ -99,10 +100,10 @@ function VisualStyleEditor({
     config,
     loading,
     error,
-
     methods,
     getColors,
-    styleUpdateTypes
+    styleUpdateTypes,
+    debounceTime
 }) {
 
     const { symbolizerBlock, ruleBlock } = getBlocks(config);
@@ -155,7 +156,7 @@ function VisualStyleEditor({
             return null;
         }
         const newStyle = {
-            ...style,
+            ...state.current,
             rules: newRules
         };
         return dispacth({
@@ -177,7 +178,7 @@ function VisualStyleEditor({
                     })
                     .catch((err) => setParserError(err && err.message));
             }
-        }, 300);
+        }, debounceTime);
         return () => {
             update.current.cancel();
         };
@@ -286,5 +287,40 @@ function VisualStyleEditor({
         />
     );
 }
+
+
+VisualStyleEditor.propTypes = {
+
+    code: PropTypes.string,
+    format: PropTypes.string,
+    layer: PropTypes.object,
+    zoom: PropTypes.number,
+    scales: PropTypes.array,
+    geometryType: PropTypes.string,
+    fonts: PropTypes.array,
+    bands: PropTypes.array,
+    attributes: PropTypes.array,
+    onChange: PropTypes.func,
+    onError: PropTypes.func,
+    defaultStyleJSON: PropTypes.object,
+    config: PropTypes.object,
+    loading: PropTypes.bool,
+    error: PropTypes.object,
+
+    methods: PropTypes.array,
+    getColors: PropTypes.func,
+    styleUpdateTypes: PropTypes.object,
+    debounceTime: PropTypes.number
+};
+
+VisualStyleEditor.defaultProps = {
+    onChange: () => {},
+    onError: () => {},
+    config: {},
+    getColors: () => {},
+    styleUpdateTypes: {},
+    debounceTime: 300,
+    defaultStyleJSON: null
+};
 
 export default VisualStyleEditor;

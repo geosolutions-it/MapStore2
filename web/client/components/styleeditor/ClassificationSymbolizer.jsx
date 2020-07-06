@@ -22,7 +22,7 @@ function ClassificationSymbolizer({
     onUpdate,
     onReplace,
     methods,
-    getColors,
+    getColors = () => {},
     ruleBlock = {},
     symbolizerBlock = {},
     bands,
