@@ -40,7 +40,7 @@ const Message = require('./locale/Message');
 require('./identify/identify.css');
 
 const selector = createStructuredSelector({
-    enabled: (state) => state.mapInfo && state.mapInfo.enabled || state.controls && state.controls.info && state.controls.info.enabled,
+    enabled: (state) => (state.mapInfo && state.mapInfo.enabled || state.controls && state.controls.info && state.controls.info.enabled) || state.mapInfo && state.mapInfo.enabled,
     responses: responsesSelector,
     validResponses: validResponsesSelector,
     requests: (state) => state.mapInfo && state.mapInfo.requests || [],
@@ -141,18 +141,6 @@ const identifyDefaultProps = defaultProps({
 /**
  * This plugin allows get informations about clicked point. It can be configured to have a mobile or a desktop flavor.
  *
- * You can configure some of the features of this plugin by setting up the initial mapInfo state, then you need to update the "initialState.defaultState", or by the plugin configuration
- * ```
- * "mapInfo": {
- *   "enabled": true, // enabled by default
- *   "disabledAlwaysOn": false, // if true, disable always on setup
- *   "configuration": {
- *     "showEmptyMessageGFI": false // allow or deny the visiibility of message when you have no results from identify request
- *     "infoFormat": "text/plain" // default infoformat value, other values are "text/html" for text only or "application/json" for properties
- *   }
- * }
- * ```
- *
  * @class Identify
  * @memberof plugins
  * @static
@@ -166,6 +154,11 @@ const identifyDefaultProps = defaultProps({
  * @prop cfg.disableCenterToMarker {bool} disable zoom to marker action
  * @prop cfg.zIndex {number} component z index order
  * @prop cfg.showInMapPopup {boolean} if true show the identify as popup
+ * @prop cfg.enabled {boolean} // enabled by default
+ * @prop cfg.disabledAlwaysOn {boolean} if true, disable always on setup
+ * @prop cfg.defaultConfiguration {object} object in which the default properties for mapInfo are set
+ * @prop cfg.defaultConfiguration.showEmptyMessageGFI {boolean} allow or deny the visiibility of message when you have no results from identify request
+ * @prop cfg.defaultConfiguration.infoFormat {string} "text/plain" default infoformat value, other values are "text/html" for text only or "application/json" for properties
  *
  * @example
  * {
@@ -177,7 +170,11 @@ const identifyDefaultProps = defaultProps({
  *       "viewerOptions": {
  *          "container": "{context.ReactSwipe}",
  *          "header": "{context.SwipeHeader}"
- *       }
+ *       },
+ *      defaultConfiguration: {
+ *          "showEmptyMessageGFI": false,
+ *          "infoFormat": "text/plain"
+ *      }
  *    }
  * }
  *
@@ -207,14 +204,11 @@ const IdentifyPlugin = compose(
             && isNil((stateProps.enabled && (stateProps.isCesium || !ownProps.showInMapPopup) && !stateProps.floatingIdentifyEnabled))
             && true
         )
-        || (
-            isNil(ownProps.enabled)
-            && (stateProps.enabled
+        || (stateProps.enabled
             && (stateProps.isCesium
             || !ownProps.showInMapPopup)
             && !stateProps.floatingIdentifyEnabled)
-        )
-        || ownProps.enabled
+        || isNil(stateProps.enabled) && ownProps.enabled
     })),
     // highlight support
     compose(
