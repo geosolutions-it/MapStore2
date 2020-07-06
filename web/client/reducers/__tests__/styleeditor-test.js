@@ -19,7 +19,8 @@ const {
     addStyle,
     loadingStyle,
     loadedStyle,
-    errorStyle
+    errorStyle,
+    updateEditorMetadata
 } = require('../../actions/styleeditor');
 
 describe('Test styleeditor reducer', () => {
@@ -145,6 +146,19 @@ describe('Test styleeditor reducer', () => {
                     line: 10,
                     column: 2
                 }
+            }
+        });
+    });
+    it('test updateEditorMetadata action', () => {
+        const updateMetadata = updateEditorMetadata({
+            editorType: 'visual',
+            styleJSON: '{}'
+        });
+        const state = styleeditor({ }, updateMetadata);
+        expect(state).toEqual({
+            metadata: {
+                editorType: 'visual',
+                styleJSON: '{}'
             }
         });
     });

@@ -8,7 +8,8 @@
 import axios from '../../libs/ajax';
 import assign from 'object-assign';
 import { getVersion } from './About';
-import { head } from 'lodash';
+import head from 'lodash/head';
+import castArray from 'lodash/castArray';
 import { getNameParts, stringifyNameParts } from '../../utils/StyleEditorUtils';
 
 const STYLE_MODULES = [
@@ -70,6 +71,32 @@ const getStyleFormatFromFilename = (filename) => {
     return filename.split('.').pop();
 };
 
+const parseStyleMetadata = (metadata = {}) => {
+    const entries = castArray(metadata?.entry || []);
+    return entries.reduce((acc, entry) => ({
+        ...acc,
+        [entry['@key']]: entry.$
+    }), {});
+};
+
+const updateStyleMetadata = ({ baseUrl: geoserverBaseUrl, styleName, metadata }) => {
+    const styleUrl = getStyleBaseUrl({...getNameParts(styleName), geoserverBaseUrl});
+    // get the all the correct style to ensure previous properties does not override with default ones
+    // in particular the format
+    return axios.get(styleUrl)
+        .then(({ data = {} } = {}) => {
+            return axios.put(styleUrl, {
+                style: {
+                    ...data.style,
+                    metadata: {
+                        ...parseStyleMetadata(data.style?.metadata),
+                        ...metadata
+                    }
+                }
+            });
+        });
+};
+
 /**
 * Api for GeoServer styles via rest
 * @name api.geoserver
@@ -90,7 +117,7 @@ const Api = {
     */
     getStyleService: function({ baseUrl }) {
         return getVersion({ baseUrl })
-            .then(({ version, manifest }) => {
+            .then(({ version, manifest, fonts = [] }) => {
                 if (!version) return null;
                 const formats = (manifest || [])
                     .map(({ name }) =>
@@ -103,7 +130,8 @@ const Api = {
                     baseUrl,
                     version: geoserver.version,
                     formats: [...formats, 'sld'],
-                    availableUrls: []
+                    availableUrls: [],
+                    fonts
                 };
             });
     },
@@ -121,6 +149,7 @@ const Api = {
         const data = formatRequestData({options, format, baseUrl, name, workspace});
         return axios.get(data.url, data.options);
     },
+
     /**
     * Create a new style
     * @memberof api.geoserver
@@ -131,10 +160,18 @@ const Api = {
     * @param {string} params.code style code
     * @return {object} response
     */
-    createStyle: ({baseUrl, code, options, format = 'sld', styleName, languageVersion}) => {
+    createStyle: ({baseUrl, code, options, format = 'sld', styleName, languageVersion, metadata }) => {
         const {name, workspace} = getNameParts(styleName);
         const data = formatRequestData({options, format, baseUrl, name, workspace, languageVersion}, true);
-        return axios.post(data.url, code, data.options);
+        return axios.post(data.url, code, data.options)
+            .then(() => {
+                return metadata
+                    ? updateStyleMetadata({ baseUrl, styleName, metadata })
+                        .then(() => null)
+                        // silent fail for missing update on metadata
+                        .catch(() => null)
+                    : null;
+            });
     },
     /**
     * Update a style
@@ -146,10 +183,18 @@ const Api = {
     * @param {string} params.code style code
     * @return {object} response
     */
-    updateStyle: ({baseUrl, code, options, format = 'sld', styleName, languageVersion}) => {
+    updateStyle: ({baseUrl, code, options, format = 'sld', styleName, languageVersion, metadata}) => {
         const {name, workspace} = getNameParts(styleName);
         const data = formatRequestData({options, format, baseUrl, name, workspace, languageVersion});
-        return axios.put(data.url, code, data.options);
+        return axios.put(data.url, code, data.options)
+            .then(() => {
+                return metadata
+                    ? updateStyleMetadata({ baseUrl, styleName, metadata })
+                        .then(() => null)
+                        // silent fail for missing update on metadata
+                        .catch(() => null)
+                    : null;
+            });
     },
     /**
     * Delete a style
@@ -182,7 +227,11 @@ const Api = {
                 styles.forEach(({name}, idx) =>
                     axios.get(getStyleBaseUrl({...getNameParts(name), geoserverBaseUrl}))
                         .then(({data}) => {
-                            responses[idx] = assign({}, styles[idx], data && data.style && {...data.style, name: stringifyNameParts(data.style)} || {});
+                            responses[idx] = assign({}, styles[idx], data && data.style && {
+                                ...data.style,
+                                ...(data.style.metadata && { metadata: parseStyleMetadata(data.style.metadata) }),
+                                name: stringifyNameParts(data.style)
+                            } || {});
                             count--;
                             if (count === 0) resolve(responses.filter(val => val));
                         })
@@ -212,7 +261,14 @@ const Api = {
                     axios.get(getStyleBaseUrl({ workspace, geoserverBaseUrl, name: response.data.style.name, format: getStyleFormatFromFilename(response.data.style.filename) })).then(({data: code}) => ({...response.data.style, code}))
                     : null;
             });
-    }
+    },
+    /**
+     * Update style metadata
+     * @param {string} baseUrl service endpoint
+     * @param {string} styleName name of style
+     * @param {object} metadata object with metadata properties
+     */
+    updateStyleMetadata
 };
 
 export default Api;

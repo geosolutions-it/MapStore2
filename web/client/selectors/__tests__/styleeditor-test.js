@@ -26,7 +26,9 @@ const {
     canEditStyleSelector,
     getUpdatedLayer,
     getAllStyles,
-    selectedStyleFormatSelector
+    selectedStyleFormatSelector,
+    editorMetadataSelector,
+    selectedStyleMetadataSelector
 } = require('../styleeditor');
 
 describe('Test styleeditor selector', () => {
@@ -484,5 +486,61 @@ describe('Test styleeditor selector', () => {
         expect(retval).toExist();
         expect(retval).toBe('css');
 
+    });
+    it('test editorMetadataSelector', () => {
+        const state = {
+            styleeditor: {
+                metadata: {
+                    editorType: 'visual',
+                    styleJSON: 'null'
+                }
+            }
+        };
+        const retval = editorMetadataSelector(state);
+        expect(retval).toBeTruthy();
+        expect(retval).toEqual({
+            editorType: 'visual',
+            styleJSON: 'null'
+        });
+    });
+
+    it('test selectedStyleMetadataSelector', () => {
+        const state = {
+            layers: {
+                flat: [
+                    {
+                        id: 'layerId',
+                        name: 'layerName',
+                        style: 'point',
+                        availableStyles: [{
+                            name: 'point',
+                            metadata: {
+                                editorType: 'visual',
+                                styleJSON: 'null'
+                            }
+                        }]
+                    }
+                ],
+                selected: [
+                    'layerId'
+                ],
+                settings: {
+                    expanded: true,
+                    node: 'layerId',
+                    nodeType: 'layers',
+                    options: {
+                        opacity: 1,
+                        style: 'point'
+                    }
+                }
+            }
+        };
+        const retval = selectedStyleMetadataSelector(state);
+
+        expect(retval).toBeTruthy();
+        expect(retval).toEqual({
+            editorType: 'visual',
+            styleJSON: 'null'
+        });
     });
 });
