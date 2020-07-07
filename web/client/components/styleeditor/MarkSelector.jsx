@@ -8,7 +8,7 @@
 
 import React from 'react';
 import { Button as ButtonRB  } from 'react-bootstrap';
-import Popover from '../misc/Popover';
+import Popover from './Popover';
 import SVGPreview from './SVGPreview';
 import wellKnownName from './config/wellKnownName';
 import tooltip from '../misc/enhancers/tooltip';

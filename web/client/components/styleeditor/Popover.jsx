@@ -3,6 +3,19 @@ import React, { useState, useEffect, useRef, useCallback, cloneElement } from 'r
 import { createPortal } from 'react-dom';
 import { getConfigProp } from '../../utils/ConfigUtils';
 
+/**
+ * Popover used for style components.
+ * This component provide a simple implementation of popover without react bootstrap
+ * I will center the content on the view if space is not available
+ * @memberof components.styleeditor
+ * @name ControlledPopover
+ * @class
+ * @prop {object} containerNode values of the style
+ * @prop {object} placement position of popover, one of center, left, right, top, bottom
+ * @prop {node} content content of floating popover
+ * @prop {boolean} open open/close content
+ * @prop {function} onOpen triggered when child is clicked
+ */
 export function ControlledPopover({
     containerNode = document.querySelector('.' + (getConfigProp('themePrefix') || 'ms2') + " > div") || document.body,
     placement,

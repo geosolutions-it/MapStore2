@@ -10,7 +10,7 @@ import React, { useState } from 'react';
 import { Glyphicon, Button as ButtonRB } from 'react-bootstrap';
 import isNaN from 'lodash/isNaN';
 import Select from 'react-select';
-import Popover from '../misc/Popover';
+import Popover from './Popover';
 import PropertyField from './PropertyField';
 import tooltip from '../misc/enhancers/tooltip';
 import localizedProps from '../misc/enhancers/localizedProps';
