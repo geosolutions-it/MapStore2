@@ -217,7 +217,9 @@ export const fields = {
                     value={value}
                     onChange={option => {
                         if (multi) {
-                            return onChange(option.map((entry) => entry.value));
+                            return onChange(option.length > 0
+                                ? option.map((entry) => entry.value)
+                                : undefined);
                         }
                         setNewOptions(updateOptions(newOptions, option));
                         return onChange(option.value);

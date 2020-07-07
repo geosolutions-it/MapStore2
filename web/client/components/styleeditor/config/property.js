@@ -365,7 +365,7 @@ const property = {
             selectProps,
             isValid
         },
-        getValue: (value = '') => {
+        getValue: (value) => {
             return {
                 [key]: value
             };
