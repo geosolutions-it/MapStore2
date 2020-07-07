@@ -2063,7 +2063,7 @@
             "redChannel": "Canale rosso",
             "greenChannel": "Canale verde",
             "blueChannel": "Canale blue",
-            "grayChannel": "Canale grigio"
+            "grayChannel": "Canale"
         
         },
         "playback": {

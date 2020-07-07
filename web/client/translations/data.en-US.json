@@ -2074,7 +2074,7 @@
             "redChannel": "Red channel",
             "greenChannel": "Green channel",
             "blueChannel": "Blue channel",
-            "grayChannel": "Gray channel"
+            "grayChannel": "Channel"
         },
         "playback": {
             "settings": {
