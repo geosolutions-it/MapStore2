@@ -2050,7 +2050,7 @@
             "quantile": "Quantile",
             "jenks": "Natural break (Jenks)",
             "switchToTextareaEditor": "Passa all'editor textarea",
-            "switchToVisualEditor": "Passa all'editor visivo",
+            "switchToVisualEditor": "Passa all'editor visuale",
             "alertForceTranslate": "Perderai tutte le modifiche aggiunte nel textaree passando all'editor visivo. Sei sicuro di passare alla modalità editor dello stile visivo?",
             "stayInTextareaEditor": "No, continua in textarea",
             "useLatestValidStyle": "Sì, passa all'editor visuale",
