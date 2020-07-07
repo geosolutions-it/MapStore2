@@ -2051,7 +2051,7 @@
             "jenks": "Natural break (Jenks)",
             "switchToTextareaEditor": "Passa all'editor textarea",
             "switchToVisualEditor": "Passa all'editor visuale",
-            "alertForceTranslate": "Perderai tutte le modifiche aggiunte nel textaree passando all'editor visivo. Sei sicuro di passare alla modalità editor dello stile visivo?",
+            "alertForceTranslate": "Passando all'editor visuale perderai tutte le modifiche applicate con l'editor testuale. Sei sicuro di passare alla modalità editor visuale?",
             "stayInTextareaEditor": "No, continua in textarea",
             "useLatestValidStyle": "Sì, passa all'editor visuale",
             "validationError": "Errore di convalida",
