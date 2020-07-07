@@ -20,7 +20,7 @@ const ReactSelectCreatable = localizedProps(['placeholder', 'noResultsText'])(Se
 const Button = tooltip(ButtonRB);
 
 function ScaleFieldRenderer({ label, currentZoom }) {
-    return <span>{label}{currentZoom && <>&nbsp;<Glyphicon glyph="star"/></>}</span>;
+    return <span>{label}{currentZoom && <>&nbsp;<Glyphicon glyph="arrow-left"/></>}</span>;
 }
 
 function ScaleInput({
