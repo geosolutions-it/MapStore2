@@ -7,7 +7,6 @@
  */
 
 const uuidv1 = require('uuid/v1');
-const randomDots = require('./img/randomdots.png');
 
 /**
  * Template object structure
@@ -161,7 +160,19 @@ const customTemplates = [
         types: ['linestring', 'vector'],
         title: 'Simple railway',
         format: 'css',
-        code: "@mode 'Flat';\n@styleTitle '${styleTitle}';\n@styleAbstract '${styleAbstract}';\n\n* {\n\tstroke: #333333, #333333;\n\tstroke-width: 0.5, 7;\n\tstroke-dasharray: 1 0, 1 10;\n}",
+        code:
+`@mode 'Flat';
+@styleTitle '\${styleTitle}';
+@styleAbstract '\${styleAbstract}';
+
+* {
+    stroke: symbol('shape://vertline'), #000000;
+    :stroke {
+        stroke: #000000;
+        size: 8;
+    };
+}
+`,
         preview: {
             config: {
                 type: 'linestring',
@@ -324,52 +335,6 @@ const customTemplates = [
 @styleAbstract '\${styleAbstract}';
 
 * {
-    stroke: #33aaff, symbol('extshape://triangle');
-    stroke-width: 1;
-    stroke-dasharray: none, 20 20;
-    :stroke {
-        size: 20;
-        fill: #33aaff;
-        stroke: #3a8bbe;
-        stroke-width: 0.5;
-    };
- }
-`,
-        types: ['linestring', 'vector'],
-        title: 'Weather Symbol',
-        format: 'css',
-        preview: {
-            config: {
-                type: 'linestring',
-                paths: [{
-                    stroke: "#33aaff",
-                    strokeWidth: 4
-                },
-                {
-                    type: 'point',
-                    transform: 'translate(67.5, 92.5) rotate(-60)',
-                    d: 'M-15 0 L15 0 L0 -15Z',
-                    stroke: '#3a8bbe',
-                    strokeWidth: 2,
-                    fill: '#33aaff'
-                }, {
-                    type: 'point',
-                    transform: 'translate(132.5, 92.5) rotate(60)',
-                    d: 'M-15 0 L15 0 L0 -15Z',
-                    stroke: '#3a8bbe',
-                    strokeWidth: 2,
-                    fill: '#33aaff'
-                }]
-            }
-        }
-    },
-    {
-        code:
-`@mode 'Flat';
-@styleTitle '\${styleTitle}';
-@styleAbstract '\${styleAbstract}';
-
-* {
     stroke: #333;
     label: 'Label';
     label-anchor: 0.5 0.5;
@@ -417,66 +382,6 @@ const customTemplates = [
             }
         }
     },
-    {
-        code:
-`@mode 'Flat';
-@styleTitle '\${styleTitle}';
-@styleAbstract '\${styleAbstract}';
-
-* {
-    stroke: #333;
-    label: 'Label';
-    label-anchor: 0.5 0.5;
-    label-conflict-resolution: true;
-    label-follow-line: true;
-    label-max-angle-delta: 90;
-    label-max-displacement: 400;
-    label-repeat: 150;
-
-    font-fill: #000;
-    font-family: 'sans-serif';
-    font-size: 20;
-    halo-color: #fff;
-    halo-radius: 4;
-}
-`,
-        types: ['linestring', 'vector'],
-        title: 'Label Follow Line',
-        format: 'css',
-        preview: {
-            config: {
-                type: "linestring",
-                paths: [{
-                    stroke: "#333",
-                    strokeWidth: 4
-                }],
-                texts: [
-                    {
-                        text: 'Label',
-                        transform: 'translate(100, 100) rotate(-60) translate(-120, -130)',
-                        style: {
-                            fontSize: 30,
-                            fontWeight: 'bold',
-                            strokeWidth: 12,
-                            stroke: '#ffffff'
-                        }
-                    },
-                    {
-                        text: 'Label',
-                        fill: '#000000',
-                        transform: 'translate(100, 100) rotate(-60) translate(-120, -130)',
-                        style: {
-                            fontSize: 30,
-                            fontWeight: 'bold',
-                            strokeWidth: 1,
-                            stroke: '#000000'
-                        }
-                    }
-                ]
-            }
-        }
-    },
-
     {
         code:
 `@mode 'Flat';
@@ -727,88 +632,6 @@ const customTemplates = [
                         fill: '#f2f2f2'
                     }
                 }]
-            }
-        }
-    },
-    {
-        code:
-`@mode 'Flat';
-@styleTitle '\${styleTitle}';
-@styleAbstract '\${styleAbstract}';
-
-* {
-    stroke:  #555555, #000000;
-    stroke-offset: 0, 5;
-    stroke-dasharray: 1 0, 8 4;
-    stroke-width: 0.5, 1;
-}
-`,
-        types: ['polygon', 'vector'],
-        title: 'Section',
-        format: 'css',
-        preview: {
-            config: {
-                type: "polygon",
-                paths: [{
-                    fill: "transparent",
-                    stroke: "#555555",
-                    strokeWidth: 2
-                }, {
-                    type: 'point',
-                    fill: "transparent",
-                    stroke: "#000000",
-                    strokeDasharray: "32 16",
-                    d: 'M30 30 L170 30 L170 170 L30 170Z',
-                    strokeWidth: 4
-                }]
-            }
-        }
-    },
-    {
-        code:
-`@mode 'Flat';
-@styleTitle '\${styleTitle}';
-@styleAbstract '\${styleAbstract}';
-
-* {
-    fill: symbol('shape://dot');
-    :fill {
-      size: 8;
-      stroke: #333;
-      stroke-width: 2;
-    };
-    stroke: #333;
-    stroke-width: 0.5;
-    stroke-dasharray: 1;
-    fill-random: free;
-    fill-random-seed: 5;
-    fill-random-rotation: none;
-    fill-random-symbol-count: 200;
-    fill-random-tile-size: 100;
-}
-`,
-        types: ['polygon', 'vector'],
-        title: 'Random Dots',
-        format: 'css',
-        preview: {
-            config: {
-                type: "polygon",
-                paths: [{
-                    fill: "transparent",
-                    stroke: "#333",
-                    strokeDasharray: "4 4",
-                    strokeWidth: 2
-                }, {fill: "url(#random_dots)"}],
-                patterns: [
-                    {
-                        id: 'random_dots',
-                        image: {
-                            xlinkHref: randomDots,
-                            height: 256,
-                            width: 256
-                        }
-                    }
-                ]
             }
         }
     },
