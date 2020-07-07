@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const wellKnownNames = [
+const wellKnownName = [
     {
         value: 'Circle',
         label: 'styleeditor.circle',
@@ -214,4 +214,4 @@ const wellKnownNames = [
     }
 ];
 
-export default wellKnownNames;
+export default wellKnownName;

@@ -10,7 +10,7 @@ import React from 'react';
 import { Button as ButtonRB  } from 'react-bootstrap';
 import Popover from '../misc/Popover';
 import SVGPreview from './SVGPreview';
-import wellKnownNames from './config/weelKnowNames';
+import wellKnownName from './config/wellKnownName';
 import tooltip from '../misc/enhancers/tooltip';
 
 const Button = tooltip(ButtonRB);
@@ -21,7 +21,7 @@ function MarkSelector({
     config = {},
     onChange = () => {}
 }) {
-    const { options = wellKnownNames } = config;
+    const { options = wellKnownName } = config;
     const selected = options.find(option => option.value === value);
     return (
         <Popover
