@@ -436,7 +436,22 @@ export const fields = {
     }
 };
 
-
+/**
+ * Fields
+ * @memberof components.styleeditor
+ * @name Editor
+ * @class
+ * @prop {object} properties values of the style
+ * @prop {object} params representation of a symbolizer block
+ * @prop {object} params[keyParam].type type of field (eg: color, select, ...)
+ * @prop {object} params[keyParam].setValue (optional) transform the value before to be passed to the component
+ * @prop {object} params[keyParam].getValue transform the value before to be changed
+ * @prop {object} params[keyParam].config specific configuration of the field
+ * @prop {object} params[keyParam].label label of the field
+ * @prop {object} params[keyParam].key property key
+ * @prop {object} config external configuration needed in field (eg: bands, attributes, ...)
+ * @prop {function} onChange return the changed value
+ */
 function Fields({
     properties,
     params,
