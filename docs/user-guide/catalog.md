@@ -150,6 +150,11 @@ In **General Settings** the user can set the title he wants to assign to this se
 
 In **Advanced Settings** the user can set, other than the standard options, also:
 
+* *Localized styles* (only for the WMS service) through which it is possible to change the language of the layers. In this way the layer's legend and the layer's labels on the map will appear localized according to the current language
+
+!!!warning 
+    To be activated, the localized style requires specific configurations on the GeoServer side.
+
 * *Format*: the default image format for the layers added to the map (`png`, `png8`, `jpeg`, `vnd.jpeg-png` or `gif`). Setting this configuration property is particularly useful when the user wants to use an optimized format by default (`png8`, `vnd.jpeg-png`) for all the layers added from the catalog's source without having to select it for each layer in [Layer Settings](https://mapstore.readthedocs.io/en/latest/user-guide/layer-settings/#display)..
 
 ### TMS Catalog
