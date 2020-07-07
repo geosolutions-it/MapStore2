@@ -2074,7 +2074,9 @@
             "redChannel": "Red channel",
             "greenChannel": "Green channel",
             "blueChannel": "Blue channel",
-            "grayChannel": "Channel"
+            "grayChannel": "Channel",
+            "ruleClassification": "Classification",
+            "ruleRaster": "Raster"
         },
         "playback": {
             "settings": {

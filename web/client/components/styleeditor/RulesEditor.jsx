@@ -236,7 +236,7 @@ function RulesEditor({
                             errorId={ruleErrorId}
                             title={
                                 hideInputLabel
-                                    ? ruleKind
+                                    ? <Message msgId={`styleeditor.rule${ruleKind}`}/>
                                     : <FormGroup>
                                         <FormControl
                                             value={name}

@@ -2063,8 +2063,9 @@
             "redChannel": "Canale rosso",
             "greenChannel": "Canale verde",
             "blueChannel": "Canale blue",
-            "grayChannel": "Canale"
-        
+            "grayChannel": "Canale",
+            "ruleClassification": "Classificazione",
+            "ruleRaster": "Raster"
         },
         "playback": {
             "settings": {
