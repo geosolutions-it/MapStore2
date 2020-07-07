@@ -2059,7 +2059,7 @@
             "equalInterval": "Equal interval",
             "quantile": "Quantile",
             "jenks": "Natural breaks (Jenks)",
-            "switchToTextareaEditor": "Switch to textarea editor",
+            "switchToTextareaEditor": "Switch to text editor",
             "switchToVisualEditor": "Switch to visual editor",
             "alertForceTranslate": "You will lose all the changes added in the text mode by switching to visual editor. Are you sure to switch to visual style editor mode?",
             "stayInTextareaEditor": "No, continue with text editor",
