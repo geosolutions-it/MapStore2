@@ -299,7 +299,7 @@ describe('RulesEditor', () => {
 
         const symbolizerFields = symbolizersNode[0].querySelectorAll('.ms-symbolizer-label > span');
         expect([...symbolizerFields].map(field => field.innerHTML)).toEqual([
-            'styleeditor.band',
+            'styleeditor.grayChannel',
             'styleeditor.contrastEnhancement',
             'styleeditor.opacity'
         ]);
@@ -407,7 +407,7 @@ describe('RulesEditor', () => {
 
         const symbolizerFields = symbolizersNode[0].querySelectorAll('.ms-symbolizer-label > span');
         expect([...symbolizerFields].map(field => field.innerHTML)).toEqual([
-            'styleeditor.band',
+            'styleeditor.grayChannel',
             'styleeditor.contrastEnhancement',
             'styleeditor.opacity',
             'styleeditor.colorRamp',
