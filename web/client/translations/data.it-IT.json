@@ -1998,7 +1998,7 @@
             "lineCapSquare": "Square",
             "lineJoinBevel": "Bevel",
             "lineJoinRound": "Round",
-            "lineJoinMitre": "Mitre",
+            "lineJoinMiter": "Miter",
             "fontStyleNormal": "Normale",
             "fontStyleItalic": "Italic",
             "fontWeightNormal": "Normale",
