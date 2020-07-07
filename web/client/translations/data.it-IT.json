@@ -2054,7 +2054,7 @@
             "alertForceTranslate": "Passando all'editor visuale perderai tutte le modifiche applicate con l'editor testuale. Sei sicuro di passare alla modalità editor visuale?",
             "stayInTextareaEditor": "No, continua con l'editor testuale",
             "useLatestValidStyle": "Sì, passa all'editor visuale",
-            "validationError": "Errore di convalida",
+            "validationError": "Errore di validazione",
             "incorrectPropertyInputError": "Questo è probabilmente dovuto ad un valore mancante o non valido negli input delle proprietà dell'editor di stile.",
             "emptyRuleEditorTitle": "Aggiungi nuove regole",
             "emptyRuleEditor": "Non ci sono regole per questo stile. Aggiungi una nuova regola facendo clic sul tipo di stile desiderato nella barra degli strumenti",
