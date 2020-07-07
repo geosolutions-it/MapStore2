@@ -97,7 +97,17 @@ class ManagerMenu extends React.Component {
             .filter(e => this.props.enableContextManager || e.path !== "/context-manager")
             .sort((a, b) => a.position - b.position).map((entry) => {
                 return {
-                    action: (context) => {context.router.history.push(entry.path); return this.props.itemSelected(entry.id); },
+                    action: (context) => {
+                        context.router.history.push(entry.path);
+                        return {
+                            type: "@@router/LOCATION_CHANGE",
+                            payload: {
+                                action: context.router.history.action,
+                                isFirstRendering: false,
+                                location: context.router.history.location
+                            }
+                        };
+                    },
                     text: entry.msgId ? <Message msgId={entry.msgId} /> : entry.text,
                     cfg: {...entry}
                 };
