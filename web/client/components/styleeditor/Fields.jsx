@@ -269,7 +269,7 @@ export const fields = {
     channel: ({
         value,
         onChange,
-        bands = []
+        bands
     }) => {
 
         const {
@@ -282,7 +282,7 @@ export const fields = {
                 ? 'gray'
                 : 'rgb';
 
-        const bandOptions = bands.map((band) => ({
+        const bandOptions = (bands || []).map((band) => ({
             label: band,
             value: band
         }));

@@ -9,6 +9,7 @@
 import React, { useState }  from 'react';
 
 import isObject from 'lodash/isObject';
+import isArray from 'lodash/isArray';
 import inlineWidgets from './inlineWidgets';
 
 import {
@@ -171,6 +172,23 @@ const styleUpdateTypes = {
     }
 };
 
+function getAttributes(hintProperties, geometryType) {
+    return hintProperties && geometryType !== 'raster' && Object.keys(hintProperties)
+        .filter((key) => ['integer', 'long', 'double', 'float', 'bigdecimal', 'string', 'decimal']
+            .indexOf(hintProperties[key].localPart.toLowerCase()) !== -1)
+        .map((key) => {
+            const { localPart } = hintProperties[key];
+            return {
+                attribute: key,
+                label: key,
+                type: ['integer', 'long', 'double', 'float', 'bigdecimal', 'decimal']
+                    .indexOf(localPart.toLowerCase()) !== -1
+                    ? 'number'
+                    : 'string'
+            };
+        });
+}
+
 const ConnectedVisualStyleEditor = connect(
     createSelector(
         [
@@ -188,21 +206,8 @@ const ConnectedVisualStyleEditor = connect(
         (code, format, hintProperties, error, loading, layer, geometryType, scales, map, styleService) => ({
             code,
             mode: getEditorMode(format),
-            bands: hintProperties && geometryType === 'raster' && hintProperties,
-            attributes: hintProperties && geometryType !== 'raster' && Object.keys(hintProperties)
-                .filter((key) => ['integer', 'long', 'double', 'float', 'bigdecimal', 'string']
-                    .indexOf(hintProperties[key].localPart.toLowerCase()) !== -1)
-                .map((key) => {
-                    const { localPart } = hintProperties[key];
-                    return {
-                        attribute: key,
-                        label: key,
-                        type: ['integer', 'long', 'double', 'float', 'bigdecimal']
-                            .indexOf(localPart.toLowerCase()) !== -1
-                            ? 'number'
-                            : 'string'
-                    };
-                }),
+            bands: isArray(hintProperties) && geometryType === 'raster' && hintProperties || [],
+            attributes: getAttributes(hintProperties, geometryType),
             error: error.edit || null,
             loading,
             format,
