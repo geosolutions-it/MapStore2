@@ -2060,7 +2060,11 @@
             "emptyRuleEditorTitle": "Ajouter de nouvelles règles",
             "emptyRuleEditor": "Il n'y a pas de règles pour ce style. Ajoutez une nouvelle règle en cliquant sur le type de symboliseur souhaité dans la barre d'outils",
             "classificationError": "Service non disponible. Actuellement, il n'est pas possible de créer une classification",
-            "classificationRasterError": "Service non disponible. Actuellement, il n'est pas possible de créer une classification raster"
+            "classificationRasterError": "Service non disponible. Actuellement, il n'est pas possible de créer une classification raster",
+            "redChannel": "Red channel",
+            "greenChannel": "Green channel",
+            "blueChannel": "Blue channel",
+            "grayChannel": "Gray channel"
         },
         "playback": {
             "settings": {

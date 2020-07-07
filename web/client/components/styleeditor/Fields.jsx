@@ -297,6 +297,7 @@ export const fields = {
                             key={channelKey}
                             value={selectedBand}
                             bands={bandOptions}
+                            label={'styleeditor.' + channelKey}
                             enhancementType={contrastEnhancement?.enhancementType || 'none'}
                             onChange={(key, newValue) => {
                                 if (key === 'band') {
@@ -344,6 +345,7 @@ export const fields = {
 
         return (
             <Band
+                label="styleeditor.grayChannel"
                 value={selectedBand}
                 bands={[
                     {

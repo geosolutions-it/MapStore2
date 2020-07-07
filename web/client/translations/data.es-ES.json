@@ -2059,7 +2059,11 @@
             "emptyRuleEditorTitle": "Agregar nuevas reglas",
             "emptyRuleEditor": "No hay reglas para este estilo. Agregue una nueva regla haciendo clic en el tipo de simbolizador deseado en la barra de herramientas",
             "classificationError": "Servicio no disponible. Actualmente no es posible crear una clasificación",
-            "classificationRasterError": "Servicio no disponible. Actualmente no es posible crear una clasificación ráster"
+            "classificationRasterError": "Servicio no disponible. Actualmente no es posible crear una clasificación ráster",
+            "redChannel": "Red channel",
+            "greenChannel": "Green channel",
+            "blueChannel": "Blue channel",
+            "grayChannel": "Gray channel"
         },
         "playback": {
             "settings": {

@@ -2059,7 +2059,11 @@
             "emptyRuleEditorTitle": "Aggiungi nuove regole",
             "emptyRuleEditor": "Non ci sono regole per questo stile. Aggiungi una nuova regola facendo clic sul tipo di stile desiderato nella barra degli strumenti",
             "classificationError": "Servizio non disponibile. Attualmente non è possibile creare una classificazione",
-            "classificationRasterError": "Servizio non disponibile. Attualmente non è possibile creare una classificazione raster"
+            "classificationRasterError": "Servizio non disponibile. Attualmente non è possibile creare una classificazione raster",
+            "redChannel": "Canale rosso",
+            "greenChannel": "Canale verde",
+            "blueChannel": "Canale blue",
+            "grayChannel": "Canale grigio"
         
         },
         "playback": {
