@@ -242,7 +242,7 @@ Ported to CodeMirror by Peter Kroon
     background-size: 24px 24px;
     background-position: 0 0, 0 12px, 12px -12px, -12px 0px;
     .ms-color-picker-swatch {
-        position: relative;
+        position: static;
         width: 100%;
         height: 100%;
         text-align: center;
@@ -295,9 +295,235 @@ Ported to CodeMirror by Peter Kroon
         & > span {
             position: absolute;
             right: 0;
+            top: 0;
             padding: 4px;
             margin: 0;
             font-size: @font-size-base;
         }
+    }
+}
+
+.ms-style-editor-switch {
+    text-align: right;
+    padding: 4px;
+    border-bottom: 1px solid @ms2-color-shade-lighter;
+    .btn-group {
+        border: 1px solid @ms2-color-shade-lighter;
+    }
+    .btn-group span {
+        
+        display: inline-flex;
+        align-items: center;
+    }
+}
+
+.ms-style-rules-editor {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    width: 100%;
+    height: 100%;
+    padding: 8px;
+    .ms-style-rules-editor-head {
+        display: flex;
+        flex-wrap: wrap;
+        .ms-style-rules-editor-left {
+            flex: 1;
+            .btn-group > span {
+                display: flex;
+            }
+        }
+        .ms-style-rules-editor-right {
+            text-align: right;
+            flex: 1;
+        }
+    }
+    ul, li {
+        padding: 0;
+        margin: 0;
+        list-style-type: none;
+    }
+    .ms-style-rule-head {
+        margin-bottom: 8px;
+        display: flex;
+        align-items: center;
+        .ms-style-rule-head-info,
+        .form-group {
+            flex: 1;
+            margin-right: 8px;
+        }
+    }
+    .ms-style-rule-head-tools {
+        display: flex;
+    }
+    .ms-style-rules-editor-body {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        position: relative;
+        width: 100%;
+        height: 100%;
+    }
+    .ms-style-rule {
+        padding: 8px;
+        .shadow-soft;
+    }
+    .ms-style-rule + .ms-style-rule {
+        margin-top: 8px;
+    }
+    .ms-style-rule:last-child {
+        margin-bottom: 8px;
+    }
+    
+    .ms-symbolizer-info {
+        padding: 4px;
+        display: flex;
+        align-items: center;
+        > *:not(.ms-symbolizer-tools) {
+            flex: 1;
+        }
+    }
+    .ms-symbolizer {
+        padding: 8px;
+        border: 1px solid @ms2-color-shade-lighter;
+    }
+    .ms-symbolizer + .ms-symbolizer {
+        border-top: none;
+    }
+    .form-group {
+        margin: 0;
+    }
+}
+
+.ms-symbolizer-field {
+    display: flex;
+    align-items: center;
+    padding: 4px;
+    min-height: 40px;
+    .form-group {
+        margin: 0;
+    }
+    > .ms-symbolizer-value,
+    > .ms-symbolizer-label {
+        flex: 1;
+    }
+    .ms-symbolizer-value {
+        display: flex;
+        align-items: center;
+        > *:not(.ms-symbolizer-tools) {
+            flex: 1;
+        }
+        .ms-popover {
+            text-align: center;
+        }
+
+        .btn-group span {
+            display: flex;
+            flex-wrap: wrap;
+            > .btn {
+                flex: 1;
+            }
+        }
+        &.ms-symbolizer-value-invalid {
+            outline: 1px solid @ms2-color-danger;
+        }
+    }
+}
+
+.ms-symbolizer-field-divider {
+    border-bottom: 1px solid @ms2-color-shade-lighter;
+    padding-bottom: 8px;
+    margin-bottom: 8px;
+}
+
+.ms-symbolizer {
+    padding: 8px;
+    margin: 0;
+    list-style-type: none;
+    background-color: @ms2-color-background;
+    .Select-menu-outer {
+        z-index: 2 !important;
+    }
+}
+
+.ms-mark-list {
+    background-color: @ms2-color-background;
+    position: relative;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    ul, li {
+        padding: 0;
+        margin: 0;
+        list-style-type: none;
+    }
+    ul {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+    .ms-mark-preview {
+        margin: 4px;
+    }
+}
+
+.ms-mark-preview {
+    width: 28px;
+    height: 28px;
+    padding: 0;
+}
+
+.ms-popover-overlay {
+    .ms-style-rule-scale {
+        background-color: @ms2-color-background;
+        .shadow-far;
+        width: 350px;
+        overflow: visible;
+        padding: 8px;
+    }
+    .ms-style-rule-filter {
+        background-color: @ms2-color-background;
+        font-size: @font-size-small;
+        * {
+            font-size: @font-size-small;
+        }
+        .shadow-far;
+        width: 450px;
+        height: 300px;
+        overflow: auto;
+    }
+    .ms-mark-list {
+        .shadow-far;
+        width: 256px;
+        max-height: 256px;
+    }
+}
+
+
+
+.ms-classification-popover {
+    width: 400px;
+    height: 300px;
+    padding: 8px;
+    background-color: @ms2-color-background;
+    .shadow-far;
+    overflow: auto;
+}
+
+.thema-classes-editor {
+    padding: 8px 0;
+    .form-group {
+        display: flex;
+        margin: 0;
+        align-items: center;
+        &>* {
+            flex: 1;
+        }
+        &>*+* {
+            margin-left: 4px;
+        }
+    }
+    .form-group + .form-group {
+        margin-top: 4px;
     }
 }

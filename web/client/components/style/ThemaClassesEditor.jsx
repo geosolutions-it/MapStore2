@@ -8,12 +8,11 @@
 
 const React = require('react');
 const PropTypes = require('prop-types');
-const { Grid, Row, Col, FormGroup} = require('react-bootstrap');
-const ColorPicker = require('./ColorPicker').default;
+const { FormGroup } = require('react-bootstrap');
+const ColorSelector = require('./ColorSelector').default;
 const numberLocalizer = require('react-widgets/lib/localizers/simple-number');
 numberLocalizer();
 const {NumberPicker} = require('react-widgets');
-const tinycolor = require('tinycolor2');
 const assign = require('object-assign');
 
 class ThemaClassesEditor extends React.Component {
@@ -30,46 +29,42 @@ class ThemaClassesEditor extends React.Component {
     };
 
     renderClasses = () => {
-        return this.props.classification.map((classItem, index) => (<Row>
-            <FormGroup>
-                <Col xs="4">
-                    <ColorPicker key={classItem.color}
-                        pickerProps={{ disableAlpha: true }}
-                        text={classItem.color} value={{ ...tinycolor(classItem.color).toRgb(), a: 100 }}
-                        onChangeColor={(color) => this.updateColor(index, color)} />
-                </Col>
-                <Col xs="4">
-                    <NumberPicker
-                        format="- ###.###"
-                        value={classItem.min}
-                        onChange={(value) => this.updateMin(index, value)}
-                    />
-                </Col>
-                <Col xs="4">
-                    <NumberPicker
-                        format="- ###.###"
-                        value={classItem.max}
-                        precision={3}
-                        onChange={(value) => this.updateMax(index, value)}
-                    />
-                </Col>
+        return this.props.classification.map((classItem, index) => (
+            <FormGroup
+                key={index}>
+                <ColorSelector
+                    key={classItem.color}
+                    color={classItem.color}
+                    disableAlpha
+                    format="hex"
+                    onChangeColor={(color) => this.updateColor(index, color)}
+                />
+                <NumberPicker
+                    format="- ###.###"
+                    value={classItem.min}
+                    onChange={(value) => this.updateMin(index, value)}
+                />
+                <NumberPicker
+                    format="- ###.###"
+                    value={classItem.max}
+                    precision={3}
+                    onChange={(value) => this.updateMax(index, value)}
+                />
             </FormGroup>
-        </Row>));
+        ));
     };
 
     render() {
-        return (<div className={"thema-classes-editor " + this.props.className}><Grid fluid>
-            <Row>
-                {this.renderClasses()}
-            </Row>
-        </Grid></div>);
+        return (<div className={"thema-classes-editor " + this.props.className}>
+            {this.renderClasses()}
+        </div>);
     }
 
     updateColor = (classIndex, color) => {
         if (color) {
             const newClassification = this.props.classification.map((classItem, index) => {
                 return index === classIndex ? assign({}, classItem, {
-                    color: tinycolor(color).toHexString()
+                    color
                 }) : classItem;
             });
             this.props.onUpdateClasses(newClassification);

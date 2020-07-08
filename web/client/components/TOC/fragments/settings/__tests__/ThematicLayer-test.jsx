@@ -419,15 +419,17 @@ describe('test ThematicLayer module component', () => {
             layer={layerWithConfiguredThematic} adminCfg={{ open: false, current: "{}" }} />, document.getElementById("container"));
 
         const domNode = ReactDOM.findDOMNode(comp);
-        expect(domNode).toExist();
+        expect(domNode).toBeTruthy();
         expect(document.getElementsByClassName('thematic_layer').length).toBe(1);
         expect(document.getElementsByClassName('thematic_layer')[0].childNodes.length).toBe(1);
-        const colorsSelector = domNode.querySelectorAll('.color-range-selector')[0];
-        expect(colorsSelector).toExist();
-        TestUtils.Simulate.click(colorsSelector);
-        const colorsOptions = colorsSelector.querySelectorAll('.rw-popup li');
+        const colorsSelector = domNode.querySelectorAll('.color-ramp-selector')[0];
+        expect(colorsSelector).toBeTruthy();
+        const inputs = colorsSelector.querySelectorAll('input');
+        TestUtils.Simulate.keyDown(inputs[0], { keyCode: 40 }); // arrow down to open select
+        const colorsOptions = colorsSelector.querySelectorAll('.Select-option');
         expect(colorsOptions.length).toBe(2);
-        TestUtils.Simulate.click(colorsOptions[1]);
+        TestUtils.Simulate.keyDown(inputs[0], { keyCode: 40 }); // arrow down to blue option
+        TestUtils.Simulate.keyDown(inputs[0], { keyCode: 13 }); // select option
         expect(spyChange).toHaveBeenCalled();
         expect(spyChange.calls[1].arguments[0]).toBe('thematic');
         expect(spyChange.calls[1].arguments[1].current.ramp).toBe('blue');
