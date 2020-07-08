@@ -301,8 +301,16 @@ export function parseJSONStyle(style) {
             }
 
             if (rule.kind === 'Raster') {
+                const colorMap = rule.classification && rule.classification.length > 0 && {
+                    colorMapEntries: (rule.classification || []).map((entry) => ({
+                        label: entry.label,
+                        quantity: entry.quantity,
+                        color: entry.color,
+                        opacity: entry.opacity
+                    }))
+                };
                 return {
-                    name: rule.name,
+                    name: rule.name || '',
                     symbolizers: [
                         {
                             ...omit(rule, [
@@ -313,17 +321,11 @@ export function parseJSONStyle(style) {
                                 'ramp',
                                 'reverse',
                                 'continuous',
-                                'symbolizerKind'
+                                'symbolizerKind',
+                                'name'
                             ]),
                             kind: 'Raster',
-                            colorMap: {
-                                colorMapEntries: (rule.classification || []).map((entry) => ({
-                                    label: entry.label,
-                                    quantity: entry.quantity,
-                                    color: entry.color,
-                                    opacity: entry.opacity
-                                }))
-                            }
+                            ...(colorMap && { colorMap })
                         }
                     ]
                 };

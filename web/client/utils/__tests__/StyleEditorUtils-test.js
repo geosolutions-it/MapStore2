@@ -298,7 +298,6 @@ describe('StyleEditorUtils test', () => {
                 symbolizers: [ {
                     kind: 'Raster',
                     opacity: 1,
-                    name: 'raster',
                     colorMap: {
                         colorMapEntries: [{
                             color: '#B9FBC7',
@@ -319,6 +318,38 @@ describe('StyleEditorUtils test', () => {
                             quantity: 1840
                         }]
                     }
+                }]
+            } ]
+        });
+    });
+
+    it('test parseJSONStyle should return empty string when rule name is undefined', () => {
+
+        const style = {
+            name: 'Style',
+            rules: [
+                {
+                    ruleId: 'rule1',
+                    kind: 'Raster',
+                    opacity: 1,
+                    classification: [],
+                    intervals: 3,
+                    method: 'equalInterval',
+                    ramp: 'custom',
+                    reverse: false,
+                    continuous: true,
+                    symbolizerKind: 'Raster'
+                }
+            ]
+        };
+
+        expect(parseJSONStyle(style)).toEqual({
+            name: 'Style',
+            rules: [ {
+                name: '',
+                symbolizers: [ {
+                    kind: 'Raster',
+                    opacity: 1
                 }]
             } ]
         });

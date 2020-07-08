@@ -407,7 +407,7 @@ const getBlocks = (/* config = {} */) => {
                     label: 'styleeditor.method',
                     getOptions: ({ methods }) => {
                         return methods?.map((value) => ({
-                            label: value,
+                            labelId: 'styleeditor.' + value,
                             value
                         }));
                     }
