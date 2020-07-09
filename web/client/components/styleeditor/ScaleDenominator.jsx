@@ -59,7 +59,7 @@ function ScaleInput({
 function ScaleDenominator({
     value,
     zoom,
-    scales: propScales,
+    scales: propScales = [],
     onChange
 }) {
 
@@ -130,17 +130,19 @@ function ScaleDenominator({
 }
 
 export function ScaleDenominatorPopover({
-    value,
-    scales,
+    value = {},
+    scales = [],
     zoom,
     hide,
-    onChange
+    onChange,
+    placement = 'right'
 }) {
     if (hide) {
         return null;
     }
     return (
         <Popover
+            placement={placement}
             content={
                 <ScaleDenominator
                     value={value}

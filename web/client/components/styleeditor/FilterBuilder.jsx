@@ -157,13 +157,15 @@ export function FilterBuilderPopover({
     value,
     hide,
     attributes,
-    onChange
+    onChange,
+    placement = 'right'
 }) {
     if (hide || !attributes || attributes.length === 0) {
         return null;
     }
     return (
         <Popover
+            placement={placement}
             content={
                 <FilterBuilder
                     filterObj={value}
