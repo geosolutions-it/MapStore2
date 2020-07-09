@@ -310,4 +310,42 @@ describe("Test the ColorPicker style component", () => {
         expect(pickerArrow).toBeTruthy();
         expect(pickerArrow.style.transform).toBe(`translate(-50%, -50%) rotateZ(${ARROW_ROTATION}deg) translateX(50%)`);
     });
+
+    it('should use container node as function', () => {
+        act(() => {
+            ReactDOM.render(
+                <div
+                    style={{
+                        position: 'absolute',
+                        top: 0,
+                        left: 0,
+                        width: 1920,
+                        height: 1080
+                    }}
+                >
+                    <div
+                        style={{
+                            position: 'absolute',
+                            top: '50%',
+                            left: '50%'
+                        }}>
+                        <ColorPicker
+                            placement="left"
+                            containerNode={() => document.querySelector('#test-overlay-target')}
+                        />
+                    </div>
+                </div>
+                , document.getElementById("container"));
+        });
+        const colorPickerNode = document.querySelector('.ms-color-picker');
+        expect(colorPickerNode).toBeTruthy();
+        const swatchNode = colorPickerNode.querySelector('.ms-color-picker-swatch');
+        expect(swatchNode).toBeTruthy();
+        act(() => {
+            Simulate.click(swatchNode);
+        });
+        const colorPickerOverlaynode = document.querySelector('.ms-color-picker-overlay');
+        expect(colorPickerOverlaynode).toBeTruthy();
+        expect(colorPickerOverlaynode.parentNode.getAttribute('id')).toBe('test-overlay-target');
+    });
 });

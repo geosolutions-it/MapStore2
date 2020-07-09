@@ -307,6 +307,7 @@ export function ControlledPopover({
                         {content}
                     </div>
                     <div
+                        className="ms-popover-arrow"
                         style={{
                             position: 'absolute',
                             borderTop: `${margin - 1}px solid transparent`,
