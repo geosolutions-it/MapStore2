@@ -41,6 +41,26 @@ export default ({
         color,
         backgroundColor
     } = isObject(theme) && theme || {};
+
+    const {
+        isTitleEnabled,
+        isLogoEnabled,
+        isNavbarEnabled
+    } = settings || {};
+    const isToolbarEnabled = buttons.length > 0;
+    const isHomeButtonEnabled = router &&
+        router.pathname &&
+        router.search &&
+        getQueryParams(router.search).showHome === 'true' &&
+        router.pathname.includes('/geostory/shared');
+    const isNavbarVisible = isNavbarEnabled && navigableItems?.length > 0;
+
+    const isVisible = isTitleEnabled
+        || isLogoEnabled
+        || isNavbarVisible
+        || isToolbarEnabled
+        || isHomeButtonEnabled;
+
     return (
         <div
             className="ms-geostory-navigation-bar"
@@ -63,16 +83,12 @@ export default ({
                     }}
                 />
             </div>
-            <div className="ms-geostory-navigation-tools">
+            {isVisible && <div className="ms-geostory-navigation-tools">
 
                 <div className="ms-geostory-navigation-toolbar">
                     <Toolbar buttons={buttons} />
                     {
-                        router &&
-                        router.pathname &&
-                        router.search &&
-                        getQueryParams(router.search).showHome === 'true' &&
-                        router.pathname.includes('/geostory/shared') && (
+                        isHomeButtonEnabled && (
                             <Home
                                 bsStyle="default"
                                 className="square-button-md no-border"
@@ -83,7 +99,7 @@ export default ({
                     }
                 </div>
                 <div className="ms-geostory-navigation-elements">
-                    {navigableItems && navigableItems.length && settings && settings.isNavbarEnabled ?
+                    {isNavbarVisible ?
                         (<div className="ms-geostory-navigation-navigable-items">
                             <ScrollMenu
                                 items={navigableItems}
@@ -101,19 +117,19 @@ export default ({
                             />
                         </div>) : null}
                     <div className="ms-geostory-navigation-metadata">
-                        {settings && settings.isTitleEnabled &&
+                        {isTitleEnabled &&
                             <div className="ms-geostory-navigation-title">
                                 {settings.storyTitle}
                             </div>
                         }
-                        {settings && settings.isLogoEnabled &&
+                        {isLogoEnabled &&
                             <div className="ms-geostory-navigation-logo">
                                 <img src={settings.thumbnail && (settings.thumbnail.data || settings.thumbnail.url) || ""} height={32}/>
                             </div>
                         }
                     </div>
                 </div>
-            </div>
+            </div>}
         </div>
     );
 };

@@ -225,7 +225,7 @@ describe('This test for Thumbnail', () => {
         />, document.getElementById("container"));
         expect(thumbnailItem).toBeTruthy();
 
-        const removeNode = document.querySelector('.dropzone-remove');
+        const removeNode = document.querySelector('.btn');
         expect(removeNode).toBeTruthy();
         TestUtils.Simulate.click(removeNode);
     });

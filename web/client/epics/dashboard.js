@@ -52,9 +52,6 @@ const {
     isLoggedIn
 } = require('../selectors/security');
 const {
-    cleanResource
-} = require('../utils/DashboardUtils');
-const {
     getEditingWidgetLayer,
     getEditingWidgetFilter
 } = require('../selectors/widgets');
@@ -187,7 +184,6 @@ module.exports = {
     // saving dashboard flow (both creation and update)
     saveDashboard: action$ => action$
         .ofType(SAVE_DASHBOARD)
-        .map(({resource}) => ({resource: cleanResource(resource)}))
         .exhaustMap(({resource} = {}) =>
             (!resource.id ? createResource(resource) : updateResource(resource))
                 .switchMap(rid => Rx.Observable.of(

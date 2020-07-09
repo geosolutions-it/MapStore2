@@ -17,6 +17,7 @@ const maptypeEpics = require('../epics/maptype');
 const mapsEpics = require('../epics/maps');
 const {mapTypeSelector} = require('../selectors/maptype');
 const {userRoleSelector} = require('../selectors/security');
+const {versionSelector} = require('../selectors/version');
 const { totalCountSelector } = require('../selectors/maps');
 const { isFeaturedMapsEnabled } = require('../selectors/featuredmaps');
 const emptyState = require('../components/misc/enhancers/emptyState');
@@ -78,7 +79,9 @@ class Maps extends React.Component {
         searchText: PropTypes.string,
         mapsOptions: PropTypes.object,
         colProps: PropTypes.object,
-        fluid: PropTypes.bool
+        version: PropTypes.string,
+        fluid: PropTypes.bool,
+        showAPIShare: PropTypes.bool
     };
 
     static contextTypes = {
@@ -100,7 +103,8 @@ class Maps extends React.Component {
             md: 4,
             className: 'ms-map-card-col'
         },
-        maps: []
+        maps: [],
+        showAPIShare: true
     };
 
     render() {
@@ -117,7 +121,8 @@ class Maps extends React.Component {
                 }
             }}
             getShareUrl={(map) => map.contextName ? `context/${map.contextName}/${map.id}` : `viewer/${this.props.mapType}/${map.id}`}
-            shareApi
+            shareApi={this.props.showAPIShare}
+            version={this.props.version}
             bottom={<PaginationToolbar />}
             metadataModal={MetadataModal}
         />);
@@ -130,10 +135,12 @@ const mapsPluginSelector = createSelector([
     state => state.maps && state.maps.results ? state.maps.results : [],
     state => state.maps && state.maps.loading,
     isFeaturedMapsEnabled,
-    userRoleSelector
-], (mapType, searchText, maps, loading, featuredEnabled, role) => ({
+    userRoleSelector,
+    versionSelector
+], (mapType, searchText, maps, loading, featuredEnabled, role, version) => ({
     mapType,
     searchText,
+    version,
     maps: maps.map(map => ({...map, featuredEnabled: featuredEnabled && role === 'ADMIN'})),
     loading
 }));

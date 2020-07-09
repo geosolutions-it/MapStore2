@@ -20,7 +20,7 @@ import { templatesSelector as contextTemplatesSelector } from '../selectors/cont
 import { mapSelector } from '../selectors/map';
 import { layersSelector, groupsSelector } from '../selectors/layers';
 import { backgroundListSelector } from '../selectors/backgroundselector';
-import { textSearchConfigSelector } from '../selectors/searchconfig';
+import { textSearchConfigSelector, bookmarkSearchConfigSelector } from '../selectors/searchconfig';
 import { mapOptionsToSaveSelector } from '../selectors/mapsave';
 import { setControlProperty } from '../actions/controls';
 import { configureMap } from '../actions/config';
@@ -107,9 +107,10 @@ export const mergeTemplateEpic = (action$, store) => action$
                 const groups = groupsSelector(state);
                 const backgrounds = backgroundListSelector(state);
                 const textSearchConfig = textSearchConfigSelector(state);
+                const bookmarkSearchConfig = bookmarkSearchConfigSelector(state);
                 const additionalOptions = mapOptionsToSaveSelector(state);
 
-                const currentConfig = MapUtils.saveMapConfiguration(map, layers, groups, backgrounds, textSearchConfig, additionalOptions);
+                const currentConfig = MapUtils.saveMapConfiguration(map, layers, groups, backgrounds, textSearchConfig, bookmarkSearchConfig, additionalOptions);
 
                 return (isString(data) ? Observable.defer(() => toMapConfig(data, false)) : Observable.of(data))
                     .switchMap(config => Observable.of(

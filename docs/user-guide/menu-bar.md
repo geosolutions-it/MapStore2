@@ -15,13 +15,15 @@ The *Menu Bar* consist of four different parts:
 
 ## Search Bar
 
-The search bar is a tool that allows the user to query the layers in order to find a specific information. In [MapStore](https://mapstore.geo-solutions.it/mapstore/#/) it is possible to perform the search in three different ways:
+The search bar is a tool that allows the user to query the layers in order to find a specific information. In [MapStore](https://mapstore.geo-solutions.it/mapstore/#/) it is possible to perform the search in four different ways:
 
 * By **Location name**
 
 * By **Coordinates**
 
 * By **Configuring a search service**
+
+* By **Bookmarks**
 
 <img src="../img/menu-bar/search-types.jpg" class="ms-docimage"/>
 
@@ -49,7 +51,7 @@ Once the coordinates are set, it is possible to perform the search with the <img
 
 ### Configuring a search service
 
-[MapStore](https://mapstore.geo-solutions.it/mapstore/#/) allows the user also to extend or replace the default OSM results with additional *WFS Search Services*. Selecting the **Configure Search Services** option, the following window opens:
+[MapStore](https://mapstore.geo-solutions.it/mapstore/#/) allows the user also to extend or replace the default OSM results with additional *WFS Search Services*. Selecting the **Configure Search Services** option <img src="../img/button/change-search-tool.jpg" class="ms-docbutton"/>, the following window opens:
 
 <img src="../img/menu-bar/create-edit-service-panel.jpg" class="ms-docimage" style="max-width:400px;"/>
 
@@ -65,7 +67,7 @@ In particular, the information to be entered are:
 
 * **Layer** to be queried
 
-* Specific **Attributes** (fileds) the user wants to query
+* Specific **Attributes** (comma separeted fields) the user wants to query
 
 When all the options are set, by clicking on the <img src="../img/button/next-txt.jpg" class="ms-docbutton"/> button a new panel opens, where it is possible to choose the properties for the displayed results:
 
@@ -109,6 +111,36 @@ Once a search service is created, it is always possible to Edit it <img src="../
 Once the **Override default services** option is enabled, only the custom search service results are shown:
 
 <img src="../img/menu-bar/override-yes.jpg" class="ms-docimage" style="max-width:400px;"/>
+
+### Search by bookmark
+
+<img src="../img/menu-bar/search-bookmark.jpg" class="ms-docimage" style="max-width:400px;"/>
+
+MapStore allows the user to search by the preconfigured bookmarks, which can zoom to a specific bounding box area or zoom along with reloading the visibility of the layers. Selecting the **Bookmark settings** <img src="../img/button/change-search-tool.jpg" class="ms-docbutton"/> icon, the following window opens:
+
+<img src="../img/menu-bar/view-bookmark.jpg" class="ms-docimage" style="max-width:400px;"/>
+
+In order to create a new bookmark, the <img src="../img/button/add_group_confirm_button.jpg" class="ms-docbutton"/> button brings up **Add new bookmark** page where the user set the *Bookmark properties*, for example:
+
+<img src="../img/menu-bar/add-bookmark.jpg" class="ms-docimage"  style="max-width:400px;"/>
+
+In particular, the information to be entered are:
+
+* **Title** of the bookmark
+
+* **Bounding Box** property the user wish to zoom to
+
+    * **West**, **South**, **East** and **North**
+    
+* **Toggle layer visibility reload**, <img src="../img/button/eyeon.jpg" class="ms-docbutton"/> to enable/disable the layer visibility reload when searched by bookmark
+    
+Note: The user can define bounding box value either manually or by selecting **Use current view as bounding box** <img src="../img/button/get_bbox.jpg" class="ms-docbutton"/> to fetch the current bounding box values from the map view to populate the fields
+
+When all the properties have been set, selecting the <img src="../img/button/save-update-button.jpg" class="ms-docbutton"/> it is possible to see the newly added bookmark in the **View bookmarks** list:
+
+<img src="../img/menu-bar/view-bookmark.jpg" class="ms-docimage"  style="max-width:400px;"/>
+
+Once a bookmark has been created, it is always possible to *Edit* it <img src="../img/button/edit-service-icon.jpg" class="ms-docbutton"/> or *Remove* it <img src="../img/button/delete-service-icon.jpg" class="ms-docbutton"/> from the list.
 
 ## Burger Menu
 

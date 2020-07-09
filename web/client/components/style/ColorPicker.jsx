@@ -75,6 +75,19 @@ function ColorPicker({
 
     // compute the position of picker and arrow in the view
     function computeStyles() {
+        const placementCenterStyle = {
+            picker: {},
+            overlay: {
+                backgroundColor: 'rgba(0, 0, 0, 0.4)'
+            },
+            arrow: {
+                opacity: 0
+            }
+        };
+
+        if (placement === 'center') {
+            return placementCenterStyle;
+        }
         const swatchBoundingClientRect = swatch?.current?.getBoundingClientRect?.();
         const overlayBoundingClientRect = overlay?.current?.getBoundingClientRect?.();
         const sketchPickerNode = overlay?.current?.querySelector?.('.ms-sketch-picker');

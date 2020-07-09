@@ -25,6 +25,7 @@ const {
     INIT_STYLE_SERVICE,
     SET_EDIT_PERMISSION,
     SET_DEFAULT_STYLE,
+    UPDATE_EDITOR_METADATA,
     updateTemporaryStyle,
     updateStatus,
     toggleStyleEditor,
@@ -40,7 +41,8 @@ const {
     deleteStyle,
     initStyleService,
     setEditPermissionStyleEditor,
-    setDefaultStyle
+    setDefaultStyle,
+    updateEditorMetadata
 } = require('../styleeditor');
 
 describe('Test the styleeditor actions', () => {
@@ -179,5 +181,15 @@ describe('Test the styleeditor actions', () => {
         const retval = setDefaultStyle();
         expect(retval).toExist();
         expect(retval.type).toBe(SET_DEFAULT_STYLE);
+    });
+    it('updateEditorMetadata', () => {
+        const metadata = {
+            styleJSON: '{}',
+            editorType: 'visual' // textarea
+        };
+        const retval = updateEditorMetadata(metadata);
+        expect(retval).toExist();
+        expect(retval.type).toBe(UPDATE_EDITOR_METADATA);
+        expect(retval.metadata).toBe(metadata);
     });
 });

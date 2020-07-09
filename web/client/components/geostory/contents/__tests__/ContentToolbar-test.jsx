@@ -195,6 +195,38 @@ describe('ContentToolbar component', () => {
             expect(buttons.length).toEqual(1);
             ReactTestUtils.Simulate.click(buttons[0]);
         });
+        it('showCaption', (done) => {
+            ReactDOM.render(<ContentToolbar
+                tools={["showCaption"]}
+                showCaption
+                caption="Caption"
+                update={(key, value) => {
+                    try {
+                        expect(key).toBe('showCaption');
+                        expect(value).toBe(false);
+                    } catch (e) {
+                        done(e);
+                    }
+                    done();
+                }}
+            />, document.getElementById("container"));
+            const buttons = document.getElementsByTagName('button');
+            expect(buttons).toBeTruthy();
+            expect(buttons.length).toBe(1);
+            ReactTestUtils.Simulate.click(buttons[0]);
+        });
+        it('showCaption disabled on edit map', () => {
+            ReactDOM.render(<ContentToolbar
+                tools={["showCaption"]}
+                editMap
+                showCaption
+                caption="Caption"
+            />, document.getElementById("container"));
+            const buttons = document.getElementsByTagName('button');
+            expect(buttons).toBeTruthy();
+            expect(buttons.length).toBe(1);
+            expect(buttons[0].disabled).toBe(true);
+        });
     });
 
 });

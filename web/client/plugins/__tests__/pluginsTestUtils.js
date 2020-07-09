@@ -56,7 +56,7 @@ const createRegisterActionsMiddleware = (actions) => {
  * import MyPlugin from './MyPlugin';
  * const { Plugin, store, actions, containers } = getPluginForTest(MyPlugin, {}, {ContainerPlugin: {}});
  */
-export const getPluginForTest = (pluginDef, storeState, plugins, testEpics = [] ) => {
+export const getPluginForTest = (pluginDef, storeState, plugins, testEpics = [], containersReducers ) => {
     const PluginImpl = Object.keys(pluginDef).reduce((previous, key) => {
         if (endsWith(key, 'Plugin')) {
             return pluginDef[key];
@@ -68,7 +68,13 @@ export const getPluginForTest = (pluginDef, storeState, plugins, testEpics = [] 
         .reduce((previous, key) => {
             return { ...previous, [key]: PluginImpl[key]};
         }, {});
-    const reducer = combineReducers({ ...(pluginDef.reducers || {}), ...rootReducers });
+    // TODO: The following commented code causes this error (probably for TOC plugins) in tests:  Disconnected (0 times)reconnect failed before timeout of 2000ms (ping timeout) so reducers have to be passed manually
+    // const containersReducers = Object.keys(plugins || {}).map(k => plugins[k]).reduce((acc, { reducers = {} }) => ({ ...acc, ...reducers }), {});
+    const reducer = combineReducers({
+        ...(pluginDef.reducers || {}),
+        ...containersReducers,
+        ...rootReducers
+    });
     const pluginEpics = Object.keys(pluginDef.epics || {}).map(key => pluginDef.epics[key]) || [];
 
     const pluginsEpics = flatten( // converts array of epics [[epic1, epic2..], [epic3, epic4...], ...] into a flat array [epic1, epic2, epic3, epic4]
@@ -81,6 +87,7 @@ export const getPluginForTest = (pluginDef, storeState, plugins, testEpics = [] 
 
     const store = applyMiddleware(thunkMiddleware, epicMiddleware, createRegisterActionsMiddleware(actions))(createStore)(reducer, storeState);
     return {
+        PluginImpl,
         Plugin: (props) => <Provider store={store}><PluginImpl {...props} /></Provider>,
         store,
         actions,

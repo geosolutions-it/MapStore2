@@ -14,7 +14,7 @@ const Combobox = require('react-widgets').Combobox;
 const assign = require('object-assign');
 const Message = require('../../../I18N/Message');
 const SwitchPanel = require('../../../misc/switch/SwitchPanel');
-const ColorRangeSelector = require('../../../style/ColorRangeSelector');
+const ColorRamp = require('../../../styleeditor/ColorRamp').default;
 
 const {Controlled: Codemirror} = require('react-codemirror2');
 const {NumberPicker} = require('react-widgets');
@@ -332,7 +332,7 @@ class ThematicLayer extends React.Component {
                                 <FormGroup>
                                     <Col xs={6}><ControlLabel><Message msgId="toc.thematic.classification_colors" /></ControlLabel></Col>
                                     <Col xs={6}>
-                                        <ColorRangeSelector items={this.getColors()} rampFunction={this.createRamp} value={{
+                                        <ColorRamp items={this.getColors()} rampFunction={this.createRamp} value={{
                                             name: thema.ramp
                                         }}
                                         disabled={this.hasCustomClassification()}

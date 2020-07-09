@@ -62,14 +62,28 @@ describe('GeoStory Navigation component', () => {
     });
     it('should render home icon', () => {
         ReactDOM.render(<Navigation router={{ pathname: '/geostory/shared/1', search: '?showHome=true' }} />, document.getElementById('container'));
-        expect(document.querySelector('#home-button')).toExist();
+        expect(document.querySelector('#home-button')).toBeTruthy();
     });
     it('should hide home icon when showHome is false', () => {
         ReactDOM.render(<Navigation router={{ pathname: '/geostory/shared/1', search: '?showHome=false' }} />, document.getElementById('container'));
-        expect(document.querySelector('#home-button')).toBe(null);
+        expect(document.querySelector('#home-button')).toBeFalsy();
     });
     it('should hide home icon without search query', () => {
         ReactDOM.render(<Navigation router={{ pathname: '/geostory/shared/1' }} />, document.getElementById('container'));
-        expect(document.querySelector('#home-button')).toBe(null);
+        expect(document.querySelector('#home-button')).toBeFalsy();
+    });
+
+    it('should hide all navigation tools', () => {
+        ReactDOM.render(<Navigation
+            router={{ pathname: '/geostory/shared/1' }}
+            settings={{
+                isTitleEnabled: false,
+                isLogoEnabled: false,
+                isNavbarEnabled: false
+            }}
+            buttons={[]}
+            navigableItems={[]}
+        />, document.getElementById('container'));
+        expect(document.querySelector('.ms-geostory-navigation-tools')).toBeFalsy();
     });
 });

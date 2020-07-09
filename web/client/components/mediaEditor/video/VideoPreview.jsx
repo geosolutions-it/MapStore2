@@ -7,7 +7,7 @@
  */
 import React from "react";
 
-import { MediaTypes } from '../../../utils/GeoStoryUtils';
+import { MediaTypes, Modes } from '../../../utils/GeoStoryUtils';
 import emptyState from '../../misc/enhancers/emptyState';
 import Video from '../../geostory/media/Video';
 
@@ -28,6 +28,7 @@ const Preview = ({
                     fit="contain"
                     src={src}
                     inView
+                    mode={Modes.VIEW}
                 />}
         </div>
     );

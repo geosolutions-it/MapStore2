@@ -50,6 +50,7 @@
         },
         "showEmptyMessageGFI": "Nachricht mit leeren Ergebnissen anzeigen",
         "remove": "Löschen",
+        "removeThumbnail": "Miniaturbild entfernen",
         "layerProperties": {
             "windowTitle": "Ebenen Eigenschaften",
             "title": "Titel",
@@ -167,7 +168,7 @@
         "gohome": "Zurück zur Startseite",
         "back": "Zurück zum Import",
         "printbutton": "Drucken",
-        "annotationsbutton": "Annotationen",
+        "annotationsbutton": "Notizen / Zeichnen",
         "noresultfound": "Keine Ergebnisse gefunden",
         "save": "Speichern",
         "saveAs": "Speichern als...",
@@ -194,7 +195,44 @@
                 "jet": "{number, plural, =0 {Jet} =1 {Jet} other {Jet}}",
                 "brown": "{number, plural, =0 {Braun} =1 {Braun} other {Braun}}",
                 "purple": "{number, plural, =0 {Lila} =1 {Lila} other {Purpur}}",
-                "random": "{number, plural, =0 {Zufällig} =1 {Zufällig} other {Zufällig}}"
+                "random": "{number, plural, =0 {Zufällig} =1 {Zufällig} other {Zufällig}}",
+                "orrd":"OrRd",
+                "pubu":"PuBu",
+                "bupu":"BuPu",
+                "oranges":"Oranges",
+                "bugn":"BuGn",
+                "ylorbr":"YlOrBr",
+                "ylgn":"YlGn",
+                "reds":"Reds",
+                "rdpu":"RdPu",
+                "greens":"Greens",
+                "ylgnbu":"YlGnBu",
+                "purples":"Purples",
+                "gnbu":"GnBu",
+                "greys":"Greys",
+                "ylorrd":"YlOrRd",
+                "purd":"PuRd",
+                "blues":"Blues",
+                "pubugn":"PuBuGn",
+                "viridis":"Viridis",
+                "spectral":"Spectral",
+                "rdylgn":"RdYlGn",
+                "rdbu":"RdBu",
+                "piyg":"PiYg",
+                "prgn":"PrGn",
+                "rdylbu":"RdYlBu",
+                "brbg":"BrBg",
+                "rdgy":"RdGy",
+                "puor":"PuOr",
+                "set2":"Set 2",
+                "accent":"Accent",
+                "set1":"Set 1",
+                "set3":"Set 3",
+                "dark2":"Dark 2",
+                "paired":"Paired",
+                "pastel2":"Pastel 2",
+                "pastel1":"Pastel 1",
+                "custom": "Custom"
             }
         },
         "home":{
@@ -390,7 +428,7 @@
                 "selectGroup": "Wähle eine Gruppe...",
                 "canView": "kann ansehen",
                 "canWrite": "kann bearbeiten",
-                "noResult": "keine Resultate gefunden",
+                "noResult": "Keine Ergebnisse gefunden",
                 "title": "Gruppen Berechtigungen"
             },
             "details": {
@@ -600,6 +638,7 @@
         "identifyShowCoordinateEditor": "Koordinateneditor anzeigen",
         "identifyHideCoordinateEditor": "Koordinateneditor ausblenden",
         "identifyCoordinateApplyChanges": "Änderungen übernehmen",
+        "identifyChangeCoordinateFormat": "Koordinatenformat ändern",
         "identifyZoomToFeature": "Auf Objekt zoomen",
         "identifyStopHighlightingFeatures": "Stoppen Sie die Markierung von Objekten",
         "identifyHighlightFeatures": "Markieren Sie Objekte",
@@ -669,6 +708,32 @@
             "cancelbtn": "Abbrechen",
             "confirmremove": "Löschen?",
             "cancelconfirm": "Bist du sicher?",
+            "searchByBookmark": "Suche nach Lesezeichen",
+            "bookmarksettings": "Lesezeicheneinstellungen",
+            "zoomToBookmark": "Zoomen Sie auf das ausgewählte Lesezeichen",
+            "bookmarkFilter": "Lesezeichen filtern",
+            "editBookmark": "Lesezeichen bearbeiten",
+            "deleteBookmark": "Lesezeichen löschen",
+            "b_listpaneltitle": "Lesezeichen anzeigen",
+            "b_newpaneltitle": "Neues Lesezeichen hinzufügen",
+            "latitude": "Lat",
+            "longitude": "Lon",
+            "b_title": "Titel",
+            "b_layer_tooltip": "Deaktivieren Sie das Neuladen der Ebenensichtbarkeit",
+            "b_bbox": "Begrenzungsrahmen",
+            "b_bbox_tooltip": "Verwenden Sie die aktuelle Ansicht als Begrenzungsrahmen",
+            "b_bbox_south": "Süden",
+            "b_bbox_south_placeholder": "Betreten Sie den Süden",
+            "b_bbox_west": "Westen",
+            "b_bbox_west_placeholder": "Betreten Sie den Westen",
+            "b_bbox_east": "East",
+            "b_bbox_east_placeholder": "Enter East",
+            "b_bbox_north": "Norden",
+            "b_bbox_north_placeholder": "Betreten Sie den Norden",
+            "bookmarkslistempty": "Kein Lesezeichen definiert",
+            "b_placeholder": "Lesezeichen auswählen ...",
+            "b_clearvalue": "Lesezeichen löschen",
+            "b_noresult": "Keine Lesezeichen gefunden",
             "s_name": "Name",
             "s_title": "Titel",
             "s_description": "Beschreibung",
@@ -686,6 +751,7 @@
             "serviceslistempty": "Keine benutzerdefinierten Services definiert",
             "service_missing": "{serviceType} dienst ist nicht konfiguriert",
             "generic_error": "Bei der Suche ist ein Fehler aufgetreten. Fehlerdetails: {message}",
+            "showGFI": "GFI anzeigen",
             "errors": {
                 "nonQueriableLayers": "Der in der URL angegebene Layer ist nicht abfragbar oder in der Karte nicht sichtbar.",
                 "serverError": "Der Server hat beim Ausführen der GetFeatureInfo-Anforderung einen Fehler zurückgegeben. Überprüfen Sie, ob die Parameter korrekt sind"
@@ -697,7 +763,9 @@
                 "single_layer": "Einzelne Schicht",
                 "no_info_description": "Das Identifizierungsfeld wird bei der Suche nicht angezeigt",
                 "all_layers_description": "Das Fenster Identifizieren zeigt Informationen zu allen in der Karte sichtbaren Layern an",
-                "single_layer_description": "Das Fenster Identifizieren wird mit den Daten angezeigt, die bereits über die WFS-Suche verfügbar sind"
+                "single_layer_description": "Das Fenster Identifizieren wird mit den Daten angezeigt, die bereits über die WFS-Suche verfügbar sind",
+                "openFeatureInfoButtonCheckbox": "Verwenden Sie die Schaltfläche, um Funktionsinformationen zu öffnen",
+                "forceSearchLayerVisibility": "Sichtbarkeit der Suchebene erzwingen"
             },
             "advancedSearchPanel": {
                 "title": "Erweiterte Suchfilter",
@@ -719,6 +787,7 @@
             "stroke": "Linie",
             "opacity": "Opacity",
             "width": "Linienbreite",
+            "textRotation": "Drehung",
             "font": {
                 "textColor": "Farbe",
                 "family": "Familie",
@@ -983,11 +1052,11 @@
             "removeannotation": "Möchten Sie die Anmerkung mit Titel entfernen: {title}?",
             "removegeometry": "Möchten Sie alle Annotationspunkte entfernen?",
             "confirm": "Bestätigen",
-            "title": "Anmerkungen",
+            "title": "Notizen / Zeichnen",
             "mandatory": "Pflichtfeld",
             "emptygeometry": "Geometrie kann nicht leer sein",
             "add": "Neue",
-            "filter": "Filtern der Annotationen...",
+            "filter": "Notizen / Zeichnungen filtern...",
             "undo": "Sind Sie sicher, dass Sie die Annotationsbearbeitungssitzung aufgeben möchten?",
             "titleUndoGeom": "Die Geometrie hat sich geändert",
             "undoGeom": "Sind Sie sicher, ohne zu speichern zu beenden? (Sie werden alle Änderungen verlieren)",
@@ -1144,7 +1213,17 @@
             "addBboxParam": "Fügen Sie einen bbox param zum Freigabeverlink hinzu",
             "wrongBboxParamTitle": "Ungültiger Bbox-Parameter",
             "wrongBboxParamMessage": "bbox-Parameter müssen in EPSG:4326 sein und als bbox=minx,miny,maxx,maxy angegeben werden",
-            "showHomeButton": "Link zur MapStore-Startseite"
+            "wrongCenterAndZoomParamTitle": "Ungültiger Mittel und Zoomparameter",
+            "wrongCenterAndZoomParamMessage": "Center und Zoom parameter müssen sein center=lon,lat&zoom=value und (+|- 90° lat, +|-180° lon, <=+35 zoom)",
+            "wrongMarkerAndZoomParamTitle": "Ungültiger Marker und Zoomparameter",
+            "wrongMarkerAndZoomParamMessage": "Marker und Zoomparameter müssen sein marker=lon,lat&zoom=value und (+|- 90° lat, +|-180° lon, <=+35 zoom)",
+            "showHomeButton": "Link zur MapStore-Startseite",
+            "addCenterAndZoomParam": "Fügen Sie die Mitte hinzu und zoomen Sie zum Freigabelink",
+            "zoom": "Zoomen",
+            "marker": "Markierung auf geladener Karte hinzufügen",
+            "coordinate": "Koordinate",
+            "coordTooltip": "Klicken Sie auf die Karte, um die Koordinaten zu erfassen",
+            "zoomToolTip": "Min: 1 und Max: 35"
         },
         "snapshot": {
             "title": "Snapshot Vorschau",
@@ -1172,6 +1251,8 @@
             },
             "add": "Hinzufügen",
             "cancel": "Abbrechen",
+            "merge": "Mit der vorhandenen Annotationsebene zusammenführen",
+            "replace": "Ersetzen Sie die vorhandene Anmerkungsebene",
             "success": " erfolgreich importiert",
             "next": "Nächster",
             "skip": "springen",
@@ -1183,7 +1264,7 @@
                 "dropZone": {
                     "heading": "<p> <h4> Legen Sie hier Ihre Kartenkontexte oder Vektordateien ab </h4> <small> oder </small> </p>",
                     "selectFiles": "Dateien auswählen...",
-                    "infoSupported": "<p> <small> Unterstützte Kartenkontextdateien: MapStore Legacy-Format, WMC. Unterstützte Vektor-Layer-Dateien: Shapefiles müssen in Zip-Archiven, KML / KMZ, GPX oder GeoJSON </small> </p> vorliegen",
+                    "infoSupported": "<p> <small> Unterstützte Kartenkontextdateien: MapStore Legacy-Format, WMC. Unterstützte Vektor-Layer-Dateien: Shapefiles müssen in Zip-Archiven, KML / KMZ, GPX, GeoJSON oder Annotations </small> </p> vorliegen",
                     "note": "<p> <small> <i> <strong> Hinweis </strong>: Die aktuelle Map wird bei der Verwendung von Kartenkontextdateien überschrieben </i> </small> </p>"
                 },
                 "errors": {
@@ -1866,7 +1947,124 @@
             "setDefaultStyleSuccessTitle": "Erfolg beim Setzen des Standardstils",
             "setDefaultStyleSuccessMessage": "Der Standardstil wurde erfolgreich angewendet",
             "setDefaultStyleErrorTitle": "Fehler beim Festlegen des Standardstils",
-            "setDefaultStyleErrorMessage": "Es ist nicht möglich, den ausgewählten Stil als Standard anzuwenden"
+            "setDefaultStyleErrorMessage": "Es ist nicht möglich, den ausgewählten Stil als Standard anzuwenden",
+
+            "enterLegendLabelPlaceholder": "Legendenbezeichnung eingeben",
+            "addMarkSymbolizer": "Markensymbolisierer hinzufügen",
+            "addMarkRule": "Markierungsregel hinzufügen",
+            "shape": "Form",
+            "fill": "Farbe füllen",
+            "strokeColor": "Linienfarbe",
+            "strokeWidth": "Linienbreite",
+            "radius": "Radius",
+            "rotation": "Rotation",
+            "addIconSymbolizer": "Symbol-Symbolisierer hinzufügen",
+            "addIconRule": "Symbolregel hinzufügen",
+            "image": "Bild",
+            "opacity": "Deckkraft",
+            "size": "Größe",
+            "addLineSymbolizer": "Liniensymbolisierer hinzufügen",
+            "addLineRule": "Zeilenregel hinzufügen",
+            "lineStyle": "Linienstil",
+            "lineCap": "Line cap",
+            "lineJoin": "Line join",
+            "addFillSymbolizer": "Füllsymbolisierer hinzufügen",
+            "addFillRule": "Füllregel hinzufügen",
+            "outlineColor": "Umrissfarbe",
+            "outlineWidth": "Umrissbreite",
+            "addTextSymbolizer": "Textsymbolisierer hinzufügen",
+            "addTextRule": "Textregel hinzufügen",
+            "label": "Label",
+            "fontFamily": "Schriftfamilie",
+            "fontColor": "Schriftfarbe",
+            "fontSize": "Schriftgröße",
+            "fontStyle": "Schriftstil",
+            "fontWeight": "Schriftgewicht",
+            "haloColor": "Halo color",
+            "haloWidth": "Halo width",
+            "offsetX": "Offset x",
+            "offsetY": "Offset y",
+            "addRasterSymbolizer": "Rastersymbolisierer hinzufügen",
+            "addRasterRule": "Rasterregel hinzufügen",
+            "colorRamp": "Farbrampe",
+            "reverse": "umgekehrte Reihenfolge",
+            "attribute": "Attribut",
+            "method": "Methode",
+            "intervals": "Intervalle",
+            "continuous": "kontinuierliche Farben",
+            "lineCapButt": "Butt",
+            "lineCapRound": "Round",
+            "lineCapSquare": "Square",
+            "lineJoinBevel": "Bevel",
+            "lineJoinRound": "Round",
+            "lineJoinMiter": "Miter",
+            "fontStyleNormal": "Normal",
+            "fontStyleItalic": "Italic",
+            "fontWeightNormal": "Normal",
+            "fontWeightBold": "Bold",
+            "boolTrue": "True",
+            "boolFalse": "False",
+            "circle": "Kreis",
+            "square": "Quadrat",
+            "triangle": "Dreieck",
+            "star": "Stern",
+            "cross": "Kreuz",
+            "x": "X",
+            "verticalLine": "Vertikale Linie",
+            "horizontalLine": "Horizontale Linie",
+            "slash": "Schrägstrich",
+            "backslash": "Backslash",
+            "dot": "Punkt",
+            "plus": "Plus",
+            "times": "Zeiten",
+            "openArrow": "Pfeil öffnen",
+            "closedArrow": "Geschlossener Pfeil",
+            "band": "Band",
+            "none": "keine",
+            "normalize": "Normalisieren",
+            "histogram": "Histogramm",
+            "contrastEnhancement": "Kontrastverbesserung",
+            "placeholderInput": "Wert eingeben",
+            "placeholderEnterImageUrl": "Bild-URL eingeben",
+            "selectPlaceholder": "Wert auswählen",
+            "noResultsSelectInput": "Keine Ergebnisse",
+            "channelAuto": "Auto",
+            "openFilterBuilder": "Filter Builder öffnen",
+            "removeRule": "Regel entfernen",
+            "openScaleDenominator": "Open Scale Nenner Filter",
+            "selectScale": "Select scale",
+            "noResultScales": "Keine Skala entspricht Ihrem Filter",
+            "maxScaleDenominator": "Max scale",
+            "minScaleDenominator": "Min scale",
+            "simpleStyle": "Einfacher Stil",
+            "classificationStyle": "Klassifizierungsstil",
+            "patternMarkStyle": "Mustermarkierungsstil",
+            "patternIconStyle": "Mustersymbolstil",
+            "singleBand": "Single band",
+            "rgbaBands": "RGB-Bänder",
+            "pseudoColor": "Pseudofarbe",
+            "undoStyle": "Stil rückgängig machen",
+            "redoStyle": "Redo style",
+            "equalInterval": "Gleiches Intervall",
+            "quantile": "Quantil",
+            "jenks": "Natürliche Pausen (Jenks)",
+            "switchToTextareaEditor": "Zum Textarea-Editor wechseln",
+            "switchToVisualEditor": "Zum visuellen Editor wechseln",
+            "alertForceTranslate": "Sie verlieren alle im Textaree hinzugefügten Änderungen, wenn Sie zum visuellen Editor wechseln. Sind Sie sicher, dass Sie zum visuellen Stil-Editor wechseln?",
+            "stayInTextareaEditor": "Nein, weiter im Textbereich",
+            "useLatestValidStyle": "Ja, zum visuellen Editor wechseln",
+            "validationError": "Validierungsfehler",
+            "incorrectPropertyInputError": "Dies liegt wahrscheinlich an einem fehlenden oder ungültigen Wert in den Eigenschaftseingaben des Stileditors.",
+            "emptyRuleEditorTitle": "Neue Regeln hinzufügen",
+            "emptyRuleEditor": "Es gibt keine Regeln für diesen Stil. Fügen Sie eine neue Regel hinzu, indem Sie in der Symbolleiste auf den gewünschten Symbolisierungstyp klicken",
+            "classificationError": "Dienst nicht verfügbar. Derzeit ist es nicht möglich, eine Klassifizierung zu erstellen",
+            "classificationRasterError": "Dienst nicht verfügbar. Derzeit ist es nicht möglich, eine Rasterklassifizierung zu erstellen.",
+            "redChannel": "Red channel",
+            "greenChannel": "Green channel",
+            "blueChannel": "Blue channel",
+            "grayChannel": "Channel",
+            "ruleClassification": "Classification",
+            "ruleRaster": "Raster"
         },
         "playback": {
             "settings": {
@@ -2023,6 +2221,7 @@
             "selectworkspace": "Sie müssen den Arbeitsbereich auswählen, um erweiterte Optionen zu aktivieren."
         },
         "geostory": {
+            "geostoreMap": "MapStore-Karten",
             "loadingSpinner": "Story wird geladen",
             "addTitleSection": "Titelabschnitt hinzufügen",
             "addParagraphSection": "Absatzabschnitt hinzufügen",
@@ -2073,7 +2272,15 @@
                 "confirmCloseMapEditing": "Schließen Sie die Kartenbearbeitung",
                 "pendingChangesDiscardConfirm": "Aktuelle Kartenänderungen verwerfen?",
                 "editURL": "Webseiten-URL bearbeiten",
-                "advancedMapEditor": "Öffnen Sie den erweiterten Karteneditor"
+                "advancedMapEditor": "Öffnen Sie den erweiterten Karteneditor",
+                "enableAudio": "Audio aktivieren",
+                "disableAudio": "Video stumm schalten",
+                "enableAutoplay": "Aktivieren autoplay",
+                "disableAutoplay": "Deaktiviere autoplay",
+                "enableLoop": "Schleife aktivieren",
+                "disableLoop": "Schleife deaktivieren",
+                "hideCaption": "Beschriftung ausblenden",
+                "showCaption": "Verwenden Sie die Beschreibung als Beschriftung"
             },
             "navigation": {
                 "edit": "Bearbeiten Sie die Geschichte"
@@ -2120,7 +2327,7 @@
                     "navbar": "Navigationsleiste",
                     "showNavbar": "Navigationsleiste anzeigen",
                     "theme": "Thema",
-                    "templateTooltip":"Mit dem erweiterten Karteneditor kann eine benutzerdefinierte Vorlage für jede Ebene konfiguriert werden (siehe Stiftsymbol).Weitere Informationen finden Sie in der <a href='https://mapstore.readthedocs.io/en/latest/user-guide/layer-settings/#templates' target='_blank'>Bedienungsanleitung</a>"
+                    "templateTooltip":"Mit dieser Einstellung können Sie die Identifizierungsfunktion auf der Karte aktivieren, indem Sie ein generisches Format für alle Ebenen definieren. Mit dem erweiterten Karteneditor (Stiftsymbol) kann für jede Ebene ein anderes Format konfiguriert werden. Weitere Informationen finden Sie im <a href='https://mapstore.readthedocs.io/en/latest/user-guide/layer-settings/#templates' target='_blank'> Benutzerhandbuch </a>. Wenn ein Layer sein eigenes Identifizierungsformat definiert hat, wird er anstelle des auf Kartenebene festgelegten generischen Formats verwendet."
                 }
             },
             "errors": {
@@ -2214,10 +2421,11 @@
                 "imageFilter": "Filtern Sie Bilder",
                 "import": "Ressource in lokalen Speicher importieren",
                 "trash": "Remove resource",
-                "autoplay": "Automatisches Abspielen",
                 "videoUrl": "Video URL",
                 "videoUrlPlaceholder": "Geben Sie eine Video-URL ein",
-                "thumbnail": "Miniaturbild hinzufügen (maximale Größe 500 KB)"
+                "thumbnail": "Miniaturbild hinzufügen (maximale Größe 500 KB)",
+                "createVideoThumbnail": "Erstellen Sie eine Miniaturansicht aus einer Videoquelle",
+                "thumbnailCreateError": "Es ist nicht möglich, ein Miniaturbild aus der aktuellen Videoquelle zu erstellen. Klicken oder löschen Sie ein Bild in der Miniaturansicht, um es manuell hochzuladen"
             },
             "mediaform": {
                 "confirmExitTitle": "Schließen Media Form",
@@ -2233,8 +2441,14 @@
                 "confirmRemoveResource": "Möchten Sie diese Medienressource aus der Story entfernen?",
                 "confirmRemoveUsedResource": "Diese Ressource wird auch aus allen Abschnitten / Inhalten entfernt, in denen sie verwendet wird und sie bleiben leer. Möchten Sie es aus der Geschichte entfernen?"
             },
+            "imageList": {
+                "emptyList": "Klicken Sie auf das Pluszeichen, um ein neues Bild hinzuzufügen. Weitere Informationen finden Sie im Benutzerhandbuch <a href='https://mapstore.readthedocs.io/en/latest/user-guide/media-editor-window/#images' target='_blank'/> hier </a>"
+            },
             "mapList": {
-                "emptyList": "Klicken Sie auf die Plus-Schaltfläche, um eine Karte zu erstellen oder einen anderen Kartendienst auszuwählen."
+                "emptyList": "Klicken Sie auf die Plus-Schaltfläche, um eine Karte zu erstellen oder einen anderen Kartendienst auszuwählen. Weitere Informationen finden Sie im Benutzerhandbuch <a href='https://mapstore.readthedocs.io/en/latest/user-guide/media-editor-window/#maps' target='_blank'/> hier </a>"
+            },
+            "videoList": {
+                "emptyList": "Klicken Sie auf das Pluszeichen, um ein neues Video hinzuzufügen. Weitere Informationen finden Sie im Benutzerhandbuch <a href='https://mapstore.readthedocs.io/en/latest/user-guide/media-editor-window/#videos' target='_blank'/> hier </a>"
             }
         },
         "backgroundDialog": {
@@ -2492,6 +2706,12 @@
                     "removePlugin": "Entfernen Sie diese Erweiterung aus MapStore",
                     "mapTemplatesConfig": "Vorlagen konfigurieren"
                 },
+                "tutorialPlugins": {
+                    "availableTitle": "Verfügbares Plugin",
+                    "availableDescription": "Dieses Plugin ist deaktiviert",
+                    "enabledTitle": "Aktiviertes Plugin",
+                    "enabledDescription": "Dieses Plugin ist aktiviert"
+                },
                 "saveCfgErrorNotification":  {
                     "title": "Syntaxfehler in der Plugin-Konfiguration",
                     "message": "Plugin \"{pluginName}\" enthält einen Konfigurationsfehler. Bitte korrigieren, bevor Sie fortfahren"
@@ -2543,7 +2763,8 @@
                 "title": "Falscher Kontextname",
                 "unknownError": "Ein unerwarteter Fehler ist aufgetreten"
             },
-            "undo": "Möchten Sie die Kontextbearbeitungssitzung wirklich abbrechen?"
+            "undo": "Möchten Sie die Kontextbearbeitungssitzung wirklich abbrechen?",
+            "showTutorial": "Tutorial anzeigen"
         },
         "contextManager": {
             "title": "Kontexte verwalten",
@@ -2726,9 +2947,103 @@
                 "title": "Karten Widget",
                 "text": "<p> Fügen Sie eine neue interaktive Karte zum Dashboard hinzu. Sie können mehr als eine Karte mit der Möglichkeit hinzufügen, andere Widgets mit ihnen zu verbinden. Nach dem Speichern der ersten Karte wird das Legenden-Widget zur Liste hinzugefügt. Das Legenden-Widget zeigt eine Legende zur verbundenen Karte. </p> <p> Schritte: </p> <p> <ul> <li> Wählen Sie eine Karte </li> <li> Verbessern Sie die Karte, indem Sie neue Ebenen hinzufügen </li> <li> Speichern und zum Dashboard hinzufügen </li> </ul> </p>"
             },
+            "contextCreator": {
+                "generalSettings": {
+                    "intro": {
+                        "title": "Tutorial zur Kontexterstellung",
+                        "text": "Dies ist ein schrittweiser Assistent zum Erstellen und Bearbeiten von MapStore-Kontexten"
+                    },
+                    "stepsOverview": {
+                        "title": "Schritte zur Kontexterstellung",
+                        "text": "<p>Jeder Kontext wird in drei Schritten erstellt:</p><p><ul><li>Allgemeine Einstellungen</li><li>Karte konfigurieren</li><li>Plugins konfigurieren</li></ul></p>"
+                    },
+                    "navigation": {
+                        "next": {
+                            "title": "Navigation: Weiter",
+                            "text": "<p>Drücken Sie diese Taste, um zum nächsten Schritt zu gelangen. Wenn die Schaltfläche deaktiviert ist, bedeutet dies, dass entweder die von Ihnen konfigurierten Daten überprüft werden oder sie ungültig sind.</p>"
+                        },
+                        "back": {
+                            "title": "Navigation: Zurück",
+                            "text": "<p>Drücken Sie diese Taste, um zum vorherigen Schritt zu gelangen.</p>"
+                        },
+                        "close": {
+                            "title": "Navigation: Schließen",
+                            "text": "<p>Drücken Sie diese Taste, um den Kontexterstellungsprozess ohne Speichern zu verlassen. Dies kann zu jedem Zeitpunkt im Erstellungsprozess erfolgen.</p>"
+                        }
+                    },
+                    "fields": {
+                        "title": "Allgemeine Einstellungen",
+                        "text": "<p>Im ersten Erstellungsschritt müssen Sie den Namen des Kontexts angeben, der auch seine eindeutige URL definiert, und den Titel, der als Titel des Browserfensters verwendet wird, wenn der Kontext geöffnet und aktiv ist. Hinweis: Der Kontextname darf nur lateinische Buchstaben, Ziffern 0-9 und Unterstriche enthalten. Der Fenstertitel darf nicht leer sein.</p>"
+                    },
+                    "showTutorial": {
+                        "title": "Tutorial anzeigen",
+                        "text": "<p>Wenn Sie das Tutorial noch einmal für einen Schritt durchgehen möchten, können Sie dies jederzeit durch Drücken dieser Taste tun.</p>"
+                    }
+                },
+                "configureMap": {
+                    "intro": {
+                        "title": "Karte konfigurieren",
+                        "text": "<p>In diesem Schritt können Sie mithilfe der MapStore Map Viewer-Tools die Standardkarte konfigurieren, die beim Zugriff auf den Kontext geöffnet wird.</p>"
+                    },
+                    "reloadMap": {
+                        "title": "Schaltfläche \"Karte neu laden\"",
+                        "text": "<p>Wenn Sie alle Änderungen, die Sie bisher an der Karte vorgenommen haben, verwerfen und von vorne beginnen möchten, können Sie dies tun, indem Sie auf diese Schaltfläche klicken.</p>"
+                    }
+                },
+                "configurePlugins": {
+                    "intro": {
+                        "title": "Plugins konfigurieren",
+                        "text": "<p>In diesem Schritt können Sie Plugins konfigurieren, die im Kontext vorhanden sind.</p>"
+                    },
+                    "availablePlugins": {
+                        "title": "Verfügbare Plugins",
+                        "text": "<p>Diese Liste enthält MapStore-Plugins, die einem Kontext hinzugefügt werden können. Um ein Plugin auszuwählen, klicken Sie einfach auf die Karte. Wenn Sie die STRG-Taste gedrückt halten, können Sie auch mehrere Plugins auswählen.</p>"
+                    },
+                    "pluginManipulation": {
+                        "title": "Plugins verschieben",
+                        "text": "<p>Einmal ausgewählt, können verfügbare Plugins in die rechte Spalte verschoben werden, sodass sie im Kontext aktiviert werden. Für einige Plugins müssen andere Plugins funktionieren. In diesem Fall werden sie neben den explizit aktivierten Plugins automatisch aktiviert.</p><p>Plugins können auch von der Spalte \"aktiviert\" in die Spalte \"verfügbar\" verschoben werden, um sie zu entfernen Plugins aus dem Kontext. Wenn Sie ein Plugin entfernen, werden auch alle Plugins deaktiviert, die für die Funktion erforderlich sind, es sei denn, es gibt derzeit aktivierte Plugins, für die ebenfalls ein solches Plugin erforderlich ist.</p>"
+                    },
+                    "enabledPlugins": {
+                        "title": "Aktivierte Plugins",
+                        "text": "<p>Diese Liste enthält MapStore-Plugins, die sich im Kontext befinden. Jedes Plugin hier kann mithilfe von Tool-Schaltflächen weiter konfiguriert werden.</p>"
+                    },
+                    "userPlugin": {
+                        "title": "Plugin-Tools: Benutzer-Plugins",
+                        "text": "<p>Durch Drücken dieser Taste können Sie zulassen, dass ein Plugin von Benutzern aktiviert / deaktiviert wird, sodass es zu einem Benutzer-Plugin wird. Solche Plugins werden im User Extensions-Plugin angezeigt. Dieses Plugin wird automatisch zum Kontext hinzugefügt, wenn mindestens ein Benutzer-Plugin aktiviert ist.</p>"
+                    },
+                    "userPluginCheckbox": {
+                        "title": "Plugin-Tools: Benutzer-Plugins",
+                        "text": "<p>Wenn ein Plugin ein Benutzer-Plugin ist, steuert dieses Kontrollkästchen, ob ein Benutzer-Plugin beim Laden des Kontexts automatisch aktiviert werden soll.</p>"
+                    },
+                    "cfgTool": {
+                        "title": "Plugin-Tools: Konfigurationstool",
+                        "text": "<p>Durch Drücken dieser Taste wird ein Editor angezeigt, in dem Sie die Standardkonfiguration des Plugins bearbeiten können.</p>"
+                    },
+                    "cfgEditor": {
+                        "title": "Plugin Tools: Konfigurationseditor",
+                        "text": "<p>Der Editor unterstützt die Syntaxhervorhebung. Alle Ihre Änderungen werden beim Bearbeiten kontinuierlich gespeichert. Wenn die Konfiguration einen Syntaxfehler enthält, werden Sie entsprechend informiert. Der Fehler muss behoben sein, bevor Sie fortfahren.</p>"
+                    },
+                    "documentationTool": {
+                        "title": "Plugin Tools: Dokumentation",
+                        "text": "<p>Durch Drücken dieser Taste gelangen Sie zur Dokumentationsseite des Plugins, auf der Sie Informationen darüber abrufen können, was das Plugin tut und welche Konfigurationsparameter es unterstützt.</p>"
+                    },
+                    "mapTemplatesTool": {
+                        "title": "Plugin-Tools: Kartenvorlagen",
+                        "text": "<p>Das Plugin für Kartenvorlagen verfügt außerdem über ein spezielles Tool, mit dem Sie Kartenvorlagen konfigurieren können, auf die im Kontext zugegriffen werden kann.</p>"
+                    },
+                    "extensions": {
+                        "title": "Erweiterungen",
+                        "text": "<p>MapStore unterstützt auch das Hochladen von benutzerdefinierten Erweiterungspaketen. Klicken Sie dazu auf diese Schaltfläche.</p>"
+                    },
+                    "extensionsDelete": {
+                        "title": "Erweiterungen",
+                        "text": "<p>Bereits hochgeladene Erweiterungen können jederzeit durch Drücken dieser Schaltfläche gelöscht werden.</p>"
+                    }
+                }
+            },
             "geostoryIntro": {
               "title": "Story Tutorial",
-              "text": "Übersicht über die Story-Funktionen"
+              "text": "<p>Übersicht über die Story-Funktionen</p><p>Lesen Sie das zugehörige Benutzerhandbuch.<a target = '_blank' href='https://mapstore.readthedocs.io/en/latest/user-guide/exploring-stories/'> hier </a>"
             },
             "geostoryViewHeader": {
               "title": "Header",
@@ -2740,11 +3055,11 @@
             },
             "geostoryViewNavTitle": {
               "title": "Titel der Geschichte",
-              "text": "Sie können für jede Geschichte einen Titel anzeigen und konfigurieren"
+              "text": "Hier sehen Sie den Titel der Geschichte"
             },
             "geostoryViewNavLogo": {
               "title": "Story-Logo",
-              "text": "Sie können für jede Story ein Logo anzeigen und konfigurieren"
+              "text": "Hier sehen Sie das Story-Logo"
             },
             "geostoryViewContent": {
               "title": "Inhalt der Geschichte",
@@ -2764,11 +3079,11 @@
             },
             "geostoryEditSidebarSettings": {
               "title": "Story-Einstellungen",
-              "text": "<p> Von links nach rechts: </p> <ul> <li> Ausgewählten Abschnitt löschen </li> <li> In den Ansichtsmodus wechseln </li> <li> Einstellungen bearbeiten </li> <li> Reduzieren / Alle erweitern </li> </ul>"
+              "text": "<p> Von links nach rechts: </p> <ul> <li> Ausgewählten Abschnitt löschen </li> <li> In den Ansichtsmodus wechseln </li> <li> Einstellungen bearbeiten </li> <li> Reduzieren / Alle erweitern </li> </ul><p> Weitere Informationen finden Sie im zugehörigen Benutzerhandbuch <a target='_blank' href='https://mapstore.readthedocs.io/en/latest/user-guide/story-setting/'> hier </a>"
             },
             "geostoryEditContainer": {
               "title": "Inhalt der Geschichte",
-              "text": "Hier können Sie den Inhalt der Geschichte sehen, sie bearbeiten, indem Sie Abschnitte, Absätze usw. hinzufügen oder entfernen."
+              "text": "Hier können Sie den Inhalt der Geschichte sehen, sie bearbeiten, indem Sie Abschnitte, Absätze usw. hinzufügen oder entfernen.</p><p>Mit jeder Symbolleiste können Sie beispielsweise den Inhalt der Story bearbeiten:</p><img src='data:image/png;base64,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'/><ul><li>Medienquelle wechseln</li><li>Passen Sie den Abschnitt an die Höhe des Inhalts an oder passen Sie ihn vertikal an die Ansicht an</li><li>Stellen Sie den Hintergrund so ein, dass er den Containerraum bedeckt oder nicht</li><li>Größe ändern</li><li>Richten Sie den Container aus (verfügbar, wenn die Größe nicht voll ist).</li><li>Thema wechseln</li></ul><img src='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACIAAAAgCAYAAAB3j6rJAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsIAAA7CARUoSoAAAAASdEVYdFNvZnR3YXJlAEdyZWVuc2hvdF5VCAUAAAIwSURBVFhHY/wPBAyDADBB6QEHow5BB1R3yIWX7xiOP30N5REPqJJY/wKN2HLnCYMwBztD+YGzYLF+F1OGV19/MHgqSzMwMzKCxfABqjjk4ccvDJ6r9jLc+/AZKgIBSgK8DNvDnBnk+XmgIrgBVaKGg4WZgYuVmYGfnZWh39mUYbanJYMQJzsDEzAgWJiIs4KgKlCwf/z5G8rDBM++fGOwWbKD4crrDwzOCpIMGYbqDLE6ygzO8hIMd95/ZnBYthOshhAg6JCXX78zmCzYwiA/bS1D3OYjDPsfvmD49vsPw4ZbjxjqDl1gYGdmZljgbc0gxs3BcPr5W4bzr94xXHvzgeHci3dgMZCcODcn1DTcgOioATlo1Y0HDPMu3Wa4ArQofcdxhp5TVxmmnrvBoC7ExyABtOzxp68MVou2MRjN38JwF5heQGIgOWISK0Vp5B8w2q69+cjAycrC4KMsw9BsZ8ggw8sFxiC2jYwYAwszldIIIbD59mOGiWeuM1Rb6zGUmmsDsQ5Dg40BmN0HTLgC7GxQlfgBxQ4BJeb5l+4w3H73CewgN0UpBmtgSIDYn37hTuTogGKHIANQAtacvQGMQWxSAFUdQgkYdQg6GDoOYQOWnLJ83DgLJS5gGWIkLgSsZ9iAtDDR2RUdEF37/vr7j+HG24/gElNfTJDhyONX4LpFioeLAd2NL4ClMKjuAWVjTmCFSAwYbTyjg1GHoINRh6CDUYegg1GHoINB4hAGBgDB977viofL1wAAAABJRU5ErkJggg=='/><p>Mit diesem Symbol können Sie die zugehörige Karte bearbeiten</p><img src=''/><b>Trinkgeld: </b>Jedes Werkzeug verfügt über einen Tooltip. Bewegen Sie den Mauszeiger darüber, um weitere Informationen anzuzeigen"
             },
             "geostoryEditAddbar": {
               "title": "Neuen Inhalt hinzufügen",
@@ -2776,7 +3091,7 @@
             },
             "geostoryEditMediaEditor": {
               "title": "Medieneditor",
-              "text": "Hier können Sie Bilder oder Karten auswählen, die der Geschichte hinzugefügt werden sollen"
+              "text": "<p> Mit dem Medieneditor können Sie verschiedene Arten von Medieninhalten in die Geschichte aufnehmen: <ul> <li> Bilder </li> <li> Videos </li> <li> Karten </li> </ul> </p><p> Weitere Informationen finden Sie im zugehÃ¶rigen Benutzerhandbuch <a target='_blank' href='https://mapstore.readthedocs.io/en/latest/user-guide/media-editor-window/'> hier </a>"
             }
         },
         "userSession": {

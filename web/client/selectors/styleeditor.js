@@ -6,7 +6,7 @@
 * LICENSE file in the root directory of this source tree.
 */
 
-const { get, head, uniqBy } = require('lodash');
+const { get, head, uniqBy, find } = require('lodash');
 const { layerSettingSelector, getSelectedLayer } = require('./layers');
 const { STYLE_ID_SEPARATOR, extractFeatureProperties } = require('../utils/StyleEditorUtils');
 
@@ -188,6 +188,15 @@ const getAllStyles = (state) => {
     };
 };
 
+const editorMetadataSelector = (state) => state?.styleeditor?.metadata;
+
+const selectedStyleMetadataSelector = (state) => {
+    const { availableStyles = []} = getUpdatedLayer(state) || {};
+    const styleName = selectedStyleSelector(state);
+    const style = find(availableStyles, ({ name }) => styleName === name) || {};
+    return style.metadata || {};
+};
+
 module.exports = {
     temporaryIdSelector,
     templateIdSelector,
@@ -207,5 +216,7 @@ module.exports = {
     canEditStyleSelector,
     getUpdatedLayer,
     selectedStyleFormatSelector,
-    getAllStyles
+    getAllStyles,
+    editorMetadataSelector,
+    selectedStyleMetadataSelector
 };

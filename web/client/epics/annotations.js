@@ -13,6 +13,7 @@ const {TOGGLE_CONTROL, toggleControl, setControlProperty} = require('../actions/
 const {addLayer, updateNode, changeLayerProperties, removeLayer} = require('../actions/layers');
 const {set} = require('../utils/ImmutableUtils');
 const {reprojectGeoJson} = require('../utils/CoordinatesUtils');
+const {ANNOTATION_TYPE} = require('../utils/AnnotationsUtils');
 const {error} = require('../actions/notifications');
 const {closeFeatureGrid} = require('../actions/featuregrid');
 const {isFeatureGridOpen} = require('../selectors/featuregrid');
@@ -470,7 +471,7 @@ module.exports = (viewer) => ({
             try {
                 const annotations = annotation && [annotation] || (annotationsLayerSelector(getState())).features;
                 const mapName = mapNameSelector(getState());
-                saveAs(new Blob([JSON.stringify({features: annotations, type: "ms2-annotations"})], {type: "application/json;charset=utf-8"}), `${ mapName.length > 0 && mapName || "Annotations"}.json`);
+                saveAs(new Blob([JSON.stringify({features: annotations, type: ANNOTATION_TYPE})], {type: "application/json;charset=utf-8"}), `${ mapName.length > 0 && mapName || "Annotations"}.json`);
                 return Rx.Observable.empty();
             } catch (e) {
                 return Rx.Observable.of(error({

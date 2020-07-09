@@ -19,7 +19,7 @@ describe('Test the WMTSUtils', () => {
             }]
         }, 'EPSG:4326');
         expect(ids.length).toBe(1);
-        expect(ids[0]).toBe('EPSG:4326');
+        expect(ids[0].identifier).toBe('EPSG:4326');
     });
 
     it('get matrix ids with array', () => {
@@ -27,7 +27,7 @@ describe('Test the WMTSUtils', () => {
             identifier: 'EPSG:4326'
         }], 'EPSG:4326');
         expect(ids.length).toBe(1);
-        expect(ids[0]).toBe('EPSG:4326');
+        expect(ids[0].identifier).toBe('EPSG:4326');
     });
 
     it('wmts kvp', (done) => {

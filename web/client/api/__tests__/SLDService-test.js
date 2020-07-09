@@ -158,6 +158,24 @@ const pointClassification = {
     }
 };
 
+const rasterClassification = {
+    Rules: {
+        Rule: {
+            RasterSymbolizer: {
+                ColorMap: {
+                    ColorMapEntry: [
+                        {
+                            '@color': '#FFF7EC',
+                            '@quantity': '1000',
+                            '@label': '1000'
+                        }
+                    ]
+                }
+            }
+        }
+    }
+};
+
 const invalidClassification = {
     Rules: {
         Rule: [{
@@ -271,6 +289,14 @@ describe('Test correctness of the SLDService APIs', () => {
         expect(result[0].min).toBe(1);
         expect(result[0].max).toBe(10);
     });
+    it('check readRasterClassification raster', () => {
+        const result = API.readRasterClassification(rasterClassification);
+        expect(result.length).toBe(1);
+        expect(result[0].color).toBe('#FFF7EC');
+        expect(result[0].label).toBe('1000');
+        expect(result[0].quantity).toBe(1000);
+        expect(result[0].opacity).toBe(1);
+    });
     it('check readClassification invalid', () => {
         let error = false;
         try {
@@ -294,7 +320,7 @@ describe('Test correctness of the SLDService APIs', () => {
     });
     it('check getColors only standard', () => {
         const result = API.getColors(undefined, layer, 10);
-        expect(result.length).toBe(5);
+        expect(result.length).toBe(5 + 36 /* 36 color brewer ramps */);
         expect(result[0].colors).toExist();
         expect(result[0].colors.length).toBe(10);
     });
@@ -312,7 +338,7 @@ describe('Test correctness of the SLDService APIs', () => {
     });
     it('check getColors layer with additional colors', () => {
         const result = API.getColors(undefined, layerWithAdditionalColors, 10);
-        expect(result.length).toBe(6);
+        expect(result.length).toBe(6 + 36 /* 36 color brewer ramps */);
         expect(result[0].colors).toExist();
         expect(result[0].colors.length).toBe(10);
     });

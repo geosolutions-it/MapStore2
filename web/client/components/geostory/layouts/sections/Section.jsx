@@ -50,7 +50,9 @@ class Section extends React.Component {
         focusedContent: PropTypes.object,
         expandableMedia: PropTypes.bool,
         storyTheme: PropTypes.object,
-        mediaViewer: PropTypes.object
+        mediaViewer: PropTypes.func,
+        contentToolbar: PropTypes.func,
+        inView: PropTypes.bool
     };
 
     static defaultProps = {
@@ -94,6 +96,8 @@ class Section extends React.Component {
                 focusedContent={this.props.focusedContent}
                 storyTheme={this.props.storyTheme}
                 mediaViewer={this.props.mediaViewer}
+                contentToolbar={this.props.contentToolbar}
+                inView={this.props.inView}
             />
         );
     }

@@ -24,7 +24,6 @@ const INIT_MAP = 'INIT_MAP';
 const RESIZE_MAP = 'RESIZE_MAP';
 const CHANGE_MAP_LIMITS = 'CHANGE_MAP_LIMITS';
 const SET_MAP_RESOLUTIONS = 'SET_MAP_RESOLUTIONS';
-const CHECK_MAP_CHANGES = 'CHECK_MAP_CHANGES';
 const REGISTER_EVENT_LISTENER = 'REGISTER_EVENT_LISTENER';
 const UNREGISTER_EVENT_LISTENER = 'UNREGISTER_EVENT_LISTENER';
 const MOUSE_MOVE = 'MOUSE_MOVE';
@@ -185,12 +184,6 @@ function setMapResolutions(resolutions) {
     };
 }
 
-const checkMapChanges = (action, source) => ({
-    type: CHECK_MAP_CHANGES,
-    action,
-    source
-});
-
 /**
  * Add a tool to the list of event listeners for the map plugin.
  * This can help to trigger actions only if some tool is effectively listen. Useful for
@@ -253,7 +246,6 @@ module.exports = {
     RESIZE_MAP,
     CHANGE_MAP_LIMITS,
     SET_MAP_RESOLUTIONS,
-    CHECK_MAP_CHANGES,
     REGISTER_EVENT_LISTENER,
     UNREGISTER_EVENT_LISTENER,
     MOUSE_MOVE,
@@ -275,7 +267,6 @@ module.exports = {
     resizeMap,
     changeMapLimits,
     setMapResolutions,
-    checkMapChanges,
     registerEventListener,
     unRegisterEventListener,
     mouseMove,

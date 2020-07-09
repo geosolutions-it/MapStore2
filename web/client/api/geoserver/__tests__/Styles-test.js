@@ -196,7 +196,8 @@ describe('Test styles rest API, Content Type of SLD', () => {
                         baseUrl,
                         version: '2.16',
                         formats: [ 'sld' ],
-                        availableUrls: []
+                        availableUrls: [],
+                        fonts: null
                     });
                 } catch (e) {
                     done(e);
@@ -219,6 +220,11 @@ describe('Test styles rest API, Content Type of SLD', () => {
             return [ 200, { about: { resource: [{ '@name': 'GeoServer', version: '2.16' }] } }];
         });
 
+        mockAxios.onGet(/\/fonts/).reply((config) => {
+            expect(config.url).toBe(`${baseUrl}rest/fonts`);
+            return [ 200, { fonts: ['Arial'] }];
+        });
+
         API.getStyleService({ baseUrl })
             .then((styleService) => {
                 try {
@@ -226,12 +232,50 @@ describe('Test styles rest API, Content Type of SLD', () => {
                         baseUrl,
                         version: '2.16',
                         formats: [ 'css', 'sld' ],
-                        availableUrls: []
+                        availableUrls: [],
+                        fonts: ['Arial']
                     });
                 } catch (e) {
                     done(e);
                 }
                 done();
             });
+    });
+
+
+    it('test updateStyleMetadata', (done) => {
+        clearCache();
+        const baseUrl = '/host-style/geoserver/';
+        const styleName = 'new-style';
+        const metadata = { title: 'New title' };
+
+        mockAxios.onGet(/\/styles/).reply((config) => {
+            expect(config.url).toBe(`${baseUrl}rest/styles/new-style.json`);
+            return [ 200, { style: {
+                format: 'css',
+                metadata: {
+                    entry: [
+                        {
+                            '@key': 'description',
+                            '$': 'my style'
+                        }
+                    ]
+                }
+            } }];
+        });
+
+        mockAxios.onPut(/\/styles/).reply((config) => {
+            try {
+                expect(config.url).toBe(`${baseUrl}rest/styles/new-style.json`);
+                expect(config.data).toEqual('{"style":{"format":"css","metadata":{"description":"my style","title":"New title"}}}');
+            } catch (e) {
+                done(e);
+            }
+            done();
+            return [ 200 ];
+        });
+
+        API.updateStyleMetadata({ baseUrl, styleName, metadata });
+
     });
 });

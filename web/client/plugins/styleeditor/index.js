@@ -6,45 +6,40 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const React = require('react');
-const { connect } = require('react-redux');
-const { createSelector } = require('reselect');
-const { compose, withState, defaultProps, branch, lifecycle } = require('recompose');
+import React  from 'react';
+import { connect } from 'react-redux';
+import { createSelector } from 'reselect';
+import { compose, withState, defaultProps, branch, lifecycle } from 'recompose';
 
-const inlineWidgets = require('./inlineWidgets');
-
-const {
+import {
     selectStyleTemplate,
     updateStatus,
     addStyle,
     createStyle,
     updateStyleCode,
-    editStyleCode,
     deleteStyle,
     setDefaultStyle
-} = require('../../actions/styleeditor');
+} from '../../actions/styleeditor';
 
-const { updateOptionsByOwner } = require('../../actions/additionallayers');
-const { updateSettingsParams } = require('../../actions/layers');
-const { getLayerCapabilities } = require('../../actions/layerCapabilities');
+import { updateOptionsByOwner } from '../../actions/additionallayers';
+import { updateSettingsParams } from '../../actions/layers';
+import { getLayerCapabilities } from '../../actions/layerCapabilities';
 
-const BorderLayout = require('../../components/layout/BorderLayout');
-const Editor = require('../../components/styleeditor/Editor');
-const withMask = require('../../components/misc/enhancers/withMask');
-const loadingState = require('../../components/misc/enhancers/loadingState');
-const emptyState = require('../../components/misc/enhancers/emptyState');
-const Loader = require('../../components/misc/Loader');
-const Message = require('../../components/I18N/Message');
+import BorderLayout from '../../components/layout/BorderLayout';
 
-const {
+import withMask from '../../components/misc/enhancers/withMask';
+import loadingState from '../../components/misc/enhancers/loadingState';
+import emptyState from '../../components/misc/enhancers/emptyState';
+import Loader from '../../components/misc/Loader';
+import Message from '../../components/I18N/Message';
+
+import {
     templateIdSelector,
     statusStyleSelector,
     codeStyleSelector,
     geometryTypeSelector,
-    formatStyleSelector,
     loadingStyleSelector,
     errorStyleSelector,
-    layerPropertiesSelector,
     initialCodeStyleSelector,
     addStyleSelector,
     selectedStyleSelector,
@@ -53,9 +48,14 @@ const {
     styleServiceSelector,
     getUpdatedLayer,
     selectedStyleFormatSelector
-} = require('../../selectors/styleeditor');
+} from '../../selectors/styleeditor';
 
-const { getEditorMode, STYLE_OWNER_NAME, getStyleTemplates } = require('../../utils/StyleEditorUtils');
+import {
+    STYLE_OWNER_NAME,
+    getStyleTemplates
+} from '../../utils/StyleEditorUtils';
+
+import StyleCodeEditor from './StyleCodeEditor';
 
 const stylesTemplates = getStyleTemplates();
 
@@ -71,42 +71,6 @@ const loadingEnhancers = (funcBool) => loadingState(
     },
     props => <div style={{position: 'relative', height: '100%', display: 'flex'}}><Loader {...props}/></div>
 );
-
-const StyleCodeEditor = compose(
-    defaultProps({
-        inlineWidgets
-    }),
-    connect(
-        createSelector(
-            [
-                codeStyleSelector,
-                formatStyleSelector,
-                layerPropertiesSelector,
-                errorStyleSelector,
-                loadingStyleSelector,
-                canEditStyleSelector
-            ],
-            (code, format, hintProperties, error, loading, canEdit) => ({
-                code,
-                mode: getEditorMode(format),
-                hintProperties,
-                error: error.edit || null,
-                loading,
-                canEdit
-            })
-        ),
-        {
-            onChange: code => editStyleCode(code)
-        }
-    ),
-    loadingEnhancers(({code, error}) => !code && !error),
-    permissionDeniedEnhancers,
-    emptyState(({error}) => error && error.status === 404, {glyph: 'exclamation-mark', title: <Message msgId="styleeditor.styleNotFound"/>})
-)(props => (
-    <BorderLayout>
-        <Editor {...props} />
-    </BorderLayout>
-));
 
 const StyleTemplates = compose(
     defaultProps({
@@ -247,11 +211,13 @@ const ReadOnlyStyleList = compose(
         </BorderLayout>
 );
 
-module.exports = {
-    StyleSelector: branch(
-        ({ readOnly }) => readOnly,
-        () => ReadOnlyStyleList
-    )(StyleList),
+export const StyleSelector = branch(
+    ({ readOnly }) => readOnly,
+    () => ReadOnlyStyleList
+)(StyleList);
+
+export default {
+    StyleSelector,
     StyleTemplates,
     StyleToolbar,
     StyleCodeEditor

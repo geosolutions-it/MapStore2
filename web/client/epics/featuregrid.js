@@ -688,7 +688,7 @@ module.exports = {
         action$.ofType(OPEN_FEATURE_GRID)
             // need to finalize the flow before listen the next open event to avoid
             // to catch open feature info triggered by this flow or advanced search
-            .exhaustMap(() =>
+            .switchMap(() =>
                 Rx.Observable.race(
                     action$.ofType(FEATURE_INFO_CLICK).take(1),
                     action$.ofType(CLOSE_FEATURE_GRID).take(1)

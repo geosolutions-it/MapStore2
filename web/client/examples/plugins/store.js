@@ -28,6 +28,7 @@ module.exports = (plugins, custom) => {
         custom
     });
     const standardEpics = {
+        ...require('../../epics/config'),
         ...require('../../epics/controls')
     };
     const rootEpic = combineEpics(plugins, {...standardEpics });

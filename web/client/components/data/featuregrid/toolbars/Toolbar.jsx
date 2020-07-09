@@ -16,7 +16,14 @@ const getSaveMessageId = ({saving, saved}) => {
     }
     return "featuregrid.toolbar.saveChanges";
 };
-module.exports = ({ events = {}, syncPopover = { showPopoverSync: true, dockSize: "32.2%" }, mode = "VIEW", showChartButton = true, selectedCount, hasChanges, hasGeometry, hasNewFeatures, isSimpleGeom, isDrawing = false, isEditingAllowed, saving = false, saved = false, isDownloadOpen, isColumnsOpen, disableToolbar, isSearchAllowed, disableDownload, displayDownload, isSyncActive = false, hasSupportedGeometry = true, disableZoomAll = false, isFilterActive = false, showTimeSyncButton = false, timeSync = false} = {}) => {
+/**
+ * Standard Toolbar for the FeatureGrid plugin.
+ *
+ * @param {bool} showAdvancedFilterButton shows / hide the advanced filter button (defaults to true)
+ * @param {bool} showSyncOnMapButton shows / hide the show on map button (defaults to true)
+ */
+module.exports = ({ events = {}, syncPopover = { showPopoverSync: true, dockSize: "32.2%" }, mode = "VIEW",
+    showAdvancedFilterButton = true, showSyncOnMapButton = true, showChartButton = true, selectedCount, hasChanges, hasGeometry, hasNewFeatures, isSimpleGeom, isDrawing = false, isEditingAllowed, saving = false, saved = false, isDownloadOpen, isColumnsOpen, disableToolbar, isSearchAllowed, disableDownload, displayDownload, isSyncActive = false, hasSupportedGeometry = true, disableZoomAll = false, isFilterActive = false, showTimeSyncButton = false, timeSync = false} = {}) => {
     return (<ButtonGroup id="featuregrid-toolbar" className="featuregrid-toolbar featuregrid-toolbar-margin">
         <TButton
             id="edit-mode"
@@ -32,7 +39,7 @@ module.exports = ({ events = {}, syncPopover = { showPopoverSync: true, dockSize
             tooltipId="featuregrid.toolbar.advancedFilter"
             active={isFilterActive}
             disabled={disableToolbar || !isSearchAllowed}
-            visible={mode === "VIEW"}
+            visible={mode === "VIEW" && showAdvancedFilterButton}
             onClick={events.showQueryPanel}
             glyph="filter"/>
         <TButton
@@ -133,7 +140,7 @@ module.exports = ({ events = {}, syncPopover = { showPopoverSync: true, dockSize
             tooltipId="featuregrid.toolbar.syncOnMap"
             disabled={disableToolbar}
             active={isSyncActive}
-            visible={mode === "VIEW"}
+            visible={mode === "VIEW" && showSyncOnMapButton}
             onClick={events.sync}
             glyph="map-filter"
             renderPopover={syncPopover.showPopoverSync}
