@@ -1,7 +1,15 @@
+/*
+ * Copyright 2020, GeoSolutions Sas.
+ * All rights reserved.
+ *
+ * This source code is licensed under the BSD-style license found in the
+ * LICENSE file in the root directory of this source tree.
+*/
 
 import React, { useState, useEffect, useRef, useCallback, cloneElement } from 'react';
 import { createPortal } from 'react-dom';
 import { getConfigProp } from '../../utils/ConfigUtils';
+import isFunction from 'lodash/isFunction';
 
 /**
  * Popover used for style components.
@@ -10,14 +18,14 @@ import { getConfigProp } from '../../utils/ConfigUtils';
  * @memberof components.styleeditor
  * @name ControlledPopover
  * @class
- * @prop {object} containerNode values of the style
+ * @prop {node|function} containerNode container node target for picker overlay or a function that return the target node
  * @prop {object} placement position of popover, one of center, left, right, top, bottom
  * @prop {node} content content of floating popover
  * @prop {boolean} open open/close content
  * @prop {function} onOpen triggered when child is clicked
  */
 export function ControlledPopover({
-    containerNode = document.querySelector('.' + (getConfigProp('themePrefix') || 'ms2') + " > div") || document.body,
+    containerNode: containerNodeProp = () => document.querySelector('.' + (getConfigProp('themePrefix') || 'ms2') + " > div") || document.body,
     placement,
     content,
     children,
@@ -26,6 +34,7 @@ export function ControlledPopover({
 }) {
 
     const margin = 10;
+    const containerNode = isFunction(containerNodeProp) ? containerNodeProp() : containerNodeProp;
 
     const defaultStyle = useRef({
         picker: {
@@ -298,6 +307,7 @@ export function ControlledPopover({
                         {content}
                     </div>
                     <div
+                        className="ms-popover-arrow"
                         style={{
                             position: 'absolute',
                             borderTop: `${margin - 1}px solid transparent`,
