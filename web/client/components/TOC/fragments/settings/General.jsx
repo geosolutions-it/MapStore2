@@ -64,7 +64,7 @@ class General extends React.Component {
             { value: "right", label: LocaleUtils.getMessageById(this.context.messages, "layerProperties.tooltip.right") },
             { value: "bottom", label: LocaleUtils.getMessageById(this.context.messages, "layerProperties.tooltip.bottom") }
         ];
-
+        const groups = this.props.groups && flattenGroups(this.props.groups);
         return (
             <Grid fluid style={{ paddingTop: 15, paddingBottom: 15 }}>
                 <form ref="settings">
@@ -124,15 +124,15 @@ class General extends React.Component {
                             <SimpleSelect
                                 key="group-dropdown"
                                 options={
-                                    ((this.props.groups && flattenGroups(this.props.groups)) || (this.props.element && this.props.element.group) || []).map(item => {
+                                    (groups || (this.props.element && this.props.element.group) || []).map(item => {
                                         if (isObject(item)) {
-                                            return {...item, label: TOCUtils.getLabelName(item.label, this.props.groups)};
+                                            return {...item, label: TOCUtils.getLabelName(item.label, groups)};
                                         }
-                                        return { label: TOCUtils.getLabelName(item, this.props.groups), value: item };
+                                        return { label: TOCUtils.getLabelName(item, groups), value: item };
                                     })
                                 }
-                                defaultValue={{ label: TOCUtils.getLabelName((this.props.element && this.props.element.group || "Default", this.props.groups)), value: this.props.element && this.props.element.group || "Default" }}
-                                placeholder={TOCUtils.getLabelName((this.props.element && this.props.element.group || "Default", this.props.groups))}
+                                defaultValue={{ label: TOCUtils.getLabelName(this.props.element && this.props.element.group || "Default", groups), value: this.props.element && this.props.element.group || "Default" }}
+                                placeholder={TOCUtils.getLabelName(this.props.element && this.props.element.group || "Default", groups)}
                                 onChange={(value) => {
                                     this.updateEntry("group", { target: { value: value || "Default" } });
                                 }}
