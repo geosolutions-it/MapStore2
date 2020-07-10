@@ -256,7 +256,7 @@ const LayersUtils = {
     getSourceId,
     extractSourcesFromLayers,
     extractTileMatrixSetFromLayers,
-    getGroupByName: (groupName, groups) => {
+    getGroupByName: (groupName, groups = []) => {
         const result = head(groups.filter(g => g.name === groupName));
         return result || groups.reduce((prev, g) => prev || !!g.nodes && LayersUtils.getGroupByName(groupName, g.nodes), undefined);
     },

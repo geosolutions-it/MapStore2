@@ -6,7 +6,9 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const {isObject} = require('lodash');
+const {isObject, get} = require('lodash');
+const LayersUtils = require('./LayersUtils');
+const LocaleUtils = require('./LocaleUtils');
 
 const TOCUtils = {
     createFromSearch: function(options, search) {
@@ -95,6 +97,19 @@ const TOCUtils = {
             }
             return acc;
         }, []);
+    },
+    getLabelName: (groupLabel = "", groups = []) => {
+        let label = groupLabel.replace(/[^\.\/]+/g, match => {
+            const title = get(LayersUtils.getGroupByName(match, groups), 'title');
+            if (isObject(title)) {
+                const locale = LocaleUtils.getLocale();
+                return title[locale] || title.default;
+            }
+            return groups && title || match;
+        });
+        label = label.replace(/\./g, '/');
+        label = label.replace(/\${dot}/g, '.');
+        return label;
     }
 };
 
