@@ -9,9 +9,7 @@
 const React = require('react');
 const PropTypes = require('prop-types');
 const Spinner = require('react-spinkit');
-const { get } = require('lodash');
 const { FormControl, FormGroup, ControlLabel, InputGroup, Col } = require('react-bootstrap');
-const LayersUtils = require('../../../../utils/LayersUtils');
 const Message = require('../../../I18N/Message');
 const { SimpleSelect } = require('react-selectize');
 const { isString, isObject, find } = require('lodash');
@@ -20,6 +18,7 @@ const assign = require('object-assign');
 require('react-selectize/themes/index.css');
 const { Grid } = require('react-bootstrap');
 const { createFromSearch, flattenGroups } = require('../../../../utils/TOCUtils');
+const TOCUtils = require('../../../../utils/TOCUtils');
 
 /**
  * General Settings form for layer
@@ -47,13 +46,6 @@ class General extends React.Component {
         showTooltipOptions: true,
         pluginCfg: {},
         allowNew: false
-    };
-
-    getLabelName = (groupLabel = "") => {
-        return groupLabel.replace(/[^\.\/]+/g,
-            match => this.props.groups && get(LayersUtils.getGroupByName(match, this.props.groups), 'title') || match)
-            .replace(/\./g, '/')
-            .replace(/\${dot}/g, '.');
     };
 
     render() {
@@ -134,13 +126,13 @@ class General extends React.Component {
                                 options={
                                     ((this.props.groups && flattenGroups(this.props.groups)) || (this.props.element && this.props.element.group) || []).map(item => {
                                         if (isObject(item)) {
-                                            return {...item, label: this.getLabelName(item.label)};
+                                            return {...item, label: TOCUtils.getLabelName(item.label, this.props.groups)};
                                         }
-                                        return { label: this.getLabelName(item), value: item };
+                                        return { label: TOCUtils.getLabelName(item, this.props.groups), value: item };
                                     })
                                 }
-                                defaultValue={{ label: this.getLabelName((this.props.element && this.props.element.group || "Default")), value: this.props.element && this.props.element.group || "Default" }}
-                                placeholder={this.getLabelName((this.props.element && this.props.element.group || "Default"))}
+                                defaultValue={{ label: TOCUtils.getLabelName((this.props.element && this.props.element.group || "Default", this.props.groups)), value: this.props.element && this.props.element.group || "Default" }}
+                                placeholder={TOCUtils.getLabelName((this.props.element && this.props.element.group || "Default", this.props.groups))}
                                 onChange={(value) => {
                                     this.updateEntry("group", { target: { value: value || "Default" } });
                                 }}
