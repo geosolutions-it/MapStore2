@@ -99,11 +99,7 @@ const TOCUtils = {
         }, []);
     },
     getLabelName: (groupLabel = "", groups = []) => {
-        let label = "";
-        if (isObject(groupLabel)) {
-            label = groupLabel.value || groupLabel.label || "";
-        }
-        label = label.replace(/[^\.\/]+/g, match => {
+        let label = groupLabel.replace(/[^\.\/]+/g, match => {
             const title = get(LayersUtils.getGroupByName(match, groups), 'title');
             if (isObject(title)) {
                 const locale = LocaleUtils.getLocale();
