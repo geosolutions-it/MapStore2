@@ -445,6 +445,80 @@ describe('Test styleeditor selector', () => {
             enabledStyle: 'square'
         });
     });
+    it('test getAllStyles fallback to style.name', () => {
+        const state = {
+            layers: {
+                flat: [
+                    {
+                        id: 'layerId',
+                        name: 'layerName',
+                        style: 'point'
+                    }
+                ],
+                selected: [
+                    'layerId'
+                ],
+                settings: {
+                    expanded: true,
+                    node: 'layerId',
+                    nodeType: 'layers',
+                    options: {
+                        opacity: 1,
+                        style: 'square',
+                        availableStyles: [
+                            {
+                                TYPE_NAME: "WMS_1_3_0.Style",
+                                filename: "default_point.sld",
+                                format: "sld",
+                                languageVersion: {version: "1.0.0"},
+                                legendURL: [],
+                                name: 'point',
+                                _abstract: ''
+                            },
+                            {
+                                TYPE_NAME: "WMS_1_3_0.Style",
+                                filename: "square.css",
+                                format: "css",
+                                languageVersion: {version: "1.0.0"},
+                                legendURL: [],
+                                name: 'square',
+                                _abstract: ''
+                            }
+                        ]
+                    }
+                }
+            }
+        };
+        const retval = getAllStyles(state);
+
+        expect(retval).toExist();
+        expect(retval).toEqual({
+            availableStyles: [
+                {
+                    TYPE_NAME: 'WMS_1_3_0.Style',
+                    filename: 'default_point.sld',
+                    format: 'sld',
+                    languageVersion: { version: '1.0.0' },
+                    legendURL: [],
+                    name: 'point',
+                    _abstract: '',
+                    label: "point"
+                },
+                {
+                    TYPE_NAME: 'WMS_1_3_0.Style',
+                    filename: 'square.css',
+                    format: 'css',
+                    languageVersion: { version: '1.0.0' },
+                    legendURL: [],
+                    name: 'square',
+                    _abstract: '',
+                    label: 'square'
+                }
+            ],
+            defaultStyle: 'point',
+            enabledStyle: 'square'
+        });
+    });
     it('test temporaryIdSelector', () => {
 
         const state = {
