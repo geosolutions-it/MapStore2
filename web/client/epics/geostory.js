@@ -8,14 +8,18 @@
  */
 
 import { Observable } from 'rxjs';
-import head from 'lodash/head';
-
-import isNaN from 'lodash/isNaN';
-import isString from 'lodash/isString';
-import isNil from 'lodash/isNil';
-import lastIndexOf from 'lodash/lastIndexOf';
+import {
+    head,
+    isNaN,
+    isString,
+    isNil,
+    lastIndexOf,
+    replace,
+    words
+} from 'lodash';
 import { push, LOCATION_CHANGE } from 'connected-react-router';
 import uuid from 'uuid/v1';
+import queryString from 'queryString';
 
 import axios from '../libs/ajax';
 
@@ -75,7 +79,17 @@ import { LOGIN_SUCCESS, LOGOUT } from '../actions/security';
 
 
 import { isLoggedIn, isAdminUserSelector } from '../selectors/security';
-import { resourceIdSelectorCreator, createPathSelector, currentStorySelector, resourcesSelector, getFocusedContentSelector, isSharedStory, resourceByIdSelectorCreator, modeSelector} from '../selectors/geostory';
+import {
+     resourceIdSelectorCreator,
+     createPathSelector,
+     currentStorySelector,
+     resourcesSelector,
+     getFocusedContentSelector,
+     isSharedStory,
+     resourceByIdSelectorCreator,
+     modeSelector,
+     updateUrlOnScrollSelector
+} from '../selectors/geostory';
 import { currentMediaTypeSelector, sourceIdSelector} from '../selectors/mediaEditor';
 
 import { wrapStartStop } from '../observables/epics';
@@ -461,6 +475,52 @@ export const handlePendingGeoStoryChanges = action$ =>
                     )
             )
     );
+
+/**
+ * Handle the url updates on currentPage change
+ * @param {Observable} action$ stream of actions
+ * @param {object} store redux store
+ */
+export const urlUpdateOnScroll = (action$, {getState}) =>
+    action$.ofType(UPDATE_CURRENT_PAGE)
+        .debounceTime(50) // little delay if too many UPDATE_CURRENT_PAGE actions come
+        .switchMap(({sectionId, columnId}) => {
+            if (
+                modeSelector(getState()) !== 'edit' && (!!columnId || !!sectionId)
+                && updateUrlOnScrollSelector(getState())
+            ) {
+                const urlObject = queryString.parse(window.location.href);
+                const EMPTY = 'EMPTY';
+                if (sectionId) {
+                    if (urlObject.sectionId || urlObject.columnId) {
+                        history.pushState(null, '', replace(window.location.href, /[^\&]+$/, `sectionId=${sectionId}`));
+                    } else {
+                        history.pushState(null, '', `${window.location.href}&sectionId=${sectionId}`);
+                    }
+                } else if (!sectionId && columnId && isString(columnId) && columnId !== EMPTY) {
+                    if (urlObject.sectionId || urlObject.columnId) {
+                        history.pushState(null, '', replace(window.location.href, /[^\&]+$/, `columnId=${columnId}`));
+                    }
+            } else return Observable.empty();
+        }
+            return Observable.empty();
+        });
+
+/**
+ * Loads geostory on POP history
+ * @param {Observable} action$ stream of actions
+ */
+export const test = (action$) =>
+    action$.ofType(LOCATION_CHANGE)
+        .switchMap(({payload}) => {
+            const hasGeostory = payload?.location?.pathname.includes('/geostory/');
+            if (hasGeostory && payload.action === 'POP') {
+                const separatedUrl = words(payload?.location?.pathname);
+                return separatedUrl[1] ? Observable.of(loadGeostory(separatedUrl[1])).delay(500) : Observable.empty();
+            }
+            return Observable.empty();
+        });
+
 /**
  * Handle the scroll of section preview in the sidebar
  * @memberof epics.mediaEditor

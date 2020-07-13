@@ -46,15 +46,18 @@ class GeoStoryPage extends React.Component {
     };
 
     componentWillMount() {
-        const id = get(this.props, "match.params.gid");
+        const parsedId = get(this.props, "match.params.gid");
+        const id = parsedId.split('&')[0];
         const previousId = this.props.previousId && this.props.previousId + '';
         this.props.reset();
         this.setInitialMode(previousId !== id);
         this.props.loadResource(id);
     }
     componentDidUpdate(oldProps) {
-        const id = get(this.props, "match.params.gid");
-        const oldId = get(oldProps, "match.params.gid");
+        const parsedId = get(this.props, "match.params.gid");
+        const id = parsedId.split('&')[0];
+        const parsedOldId = get(oldProps, "match.params.gid");
+        const oldId = parsedOldId.split('&')[0];
         if (oldId !== id) {
             if (isNil(id)) {
                 this.props.reset();

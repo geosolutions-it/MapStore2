@@ -1081,7 +1081,8 @@
       "addBboxParam": "Lisää bbox-parametrit jakamislinkkiin",
       "wrongBboxParamTitle": "virheellinen bbox-parametri",
       "wrongBboxParamMessage": "bbox-parametrien on oltava EPSG: 4326: ssa ja kirjoitettu bbox = minx, miny, maxx, maxy",
-      "showHomeButton": "Linkki MapStoren sivuille"
+      "showHomeButton": "Linkki MapStoren sivuille",
+      "showSectionId": "Sisällytä vierityspaikka"
     },
     "snapshot": {
       "title": "Kuvan esikatselu",

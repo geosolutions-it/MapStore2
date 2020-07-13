@@ -6,13 +6,13 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import React from 'react';
-
+import React, { useEffect, useRef } from 'react';
+import queryString from 'query-string';
 import Toolbar from '../../misc/toolbar/Toolbar';
 import ScrollMenu from './ScrollMenu';
 import Home from '../../../components/home/Home';
 import { getQueryParams } from '../../../utils/URLUtils';
-import isObject from 'lodash/isObject';
+import { isObject, isString } from 'lodash';
 
 /**
  * Navigation Bar for view mode of GeoStory
@@ -24,17 +24,23 @@ import isObject from 'lodash/isObject';
  * @prop {number} totalItems totalItems is the total number of sections present in the story
  * @prop {object} router router object in store contains location data
  * @prop {array} buttons array of buttons for Toolbar
+ * @prop {boolean} enableScrollOnLoad should scroll to the element after loading
+ * @prop {function} updateUrlOnScroll dispatches enableScrollOnLoad to the geostory reducer
  */
 export default ({
     settings,
     scrollTo = () => {},
     navigableItems = [],
-    currentPage, // current page progress (current page + 1/totPages),
+    currentPage = {}, // current page progress (current page + 1/totPages),
     totalItems = 1,
     currentPosition = 0,
     router,
-    buttons = []
+    buttons = [],
+    enableScrollOnLoad = false,
+    updateUrlOnScroll = () => {}
 }) => {
+    const isFirstRun = useRef(true);
+    const EMPTY = 'EMPTY';
     const theme = settings?.theme?.general;
     const {
         borderColor,
@@ -60,6 +66,29 @@ export default ({
         || isNavbarVisible
         || isToolbarEnabled
         || isHomeButtonEnabled;
+
+    useEffect(() => {
+        updateUrlOnScroll(enableScrollOnLoad);
+    }, []);
+
+    useEffect(() => {
+        if (
+            enableScrollOnLoad
+            && (
+                currentPage.sectionId
+                || currentPage.columnId && isString(currentPage.columnId) && currentPage.columnId !== EMPTY
+            )
+        ) {
+            const urlParsed = queryString.parse(window.location.href);
+            if (urlParsed.sectionId && urlParsed.sectionId !== currentPage.columnId && isFirstRun.current) {
+                isFirstRun.current = false;
+                scrollTo(urlParsed.sectionId, {block: "start", behavior: "smooth"});
+            } else if (urlParsed.columnId && urlParsed.columnId !== currentPage.columnId && isFirstRun.current) {
+                isFirstRun.current = false;
+                scrollTo(urlParsed.columnId, {block: 'start', behavior: "smooth"});
+            }
+        }
+    }, [currentPage.sectionId, currentPage.columnId, enableScrollOnLoad]);
 
     return (
         <div

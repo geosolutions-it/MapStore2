@@ -1223,7 +1223,8 @@
             "marker": "Markierung auf geladener Karte hinzufügen",
             "coordinate": "Koordinate",
             "coordTooltip": "Klicken Sie auf die Karte, um die Koordinaten zu erfassen",
-            "zoomToolTip": "Min: 1 und Max: 35"
+            "zoomToolTip": "Min: 1 und Max: 35",
+            "showSectionId": "Bildlaufposition einschließen"
         },
         "snapshot": {
             "title": "Snapshot Vorschau",

@@ -727,7 +727,8 @@
           {
             "name": "GeoStoryNavigation",
             "cfg": {
-              "containerPosition": "header"
+              "containerPosition": "header",
+              "enableScrollOnLoad": true
             }
           },
           "Notifications",
@@ -742,7 +743,8 @@
             "cfg": {
               "embedPanel": false,
               "advancedSettings": {
-                "homeButton": true
+                "homeButton": true,
+                "sectionId": true
               }
             }
           }

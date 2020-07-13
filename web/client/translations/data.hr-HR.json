@@ -1061,7 +1061,8 @@
             "advancedOptions": "Napredne mogućnosti",
             "addBboxParam": "Dodaj bbox parametar na poveznicu za dijeljenje",
             "wrongBboxParamTitle": "Neispravan bbox parametar",
-            "wrongBboxParamMessage": "bbox parametri moraju biti u EPSG:4326 i napisani kao bbox=minx,miny,maxx,maxy"
+            "wrongBboxParamMessage": "bbox parametri moraju biti u EPSG:4326 i napisani kao bbox=minx,miny,maxx,maxy",
+            "showSectionId": "Uključite položaj pomicanja"
         },
         "snapshot": {
             "title": "Pregled snimke",

@@ -1223,7 +1223,8 @@
             "addBboxParam": "Add bounding box param to sharing link",
             "wrongBboxParamTitle": "Invalid bounding box param",
             "wrongBboxParamMessage": "Bounding box params must be in EPSG:4326 and wrote as bbox=minx,miny,maxx,maxy",
-            "showHomeButton": "Link to MapStore home"
+            "showHomeButton": "Link to MapStore home",
+            "showSectionId": "Include scroll position"
         },
         "snapshot": {
             "title": "Snapshot Preview",
