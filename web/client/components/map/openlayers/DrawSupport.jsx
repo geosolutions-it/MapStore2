@@ -249,7 +249,7 @@ export default class DrawSupport extends React.Component {
                         center = geometry.properties && geometry.properties.center ? reproject(geometry.properties.center, "EPSG:4326", mapCrs) : geometry.center;
                         center = [center.x, center.y];
                         feature = new Feature({
-                            geometry: this.createOLGeometry({type: "Circle", center, projection: "EPSG:3857", radius: geometry.properties && geometry.properties.radius || geometry.radius})
+                            geometry: this.createOLGeometry({type: "Circle", center, projection: "EPSG:3857", radius: geometry.properties && geometry.properties.radius || geometry.radius, options})
                         });
                     } else {
                         feature = new Feature({
