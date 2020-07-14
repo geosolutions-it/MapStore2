@@ -168,7 +168,7 @@ class GeometryDetails extends React.Component {
             <FormControl
                 type="number"
                 id={"queryform_circle_" + name}
-                defaultValue={this.roundValue(value, !this.isWGS84() || name === 'radius' ? 100 : 1000000)}
+                defaultValue={this.roundValue(value, name === 'radius' ? 100 : 1000000)}
                 step={this.getStepCircle(this.props.zoom, name)}
                 onChange={(evt) => this.onUpdateCircle(evt.target.value, name)}/>
         );

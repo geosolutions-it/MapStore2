@@ -31,8 +31,8 @@ describe('GeometryDetails', () => {
         let geometry = {
             center: {
                 srs: "EPSG:900913",
-                x: -1761074.344349588,
-                y: 5852757.632510748
+                x: -1764074.344349588,
+                y: 5854757.632510748
             },
             projection: "EPSG:900913",
             radius: 836584.05,
@@ -66,6 +66,13 @@ describe('GeometryDetails', () => {
         let panelBodyRows = pb.getElementsByClassName('row');
         expect(panelBodyRows).toExist();
         expect(panelBodyRows.length).toBe(3);
+
+        const inputs = document.querySelectorAll('input');
+        expect(inputs.length).toBe(3);
+        // checking number of decimals
+        expect(inputs[0].value.substring(inputs[0].value.indexOf(".") + 1).length).toBe(6); // "-15.846949"
+        expect(inputs[1].value.substring(inputs[1].value.indexOf(".") + 1).length).toBe(6); // "46.462377"
+        expect(inputs[2].value.substring(inputs[2].value.indexOf(".") + 1).length).toBe(2); // "6114748.17"
 
         expect(pb.childNodes.length).toBe(1);
     });
