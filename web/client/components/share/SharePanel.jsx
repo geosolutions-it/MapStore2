@@ -32,7 +32,7 @@ import SwitchPanel from '../misc/switch/SwitchPanel';
 import Editor from '../data/identify/coordinates/Editor';
 import {set} from '../../utils/ImmutableUtils';
 import OverlayTrigger from '../misc/OverlayTrigger';
-import queryString from 'queryString';
+import queryString from 'query-string';
 
 /**
  * SharePanel allow to share the current map in some different ways.

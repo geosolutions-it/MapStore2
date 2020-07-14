@@ -19,7 +19,7 @@ import {
 } from 'lodash';
 import { push, LOCATION_CHANGE } from 'connected-react-router';
 import uuid from 'uuid/v1';
-import queryString from 'queryString';
+import queryString from 'query-string';
 
 import axios from '../libs/ajax';
 
