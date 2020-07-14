@@ -83,7 +83,8 @@ class SharePanel extends React.Component {
         onUpdateSettings: PropTypes.func,
         selectedTab: PropTypes.string,
         formatCoords: PropTypes.string,
-        point: PropTypes.object
+        point: PropTypes.object,
+        isScrollPosition: PropTypes.bool
     };
 
     static defaultProps = {
@@ -99,7 +100,8 @@ class SharePanel extends React.Component {
         closeGlyph: "1-close",
         settings: {},
         onUpdateSettings: () => {},
-        formatCoords: "decimal"
+        formatCoords: "decimal",
+        isScrollPosition: false
     };
 
     state = {
@@ -272,15 +274,19 @@ class SharePanel extends React.Component {
                         })}>
                     <Message msgId="share.showHomeButton" />
                 </Checkbox>}
-                {this.props.advancedSettings.sectionId && <Checkbox
-                    checked={this.props.settings.showSectionId}
-                    onChange={() =>
-                        this.props.onUpdateSettings({
-                            ...this.props.settings,
-                            showSectionId: !this.props.settings.showSectionId
-                        })}>
-                    <Message msgId="share.showSectionId" />
-                </Checkbox>}
+                {
+                    this.props.isScrollPosition
+                    && this.props.advancedSettings.sectionId
+                    && <Checkbox
+                        checked={this.props.settings.showSectionId}
+                        onChange={() =>
+                            this.props.onUpdateSettings({
+                                ...this.props.settings,
+                                showSectionId: !this.props.settings.showSectionId
+                            })}>
+                        <Message msgId="share.showSectionId" />
+                    </Checkbox>
+                }
                 {this.props.settings.centerAndZoomEnabled && <div>
                     <FormGroup id={"share-container"}>
                         <ControlLabel><Message msgId="share.coordinate" /></ControlLabel>

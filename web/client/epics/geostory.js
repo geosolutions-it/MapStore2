@@ -510,13 +510,15 @@ export const urlUpdateOnScroll = (action$, {getState}) =>
  * Loads geostory on POP history
  * @param {Observable} action$ stream of actions
  */
-export const test = (action$) =>
+export const loadStoryOnHistoryPop = (action$) =>
     action$.ofType(LOCATION_CHANGE)
         .switchMap(({payload}) => {
             const hasGeostory = payload?.location?.pathname.includes('/geostory/');
             if (hasGeostory && payload.action === 'POP') {
                 const separatedUrl = words(payload?.location?.pathname);
-                return separatedUrl[1] ? Observable.of(loadGeostory(separatedUrl[1])).delay(500) : Observable.empty();
+                return separatedUrl.find(i=> i === 'shared')
+                    ? Observable.of(loadGeostory(separatedUrl[2])).delay(500)
+                    : Observable.of(loadGeostory(separatedUrl[1])).delay(500);
             }
             return Observable.empty();
         });
