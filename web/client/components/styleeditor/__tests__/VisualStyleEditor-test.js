@@ -10,6 +10,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import VisualStyleEditor from '../VisualStyleEditor';
 import expect from 'expect';
+import { Simulate, act } from 'react-dom/test-utils';
 
 describe('VisualStyleEditor', () => {
     beforeEach((done) => {
@@ -86,7 +87,7 @@ describe('VisualStyleEditor', () => {
             code="unknow style format"
             onError={(error) => {
                 try {
-                    expect(error).toEqual({ messageId: 'styleeditor.formatNotSupported' });
+                    expect(error).toEqual({ messageId: 'styleeditor.formatNotSupported', status: 400 });
                 } catch (e) {
                     done(e);
                 }
@@ -95,5 +96,42 @@ describe('VisualStyleEditor', () => {
         />, document.getElementById('container'));
         const ruleEditorNode = document.querySelector('.ms-style-rules-editor');
         expect(ruleEditorNode).toBeTruthy();
+    });
+    it('should throw an error when all style are removed', (done) => {
+        const DEBOUNCE_TIME = 1;
+        act(() => {
+            ReactDOM.render(<VisualStyleEditor
+                format="css"
+                code="* { fill: #ff0000; }"
+                debounceTime={DEBOUNCE_TIME}
+                onError={(error) => {
+                    try {
+                        expect(error).toEqual({ message: 'This style is empty', status: 400 });
+                    } catch (e) {
+                        done(e);
+                    }
+                    done();
+                }}
+            />, document.getElementById('container'));
+        });
+        setTimeout(() => {
+            try {
+                const ruleEditorNode = document.querySelector('.ms-style-rules-editor');
+                expect(ruleEditorNode).toBeTruthy();
+                const buttonNodes = document.querySelectorAll('button');
+                expect([...buttonNodes].map(node => node.children[0].getAttribute('class'))).toEqual([
+                    'glyphicon glyphicon-undo',
+                    'glyphicon glyphicon-redo',
+                    'glyphicon glyphicon-1-ruler',
+                    'glyphicon glyphicon-trash',
+                    'glyphicon glyphicon-option-vertical'
+                ]);
+                act(() => {
+                    Simulate.click(buttonNodes[3]);
+                });
+            } catch (e) {
+                done(e);
+            }
+        }, DEBOUNCE_TIME * 10);
     });
 });

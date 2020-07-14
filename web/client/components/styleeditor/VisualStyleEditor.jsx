@@ -84,6 +84,27 @@ const updateFunc = ({
     });
 };
 
+/**
+ * Visual style editor provides functionality to edit css or sld styles with ui component
+ * @memberof components.styleeditor
+ * @name VisualStyleEditor
+ * @class
+ * @prop {string} code body style code of specific encoding
+ * @prop {string} format style format: css or sld
+ * @prop {node} layer content of floating popover
+ * @prop {number} zoom current map zoom
+ * @prop {array} scales available scales in map
+ * @prop {string} geometryType one of: polygon, line, point, vector or raster
+ * @prop {array} fonts list of fonts available for the style (eg ['monospace', 'serif'])
+ * @prop {array} bands available bands for raster layers, list of numbers
+ * @prop {array} attributes available attributes for vector layers
+ * @prop {function} onChange return the new changed style
+ * @prop {function} onError return the validation/parsing errors
+ * @prop {boolean} loading loading state
+ * @prop {object} error error object
+ * @prop {function} getColors return colors for available ramps in classification
+ * @prop {number} debounceTime debounce time for on change function, default 300
+ */
 function VisualStyleEditor({
     code,
     format,
@@ -108,11 +129,12 @@ function VisualStyleEditor({
 
     const { symbolizerBlock, ruleBlock } = getBlocks(config);
     const [updating, setUpdating] = useState(false);
-    const [parserError, setParserError] = useState();
     const [styleHistory, dispacth] = useReducer(historyVisualStyleReducer, {});
     const style = styleHistory?.present || DEFAULT_STYLE;
     const state = useRef();
-    state.current = style;
+    state.current = {
+        style
+    };
 
     const init = useRef(false);
 
@@ -127,7 +149,10 @@ function VisualStyleEditor({
                     });
                     init.current = true;
                 })
-                .catch((err) => setParserError(err && err.message));
+                .catch((err) => onError({
+                    ...err,
+                    status: 400
+                }));
         }
         if (parser && code && defaultStyleJSON) {
             init.current = true;
@@ -137,8 +162,9 @@ function VisualStyleEditor({
             });
         }
         if (code && !parser) {
-            return  onError({
-                messageId: 'styleeditor.formatNotSupported'
+            return onError({
+                messageId: 'styleeditor.formatNotSupported',
+                status: 400
             });
         }
         return null;
@@ -156,7 +182,7 @@ function VisualStyleEditor({
             return null;
         }
         const newStyle = {
-            ...state.current,
+            ...state.current.style,
             rules: newRules
         };
         return dispacth({
@@ -169,15 +195,27 @@ function VisualStyleEditor({
 
     useEffect(() => {
         update.current = debounce((options) => {
-            setParserError(undefined);
+            const isStyleEmpty = options.style.rules.length === 0;
+            if (isStyleEmpty) {
+                return onError({
+                    message: 'This style is empty',
+                    status: 400
+                });
+            }
             const parser = getStyleParser(options.format);
             if (parser) {
-                parser.writeStyle(parseJSONStyle(options.style))
+                return parser.writeStyle(parseJSONStyle(options.style))
                     .then((newCode) => {
                         onChange(newCode, options.style);
                     })
-                    .catch((err) => setParserError(err && err.message));
+                    .catch((err) => {
+                        onError({
+                            ...err,
+                            status: 400
+                        });
+                    });
             }
+            return null;
         }, debounceTime);
         return () => {
             update.current.cancel();
@@ -214,7 +252,7 @@ function VisualStyleEditor({
                             onClick: () => dispacth({ type: REDO_STYLE })
                         },
                         {
-                            visible: !!(error || parserError),
+                            visible: !!error,
                             Element: () => <div
                                 className="square-button-md"
                                 style={{
@@ -230,13 +268,9 @@ function VisualStyleEditor({
                                     text={<>
                                         <p><Message msgId="styleeditor.genericValidationError"/></p>
                                         <p><Message msgId="styleeditor.incorrectPropertyInputError"/></p>
-                                        {error?.line && <p>
+                                        {error.message && <p>
                                             <Message msgId="styleeditor.validationError"/>:&nbsp;
                                             {error.message}
-                                        </p>}
-                                        {parserError && <p>
-                                            <Message msgId="styleeditor.validationError"/>:&nbsp;
-                                            {parserError}
                                         </p>}
                                     </>}/>
                             </div>
@@ -276,7 +310,7 @@ function VisualStyleEditor({
                 updateFunc({
                     options,
                     layer,
-                    rules: state.current.rules,
+                    rules: state.current.style.rules,
                     styleUpdateTypes
                 })
                     .then(newRules => handleUpdateStyle(newRules))

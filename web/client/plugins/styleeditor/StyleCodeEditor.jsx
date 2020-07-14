@@ -14,7 +14,8 @@ import inlineWidgets from './inlineWidgets';
 
 import {
     editStyleCode,
-    updateEditorMetadata
+    updateEditorMetadata,
+    errorStyle
 } from '../../actions/styleeditor';
 
 import {
@@ -217,7 +218,10 @@ const ConnectedVisualStyleEditor = connect(
             zoom: map.zoom,
             fonts: styleService.fonts || []
         })
-    )
+    ),
+    {
+        onError: errorStyle.bind(null, 'edit')
+    }
 )(VisualStyleEditor);
 
 ConnectedVisualStyleEditor.defaultProps = {

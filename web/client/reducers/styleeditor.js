@@ -87,7 +87,7 @@ function styleeditor(state = {}, action) {
         };
     }
     case ERROR_STYLE: {
-        const message = action.error && action.error.statusText || '';
+        const message = action?.error?.statusText || action?.error?.message || '';
         const position = message.match(/line\s([\d]+)|column\s([\d]+)|lineNumber:\s([\d]+)|columnNumber:\s([\d]+)/g);
         const errorInfo = position && position.length === 2 && position.reduce((info, pos) => {
             const splittedValues = pos.split(' ');
