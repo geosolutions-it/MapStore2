@@ -53,7 +53,8 @@ const {
     styleServiceSelector,
     getUpdatedLayer,
     editorMetadataSelector,
-    selectedStyleMetadataSelector
+    selectedStyleMetadataSelector,
+    errorStyleSelector
 } = require('../selectors/styleeditor');
 
 const { getSelectedLayer, layerSettingSelector } = require('../selectors/layers');
@@ -198,6 +199,21 @@ module.exports = {
 
                 if (!action.enabled) return resetStyleEditorObservable(state);
                 if (enabledStyleEditorSelector(state) && isInitialized) return Rx.Observable.empty();
+
+                const styleError = errorStyleSelector(state);
+
+                // stop request and avoid infinite loop on error
+                // eg. failing get capabilities
+                if (styleError?.global) {
+                    return Rx.Observable.of(
+                        error({
+                            title: "styleeditor.initErrorTitle",
+                            message: "styleeditor.initErrorMessage",
+                            uid: "initStyleError",
+                            autoDismiss: 5
+                        })
+                    );
+                }
 
                 const layer = action.layer || getSelectedLayer(state);
                 if (!layer || layer && !layer.url) return Rx.Observable.empty();

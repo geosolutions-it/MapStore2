@@ -2064,7 +2064,10 @@
             "blueChannel": "Blue channel",
             "grayChannel": "Channel",
             "ruleClassification": "Classification",
-            "ruleRaster": "Raster"
+            "ruleRaster": "Raster",
+
+            "initErrorTitle": "Verbindungsfehler",
+            "initErrorMessage": "Es ist nicht möglich, eine Verbindung zum Stileditor herzustellen"
         },
         "playback": {
             "settings": {

@@ -206,6 +206,58 @@ describe('Test styleeditor epics', () => {
             state);
 
     });
+    it('test toggleStyleEditorEpic enabled to true with global error', (done) => {
+
+        const state = {
+            layers: {
+                flat: [
+                    {
+                        id: 'layerId',
+                        name: 'layerName',
+                        url: '/geoserver/'
+                    }
+                ],
+                selected: [
+                    'layerId'
+                ]
+            },
+            styleeditor: {
+                error: {
+                    global: {
+                        status: 401
+                    }
+                }
+            }
+        };
+        const NUMBER_OF_ACTIONS = 1;
+
+        const results = (actions) => {
+            expect(actions.length).toBe(NUMBER_OF_ACTIONS);
+            try {
+                actions.map((action) => {
+                    switch (action.type) {
+                    case SHOW_NOTIFICATION:
+                        expect(action.title).toBe('styleeditor.initErrorTitle');
+                        expect(action.level).toBe('error');
+                        break;
+                    default:
+                        expect(true).toBe(false);
+                    }
+                });
+            } catch (e) {
+                done(e);
+            }
+            done();
+        };
+
+        testEpic(
+            toggleStyleEditorEpic,
+            NUMBER_OF_ACTIONS,
+            toggleStyleEditor(undefined, true),
+            results,
+            state);
+
+    });
     it('test updateLayerOnStatusChangeEpic status template', (done) => {
 
         const state = {

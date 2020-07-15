@@ -2076,7 +2076,10 @@
             "blueChannel": "Blue channel",
             "grayChannel": "Channel",
             "ruleClassification": "Classification",
-            "ruleRaster": "Raster"
+            "ruleRaster": "Raster",
+
+            "initErrorTitle": "Connection error",
+            "initErrorMessage": "It's not possible to connect to the style editor service"
         },
         "playback": {
             "settings": {
