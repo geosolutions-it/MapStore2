@@ -60,7 +60,8 @@ import {
     EDIT_WEBPAGE,
     EDIT_RESOURCE,
     UPDATE_CURRENT_PAGE,
-    UPDATE_SETTING
+    UPDATE_SETTING,
+    SET_CURRENT_STORY
 } from '../actions/geostory';
 import { setControlProperty } from '../actions/controls';
 
@@ -505,6 +506,22 @@ export const urlUpdateOnScroll = (action$, {getState}) =>
         }
             return Observable.empty();
         });
+
+/**
+ * When story is loaded, scrolls down to the element from the URL
+ * @param {Observable} action$ stream of actions
+ */
+export const scrollOnLoad = (action$) =>
+    action$.ofType(SET_CURRENT_STORY)
+        .switchMap(() => {
+            const urlParsed = queryString.parse(window.location.href);
+            if (urlParsed.sectionId) {
+                scrollToContent(urlParsed.sectionId, {block: "start", behavior: "auto"});
+            } else if (urlParsed.columnId) {
+                scrollToContent(urlParsed.columnId, {block: 'start', behavior: "auto"});
+            }
+            return Observable.empty();
+    });
 
 /**
  * Loads geostory on POP history

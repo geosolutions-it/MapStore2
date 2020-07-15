@@ -25,7 +25,6 @@ import {
 } from '../selectors/router';
 import geostory from '../reducers/geostory';
 import Navigation from '../components/geostory/navigation/Navigation';
-import { updateUrlOnScroll } from '../actions/geostory';
 
 const GeoStoryNavigation = ({
     mode = Modes.VIEW,
@@ -36,9 +35,7 @@ const GeoStoryNavigation = ({
     navigableItems = [],
     pathname,
     search,
-    items = [],
-    enableScrollOnLoad = false,
-    updateUrlScroll = () => {}
+    items = []
 }) => {
 
     // get all buttons from other plugins via items
@@ -58,8 +55,6 @@ const GeoStoryNavigation = ({
             scrollTo={(id, options = { behavior: "smooth" }) => {
                 scrollToContent(id, options);
             }}
-            enableScrollOnLoad={enableScrollOnLoad}
-            updateUrlOnScroll={updateUrlScroll}
             navigableItems={navigableItems}
             router={{ pathname, search }}
             buttons={buttons} />
@@ -81,7 +76,7 @@ export default createPlugin('GeoStoryNavigation', {
             navigableItems: navigableItemsSelectorCreator({includeAlways: false}),
             pathname: pathnameSelector,
             search: searchSelector
-        }), { updateUrlScroll: updateUrlOnScroll }
+        })
     )(GeoStoryNavigation),
     reducers: {
         geostory

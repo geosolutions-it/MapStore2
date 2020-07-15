@@ -6,13 +6,12 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import React, { useEffect, useRef } from 'react';
-import queryString from 'query-string';
+import React from 'react';
 import Toolbar from '../../misc/toolbar/Toolbar';
 import ScrollMenu from './ScrollMenu';
 import Home from '../../../components/home/Home';
 import { getQueryParams } from '../../../utils/URLUtils';
-import { isObject, isString } from 'lodash';
+import { isObject } from 'lodash';
 
 /**
  * Navigation Bar for view mode of GeoStory
@@ -35,12 +34,8 @@ export default ({
     totalItems = 1,
     currentPosition = 0,
     router,
-    buttons = [],
-    enableScrollOnLoad = false,
-    updateUrlOnScroll = () => {}
+    buttons = []
 }) => {
-    const isFirstRun = useRef(true);
-    const EMPTY = 'EMPTY';
     const theme = settings?.theme?.general;
     const {
         borderColor,
@@ -66,29 +61,6 @@ export default ({
         || isNavbarVisible
         || isToolbarEnabled
         || isHomeButtonEnabled;
-
-    useEffect(() => {
-        updateUrlOnScroll(enableScrollOnLoad);
-    }, []);
-
-    useEffect(() => {
-        if (
-            enableScrollOnLoad
-            && (
-                currentPage.sectionId
-                || currentPage.columnId && isString(currentPage.columnId) && currentPage.columnId !== EMPTY
-            )
-        ) {
-            const urlParsed = queryString.parse(window.location.href);
-            if (urlParsed.sectionId && urlParsed.sectionId !== currentPage.columnId && isFirstRun.current) {
-                isFirstRun.current = false;
-                scrollTo(urlParsed.sectionId, {block: "start", behavior: "smooth"});
-            } else if (urlParsed.columnId && urlParsed.columnId !== currentPage.columnId && isFirstRun.current) {
-                isFirstRun.current = false;
-                scrollTo(urlParsed.columnId, {block: 'start', behavior: "smooth"});
-            }
-        }
-    }, [currentPage.sectionId, currentPage.columnId, enableScrollOnLoad]);
 
     return (
         <div

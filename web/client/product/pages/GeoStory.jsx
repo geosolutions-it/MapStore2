@@ -15,7 +15,8 @@ const urlQuery = url.parse(window.location.href, true).query;
 import Page from '../../containers/Page';
 import {
     loadGeostory,
-    setEditing
+    setEditing,
+    updateUrlOnScroll
 } from '../../actions/geostory';
 import { geostoryIdSelector } from '../../selectors/geostory';
 import { isLoggedIn } from '../../selectors/security';
@@ -35,14 +36,16 @@ class GeoStoryPage extends React.Component {
         previousId: PropTypes.oneOfType([
             PropTypes.number,
             PropTypes.string
-        ])
+        ]),
+        updateUrlOnScroll: PropTypes.func
     };
 
     static defaultProps = {
         name: "geostory",
         mode: 'desktop',
         reset: () => { },
-        setEditing: () => {}
+        setEditing: () => {},
+        updateUrlOnScroll: () => {}
     };
 
     componentWillMount() {
@@ -51,6 +54,7 @@ class GeoStoryPage extends React.Component {
         const previousId = this.props.previousId && this.props.previousId + '';
         this.props.reset();
         this.setInitialMode(previousId !== id);
+        this.props.updateUrlOnScroll(true);
         this.props.loadResource(id);
     }
     componentDidUpdate(oldProps) {
@@ -102,6 +106,7 @@ export default connect((state) => ({
 }),
 {
     loadResource: loadGeostory,
-    setEditing
+    setEditing,
+    updateUrlOnScroll
     // reset: resetGeostory
 })(GeoStoryPage);

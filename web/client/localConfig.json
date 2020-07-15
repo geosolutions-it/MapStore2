@@ -727,8 +727,7 @@
           {
             "name": "GeoStoryNavigation",
             "cfg": {
-              "containerPosition": "header",
-              "enableScrollOnLoad": true
+              "containerPosition": "header"
             }
           },
           "Notifications",
