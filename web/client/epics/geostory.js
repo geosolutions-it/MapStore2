@@ -14,12 +14,12 @@ import {
     isString,
     isNil,
     lastIndexOf,
+    words,
     replace,
-    words
+    get
 } from 'lodash';
 import { push, LOCATION_CHANGE } from 'connected-react-router';
 import uuid from 'uuid/v1';
-import queryString from 'query-string';
 
 import axios from '../libs/ajax';
 
@@ -490,17 +490,26 @@ export const urlUpdateOnScroll = (action$, {getState}) =>
                 modeSelector(getState()) !== 'edit' && (!!columnId || !!sectionId)
                 && updateUrlOnScrollSelector(getState())
             ) {
-                const urlObject = queryString.parse(window.location.href);
                 const EMPTY = 'EMPTY';
-                if (sectionId) {
-                    if (urlObject.sectionId || urlObject.columnId) {
-                        history.pushState(null, '', replace(window.location.href, /[^\&]+$/, `sectionId=${sectionId}`));
+                const storyId = get(getState(), 'geostory.resource.id');
+                const storyIds = window?.location?.hash?.substring(window?.location?.hash.indexOf(storyId)).split('/');
+                if (sectionId && storyId) {
+                    if (storyIds.length > 1 && storyIds[1]) {
+                            history.pushState(null, '', replace(window.location.href, storyIds.length === 3 ? `${storyIds[1]}/${storyIds[2]}` : `${storyIds[1]}`, `${sectionId}`));
                     } else {
-                        history.pushState(null, '', `${window.location.href}&sectionId=${sectionId}`);
+                        if (window?.location?.hash?.includes('shared')) {
+                            history.pushState(null, '', `${window.location.href}${sectionId}`);
+                        } else {
+                            history.pushState(null, '', `${window.location.href}/${sectionId}`);
+                        }
                     }
                 } else if (!sectionId && columnId && isString(columnId) && columnId !== EMPTY) {
-                    if (urlObject.sectionId || urlObject.columnId) {
-                        history.pushState(null, '', replace(window.location.href, /[^\&]+$/, `columnId=${columnId}`));
+                    if (storyIds.length > 1) {
+                        if (window?.location?.hash?.includes('shared') && !storyIds[1]) {
+                            history.pushState(null, '',  `${window.location.href}`);
+                        } else {
+                            history.pushState(null, '', storyIds.length === 3 ? replace(window.location.href,  `${storyIds[2]}`, `${columnId}`) : `${window.location.href}/${columnId}`);
+                        }
                     }
             } else return Observable.empty();
         }
@@ -514,11 +523,13 @@ export const urlUpdateOnScroll = (action$, {getState}) =>
 export const scrollOnLoad = (action$) =>
     action$.ofType(SET_CURRENT_STORY)
         .switchMap(() => {
-            const urlParsed = queryString.parse(window.location.href);
-            if (urlParsed.sectionId) {
-                scrollToContent(urlParsed.sectionId, {block: "start", behavior: "auto"});
-            } else if (urlParsed.columnId) {
-                scrollToContent(urlParsed.columnId, {block: 'start', behavior: "auto"});
+            const storyIds = window?.location?.hash?.split('/');
+            if (window?.location?.hash?.includes('shared')) {
+                scrollToContent(storyIds[5] || storyIds[4], {block: "center", behavior: "auto"});
+            } else if (storyIds.length > 4) {
+                scrollToContent(storyIds[4], {block: "start", behavior: "auto"});
+            } else if (storyIds.length === 4) {
+                scrollToContent(storyIds[3], {block: 'start', behavior: "auto"});
             }
             return Observable.empty();
     });

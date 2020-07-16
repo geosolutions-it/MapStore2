@@ -32,7 +32,6 @@ import SwitchPanel from '../misc/switch/SwitchPanel';
 import Editor from '../data/identify/coordinates/Editor';
 import {set} from '../../utils/ImmutableUtils';
 import OverlayTrigger from '../misc/OverlayTrigger';
-import queryString from 'query-string';
 
 /**
  * SharePanel allow to share the current map in some different ways.
@@ -169,9 +168,9 @@ class SharePanel extends React.Component {
             shareUrl = `${shareUrl}${settings.markerEnabled ? "?marker=" : "?center="}${this.state.coordinate}&zoom=${this.state.zoom}`;
         }
         if (!settings.showSectionId && advancedSettings && advancedSettings.sectionId) {
-            const parsedUrl = queryString.parse(shareUrl);
-            if (parsedUrl.sectionId) shareUrl = replace(shareUrl, `&sectionId=${parsedUrl.sectionId}`, '');
-            if (parsedUrl.columnId) shareUrl = replace(shareUrl, `&columnId=${parsedUrl.columnId}`, '');
+            const parsedUrl = shareUrl.split('/');
+            if (parsedUrl.length === 8) shareUrl = replace(shareUrl, parsedUrl[parsedUrl.length - 1], '');
+            if (parsedUrl.length === 9) shareUrl = replace(shareUrl, `${parsedUrl[parsedUrl.length - 2]}/${parsedUrl[parsedUrl.length - 1]}`, '');
         }
         return shareUrl;
     };
