@@ -11,7 +11,7 @@ import Toolbar from '../../misc/toolbar/Toolbar';
 import ScrollMenu from './ScrollMenu';
 import Home from '../../../components/home/Home';
 import { getQueryParams } from '../../../utils/URLUtils';
-import { isObject } from 'lodash';
+import isObject from 'lodash/isObject';
 
 /**
  * Navigation Bar for view mode of GeoStory
