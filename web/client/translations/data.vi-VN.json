@@ -1315,6 +1315,9 @@
         "showEmptyMessageGFI": "Hiển thị thông báo kết quả trống trong bảng GetFeatureInfo",
         "showMore": "Hiển thị nhiều hơn...",
         "showMousePositionCoordinates": "Hiển thị / ẩn tọa độ",
+        "showCrsSelector": "Select projection",
+        "crsSelectorFilterPlaceholder": "Filter projection",
+        "crsSelectorSelectedCRS": "Selected:",
         "snapshot": {
             "date": "Ngày",
             "downloadingSnapshots": "tạo ảnh chụp đang chờ xử lý",
