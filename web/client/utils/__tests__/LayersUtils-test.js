@@ -1120,6 +1120,17 @@ describe('LayersUtils', () => {
         expect(sortedNodes).toEqual([
             {id: 'default', nodes: [ 'layer001', 'layer002', { id: 'Default.layer005', nodes: ['nested001', 'nested002']}, 'layer003', 'layer004']}
         ]);
+    });
 
+    it('test getNestedGroupTitle', () => {
+
+        const groups = [
+            {id: 'default', title: 'Default', nodes: [{id: 'layer001', title: 'titleLayer001'}, {id: 'layer002', title: 'titleLayer002'}]}
+        ];
+        const id = 'layer001';
+        const groupTitle = LayersUtils.getNestedGroupTitle(id, groups);
+
+        expect(groupTitle).toExist();
+        expect(groupTitle).toEqual('titleLayer001');
     });
 });

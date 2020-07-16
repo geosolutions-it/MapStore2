@@ -11,7 +11,8 @@ const {
     getTooltip,
     getTooltipFragment,
     flattenGroups,
-    getTitleAndTooltip
+    getTitleAndTooltip,
+    getLabelName
 } = require('../TOCUtils');
 let options = [{label: "lab1", value: "val1"}];
 const groups = [{
@@ -189,5 +190,35 @@ describe('TOCUtils', () => {
         const {title, tooltipText} = getTitleAndTooltip({node, currentLocale});
         expect(title).toBe("Livello");
         expect(tooltipText).toBe("");
+    });
+    it('test default value getLabelName from object', () => {
+        const groupLabel = "Default";
+        const nodes = [{
+            name: 'Default',
+            title: {
+                'default': 'Layer',
+                'it-IT': 'Livello'
+            },
+            id: "layer00",
+            description: "desc",
+            tooltipOptions: "none"
+        }];
+        const label = getLabelName(groupLabel, nodes);
+        expect(label).toBe("Layer");
+    });
+    it('test localized value getLabelName from object', () => {
+        const groupLabel = "Default";
+        const nodes = [{
+            name: 'Default',
+            title: {
+                'default': 'Group Layer',
+                'en-US': 'Group Layer'
+            },
+            id: "layer00",
+            description: "desc",
+            tooltipOptions: "none"
+        }];
+        const label = getLabelName(groupLabel, nodes);
+        expect(label).toBe("Group Layer");
     });
 });

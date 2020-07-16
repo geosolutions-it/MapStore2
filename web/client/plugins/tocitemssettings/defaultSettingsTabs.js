@@ -144,7 +144,7 @@ export const getStyleTabPlugin = ({ settings, items = [], loadedPlugins, onToggl
     // get Higher priority plugin that satisfies requirements.
     const candidatePluginItems =
             sortBy(filter([...items], { target: 'style' }), ["priority"]) // find out plugins with target panel 'style' and sort by priority
-                .filter(({selector}) => selector ? selector(props) : true); // filter out items that do not have the correct requirements.
+                .filter(({selector}) => selector ? selector({...props, element}) : true); // filter out items that do not have the correct requirements.
     // TODO: to complete externalization of these items, we need to
     // move handlers, Component creation and configuration on the plugins, delegating also action dispatch.
     const thematicPlugin = head(filter(candidatePluginItems, {name: "ThematicLayer"}));

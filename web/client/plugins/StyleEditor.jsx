@@ -38,7 +38,7 @@ const {
     StyleSelector,
     StyleToolbar,
     StyleCodeEditor
-} = require('./styleeditor/index');
+} = require('./styleeditor/index').default;
 
 const { isSameOrigin } = require('../utils/StyleEditorUtils');
 
@@ -53,7 +53,8 @@ class StyleEditorPanel extends React.Component {
         userRole: PropTypes.string,
         editingAllowedRoles: PropTypes.array,
         enableSetDefaultStyle: PropTypes.bool,
-        canEdit: PropTypes.bool
+        canEdit: PropTypes.bool,
+        editorConfig: PropTypes.object
     };
 
     static defaultProps = {
@@ -61,7 +62,8 @@ class StyleEditorPanel extends React.Component {
         onInit: () => {},
         editingAllowedRoles: [
             'ADMIN'
-        ]
+        ],
+        editorConfig: {}
     };
 
     UNSAFE_componentWillMount() {
@@ -85,7 +87,7 @@ class StyleEditorPanel extends React.Component {
                 }
                 footer={<div style={{ height: 25 }} />}>
                 {this.props.isEditing
-                    ? <StyleCodeEditor />
+                    ? <StyleCodeEditor config={this.props.editorConfig}/>
                     : <StyleSelector
                         showDefaultStyleIcon={this.props.canEdit && this.props.enableSetDefaultStyle}/>}
             </BorderLayout>
