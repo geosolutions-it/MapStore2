@@ -23,7 +23,7 @@ import { currentContextSelector } from '../selectors/context';
 import { reprojectBbox, getViewportGeometry } from '../utils/CoordinatesUtils';
 import { get } from 'lodash';
 import controls from '../reducers/controls';
-
+import { updateUrlOnScrollSelector } from '../selectors/geostory';
 /**
  * Get wider and valid extent in viewport
  * @private
@@ -62,6 +62,7 @@ const getExtentFromViewport = ({ bounds, crs } = {}, dest = 'EPSG:4326') => {
  * @prop {function} [onClose] function to call on close window event.
  * @prop {function} [getCount] function used to get the count for social links.
  * @prop {object} [advancedSettings] show advanced settings (bbox param or home button) f.e {bbox: true, homeButton: true}
+ * @prop {boolean} []
  */
 
 const Share = connect(createSelector([
@@ -69,8 +70,9 @@ const Share = connect(createSelector([
     versionSelector,
     mapSelector,
     currentContextSelector,
-    state => get(state, 'controls.share.settings', {})
-], (isVisible, version, map, context, settings) => ({
+    state => get(state, 'controls.share.settings', {}),
+    updateUrlOnScrollSelector
+], (isVisible, version, map, context, settings, isScrollPosition) => ({
     isVisible,
     shareUrl: location.href,
     shareApiUrl: ShareUtils.getApiUrl(location.href),
@@ -84,7 +86,8 @@ const Share = connect(createSelector([
     settings,
     advancedSettings: {
         bbox: true
-    }
+    },
+    isScrollPosition
 })), {
     onClose: toggleControl.bind(null, 'share', null),
     onUpdateSettings: setControlProperty.bind(null, 'share', 'settings')
