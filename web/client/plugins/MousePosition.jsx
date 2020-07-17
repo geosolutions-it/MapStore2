@@ -45,12 +45,13 @@ const selector = createSelector([
     mapSelector,
     (state) => isMouseMoveCoordinatesActiveSelector(state),
     (state) => get(state, 'mousePosition.position') || {},
+    (state) => get(state, 'mousePosition.crs', 'EPSG:4326'),
     (state) => state.mapInfo || {}
-], (state, map, enabled, mousePosition, mapInfo) => ({
+], (state, map, enabled, mousePosition, crs, mapInfo) => ({
     enabled,
     mousePosition: getDesiredPosition(map, mousePosition, mapInfo),
     projectionDefs: projectionDefsSelector(state),
-    crs: mousePosition.crs || 'EPSG:4326'
+    crs: crs
 }));
 
 const MousePositionButton = connect((state) => ({
