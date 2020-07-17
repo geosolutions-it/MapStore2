@@ -1145,7 +1145,18 @@
             "addBboxParam": "Aggiungi il parametro bbox al link di condivisione",
             "wrongBboxParamTitle": "Parametro bbox non valido",
             "wrongBboxParamMessage": "i parametri bbox devono essere in EPSG:4326 e scritti come segue bbox=minx,miny,maxx,maxy",
-            "showHomeButton": "Link alla home di MapStore"
+            "wrongCenterAndZoomParamTitle": "Parametro centro e zoom non sono validi",
+            "wrongCenterAndZoomParamMessage": "I parametri Centro e Zoom devono essere center=lon,lat&zoom=value e (+|- 90° lat, +|-180° lon, <=+35 zoom)",
+            "wrongMarkerAndZoomParamTitle": "i Parametri marker e zoom non sono validi",
+            "wrongMarkerAndZoomParamMessage": "I parametri marker e zoom devono essere marker=lon,lat&zoom=value e (+|- 90° lat, +|-180° lon, <=+35 zoom)",
+            "showHomeButton": "Link alla home di MapStore",
+            "addCenterAndZoomParam": "Aggiungi centro e zoom al link di condivisione",
+            "zoom": "Ingrandisci",
+            "marker": "Aggiungi marcatore sulla mappa caricata",
+            "coordinate": "Coordinate",
+            "coordTooltip": "Clicca sulla mappa per ottenere le coordinate del centro",
+            "zoomToolTip": "Min: 1 e Max: 35",
+            "showSectionId": "Includi posizione di scorrimento"
         },
         "snapshot": {
             "title": "Istantanea",

@@ -15,11 +15,23 @@ import ShareLink from './ShareLink';
 import ShareEmbed from './ShareEmbed';
 import ShareApi from './ShareApi';
 import ShareQRCode from './ShareQRCode';
-import { Glyphicon, Tabs, Tab, Checkbox } from 'react-bootstrap';
+import {
+    Glyphicon,
+    Tabs,
+    Tab,
+    Checkbox,
+    FormControl,
+    FormGroup,
+    ControlLabel,
+    Tooltip
+} from 'react-bootstrap';
 import Message from '../../components/I18N/Message';
-import { join } from 'lodash';
+import { join, isNil, inRange, replace } from 'lodash';
 import { removeQueryFromUrl, getSharedGeostoryUrl } from '../../utils/ShareUtils';
 import SwitchPanel from '../misc/switch/SwitchPanel';
+import Editor from '../data/identify/coordinates/Editor';
+import {set} from '../../utils/ImmutableUtils';
+import OverlayTrigger from '../misc/OverlayTrigger';
 
 /**
  * SharePanel allow to share the current map in some different ways.
@@ -67,7 +79,10 @@ class SharePanel extends React.Component {
         }),
         settings: PropTypes.object,
         onUpdateSettings: PropTypes.func,
-        selectedTab: PropTypes.string
+        selectedTab: PropTypes.string,
+        formatCoords: PropTypes.string,
+        point: PropTypes.object,
+        isScrollPosition: PropTypes.bool
     };
 
     static defaultProps = {
@@ -82,7 +97,9 @@ class SharePanel extends React.Component {
         showAPI: true,
         closeGlyph: "1-close",
         settings: {},
-        onUpdateSettings: () => {}
+        onUpdateSettings: () => {},
+        formatCoords: "decimal",
+        isScrollPosition: false
     };
 
     state = {
@@ -118,6 +135,14 @@ class SharePanel extends React.Component {
         let shareUrl = getSharedGeostoryUrl(removeQueryFromUrl(this.props.shareUrl));
         if (settings.bboxEnabled && advancedSettings && advancedSettings.bbox && this.state.bbox) shareUrl = `${shareUrl}?bbox=${this.state.bbox}`;
         if (settings.showHome && advancedSettings && advancedSettings.homeButton) shareUrl = `${shareUrl}?showHome=true`;
+        if (settings.centerAndZoomEnabled && advancedSettings && advancedSettings.centerAndZoom) {
+            shareUrl = `${shareUrl}${settings.markerEnabled ? "?marker=" : "?center="}${this.state.coordinate}&zoom=${this.state.zoom}`;
+        }
+        if (!settings.showSectionId && advancedSettings && advancedSettings.sectionId) {
+            const parsedUrl = shareUrl.split('/');
+            if (parsedUrl.length === 8) shareUrl = replace(shareUrl, parsedUrl[parsedUrl.length - 1], '');
+            if (parsedUrl.length === 9) shareUrl = replace(shareUrl, `${parsedUrl[parsedUrl.length - 2]}/${parsedUrl[parsedUrl.length - 1]}`, '');
+        }
         return shareUrl;
     };
 
@@ -198,6 +223,67 @@ class SharePanel extends React.Component {
                         })}>
                     <Message msgId="share.showHomeButton" />
                 </Checkbox>}
+                {
+                    this.props.isScrollPosition
+                    && this.props.advancedSettings.sectionId
+                    && <Checkbox
+                        checked={this.props.settings.showSectionId}
+                        onChange={() =>
+                            this.props.onUpdateSettings({
+                                ...this.props.settings,
+                                showSectionId: !this.props.settings.showSectionId
+                            })}>
+                        <Message msgId="share.showSectionId" />
+                    </Checkbox>
+                }
+                {this.props.settings.centerAndZoomEnabled && <div>
+                    <FormGroup id={"share-container"}>
+                        <ControlLabel><Message msgId="share.coordinate" /></ControlLabel>
+                        <OverlayTrigger placement="top" overlay={<Tooltip id="share-coordinate"><Message msgId="share.coordTooltip"/></Tooltip>}>
+                            <Glyphicon style={{marginLeft: 5}} glyph="info-sign" />
+                        </OverlayTrigger>
+                        <Editor
+                            removeVisible={false}
+                            formatCoord={this.props.formatCoords}
+                            coordinate={{lat: this.state.coordinate[1] || "", lon: this.state.coordinate[0] || ""}}
+                            onSubmit={(val)=>{
+                                const lat = !isNil(val.lat) && !isNaN(val.lat) ? parseFloat(val.lat) : 0;
+                                const lng = !isNil(val.lon) && !isNaN(val.lon) ? parseFloat(val.lon) : 0;
+                                let newPoint = set('latlng.lng', lng, set('latlng.lat', lat, this.props.point));
+                                this.props.onSubmitClickPoint(newPoint);
+                            }}
+                            onChangeFormat={this.props.onChangeFormat}
+                        />
+                    </FormGroup>
+                    <FormGroup>
+                        <ControlLabel><Message msgId="share.zoom" /></ControlLabel>
+                        <OverlayTrigger placement="top" overlay={<Tooltip id="share-zoom"><Message msgId="share.zoomToolTip"/></Tooltip>}>
+                            <Glyphicon style={{marginLeft: 5}} glyph="info-sign" />
+                        </OverlayTrigger>
+                        <FormControl
+                            type="number"
+                            min={1}
+                            max={35}
+                            name={"zoom"}
+                            value={this.state.zoom || this.props.zoom || 21}
+                            onChange={({target})=>{
+                                const zoom = inRange(parseInt(target.value, 10), 1, 36) ? target.value : 1;
+                                this.setState({...this.state, zoom});
+                            }}/>
+                    </FormGroup>
+                    <Checkbox
+                        checked={this.props.settings && this.props.settings.markerEnabled}
+                        onChange={() => {
+                            this.props.onUpdateSettings({
+                                ...this.props.settings,
+                                markerEnabled: !this.props.settings.markerEnabled
+                            });
+                        }
+                        }>
+                        <Message msgId="share.marker" />
+                    </Checkbox>
+                </div>
+                }
             </SwitchPanel>
         );
     }
