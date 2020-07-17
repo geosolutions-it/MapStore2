@@ -29,7 +29,8 @@ import {
     scrollToContent,
     testRegex,
     isWebPageSection,
-    getWebPageComponentHeight
+    getWebPageComponentHeight,
+    parseHashUrlScrollUpdate
 } from "../GeoStoryUtils";
 
 describe("GeoStory Utils", () => {
@@ -378,5 +379,62 @@ describe("GeoStory Utils", () => {
         expect(getWebPageComponentHeight('medium', 1000)).toBe(600);
         expect(getWebPageComponentHeight('large', 1000)).toBe(800);
         expect(getWebPageComponentHeight('full', 1000)).toBe(1000);
+    });
+    describe("parseHashUrlScrollUpdate", () => {
+        it('initial without shared', () => {
+            const url = 'host/#/geostory/111';
+            const hash = '#/geostory/111';
+            const storyId = '111';
+            const sectionId = '222';
+            expect(parseHashUrlScrollUpdate(url, hash, storyId, sectionId)).toBe('host/#/geostory/111/222');
+        });
+        it('initial with shared', () => {
+            const url = 'host/#/geostory/shared/111/';
+            const hash = '#/geostory/shared/111';
+            const storyId = '111';
+            const sectionId = '222';
+            expect(parseHashUrlScrollUpdate(url, hash, storyId, sectionId)).toBe('host/#/geostory/shared/111/222');
+        });
+        it('only sectionId is changed without columnId provided', () => {
+            const url = 'host/#/geostory/111/222';
+            const hash = '#/geostory/111/222';
+            const storyId = '111';
+            const newSectionId = '333';
+            expect(parseHashUrlScrollUpdate(url, hash, storyId, newSectionId)).toBe('host/#/geostory/111/333');
+        });
+        it('changes to the new sectionId if previous sectionId and columnId are existed', () => {
+            const url = 'host/#/geostory/111/222/333';
+            const hash = '#/geostory/111/222/333';
+            const storyId = '111';
+            const newSectionId = '444';
+            expect(parseHashUrlScrollUpdate(url, hash, storyId, newSectionId)).toBe('host/#/geostory/111/444');
+        });
+        it('adds new columnId whithout previous columnId existed', () => {
+            const url = 'host/#/geostory/111/222';
+            const hash = '#/geostory/111/222';
+            const storyId = '111';
+            const newColumnId = '333';
+            expect(parseHashUrlScrollUpdate(url, hash, storyId, null, newColumnId)).toBe('host/#/geostory/111/222/333');
+        });
+        it('adds new columnId with previous columnId existed', () => {
+            const url = 'host/#/geostory/111/222/333';
+            const hash = '#/geostory/111/222/333';
+            const storyId = '111';
+            const newColumnId = '444';
+            expect(parseHashUrlScrollUpdate(url, hash, storyId, null, newColumnId)).toBe('host/#/geostory/111/222/444');
+        });
+        it('returns url if new columnId without sectionId existing with shared', () => {
+            const url = 'host/#/geostory/shared/111/';
+            const hash = '#/geostory/shared/111/';
+            const storyId = '111';
+            const newColumnId = '444';
+            expect(parseHashUrlScrollUpdate(url, hash, storyId, null, newColumnId)).toBe(url);
+        });
+        it('returns url if no new sectionId or columnId', () => {
+            const url = 'host/#/geostory/shared/111/';
+            const hash = '#/geostory/shared/111/';
+            const storyId = '111';
+            expect(parseHashUrlScrollUpdate(url, hash, storyId, null, null)).toBe(url);
+        });
     });
 });

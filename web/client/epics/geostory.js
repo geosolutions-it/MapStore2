@@ -14,7 +14,6 @@ import isString from 'lodash/isString';
 import isNil from 'lodash/isNil';
 import lastIndexOf from 'lodash/lastIndexOf';
 import words from 'lodash/words';
-import replace from 'lodash/replace';
 import get from 'lodash/get';
 import { push, LOCATION_CHANGE } from 'connected-react-router';
 import uuid from 'uuid/v1';
@@ -92,7 +91,7 @@ import {
 import { currentMediaTypeSelector, sourceIdSelector} from '../selectors/mediaEditor';
 
 import { wrapStartStop } from '../observables/epics';
-import { scrollToContent, ContentTypes, isMediaSection, Controls, getEffectivePath, getFlatPath, isWebPageSection, MediaTypes, Modes } from '../utils/GeoStoryUtils';
+import { scrollToContent, ContentTypes, isMediaSection, Controls, getEffectivePath, getFlatPath, isWebPageSection, MediaTypes, Modes, parseHashUrlScrollUpdate } from '../utils/GeoStoryUtils';
 
 import { SourceTypes } from './../utils/MediaEditorUtils';
 
@@ -488,36 +487,11 @@ export const urlUpdateOnScroll = (action$, {getState}) =>
                 modeSelector(getState()) !== 'edit' && (!!columnId || !!sectionId)
                 && updateUrlOnScrollSelector(getState())
             ) {
-                const EMPTY = 'EMPTY';
                 const storyId = get(getState(), 'geostory.resource.id');
-                const storyIds = window?.location?.hash?.substring(window?.location?.hash.indexOf(storyId)).split('/');
-                if (sectionId && storyId) {
-                    if (storyIds.length > 1 && storyIds[1]) {
-                            if (storyIds.length === 3) {
-                                history.pushState(null, '', replace(window.location.href, `${storyIds[1]}/${storyIds[2]}`, `${sectionId}`));
-                            } else {
-                                history.pushState(null, '', replace(window.location.href, `${storyIds[1]}`, `${sectionId}`));
-                            }
-                    } else {
-                        if (window?.location?.hash?.includes('shared')) {
-                            history.pushState(null, '', `${window.location.href}${sectionId}`);
-                        } else {
-                            history.pushState(null, '', `${window.location.href}/${sectionId}`);
-                        }
-                    }
-                } else if (!sectionId && columnId && isString(columnId) && columnId !== EMPTY) {
-                    if (storyIds.length > 1) {
-                        if (window?.location?.hash?.includes('shared') && !storyIds[1]) {
-                            history.pushState(null, '',  `${window.location.href}`);
-                        } else {
-                            if (storyIds.length === 3) {
-                                history.pushState(null, '', replace(window.location.href, `${storyIds[2]}`, `${columnId}`));
-                            } else {
-                                history.pushState(null, '', `${window.location.href}/${columnId}`);
-                            }
-                        }
-                    }
-            }
+                const newUrl = parseHashUrlScrollUpdate(window.location.href, window?.location?.hash, storyId, sectionId, columnId);
+                if (newUrl) {
+                    history.pushState(null, '', newUrl);
+                }
         }
             return Observable.empty();
         });
