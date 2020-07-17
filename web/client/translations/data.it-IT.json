@@ -1226,7 +1226,8 @@
             "marker": "Aggiungi marcatore sulla mappa caricata",
             "coordinate": "Coordinate",
             "coordTooltip": "Clicca sulla mappa per ottenere le coordinate del centro",
-            "zoomToolTip": "Min: 1 e Max: 35"
+            "zoomToolTip": "Min: 1 e Max: 35",
+            "showSectionId": "Includi posizione di scorrimento"
         },
         "snapshot": {
             "title": "Istantanea",
