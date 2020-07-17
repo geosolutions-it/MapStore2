@@ -326,7 +326,7 @@ const getBlocks = (/* config = {} */) => {
                             const options = methods?.map((value) => ({
                                 labelId: 'styleeditor.' + value,
                                 value
-                            }));
+                            })) || [];
                             return [
                                 ...(method === 'customInterval'
                                     ? [

@@ -216,7 +216,7 @@ export const fields = {
 
         useEffect(() => {
             setNewOptions(initOptions(options));
-        }, [options.length]);
+        }, [options?.length]);
 
         const SelectInput = creatable
             ? ReactSelectCreatable
