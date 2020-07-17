@@ -280,6 +280,7 @@ export function parseJSONStyle(style) {
                             ['>=', rule.attribute, entry.min],
                             [lessThan, rule.attribute, entry.max]
                         ],
+                        ...(rule.scaleDenominator && { scaleDenominator: rule.scaleDenominator }),
                         symbolizers: [
                             {
                                 ...omit(rule, [
@@ -311,6 +312,7 @@ export function parseJSONStyle(style) {
                 };
                 return {
                     name: rule.name || '',
+                    ...(rule.scaleDenominator && { scaleDenominator: rule.scaleDenominator }),
                     symbolizers: [
                         {
                             ...omit(rule, [
@@ -349,12 +351,12 @@ export function formatJSONStyle(style) {
                 ...rule,
                 ruleId: uuidv1(),
                 filter: rule.filter && filterArrayToFilterObject(rule.filter),
-                symbolizers: rule.symbolizers.map((symbolizer) => {
+                symbolizers: rule.symbolizers && rule.symbolizers.map((symbolizer) => {
                     return {
                         ...symbolizer,
                         symbolizerId: uuidv1()
                     };
-                })
+                }) || []
             };
         })
     };
