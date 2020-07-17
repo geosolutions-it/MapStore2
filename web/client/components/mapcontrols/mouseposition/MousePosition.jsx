@@ -78,25 +78,15 @@ class MousePosition extends React.Component {
         showElevation: false
     };
 
-    constructor(props) {
-        super(props);
-        this.state = {crs: props.crs};
-    }
-
-    onCRSChange = (e) => {
-        this.setState({crs: e});
-        this.props.onCRSChange(e); // this invocation is for event bubbling
-    }
-
     getPosition = () => {
         let {x, y, z} = this.props.mousePosition ? this.props.mousePosition : [null, null];
         if (!x && !y) {
             // if we repoject null coordinates we can end up with -0.00 instead of 0.00
             ({x, y} = {x: 0, y: 0, z});
-        } else if (proj4js.defs(this.props.mousePosition.crs) !== proj4js.defs(this.state.crs)) {
-            ({x, y} = CoordinatesUtils.reproject([x, y], this.props.mousePosition.crs, this.state.crs));
+        } else if (proj4js.defs(this.props.mousePosition.crs) !== proj4js.defs(this.props.crs)) {
+            ({x, y} = CoordinatesUtils.reproject([x, y], this.props.mousePosition.crs, this.props.crs));
         }
-        let units = CoordinatesUtils.getUnits(this.state.crs);
+        let units = CoordinatesUtils.getUnits(this.props.crs);
         if (units === "degrees") {
             return {lat: y, lng: x, z};
         }
@@ -104,11 +94,10 @@ class MousePosition extends React.Component {
     };
 
     getTemplateComponent = () => {
-        return CoordinatesUtils.getUnits(this.state.crs) === "degrees" ? this.props.degreesTemplate : this.props.projectedTemplate;
+        return CoordinatesUtils.getUnits(this.props.crs) === "degrees" ? this.props.degreesTemplate : this.props.projectedTemplate;
     };
 
     render() {
-        let crs = this.state?.crs ? this.state.crs : this.props.crs;
         let Template = this.props.mousePosition ? this.getTemplateComponent() : null;
         if (this.props.enabled) {
             const position = this.getPosition();
@@ -133,12 +122,12 @@ class MousePosition extends React.Component {
                         {this.props.showLabels ? <label><Message msgId="mousePositionElevation" /></label> : null}
                         <h5>{this.props.elevationTemplate(position.z)}</h5>
                     </span> : null}
-                    {this.props.showCRS ? this.props.crsTemplate(this.state.crs) : null}
+                    {this.props.showCRS ? this.props.crsTemplate(this.props.crs) : null}
                     {this.props.editCRS ?
                         <CRSSelector projectionDefs={this.props.projectionDefs}
                             filterAllowedCRS={this.props.filterAllowedCRS}
                             additionalCRS={this.props.additionalCRS} label={this.props.showLabels ? <label><Message msgId="mousePositionCRS"/></label> : null}
-                            crs={crs} enabled onCRSChange={this.onCRSChange}/> : null}
+                            crs={this.props.crs} enabled onCRSChange={this.props.onCRSChange}/> : null}
                     {this.props.showToggle ? this.props.toggle : null}
                 </div>
             );
