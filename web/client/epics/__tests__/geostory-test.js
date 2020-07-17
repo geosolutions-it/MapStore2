@@ -32,7 +32,8 @@ import {
     closeShareOnGeostoryChangeMode,
     openWebPageComponentCreator,
     editWebPageComponent,
-    handlePendingGeoStoryChanges
+    handlePendingGeoStoryChanges,
+    loadStoryOnHistoryPop
 } from '../geostory';
 import {
     ADD,
@@ -56,7 +57,8 @@ import {
     SET_WEBPAGE_URL,
     editWebPage,
     setResource,
-    SET_PENDING_CHANGES
+    SET_PENDING_CHANGES,
+    LOAD_GEOSTORY
 } from '../../actions/geostory';
 import { SET_CONTROL_PROPERTY } from '../../actions/controls';
 import {
@@ -1367,6 +1369,27 @@ describe('Geostory Epics', () => {
                 done();
             });
         });
+    });
 
+    describe('loadStoryOnHistoryPop', () => {
+        it('loadStoryOnHistoryPop without shared', (done) => {
+            const NUM_ACTIONS = 1;
+            testEpic(loadStoryOnHistoryPop, NUM_ACTIONS, [{type: "@@router/LOCATION_CHANGE", payload: { action: "POP", location: { pathname: '/geostory/12073/'} }}],
+                (actions) => {
+                    expect(actions[0].type).toBe(LOAD_GEOSTORY);
+                    expect(actions[0].id).toBe('12073');
+                    done();
+                });
+        });
+
+        it('loadStoryOnHistoryPop with shared', (done) => {
+            const NUM_ACTIONS = 1;
+            testEpic(loadStoryOnHistoryPop, NUM_ACTIONS, [{type: "@@router/LOCATION_CHANGE", payload: { action: "POP", location: { pathname: '/geostory/shared/344/'} }}],
+                (actions) => {
+                    expect(actions[0].type).toBe(LOAD_GEOSTORY);
+                    expect(actions[0].id).toBe('344');
+                    done();
+                });
+        });
     });
 });
