@@ -9,7 +9,6 @@ const PropTypes = require('prop-types');
 const React = require('react');
 const {connect} = require('react-redux');
 
-const { itemSelected } = require('../../actions/manager');
 const assign = require('object-assign');
 const { isPageConfigured } = require("../../selectors/plugins");
 const {DropdownButton, Glyphicon, MenuItem} = require('react-bootstrap');
@@ -34,7 +33,6 @@ class ManagerMenu extends React.Component {
         entries: PropTypes.array,
         title: PropTypes.node,
         onItemClick: PropTypes.func,
-        itemSelected: PropTypes.func,
         controls: PropTypes.object,
         mapType: PropTypes.string,
         panelStyle: PropTypes.object,
@@ -73,7 +71,6 @@ class ManagerMenu extends React.Component {
         }],
         role: "",
         onItemClick: () => {},
-        itemSelected: () => {},
         title: <MenuItem header>Manager</MenuItem>,
         controls: [],
         mapType: "leaflet",
@@ -151,9 +148,7 @@ module.exports = {
         enableImporter: isPageConfigured(IMPORTER_ID)(state),
         controls: state.controls,
         role: state.security && state.security.user && state.security.user.role
-    }), {
-        itemSelected
-    })(ManagerMenu), {
+    }))(ManagerMenu), {
         OmniBar: {
             name: "managermenu",
             position: 1,
