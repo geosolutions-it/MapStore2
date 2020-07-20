@@ -1106,4 +1106,17 @@ describe('LayersUtils', () => {
         expect(LayersUtils.getCapabilitiesUrl(layer)).toEqual(EXPECTED_CAPABILITIES_URL);
 
     });
+
+    it('test getNestedGroupTitle', () => {
+
+        const groups = [
+            {id: 'default', title: 'Default', nodes: [{id: 'layer001', title: 'titleLayer001'}, {id: 'layer002', title: 'titleLayer002'}]}
+        ];
+        const id = 'layer001';
+        const groupTitle = LayersUtils.getNestedGroupTitle(id, groups);
+
+        expect(groupTitle).toExist();
+        expect(groupTitle).toEqual('titleLayer001');
+
+    });
 });
