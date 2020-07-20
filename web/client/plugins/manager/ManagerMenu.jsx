@@ -72,6 +72,7 @@ class ManagerMenu extends React.Component {
         }],
         role: "",
         onItemClick: () => {},
+        itemSelected: () => {},
         title: <MenuItem header>Manager</MenuItem>,
         controls: [],
         mapType: "leaflet",
