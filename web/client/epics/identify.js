@@ -32,6 +32,7 @@ import { browseData } from '../actions/layers';
 import { closeAnnotations } from '../actions/annotations';
 import { MAP_CONFIG_LOADED } from '../actions/config';
 import {addPopup, cleanPopups, removePopup, REMOVE_MAP_POPUP} from '../actions/mapPopups';
+import { cancelSelectedItem } from '../actions/search';
 import { stopGetFeatureInfoSelector, identifyOptionsSelector,
     clickPointSelector, clickLayerSelector,
     isMapPopup, isHighlightEnabledSelector,
@@ -223,7 +224,7 @@ export default {
         })
             .switchMap(({point, layer}) => {
                 const projection = projectionSelector(store.getState());
-                return Rx.Observable.of(featureInfoClick(updatePointWithGeometricFilter(point, projection), layer))
+                return Rx.Observable.of(cancelSelectedItem(), featureInfoClick(updatePointWithGeometricFilter(point, projection), layer))
                     .merge(Rx.Observable.of(addPopup(uuid(),
                         { component: IDENTIFY_POPUP, maxWidth: 600, position: {  coordinates: point ? point.rawPos : []}}))
                         .filter(() => isMapPopup(store.getState()))
