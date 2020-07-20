@@ -22,7 +22,7 @@ const Container = connect(() => ({
 
 const ToolsContainer = require('../containers/ToolsContainer');
 const Message = require('../locale/Message');
-
+const { itemSelected } = require('../../actions/manager');
 require('../burgermenu/burgermenu.css');
 
 class ManagerMenu extends React.Component {
@@ -33,6 +33,7 @@ class ManagerMenu extends React.Component {
         entries: PropTypes.array,
         title: PropTypes.node,
         onItemClick: PropTypes.func,
+        itemSelected: PropTypes.func,
         controls: PropTypes.object,
         mapType: PropTypes.string,
         panelStyle: PropTypes.object,
@@ -96,6 +97,7 @@ class ManagerMenu extends React.Component {
                 return {
                     action: (context) => {
                         context.router.history.push(entry.path);
+                        this.props.itemSelected(entry.id);
                         return {
                             type: "@@router/LOCATION_CHANGE",
                             payload: {
@@ -148,7 +150,9 @@ module.exports = {
         enableImporter: isPageConfigured(IMPORTER_ID)(state),
         controls: state.controls,
         role: state.security && state.security.user && state.security.user.role
-    }))(ManagerMenu), {
+    }), {
+        itemSelected
+    })(ManagerMenu), {
         OmniBar: {
             name: "managermenu",
             position: 1,
