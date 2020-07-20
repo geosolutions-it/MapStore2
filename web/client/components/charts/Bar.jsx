@@ -8,7 +8,7 @@
 const {castArray, isNil, isEqual} = require('lodash');
 const PropTypes = require('prop-types');
 const React = require('react');
-const {BarChart, Bar} = require('recharts');
+const {BarChart, Bar, ResponsiveContainer } = require('recharts');
 
 const renderCartesianTools = require('./cartesian').default;
 
@@ -59,28 +59,28 @@ class BarChartWrapper extends React.Component {
         const marginBottom = this.state.marginBottom;
 
         return (
-            <BarChart
-                key={key}
-                autoColorOptions={autoColorOptions}
-                width={width}
-                height={height}
-                data={data}
-                margin={props.xAxisAngle ? {
-                    top: 20,
-                    right: 30,
-                    left: marginLeft,
-                    bottom: marginBottom + 20
-                } : margin }>
-                {
-                    seriesArray.map(({color, ...serie} = {}, i) =>
-                        <Bar
-                            key={`bar-${i}`}
-                            name={props.yAxisLabel ? props.yAxisLabel : null}
-                            fill={COLORS[i]} {...serie}/>)
-                }
-                {renderCartesianTools({...props, onUpdateLabelLength})}
-                {props.children}
-            </BarChart>
+            <ResponsiveContainer width="100%" height={height}>
+                <BarChart
+                    key={key}
+                    autoColorOptions={autoColorOptions}
+                    data={data}
+                    margin={props.xAxisAngle ? {
+                        top: 20,
+                        right: 30,
+                        left: marginLeft,
+                        bottom: marginBottom + 20
+                    } : margin }>
+                    {
+                        seriesArray.map(({color, ...serie} = {}, i) =>
+                            <Bar
+                                key={`bar-${i}`}
+                                name={props.yAxisLabel ? props.yAxisLabel : null}
+                                fill={COLORS[i]} {...serie}/>)
+                    }
+                    {renderCartesianTools({...props, onUpdateLabelLength})}
+                    {props.children}
+                </BarChart>
+            </ResponsiveContainer>
         );
     }
 }
