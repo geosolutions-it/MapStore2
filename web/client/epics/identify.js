@@ -224,7 +224,7 @@ export default {
         })
             .switchMap(({point, layer}) => {
                 const projection = projectionSelector(store.getState());
-                return Rx.Observable.of(cancelSelectedItem(), featureInfoClick(updatePointWithGeometricFilter(point, projection), layer))
+                return Rx.Observable.of(featureInfoClick(updatePointWithGeometricFilter(point, projection), layer), cancelSelectedItem())
                     .merge(Rx.Observable.of(addPopup(uuid(),
                         { component: IDENTIFY_POPUP, maxWidth: 600, position: {  coordinates: point ? point.rawPos : []}}))
                         .filter(() => isMapPopup(store.getState()))
