@@ -124,9 +124,7 @@ devServer: {
 * Download a tomcat standalone [here](https://mapstore.readthedocs.io/en/latest/developer-guide/requirements/) and extract to a folder of your choice
 * To generate a war file that will be deployed on your tomcat server, go to the root of the Mapstore project that was git cloned and run `./build.sh`. This might take some time but at the end a war file named `mapstore.war` will be generated into the `web/target` folder.
 * Copy the `mapstore.war` and then head back to your tomcat folder. Look for a `webapps` folder and paste the `mapstore.war` file there.
-* For Unix systems, to start tomcat server, go to the terminal `cd` into the root of your tomcat extracted folder and run `./bin/startup.sh`
-* The server will start on port `8080` and Mapstore will be running at `http://localhost:8080/mapstore`
-* But for development purposes, we're interested in the backend that was started on the tomcat server along with Mapstore.
+* To start tomcat server, go to the terminal, `cd` into the root of your tomcat extracted folder and run `./bin/startup.sh` ( unix systems) or `./bin/startup.bat` (Windows). The server will start on port `8080` and Mapstore will be running at `http://localhost:8080/mapstore`. For development purposes we're only interested in the backend that was started on the tomcat server along with Mapstore.
 * To point our development server when we eventually start it using `npm start` we need to make the following change to `build/buildConfig.js`
 
 ```javascript
