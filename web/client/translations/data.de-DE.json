@@ -1148,7 +1148,8 @@
             "addBboxParam": "Fügen Sie einen bbox param zum Freigabeverlink hinzu",
             "wrongBboxParamTitle": "Ungültiger Bbox-Parameter",
             "wrongBboxParamMessage": "bbox-Parameter müssen in EPSG:4326 sein und als bbox=minx,miny,maxx,maxy angegeben werden",
-            "showHomeButton": "Link zur MapStore-Startseite"
+            "showHomeButton": "Link zur MapStore-Startseite",
+            "showSectionId": "Bildlaufposition einschließen"
         },
         "snapshot": {
             "title": "Snapshot Vorschau",

@@ -1148,7 +1148,8 @@
             "addBboxParam": "Aggiungi il parametro bbox al link di condivisione",
             "wrongBboxParamTitle": "Parametro bbox non valido",
             "wrongBboxParamMessage": "i parametri bbox devono essere in EPSG:4326 e scritti come segue bbox=minx,miny,maxx,maxy",
-            "showHomeButton": "Link alla home di MapStore"
+            "showHomeButton": "Link alla home di MapStore",
+            "showSectionId": "Includi posizione di scorrimento"
         },
         "snapshot": {
             "title": "Istantanea",

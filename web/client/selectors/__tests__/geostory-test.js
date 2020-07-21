@@ -31,7 +31,8 @@ import {
     totalItemsSelector,
     visibleItemsSelector,
     isMediaResourceUsed,
-    geostoryIdSelector
+    geostoryIdSelector,
+    updateUrlOnScrollSelector
 } from "../geostory";
 import TEST_STORY from "../../test-resources/geostory/sampleStory_1.json";
 
@@ -124,5 +125,8 @@ describe('geostory selectors', () => { // TODO: check default
         expect(geostoryIdSelector(state)).toBe(GEOSTORY_ID);
         expect(geostoryIdSelector({})).toBe(undefined);
     });
-
+    it('geostoryIdSelector ', () => {
+        expect(updateUrlOnScrollSelector({ geostory: { updateUrlOnScroll: false} })).toBe(false);
+        expect(updateUrlOnScrollSelector({ geostory: { updateUrlOnScroll: true} })).toBe(true);
+    });
 });
