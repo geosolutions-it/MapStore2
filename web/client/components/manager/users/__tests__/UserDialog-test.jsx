@@ -90,7 +90,7 @@ describe("Test UserDialog Component", () => {
     });
     it('Test isValidPassword', () => {
         let comp = ReactDOM.render(
-            <UserDialog user={{...enabledUser, newPassword: {statusText: "ERROR"}}}/>, document.getElementById("container"));
+            <UserDialog user={{...enabledUser, newPassword: "testPassword"}}/>, document.getElementById("container"));
         expect(comp).toExist();
         // valid password, wrong confirm
         comp = ReactDOM.render(
@@ -99,7 +99,7 @@ describe("Test UserDialog Component", () => {
         expect(comp.isValidPassword()).toBe(false);
         // Valid password
         comp = ReactDOM.render(
-            <UserDialog user={{name: "user", newPassword: "aA1!@#$%&*", confirmPassword: "aA1!@#$%&*"}}/>, document.getElementById("container"));
+            <UserDialog user={{name: "user", newPassword: "aA1!@#$%&*_", confirmPassword: "aA1!@#$%&*_"}}/>, document.getElementById("container"));
         expect(comp.isValidPassword()).toBe(true);
         // Invalid password, correct confirm
         comp = ReactDOM.render(
@@ -246,6 +246,8 @@ describe("Test UserDialog Component", () => {
         expect(username.children[1].innerHTML).toBe('*');
 
         expect(password.children.length).toBe(3);
+        // eslint-disable-next-line no-console
+        console.log("CHILDREN", password.children);
         expect(password.children[0].innerHTML).toBe('user.password');
         expect(password.children[1].innerHTML).toBe('*');
         expect(password.children[2].getAttribute('class')).toBe('glyphicon glyphicon-info-sign');
