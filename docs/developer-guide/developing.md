@@ -120,7 +120,7 @@ devServer: {
 
 * You have to run npm start to run mapstore client on port 8081, that is now connected to the local test back-end
 
-### Using local backend and setting up tomcat server
+### Running local backend in tomcat 
 * Download a tomcat standalone [here](https://mapstore.readthedocs.io/en/latest/developer-guide/requirements/) and extract to a folder of your choice
 * To generate a war file that will be deployed on your tomcat server, go to the root of the Mapstore project that was git cloned and run `./build.sh`. This might take some time but at the end a war file named `mapstore.war` will be generated into the `web/target` folder.
 * Copy the `mapstore.war` and then head back to your tomcat folder. Look for a `webapps` folder and paste the `mapstore.war` file there.
