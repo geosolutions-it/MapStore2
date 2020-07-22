@@ -6,9 +6,10 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import React, { useRef } from 'react';
+import React, { useRef, forwardRef } from 'react';
 import PropTypes from 'prop-types';
-import { Glyphicon, FormControl as FormControlRB, FormGroup, Button as ButtonRB, Alert } from 'react-bootstrap';
+import find from 'lodash/find';
+import { Glyphicon, FormControl as FormControlRB, FormGroup, Button as ButtonRB } from 'react-bootstrap';
 import Fields from './Fields';
 import uuidv1 from 'uuid/v1';
 import Toolbar from '../misc/toolbar/Toolbar';
@@ -20,42 +21,10 @@ import localizedProps from '../misc/enhancers/localizedProps';
 import tooltip from '../misc/enhancers/tooltip';
 import Message from '../I18N/Message';
 import getBlocks from './config/blocks';
+import Rule from './Rule';
 
 const Button = tooltip(ButtonRB);
 const FormControl = localizedProps('placeholder')(FormControlRB);
-
-export function Rule({
-    title,
-    tools,
-    errorId,
-    children
-}) {
-    return (
-        <li
-            className="ms-style-rule">
-            <div className="ms-style-rule-head">
-                <div className="ms-style-rule-head-info">
-                    {title}
-                </div>
-                <div className="ms-style-rule-head-tools">
-                    {tools}
-                </div>
-            </div>
-            {errorId && <Alert bsStyle="danger">
-                <Message msgId={errorId}/>
-            </Alert>}
-            <ul className="ms-style-rule-body">
-                {children}
-            </ul>
-        </li>
-    );
-}
-
-Rule.propTypes = {
-    title: PropTypes.oneOfType([PropTypes.node, PropTypes.string]),
-    tools: PropTypes.node,
-    errorId: PropTypes.string
-};
 
 function EmptyRules() {
     return (
@@ -75,7 +44,29 @@ function EmptyRules() {
         </div>);
 }
 
-function RulesEditor({
+/**
+ * RulesEditor rule component
+ * @memberof components.styleeditor
+ * @name RulesEditor
+ * @class
+ * @prop {array} rules list of all style rules
+ * @prop {bool} loading trigger loading state
+ * @prop {node} toolbar left toolbar node
+ * @prop {object} config general configuration for rules and symbolizers
+ * @prop {sting} config.geometryType one of: polygon, line, point, vector or raster
+ * @prop {array} config.attributes available attributes for vector layers
+ * @prop {array} config.bands available bands for raster layers, list of numbers
+ * @prop {array} config.scales available scales in map
+ * @prop {array} config.zoom current map zoom
+ * @prop {array} config.fonts list of fonts available for the style (eg ['monospace', 'serif'])
+ * @prop {array} config.methods classification methods
+ * @prop {function} config.getColors get color ramp available for ramp selector
+ * @prop {object} ruleBlock describe all the properties and related configuration of special rules (eg: classification)
+ * @prop {object} symbolizerBlock describe all the properties and related configuration of symbolizers
+ * @prop {func} onUpdate return changes that needs an async update, argument contains property of the rule to update
+ * @prop {func} onChange return all updated rules
+ */
+const RulesEditor = forwardRef(({
     rules = [],
     loading,
     toolbar,
@@ -84,7 +75,7 @@ function RulesEditor({
     symbolizerBlock = {},
     onUpdate = () => {},
     onChange = () => {}
-}) {
+}, ref) => {
 
     const {
         geometryType,
@@ -141,7 +132,7 @@ function RulesEditor({
     }
 
     function handleAdd(newRule) {
-        const newRules = [...state.current.rules, newRule];
+        const newRules = [newRule, ...state.current.rules];
         onChange(newRules);
     }
 
@@ -163,8 +154,27 @@ function RulesEditor({
         return onChange(newRules);
     }
 
+    function handleSortRules(dragIndex, hoverIndex) {
+        const dragRule = find(state.current.rules, (rule, idx) => idx === dragIndex);
+        const newRules = state.current.rules
+            .reduce((acc, rule, idx) => {
+                if (idx === dragIndex) {
+                    return acc;
+                }
+                if (idx === hoverIndex) {
+                    return dragIndex > hoverIndex
+                        ? [ ...acc, dragRule, rule ]
+                        : [ ...acc, rule, dragRule ];
+                }
+                return [...acc, rule];
+            }, []);
+        return onChange(newRules);
+    }
+
     return (
-        <div className="ms-style-rules-editor">
+        <div
+            ref={ref}
+            className="ms-style-rules-editor">
             <div className="ms-style-rules-editor-head">
                 <div className="ms-style-rules-editor-left">{toolbar}</div>
                 <div className="ms-style-rules-editor-right">
@@ -211,7 +221,7 @@ function RulesEditor({
             </div>
             <ul className="ms-style-rules-editor-body">
                 {rules.length === 0 && <EmptyRules />}
-                {rules.map(rule => {
+                {rules.map((rule, index) => {
                     const {
                         name,
                         symbolizers = [],
@@ -232,12 +242,23 @@ function RulesEditor({
                     } = ruleBlock[ruleKind] || {};
                     return (
                         <Rule
-                            key={ruleId}
+                            // force render if draggable is enabled
+                            key={ruleId + (rules.length > 1 ? '_draggable' : '')}
+                            draggable={rules.length > 1}
+                            id={ruleId}
+                            index={index}
                             errorId={ruleErrorId}
+                            onSort={handleSortRules}
                             title={
                                 hideInputLabel
                                     ? <Message msgId={`styleeditor.rule${ruleKind}`}/>
-                                    : <FormGroup>
+                                    : <FormGroup
+                                        // prevent drag and drop when interacting with property input
+                                        onDragStart={(event) => {
+                                            event.stopPropagation();
+                                            event.preventDefault();
+                                        }}
+                                        draggable>
                                         <FormControl
                                             value={name}
                                             placeholder="styleeditor.enterLegendLabelPlaceholder"
@@ -340,7 +361,7 @@ function RulesEditor({
             </ul>
         </div>
     );
-}
+});
 
 const {
     symbolizerBlock: defaultSymbolizerBlock,

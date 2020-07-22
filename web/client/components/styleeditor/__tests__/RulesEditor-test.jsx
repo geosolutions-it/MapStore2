@@ -8,9 +8,14 @@
 
 import React from 'react';
 import ReactDOM from 'react-dom';
-import RulesEditor from '../RulesEditor';
+import RulesEditorComponent from '../RulesEditor';
 import TestUtils from 'react-dom/test-utils';
 import expect from 'expect';
+import { DragDropContext as dragDropContext } from 'react-dnd';
+import testBackend from 'react-dnd-test-backend';
+import Rule from '../Rule';
+
+const RulesEditor = dragDropContext(testBackend)(RulesEditorComponent);
 
 describe('RulesEditor', () => {
     beforeEach((done) => {
@@ -689,6 +694,57 @@ describe('RulesEditor', () => {
         expect(buttonInputNodes.length).toBe(2);
 
         TestUtils.Simulate.click(buttonInputNodes[0]);
+    });
+    it('should trigger on change after sorting', (done) => {
+        const root = ReactDOM.render(
+            <RulesEditor
+                rules={[
+                    {
+                        name: 'Line rule',
+                        ruleId: 1,
+                        symbolizers: [{
+                            symbolizerId: 1,
+                            kind: 'Line',
+                            color: '#777777',
+                            width: 1,
+                            opacity: 1,
+                            cap: 'round',
+                            join: 'round'
+                        }]
+                    },
+                    {
+                        name: 'Fill rule',
+                        ruleId: 2,
+                        symbolizers: [{
+                            symbolizerId: 1,
+                            kind: 'Fill',
+                            color: '#ff0000'
+                        }]
+                    }
+                ]}
+                onChange={(nreRules) => {
+                    try {
+                        expect(nreRules[0].ruleId).toBe(2);
+                        expect(nreRules[1].ruleId).toBe(1);
+                    } catch (e) {
+                        done(e);
+                    }
+                    done();
+                }}
+            />, document.getElementById('container'));
+
+        const backend = root.getManager().getBackend();
+        const rulesTargets = TestUtils.scryRenderedComponentsWithType(root, Rule);
+        expect(rulesTargets.length).toBe(2);
+        // sources are nested inside the target using dragRuleSource
+        const rulesSources = rulesTargets.map(ruleTarget => ruleTarget.getDecoratedComponentInstance());
+        expect(rulesSources.length).toBe(2);
+        backend.simulateBeginDrag([rulesSources[0].getHandlerId()], {
+            clientOffset: { x: 0, y: 99999 },
+            getSourceClientOffset: () => ({ x: 0, y: 99999 })
+        });
+        backend.simulateHover([rulesTargets[1].getHandlerId()]);
+        backend.simulateEndDrag();
     });
 
 });

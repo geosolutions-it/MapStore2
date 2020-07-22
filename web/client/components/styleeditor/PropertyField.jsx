@@ -19,7 +19,14 @@ function PropertyField({ children, label, tools, divider, invalid }) {
         <div
             className="ms-symbolizer-field">
             <div className="ms-symbolizer-label"><Message msgId={label} /></div>
-            <div className={'ms-symbolizer-value' + validationClassName}>
+            <div
+                className={'ms-symbolizer-value' + validationClassName}
+                // prevent drag and drop when interacting with property input
+                onDragStart={(event) => {
+                    event.stopPropagation();
+                    event.preventDefault();
+                }}
+                draggable>
                 {children}
                 <div className="ms-symbolizer-tools">
                     {tools}
