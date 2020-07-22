@@ -168,9 +168,9 @@ class SharePanel extends React.Component {
             shareUrl = `${shareUrl}${settings.markerEnabled ? "?marker=" : "?center="}${this.state.coordinate}&zoom=${this.state.zoom}`;
         }
         if (!settings.showSectionId && advancedSettings && advancedSettings.sectionId) {
-            const parsedUrl = shareUrl.split('/');
-            if (parsedUrl.length === 8) shareUrl = replace(shareUrl, parsedUrl[parsedUrl.length - 1], '');
-            if (parsedUrl.length === 9) shareUrl = replace(shareUrl, `${parsedUrl[parsedUrl.length - 2]}/${parsedUrl[parsedUrl.length - 1]}`, '');
+            const parsedUrl = shareUrl.split('#')[1]?.split('/');
+            if (parsedUrl.length === 5 && parsedUrl.includes('shared')) shareUrl = replace(shareUrl, parsedUrl[parsedUrl.length - 1], '');
+            if (parsedUrl.length === 6 && parsedUrl.includes('shared')) shareUrl = replace(shareUrl, `${parsedUrl[parsedUrl.length - 2]}/${parsedUrl[parsedUrl.length - 1]}`, '');
         }
         return shareUrl;
     };
