@@ -246,8 +246,6 @@ describe("Test UserDialog Component", () => {
         expect(username.children[1].innerHTML).toBe('*');
 
         expect(password.children.length).toBe(3);
-        // eslint-disable-next-line no-console
-        console.log("CHILDREN", password.children);
         expect(password.children[0].innerHTML).toBe('user.password');
         expect(password.children[1].innerHTML).toBe('*');
         expect(password.children[2].getAttribute('class')).toBe('glyphicon glyphicon-info-sign');
