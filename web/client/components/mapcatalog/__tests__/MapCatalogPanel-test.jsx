@@ -67,14 +67,19 @@ describe('MapCatalogPanel component', () => {
                 }
             }
         };
+        const actions = {
+            reloadFunction: () => {
+            }
+        };
+        const spyonReload = expect.spyOn(actions, 'reloadFunction');
 
         const Provider = compose(
             withContext({ router: PropTypes.object }, () => ({ router: routerMock }))
         )(MapCatalogPanel);
 
-        ReactDOM.render(<Provider items={items}/>, document.getElementById('container'));
+        ReactDOM.render(<Provider items={items} reloadFunction={actions.reloadFunction}/>, document.getElementById('container'));
         const renderedItems = document.querySelectorAll('.mapstore-side-card');
         ReactTestUtils.Simulate.click(renderedItems[1]);
-        expect(location.hash).toEqual("#/context/plui_advanced/26658");
+        expect(spyonReload).toHaveBeenCalled();
     });
 });
