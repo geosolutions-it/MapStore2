@@ -14,23 +14,13 @@ const { error } = require('../actions/notifications');
 const { SET_CURRENT_TIME, MOVE_TIME, SET_OFFSET_TIME, updateLayerDimensionData, setCurrentTime, setCurrentOffset} = require('../actions/dimension');
 const { selectLayer, autoselect } = require('../actions/timeline');
 const { layersWithTimeDataSelector, offsetTimeSelector, currentTimeSelector } = require('../selectors/dimension');
-const {describeDomains} = require('../api/MultiDim');
+const { describeDomains, getMultidimURL } = require('../api/MultiDim');
 const {
     domainsToDimensionsObject
 } = require('../utils/TimeUtils');
 
-const { pick, find, replace, endsWith, get, flatten } = require('lodash');
-/**
- * Tries to get the layer's information form the URL.
- * TODO: find out a better way to do this
- * @param {string} url the wms layers wms URL
- */
-const getMultidimURL = ({url} = {}) =>
-    endsWith(url, "/wms")
-        ? replace(url, "/wms", "/gwc/service/wmts")
-        : endsWith(url, "/ows")
-            ? replace(url, "/ows", "/gwc/service/wmts")
-            : url;
+const { pick, find, get, flatten } = require('lodash');
+
 
 const DESCRIBE_DOMAIN_OPTIONS = {
     expandLimit: 10 // TODO: increase this limit to max client allowed
