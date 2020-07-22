@@ -15,6 +15,7 @@ import isNil from 'lodash/isNil';
 import lastIndexOf from 'lodash/lastIndexOf';
 import words from 'lodash/words';
 import get from 'lodash/get';
+import tail from 'lodash/tail';
 import { push, LOCATION_CHANGE } from 'connected-react-router';
 import uuid from 'uuid/v1';
 
@@ -283,7 +284,19 @@ export const loadGeostoryEpic = (action$, {getState = () => {}}) => action$
                 return axios.get(`configs/${id}.json`)
                     // not return anything else that data in this case
                     // to match with data/resource object structure of getResource
-                    .then(({data}) => ({ data, isStatic: true, canEdit: true }));
+                    .then(({data}) => {
+                        // generates random id for section
+                        const defaultSection = data.sections[0];
+                        defaultSection.id = uuid();
+                        const newData =  defaultSection ? {
+                            ...data,
+                            sections: [
+                                defaultSection,
+                                ...tail(data.sections)
+                            ]
+                        } : data;
+                        return ({ data: newData, isStatic: true, canEdit: true });
+                    });
             }
             return getResource(id);
         })
