@@ -2069,7 +2069,8 @@
             "blueChannel": "Canale blue",
             "grayChannel": "Canale",
             "ruleClassification": "Classificazione",
-            "ruleRaster": "Raster"
+            "ruleRaster": "Raster",
+            "customInterval": "Custom Interval"
         },
         "playback": {
             "settings": {

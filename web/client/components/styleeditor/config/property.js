@@ -320,7 +320,11 @@ const property = {
             };
         }
     }),
-    bool: ({ label, key = 'label' }) => ({
+    bool: ({
+        key = 'label',
+        label,
+        isDisabled
+    }) => ({
         type: 'toolbar',
         label,
         config: {
@@ -332,13 +336,19 @@ const property = {
                 value: false
             }]
         },
+        isDisabled,
         getValue: (value) => {
             return {
                 [key]: value
             };
         }
     }),
-    intervals: ({ key = 'intervals', label = 'Intervals' }) => ({
+    intervals: ({
+        key = 'intervals',
+        label,
+        isDisabled = (value, properties) =>
+            properties?.method === 'customInterval'
+    }) => ({
         type: 'slider',
         label,
         config: {
@@ -348,6 +358,7 @@ const property = {
                 to: value => Math.round(value)
             }
         },
+        isDisabled,
         setValue: (value = 2) => {
             return parseFloat(value);
         },
@@ -383,13 +394,20 @@ const property = {
             };
         }
     }),
-    colorMap: ({ label, key = '', rampKey = '' }) => ({
+    colorMap: ({ label, key = '' }) => ({
         type: 'colorMap',
         label,
-        getValue: (value = '') => {
+        getValue: (value = {}, properties) => {
+            const {
+                classification,
+                type
+            } = value;
+            const isCustomInteval = type === 'interval' || properties.method === 'customInterval';
+            const isCustomColor = type === 'color' || properties.ramp === 'custom';
             return {
-                [key]: value,
-                ...(rampKey && { [rampKey]: 'custom' })
+                [key]: classification,
+                ...(isCustomInteval && { method: 'customInterval' }),
+                ...(isCustomColor && { ramp: 'custom' })
             };
         }
     }),

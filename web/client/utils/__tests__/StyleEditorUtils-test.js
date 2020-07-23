@@ -369,5 +369,81 @@ describe('StyleEditorUtils test', () => {
         expect(formattedJSONStyle.rules[0].filter.groupFields).toBeTruthy();
         expect(formattedJSONStyle.rules[0].filter.filterFields).toBeTruthy();
     });
+    it('test parseJSONStyle read scale denominator filters for rule kind Classification', () => {
+        const scaleDenominator = {
+            min: 100,
+            max: 50000
+        };
+        const style = {
+            name: 'Style',
+            rules: [ {
+                scaleDenominator,
+
+                kind: 'Classification',
+                ruleId: 'rule0',
+                intervals: 5,
+                method: 'equalInterval',
+                reverse: false,
+                ramp: 'spectral',
+                type: 'classificationVector',
+
+                symbolizerKind: 'Fill',
+                color: '#dddddd',
+                fillOpacity: 1,
+                outlineColor: '#777777',
+                outlineWidth: 1,
+
+                classification: [
+                    {
+                        title: ' >= 168839.0 AND <2211312.4',
+                        color: '#9E0142',
+                        type: 'Polygon',
+                        min: 168839,
+                        max: 2211312.4
+                    },
+                    {
+                        title: ' >= 2211312.4 AND <4253785.8',
+                        color: '#F98E52',
+                        type: 'Polygon',
+                        min: 2211312.4,
+                        max: 4253785.8
+                    }
+                ]
+            }]
+        };
+
+        const formattedJSONStyle = parseJSONStyle(style);
+        expect(formattedJSONStyle.rules.length).toBe(2);
+        expect(formattedJSONStyle.rules[0].scaleDenominator).toEqual(scaleDenominator);
+        expect(formattedJSONStyle.rules[1].scaleDenominator).toEqual(scaleDenominator);
+    });
+    it('test parseJSONStyle read scale denominator filters for rule kind Raster', () => {
+        const scaleDenominator = {
+            min: 100,
+            max: 50000
+        };
+        const style = {
+            name: 'Style',
+            rules: [ {
+                scaleDenominator,
+
+                kind: 'Raster',
+                ruleId: 'rule0',
+                intervals: 5,
+                method: 'equalInterval',
+                reverse: false,
+                continuous: true,
+                ramp: 'spectral',
+                type: 'classificationRaster',
+
+                opacity: 1,
+                symbolizerKind: 'Raster'
+            }]
+        };
+
+        const formattedJSONStyle = parseJSONStyle(style);
+        expect(formattedJSONStyle.rules.length).toBe(1);
+        expect(formattedJSONStyle.rules[0].scaleDenominator).toEqual(scaleDenominator);
+    });
 
 });

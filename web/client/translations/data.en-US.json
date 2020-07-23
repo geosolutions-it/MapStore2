@@ -2080,7 +2080,8 @@
             "blueChannel": "Blue channel",
             "grayChannel": "Channel",
             "ruleClassification": "Classification",
-            "ruleRaster": "Raster"
+            "ruleRaster": "Raster",
+            "customInterval": "Custom Interval"
         },
         "playback": {
             "settings": {

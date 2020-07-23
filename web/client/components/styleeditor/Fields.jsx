@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { FormGroup, FormControl as FormControlRB  } from 'react-bootstrap';
 import isObject from 'lodash/isObject';
 import omit from 'lodash/omit';
@@ -81,20 +81,31 @@ export const fields = {
             </PropertyField>
         );
     },
-    slider: ({ label, value, config = {}, onChange = () => {} }) => (
-        <PropertyField label={label}>
-            <div
-                className="mapstore-slider with-tooltip"
-                onClick={(e) => { e.stopPropagation(); }}>
-                <Slider
-                    start={[value]}
-                    tooltips={[true]}
-                    format={config.format}
-                    range={config.range || { min: 0, max: 10 }}
-                    onChange={(changedValue) => onChange(changedValue)}/>
-            </div>
-        </PropertyField>
-    ),
+    slider: ({
+        label,
+        value,
+        disabled,
+        config = {},
+        onChange = () => {}
+    }) => {
+        return (
+            <PropertyField
+                label={label}
+                disabled={disabled}>
+                <div
+                    className="mapstore-slider with-tooltip"
+                    onClick={(e) => { e.stopPropagation(); }}>
+                    <Slider
+                        start={[value]}
+                        disabled={disabled}
+                        tooltips={[true]}
+                        format={config.format}
+                        range={config.range || { min: 0, max: 10 }}
+                        onChange={(changedValue) => onChange(changedValue)}/>
+                </div>
+            </PropertyField>
+        );
+    },
     input: ({ label, value, config = {}, onChange = () => {} }) => {
         return (
             <PropertyField
@@ -109,9 +120,16 @@ export const fields = {
             </PropertyField>
         );
     },
-    toolbar: ({ label, value, onChange = () => {}, config = {} }) => (
+    toolbar: ({
+        label,
+        value,
+        onChange = () => {},
+        config = {},
+        disabled
+    }) => (
         <PropertyField
-            label={label}>
+            label={label}
+            disabled={disabled}>
             <Toolbar
                 btnDefaultProps={{
                     className: 'no-border',
@@ -121,6 +139,7 @@ export const fields = {
                     .map(({ glyph, label: optionLabel, labelId: optionLabelId, tooltipId, value: optionValue }) => ({
                         glyph,
                         tooltipId,
+                        disabled,
                         text: optionLabelId ? <Message msgId={optionLabelId} /> : optionLabel,
                         active: optionValue === value ? true : false,
                         onClick: () => onChange(value === optionValue ? undefined : optionValue)
@@ -195,6 +214,10 @@ export const fields = {
 
         const [newOptions, setNewOptions] = useState(initOptions(options));
 
+        useEffect(() => {
+            setNewOptions(initOptions(options));
+        }, [options?.length]);
+
         const SelectInput = creatable
             ? ReactSelectCreatable
             : ReactSelect;
@@ -261,7 +284,11 @@ export const fields = {
             <>
             <ThemaClassesEditor
                 classification={value}
-                onUpdateClasses={(classification) => onChange(classification)}
+                onUpdateClasses={(classification, type) =>
+                    onChange({
+                        classification,
+                        type
+                    })}
             />
             </>
         );
@@ -470,7 +497,7 @@ function Fields({
     return <>
         {Object.keys(params)
             .map((keyParam) => {
-                const { type, setValue, getValue, config, label, key: keyProperty } = params[keyParam] || {};
+                const { type, setValue, getValue, isDisabled, config, label, key: keyProperty } = params[keyParam] || {};
                 const key = keyProperty || keyParam;
                 const FieldComponent = fields[type];
                 const value = setValue && setValue(properties[key], state.current.properties);
@@ -479,6 +506,7 @@ function Fields({
                     key={key}
                     label={label || key}
                     config={config}
+                    disabled={isDisabled && isDisabled(properties[key], state.current.properties)}
                     value={!isNil(value) ? value : properties[key]}
                     onChange={(values) => onChange(getValue && getValue(values, state.current.properties) || values)}/>;
             })}

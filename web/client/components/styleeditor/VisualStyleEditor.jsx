@@ -55,17 +55,17 @@ const historyVisualStyleReducer = undoable(reducer, {
 const DEFAULT_STYLE = {};
 
 const updateFunc = ({
-    options,
+    values,
+    properties,
     rules,
     layer,
     styleUpdateTypes = {}
 }) => {
 
     // if there is not a correspondent type simply update the changes in the selected rule
-    const updateRules = () => {
-        const { values } = options || {};
+    const defaultUpdateRules = () => {
         return rules.map((rule) => {
-            if (rule.ruleId === options.ruleId) {
+            if (rule.ruleId === properties.ruleId) {
                 return {
                     ...rule,
                     ...values,
@@ -77,10 +77,10 @@ const updateFunc = ({
     };
 
     return new Promise((resolve) => {
-        const request = options.type && styleUpdateTypes[options.type];
+        const request = properties.type && styleUpdateTypes[properties.type];
         return request
-            ? resolve(request({ options, rules, layer, updateRules }))
-            : resolve(updateRules);
+            ? resolve(request({ values, properties, rules, layer }))
+            : resolve(defaultUpdateRules());
     });
 };
 
@@ -271,10 +271,11 @@ function VisualStyleEditor({
                 getColors
             }}
             // changes that could need an asynch update
-            onUpdate={(options) => {
+            onUpdate={({ values, ...properties }) => {
                 setUpdating(true);
                 updateFunc({
-                    options,
+                    values,
+                    properties,
                     layer,
                     rules: state.current.rules,
                     styleUpdateTypes
