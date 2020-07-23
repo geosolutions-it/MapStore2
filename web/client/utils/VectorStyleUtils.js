@@ -11,8 +11,10 @@ const {set} = require('./ImmutableUtils');
 const {colorToRgbaStr} = require('./ColorUtils');
 const axios = require('axios');
 const SLDParser = require('geostyler-sld-parser').default;
+const GeoCSSParser = require('geostyler-geocss-parser').default;
 const StyleParsers = {
-    sld: new SLDParser()
+    sld: new SLDParser(),
+    css: new GeoCSSParser()
 };
 
 /**

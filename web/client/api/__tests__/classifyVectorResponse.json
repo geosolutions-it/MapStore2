@@ -1,0 +1,126 @@
+{
+    "Rules": {
+        "Rule": [
+            {
+                "Title": " >= 168839.0 AND <2211312.4",
+                "Filter": {
+                    "And": {
+                        "PropertyIsGreaterThanOrEqualTo": {
+                            "PropertyName": "ATTRIBUTE",
+                            "Literal": 168839
+                        },
+                        "PropertyIsLessThan": {
+                            "PropertyName": "ATTRIBUTE",
+                            "Literal": 2211312.4
+                        }
+                    }
+                },
+                "PolygonSymbolizer": {
+                    "Fill": {
+                        "CssParameter": {
+                            "@name": "fill",
+                            "$": "#9E0142"
+                        }
+                    },
+                    "Stroke": "null"
+                }
+            },
+            {
+                "Title": " >= 2211312.4 AND <4253785.8",
+                "Filter": {
+                    "And": {
+                        "PropertyIsGreaterThanOrEqualTo": {
+                            "PropertyName": "ATTRIBUTE",
+                            "Literal": 2211312.4
+                        },
+                        "PropertyIsLessThan": {
+                            "PropertyName": "ATTRIBUTE",
+                            "Literal": 4253785.8
+                        }
+                    }
+                },
+                "PolygonSymbolizer": {
+                    "Fill": {
+                        "CssParameter": {
+                            "@name": "fill",
+                            "$": "#F98E52"
+                        }
+                    },
+                    "Stroke": "null"
+                }
+            },
+            {
+                "Title": " >= 4253785.8 AND <6296259.2",
+                "Filter": {
+                    "And": {
+                        "PropertyIsGreaterThanOrEqualTo": {
+                            "PropertyName": "ATTRIBUTE",
+                            "Literal": 4253785.8
+                        },
+                        "PropertyIsLessThan": {
+                            "PropertyName": "ATTRIBUTE",
+                            "Literal": 6296259.2
+                        }
+                    }
+                },
+                "PolygonSymbolizer": {
+                    "Fill": {
+                        "CssParameter": {
+                            "@name": "fill",
+                            "$": "#FFFFBF"
+                        }
+                    },
+                    "Stroke": "null"
+                }
+            },
+            {
+                "Title": " >= 6296259.2 AND <8338732.6",
+                "Filter": {
+                    "And": {
+                        "PropertyIsGreaterThanOrEqualTo": {
+                            "PropertyName": "ATTRIBUTE",
+                            "Literal": 6296259.2
+                        },
+                        "PropertyIsLessThan": {
+                            "PropertyName": "ATTRIBUTE",
+                            "Literal": 8338732.6
+                        }
+                    }
+                },
+                "PolygonSymbolizer": {
+                    "Fill": {
+                        "CssParameter": {
+                            "@name": "fill",
+                            "$": "#89D0A5"
+                        }
+                    },
+                    "Stroke": "null"
+                }
+            },
+            {
+                "Title": " >= 8338732.6 AND <=1.0381206E7",
+                "Filter": {
+                    "And": {
+                        "PropertyIsGreaterThanOrEqualTo": {
+                            "PropertyName": "ATTRIBUTE",
+                            "Literal": 8338732.6
+                        },
+                        "PropertyIsLessThanOrEqualTo": {
+                            "PropertyName": "ATTRIBUTE",
+                            "Literal": 1.0381206E7
+                        }
+                    }
+                },
+                "PolygonSymbolizer": {
+                    "Fill": {
+                        "CssParameter": {
+                            "@name": "fill",
+                            "$": "#5E4FA2"
+                        }
+                    },
+                    "Stroke": "null"
+                }
+            }
+        ]
+    }
+}

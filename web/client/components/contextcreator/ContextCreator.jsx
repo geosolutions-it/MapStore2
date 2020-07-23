@@ -185,13 +185,21 @@ export default class ContextCreator extends React.Component {
             "ScaleBox",
             "Toolbar",
             "MapLoading",
-            "Identify",
+            {
+                "name": "Identify",
+                "overrides": {
+                    "cfg": {
+                        showEdit: false
+                    }
+                }
+            },
             "Locate",
             "ZoomIn",
             "ZoomOut",
             "ZoomAll",
             "Annotations",
             "MapImport",
+            "MapExport",
             "Undo",
             "Redo",
             "Expander"

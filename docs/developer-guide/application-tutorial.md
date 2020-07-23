@@ -1,4 +1,5 @@
 Writing a new MapStore based application can be done following these steps:
+
  * create a new folder for the application, inside the MapStore directory tree (e.g. web/client/examples/myapp), and the following folder structure:
 
 ```

@@ -38,7 +38,9 @@ const DOWNLOAD_FORMATS_LOOKUP = {
     "gml32": "GML3.2",
     "application/json": "GeoJSON",
     "csv": "CSV",
-    "application/x-gpkg": "GeoPackage"
+    "application/x-gpkg": "GeoPackage",
+    "excel": "excel",
+    "excel2007": "excel2007"
 };
 
 const hasOutputFormat = (data) => {

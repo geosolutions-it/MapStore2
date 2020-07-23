@@ -441,6 +441,72 @@ describe('Test DrawSupport', () => {
         expect(spyChangeStatus.calls.length).toBe(1);
     });
 
+    it('tests a replace of geodesic circle feature ', () => {
+        const fakeMap = {
+            addLayer: () => {},
+            disableEventListener: () => {},
+            addInteraction: () => {},
+            getInteractions: () => ({
+                getLength: () => 0
+            }),
+            getView: () => ({
+                getProjection: () => ({
+                    getCode: () => 'EPSG:4326'
+                })
+            })
+        };
+        const support = ReactDOM.render(
+            <DrawSupport features={[]} map={fakeMap}/>, document.getElementById("container"));
+        expect(support).toExist();
+        ReactDOM.render(
+            <DrawSupport
+                features={[]}
+                map={fakeMap}
+                drawStatus="start"
+                drawMethod="Circle"
+                options={{
+                    stopAfterDrawing: true,
+                    geodesic: true
+                }}
+            />, document.getElementById("container"));
+        ReactDOM.render(
+            <DrawSupport
+                features={[
+                    {
+                        type: 'Polygon',
+                        center: {
+                            x: 721565.5470120639,
+                            y: 5586683.477814646
+                        },
+                        coordinates: [
+                            721565.5470120639,
+                            5586683.477814646
+                        ],
+                        radius: 294110.99,
+                        projection: 'EPSG:3857'
+                    }
+                ]}
+                map={fakeMap}
+                drawStatus="replace"
+                drawMethod="Circle"
+                options={{
+                    geodesic: true
+                }}
+                onEndDrawing={testHandlers.onEndDrawing}
+                onChangeDrawingStatus={testHandlers.onStatusChange}
+            />, document.getElementById("container"));
+        const {geodesicCenter} = support.drawSource.getFeatures()[0].getGeometry().getProperties();
+        const isNearlyEqual = function(a, b) {
+            if (a === undefined || b === undefined) {
+                return false;
+            }
+            return a.toFixed(12) - b.toFixed(12) === 0;
+        };
+        expect(isNearlyEqual(geodesicCenter[0], 721565.5470120639)).toBeTruthy();
+        expect(isNearlyEqual(geodesicCenter[1], 5586683.477814646)).toBeTruthy();
+    });
+
+
     it('end drawing with continue', () => {
         const fakeMap = {
             addLayer: () => {},

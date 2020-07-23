@@ -9,7 +9,6 @@
 const PropTypes = require('prop-types');
 const React = require('react');
 const {connect} = require('../utils/PluginsUtils');
-const {createSelector} = require('reselect');
 
 const {loadFont} = require('../utils/AgentUtils');
 
@@ -411,60 +410,9 @@ class MapPlugin extends React.Component {
         plugins = require('./map/index')(props.mapType, props.actions);
     };
 }
+const selector = require('./map/selector').default;
 
-const {mapSelector, projectionDefsSelector} = require('../selectors/map');
-const { mapTypeSelector, isOpenlayers } = require('../selectors/maptype');
-const {layerSelectorWithMarkers} = require('../selectors/layers');
-const {highlighedFeatures} = require('../selectors/highlight');
-const {securityTokenSelector} = require('../selectors/security');
-const {currentLocaleLanguageSelector} = require('../selectors/locale');
-const {
-    isLocalizedLayerStylesEnabledSelector,
-    localizedLayerStylesNameSelector
-} = require('../selectors/localizedLayerStyles');
 
-const selector = createSelector(
-    [
-        projectionDefsSelector,
-        mapSelector,
-        mapTypeSelector,
-        layerSelectorWithMarkers,
-        highlighedFeatures,
-        (state) => state.mapInitialConfig && state.mapInitialConfig.loadingError && state.mapInitialConfig.loadingError.data,
-        securityTokenSelector,
-        (state) => state.mousePosition && state.mousePosition.enabled,
-        isOpenlayers,
-        isLocalizedLayerStylesEnabledSelector,
-        localizedLayerStylesNameSelector,
-        currentLocaleLanguageSelector
-    ], (
-        projectionDefs,
-        map,
-        mapType,
-        layers,
-        features,
-        loadingError,
-        securityToken,
-        elevationEnabled,
-        shouldLoadFont,
-        isLocalizedLayerStylesEnabled,
-        localizedLayerStylesName,
-        currentLocaleLanguage
-    ) => ({
-        projectionDefs,
-        map,
-        mapType,
-        layers,
-        features,
-        loadingError,
-        securityToken,
-        elevationEnabled,
-        shouldLoadFont,
-        isLocalizedLayerStylesEnabled,
-        localizedLayerStylesName,
-        currentLocaleLanguage
-    })
-);
 module.exports = {
     MapPlugin: connect(selector, {
         onFontError: errorLoadingFont,

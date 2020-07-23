@@ -17,6 +17,7 @@ that is the project entry point.
 
 Editing **app.jsx** you can start using your own configuration files and add custom behaviours and look and
 feel to your project, in particular:
+
  * you can add your own translation files
 
 ```javascript

@@ -897,7 +897,8 @@
             "cfg": {
               "embedPanel": false,
               "advancedSettings": {
-                "homeButton": true
+                "homeButton": true,
+                "sectionId": true
               }
             }
           }

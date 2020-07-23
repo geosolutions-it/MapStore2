@@ -6,7 +6,7 @@
 * LICENSE file in the root directory of this source tree.
 */
 
-const { get, head, uniqBy } = require('lodash');
+const { get, head, uniqBy, find, isString } = require('lodash');
 const { layerSettingSelector, getSelectedLayer } = require('./layers');
 const { STYLE_ID_SEPARATOR, extractFeatureProperties } = require('../utils/StyleEditorUtils');
 
@@ -176,8 +176,8 @@ const getAllStyles = (state) => {
     const enabledStyle = updatedLayer.style || updatedLayer && !updatedLayer.style && defaultStyle;
     return {
         availableStyles: uniqBy(availableStyles.map(style => {
-            const splittedName = style.title && style.title.split(STYLE_ID_SEPARATOR);
-            const label = splittedName[0] || style.name;
+            const splittedName = style && style.title && isString(style.title) && style.title.split(STYLE_ID_SEPARATOR);
+            const label = splittedName && splittedName[0] || style.name;
             return {
                 ...style,
                 label
@@ -186,6 +186,15 @@ const getAllStyles = (state) => {
         defaultStyle,
         enabledStyle
     };
+};
+
+const editorMetadataSelector = (state) => state?.styleeditor?.metadata;
+
+const selectedStyleMetadataSelector = (state) => {
+    const { availableStyles = []} = getUpdatedLayer(state) || {};
+    const styleName = selectedStyleSelector(state);
+    const style = find(availableStyles, ({ name }) => styleName === name) || {};
+    return style.metadata || {};
 };
 
 module.exports = {
@@ -207,5 +216,7 @@ module.exports = {
     canEditStyleSelector,
     getUpdatedLayer,
     selectedStyleFormatSelector,
-    getAllStyles
+    getAllStyles,
+    editorMetadataSelector,
+    selectedStyleMetadataSelector
 };

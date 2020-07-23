@@ -61,4 +61,49 @@ describe('Test for DownloadOptions component', () => {
         expect(check).toExist();
 
     });
+    it('options in the select with local formats', () => {
+        const events = {
+            onChange: () => {},
+            mockFetch: () => {}
+        };
+        const wfsFormats = [{name: "test"}, {name: 'test2'}, {name: "test3"}, {name: 'test4'}];
+        const localFormats = [{name: "test3"}, {name: 'test4'}];
+
+        ReactDOM.render(
+            <DownloadOptions
+                onChange={events.onChange}
+                virtualScroll={false}
+                formatOptionsFetch={events.mockFetch}
+                downloadOptions={{selectedFormat: "test"}}
+                formats={localFormats}
+                wfsFormats={wfsFormats}
+            />, document.getElementById("container"));
+        const reactBootstrapSelect = document.querySelector('.Select-input input');
+        TestUtils.Simulate.change(reactBootstrapSelect);
+        const options = document.querySelectorAll('.Select-option');
+        const optionsValue = [...options].map(i=> i.innerText);
+        expect(optionsValue).toEqual(['test3', 'test4']);
+    });
+    it('options in the select', () => {
+        const events = {
+            onChange: () => {},
+            mockFetch: () => {}
+        };
+        const wfsFormats = [{name: "test"}, {name: 'test2'}, {name: "test3"}, {name: 'test4'}];
+
+        ReactDOM.render(
+            <DownloadOptions
+                onChange={events.onChange}
+                virtualScroll={false}
+                formatOptionsFetch={events.mockFetch}
+                downloadOptions={{selectedFormat: "test"}}
+                formats={[]}
+                wfsFormats={wfsFormats}
+            />, document.getElementById("container"));
+        const reactBootstrapSelect = document.querySelector('.Select-input input');
+        TestUtils.Simulate.change(reactBootstrapSelect);
+        const options = document.querySelectorAll('.Select-option');
+        const optionsValue = [...options].map(i=> i.innerText);
+        expect(optionsValue).toEqual(['test', 'test2', 'test3', 'test4']);
+    });
 });
