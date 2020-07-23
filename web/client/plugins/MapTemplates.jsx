@@ -32,6 +32,7 @@ import * as epics from '../epics/maptemplates';
  * @memberof plugins
  * @class
  * @name MapTemplates
+ * * @prop {object[]} cfg.templates: A list of objects with map template ids used to load templates when not in context
  */
 const mapTemplates = ({
     active,

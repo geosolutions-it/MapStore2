@@ -15,7 +15,7 @@ import { error as showError } from '../actions/notifications';
 import { isLoggedIn } from '../selectors/security';
 import { setTemplates, setMapTemplatesLoaded, setTemplateData, setTemplateLoading, CLEAR_MAP_TEMPLATES, OPEN_MAP_TEMPLATES_PANEL,
     MERGE_TEMPLATE, REPLACE_TEMPLATE } from '../actions/maptemplates';
-import { templatesSelector, mapTemplatesLoadedSelector } from '../selectors/maptemplates';
+import { templatesSelector, mapTemplatesLoadedSelector, desktopMapTemplatesConfigSelector } from '../selectors/maptemplates';
 import { templatesSelector as contextTemplatesSelector } from '../selectors/context';
 import { mapSelector } from '../selectors/map';
 import { layersSelector, groupsSelector } from '../selectors/layers';
@@ -48,12 +48,17 @@ export const openMapTemplatesPanelEpic = (action$, store) => action$
     .ofType(OPEN_MAP_TEMPLATES_PANEL)
     .switchMap(() => {
         const state = store.getState();
-        const contextTemplates = contextTemplatesSelector(state);
+        const contextTemplates = contextTemplatesSelector(state) || [];
+        const localConfigMapTemplates = desktopMapTemplatesConfigSelector(state).cfg.templates || [];
+
+        // consider templates from both the localConfig and context loaded in geostore
+        const templates = [...contextTemplates, ...localConfigMapTemplates];
+
         const mapTemplatesLoaded = mapTemplatesLoadedSelector(state);
 
         const makeFilter = () => ({
             OR: {
-                FIELD: contextTemplates.map(template => ({
+                FIELD: templates.map(template => ({
                     field: ['ID'],
                     operator: ['EQUAL_TO'],
                     value: [template.id]
@@ -71,7 +76,7 @@ export const openMapTemplatesPanelEpic = (action$, store) => action$
         };
 
         return Observable.of(setControlProperty('mapTemplates', 'enabled', true, true)).concat(!mapTemplatesLoaded ?
-            (contextTemplates.length > 0 ? Observable.defer(() => Api.searchListByAttributes(makeFilter(), {
+            (templates.length > 0 ? Observable.defer(() => Api.searchListByAttributes(makeFilter(), {
                 params: {
                     includeAttributes: true
                 }

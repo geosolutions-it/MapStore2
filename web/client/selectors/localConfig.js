@@ -7,6 +7,7 @@
  */
 
 import {get} from 'lodash';
+import { createSelector } from 'reselect';
 
 /**
  * selector for localConfig from application state
@@ -36,3 +37,9 @@ export const pluginsSelectorCreator = (page) => state => get(pluginsObjectSelect
  * @returns {number} the delay in ms
  */
 export const floatingIdentifyDelaySelector = state => get(localConfigSelector(state), 'defaultMapOptions.floatingIdentifyDelay', 500);
+
+// select desktop configuration
+export const desktopPluginsConfigSelector = createSelector(
+    pluginsObjectSelector,
+    (plugins = {}) => plugins.desktop
+);

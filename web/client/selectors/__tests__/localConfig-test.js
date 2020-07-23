@@ -10,7 +10,8 @@ import expect from 'expect';
 import {
     localConfigSelector,
     pluginsObjectSelector,
-    pluginsSelectorCreator
+    pluginsSelectorCreator,
+    desktopPluginsConfigSelector
 } from '../localConfig';
 import { createStateMocker } from '../../reducers/__tests__/reducersTestUtils';
 import localConfig from '../../reducers/localConfig';
@@ -35,6 +36,10 @@ describe('localConfig selectors', () => {
     });
     it('pluginsObjectSelector', () => {
         expect(pluginsObjectSelector(stateMocker(localConfigLoaded(TEST_CONFIG)))).toBe(TEST_CONFIG.plugins);
+    });
+    it('desktopPluginsConfigSelector', () => {
+        expect(desktopPluginsConfigSelector(stateMocker(localConfigLoaded(TEST_CONFIG)))).toBeAn(Array);
+        expect(desktopPluginsConfigSelector(stateMocker(localConfigLoaded(TEST_CONFIG)))[0]).toBe("TEST");
     });
     it('pluginsSelectorCreator', () => {
         expect(pluginsSelectorCreator('desktop')(stateMocker(localConfigLoaded(TEST_CONFIG)))).toBe(TEST_CONFIG.plugins.desktop);

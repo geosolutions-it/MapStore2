@@ -90,7 +90,14 @@ describe('maptemplates epics', () => {
                     }]
                 }
             },
-            maptemplates: {}
+            maptemplates: {},
+            localConfig: {
+                plugins: {
+                    desktop: [
+                        {name: "MapTemplates", cfg: {templates: [{ id: 1 }]}}
+                    ]
+                }
+            }
         }, done);
     });
 });
