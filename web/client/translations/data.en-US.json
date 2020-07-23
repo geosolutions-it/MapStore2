@@ -160,6 +160,9 @@
         "elevationNotAvailable": "N/A",
         "mapScale": "Scale:",
         "showMousePositionCoordinates": "Show/Hide coordinates",
+        "showCrsSelector": "Select projection",
+        "crsSelectorFilterPlaceholder": "Filter projection",
+        "crsSelectorSelectedCRS": "Selected:",
         "menu": "Menu",
         "options": "Options",
         "settings": "Settings",
@@ -1223,7 +1226,8 @@
             "addBboxParam": "Add bounding box param to sharing link",
             "wrongBboxParamTitle": "Invalid bounding box param",
             "wrongBboxParamMessage": "Bounding box params must be in EPSG:4326 and wrote as bbox=minx,miny,maxx,maxy",
-            "showHomeButton": "Link to MapStore home"
+            "showHomeButton": "Link to MapStore home",
+            "showSectionId": "Include scroll position"
         },
         "snapshot": {
             "title": "Snapshot Preview",
@@ -2076,7 +2080,8 @@
             "blueChannel": "Blue channel",
             "grayChannel": "Channel",
             "ruleClassification": "Classification",
-            "ruleRaster": "Raster"
+            "ruleRaster": "Raster",
+            "customInterval": "Custom Interval"
         },
         "playback": {
             "settings": {

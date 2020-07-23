@@ -73,7 +73,7 @@ const getColor = (layer, name, intervals, customRamp) => {
         : customRamp
             ? head([ customRamp, ...standardColors].filter(c => c.name === name))
             : head(standardColors.filter(c => c.name === name));
-    if (chosenColors && (!isString(chosenColors.colors) || chosenColors.colors.length >= 2)) {
+    if (chosenColors && (isString(chosenColors.colors) || chosenColors.colors.length >= 2)) {
         return {
             ramp: "custom",
             colors: chroma.scale(chosenColors.colors).colors(intervals).join(',')

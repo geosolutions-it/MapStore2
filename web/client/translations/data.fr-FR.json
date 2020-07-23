@@ -160,6 +160,9 @@
         "elevationNotAvailable": "N/A",
         "mapScale": "Échelle :",
         "showMousePositionCoordinates": "Montrer/cacher les coordonnées",
+        "showCrsSelector": "Sélectionnez la projection",
+        "crsSelectorFilterPlaceholder": "Projection de filtre",
+        "crsSelectorSelectedCRS": "Choisi:",
         "menu": "Menu",
         "options": "Options",
         "settings": "Réglages",
@@ -1224,7 +1227,8 @@
             "zoomToolTip": "Min: 1 et Max: 35",
             "addBboxParam": "Ajouter un paramètre de rectangle englobant au lien de partage",
             "wrongBboxParamTitle": "Paramètre de rectangle englobant invalide",
-            "wrongBboxParamMessage": "Les paramètres du rectangle englobant doivent être en EPSG:4326 et écrit de cette façon : bbox=minx,miny,maxx,maxy"
+            "wrongBboxParamMessage": "Les paramètres du rectangle englobant doivent être en EPSG:4326 et écrit de cette façon : bbox=minx,miny,maxx,maxy",
+            "showSectionId": "Inclure la position de défilement"
         },
         "snapshot": {
             "title": "Prévisualisation de la capture de la carte",
@@ -2066,7 +2070,8 @@
             "blueChannel": "Blue channel",
             "grayChannel": "Channel",
             "ruleClassification": "Classification",
-            "ruleRaster": "Raster"
+            "ruleRaster": "Raster",
+            "customInterval": "Custom Interval"
         },
         "playback": {
             "settings": {
