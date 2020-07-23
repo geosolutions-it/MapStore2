@@ -53,7 +53,7 @@ describe('PluginsUtils', () => {
         const cfg = {
             test: "TEST"
         };
-        let desc1 = PluginsUtils.getPluginDescriptor({}, {P1Plugin: P1, P2Plugin: P2}, [{name: "P1", cfg}, "P2"], "P1" );
+        let desc1 = PluginsUtils.getPluginDescriptor({}, {P1Plugin: P1, P2Plugin: P2}, [{name: "P1", cfg}, {name: "P2"}], "P1" );
         expect(desc1).toExist();
         expect(desc1.id).toBe("P1");
         expect(desc1.name).toBe("P1");
@@ -136,7 +136,11 @@ describe('PluginsUtils', () => {
 
         const pluginsConfig = [{
             name: "Test1"
-        }, "Container1", "Container2"];
+        }, {
+            name: "Container1"
+        }, {
+            name: "Container2"
+        }];
         const items1 = PluginsUtils.getPluginItems(defaultState, plugins, pluginsConfig, "Container1", "Container1", true, []);
         expect(items1.length).toBe(1);
         const items2 = PluginsUtils.getPluginItems(defaultState, plugins, pluginsConfig, "Container2", "Container2", true, []);
@@ -160,7 +164,11 @@ describe('PluginsUtils', () => {
         const pluginsConfig = [{
             name: "Test1",
             showIn: ['Container1']
-        }, "Container1", "Container2"];
+        }, {
+            name: "Container1"
+        }, {
+            name: "Container2"
+        }];
         const items1 = PluginsUtils.getPluginItems(defaultState, plugins, pluginsConfig, "Container1", "Container1", true, []);
         expect(items1.length).toBe(1);
         const items2 = PluginsUtils.getPluginItems(defaultState, plugins, pluginsConfig, "Container2", "Container2", true, []);
@@ -207,7 +215,11 @@ describe('PluginsUtils', () => {
 
         const pluginsConfig = [{
             name: "Test1"
-        }, "Container1", "Container2"];
+        }, {
+            name: "Container1"
+        }, {
+            name: "Container2"
+        }];
         const items1 = PluginsUtils.getPluginItems(defaultState, plugins, pluginsConfig, "Container1", "Container1", true, []);
         expect(items1.length).toBe(0);
         const items2 = PluginsUtils.getPluginItems(defaultState, plugins, pluginsConfig, "Container2", "Container2", true, []);
@@ -235,7 +247,11 @@ describe('PluginsUtils', () => {
                     priority: 3
                 }
             }
-        }, "Container1", "Container2"];
+        }, {
+            name: "Container1"
+        }, {
+            name: "Container2"
+        }];
         const items1 = PluginsUtils.getPluginItems(defaultState, plugins, pluginsConfig, "Container1", "Container1", true, []);
         expect(items1.length).toBe(1);
         const items2 = PluginsUtils.getPluginItems(defaultState, plugins, pluginsConfig, "Container2", "Container2", true, []);
@@ -261,7 +277,11 @@ describe('PluginsUtils', () => {
             "cfg": {
                 disablePluginIf: "{true}"
             }
-        }, "Container1", "Container2"];
+        }, {
+            name: "Container1"
+        }, {
+            name: "Container2"
+        }];
         const items1 = PluginsUtils.getPluginItems(defaultState, plugins, pluginsConfig, "Container1", "Container1", true, []);
         expect(items1.length).toBe(0);
         const items2 = PluginsUtils.getPluginItems(defaultState, plugins, pluginsConfig, "Container2", "Container2", true, []);
@@ -285,7 +305,11 @@ describe('PluginsUtils', () => {
         const pluginsConfig = [{
             name: "Test1",
             disablePluginIf: "{true}"
-        }, "Container1", "Container2"];
+        }, {
+            name: "Container1"
+        }, {
+            name: "Container2"
+        }];
         const items1 = PluginsUtils.getPluginItems(defaultState, plugins, pluginsConfig, "Container1", "Container1", true, [], () => false);
         expect(items1.length).toBe(0);
         const items2 = PluginsUtils.getPluginItems(defaultState, plugins, pluginsConfig, "Container2", "Container2", true, [], () => false);

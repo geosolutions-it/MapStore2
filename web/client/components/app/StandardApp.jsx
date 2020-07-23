@@ -117,19 +117,27 @@ class StandardApp extends React.Component {
         if (urlQuery.localConfig) {
             ConfigUtils.setLocalConfigurationFile(urlQuery.localConfig + '.json');
         }
+
         ConfigUtils.loadConfiguration().then((config) => {
+            const plugins = this.props.pluginsDef.plugins;
+            const convertedPlugins = PluginsUtils.makeInternalPluginsConfig(config.plugins, plugins);
+
+            ConfigUtils.setConfigProp('internalPlugins', convertedPlugins);
+
+            const configWithPlugins  = {...config, plugins: convertedPlugins};
+
             const opts = assign({}, this.props.storeOpts, {
-                onPersist: onInit.bind(null, config)
+                onPersist: onInit.bind(null, configWithPlugins)
             }, {
-                initialState: this.parseInitialState(config.initialState, {
+                initialState: this.parseInitialState(configWithPlugins.initialState, {
                     mode: this.props.mode || (ConfigUtils.getBrowserProperties().mobile ? 'mobile' : 'desktop')
                 }) || {defaultState: {}, mobile: {}}
             });
-            this.store = this.props.appStore(this.props.pluginsDef.plugins, opts);
+            this.store = this.props.appStore(plugins, opts);
             this.props.onStoreInit(this.store);
 
             if (!opts.persist) {
-                onInit(config);
+                onInit(configWithPlugins);
             }
         });
 
@@ -139,10 +147,11 @@ class StandardApp extends React.Component {
         const {plugins, requires} = this.props.pluginsDef;
         const {appStore, initialActions, appComponent, mode, ...other} = this.props;
         const App = dragDropContext(html5Backend)(this.props.appComponent);
+        const pluginsFull = {...plugins, ...this.filterRemoved(this.state.pluginsRegistry, this.state.removedPlugins)};
 
         return this.state.initialized ?
             <Provider store={this.store}>
-                <App {...other} plugins={assign(PluginsUtils.getPlugins({...plugins, ...this.filterRemoved(this.state.pluginsRegistry, this.state.removedPlugins)}), { requires })} />
+                <App {...other} plugins={assign(PluginsUtils.getPlugins(pluginsFull), { requires })} pluginsFull={pluginsFull} />
             </Provider>
             : (<span><div className="_ms2_init_spinner _ms2_init_center"><div></div></div>
                 <div className="_ms2_init_text _ms2_init_center">Loading MapStore</div></span>);
@@ -192,7 +201,8 @@ class StandardApp extends React.Component {
                                         loadPlugin: (resolve) => {
                                             resolve(impl);
                                         }
-                                    }
+                                    },
+                                    configuration: impl.configuration
                                 }
                             };
                             return { plugin: pluginDef, translations: plugins[pluginName].translations || "" };

@@ -23,6 +23,7 @@ import { loadUserSession, USER_SESSION_LOADED, userSessionStartSaving, setUserSe
 
 import { wrapStartStop } from '../observables/epics';
 import ConfigUtils from '../utils/ConfigUtils';
+import PluginsUtils from '../utils/PluginsUtils';
 import {userSessionEnabledSelector, buildSessionName} from "../selectors/usersession";
 import merge from "lodash/merge";
 
@@ -41,21 +42,27 @@ function ContextError(error) {
  * @param {String} id context resource identifier
  * @param {Object} session optional session to integrate with the context configuration
  * @param {Function} getState state extraction function
+ * @param {Object} plugins object with plugin definitions for configuration validation
  *
  * @returns {Observable} context configuration flow
  */
-const createContextFlow = (id, session = {}, getState) =>
+const createContextFlow = (id, session = {}, getState, plugins) =>
     (id !== "default"
         ? getResource(id)
             // TODO: setContext should put in ConfigUtils some variables
             // TODO: solve the problem of initial state used to configure plugins partially
-            .switchMap((resource) => Observable.of(setResource(resource), setContext(merge({}, resource.data, session))))
+            .switchMap((resource) => Observable.of(
+                setResource(resource),
+                setContext(
+                    merge({}, resource.data, session),
+                    PluginsUtils.makeInternalPluginsConfig(resource.data.plugins, plugins),
+                    PluginsUtils.makeInternalPluginsPageConfig(resource.data.userPlugins, plugins)
+                )
+            ))
         : Observable.of(
             setContext({
-                plugins: {
-                    desktop: pluginsSelectorCreator("desktop")(getState())
-                }
-            }) // TODO: select mobile if mobile browser
+                plugins: pluginsSelectorCreator("mapviewer")(getState())
+            })
         )
     ); // TODO: use default context ID
 
@@ -105,7 +112,7 @@ const errorToMessageId = (name, e, getState = () => {}) => {
  *
  * @returns {Observable} flow to load the current context (with session, if enabled)
  */
-const createSessionFlow = (mapId, contextName, action$, getState) => {
+const createSessionFlow = (mapId, contextName, action$, getState, plugins) => {
     return Observable.forkJoin(
         getResourceIdByName('CONTEXT', contextName),
         (mapId ? Observable.of(null) : getResourceDataByName('CONTEXT', contextName))
@@ -121,7 +128,7 @@ const createSessionFlow = (mapId, contextName, action$, getState) => {
                 };
                 return Observable.merge(
                     Observable.of(clearMapTemplates()),
-                    createContextFlow(id, contextSession, getState).catch(e => {throw new ContextError(e); }),
+                    createContextFlow(id, contextSession, getState, plugins).catch(e => {throw new ContextError(e); }),
                     createMapFlow(mapId, data && data.mapConfig, mapSession, action$, getState).catch(e => { throw new MapError(e); }),
                     Observable.of(setUserSession(session)),
                     Observable.of(userSessionStartSaving())
@@ -137,14 +144,14 @@ const createSessionFlow = (mapId, contextName, action$, getState) => {
  * @param {object} store
  */
 export const loadContextAndMap = (action$, { getState = () => { } } = {}) =>
-    action$.ofType(LOAD_CONTEXT).switchMap(({ mapId, contextName }) => {
+    action$.ofType(LOAD_CONTEXT).switchMap(({ mapId, contextName, plugins }) => {
         const sessionsEnabled = userSessionEnabledSelector(getState());
         const flow = sessionsEnabled
-            ? createSessionFlow(mapId, contextName, action$, getState)
+            ? createSessionFlow(mapId, contextName, action$, getState, plugins)
             : Observable.merge(
                 Observable.of(clearMapTemplates()),
                 getResourceIdByName('CONTEXT', contextName)
-                    .switchMap(id => createContextFlow(id, null, getState)).catch(e => {throw new ContextError(e); }),
+                    .switchMap(id => createContextFlow(id, null, getState, plugins)).catch(e => {throw new ContextError(e); }),
                 (mapId ? Observable.of(null) : getResourceDataByName('CONTEXT', contextName))
                     .switchMap(data => createMapFlow(mapId, data && data.mapConfig, null, action$, getState)).catch(e => { throw new MapError(e); })
             );

@@ -7,6 +7,7 @@
  */
 import expect from 'expect';
 import ConfigUtils from '../../utils/ConfigUtils';
+import PluginsUtils from '../../utils/PluginsUtils';
 
 import {
     currentContextSelector,
@@ -37,13 +38,19 @@ describe('context selectors', () => {
         expect(isLoadingSelector(stateMocker(loading(true)))).toBe(true);
     });
     it('pluginsSelector', () => {
-        expect(pluginsSelector(stateMocker(setContext(CONTEXT_DATA)))).toEqual(CONTEXT_DATA.plugins);
+        const contextPlugins = PluginsUtils.makeInternalPluginsConfig(CONTEXT_DATA.plugins);
+        const emptyUserPlugins = {
+            desktop: [],
+            mobile: [],
+            embedded: []
+        };
+        expect(pluginsSelector(stateMocker(setContext(CONTEXT_DATA, contextPlugins, emptyUserPlugins)))).toEqual(contextPlugins);
         // when loading, use default plugins
-        const DUMMY_PLUGINS = { desktop: ["TEST"] };
-        const OLD_PLUGINS = ConfigUtils.getConfigProp('plugins');
-        ConfigUtils.setConfigProp('plugins', DUMMY_PLUGINS);
-        expect(pluginsSelector(stateMocker(loading(true)))).toEqual({desktop: ["TEST", "Context"]});
-        ConfigUtils.setConfigProp('plugins', OLD_PLUGINS);
+        const DUMMY_PLUGINS = { mapviewer: {desktop: [{name: "TEST"}]} };
+        const OLD_PLUGINS = ConfigUtils.getConfigProp('internalPlugins');
+        ConfigUtils.setConfigProp('internalPlugins', DUMMY_PLUGINS);
+        expect(pluginsSelector(stateMocker(loading(true)))).toEqual({mapviewer: {desktop: [{name: "TEST"}, {name: "Context"}]}});
+        ConfigUtils.setConfigProp('internalPlugins', OLD_PLUGINS);
     });
 
     it('resourceSelector', () => {

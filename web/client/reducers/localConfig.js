@@ -13,8 +13,9 @@ const ConfigUtils = require('../utils/ConfigUtils');
 const initialState = ConfigUtils.getDefaults();
 function controls(state = initialState, action) {
     switch (action.type) {
-    case LOCAL_CONFIG_LOADED:
+    case LOCAL_CONFIG_LOADED: {
         return assign({}, state, action.config);
+    }
     default:
         return state;
     }

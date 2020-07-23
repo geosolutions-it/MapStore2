@@ -3,6 +3,7 @@ import {connect} from "react-redux";
 import Extension from "../components/Extension";
 import Rx from "rxjs";
 import { changeZoomLevel } from "../../../web/client/actions/map";
+import { set } from "../../../web/client/utils/ImmutableUtils";
 
 export default {
     name: "SampleExtension",
@@ -44,5 +45,16 @@ export default {
             },
             priority: 1
         }
+    },
+    configuration: {
+        main: ({cfg = {}}) => ({
+            cfg: {
+                customProp: cfg.customProp?.toString() || 'none',
+                validatedProp: (cfg.validatedProp?.toString() || '').replace('removeme', '')
+            }
+        }),
+        desktop: (config) => set('cfg.customProp', config.cfg.customProp + ' |desktop|', config),
+        mobile: (config) => set('cfg.customProp', config.cfg.customProp + ' |mobile|', config),
+        embedded: (config) => set('cfg.customProp', config.cfg.customProp + ' |embedded|', config)
     }
 };

@@ -14,7 +14,9 @@ import MapViewerCmp from '../components/viewer/MapViewerCmp';
 import { loadContext, clearContext } from '../../actions/context';
 import MapViewerContainer from '../../containers/MapViewer';
 import { createStructuredSelector } from 'reselect';
-import { contextMonitoredStateSelector, pluginsSelector, currentTitleSelector } from '../../selectors/context';
+import { contextMonitoredStateSelector, pluginsSelector, currentTitleSelector, currentContextModeSelector } from '../../selectors/context';
+
+
 /**
   * @name Context
   * @memberof pages
@@ -58,6 +60,7 @@ class Context extends React.Component {
         match: PropTypes.object,
         onInit: PropTypes.func,
         plugins: PropTypes.object,
+        pluginsFull: PropTypes.object,
         pluginsConfig: PropTypes.object,
         windowTitle: PropTypes.string,
         monitoredState: PropTypes.array,
@@ -72,6 +75,7 @@ class Context extends React.Component {
         loadContext: () => {},
         reset: () => {},
         plugins: {},
+        pluginsFull: {},
         match: {
             params: {}
         },
@@ -80,14 +84,14 @@ class Context extends React.Component {
     componentWillMount() {
         const params = this.props.match.params;
         this.oldTitle = document.title;
-        this.props.loadContext(params);
+        this.props.loadContext(params, this.props.pluginsFull);
     }
     componentDidUpdate(oldProps) {
         const paramsChanged = !isEqual(this.props.match.params, oldProps.match.params);
         const newParams = this.props.match.params;
 
         if (paramsChanged) {
-            this.props.loadContext(newParams);
+            this.props.loadContext(newParams, this.props.pluginsFull);
         }
 
         if (this.props.windowTitle) {
@@ -107,7 +111,7 @@ export default compose(
     connect(
         createStructuredSelector({
             pluginsConfig: pluginsSelector,
-            mode: () => 'desktop',
+            mode: currentContextModeSelector,
             monitoredState: contextMonitoredStateSelector,
             windowTitle: currentTitleSelector
         }),

@@ -1,19 +1,21 @@
 /*
- * Copyright 2017, GeoSolutions Sas.
+ * Copyright 2020, GeoSolutions Sas.
  * All rights reserved.
  *
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const React = require('react');
-const PropTypes = require('prop-types');
-const {connect} = require('react-redux');
-const url = require('url');
+import React from 'react';
+import PropTypes from 'prop-types';
+import {connect} from 'react-redux';
+
+import url from 'url';
 const urlQuery = url.parse(window.location.href, true).query;
-const MapViewerCmp = require('../components/viewer/MapViewerCmp');
-const {loadNewMap, loadMapConfig} = require('../../actions/config');
-const {initMap} = require('../../actions/map');
-const MapViewerContainer = require('../../containers/MapViewer');
+
+import MapViewerCmp from '../components/viewer/MapViewerCmp';
+import {loadNewMap, loadMapConfig} from '../../actions/config';
+import {initMap} from '../../actions/map';
+import MapViewerContainer from '../../containers/MapViewer';
 
 class MapViewerPage extends React.Component {
     static propTypes = {
@@ -41,7 +43,7 @@ class MapViewerPage extends React.Component {
     }
 }
 
-module.exports = connect((state) => ({
+export default connect((state) => ({
     mode: urlQuery.mobile || state.browser && state.browser.mobile ? 'mobile' : 'desktop'
 }),
 {

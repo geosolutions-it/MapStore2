@@ -33,7 +33,7 @@ ConfigUtils.setLocalConfigurationFile('MapStore2/web/client/localConfig.json');
  *     pages: [{
  *         name: "mapviewer",
  *         path: "/",
- *         component: require('@mapstore/product/pages/MapViewer')
+ *         component: require('@mapstore/product/pages/MapViewer').default
  *     }]
  * });
  */

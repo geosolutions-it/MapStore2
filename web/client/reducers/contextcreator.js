@@ -8,6 +8,7 @@
 import {get, omit, isObject, head, find, pick} from 'lodash';
 
 import ConfigUtils from '../utils/ConfigUtils';
+import PluginsUtils from '../utils/PluginsUtils';
 
 import {INIT, SET_CREATION_STEP, SET_WAS_TUTORIAL_SHOWN, SET_TUTORIAL_STEP, MAP_VIEWER_LOADED, SHOW_MAP_VIEWER_RELOAD_CONFIRM, SET_RESOURCE,
     UPDATE_TEMPLATE, IS_VALID_CONTEXT_NAME, CONTEXT_NAME_CHECKED, CLEAR_CONTEXT_CREATOR, SET_FILTER_TEXT, SET_SELECTED_PLUGINS,
@@ -87,13 +88,9 @@ const makeNode = (plugin, parent = null, plugins = [], localPlugins = []) => ({
     denyUserSelection: plugin.denyUserSelection || false,
     isUserPlugin: false,
     isExtension: plugin.extension ?? false,
-    pluginConfig: {
-        override: plugin.defaultOverride,
-        ...omit(head(localPlugins.filter(localPlugin => localPlugin.name === plugin.name)) || {},
-            'cfg', ...(plugin.defaultOverride ? ['override'] : [])),
-        name: plugin.name,
-        cfg: plugin.defaultConfig
-    },
+    pluginConfig: omit(plugin.defaultConfig ?
+        plugin.defaultConfig :
+        (head(localPlugins.filter(localPlugin => localPlugin.name === plugin.name)) || {}), 'name', 'active'),
     autoEnableChildren: plugin.autoEnableChildren || [],
     children: get(plugin, 'children', [])
         .map(childPluginName => head(plugins.filter(p => p.name === childPluginName)))
@@ -101,8 +98,14 @@ const makeNode = (plugin, parent = null, plugins = [], localPlugins = []) => ({
         .map(childPlugin => makeNode(childPlugin, plugin.name, plugins, localPlugins))
 });
 
-const makePluginTree = (plugins, localPluginsConfig) => {
-    const localPlugins = get(localPluginsConfig, 'desktop', []).map(plugin => isObject(plugin) ? plugin : {name: plugin});
+const makePluginTree = (pluginsConfig = {}, localPluginsConfig) => {
+    const plugins = (pluginsConfig.version === 2 ?
+        pluginsConfig.plugins :
+        pluginsConfig.plugins?.map(plugin => ({
+            ...plugin,
+            ...(plugin.defaultConfig ? {defaultConfig: {cfg: {...plugin.defaultConfig}}} : {})
+        })));
+    const localPlugins = get(localPluginsConfig, 'mapviewer', []).map(plugin => isObject(plugin) ? plugin : {name: plugin});
 
     if (!plugins) {
         return defaultPlugins;
@@ -199,11 +202,11 @@ export default (state = {}, action) => {
         };
     }
     case SET_RESOURCE: {
-        const {data = {plugins: {desktop: []}}, ...resource} = action.resource || {};
-        const {plugins = {desktop: []}, userPlugins = [], templates = [], ...otherData} = data;
-        const contextPlugins = get(plugins, 'desktop', []);
+        const {data = {plugins: {mapviewer: []}}, ...resource} = action.resource || {};
+        const {plugins = {mapviewer: []}, userPlugins = [], templates = [], ...otherData} = data;
+        const contextPlugins = PluginsUtils.fromLegacyPlugins(plugins).mapviewer;
 
-        const allPlugins = makePluginTree(get(action.pluginsConfig, 'plugins'), ConfigUtils.getConfigProp('plugins'));
+        const allPlugins = makePluginTree(action.pluginsConfig, PluginsUtils.fromLegacyPlugins(ConfigUtils.getConfigProp('plugins')));
 
         let pluginsToEnable = [];
         const convertPlugins = curPlugins => curPlugins.map(plugin => {
@@ -222,8 +225,7 @@ export default (state = {}, action) => {
                 ...plugin,
                 pluginConfig: {
                     ...get(plugin, 'pluginConfig', {}),
-                    cfg: get(targetPlugin, 'cfg'),
-                    override: get(targetPlugin, 'override')
+                    ...omit(targetPlugin, 'name', 'active')
                 },
                 isUserPlugin: !!userPlugin,
                 active: targetPlugin.active || false,
@@ -313,8 +315,7 @@ export default (state = {}, action) => {
         const plugin = findPlugin(get(state, 'plugins', []), action.pluginName);
         return action.pluginName ?
             set('editedCfg', JSON.stringify({
-                cfg: get(plugin, 'pluginConfig.cfg', {}),
-                override: get(plugin, 'pluginConfig.override', {})
+                ...get(plugin, 'pluginConfig', {})
             }, null, 2), state) :
             state;
     }

@@ -598,9 +598,16 @@ describe('identify Epics', () => {
                 disableAlwaysOn: false
             },
             context: {
+                contextPlugins: {
+                    mapviewer: {
+                        desktop: [],
+                        mobile: [],
+                        embedded: []
+                    }
+                },
                 currentContext: {
                     plugins: {
-                        desktop: []
+                        mapviewer: []
                     }
                 }
             }
@@ -617,9 +624,16 @@ describe('identify Epics', () => {
                 disableAlwaysOn: false
             },
             context: {
+                contextPlugins: {
+                    mapviewer: {
+                        desktop: [{name: "Identify"}],
+                        mobile: [{name: "Identify"}],
+                        embedded: [{name: "Identify"}]
+                    }
+                },
                 currentContext: {
                     plugins: {
-                        desktop: [{name: "Identify"}]
+                        mapviewer: [{name: "Identify"}]
                     }
                 }
             },
@@ -665,9 +679,16 @@ describe('identify Epics', () => {
                 disableAlwaysOn: false
             },
             context: {
+                contextPlugins: {
+                    mapviewer: {
+                        desktop: [{name: "Identify"}],
+                        mobile: [{name: "Identify"}],
+                        embedded: [{name: "Identify"}]
+                    }
+                },
                 currentContext: {
                     plugins: {
-                        desktop: [{ name: "Identify" }]
+                        mapviewer: [{name: "Identify"}]
                     }
                 }
             },

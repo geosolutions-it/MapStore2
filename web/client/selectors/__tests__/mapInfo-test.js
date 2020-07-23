@@ -219,9 +219,16 @@ describe('Test mapinfo selectors', () => {
                 enabled: true
             },
             context: {
+                contextPlugins: {
+                    mapviewer: {
+                        desktop: [{name: "Identify"}],
+                        mobile: [{name: "Identify"}],
+                        embedded: [{name: "Identify"}]
+                    }
+                },
                 currentContext: {
                     plugins: {
-                        desktop: [{ name: "Identify" }]
+                        mapviewer: [{name: "Identify"}]
                     }
                 }
             }

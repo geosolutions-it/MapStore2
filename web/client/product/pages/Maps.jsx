@@ -19,7 +19,7 @@ const ConfigUtils = require('../../utils/ConfigUtils');
 const {resetControls} = require('../../actions/controls');
 const {loadMaps} = require('../../actions/maps');
 
-const Page = require('../../containers/Page');
+const Page = require('../../containers/Page').default;
 
 class MapsPage extends React.Component {
     static propTypes = {

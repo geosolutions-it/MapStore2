@@ -138,6 +138,9 @@ var ConfigUtils = {
     setLocalConfigurationFile(file) {
         localConfigFile = file;
     },
+    getLocalConfigurationFile() {
+        return localConfigFile;
+    },
     loadConfiguration: function() {
         if (localConfigFile) {
             return axios.get(localConfigFile).then(response => {

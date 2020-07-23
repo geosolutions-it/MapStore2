@@ -14,7 +14,7 @@ module.exports = {
     pages: [{
         name: "mapviewer",
         path: "/:mapId",
-        component: require('./pages/MapViewer')
+        component: require('./pages/MapViewer').default
     }],
     pluginsDef: require('./apiPlugins.js'),
     initialState: {

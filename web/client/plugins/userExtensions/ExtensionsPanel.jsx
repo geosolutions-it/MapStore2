@@ -14,7 +14,7 @@ import { compose, withState } from 'recompose';
 import { Glyphicon } from 'react-bootstrap';
 
 import { updateUserPlugin } from '../../actions/context';
-import { userPluginsSelector } from '../../selectors/context';
+import { userContextPluginsSelector } from '../../selectors/context';
 
 import Message from '../../components/I18N/Message';
 import BorderLayout from '../../components/layout/BorderLayout';
@@ -24,6 +24,9 @@ import Toolbar from '../../components/misc/toolbar/Toolbar';
 import emptyState from '../../components/misc/enhancers/emptyState';
 import localizedProps from '../../components/misc/enhancers/localizedProps';
 import withPluginsDefinition from './withPluginsDefinition';
+
+import url from 'url';
+const urlQuery = url.parse(window.location.href, true).query;
 
 const Filter = localizedProps('filterPlaceholder')(BaseFilter);
 
@@ -103,7 +106,11 @@ const ExtensionsPanel = ({
 
 export default compose(
     connect(
-        createSelector(userPluginsSelector, extensions => ({extensions})),
+        createSelector(
+            userContextPluginsSelector,
+            (state) => urlQuery.mode || state.mode || (state.browser && state.browser.mobile ? 'mobile' : 'desktop'),
+            (extensions, mode) => ({extensions: extensions?.[mode]})
+        ),
         {
             onSelect: (extension) => updateUserPlugin(extension.name, { active: !extension.active })
         }

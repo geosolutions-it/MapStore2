@@ -8,7 +8,25 @@
 
 import React from 'react';
 import assign from 'object-assign';
-import { omit, isObject, head, isArray, isString, isFunction, memoize, get, endsWith } from 'lodash';
+import {
+    omit,
+    isObject,
+    head,
+    isArray,
+    isString,
+    isFunction,
+    memoize,
+    get,
+    endsWith,
+    keys,
+    values,
+    mapValues,
+    identity,
+    dropRight,
+    sortBy,
+    last,
+    findIndex
+} from 'lodash';
 import {connect as originalConnect} from 'react-redux';
 import axios from '../libs/ajax';
 import url from 'url';
@@ -80,10 +98,12 @@ const normalizeName = name => endsWith(name, 'Plugin') && name || (name + "Plugi
 
 export const getPluginConfiguration = (cfg, plugin) => {
     const pluginName = getPluginSimpleName(plugin);
-    return head(cfg.filter((cfgObj) => cfgObj.name === pluginName || cfgObj === pluginName).map(cfgObj => isString(cfgObj) ? {
-        name: cfgObj
-    } : cfgObj)) || {};
+    return head(cfg.filter((cfgObj) => cfgObj.name === pluginName));
 };
+
+const executeDeferredProp = (pluginImpl, pluginConfig, name) => pluginImpl && isFunction(pluginImpl[name]) ?
+    ({...pluginImpl, [name]: pluginImpl[name](pluginConfig)}) :
+    pluginImpl;
 
 /* eslint-disable */
 const parseExpression = (state = {}, context = {}, value) => {
@@ -162,22 +182,22 @@ const includeLoaded = (name, loadedPlugins, plugin) => {
     return plugin;
 };
 
-const getPriority = (plugin, override = {}, container) => {
+const getPriority = (plugin, cfg = {}, container) => {
     return (
-        get(override, container + ".priority") ||
-        get(plugin, container + ".priority") ||
+        get(cfg.override, container + ".priority") ||
+        get(executeDeferredProp(plugin, cfg, container), container + '.priority') ||
         0
     );
 };
 
-export const getMorePrioritizedContainer = (pluginImpl, override = {}, plugins, priority) => {
+export const getMorePrioritizedContainer = (pluginImpl, cfg = {}, plugins, priority) => {
     return plugins.reduce((previous, current) => {
-        const containerName = current.name || current;
-        const pluginPriority = getPriority(pluginImpl, override, containerName);
+        const containerName = current.name;
+        const pluginPriority = getPriority(pluginImpl, cfg, containerName);
         return pluginPriority > previous.priority ? {
             plugin: {
                 name: containerName,
-                impl: assign({}, pluginImpl[containerName], override[containerName])
+                impl: assign({}, pluginImpl[containerName], cfg.override?.[containerName] || {})
             },
             priority: pluginPriority} : previous;
     }, {plugin: null, priority: priority});
@@ -200,9 +220,9 @@ const canContain = (container, plugin, override = {}) => {
     return plugin[container] || override[container] || false;
 };
 
-const isMorePrioritizedContainer = (pluginImpl, override, plugins, priority) => {
+const isMorePrioritizedContainer = (pluginImpl, cfg, plugins, priority) => {
     return getMorePrioritizedContainer(pluginImpl,
-        override,
+        cfg,
         plugins,
         priority).plugin === null;
 };
@@ -210,10 +230,6 @@ const isMorePrioritizedContainer = (pluginImpl, override, plugins, priority) => 
 const isValidConfiguration = (cfg) => {
     return cfg && isString(cfg) || (isObject(cfg) && cfg.name);
 };
-
-const executeDeferredProp = (pluginImpl, pluginConfig, name) => pluginImpl && isFunction(pluginImpl[name]) ?
-    ({...pluginImpl, [name]: pluginImpl[name](pluginConfig)}) :
-    pluginImpl;
 
 export const getPluginItems = (state, plugins, pluginsConfig, containerName, containerId, isDefault, loadedPlugins, filter) => {
     return Object.keys(plugins)
@@ -239,8 +255,8 @@ export const getPluginItems = (state, plugins, pluginsConfig, containerName, con
             return showIn(state, plugins.requires, plugin.config, containerName, containerId, isDefault);
         })
     // include only plugins for which container is the preferred container
-        .filter((plugin) => isMorePrioritizedContainer(plugin.impl, plugin.config.override, pluginsConfig,
-            getPriority(plugin.impl, plugin.config.override, containerName)))
+        .filter((plugin) => isMorePrioritizedContainer(plugin.impl, plugin.config, pluginsConfig,
+            getPriority(plugin.impl, plugin.config, containerName)))
         .map((plugin) => {
             const pluginName = getPluginSimpleName(plugin.name);
             const pluginImpl = includeLoaded(pluginName, loadedPlugins, plugin.impl);
@@ -365,8 +381,9 @@ export const mapPluginsPosition = (pluginsConfig = []) =>
         };
     }, {});
 
+export const getPlugin = pluginDef => omit(pluginDef, 'reducers', 'epics', 'configuration');
 export const getPlugins = (plugins) => Object.keys(plugins).map((name) => plugins[name])
-    .reduce((previous, current) => assign({}, previous, omit(current, 'reducers', 'epics')), {});
+    .reduce((previous, current) => assign({}, previous, getPlugin(current)), {});
 
 /**
  * provide the pluginDescriptor for a given plugin, with a state and a configuration
@@ -454,6 +471,7 @@ export const connect = (mapStateToProps, mapDispatchToProps, mergeProps, options
  * @param {string} name name of the plugin (without the Plugin postfix)
  * @param {object} config configuration object, with the following (optional) properties:
  * @param {object|function} config.component: ReactJS component that implements the plugin functionalities, can be null if the plugin supports lazy loading
+ * @param {object} config.configuration: object containing plugin configuration validation functions
  * @param {object} config.options: generic plugins configuration options (e.g. disablePluginIf)
  * @param {object} config.containers: object with supported containers (key=container name, value=container config)
  * @param {object} config.reducers: reducers the plugin will need
@@ -500,7 +518,7 @@ export const connect = (mapStateToProps, mapDispatchToProps, mergeProps, options
  *  epics: {myEpic: require('...')}
  * });
  */
-export const createPlugin = (name, { component, options = {}, containers = {}, reducers = {}, epics = {}, lazy = false, enabler = () => true, loader }) => {
+export const createPlugin = (name, { component, configuration = {}, options = {}, containers = {}, reducers = {}, epics = {}, lazy = false, enabler = () => true, loader }) => {
     const pluginName = normalizeName(name);
     const pluginImpl = lazy ? {
         loadPlugin: (resolve) => {
@@ -513,6 +531,7 @@ export const createPlugin = (name, { component, options = {}, containers = {}, r
     } : assign(component, { isMapStorePlugin: true });
     return {
         [pluginName]: assign(pluginImpl, containers, options),
+        configuration,
         reducers,
         epics
     };
@@ -547,6 +566,114 @@ export const loadPlugin = (pluginUrl) => {
     });
 };
 
+export const fromLegacyPlugins = (legacyPlugins = {}) => {
+    if (!legacyPlugins || isArray(legacyPlugins) || !isObject(legacyPlugins)) {
+        return legacyPlugins;
+    }
+    if (isObject(legacyPlugins) && legacyPlugins.mapviewer) {
+        return omit(legacyPlugins, 'desktop', 'mobile', 'embedded');
+    }
+
+    const getPluginName = p => isObject(p) ? p.name : p;
+    const {desktop = [], mobile = [], embedded = [], ...other} = legacyPlugins;
+
+    return {
+        ...other,
+        mapviewer: sortBy([
+            ...desktop.map(p => [p, 'desktop']),
+            ...mobile.map(p => [p, 'mobile']),
+            ...embedded.map(p => [p, 'embedded'])
+        ], ([p]) => getPluginName(p)).reduce((result, [curPlugin, curMode]) => {
+            const curPluginFixed = isObject(curPlugin) ? curPlugin : {name: curPlugin};
+            const lastConfig = last(result);
+            const existingConfig = lastConfig?.name === curPluginFixed.name ? lastConfig : {name: curPluginFixed.name};
+            const newPluginConf = {
+                ...existingConfig,
+                modes: {
+                    desktop: existingConfig.modes?.desktop ?? false,
+                    mobile: existingConfig.modes?.mobile ?? false,
+                    embedded: existingConfig.modes?.embedded ?? false,
+                    [curMode]: omit(curPlugin, 'name')
+                }
+            };
+
+            return [
+                ...dropRight(result),
+                ...(!lastConfig || existingConfig === lastConfig ? [newPluginConf] : [lastConfig, newPluginConf])
+            ];
+        }, [])
+    };
+};
+
+export const pageConfigToInternal = (pagePlugins = [], pluginsWithConfig = {}) => {
+    const pagePluginsFixed = pagePlugins.map(plugin => isObject(plugin) ? plugin : {name: plugin});
+    const makeConfig = mode => pagePluginsFixed.map(({name, modes, ...config}) => {
+        const modeConfig = modes?.[mode];
+        const modeIsDisabled = findIndex(pluginsWithConfig[name]?.configuration?.disabledModes, disabledMode => disabledMode === mode) > -1;
+
+        if (modeIsDisabled || modeConfig === false) {
+            return false;
+        }
+
+        return  {
+            name,
+            ...config,
+            ...(modeConfig || {})
+        };
+    }).filter(p => p !== false);
+
+    return {
+        desktop: makeConfig('desktop'),
+        mobile: makeConfig('mobile'),
+        embedded: makeConfig('embedded')
+    };
+};
+
+// {[page]: {desktop: [{plugin1, plugin2, ...}], mobile: [...], embedded: [...]}} - internal config
+export const pluginsConfigToInternal = (pluginsConfig = {}, pluginsWithConfig = {}) => mapValues(pluginsConfig, pageConfig => pageConfigToInternal(pageConfig, pluginsWithConfig));
+
+export const validatePluginConfigMode = (configuration, mode = 'desktop', config = {}) => ({
+    ...(configuration?.[mode] ?? identity)((configuration?.main ?? identity)(config)),
+    name: config.name
+});
+
+export const mapPluginConfigsPage = (pageConfig = {}, iterator = identity, pageName) =>
+    mapValues(pageConfig, (pagePlugins, mode) => pagePlugins.map(pagePlugin => iterator(pagePlugin, mode, pagePlugins, pageName, pageConfig)));
+
+export const mapPluginConfigs = (pluginsConfig = {}, iterator = identity) =>
+    mapValues(pluginsConfig, (pageConfig, pageName) => mapPluginConfigsPage(pageConfig, iterator, pageName));
+
+export const validatePluginConfigs = (pluginsConfig = {}, pluginsWithConfig = {}) =>
+    mapPluginConfigs(pluginsConfig, (pagePlugin, mode) => {
+        const configuration = pluginsWithConfig[pagePlugin.name]?.configuration;
+        return validatePluginConfigMode(configuration, mode, pagePlugin);
+    });
+
+export const validatePluginConfig = (pluginsConfig, configuration, pluginName, validator = mapPluginConfigs) =>
+    validator(pluginsConfig, (pagePlugin, mode) => pluginName === pagePlugin.name ? validatePluginConfigMode(configuration, mode, pagePlugin) : pagePlugin);
+
+export const pluginsWithConfiguration = (plugins) => values(plugins).reduce((result, curPlugin) => {
+    const pluginObj = getPlugin(curPlugin);
+    const pluginKey = head(keys(pluginObj));
+    const pluginName = getPluginSimpleName(pluginKey);
+    const plugin = pluginObj[pluginKey];
+
+    return {
+        ...result,
+        [pluginName || pluginKey]: {
+            plugin,
+            configuration: curPlugin.configuration ?? {}
+        }
+    };
+}, {});
+
+export const makeInternalPluginsConfig = (localConfig, plugins) => {
+    const pluginsWithConfig = pluginsWithConfiguration(plugins);
+    return validatePluginConfigs(pluginsConfigToInternal(fromLegacyPlugins(localConfig), pluginsWithConfig), pluginsWithConfig);
+};
+
+export const makeInternalPluginsPageConfig = (pageConfig, plugins) => makeInternalPluginsConfig({mapviewer: pageConfig}, plugins).mapviewer;
+
 /**
  * Utilities to manage plugins
  * @memberof utils
@@ -558,6 +685,7 @@ export default {
     filterDisabledPlugins,
     getMonitoredState,
     mapPluginsPosition,
+    getPlugin,
     getPlugins,
     getPluginDescriptor,
     getPluginItems,
@@ -570,5 +698,15 @@ export default {
     handleExpression,
     getMorePrioritizedContainer,
     getPluginConfiguration,
-    isMapStorePlugin
+    isMapStorePlugin,
+    fromLegacyPlugins,
+    pageConfigToInternal,
+    pluginsConfigToInternal,
+    validatePluginConfigMode,
+    mapPluginConfigsPage,
+    mapPluginConfigs,
+    validatePluginConfigs,
+    validatePluginConfig,
+    makeInternalPluginsConfig,
+    makeInternalPluginsPageConfig
 };

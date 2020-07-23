@@ -1,26 +1,28 @@
-const PropTypes = require('prop-types');
 /**
- * Copyright 2016, GeoSolutions Sas.
+ * Copyright 2020, GeoSolutions Sas.
  * All rights reserved.
  *
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const React = require('react');
+import React from 'react';
+import PropTypes from 'prop-types';
 
-const {connect} = require('react-redux');
+import {connect} from 'react-redux';
 
-const url = require('url');
+import url from 'url';
 const urlQuery = url.parse(window.location.href, true).query;
-const PluginsUtils = require('../utils/PluginsUtils');
-const ConfigUtils = require('../utils/ConfigUtils');
+
+import PluginsContainerCmp from '../components/plugins/PluginsContainer';
+import PluginsUtils from '../utils/PluginsUtils';
+import ConfigUtils from '../utils/ConfigUtils';
 
 const PluginsContainer = connect((state) => ({
     mode: urlQuery.mode || (urlQuery.mobile || state.browser && state.browser.mobile ? 'mobile' : 'desktop'),
     monitoredState: PluginsUtils.getMonitoredState(state, ConfigUtils.getConfigProp('monitorState'))
-}))(require('../components/plugins/PluginsContainer'));
+}))(PluginsContainerCmp);
 
-class Page extends React.Component {
+export default class Page extends React.Component {
     static propTypes = {
         id: PropTypes.string,
         className: PropTypes.string,
@@ -45,11 +47,8 @@ class Page extends React.Component {
     }
 
     getDefaultPluginsConfig = (name) => {
-        const plugins = ConfigUtils.getConfigProp("plugins") || {};
-        return {
-            "desktop": plugins[name] || [],
-            "mobile": plugins[name] || []
-        };
+        const plugins = ConfigUtils.getConfigProp('internalPlugins') || {};
+        return plugins[name];
     };
 
     render() {
@@ -70,5 +69,3 @@ class Page extends React.Component {
         />);
     }
 }
-
-module.exports = Page;

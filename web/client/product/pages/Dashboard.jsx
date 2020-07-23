@@ -15,7 +15,7 @@ const urlQuery = url.parse(window.location.href, true).query;
 const { loadDashboard, resetDashboard } = require('../../actions/dashboard');
 const { checkLoggedUser } = require('../../actions/security');
 
-const Page = require('../../containers/Page');
+const Page = require('../../containers/Page').default;
 const BorderLayout = require('../../components/layout/BorderLayout');
 
 class DashboardPage extends React.Component {

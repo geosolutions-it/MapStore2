@@ -14,7 +14,7 @@ const Localized = require('../../../components/I18N/Localized');
 const App = (props) => {
     const MapViewer = connect(() => ({
         plugins: props.plugins
-    }))(require('../pages/MapViewer'));
+    }))(require('../pages/MapViewer').default);
     return (
         <div className="fill">
             <Localized messages={props.messages} locale={props.current} loadingError={props.localeError}>

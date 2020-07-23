@@ -1,19 +1,20 @@
-const PropTypes = require('prop-types');
 /*
- * Copyright 2016, GeoSolutions Sas.
+ * Copyright 2020, GeoSolutions Sas.
  * All rights reserved.
  *
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const React = require('react');
+import React from 'react';
+import PropTypes from 'prop-types';
 
-const PluginsUtils = require('../../utils/PluginsUtils');
+import PluginsUtils from '../../utils/PluginsUtils';
 
-const assign = require('object-assign');
+import assign from 'object-assign';
 
-const { get, isEqual, isObject, isArray } = require('lodash');
-const {componentFromProp} = require('recompose');
+import { get, isEqual, isObject, isArray } from 'lodash';
+import { componentFromProp } from 'recompose';
+
 const Component = componentFromProp('component');
 
 /**
@@ -22,15 +23,15 @@ const Component = componentFromProp('component');
  * The plugins to render will come from the `mode` entry of the `pluginsConfig`
  * @class
  * @memberof components.plugins
- * @prop {string} mode key of the pluginsConfig object to get the plugins to render
+ * @prop {string} mode MapStore current mode
  * @prop {string} defaultMode mode to use if mode is not defined
  * @prop {object} params params of the current page, usually from react router. Used as state to get plugins descriptor if monitored state is not present.
  * @prop {object} plugins the Plugins definitions
- * @prop {object} pluginsConfig the configuration for the plugins. a map of [mode]: [{pluginCfg1}...]
+ * @prop {object} pluginsConfig the configuration for the plugins. a map of {[mode]: [pluginCfg1, pluginCfg2, ...]}
  * @prop {object} pluginsState a piece of state to use. usually controls.
  * @prop {object} monitoredState the piece of state to monitor Used as state to get plugins descriptor.
  */
-class PluginsContainer extends React.Component {
+export default class PluginsContainer extends React.Component {
     static propTypes = {
         mode: PropTypes.string,
         params: PropTypes.object,
@@ -86,6 +87,8 @@ class PluginsContainer extends React.Component {
     }
 
     UNSAFE_componentWillMount() {
+        this.isPluginLoading = {};
+        this.wasPluginLoaded = {};
         this.loadPlugins(this.props.pluginsState, this.props);
     }
 
@@ -137,8 +140,8 @@ class PluginsContainer extends React.Component {
             .filter(this.filterDisabled)
             // renders only loaded plugins (skip lazy ones, not loaded yet)
             .filter(this.filterLoaded)
-            // renders only root plugins (children of other plugins are skipped)
             .filter(this.filterRoot)
+            // renders only root plugins (children of other plugins are skipped)
             .map((Plugin) => <Plugin.impl key={Plugin.id} ref={Plugin.cfg.withGlobalRef ? PluginsUtils.setRefToWrappedComponent(Plugin.name) : null}
                 {...this.props.params} {...Plugin.cfg} pluginCfg={Plugin.cfg} items={Plugin.items}/>);
     };
@@ -172,9 +175,10 @@ class PluginsContainer extends React.Component {
     filterLoaded = (plugin) => plugin && !plugin.impl.loadPlugin;
 
     filterRoot = (plugin) => {
+        const cfg = PluginsUtils.getPluginConfiguration(this.getPluginsConfig(this.props), plugin.name);
         const container = PluginsUtils.getMorePrioritizedContainer(
             plugin.impl,
-            PluginsUtils.getPluginConfiguration(this.getPluginsConfig(this.props), plugin.name).override,
+            cfg,
             this.getPluginsConfig(this.props),
             0
         );
@@ -185,24 +189,27 @@ class PluginsContainer extends React.Component {
 
     loadPlugins = (state, newProps) => {
         const getState = (path) => this.getState(path, newProps);
+
         (newProps.pluginsConfig && this.getPluginsConfig(newProps) || [])
             .map((plugin) => PluginsUtils.getPluginDescriptor(getState, (newProps.plugins),
                 this.getPluginsConfig(newProps), plugin, this.state.loadedPlugins))
             .filter(plugin => PluginsUtils.filterDisabledPlugins({ plugin: plugin && plugin.impl || plugin, cfg: plugin && plugin.cfg || {}}, getState))
             .filter((plugin) => plugin && plugin.impl.loadPlugin).forEach((plugin) => {
-                if (!this.state.loadedPlugins[plugin.name]) {
+                if (!this.wasPluginLoaded[plugin.name] && !this.isPluginLoading[plugin.name]) {
                     if (!plugin.impl.enabler || plugin.impl.enabler(state)) {
+                        this.isPluginLoading[plugin.name] = true;
                         plugin.impl.loadPlugin((impl) => this.loadPlugin(plugin, impl));
                     }
                 }
             });
     };
     loadPlugin = (plugin, impl) => {
+        this.wasPluginLoaded[plugin.name] = true;
+        this.isPluginLoading[plugin.name] = false;
+
         this.setState({
             loadedPlugins: assign({}, this.state.loadedPlugins, {[plugin.name]: impl})
         });
         this.props.onPluginLoaded(plugin.name, impl);
     };
 }
-
-module.exports = PluginsContainer;

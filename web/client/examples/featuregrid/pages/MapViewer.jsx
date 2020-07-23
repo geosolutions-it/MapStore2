@@ -23,9 +23,9 @@ const {resetControls} = require('../../../actions/controls');
 const urlQuery = url.parse(window.location.href, true).query;
 
 const PluginsContainer = connect((state) => ({
-    pluginsConfig: state.plugins || ConfigUtils.getConfigProp('plugins') || null,
+    pluginsConfig: state.plugins || ConfigUtils.getConfigProp('internalPlugins') || null,
     mode: urlQuery.mobile || state.browser && state.browser.touch ? 'mobile' : 'desktop'
-}))(require('../../../components/plugins/PluginsContainer'));
+}))(require('../../../components/plugins/PluginsContainer').default);
 
 
 class MapViewer extends React.Component {

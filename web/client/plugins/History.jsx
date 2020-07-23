@@ -37,27 +37,32 @@ const RedoButton = connect((state) => {
 })(require('../components/mapcontrols/navigationhistory/RedoButton'));
 
 module.exports = {
-    UndoPlugin: assign(UndoButton, {
-        Toolbar: {
-            name: 'undo',
-            position: 5,
-            tool: true,
-            tooltip: "history.undoBtnTooltip",
-            icon: <Glyphicon glyph="step-backward"/>,
-            help: <Message msgId="helptexts.historyundo"/>,
-            priority: 1
-        }
-    }),
-    RedoPlugin: assign(RedoButton, {
-        Toolbar: {
-            name: 'redo',
-            position: 6,
-            tool: true,
-            tooltip: "history.redoBtnTooltip",
-            icon: <Glyphicon glyph="step-forward"/>,
-            help: <Message msgId="helptexts.historyredo"/>,
-            priority: 1
-        }
-    }),
-    reducers: {}
+    UndoPlugin: {
+        UndoPlugin: assign(UndoButton, {
+            Toolbar: {
+                name: 'undo',
+                position: 5,
+                tool: true,
+                tooltip: "history.undoBtnTooltip",
+                icon: <Glyphicon glyph="step-backward"/>,
+                help: <Message msgId="helptexts.historyundo"/>,
+                priority: 1
+            }
+        }),
+        reducers: {}
+    },
+    RedoPlugin: {
+        RedoPlugin: assign(RedoButton, {
+            Toolbar: {
+                name: 'redo',
+                position: 6,
+                tool: true,
+                tooltip: "history.redoBtnTooltip",
+                icon: <Glyphicon glyph="step-forward"/>,
+                help: <Message msgId="helptexts.historyredo"/>,
+                priority: 1
+            }
+        }),
+        reducers: {}
+    }
 };

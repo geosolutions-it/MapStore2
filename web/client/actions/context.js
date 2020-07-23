@@ -14,15 +14,18 @@ export const LOAD_CONTEXT = "CONTEXT:LOAD";
  * @param {object} params params of the context page
  * @param {string|number} contextId id of the context to load
  * @param {string|number} mapId id of the map to load in the context
+ * @param {object} plugins plugins object with configuration entries
  */
-export const loadContext = ({ mapId, contextName }) => ({ type: LOAD_CONTEXT, mapId, contextName });
+export const loadContext = ({ mapId, contextName }, plugins) => ({ type: LOAD_CONTEXT, mapId, contextName, plugins });
 
 export const SET_CURRENT_CONTEXT = "CONTEXT:SET_CURRENT_CONTEXT";
 /**
  * Sets the context passed in the state
  * @param {object} context the context
+ * @param {object} contextPlugins context plugins in internal format
+ * @param {object} contextUserPlugins context user plugins in internal format
  */
-export const setContext = (context) => ({ type: SET_CURRENT_CONTEXT, context });
+export const setContext = (context, contextPlugins, contextUserPlugins) => ({ type: SET_CURRENT_CONTEXT, context, contextPlugins, contextUserPlugins });
 
 export const LOADING = "CONTEXT:LOADING";
 /**

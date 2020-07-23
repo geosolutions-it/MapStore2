@@ -8,7 +8,7 @@
 
 import React from 'react';
 import * as PropTypes from 'prop-types';
-import { keys, isObject, find, get } from 'lodash';
+import { mapValues, isObject, find, get } from 'lodash';
 
 import Stepper from '../misc/Stepper';
 import GeneralSettings from './GeneralSettingsStep';
@@ -265,11 +265,11 @@ export default class ContextCreator extends React.Component {
                     component:
                         <ConfigureMap
                             pluginsConfig={this.props.ignoreViewerPlugins ?
-                                this.props.pluginsConfig :
-                                keys(this.props.pluginsConfig).reduce((curConfig, mode) => ({
-                                    ...curConfig,
-                                    [mode]: pluginsFilterOverride(this.props.pluginsConfig[mode], this.props.viewerPlugins)
-                                }), {})}
+                                this.props.pluginsConfig : {
+                                    ...this.props.pluginsConfig,
+                                    mapviewer: mapValues(this.props.pluginsConfig?.mapviewer, modeConfig => pluginsFilterOverride(modeConfig, this.props.viewerPlugins))
+                                }
+                            }
                             plugins={this.context.plugins}
                             mapType={this.props.mapType}
                             showConfirm={this.props.showReloadConfirm}

@@ -1,30 +1,33 @@
 {
+  "version": 2,
   "plugins": [
     {
       "name": "Map",
       "glyph": "1-map",
       "mandatory": true,
       "defaultConfig": {
-        "mapTypeOverride": "openlayers",
-        "mapOptions": {
-          "openlayers": {
-            "interactions": {
-              "pinchRotate": false,
-              "altShiftDragRotate": false
+        "cfg": {
+          "mapTypeOverride": "openlayers",
+          "mapOptions": {
+            "openlayers": {
+              "interactions": {
+                "pinchRotate": false,
+                "altShiftDragRotate": false
+              },
+              "attribution": {
+                "container": "#footer-attribution-container"
+              }
             },
-            "attribution": {
-              "container": "#footer-attribution-container"
+            "leaflet": {
+              "attribution": {
+                "container": "#footer-attribution-container"
+              }
             }
           },
-          "leaflet": {
-            "attribution": {
-              "container": "#footer-attribution-container"
+          "toolsOptions": {
+            "scalebar": {
+              "container": "#footer-scalebar-container"
             }
-          }
-        },
-        "toolsOptions": {
-          "scalebar": {
-            "container": "#footer-scalebar-container"
           }
         }
       }
@@ -45,14 +48,16 @@
       "title": "plugins.TOC.title",
       "description": "plugins.TOC.description",
       "defaultConfig": {
-        "activateAddLayerButton": true,
-        "addLayersPermissions": true,
-        "removeLayersPermissions": true,
-        "sortingPermissions": true,
-        "addGroupsPermissions": true,
-        "removeGroupsPermissions": true,
-        "activateWidgetTool": true,
-        "activateMetedataTool": false
+        "cfg": {
+          "activateAddLayerButton": true,
+          "addLayersPermissions": true,
+          "removeLayersPermissions": true,
+          "sortingPermissions": true,
+          "addGroupsPermissions": true,
+          "removeGroupsPermissions": true,
+          "activateWidgetTool": true,
+          "activateMetedataTool": false
+        }
       },
       "children": [
         "TOCItemsSettings",
@@ -179,9 +184,11 @@
       "title": "plugins.Identify.title",
       "description": "plugins.Identify.description",
       "defaultConfig": {
-        "showHighlightFeatureButton": true,
-        "viewerOptions": {
-          "container": "{context.ReactSwipe}"
+        "cfg": {
+          "showHighlightFeatureButton": true,
+          "viewerOptions": {
+            "container": "{context.ReactSwipe}"
+          }
         }
       }
     },
@@ -209,39 +216,41 @@
       "name": "QueryPanel",
       "glyph": "filter",
       "defaultConfig": {
-        "activateQueryTool": true,
-        "spatialOperations": [
-          {
-            "id": "INTERSECTS",
-            "name": "queryform.spatialfilter.operations.intersects"
-          },
-          {
-            "id": "CONTAINS",
-            "name": "queryform.spatialfilter.operations.contains"
-          },
-          {
-            "id": "WITHIN",
-            "name": "queryform.spatialfilter.operations.within"
-          }
-        ],
-        "spatialMethodOptions": [
-          {
-            "id": "Viewport",
-            "name": "queryform.spatialfilter.methods.viewport"
-          },
-          {
-            "id": "BBOX",
-            "name": "queryform.spatialfilter.methods.box"
-          },
-          {
-            "id": "Circle",
-            "name": "queryform.spatialfilter.methods.circle"
-          },
-          {
-            "id": "Polygon",
-            "name": "queryform.spatialfilter.methods.poly"
-          }
-        ]
+        "cfg": {
+          "activateQueryTool": true,
+          "spatialOperations": [
+            {
+              "id": "INTERSECTS",
+              "name": "queryform.spatialfilter.operations.intersects"
+            },
+            {
+              "id": "CONTAINS",
+              "name": "queryform.spatialfilter.operations.contains"
+            },
+            {
+              "id": "WITHIN",
+              "name": "queryform.spatialfilter.operations.within"
+            }
+          ],
+          "spatialMethodOptions": [
+            {
+              "id": "Viewport",
+              "name": "queryform.spatialfilter.methods.viewport"
+            },
+            {
+              "id": "BBOX",
+              "name": "queryform.spatialfilter.methods.box"
+            },
+            {
+              "id": "Circle",
+              "name": "queryform.spatialfilter.methods.circle"
+            },
+            {
+              "id": "Polygon",
+              "name": "queryform.spatialfilter.methods.poly"
+            }
+          ]
+        }
       }
     },
     {
@@ -317,7 +326,9 @@
         "BurgerMenu"
       ],
       "defaultConfig": {
-        "wrap": true
+        "cfg": {
+          "wrap": true
+        }
       }
     },
     {
@@ -326,7 +337,9 @@
       "title": "plugins.MetadataExplorer.title",
       "description": "plugins.MetadataExplorer.description",
       "defaultConfig": {
-        "wrap": true
+        "cfg": {
+          "wrap": true
+        }
       }
     },
     {
@@ -343,14 +356,16 @@
       "description": "plugins.MousePosition.description",
       "dependencies": ["MapFooter"],
       "defaultConfig": {
-        "editCRS": true,
-        "showLabels": true,
-        "showToggle": true,
-        "filterAllowedCRS": [
-          "EPSG:4326",
-          "EPSG:3857"
-        ],
-        "additionalCRS": {}
+        "cfg": {
+          "editCRS": true,
+          "showLabels": true,
+          "showToggle": true,
+          "filterAllowedCRS": [
+            "EPSG:4326",
+            "EPSG:3857"
+          ],
+          "additionalCRS": {}
+        }
       }
     },
     {
@@ -360,14 +375,16 @@
       "description": "plugins.CRSSelector.description",
       "dependencies": ["MapFooter"],
       "defaultConfig": {
-        "additionalCRS": {},
-        "filterAllowedCRS": [
-          "EPSG:4326",
-          "EPSG:3857"
-        ],
-        "allowedRoles": [
-          "ADMIN"
-        ]
+        "cfg": {
+          "additionalCRS": {},
+          "filterAllowedCRS": [
+            "EPSG:4326",
+            "EPSG:3857"
+          ],
+          "allowedRoles": [
+            "ADMIN"
+          ]
+        }
       }
     },
     {
@@ -380,10 +397,12 @@
         "SearchServicesConfig"
       ],
       "defaultConfig": {
-        "withToggle": [
-          "max-width: 768px",
-          "min-width: 768px"
-        ]
+        "cfg": {
+          "withToggle": [
+            "max-width: 768px",
+            "min-width: 768px"
+          ]
+        }
       }
     },
     {
@@ -391,8 +410,10 @@
       "mandatory": true,
       "hidden": true,
       "defaultConfig": {
-        "externalCookieUrl": "",
-        "declineUrl": "http://www.google.com"
+        "cfg": {
+          "externalCookieUrl": "",
+          "declineUrl": "http://www.google.com"
+        }
       }
     },
     {

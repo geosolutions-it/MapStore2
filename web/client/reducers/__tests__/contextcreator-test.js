@@ -50,7 +50,7 @@ const testContextResource = {
         mapConfig: {},
         templates: [{id: 2}],
         plugins: {
-            desktop: [{
+            mapviewer: [{
                 name: 'Catalog',
                 cfg: {
                     parameter: true,
@@ -80,7 +80,9 @@ const defaultPlugins = [{
     name: 'Catalog',
     title: 'Catalog',
     defaultConfig: {
-        parameter: false
+        cfg: {
+            parameter: false
+        }
     },
     children: ['CatalogChildPlugin']
 }, {
@@ -89,22 +91,26 @@ const defaultPlugins = [{
 }, {
     name: 'ZoomOut',
     defaultConfig: {
-        parameter: 'value'
+        cfg: {
+            parameter: 'value'
+        }
     }
 }, {
     name: 'CatalogChildPlugin',
     title: 'ChildPlugin'
 }, {
     name: 'Identify',
-    defaultOverride: {
-        parameter: 'value2'
+    defaultConfig: {
+        override: {
+            parameter: 'value2'
+        }
     }
 }];
 
-const pluginsConfig = {plugins: defaultPlugins};
+const pluginsConfig = {version: 2, plugins: defaultPlugins};
 
 const localPlugins = {
-    desktop: [{
+    mapviewer: [{
         name: 'ZoomOut',
         override: {
             parameter: 'value'
@@ -184,14 +190,12 @@ describe('contextcreator reducer', () => {
         expect(plugins[0].isUserPlugin).toBe(false);
         expect(plugins[0].active).toBe(false);
         expect(plugins[0].pluginConfig).toExist();
-        expect(plugins[0].pluginConfig.name).toBe(defaultPlugins[0].name);
-        expect(plugins[0].pluginConfig.cfg).toEqual(data.plugins.desktop[0].cfg);
-        expect(plugins[0].pluginConfig.override).toEqual(data.plugins.desktop[0].override);
+        expect(plugins[0].pluginConfig.cfg).toEqual(data.plugins.mapviewer[0].cfg);
+        expect(plugins[0].pluginConfig.override).toEqual(data.plugins.mapviewer[0].override);
         expect(plugins[0].children.length).toBe(1);
         expect(plugins[0].children[0].name).toBe(defaultPlugins[3].name);
         expect(plugins[0].children[0].title).toBe(defaultPlugins[3].title);
         expect(plugins[0].children[0].pluginConfig).toExist();
-        expect(plugins[0].children[0].pluginConfig.name).toBe(defaultPlugins[3].name);
         expect(plugins[0].children[0].pluginConfig.cfg).toNotExist();
         expect(plugins[1].name).toBe(defaultPlugins[1].name);
         expect(plugins[1].title).toBe(defaultPlugins[1].title);
@@ -199,7 +203,6 @@ describe('contextcreator reducer', () => {
         expect(plugins[1].isUserPlugin).toBe(true);
         expect(plugins[1].active).toBe(true);
         expect(plugins[1].pluginConfig).toExist();
-        expect(plugins[1].pluginConfig.name).toBe(defaultPlugins[1].name);
         expect(plugins[1].pluginConfig.cfg).toEqual(data.userPlugins[0].cfg);
         expect(plugins[1].pluginConfig.override).toNotExist();
         expect(plugins[2].name).toBe(defaultPlugins[2].name);
@@ -208,18 +211,15 @@ describe('contextcreator reducer', () => {
         expect(plugins[2].isUserPlugin).toBe(false);
         expect(plugins[2].active).toBe(false);
         expect(plugins[2].pluginConfig).toExist();
-        expect(plugins[2].pluginConfig.name).toEqual(defaultPlugins[2].name);
-        expect(plugins[2].pluginConfig.cfg).toEqual(defaultPlugins[2].defaultConfig);
-        expect(plugins[2].pluginConfig.override).toEqual(localPlugins.desktop[0].override);
+        expect(plugins[2].pluginConfig.cfg).toEqual(defaultPlugins[2].defaultConfig.cfg);
         expect(plugins[3].name).toBe(defaultPlugins[4].name);
         expect(plugins[3].title).toBe(defaultPlugins[4].title);
         expect(plugins[3].enabled).toBe(false);
         expect(plugins[3].isUserPlugin).toBe(false);
         expect(plugins[3].active).toBe(false);
         expect(plugins[3].pluginConfig).toExist();
-        expect(plugins[3].pluginConfig.name).toEqual(defaultPlugins[4].name);
         expect(plugins[3].pluginConfig.cfg).toNotExist();
-        expect(plugins[3].pluginConfig.override).toEqual(defaultPlugins[4].defaultOverride);
+        expect(plugins[3].pluginConfig.override).toEqual(defaultPlugins[4].defaultConfig.override);
     });
     it('setSelectedPlugins', () => {
         const pluginsToSelect = ['Catalog', 'ZoomIn'];
@@ -237,7 +237,7 @@ describe('contextcreator reducer', () => {
     });
     it('setEditedCfg', () => {
         const state = stateMocker(setResource(testContextResource, pluginsConfig), setEditedCfg('ZoomIn'));
-        expect(editedCfgSelector(state)).toBe('{\n  \"cfg\": {},\n  \"override\": {}\n}');
+        expect(editedCfgSelector(state)).toBe('{\n  \"cfg\": {}\n}');
     });
     it('changePluginsKey', () => {
         const pluginsToChange = ['CatalogChildPlugin', 'ZoomIn'];

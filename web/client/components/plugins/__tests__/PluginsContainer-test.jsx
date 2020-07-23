@@ -11,7 +11,7 @@ const PropTypes = require('prop-types');
 
 const React = require('react');
 const ReactDOM = require('react-dom');
-const PluginsContainer = require('../PluginsContainer');
+const PluginsContainer = require('../PluginsContainer').default;
 const {Provider} = require('react-redux');
 const {connect} = require('react-redux');
 
@@ -67,7 +67,9 @@ const plugins = {
 };
 
 const pluginsCfg = {
-    desktop: [ "My", {
+    desktop: [{
+        name: "My"
+    }, {
         name: "Other",
         cfg: {
             disablePluginIf: "{true}"
@@ -76,14 +78,26 @@ const pluginsCfg = {
 };
 
 const pluginsCfg2 = {
-    desktop: ["My", "Other"]
+    desktop: [{
+        name: "My"
+    }, {
+        name: "Other"
+    }]
 };
 
 const pluginsCfg3 = {
-    desktop: ["My", "NoRoot"]
+    desktop: [{
+        name: "My"
+    }, {
+        name: "NoRoot"
+    }]
 };
 const pluginsCfg4 = {
-    desktop: ["Container", "NoRoot"]
+    desktop: [{
+        name: "Container"
+    }, {
+        name: "NoRoot"
+    }]
 };
 
 const pluginsCfgRef = {

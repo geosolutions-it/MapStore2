@@ -103,5 +103,6 @@ div.nav-menu {
 }
 
 #drawer-menu-button {
-     position: absolute;
+    position: absolute;
+    z-index: 1;
 }

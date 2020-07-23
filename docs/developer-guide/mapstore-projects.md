@@ -42,7 +42,7 @@ const appConfig = assign({}, require('../MapStore2/web/client/product/appConfig'
      pages: [{
          name: "mapviewer",
          path: "/",
-         component: require('../MapStore2/web/client/product/pages/MapViewer')
+         component: require('../MapStore2/web/client/product/pages/MapViewer').default
      }]
 });
 

@@ -19,7 +19,7 @@ const Message = require("../../components/I18N/Message");
 const {loadMapConfig} = require('../../actions/config');
 const {resetControls} = require('../../actions/controls');
 
-const Page = require('../../containers/Page');
+const Page = require('../../containers/Page').default;
 const BorderLayout = require('../../components/layout/BorderLayout');
 /**
   * @name RulesManager
@@ -138,7 +138,7 @@ class RulesManagerPage extends React.Component {
     };
 
     render() {
-        const plugins = ConfigUtils.getConfigProp("plugins") || {};
+        const plugins = ConfigUtils.getConfigProp('internalPlugins') || {};
         const pluginsConfig = plugins.rulesmanager || [];
         return pluginsConfig.length > 0 && (<Page
             className="rules-manager"

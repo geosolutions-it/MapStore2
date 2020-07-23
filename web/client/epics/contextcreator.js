@@ -62,7 +62,11 @@ const flattenPluginTree = (plugins = []) =>
     flatten(plugins.map(plugin => [omit(plugin, 'children')].concat(plugin.enabled ? flattenPluginTree(plugin.children) : [])));
 
 const makePlugins = (plugins = []) =>
-    plugins.map(plugin => ({...plugin.pluginConfig, ...(plugin.isUserPlugin ? {active: plugin.active} : {})}));
+    plugins.map(plugin => ({
+        ...plugin.pluginConfig,
+        ...(plugin.isUserPlugin ? {active: plugin.active} : {}),
+        name: plugin.name
+    }));
 
 const findPlugin = (plugins, pluginName) =>
     plugins && plugins.reduce((result, plugin) =>
@@ -89,7 +93,7 @@ export const saveContextResource = (action$, store) => action$
         const newContext = {
             ...context,
             mapConfig,
-            plugins: {desktop: unselectablePlugins},
+            plugins: { mapviewer: unselectablePlugins },
             userPlugins,
             templates: get(context, 'templates', []).filter(template => template.enabled).map(template => pick(template, 'id'))
         };
@@ -874,8 +878,7 @@ export const savePluginCfgEpic = (action$, store) => action$
 
         return pluginName && parsedCfg && !cfgError ?
             Rx.Observable.of(
-                changePluginsKey([pluginName], 'pluginConfig.cfg', parsedCfg.cfg),
-                changePluginsKey([pluginName], 'pluginConfig.override', parsedCfg.override)
+                changePluginsKey([pluginName], 'pluginConfig', parsedCfg),
             ) :
             Rx.Observable.empty();
     });

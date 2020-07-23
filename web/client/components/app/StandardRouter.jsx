@@ -28,6 +28,7 @@ const ThemeProvider = connect((state) => ({
 class StandardRouter extends React.Component {
     static propTypes = {
         plugins: PropTypes.object,
+        pluginsFull: PropTypes.object,
         locale: PropTypes.object,
         pages: PropTypes.array,
         className: PropTypes.string,
@@ -40,6 +41,7 @@ class StandardRouter extends React.Component {
 
     static defaultProps = {
         plugins: {},
+        pluginsFull: {},
         locale: {messages: {}, current: 'en-US'},
         pages: [],
         className: "fill",
@@ -55,6 +57,7 @@ class StandardRouter extends React.Component {
             const pageConfig = page.pageConfig || {};
             const Component = connect(() => ({
                 plugins: this.props.plugins,
+                pluginsFull: this.props.pluginsFull,
                 ...pageConfig
             }))(page.component);
             return <Route key={(page.name || page.path) + i} exact path={page.path} component={Component}/>;

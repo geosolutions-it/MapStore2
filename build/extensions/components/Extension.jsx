@@ -10,7 +10,7 @@ const style = {
     position: "absolute",
     top: 50, zIndex: 1000
 };
-const Extension = ({ value = 0, onIncrease, changeZoomLevel }) => {
+const Extension = ({ value = 0, onIncrease, changeZoomLevel, customProp = 'none', validatedProp = 'none' }) => {
     return (<div id="SAMPLE_EXTENSION" style={style}>
         <h2>Extension Sample</h2>
         <div>This is a sample extension plugin. The following tools demonstrate the correct binding inside MapStore</div>
@@ -23,6 +23,8 @@ const Extension = ({ value = 0, onIncrease, changeZoomLevel }) => {
         <h3>Core action</h3>
         This button should change the zoom level to "1"
         <button onClick={() => { changeZoomLevel(1); }}>zoom to level 1</button>
+        <h3>Configuration props</h3>
+        This tests the config props. Config prop customProp is: {customProp}, validatedProp is: {validatedProp}
     </div>);
 };
 

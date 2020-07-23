@@ -58,7 +58,7 @@ export const contextCreatorSelector = createStructuredSelector({
     uploading: state => state.contextcreator && state.contextcreator.uploadingPlugin,
     uploadResult: state => state.contextcreator && state.contextcreator.uploadResult,
     pluginsToUpload: state => state.contextcreator?.pluginsToUpload,
-    pluginsConfig: () => ConfigUtils.getConfigProp('plugins'),
+    pluginsConfig: () => ConfigUtils.getConfigProp('internalPlugins'),
     showBackToPageConfirmation: showBackToPageConfirmationSelector
 });
 

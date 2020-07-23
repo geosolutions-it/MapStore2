@@ -18,15 +18,15 @@ module.exports = {
     }, {
         name: "mapviewer",
         path: "/viewer/:mapType/:mapId",
-        component: require('./pages/MapViewer')
+        component: require('./pages/MapViewer').default
     }, {
         name: "mapviewer",
         path: "/viewer/:mapType/:mapId/context/:contextId",
-        component: require('./pages/MapViewer')
+        component: require('./pages/MapViewer').default
     }, {
         name: "mapviewer",
         path: "/viewer/:mapId",
-        component: require('./pages/MapViewer')
+        component: require('./pages/MapViewer').default
     }, {
         name: 'context',
         path: "/context/:contextName",

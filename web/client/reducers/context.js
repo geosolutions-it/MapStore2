@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 import { SET_CURRENT_CONTEXT, LOADING, SET_RESOURCE, CLEAR_CONTEXT, UPDATE_USER_PLUGIN } from "../actions/context";
-import { find, get } from 'lodash';
+import { find, get, mapValues } from 'lodash';
 import {set, arrayUpdate} from '../utils/ImmutableUtils';
 
 /**
@@ -15,9 +15,11 @@ import {set, arrayUpdate} from '../utils/ImmutableUtils';
  * ```
  * {
  * currentContext: {// the context object
- *     plugins: {
- *         desktop: [...]
- *     },
+ *     plugins: [
+ *         {name: 'Plugin1', ...},
+ *         {name: 'Plugin2', ...},
+ *         ...
+ *     ],
  *     resource: {} // the original (geostore) resource, with canEdit, canWrite properties, id etc...
  *     loading: true|false
  *     loadingFlags: {
@@ -32,7 +34,8 @@ import {set, arrayUpdate} from '../utils/ImmutableUtils';
 export default (state = {}, action) => {
     switch (action.type) {
     case SET_CURRENT_CONTEXT: {
-        return set('currentContext', action.context, state);
+        return set('contextUserPlugins', action.contextUserPlugins,
+            set('contextPlugins', action.contextPlugins, set('currentContext', action.context, state)));
     }
     case SET_RESOURCE: {
         return set('resource', action.resource, state);
@@ -47,11 +50,13 @@ export default (state = {}, action) => {
         ));
     }
     case UPDATE_USER_PLUGIN: {
-        const plugin = find(get(state, 'currentContext.userPlugins', []), {name: action.name});
-        if (plugin) {
-            return arrayUpdate('currentContext.userPlugins', { ...plugin, ...action.values}, {name: action.name}, state);
-        }
-        return state;
+        return set('contextUserPlugins', mapValues(get(state, 'contextUserPlugins', {}), plugins => {
+            const plugin = find(plugins, {name: action.name});
+            if (plugin) {
+                return arrayUpdate('', { ...plugin, ...action.values}, {name: action.name}, plugins);
+            }
+            return plugins;
+        }), state);
     }
     default:
         return state;

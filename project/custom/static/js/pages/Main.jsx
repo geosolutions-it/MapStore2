@@ -12,7 +12,7 @@ const {loadMapConfig} = require('../../MapStore2/web/client/actions/config');
 
 const MapViewer = connect(() => ({}), {
     loadMapConfig: loadMapConfig.bind(null, "config.json", false)
-})(require('../../MapStore2/web/client/containers/MapViewer'));
+})(require('../../MapStore2/web/client/containers/MapViewer').default);
 
 const Main = (props) => <MapViewer plugins={props.plugins} params={{mapType: "leaflet"}}/>;
 
