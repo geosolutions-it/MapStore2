@@ -454,7 +454,7 @@ export const parseHashUrlScrollUpdate = (url, hash = '', storyId, sectionId, col
             return replace(url, `${storyIds[1]}`, `${sectionId}`);
         }
         if (hash.includes('shared')) {
-            return `${url}${sectionId}`;
+            return `${url}/${sectionId}`;
         }
         return `${url}/${sectionId}`;
     } else if (!sectionId && columnId && isString(columnId) && columnId !== EMPTY) {

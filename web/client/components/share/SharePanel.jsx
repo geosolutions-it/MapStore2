@@ -26,7 +26,7 @@ import {
     Tooltip
 } from 'react-bootstrap';
 import Message from '../../components/I18N/Message';
-import { join, isNil, isEqual, inRange, replace } from 'lodash';
+import { join, isNil, isEqual, inRange } from 'lodash';
 import { removeQueryFromUrl, getSharedGeostoryUrl } from '../../utils/ShareUtils';
 import SwitchPanel from '../misc/switch/SwitchPanel';
 import Editor from '../data/identify/coordinates/Editor';
@@ -161,16 +161,12 @@ class SharePanel extends React.Component {
 
     getShareUrl = () => {
         const { settings, advancedSettings } = this.props;
-        let shareUrl = getSharedGeostoryUrl(removeQueryFromUrl(this.props.shareUrl));
+        const shouldRemoveSectionId = !settings.showSectionId && advancedSettings && advancedSettings.sectionId;
+        let shareUrl = getSharedGeostoryUrl(removeQueryFromUrl(this.props.shareUrl), shouldRemoveSectionId);
         if (settings.bboxEnabled && advancedSettings && advancedSettings.bbox && this.state.bbox) shareUrl = `${shareUrl}?bbox=${this.state.bbox}`;
         if (settings.showHome && advancedSettings && advancedSettings.homeButton) shareUrl = `${shareUrl}?showHome=true`;
         if (settings.centerAndZoomEnabled && advancedSettings && advancedSettings.centerAndZoom) {
             shareUrl = `${shareUrl}${settings.markerEnabled ? "?marker=" : "?center="}${this.state.coordinate}&zoom=${this.state.zoom}`;
-        }
-        if (!settings.showSectionId && advancedSettings && advancedSettings.sectionId) {
-            const parsedUrl = shareUrl.split('#')[1]?.split('/');
-            if (parsedUrl.length === 5 && parsedUrl.includes('shared')) shareUrl = replace(shareUrl, parsedUrl[parsedUrl.length - 1], '');
-            if (parsedUrl.length === 6 && parsedUrl.includes('shared')) shareUrl = replace(shareUrl, `${parsedUrl[parsedUrl.length - 2]}/${parsedUrl[parsedUrl.length - 1]}`, '');
         }
         return shareUrl;
     };
