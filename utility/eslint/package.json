@@ -1,0 +1,11 @@
+{
+  "name": "eslint-config-mapstore",
+  "version": "1.0.0",
+  "description": "ESLint Configuration for MapStore project",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "GeoSolutions S.a.s.",
+  "license": "ISC"
+}

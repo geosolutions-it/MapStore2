@@ -4,6 +4,17 @@
   "description": "MapStore 2",
   "repository": "https://github.com/geosolutions-it/MapStore2",
   "main": "index.js",
+  "eslintConfig": {
+    "extends": ["eslint-config-mapstore"]
+  },
+  "eslintIgnore": [
+    "web/client/dist/",
+    "web/client/libs/Cesium",
+    "web/client/libs/cesium-navigation",
+    "web/client/test-resources/",
+    "web/docs/",
+    "web/client/mapstore/docs/"
+  ],
   "devDependencies": {
     "@babel/core": "7.8.7",
     "@babel/plugin-proposal-class-properties": "7.8.3",
@@ -262,6 +273,9 @@
     "generate-icons": "node ./build/generateIcons.js",
     "build-extension": "rimraf ./build/extensions/dist && mkdirp ./build/extensions/dist && webpack --progress  --colors --config build/extensions/prod-webpack.config.js",
     "run-extension": "webpack-dev-server --progress --colors --port 8081 --hot --inline --config build/extensions/webpack.config.js --content-base build/extensions"
+  },
+  "peerDependencies": {
+    "eslint": ">= 6.3.0"
   },
   "author": "GeoSolutions",
   "license": "BSD-2-Clause"
