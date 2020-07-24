@@ -76,7 +76,9 @@
         }
     }
     .ms-cascade-story.ms-edit {
-        .ms-section-title, .ms-section-immersive {
+        .ms-section-title,
+        .ms-section-banner,
+        .ms-section-immersive {
             .ms-text-editor-active {
                 pointer-events: all;
             }
@@ -245,7 +247,8 @@
         /* size of content */
         width: @ms-story-size-full;
     }
-    .ms-section-title {
+    .ms-section-title,
+    .ms-section-banner {
         .ms-content-text {
             width: 100%;
             padding-left: @ms-story-padding-small-screen;
@@ -296,6 +299,7 @@
     }
     .ms-section.ms-expandable-background {
         &.ms-section-title .ms-content-text,
+        &.ms-section-banner .ms-content-text,
         &.ms-section-immersive .ms-content-column {
             padding-right: @square-btn-medium-size + 8px;
         }
@@ -310,7 +314,8 @@
         &.ms-size-medium .ms-media { width: @ms-story-size-medium; }
         &.ms-size-small .ms-media { width: @ms-story-size-medium; }
     }
-    .ms-section-title .ms-content-text {
+    .ms-section-title .ms-content-text,
+    .ms-section-banner .ms-content-text {
         padding-left: @ms-story-padding-medium-screen;
         padding-right: @ms-story-padding-medium-screen;
         &.ms-align-center .ms-content-body { margin-left: auto; margin-right: auto; }
@@ -509,7 +514,8 @@
             }
         }
 
-        &.ms-section-title {
+        &.ms-section-title,
+        &.ms-section-banner {
             .ms-content-body {
                 display: flex;
                 margin: auto;
@@ -1105,7 +1111,8 @@
             }
 
             // foreground guidelines color for container size
-            &.ms-section-title {
+            &.ms-section-title,
+            &.ms-section-banner {
                 > .ms-content-toolbar {
                     border-top: 2px solid @ms-story-bg-guidelines;
                 }

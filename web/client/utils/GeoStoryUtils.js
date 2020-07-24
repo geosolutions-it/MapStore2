@@ -32,7 +32,8 @@ export const StoryTypes = {
 export const SectionTypes = {
     TITLE: 'title',
     PARAGRAPH: 'paragraph',
-    IMMERSIVE: 'immersive'
+    IMMERSIVE: 'immersive',
+    BANNER: 'banner'
 };
 /**
  * Allowed contents
@@ -41,7 +42,8 @@ export const ContentTypes = {
     TEXT: 'text',
     MEDIA: 'media',
     WEBPAGE: 'webPage',
-    COLUMN: 'column' // can have contents of type 'text' or 'media'
+    COLUMN: 'column', // can have contents of type 'text' or 'media'
+    BANNER: 'banner'
 };
 
 // Templates for contents that can be created using getDefaultSectionTemplate
@@ -204,6 +206,28 @@ export const getDefaultSectionTemplate = (type, localize = v => v) => {
                     }
                 }
             ]
+        };
+    case SectionTypes.BANNER:
+        return {
+            id: uuid(),
+            type: SectionTypes.BANNER,
+            title: localize("geostory.builder.defaults.titleBanner"),
+            cover: false,
+            size: 'full',
+            align: 'center',
+            contents: [{
+                id: uuid(),
+                type: ContentTypes.BANNER,
+                html: '',
+                size: 'large',
+                align: 'center',
+                theme: 'bright',
+                background: {
+                    fit: 'cover',
+                    size: 'full',
+                    align: 'center'
+                }
+            }]
         };
     case SectionTypes.PARAGRAPH:
         return {

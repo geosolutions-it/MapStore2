@@ -126,6 +126,13 @@ const Immersive = ({
                 }
             },
             {
+                glyph: 'story-title-section',
+                tooltipId: 'geostory.addBannerSection',
+                onClick: () => {
+                    add('sections', id, SectionTypes.BANNER);
+                }
+            },
+            {
                 glyph: 'story-paragraph-section',
                 tooltipId: 'geostory.addParagraphSection',
                 onClick: () => {

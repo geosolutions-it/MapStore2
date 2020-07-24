@@ -11,6 +11,7 @@ import { ContentTypes, MediaTypes } from '../../../utils/GeoStoryUtils';
 import Media from '../media';
 import WebPage from './WebPageWrapper';
 const DummyComponent = ({ type }) => <div className="ms-content ms-content-unknown">{`warning: unknown content type "${type}"`}</div>;
+const BannerComponent = () => <div className="ms-content-banner" style={{minHeight: '300px'}}></div>;
 
 /**
  * Returns the Component to use for the given type
@@ -27,6 +28,8 @@ const getComponent = type => {
         return Media;
     case ContentTypes.WEBPAGE:
         return WebPage;
+    case ContentTypes.BANNER:
+        return BannerComponent;
     default:
         return DummyComponent;
     }

@@ -78,5 +78,11 @@ describe('Content component', () => {
         const imageContent = container.querySelector('.ms-media.ms-media-map');
         expect(imageContent).toExist();
     });
+    it('Content rendering BANNER', () => {
+        ReactDOM.render(<Content lazy={false} type={ContentTypes.BANNER}/>, document.getElementById("container"));
+        const container = document.getElementById('container');
+        const bannerContent = container.querySelector('.ms-content-banner');
+        expect(bannerContent).toExist();
+    });
 
 });

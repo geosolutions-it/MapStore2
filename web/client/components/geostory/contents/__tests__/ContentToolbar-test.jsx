@@ -162,7 +162,7 @@ describe('ContentToolbar component', () => {
             expect(list[3].innerText).toBe("geostory.contentToolbar.customizeThemeLabel");
             done();
         });
-        it(`remove`, (done) => {
+        it(`remove func`, (done) => {
             ReactDOM.render(<ContentToolbar
                 tools={["remove"]}
                 fit="contain"
@@ -171,6 +171,22 @@ describe('ContentToolbar component', () => {
                     expect(path).toEqual("TEST_PATH"); // check remove handler is called with proper path argument
                     done();
                 }}
+            />, document.getElementById("container"));
+            const removeButton = document.querySelector('.ms-content-toolbar button');
+            expect(removeButton).toExist();
+            ReactTestUtils.Simulate.click(removeButton);
+            const confirmDialog = document.querySelector('.modal-dialog');
+            expect(confirmDialog.style.display).toNotBe("none"); // check confirmation dialog to be shown
+            const confirmButton = confirmDialog.querySelector('.btn-group .btn');
+            ReactTestUtils.Simulate.click(confirmButton); // confirm
+        });
+        it(`remove object`, () => {
+            const PATH = "TEST_PATH";
+            ReactDOM.render(<ContentToolbar
+                tools={["remove"]}
+                fit="contain"
+                path={PATH}
+                remove={{removeFunc: () => {}, customPath: PATH}}
             />, document.getElementById("container"));
             const removeButton = document.querySelector('.ms-content-toolbar button');
             expect(removeButton).toExist();

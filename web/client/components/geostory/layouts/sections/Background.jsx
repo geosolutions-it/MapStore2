@@ -43,7 +43,7 @@ class Background extends Component {
         update: PropTypes.func,
         updateSection: PropTypes.func,
         remove: PropTypes.func,
-        type: PropTypes.oneOf(lists.MediaTypes),
+        type: PropTypes.oneOf([...lists.MediaTypes, 'none']),
         disableToolbarPortal: PropTypes.bool,
         backgroundPlaceholder: PropTypes.object,
         sectionType: PropTypes.string,
@@ -78,7 +78,11 @@ class Background extends Component {
                     disableTextColor: true,
                     disableShadow: true
                 }}
-                tools={this.props.tools && this.props.type && this.props.tools[this.props.type] || defaultTools}
+                tools={
+                    this.props.tools && this.props.type && this.props.tools[this.props.type]
+                    || this.props.sectionType === SectionTypes.BANNER && [...defaultTools, 'cover', 'remove']
+                    || defaultTools
+                }
             />
         );
 
