@@ -90,7 +90,8 @@ function styleeditor(state = {}, action) {
     }
     case ERROR_STYLE: {
         const message = action?.error?.statusText || action?.error?.message || '';
-        const messageId = isString(action?.error?.messageId) && action.error.messageId;
+        const messageIdParam = isString(action?.error?.messageId)
+            && { messageId: action.error.messageId };
         const position = message.match(/line\s([\d]+)|column\s([\d]+)|lineNumber:\s([\d]+)|columnNumber:\s([\d]+)/g);
         const errorInfo = position && position.length === 2 && position.reduce((info, pos) => {
             const splittedValues = pos.split(' ');
@@ -100,7 +101,7 @@ function styleeditor(state = {}, action) {
                 ...info,
                 [param]: value
             } || { ...info };
-        }, { message, messageId }) || { message, messageId };
+        }, { message, ...messageIdParam }) || { message, ...messageIdParam };
         return {
             ...state,
             loading: false,
