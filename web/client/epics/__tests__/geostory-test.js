@@ -11,8 +11,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import MockAdapter from 'axios-mock-adapter';
 import { LOCATION_CHANGE, CALL_HISTORY_METHOD } from 'connected-react-router';
-
-
+import get from 'lodash/get';
 import TEST_STORY from "../../test-resources/geostory/sampleStory_1.json";
 import axios from '../../libs/ajax';
 
@@ -248,6 +247,11 @@ describe('Geostory Epics', () => {
                         expect(a.value).toBe(i === 0);
                         break;
                     case SET_CURRENT_STORY:
+                        if (a.story) {
+                            a.story.sections[0].id = get(TEST_STORY, 'sections[0].id');
+                            a.story.sections[1].id = get(TEST_STORY, 'sections[1].id');
+                            a.story.sections[2].id = get(TEST_STORY, 'sections[2].id');
+                        }
                         expect(a.story).toEqual(TEST_STORY);
                         break;
                     case SET_RESOURCE: {
@@ -288,6 +292,11 @@ describe('Geostory Epics', () => {
                         expect(a.value).toBe(i === 0);
                         break;
                     case SET_CURRENT_STORY:
+                        if (a.story) {
+                            a.story.sections[0].id = get(TEST_STORY, 'sections[0].id');
+                            a.story.sections[1].id = get(TEST_STORY, 'sections[1].id');
+                            a.story.sections[2].id = get(TEST_STORY, 'sections[2].id');
+                        }
                         expect(a.story).toEqual(TEST_STORY);
                         break;
                     case SET_RESOURCE: {

@@ -388,9 +388,23 @@ describe("GeoStory Utils", () => {
             const sectionId = '222';
             expect(parseHashUrlScrollUpdate(url, hash, storyId, sectionId)).toBe('host/#/geostory/111/222');
         });
+        it('initial without shared with slash after storyId', () => {
+            const url = 'host/#/geostory/111/';
+            const hash = '#/geostory/111/';
+            const storyId = '111';
+            const sectionId = '222';
+            expect(parseHashUrlScrollUpdate(url, hash, storyId, sectionId)).toBe('host/#/geostory/111/222');
+        });
         it('initial with shared', () => {
-            const url = 'host/#/geostory/shared/111/';
+            const url = 'host/#/geostory/shared/111';
             const hash = '#/geostory/shared/111';
+            const storyId = '111';
+            const sectionId = '222';
+            expect(parseHashUrlScrollUpdate(url, hash, storyId, sectionId)).toBe('host/#/geostory/shared/111/222');
+        });
+        it('initial with shared with slash after storyId', () => {
+            const url = 'host/#/geostory/shared/111/';
+            const hash = '#/geostory/shared/111/';
             const storyId = '111';
             const sectionId = '222';
             expect(parseHashUrlScrollUpdate(url, hash, storyId, sectionId)).toBe('host/#/geostory/shared/111/222');
