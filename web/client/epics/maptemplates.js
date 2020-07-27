@@ -15,8 +15,7 @@ import { error as showError } from '../actions/notifications';
 import { isLoggedIn } from '../selectors/security';
 import { setTemplates, setMapTemplatesLoaded, setTemplateData, setTemplateLoading, CLEAR_MAP_TEMPLATES, OPEN_MAP_TEMPLATES_PANEL,
     MERGE_TEMPLATE, REPLACE_TEMPLATE } from '../actions/maptemplates';
-import { templatesSelector, mapTemplatesLoadedSelector, desktopMapTemplatesConfigSelector } from '../selectors/maptemplates';
-import { templatesSelector as contextTemplatesSelector } from '../selectors/context';
+import { templatesSelector, mapTemplatesLoadedSelector, allTemplatesSelector } from '../selectors/maptemplates';
 import { mapSelector } from '../selectors/map';
 import { layersSelector, groupsSelector } from '../selectors/layers';
 import { backgroundListSelector } from '../selectors/backgroundselector';
@@ -48,11 +47,7 @@ export const openMapTemplatesPanelEpic = (action$, store) => action$
     .ofType(OPEN_MAP_TEMPLATES_PANEL)
     .switchMap(() => {
         const state = store.getState();
-        const contextTemplates = contextTemplatesSelector(state) || [];
-        const localConfigMapTemplates = desktopMapTemplatesConfigSelector(state).cfg.templates || [];
-
-        // consider templates from both the localConfig and context loaded in geostore
-        const templates = [...contextTemplates, ...localConfigMapTemplates];
+        const templates = allTemplatesSelector(state);
 
         const mapTemplatesLoaded = mapTemplatesLoadedSelector(state);
 

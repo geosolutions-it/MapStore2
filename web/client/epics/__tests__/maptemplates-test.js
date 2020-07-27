@@ -94,7 +94,7 @@ describe('maptemplates epics', () => {
             localConfig: {
                 plugins: {
                     desktop: [
-                        {name: "MapTemplates", cfg: {templates: [{ id: 1 }]}}
+                        {name: "MapTemplates", cfg: {allowedTemplates: [{ id: 1 }]}}
                     ]
                 }
             }

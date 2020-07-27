@@ -7,30 +7,34 @@
  */
 
 import expect from 'expect';
-
-import {desktopMapTemplatesConfigSelector} from '../maptemplates';
-import { createStateMocker } from '../../reducers/__tests__/reducersTestUtils';
-import localConfig from '../../reducers/localConfig';
-import {
-    localConfigLoaded
-} from '../../actions/localConfig';
-
-const stateMocker = createStateMocker({localConfig});
-const mapTemplateDefinition = {
-    name: "MapTemplates",
-    cfg: {
-        templates: [{ id: 1 }]
-    }
-};
-const TEST_CONFIG = {
-    test: "CONFIG",
-    plugins: {
-        desktop: [mapTemplateDefinition]
-    }
-};
+import {allTemplatesSelector} from '../maptemplates';
 
 describe('maptemplates selectors', () => {
-    it('desktopMapTemplatesConfigSelector', () => {
-        expect(desktopMapTemplatesConfigSelector(stateMocker(localConfigLoaded(TEST_CONFIG)))).toBe(mapTemplateDefinition);
+    it('should return allowed templates when they are provided', () => {
+        const state = {
+            maptemplates: {
+                allowedTemplates: ["TEST"]
+            },
+            context: {
+                currentContext: {
+                    templates: ["CONTEXT TEST TEMPLATE"]
+                }
+            }
+        };
+        expect(allTemplatesSelector(state)[0]).toBe("TEST");
+    });
+
+    it('should fallback to templates in context if allowedTemplates is empty', () => {
+        const state = {
+            maptemplates: {
+                allowedTemplates: []
+            },
+            context: {
+                currentContext: {
+                    templates: ["CONTEXT TEST TEMPLATE"]
+                }
+            }
+        };
+        expect(allTemplatesSelector(state)[0]).toBe("CONTEXT TEST TEMPLATE");
     });
 });
