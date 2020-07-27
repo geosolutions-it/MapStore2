@@ -95,7 +95,7 @@ class UserDialog extends React.Component {
         }
         let pw = this.props.user.newPassword;
         const validation = this.isMainPasswordValid(pw);
-        return validation.valid ? "success" : "warning";
+        return validation.valid ? "success" : "error";
     };
 
     getPwValidationMeta = () => {

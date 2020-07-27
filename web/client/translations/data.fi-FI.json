@@ -993,7 +993,7 @@
       "changePwd": "Vaihda salasana",
       "newPwd": "Uusi salasana",
       "retypePwd": "Kirjoita salasana uudelleen",
-      "passwordMinlenght": "Salasan tulee olla vähintään {minSize} merkkiä",
+      "passwordMinlenght": "Salasan tulee olla vähintään {data} merkkiä",
       "passwordCheckFail": "Salasanat eivät täsmää!",
       "passwordInvalid": "Virheellinen salasana",
       "username": "Käyttäjänimi",
