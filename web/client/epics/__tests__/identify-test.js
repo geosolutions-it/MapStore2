@@ -558,27 +558,11 @@ describe('identify Epics', () => {
     it('onMapClick triggers featureinfo when selected', done => {
         registerHook(GET_COORDINATES_FROM_PIXEL_HOOK, undefined);
         registerHook(GET_PIXEL_FROM_COORDINATES_HOOK, undefined);
-        testEpic(onMapClick, 1, [clickOnMap({latlng: {lat: 8, lng: 8}})], ([action]) => {
-            expect(action.type === FEATURE_INFO_CLICK);
-            done();
-        }, {
-            mapInfo: {
-                enabled: true,
-                disableAlwaysOn: false
-            },
-            map: {
-                present: {
-                    projection: 'EPSG:3857'
-                }
-            }
-        });
-    });
-
-    it('onMapClick triggers search items cleanup', done => {
-        registerHook(GET_COORDINATES_FROM_PIXEL_HOOK, undefined);
-        registerHook(GET_PIXEL_FROM_COORDINATES_HOOK, undefined);
-        testEpic(onMapClick, 1, [clickOnMap({latlng: {lat: 8, lng: 8}})], ([action]) => {
-            expect(action.type === TEXT_SEARCH_CANCEL_ITEM);
+        const NUM_ACTIONS = 2;
+        testEpic(onMapClick, NUM_ACTIONS, [clickOnMap({latlng: {lat: 8, lng: 8}})], (actions) => {
+            expect(actions.length).toBe(2);
+            expect(actions[0].type).toEqual(FEATURE_INFO_CLICK);
+            expect(actions[1].type).toEqual(TEXT_SEARCH_CANCEL_ITEM);
             done();
         }, {
             mapInfo: {
