@@ -471,13 +471,7 @@
             "Timeline",
             "Playback",
             "FeedbackMask",
-            "StyleEditor",
-            {
-              "name": "MapTemplates",
-              "cfg": {
-                "localConfigTemplates": [{"id": 6}]
-                }
-            }
+            "StyleEditor"
         ],
         "embedded": [{
                 "name": "Map",
