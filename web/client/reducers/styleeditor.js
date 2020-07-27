@@ -19,6 +19,8 @@ const {
     UPDATE_EDITOR_METADATA
 } = require('../actions/styleeditor');
 
+const isString = require('lodash/isString');
+
 function styleeditor(state = {}, action) {
     switch (action.type) {
     case INIT_STYLE_SERVICE: {
@@ -88,6 +90,7 @@ function styleeditor(state = {}, action) {
     }
     case ERROR_STYLE: {
         const message = action?.error?.statusText || action?.error?.message || '';
+        const messageId = isString(action?.error?.messageId) && action.error.messageId;
         const position = message.match(/line\s([\d]+)|column\s([\d]+)|lineNumber:\s([\d]+)|columnNumber:\s([\d]+)/g);
         const errorInfo = position && position.length === 2 && position.reduce((info, pos) => {
             const splittedValues = pos.split(' ');
@@ -97,7 +100,7 @@ function styleeditor(state = {}, action) {
                 ...info,
                 [param]: value
             } || { ...info };
-        }, { message }) || { message };
+        }, { message, messageId }) || { message, messageId };
         return {
             ...state,
             loading: false,

@@ -106,7 +106,7 @@ describe('VisualStyleEditor', () => {
                 debounceTime={DEBOUNCE_TIME}
                 onError={(error) => {
                     try {
-                        expect(error).toEqual({ message: 'This style is empty', status: 400 });
+                        expect(error).toEqual({ messageId: 'styleeditor.styleEmpty', status: 400 });
                     } catch (e) {
                         done(e);
                     }
@@ -133,5 +133,73 @@ describe('VisualStyleEditor', () => {
                 done(e);
             }
         }, DEBOUNCE_TIME * 10);
+    });
+    it('should throw an error when rule has an error', (done) => {
+        const DEBOUNCE_TIME = 1;
+        act(() => {
+            ReactDOM.render(<VisualStyleEditor
+                format="css"
+                code="* { fill: #ff0000; }"
+                defaultStyleJSON={{
+                    rules: [
+                        {
+                            name: '',
+                            symbolizers: [
+                                {
+                                    kind: 'Fill',
+                                    color: '#ff0000'
+                                }
+                            ]
+                        },
+                        {
+                            errorId: 'ruleErrorId'
+                        }
+                    ]
+                }}
+                debounceTime={DEBOUNCE_TIME}
+                onError={(error) => {
+                    try {
+                        expect(error).toEqual({ messageId: 'ruleErrorId', status: 400 });
+                    } catch (e) {
+                        done(e);
+                    }
+                    done();
+                }}
+            />, document.getElementById('container'));
+        });
+    });
+    it('should throw an error when classification rule is incomplete', (done) => {
+        const DEBOUNCE_TIME = 1;
+        act(() => {
+            ReactDOM.render(<VisualStyleEditor
+                format="css"
+                code="* { fill: #ff0000; }"
+                defaultStyleJSON={{
+                    rules: [
+                        {
+                            name: '',
+                            symbolizers: [
+                                {
+                                    kind: 'Fill',
+                                    color: '#ff0000'
+                                }
+                            ]
+                        },
+                        {
+                            kind: 'Classification'
+                        }
+                    ]
+                }}
+                debounceTime={DEBOUNCE_TIME}
+                onError={(error) => {
+                    try {
+                        expect(error).toEqual({ messageId: 'styleeditor.incompleteClassification', status: 400 });
+                    } catch (e) {
+                        done(e);
+                    }
+                    done();
+                }}
+            />, document.getElementById('container'));
+        });
     });
 });

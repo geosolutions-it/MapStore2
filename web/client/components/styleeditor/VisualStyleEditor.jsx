@@ -9,6 +9,7 @@
 import React, { useEffect, useRef, useReducer, useState } from 'react';
 import PropTypes from 'prop-types';
 import debounce from 'lodash/debounce';
+import find from 'lodash/find';
 import identity from 'lodash/identity';
 
 import Toolbar from '../../components/misc/toolbar/Toolbar';
@@ -84,6 +85,35 @@ const updateFunc = ({
     });
 };
 
+function validateStyle(rules) {
+    const isStyleEmpty = !rules || rules.length === 0;
+    if (isStyleEmpty) {
+        return {
+            messageId: 'styleeditor.styleEmpty',
+            status: 400
+        };
+    }
+    // find first rule with error
+    const ruleErrorMessageId = find(rules.map(({ errorId }) => errorId), (errorId) => errorId);
+    if (ruleErrorMessageId) {
+        return {
+            messageId: ruleErrorMessageId,
+            status: 400
+        };
+    }
+    // find classification rules without classification entries
+    const missingClassification = find(rules, ({ kind, classification }) =>
+        (kind === 'Classification' || kind === 'Raster')
+        && (!classification || classification.length === 0));
+    if (missingClassification) {
+        return {
+            messageId: 'styleeditor.incompleteClassification',
+            status: 400
+        };
+    }
+    return null;
+}
+
 /**
  * Visual style editor provides functionality to edit css or sld styles with ui component
  * @memberof components.styleeditor
@@ -129,7 +159,7 @@ function VisualStyleEditor({
 
     const { symbolizerBlock, ruleBlock } = getBlocks(config);
     const [updating, setUpdating] = useState(false);
-    const [styleHistory, dispacth] = useReducer(historyVisualStyleReducer, {});
+    const [styleHistory, dispatch] = useReducer(historyVisualStyleReducer, {});
     const style = styleHistory?.present || DEFAULT_STYLE;
     const state = useRef();
     state.current = {
@@ -143,7 +173,7 @@ function VisualStyleEditor({
         if (parser && code && defaultStyleJSON === null) {
             return parser.readStyle(code)
                 .then((newStyle) => {
-                    dispacth({
+                    dispatch({
                         type: UPDATE_STYLE,
                         payload: formatJSONStyle(newStyle)
                     });
@@ -156,7 +186,7 @@ function VisualStyleEditor({
         }
         if (parser && code && defaultStyleJSON) {
             init.current = true;
-            return dispacth({
+            return dispatch({
                 type: UPDATE_STYLE,
                 payload: defaultStyleJSON
             });
@@ -185,7 +215,7 @@ function VisualStyleEditor({
             ...state.current.style,
             rules: newRules
         };
-        return dispacth({
+        return dispatch({
             type: UPDATE_STYLE,
             payload: newStyle
         });
@@ -195,12 +225,10 @@ function VisualStyleEditor({
 
     useEffect(() => {
         update.current = debounce((options) => {
-            const isStyleEmpty = options.style.rules.length === 0;
-            if (isStyleEmpty) {
-                return onError({
-                    message: 'This style is empty',
-                    status: 400
-                });
+            const styleRules = options?.style?.rules;
+            const styleError = validateStyle(styleRules);
+            if (styleError) {
+                return onError(styleError);
             }
             const parser = getStyleParser(options.format);
             if (parser) {
@@ -243,13 +271,13 @@ function VisualStyleEditor({
                             glyph: 'undo',
                             tooltipId: 'styleeditor.undoStyle',
                             disabled: styleHistory?.past?.length === 0,
-                            onClick: () => dispacth({ type: UNDO_STYLE })
+                            onClick: () => dispatch({ type: UNDO_STYLE })
                         },
                         {
                             disabled: styleHistory?.future?.length === 0,
                             tooltipId: 'styleeditor.redoStyle',
                             glyph: 'redo',
-                            onClick: () => dispacth({ type: REDO_STYLE })
+                            onClick: () => dispatch({ type: REDO_STYLE })
                         },
                         {
                             visible: !!error,
@@ -268,9 +296,9 @@ function VisualStyleEditor({
                                     text={<>
                                         <p><Message msgId="styleeditor.genericValidationError"/></p>
                                         <p><Message msgId="styleeditor.incorrectPropertyInputError"/></p>
-                                        {error.message && <p>
+                                        {(error.message || error.messageId) && <p>
                                             <Message msgId="styleeditor.validationError"/>:&nbsp;
-                                            {error.message}
+                                            {error.message || error.messageId && <Message msgId={error.messageId}/>}
                                         </p>}
                                     </>}/>
                             </div>
