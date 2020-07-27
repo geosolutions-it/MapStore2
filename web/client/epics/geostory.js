@@ -15,7 +15,7 @@ import isNil from 'lodash/isNil';
 import lastIndexOf from 'lodash/lastIndexOf';
 import words from 'lodash/words';
 import get from 'lodash/get';
-import tail from 'lodash/tail';
+import isArray from 'lodash/isArray';
 import { push, LOCATION_CHANGE } from 'connected-react-router';
 import uuid from 'uuid/v1';
 
@@ -286,14 +286,12 @@ export const loadGeostoryEpic = (action$, {getState = () => {}}) => action$
                     // to match with data/resource object structure of getResource
                     .then(({data}) => {
                         // generates random id for section
-                        const defaultSection = data.sections[0];
-                        defaultSection.id = uuid();
-                        const newData =  defaultSection ? {
+                        const defaultSections = data.sections;
+                        const sectionsWithId = isArray(defaultSections)
+                            && defaultSections.map(section => ({ ...section, id: uuid()}));
+                        const newData = sectionsWithId.length ? {
                             ...data,
-                            sections: [
-                                defaultSection,
-                                ...tail(data.sections)
-                            ]
+                            sections: sectionsWithId
                         } : data;
                         return ({ data: newData, isStatic: true, canEdit: true });
                     });

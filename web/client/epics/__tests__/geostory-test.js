@@ -249,6 +249,8 @@ describe('Geostory Epics', () => {
                     case SET_CURRENT_STORY:
                         if (a.story) {
                             a.story.sections[0].id = get(TEST_STORY, 'sections[0].id');
+                            a.story.sections[1].id = get(TEST_STORY, 'sections[1].id');
+                            a.story.sections[2].id = get(TEST_STORY, 'sections[2].id');
                         }
                         expect(a.story).toEqual(TEST_STORY);
                         break;
@@ -292,6 +294,8 @@ describe('Geostory Epics', () => {
                     case SET_CURRENT_STORY:
                         if (a.story) {
                             a.story.sections[0].id = get(TEST_STORY, 'sections[0].id');
+                            a.story.sections[1].id = get(TEST_STORY, 'sections[1].id');
+                            a.story.sections[2].id = get(TEST_STORY, 'sections[2].id');
                         }
                         expect(a.story).toEqual(TEST_STORY);
                         break;
