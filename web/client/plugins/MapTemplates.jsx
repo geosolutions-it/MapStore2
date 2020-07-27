@@ -15,7 +15,7 @@ import { createPlugin } from '../utils/PluginsUtils';
 
 import { toggleControl } from '../actions/controls';
 import { templatesSelector, mapTemplatesLoadedSelector } from '../selectors/maptemplates';
-import { openMapTemplatesPanel, mergeTemplate, replaceTemplate, toggleFavouriteTemplate } from '../actions/maptemplates';
+import { openMapTemplatesPanel, mergeTemplate, replaceTemplate, toggleFavouriteTemplate, setLocalConfigTemplates } from '../actions/maptemplates';
 
 import Message from '../components/I18N/Message';
 import Loader from '../components/misc/Loader';
@@ -37,12 +37,18 @@ import * as epics from '../epics/maptemplates';
 const mapTemplates = ({
     active,
     templates = [],
+    localConfigTemplates = [],
     templatesLoaded,
     onToggleControl = () => {},
     onMergeTemplate = () => {},
     onReplaceTemplate = () => {},
-    onToggleFavourite = () => {}
+    onToggleFavourite = () => {},
+    onSetLocalConfigTemplates = () => {},
+    pluginCfg
 }) => {
+    console.log("PLUGIN CONFIG", pluginCfg);
+    // Store templates list from config into the maptemplates state
+    onSetLocalConfigTemplates(localConfigTemplates);
     return (
         <DockPanel
             open={active}
@@ -75,7 +81,8 @@ const MapTemplatesPlugin = connect(createSelector(
     onToggleControl: toggleControl.bind(null, 'mapTemplates', 'enabled'),
     onMergeTemplate: mergeTemplate,
     onReplaceTemplate: replaceTemplate,
-    onToggleFavourite: toggleFavouriteTemplate
+    onToggleFavourite: toggleFavouriteTemplate,
+    onSetLocalConfigTemplates: setLocalConfigTemplates
 })(mapTemplates);
 
 export default createPlugin('MapTemplates', {
