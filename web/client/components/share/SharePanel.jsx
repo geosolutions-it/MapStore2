@@ -22,7 +22,7 @@ import {
     Checkbox
 } from 'react-bootstrap';
 import Message from '../../components/I18N/Message';
-import { join, replace } from 'lodash';
+import { join } from 'lodash';
 import { removeQueryFromUrl, getSharedGeostoryUrl } from '../../utils/ShareUtils';
 import SwitchPanel from '../misc/switch/SwitchPanel';
 
@@ -123,14 +123,10 @@ class SharePanel extends React.Component {
 
     getShareUrl = () => {
         const { settings, advancedSettings } = this.props;
-        let shareUrl = getSharedGeostoryUrl(removeQueryFromUrl(this.props.shareUrl));
+        const shouldRemoveSectionId = !settings.showSectionId && advancedSettings && advancedSettings.sectionId;
+        let shareUrl = getSharedGeostoryUrl(removeQueryFromUrl(this.props.shareUrl), shouldRemoveSectionId);
         if (settings.bboxEnabled && advancedSettings && advancedSettings.bbox && this.state.bbox) shareUrl = `${shareUrl}?bbox=${this.state.bbox}`;
         if (settings.showHome && advancedSettings && advancedSettings.homeButton) shareUrl = `${shareUrl}?showHome=true`;
-        if (!settings.showSectionId && advancedSettings && advancedSettings.sectionId) {
-            const parsedUrl = shareUrl.split('/');
-            if (parsedUrl.length === 8) shareUrl = replace(shareUrl, parsedUrl[parsedUrl.length - 1], '');
-            if (parsedUrl.length === 9) shareUrl = replace(shareUrl, `${parsedUrl[parsedUrl.length - 2]}/${parsedUrl[parsedUrl.length - 1]}`, '');
-        }
         return shareUrl;
     };
 
