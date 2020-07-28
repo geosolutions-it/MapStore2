@@ -83,6 +83,7 @@ const defaultConfig = require('./AnnotationsConfig');
  * @prop {string} symbolsPath path to the svg folder
  * @prop {object[]} symbolList list of symbols
  * @prop {string} defaultShape default Shape
+ * @prop {number} textRotationStep rotation step of text styler
  *
  * the annotation's attributes.
  */
@@ -129,7 +130,8 @@ class Annotations extends React.Component {
         lineDashOptions: PropTypes.array,
         symbolList: PropTypes.array,
         defaultShape: PropTypes.string,
-        symbolsPath: PropTypes.string
+        symbolsPath: PropTypes.string,
+        textRotationStep: PropTypes.number
     };
 
     static contextTypes = {
@@ -239,6 +241,7 @@ class Annotations extends React.Component {
             symbolErrors={this.props.symbolErrors}
             symbolList={this.props.symbolList}
             defaultShape={this.props.defaultShape}
+            textRotationStep={this.props.textRotationStep}
         />;
     };
 

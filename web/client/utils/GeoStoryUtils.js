@@ -20,6 +20,7 @@ import merge from "lodash/merge";
 import isString from "lodash/isString";
 import isObject from "lodash/isObject";
 import includes from "lodash/includes";
+import replace from 'lodash/replace';
 import uuid from 'uuid';
 
 export const EMPTY_CONTENT = "EMPTY_CONTENT";
@@ -439,4 +440,33 @@ export const getWebPageComponentHeight = (size, viewHeight) => {
     }
 
     return 0;
+};
+
+export const parseHashUrlScrollUpdate = (url, hash = '', storyId, sectionId, columnId) => {
+    const EMPTY = 'EMPTY';
+    const storyIds = hash.substring(hash.indexOf(storyId)).split('/');
+
+    if (sectionId && storyId) {
+        if (storyIds.length > 1 && storyIds[1]) {
+            if (storyIds.length === 3) {
+                return replace(url, `${storyIds[1]}/${storyIds[2]}`, `${sectionId}`);
+            }
+            return replace(url, `${storyIds[1]}`, `${sectionId}`);
+        }
+        if (hash.includes('shared')) {
+            return storyIds[1] !== '' ? `${url}/${sectionId}` : `${url}${sectionId}`;
+        }
+        return storyIds[1] !== '' ? `${url}/${sectionId}` : `${url}${sectionId}`;
+    } else if (!sectionId && columnId && isString(columnId) && columnId !== EMPTY) {
+        if (storyIds.length > 1) {
+            if (hash.includes('shared') && !storyIds[1]) {
+                return url;
+            }
+            if (storyIds.length === 3) {
+                return replace(url, `${storyIds[2]}`, `${columnId}`);
+            }
+            return `${url}/${columnId}`;
+        }
+    }
+    return url;
 };

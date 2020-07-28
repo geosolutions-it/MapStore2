@@ -9,11 +9,13 @@
 
 import { Observable } from 'rxjs';
 import head from 'lodash/head';
-
 import isNaN from 'lodash/isNaN';
 import isString from 'lodash/isString';
 import isNil from 'lodash/isNil';
 import lastIndexOf from 'lodash/lastIndexOf';
+import words from 'lodash/words';
+import get from 'lodash/get';
+import isArray from 'lodash/isArray';
 import { push, LOCATION_CHANGE } from 'connected-react-router';
 import uuid from 'uuid/v1';
 
@@ -56,7 +58,8 @@ import {
     EDIT_WEBPAGE,
     EDIT_RESOURCE,
     UPDATE_CURRENT_PAGE,
-    UPDATE_SETTING
+    UPDATE_SETTING,
+    SET_CURRENT_STORY
 } from '../actions/geostory';
 import { setControlProperty } from '../actions/controls';
 
@@ -75,11 +78,21 @@ import { LOGIN_SUCCESS, LOGOUT } from '../actions/security';
 
 
 import { isLoggedIn, isAdminUserSelector } from '../selectors/security';
-import { resourceIdSelectorCreator, createPathSelector, currentStorySelector, resourcesSelector, getFocusedContentSelector, isSharedStory, resourceByIdSelectorCreator, modeSelector} from '../selectors/geostory';
+import {
+     resourceIdSelectorCreator,
+     createPathSelector,
+     currentStorySelector,
+     resourcesSelector,
+     getFocusedContentSelector,
+     isSharedStory,
+     resourceByIdSelectorCreator,
+     modeSelector,
+     updateUrlOnScrollSelector
+} from '../selectors/geostory';
 import { currentMediaTypeSelector, sourceIdSelector} from '../selectors/mediaEditor';
 
 import { wrapStartStop } from '../observables/epics';
-import { scrollToContent, ContentTypes, isMediaSection, Controls, getEffectivePath, getFlatPath, isWebPageSection, MediaTypes, Modes } from '../utils/GeoStoryUtils';
+import { scrollToContent, ContentTypes, isMediaSection, Controls, getEffectivePath, getFlatPath, isWebPageSection, MediaTypes, Modes, parseHashUrlScrollUpdate } from '../utils/GeoStoryUtils';
 
 import { SourceTypes } from './../utils/MediaEditorUtils';
 
@@ -271,7 +284,17 @@ export const loadGeostoryEpic = (action$, {getState = () => {}}) => action$
                 return axios.get(`configs/${id}.json`)
                     // not return anything else that data in this case
                     // to match with data/resource object structure of getResource
-                    .then(({data}) => ({ data, isStatic: true, canEdit: true }));
+                    .then(({data}) => {
+                        // generates random id for section
+                        const defaultSections = data.sections;
+                        const sectionsWithId = isArray(defaultSections)
+                            && defaultSections.map(section => ({ ...section, id: uuid()}));
+                        const newData = sectionsWithId.length ? {
+                            ...data,
+                            sections: sectionsWithId
+                        } : data;
+                        return ({ data: newData, isStatic: true, canEdit: true });
+                    });
             }
             return getResource(id);
         })
@@ -461,6 +484,64 @@ export const handlePendingGeoStoryChanges = action$ =>
                     )
             )
     );
+
+/**
+ * Handle the url updates on currentPage change
+ * @param {Observable} action$ stream of actions
+ * @param {object} store redux store
+ */
+export const urlUpdateOnScroll = (action$, {getState}) =>
+    action$.ofType(UPDATE_CURRENT_PAGE)
+        .debounceTime(50) // little delay if too many UPDATE_CURRENT_PAGE actions come
+        .switchMap(({sectionId, columnId}) => {
+            if (
+                modeSelector(getState()) !== 'edit' && (!!columnId || !!sectionId)
+                && updateUrlOnScrollSelector(getState())
+            ) {
+                const storyId = get(getState(), 'geostory.resource.id');
+                const newUrl = parseHashUrlScrollUpdate(window.location.href, window?.location?.hash, storyId, sectionId, columnId);
+                if (newUrl) {
+                    history.pushState(null, '', newUrl);
+                }
+        }
+            return Observable.empty();
+        });
+
+/**
+ * When story is loaded, scrolls down to the element from the URL
+ * @param {Observable} action$ stream of actions
+ */
+export const scrollOnLoad = (action$) =>
+    action$.ofType(SET_CURRENT_STORY)
+        .switchMap(() => {
+            const storyIds = window?.location?.hash?.split('/');
+            if (window?.location?.hash?.includes('shared')) {
+                scrollToContent(storyIds[5] || storyIds[4], {block: "center", behavior: "auto"});
+            } else if (storyIds.length > 4) {
+                scrollToContent(storyIds[4], {block: "start", behavior: "auto"});
+            } else if (storyIds.length === 4) {
+                scrollToContent(storyIds[3], {block: 'start', behavior: "auto"});
+            }
+            return Observable.empty();
+    });
+
+/**
+ * Loads geostory on POP history
+ * @param {Observable} action$ stream of actions
+ */
+export const loadStoryOnHistoryPop = (action$) =>
+    action$.ofType(LOCATION_CHANGE)
+        .switchMap(({payload}) => {
+            const hasGeostory = payload?.location?.pathname.includes('/geostory/');
+            if (hasGeostory && payload.action === 'POP') {
+                const separatedUrl = words(payload?.location?.pathname);
+                return separatedUrl.find(i=> i === 'shared')
+                    ? Observable.of(loadGeostory(separatedUrl[2])).delay(500)
+                    : Observable.of(loadGeostory(separatedUrl[1])).delay(500);
+            }
+            return Observable.empty();
+        });
+
 /**
  * Handle the scroll of section preview in the sidebar
  * @memberof epics.mediaEditor

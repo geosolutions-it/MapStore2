@@ -23,6 +23,7 @@ const epics = require('../epics/tutorial');
  * @prop {string} cfg.preset overrides the default_tutorial with another from the preset folder
  * @prop {object} cfg.presetList overrides preset list of MapStore2
  * @prop {boolean} cfg.showCheckbox shows/hides checkbox to disable tutorial next autostart
+ * @prop {object} cfg.scrollIntoViewOptions options applied to Element.scrollIntoView, {"block": "end"}
  * @prop {number} cfg.scrollOffset changes the scroll offset
  * @memberof plugins
  * @class Tutorial

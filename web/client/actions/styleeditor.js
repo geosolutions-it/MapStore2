@@ -22,6 +22,7 @@ const DELETE_STYLE = 'STYLEEDITOR:DELETE_STYLE';
 const INIT_STYLE_SERVICE = 'STYLEEDITOR:INIT_STYLE_SERVICE';
 const SET_EDIT_PERMISSION = 'STYLEEDITOR:SET_EDIT_PERMISSION';
 const SET_DEFAULT_STYLE = 'STYLEEDITOR:SET_DEFAULT_STYLE';
+const UPDATE_EDITOR_METADATA = 'STYLEEDITOR:UPDATE_EDITOR_METADATA';
 
 /**
 * Toggle style editor, it triggers an epic to initialize or stop the style editor
@@ -218,6 +219,14 @@ function setDefaultStyle() {
     };
 }
 
+
+function updateEditorMetadata(metadata) {
+    return {
+        type: UPDATE_EDITOR_METADATA,
+        metadata
+    };
+}
+
 /**
 * Actions for styleeditor
 * @name actions.styleeditor
@@ -239,6 +248,7 @@ module.exports = {
     INIT_STYLE_SERVICE,
     SET_EDIT_PERMISSION,
     SET_DEFAULT_STYLE,
+    UPDATE_EDITOR_METADATA,
     updateTemporaryStyle,
     updateStatus,
     toggleStyleEditor,
@@ -254,5 +264,6 @@ module.exports = {
     deleteStyle,
     initStyleService,
     setEditPermissionStyleEditor,
-    setDefaultStyle
+    setDefaultStyle,
+    updateEditorMetadata
 };

@@ -142,6 +142,9 @@
         "elevationNotAvailable": "N/A",
         "mapScale": "比例尺:",
         "showMousePositionCoordinates": "显示/隐藏坐标",
+        "showCrsSelector": "Select projection",
+        "crsSelectorFilterPlaceholder": "Filter projection",
+        "crsSelectorSelectedCRS": "Selected:",
         "menu": "菜单",
         "options": "选项",
         "settings": "设置",
@@ -926,7 +929,7 @@
             "changePwd": "更改密码",
             "newPwd": "新密码",
             "retypePwd": "重新输入密码",
-            "passwordMinlenght": "您的密码必须至少为{minSize}个字符",
+            "passwordMinlenght": "您的密码必须至少为{data}个字符",
             "passwordCheckFail": "密码不匹配!",
             "passwordInvalid": "无效的密码",
             "username": "用户名",
@@ -1016,7 +1019,8 @@
             "advancedOptions": "Advanced Options",
             "addBboxParam": "Add bbox param to sharing link",
             "wrongBboxParamTitle": "Invalid bbox param",
-            "wrongBboxParamMessage": "bbox params must be in EPSG:4326 and wrote as bbox=minx,miny,maxx,maxy"
+            "wrongBboxParamMessage": "bbox params must be in EPSG:4326 and wrote as bbox=minx,miny,maxx,maxy",
+            "showSectionId": "Include scroll position"
         },
         "snapshot": {
             "title": "Snapshot Preview",

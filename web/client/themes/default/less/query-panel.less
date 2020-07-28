@@ -98,49 +98,6 @@
                 font-weight: bold;
             }
         }
-
-        .mapstore-conditions-group {
-            margin-bottom: @square-btn-small-size /2;
-            padding: 5px;
-            .col-xs-2 {
-                padding: 0;
-            }
-            .mapstore-conditions-group {
-                padding-bottom: 5px;
-                padding-left: @square-btn-small-size;
-                border-left: 2px solid contrast(@ms2-color-background);
-                .shadow-soft;
-
-            }
-            .remove-filter-button {
-                background: none;
-            }
-            margin-bottom: @square-btn-small-size /2;
-            .col-xs-2 {
-                padding: 0;
-            }
-
-        }
-    }
-
-    .query-content .filter-field-row {
-        padding-left: 0;
-        padding-right: 0;
-        height: 52px;
-        .filter-logig-header-text {
-            height: 52px;
-        }
-        & > div, & > div.col-xs-2 {
-            padding-left: 7px;
-        }
-        & > div:not(:last-child) {
-            padding-right: 0px;
-        }
-    }
-    .m-label {
-        margin-top:( @square-btn-size - @square-btn-medium-size) / 2;
-        height: @square-btn-medium-size;
-        line-height: @square-btn-medium-size;
     }
     .filter-field-fixed-row {
         height: 52px;
@@ -194,4 +151,61 @@
 #mapstore-drawermenu #query-form-panel .querypanel > .query-filter-container {
 	margin-right: 60px;
 	margin-left: 10px;
+}
+
+.mapstore-conditions-group {
+    position: relative;
+    width: 100%;
+    padding: 8px;
+    .filter-logic-header {
+        padding: 8px 0;
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        .filter-logic-header-text {
+            flex: 1;
+            min-width: 300px;
+        }
+    }
+    .mapstore-conditions-group {
+        padding-left: @square-btn-small-size;
+        padding-right: 0;
+        border-left: 2px solid contrast(@ms2-color-background);
+        .shadow-soft;
+        + .filter-field-row,
+        + .mapstore-conditions-group {
+            margin-top: 8px;
+        }
+    }
+    .filter-field-row {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        .filter-field-operator {
+            width: 100px;
+            min-width: 100px;
+        }
+        .filter-field-attribute,
+        .filter-field-value {
+            flex: 1;
+            min-width: 100px;
+        }
+        >* + * {
+            margin-left: 8px;
+        }
+        + .filter-field-row,
+        + .mapstore-conditions-group {
+            margin-top: 8px;
+        }
+    }
+
+    .query-field {
+        display: flex;
+        .query-field-value {
+            flex: 1;
+        }
+        .query-field-value + .query-field-value {
+            margin-left: 8px;
+        }
+    }
 }

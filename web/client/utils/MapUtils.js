@@ -282,10 +282,19 @@ const isNearlyEqual = function(a, b) {
     return a.toFixed(12) - b.toFixed(12) === 0;
 };
 
+/**
+ * checks if maps has changed by looking at center or zoom
+ * @param {object} oldMap map object
+ * @param {object} newMap map object
+ */
 function mapUpdated(oldMap, newMap) {
-    const centersEqual = isNearlyEqual(newMap.center.x, oldMap.center.x) &&
-                          isNearlyEqual(newMap.center.y, oldMap.center.y);
-    return !centersEqual || newMap.zoom !== oldMap.zoom;
+    if (oldMap && !isEmpty(oldMap) &&
+        newMap && !isEmpty(newMap)) {
+        const centersEqual = isNearlyEqual(newMap?.center?.x, oldMap?.center?.x) &&
+                              isNearlyEqual(newMap?.center?.y, oldMap?.center?.y);
+        return !centersEqual || newMap?.zoom !== oldMap?.zoom;
+    }
+    return false;
 }
 
 /* Transform width and height specified in meters to the units of the specified projection */
@@ -495,6 +504,39 @@ const mergeMapConfigs = (cfg1 = {}, cfg2 = {}) => {
     };
 };
 
+const addRootParentGroup = (cfg = {}, groupTitle = 'RootGroup') => {
+    const groups = get(cfg, 'map.groups', []);
+    const groupsWithoutDefault = groups.filter(({id}) => id !== 'Default');
+    const defaultGroup = find(groups, ({id}) => id === 'Default');
+    const fixedDefaultGroup = defaultGroup && {
+        id: uuidv1(),
+        title: groupTitle,
+        expanded: defaultGroup.expanded
+    };
+    const groupsWithFixedDefault = defaultGroup ?
+        [
+            ...groupsWithoutDefault.map(({id, ...other}) => ({
+                id: `${fixedDefaultGroup.id}.${id}`,
+                ...other
+            })),
+            fixedDefaultGroup
+        ] :
+        groupsWithoutDefault;
+
+    return {
+        ...cfg,
+        map: {
+            ...cfg.map,
+            groups: groupsWithFixedDefault,
+            layers: get(cfg, 'map.layers', []).map(({group, ...other}) => ({
+                ...other,
+                group: defaultGroup && group !== 'background' && (group === 'Default' || !group) ? fixedDefaultGroup.id :
+                    defaultGroup && find(groupsWithFixedDefault, ({id}) => id.slice(id.indexOf('.') + 1) === group)?.id || group
+            }))
+        }
+    };
+};
+
 function isSimpleGeomType(geomType) {
     switch (geomType) {
     case "MultiPoint": case "MultiLineString": case "MultiPolygon": case "GeometryCollection": case "Text": return false;
@@ -656,6 +698,7 @@ module.exports = {
     saveMapConfiguration,
     generateNewUUIDs,
     mergeMapConfigs,
+    addRootParentGroup,
     isSimpleGeomType,
     getSimpleGeomType,
     getIdFromUri,

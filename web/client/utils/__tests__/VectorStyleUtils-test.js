@@ -408,9 +408,11 @@ describe("VectorStyleUtils ", () => {
         });
     });
     it('getStyleParser returns parsers for supported style formats', () => {
-        expect(getStyleParser('sld')).toExist();
-        expect(getStyleParser('sld').readStyle).toExist();
-        expect(getStyleParser('sld').writeStyle).toExist();
-        expect(getStyleParser('css')).toNotExist();
+        expect(getStyleParser('sld')).toBeTruthy();
+        expect(getStyleParser('sld').readStyle).toBeTruthy();
+        expect(getStyleParser('sld').writeStyle).toBeTruthy();
+        expect(getStyleParser('css')).toBeTruthy();
+        expect(getStyleParser('css').readStyle).toBeTruthy();
+        expect(getStyleParser('css').writeStyle).toBeTruthy();
     });
 });

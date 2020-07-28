@@ -249,7 +249,7 @@ export default class DrawSupport extends React.Component {
                         center = geometry.properties && geometry.properties.center ? reproject(geometry.properties.center, "EPSG:4326", mapCrs) : geometry.center;
                         center = [center.x, center.y];
                         feature = new Feature({
-                            geometry: this.createOLGeometry({type: "Circle", center, projection: "EPSG:3857", radius: geometry.properties && geometry.properties.radius || geometry.radius})
+                            geometry: this.createOLGeometry({type: "Circle", center, projection: "EPSG:3857", radius: geometry.properties && geometry.properties.radius || geometry.radius, options})
                         });
                     } else {
                         feature = new Feature({
@@ -480,14 +480,15 @@ export default class DrawSupport extends React.Component {
                     let newMultiGeom = this.toMulti(this.createOLGeometry({type: newDrawMethod, coordinates: [coordinates]}));
                     if (features.length === 1 && !features[0].geometry) {
                         previousGeometries = [];
-                        geomCollection = new GeometryCollection([newMultiGeom]);
+                        geomCollection = newMultiGeom.clone();
                     } else {
                         previousGeometries = this.toMulti(head(drawnFeatures).getGeometry());
                         if (previousGeometries.getGeometries) {
                             let geoms = this.replaceCirclesWithPolygons(head(drawnFeatures));
                             geomCollection = new GeometryCollection([...geoms, newMultiGeom]);
                         } else {
-                            geomCollection = new GeometryCollection([previousGeometries, newMultiGeom]);
+                            geomCollection = previousGeometries.clone();
+                            geomCollection.appendPoint(newMultiGeom.getPoint(0));
                         }
                     }
                     sketchFeature.setGeometry(geomCollection);

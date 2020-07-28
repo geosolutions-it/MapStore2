@@ -1,0 +1,38 @@
+{
+    "Rules": {
+        "Rule": {
+            "RasterSymbolizer": {
+                "ColorMap": {
+                    "ColorMapEntry": [
+                        {
+                            "@color": "#9E0142",
+                            "@quantity": "0.0",
+                            "@label": "0"
+                        },
+                        {
+                            "@color": "#F98E52",
+                            "@quantity": "1789.75",
+                            "@label": "1789.75"
+                        },
+                        {
+                            "@color": "#FFFFBF",
+                            "@quantity": "3579.5",
+                            "@label": "3579.5"
+                        },
+                        {
+                            "@color": "#89D0A5",
+                            "@quantity": "5369.25",
+                            "@label": "5369.25"
+                        },
+                        {
+                            "@color": "#5E4FA2",
+                            "@quantity": "7159.0",
+                            "@label": "7159"
+                        }
+                    ]
+                },
+                "ContrastEnhancement": "null"
+            }
+        }
+    }
+}

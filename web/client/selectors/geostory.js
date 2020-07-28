@@ -277,3 +277,9 @@ export const isMediaResourceUsed = (state, resId) => !!find(sectionsSelector(sta
 export const isSharedStory = (state = {}) => pathnameSelector(state).includes("geostory/shared");
 
 export const hasPendingChanges = (state = {}) => state?.geostory?.pendingChanges;
+
+/**
+ * It checks if updateUrlOnScroll is on
+ * @param {object} state application state
+ */
+export const updateUrlOnScrollSelector = state => get(state, 'geostory.updateUrlOnScroll', false);

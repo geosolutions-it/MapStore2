@@ -1,0 +1,562 @@
+{
+  "plugins": [
+    {
+      "name": "Map",
+      "glyph": "1-map",
+      "mandatory": true,
+      "defaultConfig": {
+        "mapTypeOverride": "openlayers",
+        "mapOptions": {
+          "openlayers": {
+            "interactions": {
+              "pinchRotate": false,
+              "altShiftDragRotate": false
+            },
+            "attribution": {
+              "container": "#footer-attribution-container"
+            }
+          },
+          "leaflet": {
+            "attribution": {
+              "container": "#footer-attribution-container"
+            }
+          }
+        },
+        "toolsOptions": {
+          "scalebar": {
+            "container": "#footer-scalebar-container"
+          }
+        }
+      }
+    },
+    {
+      "name": "Notifications",
+      "mandatory": true,
+      "hidden": true
+    },
+    {
+      "name": "DrawerMenu",
+      "hidden": true
+    },
+    {
+      "name": "TOC",
+      "glyph": "1-layer",
+      "symbol": "layers",
+      "title": "plugins.TOC.title",
+      "description": "plugins.TOC.description",
+      "defaultConfig": {
+        "activateAddLayerButton": true,
+        "addLayersPermissions": true,
+        "removeLayersPermissions": true,
+        "sortingPermissions": true,
+        "addGroupsPermissions": true,
+        "removeGroupsPermissions": true,
+        "activateWidgetTool": true,
+        "activateMetedataTool": false
+      },
+      "children": [
+        "TOCItemsSettings",
+        "FeatureEditor",
+        "FilterLayer",
+        "AddGroup"
+      ],
+      "autoEnableChildren": [
+        "TOCItemsSettings",
+        "FeatureEditor",
+        "FilterLayer",
+        "AddGroup"
+      ],
+      "dependencies": [
+        "DrawerMenu"
+      ]
+    },
+    {
+      "name": "FeatureEditor",
+      "glyph": "features-grid",
+      "title": "plugins.FeatureEditor.title",
+      "description": "plugins.FeatureEditor.description",
+      "dependencies": [
+        "QueryPanel"
+      ],
+      "children": [
+        "WFSDownload"
+      ],
+      "autoEnableChildren": [
+        "WFSDownload"
+      ],
+      "defaultConfig": {}
+    },
+    {
+      "name": "TOCItemsSettings",
+      "glyph": "wrench",
+      "title": "plugins.TOCItemsSettings.title",
+      "description": "plugins.TOCItemsSettings.description",
+      "children": [
+          "StyleEditor"
+      ]
+    },
+    {
+      "name": "MapFooter",
+      "mandatory": true,
+      "hidden": true
+    },
+    {
+      "name": "Widgets",
+      "glyph": "stats",
+      "title": "plugins.Widgets.title",
+      "description": "plugins.Widgets.description",
+      "children": [
+        "WidgetsTray"
+      ],
+      "autoEnableChildren": [
+        "WidgetsTray"
+      ],
+      "dependencies": [
+        "WidgetsBuilder"
+      ]
+    },
+    {
+      "name": "WidgetsTray",
+      "glyph": "import",
+      "title": "plugins.WidgetsTray.title",
+      "description": "plugins.WidgetsTray.description",
+      "denyUserSelection": true
+    },
+    {
+      "name": "WidgetsBuilder",
+      "dependencies": [
+        "QueryPanel"
+      ],
+      "hidden": true
+    },
+    {
+      "name": "Details",
+      "glyph": "sheet",
+      "title": "plugins.Details.title",
+      "description": "plugins.Details.description"
+    },
+    {
+      "name": "HelpLink",
+      "glyph": "question-sign",
+      "title": "plugins.HelpLink.title",
+      "description": "plugins.HelpLink.description",
+      "dependencies": [
+        "BurgerMenu"
+      ]
+    },
+    {
+      "name": "Share",
+      "glyph": "share",
+      "title": "plugins.Share.title",
+      "description": "plugins.Share.description",
+      "dependencies": [
+        "BurgerMenu"
+      ]
+    },
+    {
+      "name": "Version",
+      "glyph": "info-sign",
+      "title": "plugins.Version.title",
+      "description": "plugins.Version.description"
+    },
+    {
+      "name": "BackgroundSelector",
+      "title": "plugins.BackgroundSelector.title",
+      "description": "plugins.BackgroundSelector.description"
+    },
+    {
+      "name": "Annotations",
+      "glyph": "comment",
+      "title": "plugins.Annotations.title",
+      "description": "plugins.Annotations.description",
+      "dependencies": [
+        "BurgerMenu"
+      ]
+    },
+    {
+      "name": "Identify",
+      "glyph": "map-marker",
+      "title": "plugins.Identify.title",
+      "description": "plugins.Identify.description",
+      "defaultConfig": {
+        "showHighlightFeatureButton": true,
+        "viewerOptions": {
+          "container": "{context.ReactSwipe}"
+        }
+      }
+    },
+    {
+      "name": "Locate",
+      "glyph": "1-position-1",
+      "title": "plugins.Locate.title",
+      "description": "plugins.Locate.description",
+      "dependencies": ["Toolbar"]
+    },
+    {
+      "name": "Home",
+      "glyph": "home",
+      "title": "plugins.Home.title",
+      "description": "plugins.Home.description",
+      "dependencies": ["OmniBar"]
+    },
+    {
+      "name": "WFSDownload",
+      "glyph": "features-grid-download",
+      "title": "plugins.WFSDownload.title",
+      "description": "plugins.WFSDownload.description"
+    },
+    {
+      "name": "QueryPanel",
+      "glyph": "filter",
+      "defaultConfig": {
+        "activateQueryTool": true,
+        "spatialOperations": [
+          {
+            "id": "INTERSECTS",
+            "name": "queryform.spatialfilter.operations.intersects"
+          },
+          {
+            "id": "CONTAINS",
+            "name": "queryform.spatialfilter.operations.contains"
+          },
+          {
+            "id": "WITHIN",
+            "name": "queryform.spatialfilter.operations.within"
+          }
+        ],
+        "spatialMethodOptions": [
+          {
+            "id": "Viewport",
+            "name": "queryform.spatialfilter.methods.viewport"
+          },
+          {
+            "id": "BBOX",
+            "name": "queryform.spatialfilter.methods.box"
+          },
+          {
+            "id": "Circle",
+            "name": "queryform.spatialfilter.methods.circle"
+          },
+          {
+            "id": "Polygon",
+            "name": "queryform.spatialfilter.methods.poly"
+          }
+        ]
+      }
+    },
+    {
+      "name": "AddGroup",
+      "glyph": "add-folder",
+      "title": "plugins.AddGroup.title",
+      "description": "plugins.AddGroup.description"
+    }, {
+      "name": "FilterLayer",
+      "glyph": "filter-layer",
+      "title": "plugins.FilterLayer.title",
+      "description": "plugins.FilterLayer.description",
+      "dependencies": ["QueryPanel"]
+    },
+    {
+      "name": "Tutorial",
+      "glyph": "book",
+      "title": "plugins.Tutorial.title",
+      "description": "plugins.Tutorial.description"
+    },
+    {
+      "name": "Measure",
+      "glyph": "1-ruler",
+      "title": "plugins.Measure.title",
+      "description": "plugins.Measure.description",
+      "dependencies": [
+        "BurgerMenu"
+      ]
+    },
+    {
+      "name": "Print",
+      "glyph": "print",
+      "title": "plugins.Print.title",
+      "description": "plugins.Print.description",
+      "dependencies": [
+        "BurgerMenu"
+      ]
+    },
+    {
+      "name": "MapCatalog",
+      "glyph": "maps-catalog",
+      "title": "plugins.MapCatalog.title",
+      "description": "plugins.MapCatalog.description",
+      "dependencies": [
+        "BurgerMenu"
+      ]
+    },
+    {
+      "name": "MapImport",
+      "glyph": "upload",
+      "title": "plugins.MapImport.title",
+      "description": "plugins.MapImport.description",
+      "dependencies": [
+        "BurgerMenu"
+      ]
+    },
+    {
+      "name": "MapExport",
+      "glyph": "download",
+      "title": "plugins.MapExport.title",
+      "description": "plugins.MapExport.description",
+      "dependencies": [
+        "BurgerMenu"
+      ]
+    },
+    {
+      "name": "Settings",
+      "glyph": "cog",
+      "title": "plugins.Settings.title",
+      "description": "plugins.Settings.description",
+      "children": ["Version"],
+      "dependencies": [
+        "BurgerMenu"
+      ],
+      "defaultConfig": {
+        "wrap": true
+      }
+    },
+    {
+      "name": "MetadataExplorer",
+      "glyph": "folder-open",
+      "title": "plugins.MetadataExplorer.title",
+      "description": "plugins.MetadataExplorer.description",
+      "defaultConfig": {
+        "wrap": true
+      }
+    },
+    {
+      "name": "About",
+      "glyph": "info-sign",
+      "title": "plugins.About.title",
+      "description": "plugins.About.description",
+      "dependencies": ["BurgerMenu"]
+    },
+    {
+      "name": "MousePosition",
+      "glyph": "mouse",
+      "title": "plugins.MousePosition.title",
+      "description": "plugins.MousePosition.description",
+      "dependencies": ["MapFooter"],
+      "defaultConfig": {
+        "editCRS": true,
+        "showLabels": true,
+        "showToggle": true,
+        "filterAllowedCRS": [
+          "EPSG:4326",
+          "EPSG:3857"
+        ],
+        "additionalCRS": {}
+      }
+    },
+    {
+      "name": "CRSSelector",
+      "glyph": "crs",
+      "title": "plugins.CRSSelector.title",
+      "description": "plugins.CRSSelector.description",
+      "dependencies": ["MapFooter"],
+      "defaultConfig": {
+        "additionalCRS": {},
+        "filterAllowedCRS": [
+          "EPSG:4326",
+          "EPSG:3857"
+        ],
+        "allowedRoles": [
+          "ADMIN"
+        ]
+      }
+    },
+    {
+      "name": "Search",
+      "glyph": "search",
+      "title": "plugins.Search.title",
+      "description": "plugins.Search.description",
+      "dependencies": [
+        "OmniBar",
+        "SearchServicesConfig"
+      ],
+      "defaultConfig": {
+        "withToggle": [
+          "max-width: 768px",
+          "min-width: 768px"
+        ]
+      }
+    },
+    {
+      "name": "Cookie",
+      "mandatory": true,
+      "hidden": true,
+      "defaultConfig": {
+        "externalCookieUrl": "",
+        "declineUrl": "http://www.google.com"
+      }
+    },
+    {
+      "name": "Toolbar",
+      "hidden": true
+    },
+    {
+      "name": "ScaleBox",
+      "title": "plugins.ScaleBox.title",
+      "description": "plugins.ScaleBox.description",
+      "dependencies": ["MapFooter"]
+    },
+    {
+      "name": "ZoomAll",
+      "glyph": "resize-full",
+      "title": "plugins.ZoomAll.title",
+      "description": "plugins.ZoomAll.description",
+      "dependencies": [
+        "Toolbar"
+      ]
+    },
+    {
+      "name": "ZoomIn",
+      "glyph": "plus",
+      "title": "plugins.ZoomIn.title",
+      "description": "plugins.ZoomIn.description",
+      "dependencies": [
+        "Toolbar"
+      ]
+    },
+    {
+      "name": "ZoomOut",
+      "glyph": "minus",
+      "title": "plugins.ZoomOut.title",
+      "description": "plugins.ZoomOut.description",
+      "dependencies": [
+        "Toolbar"
+      ]
+    },
+    {
+      "name": "OmniBar",
+      "hidden": true
+    },
+    {
+      "name": "Login",
+      "glyph": "user",
+      "title": "plugins.Login.title",
+      "description": "plugins.Login.description"
+    },
+    {
+      "name": "Save",
+      "denyUserSelection": true,
+      "title": "plugins.Save.title",
+      "description": "plugins.Save.description",
+      "dependencies": [
+        "BurgerMenu",
+        "SaveAs"
+      ]
+    },
+    {
+      "name": "SaveAs",
+      "glyph": "floppy-open",
+      "title": "plugins.SaveAs.title",
+      "hidden": true,
+      "description": "plugins.SaveAs.description",
+      "dependencies": [
+        "BurgerMenu"
+      ]
+    },
+    {
+      "name": "BurgerMenu",
+      "hidden": true,
+      "glyph": "menu-hamburger",
+      "title": "plugins.BurgerMenu.title",
+      "description": "plugins.BurgerMenu.description",
+      "dependencies": [
+        "OmniBar"
+      ]
+    },
+    {
+      "name": "Expander",
+      "hidden": true,
+      "glyph": "option-horizontal",
+      "title": "plugins.Expander.title",
+      "description": "plugins.Expander.description"
+    },
+    {
+      "name": "Undo",
+      "glyph": "1-screen-backward",
+      "dependencies": [
+        "Toolbar",
+        "Expander"
+      ]
+    },
+    {
+      "name": "Redo",
+      "glyph": "1-screen-forward",
+      "dependencies": [
+        "Toolbar",
+        "Expander"
+      ]
+    },
+    {
+      "name": "FullScreen",
+      "glyph": "1-full-screen",
+      "dependencies": [
+        "Toolbar"
+      ]
+    },
+    {
+      "name": "SearchServicesConfig",
+      "hidden": true
+    },
+    {
+      "name": "Timeline",
+      "glyph": "time",
+      "title": "plugins.Timeline.title",
+      "description": "plugins.Timeline.description",
+      "dependencies": ["Playback"]
+    },
+    {
+      "name": "Playback",
+      "hidden": true
+    },
+    {
+      "name": "FeedbackMask",
+      "glyph": "1-time-user",
+      "mandatory": true,
+      "hidden": true
+    },
+    {
+      "name": "StyleEditor",
+      "glyph": "1-stilo",
+      "title": "plugins.StyleEditor.title",
+      "description": "plugins.StyleEditor.description"
+    },
+    {
+      "name": "MapLoading",
+      "glyph": "1-time-user",
+      "title": "plugins.MapLoading.title",
+      "description": "plugins.MapLoading.description",
+      "dependencies": [
+        "Toolbar"
+      ]
+    },
+    {
+      "name": "MapTemplates",
+      "title": "Map Templates",
+      "dependencies": [
+          "BurgerMenu"
+      ]
+    }, {
+      "name": "UserExtensions",
+      "glyph": "1-user-add",
+      "title": "plugins.UserExtensions.title",
+      "hidden": true,
+      "description": "plugins.UserExtensions.description",
+      "dependencies": ["BurgerMenu"]
+    }, {
+      "name": "UserSession",
+      "glyph": "floppy-save",
+      "title": "plugins.UserSession.title",
+      "description": "plugins.UserSession.description",
+      "dependencies": ["BurgerMenu"]
+    }
+  ]
+}
