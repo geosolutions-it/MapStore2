@@ -49,9 +49,8 @@ export const setError = (error) => ({
     error
 });
 
-export const loading = (value, stage, name = "loading") => ({
+export const loading = (value, name = "loading") => ({
     type: LOADING,
     name,
-    stage,
     value
 });

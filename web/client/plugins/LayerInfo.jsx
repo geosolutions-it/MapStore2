@@ -22,7 +22,6 @@ import {
     layersSelector,
     loadingSelector,
     loadFlagsSelector,
-    loadingStageSelector,
     syncStatusSelector,
     errorSelector
 } from '../selectors/layerinfo';
@@ -33,12 +32,17 @@ import {
 import layerinfo from '../reducers/layerinfo';
 import * as epics from '../epics/layerinfo';
 
+/**
+ * Provides title and description syncronization functionality for layers
+ * @memberof plugins
+ * @name LayerInfo
+ * @class
+ */
 const LayerInfoPlugin = ({
     enabled = false,
     layers = [],
     loading = false,
     loadFlags = {},
-    loadingStage,
     syncStatus = {},
     error,
     onSyncLayers = () => {},
@@ -52,9 +56,7 @@ const LayerInfoPlugin = ({
         <ResizableModal
             bodyClassName="layerinfo-dialog-body"
             loading={updating}
-            loadingText={loadingStage && <Message
-                msgId={`layerInfo.loadingText.${loadingStage}`}
-                msgParams={loadingStage === 'updatingLayers' ? syncStatus : undefined}/>}
+            loadingText={loading && <Message msgId="layerInfo.updatingLayers" msgParams={syncStatus}/>}
             size="sm"
             show={enabled}
             clickOutEnabled={!updating}
@@ -82,7 +84,6 @@ export default createPlugin('LayerInfo', {
         layers: layersSelector,
         loading: loadingSelector,
         loadFlags: loadFlagsSelector,
-        loadingStage: loadingStageSelector,
         syncStatus: syncStatusSelector,
         error: errorSelector
     }), {

@@ -22,7 +22,7 @@ const {getLayerCapabilities} = require('../actions/layerCapabilities');
 const {zoomToExtent} = require('../actions/map');
 const {error} = require('../actions/notifications');
 const {groupsSelector, layersSelector, selectedNodesSelector, layerFilterSelector, layerSettingSelector, layerMetadataSelector, wfsDownloadSelector} = require('../selectors/layers');
-const {mapSelector, mapIdSelector, mapNameSelector} = require('../selectors/map');
+const {mapSelector, mapNameSelector} = require('../selectors/map');
 const {currentLocaleSelector, currentLocaleLanguageSelector} = require("../selectors/locale");
 const {widgetBuilderAvailable} = require('../selectors/controls');
 const {generalInfoFormatSelector} = require("../selectors/mapInfo");
@@ -91,9 +91,8 @@ const tocSelector = createSelector(
         generalInfoFormatSelector,
         isCesium,
         userSelector,
-        isLocalizedLayerStylesEnabledSelector,
-        mapIdSelector
-    ], (enabled, groups, settings, layerMetadata, wfsdownload, map, currentLocale, currentLocaleLanguage, selectedNodes, filterText, layers, mapName, catalogActive, activateWidgetTool, generalInfoFormat, isCesiumActive, user, isLocalizedLayerStylesEnabled, mapId) => ({
+        isLocalizedLayerStylesEnabledSelector
+    ], (enabled, groups, settings, layerMetadata, wfsdownload, map, currentLocale, currentLocaleLanguage, selectedNodes, filterText, layers, mapName, catalogActive, activateWidgetTool, generalInfoFormat, isCesiumActive, user, isLocalizedLayerStylesEnabled) => ({
         enabled,
         groups,
         settings,
@@ -137,7 +136,6 @@ const tocSelector = createSelector(
         ]),
         catalogActive,
         activateWidgetTool,
-        activateLayerInfoTool: !!mapId,
         user,
         isLocalizedLayerStylesEnabled
     })

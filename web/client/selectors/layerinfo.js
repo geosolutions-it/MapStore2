@@ -10,6 +10,5 @@ export const layerInfoControlEnabledSelector = state => state.controls?.layerinf
 export const layersSelector = state => state.layerinfo?.layers;
 export const loadingSelector = state => state.layerinfo?.loading;
 export const loadFlagsSelector = state => state.layerinfo?.loadFlags;
-export const loadingStageSelector = state => state.layerinfo?.loadingStage;
 export const syncStatusSelector = state => state.layerinfo?.syncStatus;
 export const errorSelector = state => state.layerinfo?.error;

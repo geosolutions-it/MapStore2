@@ -2664,15 +2664,12 @@
             "updateError": "Beim Speichern der Karte ist ein unerwarteter Fehler aufgetreten"
         },
         "layerInfo": {
-            "title": "Aktualisieren Sie den Layertitel und die Beschreibung",
+            "title": "Aktualisieren Sie die Titel und Beschreibungen der Ebenen",
             "noLayers": "Keine Schichten gefunden",
             "syncButton": "Titel und Beschreibungen synchronisieren",
             "selectAll": "Wählen Sie Alle",
             "deselectAll": "Alle abwählen",
-            "loadingText": {
-                "updatingLayers": "Aktualisieren von Layern {updatedCount}/{totalCount}",
-                "savingToServer": "Speichern aktualisierter Daten auf dem Server"
-            },
+            "updatingLayers": "Aktualisieren von Layern {updatedCount}/{totalCount}",
             "tooltips": {
                 "syncSuccess": "Titel und Beschreibung wurden für diese Ebene erfolgreich aktualisiert",
                 "syncError": "Es ist nicht möglich, den Titel und die Beschreibung dieser Ebene zu aktualisieren. Sie können im Einstellungsfeld überprüfen, ob alle Ebenenoptionen korrekt sind"

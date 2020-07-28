@@ -45,9 +45,9 @@ export default (state = {}, action) => {
     }
     case LOADING: {
         // anyway sets loading to true
-        return set('loadingStage', action.stage, set(action.name === "loading" ? "loading" : `loadFlags.${action.name}`, action.value, set(
+        return set(action.name === "loading" ? "loading" : `loadFlags.${action.name}`, action.value, set(
             "loading", action.value, state
-        )));
+        ));
     }
     default:
         return state;

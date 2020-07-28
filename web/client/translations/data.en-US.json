@@ -2668,15 +2668,12 @@
             "updateError": "Unexpected error occurred while saving the map"
         },
         "layerInfo": {
-            "title": "Update Layer Title and Description",
+            "title": "Update layers titles and descriptions",
             "noLayers": "No layers found",
-            "syncButton": "Sync title and descriptions",
+            "syncButton": "Sync titles and descriptions",
             "selectAll": "Select all",
             "deselectAll": "Deselect all",
-            "loadingText": {
-                "updatingLayers": "Updating layers {updatedCount}/{totalCount}",
-                "savingToServer": "Saving updated data to server"
-            },
+            "updatingLayers": "Updating layers {updatedCount}/{totalCount}",
             "tooltips": {
                 "syncSuccess": "Title and description were successfully updated for this layer",
                 "syncError": "It's not possible to update the title and description of this layer. You could verify if all layer options are correct in the settings panel"

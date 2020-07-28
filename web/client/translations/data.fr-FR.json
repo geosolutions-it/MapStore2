@@ -2666,15 +2666,12 @@
             "updateError": "Une erreur inattendue s'est produite lors de l'enregistrement de la carte"
         },
         "layerInfo": {
-            "title": "Mettre à jour le titre et la description de la couche",
+            "title": "Mettre à jour les titres et descriptions des calques",
             "noLayers": "Aucun calque trouvé",
-            "syncButton": "Synchroniser le titre et les descriptions",
+            "syncButton": "Synchroniser les titres et les descriptions",
             "selectAll": "Tout sélectionner",
             "deselectAll": "Tout déselectionner",
-            "loadingText": {
-                "updatingLayers": "Mise à jour des couches {updatedCount}/{totalCount}",
-                "savingToServer": "Enregistrement des données mises à jour sur le serveur"
-            },
+            "updatingLayers": "Mise à jour des couches {updatedCount}/{totalCount}",
             "tooltips": {
                 "syncSuccess": "Le titre et la description ont été mis à jour avec succès pour cette couche",
                 "syncError": "Il n'est pas possible de mettre à jour le titre et la description de cette couche. Vous pouvez vérifier si toutes les options de calque sont correctes dans le panneau des paramètres"

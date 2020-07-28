@@ -2665,15 +2665,12 @@
             "updateError": "Si è verificato un errore imprevisto durante il salvataggio della mappa"
         },
         "layerInfo": {
-            "title": "Aggiorna titolo e descrizione del livello",
+            "title": "Aggiorna titoli e descrizioni dei livelli",
             "noLayers": "Nessun livello trovato",
-            "syncButton": "Sincronizza titolo e descrizioni",
+            "syncButton": "Sincronizza titoli e descrizioni",
             "selectAll": "Seleziona tutto",
             "deselectAll": "Deselezionare tutto",
-            "loadingText": {
-                "updatingLayers": "Aggiornamento dei livelli {updatedCount}/{totalCount}",
-                "savingToServer": "Salvataggio dei dati aggiornati sul server"
-            },
+            "updatingLayers": "Aggiornamento dei livelli {updatedCount}/{totalCount}",
             "tooltips": {
                 "syncSuccess": "Titolo e descrizione sono stati aggiornati con successo per questo livello",
                 "syncError": "Non è possibile aggiornare il titolo e la descrizione di questo livello. È possibile verificare se tutte le opzioni di livello sono corrette nel pannello delle impostazioni"
