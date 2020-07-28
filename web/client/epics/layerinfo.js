@@ -25,7 +25,7 @@ import {
     layerInfoControlEnabledSelector,
     layersSelector
 } from '../selectors/layerinfo';
-import { layersSelector as mapLayersSelector } from '../selectors/layers'
+import { layersSelector as mapLayersSelector } from '../selectors/layers';
 
 import { getLayerCapabilities } from '../observables/wms';
 import CSWApi from '../api/CSW';
@@ -91,10 +91,7 @@ export const layerInfoSyncLayersEpic = (action$, store) => action$
                     layerObj,
                     ...extractLayerData(layerObj),
                     syncStatus
-                }), updateSyncStatus()))
-                .concat(Observable.defer(() => Observable.of(
-                    ...layersSelector(store.getState()).map(({layerObj}) => updateNode(layerObj.id, 'layer', pick(layerObj, 'title', 'description')))
-                )))
+                }), updateNode(layerObj.id, 'layer', pick(layerObj, 'title', 'description')), updateSyncStatus()))
                 .concat(Observable.of(loading(false, 'syncingLayers')))
                 .catch(() => Observable.of(setError({
                     title: 'layerInfo.syncingLayersGeneralError.title',

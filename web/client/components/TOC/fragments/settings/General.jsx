@@ -100,16 +100,12 @@ class General extends React.Component {
                     </FormGroup>)}
                     <FormGroup>
                         <ControlLabel><Message msgId="layerProperties.name" /></ControlLabel>
-                        <InputGroup>
-                            <FormControl
-                                value={this.state.layerName || ''}
-                                key="name"
-                                type="text"
-                                onChange={evt => this.setState({layerName: evt.target.value})} />
-                            <InputGroup.Addon className="btn" onClick={() => this.updateEntry('name', {target: {value: this.state.layerName}})}>
-                                <Glyphicon glyph="refresh"/>
-                            </InputGroup.Addon>
-                        </InputGroup>
+                        <FormControl
+                            defaultValue={this.props.element.name || ''}
+                            key="name"
+                            type="text"
+                            disabled
+                            onBlur={this.updateEntry.bind(null, "name")} />
                     </FormGroup>
                     <FormGroup>
                         <ControlLabel><Message msgId="layerProperties.description" /></ControlLabel>
