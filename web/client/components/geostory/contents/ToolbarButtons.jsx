@@ -81,7 +81,7 @@ export const AlignButtonToolbar = ({editMap: disabled = false, align, sectionTyp
         onSelect={(selected) => update('align', selected)}/>
     );
 
-export const ThemeButtonToolbar = ({editMap: disabled = false, theme, storyTheme, align, sectionType, update = () => {}, themeProps, size }) =>
+export const ThemeButtonToolbar = ({editMap: disabled = false, theme, storyTheme, align, sectionType, update = () => {}, themeProps, size, defaultThemeForType = '' }) =>
     (<ToolbarDropdownButton
         value={theme}
         noTooltipWhenDisabled
@@ -98,7 +98,7 @@ export const ThemeButtonToolbar = ({editMap: disabled = false, theme, storyTheme
             return selected?.value === 'custom' && options?.value !== 'custom';
         }}
         options={[{
-            value: '',
+            value: 'default',
             isActive: (current) =>
                 current === undefined || current === ''
                 || isObject(current) && (current.value === undefined || current.value === ''),
@@ -124,7 +124,9 @@ export const ThemeButtonToolbar = ({editMap: disabled = false, theme, storyTheme
                 />
             )
         }]}
-        onSelect={(value) => update('theme', { ...(isObject(theme) && theme), value })}/>
+        onSelect={(value) => defaultThemeForType && value === defaultThemeForType
+            ? update('theme', { ...(isObject(theme) && theme), "value": defaultThemeForType, [defaultThemeForType]: storyTheme })
+            : update('theme', { ...(isObject(theme) && theme), value })}/>
     );
 
 

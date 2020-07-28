@@ -52,7 +52,7 @@ describe('ContentToolbar component', () => {
         name: "theme",
         length: 4,
         totButtons: 1,
-        aTag: ["", "bright", "dark", "custom"]
+        aTag: ["default", "bright", "dark", "custom"]
     }];
     testItems.forEach(tool => {
         it(`ContentToolbar rendering ${tool.name} item and click event`, (done) => {

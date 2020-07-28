@@ -15,7 +15,7 @@ import AddBar from '../../common/AddBar';
 import { SectionTypes, ContentTypes, Modes, MediaTypes, SectionTemplates } from '../../../../utils/GeoStoryUtils';
 import titlePattern from './patterns/dots.png';
 import coverPattern from './patterns/grid.svg';
-import {get} from 'lodash';
+import {get, isObject} from 'lodash';
 /**
  * Paragraph Section Type.
  * Paragraph is a page block that expands for all it's height
@@ -56,6 +56,9 @@ export default compose(
     const hideContent = get(focusedContent, "target.id") === contentId;
     const visibility = hideContent ?  'hidden' : 'visible';
     const expandableBackgroundClassName = expandableMedia && background && background.type === 'map' ? ' ms-expandable-background' : '';
+    const overlayStoryTheme = isObject(storyTheme) && isObject(storyTheme.overlay) && storyTheme.overlay || {};
+    const DEFAULT = 'default';
+
     return (
         <section
             ref={inViewRef}
@@ -122,7 +125,8 @@ export default compose(
                 }}
                 focusedContent={focusedContent}
                 bubblingTextEditing={bubblingTextEditing}
-                storyTheme={storyTheme}
+                storyTheme={overlayStoryTheme}
+                overrideThemeTypeWithDefault={DEFAULT}
             />
             {mode === Modes.EDIT && !hideContent && <AddBar
                 containerWidth={viewWidth}

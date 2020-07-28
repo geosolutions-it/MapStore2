@@ -7,6 +7,11 @@
         "color": "#333333",
         "backgroundColor": "#ffffff",
         "borderColor": "#e6e6e6"
+      },
+      "overlay": {
+        "color": "#333333",
+        "backgroundColor": "#ffffff",
+        "borderColor": "#e6e6e6"
       }
     }
   },
