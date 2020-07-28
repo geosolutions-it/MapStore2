@@ -189,6 +189,13 @@ const clickedPointWithFeaturesSelector = createSelector(
 
 const currentEditFeatureQuerySelector = state => state.mapInfo?.currentEditFeatureQuery;
 
+const mapTriggerSelector = state => {
+    if (state.mapInfo === undefined || state.mapInfo.trigger === undefined) {
+        return 'click';
+    }
+    return state.mapInfo.trigger;
+};
+
 
 module.exports = {
     isMapInfoOpen,
@@ -212,5 +219,6 @@ module.exports = {
     overrideParamsSelector,
     filterNameListSelector,
     isMapPopup,
-    currentEditFeatureQuerySelector
+    currentEditFeatureQuerySelector,
+    mapTriggerSelector
 };

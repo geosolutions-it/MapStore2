@@ -29,6 +29,7 @@ const { mapPaddingSelector } = require('../selectors/maplayout');
 
 const {setControlProperty} = require('../actions/controls');
 const {MAP_CONFIG_LOADED, MAP_CONFIG_LOAD_ERROR} = require('../actions/config');
+const { registerEventListener, unRegisterEventListener } = require('../actions/map');
 const {isSupportedLayer} = require('../utils/LayersUtils');
 const MapUtils = require('../utils/MapUtils');
 const CoordinatesUtils = require('../utils/CoordinatesUtils');
@@ -42,6 +43,7 @@ const { head, isArray, isObject, mapValues } = require('lodash');
 
 const { isLoggedIn } = require('../selectors/security');
 const {pathnameSelector} = require('../selectors/router');
+const { mapTriggerSelector } = require('../selectors/mapInfo');
 const { push } = require('connected-react-router');
 
 const handleCreationBackgroundError = (action$, store) =>
@@ -91,6 +93,15 @@ const handleCreationLayerError = (action$, store) =>
             return !!layer && isSupportedLayer(layer, maptype) ? Rx.Observable.from([
                 changeLayerProperties(a.options.id, {invalid: true})
             ]) : Rx.Observable.empty();
+        });
+
+// Epic to determine which trigger to use when map loads
+const setMapTriggerEpic = (action$, store) =>
+    action$.ofType(MAP_CONFIG_LOADED)
+        .switchMap(() => {
+            return Rx.Observable.of(
+                mapTriggerSelector(store.getState()) === 'hover' ? registerEventListener('mousemove', 'identifyFloatingTool') : unRegisterEventListener('mousemove', 'identifyFloatingTool')
+            );
         });
 
 const resetLimitsOnInit = (action$, store) =>
@@ -235,5 +246,6 @@ module.exports = {
     resetMapOnInit,
     resetLimitsOnInit,
     zoomToExtentEpic,
-    redirectUnauthorizedUserOnNewMap
+    redirectUnauthorizedUserOnNewMap,
+    setMapTriggerEpic
 };

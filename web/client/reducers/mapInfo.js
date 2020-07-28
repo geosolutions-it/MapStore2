@@ -29,7 +29,8 @@ const {
     TOGGLE_EMPTY_MESSAGE_GFI,
     CHANGE_FORMAT,
     TOGGLE_SHOW_COORD_EDITOR,
-    SET_CURRENT_EDIT_FEATURE_QUERY
+    SET_CURRENT_EDIT_FEATURE_QUERY,
+    SET_MAP_TRIGGER
 } = require('../actions/mapInfo');
 const {
     MAP_CONFIG_LOADED
@@ -363,6 +364,12 @@ function mapInfo(state = initState, action) {
         return {
             ...state,
             currentEditFeatureQuery: action.query
+        };
+    }
+    case SET_MAP_TRIGGER: {
+        return {
+            ...state,
+            trigger: action.trigger
         };
     }
     default:

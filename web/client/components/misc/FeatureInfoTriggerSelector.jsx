@@ -15,8 +15,15 @@ const {FormControl, FormGroup, ControlLabel} = require('react-bootstrap');
 class FeatureInfoTriggerSelector extends React.Component {
     static propTypes = {
         trigger: PropTypes.string,
-        onTriggerChange: PropTypes.func
+        onTriggerChange: PropTypes.func,
+        onSetMapTrigger: PropTypes.func
     }
+
+    onChange = (event) => {
+        this.props.onTriggerChange(event);
+        this.props.onSetMapTrigger(event.target.value);
+    }
+
     render() {
         return (
             <FormGroup bsSize="small">
@@ -24,7 +31,7 @@ class FeatureInfoTriggerSelector extends React.Component {
                 <FormControl
                     value={this.props.trigger}
                     componentClass="select"
-                    onChange={this.props.onTriggerChange}>
+                    onChange={this.onChange}>
                     <option value="click" key="click">Click</option>
                     <option value="hover" key="hover">Hover</option>
                 </FormControl>
