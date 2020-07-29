@@ -12,6 +12,9 @@ export const clearMapTemplates = () => ({ type: CLEAR_MAP_TEMPLATES });
 export const SET_TEMPLATES = 'MAPTEMPLATES:SET_TEMPLATES';
 export const setTemplates = (templates) => ({ type: SET_TEMPLATES, templates});
 
+export const SET_ALLOWED_TEMPLATES = 'MAPTEMPLATES:SET_ALLOWED_TEMPLATES';
+export const setAllowedTemplates = (templates) => ({ type: SET_ALLOWED_TEMPLATES, templates});
+
 export const OPEN_MAP_TEMPLATES_PANEL = 'MAPTEMPLATES:OPEN_MAP_TEMPLATES_PANEL';
 export const openMapTemplatesPanel = () => ({ type: OPEN_MAP_TEMPLATES_PANEL });
 

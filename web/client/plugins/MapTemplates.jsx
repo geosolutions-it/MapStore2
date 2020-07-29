@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { get } from 'lodash';
 import { connect } from 'react-redux';
 import { Glyphicon } from 'react-bootstrap';
@@ -15,7 +15,7 @@ import { createPlugin } from '../utils/PluginsUtils';
 
 import { toggleControl } from '../actions/controls';
 import { templatesSelector, mapTemplatesLoadedSelector } from '../selectors/maptemplates';
-import { openMapTemplatesPanel, mergeTemplate, replaceTemplate, toggleFavouriteTemplate } from '../actions/maptemplates';
+import { openMapTemplatesPanel, mergeTemplate, replaceTemplate, toggleFavouriteTemplate, setAllowedTemplates } from '../actions/maptemplates';
 
 import Message from '../components/I18N/Message';
 import Loader from '../components/misc/Loader';
@@ -32,16 +32,24 @@ import * as epics from '../epics/maptemplates';
  * @memberof plugins
  * @class
  * @name MapTemplates
+ * @prop {object[]} cfg.allowedTemplates: A list of objects with map template ids used to load templates when not in context
  */
 const mapTemplates = ({
     active,
     templates = [],
+    allowedTemplates = [],
     templatesLoaded,
     onToggleControl = () => {},
     onMergeTemplate = () => {},
     onReplaceTemplate = () => {},
-    onToggleFavourite = () => {}
+    onToggleFavourite = () => {},
+    onSetAllowedTemplates = () => {}
 }) => {
+    useEffect(() => {
+        if (active) {
+            onSetAllowedTemplates(allowedTemplates);
+        }
+    }, [ active ]);
     return (
         <DockPanel
             open={active}
@@ -74,7 +82,8 @@ const MapTemplatesPlugin = connect(createSelector(
     onToggleControl: toggleControl.bind(null, 'mapTemplates', 'enabled'),
     onMergeTemplate: mergeTemplate,
     onReplaceTemplate: replaceTemplate,
-    onToggleFavourite: toggleFavouriteTemplate
+    onToggleFavourite: toggleFavouriteTemplate,
+    onSetAllowedTemplates: setAllowedTemplates
 })(mapTemplates);
 
 export default createPlugin('MapTemplates', {
