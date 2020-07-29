@@ -145,18 +145,30 @@ const sortNestedGroups = (groups, previousGroups) => {
         return groups;
     }
 
-    const nestedNodeIds = isArray(previousGroups[0].nodes) && previousGroups[0].nodes.map(node => isObject(node) && node.id?.includes('Default') ? node : node.id) || [];
+    const nestedNodeIds = isArray(previousGroups[0].nodes)
+        && previousGroups[0].nodes.map(node => isObject(node) && node.id?.includes('Default') ? node : node.id)
+        || [];
     nestedNodeIds.map(nodeId => {
         nestedDefaultGroups.map(nestedDefault => {
             previousGroupsFormatted.push(isObject(nodeId) && nodeId.id?.includes('Default') ? nestedDefault : nodeId);
         });
     });
 
-    const newNodes = copyGroups[0].nodes.filter(node => isObject(node) ? !previousGroupsFormatted.find(fNode => isEqual(fNode, node)) : !previousGroupsFormatted.find(fNode => fNode === node));
+    const newNodes = copyGroups[0].nodes.filter(node => isObject(node)
+        ? !previousGroupsFormatted.find(fNode => isEqual(fNode, node))
+        : !previousGroupsFormatted.find(fNode => fNode === node));
 
-    if ((newNodes.length && previousGroupsFormatted.length) || (groups[0]?.nodes.length !== previousGroups[0]?.nodes.length && newNodes.length === 0)) {
+    if (
+        (newNodes.length && previousGroupsFormatted.length)
+        || (groups[0]?.nodes.length !== previousGroups[0]?.nodes.length && newNodes.length === 0)
+    ) {
         copyGroups[0].nodes = uniq([...newNodes, ...previousGroupsFormatted]);
         return copyGroups;
+    }
+
+    if (groups.length !== previousGroups.length && groups.length > previousGroups.length) {
+        groups[0].nodes = [...previousGroupsFormatted];
+        return groups;
     }
 
     return groups;
