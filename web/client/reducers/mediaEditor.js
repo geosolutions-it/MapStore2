@@ -109,6 +109,9 @@ export default (state = DEFAULT_STATE, action) => {
         return set(`data["${mediaType}"]["${sourceId}"].resultData.resources[${indexItem}]`, newResource, state);
     }
     case SELECT_ITEM: {
+        if (action.id === state.selected) {
+            return set('selected', '', state);
+        }
         return set('selected', action.id, state);
     }
     case SET_MEDIA_TYPE: {
