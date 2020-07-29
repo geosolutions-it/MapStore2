@@ -198,7 +198,6 @@ class AnnotationsEditor extends React.Component {
         defaultShapeSize: PropTypes.number,
         defaultShapeFillColor: PropTypes.string,
         defaultShapeStrokeColor: PropTypes.string,
-        defaultPointType: PropTypes.string,
         defaultStyles: PropTypes.object,
         textRotationStep: PropTypes.number
     };
@@ -327,7 +326,7 @@ class AnnotationsEditor extends React.Component {
                             disabled: !this.props.config.multiGeometry && this.props.editing && this.props.editing.features && this.props.editing.features.length,
                             drawing: this.props.drawing,
                             defaultStyles: this.props.defaultStyles,
-                            defaultPointType: this.props.defaultPointType,
+                            defaultPointType: this.getConfig().defaultPointType,
                             titles: {
                                 marker: <Message msgId="annotations.titles.marker" />,
                                 line: <Message msgId="annotations.titles.line" />,
