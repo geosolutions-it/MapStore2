@@ -13,11 +13,13 @@ import MockAdapter from 'axios-mock-adapter';
 import { testEpic } from './epicTestUtils';
 
 import {
-    openMapTemplatesPanelEpic
+    openMapTemplatesPanelEpic,
+    setAllowedTemplatesEpic
 } from '../maptemplates';
 
 import {
     openMapTemplatesPanel,
+    setAllowedTemplates,
     SET_TEMPLATES,
     SET_MAP_TEMPLATES_LOADED
 } from '../../actions/maptemplates';
@@ -37,6 +39,13 @@ describe('maptemplates epics', () => {
         mockAxios = null;
     });
     it('openMapTemplatesPanelEpic', (done) => {
+        const epicResponse = actions => {
+            expect(actions[0].type).toBe(SET_CONTROL_PROPERTY);
+            done();
+        };
+        testEpic(openMapTemplatesPanelEpic, 1, openMapTemplatesPanel(), epicResponse);
+    });
+    it('setAllowedTemplatesEpic', (done) => {
         mockAxios.onPost('/resources/search/list').reply(config => get(config, 'params.includeAttributes', false) ? [200, {
             ResourceList: {
                 Resource: [{
@@ -60,26 +69,25 @@ describe('maptemplates epics', () => {
                 }]
             }
         }] : [404, {}]);
-        testEpic(openMapTemplatesPanelEpic, 3, openMapTemplatesPanel(), actions => {
-            expect(actions.length).toBe(3);
-            expect(actions[0].type).toBe(SET_CONTROL_PROPERTY);
-            expect(actions[1].type).toBe(SET_TEMPLATES);
-            expect(actions[1].templates).toExist();
-            expect(actions[1].templates.length).toBe(2);
-            expect(actions[1].templates[0]).toEqual({
+        testEpic(setAllowedTemplatesEpic, 2, setAllowedTemplates(), actions => {
+            expect(actions.length).toBe(2);
+            expect(actions[0].type).toBe(SET_TEMPLATES);
+            expect(actions[0].templates).toExist();
+            expect(actions[0].templates.length).toBe(2);
+            expect(actions[0].templates[0]).toEqual({
                 id: 1,
                 thumbnail: 'thumbnail',
                 dataLoaded: false,
                 loading: false
             });
-            expect(actions[1].templates[1]).toEqual({
+            expect(actions[0].templates[1]).toEqual({
                 id: 2,
                 thumbnail: 'thumbnail',
                 dataLoaded: false,
                 loading: false
             });
-            expect(actions[2].type).toBe(SET_MAP_TEMPLATES_LOADED);
-            expect(actions[2].loaded).toBe(true);
+            expect(actions[1].type).toBe(SET_MAP_TEMPLATES_LOADED);
+            expect(actions[1].loaded).toBe(true);
         }, {
             context: {
                 currentContext: {
@@ -90,7 +98,14 @@ describe('maptemplates epics', () => {
                     }]
                 }
             },
-            maptemplates: {}
+            maptemplates: {},
+            localConfig: {
+                plugins: {
+                    desktop: [
+                        {name: "MapTemplates", cfg: {allowedTemplates: [{ id: 1 }]}}
+                    ]
+                }
+            }
         }, done);
     });
 });
