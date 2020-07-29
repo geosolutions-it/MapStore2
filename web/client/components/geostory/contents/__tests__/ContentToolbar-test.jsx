@@ -180,22 +180,6 @@ describe('ContentToolbar component', () => {
             const confirmButton = confirmDialog.querySelector('.btn-group .btn');
             ReactTestUtils.Simulate.click(confirmButton); // confirm
         });
-        it(`remove object`, () => {
-            const PATH = "TEST_PATH";
-            ReactDOM.render(<ContentToolbar
-                tools={["remove"]}
-                fit="contain"
-                path={PATH}
-                remove={{removeFunc: () => {}, customPath: PATH}}
-            />, document.getElementById("container"));
-            const removeButton = document.querySelector('.ms-content-toolbar button');
-            expect(removeButton).toExist();
-            ReactTestUtils.Simulate.click(removeButton);
-            const confirmDialog = document.querySelector('.modal-dialog');
-            expect(confirmDialog.style.display).toNotBe("none"); // check confirmation dialog to be shown
-            const confirmButton = confirmDialog.querySelector('.btn-group .btn');
-            ReactTestUtils.Simulate.click(confirmButton); // confirm
-        });
         it(`editMedia`, (done) => {
             ReactDOM.render(<ContentToolbar
                 tools={["editMedia"]}

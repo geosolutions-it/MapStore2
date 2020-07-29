@@ -7,7 +7,6 @@
  */
 import React from "react";
 import {compose, withStateHandlers} from 'recompose';
-import SectionContents from '../../contents/SectionContents';
 import Background from './Background';
 import {backgroundPropWithHandler} from './enhancers/immersiveBackgroundManager';
 import ContainerDimensions from 'react-container-dimensions';
@@ -20,12 +19,13 @@ import {get} from 'lodash';
  * Paragraph Section Type.
  * Paragraph is a page block that expands for all it's height
  */
+export const DEFAULT_BANNER_HEIGHT = 300;
+
 export default compose(
     backgroundPropWithHandler,
     withStateHandlers({textEditorActive: false}))(({
     id,
     background = {},
-    contents = [],
     mode,
     contentId,
     path,
@@ -44,11 +44,9 @@ export default compose(
     storyTheme,
     mediaViewer,
     contentToolbar,
-    inView,
-    bubblingTextEditing = () => {}
+    inView
 }) => {
     const hideContent = get(focusedContent, "target.id") === contentId;
-    const visibility = hideContent ?  'hidden' : 'visible';
     const expandableBackgroundClassName = expandableMedia && background && background.type === 'map' ? ' ms-expandable-background' : '';
     const deletePath = path.replace('.background', '');
 
@@ -78,7 +76,7 @@ export default compose(
                         expandable={expandableMedia}
                         updateSection={updateSection}
                         cover={cover}
-                        remove={{removeFunc: remove, customPath: deletePath}}
+                        remove={() => remove(deletePath)}
                         width={viewWidth}
                         sectionType={sectionType}
                         backgroundPlaceholder={{
@@ -99,23 +97,12 @@ export default compose(
                         inView={inView}
                     />}
             </ContainerDimensions>
-            <SectionContents
-                className={`ms-section-contents`}
-                contents={contents}
-                mode={mode}
-                sectionType={sectionType}
-                sectionId={id}
-                viewWidth={viewWidth}
-                viewHeight={viewHeight}
-                focusedContent={focusedContent}
-                bubblingTextEditing={bubblingTextEditing}
-                storyTheme={storyTheme}
-                contentProps={{
-                    contentWrapperStyle: cover ? { minHeight: viewHeight, visibility} : {visibility},
-                    mediaViewer,
-                    contentToolbar
-                }}
-            />
+            <div
+                style={{
+                    minHeight: cover ? viewHeight : DEFAULT_BANNER_HEIGHT,
+                    pointerEvents: 'none'
+                }}>
+            </div>
             {mode === Modes.EDIT && !hideContent && <AddBar
                 containerWidth={viewWidth}
                 containerHeight={viewHeight}

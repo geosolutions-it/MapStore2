@@ -10,7 +10,7 @@ import ReactDOM from 'react-dom';
 import {Provider} from 'react-redux';
 import expect from 'expect';
 import { testToolbarButtons } from './testUtils';
-import Banner from '../Banner';
+import Banner, { DEFAULT_BANNER_HEIGHT } from '../Banner';
 
 describe('Banner component', () => {
     beforeEach((done) => {
@@ -72,10 +72,6 @@ describe('Banner component', () => {
         const el = container.querySelector('.ms-section-banner');
         expect(el).toExist();
 
-        const sectionContents = container.querySelector('.ms-section-contents');
-        expect(sectionContents).toExist();
-        expect(sectionContents.clientHeight).toBe(VIEW_HEIGHT);
-
         const backgroundContainer = container.querySelector('.ms-section-background-container');
         expect(backgroundContainer).toExist();
         expect(backgroundContainer.clientHeight).toBe(VIEW_HEIGHT);
@@ -98,13 +94,9 @@ describe('Banner component', () => {
         const el = container.querySelector('.ms-section-banner');
         expect(el).toExist();
 
-        const sectionContents = container.querySelector('.ms-section-contents');
-        expect(sectionContents).toExist();
-        expect(sectionContents.clientHeight < VIEW_HEIGHT).toBe(true);
-
         const backgroundContainer = container.querySelector('.ms-section-background-container');
         expect(backgroundContainer).toExist();
-        expect(backgroundContainer.clientHeight).toBe(sectionContents.clientHeight);
+        expect(backgroundContainer.clientHeight).toBe(DEFAULT_BANNER_HEIGHT);
     });
     it('Banner rendering with Map as background', () => {
         const VIEW_HEIGHT = 834;
@@ -129,10 +121,6 @@ describe('Banner component', () => {
         const container = document.getElementById('container');
         const el = container.querySelector('.ms-section-banner');
         expect(el).toExist();
-
-        const sectionContents = container.querySelector('.ms-section-contents');
-        expect(sectionContents).toExist();
-        expect(sectionContents.clientHeight).toBe(VIEW_HEIGHT);
 
         const backgroundContainer = container.querySelector('.ms-section-background-container');
         expect(backgroundContainer).toExist();

@@ -42,8 +42,7 @@ export const ContentTypes = {
     TEXT: 'text',
     MEDIA: 'media',
     WEBPAGE: 'webPage',
-    COLUMN: 'column', // can have contents of type 'text' or 'media'
-    BANNER: 'banner'
+    COLUMN: 'column' // can have contents of type 'text' or 'media'
 };
 
 // Templates for contents that can be created using getDefaultSectionTemplate
@@ -217,11 +216,6 @@ export const getDefaultSectionTemplate = (type, localize = v => v) => {
             align: 'center',
             contents: [{
                 id: uuid(),
-                type: ContentTypes.BANNER,
-                html: '',
-                size: 'large',
-                align: 'center',
-                theme: 'bright',
                 background: {
                     fit: 'cover',
                     size: 'full',

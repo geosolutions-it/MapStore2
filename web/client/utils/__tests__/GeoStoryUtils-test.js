@@ -146,8 +146,7 @@ describe("GeoStory Utils", () => {
             TEXT: "text",
             MEDIA: "media",
             WEBPAGE: "webPage",
-            COLUMN: "column",
-            BANNER: 'banner'
+            COLUMN: "column"
         });
     });
     it("test MediaTypes", () => {
@@ -222,10 +221,6 @@ describe("GeoStory Utils", () => {
             const content = data.contents[0];
             expect(content.id).toExist();
             expect(content.id.length).toBe(uuid().length);
-            expect(content.type).toBe(ContentTypes.BANNER);
-            expect(content.size).toBe("large");
-            expect(content.align).toBe("center");
-            expect(content.theme).toBe("bright");
             const background = data.contents[0].background;
             expect(background.theme).toBe(undefined);
             expect(background.fit).toBe("cover");

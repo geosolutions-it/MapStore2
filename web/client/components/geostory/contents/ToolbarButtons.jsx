@@ -15,7 +15,6 @@ import withConfirm from "../../misc/withConfirm";
 import { CustomThemePickerMenuItem } from '../common/CustomThemePicker';
 import isObject from "lodash/isObject";
 import isString from "lodash/isString";
-import isFunction from "lodash/isFunction";
 const DeleteButton = withConfirm(ToolbarButton);
 const BUTTON_CLASSES = 'square-button-md no-border';
 
@@ -140,8 +139,6 @@ export const DeleteButtonToolbar = ({ editMap: disabled = false, path, remove = 
         confirmTitle={<Message msgId="geostory.contentToolbar.removeConfirmTitle" />}
         confirmContent={<Message msgId="geostory.contentToolbar.removeConfirmContent" />}
         onClick={ () => {
-            isFunction(remove)
-                ? remove(path)
-                : remove.removeFunc(remove.customPath);
+            remove(path);
         }} />
     );

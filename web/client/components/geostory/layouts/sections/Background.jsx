@@ -43,7 +43,7 @@ class Background extends Component {
         update: PropTypes.func,
         updateSection: PropTypes.func,
         remove: PropTypes.func,
-        type: PropTypes.oneOf([...lists.MediaTypes, 'none']),
+        type: PropTypes.oneOf(lists.MediaTypes),
         disableToolbarPortal: PropTypes.bool,
         backgroundPlaceholder: PropTypes.object,
         sectionType: PropTypes.string,
