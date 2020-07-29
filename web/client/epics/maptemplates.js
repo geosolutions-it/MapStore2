@@ -14,7 +14,7 @@ import Api from '../api/GeoStoreDAO';
 import { error as showError } from '../actions/notifications';
 import { isLoggedIn } from '../selectors/security';
 import { setTemplates, setMapTemplatesLoaded, setTemplateData, setTemplateLoading, CLEAR_MAP_TEMPLATES, OPEN_MAP_TEMPLATES_PANEL,
-    MERGE_TEMPLATE, REPLACE_TEMPLATE } from '../actions/maptemplates';
+    MERGE_TEMPLATE, REPLACE_TEMPLATE, SET_ALLOWED_TEMPLATES } from '../actions/maptemplates';
 import { templatesSelector, mapTemplatesLoadedSelector, allTemplatesSelector } from '../selectors/maptemplates';
 import { mapSelector } from '../selectors/map';
 import { layersSelector, groupsSelector } from '../selectors/layers';
@@ -43,13 +43,15 @@ export const clearMapTemplatesEpic = (action$) => action$
     .ofType(CLEAR_MAP_TEMPLATES)
     .switchMap(() => Observable.of(setControlProperty('mapTemplates', 'enabled', false, false)));
 
-export const openMapTemplatesPanelEpic = (action$, store) => action$
+export const openMapTemplatesPanelEpic = (action$) => action$
     .ofType(OPEN_MAP_TEMPLATES_PANEL)
+    .switchMap(() => Observable.of(setControlProperty('mapTemplates', 'enabled', true, true)));
+
+export const setAllowedTemplatesEpic = (action$, store) => action$
+    .ofType(SET_ALLOWED_TEMPLATES)
     .switchMap(() => {
         const state = store.getState();
         const templates = allTemplatesSelector(state);
-
-        const mapTemplatesLoaded = mapTemplatesLoadedSelector(state);
 
         const makeFilter = () => ({
             OR: {
@@ -70,26 +72,23 @@ export const openMapTemplatesPanelEpic = (action$, store) => action$
             }), {});
         };
 
-        return Observable.of(setControlProperty('mapTemplates', 'enabled', true, true)).concat(!mapTemplatesLoaded ?
-            (templates.length > 0 ? Observable.defer(() => Api.searchListByAttributes(makeFilter(), {
-                params: {
-                    includeAttributes: true
-                }
-            }, '/resources/search/list')) : Observable.of({}))
-                .switchMap((data) => {
-                    const resourceObj = get(data, 'ResourceList.Resource', []);
-                    const resources = isArray(resourceObj) ? resourceObj : [resourceObj];
-                    const newTemplates = resources.map(resource => ({
-                        ...pick(resource, 'id', 'name', 'description'),
-                        ...extractAttributes(resource),
-                        dataLoaded: false,
-                        loading: false
-                    }));
-                    return Observable.of(setTemplates(newTemplates), setMapTemplatesLoaded(true));
-                })
-                .catch(err => Observable.of(setMapTemplatesLoaded(true, err))) :
-            Observable.empty()
-        );
+        return templates.length > 0 ? Observable.defer(
+            () => Api.searchListByAttributes(makeFilter(), {params: { includeAttributes: true }}, '/resources/search/list')
+        ).switchMap(
+            (data) => {
+                const resourceObj = get(data, 'ResourceList.Resource', []);
+                const resources = isArray(resourceObj) ? resourceObj : [resourceObj];
+                const newTemplates = resources.map(resource => ({
+                    ...pick(resource, 'id', 'name', 'description'),
+                    ...extractAttributes(resource),
+                    dataLoaded: false,
+                    loading: false
+                }));
+                return Observable.of(setTemplates(newTemplates), setMapTemplatesLoaded(true));
+            }
+        ).catch(
+            err => Observable.of(setMapTemplatesLoaded(true, err))
+        ) : Observable.empty();
     });
 
 export const mergeTemplateEpic = (action$, store) => action$
