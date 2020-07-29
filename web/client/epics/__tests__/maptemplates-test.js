@@ -20,13 +20,12 @@ import {
 import {
     openMapTemplatesPanel,
     setAllowedTemplates,
-    SET_ALLOWED_TEMPLATES,
     SET_TEMPLATES,
     SET_MAP_TEMPLATES_LOADED
 } from '../../actions/maptemplates';
 
 import {
-    SET_CONTROL_PROPERTY, SET_CONTROL_PROPERTIES
+    SET_CONTROL_PROPERTY
 } from '../../actions/controls';
 
 let mockAxios;
