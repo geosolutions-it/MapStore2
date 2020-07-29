@@ -215,8 +215,6 @@ describe("GeoStory Utils", () => {
             expect(data.type).toBe(SectionTypes.BANNER);
             expect(data.title).toBe("geostory.builder.defaults.titleBanner");
             expect(data.cover).toBe(false);
-            expect(data.size).toBe('full');
-            expect(data.align).toBe('center');
             expect(isArray(data.contents)).toBe(true);
             const content = data.contents[0];
             expect(content.id).toExist();

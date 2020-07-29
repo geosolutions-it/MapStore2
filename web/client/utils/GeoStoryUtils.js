@@ -212,8 +212,6 @@ export const getDefaultSectionTemplate = (type, localize = v => v) => {
             type: SectionTypes.BANNER,
             title: localize("geostory.builder.defaults.titleBanner"),
             cover: false,
-            size: 'full',
-            align: 'center',
             contents: [{
                 id: uuid(),
                 background: {

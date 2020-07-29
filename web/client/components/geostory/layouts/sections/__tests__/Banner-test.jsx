@@ -33,13 +33,11 @@ describe('Banner component', () => {
         const CONTENTS = [
             {
                 id: '000',
-                type: 'column',
                 background: {
                     type: 'image',
                     src: IMAGE_SRC,
                     lazy: false
-                },
-                html: '<h1>Banner</h1>'
+                }
             }
         ];
         ReactDOM.render(<Banner contents={CONTENTS} mode="edit"/>, document.getElementById("container"));
@@ -62,9 +60,7 @@ describe('Banner component', () => {
         const VIEW_HEIGHT = 500;
         const CONTENTS = [
             {
-                id: '000',
-                type: 'text',
-                html: '<h1>Banner</h1>'
+                id: '000'
             }
         ];
         ReactDOM.render(<Banner contents={CONTENTS} viewHeight={VIEW_HEIGHT} sectionType="banner" cover mode="edit"/>, document.getElementById("container"));
@@ -84,9 +80,7 @@ describe('Banner component', () => {
         const VIEW_HEIGHT = 500;
         const CONTENTS = [
             {
-                id: '000',
-                type: 'text',
-                html: '<h1>Banner</h1>'
+                id: '000'
             }
         ];
         ReactDOM.render(<Banner contents={CONTENTS} viewHeight={VIEW_HEIGHT} cover={false}/>, document.getElementById("container"));
@@ -103,7 +97,6 @@ describe('Banner component', () => {
         const CONTENTS = [
             {
                 id: '000',
-                type: "text",
                 background: {
                     type: 'map'
                 }
@@ -134,7 +127,6 @@ describe('Banner component', () => {
         const CONTENTS = [
             {
                 id: '000',
-                type: "text",
                 background: {
                     type: 'map'
                 }
@@ -156,15 +148,10 @@ describe('Banner component', () => {
     it('should render video toolbar on background (fit cover)', () => {
         const CONTENTS = [{
             id: '000',
-            type: 'column',
             background: {
                 type: 'video',
                 fit: 'cover'
-            },
-            contents: [{
-                type: 'text',
-                html: '<p>column</p>'
-            }]
+            }
         }];
         ReactDOM.render(
             <Provider store={{
@@ -184,15 +171,10 @@ describe('Banner component', () => {
     it('should render video toolbar on background (fit contain)', () => {
         const CONTENTS = [{
             id: '000',
-            type: 'column',
             background: {
                 type: 'video',
                 fit: 'contain'
-            },
-            contents: [{
-                type: 'text',
-                html: '<p>column</p>'
-            }]
+            }
         }];
         ReactDOM.render(
             <Provider store={{
