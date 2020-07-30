@@ -15,8 +15,7 @@ To start developing the MapStore framework you have to:
 
 `npm install`
 
-!!!
-    After a while (depending on the network bandwidth) the full set of dependencies and tools will be downloaded to the **node_modules** sub-folder.
+After a while (depending on the network bandwidth) the full set of dependencies and tools will be downloaded to the **node_modules** sub-folder.
 
 * start the development instance with:
 
