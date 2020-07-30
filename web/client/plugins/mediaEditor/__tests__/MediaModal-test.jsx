@@ -34,6 +34,16 @@ describe('MediaModal component', () => {
 
     });
     describe('tests disabled state of apply button', () => {
+        it('when no item is selected', () => {
+            ReactDOM.render(
+                <Provider store={{subscribe: () => {}, getState: () => ({mediaEditor: {open: true}})}}>
+                    <MediaModal open selectedItem={null}/>
+                </Provider>, document.getElementById("myContainer"));
+            const buttons = document.querySelectorAll("button");
+            expect(buttons.length).toBe(4);
+            const applyBtn = buttons[3];
+            expect(applyBtn.disabled).toBe(false);
+        });
         it('when is adding a new resource', () => {
             ReactDOM.render(
                 <Provider store={{subscribe: () => {}, getState: () => ({mediaEditor: {open: true}})}}>
