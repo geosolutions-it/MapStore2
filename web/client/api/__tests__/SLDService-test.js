@@ -217,6 +217,70 @@ const classificationWithZeros = {
     }
 };
 
+const classificationStandardDeviation = {
+    Rules: {
+        Rule: [
+            {
+                Title: ' < -100',
+                Filter: {
+                    PropertyIsLessThan: {
+                        PropertyName: 'PROPERTY_NAME',
+                        Literal: -100
+                    }
+                },
+                PolygonSymbolizer: {
+                    Fill: {
+                        CssParameter: {
+                            '@name': 'fill',
+                            '$': '#000000'
+                        }
+                    }
+                }
+            },
+            {
+                Title: ' >= -100 AND < 100',
+                Filter: {
+                    And: {
+                        PropertyIsGreaterThanOrEqualTo: {
+                            PropertyName: 'PROPERTY_NAME',
+                            Literal: -100
+                        },
+                        PropertyIsLessThan: {
+                            PropertyName: 'PROPERTY_NAME',
+                            Literal: 100
+                        }
+                    }
+                },
+                PolygonSymbolizer: {
+                    Fill: {
+                        CssParameter: {
+                            '@name': 'fill',
+                            '$': '#400000'
+                        }
+                    }
+                }
+            },
+            {
+                Title: ' >= 100',
+                Filter: {
+                    PropertyIsGreaterThanOrEqualTo: {
+                        PropertyName: 'PROPERTY_NAME',
+                        Literal: 100
+                    }
+                },
+                PolygonSymbolizer: {
+                    Fill: {
+                        CssParameter: {
+                            '@name': 'fill',
+                            '$': '#FF0000'
+                        }
+                    }
+                }
+            }
+        ]
+    }
+};
+
 const paramsDef = [{
     type: "aggregate",
     name: "aggregate"
@@ -313,6 +377,19 @@ describe('Test correctness of the SLDService APIs', () => {
         expect(result[0].min).toBe(0);
         expect(result[0].max).toBe(10);
     });
+    it('check readClassification without lower and upper bounds', () => {
+        const result = API.readClassification(classificationStandardDeviation);
+        expect(result.length).toBe(3);
+        expect(result[0].color).toBe('#000000');
+        expect(result[0].min).toBe(null);
+        expect(result[0].max).toBe(-100);
+        expect(result[1].color).toBe('#400000');
+        expect(result[1].min).toBe(-100);
+        expect(result[1].max).toBe(100);
+        expect(result[2].color).toBe('#FF0000');
+        expect(result[2].min).toBe(100);
+        expect(result[2].max).toBe(null);
+    });
     it('check getThematicParameters', () => {
         const result = API.getThematicParameters(paramsDef);
         expect(result.length).toBe(2);
@@ -353,5 +430,9 @@ describe('Test correctness of the SLDService APIs', () => {
     it('check removeThematicStyle', () => {
         const result = API.removeThematicStyle(layerWithThema);
         expect(result.SLD).toNotExist();
+    });
+    it('check getCapabilitiesUrl', () => {
+        const result = API.getCapabilitiesUrl(layer);
+        expect(result).toBe('http://localhost:8080/geoserver/rest/sldservice/capabilities.json');
     });
 });

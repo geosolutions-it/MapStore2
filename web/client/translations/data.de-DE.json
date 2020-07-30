@@ -2053,6 +2053,7 @@
             "equalInterval": "Gleiches Intervall",
             "quantile": "Quantil",
             "jenks": "Natürliche Pausen (Jenks)",
+            "standardDeviation": "Varianz",
             "switchToTextareaEditor": "Zum Textarea-Editor wechseln",
             "switchToVisualEditor": "Zum visuellen Editor wechseln",
             "alertForceTranslate": "Sie verlieren alle im Textaree hinzugefügten Änderungen, wenn Sie zum visuellen Editor wechseln. Sind Sie sicher, dass Sie zum visuellen Stil-Editor wechseln?",

@@ -2054,6 +2054,7 @@
             "equalInterval": "Intervallo uguale",
             "quantile": "Quantile",
             "jenks": "Natural break (Jenks)",
+            "standardDeviation": "Deviazione standard",
             "switchToTextareaEditor": "Passa all'editor testuale",
             "switchToVisualEditor": "Passa all'editor visuale",
             "alertForceTranslate": "Passando all'editor visuale perderai tutte le modifiche applicate con l'editor testuale. Sei sicuro di passare alla modalità editor visuale?",
