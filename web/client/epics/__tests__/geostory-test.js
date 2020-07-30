@@ -956,6 +956,65 @@ describe('Geostory Epics', () => {
             }
         });
     });
+    it('test restore background to the empty value when resource is empty', (done) => {
+        const NUM_ACTIONS = 3;
+        testEpic(addTimeoutEpic(editMediaForBackgroundEpic), NUM_ACTIONS, [
+            editMedia({path: `sections[{"id": "section_id"}].contents[{"id": "content_id"}].background`, owner: "geostore"}),
+            chooseMedia(undefined)
+        ],  (actions) => {
+            expect(actions.length).toBe(NUM_ACTIONS);
+            actions.map(a => {
+                switch (a.type) {
+                case SHOW:
+                    expect(a.owner).toEqual("geostore");
+                    break;
+                case SELECT_ITEM:
+                    expect(a.id).toEqual("resourceId");
+                    break;
+                case UPDATE:
+                    expect(a.mode).toEqual("replace");
+                    expect(a.path).toEqual(`sections[{"id": "section_id"}].contents[{"id": "content_id"}].background`);
+                    expect(a.element).toEqual({resourceId: "", type: null});
+                    break;
+                default: expect(true).toBe(false);
+                    break;
+                }
+            });
+            done();
+        }, {
+            geostory: {
+                currentStory: {
+                    resources: [{
+                        id: "resourceId",
+                        type: "image",
+                        data: {
+                            id: "resource_id"
+                        }
+                    }],
+                    sections: [{
+                        id: "section_id",
+                        contents: [{
+                            id: "content_id",
+                            resourceId: "resourceId",
+                            background: {
+                                resourceId: "resourceId",
+                                type: "image",
+                                fit: "cover",
+                                size: "full",
+                                align: "center"
+                            }
+                        }]
+                    }]
+                }
+            },
+            mediaEditor: {
+                settings: {
+                    mediaType: "image",
+                    sourceId: "geostory"
+                }
+            }
+        });
+    });
     describe('reloadGeoStoryOnLoginLogout', () => {
         it('on login', done => {
             testEpic(reloadGeoStoryOnLoginLogout, 1, [loadGeostory(1234), loginSuccess()], () => {
