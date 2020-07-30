@@ -12,6 +12,7 @@ import { lists, Modes, StoryTypes, SectionTypes, SectionTemplates} from '../../.
 import Immersive from './Immersive';
 import Paragraph from './Paragraph';
 import Title from './Title';
+import Banner from './Banner';
 
 import visibilityHandler from '../../contents/enhancers/visibilityHandler';
 
@@ -21,6 +22,7 @@ const types = {
     [SectionTemplates.MEDIA]: Paragraph,
     [SectionTemplates.WEBPAGE]: Paragraph,
     [SectionTypes.TITLE]: Title,
+    [SectionTypes.BANNER]: Banner,
     UNKNOWN: ({ type, inViewRef }) => <div ref={inViewRef} className="ms-section ms-section-unknown">WARNING: unknown session of type {type}</div>
 };
 

@@ -32,7 +32,8 @@ export const StoryTypes = {
 export const SectionTypes = {
     TITLE: 'title',
     PARAGRAPH: 'paragraph',
-    IMMERSIVE: 'immersive'
+    IMMERSIVE: 'immersive',
+    BANNER: 'banner'
 };
 /**
  * Allowed contents
@@ -204,6 +205,21 @@ export const getDefaultSectionTemplate = (type, localize = v => v) => {
                     }
                 }
             ]
+        };
+    case SectionTypes.BANNER:
+        return {
+            id: uuid(),
+            type: SectionTypes.BANNER,
+            title: localize("geostory.builder.defaults.titleBanner"),
+            cover: false,
+            contents: [{
+                id: uuid(),
+                background: {
+                    fit: 'cover',
+                    size: 'full',
+                    align: 'center'
+                }
+            }]
         };
     case SectionTypes.PARAGRAPH:
         return {

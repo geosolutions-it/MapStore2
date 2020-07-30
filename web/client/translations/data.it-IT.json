@@ -2231,6 +2231,7 @@
             "geostoreMap": "Mappe di MapStore",
             "loadingSpinner": "Caricamento Storia",
             "addTitleSection": "Aggiungi sezione titolo",
+            "addBannerSection": "Aggiungi sezione banner",
             "addParagraphSection": "Aggiungi sezione paragrafo",
             "addImmersiveSection": "Aggiungi sezione immersiva",
             "addMediaSection": "Aggiungi sezione media",
@@ -2295,6 +2296,7 @@
             "builder": {
                 "defaults": {
                     "titleTitle": "Sezione Titolo",
+                    "titleBanner": "Sezione banner",
                     "htmlTitlePlaceholder": "Inserisci Titolo",
                     "htmlPlaceholder": "Inserisci del testo qui...",
                     "titleParagraph": "Sezione Paragrafo",
