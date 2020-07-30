@@ -99,9 +99,8 @@ export const ThemeButtonToolbar = ({editMap: disabled = false, theme, storyTheme
         }}
         options={[{
             value: 'default',
-            isActive: (current) =>
-                current === undefined || current === ''
-                || isObject(current) && (current.value === undefined || current.value === ''),
+            isActive: (current) => current === undefined || current === 'default'
+                || isObject(current) && (current.value === undefined || current.value === 'default'),
             label: <Message msgId="geostory.contentToolbar.defaultThemeLabel"/>
         }, {
             value: 'bright',

@@ -14,7 +14,7 @@ import Background from './Background';
 import AddBar from '../../common/AddBar';
 import { SectionTypes, ContentTypes, MediaTypes, Modes, SectionTemplates } from '../../../../utils/GeoStoryUtils';
 import pattern from './patterns/world.svg';
-import {get, isObject} from 'lodash';
+import {get} from 'lodash';
 
 /**
  * Immersive Section Type
@@ -50,7 +50,7 @@ const Immersive = ({
     const hideContent = focusedContent && focusedContent.hideContent && (get(focusedContent, "target.id") === contentId);
     const visibility = hideContent ? 'hidden' : 'visible';
     const expandableBackgroundClassName = expandableMedia && background && background.type === 'map' ? ' ms-expandable-background' : '';
-    const overlayStoryTheme = isObject(storyTheme) && isObject(storyTheme.overlay) && storyTheme.overlay || {};
+    const overlayStoryTheme = storyTheme?.overlay || {};
     const DEFAULT = 'default';
 
     return (<section
