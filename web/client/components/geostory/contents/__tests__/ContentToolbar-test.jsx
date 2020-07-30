@@ -162,7 +162,7 @@ describe('ContentToolbar component', () => {
             expect(list[3].innerText).toBe("geostory.contentToolbar.customizeThemeLabel");
             done();
         });
-        it(`remove`, (done) => {
+        it(`remove func`, (done) => {
             ReactDOM.render(<ContentToolbar
                 tools={["remove"]}
                 fit="contain"
