@@ -1117,6 +1117,6 @@ describe('LayersUtils', () => {
 
         expect(groupTitle).toExist();
         expect(groupTitle).toEqual('titleLayer001');
-        
+
     });
 });
