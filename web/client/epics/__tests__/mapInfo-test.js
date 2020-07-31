@@ -8,7 +8,7 @@
 
 const expect = require('expect');
 
-const { setMapTriggerEpic } = require('../map');
+const { setMapTriggerEpic } = require('../mapInfo');
 const { configureMap } = require('../../actions/config');
 const { testEpic } = require('./epicTestUtils');
 
