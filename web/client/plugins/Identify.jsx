@@ -19,7 +19,7 @@ const { isEditingAllowedSelector } = require('../selectors/featuregrid');
 
 
 const { hideMapinfoMarker, showMapinfoRevGeocode, hideMapinfoRevGeocode, clearWarning, toggleMapInfoState, changeMapInfoFormat, updateCenterToMarker, closeIdentify, purgeMapInfoResults, updateFeatureInfoClickPoint, changeFormat, toggleShowCoordinateEditor, changePage, toggleHighlightFeature, editLayerFeatures, setMapTrigger} = require('../actions/mapInfo');
-const { changeMousePointer, zoomToExtent, registerEventListener, unRegisterEventListener} = require('../actions/map');
+const { changeMousePointer, zoomToExtent } = require('../actions/map');
 
 
 const {currentLocaleSelector} = require('../selectors/locale');
@@ -233,8 +233,7 @@ const FeatureInfoFormatSelector = connect((state) => ({
 const FeatureInfoTriggerSelector = connect((state) => ({
     trigger: isMouseMoveIdentifyActiveSelector(state) ? 'hover' : 'click'
 }), {
-    onSetMapTrigger: setMapTrigger,
-    onTriggerChange: (event) => event.target.value === 'hover' ? registerEventListener('mousemove', 'identifyFloatingTool') : unRegisterEventListener('mousemove', 'identifyFloatingTool')
+    onSetMapTrigger: setMapTrigger
 })(require("../components/misc/FeatureInfoTriggerSelector"));
 
 module.exports = {

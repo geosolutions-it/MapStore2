@@ -8,8 +8,7 @@
 
 const expect = require('expect');
 
-const { resetLimitsOnInit, zoomToExtentEpic, checkMapPermissions, redirectUnauthorizedUserOnNewMap,
-    setMapTriggerEpic } = require('../map');
+const { resetLimitsOnInit, zoomToExtentEpic, checkMapPermissions, redirectUnauthorizedUserOnNewMap } = require('../map');
 const { CHANGE_MAP_LIMITS, changeMapCrs } = require('../../actions/map');
 
 const { LOAD_MAP_INFO, configureMap, configureError} = require('../../actions/config');
@@ -19,8 +18,6 @@ const MapUtils = require('../../utils/MapUtils');
 
 const {
     CHANGE_MAP_VIEW,
-    REGISTER_EVENT_LISTENER,
-    UNREGISTER_EVENT_LISTENER,
     zoomToExtent
 } = require('../../actions/map');
 
@@ -265,22 +262,6 @@ describe('map epics', () => {
             };
 
             testEpic(redirectUnauthorizedUserOnNewMap, 1, configureError({status: 403}), epicResponse, initState);
-        });
-    });
-    describe('setMapTriggerEpic', () => {
-        it('should register event if hover is trigger in mapInfo', (done) => {
-            const epicResponse = actions => {
-                expect(actions[0].type).toBe(REGISTER_EVENT_LISTENER);
-                done();
-            };
-            testEpic(setMapTriggerEpic, 1, configureMap(), epicResponse, {mapInfo: {trigger: 'hover'}});
-        });
-        it('should unregister event if no mapInfo or no trigger is present in mapInfo', (done) => {
-            const epicResponse = actions => {
-                expect(actions[0].type).toBe(UNREGISTER_EVENT_LISTENER);
-                done();
-            };
-            testEpic(setMapTriggerEpic, 1, configureMap(), epicResponse, {});
         });
     });
 });

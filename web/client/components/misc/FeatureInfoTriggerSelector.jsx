@@ -15,12 +15,10 @@ const {FormControl, FormGroup, ControlLabel} = require('react-bootstrap');
 class FeatureInfoTriggerSelector extends React.Component {
     static propTypes = {
         trigger: PropTypes.string,
-        onTriggerChange: PropTypes.func,
         onSetMapTrigger: PropTypes.func
     }
 
     onChange = (event) => {
-        this.props.onTriggerChange(event);
         this.props.onSetMapTrigger(event.target.value);
     }
 
