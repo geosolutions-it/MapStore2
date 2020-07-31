@@ -1107,38 +1107,6 @@ describe('LayersUtils', () => {
 
     });
 
-    it('test sortNestedGroups', () => {
-        const groups = [
-            {id: 'default', nodes: ['layer001', 'layer002', 'layer003', 'layer004', { id: 'Default.layer005', nodes: ['nested001', 'nested002']}]}
-        ];
-        const previousGroups = [
-            {id: 'default', nodes: [{ id: 'Default.layer005', nodes: ['nested001', 'nested002']}, {id: 'layer003'}, {id: 'layer004'}]}
-        ];
-        const sortedNodes = LayersUtils.sortNestedGroups(groups, previousGroups);
-
-        expect(sortedNodes).toExist();
-        expect(sortedNodes).toEqual([
-            {id: 'default', nodes: [ 'layer001', 'layer002', { id: 'Default.layer005', nodes: ['nested001', 'nested002']}, 'layer003', 'layer004']}
-        ]);
-    });
-
-    it('test sortNestedGroups with new group added', () => {
-        const groups = [
-            {id: 'default', nodes: ['layer001', 'layer002', 'layer003', 'layer004', { id: 'Default.layer005', nodes: ['nested001', 'nested002']}]},
-            {id: 'newGroup', nodes: ['newLayer001', 'newLayer002', 'newLayer003']}
-        ];
-        const previousGroups = [
-            {id: 'default', nodes: [{id: 'layer001'}, {id: 'layer002'}, { id: 'Default.layer005', nodes: ['nested001', 'nested002']}, {id: 'layer003'}, {id: 'layer004'}]}
-        ];
-        const sortedNodes = LayersUtils.sortNestedGroups(groups, previousGroups);
-
-        expect(sortedNodes).toExist();
-        expect(sortedNodes).toEqual([
-            {id: 'default', nodes: [ 'layer001', 'layer002', { id: 'Default.layer005', nodes: ['nested001', 'nested002']}, 'layer003', 'layer004']},
-            {id: 'newGroup', nodes: ['newLayer001', 'newLayer002', 'newLayer003']}
-        ]);
-    });
-
     it('test getNestedGroupTitle', () => {
 
         const groups = [

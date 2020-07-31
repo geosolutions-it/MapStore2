@@ -9,7 +9,7 @@
 const assign = require('object-assign');
 const toBbox = require('turf-bbox');
 const uuidv1 = require('uuid/v1');
-const { isString, isObject, isArray, head, castArray, isEmpty, findIndex, pick, isNil, map, clone, isEqual, uniq} = require('lodash');
+const { isString, isObject, isArray, head, castArray, isEmpty, findIndex, pick, isNil } = require('lodash');
 
 let regGeoServerRule = /\/[\w- ]*geoserver[\w- ]*\//;
 
@@ -124,55 +124,6 @@ const getGroupNodes = (node) => {
     return [];
 };
 
-/**
- * @param {array} groups contains ids on nested layers in group
- * @param {array} previousGroups contains sorted by position previous groups with layer objects
- * @return {array} groups where new nodes which are the groups added above previous nodes (only for Default group)
- */
-const sortNestedGroups = (groups, previousGroups) => {
-    const previousGroupsFormatted = [];
-    const copyGroups = map(groups, clone);
-    let nestedDefaultGroups = [];
-
-    if (!previousGroups || !previousGroups.length) {
-        return groups;
-    }
-    if (groups[0] && isArray(groups[0].nodes)) {
-        nestedDefaultGroups = groups[0].nodes.filter(groupItem => isObject(groupItem));
-    }
-
-    if (!nestedDefaultGroups.length) {
-        return groups;
-    }
-
-    const nestedNodeIds = isArray(previousGroups[0].nodes)
-        && previousGroups[0].nodes.map(node => isObject(node) && node.id?.includes('Default') ? node : node.id)
-        || [];
-    nestedNodeIds.map(nodeId => {
-        nestedDefaultGroups.map(nestedDefault => {
-            previousGroupsFormatted.push(isObject(nodeId) && nodeId.id?.includes('Default') ? nestedDefault : nodeId);
-        });
-    });
-
-    const newNodes = copyGroups[0].nodes.filter(node => isObject(node)
-        ? !previousGroupsFormatted.find(fNode => isEqual(fNode, node))
-        : !previousGroupsFormatted.find(fNode => fNode === node));
-
-    if (
-        (newNodes.length && previousGroupsFormatted.length)
-        || (groups[0]?.nodes.length !== previousGroups[0]?.nodes.length && newNodes.length === 0)
-    ) {
-        copyGroups[0].nodes = uniq([...newNodes, ...previousGroupsFormatted]);
-        return copyGroups;
-    }
-
-    if (groups.length !== previousGroups.length && groups.length > previousGroups.length) {
-        groups[0].nodes = [...previousGroupsFormatted];
-        return groups;
-    }
-
-    return groups;
-};
 
 /*
  * Gets title of nested groups from Default
@@ -371,7 +322,7 @@ const LayersUtils = {
      */
     belongsToGroup: (gid) => l => (l.group || "Default") === gid || (l.group || "").indexOf(`${gid}.`) === 0,
 
-    getLayersByGroup: (configLayers, configGroups, previousGroups) => {
+    getLayersByGroup: (configLayers, configGroups) => {
         let i = 0;
         let mapLayers = configLayers.map((layer) => assign({}, layer, {storeIndex: i++}));
         let groupNames = mapLayers.reduce((groups, layer) => {
@@ -392,7 +343,7 @@ const LayersUtils = {
                 }
                 return group.nodes;
             }, groups);
-            return sortNestedGroups(groups, previousGroups);
+            return groups;
         }, []);
     },
     removeEmptyGroups: (groups) => {
@@ -452,7 +403,7 @@ const LayersUtils = {
     },
     splitMapAndLayers: (mapState) => {
         if (mapState && isArray(mapState.layers)) {
-            let groups = LayersUtils.getLayersByGroup(mapState.layers, mapState.groups, mapState.map && mapState.map.previousGroups);
+            let groups = LayersUtils.getLayersByGroup(mapState.layers, mapState.groups);
             // additional params from saved configuration
             if (isArray(mapState.groups)) {
                 groups = mapState.groups.reduce((g, group) => {
@@ -651,7 +602,6 @@ const LayersUtils = {
     },
     getNode,
     getGroupNodes,
-    sortNestedGroups,
     getNestedGroupTitle,
     deepChange,
     extractDataFromSources,

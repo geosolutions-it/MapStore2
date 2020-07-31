@@ -266,7 +266,6 @@ describe('Test the MapUtils', () => {
                         title: 'nested001',
                         expanded: true
                     }],
-                    previousGroups: groups,
                     layers: [{
                         allowedSRS: {},
                         thumbURL: "THUMB_URL",
@@ -611,7 +610,6 @@ describe('Test the MapUtils', () => {
                         title: 'nested001',
                         expanded: true
                     }],
-                    previousGroups: groups,
                     layers: [{
                         allowedSRS: {},
                         thumbURL: "THUMB_URL",
@@ -1025,7 +1023,6 @@ describe('Test the MapUtils', () => {
                         title: 'nested001',
                         expanded: true
                     }],
-                    previousGroups: groups,
                     layers: [{
                         allowedSRS: {},
                         thumbURL: "THUMB_URL",
@@ -1313,7 +1310,6 @@ describe('Test the MapUtils', () => {
                         title: 'nested001',
                         expanded: true
                     }],
-                    previousGroups: groups,
                     layers: [{
                         allowedSRS: {},
                         thumbURL: undefined,
@@ -1577,7 +1573,6 @@ describe('Test the MapUtils', () => {
                     },
                     mapInfoControl: undefined,
                     backgrounds: [],
-                    previousGroups: groups,
                     layers: [{
                         id: 'annotations',
                         features: [ {
@@ -1718,7 +1713,6 @@ describe('Test the MapUtils', () => {
                         title: 'nested001',
                         expanded: true
                     }],
-                    previousGroups: groups,
                     layers: [{
                         allowedSRS: {},
                         thumbURL: undefined,
@@ -1866,7 +1860,6 @@ describe('Test the MapUtils', () => {
                         title: 'nested001',
                         expanded: true
                     }],
-                    previousGroups: groups,
                     layers: [{
                         allowedSRS: {},
                         thumbURL: undefined,
@@ -2054,7 +2047,6 @@ describe('Test the MapUtils', () => {
                         title: 'nested001',
                         expanded: true
                     }],
-                    previousGroups: groups,
                     layers: [{
                         allowedSRS: {},
                         thumbURL: "THUMB_URL",
@@ -2710,18 +2702,17 @@ describe('Test the MapUtils', () => {
         expect(cfg.map.layers.length).toBe(7);
         expect(cfg.map.layers[0].id).toBe(cfg.map.backgrounds[0].id);
         expect(cfg.map.layers[0].group).toBe("background");
-        expect(cfg.map.layers[1].id).toBe("layer3");
-        expect(cfg.map.layers[1].group).toBe("group");
+        expect(cfg.map.layers[1].id).toNotBe("layer3");
+        expect(cfg.map.layers[1].id.length).toBe(36);
+        expect(cfg.map.layers[1].group).toBe("group2");
         expect(cfg.map.layers[2].id).toNotBe("layer2");
         expect(cfg.map.layers[2].id.length).toBe(36);
-        expect(cfg.map.layers[2].group).toBe("group2");
         expect(cfg.map.layers[3].id).toBe("layer1");
         expect(cfg.map.layers[3].group).toNotExist();
         expect(cfg.map.layers[4].id).toBe("layer2");
         expect(cfg.map.layers[4].group).toNotExist();
-        expect(cfg.map.layers[5].id).toNotBe("layer3");
-        expect(cfg.map.layers[5].id.length).toBe(36);
-        expect(cfg.map.layers[5].group).toNotExist();
+        expect(cfg.map.layers[5].id).toBe("layer3");
+        expect(cfg.map.layers[5].group).toBe("group");
         expect(cfg.map.layers[6].id).toBe("annotations");
         expect(cfg.map.projection).toBe(cfg1.map.projection);
         expect(cfg.map.units).toBe("m");
@@ -2730,7 +2721,7 @@ describe('Test the MapUtils', () => {
         expect(cfg.widgetsConfig.widgets[0].id).toNotBe("widget1");
         expect(cfg.widgetsConfig.widgets[0].id.length).toBe(36);
         expect(cfg.widgetsConfig.widgets[0].layer).toExist();
-        expect(cfg.widgetsConfig.widgets[0].layer.id).toBe(cfg.map.layers[2].id);
+        expect(cfg.widgetsConfig.widgets[0].layer.id).toBe(cfg.map.layers[1].id);
         expect(cfg.widgetsConfig.widgets[0].layer.group).toBe("group2");
         expect(cfg.widgetsConfig.collapsed).toExist();
 
