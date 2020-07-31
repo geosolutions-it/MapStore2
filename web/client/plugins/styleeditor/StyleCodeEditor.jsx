@@ -110,13 +110,15 @@ const ConnectedVisualStyleEditor = connect(
             geometryType,
             scales: scales.map(scale => Math.round(scale)),
             zoom: map.zoom,
-            fonts: styleService.fonts || []
+            fonts: styleService.fonts || [],
+            methods: (geometryType === 'raster'
+                ? styleService?.classificationMethods?.raster
+                : styleService?.classificationMethods?.vector) || methods
         })
     )
 )(VisualStyleEditor);
 
 ConnectedVisualStyleEditor.defaultProps = {
-    methods,
     getColors,
     styleUpdateTypes
 };

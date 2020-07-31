@@ -2064,6 +2064,7 @@
             "equalInterval": "Equal interval",
             "quantile": "Quantile",
             "jenks": "Natural breaks (Jenks)",
+            "standardDeviation": "Standard deviation",
             "switchToTextareaEditor": "Switch to text editor",
             "switchToVisualEditor": "Switch to visual editor",
             "alertForceTranslate": "You will lose all the changes added in the text mode by switching to visual editor. Are you sure to switch to visual style editor mode?",

@@ -2054,6 +2054,7 @@
             "equalInterval": "Intervalo igual",
             "quantile": "Cuantil",
             "jenks": "Descansos naturales (Jenks)",
+            "standardDeviation": "Desviación estándar",
             "switchToTextareaEditor": "Cambiar al editor de textarea",
             "switchToVisualEditor": "Cambiar al editor visual",
             "alertForceTranslate": "Perderá todos los cambios agregados en el texto al cambiar al editor visual. ¿Está seguro de cambiar al modo editor de estilo visual?",
