@@ -57,6 +57,7 @@ export default compose(
     const visibility = hideContent ?  'hidden' : 'visible';
     const expandableBackgroundClassName = expandableMedia && background && background.type === 'map' ? ' ms-expandable-background' : '';
     const overlayStoryTheme = storyTheme?.overlay || {};
+    const generalStoryTheme = storyTheme?.general || {};
     const DEFAULT = 'default';
 
     return (
@@ -100,7 +101,7 @@ export default compose(
                         height={height >= viewHeight
                             ? viewHeight
                             : height}
-                        storyTheme={storyTheme}
+                        storyTheme={generalStoryTheme}
                         mediaViewer={mediaViewer}
                         contentToolbar={contentToolbar}
                         inView={inView}

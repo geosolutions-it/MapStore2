@@ -81,7 +81,7 @@ export const AlignButtonToolbar = ({editMap: disabled = false, align, sectionTyp
         onSelect={(selected) => update('align', selected)}/>
     );
 
-export const ThemeButtonToolbar = ({editMap: disabled = false, theme, storyTheme, align, sectionType, update = () => {}, themeProps, size, defaultThemeForType = '' }) =>
+export const ThemeButtonToolbar = ({editMap: disabled = false, theme, storyTheme, align, sectionType, update = () => {}, themeProps, size}) =>
     (<ToolbarDropdownButton
         value={theme}
         noTooltipWhenDisabled
@@ -98,9 +98,9 @@ export const ThemeButtonToolbar = ({editMap: disabled = false, theme, storyTheme
             return selected?.value === 'custom' && options?.value !== 'custom';
         }}
         options={[{
-            value: 'default',
-            isActive: (current) => current === undefined || current === 'default'
-                || isObject(current) && (current.value === undefined || current.value === 'default'),
+            value: '',
+            isActive: (current) => current === undefined || current === ''
+                || isObject(current) && (current.value === undefined || current.value === ''),
             label: <Message msgId="geostory.contentToolbar.defaultThemeLabel"/>
         }, {
             value: 'bright',
@@ -123,9 +123,7 @@ export const ThemeButtonToolbar = ({editMap: disabled = false, theme, storyTheme
                 />
             )
         }]}
-        onSelect={(value) => defaultThemeForType && value === defaultThemeForType
-            ? update('theme', { ...(isObject(theme) && theme), "value": defaultThemeForType, [defaultThemeForType]: storyTheme })
-            : update('theme', { ...(isObject(theme) && theme), value })}/>
+        onSelect={(value) => update('theme', { ...(isObject(theme) && theme), value })}/>
     );
 
 

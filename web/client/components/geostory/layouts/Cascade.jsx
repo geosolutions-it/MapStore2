@@ -122,7 +122,7 @@ const Cascade = ({
                 id="ms-sections-container"
                 className={`ms-sections-container${sizeClassName}`}
                 style={{
-                    ...storyTheme,
+                    ...storyTheme?.general,
                     ...isContentFocused && { overflow: 'hidden' }
                 }}>
                 {

@@ -51,6 +51,7 @@ const Immersive = ({
     const visibility = hideContent ? 'hidden' : 'visible';
     const expandableBackgroundClassName = expandableMedia && background && background.type === 'map' ? ' ms-expandable-background' : '';
     const overlayStoryTheme = storyTheme?.overlay || {};
+    const generalStoryTheme = storyTheme?.general || {};
     const DEFAULT = 'default';
 
     return (<section
@@ -86,7 +87,7 @@ const Immersive = ({
                 background: `url(${pattern})`,
                 backgroundSize: '600px auto'
             }}
-            storyTheme={storyTheme}
+            storyTheme={generalStoryTheme}
             mediaViewer={mediaViewer}
             contentToolbar={contentToolbar}
             inView={inView}/>
