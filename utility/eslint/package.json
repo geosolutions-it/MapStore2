@@ -1,10 +1,16 @@
 {
   "name": "eslint-config-mapstore",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "ESLint Configuration for MapStore project",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "peerDependencies": {
+    "eslint": ">= 6.3.0",
+    "eslint-plugin-import": ">= 2.20.2",
+    "eslint-plugin-no-only-tests": ">= 2.3.1",
+    "eslint-plugin-react": ">= 3.3.2"
   },
   "author": "GeoSolutions S.a.s.",
   "license": "ISC"
