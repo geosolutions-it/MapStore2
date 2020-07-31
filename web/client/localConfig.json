@@ -39,12 +39,7 @@
       }, {
         "urlPattern": ".*rest/config.*",
         "method": "bearer"
-      },
-      {
-        "urlPattern": "http(s)?\\:\\/\\/gs-stable\\.geo-solutions\\.it\\/geoserver/.*",
-        "authkeyParamName": "authkey",
-        "method": "authkey"
-    }],
+      }],
     "monitorState": [
       {"name": "router", "path": "router.location.pathname"},
       {"name": "browser", "path": "browser"},
@@ -91,7 +86,10 @@
                 "url": "https://gs-stable.geo-solutions.it/geoserver/wms",
                 "type": "wms",
                 "title": "GeoSolutions GeoServer WMS",
-                "autoload": false
+                "autoload": false,
+                "layerOptions": {
+                  "tileSize": 512
+              }
               },
               "gs_stable_wmts": {
                 "url": "https://gs-stable.geo-solutions.it/geoserver/gwc/service/wmts",

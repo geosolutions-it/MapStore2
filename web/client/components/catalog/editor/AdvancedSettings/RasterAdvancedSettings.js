@@ -29,5 +29,17 @@ export default ({
                     onChange={event => onChangeServiceFormat(event && event.value)} />
             </Col >
         </FormGroup>
+        <FormGroup style={{ display: 'flex', alignItems: 'center', paddingTop: 15, borderTop: '1px solid #ddd' }}>
+            <Col xs={6}>
+                <ControlLabel>Layer tile size</ControlLabel>
+            </Col >
+            <Col xs={6}>
+                <Select
+                    defaultValue={{label: "256x256", value: "256px"}}
+                    value={{label: "256x256", value: "256px"}}
+                    options={[{label: "256x256", value: "256px"}, {label: "512x512", value: "512px"}]}
+                    onChange={() => {}} />
+            </Col >
+        </FormGroup>
     </CommonAdvancedSettings>);
 };
