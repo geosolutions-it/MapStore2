@@ -58,7 +58,6 @@ export default compose(
     const expandableBackgroundClassName = expandableMedia && background && background.type === 'map' ? ' ms-expandable-background' : '';
     const overlayStoryTheme = storyTheme?.overlay || {};
     const generalStoryTheme = storyTheme?.general || {};
-    const DEFAULT = 'default';
 
     return (
         <section
@@ -127,7 +126,6 @@ export default compose(
                 focusedContent={focusedContent}
                 bubblingTextEditing={bubblingTextEditing}
                 storyTheme={overlayStoryTheme}
-                overrideThemeTypeWithDefault={DEFAULT}
             />
             {mode === Modes.EDIT && !hideContent && <AddBar
                 containerWidth={viewWidth}

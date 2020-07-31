@@ -51,8 +51,7 @@ export default ({
     update = () => {},
     remove = () => {},
     bubblingTextEditing = () => {},
-    storyTheme,
-    overrideThemeTypeWithDefault
+    storyTheme
 }) =>
     (<div className={className}>
         {contents.reduce(( rendered = [], { id, ...props }) => {
@@ -73,7 +72,6 @@ export default ({
                     {...contentProps}
                     {...props}
                     storyTheme={storyTheme}
-                    defaultThemeForType={overrideThemeTypeWithDefault}
                     bubblingTextEditing={bubblingTextEditing}
                     tools={tools && tools[props.type]} />)];
             if (mode === Modes.EDIT && addButtons.length > 0) {

@@ -52,7 +52,6 @@ const Immersive = ({
     const expandableBackgroundClassName = expandableMedia && background && background.type === 'map' ? ' ms-expandable-background' : '';
     const overlayStoryTheme = storyTheme?.overlay || {};
     const generalStoryTheme = storyTheme?.general || {};
-    const DEFAULT = 'default';
 
     return (<section
         className={`ms-section ms-section-immersive${expandableBackgroundClassName}`}
@@ -118,7 +117,6 @@ const Immersive = ({
             bubblingTextEditing={bubblingTextEditing}
             sectionType={sectionType}
             storyTheme={overlayStoryTheme}
-            overrideThemeTypeWithDefault={DEFAULT}
         />
         {mode === Modes.EDIT && !hideContent && <AddBar
             containerWidth={viewWidth}

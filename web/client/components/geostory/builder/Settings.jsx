@@ -70,7 +70,6 @@ export default ({
             <CustomThemePicker
                 themeStyle={settings?.theme?.overlay}
                 placement="right"
-                disableBackgroundAlpha
                 onChange={(overlay) => onUpdateSettings("theme", { ...settings?.theme, overlay })}/>
         </FormGroup>
         <FormGroup>
