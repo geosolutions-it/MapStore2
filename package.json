@@ -6,7 +6,7 @@
   "main": "index.js",
   "eslintConfig": {
     "extends": [
-      "mapstore"
+      "@mapstore/eslint-config-mapstore"
     ]
   },
   "eslintIgnore": [
@@ -42,7 +42,7 @@
     "dynamic-public-path-webpack-plugin": "1.0.4",
     "escope": "3.2.0",
     "eslint": "6.3.0",
-    "eslint-config-mapstore": "1.0.1",
+    "@mapstore/eslint-config-mapstore": "1.0.0",
     "eslint-plugin-import": "2.20.2",
     "eslint-plugin-no-only-tests": "2.3.1",
     "eslint-plugin-react": "3.3.2",

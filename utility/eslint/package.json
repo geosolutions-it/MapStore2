@@ -1,8 +1,21 @@
 {
-  "name": "eslint-config-mapstore",
-  "version": "1.0.1",
+  "name": "@mapstore/eslint-config-mapstore",
+  "version": "1.0.0",
+  "private": false,
   "description": "ESLint Configuration for MapStore project",
+  "author": "GeoSolutions S.a.s.",
+  "license": "ISC",
+  "keywords": [
+    "eslint",
+    "eslintconfig",
+    "mapstore"
+  ],
   "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/geosolutions-it/MapStore2.git",
+    "directory": "utility/eslint"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -11,7 +24,5 @@
     "eslint-plugin-import": ">= 2.20.2",
     "eslint-plugin-no-only-tests": ">= 2.3.1",
     "eslint-plugin-react": ">= 3.3.2"
-  },
-  "author": "GeoSolutions S.a.s.",
-  "license": "ISC"
+  }
 }
