@@ -9,7 +9,7 @@
 const assign = require('object-assign');
 const toBbox = require('turf-bbox');
 const uuidv1 = require('uuid/v1');
-const { isString, isObject, isArray, head, castArray, isEmpty, findIndex, pick, isNil } = require('lodash');
+const { isString, isObject, isArray, head, castArray, isEmpty, findIndex, pick, isNil} = require('lodash');
 
 let regGeoServerRule = /\/[\w- ]*geoserver[\w- ]*\//;
 
@@ -124,8 +124,7 @@ const getGroupNodes = (node) => {
     return [];
 };
 
-
-/*
+/**
  * Gets title of nested groups from Default
  * @param {string} id of group
  * @param {array} groups groups of map
@@ -312,8 +311,8 @@ const LayersUtils = {
      */
     normalizeMap: (rawMap = {}) =>
         [
-            (mapItem) => (mapItem.layers || []).filter(({ id } = {}) => !id).length > 0 ? {...mapItem, layers: (mapItem.layers || []).map(l => LayersUtils.normalizeLayer(l))} : mapItem,
-            (mapItem) => mapItem.groups ? mapItem : {...mapItem, groups: {id: "Default", expanded: true}}
+            (map) => (map.layers || []).filter(({ id } = {}) => !id).length > 0 ? {...map, layers: (map.layers || []).map(l => LayersUtils.normalizeLayer(l))} : map,
+            (map) => map.groups ? map : {...map, groups: {id: "Default", expanded: true}}
         // this is basically a compose
         ].reduce((f, g) => (...args) => f(g(...args)))(rawMap),
     /**
@@ -321,7 +320,6 @@ const LayersUtils = {
      * @return function that filter by group
      */
     belongsToGroup: (gid) => l => (l.group || "Default") === gid || (l.group || "").indexOf(`${gid}.`) === 0,
-
     getLayersByGroup: (configLayers, configGroups) => {
         let i = 0;
         let mapLayers = configLayers.map((layer) => assign({}, layer, {storeIndex: i++}));
