@@ -251,6 +251,7 @@ describe('Geostory Epics', () => {
                             a.story.sections[0].id = get(TEST_STORY, 'sections[0].id');
                             a.story.sections[1].id = get(TEST_STORY, 'sections[1].id');
                             a.story.sections[2].id = get(TEST_STORY, 'sections[2].id');
+                            a.story.sections[3].id = get(TEST_STORY, 'sections[3].id');
                         }
                         expect(a.story).toEqual(TEST_STORY);
                         break;
@@ -296,6 +297,7 @@ describe('Geostory Epics', () => {
                             a.story.sections[0].id = get(TEST_STORY, 'sections[0].id');
                             a.story.sections[1].id = get(TEST_STORY, 'sections[1].id');
                             a.story.sections[2].id = get(TEST_STORY, 'sections[2].id');
+                            a.story.sections[3].id = get(TEST_STORY, 'sections[3].id');
                         }
                         expect(a.story).toEqual(TEST_STORY);
                         break;
