@@ -66,8 +66,6 @@ In addition to static and templates, the following files from the root MapStore 
 
 * .babelrc
 * .editorconfig
-* .eslintrc
-* .eslintignore
 * LICENSE.txt
 
 ## Update MapStore2 version in a project
