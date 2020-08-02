@@ -26,7 +26,8 @@ const {
     selectedServiceTypeSelector,
     selectedServiceSelector,
     servicesSelector,
-    serviceListOpenSelector
+    serviceListOpenSelector,
+    tileSizeOptionsSelector
 } = require("../catalog");
 
 const {set} = require('../../utils/ImmutableUtils');
@@ -237,5 +238,9 @@ describe('Test catalog selectors', () => {
         expect(delay).toExist();
         expect(delay).toBe(1234);
     });
-
+    it('test tileSizeOptionsSelector defaults to array with 256', () => {
+        const tileSizes = tileSizeOptionsSelector(state);
+        expect(tileSizes.length).toBe(1);
+        expect(tileSizes[0]).toBe(256);
+    });
 });

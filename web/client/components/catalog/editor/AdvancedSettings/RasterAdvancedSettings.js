@@ -10,12 +10,25 @@ import Select from "react-select";
 import { FormGroup, Col, ControlLabel } from "react-bootstrap";
 import CommonAdvancedSettings from './CommonAdvancedSettings';
 
+/**
+ * Generates an array of options in the form e.g. [{value: "256", label: "256x256"}]
+ * @param {number[]} opts an array of tile sizes
+ */
+const getTileSizeSelectOptions = (opts) => {
+    return opts.map(opt => ({label: `${opt}x${opt}`, value: opt}));
+};
+
 export default ({
     service,
     formatOptions,
     onChangeServiceFormat = () => { },
+    onChangeWMSTileSize = () => {},
+    tileSizeOptions,
+    currentWMSCatalogLayerSize,
+    selectedService,
     ...props
 }) => {
+    const tileSelectOptions = getTileSizeSelectOptions(tileSizeOptions);
     return (<CommonAdvancedSettings service={service} {...props}>
         <FormGroup style={{ display: 'flex', alignItems: 'center', paddingTop: 15, borderTop: '1px solid #ddd' }}>
             <Col xs={6}>
@@ -31,14 +44,13 @@ export default ({
         </FormGroup>
         <FormGroup style={{ display: 'flex', alignItems: 'center', paddingTop: 15, borderTop: '1px solid #ddd' }}>
             <Col xs={6}>
-                <ControlLabel>Layer tile size</ControlLabel>
+                <ControlLabel>WMS Layer tile size</ControlLabel>
             </Col >
             <Col xs={6}>
                 <Select
-                    defaultValue={{label: "256x256", value: "256px"}}
-                    value={{label: "256x256", value: "256px"}}
-                    options={[{label: "256x256", value: "256px"}, {label: "512x512", value: "512px"}]}
-                    onChange={() => {}} />
+                    value={getTileSizeSelectOptions([service.layerOptions?.tileSize || 256])[0]}
+                    options={tileSelectOptions}
+                    onChange={event => onChangeWMSTileSize(event && event.value)} />
             </Col >
         </FormGroup>
     </CommonAdvancedSettings>);

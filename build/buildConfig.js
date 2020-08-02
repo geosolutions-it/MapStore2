@@ -177,18 +177,38 @@ module.exports = (bundles, themeEntries, paths, extractThemesPlugin, prod, publi
         }] : [])
     },
     devServer: {
-        proxy: {
+        proxy: proxy || {
             '/rest': {
-                target: "http://localhost:8080/mapstore",
-                secure: false
+                target: "https://dev.mapstore.geo-solutions.it/mapstore",
+                secure: false,
+                headers: {
+                    host: "dev.mapstore.geo-solutions.it"
+                }
+            },
+            '/pdf': {
+                target: "https://dev.mapstore.geo-solutions.it/mapstore",
+                secure: false,
+                headers: {
+                    host: "dev.mapstore.geo-solutions.it"
+                }
+            },
+            '/mapstore/pdf': {
+                target: "https://dev.mapstore.geo-solutions.it",
+                secure: false,
+                headers: {
+                    host: "dev.mapstore.geo-solutions.it"
+                }
             },
             '/proxy': {
-                target: "http://localhost:8080/mapstore",
-                secure: false
+                target: "https://dev.mapstore.geo-solutions.it/mapstore",
+                secure: false,
+                headers: {
+                    host: "dev.mapstore.geo-solutions.it"
+                }
             },
-            '/docs': { // this can be used when you run npm run doctest
+            '/docs': {
                 target: "http://localhost:8081",
-                pathRewrite: { '/docs': '/mapstore/docs' }
+                pathRewrite: {'/docs': '/mapstore/docs'}
             }
         }
     },

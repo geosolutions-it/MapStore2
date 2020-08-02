@@ -31,7 +31,7 @@ const serviceNew = {
 const catalog = require('../catalog');
 const {RECORD_LIST_LOADED, ADD_LAYER_ERROR, RESET_CATALOG, RECORD_LIST_LOAD_ERROR, CHANGE_CATALOG_FORMAT, CHANGE_CATALOG_MODE,
     FOCUS_SERVICES_LIST, CHANGE_TITLE, CHANGE_URL, CHANGE_TYPE, CHANGE_SELECTED_SERVICE, CHANGE_SERVICE_PROPERTY, DELETE_CATALOG_SERVICE, SAVING_SERVICE, CHANGE_METADATA_TEMPLATE, TOGGLE_THUMBNAIL, TOGGLE_TEMPLATE, TOGGLE_ADVANCED_SETTINGS,
-    addCatalogService, changeText, changeServiceFormat, setLoading} = require('../../actions/catalog');
+    CHANGE_WMS_LAYER_TILE_SIZE, addCatalogService, changeText, changeServiceFormat, setLoading} = require('../../actions/catalog');
 const {MAP_CONFIG_LOADED} = require('../../actions/config');
 const sampleRecord = {
     boundingBox: {
@@ -299,5 +299,11 @@ describe('Test the catalog reducer', () => {
             newService: {}
         }, {type: CHANGE_METADATA_TEMPLATE, metadataTemplate: ""});
         expect(state.newService.metadataTemplate).toBe("");
+    });
+    it('CHANGE_WMS_LAYER_TILE_SIZE ', () => {
+        const state = catalog({
+            newService: {}
+        }, {type: CHANGE_WMS_LAYER_TILE_SIZE, size: 256});
+        expect(state.newService.layerOptions.tileSize).toBe(256);
     });
 });

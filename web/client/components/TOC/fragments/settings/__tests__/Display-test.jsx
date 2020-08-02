@@ -118,11 +118,11 @@ describe('test Layer Properties Display module component', () => {
         // Default legend values
         expect(legendWidth.value).toBe('12');
         expect(legendHeight.value).toBe('12');
-        expect(labels.length).toBe(6);
-        expect(labels[2].innerText).toBe("layerProperties.legendOptions.title");
-        expect(labels[3].innerText).toBe("layerProperties.legendOptions.legendWidth");
-        expect(labels[4].innerText).toBe("layerProperties.legendOptions.legendHeight");
-        expect(labels[5].innerText).toBe("layerProperties.legendOptions.legendPreview");
+        expect(labels.length).toBe(7);
+        expect(labels[3].innerText).toBe("layerProperties.legendOptions.title");
+        expect(labels[4].innerText).toBe("layerProperties.legendOptions.legendWidth");
+        expect(labels[5].innerText).toBe("layerProperties.legendOptions.legendHeight");
+        expect(labels[6].innerText).toBe("layerProperties.legendOptions.legendPreview");
     });
 
     it('tests Layer Properties Legend component events', () => {

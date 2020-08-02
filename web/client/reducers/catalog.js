@@ -28,7 +28,8 @@ const {
     SET_LOADING,
     TOGGLE_THUMBNAIL,
     TOGGLE_TEMPLATE,
-    TOGGLE_ADVANCED_SETTINGS
+    TOGGLE_ADVANCED_SETTINGS,
+    CHANGE_WMS_LAYER_TILE_SIZE
 } = require('../actions/catalog');
 const {
     MAP_CONFIG_LOADED
@@ -206,6 +207,9 @@ function catalog(state = {
     }
     case TOGGLE_ADVANCED_SETTINGS: {
         return set("newService.showAdvancedSettings", !state.newService.showAdvancedSettings, state);
+    }
+    case CHANGE_WMS_LAYER_TILE_SIZE: {
+        return set(`newService.layerOptions.tileSize`, action.size, state);
     }
     default:
         return state;
