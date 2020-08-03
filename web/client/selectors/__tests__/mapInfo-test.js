@@ -342,8 +342,9 @@ describe('Test mapinfo selectors', () => {
     it('test mapTriggerSelector', () => {
         // when no mapInfo object is not present in state
         expect(mapTriggerSelector({})).toBe('click');
+        // when no trigger in the configuration
+        expect(mapTriggerSelector({mapInfo: { configuration: {} }})).toBe('click');
         // when mapInfo is present
-        expect(mapTriggerSelector({mapInfo: {trigger: 'hover'}})).toBe('hover');
-        expect(mapTriggerSelector({mapInfo: {trigger: 'click'}})).toBe('click');
+        expect(mapTriggerSelector({mapInfo: { configuration: { trigger: 'hover' } }})).toBe('hover');
     });
 });

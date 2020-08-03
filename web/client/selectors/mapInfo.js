@@ -190,10 +190,10 @@ const clickedPointWithFeaturesSelector = createSelector(
 const currentEditFeatureQuerySelector = state => state.mapInfo?.currentEditFeatureQuery;
 
 const mapTriggerSelector = state => {
-    if (state.mapInfo === undefined || state.mapInfo.trigger === undefined) {
+    if (state.mapInfo?.configuration?.trigger === undefined) {
         return 'click';
     }
-    return state.mapInfo.trigger;
+    return state.mapInfo.configuration.trigger;
 };
 
 

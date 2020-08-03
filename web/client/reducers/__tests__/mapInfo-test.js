@@ -819,6 +819,6 @@ describe('Test the mapInfo reducer', () => {
     it('mapInfo SET_MAP_TRIGGER', () => {
         const action = setMapTrigger('hover');
         const state = mapInfo(undefined, action);
-        expect(state.trigger).toBe('hover');
+        expect(state.configuration.trigger).toBe('hover');
     });
 });

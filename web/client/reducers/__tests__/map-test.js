@@ -10,6 +10,7 @@ const {round} = require('lodash');
 
 var mapConfig = require('../map');
 const { changeMapLimits, PAN_TO, SET_MAP_RESOLUTIONS } = require('../../actions/map');
+const { SET_MAP_TRIGGER, setMapTrigger } = require('../../actions/mapInfo');
 
 describe('Test the map reducer', () => {
     it('returns original state on unrecognized action', () => {
@@ -257,5 +258,10 @@ describe('Test the map reducer', () => {
         expect(state.center).toEqual({...pos, srs: crs, crs});
         expect(state.zoom).toEqual(zoom);
         expect(state.mapStateSource).toEqual(null);
+    });
+    it('tests SET_MAP_TRIGGER to set trigger in mapInfoConfiguration', () => {
+        const state = mapConfig({}, {type: SET_MAP_TRIGGER, trigger: "hover"});
+        expect(state.mapInfoConfiguration).toExist();
+        expect(state.mapInfoConfiguration.trigger).toBe("hover");
     });
 });

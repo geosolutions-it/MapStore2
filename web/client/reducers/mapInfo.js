@@ -369,7 +369,10 @@ function mapInfo(state = initState, action) {
     case SET_MAP_TRIGGER: {
         return {
             ...state,
-            trigger: action.trigger
+            configuration: {
+                ...state.configuration,
+                trigger: action.trigger
+            }
         };
     }
     default:
