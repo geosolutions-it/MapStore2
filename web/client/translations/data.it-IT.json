@@ -2072,7 +2072,8 @@
             "ruleRaster": "Raster",
             "customInterval": "Custom Interval",
             "styleEmpty": "Questo stile non è valido perchè vuoto",
-            "incompleteClassification": "La classificazione è incompleta perchè mancano i valori per le classi. Assicurati che tutte le proprietà dello stile sono corrette"
+            "incompleteClassification": "La classificazione è incompleta perchè mancano i valori per le classi. Assicurati che tutte le proprietà dello stile sono corrette",
+            "emptyImageIconSymbolizer": "Immagine mancante nello stile icona"
         },
         "playback": {
             "settings": {

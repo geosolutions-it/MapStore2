@@ -111,6 +111,16 @@ function validateStyle(rules) {
             status: 400
         };
     }
+    // if the image is missing in icon symbolizer is not possible to create the rule
+    const emptyImageIconSymbolizer = find(rules, ({ symbolizers = [] }) =>
+        find(symbolizers, ({ kind, image }) => kind === 'Icon' && (image === undefined || image === ''))
+    );
+    if (emptyImageIconSymbolizer) {
+        return {
+            messageId: 'styleeditor.emptyImageIconSymbolizer',
+            status: 400
+        };
+    }
     return null;
 }
 

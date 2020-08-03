@@ -2083,7 +2083,8 @@
             "ruleRaster": "Raster",
             "customInterval": "Custom Interval",
             "styleEmpty": "This style has no rules",
-            "incompleteClassification": "The classification is incomplete bacause the entries are not available. Ensure all properties are corretly provided"
+            "incompleteClassification": "The classification is incomplete bacause the entries are not available. Ensure all properties are corretly provided",
+            "emptyImageIconSymbolizer": "Missing image url in the icon style"
         },
         "playback": {
             "settings": {

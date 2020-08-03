@@ -202,4 +202,35 @@ describe('VisualStyleEditor', () => {
             />, document.getElementById('container'));
         });
     });
+    it('should throw an error when icon symbolizer has image undefined', (done) => {
+        const DEBOUNCE_TIME = 1;
+        act(() => {
+            ReactDOM.render(<VisualStyleEditor
+                format="css"
+                code="* { fill: #ff0000; }"
+                defaultStyleJSON={{
+                    rules: [
+                        {
+                            name: '',
+                            symbolizers: [
+                                {
+                                    kind: 'Icon',
+                                    image: undefined
+                                }
+                            ]
+                        }
+                    ]
+                }}
+                debounceTime={DEBOUNCE_TIME}
+                onError={(error) => {
+                    try {
+                        expect(error).toEqual({ messageId: 'styleeditor.emptyImageIconSymbolizer', status: 400 });
+                    } catch (e) {
+                        done(e);
+                    }
+                    done();
+                }}
+            />, document.getElementById('container'));
+        });
+    });
 });

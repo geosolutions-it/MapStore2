@@ -2072,7 +2072,8 @@
             "ruleRaster": "Ráster",
             "customInterval": "Custom Interval",
             "styleEmpty": "Este estilo no tiene reglas",
-            "incompleteClassification": "La clasificación es incompleta porque las entradas no están disponibles. Asegúrese de que todas las propiedades se proporcionan correctamente"
+            "incompleteClassification": "La clasificación es incompleta porque las entradas no están disponibles. Asegúrese de que todas las propiedades se proporcionan correctamente",
+            "emptyImageIconSymbolizer": "Falta la URL de la imagen en el estilo del icono"
         },
         "playback": {
             "settings": {
