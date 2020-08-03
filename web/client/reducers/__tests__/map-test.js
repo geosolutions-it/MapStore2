@@ -10,7 +10,7 @@ const {round} = require('lodash');
 
 var mapConfig = require('../map');
 const { changeMapLimits, PAN_TO, SET_MAP_RESOLUTIONS } = require('../../actions/map');
-const { SET_MAP_TRIGGER, setMapTrigger } = require('../../actions/mapInfo');
+const { SET_MAP_TRIGGER } = require('../../actions/mapInfo');
 
 describe('Test the map reducer', () => {
     it('returns original state on unrecognized action', () => {
