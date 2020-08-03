@@ -10,7 +10,6 @@ const {Glyphicon} = require('react-bootstrap');
 const {connect} = require('react-redux');
 const { createSelector, createStructuredSelector} = require('reselect');
 const assign = require('object-assign');
-const {isNil} = require('lodash');
 const {mapSelector, isMouseMoveIdentifyActiveSelector} = require('../selectors/map');
 const {layersSelector} = require('../selectors/layers');
 const { mapTypeSelector, isCesium } = require('../selectors/maptype');
@@ -20,7 +19,7 @@ const { isEditingAllowedSelector } = require('../selectors/featuregrid');
 
 
 const { hideMapinfoMarker, showMapinfoRevGeocode, hideMapinfoRevGeocode, clearWarning, toggleMapInfoState, changeMapInfoFormat, updateCenterToMarker, closeIdentify, purgeMapInfoResults, updateFeatureInfoClickPoint, changeFormat, toggleShowCoordinateEditor, changePage, toggleHighlightFeature, editLayerFeatures,
-    setDefaultIdentify} = require('../actions/mapInfo');
+    identifyConfigureDefault} = require('../actions/mapInfo');
 const { changeMousePointer, zoomToExtent, registerEventListener, unRegisterEventListener} = require('../actions/map');
 
 
@@ -40,7 +39,7 @@ const Message = require('./locale/Message');
 require('./identify/identify.css');
 
 const selector = createStructuredSelector({
-    enabled: (state) => (state.mapInfo && state.mapInfo.enabled || state.controls && state.controls.info && state.controls.info.enabled) || state.mapInfo && state.mapInfo.enabled,
+    enabled: (state) => state.mapInfo && state.mapInfo.enabled || state.controls && state.controls.info && state.controls.info.enabled || null,
     responses: responsesSelector,
     validResponses: validResponsesSelector,
     requests: (state) => state.mapInfo && state.mapInfo.requests || [],
@@ -157,6 +156,8 @@ const identifyDefaultProps = defaultProps({
  * @prop cfg.enabled {boolean} // enabled by default
  * @prop cfg.disabledAlwaysOn {boolean} if true, disable always on setup
  * @prop cfg.defaultConfiguration {object} object in which the default properties for mapInfo are set
+ * @prop cfg.defaultConfiguration.enabled {boolean} sets default value
+ * @prop cfg.defaultConfiguration.disabledAlwaysOn {boolean} if true, disable always on setup
  * @prop cfg.defaultConfiguration.showEmptyMessageGFI {boolean} allow or deny the visiibility of message when you have no results from identify request
  * @prop cfg.defaultConfiguration.infoFormat {string} "text/plain" default infoformat value, other values are "text/html" for text only or "application/json" for properties
  *
@@ -172,6 +173,8 @@ const identifyDefaultProps = defaultProps({
  *          "header": "{context.SwipeHeader}"
  *       },
  *      defaultConfiguration: {
+ *          "enabled": true,
+ *          "disabledAlwaysOn": false,
  *          "showEmptyMessageGFI": false,
  *          "infoFormat": "text/plain"
  *      }
@@ -194,21 +197,12 @@ const IdentifyPlugin = compose(
         hideRevGeocode: hideMapinfoRevGeocode,
         onEnableCenterToMarker: updateCenterToMarker.bind(null, 'enabled'),
         onEdit: editLayerFeatures,
-        setDefaultIdentify: setDefaultIdentify
+        identifyConfigureDefault: identifyConfigureDefault
     }, (stateProps, dispatchProps, ownProps) => ({
         ...ownProps,
         ...stateProps,
         ...dispatchProps,
-        enabled: (
-            isNil(ownProps.enabled)
-            && isNil((stateProps.enabled && (stateProps.isCesium || !ownProps.showInMapPopup) && !stateProps.floatingIdentifyEnabled))
-            && true
-        )
-        || (stateProps.enabled
-            && (stateProps.isCesium
-            || !ownProps.showInMapPopup)
-            && !stateProps.floatingIdentifyEnabled)
-        || isNil(stateProps.enabled) && ownProps.enabled
+        enabled: stateProps.enabled && (stateProps.isCesium || !ownProps.showInMapPopup) && !stateProps.floatingIdentifyEnabled
     })),
     // highlight support
     compose(

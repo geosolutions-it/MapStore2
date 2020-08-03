@@ -31,7 +31,7 @@ const {
     CHANGE_FORMAT,
     TOGGLE_SHOW_COORD_EDITOR,
     SET_CURRENT_EDIT_FEATURE_QUERY,
-    SET_DEFAULT_IDENTIFY
+    CONFIGURE_DEFAULT
 } = require('../actions/mapInfo');
 const {
     MAP_CONFIG_LOADED
@@ -369,7 +369,7 @@ function mapInfo(state = initState, action) {
             currentEditFeatureQuery: action.query
         };
     }
-    case SET_DEFAULT_IDENTIFY: {
+    case CONFIGURE_DEFAULT: {
         const { cfg } = action;
         return {
             ...state,

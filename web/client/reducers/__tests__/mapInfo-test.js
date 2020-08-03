@@ -16,7 +16,7 @@ import {
     changeFormat,
     changePage,
     toggleHighlightFeature,
-    setDefaultIdentify
+    identifyConfigureDefault
 } from '../../actions/mapInfo';
 import { MAP_CONFIG_LOADED } from '../../actions/config';
 
@@ -832,7 +832,7 @@ describe('Test the mapInfo reducer', () => {
                 infoFormat: 'test'
             }
         };
-        const action = setDefaultIdentify(defaultConfig);
+        const action = identifyConfigureDefault(defaultConfig);
         const state = mapInfo(undefined, action);
         expect(state.enabled).toBe(true);
         expect(state.disabledAlwaysOn).toBe(true);

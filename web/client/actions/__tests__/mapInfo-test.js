@@ -32,7 +32,7 @@ import {
     CHANGE_FORMAT, changeFormat,
     CHANGE_PAGE, changePage,
     TOGGLE_HIGHLIGHT_FEATURE, toggleHighlightFeature,
-    SET_DEFAULT_IDENTIFY, setDefaultIdentify
+    CONFIGURE_DEFAULT, identifyConfigureDefault
 } from '../mapInfo';
 
 describe('Test correctness of the map actions', () => {
@@ -160,9 +160,9 @@ describe('Test correctness of the map actions', () => {
                 infoFormat: 'test'
             }
         };
-        const retVal = setDefaultIdentify(defaultConfig);
+        const retVal = identifyConfigureDefault(defaultConfig);
         expect(retVal).toExist();
-        expect(retVal.type).toBe(SET_DEFAULT_IDENTIFY);
+        expect(retVal.type).toBe(CONFIGURE_DEFAULT);
         expect(retVal.cfg).toBe(defaultConfig);
     });
 });

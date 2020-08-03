@@ -55,7 +55,7 @@ const identifyHandlers = withHandlers({
 
 /**
  * Basic identify lifecycle used in Identify plugin with IdentifyContainer component
- * - componentDidMount: show cursor on map as pointer if enabled props is true
+ * - componentDidMount: show cursor on map as pointer if enabled props is true, sets default identify config
  * - componentWillReceiveProps:
  *      - changes pointer enable true/false - TODO: move it in an epic
  *      - set index to 0 to when responses are changed to avoid empty view if index is greater than current responses length
@@ -70,12 +70,24 @@ const identifyLifecycle = compose(
                 enabled,
                 changeMousePointer = () => {},
                 disableCenterToMarker,
-                onEnableCenterToMarker = () => {}
+                onEnableCenterToMarker = () => {},
+                disabledAlwaysOn,
+                defaultConfiguration,
+                identifyConfigureDefault = () => {}
             } = this.props;
 
             if (enabled) {
                 changeMousePointer('pointer');
             }
+
+            identifyConfigureDefault({
+                enabled: isNil(enabled) && defaultConfiguration?.enabled
+                || enabled
+                || (isNil(defaultConfiguration?.enabled) && isNil(defaultConfiguration?.enabled) && true)
+                || false,
+                ...(!isNil(disabledAlwaysOn) && {disabledAlwaysOn: disabledAlwaysOn}),
+                defaultConfiguration: {...defaultConfiguration}
+            });
 
             if (!disableCenterToMarker) {
                 onEnableCenterToMarker();

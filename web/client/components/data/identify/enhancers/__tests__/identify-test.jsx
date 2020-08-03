@@ -49,6 +49,23 @@ describe("test identify enhancers", () => {
         expect(spyMousePointer.calls.length).toEqual(2);
     });
 
+    it('test identifyLifecycle component sets default configuration', () => {
+
+        const Component = identifyLifecycle(() => <div id="test-component"></div>);
+
+        const testHandlers = {
+            identifyConfigureDefaultMock: () => {}
+        };
+
+        const spyConfigureDefault = expect.spyOn(testHandlers, 'identifyConfigureDefaultMock');
+
+        ReactDOM.render(
+            <Component identifyConfigureDefault={testHandlers.identifyConfigureDefaultMock} />,
+            document.getElementById("container")
+        );
+        expect(spyConfigureDefault.calls.length).toEqual(1);
+    });
+
     it("test identifyLifecycle component doesn't need reset current index when requests are the same", () => {
         const Component = identifyLifecycle(() => <div id="test-component"></div>);
         const testHandlers = {

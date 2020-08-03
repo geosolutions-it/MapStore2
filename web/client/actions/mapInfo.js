@@ -35,7 +35,7 @@ const SET_CURRENT_EDIT_FEATURE_QUERY = 'IDENTIFY:CURRENT_EDIT_FEATURE_QUERY';
 
 const TOGGLE_EMPTY_MESSAGE_GFI = "IDENTIFY:TOGGLE_EMPTY_MESSAGE_GFI";
 const toggleEmptyMessageGFI = () => ({type: TOGGLE_EMPTY_MESSAGE_GFI});
-const SET_DEFAULT_IDENTIFY = "SET_DEFAULT_IDENTIFY";
+const CONFIGURE_DEFAULT = "IDENTIFY:CONFIGURE_DEFAULT";
 /**
  * Private
  * @return a LOAD_FEATURE_INFO action with the response data to a wms GetFeatureInfo
@@ -271,9 +271,9 @@ const setCurrentEditFeatureQuery = (query) => ({
  * sets default properties for enabled, disabledAlwaysOn, configuration from config
  * @prop {object} cfg
 */
-function setDefaultIdentify(cfg) {
+function identifyConfigureDefault(cfg) {
     return {
-        type: SET_DEFAULT_IDENTIFY,
+        type: CONFIGURE_DEFAULT,
         cfg
     };
 }
@@ -324,5 +324,5 @@ module.exports = {
     UPDATE_FEATURE_INFO_CLICK_POINT, updateFeatureInfoClickPoint,
     EDIT_LAYER_FEATURES, editLayerFeatures,
     SET_CURRENT_EDIT_FEATURE_QUERY, setCurrentEditFeatureQuery,
-    SET_DEFAULT_IDENTIFY, setDefaultIdentify
+    CONFIGURE_DEFAULT, identifyConfigureDefault
 };
