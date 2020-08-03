@@ -20,7 +20,7 @@ describe('setMapTriggerEpic', () => {
             expect(actions[0].type).toBe(REGISTER_EVENT_LISTENER);
             done();
         };
-        testEpic(setMapTriggerEpic, 1, configureMap(), epicResponse, {mapInfo: {trigger: 'hover'}});
+        testEpic(setMapTriggerEpic, 1, configureMap(), epicResponse, {mapInfo: {configuration: {trigger: 'hover'}}});
     });
     it('should unregister event if no mapInfo or no trigger is present in mapInfo', (done) => {
         const epicResponse = actions => {
