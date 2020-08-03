@@ -97,9 +97,7 @@ export const getClassNameFromProps = ({ theme = {}, align = 'center', size = 'fu
 export const getThemeStyleFromProps = ({ theme = {}, storyTheme }) => {
     if (
         theme === ''
-        || theme === undefined
         || theme?.value === ''
-        || theme?.value === undefined
     ) {
         return isObject(storyTheme) ? storyTheme : {};
     }
