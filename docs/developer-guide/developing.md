@@ -120,6 +120,35 @@ devServer: {
 
 * You have to run npm start to run mapstore client on port 8081, that is now connected to the local test back-end
 
+### Running local backend in tomcat 
+If you prefer, or if you have some problems with `mvn jetty:run-war`, you can run MapStore back-end in a tomcat instance instead of using Jetty. 
+To do so, you can :
+* download a tomcat standalone [here](https://mapstore.readthedocs.io/en/latest/developer-guide/requirements/) and extract to a folder of your choice
+* To generate a war file that will be deployed on your tomcat server, go to the root of the Mapstore project that was git cloned and run `./build.sh`. This might take some time but at the end a war file named `mapstore.war` will be generated into the `web/target` folder.
+* Copy the `mapstore.war` and then head back to your tomcat folder. Look for a `webapps` folder and paste the `mapstore.war` file there.
+* To start tomcat server, go to the terminal, `cd` into the root of your tomcat extracted folder and run `./bin/startup.sh` ( unix systems) or `./bin/startup.bat` (Windows). The server will start on port `8080` and Mapstore will be running at `http://localhost:8080/mapstore`. For development purposes we're only interested in the backend that was started on the tomcat server along with Mapstore.
+* To point our development server when we eventually start it using `npm start` we need to make the following change to `build/buildConfig.js`
+
+```javascript
+devServer: {
+        proxy: {
+            '/rest/': {
+                target: "http://localhost:8080/mapstore"
+            },
+            '/proxy': {
+                target: "http://localhost:8080/mapstore",
+                secure: false
+            },
+            '/docs': { // this can be used when you run npm run doctest
+                target: "http://localhost:8081",
+                pathRewrite: { '/docs': '/mapstore/docs' }
+            }
+        }
+    },
+    // ...
+```
+* Finally, run the development server using `npm start`. The backend will now be pointed to the one tomcat is running.
+
 You can even run geostore and http-proxy separately and debug them with your own IDE. See the documentation about them in their own repositories.
 
 if you want to change the default port for mapstore back-end you have to edit `pom.xml` in the root of the project:

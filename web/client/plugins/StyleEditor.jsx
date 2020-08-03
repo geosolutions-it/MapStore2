@@ -147,14 +147,21 @@ const StyleEditorPlugin = compose(
             onInit: initStyleService,
             onUpdateParams: updateSettingsParams
         },
-        (stateProps, dispatchProps, ownProps) => ({
-            ...ownProps,
-            ...stateProps,
-            ...dispatchProps,
-            styleService: ownProps.styleService
+        (stateProps, dispatchProps, ownProps) => {
+            // detect if the static service has been updated with new information in the global state
+            // eg: classification methods are requested asynchronously
+            const isStaticServiceUpdated = ownProps.styleService?.baseUrl === stateProps.styleService?.baseUrl
+                && stateProps.styleService?.isStatic;
+            const newStyleService = ownProps.styleService && !isStaticServiceUpdated
                 ? { ...ownProps.styleService, isStatic: true }
-                : { ...stateProps.styleService }
-        })
+                : { ...stateProps.styleService };
+            return {
+                ...ownProps,
+                ...stateProps,
+                ...dispatchProps,
+                styleService: newStyleService
+            };
+        }
     ),
     emptyState(
         ({ error }) => error,

@@ -118,7 +118,8 @@ describe("GeoStory Utils", () => {
         expect(SectionTypes).toEqual({
             TITLE: "title",
             PARAGRAPH: "paragraph",
-            IMMERSIVE: "immersive"
+            IMMERSIVE: "immersive",
+            BANNER: 'banner'
         });
     });
     it("test isMediaSection", () => {
@@ -206,6 +207,23 @@ describe("GeoStory Utils", () => {
             expect(background.size).toBe("full");
             expect(background.align).toBe("center");
 
+        });
+        it("SectionTypes.BANNER", () => {
+            const data = getDefaultSectionTemplate(SectionTypes.BANNER);
+            expect(data.id).toExist();
+            expect(data.id.length).toBe(uuid().length);
+            expect(data.type).toBe(SectionTypes.BANNER);
+            expect(data.title).toBe("geostory.builder.defaults.titleBanner");
+            expect(data.cover).toBe(false);
+            expect(isArray(data.contents)).toBe(true);
+            const content = data.contents[0];
+            expect(content.id).toExist();
+            expect(content.id.length).toBe(uuid().length);
+            const background = data.contents[0].background;
+            expect(background.theme).toBe(undefined);
+            expect(background.fit).toBe("cover");
+            expect(background.size).toBe("full");
+            expect(background.align).toBe("center");
         });
         it("SectionTypes.PARAGRAPH", () => {
             const data = getDefaultSectionTemplate(SectionTypes.PARAGRAPH);
@@ -388,9 +406,23 @@ describe("GeoStory Utils", () => {
             const sectionId = '222';
             expect(parseHashUrlScrollUpdate(url, hash, storyId, sectionId)).toBe('host/#/geostory/111/222');
         });
+        it('initial without shared with slash after storyId', () => {
+            const url = 'host/#/geostory/111/';
+            const hash = '#/geostory/111/';
+            const storyId = '111';
+            const sectionId = '222';
+            expect(parseHashUrlScrollUpdate(url, hash, storyId, sectionId)).toBe('host/#/geostory/111/222');
+        });
         it('initial with shared', () => {
-            const url = 'host/#/geostory/shared/111/';
+            const url = 'host/#/geostory/shared/111';
             const hash = '#/geostory/shared/111';
+            const storyId = '111';
+            const sectionId = '222';
+            expect(parseHashUrlScrollUpdate(url, hash, storyId, sectionId)).toBe('host/#/geostory/shared/111/222');
+        });
+        it('initial with shared with slash after storyId', () => {
+            const url = 'host/#/geostory/shared/111/';
+            const hash = '#/geostory/shared/111/';
             const storyId = '111';
             const sectionId = '222';
             expect(parseHashUrlScrollUpdate(url, hash, storyId, sectionId)).toBe('host/#/geostory/shared/111/222');

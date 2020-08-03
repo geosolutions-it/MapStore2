@@ -15,6 +15,8 @@ import isNil from 'lodash/isNil';
 import lastIndexOf from 'lodash/lastIndexOf';
 import words from 'lodash/words';
 import get from 'lodash/get';
+import isArray from 'lodash/isArray';
+import isEmpty from 'lodash/isEmpty';
 import { push, LOCATION_CHANGE } from 'connected-react-router';
 import uuid from 'uuid/v1';
 
@@ -113,7 +115,12 @@ const updateMediaSection = (store, path) => action$ =>
             let resourceId = resource.id;
             if (resourceAlreadyPresent) {
                 resourceId = resourceAlreadyPresent.id;
-            } else {
+            } else if (isEmpty(resource)) {
+                const emptyMedia = mediaType === MediaTypes.MAP
+                ? {resourceId: '', type: null, map: undefined}
+                : {resourceId: '', type: null};
+                actions = [...actions, update(`${path}`, emptyMedia ), hide()];
+            }  else {
             // if the resource is new, add it to the story resources list
                 resourceId = uuid();
                 actions = [...actions, addResource(resourceId, mediaType, resource)];
@@ -283,7 +290,17 @@ export const loadGeostoryEpic = (action$, {getState = () => {}}) => action$
                 return axios.get(`configs/${id}.json`)
                     // not return anything else that data in this case
                     // to match with data/resource object structure of getResource
-                    .then(({data}) => ({ data, isStatic: true, canEdit: true }));
+                    .then(({data}) => {
+                        // generates random id for section
+                        const defaultSections = data.sections;
+                        const sectionsWithId = isArray(defaultSections)
+                            && defaultSections.map(section => ({ ...section, id: uuid()}));
+                        const newData = sectionsWithId.length ? {
+                            ...data,
+                            sections: sectionsWithId
+                        } : data;
+                        return ({ data: newData, isStatic: true, canEdit: true });
+                    });
             }
             return getResource(id);
         })

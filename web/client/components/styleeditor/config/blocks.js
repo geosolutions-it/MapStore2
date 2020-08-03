@@ -290,6 +290,7 @@ const getBlocks = (/* config = {} */) => {
         Classification: {
             kind: 'Classification',
             glyph: 'list',
+            classificationType: 'classificationVector',
             hideInputLabel: true,
             hideFilter: true,
             params: [
@@ -301,7 +302,10 @@ const getBlocks = (/* config = {} */) => {
                     }),
                     reverse: property.bool({
                         key: 'reverse',
-                        label: 'styleeditor.reverse'
+                        label: 'styleeditor.reverse',
+                        isDisabled: (value, properties) =>
+                            properties?.ramp === 'custom'
+                            || properties?.method === 'customInterval'
                     }),
                     attribute: property.select({
                         key: 'attribute',
@@ -318,11 +322,22 @@ const getBlocks = (/* config = {} */) => {
                     method: property.select({
                         key: 'method',
                         label: 'styleeditor.method',
-                        getOptions: ({ methods }) => {
-                            return methods?.map((value) => ({
+                        getOptions: ({ methods, method }) => {
+                            const options = methods?.map((value) => ({
                                 labelId: 'styleeditor.' + value,
                                 value
-                            }));
+                            })) || [];
+                            return [
+                                ...(method === 'customInterval'
+                                    ? [
+                                        {
+                                            labelId: 'styleeditor.' + method,
+                                            value: method
+                                        }
+                                    ]
+                                    : []),
+                                ...options
+                            ];
                         }
                     }),
                     intervals: property.intervals({
@@ -381,7 +396,7 @@ const getBlocks = (/* config = {} */) => {
         Raster: {
             kind: 'Raster',
             glyph: '1-raster',
-            classificationType: 'classification-raster',
+            classificationType: 'classificationRaster',
             hideInputLabel: false,
             hideFilter: true,
             params: [{

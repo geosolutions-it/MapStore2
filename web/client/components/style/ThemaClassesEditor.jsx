@@ -67,7 +67,7 @@ class ThemaClassesEditor extends React.Component {
                     color
                 }) : classItem;
             });
-            this.props.onUpdateClasses(newClassification);
+            this.props.onUpdateClasses(newClassification, 'color');
         }
     };
 
@@ -86,7 +86,7 @@ class ThemaClassesEditor extends React.Component {
                 }
                 return classItem;
             });
-            this.props.onUpdateClasses(newClassification, true);
+            this.props.onUpdateClasses(newClassification, 'interval');
         }
     };
 
@@ -105,7 +105,7 @@ class ThemaClassesEditor extends React.Component {
                 }
                 return classItem;
             });
-            this.props.onUpdateClasses(newClassification);
+            this.props.onUpdateClasses(newClassification, 'interval');
         }
     };
 }

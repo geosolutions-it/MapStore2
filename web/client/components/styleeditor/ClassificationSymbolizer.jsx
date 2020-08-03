@@ -17,7 +17,7 @@ function ClassificationSymbolizer({
     params,
     kind,
     symbolizerKind,
-    classificationType = 'classification',
+    classificationType = 'classificationVector',
     attributes = [],
     onUpdate,
     onReplace,
@@ -95,7 +95,8 @@ function ClassificationSymbolizer({
                     attributes,
                     methods,
                     getColors: handleColors,
-                    bands
+                    bands,
+                    method
                 }}
                 params={mergedParams}
                 onChange={(values) => onUpdate({

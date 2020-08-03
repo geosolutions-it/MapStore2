@@ -47,6 +47,13 @@ const ContainerDimensions = emptyState(
                 }
             },
             {
+                glyph: 'story-title-section',
+                tooltipId: 'geostory.addBannerSection',
+                onClick: () => {
+                    add('sections', 0, SectionTypes.BANNER);
+                }
+            },
+            {
                 glyph: 'story-paragraph-section',
                 tooltipId: 'geostory.addParagraphSection',
                 onClick: () => {
