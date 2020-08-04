@@ -22,6 +22,7 @@ import tooltip from '../misc/enhancers/tooltip';
 import Message from '../I18N/Message';
 import getBlocks from './config/blocks';
 import Rule from './Rule';
+import InfoPopover from '../widgets/widget/InfoPopover';
 
 const Button = tooltip(ButtonRB);
 const FormControl = localizedProps('placeholder')(FormControlRB);
@@ -171,6 +172,14 @@ const RulesEditor = forwardRef(({
         return onChange(newRules);
     }
 
+    function checkOrderWarning(rule, index) {
+        const { symbolizers = [] } = rule;
+        const isTextSymbolizer = !!find(symbolizers, ({ kind }) => kind === 'Text');
+        // some renderer engine draws the labels always on top of the other rules
+        // so we add a warning to explain that the rule order could not match the rendering order
+        return isTextSymbolizer && index > 0;
+    }
+
     return (
         <div
             ref={ref}
@@ -269,6 +278,12 @@ const RulesEditor = forwardRef(({
                             }
                             tools={
                                 <>
+                                {checkOrderWarning(rule, index) && <InfoPopover
+                                    glyph="exclamation-mark"
+                                    bsStyle="warning"
+                                    placement="right"
+                                    title={<Message msgId="styleeditor.warningTextOrderTitle"/>}
+                                    text={<Message msgId="styleeditor.warningTextOrder"/>}/>}
                                 <FilterBuilderPopover
                                     hide={hideFilter}
                                     value={filter}

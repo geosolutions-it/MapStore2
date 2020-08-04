@@ -747,5 +747,105 @@ describe('RulesEditor', () => {
         backend.simulateEndDrag();
     });
 
+    it('should render with text symbolizer', () => {
+        ReactDOM.render(
+            <RulesEditor
+                rules={[
+                    {
+                        name: 'Text rule',
+                        ruleId: 1,
+                        symbolizers: [{
+                            symbolizerId: 1,
+                            kind: 'Text',
+                            color: '#dddddd',
+                            label: 'Label'
+                        }]
+                    }
+                ]}
+            />, document.getElementById('container'));
+        const ruleEditorNode = document.querySelector('.ms-style-rules-editor');
+        expect(ruleEditorNode).toBeTruthy();
+
+        const rulesNode = document.querySelectorAll('.ms-style-rule');
+        expect(rulesNode.length).toBe(1);
+
+        const ruleHeadNode = rulesNode[0].querySelector('.ms-style-rule-head');
+
+        const legendLabelInput = ruleHeadNode.querySelector('input');
+        expect(legendLabelInput).toBeTruthy();
+        expect(legendLabelInput.value).toBe('Text rule');
+
+        const ruleHeadButtonNodes = ruleHeadNode.querySelectorAll('button');
+        expect([...ruleHeadButtonNodes].map(btn => btn.children[0].getAttribute('class'))).toEqual([
+            'glyphicon glyphicon-1-ruler',
+            'glyphicon glyphicon-trash'
+        ]);
+
+        const symbolizersNode = rulesNode[0].querySelectorAll('.ms-symbolizer');
+        expect(symbolizersNode.length).toBe(1);
+
+        const symbolizerFields = symbolizersNode[0].querySelectorAll('.ms-symbolizer-label > span');
+        expect([...symbolizerFields].map(field => field.innerHTML)).toEqual([
+            'styleeditor.label',
+            'styleeditor.fontFamily',
+            'styleeditor.fontColor',
+            'styleeditor.fontSize',
+            'styleeditor.fontStyle',
+            'styleeditor.fontWeight',
+            'styleeditor.haloColor',
+            'styleeditor.haloWidth',
+            'styleeditor.rotation',
+            'styleeditor.offsetX',
+            'styleeditor.offsetY'
+        ]);
+
+        const optionsNodes = rulesNode[0].querySelectorAll('.ms-symbolizer-tools .dropdown-menu li a span');
+
+        expect([...optionsNodes].map(field => field.innerHTML)).toEqual([
+            'styleeditor.simpleStyle',
+            'styleeditor.classificationStyle'
+        ]);
+
+    });
+
+    it('should add warning to text symbolizer with index greater than zero', () => {
+        ReactDOM.render(
+            <RulesEditor
+                rules={[
+                    {
+                        name: 'Text rule',
+                        ruleId: 0,
+                        symbolizers: [{
+                            symbolizerId: 1,
+                            kind: 'Text',
+                            color: '#dddddd',
+                            label: 'Label'
+                        }]
+                    },
+                    {
+                        name: 'Text rule',
+                        ruleId: 1,
+                        symbolizers: [{
+                            symbolizerId: 1,
+                            kind: 'Text',
+                            color: '#dddddd',
+                            label: 'Label'
+                        }]
+                    }
+                ]}
+            />, document.getElementById('container'));
+        const ruleEditorNode = document.querySelector('.ms-style-rules-editor');
+        expect(ruleEditorNode).toBeTruthy();
+
+        const rulesNode = document.querySelectorAll('.ms-style-rule');
+        expect(rulesNode.length).toBe(2);
+
+        let warningPopOverNode = rulesNode[0].querySelector('.mapstore-info-popover');
+        expect(warningPopOverNode).toBeFalsy();
+
+        warningPopOverNode = rulesNode[1].querySelector('.mapstore-info-popover');
+        expect(warningPopOverNode).toBeTruthy();
+    });
+
 });
 
