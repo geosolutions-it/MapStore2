@@ -34,6 +34,7 @@ export default ({
     id,
     urlTooltip,
     formatOptions,
+    bboxCrsOptions,
     buttonStyle,
     saving,
     onChangeServiceFormat = () => {},
@@ -68,6 +69,7 @@ export default ({
                 id={id}
                 service={service}
                 formatOptions={formatOptions}
+                bboxCrsOptions={bboxCrsOptions}
                 buttonStyle={buttonStyle}
                 saving={saving}
                 onChangeServiceFormat={onChangeServiceFormat}

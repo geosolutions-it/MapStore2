@@ -13,7 +13,9 @@ import CommonAdvancedSettings from './CommonAdvancedSettings';
 export default ({
     service,
     formatOptions,
-    onChangeServiceFormat = () => { },
+    bboxCrsOptions,
+    onChangeServiceFormat = () => {},
+    onChangeServiceProperty = () => {},
     ...props
 }) => {
     return (<CommonAdvancedSettings service={service} {...props}>
@@ -28,6 +30,18 @@ export default ({
                     options={formatOptions}
                     onChange={event => onChangeServiceFormat(event && event.value)} />
             </Col >
+        </FormGroup>
+        <FormGroup style={{ display: 'flex', alignItems: 'center', paddingTop: 15}}>
+            <Col xs={6}>
+                <ControlLabel>BBOX CRS</ControlLabel>
+            </Col>
+            <Col xs={6}>
+                <Select
+                    value={service && service.bboxCrs}
+                    clearable
+                    options={bboxCrsOptions}
+                    onChange={event => onChangeServiceProperty('bboxCrs', event && event.value)} />
+            </Col>
         </FormGroup>
     </CommonAdvancedSettings>);
 };

@@ -200,6 +200,7 @@ export default (API) => ({
             .switchMap(() => {
                 const state = store.getState();
                 const newService = newServiceSelector(state);
+                const selectedService = selectedServiceSelector(state);
                 return Rx.Observable.of(newService)
                     // validate
                     .switchMap((service) => API[service.type]?.validate?.(service) ?? ( Rx.Observable.of(service)))
@@ -212,7 +213,8 @@ export default (API) => ({
                                 message: "catalog.notification.addCatalogService",
                                 autoDismiss: 6,
                                 position: "tc"
-                            })
+                            }),
+                            changeSelectedService(selectedService)
                         );
                     })
                     .startWith(savingService(true))
@@ -372,8 +374,9 @@ export default (API) => ({
             .switchMap(({ text }) => {
                 const state = getState();
                 const pageSize = pageSizeSelector(state);
+                const selectedCatalog = selectedCatalogSelector(state);
                 const { type, url } = selectedCatalogSelector(state);
-                return Rx.Observable.of(textSearch({ format: type, url, startPosition: 1, maxRecords: pageSize, text }));
+                return Rx.Observable.of(textSearch({ format: type, url, startPosition: 1, maxRecords: pageSize, text, options: {service: selectedCatalog} }));
             }),
 
     catalogCloseEpic: (action$, store) =>
