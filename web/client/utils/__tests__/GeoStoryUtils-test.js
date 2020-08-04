@@ -200,7 +200,7 @@ describe("GeoStory Utils", () => {
             expect(content.type).toBe(ContentTypes.TEXT);
             expect(content.size).toBe("large");
             expect(content.align).toBe("center");
-            expect(content.theme).toBe("bright");
+            expect(content.theme).toBe("");
             const background = data.contents[0].background;
             expect(background.theme).toBe(undefined);
             expect(background.fit).toBe("cover");
