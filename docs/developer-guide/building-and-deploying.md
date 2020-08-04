@@ -110,3 +110,18 @@ In particular:
 * build for travis
 
 `npm run travis`
+
+## Including the printing engine in your build
+
+The [MapStore printing engine](https://github.com/geosolutions-it/mapfish-print/wiki) is not included in official builds by default.
+
+To build your own version of MapStore with the printing module included, you can enable the
+**printing** profile:
+
+`./build.sh [version_identifier] -Pprinting`
+
+It is also possible to build only the printing extension as a zip (to be unzipped on your deployed MapStore). To do that:
+
+`mvn clean install -Pprintingbundle`
+
+The zip bundle will be in printing/target/mapstore-printing.zip.

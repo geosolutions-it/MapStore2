@@ -47,6 +47,13 @@ const ContainerDimensions = emptyState(
                 }
             },
             {
+                glyph: 'story-title-section',
+                tooltipId: 'geostory.addBannerSection',
+                onClick: () => {
+                    add('sections', 0, SectionTypes.BANNER);
+                }
+            },
+            {
                 glyph: 'story-paragraph-section',
                 tooltipId: 'geostory.addParagraphSection',
                 onClick: () => {
@@ -107,7 +114,8 @@ const Cascade = ({
     isContentFocused = false,
     getSize = defaultGetSize,
     theme = {},
-    mediaViewer
+    mediaViewer,
+    contentToolbar
 }) => (<BorderLayout  className={`ms-cascade-story ms-${mode}`}>
     <ContainerDimensions
         sections={sections}
@@ -121,7 +129,7 @@ const Cascade = ({
                 id="ms-sections-container"
                 className={`ms-sections-container${sizeClassName}`}
                 style={{
-                    ...storyTheme,
+                    ...storyTheme?.general,
                     ...isContentFocused && { overflow: 'hidden' }
                 }}>
                 {
@@ -147,6 +155,7 @@ const Cascade = ({
                                 cover={cover}
                                 storyTheme={storyTheme}
                                 mediaViewer={mediaViewer}
+                                contentToolbar={contentToolbar}
                             />
                         );
                     })

@@ -13,7 +13,7 @@ import assign from 'object-assign';
 import SecurityUtils from '../../../../utils/SecurityUtils';
 import WMTSUtils from '../../../../utils/WMTSUtils';
 import WMTS from '../../../../utils/leaflet/WMTS';
-import { isArray, isObject, head } from 'lodash';
+import { isArray } from 'lodash';
 import { isVectorFormat } from '../../../../utils/VectorTileUtils';
 
 L.tileLayer.wmts = function(urls, options, matrixOptions) {
@@ -42,22 +42,20 @@ function getWMSURLs(urls) {
     return urls.map((url) => url.split("\?")[0]);
 }
 
-function getMatrixIds(matrix, srs) {
-    return isObject(matrix) && matrix[srs] || matrix;
-}
-
 const createLayer = options => {
     const urls = getWMSURLs(isArray(options.url) ? options.url : [options.url]);
     const queryParameters = wmtsToLeafletOptions(options) || {};
     urls.forEach(url => SecurityUtils.addAuthenticationParameter(url, queryParameters, options.securityToken));
     const srs = CoordinatesUtils.normalizeSRS(options.srs || 'EPSG:3857', options.allowedSRS);
+    const { tileMatrixSet, matrixIds } = WMTSUtils.getTileMatrix(options, srs);
     return L.tileLayer.wmts(urls, queryParameters, {
         tileMatrixPrefix: options.tileMatrixPrefix || queryParameters.tileMatrixSet + ':' || srs + ':',
         originY: options.originY || 20037508.3428,
         originX: options.originX || -20037508.3428,
         ignoreErrors: options.ignoreErrors || false,
-        matrixIds: options.matrixIds && getMatrixIds(options.matrixIds, queryParameters.tileMatrixSet || srs) || null,
-        matrixSet: head(options.tileMatrixSet.filter(t => t['ows:Identifier'] === queryParameters.tileMatrixSet)) || null
+        // TODO: use matrix IDs sorted from getTileMatrix
+        matrixIds: matrixIds,
+        matrixSet: tileMatrixSet
     });
 };
 

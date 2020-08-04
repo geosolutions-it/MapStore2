@@ -51,8 +51,8 @@ describe("Test GroupCard Component", () => {
         let comp = ReactDOM.render(
             <GroupCard group={group1} />, document.getElementById("container"));
         expect(comp).toExist();
-        let items = document.querySelectorAll('#container .gridcard .user-data-container > div');
-        let renderName = items[1];
+        let items = document.querySelectorAll('#container .gridcard .user-data-container .user-card-info-container > div');
+        let renderName = items[0];
         expect(renderName.innerHTML).toBe(group1.groupName);
     });
 });

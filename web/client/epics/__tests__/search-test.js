@@ -515,5 +515,4 @@ describe('search Epics', () => {
             done();
         }, {layers: {flat: [{name: "layerName", url: "base/web/client/test-resources/wms/GetFeature.json", visibility: true, queryable: true, type: "wms"}]}});
     });
-
 });

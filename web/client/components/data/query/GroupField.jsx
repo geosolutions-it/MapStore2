@@ -8,7 +8,7 @@ const PropTypes = require('prop-types');
  */
 const React = require('react');
 
-const {Grid, Row, Col, Button, Glyphicon, Panel, Tooltip} = require('react-bootstrap');
+const {Button, Glyphicon, Tooltip} = require('react-bootstrap');
 const Toolbar = require('../../misc/toolbar/Toolbar');
 const OverlayTrigger = require('../../misc/OverlayTrigger');
 
@@ -37,7 +37,11 @@ class GroupField extends React.Component {
         addButtonIcon: PropTypes.string,
         logicComboOptions: PropTypes.array,
         attributePanelExpanded: PropTypes.bool,
-        actions: PropTypes.object
+        actions: PropTypes.object,
+        listOperators: PropTypes.array,
+        stringOperators: PropTypes.array,
+        booleanOperators: PropTypes.array,
+        defaultOperators: PropTypes.array
     };
 
     static contextTypes = {
@@ -70,7 +74,11 @@ class GroupField extends React.Component {
             onChangeCascadingValue: () => {},
             onExpandAttributeFilterPanel: () => {},
             toggleMenu: () => {}
-        }
+        },
+        listOperators: ["="],
+        stringOperators: ["=", "like", "ilike", "isNull"],
+        booleanOperators: ["="],
+        defaultOperators: ["=", ">", "<", ">=", "<=", "<>", "><"]
     };
 
     getComboValues = (selected, attributes) => {
@@ -102,16 +110,16 @@ class GroupField extends React.Component {
         let type = selectedAttribute && selectedAttribute.type ? selectedAttribute.type : "";
         switch (type) {
         case "list": {
-            return ["="];
+            return this.props.listOperators;
         }
         case "string": {
-            return ["=", "like", "ilike", "isNull"];
+            return this.props.stringOperators;
         }
         case "boolean": {
-            return ["="];
+            return this.props.booleanOperators;
         }
         default:
-            return ["=", ">", "<", ">=", "<=", "<>", "><"];
+            return this.props.defaultOperators;
         }
     };
 
@@ -130,62 +138,56 @@ class GroupField extends React.Component {
                     <Glyphicon glyph={this.props.removeButtonIcon}/>
                 </Button></OverlayTrigger>);
         return (
-            <div key={filterField.rowId}>
-                <Row className="filter-field-row filter-field-row">
-                    <Col xs={12}>
-                        <FilterField
-                            deleteButton={deleteButton}
-                            attributes={this.props.attributes}
+            <FilterField
+                key={filterField.rowId}
+                deleteButton={deleteButton}
+                attributes={this.props.attributes}
+                filterField={filterField}
+                operatorOptions={this.getOperator(selectedAttribute)}
+                onUpdateField={this.props.actions.onUpdateFilterField}
+                toggleMenu={this.props.actions.toggleMenu}
+                maxFeaturesWPS={this.props.maxFeaturesWPS}
+                onUpdateExceptionField={this.props.actions.onUpdateExceptionField}
+                onChangeCascadingValue={this.props.actions.onChangeCascadingValue}>
+                <ComboField
+                    attType="list"
+                    valueField={'id'}
+                    textField={'name'}
+                    fieldOptions={comboValues ? comboValues : []}
+                    comboFilter={"contains"}/>
+                <DateField
+                    attType="date"
+                    dateEnabled
+                    operator={filterField.operator}/>
+                <DateField
+                    attType="date-time"
+                    timeEnabled
+                    dateEnabled
+                    operator={filterField.operator}/>
+                <DateField
+                    attType="time"
+                    timeEnabled
+                    dateEnabled={false}
+                    operator={filterField.operator}/>
+                <NumberField
+                    operator={filterField.operator}
+                    attType="number"/>
+                {
+                    // flag to swtich from AutocompleteField to TextField
+                    this.props.autocompleteEnabled ?
+                        (<AutocompleteField
                             filterField={filterField}
-                            operatorOptions={this.getOperator(selectedAttribute)}
-                            onUpdateField={this.props.actions.onUpdateFilterField}
-                            toggleMenu={this.props.actions.toggleMenu}
-                            maxFeaturesWPS={this.props.maxFeaturesWPS}
-                            onUpdateExceptionField={this.props.actions.onUpdateExceptionField}
-                            onChangeCascadingValue={this.props.actions.onChangeCascadingValue}>
-                            <ComboField
-                                attType="list"
-                                valueField={'id'}
-                                textField={'name'}
-                                fieldOptions={comboValues ? comboValues : []}
-                                comboFilter={"contains"}/>
-                            <DateField
-                                attType="date"
-                                dateEnabled
-                                operator={filterField.operator}/>
-                            <DateField
-                                attType="date-time"
-                                timeEnabled
-                                dateEnabled
-                                operator={filterField.operator}/>
-                            <DateField
-                                attType="time"
-                                timeEnabled
-                                dateEnabled={false}
-                                operator={filterField.operator}/>
-                            <NumberField
-                                operator={filterField.operator}
-                                attType="number"/>
-                            {
-                                // flag to swtich from AutocompleteField to TextField
-                                this.props.autocompleteEnabled ?
-                                    (<AutocompleteField
-                                        filterField={filterField}
-                                        attType="string"/>) :
-                                    (<TextField
-                                        operator={filterField.operator}
-                                        attType="string"/>)
-                            }
+                            attType="string"/>) :
+                        (<TextField
+                            operator={filterField.operator}
+                            attType="string"/>)
+                }
 
-                            <ComboField
-                                fieldOptions={['true', 'false']}
-                                attType="boolean"
-                                comboFilter={"contains"}/>
-                        </FilterField>
-                    </Col>
-
-                </Row>
-            </div>
+                <ComboField
+                    fieldOptions={['true', 'false']}
+                    attType="boolean"
+                    comboFilter={"contains"}/>
+            </FilterField>
         );
     };
     renderGroupButtons = groupField => {
@@ -219,34 +221,23 @@ class GroupField extends React.Component {
         }
         return (<Toolbar buttons={buttons} btnDefaultProps={{
         }} />);
-        /*
-        return (<Toolbar className="pull-right">
-            {[removeButton, addButton, addCondition]}
-        </ButtonGroup>);
-        */
     };
     renderGroupHeader = (groupField) => {
         return (
-            <Grid fluid>
-                <Row className="logicHeader filter-field-row">
-                    <Col xs={12}>
-                        <Row className="filter-field-row">
-                            <div key="filter-logic-header" className="filter-logig-header-text m-label">
-                                <span className="group_label_a"><I18N.Message msgId={"queryform.attributefilter.group_label_a"}/></span>
-                                &nbsp;<StringSelector
-                                    options={this.props.logicComboOptions}
-                                    valueField={"logic"}
-                                    value={groupField.logic}
-                                    onSelect={ v => this.props.actions.onUpdateLogicCombo(groupField.id, v)}
-                                    labelRenderer={ ({name} = {}) => <I18N.Message msgId={name} />}
-                                />&nbsp;
-                                <span className="group_label_b"><I18N.Message msgId={"queryform.attributefilter.group_label_b"}/></span>
-                                <span className="pull-right">{this.renderGroupButtons(groupField)}</span>
-                            </div>
-                        </Row>
-                    </Col>
-                </Row>
-            </Grid>
+            <div className="logicHeader filter-logic-header">
+                <div key="filter-logic-header" className="filter-logic-header-text m-label">
+                    <span className="group_label_a"><I18N.Message msgId={"queryform.attributefilter.group_label_a"}/></span>
+                    &nbsp;<StringSelector
+                        options={this.props.logicComboOptions}
+                        valueField={"logic"}
+                        value={groupField.logic}
+                        onSelect={ v => this.props.actions.onUpdateLogicCombo(groupField.id, v)}
+                        labelRenderer={ ({name} = {}) => <I18N.Message msgId={name} />}
+                    />&nbsp;
+                    <span className="group_label_b"><I18N.Message msgId={"queryform.attributefilter.group_label_b"}/></span>
+                </div>
+                {this.renderGroupButtons(groupField)}
+            </div>
         );
     };
 
@@ -268,10 +259,10 @@ class GroupField extends React.Component {
         });
 
         return (
-            <Panel className="mapstore-conditions-group" key={groupField.id}>
+            <div className="mapstore-conditions-group" key={groupField.id}>
                 {this.renderGroupHeader(groupField)}
                 <div className="query-content">{container}</div>
-            </Panel>
+            </div>
         );
     };
 

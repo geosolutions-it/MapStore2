@@ -81,7 +81,7 @@ export const AlignButtonToolbar = ({editMap: disabled = false, align, sectionTyp
         onSelect={(selected) => update('align', selected)}/>
     );
 
-export const ThemeButtonToolbar = ({editMap: disabled = false, theme, storyTheme, align, sectionType, update = () => {}, themeProps, size }) =>
+export const ThemeButtonToolbar = ({editMap: disabled = false, theme, storyTheme, align, sectionType, update = () => {}, themeProps, size}) =>
     (<ToolbarDropdownButton
         value={theme}
         noTooltipWhenDisabled
@@ -99,8 +99,7 @@ export const ThemeButtonToolbar = ({editMap: disabled = false, theme, storyTheme
         }}
         options={[{
             value: '',
-            isActive: (current) =>
-                current === undefined || current === ''
+            isActive: (current) => current === undefined || current === ''
                 || isObject(current) && (current.value === undefined || current.value === ''),
             label: <Message msgId="geostory.contentToolbar.defaultThemeLabel"/>
         }, {

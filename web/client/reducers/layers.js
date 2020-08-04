@@ -343,7 +343,8 @@ function layers(state = { flat: [] }, action) {
             title: action.group,
             name: id,
             nodes: [],
-            expanded: true
+            expanded: true,
+            ...action.options
         }, action.parent);
         return assign({}, state, {
             groups: newGroups

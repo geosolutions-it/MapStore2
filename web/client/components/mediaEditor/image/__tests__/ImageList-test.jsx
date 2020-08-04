@@ -22,8 +22,21 @@ describe('ImageList component', () => {
         setTimeout(done);
     });
     it('ImageList rendering with defaults', () => {
-        ReactDOM.render(<ImageList />, document.getElementById("container"));
+        ReactDOM.render(<ImageList/>, document.getElementById("container"));
         const container = document.getElementById('container');
-        expect(container.querySelector('.ms-imageList')).toExist();
+        expect(container.querySelector('.ms-imageList')).toBeTruthy();
+        expect(container.querySelector('.msEmptyListMessage')).toBeTruthy();
+    });
+    it('does not renders empty list message', () => {
+        ReactDOM.render(<ImageList resources={[
+            {
+                id: "test",
+                data: {}
+            }
+        ]} />, document.getElementById("container"));
+        const container = document.getElementById('container');
+        expect(container.querySelector('.ms-imageList')).toBeTruthy();
+        expect(container.querySelector('.msEmptyListMessage')).toBeFalsy();
+
     });
 });

@@ -1315,6 +1315,9 @@
         "showEmptyMessageGFI": "Hiển thị thông báo kết quả trống trong bảng GetFeatureInfo",
         "showMore": "Hiển thị nhiều hơn...",
         "showMousePositionCoordinates": "Hiển thị / ẩn tọa độ",
+        "showCrsSelector": "Select projection",
+        "crsSelectorFilterPlaceholder": "Filter projection",
+        "crsSelectorSelectedCRS": "Selected:",
         "snapshot": {
             "date": "Ngày",
             "downloadingSnapshots": "tạo ảnh chụp đang chờ xử lý",
@@ -1675,7 +1678,7 @@
             "passwordError": "Lỗi thay đổi mật khẩu",
             "passwordInvalid": "Mật khẩu không hợp lệ",
             "passwordMessage": "Mật khẩu phải chứa ít nhất 6 ký tự",
-            "passwordMinlenght": "Mật khẩu của bạn phải có ít nhất ký tự {minSize} ",
+            "passwordMinlenght": "Mật khẩu của bạn phải có ít nhất ký tự {data} ",
             "retypePwd": "Gõ lại mật khẩu",
             "signIn": "Đăng nhập",
             "username": "Tên đăng nhập"

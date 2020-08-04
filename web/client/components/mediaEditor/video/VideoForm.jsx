@@ -15,7 +15,6 @@ import BorderLayout from '../../layout/BorderLayout';
 import Toolbar from '../../misc/toolbar/Toolbar';
 import withConfirm from '../../misc/withConfirm';
 import Thumbnail from '../../misc/Thumbnail';
-import SwitchButton from '../../misc/switch/SwitchButton';
 import { getVideoThumbnail } from '../../../utils/ThumbnailUtils';
 
 const form = [
@@ -69,12 +68,14 @@ const VideoThumbnail = ({
         };
     }, []);
 
-    // try to generate a thumbnail from video when it's missing or removed
-    // stop when throws an error
-    const [loading, setLoading] = useState(false);
-    const [generateProcessError, setGenerateProcessError] = useState(false);
+    const [errors, setErrors] = useState();
+    const [loading, setLoading] = useState();
+    // try to automatically create a thumbnail from video source
+    // when thumbnail is missing
+    const [createThumbnail, setCreateThumbnail] = useState(!thumbnail);
     useEffect(() => {
-        if (src && !thumbnail && !loading && !generateProcessError) {
+        if (src && createThumbnail) {
+            setErrors(undefined);
             setLoading(true);
             getVideoThumbnail(src, {
                 width: 640,
@@ -84,18 +85,19 @@ const VideoThumbnail = ({
             }).then((response) => {
                 if (mounted.current) {
                     onUpdate(response);
+                    setCreateThumbnail(false);
                     setLoading(false);
                 }
             }).catch(() => {
                 if (mounted.current) {
+                    setCreateThumbnail(false);
+                    setErrors([ 'CREATE' ]);
                     setLoading(false);
-                    setGenerateProcessError(true);
                 }
             });
         }
-    }, [ src, thumbnail, loading, generateProcessError ]);
+    }, [ src, createThumbnail ]);
 
-    const [errors, setErrors] = useState();
     return (
         <>
         <Thumbnail
@@ -112,19 +114,35 @@ const VideoThumbnail = ({
                 onUpdate(newImageData);
                 setErrors(undefined);
             }}
-            onRemove={() => {
-                onUpdate(undefined);
-                setErrors(undefined);
-                // clear error to generate a new thumbnail
-                setGenerateProcessError(false);
-            }}
             onError={(err) => setErrors(err)}
+            toolbarButtons={[
+                {
+                    glyph: 'refresh',
+                    tooltipId: 'mediaEditor.mediaPicker.createVideoThumbnail',
+                    visible: !thumbnail,
+                    onClick: (event) => {
+                        event.stopPropagation();
+                        setCreateThumbnail(true);
+                    }
+                },
+                {
+                    glyph: 'trash',
+                    tooltipId: 'removeThumbnail',
+                    visible: !!thumbnail,
+                    onClick: (event) => {
+                        event.stopPropagation();
+                        onUpdate(undefined);
+                        setErrors(undefined);
+                    }
+                }
+            ]}
         />
         {errors && errors.length > 0 &&
         <Alert bsStyle="danger" className="text-center">
-            <div><Message msgId="map.error"/></div>
+            {errors.indexOf('CREATE') === -1 && <div><Message msgId="map.error"/></div>}
             {errors.indexOf('FORMAT') !== -1 && <div><Message msgId="map.errorFormat" /></div>}
             {errors.indexOf('SIZE') !== -1 && <div><Message msgId="map.errorSize" /></div>}
+            {errors.indexOf('CREATE') !== -1 && <div><Message msgId="mediaEditor.mediaPicker.thumbnailCreateError" /></div>}
         </Alert>}
         </>
     );
@@ -196,14 +214,6 @@ const VideoForm = ({
                             }} />
                     </FormGroup>
                 ))}
-                <FormGroup key="autoplay">
-                    <ControlLabel><Message msgId="mediaEditor.mediaPicker.autoplay"/></ControlLabel>
-                    <SwitchButton
-                        onChange={() => setProperties({ ...properties, autoplay: !properties.autoplay })}
-                        className="ms-geostory-settings-switch"
-                        checked={properties.autoplay}
-                    />
-                </FormGroup>
             </Form>
         </BorderLayout>
     );

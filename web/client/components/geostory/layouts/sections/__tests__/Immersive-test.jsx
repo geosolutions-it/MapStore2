@@ -112,13 +112,12 @@ describe('Immersive component', () => {
         expect(columnToolbar.querySelector('button .glyphicon-align-center')).toExist(); // align tool
         expect(columnToolbar.querySelector('button .glyphicon-dropper')).toExist(); // theme
 
-        // inner media and image contents must have edit, resize and align tools
+        // inner media and image contents must have edit and resize
         const innerMediaToolbar = document.querySelector('.ms-column-contents .ms-content-image .ms-content-toolbar .btn-group');
         expect(innerMediaToolbar).toExist();
-        expect(innerMediaToolbar.querySelectorAll('button').length).toBe(4);
+        expect(innerMediaToolbar.querySelectorAll('button').length).toBe(3);
         expect(innerMediaToolbar.querySelector('button .glyphicon-pencil')).toExist(); // edit tool
         expect(innerMediaToolbar.querySelector('button .glyphicon-resize-horizontal')).toExist(); // resize tool
-        expect(innerMediaToolbar.querySelector('button .glyphicon-align-center')).toExist(); // align tool
         expect(innerMediaToolbar.querySelector('button .glyphicon-trash')).toExist(); // delete tool
     });
 
@@ -173,5 +172,61 @@ describe('Immersive component', () => {
         const container = document.getElementById('container');
         const el = container.querySelector('.ms-section-immersive.ms-expandable-background');
         expect(el).toExist();
+    });
+    it('should render video toolbar on background (fit cover)', () => {
+        const CONTENTS_VIDEO = [{
+            id: '000',
+            type: 'column',
+            background: {
+                type: 'video',
+                fit: 'cover'
+            },
+            contents: [{
+                type: 'text',
+                html: '<p>column</p>'
+            }]
+        }];
+        ReactDOM.render(
+            <Provider store={{
+                getState: () => {},
+                subscribe: () => {},
+                dispatch: () => {}
+            }}>
+                <Immersive mode={Modes.EDIT} contents={CONTENTS_VIDEO} />
+            </Provider>
+            , document.getElementById("container"));
+        const container = document.getElementById('container');
+
+        const contentToolbar = container.querySelector('.ms-content-toolbar');
+        expect(contentToolbar).toExist();
+        testToolbarButtons(['pencil', 'fit-contain', 'size-extra-large', 'align-center', 'dropper', 'audio'], container);
+    });
+    it('should render video toolbar on background (fit contain)', () => {
+        const CONTENTS_VIDEO = [{
+            id: '000',
+            type: 'column',
+            background: {
+                type: 'video',
+                fit: 'contain'
+            },
+            contents: [{
+                type: 'text',
+                html: '<p>column</p>'
+            }]
+        }];
+        ReactDOM.render(
+            <Provider store={{
+                getState: () => {},
+                subscribe: () => {},
+                dispatch: () => {}
+            }}>
+                <Immersive mode={Modes.EDIT} contents={CONTENTS_VIDEO} />
+            </Provider>
+            , document.getElementById("container"));
+        const container = document.getElementById('container');
+
+        const contentToolbar = container.querySelector('.ms-content-toolbar');
+        expect(contentToolbar).toExist();
+        testToolbarButtons(['pencil', 'fit-cover', 'size-extra-large', 'align-center', 'dropper', 'audio', 'play-circle', 'loop'], container);
     });
 });

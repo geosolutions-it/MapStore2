@@ -23,6 +23,43 @@ describe('TOCItemsSettings - getStyleTabPlugin', () => {
         };
         expect(getStyleTabPlugin(DEFAULT_TEST_PARAMS)).toEqual({});
     });
+    it('getStyleTabPlugin gets thematic plugin if present and the layer is wfs', () => {
+        const DEFAULT_TEST_PARAMS = {
+            ...BASE_STYLE_TEST_DATA,
+            element: {
+                search: {
+                    type: "wfs",
+                    url: "something"
+                }
+            },
+            items: [{
+                target: 'style',
+                name: 'ThematicLayer',
+                selector: (props) => {
+                    return props?.element?.search;
+                }
+            }]
+        };
+        const toolbar = getStyleTabPlugin(DEFAULT_TEST_PARAMS).toolbar;
+        expect(toolbar).toBeTruthy();
+        expect(toolbar.length).toBe(2);
+    });
+    it('getStyleTabPlugin exclude thematic plugin if layer is not', () => {
+        const DEFAULT_TEST_PARAMS = {
+            ...BASE_STYLE_TEST_DATA,
+            element: {
+                type: "asd"
+            },
+            items: [{
+                target: 'style',
+                name: 'ThematicLayer',
+                selector: (props) => {
+                    return props?.element?.search;
+                }
+            }]
+        };
+        expect(getStyleTabPlugin(DEFAULT_TEST_PARAMS)).toEqual({});
+    });
     it('defaultSettingsTabs', () => {
         {
             const items = defaultSettingsTabs(BASE_STYLE_TEST_DATA);

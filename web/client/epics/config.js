@@ -7,7 +7,7 @@
  */
 import { Observable } from 'rxjs';
 import axios from '../libs/ajax';
-import { get, merge } from 'lodash';
+import { get, merge, isNaN } from 'lodash';
 import {
     LOAD_NEW_MAP,
     LOAD_MAP_CONFIG,
@@ -61,6 +61,10 @@ const mapFlowWithOverride = (configName, mapId, config, mapInfo, state, override
     // certain epics always function correctly
     // i.e. FeedbackMask disables correctly after load
     // TODO: investigate the root causes of the problem and come up with a better solution, if possible
+
+    // mapstore recognizes alphanumeric map id as static json
+    // avoid map info requests if the configuration is static
+    const isNumberId = !isNaN(parseFloat(mapId));
     return (
         config ?
             Observable.of({data: merge({}, config, overrideConfig), staticConfig: true}).delay(100) :
@@ -77,7 +81,7 @@ const mapFlowWithOverride = (configName, mapId, config, mapInfo, state, override
                     return Observable.of(configureError({messageId: `map.errors.loading.projectionError`, errorMessageParams: {projection}}, mapId));
                 }
                 const mapConfig = merge({}, response.data, overrideConfig);
-                return mapId ? Observable.of(
+                return isNumberId ? Observable.of(
                     configureMap(mapConfig, mapId),
                     mapInfo ? mapInfoLoaded(mapInfo) : loadMapInfo(mapId),
                     ...(response.staticConfig ? [] : [saveMapConfig(response.data)])
@@ -91,7 +95,7 @@ const mapFlowWithOverride = (configName, mapId, config, mapInfo, state, override
             try {
                 const data = JSON.parse(response.data);
                 const mapConfig = merge({}, data, overrideConfig);
-                return mapId ? Observable.of(configureMap(mapConfig, mapId), mapInfo ? mapInfoLoaded(mapInfo) : loadMapInfo(mapId)) :
+                return isNumberId ? Observable.of(configureMap(mapConfig, mapId), mapInfo ? mapInfoLoaded(mapInfo) : loadMapInfo(mapId)) :
                     Observable.of(
                         configureMap(mapConfig, mapId),
                         ...(mapInfo ? [mapInfoLoaded(mapInfo)] : []),

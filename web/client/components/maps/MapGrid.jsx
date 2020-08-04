@@ -22,6 +22,7 @@ class MapGrid extends React.Component {
         maps: PropTypes.array,
         currentMap: PropTypes.object,
         fluid: PropTypes.bool,
+        showAPIShare: PropTypes.bool,
         viewerUrl: PropTypes.oneOfType([PropTypes.string, PropTypes.func]),
         mapType: PropTypes.string,
         colProps: PropTypes.object,
@@ -53,6 +54,7 @@ class MapGrid extends React.Component {
         mapType: 'leaflet',
         bottom: "",
         fluid: true,
+        showAPIShare: true,
         colProps: {
             xs: 12,
             sm: 6
@@ -105,6 +107,7 @@ class MapGrid extends React.Component {
                         detailsSheetActions={this.props.detailsSheetActions}
                         onMapDelete={this.props.deleteMap}
                         onShare={this.props.onShare}
+                        showAPIShare={this.props.showAPIShare}
                         onUpdateAttribute={this.props.onUpdateAttribute}/>
                 </Col>;
         });

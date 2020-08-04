@@ -18,6 +18,7 @@ const Message = require('../../I18N/Message');
 const ResizableModal = require('../../misc/ResizableModal');
 
 const FileUtils = require('../../../utils/FileUtils');
+const {ANNOTATION_TYPE} = require('../../../utils/AnnotationsUtils');
 const {Promise} = require('es6-promise');
 
 class SelectAnnotationsFile extends React.Component {
@@ -86,7 +87,7 @@ class SelectAnnotationsFile extends React.Component {
                 this.setState(() => ({error: null}));
             }
             // Get only features
-            const annotations = contents.filter(({geoJSON, errors = []}) => errors.length === 0 || geoJSON.type === 'ms2-annotations').reduce((acc, {geoJSON}) => acc.concat(geoJSON.features || geoJSON), []);
+            const annotations = contents.filter(({geoJSON, errors = []}) => errors.length === 0 || geoJSON.type === ANNOTATION_TYPE).reduce((acc, {geoJSON}) => acc.concat(geoJSON.features || geoJSON), []);
             if (annotations.length === 0) {
                 throw new Error();
             }

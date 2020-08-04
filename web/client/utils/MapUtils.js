@@ -282,10 +282,19 @@ const isNearlyEqual = function(a, b) {
     return a.toFixed(12) - b.toFixed(12) === 0;
 };
 
+/**
+ * checks if maps has changed by looking at center or zoom
+ * @param {object} oldMap map object
+ * @param {object} newMap map object
+ */
 function mapUpdated(oldMap, newMap) {
-    const centersEqual = isNearlyEqual(newMap.center.x, oldMap.center.x) &&
-                          isNearlyEqual(newMap.center.y, oldMap.center.y);
-    return !centersEqual || newMap.zoom !== oldMap.zoom;
+    if (oldMap && !isEmpty(oldMap) &&
+        newMap && !isEmpty(newMap)) {
+        const centersEqual = isNearlyEqual(newMap?.center?.x, oldMap?.center?.x) &&
+                              isNearlyEqual(newMap?.center?.y, oldMap?.center?.y);
+        return !centersEqual || newMap?.zoom !== oldMap?.zoom;
+    }
+    return false;
 }
 
 /* Transform width and height specified in meters to the units of the specified projection */
@@ -309,13 +318,14 @@ const groupSaveFormatted = (node) => {
 };
 
 
-function saveMapConfiguration(currentMap, currentLayers, currentGroups, currentBackgrounds, textSearchConfig, additionalOptions) {
+function saveMapConfiguration(currentMap, currentLayers, currentGroups, currentBackgrounds, textSearchConfig, bookmarkSearchConfig, additionalOptions) {
 
     const map = {
         center: currentMap.center,
         maxExtent: currentMap.maxExtent,
         projection: currentMap.projection,
         units: currentMap.units,
+        mapInfoControl: currentMap.mapInfoControl,
         zoom: currentMap.zoom,
         mapOptions: currentMap.mapOptions || {}
     };
@@ -370,7 +380,7 @@ function saveMapConfiguration(currentMap, currentLayers, currentGroups, currentB
     return {
         version: 2,
         // layers are defined inside the map object
-        map: assign({}, map, {layers: formattedLayers, groups, backgrounds, text_search_config: textSearchConfig},
+        map: assign({}, map, {layers: formattedLayers, groups, backgrounds, text_search_config: textSearchConfig, bookmark_search_config: bookmarkSearchConfig},
             !isEmpty(sources) && {sources} || {}),
         ...additionalOptions
     };
@@ -482,6 +492,47 @@ const mergeMapConfigs = (cfg1 = {}, cfg2 = {}) => {
                     ]
                 }), {}),
             widgets: [...get(widgetsConfig1, 'widgets', []), ...get(widgetsConfig2, 'widgets', [])]
+        },
+        timelineData: {
+            ...get(cfg1, 'timelineData', {}),
+            ...get(cfg2Fixed, 'timelineData', {})
+        },
+        dimensionData: {
+            ...get(cfg1, 'dimensionData', {}),
+            ...get(cfg2Fixed, 'dimensionData', {})
+        }
+    };
+};
+
+const addRootParentGroup = (cfg = {}, groupTitle = 'RootGroup') => {
+    const groups = get(cfg, 'map.groups', []);
+    const groupsWithoutDefault = groups.filter(({id}) => id !== 'Default');
+    const defaultGroup = find(groups, ({id}) => id === 'Default');
+    const fixedDefaultGroup = defaultGroup && {
+        id: uuidv1(),
+        title: groupTitle,
+        expanded: defaultGroup.expanded
+    };
+    const groupsWithFixedDefault = defaultGroup ?
+        [
+            ...groupsWithoutDefault.map(({id, ...other}) => ({
+                id: `${fixedDefaultGroup.id}.${id}`,
+                ...other
+            })),
+            fixedDefaultGroup
+        ] :
+        groupsWithoutDefault;
+
+    return {
+        ...cfg,
+        map: {
+            ...cfg.map,
+            groups: groupsWithFixedDefault,
+            layers: get(cfg, 'map.layers', []).map(({group, ...other}) => ({
+                ...other,
+                group: defaultGroup && group !== 'background' && (group === 'Default' || !group) ? fixedDefaultGroup.id :
+                    defaultGroup && find(groupsWithFixedDefault, ({id}) => id.slice(id.indexOf('.') + 1) === group)?.id || group
+            }))
         }
     };
 };
@@ -576,6 +627,7 @@ const compareMapChanges = (map1 = {}, map2 = {}) => {
         'map.layers',
         'map.backgrounds',
         'map.text_search_config',
+        'map.bookmark_search_config',
         'map.text_serch_config',
         'map.zoom',
         'widgetsConfig'
@@ -646,6 +698,7 @@ module.exports = {
     saveMapConfiguration,
     generateNewUUIDs,
     mergeMapConfigs,
+    addRootParentGroup,
     isSimpleGeomType,
     getSimpleGeomType,
     getIdFromUri,

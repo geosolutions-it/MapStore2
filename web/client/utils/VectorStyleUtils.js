@@ -11,8 +11,10 @@ const {set} = require('./ImmutableUtils');
 const {colorToRgbaStr} = require('./ColorUtils');
 const axios = require('axios');
 const SLDParser = require('geostyler-sld-parser').default;
+const GeoCSSParser = require('geostyler-geocss-parser').default;
 const StyleParsers = {
-    sld: new SLDParser()
+    sld: new SLDParser(),
+    css: new GeoCSSParser()
 };
 
 /**
@@ -49,7 +51,7 @@ const isFillStyle = (style = {}, attributes = ["fillColor", "fillOpacity"]) => {
  * @param {string[]} attibutes of a text style
  * @return {boolean} if the style is compatible with an ol.Text style
 */
-const isTextStyle = (style = {}, attributes = ["label", "font", "fontFamily", "fontSize", "fontStyle", "fontWeight", "textAlign" ]) => {
+const isTextStyle = (style = {}, attributes = ["label", "font", "fontFamily", "fontSize", "fontStyle", "fontWeight", "textAlign", "textRotationDeg"]) => {
     return isAttrPresent(style, attributes);
 };
 

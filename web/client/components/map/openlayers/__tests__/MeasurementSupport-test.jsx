@@ -353,4 +353,153 @@ describe('Openlayers MeasurementSupport', () => {
         expect(changedFeatures[0].properties.values[0].formattedValue).toContain("T");
         expect(changedFeatures[0].properties.values[0].type).toContain("bearing");
     });
+    it('test drawState restore on geomType change', () => {
+        let cmp = renderMeasurement();
+        cmp = renderMeasurement({
+            measurement: {
+                geomType: "LineString",
+                lineMeasureEnabled: true,
+                updatedByUI: false,
+                showLabel: true
+            },
+            uom
+        });
+
+        const initialOverlayCount = map.getOverlays().getLength();
+
+        const geometry = new LineString([[15.0, 45.0], [15.0, 45.0]]);
+        const feature = new Feature({
+            geometry,
+            name: 'My line'
+        });
+
+        cmp.drawInteraction.dispatchEvent({
+            type: 'drawstart',
+            feature
+        });
+        expect(cmp.sketchFeature).toExist();
+        expect(cmp.savedDrawState).toExist();
+        expect(cmp.savedDrawState.textLabels).toEqual([]);
+        expect(cmp.savedDrawState.segmentLengths).toEqual([]);
+        expect(cmp.savedDrawState.measureTooltipsLength).toBe(0);
+        expect(cmp.savedDrawState.segmentOverlaysLength).toBe(0);
+        cmp.sketchFeature.getGeometry().setCoordinates([[15.0, 45.0], [15.0, 40.0]]);
+        cmp.sketchFeature.getGeometry().appendCoordinate([16.0, 35.0]);
+        expect(map.getOverlays().getLength()).toBe(initialOverlayCount + 3);
+
+        cmp = renderMeasurement({
+            measurement: {
+                geomType: "Bearing",
+                updatedByUI: false,
+                bearingMeasureEnabled: true,
+                trueBearing: {measureTrueBearing: true}
+            },
+            uom
+        });
+
+        expect(cmp.savedDrawState).toBe(null);
+        expect(cmp.textLabels).toEqual([]);
+        expect(cmp.segmentLengths).toEqual([]);
+        expect(cmp.segmentOverlays).toEqual([]);
+        expect(cmp.segmentOverlayElements).toEqual([]);
+        expect(cmp.measureTooltips).toEqual([]);
+        expect(cmp.measureTooltipElements).toEqual([]);
+        expect(cmp.outputValues).toEqual([]);
+        expect(map.getOverlays().getLength()).toBe(initialOverlayCount);
+    });
+    it('test drawState restore on geomType change with drawn geometry', () => {
+        let cmp = renderMeasurement();
+        cmp = renderMeasurement({
+            measurement: {
+                geomType: "LineString",
+                lineMeasureEnabled: true,
+                updatedByUI: false,
+                showLabel: true
+            },
+            uom
+        });
+
+        let geometry = new LineString([[15.0, 45.0], [15.0, 45.0]]);
+        let feature = new Feature({
+            geometry,
+            name: 'My line'
+        });
+
+        cmp.drawInteraction.dispatchEvent({
+            type: 'drawstart',
+            feature
+        });
+        expect(cmp.sketchFeature).toExist();
+        expect(cmp.savedDrawState).toExist();
+        expect(cmp.savedDrawState.textLabels).toEqual([]);
+        expect(cmp.savedDrawState.segmentLengths).toEqual([]);
+        expect(cmp.savedDrawState.measureTooltipsLength).toBe(0);
+        expect(cmp.savedDrawState.segmentOverlaysLength).toBe(0);
+        cmp.sketchFeature.getGeometry().setCoordinates([[15.0, 45.0], [15.0, 40.0]]);
+        cmp.sketchFeature.getGeometry().appendCoordinate([16.0, 35.0]);
+        cmp.sketchFeature.getGeometry().appendCoordinate([16.0, 35.0]);
+        cmp.drawInteraction.dispatchEvent({
+            type: 'drawend',
+            feature: new Feature({
+                geometry: new LineString([[15.0, 45.0], [15.0, 40.0], [16.0, 35.0]]),
+                name: 'My line'
+            })
+        });
+        expect(cmp.savedDrawState).toBe(null);
+
+        cmp = renderMeasurement({
+            measurement: {
+                geomType: "LineString",
+                lineMeasureEnabled: true,
+                updatedByUI: false,
+                showLabel: true
+            },
+            uom
+        });
+
+        geometry = new LineString([[10.0, 15.0], [10.0, 15.0]]);
+        feature = new Feature({
+            geometry,
+            name: 'My line 2'
+        });
+
+        const savedOverlayCount = map.getOverlays().getLength();
+
+        cmp.drawInteraction.dispatchEvent({
+            type: 'drawstart',
+            feature
+        });
+        expect(cmp.savedDrawState).toExist();
+        expect(cmp.savedDrawState.textLabels.length).toBe(2);
+        expect(cmp.savedDrawState.segmentLengths.length).toBe(2);
+        expect(cmp.savedDrawState.measureTooltipsLength).toBe(1);
+        expect(cmp.savedDrawState.segmentOverlaysLength).toBe(2);
+
+        const savedTextLabels = [...cmp.savedDrawState.textLabels];
+        const savedSegmentLengths = [...cmp.savedDrawState.segmentLengths];
+
+        cmp.sketchFeature.getGeometry().setCoordinates([[10.0, 15.0], [10.0, 10.0]]);
+        cmp.sketchFeature.getGeometry().appendCoordinate([11.0, 25.0]);
+        expect(map.getOverlays().getLength()).toBe(savedOverlayCount + 3);
+
+        cmp = renderMeasurement({
+            measurement: {
+                geomType: "Bearing",
+                updatedByUI: false,
+                bearingMeasureEnabled: true,
+                trueBearing: {measureTrueBearing: true}
+            },
+            uom
+        });
+
+        expect(cmp.savedDrawState).toBe(null);
+        expect(cmp.textLabels).toEqual(savedTextLabels);
+        expect(cmp.segmentLengths).toEqual(savedSegmentLengths);
+        expect(cmp.segmentOverlays.length).toBe(2);
+        expect(cmp.segmentOverlayElements.length).toEqual(2);
+        expect(cmp.measureTooltips.length).toBe(1);
+        expect(cmp.measureTooltipElements.length).toBe(1);
+        expect(cmp.outputValues.length).toBe(1);
+        expect(map.getOverlays().getLength()).toBe(savedOverlayCount);
+    });
 });

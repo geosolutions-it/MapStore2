@@ -37,7 +37,7 @@ function CustomThemePicker({
     disableTextColor,
     disableShadow,
     onChange = () => {},
-    onOpen,
+    onOpen = () => {},
     placement
 }) {
 

@@ -1,0 +1,59 @@
+#bookmark-tools button {
+    background-color: unset;
+    color: #078aa3;
+    &:hover {
+        background-color: #e6e6e6;
+    }
+}
+
+#bookmark-list {
+    .search-bookmark-name {
+        padding-top: 10px;
+        margin-left: -5px;
+        font-weight: 600;
+    }
+    .bookmark-card {
+        max-height: 400px;
+        scrollbar-width: thin;
+        overflow: auto;
+        padding: 5px;
+    }
+}
+.bookmark-card::-webkit-scrollbar { width: 8px; background: #fff; }
+.bookmark-card::-webkit-scrollbar-thumb { background: #c5c5c5; }
+
+#add-new-bookmark {
+    .form-control {
+        font-family: @font-family-monospace;
+    }
+    .bookmark-title{
+        font-family: inherit;
+    }
+    .bbox-field-group {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+    .field-top-bottom {
+        width: 100%;
+        padding: 4px;
+        max-width: 200px
+    }
+    .field-center-group {
+        display: flex;
+        justify-content: space-between;
+        width: 100%;
+        flex-wrap: wrap;
+    }
+    .field-left-right {
+        flex: 1 1 0%;
+        padding: 4px;
+        max-width: 200px;
+        min-width: 200px;
+    }
+}
+
+#bookmark-panel-dialog {
+    z-index: 1000 !important;
+}

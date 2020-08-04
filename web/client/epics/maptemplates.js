@@ -14,13 +14,12 @@ import Api from '../api/GeoStoreDAO';
 import { error as showError } from '../actions/notifications';
 import { isLoggedIn } from '../selectors/security';
 import { setTemplates, setMapTemplatesLoaded, setTemplateData, setTemplateLoading, CLEAR_MAP_TEMPLATES, OPEN_MAP_TEMPLATES_PANEL,
-    MERGE_TEMPLATE, REPLACE_TEMPLATE } from '../actions/maptemplates';
-import { templatesSelector, mapTemplatesLoadedSelector } from '../selectors/maptemplates';
-import { templatesSelector as contextTemplatesSelector } from '../selectors/context';
+    MERGE_TEMPLATE, REPLACE_TEMPLATE, SET_ALLOWED_TEMPLATES } from '../actions/maptemplates';
+import { templatesSelector, allTemplatesSelector } from '../selectors/maptemplates';
 import { mapSelector } from '../selectors/map';
 import { layersSelector, groupsSelector } from '../selectors/layers';
 import { backgroundListSelector } from '../selectors/backgroundselector';
-import { textSearchConfigSelector } from '../selectors/searchconfig';
+import { textSearchConfigSelector, bookmarkSearchConfigSelector } from '../selectors/searchconfig';
 import { mapOptionsToSaveSelector } from '../selectors/mapsave';
 import { setControlProperty } from '../actions/controls';
 import { configureMap } from '../actions/config';
@@ -44,16 +43,19 @@ export const clearMapTemplatesEpic = (action$) => action$
     .ofType(CLEAR_MAP_TEMPLATES)
     .switchMap(() => Observable.of(setControlProperty('mapTemplates', 'enabled', false, false)));
 
-export const openMapTemplatesPanelEpic = (action$, store) => action$
+export const openMapTemplatesPanelEpic = (action$) => action$
     .ofType(OPEN_MAP_TEMPLATES_PANEL)
+    .switchMap(() => Observable.of(setControlProperty('mapTemplates', 'enabled', true, true)));
+
+export const setAllowedTemplatesEpic = (action$, store) => action$
+    .ofType(SET_ALLOWED_TEMPLATES)
     .switchMap(() => {
         const state = store.getState();
-        const contextTemplates = contextTemplatesSelector(state);
-        const mapTemplatesLoaded = mapTemplatesLoadedSelector(state);
+        const templates = allTemplatesSelector(state);
 
         const makeFilter = () => ({
             OR: {
-                FIELD: contextTemplates.map(template => ({
+                FIELD: templates.map(template => ({
                     field: ['ID'],
                     operator: ['EQUAL_TO'],
                     value: [template.id]
@@ -70,26 +72,23 @@ export const openMapTemplatesPanelEpic = (action$, store) => action$
             }), {});
         };
 
-        return Observable.of(setControlProperty('mapTemplates', 'enabled', true, true)).concat(!mapTemplatesLoaded ?
-            (contextTemplates.length > 0 ? Observable.defer(() => Api.searchListByAttributes(makeFilter(), {
-                params: {
-                    includeAttributes: true
-                }
-            }, '/resources/search/list')) : Observable.of({}))
-                .switchMap((data) => {
-                    const resourceObj = get(data, 'ResourceList.Resource', []);
-                    const resources = isArray(resourceObj) ? resourceObj : [resourceObj];
-                    const newTemplates = resources.map(resource => ({
-                        ...pick(resource, 'id', 'name', 'description'),
-                        ...extractAttributes(resource),
-                        dataLoaded: false,
-                        loading: false
-                    }));
-                    return Observable.of(setTemplates(newTemplates), setMapTemplatesLoaded(true));
-                })
-                .catch(err => Observable.of(setMapTemplatesLoaded(true, err))) :
-            Observable.empty()
-        );
+        return templates.length > 0 ? Observable.defer(
+            () => Api.searchListByAttributes(makeFilter(), {params: { includeAttributes: true }}, '/resources/search/list')
+        ).switchMap(
+            (data) => {
+                const resourceObj = get(data, 'ResourceList.Resource', []);
+                const resources = isArray(resourceObj) ? resourceObj : [resourceObj];
+                const newTemplates = resources.map(resource => ({
+                    ...pick(resource, 'id', 'name', 'description'),
+                    ...extractAttributes(resource),
+                    dataLoaded: false,
+                    loading: false
+                }));
+                return Observable.of(setTemplates(newTemplates), setMapTemplatesLoaded(true));
+            }
+        ).catch(
+            err => Observable.of(setMapTemplatesLoaded(true, err))
+        ) : Observable.empty();
     });
 
 export const mergeTemplateEpic = (action$, store) => action$
@@ -107,14 +106,15 @@ export const mergeTemplateEpic = (action$, store) => action$
                 const groups = groupsSelector(state);
                 const backgrounds = backgroundListSelector(state);
                 const textSearchConfig = textSearchConfigSelector(state);
+                const bookmarkSearchConfig = bookmarkSearchConfigSelector(state);
                 const additionalOptions = mapOptionsToSaveSelector(state);
 
-                const currentConfig = MapUtils.saveMapConfiguration(map, layers, groups, backgrounds, textSearchConfig, additionalOptions);
+                const currentConfig = MapUtils.saveMapConfiguration(map, layers, groups, backgrounds, textSearchConfig, bookmarkSearchConfig, additionalOptions);
 
-                return (isString(data) ? Observable.defer(() => toMapConfig(data, true)) : Observable.of(data))
+                return (isString(data) ? Observable.defer(() => toMapConfig(data, false)) : Observable.of(data))
                     .switchMap(config => Observable.of(
                         ...(!template.dataLoaded ? [setTemplateData(id, data)] : []),
-                        configureMap(cloneDeep(omit(MapUtils.mergeMapConfigs(currentConfig, config), 'widgetsConfig')), null)
+                        configureMap(cloneDeep(omit(MapUtils.mergeMapConfigs(currentConfig, MapUtils.addRootParentGroup(config, template.name)), 'widgetsConfig')), null)
                     ));
             }
 

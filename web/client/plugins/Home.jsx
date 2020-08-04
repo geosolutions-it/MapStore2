@@ -11,6 +11,8 @@ const React = require('react');
 const assign = require('object-assign');
 
 const {goToPage} = require('../actions/router');
+const { comparePendingChanges } = require('../epics/pendingChanges');
+
 
 const Message = require('./locale/Message');
 
@@ -19,7 +21,7 @@ const {Glyphicon} = require('react-bootstrap');
 const Home = require('../components/home/Home');
 
 const {connect} = require('react-redux');
-const {checkMapChanges} = require('../actions/map');
+const { checkPendingChanges } = require('../actions/pendingChanges');
 const {setControlProperty} = require('../actions/controls');
 const {unsavedMapSelector, unsavedMapSourceSelector} = require('../selectors/controls');
 const {feedbackMaskSelector} = require('../selectors/feedbackmask');
@@ -27,7 +29,7 @@ const ConfigUtils = require('../utils/ConfigUtils');
 
 const checkUnsavedMapChanges = (action) => {
     return dispatch => {
-        dispatch(checkMapChanges(action, 'gohome'));
+        dispatch(checkPendingChanges(action, 'gohome'));
     };
 };
 
@@ -35,7 +37,8 @@ const HomeConnected = connect((state) => ({
     renderUnsavedMapChangesDialog: ConfigUtils.getConfigProp('unsavedMapChangesDialog'),
     displayUnsavedDialog: unsavedMapSelector(state)
         && unsavedMapSourceSelector(state) === 'gohome'
-        && feedbackMaskSelector(state).currentPage === 'viewer'
+        && (feedbackMaskSelector(state).currentPage === 'viewer'
+        || feedbackMaskSelector(state).currentPage === 'geostory')
 }), {
     onCheckMapChanges: checkUnsavedMapChanges,
     onCloseUnsavedDialog: setControlProperty.bind(null, 'unsavedMap', 'enabled', false)
@@ -68,5 +71,6 @@ module.exports = {
             priority: 3
         }
     }),
-    reducers: {}
+    reducers: {},
+    epics: { comparePendingChanges }
 };

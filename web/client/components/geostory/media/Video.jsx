@@ -10,14 +10,20 @@ import ReactPlayer from 'react-player';
 import Loader from '../../misc/Loader';
 import { withResizeDetector } from 'react-resize-detector';
 import { Glyphicon } from 'react-bootstrap';
+import { Modes } from '../../../utils/GeoStoryUtils';
 
 /**
  * Video component
  * @prop {string} src source of the video
  * @prop {number} resolution resolution of the video
  * @prop {string} fit one of `cover`, `contain` or undefined
+ * (`cover` provides a video covering the available space provided by its own container
+ * and it has loop and autoplay enabled and controls not visible by default)
+ * @prop {string} loop loop the video (loop has no effect for fit equal to `cover`)
+ * @prop {string} volume change the volume of video, value between 0.0 and 1.0
+ * @prop {string} muted mute the video audio
  * @prop {string} thumbnail source of thumbnail
- * @prop {boolean} controls enable/disable video controls
+ * @prop {boolean} controls enable/disable video controls (controls has no effect for fit equal to `cover`)
  * @prop {boolean} play play/stop the video
  * @prop {function} onPlay on playing event callback
  * @prop {function} onStart on start event callback
@@ -32,7 +38,10 @@ const Video = withResizeDetector(({
     play,
     onPlay = () => {},
     onStart = () => {},
-    fit
+    fit,
+    loop,
+    volume = 1,
+    muted
 }) => {
 
     const playing = play;
@@ -69,7 +78,10 @@ const Video = withResizeDetector(({
 
     const size = getSize();
 
-    const containerHeight = (fit === 'contain' || fit === 'cover') ? height : size[1];
+    const containerHeight = (fit === 'contain' || isCover) ? height : size[1];
+
+    const showControls = isCover ? false : controls;
+    const forceLoop = isCover ? true : loop;
 
     return (
         <div
@@ -81,12 +93,7 @@ const Video = withResizeDetector(({
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                ...(isCover && { cursor: 'pointer '})
-            }}
-            onClick={() => {
-                if (started && isCover) {
-                    onPlay(!playing);
-                }
+                overflow: 'hidden'
             }}>
             {src &&
             <>
@@ -95,6 +102,9 @@ const Video = withResizeDetector(({
                 width={size[0]}
                 height={size[1]}
                 playing={playing}
+                loop={forceLoop}
+                volume={volume}
+                muted={muted}
                 style={isCover
                     ? {
                         left: '50%',
@@ -102,7 +112,7 @@ const Video = withResizeDetector(({
                         transform: 'translate(-50%, -50%)',
                         position: 'absolute'
                     } : {}}
-                controls={controls && !isCover}
+                controls={showControls}
                 pip={false}
                 fileConfig={{
                     attributes: {
@@ -112,7 +122,7 @@ const Video = withResizeDetector(({
                 }}
                 youtubeConfig={{
                     playerVars: {
-                        controls: controls ? 2 : 0,
+                        controls: showControls ? 2 : 0,
                         modestbranding: 1,
                         rel: 0
                     }
@@ -135,7 +145,7 @@ const Video = withResizeDetector(({
                     ...(!(loading || error) && { cursor: 'pointer' }),
                     ...(!playing && thumbnail && {
                         backgroundImage: `url(${thumbnail})`,
-                        backgroundSize: '640px auto',
+                        backgroundSize: isCover ? 'cover' : '640px auto',
                         backgroundPosition: 'center',
                         backgroundRepeat: 'no-repeat'
                     })
@@ -158,6 +168,14 @@ const Video = withResizeDetector(({
                     />}
             </div>}
             </>}
+            {!showControls && <div
+                className="ms-video-mask-cover"
+                style={{
+                    position: 'absolute',
+                    width: size[0],
+                    height: size[1]
+                }}>
+            </div>}
         </div>
     );
 });
@@ -170,12 +188,19 @@ const Video = withResizeDetector(({
  * @prop {boolean} autoplay play the video when is in view
  * @prop {boolean} inView define if the video si in the window view
  * @prop {string} fit one of `cover`, `contain` or undefined
- * @prop {string} description video description
- * @prop {boolean} descriptionEnabled display/hide description
+ * (`cover` provides a video covering the available space provided by its own container
+ * and it has loop and autoplay enabled and controls not visible by default)
+ * @prop {string} loop loop the video (loop has no effect for fit equal to `cover`)
+ * @prop {string} muted mute the video audio
+ * @prop {string} caption caption of current content
+ * @prop {string} description description of video resource
+ * @prop {boolean} showCaption display/hide caption
  * @prop {string} thumbnail source of thumbnail
  * @prop {string} credits source of thumbnail
- * @prop {boolean} controls enable/disable video controls
+ * @prop {boolean} controls enable/disable video controls (controls has no effect for fit equal to `cover`)
  * @prop {function} onPlay on play callback
+ * @prop {string} mode one of 'view' or 'edit'
+ * @prop {boolean} containerInView define if the container is in view, useful for scrollable container with content with position sticky eg. Backgrounds
  */
 const VideoMedia = ({
     id,
@@ -184,57 +209,76 @@ const VideoMedia = ({
     autoplay,
     inView,
     description,
-    descriptionEnabled = true,
+    showCaption,
+    caption = description,
     thumbnail,
     credits,
     controls = true,
     fit,
-    onPlay = () => {}
+    loop,
+    muted,
+    onPlay = () => {},
+    mode,
+    containerInView = true
 }) => {
 
+    // ensure both container and content are visible
+    const isVisible = containerInView && inView;
+
     const [playing, setPlaying] = useState(false);
-    const [started, setStarted] = useState(false);
 
     const handleOnPlay = (newPlaying) => {
         setPlaying(newPlaying);
         onPlay(newPlaying);
     };
 
+    // reset player after switching from view to edit mode
     useEffect(() => {
-        if (inView && autoplay && !started) {
-            handleOnPlay(true);
-        }
-    }, [ inView, autoplay, started ]);
-
-    useEffect(() => {
-        if (!inView && playing) {
+        if (mode === Modes.EDIT) {
             handleOnPlay(false);
         }
-    }, [inView, playing]);
+    }, [ mode ]);
+
+    // every time the video is in view it should play if autoplay is enabled or fit equal to cover
+    useEffect(() => {
+        if (mode === Modes.VIEW
+        && isVisible
+        && (autoplay || fit === 'cover')) {
+            handleOnPlay(true);
+        }
+    }, [ isVisible, autoplay, fit, mode ]);
+
+    // video should stop when it is not in view
+    useEffect(() => {
+        if (mode === Modes.VIEW && !isVisible && playing) {
+            handleOnPlay(false);
+        }
+    }, [isVisible, playing, mode]);
 
     return (
         <div
             id={id}
-            key={id}
+            key={`${id}-${fit}-${mode}`}
             className="ms-media ms-media-video">
             <Video
                 src={src}
-                play={playing}
+                play={playing && mode === Modes.VIEW}
                 resolution={resolution}
                 thumbnail={thumbnail}
-                controls={controls}
+                controls={controls && mode === Modes.VIEW}
                 onPlay={handleOnPlay}
-                onStart={setStarted}
                 fit={fit}
+                loop={loop}
+                muted={muted}
             />
             {credits && <div className="ms-media-credits">
                 <small>
                     {credits}
                 </small>
             </div>}
-            {descriptionEnabled && description && <div className="ms-media-description">
+            {showCaption && caption && <div className="ms-media-caption">
                 <small>
-                    {description}
+                    {caption}
                 </small>
             </div>}
         </div>
