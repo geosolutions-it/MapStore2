@@ -35,4 +35,4 @@ module.exports = ({
         tooltipId: "identifyZoomToFeature",
         onClick: zoomToFeature
     }
-].filter(btn => btn && btn.visible);
+];

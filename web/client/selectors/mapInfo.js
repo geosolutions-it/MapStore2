@@ -124,19 +124,6 @@ const validResponsesSelector = createSelector(
         return requests.length === responses.length && validatorFormat.getValidResponses(responses);
     });
 
-/**
- * Checks whether all the received responses are invalid
- */
-const emptyResponsesSelector = createSelector(
-    responsesSelector,
-    requestsSelector,
-    generalInfoFormatSelector,
-    (responses, requests, format) => {
-        const validatorFormat = MapInfoUtils.getValidator(format);
-        const emptyResponses = validatorFormat.getNoValidResponses(responses);
-        return emptyResponses.length === requests.length;
-    });
-
 const currentResponseSelector = createSelector(
     validResponsesSelector, indexSelector,
     (responses = [], index = 0) => responses[index]
@@ -229,6 +216,5 @@ module.exports = {
     overrideParamsSelector,
     filterNameListSelector,
     isMapPopup,
-    currentEditFeatureQuerySelector,
-    emptyResponsesSelector
+    currentEditFeatureQuerySelector
 };

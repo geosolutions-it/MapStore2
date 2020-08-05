@@ -35,13 +35,13 @@ class DefaultViewer extends React.Component {
         onPrevious: PropTypes.func,
         onUpdateIndex: PropTypes.func,
         setIndex: PropTypes.func,
-        showEmptyMessageGFI: PropTypes.bool,
-        emptyResponses: PropTypes.bool
+        showEmptyMessageGFI: PropTypes.bool
     };
 
     static defaultProps = {
         format: MapInfoUtils.getDefaultInfoFormatValue(),
         responses: [],
+        requests: [],
         missingResponses: 0,
         collapsible: false,
         headerOptions: {},
@@ -57,8 +57,7 @@ class DefaultViewer extends React.Component {
         showEmptyMessageGFI: true,
         onNext: () => {},
         onPrevious: () => {},
-        setIndex: () => {},
-        emptyResponses: false
+        setIndex: () => {}
     };
 
     UNSAFE_componentWillReceiveProps(nextProps) {
@@ -72,12 +71,29 @@ class DefaultViewer extends React.Component {
         return nextProps.responses !== this.props.responses || nextProps.missingResponses !== this.props.missingResponses || nextProps.index !== this.props.index;
     }
 
-    renderEmptyLayers = (validator) => {
+    /**
+     * Get validation properties of the responses
+     */
+    getResponseProperties = () => {
+        const validator = this.props.validator(this.props.format);
+        const validResponses = validator.getValidResponses(this.props.responses);
         const invalidResponses = validator.getNoValidResponses(this.props.responses);
-        if (this.props.missingResponses === 0 && this.props.emptyResponses) {
+        const emptyResponses = this.props.requests.length === invalidResponses.length;
+        console.log('emptyResponses', emptyResponses);
+        return {
+            validResponses,
+            currResponse: this.formattedResponse(validResponses[this.props.index]?.response),
+            emptyResponses,
+            invalidResponses
+        };
+    }
+
+    renderEmptyLayers = () => {
+        const {invalidResponses, emptyResponses} = this.getResponseProperties();
+        if (this.props.missingResponses === 0 && emptyResponses) {
             return null;
         }
-        if (invalidResponses.length !== 0) {
+        if (this.props.missingResponses === 0 && invalidResponses.length !== 0) {
             const titles = invalidResponses.map((res) => {
                 const {layerMetadata} = res;
                 return layerMetadata.title;
@@ -101,7 +117,8 @@ class DefaultViewer extends React.Component {
     };
 
     renderEmptyPages = () => {
-        if (this.props.missingResponses === 0 && this.props.emptyResponses) {
+        const {emptyResponses} = this.getResponseProperties();
+        if (this.props.missingResponses === 0 && emptyResponses) {
             return (
                 <Alert bsStyle={"danger"}>
                     <h4><HTML msgId="noFeatureInfo"/></h4>
@@ -148,19 +165,17 @@ class DefaultViewer extends React.Component {
     renderAdditionalInfo = () => {
         const validator = this.props.validator(this.props.format);
         if (validator) {
-            return this.renderEmptyLayers(validator);
+            return this.renderEmptyLayers();
         }
         return null;
     };
 
     render() {
         const Container = this.props.container;
-        const validator = this.props.validator(this.props.format);
-        let validResponses = validator.getValidResponses(this.props.responses);
-        const currResponse = this.formattedResponse(validResponses[this.props.index]?.response);
+        const {validResponses, currResponse, emptyResponses} = this.getResponseProperties();
         return (
             <div className="mapstore-identify-viewer">
-                {!this.props.emptyResponses ?
+                {!emptyResponses ?
                     <>
                         <Container {...this.props.containerProps}
                             onChangeIndex={(index) => {
@@ -181,7 +196,9 @@ class DefaultViewer extends React.Component {
         );
     }
 
-    // Display empty content when layer has no features
+    /**
+     * Display empty content when layer has no features
+     */
     formattedResponse = (response) =>{
         return typeof response === "object" ? response :
             typeof response === "string" && response.indexOf("no features were found") !== 0 ? response : "";

@@ -65,7 +65,7 @@ module.exports = props => {
         onSubmitClickPoint,
         onChangeFormat,
         formatCoord,
-        emptyResponses = false
+        validator = () => null
     } = props;
     const latlng = point && point.latlng || null;
     const targetResponse = validResponses[index];
@@ -96,6 +96,7 @@ module.exports = props => {
             url: get(layer, 'search.url')
         })
     });
+    const emptyResponses = requests.length === validator(format)?.getNoValidResponses(responses)?.length || 0;
     const missingResponses = requests.length - responses.length;
     const revGeocodeDisplayName = reverseGeocodeData.error ? <Message msgId="identifyRevGeocodeError"/> : reverseGeocodeData.display_name;
     return (
@@ -117,7 +118,12 @@ module.exports = props => {
                     <Row className="layer-select-row">
                         <div className="layer-col">
                             <span className="identify-icon glyphicon glyphicon-1-layer"/>
-                            <LayerSelector {...props} missingResponses={missingResponses}/>
+                            <LayerSelector
+                                responses={responses}
+                                index={index}
+                                setIndex={setIndex}
+                                missingResponses={missingResponses}
+                                emptyResponses={emptyResponses}/>
                             <Toolbar
                                 btnDefaultProps={{ bsStyle: 'primary', className: 'square-button-md' }}
                                 buttons={getFeatureButtons(props)}
@@ -157,7 +163,6 @@ module.exports = props => {
                     setIndex={setIndex}
                     format={format}
                     missingResponses={missingResponses}
-                    emptyResponses={emptyResponses}
                     responses={responses}
                     requests={requests}
                     showEmptyMessageGFI={showEmptyMessageGFI}

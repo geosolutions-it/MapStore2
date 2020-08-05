@@ -37,7 +37,7 @@ describe('DefaultViewer', () => {
     it('creates the DefaultViewer component with custom container', () => {
         const Container = () => <div className="mycontainer"/>;
         const viewer = ReactDOM.render(
-            <DefaultViewer container={Container}/>,
+            <DefaultViewer container={Container} requests={["TEST"]}/>,
             document.getElementById("container")
         );
 
@@ -55,7 +55,7 @@ describe('DefaultViewer', () => {
         }];
         const Header = () => <div className="mycontainer"/>;
         const viewer = ReactDOM.render(
-            <DefaultViewer responses={responses} header={Header}/>,
+            <DefaultViewer responses={responses} header={Header} requests={["TEST"]}/>,
             document.getElementById("container")
         );
 
@@ -142,7 +142,7 @@ describe('DefaultViewer', () => {
             }
         }];
         const viewer = ReactDOM.render(
-            <DefaultViewer responses={responses}/>,
+            <DefaultViewer responses={responses} requests={["TEST"]}/>,
             document.getElementById("container")
         );
 
@@ -173,7 +173,7 @@ describe('DefaultViewer', () => {
             "custom": (props) => <span className="custom">{props.response}</span>
         };
         const viewer = ReactDOM.render(
-            <DefaultViewer responses={responses} viewers={viewers} format="custom"/>,
+            <DefaultViewer responses={responses} viewers={viewers} format="custom" requests={["TEST"]}/>,
             document.getElementById("container")
         );
 
