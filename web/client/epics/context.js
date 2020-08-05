@@ -175,20 +175,18 @@ export const setMapTypeOnContextChange = action$ => action$
     .switchMap(({context}) => Observable.of(changeMapType(context && context.mapType || 'openlayers')));
 
 /**
- * Handles the reload of the context and map.
+ * Handles the reload of the context and map. This have to be triggered
+ * When access conditions change due to login/logout events.
+ * This allows to correctly reload the context (and the eventual user session map and context changes)
  * @param {observable} action$ stream of actions
  */
-export const handleLoginLogoutContextReload = action$ => {
-    return Observable.merge(
-        // in case of forbidden error...
-        action$.ofType(CONTEXT_LOAD_ERROR)
-            .filter(({ error }) => error.status === 403)
-            .switchMap( () =>  action$.ofType(LOGIN_SUCCESS).take(1).takeUntil(action$.ofType(LOCATION_CHANGE))), // ...wait for login success
-        // Or if context was loaded
-        action$.ofType(LOAD_FINISHED)
-            .switchMap(() => action$.ofType(LOGOUT).take(1).takeUntil(action$.ofType(LOCATION_CHANGE))) // ...and then the user logged out
-    // then reload the last context and map
-    ).withLatestFrom(
-        action$.ofType(LOAD_CONTEXT)
-    ).switchMap(([, args]) => Observable.of(loadContext(args)));
-};
+export const handleLoginLogoutContextReload = action$ =>
+    // If the was a forbidden error (access denied to the given context)
+    action$.ofType(CONTEXT_LOAD_ERROR).filter(({ error }) => error.status === 403)
+        //  or in case of context successfully loaded
+        .merge(action$.ofType(LOAD_FINISHED))
+        // on login-logout event
+        .switchMap(() => action$.ofType(LOGIN_SUCCESS, LOGOUT).take(1).takeUntil(action$.ofType(LOCATION_CHANGE)))
+        // re-trigger the last context load event to re-load context and map ()
+        .withLatestFrom(action$.ofType(LOAD_CONTEXT))
+        .switchMap(([, args]) => Observable.of(loadContext(args)));

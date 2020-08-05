@@ -64,7 +64,7 @@ Through this menu the user is allowed to:
 
 ## Preview
 
-When the print settings are chosen, it is possible to access the preview by clicking on the <img src="../img/button/print-button.jpg" class="ms-docbutton"/> button. A window similar to the following appears:
+When the print settings are chosen, it is possible to access the preview by clicking on the <img src="../img/button/print_button.jpg" class="ms-docbutton"/> button. A window similar to the following appears:
 
 <img src="../img/print/preview.jpg" class="ms-docimage"/> 
 

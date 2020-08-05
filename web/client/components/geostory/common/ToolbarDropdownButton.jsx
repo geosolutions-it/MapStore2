@@ -7,7 +7,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { DropdownButton as DropdownButtonRB, Glyphicon, MenuItem } from 'react-bootstrap';
 import tooltip from '../../misc/enhancers/buttonTooltip';
 import find from 'lodash/find';
@@ -39,6 +39,14 @@ export default function ToolbarDropdownButton({
     const {
         glyph: glyphOption
     } = currentOption;
+
+    // hide dropdown when disabled
+    useEffect(() => {
+        if (disabled) {
+            setOpen(false);
+        }
+    }, [ disabled ]);
+
     return (
         <DropdownButton
             noCaret

@@ -106,6 +106,7 @@ export default class MeasurementSupport extends React.Component {
              * and the measure tool is getting enabled
             */
             (newProps.measurement.geomType && (newProps.measurement.lineMeasureEnabled || newProps.measurement.areaMeasureEnabled || newProps.measurement.bearingMeasureEnabled) && !this.props.enabled && newProps.enabled) ) {
+            this.restoreDrawState();
             this.addDrawInteraction(newProps);
         }
         if (!newProps.measurement.geomType) {
@@ -203,9 +204,7 @@ export default class MeasurementSupport extends React.Component {
             };
 
             // recalculate segments
-            if (!isBearing
-            // && !(geomType === 'LineString' && coords.length <= 2)
-            ) {
+            if (!isBearing) {
                 for (let i = 0; i < coords.length - 1; ++i) {
                     this.createSegmentLengthOverlay();
 
@@ -298,7 +297,7 @@ export default class MeasurementSupport extends React.Component {
         });
 
         this.props.changeGeometry(newFeatures);
-        this.props.setTextLabels(this.textLabels);
+        this.props.setTextLabels([...this.textLabels]);
 
         for (let i = 0; i < this.measureTooltipElements.length; ++i) {
             if (this.measureTooltipElements[i]) {
@@ -341,7 +340,7 @@ export default class MeasurementSupport extends React.Component {
         }
 
         if (!this.drawing) {
-            this.props.setTextLabels(this.textLabels);
+            this.props.setTextLabels([...this.textLabels]);
         }
 
         const newFeatures = (props.measurement.features || []).map(feature => ({
@@ -398,6 +397,47 @@ export default class MeasurementSupport extends React.Component {
         // css style for overlay texts
         return `transform: rotate(calc(360deg - ${deg}deg));padding:unset;top:10px;left:10px;`;
     }
+
+    saveDrawState = () => {
+        this.savedDrawState = {
+            textLabels: this.textLabels.slice(),
+            segmentLengths: this.segmentLengths.slice(),
+            measureTooltipsLength: this.measureTooltips?.length ?? 0,
+            segmentOverlaysLength: this.segmentOverlays?.length ?? 0
+        };
+    };
+
+    discardDrawState = () => {
+        this.savedDrawState = null;
+    };
+
+    restoreDrawState = () => {
+        if (!this.savedDrawState) {
+            return;
+        }
+
+        this.textLabels = this.savedDrawState.textLabels;
+        this.segmentLengths = this.savedDrawState.segmentLengths;
+
+        for (let i = this.savedDrawState.measureTooltipsLength; i < this.measureTooltips.length; ++i) {
+            this.props.map.removeOverlay(this.measureTooltips[i]);
+            this.measureTooltipElements[i].parentNode.removeChild(this.measureTooltipElements[i]);
+        }
+        for (let i = this.savedDrawState.segmentOverlaysLength; i < this.segmentOverlays.length; ++i) {
+            this.props.map.removeOverlay(this.segmentOverlays[i]);
+            this.segmentOverlayElements[i].parentNode.removeChild(this.segmentOverlayElements[i]);
+        }
+
+        this.measureTooltips.splice(this.savedDrawState.measureTooltipsLength);
+        this.measureTooltipElements.splice(this.savedDrawState.measureTooltipsLength);
+        this.outputValues.splice(this.savedDrawState.measureTooltipsLength);
+        this.segmentOverlays.splice(this.savedDrawState.segmentOverlaysLength);
+        this.segmentOverlayElements.splice(this.savedDrawState.segmentOverlaysLength);
+
+        this.curPolygonLength = undefined;
+        this.curLineStringLength = undefined;
+        this.savedDrawState = null;
+    };
 
     addDrawInteraction = (newProps) => {
         let draw;
@@ -500,6 +540,8 @@ export default class MeasurementSupport extends React.Component {
             }
 
             if (!this.props.measurement.disableLabels) {
+                this.saveDrawState();
+
                 this.createMeasureTooltip(this.props.measurement.geomType === 'Polygon' ? [0, 0] : undefined);
                 if (this.props.measurement.geomType === 'Polygon') {
                     this.createMeasureTooltip();
@@ -697,13 +739,14 @@ export default class MeasurementSupport extends React.Component {
                 this.segmentOverlayElements.splice(this.segmentOverlays.length - 2, 1);
                 this.segmentOverlays.splice(this.segmentOverlays.length - 2, 1);
             }
-            this.props.setTextLabels(this.textLabels);
+            // this.props.setTextLabels(this.textLabels);
             const labelsLength = this.textLabels.length;
             newFeature.geometry = newFeature.geometry || {};
             newFeature.geometry.coordinates = newFeature.geometry.coordinates || [];
             const coordinatesLength = newFeature.geometry.coordinates.length;
             newFeature.geometry.textLabels = this.textLabels.slice(labelsLength - (newFeature.geometry.type === "Polygon" ? 3 : coordinatesLength - 1), labelsLength);
             this.props.changeGeometry([...currentFeatures, newFeature]);
+            this.props.setTextLabels([...this.textLabels]);
 
             this.addFeature(clonedNewFeature);
             if (!this.props.measurement.disableLabels) {
@@ -723,6 +766,8 @@ export default class MeasurementSupport extends React.Component {
 
             this.curPolygonLength = undefined;
             this.curLineStringLength = undefined;
+
+            this.discardDrawState();
         });
 
         this.props.map.addInteraction(draw);
@@ -918,6 +963,9 @@ export default class MeasurementSupport extends React.Component {
     removeHelpTooltip = () => {
         if (this.helpTooltipElement && this.helpTooltipElement.parentNode) {
             this.helpTooltipElement.parentNode.removeChild(this.helpTooltipElement);
+        }
+        if (this.helpTooltip) {
+            this.props.map.removeOverlay(this.helpTooltip);
         }
     }
     removeMeasureTooltips = () => {

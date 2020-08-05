@@ -15,14 +15,16 @@ import { sortBy, isNil } from 'lodash';
 import { queryableLayersSelector, getLayerFromName } from '../selectors/layers';
 
 import { updateAdditionalLayer } from '../actions/additionallayers';
-import { showMapinfoMarker, featureInfoClick} from '../actions/mapInfo';
-import { zoomToExtent, zoomToPoint} from '../actions/map';
+import { showMapinfoMarker, featureInfoClick } from '../actions/mapInfo';
+import { zoomToExtent, zoomToPoint } from '../actions/map';
+import { changeLayerProperties } from '../actions/layers';
 import {
     SEARCH_LAYER_WITH_FILTER,
     TEXT_SEARCH_STARTED,
     TEXT_SEARCH_RESULTS_PURGE,
     TEXT_SEARCH_RESET,
     TEXT_SEARCH_ITEM_SELECTED,
+    TEXT_SEARCH_SHOW_GFI,
     ZOOM_ADD_POINT,
     addMarker,
     nonQueriableLayerError,
@@ -36,7 +38,7 @@ import {
 } from '../actions/search';
 
 import CoordinatesUtils from '../utils/CoordinatesUtils';
-import {defaultIconStyle} from '../utils/SearchUtils';
+import {defaultIconStyle, showGFIForService} from '../utils/SearchUtils';
 import {generateTemplateString} from '../utils/TemplateUtils';
 
 import {API} from '../api/searchText';
@@ -106,7 +108,7 @@ export const searchEpic = action$ =>
  * @return {Observable}
  */
 
-export const searchItemSelected = action$ =>
+export const searchItemSelected = (action$, store) =>
     action$.ofType(TEXT_SEARCH_ITEM_SELECTED)
         .switchMap(action => {
             // itemSelectionStream --> emits actions for zoom and marker add
@@ -134,18 +136,22 @@ export const searchItemSelected = action$ =>
                         const latlng = { lng: coord[0], lat: coord[1] };
                         const typeName = item.__SERVICE__.options.typeName;
                         if (coord) {
+                            const layerObj = typeName && getLayerFromName(store.getState(), typeName);
                             let itemId = null;
                             let filterNameList = [];
                             let overrideParams = {};
+                            let forceVisibility = false;
                             if (item.__SERVICE__.launchInfoPanel === "single_layer") {
                                 /* take info from the item selected and restrict feature info to this layer
                                  * and force info_format to application/json for allowing
                                  * filtering results later on (identify epic) */
+                                forceVisibility = item.__SERVICE__.forceSearchLayerVisibility;
                                 filterNameList = [typeName];
                                 itemId = item.id;
                                 overrideParams = { [item.__SERVICE__.options.typeName]: { info_format: "application/json" } };
                             }
                             return [
+                                ...(forceVisibility && layerObj ? [changeLayerProperties(layerObj.id, {visibility: true})] : []),
                                 featureInfoClick({ latlng }, typeName, filterNameList, overrideParams, itemId),
                                 showMapinfoMarker(),
                                 ...actions
@@ -180,6 +186,30 @@ export const searchItemSelected = action$ =>
             return Rx.Observable.of(resultsPurge()).concat(itemSelectionStream, nestedServicesStream, searchTextStream);
         });
 
+/**
+ * Handles show GFI button click action.
+ */
+export const textSearchShowGFIEpic = (action$, store) =>
+    action$.ofType(TEXT_SEARCH_SHOW_GFI)
+        .switchMap(({item}) => {
+            const state = store.getState();
+            const typeName = item?.__SERVICE__?.options?.typeName;
+            const layerObj = typeName && getLayerFromName(state, typeName);
+            const bbox = item.bbox || item.properties.bbox || toBbox(item);
+            const coord = pointOnSurface(item).geometry.coordinates;
+            const latlng = { lng: coord[0], lat: coord[1] };
+
+            return !!coord &&
+                showGFIForService(layerObj, item?.__SERVICE__) ?
+                Rx.Observable.of(
+                    ...(item?.__SERVICE__?.forceSearchLayerVisibility && layerObj ? [changeLayerProperties(layerObj.id, {visibility: true})] : []),
+                    featureInfoClick({ latlng }, typeName, [typeName], { [typeName]: { info_format: "application/json" } }, item.id),
+                    showMapinfoMarker(),
+                    zoomToExtent([bbox[0], bbox[1], bbox[2], bbox[3]], "EPSG:4326", item?.__SERVICE__?.options?.maxZoomLevel || 21),
+                    addMarker(item),
+                ) :
+                Rx.Observable.empty();
+        });
 
 /**
  * Gets every `ZOOM_ADD_POINT` event.

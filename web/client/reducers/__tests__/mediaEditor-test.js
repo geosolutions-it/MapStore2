@@ -75,6 +75,11 @@ describe('Test the mediaEditor reducer', () => {
         let state = mediaEditor({}, selectItem(id));
         expect(state.selected).toEqual(id);
     });
+    it('SELECT_ITEM with empty the same id', () => {
+        const id = "id";
+        let state = mediaEditor({selected: id}, selectItem(id));
+        expect(state.selected).toEqual('');
+    });
     it('SET_MEDIA_SERVICE', () => {
         const value = "id";
         let state = mediaEditor({}, setMediaService({value}));

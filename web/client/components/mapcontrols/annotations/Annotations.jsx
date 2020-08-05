@@ -18,6 +18,7 @@ const PolygonThumb = require('../../../components/style/thumbGeoms/PolygonThumb.
 const {head} = require('lodash');
 const assign = require('object-assign');
 const Filter = require('../../misc/Filter');
+const Loader = require('../../misc/Loader');
 const uuidv1 = require('uuid/v1');
 
 const {Grid, Col, Row, Glyphicon, Button} = require('react-bootstrap');
@@ -83,6 +84,11 @@ const defaultConfig = require('./AnnotationsConfig');
  * @prop {string} symbolsPath path to the svg folder
  * @prop {object[]} symbolList list of symbols
  * @prop {string} defaultShape default Shape
+ * @prop {string} defaultShapeStrokeColor default symbol stroke color
+ * @prop {string} defaultShapeFillColor default symbol fill color
+ * @prop {string} defaultShapeSize default symbol shape size in px
+ * @prop {object} defaultStyles object with default symbol styles
+ * @prop {number} textRotationStep rotation step of text styler
  *
  * the annotation's attributes.
  */
@@ -92,6 +98,7 @@ class Annotations extends React.Component {
         styling: PropTypes.bool,
         toggleControl: PropTypes.func,
 
+        loading: PropTypes.bool,
         closing: PropTypes.bool,
         showUnsavedChangesModal: PropTypes.bool,
         showUnsavedStyleModal: PropTypes.bool,
@@ -129,7 +136,13 @@ class Annotations extends React.Component {
         lineDashOptions: PropTypes.array,
         symbolList: PropTypes.array,
         defaultShape: PropTypes.string,
-        symbolsPath: PropTypes.string
+        symbolsPath: PropTypes.string,
+        defaultShapeSize: PropTypes.number,
+        defaultShapeFillColor: PropTypes.string,
+        defaultShapeStrokeColor: PropTypes.string,
+        defaultStyles: PropTypes.object,
+        onLoadDefaultStyles: PropTypes.func,
+        textRotationStep: PropTypes.number
     };
 
     static contextTypes = {
@@ -144,11 +157,18 @@ class Annotations extends React.Component {
         onUpdateSymbols: () => {},
         onSetErrorSymbol: () => {},
         onLoadAnnotations: () => {},
+        onLoadDefaultStyles: () => {},
         annotations: []
     };
     state = {
         selectFile: false
     }
+
+    componentDidMount() {
+        this.props.onLoadDefaultStyles(this.props.defaultShape, this.props.defaultShapeSize, this.props.defaultShapeFillColor, this.props.defaultShapeStrokeColor,
+            this.props.symbolsPath);
+    }
+
     getConfig = () => {
         return assign({}, defaultConfig, this.props.config);
     };
@@ -221,6 +241,13 @@ class Annotations extends React.Component {
     };
 
     renderCards = () => {
+        if (this.props.loading) {
+            return (
+                <div style={{display: 'flex', height: '100%', justifyContent: 'center', alignItems: 'center'}}>
+                    <Loader size={352}/>
+                </div>
+            );
+        }
         if (this.props.mode === 'list') {
             return (
                 <SideGrid items={this.props.annotations && this.props.annotations.filter(this.applyFilter).map(a => this.renderItems(a))}/>
@@ -239,6 +266,11 @@ class Annotations extends React.Component {
             symbolErrors={this.props.symbolErrors}
             symbolList={this.props.symbolList}
             defaultShape={this.props.defaultShape}
+            defaultShapeSize={this.props.defaultShapeSize}
+            defaultShapeFillColor={this.props.defaultShapeFillColor}
+            defaultShapeStrokeColor={this.props.defaultShapeStrokeColor}
+            defaultStyles={this.props.defaultStyles}
+            textRotationStep={this.props.textRotationStep}
         />;
     };
 

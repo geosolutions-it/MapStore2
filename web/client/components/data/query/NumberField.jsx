@@ -8,7 +8,7 @@ const PropTypes = require('prop-types');
  */
 
 const React = require('react');
-const {Tooltip, Row, Col} = require("react-bootstrap");
+const {Tooltip} = require("react-bootstrap");
 const OverlayTrigger = require('../../misc/OverlayTrigger');
 const LocaleUtils = require('../../../utils/LocaleUtils');
 const numberLocalizer = require('react-widgets/lib/localizers/simple-number');
@@ -71,40 +71,36 @@ class NumberField extends React.Component {
         let lowLabel = this.props.lowLabel ? <label>{this.props.lowLabel}</label> : null;
         let upLabel = this.props.upLabel ? <label>{this.props.upLabel}</label> : null;
         return this.props.operator === "><" ?
-            <div>
-                <Row>
-                    <Col xs={6}>
-                        {lowLabel}
-                        <NumberPicker
-                            style={style}
-                            value={this.props.fieldValue && (this.props.fieldValue.lowBound !== null && this.props.fieldValue.lowBound !== undefined) ? this.props.fieldValue.lowBound : null}
-                            onChange={(value) => !isNaN(value) && this.changeNumber({lowBound: value, upBound: this.props.fieldValue && (this.props.fieldValue.upBound !== null && this.props.fieldValue.upBound !== undefined ) ? this.props.fieldValue.upBound : null})}
-                            {...this.props.options}
-                        />
-                    </Col>
-                    <Col xs={6}>
-                        {upLabel}
-                        <NumberPicker
-                            style={style}
-                            value={this.props.fieldValue && (this.props.fieldValue.upBound !== null && this.props.fieldValue.upBound !== undefined ) ? this.props.fieldValue.upBound : null}
-                            onChange={(value) => !isNaN(value) && this.changeNumber({upBound: value, lowBound: this.props.fieldValue && (this.props.fieldValue.lowBound !== null && this.props.fieldValue.lowBound !== undefined) ? this.props.fieldValue.lowBound : null})}
-                            {...this.props.options}
-                        />
-                    </Col>
-                </Row>
-            </div>
-            :
-            <Row>
-                <Col xs={12}>
-                    {label}
+            <div className="query-field">
+                <div className="query-field-value">
+                    {lowLabel}
                     <NumberPicker
                         style={style}
-                        value={this.props.fieldValue && (this.props.fieldValue.lowBound !== null && this.props.fieldValue.lowBound !== undefined) ? this.props.fieldValue.lowBound : this.props.fieldValue}
-                        onChange={(value) => !isNaN(value) && this.changeNumber(value)}
+                        value={this.props.fieldValue && (this.props.fieldValue.lowBound !== null && this.props.fieldValue.lowBound !== undefined) ? this.props.fieldValue.lowBound : null}
+                        onChange={(value) => !isNaN(value) && this.changeNumber({lowBound: value, upBound: this.props.fieldValue && (this.props.fieldValue.upBound !== null && this.props.fieldValue.upBound !== undefined ) ? this.props.fieldValue.upBound : null})}
                         {...this.props.options}
                     />
-                </Col>
-            </Row>
+                </div>
+                <div className="query-field-value">
+                    {upLabel}
+                    <NumberPicker
+                        style={style}
+                        value={this.props.fieldValue && (this.props.fieldValue.upBound !== null && this.props.fieldValue.upBound !== undefined ) ? this.props.fieldValue.upBound : null}
+                        onChange={(value) => !isNaN(value) && this.changeNumber({upBound: value, lowBound: this.props.fieldValue && (this.props.fieldValue.lowBound !== null && this.props.fieldValue.lowBound !== undefined) ? this.props.fieldValue.lowBound : null})}
+                        {...this.props.options}
+                    />
+                </div>
+            </div>
+            :
+            <div>
+                {label}
+                <NumberPicker
+                    style={style}
+                    value={this.props.fieldValue && (this.props.fieldValue.lowBound !== null && this.props.fieldValue.lowBound !== undefined) ? this.props.fieldValue.lowBound : this.props.fieldValue}
+                    onChange={(value) => !isNaN(value) && this.changeNumber(value)}
+                    {...this.props.options}
+                />
+            </div>
         ;
     };
 

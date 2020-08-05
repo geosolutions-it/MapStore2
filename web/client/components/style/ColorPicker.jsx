@@ -8,6 +8,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
+import isFunction from 'lodash/isFunction';
 import { SketchPicker } from 'react-color';
 import tinycolor from 'tinycolor2';
 import { createPortal } from 'react-dom';
@@ -21,7 +22,7 @@ import { getConfigProp } from '../../utils/ConfigUtils';
  * @prop {function} line show swatch for line style
  * @prop {bool} disabled disable swatch and picker
  * @prop {object} pickerProps props for picker component
- * @prop {node} containerNode container node target for picker overlay
+ * @prop {node|function} containerNode container node target for picker overlay or a function that return the target node
  * @prop {function} onOpen detect when color picker is open
  * @prop {string} placement preferred placement of picker, one of 'top', 'right', 'bottom' or 'left'
  */
@@ -33,7 +34,7 @@ function ColorPicker({
     line,
     disabled,
     pickerProps,
-    containerNode,
+    containerNode: containerNodeProp,
     onOpen,
     placement
 }) {
@@ -54,6 +55,9 @@ function ColorPicker({
     const [displayColorPicker, setDisplayColorPicker] = useState();
 
     const valueString = tinycolor(value).toString();
+
+    const containerNode = isFunction(containerNodeProp) ? containerNodeProp() : containerNodeProp;
+
     useEffect(() => {
         const colorString = color && tinycolor(color).toString();
         if (colorString && valueString
@@ -75,6 +79,19 @@ function ColorPicker({
 
     // compute the position of picker and arrow in the view
     function computeStyles() {
+        const placementCenterStyle = {
+            picker: {},
+            overlay: {
+                backgroundColor: 'rgba(0, 0, 0, 0.4)'
+            },
+            arrow: {
+                opacity: 0
+            }
+        };
+
+        if (placement === 'center') {
+            return placementCenterStyle;
+        }
         const swatchBoundingClientRect = swatch?.current?.getBoundingClientRect?.();
         const overlayBoundingClientRect = overlay?.current?.getBoundingClientRect?.();
         const sketchPickerNode = overlay?.current?.querySelector?.('.ms-sketch-picker');
@@ -358,7 +375,7 @@ ColorPicker.propTypes = {
     line: PropTypes.bool,
     disabled: PropTypes.bool,
     pickerProps: PropTypes.object,
-    containerNode: PropTypes.node,
+    containerNode: PropTypes.oneOfType([ PropTypes.node, PropTypes.func ]),
     onOpen: PropTypes.function,
     placement: PropTypes.string
 };
@@ -369,7 +386,7 @@ ColorPicker.defaultProps = {
     onChangeColor: () => {},
     pickerProps: {},
     onOpen: () => {},
-    containerNode: document.querySelector('.' + (getConfigProp('themePrefix') || 'ms2') + " > div") || document.body
+    containerNode: () => document.querySelector('.' + (getConfigProp('themePrefix') || 'ms2') + " > div") || document.body
 };
 
 export default ColorPicker;

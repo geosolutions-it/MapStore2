@@ -52,9 +52,17 @@ const video = branch(
     compose(
         connect(createSelector(resourcesSelector, (resources) => ({resources}))),
         withProps(
-            ({ resources, resourceId: id }) => {
+            ({ resources, resourceId: id, autoplay }) => {
                 const resource = find(resources, { id }) || {};
-                return resource.data;
+                const { autoplay: resourceAutoplay, ...resourceData } = resource.data || {};
+                return {
+                    ...resourceData,
+                    // prioritize autoplay of content
+                    // instead of one from resource
+                    autoplay: autoplay !== undefined
+                        ? autoplay
+                        : resourceAutoplay
+                };
             }
         )
     ),

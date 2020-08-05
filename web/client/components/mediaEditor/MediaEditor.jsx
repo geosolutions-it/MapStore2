@@ -78,7 +78,7 @@ export default ({
                     disabled={saveState && saveState.addingMedia}
                     noResultsText="mediaEditor.mediaPicker.noResults"
                     placeholder="mediaEditor.mediaPicker.selectService"
-                    options={services.map(s => ({label: s.name, value: s.id}))}
+                    options={services.map(s => ({label: <Message msgId={s.name}/>, value: s.id}))}
                     onChange={setMediaService}
                     value={selectedService}
                     clearable={false}

@@ -29,7 +29,8 @@ export default ({
     viewWidth,
     viewHeight,
     expandableMedia,
-    mediaViewer
+    mediaViewer,
+    contentToolbar
 }) => (
     <section
         className="ms-section ms-section-paragraph"
@@ -50,7 +51,8 @@ export default ({
             viewHeight={viewHeight}
             contentProps={{
                 expandable: expandableMedia,
-                mediaViewer
+                mediaViewer,
+                contentToolbar
             }}
         />
         {mode === Modes.EDIT && <AddBar
@@ -61,6 +63,13 @@ export default ({
                 tooltipId: 'geostory.addTitleSection',
                 onClick: () => {
                     add(`sections`, id, SectionTypes.TITLE);
+                }
+            },
+            {
+                glyph: 'story-title-section',
+                tooltipId: 'geostory.addBannerSection',
+                onClick: () => {
+                    add('sections', id, SectionTypes.BANNER);
                 }
             },
             {

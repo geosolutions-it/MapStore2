@@ -23,6 +23,8 @@ class GroupCard extends React.Component {
         // props
         style: PropTypes.object,
         group: PropTypes.object,
+        titleStyle: PropTypes.object,
+        headerStyle: PropTypes.object,
         innerItemStyle: PropTypes.object,
         avatarStyle: PropTypes.object,
         nameStyle: PropTypes.object,
@@ -36,21 +38,27 @@ class GroupCard extends React.Component {
             backgroundPosition: "center",
             backgroundRepeat: "repeat-x"
         },
-        innerItemStyle: {
-            marginTop: "35px",
-            marginLeft: "9px"
+        titleStyle: {
+            display: "flex"
         },
+        headerStyle: {
+            flexGrow: 1,
+            overflow: "hidden",
+            whiteSpace: "nowrap",
+            textOverflow: "ellipsis",
+            width: 0
+        },
+        innerItemStyle: {},
         avatarStyle: {
             margin: "10px"
         },
         nameStyle: {
-            position: "absolute",
-            left: "80px",
-            top: "30px",
-            width: "75%",
             borderBottom: "1px solid #ddd",
             fontSize: 18,
-            fontWeight: "bold"
+            fontWeight: "bold",
+            overflow: "auto",
+            wordWrap: "break-word",
+            minHeight: "1.5em"
         }
     };
 
@@ -72,7 +80,7 @@ class GroupCard extends React.Component {
     renderDescription = () => {
         return (<div className="group-thumb-description" style={this.props.innerItemStyle}>
             <div><strong><Message msgId="usergroups.description" /></strong></div>
-            <div>{this.props.group.description ? this.props.group.description : <Message msgId="usergroups.noDescriptionAvailable" />}</div>
+            <div className="group-thumb-description-content">{this.props.group.description ? this.props.group.description : <Message msgId="usergroups.noDescriptionAvailable" />}</div>
         </div>);
     };
 
@@ -80,15 +88,21 @@ class GroupCard extends React.Component {
         return (<div key="name" style={this.props.nameStyle}>{this.props.group.groupName}</div>);
     };
 
+    renderHeader = () => {
+        return <div style={this.props.headerStyle}>{this.props.group.groupName}</div>;
+    }
+
     render() {
         return (
-            <GridCard className="group-thumb" style={this.props.style} header={this.props.group.groupName}
+            <GridCard className="group-thumb" style={this.props.style} titleStyle={this.props.titleStyle} header={this.renderHeader()}
                 actions={this.props.actions}
             >
                 <div className="user-data-container">
                     {this.renderAvatar()}
-                    {this.renderName()}
-                    {this.renderDescription()}
+                    <div className="user-card-info-container">
+                        {this.renderName()}
+                        {this.renderDescription()}
+                    </div>
                 </div>
                 {this.renderStatus()}
             </GridCard>

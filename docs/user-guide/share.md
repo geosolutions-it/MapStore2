@@ -23,7 +23,11 @@ As soon as the Share window opens, the link section is by default displayed:
 
 <img src="../img/share/share_window.jpg" class="ms-docimage"  style="max-width:400px;"/>
 
-Here it is possible to copy the resource url link and access its qr code. Moreover only opening this window from the [Burger Menu](menu-bar.md#burger-menu) it is possible to access the advanced options where the user can add the bbox param to the link (in this case the zoom and the coordinates of the displayed map will be shared with the link).
+Here it is possible to copy the resource url link and access its qr code. Moreover only opening this window from the [Burger Menu](menu-bar.md#burger-menu) it is possible to access the advanced options where the user can add the bbox param or center and zoom param of the share link.
+
+<img src="../img/share/share_window_center_zoom.jpg" class="ms-docimage"  style="max-width:400px;"/>
+
+With *Add center and zoom to sharing link*, manually or by clicking the center coordinates with possibility to switch coordinate format. The user can also set *zoom* value from the input field. By default, the center and zoom param are added to the share link with the possibility to add a place marker (when map loads) by selecting the *Add Marker* checkbox. 
 
 ## Social
 
@@ -31,7 +35,7 @@ The social section displays like the following:
 
 <img src="../img/share/social.jpg" class="ms-docimage"  style="max-width:400px;"/>
 
-From here it is possible to share the Resource in Facebook, Twitter and Likedin. Also in this case, only opening the window from the maps [Burger Menu](menu-bar.md#burger-menu) the user can add the bbox param.
+From here it is possible to share the Resource on Facebook, Twitter and LinkedIn. Also in this case, only opening the window from the maps [Burger Menu](menu-bar.md#burger-menu) the user can add the bbox or center and zoom param.
 
 ## Embed
 
@@ -39,7 +43,7 @@ Accessing the embed section it displays the following:
 
 <img src="../img/share/embed.jpg" class="ms-docimage"  style="max-width:400px;"/>
 
-With this section the user can copy the embedded code or the APIs, useful for example when you need to insert the resource inside a webpage. Also in this case, only opening the window from the maps [Burger Menu](menu-bar.md#burger-menu) the user can add the bbox param.
+With this section the user can copy the embedded code or the APIs, useful for example when you need to insert the resource inside a webpage. Also in this case, only opening the window from the maps [Burger Menu](menu-bar.md#burger-menu) the user can add the bbox or center and zoom param.
 
 !!!note
     At the moment the embed section is available only for Maps.

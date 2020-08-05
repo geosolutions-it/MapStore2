@@ -29,6 +29,7 @@ const {addOpacityToColor} = require('../../../utils/VectorStyleUtils');
 class Stroke extends React.Component {
     static propTypes = {
         style: PropTypes.object,
+        defaultColor: PropTypes.string,
         lineDashOptions: PropTypes.array,
         onChange: PropTypes.func,
         width: PropTypes.number,
@@ -75,7 +76,7 @@ class Stroke extends React.Component {
                     <Message msgId="draw.color"/>
                 </Col>
                 <Col xs={6} style={{position: "static"}}>
-                    <ColorSelector color={addOpacityToColor(tinycolor(style.color).toRgb(), style.opacity)} width={this.props.width}
+                    <ColorSelector color={addOpacityToColor(tinycolor(style.color || this.props.defaultColor).toRgb(), style.opacity)} width={this.props.width}
                         onChangeColor={c => {
                             if (!isNil(c)) {
                                 const color = tinycolor(c).toHexString();

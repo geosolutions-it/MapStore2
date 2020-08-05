@@ -15,7 +15,8 @@ const {
     LOADING_STYLE,
     LOADED_STYLE,
     INIT_STYLE_SERVICE,
-    SET_EDIT_PERMISSION
+    SET_EDIT_PERMISSION,
+    UPDATE_EDITOR_METADATA
 } = require('../actions/styleeditor');
 
 function styleeditor(state = {}, action) {
@@ -107,6 +108,15 @@ function styleeditor(state = {}, action) {
                     status: action.error && action.error.status || 404,
                     ...errorInfo
                 }
+            }
+        };
+    }
+    case UPDATE_EDITOR_METADATA: {
+        return {
+            ...state,
+            metadata: {
+                ...state.metadata,
+                ...action.metadata
             }
         };
     }

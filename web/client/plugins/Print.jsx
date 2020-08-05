@@ -464,7 +464,7 @@ module.exports = {
         enabler: (state) => state.print && state.print.enabled || state.toolbar && state.toolbar.active === 'print'
     },
     {
-        disablePluginIf: "{state('mapType') === 'cesium'}",
+        disablePluginIf: "{state('mapType') === 'cesium' || !state('printEnabled')}",
         Toolbar: {
             name: 'print',
             position: 7,

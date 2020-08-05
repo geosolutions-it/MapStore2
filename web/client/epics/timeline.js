@@ -7,7 +7,7 @@ const {wrapStartStop} = require('../observables/epics');
 
 const { CHANGE_MAP_VIEW } = require('../actions/map');
 
-const { SELECT_TIME, RANGE_CHANGED, ENABLE_OFFSET, SET_MAP_SYNC, timeDataLoading, rangeDataLoaded, onRangeChanged, selectLayer } = require('../actions/timeline');
+const { SELECT_TIME, RANGE_CHANGED, ENABLE_OFFSET, SET_MAP_SYNC, AUTOSELECT, timeDataLoading, rangeDataLoaded, onRangeChanged, selectLayer } = require('../actions/timeline');
 const { setCurrentTime, UPDATE_LAYER_DIMENSION_DATA, setCurrentOffset } = require('../actions/dimension');
 
 const {REMOVE_NODE} = require('../actions/layers');
@@ -195,7 +195,7 @@ module.exports = {
     /**
      * Initializes the time line
      */
-    setupTimelineExistingSettings: (action$, { getState = () => { } } = {}) => action$.ofType(REMOVE_NODE, UPDATE_LAYER_DIMENSION_DATA)
+    setupTimelineExistingSettings: (action$, { getState = () => { } } = {}) => action$.ofType(REMOVE_NODE, AUTOSELECT)
         .exhaustMap(() =>
             isAutoSelectEnabled(getState())
             && get(timelineLayersSelector(getState()), "[0].id")

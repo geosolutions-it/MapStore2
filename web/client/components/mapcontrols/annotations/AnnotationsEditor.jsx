@@ -102,8 +102,13 @@ const bbox = require('@turf/bbox');
  * @prop {string} pointType the type of the point, values are "marker" or "symbol"
  * @prop {object[]} lineDashOptions list of options for dashed lines
  * @prop {object[]} symbolList list of symbols
- * @prop {string} defaultShape default shape for symbol
  * @prop {string} symbolsPath path to the svg folder
+ * @prop {string} defaultShape default shape for symbol
+ * @prop {string} defaultShapeStrokeColor default symbol stroke color
+ * @prop {string} defaultShapeFillColor default symbol fill color
+ * @prop {string} defaultShapeSize default symbol shape size in px
+ * @prop {object} defaultStyles object with default symbol styles
+ * @prop {number} textRotationStep rotation step of text styler
  *
  * In addition, as the Identify viewer interface mandates, every feature attribute is mapped as a component property (in addition to the feature object).
  */
@@ -189,7 +194,12 @@ class AnnotationsEditor extends React.Component {
         symbolErrors: PropTypes.array,
         lineDashOptions: PropTypes.array,
         symbolList: PropTypes.array,
-        defaultShape: PropTypes.string
+        defaultShape: PropTypes.string,
+        defaultShapeSize: PropTypes.number,
+        defaultShapeFillColor: PropTypes.string,
+        defaultShapeStrokeColor: PropTypes.string,
+        defaultStyles: PropTypes.object,
+        textRotationStep: PropTypes.number
     };
 
     static defaultProps = {
@@ -315,6 +325,8 @@ class AnnotationsEditor extends React.Component {
                             onStartDrawing: this.props.onStartDrawing,
                             disabled: !this.props.config.multiGeometry && this.props.editing && this.props.editing.features && this.props.editing.features.length,
                             drawing: this.props.drawing,
+                            defaultStyles: this.props.defaultStyles,
+                            defaultPointType: this.getConfig().defaultPointType,
                             titles: {
                                 marker: <Message msgId="annotations.titles.marker" />,
                                 line: <Message msgId="annotations.titles.line" />,
@@ -465,8 +477,14 @@ class AnnotationsEditor extends React.Component {
             onUpdateSymbols={this.props.onUpdateSymbols}
             symbolList={this.props.symbolList}
             defaultShape={this.props.defaultShape}
+            defaultShapeSize={this.props.defaultShapeSize}
+            defaultShapeFillColor={this.props.defaultShapeFillColor}
+            defaultShapeStrokeColor={this.props.defaultShapeStrokeColor}
+            defaultPointType={this.getConfig().defaultPointType}
+            defaultStyles={this.props.defaultStyles}
             lineDashOptions={this.props.lineDashOptions}
             markersOptions={this.getConfig()}
+            textRotationStep={this.props.textRotationStep}
         />);
     };
 

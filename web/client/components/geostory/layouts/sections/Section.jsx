@@ -12,6 +12,7 @@ import { lists, Modes, StoryTypes, SectionTypes, SectionTemplates} from '../../.
 import Immersive from './Immersive';
 import Paragraph from './Paragraph';
 import Title from './Title';
+import Banner from './Banner';
 
 import visibilityHandler from '../../contents/enhancers/visibilityHandler';
 
@@ -21,6 +22,7 @@ const types = {
     [SectionTemplates.MEDIA]: Paragraph,
     [SectionTemplates.WEBPAGE]: Paragraph,
     [SectionTypes.TITLE]: Title,
+    [SectionTypes.BANNER]: Banner,
     UNKNOWN: ({ type, inViewRef }) => <div ref={inViewRef} className="ms-section ms-section-unknown">WARNING: unknown session of type {type}</div>
 };
 
@@ -50,7 +52,9 @@ class Section extends React.Component {
         focusedContent: PropTypes.object,
         expandableMedia: PropTypes.bool,
         storyTheme: PropTypes.object,
-        mediaViewer: PropTypes.object
+        mediaViewer: PropTypes.func,
+        contentToolbar: PropTypes.func,
+        inView: PropTypes.bool
     };
 
     static defaultProps = {
@@ -94,6 +98,8 @@ class Section extends React.Component {
                 focusedContent={this.props.focusedContent}
                 storyTheme={this.props.storyTheme}
                 mediaViewer={this.props.mediaViewer}
+                contentToolbar={this.props.contentToolbar}
+                inView={this.props.inView}
             />
         );
     }

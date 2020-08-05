@@ -102,6 +102,35 @@ describe('withShareTool enhancer', () => {
             // verify the embedOptions.showTOCToggle has effect on "show TOC" checkbox hiding it
             expect(showTOC).toNotExist();
         });
+        it('tests correct shareApiUrl when share api is visible)', () => {
+            const VERSION = "VERSION";
+            const Sink = addSharePanel(createSink(() => { }));
+            ReactDOM.render(<Sink
+                showShareModal
+                shareApi
+                version={VERSION}
+                editedResource={{}}
+                getShareUrl={() => FAKE_RESOURCE_PATH}
+            />, document.getElementById("container"));
+            const sharePanel = document.querySelector('#sharePanel-tabs');
+            expect(sharePanel).toExist('Share panel doesn\'t exist');
+            document.getElementById('sharePanel-tabs-tab-3').click();
+            // check if the showTOC is enabled by deafult
+            let showTOC = document.querySelector('#sharePanel-tabs .input-link-tools input[type=checkbox]');
+            expect(showTOC).toExist();
+            ReactDOM.render(<Sink
+                showShareModal
+                shareApi
+                version={VERSION}
+                editedResource={{}}
+                getShareUrl={() => FAKE_RESOURCE_PATH}
+            />, document.getElementById("container"));
+            document.getElementById('sharePanel-tabs-tab-3').click();
+            const codeAPI = document.querySelectorAll("code")[1];
+            const code = codeAPI.innerText;
+            const index = code.indexOf("dist/ms2-api.js?VERSION");
+            expect(index).toBeGreaterThan(-1);
+        });
     });
 
 });

@@ -101,6 +101,7 @@ const settingsLifecycle = compose(
         },
         componentWillUpdate(newProps) {
             const {
+                initialActiveTab = 'general',
                 settings = {},
                 onUpdateOriginalSettings = () => { },
                 onUpdateInitialSettings = () => { },
@@ -111,7 +112,7 @@ const settingsLifecycle = compose(
                 // update initial and original settings
                 onUpdateOriginalSettings({ });
                 onUpdateInitialSettings({ ...newProps.element });
-                onSetTab('general');
+                onSetTab(initialActiveTab);
             }
         }
     })

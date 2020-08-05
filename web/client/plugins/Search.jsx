@@ -5,16 +5,19 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
 */
+
 const PropTypes = require('prop-types');
 const React = require('react');
 const {connect} = require('react-redux');
 const {createSelector} = require('reselect');
 const assign = require('object-assign');
-const HelpWrapper = require('./help/HelpWrapper');
-const Message = require('./locale/Message');
 const {get, isArray} = require('lodash');
-const {searchEpic, searchOnStartEpic, searchItemSelected, zoomAndAddPointEpic} = require('../epics/search');
+const {searchEpic, searchOnStartEpic, searchItemSelected, zoomAndAddPointEpic, textSearchShowGFIEpic} = require('../epics/search');
 const {defaultIconStyle} = require('../utils/SearchUtils');
+const {mapSelector} = require('../selectors/map');
+const {setSearchBookmarkConfig} = require('../actions/searchbookmarkconfig');
+const {zoomToExtent} = require( "../actions/map");
+const {configureMap} = require( "../actions/config");
 
 const {
     resultsPurge,
@@ -28,7 +31,8 @@ const {
     zoomAndAddPoint,
     changeFormat,
     changeCoord,
-    updateResultsStyle
+    updateResultsStyle,
+    showGFI
 } = require("../actions/search");
 const {
     toggleControl
@@ -39,16 +43,22 @@ const {
 
 const searchSelector = createSelector([
     state => state.search || null,
-    state => state .controls && state.controls.searchservicesconfig || null
-], (searchState, searchservicesconfigControl) => ({
+    state => state.controls && state.controls.searchservicesconfig || null,
+    state => state.controls && state.controls.searchBookmarkConfig || null,
+    state=> state.mapConfigRawData || {},
+    state => state.searchbookmarkconfig || {}
+], (searchState, searchservicesconfigControl, searchBookmarkConfigControl, mapInitial, bookmarkConfig) => ({
     enabledSearchServicesConfig: searchservicesconfigControl && searchservicesconfigControl.enabled || false,
+    enabledSearchBookmarkConfig: searchBookmarkConfigControl && searchBookmarkConfigControl.enabled || false,
     error: searchState && searchState.error,
     coordinate: searchState && searchState.coordinate || {},
     loading: searchState && searchState.loading,
     searchText: searchState ? searchState.searchText : "",
     activeSearchTool: get(searchState, "activeSearchTool", "addressSearch"),
     format: get(searchState, "format", "decimal"),
-    selectedItems: searchState && searchState.selectedItems
+    selectedItems: searchState && searchState.selectedItems,
+    mapInitial,
+    bookmarkConfig: bookmarkConfig || {}
 }));
 
 const SearchBar = connect(searchSelector, {
@@ -62,33 +72,38 @@ const SearchBar = connect(searchSelector, {
     onPurgeResults: resultsPurge,
     onSearchReset: resetSearch,
     onSearchTextChange: searchTextChanged,
-    onCancelSelectedItem: cancelSelectedItem
+    onCancelSelectedItem: cancelSelectedItem,
+    onPropertyChange: setSearchBookmarkConfig,
+    onZoomToExtent: zoomToExtent,
+    onLayerVisibilityLoad: configureMap
 })(require("../components/mapcontrols/search/SearchBar").default);
 
-const {mapSelector} = require('../selectors/map');
+const {layersSelector} = require('../selectors/layers');
 
 const MediaQuery = require('react-responsive');
 
 const selector = createSelector([
     mapSelector,
+    layersSelector,
     state => state.search || null
-], (mapConfig, searchState) => ({
+], (mapConfig, layers, searchState) => ({
     mapConfig,
+    layers,
     results: searchState ? searchState.results : null
 }));
 
 const SearchResultList = connect(selector, {
     onItemClick: selectSearchItem,
-    addMarker: addMarker
-})(require('../components/mapcontrols/search/SearchResultList'));
+    addMarker,
+    showGFI
+})(require('../components/mapcontrols/search/SearchResultList').default);
 
 const ToggleButton = require('./searchbar/ToggleButton');
 
 /**
  * Search plugin. Provides search functionalities for the map.
- * Allows to display results and place them on the map. Supports nominatim and WFS as search protocols
- * You can configure the services and each service can trigger a nested search.
- *
+ * <br> Allows to display results and place them on the map. Supports nominatim and WFS as search protocols
+ * <br> You can configure the services and each service can trigger a nested search.
  * @example
  * {
  *  "name": "Search",
@@ -124,6 +139,12 @@ const ToggleButton = require('./searchbar/ToggleButton');
  * }
  * @class Search
  * @memberof plugins
+ * @prop {boolean} [cfg.showOptions=true] shows the burger menu in the input field
+ * @prop {string} [cfg.activeSearchTool=addressSearch] default search tool. Values are "addressSearch", "coordinatesSearch", "bookmarkSearch"
+ * @prop {boolean} [cfg.showCoordinatesSearchOption=true] shows the menu item to switch to the coordinate editor
+ * @prop {boolean} [cfg.showAddressSearchOption=true]  shows the menu item to switch to the address editor
+ * @prop {boolean} [cfg.showBookMarkSearchOption=true]  shows the menu item to switch to the bookmark selector
+ * You can configure the bookmarks and each bookmark can trigger a zoomToExtent or Layer visibility reload based on the options set while configuring
  * @prop {object} cfg.searchOptions initial search options
  * @prop {object} cfg.maxResults number of max items present in the result list
  * @prop {object} cfg.resultsStyle custom style for search results
@@ -274,12 +295,7 @@ const SearchPlugin = connect((state) => ({
 
     render() {
         return (<span>
-            <HelpWrapper
-                id="search-help"
-                key="seachBar-help"
-                helpText={<Message msgId="helptexts.searchBar"/>}>
-                {this.getSearchAndToggleButton()}
-            </HelpWrapper>
+            {this.getSearchAndToggleButton()}
             <SearchResultList
                 fitToMapSize={this.props.fitResultsToMapSize}
                 searchOptions={this.props.searchOptions}
@@ -299,7 +315,7 @@ module.exports = {
             priority: 1
         }
     }),
-    epics: {searchEpic, searchOnStartEpic, searchItemSelected, zoomAndAddPointEpic},
+    epics: {searchEpic, searchOnStartEpic, searchItemSelected, zoomAndAddPointEpic, textSearchShowGFIEpic},
     reducers: {
         search: require('../reducers/search'),
         mapInfo: require('../reducers/mapInfo')

@@ -63,12 +63,19 @@ module.exports = class extends React.Component {
                     options={this.props.wfsFormats.map(f => ({value: f.name, label: f.label || f.name}))} />
             );
         }
+        const availableWFSFormats = this.props.wfsFormats
+        && this.props.wfsFormats.length
+        && formats.filter(f => this.props.wfsFormats.find(wfsF => wfsF.name.toLowerCase() === f.name.toLowerCase()))
+        || [];
         return (
             <Select
                 clearable={false}
+                isLoading={this.props.formatsLoading}
+                onOpen={() => this.props.formatOptionsFetch(this.props.layer)}
                 value={this.getSelectedFormat()}
+                noResultsText={<Message msgId="wfsdownload.format" />}
                 onChange={(sel) => this.props.onChange("selectedFormat", sel.value)}
-                options={formats.map(f => ({value: f.name, label: f.label || f.name}))} />
+                options={availableWFSFormats.map(f => ({value: f.name, label: f.label || f.name}))} />
         );
     };
     render() {
