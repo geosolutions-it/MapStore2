@@ -165,11 +165,13 @@ class GeometryDetails extends React.Component {
         );
     };
     renderCircleField = (value, name) => {
+        // radius should have 2 decimals if uom of projections is meter (EPSG:3857)
+        // all other cases it must have at least 6 decimals because coords are converted to EPSG:4326
         return (
             <IntlNumberFormControl
                 type="number"
                 id={"queryform_circle_" + name}
-                defaultValue={this.roundValue(value, !this.isWGS84() || name === 'radius' ? 100 : 1000000)}
+                defaultValue={this.roundValue(value, name === 'radius' && !this.isWGS84() ? 100 : 1000000)}
                 step={this.getStepCircle(this.props.zoom, name)}
                 onChange={(val) => this.onUpdateCircle(val, name)}/>
         );

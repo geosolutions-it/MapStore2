@@ -7,22 +7,22 @@
 */
 
 import React from 'react';
-import { FormGroup, Glyphicon, Row, Col } from 'react-bootstrap';
-import { isNumber } from 'lodash';
+import { InputGroup, FormGroup, Glyphicon, Row } from 'react-bootstrap';
+import { isNumber, isEmpty, some, isUndefined } from 'lodash';
 
 import CoordinateEntry from '../../misc/coordinateeditors/CoordinateEntry';
 import Message from '../../I18N/Message';
 import DropdownToolbarOptions from '../../misc/toolbar/DropdownToolbarOptions';
-import Toolbar from '../../misc/toolbar/Toolbar';
 
 import SearchBarBase from '../../search/SearchBarBase';
 import SearchBarInput from '../../search/SearchBarInput';
 import SearchBarToolbar from '../../search/SearchBarToolbar';
 
 import { defaultSearchWrapper } from '../../search/SearchBarUtils';
+import BookmarkSelect from "../searchbookmarkconfig/BookmarkSelect";
 
 export default ({
-    activeSearchTool = 'addressSearch',
+    activeSearchTool: activeTool = 'addressSearch',
     removeIcon = '1-close',
     searchIcon = 'search',
     isSearchClickable = true,
@@ -56,6 +56,7 @@ export default ({
     selectedItems = [],
     defaultZoomLevel = 12,
     enabledSearchServicesConfig = false,
+    enabledSearchBookmarkConfig = false,
     error,
     format = 'decimal',
     placeholder,
@@ -63,6 +64,7 @@ export default ({
     showOptions = true,
     showAddressSearchOption = true,
     showCoordinatesSearchOption = true,
+    showBookMarkSearchOption = true,
     onSearch,
     onSearchReset,
     onSearchTextChange,
@@ -73,7 +75,9 @@ export default ({
     onChangeFormat = () => {},
     onToggleControl = () => {},
     onZoomToPoint = () => {},
-    onPurgeResults
+    onPurgeResults,
+    items = [],
+    ...props
 }) => {
     const search = defaultSearchWrapper({searchText, selectedItems, searchOptions, maxResults, onSearch, onSearchReset});
 
@@ -94,15 +98,20 @@ export default ({
         }, defaultZoomLevel, "EPSG:4326");
     };
 
-    const getActiveTool = () => {
-        let activeTool = activeSearchTool;
-        if (showAddressSearchOption && !showCoordinatesSearchOption) {
-            activeTool = "addressSearch";
+    const searchByBookmark = () => {
+        const {bookmarkConfig, onLayerVisibilityLoad, mapInitial, onZoomToExtent} = props;
+        const {options: bbox = {}, layerVisibilityReload = false} = bookmarkConfig && bookmarkConfig.selected;
+        if (layerVisibilityReload) {
+            onLayerVisibilityLoad({
+                ...mapInitial,
+                map: {
+                    ...mapInitial.map,
+                    bookmark_search_config: bookmarkConfig && bookmarkConfig.bookmarkSearchConfig
+                }
+            }, null, [bbox.west, bbox.south, bbox.east, bbox.north]);
+        } else if (bbox && !isEmpty(bbox)) {
+            onZoomToExtent([bbox.west, bbox.south, bbox.east, bbox.north], "EPSG:4326");
         }
-        if (!showAddressSearchOption && showCoordinatesSearchOption) {
-            activeTool = "coordinatesSearch";
-        }
-        return activeTool;
     };
 
     const areValidCoordinates = () => isNumber(coordinate.lon) && isNumber(coordinate.lat);
@@ -123,9 +132,8 @@ export default ({
         return null;
     };
 
-    let activeTool = getActiveTool();
     let searchMenuOptions = [];
-    if (showAddressSearchOption && showCoordinatesSearchOption) {
+    if (showAddressSearchOption) {
         searchMenuOptions.push({
             active: activeTool === "addressSearch",
             onClick: () => {
@@ -135,6 +143,8 @@ export default ({
             glyph: searchIcon,
             text: <Message msgId="search.addressSearch"/>
         });
+    }
+    if (showCoordinatesSearchOption) {
         searchMenuOptions.push({
             active: activeTool === "coordinatesSearch",
             onClick: () => {
@@ -148,9 +158,61 @@ export default ({
         });
     }
 
+    let searchByBookmarkConfig;
+    // Search by bookmark option
+    if (showBookMarkSearchOption && !isEmpty(items)) {
+        const [item] = items;
+        if (some(items, "menuItem")) {
+            searchMenuOptions.push(
+                item.menuItem(onChangeActiveSearchTool, activeTool)
+            );
+        }
+        if (some(items, "bookmarkConfig")) {
+            searchByBookmarkConfig = item.bookmarkConfig(onToggleControl, enabledSearchBookmarkConfig, activeTool);
+        }
+    }
+
+    const searchConfig = {
+        onClick: () => {
+            if (!enabledSearchServicesConfig) {
+                onToggleControl("searchservicesconfig");
+            }
+        },
+        glyph: "cog",
+        className: "square-button-md no-border ",
+        tooltip: <Message msgId="search.searchservicesbutton"/>,
+        tooltipPosition: "bottom",
+        bsStyle: "default",
+        pullRight: true,
+        visible: showOptions && activeTool === "addressSearch"
+    };
+
+    const coordinateFormatChange = {
+        buttonConfig: {
+            title: <Glyphicon glyph="cog"/>,
+            tooltipId: "search.changeSearchInputField",
+            tooltipPosition: "bottom",
+            className: "square-button-md no-border",
+            pullRight: true
+        },
+        menuOptions: [
+            {
+                active: format === "decimal",
+                onClick: () => onChangeFormat("decimal"),
+                text: <Message msgId="search.decimal"/>
+            }, {
+                active: format === "aeronautical",
+                onClick: () => onChangeFormat("aeronautical"),
+                text: <Message msgId="search.aeronautical"/>
+            }
+        ],
+        visible: showOptions && activeTool === "coordinatesSearch",
+        Element: DropdownToolbarOptions
+    };
+
     return (<SearchBarBase>
         <FormGroup>
-            <div className="input-group">
+            <div className="input-group" style={{display: "flex"}}>
                 {selectedItems && selectedItems.map((item, index) =>
                     <span key={"selected-item" + index} className="input-group-addon"><div className="selectedItem-text">{item.text}</div></span>
                 )}
@@ -167,60 +229,69 @@ export default ({
                     onSearchTextChange={onSearchTextChange}
                     onCancelSelectedItem={onCancelSelectedItem}
                     onPurgeResults={onPurgeResults}/>
-                {activeTool !== "addressSearch" && showCoordinatesSearchOption &&
-                    <div className="coordinateEditor">
+                {activeTool === "coordinatesSearch" && showCoordinatesSearchOption &&
+                    <div className="coordinateEditor" style={{flexWrap: format === "decimal" ? "nowrap" : "wrap" }}>
                         <Row className={`entryRow ${format}`}>
-                            <Col xs={3} className="coordinateLabel">
-                                <Message msgId="latitude"/>
-                            </Col>
-                            <Col xs={9}>
-                                <CoordinateEntry
-                                    format={format}
-                                    aeronauticalOptions={aeronauticalOptions}
-                                    coordinate="lat"
-                                    idx={1}
-                                    value={coordinate.lat}
-                                    constraints={constraintsCoordEditor}
-                                    onChange={(dd) => changeCoord("lat", dd)}
-                                    onKeyDown={(e) => {
-                                        if (areValidCoordinates() && e.keyCode === 13) {
-                                            zoomToPoint();
-                                        }
-                                    }}
-                                />
-                            </Col>
+                            <FormGroup>
+                                <InputGroup >
+                                    <InputGroup.Addon style={{minWidth: 45}}><Message msgId="search.latitude"/></InputGroup.Addon>
+                                    <CoordinateEntry
+                                        format={format}
+                                        aeronauticalOptions={aeronauticalOptions}
+                                        coordinate="lat"
+                                        idx={1}
+                                        value={coordinate.lat}
+                                        constraints={constraintsCoordEditor}
+                                        onChange={(dd) => changeCoord("lat", dd)}
+                                        onKeyDown={(e) => {
+                                            if (areValidCoordinates() && e.keyCode === 13) {
+                                                zoomToPoint();
+                                            }
+                                        }}
+                                    />
+                                </InputGroup>
+                            </FormGroup>
                         </Row>
                         <Row className={`entryRow ${format}`}>
-                            <Col xs={3} className="coordinateLabel">
-                                <Message msgId="longitude"/>
-                            </Col>
-                            <Col xs={9}>
-                                <CoordinateEntry
-                                    format={format}
-                                    aeronauticalOptions={aeronauticalOptions}
-                                    coordinate="lon"
-                                    idx={2}
-                                    value={coordinate.lon}
-                                    constraints={constraintsCoordEditor}
-                                    onChange={(dd) => changeCoord("lon", dd)}
-                                    onKeyDown={(e) => {
-                                        if (areValidCoordinates() && e.keyCode === 13) {
-                                            zoomToPoint();
-                                        }
-                                    }}
-                                />
-                            </Col>
+                            <FormGroup>
+                                <InputGroup>
+                                    <InputGroup.Addon style={{minWidth: 45}}><Message msgId="search.longitude"/></InputGroup.Addon>
+                                    <CoordinateEntry
+                                        format={format}
+                                        aeronauticalOptions={aeronauticalOptions}
+                                        coordinate="lon"
+                                        idx={2}
+                                        value={coordinate.lon}
+                                        constraints={constraintsCoordEditor}
+                                        onChange={(dd) => changeCoord("lon", dd)}
+                                        onKeyDown={(e) => {
+                                            if (areValidCoordinates() && e.keyCode === 13) {
+                                                zoomToPoint();
+                                            }
+                                        }}
+                                    />
+                                </InputGroup>
+                            </FormGroup>
                         </Row>
                     </div>
                 }
+                {
+                    activeTool === "bookmarkSearch" && showBookMarkSearchOption &&
+                        <BookmarkSelect bookmarkConfig={props.bookmarkConfig} onPropertyChange={props.onPropertyChange}/>
+                }
                 <SearchBarToolbar
                     splitTools={false}
-                    loading={loading}
                     toolbarButtons={[{
+                        ...(activeTool === "addressSearch" ? searchConfig :
+                            showOptions && activeTool === "coordinatesSearch" ? coordinateFormatChange :
+                                showOptions && activeTool === "bookmarkSearch" ? searchByBookmarkConfig : {})
+                    },
+                    {
                         glyph: removeIcon,
                         className: "square-button-md no-border",
                         bsStyle: "default",
                         pullRight: true,
+                        loading: !isUndefined(loading) && loading,
                         visible: activeTool === "addressSearch" &&
                             (searchText !== "" || selectedItems && selectedItems.length > 0) ||
                             activeTool === "coordinatesSearch" && (isNumber(coordinate.lon) || isNumber(coordinate.lat)),
@@ -237,15 +308,21 @@ export default ({
                             (isSearchClickable || activeTool !== "addressSearch" ? "magnifying-glass clickable" : "magnifying-glass"),
                         bsStyle: "default",
                         pullRight: true,
+                        tooltipId: activeTool === "bookmarkSearch" ? "search.zoomToBookmark" : "",
+                        tooltipPosition: "bottom",
                         visible: activeTool === "addressSearch" &&
                             (!(searchText !== "" || selectedItems && selectedItems.length > 0) || !splitTools) ||
-                            activeTool === "coordinatesSearch",
+                            activeTool === "coordinatesSearch" || activeTool === "bookmarkSearch",
+                        disabled: activeTool === "bookmarkSearch" && props.bookmarkConfig && !props.bookmarkConfig.selected,
                         onClick: () => {
                             if (activeTool === "coordinatesSearch" && areValidCoordinates()) {
                                 zoomToPoint();
                             }
                             if (isSearchClickable) {
                                 search();
+                            }
+                            if (activeTool === "bookmarkSearch") {
+                                searchByBookmark();
                             }
                         }
                     }, {
@@ -266,52 +343,12 @@ export default ({
                             pullRight: true
                         },
                         menuOptions: [
-                            ...searchMenuOptions, {
-                                onClick: () => {
-                                    if (!enabledSearchServicesConfig) {
-                                        onToggleControl("searchservicesconfig");
-                                    }
-                                },
-                                glyph: "cog",
-                                text: <Message msgId="search.searchservicesbutton"/>
-                            }
+                            ...searchMenuOptions
                         ],
                         visible: showOptions,
                         Element: DropdownToolbarOptions
                     }]}
-                >
-                    {
-                        showOptions && activeTool === "coordinatesSearch" ? <Toolbar
-                            btnGroupProps = {{ className: 'btn-group-menu-options-format'}}
-                            transitionProps = {null}
-                            btnDefaultProps = {{ className: 'square-button-md', bsStyle: 'primary' }}
-                            buttons={[
-                                {
-                                    buttonConfig: {
-                                        title: <Glyphicon glyph="cog"/>,
-                                        tooltipId: "search.changeSearchInputField",
-                                        tooltipPosition: "bottom",
-                                        className: "square-button-md no-border",
-                                        pullRight: true
-                                    },
-                                    menuOptions: [
-                                        {
-                                            active: format === "decimal",
-                                            onClick: () => onChangeFormat("decimal"),
-                                            text: <Message msgId="search.decimal"/>
-                                        }, {
-                                            active: format === "aeronautical",
-                                            onClick: () => onChangeFormat("aeronautical"),
-                                            text: <Message msgId="search.aeronautical"/>
-                                        }
-                                    ],
-                                    visible: showOptions && activeTool === "coordinatesSearch",
-                                    Element: DropdownToolbarOptions
-                                }
-                            ]}
-                        /> : null
-                    }
-                </SearchBarToolbar>
+                />
             </div>
         </FormGroup>
     </SearchBarBase>);

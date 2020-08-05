@@ -7,6 +7,8 @@
  */
 
 const ajax = require('../libs/ajax');
+const {replace, endsWith} = require('lodash');
+
 // const {endsWith, replace} = require('lodash');
 const {Observable} = require('rxjs');
 const {parseXML, interceptOGCError} = require('../utils/ObservableUtils');
@@ -117,6 +119,19 @@ const getDomainValues = (url, layer, domain, {
 }))
     .let(interceptOGCError)
     .switchMap(response => parseXML(response.data));
+
+/**
+ * Tries to guess the layer's information form the URL.
+ * TODO: find out a better way to do this
+ * @param {string} url the wms layers wms URL
+ */
+const getMultidimURL = ({ url } = {}) =>
+    endsWith(url, "/wms")
+        ? replace(url, /\/wms$/, "/gwc/service/wmts")
+        : endsWith(url, "/ows")
+            ? replace(url, /\/ows$/, "/gwc/service/wmts")
+            : url;
+
 /**
  * API for [WMTS Multidimensional](http://docs.geoserver.org/latest/en/user/community/wmts-multidimensional/index.html) that in the future
  * should be extended to WMS.
@@ -124,6 +139,7 @@ const getDomainValues = (url, layer, domain, {
  * @memberof api
  */
 module.exports = {
+    getMultidimURL,
     describeDomains,
     getHistogram,
     getDomainValues

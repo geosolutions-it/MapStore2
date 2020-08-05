@@ -88,6 +88,7 @@ const mapsState = {
     }
 };
 
+// category is required to support details map
 const testMap = {
     "success": true,
     "totalCount": 13,
@@ -101,6 +102,7 @@ const testMap = {
             "description": "",
             "id": 464,
             "context": "2100",
+            "category": {name: "MAP"},
             "contextName": "test-context",
             "name": "TEST MAP",
             "thumbnail": "base%2Fweb%2Fclient%2Ftest-resources%2Fimg%2Fblank.jpg",
@@ -121,6 +123,7 @@ const testMap2 = {
             "lastUpdate": "2017-05-17 10:18:11.455",
             "description": "",
             "id": 464,
+            "category": {name: "MAP"},
             "context": "2134",
             "contextName": null,
             "name": "TEST MAP",

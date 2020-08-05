@@ -11,6 +11,8 @@ const React = require('react');
 const {Row, Col} = require('react-bootstrap');
 const Combobox = require('react-widgets').Combobox;
 const IntlNumberFormControl = require('../../I18N/IntlNumberFormControl');
+const Slider = require('react-nouislider');
+
 const numberLocalizer = require('react-widgets/lib/localizers/simple-number');
 // not sure this is needed, TODO check!
 numberLocalizer();
@@ -33,7 +35,8 @@ class Text extends React.Component {
         fontStyleValues: PropTypes.array,
         fontWeightValues: PropTypes.array,
         fontFamilyValues: PropTypes.array,
-        shapeStyle: PropTypes.object
+        shapeStyle: PropTypes.object,
+        rotationStep: PropTypes.number
     };
 
     static contextTypes = {
@@ -48,7 +51,8 @@ class Text extends React.Component {
         alignValues: [{value: "start", label: "left"}, {value: "center", label: "center"}, {value: "end", label: "right"}],
         fontStyleValues: [{value: "normal"}, {value: "italic"}],
         fontFamilyValues: [{value: "Arial"}, {value: "Helvetica"}, {value: "sans-serif"}, {value: "Courier"}],
-        shapeStyle: {}
+        shapeStyle: {},
+        rotationStep: 5
     };
 
     state = {
@@ -192,6 +196,32 @@ class Text extends React.Component {
                             this.props.onChange(style.id, {textAlign});
                         }}
                     />
+                </Col>
+            </Row>
+            <Row>
+                <Col xs={6}>
+                    <Message msgId="draw.textRotation"/>
+                </Col>
+                <Col xs={6} style={{position: "static"}}>
+                    <div className="mapstore-slider with-tooltip">
+                        <Slider
+                            tooltips
+                            step={this.props.rotationStep}
+                            start={[style.textRotationDeg || 0]}
+                            format={{
+                                from: value => Math.round(parseFloat(value)),
+                                to: value => Math.round(value) + ' &deg;'
+                            }}
+                            range={{
+                                min: 0,
+                                max: 359
+                            }}
+                            onChange={(values) => {
+                                const rotationDeg = parseInt(values[0].replace(' &deg;', ''), 10);
+                                this.props.onChange(style.id, {textRotationDeg: rotationDeg});
+                            }}
+                        />
+                    </div>
                 </Col>
             </Row>
         </div>);

@@ -52,36 +52,30 @@ class Manager extends React.Component {
         width: PropTypes.number,
         symbolsPath: PropTypes.string,
         defaultShape: PropTypes.string,
+        defaultShapeSize: PropTypes.number,
+        defaultShapeFillColor: PropTypes.string,
+        defaultShapeStrokeColor: PropTypes.string,
+        defaultStyles: PropTypes.object,
         symbolList: PropTypes.array,
         symbolErrors: PropTypes.array,
         defaultSymbol: PropTypes.object,
         defaultMarker: PropTypes.object,
-        markersOptions: PropTypes.object
+        markersOptions: PropTypes.object,
+        textRotationStep: PropTypes.number
     };
 
     static defaultProps = {
         style: {},
         defaultShape: DEFAULT_SHAPE,
         symbolsPath: DEFAULT_PATH,
-        defaultSymbol: {
-            iconAnchor: [0.5, 0.5],
-            anchorXUnits: 'fraction',
-            anchorYUnits: 'fraction',
-            color: "#000000",
-            fillColor: "#000000",
-            opacity: 1,
-            size: 64,
-            fillOpacity: 1
-        },
+        defaultShapeSize: 64,
+        defaultShapeFillColor: '#000000',
+        defaultShapeStrokeColor: '#000000',
         symbolErrors: [],
-        defaultMarker: {
-            iconGlyph: 'comment',
-            iconShape: 'square',
-            iconColor: 'blue'
-        },
         onChangeStyle: () => {},
         onChangePointType: () => {},
         onUpdateSymbols: () => {},
+        defaultStyles: {},
         switchPanelOptions: []
     };
 
@@ -99,6 +93,7 @@ class Manager extends React.Component {
             this.checkSymbolUrl({...this.props, style});
         });
     }
+
     /**
      * it renders a switch panel styler
      * @prop {object} style
@@ -134,12 +129,12 @@ class Manager extends React.Component {
         const stroke = isStrokeStyle(style) && isSymbolStyle(style) &&
             (checkSymbolsError(this.props.symbolErrors) ||
              checkSymbolsError(this.props.symbolErrors, "loading_symbol" + style.shape))
-            ? null : isStrokeStyle(style) ? <Stroke {...stylerProps} lineDashOptions={this.props.lineDashOptions} constraints={{maxWidth: isSymbolStyle(style) ? 5 : 15}} key={"stroke" + i}/> : null;
+            ? null : isStrokeStyle(style) ? <Stroke {...stylerProps} defaultColor={this.props.defaultShapeStrokeColor} lineDashOptions={this.props.lineDashOptions} constraints={{maxWidth: isSymbolStyle(style) ? 5 : 15}} key={"stroke" + i}/> : null;
         const fill = isFillStyle(style) && isSymbolStyle(style) &&
         (checkSymbolsError(this.props.symbolErrors) ||
         checkSymbolsError(this.props.symbolErrors, "loading_symbol" + style.shape))
-            ? null : isFillStyle(style) && <Fill {...stylerProps} key={"fill" + i}/> || null;
-        const text = isTextStyle(style) && <Text {...stylerProps} /> || null;
+            ? null : isFillStyle(style) && <Fill {...stylerProps} defaultColor={this.props.defaultShapeFillColor} key={"fill" + i}/> || null;
+        const text = isTextStyle(style) && <Text {...stylerProps} rotationStep={this.props.textRotationStep}/> || null;
         const markerType = (isMarkerStyle(style) || isSymbolStyle(style)) && <MarkerType {...stylerProps} pointType={isSymbolStyle(style) ? "symbol" : "marker"} onChangeType={this.changeSymbolType}/> || null;
         const markerGlyph = isMarkerStyle(style) && <MarkerGlyph {...stylerProps} markersOptions={this.props.markersOptions}/> || null;
         const symbolLayout = isSymbolStyle(style) && (
@@ -148,6 +143,7 @@ class Manager extends React.Component {
                 style={{...style}}
                 symbolsPath={this.props.symbolsPath}
                 defaultShape={this.props.defaultShape}
+                defaultShapeSize={this.props.defaultShapeSize}
                 onUpdateOptions={(symbols) => {
                     this.props.onUpdateSymbols(symbols);
                 }}
@@ -211,68 +207,7 @@ class Manager extends React.Component {
         this.props.onChangeStyle(newStyles);
     }
     changeSymbolType = (id, pointType) => {
-        // TODO FIX THIS
-
-        let defaultSymbolStyle = {};
-        if (pointType === "symbol") {
-            // symbol default style
-            defaultSymbolStyle = {
-                ...this.props.defaultSymbol,
-                symbolUrl: this.props.symbolsPath + this.props.defaultShape + ".svg" };
-            if (!this.props.symbolErrors.length) {
-                // no errors related to loading symbols, then call the ajax
-
-                // TODO we need another check to see if i have already called the ajax
-                axios.get(defaultSymbolStyle.symbolUrl).then(() => {
-                    defaultSymbolStyle = {
-                        ...defaultSymbolStyle,
-                        shape: this.props.defaultShape
-                    };
-                    createSvgUrl(defaultSymbolStyle, defaultSymbolStyle.symbolUrlCustomized || defaultSymbolStyle.symbolUrl)
-                        .then((symbolUrlCustomized) => {
-                            this.updateStylesAndType(
-                                id,
-                                pointType,
-                                {
-                                    ...defaultSymbolStyle,
-                                    shape: this.props.defaultShape,
-                                    symbolUrlCustomized
-                                });
-                        });
-                }).catch(() => {
-                    this.props.onSetErrorSymbol(this.props.symbolErrors.concat(["loading_symbol" + this.props.defaultShape]));
-                    defaultSymbolStyle = {
-                        ...defaultSymbolStyle,
-                        symbolUrlCustomized: require('../../../product/assets/symbols/symbolMissing.svg'),
-                        symbolUrl: this.props.symbolsPath + this.props.defaultShape + ".svg",
-                        shape: this.props.defaultShape
-                    };
-                    this.updateStylesAndType(id, pointType, defaultSymbolStyle);
-                });
-            } else {
-                // if there is a problem loading path index.json, use missing symbol:
-                let shape;
-                let symbolUrl;
-                shape = this.props.defaultShape;
-                symbolUrl = this.props.symbolsPath + this.props.defaultShape + ".svg";
-                createSvgUrl(defaultSymbolStyle, defaultSymbolStyle.symbolUrlCustomized || defaultSymbolStyle.symbolUrl)
-                    .then((symbolUrlCustomized) => {
-                        this.updateStylesAndType(
-                            id,
-                            pointType,
-                            {
-                                ...defaultSymbolStyle,
-                                shape,
-                                symbolUrl,
-                                symbolUrlCustomized
-                            });
-                    });
-            }
-        } else {
-            // marker default style
-            const pointStyle = this.props.defaultMarker;
-            this.updateStylesAndType(id, pointType, pointStyle);
-        }
+        this.updateStylesAndType(id, pointType, this.props.defaultStyles.POINT?.[pointType]);
     }
 
     updateStylesAndType = (id, pointType, pointStyle) => {

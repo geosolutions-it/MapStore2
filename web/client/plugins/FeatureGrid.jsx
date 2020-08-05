@@ -10,7 +10,13 @@ const {selectFeatures, dockSizeFeatures} = require('../actions/featuregrid');
 const {query, queryClose} = require('../actions/wfsquery');
 const {changeMapView} = require('../actions/map');
 const {toggleControl} = require('../actions/controls');
-
+/**
+ * this plugin has been deprecated in favor of FeatureEditor {@link plugins.FeatureEditor}
+ * @name FeatureGrid
+ * @memberof plugins
+ * @class
+ * @deprecated
+*/
 module.exports = {
     FeatureGridPlugin: connect((state) => ({
         open: state.query && state.query.open,

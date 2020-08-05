@@ -2,7 +2,7 @@
     border: none;
     @media (min-width: 768px) {
         & {
-            width: 500px;
+            width: 550px;
         }
     }
     .input-link {
@@ -58,4 +58,19 @@
     }
     .mapstore-switch-panel::-webkit-scrollbar { width: 8px; background: #fff; }
     .mapstore-switch-panel::-webkit-scrollbar-thumb { background: #c5c5c5; }
+}
+
+#share-container {
+    .coordinateRow > div:first-child{
+        display: none;
+    }
+    .degrees, .minutes {
+        flex: 1;
+    }
+    .seconds {
+        flex: 1;
+        .react-numeric-input{
+          width: 75px;
+        }
+    }
 }

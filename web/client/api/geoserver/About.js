@@ -20,7 +20,7 @@ const toCamelCase = items => items.map(item => mapKeys(item, (value, key) => cam
 */
 
 /**
-* Get version and manifest
+* Get version, manifest and fonts
 * @memberof api.geoserver
 * @param {object} params {baseUrl}
 * @param {string} params.baseUrl base url of GeoServer eg: http://localhost:8080/geoserver/
@@ -34,12 +34,16 @@ export const getVersion = function({ baseUrl }) {
             .catch(() => null),
         axios.get(`${baseUrl}rest/about/manifest`, {'Content-Type': 'application/json' })
             .then(({ data }) => get(data, 'about.resource'))
+            .catch(() => null),
+        axios.get(`${baseUrl}rest/fonts`, {'Content-Type': 'application/json' })
+            .then(({ data }) => get(data, 'fonts'))
             .catch(() => null)
     ])
-        .then(([version, manifest]) => {
+        .then(([version, manifest, fonts]) => {
             const response = {
                 version: version && toCamelCase(version),
-                manifest: manifest && toCamelCase(manifest)
+                manifest: manifest && toCamelCase(manifest),
+                fonts
             };
             // if one of version or manifest fails we should not cache the response
             if (!version || !manifest) return response;

@@ -67,7 +67,11 @@ export const PLUGIN_UNINSTALLED = 'CONTEXTCREATOR:PLUGIN_UNINSTALLED';
 export const UNINSTALL_PLUGIN_ERROR = 'CONTEXTCREATOR:UNINSTALL_PLUGIN_ERROR';
 export const BACK_TO_PAGE_SHOW_CONFIRMATION = 'CONTEXTCREATOR:BACK_TO_PAGE_SHOW_CONFIRMATION';
 export const LOAD_EXTENSIONS = 'CONTEXTCREATOR:LOAD_EXTENSIONS';
-
+export const CONTEXT_TUTORIALS = {
+    "general-settings": "contextcreator_generalsettings_tutorial",
+    "configure-map": "contextcreator_configuremap_tutorial",
+    "configure-plugins": "contextcreator_configureplugins_tutorial"
+};
 /**
  * Merges initState into context creator state. Meant to be called on ContextCreator component mount
  * @param {object} initState state to merge

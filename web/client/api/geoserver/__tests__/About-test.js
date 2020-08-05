@@ -43,6 +43,7 @@ describe('Test About REST Api', () => {
                 try {
                     expect(about.version).toEqual([{ name: 'GeoServer' }]);
                     expect(about.manifest).toEqual([{ name: 'module' }]);
+                    expect(about.fonts).toBe(null);
                 } catch (e) {
                     done(e);
                 }

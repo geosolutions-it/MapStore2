@@ -48,7 +48,8 @@ import {
     update,
     updateCurrentPage,
     updateSetting,
-    removeResource, REMOVE_RESOURCE
+    removeResource, REMOVE_RESOURCE,
+    updateUrlOnScroll, SET_UPDATE_URL_SCROLL
 } from '../geostory';
 
 describe('test geostory action creators', () => {
@@ -205,6 +206,12 @@ describe('test geostory action creators', () => {
         expect(action.type).toBe(REMOVE_RESOURCE);
         expect(action.id).toBe(id);
         expect(action.mediaType).toBe(mediaType);
+    });
+    it('updateUrlOnScroll', () => {
+        const value = true;
+        const action = updateUrlOnScroll(value);
+        expect(action.type).toBe(SET_UPDATE_URL_SCROLL);
+        expect(action.value).toBe(value);
     });
 
 });
