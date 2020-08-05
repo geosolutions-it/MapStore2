@@ -9,7 +9,7 @@ function init() {
 
     /*eslint-disable */
     cfg = MapStore2.loadConfigFromStorage('mapstore.example.plugins.' + MapStore2.getParamFromRequest('map'));
-    cfgUrl = MapStore2.getParamFromRequest('config');
+    cfgUrl = MapStore2.getParamFromRequest('config') || 'config.json';
     theme = MapStore2.getParamFromRequest('theme');
     /* eslint-enable */
     embeddedPlugins = {
@@ -39,7 +39,6 @@ function init() {
                     }
                 }
             },
-            "Identify",
             {
                 "name": "TOCItemsSettings",
                 "cfg": {
