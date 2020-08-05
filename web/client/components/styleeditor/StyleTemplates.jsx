@@ -24,6 +24,7 @@ const ResizableModal = require('../misc/ResizableModal');
 const Portal = require('../misc/Portal');
 const Message = require('../I18N/Message');
 const HTML = require('../I18N/HTML');
+const SVGPreview = require('./SVGPreview');
 
 const SideGrid = emptyState(
     ({items}) => items.length === 0,
@@ -118,6 +119,9 @@ const StyleTemplates = ({
                 .filter(({types, format}) => (!types || head(types.filter(type => type === geometryType)) && availableFormats.indexOf(format) !== -1))
                 .map(styleTemplate => ({
                     ...styleTemplate,
+                    preview: styleTemplate?.preview?.config
+                        ? <SVGPreview { ...styleTemplate.preview.config } />
+                        : styleTemplate?.preview,
                     selected: styleTemplate.styleId === selectedStyle,
                     disabled: loading
                 }))}/>

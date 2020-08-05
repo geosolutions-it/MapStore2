@@ -46,6 +46,8 @@ const configSelector = (state) => get(state, "annotations.config", {});
 const symbolListSelector = (state) => get(state, "annotations.symbolList", []);
 const symbolErrorsSelector = (state) => get(state, "annotations.symbolErrors", []);
 const modeSelector = (state) => editingSelector(state) && 'editing' || annotationsLayerSelector(state) && currentSelector(state) && 'detail' || 'list';
+const defaultStylesSelector = state => state.annotations.defaultStyles;
+const loadingSelector = state => state.annotations.loading;
 
 const annotationsInfoSelector = (state) => (assign({}, {
     symbolErrors: symbolErrorsSelector(state),
@@ -100,7 +102,9 @@ const annotationsListSelector = createSelector([
     annotations: layer && layer.features || [],
     current: annotations.current || null,
     editing: info.editing,
-    filter: annotations.filter || ''
+    filter: annotations.filter || '',
+    defaultStyles: annotations.defaultStyles,
+    loading: annotations.loading
 }, info.config ? {
     config: info.config
 } : { })));
@@ -140,5 +144,7 @@ module.exports = {
     formatSelector,
     errorsSelector,
     configSelector,
-    symbolListSelector
+    symbolListSelector,
+    defaultStylesSelector,
+    loadingSelector
 };

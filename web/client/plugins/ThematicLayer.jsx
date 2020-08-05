@@ -131,6 +131,9 @@ module.exports = {
         TOCItemsSettings: {
             priority: 1,
             name: 'ThematicLayer',
+            selector: (props) => {
+                return props?.element?.search;
+            },
             container: "TOCItemSettings",
             target: "style"
         }

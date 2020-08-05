@@ -394,7 +394,7 @@ export default {
         action$.ofType(UNREGISTER_EVENT_LISTENER)
             .switchMap(() => {
                 let observable = Rx.Observable.empty();
-                const popups = getState().mapPopups.popups;
+                const popups = getState()?.mapPopups?.popups || [];
                 if (popups.length && !isMouseMoveIdentifyActiveSelector(getState())) {
                     const activePopupId = popups[0].id;
                     observable = Rx.Observable.of(removePopup(activePopupId));
@@ -408,7 +408,7 @@ export default {
         action$.ofType(LOCATION_CHANGE, PURGE_MAPINFO_RESULTS)
             .switchMap(() => {
                 let observable = Rx.Observable.empty();
-                const popups = getState().mapPopups.popups;
+                const popups = getState()?.mapPopups?.popups || [];
                 if (popups.length) {
                     const activePopupId = popups[0].id;
                     observable = Rx.Observable.of(removePopup(activePopupId));

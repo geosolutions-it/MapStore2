@@ -17,10 +17,13 @@ import Localized from '../I18N/Localized';
 import Theme from '../theme/Theme';
 import {ErrorBoundary} from 'react-error-boundary';
 import ErrorBoundaryFallbackComponent from './ErrorFallBackComp';
+import assign from 'object-assign';
 
 const ThemeProvider = connect((state) => ({
     theme: state.theme?.selectedTheme?.id
-}))(Theme);
+}), {}, (stateProps, dispatchProps, ownProps) => {
+    return assign({}, stateProps, dispatchProps, ownProps);
+})(Theme);
 
 class StandardRouter extends React.Component {
     static propTypes = {
