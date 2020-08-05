@@ -26,6 +26,8 @@ const {cancelRemoveAnnotation, confirmRemoveAnnotation, editAnnotation, newAnnot
     setErrorSymbol, toggleVisibilityAnnotation
 } = require('../actions/annotations');
 
+const {selectFeatures} = require('../actions/draw');
+
 const { zoomToExtent } = require('../actions/map');
 
 const { annotationsInfoSelector, annotationsListSelector } = require('../selectors/annotations');
@@ -63,6 +65,7 @@ const commonEditorActions = {
     onStartDrawing: startDrawing,
     onDeleteGeometry: removeAnnotationGeometry,
     onZoom: zoomToExtent,
+    onSelectFeature: selectFeatures,
     onChangeRadius: changeRadius,
     onSetInvalidSelected: setInvalidSelected,
     onChangeText: changeText,
@@ -166,6 +169,7 @@ class AnnotationsPanel extends React.Component {
                 { ({ width }) =>
                     <span className="ms-annotations-panel react-dock-no-resize ms-absolute-dock ms-side-panel">
                         <Dock
+                            fluid
                             dockStyle={this.props.dockStyle} {...this.props.dockProps}
                             isVisible={this.props.active}
                             size={this.props.width / width > 1 ? 1 : this.props.width / width} >
@@ -205,10 +209,12 @@ const conditionalToggle = on.bind(null, toggleControl('annotations', null), (sta
 
 const annotationsSelector = createSelector([
     state => (state.controls && state.controls.annotations && state.controls.annotations.enabled) || (state.annotations && state.annotations.closing) || false,
-    state => mapLayoutValuesSelector(state, {height: true})
-], (active, dockStyle) => ({
+    state => mapLayoutValuesSelector(state, {height: true}),
+    annotationsListSelector
+], (active, dockStyle, list) => ({
     active,
-    dockStyle
+    dockStyle,
+    width: list?.selected ? 660 : 330
 }));
 
 const AnnotationsPlugin = connect(annotationsSelector, {

@@ -128,7 +128,7 @@ module.exports = props => {
                         }}
                     />,
                     <GeocodeViewer latlng={latlng} revGeocodeDisplayName={revGeocodeDisplayName} {...props}/>,
-                    <Row key="button-row" className="text-center" style={{position: 'relative'}}>
+                    <Row key="button-row" className="text-center" style={{position: 'relative', marginBottom: 10}}>
                         <Col key="tools" xs={12}>
                             <Toolbar
                                 btnDefaultProps={{ bsStyle: 'primary', className: 'square-button-md' }}

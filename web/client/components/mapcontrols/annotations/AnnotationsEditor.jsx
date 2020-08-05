@@ -11,20 +11,19 @@ const React = require('react');
 const Toolbar = require('../../misc/toolbar/Toolbar');
 const Portal = require('../../misc/Portal');
 const GeometryEditor = require('./GeometryEditor');
-const BorderLayout = require('../../layout/BorderLayout');
 const Manager = require('../../style/vector/Manager');
 const Message = require('../../I18N/Message');
-const { FormControl, Grid, Row, Col } = require('react-bootstrap');
-const DropdownFeatureType = require('./DropdownFeatureType');
+const { FormControl, Grid, Row, Col, Nav, NavItem, Glyphicon, FormGroup, ControlLabel } = require('react-bootstrap');
 const ReactQuill = require('react-quill');
 require('react-quill/dist/quill.snow.css');
-const { isFunction } = require('lodash');
-
+const { isFunction, isEmpty, head } = require('lodash');
+const {getGeometryGlyphInfo, getGeometryType} = require('../../../utils/AnnotationsUtils');
 const ConfirmDialog = require('../../misc/ConfirmDialog');
 const assign = require('object-assign');
 const PluginsUtils = require('../../../utils/PluginsUtils');
 const defaultConfig = require('./AnnotationsConfig');
 const FeaturesList = require('./FeaturesList');
+const {getComponents, coordToArray, validateCoords} = require('../../../utils/AnnotationsUtils');
 
 /**
  * (Default) Viewer / Editor for Annotations.
@@ -178,6 +177,7 @@ class AnnotationsEditor extends React.Component {
         width: PropTypes.number,
         onDownload: PropTypes.func,
         onChangeFormat: PropTypes.func,
+        onSelectFeature: PropTypes.func,
         mapProjection: PropTypes.string,
         format: PropTypes.string,
         aeronauticalOptions: PropTypes.object,
@@ -211,7 +211,8 @@ class AnnotationsEditor extends React.Component {
     state = {
         editedFields: {},
         removing: null,
-        textValue: ""
+        textValue: "",
+        tabValue: "coordinates"
     };
 
     getConfig = () => {
@@ -419,34 +420,12 @@ class AnnotationsEditor extends React.Component {
         });
     };
 
-    renderStylerBody = () => {
-        return (<Manager
-            onChangeStyle={(style) => {
-                this.props.onSetStyle(style);
-                this.props.onSetUnsavedStyle(true);
-                this.props.onSetUnsavedChanges(true);
-            }}
-            pointType={this.props.pointType}
-            onChangePointType={this.props.onChangePointType}
-            style={this.props.selected && this.props.selected.style || this.props.editing.style}
-            width={this.props.width}
-            symbolsPath={this.props.symbolsPath}
-            onSetErrorSymbol={this.props.onSetErrorSymbol}
-            symbolErrors={this.props.symbolErrors}
-            onUpdateSymbols={this.props.onUpdateSymbols}
-            symbolList={this.props.symbolList}
-            defaultShape={this.props.defaultShape}
-            lineDashOptions={this.props.lineDashOptions}
-            markersOptions={this.getConfig()}
-        />);
-    };
-
-    renderStyler = () => {
-        return (<BorderLayout
-            className="mapstore-annotations-info-viewer-styler-container">
-            {this.renderStylerBody("marker" || this.props.stylerType)}
-        </BorderLayout>);
-    };
+    // renderStyler = () => {
+    //     return (<BorderLayout
+    //         className="mapstore-annotations-info-viewer-styler-container">
+    //         {this.renderStylerBody("marker" || this.props.stylerType)}
+    //     </BorderLayout>);
+    // };
 
     renderBody = (editing) => {
         const items = this.getBodyItems(editing);
@@ -454,35 +433,23 @@ class AnnotationsEditor extends React.Component {
             return null;
         }
         return (<div className={"mapstore-annotations-info-viewer-items" + (this.props.styling ? " mapstore-annotations-info-viewer-styler" : "")}>
-            {this.props.styling ? this.renderStyler() : (
-                <>
-                    {!this.props.coordinateEditorEnabled &&
-                        <div>
-                            {items}
-                            <FeaturesList {...this.props}/>
-                        </div>
-                    }
-                    {this.props.coordinateEditorEnabled && <Row>
-                        <Col xs={12}>
-                            <GeometryEditor
-                                options={this.props.config && this.props.config.geometryEditorOptions}
-                                drawing={this.props.drawing}
-                                aeronauticalOptions={this.props.aeronauticalOptions}
-                                selected={this.props.selected}
-                                featureType={this.props.featureType}
-                                format={this.props.format}
-                                mapProjection={this.props.mapProjection}
-                                onChange={this.props.onChangeSelected}
-                                onChangeRadius={this.props.onChangeRadius}
-                                onChangeFormat={this.props.onChangeFormat}
-                                onHighlightPoint={this.props.onHighlightPoint}
-                                onSetInvalidSelected={this.props.onSetInvalidSelected}
-                                onChangeText={this.props.onChangeText}
-                            />
-                        </Col>
-                    </Row>}
-                </>
-            )}
+            <div>
+                {items}
+                {editing && <FeaturesList
+                    editing={this.props.editing}
+                    selected={this.props.selected}
+                    onAddGeometry={this.props.onAddGeometry}
+                    onSetStyle={this.props.onSetStyle}
+                    onStartDrawing={this.props.onStartDrawing}
+                    onAddText={this.props.onAddText}
+                    onDeleteGeometry={this.props.onDeleteGeometry}
+                    onZoom={this.props.onZoom}
+                    maxZoom={this.props.maxZoom}
+                    onSelectFeature={this.props.onSelectFeature}
+                    onUnselectFeature={this.props.onResetCoordEditor}
+                />
+                }
+            </div>
         </div>);
     };
 
@@ -590,12 +557,109 @@ class AnnotationsEditor extends React.Component {
                 this.props.onCleanHighlight();
             }
         } : {};
+        const type = this.props.selected ? getGeometryType(this.props.selected) : "";
+        const {glyph = "", label = ""} = isEmpty(type) ? {} : getGeometryGlyphInfo(type);
         return (
-            <div className={"mapstore-annotations-info-viewer" + (this.props.mouseHoverEvents ? " hover-background" : "")} {...mouseHoverEvents}>
-                {this.renderButtons(editing, this.props.coordinateEditorEnabled)}
-                {this.renderError(editing)}
-                {this.renderModals(editing)}
-                {this.renderBody(editing)}
+            <div style={{display: "flex"}} className={"mapstore-annotations-info-viewer" + (this.props.mouseHoverEvents ? " hover-background" : "")} {...mouseHoverEvents}>
+                <div style={{flex: 1}}>
+                    {this.renderButtons(editing, this.props.coordinateEditorEnabled)}
+                    {this.renderError(editing)}
+                    {this.renderModals(editing)}
+                    {this.renderBody(editing)}
+                </div>
+                {this.props.selected &&
+                    <div className="mapstore-annotations-info-viewer-expanded">
+                        <div style={{padding: 8, display: 'flex', alignItems: 'center'}}>
+                            <Glyphicon glyph={glyph} style={{fontSize: 20, paddingRight: 8}}/>
+                            <div style={{flex: 1}}>
+                                <FormControl
+                                    defaultValue={label || this.props.selected?.properties?.id}
+                                    placeholder="Enter geometry title"
+                                />
+                            </div>
+                        </div>
+                        {this.props.selected?.properties?.isText && <div style={{padding: 8}}>
+                            <FormGroup>
+                                <FormGroup validationState={!this.props.selected?.properties.valueText ? "error" : null}>
+                                    <ControlLabel><Message msgId="annotations.editor.text"/></ControlLabel>
+                                    <FormControl
+                                        value={this.props.selected?.properties?.valueText || ''}
+                                        name="text"
+                                        placeholder="text value"
+                                        onChange={e => {
+                                            const valueText = e.target.value;
+                                            const components = this.props?.selected?.geometry?.coordinates?.length ?
+                                                getComponents(this.props.selected.geometry) : [];
+                                            if (this.validateText(components, valueText )) {
+                                                this.props.onChangeText(valueText, components.map(coordToArray));
+                                            } else if (valueText !== "") {
+                                                this.props.onChangeText(valueText, components.map(coordToArray));
+                                            } else {
+                                                this.props.onChangeText("", components.map(coordToArray));
+                                                this.props.onSetInvalidSelected("text", components.map(coordToArray));
+                                            }
+                                        }}
+                                        type="text"/>
+                                </FormGroup>
+                            </FormGroup>
+                        </div>}
+                        <Nav bsStyle="tabs" activeKey={this.state.tabValue} justified>
+                            <NavItem
+                                key="coordinates"
+                                eventKey="coordinates"
+                                onClick={() => this.setState({...this.state, tabValue: 'coordinates'})}>
+                                Coordinates
+                            </NavItem>
+                            <NavItem
+                                key="style"
+                                eventKey="style"
+                                onClick={() => this.setState({...this.state, tabValue: 'style'})}>
+                                Style
+                            </NavItem>
+                        </Nav>
+                        <div style={{flex: 1, overflow: 'auto', paddingTop: 8}}>
+                            {this.state.tabValue === 'coordinates' &&
+                            <GeometryEditor
+                                options={this.props.config && this.props.config.geometryEditorOptions}
+                                drawing={this.props.drawing}
+                                aeronauticalOptions={this.props.aeronauticalOptions}
+                                selected={this.props.selected}
+                                featureType={this.props.featureType}
+                                format={this.props.format}
+                                mapProjection={this.props.mapProjection}
+                                onChange={this.props.onChangeSelected}
+                                onChangeRadius={this.props.onChangeRadius}
+                                onChangeFormat={this.props.onChangeFormat}
+                                onHighlightPoint={this.props.onHighlightPoint}
+                                onSetInvalidSelected={this.props.onSetInvalidSelected}
+                                onChangeText={this.props.onChangeText}
+                                renderer={"annotations"}
+                            />
+                            }
+                            {this.state.tabValue === 'style' &&
+                            <Manager
+                                onChangeStyle={(style) => {
+                                    this.props.onSetStyle(style);
+                                    this.props.onSetUnsavedStyle(true);
+                                    this.props.onSetUnsavedChanges(true);
+                                }}
+                                pointType={this.props.pointType}
+                                onChangePointType={this.props.onChangePointType}
+                                style={this.props.selected && this.props.selected.style || this.props.editing.style}
+                                width={this.props.width}
+                                symbolsPath={this.props.symbolsPath}
+                                onSetErrorSymbol={this.props.onSetErrorSymbol}
+                                symbolErrors={this.props.symbolErrors}
+                                onUpdateSymbols={this.props.onUpdateSymbols}
+                                symbolList={this.props.symbolList}
+                                defaultShape={this.props.defaultShape}
+                                lineDashOptions={this.props.lineDashOptions}
+                                markersOptions={this.getConfig()}
+                            />
+                            }
+                        </div>
+                    </div>
+                }
             </div>
         );
     }
@@ -653,6 +717,14 @@ class AnnotationsEditor extends React.Component {
         });
 
     };
+
+    validateText = (components, valueText) => {
+        if (components && components.length) {
+            const cmp = head(components);
+            return !!valueText && validateCoords(cmp);
+        }
+        return false;
+    }
 
     save = () => {
         const errors = this.validate();

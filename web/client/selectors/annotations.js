@@ -100,6 +100,7 @@ const annotationsListSelector = createSelector([
     annotations: layer && layer.features || [],
     current: annotations.current || null,
     editing: info.editing,
+    selected: info.selected,
     filter: annotations.filter || ''
 }, info.config ? {
     config: info.config

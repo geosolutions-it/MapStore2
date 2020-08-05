@@ -120,8 +120,8 @@
                 "tooltip": "Note: This parameter requires specific configurations on GeoServer"
             }
         },
-        "longitude": "Longitude",
-        "latitude": "Latitude",
+        "longitude": "Lon",
+        "latitude": "Lat",
         "notification": {
             "update": "Update",
             "warning": "Warning",
@@ -1001,6 +1001,7 @@
             "undoDeleteFeature": "Are you sure to delete this feature?",
             "title": "Annotations",
             "zoomTo": "Zoom to annotation",
+            "zoomToGeometry": "Zoom to geometry",
             "hide": "Hide annotation",
             "show": "Show annotation",
             "insertText": "Please insert the text annotation",

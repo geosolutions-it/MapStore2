@@ -11,18 +11,16 @@ const uuidv1 = require('uuid/v1');
 const bbox = require('@turf/bbox');
 const Toolbar = require('../../misc/toolbar/Toolbar');
 const Message = require('../../I18N/Message');
-const {DEFAULT_ANNOTATIONS_STYLES, getStartEndPointsForLinestring} = require('../../../utils/AnnotationsUtils');
+const {DEFAULT_ANNOTATIONS_STYLES, getStartEndPointsForLinestring, getGeometryGlyphInfo, getGeometryType} = require('../../../utils/AnnotationsUtils');
 
-const FeaturesList = ({
-    editing,
-    onAddGeometry,
-    onSetStyle,
-    onStartDrawing,
-    onAddText,
-    onDeleteGeometry,
-    onZoom,
-    maxZoom
-}) =>{
+const FeaturesList = (props) =>{
+    const {
+        editing,
+        onAddGeometry,
+        onSetStyle,
+        onStartDrawing,
+        onAddText
+    } = props;
     const {features = []} = editing;
     return (
         <>
@@ -102,46 +100,24 @@ const FeaturesList = ({
             {features.length === 0 && <div style={{ textAlign: 'center' }}>Add a new geometry</div>}
             {features.map((feature, key) => {
                 return (
-                    <FeatureCard feature={feature} key={key} onDeleteGeometry={onDeleteGeometry} onZoom={onZoom} maxZoom={maxZoom}/>
+                    <FeatureCard feature={feature} key={key} {...props}/>
                 );
             })}
         </>
     );
 };
 
-const getGeometryType = (feature) => {
-    if (feature?.properties?.isCircle) {
-        return 'Circle';
-    }
-    if (feature?.properties?.isText) {
-        return 'Text';
-    }
-    return feature?.geometry?.type;
-};
-
-const getGeometryGlyphInfo = (type) => {
-    const glyphs = {
-        Point: {glyph: 'point', label: 'Point'},
-        MultiPoint: {glyph: 'point', label: 'Point'},
-        LineString: {glyph: 'polyline', label: 'Line'},
-        MultiLineString: {glyph: 'polyline', label: 'Line'},
-        Polygon: {glyph: 'polygon', label: 'Polygon'},
-        MultiPolygon: {glyph: 'polygon', label: 'Polygon'},
-        Text: {glyph: 'font', label: 'Text'},
-        Circle: {glyph: '1-circle', label: 'Circle'}
-    };
-    return glyphs[type];
-};
-
-const FeatureCard = ({feature, onDeleteGeometry, onZoom, maxZoom}) => {
+const FeatureCard = ({feature, selected, onDeleteGeometry, onZoom, maxZoom, onSelectFeature, onUnselectFeature}) => {
     const {properties, geometry} = feature;
     const type = getGeometryType({ properties, geometry });
     const {glyph, label} = getGeometryGlyphInfo(type);
+    const unselect = selected?.properties?.id === properties?.id;
+    const isValidFeature = selected?.properties?.isValidFeature || properties?.isValidFeature;
 
     return (
         <div
             className={'geometry-card'} // ${selected ? ' ms-selected' : ''}
-            // onClick={() => onSelect()}
+            onClick={() => unselect ? onUnselectFeature() : onSelectFeature([feature])}
         >
             <div className="geometry-card-preview">
                 <Glyphicon glyph={glyph}/>
@@ -155,11 +131,11 @@ const FeatureCard = ({feature, onDeleteGeometry, onZoom, maxZoom}) => {
                 }}
                 buttons={[
                     {
-                        Element: () => <Glyphicon glyph="ok-sign" className="text-success"/>
+                        Element: () => <Glyphicon glyph={isValidFeature ? "ok-sign" : "exclamation-mark"} className="text-success"/>
                     },
                     {
                         glyph: 'zoom-to',
-                        tooltip: 'Zoom to geometry',
+                        tooltip: 'annotations.zoomToGeometry',
                         onClick: (event) => {
                             event.stopPropagation();
                             const extent = bbox(feature);

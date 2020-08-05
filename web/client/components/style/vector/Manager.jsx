@@ -116,18 +116,20 @@ class Manager extends React.Component {
         // only for marker there is no preview
         // TODO move into separate functions the checks for showing the various pieces of styler
         */
+        const isTextOrSymbol = isTextStyle(style) || isSymbolStyle(style);
         const preview = !(isMarkerStyle(style) || isSymbolStyle(style) && (checkSymbolsError(this.props.symbolErrors) ||
          checkSymbolsError(this.props.symbolErrors, "loading_symbol" + style.shape))) && (<div className="ms-marker-preview" style={{display: 'flex', width: '100%', height: 90}}>
-            <StyleCanvas style={{ padding: 0, margin: "auto", display: "block"}}
-                originalStyle={style}
-                shapeStyle={assign({}, style, {
-                    color: addOpacityToColor(tinycolor(style.color).toRgb(), isNil(style.opacity) ? 1 : style.opacity),
-                    fill: addOpacityToColor(tinycolor(style.fillColor || "#FFCC33").toRgb(), isNil(style.fillOpacity) ? 1 : style.fillOpacity),
-                    radius: 75
-                })}
-                geomType={getStylerTitle(style)}
-                width={isTextStyle(style) || isSymbolStyle(style) ? 600 : 90}
-                height={90}
+            <StyleCanvas style={{ padding: 0, margin: "auto", display: "block",
+                width: isTextOrSymbol ? "100%" : "auto", ...isTextOrSymbol && {transform: "scaleX(2.2) scaleY(2.5)"}}}
+            originalStyle={style}
+            shapeStyle={assign({}, style, {
+                color: addOpacityToColor(tinycolor(style.color).toRgb(), isNil(style.opacity) ? 1 : style.opacity),
+                fill: addOpacityToColor(tinycolor(style.fillColor || "#FFCC33").toRgb(), isNil(style.fillOpacity) ? 1 : style.fillOpacity),
+                radius: 75
+            })}
+            geomType={getStylerTitle(style)}
+            width={isTextOrSymbol ? 600 : 90}
+            height={120}
             />
         </div>);
         // TODO  improve conditions to show the stroke and fill

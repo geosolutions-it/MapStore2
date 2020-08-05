@@ -342,6 +342,38 @@ const AnnotationsUtils = {
     STYLE_LINE,
     STYLE_POLYGON,
     /**
+     * Converts any feature to a geometry type
+     * @param {object} feature
+     * @return {string} a geometry type
+     */
+    getGeometryType: (feature) => {
+        if (feature?.properties?.isCircle) {
+            return 'Circle';
+        }
+        if (feature?.properties?.isText) {
+            return 'Text';
+        }
+        return feature?.geometry?.type;
+    },
+    /**
+     * Converts any geometry type to a glyph
+     * @param {string} type of geometry
+     * @return {object} a glyph name and label
+     */
+    getGeometryGlyphInfo: (type = 'Point') => {
+        const glyphs = {
+            Point: {glyph: 'point', label: 'Point'},
+            MultiPoint: {glyph: 'point', label: 'Point'},
+            LineString: {glyph: 'polyline', label: 'Line'},
+            MultiLineString: {glyph: 'polyline', label: 'Line'},
+            Polygon: {glyph: 'polygon', label: 'Polygon'},
+            MultiPolygon: {glyph: 'polygon', label: 'Polygon'},
+            Text: {glyph: 'font', label: 'Text'},
+            Circle: {glyph: '1-circle', label: 'Circle'}
+        };
+        return glyphs[type];
+    },
+    /**
     * it converts any geoJSONObject to an annotation
     * Mandatory elements: MUST be a geoJSON type Feature => properties with an ID and a title
     * annotation style.

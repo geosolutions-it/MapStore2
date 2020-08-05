@@ -67,7 +67,7 @@ class SymbolLayout extends React.Component {
         // maybe we can use the original svg as the preview in the <Select> list
         const iconRenderer = (option) => {
             return (<div style={{ display: "flex", alignItems: "center" }}>
-                <img src={option.symbolUrl || option.iconUrl} width={25} height={25} />
+                <img src={option.symbolUrl || option.iconUrl} width={15} height={15} />
                 <span style={{ flex: 1, paddingLeft: 4 }}> {option.label}</span></div>);
         };
         // checking if default shape exists
@@ -76,7 +76,7 @@ class SymbolLayout extends React.Component {
             <div>
                 <Row>
                     <Col xs={12}>
-                        <strong><Message msgId="draw.marker.layout"/></strong>
+                        <Message msgId="draw.marker.layout"/>
                     </Col>
                 </Row>
                 {   // managing misconfigruation of symbols.json (symbolsPath)

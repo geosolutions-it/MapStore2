@@ -1,28 +1,25 @@
 
 #identify-container {
     .coordinateRow.coord-editor.aeronautical {
-        @media screen and (max-width: 660px) {
-            display: block;
-            & .col-xs-1 .pull-right.btn-group {
-                margin-top: -70px;
-            }
-
-        }
         & .form-group {
-            width: auto;
+            width: 100%;
             position: relative;
             & .seconds {
-                min-width: 120px;
-                flex: unset !important;
+                min-width: 75px;
             }
         }
     }
-    .coordinateRow.coord-editor.decimal {
-        @media only screen and (max-width: 660px) {
-            display: block;
-            & .form-group {
-                max-width: ~"calc(100% - 80px)";
-                margin-left: 40px;
+    .coordinateRow {
+        .coordinate {
+            width: 100%;
+            display: flex;
+            flex: 1 1 0%;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            .input-group {
+                flex: 1 1 0%;
+                padding: 4px 0px;
+                margin-right: 8px;
             }
         }
     }
@@ -54,13 +51,15 @@
 }
 
 .coordinateRow {
-    margin: 8px 0px;
-    border: 1px solid #dddddd;
+    margin: 0;
+    border: 0;
     text-align: center;
     display: flex;
     align-items: center;
     box-sizing: border-box;
-    padding: 15px 5px;
+    padding: 0;
+    color: #333333 !important;
+    background-color: transparent !important;
 
     input {
         font-size: 12px;
@@ -82,10 +81,10 @@
         min-width: unset !important;
     }
     .form-group {
-        margin: 4px 0;
+        margin: 0;
     }
     &.coord-editor .tools.btn-group {
-        margin-top: 20px;
+        margin-top: 0;
     }
     .tools.btn-group span {
         display: flex;
