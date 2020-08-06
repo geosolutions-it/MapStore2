@@ -656,6 +656,28 @@ describe('Get Map Resource By Category Epic', () => {
             });
         }))
     );
+    it('test getMapsResourcesByCategoryEpic with empty results string', (done) => {
+        const mock = new MockAdapter(axios);
+        mock.onGet().reply(200, {success: true, totalCount: 0, results: ""});
+        testEpic(addTimeoutEpic(getMapsResourcesByCategoryEpic), 3, getMapResourcesByCategory('MAP', 'test', {
+            baseUrl,
+            params: { start: 0, limit: 12 }
+        }), actions => {
+            expect(actions.length).toBe(3);
+            expect(actions[0].type).toBe(LOADING);
+            expect(actions[0].value).toBe(true);
+            expect(actions[0].name).toBe('loadingMaps');
+            expect(actions[1].type).toBe(MAPS_LIST_LOADED);
+            expect(actions[1].maps).toEqual({success: true, totalCount: 0, results: ""});
+            expect(actions[1].params).toEqual(params);
+            expect(actions[1].searchText).toBe('test');
+            expect(actions[2].type).toBe(LOADING);
+            expect(actions[2].value).toBe(false);
+            expect(actions[2].name).toBe('loadingMaps');
+            mock.restore();
+            done();
+        });
+    });
     it('test getMapsResourcesByCategoryEpic with an error', (done) => {
         const mock = new MockAdapter(axios);
         mock.onPost().reply(404);

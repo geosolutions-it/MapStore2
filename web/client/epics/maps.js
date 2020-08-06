@@ -295,7 +295,12 @@ const getMapsResourcesByCategoryEpic = (action$, store) =>
                     .switchMap((response) => getContextNames(response).switchMap(responseWithContext => {
                         // category is required to identify maps for detail card. It's missing from this entry point
                         return Rx.Observable.of(
-                            mapsLoaded({...responseWithContext, results: responseWithContext?.results?.map(res => ({...res, category: {name: "MAP"}}))}, opts.params, searchText)
+                            mapsLoaded({
+                                ...responseWithContext,
+                                results: isArray(responseWithContext.results) ?
+                                    responseWithContext.results?.map(res => ({...res, category: {name: "MAP"}})) :
+                                    responseWithContext.results
+                            }, opts.params, searchText)
                         );
                     }
                     ))
