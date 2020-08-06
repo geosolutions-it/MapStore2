@@ -101,8 +101,13 @@ const {getComponents, coordToArray, validateCoords} = require('../../../utils/An
  * @prop {string} pointType the type of the point, values are "marker" or "symbol"
  * @prop {object[]} lineDashOptions list of options for dashed lines
  * @prop {object[]} symbolList list of symbols
- * @prop {string} defaultShape default shape for symbol
  * @prop {string} symbolsPath path to the svg folder
+ * @prop {string} defaultShape default shape for symbol
+ * @prop {string} defaultShapeStrokeColor default symbol stroke color
+ * @prop {string} defaultShapeFillColor default symbol fill color
+ * @prop {string} defaultShapeSize default symbol shape size in px
+ * @prop {object} defaultStyles object with default symbol styles
+ * @prop {number} textRotationStep rotation step of text styler
  *
  * In addition, as the Identify viewer interface mandates, every feature attribute is mapped as a component property (in addition to the feature object).
  */
@@ -189,7 +194,12 @@ class AnnotationsEditor extends React.Component {
         symbolErrors: PropTypes.array,
         lineDashOptions: PropTypes.array,
         symbolList: PropTypes.array,
-        defaultShape: PropTypes.string
+        defaultShape: PropTypes.string,
+        defaultShapeSize: PropTypes.number,
+        defaultShapeFillColor: PropTypes.string,
+        defaultShapeStrokeColor: PropTypes.string,
+        defaultStyles: PropTypes.object,
+        textRotationStep: PropTypes.number
     };
 
     static defaultProps = {

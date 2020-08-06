@@ -13,7 +13,8 @@ const {MAPS_LIST_LOADED} = require('../actions/maps');
 const {TOGGLE_3D} = require('../actions/globeswitcher');
 const {modeSelector} = require('../selectors/geostory');
 const {CHANGE_MODE} = require('../actions/geostory');
-
+const { creationStepSelector } = require('../selectors/contextcreator');
+const { CONTEXT_TUTORIALS } = require('../actions/contextcreator');
 const findTutorialId = path => path.match(/\/(viewer)\/(\w+)\/(\d+)/) && path.replace(/\/(viewer)\/(\w+)\/(\d+)/, "$2")
     || path.match(/\/(\w+)\/(\d+)/) && path.replace(/\/(\w+)\/(\d+)/, "$1")
     || path.match(/\/(\w+)\//) && path.replace(/\/(\w+)\//, "$1");
@@ -57,15 +58,19 @@ const switchTutorialEpic = (action$, store) =>
                     const defaultName = id ? 'default' : action.payload && action.payload.location && action.payload.location.pathname || 'default';
                     const prevTutorialId = state.tutorial && state.tutorial.id;
                     let presetName = id + mobile + '_tutorial';
-                    if (id && id?.indexOf("geostory") !== -1) {
+                    if (defaultName.indexOf("context") !== -1) {
+                        const currentStep = creationStepSelector(state) || "general-settings";
+                        const currentPreset = CONTEXT_TUTORIALS[currentStep];
+                        return Rx.Observable.of(setupTutorial(currentPreset, presetList[currentPreset], null, null, null, prevTutorialId === (currentPreset)));
+                    }
+                    if (id && id?.indexOf("geostory") !== -1 && !isEmpty(presetList)) {
                         // this is needed to setup correct geostory tutorial based on the current mode and page
                         if (modeSelector(state) === "edit" || id && id?.indexOf("newgeostory") !== -1) {
                             id  = "geostory";
                             presetName = `geostory_edit_tutorial`;
                             return Rx.Observable.from([
                                 setupTutorial(id, presetList[presetName], null, null, null, false)
-                            ]
-                            );
+                            ]);
                         }
                         presetName = `geostory_view_tutorial`;
                         return Rx.Observable.of(setupTutorial(id, presetList[presetName], null, null, null, true));

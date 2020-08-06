@@ -14,7 +14,6 @@ import {push} from 'connected-react-router';
 import Api from '../api/GeoStoreDAO';
 
 import ConfigUtils from '../utils/ConfigUtils';
-import MapUtils from '../utils/MapUtils';
 
 import {SAVE_CONTEXT, SAVE_TEMPLATE, LOAD_CONTEXT, LOAD_TEMPLATE, DELETE_TEMPLATE, EDIT_TEMPLATE, SHOW_DIALOG, SET_CREATION_STEP, MAP_VIEWER_LOAD,
     MAP_VIEWER_RELOAD, CHANGE_ATTRIBUTE, ENABLE_MANDATORY_PLUGINS, ENABLE_PLUGINS, DISABLE_PLUGINS, SAVE_PLUGIN_CFG,
@@ -35,11 +34,7 @@ import {isLoggedIn} from '../selectors/security';
 import {show, error} from '../actions/notifications';
 import {changePreset} from '../actions/tutorial';
 import {initMap} from '../actions/map';
-import {mapSelector} from '../selectors/map';
-import {layersSelector, groupsSelector} from '../selectors/layers';
-import {backgroundListSelector} from '../selectors/backgroundselector';
-import {textSearchConfigSelector} from '../selectors/searchconfig';
-import {mapOptionsToSaveSelector} from '../selectors/mapsave';
+import {mapSaveSelector} from '../selectors/mapsave';
 import {loadMapConfig} from '../actions/config';
 import {createResource, createCategory, updateResource, deleteResource, getResource} from '../api/persistence';
 import getPluginsConfig from '../observables/config/getPluginsConfig';
@@ -83,18 +78,10 @@ export const saveContextResource = (action$, store) => action$
     .ofType(SAVE_CONTEXT)
     .exhaustMap(({destLocation}) => {
         const state = store.getState();
+        const mapConfig = mapSaveSelector(state);
+        const plugins = pluginsSelector(state);
         const context = newContextSelector(state);
         const resource = resourceSelector(state);
-        const map = mapSelector(state);
-        const layers = layersSelector(state);
-        const groups = groupsSelector(state);
-        const backgrounds = backgroundListSelector(state);
-        const textSearchConfig = textSearchConfigSelector(state);
-        const additionalOptions = mapOptionsToSaveSelector(state);
-        const plugins = pluginsSelector(state);
-
-        const mapConfig = MapUtils.saveMapConfiguration(map, layers, groups, backgrounds, textSearchConfig, additionalOptions);
-
         const pluginsArray = flattenPluginTree(plugins).filter(plugin => plugin.enabled);
         const unselectablePlugins = makePlugins(pluginsArray.filter(plugin => !plugin.isUserPlugin));
         const userPlugins = makePlugins(pluginsArray.filter(plugin => plugin.isUserPlugin));

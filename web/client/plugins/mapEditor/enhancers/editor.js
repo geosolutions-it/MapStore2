@@ -20,6 +20,7 @@ import {mapSelector} from '../../../selectors/map';
 import {layersSelector, groupsSelector} from '../../../selectors/layers';
 import {backgroundListSelector} from '../../../selectors/backgroundselector';
 import {mapOptionsToSaveSelector} from '../../../selectors/mapsave';
+import {textSearchConfigSelector, bookmarkSearchConfigSelector} from '../../../selectors/searchconfig';
 import MapUtils from '../../../utils/MapUtils';
 import { isNull } from 'util';
 
@@ -29,10 +30,11 @@ const saveSelector = createSelector(
     groupsSelector,
     backgroundListSelector,
     mapOptionsToSaveSelector,
-    state => state.searchconfig && state.searchconfig.textSearchConfig,
+    textSearchConfigSelector,
+    bookmarkSearchConfigSelector,
     mapSelector,
-    (layers, groups, backgrounds, additionalOptions, textSearchConfig, map) =>
-        ({layers, groups, backgrounds, additionalOptions, textSearchConfig, map})
+    (layers, groups, backgrounds, additionalOptions, textSearchConfig, bookmarkSearchConfig, map) =>
+        ({layers, groups, backgrounds, additionalOptions, textSearchConfig, bookmarkSearchConfig, map})
 );
 
 
@@ -46,9 +48,9 @@ export default compose(
         onClick: ({hide, owner}) => () => {
             hide(owner);
         },
-        save: ({save, owner, map, layers, groups, backgrounds, textSearchConfig, additionalOptions}) => () => {
+        save: ({save, owner, map, layers, groups, backgrounds, textSearchConfig, bookmarkSearchConfig, additionalOptions}) => () => {
             const mapData = MapUtils.saveMapConfiguration(map, layers, groups,
-                backgrounds, textSearchConfig, additionalOptions);
+                backgrounds, textSearchConfig, bookmarkSearchConfig, additionalOptions);
 
             return save({...mapData.map, layers: mapData.map.layers.map(l => pickBy(l, (p) => p !== undefined && !isNull(p)))}, owner);
         }

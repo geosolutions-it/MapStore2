@@ -15,15 +15,23 @@ import ShareLink from './ShareLink';
 import ShareEmbed from './ShareEmbed';
 import ShareApi from './ShareApi';
 import ShareQRCode from './ShareQRCode';
-import {Glyphicon, Tabs, Tab, Checkbox, FormControl, FormGroup, ControlLabel} from 'react-bootstrap';
+import {
+    Glyphicon,
+    Tabs,
+    Tab,
+    Checkbox,
+    FormControl,
+    FormGroup,
+    ControlLabel,
+    Tooltip
+} from 'react-bootstrap';
 import Message from '../../components/I18N/Message';
 import { join, isNil, isEqual, inRange } from 'lodash';
 import { removeQueryFromUrl, getSharedGeostoryUrl } from '../../utils/ShareUtils';
 import SwitchPanel from '../misc/switch/SwitchPanel';
 import Editor from '../data/identify/coordinates/Editor';
-const {set} = require('../../utils/ImmutableUtils');
-const OverlayTrigger = require('../misc/OverlayTrigger');
-const {Tooltip} = require('react-bootstrap');
+import {set} from '../../utils/ImmutableUtils';
+import OverlayTrigger from '../misc/OverlayTrigger';
 
 /**
  * SharePanel allow to share the current map in some different ways.
@@ -74,7 +82,8 @@ class SharePanel extends React.Component {
         onUpdateSettings: PropTypes.func,
         selectedTab: PropTypes.string,
         formatCoords: PropTypes.string,
-        point: PropTypes.object
+        point: PropTypes.object,
+        isScrollPosition: PropTypes.bool
     };
 
     static defaultProps = {
@@ -90,7 +99,8 @@ class SharePanel extends React.Component {
         closeGlyph: "1-close",
         settings: {},
         onUpdateSettings: () => {},
-        formatCoords: "decimal"
+        formatCoords: "decimal",
+        isScrollPosition: false
     };
 
     state = {
@@ -151,7 +161,8 @@ class SharePanel extends React.Component {
 
     getShareUrl = () => {
         const { settings, advancedSettings } = this.props;
-        let shareUrl = getSharedGeostoryUrl(removeQueryFromUrl(this.props.shareUrl));
+        const shouldRemoveSectionId = !settings.showSectionId && advancedSettings && advancedSettings.sectionId;
+        let shareUrl = getSharedGeostoryUrl(removeQueryFromUrl(this.props.shareUrl), shouldRemoveSectionId);
         if (settings.bboxEnabled && advancedSettings && advancedSettings.bbox && this.state.bbox) shareUrl = `${shareUrl}?bbox=${this.state.bbox}`;
         if (settings.showHome && advancedSettings && advancedSettings.homeButton) shareUrl = `${shareUrl}?showHome=true`;
         if (settings.centerAndZoomEnabled && advancedSettings && advancedSettings.centerAndZoom) {
@@ -258,6 +269,19 @@ class SharePanel extends React.Component {
                         })}>
                     <Message msgId="share.showHomeButton" />
                 </Checkbox>}
+                {
+                    this.props.isScrollPosition
+                    && this.props.advancedSettings.sectionId
+                    && <Checkbox
+                        checked={this.props.settings.showSectionId}
+                        onChange={() =>
+                            this.props.onUpdateSettings({
+                                ...this.props.settings,
+                                showSectionId: !this.props.settings.showSectionId
+                            })}>
+                        <Message msgId="share.showSectionId" />
+                    </Checkbox>
+                }
                 {this.props.settings.centerAndZoomEnabled && <div>
                     <FormGroup id={"share-container"}>
                         <ControlLabel><Message msgId="share.coordinate" /></ControlLabel>

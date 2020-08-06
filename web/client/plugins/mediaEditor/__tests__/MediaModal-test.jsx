@@ -42,7 +42,7 @@ describe('MediaModal component', () => {
             const buttons = document.querySelectorAll("button");
             expect(buttons.length).toBe(4);
             const applyBtn = buttons[3];
-            expect(applyBtn.disabled).toBe(true);
+            expect(applyBtn.disabled).toBe(false);
         });
         it('when is adding a new resource', () => {
             ReactDOM.render(

@@ -15,6 +15,7 @@ const bbox = require('@turf/bbox');
 const {head, countBy, values, isUndefined} = require('lodash');
 const assign = require('object-assign');
 const Filter = require('../../misc/Filter');
+const Loader = require('../../misc/Loader');
 const uuidv1 = require('uuid/v1');
 
 const {Glyphicon, Button} = require('react-bootstrap');
@@ -81,7 +82,15 @@ const defaultConfig = require('./AnnotationsConfig');
  * @prop {string} symbolsPath path to the svg folder
  * @prop {object[]} symbolList list of symbols
  * @prop {string} defaultShape default Shape
+<<<<<<< HEAD
  * @prop {number} maxZoom max zoom for annotation (default 18)
+=======
+ * @prop {string} defaultShapeStrokeColor default symbol stroke color
+ * @prop {string} defaultShapeFillColor default symbol fill color
+ * @prop {string} defaultShapeSize default symbol shape size in px
+ * @prop {object} defaultStyles object with default symbol styles
+ * @prop {number} textRotationStep rotation step of text styler
+>>>>>>> origin/mapstore2_master
  *
  * the annotation's attributes.
  */
@@ -91,6 +100,7 @@ class Annotations extends React.Component {
         styling: PropTypes.bool,
         toggleControl: PropTypes.func,
 
+        loading: PropTypes.bool,
         closing: PropTypes.bool,
         showUnsavedChangesModal: PropTypes.bool,
         showUnsavedStyleModal: PropTypes.bool,
@@ -132,7 +142,13 @@ class Annotations extends React.Component {
         symbolList: PropTypes.array,
         defaultShape: PropTypes.string,
         symbolsPath: PropTypes.string,
-        maxZoom: PropTypes.number
+        maxZoom: PropTypes.number,
+        defaultShapeSize: PropTypes.number,
+        defaultShapeFillColor: PropTypes.string,
+        defaultShapeStrokeColor: PropTypes.string,
+        defaultStyles: PropTypes.object,
+        onLoadDefaultStyles: PropTypes.func,
+        textRotationStep: PropTypes.number
     };
 
     static contextTypes = {
@@ -148,11 +164,18 @@ class Annotations extends React.Component {
         onSetErrorSymbol: () => {},
         onLoadAnnotations: () => {},
         annotations: [],
-        maxZoom: 18
+        maxZoom: 18,
+        onLoadDefaultStyles: () => {}
     };
     state = {
         selectFile: false
     }
+
+    componentDidMount() {
+        this.props.onLoadDefaultStyles(this.props.defaultShape, this.props.defaultShapeSize, this.props.defaultShapeFillColor, this.props.defaultShapeStrokeColor,
+            this.props.symbolsPath);
+    }
+
     getConfig = () => {
         return assign({}, defaultConfig, this.props.config);
     };
@@ -275,6 +298,13 @@ class Annotations extends React.Component {
     };
 
     renderCards = () => {
+        if (this.props.loading) {
+            return (
+                <div style={{display: 'flex', height: '100%', justifyContent: 'center', alignItems: 'center'}}>
+                    <Loader size={352}/>
+                </div>
+            );
+        }
         if (this.props.mode === 'list') {
             return (
                 <>
@@ -331,6 +361,11 @@ class Annotations extends React.Component {
             symbolErrors={this.props.symbolErrors}
             symbolList={this.props.symbolList}
             defaultShape={this.props.defaultShape}
+            defaultShapeSize={this.props.defaultShapeSize}
+            defaultShapeFillColor={this.props.defaultShapeFillColor}
+            defaultShapeStrokeColor={this.props.defaultShapeStrokeColor}
+            defaultStyles={this.props.defaultStyles}
+            textRotationStep={this.props.textRotationStep}
         />;
     };
 
@@ -357,7 +392,7 @@ class Annotations extends React.Component {
     }
 
     render() {
-        let body = null;
+        let body;
         if (this.props.closing ) {
             body = (<ConfirmDialog
                 show

@@ -158,6 +158,24 @@ const pointClassification = {
     }
 };
 
+const rasterClassification = {
+    Rules: {
+        Rule: {
+            RasterSymbolizer: {
+                ColorMap: {
+                    ColorMapEntry: [
+                        {
+                            '@color': '#FFF7EC',
+                            '@quantity': '1000',
+                            '@label': '1000'
+                        }
+                    ]
+                }
+            }
+        }
+    }
+};
+
 const invalidClassification = {
     Rules: {
         Rule: [{
@@ -196,6 +214,70 @@ const classificationWithZeros = {
                 }
             }
         }]
+    }
+};
+
+const classificationStandardDeviation = {
+    Rules: {
+        Rule: [
+            {
+                Title: ' < -100',
+                Filter: {
+                    PropertyIsLessThan: {
+                        PropertyName: 'PROPERTY_NAME',
+                        Literal: -100
+                    }
+                },
+                PolygonSymbolizer: {
+                    Fill: {
+                        CssParameter: {
+                            '@name': 'fill',
+                            '$': '#000000'
+                        }
+                    }
+                }
+            },
+            {
+                Title: ' >= -100 AND < 100',
+                Filter: {
+                    And: {
+                        PropertyIsGreaterThanOrEqualTo: {
+                            PropertyName: 'PROPERTY_NAME',
+                            Literal: -100
+                        },
+                        PropertyIsLessThan: {
+                            PropertyName: 'PROPERTY_NAME',
+                            Literal: 100
+                        }
+                    }
+                },
+                PolygonSymbolizer: {
+                    Fill: {
+                        CssParameter: {
+                            '@name': 'fill',
+                            '$': '#400000'
+                        }
+                    }
+                }
+            },
+            {
+                Title: ' >= 100',
+                Filter: {
+                    PropertyIsGreaterThanOrEqualTo: {
+                        PropertyName: 'PROPERTY_NAME',
+                        Literal: 100
+                    }
+                },
+                PolygonSymbolizer: {
+                    Fill: {
+                        CssParameter: {
+                            '@name': 'fill',
+                            '$': '#FF0000'
+                        }
+                    }
+                }
+            }
+        ]
     }
 };
 
@@ -271,6 +353,14 @@ describe('Test correctness of the SLDService APIs', () => {
         expect(result[0].min).toBe(1);
         expect(result[0].max).toBe(10);
     });
+    it('check readRasterClassification raster', () => {
+        const result = API.readRasterClassification(rasterClassification);
+        expect(result.length).toBe(1);
+        expect(result[0].color).toBe('#FFF7EC');
+        expect(result[0].label).toBe('1000');
+        expect(result[0].quantity).toBe(1000);
+        expect(result[0].opacity).toBe(1);
+    });
     it('check readClassification invalid', () => {
         let error = false;
         try {
@@ -287,6 +377,19 @@ describe('Test correctness of the SLDService APIs', () => {
         expect(result[0].min).toBe(0);
         expect(result[0].max).toBe(10);
     });
+    it('check readClassification without lower and upper bounds', () => {
+        const result = API.readClassification(classificationStandardDeviation);
+        expect(result.length).toBe(3);
+        expect(result[0].color).toBe('#000000');
+        expect(result[0].min).toBe(null);
+        expect(result[0].max).toBe(-100);
+        expect(result[1].color).toBe('#400000');
+        expect(result[1].min).toBe(-100);
+        expect(result[1].max).toBe(100);
+        expect(result[2].color).toBe('#FF0000');
+        expect(result[2].min).toBe(100);
+        expect(result[2].max).toBe(null);
+    });
     it('check getThematicParameters', () => {
         const result = API.getThematicParameters(paramsDef);
         expect(result.length).toBe(2);
@@ -294,7 +397,7 @@ describe('Test correctness of the SLDService APIs', () => {
     });
     it('check getColors only standard', () => {
         const result = API.getColors(undefined, layer, 10);
-        expect(result.length).toBe(5);
+        expect(result.length).toBe(5 + 36 /* 36 color brewer ramps */);
         expect(result[0].colors).toExist();
         expect(result[0].colors.length).toBe(10);
     });
@@ -312,7 +415,7 @@ describe('Test correctness of the SLDService APIs', () => {
     });
     it('check getColors layer with additional colors', () => {
         const result = API.getColors(undefined, layerWithAdditionalColors, 10);
-        expect(result.length).toBe(6);
+        expect(result.length).toBe(6 + 36 /* 36 color brewer ramps */);
         expect(result[0].colors).toExist();
         expect(result[0].colors.length).toBe(10);
     });
@@ -327,5 +430,9 @@ describe('Test correctness of the SLDService APIs', () => {
     it('check removeThematicStyle', () => {
         const result = API.removeThematicStyle(layerWithThema);
         expect(result.SLD).toNotExist();
+    });
+    it('check getCapabilitiesUrl', () => {
+        const result = API.getCapabilitiesUrl(layer);
+        expect(result).toBe('http://localhost:8080/geoserver/rest/sldservice/capabilities.json');
     });
 });

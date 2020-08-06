@@ -24,10 +24,20 @@ const STYLE_CIRCLE = {
     fillColor: '#ffffff',
     fillOpacity: 0.2
 };
-const STYLE_POINT = {
+const STYLE_POINT_MARKER = {
     iconGlyph: 'comment',
     iconShape: 'square',
     iconColor: 'blue'
+};
+const STYLE_POINT_SYMBOL = {
+    iconAnchor: [0.5, 0.5],
+    anchorXUnits: 'fraction',
+    anchorYUnits: 'fraction',
+    color: "#000000",
+    fillColor: "#000000",
+    opacity: 1,
+    size: 64,
+    fillOpacity: 1
 };
 const STYLE_TEXT = {
     fontStyle: 'normal',
@@ -63,14 +73,16 @@ const STYLE_POLYGON = {
 
 const DEFAULT_ANNOTATIONS_STYLES = {
     "Text": STYLE_TEXT,
-    "Point": STYLE_POINT,
+    "Point": STYLE_POINT_MARKER,
     "Circle": STYLE_CIRCLE,
-    "MultiPoint": STYLE_POINT,
+    "MultiPoint": STYLE_POINT_MARKER,
     "LineString": STYLE_LINE,
     "MultiLineString": STYLE_LINE,
     "Polygon": STYLE_POLYGON,
     "MultiPolygon": STYLE_POLYGON
 };
+
+const ANNOTATION_TYPE = "ms2-annotations";
 
 /**
  * return two styles object for start and end point.
@@ -199,6 +211,10 @@ const annStyleToOlStyle = (type, tempStyle, label = "") => {
 };
 
 const AnnotationsUtils = {
+    /**
+     * The constant for annotation type
+     */
+    ANNOTATION_TYPE,
     /**
      * function used to convert a geojson into a internal model.
      * if it finds some textValues in the properties it will return this as Text
@@ -337,7 +353,8 @@ const AnnotationsUtils = {
     */
     DEFAULT_ANNOTATIONS_STYLES,
     STYLE_CIRCLE,
-    STYLE_POINT,
+    STYLE_POINT_MARKER,
+    STYLE_POINT_SYMBOL,
     STYLE_TEXT,
     STYLE_LINE,
     STYLE_POLYGON,
@@ -614,7 +631,14 @@ const AnnotationsUtils = {
         const validCoords = coords[0].filter(AnnotationsUtils.validateCoordsArray);
         return validCoords.length > 3 && head(validCoords)[0] === last(validCoords)[0] && head(validCoords)[1] === last(validCoords)[1];
     },
-    getDashArrayFromStyle
+    getDashArrayFromStyle,
+    /**
+     * utility to check if the GeoJSON has the annotation model structure i.e. {"type": "ms2-annotations", "features": [list of FeatureCollection]}
+     * or the imported annotation object's name is of "Annotations"
+     * @param {object} json GeoJSON/plain object
+     * @returns {boolean} if the GeoJSON passes is a ms2-annotation or if the name property of the object passed is Annotations
+     */
+    isAnnotation: (json) => json?.type === ANNOTATION_TYPE || json?.name === "Annotations"
 };
 
 module.exports = AnnotationsUtils;

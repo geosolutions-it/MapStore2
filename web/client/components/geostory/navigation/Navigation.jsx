@@ -7,7 +7,6 @@
  */
 
 import React from 'react';
-
 import Toolbar from '../../misc/toolbar/Toolbar';
 import ScrollMenu from './ScrollMenu';
 import Home from '../../../components/home/Home';
@@ -24,12 +23,14 @@ import isObject from 'lodash/isObject';
  * @prop {number} totalItems totalItems is the total number of sections present in the story
  * @prop {object} router router object in store contains location data
  * @prop {array} buttons array of buttons for Toolbar
+ * @prop {boolean} enableScrollOnLoad should scroll to the element after loading
+ * @prop {function} updateUrlOnScroll dispatches enableScrollOnLoad to the geostory reducer
  */
 export default ({
     settings,
     scrollTo = () => {},
     navigableItems = [],
-    currentPage, // current page progress (current page + 1/totPages),
+    currentPage = {}, // current page progress (current page + 1/totPages),
     totalItems = 1,
     currentPosition = 0,
     router,

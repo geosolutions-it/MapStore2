@@ -53,6 +53,9 @@ const CONFIRM_DELETE_FEATURE = 'ANNOTATIONS:CONFIRM_DELETE_FEATURE';
 const CHANGE_FORMAT = 'ANNOTATIONS:CHANGE_FORMAT';
 const UPDATE_SYMBOLS = 'ANNOTATIONS:UPDATE_SYMBOLS';
 const ERROR_SYMBOLS = 'ANNOTATIONS:ERROR_SYMBOLS';
+const SET_DEFAULT_STYLE = 'ANNOTATIONS:SET_DEFAULT_STYLE';
+const LOAD_DEFAULT_STYLES = 'ANNOTATIONS:LOAD_DEFAULT_STYLES';
+const LOADING = 'ANNOTATIONS:LOADING';
 
 const updateSymbols = (symbols = []) => ({
     type: UPDATE_SYMBOLS,
@@ -350,6 +353,28 @@ function changeText(text, components) {
         components
     };
 }
+
+const setDefaultStyle = (path, style) => ({
+    type: SET_DEFAULT_STYLE,
+    path,
+    style
+});
+
+const loadDefaultStyles = (shape, size, fillColor, strokeColor, symbolsPath) => ({
+    type: LOAD_DEFAULT_STYLES,
+    shape,
+    size,
+    fillColor,
+    strokeColor,
+    symbolsPath
+});
+
+const loading = (value, name = "loading") => ({
+    type: LOADING,
+    name,
+    value
+});
+
 module.exports = {
     SHOW_ANNOTATION,
     EDIT_ANNOTATION,
@@ -419,5 +444,8 @@ module.exports = {
     CHANGE_FORMAT, changeFormat,
     CHANGED_SELECTED, changeSelected,
     UPDATE_SYMBOLS, updateSymbols,
-    ERROR_SYMBOLS, setErrorSymbol
+    ERROR_SYMBOLS, setErrorSymbol,
+    SET_DEFAULT_STYLE, setDefaultStyle,
+    LOAD_DEFAULT_STYLES, loadDefaultStyles,
+    LOADING, loading
 };

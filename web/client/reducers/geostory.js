@@ -31,7 +31,9 @@ import {
     UPDATE,
     UPDATE_CURRENT_PAGE,
     UPDATE_SETTING,
-    REMOVE_RESOURCE
+    REMOVE_RESOURCE,
+    SET_PENDING_CHANGES,
+    SET_UPDATE_URL_SCROLL
 } from '../actions/geostory';
 
 
@@ -86,7 +88,8 @@ let INITIAL_STATE = {
     focusedContent: {},
     currentPage: {},
     settings: {},
-    oldSettings: {}
+    oldSettings: {},
+    updateUrlOnScroll: false
 };
 
 /**
@@ -97,6 +100,7 @@ let INITIAL_STATE = {
  * @param state the application state
  * @param {string} state.mode the mode ('view' or 'edit')
  * @param {object} state.currentStory the current story.
+ * @param {boolean} state.updateUrlOnScroll should update URL on scroll
  *
  * @example
  * {
@@ -321,6 +325,12 @@ export default (state = INITIAL_STATE, action) => {
         const {status, target, selector = "", hideContent = false, path} = action;
         const focusedContent = status ? {target, selector, hideContent, path} : undefined;
         return set(`focusedContent`, focusedContent, state);
+    }
+    case SET_PENDING_CHANGES: {
+        return set(`pendingChanges`, action.value, state);
+    }
+    case SET_UPDATE_URL_SCROLL: {
+        return set(`updateUrlOnScroll`, action.value, state);
     }
     default:
         return state;

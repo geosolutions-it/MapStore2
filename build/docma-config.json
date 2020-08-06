@@ -261,6 +261,7 @@
                 "web/client/plugins/TOC.jsx",
                 "web/client/plugins/TOCItemsSettings.jsx",
                 "web/client/plugins/Tutorial.jsx",
+                "web/client/plugins/UserSession.jsx",
                 "web/client/plugins/Version.jsx",
                 "web/client/plugins/WFSDownload.jsx",
                 "web/client/plugins/Widgets.jsx",

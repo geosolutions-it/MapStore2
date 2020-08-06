@@ -181,6 +181,10 @@ export const navigableItemsSelectorCreator = ({withImmersiveSection = false, inc
             // include only the section
             return [...p, c];
         }
+        if (c.type === SectionTypes.BANNER && (includeAlways || visibleItems[c.id])) {
+            // include only the section
+            return [...p, c];
+        }
         if (c.type === SectionTypes.IMMERSIVE) {
             // include immersive sections || contents
             const allImmContents = c.contents && c.contents.reduce((pImm, column) => {
@@ -275,3 +279,11 @@ export const isMediaResourceUsed = (state, resId) => !!find(sectionsSelector(sta
  * @param {object} state application state
  */
 export const isSharedStory = (state = {}) => pathnameSelector(state).includes("geostory/shared");
+
+export const hasPendingChanges = (state = {}) => state?.geostory?.pendingChanges;
+
+/**
+ * It checks if updateUrlOnScroll is on
+ * @param {object} state application state
+ */
+export const updateUrlOnScrollSelector = state => get(state, 'geostory.updateUrlOnScroll', false);

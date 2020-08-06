@@ -11,6 +11,7 @@ const PropTypes = require('prop-types');
 const React = require('react');
 const Filter = require('../../../misc/Filter');
 const MarkerPropertyPicker = require( "../../MarkerPropertyPicker").default;
+const Message = require('../../../I18N/Message');
 
 /**
  * Styler for the glyph, color and shape
@@ -51,8 +52,7 @@ class MarkerGlyph extends React.Component {
             <div>
                 <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', padding: '4px 0' }}>
                     <div style={{ flex: 1 }}>
-                        {/* <Message msgId="draw.marker.icon"/>*/}
-                        Icon
+                        <Message msgId="draw.marker.icon"/>
                     </div>
                     <div style={{ flex: 1 }}>
                         <MarkerPropertyPicker

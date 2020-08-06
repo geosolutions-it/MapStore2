@@ -25,6 +25,7 @@ class SymbolLayout extends React.Component {
         style: PropTypes.object,
         options: PropTypes.array,
         defaultShape: PropTypes.string,
+        defaultShapeSize: PropTypes.number,
         onChange: PropTypes.func,
         onUpdateOptions: PropTypes.func,
         onLoadingError: PropTypes.func,
@@ -41,6 +42,7 @@ class SymbolLayout extends React.Component {
         symbolsPath: DEFAULT_PATH,
         style: {},
         defaultShape: DEFAULT_SHAPE,
+        defaultShapeSize: 64,
         options: [],
         symbolErrors: [],
         onChange: () => {},
@@ -127,7 +129,7 @@ class SymbolLayout extends React.Component {
                                     <Col xs={6} style={{ position: "static" }}>
                                         <div className="mapstore-slider with-tooltip">
                                             <Slider tooltips step={1}
-                                                start={[this.props.style.size || 64]}
+                                                start={[this.props.style.size || this.props.defaultShapeSize]}
                                                 format={{
                                                     from: value => Math.round(value),
                                                     to: value => Math.round(value) + " px"

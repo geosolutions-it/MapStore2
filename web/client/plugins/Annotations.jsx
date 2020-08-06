@@ -23,7 +23,7 @@ const {cancelRemoveAnnotation, confirmRemoveAnnotation, editAnnotation, newAnnot
     changedProperties, setUnsavedStyle, toggleUnsavedStyleModal, addText, download, loadAnnotations,
     changeSelected, resetCoordEditor, changeRadius, changeText, toggleUnsavedGeometryModal, addNewFeature, setInvalidSelected,
     highlightPoint, confirmDeleteFeature, toggleDeleteFtModal, changeFormat, openEditor, updateSymbols, changePointType,
-    setErrorSymbol, toggleVisibilityAnnotation
+    setErrorSymbol, toggleVisibilityAnnotation, loadDefaultStyles
 } = require('../actions/annotations');
 
 const {selectFeatures} = require('../actions/draw');
@@ -111,7 +111,8 @@ const Annotations = connect(panelSelector, {
     onFilter: filterAnnotations,
     onDownload: download,
     onZoom: zoomToExtent,
-    onLoadAnnotations: loadAnnotations
+    onLoadAnnotations: loadAnnotations,
+    onLoadDefaultStyles: loadDefaultStyles
 })(require('../components/mapcontrols/annotations/Annotations'));
 
 const ContainerDimensions = require('react-container-dimensions').default;
@@ -201,7 +202,10 @@ const conditionalToggle = on.bind(null, toggleControl('annotations', null), (sta
   * If an odd number of values is inserted then they are added again to reach an even number of values
   * for more information see [this page](https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/stroke-dasharray)
   * @prop {string} symbolsPath the relative path to the symbols folder where symbols.json and SVGs are located (starting from the index.html folder, i.e. the root)
-  * @prop {string} defaultShape the default symbol used when switching to the symbol styler from marker styler
+  * @prop {string} defaultShape the default symbol used when switching for the symbol styler
+  * @prop {string} defaultShapeStrokeColor default symbol stroke color
+  * @prop {string} defaultShapeFillColor default symbol fill color
+  * @prop {string} defaultShapeSize default symbol shape size in px
   * @class Annotations
   * @memberof plugins
   * @static
