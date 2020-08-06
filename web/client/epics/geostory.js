@@ -116,10 +116,7 @@ const updateMediaSection = (store, path) => action$ =>
             if (resourceAlreadyPresent) {
                 resourceId = resourceAlreadyPresent.id;
             } else if (isEmpty(resource)) {
-                const emptyMedia = mediaType === MediaTypes.MAP
-                ? {resourceId: '', type: null, map: undefined}
-                : {resourceId: '', type: null};
-                actions = [...actions, update(`${path}`, emptyMedia ), hide()];
+                actions = [...actions, remove(`${path}`), hide()];
             }  else {
             // if the resource is new, add it to the story resources list
                 resourceId = uuid();
