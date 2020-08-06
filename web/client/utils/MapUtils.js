@@ -314,7 +314,14 @@ function transformExtent(projection, center, width, height) {
 }
 
 const groupSaveFormatted = (node) => {
-    return {id: node.id, title: node.title, expanded: node.expanded};
+    return {
+        id: node.id,
+        title: node.title,
+        description: node.description,
+        tooltipOptions: node.tooltipOptions,
+        tooltipPlacement: node.tooltipPlacement,
+        expanded: node.expanded
+    };
 };
 
 
