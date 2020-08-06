@@ -31,7 +31,7 @@ export default ({
                     onChange={event => onChangeServiceFormat(event && event.value)} />
             </Col >
         </FormGroup>
-        <FormGroup style={{ display: 'flex', alignItems: 'center', paddingTop: 15}}>
+        {service?.type === 'csw' && <FormGroup style={{ display: 'flex', alignItems: 'center', paddingTop: 15}}>
             <Col xs={6}>
                 <ControlLabel>BBOX CRS</ControlLabel>
             </Col>
@@ -42,6 +42,6 @@ export default ({
                     options={bboxCrsOptions}
                     onChange={event => onChangeServiceProperty('bboxCrs', event && event.value)} />
             </Col>
-        </FormGroup>
+        </FormGroup>}
     </CommonAdvancedSettings>);
 };
