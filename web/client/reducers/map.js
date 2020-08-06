@@ -12,8 +12,6 @@ var {CHANGE_MAP_VIEW, CHANGE_MOUSE_POINTER,
     RESIZE_MAP, CHANGE_MAP_LIMITS, SET_MAP_RESOLUTIONS,
     TOGGLE_UNSAVED_MAP_CHANGES_DIALOG, REGISTER_EVENT_LISTENER, UNREGISTER_EVENT_LISTENER} = require('../actions/map');
 
-const {SET_MAP_TRIGGER} = require('../actions/mapInfo');
-
 var assign = require('object-assign');
 var MapUtils = require('../utils/MapUtils');
 var CoordinatesUtils = require('../utils/CoordinatesUtils');
@@ -129,9 +127,6 @@ function mapConfig(state = {eventListeners: {}}, action) {
                     {[action.eventName]: filteredEventNameTools})});
         }
         return data;
-    }
-    case SET_MAP_TRIGGER: {
-        return assign({}, state, { mapInfoConfiguration: {trigger: action.trigger} });
     }
     default:
         return state;
