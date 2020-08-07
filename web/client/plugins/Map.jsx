@@ -426,8 +426,5 @@ module.exports = {
         maptype: require('../reducers/maptype'),
         additionallayers: require('../reducers/additionallayers')
     },
-    epics: {
-        ...require('../epics/map'),
-        ...require('../epics/mapInfo')
-    }
+    epics: require('../epics/map')
 };
