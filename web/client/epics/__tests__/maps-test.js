@@ -692,7 +692,7 @@ describe('Create and update flow using persistence api', () => {
         Persistence.setApi("geostore");
     });
     it('test create flow ', done => {
-        testEpic(addTimeoutEpic(mapSaveMapResourceEpic), 6, saveMapResource( {}), actions => {
+        testEpic(addTimeoutEpic(mapSaveMapResourceEpic), 6, saveMapResource({}), actions => {
             expect(actions.length).toBe(6);
             actions.map((action) => {
                 switch (action.type) {
@@ -747,6 +747,36 @@ describe('Create and update flow using persistence api', () => {
             });
             done();
         });
+    });
+    it('test thumbnail attribute is ignored', done => {
+        const attributeTestApi = {
+            ...api,
+            updateResourceAttribute: ({name}) => name === 'thumbnail' ? done(new Error('thumbnail update request was issued!')) : Rx.Observable.of(10)
+        };
+        Persistence.addApi('attributeTest', attributeTestApi);
+        Persistence.setApi('attributeTest');
+
+        testEpic(addTimeoutEpic(mapSaveMapResourceEpic), 6, saveMapResource({id: 10, metadata: {name: 'resource'}, attributes: {thumbnail: 'thumb', someAttribute: 'value'}}), actions => {
+            try {
+                expect(actions.length).toBe(6);
+                actions.map((action) => {
+                    switch (action.type) {
+                    case MAP_UPDATING:
+                    case TOGGLE_CONTROL:
+                    case MAP_SAVED:
+                    case SHOW_NOTIFICATION:
+                    case LOAD_MAP_INFO:
+                    case MAP_CONFIG_LOADED:
+                        break;
+                    default:
+                        expect(true).toBe(false);
+                    }
+                });
+                done();
+            } catch (e) {
+                done(e);
+            }
+        }, {});
     });
 
     it('test reloadMaps', function(done) {

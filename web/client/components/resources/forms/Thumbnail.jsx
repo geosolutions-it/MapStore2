@@ -100,7 +100,6 @@ class Thumbnail extends React.Component {
                     // with at least one error
                     this.props.onError(errors, this.props.resource.id);
                     this.files  = files;
-                    this.props.onUpdate(null, null);
                 }}
                 onRemove={() => {
                     this.files = null;
