@@ -1,4 +1,5 @@
 {
+    "postinstall": "node MapStore2/utility/build/postInstall.js",
     "clean": "rimraf dist",
     "compile": "npm run clean && mkdirp ./dist && node --max_old_space_size=2048 webpack --config prod-webpack.config.js --env.production",
     "start": "webpack-dev-server --progress --colors --port 8081 --hot --inline --content-base .",
