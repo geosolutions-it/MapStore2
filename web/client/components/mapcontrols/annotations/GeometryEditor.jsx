@@ -29,7 +29,8 @@ class GeometryEditor extends React.Component {
         onSetInvalidSelected: PropTypes.func,
         aeronauticalOptions: PropTypes.object,
         onChangeText: PropTypes.func,
-        renderer: PropTypes.string
+        renderer: PropTypes.string,
+        canEdit: PropTypes.bool
     };
 
     static defaultProps = {
@@ -48,7 +49,8 @@ class GeometryEditor extends React.Component {
             transitionName: "switch-panel-transition",
             transitionEnterTimeout: 300,
             transitionLeaveTimeout: 300
-        }
+        },
+        canEdit: true
     };
 
     render() {
@@ -56,6 +58,7 @@ class GeometryEditor extends React.Component {
             {...this.props.options}
             items={[]}
             isDraggable
+            canEdit={this.props.canEdit}
             type={this.props.featureType}
             components={this.props.selected && this.props.selected.geometry && this.props.selected.geometry.coordinates && this.props.selected.geometry.coordinates.length ? getComponents(this.props.selected.geometry) : []}
             properties={this.props.selected && this.props.selected.properties || {}}

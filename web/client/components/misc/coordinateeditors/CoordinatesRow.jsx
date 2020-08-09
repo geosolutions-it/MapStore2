@@ -37,14 +37,16 @@ class CoordinatesRow extends React.Component {
         removeVisible: PropTypes.bool,
         formatVisible: PropTypes.bool,
         removeEnabled: PropTypes.bool,
-        renderer: PropTypes.string
+        renderer: PropTypes.string,
+        canEdit: PropTypes.bool
     };
 
     static defaultProps = {
         showLabels: false, // Remove it
         formatVisible: false,
         onMouseEnter: () => {},
-        onMouseLeave: () => {}
+        onMouseLeave: () => {},
+        canEdit: true
     };
 
     constructor(props) {
@@ -108,7 +110,7 @@ class CoordinatesRow extends React.Component {
                         text: <Message msgId="search.aeronautical"/>
                     }
                 ],
-                visible: this.props.formatVisible,
+                visible: this.props.canEdit && this.props.formatVisible,
                 Element: DropdownToolbarOptions
             },
             {
@@ -147,6 +149,7 @@ class CoordinatesRow extends React.Component {
                     <InputGroup>
                         <InputGroup.Addon><Message msgId="latitude"/></InputGroup.Addon>
                         <CoordinateEntry
+                            canEdit={this.props.canEdit}
                             format={this.props.format}
                             aeronauticalOptions={this.props.aeronauticalOptions}
                             coordinate="lat"
@@ -171,6 +174,7 @@ class CoordinatesRow extends React.Component {
                     <InputGroup>
                         <InputGroup.Addon><Message msgId="longitude"/></InputGroup.Addon>
                         <CoordinateEntry
+                            canEdit={this.props.canEdit}
                             format={this.props.format}
                             aeronauticalOptions={this.props.aeronauticalOptions}
                             coordinate="lon"

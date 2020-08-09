@@ -56,6 +56,8 @@ const ERROR_SYMBOLS = 'ANNOTATIONS:ERROR_SYMBOLS';
 const SET_DEFAULT_STYLE = 'ANNOTATIONS:SET_DEFAULT_STYLE';
 const LOAD_DEFAULT_STYLES = 'ANNOTATIONS:LOAD_DEFAULT_STYLES';
 const LOADING = 'ANNOTATIONS:LOADING';
+const CHANGE_GEOMETRY_TITLE = 'ANNOTATIONS:CHANGE_GEOMETRY_TITLE';
+const TOGGLE_GEOMETRY_EDIT = 'ANNOTATIONS:TOGGLE_GEOMETRY_EDIT';
 
 const updateSymbols = (symbols = []) => ({
     type: UPDATE_SYMBOLS,
@@ -95,6 +97,14 @@ function toggleDeleteFtModal() {
         type: TOGGLE_DELETE_FT_MODAL
     };
 }
+
+function toggleGeometryEdit(canEdit) {
+    return {
+        type: TOGGLE_GEOMETRY_EDIT,
+        canEdit: canEdit
+    };
+}
+
 function highlightPoint(point) {
     return {
         type: HIGHLIGHT_POINT,
@@ -369,6 +379,11 @@ const loadDefaultStyles = (shape, size, fillColor, strokeColor, symbolsPath) => 
     symbolsPath
 });
 
+const changeGeometryTitle = (title) => ({
+    type: CHANGE_GEOMETRY_TITLE,
+    title
+});
+
 const loading = (value, name = "loading") => ({
     type: LOADING,
     name,
@@ -447,5 +462,7 @@ module.exports = {
     ERROR_SYMBOLS, setErrorSymbol,
     SET_DEFAULT_STYLE, setDefaultStyle,
     LOAD_DEFAULT_STYLES, loadDefaultStyles,
-    LOADING, loading
+    LOADING, loading,
+    CHANGE_GEOMETRY_TITLE, changeGeometryTitle,
+    TOGGLE_GEOMETRY_EDIT, toggleGeometryEdit
 };

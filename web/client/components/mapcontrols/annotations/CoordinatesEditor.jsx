@@ -70,7 +70,8 @@ class CoordinatesEditor extends React.Component {
         isDraggable: PropTypes.bool,
         isMouseEnterEnabled: PropTypes.bool,
         isMouseLeaveEnabled: PropTypes.bool,
-        renderer: PropTypes.string
+        renderer: PropTypes.string,
+        canEdit: PropTypes.bool
     };
 
     static contextTypes = {
@@ -106,7 +107,8 @@ class CoordinatesEditor extends React.Component {
         isMouseEnterEnabled: false,
         isMouseLeaveEnabled: false,
         properties: {},
-        type: "Point"
+        type: "Point",
+        canEdit: true
     };
 
     getValidationStateRadius = (radius) => {
@@ -118,11 +120,12 @@ class CoordinatesEditor extends React.Component {
     }
 
     renderCircle() {
-        return (<div style={{flex: 1, overflowY: 'auto'}}>
+        return (<div style={{flex: 1, overflowY: 'auto', padding: "0 10px"}}>
             <div>
                 <FormGroup validationState={this.getValidationStateRadius(this.props.properties.radius)}>
                     <ControlLabel><Message msgId="annotations.editor.radius"/></ControlLabel>
                     <MeasureEditor
+                        canEdit={this.props.canEdit}
                         placeholder="radius"
                         {...this.props.measureOptions}
                         value={this.props.properties.radius}
@@ -146,7 +149,7 @@ class CoordinatesEditor extends React.Component {
     }
 
     render() {
-        const {componentsValidation, type} = this.props;
+        const {componentsValidation, type, canEdit} = this.props;
         const actualComponents = [...this.props.components];
         const actualValidComponents = actualComponents.filter(validateCoords);
         const allValidComponents = actualValidComponents.length === actualComponents.length;
@@ -182,7 +185,7 @@ class CoordinatesEditor extends React.Component {
             {
                 glyph: 'plus',
                 tooltipId: 'annotations.editor.add',
-                visible: componentsValidation[type].add && componentsValidation[type].max ? this.props.components.length !== componentsValidation[type].max : true,
+                visible: componentsValidation[type].add && componentsValidation[type].max ? this.props.components.length !== componentsValidation[type].max : canEdit,
                 onClick: () => {
                     let tempComps = [...this.props.components];
                     tempComps = tempComps.concat([{lat: "", lon: ""}]);
@@ -228,7 +231,7 @@ class CoordinatesEditor extends React.Component {
                 </div>
                 {this.props.type === "Circle" && this.renderCircle()}
                 {
-                    this.props.type === "Circle" && <div style={{flex: 1, overflowY: 'auto'}}>
+                    this.props.type === "Circle" && <div style={{flex: 1, overflowY: 'auto', paddingLeft: 10, marginTop: 10}}>
                         <div>
                             <ControlLabel><Message msgId={"annotations.editor.center"}/></ControlLabel>
                         </div>
@@ -240,6 +243,7 @@ class CoordinatesEditor extends React.Component {
                         aeronauticalOptions={this.props.aeronauticalOptions}
                         sortId={idx}
                         key={idx + " key"}
+                        canEdit={this.props.canEdit}
                         renderer={this.props.renderer}
                         isDraggable={this.props.isDraggable}
                         isDraggableEnabled={this.props.isDraggable && this[componentsValidation[type].validation]()}

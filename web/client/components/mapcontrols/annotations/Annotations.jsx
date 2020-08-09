@@ -301,7 +301,7 @@ class Annotations extends React.Component {
         if (this.props.loading) {
             return (
                 <div style={{display: 'flex', height: '100%', justifyContent: 'center', alignItems: 'center'}}>
-                    <Loader size={352}/>
+                    <Loader size={250}/>
                 </div>
             );
         }

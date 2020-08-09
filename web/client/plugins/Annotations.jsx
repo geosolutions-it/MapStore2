@@ -23,7 +23,7 @@ const {cancelRemoveAnnotation, confirmRemoveAnnotation, editAnnotation, newAnnot
     changedProperties, setUnsavedStyle, toggleUnsavedStyleModal, addText, download, loadAnnotations,
     changeSelected, resetCoordEditor, changeRadius, changeText, toggleUnsavedGeometryModal, addNewFeature, setInvalidSelected,
     highlightPoint, confirmDeleteFeature, toggleDeleteFtModal, changeFormat, openEditor, updateSymbols, changePointType,
-    setErrorSymbol, toggleVisibilityAnnotation, loadDefaultStyles
+    setErrorSymbol, toggleVisibilityAnnotation, loadDefaultStyles, changeGeometryTitle, toggleGeometryEdit
 } = require('../actions/annotations');
 
 const {selectFeatures} = require('../actions/draw');
@@ -69,6 +69,8 @@ const commonEditorActions = {
     onChangeRadius: changeRadius,
     onSetInvalidSelected: setInvalidSelected,
     onChangeText: changeText,
+    onToggleGeometryEdit: toggleGeometryEdit,
+    onChangeGeometryTitle: changeGeometryTitle,
     onCancelRemove: cancelRemoveAnnotation,
     onCancelClose: cancelCloseAnnotations,
     onConfirmClose: confirmCloseAnnotations,

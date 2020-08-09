@@ -13,7 +13,7 @@ const Toolbar = require('../../misc/toolbar/Toolbar');
 const Message = require('../../I18N/Message');
 const {DEFAULT_ANNOTATIONS_STYLES, getStartEndPointsForLinestring, getGeometryGlyphInfo, getGeometryType} = require('../../../utils/AnnotationsUtils');
 
-const FeaturesList = (props) =>{
+const FeaturesList = (props) => {
     const {
         editing,
         onAddGeometry,
@@ -123,7 +123,7 @@ const FeatureCard = ({feature, selected, onDeleteGeometry, onZoom, maxZoom, onSe
                 <Glyphicon glyph={glyph}/>
             </div>
             <div className="geometry-card-label">
-                <div>{label || properties?.id}</div>
+                <div>{properties?.geometryTitle || label || properties?.id}</div>
             </div>
             <Toolbar
                 btnDefaultProps={{
@@ -135,7 +135,7 @@ const FeatureCard = ({feature, selected, onDeleteGeometry, onZoom, maxZoom, onSe
                     },
                     {
                         glyph: 'zoom-to',
-                        tooltip: 'annotations.zoomToGeometry',
+                        tooltip: <Message msgId="annotations.zoomToGeometry"/>,
                         onClick: (event) => {
                             event.stopPropagation();
                             const extent = bbox(feature);
@@ -144,7 +144,7 @@ const FeatureCard = ({feature, selected, onDeleteGeometry, onZoom, maxZoom, onSe
                     },
                     {
                         glyph: 'trash',
-                        tooltip: 'Remove',
+                        tooltip: <Message msgId="annotations.removeGeometry"/>,
                         onClick: (event) => {
                             event.stopPropagation();
                             onDeleteGeometry(properties?.id);

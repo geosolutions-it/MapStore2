@@ -24,7 +24,8 @@ class DecimalCoordinateEditor extends React.Component {
         coordinate: PropTypes.string,
         onChange: PropTypes.func,
         onKeyDown: PropTypes.func,
-        onSubmit: PropTypes.func
+        onSubmit: PropTypes.func,
+        canEdit: PropTypes.bool
     };
     static defaultProps = {
         format: "decimal",
@@ -41,12 +42,13 @@ class DecimalCoordinateEditor extends React.Component {
                 }
             }
         },
-        onKeyDown: () => {}
+        onKeyDown: () => {},
+        canEdit: true
     }
 
 
     render() {
-        const {coordinate, value, onChange} = this.props;
+        const {coordinate, value, onChange, canEdit} = this.props;
         const validateNameFunc = "validateDecimal" + capitalize(coordinate);
         return (
             <FormGroup
@@ -55,6 +57,7 @@ class DecimalCoordinateEditor extends React.Component {
                     key={coordinate}
                     value={value}
                     placeholder={coordinate}
+                    disabled={!canEdit}
                     onChange={e => {
                         // when inserting 4eee5 as number here it comes "" that makes the re-render fail
                         if (e.target.value === "") {

@@ -27,7 +27,7 @@ const {updateAnnotationGeometry, setStyle, toggleStyle, cleanHighlight, toggleAd
     SET_STYLE, RESTORE_STYLE, HIGHLIGHT, CLEAN_HIGHLIGHT, CONFIRM_CLOSE_ANNOTATIONS, START_DRAWING,
     CANCEL_CLOSE_TEXT, SAVE_TEXT, DOWNLOAD, LOAD_ANNOTATIONS, CHANGED_SELECTED, RESET_COORD_EDITOR, CHANGE_RADIUS,
     ADD_NEW_FEATURE, SET_EDITING_FEATURE, CHANGE_TEXT, NEW_ANNOTATION, TOGGLE_STYLE, CONFIRM_DELETE_FEATURE, OPEN_EDITOR,
-    TOGGLE_ANNOTATION_VISIBILITY, LOAD_DEFAULT_STYLES
+    TOGGLE_ANNOTATION_VISIBILITY, LOAD_DEFAULT_STYLES, TOGGLE_GEOMETRY_EDIT
 } = require('../actions/annotations');
 
 const uuidv1 = require('uuid/v1');
@@ -665,11 +665,12 @@ module.exports = (viewer) => ({
             }, assign({}, style, {highlight: false}));
             return Rx.Observable.of(action);
         }),
-    editSelectedFeatureEpic: (action$, {getState}) => action$.ofType(FEATURES_SELECTED)
+    editSelectedFeatureEpic: (action$, {getState}) => action$.ofType(FEATURES_SELECTED, TOGGLE_GEOMETRY_EDIT)
         .switchMap(() => {
             const state = getState();
             const feature = state.annotations.editing;
             const selected = state.annotations.selected;
+            const canEdit = state.annotations.editGeometry || state.annotations.allowEdit || false;
             const multiGeometry = multiGeometrySelector(state);
             const style = feature.style;
             let method = selected.geometry.type;
@@ -679,8 +680,7 @@ module.exports = (viewer) => ({
             if (selected.properties.isText) {
                 method = "Text";
             }
-
-            const action = changeDrawingStatus("drawOrEdit", method, "annotations", [feature], {
+            const options = canEdit ? {
                 featureProjection: "EPSG:4326",
                 stopAfterDrawing: !multiGeometry,
                 editEnabled: true,
@@ -690,7 +690,15 @@ module.exports = (viewer) => ({
                 useSelectedStyle: true,
                 transformToFeatureCollection: true,
                 addClickCallback: true
-            }, assign({}, style, {highlight: false}));
+            } : {
+                featureProjection: "EPSG:4326",
+                stopAfterDrawing: !multiGeometry,
+                editEnabled: false,
+                drawEnabled: false,
+                selectEnabled: true,
+                transformToFeatureCollection: true
+            };
+            const action = changeDrawingStatus("drawOrEdit", method, "annotations", [feature], options, assign({}, style, {highlight: false}));
             return Rx.Observable.of( changeDrawingStatus("clean"), action);
         }),
     editCircleFeatureEpic: (action$, {getState}) => action$.ofType(DRAWING_FEATURE)
