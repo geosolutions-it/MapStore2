@@ -22,6 +22,8 @@ class UserCard extends React.Component {
         // props
         style: PropTypes.object,
         user: PropTypes.object,
+        titleStyle: PropTypes.object,
+        headerStyle: PropTypes.object,
         innerItemStyle: PropTypes.object,
         avatarStyle: PropTypes.object,
         nameStyle: PropTypes.object,
@@ -35,24 +37,27 @@ class UserCard extends React.Component {
             backgroundPosition: "center",
             backgroundRepeat: "repeat-x"
         },
-        innerItemStyle: {
-            position: "relative",
-            marginTop: "35px",
-            marginLeft: "10px",
-            marginRight: "10px",
-            maxHeight: "85px"
+        titleStyle: {
+            display: "flex"
         },
+        headerStyle: {
+            flexGrow: 1,
+            overflow: "hidden",
+            whiteSpace: "nowrap",
+            textOverflow: "ellipsis",
+            width: 0
+        },
+        innerItemStyle: {},
         avatarStyle: {
             margin: "10px"
         },
         nameStyle: {
-            position: "absolute",
-            left: "80px",
-            top: "30px",
-            width: "75%",
             borderBottom: "1px solid #ddd",
             fontSize: 18,
-            fontWeight: "bold"
+            fontWeight: "bold",
+            overflow: "auto",
+            wordWrap: "break-word",
+            minHeight: "1.5em"
         }
     };
 
@@ -91,16 +96,24 @@ class UserCard extends React.Component {
         return (<div key="name" style={this.props.nameStyle}>{this.props.user.name}</div>);
     };
 
+    renderHeader = () => {
+        return <div style={this.props.headerStyle}>{this.props.user.name}</div>;
+    }
+
     render() {
         return (
-            <GridCard className="user-thumb" style={this.props.style} header={this.props.user.name}
+            <GridCard className="user-thumb" style={this.props.style} titleStyle={this.props.titleStyle} header={this.renderHeader()}
                 actions={this.props.actions}
             >
                 <div className="user-data-container">
                     {this.renderAvatar()}
-                    {this.renderName()}
-                    {this.renderRole()}
-                    {this.renderGroups()}
+                    <div className="user-card-info-container">
+                        {this.renderName()}
+                        <div className="user-card-rolegroups-container">
+                            {this.renderRole()}
+                            {this.renderGroups()}
+                        </div>
+                    </div>
                 </div>
                 {this.renderStatus()}
             </GridCard>
