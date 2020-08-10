@@ -181,6 +181,7 @@ class AnnotationsEditor extends React.Component {
         showDeleteFeatureModal: PropTypes.bool,
         showUnsavedGeometryModal: PropTypes.bool,
         config: PropTypes.object,
+        feature: PropTypes.object,
         features: PropTypes.object,
         selected: PropTypes.object,
         mode: PropTypes.string,
@@ -319,10 +320,24 @@ class AnnotationsEditor extends React.Component {
                             }
                         },
                         {
+                            glyph: 'trash',
+                            tooltipId: "annotations.remove",
+                            visible: true,
+                            onClick: () => {
+                                this.setState({removing: this.props.id});
+                            }
+                        },
+                        {
                             glyph: 'floppy-disk',
                             tooltipId: "annotations.save",
                             visible: true,
                             onClick: this.save
+                        },
+                        {  // TODO should this be included on geometry card
+                            glyph: 'download',
+                            tooltip: <Message msgId="annotations.downloadcurrenttooltip" />,
+                            visible: true,
+                            onClick: () => { this.props.onDownload(this.props.editing); }
                         }
                         ]} />
                 </Col>
@@ -376,9 +391,14 @@ class AnnotationsEditor extends React.Component {
     };
 
     renderButtons = (editing) => {
-        const toolbar = editing ?
-            this.props.coordinateEditorEnabled ? this.renderEditingCoordButtons() : this.renderEditingButtons()
-            : this.renderViewButtons();
+        let toolbar;
+        if (editing) {
+            if (this.props.coordinateEditorEnabled) {
+                toolbar = this.renderEditingCoordButtons();
+            } else {
+                toolbar = this.renderEditingButtons();
+            }
+        }
         return (<div className="mapstore-annotations-info-viewer-buttons">{toolbar}</div>);
     };
 
@@ -391,7 +411,7 @@ class AnnotationsEditor extends React.Component {
                 />);
             case 'component':
                 const Component = fieldValue;
-                return <prop editing value={<Component annotation={this.props.features} />} onChange={(e) => { this.change(field.name, e.target.value); if (!this.props.unsavedChanges) { this.props.onSetUnsavedChanges(true); } }} />;
+                return <prop editing value={<Component annotation={this.props.feature} />} onChange={(e) => { this.change(field.name, e.target.value); if (!this.props.unsavedChanges) { this.props.onSetUnsavedChanges(true); } }} />;
             default:
                 return <FormControl value={fieldValue || ''} onChange={(e) => { this.change(field.name, e.target.value); if (!this.props.unsavedChanges) { this.props.onSetUnsavedChanges(true); } }} />;
             }
@@ -402,7 +422,7 @@ class AnnotationsEditor extends React.Component {
             return <span dangerouslySetInnerHTML={{ __html: fieldValue }} />;
         case 'component':
             const Component = fieldValue;
-            return <Component annotation={this.props.features} />;
+            return <Component annotation={this.props.feature} />;
         default:
             return (<p>{fieldValue}</p>);
         }
@@ -426,13 +446,6 @@ class AnnotationsEditor extends React.Component {
         });
     };
 
-    // renderStyler = () => {
-    //     return (<BorderLayout
-    //         className="mapstore-annotations-info-viewer-styler-container">
-    //         {this.renderStylerBody("marker" || this.props.stylerType)}
-    //     </BorderLayout>);
-    // };
-
     renderBody = (editing) => {
         const items = this.getBodyItems(editing);
         if (items.length === 0) {
@@ -453,6 +466,7 @@ class AnnotationsEditor extends React.Component {
                     maxZoom={this.props.maxZoom}
                     onSelectFeature={this.props.onSelectFeature}
                     onUnselectFeature={this.props.onResetCoordEditor}
+                    onToggleGeometryEdit={this.props.onToggleGeometryEdit}
                 />
                 }
             </div>
@@ -573,7 +587,7 @@ class AnnotationsEditor extends React.Component {
                     {this.renderModals(editing)}
                     {this.renderBody(editing)}
                 </div>
-                {this.props.selected &&
+                {!isEmpty(this.props.selected) &&
                     <div className="mapstore-annotations-info-viewer-expanded">
                         <div style={{padding: 8, display: 'flex', alignItems: 'center'}}>
                             <Glyphicon glyph={glyph} style={{fontSize: 20, paddingRight: 8}}/>

@@ -86,7 +86,7 @@ class CoordinatesRow extends React.Component {
         const toolButtons = [
             {
                 visible: this.props.removeVisible,
-                disabled: !this.props.removeEnabled,
+                disabled: !this.props.removeEnabled && !this.props.canEdit,
                 glyph: 'trash',
                 onClick: () => {
                     this.props.onRemove(idx);

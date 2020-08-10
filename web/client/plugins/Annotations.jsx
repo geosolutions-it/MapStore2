@@ -15,6 +15,7 @@ const PropTypes = require('prop-types');
 const {Glyphicon} = require('react-bootstrap');
 const {on, toggleControl} = require('../actions/controls');
 const {createSelector} = require('reselect');
+const isEmtpy = require('lodash/isEmpty');
 
 const {cancelRemoveAnnotation, confirmRemoveAnnotation, editAnnotation, newAnnotation, removeAnnotation, cancelEditAnnotation,
     saveAnnotation, toggleAdd, validationError, removeAnnotationGeometry, toggleStyle, setStyle, restoreStyle,
@@ -220,7 +221,7 @@ const annotationsSelector = createSelector([
 ], (active, dockStyle, list) => ({
     active,
     dockStyle,
-    width: list?.selected ? 660 : 330
+    width: !isEmtpy(list?.selected) ? 660 : 330
 }));
 
 const AnnotationsPlugin = connect(annotationsSelector, {

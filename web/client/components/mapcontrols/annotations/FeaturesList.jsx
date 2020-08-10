@@ -19,7 +19,8 @@ const FeaturesList = (props) => {
         onAddGeometry,
         onSetStyle,
         onStartDrawing,
-        onAddText
+        onAddText,
+        onToggleGeometryEdit
     } = props;
     const {features = []} = editing;
     return (
@@ -45,6 +46,7 @@ const FeaturesList = (props) => {
                                 onAddGeometry("Point");
                                 onSetStyle([{ ...DEFAULT_ANNOTATIONS_STYLES.Point, highlight: true, id: uuidv1()}]);
                                 onStartDrawing();
+                                onToggleGeometryEdit(true);
                             },
                             tooltip: <Message msgId="annotations.titles.marker" />
                         },
@@ -56,6 +58,7 @@ const FeaturesList = (props) => {
                                     [{ ...DEFAULT_ANNOTATIONS_STYLES.LineString, highlight: true, id: uuidv1()}]
                                         .concat(getStartEndPointsForLinestring()));
                                 onStartDrawing();
+                                onToggleGeometryEdit(true);
                             },
                             tooltip: <Message msgId="annotations.titles.line" />
                         },
@@ -67,6 +70,7 @@ const FeaturesList = (props) => {
                                     {...DEFAULT_ANNOTATIONS_STYLES.Polygon, highlight: true, id: uuidv1()}
                                 ]);
                                 onStartDrawing();
+                                onToggleGeometryEdit(true);
                             },
                             tooltip: <Message msgId="annotations.titles.polygon" />
                         },
@@ -79,6 +83,7 @@ const FeaturesList = (props) => {
                                     {...DEFAULT_ANNOTATIONS_STYLES.Text, highlight: true, type: "Text", title: "Text Style", id: uuidv1()}
                                 ]);
                                 onStartDrawing();
+                                onToggleGeometryEdit(true);
                             },
                             tooltip: <Message msgId="annotations.titles.text" />
                         },
@@ -91,14 +96,15 @@ const FeaturesList = (props) => {
                                     {...DEFAULT_ANNOTATIONS_STYLES.Point, highlight: true, iconAnchor: [0.5, 0.5], type: "Point", title: "Center Style", filtering: false, geometry: "centerPoint", id: uuidv1()}
                                 ]);
                                 onStartDrawing();
+                                onToggleGeometryEdit(true);
                             },
                             tooltip: <Message msgId="annotations.titles.circle" />
                         }
                     ]}
                 />
             </div>
-            {features.length === 0 && <div style={{ textAlign: 'center' }}>Add a new geometry</div>}
-            {features.map((feature, key) => {
+            {features && features.length === 0 && <div style={{ textAlign: 'center' }}>Add a new geometry</div>}
+            {features?.map((feature, key) => {
                 return (
                     <FeatureCard feature={feature} key={key} {...props}/>
                 );

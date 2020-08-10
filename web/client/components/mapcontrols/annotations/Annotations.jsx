@@ -12,7 +12,7 @@ const ConfirmDialog = require('../../misc/ConfirmDialog');
 const Message = require('../../I18N/Message');
 const LocaleUtils = require('../../../utils/LocaleUtils');
 const bbox = require('@turf/bbox');
-const {head, countBy, values, isUndefined} = require('lodash');
+const {head, countBy, values, isUndefined, keys} = require('lodash');
 const assign = require('object-assign');
 const Filter = require('../../misc/Filter');
 const Loader = require('../../misc/Loader');
@@ -22,6 +22,7 @@ const {Glyphicon, Button} = require('react-bootstrap');
 const BorderLayout = require('../../layout/BorderLayout');
 const Toolbar = require('../../misc/toolbar/Toolbar');
 const SideGrid = require('../../misc/cardgrids/SideGrid');
+const {getGeometryGlyphInfo} = require('../../../utils/AnnotationsUtils');
 
 const SelectAnnotationsFile = require("./SelectAnnotationsFile");
 
@@ -82,15 +83,12 @@ const defaultConfig = require('./AnnotationsConfig');
  * @prop {string} symbolsPath path to the svg folder
  * @prop {object[]} symbolList list of symbols
  * @prop {string} defaultShape default Shape
-<<<<<<< HEAD
  * @prop {number} maxZoom max zoom for annotation (default 18)
-=======
  * @prop {string} defaultShapeStrokeColor default symbol stroke color
  * @prop {string} defaultShapeFillColor default symbol fill color
  * @prop {string} defaultShapeSize default symbol shape size in px
  * @prop {object} defaultStyles object with default symbol styles
  * @prop {number} textRotationStep rotation step of text styler
->>>>>>> origin/mapstore2_master
  *
  * the annotation's attributes.
  */
@@ -181,7 +179,7 @@ class Annotations extends React.Component {
     };
 
     getGeomsThumbnail(geometry) {
-        let geomIcon;
+        let glyph;
         const geoms =  geometry?.features.reduce((p, c) => {
             if (c.properties && c.properties.isCircle) {
                 return {...p, "Circle": true};
@@ -193,20 +191,13 @@ class Annotations extends React.Component {
         }, {"Circle": false, "Text": false});
 
         if (countBy(values(geoms))?.true > 1) {
-            geomIcon = "geometry-collection";
-        } else if (geoms.Text) {
-            geomIcon = "font";
-        } else if (geoms.Circle) {
-            geomIcon = "1-circle";
-        } else if (geoms.Polygon || geoms.MultiPolygon) {
-            geomIcon = "polygon";
-        } else if (geoms.LineString || geoms.MultiLineString) {
-            geomIcon = "polyline";
-        } else if (geoms.Point || geoms.MultiPoint) {
-            geomIcon = "point";
+            glyph = "geometry-collection";
+        } else {
+            const type = keys(geoms).find(key => geoms[key] === true);
+            glyph = getGeometryGlyphInfo(type)?.glyph;
         }
 
-        return <Glyphicon glyph={geomIcon}/>;
+        return <Glyphicon glyph={glyph}/>;
     }
 
     renderField = (field, annotation) => {
@@ -348,7 +339,7 @@ class Annotations extends React.Component {
         const annotation = this.props.annotations && head(this.props.annotations.filter(a => a.properties.id === this.props.current));
         const Editor = this.props.editor;
         if (this.props.mode === 'detail') {
-            return (<Editor features={annotation} showBack id={this.props.current} config={this.props.config} width={this.props.width}
+            return (<Editor feature={annotation} showBack id={this.props.current} config={this.props.config} width={this.props.width}
                 {...annotation.properties}
             />);
         }
@@ -429,7 +420,7 @@ class Annotations extends React.Component {
                 closeText={<Message msgId="annotations.cancel" />}>
                 <Message msgId="annotations.undo"/>
             </ConfirmDialog>);
-        } else if (this.state.selectFile) {
+        }  else if (this.state.selectFile) {
             body = (
                 <SelectAnnotationsFile
                     text={<Message msgId="annotations.selectfiletext"/>}

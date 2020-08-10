@@ -246,11 +246,11 @@ class CoordinatesEditor extends React.Component {
                         canEdit={this.props.canEdit}
                         renderer={this.props.renderer}
                         isDraggable={this.props.isDraggable}
-                        isDraggableEnabled={this.props.isDraggable && this[componentsValidation[type].validation]()}
+                        isDraggableEnabled={this.props.canEdit && this.props.isDraggable && this[componentsValidation[type].validation]()}
                         showDraggable={this.props.isDraggable && !(this.props.type === "Point" || this.props.type === "Text" || this.props.type === "Circle")}
                         formatVisible={false}
                         removeVisible={componentsValidation[type].remove}
-                        removeEnabled={this[componentsValidation[type].validation](this.props.components, componentsValidation[type].remove, idx)}
+                        removeEnabled={this.props.canEdit && this[componentsValidation[type].validation](this.props.components, componentsValidation[type].remove, idx)}
                         onSubmit={this.change}
                         onMouseEnter={(val) => {
                             if (this.props.isMouseEnterEnabled || this.props.type === "LineString" || this.props.type === "Polygon" || this.props.type === "MultiPoint") {
