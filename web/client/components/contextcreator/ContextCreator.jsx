@@ -202,7 +202,8 @@ export default class ContextCreator extends React.Component {
             "MapExport",
             "Undo",
             "Redo",
-            "Expander"
+            "Expander",
+            "FilterLayer"
         ],
         ignoreViewerPlugins: false,
         allAvailablePlugins: [],
