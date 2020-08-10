@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 import expect from 'expect';
-import {findIndex, flatten, omit} from 'lodash';
+import {findIndex, find, flatten, omit} from 'lodash';
 
 import { createStateMocker } from './reducersTestUtils';
 import ConfigUtils from '../../utils/ConfigUtils';
@@ -18,8 +18,10 @@ import {
     mapConfigSelector,
     resourceSelector,
     pluginsSelector,
+    templatesSelector,
     editedPluginSelector,
-    editedCfgSelector
+    editedCfgSelector,
+    editedTemplateSelector
 } from '../../selectors/contextcreator';
 import {
     setFilterText,
@@ -41,7 +43,11 @@ import {
     pluginUninstalling,
     showBackToPageConfirmation,
     addPluginToUpload,
-    removePluginToUpload
+    removePluginToUpload,
+    setSelectedTemplates,
+    setEditedTemplate,
+    setTemplates,
+    changeTemplatesKey
 } from '../../actions/contextcreator';
 
 const testContextResource = {
@@ -162,18 +168,19 @@ describe('contextcreator reducer', () => {
         const {data, ...resource} = testContextResource;
         const newContext = newContextSelector(state);
         const plugins = pluginsSelector(state);
+        const templates = templatesSelector(state);
         expect(newContext).toExist();
         expect(newContext.windowTitle).toBe(data.windowTitle);
-        expect(newContext.templates).toExist();
-        expect(newContext.templates.length).toBe(2);
-        expect(newContext.templates[0].id).toBe(1);
-        expect(newContext.templates[0].enabled).toBe(false);
-        expect(newContext.templates[0].selected).toBe(false);
-        expect(newContext.templates[1].id).toBe(2);
-        expect(newContext.templates[1].enabled).toBe(true);
-        expect(newContext.templates[1].selected).toBe(false);
         expect(newContext.plugins).toNotExist();
         expect(newContext.userPlugins).toNotExist();
+        expect(templates).toExist();
+        expect(templates.length).toBe(2);
+        expect(templates[0].id).toBe(1);
+        expect(templates[0].enabled).toBe(false);
+        expect(templates[0].selected).toBe(false);
+        expect(templates[1].id).toBe(2);
+        expect(templates[1].enabled).toBe(true);
+        expect(templates[1].selected).toBe(false);
         expect(mapConfigSelector(state)).toEqual(data.mapConfig);
         expect(resourceSelector(state)).toEqual(resource);
         expect(plugins).toExist();
@@ -221,6 +228,122 @@ describe('contextcreator reducer', () => {
         expect(plugins[3].pluginConfig.cfg).toNotExist();
         expect(plugins[3].pluginConfig.override).toEqual(defaultPlugins[4].defaultOverride);
     });
+    it('setResource with context with templates inside MapTemplates config', () => {
+        const contextResource = {
+            data: {
+                windowTitle: 'title',
+                mapConfig: {},
+                plugins: {
+                    desktop: [{
+                        name: 'Catalog',
+                        cfg: {
+                            parameter: true,
+                            anotherParameter: "someInterestingValue"
+                        },
+                        override: {
+                            parameter: "value"
+                        }
+                    }, {
+                        name: 'MapTemplates',
+                        cfg: {
+                            allowedTemplates: [{ id: 2 }]
+                        }
+                    }]
+                },
+                userPlugins: [{
+                    name: 'ZoomIn',
+                    active: true,
+                    cfg: {}
+                }]
+            },
+            canDelete: true,
+            canEdit: true,
+            creation: "2019-10-21T16:00:29.888+02:00",
+            description: "test context",
+            id: 11516,
+            lastUpdate: "2019-10-22T15:55:41.123+02:00",
+            name: "test context"
+        };
+        const pluginsConfigWithMapTemplates = {
+            plugins: [
+                ...pluginsConfig.plugins, {
+                    name: 'MapTemplates'
+                }
+            ]
+        };
+
+        const state = stateMocker(setResource(contextResource, pluginsConfigWithMapTemplates, allTemplates));
+        const {data, ...resource} = testContextResource;
+        const newContext = newContextSelector(state);
+        const plugins = pluginsSelector(state);
+        const templates = templatesSelector(state);
+        expect(newContext).toExist();
+        expect(newContext.windowTitle).toBe(data.windowTitle);
+        expect(newContext.plugins).toNotExist();
+        expect(newContext.userPlugins).toNotExist();
+        expect(templates).toExist();
+        expect(templates.length).toBe(2);
+        expect(templates[0].id).toBe(1);
+        expect(templates[0].enabled).toBe(false);
+        expect(templates[0].selected).toBe(false);
+        expect(templates[1].id).toBe(2);
+        expect(templates[1].enabled).toBe(true);
+        expect(templates[1].selected).toBe(false);
+        expect(mapConfigSelector(state)).toEqual(data.mapConfig);
+        expect(resourceSelector(state)).toEqual(resource);
+        expect(plugins).toExist();
+        expect(plugins.length).toBe(5);
+        expect(plugins[0].name).toBe(defaultPlugins[0].name);
+        expect(plugins[0].title).toBe(defaultPlugins[0].title);
+        expect(plugins[0].enabled).toBe(false);
+        expect(plugins[0].isUserPlugin).toBe(false);
+        expect(plugins[0].active).toBe(false);
+        expect(plugins[0].pluginConfig).toExist();
+        expect(plugins[0].pluginConfig.name).toBe(defaultPlugins[0].name);
+        expect(plugins[0].pluginConfig.cfg).toEqual(data.plugins.desktop[0].cfg);
+        expect(plugins[0].pluginConfig.override).toEqual(data.plugins.desktop[0].override);
+        expect(plugins[0].children.length).toBe(1);
+        expect(plugins[0].children[0].name).toBe(defaultPlugins[3].name);
+        expect(plugins[0].children[0].title).toBe(defaultPlugins[3].title);
+        expect(plugins[0].children[0].pluginConfig).toExist();
+        expect(plugins[0].children[0].pluginConfig.name).toBe(defaultPlugins[3].name);
+        expect(plugins[0].children[0].pluginConfig.cfg).toNotExist();
+        expect(plugins[1].name).toBe(defaultPlugins[1].name);
+        expect(plugins[1].title).toBe(defaultPlugins[1].title);
+        expect(plugins[1].enabled).toBe(false);
+        expect(plugins[1].isUserPlugin).toBe(true);
+        expect(plugins[1].active).toBe(true);
+        expect(plugins[1].pluginConfig).toExist();
+        expect(plugins[1].pluginConfig.name).toBe(defaultPlugins[1].name);
+        expect(plugins[1].pluginConfig.cfg).toEqual(data.userPlugins[0].cfg);
+        expect(plugins[1].pluginConfig.override).toNotExist();
+        expect(plugins[2].name).toBe(defaultPlugins[2].name);
+        expect(plugins[2].title).toBe(defaultPlugins[2].title);
+        expect(plugins[2].enabled).toBe(false);
+        expect(plugins[2].isUserPlugin).toBe(false);
+        expect(plugins[2].active).toBe(false);
+        expect(plugins[2].pluginConfig).toExist();
+        expect(plugins[2].pluginConfig.name).toEqual(defaultPlugins[2].name);
+        expect(plugins[2].pluginConfig.cfg).toEqual(defaultPlugins[2].defaultConfig);
+        expect(plugins[2].pluginConfig.override).toEqual(localPlugins.desktop[0].override);
+        expect(plugins[3].name).toBe(defaultPlugins[4].name);
+        expect(plugins[3].title).toBe(defaultPlugins[4].title);
+        expect(plugins[3].enabled).toBe(false);
+        expect(plugins[3].isUserPlugin).toBe(false);
+        expect(plugins[3].active).toBe(false);
+        expect(plugins[3].pluginConfig).toExist();
+        expect(plugins[3].pluginConfig.name).toEqual(defaultPlugins[4].name);
+        expect(plugins[3].pluginConfig.cfg).toNotExist();
+        expect(plugins[3].pluginConfig.override).toEqual(defaultPlugins[4].defaultOverride);
+        expect(plugins[4].name).toBe('MapTemplates');
+        expect(plugins[4].enabled).toBe(false);
+        expect(plugins[4].isUserPlugin).toBe(false);
+        expect(plugins[4].active).toBe(false);
+        expect(plugins[4].pluginConfig).toExist();
+        expect(plugins[4].pluginConfig.cfg).toExist();
+        expect(plugins[4].pluginConfig.cfg.allowedTemplates).toExist();
+        expect(plugins[4].pluginConfig.cfg.allowedTemplates.length).toBe(1);
+    });
     it('setSelectedPlugins', () => {
         const pluginsToSelect = ['Catalog', 'ZoomIn'];
         const state = stateMocker(setResource(testContextResource, pluginsConfig), setSelectedPlugins(pluginsToSelect));
@@ -237,6 +360,57 @@ describe('contextcreator reducer', () => {
     });
     it('setEditedCfg', () => {
         const state = stateMocker(setResource(testContextResource, pluginsConfig), setEditedCfg('ZoomIn'));
+        expect(editedCfgSelector(state)).toBe('{\n  \"cfg\": {},\n  \"override\": {}\n}');
+    });
+    it('setEditedCfg with MapTemplates with allowedTemplates', () => {
+        const contextResource = {
+            data: {
+                windowTitle: 'title',
+                mapConfig: {},
+                plugins: {
+                    desktop: [{
+                        name: 'Catalog',
+                        cfg: {
+                            parameter: true,
+                            anotherParameter: "someInterestingValue"
+                        },
+                        override: {
+                            parameter: "value"
+                        }
+                    }, {
+                        name: 'MapTemplates',
+                        cfg: {
+                            allowedTemplates: [{ id: 2 }]
+                        }
+                    }]
+                },
+                userPlugins: [{
+                    name: 'ZoomIn',
+                    active: true,
+                    cfg: {}
+                }]
+            },
+            canDelete: true,
+            canEdit: true,
+            creation: "2019-10-21T16:00:29.888+02:00",
+            description: "test context",
+            id: 11516,
+            lastUpdate: "2019-10-22T15:55:41.123+02:00",
+            name: "test context"
+        };
+        const pluginsConfigWithMapTemplates = {
+            plugins: [
+                ...pluginsConfig.plugins, {
+                    name: 'MapTemplates'
+                }
+            ]
+        };
+
+        const state = stateMocker(setResource(contextResource, pluginsConfigWithMapTemplates), setEditedCfg('MapTemplates'));
+        const allowedTemplates = findPlugins(pluginsSelector(state), ({name}) => name === 'MapTemplates')[0]?.pluginConfig?.cfg?.allowedTemplates;
+
+        expect(allowedTemplates).toExist();
+        expect(allowedTemplates.length).toBe(1);
         expect(editedCfgSelector(state)).toBe('{\n  \"cfg\": {},\n  \"override\": {}\n}');
     });
     it('changePluginsKey', () => {
@@ -256,6 +430,33 @@ describe('contextcreator reducer', () => {
     it('updateEditedCfg', () => {
         const state = stateMocker(updateEditedCfg('cfgtext'));
         expect(editedCfgSelector(state)).toBe('cfgtext');
+    });
+    it('setSelectedTemplates', () => {
+        const state = stateMocker(setResource(testContextResource, pluginsConfig, allTemplates), setSelectedTemplates([2]));
+        const templates = templatesSelector(state);
+        expect(templates).toExist();
+        expect(templates.length).toBe(2);
+        expect(find(templates, {id: 2})?.selected).toBe(true);
+    });
+    it('setEditedTemplate', () => {
+        const state = stateMocker(setResource(testContextResource, pluginsConfig, allTemplates), setEditedTemplate(1));
+        expect(editedTemplateSelector(state)?.id).toBe(1);
+    });
+    it('setTemplates', () => {
+        const state = stateMocker(setTemplates([{id: 101}, {id: 102}]));
+        const templates = templatesSelector(state);
+        expect(templates).toExist();
+        expect(templates.length).toBe(2);
+        expect(templates[0].id).toBe(101);
+        expect(templates[1].id).toBe(102);
+    });
+    it('changeTemplatesKey', () => {
+        const state = stateMocker(setResource(testContextResource, pluginsConfig, allTemplates), changeTemplatesKey([1, 2], 'enabled', true));
+        const templates = templatesSelector(state);
+        expect(templates).toExist();
+        expect(templates.length).toBe(2);
+        expect(templates[0].enabled).toBe(true);
+        expect(templates[1].enabled).toBe(true);
     });
     it('enableUploadPlugin', () => {
         const state = contextcreator(undefined, enableUploadPlugin(true));
