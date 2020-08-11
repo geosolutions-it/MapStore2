@@ -129,7 +129,7 @@ const Immersive = ({
                 }
             },
             {
-                glyph: 'story-title-section',
+                glyph: 'story-banner-section',
                 tooltipId: 'geostory.addBannerSection',
                 onClick: () => {
                     add('sections', id, SectionTypes.BANNER);
