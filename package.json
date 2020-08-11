@@ -180,7 +180,7 @@
     "react-dnd-test-backend": "2.6.0",
     "react-dock": "0.2.4",
     "react-dom": "16.10.1",
-    "react-draft-wysiwyg": "1.13.2",
+    "react-draft-wysiwyg": "github:geosolutions-it/react-draft-wysiwyg#master",
     "react-draggable": "2.2.6",
     "react-dropzone": "3.13.1",
     "react-error-boundary": "1.2.5",
