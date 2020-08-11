@@ -40,16 +40,15 @@ const {
 const {
     removeAdditionalLayer
 } = require("../actions/additionallayers");
-const { defaultCoordinateFormatSelector } = require("../selectors/config");
+const { getDefaults } = require("../utils/ConfigUtils");
 
 const searchSelector = createSelector([
     state => state.search || null,
     state => state.controls && state.controls.searchservicesconfig || null,
     state => state.controls && state.controls.searchBookmarkConfig || null,
     state=> state.mapConfigRawData || {},
-    state => state.searchbookmarkconfig || {},
-    state => defaultCoordinateFormatSelector(state)
-], (searchState, searchservicesconfigControl, searchBookmarkConfigControl, mapInitial, bookmarkConfig, defaultCoordinateFormat) => ({
+    state => state.searchbookmarkconfig || {}
+], (searchState, searchservicesconfigControl, searchBookmarkConfigControl, mapInitial, bookmarkConfig) => ({
     enabledSearchServicesConfig: searchservicesconfigControl && searchservicesconfigControl.enabled || false,
     enabledSearchBookmarkConfig: searchBookmarkConfigControl && searchBookmarkConfigControl.enabled || false,
     error: searchState && searchState.error,
@@ -57,7 +56,7 @@ const searchSelector = createSelector([
     loading: searchState && searchState.loading,
     searchText: searchState ? searchState.searchText : "",
     activeSearchTool: get(searchState, "activeSearchTool", "addressSearch"),
-    format: get(searchState, "format") || defaultCoordinateFormat,
+    format: get(searchState, "format") || getDefaults().defaultCoordinateFormat,
     selectedItems: searchState && searchState.selectedItems,
     mapInitial,
     bookmarkConfig: bookmarkConfig || {}

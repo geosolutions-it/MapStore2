@@ -13,9 +13,7 @@ const dragDropContext = require('react-dnd').DragDropContext;
 const testBackend = require('react-dnd-test-backend');
 const CoordinatesEditor = dragDropContext(testBackend)(require('../CoordinatesEditor'));
 const TestUtils = require('react-dom/test-utils');
-import {
-    defaultCoordinateFormatSelector
-} from '../../../../selectors/config';
+const ConfigUtils = require('../../../../utils/ConfigUtils');
 
 const testHandlers = {
     onChange: () => {},
@@ -46,8 +44,9 @@ describe("test the CoordinatesEditor Panel", () => {
     });
 
     it('CoordinatesEditor as marker editor with base input coordinates', () => {
-        const state = {localConfig: {defaultCoordinateFormat: "aeronautical"}};
-        const defaultFormat = defaultCoordinateFormatSelector(state);
+        const defaultFormat = ConfigUtils.getDefaults({
+            defaultCoordinateFormat: "aeronautical"
+        });
         let editor = ReactDOM.render(
             <CoordinatesEditor
                 type="Point"

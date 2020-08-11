@@ -5,12 +5,13 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
+
 const React = require('react');
 const expect = require('expect');
 const ReactDOM = require('react-dom');
 const IdentifyContainer = require('../IdentifyContainer');
 const TestUtils = require('react-dom/test-utils');
-const {defaultCoordinateFormatSelector} = require('../../../../selectors/config');
+const ConfigUtils = require('../../../../utils/ConfigUtils');
 
 describe("test IdentifyContainer", () => {
     beforeEach((done) => {
@@ -119,8 +120,9 @@ describe("test IdentifyContainer", () => {
     });
 
     it('test default coordinate format from localConfig', () => {
-        let state = {localConfig: {defaultCoordinateFormat: "aeronautical"}};
-        const defaultFormat = defaultCoordinateFormatSelector(state);
+        const defaultFormat = ConfigUtils.getDefaults = () => ({
+            defaultCoordinateFormat: "aeronautical"
+        });
         const point = {latlng: {lat: 39.86927447817351, lng: -81.91405928134918}};
         let format;
         ReactDOM.render(

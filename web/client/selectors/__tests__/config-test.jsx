@@ -9,14 +9,12 @@
 
 import expect from 'expect';
 import {
-    defaultCoordinateFormatSelector,
     loadAfterThemeSelector
 } from '../config';
 
 let state = {
     localConfig: {
-        loadAfterTheme: false,
-        defaultCoordinateFormat: "aeronautical"
+        loadAfterTheme: false
     }
 };
 
@@ -24,9 +22,5 @@ describe('Test config selectors', () => {
     it('test loadAfterThemeSelector', () => {
         const props = loadAfterThemeSelector(state);
         expect(props).toEqual(false);
-    });
-    it('test defaultCoordinateFormat selector', () => {
-        const props = defaultCoordinateFormatSelector(state);
-        expect(props).toEqual("aeronautical");
     });
 });

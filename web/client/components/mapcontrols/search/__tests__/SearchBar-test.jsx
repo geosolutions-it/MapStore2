@@ -10,7 +10,7 @@ var expect = require('expect');
 var React = require('react');
 var ReactDOM = require('react-dom');
 var SearchBar = require('../SearchBar').default;
-const {defaultCoordinateFormatSelector} = require("../../../../selectors/config");
+const ConfigUtils = require('../../../../utils/ConfigUtils');
 
 const TestUtils = require('react-dom/test-utils');
 
@@ -298,8 +298,9 @@ describe("test the SearchBar", () => {
     });
 
     it('test default coordinate format from localConfig', () => {
-        const state = {localConfig: {defaultCoordinateFormat: "aeronautical"}};
-        const defaultFormat = defaultCoordinateFormatSelector(state);
+        const defaultFormat = ConfigUtils.getDefaults({
+            defaultCoordinateFormat: "aeronautical"
+        });
         let format;
         ReactDOM.render(
             <SearchBar
