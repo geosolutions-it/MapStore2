@@ -212,6 +212,7 @@ class AnnotationsEditor extends React.Component {
         coordinateEditorEnabled: false,
         feature: {},
         maxZoom: 18,
+        format: "decimal",
         pointType: "marker",
         stylerType: "marker"
     };

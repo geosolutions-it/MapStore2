@@ -5,11 +5,13 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
+
 const React = require('react');
 const expect = require('expect');
 const ReactDOM = require('react-dom');
 const IdentifyContainer = require('../IdentifyContainer');
 const TestUtils = require('react-dom/test-utils');
+const ConfigUtils = require('../../../../utils/ConfigUtils');
 
 describe("test IdentifyContainer", () => {
     beforeEach((done) => {
@@ -115,6 +117,33 @@ describe("test IdentifyContainer", () => {
         const sidePanel = document.getElementsByClassName('ms-side-panel');
         expect(sidePanel.length).toBe(1);
         expect(sidePanel[0].children[0].style.zIndex).toBe('7777');
+    });
+
+    it('test default coordinate format from localConfig', () => {
+        ConfigUtils.setConfigProp("defaultCoordinateFormat", "aeronautical");
+        const defaultFormat = ConfigUtils.getConfigProp('defaultCoordinateFormat');
+        const point = {latlng: {lat: 39.86927447817351, lng: -81.91405928134918}};
+        let format;
+        ReactDOM.render(
+            <IdentifyContainer
+                enabled
+                requests={[{}]}
+                enabledCoordEditorButton
+                showCoordinateEditor
+                point={point}
+                formatCoord={format || defaultFormat || "decimal"}
+            />, document.getElementById("container"));
+        const inputs = document.getElementsByClassName('form-control');
+        expect(inputs.length).toBe(8);
+        expect(inputs[0].placeholder).toBe("d");
+        expect(inputs[0].value).toBe('39');
+        expect(inputs[1].placeholder).toBe("m");
+        expect(inputs[1].value).toBe('52');
+        expect(inputs[2].placeholder).toBe("s");
+        expect(inputs[2].value).toBe('9.3881');
+
+        // Clean up defaults
+        ConfigUtils.removeConfigProp("defaultCoordinateFormat");
     });
 
     it('test edit button with PROPERTIES response', () => {
