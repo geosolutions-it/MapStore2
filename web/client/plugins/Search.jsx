@@ -40,7 +40,7 @@ const {
 const {
     removeAdditionalLayer
 } = require("../actions/additionallayers");
-const { getDefaults } = require("../utils/ConfigUtils");
+const { getConfigProp } = require("../utils/ConfigUtils");
 
 const searchSelector = createSelector([
     state => state.search || null,
@@ -56,7 +56,7 @@ const searchSelector = createSelector([
     loading: searchState && searchState.loading,
     searchText: searchState ? searchState.searchText : "",
     activeSearchTool: get(searchState, "activeSearchTool", "addressSearch"),
-    format: get(searchState, "format") || getDefaults().defaultCoordinateFormat,
+    format: get(searchState, "format") || getConfigProp("defaultCoordinateFormat"),
     selectedItems: searchState && searchState.selectedItems,
     mapInitial,
     bookmarkConfig: bookmarkConfig || {}

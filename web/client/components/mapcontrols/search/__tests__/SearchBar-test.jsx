@@ -298,9 +298,8 @@ describe("test the SearchBar", () => {
     });
 
     it('test default coordinate format from localConfig', () => {
-        const defaultFormat = ConfigUtils.getDefaults({
-            defaultCoordinateFormat: "aeronautical"
-        });
+        ConfigUtils.setConfigProp("defaultCoordinateFormat", "aeronautical");
+        const defaultFormat = ConfigUtils.getConfigProp('defaultCoordinateFormat');
         let format;
         ReactDOM.render(
             <SearchBar
@@ -315,6 +314,9 @@ describe("test the SearchBar", () => {
         expect(inputs[0].placeholder).toBe('d');
         expect(inputs[1].placeholder).toBe('m');
         expect(inputs[2].placeholder).toBe('s');
+
+        // Clean up defaults
+        ConfigUtils.removeConfigProp("defaultCoordinateFormat");
     });
 
     it('test searchByBookmark options under menu', () => {

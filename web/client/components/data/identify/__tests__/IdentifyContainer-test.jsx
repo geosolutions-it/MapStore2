@@ -120,9 +120,8 @@ describe("test IdentifyContainer", () => {
     });
 
     it('test default coordinate format from localConfig', () => {
-        const defaultFormat = ConfigUtils.getDefaults = () => ({
-            defaultCoordinateFormat: "aeronautical"
-        });
+        ConfigUtils.setConfigProp("defaultCoordinateFormat", "aeronautical");
+        const defaultFormat = ConfigUtils.getConfigProp('defaultCoordinateFormat');
         const point = {latlng: {lat: 39.86927447817351, lng: -81.91405928134918}};
         let format;
         ReactDOM.render(
@@ -142,6 +141,9 @@ describe("test IdentifyContainer", () => {
         expect(inputs[1].value).toBe('52');
         expect(inputs[2].placeholder).toBe("s");
         expect(inputs[2].value).toBe('9.3881');
+
+        // Clean up defaults
+        ConfigUtils.removeConfigProp("defaultCoordinateFormat");
     });
 
     it('test edit button with PROPERTIES response', () => {

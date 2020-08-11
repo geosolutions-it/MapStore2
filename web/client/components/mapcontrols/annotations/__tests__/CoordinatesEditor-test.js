@@ -44,9 +44,8 @@ describe("test the CoordinatesEditor Panel", () => {
     });
 
     it('CoordinatesEditor as marker editor with base input coordinates', () => {
-        const defaultFormat = ConfigUtils.getDefaults({
-            defaultCoordinateFormat: "aeronautical"
-        });
+        ConfigUtils.setConfigProp("defaultCoordinateFormat", "aeronautical");
+        const defaultFormat = ConfigUtils.getConfigProp('defaultCoordinateFormat');
         let editor = ReactDOM.render(
             <CoordinatesEditor
                 type="Point"
@@ -92,6 +91,9 @@ describe("test the CoordinatesEditor Panel", () => {
         expect(inputs[0].placeholder).toBe("d");
         expect(inputs[1].placeholder).toBe("m");
         expect(inputs[2].placeholder).toBe("s");
+
+        // Clean up defaults
+        ConfigUtils.removeConfigProp("defaultCoordinateFormat");
     });
 
     it('CoordinatesEditor update coordinates when coordinates props changes', () => {

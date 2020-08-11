@@ -52,7 +52,7 @@ const Share = connect(createSelector([
     mapSelector,
     currentContextSelector,
     state => get(state, 'controls.share.settings', {}),
-    (state) => state.mapInfo && state.mapInfo.formatCoord || ConfigUtils.getDefaults().defaultCoordinateFormat,
+    (state) => state.mapInfo && state.mapInfo.formatCoord || ConfigUtils.getConfigProp("defaultCoordinateFormat"),
     clickPointSelector,
     updateUrlOnScrollSelector
 ], (isVisible, version, map, context, settings, formatCoords, point, isScrollPosition) => ({

@@ -21,7 +21,7 @@ const {highlightPoint} = require('../actions/annotations');
 const { isOpenlayers } = require('../selectors/maptype');
 const { isCoordinateEditorEnabledSelector, showAddAsAnnotationSelector, isTrueBearingEnabledSelector } = require('../selectors/measurement');
 const { showCoordinateEditorSelector, measureSelector } = require('../selectors/controls');
-const { getDefaults } = require('../utils/ConfigUtils');
+const { getConfigProp } = require('../utils/ConfigUtils');
 
 const selector = (state) => {
     return {
@@ -84,7 +84,7 @@ const Measure = connect(
     (measure, show) => ({
         ...measure,
         show,
-        format: measure.format || getDefaults().defaultCoordinateFormat || "decimal"
+        format: measure.format || getConfigProp("defaultCoordinateFormat") || "decimal"
     }
     )),
     {
