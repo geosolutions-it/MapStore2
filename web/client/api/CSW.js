@@ -82,7 +82,7 @@ var Api = {
             });
         });
     },
-    getRecords: function(url, startPosition, maxRecords, filter, searchOptions) {
+    getRecords: function(url, startPosition, maxRecords, filter) {
         return new Promise((resolve) => {
             require.ensure(['../utils/ogc/CSW', '../utils/ogc/Filter'], () => {
                 const {CSW, marshaller, unmarshaller} = require('../utils/ogc/CSW');
@@ -132,7 +132,6 @@ var Api = {
                                                 // if the service provides wrong crs altogether or it deviates from official definitions of EPSG:4326 and CRS84
                                                 // the right crs can be forced with bboxCrs parameter of a service
 
-                                                const bboxCrs = searchOptions?.options?.service?.bboxCrs;
                                                 const crsValue = el.value?.crs ?? '';
                                                 const urn = crsValue.match(/[\w-]*:[\w-]*:[\w-]*:[\w-]*:[\w-]*:[^:]*:(([\w-]+\s[\w-]+)|[\w-]*)/)?.[0];
                                                 const epsg = CoordinatesUtils.makeNumericEPSG(crsValue.match(/EPSG:[0-9]+/)?.[0]);
@@ -140,7 +139,7 @@ var Api = {
                                                 let lc = el.value.lowerCorner;
                                                 let uc = el.value.upperCorner;
 
-                                                const extractedCrs = bboxCrs || epsg || (CoordinatesUtils.extractCrsFromURN(urn) || _.last(crsValue.split(':')));
+                                                const extractedCrs = epsg || (CoordinatesUtils.extractCrsFromURN(urn) || _.last(crsValue.split(':')));
 
                                                 if (!extractedCrs) {
                                                     crs = 'EPSG:4326';
@@ -215,7 +214,7 @@ var Api = {
             });
         });
     },
-    textSearch: function(url, startPosition, maxRecords, text, searchOptions) {
+    textSearch: function(url, startPosition, maxRecords, text) {
         return new Promise((resolve) => {
             require.ensure(['../utils/ogc/CSW', '../utils/ogc/Filter'], () => {
                 const {Filter} = require('../utils/ogc/Filter');
@@ -226,11 +225,11 @@ var Api = {
                     let ops = Filter.propertyIsLike("csw:AnyText", "%" + text + "%");
                     filter = Filter.filter(ops);
                 }
-                resolve(Api.getRecords(url, startPosition, maxRecords, filter, searchOptions));
+                resolve(Api.getRecords(url, startPosition, maxRecords, filter));
             });
         });
     },
-    workspaceSearch: function(url, startPosition, maxRecords, text, workspace, searchOptions) {
+    workspaceSearch: function(url, startPosition, maxRecords, text, workspace) {
         return new Promise((resolve) => {
             require.ensure(['../utils/ogc/CSW', '../utils/ogc/Filter'], () => {
                 const {Filter} = require('../utils/ogc/Filter');
@@ -238,7 +237,7 @@ var Api = {
                 const layerNameTerm = text && "%" + text + "%" || "%";
                 const ops = Filter.propertyIsLike("identifier", workspaceTerm + ":" + layerNameTerm);
                 const filter = Filter.filter(ops);
-                resolve(Api.getRecords(url, startPosition, maxRecords, filter, searchOptions));
+                resolve(Api.getRecords(url, startPosition, maxRecords, filter));
             });
         });
     },

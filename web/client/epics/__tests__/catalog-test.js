@@ -133,42 +133,6 @@ describe('catalog Epics', () => {
             done();
         }, { });
     });
-    it('recordSearchEpic with bbox crs', (done) => {
-        const NUM_ACTIONS = 2;
-        testEpic(addTimeoutEpic(recordSearchEpic), NUM_ACTIONS, textSearch({
-            format: "csw",
-            url: "base/web/client/test-resources/csw/getRecordsResponseDC.xml",
-            startPosition: 1,
-            maxRecords: 1,
-            text: "a",
-            options: {service: {bboxCrs: 'CRS84'}}
-        }), (actions) => {
-            expect(actions.length).toBe(NUM_ACTIONS);
-            actions.map((action) => {
-                switch (action.type) {
-                case SET_LOADING:
-                    expect(action.loading).toBe(true);
-                    break;
-                case RECORD_LIST_LOADED:
-                    expect(action.result.records.length).toBe(2);
-                    const rec0 = action.result.records[0];
-                    expect(rec0.boundingBox).toExist();
-                    expect(rec0.boundingBox.crs).toBe('EPSG:4326');
-                    expect(rec0.boundingBox.extent).toEqual([11.874, 45.542, 12.718, 46.026]);
-                    const rec1 = action.result.records[1];
-                    expect(rec1.boundingBox).toExist();
-                    expect(rec1.boundingBox.crs).toBe('EPSG:4326');
-                    expect(rec1.boundingBox.extent).toEqual([12.002717999999996, 45.760718, 12.429282000000002, 46.187282]);
-                    break;
-                case TEST_TIMEOUT:
-                    break;
-                default:
-                    expect(true).toBe(false);
-                }
-            });
-            done();
-        }, { });
-    });
     it('recordSearchEpic with exception', (done) => {
         const NUM_ACTIONS = 2;
         testEpic(addTimeoutEpic(recordSearchEpic), NUM_ACTIONS, textSearch({

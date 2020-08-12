@@ -56,7 +56,57 @@
     "userSessions": {
       "enabled": true
     },
-    "projectionDefs": [],
+    "projectionDefs": [{
+      "code": "EPSG:2154",
+      "def": "+proj=lcc +lat_1=49 +lat_2=44 +lat_0=46.5 +lon_0=3 +x_0=700000 +y_0=6600000 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs",
+      "extent": [-378305.81, 6093283.21, 1212610.74, 7186901.68],
+      "worldExtent": [-9.86, 41.15, 10.38, 51.56]
+    }, {
+      "code": "EPSG:3942",
+      "def": "+proj=lcc +lat_1=41.25 +lat_2=42.75 +lat_0=42 +lon_0=3 +x_0=1700000 +y_0=1200000 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs",
+      "extent": [624506.09, 1186515.84, 2218708.44, 2290184.50],
+      "worldExtent": [-9.86, 41.15, 10.38, 51.56]
+    }, {
+      "code": "EPSG:3943",
+      "def": "+proj=lcc +lat_1=42.25 +lat_2=43.75 +lat_0=43 +lon_0=3 +x_0=1700000 +y_0=2200000 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs",
+      "extent": [624227.05, 2076993.88, 2217136.99, 3178000.51],
+      "worldExtent": [-9.86, 41.15, 10.38, 51.56]
+    }, {
+      "code": "EPSG:3944",
+      "def": "+proj=lcc +lat_1=43.25 +lat_2=44.75 +lat_0=44 +lon_0=3 +x_0=1700000 +y_0=3200000 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs",
+      "extent": [623631.35, 2967391.61, 2215750.35, 4066109.53],
+      "worldExtent": [-9.86, 41.15, 10.38, 51.56]
+    }, {
+      "code": "EPSG:3945",
+      "def": "+proj=lcc +lat_1=44.25 +lat_2=45.75 +lat_0=45 +lon_0=3 +x_0=1700000 +y_0=4200000 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs",
+      "extent": [622723.91, 3857676.97, 2214544.93, 4954472.70],
+      "worldExtent": [-9.86, 41.15, 10.38, 51.56]
+    }, {
+      "code": "EPSG:3946",
+      "def": "+proj=lcc +lat_1=45.25 +lat_2=46.75 +lat_0=46 +lon_0=3 +x_0=1700000 +y_0=5200000 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs",
+      "extent": [621509.63, 4747818.41, 2213517.21, 5843051.80],
+      "worldExtent": [-9.86, 41.15, 10.38, 51.56]
+    }, {
+      "code": "EPSG:3947",
+      "def": "+proj=lcc +lat_1=46.25 +lat_2=47.75 +lat_0=47 +lon_0=3 +x_0=1700000 +y_0=6200000 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs",
+      "extent": [619993.48, 5637784.91, 2212663.72, 6731809.22],
+      "worldExtent": [-9.86, 41.15, 10.38, 51.56]
+    }, {
+      "code": "EPSG:3948",
+      "def": "+proj=lcc +lat_1=47.25 +lat_2=48.75 +lat_0=48 +lon_0=3 +x_0=1700000 +y_0=7200000 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs",
+      "extent": [618180.54, 6527546.03, 2211981.05, 7620707.95],
+      "worldExtent": [-9.86, 41.15, 10.38, 51.56]
+    }, {
+      "code": "EPSG:3949",
+      "def": "+proj=lcc +lat_1=48.25 +lat_2=49.75 +lat_0=49 +lon_0=3 +x_0=1700000 +y_0=8200000 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs",
+      "extent": [616075.94, 7417071.95, 2211465.79, 8509711.64],
+      "worldExtent": [-9.86, 41.15, 10.38, 51.56]
+    }, {
+      "code": "EPSG:3950",
+      "def": "+proj=lcc +lat_1=49.25 +lat_2=50.75 +lat_0=50 +lon_0=3 +x_0=1700000 +y_0=9200000 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs",
+      "extent": [613684.96, 8306333.45, 2211114.59, 9398784.57],
+      "worldExtent": [-9.86, 41.15, 10.38, 51.56]
+    }],
     "initialState": {
       "defaultState": {
         "annotations": {
@@ -409,7 +459,18 @@
               "name": "CRSSelector",
               "cfg": {
                 "additionalCRS": {
-
+                  "EPSG:2154": {
+                    "label": "EPSG:2154"
+                  },
+                  "EPSG:3945": {
+                    "label": "EPSG:3945"
+                  },
+                  "EPSG:3946": {
+                    "label": "EPSG:3946"
+                  },
+                  "EPSG:3948": {
+                    "label": "EPSG:3948"
+                  }
                 },
                 "filterAllowedCRS": [
                   "EPSG:4326",

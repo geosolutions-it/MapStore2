@@ -32,7 +32,7 @@ const {resultSelector, serviceListOpenSelector, newServiceSelector,
     modeSelector, layerErrorSelector, activeSelector, savingSelector, authkeyParamNameSelector,
     searchTextSelector, groupSelector, pageSizeSelector, loadingSelector, selectedServiceLayerOptionsSelector
 } = require("../selectors/catalog");
-const {projectionSelector, projectionDefsSelector} = require('../selectors/map');
+const {projectionSelector} = require('../selectors/map');
 const {isLocalizedLayerStylesEnabledSelector} = require('../selectors/localizedLayerStyles');
 
 const {mapLayoutValuesSelector} = require('../selectors/maplayout');
@@ -72,24 +72,13 @@ const metadataExplorerSelector = createStructuredSelector({
     pageSize: pageSizeSelector,
     loading: loadingSelector,
     crs: projectionSelector,
-    projectionDefs: projectionDefsSelector,
     isLocalizedLayerStylesEnabled: isLocalizedLayerStylesEnabledSelector
 });
 
 
 const Catalog = compose(
-    withProps(({ result, selectedFormat, options, layerOptions, services, selectedService, locales, projectionDefs = [] }) => ({
-        records: result && CatalogUtils.getCatalogRecords(selectedFormat, result, { ...options, layerOptions, service: services[selectedService] }, locales) || [],
-        bboxCrsOptions: [{
-            label: 'EPSG:4326 (latitude, longtitude)',
-            value: 'EPSG:4326'
-        }, {
-            label: 'EPSG:4326 (longtitude, latitude)',
-            value: 'CRS84'
-        }, {
-            label: 'EPSG:3857',
-            value: 'EPSG:3857'
-        }, ...projectionDefs.map(({code}) => ({ label: code, value: code }))]
+    withProps(({ result, selectedFormat, options, layerOptions, services, selectedService, locales}) => ({
+        records: result && CatalogUtils.getCatalogRecords(selectedFormat, result, { ...options, layerOptions, service: services[selectedService] }, locales) || []
     })),
     defaultProps({
         buttonStyle: {

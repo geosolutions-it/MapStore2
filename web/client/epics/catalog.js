@@ -200,7 +200,6 @@ export default (API) => ({
             .switchMap(() => {
                 const state = store.getState();
                 const newService = newServiceSelector(state);
-                const selectedService = selectedServiceSelector(state);
                 return Rx.Observable.of(newService)
                     // validate
                     .switchMap((service) => API[service.type]?.validate?.(service) ?? ( Rx.Observable.of(service)))
@@ -213,8 +212,7 @@ export default (API) => ({
                                 message: "catalog.notification.addCatalogService",
                                 autoDismiss: 6,
                                 position: "tc"
-                            }),
-                            changeSelectedService(selectedService)
+                            })
                         );
                     })
                     .startWith(savingService(true))
