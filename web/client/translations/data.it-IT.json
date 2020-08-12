@@ -2055,6 +2055,7 @@
             "equalInterval": "Intervallo uguale",
             "quantile": "Quantile",
             "jenks": "Natural break (Jenks)",
+            "standardDeviation": "Deviazione standard",
             "switchToTextareaEditor": "Passa all'editor testuale",
             "switchToVisualEditor": "Passa all'editor visuale",
             "alertForceTranslate": "Passando all'editor visuale perderai tutte le modifiche applicate con l'editor testuale. Sei sicuro di passare alla modalità editor visuale?",
@@ -2232,6 +2233,7 @@
             "geostoreMap": "Mappe di MapStore",
             "loadingSpinner": "Caricamento Storia",
             "addTitleSection": "Aggiungi sezione titolo",
+            "addBannerSection": "Aggiungi sezione banner",
             "addParagraphSection": "Aggiungi sezione paragrafo",
             "addImmersiveSection": "Aggiungi sezione immersiva",
             "addMediaSection": "Aggiungi sezione media",
@@ -2296,6 +2298,7 @@
             "builder": {
                 "defaults": {
                     "titleTitle": "Sezione Titolo",
+                    "titleBanner": "Sezione banner",
                     "htmlTitlePlaceholder": "Inserisci Titolo",
                     "htmlPlaceholder": "Inserisci del testo qui...",
                     "titleParagraph": "Sezione Paragrafo",
@@ -2335,6 +2338,7 @@
                     "navbar": "Barra di navigazione",
                     "showNavbar": "Mostra barra di navigazione",
                     "theme": "Tema",
+                    "overlay": "Copertura",
                     "templateTooltip":"Questa impostazione consente di abilitare la funzione di Identify sulla mappa definendo un formato generico per tutti i layer. E' possibile configurare un formato differente per ogni singolo livello usando l'editor di mappa avanzato (icona matita). Per maggiori informazioni si consulti la <a href='https://mapstore.readthedocs.io/en/latest/user-guide/layer-settings/#templates' target='_blank'>guida utente</a>. Se un layer ha definito il proprio formato di Identify, questo esso verrà usato al posto di quello generico impostato a livello di mappa."
                 }
             },

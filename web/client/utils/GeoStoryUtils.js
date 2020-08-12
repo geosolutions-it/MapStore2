@@ -32,7 +32,8 @@ export const StoryTypes = {
 export const SectionTypes = {
     TITLE: 'title',
     PARAGRAPH: 'paragraph',
-    IMMERSIVE: 'immersive'
+    IMMERSIVE: 'immersive',
+    BANNER: 'banner'
 };
 /**
  * Allowed contents
@@ -94,7 +95,13 @@ export const getClassNameFromProps = ({ theme = {}, align = 'center', size = 'fu
  * @prop {string} theme.value style key
  * @prop {string} theme[theme.value] a style object referred to the style key
  */
-export const getThemeStyleFromProps = ({ theme = {} }) => {
+export const getThemeStyleFromProps = ({ theme = {}, storyTheme }) => {
+    if (
+        theme === ''
+        || theme?.value === ''
+    ) {
+        return isObject(storyTheme) ? storyTheme : {};
+    }
     const styleKey = theme?.value;
     const style = theme?.[styleKey];
     return isObject(style) && style || {};
@@ -196,7 +203,7 @@ export const getDefaultSectionTemplate = (type, localize = v => v) => {
                     html: '',
                     size: 'large',
                     align: 'center',
-                    theme: 'bright',
+                    theme: '',
                     background: {
                         fit: 'cover',
                         size: 'full',
@@ -204,6 +211,21 @@ export const getDefaultSectionTemplate = (type, localize = v => v) => {
                     }
                 }
             ]
+        };
+    case SectionTypes.BANNER:
+        return {
+            id: uuid(),
+            type: SectionTypes.BANNER,
+            title: localize("geostory.builder.defaults.titleBanner"),
+            cover: false,
+            contents: [{
+                id: uuid(),
+                background: {
+                    fit: 'cover',
+                    size: 'full',
+                    align: 'center'
+                }
+            }]
         };
     case SectionTypes.PARAGRAPH:
         return {
@@ -275,7 +297,7 @@ export const getDefaultSectionTemplate = (type, localize = v => v) => {
             type: ContentTypes.COLUMN,
             align: 'left',
             size: 'small',
-            theme: 'bright',
+            theme: '',
             title: localize("geostory.builder.defaults.titleImmersiveContent"),
             contents: [{
                 id: uuid(),

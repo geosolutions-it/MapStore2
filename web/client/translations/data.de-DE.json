@@ -2054,6 +2054,7 @@
             "equalInterval": "Gleiches Intervall",
             "quantile": "Quantil",
             "jenks": "Natürliche Pausen (Jenks)",
+            "standardDeviation": "Varianz",
             "switchToTextareaEditor": "Zum Textarea-Editor wechseln",
             "switchToVisualEditor": "Zum visuellen Editor wechseln",
             "alertForceTranslate": "Sie verlieren alle im Textaree hinzugefügten Änderungen, wenn Sie zum visuellen Editor wechseln. Sind Sie sicher, dass Sie zum visuellen Stil-Editor wechseln?",
@@ -2231,6 +2232,7 @@
             "geostoreMap": "MapStore-Karten",
             "loadingSpinner": "Story wird geladen",
             "addTitleSection": "Titelabschnitt hinzufügen",
+            "addBannerSection": "Bannerbereich hinzufügen",
             "addParagraphSection": "Absatzabschnitt hinzufügen",
             "addImmersiveSection": "Immersive Section hinzufügen",
             "addMediaSection": "Medienabschnitt hinzufügen",
@@ -2297,6 +2299,7 @@
                     "htmlTitlePlaceholder": "Titel einfügen",
                     "htmlPlaceholder": "Text hier einfügen...",
                     "titleTitle": "Titelbereich",
+                    "titleBanner": "Banner-Bereich",
                     "titleParagraph": "Absatz Abschnitt",
                     "titleImmersiveContent": "Immersiver Inhalt",
                     "titleImmersive": "Immersive Section",
@@ -2334,6 +2337,7 @@
                     "navbar": "Navigationsleiste",
                     "showNavbar": "Navigationsleiste anzeigen",
                     "theme": "Thema",
+                    "overlay": "Überlagerung",
                     "templateTooltip":"Mit dieser Einstellung können Sie die Identifizierungsfunktion auf der Karte aktivieren, indem Sie ein generisches Format für alle Ebenen definieren. Mit dem erweiterten Karteneditor (Stiftsymbol) kann für jede Ebene ein anderes Format konfiguriert werden. Weitere Informationen finden Sie im <a href='https://mapstore.readthedocs.io/en/latest/user-guide/layer-settings/#templates' target='_blank'> Benutzerhandbuch </a>. Wenn ein Layer sein eigenes Identifizierungsformat definiert hat, wird er anstelle des auf Kartenebene festgelegten generischen Formats verwendet."
                 }
             },

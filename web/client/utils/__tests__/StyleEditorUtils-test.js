@@ -252,7 +252,84 @@ describe('StyleEditorUtils test', () => {
             }]
         });
     });
-
+    it('test parseJSONStyle classification translation with null values', () => {
+        const style = {
+            name: 'Style',
+            rules: [
+                {
+                    ruleId: 'rule1',
+                    kind: 'Classification',
+                    color: '#dddddd',
+                    fillOpacity: 1,
+                    outlineColor: '#777777',
+                    outlineWidth: 1,
+                    classification: [{
+                        title: '<10164.3',
+                        color: '#FFF7EC',
+                        type: 'Polygon',
+                        min: null,
+                        max: 10164.3
+                    },
+                    {
+                        title: ' >= 10164.3 AND <20310.5',
+                        color: '#FC8D59',
+                        type: 'Polygon',
+                        min: 10164.3,
+                        max: 20310.5
+                    },
+                    {
+                        title: '>= 20310.5',
+                        color: '#7F0000',
+                        type: 'Polygon',
+                        min: 20310.5,
+                        max: null
+                    }],
+                    intervals: 3,
+                    method: 'equalInterval',
+                    ramp: 'orrd',
+                    reverse: false,
+                    symbolizerKind: 'Fill',
+                    attribute: 'WATER_KM'
+                }
+            ]
+        };
+        expect(parseJSONStyle(style)).toEqual({
+            name: 'Style',
+            rules: [ {
+                name: '< 10164.3',
+                filter: [ '&&', [ '<', 'WATER_KM', 10164.3 ] ],
+                symbolizers: [{
+                    kind: 'Fill',
+                    color: '#FFF7EC',
+                    fillOpacity: 1,
+                    outlineColor: '#777777',
+                    outlineWidth: 1
+                }]
+            },
+            {
+                name: '>= 10164.3 and < 20310.5',
+                filter: [ '&&', [ '>=', 'WATER_KM', 10164.3 ], [ '<', 'WATER_KM', 20310.5 ] ],
+                symbolizers: [ {
+                    kind: 'Fill',
+                    color: '#FC8D59',
+                    fillOpacity: 1,
+                    outlineColor: '#777777',
+                    outlineWidth: 1
+                }]
+            },
+            {
+                name: '>= 20310.5',
+                filter: [ '&&', [ '>=', 'WATER_KM', 20310.5 ] ],
+                symbolizers: [{
+                    kind: 'Fill',
+                    color: '#7F0000',
+                    fillOpacity: 1,
+                    outlineColor: '#777777',
+                    outlineWidth: 1
+                }]
+            }]
+        });
+    });
     it('test parseJSONStyle raster classification translation', () => {
 
         const style = {

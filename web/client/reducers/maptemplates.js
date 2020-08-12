@@ -7,7 +7,7 @@
  */
 
 import { CLEAR_MAP_TEMPLATES, SET_TEMPLATES, TOGGLE_FAVOURITE_TEMPLATE, SET_TEMPLATE_DATA, SET_TEMPLATE_LOADING,
-    SET_MAP_TEMPLATES_LOADED } from "../actions/maptemplates";
+    SET_MAP_TEMPLATES_LOADED, SET_ALLOWED_TEMPLATES } from "../actions/maptemplates";
 import { get } from 'lodash';
 import { set } from '../utils/ImmutableUtils';
 
@@ -18,6 +18,9 @@ export default (state = {}, action) => {
     }
     case SET_TEMPLATES: {
         return set('templates', action.templates, state);
+    }
+    case SET_ALLOWED_TEMPLATES: {
+        return set('allowedTemplates', action.templates, state);
     }
     case TOGGLE_FAVOURITE_TEMPLATE: {
         const templates = get(state, 'templates', [])

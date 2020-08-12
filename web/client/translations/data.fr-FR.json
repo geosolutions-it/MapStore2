@@ -2056,6 +2056,7 @@
             "equalInterval": "intervalle égal",
             "quantile": "Quantile",
             "jenks": "Pauses naturelles (Jenks)",
+            "standardDeviation": "Écart type",
             "switchToTextareaEditor": "Passer à l'éditeur de zone de texte",
             "switchToVisualEditor": "Passer à l'éditeur visuel",
             "alertForceTranslate": "Vous perdrez toutes les modifications ajoutées dans le texte en passant à l'éditeur visuel. Êtes-vous sûr de passer en mode éditeur de style visuel?",
@@ -2233,6 +2234,7 @@
             "geostoreMap": "Cartes de MapStore",
             "loadingSpinner": "Chargement de story",
             "addTitleSection": "Ajouter une section de titre",
+            "addBannerSection": "Ajouter une section de bannière",
             "addParagraphSection": "Ajouter une section de paragraphe",
             "addImmersiveSection": "Ajouter une section immersive",
             "addMediaSection": "Ajouter une section multimédia",
@@ -2299,6 +2301,7 @@
                     "htmlTitlePlaceholder": "Insérer un titre",
                     "htmlPlaceholder": "Insérer du texte ici...",
                     "titleTitle": "Section de titre",
+                    "titleBanner": "Section bannière",
                     "titleParagraph": "Section de paragraphe",
                     "titleImmersive": "Section immersive",
                     "titleImmersiveContent": "Contenu immersif",
@@ -2336,6 +2339,7 @@
                     "navbar": "Barre de navigation",
                     "showNavbar": "Afficher la barre de navigation",
                     "theme": "Thème",
+                    "overlay": "Recouvrir",
                     "templateTooltip":"Ce paramètre vous permet d'activer la fonction Identifier sur la carte en définissant un format générique pour toutes les couches. Il est possible de configurer un format différent pour chaque niveau à l'aide de l'éditeur de carte avancé (icône crayon). Pour plus d'informations, consultez le <a href='https://mapstore.readthedocs.io/en/latest/user-guide/layer-settings/#templates' target='_blank'> guide de l'utilisateur </a>. Si une couche a défini son propre format d'identification, elle sera utilisée à la place du format générique défini au niveau de la carte."
                 }
             },

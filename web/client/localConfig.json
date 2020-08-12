@@ -64,7 +64,6 @@
             "multiGeometry": true,
             "validationErrors": {}
           },
-          "format": "decimal",
           "defaultTextAnnotation": "New"
         },
         "maptype": {

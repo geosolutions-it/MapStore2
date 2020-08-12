@@ -7,7 +7,9 @@
  */
 import {
     classificationVector,
-    classificationRaster
+    classificationRaster,
+    updateStyleService,
+    clearCache
 } from '../StyleEditor';
 import axios from '../../libs/ajax';
 import expect from 'expect';
@@ -529,6 +531,86 @@ describe('StyleEditor API', () => {
                 }
                 done();
             });
+        });
+    });
+    describe('updateStyleService', () => {
+        beforeEach(done => {
+            mockAxios = new MockAdapter(axios);
+            setTimeout(done);
+        });
+
+        afterEach(done => {
+            clearCache();
+            mockAxios.restore();
+            setTimeout(done);
+        });
+        it('should update static services with request to classification endpoint', (done) => {
+            mockAxios.onGet(/sldservice/).reply(200, {
+                capabilities: {
+                    vector: {
+                        classifications: [
+                            'quantile',
+                            'jenks',
+                            'equalArea',
+                            'equalInterval',
+                            'uniqueInterval',
+                            'standardDeviation'
+                        ]
+                    },
+                    raster: {
+                        classifications: [
+                            'quantile',
+                            'jenks',
+                            'equalArea',
+                            'equalInterval',
+                            'uniqueInterval'
+                        ]
+                    }
+                }
+            });
+            const styleService = {
+                baseUrl: 'http://localhost:8080/geoserver/',
+                version: '2.18-SNAPSHOT',
+                formats: [ 'css', 'sld' ],
+                availableUrls: [],
+                fonts: ['Arial'],
+                iStatic: true
+            };
+            updateStyleService({ styleService })
+                .then((updatedStyleService) => {
+                    try {
+                        expect(updatedStyleService.classificationMethods.vector)
+                            .toEqual([ 'quantile', 'jenks', 'equalInterval', 'standardDeviation' ]);
+                        expect(updatedStyleService.classificationMethods.raster)
+                            .toEqual([ 'quantile', 'jenks', 'equalInterval' ]);
+                    } catch (e) {
+                        done(e);
+                    }
+                    done();
+                });
+        });
+        it('should use default classification methods if sldservice request fails', (done) => {
+            mockAxios.onGet(/sldservice/).reply(404);
+            const styleService = {
+                baseUrl: 'http://localhost:8080/geoserver/',
+                version: '2.18-SNAPSHOT',
+                formats: [ 'css', 'sld' ],
+                availableUrls: [],
+                fonts: ['Arial'],
+                iStatic: true
+            };
+            updateStyleService({ styleService })
+                .then((updatedStyleService) => {
+                    try {
+                        expect(updatedStyleService.classificationMethods.vector)
+                            .toEqual([ 'equalInterval', 'quantile', 'jenks' ]);
+                        expect(updatedStyleService.classificationMethods.raster)
+                            .toEqual([ 'equalInterval', 'quantile', 'jenks' ]);
+                    } catch (e) {
+                        done(e);
+                    }
+                    done();
+                });
         });
     });
 });

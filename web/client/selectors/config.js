@@ -8,7 +8,6 @@
 
 const loadAfterThemeSelector = (state) => state.localConfig && state.localConfig.loadAfterTheme;
 
-
 module.exports = {
     loadAfterThemeSelector
 };

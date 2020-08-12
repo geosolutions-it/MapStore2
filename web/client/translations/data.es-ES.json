@@ -2055,6 +2055,7 @@
             "equalInterval": "Intervalo igual",
             "quantile": "Cuantil",
             "jenks": "Descansos naturales (Jenks)",
+            "standardDeviation": "Desviación estándar",
             "switchToTextareaEditor": "Cambiar al editor de textarea",
             "switchToVisualEditor": "Cambiar al editor visual",
             "alertForceTranslate": "Perderá todos los cambios agregados en el texto al cambiar al editor visual. ¿Está seguro de cambiar al modo editor de estilo visual?",
@@ -2232,6 +2233,7 @@
             "geostoreMap": "Mapas de MapStore",
             "loadingSpinner": "Cargando Historia",
             "addTitleSection": "Agregar sección de título",
+            "addBannerSection": "Agregar sección de párrafo",
             "addParagraphSection": "Agregar sección de párrafo",
             "addImmersiveSection": "Añadir sección inmersiva",
             "addMediaSection": "Agregar sección de multimedia",
@@ -2298,6 +2300,7 @@
                     "htmlTitlePlaceholder": "Insertar título",
                     "htmlPlaceholder": "insertar texto aquí...",
                     "titleTitle": "Sección de título",
+                    "titleBanner": "Sección de banner",
                     "titleParagraph": "Sección de párrafo",
                     "titleImmersive": "Sección inmersiva",
                     "titleImmersiveContent": "Contenido inmersivo",
@@ -2335,6 +2338,7 @@
                     "navbar": "Barra de navegación",
                     "showNavbar": "Mostrar barra de navegación",
                     "theme": "Tema",
+                    "overlay": "Cubrir",
                     "templateTooltip":"Esta configuración le permite habilitar la función Identificar en el mapa definiendo un formato genérico para todas las capas. Es posible configurar un formato diferente para cada nivel usando el editor de mapas avanzado (icono de lápiz). Para obtener más información, consulte la <a href='https://mapstore.readthedocs.io/en/latest/user-guide/layer-settings/#templates' target='_blank'> guía del usuario </a>. Si una capa ha definido su propio formato de identificación, se utilizará en lugar del genérico establecido en el nivel del mapa."
                 }
             },

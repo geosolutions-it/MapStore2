@@ -16,6 +16,7 @@ import lastIndexOf from 'lodash/lastIndexOf';
 import words from 'lodash/words';
 import get from 'lodash/get';
 import isArray from 'lodash/isArray';
+import isEmpty from 'lodash/isEmpty';
 import { push, LOCATION_CHANGE } from 'connected-react-router';
 import uuid from 'uuid/v1';
 
@@ -114,7 +115,9 @@ const updateMediaSection = (store, path) => action$ =>
             let resourceId = resource.id;
             if (resourceAlreadyPresent) {
                 resourceId = resourceAlreadyPresent.id;
-            } else {
+            } else if (isEmpty(resource)) {
+                actions = [...actions, remove(`${path}`), hide()];
+            }  else {
             // if the resource is new, add it to the story resources list
                 resourceId = uuid();
                 actions = [...actions, addResource(resourceId, mediaType, resource)];

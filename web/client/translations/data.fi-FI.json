@@ -1944,6 +1944,7 @@
     "geostory": {
       "loadingSpinner": "Ladataan tarinaa",
       "addTitleSection": "Lisää otsikko-osa",
+      "addBannerSection": "Lisää banderolli",
       "addParagraphSection": "Lisää kappaleosa",
       "addImmersiveSection": "Lisää ympäröivä osio",
       "addMediaSection": "Lisää mediaosa",
@@ -1999,6 +2000,7 @@
           "htmlTitlePlaceholder": "Lisää otsikko",
           "htmlPlaceholder": "Lisää teksti tähän...",
           "titleTitle": "Otsikkoalue",
+          "titleBanner": "Banneriosa",
           "titleParagraph": "Kappalealue",
           "titleImmersive": "Syventävä alue",
           "titleImmersiveContent": "Syventävä sisältö",

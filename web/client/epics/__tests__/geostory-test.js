@@ -251,6 +251,7 @@ describe('Geostory Epics', () => {
                             a.story.sections[0].id = get(TEST_STORY, 'sections[0].id');
                             a.story.sections[1].id = get(TEST_STORY, 'sections[1].id');
                             a.story.sections[2].id = get(TEST_STORY, 'sections[2].id');
+                            a.story.sections[3].id = get(TEST_STORY, 'sections[3].id');
                         }
                         expect(a.story).toEqual(TEST_STORY);
                         break;
@@ -296,6 +297,7 @@ describe('Geostory Epics', () => {
                             a.story.sections[0].id = get(TEST_STORY, 'sections[0].id');
                             a.story.sections[1].id = get(TEST_STORY, 'sections[1].id');
                             a.story.sections[2].id = get(TEST_STORY, 'sections[2].id');
+                            a.story.sections[3].id = get(TEST_STORY, 'sections[3].id');
                         }
                         expect(a.story).toEqual(TEST_STORY);
                         break;
@@ -952,6 +954,114 @@ describe('Geostory Epics', () => {
                 settings: {
                     mediaType: "map",
                     sourceId: "geostoreMap"
+                }
+            }
+        });
+    });
+    it('test removes mediaType when resousrce is empty', (done) => {
+        const NUM_ACTIONS = 3;
+        testEpic(addTimeoutEpic(editMediaForBackgroundEpic), NUM_ACTIONS, [
+            editMedia({path: `sections[{"id": "section_id"}].contents[{"id": "content_id"}]`, owner: "geostore"}),
+            chooseMedia(undefined)
+        ],  (actions) => {
+            expect(actions.length).toBe(NUM_ACTIONS);
+            actions.map(a => {
+                switch (a.type) {
+                case SHOW:
+                    expect(a.owner).toEqual("geostore");
+                    break;
+                case SELECT_ITEM:
+                    expect(a.id).toEqual("resource_id");
+                    break;
+                case REMOVE:
+                    expect(a.path).toEqual(`sections[{"id": "section_id"}].contents[{"id": "content_id"}]`);
+                    break;
+                default: expect(true).toBe(false);
+                    break;
+                }
+            });
+            done();
+        }, {
+            geostory: {
+                currentStory: {
+                    resources: [{
+                        id: "resourceId",
+                        type: "image",
+                        data: {
+                            id: "resource_id"
+                        }
+                    }],
+                    sections: [{
+                        id: "section_id",
+                        contents: [{
+                            id: "content_id",
+                            resourceId: "resource_id",
+                            type: "image"
+                        }]
+                    }]
+                }
+            },
+            mediaEditor: {
+                settings: {
+                    mediaType: "image",
+                    sourceId: "geostory"
+                }
+            }
+        });
+    });
+    it('test restore background to the empty value when resource is empty', (done) => {
+        const NUM_ACTIONS = 3;
+        testEpic(addTimeoutEpic(editMediaForBackgroundEpic), NUM_ACTIONS, [
+            editMedia({path: `sections[{"id": "section_id"}].contents[{"id": "content_id"}].background`, owner: "geostore"}),
+            chooseMedia(undefined)
+        ],  (actions) => {
+            expect(actions.length).toBe(NUM_ACTIONS);
+            actions.map(a => {
+                switch (a.type) {
+                case SHOW:
+                    expect(a.owner).toEqual("geostore");
+                    break;
+                case SELECT_ITEM:
+                    expect(a.id).toEqual("resourceId");
+                    break;
+                case REMOVE:
+                    expect(a.path).toEqual(`sections[{"id": "section_id"}].contents[{"id": "content_id"}].background`);
+                    break;
+                default: expect(true).toBe(false);
+                    break;
+                }
+            });
+            done();
+        }, {
+            geostory: {
+                currentStory: {
+                    resources: [{
+                        id: "resourceId",
+                        type: "image",
+                        data: {
+                            id: "resource_id"
+                        }
+                    }],
+                    sections: [{
+                        id: "section_id",
+                        contents: [{
+                            id: "content_id",
+                            resourceId: "resourceId",
+                            background: {
+                                resourceId: "resourceId",
+                                type: "image",
+                                fit: "cover",
+                                size: "full",
+                                align: "center"
+                            }
+                        }]
+                    }]
+                }
+            },
+            mediaEditor: {
+                settings: {
+                    mediaType: "image",
+                    sourceId: "geostory"
                 }
             }
         });

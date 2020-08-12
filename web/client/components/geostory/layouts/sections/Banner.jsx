@@ -7,12 +7,11 @@
  */
 import React from "react";
 import {compose, withStateHandlers} from 'recompose';
-import SectionContents from '../../contents/SectionContents';
 import Background from './Background';
 import {backgroundPropWithHandler} from './enhancers/immersiveBackgroundManager';
 import ContainerDimensions from 'react-container-dimensions';
 import AddBar from '../../common/AddBar';
-import { SectionTypes, ContentTypes, Modes, MediaTypes, SectionTemplates } from '../../../../utils/GeoStoryUtils';
+import { SectionTypes, Modes, MediaTypes, SectionTemplates } from '../../../../utils/GeoStoryUtils';
 import titlePattern from './patterns/dots.png';
 import coverPattern from './patterns/grid.svg';
 import {get} from 'lodash';
@@ -20,33 +19,27 @@ import {get} from 'lodash';
  * Paragraph Section Type.
  * Paragraph is a page block that expands for all it's height
  */
+export const DEFAULT_BANNER_HEIGHT = 300;
+
 export default compose(
     backgroundPropWithHandler,
-    withStateHandlers({textEditorActive: false}, {
-        bubblingTextEditing: () => (editing) => {
-            return  {textEditorActiveClass: editing ? ' ms-text-editor-active' : ''};
-        }
-    }))(({
+    withStateHandlers({textEditorActive: false}))(({
     id,
     background = {},
-    contents = [],
     mode,
     contentId,
     path,
-    sectionType,
+    sectionType = SectionTypes.BANNER,
     cover,
     viewWidth,
     viewHeight,
     inViewRef,
     add = () => {},
-    update = () => {},
     updateSection = () => {},
     remove = () => {},
     updateBackground = () => {},
     editMedia = () => {},
     focusedContent,
-    bubblingTextEditing = () => {},
-    textEditorActiveClass = "",
     expandableMedia = false,
     storyTheme,
     mediaViewer,
@@ -54,15 +47,13 @@ export default compose(
     inView
 }) => {
     const hideContent = get(focusedContent, "target.id") === contentId;
-    const visibility = hideContent ?  'hidden' : 'visible';
     const expandableBackgroundClassName = expandableMedia && background && background.type === 'map' ? ' ms-expandable-background' : '';
-    const overlayStoryTheme = storyTheme?.overlay || {};
-    const generalStoryTheme = storyTheme?.general || {};
+    const deletePath = path.replace('.background', '');
 
     return (
         <section
             ref={inViewRef}
-            className={`ms-section ms-section-title${expandableBackgroundClassName}`}
+            className={`ms-section ms-section-banner${expandableBackgroundClassName}`}
             id={id}
         >
             <ContainerDimensions>
@@ -85,7 +76,7 @@ export default compose(
                         expandable={expandableMedia}
                         updateSection={updateSection}
                         cover={cover}
-                        remove={remove}
+                        remove={() => remove(deletePath)}
                         width={viewWidth}
                         sectionType={sectionType}
                         backgroundPlaceholder={{
@@ -93,40 +84,25 @@ export default compose(
                             backgroundSize: `${cover ? 64 : 600 }px auto`
                         }}
                         tools={{
-                            [MediaTypes.IMAGE]: ['editMedia', 'cover', 'fit', 'size', 'align', 'theme'],
-                            [MediaTypes.MAP]: ['editMedia', 'cover', 'editMap', 'size', 'align', 'theme'],
-                            [MediaTypes.VIDEO]: ['editMedia', 'cover', 'fit', 'size', 'align', 'theme', 'muted', 'autoplay', 'loop']
+                            [MediaTypes.IMAGE]: ['editMedia', 'cover', 'fit', 'size', 'align', 'theme', 'remove'],
+                            [MediaTypes.MAP]: ['editMedia', 'cover', 'editMap', 'size', 'align', 'theme', 'remove'],
+                            [MediaTypes.VIDEO]: ['editMedia', 'cover', 'fit', 'size', 'align', 'theme', 'muted', 'autoplay', 'loop', 'remove']
                         }}
                         height={height >= viewHeight
                             ? viewHeight
                             : height}
-                        storyTheme={generalStoryTheme}
+                        storyTheme={storyTheme}
                         mediaViewer={mediaViewer}
                         contentToolbar={contentToolbar}
                         inView={inView}
                     />}
             </ContainerDimensions>
-            <SectionContents
-                className={`ms-section-contents${textEditorActiveClass}`}
-                contents={contents}
-                mode={mode}
-                add={add}
-                sectionType={sectionType}
-                update={update}
-                remove={remove}
-                sectionId={id}
-                contentProps={{
-                    contentWrapperStyle: cover ? { minHeight: viewHeight, visibility} : {visibility},
-                    mediaViewer,
-                    contentToolbar
-                }}
-                tools={{
-                    [ContentTypes.TEXT]: ['size', 'align', 'theme', 'remove']
-                }}
-                focusedContent={focusedContent}
-                bubblingTextEditing={bubblingTextEditing}
-                storyTheme={overlayStoryTheme}
-            />
+            <div
+                style={{
+                    minHeight: cover ? viewHeight : DEFAULT_BANNER_HEIGHT,
+                    pointerEvents: 'none'
+                }}>
+            </div>
             {mode === Modes.EDIT && !hideContent && <AddBar
                 containerWidth={viewWidth}
                 containerHeight={viewHeight}

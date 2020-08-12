@@ -118,7 +118,8 @@ describe("GeoStory Utils", () => {
         expect(SectionTypes).toEqual({
             TITLE: "title",
             PARAGRAPH: "paragraph",
-            IMMERSIVE: "immersive"
+            IMMERSIVE: "immersive",
+            BANNER: 'banner'
         });
     });
     it("test isMediaSection", () => {
@@ -199,13 +200,30 @@ describe("GeoStory Utils", () => {
             expect(content.type).toBe(ContentTypes.TEXT);
             expect(content.size).toBe("large");
             expect(content.align).toBe("center");
-            expect(content.theme).toBe("bright");
+            expect(content.theme).toBe("");
             const background = data.contents[0].background;
             expect(background.theme).toBe(undefined);
             expect(background.fit).toBe("cover");
             expect(background.size).toBe("full");
             expect(background.align).toBe("center");
 
+        });
+        it("SectionTypes.BANNER", () => {
+            const data = getDefaultSectionTemplate(SectionTypes.BANNER);
+            expect(data.id).toExist();
+            expect(data.id.length).toBe(uuid().length);
+            expect(data.type).toBe(SectionTypes.BANNER);
+            expect(data.title).toBe("geostory.builder.defaults.titleBanner");
+            expect(data.cover).toBe(false);
+            expect(isArray(data.contents)).toBe(true);
+            const content = data.contents[0];
+            expect(content.id).toExist();
+            expect(content.id.length).toBe(uuid().length);
+            const background = data.contents[0].background;
+            expect(background.theme).toBe(undefined);
+            expect(background.fit).toBe("cover");
+            expect(background.size).toBe("full");
+            expect(background.align).toBe("center");
         });
         it("SectionTypes.PARAGRAPH", () => {
             const data = getDefaultSectionTemplate(SectionTypes.PARAGRAPH);

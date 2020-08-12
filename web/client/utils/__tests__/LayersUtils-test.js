@@ -71,13 +71,42 @@ describe('LayersUtils', () => {
     });
 
     it('splits layers and groups groups additional data (expanded and title)', () => {
-        const groups = [{id: 'custom.nested001', expanded: true}, {id: 'custom.nested001.nested002', expanded: false}, {id: 'Default', expanded: false}, {id: 'custom', expanded: true, title: {'default': 'Default', 'en-US': 'new'}}];
-        const layers = [{id: 'layer001', group: 'Default'}, {id: 'layer002', group: 'Default'}, {id: 'layer003', group: 'custom.nested001'}, {id: 'layer004', group: 'custom.nested001.nested002'}];
+        const groups = [
+            {id: 'custom.nested001', expanded: true},
+            {id: 'custom.nested001.nested002', expanded: false},
+            {id: 'Default', expanded: false},
+            {id: 'custom', expanded: true, title: {'default': 'Default', 'en-US': 'new'}},
+            {id: 'test', expanded: true, title: "Test-group", description: "description", tooltipOptions: "both", tooltipPlacement: 'right'}
+        ];
+        const layers = [
+            {id: 'layer001', group: 'Default'},
+            {id: 'layer002', group: 'Default'},
+            {id: 'layer003', group: 'custom.nested001'},
+            {id: 'layer004', group: 'custom.nested001.nested002'},
+            {id: 'layer005', group: 'test'}
+        ];
 
         const state = LayersUtils.splitMapAndLayers({groups, layers});
 
         expect(state.layers.groups).toEqual([
-            {expanded: true, id: 'custom', name: 'custom', title: {'default': 'Default', 'en-US': 'new'},
+            {
+                expanded: true,
+                id: 'test',
+                name: 'test',
+                title: 'Test-group',
+                description: 'description',
+                tooltipOptions: 'both',
+                tooltipPlacement: 'right',
+                nodes: ['layer005']
+            },
+            {
+                expanded: true,
+                id: 'custom',
+                name: 'custom',
+                title: {'default': 'Default', 'en-US': 'new'},
+                description: undefined,
+                tooltipOptions: undefined,
+                tooltipPlacement: undefined,
                 nodes: [
                     {expanded: true, id: 'custom.nested001', name: 'nested001', title: 'nested001',
                         nodes: [

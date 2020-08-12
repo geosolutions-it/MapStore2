@@ -5,6 +5,8 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
+
+
 const React = require('react');
 const {Glyphicon} = require('react-bootstrap');
 const {connect} = require('react-redux');
@@ -16,10 +18,10 @@ const { mapTypeSelector, isCesium } = require('../selectors/maptype');
 
 const { generalInfoFormatSelector, clickPointSelector, indexSelector, responsesSelector, validResponsesSelector, showEmptyMessageGFISelector, isHighlightEnabledSelector, currentFeatureSelector, currentFeatureCrsSelector } = require('../selectors/mapInfo');
 const { isEditingAllowedSelector } = require('../selectors/featuregrid');
+const {getConfigProp} = require("../utils/ConfigUtils");
 
-
-const { hideMapinfoMarker, showMapinfoRevGeocode, hideMapinfoRevGeocode, clearWarning, toggleMapInfoState, changeMapInfoFormat, updateCenterToMarker, closeIdentify, purgeMapInfoResults, updateFeatureInfoClickPoint, changeFormat, toggleShowCoordinateEditor, changePage, toggleHighlightFeature, editLayerFeatures} = require('../actions/mapInfo');
-const { changeMousePointer, zoomToExtent, registerEventListener, unRegisterEventListener} = require('../actions/map');
+const { hideMapinfoMarker, showMapinfoRevGeocode, hideMapinfoRevGeocode, clearWarning, toggleMapInfoState, changeMapInfoFormat, updateCenterToMarker, closeIdentify, purgeMapInfoResults, updateFeatureInfoClickPoint, changeFormat, toggleShowCoordinateEditor, changePage, toggleHighlightFeature, editLayerFeatures, setMapTrigger} = require('../actions/mapInfo');
+const { changeMousePointer, zoomToExtent } = require('../actions/map');
 
 
 const {currentLocaleSelector} = require('../selectors/locale');
@@ -51,7 +53,7 @@ const selector = createStructuredSelector({
     warning: (state) => state.mapInfo && state.mapInfo.warning,
     currentLocale: currentLocaleSelector,
     dockStyle: state => mapLayoutValuesSelector(state, {height: true}),
-    formatCoord: (state) => state.mapInfo && state.mapInfo.formatCoord,
+    formatCoord: (state) => state.mapInfo && state.mapInfo.formatCoord || getConfigProp("defaultCoordinateFormat"),
     showCoordinateEditor: (state) => state.mapInfo && state.mapInfo.showCoordinateEditor,
     showEmptyMessageGFI: state => showEmptyMessageGFISelector(state),
     isEditingAllowed: isEditingAllowedSelector,
@@ -233,7 +235,7 @@ const FeatureInfoFormatSelector = connect((state) => ({
 const FeatureInfoTriggerSelector = connect((state) => ({
     trigger: isMouseMoveIdentifyActiveSelector(state) ? 'hover' : 'click'
 }), {
-    onTriggerChange: (event) => event.target.value === 'hover' ? registerEventListener('mousemove', 'identifyFloatingTool') : unRegisterEventListener('mousemove', 'identifyFloatingTool')
+    onSetMapTrigger: setMapTrigger
 })(require("../components/misc/FeatureInfoTriggerSelector"));
 
 module.exports = {
