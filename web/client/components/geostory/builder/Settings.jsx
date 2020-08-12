@@ -53,7 +53,11 @@ export default ({
             <div className="ms-font-select">
                 <div>Font Family</div>
                 <div>
-                    <Select />
+                    <Select
+                        value={settings?.theme?.general?.fontFamily || "Comic Sans"}
+                        onChange={event => onUpdateSettings("theme", {...settings?.theme, general: { ...settings?.theme?.general, fontFamily: event.value } })}
+                        options={[{value: "Lemonada", label: "Lemonada"}, {value: "Comic Sans", label: "Comic sans"}]}
+                    />
                 </div>
             </div>
         </FormGroup>
