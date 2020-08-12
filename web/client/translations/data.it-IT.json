@@ -120,8 +120,8 @@
                 "tooltip": "Nota: questo parametro richiede configurazioni specifiche su GeoServer"
             }
         },
-        "longitude": "Longitudine",
-        "latitude": "Latitudine",
+        "longitude": "Lon",
+        "latitude": "Lat",
         "notification": {
             "update": "Aggiorna",
             "warning": "Attenzione",
@@ -650,6 +650,7 @@
         "identifyRevGeocodeCloseText": "Chiudi",
         "identifyRevGeocodeError": "Impossibile eseguire il geocoding",
         "identifyEdit": "Modifica",
+        "identifyLayerSelectNoResult": "Nessun livello trovato",
         "getFeatureInfoError": {
             "title": "Ooops! Qualcosa non va",
             "text": "Si è verificato un errore nel fare questa richiesta <b>GetFeatureInfo</b>"

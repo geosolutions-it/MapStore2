@@ -15,7 +15,7 @@ const assign = require('object-assign');
 require('babel-polyfill');
 
 describe('Test the mapInfo reducer', () => {
-    let appState = {requests: [{reqId: 10, request: "test"}]};
+    let appState = {requests: [{reqId: 10, request: "test"}, {reqId: 11, request: "test1"}]};
 
     it('returns original state on unrecognized action', () => {
         let state = mapInfo(1, {type: 'UNKNOWN'});
@@ -44,8 +44,7 @@ describe('Test the mapInfo reducer', () => {
         expect(state.responses[0].response).toBe("error");
         expect(state.responses[0].queryParams).toBe("params");
         expect(state.responses[0].layerMetadata).toBe("meta");
-
-        state = mapInfo(assign({}, appState, {responses: ["test"]}), testAction);
+        state = mapInfo(assign({}, appState, {responses: ["test"]}), {...testAction, reqId: 11});
         expect(state.responses).toExist();
         expect(state.responses.length).toBe(2);
         expect(state.responses[0]).toBe("test");
@@ -78,7 +77,7 @@ describe('Test the mapInfo reducer', () => {
         expect(state.responses[0].layerMetadata).toBe("meta");
 
 
-        state = mapInfo(assign({}, appState, {responses: ["test"]}), testAction);
+        state = mapInfo(assign({}, appState, {responses: ["test"]}), {...testAction, reqId: 11});
         expect(state.responses).toExist();
         expect(state.responses.length).toBe(2);
         expect(state.responses[0]).toBe("test");
@@ -111,7 +110,7 @@ describe('Test the mapInfo reducer', () => {
         expect(state.responses[0].queryParams).toBe("params");
         expect(state.responses[0].layerMetadata).toBe("meta");
 
-        state = mapInfo(assign({}, appState, {responses: ["test"]}), testAction);
+        state = mapInfo(assign({}, appState, {responses: ["test"]}), {...testAction, reqId: 11});
         expect(state.responses).toExist();
         expect(state.responses.length).toBe(2);
         expect(state.responses[0]).toBe("test");
@@ -146,7 +145,7 @@ describe('Test the mapInfo reducer', () => {
             metadata: "meta"
         };
 
-        let state = mapInfo(appState, testAction);
+        let state = mapInfo({requests: []}, testAction);
         expect(state.responses).toExist();
         expect(state.responses.length).toBe(1);
         expect(state.responses[0].response).toExist();
@@ -168,9 +167,8 @@ describe('Test the mapInfo reducer', () => {
         expect(state.requests.filter((req) => req.reqId === 1)[0].request).toBe("request");
 
         state = mapInfo( appState, {type: 'NEW_MAPINFO_REQUEST', reqId: 1, request: "request"});
-
         expect(state.requests).toExist();
-        expect(state.requests.length).toBe(2);
+        expect(state.requests.length).toBe(3);
         expect(state.requests.filter((req) => req.reqId === 10)[0].request).toBe("test");
         expect(state.requests.filter((req) => req.reqId === 1)[0].request).toBe("request");
     });
@@ -648,7 +646,7 @@ describe('Test the mapInfo reducer', () => {
             }
         };
 
-        let state = mapInfo(appState, testAction);
+        let state = mapInfo({requests: []}, testAction);
         expect(state.responses).toExist();
         expect(state.responses.length).toBe(1);
         expect(state.responses[0].response).toExist();

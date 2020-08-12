@@ -120,8 +120,8 @@
                 "tooltip": "Nota: este parámetro requiere configuraciones específicas en GeoServer"
             }
         },
-        "longitude": "Longitud",
-        "latitude": "Latitud",
+        "longitude": "Lon",
+        "latitude": "Lat",
         "notification": {
             "update": "Actualizar",
             "warning": "Aviso",
@@ -650,6 +650,7 @@
         "identifyRevGeocodeCloseText": "Cerrar",
         "identifyRevGeocodeError": "Geocodificación imposible",
         "identifyEdit": "Editar",
+        "identifyLayerSelectNoResult": "No se encontraron capas",
         "getFeatureInfoError": {
             "title": "Ooops! Algo va mal",
             "text": "Un error se ha producido durante esta <b>GetFeatureInfo</b> petición"

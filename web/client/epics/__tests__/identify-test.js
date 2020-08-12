@@ -360,10 +360,10 @@ describe('identify Epics', () => {
                 expect(a0).toExist();
                 expect(a0.type).toBe(PURGE_MAPINFO_RESULTS);
                 expect(a1).toExist();
-                expect(a1.type).toBe(NEW_MAPINFO_REQUEST);
-                expect(a1.reqId).toExist();
-                expect(a1.request).toExist();
-                expect(a2.type).toBe(GET_VECTOR_INFO);
+                expect(a1.type).toBe(GET_VECTOR_INFO);
+                expect(a2.type).toBe(NEW_MAPINFO_REQUEST);
+                expect(a2.reqId).toExist();
+                expect(a2.request).toExist();
                 expect(a3).toExist();
                 expect(a3.type).toBe(LOAD_FEATURE_INFO);
                 done();

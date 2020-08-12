@@ -5,11 +5,9 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
 */
+
 import Rx from 'rxjs';
-
-import { get, find} from 'lodash';
-
-
+import { get, find, reverse} from 'lodash';
 import uuid from 'uuid';
 import { LOCATION_CHANGE } from 'connected-react-router';
 import {
@@ -124,7 +122,8 @@ export default {
     getFeatureInfoOnFeatureInfoClick: (action$, { getState = () => { } }) =>
         action$.ofType(FEATURE_INFO_CLICK)
             .switchMap(({ point, filterNameList = [], overrideParams = {} }) => {
-                let queryableLayers = queryableLayersSelector(getState());
+                // Reverse - To query layer in same order as in TOC
+                let queryableLayers = reverse(queryableLayersSelector(getState()));
                 const queryableSelectedLayers = queryableSelectedLayersSelector(getState());
                 if (queryableSelectedLayers.length) {
                     queryableLayers = queryableSelectedLayers;
@@ -180,7 +179,6 @@ export default {
                     return out$;
                 }
                 return out$.startWith(purgeMapInfoResults());
-
             }),
     /**
      * if `clickLayer` is present, this means that `handleClickOnLayer` is true for the clicked layer, so the marker have to be hidden, because

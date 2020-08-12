@@ -120,8 +120,8 @@
                 "tooltip": "Opmerking: deze parameter vereist specifieke configuraties op GeoServer"
             }
         },
-        "longitude": "Länge",
-        "latitude": "Breite",
+        "longitude": "Lon",
+        "latitude": "Lat",
         "notification": {
             "update": "Aktualisierung",
             "warning": "Warnung",
@@ -650,6 +650,7 @@
         "identifyRevGeocodeCloseText": "Schliessen",
         "identifyRevGeocodeError": "Konnte nicht geocodiert werden",
         "identifyEdit": "Bearbeiten",
+        "identifyLayerSelectNoResult": "Keine Schichten gefunden",
         "getFeatureInfoError": {
             "title": "Ooops! Etwas ist schiefgelaufen.",
             "text": "Ein Fehler ist während dieser <b>GetFeatureInfo</b> Anfrage aufgetreten"

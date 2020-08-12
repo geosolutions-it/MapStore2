@@ -110,15 +110,18 @@ const indexSelector = (state = {}) => state && state.mapInfo && state.mapInfo.in
 
 const responsesSelector = state => state.mapInfo && state.mapInfo.responses || [];
 
+const requestsSelector = state => state?.mapInfo?.requests || [];
+
 /**
  * Gets only the valid responses
  */
 const validResponsesSelector = createSelector(
+    requestsSelector,
     responsesSelector,
     generalInfoFormatSelector,
-    (responses, format) => {
+    (requests, responses, format) => {
         const validatorFormat = MapInfoUtils.getValidator(format);
-        return validatorFormat.getValidResponses(responses);
+        return requests.length === responses.length && validatorFormat.getValidResponses(responses);
     });
 
 const currentResponseSelector = createSelector(
@@ -201,6 +204,7 @@ module.exports = {
     isMapInfoOpen,
     indexSelector,
     responsesSelector,
+    requestsSelector,
     validResponsesSelector,
     currentFeatureSelector,
     currentFeatureCrsSelector,
