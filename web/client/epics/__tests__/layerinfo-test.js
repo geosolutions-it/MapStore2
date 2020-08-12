@@ -149,7 +149,10 @@ describe('layerinfo epics', () => {
             layerObj: {
                 id: 'layer2',
                 name: 'layer2 name',
-                title: 'layer2 title',
+                title: {
+                    'default': 'layer2 title',
+                    'en-US': 'english title'
+                },
                 description: 'layer2 description',
                 type: 'wmts',
                 url: '/layer2url'
@@ -213,15 +216,34 @@ describe('layerinfo epics', () => {
                 expect(updateLayerAction.type).toBe(UPDATE_LAYER);
                 expect(updateLayerAction.layer).toExist();
                 expect(updateLayerAction.layer.id).toBe(testLayers[idx].id);
-                expect(updateLayerAction.layer.title).toBe(title);
+
+                if (idx === 1) {
+                    expect(updateLayerAction.layer.title).toExist();
+                    expect(updateLayerAction.layer.title.default).toBe(title);
+                    expect(updateLayerAction.layer.title['en-US']).toBe('english title');
+                    expect(updateLayerAction.layer.layerObj.title).toExist();
+                    expect(updateLayerAction.layer.layerObj.title.default).toBe(title);
+                    expect(updateLayerAction.layer.layerObj.title['en-US']).toBe('english title');
+                } else {
+                    expect(updateLayerAction.layer.title).toBe(title);
+                    expect(updateLayerAction.layer.layerObj.title).toBe(title);
+                }
+
                 expect(updateLayerAction.layer.description).toBe(description);
-                expect(updateLayerAction.layer.layerObj.title).toBe(title);
                 expect(updateLayerAction.layer.layerObj.description).toBe(description);
                 expect(updateNodeAction.type).toBe(UPDATE_NODE);
                 expect(updateNodeAction.node).toBe(testLayers[idx].id);
                 expect(updateNodeAction.nodeType).toBe('layer');
                 expect(updateNodeAction.options).toExist();
-                expect(updateNodeAction.options.title).toBe(title);
+
+                if (idx === 1) {
+                    expect(updateNodeAction.options.title).toExist();
+                    expect(updateNodeAction.options.title.default).toBe(title);
+                    expect(updateNodeAction.options.title['en-US']).toBe('english title');
+                } else {
+                    expect(updateNodeAction.options.title).toBe(title);
+                }
+
                 expect(updateNodeAction.options.description).toBe(description);
                 expect(updateSyncAction.type).toBe(UPDATE_SYNC_STATUS);
             });

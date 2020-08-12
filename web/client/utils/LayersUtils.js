@@ -662,7 +662,8 @@ const LayersUtils = {
             }
             : {};
     },
-    getWpsUrl
+    getWpsUrl,
+    getLayerTitle: ({title, name}, currentLocale = 'default') => title?.[currentLocale] || title?.['default'] || title || name
 };
 
 module.exports = LayersUtils;

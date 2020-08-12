@@ -15,17 +15,20 @@ import Loader from '../misc/Loader';
 import Message from '../I18N/Message';
 import OverlayTrigger from '../misc/OverlayTrigger';
 
+import { getLayerTitle } from '../../utils/LayersUtils';
+
 export default ({
     loading = false,
     loadFlags = {},
     error,
     layers = [],
+    currentLocale = 'default',
     onSelectLayers = () => {}
 }) => {
     const layerIds = layers.map(({id}) => id);
     const selectedLayerIds = layers.filter(({selected}) => selected).map(({id}) => id);
     const layerItems = layers.map(({title, name, type, selected, id, syncStatus}) => ({
-        title: title || name,
+        title: getLayerTitle({title, name}, currentLocale),
         description: <Message msgId="layerInfo.layerType" msgParams={{type}}/>,
         cardSize: 'sm',
         selected,

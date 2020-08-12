@@ -280,7 +280,7 @@
             },
             "FeedbackMask"
         ],
-        "desktop": ["Details", "LayerInfo",
+        "desktop": ["Details",
           {
             "name": "Map",
             "cfg": {

@@ -7,7 +7,7 @@
  */
 
 import { Observable } from 'rxjs';
-import { keys, findIndex, pick, castArray, find } from 'lodash';
+import { keys, findIndex, pick, castArray, find, isObject } from 'lodash';
 
 import {
     SYNC_LAYERS,
@@ -80,11 +80,18 @@ export const layerInfoSyncLayersEpic = (action$, store) => action$
         ).concat(
             Observable.merge(
                 ...layers.map(({layerObj}) => getCapabilities[layerObj.type](layerObj)
-                    .map(caps => ['success', {
-                        ...layerObj,
-                        title: caps.title ?? caps.dc?.title,
-                        description: caps._abstract ?? caps.dc?.abstract ?? caps.dc?.description
-                    }])
+                    .map(caps => {
+                        const title = caps.title ?? caps.dc?.title;
+
+                        return ['success', {
+                            ...layerObj,
+                            title: isObject(layerObj.title) ? {
+                                ...layerObj.title,
+                                'default': title
+                            } : title,
+                            description: caps._abstract ?? caps.dc?.abstract ?? caps.dc?.description
+                        }];
+                    })
                     .catch(() => Observable.of(['error', layerObj])))
             )
                 .flatMap(([syncStatus, layerObj]) => Observable.of(updateLayer({

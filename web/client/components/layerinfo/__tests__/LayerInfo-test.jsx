@@ -26,4 +26,19 @@ describe('LayerInfo component', () => {
         ReactDOM.render(<LayerInfo/>, document.getElementById('container'));
         expect(document.getElementsByClassName('layerinfo-content')[0]).toExist();
     });
+    it('rendering with a layer with title translations', () => {
+        const testLayer = {
+            id: 'layerId',
+            title: {
+                'default': 'default title',
+                'en-US': 'english title'
+            },
+            name: 'layername',
+            url: 'url'
+        };
+        ReactDOM.render(<LayerInfo layers={[testLayer]} currentLocale="en-US"/>, document.getElementById('container'));
+        expect(document.getElementsByClassName('layerinfo-content')[0]).toExist();
+        expect(document.getElementsByClassName('mapstore-side-card')?.length).toBe(1);
+        expect(document.querySelector('.mapstore-side-card-title > span')?.textContent).toBe('english title');
+    });
 });

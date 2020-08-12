@@ -25,6 +25,7 @@ import {
     syncStatusSelector,
     errorSelector
 } from '../selectors/layerinfo';
+import { currentLocaleSelector } from '../selectors/locale';
 import {
     syncLayers,
     selectLayers
@@ -41,6 +42,7 @@ import * as epics from '../epics/layerinfo';
 const LayerInfoPlugin = ({
     enabled = false,
     layers = [],
+    currentLocale,
     loading = false,
     loadFlags = {},
     syncStatus = {},
@@ -73,6 +75,7 @@ const LayerInfoPlugin = ({
                 loadFlags={loadFlags}
                 error={error}
                 layers={layers}
+                currentLocale={currentLocale}
                 onSelectLayers={onSelectLayers}/>
         </ResizableModal>
     );
@@ -82,6 +85,7 @@ export default createPlugin('LayerInfo', {
     component: connect(createStructuredSelector({
         enabled: layerInfoControlEnabledSelector,
         layers: layersSelector,
+        currentLocale: currentLocaleSelector,
         loading: loadingSelector,
         loadFlags: loadFlagsSelector,
         syncStatus: syncStatusSelector,
