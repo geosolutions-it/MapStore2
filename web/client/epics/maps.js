@@ -248,7 +248,7 @@ const getMapsResourcesByCategoryEpic = (action$, store) =>
             const getContextNames = ({results, ...other}) => {
                 const maps = isArray(results) ? results : (results === "" ? [] : [results]);
                 return maps.length === 0 ?
-                    Rx.Observable.of({results, ...other}) :
+                    Rx.Observable.of({results: [], ...other}) :
                     Rx.Observable.forkJoin(
                         maps.map(({context}) => context ?
                             getResource(context, {includeAttributes: false, withData: false, withPermissions: false})
@@ -297,9 +297,7 @@ const getMapsResourcesByCategoryEpic = (action$, store) =>
                         return Rx.Observable.of(
                             mapsLoaded({
                                 ...responseWithContext,
-                                results: isArray(responseWithContext.results) ?
-                                    responseWithContext.results?.map(res => ({...res, category: {name: "MAP"}})) :
-                                    responseWithContext.results
+                                results: responseWithContext.results?.map(res => ({...res, category: {name: "MAP"}}))
                             }, opts.params, searchText)
                         );
                     }

@@ -668,7 +668,7 @@ describe('Get Map Resource By Category Epic', () => {
             expect(actions[0].value).toBe(true);
             expect(actions[0].name).toBe('loadingMaps');
             expect(actions[1].type).toBe(MAPS_LIST_LOADED);
-            expect(actions[1].maps).toEqual({success: true, totalCount: 0, results: ""});
+            expect(actions[1].maps).toEqual({success: true, totalCount: 0, results: []});
             expect(actions[1].params).toEqual(params);
             expect(actions[1].searchText).toBe('test');
             expect(actions[2].type).toBe(LOADING);
