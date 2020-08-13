@@ -5,12 +5,12 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-var expect = require('expect');
+const expect = require('expect');
 
-var React = require('react');
-var ReactDOM = require('react-dom');
-var SearchBar = require('../SearchBar').default;
 const ConfigUtils = require('../../../../utils/ConfigUtils');
+const React = require('react');
+const ReactDOM = require('react-dom');
+const SearchBar = require('../SearchBar').default;
 
 const TestUtils = require('react-dom/test-utils');
 
@@ -343,6 +343,15 @@ describe("test the SearchBar", () => {
         expect(searchButton).toExist();
         expect(searchButton.disabled).toBe(true);
         expect(cog).toExist();
+    });
+    it('test reset active search tool when no bookmark config', () => {
+        const actions = {
+            onChangeActiveSearchTool: () =>{}
+        };
+        const spyOnChangeActiveSearchTool = expect.spyOn(actions, 'onChangeActiveSearchTool');
+        ReactDOM.render(<SearchBar showOptions showBookMarkSearchOption onChangeActiveSearchTool={actions.onChangeActiveSearchTool} activeSearchTool="bookmarkSearch" />, document.getElementById("container"));
+        expect(spyOnChangeActiveSearchTool).toHaveBeenCalled();
+        expect(spyOnChangeActiveSearchTool.calls[0].arguments[0]).toBe("addressSearch");
     });
     it('test searchByBookmark, with bookmark selected', () => {
         const bookmarkConfig = {selected: {title: "Bookmark1"}, bookmarkSearchConfig: {bookmarks: [{title: "Bookmark 1"}, {title: "Bookmark 2"}]}};

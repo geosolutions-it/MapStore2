@@ -171,6 +171,10 @@ export default ({
             searchByBookmarkConfig = item.bookmarkConfig(onToggleControl, enabledSearchBookmarkConfig, activeTool);
         }
     }
+    // Reset activeTool when no bookmark config
+    if (isUndefined(searchByBookmarkConfig) && activeTool === "bookmarkSearch") {
+        onChangeActiveSearchTool("addressSearch");
+    }
 
     const searchConfig = {
         onClick: () => {
