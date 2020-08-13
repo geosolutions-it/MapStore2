@@ -36,8 +36,8 @@ const TransferColumnCardList = ({
                 key={item.id || idx}
                 size={item.cardSize}
                 className={(item.className ? `${item.className} ` : ' ') + (idx === items.length - 1 ? 'ms2-transfer-lastcard' : '')}
-                selected={isSelected}
-                tools={item.tools && <Toolbar
+                selected={isSelected ?? item.selected}
+                tools={item.tools && item.tools.length > 0 ? <Toolbar
                     buttons={item.tools.map(tool => ({
                         ...tool,
                         className: 'square-button-md no-border',
@@ -47,7 +47,7 @@ const TransferColumnCardList = ({
                                 tool.onClick();
                             }
                         }
-                    }))}/>
+                    }))}/> : undefined
                 }
                 preview={item.preview}
                 description={item.showDescriptionTooltip && item.description ?

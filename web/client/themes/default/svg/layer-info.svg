@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg" xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd" xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" version="1.1" viewBox="0 -240 1200 1200" id="svg6" sodipodi:docname="layer-info.svg" inkscape:version="0.92.4 (5da689c313, 2019-01-14)">
+  <metadata id="metadata12">
+    <rdf:RDF>
+      <cc:Work rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
+        <dc:title/>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <defs id="defs10"/>
+  <sodipodi:namedview pagecolor="#ffffff" bordercolor="#666666" borderopacity="1" objecttolerance="10" gridtolerance="10" guidetolerance="10" inkscape:pageopacity="0" inkscape:pageshadow="2" inkscape:window-width="1920" inkscape:window-height="1017" id="namedview8" showgrid="false" inkscape:zoom="0.39333334" inkscape:cx="617.41135" inkscape:cy="740.9899" inkscape:window-x="1912" inkscape:window-y="-8" inkscape:window-maximized="1" inkscape:current-layer="layer2" showguides="false"/>
+  <g inkscape:groupmode="layer" id="layer2" inkscape:label="glyph">
+    <path style="fill:currentColor" d="M 1135.2988 120 C 1120.0776 121.98885 1107.4861 128.57984 1097.5293 139.78125 C 1085.4229 153.40087 1079.3691 166.91297 1079.3691 180.31641 C 1076.3426 213.17646 1092.9875 229.60547 1129.3066 229.60547 C 1147.4661 229.60547 1162.9248 223.65969 1175.6797 211.76953 C 1188.4345 199.87938 1194.8105 185.50301 1194.8105 168.64062 C 1194.8105 139.51734 1181.8955 123.31183 1156.084 120 L 1135.2988 120 z M 1139.0352 294.46094 C 1121.7404 294.46094 1096.2307 302.8915 1062.5059 319.75391 C 1028.7811 336.61631 997.21951 357.58667 967.81836 382.66406 L 980.14062 404.06641 C 1012.136 385.90691 1033.5385 376.82813 1044.3477 376.82812 C 1048.6714 376.82812 1048.6714 385.90691 1044.3477 404.06641 L 1011.9199 534.42578 C 998.51656 592.7956 1007.8114 621.98047 1039.8066 621.98047 C 1088.6644 621.98047 1142.0625 592.7956 1200 534.42578 L 1184.4355 514.32031 C 1157.1963 534.20931 1137.0902 544.1543 1124.1191 544.1543 C 1116.7688 544.1543 1116.1205 533.5611 1122.1738 512.375 L 1156.5469 376.82812 C 1170.3827 321.91725 1164.545 294.46094 1139.0352 294.46094 z M 404 422 L 0 842 L 535 1112 L 939 690 L 404 422 z M 876 840 L 538 1196 L 84 970 L 7 1040 L 557 1320 L 971 893 L 876 840 z " transform="translate(0,-240)" id="path830"/>
+  </g>
+</svg>
