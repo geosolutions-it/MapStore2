@@ -38,14 +38,14 @@ const {
 const {RESET_CONTROLS} = require('../actions/controls');
 
 const assign = require('object-assign');
-const {findIndex, find} = require('lodash');
+const {findIndex} = require('lodash');
+const {getValidator} = require('../utils/MapInfoUtils');
 
 function receiveResponse(state, action, type) {
     const requestIndex = findIndex((state.requests || []), (req) => req.reqId === action.reqId);
+
     if (requestIndex !== -1) {
         const responses = state.responses || [];
-        // Update index when first response is received
-        const updateIndex = find(responses, "response") === undefined;
         // Add response in same order it was requested
         responses[requestIndex] = {
             response: action[type],
@@ -53,6 +53,11 @@ function receiveResponse(state, action, type) {
             layerMetadata: action.layerMetadata,
             layer: action.layer
         };
+        const {info_format: format} = action.requestParams;
+        const validResponse = getValidator(format)?.
+            getValidResponses([responses[requestIndex]], true);
+        // Update index when first response is received
+        const updateIndex = state.index === undefined && !!validResponse.length;
         return assign({}, state, {
             responses: [...responses],
             ...(updateIndex && {index: requestIndex})
@@ -212,10 +217,10 @@ function mapInfo(state = initState, action) {
         });
     }
     case PURGE_MAPINFO_RESULTS:
-        return assign({}, state, {
-            responses: [],
+        const {index, ...restOfState} = state;
+        return {...restOfState, responses: [],
             requests: []
-        });
+        };
     case LOAD_FEATURE_INFO: {
         return receiveResponse(state, action, 'data');
     }

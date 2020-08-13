@@ -96,9 +96,7 @@ const identifyLifecycle = compose(
                 hideMarker = () => {},
                 purgeResults = () => {},
                 changeMousePointer = () => {},
-                setIndex,
-                enabled,
-                responses
+                enabled
             } = this.props;
             if (newProps.enabled && !enabled) {
                 changeMousePointer('pointer');
@@ -106,10 +104,6 @@ const identifyLifecycle = compose(
                 changeMousePointer('auto');
                 hideMarker();
                 purgeResults();
-            }
-            // reset current page on new requests set
-            if (setIndex && !isEqual(newProps.responses, responses)) {
-                setIndex(0);
             }
         }
     })

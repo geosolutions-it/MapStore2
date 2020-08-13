@@ -15,6 +15,7 @@ const { isPluginInContext } = require('./context');
 const { currentLocaleSelector } = require('./locale');
 const MapInfoUtils = require('../utils/MapInfoUtils');
 const {isCesium} = require('./maptype');
+const {isMouseMoveIdentifyActiveSelector: identifyFloatingTool } = require('../selectors/map');
 
 const {pluginsSelectorCreator} = require('./localConfig');
 /**
@@ -119,9 +120,10 @@ const validResponsesSelector = createSelector(
     requestsSelector,
     responsesSelector,
     generalInfoFormatSelector,
-    (requests, responses, format) => {
+    identifyFloatingTool,
+    (requests, responses, format, identifyFloating) => {
         const validatorFormat = MapInfoUtils.getValidator(format);
-        return requests.length === responses.length && validatorFormat.getValidResponses(responses);
+        return requests.length === responses.length && validatorFormat.getValidResponses(responses, identifyFloating);
     });
 
 const currentResponseSelector = createSelector(

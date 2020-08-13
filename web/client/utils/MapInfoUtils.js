@@ -163,7 +163,7 @@ const MapInfoUtils = {
             getNoValidResponses: () => []
         };
         return {
-            getValidResponses: (responses) => {
+            getValidResponses: (responses, identifyFloating = false) => {
                 return responses.reduce((previous, current) => {
                     if (current) {
                         let infoFormat;
@@ -175,7 +175,7 @@ const MapInfoUtils = {
                         if (current.queryParams && current.queryParams.hasOwnProperty('outputFormat')) {
                             infoFormat = current.queryParams.outputFormat;
                         }
-                        const valid = (FeatureInfoUtils.Validator[current.format || INFO_FORMATS_BY_MIME_TYPE[infoFormat] || INFO_FORMATS_BY_MIME_TYPE[format]] || defaultValidator).getValidResponses([current]);
+                        const valid = (FeatureInfoUtils.Validator[current.format || INFO_FORMATS_BY_MIME_TYPE[infoFormat] || INFO_FORMATS_BY_MIME_TYPE[format]] || defaultValidator).getValidResponses([current], identifyFloating);
                         return [...previous, ...valid];
                     }
                     return [...previous];
