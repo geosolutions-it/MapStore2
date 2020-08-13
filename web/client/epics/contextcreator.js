@@ -26,7 +26,7 @@ import {SAVE_CONTEXT, SAVE_TEMPLATE, LOAD_CONTEXT, LOAD_TEMPLATE, DELETE_TEMPLAT
     setWasTutorialShown, setTutorialStep} from '../actions/contextcreator';
 import {newContextSelector, resourceSelector, creationStepSelector, mapConfigSelector, mapViewerLoadedSelector, contextNameCheckedSelector,
     editedPluginSelector, editedCfgSelector, validationStatusSelector, parsedCfgSelector, cfgErrorSelector,
-    pluginsSelector, initialEnabledPluginsSelector, editedTemplateSelector, tutorialsSelector,
+    pluginsSelector, initialEnabledPluginsSelector, templatesSelector, editedTemplateSelector, tutorialsSelector,
     wasTutorialShownSelector} from '../selectors/contextcreator';
 import {CONTEXTS_LIST_LOADED} from '../actions/contextmanager';
 import {wrapStartStop} from '../observables/epics';
@@ -83,7 +83,17 @@ export const saveContextResource = (action$, store) => action$
         const plugins = pluginsSelector(state);
         const context = newContextSelector(state);
         const resource = resourceSelector(state);
-        const pluginsArray = flattenPluginTree(plugins).filter(plugin => plugin.enabled);
+        const templates = templatesSelector(state);
+        const pluginsArray = flattenPluginTree(plugins).filter(plugin => plugin.enabled).map(plugin => plugin.name === 'MapTemplates' ? ({
+            ...plugin,
+            pluginConfig: {
+                ...plugin.pluginConfig,
+                cfg: {
+                    ...(plugin.pluginConfig.cfg || {}),
+                    allowedTemplates: templates.filter(template => template.enabled).map(template => pick(template, 'id'))
+                }
+            }
+        }) : plugin);
         const unselectablePlugins = makePlugins(pluginsArray.filter(plugin => !plugin.isUserPlugin));
         const userPlugins = makePlugins(pluginsArray.filter(plugin => plugin.isUserPlugin));
 
@@ -91,8 +101,7 @@ export const saveContextResource = (action$, store) => action$
             ...context,
             mapConfig,
             plugins: {desktop: unselectablePlugins},
-            userPlugins,
-            templates: get(context, 'templates', []).filter(template => template.enabled).map(template => pick(template, 'id'))
+            userPlugins
         };
         const newResource = resource && resource.id ? {
             ...omit(resource, 'name', 'description'),
