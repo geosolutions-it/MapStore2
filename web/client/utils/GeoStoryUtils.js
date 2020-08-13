@@ -22,6 +22,7 @@ import isObject from "lodash/isObject";
 import includes from "lodash/includes";
 import replace from 'lodash/replace';
 import uuid from 'uuid';
+import { set } from '../utils/ImmutableUtils';
 
 export const EMPTY_CONTENT = "EMPTY_CONTENT";
 // Allowed StoryTypes
@@ -491,4 +492,37 @@ export const parseHashUrlScrollUpdate = (url, hash = '', storyId, sectionId, col
         }
     }
     return url;
+};
+
+/**
+ * Creates a configuration from localConfig object to be used by the webfontloader library
+ * @param {array} fontFamilies - font families configured from localConfig
+ * @param {function} activeCallback - call back function to run when fonts are successfully loaded
+ * @param {function} inactiveCallback - call back function to run when font loading fails
+ */
+export const createWebFontLoaderConfig = (fontFamilies, activeCallback, inactiveCallback) => {
+    const config = {
+        active: activeCallback,
+        inactive: inactiveCallback,
+        custom: {
+            families: [],
+            urls: []
+        }
+    };
+
+    fontFamilies.forEach((family, i) => {
+        config.custom.families[i] = family.family;
+        config.custom.urls[i] = family.src;
+    });
+
+    return config;
+};
+
+/**
+ * Creates an array with just font family names from localConfig
+ * @param {array} fontFamilies - font families configured from localConfig
+ * @return {array} - array of font family names
+ */
+export const extractFontNamesFromConfig = (fontFamilies) => {
+    return fontFamilies.map(family => family.family);
 };

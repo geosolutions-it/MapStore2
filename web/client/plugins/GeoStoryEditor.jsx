@@ -6,9 +6,10 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
+import WebFont from 'webfontloader';
 
 import {
     currentStorySelector,
@@ -22,7 +23,8 @@ import {
     isFocusOnContentSelector,
     settingsSelector,
     settingsChangedSelector,
-    isEditAllowedSelector
+    isEditAllowedSelector,
+    currentStoryFonts
 } from '../selectors/geostory';
 import geostory from '../reducers/geostory';
 import {
@@ -38,7 +40,8 @@ import {
 } from '../actions/geostory';
 
 import Builder from '../components/geostory/builder/Builder';
-import { Modes, scrollToContent } from '../utils/GeoStoryUtils';
+import { Modes, scrollToContent, createWebFontLoaderConfig, extractFontNamesFromConfig } from '../utils/GeoStoryUtils';
+import { basicError } from '../utils/NotificationUtils';
 import { createPlugin } from '../utils/PluginsUtils';
 import tooltip from '../components/misc/enhancers/tooltip';
 import { withRouter } from 'react-router';
@@ -91,6 +94,8 @@ const GeoStoryEditor = ({
     settings = {},
     settingsItems,
     selected,
+    fontFamilies = [],
+    storyFonts,
     setEditingMode = () => {},
     onToggleCardPreview = () => {},
     onToggleSettingsPanel = () => {},
@@ -99,41 +104,61 @@ const GeoStoryEditor = ({
     onSelect = () => {},
     onRemove = () => {},
     onUpdate = () => {},
-    onSort = () => {}
-}) => (mode === Modes.EDIT && !isFocused ? <div
-    key="left-column"
-    className="ms-geostory-editor"
-    style={{ order: -1, width: 400, position: 'relative' }}>
-    <Builder
-        currentPage={currentPage}
-        isCollapsed={isCollapsed}
-        isSettingsChanged={isSettingsChanged}
-        isSettingsEnabled={isSettingsEnabled}
-        isToolbarEnabled={isToolbarEnabled}
-        mode={mode}
-        scrollTo={(id, options = { behavior: "smooth" }) => {
-            scrollToContent(id, options);
-        }}
-        selected={selected}
-        settings={settings}
-        settingsItems={settingsItems}
-        story={story}
+    onSort = () => {},
+    onBasicError = () => {}
+}) => {
+    useEffect(() => {
+        if (fontFamilies.length > 0) {
+            WebFont.load(createWebFontLoaderConfig(
+                fontFamilies,
+                () => onUpdateSettings("fontFamilies", extractFontNamesFromConfig(fontFamilies)),
+                () => onBasicError(
+                    {
+                        message: 'geostory.builder.settings.webFontLoadError',
+                        autoDismiss: 6,
+                        position: 'tc'
+                    }
+                )
+            ));
+        }
+    }, [ fontFamilies ]);
 
-        setEditing={setEditingMode}
-        onRemove={onRemove}
-        onSelect={onSelect}
-        onSort={onSort}
-        onToggleCardPreview={onToggleCardPreview}
-        onToggleSettings={onToggleSettings}
-        onToggleSettingsPanel={onToggleSettingsPanel}
-        onUpdate={onUpdate}
-        onUpdateSettings={onUpdateSettings}
-    />
-</div> : null);
+    return mode === Modes.EDIT && !isFocused ? <div
+        key="left-column"
+        className="ms-geostory-editor"
+        style={{ order: -1, width: 400, position: 'relative' }}>
+        <Builder
+            currentPage={currentPage}
+            isCollapsed={isCollapsed}
+            isSettingsChanged={isSettingsChanged}
+            isSettingsEnabled={isSettingsEnabled}
+            isToolbarEnabled={isToolbarEnabled}
+            mode={mode}
+            scrollTo={(id, options = { behavior: "smooth" }) => {
+                scrollToContent(id, options);
+            }}
+            selected={selected}
+            settings={settings}
+            settingsItems={settingsItems}
+            story={story}
+            storyFonts={storyFonts}
+            setEditing={setEditingMode}
+            onRemove={onRemove}
+            onSelect={onSelect}
+            onSort={onSort}
+            onToggleCardPreview={onToggleCardPreview}
+            onToggleSettings={onToggleSettings}
+            onToggleSettingsPanel={onToggleSettingsPanel}
+            onUpdate={onUpdate}
+            onUpdateSettings={onUpdateSettings}
+        />
+    </div> : null;
+};
 /**
  * Plugin for GeoStory side panel editor
  * @name GeoStoryEditor
  * @memberof plugins
+ * @prop {object[]} cfg.fontFamilies: A list of objects with font family names and sources where to load them from e.g. [{"family": "Comic sans", "src": "link to source"}]
  */
 export default createPlugin('GeoStoryEditor', {
     component: connect(
@@ -148,7 +173,8 @@ export default createPlugin('GeoStoryEditor', {
             isToolbarEnabled: isToolbarEnabledSelector,
             selected: selectedCardSelector,
             isSettingsEnabled: isSettingsEnabledSelector,
-            isFocused: isFocusOnContentSelector
+            isFocused: isFocusOnContentSelector,
+            storyFonts: currentStoryFonts
         }), {
             setEditingMode: setEditing,
             onUpdateSettings: updateSetting,
@@ -158,7 +184,8 @@ export default createPlugin('GeoStoryEditor', {
             onRemove: remove,
             onSelect: selectCard,
             onSort: move,
-            onUpdate: update
+            onUpdate: update,
+            onBasicError: basicError
         }
     )(GeoStoryEditor),
     containers: {

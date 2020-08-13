@@ -18,12 +18,33 @@ import CustomThemePicker from '../common/CustomThemePicker';
 import Select from 'react-select';
 const InputLocalized = localizedProps("placeholder")(FormControl);
 
+const storyTitleFontSizes = [
+    {value: "14px", label: "14px"},
+    {value: "16px", label: "16px"},
+    {value: "18px", label: "18px"},
+    {value: "24px", label: "24px"},
+    {value: "28px", label: "28px"}
+];
+
+const defaultStoryFontFamilies = [
+    "Raleway",
+    "sans-serif",
+    "Helvetica Neue",
+    "Georgia",
+    "Menlo"
+];
+
+const getSelectOptions = (opts) => {
+    return opts.map(opt => ({label: opt, value: opt}));
+};
+
 /**
  * Shows list of settings for the story
  */
 export default ({
     items = [],
     settings,
+    storyFonts,
     onToggleSettings = () => {},
     onUpdateSettings = () => {}
 }) => {
@@ -33,13 +54,13 @@ export default ({
 
     return (<Form className="ms-geostory-settings">
         <div>
-            <h4>Story theme</h4>
+            <h4><Message msgId="geostory.builder.settings.storyTheme"/></h4>
             <hr />
         </div>
         <FormGroup>
-            <div style={{ marginBottom: "10px"}}>
+            <div style={{ marginBottom: "10px", fontSize: "15px"}}>
                 <ControlLabel>
-                    <bold>Default theme</bold>
+                    <Message msgId="geostory.builder.settings.theme"/>
                 </ControlLabel>
             </div>
             <CustomThemePicker
@@ -51,19 +72,20 @@ export default ({
         </FormGroup>
         <FormGroup>
             <div className="ms-font-select">
-                <div>Font Family</div>
+                <div><Message msgId="geostory.builder.settings.fontFamily"/></div>
                 <div>
                     <Select
-                        value={settings?.theme?.general?.fontFamily || "Comic Sans"}
+                        value={settings?.theme?.general?.fontFamily}
                         onChange={event => onUpdateSettings("theme", {...settings?.theme, general: { ...settings?.theme?.general, fontFamily: event.value } })}
-                        options={[{value: "Lemonada", label: "Lemonada"}, {value: "Comic Sans", label: "Comic sans"}]}
+                        // options={storyFontFamilies}
+                        options={getSelectOptions([...storyFonts, ...defaultStoryFontFamilies])}
                     />
                 </div>
             </div>
         </FormGroup>
         <FormGroup>
-            <div style={{ marginBottom: "10px"}}>
-                <ControlLabel>Overlays</ControlLabel>
+            <div style={{ marginBottom: "10px", fontSize: "15px" }}>
+                <ControlLabel><Message msgId="geostory.builder.settings.overlay"/></ControlLabel>
             </div>
             <CustomThemePicker
                 themeStyle={settings?.theme?.overlay}
@@ -71,11 +93,11 @@ export default ({
                 onChange={(overlay) => onUpdateSettings("theme", { ...settings?.theme, overlay })}/>
         </FormGroup>
         <div>
-            <h4>Story header</h4>
+            <h4><Message msgId="geostory.builder.settings.storyHeader"/></h4>
             <hr />
         </div>
         <FormGroup>
-            <div style={{ marginBottom: "10px"}}>
+            <div style={{ marginBottom: "10px", fontSize: "15px"}}>
                 <ControlLabel><Message msgId="geostory.builder.settings.title"/></ControlLabel>
                 <SwitchButton
                     onChange={() => onToggleSettings("isTitleEnabled")}
@@ -94,14 +116,18 @@ export default ({
         </FormGroup>
         <FormGroup>
             <div className="ms-font-select">
-                <div>Font size</div>
+                <div><Message msgId="geostory.builder.settings.fontSize"/></div>
                 <div>
-                    <Select />
+                    <Select
+                        value={settings.storyTitleFontSize}
+                        onChange={event => onUpdateSettings("storyTitleFontSize", event.value)}
+                        options={storyTitleFontSizes}
+                    />
                 </div>
             </div>
         </FormGroup>
         <FormGroup>
-            <div style={{ marginBottom: "10px"}}>
+            <div style={{ marginBottom: "10px", fontSize: "15px"}}>
                 <ControlLabel><Message msgId="geostory.builder.settings.logo"/></ControlLabel>
                 <SwitchButton
                     onChange={() => onToggleSettings("isLogoEnabled")}
@@ -140,7 +166,7 @@ export default ({
             }
         </FormGroup>
         <FormGroup>
-            <div style={{ marginBottom: "10px"}}>
+            <div style={{ marginBottom: "10px", fontSize: "15px"}}>
                 <ControlLabel><Message msgId="geostory.builder.settings.navbar"/></ControlLabel>
                 <SwitchButton
                     onChange={() => onToggleSettings("isNavbarEnabled")}
@@ -158,104 +184,5 @@ export default ({
                 onExpand={expandVal => setExpanded(expandVal)}
             />)}
         </FormGroup>
-        {/* <div className="text-center">
-            <h4><Message msgId="geostory.builder.settings.headerTitle"/></h4>
-        </div>
-        <FormGroup>
-            <div style={{ marginBottom: "10px"}}>
-                <ControlLabel><Message msgId="geostory.builder.settings.title"/></ControlLabel>
-                <SwitchButton
-                    onChange={() => onToggleSettings("isTitleEnabled")}
-                    className="ms-geostory-settings-switch"
-                    checked={settings.isTitleEnabled}
-                />
-            </div>
-            <InputLocalized
-                disabled={!settings.isTitleEnabled}
-                value={storyTitle}
-                onChange={evt => setStoryTitle(evt.target.value) }
-                onBlur={evt => onUpdateSettings("storyTitle", evt.target.value) }
-                placeholder="geostory.builder.settings.titlePlaceholder"
-                style = {{ marginTop: "10px"}}
-            />
-        </FormGroup>
-        <FormGroup>
-            <div style={{ marginBottom: "10px"}}>
-                <ControlLabel><Message msgId="geostory.builder.settings.theme"/></ControlLabel>
-            </div>
-            <CustomThemePicker
-                themeStyle={settings?.theme?.general}
-                placement="right"
-                disableBackgroundAlpha
-                disableShadow
-                onChange={(general) => onUpdateSettings("theme", { ...settings?.theme, general })}/>
-        </FormGroup>
-        <FormGroup>
-            <div style={{ marginBottom: "10px"}}>
-                <ControlLabel><Message msgId="geostory.builder.settings.overlay"/></ControlLabel>
-            </div>
-            <CustomThemePicker
-                themeStyle={settings?.theme?.overlay}
-                placement="right"
-                onChange={(overlay) => onUpdateSettings("theme", { ...settings?.theme, overlay })}/>
-        </FormGroup>
-        <FormGroup>
-            <div style={{ marginBottom: "10px"}}>
-                <ControlLabel><Message msgId="geostory.builder.settings.logo"/></ControlLabel>
-                <SwitchButton
-                    onChange={() => onToggleSettings("isLogoEnabled")}
-                    className="ms-geostory-settings-switch"
-                    checked={settings.isLogoEnabled}
-                />
-            </div>
-            {settings.isLogoEnabled && (
-                <>
-                <Thumbnail
-                    thumbnail={settings?.thumbnail?.data || settings?.thumbnail?.url}
-                    onUpdate={(data, files) => {
-                        onUpdateSettings("thumbnail", { data, url: files?.[0]?.preview });
-                        onUpdateSettings("thumbnailErrors", undefined);
-                    }}
-                    onRemove={() => {
-                        onUpdateSettings("thumbnail", undefined);
-                        onUpdateSettings("thumbnailErrors", undefined);
-                    }}
-                    onError={(errors) => onUpdateSettings("thumbnailErrors", errors)}
-                    message={<Message msgId="geostory.builder.settings.logoPlaceholder"/>}
-                    thumbnailOptions={{
-                        width: 300,
-                        height: 150,
-                        type: 'image/png',
-                        contain: true
-                    }}
-                />
-                {settings.thumbnailErrors && settings.thumbnailErrors.length > 0 &&
-                    <Alert bsStyle="danger" className="text-center">
-                        <div><Message msgId="map.error"/></div>
-                        {settings.thumbnailErrors.indexOf('FORMAT') !== -1 && <div><Message msgId="map.errorFormat" /></div>}
-                        {settings.thumbnailErrors.indexOf('SIZE') !== -1 && <div><Message msgId="map.errorSize" /></div>}
-                    </Alert>}
-                </>)
-            }
-        </FormGroup>
-        <FormGroup>
-            <div style={{ marginBottom: "10px"}}>
-                <ControlLabel><Message msgId="geostory.builder.settings.navbar"/></ControlLabel>
-                <SwitchButton
-                    onChange={() => onToggleSettings("isNavbarEnabled")}
-                    className="ms-geostory-settings-switch"
-                    checked={settings.isNavbarEnabled}
-                />
-            </div>
-            {   settings.isNavbarEnabled && (<CheckboxTree
-                showNodeIcon={false}
-                nativeCheckboxes
-                nodes={items}
-                checked={settings.checked || []}
-                expanded={expanded}
-                onCheck={checkedVal => onUpdateSettings("checked", checkedVal)}
-                onExpand={expandVal => setExpanded(expandVal)}
-            />)}
-        </FormGroup> */}
     </Form>);
 };

@@ -30,7 +30,9 @@ import {
     testRegex,
     isWebPageSection,
     getWebPageComponentHeight,
-    parseHashUrlScrollUpdate
+    parseHashUrlScrollUpdate,
+    createWebFontLoaderConfig,
+    extractFontNamesFromConfig
 } from "../GeoStoryUtils";
 
 describe("GeoStory Utils", () => {
@@ -467,6 +469,46 @@ describe("GeoStory Utils", () => {
             const hash = '#/geostory/shared/111/';
             const storyId = '111';
             expect(parseHashUrlScrollUpdate(url, hash, storyId, null, null)).toBe(url);
+        });
+    });
+    describe('createWebFontLoaderConfig', () => {
+        it('returns a config for webfontloader', () => {
+            const fontFamilyConf = [
+                {
+                    family: "fam1",
+                    src: "link-fam1"
+                },
+                {
+                    family: "fam2",
+                    src: "link-fam2"
+                }
+            ];
+
+            const noop = () => {};
+
+            expect(createWebFontLoaderConfig(fontFamilyConf, noop, noop)).toEqual({
+                active: noop,
+                inactive: noop,
+                custom: {
+                    families: ["fam1", "fam2"],
+                    urls: ["link-fam1", "link-fam2"]
+                }
+            });
+        });
+    });
+    describe('extractFontNamesFromConfig', () => {
+        it('returns an array of font names', () => {
+            const fontFamilyConf = [
+                {
+                    family: "fam1",
+                    src: "link-fam1"
+                },
+                {
+                    family: "fam2",
+                    src: "link-fam2"
+                }
+            ];
+            expect(extractFontNamesFromConfig(fontFamilyConf)).toEqual(["fam1", "fam2"]);
         });
     });
 });
