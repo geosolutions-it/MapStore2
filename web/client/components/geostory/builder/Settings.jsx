@@ -77,7 +77,6 @@ export default ({
                     <Select
                         value={settings?.theme?.general?.fontFamily}
                         onChange={event => onUpdateSettings("theme", {...settings?.theme, general: { ...settings?.theme?.general, fontFamily: event.value } })}
-                        // options={storyFontFamilies}
                         options={getSelectOptions([...storyFonts, ...defaultStoryFontFamilies])}
                     />
                 </div>
