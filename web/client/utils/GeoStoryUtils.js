@@ -22,7 +22,6 @@ import isObject from "lodash/isObject";
 import includes from "lodash/includes";
 import replace from 'lodash/replace';
 import uuid from 'uuid';
-import { set } from '../utils/ImmutableUtils';
 
 export const EMPTY_CONTENT = "EMPTY_CONTENT";
 // Allowed StoryTypes
