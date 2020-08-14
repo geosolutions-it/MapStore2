@@ -15,7 +15,7 @@ const assign = require('object-assign');
 require('babel-polyfill');
 
 describe('Test the mapInfo reducer', () => {
-    let appState = {requests: [{reqId: 10, request: "test"}, {reqId: 11, request: "test1"}]};
+    let appState = {configuration: {infoFormat: 'text/plain'}, requests: [{reqId: 10, request: "test"}, {reqId: 11, request: "test1"}]};
 
     it('returns original state on unrecognized action', () => {
         let state = mapInfo(1, {type: 'UNKNOWN'});
@@ -102,6 +102,7 @@ describe('Test the mapInfo reducer', () => {
         expect(state.responses[0].response).toBe("data");
         expect(state.responses[0].queryParams).toBe("params");
         expect(state.responses[0].layerMetadata).toBe("meta");
+        expect(state.index).toBe(0);
 
         state = mapInfo(assign({}, appState, {responses: []}), testAction);
         expect(state.responses).toExist();
@@ -109,6 +110,7 @@ describe('Test the mapInfo reducer', () => {
         expect(state.responses[0].response).toBe("data");
         expect(state.responses[0].queryParams).toBe("params");
         expect(state.responses[0].layerMetadata).toBe("meta");
+        expect(state.index).toBe(0);
 
         state = mapInfo(assign({}, appState, {responses: ["test"]}), {...testAction, reqId: 11});
         expect(state.responses).toExist();
@@ -117,6 +119,7 @@ describe('Test the mapInfo reducer', () => {
         expect(state.responses[1].response).toBe("data");
         expect(state.responses[1].queryParams).toBe("params");
         expect(state.responses[1].layerMetadata).toBe("meta");
+        expect(state.index).toBe(1);
     });
 
     it('creates a feature info data from vector info request', () => {

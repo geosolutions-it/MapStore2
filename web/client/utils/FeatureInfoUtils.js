@@ -49,9 +49,7 @@ const Validator = {
          *Parse the HTML to get only the valid html responses
          */
         getValidResponses(responses, identifyFloating) {
-            if (identifyFloating) {
-                return responses.filter(parseHTMLResponse);
-            }
+            if (identifyFloating) return responses.filter(parseHTMLResponse);
             return responses;
         },
         /**
@@ -66,10 +64,9 @@ const Validator = {
          *Parse the TEXT to get only the valid text responses
          */
         getValidResponses(responses, identifyFloating) {
-            if (identifyFloating) {
-                return responses.filter((res) => res.response !== "" && (typeof res.response === "string" && res.response.indexOf("no features were found") !== 0) && (typeof res.response === "string" && res.response.indexOf("<?xml") !== 0));
-            }
-            return responses.filter((res) => res.response !== "" && (typeof res.response === "string" && res.response.indexOf("<?xml") !== 0));
+            let result = responses.filter(({response}) => response !== "" && (typeof response === "string" && response.indexOf("<?xml") !== 0));
+            if (identifyFloating) result = result.filter(({response}) => (typeof response === "string" && response.indexOf("no features were found") !== 0));
+            return result;
         },
         /**
          * Parse the TEXT to get only the NOT valid text responses
@@ -83,10 +80,9 @@ const Validator = {
          *Parse the JSON to get only the valid json responses
          */
         getValidResponses(responses, identifyFloating) {
-            if (identifyFloating) {
-                return responses.filter((res) => res.response && res.response.features && res.response.features.length);
-            }
-            return responses.filter((res) => res.response && res.response.features);
+            let result = responses.filter(({response}) => response && response.features);
+            if (identifyFloating) result = result.filter(({response}) => identifyFloating && response.features.length);
+            return result;
         },
         /**
          * Parse the JSON to get only the NOT valid json responses
@@ -100,10 +96,9 @@ const Validator = {
          *Parse the JSON to get only the valid json responses
          */
         getValidResponses(responses, identifyFloating) {
-            if (identifyFloating) {
-                return responses.filter((res) => res.response && res.response.features && res.response.features.length);
-            }
-            return responses.filter((res) => res.response && res.response.features);
+            let result = responses.filter(({response}) => response && response.features);
+            if (identifyFloating) result = result.filter(({response}) => identifyFloating && response.features.length);
+            return result;
         },
         /**
          * Parse the JSON to get only the NOT valid json responses

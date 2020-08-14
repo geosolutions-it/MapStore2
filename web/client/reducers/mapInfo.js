@@ -46,6 +46,7 @@ function receiveResponse(state, action, type) {
 
     if (requestIndex !== -1) {
         const responses = state.responses || [];
+
         // Add response in same order it was requested
         responses[requestIndex] = {
             response: action[type],
@@ -56,8 +57,11 @@ function receiveResponse(state, action, type) {
         const {infoFormat, trigger} = state.configuration;
         const validResponse = getValidator(infoFormat)?.
             getValidResponses([responses[requestIndex]], true);
-        // Update index when first response is received
+
+        // Update index when first response received is valid
         const updateIndex = state.index === undefined && !!validResponse.length;
+
+        // Reset index for identify floating viewer
         return assign({}, state, {
             responses: [...responses],
             ...(updateIndex && {index: trigger === "hover" ? 0 : requestIndex})

@@ -8,7 +8,7 @@
 
 const {lifecycle, withHandlers, compose} = require('recompose');
 const {set} = require('../../../../utils/ImmutableUtils');
-const {isEqual, isNil, isNaN} = require('lodash');
+const {isNil, isNaN} = require('lodash');
 
 /**
  * Enhancer to enable set index only if Component has header
