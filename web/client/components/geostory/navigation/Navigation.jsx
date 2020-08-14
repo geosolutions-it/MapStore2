@@ -34,8 +34,7 @@ export default ({
     totalItems = 1,
     currentPosition = 0,
     router,
-    buttons = [],
-    geostoryId
+    buttons = []
 }) => {
     const theme = settings?.theme?.general;
     const {
@@ -106,7 +105,6 @@ export default ({
                             <ScrollMenu
                                 items={navigableItems}
                                 currentPage={currentPage}
-                                key={geostoryId}
                                 scrollTo={scrollTo}
                                 getItemStyle={(isSelected) => !isSelected
                                     ? {

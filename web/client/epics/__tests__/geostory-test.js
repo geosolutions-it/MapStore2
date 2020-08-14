@@ -244,16 +244,18 @@ describe('Geostory Epics', () => {
                     switch (a.type) {
                     case LOADING_GEOSTORY:
                         expect(a.name).toBe("loading");
-                        expect(a.value).toBe(i === 0);
+                        expect(a.value).toBe(i === 1);
                         break;
                     case SET_CURRENT_STORY:
-                        if (a.story) {
+                        if (a.story.sections) {
                             a.story.sections[0].id = get(TEST_STORY, 'sections[0].id');
                             a.story.sections[1].id = get(TEST_STORY, 'sections[1].id');
                             a.story.sections[2].id = get(TEST_STORY, 'sections[2].id');
                             a.story.sections[3].id = get(TEST_STORY, 'sections[3].id');
+                            expect(a.story).toEqual(TEST_STORY);
+                        } else {
+                            expect(a.story).toEqual({});
                         }
-                        expect(a.story).toEqual(TEST_STORY);
                         break;
                     case SET_RESOURCE: {
                         expect(a.resource).toExist();
@@ -290,16 +292,18 @@ describe('Geostory Epics', () => {
                     switch (a.type) {
                     case LOADING_GEOSTORY:
                         expect(a.name).toBe("loading");
-                        expect(a.value).toBe(i === 0);
+                        expect(a.value).toBe(i === 1);
                         break;
                     case SET_CURRENT_STORY:
-                        if (a.story) {
+                        if (a.story.sections) {
                             a.story.sections[0].id = get(TEST_STORY, 'sections[0].id');
                             a.story.sections[1].id = get(TEST_STORY, 'sections[1].id');
                             a.story.sections[2].id = get(TEST_STORY, 'sections[2].id');
                             a.story.sections[3].id = get(TEST_STORY, 'sections[3].id');
+                            expect(a.story).toEqual(TEST_STORY);
+                        } else {
+                            expect(a.story).toEqual({});
                         }
-                        expect(a.story).toEqual(TEST_STORY);
                         break;
                     case SET_RESOURCE: {
                         expect(a.resource).toExist();
@@ -336,7 +340,7 @@ describe('Geostory Epics', () => {
                     switch (a.type) {
                     case LOADING_GEOSTORY:
                         expect(a.name).toBe("loading");
-                        expect(a.value).toBe(i === 0);
+                        expect(a.value).toBe(i === 1);
                         break;
                     case SET_CURRENT_STORY:
                         expect(a.story).toEqual({});
@@ -371,7 +375,7 @@ describe('Geostory Epics', () => {
                     switch (a.type) {
                     case LOADING_GEOSTORY:
                         expect(a.name).toBe("loading");
-                        expect(a.value).toBe(i === 0);
+                        expect(a.value).toBe(i === 1);
                         break;
                     case LOAD_GEOSTORY_ERROR:
                         expect(a.error.status).toEqual(403);
@@ -403,7 +407,7 @@ describe('Geostory Epics', () => {
                     switch (a.type) {
                     case LOADING_GEOSTORY:
                         expect(a.name).toBe("loading");
-                        expect(a.value).toBe(i === 0);
+                        expect(a.value).toBe(i === 1);
                         break;
                     case SET_CURRENT_STORY:
                         expect(a.story).toEqual({});
@@ -437,7 +441,7 @@ describe('Geostory Epics', () => {
                     switch (a.type) {
                     case LOADING_GEOSTORY:
                         expect(a.name).toBe("loading");
-                        expect(a.value).toBe(i === 0);
+                        expect(a.value).toBe(i === 1);
                         break;
                     case SET_CURRENT_STORY:
                         expect(a.story).toEqual({});
@@ -475,7 +479,7 @@ describe('Geostory Epics', () => {
                     switch (a.type) {
                     case LOADING_GEOSTORY:
                         expect(a.name).toBe("loading");
-                        expect(a.value).toBe(i === 0);
+                        expect(a.value).toBe(i === 1);
                         break;
                     case SET_CURRENT_STORY:
                         expect(a.story).toEqual({});
@@ -504,7 +508,7 @@ describe('Geostory Epics', () => {
                     switch (a.type) {
                     case LOADING_GEOSTORY:
                         expect(a.name).toBe("loading");
-                        expect(a.value).toBe(i === 0);
+                        expect(a.value).toBe(i === 1);
                         break;
                     case SET_CURRENT_STORY:
                         expect(a.story).toEqual({});
@@ -528,7 +532,7 @@ describe('Geostory Epics', () => {
             });
         });
         it('should not change mode on story with id number, if user has permission with loadGeostoryEpic', (done) => {
-            const NUM_ACTIONS = 5;
+            const NUM_ACTIONS = 6;
             mockAxios.onGet().reply(200, TEST_STORY);
             testEpic(
                 loadGeostoryEpic,
@@ -538,6 +542,7 @@ describe('Geostory Epics', () => {
                     try {
                         expect(actions.length).toBe(NUM_ACTIONS);
                         expect(actions.map(({ type }) => type)).toEqual([
+                            SET_CURRENT_STORY,
                             LOADING_GEOSTORY,
                             GEOSTORY_LOADED,
                             SET_CURRENT_STORY,
@@ -560,7 +565,7 @@ describe('Geostory Epics', () => {
             );
         });
         it('should change mode to VIEW on story with id number, if user has not permission and current mode is EDIT with loadGeostoryEpic', (done) => {
-            const NUM_ACTIONS = 6;
+            const NUM_ACTIONS = 7;
             mockAxios.onGet().reply(200, TEST_STORY);
             testEpic(
                 loadGeostoryEpic,
@@ -570,6 +575,7 @@ describe('Geostory Epics', () => {
                     try {
                         expect(actions.length).toBe(NUM_ACTIONS);
                         expect(actions.map(({ type }) => type)).toEqual([
+                            SET_CURRENT_STORY,
                             LOADING_GEOSTORY,
                             CHANGE_MODE,
                             GEOSTORY_LOADED,
@@ -578,7 +584,7 @@ describe('Geostory Epics', () => {
                             LOADING_GEOSTORY
                         ]);
 
-                        const changeModeAction = actions[1];
+                        const changeModeAction = actions[2];
                         expect(changeModeAction.mode).toBe(Modes.VIEW);
 
                     } catch (e) {
@@ -599,7 +605,7 @@ describe('Geostory Epics', () => {
             );
         });
         it('should change mode to VIEW on story with id number, if user has permission and current mode is EDIT with loadGeostoryEpic', (done) => {
-            const NUM_ACTIONS = 6;
+            const NUM_ACTIONS = 7;
             mockAxios.onGet().reply(200, { ...TEST_STORY, ShortResource: { canEdit: true } });
             testEpic(
                 loadGeostoryEpic,
@@ -609,6 +615,7 @@ describe('Geostory Epics', () => {
                     try {
                         expect(actions.length).toBe(NUM_ACTIONS);
                         expect(actions.map(({ type }) => type)).toEqual([
+                            SET_CURRENT_STORY,
                             LOADING_GEOSTORY,
                             CHANGE_MODE,
                             GEOSTORY_LOADED,
@@ -617,7 +624,7 @@ describe('Geostory Epics', () => {
                             LOADING_GEOSTORY
                         ]);
 
-                        const changeModeAction = actions[1];
+                        const changeModeAction = actions[2];
                         expect(changeModeAction.mode).toBe(Modes.EDIT);
 
                     } catch (e) {

@@ -357,7 +357,8 @@ export const loadGeostoryEpic = (action$, {getState = () => {}}) => action$
                         loadGeostoryError({...e, messageId: message})
                     );
                 }
-            ));
+            ))
+            .startWith(setCurrentStory({}));
     });
 /**
  * Triggers reload of last loaded story when user login-logout

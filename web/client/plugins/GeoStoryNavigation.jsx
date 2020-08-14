@@ -17,8 +17,7 @@ import {
     modeSelector,
     navigableItemsSelectorCreator,
     settingsSelector,
-    totalItemsSelector,
-    geostoryIdSelector
+    totalItemsSelector
 } from '../selectors/geostory';
 import {
     pathnameSelector,
@@ -36,8 +35,7 @@ const GeoStoryNavigation = ({
     navigableItems = [],
     pathname,
     search,
-    items = [],
-    geostoryId
+    items = []
 }) => {
 
     // get all buttons from other plugins via items
@@ -54,7 +52,6 @@ const GeoStoryNavigation = ({
             currentPage={currentPage}
             currentPosition={currentPosition}
             totalItems={totalItems}
-            geostoryId={geostoryId}
             scrollTo={(id, options = { behavior: "smooth" }) => {
                 scrollToContent(id, options);
             }}
@@ -78,8 +75,7 @@ export default createPlugin('GeoStoryNavigation', {
             totalItems: totalItemsSelector,
             navigableItems: navigableItemsSelectorCreator({includeAlways: false}),
             pathname: pathnameSelector,
-            search: searchSelector,
-            geostoryId: geostoryIdSelector
+            search: searchSelector
         })
     )(GeoStoryNavigation),
     reducers: {
