@@ -13,7 +13,7 @@ const HTML = require('../../../components/I18N/HTML');
 const Message = require('../../../components/I18N/Message');
 const {Alert, Panel, Accordion} = require('react-bootstrap');
 const ViewerPage = require('./viewers/ViewerPage');
-const {isEqual, isEmpty} = require('lodash');
+const {isEmpty} = require('lodash');
 const {getFormatForResponse} = require('../../../utils/IdentifyUtils');
 
 class DefaultViewer extends React.Component {
@@ -62,13 +62,6 @@ class DefaultViewer extends React.Component {
         setIndex: () => {}
     };
 
-    UNSAFE_componentWillReceiveProps(nextProps) {
-        // reset current page on new requests set
-        if (!isEqual(nextProps.responses, this.props.responses)) {
-            this.props.setIndex(0); // TODO CHECK
-        }
-    }
-
     shouldComponentUpdate(nextProps) {
         return nextProps.responses !== this.props.responses || nextProps.missingResponses !== this.props.missingResponses || nextProps.index !== this.props.index;
     }
@@ -81,13 +74,21 @@ class DefaultViewer extends React.Component {
         const validResponses = validator.getValidResponses(this.props.responses, this.props.identifyFloating);
         const invalidResponses = validator.getNoValidResponses(this.props.responses);
         const emptyResponses = this.props.requests.length === invalidResponses.length;
-        const currResponse = this.formattedResponse(validResponses[this.props.index]);
+        const currResponse = this.getCurrentResponse(validResponses[this.props.index]);
         return {
             validResponses,
             currResponse,
             emptyResponses,
             invalidResponses
         };
+    }
+
+    /**
+     * Identify current response is valid
+     */
+    getCurrentResponse = (response) => {
+        const validator = this.props.validator(this.props.format);
+        return validator.getValidResponses([response], true);
     }
 
     renderEmptyLayers = () => {
@@ -187,14 +188,6 @@ class DefaultViewer extends React.Component {
                 }
             </div>
         );
-    }
-
-    /**
-     * Display empty content when layer has no features
-     */
-    formattedResponse = (response) => {
-        const validator = this.props.validator(this.props.format);
-        return validator.getValidResponses([response], true);
     }
 }
 

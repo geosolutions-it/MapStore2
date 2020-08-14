@@ -53,14 +53,14 @@ function receiveResponse(state, action, type) {
             layerMetadata: action.layerMetadata,
             layer: action.layer
         };
-        const {info_format: format} = action.requestParams;
-        const validResponse = getValidator(format)?.
+        const {infoFormat, trigger} = state.configuration;
+        const validResponse = getValidator(infoFormat)?.
             getValidResponses([responses[requestIndex]], true);
         // Update index when first response is received
         const updateIndex = state.index === undefined && !!validResponse.length;
         return assign({}, state, {
             responses: [...responses],
-            ...(updateIndex && {index: requestIndex})
+            ...(updateIndex && {index: trigger === "hover" ? 0 : requestIndex})
         });
     }
     return state;
