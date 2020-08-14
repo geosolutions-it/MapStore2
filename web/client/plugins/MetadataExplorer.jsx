@@ -18,7 +18,6 @@ const CatalogServiceEditor = require('../components/catalog/CatalogServiceEditor
 const {Glyphicon, Panel} = require('react-bootstrap');
 const ContainerDimensions = require('react-container-dimensions').default;
 const {changeLayerProperties} = require('../actions/layers');
-const { changeWMSTileSize } = require('../actions/catalog');
 const {addService, deleteService, textSearch, changeCatalogFormat, changeCatalogMode,
     changeUrl, changeTitle, changeServiceProperty, changeType, changeServiceFormat, changeSelectedService,
     addLayer, addLayerError, focusServicesList, changeText,
@@ -234,7 +233,6 @@ const MetadataExplorerPlugin = connect(metadataExplorerSelector, {
     onToggle: toggleControl.bind(null, 'backgroundSelector', null),
     onLayerChange: setControlProperty.bind(null, 'backgroundSelector'),
     onStartChange: setControlProperty.bind(null, 'backgroundSelector', 'start'),
-    onChangeWMSTileSize: changeWMSTileSize
 })(MetadataExplorerComponent);
 const API = require('../api/catalog').default;
 

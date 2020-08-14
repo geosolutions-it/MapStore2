@@ -58,7 +58,6 @@ export const SET_LOADING = 'CATALOG:SET_LOADING';
 export const TOGGLE_TEMPLATE = 'CATALOG:TOGGLE_TEMPLATE';
 export const TOGGLE_THUMBNAIL = 'CATALOG:TOGGLE_THUMBNAIL';
 export const TOGGLE_ADVANCED_SETTINGS = 'CATALOG:TOGGLE_ADVANCED_SETTINGS';
-export const CHANGE_WMS_LAYER_TILE_SIZE = 'CATALOG:CHANGE_WMS_LAYER_TILE_SIZE';
 
 /**
  * Adds a list of layers from the given catalogs to the map
@@ -318,11 +317,4 @@ export function recordsNotFound(records = "") {
         message: "catalog.notification.errorSearchingRecords",
         values: {records}
     });
-}
-
-export function changeWMSTileSize(size = 256) {
-    return {
-        type: CHANGE_WMS_LAYER_TILE_SIZE,
-        size
-    };
 }

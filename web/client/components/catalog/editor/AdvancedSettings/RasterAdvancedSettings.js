@@ -22,7 +22,7 @@ export default ({
     service,
     formatOptions,
     onChangeServiceFormat = () => { },
-    onChangeWMSTileSize = () => {},
+    onChangeServiceProperty = () => {},
     tileSizeOptions,
     currentWMSCatalogLayerSize,
     selectedService,
@@ -50,7 +50,7 @@ export default ({
                 <Select
                     value={getTileSizeSelectOptions([service.layerOptions?.tileSize || 256])[0]}
                     options={tileSelectOptions}
-                    onChange={event => onChangeWMSTileSize(event && event.value)} />
+                    onChange={event => onChangeServiceProperty("layerOptions", { tileSize: event && event.value })} />
             </Col >
         </FormGroup>
     </CommonAdvancedSettings>);

@@ -45,7 +45,6 @@ export default ({
     onAddService = () => {},
     onDeleteService = () => {},
     onChangeCatalogMode = () => {},
-    onChangeWMSTileSize = () => {},
     selectedService,
     isLocalizedLayerStylesEnabled,
     tileSizeOptions = [256],
@@ -80,7 +79,6 @@ export default ({
                 onChangeServiceProperty={onChangeServiceProperty}
                 onToggleTemplate={onToggleTemplate}
                 onToggleThumbnail={onToggleThumbnail}
-                onChangeWMSTileSize={onChangeWMSTileSize}
                 isLocalizedLayerStylesEnabled={isLocalizedLayerStylesEnabled}
                 tileSizeOptions={tileSizeOptions}
                 currentWMSCatalogLayerSize={layerOptions.tileSize ? layerOptions.tileSize : 256}

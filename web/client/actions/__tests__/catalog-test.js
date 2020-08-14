@@ -22,7 +22,7 @@ const {
     changeServiceProperty, CHANGE_SERVICE_PROPERTY, deleteCatalogService, DELETE_CATALOG_SERVICE, deleteService, DELETE_SERVICE, savingService,
     SAVING_SERVICE, DESCRIBE_ERROR, initCatalog, CATALOG_INITED, changeText, CHANGE_TEXT,
     TOGGLE_ADVANCED_SETTINGS, toggleAdvancedSettings, TOGGLE_THUMBNAIL, toggleThumbnail, TOGGLE_TEMPLATE, toggleTemplate, CHANGE_METADATA_TEMPLATE, changeMetadataTemplate, SET_LOADING,
-    recordsNotFound, CHANGE_WMS_LAYER_TILE_SIZE, changeWMSTileSize
+    recordsNotFound
 } = require('../catalog');
 const { CHANGE_LAYER_PROPERTIES, ADD_LAYER } = require('../layers');
 const { SHOW_NOTIFICATION } = require('../notifications');
@@ -327,10 +327,5 @@ describe('Test correctness of the catalog actions', () => {
         expect(action.type).toBe(SHOW_NOTIFICATION);
         expect(action.message).toBe("catalog.notification.errorSearchingRecords");
         expect(action.values).toEqual({ records: "topp:states , topp:states-tasmania" });
-    });
-    it('test changeWMSTileSize action', () => {
-        const action = changeWMSTileSize();
-        expect(action.type).toBe(CHANGE_WMS_LAYER_TILE_SIZE);
-        expect(action.size).toBe(256);
     });
 });
