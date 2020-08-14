@@ -162,6 +162,7 @@ const removeNulls = (obj = {}) => {
 
 function wmsToLeafletOptions(options) {
     var opacity = options.opacity !== undefined ? options.opacity : 1;
+    console.log("OPTIONS", options);
     const params = optionsToVendorParams(options);
     // NOTE: can we use opacity to manage visibility?
     const result = objectAssign({}, options.baseParams, {
@@ -204,7 +205,7 @@ Layers.registerType('wms', {
         return L.tileLayer.multipleUrlWMS(urls, queryParameters);
     },
     update: function(layer, newOptions, oldOptions) {
-        if (oldOptions.singleTile !== newOptions.singleTile || oldOptions.securityToken !== newOptions.securityToken && newOptions.visibility) {
+        if (oldOptions.singleTile !== newOptions.singleTile || oldOptions.tileSize !== newOptions.tileSize || oldOptions.securityToken !== newOptions.securityToken && newOptions.visibility) {
             let newLayer;
             const urls = getWMSURLs(isArray(newOptions.url) ? newOptions.url : [newOptions.url]);
             const queryParameters = wmsToLeafletOptions(newOptions) || {};

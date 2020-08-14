@@ -232,7 +232,7 @@ const MetadataExplorerPlugin = connect(metadataExplorerSelector, {
     onAddBackground: backgroundAdded,
     onToggle: toggleControl.bind(null, 'backgroundSelector', null),
     onLayerChange: setControlProperty.bind(null, 'backgroundSelector'),
-    onStartChange: setControlProperty.bind(null, 'backgroundSelector', 'start'),
+    onStartChange: setControlProperty.bind(null, 'backgroundSelector', 'start')
 })(MetadataExplorerComponent);
 const API = require('../api/catalog').default;
 
