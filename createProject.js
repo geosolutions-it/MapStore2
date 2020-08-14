@@ -32,7 +32,7 @@ const paramsDesc = [{
     label: 'Repository URL: ',
     name: 'repoURL',
     "default": undefined,
-    validate: (val) => true
+    validate: () => true
 }, {
     label: 'Output folder: ',
     name: 'outFolder',
