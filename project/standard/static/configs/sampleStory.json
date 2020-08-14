@@ -1,0 +1,341 @@
+{
+  "resources":[
+    {
+      "id": "3025f52e-8d57-48df-9a56-8e21ac252282",
+      "type": "map",
+      "data": {
+        "projection": "EPSG:900913",
+        "units": "m",
+        "center": {
+          "x": -97.46704829402395,
+          "y": 38.19914131811602,
+          "crs": "EPSG:4326"
+        },
+        "zoom": 3,
+        "maxExtent": [
+          -20037508.34,
+          -20037508.34,
+          20037508.34,
+          20037508.34
+        ],
+        "layers": [
+          {
+            "type": "osm",
+            "title": "Open Street Map",
+            "name": "mapnik",
+            "source": "osm",
+            "group": "background",
+            "visibility": true,
+            "id": "mapnik__0"
+          },
+          {
+            "type": "mapquest",
+            "title": "MapQuest OSM",
+            "name": "osm",
+            "source": "mapquest",
+            "group": "background",
+            "visibility": false,
+            "apiKey": "__API_KEY_MAPQUEST__",
+            "id": "osm__2"
+          },
+          {
+            "type": "tileprovider",
+            "title": "NASAGIBS Night 2012",
+            "provider": "NASAGIBS.ViirsEarthAtNight2012",
+            "name": "Night2012",
+            "source": "nasagibs",
+            "group": "background",
+            "visibility": false,
+            "id": "Night2012__3"
+          },
+          {
+            "type": "tileprovider",
+            "title": "OpenTopoMap",
+            "provider": "OpenTopoMap",
+            "name": "OpenTopoMap",
+            "source": "OpenTopoMap",
+            "group": "background",
+            "visibility": false,
+            "id": "OpenTopoMap__4"
+          },
+          {
+            "source": "ol",
+            "group": "background",
+            "title": "Empty Background",
+            "fixed": true,
+            "type": "empty",
+            "visibility": false,
+            "args": [
+              "Empty Background",
+              {
+                "visibility": false
+              }
+            ],
+            "id": "undefined__5"
+          },
+          {
+            "type": "wms",
+            "url": "https://demo.geo-solutions.it:443/geoserver/wms",
+            "visibility": true,
+            "dimensions": [],
+            "name": "topp:states",
+            "title": "USA Population",
+            "description": "This is some census data on the states.",
+            "bbox": {
+              "crs": "EPSG:4326",
+              "bounds": {
+                "minx": -124.73142200000001,
+                "miny": 24.955967,
+                "maxx": -66.969849,
+                "maxy": 49.371735
+              }
+            },
+            "links": [],
+            "params": {},
+            "allowedSRS": {},
+            "search": {
+              "type": "wfs",
+              "url": "https://demo.geo-solutions.it:443/geoserver/wfs"
+            },
+            "id": "topp:states__xbiwklaqww"
+          }
+        ],
+        "groups": {
+          "id": "Default",
+          "expanded": true
+        },
+        "bbox": {
+          "bounds": {
+            "minx": -16505099.28586463,
+            "miny": 1173433.3176468946,
+            "maxx": -5194865.084563671,
+            "maxy": 8041758.9312396925
+          },
+          "crs": "EPSG:3857",
+          "rotation": 0
+        },
+        "size": {
+          "width": 578,
+          "height": 351
+        },
+        "mapStateSource": "cfd19650-578b-11e8-a74e-c520a50d6e8f"
+      }
+    },
+    {
+      "id": "9a569a56-8d57-48df-9a56-8e21ac252282",
+      "type": "image",
+      "data": {
+        "src": "https://images.unsplash.com/photo-1480843669328-3f7e37d196ae?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1350&q=80",
+        "title": "Lorem ipsum dolor sit amet, consectetur adipiscing elit",
+        "credits": "Lorem Ipsum",
+        "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+        "altText": "Lorem ipsum dolor sit amet, consectetur adipiscing elit"
+      }
+    },
+    {
+      "id": "8d578d57-8d57-48df-9a56-8e21ac252282",
+      "type": "image",
+      "data": {
+        "src": "https://images.unsplash.com/photo-1558999539-7a19738f085d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1350&q=80",
+        "title": "Lorem ipsum dolor sit amet, consectetur adipiscing elit",
+        "credits": "Lorem Ipsum",
+        "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+        "altText": "Lorem ipsum dolor sit amet, consectetur adipiscing elit"
+      }
+    },
+    {
+      "id": "48df48df-8d57-48df-9a56-8e21ac252282",
+      "type": "image",
+      "data": {
+        "src": "https://images.unsplash.com/photo-1557672172-298e090bd0f1?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=634&q=80",
+        "title": "Lorem ipsum dolor sit amet, consectetur adipiscing elit",
+        "credits": "Lorem Ipsum",
+        "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+        "altText": "Lorem ipsum dolor sit amet, consectetur adipiscing elit"
+      }
+    },
+    {
+      "id": "1ac21ac2-8d57-48df-9a56-8e21ac252282",
+      "type": "image",
+      "data": {
+        "src": "https://images.unsplash.com/photo-1562874724-b33411b38141?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=701&q=80",
+        "title": "Lorem ipsum dolor sit amet, consectetur adipiscing elit",
+        "credits": "Lorem Ipsum",
+        "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+        "altText": "Lorem ipsum dolor sit amet, consectetur adipiscing elit"
+      }
+    },
+    {
+      "id": "52285228-8d57-48df-9a56-8e21ac252282",
+      "type": "image",
+      "data": {
+        "src": "https://images.unsplash.com/photo-1462331321792-cc44368b8894?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1422&q=80",
+        "title": "Lorem ipsum dolor sit amet, consectetur adipiscing elit",
+        "credits": "Lorem Ipsum",
+        "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+        "altText": "Lorem ipsum dolor sit amet, consectetur adipiscing elit"
+      }
+    },
+    {
+      "id": "e21ae21a-8d57-48df-9a56-8e21ac252282",
+      "type": "image",
+      "data": {
+        "src": "https://images.unsplash.com/photo-1565378434747-262417385c7f?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=749&q=80",
+        "title": "Lorem ipsum dolor sit amet, consectetur adipiscing elit",
+        "credits": "Lorem Ipsum",
+        "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+        "altText": "Lorem ipsum dolor sit amet, consectetur adipiscing elit"
+      }
+    },
+    {
+      "id": "8d8de21a-8d57-48df-9a56-8e21ac252282",
+      "type": "image",
+      "data": {
+        "src": "https://images.unsplash.com/photo-1563818500545-86cdb0a38abd?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=564&q=80",
+        "title": "Lorem ipsum dolor sit amet, consectetur adipiscing elit",
+        "credits": "Lorem Ipsum",
+        "description": "test7",
+        "altText": "Lorem ipsum dolor sit amet, consectetur adipiscing elit"
+      }
+    }
+  ],
+  "type": "cascade",
+  "sections": [{
+    "type": "title",
+    "id": "title_section_id1",
+    "title": "Abstract",
+    "cover": true,
+    "contents": [
+      {
+        "id": "title_content_id1",
+        "background": {
+          "type": "image",
+          "size": "full",
+          "align": "center",
+          "resourceId": "3025f52e-8d57-48df-9a56-8e21ac252282"
+        },
+        "type": "text",
+        "size": "large",
+        "align": "center",
+        "theme": "bright",
+        "html": "<h1 style='text-align:center;'>List of Highest Astronomical Observatories</h1><p style='text-align:center;'><em>From Wikipedia, the free encyclopedia</em></p>"
+      }
+    ]
+  }, {
+    "type": "paragraph",
+    "id": "paragraph_section_id2",
+    "title": "Abstract new paragrph",
+    "contents": [{
+      "type": "column",
+      "id": "paragraph_content_id1",
+      "contents": [
+        {
+          "id": "paragraph_content_content_id1",
+          "type": "text",
+          "background": {},
+          "html": "<p>This is a list of the<strong> </strong><strong><ins>highest astronomical observatories</ins></strong><strong> </strong>in the world, considering only ground-based observatories and ordered by elevation above mean sea level. The main list includes only permanent observatories with facilities constructed at a fixed location, followed by a supplementary list for temporary observatories such as transportable telescopes or instrument packages. For large observatories with numerous telescopes at a single location, only a single entry is included listing the main elevation of the observatory or of the highest operational instrument if that information is available.</p>"
+        },
+        {
+          "id": "paragraph_content_content_id2",
+          "type": "map",
+          "resourceId": "3025f52e-8d57-48df-9a56-8e21ac252282",
+          "enableFullscreen": true,
+          "size": "medium",
+          "align": "center"
+        }
+      ]
+    }]
+  }, {
+    "type": "title",
+    "id": "title_section_id2",
+    "title": "Abstract",
+    "contents": [
+      {
+        "id": "title_content_id1",
+        "background": {
+          "type": "image",
+          "resourceId": "48df48df-8d57-48df-9a56-8e21ac252282",
+          "size": "medium",
+          "align": "center"
+        },
+        "type": "text",
+        "size": "medium",
+        "align": "center",
+        "theme": "bright",
+        "html": "<h1 style='text-align:center;'>Enter title...</h1>"
+      }
+    ]
+  }, {
+    "type": "immersive",
+    "id": "immersive_section_id1",
+    "title": "Immersive",
+    "contents": [{
+        "type": "column",
+        "id": "column_id1",
+        "background": {
+            "type": "image",
+            "fit": "cover",
+            "size": "medium",
+            "align": "center",
+            "resourceId": "1ac21ac2-8d57-48df-9a56-8e21ac252282"
+          },
+        "contents": [{
+          "id": "immersive_content_id1",
+          "type": "text",
+          "html": "<p>This is a list of the<strong> </strong><strong><ins>highest astronomical observatories</ins></strong><strong> </strong>in the world, considering only ground-based observatories and ordered by elevation above mean sea level. The main list includes only permanent observatories with facilities constructed at a fixed location, followed by a supplementary list for temporary observatories such as transportable telescopes or instrument packages. For large observatories with numerous telescopes at a single location, only a single entry is included listing the main elevation of the observatory or of the highest operational instrument if that information is available.</p>",
+          "align": "left",
+          "size": "small"
+        }]
+    },{
+        "type": "column",
+        "id": "column_id2",
+        "background": {
+          "type": "image",
+          "align": "center",
+          "size": "medium",
+          "resourceId": "52285228-8d57-48df-9a56-8e21ac252282"
+        },
+        "contents": [{
+          "id": "immersive_content_id2",
+          "type": "text",
+          "align": "center",
+          "size": "medium",
+          "html": "<p>This is a list of the<strong> </strong><strong><ins>highest astronomical observatories</ins></strong><strong> </strong>in the world, considering only ground-based observatories and ordered by elevation above mean sea level. The main list includes only permanent observatories with facilities constructed at a fixed location, followed by a supplementary list for temporary observatories such as transportable telescopes or instrument packages. For large observatories with numerous telescopes at a single location, only a single entry is included listing the main elevation of the observatory or of the highest operational instrument if that information is available.</p>"
+        }]
+    },{
+        "type": "column",
+        "id": "column_id3",
+        "background": {
+          "type": "image",
+          "align": "center",
+          "size": "medium",
+          "resourceId": "e21ae21a-8d57-48df-9a56-8e21ac252282"
+        },
+        "contents": [{
+        "id": "immersive_content_id3",
+        "type": "text",
+        "align": "center",
+        "size": "medium",
+        "html": "<p>This is a list of the<strong> </strong><strong><ins>highest astronomical observatories</ins></strong><strong> </strong>in the world, considering only ground-based observatories and ordered by elevation above mean sea level. The main list includes only permanent observatories with facilities constructed at a fixed location, followed by a supplementary list for temporary observatories such as transportable telescopes or instrument packages. For large observatories with numerous telescopes at a single location, only a single entry is included listing the main elevation of the observatory or of the highest operational instrument if that information is available.</p>"
+      }]
+    },{
+        "type": "column",
+        "id": "column_id4",
+        "background": {
+          "type": "image",
+          "fit": "contain",
+          "align": "center",
+          "size": "medium",
+          "resourceId": "8d8de21a-8d57-48df-9a56-8e21ac252282"
+        },
+        "contents": [{
+        "id": "immersive_content_id4",
+        "type": "text",
+        "align": "center",
+        "size": "medium",
+        "html": "<p>This is a list of the<strong> </strong><strong><ins>highest astronomical observatories</ins></strong><strong> </strong>in the world, considering only ground-based observatories and ordered by elevation above mean sea level. The main list includes only permanent observatories with facilities constructed at a fixed location, followed by a supplementary list for temporary observatories such as transportable telescopes or instrument packages. For large observatories with numerous telescopes at a single location, only a single entry is included listing the main elevation of the observatory or of the highest operational instrument if that information is available.</p>"
+      }]
+    }
+    ]
+  }]
+}
