@@ -664,6 +664,7 @@ const LayersUtils = {
                 capabilitiesLoading: null,
                 description: capabilities._abstract,
                 boundingBox: capabilities.latLonBoundingBox,
+                boundingBox: capabilities.latLonBoundingBox,
                 availableStyles: capabilities.style && (Array.isArray(capabilities.style) ? capabilities.style : [capabilities.style])
             }
             : {};
