@@ -69,8 +69,8 @@ var ShareUtils = {
 
             if (removeScroll) {
                 const parsedUrl = geostoryUrl.split('#')[1]?.split('/');
-                if (parsedUrl.length === 5 && parsedUrl.includes('shared')) geostoryUrl = replace(geostoryUrl, `/${parsedUrl[parsedUrl.length - 1]}`, '');
-                if (parsedUrl.length === 6 && parsedUrl.includes('shared')) geostoryUrl = replace(geostoryUrl, `/${parsedUrl[parsedUrl.length - 2]}/${parsedUrl[parsedUrl.length - 1]}`, '');
+                if (parsedUrl.length === 6 && parsedUrl.includes('shared')) geostoryUrl = replace(geostoryUrl, `/section/${parsedUrl[parsedUrl.length - 1]}`, '');
+                if (parsedUrl.length === 8 && parsedUrl.includes('shared')) geostoryUrl = replace(geostoryUrl, `/section/${parsedUrl[parsedUrl.length - 3]}/column/${parsedUrl[parsedUrl.length - 1]}`, '');
             }
 
             return geostoryUrl;

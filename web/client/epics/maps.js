@@ -248,7 +248,7 @@ const getMapsResourcesByCategoryEpic = (action$, store) =>
             const getContextNames = ({results, ...other}) => {
                 const maps = isArray(results) ? results : (results === "" ? [] : [results]);
                 return maps.length === 0 ?
-                    Rx.Observable.of({results, ...other}) :
+                    Rx.Observable.of({results: [], ...other}) :
                     Rx.Observable.forkJoin(
                         maps.map(({context}) => context ?
                             getResource(context, {includeAttributes: false, withData: false, withPermissions: false})
@@ -295,7 +295,10 @@ const getMapsResourcesByCategoryEpic = (action$, store) =>
                     .switchMap((response) => getContextNames(response).switchMap(responseWithContext => {
                         // category is required to identify maps for detail card. It's missing from this entry point
                         return Rx.Observable.of(
-                            mapsLoaded({...responseWithContext, results: responseWithContext?.results?.map(res => ({...res, category: {name: "MAP"}}))}, opts.params, searchText)
+                            mapsLoaded({
+                                ...responseWithContext,
+                                results: responseWithContext.results?.map(res => ({...res, category: {name: "MAP"}}))
+                            }, opts.params, searchText)
                         );
                     }
                     ))

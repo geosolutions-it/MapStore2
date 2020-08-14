@@ -521,6 +521,7 @@
                 "title": "Mettre à jour le titre",
                 "dimensions": "Mettre à jour les dimensions"
             },
+            "layerInfoTooltip": "Mettre à jour le titre et la description de la couche",
             "layerMetadata": {
                 "identifier": "Identifiant",
                 "title": "Titre",
@@ -2830,6 +2831,27 @@
             },
             "deleteError": "Une erreur inattendue s'est produite lors de la suppression de la carte",
             "updateError": "Une erreur inattendue s'est produite lors de l'enregistrement de la carte"
+        },
+        "layerInfo": {
+            "title": "Mettre à jour les titres et descriptions des calques",
+            "noLayers": "Aucun calque trouvé",
+            "syncButton": "Synchroniser les titres et les descriptions",
+            "selectAll": "Tout sélectionner",
+            "deselectAll": "Tout déselectionner",
+            "updatingLayers": "Mise à jour des couches {updatedCount}/{totalCount}",
+            "tooltips": {
+                "syncSuccess": "Le titre et la description ont été mis à jour avec succès pour cette couche",
+                "syncError": "Il n'est pas possible de mettre à jour le titre et la description de cette couche. Vous pouvez vérifier si toutes les options de calque sont correctes dans le panneau des paramètres"
+            },
+            "syncingLayersSavingToServerError": {
+                "title": "Erreur d'enregistrement du serveur",
+                "message": "Une erreur inattendue s'est produite lors de l'enregistrement des couches mises à jour sur le serveur"
+            },
+            "syncingLayersGeneralError": {
+                "title": "Erreur générale",
+                "message": "Une erreur inattendue s'est produite lors de la synchronisation des couches. Il y a probablement un bogue dans MapStore"
+            },
+            "layerType": "type: {type}"
         },
         "tutorial": {
             "title": "Tutoriel",

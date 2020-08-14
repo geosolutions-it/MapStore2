@@ -30,7 +30,8 @@ const onToolsActions = {
     onAddGroup: () => {},
     onGetMetadataRecord: () => {},
     onHideLayerMetadata: () => {},
-    onShow: () => {}
+    onShow: () => {},
+    onLayerInfo: () => {}
 };
 
 describe('TOC Toolbar', () => {
@@ -46,18 +47,22 @@ describe('TOC Toolbar', () => {
     });
 
     it('deselected element', () => {
+        const spyLayerInfo = expect.spyOn(onToolsActions, 'onLayerInfo');
         const spyAddLayer = expect.spyOn(onToolsActions, 'onAddLayer');
         const spyAddGroup = expect.spyOn(onToolsActions, 'onAddGroup');
         ReactDOM.render(<Toolbar onToolsActions={onToolsActions}/>, document.getElementById("container"));
         const el = document.getElementsByClassName("btn-group").item(0);
         expect(el).toExist();
         const btn = el.getElementsByClassName("btn");
-        expect(btn.length).toBe(2);
-        expect(btn[0].innerHTML).toContain('add-layer');
-        expect(btn[1].innerHTML).toContain('add-folder');
+        expect(btn.length).toBe(3);
+        expect(btn[0].innerHTML).toContain('layer-info');
+        expect(btn[1].innerHTML).toContain('add-layer');
+        expect(btn[2].innerHTML).toContain('add-folder');
         TestUtils.Simulate.click(btn[0]);
-        expect(spyAddLayer).toHaveBeenCalled();
+        expect(spyLayerInfo).toHaveBeenCalled();
         TestUtils.Simulate.click(btn[1]);
+        expect(spyAddLayer).toHaveBeenCalled();
+        TestUtils.Simulate.click(btn[2]);
         expect(spyAddGroup).toHaveBeenCalled();
     });
 

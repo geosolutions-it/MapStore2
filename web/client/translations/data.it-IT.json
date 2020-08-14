@@ -521,6 +521,7 @@
                 "title": "Aggiorna il titolo del layer",
                 "dimensions": "Aggiorna le dimensioni aggiuntive"
             },
+            "layerInfoTooltip": "Aggiorna titolo e descrizione del livello",
             "layerMetadata": {
                 "identifier": "Identificativo",
                 "title": "Titolo",
@@ -2829,6 +2830,27 @@
             },
             "deleteError": "Si è verificato un errore imprevisto durante l'eliminazione della mappa",
             "updateError": "Si è verificato un errore imprevisto durante il salvataggio della mappa"
+        },
+        "layerInfo": {
+            "title": "Aggiorna titoli e descrizioni dei livelli",
+            "noLayers": "Nessun livello trovato",
+            "syncButton": "Sincronizza titoli e descrizioni",
+            "selectAll": "Seleziona tutto",
+            "deselectAll": "Deselezionare tutto",
+            "updatingLayers": "Aggiornamento dei livelli {updatedCount}/{totalCount}",
+            "tooltips": {
+                "syncSuccess": "Titolo e descrizione sono stati aggiornati con successo per questo livello",
+                "syncError": "Non è possibile aggiornare il titolo e la descrizione di questo livello. È possibile verificare se tutte le opzioni di livello sono corrette nel pannello delle impostazioni"
+            },
+            "syncingLayersSavingToServerError": {
+                "title": "Errore di salvataggio del server",
+                "message": "Si è verificato un errore imprevisto durante il salvataggio dei livelli aggiornati sul server"
+            },
+            "syncingLayersGeneralError": {
+                "title": "Errore generale",
+                "message": "Si è verificato un errore imprevisto durante la sincronizzazione dei livelli. Probabilmente c'è un bug in MapStore"
+            },
+            "layerType": "tipo: {type}"
         },
         "tutorial": {
             "title": "Tutorial",

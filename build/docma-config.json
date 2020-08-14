@@ -230,6 +230,7 @@
                 "web/client/plugins/GoFull.jsx",
                 "web/client/plugins/HelpLink.jsx",
                 "web/client/plugins/Identify.jsx",
+                "web/client/plugins/LayerInfo.jsx",
                 "web/client/plugins/Locate.jsx",
                 "web/client/plugins/Login.jsx",
                 "web/client/plugins/manager/ManagerMenu.jsx",
