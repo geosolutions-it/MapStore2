@@ -61,9 +61,9 @@ describe('ShareUtils test', () => {
         expect(ShareUtils.getSharedGeostoryUrl('http://test-url/#/geostory/111')).toBe(expectedURL);
         expect(ShareUtils.getSharedGeostoryUrl('http://test-url/#/geostory/newgeostory')).toBe('http://test-url/#/geostory/newgeostory');
         expect(ShareUtils.getSharedGeostoryUrl('http://test-url/#/other')).toBe('http://test-url/#/other');
-        expect(ShareUtils.getSharedGeostoryUrl('http://test-url/#/geostory/111/222', true)).toBe(expectedURL);
-        expect(ShareUtils.getSharedGeostoryUrl('http://test-url/#/geostory/111/222', false)).toBe(`${expectedURL}/222`);
-        expect(ShareUtils.getSharedGeostoryUrl('http://test-url/#/geostory/111/222/333', true)).toBe(expectedURL);
-        expect(ShareUtils.getSharedGeostoryUrl('http://test-url/#/geostory/111/222/333', false)).toBe(`${expectedURL}/222/333`);
+        expect(ShareUtils.getSharedGeostoryUrl('http://test-url/#/geostory/111/section/222', true)).toBe(expectedURL);
+        expect(ShareUtils.getSharedGeostoryUrl('http://test-url/#/geostory/111/section/222', false)).toBe(`${expectedURL}/section/222`);
+        expect(ShareUtils.getSharedGeostoryUrl('http://test-url/#/geostory/111/section/222/column/333', true)).toBe(expectedURL);
+        expect(ShareUtils.getSharedGeostoryUrl('http://test-url/#/geostory/111/section/222/column/333', false)).toBe(`${expectedURL}/section/222/column/333`);
     });
 });
