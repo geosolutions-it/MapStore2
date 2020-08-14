@@ -466,29 +466,32 @@ export const getWebPageComponentHeight = (size, viewHeight) => {
 
 export const parseHashUrlScrollUpdate = (url, hash = '', storyId, sectionId, columnId) => {
     const EMPTY = 'EMPTY';
+    if (!hash.includes(storyId)) {
+        return null;
+    }
     const storyIds = hash.substring(hash.indexOf(storyId)).split('/');
 
     if (sectionId && storyId) {
-        if (storyIds.length > 1 && storyIds[1]) {
-            if (storyIds.length === 3) {
-                return replace(url, `${storyIds[1]}/${storyIds[2]}`, `${sectionId}`);
+        if (storyIds.length > 1 && storyIds[2] && Number(storyIds[0]) === storyId) {
+            if (storyIds.length === 5) {
+                return replace(url, `${storyIds[2]}/column/${storyIds[4]}`, `${sectionId}`);
             }
-            return replace(url, `${storyIds[1]}`, `${sectionId}`);
+            return replace(url, `${storyIds[2]}`, `${sectionId}`);
         }
         if (hash.includes('shared')) {
-            return storyIds[1] !== '' ? `${url}/${sectionId}` : `${url}${sectionId}`;
+            return storyIds[1] !== '' ? `${url}/section/${sectionId}` : `${url}section/${sectionId}`;
         }
-        return storyIds[1] !== '' ? `${url}/${sectionId}` : `${url}${sectionId}`;
+        return storyIds[1] !== '' ? `${url}/section/${sectionId}` : `${url}section/${sectionId}`;
     } else if (!sectionId && columnId && isString(columnId) && columnId !== EMPTY) {
         if (storyIds.length > 1) {
-            if (hash.includes('shared') && !storyIds[1]) {
+            if (hash.includes('shared') && !storyIds[2]) {
                 return url;
             }
-            if (storyIds.length === 3) {
-                return replace(url, `${storyIds[2]}`, `${columnId}`);
+            if (storyIds.length === 5) {
+                return replace(url, `${storyIds[4]}`, `${columnId}`);
             }
-            return `${url}/${columnId}`;
+            return `${url}/column/${columnId}`;
         }
     }
-    return url;
+    return null;
 };
