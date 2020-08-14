@@ -129,8 +129,6 @@ var Api = {
                                                 // so internally EPSG:4326 is assumed to be (lon,lat) but when we import from external services
                                                 // we assume that EPSG:4326 is (lat,lon) and CRS84 is (lon,lat) as by their definition
                                                 // after conversion to (lon,lat) we set crs to EPSG:4326
-                                                // if the service provides wrong crs altogether or it deviates from official definitions of EPSG:4326 and CRS84
-                                                // the right crs can be forced with bboxCrs parameter of a service
 
                                                 const crsValue = el.value?.crs ?? '';
                                                 const urn = crsValue.match(/[\w-]*:[\w-]*:[\w-]*:[\w-]*:[\w-]*:[^:]*:(([\w-]+\s[\w-]+)|[\w-]*)/)?.[0];

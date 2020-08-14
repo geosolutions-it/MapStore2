@@ -372,9 +372,8 @@ export default (API) => ({
             .switchMap(({ text }) => {
                 const state = getState();
                 const pageSize = pageSizeSelector(state);
-                const selectedCatalog = selectedCatalogSelector(state);
                 const { type, url } = selectedCatalogSelector(state);
-                return Rx.Observable.of(textSearch({ format: type, url, startPosition: 1, maxRecords: pageSize, text, options: {service: selectedCatalog} }));
+                return Rx.Observable.of(textSearch({ format: type, url, startPosition: 1, maxRecords: pageSize, text }));
             }),
 
     catalogCloseEpic: (action$, store) =>
