@@ -43,11 +43,11 @@ describe('Column component', () => {
     });
     describe('Column contents has proper toolbars', () => {
         it('text', () => {
-            // text content should contain only delete button
+            // text content should contain delete button and size button
             ReactDOM.render(<Column mode={Modes.EDIT} contents={[{ type: ContentTypes.TEXT, html: '<p id="TEST_HTML">something</p>' }]} />, document.getElementById("container"));
             const textToolbar = document.querySelector('.ms-content-toolbar .btn-group');
             expect(textToolbar).toExist();
-            expect(textToolbar.querySelectorAll('button').length).toBe(1);
+            expect(textToolbar.querySelectorAll('button').length).toBe(2);
             expect(textToolbar.querySelector('button .glyphicon-trash')).toExist(); // align tool
         });
         it('media', () => {
