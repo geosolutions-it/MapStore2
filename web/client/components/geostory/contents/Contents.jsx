@@ -51,9 +51,10 @@ export default ({
     update = () => {},
     remove = () => {},
     bubblingTextEditing = () => {},
-    storyTheme
-}) =>
-    (<div className={className}>
+    storyTheme,
+    storyFonts
+}) => {
+    return (<div className={className}>
         {contents.reduce(( rendered = [], { id, ...props }) => {
             const content =
                 [(<ContentComponent
@@ -63,6 +64,7 @@ export default ({
                     viewWidth={viewWidth}
                     sectionType={sectionType}
                     viewHeight={viewHeight}
+                    storyFonts={storyFonts}
                     editMedia={({path = ""}, ...args) => editMedia({path: `contents[{"id": "${id}"}]` + path}, ...args)}
                     editWebPage={({path = ""}, ...args) => editWebPage({ path: `contents[{"id": "${id}"}]` + path }, ...args)}
                     // restructure the path to give it the correct scope
@@ -90,3 +92,4 @@ export default ({
             return [...rendered, ...content];
         }, [])}
     </div>);
+};
