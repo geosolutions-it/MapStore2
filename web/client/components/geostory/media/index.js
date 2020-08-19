@@ -23,7 +23,10 @@ export const typesMap = {
 };
 
 const ErrorComponent = () => <div className="ms-media-error"><Glyphicon glyph="exclamation-sign"/></div>;
-const LoaderComponent = () => <div className="ms-media-loader"><Loader size={52}/></div>;
+
+// The div wrapping <Loader /> is passed a style that includes a height e.g. 500px big enough such that we're able to scroll
+// to a section during lazy loading of media. See https://github.com/geosolutions-it/MapStore2/issues/5766
+const LoaderComponent = ({ style = {}, size = 52 }) => <div style={style} className="ms-media-loader"><Loader size={size}/></div>;
 
 /**
  * Media component renders different kind of media based on type or mediaType
