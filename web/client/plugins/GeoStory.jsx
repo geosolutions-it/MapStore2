@@ -9,10 +9,10 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
-import {compose, withPropsOnChange, withHandlers} from 'recompose';
+import {compose, withPropsOnChange, withHandlers, lifecycle} from 'recompose';
 
 import {createPlugin} from '../utils/PluginsUtils';
-import { Modes } from '../utils/GeoStoryUtils';
+import { Modes, scrollToContent } from '../utils/GeoStoryUtils';
 import { getMessageById } from '../utils/LocaleUtils';
 import { add, update, updateCurrentPage, remove, editWebPage } from '../actions/geostory';
 import { editMedia } from '../actions/mediaEditor';
@@ -25,6 +25,7 @@ import Story from '../components/geostory/Story';
 import MapEditor from '../components/geostory/common/MapEditor';
 import MediaViewer from './geostory/MediaViewer';
 import MediaContentToolbar from './geostory/MediaContentToolbar';
+
 const GeoStory = ({
     story,
     mode = Modes.VIEW,
@@ -81,6 +82,15 @@ export default createPlugin("GeoStory", {
         withHandlers({
             // adding to the original add function the localize function that takes
             add: ({localize, add: addFunc}) => (path, position, element) => addFunc(path, position, element, localize)
+        }),
+        lifecycle({
+            componentWillMount() {
+                window.__geostory_interaction = (type, param) => {
+                    if (type === 'scrollTo')  {
+                        scrollToContent(param, {behavior: "smooth"});
+                    }
+                };
+            }
         })
     )(GeoStory),
     reducers: {

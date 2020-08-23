@@ -495,3 +495,36 @@ export const parseHashUrlScrollUpdate = (url, hash = '', storyId, sectionId, col
     }
     return null;
 };
+
+export const customEntityTransform = (entity, text) => {
+    if (entity.type === 'MENTION') {
+        return "<a href=\"".concat(entity.data.url, "\" class=\"wysiwyg-mention\" data-mention data-value=\"").concat(entity.data.value, "\">").concat(text, "</a>");
+    }
+
+    if (entity.type === 'LINK') {
+        const targetOption = entity.data.targetOption || '_self';
+        const dataInteraction = entity.data.geoStorySection;
+
+        // uuid v4 pattern
+        const uuidPattern = /^[0-9A-F]{8}-[0-9A-F]{4}-[4][0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$/i;
+        if (dataInteraction && testRegex(dataInteraction, uuidPattern)) {
+            return "<a data-geostory-interaction=\"".concat(entity.data.geoStorySection, "\"").concat(`onclick="__geostory_interaction(type='scrollTo', '${entity.data.geoStorySection}')"`).concat(">").concat(text, "</a>");
+        }
+        return "<a href=\"".concat(entity.data.url, "\" target=\"").concat(targetOption, "\">").concat(text, "</a>");
+    }
+
+    if (entity.type === 'IMAGE') {
+        const alignment = entity.data.alignment;
+
+        if (alignment && alignment.length) {
+            return "<div style=\"text-align:".concat(alignment, ";\"><img src=\"").concat(entity.data.src, "\" alt=\"").concat(entity.data.alt, "\" style=\"height: ").concat(entity.data.height, ";width: ").concat(entity.data.width, "\"/></div>");
+        }
+
+        return "<img src=\"".concat(entity.data.src, "\" alt=\"").concat(entity.data.alt, "\" style=\"height: ").concat(entity.data.height, ";width: ").concat(entity.data.width, "\"/>");
+    }
+
+    if (entity.type === 'EMBEDDED_LINK') {
+        return "<iframe width=\"".concat(entity.data.width, "\" height=\"").concat(entity.data.height, "\" src=\"").concat(entity.data.src, "\" frameBorder=\"0\"></iframe>");
+    }
+    return text;
+};

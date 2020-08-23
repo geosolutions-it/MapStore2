@@ -82,7 +82,9 @@
   "dependencies": {
     "@boundlessgeo/jsonix": "2.4.3",
     "@carnesen/redux-add-action-listener-enhancer": "0.0.1",
+    "@geosolutions/html-to-draftjs": "file:../external/html-to-draftjs/geosolutions-html-to-draftjs-1.5.0.tgz",
     "@geosolutions/proj4": "2.4.7",
+    "@geosolutions/react-draft-wysiwyg": "file:../external/react-draft-wysiwyg/geosolutions-react-draft-wysiwyg-1.14.6.tgz",
     "@geosolutions/react-joyride": "1.10.2",
     "@geosolutions/wkt-parser": "1.2.2",
     "@mapbox/geojsonhint": "2.0.1",
@@ -129,6 +131,7 @@
     "geostyler-openlayers-parser": "1.1.4",
     "geostyler-sld-parser": "2.0.1",
     "history": "4.6.1",
+    "html-to-draftjs": "^1.5.0",
     "html2canvas": "0.5.0-beta4",
     "immutable": "4.0.0-rc.12",
     "intersection-observer": "0.7.0",

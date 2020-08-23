@@ -9,11 +9,16 @@ import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 
 import { ContentState, EditorState, Modifier, RichUtils, convertToRaw } from 'draft-js';
 import draftToHtml from 'draftjs-to-html';
-import htmlToDraft from 'html-to-draftjs';
-import { Editor } from 'react-draft-wysiwyg';
+// import htmlToDraft from 'html-to-draftjs';
+import htmlToDraft from '@geosolutions/html-to-draftjs';
+// import { Editor } from 'react-draft-wysiwyg';
+import { Editor } from '@geosolutions/react-draft-wysiwyg';
 import { branch, compose, renderComponent, withHandlers, withProps, withState, lifecycle } from "recompose";
 
-import { EMPTY_CONTENT, SectionTypes } from "../../../../utils/GeoStoryUtils";
+import {
+    EMPTY_CONTENT,
+    SectionTypes,
+    customEntityTransform } from "../../../../utils/GeoStoryUtils";
 
 /**
  * HOC that adds WYSIWYG editor to a content. The editor will replace the component when activated, and it will be activated again when
@@ -56,7 +61,7 @@ export default compose(
                     const blocks = convertToRaw(editorState.getCurrentContent()).blocks;
                     // it can happen that first block is empty, i.e. there is a carriage return
                     const rawText = blocks.length === 1 ? convertToRaw(editorState.getCurrentContent()).blocks[0].text : true;
-                    const html = draftToHtml(convertToRaw(editorState.getCurrentContent()));
+                    const html = draftToHtml(convertToRaw(editorState.getCurrentContent()), null, null, customEntityTransform);
                     // when text written inside editor is "" then return EMPTY_CONTENT to manage placeholder outside
                     save(rawText ? html : EMPTY_CONTENT);
                 }
@@ -67,7 +72,7 @@ export default compose(
                 }
             }),
             // default properties for editor
-            withProps(({ placeholder, toolbarStyle = {}, className = "ms-text-editor"}) => ({
+            withProps(({ sections = [], placeholder, toolbarStyle = {}, className = "ms-text-editor"}) => ({
                 editorRef: ref => setTimeout(() => ref && ref.focus && ref.focus(), 100), // handle auto-focus on edit
                 stripPastedStyles: true,
                 placeholder,
@@ -75,6 +80,7 @@ export default compose(
                 toolbar: {
                     // [here](https://jpuri.github.io/react-draft-wysiwyg/#/docs) you can find some examples (hard to find them in the official draft-js doc)
                     options: ['fontFamily', 'blockType', 'fontSize', 'inline', 'textAlign', 'colorPicker', 'list', 'link', 'remove'],
+                    inGeoStoryContext: true,
                     fontFamily: {
                         options: ['inherit', 'Arial', 'Georgia', 'Impact', 'Tahoma', 'Times New Roman', 'Verdana'],
                         className: undefined,
@@ -92,7 +98,8 @@ export default compose(
                         options: ['link', 'unlink'],
                         link: { icon: undefined, className: undefined },
                         unlink: { icon: undefined, className: undefined },
-                        linkCallback: undefined
+                        linkCallback: undefined,
+                        availableStorySections: [...sections]
                     },
                     blockType: {
                         inDropdown: true,
