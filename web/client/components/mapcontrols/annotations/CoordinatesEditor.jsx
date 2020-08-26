@@ -44,6 +44,8 @@ const MeasureEditor = require('./MeasureEditor');
  * @prop {string} type of the feature (Polygon, LineString, Point, Circle, Text)
  * @prop {string} mapProjection crs of the map
  * @prop {string} isDraggable tells if the coordinate row is draggable
+ * @prop {string} renderer flag to determine the rendering component
+ * @prop {boolean} canEdit flag to check for edit permission
  *
 */
 class CoordinatesEditor extends React.Component {

@@ -69,6 +69,7 @@ const defaultConfig = require('./AnnotationsConfig');
  * @prop {function} onCancelClose triggered when the user cancels closing
  * @prop {function} onConfirmClose triggered when the user confirms closing
  * @prop {function} onAdd triggered when the user clicks on the new annotation button
+ * @prop {function} onEdit triggered when the user clicks on the annotation card into annotation viewer
  * @prop {function} onZoom triggered when the user zooms to an annotation
  * @prop {function} onHighlight triggered when the mouse hovers an annotation card
  * @prop {function} onCleanHighlight triggered when the mouse is out of any annotation card
@@ -78,6 +79,7 @@ const defaultConfig = require('./AnnotationsConfig');
  * @prop {function} onSetErrorSymbol set a flag in the state to say if the default symbols exists
  * @prop {function} onDownload triggered when the user clicks on the download annotations button
  * @prop {function} onUpdateSymbols triggered when user click on refresh icon of the symbols addon
+ * @prop {function} onToggleVisibility triggered when user click on annotation visibility icon
  * @prop {boolean} symbolErrors errors related to the symbols
  * @prop {object[]} lineDashOptions list of options for dashed lines
  * @prop {string} symbolsPath path to the svg folder
@@ -97,7 +99,6 @@ class Annotations extends React.Component {
         id: PropTypes.string,
         styling: PropTypes.bool,
         toggleControl: PropTypes.func,
-
         loading: PropTypes.bool,
         closing: PropTypes.bool,
         showUnsavedChangesModal: PropTypes.bool,

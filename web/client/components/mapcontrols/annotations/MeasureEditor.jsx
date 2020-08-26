@@ -34,7 +34,8 @@ module.exports = compose(
             { value: "km", label: "km", originUom: "m" },
             { value: "mi", label: "mi", originUom: "m" },
             { value: "nm", label: "nm", originUom: "m" }
-        ]
+        ],
+        canEdit: true
     }),
     withStateHandlers(
         ({ displayUom = "nm"}) => ({
@@ -75,13 +76,15 @@ module.exports = compose(
     projection = "EPSG:3857",
     style = {display: "inline-flex", width: "100%"},
     setUom = () => {},
-    onChange = () => {}
+    onChange = () => {},
+    canEdit
 }) => {
     const unitsFromCrs = getUnits(projection);
     return (<FormGroup style={style}>
         <FormControl
             value={value}
             placeholder="radius"
+            disabled={!canEdit}
             name="radius"
             onChange={e => onChange(e.target.value, uom)}
             step={1}
@@ -89,6 +92,7 @@ module.exports = compose(
         <FormControl
             componentClass="select" placeholder="select"
             value={uom}
+            disabled={!canEdit}
             onChange={e => setUom(e.target.value)}
             style={{ width: 85 }}>
             {units.filter(({originUom}) => unitsFromCrs === originUom).map((u) => <option key={u.value} value={u.value}>{u.label}</option>)}

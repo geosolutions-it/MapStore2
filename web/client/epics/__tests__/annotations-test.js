@@ -22,7 +22,7 @@ const {CLOSE_IDENTIFY} = require('../../actions/mapInfo');
 const {editAnnotation, confirmRemoveAnnotation, saveAnnotation, startDrawing, cancelEditAnnotation,
     setStyle, highlight, cleanHighlight, download, loadAnnotations, SET_STYLE, toggleStyle,
     resetCoordEditor, changeRadius, changeText, changeSelected, confirmDeleteFeature, openEditor, SHOW_ANNOTATION,
-    loadDefaultStyles, LOADING, SET_DEFAULT_STYLE
+    loadDefaultStyles, LOADING, SET_DEFAULT_STYLE, toggleVisibilityAnnotation, toggleGeometryEdit
 } = require('../../actions/annotations');
 const {TOGGLE_CONTROL, toggleControl, SET_CONTROL_PROPERTY} = require('../../actions/controls');
 const {STYLE_POINT_MARKER} = require('../../utils/AnnotationsUtils');
@@ -30,13 +30,13 @@ const {addAnnotationsLayerEpic, editAnnotationEpic, removeAnnotationEpic, saveAn
     disableInteractionsEpic, cancelEditAnnotationEpic, startDrawingMultiGeomEpic, endDrawGeomEpic, endDrawTextEpic, cancelTextAnnotationsEpic,
     setAnnotationStyleEpic, restoreStyleEpic, highlighAnnotationEpic, cleanHighlightAnnotationEpic, closeAnnotationsEpic, confirmCloseAnnotationsEpic,
     downloadAnnotations, onLoadAnnotations, onChangedSelectedFeatureEpic, onBackToEditingFeatureEpic, redrawOnChangeRadiusEpic, redrawOnChangeTextEpic,
-    editSelectedFeatureEpic, editCircleFeatureEpic, purgeMapInfoEpic, closeMeasureToolEpic, openEditorEpic, loadDefaultAnnotationsStylesEpic
+    editSelectedFeatureEpic, editCircleFeatureEpic, purgeMapInfoEpic, closeMeasureToolEpic, openEditorEpic, loadDefaultAnnotationsStylesEpic, showHideAnnotationEpic
 } = require('../annotations')({});
 const rootEpic = combineEpics(addAnnotationsLayerEpic, editAnnotationEpic, removeAnnotationEpic, saveAnnotationEpic, newAnnotationEpic, addAnnotationEpic,
     disableInteractionsEpic, cancelEditAnnotationEpic, startDrawingMultiGeomEpic, endDrawGeomEpic, endDrawTextEpic, cancelTextAnnotationsEpic,
     setAnnotationStyleEpic, restoreStyleEpic, highlighAnnotationEpic, cleanHighlightAnnotationEpic, closeAnnotationsEpic, confirmCloseAnnotationsEpic,
     downloadAnnotations, onLoadAnnotations, onChangedSelectedFeatureEpic, onBackToEditingFeatureEpic, redrawOnChangeRadiusEpic, redrawOnChangeTextEpic,
-    editSelectedFeatureEpic, editCircleFeatureEpic, purgeMapInfoEpic, closeMeasureToolEpic, openEditorEpic, loadDefaultAnnotationsStylesEpic
+    editSelectedFeatureEpic, editCircleFeatureEpic, purgeMapInfoEpic, closeMeasureToolEpic, openEditorEpic, loadDefaultAnnotationsStylesEpic, showHideAnnotationEpic
 );
 const epicMiddleware = createEpicMiddleware(rootEpic);
 const mockStore = configureMockStore([epicMiddleware]);
@@ -445,7 +445,7 @@ describe('annotations Epics', () => {
                 done();
             }
         });
-        const action = confirmRemoveAnnotation('1');
+        const action = confirmRemoveAnnotation('1', 'features');
         store.dispatch(action);
     });
     it('remove annotation geometry', (done) => {
@@ -456,7 +456,7 @@ describe('annotations Epics', () => {
                 done();
             }
         });
-        const action = confirmRemoveAnnotation('geometry');
+        const action = confirmRemoveAnnotation('1', 'geometry');
         store.dispatch(action);
     });
 
@@ -477,7 +477,49 @@ describe('annotations Epics', () => {
                 done();
             }
         });
-        const action = confirmRemoveAnnotation('geometry');
+        const action = confirmRemoveAnnotation('1', 'geometry');
+        store.dispatch(action);
+    });
+    it('toggle annotation visibility', (done) => {
+        const tempStore = mockStore({
+            layers: {
+                flat: [
+                    {id: "annotations", features: [{properties: {id: '1'}}]}
+                ]
+            }
+        });
+        tempStore.subscribe(() => {
+            const actions = store.getActions();
+            if (actions.length >= 2) {
+                expect(actions[0].type).toBe("ANNOTATIONS:VISIBILITY");
+                expect(actions[1].type).toBe(UPDATE_NODE);
+                done();
+            }
+        });
+        const action = toggleVisibilityAnnotation('1');
+        store.dispatch(action);
+    });
+    it('toggle geometry edit', (done) => {
+        const tempStore = mockStore({
+            annotations: {
+                editing: {},
+                selected: {properties: {}, geometry: {type: "Point"}},
+                editGeometry: true
+            }
+        });
+        tempStore.subscribe(() => {
+            const actions = store.getActions();
+            if (actions.length >= 2) {
+                expect(actions[0].type).toBe("ANNOTATIONS:TOGGLE_GEOMETRY_EDIT");
+                expect(actions[1].type).toBe("CHANGE_DRAWING_STATUS");
+                expect(actions[1].status).toBe("clean");
+                expect(actions[2].type).toBe("CHANGE_DRAWING_STATUS");
+                expect(actions[2].status).toBe("drawOrEdit");
+                expect(actions[2].options.editEnabled).toBe(true);
+                done();
+            }
+        });
+        const action = toggleGeometryEdit(true);
         store.dispatch(action);
     });
     it('save annotation', (done) => {
@@ -887,22 +929,6 @@ describe('annotations Epics', () => {
 
         store.dispatch(action);
     });
-    it('openEditorEpic', (done) => {
-        let action = openEditor("1");
-
-        store.subscribe(() => {
-            const actions = store.getActions();
-            if (actions.length >= 4) {
-                expect(actions[1].type).toBe(CLOSE_IDENTIFY);
-                expect(actions[2].type).toBe(SET_CONTROL_PROPERTY);
-                expect(actions[3].type).toBe(SHOW_ANNOTATION);
-                done();
-            }
-        });
-
-        store.dispatch(action);
-    });
-
     it('should safely start drawing annotation when no annotation config provided', (done) => {
         store = mockStore({
             annotations: {
@@ -922,7 +948,21 @@ describe('annotations Epics', () => {
         const action = startDrawing();
         store.dispatch(action);
     });
+    it('openEditorEpic', (done) => {
+        let action = openEditor("1");
 
+        store.subscribe(() => {
+            const actions = store.getActions();
+            if (actions.length >= 4) {
+                expect(actions[1].type).toBe(CLOSE_IDENTIFY);
+                expect(actions[2].type).toBe(SET_CONTROL_PROPERTY);
+                expect(actions[3].type).toBe(SHOW_ANNOTATION);
+                done();
+            }
+        });
+
+        store.dispatch(action);
+    });
     it('default styles are loaded on loadDefaultStyles', (done) => {
         store = mockStore({
             annotations: {}

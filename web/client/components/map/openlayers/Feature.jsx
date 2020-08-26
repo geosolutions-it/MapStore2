@@ -67,6 +67,7 @@ export default class Feature extends React.Component {
         let canRender = false;
 
         if (props.type === "FeatureCollection") {
+            // show/hide feature
             const showHideFeature = !isUndefined(props.properties.visibility) ? props.properties.visibility : true;
             ftGeometry = { features: showHideFeature ? props.features : [] };
             canRender = !!(props.features);

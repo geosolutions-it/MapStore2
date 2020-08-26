@@ -191,9 +191,11 @@ describe("test the Annotations Panel", () => {
     it('test annotation card', ()=> {
         const actions = {
             onZoom: () => {},
-            onToggleVisibility: () => {}
+            onToggleVisibility: () => {},
+            onHighlight: () => {}
         };
         const spyOnToggleVisibility = expect.spyOn(actions, 'onToggleVisibility');
+        const spyOnHighlight = expect.spyOn(actions, 'onHighlight');
         const spyOnZoom = expect.spyOn(actions, 'onZoom');
         const annotations = [{
             "type": "FeatureCollection",
@@ -224,7 +226,7 @@ describe("test the Annotations Panel", () => {
                 }
             ]
         }];
-        const container = ReactDOM.render(<Annotations annotations={annotations} onZoom={actions.onZoom} onToggleVisibility={actions.onToggleVisibility} />, document.getElementById("container"));
+        const container = ReactDOM.render(<Annotations annotations={annotations} onZoom={actions.onZoom} onHighlight={actions.onHighlight} onToggleVisibility={actions.onToggleVisibility} />, document.getElementById("container"));
         expect(container).toBeTruthy();
 
         const sideCard = TestUtils.scryRenderedDOMComponentsWithClass(container, "mapstore-side-card");
@@ -246,5 +248,9 @@ describe("test the Annotations Panel", () => {
         const visibilityBtn = cardButtons[1];
         TestUtils.Simulate.click(visibilityBtn);
         expect(spyOnToggleVisibility).toHaveBeenCalled();
+
+        // Toggle annotation highlight
+        TestUtils.Simulate.mouseEnter(sideCard[0]);
+        expect(spyOnHighlight).toHaveBeenCalled();
     });
 });

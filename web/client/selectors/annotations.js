@@ -151,5 +151,7 @@ module.exports = {
     configSelector,
     symbolListSelector,
     defaultStylesSelector,
-    loadingSelector
+    loadingSelector,
+    allowEditSelector,
+    editGeometrySelector
 };

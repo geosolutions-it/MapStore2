@@ -10,9 +10,16 @@ const {Glyphicon, ControlLabel} = require('react-bootstrap');
 const uuidv1 = require('uuid/v1');
 const bbox = require('@turf/bbox');
 const Toolbar = require('../../misc/toolbar/Toolbar');
+const cs = require('classnames');
 const Message = require('../../I18N/Message');
 const {DEFAULT_ANNOTATIONS_STYLES, getStartEndPointsForLinestring, getGeometryGlyphInfo, getGeometryType} = require('../../../utils/AnnotationsUtils');
 
+/**
+ * Feature List component for Annotation Viewer.
+ * @memberof components.mapControls.annotations
+ * @function
+ *
+*/
 const FeaturesList = (props) => {
     const {
         editing,
@@ -22,7 +29,7 @@ const FeaturesList = (props) => {
         onAddText,
         onToggleGeometryEdit
     } = props;
-    const {features = []} = editing;
+    const {features = []} = editing || {};
     return (
         <>
             <div style={{
@@ -34,7 +41,7 @@ const FeaturesList = (props) => {
                 top: 0,
                 zIndex: 10
             }}>
-                <ControlLabel>Geometries</ControlLabel>
+                <ControlLabel><Message msgId={"annotations.geometries"}/></ControlLabel>
                 <Toolbar
                     btnDefaultProps={{
                         className: 'square-button-md no-border'
@@ -103,7 +110,7 @@ const FeaturesList = (props) => {
                     ]}
                 />
             </div>
-            {features && features.length === 0 && <div style={{ textAlign: 'center' }}>Add a new geometry</div>}
+            {features && features.length === 0 && <div style={{ textAlign: 'center' }}><Message msgId="annotations.addGeometry"/></div>}
             {features?.map((feature, key) => {
                 return (
                     <FeatureCard feature={feature} key={key} {...props}/>
@@ -113,16 +120,21 @@ const FeaturesList = (props) => {
     );
 };
 
+/**
+ * Feature or Geometry card component for FeatureList.
+ * @function
+ *
+ */
 const FeatureCard = ({feature, selected, onDeleteGeometry, onZoom, maxZoom, onSelectFeature, onUnselectFeature}) => {
-    const {properties, geometry} = feature;
-    const type = getGeometryType({ properties, geometry });
+    const type = getGeometryType(feature);
+    const {properties} = feature;
     const {glyph, label} = getGeometryGlyphInfo(type);
     const unselect = selected?.properties?.id === properties?.id;
     const isValidFeature = selected?.properties?.isValidFeature || properties?.isValidFeature;
 
     return (
         <div
-            className={'geometry-card'} // ${selected ? ' ms-selected' : ''}
+            className={cs('geometry-card', {'ms-selected': unselect})}
             onClick={() => unselect ? onUnselectFeature() : onSelectFeature([feature])}
         >
             <div className="geometry-card-preview">

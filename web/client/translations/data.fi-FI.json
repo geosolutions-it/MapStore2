@@ -918,7 +918,7 @@
       "cancel": "Peruuta",
       "back": "Takaisin",
       "applyStyle": "Käytä tyyliä",
-      "addMarker": "Lisää uusi geometria",
+      "addGeometry": "Lisää uusi geometria",
       "styleGeometry": "Vaihda tyyli",
       "deleteGeometry": "Poista kaikki merkintägeometriat",
       "removeannotation": "Haluatko poistaa merkinnät otsikolla: {title}?",

@@ -92,6 +92,7 @@ const {getComponents, coordToArray, validateCoords} = require('../../../utils/An
  * @prop {function} onDownload triggered when the user exports
  * @prop {function} onToggleGeometryEdit triggered when the user selects edit geometry from toolbar
  * @prop {function} onChangeGeometryTitle triggered when the user changes geometry title in coordinate editor panel
+ * @prop {function} onSelectFeature triggered when the user clicks on a geometry card
  * @prop {boolean} coordinateEditorEnabled triggered when the user zooms to an annotation
  * @prop {object} selected Feature containing the geometry and the properties used for the coordinated editor
  * @prop {object} aeronauticalOptions options for aeronautical format (seconds decimals and step)
@@ -355,6 +356,7 @@ class AnnotationsEditor extends React.Component {
                                 glyph: 'arrow-left',
                                 tooltipId: "annotations.back",
                                 visible: true,
+                                disabled: !this.props?.selected?.properties?.isValidFeature || false,
                                 onClick: () => {
                                     if (this.props.styling) {
                                         if (this.props.unsavedStyle) {

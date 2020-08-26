@@ -33,7 +33,9 @@ const {
     aeronauticalOptionsSelector,
     annotationSelector,
     annotationsListSelector,
-    symbolListSelector
+    symbolListSelector,
+    allowEditSelector,
+    editGeometrySelector
 } = require("../annotations");
 
 const state = {
@@ -610,5 +612,25 @@ describe('Test annotations selectors', () => {
                 current: true
             }
         }).mode).toBe('list');
+    });
+    it('allowEditSelector', () => {
+        // Restrict edit mode
+        expect(allowEditSelector({
+            annotations: {allowEdit: false}
+        })).toBe(false);
+        // Allow edit
+        expect(allowEditSelector({
+            annotations: {allowEdit: true}
+        })).toBe(true);
+    });
+    it('editGeometrySelector', () => {
+        // Edit geometry
+        expect(editGeometrySelector({
+            annotations: {editGeometry: false}
+        })).toBe(false);
+        // Allow edit geometry
+        expect(editGeometrySelector({
+            annotations: {allowEdit: true}
+        })).toBe(true);
     });
 });
