@@ -1066,6 +1066,8 @@
             "removeGeometry": "Entfernen",
             "hide": "Anmerkung ausblenden",
             "show": "Anmerkung anzeigen",
+            "tabCoordinates": "Koordinaten",
+            "tabStyle": "Stil",
             "filter": "Notizen / Zeichnungen filtern...",
             "undo": "Sind Sie sicher, dass Sie die Annotationsbearbeitungssitzung aufgeben möchten?",
             "titleUndoGeom": "Die Geometrie hat sich geändert",

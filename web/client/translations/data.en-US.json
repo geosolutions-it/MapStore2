@@ -1074,6 +1074,8 @@
             "removeGeometry": "Remove",
             "hide": "Hide annotation",
             "show": "Show annotation",
+            "tabCoordinates": "Coordinates",
+            "tabStyle": "Style",
             "insertText": "Please insert the text annotation",
             "downloadtooltip": "Download annotations",
             "downloadcurrenttooltip": "Download current annotation",

@@ -384,6 +384,7 @@ class Annotations extends React.Component {
     }
 
     render() {
+        console.log("defaultStyleAnnotations", this.props.defaultStyles);
         let body;
         if (this.props.closing ) {
             body = (<ConfirmDialog

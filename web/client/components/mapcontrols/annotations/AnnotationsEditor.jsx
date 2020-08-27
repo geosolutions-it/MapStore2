@@ -370,6 +370,7 @@ class AnnotationsEditor extends React.Component {
                                         this.props.onResetCoordEditor();
                                     }
                                     !this.props.allowEdit && this.props.onToggleGeometryEdit(false);
+                                    this.setState({...this.state, tabValue: 'coordinates'});
                                 }
                             }, {
                                 glyph: 'pencil',
@@ -638,14 +639,14 @@ class AnnotationsEditor extends React.Component {
                                 key="coordinates"
                                 eventKey="coordinates"
                                 onClick={() => this.setState({...this.state, tabValue: 'coordinates'})}>
-                                Coordinates
+                                <Message msgId={"annotations.tabCoordinates"}/>
                             </NavItem>
                             <NavItem
                                 disabled={!this.props.canEdit}
                                 key="style"
                                 eventKey="style"
                                 onClick={() => this.setState({...this.state, tabValue: 'style'})}>
-                                Style
+                                <Message msgId={"annotations.tabStyle"}/>
                             </NavItem>
                         </Nav>
                         <div style={{flex: 1, overflow: 'auto', paddingTop: 8}}>
@@ -685,8 +686,14 @@ class AnnotationsEditor extends React.Component {
                                 onUpdateSymbols={this.props.onUpdateSymbols}
                                 symbolList={this.props.symbolList}
                                 defaultShape={this.props.defaultShape}
+                                defaultShapeSize={this.props.defaultShapeSize}
+                                defaultShapeFillColor={this.props.defaultShapeFillColor}
+                                defaultShapeStrokeColor={this.props.defaultShapeStrokeColor}
+                                defaultPointType={this.getConfig().defaultPointType}
+                                defaultStyles={this.props.defaultStyles}
                                 lineDashOptions={this.props.lineDashOptions}
                                 markersOptions={this.getConfig()}
+                                textRotationStep={this.props.textRotationStep}
                             />
                             }
                         </div>

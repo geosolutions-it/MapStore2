@@ -1060,6 +1060,8 @@
             "add": "Nuova",
             "geometries": "Geometrie",
             "enableEdit": "Abilita modifica",
+            "tabCoordinates": "Coordinate",
+            "tabStyle": "Stile",
             "zoomTo": "Zoom sull'annotazione",
             "zoomToGeometry": "Zoom sulla geometria",
             "removeGeometry": "Rimuovere",

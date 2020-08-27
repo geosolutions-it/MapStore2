@@ -1065,6 +1065,8 @@
             "removeGeometry": "Retirer",
             "hide": "Masquer l'annotation",
             "show": "Afficher l'annotation",
+            "tabCoordinates": "Coordonnés",
+            "tabStyle": "Style",
             "filter": "Filtrer les annotations...",
             "undo": "Êtes-vous sûr de vouloir abandonner la session d'édition des annotations ?",
             "titleUndoGeom": "La géométrie a changé",
