@@ -26,6 +26,27 @@
 }
 
 #share-container {
+    .coordinateRow.aeronautical{
+        .coordinate{
+            flex-direction: column;
+            .form-group .degrees, .minutes, .seconds {
+                flex: 1;
+            }
+        }
+    }
+    .coordinateRow {
+        .coordinate {
+            display: flex;
+            flex: 1 1 0%;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            .input-group {
+                flex: 1 1 0%;
+                padding: 4px 0;
+                margin-right: 8px;
+            }
+        }
+    }
     .coordinateRow.aeronautical.coord-editor.row {
         border: none !important;
         margin: unset !important;

@@ -637,7 +637,7 @@ describe("test the CoordinatesEditor Panel", () => {
         );
         expect(editor).toExist();
 
-        let buttons = TestUtils.scryRenderedDOMComponentsWithTag(editor, "button");
+        let buttons = TestUtils.scryRenderedDOMComponentsWithClass(editor, "btn-default");
         let firstDelButton = buttons[4];
         TestUtils.Simulate.click(firstDelButton);
         expect(spyOnHighlightPoint).toHaveBeenCalled();
@@ -668,7 +668,7 @@ describe("test the CoordinatesEditor Panel", () => {
         );
         expect(editor).toExist();
 
-        let buttons = TestUtils.scryRenderedDOMComponentsWithTag(editor, "button");
+        let buttons = TestUtils.scryRenderedDOMComponentsWithClass(editor, "btn-default");
         let firstDelButton = buttons[5];
         TestUtils.Simulate.click(firstDelButton);
         expect(spyOnHighlightPoint).toNotHaveBeenCalled();
@@ -706,7 +706,7 @@ describe("test the CoordinatesEditor Panel", () => {
         );
         expect(editor).toExist();
 
-        let buttons = TestUtils.scryRenderedDOMComponentsWithTag(editor, "button");
+        let buttons = TestUtils.scryRenderedDOMComponentsWithClass(editor, "btn-default");
         let firstDelButton = buttons[4];
         TestUtils.Simulate.click(firstDelButton);
         expect(spyOnSetInvalidSelected).toNotHaveBeenCalled();
@@ -744,7 +744,7 @@ describe("test the CoordinatesEditor Panel", () => {
         );
         expect(editor).toExist();
 
-        const buttons = TestUtils.scryRenderedDOMComponentsWithTag(editor, "button");
+        let buttons = TestUtils.scryRenderedDOMComponentsWithClass(editor, "btn-default");
 
         expect(buttons.length).toBe(15);
         const invalidLineString = buttons[0].getElementsByClassName('glyphicon-exclamation-mark');
@@ -784,7 +784,7 @@ describe("test the CoordinatesEditor Panel", () => {
 
         const hamburgerMenus = TestUtils.scryRenderedDOMComponentsWithClass(editor, "glyphicon-menu-hamburger");
         expect(hamburgerMenus.length).toBe(5);
-        const buttons = TestUtils.scryRenderedDOMComponentsWithTag(editor, "button");
+        let buttons = TestUtils.scryRenderedDOMComponentsWithClass(editor, "btn-default");
         expect(buttons.length).toBe(18);
         const invalidPolygon = buttons[0].getElementsByClassName('glyphicon-exclamation-mark');
         expect(invalidPolygon).toBeTruthy();

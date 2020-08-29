@@ -8,7 +8,7 @@
 
 const React = require('react');
 const PropTypes = require('prop-types');
-const {Glyphicon, Button, InputGroup} = require('react-bootstrap');
+const {Glyphicon, InputGroup} = require('react-bootstrap');
 const Toolbar = require('../toolbar/Toolbar');
 const draggableComponent = require('../enhancers/draggableComponent');
 const CoordinateEntry = require('./CoordinateEntry');
@@ -71,6 +71,7 @@ class CoordinatesRow extends React.Component {
             const changeLat = parseFloat(this.state.lat) !== parseFloat(this.props.component.lat);
             const changeLon = parseFloat(this.state.lon) !== parseFloat(this.props.component.lon);
             this.setState({...this.state, disabledApplyChange: !(changeLat || changeLon)}, ()=> {
+                // Auto save on coordinate change for annotations
                 this.props.renderer === "annotations" &&  this.props.onSubmit(this.props.idx, this.state);
             });
         });
@@ -82,7 +83,6 @@ class CoordinatesRow extends React.Component {
 
     render() {
         const {idx} = this.props;
-        // drag button must be a button in order to show the disabled state
         const toolButtons = [
             {
                 visible: this.props.removeVisible,
@@ -121,16 +121,18 @@ class CoordinatesRow extends React.Component {
                 visible: this.props.renderer !== "annotations"
             }
         ];
+
+        // drag button cannot be a button since IE/Edge doesn't support drag operation on button
         const dragButton = (
-            <div><Button
-                disabled={!this.props.isDraggableEnabled}
-                className="square-button-md no-border btn btn-default"
-                style={{display: "flex", cursor: this.props.isDraggableEnabled && 'grab'}}>
+            <div role="button" className="square-button-md no-border btn btn-default"
+                style={{display: "table",
+                    color: !this.props.isDraggableEnabled && "#999999",
+                    pointerEvents: !this.props.isDraggableEnabled ? "none" : "auto",
+                    cursor: this.props.isDraggableEnabled && 'grab' }}>
                 <Glyphicon
                     glyph="menu-hamburger"
-                    style={{pointerEvents: !this.props.isDraggableEnabled ? "none" : "auto"}}
                 />
-            </Button></div>);
+            </div>);
 
         return (
             <div className={`coordinateRow ${this.props.format || ""} ${this.props.customClassName || ""}`} onMouseEnter={() => {
@@ -142,7 +144,7 @@ class CoordinatesRow extends React.Component {
                     this.props.onMouseLeave();
                 }
             }}>
-                <div>
+                <div style={{cursor: this.props.isDraggableEnabled ? 'grab' : "not-allowed"}}>
                     {this.props.showDraggable ? this.props.isDraggable ? this.props.connectDragSource(dragButton) : dragButton : null}
                 </div>
                 <div className="coordinate lat">

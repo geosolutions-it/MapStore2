@@ -274,7 +274,10 @@ class AnnotationsEditor extends React.Component {
                                 glyph: 'arrow-left',
                                 tooltipId: "annotations.back",
                                 visible: this.props.showBack,
-                                onClick: () => { this.props.onCancel(); this.props.onCleanHighlight(); }
+                                onClick: () => {
+                                    this.props.onCancelEdit();
+                                    this.props.onCancel(); this.props.onCleanHighlight();
+                                }
                             }, {
                                 glyph: "pencil",
                                 tooltipId: "annotations.edit",
@@ -302,49 +305,6 @@ class AnnotationsEditor extends React.Component {
             </Grid>);
     };
 
-    renderEditingButtons = () => {
-        return (<Grid className="mapstore-annotations-info-viewer-buttons" fluid>
-            <Row className="text-center noTopMargin">
-                <Col xs={12}>
-                    <Toolbar
-                        btnDefaultProps={{ className: 'square-button-md', bsStyle: 'primary' }}
-                        buttons={[{
-                            glyph: 'arrow-left',
-                            tooltipId: "annotations.back",
-                            visible: true,
-                            onClick: () => {
-                                if (this.props.unsavedChanges) {
-                                    this.props.onToggleUnsavedChangesModal();
-                                } else {
-                                    this.cancelEdit();
-                                }
-                            }
-                        },
-                        {
-                            glyph: 'trash',
-                            tooltipId: "annotations.remove",
-                            visible: true,
-                            onClick: () => {
-                                this.setState({removing: this.props.id});
-                            }
-                        },
-                        {
-                            glyph: 'floppy-disk',
-                            tooltipId: "annotations.save",
-                            visible: true,
-                            onClick: this.save
-                        },
-                        {  // TODO should this be included on geometry card
-                            glyph: 'download',
-                            tooltip: <Message msgId="annotations.downloadcurrenttooltip" />,
-                            visible: true,
-                            onClick: () => { this.props.onDownload(this.props.editing); }
-                        }
-                        ]} />
-                </Col>
-            </Row>
-        </Grid>);
-    };
     renderEditingCoordButtons = () => {
         return (<Grid className="mapstore-annotations-info-viewer-buttons" fluid>
             <Row className="text-center noTopMargin">
@@ -356,7 +316,8 @@ class AnnotationsEditor extends React.Component {
                                 glyph: 'arrow-left',
                                 tooltipId: "annotations.back",
                                 visible: true,
-                                disabled: !this.props?.selected?.properties?.isValidFeature || false,
+                                disabled: this.props?.selected?.properties
+                                    && !this.props?.selected?.properties?.isValidFeature || false,
                                 onClick: () => {
                                     if (this.props.styling) {
                                         if (this.props.unsavedStyle) {
@@ -366,26 +327,44 @@ class AnnotationsEditor extends React.Component {
                                         }
                                     } else if (this.props.unsavedGeometry) {
                                         this.props.onToggleUnsavedGeometryModal();
+                                    } else if (this.props.unsavedChanges) {
+                                        this.props.onToggleUnsavedChangesModal();
                                     } else {
                                         this.props.onResetCoordEditor();
+                                        this.props.onCancelEdit();
                                     }
-                                    !this.props.allowEdit && this.props.onToggleGeometryEdit(false);
+                                    // Reset edit mode and geometry editor tab
+                                    !this.props.allowEdit && this.props.onToggleGeometryEdit && this.props.onToggleGeometryEdit(false);
                                     this.setState({...this.state, tabValue: 'coordinates'});
+                                }
+                            }, {
+                                glyph: 'trash',
+                                tooltipId: "annotations.remove",
+                                visible: !this.props.selected,
+                                onClick: () => {
+                                    this.setState({removing: this.props.id});
                                 }
                             }, {
                                 glyph: 'pencil',
                                 tooltipId: "annotations.enableEdit",
-                                visible: !this.props.canEdit,
+                                visible: this.props.selected && !this.props.canEdit,
                                 onClick: ()=> this.props.onToggleGeometryEdit(true)
-                            }, {// only in coord editor
+                            }, {
                                 glyph: 'floppy-disk',
                                 tooltipId: "annotations.save",
-                                visible: !this.props.styling && this.props.canEdit,
+                                visible: !this.props.styling && this.props.canEdit || !this.props.selected,
                                 disabled: this.props.selected && this.props.selected.properties && !this.props.selected.properties.isValidFeature,
                                 onClick: () => {
-                                    this.props.selected && this.props.onAddNewFeature();
-                                    !this.props.allowEdit && this.props.onToggleGeometryEdit(false);
+
+                                    !this.props.allowEdit && this.props.onToggleGeometryEdit && this.props.onToggleGeometryEdit(false);
+                                    this.save();
                                 }
+                            },
+                            {
+                                glyph: 'download',
+                                tooltip: <Message msgId="annotations.downloadcurrenttooltip" />,
+                                visible: !this.props.selected,
+                                onClick: () => { this.props.onDownload(this.props.editing); }
                             }
                         ]} />
                 </Col>
@@ -396,11 +375,9 @@ class AnnotationsEditor extends React.Component {
     renderButtons = (editing) => {
         let toolbar;
         if (editing) {
-            if (this.props.coordinateEditorEnabled) {
-                toolbar = this.renderEditingCoordButtons();
-            } else {
-                toolbar = this.renderEditingButtons();
-            }
+            toolbar = this.renderEditingCoordButtons();
+        } else {
+            toolbar = this.renderViewButtons();
         }
         return (<div className="mapstore-annotations-info-viewer-buttons">{toolbar}</div>);
     };
@@ -703,10 +680,6 @@ class AnnotationsEditor extends React.Component {
         );
     }
 
-    cancelEdit = () => {
-        this.props.onCancelEdit();
-    };
-
     change = (field, value) => {
         this.props.onChangeProperties(field, value);
     };
@@ -768,6 +741,7 @@ class AnnotationsEditor extends React.Component {
     save = () => {
         const errors = this.validate();
         if (Object.keys(errors).length === 0) {
+            this.props.selected && this.props.onAddNewFeature();
             this.props.onSave(this.props.id, assign({}, this.props.editedFields),
                 this.props.editing.features, this.props.editing.style, this.props.editing.newFeature || false, this.props.editing.properties);
         } else {

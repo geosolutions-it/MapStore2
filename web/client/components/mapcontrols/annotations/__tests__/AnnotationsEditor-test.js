@@ -136,18 +136,22 @@ describe("test the AnnotationsEditor Panel", () => {
 
         const testHandlers = {
             onSaveHandler: (id) => { return id; },
-            onCancelHandler: (id) => { return id; }
+            onCancelHandler: (id) => { return id; },
+            onToggleGeometryEditHandler: (flag) => { return flag; }
         };
 
         const spySave = expect.spyOn(testHandlers, 'onSaveHandler');
         const spyCancel = expect.spyOn(testHandlers, 'onCancelHandler');
+        const spyOnToggleGeometryEdit = expect.spyOn(testHandlers, 'onToggleGeometryEditHandler');
 
         const viewer = ReactDOM.render(<AnnotationsEditor {...feature} {...actions}
+            selected={null}
             editing={{
                 properties: feature,
                 features: [{}]
             }}
             onSave={testHandlers.onSaveHandler}
+            onToggleGeometryEdit={testHandlers.onToggleGeometryEditHandler}
             onCancelEdit={testHandlers.onCancelHandler}/>, document.getElementById("container"));
         expect(viewer).toExist();
 
@@ -158,6 +162,7 @@ describe("test the AnnotationsEditor Panel", () => {
 
         expect(spySave.calls.length).toEqual(1);
         expect(spyCancel.calls.length).toEqual(0);
+        expect(spyOnToggleGeometryEdit.calls.length).toEqual(1);
     });
 
     it('test click cancel', () => {
@@ -179,7 +184,8 @@ describe("test the AnnotationsEditor Panel", () => {
             properties: feature,
             geometry: {}
         }} onSave={testHandlers.onSaveHandler}
-        onCancelEdit={testHandlers.onCancelHandler}/>, document.getElementById("container"));
+        onCancelEdit={testHandlers.onCancelHandler}
+        onResetCoordEditor={()=>null}/>, document.getElementById("container"));
         expect(viewer).toExist();
 
         let cancelButton = ReactDOM.findDOMNode(TestUtils.scryRenderedDOMComponentsWithTag(viewer, "button")[0]);

@@ -197,7 +197,7 @@ class CoordinatesEditor extends React.Component {
         ];
         return (
             <div style={{display: 'flex', flexDirection: 'column', flex: 1}}>
-                <div style={{display: 'flex', alignItems: 'center', marginBottom: 8, justifyContent: "flex-end"}}>
+                <div className={"measure-feature-selector"}>
                     <div>
                         {this.props.showFeatureSelector ? <Select
                             value={this.props.currentFeature}
@@ -239,7 +239,7 @@ class CoordinatesEditor extends React.Component {
                         </div>
                     </div>
                 }
-                <div style={{flex: 1, flexBasis: 'auto', overflowY: 'auto', overflowX: 'hidden'}}>
+                <div className={"coordinates-row-container"}>
                     {this.props.components.map((component, idx) => <CoordinatesRow
                         format={this.props.format}
                         aeronauticalOptions={this.props.aeronauticalOptions}
