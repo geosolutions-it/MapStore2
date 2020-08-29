@@ -51,6 +51,7 @@ class AddBar extends React.Component {
         return (
             <ToolbarPopover
                 className="add-bar"
+                popoverClassName="add-bar-popover"
                 content={(
                     <Toolbar
                         btnDefaultProps={{ className: 'square-button btn-tray' }}

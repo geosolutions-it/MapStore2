@@ -13,6 +13,7 @@ const {isOpenlayers} = require('./maptype');
 const {isMapInfoOpen} = require('./mapInfo');
 const {head, get} = require('lodash');
 const assign = require('object-assign');
+const { getConfigProp } = require('../utils/ConfigUtils');
 
 const annotationsLayerSelector = createSelector([
     layersSelector
@@ -58,7 +59,7 @@ const annotationsInfoSelector = (state) => (assign({}, {
     allowEdit: allowEditSelector(state),
     mouseHoverEvents: isMapInfoOpen(state),
     closing: closingSelector(state),
-    format: formatSelector(state),
+    format: formatSelector(state) || getConfigProp("defaultCoordinateFormat"),
     aeronauticalOptions: aeronauticalOptionsSelector(state),
     config: configSelector(state),
     drawing: drawingSelector(state),

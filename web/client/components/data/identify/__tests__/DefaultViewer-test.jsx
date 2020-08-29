@@ -37,7 +37,7 @@ describe('DefaultViewer', () => {
     it('creates the DefaultViewer component with custom container', () => {
         const Container = () => <div className="mycontainer"/>;
         const viewer = ReactDOM.render(
-            <DefaultViewer container={Container}/>,
+            <DefaultViewer container={Container} requests={["TEST"]}/>,
             document.getElementById("container")
         );
 
@@ -55,7 +55,7 @@ describe('DefaultViewer', () => {
         }];
         const Header = () => <div className="mycontainer"/>;
         const viewer = ReactDOM.render(
-            <DefaultViewer responses={responses} header={Header}/>,
+            <DefaultViewer responses={responses} header={Header} requests={["TEST"]}/>,
             document.getElementById("container")
         );
 
@@ -97,13 +97,36 @@ describe('DefaultViewer', () => {
 
     it('creates the DefaultViewer component with no results', () => {
         const viewer = ReactDOM.render(
-            <DefaultViewer/>,
+            <DefaultViewer emptyResponses/>,
             document.getElementById("container")
         );
 
         expect(viewer).toExist();
         const dom = ReactDOM.findDOMNode(viewer);
         expect(dom.getElementsByClassName("alert").length).toBe(1);
+    });
+
+    it('creates the DefaultViewer component with an empty and an non empty layer results', () => {
+        const responses = [{
+            response: "A",
+            layerMetadata: {
+                title: 'a'
+            }
+        }, {
+            response: "no features were found",
+            layerMetadata: {
+                title: 'b'
+            }
+        }];
+        const viewer = ReactDOM.render(
+            <DefaultViewer responses={responses}/>,
+            document.getElementById("container")
+        );
+
+        expect(viewer).toExist();
+        const dom = ReactDOM.findDOMNode(viewer);
+        expect(dom.getElementsByClassName("alert").length).toBe(1);
+        expect(dom.getElementsByClassName("panel").length).toBe(1);
     });
 
     it('creates the DefaultViewer component with some results', () => {
@@ -119,7 +142,7 @@ describe('DefaultViewer', () => {
             }
         }];
         const viewer = ReactDOM.render(
-            <DefaultViewer responses={responses}/>,
+            <DefaultViewer responses={responses} requests={["TEST"]}/>,
             document.getElementById("container")
         );
 
@@ -150,7 +173,7 @@ describe('DefaultViewer', () => {
             "custom": (props) => <span className="custom">{props.response}</span>
         };
         const viewer = ReactDOM.render(
-            <DefaultViewer responses={responses} viewers={viewers} format="custom"/>,
+            <DefaultViewer responses={responses} viewers={viewers} format="custom" requests={["TEST"]}/>,
             document.getElementById("container")
         );
 

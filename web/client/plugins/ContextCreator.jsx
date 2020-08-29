@@ -13,7 +13,7 @@ import ConfigUtils from '../utils/ConfigUtils';
 import {createPlugin} from '../utils/PluginsUtils';
 import {newContextSelector, resourceSelector, creationStepSelector, reloadConfirmSelector, showDialogSelector, isLoadingSelector,
     loadFlagsSelector, isValidContextNameSelector, contextNameCheckedSelector, pluginsSelector, editedPluginSelector, editedCfgSelector,
-    validationStatusSelector, cfgErrorSelector, parsedTemplateSelector, fileDropStatusSelector, editedTemplateSelector,
+    validationStatusSelector, cfgErrorSelector, templatesSelector, parsedTemplateSelector, fileDropStatusSelector, editedTemplateSelector,
     availablePluginsFilterTextSelector, availableTemplatesFilterTextSelector, enabledPluginsFilterTextSelector,
     enabledTemplatesFilterTextSelector, showBackToPageConfirmationSelector, tutorialStepSelector} from '../selectors/contextcreator';
 import {mapTypeSelector} from '../selectors/maptype';
@@ -40,6 +40,7 @@ export const contextCreatorSelector = createStructuredSelector({
     editedCfg: editedCfgSelector,
     isCfgValidated: validationStatusSelector,
     cfgError: cfgErrorSelector,
+    mapTemplates: templatesSelector,
     parsedTemplate: parsedTemplateSelector,
     editedTemplate: editedTemplateSelector,
     fileDropStatus: fileDropStatusSelector,

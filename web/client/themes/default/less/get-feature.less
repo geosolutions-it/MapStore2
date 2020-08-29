@@ -1,5 +1,27 @@
 
 #identify-container {
+    .layer-select-row{
+        margin-top: unset;
+        .layer-col{
+            display: flex;
+            align-items: center;
+            padding: 8px 8px 0;
+            z-index: 10;
+        }
+    }
+    .coordinates-edit-row {
+        display: flex;
+        align-items: center;
+        padding: 8px;
+        margin-top: 8px;
+        border-top: 1px solid rgb(221, 221, 221);
+        border-bottom: 1px solid rgb(221, 221, 221);
+        .coordinate-editor {
+            flex: 1 1 0%;
+            font-family: @font-family-monospace;
+            padding: 0 4px;
+        }
+    }
     .coordinateRow.coord-editor.aeronautical {
         & .form-group {
             width: 100%;
@@ -20,6 +42,18 @@
                 flex: 1 1 0%;
                 padding: 4px 0px;
                 margin-right: 8px;
+                .form-group{
+                    .minutes, .degrees {
+                        min-width: 45px;
+                        flex: 1;
+                        display: flex;
+                    }
+                    .seconds {
+                        display: flex;
+                        flex: 1;
+                        min-width: 75px;
+                    }
+                }
             }
         }
     }
@@ -44,7 +78,20 @@
                 flex: 1 1 0%;
                 padding: 4px 0;
                 margin-right: 8px;
+                .form-group{
+                    .minutes, .degrees {
+                        min-width: 45px;
+                        flex: 1;
+                        display: flex;
+                    }
+                    .seconds {
+                        display: flex;
+                        flex: 1;
+                        min-width: 75px;
+                    }
+                }
             }
+
         }
     }
     .coordinateRow.aeronautical.coord-editor.row {
@@ -56,6 +103,7 @@
         border: none !important;
         margin: unset !important;
         padding: unset !important;
+
     }
 }
 
@@ -69,6 +117,10 @@
     .ms-identify-swipe-header-arrow {
         min-width: @square-btn-medium-size;
     }
+}
+
+#identify-layer-select .Select .Select-menu-outer {
+    z-index: 3;
 }
 
 .coordinateRow {
@@ -179,4 +231,16 @@
         padding-top: 8px;
         border-top: 1px solid @ms2-color-shade-lighter;
     }
+}
+
+.coordinates-text {
+    flex: 1 1 0%;
+    margin-left: 8px;
+    color: #333333 !important;
+    background-color: #ffffff !important;
+    font-family: @font-family-monospace;
+}
+.identify-icon{
+    display: inline-block;
+    margin-top: 4px;
 }
