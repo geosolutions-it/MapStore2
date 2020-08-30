@@ -92,7 +92,7 @@ describe('FeatureInfoUtils', () => {
     const emptyJSON = {"type": "FeatureCollection", "totalFeatures": "unknown", "features": [], "crs": null};
     it('PROPERTIES Validator', () => {
         let results = FeatureInfoUtils.Validator.PROPERTIES.getValidResponses([{response: validJSON}, {response: emptyJSON}]);
-        expect(results.length).toBe(1);
+        expect(results.length).toBe(2);
         expect(results[0].response).toBe(validJSON);
 
         let notValidResults = FeatureInfoUtils.Validator.PROPERTIES.getNoValidResponses([{response: validJSON}, {response: emptyJSON}]);
@@ -105,7 +105,7 @@ describe('FeatureInfoUtils', () => {
     // **********************************
     it('TEMPLATE Validator', () => {
         let results = FeatureInfoUtils.Validator.TEMPLATE.getValidResponses([{response: validJSON}, {response: emptyJSON}]);
-        expect(results.length).toBe(1);
+        expect(results.length).toBe(2);
         expect(results[0].response).toBe(validJSON);
 
         let notValidResults = FeatureInfoUtils.Validator.TEMPLATE.getNoValidResponses([{response: validJSON}, {response: emptyJSON}]);

@@ -66,6 +66,7 @@ module.exports = {
         HomePlugin: require('../plugins/Home'),
         IdentifyPlugin: require('../plugins/Identify'),
         LanguagePlugin: require('../plugins/Language'),
+        LayerInfoPlugin: require('../plugins/LayerInfo').default,
         LocatePlugin: require('../plugins/Locate'),
         LoginPlugin: require('../plugins/Login'),
         ManagerMenuPlugin: require('../plugins/manager/ManagerMenu'),

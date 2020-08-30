@@ -23,6 +23,7 @@ class ToolbarPopover extends React.Component {
         id: PropTypes.string,
         style: PropTypes.object,
         className: PropTypes.string,
+        popoverClassName: PropTypes.string,
         placement: PropTypes.string,
         title: PropTypes.node,
         content: PropTypes.node
@@ -46,7 +47,8 @@ class ToolbarPopover extends React.Component {
                     overlay={
                         <Popover
                             id={this.props.id}
-                            title={this.props.title}>
+                            title={this.props.title}
+                            className={this.props.popoverClassName}>
                             {this.props.content}
                         </Popover>}>
                     {this.props.children}

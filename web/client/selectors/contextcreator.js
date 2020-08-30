@@ -29,6 +29,7 @@ export const cfgErrorSelector = state => state.contextcreator && state.contextcr
 export const validationStatusSelector = state => get(state, 'contextcreator.validationStatus', true);
 export const parsedTemplateSelector = state => state.contextcreator && state.contextcreator.parsedTemplate;
 export const fileDropStatusSelector = state => state.contextcreator && state.contextcreator.fileDropStatus;
+export const templatesSelector = state => state.contextcreator?.templates;
 export const editedTemplateSelector = state => state.contextcreator && state.contextcreator.editedTemplate;
 export const filterTextSelector = state => state.contextcreator && state.contextcreator.filterText;
 export const availablePluginsFilterTextSelector = createSelector(filterTextSelector, filterText => get(filterText, 'availablePlugins'));

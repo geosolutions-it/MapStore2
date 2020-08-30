@@ -165,30 +165,36 @@ const MapInfoUtils = {
         return {
             getValidResponses: (responses) => {
                 return responses.reduce((previous, current) => {
-                    let infoFormat;
-                    // Handle WMS, WMTS
-                    if (current.queryParams && current.queryParams.hasOwnProperty('info_format')) {
-                        infoFormat = current.queryParams.info_format;
+                    if (current) {
+                        let infoFormat;
+                        // Handle WMS, WMTS
+                        if (current.queryParams && current.queryParams.hasOwnProperty('info_format')) {
+                            infoFormat = current.queryParams.info_format;
+                        }
+                        // handle WFS
+                        if (current.queryParams && current.queryParams.hasOwnProperty('outputFormat')) {
+                            infoFormat = current.queryParams.outputFormat;
+                        }
+                        const valid = (FeatureInfoUtils.Validator[current.format || INFO_FORMATS_BY_MIME_TYPE[infoFormat] || INFO_FORMATS_BY_MIME_TYPE[format]] || defaultValidator).getValidResponses([current]);
+                        return [...previous, ...valid];
                     }
-                    // handle WFS
-                    if (current.queryParams && current.queryParams.hasOwnProperty('outputFormat')) {
-                        infoFormat = current.queryParams.outputFormat;
-                    }
-                    const valid = (FeatureInfoUtils.Validator[current.format || INFO_FORMATS_BY_MIME_TYPE[infoFormat] || INFO_FORMATS_BY_MIME_TYPE[format]] || defaultValidator).getValidResponses([current]);
-                    return [...previous, ...valid];
+                    return [...previous];
                 }, []);
             },
             getNoValidResponses: (responses) => {
                 return responses.reduce((previous, current) => {
-                    let infoFormat;
-                    if (current.queryParams && current.queryParams.hasOwnProperty('info_format')) {
-                        infoFormat = current.queryParams.info_format;
+                    if (current) {
+                        let infoFormat;
+                        if (current.queryParams && current.queryParams.hasOwnProperty('info_format')) {
+                            infoFormat = current.queryParams.info_format;
+                        }
+                        if (current.queryParams && current.queryParams.hasOwnProperty('outputFormat')) {
+                            infoFormat = current.queryParams.outputFormat;
+                        }
+                        const valid = (FeatureInfoUtils.Validator[current.format || INFO_FORMATS_BY_MIME_TYPE[infoFormat] || INFO_FORMATS_BY_MIME_TYPE[format]] || defaultValidator).getNoValidResponses([current]);
+                        return [...previous, ...valid];
                     }
-                    if (current.queryParams && current.queryParams.hasOwnProperty('outputFormat')) {
-                        infoFormat = current.queryParams.outputFormat;
-                    }
-                    const valid = (FeatureInfoUtils.Validator[current.format || INFO_FORMATS_BY_MIME_TYPE[infoFormat] || INFO_FORMATS_BY_MIME_TYPE[format]] || defaultValidator).getNoValidResponses([current]);
-                    return [...previous, ...valid];
+                    return [...previous];
                 }, []);
             }
         };

@@ -3,45 +3,111 @@
     .degrees, .minutes {
         width: auto !important;
     }
+
+    .layer-select-row{
+        margin-top: unset;
+        .layer-col{
+            display: flex;
+            align-items: center;
+            padding: 8px 8px 0;
+            z-index: 10;
+        }
+    }
+    .coordinates-edit-row {
+        display: flex;
+        align-items: center;
+        padding: 8px;
+        margin-top: 8px;
+        border-top: 1px solid rgb(221, 221, 221);
+        border-bottom: 1px solid rgb(221, 221, 221);
+        .coordinate-editor {
+            flex: 1 1 0%;
+            font-family: @font-family-monospace;
+            padding: 0 4px;
+        }
+    }
     .coordinateRow.coord-editor.aeronautical {
+        .coordinate {
+            flex-direction: column;
+        }
+        span.react-numeric-input{
+            width: 100%;
+        }
         @media screen and (max-width: 660px) {
             display: block;
             & .col-xs-1 .pull-right.btn-group {
                 margin-top: -70px;
             }
-
         }
         & .form-group {
-            width: auto;
+            width: 100%;
             position: relative;
             & .seconds {
-                min-width: 80px;
-                max-width: 100px;
                 flex: unset !important;
             }
         }
     }
-    .coordinateRow.coord-editor.decimal {
-        @media only screen and (max-width: 660px) {
-            display: block;
-            & .form-group {
-                max-width: ~"calc(100% - 80px)";
-                margin-left: 40px;
+    .coordinateRow {
+        .coordinate {
+            .input-group {
+                .form-group {
+                    display: flex;
+                    input#intl-numeric{
+                        float: unset;
+                    }
+                }
             }
         }
     }
 }
 
 #share-container {
-    .coordinateRow.aeronautical.coord-editor.row {
-        border: none !important;
-        margin: unset !important;
-        padding: unset !important;
+    .coordinateRow {
+        .coordinate {
+            .input-group {
+                .input-group-addon {
+                    min-width: 45px;
+                }
+                .form-group {
+                    width: 100%;
+                    position: relative;
+                    display: flex;
+                    input#intl-numeric{
+                        float: unset;
+                    }
+                }
+                .direction-select {
+                    width: 45px
+                }
+            }
+        }
     }
-    .coordinateRow.decimal.coord-editor.row {
-        border: none !important;
-        margin: unset !important;
-        padding: unset !important;
+}
+
+#share-container, #identify-container {
+    .coordinateRow {
+        .coordinate {
+            width: 100%;
+            display: flex;
+            flex: 1;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            .input-group {
+                flex: 1;
+                padding: 4px 0;
+                margin-right: 8px;
+            }
+            .degrees, .minutes {
+                display: flex;
+                flex: 1;
+                min-width: 45px;
+            }
+            .seconds {
+                display: flex;
+                flex: 1;
+                min-width: 75px;
+            }
+        }
     }
 }
 
@@ -57,14 +123,20 @@
     }
 }
 
+#identify-layer-select .Select .Select-menu-outer {
+    z-index: 3;
+}
+
 .coordinateRow {
-    margin: 8px 0px;
-    border: 1px solid #dddddd;
+    margin: 0;
+    border: 0;
     text-align: center;
     display: flex;
     align-items: center;
     box-sizing: border-box;
-    padding: 15px 5px;
+    padding: 0;
+    color: #333333 !important;
+    background-color: transparent !important;
 
     input {
         font-size: 12px !important;
@@ -86,10 +158,10 @@
         min-width: unset !important;
     }
     .form-group {
-        margin: 4px 0;
+        margin: 0;
     }
     &.coord-editor .tools.btn-group {
-        margin-top: 20px;
+        margin-top: 0;
     }
     .tools.btn-group span {
         display: flex;
@@ -170,4 +242,15 @@
     background: unset !important;
     box-shadow: unset !important;
     z-index: 100;
+}
+.coordinates-text {
+    flex: 1 1 0%;
+    margin-left: 8px;
+    color: #333333 !important;
+    background-color: #ffffff !important;
+    font-family: @font-family-monospace;
+}
+.identify-icon{
+    display: inline-block;
+    margin-top: 4px;
 }

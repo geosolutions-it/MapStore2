@@ -192,7 +192,7 @@ class AeronauticalCoordinateEditor extends React.Component {
                         componentClass="select" placeholder="select"
                         value={this.props.direction}
                         onChange={e => this.onChange("direction", e.target.value)}
-                        style={{ width: 40, paddingLeft: 4, paddingRight: 4 }}>
+                        style={{ minWidth: 45, paddingLeft: 4, paddingRight: 4, flex: "1 1 0%" }}>
                         {this.props.directions.map((d) => <option key={d} value={d}>{d}</option>)}
                     </FormControl>
                 </div>

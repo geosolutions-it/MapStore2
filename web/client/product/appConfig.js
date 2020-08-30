@@ -69,11 +69,11 @@ module.exports = {
         component: require('./pages/GeoStory').default
     }, {
         name: "geostory",
-        path: "/geostory/:gid/:sectionId",
+        path: "/geostory/:gid/section/:sectionId",
         component: require('./pages/GeoStory').default
     }, {
         name: "geostory",
-        path: "/geostory/:gid/:sectionId/:columnId",
+        path: "/geostory/:gid/section/:sectionId/column/:columnId",
         component: require('./pages/GeoStory').default
     }, {
         name: "geostory",
@@ -82,12 +82,12 @@ module.exports = {
     },
     {
         name: "geostory",
-        path: "/geostory/shared/:gid/:sectionId",
+        path: "/geostory/shared/:gid/section/:sectionId",
         component: require('./pages/GeoStory').default
     },
     {
         name: "geostory",
-        path: "/geostory/shared/:gid/:sectionId/:columnId",
+        path: "/geostory/shared/:gid/section/:sectionId/column/:columnId",
         component: require('./pages/GeoStory').default
     }],
     initialState: {

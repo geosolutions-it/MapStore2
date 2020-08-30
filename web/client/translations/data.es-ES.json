@@ -120,8 +120,8 @@
                 "tooltip": "Nota: este parámetro requiere configuraciones específicas en GeoServer"
             }
         },
-        "longitude": "Longitud",
-        "latitude": "Latitud",
+        "longitude": "Lon",
+        "latitude": "Lat",
         "notification": {
             "update": "Actualizar",
             "warning": "Aviso",
@@ -521,6 +521,7 @@
                 "title": "Refrescar el título",
                 "dimensions": "Refrescar las dimensiones"
             },
+            "layerInfoTooltip": "Actualizar el título y la descripción de la capa",
             "layerMetadata": {
                 "identifier": "Identificador",
                 "title": "Título",
@@ -650,6 +651,7 @@
         "identifyRevGeocodeCloseText": "Cerrar",
         "identifyRevGeocodeError": "Geocodificación imposible",
         "identifyEdit": "Editar",
+        "identifyLayerSelectNoResult": "No se encontraron capas",
         "getFeatureInfoError": {
             "title": "Ooops! Algo va mal",
             "text": "Un error se ha producido durante esta <b>GetFeatureInfo</b> petición"
@@ -2828,6 +2830,27 @@
             },
             "deleteError": "Se produjo un error inesperado al eliminar el mapa",
             "updateError": "Se produjo un error inesperado al guardar el mapa"
+        },
+        "layerInfo": {
+            "title": "Actualizar títulos y descripciones de capas",
+            "noLayers": "No se encontraron capas",
+            "syncButton": "Sincronizar títulos y descripciones",
+            "selectAll": "Seleccionar todo",
+            "deselectAll": "Deseleccionar todo",
+            "updatingLayers": "Actualización de capas {updatedCount}/{totalCount}",
+            "tooltips": {
+                "syncSuccess": "El título y la descripción se actualizaron correctamente para esta capa",
+                "syncError": "No es posible actualizar el título y la descripción de esta capa. Puede verificar si todas las opciones de capa son correctas en el panel de configuración"
+            },
+            "syncingLayersSavingToServerError": {
+                "title": "Error al guardar el servidor",
+                "message": "Se produjo un error inesperado al guardar capas actualizadas en el servidor"
+            },
+            "syncingLayersGeneralError": {
+                "title": "General Error",
+                "message": "Se produjo un error inesperado durante la sincronización de capas. Probablemente hay un error en MapStore"
+            },
+            "layerType": "tipo: {type}"
         },
         "tutorial": {
             "title": "Tutorial",
