@@ -38,13 +38,14 @@ describe("BookmarkList component", () => {
         expect(placeholder.innerText).toBe("search.b_placeholder");
 
     });
-    it('test BookmarkSelect with value and onPropertyChange', (done) => {
+    it('test BookmarkSelect, onPropertyChange and zoomOnSelect', (done) => {
 
         let bookmarkConfig = {
             selected: {title: "Bookmark 1"},
             bookmarkSearchConfig: {
                 bookmarks: [{title: "Bookmark 1"}, {title: "Bookmark 2"}]
-            }
+            },
+            zoomOnSelect: true
         };
 
         TestUtils.act(() => {
@@ -53,6 +54,15 @@ describe("BookmarkList component", () => {
                     bookmarkConfig={bookmarkConfig}
                     onPropertyChange={
                         (s, value) => {
+                            try {
+                                expect(value.title).toBe('Bookmark 2');
+                            } catch (e) {
+                                done(e);
+                            }
+                            done();
+                        }}
+                    searchByBookmark={
+                        (value) => {
                             try {
                                 expect(value.title).toBe('Bookmark 2');
                             } catch (e) {

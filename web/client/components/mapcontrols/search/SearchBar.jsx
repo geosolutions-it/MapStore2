@@ -98,9 +98,9 @@ export default ({
         }, defaultZoomLevel, "EPSG:4326");
     };
 
-    const searchByBookmark = () => {
+    const searchByBookmark = (selectedBookmark = {}) => {
         const {bookmarkConfig, onLayerVisibilityLoad, mapInitial, onZoomToExtent} = props;
-        const {options: bbox = {}, layerVisibilityReload = false} = bookmarkConfig && bookmarkConfig.selected;
+        const {options: bbox = {}, layerVisibilityReload = false} = bookmarkConfig?.selected || selectedBookmark;
         if (layerVisibilityReload) {
             onLayerVisibilityLoad({
                 ...mapInitial,
@@ -281,7 +281,11 @@ export default ({
                 }
                 {
                     activeTool === "bookmarkSearch" && showBookMarkSearchOption &&
-                        <BookmarkSelect bookmarkConfig={props.bookmarkConfig} onPropertyChange={props.onPropertyChange}/>
+                        <BookmarkSelect
+                            bookmarkConfig={props.bookmarkConfig}
+                            onPropertyChange={props.onPropertyChange}
+                            searchByBookmark={searchByBookmark}
+                        />
                 }
                 <SearchBarToolbar
                     splitTools={false}

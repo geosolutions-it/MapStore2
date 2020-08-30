@@ -13,9 +13,9 @@ import {isEmpty} from 'lodash';
 import localizedProps from '../../misc/enhancers/localizedProps';
 const SelectLocalized = localizedProps(['placeholder', 'clearValueText', 'noResultsText'])(Select);
 
-const BookmarkSelect = ({ bookmarkConfig: config, onPropertyChange }) => {
+const BookmarkSelect = ({ bookmarkConfig: config, onPropertyChange, searchByBookmark }) => {
     const [ options, setOptions ] = useState([]);
-    const { selected = {}, bookmarkSearchConfig = {} } = config || {};
+    const { selected = {}, bookmarkSearchConfig = {}, zoomOnSelect = false } = config || {};
     const { bookmarks = [] } = bookmarkSearchConfig;
     const selectProps = {clearable: true, isSearchable: true, isClearable: true};
 
@@ -29,6 +29,7 @@ const BookmarkSelect = ({ bookmarkConfig: config, onPropertyChange }) => {
         const value = event && event.value || "";
         const [selectedBookmark] = bookmarks.filter((b, id)=> (b.title === value &&  id === event.idx));
         onPropertyChange("selected", selectedBookmark);
+        zoomOnSelect && searchByBookmark(selectedBookmark);
     };
 
     return (

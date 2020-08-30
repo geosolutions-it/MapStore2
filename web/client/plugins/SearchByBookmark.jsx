@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
 */
 
-import React from 'react';
+import React, {useEffect} from 'react';
 import { createPlugin } from '../utils/PluginsUtils';
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
@@ -18,6 +18,7 @@ import Message from './locale/Message';
 import {mapSelector} from '../selectors/map';
 import {toggleControl} from '../actions/controls';
 import {setSearchBookmarkConfig, resetBookmarkConfig, updateBookmark, filterBookmarks} from '../actions/searchbookmarkconfig';
+import {isLoggedIn, isAdminUserSelector} from '../selectors/security';
 import BookmarkList from '../components/mapcontrols/searchbookmarkconfig/BookmarkList';
 import AddNewBookmark from '../components/mapcontrols/searchbookmarkconfig/AddNewBookmark';
 import searchbookmarkconfig from '../reducers/searchbookmarkconfig';
@@ -29,16 +30,21 @@ import searchbookmarkconfig from '../reducers/searchbookmarkconfig';
  *
  * @class SearchByBookmarkPanel
  * @memberof plugins
- * @static
- *
+ * @prop {object} cfg.zoomOnSelect zooms to the extent on selecting a value from the bookmark drop down
+ * rather than clicking search icon
  */
 const SearchByBookmarkPanel = (props) => {
     const { enabled, pages, page,
         onPropertyChange,
         bookmark,
         bookmarkSearchConfig = {},
-        editIdx
+        editIdx,
+        zoomOnSelect = false
     } = props;
+
+    useEffect(()=>{
+        onPropertyChange("zoomOnSelect", zoomOnSelect);
+    }, [onPropertyChange]);
 
     const onClose = () => {
         props.toggleControl("searchBookmarkConfig");
@@ -186,8 +192,11 @@ export default createPlugin('SearchByBookmark', {
     },
     containers: {
         Search: {
-            menuItem: searchMenuItem,
-            bookmarkConfig: searchByBookmarkConfig
+            // Display bookmark setting only when logged in user is an ADMIN
+            ...(isLoggedIn && isAdminUserSelector && {
+                menuItem: searchMenuItem,
+                bookmarkConfig: searchByBookmarkConfig
+            })
         }
     },
     reducers: {
