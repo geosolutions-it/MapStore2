@@ -26,7 +26,7 @@ To learn how to connect the front-end dev server to a local back-end read the fo
 
 ### Connect Front-end to local back-end
 
-By default `npm start` runs a dev server connected to the mapstore online dev server.
+By default `npm start` uses the online dev server as a backend.
 This configuration needs to be changed to develop locally in order to access all the functionalities.
 
 To use a local back-end you have to:
