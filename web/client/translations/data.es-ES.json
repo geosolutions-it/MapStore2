@@ -2075,6 +2075,9 @@
             "ruleClassification": "Clasificación",
             "ruleRaster": "Ráster",
             "customInterval": "Custom Interval",
+            "styleEmpty": "Este estilo no tiene reglas",
+            "incompleteClassification": "La clasificación es incompleta porque las entradas no están disponibles. Asegúrese de que todas las propiedades se proporcionan correctamente",
+            "emptyImageIconSymbolizer": "Falta la URL de la imagen en el estilo del icono",
             "warningTextOrderTitle": "Advertencia",
             "warningTextOrder": "El orden de la regla que contiene el estilo de texto no pudo coincidir con el orden de representación en el mapa. Este comportamiento está relacionado con algún motor de renderizado que dibuja la etiqueta sobre otras reglas"
         },

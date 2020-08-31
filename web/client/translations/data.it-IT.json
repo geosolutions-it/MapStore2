@@ -2075,6 +2075,9 @@
             "ruleClassification": "Classificazione",
             "ruleRaster": "Raster",
             "customInterval": "Custom Interval",
+            "styleEmpty": "Questo stile non è valido perchè vuoto",
+            "incompleteClassification": "La classificazione è incompleta perchè mancano i valori per le classi. Assicurati che tutte le proprietà dello stile sono corrette",
+            "emptyImageIconSymbolizer": "Immagine mancante nello stile icona",
             "warningTextOrderTitle": "Attenzione",
             "warningTextOrder": "L'ordine delle regole che contengono etichette potrebbe non corrispondere all'ordine di disegno sulla mappa. Questo comportamento è correlato ad alcuni motori di rendering che disegnano etichette sopra alle altre regole"
         },

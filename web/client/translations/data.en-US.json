@@ -2086,6 +2086,9 @@
             "ruleClassification": "Classification",
             "ruleRaster": "Raster",
             "customInterval": "Custom Interval",
+            "styleEmpty": "This style has no rules",
+            "incompleteClassification": "The classification is incomplete bacause the entries are not available. Ensure all properties are corretly provided",
+            "emptyImageIconSymbolizer": "Missing image url in the icon style",
             "warningTextOrderTitle": "Warning",
             "warningTextOrder": "The order of rule containing text style could not match the rendering order on map. This behaviour is related to some rendering engine that draw label on top of other rules"
         },
