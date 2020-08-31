@@ -12,10 +12,27 @@ import {
     getStyleMetadataService,
     readClassification,
     readRasterClassification,
-    getColor
+    getColor,
+    getCapabilitiesUrl
 } from './SLDService';
 
 import axios from '../libs/ajax';
+import StylesAPI from './geoserver/Styles';
+
+const SUPPORTED_CLASSIFICATION_METHODS = [
+    'equalInterval',
+    'quantile',
+    'jenks',
+    'standardDeviation'
+];
+
+const DEFAULT_CLASSIFICATION_METHODS = [
+    'equalInterval',
+    'quantile',
+    'jenks'
+];
+
+let cache = {};
 
 /**
  * Update rule in rules array
@@ -41,7 +58,90 @@ function updateRules(ruleId, rules, setRule = (rl) => rl) {
  * @memberof API
  * @name StyleEditor
  */
+export function clearCache() {
+    cache = {};
+}
 
+function filterMethods(sldServiceCapabilities) {
+    const { capabilities = {} } = sldServiceCapabilities || {};
+    const { vector = {} } = capabilities;
+    const { raster = {} } = capabilities;
+    const vectorMethods = vector.classifications || [];
+    const rasterMethods = raster.classifications || [];
+    return {
+        vector: vectorMethods.filter(method => SUPPORTED_CLASSIFICATION_METHODS.indexOf(method) !== -1),
+        raster: rasterMethods.filter(method => SUPPORTED_CLASSIFICATION_METHODS.indexOf(method) !== -1)
+    };
+}
+
+const API = {
+    geoserver: {
+        updateStyleService: ({ baseUrl, styleService }) => {
+            const serviceBaseUrl = styleService?.isStatic
+                ? styleService.baseUrl
+                : baseUrl;
+            if (cache[serviceBaseUrl]) {
+                return new Promise(resolve => resolve(cache[serviceBaseUrl]));
+            }
+            const styleServiceCapabilitiesUrl = getCapabilitiesUrl({
+                url: serviceBaseUrl
+            });
+            // request style service only if the styleService is not declared in cfg
+            const servicePromise = styleService?.isStatic
+                ? new Promise(resolve => resolve(styleService))
+                : StylesAPI.getStyleService({ baseUrl: serviceBaseUrl });
+            return servicePromise
+                .then((updatedStyleService) => {
+                    // TODO: avoid request if the sld service is not available in GeoServer
+                    // this improvement needs a complete support of custom intervals
+                    // eg: look in manifest for jars related to sld service
+                    return axios.get(styleServiceCapabilitiesUrl)
+                        .then(({ data }) => [updatedStyleService, data])
+                        .catch(() => [updatedStyleService, null]);
+                })
+                .then(([updatedStyleService, serviceCapabilities]) => {
+                    const newStyleService = {
+                        ...updatedStyleService,
+                        classificationMethods: serviceCapabilities
+                            // use only supported methods on the client
+                            ? filterMethods(serviceCapabilities)
+                            : {
+                                vector: DEFAULT_CLASSIFICATION_METHODS,
+                                raster: DEFAULT_CLASSIFICATION_METHODS
+                            }
+                    };
+                    cache[serviceBaseUrl] = newStyleService;
+                    return newStyleService;
+                });
+        }
+    }
+};
+
+/**
+ * Get an updated style service
+ * @memberof API.StyleEditor
+ * @method updateStyleService
+ * @param {object} options new values to update
+ * @param {string} options.baseUrl base url of service endpoint
+ * @param {object} options.styleService existing style service (this has precedence on baseUrl if is static service)
+ * @returns {promise} return new rules with updated style service
+ * @example
+ * // expected style service in the promise resolve
+ * {
+ *  "baseUrl": "http://localhost:8080/geoserver/",
+ *  "version": "2.18-SNAPSHOT",
+ *  "formats": [ "css", "sld"],
+ *  "availableUrls": [],
+ *  "fonts": [ "Arial" ],
+ *  "classificationMethods": {
+ *   "vector": [ "equalInterval", "quantile", "jenks", "standardDeviation" ],
+ *   "raster": [ "equalInterval", "quantile", "jenks" ]
+ *  }
+ * }
+ */
+export function updateStyleService({ baseUrl, styleService }) {
+    return API.geoserver.updateStyleService({ baseUrl, styleService });
+}
 /**
  * Update rules of a style for a vector layer using external SLD services
  * @memberof API.StyleEditor
@@ -216,5 +316,7 @@ export function classificationRaster({
 
 export default {
     classificationVector,
-    classificationRaster
+    classificationRaster,
+    updateStyleService,
+    clearCache
 };

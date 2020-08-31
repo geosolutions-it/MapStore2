@@ -347,6 +347,18 @@ Ported to CodeMirror by Peter Kroon
         margin-bottom: 8px;
         display: flex;
         align-items: center;
+        .ms-style-rule-grab-handle {
+            cursor: move;
+            cursor: grab;
+            cursor: -moz-grab;
+            cursor: -webkit-grab;
+            &:active {
+                cursor: move;
+                cursor: grabbing;
+                cursor: -moz-grabbing;
+                cursor: -webkit-grabbing;
+            }
+        }
         .ms-style-rule-head-info,
         .form-group {
             flex: 1;
@@ -355,6 +367,7 @@ Ported to CodeMirror by Peter Kroon
     }
     .ms-style-rule-head-tools {
         display: flex;
+        align-items: center;
     }
     .ms-style-rules-editor-body {
         flex: 1;
@@ -367,6 +380,13 @@ Ported to CodeMirror by Peter Kroon
     .ms-style-rule {
         padding: 8px;
         .shadow-soft;
+        &.ms-drop-target {
+            border: 1px dashed @ms2-color-primary;
+            .box-shadow(none);
+            > * {
+                opacity: 0;
+            }
+        }
     }
     .ms-style-rule + .ms-style-rule {
         margin-top: 8px;

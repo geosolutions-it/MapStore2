@@ -120,8 +120,8 @@
                 "tooltip": "Opmerking: deze parameter vereist specifieke configuraties op GeoServer"
             }
         },
-        "longitude": "Länge",
-        "latitude": "Breite",
+        "longitude": "Lon",
+        "latitude": "Lat",
         "notification": {
             "update": "Aktualisierung",
             "warning": "Warnung",
@@ -521,6 +521,7 @@
                 "title": "Titel aktualisieren",
                 "dimensions": "Dimensionen aktualisieren"
             },
+            "layerInfoTooltip": "Aktualisieren Sie den Layertitel und die Beschreibung",
             "layerMetadata": {
                 "identifier": "Kennung",
                 "title": "Titel",
@@ -650,6 +651,7 @@
         "identifyRevGeocodeCloseText": "Schliessen",
         "identifyRevGeocodeError": "Konnte nicht geocodiert werden",
         "identifyEdit": "Bearbeiten",
+        "identifyLayerSelectNoResult": "Keine Schichten gefunden",
         "getFeatureInfoError": {
             "title": "Ooops! Etwas ist schiefgelaufen.",
             "text": "Ein Fehler ist während dieser <b>GetFeatureInfo</b> Anfrage aufgetreten"
@@ -1125,12 +1127,13 @@
             "changePwd": "Passwort ändern",
             "newPwd": "Neues Passwort",
             "retypePwd": "Passwort wiederholen",
-            "passwordMinlenght": "Dein Passwort muss aus mindestens {minSize} Zeichen bestehen",
+            "passwordMinlenght": "Dein Passwort muss aus mindestens {data} Zeichen bestehen",
             "passwordCheckFail": "Passwörter sind nicht identisch!",
             "passwordInvalid": "Ungültiges Passwort",
             "username": "Benutzername",
             "password": "Passwort",
-            "passwordMessage": "Das Passwort muss aus mindestens 6 Zeichen bestehen",
+            "passwordMessage": "Das Passwort muss aus mindestens 6 Zeichen bestehen. Gültige Werte für Kennwörter sind Ziffern, Klein- oder Großbuchstaben und die folgenden Sonderzeichen: !,@,#,$,%,&,*,_",
+            "passwordInvalidChar": "Das Passwort darf diese Zeichen nicht enthalten: {data}",
             "passwordChanged": "Passwort geändert",
             "passwordError": "Fehler beim Ändern des Passworts",
             "signIn":"Anmelden",
@@ -2052,6 +2055,7 @@
             "equalInterval": "Gleiches Intervall",
             "quantile": "Quantil",
             "jenks": "Natürliche Pausen (Jenks)",
+            "standardDeviation": "Varianz",
             "switchToTextareaEditor": "Zum Textarea-Editor wechseln",
             "switchToVisualEditor": "Zum visuellen Editor wechseln",
             "alertForceTranslate": "Sie verlieren alle im Textaree hinzugefügten Änderungen, wenn Sie zum visuellen Editor wechseln. Sind Sie sicher, dass Sie zum visuellen Stil-Editor wechseln?",
@@ -2072,7 +2076,9 @@
             "customInterval": "Custom Interval",
             "styleEmpty": "Dieser Stil hat keine Regeln",
             "incompleteClassification": "Die Klassifizierung ist unvollständig, da die Einträge nicht verfügbar sind. Stellen Sie sicher, dass alle Eigenschaften korrekt bereitgestellt werden.",
-            "emptyImageIconSymbolizer": "Fehlende Bild-URL im Symbolstil"
+            "emptyImageIconSymbolizer": "Fehlende Bild-URL im Symbolstil",
+            "warningTextOrderTitle": "Warnung",
+            "warningTextOrder": "Die Reihenfolge der Regeln, die den Textstil enthalten, konnte nicht mit der Renderreihenfolge auf der Karte übereinstimmen. Dieses Verhalten hängt mit einigen Rendering-Engines zusammen, die Beschriftungen über andere Regeln ziehen"
         },
         "playback": {
             "settings": {
@@ -2232,6 +2238,7 @@
             "geostoreMap": "MapStore-Karten",
             "loadingSpinner": "Story wird geladen",
             "addTitleSection": "Titelabschnitt hinzufügen",
+            "addBannerSection": "Bannerbereich hinzufügen",
             "addParagraphSection": "Absatzabschnitt hinzufügen",
             "addImmersiveSection": "Immersive Section hinzufügen",
             "addMediaSection": "Medienabschnitt hinzufügen",
@@ -2298,6 +2305,7 @@
                     "htmlTitlePlaceholder": "Titel einfügen",
                     "htmlPlaceholder": "Text hier einfügen...",
                     "titleTitle": "Titelbereich",
+                    "titleBanner": "Banner-Bereich",
                     "titleParagraph": "Absatz Abschnitt",
                     "titleImmersiveContent": "Immersiver Inhalt",
                     "titleImmersive": "Immersive Section",
@@ -2335,6 +2343,7 @@
                     "navbar": "Navigationsleiste",
                     "showNavbar": "Navigationsleiste anzeigen",
                     "theme": "Thema",
+                    "overlay": "Überlagerung",
                     "templateTooltip":"Mit dieser Einstellung können Sie die Identifizierungsfunktion auf der Karte aktivieren, indem Sie ein generisches Format für alle Ebenen definieren. Mit dem erweiterten Karteneditor (Stiftsymbol) kann für jede Ebene ein anderes Format konfiguriert werden. Weitere Informationen finden Sie im <a href='https://mapstore.readthedocs.io/en/latest/user-guide/layer-settings/#templates' target='_blank'> Benutzerhandbuch </a>. Wenn ein Layer sein eigenes Identifizierungsformat definiert hat, wird er anstelle des auf Kartenebene festgelegten generischen Formats verwendet."
                 }
             },
@@ -2825,6 +2834,27 @@
             },
             "deleteError": "Beim Löschen der Karte ist ein unerwarteter Fehler aufgetreten",
             "updateError": "Beim Speichern der Karte ist ein unerwarteter Fehler aufgetreten"
+        },
+        "layerInfo": {
+            "title": "Aktualisieren Sie die Titel und Beschreibungen der Ebenen",
+            "noLayers": "Keine Schichten gefunden",
+            "syncButton": "Titel und Beschreibungen synchronisieren",
+            "selectAll": "Wählen Sie Alle",
+            "deselectAll": "Alle abwählen",
+            "updatingLayers": "Aktualisieren von Layern {updatedCount}/{totalCount}",
+            "tooltips": {
+                "syncSuccess": "Titel und Beschreibung wurden für diese Ebene erfolgreich aktualisiert",
+                "syncError": "Es ist nicht möglich, den Titel und die Beschreibung dieser Ebene zu aktualisieren. Sie können im Einstellungsfeld überprüfen, ob alle Ebenenoptionen korrekt sind"
+            },
+            "syncingLayersSavingToServerError": {
+                "title": "Server-Speicherfehler",
+                "message": "Beim Speichern aktualisierter Layer auf dem Server ist ein unerwarteter Fehler aufgetreten"
+            },
+            "syncingLayersGeneralError": {
+                "title": "Allgemeiner Fehler",
+                "message": "Während der Ebenensynchronisierung ist ein unerwarteter Fehler aufgetreten. Es gibt wahrscheinlich einen Fehler im MapStore"
+            },
+            "layerType": "Typ: {type}"
         },
         "tutorial": {
             "title": "Anleitung",

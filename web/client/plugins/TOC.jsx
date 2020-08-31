@@ -40,7 +40,7 @@ const layersIcon = require('./toolbar/assets/img/layers.png');
 
 const {isObject, head, find} = require('lodash');
 
-const { setControlProperties} = require('../actions/controls');
+const {setControlProperties, setControlProperty} = require('../actions/controls');
 const {createWidget} = require('../actions/widgets');
 
 const {getMetadataRecordById} = require("../actions/catalog");
@@ -196,6 +196,7 @@ class LayerTree extends React.Component {
         activateSettingsTool: PropTypes.bool,
         activateMetedataTool: PropTypes.bool,
         activateWidgetTool: PropTypes.bool,
+        activateLayerInfoTool: PropTypes.bool,
         maxDepth: PropTypes.number,
         visibilityCheckType: PropTypes.string,
         settingsOptions: PropTypes.object,
@@ -230,7 +231,8 @@ class LayerTree extends React.Component {
         hideOpacityTooltip: PropTypes.bool,
         layerNodeComponent: PropTypes.func,
         groupNodeComponent: PropTypes.func,
-        isLocalizedLayerStylesEnabled: PropTypes.bool
+        isLocalizedLayerStylesEnabled: PropTypes.bool,
+        onLayerInfo: PropTypes.func
     };
 
     static contextTypes = {
@@ -271,6 +273,7 @@ class LayerTree extends React.Component {
         activateDownloadTool: false,
         activateWidgetTool: false,
         activateLayerFilterTool: false,
+        activateLayerInfoTool: true,
         maxDepth: 3,
         visibilityCheckType: "glyph",
         settingsOptions: {
@@ -310,7 +313,8 @@ class LayerTree extends React.Component {
         activateAddGroupButton: false,
         catalogActive: false,
         refreshLayerVersion: () => {},
-        metadataTemplate: null
+        metadataTemplate: null,
+        onLayerInfo: () => {}
     };
 
     getNoBackgroundLayers = (group) => {
@@ -401,7 +405,8 @@ class LayerTree extends React.Component {
                                 includeDeleteButtonInSettings: false,
                                 activateMetedataTool: this.props.activateMetedataTool,
                                 activateWidgetTool: this.props.activateWidgetTool,
-                                activateLayerFilterTool: this.props.activateLayerFilterTool
+                                activateLayerFilterTool: this.props.activateLayerFilterTool,
+                                activateLayerInfoTool: this.props.activateLayerInfoTool
                             }}
                             options={{
                                 modalOptions: {},
@@ -450,8 +455,8 @@ class LayerTree extends React.Component {
                                 },
                                 layerMetadataTooltip: <Message msgId="toc.layerMetadata.toolLayerMetadataTooltip"/>,
                                 layerMetadataPanelTitle: <Message msgId="toc.layerMetadata.layerMetadataPanelTitle"/>,
-                                layerFilterTooltip: <Message msgId="toc.layerFilterTooltip"/>
-
+                                layerFilterTooltip: <Message msgId="toc.layerFilterTooltip"/>,
+                                layerInfoTooltip: <Message msgId="toc.layerInfoTooltip"/>
                             }}
                             onToolsActions={{
                                 onZoom: this.props.onZoomToExtent,
@@ -471,7 +476,9 @@ class LayerTree extends React.Component {
                                 onAddGroup: this.props.onAddGroup,
                                 onGetMetadataRecord: this.props.onGetMetadataRecord,
                                 onHideLayerMetadata: this.props.hideLayerMetadata,
-                                onShow: this.props.layerPropertiesChangeHandler}}/>
+                                onShow: this.props.layerPropertiesChangeHandler,
+                                onLayerInfo: this.props.onLayerInfo
+                            }}/>
                     }/>
                 <div className={'mapstore-toc' + bodyClass}>
                     {this.props.noFilterResults && this.props.filterText ?
@@ -508,7 +515,8 @@ const securityEnhancer = withPropsOnChange(
         "removeLayersPermissions", "activateRemoveLayer",
         "sortingPermission", "activateRemoveLayer",
         "addGroupsPermissions", "activateAddGroupButton",
-        "removeGroupsPermissions", "activateRemoveGroup"
+        "removeGroupsPermissions", "activateRemoveGroup",
+        "layerInfoToolPermissions", "activateLayerInfoTool"
     ],
     (props) => {
         const {
@@ -517,11 +525,13 @@ const securityEnhancer = withPropsOnChange(
             sortingPermissions = true,
             addGroupsPermissions = true,
             removeGroupsPermissions = true,
+            layerInfoToolPermissions = false,
             activateAddLayerButton,
             activateRemoveLayer,
             activateSortLayer,
             activateAddGroupButton,
             activateRemoveGroup,
+            activateLayerInfoTool,
             user
         } = props;
 
@@ -535,7 +545,8 @@ const securityEnhancer = withPropsOnChange(
             activateRemoveLayer: activateParameter(removeLayersPermissions, activateRemoveLayer),
             activateSortLayer: activateParameter(sortingPermissions, activateSortLayer),
             activateAddGroupButton: activateParameter(addGroupsPermissions, activateAddGroupButton),
-            activateRemoveGroup: activateParameter(removeGroupsPermissions, activateRemoveGroup)
+            activateRemoveGroup: activateParameter(removeGroupsPermissions, activateRemoveGroup),
+            activateLayerInfoTool: activateParameter(layerInfoToolPermissions, activateLayerInfoTool)
         };
     });
 
@@ -549,7 +560,7 @@ const securityEnhancer = withPropsOnChange(
 const checkPluginsEnhancer = branch(
     ({ checkPlugins = true }) => checkPlugins,
     withPropsOnChange(
-        ["items", "activateAddLayerButton", "activateAddGroupButton", "activateLayerFilterTool", "activateSettingsTool", "FeatureEditor"],
+        ["items", "activateAddLayerButton", "activateAddGroupButton", "activateLayerFilterTool", "activateSettingsTool", "FeatureEditor", "activateLayerInfoTool"],
         ({
             items = [],
             activateAddLayerButton = true,
@@ -557,7 +568,8 @@ const checkPluginsEnhancer = branch(
             activateQueryTool = true,
             activateSettingsTool = true,
             activateLayerFilterTool = true,
-            activateWidgetTool = true
+            activateWidgetTool = true,
+            activateLayerInfoTool = true
         }) => ({
             activateAddLayerButton: activateAddLayerButton && !!find(items, { name: "MetadataExplorer" }) || false, // requires MetadataExplorer (Catalog)
             activateAddGroupButton: activateAddGroupButton && !!find(items, { name: "AddGroup" }) || false,
@@ -566,7 +578,8 @@ const checkPluginsEnhancer = branch(
             activateLayerFilterTool: activateLayerFilterTool && !!find(items, {name: "FilterLayer"}) || false,
             // NOTE: activateWidgetTool is already controlled by a selector. TODO: Simplify investigating on the best approach
             // the button should hide if also widgets plugins is not available. Maybe is a good idea to merge the two plugins
-            activateWidgetTool: activateWidgetTool && !!find(items, { name: "WidgetBuilder" }) && !!find(items, { name: "Widgets" })
+            activateWidgetTool: activateWidgetTool && !!find(items, { name: "WidgetBuilder" }) && !!find(items, { name: "Widgets" }),
+            activateLayerInfoTool: activateLayerInfoTool && !!find(items, { name: "LayerInfo" }) || false
         })
     )
 );
@@ -804,7 +817,8 @@ const TOCPlugin = connect(tocSelector, {
     onError: error,
     hideLayerMetadata,
     onNewWidget: () => createWidget(),
-    refreshLayerVersion
+    refreshLayerVersion,
+    onLayerInfo: setControlProperty.bind(null, 'layerinfo', 'enabled', true, false)
 })(compose(
     securityEnhancer,
     checkPluginsEnhancer

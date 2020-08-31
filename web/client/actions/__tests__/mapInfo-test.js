@@ -31,7 +31,8 @@ var {
     TOGGLE_SHOW_COORD_EDITOR, toggleShowCoordinateEditor,
     CHANGE_FORMAT, changeFormat,
     CHANGE_PAGE, changePage,
-    TOGGLE_HIGHLIGHT_FEATURE, toggleHighlightFeature
+    TOGGLE_HIGHLIGHT_FEATURE, toggleHighlightFeature,
+    SET_MAP_TRIGGER, setMapTrigger
 } = require('../mapInfo');
 
 describe('Test correctness of the map actions', () => {
@@ -151,5 +152,8 @@ describe('Test correctness of the map actions', () => {
         expect(retVal.type).toBe(CHANGE_PAGE);
         expect(changePage().index).toBeFalsy();
         expect(changePage(1).index).toBe(1);
+    });
+    it('setMapTrigger', () => {
+        expect(setMapTrigger('hover')).toEqual({type: SET_MAP_TRIGGER, trigger: 'hover' });
     });
 });

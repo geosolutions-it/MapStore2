@@ -277,12 +277,20 @@ export function parseJSONStyle(style) {
                     const lessThan = idx === rule.classification.length - 1
                         ? '<='
                         : '<';
+                    const minFilter = entry.min !== null ? [['>=', rule.attribute, entry.min]] : [];
+                    const maxFilter = entry.max !== null ? [[lessThan, rule.attribute, entry.max]] : [];
+                    const minLabel = entry.min !== null && '>= ' + entry.min;
+                    const maxLabel = entry.max !== null && lessThan + ' ' + entry.max;
                     return {
-                        name: `>= ${entry.min} and ${lessThan} ${entry.max}`,
-                        filter: ['&&',
-                            ['>=', rule.attribute, entry.min],
-                            [lessThan, rule.attribute, entry.max]
-                        ],
+                        name: minLabel && maxLabel
+                            ? minLabel + ' and ' + maxLabel
+                            : minLabel || maxLabel,
+                        filter: minFilter[0] || maxFilter[0]
+                            ? ['&&',
+                                ...minFilter,
+                                ...maxFilter
+                            ]
+                            : undefined,
                         ...(rule.scaleDenominator && { scaleDenominator: rule.scaleDenominator }),
                         symbolizers: [
                             omitBy({

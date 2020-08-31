@@ -78,5 +78,4 @@ describe('Content component', () => {
         const imageContent = container.querySelector('.ms-media.ms-media-map');
         expect(imageContent).toExist();
     });
-
 });

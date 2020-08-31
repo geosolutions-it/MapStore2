@@ -120,8 +120,8 @@
                 "tooltip": "Nota: questo parametro richiede configurazioni specifiche su GeoServer"
             }
         },
-        "longitude": "Longitudine",
-        "latitude": "Latitudine",
+        "longitude": "Lon",
+        "latitude": "Lat",
         "notification": {
             "update": "Aggiorna",
             "warning": "Attenzione",
@@ -521,6 +521,7 @@
                 "title": "Aggiorna il titolo del layer",
                 "dimensions": "Aggiorna le dimensioni aggiuntive"
             },
+            "layerInfoTooltip": "Aggiorna titolo e descrizione del livello",
             "layerMetadata": {
                 "identifier": "Identificativo",
                 "title": "Titolo",
@@ -650,6 +651,7 @@
         "identifyRevGeocodeCloseText": "Chiudi",
         "identifyRevGeocodeError": "Impossibile eseguire il geocoding",
         "identifyEdit": "Modifica",
+        "identifyLayerSelectNoResult": "Nessun livello trovato",
         "getFeatureInfoError": {
             "title": "Ooops! Qualcosa non va",
             "text": "Si è verificato un errore nel fare questa richiesta <b>GetFeatureInfo</b>"
@@ -1125,12 +1127,13 @@
             "changePwd": "Cambia Password",
             "newPwd": "Nuova Password",
             "retypePwd": "Conferma Password",
-            "passwordMinlenght": "La password deve essere lunga almeno {minSize} caratteri",
+            "passwordMinlenght": "La password deve essere lunga almeno {data} caratteri",
             "passwordCheckFail": "Le due password non corrispondono",
             "passwordInvalid": "Password non valida",
             "username": "Username",
             "password": "Password",
-            "passwordMessage": "La password deve contenere almeno 6 caratteri",
+            "passwordMessage": "La password deve contenere almeno 6 caratteri. I valori validi per le password includono numeri, lettere minuscole o maiuscole e i seguenti caratteri speciali: !,@,#,$,%,&,*,_",
+            "passwordInvalidChar": "La password non deve contenere questi caratteri: {data}",
             "passwordChanged": "La password è stata cambiata",
             "passwordError": "Errore nel cambio della password",
             "signIn":"Accedi",
@@ -2053,6 +2056,7 @@
             "equalInterval": "Intervallo uguale",
             "quantile": "Quantile",
             "jenks": "Natural break (Jenks)",
+            "standardDeviation": "Deviazione standard",
             "switchToTextareaEditor": "Passa all'editor testuale",
             "switchToVisualEditor": "Passa all'editor visuale",
             "alertForceTranslate": "Passando all'editor visuale perderai tutte le modifiche applicate con l'editor testuale. Sei sicuro di passare alla modalità editor visuale?",
@@ -2073,7 +2077,9 @@
             "customInterval": "Custom Interval",
             "styleEmpty": "Questo stile non è valido perchè vuoto",
             "incompleteClassification": "La classificazione è incompleta perchè mancano i valori per le classi. Assicurati che tutte le proprietà dello stile sono corrette",
-            "emptyImageIconSymbolizer": "Immagine mancante nello stile icona"
+            "emptyImageIconSymbolizer": "Immagine mancante nello stile icona",
+            "warningTextOrderTitle": "Attenzione",
+            "warningTextOrder": "L'ordine delle regole che contengono etichette potrebbe non corrispondere all'ordine di disegno sulla mappa. Questo comportamento è correlato ad alcuni motori di rendering che disegnano etichette sopra alle altre regole"
         },
         "playback": {
             "settings": {
@@ -2233,6 +2239,7 @@
             "geostoreMap": "Mappe di MapStore",
             "loadingSpinner": "Caricamento Storia",
             "addTitleSection": "Aggiungi sezione titolo",
+            "addBannerSection": "Aggiungi sezione banner",
             "addParagraphSection": "Aggiungi sezione paragrafo",
             "addImmersiveSection": "Aggiungi sezione immersiva",
             "addMediaSection": "Aggiungi sezione media",
@@ -2297,6 +2304,7 @@
             "builder": {
                 "defaults": {
                     "titleTitle": "Sezione Titolo",
+                    "titleBanner": "Sezione banner",
                     "htmlTitlePlaceholder": "Inserisci Titolo",
                     "htmlPlaceholder": "Inserisci del testo qui...",
                     "titleParagraph": "Sezione Paragrafo",
@@ -2336,6 +2344,7 @@
                     "navbar": "Barra di navigazione",
                     "showNavbar": "Mostra barra di navigazione",
                     "theme": "Tema",
+                    "overlay": "Copertura",
                     "templateTooltip":"Questa impostazione consente di abilitare la funzione di Identify sulla mappa definendo un formato generico per tutti i layer. E' possibile configurare un formato differente per ogni singolo livello usando l'editor di mappa avanzato (icona matita). Per maggiori informazioni si consulti la <a href='https://mapstore.readthedocs.io/en/latest/user-guide/layer-settings/#templates' target='_blank'>guida utente</a>. Se un layer ha definito il proprio formato di Identify, questo esso verrà usato al posto di quello generico impostato a livello di mappa."
                 }
             },
@@ -2826,6 +2835,27 @@
             },
             "deleteError": "Si è verificato un errore imprevisto durante l'eliminazione della mappa",
             "updateError": "Si è verificato un errore imprevisto durante il salvataggio della mappa"
+        },
+        "layerInfo": {
+            "title": "Aggiorna titoli e descrizioni dei livelli",
+            "noLayers": "Nessun livello trovato",
+            "syncButton": "Sincronizza titoli e descrizioni",
+            "selectAll": "Seleziona tutto",
+            "deselectAll": "Deselezionare tutto",
+            "updatingLayers": "Aggiornamento dei livelli {updatedCount}/{totalCount}",
+            "tooltips": {
+                "syncSuccess": "Titolo e descrizione sono stati aggiornati con successo per questo livello",
+                "syncError": "Non è possibile aggiornare il titolo e la descrizione di questo livello. È possibile verificare se tutte le opzioni di livello sono corrette nel pannello delle impostazioni"
+            },
+            "syncingLayersSavingToServerError": {
+                "title": "Errore di salvataggio del server",
+                "message": "Si è verificato un errore imprevisto durante il salvataggio dei livelli aggiornati sul server"
+            },
+            "syncingLayersGeneralError": {
+                "title": "Errore generale",
+                "message": "Si è verificato un errore imprevisto durante la sincronizzazione dei livelli. Probabilmente c'è un bug in MapStore"
+            },
+            "layerType": "tipo: {type}"
         },
         "tutorial": {
             "title": "Tutorial",

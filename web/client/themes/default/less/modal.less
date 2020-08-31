@@ -128,11 +128,10 @@
         }
 
         & > .modal-body {
-            overflow-y: auto;
-            flex: 1;
+            flex: 1 1 auto;
             padding: 0;
             display: flex;
-            height: auto;
+            height: inherit;
             flex-direction: column;
             & > div {
                 overflow-y: auto;
@@ -187,9 +186,35 @@
             border: none;
             padding: 0;
             z-index: 10;
+            & > div {
+                min-height: @square-btn-size;
+            }
             .btn-group {
                 margin: (@square-btn-size - 34) / 2;
             }
+        }
+    }
+
+    .ms-resizable-modal-loading-spinner-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-shrink: 0;
+        flex-basis: 48px;
+    }
+
+    .ms-resizable-modal-loading-text {
+        display: flex;
+        flex-direction: column;
+        flex-grow: 2;
+        justify-content: center;
+        min-width: 0;
+        white-space: nowrap;
+        text-align: left;
+
+        & > span {
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
     }
 }
