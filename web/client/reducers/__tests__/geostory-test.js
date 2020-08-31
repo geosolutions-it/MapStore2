@@ -28,7 +28,8 @@ import {
     updateCurrentPage,
     updateSetting,
     removeResource,
-    setPendingChanges
+    setPendingChanges,
+    updateUrlOnScroll
 } from '../../actions/geostory';
 import geostory from '../../reducers/geostory';
 import {
@@ -49,7 +50,8 @@ import {
     sectionAtIndexSelectorCreator,
     sectionsSelector,
     settingsSelector,
-    hasPendingChanges
+    hasPendingChanges,
+    updateUrlOnScrollSelector
 } from '../../selectors/geostory';
 import TEST_STORY from "../../test-resources/geostory/sampleStory_1.json";
 import TEST_STORY_1 from "../../test-resources/geostory/story_state.json";
@@ -416,5 +418,9 @@ describe('geostory reducer', () => {
         expect(hasPendingChanges( { geostory: geostory(undefined, setCurrentStory(TEST_STORY)) } )).toBeFalsy();
         expect(hasPendingChanges( { geostory: geostory(undefined, setPendingChanges(true)) } )).toBeTruthy();
         expect(hasPendingChanges( { geostory: geostory(undefined, setPendingChanges(false)) } )).toBeFalsy();
+    });
+    it('updateUrlOnScroll', () => {
+        expect(updateUrlOnScrollSelector( { geostory: geostory(undefined, updateUrlOnScroll(true)) } )).toBeTruthy();
+        expect(updateUrlOnScrollSelector( { geostory: geostory(undefined, updateUrlOnScroll(false)) } )).toBeFalsy();
     });
 });

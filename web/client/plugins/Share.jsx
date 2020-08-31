@@ -25,7 +25,7 @@ import { get } from 'lodash';
 import controls from '../reducers/controls';
 import {featureInfoClick, changeFormat, hideMapinfoMarker} from '../actions/mapInfo';
 import { clickPointSelector} from '../selectors/mapInfo';
-
+import { updateUrlOnScrollSelector } from '../selectors/geostory';
 /**
  * Share Plugin allows to share the current URL (location.href) in some different ways.
  * You can share it on socials networks(facebook,twitter,google+,linkedin)
@@ -43,6 +43,7 @@ import { clickPointSelector} from '../selectors/mapInfo';
  * @prop {function} [onClose] function to call on close window event.
  * @prop {function} [getCount] function used to get the count for social links.
  * @prop {object} [advancedSettings] show advanced settings (bbox param or home button) f.e {bbox: true, homeButton: true}
+ * @prop {boolean} []
  */
 
 const Share = connect(createSelector([
@@ -51,9 +52,10 @@ const Share = connect(createSelector([
     mapSelector,
     currentContextSelector,
     state => get(state, 'controls.share.settings', {}),
-    (state) => state.mapInfo && state.mapInfo.formatCoord,
-    clickPointSelector
-], (isVisible, version, map, context, settings, formatCoords, point) => ({
+    (state) => state.mapInfo && state.mapInfo.formatCoord || ConfigUtils.getConfigProp("defaultCoordinateFormat"),
+    clickPointSelector,
+    updateUrlOnScrollSelector
+], (isVisible, version, map, context, settings, formatCoords, point, isScrollPosition) => ({
     isVisible,
     shareUrl: location.href,
     shareApiUrl: ShareUtils.getApiUrl(location.href),
@@ -72,7 +74,8 @@ const Share = connect(createSelector([
         centerAndZoom: true
     },
     formatCoords: formatCoords,
-    point
+    point,
+    isScrollPosition
 })), {
     onClose: toggleControl.bind(null, 'share', null),
     hideMarker: hideMapinfoMarker,

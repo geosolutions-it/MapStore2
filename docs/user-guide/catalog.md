@@ -150,6 +150,16 @@ In **General Settings** the user can set the title he wants to assign to this se
 
 In **Advanced Settings** the user can set, other than the standard options, also:
 
+* *Localized styles* (only for the WMS service) if enabled allows to include the MapStore's locale in each **GetMap**, **GetLegendGraphic** and **GetFeatureInfo** requests to the server so that the WMS server, if properly configured, can use that locale to:
+
+    - Use localized lables for Tiles in case of vector layers (the layer's style must be properly configured for this using the [ENV variable support](https://docs.geoserver.org/stable/en/user/styling/sld/extensions/substitution.html))
+
+    - Produce a localized layer legend in case of vector layers (the layer's style must be properly configured to use the [Localized tag for rule titles](https://docs.geoserver.org/stable/en/user/styling/sld/language.html))
+
+    - Produce a localized output for GetFeatureInfo requests (the freemarker template need to be properly configured to retrieve [the locale from the request](https://docs.geoserver.org/stable/en/user/tutorials/freemarker.html))
+
+Enabling that option, all layers added to the map from this catalog source will be localized as described above (it is possible to tune again that setting for each single layer by opening the [Layer Settings](layer-settings.md#display) in TOC).
+
 * *Format*: the default image format for the layers added to the map (`png`, `png8`, `jpeg`, `vnd.jpeg-png` or `gif`). Setting this configuration property is particularly useful when the user wants to use an optimized format by default (`png8`, `vnd.jpeg-png`) for all the layers added from the catalog's source without having to select it for each layer in [Layer Settings](https://mapstore.readthedocs.io/en/latest/user-guide/layer-settings/#display)..
 
 ### TMS Catalog

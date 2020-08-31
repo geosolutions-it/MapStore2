@@ -75,6 +75,7 @@ const MapCatalogComponent = ({
                     `context/${map.contextName}/${map.id}` :
                     `viewer/${mapType}/${map.id}`
                 }
+                toggleCatalog={() => onToggleControl()}
                 shareApi/>
         </DockPanel>
     );

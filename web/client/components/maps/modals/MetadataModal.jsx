@@ -449,7 +449,7 @@ class MetadataModal extends React.Component {
                                 />
                             </Col>
                         </Row>
-                        {this.props.showDetailsRow && get(this.props.map, "category.name") !== "DASHBOARD" ? this.renderDetailsRow() : null}
+                        {this.props.showDetailsRow && get(this.props.map, "category.name") === "MAP" ? this.renderDetailsRow() : null}
 
                         {!this.props.map.hideGroupProperties && this.props.displayPermissionEditor && this.renderPermissionEditor()}
 

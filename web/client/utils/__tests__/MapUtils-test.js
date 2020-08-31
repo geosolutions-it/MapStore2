@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 var expect = require('expect');
-const { keys } = require('lodash');
+const { keys, sortBy } = require('lodash');
 
 var {
     RESOLUTIONS_HOOK,
@@ -35,6 +35,7 @@ var {
     updateObjectFieldKey,
     compareMapChanges,
     mergeMapConfigs,
+    addRootParentGroup,
     mapUpdated
 } = require('../MapUtils');
 
@@ -232,7 +233,14 @@ describe('Test the MapUtils', () => {
 
             const groups = [
                 {expanded: true, id: 'Default', name: 'Default', title: 'Default', nodes: ['layer001', 'layer002']},
-                {expanded: false, id: 'custom', name: 'custom', title: 'custom',
+                {
+                    expanded: false,
+                    id: 'custom',
+                    name: 'custom',
+                    title: 'custom',
+                    description: 'custom-description',
+                    tooltipOptions: 'both',
+                    tooltipPlacement: 'right',
                     nodes: [{expanded: true, id: 'custom.nested001', name: 'nested001', title: 'nested001', nodes: ['layer003']}
                     ]}
             ];
@@ -255,15 +263,24 @@ describe('Test the MapUtils', () => {
                     groups: [{
                         id: 'Default',
                         title: 'Default',
-                        expanded: true
+                        expanded: true,
+                        description: undefined,
+                        tooltipOptions: undefined,
+                        tooltipPlacement: undefined
                     }, {
                         id: 'custom',
                         title: 'custom',
-                        expanded: false
+                        expanded: false,
+                        description: 'custom-description',
+                        tooltipOptions: 'both',
+                        tooltipPlacement: 'right'
                     }, {
                         id: 'custom.nested001',
                         title: 'nested001',
-                        expanded: true
+                        expanded: true,
+                        description: undefined,
+                        tooltipOptions: undefined,
+                        tooltipPlacement: undefined
                     }],
                     layers: [{
                         allowedSRS: {},
@@ -599,15 +616,24 @@ describe('Test the MapUtils', () => {
                     groups: [{
                         id: 'Default',
                         title: 'Default',
-                        expanded: true
+                        expanded: true,
+                        description: undefined,
+                        tooltipOptions: undefined,
+                        tooltipPlacement: undefined
                     }, {
                         id: 'custom',
                         title: 'custom',
-                        expanded: false
+                        expanded: false,
+                        description: undefined,
+                        tooltipOptions: undefined,
+                        tooltipPlacement: undefined
                     }, {
                         id: 'custom.nested001',
                         title: 'nested001',
-                        expanded: true
+                        expanded: true,
+                        description: undefined,
+                        tooltipOptions: undefined,
+                        tooltipPlacement: undefined
                     }],
                     layers: [{
                         allowedSRS: {},
@@ -1012,15 +1038,24 @@ describe('Test the MapUtils', () => {
                     groups: [{
                         id: 'Default',
                         title: 'Default',
-                        expanded: true
+                        expanded: true,
+                        description: undefined,
+                        tooltipOptions: undefined,
+                        tooltipPlacement: undefined
                     }, {
                         id: 'custom',
                         title: 'custom',
-                        expanded: false
+                        expanded: false,
+                        description: undefined,
+                        tooltipOptions: undefined,
+                        tooltipPlacement: undefined
                     }, {
                         id: 'custom.nested001',
                         title: 'nested001',
-                        expanded: true
+                        expanded: true,
+                        description: undefined,
+                        tooltipOptions: undefined,
+                        tooltipPlacement: undefined
                     }],
                     layers: [{
                         allowedSRS: {},
@@ -1299,15 +1334,24 @@ describe('Test the MapUtils', () => {
                     groups: [{
                         id: 'Default',
                         title: 'Default',
-                        expanded: true
+                        expanded: true,
+                        description: undefined,
+                        tooltipOptions: undefined,
+                        tooltipPlacement: undefined
                     }, {
                         id: 'custom',
                         title: 'custom',
-                        expanded: false
+                        expanded: false,
+                        description: undefined,
+                        tooltipOptions: undefined,
+                        tooltipPlacement: undefined
                     }, {
                         id: 'custom.nested001',
                         title: 'nested001',
-                        expanded: true
+                        expanded: true,
+                        description: undefined,
+                        tooltipOptions: undefined,
+                        tooltipPlacement: undefined
                     }],
                     layers: [{
                         allowedSRS: {},
@@ -1631,12 +1675,27 @@ describe('Test the MapUtils', () => {
                         tooltipPlacement: undefined, legendOptions: undefined,
                         params: {} } ],
                     groups: [ {
-                        id: 'Default', title: 'Default', expanded: true
+                        id: 'Default',
+                        title: 'Default',
+                        expanded: true,
+                        description: undefined,
+                        tooltipOptions: undefined,
+                        tooltipPlacement: undefined
                     }, {
-                        id: 'custom', title: 'custom', expanded: false
+                        id: 'custom',
+                        title: 'custom',
+                        expanded: false,
+                        description: undefined,
+                        tooltipOptions: undefined,
+                        tooltipPlacement: undefined
                     }, {
-                        id: 'custom.nested001', title: 'nested001', expanded: true
-                    } ],
+                        id: 'custom.nested001',
+                        title: 'nested001',
+                        expanded: true,
+                        description: undefined,
+                        tooltipOptions: undefined,
+                        tooltipPlacement: undefined
+                    }],
                     text_search_config: '', bookmark_search_config: {} }
             });
         });
@@ -1702,15 +1761,24 @@ describe('Test the MapUtils', () => {
                     groups: [{
                         id: 'Default',
                         title: 'Default',
-                        expanded: true
+                        expanded: true,
+                        description: undefined,
+                        tooltipOptions: undefined,
+                        tooltipPlacement: undefined
                     }, {
                         id: 'custom',
                         title: 'custom',
-                        expanded: false
+                        expanded: false,
+                        description: undefined,
+                        tooltipOptions: undefined,
+                        tooltipPlacement: undefined
                     }, {
                         id: 'custom.nested001',
                         title: 'nested001',
-                        expanded: true
+                        expanded: true,
+                        description: undefined,
+                        tooltipOptions: undefined,
+                        tooltipPlacement: undefined
                     }],
                     layers: [{
                         allowedSRS: {},
@@ -1849,15 +1917,24 @@ describe('Test the MapUtils', () => {
                     groups: [{
                         id: 'Default',
                         title: 'Default',
-                        expanded: true
+                        expanded: true,
+                        description: undefined,
+                        tooltipOptions: undefined,
+                        tooltipPlacement: undefined
                     }, {
                         id: 'custom',
                         title: 'custom',
-                        expanded: false
+                        expanded: false,
+                        description: undefined,
+                        tooltipOptions: undefined,
+                        tooltipPlacement: undefined
                     }, {
                         id: 'custom.nested001',
                         title: 'nested001',
-                        expanded: true
+                        expanded: true,
+                        description: undefined,
+                        tooltipOptions: undefined,
+                        tooltipPlacement: undefined
                     }],
                     layers: [{
                         allowedSRS: {},
@@ -2036,15 +2113,24 @@ describe('Test the MapUtils', () => {
                     groups: [{
                         id: 'Default',
                         title: 'Default',
-                        expanded: true
+                        expanded: true,
+                        description: undefined,
+                        tooltipOptions: undefined,
+                        tooltipPlacement: undefined
                     }, {
                         id: 'custom',
                         title: 'custom',
-                        expanded: false
+                        expanded: false,
+                        description: undefined,
+                        tooltipOptions: undefined,
+                        tooltipPlacement: undefined
                     }, {
                         id: 'custom.nested001',
                         title: 'nested001',
-                        expanded: true
+                        expanded: true,
+                        description: undefined,
+                        tooltipOptions: undefined,
+                        tooltipPlacement: undefined
                     }],
                     layers: [{
                         allowedSRS: {},
@@ -2701,18 +2787,17 @@ describe('Test the MapUtils', () => {
         expect(cfg.map.layers.length).toBe(7);
         expect(cfg.map.layers[0].id).toBe(cfg.map.backgrounds[0].id);
         expect(cfg.map.layers[0].group).toBe("background");
-        expect(cfg.map.layers[1].id).toBe("layer3");
-        expect(cfg.map.layers[1].group).toBe("group");
+        expect(cfg.map.layers[1].id).toNotBe("layer3");
+        expect(cfg.map.layers[1].id.length).toBe(36);
+        expect(cfg.map.layers[1].group).toBe("group2");
         expect(cfg.map.layers[2].id).toNotBe("layer2");
         expect(cfg.map.layers[2].id.length).toBe(36);
-        expect(cfg.map.layers[2].group).toBe("group2");
         expect(cfg.map.layers[3].id).toBe("layer1");
         expect(cfg.map.layers[3].group).toNotExist();
         expect(cfg.map.layers[4].id).toBe("layer2");
         expect(cfg.map.layers[4].group).toNotExist();
-        expect(cfg.map.layers[5].id).toNotBe("layer3");
-        expect(cfg.map.layers[5].id.length).toBe(36);
-        expect(cfg.map.layers[5].group).toNotExist();
+        expect(cfg.map.layers[5].id).toBe("layer3");
+        expect(cfg.map.layers[5].group).toBe("group");
         expect(cfg.map.layers[6].id).toBe("annotations");
         expect(cfg.map.projection).toBe(cfg1.map.projection);
         expect(cfg.map.units).toBe("m");
@@ -2721,7 +2806,7 @@ describe('Test the MapUtils', () => {
         expect(cfg.widgetsConfig.widgets[0].id).toNotBe("widget1");
         expect(cfg.widgetsConfig.widgets[0].id.length).toBe(36);
         expect(cfg.widgetsConfig.widgets[0].layer).toExist();
-        expect(cfg.widgetsConfig.widgets[0].layer.id).toBe(cfg.map.layers[2].id);
+        expect(cfg.widgetsConfig.widgets[0].layer.id).toBe(cfg.map.layers[1].id);
         expect(cfg.widgetsConfig.widgets[0].layer.group).toBe("group2");
         expect(cfg.widgetsConfig.collapsed).toExist();
 
@@ -2788,5 +2873,98 @@ describe('Test the MapUtils', () => {
             };
             expect(mapUpdated(MAP_1, MAP_1_CENTER_CHANGED_BUTSIMILAR)).toBeFalsy();
         });
+    });
+
+    it('addRootParentGroup', () => {
+        const cfg = {
+            catalogServices: {
+                services: {
+                    "Demo CSW Service": {
+                        autoload: true,
+                        title: "Demo CSW Service",
+                        type: "csw",
+                        url: "url"
+                    }
+                }
+            },
+            map: {
+                backgrounds: [],
+                center: {
+                    x: 20.942519296828383,
+                    y: 40.953969320283846,
+                    crs: "EPSG:4326"
+                },
+                groups: [{
+                    id: "Default",
+                    title: "Default",
+                    expanded: true
+                }, {
+                    id: "group",
+                    title: "group"
+                }, {
+                    id: "group.group2",
+                    title: "group2"
+                }],
+                layers: [{
+                    id: "layer1",
+                    group: "group"
+                }, {
+                    id: "layer2",
+                    group: "group.group2"
+                }, {
+                    id: "layer3",
+                    group: "background"
+                }, {
+                    id: "annotations"
+                }, {
+                    id: "layer4"
+                }, {
+                    id: "layer5"
+                }],
+                projection: "EPSG:4326",
+                units: "m"
+            }
+        };
+
+        const newCfg = addRootParentGroup(cfg, 'ARootGroup');
+
+        expect(newCfg).toExist();
+        expect(newCfg.catalogServices).toEqual(cfg.catalogServices);
+        expect(newCfg.map).toExist();
+        expect(newCfg.map.backgrounds).toEqual(cfg.map.backgrounds);
+        expect(newCfg.map.center).toEqual(cfg.map.center);
+        expect(newCfg.map.projection).toEqual(cfg.map.projection);
+        expect(newCfg.map.units).toEqual(cfg.map.units);
+        expect(newCfg.map.groups).toExist();
+        expect(newCfg.map.groups.length).toBe(3);
+
+        const sortedGroups = sortBy(newCfg.map.groups, ['title']);
+
+        expect(sortedGroups[0].id).toExist();
+        expect(sortedGroups[0].id.length).toBe(36);
+        expect(sortedGroups[0].title).toBe('ARootGroup');
+        expect(sortedGroups[0].expanded).toBe(true);
+        expect(sortedGroups[1].id).toBe(`${sortedGroups[0].id}.group`);
+        expect(sortedGroups[1].title).toBe('group');
+        expect(sortedGroups[2].id).toBe(`${sortedGroups[0].id}.group.group2`);
+        expect(sortedGroups[2].title).toBe('group2');
+
+        expect(newCfg.map.layers).toExist();
+        expect(newCfg.map.layers.length).toBe(6);
+
+        const sortedLayers = sortBy(newCfg.map.layers, ['id']);
+
+        expect(sortedLayers[0].id).toBe('annotations');
+        expect(sortedLayers[0].group).toBe(sortedGroups[0].id);
+        expect(sortedLayers[1].id).toBe('layer1');
+        expect(sortedLayers[1].group).toBe(`${sortedGroups[0].id}.group`);
+        expect(sortedLayers[2].id).toBe('layer2');
+        expect(sortedLayers[2].group).toBe(`${sortedGroups[0].id}.group.group2`);
+        expect(sortedLayers[3].id).toBe('layer3');
+        expect(sortedLayers[3].group).toBe('background');
+        expect(sortedLayers[4].id).toBe('layer4');
+        expect(sortedLayers[4].group).toBe(sortedGroups[0].id);
+        expect(sortedLayers[5].id).toBe('layer5');
+        expect(sortedLayers[5].group).toBe(sortedGroups[0].id);
     });
 });

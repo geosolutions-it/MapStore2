@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 const Url = require('url');
-const { trimStart } = require('lodash');
+const { trimStart, replace } = require('lodash');
 /**
  * Utility functions for Share tools.
  * @memberof utils
@@ -61,10 +61,21 @@ var ShareUtils = {
         const formatHash = Url.format({ ...parseHash, query: null, search: null });
         return Url.format({ ...parsedUrl, query: null, search: null, hash: formatHash ? `#${formatHash}` : null });
     },
-    getSharedGeostoryUrl: (url = '') => {
-        return url.match(/\/(geostory)\/((shared)|(newgeostory))/)
-            ? url
-            : url.replace('/geostory/', '/geostory/shared/');
+    getSharedGeostoryUrl: (url = '', removeScroll = false) => {
+        if (url.match(/\#\/(geostory)/)) {
+            let geostoryUrl = url.match(/\/(geostory)\/((shared)|(newgeostory))/)
+                ? url
+                : url.replace('/geostory/', '/geostory/shared/');
+
+            if (removeScroll) {
+                const parsedUrl = geostoryUrl.split('#')[1]?.split('/');
+                if (parsedUrl.length === 6 && parsedUrl.includes('shared')) geostoryUrl = replace(geostoryUrl, `/section/${parsedUrl[parsedUrl.length - 1]}`, '');
+                if (parsedUrl.length === 8 && parsedUrl.includes('shared')) geostoryUrl = replace(geostoryUrl, `/section/${parsedUrl[parsedUrl.length - 3]}/column/${parsedUrl[parsedUrl.length - 1]}`, '');
+            }
+
+            return geostoryUrl;
+        }
+        return url;
     }
 };
 

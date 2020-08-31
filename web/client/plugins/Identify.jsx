@@ -5,6 +5,8 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
+
+
 const React = require('react');
 const {Glyphicon} = require('react-bootstrap');
 const {connect} = require('react-redux');
@@ -14,13 +16,14 @@ const {mapSelector, isMouseMoveIdentifyActiveSelector} = require('../selectors/m
 const {layersSelector} = require('../selectors/layers');
 const { mapTypeSelector, isCesium } = require('../selectors/maptype');
 
-const { generalInfoFormatSelector, clickPointSelector, indexSelector, responsesSelector, validResponsesSelector, showEmptyMessageGFISelector, isHighlightEnabledSelector, currentFeatureSelector, currentFeatureCrsSelector } = require('../selectors/mapInfo');
+const { generalInfoFormatSelector, clickPointSelector, indexSelector, responsesSelector, requestsSelector, validResponsesSelector, showEmptyMessageGFISelector, isHighlightEnabledSelector, currentFeatureSelector, currentFeatureCrsSelector } = require('../selectors/mapInfo');
 const { isEditingAllowedSelector } = require('../selectors/featuregrid');
+const {getConfigProp} = require("../utils/ConfigUtils");
 
 
 const { hideMapinfoMarker, showMapinfoRevGeocode, hideMapinfoRevGeocode, clearWarning, toggleMapInfoState, changeMapInfoFormat, updateCenterToMarker, closeIdentify, purgeMapInfoResults, updateFeatureInfoClickPoint, changeFormat, toggleShowCoordinateEditor, changePage, toggleHighlightFeature, editLayerFeatures,
-    identifyConfigureDefault} = require('../actions/mapInfo');
-const { changeMousePointer, zoomToExtent, registerEventListener, unRegisterEventListener} = require('../actions/map');
+    identifyConfigureDefault, setMapTrigger} = require('../actions/mapInfo');
+const { changeMousePointer, zoomToExtent } = require('../actions/map');
 
 
 const {currentLocaleSelector} = require('../selectors/locale');
@@ -33,7 +36,7 @@ const {defaultViewerHandlers, defaultViewerDefaultProps} = require('../component
 const {identifyLifecycle} = require('../components/data/identify/enhancers/identify');
 const zoomToFeatureHandler = require('..//components/data/identify/enhancers/zoomToFeatureHandler');
 const getToolButtons = require('./identify/toolButtons');
-const getNavigationButtons = require('./identify/navigationButtons');
+const getFeatureButtons = require('./identify/featureButtons');
 const Message = require('./locale/Message');
 
 require('./identify/identify.css');
@@ -42,7 +45,7 @@ const selector = createStructuredSelector({
     enabled: (state) => state.mapInfo && state.mapInfo.enabled || state.controls && state.controls.info && state.controls.info.enabled || null,
     responses: responsesSelector,
     validResponses: validResponsesSelector,
-    requests: (state) => state.mapInfo && state.mapInfo.requests || [],
+    requests: requestsSelector,
     format: generalInfoFormatSelector,
     map: mapSelector,
     layers: layersSelector,
@@ -52,7 +55,7 @@ const selector = createStructuredSelector({
     warning: (state) => state.mapInfo && state.mapInfo.warning,
     currentLocale: currentLocaleSelector,
     dockStyle: state => mapLayoutValuesSelector(state, {height: true}),
-    formatCoord: (state) => state.mapInfo && state.mapInfo.formatCoord,
+    formatCoord: (state) => state.mapInfo && state.mapInfo.formatCoord || getConfigProp("defaultCoordinateFormat"),
     showCoordinateEditor: (state) => state.mapInfo && state.mapInfo.showCoordinateEditor,
     showEmptyMessageGFI: state => showEmptyMessageGFISelector(state),
     isEditingAllowed: isEditingAllowedSelector,
@@ -126,11 +129,12 @@ const identifyDefaultProps = defaultProps({
     showTabs: true,
     showCoords: true,
     showLayerTitle: true,
+    showMoreInfo: true,
     showEdit: false,
     position: 'right',
     size: 660,
     getToolButtons,
-    getNavigationButtons,
+    getFeatureButtons,
     showFullscreen: false,
     validResponses: [],
     validator: MapInfoUtils.getValidator, // TODO: move all validation from the components to the selectors
@@ -160,6 +164,7 @@ const identifyDefaultProps = defaultProps({
  * @prop cfg.defaultConfiguration.disabledAlwaysOn {boolean} if true, disable always on setup
  * @prop cfg.defaultConfiguration.showEmptyMessageGFI {boolean} allow or deny the visiibility of message when you have no results from identify request
  * @prop cfg.defaultConfiguration.infoFormat {string} "text/plain" default infoformat value, other values are "text/html" for text only or "application/json" for properties
+ * @prop cfg.showMoreInfo {boolean} if true shows the more info icon which allow user to show/hide Geocode viewer as popup (true by default)
  *
  * @example
  * {
@@ -236,7 +241,7 @@ const FeatureInfoFormatSelector = connect((state) => ({
 const FeatureInfoTriggerSelector = connect((state) => ({
     trigger: isMouseMoveIdentifyActiveSelector(state) ? 'hover' : 'click'
 }), {
-    onTriggerChange: (event) => event.target.value === 'hover' ? registerEventListener('mousemove', 'identifyFloatingTool') : unRegisterEventListener('mousemove', 'identifyFloatingTool')
+    onSetMapTrigger: setMapTrigger
 })(require("../components/misc/FeatureInfoTriggerSelector"));
 
 module.exports = {

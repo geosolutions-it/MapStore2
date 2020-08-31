@@ -5,11 +5,13 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
+
 const React = require('react');
 const expect = require('expect');
 const ReactDOM = require('react-dom');
 const IdentifyContainer = require('../IdentifyContainer');
 const TestUtils = require('react-dom/test-utils');
+const ConfigUtils = require('../../../../utils/ConfigUtils');
 
 describe("test IdentifyContainer", () => {
     beforeEach((done) => {
@@ -117,6 +119,33 @@ describe("test IdentifyContainer", () => {
         expect(sidePanel[0].children[0].style.zIndex).toBe('7777');
     });
 
+    it('test default coordinate format from localConfig', () => {
+        ConfigUtils.setConfigProp("defaultCoordinateFormat", "aeronautical");
+        const defaultFormat = ConfigUtils.getConfigProp('defaultCoordinateFormat');
+        const point = {latlng: {lat: 39.86927447817351, lng: -81.91405928134918}};
+        let format;
+        ReactDOM.render(
+            <IdentifyContainer
+                enabled
+                requests={[{}]}
+                enabledCoordEditorButton
+                showCoordinateEditor
+                point={point}
+                formatCoord={format || defaultFormat || "decimal"}
+            />, document.getElementById("container"));
+        const inputs = document.getElementsByClassName('form-control');
+        expect(inputs.length).toBe(8);
+        expect(inputs[0].placeholder).toBe("d");
+        expect(inputs[0].value).toBe('39');
+        expect(inputs[1].placeholder).toBe("m");
+        expect(inputs[1].value).toBe('52');
+        expect(inputs[2].placeholder).toBe("s");
+        expect(inputs[2].value).toBe('9.3881');
+
+        // Clean up defaults
+        ConfigUtils.removeConfigProp("defaultCoordinateFormat");
+    });
+
     it('test edit button with PROPERTIES response', () => {
         const funcs = {
             getToolButtons: () => {}
@@ -154,4 +183,58 @@ describe("test IdentifyContainer", () => {
         expect(getToolButtonsSpy).toHaveBeenCalled();
         expect(getToolButtonsSpy.calls[0].arguments[0].showEdit).toBe(true);
     });
+
+    it('test rendering of Layer selector in Identify panel', () => {
+        const requests = [{reqId: 1}, {reqId: 2}];
+        const responses = [{layerMetadata: {title: "Layer 1"}}, {layerMetadata: {title: "Layer 2"}}];
+        ReactDOM.render(<IdentifyContainer
+            enabled
+            index={0}
+            requests={requests}
+            responses={responses}
+        />, document.getElementById("container"));
+        const layerSelect = document.getElementById("identify-layer-select");
+        expect(layerSelect).toExist();
+    });
+
+    it('test rendering of layer select and feature buttons in Identify panel', () => {
+        const requests = [{reqId: 1}, {reqId: 2}];
+        const responses = [{layerMetadata: {title: "Layer 1"}}, {layerMetadata: {title: "Layer 2"}}];
+        ReactDOM.render(<IdentifyContainer
+            enabled
+            index={0}
+            requests={requests}
+            responses={responses}
+        />, document.getElementById("container"));
+        const layerRow = document.getElementsByClassName("layer-col");
+        expect(layerRow[0].children.length).toBe(3);
+        const layerIcon = layerRow[0].children[0];
+        const layerSelect = layerRow[0].children[1];
+        const featureButtons = layerRow[0].children[2];
+        expect(layerIcon.getAttribute('class')).toContain('glyphicon-1-layer');
+        expect(layerSelect.getAttribute('id')).toContain('identify-layer-select');
+        expect(featureButtons.getAttribute('class')).toContain('btn-group');
+    });
+
+    it('test rendering of coordinates viewer and toolbar in Identify panel', () => {
+        const requests = [{reqId: 1}, {reqId: 2}];
+        const responses = [{layerMetadata: {title: "Layer 1"}}, {layerMetadata: {title: "Layer 2"}}];
+        ReactDOM.render(<IdentifyContainer
+            enabled
+            index={0}
+            requests={requests}
+            responses={responses}
+            point={{latlng: {lat: 1, lng: 1}}}
+            showCoordinateEditor={false}
+        />, document.getElementById("container"));
+        const coordinatesRow = document.getElementsByClassName("coordinates-edit-row");
+        expect(coordinatesRow[0].children.length).toBe(3);
+        const coordinateIcon = coordinatesRow[0].children[0];
+        const coordinateViewer = coordinatesRow[0].children[1];
+        const toolbar = coordinatesRow[0].children[2];
+        expect(coordinateIcon.getAttribute('class')).toContain('glyphicon-point');
+        expect(coordinateViewer.children[0].getAttribute('class')).toContain('coordinates-text');
+        expect(toolbar.getAttribute('class')).toContain('btn-group');
+    });
+
 });

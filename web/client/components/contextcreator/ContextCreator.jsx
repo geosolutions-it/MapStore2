@@ -94,6 +94,7 @@ export default class ContextCreator extends React.Component {
         editedCfg: PropTypes.string,
         isCfgValidated: PropTypes.bool,
         cfgError: PropTypes.object,
+        mapTemplates: PropTypes.array,
         parsedTemplate: PropTypes.object,
         editedTemplate: PropTypes.object,
         fileDropStatus: PropTypes.string,
@@ -185,16 +186,25 @@ export default class ContextCreator extends React.Component {
             "ScaleBox",
             "Toolbar",
             "MapLoading",
-            "Identify",
+            {
+                "name": "Identify",
+                "overrides": {
+                    "cfg": {
+                        showEdit: false
+                    }
+                }
+            },
             "Locate",
             "ZoomIn",
             "ZoomOut",
             "ZoomAll",
             "Annotations",
             "MapImport",
+            "MapExport",
             "Undo",
             "Redo",
-            "Expander"
+            "Expander",
+            "FilterLayer"
         ],
         ignoreViewerPlugins: false,
         allAvailablePlugins: [],
@@ -300,7 +310,7 @@ export default class ContextCreator extends React.Component {
                             showDescriptionTooltip={this.props.showPluginDescriptionTooltip}
                             descriptionTooltipDelay={this.props.pluginDescriptionTooltipDelay}
                             showDialog={this.props.showDialog}
-                            mapTemplates={this.props.newContext.templates}
+                            mapTemplates={this.props.mapTemplates}
                             parsedTemplate={this.props.parsedTemplate}
                             editedTemplate={this.props.editedTemplate}
                             fileDropStatus={this.props.fileDropStatus}

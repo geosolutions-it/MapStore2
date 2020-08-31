@@ -32,7 +32,8 @@ import {
     CHANGE_FORMAT, changeFormat,
     CHANGE_PAGE, changePage,
     TOGGLE_HIGHLIGHT_FEATURE, toggleHighlightFeature,
-    CONFIGURE_DEFAULT, identifyConfigureDefault
+    CONFIGURE_DEFAULT, identifyConfigureDefault,
+    SET_MAP_TRIGGER, setMapTrigger
 } from '../mapInfo';
 
 describe('Test correctness of the map actions', () => {
@@ -164,5 +165,8 @@ describe('Test correctness of the map actions', () => {
         expect(retVal).toExist();
         expect(retVal.type).toBe(CONFIGURE_DEFAULT);
         expect(retVal.cfg).toBe(defaultConfig);
+    });
+    it('setMapTrigger', () => {
+        expect(setMapTrigger('hover')).toEqual({type: SET_MAP_TRIGGER, trigger: 'hover' });
     });
 });

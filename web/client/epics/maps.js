@@ -248,7 +248,7 @@ const getMapsResourcesByCategoryEpic = (action$, store) =>
             const getContextNames = ({results, ...other}) => {
                 const maps = isArray(results) ? results : (results === "" ? [] : [results]);
                 return maps.length === 0 ?
-                    Rx.Observable.of({results, ...other}) :
+                    Rx.Observable.of({results: [], ...other}) :
                     Rx.Observable.forkJoin(
                         maps.map(({context}) => context ?
                             getResource(context, {includeAttributes: false, withData: false, withPermissions: false})
@@ -292,9 +292,16 @@ const getMapsResourcesByCategoryEpic = (action$, store) =>
                     }
                 })
                     .then(data => data))
-                    .switchMap((response) => getContextNames(response).switchMap(responseWithContext => Rx.Observable.of(
-                        mapsLoaded(responseWithContext, opts.params, searchText)
-                    )))
+                    .switchMap((response) => getContextNames(response).switchMap(responseWithContext => {
+                        // category is required to identify maps for detail card. It's missing from this entry point
+                        return Rx.Observable.of(
+                            mapsLoaded({
+                                ...responseWithContext,
+                                results: responseWithContext.results?.map(res => ({...res, category: {name: "MAP"}}))
+                            }, opts.params, searchText)
+                        );
+                    }
+                    ))
             )
                 .let(wrapStartStop(
                     loading(true, 'loadingMaps'),
@@ -486,8 +493,9 @@ const mapSaveMapResourceEpic = (action$, store) =>
     action$.ofType(SAVE_MAP_RESOURCE)
         .exhaustMap(({resource}) => {
             // filter out invalid attributes
+            // thumbnails are handled separately
             const validAttributesNames = keys(resource.attributes)
-                .filter(attrName => resource.attributes[attrName] !== undefined && resource.attributes[attrName] !== null);
+                .filter(attrName => attrName !== 'thumbnail' && resource.attributes[attrName] !== undefined && resource.attributes[attrName] !== null);
             return Rx.Observable.forkJoin(
                 (() => {
                     // get a context information using the id in the attribute

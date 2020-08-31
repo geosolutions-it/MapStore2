@@ -60,6 +60,8 @@ This is the main structure:
   },
   // flag for abandon map edit confirm popup, by default is enabled
   "unsavedMapChangesDialog": false,
+  // optional flag to set default coordinate format (decimal, aeronautical)
+  "defaultCoordinateFormat": "aeronautical",
   // optional state initializer (it will override the one defined in appConfig.js)
   "initialState": {
       // default initial state for every mode (will override initialState imposed by plugins reducers)
@@ -204,6 +206,34 @@ Example:<br>
   }
 }
 ```
+
+#### Annotations Editor configuration
+Annotations editor can be configured by setting it's defaultState. It looks like this:
+
+```
+"defaultState": {
+ ...
+  "annotations": {
+    "config": {
+    "geometryEditorOptions": {
+        "measureOptions": {
+          "displayUom": "nm"
+        }
+      },
+      "multiGeometry": true,
+      "validationErrors": {},
+      "defaultPointType": "symbol"
+    },
+    "format": "aeronautical",
+    "defaultTextAnnotation": "New"
+  },
+```
+
+- **format** - decimal or aeronautical degree for coordinates
+- **defaultTextAnnotation** - default text value for text annotations
+- **config.geometryEditorOptions** - properties to be passed to CoordinatesEditor of GeometryEditor. For more information refer to the documentation of CoordinatesEditor component
+- **config.multiGeometry** - if set to true allows to add more then one geometry to annotations
+- **config.defaultPointType** - default point type of marker geometry type. Can be 'marker' or 'symbol'
 
 ### projectionDefs configuration
 Custom CRS can be configured here, at root level of localConfig.json file. For example:

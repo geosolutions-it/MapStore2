@@ -32,6 +32,7 @@ const CHANGE_FORMAT = 'IDENTIFY:CHANGE_FORMAT';
 const TOGGLE_SHOW_COORD_EDITOR = 'IDENTIFY:TOGGLE_SHOW_COORD_EDITOR';
 const EDIT_LAYER_FEATURES = 'IDENTIFY:EDIT_LAYER_FEATURES';
 const SET_CURRENT_EDIT_FEATURE_QUERY = 'IDENTIFY:CURRENT_EDIT_FEATURE_QUERY';
+const SET_MAP_TRIGGER = 'IDENTIFY:SET_MAP_TRIGGER';
 
 const TOGGLE_EMPTY_MESSAGE_GFI = "IDENTIFY:TOGGLE_EMPTY_MESSAGE_GFI";
 const toggleEmptyMessageGFI = () => ({type: TOGGLE_EMPTY_MESSAGE_GFI});
@@ -271,12 +272,15 @@ const setCurrentEditFeatureQuery = (query) => ({
  * sets default properties for enabled, disabledAlwaysOn, configuration from config
  * @prop {object} cfg
 */
-function identifyConfigureDefault(cfg) {
-    return {
-        type: CONFIGURE_DEFAULT,
-        cfg
-    };
-}
+const identifyConfigureDefault = (cfg) => ({
+    type: CONFIGURE_DEFAULT,
+    cfg
+});
+
+const setMapTrigger = (trigger) => ({
+    type: SET_MAP_TRIGGER,
+    trigger
+});
 
 module.exports = {
     ERROR_FEATURE_INFO,
@@ -324,5 +328,6 @@ module.exports = {
     UPDATE_FEATURE_INFO_CLICK_POINT, updateFeatureInfoClickPoint,
     EDIT_LAYER_FEATURES, editLayerFeatures,
     SET_CURRENT_EDIT_FEATURE_QUERY, setCurrentEditFeatureQuery,
-    CONFIGURE_DEFAULT, identifyConfigureDefault
+    CONFIGURE_DEFAULT, identifyConfigureDefault,
+    SET_MAP_TRIGGER, setMapTrigger
 };

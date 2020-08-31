@@ -41,7 +41,9 @@ const {
     toggleStyle,
     setStyle,
     updateSymbols,
-    setEditingFeature
+    setEditingFeature,
+    setDefaultStyle,
+    loading
 } = require('../../actions/annotations');
 const {PURGE_MAPINFO_RESULTS} = require('../../actions/mapInfo');
 const {drawingFeatures, selectFeatures} = require('../../actions/draw');
@@ -1589,5 +1591,14 @@ describe('Test the annotations reducer', () => {
         expect(annotationsState.editing.features[0].style[2].filtering).toBe(false);
         expect(annotationsState.editing.features[1].style[1].filtering).toBe(false);
         expect(annotationsState.editing.features[1].style[2].filtering).toBe(false);
+    });
+    it('setDefaultStyle', () => {
+        const state = annotations({}, setDefaultStyle('POINT.symbol', {size: 64}));
+        expect(state.defaultStyles?.POINT?.symbol).toEqual({size: 64});
+    });
+    it('loading', () => {
+        const state = annotations({}, loading(true, 'loadingFlag'));
+        expect(state.loading).toBe(true);
+        expect(state.loadFlags).toEqual({loadingFlag: true});
     });
 });
