@@ -16,7 +16,8 @@ const {mapSelector, isMouseMoveIdentifyActiveSelector} = require('../selectors/m
 const {layersSelector} = require('../selectors/layers');
 const { mapTypeSelector, isCesium } = require('../selectors/maptype');
 
-const { generalInfoFormatSelector, clickPointSelector, indexSelector, responsesSelector, requestsSelector, validResponsesSelector, showEmptyMessageGFISelector, isHighlightEnabledSelector, currentFeatureSelector, currentFeatureCrsSelector } = require('../selectors/mapInfo');
+const { generalInfoFormatSelector, clickPointSelector, indexSelector, responsesSelector, requestsSelector, validResponsesSelector, showEmptyMessageGFISelector, isHighlightEnabledSelector, currentFeatureSelector, currentFeatureCrsSelector,
+    mapInfoConfigurationSelector } = require('../selectors/mapInfo');
 const { isEditingAllowedSelector } = require('../selectors/featuregrid');
 const {getConfigProp} = require("../utils/ConfigUtils");
 
@@ -60,7 +61,8 @@ const selector = createStructuredSelector({
     showEmptyMessageGFI: state => showEmptyMessageGFISelector(state),
     isEditingAllowed: isEditingAllowedSelector,
     isCesium,
-    floatingIdentifyEnabled: (state) => isMouseMoveIdentifyActiveSelector(state)
+    floatingIdentifyEnabled: (state) => isMouseMoveIdentifyActiveSelector(state),
+    defaultCfg: state => mapInfoConfigurationSelector(state)
 });
 // result panel
 

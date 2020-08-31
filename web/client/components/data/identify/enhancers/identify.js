@@ -8,7 +8,7 @@
 
 const {lifecycle, withHandlers, compose} = require('recompose');
 const {set} = require('../../../../utils/ImmutableUtils');
-const {isEqual, isNil, isNaN} = require('lodash');
+const {isEqual, isNil, isNaN, isEmpty} = require('lodash');
 
 /**
  * Enhancer to enable set index only if Component has header
@@ -71,9 +71,10 @@ const identifyLifecycle = compose(
                 changeMousePointer = () => {},
                 disableCenterToMarker,
                 onEnableCenterToMarker = () => {},
-                disabledAlwaysOn,
-                defaultConfiguration,
-                identifyConfigureDefault = () => {}
+                identifyConfigureDefault = () => {},
+                pluginCfg = {},
+                disabledAlwaysOn = false,
+                defaultCfg = {}
             } = this.props;
 
             if (enabled) {
@@ -81,12 +82,10 @@ const identifyLifecycle = compose(
             }
 
             identifyConfigureDefault({
-                enabled: isNil(enabled) && defaultConfiguration?.enabled
-                || enabled
-                || (isNil(defaultConfiguration?.enabled) && isNil(defaultConfiguration?.enabled) && true)
-                || false,
-                ...(!isNil(disabledAlwaysOn) && {disabledAlwaysOn: disabledAlwaysOn}),
-                defaultConfiguration: {...defaultConfiguration}
+                ...isNil(enabled)
+                && {enabled: pluginCfg?.defaultConfiguration?.enabled || (isNil(pluginCfg?.defaultConfiguration?.enabled) && true) || false},
+                ...(isNil(disabledAlwaysOn) && {disabledAlwaysOn: pluginCfg?.defaultConfiguration?.disabledAlwaysOn || false}),
+                ...(isEmpty(defaultCfg) && {defaultConfiguration: pluginCfg?.defaultConfiguration || {}})
             });
 
             if (!disableCenterToMarker) {
