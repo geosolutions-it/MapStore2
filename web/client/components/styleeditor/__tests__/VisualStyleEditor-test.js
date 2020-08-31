@@ -8,8 +8,12 @@
 
 import React from 'react';
 import ReactDOM from 'react-dom';
-import VisualStyleEditor from '../VisualStyleEditor';
+import VisualStyleEditorComponent from '../VisualStyleEditor';
 import expect from 'expect';
+import { DragDropContext as dragDropContext } from 'react-dnd';
+import testBackend from 'react-dnd-test-backend';
+
+const VisualStyleEditor = dragDropContext(testBackend)(VisualStyleEditorComponent);
 
 describe('VisualStyleEditor', () => {
     beforeEach((done) => {

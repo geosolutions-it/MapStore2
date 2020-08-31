@@ -2075,7 +2075,9 @@
             "grayChannel": "Channel",
             "ruleClassification": "Classification",
             "ruleRaster": "Raster",
-            "customInterval": "Custom Interval"
+            "customInterval": "Custom Interval",
+            "warningTextOrderTitle": "Avertissement",
+            "warningTextOrder": "L'ordre de la règle contenant le style de texte ne pouvait pas correspondre à l'ordre de rendu sur la carte. Ce comportement est lié à certains moteurs de rendu qui dessinent une étiquette au-dessus d'autres règles"
         },
         "playback": {
             "settings": {

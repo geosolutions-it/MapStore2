@@ -2074,7 +2074,9 @@
             "grayChannel": "Channel",
             "ruleClassification": "Clasificación",
             "ruleRaster": "Ráster",
-            "customInterval": "Custom Interval"
+            "customInterval": "Custom Interval",
+            "warningTextOrderTitle": "Advertencia",
+            "warningTextOrder": "El orden de la regla que contiene el estilo de texto no pudo coincidir con el orden de representación en el mapa. Este comportamiento está relacionado con algún motor de renderizado que dibuja la etiqueta sobre otras reglas"
         },
         "playback": {
             "settings": {

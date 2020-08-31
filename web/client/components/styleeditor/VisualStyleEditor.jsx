@@ -259,7 +259,6 @@ function VisualStyleEditor({
             }
             ruleBlock={ruleBlock}
             symbolizerBlock={symbolizerBlock}
-            rules={style?.rules}
             config={{
                 geometryType,
                 zoom,
@@ -270,7 +269,13 @@ function VisualStyleEditor({
                 methods,
                 getColors
             }}
-            // changes that could need an asynch update
+            // reverse rules order to show top rendered style
+            // as first item of the list
+            rules={style?.rules && [...style.rules].reverse()}
+            // changes synchronous updated
+            // reverse the rules to their original order
+            onChange={newRules => handleUpdateStyle([...newRules].reverse())}
+            // changes that could need an async update
             onUpdate={({ values, ...properties }) => {
                 setUpdating(true);
                 updateFunc({
@@ -283,8 +288,6 @@ function VisualStyleEditor({
                     .then(newRules => handleUpdateStyle(newRules))
                     .catch(() => handleUpdateStyle());
             }}
-            // changes synchronous updated
-            onChange={newRules => handleUpdateStyle(newRules)}
         />
     );
 }
