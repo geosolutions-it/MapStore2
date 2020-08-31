@@ -21,7 +21,7 @@ After a while (depending on the network bandwidth) the full set of dependencies 
 
 `npm start`
 
-Then point your preferred browser to [http://localhost:8081](http://localhost:8081). By default the front-end works using the online dev server as back-end. This configuration is useful on start-up quickly but is not a suggested configuration if you want to develop.
+Then point your preferred browser to [http://localhost:8081](http://localhost:8081). By default the front-end works using the online dev server as back-end. This configuration is useful for a quick startup, but is not the suggested configuration if you want to develop.
 To learn how to connect the front-end dev server to a local back-end read the following instructions.
 
 ### Connect Front-end to local back-end
