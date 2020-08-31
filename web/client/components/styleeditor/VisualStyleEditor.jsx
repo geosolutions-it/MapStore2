@@ -268,6 +268,8 @@ function VisualStyleEditor({
         });
     }, [JSON.stringify(style)]);
 
+    const errorMessage = error && (error.message || error.messageId && <Message msgId={error.messageId}/>);
+
     return (
         <RulesEditor
             loading={updating}
@@ -305,11 +307,12 @@ function VisualStyleEditor({
                                     title={<Message msgId="styleeditor.validationErrorTitle"/>}
                                     text={<>
                                         <p><Message msgId="styleeditor.genericValidationError"/></p>
-                                        <p><Message msgId="styleeditor.incorrectPropertyInputError"/></p>
-                                        {(error.message || error.messageId) && <p>
-                                            <Message msgId="styleeditor.validationError"/>:&nbsp;
-                                            {error.message || error.messageId && <Message msgId={error.messageId}/>}
-                                        </p>}
+                                        {errorMessage
+                                            ? <p>
+                                                <Message msgId="styleeditor.validationError"/>:&nbsp;
+                                                {errorMessage}
+                                            </p>
+                                            : <p><Message msgId="styleeditor.incorrectPropertyInputError"/></p>}
                                     </>}/>
                             </div>
                         },
