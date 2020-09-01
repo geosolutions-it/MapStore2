@@ -33,6 +33,7 @@ import { closeAnnotations } from '../actions/annotations';
 import { MAP_CONFIG_LOADED } from '../actions/config';
 import {addPopup, cleanPopups, removePopup, REMOVE_MAP_POPUP} from '../actions/mapPopups';
 import { cancelSelectedItem } from '../actions/search';
+const { SET_MAP_TRIGGER } = require('../actions/mapInfo');
 import { stopGetFeatureInfoSelector, identifyOptionsSelector,
     clickPointSelector, clickLayerSelector,
     isMapPopup, isHighlightEnabledSelector,
