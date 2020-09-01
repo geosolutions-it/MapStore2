@@ -391,12 +391,13 @@
 }
 
 
-.coordinateRow {
+.mapstore-annotations-info-viewer-items .coordinateRow {
     display: flex;
     align-items: center;
     box-sizing: border-box;
+    margin: 8px 0;
+    padding: 15px 5px;
     border: 1px solid @ms2-color-shade-lighter;
-    margin: 8px 15px !important;
     font-family: @font-family-monospace;
     .col-xs-5, .col-xs-1 {
         padding: 0;
@@ -419,6 +420,28 @@
     .glyphicon-menu-hamburger {
         width: 10px;
         overflow: hidden;
+    }
+    .coordinate {
+        width: 100%;
+        display: flex;
+        flex: 1;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        .input-group {
+            flex: 1;
+            padding: 4px 0;
+            margin-right: 8px;
+        }
+        .degrees, .minutes {
+            min-width: 45px;
+            flex: 1;
+            display: flex;
+        }
+        .seconds {
+            display: flex;
+            min-width: 75px;
+            flex: 1;
+        }
     }
 }
 

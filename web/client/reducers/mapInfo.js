@@ -29,7 +29,8 @@ const {
     TOGGLE_EMPTY_MESSAGE_GFI,
     CHANGE_FORMAT,
     TOGGLE_SHOW_COORD_EDITOR,
-    SET_CURRENT_EDIT_FEATURE_QUERY
+    SET_CURRENT_EDIT_FEATURE_QUERY,
+    SET_MAP_TRIGGER
 } = require('../actions/mapInfo');
 const {
     MAP_CONFIG_LOADED
@@ -37,19 +38,24 @@ const {
 const {RESET_CONTROLS} = require('../actions/controls');
 
 const assign = require('object-assign');
-const {head} = require('lodash');
+const {findIndex, find} = require('lodash');
 
 function receiveResponse(state, action, type) {
-    const request = head((state.requests || []).filter((req) => req.reqId === action.reqId));
-    if (request) {
+    const requestIndex = findIndex((state.requests || []), (req) => req.reqId === action.reqId);
+    if (requestIndex !== -1) {
         const responses = state.responses || [];
+        // Update index when first response is received
+        const updateIndex = find(responses, "response") === undefined;
+        // Add response in same order it was requested
+        responses[requestIndex] = {
+            response: action[type],
+            queryParams: action.requestParams,
+            layerMetadata: action.layerMetadata,
+            layer: action.layer
+        };
         return assign({}, state, {
-            responses: [...responses, {
-                response: action[type],
-                queryParams: action.requestParams,
-                layerMetadata: action.layerMetadata,
-                layer: action.layer
-            }]
+            responses: [...responses],
+            ...(updateIndex && {index: requestIndex})
         });
     }
     return state;
@@ -314,20 +320,22 @@ function mapInfo(state = initState, action) {
             }
 
         );
-        const responses = state.responses || [];
+        let responses = state.responses || [];
+        // Add response such that it doesn't replace other layer response's index
+        responses[state.requests.length] = {
+            response: {
+                crs: null,
+                features: intersected,
+                totalFeatures: "unknown",
+                type: "FeatureCollection"
+            },
+            queryParams: action.request,
+            layerMetadata: action.metadata,
+            format: 'JSON'
+        };
         return assign({}, state, {
             requests: [...state.requests, {}],
-            responses: [...responses, {
-                response: {
-                    crs: null,
-                    features: intersected,
-                    totalFeatures: "unknown",
-                    type: "FeatureCollection"
-                },
-                queryParams: action.request,
-                layerMetadata: action.metadata,
-                format: 'JSON'
-            }]
+            responses: [...responses]
         });
     }
     case UPDATE_CENTER_TO_MARKER: {
@@ -363,6 +371,15 @@ function mapInfo(state = initState, action) {
         return {
             ...state,
             currentEditFeatureQuery: action.query
+        };
+    }
+    case SET_MAP_TRIGGER: {
+        return {
+            ...state,
+            configuration: {
+                ...state.configuration,
+                trigger: action.trigger
+            }
         };
     }
     default:

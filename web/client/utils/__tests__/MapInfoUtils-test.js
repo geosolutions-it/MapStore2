@@ -334,6 +334,152 @@ describe('MapInfoUtils', () => {
         let validResponses = validator.getValidResponses(response);
         expect(validResponses.length).toBe(1);
     });
+
+    it('getValidResponses for vector layer', ()=>{
+        let response = [
+            {
+                "response": {
+                    "crs": null,
+                    "features": [{
+                        "type": "Feature",
+                        "geometry": {
+                            "type": "Point",
+                            "coordinates": [10.728187343305999, 43.95330251168864]
+                        },
+                        "properties": {
+                            "OBJECTID_1": 8
+                        },
+                        "id": 0
+                    }
+                    ],
+                    "totalFeatures": "unknown",
+                    "type": "FeatureCollection"
+                },
+                "queryParams": {
+                    "lat": 43.95229339335166,
+                    "lng": 10.726776123046875
+                },
+                "layerMetadata": {
+                    "fields": ["OBJECTID_1"],
+                    "title": "prova",
+                    "resolution": 152.8740565703525,
+                    "buffer": 2
+                },
+                "format": "TEXT"
+            },
+            {
+                "response": "no features were found",
+                "queryParams": {
+                    "lat": 43.95229339335166,
+                    "lng": 10.726776123046875
+                },
+                "layerMetadata": {
+                    "fields": ["OBJECTID_1"],
+                    "title": "prova",
+                    "resolution": 152.8740565703525,
+                    "buffer": 2
+                },
+                "format": "TEXT"
+            },
+            undefined
+        ];
+
+        let validator = getValidator();
+        let validResponses = validator.getValidResponses(response);
+        expect(validResponses.length).toBe(1);
+
+        // Validate format 'PROPERTIES'
+        response.filter(r=> r !== undefined).forEach(res => {res.format = "PROPERTIES"; return res;});
+        validResponses = validator.getValidResponses(response);
+        expect(validResponses.length).toBe(1);
+
+        // Validate format 'JSON'
+        response.filter(r=> r !== undefined).forEach(res => {res.format = "JSON"; return res;});
+        validResponses = validator.getValidResponses(response);
+        expect(validResponses.length).toBe(1);
+    });
+
+    it('getNoValidResponses for vector layer', ()=>{
+        let response = [
+            {
+                "response": {
+                    "crs": null,
+                    "features": [{
+                        "type": "Feature",
+                        "geometry": {
+                            "type": "Point",
+                            "coordinates": [10.728187343305999, 43.95330251168864]
+                        },
+                        "properties": {
+                            "OBJECTID_1": 8
+                        },
+                        "id": 0
+                    }
+                    ],
+                    "totalFeatures": "unknown",
+                    "type": "FeatureCollection"
+                },
+                "queryParams": {
+                    "lat": 43.95229339335166,
+                    "lng": 10.726776123046875
+                },
+                "layerMetadata": {
+                    "fields": ["OBJECTID_1"],
+                    "title": "prova",
+                    "resolution": 152.8740565703525,
+                    "buffer": 2
+                },
+                "format": "TEXT"
+            },
+            {
+                "response": "no features were found",
+                "queryParams": {
+                    "lat": 43.95229339335166,
+                    "lng": 10.726776123046875
+                },
+                "layerMetadata": {
+                    "fields": ["OBJECTID_1"],
+                    "title": "prova",
+                    "resolution": 152.8740565703525,
+                    "buffer": 2
+                },
+                "format": "TEXT"
+            },
+            {
+                "response": {
+                    features: []
+                },
+                "queryParams": {
+                    "lat": 43.95229339335166,
+                    "lng": 10.726776123046875
+                },
+                "layerMetadata": {
+                    "fields": ["OBJECTID_1"],
+                    "title": "prova",
+                    "resolution": 152.8740565703525,
+                    "buffer": 2
+                },
+                "format": "TEXT"
+            },
+            undefined
+        ];
+
+        let validator = getValidator();
+        let noValidResponses = validator.getNoValidResponses(response);
+        expect(noValidResponses.length).toBe(1);
+
+        // Validate format 'PROPERTIES'
+        response.filter(r=> r !== undefined).forEach(res => {res.format = "PROPERTIES"; return res;});
+        noValidResponses = validator.getNoValidResponses(response);
+        expect(noValidResponses.length).toBe(1);
+
+        // Validate format 'JSON'
+        response.filter(r=> r !== undefined).forEach(res => {res.format = "JSON"; return res;});
+        noValidResponses = validator.getNoValidResponses(response);
+        expect(noValidResponses.length).toBe(1);
+
+    });
+
     it('get the label given the text/plain value', () => {
         let label = getLabelFromValue("text/plain");
         expect(label).toBe("TEXT");

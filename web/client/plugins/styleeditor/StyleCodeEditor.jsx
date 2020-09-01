@@ -14,7 +14,8 @@ import inlineWidgets from './inlineWidgets';
 
 import {
     editStyleCode,
-    updateEditorMetadata
+    updateEditorMetadata,
+    errorStyle
 } from '../../actions/styleeditor';
 
 import {
@@ -110,13 +111,18 @@ const ConnectedVisualStyleEditor = connect(
             geometryType,
             scales: scales.map(scale => Math.round(scale)),
             zoom: map.zoom,
-            fonts: styleService.fonts || []
+            fonts: styleService.fonts || [],
+            methods: (geometryType === 'raster'
+                ? styleService?.classificationMethods?.raster
+                : styleService?.classificationMethods?.vector) || methods
         })
-    )
+    ),
+    {
+        onError: errorStyle.bind(null, 'edit')
+    }
 )(VisualStyleEditor);
 
 ConnectedVisualStyleEditor.defaultProps = {
-    methods,
     getColors,
     styleUpdateTypes
 };

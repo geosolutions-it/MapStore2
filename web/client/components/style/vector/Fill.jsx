@@ -28,6 +28,7 @@ const {addOpacityToColor} = require('../../../utils/VectorStyleUtils');
 class Fill extends React.Component {
     static propTypes = {
         style: PropTypes.object,
+        defaultColor: PropTypes.string,
         onChange: PropTypes.func,
         width: PropTypes.number
     };
@@ -50,7 +51,7 @@ class Fill extends React.Component {
                     <Message msgId="draw.color"/>
                 </Col>
                 <Col xs={6} style={{position: "static"}}>
-                    <ColorSelector color={addOpacityToColor(tinycolor(style.fillColor).toRgb(), style.fillOpacity)} width={this.props.width}
+                    <ColorSelector color={addOpacityToColor(tinycolor(style.fillColor || this.props.defaultColor).toRgb(), style.fillOpacity)} width={this.props.width}
                         onChangeColor={c => {
                             if (!isNil(c)) {
                                 const fillColor = tinycolor(c).toHexString();

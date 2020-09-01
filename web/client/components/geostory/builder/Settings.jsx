@@ -65,6 +65,15 @@ export default ({
         </FormGroup>
         <FormGroup>
             <div style={{ marginBottom: "10px"}}>
+                <ControlLabel><Message msgId="geostory.builder.settings.overlay"/></ControlLabel>
+            </div>
+            <CustomThemePicker
+                themeStyle={settings?.theme?.overlay}
+                placement="right"
+                onChange={(overlay) => onUpdateSettings("theme", { ...settings?.theme, overlay })}/>
+        </FormGroup>
+        <FormGroup>
+            <div style={{ marginBottom: "10px"}}>
                 <ControlLabel><Message msgId="geostory.builder.settings.logo"/></ControlLabel>
                 <SwitchButton
                     onChange={() => onToggleSettings("isLogoEnabled")}

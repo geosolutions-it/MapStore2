@@ -120,8 +120,8 @@
                 "tooltip": "Remarque: ce paramètre nécessite des configurations spécifiques sur GeoServer"
             }
         },
-        "longitude": "Longitude",
-        "latitude": "Latitude",
+        "longitude": "Lon",
+        "latitude": "Lat",
         "notification": {
             "update": "Mise à jour",
             "warning": "Avertissement",
@@ -521,6 +521,7 @@
                 "title": "Mettre à jour le titre",
                 "dimensions": "Mettre à jour les dimensions"
             },
+            "layerInfoTooltip": "Mettre à jour le titre et la description de la couche",
             "layerMetadata": {
                 "identifier": "Identifiant",
                 "title": "Titre",
@@ -650,6 +651,7 @@
         "identifyRevGeocodeCloseText": "Fermer",
         "identifyRevGeocodeError": "Géocodage impossible",
         "identifyEdit": "Éditer",
+        "identifyLayerSelectNoResult": "Aucun calque trouvé",
         "getFeatureInfoError": {
             "title": "Ooops! Quelque chose ne fonctionne pas",
             "text": "Une erreur s'est produite au cours de cette requête <b>GetFeatureInfo</b>"
@@ -2055,6 +2057,7 @@
             "equalInterval": "intervalle égal",
             "quantile": "Quantile",
             "jenks": "Pauses naturelles (Jenks)",
+            "standardDeviation": "Écart type",
             "switchToTextareaEditor": "Passer à l'éditeur de zone de texte",
             "switchToVisualEditor": "Passer à l'éditeur visuel",
             "alertForceTranslate": "Vous perdrez toutes les modifications ajoutées dans le texte en passant à l'éditeur visuel. Êtes-vous sûr de passer en mode éditeur de style visuel?",
@@ -2072,7 +2075,12 @@
             "grayChannel": "Channel",
             "ruleClassification": "Classification",
             "ruleRaster": "Raster",
-            "customInterval": "Custom Interval"
+            "customInterval": "Custom Interval",
+            "styleEmpty": "Ce style n'a pas de règles",
+            "incompleteClassification": "La classification est incomplète car les entrées ne sont pas disponibles. Assurez-vous que toutes les propriétés sont correctement fournies",
+            "emptyImageIconSymbolizer": "URL d'image manquante dans le style d'icône",
+            "warningTextOrderTitle": "Avertissement",
+            "warningTextOrder": "L'ordre de la règle contenant le style de texte ne pouvait pas correspondre à l'ordre de rendu sur la carte. Ce comportement est lié à certains moteurs de rendu qui dessinent une étiquette au-dessus d'autres règles"
         },
         "playback": {
             "settings": {
@@ -2337,6 +2345,7 @@
                     "navbar": "Barre de navigation",
                     "showNavbar": "Afficher la barre de navigation",
                     "theme": "Thème",
+                    "overlay": "Recouvrir",
                     "templateTooltip":"Ce paramètre vous permet d'activer la fonction Identifier sur la carte en définissant un format générique pour toutes les couches. Il est possible de configurer un format différent pour chaque niveau à l'aide de l'éditeur de carte avancé (icône crayon). Pour plus d'informations, consultez le <a href='https://mapstore.readthedocs.io/en/latest/user-guide/layer-settings/#templates' target='_blank'> guide de l'utilisateur </a>. Si une couche a défini son propre format d'identification, elle sera utilisée à la place du format générique défini au niveau de la carte."
                 }
             },
@@ -2827,6 +2836,27 @@
             },
             "deleteError": "Une erreur inattendue s'est produite lors de la suppression de la carte",
             "updateError": "Une erreur inattendue s'est produite lors de l'enregistrement de la carte"
+        },
+        "layerInfo": {
+            "title": "Mettre à jour les titres et descriptions des calques",
+            "noLayers": "Aucun calque trouvé",
+            "syncButton": "Synchroniser les titres et les descriptions",
+            "selectAll": "Tout sélectionner",
+            "deselectAll": "Tout déselectionner",
+            "updatingLayers": "Mise à jour des couches {updatedCount}/{totalCount}",
+            "tooltips": {
+                "syncSuccess": "Le titre et la description ont été mis à jour avec succès pour cette couche",
+                "syncError": "Il n'est pas possible de mettre à jour le titre et la description de cette couche. Vous pouvez vérifier si toutes les options de calque sont correctes dans le panneau des paramètres"
+            },
+            "syncingLayersSavingToServerError": {
+                "title": "Erreur d'enregistrement du serveur",
+                "message": "Une erreur inattendue s'est produite lors de l'enregistrement des couches mises à jour sur le serveur"
+            },
+            "syncingLayersGeneralError": {
+                "title": "Erreur générale",
+                "message": "Une erreur inattendue s'est produite lors de la synchronisation des couches. Il y a probablement un bogue dans MapStore"
+            },
+            "layerType": "type: {type}"
         },
         "tutorial": {
             "title": "Tutoriel",

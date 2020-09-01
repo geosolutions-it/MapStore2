@@ -16,6 +16,7 @@ import lastIndexOf from 'lodash/lastIndexOf';
 import words from 'lodash/words';
 import get from 'lodash/get';
 import isArray from 'lodash/isArray';
+import isEmpty from 'lodash/isEmpty';
 import { push, LOCATION_CHANGE } from 'connected-react-router';
 import uuid from 'uuid/v1';
 
@@ -114,7 +115,9 @@ const updateMediaSection = (store, path) => action$ =>
             let resourceId = resource.id;
             if (resourceAlreadyPresent) {
                 resourceId = resourceAlreadyPresent.id;
-            } else {
+            } else if (isEmpty(resource)) {
+                actions = [...actions, remove(`${path}`), hide()];
+            }  else {
             // if the resource is new, add it to the story resources list
                 resourceId = uuid();
                 actions = [...actions, addResource(resourceId, mediaType, resource)];
@@ -354,7 +357,8 @@ export const loadGeostoryEpic = (action$, {getState = () => {}}) => action$
                         loadGeostoryError({...e, messageId: message})
                     );
                 }
-            ));
+            ))
+            .startWith(setCurrentStory({}));
     });
 /**
  * Triggers reload of last loaded story when user login-logout
@@ -516,11 +520,11 @@ export const scrollOnLoad = (action$) =>
         .switchMap(() => {
             const storyIds = window?.location?.hash?.split('/');
             if (window?.location?.hash?.includes('shared')) {
-                scrollToContent(storyIds[5] || storyIds[4], {block: "center", behavior: "auto"});
-            } else if (storyIds.length > 4) {
-                scrollToContent(storyIds[4], {block: "start", behavior: "auto"});
-            } else if (storyIds.length === 4) {
-                scrollToContent(storyIds[3], {block: 'start', behavior: "auto"});
+                scrollToContent(storyIds[7] || storyIds[5], {block: "start", behavior: "auto"});
+            } else if (storyIds.length > 5) {
+                scrollToContent(storyIds[6], {block: "start", behavior: "auto"});
+            } else if (storyIds.length === 5) {
+                scrollToContent(storyIds[4], {block: 'start', behavior: "auto"});
             }
             return Observable.empty();
     });
