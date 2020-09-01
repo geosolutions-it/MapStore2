@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import WebFont from 'webfontloader';
@@ -23,8 +23,7 @@ import {
     isFocusOnContentSelector,
     settingsSelector,
     settingsChangedSelector,
-    isEditAllowedSelector,
-    currentStoryFonts
+    isEditAllowedSelector
 } from '../selectors/geostory';
 import geostory from '../reducers/geostory';
 import {
@@ -95,7 +94,6 @@ const GeoStoryEditor = ({
     settingsItems,
     selected,
     fontFamilies = [],
-    storyFonts,
     setEditingMode = () => {},
     onToggleCardPreview = () => {},
     onToggleSettingsPanel = () => {},
@@ -107,11 +105,12 @@ const GeoStoryEditor = ({
     onSort = () => {},
     onBasicError = () => {}
 }) => {
+    const [storyFonts, setStoryFonts] = useState([]);
     useEffect(() => {
         if (fontFamilies.length > 0) {
             WebFont.load(createWebFontLoaderConfig(
                 fontFamilies,
-                () => onUpdateSettings("fontFamilies", extractFontNamesFromConfig(fontFamilies)),
+                () => setStoryFonts(extractFontNamesFromConfig(fontFamilies)),
                 () => onBasicError(
                     {
                         message: 'geostory.builder.settings.webFontLoadError',
@@ -173,8 +172,7 @@ export default createPlugin('GeoStoryEditor', {
             isToolbarEnabled: isToolbarEnabledSelector,
             selected: selectedCardSelector,
             isSettingsEnabled: isSettingsEnabledSelector,
-            isFocused: isFocusOnContentSelector,
-            storyFonts: currentStoryFonts
+            isFocused: isFocusOnContentSelector
         }), {
             setEditingMode: setEditing,
             onUpdateSettings: updateSetting,
