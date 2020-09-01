@@ -137,6 +137,7 @@ export const scrollToContent = (id, scrollOptions) => {
 export const DEFAULT_MAP_OPTIONS = {
     zoomControl: true,
     mapInfoControl: false,
+    mapLocationsEnabled: false,
     mapOptions: {
         // leaflet
         scrollWheelZoom: false,

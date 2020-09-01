@@ -93,6 +93,44 @@
     position: relative;
     top: unset;
 }
+
+.ms-geostory-map-controls-switch-add {
+    float: right;
+    display: flex;
+    align-items: flex-end;
+    justify-content: flex-end;
+    width: 15%;
+
+    .btn {
+        margin-right: auto;
+    }
+}
+
+.ms-geostory-map-locations {
+    margin-top: 10px;
+    border: 1px solid #dddddd;
+    height: auto;
+    max-height: 200px;
+    overflow-y: scroll;
+
+    .ms-geostory-map-locations-item {
+        border-bottom: 1px solid #dddddd;
+        padding: 10px;
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        cursor: pointer;
+
+        .btn {
+            margin-left: auto;
+        }
+    }
+
+    .ms-geostory-map-locations-item-active {
+        border: 2px solid @ms2-color-primary;
+    }
+}
+
 .ms-geostory-builder {
     transform: translate(0, 0);
     .ms-geostory-settings {

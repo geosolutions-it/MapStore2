@@ -271,6 +271,7 @@ const getLayerUrl = (layer) => {
 };
 
 const LayersUtils = {
+    getLayer,
     getSourceId,
     extractSourcesFromLayers,
     extractTileMatrixSetFromLayers,

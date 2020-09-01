@@ -47,6 +47,7 @@ import Select from 'ol/interaction/Select';
 import {unByKey} from 'ol/Observable';
 import {getCenter} from 'ol/extent';
 import {fromCircle, circular} from 'ol/geom/Polygon';
+import { toLonLat } from 'ol/proj';
 
 const geojsonFormat = new GeoJSON();
 
@@ -124,7 +125,7 @@ export default class DrawSupport extends React.Component {
         if (!newProps.drawStatus && this.selectInteraction) {
             this.selectInteraction.getFeatures().clear();
         }
-        if ( this.props.drawStatus !== newProps.drawStatus || this.props.drawMethod !== newProps.drawMethod || this.props.features !== newProps.features) {
+        if ( this.props.drawStatus !== newProps.drawStatus || this.props.drawMethod !== newProps.drawMethod || this.props.features !== newProps.features || this.props.drawStatus === "simpleDrag" || newProps.drawStatus === "simpleDrag") {
             switch (newProps.drawStatus) {
             case "create": this.addLayer(newProps); break; // deprecated, not used (addLayer is automatically called by other commands when needed)
             case "start":/* only starts draw*/ this.addInteractions(newProps); break;
@@ -135,6 +136,7 @@ export default class DrawSupport extends React.Component {
             case "clean": this.clean(); break;
             case "cleanAndContinueDrawing": this.clean(true); break;
             case "endDrawing": this.endDrawing(newProps); break;
+            case "simpleDrag": this.addSimpleDragOperation(newProps); break;
             default : return;
             }
         }
@@ -725,6 +727,25 @@ export default class DrawSupport extends React.Component {
         });
 
         this.props.onChangeDrawingStatus('replace', this.props.drawMethod, this.props.drawOwner, updatedFeatures);
+    };
+
+    addSimpleDragOperation = (props) => {
+        this.translate = new Translate();
+        this.translate.on("translateend", (e) => {
+            const featureId = e.features.getArray()[0].id_;
+            const coordinates = e.features.getArray()[0].getGeometry().getCoordinates();
+            const latlng = toLonLat(coordinates, props.map.getView().getProjection().getCode());
+            props.onTranslateEnd({
+                id: featureId,
+                rawPos: coordinates,
+                latlng: {
+                    lat: latlng[1],
+                    lng: latlng[0]
+                }
+            });
+        });
+
+        this.props.map.addInteraction(this.translate);
     };
 
     addInteractions = (newProps) => {

@@ -112,6 +112,7 @@ export default class PopupSupport extends React.Component {
                 maxHeight: maxHeightOption = maxMapHeight,
                 autoPan = false,
                 autoPanMargin = margin,
+                positioning = 'bottom-center',
                 offset = [0, 0],
                 autoPanAnimation = {
                     duration: 200
@@ -129,7 +130,7 @@ export default class PopupSupport extends React.Component {
                 offset,
                 autoPanMargin,
                 autoPanAnimation,
-                positioning: 'bottom-center',
+                positioning,
                 className: 'ol-overlay-container ol-unselectable',
                 position: coordinates
             });

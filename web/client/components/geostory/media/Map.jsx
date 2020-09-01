@@ -35,7 +35,8 @@ export default compose(
     height,
     size,
     showCaption,
-    caption: contentCaption
+    caption: contentCaption,
+    update
 }) => {
 
     const { layers = [], mapOptions = {}, description, ...m} = (map.data ? map.data : map);
@@ -83,6 +84,15 @@ export default compose(
         : expandMapOptions;
 
     const isMapInfoControlActive = m.mapInfoControl && !(expandable && !active);
+    const isMapLocationsEnabled = m.mapLocationsEnabled;
+    let tools = [];
+    if (isMapInfoControlActive || isMapLocationsEnabled) {
+        tools = ["popup"];
+    }
+    if (editMap && isMapLocationsEnabled) {
+        tools = ["popup", "draw"];
+    }
+
     // BaseMap component overrides the MapView id with map's id
     const mapView = (
         <>
@@ -103,8 +113,10 @@ export default compose(
                 }
             }} // if map id is passed as number, the resource id, ol throws an error
             layers={layers}
-            tools={isMapInfoControlActive ? ["popup"] : []}
+            tools={tools}
             options={applyDefaults(updatedMapOptions)}
+            update={update}
+            editMap={editMap}
         />
         {expandable && !editMap &&
         <Button

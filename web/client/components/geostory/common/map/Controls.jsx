@@ -6,29 +6,45 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import React from 'react';
+import React  from 'react';
 import {Form, FormGroup, ControlLabel} from 'react-bootstrap';
 import Message from '../../../I18N/Message';
 import Select from "react-select";
 import {isNil} from "lodash";
+const {Glyphicon} = require('react-bootstrap');
+import uuid from "uuid";
+const enhanceTooltip = require('../../../misc/enhancers/tooltip');
 import { applyDefaults } from '../../../../utils/GeoStoryUtils';
+import { getLayer } from '../../../../utils/LayersUtils';
 
 import SwitchButton from '../../../misc/switch/SwitchButton';
+import GeneralButton from '../../../misc/GeneralButton';
+import LocationsList from './LocationList';
 import localizedProps from '../../../misc/enhancers/localizedProps';
 import FeatureInfoFormatSelector from '../../../misc/FeatureInfoFormatSelector';
+
+const Glyph = enhanceTooltip(Glyphicon);
 
 const SelectLocalized = localizedProps(["placeholder", "options"])(Select);
 
 export const Controls = ({
-    map = {zoomControl: true, mapInfoControl: false},
-    onChangeMap = () => {}
+    map = {zoomControl: true, mapInfoControl: false, mapLocationsEnabled: false},
+    onChangeMap = () => {},
+    onChange = () => {},
+    onDeleteFromMap = () => {},
+    currentMapLocation
 } = {}) => {
     const mapOptions = map && map.mapOptions || {};
     const options = applyDefaults({
         mapOptions,
         zoomControl: !isNil(map.zoomControl) ? map.zoomControl : true,
-        mapInfoControl: !isNil(map.mapInfoControl) ? map.mapInfoControl : false
+        mapInfoControl: !isNil(map.mapInfoControl) ? map.mapInfoControl : false,
+        mapLocationsEnabled: !isNil(map.mapLocationsEnabled) ? map.mapLocationsEnabled : false
     });
+
+    const locationsLayer = getLayer('locations', map.layers);
+    const locationFeatures = locationsLayer && locationsLayer.features[0].features || [];
+
     return (<Form className="ms-geostory-map-controls">
         <FormGroup>
             <ControlLabel><Message msgId="geostory.mapEditor.zoom"/></ControlLabel>
@@ -80,6 +96,7 @@ export const Controls = ({
                 onChange={() => {
                     let newMapInfoStatus = !options.mapInfoControl;
                     onChangeMap("mapInfoControl", newMapInfoStatus);
+                    onChange("mapInfoControlTrack", newMapInfoStatus);
                 }}
                 className="ms-geostory-map-controls-switch"
                 checked={options.mapInfoControl}
@@ -92,6 +109,56 @@ export const Controls = ({
                 selectProps={{
                     wrapperStyle: { marginTop: 10 }
                 }}/>}
+        </FormGroup>
+        <FormGroup>
+            <ControlLabel>Locations</ControlLabel>
+            <div className="ms-geostory-map-controls-switch-add">
+                {options.mapLocationsEnabled && (
+                    <GeneralButton onClick={
+                        () => {
+                            const id = uuid();
+                            const locationFeature = {
+                                id,
+                                type: "Feature",
+                                style: [{
+                                    highlight: false,
+                                    iconColor: "blue",
+                                    iconGlyph: "marker"
+                                }],
+                                properties: {
+                                    canEdit: false,
+                                    isValidFeature: true,
+                                    html: "",
+                                    locationName: "New Location"
+                                },
+                                geometry: {
+                                    type: "Point",
+                                    coordinates: []
+                                }
+                            };
+                            onChangeMap('layers[{"id": "locations"}].features[{"id": "locFeatureCollection"}].features', [locationFeature]);
+                            onChange("currentMapLocation", id);
+
+                        }
+                    } className="square-button-sm no-border">
+                        <Glyph glyph="plus" />
+                    </GeneralButton>
+                )}
+                <SwitchButton
+                    onChange={() => {
+                        let newMapLocationsEnabledStatus = !options.mapLocationsEnabled;
+                        onChangeMap("mapLocationsEnabled", newMapLocationsEnabledStatus);
+                    }}
+                    checked={options.mapLocationsEnabled}
+                />
+            </div>
+            {options.mapLocationsEnabled &&
+            <LocationsList
+                currentMapLocation={currentMapLocation}
+                onDeleteFromMap={onDeleteFromMap}
+                onChangeMap={onChangeMap}
+                onChange={onChange}
+                locationFeatures={locationFeatures} /> }
         </FormGroup>
     </Form>);
 };

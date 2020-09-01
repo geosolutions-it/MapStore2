@@ -61,11 +61,14 @@ export default compose(
                     save(rawText ? html : EMPTY_CONTENT);
                 }
             }),
-            withHandlers({
-                onBlur: ({toggleEditing = () => {}}) => () => {
-                    toggleEditing(false);
-                }
-            }),
+            branch(
+                ({allowBlur = true}) => allowBlur,
+                withHandlers({
+                    onBlur: ({toggleEditing = () => {}}) => () => {
+                        toggleEditing(false);
+                    }
+                })
+            ),
             // default properties for editor
             withProps(({ placeholder, toolbarStyle = {}, className = "ms-text-editor"}) => ({
                 editorRef: ref => setTimeout(() => ref && ref.focus && ref.focus(), 100), // handle auto-focus on edit

@@ -53,8 +53,8 @@ export default compose(
 export const withFocusedContentMap = compose(
     connect(createSelector(getCurrentFocusedContentEl, (focusedEl = {}) => ({focusedEl }))), // Map connection and update withFocusedMap
     withProps(
-        ({ focusedEl: {resourceId, map} = {}}) => {
-            return { map: map || {},  resourceId, disableReset: !map };
+        ({ focusedEl: {resourceId, map, currentMapLocation = ""} = {}}) => {
+            return { map: map || {},  resourceId, disableReset: !map, currentMapLocation};
         }
     ));
 /**
@@ -68,7 +68,12 @@ export const handleMapUpdate = withHandlers({
     onChange: ({update, focusedContent = {}}) =>
         (path, value) => {
             update(focusedContent.path + `.${path}`, value, "merge");
-        }});
+        },
+    onDeleteFromMap: ({remove, focusedContent = {}}) =>
+        (path) => {
+            remove(`${focusedContent.path}.map.${path}`);
+        }
+});
 /**
  * Connect and toggle advanced Editor
  */
@@ -86,8 +91,11 @@ export const handleAdvancedMapEditor = compose(
  * Map reset restores the original resource map configuration by removing all content map configs
  */
 export const handleToolbar = withHandlers({
-    toggleEditing: ({editMap, update, focusedContent}) => () =>
-        update(focusedContent.path + ".editMap", !editMap),
+    toggleEditing: ({editMap, update, focusedContent}) => () => {
+        update(focusedContent.path + ".editMap", !editMap);
+        // Also reset currentMapLocation
+        update(focusedContent.path + ".currentMapLocation", "");
+    },
     onReset: ({update, focusedContent: {path = ""} = {}}) => () => {
         update(path + `.map`, undefined);
     },

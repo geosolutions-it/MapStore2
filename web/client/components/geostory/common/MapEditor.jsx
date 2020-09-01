@@ -61,12 +61,14 @@ const MapEditor = ({
     map = {},
     onChange = () => {},
     onChangeMap = () => {},
+    onDeleteFromMap = () => {},
     onNodeSelect =  () => {},
     selectedNodes,
     buttons = [],
     editNode,
     closeNodeEditor,
-    CloseBtn = () => (null)
+    CloseBtn = () => (null),
+    currentMapLocation
 }) => {
     return (mode === Modes.EDIT && isFocused ? <div
         key="left-column"
@@ -107,8 +109,10 @@ const MapEditor = ({
                         map={map}
                         onChange={onChange}
                         onChangeMap={onChangeMap}
+                        onDeleteFromMap={onDeleteFromMap}
                         selectedNodes={selectedNodes}
                         onSelect={onNodeSelect}
+                        currentMapLocation={currentMapLocation}
                     />
                 ]}
         </BorderLayout>

@@ -133,6 +133,7 @@ class OpenlayersMap extends React.Component {
                 this.mouseWheelInteraction
             ]);
         }
+
         let controls = defaultControls(assign({
             zoom: this.props.zoomControl,
             attributionOptions: assign({
