@@ -143,7 +143,7 @@ describe('DefaultViewer', () => {
             }
         }];
         const viewer = ReactDOM.render(
-            <DefaultViewer responses={responses} identifyFloating/>,
+            <DefaultViewer responses={responses} renderEmpty/>,
             document.getElementById("container")
         );
 
@@ -221,7 +221,7 @@ describe('DefaultViewer', () => {
             }
         }];
         ReactDOM.render(
-            <DefaultViewer responses={responses} header={SwipeHeader} identifyFloating/>,
+            <DefaultViewer responses={responses} header={SwipeHeader} renderEmpty/>,
             document.getElementById("container")
         );
         const header = document.querySelector('.ms-identify-swipe-header');

@@ -46,14 +46,14 @@ const selector = createSelector([
     generalInfoFormatSelector,
     showEmptyMessageGFISelector,
     identifyFloatingTool],
-(responses, validResponses, requests, format, showEmptyMessageGFI, identifyFloating) => ({
+(responses, validResponses, requests, format, showEmptyMessageGFI, renderEmpty) => ({
     responses,
     validResponses,
     requests,
     format,
     showEmptyMessageGFI,
     missingResponses: (requests || []).length - (responses || []).length,
-    identifyFloating
+    renderEmpty
 }));
 
 

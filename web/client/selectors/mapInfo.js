@@ -121,9 +121,9 @@ const validResponsesSelector = createSelector(
     responsesSelector,
     generalInfoFormatSelector,
     identifyFloatingTool,
-    (requests, responses, format, identifyFloating) => {
+    (requests, responses, format, renderEmpty) => {
         const validatorFormat = MapInfoUtils.getValidator(format);
-        return requests.length === responses.length && validatorFormat.getValidResponses(responses, identifyFloating);
+        return requests.length === responses.length && validatorFormat.getValidResponses(responses, renderEmpty);
     });
 
 const currentResponseSelector = createSelector(

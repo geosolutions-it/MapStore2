@@ -38,15 +38,23 @@ const {
 const {RESET_CONTROLS} = require('../actions/controls');
 
 const assign = require('object-assign');
-const {findIndex} = require('lodash');
+const {findIndex, isNumber} = require('lodash');
 const {getValidator} = require('../utils/MapInfoUtils');
 
 function receiveResponse(state, action, type) {
     const requestIndex = findIndex((state.requests || []), (req) => req.reqId === action.reqId);
 
     if (requestIndex !== -1) {
-        const responses = state.responses || [];
+        // Filter un-queryable layer
+        if (["exceptions", "error"].includes(type)) {
+            const fltRequests = state.requests.filter((_, index)=> index !== requestIndex);
+            const fltResponses = state.tempResponses.filter((_, index)=> index !== requestIndex);
+            return {
+                ...state, tempResponses: fltResponses, requests: fltRequests
+            };
+        }
 
+        const responses = state.tempResponses || [];
         // Add response in same order it was requested
         responses[requestIndex] = {
             response: action[type],
@@ -55,17 +63,19 @@ function receiveResponse(state, action, type) {
             layer: action.layer
         };
         const {infoFormat, trigger} = state.configuration;
-        const validResponse = getValidator(infoFormat)?.
-            getValidResponses([responses[requestIndex]], true);
+        const validResponse = getValidator(infoFormat)?.getValidResponses([responses[requestIndex]], true);
 
         // Update index when first response received is valid
         const updateIndex = state.index === undefined && !!validResponse.length;
+        const allResponsesReceived = state.requests.length === responses.filter(res=> res).length;
 
-        // Reset index for identify floating viewer
+        // Set responses and index when all responses are received
         return assign({}, state, {
-            responses: [...responses],
-            ...(updateIndex && {index: trigger === "hover" ? 0 : requestIndex})
-        });
+            tempResponses: [...responses],
+            ...(updateIndex && {tempIndex: trigger === "hover" ? 0 : requestIndex}),
+            ...(allResponsesReceived && {responses: [...responses],
+                index: isNumber(state.tempIndex) ? state.tempIndex : requestIndex})}
+        );
     }
     return state;
 }
@@ -221,10 +231,8 @@ function mapInfo(state = initState, action) {
         });
     }
     case PURGE_MAPINFO_RESULTS:
-        const {index, ...restOfState} = state;
-        return {...restOfState, responses: [],
-            requests: []
-        };
+        const {index, tempResponses, tempIndex, ...others} = state;
+        return {...others, tempResponses: [], responses: [], requests: [] };
     case LOAD_FEATURE_INFO: {
         return receiveResponse(state, action, 'data');
     }

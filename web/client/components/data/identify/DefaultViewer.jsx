@@ -36,7 +36,7 @@ class DefaultViewer extends React.Component {
         onUpdateIndex: PropTypes.func,
         setIndex: PropTypes.func,
         showEmptyMessageGFI: PropTypes.bool,
-        identifyFloating: PropTypes.bool
+        renderEmpty: PropTypes.bool
     };
 
     static defaultProps = {
@@ -56,7 +56,7 @@ class DefaultViewer extends React.Component {
         containerProps: {},
         index: 0,
         showEmptyMessageGFI: true,
-        identifyFloating: false,
+        renderEmpty: false,
         onNext: () => {},
         onPrevious: () => {},
         setIndex: () => {}
@@ -71,7 +71,7 @@ class DefaultViewer extends React.Component {
      */
     getResponseProperties = () => {
         const validator = this.props.validator(this.props.format);
-        const validResponses = validator.getValidResponses(this.props.responses, this.props.identifyFloating);
+        const validResponses = validator.getValidResponses(this.props.responses, this.props.renderEmpty);
         const invalidResponses = validator.getNoValidResponses(this.props.responses);
         const emptyResponses = this.props.requests.length === invalidResponses.length;
         const currResponse = this.getCurrentResponse(validResponses[this.props.index]);

@@ -15,7 +15,7 @@ const assign = require('object-assign');
 require('babel-polyfill');
 
 describe('Test the mapInfo reducer', () => {
-    let appState = {configuration: {infoFormat: 'text/plain'}, requests: [{reqId: 10, request: "test"}, {reqId: 11, request: "test1"}]};
+    let appState = {configuration: {infoFormat: 'text/plain'}, tempResponses: [], requests: [{reqId: 10, request: "test"}, {reqId: 11, request: "test1"}]};
 
     it('returns original state on unrecognized action', () => {
         let state = mapInfo(1, {type: 'UNKNOWN'});
@@ -32,25 +32,19 @@ describe('Test the mapInfo reducer', () => {
         };
 
         let state = mapInfo( appState, testAction);
-        expect(state.responses).toExist();
-        expect(state.responses.length).toBe(1);
-        expect(state.responses[0].response).toBe("error");
-        expect(state.responses[0].queryParams).toBe("params");
-        expect(state.responses[0].layerMetadata).toBe("meta");
+        expect(state.responses).toBeFalsy();
+        expect(state.tempResponses).toExist();
+        expect(state.tempResponses.length).toBe(0);
 
         state = mapInfo(assign({}, appState, {responses: []}), testAction);
         expect(state.responses).toExist();
-        expect(state.responses.length).toBe(1);
-        expect(state.responses[0].response).toBe("error");
-        expect(state.responses[0].queryParams).toBe("params");
-        expect(state.responses[0].layerMetadata).toBe("meta");
+        expect(state.responses.length).toBe(0);
+
         state = mapInfo(assign({}, appState, {responses: ["test"]}), {...testAction, reqId: 11});
         expect(state.responses).toExist();
-        expect(state.responses.length).toBe(2);
+        expect(state.responses.length).toBe(1);
         expect(state.responses[0]).toBe("test");
-        expect(state.responses[1].response).toBe("error");
-        expect(state.responses[1].queryParams).toBe("params");
-        expect(state.responses[1].layerMetadata).toBe("meta");
+        expect(state.responses[1]).toBeFalsy();
     });
 
     it('creates an wms feature info exception', () => {
@@ -63,31 +57,24 @@ describe('Test the mapInfo reducer', () => {
         };
 
         let state = mapInfo(appState, testAction);
-        expect(state.responses).toExist();
-        expect(state.responses.length).toBe(1);
-        expect(state.responses[0].response).toBe("exception");
-        expect(state.responses[0].queryParams).toBe("params");
-        expect(state.responses[0].layerMetadata).toBe("meta");
+        expect(state.responses).toBeFalsy();
+        expect(state.tempResponses.length).toBe(0);
 
         state = mapInfo(assign({}, appState, {responses: []}), testAction);
         expect(state.responses).toExist();
-        expect(state.responses.length).toBe(1);
-        expect(state.responses[0].response).toBe("exception");
-        expect(state.responses[0].queryParams).toBe("params");
-        expect(state.responses[0].layerMetadata).toBe("meta");
-
+        expect(state.responses.length).toBe(0);
+        expect(state.tempResponses.length).toBe(0);
 
         state = mapInfo(assign({}, appState, {responses: ["test"]}), {...testAction, reqId: 11});
         expect(state.responses).toExist();
-        expect(state.responses.length).toBe(2);
+        expect(state.responses.length).toBe(1);
         expect(state.responses[0]).toBe("test");
-        expect(state.responses[1].response).toBe("exception");
-        expect(state.responses[1].queryParams).toBe("params");
-        expect(state.responses[1].layerMetadata).toBe("meta");
+        expect(state.tempResponses.length).toBe(0);
+        expect(state.responses[1]).toBeFalsy();
 
     });
 
-    it('creates a feature info data from succesfull request', () => {
+    it('creates a feature info data from successful request', () => {
         let testAction = {
             type: 'LOAD_FEATURE_INFO',
             data: "data",
@@ -97,25 +84,25 @@ describe('Test the mapInfo reducer', () => {
         };
 
         let state = mapInfo(appState, testAction);
-        expect(state.responses).toExist();
-        expect(state.responses.length).toBe(1);
-        expect(state.responses[0].response).toBe("data");
-        expect(state.responses[0].queryParams).toBe("params");
-        expect(state.responses[0].layerMetadata).toBe("meta");
-        expect(state.index).toBe(0);
+        expect(state.tempResponses).toExist();
+        expect(state.tempResponses.length).toBe(1);
+        expect(state.tempResponses[0].response).toBe("data");
+        expect(state.tempResponses[0].queryParams).toBe("params");
+        expect(state.tempResponses[0].layerMetadata).toBe("meta");
+        expect(state.tempIndex).toBe(0);
 
         state = mapInfo(assign({}, appState, {responses: []}), testAction);
         expect(state.responses).toExist();
-        expect(state.responses.length).toBe(1);
-        expect(state.responses[0].response).toBe("data");
-        expect(state.responses[0].queryParams).toBe("params");
-        expect(state.responses[0].layerMetadata).toBe("meta");
-        expect(state.index).toBe(0);
+        expect(state.tempResponses.length).toBe(1);
+        expect(state.tempResponses[0].response).toBe("data");
+        expect(state.tempResponses[0].queryParams).toBe("params");
+        expect(state.tempResponses[0].layerMetadata).toBe("meta");
+        expect(state.tempIndex).toBe(0);
 
         state = mapInfo(assign({}, appState, {responses: ["test"]}), {...testAction, reqId: 11});
         expect(state.responses).toExist();
         expect(state.responses.length).toBe(2);
-        expect(state.responses[0]).toBe("test");
+        expect(state.responses[0]).toBeTruthy();
         expect(state.responses[1].response).toBe("data");
         expect(state.responses[1].queryParams).toBe("params");
         expect(state.responses[1].layerMetadata).toBe("meta");
