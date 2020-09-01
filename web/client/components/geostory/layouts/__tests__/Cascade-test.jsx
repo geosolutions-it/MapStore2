@@ -81,7 +81,7 @@ describe('Cascade component', () => {
     it('should apply custom theme on the story', () => {
         const COLOR = '#ffffff';
         const BACKGROUND_COLOR = '#000000';
-        ReactDOM.render(<Cascade {...STORY} theme={{ color: COLOR, backgroundColor: BACKGROUND_COLOR }}/>, document.getElementById("container"));
+        ReactDOM.render(<Cascade {...STORY} theme={{general: { color: COLOR, backgroundColor: BACKGROUND_COLOR }, overlay: {color: COLOR, backgroundColor: BACKGROUND_COLOR}}}/>, document.getElementById("container"));
         const container = document.getElementById('container');
         const sectionsContainerNode = container.querySelector('.ms-sections-container');
         expect(sectionsContainerNode).toBeTruthy();

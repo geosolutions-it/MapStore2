@@ -160,6 +160,9 @@
         "elevationNotAvailable": "Non disp.",
         "mapScale": "Scala:",
         "showMousePositionCoordinates": "Mostra/Nascondi Coordinate",
+        "showCrsSelector": "Seleziona la proiezione",
+        "crsSelectorFilterPlaceholder": "Filtra la proiezione",
+        "crsSelectorSelectedCRS": "Selezionato:",
         "menu": "Menu",
         "options": "Opzioni",
         "settings": "Impostazioni",
@@ -1054,12 +1057,13 @@
             "changePwd": "Cambia Password",
             "newPwd": "Nuova Password",
             "retypePwd": "Conferma Password",
-            "passwordMinlenght": "La password deve essere lunga almeno {minSize} caratteri",
+            "passwordMinlenght": "La password deve essere lunga almeno {data} caratteri",
             "passwordCheckFail": "Le due password non corrispondono",
             "passwordInvalid": "Password non valida",
             "username": "Username",
             "password": "Password",
-            "passwordMessage": "La password deve contenere almeno 6 caratteri",
+            "passwordMessage": "La password deve contenere almeno 6 caratteri. I valori validi per le password includono numeri, lettere minuscole o maiuscole e i seguenti caratteri speciali: !,@,#,$,%,&,*,_",
+            "passwordInvalidChar": "La password non deve contenere questi caratteri: {data}",
             "passwordChanged": "La password è stata cambiata",
             "passwordError": "Errore nel cambio della password",
             "signIn":"Accedi",
@@ -1145,7 +1149,8 @@
             "addBboxParam": "Aggiungi il parametro bbox al link di condivisione",
             "wrongBboxParamTitle": "Parametro bbox non valido",
             "wrongBboxParamMessage": "i parametri bbox devono essere in EPSG:4326 e scritti come segue bbox=minx,miny,maxx,maxy",
-            "showHomeButton": "Link alla home di MapStore"
+            "showHomeButton": "Link alla home di MapStore",
+            "showSectionId": "Includi posizione di scorrimento"
         },
         "snapshot": {
             "title": "Istantanea",
@@ -2028,6 +2033,7 @@
             "geostoreMap": "Mappe di MapStore",
             "loadingSpinner": "Caricamento Storia",
             "addTitleSection": "Aggiungi sezione titolo",
+            "addBannerSection": "Aggiungi sezione banner",
             "addParagraphSection": "Aggiungi sezione paragrafo",
             "addImmersiveSection": "Aggiungi sezione immersiva",
             "addMediaSection": "Aggiungi sezione media",
@@ -2092,6 +2098,7 @@
             "builder": {
                 "defaults": {
                     "titleTitle": "Sezione Titolo",
+                    "titleBanner": "Sezione banner",
                     "htmlTitlePlaceholder": "Inserisci Titolo",
                     "htmlPlaceholder": "Inserisci del testo qui...",
                     "titleParagraph": "Sezione Paragrafo",
@@ -2131,6 +2138,7 @@
                     "navbar": "Barra di navigazione",
                     "showNavbar": "Mostra barra di navigazione",
                     "theme": "Tema",
+                    "overlay": "Copertura",
                     "templateTooltip":"Questa impostazione consente di abilitare la funzione di Identify sulla mappa definendo un formato generico per tutti i layer. E' possibile configurare un formato differente per ogni singolo livello usando l'editor di mappa avanzato (icona matita). Per maggiori informazioni si consulti la <a href='https://mapstore.readthedocs.io/en/latest/user-guide/layer-settings/#templates' target='_blank'>guida utente</a>. Se un layer ha definito il proprio formato di Identify, questo esso verrà usato al posto di quello generico impostato a livello di mappa."
                 }
             },

@@ -8,12 +8,18 @@
 const React = require('react');
 const PropTypes = require('prop-types');
 const { ListGroupItem, ListGroup, FormControl } = require('react-bootstrap');
+const LocaleUtils = require("../../../utils/LocaleUtils");
+const Message = require('../../I18N/Message');
 
 class CrsSelectorMenu extends React.Component {
     static propTypes = {
         selected: PropTypes.string,
         value: PropTypes.string,
         changeInputValue: PropTypes.func
+    };
+
+    static contextTypes = {
+        messages: PropTypes.object
     };
 
     static defaultProps = {
@@ -32,7 +38,7 @@ class CrsSelectorMenu extends React.Component {
                 <ListGroupItem
                     className="ms-prj-header"
                     bsSize="sm">
-                    <div>Selected:</div>
+                    <div><Message msgId="crsSelectorSelectedCRS"/></div>
                     <div>{this.props.selected}</div>
                 </ListGroupItem>
                 <ListGroup style={{ maxHeight: 150, overflowY: 'auto', marginBottom: 0}}>
@@ -45,7 +51,7 @@ class CrsSelectorMenu extends React.Component {
                         this.input = c;
                     }}
                     type="text"
-                    placeholder="Filter projection"
+                    placeholder={LocaleUtils.getMessageById(this.context.messages, "crsSelectorFilterPlaceholder")}
                     onChange={this.handleChange}
                     value={this.props.value}
                 />

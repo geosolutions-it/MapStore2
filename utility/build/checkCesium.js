@@ -1,6 +1,6 @@
 const fs = require('fs-extra');
 const isInProject = !fs.existsSync('./node_modules/cesium');
-const dirPrefix = isInProject ? '..' : '.'
+const dirPrefix = isInProject ? '..' : '.';
 const dir = `${dirPrefix}/web/client/libs/Cesium`;
 
 console.log("Is project: " + isInProject);

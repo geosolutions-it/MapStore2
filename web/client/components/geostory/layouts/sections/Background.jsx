@@ -78,7 +78,11 @@ class Background extends Component {
                     disableTextColor: true,
                     disableShadow: true
                 }}
-                tools={this.props.tools && this.props.type && this.props.tools[this.props.type] || defaultTools}
+                tools={
+                    this.props.tools && this.props.type && this.props.tools[this.props.type]
+                    || this.props.sectionType === SectionTypes.BANNER && [...defaultTools, 'cover', 'remove']
+                    || defaultTools
+                }
             />
         );
 

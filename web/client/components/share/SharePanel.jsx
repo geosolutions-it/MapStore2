@@ -15,7 +15,12 @@ import ShareLink from './ShareLink';
 import ShareEmbed from './ShareEmbed';
 import ShareApi from './ShareApi';
 import ShareQRCode from './ShareQRCode';
-import { Glyphicon, Tabs, Tab, Checkbox } from 'react-bootstrap';
+import {
+    Glyphicon,
+    Tabs,
+    Tab,
+    Checkbox
+} from 'react-bootstrap';
 import Message from '../../components/I18N/Message';
 import { join } from 'lodash';
 import { removeQueryFromUrl, getSharedGeostoryUrl } from '../../utils/ShareUtils';
@@ -67,7 +72,9 @@ class SharePanel extends React.Component {
         }),
         settings: PropTypes.object,
         onUpdateSettings: PropTypes.func,
-        selectedTab: PropTypes.string
+        selectedTab: PropTypes.string,
+        point: PropTypes.object,
+        isScrollPosition: PropTypes.bool
     };
 
     static defaultProps = {
@@ -82,7 +89,8 @@ class SharePanel extends React.Component {
         showAPI: true,
         closeGlyph: "1-close",
         settings: {},
-        onUpdateSettings: () => {}
+        onUpdateSettings: () => {},
+        isScrollPosition: false
     };
 
     state = {
@@ -115,7 +123,8 @@ class SharePanel extends React.Component {
 
     getShareUrl = () => {
         const { settings, advancedSettings } = this.props;
-        let shareUrl = getSharedGeostoryUrl(removeQueryFromUrl(this.props.shareUrl));
+        const shouldRemoveSectionId = !settings.showSectionId && advancedSettings && advancedSettings.sectionId;
+        let shareUrl = getSharedGeostoryUrl(removeQueryFromUrl(this.props.shareUrl), shouldRemoveSectionId);
         if (settings.bboxEnabled && advancedSettings && advancedSettings.bbox && this.state.bbox) shareUrl = `${shareUrl}?bbox=${this.state.bbox}`;
         if (settings.showHome && advancedSettings && advancedSettings.homeButton) shareUrl = `${shareUrl}?showHome=true`;
         return shareUrl;
@@ -198,6 +207,19 @@ class SharePanel extends React.Component {
                         })}>
                     <Message msgId="share.showHomeButton" />
                 </Checkbox>}
+                {
+                    this.props.isScrollPosition
+                    && this.props.advancedSettings.sectionId
+                    && <Checkbox
+                        checked={this.props.settings.showSectionId}
+                        onChange={() =>
+                            this.props.onUpdateSettings({
+                                ...this.props.settings,
+                                showSectionId: !this.props.settings.showSectionId
+                            })}>
+                        <Message msgId="share.showSectionId" />
+                    </Checkbox>
+                }
             </SwitchPanel>
         );
     }

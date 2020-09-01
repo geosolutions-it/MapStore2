@@ -9,7 +9,6 @@ const PropTypes = require('prop-types');
 const React = require('react');
 const {connect} = require('react-redux');
 
-const { itemSelected } = require('../../actions/manager');
 const assign = require('object-assign');
 const { isPageConfigured } = require("../../selectors/plugins");
 const {DropdownButton, Glyphicon, MenuItem} = require('react-bootstrap');
@@ -23,7 +22,7 @@ const Container = connect(() => ({
 
 const ToolsContainer = require('../containers/ToolsContainer');
 const Message = require('../locale/Message');
-
+const { itemSelected } = require('../../actions/manager');
 require('../burgermenu/burgermenu.css');
 
 class ManagerMenu extends React.Component {
@@ -97,7 +96,18 @@ class ManagerMenu extends React.Component {
             .filter(e => this.props.enableContextManager || e.path !== "/context-manager")
             .sort((a, b) => a.position - b.position).map((entry) => {
                 return {
-                    action: (context) => {context.router.history.push(entry.path); return this.props.itemSelected(entry.id); },
+                    action: (context) => {
+                        context.router.history.push(entry.path);
+                        this.props.itemSelected(entry.id);
+                        return {
+                            type: "@@router/LOCATION_CHANGE",
+                            payload: {
+                                action: context.router.history.action,
+                                isFirstRendering: false,
+                                location: context.router.history.location
+                            }
+                        };
+                    },
                     text: entry.msgId ? <Message msgId={entry.msgId} /> : entry.text,
                     cfg: {...entry}
                 };
