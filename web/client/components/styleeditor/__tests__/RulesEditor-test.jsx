@@ -8,9 +8,14 @@
 
 import React from 'react';
 import ReactDOM from 'react-dom';
-import RulesEditor from '../RulesEditor';
+import RulesEditorComponent from '../RulesEditor';
 import TestUtils from 'react-dom/test-utils';
 import expect from 'expect';
+import { DragDropContext as dragDropContext } from 'react-dnd';
+import testBackend from 'react-dnd-test-backend';
+import Rule from '../Rule';
+
+const RulesEditor = dragDropContext(testBackend)(RulesEditorComponent);
 
 describe('RulesEditor', () => {
     beforeEach((done) => {
@@ -689,6 +694,157 @@ describe('RulesEditor', () => {
         expect(buttonInputNodes.length).toBe(2);
 
         TestUtils.Simulate.click(buttonInputNodes[0]);
+    });
+    it('should trigger on change after sorting', (done) => {
+        const root = ReactDOM.render(
+            <RulesEditor
+                rules={[
+                    {
+                        name: 'Line rule',
+                        ruleId: 1,
+                        symbolizers: [{
+                            symbolizerId: 1,
+                            kind: 'Line',
+                            color: '#777777',
+                            width: 1,
+                            opacity: 1,
+                            cap: 'round',
+                            join: 'round'
+                        }]
+                    },
+                    {
+                        name: 'Fill rule',
+                        ruleId: 2,
+                        symbolizers: [{
+                            symbolizerId: 1,
+                            kind: 'Fill',
+                            color: '#ff0000'
+                        }]
+                    }
+                ]}
+                onChange={(nreRules) => {
+                    try {
+                        expect(nreRules[0].ruleId).toBe(2);
+                        expect(nreRules[1].ruleId).toBe(1);
+                    } catch (e) {
+                        done(e);
+                    }
+                    done();
+                }}
+            />, document.getElementById('container'));
+
+        const backend = root.getManager().getBackend();
+        const rulesTargets = TestUtils.scryRenderedComponentsWithType(root, Rule);
+        expect(rulesTargets.length).toBe(2);
+        // sources are nested inside the target using dragRuleSource
+        const rulesSources = rulesTargets.map(ruleTarget => ruleTarget.getDecoratedComponentInstance());
+        expect(rulesSources.length).toBe(2);
+        backend.simulateBeginDrag([rulesSources[0].getHandlerId()], {
+            clientOffset: { x: 0, y: 99999 },
+            getSourceClientOffset: () => ({ x: 0, y: 99999 })
+        });
+        backend.simulateHover([rulesTargets[1].getHandlerId()]);
+        backend.simulateEndDrag();
+    });
+
+    it('should render with text symbolizer', () => {
+        ReactDOM.render(
+            <RulesEditor
+                rules={[
+                    {
+                        name: 'Text rule',
+                        ruleId: 1,
+                        symbolizers: [{
+                            symbolizerId: 1,
+                            kind: 'Text',
+                            color: '#dddddd',
+                            label: 'Label'
+                        }]
+                    }
+                ]}
+            />, document.getElementById('container'));
+        const ruleEditorNode = document.querySelector('.ms-style-rules-editor');
+        expect(ruleEditorNode).toBeTruthy();
+
+        const rulesNode = document.querySelectorAll('.ms-style-rule');
+        expect(rulesNode.length).toBe(1);
+
+        const ruleHeadNode = rulesNode[0].querySelector('.ms-style-rule-head');
+
+        const legendLabelInput = ruleHeadNode.querySelector('input');
+        expect(legendLabelInput).toBeTruthy();
+        expect(legendLabelInput.value).toBe('Text rule');
+
+        const ruleHeadButtonNodes = ruleHeadNode.querySelectorAll('button');
+        expect([...ruleHeadButtonNodes].map(btn => btn.children[0].getAttribute('class'))).toEqual([
+            'glyphicon glyphicon-1-ruler',
+            'glyphicon glyphicon-trash'
+        ]);
+
+        const symbolizersNode = rulesNode[0].querySelectorAll('.ms-symbolizer');
+        expect(symbolizersNode.length).toBe(1);
+
+        const symbolizerFields = symbolizersNode[0].querySelectorAll('.ms-symbolizer-label > span');
+        expect([...symbolizerFields].map(field => field.innerHTML)).toEqual([
+            'styleeditor.label',
+            'styleeditor.fontFamily',
+            'styleeditor.fontColor',
+            'styleeditor.fontSize',
+            'styleeditor.fontStyle',
+            'styleeditor.fontWeight',
+            'styleeditor.haloColor',
+            'styleeditor.haloWidth',
+            'styleeditor.rotation',
+            'styleeditor.offsetX',
+            'styleeditor.offsetY'
+        ]);
+
+        const optionsNodes = rulesNode[0].querySelectorAll('.ms-symbolizer-tools .dropdown-menu li a span');
+
+        expect([...optionsNodes].map(field => field.innerHTML)).toEqual([
+            'styleeditor.simpleStyle',
+            'styleeditor.classificationStyle'
+        ]);
+
+    });
+
+    it('should add warning to text symbolizer with index greater than zero', () => {
+        ReactDOM.render(
+            <RulesEditor
+                rules={[
+                    {
+                        name: 'Text rule',
+                        ruleId: 0,
+                        symbolizers: [{
+                            symbolizerId: 1,
+                            kind: 'Text',
+                            color: '#dddddd',
+                            label: 'Label'
+                        }]
+                    },
+                    {
+                        name: 'Text rule',
+                        ruleId: 1,
+                        symbolizers: [{
+                            symbolizerId: 1,
+                            kind: 'Text',
+                            color: '#dddddd',
+                            label: 'Label'
+                        }]
+                    }
+                ]}
+            />, document.getElementById('container'));
+        const ruleEditorNode = document.querySelector('.ms-style-rules-editor');
+        expect(ruleEditorNode).toBeTruthy();
+
+        const rulesNode = document.querySelectorAll('.ms-style-rule');
+        expect(rulesNode.length).toBe(2);
+
+        let warningPopOverNode = rulesNode[0].querySelector('.mapstore-info-popover');
+        expect(warningPopOverNode).toBeFalsy();
+
+        warningPopOverNode = rulesNode[1].querySelector('.mapstore-info-popover');
+        expect(warningPopOverNode).toBeTruthy();
     });
 
 });

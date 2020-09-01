@@ -13,6 +13,7 @@ const {isOpenlayers} = require('./maptype');
 const {isMapInfoOpen} = require('./mapInfo');
 const {head, get} = require('lodash');
 const assign = require('object-assign');
+const { getConfigProp } = require('../utils/ConfigUtils');
 
 const annotationsLayerSelector = createSelector([
     layersSelector
@@ -46,13 +47,15 @@ const configSelector = (state) => get(state, "annotations.config", {});
 const symbolListSelector = (state) => get(state, "annotations.symbolList", []);
 const symbolErrorsSelector = (state) => get(state, "annotations.symbolErrors", []);
 const modeSelector = (state) => editingSelector(state) && 'editing' || annotationsLayerSelector(state) && currentSelector(state) && 'detail' || 'list';
+const defaultStylesSelector = state => state.annotations.defaultStyles;
+const loadingSelector = state => state.annotations.loading;
 
 const annotationsInfoSelector = (state) => (assign({}, {
     symbolErrors: symbolErrorsSelector(state),
     showEdit: isOpenlayers(state),
     mouseHoverEvents: isMapInfoOpen(state),
     closing: closingSelector(state),
-    format: formatSelector(state),
+    format: formatSelector(state) || getConfigProp("defaultCoordinateFormat"),
     aeronauticalOptions: aeronauticalOptionsSelector(state),
     config: configSelector(state),
     drawing: drawingSelector(state),
@@ -100,7 +103,9 @@ const annotationsListSelector = createSelector([
     annotations: layer && layer.features || [],
     current: annotations.current || null,
     editing: info.editing,
-    filter: annotations.filter || ''
+    filter: annotations.filter || '',
+    defaultStyles: annotations.defaultStyles,
+    loading: annotations.loading
 }, info.config ? {
     config: info.config
 } : { })));
@@ -140,5 +145,7 @@ module.exports = {
     formatSelector,
     errorsSelector,
     configSelector,
-    symbolListSelector
+    symbolListSelector,
+    defaultStylesSelector,
+    loadingSelector
 };

@@ -55,7 +55,7 @@ module.exports = class MainForm extends React.Component {
                     onRemove={() => onUpdateLinkedResource("thumbnail", "NODATA", "THUMBNAIL", {
                         tail: `/raw?decode=datauri&v=${uuid()}`
                     })}
-                    onUpdate={(data) => onUpdateLinkedResource("thumbnail", data, "THUMBNAIL", {
+                    onUpdate={(data) => onUpdateLinkedResource("thumbnail", data || "NODATA", "THUMBNAIL", {
                         tail: `/raw?decode=datauri&v=${uuid()}`
                     })} />
             </Col>

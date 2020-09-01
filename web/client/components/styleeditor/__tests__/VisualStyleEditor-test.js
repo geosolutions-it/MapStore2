@@ -8,8 +8,13 @@
 
 import React from 'react';
 import ReactDOM from 'react-dom';
-import VisualStyleEditor from '../VisualStyleEditor';
+import VisualStyleEditorComponent from '../VisualStyleEditor';
 import expect from 'expect';
+import { Simulate, act } from 'react-dom/test-utils';
+import { DragDropContext as dragDropContext } from 'react-dnd';
+import testBackend from 'react-dnd-test-backend';
+
+const VisualStyleEditor = dragDropContext(testBackend)(VisualStyleEditorComponent);
 
 describe('VisualStyleEditor', () => {
     beforeEach((done) => {
@@ -86,7 +91,7 @@ describe('VisualStyleEditor', () => {
             code="unknow style format"
             onError={(error) => {
                 try {
-                    expect(error).toEqual({ messageId: 'styleeditor.formatNotSupported' });
+                    expect(error).toEqual({ messageId: 'styleeditor.formatNotSupported', status: 400 });
                 } catch (e) {
                     done(e);
                 }
@@ -95,5 +100,141 @@ describe('VisualStyleEditor', () => {
         />, document.getElementById('container'));
         const ruleEditorNode = document.querySelector('.ms-style-rules-editor');
         expect(ruleEditorNode).toBeTruthy();
+    });
+    it('should throw an error when all style are removed', (done) => {
+        const DEBOUNCE_TIME = 1;
+        act(() => {
+            ReactDOM.render(<VisualStyleEditor
+                format="css"
+                code="* { fill: #ff0000; }"
+                debounceTime={DEBOUNCE_TIME}
+                onError={(error) => {
+                    try {
+                        expect(error).toEqual({ messageId: 'styleeditor.styleEmpty', status: 400 });
+                    } catch (e) {
+                        done(e);
+                    }
+                    done();
+                }}
+            />, document.getElementById('container'));
+        });
+        setTimeout(() => {
+            try {
+                const ruleEditorNode = document.querySelector('.ms-style-rules-editor');
+                expect(ruleEditorNode).toBeTruthy();
+                const buttonNodes = document.querySelectorAll('button');
+                expect([...buttonNodes].map(node => node.children[0].getAttribute('class'))).toEqual([
+                    'glyphicon glyphicon-undo',
+                    'glyphicon glyphicon-redo',
+                    'glyphicon glyphicon-1-ruler',
+                    'glyphicon glyphicon-trash',
+                    'glyphicon glyphicon-option-vertical'
+                ]);
+                act(() => {
+                    Simulate.click(buttonNodes[3]);
+                });
+            } catch (e) {
+                done(e);
+            }
+        }, DEBOUNCE_TIME * 10);
+    });
+    it('should throw an error when rule has an error', (done) => {
+        const DEBOUNCE_TIME = 1;
+        act(() => {
+            ReactDOM.render(<VisualStyleEditor
+                format="css"
+                code="* { fill: #ff0000; }"
+                defaultStyleJSON={{
+                    rules: [
+                        {
+                            name: '',
+                            symbolizers: [
+                                {
+                                    kind: 'Fill',
+                                    color: '#ff0000'
+                                }
+                            ]
+                        },
+                        {
+                            errorId: 'ruleErrorId'
+                        }
+                    ]
+                }}
+                debounceTime={DEBOUNCE_TIME}
+                onError={(error) => {
+                    try {
+                        expect(error).toEqual({ messageId: 'ruleErrorId', status: 400 });
+                    } catch (e) {
+                        done(e);
+                    }
+                    done();
+                }}
+            />, document.getElementById('container'));
+        });
+    });
+    it('should throw an error when classification rule is incomplete', (done) => {
+        const DEBOUNCE_TIME = 1;
+        act(() => {
+            ReactDOM.render(<VisualStyleEditor
+                format="css"
+                code="* { fill: #ff0000; }"
+                defaultStyleJSON={{
+                    rules: [
+                        {
+                            name: '',
+                            symbolizers: [
+                                {
+                                    kind: 'Fill',
+                                    color: '#ff0000'
+                                }
+                            ]
+                        },
+                        {
+                            kind: 'Classification'
+                        }
+                    ]
+                }}
+                debounceTime={DEBOUNCE_TIME}
+                onError={(error) => {
+                    try {
+                        expect(error).toEqual({ messageId: 'styleeditor.incompleteClassification', status: 400 });
+                    } catch (e) {
+                        done(e);
+                    }
+                    done();
+                }}
+            />, document.getElementById('container'));
+        });
+    });
+    it('should throw an error when icon symbolizer has image undefined', (done) => {
+        const DEBOUNCE_TIME = 1;
+        act(() => {
+            ReactDOM.render(<VisualStyleEditor
+                format="css"
+                code="* { fill: #ff0000; }"
+                defaultStyleJSON={{
+                    rules: [
+                        {
+                            name: '',
+                            symbolizers: [
+                                {
+                                    kind: 'Icon',
+                                    image: undefined
+                                }
+                            ]
+                        }
+                    ]
+                }}
+                debounceTime={DEBOUNCE_TIME}
+                onError={(error) => {
+                    try {
+                        expect(error).toEqual({ messageId: 'styleeditor.emptyImageIconSymbolizer', status: 400 });
+                    } catch (e) {
+                        done(e);
+                    }
+                    done();
+                }}
+            />, document.getElementById('container'));
+        });
     });
 });

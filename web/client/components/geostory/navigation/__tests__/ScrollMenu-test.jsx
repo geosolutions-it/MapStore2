@@ -31,7 +31,7 @@ describe('ScrollMenu component', () => {
         expect(el).toExist();
         const menuItems = container.querySelectorAll('.ms-menu-item');
         expect(menuItems).toExist();
-        expect(menuItems.length).toBe(4);
+        expect(menuItems.length).toBe(5);
     });
     it('should fire scrollTo on menu item click', (done) => {
         const ITEMS = [{

@@ -64,7 +64,6 @@
             "multiGeometry": true,
             "validationErrors": {}
           },
-          "format": "decimal",
           "defaultTextAnnotation": "New"
         },
         "maptype": {
@@ -280,7 +279,7 @@
             },
             "FeedbackMask"
         ],
-        "desktop": [ "Details",
+        "desktop": ["Details",
           {
             "name": "Map",
             "cfg": {

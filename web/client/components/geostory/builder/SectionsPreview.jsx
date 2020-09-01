@@ -47,6 +47,7 @@ const Icon = ({ type, src, thumbnail } = {}) => {
         text: 'sheet',
         image: 'picture',
         title: 'story-title-section',
+        banner: 'story-banner-section',
         paragraph: 'story-paragraph-section',
         immersive: 'story-immersive-section',
         media: 'story-media-section',

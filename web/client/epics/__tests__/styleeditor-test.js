@@ -1311,7 +1311,11 @@ describe('Test styleeditor epics, with mock axios', () => {
                     version: '2.16',
                     formats: [ 'css', 'sld' ],
                     availableUrls: [],
-                    fonts: ['Arial']
+                    fonts: ['Arial'],
+                    classificationMethods: {
+                        vector: [ 'equalInterval', 'quantile', 'jenks' ],
+                        raster: [ 'equalInterval', 'quantile', 'jenks' ]
+                    }
                 });
             } catch (e) {
                 done(e);

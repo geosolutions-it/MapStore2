@@ -918,7 +918,7 @@
             "changePwd": "Paswoord wijzigen",
             "newPwd": "Nieuw paswoord",
             "retypePwd": "Bevestig het paswoord",
-            "passwordMinlenght": "Uw wachtwoord moet minstens {minSize} tekens bevatten",
+            "passwordMinlenght": "Uw wachtwoord moet minstens {data} tekens bevatten",
             "passwordCheckFail": "De twee wachtwoorden komen niet overeen!",
             "passwordInvalid": "Verkeerd wachtwoord",
             "username": "Gebruikersnaam",

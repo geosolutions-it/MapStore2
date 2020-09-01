@@ -14,21 +14,16 @@ import inlineWidgets from './inlineWidgets';
 
 import {
     editStyleCode,
-    updateEditorMetadata
+    updateEditorMetadata,
+    errorStyle
 } from '../../actions/styleeditor';
 
 import {
-    getStyleMetadataService,
-    readClassification,
-    readRasterClassification,
-    getColor,
     getColors,
     methods
 } from '../../api/SLDService';
 
 import { getEditorMode } from '../../utils/StyleEditorUtils';
-
-import axios from '../../libs/ajax';
 
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
@@ -60,116 +55,17 @@ import Loader from '../../components/misc/Loader';
 
 import { Alert, Glyphicon } from 'react-bootstrap';
 import { createShallowSelector } from '../../utils/ReselectUtils';
+import {
+    classificationVector,
+    classificationRaster
+} from '../../api/StyleEditor';
 
 const styleUpdateTypes = {
-
-    'classification': ({ options, rules, layer, updateRules }) => {
-
-        const paramsKeys = [
-            'intervals',
-            'method',
-            'reverse',
-            'attribute',
-            'ramp'
-        ];
-
-        const { values, ...others } = options || {};
-        const params = { ...others, ...values};
-        const needsRequest = !paramsKeys.find(key => params[key] === undefined);
-
-        if (needsRequest) {
-            const customRamp = params.ramp === 'custom' && params.classification.length > 0
-                && { name: 'custom', colors: params.classification.map((entry) => entry.color) };
-            return axios.get(getStyleMetadataService(layer, {
-                intervals: params.intervals,
-                method: params.method,
-                attribute: params.attribute,
-                reverse: params.reverse,
-                ...getColor(undefined, params.ramp, params.intervals, customRamp)
-            }))
-                .then(({ data }) => {
-                    const newRules = rules.map((rule) => {
-                        if (rule.ruleId === options.ruleId) {
-                            return {
-                                ...rule,
-                                ...values,
-                                [options.type]: readClassification(data),
-                                errorId: undefined
-                            };
-                        }
-                        return rule;
-                    });
-                    return newRules;
-                })
-                .catch(() => {
-                    const newRules = rules.map((rule) => {
-                        if (rule.ruleId === options.ruleId) {
-                            return {
-                                ...rule,
-                                errorId: 'styleeditor.classificationError'
-                            };
-                        }
-                        return rule;
-                    });
-                    return newRules;
-                });
-        }
-
-        return updateRules();
-    },
-    'classification-raster': ({ options, rules, layer, updateRules }) => {
-
-        const paramsKeys = [
-            'intervals',
-            'continuous',
-            'method',
-            'reverse',
-            'ramp'
-        ];
-
-        const { values, ...others } = options || {};
-        const params = { ...others, ...values};
-
-        const needsRequest = !paramsKeys.find(key => params[key] === undefined);
-        if (needsRequest) {
-            const customRamp = params.ramp === 'custom' && params.classification.length > 0
-                && { name: 'custom', colors: params.classification.map((entry) => entry.color) };
-            return axios.get(getStyleMetadataService(layer, {
-                intervals: params.intervals,
-                continuous: params.continuous,
-                method: params.method,
-                reverse: params.reverse,
-                ...getColor(undefined, params.ramp, params.intervals, customRamp)
-            }))
-                .then(({ data }) => {
-                    const newRules = rules.map((rule) => {
-                        if (rule.ruleId === options.ruleId) {
-                            return {
-                                ...rule,
-                                ...values,
-                                classification: readRasterClassification(data),
-                                errorId: undefined
-                            };
-                        }
-                        return rule;
-                    });
-                    return newRules;
-                })
-                .catch(() => {
-                    const newRules = rules.map((rule) => {
-                        if (rule.ruleId === options.ruleId) {
-                            return {
-                                ...rule,
-                                errorId: 'styleeditor.classificationRasterError'
-                            };
-                        }
-                        return rule;
-                    });
-                    return newRules;
-                });
-        }
-        return updateRules();
-    }
+    'classificationVector': classificationVector,
+    'classificationRaster': classificationRaster,
+    // support previous type
+    'classification': classificationVector,
+    'classification-raster': classificationRaster
 };
 
 function getAttributes(hintProperties, geometryType) {
@@ -215,13 +111,18 @@ const ConnectedVisualStyleEditor = connect(
             geometryType,
             scales: scales.map(scale => Math.round(scale)),
             zoom: map.zoom,
-            fonts: styleService.fonts || []
+            fonts: styleService.fonts || [],
+            methods: (geometryType === 'raster'
+                ? styleService?.classificationMethods?.raster
+                : styleService?.classificationMethods?.vector) || methods
         })
-    )
+    ),
+    {
+        onError: errorStyle.bind(null, 'edit')
+    }
 )(VisualStyleEditor);
 
 ConnectedVisualStyleEditor.defaultProps = {
-    methods,
     getColors,
     styleUpdateTypes
 };

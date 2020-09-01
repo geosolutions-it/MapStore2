@@ -120,8 +120,8 @@
                 "tooltip": "Note: This parameter requires specific configurations on GeoServer"
             }
         },
-        "longitude": "Longitude",
-        "latitude": "Latitude",
+        "longitude": "Lon",
+        "latitude": "Lat",
         "notification": {
             "update": "Update",
             "warning": "Warning",
@@ -521,6 +521,7 @@
                 "title": "Update title",
                 "dimensions": "Update dimensions"
             },
+            "layerInfoTooltip": "Update layer title and description",
             "layerMetadata": {
                 "identifier": "Identifier",
                 "title": "Title",
@@ -650,6 +651,7 @@
         "identifyRevGeocodeCloseText": "Close",
         "identifyRevGeocodeError": "Unable to geocode",
         "identifyEdit": "Edit",
+        "identifyLayerSelectNoResult": "No layers found",
         "getFeatureInfoError": {
             "title": "Ooops! Something's wrong",
             "text": "An error has occurred during this <b>GetFeatureInfo</b> request"
@@ -1125,12 +1127,13 @@
             "changePwd": "Change Password",
             "newPwd": "New Password",
             "retypePwd": "Retype Password",
-            "passwordMinlenght": "Your password must be at least {minSize} character",
+            "passwordMinlenght": "Your password must be at least {data} character",
             "passwordCheckFail": "Passwords do not match!",
             "passwordInvalid": "Invalid password",
             "username": "Username",
             "password": "Password",
-            "passwordMessage": "Password must contain at least 6 characters",
+            "passwordMessage": "Password must contain at least 6 characters. Valid values for passwords include numerals, lower or upper-case letters and the following special characters: ! @ # $ % & * _.",
+            "passwordInvalidChar": "The password must not contain these characters: {data}",
             "passwordChanged": "Password changed",
             "passwordError": "Error changing password",
             "signIn":"Sign-in",
@@ -2063,6 +2066,7 @@
             "equalInterval": "Equal interval",
             "quantile": "Quantile",
             "jenks": "Natural breaks (Jenks)",
+            "standardDeviation": "Standard deviation",
             "switchToTextareaEditor": "Switch to text editor",
             "switchToVisualEditor": "Switch to visual editor",
             "alertForceTranslate": "You will lose all the changes added in the text mode by switching to visual editor. Are you sure to switch to visual style editor mode?",
@@ -2080,7 +2084,13 @@
             "blueChannel": "Blue channel",
             "grayChannel": "Channel",
             "ruleClassification": "Classification",
-            "ruleRaster": "Raster"
+            "ruleRaster": "Raster",
+            "customInterval": "Custom Interval",
+            "styleEmpty": "This style has no rules",
+            "incompleteClassification": "The classification is incomplete bacause the entries are not available. Ensure all properties are corretly provided",
+            "emptyImageIconSymbolizer": "Missing image url in the icon style",
+            "warningTextOrderTitle": "Warning",
+            "warningTextOrder": "The order of rule containing text style could not match the rendering order on map. This behaviour is related to some rendering engine that draw label on top of other rules"
         },
         "playback": {
             "settings": {
@@ -2240,6 +2250,7 @@
             "geostoreMap": "MapStore Maps",
             "loadingSpinner": "Loading Story",
             "addTitleSection": "Add Title Section",
+            "addBannerSection": "Add Banner Section",
             "addParagraphSection": "Add Paragraph Section",
             "addImmersiveSection": "Add Immersive Section",
             "addMediaSection": "Add Media Section",
@@ -2306,6 +2317,7 @@
                     "htmlTitlePlaceholder": "Insert title",
                     "htmlPlaceholder": "Insert text here...",
                     "titleTitle": "Title Section",
+                    "titleBanner": "Banner Section",
                     "titleParagraph": "Paragraph Section",
                     "titleImmersive": "Immersive Section",
                     "titleImmersiveContent": "Immersive Content",
@@ -2343,6 +2355,7 @@
                     "navbar" : "Navigation bar",
                     "showNavbar" : "Show navbar",
                     "theme": "Theme",
+                    "overlay": "Overlay",
                     "templateTooltip":"This setting allows you to enable the Identify function on the map by defining a generic format for all the layers. It is possible to configure a different format for each single layer using the advanced map editor (pencil icon). For more information, see the <a href='https://mapstore.readthedocs.io/en/latest/user-guide/layer-settings/#templates' target='_blank'> user guide </a>. If a layer has defined its own Identify format, it will be used instead of the generic one set at the map level."
                 }
             },
@@ -2833,6 +2846,27 @@
             },
             "deleteError": "Unexpected error occurred while deleting the map",
             "updateError": "Unexpected error occurred while saving the map"
+        },
+        "layerInfo": {
+            "title": "Update layers titles and descriptions",
+            "noLayers": "No layers found",
+            "syncButton": "Sync titles and descriptions",
+            "selectAll": "Select all",
+            "deselectAll": "Deselect all",
+            "updatingLayers": "Updating layers {updatedCount}/{totalCount}",
+            "tooltips": {
+                "syncSuccess": "Title and description were successfully updated for this layer",
+                "syncError": "It's not possible to update the title and description of this layer. You could verify if all layer options are correct in the settings panel"
+            },
+            "syncingLayersSavingToServerError": {
+                "title": "Server Saving Error",
+                "message": "An unexpected error occurred when saving updated layers to server"
+            },
+            "syncingLayersGeneralError": {
+                "title": "General Error",
+                "message": "An unexpected error occurred during layers syncing. There is probably a bug in MapStore"
+            },
+            "layerType": "type: {type}"
         },
         "tutorial": {
             "title": "Tutorial",

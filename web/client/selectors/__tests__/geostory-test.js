@@ -75,13 +75,13 @@ describe('geostory selectors', () => { // TODO: check default
             expect(navigableItemsSelectorCreator()({
                 geostory: {
                     currentStory: TEST_STORY
-                }}).map(item => item.id)).toEqual([ 'SomeID', 'col1', 'col2', 'SomeID_title' ]);
+                }}).map(item => item.id)).toEqual([ 'SomeID', 'col1', 'col2', 'SomeID_title', 'SomeID_banner' ]);
         });
         it('with all sections and columns', () => {
             expect(navigableItemsSelectorCreator({withImmersiveSection: true})({
                 geostory: {
                     currentStory: TEST_STORY
-                }}).map(item => item.id)).toEqual([ 'SomeID', 'SomeID2', 'col1', 'col2', 'SomeID_title']);
+                }}).map(item => item.id)).toEqual([ 'SomeID', 'SomeID2', 'col1', 'col2', 'SomeID_title', 'SomeID_banner']);
         });
         it('with all sections except immersive, and columns, with some items disabled', () => {
             expect(navigableItemsSelectorCreator({includeAlways: false})({
@@ -100,13 +100,14 @@ describe('geostory selectors', () => { // TODO: check default
         [
             { label: 'Abstract', value: 'SomeID' },
             { label: 'Abstract', value: 'SomeID2', children: [ { label: "", value: 'col1' }, { label: "", value: 'col2' } ] },
-            { label: 'Abstract', value: 'SomeID_title' }
+            { label: 'Abstract', value: 'SomeID_title' },
+            { label: 'Abstract', value: 'SomeID_banner' }
         ])
     );
     it('currentPositionSelector ', () => expect(currentPositionSelector({ geostory: { currentStory: TEST_STORY, currentPage: {
         sectionId: "SomeID"
     } } })).toBe(0));
-    it('totalItemsSelector ', () => expect(totalItemsSelector({ geostory: { currentStory: TEST_STORY } })).toBe(4));
+    it('totalItemsSelector ', () => expect(totalItemsSelector({ geostory: { currentStory: TEST_STORY } })).toBe(5));
     it('settingsSelector ', () => expect(settingsSelector({ geostory: { currentStory: {...TEST_STORY, settings: {
         checked: ["col2"]
     }} } })).toEqual({checked: [ 'col2' ], expanded: [ 'SomeID2' ] }));
