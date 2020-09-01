@@ -162,7 +162,6 @@ const removeNulls = (obj = {}) => {
 
 function wmsToLeafletOptions(options) {
     var opacity = options.opacity !== undefined ? options.opacity : 1;
-    console.log("OPTIONS", options);
     const params = optionsToVendorParams(options);
     // NOTE: can we use opacity to manage visibility?
     const result = objectAssign({}, options.baseParams, {
