@@ -119,7 +119,7 @@ export default ({
                         </div>) : null}
                     <div className="ms-geostory-navigation-metadata">
                         {isTitleEnabled &&
-                            <div className="ms-geostory-navigation-title" style={{fontSize: settings?.storyTitleFontSize}}>
+                            <div className="ms-geostory-navigation-title" style={{fontSize: settings.storyTitleFontSize || "14px"}}>
                                 {settings.storyTitle}
                             </div>
                         }

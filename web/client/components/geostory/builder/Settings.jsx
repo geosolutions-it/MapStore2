@@ -58,7 +58,7 @@ export default ({
             <hr />
         </div>
         <FormGroup>
-            <div style={{ marginBottom: "10px", fontSize: "15px"}}>
+            <div style={{ marginBottom: "10px" }}>
                 <ControlLabel>
                     <Message msgId="geostory.builder.settings.theme"/>
                 </ControlLabel>
@@ -83,7 +83,7 @@ export default ({
             </div>
         </FormGroup>
         <FormGroup>
-            <div style={{ marginBottom: "10px", fontSize: "15px" }}>
+            <div style={{ marginBottom: "10px" }}>
                 <ControlLabel><Message msgId="geostory.builder.settings.overlay"/></ControlLabel>
             </div>
             <CustomThemePicker
@@ -96,7 +96,7 @@ export default ({
             <hr />
         </div>
         <FormGroup>
-            <div style={{ marginBottom: "10px", fontSize: "15px"}}>
+            <div style={{ marginBottom: "10px" }}>
                 <ControlLabel><Message msgId="geostory.builder.settings.title"/></ControlLabel>
                 <SwitchButton
                     onChange={() => onToggleSettings("isTitleEnabled")}
@@ -126,7 +126,7 @@ export default ({
             </div>
         </FormGroup>
         <FormGroup>
-            <div style={{ marginBottom: "10px", fontSize: "15px"}}>
+            <div style={{ marginBottom: "10px" }}>
                 <ControlLabel><Message msgId="geostory.builder.settings.logo"/></ControlLabel>
                 <SwitchButton
                     onChange={() => onToggleSettings("isLogoEnabled")}
@@ -165,7 +165,7 @@ export default ({
             }
         </FormGroup>
         <FormGroup>
-            <div style={{ marginBottom: "10px", fontSize: "15px"}}>
+            <div style={{ marginBottom: "10px" }}>
                 <ControlLabel><Message msgId="geostory.builder.settings.navbar"/></ControlLabel>
                 <SwitchButton
                     onChange={() => onToggleSettings("isNavbarEnabled")}
