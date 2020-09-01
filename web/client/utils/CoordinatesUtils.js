@@ -233,6 +233,15 @@ const getExtentFromNormalized = (bounds, projection) => {
         isIDL};
 };
 
+const crsCodeTable = {
+    'wgs84': 4326,
+    'wgs1984': 4326,
+    'crs84': 4326,
+    'ogccrs84': 4326,
+    'lambert93': 2154,
+    'rgflambert93': 2154
+};
+
 /**
  * Utilities for Coordinates conversion.
  * @memberof utils
@@ -907,7 +916,71 @@ const CoordinatesUtils = {
     isPointInsideExtent: (point = {lat: 1, lng: 1}, extent) => {
         return contains(getPolygonFromExtent(extent), toPoint([point.lng, point.lat]));
     },
-    isBboxCompatible: (extent1, extent2) => overlap(extent1, extent2) || contains(extent1, extent2) || contains(extent2, extent1)
+    isBboxCompatible: (extent1, extent2) => overlap(extent1, extent2) || contains(extent1, extent2) || contains(extent2, extent1),
+    extractCrsFromURN: (urnString) => {
+        if (urnString) {
+            const parts = urnString.split(':');
+
+            const validURN = parts[0] === 'urn' &&
+                (parts[1] === 'ogc' || parts[1] === 'x-ogc') &&
+                parts[2] === 'def' &&
+                parts[3] === 'crs' &&
+                (!!parts[4] || !!parts[6]);
+
+            if (validURN) {
+                const authority = parts[4];
+                const code = parts[6];
+
+                return authority ? `${authority}:${code}` : code;
+            }
+        }
+
+        return null;
+    },
+    crsCodeTable,
+    makeNumericEPSG: (epsg) => {
+        if (!epsg || epsg.slice(0, 5) !== 'EPSG:') {
+            return null;
+        }
+
+        const epsgCode = epsg.slice(5);
+        const epsgCodeNum = parseInt(epsgCode, 10);
+
+        if (epsgCodeNum >= 1024 && epsgCodeNum <= 32767) {
+            return epsg;
+        }
+
+        const epsgCodeNormalized = epsgCode.replace(' ', '').replace(':', '').toLowerCase();
+        const epsgCodeNewNum = crsCodeTable[epsgCodeNormalized];
+
+        if (epsgCodeNewNum >= 1024 && epsgCodeNewNum <= 32767) {
+            return `EPSG:${epsgCodeNewNum}`;
+        }
+
+        return null;
+    },
+    makeBboxFromOWS: (lcOWS, ucOWS) => {
+        let lc = [lcOWS[0], lcOWS[1]];
+        let uc = [ucOWS[0], ucOWS[1]];
+
+        // lower is actually upper?
+        if (lc[1] > uc[1]) {
+            const t = lc;
+            lc = uc;
+            uc = t;
+        }
+
+        // lower right upper left instead of lower left upper right?
+        if (lc[0] > uc[0]) {
+            const lcOld = lc.slice();
+            const ucOld = uc.slice();
+
+            lc = [ucOld[0], lcOld[1]];
+            uc = [lcOld[0], ucOld[1]];
+        }
+
+        return [lc[0], lc[1], uc[0], uc[1]];
+    }
 
 };
 

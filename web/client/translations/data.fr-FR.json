@@ -2083,7 +2083,12 @@
             "grayChannel": "Channel",
             "ruleClassification": "Classification",
             "ruleRaster": "Raster",
-            "customInterval": "Custom Interval"
+            "customInterval": "Custom Interval",
+            "styleEmpty": "Ce style n'a pas de règles",
+            "incompleteClassification": "La classification est incomplète car les entrées ne sont pas disponibles. Assurez-vous que toutes les propriétés sont correctement fournies",
+            "emptyImageIconSymbolizer": "URL d'image manquante dans le style d'icône",
+            "warningTextOrderTitle": "Avertissement",
+            "warningTextOrder": "L'ordre de la règle contenant le style de texte ne pouvait pas correspondre à l'ordre de rendu sur la carte. Ce comportement est lié à certains moteurs de rendu qui dessinent une étiquette au-dessus d'autres règles"
         },
         "playback": {
             "settings": {
