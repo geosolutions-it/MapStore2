@@ -87,6 +87,8 @@
     "@geosolutions/wkt-parser": "1.2.2",
     "@mapbox/geojsonhint": "2.0.1",
     "@mapbox/togeojson": "0.16.0",
+    "@terrestris/base-util": "0.2.3",
+    "@terrestris/ol-util": "3.0.1",
     "@turf/bbox": "4.1.0",
     "@turf/bbox-polygon": "5.1.5",
     "@turf/boolean-contains": "5.1.5",
