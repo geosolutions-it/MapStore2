@@ -42,8 +42,7 @@ export default ({
     bubblingTextEditing = () => {},
     expandable,
     mediaViewer,
-    contentToolbar,
-    storyFonts
+    contentToolbar
 }) => (
     <Contents
         className="ms-column-contents"
@@ -63,7 +62,6 @@ export default ({
             mediaViewer,
             contentToolbar
         }}
-        storyFonts={storyFonts}
         tools={{
             [ContentTypes.TEXT]: ['remove'],
             [MediaTypes.IMAGE]: ['editMedia', size(), 'showCaption', 'remove'],

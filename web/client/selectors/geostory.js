@@ -287,9 +287,3 @@ export const hasPendingChanges = (state = {}) => state?.geostory?.pendingChanges
  * @param {object} state application state
  */
 export const updateUrlOnScrollSelector = state => get(state, 'geostory.updateUrlOnScroll', false);
-
-/**
- * Gets the currentStoryFonts that were loaded from config by useEffect hook in the GeoStoryEditor
- * @param {object} state application state
- */
-export const currentStoryFonts = state => get(state, "geostory.currentStory.settings.fontFamilies", []);

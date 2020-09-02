@@ -36,7 +36,7 @@ const getComponent = type => {
  * Generic Wrapper for story Contents.
  * Switch content type
  */
-export default ({type, storyFonts, ...props}) => {
+export default ({type, ...props}) => {
     const Component = getComponent(type);
-    return <Component type={type} storyFonts={storyFonts} {...props} />;
+    return <Component type={type} {...props} />;
 };

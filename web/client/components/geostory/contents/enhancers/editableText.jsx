@@ -67,7 +67,7 @@ export default compose(
                 }
             }),
             // default properties for editor
-            withProps(({ storyFonts = [], placeholder, toolbarStyle = {}, className = "ms-text-editor"}) => ({
+            withProps(({ placeholder, toolbarStyle = {}, className = "ms-text-editor"}) => ({
                 editorRef: ref => setTimeout(() => ref && ref.focus && ref.focus(), 100), // handle auto-focus on edit
                 stripPastedStyles: true,
                 placeholder,
@@ -76,7 +76,7 @@ export default compose(
                     // [here](https://jpuri.github.io/react-draft-wysiwyg/#/docs) you can find some examples (hard to find them in the official draft-js doc)
                     options: ['fontFamily', 'blockType', 'fontSize', 'inline', 'textAlign', 'colorPicker', 'list', 'link', 'remove'],
                     fontFamily: {
-                        options: ['inherit', 'Arial', 'Georgia', 'Impact', 'Tahoma', 'Times New Roman', 'Verdana', ...storyFonts],
+                        options: ['inherit', 'Arial', 'Georgia', 'Impact', 'Tahoma', 'Times New Roman', 'Verdana'],
                         className: undefined,
                         component: undefined,
                         dropdownClassName: undefined
