@@ -71,6 +71,7 @@ class DefaultViewer extends React.Component {
      */
     getResponseProperties = () => {
         const validator = this.props.validator(this.props.format);
+
         const validResponses = validator.getValidResponses(this.props.responses, this.props.renderEmpty);
         const invalidResponses = validator.getNoValidResponses(this.props.responses);
         const emptyResponses = this.props.requests.length === invalidResponses.length;
@@ -96,7 +97,7 @@ class DefaultViewer extends React.Component {
         if (this.props.missingResponses === 0 && emptyResponses) {
             return null;
         }
-        if (this.props.missingResponses === 0 && invalidResponses.length !== 0) {
+        if ( invalidResponses.length !== 0) {
             const titles = invalidResponses.map((res) => {
                 const {layerMetadata} = res;
                 return layerMetadata.title;

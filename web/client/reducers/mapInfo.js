@@ -42,8 +42,8 @@ const {findIndex, isNumber} = require('lodash');
 const {getValidator} = require('../utils/MapInfoUtils');
 
 function receiveResponse(state, action, type) {
-    const requestIndex = findIndex((state.requests || []), (req) => req.reqId === action.reqId);
-
+    const isVector = type === "vector";
+    const requestIndex = !isVector ? findIndex((state.requests || []), (req) => req.reqId === action.reqId) : 0;
     if (requestIndex !== -1) {
         // Filter un-queryable layer
         if (["exceptions", "error"].includes(type)) {
@@ -53,16 +53,18 @@ function receiveResponse(state, action, type) {
                 ...state, tempResponses: fltResponses, requests: fltRequests
             };
         }
-
         const responses = state.tempResponses || [];
         // Add response in same order it was requested
-        responses[requestIndex] = {
-            response: action[type],
-            queryParams: action.requestParams,
-            layerMetadata: action.layerMetadata,
-            layer: action.layer
-        };
-        const {infoFormat, trigger} = state.configuration;
+        if (!isVector) {
+            responses[requestIndex] = {
+                response: action[type],
+                queryParams: action.requestParams,
+                layerMetadata: action.layerMetadata,
+                layer: action.layer
+            };
+        }
+        const {infoFormat, trigger} = state.configuration || {};
+        const isHover = (trigger === "hover");
         const validResponse = getValidator(infoFormat)?.getValidResponses([responses[requestIndex]], true);
 
         // Update index when first response received is valid
@@ -71,10 +73,11 @@ function receiveResponse(state, action, type) {
 
         // Set responses and index when all responses are received
         return assign({}, state, {
+            ...(isVector && {requests: state.requests}),
             tempResponses: [...responses],
-            ...(updateIndex && {tempIndex: trigger === "hover" ? 0 : requestIndex}),
+            ...(updateIndex && {tempIndex: isHover ? 0 : requestIndex}),
             ...(allResponsesReceived && {responses: [...responses],
-                index: isNumber(state.tempIndex) ? state.tempIndex : requestIndex})}
+                index: isHover ? 0 : isNumber(state.tempIndex) ? state.tempIndex : requestIndex})}
         );
     }
     return state;
@@ -337,7 +340,7 @@ function mapInfo(state = initState, action) {
             }
 
         );
-        let responses = state.responses || [];
+        let responses = state.tempResponses || [];
         // Add response such that it doesn't replace other layer response's index
         responses[state.requests.length] = {
             response: {
@@ -350,10 +353,11 @@ function mapInfo(state = initState, action) {
             layerMetadata: action.metadata,
             format: 'JSON'
         };
-        return assign({}, state, {
-            requests: [...state.requests, {}],
-            responses: [...responses]
-        });
+        const requests = [...state.requests, {}];
+        return receiveResponse(assign({}, state, {
+            requests,
+            tempResponses: [...responses]
+        }), null, "vector");
     }
     case UPDATE_CENTER_TO_MARKER: {
         return assign({}, state, {
