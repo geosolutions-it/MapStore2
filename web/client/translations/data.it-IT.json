@@ -2074,7 +2074,12 @@
             "grayChannel": "Canale",
             "ruleClassification": "Classificazione",
             "ruleRaster": "Raster",
-            "customInterval": "Custom Interval"
+            "customInterval": "Custom Interval",
+            "styleEmpty": "Questo stile non è valido perchè vuoto",
+            "incompleteClassification": "La classificazione è incompleta perchè mancano i valori per le classi. Assicurati che tutte le proprietà dello stile sono corrette",
+            "emptyImageIconSymbolizer": "Immagine mancante nello stile icona",
+            "warningTextOrderTitle": "Attenzione",
+            "warningTextOrder": "L'ordine delle regole che contengono etichette potrebbe non corrispondere all'ordine di disegno sulla mappa. Questo comportamento è correlato ad alcuni motori di rendering che disegnano etichette sopra alle altre regole"
         },
         "playback": {
             "settings": {
@@ -2326,9 +2331,10 @@
                     "backConfirmBody": "Sicuro di chiudere il pannello senza salvare le tue modifiche?",
                     "backConfirmNo": "No",
                     "backConfirmYes": "Si",
-                    "logoPlaceholder": "Il logo non deve superare i 48 px di altezza ed è consigliata una larghezza di massimo 96 px. Limite di 500kb",
+                    "logoPlaceholder": "Trascina qui l'immagine del tuo logo o fai clic per selezionare un file immagine (i formati supportati sono png e jpeg)",
                     "save": "Salva impostazioni",
-                    "headerTitle": "Impostazioni della storia",
+                    "storyTheme" : "Tema della storia",
+                    "storyHeader" : "Intestazione della storia",
                     "title": "Titolo",
                     "titlePlaceholder": "Inserisci titolo",
                     "logo": "Logo",
@@ -2338,7 +2344,10 @@
                     "autoplayIntervalPlaceholder": "Abilita l'intervallo dell'autoplay",
                     "navbar": "Barra di navigazione",
                     "showNavbar": "Mostra barra di navigazione",
-                    "theme": "Tema",
+                    "theme": "Tema predefinito",
+                    "fontFamily": "Famiglia di font",
+                    "webFontLoadError": "Impossibile caricare alcuni caratteri dalla configurazione locale",
+                    "fontSize": "Dimensione del font",
                     "overlay": "Copertura",
                     "templateTooltip":"Questa impostazione consente di abilitare la funzione di Identify sulla mappa definendo un formato generico per tutti i layer. E' possibile configurare un formato differente per ogni singolo livello usando l'editor di mappa avanzato (icona matita). Per maggiori informazioni si consulti la <a href='https://mapstore.readthedocs.io/en/latest/user-guide/layer-settings/#templates' target='_blank'>guida utente</a>. Se un layer ha definito il proprio formato di Identify, questo esso verrà usato al posto di quello generico impostato a livello di mappa."
                 }

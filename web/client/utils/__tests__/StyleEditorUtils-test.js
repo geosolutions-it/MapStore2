@@ -522,5 +522,28 @@ describe('StyleEditorUtils test', () => {
         expect(formattedJSONStyle.rules.length).toBe(1);
         expect(formattedJSONStyle.rules[0].scaleDenominator).toEqual(scaleDenominator);
     });
+    it('test parseJSONStyle remove undefined value', () => {
+        const style = {
+            name: 'Style',
+            rules: [ {
+                name: 'Rule',
+                symbolizers: [
+                    {
+                        kind: 'Text',
+                        label: 'Label',
+                        font: undefined,
+                        color: '#333333'
+                    }
+                ]
+            }]
+        };
 
+        const formattedJSONStyle = parseJSONStyle(style);
+        expect(formattedJSONStyle.rules.length).toBe(1);
+        expect(formattedJSONStyle.rules[0].symbolizers[0]).toEqual({
+            kind: 'Text',
+            label: 'Label',
+            color: '#333333'
+        });
+    });
 });

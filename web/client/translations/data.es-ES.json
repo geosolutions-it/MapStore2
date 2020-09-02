@@ -2074,7 +2074,12 @@
             "grayChannel": "Channel",
             "ruleClassification": "Clasificación",
             "ruleRaster": "Ráster",
-            "customInterval": "Custom Interval"
+            "customInterval": "Custom Interval",
+            "styleEmpty": "Este estilo no tiene reglas",
+            "incompleteClassification": "La clasificación es incompleta porque las entradas no están disponibles. Asegúrese de que todas las propiedades se proporcionan correctamente",
+            "emptyImageIconSymbolizer": "Falta la URL de la imagen en el estilo del icono",
+            "warningTextOrderTitle": "Advertencia",
+            "warningTextOrder": "El orden de la regla que contiene el estilo de texto no pudo coincidir con el orden de representación en el mapa. Este comportamiento está relacionado con algún motor de renderizado que dibuja la etiqueta sobre otras reglas"
         },
         "playback": {
             "settings": {
@@ -2327,18 +2332,22 @@
                     "backConfirmNo": "No",
                     "backConfirmYes": "Si",
                     "save": "Guardar ajustes",
-                    "headerTitle": "Configuración de la historia",
+                    "storyTheme" : "Tema de la historia",
+                    "storyHeader" : "Encabezado de la historia",
                     "title": "Titulo",
                     "titlePlaceholder": "Ingrese título",
                     "logo": "Logo",
-                    "logoPlaceholder": "El logotipo no debe superar los 48 px de altura y se sugiere un ancho de 96 px. max 500kb",
+                    "logoPlaceholder": "Suelta la imagen de tu logotipo aquí o haz clic para seleccionar un archivo de imagen (los formatos admitidos son png y jpeg)",
                     "autoplay": "Auto-reproducción",
                     "enableAutoplay": "Habilitar reproducción automática",
                     "autoplayInterval": "Intervalo de reproducción automática (segundos)",
                     "autoplayIntervalPlaceholder": "Habilitar intervalo de reproducción automática",
                     "navbar": "Barra de navegación",
                     "showNavbar": "Mostrar barra de navegación",
-                    "theme": "Tema",
+                    "theme": "Tema predeterminado",
+                    "fontFamily": "Familia tipográfica",
+                    "webFontLoadError": "No se pudieron cargar algunas fuentes desde la configuración local",
+                    "fontSize": "Tamaño de fuente",
                     "overlay": "Cubrir",
                     "templateTooltip":"Esta configuración le permite habilitar la función Identificar en el mapa definiendo un formato genérico para todas las capas. Es posible configurar un formato diferente para cada nivel usando el editor de mapas avanzado (icono de lápiz). Para obtener más información, consulte la <a href='https://mapstore.readthedocs.io/en/latest/user-guide/layer-settings/#templates' target='_blank'> guía del usuario </a>. Si una capa ha definido su propio formato de identificación, se utilizará en lugar del genérico establecido en el nivel del mapa."
                 }

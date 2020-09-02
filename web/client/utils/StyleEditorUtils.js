@@ -13,7 +13,10 @@ import isString from 'lodash/isString';
 import flatten from 'lodash/flatten';
 import isNil from 'lodash/isNil';
 import omit from 'lodash/omit';
+import omitBy from 'lodash/omitBy';
+import isUndefined from 'lodash/isUndefined';
 import uuidv1 from 'uuid/v1';
+
 
 import url from 'url';
 
@@ -290,7 +293,7 @@ export function parseJSONStyle(style) {
                             : undefined,
                         ...(rule.scaleDenominator && { scaleDenominator: rule.scaleDenominator }),
                         symbolizers: [
-                            {
+                            omitBy({
                                 ...omit(rule, [
                                     'ruleId',
                                     'classification',
@@ -303,7 +306,7 @@ export function parseJSONStyle(style) {
                                 ]),
                                 kind: rule.symbolizerKind || 'Fill',
                                 color: entry.color
-                            }
+                            }, isUndefined)
                         ]
                     };
                 });
@@ -322,7 +325,7 @@ export function parseJSONStyle(style) {
                     name: rule.name || '',
                     ...(rule.scaleDenominator && { scaleDenominator: rule.scaleDenominator }),
                     symbolizers: [
-                        {
+                        omitBy({
                             ...omit(rule, [
                                 'ruleId',
                                 'classification',
@@ -336,7 +339,7 @@ export function parseJSONStyle(style) {
                             ]),
                             kind: 'Raster',
                             ...(colorMap && { colorMap })
-                        }
+                        }, isUndefined)
                     ]
                 };
             }
@@ -345,7 +348,9 @@ export function parseJSONStyle(style) {
 
             return {
                 ...rule,
-                filter
+                filter,
+                symbolizers: (rule?.symbolizers || [])
+                    .map((symbolizer) => omitBy(symbolizer, isUndefined))
             };
         }))
     };
