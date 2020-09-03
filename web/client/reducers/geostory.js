@@ -5,7 +5,7 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import { get, isString, isNumber, findIndex, find, isArray, castArray, isPlainObject } from "lodash";
+import { get, isString, isNumber, findIndex, find, isObject, isArray, castArray } from "lodash";
 import { set, unset, arrayUpdate, compose,
     arrayDelete } from '../utils/ImmutableUtils';
 import { getEffectivePath, MediaTypes } from '../utils/GeoStoryUtils';
@@ -293,14 +293,8 @@ export default (state = INITIAL_STATE, action) => {
         let { element: newElement } = action;
         const path = getEffectivePath(`currentStory.${rawPath}`, state);
         const oldElement = get(state, path);
-
-        // NOTE: isObject vs isPlainObject are different
-        if (isPlainObject(oldElement) && isPlainObject(newElement) && mode === "merge") {
+        if (isObject(oldElement) && isObject(newElement) && mode === "merge") {
             newElement = { ...oldElement, ...newElement };
-        }
-
-        if (isArray(oldElement) && isArray(newElement) && mode === "merge") {
-            newElement = [ ...oldElement, ...newElement ];
         }
         return set(path, newElement, state);
     }
