@@ -39,7 +39,7 @@ import {
 } from '../actions/geostory';
 
 import Builder from '../components/geostory/builder/Builder';
-import { Modes, scrollToContent } from '../utils/GeoStoryUtils';
+import { Modes, scrollToContent, extractFontNames } from '../utils/GeoStoryUtils';
 import { basicError } from '../utils/NotificationUtils';
 import { createPlugin } from '../utils/PluginsUtils';
 import tooltip from '../components/misc/enhancers/tooltip';
@@ -122,7 +122,7 @@ const GeoStoryEditor = ({
             settings={settings}
             settingsItems={settingsItems}
             story={story}
-            storyFonts={storyFonts}
+            storyFonts={extractFontNames(storyFonts)}
             setEditing={setEditingMode}
             onRemove={onRemove}
             onSelect={onSelect}

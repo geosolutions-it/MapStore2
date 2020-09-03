@@ -12,7 +12,7 @@ import { createStructuredSelector } from 'reselect';
 import WebFont from 'webfontloader';
 
 import {createPlugin} from '../utils/PluginsUtils';
-import { Modes, createWebFontLoaderConfig } from '../utils/GeoStoryUtils';
+import { Modes, createWebFontLoaderConfig, extractFontNames } from '../utils/GeoStoryUtils';
 import { getMessageById } from '../utils/LocaleUtils';
 import { basicError } from '../utils/NotificationUtils';
 import { add, update, updateCurrentPage, remove, editWebPage } from '../actions/geostory';
@@ -38,6 +38,7 @@ const GeoStory = ({
     onAdd,
     messages,
     fontFamilies = [],
+    storyFonts = [],
     onUpdate = () => {},
     onBasicError = () => {},
     ...props
@@ -46,14 +47,18 @@ const GeoStory = ({
     const addFunc = (path, position, element) => onAdd(path, position, element, localize);
 
     useEffect(() => {
-        if (fontFamilies.length > 0) {
+        onUpdate("settings.fontFamilies", fontFamilies, "merge");
+    }, [ fontFamilies ]);
+
+    useEffect(() => {
+        if (storyFonts.length > 0) {
             WebFont.load(createWebFontLoaderConfig(
-                fontFamilies,
-                () => onUpdate("settings.fontFamilies", fontFamilies, "merge"),
+                storyFonts,
+                () => {},
                 () => onBasicError({message: 'geostory.builder.settings.webFontLoadError'})
             ));
         }
-    }, []);
+    }, [ storyFonts ]);
 
     return (<BorderLayout
         className="ms-geostory"
@@ -61,6 +66,7 @@ const GeoStory = ({
         <Story
             {...story}
             {...props} // add actions
+            storyFonts={extractFontNames(storyFonts)}
             add={addFunc}
             update={onUpdate}
             mode={mode}

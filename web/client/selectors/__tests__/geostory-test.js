@@ -133,6 +133,10 @@ describe('geostory selectors', () => { // TODO: check default
     });
     it('currentStoryFonts ', () => {
         expect(currentStoryFonts({})).toEqual([]);
-        expect(currentStoryFonts({ geostory: { currentStory: {settings: { fontFamilies: ["test family"]}}}})).toEqual(["test family"]);
+        const fontFamilies = [{
+            family: "test",
+            src: "test"
+        }];
+        expect(currentStoryFonts({ geostory: { currentStory: {settings: { fontFamilies }}}})).toEqual(fontFamilies);
     });
 });
