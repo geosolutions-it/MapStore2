@@ -32,7 +32,8 @@ import {
     visibleItemsSelector,
     isMediaResourceUsed,
     geostoryIdSelector,
-    updateUrlOnScrollSelector
+    updateUrlOnScrollSelector,
+    currentStoryFonts
 } from "../geostory";
 import TEST_STORY from "../../test-resources/geostory/sampleStory_1.json";
 
@@ -129,5 +130,9 @@ describe('geostory selectors', () => { // TODO: check default
     it('geostoryIdSelector ', () => {
         expect(updateUrlOnScrollSelector({ geostory: { updateUrlOnScroll: false} })).toBe(false);
         expect(updateUrlOnScrollSelector({ geostory: { updateUrlOnScroll: true} })).toBe(true);
+    });
+    it('currentStoryFonts ', () => {
+        expect(currentStoryFonts({})).toEqual([]);
+        expect(currentStoryFonts({ geostory: { currentStory: {settings: { fontFamilies: ["test family"]}}}})).toEqual(["test family"]);
     });
 });

@@ -6,10 +6,9 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
-import WebFont from 'webfontloader';
 
 import {
     currentStorySelector,
@@ -23,7 +22,8 @@ import {
     isFocusOnContentSelector,
     settingsSelector,
     settingsChangedSelector,
-    isEditAllowedSelector
+    isEditAllowedSelector,
+    currentStoryFonts
 } from '../selectors/geostory';
 import geostory from '../reducers/geostory';
 import {
@@ -39,7 +39,7 @@ import {
 } from '../actions/geostory';
 
 import Builder from '../components/geostory/builder/Builder';
-import { Modes, scrollToContent, createWebFontLoaderConfig, extractFontNamesFromConfig } from '../utils/GeoStoryUtils';
+import { Modes, scrollToContent } from '../utils/GeoStoryUtils';
 import { basicError } from '../utils/NotificationUtils';
 import { createPlugin } from '../utils/PluginsUtils';
 import tooltip from '../components/misc/enhancers/tooltip';
@@ -93,7 +93,7 @@ const GeoStoryEditor = ({
     settings = {},
     settingsItems,
     selected,
-    fontFamilies = [],
+    storyFonts = [],
     setEditingMode = () => {},
     onToggleCardPreview = () => {},
     onToggleSettingsPanel = () => {},
@@ -102,26 +102,8 @@ const GeoStoryEditor = ({
     onSelect = () => {},
     onRemove = () => {},
     onUpdate = () => {},
-    onSort = () => {},
-    onBasicError = () => {}
+    onSort = () => {}
 }) => {
-    const [storyFonts, setStoryFonts] = useState([]);
-    useEffect(() => {
-        if (fontFamilies.length > 0) {
-            WebFont.load(createWebFontLoaderConfig(
-                fontFamilies,
-                () => setStoryFonts(extractFontNamesFromConfig(fontFamilies)),
-                () => onBasicError(
-                    {
-                        message: 'geostory.builder.settings.webFontLoadError',
-                        autoDismiss: 6,
-                        position: 'tc'
-                    }
-                )
-            ));
-        }
-    }, [ fontFamilies ]);
-
     return mode === Modes.EDIT && !isFocused ? <div
         key="left-column"
         className="ms-geostory-editor"
@@ -172,7 +154,8 @@ export default createPlugin('GeoStoryEditor', {
             isToolbarEnabled: isToolbarEnabledSelector,
             selected: selectedCardSelector,
             isSettingsEnabled: isSettingsEnabledSelector,
-            isFocused: isFocusOnContentSelector
+            isFocused: isFocusOnContentSelector,
+            storyFonts: currentStoryFonts
         }), {
             setEditingMode: setEditing,
             onUpdateSettings: updateSetting,

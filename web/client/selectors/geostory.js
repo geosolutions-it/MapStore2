@@ -7,7 +7,7 @@
  */
 import {get, find, findIndex, isEqual, uniq} from 'lodash';
 import { Controls, getEffectivePath } from '../utils/GeoStoryUtils';
-import { SectionTypes, findSectionIdFromColumnId } from './../utils/GeoStoryUtils';
+import { SectionTypes, findSectionIdFromColumnId, extractFontNames } from './../utils/GeoStoryUtils';
 import { isAdminUserSelector } from './security';
 import {pathnameSelector} from "./router";
 /**
@@ -287,3 +287,11 @@ export const hasPendingChanges = (state = {}) => state?.geostory?.pendingChanges
  * @param {object} state application state
  */
 export const updateUrlOnScrollSelector = state => get(state, 'geostory.updateUrlOnScroll', false);
+
+/**
+ * Gets the currentStoryFonts that were loaded from config
+ * @param {object} state application state
+ */
+export const currentStoryFonts = state => {
+    return extractFontNames(get(state, "geostory.currentStory.settings.fontFamilies", []));
+};

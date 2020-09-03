@@ -512,19 +512,21 @@ export const createWebFontLoaderConfig = (fontFamilies, activeCallback, inactive
         }
     };
 
-    fontFamilies.forEach((family, i) => {
-        config.custom.families[i] = family.family;
-        config.custom.urls[i] = family.src;
-    });
+    // first filter out those without a src property
+    fontFamilies.filter((family) => !!family.src)
+        .forEach((family, i) => {
+            config.custom.families[i] = family.family;
+            config.custom.urls[i] = family.src;
+        });
 
     return config;
 };
 
 /**
- * Creates an array with just font family names from localConfig
- * @param {array} fontFamilies - font families configured from localConfig
+ * Creates an array with just font family names from an object
+ * @param {array} fontFamilies - an array of font families i.e [{"name": "fontName", "src": "fontSrc"}]
  * @return {array} - array of font family names
  */
-export const extractFontNamesFromConfig = (fontFamilies) => {
+export const extractFontNames = (fontFamilies) => {
     return fontFamilies.map(family => family.family);
 };
