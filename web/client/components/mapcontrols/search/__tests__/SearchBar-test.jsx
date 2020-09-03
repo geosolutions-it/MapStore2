@@ -5,7 +5,10 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
+import {MenuItem} from "react-bootstrap";
+
 const expect = require('expect');
+const Provider = require("react-redux").Provider;
 
 const ConfigUtils = require('../../../../utils/ConfigUtils');
 const React = require('react');
@@ -15,7 +18,7 @@ const SearchBar = require('../SearchBar').default;
 const TestUtils = require('react-dom/test-utils');
 
 describe("test the SearchBar", () => {
-    const items = [{bookmarkConfig: () =>({glyph: "cog", visible: true}), menuItem: () => ({active: true, glyph: "bookmark", text: "Search by bookmark"})}];
+    const items = [{bookmarkConfig: () =>({glyph: "cog", visible: true}), menuItem: () => <MenuItem>Search by bookmark</MenuItem>}];
 
     beforeEach((done) => {
         document.body.innerHTML = '<div id="container"></div>';
@@ -191,7 +194,8 @@ describe("test the SearchBar", () => {
         expect(search.length).toBe(1);
     });
     it('test zoomToPoint, with search, with decimal, with reset', () => {
-        ReactDOM.render(<SearchBar format="decimal" coordinate={{"lat": 2, "lon": 2}} activeSearchTool="coordinatesSearch" showOptions searchText={"va"} delay={0} typeAhead={false} />, document.getElementById("container"));
+        const store = {dispatch: () => {}, subscribe: () => {}, getState: () => ({search: {coordinate: {lat: 2, lon: 2}}})};
+        ReactDOM.render(<Provider store={store}><SearchBar format="decimal" coordinate={{"lat": 2, "lon": 2}} activeSearchTool="coordinatesSearch" showOptions searchText={"va"} delay={0} typeAhead={false} /></Provider>, document.getElementById("container"));
         let reset = document.getElementsByClassName("glyphicon-1-close");
         let search = document.getElementsByClassName("glyphicon-search");
         let cog = document.getElementsByClassName("glyphicon-cog");
@@ -201,7 +205,8 @@ describe("test the SearchBar", () => {
     });
 
     it('test zoomToPoint, with search, with aeronautical, with reset', () => {
-        ReactDOM.render(<SearchBar format="aeronautical" activeSearchTool="coordinatesSearch" showOptions searchText={"va"} delay={0} typeAhead={false} />, document.getElementById("container"));
+        const store = {dispatch: () => {}, subscribe: () => {}, getState: () => ({search: {coordinate: {lat: 2, lon: 2}}})};
+        ReactDOM.render(<Provider store={store}><SearchBar format="aeronautical" activeSearchTool="coordinatesSearch" showOptions searchText={"va"} delay={0} typeAhead={false} /></Provider>, document.getElementById("container"));
         let reset = document.getElementsByClassName("glyphicon-1-close");
         let search = document.getElementsByClassName("glyphicon-search");
         let cog = document.getElementsByClassName("glyphicon-cog");
@@ -213,19 +218,27 @@ describe("test the SearchBar", () => {
     });
 
     it('test calling zoomToPoint with onKeyDown event', (done) => {
+        const store = {
+            dispatch: () => {},
+            subscribe: () => {},
+            getState: () => ({search: {coordinate: {lat: 15, lon: 15}}})
+        };
         ReactDOM.render(
-            <SearchBar
-                format="decimal"
-                activeSearchTool="coordinatesSearch"
-                showOptions
-                onZoomToPoint={(point, zoom, crs) => {
-                    expect(point).toEqual({x: 15, y: 15});
-                    expect(zoom).toEqual(12);
-                    expect(crs).toEqual("EPSG:4326");
-                    done();
-                }}
-                coordinate={{lat: 15, lon: 15}}
-                typeAhead={false} />, document.getElementById("container")
+            <Provider store={store}>
+                <SearchBar
+                    format="decimal"
+                    activeSearchTool="coordinatesSearch"
+                    showOptions
+                    onZoomToPoint={(point, zoom, crs) => {
+                        expect(point).toEqual({x: 15, y: 15});
+                        expect(zoom).toEqual(12);
+                        expect(crs).toEqual("EPSG:4326");
+                        done();
+                    }}
+                    coordinate={{lat: 15, lon: 15}}
+                    typeAhead={false} />
+            </Provider>
+            , document.getElementById("container")
         );
         const container = document.getElementById('container');
         const elements = container.querySelectorAll('input');
@@ -238,16 +251,23 @@ describe("test the SearchBar", () => {
         });
     });
     it('Test SearchBar with not allowed e char for keyDown event', (done) => {
+        const store = {
+            dispatch: () => {},
+            subscribe: () => {},
+            getState: () => ({search: {coordinate: {lat: 15, lon: 15}}})
+        };
         ReactDOM.render(
-            <SearchBar
-                format="decimal"
-                activeSearchTool="coordinatesSearch"
-                showOptions
-                onZoomToPoint={() => {
-                    expect(true).toBe(false);
-                }}
-                coordinate={{lat: 15, lon: 15}}
-                typeAhead={false} />, document.getElementById("container")
+            <Provider store={store}>
+                <SearchBar
+                    format="decimal"
+                    activeSearchTool="coordinatesSearch"
+                    showOptions
+                    onZoomToPoint={() => {
+                        expect(true).toBe(false);
+                    }}
+                    coordinate={{lat: 15, lon: 15}}
+                    typeAhead={false} />
+            </Provider>, document.getElementById("container")
         );
         const container = document.getElementById('container');
         const elements = container.querySelectorAll('input');
@@ -263,16 +283,23 @@ describe("test the SearchBar", () => {
         });
     });
     it('Test SearchBar with valid onKeyDown event by pressing number 8', () => {
+        const store = {
+            dispatch: () => {},
+            subscribe: () => {},
+            getState: () => ({search: {coordinate: {lat: 1, lon: 1}}})
+        };
         ReactDOM.render(
-            <SearchBar
-                format="decimal"
-                activeSearchTool="coordinatesSearch"
-                showOptions
-                onZoomToPoint={() => {
-                    expect(true).toBe(false);
-                }}
-                coordinate={{lat: 1, lon: 1}}
-                typeAhead={false} />, document.getElementById("container")
+            <Provider store={store}>
+                <SearchBar
+                    format="decimal"
+                    activeSearchTool="coordinatesSearch"
+                    showOptions
+                    onZoomToPoint={() => {
+                        expect(true).toBe(false);
+                    }}
+                    coordinate={{lat: 1, lon: 1}}
+                    typeAhead={false} />
+            </Provider>, document.getElementById("container")
         );
         const container = document.getElementById('container');
         const elements = container.querySelectorAll('input');
@@ -298,17 +325,20 @@ describe("test the SearchBar", () => {
     });
 
     it('test default coordinate format from localConfig', () => {
+        const store = {dispatch: () => {}, subscribe: () => {}, getState: () => ({search: {coordinate: {lat: 2, lon: 2}}})};
         ConfigUtils.setConfigProp("defaultCoordinateFormat", "aeronautical");
         const defaultFormat = ConfigUtils.getConfigProp('defaultCoordinateFormat');
         let format;
         ReactDOM.render(
-            <SearchBar
-                format={format || defaultFormat || "decimal"}
-                activeSearchTool="coordinatesSearch"
-                showOptions
-                searchText={"va"}
-                delay={0}
-                typeAhead={false}/>, document.getElementById("container"));
+            <Provider store={store}>
+                <SearchBar
+                    format={format || defaultFormat || "decimal"}
+                    activeSearchTool="coordinatesSearch"
+                    showOptions
+                    searchText={"va"}
+                    delay={0}
+                    typeAhead={false}/>
+            </Provider>, document.getElementById("container"));
         let inputs = document.getElementsByTagName("input");
         expect(inputs.length).toBe(6);
         expect(inputs[0].placeholder).toBe('d');
@@ -320,7 +350,8 @@ describe("test the SearchBar", () => {
     });
 
     it('test searchByBookmark options under menu', () => {
-        ReactDOM.render(<SearchBar showOptions showBookMarkSearchOption activeSearchTool="bookmarkSearch" items={items}  />, document.getElementById("container"));
+        const store = {dispatch: () => {}, subscribe: () => {}, getState: () => ({searchbookmarkconfig: {selected: {}}})};
+        ReactDOM.render(<Provider store={store}><SearchBar showOptions bookmarkConfig={{selected: {}}} showBookMarkSearchOption activeSearchTool="bookmarkSearch" items={items}  /></Provider>, document.getElementById("container"));
         const container = document.getElementById('container');
         const buttons = container.querySelectorAll('button');
         expect(buttons.length).toBe(3);
@@ -332,7 +363,8 @@ describe("test the SearchBar", () => {
         expect(links[2].innerText).toBe('Search by bookmark');
     });
     it('test searchByBookmark, search button disabled', () => {
-        ReactDOM.render(<SearchBar showOptions showBookMarkSearchOption activeSearchTool="bookmarkSearch" items={items} bookmarkConfig={{}}  />, document.getElementById("container"));
+        const store = {dispatch: () => {}, subscribe: () => {}, getState: () => ({searchbookmarkconfig: {selected: {}}})};
+        ReactDOM.render(<Provider store={store}><SearchBar showOptions showBookMarkSearchOption activeSearchTool="bookmarkSearch" items={items} bookmarkConfig={{}}  /></Provider>, document.getElementById("container"));
         const container = document.getElementById('container');
         const buttons = container.querySelectorAll('button');
         const cog = document.getElementsByClassName("glyphicon-cog");
@@ -345,17 +377,19 @@ describe("test the SearchBar", () => {
         expect(cog).toExist();
     });
     it('test reset active search tool when no bookmark config', () => {
+        const store = {dispatch: () => {}, subscribe: () => {}, getState: () => ({searchbookmarkconfig: {selected: {}}})};
         const actions = {
             onChangeActiveSearchTool: () =>{}
         };
         const spyOnChangeActiveSearchTool = expect.spyOn(actions, 'onChangeActiveSearchTool');
-        ReactDOM.render(<SearchBar showOptions showBookMarkSearchOption onChangeActiveSearchTool={actions.onChangeActiveSearchTool} activeSearchTool="bookmarkSearch" />, document.getElementById("container"));
+        ReactDOM.render(<Provider store={store}><SearchBar bookmarkConfig={{selected: {}}} showOptions showBookMarkSearchOption onChangeActiveSearchTool={actions.onChangeActiveSearchTool} items={items} activeSearchTool="bookmarkSearch" /></Provider>, document.getElementById("container"));
         expect(spyOnChangeActiveSearchTool).toHaveBeenCalled();
         expect(spyOnChangeActiveSearchTool.calls[0].arguments[0]).toBe("addressSearch");
     });
     it('test searchByBookmark, with bookmark selected', () => {
+        const store = {dispatch: () => {}, subscribe: () => {}, getState: () => ({searchbookmarkconfig: {selected: {}}})};
         const bookmarkConfig = {selected: {title: "Bookmark1"}, bookmarkSearchConfig: {bookmarks: [{title: "Bookmark 1"}, {title: "Bookmark 2"}]}};
-        ReactDOM.render(<SearchBar showOptions showBookMarkSearchOption activeSearchTool="bookmarkSearch" items={items} bookmarkConfig={bookmarkConfig}  />, document.getElementById("container"));
+        ReactDOM.render(<Provider store={store}><SearchBar showOptions showBookMarkSearchOption activeSearchTool="bookmarkSearch" items={items} bookmarkConfig={bookmarkConfig}  /></Provider>, document.getElementById("container"));
         const cmp = document.getElementById('container');
         expect(cmp).toExist();
         const bookmarkSelect = cmp.querySelector('.search-select');
@@ -364,22 +398,24 @@ describe("test the SearchBar", () => {
         expect(buttons[1].disabled).toBeFalsy();
     });
     it('test searchByBookmark, open view bookmarks onToggleControl', () => {
-        const bookmarkConfig = {selected: {title: "Bookmark1"}, bookmarkSearchConfig: {bookmarks: [{title: "Bookmark 1"}, {title: "Bookmark 2"}]}};
+        const store = {dispatch: () => {}, subscribe: () => {}, getState: () => ({searchbookmarkconfig: {selected: {}}})};
+        const bookmarkConfig = {selected: {title: "Bookmark1"}, bookmarkSearchConfig: {bookmarks: [{title: "Bookmark 1"}, {title: "Bookmark 2"}]}, allowUser: true};
         const actions = {
             onToggleControl: () =>{}
         };
-        const itemsProps = [{bookmarkConfig: (toggleConfig) =>({onClick: () => toggleConfig("searchBookmarkConfig"), glyph: "cog", visible: true}), menuItem: () => ({active: true, glyph: "bookmark", text: "Search by bookmark"})}];
+        const itemsProps = [{bookmarkConfig: (toggleConfig) =>({onClick: () => toggleConfig("searchBookmarkConfig"), glyph: "cog", visible: true}), menuItem: () => <MenuItem>Search by bookmark</MenuItem>}];
         const spyOnToggleControl = expect.spyOn(actions, 'onToggleControl');
         const props = {
             showOptions: true,
             showBookMarkSearchOption: true,
             enabledSearchBookmarkConfig: false,
+            allowBookmarkEdit: true,
             activeSearchTool: "bookmarkSearch",
             onToggleControl: actions.onToggleControl,
             items: itemsProps,
             bookmarkConfig
         };
-        ReactDOM.render(<SearchBar {...props}/>, document.getElementById("container"));
+        ReactDOM.render(<Provider store={store}><SearchBar {...props}/></Provider>, document.getElementById("container"));
         const cmp = document.getElementById('container');
         expect(cmp).toExist();
         const bookmarkSelect = cmp.querySelector('.search-select');
@@ -390,11 +426,12 @@ describe("test the SearchBar", () => {
         expect(spyOnToggleControl.calls[0].arguments[0]).toBe("searchBookmarkConfig");
     });
     it('test searchByBookmark, load a bookmark with onLayerVisibilityLoad', () => {
+        const store = {dispatch: () => {}, subscribe: () => {}, getState: () => ({searchbookmarkconfig: {selected: {}}})};
         const bookmarkConfig = {selected: {title: "Bookmark1", layerVisibilityReload: true, options: {west: 5, south: 10, east: 20, north: 30}}, bookmarkSearchConfig: {bookmarks: [{title: "Bookmark 1"}, {title: "Bookmark 2"}]}};
         const actions = {
             onLayerVisibilityLoad: () =>{}
         };
-        const itemsProps = [{bookmarkConfig: () =>({glyph: "cog", visible: true}), menuItem: () => ({active: true, glyph: "bookmark", text: "Search by bookmark"})}];
+        const itemsProps = [{bookmarkConfig: () =>({glyph: "cog", visible: true}), menuItem: () => <MenuItem>Search by bookmark</MenuItem>}];
         const spyOnLayerVisibilityLoad = expect.spyOn(actions, 'onLayerVisibilityLoad');
         const props = {
             showOptions: true,
@@ -406,7 +443,7 @@ describe("test the SearchBar", () => {
             bookmarkConfig,
             mapInitial: {map: {layers: "Tests"}}
         };
-        ReactDOM.render(<SearchBar {...props}/>, document.getElementById("container"));
+        ReactDOM.render(<Provider store={store}><SearchBar {...props}/></Provider>, document.getElementById("container"));
         const cmp = document.getElementById('container');
         expect(cmp).toExist();
         const bookmarkSelect = cmp.querySelector('.search-select');
@@ -420,11 +457,12 @@ describe("test the SearchBar", () => {
         expect(spyOnLayerVisibilityLoad.calls[0].arguments[2]).toEqual([5, 10, 20, 30]);
     });
     it('test searchByBookmark, load a bookmark with zoomToExtent', () => {
+        const store = {dispatch: () => {}, subscribe: () => {}, getState: () => ({searchbookmarkconfig: {selected: {}}})};
         const bookmarkConfig = {selected: {title: "Bookmark1", layerVisibilityReload: false, options: {west: 5, south: 10, east: 20, north: 30}}};
         const actions = {
             onZoomToExtent: () => {}
         };
-        const itemsProps = [{bookmarkConfig: () =>({glyph: "cog", visible: true}), menuItem: () => ({active: true, glyph: "bookmark", text: "Search by bookmark"})}];
+        const itemsProps = [{bookmarkConfig: () =>({glyph: "cog", visible: true}), menuItem: () => <MenuItem>Search by bookmark</MenuItem>}];
         const spyOnZoomToExtent = expect.spyOn(actions, 'onZoomToExtent');
         const props = {
             showOptions: true,
@@ -436,7 +474,7 @@ describe("test the SearchBar", () => {
             bookmarkConfig,
             mapInitial: {map: {layers: "Tests"}}
         };
-        ReactDOM.render(<SearchBar {...props}/>, document.getElementById("container"));
+        ReactDOM.render(<Provider store={store}><SearchBar {...props}/></Provider>, document.getElementById("container"));
         const cmp = document.getElementById('container');
         expect(cmp).toExist();
         const bookmarkSelect = cmp.querySelector('.search-select');

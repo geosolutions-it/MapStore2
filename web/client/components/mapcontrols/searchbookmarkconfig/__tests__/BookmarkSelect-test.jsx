@@ -11,6 +11,7 @@ import expect from 'expect';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import TestUtils from 'react-dom/test-utils';
+import {Provider} from "react-redux";
 import BookmarkSelect from '../BookmarkSelect';
 
 describe("BookmarkList component", () => {
@@ -26,8 +27,8 @@ describe("BookmarkList component", () => {
     });
 
     it('test BookmarkSelect default', () => {
-
-        ReactDOM.render(<BookmarkSelect onPropertyChange={null} bookmarkConfig={null}/>, document.getElementById("container"));
+        const store = {dispatch: () => {}, subscribe: () => {}, getState: () => ({searchbookmarkconfig: {selected: {}}})};
+        ReactDOM.render(<Provider store={store}><BookmarkSelect onPropertyChange={null} bookmarkConfig={null}/></Provider>, document.getElementById("container"));
         const container = document.getElementById('container');
         expect(container).toExist();
         const select = container.querySelector(".search-select");
@@ -38,49 +39,41 @@ describe("BookmarkList component", () => {
         expect(placeholder.innerText).toBe("search.b_placeholder");
 
     });
-    it('test BookmarkSelect, onPropertyChange and zoomOnSelect', (done) => {
-
-        let bookmarkConfig = {
+    it('test BookmarkSelect, onPropertyChange and zoomOnSelect', () => {
+        const store = {dispatch: () => {}, subscribe: () => {}, getState: () => ({searchbookmarkconfig: {
             selected: {title: "Bookmark 1"},
+            zoomOnSelect: true,
             bookmarkSearchConfig: {
-                bookmarks: [{title: "Bookmark 1"}, {title: "Bookmark 2"}]
-            },
-            zoomOnSelect: true
-        };
+                bookmarks: [{title: "Bookmark 1", options: {west: 1, east: 1, north: 1, south: 1}}, {title: "Bookmark 2"}]
+            }}})};
 
-        TestUtils.act(() => {
-            ReactDOM.render(
-                <BookmarkSelect
-                    bookmarkConfig={bookmarkConfig}
-                    onPropertyChange={
-                        (s, value) => {
-                            try {
-                                expect(value.title).toBe('Bookmark 2');
-                            } catch (e) {
-                                done(e);
-                            }
-                            done();
-                        }}
-                    searchByBookmark={
-                        (value) => {
-                            try {
-                                expect(value.title).toBe('Bookmark 2');
-                            } catch (e) {
-                                done(e);
-                            }
-                            done();
-                        }}
-                />,
-                document.getElementById("container"));
-        });
+        const spyOnchange = expect.spyOn(store, "dispatch");
+
+        ReactDOM.render(
+            <Provider store={store}>
+                <BookmarkSelect/>,
+            </Provider>,
+            document.getElementById("container"));
+
         const cmp = document.getElementById('container');
         expect(cmp).toBeTruthy();
 
         const input = cmp.querySelector('input');
         expect(input).toBeTruthy();
 
+        TestUtils.Simulate.change(input, { target: { value: 'Bookmark 1' } });
+        TestUtils.Simulate.keyDown(input, {keyCode: 9, key: 'Tab' });
+
         let selectValue = cmp.querySelector('.Select-value-label');
         expect(selectValue.innerText).toBe("Bookmark 1");
+        expect(spyOnchange).toHaveBeenCalled();
+        expect(spyOnchange.calls[0].arguments[0].type).toBe("SET_SEARCH_BOOKMARK_CONFIG");
+        expect(spyOnchange.calls[0].arguments[0].value).toBeTruthy();
+        expect(spyOnchange.calls[0].arguments[0].value.title).toBe("Bookmark 1");
+
+        expect(spyOnchange.calls[1].arguments[0].type).toBe("ZOOM_TO_EXTENT");
+        expect(spyOnchange.calls[1].arguments[0].extent).toEqual([1, 1, 1, 1]);
+        expect(spyOnchange.calls[1].arguments[0].crs).toBe("EPSG:4326");
 
         TestUtils.act(() => {
             TestUtils.Simulate.focus(input);
@@ -88,11 +81,14 @@ describe("BookmarkList component", () => {
         });
         const selectMenuOptionNodes = cmp.querySelectorAll('.Select-option');
         expect(selectMenuOptionNodes.length).toBe(2);
-        TestUtils.act(() => {
-            TestUtils.Simulate.mouseDown(selectMenuOptionNodes[1]);
-        });
-        selectValue = cmp.querySelector('.Select-value-label');
-        expect(selectValue.innerText).toBe("Bookmark 2");
+
+        TestUtils.Simulate.change(input, { target: { value: 'Bookmark 2' } });
+        TestUtils.Simulate.keyDown(input, {keyCode: 9, key: 'Tab' });
+
+        expect(spyOnchange).toHaveBeenCalled();
+        expect(spyOnchange.calls[2].arguments[0].type).toBe("SET_SEARCH_BOOKMARK_CONFIG");
+        expect(spyOnchange.calls[2].arguments[0].value).toBeTruthy();
+        expect(spyOnchange.calls[2].arguments[0].value.title).toBe("Bookmark 2");
 
     });
 });
