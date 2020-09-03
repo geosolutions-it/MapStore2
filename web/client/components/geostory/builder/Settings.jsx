@@ -8,6 +8,8 @@
 
 import React, { useState } from 'react';
 import {Form, FormControl, FormGroup, ControlLabel, Alert} from 'react-bootstrap';
+import { uniq } from 'lodash';
+
 import Message from '../../I18N/Message';
 import SwitchButton from '../../misc/switch/SwitchButton';
 import Thumbnail from '../../misc/Thumbnail';
@@ -77,7 +79,7 @@ export default ({
                     <Select
                         value={settings?.theme?.general?.fontFamily}
                         onChange={event => onUpdateSettings("theme", {...settings?.theme, general: { ...settings?.theme?.general, fontFamily: event.value } })}
-                        options={getSelectOptions([...defaultStoryFontFamilies, ...storyFonts])}
+                        options={getSelectOptions(uniq([...defaultStoryFontFamilies, ...storyFonts]))}
                     />
                 </div>
             </div>

@@ -12,6 +12,7 @@ import draftToHtml from 'draftjs-to-html';
 import htmlToDraft from 'html-to-draftjs';
 import { Editor } from 'react-draft-wysiwyg';
 import { branch, compose, renderComponent, withHandlers, withProps, withState, lifecycle } from "recompose";
+import { uniq } from 'lodash';
 
 import { EMPTY_CONTENT, SectionTypes } from "../../../../utils/GeoStoryUtils";
 
@@ -76,7 +77,7 @@ export default compose(
                     // [here](https://jpuri.github.io/react-draft-wysiwyg/#/docs) you can find some examples (hard to find them in the official draft-js doc)
                     options: ['fontFamily', 'blockType', 'fontSize', 'inline', 'textAlign', 'colorPicker', 'list', 'link', 'remove'],
                     fontFamily: {
-                        options: ['inherit', 'Arial', 'Georgia', 'Impact', 'Tahoma', 'Times New Roman', 'Verdana', ...storyFonts],
+                        options: uniq(['inherit', 'Arial', 'Georgia', 'Impact', 'Tahoma', 'Times New Roman', 'Verdana', ...storyFonts]),
                         className: undefined,
                         component: undefined,
                         dropdownClassName: undefined
