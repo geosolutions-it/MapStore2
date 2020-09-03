@@ -118,7 +118,7 @@ The [MapStore printing engine](https://github.com/geosolutions-it/mapfish-print/
 To build your own version of MapStore with the printing module included, you can enable the
 **printing** profile:
 
-`./build.sh [version_identifier] -Pprinting`
+`./build.sh [version_identifier] printing`
 
 It is also possible to build only the printing extension as a zip (to be unzipped on your deployed MapStore). To do that:
 
