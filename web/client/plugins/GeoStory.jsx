@@ -15,7 +15,7 @@ import {createPlugin} from '../utils/PluginsUtils';
 import { Modes, createWebFontLoaderConfig, extractFontNames } from '../utils/GeoStoryUtils';
 import { getMessageById } from '../utils/LocaleUtils';
 import { basicError } from '../utils/NotificationUtils';
-import { add, update, updateCurrentPage, remove, editWebPage } from '../actions/geostory';
+import { add, update, updateSetting, updateCurrentPage, remove, editWebPage } from '../actions/geostory';
 import { editMedia } from '../actions/mediaEditor';
 import * as epics from '../epics/geostory';
 import {
@@ -39,7 +39,7 @@ const GeoStory = ({
     messages,
     fontFamilies = [],
     storyFonts = [],
-    onUpdate = () => {},
+    onUpdateSetting = () => {},
     onBasicError = () => {},
     ...props
 }) => {
@@ -47,28 +47,30 @@ const GeoStory = ({
     const addFunc = (path, position, element) => onAdd(path, position, element, localize);
 
     useEffect(() => {
-        onUpdate("settings.fontFamilies", fontFamilies, "merge");
+        onUpdateSetting("fontFamilies", fontFamilies);
     }, [ fontFamilies ]);
 
     useEffect(() => {
         if (storyFonts.length > 0) {
-            WebFont.load(createWebFontLoaderConfig(
-                storyFonts,
-                () => {},
-                () => onBasicError({message: 'geostory.builder.settings.webFontLoadError'})
-            ));
+            const storyFontsSrc = storyFonts.filter(({ src }) => src && !document?.head.querySelector(`link[href='${src}']`));
+            if (storyFontsSrc.length > 0) {
+                WebFont.load(createWebFontLoaderConfig(
+                    storyFonts,
+                    () => {},
+                    () => onBasicError({message: 'geostory.builder.settings.webFontLoadError'})
+                ));
+            }
         }
     }, [ storyFonts ]);
 
     return (<BorderLayout
         className="ms-geostory"
-        columns={[<MapEditor {...props} add={addFunc} update={onUpdate} mode={mode} />]}>
+        columns={[<MapEditor {...props} add={addFunc} mode={mode} />]}>
         <Story
             {...story}
             {...props} // add actions
             storyFonts={extractFontNames(storyFonts)}
             add={addFunc}
-            update={onUpdate}
             mode={mode}
             mediaViewer={MediaViewer}
             contentToolbar={MediaContentToolbar}
@@ -99,8 +101,9 @@ export default createPlugin("GeoStory", {
             storyFonts: currentStoryFonts
         }), {
             onAdd: add,
-            onUpdate: update,
+            update,
             updateCurrentPage,
+            onUpdateSetting: updateSetting,
             remove,
             editMedia,
             editWebPage,
