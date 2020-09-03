@@ -7,7 +7,7 @@
  */
 import {get, find, findIndex, isEqual, uniq} from 'lodash';
 import { Controls, getEffectivePath } from '../utils/GeoStoryUtils';
-import { SectionTypes, findSectionIdFromColumnId, extractFontNames } from './../utils/GeoStoryUtils';
+import { SectionTypes, findSectionIdFromColumnId } from './../utils/GeoStoryUtils';
 import { isAdminUserSelector } from './security';
 import {pathnameSelector} from "./router";
 /**
