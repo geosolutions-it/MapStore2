@@ -346,6 +346,7 @@
         },
         "resources": {
             "successSaved": "Cette ressource a été enregistrée correctement",
+            "savingError": "Une erreur s'est produite lors de l'enregistrement de la ressource",
             "deleteConfirmTitle": "Êtes-vous sûr",
             "deleteConfirmMessage": "Êtes-vous sûr de vouloir supprimer cette ressource ?",
             "deleteConfirmButtonText": "Supprimer",

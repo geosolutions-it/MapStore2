@@ -346,6 +346,7 @@
         },
         "resources": {
             "successSaved": "Este recurso se ha guardado correctamente",
+            "savingError": "Hubo un error al guardar el recurso",
             "deleteConfirmTitle": "¿Estás seguro?",
             "deleteConfirmMessage": "¿Estás seguro de que quieres eliminar este recurso?",
             "deleteConfirmButtonText": "Eliminar",
