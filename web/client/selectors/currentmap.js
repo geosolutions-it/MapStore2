@@ -24,6 +24,7 @@ const currentMapDetailsTextSelector = (state) => get(state, "currentMap.detailsT
 const currentMapThumbnailUriSelector = (state) => get(state, "currentMap.thumbnail", "");
 const currentMapDetailsChangedSelector = (state) => get(state, "currentMap.detailsChanged", false);
 const currentMapOriginalDetailsTextSelector = (state) => get(state, "currentMap.originalDetails", false);
+
 module.exports = {
     currentMapSelector,
     currentMapIdSelector,

@@ -6,52 +6,12 @@
 * This source code is licensed under the BSD-style license found in the
 * LICENSE file in the root directory of this source tree.
 */
-const Rx = require('rxjs');
-const { compose, branch, withState, withHandlers, defaultProps, mapPropsStream, createEventHandler } = require('recompose');
+const { compose, branch, withState, withHandlers, defaultProps } = require('recompose');
 
-const handleSaveModal = require('../modals/enhancers/handleSaveModal');
+const handleSave = require('../modals/enhancers/handleSave').default;
+const handleSaveModal = require('../modals/enhancers/handleSaveModal').default;
 const handleResourceDownload = require('../modals/enhancers/handleResourceDownload');
-const { updateResource } = require('../../../api/persistence');
 
-const handleSave = mapPropsStream(props$ => {
-    const { handler: onSave, stream: saveEventStream$ } = createEventHandler();
-    const saveStream$ =
-        saveEventStream$
-            .withLatestFrom(props$)
-            .switchMap(([resource, props]) =>
-                updateResource(resource)
-                    .do(() => {
-                        if (props) {
-                            if (props.onClose) {
-                                props.onClose();
-                            }
-                            if (props.onSaveSuccess) {
-                                props.onSaveSuccess(resource);
-                            }
-                            if (props.onShowSuccessNotification) {
-                                props.onShowSuccessNotification();
-                            }
-                        }
-                    })
-                    .concat(Rx.Observable.of({ loading: false }))
-                    .startWith({ loading: true })
-                    .catch(e => {
-                        props.setErrors([...(props.errors || []), e]);
-                        return Rx.Observable.of({
-                            loading: false
-                        });
-                    })
-            );
-    return props$.combineLatest(
-        saveStream$.startWith({}),
-        (props, saveProps) => ({
-            ...props,
-            ...saveProps,
-            errors: props.errors,
-            onSave
-        })
-    );
-});
 /*
  * EditDialog
  * Automatically downloads missing data and manage resource changes. Manages save, triggering onSaveSuccess

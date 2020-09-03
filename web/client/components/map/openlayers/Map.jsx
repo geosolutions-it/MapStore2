@@ -77,6 +77,11 @@ class OpenlayersMap extends React.Component {
         onResolutionsChange: () => { },
         onCreationError: () => { },
         onClick: null,
+        center: {
+            x: 0,
+            y: 0,
+            crs: 'EPSG:4326'
+        },
         onMouseMove: () => { },
         mapOptions: {},
         projection: 'EPSG:3857',

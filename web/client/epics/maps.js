@@ -6,63 +6,58 @@
  * LICENSE file in the root directory of this source tree.
 */
 
-const Rx = require('rxjs');
-const uuidv1 = require('uuid/v1');
-const assign = require('object-assign');
-const {push} = require('connected-react-router');
-const {basicError, basicSuccess} = require('../utils/NotificationUtils');
-const GeoStoreApi = require('../api/GeoStoreDAO');
-const { MAP_INFO_LOADED, MAP_SAVED, mapSaveError, mapSaved, loadMapInfo, configureMap } = require('../actions/config');
-const {get, isNil, isArray, isEqual, find, pick, omit, keys, zip} = require('lodash');
-const {
-    SAVE_DETAILS, SAVE_RESOURCE_DETAILS, MAPS_GET_MAP_RESOURCES_BY_CATEGORY,
+import Rx from 'rxjs';
+import assign from 'object-assign';
+import {push} from 'connected-react-router';
+import {basicError, basicSuccess} from '../utils/NotificationUtils';
+import GeoStoreApi from '../api/GeoStoreDAO';
+import { MAP_INFO_LOADED, MAP_SAVED, mapSaveError, mapSaved, loadMapInfo, configureMap } from '../actions/config';
+import { get, isArray, isEqual, find, pick, omit, keys, zip } from 'lodash';
+import {
+    MAPS_GET_MAP_RESOURCES_BY_CATEGORY,
     DELETE_MAP, OPEN_DETAILS_PANEL, MAPS_LOAD_MAP,
     CLOSE_DETAILS_PANEL, NO_DETAILS_AVAILABLE, SAVE_MAP_RESOURCE, MAP_DELETED,
-    SEARCH_FILTER_CHANGED, SEARCH_FILTER_CLEAR_ALL, LOAD_CONTEXTS,
-    setDetailsChanged, updateDetails, mapsLoading, mapsLoaded,
-    mapDeleting, toggleDetailsEditability, mapDeleted, loadError,
-    doNothing, detailsLoaded, detailsSaving, onDisplayMetadataEdit,
-    RESET_UPDATING, resetUpdating, toggleDetailsSheet, getMapResourcesByCategory,
-    mapUpdating, savingMap, mapCreated, loadMaps, loadContexts, setContexts, setSearchFilter, loading
-} = require('../actions/maps');
-const {
-    resetCurrentMap, EDIT_MAP
-} = require('../actions/currentMap');
-const {closeFeatureGrid} = require('../actions/featuregrid');
-const {toggleControl, setControlProperty} = require('../actions/controls');
-const {setTabsHidden} = require('../actions/contenttabs');
-const {
-    mapPermissionsFromIdSelector, mapThumbnailsUriFromIdSelector,
+    SEARCH_FILTER_CHANGED, SEARCH_FILTER_CLEAR_ALL, LOAD_CONTEXTS, ATTRIBUTE_UPDATED,
+    updateDetails, mapsLoading, mapsLoaded,
+    mapDeleting, mapDeleted, loadError,
+    detailsLoaded, onDisplayMetadataEdit,
+    RESET_UPDATING, getMapResourcesByCategory,
+    mapUpdating, savingMap, mapCreated, loadMaps, loadContexts, setContexts, setSearchFilter, loading,
+    invalidateFeaturedMaps
+} from '../actions/maps';
+import { DASHBOARD_DELETED } from '../actions/dashboards';
+import {
+    resetCurrentMap
+} from '../actions/currentMap';
+import { closeFeatureGrid } from '../actions/featuregrid';
+import { toggleControl, setControlProperty } from '../actions/controls';
+import { setTabsHidden } from '../actions/contenttabs';
+import {
+    mapThumbnailsUriFromIdSelector,
     mapDetailsUriFromIdSelector,
     searchTextSelector,
     searchParamsSelector,
     totalCountSelector,
     contextsSelector,
     searchFilterSelector
-} = require('../selectors/maps');
-const {
+} from '../selectors/maps';
+import {
     mapIdSelector, mapInfoDetailsUriFromIdSelector
-} = require('../selectors/map');
-const {mapTypeSelector} = require('../selectors/maptype');
-const {
-    currentMapDetailsTextSelector, currentMapIdSelector,
-    currentMapDetailsUriSelector, currentMapSelector,
-    currentMapDetailsChangedSelector, currentMapOriginalDetailsTextSelector
-} = require('../selectors/currentmap');
-const {userParamsSelector, userRoleSelector} = require('../selectors/security');
-const {
+} from '../selectors/map';
+import { mapTypeSelector } from '../selectors/maptype';
+import { userRoleSelector } from '../selectors/security';
+import {
     LOGIN_SUCCESS,
     LOGOUT
-} = require('../actions/security');
-const {deleteResourceById, createAssociatedResource, deleteAssociatedResource, updateAssociatedResource} = require('../utils/ObservableUtils');
+} from '../actions/security';
+import { deleteResourceById } from '../utils/ObservableUtils';
 
-const {getIdFromUri} = require('../utils/MapUtils');
+import { getIdFromUri } from '../utils/MapUtils';
 
-const {getErrorMessage} = require('../utils/LocaleUtils');
-const { EMPTY_RESOURCE_VALUE } = require('../utils/MapInfoUtils');
-const {createResource, updateResource, getResource, searchListByAttributes, updateResourceAttribute} = require("../api/persistence");
-const {wrapStartStop} = require('../observables/epics');
-
+import { getErrorMessage } from '../utils/LocaleUtils';
+import { EMPTY_RESOURCE_VALUE } from '../utils/MapInfoUtils';
+import { createResource, updateResource, getResource, searchListByAttributes, updateResourceAttribute } from "../api/persistence";
+import { wrapStartStop } from '../observables/epics';
 
 const calculateNewParams = state => {
     const totalCount = totalCountSelector(state);
@@ -78,127 +73,11 @@ const calculateNewParams = state => {
     };
 };
 
-const manageMapResource = ({map = {}, attribute = "", resource = null, type = "STRING", optionsDel = {}, messages = {}} = {}) => {
-    const attrVal = map[attribute];
-    const mapId = map.id;
-    // create
-    if ((isNil(attrVal) || attrVal === EMPTY_RESOURCE_VALUE) && !isNil(resource)) {
-        return createAssociatedResource({...resource, attribute, mapId, type, messages});
-    }
-    if (isNil(resource)) {
-        // delete
-        return deleteAssociatedResource({
-            mapId,
-            attribute,
-            type,
-            resourceId: getIdFromUri(attrVal),
-            options: optionsDel,
-            messages});
-    }
-    // update
-    return updateAssociatedResource({
-        permissions: resource.permissions,
-        resourceId: getIdFromUri(attrVal),
-        value: resource.value,
-        attribute,
-        options: resource.optionsAttr,
-        messages});
+export const invalidateFeaturedMapsEpic = (action$) => action$
+    .ofType(ATTRIBUTE_UPDATED, MAP_DELETED, MAP_SAVED, DASHBOARD_DELETED)
+    .mapTo(invalidateFeaturedMaps());
 
-};
-
-/**
-    If details are changed from the original ones then set unsavedChanges to true
-*/
-const setDetailsChangedEpic = (action$, store) =>
-    action$.ofType(SAVE_DETAILS)
-        .switchMap((a) => {
-            let actions = [];
-            const state = store.getState();
-            const detailsUri = currentMapDetailsUriSelector(state);
-            if (a.detailsText.length <= 500000) {
-                actions.push(toggleDetailsSheet(true));
-            } else {
-                actions.push(basicError({message: "maps.feedback.errorSizeExceeded"}));
-            }
-            if (!detailsUri) {
-                actions.push(setDetailsChanged(a.detailsText !== "<p><br></p>"));
-                return Rx.Observable.from(actions);
-            }
-            const originalDetails = currentMapOriginalDetailsTextSelector(state);
-            const currentDetails = currentMapDetailsTextSelector(state);
-            actions.push(setDetailsChanged(originalDetails !== currentDetails));
-            return Rx.Observable.from(actions);
-        });
-
-/**
- * If the details resource does not exist it saves it, and it updates its permission with the one set for the mapPermissionsFromIdSelector
- * and it updates the attribute details in map resource
-*/
-const saveResourceDetailsEpic = (action$, store) =>
-    action$.ofType(SAVE_RESOURCE_DETAILS)
-        .switchMap(() => {
-            const state = store.getState();
-            const mapId = currentMapIdSelector(state);
-            const value = currentMapDetailsTextSelector(state, mapId);
-            const detailsChanged = currentMapDetailsChangedSelector(state);
-
-            let params = {
-                attribute: "details",
-                map: currentMapSelector(state),
-                resource: null,
-                type: "STRING"
-            };
-            if (!detailsChanged) {
-                return Rx.Observable.of(doNothing());
-            }
-            if (value !== "" && detailsChanged) {
-                params.resource = {
-                    category: "DETAILS",
-                    userParams: userParamsSelector(state),
-                    metadata: {name: uuidv1()},
-                    value,
-                    permissions: mapPermissionsFromIdSelector(state, mapId),
-                    optionsAttr: {},
-                    optionsRes: {}
-                };
-            } else {
-                params.optionsDel = {};
-            }
-            return manageMapResource({
-                ...params
-            }).concat([detailsSaving(false), resetUpdating(mapId)]).startWith(detailsSaving(true));
-        });
-
-/**
-    Epics used to fetch and/or open the details modal
-*/
-const fetchDetailsFromResourceEpic = (action$, store) =>
-    action$.ofType(EDIT_MAP)
-        .switchMap(() => {
-            const state = store.getState();
-            const mapId = currentMapIdSelector(state);
-            const detailsUri = currentMapDetailsUriSelector(state);
-            if (!detailsUri || detailsUri === EMPTY_RESOURCE_VALUE) {
-                return Rx.Observable.of(
-                    updateDetails("", true, "")
-                );
-            }
-            const detailsId = getIdFromUri(detailsUri);
-            return Rx.Observable.fromPromise(GeoStoreApi.getData(detailsId)
-                .then(data => data))
-                .switchMap((details) => {
-                    return Rx.Observable.of(
-                        updateDetails(details, true, details)
-                    );
-                }).catch(() => {
-                    return Rx.Observable.of(
-                        basicError({ message: "maps.feedback.errorFetchingDetailsOfMap"}),
-                        updateDetails(NO_DETAILS_AVAILABLE, true, NO_DETAILS_AVAILABLE),
-                        toggleDetailsEditability(mapId));
-                });
-        });
-
-const loadMapsEpic = (action$) =>
+export const loadMapsEpic = (action$) =>
     action$.ofType(MAPS_LOAD_MAP)
         .switchMap((action) => {
             let {params, searchText, geoStoreUrl} = action;
@@ -211,7 +90,7 @@ const loadMapsEpic = (action$) =>
 
         });
 
-const reloadMapsEpic = (action$, { getState = () => { } }) =>
+export const reloadMapsEpic = (action$, { getState = () => { } }) =>
     action$.ofType(MAP_DELETED, MAP_SAVED)
         .delay(1000)
         .switchMap(() => Rx.Observable.of(loadMaps(false,
@@ -219,7 +98,7 @@ const reloadMapsEpic = (action$, { getState = () => { } }) =>
             calculateNewParams(getState())
         )));
 
-const getMapsResourcesByCategoryEpic = (action$, store) =>
+export const getMapsResourcesByCategoryEpic = (action$, store) =>
     action$.ofType(MAPS_GET_MAP_RESOURCES_BY_CATEGORY)
         .switchMap((action) => {
             const state = store.getState();
@@ -310,7 +189,7 @@ const getMapsResourcesByCategoryEpic = (action$, store) =>
                 ));
         });
 
-const loadMapsOnSearchFilterChange = (action$, store) =>
+export const loadMapsOnSearchFilterChange = (action$, store) =>
     action$.ofType(SEARCH_FILTER_CHANGED, SEARCH_FILTER_CLEAR_ALL)
         .filter(({filter}) => !filter || filter === 'contexts')
         .switchMap(({type}) => {
@@ -327,7 +206,7 @@ const loadMapsOnSearchFilterChange = (action$, store) =>
             );
         });
 
-const hideTabsOnSearchFilterChange = (action$) =>
+export const hideTabsOnSearchFilterChange = (action$) =>
     action$.ofType(SEARCH_FILTER_CHANGED, SEARCH_FILTER_CLEAR_ALL)
         .filter(({filter}) => !filter || filter === 'contexts')
         .switchMap(({filterData}) => Rx.Observable.of(
@@ -342,7 +221,7 @@ const hideTabsOnSearchFilterChange = (action$) =>
             )
         ));
 
-const mapsLoadContextsEpic = (action$) =>
+export const mapsLoadContextsEpic = (action$) =>
     action$.ofType(LOAD_CONTEXTS)
         .distinctUntilChanged((prev, cur) =>
             (prev.searchText || '*') === (cur.searchText || '*') &&
@@ -372,7 +251,7 @@ const mapsLoadContextsEpic = (action$) =>
             );
         });
 
-const mapsSetupFilterOnLogin = (action$, store) =>
+export const mapsSetupFilterOnLogin = (action$, store) =>
     action$.ofType(LOGIN_SUCCESS, LOGOUT)
         .switchMap(() => {
             const state = store.getState();
@@ -384,7 +263,7 @@ const mapsSetupFilterOnLogin = (action$, store) =>
             ));
         });
 
-const deleteMapAndAssociatedResourcesEpic = (action$, store) =>
+export const deleteMapAndAssociatedResourcesEpic = (action$, store) =>
     action$.ofType(DELETE_MAP)
         .switchMap((action) => {
             const state = store.getState();
@@ -430,7 +309,7 @@ const deleteMapAndAssociatedResourcesEpic = (action$, store) =>
             }).startWith(mapDeleting(mapId));
         });
 
-const fetchDataForDetailsPanel = (action$, store) =>
+export const fetchDataForDetailsPanel = (action$, store) =>
     action$.ofType(OPEN_DETAILS_PANEL)
         .switchMap(() => {
             const state = store.getState();
@@ -453,21 +332,21 @@ const fetchDataForDetailsPanel = (action$, store) =>
                 });
         });
 
-const closeDetailsPanelEpic = (action$) =>
+export const closeDetailsPanelEpic = (action$) =>
     action$.ofType(CLOSE_DETAILS_PANEL)
         .switchMap(() => Rx.Observable.from( [
             toggleControl("details", "enabled"),
             resetCurrentMap()
         ])
         );
-const resetCurrentMapEpic = (action$) =>
+export const resetCurrentMapEpic = (action$) =>
     action$.ofType(RESET_UPDATING)
         .switchMap(() => Rx.Observable.from( [
             onDisplayMetadataEdit(false),
             resetCurrentMap()
         ])
         );
-const storeDetailsInfoEpic = (action$, store) =>
+export const storeDetailsInfoEpic = (action$, store) =>
     action$.ofType(MAP_INFO_LOADED)
         .switchMap(() => {
             const mapId = mapIdSelector(store.getState());
@@ -489,13 +368,13 @@ const storeDetailsInfoEpic = (action$, store) =>
 /**
  * Create or update map resource with persistence api
  */
-const mapSaveMapResourceEpic = (action$, store) =>
+export const mapSaveMapResourceEpic = (action$, store) =>
     action$.ofType(SAVE_MAP_RESOURCE)
         .exhaustMap(({resource}) => {
             // filter out invalid attributes
-            // thumbnails are handled separately
+            // thumbnails and details are handled separately(linked resources)
             const validAttributesNames = keys(resource.attributes)
-                .filter(attrName => attrName !== 'thumbnail' && resource.attributes[attrName] !== undefined && resource.attributes[attrName] !== null);
+                .filter(attrName => attrName !== 'thumbnail' && attrName !== 'details' && resource.attributes[attrName] !== undefined && resource.attributes[attrName] !== null);
             return Rx.Observable.forkJoin(
                 (() => {
                     // get a context information using the id in the attribute
@@ -514,7 +393,7 @@ const mapSaveMapResourceEpic = (action$, store) =>
                         ...(resource.id ? [loadMapInfo(rid)] : []),
                         ...(resource.id ? [configureMap(resource.data, rid)] : []),
                         resource.id ? toggleControl('mapSave') : toggleControl('mapSaveAs'),
-                        mapSaved(),
+                        mapSaved(resource.id),
                         ...(!resource.id ? [
                             mapCreated(rid, assign({id: rid, canDelete: true, canEdit: true, canCopy: true}, resource.metadata), resource.data),
                             // if we got a valid context information redirect to a context, instead of the default viewer
@@ -542,22 +421,3 @@ const mapSaveMapResourceEpic = (action$, store) =>
                 })
                 .startWith(!resource.id ? savingMap(resource.metadata) : mapUpdating(resource.metadata));
         });
-
-module.exports = {
-    loadMapsEpic,
-    resetCurrentMapEpic,
-    storeDetailsInfoEpic,
-    closeDetailsPanelEpic,
-    fetchDataForDetailsPanel,
-    deleteMapAndAssociatedResourcesEpic,
-    getMapsResourcesByCategoryEpic,
-    loadMapsOnSearchFilterChange,
-    hideTabsOnSearchFilterChange,
-    mapsLoadContextsEpic,
-    mapsSetupFilterOnLogin,
-    setDetailsChangedEpic,
-    fetchDetailsFromResourceEpic,
-    saveResourceDetailsEpic,
-    mapSaveMapResourceEpic,
-    reloadMapsEpic
-};

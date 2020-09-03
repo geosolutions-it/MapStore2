@@ -15,13 +15,12 @@
 const { get } = require('lodash');
 module.exports = {
     /**
-     * selects latestResource from featuredmaps, it's the latest resource updated
-     * it's needed to update the current featured maps list
+     * invalidation flag, triggers featuredmaps reload when changed
      * @memberof selectors.featuredmaps
-     * @param  {object}  state applications state
-     * @return {object}  latestResource object eg {resourceId: 7, ...otherInfo}
+     * @param {object} state applications state
+     * @return {boolean} invalidation flag value
      */
-    resourceSelector: state => state && state.featuredmaps && state.featuredmaps.latestResource || {},
+    invalidationSelector: state => state && state.featuredmaps && state.featuredmaps.invalidate || false,
     /**
      * selects searchText from featuredmaps, it's updated only on map list loading (press enter on search map)
      * @memberof selectors.featuredmaps

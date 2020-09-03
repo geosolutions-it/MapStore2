@@ -12,25 +12,25 @@ const configureMockStore = require('redux-mock-store').default;
 const {createEpicMiddleware, combineEpics } = require('redux-observable');
 const {CALL_HISTORY_METHOD} = require('connected-react-router');
 const {
-    saveDetails, SET_DETAILS_CHANGED, MAPS_LIST_LOADING, MAPS_LIST_LOADED, MAPS_LIST_LOAD_ERROR,
+    MAPS_LIST_LOADING, MAPS_LIST_LOADED, MAPS_LIST_LOAD_ERROR,
     CLOSE_DETAILS_PANEL, closeDetailsPanel, loadMaps, MAPS_GET_MAP_RESOURCES_BY_CATEGORY,
     openDetailsPanel, UPDATE_DETAILS, DETAILS_LOADED, getMapResourcesByCategory,
-    MAP_DELETING, MAP_DELETED, deleteMap, mapDeleted, TOGGLE_DETAILS_SHEET,
+    MAP_DELETING, MAP_DELETED, deleteMap, mapDeleted,
     saveMapResource, MAP_CREATED, SAVING_MAP, MAP_UPDATING, MAPS_LOAD_MAP, LOADING, LOAD_CONTEXTS
 } = require('../../actions/maps');
 const { mapInfoLoaded, MAP_SAVED, LOAD_MAP_INFO, MAP_CONFIG_LOADED } = require('../../actions/config');
 const {SHOW_NOTIFICATION} = require('../../actions/notifications');
 const {TOGGLE_CONTROL, SET_CONTROL_PROPERTY} = require('../../actions/controls');
-const {RESET_CURRENT_MAP, editMap} = require('../../actions/currentMap');
+const {RESET_CURRENT_MAP} = require('../../actions/currentMap');
 const {CLOSE_FEATURE_GRID} = require('../../actions/featuregrid');
 const {loginSuccess, logout} = require('../../actions/security');
 
 const {
-    setDetailsChangedEpic, loadMapsEpic, getMapsResourcesByCategoryEpic,
+    loadMapsEpic, getMapsResourcesByCategoryEpic,
     closeDetailsPanelEpic, fetchDataForDetailsPanel,
-    fetchDetailsFromResourceEpic, deleteMapAndAssociatedResourcesEpic, mapsSetupFilterOnLogin,
+    deleteMapAndAssociatedResourcesEpic, mapsSetupFilterOnLogin,
     storeDetailsInfoEpic, mapSaveMapResourceEpic, reloadMapsEpic} = require('../maps');
-const rootEpic = combineEpics(setDetailsChangedEpic, closeDetailsPanelEpic);
+const rootEpic = combineEpics(closeDetailsPanelEpic);
 const epicMiddleware = createEpicMiddleware(rootEpic);
 const mockStore = configureMockStore([epicMiddleware]);
 const {testEpic, addTimeoutEpic, TEST_TIMEOUT} = require('./epicTestUtils');
@@ -165,50 +165,6 @@ describe('maps Epics', () => {
         ConfigUtils.getDefaults = oldGetDefaults;
     });
 
-    it('test setDetailsChangedEpic', (done) => {
-
-        store.dispatch(saveDetails("<p>some details</p>"));
-
-        setTimeout( () => {
-            try {
-                const actions = store.getActions();
-                expect(actions.length).toBe(3);
-                expect(actions[1].type).toBe(TOGGLE_DETAILS_SHEET);
-                expect(actions[2].type).toBe(SET_DETAILS_CHANGED);
-            } catch (e) {
-                done(e);
-            }
-            done();
-        }, 50);
-
-    });
-    it('test setDetailsChangedEpic with details resource present', (done) => {
-        testEpic(setDetailsChangedEpic, 1, saveDetails(detailsText), actions => {
-            expect(actions.length).toBe(1);
-            actions.map((action) => {
-                switch (action.type) {
-                case SET_DETAILS_CHANGED:
-                    expect(action.detailsChanged).toBe(false);
-                    break;
-                case TOGGLE_DETAILS_SHEET:
-                    expect(action.detailsSheetReadOnly).toBe(true);
-                    break;
-                default:
-                    expect(true).toBe(false);
-                }
-            });
-            done();
-        }, {
-            locale,
-            currentMap: {
-                id: mapId,
-                details: "wrong/uri/4",
-                detailsText,
-                originalDetails: detailsText
-            }
-        });
-    });
-
     it('test closeDetailsPanel', (done) => {
 
         store.dispatch(closeDetailsPanel());
@@ -289,76 +245,7 @@ describe('maps Epics', () => {
             }
         });
     });
-    it('test fetchDetailsFromResourceEpic, map without saved Details', (done) => {
-        delete map1.details;
-        testEpic(addTimeoutEpic(fetchDetailsFromResourceEpic), 1, editMap({}, true), actions => {
-            expect(actions.length).toBe(1);
-            actions.map((action) => {
-                switch (action.type) {
-                case UPDATE_DETAILS:
-                    expect(action.detailsText).toBe("");
-                    expect(action.originalDetails).toBe("");
-                    expect(action.doBackup).toBe(true);
-                    break;
-                default:
-                    expect(true).toBe(false);
-                }
-            });
-            done();
-        }, {
-            currentMap: {
-                id: mapId
-            }
-        });
-    });
 
-    it('test fetchDetailsFromResourceEpic, map with saved Details', (done) => {
-        testEpic(addTimeoutEpic(fetchDetailsFromResourceEpic), 1, editMap({}, true), actions => {
-            expect(actions.length).toBe(1);
-            actions.map((action) => {
-                switch (action.type) {
-                case UPDATE_DETAILS:
-                    expect(action.detailsText.indexOf(detailsText)).toNotBe(-1);
-                    expect(action.originalDetails.indexOf(detailsText)).toNotBe(-1);
-                    expect(action.doBackup).toBe(true);
-                    break;
-                default:
-                    expect(true).toBe(false);
-                }
-            });
-            done();
-        }, {
-            currentMap: {
-                id: mapId,
-                details: encodeURIComponent(detailsUri)
-            }
-        });
-    });
-
-    it('test fetchDetailsFromResourceEpic, withError', (done) => {
-        testEpic(addTimeoutEpic(fetchDetailsFromResourceEpic), 1, editMap({}, true), actions => {
-            expect(actions.length).toBe(1);
-            actions.map((action) => {
-                switch (action.type) {
-                case SHOW_NOTIFICATION:
-                    expect(action.message).toBe("maps.feedback.errorFetchingDetailsOfMap");
-                    break;
-                default:
-                    expect(true).toBe(false);
-                }
-            });
-            done();
-        }, {
-            locale,
-            currentMap: {
-                id: mapId,
-                details: "wrong/uri/sfdsdfs"
-            },
-            maps: {
-                results: [map1]
-            }
-        });
-    });
     it('test deleteMapAndAssociatedResourcesEpic, with map, details, thumbnail errors', (done) => {
         map1.thumbnail = "wronguri/data/5/";
         map1.details = "wronguri/data/6/";

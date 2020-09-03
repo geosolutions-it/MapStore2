@@ -57,11 +57,11 @@ describe('This test for MapCard', () => {
         const testDescription = "testDescription";
         let component = TestUtils.renderIntoDocument(<MapCard viewerUrl="viewer" id={1} map={{id: 1, name: testName, description: testDescription, details: null, canEdit: true}} shareToolEnabled={false}  mapType="leaflet"/>);
         const handlers = {
-            onToggleDetailsSheet: () => {},
+            onShowDetailsSheet: () => {},
             onEdit: () => {}
         };
-        let spy = expect.spyOn(handlers, "onToggleDetailsSheet");
-        component = TestUtils.renderIntoDocument(<MapCard id={1} detailsSheetActions={{...handlers}} map={{id: 1, name: testName, description: testDescription, detailsText: "here some details", details: "here some details"}} shareToolEnabled={false} mapType="leaflet" />);
+        let spy = expect.spyOn(handlers, "onShowDetailsSheet");
+        component = TestUtils.renderIntoDocument(<MapCard id={1} {...handlers} map={{id: 1, name: testName, description: testDescription, detailsText: "here some details", details: "here some details"}} shareToolEnabled={false} mapType="leaflet" />);
         const detailsTool = TestUtils.findRenderedDOMComponentWithTag(
             component, 'button'
         );

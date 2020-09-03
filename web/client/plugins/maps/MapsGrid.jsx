@@ -6,16 +6,32 @@
 * LICENSE file in the root directory of this source tree.
 */
 
-const {bindActionCreators} = require('redux');
+const {compose, branch, withProps} = require('recompose');
 const {connect} = require('react-redux');
-const {loadMaps, updateMapMetadata, deleteMap, createThumbnail,
-    updateDetails, deleteDetails, saveDetails, toggleDetailsSheet, toggleGroupProperties, toggleUnsavedChanges, setDetailsChanged,
-    deleteThumbnail, saveMap, thumbnailError, saveAll, onDisplayMetadataEdit, resetUpdating,
-    backDetails, undoDetails, updateAttribute} = require('../../actions/maps');
-const {editMap, updateCurrentMap, errorCurrentMap, removeThumbnail, resetCurrentMap} = require('../../actions/currentMap');
+const {loadMaps, deleteMap, onDisplayMetadataEdit,
+    updateAttribute, showDetailsSheet, hideDetailsSheet} = require('../../actions/maps');
+const {mapSaved} = require('../../actions/config');
+const {editMap, resetCurrentMap} = require('../../actions/currentMap');
 const {mapTypeSelector} = require('../../selectors/maptype');
 const {showMapDetailsSelector} = require('../../selectors/maps.js');
+const {userSelector} = require('../../selectors/security');
+const {basicSuccess, basicError} = require('../../utils/NotificationUtils');
 const withShareTool = require('../../components/resources/enhancers/withShareTool').default;
+
+const SaveModal = require('../../components/resources/modals/Save');
+const handleSave = require('../../components/resources/modals/enhancers/handleSave').default;
+const handleSaveModal = require('../../components/resources/modals/enhancers/handleSaveModal').default;
+const handleResourceDownload = require('../../components/resources/modals/enhancers/handleResourceDownload');
+const MetadataModal = compose(
+    handleResourceDownload,
+    branch(
+        ({ resource }) => resource && resource.id,
+        compose(
+            handleSave,
+            handleSaveModal
+        )
+    )
+)(SaveModal);
 
 const MapsGrid = connect((state) => {
     return {
@@ -23,38 +39,28 @@ const MapsGrid = connect((state) => {
         currentMap: state.currentMap,
         showMapDetails: showMapDetailsSelector(state),
         loading: state.maps && state.maps.loading,
-        mapType: mapTypeSelector(state)
+        mapType: mapTypeSelector(state),
+        user: userSelector(state)
     };
 }, dispatch => {
     return {
         loadMaps: (...params) => dispatch(loadMaps(...params)),
-        updateMapMetadata: (...params) => dispatch(updateMapMetadata(...params)),
         editMap: (...params) => dispatch(editMap(...params)),
-        saveMap: (...params) => dispatch(saveMap(...params)),
-        removeThumbnail: (...params) => dispatch(removeThumbnail(...params)),
         onDisplayMetadataEdit: (...params) => dispatch(onDisplayMetadataEdit(...params)),
-        resetUpdating: (...params) => dispatch(resetUpdating(...params)),
-        saveAll: (...params) => dispatch(saveAll(...params)),
-        updateCurrentMap: (...params) => dispatch(updateCurrentMap(...params)),
-        errorCurrentMap: (...params) => dispatch(errorCurrentMap(...params)),
-        thumbnailError: (...params) => dispatch(thumbnailError(...params)),
-        createThumbnail: (...params) => dispatch(createThumbnail(...params)),
-        deleteThumbnail: (...params) => dispatch(deleteThumbnail(...params)),
         deleteMap: (...params) => dispatch(deleteMap(...params)),
         resetCurrentMap: (...params) => dispatch(resetCurrentMap(...params)),
         onUpdateAttribute: (...params) => dispatch(updateAttribute(...params)),
-        detailsSheetActions: bindActionCreators({
-            onBackDetails: backDetails,
-            onUndoDetails: undoDetails,
-            onToggleDetailsSheet: toggleDetailsSheet,
-            onToggleGroupProperties: toggleGroupProperties,
-            onToggleUnsavedChangesModal: toggleUnsavedChanges,
-            onsetDetailsChanged: setDetailsChanged,
-            onUpdateDetails: updateDetails,
-            onSaveDetails: saveDetails,
-            onDeleteDetails: deleteDetails
-        }, dispatch)
+        onSaveSuccess: () => dispatch(basicSuccess({message: 'resources.successSaved'})),
+        onSaveError: () => dispatch(basicError({message: 'resource.savingError'})),
+        onMapSaved: (...params) => dispatch(mapSaved(...params)),
+        onShowDetailsSheet: (...params) => dispatch(showDetailsSheet(...params)),
+        onHideDetailsSheet: (...params) => dispatch(hideDetailsSheet(...params))
     };
 })(require('../../components/maps/MapGrid'));
 
-module.exports = withShareTool(MapsGrid);
+module.exports = compose(
+    withProps({
+        metadataModal: MetadataModal
+    }),
+    withShareTool
+)(MapsGrid);

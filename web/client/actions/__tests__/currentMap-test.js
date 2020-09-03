@@ -9,9 +9,6 @@
 var expect = require('expect');
 var {
     EDIT_MAP, editMap,
-    UPDATE_CURRENT_MAP, updateCurrentMap,
-    ERROR_CURRENT_MAP, errorCurrentMap,
-    REMOVE_THUMBNAIL, removeThumbnail,
     UPDATE_CURRENT_MAP_PERMISSIONS, updateCurrentMapPermissions,
     UPDATE_CURRENT_MAP_GROUPS, updateCurrentMapGroups,
     RESET_CURRENT_MAP, resetCurrentMap,
@@ -36,15 +33,6 @@ describe('Test correctness of the maps actions', () => {
         expect(retval.map.canWrite).toBeTruthy();
     });
 
-    it('updateCurrentMap', () => {
-        let thumbnailData = [];
-        let thumbnail = "myThumnbnailUrl";
-        var retval = updateCurrentMap(thumbnailData, thumbnail);
-        expect(retval).toExist();
-        expect(retval.type).toBe(UPDATE_CURRENT_MAP);
-        expect(retval.thumbnail).toBe(thumbnail);
-        expect(retval.thumbnailData).toBe(thumbnailData);
-    });
     it('updateCurrentMapGroups', () => {
         let groups = {
             groups: {
@@ -61,13 +49,6 @@ describe('Test correctness of the maps actions', () => {
         expect(retval.groups).toBe(groups);
     });
 
-    it('errorCurrentMap', () => {
-        let errors = ["FORMAT"];
-        var retval = errorCurrentMap(errors);
-        expect(retval).toExist();
-        expect(retval.type).toBe(ERROR_CURRENT_MAP);
-        expect(retval.errors).toBe(errors);
-    });
     it('updateCurrentMapPermissions', () => {
         let permissions = {
             SecurityRuleList: {
@@ -85,13 +66,6 @@ describe('Test correctness of the maps actions', () => {
         expect(retval).toExist();
         expect(retval.type).toBe(UPDATE_CURRENT_MAP_PERMISSIONS);
         expect(retval.permissions).toBe(permissions);
-    });
-    it('removeThumbnail', () => {
-        let resourceId = 1;
-        const retval = removeThumbnail(resourceId);
-        expect(retval).toExist();
-        expect(retval.type).toBe(REMOVE_THUMBNAIL);
-        expect(retval.resourceId).toBe(resourceId);
     });
     it('resetCurrentMap', () => {
         const retval = resetCurrentMap();

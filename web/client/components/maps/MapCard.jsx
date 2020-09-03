@@ -20,7 +20,6 @@ class MapCard extends React.Component {
         style: PropTypes.object,
         map: PropTypes.object,
         showMapDetails: PropTypes.bool,
-        detailsSheetActions: PropTypes.object,
         shareToolEnabled: PropTypes.bool,
         // CALLBACKS
         viewerUrl: PropTypes.oneOfType([PropTypes.string, PropTypes.func]),
@@ -28,6 +27,7 @@ class MapCard extends React.Component {
         onMapDelete: PropTypes.func,
         onShare: PropTypes.func,
         onUpdateAttribute: PropTypes.func,
+        onShowDetailsSheet: PropTypes.func,
         backgroundOpacityStart: PropTypes.number,
         backgroundOpacityEnd: PropTypes.number,
         tooltips: PropTypes.object
@@ -45,14 +45,12 @@ class MapCard extends React.Component {
             backgroundPosition: "center",
             backgroundRepeat: "repeat-x"
         },
-        detailsSheetActions: {
-            onToggleDetailsSheet: () => {}
-        },
         shareToolEnabled: true,
         // CALLBACKS
         onMapDelete: ()=> {},
         onEdit: () => {},
         onUpdateAttribute: () => {},
+        onShowDetailsSheet: () => {},
         backgroundOpacityStart: 0.7,
         backgroundOpacityEnd: 0.3,
         tooltips: {
@@ -146,7 +144,7 @@ class MapCard extends React.Component {
                 onClick: evt => {
                     this.stopPropagate(evt);
                     this.onEdit(this.props.map, false);
-                    this.props.detailsSheetActions.onToggleDetailsSheet(true);
+                    this.props.onShowDetailsSheet();
                 }
             },
             {

@@ -9,8 +9,6 @@
 // const {isNil} = require('lodash');
 const {
     EDIT_MAP,
-    UPDATE_CURRENT_MAP,
-    ERROR_CURRENT_MAP,
     UPDATE_CURRENT_MAP_PERMISSIONS,
     UPDATE_CURRENT_MAP_GROUPS,
     RESET_CURRENT_MAP,
@@ -20,22 +18,14 @@ const {
 const {
     THUMBNAIL_ERROR,
     MAP_UPDATING,
-    SAVE_MAP,
     DISPLAY_METADATA_EDIT,
     RESET_UPDATING,
     MAP_ERROR,
     MAP_CREATED,
     PERMISSIONS_LIST_LOADING,
-    PERMISSIONS_LIST_LOADED,
-    TOGGLE_DETAILS_SHEET,
+    SHOW_DETAILS_SHEET,
+    HIDE_DETAILS_SHEET,
     UPDATE_DETAILS,
-    SAVE_DETAILS,
-    DELETE_DETAILS,
-    BACK_DETAILS,
-    UNDO_DETAILS,
-    TOGGLE_GROUP_PROPERTIES,
-    TOGGLE_UNSAVED_CHANGES,
-    SET_DETAILS_CHANGED,
     SET_UNSAVED_CHANGES,
     METADATA_CHANGED,
     DETAILS_SAVING,
@@ -63,13 +53,6 @@ function currentMap(state = {}, action) {
     case TOGGLE_DETAILS_EDITABILITY: {
         return assign({}, state, {
             editDetailsDisabled: !state.editDetailsDisabled
-        });
-    }
-    case UPDATE_CURRENT_MAP: {
-        return assign({}, state, {
-            newThumbnail: action.thumbnail,
-            thumbnailData: action.thumbnailData,
-            unsavedChanges: true
         });
     }
     case MAP_UPDATING: {
@@ -105,17 +88,11 @@ function currentMap(state = {}, action) {
         }
         return assign({}, state, { permissions: newPermissions });
     }
-    case ERROR_CURRENT_MAP: {
-        return assign({}, state, {thumbnailError: null, mapError: null, errors: action.errors});
-    }
     case THUMBNAIL_ERROR: {
         return assign({}, state, {thumbnailError: action.error, errors: [], updating: false});
     }
     case MAP_ERROR: {
         return assign({}, state, {mapError: action.error, errors: [], updating: false});
-    }
-    case SAVE_MAP: {
-        return assign({}, state, {thumbnailError: null});
     }
     case DISPLAY_METADATA_EDIT: {
         return assign({}, state, {displayMetadataEdit: action.displayMetadataEditValue});
@@ -129,18 +106,20 @@ function currentMap(state = {}, action) {
     case PERMISSIONS_LIST_LOADING: {
         return assign({}, state, {permissionLoading: true});
     }
-    case PERMISSIONS_LIST_LOADED: {
-        return assign({}, state, {permissionLoading: false});
-    }
     case RESET_CURRENT_MAP: {
         return {};
     }
-    case TOGGLE_DETAILS_SHEET: {
-        return assign({}, state, {
-            showDetailEditor: !state.showDetailEditor,
-            detailsBackup: !state.showDetailEditor && !state.detailsDeleted ? "" : state.detailsBackup,
-            detailsSheetReadOnly: action.detailsSheetReadOnly
-        });
+    case SHOW_DETAILS_SHEET: {
+        return {
+            ...state,
+            showDetailsSheet: true
+        };
+    }
+    case HIDE_DETAILS_SHEET: {
+        return {
+            ...state,
+            showDetailsSheet: false
+        };
     }
     case METADATA_CHANGED: {
         let prop = action.prop;
@@ -158,60 +137,14 @@ function currentMap(state = {}, action) {
             detailsBackup: action.doBackup ? state.detailsText : state.detailsBackup
         });
     }
-    case BACK_DETAILS: {
-        return assign({}, state, {
-            detailsText: state.detailsDeleted ? "" : action.backupDetails,
-            detailsBackup: state.detailsDeleted ? state.detailsBackup : "",
-            showDetailEditor: false
-        });
-    }
-    case UNDO_DETAILS: {
-        return assign({}, state, {
-            detailsText: state.detailsBackup,
-            detailsBackup: "",
-            detailsDeleted: false
-        });
-    }
-    case SAVE_DETAILS: {
-        return action.detailsText.length <= 500000 ? assign({}, state, {
-            detailsText: action.detailsText,
-            detailsBackup: "",
-            detailsDeleted: false
-        }) : state;
-    }
     case DETAILS_SAVING: {
         return assign({}, state, {
             saving: action.saving
         });
     }
-    case DELETE_DETAILS: {
-        return assign({}, state, {
-            detailsText: "",
-            detailsBackup: state.detailsText,
-            detailsChanged: true,
-            unsavedChanges: true,
-            detailsDeleted: true
-        });
-    }
     case SET_UNSAVED_CHANGES: {
         return assign({}, state, {
             unsavedChanges: action.value
-        });
-    }
-    case TOGGLE_GROUP_PROPERTIES: {
-        return assign({}, state, {
-            hideGroupProperties: !state.hideGroupProperties
-        });
-    }
-    case TOGGLE_UNSAVED_CHANGES: {
-        return assign({}, state, {
-            showUnsavedChanges: !state.showUnsavedChanges
-        });
-    }
-    case SET_DETAILS_CHANGED: {
-        return assign({}, state, {
-            unsavedChanges: action.detailsChanged ? action.detailsChanged : state.unsavedChanges,
-            detailsChanged: action.detailsChanged
         });
     }
     default:

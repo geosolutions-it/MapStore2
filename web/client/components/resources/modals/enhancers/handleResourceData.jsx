@@ -7,6 +7,7 @@
  */
 const React = require('react');
 const { compose, withStateHandlers, withState, branch, withHandlers, renderComponent} = require('recompose');
+const { omit } = require('lodash');
 const {set} = require('../../../../utils/ImmutableUtils');
 const Message = require('../../../I18N/Message');
 const ConfirmDialog = require('../ConfirmModal');
@@ -53,6 +54,9 @@ module.exports = compose(
                     data,
                     ...options
                 }, linkedResources)
+            }),
+            onDeleteLinkedResource: ({ linkedResources = {} }) => (key) => ({
+                linkedResources: omit(linkedResources, key)
             })
         }
     ),
