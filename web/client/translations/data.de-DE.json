@@ -2073,7 +2073,12 @@
             "grayChannel": "Channel",
             "ruleClassification": "Classification",
             "ruleRaster": "Raster",
-            "customInterval": "Custom Interval"
+            "customInterval": "Custom Interval",
+            "styleEmpty": "Dieser Stil hat keine Regeln",
+            "incompleteClassification": "Die Klassifizierung ist unvollständig, da die Einträge nicht verfügbar sind. Stellen Sie sicher, dass alle Eigenschaften korrekt bereitgestellt werden.",
+            "emptyImageIconSymbolizer": "Fehlende Bild-URL im Symbolstil",
+            "warningTextOrderTitle": "Warnung",
+            "warningTextOrder": "Die Reihenfolge der Regeln, die den Textstil enthalten, konnte nicht mit der Renderreihenfolge auf der Karte übereinstimmen. Dieses Verhalten hängt mit einigen Rendering-Engines zusammen, die Beschriftungen über andere Regeln ziehen"
         },
         "playback": {
             "settings": {
@@ -2326,18 +2331,22 @@
                     "backConfirmNo": "Nein",
                     "backConfirmYes": "Ja",
                     "save": "Einstellungen speichern",
-                    "headerTitle": "Story-Einstellungen",
+                    "storyTheme" : "Story-Thema",
+                    "storyHeader" : "Story-Header",
                     "title": "Titel",
                     "titlePlaceholder": "Titel eingeben",
                     "logo": "Logo",
-                    "logoPlaceholder": "Das Logo darf nicht höher als 48 px sein und es wird eine Breite von 96 px empfohlen. max 500kb",
+                    "logoPlaceholder": "Legen Sie Ihr Logo hier ab oder klicken Sie, um eine Bilddatei auszuwählen (unterstützte Formate sind PNG und JPEG).",
                     "autoplay": "Automatisches Abspielen",
                     "enableAutoplay": "Aktivieren Sie die automatische Wiedergabe",
                     "autoplayInterval": "Autoplay-Intervall (Sekunden)",
                     "autoplayIntervalPlaceholder": "Aktivieren Sie das Autoplay-Intervall",
                     "navbar": "Navigationsleiste",
                     "showNavbar": "Navigationsleiste anzeigen",
-                    "theme": "Thema",
+                    "theme": "Standardthema",
+                    "fontFamily": "Schriftfamilie",
+                    "webFontLoadError": "Fehler beim Laden einiger Schriftarten aus der lokalen Konfiguration",
+                    "fontSize": "Schriftgröße",
                     "overlay": "Überlagerung",
                     "templateTooltip":"Mit dieser Einstellung können Sie die Identifizierungsfunktion auf der Karte aktivieren, indem Sie ein generisches Format für alle Ebenen definieren. Mit dem erweiterten Karteneditor (Stiftsymbol) kann für jede Ebene ein anderes Format konfiguriert werden. Weitere Informationen finden Sie im <a href='https://mapstore.readthedocs.io/en/latest/user-guide/layer-settings/#templates' target='_blank'> Benutzerhandbuch </a>. Wenn ein Layer sein eigenes Identifizierungsformat definiert hat, wird er anstelle des auf Kartenebene festgelegten generischen Formats verwendet."
                 }

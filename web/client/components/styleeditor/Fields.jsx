@@ -281,16 +281,22 @@ export const fields = {
         onChange
     }) => {
         return (
-            <>
-            <ThemaClassesEditor
-                classification={value}
-                onUpdateClasses={(classification, type) =>
-                    onChange({
-                        classification,
-                        type
-                    })}
-            />
-            </>
+            <div
+                // prevent drag and drop when interacting with property input
+                onDragStart={(event) => {
+                    event.stopPropagation();
+                    event.preventDefault();
+                }}
+                draggable>
+                <ThemaClassesEditor
+                    classification={value}
+                    onUpdateClasses={(classification, type) =>
+                        onChange({
+                            classification,
+                            type
+                        })}
+                />
+            </div>
         );
     },
     channel: ({

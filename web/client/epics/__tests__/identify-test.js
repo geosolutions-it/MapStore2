@@ -11,7 +11,7 @@ const { LOCATION_CHANGE } = require('connected-react-router');
 const { ZOOM_TO_POINT, clickOnMap, CHANGE_MAP_VIEW, UNREGISTER_EVENT_LISTENER, REGISTER_EVENT_LISTENER} = require('../../actions/map');
 const { FEATURE_INFO_CLICK, UPDATE_CENTER_TO_MARKER, PURGE_MAPINFO_RESULTS, NEW_MAPINFO_REQUEST, LOAD_FEATURE_INFO, NO_QUERYABLE_LAYERS, ERROR_FEATURE_INFO, EXCEPTIONS_FEATURE_INFO, SHOW_MAPINFO_MARKER, HIDE_MAPINFO_MARKER, GET_VECTOR_INFO, SET_CURRENT_EDIT_FEATURE_QUERY, loadFeatureInfo, featureInfoClick, closeIdentify, toggleHighlightFeature, editLayerFeatures, updateFeatureInfoClickPoint, purgeMapInfoResults } = require('../../actions/mapInfo');
 const { REMOVE_MAP_POPUP } = require('../../actions/mapPopups');
-
+const { TEXT_SEARCH_CANCEL_ITEM } = require('../../actions/search');
 const {
     getFeatureInfoOnFeatureInfoClick,
     zoomToVisibleAreaEpic,
@@ -560,8 +560,11 @@ describe('identify Epics', () => {
     it('onMapClick triggers featureinfo when selected', done => {
         registerHook(GET_COORDINATES_FROM_PIXEL_HOOK, undefined);
         registerHook(GET_PIXEL_FROM_COORDINATES_HOOK, undefined);
-        testEpic(onMapClick, 1, [clickOnMap({latlng: {lat: 8, lng: 8}})], ([action]) => {
-            expect(action.type === FEATURE_INFO_CLICK);
+        const NUM_ACTIONS = 2;
+        testEpic(onMapClick, NUM_ACTIONS, [clickOnMap({latlng: {lat: 8, lng: 8}})], (actions) => {
+            expect(actions.length).toBe(2);
+            expect(actions[0].type).toEqual(FEATURE_INFO_CLICK);
+            expect(actions[1].type).toEqual(TEXT_SEARCH_CANCEL_ITEM);
             done();
         }, {
             mapInfo: {
@@ -575,6 +578,7 @@ describe('identify Epics', () => {
             }
         });
     });
+
     it('onMapClick do not trigger when mapinfo is not enabled', done => {
         registerHook(GET_COORDINATES_FROM_PIXEL_HOOK, undefined);
         registerHook(GET_PIXEL_FROM_COORDINATES_HOOK, undefined);

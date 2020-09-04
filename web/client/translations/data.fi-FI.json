@@ -2026,17 +2026,22 @@
           "backConfirmNo": "Ei",
           "backConfirmYes": "Kyllä",
           "save": "Tallenna asetukset",
-          "headerTitle": "Tarina-asetukset",
+          "storyTheme" : "Tarinan teema",
+          "storyHeader" : "Tarinan otsikko",
           "title": "Otsikko",
           "titlePlaceholder": "Kirjoita otsikko",
           "logo": "Logo",
-          "logoPlaceholder": "Logo ei saa ylittää 48 px korkeutta, ja sen leveydeksi suositellaan 96 px. enintään 500 kt",
+          "logoPlaceholder": "Pudota logo -kuvake tähän tai valitse kuvatiedosto napsauttamalla (tuetut muodot ovat png ja jpeg)",
           "autoplay": "Automaattinen toisto",
           "enableAutoplay": "Ota automaattinen toisto käyttöön",
           "autoplayInterval": "Automaattisen toiston väliaika (sekunteina)",
           "autoplayIntervalPlaceholder": "Ota automaattisen toiston väliaika käyttöön",
           "navbar": "Navigointipalkki",
-          "showNavbar": "Näytä navigointipalkki"
+          "showNavbar": "Näytä navigointipalkki",
+          "theme": "Oletusteema",
+          "fontFamily": "Kirjasinperhe",
+          "webFontLoadError": "Joidenkin kirjasinten lataus epäonnistui paikallisesta kokoonpanosta",
+          "fontSize": "Fonttikoko"
         }
       },
       "errors": {

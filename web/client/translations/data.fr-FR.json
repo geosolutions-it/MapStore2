@@ -2075,7 +2075,12 @@
             "grayChannel": "Channel",
             "ruleClassification": "Classification",
             "ruleRaster": "Raster",
-            "customInterval": "Custom Interval"
+            "customInterval": "Custom Interval",
+            "styleEmpty": "Ce style n'a pas de règles",
+            "incompleteClassification": "La classification est incomplète car les entrées ne sont pas disponibles. Assurez-vous que toutes les propriétés sont correctement fournies",
+            "emptyImageIconSymbolizer": "URL d'image manquante dans le style d'icône",
+            "warningTextOrderTitle": "Avertissement",
+            "warningTextOrder": "L'ordre de la règle contenant le style de texte ne pouvait pas correspondre à l'ordre de rendu sur la carte. Ce comportement est lié à certains moteurs de rendu qui dessinent une étiquette au-dessus d'autres règles"
         },
         "playback": {
             "settings": {
@@ -2328,18 +2333,22 @@
                     "backConfirmNo": "Non",
                     "backConfirmYes": "Oui",
                     "save": "Enregistrer les paramètres",
-                    "headerTitle": "Paramètres de la story",
+                    "storyTheme" : "Thème de l'histoire",
+                    "storyHeader" : "En-tête de l'histoire",
                     "title": "Titre",
                     "titlePlaceholder": "Entrez le titre",
                     "logo": "Logo",
-                    "logoPlaceholder": "Le logo ne doit pas dépasser 48 px de hauteur et il est suggéré une largeur de 96 px. max 500kb",
+                    "logoPlaceholder": "Déposez votre image de logo ici ou cliquez pour sélectionner un fichier image (les formats pris en charge sont png et jpeg)",
                     "autoplay": "Lecture automatique",
                     "enableAutoplay": "Activer la lecture automatique",
                     "autoplayInterval": "Intervalle de lecture automatique (secondes)",
                     "autoplayIntervalPlaceholder": "Activer l'intervalle de lecture automatique",
                     "navbar": "Barre de navigation",
                     "showNavbar": "Afficher la barre de navigation",
-                    "theme": "Thème",
+                    "theme": "Thème par défaut",
+                    "fontFamily": "Famille de polices",
+                    "webFontLoadError": "Échec du chargement de certaines polices à partir de la configuration locale",
+                    "fontSize": "Taille de police",
                     "overlay": "Recouvrir",
                     "templateTooltip":"Ce paramètre vous permet d'activer la fonction Identifier sur la carte en définissant un format générique pour toutes les couches. Il est possible de configurer un format différent pour chaque niveau à l'aide de l'éditeur de carte avancé (icône crayon). Pour plus d'informations, consultez le <a href='https://mapstore.readthedocs.io/en/latest/user-guide/layer-settings/#templates' target='_blank'> guide de l'utilisateur </a>. Si une couche a défini son propre format d'identification, elle sera utilisée à la place du format générique défini au niveau de la carte."
                 }

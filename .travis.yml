@@ -7,6 +7,8 @@ script:
 addons:
   firefox: latest
 before_install:
+    # Fixes an issue where the max file watch count is exceeded, triggering ENOSPC
+    - echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p
     - node -v
     - npm -v
 branches:
