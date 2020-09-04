@@ -527,6 +527,7 @@ export const customEntityTransform = (entity, text) => {
         return "<iframe width=\"".concat(entity.data.width, "\" height=\"").concat(entity.data.height, "\" src=\"").concat(entity.data.src, "\" frameBorder=\"0\"></iframe>");
     }
     return text;
+};
 /**
  * Creates a configuration from localConfig object to be used by the webfontloader library
  * @param {array} fontFamilies - font families configured from localConfig
