@@ -137,6 +137,6 @@ describe('geostory selectors', () => { // TODO: check default
             family: "test",
             src: "test"
         }];
-        expect(currentStoryFonts({ geostory: { currentStory: {settings: { fontFamilies }}}})).toEqual(fontFamilies);
+        expect(currentStoryFonts({ geostory: { currentStory: {settings: { theme: { fontFamilies } }}}})).toEqual(fontFamilies);
     });
 });

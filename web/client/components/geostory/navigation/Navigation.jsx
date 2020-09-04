@@ -38,6 +38,7 @@ export default ({
 }) => {
     const theme = settings?.theme?.general;
     const {
+        fontFamily,
         borderColor,
         color,
         backgroundColor
@@ -68,7 +69,8 @@ export default ({
             style={{
                 color,
                 backgroundColor,
-                ...(borderColor && { borderBottom: `1px solid ${borderColor}` })
+                ...(borderColor && { borderBottom: `1px solid ${borderColor}` }),
+                fontFamily
             }}>
             <div
                 className="progress-bar"

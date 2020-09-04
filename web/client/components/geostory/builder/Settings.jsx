@@ -8,7 +8,6 @@
 
 import React, { useState } from 'react';
 import {Form, FormControl, FormGroup, ControlLabel, Alert} from 'react-bootstrap';
-import { uniq } from 'lodash';
 
 import Message from '../../I18N/Message';
 import SwitchButton from '../../misc/switch/SwitchButton';
@@ -20,20 +19,14 @@ import CustomThemePicker from '../common/CustomThemePicker';
 import Select from 'react-select';
 const InputLocalized = localizedProps("placeholder")(FormControl);
 
+import { DEFAULT_FONT_FAMILIES } from '../../../utils/GeoStoryUtils';
+
 const storyTitleFontSizes = [
     {value: "14px", label: "14px"},
     {value: "16px", label: "16px"},
     {value: "18px", label: "18px"},
     {value: "24px", label: "24px"},
     {value: "28px", label: "28px"}
-];
-
-const defaultStoryFontFamilies = [
-    "Raleway",
-    "sans-serif",
-    "Helvetica Neue",
-    "Georgia",
-    "Menlo"
 ];
 
 const getSelectOptions = (opts) => {
@@ -53,6 +46,7 @@ export default ({
 
     const [storyTitle, setStoryTitle] = useState(settings.storyTitle);
     const [expanded, setExpanded] = useState(settings.expanded || []);
+    const fonts = storyFonts.length > 0 ? storyFonts : DEFAULT_FONT_FAMILIES;
 
     return (<Form className="ms-geostory-settings">
         <div>
@@ -79,7 +73,7 @@ export default ({
                     <Select
                         value={settings?.theme?.general?.fontFamily}
                         onChange={event => onUpdateSettings("theme", {...settings?.theme, general: { ...settings?.theme?.general, fontFamily: event.value } })}
-                        options={getSelectOptions(uniq([...defaultStoryFontFamilies, ...storyFonts]))}
+                        options={getSelectOptions(fonts)}
                     />
                 </div>
             </div>

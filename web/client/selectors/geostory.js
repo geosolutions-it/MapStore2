@@ -292,4 +292,4 @@ export const updateUrlOnScrollSelector = state => get(state, 'geostory.updateUrl
  * Gets the currentStoryFonts that were loaded from config
  * @param {object} state application state
  */
-export const currentStoryFonts = state => get(state, "geostory.currentStory.settings.fontFamilies", []);
+export const currentStoryFonts = state => get(state, "geostory.currentStory.settings.theme.fontFamilies", []);

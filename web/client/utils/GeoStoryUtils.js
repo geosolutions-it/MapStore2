@@ -530,3 +530,13 @@ export const createWebFontLoaderConfig = (fontFamilies, activeCallback, inactive
 export const extractFontNames = (fontFamilies) => {
     return fontFamilies.map(family => family.family);
 };
+
+export const DEFAULT_FONT_FAMILIES = [
+    'inherit',
+    'Arial',
+    'Georgia',
+    'Impact',
+    'Tahoma',
+    'Times New Roman',
+    'Verdana'
+];

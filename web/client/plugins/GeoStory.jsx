@@ -39,7 +39,8 @@ const GeoStory = ({
     messages,
     fontFamilies = [],
     storyFonts = [],
-    onUpdateSetting = () => {},
+    webFont = WebFont,
+    onUpdate = () => {},
     onBasicError = () => {},
     ...props
 }) => {
@@ -47,14 +48,14 @@ const GeoStory = ({
     const addFunc = (path, position, element) => onAdd(path, position, element, localize);
 
     useEffect(() => {
-        onUpdateSetting("fontFamilies", fontFamilies);
-    }, [ fontFamilies ]);
+        onUpdate("settings.theme.fontFamilies", fontFamilies, "merge");
+    }, []);
 
     useEffect(() => {
         if (storyFonts.length > 0) {
             const storyFontsSrc = storyFonts.filter(({ src }) => src && !document?.head.querySelector(`link[href='${src}']`));
             if (storyFontsSrc.length > 0) {
-                WebFont.load(createWebFontLoaderConfig(
+                webFont.load(createWebFontLoaderConfig(
                     storyFonts,
                     () => {},
                     () => onBasicError({message: 'geostory.builder.settings.webFontLoadError'})
@@ -65,12 +66,13 @@ const GeoStory = ({
 
     return (<BorderLayout
         className="ms-geostory"
-        columns={[<MapEditor {...props} add={addFunc} mode={mode} />]}>
+        columns={[<MapEditor {...props} add={addFunc} update={onUpdate} mode={mode} />]}>
         <Story
             {...story}
             {...props} // add actions
             storyFonts={extractFontNames(storyFonts)}
             add={addFunc}
+            update={onUpdate}
             mode={mode}
             mediaViewer={MediaViewer}
             contentToolbar={MediaContentToolbar}
@@ -83,11 +85,17 @@ const storyThemeSelector = (state) => {
     return settingsSelector(state)?.theme || {};
 };
 
+GeoStory.defaultProps = {
+    storyFonts: [],
+    fontFamilies: []
+};
+
 /**
  * Plugin for GeoStory visualization
  * @name GeoStory
  * @memberof plugins
  * @prop {numeric} cfg.interceptionTime default 100, the debounce before calculations of currentPage active section
+ * @prop {object[]} cfg.fontFamilies: A list of objects with font family names and sources where to load them from e.g. [{"family": "Comic sans", "src": "link to source"}]
  */
 export default createPlugin("GeoStory", {
     component: connect(
@@ -101,7 +109,7 @@ export default createPlugin("GeoStory", {
             storyFonts: currentStoryFonts
         }), {
             onAdd: add,
-            update,
+            onUpdate: update,
             updateCurrentPage,
             onUpdateSetting: updateSetting,
             remove,

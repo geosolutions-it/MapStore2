@@ -139,7 +139,6 @@ const GeoStoryEditor = ({
  * Plugin for GeoStory side panel editor
  * @name GeoStoryEditor
  * @memberof plugins
- * @prop {object[]} cfg.fontFamilies: A list of objects with font family names and sources where to load them from e.g. [{"family": "Comic sans", "src": "link to source"}]
  */
 export default createPlugin('GeoStoryEditor', {
     component: connect(
