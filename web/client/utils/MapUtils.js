@@ -314,7 +314,14 @@ function transformExtent(projection, center, width, height) {
 }
 
 const groupSaveFormatted = (node) => {
-    return {id: node.id, title: node.title, expanded: node.expanded};
+    return {
+        id: node.id,
+        title: node.title,
+        description: node.description,
+        tooltipOptions: node.tooltipOptions,
+        tooltipPlacement: node.tooltipPlacement,
+        expanded: node.expanded
+    };
 };
 
 
@@ -427,19 +434,10 @@ const mergeMapConfigs = (cfg1 = {}, cfg2 = {}) => {
 
     const annotationsLayer1 = find(layers1, layer => layer.id === 'annotations');
     const annotationsLayer2 = find(layers2, layer => layer.id === 'annotations');
-    const ordinaryLayers = [
-        ...layers1.filter(layer => layer.group && layer.group !== 'Default'),
-        ...layers2.filter(layer => layer.group && layer.group !== 'Default')
-    ];
-    const defaultLayers = [
-        ...layers1
-            .filter(layer => (layer.group === undefined || layer.group === 'Default') && layer.id !== 'annotations'),
-        ...layers2
-            .filter(layer => (layer.group === undefined || layer.group === 'Default') && layer.id !== 'annotations')
-    ];
+
     const layers = [
-        ...ordinaryLayers,
-        ...defaultLayers,
+        ...layers2.filter(layer => layer.id !== 'annotations'),
+        ...layers1.filter(layer => layer.id !== 'annotations'),
         ...(annotationsLayer1 || annotationsLayer2 ? [{
             ...(annotationsLayer1 || {}),
             ...(annotationsLayer2 || {}),

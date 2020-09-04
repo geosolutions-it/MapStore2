@@ -1,7 +1,8 @@
 const fs = require('fs-extra');
 const isInProject = !fs.existsSync('./node_modules/cesium');
-const dirPrefix = isInProject ? '..' : '.'
+const dirPrefix = isInProject ? '..' : '.';
 fs.removeSync(`${dirPrefix}/node_modules/leaflet-simple-graticule/node_modules`);
 fs.removeSync(`${dirPrefix}/node_modules/react-sortable-items/node_modules/react-dom`);
+fs.removeSync(`${dirPrefix}/node_modules/geostyler-openlayers-parser/node_modules/@terrestris`); // explicit dependency in package.json
 fs.emptyDirSync(`${dirPrefix}/node_modules/mocha`);
 fs.copySync(`${dirPrefix}/node_modules/@geosolutions/mocha`, `${dirPrefix}/node_modules/mocha`);

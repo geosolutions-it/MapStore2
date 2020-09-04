@@ -120,8 +120,8 @@
                 "tooltip": "Note: This parameter requires specific configurations on GeoServer"
             }
         },
-        "longitude": "Longitude",
-        "latitude": "Latitude",
+        "longitude": "Lon",
+        "latitude": "Lat",
         "notification": {
             "update": "Update",
             "warning": "Warning",
@@ -521,6 +521,7 @@
                 "title": "Update title",
                 "dimensions": "Update dimensions"
             },
+            "layerInfoTooltip": "Update layer title and description",
             "layerMetadata": {
                 "identifier": "Identifier",
                 "title": "Title",
@@ -650,6 +651,7 @@
         "identifyRevGeocodeCloseText": "Close",
         "identifyRevGeocodeError": "Unable to geocode",
         "identifyEdit": "Edit",
+        "identifyLayerSelectNoResult": "No layers found",
         "getFeatureInfoError": {
             "title": "Ooops! Something's wrong",
             "text": "An error has occurred during this <b>GetFeatureInfo</b> request"
@@ -2083,7 +2085,12 @@
             "grayChannel": "Channel",
             "ruleClassification": "Classification",
             "ruleRaster": "Raster",
-            "customInterval": "Custom Interval"
+            "customInterval": "Custom Interval",
+            "styleEmpty": "This style has no rules",
+            "incompleteClassification": "The classification is incomplete bacause the entries are not available. Ensure all properties are corretly provided",
+            "emptyImageIconSymbolizer": "Missing image url in the icon style",
+            "warningTextOrderTitle": "Warning",
+            "warningTextOrder": "The order of rule containing text style could not match the rendering order on map. This behaviour is related to some rendering engine that draw label on top of other rules"
         },
         "playback": {
             "settings": {
@@ -2336,18 +2343,23 @@
                     "backConfirmNo": "No",
                     "backConfirmYes": "Yes",
                     "save": "Save settings",
-                    "headerTitle" : "Story Settings",
+                    "storyTheme" : "Story theme",
+                    "storyHeader" : "Story Header",
                     "title" : "Title",
                     "titlePlaceholder" : "Enter Title",
                     "logo" : "Logo",
-                    "logoPlaceholder": "Logo must not go beyond 48 px of height and is suggested a width of 96 px. max 500kb",
+                    "logoPlaceholder": "Drop your logo image here or click to select an image file (supported formats are png and jpeg)",
                     "autoplay" : "Autoplay",
                     "enableAutoplay" : "Enable autoplay",
                     "autoplayInterval" : "Autoplay interval (seconds)",
                     "autoplayIntervalPlaceholder" : "Enable autoplay interval",
                     "navbar" : "Navigation bar",
                     "showNavbar" : "Show navbar",
-                    "theme": "Theme",
+                    "theme": "Default Theme",
+                    "fontFamily": "Font Family",
+                    "webFontLoadError": "Failed to load some fonts from local configuration",
+                    "fontSize": "Font size",
+                    "overlay": "Overlay",
                     "templateTooltip":"This setting allows you to enable the Identify function on the map by defining a generic format for all the layers. It is possible to configure a different format for each single layer using the advanced map editor (pencil icon). For more information, see the <a href='https://mapstore.readthedocs.io/en/latest/user-guide/layer-settings/#templates' target='_blank'> user guide </a>. If a layer has defined its own Identify format, it will be used instead of the generic one set at the map level."
                 }
             },
@@ -2838,6 +2850,27 @@
             },
             "deleteError": "Unexpected error occurred while deleting the map",
             "updateError": "Unexpected error occurred while saving the map"
+        },
+        "layerInfo": {
+            "title": "Update layers titles and descriptions",
+            "noLayers": "No layers found",
+            "syncButton": "Sync titles and descriptions",
+            "selectAll": "Select all",
+            "deselectAll": "Deselect all",
+            "updatingLayers": "Updating layers {updatedCount}/{totalCount}",
+            "tooltips": {
+                "syncSuccess": "Title and description were successfully updated for this layer",
+                "syncError": "It's not possible to update the title and description of this layer. You could verify if all layer options are correct in the settings panel"
+            },
+            "syncingLayersSavingToServerError": {
+                "title": "Server Saving Error",
+                "message": "An unexpected error occurred when saving updated layers to server"
+            },
+            "syncingLayersGeneralError": {
+                "title": "General Error",
+                "message": "An unexpected error occurred during layers syncing. There is probably a bug in MapStore"
+            },
+            "layerType": "type: {type}"
         },
         "tutorial": {
             "title": "Tutorial",

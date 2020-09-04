@@ -8,7 +8,7 @@
 
 const React = require('react');
 const PropTypes = require('prop-types');
-const {Row, Col, Glyphicon, Button} = require('react-bootstrap');
+const {Row, Col, Glyphicon, Button, InputGroup} = require('react-bootstrap');
 const Toolbar = require('../toolbar/Toolbar');
 const draggableComponent = require('../enhancers/draggableComponent');
 const CoordinateEntry = require('./CoordinateEntry');
@@ -77,7 +77,6 @@ class CoordinatesRow extends React.Component {
 
     render() {
         const {idx} = this.props;
-        const rowStyle = {marginLeft: -5, marginRight: -5};
         // drag button must be a button in order to show the disabled state
         const toolButtons = [
             {
@@ -128,7 +127,7 @@ class CoordinatesRow extends React.Component {
             </Button></div>);
 
         return (
-            <Row className={`coordinateRow ${this.props.format || ""} ${this.props.customClassName || ""}`} style={!this.props.customClassName ? rowStyle : {}} onMouseEnter={() => {
+            <Row className={`coordinateRow ${this.props.format || ""} ${this.props.customClassName || ""}`} onMouseEnter={() => {
                 if (this.props.onMouseEnter && this.props.component.lat && this.props.component.lon) {
                     this.props.onMouseEnter(this.props.component);
                 }
@@ -137,12 +136,12 @@ class CoordinatesRow extends React.Component {
                     this.props.onMouseLeave();
                 }
             }}>
-                <Col xs md={1}>
+                <Col>
                     {this.props.showDraggable ? this.props.isDraggable ? this.props.connectDragSource(dragButton) : dragButton : null}
                 </Col>
-                <div className="coordinate lat" style={{width: "100%"}}>
-                    <Col xs md={4}>
-                        {this.props.showLabels && <div><Message msgId="latitude"/></div>}
+                <div className="coordinate lat">
+                    <InputGroup>
+                        {this.props.showLabels && <InputGroup.Addon><Message msgId="latitude"/></InputGroup.Addon>}
                         <CoordinateEntry
                             format={this.props.format}
                             aeronauticalOptions={this.props.aeronauticalOptions}
@@ -164,11 +163,9 @@ class CoordinatesRow extends React.Component {
                             }}
                             onKeyDown={this.onSubmit}
                         />
-                    </Col>
-                </div>
-                <div className="coordinate lon" style={{width: "100%"}}>
-                    <Col xs md={4}>
-                        {this.props.showLabels && <div><Message msgId="longitude"/></div>}
+                    </InputGroup>
+                    <InputGroup>
+                        {this.props.showLabels && <InputGroup.Addon><Message msgId="longitude"/></InputGroup.Addon>}
                         <CoordinateEntry
                             format={this.props.format}
                             aeronauticalOptions={this.props.aeronauticalOptions}
@@ -190,14 +187,14 @@ class CoordinatesRow extends React.Component {
                             }}
                             onKeyDown={this.onSubmit}
                         />
-                    </Col>
+                    </InputGroup>
                 </div>
-                <Col key="tools" xs md={3}>
+                <div key="tools">
                     <Toolbar
                         btnGroupProps={{ className: 'tools' }}
                         btnDefaultProps={{ className: 'square-button-md no-border'}}
                         buttons={toolButtons}/>
-                </Col>
+                </div>
             </Row>
         );
     }

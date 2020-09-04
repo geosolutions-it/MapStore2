@@ -63,7 +63,7 @@ const Validator = {
          *Parse the TEXT to get only the valid text responses
          */
         getValidResponses(responses) {
-            return responses.filter((res) => res.response !== "" && (typeof res.response === "string" && res.response.indexOf("no features were found") !== 0) && (typeof res.response === "string" && res.response.indexOf("<?xml") !== 0));
+            return responses.filter((res) => res.response !== "" && (typeof res.response === "string" && res.response.indexOf("<?xml") !== 0));
         },
         /**
          * Parse the TEXT to get only the NOT valid text responses
@@ -77,7 +77,7 @@ const Validator = {
          *Parse the JSON to get only the valid json responses
          */
         getValidResponses(responses) {
-            return responses.filter((res) => res.response && res.response.features && res.response.features.length);
+            return responses.filter((res) => res.response && res.response.features);
         },
         /**
          * Parse the JSON to get only the NOT valid json responses
@@ -91,7 +91,7 @@ const Validator = {
          *Parse the JSON to get only the valid json responses
          */
         getValidResponses(responses) {
-            return responses.filter((res) => res.response && res.response.features && res.response.features.length);
+            return responses.filter((res) => res.response && res.response.features);
         },
         /**
          * Parse the JSON to get only the NOT valid json responses
@@ -119,7 +119,7 @@ const Validator = {
          *Parse the JSON to get only the valid json responses
          */
         getValidResponses(responses) {
-            return responses.filter((res) => res.response && res.response.features && res.response.features.length);
+            return responses.filter((res) => res.response && res.response.features);
         },
         /**
          * Parse the JSON to get only the NOT valid json responses

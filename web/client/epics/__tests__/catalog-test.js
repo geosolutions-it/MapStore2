@@ -115,6 +115,14 @@ describe('catalog Epics', () => {
                     break;
                 case RECORD_LIST_LOADED:
                     expect(action.result.records.length).toBe(2);
+                    const rec0 = action.result.records[0];
+                    expect(rec0.boundingBox).toExist();
+                    expect(rec0.boundingBox.crs).toBe('EPSG:4326');
+                    expect(rec0.boundingBox.extent).toEqual([45.542, 11.874, 46.026, 12.718]);
+                    const rec1 = action.result.records[1];
+                    expect(rec1.boundingBox).toExist();
+                    expect(rec1.boundingBox.crs).toBe('EPSG:4326');
+                    expect(rec1.boundingBox.extent).toEqual([12.002717999999996, 45.760718, 12.429282000000002, 46.187282]);
                     break;
                 case TEST_TIMEOUT:
                     break;
