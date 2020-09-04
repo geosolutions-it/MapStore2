@@ -116,7 +116,7 @@ module.exports = {
             sortable,
             key: desc.name,
             width: columnSettings[desc.name] && columnSettings[desc.name].width || (defaultSize ? defaultSize : undefined),
-            name: desc.name,
+            name: columnSettings[desc.name] && columnSettings[desc.name].label || desc.name,
             resizable,
             editable,
             filterable,
