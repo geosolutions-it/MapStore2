@@ -91,6 +91,17 @@ export default ({
                 placement="right"
                 onChange={(overlay) => onUpdateSettings("theme", { ...settings?.theme, overlay })}/>
         </FormGroup>
+        <FormGroup>
+            <div style={{ marginBottom: "10px" }}>
+                <ControlLabel><Message msgId="Links"/></ControlLabel>
+            </div>
+            <CustomThemePicker
+                disableShadow
+                disableTextColor
+                themeStyle={settings?.theme?.overlay}
+                placement="right"
+                onChange={(overlay) => onUpdateSettings("theme", { ...settings?.theme, overlay })}/>
+        </FormGroup>
         <div>
             <h4><Message msgId="geostory.builder.settings.storyHeader"/></h4>
             <hr />
