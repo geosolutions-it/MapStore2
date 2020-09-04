@@ -46,6 +46,17 @@ function init() {
                     "showFeatureInfoTab": false
                 }
             },
+            {
+                "name": "Identify",
+                "cfg": {
+                    "position": "right",
+                    "size": 0.4,
+                    "fluid": true,
+                    "viewerOptions": {
+                        "container": "{context.ReactSwipe}"
+                    }
+                }
+            },
             "FullScreen"
         ]};
     /*eslint-disable */
