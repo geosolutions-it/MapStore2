@@ -33,6 +33,8 @@ const Button = tooltip(ButtonRB);
  */
 function CustomThemePicker({
     themeStyle,
+    disableBackgroundPicker = false,
+    disableLinkColorPicker,
     disableBackgroundAlpha,
     disableTextColor,
     disableShadow,
@@ -44,6 +46,7 @@ function CustomThemePicker({
     const trigger = useRef();
     const backgroundColor = themeStyle?.backgroundColor;
     const color = themeStyle?.color;
+    const hyperlinksColor = themeStyle?.a;
 
     const mostReadableTextColor = !disableTextColor && backgroundColor && color
         && !tinycolor.isReadable(color, backgroundColor)
@@ -52,33 +55,35 @@ function CustomThemePicker({
 
     return (
         <>
-        <div className="ms-custom-theme-picker-field">
-            <div><Message msgId="geostory.customizeTheme.backgroundColorLabel"/></div>
-            <div>
-                <ColorSelector
-                    placement={placement}
-                    key={backgroundColor}
-                    onOpen={onOpen}
-                    color={backgroundColor}
-                    format={!disableBackgroundAlpha ? 'rgb' : 'hex'}
-                    disableAlpha={disableBackgroundAlpha}
-                    presetColors={[]}
-                    onChangeColor={(newBackgroundColor) => {
-                        const borderColor = tinycolor(newBackgroundColor).isLight()
-                            ? tinycolor(newBackgroundColor).darken(10).toHexString()
-                            : tinycolor(newBackgroundColor).lighten(15).toHexString();
-                        const readableTextColor = !disableTextColor && !themeStyle?.color && {
-                            color: tinycolor.mostReadable(newBackgroundColor, ['#000000', '#ffffff'], { includeFallbackColors: true }).toHexString()
-                        };
-                        onChange({
-                            ...themeStyle,
-                            backgroundColor: newBackgroundColor,
-                            borderColor,
-                            ...(!disableTextColor && readableTextColor)
-                        });
-                    }}/>
+        {!disableBackgroundPicker && (
+            <div className="ms-custom-theme-picker-field">
+                <div><Message msgId="geostory.customizeTheme.backgroundColorLabel"/></div>
+                <div>
+                    <ColorSelector
+                        placement={placement}
+                        key={backgroundColor}
+                        onOpen={onOpen}
+                        color={backgroundColor}
+                        format={!disableBackgroundAlpha ? 'rgb' : 'hex'}
+                        disableAlpha={disableBackgroundAlpha}
+                        presetColors={[]}
+                        onChangeColor={(newBackgroundColor) => {
+                            const borderColor = tinycolor(newBackgroundColor).isLight()
+                                ? tinycolor(newBackgroundColor).darken(10).toHexString()
+                                : tinycolor(newBackgroundColor).lighten(15).toHexString();
+                            const readableTextColor = !disableTextColor && !themeStyle?.color && {
+                                color: tinycolor.mostReadable(newBackgroundColor, ['#000000', '#ffffff'], { includeFallbackColors: true }).toHexString()
+                            };
+                            onChange({
+                                ...themeStyle,
+                                backgroundColor: newBackgroundColor,
+                                borderColor,
+                                ...(!disableTextColor && readableTextColor)
+                            });
+                        }}/>
+                </div>
             </div>
-        </div>
+        )}
         {!disableTextColor &&
         <div className="ms-custom-theme-picker-field">
             <div>
@@ -155,6 +160,27 @@ function CustomThemePicker({
                 />
             </div>
         </div>}
+        {!disableLinkColorPicker && (
+            <div className="ms-custom-theme-picker-field">
+                <div><Message msgId="Hyperlinks"/></div>
+                <div>
+                    <ColorSelector
+                        placement={placement}
+                        key={hyperlinksColor}
+                        onOpen={onOpen}
+                        color={hyperlinksColor}
+                        format="hex"
+                        disableAlpha
+                        presetColors={[]}
+                        onChangeColor={(newHyperlinksColor) => {
+                            onChange({
+                                ...themeStyle,
+                                a: newHyperlinksColor
+                            });
+                        }}/>
+                </div>
+            </div>
+        )}
         </>
     );
 }

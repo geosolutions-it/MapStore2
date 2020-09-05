@@ -8,6 +8,7 @@
 import React from 'react';
 import ContainerDimensionsBase from 'react-container-dimensions';
 import {compose} from 'recompose';
+import Style from 'style-it';
 import { throttlePageUpdateEnhancer } from './sections/enhancers/updateCurrentPageEnhancer';
 
 import emptyState from '../../misc/enhancers/emptyState';
@@ -125,42 +126,49 @@ const Cascade = ({
             const sizeClassName = containerSize ? ` ms-${containerSize}` : '';
             const isMediaExpandable = containerSize === 'sm';
             const storyTheme = theme && isObject(theme) && theme || {};
-            return (<div
-                id="ms-sections-container"
-                className={`ms-sections-container${sizeClassName}`}
-                style={{
-                    ...storyTheme?.general,
-                    ...isContentFocused && { overflow: 'hidden' }
-                }}>
-                {
-                    sections.map(({ contents = [], id: sectionId, type: sectionType, cover }) => {
-                        return (
-                            <Section
-                                focusedContent={focusedContent}
-                                onVisibilityChange={onVisibilityChange}
-                                add={add}
-                                editMedia={editMedia}
-                                expandableMedia={isMediaExpandable}
-                                editWebPage={editWebPage}
-                                updateCurrentPage={updateCurrentPage}
-                                update={update}
-                                remove={remove}
-                                key={sectionId}
-                                id={sectionId}
-                                viewHeight={height}
-                                viewWidth={width}
-                                type={sectionType}
-                                mode={mode}
-                                contents={contents}
-                                cover={cover}
-                                storyTheme={storyTheme}
-                                mediaViewer={mediaViewer}
-                                contentToolbar={contentToolbar}
-                            />
-                        );
-                    })
-                }
-            </div>);
+            return (
+                <Style>
+                    {`
+          .hyperClass a {
+            color: ${storyTheme?.general?.a};
+          }
+        `}
+                    <div
+                        id="ms-sections-container"
+                        className={`ms-sections-container${sizeClassName} hyperClass`}
+                        style={{
+                            ...storyTheme?.general,
+                            ...isContentFocused && { overflow: 'hidden' }
+                        }}>
+                        {
+                            sections.map(({ contents = [], id: sectionId, type: sectionType, cover }) => {
+                                return (
+                                    <Section
+                                        focusedContent={focusedContent}
+                                        onVisibilityChange={onVisibilityChange}
+                                        add={add}
+                                        editMedia={editMedia}
+                                        expandableMedia={isMediaExpandable}
+                                        editWebPage={editWebPage}
+                                        updateCurrentPage={updateCurrentPage}
+                                        update={update}
+                                        remove={remove}
+                                        key={sectionId}
+                                        id={sectionId}
+                                        viewHeight={height}
+                                        viewWidth={width}
+                                        type={sectionType}
+                                        mode={mode}
+                                        contents={contents}
+                                        cover={cover}
+                                        storyTheme={storyTheme}
+                                        mediaViewer={mediaViewer}
+                                        contentToolbar={contentToolbar}
+                                    />
+                                );
+                            })
+                        }
+                    </div></Style>);
         }}
     </ContainerDimensions>
 </BorderLayout>);
