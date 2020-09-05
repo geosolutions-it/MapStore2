@@ -362,8 +362,7 @@ function annotations(state = { validationErrors: {} }, action) {
         });
     }
     case TOGGLE_DELETE_FT_MODAL: {
-        let newState = set("showDeleteFeatureModal", !state.showDeleteFeatureModal, state);
-        return newState;
+        return set("showDeleteFeatureModal", !state.showDeleteFeatureModal, state);
     }
     case CONFIRM_DELETE_FEATURE: {
         let newState = set("editing.features", state.editing.features.filter(f => f.properties.id !== state.selected.properties.id), state);
@@ -431,10 +430,12 @@ function annotations(state = { validationErrors: {} }, action) {
         });
     case CONFIRM_REMOVE_ANNOTATION:
         const features = state.editing.features.filter(feature=> feature.properties.id !== action.id);
+        const delSelectedFeature = state?.selected?.properties?.id === action.id || false;
         return assign({}, state, {
             removing: null,
             stylerType: "",
             current: null,
+            ...(delSelectedFeature && {selected: null}),
             editing: state.editing ? assign({}, state.editing, {
                 features,
                 style: {

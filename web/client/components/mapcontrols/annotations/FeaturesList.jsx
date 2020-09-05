@@ -12,6 +12,7 @@ const bbox = require('@turf/bbox');
 const Toolbar = require('../../misc/toolbar/Toolbar');
 const cs = require('classnames');
 const Message = require('../../I18N/Message');
+const {get} = require('lodash');
 const {DEFAULT_ANNOTATIONS_STYLES, getStartEndPointsForLinestring, getGeometryGlyphInfo, getGeometryType} = require('../../../utils/AnnotationsUtils');
 
 /**
@@ -27,9 +28,24 @@ const FeaturesList = (props) => {
         onSetStyle,
         onStartDrawing,
         onAddText,
-        onToggleGeometryEdit
+        onToggleGeometryEdit,
+        onStyleGeometry,
+        styling,
+        setTabValue,
+        drawing
     } = props;
     const {features = []} = editing || {};
+    const isValidFeature = get(props, "selected.properties.isValidFeature", true);
+
+    const onClickGeometry = (type, style) => {
+        styling && onStyleGeometry();
+        onAddGeometry(type);
+        type === "Text" && onAddText();
+        onSetStyle(style);
+        onStartDrawing();
+        onToggleGeometryEdit(true);
+        setTabValue('coordinates');
+    };
     return (
         <>
             <div style={{
@@ -49,61 +65,52 @@ const FeaturesList = (props) => {
                     buttons={[
                         {
                             glyph: 'point-plus',
+                            disabled: !isValidFeature,
                             onClick: () => {
-                                onAddGeometry("Point");
-                                onSetStyle([{ ...DEFAULT_ANNOTATIONS_STYLES.Point, highlight: true, id: uuidv1()}]);
-                                onStartDrawing();
-                                onToggleGeometryEdit(true);
+                                const style = [{ ...DEFAULT_ANNOTATIONS_STYLES.Point, highlight: true, id: uuidv1()}];
+                                onClickGeometry("Point", style);
                             },
                             tooltip: <Message msgId="annotations.titles.marker" />
                         },
                         {
                             glyph: 'polyline-plus',
+                            disabled: !isValidFeature,
                             onClick: () => {
-                                onAddGeometry("LineString");
-                                onSetStyle(
-                                    [{ ...DEFAULT_ANNOTATIONS_STYLES.LineString, highlight: true, id: uuidv1()}]
-                                        .concat(getStartEndPointsForLinestring()));
-                                onStartDrawing();
-                                onToggleGeometryEdit(true);
+                                const style = [{ ...DEFAULT_ANNOTATIONS_STYLES.LineString, highlight: true, id: uuidv1()}]
+                                    .concat(getStartEndPointsForLinestring());
+                                onClickGeometry("LineString", style);
                             },
                             tooltip: <Message msgId="annotations.titles.line" />
                         },
                         {
                             glyph: 'polygon-plus',
+                            disabled: !isValidFeature,
                             onClick: () => {
-                                onAddGeometry("Polygon");
-                                onSetStyle([
-                                    {...DEFAULT_ANNOTATIONS_STYLES.Polygon, highlight: true, id: uuidv1()}
-                                ]);
-                                onStartDrawing();
-                                onToggleGeometryEdit(true);
+                                const style = [
+                                    {...DEFAULT_ANNOTATIONS_STYLES.Polygon, highlight: true, id: uuidv1()}];
+                                onClickGeometry("Polygon", style);
                             },
                             tooltip: <Message msgId="annotations.titles.polygon" />
                         },
                         {
                             glyph: 'font-add',
+                            disabled: !isValidFeature,
                             onClick: () => {
-                                onAddGeometry("Text");
-                                onAddText();
-                                onSetStyle([
-                                    {...DEFAULT_ANNOTATIONS_STYLES.Text, highlight: true, type: "Text", title: "Text Style", id: uuidv1()}
-                                ]);
-                                onStartDrawing();
-                                onToggleGeometryEdit(true);
+                                const style = [
+                                    {...DEFAULT_ANNOTATIONS_STYLES.Text, highlight: true, type: "Text", title: "Text Style", id: uuidv1()}];
+                                onClickGeometry("Text", style);
                             },
                             tooltip: <Message msgId="annotations.titles.text" />
                         },
                         {
                             glyph: '1-circle-add',
+                            disabled: !isValidFeature,
                             onClick: () => {
-                                onAddGeometry("Circle");
-                                onSetStyle([
+                                const style = [
                                     {...DEFAULT_ANNOTATIONS_STYLES.Circle, highlight: true, type: "Circle", title: "Circle Style", id: uuidv1()},
                                     {...DEFAULT_ANNOTATIONS_STYLES.Point, highlight: true, iconAnchor: [0.5, 0.5], type: "Point", title: "Center Style", filtering: false, geometry: "centerPoint", id: uuidv1()}
-                                ]);
-                                onStartDrawing();
-                                onToggleGeometryEdit(true);
+                                ];
+                                onClickGeometry("Circle", style);
                             },
                             tooltip: <Message msgId="annotations.titles.circle" />
                         }
@@ -125,7 +132,7 @@ const FeaturesList = (props) => {
  * @function
  *
  */
-const FeatureCard = ({feature, selected, onDeleteGeometry, onZoom, maxZoom, onSelectFeature, onUnselectFeature}) => {
+const FeatureCard = ({feature, selected, onDeleteGeometry, onZoom, maxZoom, onSelectFeature, onUnselectFeature, setTabValue, styling, onStyleGeometry}) => {
     const type = getGeometryType(feature);
     const {properties} = feature;
     const {glyph, label} = getGeometryGlyphInfo(type);
@@ -135,7 +142,15 @@ const FeatureCard = ({feature, selected, onDeleteGeometry, onZoom, maxZoom, onSe
     return (
         <div
             className={cs('geometry-card', {'ms-selected': unselect})}
-            onClick={() => unselect ? onUnselectFeature() : onSelectFeature([feature])}
+            onClick={() =>{
+                if (unselect) {
+                    onUnselectFeature();
+                } else {
+                    onSelectFeature([feature]);
+                    setTabValue('coordinates');
+                    styling && onStyleGeometry();
+                }
+            } }
         >
             <div className="geometry-card-preview">
                 <Glyphicon glyph={glyph}/>
@@ -149,10 +164,11 @@ const FeatureCard = ({feature, selected, onDeleteGeometry, onZoom, maxZoom, onSe
                 }}
                 buttons={[
                     {
-                        Element: () => <Glyphicon glyph={isValidFeature ? "ok-sign" : "exclamation-mark"} className="text-success"/>
+                        Element: () => <Glyphicon glyph={isValidFeature ? "ok-sign" : "exclamation-mark"} className={"text-" + (isValidFeature ? "success" : "danger")}/>
                     },
                     {
                         glyph: 'zoom-to',
+                        visible: isValidFeature,
                         tooltip: <Message msgId="annotations.zoomToGeometry"/>,
                         onClick: (event) => {
                             event.stopPropagation();
@@ -162,6 +178,7 @@ const FeatureCard = ({feature, selected, onDeleteGeometry, onZoom, maxZoom, onSe
                     },
                     {
                         glyph: 'trash',
+                        visible: isValidFeature,
                         tooltip: <Message msgId="annotations.removeGeometry"/>,
                         onClick: (event) => {
                             event.stopPropagation();

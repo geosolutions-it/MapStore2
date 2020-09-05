@@ -101,7 +101,11 @@
 .mapstore-annotations-panel {
     height: 100%;
 }
-
+.annotations-empty-panel{
+    padding: 10px;
+    font-style: italic;
+    text-align: center;
+}
 #ms-annotations-panel-card{
     .msSideGrid{
         margin: 0;
@@ -378,7 +382,7 @@
         height: 100%;
         flex-direction: column;
         .ms-style-manager {
-            height: ~"calc(100% - 90px)";
+            position: relative;
             overflow-y: auto;
             overflow-x: hidden;
             .Select *{

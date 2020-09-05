@@ -333,10 +333,11 @@ class AnnotationsEditor extends React.Component {
                                     } else {
                                         this.props.onResetCoordEditor();
                                         this.props.onCancelEdit();
+                                        // Reset edit mode and geometry editor tab
+                                        !this.props.allowEdit && this.props.onToggleGeometryEdit && this.props.onToggleGeometryEdit(false);
+                                        this.setState({...this.state, tabValue: 'coordinates'});
                                     }
-                                    // Reset edit mode and geometry editor tab
-                                    !this.props.allowEdit && this.props.onToggleGeometryEdit && this.props.onToggleGeometryEdit(false);
-                                    this.setState({...this.state, tabValue: 'coordinates'});
+
                                 }
                             }, {
                                 glyph: 'trash',
@@ -353,7 +354,7 @@ class AnnotationsEditor extends React.Component {
                             }, {
                                 glyph: 'floppy-disk',
                                 tooltipId: "annotations.save",
-                                visible: !this.props.styling && this.props.canEdit || !this.props.selected,
+                                visible: this.props.canEdit || !this.props.selected,
                                 disabled: this.props.selected && this.props.selected.properties && !this.props.selected.properties.isValidFeature,
                                 onClick: () => {
 
@@ -445,7 +446,11 @@ class AnnotationsEditor extends React.Component {
                     onDeleteGeometry={this.props.onDeleteGeometry}
                     onZoom={this.props.onZoom}
                     maxZoom={this.props.maxZoom}
+                    setTabValue={this.setTabValue}
+                    styling={this.props.styling}
+                    onStyleGeometry={this.props.onStyleGeometry}
                     onSelectFeature={this.props.onSelectFeature}
+                    drawing={this.props.drawing}
                     onUnselectFeature={this.props.onResetCoordEditor}
                     onToggleGeometryEdit={this.props.onToggleGeometryEdit}
                 />
@@ -477,7 +482,7 @@ class AnnotationsEditor extends React.Component {
                 show
                 modal
                 onClose={this.props.onToggleUnsavedChangesModal}
-                onConfirm={() => { this.props.onCancelEdit(); this.props.onToggleUnsavedChangesModal(); }}
+                onConfirm={() => { this.props.onToggleUnsavedChangesModal(); }}
                 confirmButtonBSStyle="default"
                 closeGlyph="1-close"
                 confirmButtonContent={<Message msgId="annotations.confirm" />}
@@ -616,14 +621,20 @@ class AnnotationsEditor extends React.Component {
                                 disabled={!this.props.canEdit}
                                 key="coordinates"
                                 eventKey="coordinates"
-                                onClick={() => this.setState({...this.state, tabValue: 'coordinates'})}>
+                                onClick={() => {
+                                    this.setTabValue('coordinates');
+                                    this.props.styling && this.props.onStyleGeometry();
+                                }}>
                                 <Message msgId={"annotations.tabCoordinates"}/>
                             </NavItem>
                             <NavItem
                                 disabled={!this.props.canEdit}
                                 key="style"
                                 eventKey="style"
-                                onClick={() => this.setState({...this.state, tabValue: 'style'})}>
+                                onClick={() => {
+                                    this.setTabValue('style');
+                                    !this.props.styling && this.props.onStyleGeometry();
+                                }}>
                                 <Message msgId={"annotations.tabStyle"}/>
                             </NavItem>
                         </Nav>
@@ -749,6 +760,12 @@ class AnnotationsEditor extends React.Component {
             this.props.onError(errors);
         }
     };
+
+    setTabValue = (tabValue) =>{
+        if (this.state.tabValue !== tabValue) {
+            this.setState({...this.state, tabValue});
+        }
+    }
 }
 
 module.exports = AnnotationsEditor;

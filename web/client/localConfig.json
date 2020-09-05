@@ -64,7 +64,8 @@
             "multiGeometry": true,
             "validationErrors": {}
           },
-          "defaultTextAnnotation": "New"
+          "defaultTextAnnotation": "New",
+          "allowEdit": true
         },
         "maptype": {
             "mapType": "{context.mode === 'desktop' ? 'openlayers' : 'leaflet'}"

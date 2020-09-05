@@ -665,12 +665,11 @@ module.exports = (viewer) => ({
             }, assign({}, style, {highlight: false}));
             return Rx.Observable.of(action);
         }),
-    editSelectedFeatureEpic: (action$, {getState}) => action$.ofType(FEATURES_SELECTED, TOGGLE_GEOMETRY_EDIT)
+    editSelectedFeatureEpic: (action$, {getState}) => action$.ofType(FEATURES_SELECTED)
         .switchMap(() => {
             const state = getState();
             const feature = state.annotations.editing;
             const selected = state.annotations.selected;
-            const canEdit = state.annotations.editGeometry || state.annotations.allowEdit || false;
             const multiGeometry = multiGeometrySelector(state);
             const style = feature.style;
             let method = selected.geometry.type;
@@ -680,7 +679,7 @@ module.exports = (viewer) => ({
             if (selected.properties.isText) {
                 method = "Text";
             }
-            const options = canEdit ? {
+            const action = changeDrawingStatus("drawOrEdit", method, "annotations", [feature], {
                 featureProjection: "EPSG:4326",
                 stopAfterDrawing: !multiGeometry,
                 editEnabled: true,
@@ -690,15 +689,7 @@ module.exports = (viewer) => ({
                 useSelectedStyle: true,
                 transformToFeatureCollection: true,
                 addClickCallback: true
-            } : {
-                featureProjection: "EPSG:4326",
-                stopAfterDrawing: !multiGeometry,
-                editEnabled: false,
-                drawEnabled: false,
-                selectEnabled: true,
-                transformToFeatureCollection: true
-            };
-            const action = changeDrawingStatus("drawOrEdit", method, "annotations", [feature], options, assign({}, style, {highlight: false}));
+            }, assign({}, style, {highlight: false}));
             return Rx.Observable.of( changeDrawingStatus("clean"), action);
         }),
     editCircleFeatureEpic: (action$, {getState}) => action$.ofType(DRAWING_FEATURE)

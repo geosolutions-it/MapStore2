@@ -298,6 +298,7 @@ class Annotations extends React.Component {
             );
         }
         if (this.props.mode === 'list') {
+            const annotationsPresent = !!this.props.annotations.length;
             return (
                 <>
                     <div style={{display: "flex", margin: "auto", justifyContent: "center"}} className="text-center">
@@ -331,8 +332,11 @@ class Annotations extends React.Component {
                             filterText={this.props.filter}
                             onFilter={this.props.onFilter} />
                     </div>
-                    <div id="ms-annotations-panel-card">
-                        <SideGrid size="sm"  items={this.props.annotations && this.props.annotations.filter(this.applyFilter).map(a => this.renderItems(a))}/>
+                    <div id="ms-annotations-panel-card" className={(!annotationsPresent && "annotations-empty-panel")}>
+                        {!annotationsPresent && <Message msgId={"annotations.empty"}/>}
+                        { annotationsPresent &&
+                            <SideGrid size="sm" items={this.props.annotations && this.props.annotations.filter(this.applyFilter).map(a => this.renderItems(a))}/>
+                        }
                     </div>
                 </>
             );
