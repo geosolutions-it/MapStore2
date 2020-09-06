@@ -213,7 +213,6 @@ export default class MeasurementSupport extends React.Component {
                     const bearingText = this.props.measurement && this.props.measurement.showLengthAndBearingLabel && " | " + getFormattedBearingValue(segmentLengthBearing, this.props.measurement.trueBearing) || "";
                     const overlayText = this.formatLengthValue(segmentLengthDistance, props.uom, isBearing) + bearingText;
                     last(this.segmentOverlayElements).innerHTML = overlayText;
-                    last(this.segmentOverlayElements).style.cssText += this.alignTextLabels([coords[i], coords[i + 1]]);
                     last(this.segmentOverlays).setPosition(midpoint(reprojectedCoords[i], reprojectedCoords[i + 1], true));
                     this.textLabels[this.segmentOverlays.length - 1] = {
                         text: overlayText,
@@ -287,11 +286,12 @@ export default class MeasurementSupport extends React.Component {
         this.source.addFeatures(geometries.filter(g => !!g).map(geometry => new Feature({geometry})));
         const tempTextLabels = [...this.textLabels];
         newFeatures.map((newFeature) => {
+            const isBearing = !!newFeature.properties.values.find(val=>val.type === 'bearing');
             newFeature.geometry = newFeature.geometry || {};
             const isPolygon = newFeature.geometry.type === "Polygon";
-            const sliceVal = isPolygon ? 0 : 1;
+            const sliceVal = (isPolygon || isBearing) ? 0 : 1;
             const coordinates = isPolygon ? newFeature.geometry.coordinates[0] : newFeature.geometry.coordinates;
-            const tempCoordinateLengthCurr = isPolygon ? coordinates.length - 1 : coordinates.length;
+            const tempCoordinateLengthCurr = isPolygon ? coordinates.length - 1 : isBearing ? 0 : coordinates.length;
             newFeature.geometry.textLabels =  tempTextLabels.splice(0, tempCoordinateLengthCurr - sliceVal) || [];
             return newFeature;
         });
@@ -385,18 +385,6 @@ export default class MeasurementSupport extends React.Component {
         this.source.clear();
         this.props.resetGeometry();
     };
-
-    alignTextLabels = (segment) =>{
-        let deg = calculateAzimuth(segment[0], segment[1], getProjectionCode(this.props.map));
-        if (deg >= 180 && deg <= 360) {
-            deg = 270 - Math.ceil(deg);
-        } else if (deg >= 0 && deg <= 180) {
-            deg = 90 - Math.ceil(deg);
-            deg = deg - 10; // correction
-        }
-        // css style for overlay texts
-        return `transform: rotate(calc(360deg - ${deg}deg));padding:unset;top:10px;left:10px;`;
-    }
 
     saveDrawState = () => {
         this.savedDrawState = {
@@ -582,7 +570,6 @@ export default class MeasurementSupport extends React.Component {
                                 const bearingText = this.props.measurement && this.props.measurement.showLengthAndBearingLabel && " | " + getFormattedBearingValue(calculateAzimuth(segment[0], segment[1], getProjectionCode(this.props.map)), this.props.measurement.trueBearing) || "";
                                 const text = this.formatLengthValue(length, this.props.uom, false) + bearingText;
                                 this.segmentOverlayElements[this.segmentOverlays.length - i - 1].innerHTML = text;
-                                this.segmentOverlayElements[this.segmentOverlays.length - i - 1].style.cssText  += this.alignTextLabels(segment);
                                 this.segmentOverlays[this.segmentOverlays.length - i - 1].setPosition(segments[i]);
                                 this.segmentLengths[this.segmentOverlays.length - i - 1] = {
                                     value: length,
@@ -618,7 +605,6 @@ export default class MeasurementSupport extends React.Component {
                         const overlayText = this.formatLengthValue(lastSegmentLength, this.props.uom, this.props.measurement.geomType === 'Bearing', this.props.measurement.trueBearing) + bearingText;
 
                         last(this.segmentOverlayElements).innerHTML = overlayText;
-                        last(this.segmentOverlayElements).style.cssText  += this.alignTextLabels(lastSegment);
                         last(this.segmentOverlays).setPosition(midpoint(lastSegment[0], lastSegment[1], true));
                         this.textLabels[this.segmentOverlays.length - 1] = {
                             text: overlayText,
