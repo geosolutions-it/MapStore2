@@ -8,7 +8,6 @@
 
 const React = require('react');
 const PropTypes = require('prop-types');
-const ConfirmDialog = require('../../misc/ConfirmDialog');
 const Message = require('../../I18N/Message');
 const LocaleUtils = require('../../../utils/LocaleUtils');
 const bbox = require('@turf/bbox');
@@ -136,6 +135,7 @@ class Annotations extends React.Component {
         onSetErrorSymbol: PropTypes.func,
         onToggleVisibility: PropTypes.func,
         onEdit: PropTypes.func,
+        allowEdit: PropTypes.bool,
         symbolErrors: PropTypes.array,
         lineDashOptions: PropTypes.array,
         symbolList: PropTypes.array,
@@ -147,6 +147,7 @@ class Annotations extends React.Component {
         defaultShapeStrokeColor: PropTypes.string,
         defaultStyles: PropTypes.object,
         onLoadDefaultStyles: PropTypes.func,
+        onToggleGeometryEdit: PropTypes.func,
         textRotationStep: PropTypes.number
     };
 
@@ -164,7 +165,9 @@ class Annotations extends React.Component {
         onLoadAnnotations: () => {},
         annotations: [],
         maxZoom: 18,
-        onLoadDefaultStyles: () => {}
+        onLoadDefaultStyles: () => {},
+        onToggleGeometryEdit: () => {},
+        allowEdit: true
     };
     state = {
         selectFile: false
@@ -173,6 +176,7 @@ class Annotations extends React.Component {
     componentDidMount() {
         this.props.onLoadDefaultStyles(this.props.defaultShape, this.props.defaultShapeSize, this.props.defaultShapeFillColor, this.props.defaultShapeStrokeColor,
             this.props.symbolsPath);
+        this.props.onToggleGeometryEdit(this.props.allowEdit);
     }
 
     getConfig = () => {
@@ -362,6 +366,7 @@ class Annotations extends React.Component {
             defaultShapeStrokeColor={this.props.defaultShapeStrokeColor}
             defaultStyles={this.props.defaultStyles}
             textRotationStep={this.props.textRotationStep}
+            allowEdit={this.props.allowEdit}
         />;
     };
 
@@ -389,43 +394,7 @@ class Annotations extends React.Component {
 
     render() {
         let body;
-        if (this.props.closing ) {
-            body = (<ConfirmDialog
-                show
-                modal
-                onClose={this.props.onCancelClose}
-                onConfirm={this.props.onConfirmClose}
-                confirmButtonBSStyle="default"
-                closeGlyph="1-close"
-                confirmButtonContent={<Message msgId="annotations.confirm" />}
-                closeText={<Message msgId="annotations.cancel" />}>
-                <Message msgId="annotations.undo"/>
-            </ConfirmDialog>);
-        } else if (this.props.showUnsavedChangesModal) {
-            body = (<ConfirmDialog
-                show
-                modal
-                onClose={this.props.onToggleUnsavedChangesModal}
-                onConfirm={() => { this.props.onCancelEdit(); this.props.onToggleUnsavedChangesModal(); }}
-                confirmButtonBSStyle="default"
-                closeGlyph="1-close"
-                confirmButtonContent={<Message msgId="annotations.confirm" />}
-                closeText={<Message msgId="annotations.cancel" />}>
-                <Message msgId="annotations.undo"/>
-            </ConfirmDialog>);
-        } else if (this.props.showUnsavedStyleModal) {
-            body = (<ConfirmDialog
-                show
-                modal
-                onClose={this.props.onToggleUnsavedStyleModal}
-                onConfirm={() => { this.props.onCancelStyle(); this.props.onToggleUnsavedStyleModal(); }}
-                confirmButtonBSStyle="default"
-                closeGlyph="1-close"
-                confirmButtonContent={<Message msgId="annotations.confirm" />}
-                closeText={<Message msgId="annotations.cancel" />}>
-                <Message msgId="annotations.undo"/>
-            </ConfirmDialog>);
-        }  else if (this.state.selectFile) {
+        if (this.state.selectFile) {
             body = (
                 <SelectAnnotationsFile
                     text={<Message msgId="annotations.selectfiletext"/>}

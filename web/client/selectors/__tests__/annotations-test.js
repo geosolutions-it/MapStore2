@@ -34,7 +34,6 @@ const {
     annotationSelector,
     annotationsListSelector,
     symbolListSelector,
-    allowEditSelector,
     editGeometrySelector
 } = require("../annotations");
 
@@ -613,24 +612,14 @@ describe('Test annotations selectors', () => {
             }
         }).mode).toBe('list');
     });
-    it('allowEditSelector', () => {
-        // Restrict edit mode
-        expect(allowEditSelector({
-            annotations: {allowEdit: false}
-        })).toBe(false);
-        // Allow edit
-        expect(allowEditSelector({
-            annotations: {allowEdit: true}
-        })).toBe(true);
-    });
     it('editGeometrySelector', () => {
         // Edit geometry
         expect(editGeometrySelector({
             annotations: {editGeometry: false}
         })).toBe(false);
-        // Allow edit geometry
+        // Default edit geometry
         expect(editGeometrySelector({
-            annotations: {allowEdit: true}
+            annotations: {}
         })).toBe(true);
     });
 });

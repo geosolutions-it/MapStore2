@@ -64,8 +64,7 @@
             "multiGeometry": true,
             "validationErrors": {}
           },
-          "defaultTextAnnotation": "New",
-          "allowEdit": true
+          "defaultTextAnnotation": "New"
         },
         "maptype": {
             "mapType": "{context.mode === 'desktop' ? 'openlayers' : 'leaflet'}"
@@ -306,7 +305,12 @@
                 }
               }
             }
-          }, "AutoMapUpdate", "HelpLink", "DrawerMenu", "Version", "Notifications", "BackgroundSelector", "Annotations",
+          }, "AutoMapUpdate", "HelpLink", "DrawerMenu", "Version", "Notifications", "BackgroundSelector", {
+            "name": "Annotations",
+            "cfg": {
+              "allowEdit": true
+            }
+          },
             {
               "name": "Share",
               "cfg": {

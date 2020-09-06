@@ -31,8 +31,7 @@ const FeaturesList = (props) => {
         onToggleGeometryEdit,
         onStyleGeometry,
         styling,
-        setTabValue,
-        drawing
+        setTabValue
     } = props;
     const {features = []} = editing || {};
     const isValidFeature = get(props, "selected.properties.isValidFeature", true);

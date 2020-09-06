@@ -176,18 +176,6 @@ describe("test the Annotations Panel", () => {
         expect(TestUtils.scryRenderedDOMComponentsWithClass(annotations, "myeditor1").length).toBe(1);
     });
 
-    it('test annotation confirmation dialogs', ()=>{
-        let annotations = ReactDOM.render(<Annotations mode="detail" closing />, document.getElementById("container"));
-        expect(annotations).toBeTruthy();
-        expect(TestUtils.scryRenderedDOMComponentsWithClass(annotations, "modal-dialog").length).toBe(1);
-
-        annotations = ReactDOM.render(<Annotations mode="detail" showUnsavedChangesModal />, document.getElementById("container"));
-        expect(TestUtils.scryRenderedDOMComponentsWithClass(annotations, "modal-dialog").length).toBe(1);
-
-        annotations = ReactDOM.render(<Annotations mode="detail" showUnsavedStyleModal />, document.getElementById("container"));
-        expect(TestUtils.scryRenderedDOMComponentsWithClass(annotations, "modal-dialog").length).toBe(1);
-    });
-
     it('test annotation card', ()=> {
         const actions = {
             onZoom: () => {},

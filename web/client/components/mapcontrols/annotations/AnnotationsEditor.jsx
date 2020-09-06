@@ -482,7 +482,11 @@ class AnnotationsEditor extends React.Component {
                 show
                 modal
                 onClose={this.props.onToggleUnsavedChangesModal}
-                onConfirm={() => { this.props.onToggleUnsavedChangesModal(); }}
+                onConfirm={() => {
+                    this.props.selected && this.props.onResetCoordEditor();
+                    this.props.onCancelEdit(); this.props.onToggleUnsavedChangesModal();
+                    !this.props.allowEdit && this.props.onToggleGeometryEdit(false);
+                }}
                 confirmButtonBSStyle="default"
                 closeGlyph="1-close"
                 confirmButtonContent={<Message msgId="annotations.confirm" />}
@@ -507,7 +511,10 @@ class AnnotationsEditor extends React.Component {
                 show
                 modal
                 onClose={this.props.onToggleUnsavedStyleModal}
-                onConfirm={() => { this.props.onCancelStyle(); this.props.onToggleUnsavedStyleModal(); }}
+                onConfirm={() => {
+                    this.props.onCancelStyle(); this.props.onToggleUnsavedStyleModal();
+                    this.setTabValue('coordinates');
+                }}
                 confirmButtonBSStyle="default"
                 closeGlyph="1-close"
                 confirmButtonContent={<Message msgId="annotations.confirm" />}

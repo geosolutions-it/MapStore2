@@ -115,7 +115,8 @@ const Annotations = connect(panelSelector, {
     onDownload: download,
     onZoom: zoomToExtent,
     onLoadAnnotations: loadAnnotations,
-    onLoadDefaultStyles: loadDefaultStyles
+    onLoadDefaultStyles: loadDefaultStyles,
+    onToggleGeometryEdit: toggleGeometryEdit
 })(require('../components/mapcontrols/annotations/Annotations'));
 
 const ContainerDimensions = require('react-container-dimensions').default;

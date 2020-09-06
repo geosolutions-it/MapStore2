@@ -89,7 +89,8 @@ describe("test FeatureList component", () => {
             onSelectFeature: () => {},
             onUnselectFeature: () => {},
             onZoom: () => {},
-            onDeleteGeometry: () => {}
+            onDeleteGeometry: () => {},
+            setTabValue: () => {}
         };
         const spyOnSelectFeature = expect.spyOn(testHandlers, "onSelectFeature");
         const spyOnZoom = expect.spyOn(testHandlers, "onZoom");
@@ -100,6 +101,7 @@ describe("test FeatureList component", () => {
                 onUnselectFeature={testHandlers.onUnselectFeature}
                 onZoom={testHandlers.onZoom}
                 onDeleteGeometry={testHandlers.onDeleteGeometry}
+                setTabValue={testHandlers.setTabValue}
             />, document.getElementById("container"));
         const container = document.getElementById('container');
         expect(container).toBeTruthy();

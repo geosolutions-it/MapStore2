@@ -30,8 +30,7 @@ const showUnsavedGeometryModalSelector = (state) => get(state, "annotations.show
 const showDeleteFeatureModalSelector = (state) => get(state, "annotations.showDeleteFeatureModal", false);
 const closingSelector = (state) => !!get(state, "annotations.closing");
 const editingSelector = (state) => get(state, "annotations.editing");
-const allowEditSelector = (state) => get(state, "annotations.allowEdit");
-const editGeometrySelector = (state) => get(state, "annotations.editGeometry", allowEditSelector(state) || false);
+const editGeometrySelector = (state) => get(state, "annotations.editGeometry", true);
 const featureTypeSelector = (state) => get(state, "annotations.featureType");
 const coordinateEditorEnabledSelector = (state) => get(state, "annotations.coordinateEditorEnabled");
 const drawingSelector = (state) => !!get(state, "annotations.drawing");
@@ -56,7 +55,6 @@ const annotationsInfoSelector = (state) => (assign({}, {
     symbolErrors: symbolErrorsSelector(state),
     showEdit: isOpenlayers(state),
     canEdit: editGeometrySelector(state),
-    allowEdit: allowEditSelector(state),
     mouseHoverEvents: isMapInfoOpen(state),
     closing: closingSelector(state),
     format: formatSelector(state) || getConfigProp("defaultCoordinateFormat"),
@@ -153,6 +151,5 @@ module.exports = {
     symbolListSelector,
     defaultStylesSelector,
     loadingSelector,
-    allowEditSelector,
     editGeometrySelector
 };

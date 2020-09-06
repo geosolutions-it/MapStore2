@@ -22,7 +22,7 @@ const {CLOSE_IDENTIFY} = require('../../actions/mapInfo');
 const {editAnnotation, confirmRemoveAnnotation, saveAnnotation, startDrawing, cancelEditAnnotation,
     setStyle, highlight, cleanHighlight, download, loadAnnotations, SET_STYLE, toggleStyle,
     resetCoordEditor, changeRadius, changeText, changeSelected, confirmDeleteFeature, openEditor, SHOW_ANNOTATION,
-    loadDefaultStyles, LOADING, SET_DEFAULT_STYLE, toggleVisibilityAnnotation, toggleGeometryEdit
+    loadDefaultStyles, LOADING, SET_DEFAULT_STYLE, toggleVisibilityAnnotation
 } = require('../../actions/annotations');
 const {TOGGLE_CONTROL, toggleControl, SET_CONTROL_PROPERTY} = require('../../actions/controls');
 const {STYLE_POINT_MARKER} = require('../../utils/AnnotationsUtils');
@@ -497,29 +497,6 @@ describe('annotations Epics', () => {
             }
         });
         const action = toggleVisibilityAnnotation('1');
-        store.dispatch(action);
-    });
-    it('toggle geometry edit', (done) => {
-        const tempStore = mockStore({
-            annotations: {
-                editing: {},
-                selected: {properties: {}, geometry: {type: "Point"}},
-                editGeometry: true
-            }
-        });
-        tempStore.subscribe(() => {
-            const actions = store.getActions();
-            if (actions.length >= 2) {
-                expect(actions[0].type).toBe("ANNOTATIONS:TOGGLE_GEOMETRY_EDIT");
-                expect(actions[1].type).toBe("CHANGE_DRAWING_STATUS");
-                expect(actions[1].status).toBe("clean");
-                expect(actions[2].type).toBe("CHANGE_DRAWING_STATUS");
-                expect(actions[2].status).toBe("drawOrEdit");
-                expect(actions[2].options.editEnabled).toBe(true);
-                done();
-            }
-        });
-        const action = toggleGeometryEdit(true);
         store.dispatch(action);
     });
     it('save annotation', (done) => {
