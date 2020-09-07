@@ -1,9 +1,15 @@
 const fs = require('fs-extra');
 const isInProject = !fs.existsSync('./node_modules/cesium');
-const dirPrefix = isInProject ? '..' : '.';
+const isPackage = !!fs.existsSync('../../node_modules/cesium');
+const dirPrefix = isPackage
+    ? '../..'
+    : isInProject
+        ? '..'
+        : '.';
 const dir = `${dirPrefix}/web/client/libs/Cesium`;
 
 console.log("Is project: " + isInProject);
+console.log("Is package: " + isPackage);
 
 const copyFromNodeModules = () => {
     console.log("Copying Cesium from node_modules...");
