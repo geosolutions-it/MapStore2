@@ -57,6 +57,7 @@ export default ({
     onChangeFormat = () => {},
     onToggleControl = () => {},
     onZoomToPoint = () => {},
+    onClearBookmarkSearch = () => {},
     onPurgeResults,
     items = [],
     ...props
@@ -80,6 +81,7 @@ export default ({
         searchMenuOptions.push(
             <MenuItem active={activeTool === "addressSearch"} onClick={()=>{
                 onClearCoordinatesSearch({owner: "search"});
+                onClearBookmarkSearch("selected");
                 onChangeActiveSearchTool("addressSearch");
             }}
             >
@@ -93,25 +95,27 @@ export default ({
                 searchText={searchText}
                 clearSearch={clearSearch}
                 onChangeActiveSearchTool={onChangeActiveSearchTool}
+                onClearBookmarkSearch={onClearBookmarkSearch}
             />);
     }
 
     let searchByBookmarkConfig;
     if (showBookMarkSearchOption && !isEmpty(items)) {
-        const {allowBookmarkEdit, bookmarkConfig} = props;
+        const {allowUser, bookmarkSearchConfig: config} = props.bookmarkConfig || {};
         const [item] = items;
         if (some(items, "menuItem")) {
             const BookmarkMenuItem = item.menuItem;
             searchMenuOptions.push(<BookmarkMenuItem/>);
         }
-        if (some(items, "bookmarkConfig") && bookmarkConfig?.allowUser) {
+        if (some(items, "bookmarkConfig")) {
             searchByBookmarkConfig = {
                 ...item.bookmarkConfig(onToggleControl, enabledSearchBookmarkConfig, activeTool),
-                ...(!allowBookmarkEdit && {visible: false} )
+                ...(!allowUser && {visible: false})
             };
-        } else {
-            // Reset activeTool when no bookmark config
-            activeTool === "bookmarkSearch" && onChangeActiveSearchTool("addressSearch");
+        }
+        // Reset activeTool when no valid permission for bookmark
+        if (!allowUser && config?.bookmarks?.length === 0 && activeTool === "bookmarkSearch") {
+            onChangeActiveSearchTool("addressSearch");
         }
     }
 

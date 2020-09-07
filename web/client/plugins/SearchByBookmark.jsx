@@ -11,7 +11,7 @@ import { connect } from 'react-redux';
 
 import { createSelector } from 'reselect';
 import {Glyphicon, Button, MenuItem} from 'react-bootstrap';
-import { get } from 'lodash';
+import { get, isNil } from 'lodash';
 
 import { createPlugin } from '../utils/PluginsUtils';
 import {getExtentFromViewport} from "../utils/CoordinatesUtils";
@@ -55,7 +55,7 @@ const SearchByBookmarkPanel = (props) => {
         bookmarkSearchConfig = {},
         editIdx,
         zoomOnSelect = true,
-        bookmarkEditing = "ALL",
+        bookmarkEditing = "EDIT",
         allowUser
     } = props;
 
@@ -161,21 +161,23 @@ const SearchByBookmarkPanel = (props) => {
 
 };
 
+/**
+ * Check whether the user has required permission for bookmark feature
+ * @param {string} bookmarkEditing user role allowed
+ * @param {bool} loggedIn check if the user is logged into mapstore
+ * @param {bool} canEdit can user edit the map
+ * @param {number} id map id to check for new/existing map
+ * @param {bool} isAdmin logged user is an admin user
+ */
 const isAllowedUser = (
     bookmarkEditing,
     loggedIn,
     {canEdit, id},
-    bookmarks,
     isAdmin) => {
-    const bookMarkPresent = !!bookmarks.length;
-    if (bookmarkEditing === "ALL") {
-        return bookMarkPresent;
-    } else if (bookmarkEditing === "EDIT") {
-        return (loggedIn && id && canEdit && bookMarkPresent) || isAdmin;
-    } else if (bookmarkEditing === "ADMIN") {
-        return isAdmin;
-    }
-    return false;
+    const canEditMap = loggedIn && (canEdit || isNil(id));
+    return  (bookmarkEditing === "ALL"
+    || bookmarkEditing === "EDIT" && canEditMap
+    || bookmarkEditing === "ADMIN" && isAdmin);
 };
 
 /**
@@ -188,9 +190,9 @@ const isAllowedUser = (
 const BookmarkMenuItem = connect(createSelector([
     state => state?.search?.activeSearchTool || null,
     state => state?.searchbookmarkconfig || {}
-], (searchTool, bookmarkConfig, ) => ({
+], (searchTool, config, ) => ({
     active: searchTool === "bookmarkSearch",
-    show: bookmarkConfig?.allowUser
+    show: config?.allowUser || !!get(config, "bookmarkSearchConfig.bookmarks", []).length
 })), {
     onClick: changeActiveSearchTool
 })(({show, onClick, active}) => {
@@ -243,11 +245,7 @@ const selector = createSelector([
     bookmarkSearchConfig: bookmarkconfig && bookmarkconfig.bookmarkSearchConfig,
     editIdx: bookmarkconfig && bookmarkconfig.editIdx,
     filter: bookmarkconfig && bookmarkconfig.filter,
-    allowUser: isAllowedUser(get(bookmarkconfig, "bookmarkEditing"),
-        loggedIn,
-        mapInfo,
-        get(bookmarkconfig, "bookmarkSearchConfig.bookmarks", []),
-        isAdmin)
+    allowUser: isAllowedUser(get(bookmarkconfig, "bookmarkEditing"), loggedIn, mapInfo, isAdmin)
 }));
 
 const SearchByBookmarkPlugin = connect(selector, {

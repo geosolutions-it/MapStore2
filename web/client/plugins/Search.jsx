@@ -15,9 +15,9 @@ const {get, isArray} = require('lodash');
 const {searchEpic, searchOnStartEpic, searchItemSelected, zoomAndAddPointEpic, textSearchShowGFIEpic} = require('../epics/search');
 const {defaultIconStyle} = require('../utils/SearchUtils');
 const {mapSelector} = require('../selectors/map');
-const {isAdminUserSelector} = require('../selectors/security');
 const {zoomToExtent} = require( "../actions/map");
 const {configureMap} = require( "../actions/config");
+const {setSearchBookmarkConfig} = require( "../actions/searchbookmarkconfig");
 
 const {
     resultsPurge,
@@ -59,8 +59,7 @@ const searchSelector = createSelector([
     format: get(searchState, "format") || getConfigProp("defaultCoordinateFormat"),
     selectedItems: searchState && searchState.selectedItems,
     mapInitial,
-    bookmarkConfig: bookmarkConfig || {},
-    allowBookmarkEdit: (bookmarkConfig?.bookmarkEditing === "ADMIN") && isAdminUserSelector
+    bookmarkConfig: bookmarkConfig || {}
 }));
 
 const SearchBar = connect(searchSelector, {
@@ -68,6 +67,7 @@ const SearchBar = connect(searchSelector, {
     onChangeCoord: changeCoord,
     onChangeActiveSearchTool: changeActiveSearchTool,
     onClearCoordinatesSearch: removeAdditionalLayer,
+    onClearBookmarkSearch: setSearchBookmarkConfig,
     onChangeFormat: changeFormat,
     onToggleControl: toggleControl,
     onZoomToPoint: zoomAndAddPoint,

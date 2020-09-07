@@ -74,11 +74,12 @@ export const CoordinateOptions = ({
             }
         }
     }),
-    coordinatesMenuItem: ({activeTool, searchText, clearSearch, onChangeActiveSearchTool}) =>(
+    coordinatesMenuItem: ({activeTool, searchText, clearSearch, onChangeActiveSearchTool, onClearBookmarkSearch}) =>(
         <MenuItem active={activeTool === "coordinatesSearch"} onClick={() => {
             if (searchText !== undefined && searchText !== "") {
                 clearSearch();
             }
+            onClearBookmarkSearch("selected");
             onChangeActiveSearchTool("coordinatesSearch");
             document.dispatchEvent(new MouseEvent('click'));
         }}>
