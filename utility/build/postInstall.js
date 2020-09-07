@@ -41,7 +41,8 @@ if (isPackage && !isFramework) {
         );
     });
 
-    const files = fs.readdirSync(dirPrefix);
+    const files = fs.readdirSync(`${dirPrefix}/node_modules/mapstore`);
+
     const excludeRemove = [
         'package.json',
         'framework',
@@ -54,8 +55,7 @@ if (isPackage && !isFramework) {
     files.forEach(name => {
         if (excludeRemove.indexOf(name) === -1) {
             fs.removeSync(`${dirPrefix}/node_modules/mapstore/${name}`);
+            console.log(`REMOVED: ${dirPrefix}/node_modules/mapstore/${name}`);
         }
     });
-
 }
-
