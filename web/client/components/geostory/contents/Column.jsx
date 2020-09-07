@@ -63,7 +63,7 @@ export default ({
             contentToolbar
         }}
         tools={{
-            [ContentTypes.TEXT]: ['remove', size(true)],
+            [ContentTypes.TEXT]: ['remove'],
             [MediaTypes.IMAGE]: ['editMedia', size(), 'showCaption', 'remove'],
             [MediaTypes.MAP]: ['editMedia', 'editMap', size(true), 'showCaption', 'remove'],
             [ContentTypes.WEBPAGE]: ['editURL', size(true), 'remove'],
