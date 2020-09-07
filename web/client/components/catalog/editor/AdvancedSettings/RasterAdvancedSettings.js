@@ -13,7 +13,7 @@ import CommonAdvancedSettings from './CommonAdvancedSettings';
 export default ({
     service,
     formatOptions,
-    onChangeServiceFormat = () => { },
+    onChangeServiceFormat = () => {},
     ...props
 }) => {
     return (<CommonAdvancedSettings service={service} {...props}>

@@ -36,7 +36,8 @@ export default ({
     viewHeight,
     expandableMedia,
     mediaViewer,
-    contentToolbar
+    contentToolbar,
+    storyFonts
 }) => (
     <section
         className="ms-section ms-section-paragraph"
@@ -63,6 +64,7 @@ export default ({
                     [ContentTypes.TEXT]: [size(true), 'remove']
                 }
             }}
+            storyFonts={storyFonts}
         />
         {mode === Modes.EDIT && <AddBar
             containerWidth={viewWidth}

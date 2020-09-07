@@ -38,6 +38,7 @@ export default ({
 }) => {
     const theme = settings?.theme?.general;
     const {
+        fontFamily,
         borderColor,
         color,
         backgroundColor
@@ -68,7 +69,8 @@ export default ({
             style={{
                 color,
                 backgroundColor,
-                ...(borderColor && { borderBottom: `1px solid ${borderColor}` })
+                ...(borderColor && { borderBottom: `1px solid ${borderColor}` }),
+                fontFamily
             }}>
             <div
                 className="progress-bar"
@@ -119,7 +121,7 @@ export default ({
                         </div>) : null}
                     <div className="ms-geostory-navigation-metadata">
                         {isTitleEnabled &&
-                            <div className="ms-geostory-navigation-title">
+                            <div className="ms-geostory-navigation-title" style={{fontSize: settings.storyTitleFontSize || "14px"}}>
                                 {settings.storyTitle}
                             </div>
                         }

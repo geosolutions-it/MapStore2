@@ -197,7 +197,7 @@ describe('TOCUtils', () => {
             name: 'Default',
             title: {
                 'default': 'Layer',
-                'it-IT': 'Livello'
+                'no-exist': 'Label of an unknown language'
             },
             id: "layer00",
             description: "desc",
