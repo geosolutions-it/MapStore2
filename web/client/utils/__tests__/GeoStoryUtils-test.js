@@ -32,7 +32,7 @@ import {
     getWebPageComponentHeight,
     parseHashUrlScrollUpdate,
     createWebFontLoaderConfig,
-    extractFontNamesFromConfig
+    extractFontNames
 } from "../GeoStoryUtils";
 
 describe("GeoStory Utils", () => {
@@ -481,6 +481,10 @@ describe("GeoStory Utils", () => {
             {
                 family: "fam2",
                 src: "link-fam2"
+            },
+            {
+                family: "fam3",
+                safe: true
             }
         ];
 
@@ -496,7 +500,7 @@ describe("GeoStory Utils", () => {
         });
     });
     it('returns an array of font names', () => {
-        const fontFamilyConf = [
+        const fontFamilies = [
             {
                 family: "fam1",
                 src: "link-fam1"
@@ -506,6 +510,6 @@ describe("GeoStory Utils", () => {
                 src: "link-fam2"
             }
         ];
-        expect(extractFontNamesFromConfig(fontFamilyConf)).toEqual(["fam1", "fam2"]);
+        expect(extractFontNames(fontFamilies)).toEqual(["fam1", "fam2"]);
     });
 });
