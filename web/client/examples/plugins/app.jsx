@@ -24,7 +24,7 @@ const startApp = () => {
     const {changeMapType} = require('../../actions/maptype');
     const PluginsContainer = connect((state) => ({
         pluginsState: state && state.controls || {}
-    }))(require('../../components/plugins/PluginsContainer'));
+    }))(require('../../components/plugins/PluginsContainer').default);
     const dragDropContext = require('react-dnd').DragDropContext;
     const html5Backend = require('react-dnd-html5-backend');
 
