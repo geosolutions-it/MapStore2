@@ -313,7 +313,7 @@ const createSvgUrl = (style = {}, url) => {
 
                 return symbolUrlCustomized;
             }).catch(()=> {
-                return require('../product/assets/symbols/symbolMissing.svg');
+                return require('../assets/symbols/symbolMissing.svg');
             }) : new Promise((resolve) => {
             resolve(null);
         });
@@ -325,7 +325,7 @@ const createStylesAsync = (styles = []) => {
             .then(symbolUrlCustomized => {
                 return symbolUrlCustomized ? {...style, symbolUrlCustomized} : fetchStyle(hashAndStringify(style));
             }).catch(() => {
-                return {...style, symbolUrlCustomized: require('../product/assets/symbols/symbolMissing.svg')};
+                return {...style, symbolUrlCustomized: require('../assets/symbols/symbolMissing.svg')};
             }) : new Promise((resolve) => {
             resolve(isSymbolStyle(style) ? fetchStyle(hashAndStringify(style)) : style);
         });

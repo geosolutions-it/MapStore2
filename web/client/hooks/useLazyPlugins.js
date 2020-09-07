@@ -7,8 +7,8 @@
  */
 
 import { useEffect, useState } from 'react';
-import { getPlugins } from '../../../../web/client/utils/PluginsUtils';
-import { augmentStore } from '../../../../web/client/utils/StateUtils';
+import { getPlugins } from '../utils/PluginsUtils';
+import { augmentStore } from '../utils/StateUtils';
 import join from 'lodash/join';
 
 function filterRemoved(registry, removed = []) {

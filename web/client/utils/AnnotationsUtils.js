@@ -582,12 +582,12 @@ const AnnotationsUtils = {
     },
     getStartEndPointsForLinestring,
     DEFAULT_SHAPE: "triangle",
-    DEFAULT_PATH: "product/assets/symbols/",
+    DEFAULT_PATH: "assets/symbols/",
     checkSymbolsError: (symbolErrors, error = "loading_symbols_path") => {
         return symbolErrors.length && findIndex(symbolErrors, (s) => s === error) !== -1;
     },
     isAMissingSymbol: (style) => {
-        return style.symbolUrlCustomized === require('../product/assets/symbols/symbolMissing.svg');
+        return style.symbolUrlCustomized === require('../assets/symbols/symbolMissing.svg');
     },
     /**
      * it tells if the filtered list of the coordinates is a geojson polygon,

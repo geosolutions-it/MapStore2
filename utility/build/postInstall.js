@@ -19,6 +19,7 @@ if (isPackage && !isFramework) {
     const framework = [
         'actions',
         'api',
+        'assets',
         'components',
         'containers',
         'epics',
@@ -32,7 +33,9 @@ if (isPackage && !isFramework) {
         'stores',
         'themes',
         'translations',
-        'utils'
+        'utils',
+        'localConfig.json',
+        'config.json'
     ];
     framework.forEach(name => {
         fs.copySync(

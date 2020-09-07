@@ -9,10 +9,10 @@
 import React, { forwardRef } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import Debug from '../../../web/client/components/development/Debug';
+import Debug from '../development/Debug';
 import { Route } from 'react-router';
 import { ConnectedRouter } from 'connected-react-router';
-import Localized from '../../../web/client/components/I18N/Localized';
+import Localized from '../I18N/Localized';
 import { ErrorBoundary } from 'react-error-boundary';
 import { createHashHistory } from 'history';
 
