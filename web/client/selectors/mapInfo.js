@@ -113,6 +113,8 @@ const responsesSelector = state => state.mapInfo && state.mapInfo.responses || [
 
 const requestsSelector = state => state?.mapInfo?.requests || [];
 
+const isLoadedResponseSelector = state => state?.mapInfo?.loaded;
+
 /**
  * Gets only the valid responses
  */
@@ -226,5 +228,6 @@ module.exports = {
     filterNameListSelector,
     isMapPopup,
     currentEditFeatureQuerySelector,
-    mapTriggerSelector
+    mapTriggerSelector,
+    isLoadedResponseSelector
 };

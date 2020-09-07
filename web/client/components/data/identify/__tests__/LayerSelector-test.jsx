@@ -43,6 +43,7 @@ describe("LayerSelector component", () => {
         TestUtils.act(() => {
             ReactDOM.render(
                 <LayerSelector
+                    loaded
                     {...config}
                     setIndex={
                         (value) => {

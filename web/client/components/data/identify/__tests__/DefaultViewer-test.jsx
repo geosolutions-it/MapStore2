@@ -86,7 +86,7 @@ describe('DefaultViewer', () => {
             }]
         });
         const viewer = ReactDOM.render(
-            <DefaultViewer validator={validator}/>,
+            <DefaultViewer validator={validator} renderEmpty/>,
             document.getElementById("container")
         );
 

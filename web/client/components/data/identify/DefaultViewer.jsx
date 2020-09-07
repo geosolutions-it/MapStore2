@@ -36,7 +36,8 @@ class DefaultViewer extends React.Component {
         onUpdateIndex: PropTypes.func,
         setIndex: PropTypes.func,
         showEmptyMessageGFI: PropTypes.bool,
-        renderEmpty: PropTypes.bool
+        renderEmpty: PropTypes.bool,
+        loaded: PropTypes.bool
     };
 
     static defaultProps = {
@@ -54,7 +55,6 @@ class DefaultViewer extends React.Component {
             marginBottom: 0
         },
         containerProps: {},
-        index: 0,
         showEmptyMessageGFI: true,
         renderEmpty: false,
         onNext: () => {},
@@ -71,8 +71,8 @@ class DefaultViewer extends React.Component {
      */
     getResponseProperties = () => {
         const validator = this.props.validator(this.props.format);
-
-        const validResponses = validator.getValidResponses(this.props.responses, this.props.renderEmpty);
+        const responses = this.props.responses.map(res => res === undefined ? {} : res); // Replace any undefined responses
+        const validResponses = this.props.renderEmpty ? validator.getValidResponses(responses, this.props.renderEmpty) : responses;
         const invalidResponses = validator.getNoValidResponses(this.props.responses);
         const emptyResponses = this.props.requests.length === invalidResponses.length;
         const currResponse = this.getCurrentResponse(validResponses[this.props.index]);
@@ -97,7 +97,11 @@ class DefaultViewer extends React.Component {
         if (this.props.missingResponses === 0 && emptyResponses) {
             return null;
         }
-        if ( invalidResponses.length !== 0) {
+        let allowRender = invalidResponses.length !== 0;
+        if (!this.props.renderEmpty) {
+            allowRender =  allowRender && this.props.missingResponses === 0;
+        }
+        if (allowRender) {
             const titles = invalidResponses.map((res) => {
                 const {layerMetadata} = res;
                 return layerMetadata.title;
@@ -139,7 +143,7 @@ class DefaultViewer extends React.Component {
             const format = getFormatForResponse(res, this.props);
             const PageHeader = this.props.header;
             let customViewer;
-            if (layerMetadata.viewer && layerMetadata.viewer.type) {
+            if (layerMetadata?.viewer?.type) {
                 customViewer = MapInfoUtils.getViewer(layerMetadata.viewer.type);
             }
             return (<Panel
@@ -160,7 +164,6 @@ class DefaultViewer extends React.Component {
                     format={format}
                     viewers={customViewer || this.props.viewers}
                     layer={layerMetadata}/>
-
             </Panel>);
         });
     };

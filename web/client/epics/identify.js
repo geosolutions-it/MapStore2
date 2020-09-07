@@ -171,7 +171,7 @@ export default {
                                 .catch((e) => Rx.Observable.of(errorFeatureInfo(reqId, e.data || e.statusText || e.status, requestParams, lMetaData)))
                                 .startWith(newMapInfoRequest(reqId, param));
                         }
-                        return Rx.Observable.of(getVectorInfo(layer, request, metadata));
+                        return Rx.Observable.of(getVectorInfo(layer, request, metadata, queryableLayers));
                     });
                 // NOTE: multiSelection is inside the event
                 // TODO: move this flag in the application state
