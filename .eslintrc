@@ -1,6 +1,12 @@
 {
-  "parser": "babel-eslint",          // https://github.com/babel/babel-eslint
+  "parser": "@babel/eslint-parser",          // https://babeljs.io/blog/2020/07/13/the-state-of-babel-eslint#the-present
+  "parserOptions": {
+        "babelOptions": {
+            "configFile": "./build/babel.config.js" // https://babeljs.io/blog/2020/07/13/the-state-of-babel-eslint#the-present
+        }
+  },
   "plugins": [
+    "@babel",                        // https: //babeljs.io/blog/2020/07/13/the-state-of-babel-eslint#the-present
     "no-only-tests",                 // https://github.com/levibuzolic/eslint-plugin-no-only-tests
     "react",                         // https://github.com/yannickcr/eslint-plugin-react
     "import"                         // https://github.com/benmosher/eslint-plugin-import
