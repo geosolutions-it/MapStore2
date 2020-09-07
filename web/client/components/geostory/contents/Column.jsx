@@ -43,7 +43,7 @@ export default ({
     expandable,
     mediaViewer,
     contentToolbar,
-    overrideTools
+    overrideTools,
     storyFonts
 }) => (
     <Contents
