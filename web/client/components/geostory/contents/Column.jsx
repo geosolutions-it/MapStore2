@@ -43,6 +43,7 @@ export default ({
     expandable,
     mediaViewer,
     contentToolbar,
+    overrideTools,
     storyFonts
 }) => (
     <Contents
@@ -69,7 +70,8 @@ export default ({
             [MediaTypes.IMAGE]: ['editMedia', size(), 'showCaption', 'remove'],
             [MediaTypes.MAP]: ['editMedia', 'editMap', size(true), 'showCaption', 'remove'],
             [ContentTypes.WEBPAGE]: ['editURL', size(true), 'remove'],
-            [MediaTypes.VIDEO]: ['editMedia', 'muted', 'autoplay', 'loop', 'showCaption', 'remove']
+            [MediaTypes.VIDEO]: ['editMedia', 'muted', 'autoplay', 'loop', 'showCaption', 'remove'],
+            ...overrideTools
         }}
         addButtons={[{
             glyph: 'sheet',
