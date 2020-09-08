@@ -129,13 +129,13 @@ const Cascade = ({
             return (
                 <Style>
                     {`
-          .hyperClass a {
-            color: ${storyTheme?.general?.a};
-          }
-        `}
+                        .ms-sections-hyperlinks a {
+                            color: ${storyTheme?.general?.a};
+                        }
+                    `}
                     <div
                         id="ms-sections-container"
-                        className={`ms-sections-container${sizeClassName} hyperClass`}
+                        className={`ms-sections-container${sizeClassName} ms-sections-hyperlinks`}
                         style={{
                             ...storyTheme?.general,
                             ...isContentFocused && { overflow: 'hidden' }
