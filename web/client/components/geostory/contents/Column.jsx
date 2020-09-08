@@ -42,7 +42,9 @@ export default ({
     bubblingTextEditing = () => {},
     expandable,
     mediaViewer,
-    contentToolbar
+    contentToolbar,
+    overrideTools,
+    storyFonts
 }) => (
     <Contents
         className="ms-column-contents"
@@ -62,12 +64,14 @@ export default ({
             mediaViewer,
             contentToolbar
         }}
+        storyFonts={storyFonts}
         tools={{
             [ContentTypes.TEXT]: ['remove'],
             [MediaTypes.IMAGE]: ['editMedia', size(), 'showCaption', 'remove'],
             [MediaTypes.MAP]: ['editMedia', 'editMap', size(true), 'showCaption', 'remove'],
             [ContentTypes.WEBPAGE]: ['editURL', size(true), 'remove'],
-            [MediaTypes.VIDEO]: ['editMedia', 'muted', 'autoplay', 'loop', 'showCaption', 'remove']
+            [MediaTypes.VIDEO]: ['editMedia', 'muted', 'autoplay', 'loop', 'showCaption', 'remove'],
+            ...overrideTools
         }}
         addButtons={[{
             glyph: 'sheet',

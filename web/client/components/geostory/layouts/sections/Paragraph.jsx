@@ -7,9 +7,15 @@
  */
 import React from "react";
 import AddBar from '../../common/AddBar';
-import { SectionTypes, Modes, SectionTemplates} from '../../../../utils/GeoStoryUtils';
+import { SectionTypes, ContentTypes, Modes, SectionTemplates} from '../../../../utils/GeoStoryUtils';
 
 import SectionContents from "../../contents/SectionContents";
+
+const size = (pullRight) => ({
+    id: 'size',
+    filterOptions: ({ value }) => value !== 'full',
+    pullRight
+});
 
 
 /**
@@ -30,7 +36,8 @@ export default ({
     viewHeight,
     expandableMedia,
     mediaViewer,
-    contentToolbar
+    contentToolbar,
+    storyFonts
 }) => (
     <section
         className="ms-section ms-section-paragraph"
@@ -52,8 +59,12 @@ export default ({
             contentProps={{
                 expandable: expandableMedia,
                 mediaViewer,
-                contentToolbar
+                contentToolbar,
+                overrideTools: {
+                    [ContentTypes.TEXT]: [size(true), 'remove']
+                }
             }}
+            storyFonts={storyFonts}
         />
         {mode === Modes.EDIT && <AddBar
             containerWidth={viewWidth}

@@ -54,7 +54,8 @@ class Section extends React.Component {
         storyTheme: PropTypes.object,
         mediaViewer: PropTypes.func,
         contentToolbar: PropTypes.func,
-        inView: PropTypes.bool
+        inView: PropTypes.bool,
+        storyFonts: PropTypes.array
     };
 
     static defaultProps = {
@@ -69,7 +70,8 @@ class Section extends React.Component {
         viewHeight: 0,
         viewWidth: 0,
         mode: Modes.VIEW,
-        expandableMedia: false
+        expandableMedia: false,
+        storyFonts: []
     };
 
     state = {
@@ -100,6 +102,7 @@ class Section extends React.Component {
                 mediaViewer={this.props.mediaViewer}
                 contentToolbar={this.props.contentToolbar}
                 inView={this.props.inView}
+                storyFonts={this.props.storyFonts}
             />
         );
     }

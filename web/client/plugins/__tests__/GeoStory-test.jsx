@@ -29,7 +29,16 @@ describe('GeoStory Plugin', () => {
     });
     it('Shows GeoStory plugin', () => {
         const { Plugin } = getPluginForTest(GeoStory, stateMocker({geostory}));
-        ReactDOM.render(<Plugin />, document.getElementById("container"));
+        ReactDOM.render(<Plugin webFont={{load: () => {}}} />, document.getElementById("container"));
         expect(document.getElementsByClassName('ms-geostory').length).toBe(1);
+    });
+    it('Dispatches update action and sets fontFamilies', () => {
+        const { Plugin, actions, store } = getPluginForTest(GeoStory, stateMocker({geostory}));
+        const fontFamilies = [{family: "test", src: "test"}];
+        ReactDOM.render(<Plugin webFont={{load: () => {}}} fontFamilies={fontFamilies} />, document.getElementById("container"));
+
+        // expect to have dispatched update action once from useEffect(callback, [])
+        expect(actions.length).toEqual(1);
+        expect(store.getState().geostory.currentStory.settings.theme.fontFamilies).toEqual(fontFamilies);
     });
 });
