@@ -15,9 +15,9 @@ const {get, isArray} = require('lodash');
 const {searchEpic, searchOnStartEpic, searchItemSelected, zoomAndAddPointEpic, textSearchShowGFIEpic} = require('../epics/search');
 const {defaultIconStyle} = require('../utils/SearchUtils');
 const {mapSelector} = require('../selectors/map');
-const {setSearchBookmarkConfig} = require('../actions/searchbookmarkconfig');
 const {zoomToExtent} = require( "../actions/map");
 const {configureMap} = require( "../actions/config");
+const {setSearchBookmarkConfig} = require( "../actions/searchbookmarkconfig");
 
 const {
     resultsPurge,
@@ -47,7 +47,7 @@ const searchSelector = createSelector([
     state => state.controls && state.controls.searchservicesconfig || null,
     state => state.controls && state.controls.searchBookmarkConfig || null,
     state=> state.mapConfigRawData || {},
-    state => state.searchbookmarkconfig || {}
+    state => state?.searchbookmarkconfig || ''
 ], (searchState, searchservicesconfigControl, searchBookmarkConfigControl, mapInitial, bookmarkConfig) => ({
     enabledSearchServicesConfig: searchservicesconfigControl && searchservicesconfigControl.enabled || false,
     enabledSearchBookmarkConfig: searchBookmarkConfigControl && searchBookmarkConfigControl.enabled || false,
@@ -67,6 +67,7 @@ const SearchBar = connect(searchSelector, {
     onChangeCoord: changeCoord,
     onChangeActiveSearchTool: changeActiveSearchTool,
     onClearCoordinatesSearch: removeAdditionalLayer,
+    onClearBookmarkSearch: setSearchBookmarkConfig,
     onChangeFormat: changeFormat,
     onToggleControl: toggleControl,
     onZoomToPoint: zoomAndAddPoint,
@@ -74,7 +75,6 @@ const SearchBar = connect(searchSelector, {
     onSearchReset: resetSearch,
     onSearchTextChange: searchTextChanged,
     onCancelSelectedItem: cancelSelectedItem,
-    onPropertyChange: setSearchBookmarkConfig,
     onZoomToExtent: zoomToExtent,
     onLayerVisibilityLoad: configureMap
 })(require("../components/mapcontrols/search/SearchBar").default);
