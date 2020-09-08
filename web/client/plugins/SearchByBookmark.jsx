@@ -28,26 +28,6 @@ import searchbookmarkconfig from '../reducers/searchbookmarkconfig';
 import {mapInfoSelector, mapSelector} from '../selectors/map';
 import {isLoggedIn, isAdminUserSelector} from '../selectors/security';
 
-/**
- * Bookmark search configuration Plugin. Allow to add and edit additional
- * bookmarks used by search by bookmark plugin. User has to
- * save the map to persist service changes.
- *
- * @function SearchByBookmarkPanel
- * @memberof plugins
- * @param {object} props Component props
- * @param {bool} props.zoomOnSelect cfg.zoomOnSelect zooms to the extent on selecting a value from the bookmark drop down
- * rather than clicking search icon
- * @param {string} props.bookmarkEditing cfg.bookmarkEditing "ADMIN"|"EDIT"|"ALL" sets the user permission restriction
- * for bookmark edit feature
- * @example
- * {
- *     cfg: {
- *         zoomOnSelect: true,
- *         bookmarkEditing: "ADMIN"
- *     }
- * }
- */
 const SearchByBookmarkPanel = (props) => {
     const { enabled, pages, page,
         onPropertyChange,
@@ -163,6 +143,7 @@ const SearchByBookmarkPanel = (props) => {
 
 /**
  * Check whether the user has required permission for bookmark feature
+ * @ignore
  * @param {string} bookmarkEditing user role allowed
  * @param {bool} loggedIn check if the user is logged into mapstore
  * @param {bool} canEdit can user edit the map
@@ -182,6 +163,7 @@ const isAllowedUser = (
 
 /**
  * Search by bookmark menu item for Search bar burgermenu
+ * @ignore
  * @param {object} props Component props
  * @param {bool} props.show enable/disable bookmark menu item
  * @param {func} props.onClick toggle bookmark search
@@ -208,6 +190,7 @@ const BookmarkMenuItem = connect(createSelector([
 
 /**
  * Search by bookmark config for settings(configuration) button in Search bar
+ * @ignore
  * @memberof SearchByBookmark plugin
  * @param {func} toggleConfig enable/disable bookmark config
  * @param {bool} enabled bookmark config toggle status
@@ -255,6 +238,29 @@ const SearchByBookmarkPlugin = connect(selector, {
     updateBookmark,
     onFilter: filterBookmarks})(SearchByBookmarkPanel);
 
+/**
+ * Bookmark search configuration Plugin. Allow to add and edit additional
+ * bookmarks used by search by bookmark plugin. User has to
+ * save the map to persist service changes.
+ *
+ * @name SearchByBookmark
+ * @memberof plugins
+ * @class
+ * @param {bool} cfg.zoomOnSelect cfg.zoomOnSelect zooms to the extent on selecting a value from the bookmark drop down
+ * rather than clicking search icon
+ * @param {string} cfg.bookmarkEditing cfg.bookmarkEditing "ADMIN"|"EDIT"|"ALL" sets the user permission restriction
+ * for bookmark edit feature
+ * - "ADMIN": only admin can edit bookmarks
+ * - "EDIT": only users with edit permission on the current map can edit bookmarks
+ * - "ALL": everyone can edit bookmarks
+ * @example
+ * {
+ *     cfg: {
+ *         zoomOnSelect: true,
+ *         bookmarkEditing: "ADMIN"
+ *     }
+ * }
+ */
 export default createPlugin('SearchByBookmark', {
     component: SearchByBookmarkPlugin,
     containers: {
