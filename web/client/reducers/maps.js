@@ -9,11 +9,9 @@
 const {
     MAPS_LIST_LOADED, MAPS_LIST_LOADING, MAPS_LIST_LOAD_ERROR, MAP_CREATED, MAP_ERROR, MAP_UPDATING,
     MAP_DELETING, ATTRIBUTE_UPDATED, PERMISSIONS_LIST_LOADING,
-    THUMBNAIL_ERROR, RESET_UPDATING,
+    THUMBNAIL_ERROR, UPDATE_DETAILS,
     MAPS_SEARCH_TEXT_CHANGED, SEARCH_FILTER_CHANGED, SET_SEARCH_FILTER, SET_CONTEXTS, LOADING, METADATA_CHANGED,
     SHOW_DETAILS} = require('../actions/maps');
-const {
-    EDIT_MAP, RESET_CURRENT_MAP} = require('../actions/currentMap');
 const assign = require('object-assign');
 const {isNil} = require('lodash');
 /**
@@ -105,19 +103,6 @@ function maps(state = {
     case SHOW_DETAILS: {
         return assign({}, state, {showMapDetails: action.showMapDetails});
     }
-    case EDIT_MAP: {
-        return assign({}, state, {
-            metadata: {
-                name: action.map && action.map.name || state && state.metadata && state.metadata.name || "",
-                description: action.map && action.map.description || state && state.metadata && state.metadata.description || ""
-            }
-        });
-    }
-    case RESET_CURRENT_MAP: {
-        return assign({}, state, {
-            metadata: {name: "", description: ""}
-        });
-    }
     case MAPS_LIST_LOADING:
         return assign({}, state, {
             loading: true,
@@ -179,7 +164,7 @@ function maps(state = {
         };
         return assign({}, state, newMapsState);
     }
-    case THUMBNAIL_ERROR: case MAP_ERROR: case RESET_UPDATING: {
+    case THUMBNAIL_ERROR: case MAP_ERROR: {
         let newMaps = state.results === "" ? [] : [...state.results];
 
         for (let i = 0; i < newMaps.length; i++) {
@@ -202,6 +187,9 @@ function maps(state = {
         }
         );
         return newState;
+    }
+    case UPDATE_DETAILS: {
+        return {...state, detailsText: action.detailsText};
     }
     default:
         return state;

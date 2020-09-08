@@ -17,18 +17,15 @@ import {
     MAPS_GET_MAP_RESOURCES_BY_CATEGORY,
     DELETE_MAP, OPEN_DETAILS_PANEL, MAPS_LOAD_MAP,
     CLOSE_DETAILS_PANEL, NO_DETAILS_AVAILABLE, SAVE_MAP_RESOURCE, MAP_DELETED,
-    SEARCH_FILTER_CHANGED, SEARCH_FILTER_CLEAR_ALL, LOAD_CONTEXTS, ATTRIBUTE_UPDATED,
+    SEARCH_FILTER_CHANGED, SEARCH_FILTER_CLEAR_ALL, LOAD_CONTEXTS, ATTRIBUTE_UPDATED, RELOAD_MAPS,
     updateDetails, mapsLoading, mapsLoaded,
     mapDeleting, mapDeleted, loadError,
-    detailsLoaded, onDisplayMetadataEdit,
-    RESET_UPDATING, getMapResourcesByCategory,
+    detailsLoaded,
+    getMapResourcesByCategory,
     mapUpdating, savingMap, mapCreated, loadMaps, loadContexts, setContexts, setSearchFilter, loading,
     invalidateFeaturedMaps
 } from '../actions/maps';
 import { DASHBOARD_DELETED } from '../actions/dashboards';
-import {
-    resetCurrentMap
-} from '../actions/currentMap';
 import { closeFeatureGrid } from '../actions/featuregrid';
 import { toggleControl, setControlProperty } from '../actions/controls';
 import { setTabsHidden } from '../actions/contenttabs';
@@ -73,10 +70,6 @@ const calculateNewParams = state => {
     };
 };
 
-export const invalidateFeaturedMapsEpic = (action$) => action$
-    .ofType(ATTRIBUTE_UPDATED, MAP_DELETED, MAP_SAVED, DASHBOARD_DELETED)
-    .mapTo(invalidateFeaturedMaps());
-
 export const loadMapsEpic = (action$) =>
     action$.ofType(MAPS_LOAD_MAP)
         .switchMap((action) => {
@@ -91,12 +84,12 @@ export const loadMapsEpic = (action$) =>
         });
 
 export const reloadMapsEpic = (action$, { getState = () => { } }) =>
-    action$.ofType(MAP_DELETED, MAP_SAVED)
+    action$.ofType(MAP_DELETED, MAP_SAVED, RELOAD_MAPS, ATTRIBUTE_UPDATED, DASHBOARD_DELETED)
         .delay(1000)
         .switchMap(() => Rx.Observable.of(loadMaps(false,
             searchTextSelector(getState()),
             calculateNewParams(getState())
-        )));
+        ), invalidateFeaturedMaps()));
 
 export const getMapsResourcesByCategoryEpic = (action$, store) =>
     action$.ofType(MAPS_GET_MAP_RESOURCES_BY_CATEGORY)
@@ -335,17 +328,10 @@ export const fetchDataForDetailsPanel = (action$, store) =>
 export const closeDetailsPanelEpic = (action$) =>
     action$.ofType(CLOSE_DETAILS_PANEL)
         .switchMap(() => Rx.Observable.from( [
-            toggleControl("details", "enabled"),
-            resetCurrentMap()
+            toggleControl("details", "enabled")
         ])
         );
-export const resetCurrentMapEpic = (action$) =>
-    action$.ofType(RESET_UPDATING)
-        .switchMap(() => Rx.Observable.from( [
-            onDisplayMetadataEdit(false),
-            resetCurrentMap()
-        ])
-        );
+
 export const storeDetailsInfoEpic = (action$, store) =>
     action$.ofType(MAP_INFO_LOADED)
         .switchMap(() => {

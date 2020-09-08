@@ -16,7 +16,7 @@ import Message from '../../../I18N/Message';
 
 
 export default ({
-    resource = {},
+    loading = false,
     showPreview = false,
     editDetailsDisabled,
     detailsText,
@@ -34,53 +34,52 @@ export default ({
                 <Row>
                     <Col xs={6}>
                         <div className="m-label">
-                            {detailsText === 'NODATA' ? <Message msgId="map.details.add" /> : <Message msgId="map.details.rowTitle" />}
+                            {!loading && isNil(detailsText) ? <Message msgId="map.details.add" /> : <Message msgId="map.details.rowTitle" />}
                         </div>
                     </Col>
                     <Col xs={6}>
                         <div className="ms-details-sheet">
                             <div className="pull-right">
-                                {resource.saving ? <Spinner spinnerName="circle" noFadeIn overrideSpinnerClassName="spinner" /> : null}
-                                {isNil(detailsText) ? <Spinner spinnerName="circle" noFadeIn overrideSpinnerClassName="spinner" /> : <Toolbar
+                                {loading ? <Spinner spinnerName="circle" noFadeIn overrideSpinnerClassName="spinner" /> : null}
+                                {!loading && <Toolbar
                                     btnDefaultProps={{ className: 'square-button-md no-border' }}
                                     buttons={[
                                         {
                                             glyph: showPreview ? 'eye-open' : 'eye-close',
-                                            visible: detailsText !== 'NODATA',
+                                            visible: !!detailsText,
                                             onClick: () => showPreview ? onHidePreview() : onShowPreview(),
-                                            disabled: resource.saving,
+                                            disabled: loading,
                                             tooltipId: !showPreview ? "map.details.showPreview" : "map.details.hidePreview"
                                         }, {
                                             glyph: 'undo',
                                             tooltipId: "map.details.undo",
                                             visible: canUndo,
                                             onClick: () => onUndo(),
-                                            disabled: resource.saving
+                                            disabled: loading
                                         }, {
                                             glyph: 'pencil-add',
                                             tooltipId: "map.details.add",
-                                            visible: detailsText === 'NODATA',
+                                            visible: !detailsText,
                                             onClick: () => {
                                                 onShowDetailsSheet();
+                                                onUpdate();
                                             },
-                                            disabled: resource.saving
+                                            disabled: loading
                                         }, {
                                             glyph: 'pencil',
                                             tooltipId: "map.details.edit",
-                                            visible: detailsText !== 'NODATA' && !editDetailsDisabled,
+                                            visible: !!detailsText && !editDetailsDisabled,
                                             onClick: () => {
                                                 onShowDetailsSheet();
-                                                if (detailsText) {
-                                                    onUpdate(detailsText);
-                                                }
+                                                onUpdate(detailsText);
                                             },
-                                            disabled: resource.saving
+                                            disabled: loading
                                         }, {
                                             glyph: 'trash',
                                             tooltipId: "map.details.delete",
-                                            visible: detailsText !== 'NODATA',
+                                            visible: !!detailsText,
                                             onClick: () => onDelete(),
-                                            disabled: resource.saving
+                                            disabled: loading
                                         }]} />}
                             </div>
                         </div>
@@ -88,7 +87,7 @@ export default ({
                 </Row>
             </div>
             {detailsText && <div className="ms-details-preview-container">
-                {detailsText !== 'NODATA' ? <div className="ms-details-preview" dangerouslySetInnerHTML={{ __html: detailsText }} />
+                {detailsText !== '' ? <div className="ms-details-preview" dangerouslySetInnerHTML={{ __html: detailsText }} />
                     : <div className="ms-details-preview"> <Message msgId="maps.feedback.noDetailsAvailable" /></div>}
             </div>}
         </div>

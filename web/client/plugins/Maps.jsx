@@ -5,6 +5,7 @@
 * This source code is licensed under the BSD-style license found in the
 * LICENSE file in the root directory of this source tree.
 */
+
 import React from 'react';
 import PropTypes from 'prop-types';
 import assign from 'object-assign';
@@ -32,7 +33,6 @@ import {loadMaps, setShowMapDetails} from '../actions/maps';
 
 import mapsReducer from '../reducers/maps';
 import maptype from '../reducers/maptype';
-import currentMap from '../reducers/currentMap';
 
 const mapsCountSelector = createSelector(
     totalCountSelector,
@@ -115,7 +115,7 @@ class Maps extends React.Component {
 
     render() {
         return (<MapsGrid
-            maps={this.props.maps}
+            resources={this.props.maps}
             fluid={this.props.fluid}
             title={this.props.title}
             colProps={this.props.colProps}
@@ -188,7 +188,6 @@ export default {
     },
     reducers: {
         maps: mapsReducer,
-        maptype,
-        currentMap
+        maptype
     }
 };

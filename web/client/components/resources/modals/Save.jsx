@@ -17,8 +17,6 @@ const ErrorBox = require('./fragments/ErrorBox');
 const MainForm = require('./fragments/MainForm');
 const ruleEditor = require('./enhancers/ruleEditor');
 const PermissionEditor = ruleEditor(require('./fragments/PermissionEditor'));
-const DetailsRow = require('./fragments/DetailsRow').default;
-const DetailsSheet = require('./fragments/DetailsSheet').default;
 
 /**
  * Defines if the resource permissions are available or not.
@@ -70,27 +68,15 @@ class SaveModal extends React.Component {
         linkedResources: PropTypes.object,
         style: PropTypes.object,
         modalSize: PropTypes.string,
-        detailsText: PropTypes.string,
-        detailsBackup: PropTypes.string,
-        detailsTextOriginal: PropTypes.string,
         enableDetails: PropTypes.bool,
-        showDetailsPreview: PropTypes.bool,
-        showDetailsSheet: PropTypes.bool,
-        showReadOnlyDetailsSheet: PropTypes.bool,
+        detailsComponent: PropTypes.element,
         // CALLBACKS
         onError: PropTypes.func,
         onUpdate: PropTypes.func,
         onUpdateLinkedResource: PropTypes.func,
-        onDeleteLinkedResource: PropTypes.func,
         onClose: PropTypes.func,
         onFileDrop: PropTypes.func,
         onFileDropClear: PropTypes.func,
-        onShowDetailsPreview: PropTypes.func,
-        onHideDetailsPreview: PropTypes.func,
-        onShowDetailsSheet: PropTypes.func,
-        onHideDetailsSheet: PropTypes.func,
-        onUpdateDetailsText: PropTypes.func,
-        onCloseReadOnlyDetailsSheet: PropTypes.bool,
         metadataChanged: PropTypes.func,
         disablePermission: PropTypes.bool,
         availablePermissions: PropTypes.arrayOf(PropTypes.string),
@@ -122,14 +108,14 @@ class SaveModal extends React.Component {
         onUpdate: ()=> {},
         onUpdateLinkedResource: () => {},
         onDeleteLinkedResource: () => {},
-        onCloseReadOnlyDetailsSheet: () => {},
         onSave: ()=> {},
         disablePermission: false,
         availablePermissions: ["canRead", "canWrite"],
         availableGroups: [],
         canSave: true,
         user: {},
-        dialogClassName: ''
+        dialogClassName: '',
+        detailsComponent: require('./enhancers/handleDetails').default((require('./fragments/Details').default))
     };
     onCloseMapPropertiesModal = () => {
         this.props.onClose();
@@ -144,9 +130,10 @@ class SaveModal extends React.Component {
     */
     render() {
         const canEditPermission = !this.props.disablePermission && canEditResourcePermission(this.props.user, this.props.resource);
+        const Details = this.props.detailsComponent;
 
         return (<Portal key="saveDialog">
-            {!this.props.showReadOnlyDetailsSheet && <ResizableModal
+            <ResizableModal
                 loading={this.props.loading}
                 title={<Message msgId={this.props.title}/>}
                 show={this.props.show}
@@ -184,43 +171,11 @@ class SaveModal extends React.Component {
                             onError={this.props.onError}
                             nameFieldFilter={this.props.nameFieldFilter}
                             onUpdate={this.props.onUpdate} />
-                        {this.props.enableDetails && <DetailsRow
+                        {this.props.enableDetails && <Details
+                            loading={this.props.loading}
                             resource={this.props.resource}
-                            showPreview={this.props.showDetailsPreview}
-                            detailsText={this.props.detailsText}
-                            canUndo={!!this.props.linkedResources.details}
-                            onShowPreview={this.props.onShowDetailsPreview}
-                            onHidePreview={this.props.onHideDetailsPreview}
-                            onShowDetailsSheet={this.props.onShowDetailsSheet}
-                            onUpdate={this.props.onUpdateDetailsText}
-                            onDelete={() => {
-                                this.props.onUpdateLinkedResource('details', 'NODATA', 'DETAILS');
-                                this.props.onUpdateDetailsText('NODATA');
-                                this.props.onHideDetailsPreview();
-                            }}
-                            onUndo={() => {
-                                this.props.onDeleteLinkedResource('details');
-                                this.props.onUpdateDetailsText(this.props.detailsTextOriginal);
-                                if (this.props.detailsTextOriginal === 'NODATA') {
-                                    this.props.onHideDetailsPreview();
-                                }
-                            }}/>
-                        }
-                        {this.props.enableDetails && <DetailsSheet
-                            show={this.props.showDetailsSheet}
-                            resource={this.props.resource}
-                            detailsText={this.props.detailsText}
-                            onClose={() => {
-                                this.props.onHideDetailsSheet();
-                                this.props.onUpdateDetailsText(this.props.detailsBackup);
-                            }}
-                            onSave={text => {
-                                this.props.onHideDetailsSheet();
-                                this.props.onUpdateLinkedResource('details', text || 'NODATA', 'DETAILS');
-                            }}
-                            onUpdate={text => {
-                                this.props.onUpdateDetailsText(text);
-                            }}/>
+                            linkedResources={this.props.linkedResources}
+                            onUpdateLinkedResource={this.props.onUpdateLinkedResource}/>
                         }
                         {
                             !!canEditPermission &&  <PermissionEditor
@@ -231,16 +186,7 @@ class SaveModal extends React.Component {
                         }
                     </div>
                 </Grid>
-            </ResizableModal>}
-            {this.props.showReadOnlyDetailsSheet && <DetailsSheet
-                show={this.props.showReadOnlyDetailsSheet}
-                readOnly
-                resource={this.props.resource}
-                detailsText={this.props.detailsText}
-                onClose={() => {
-                    this.props.onCloseReadOnlyDetailsSheet();
-                }}
-            />}
+            </ResizableModal>
         </Portal>);
     }
     isValidForm = () => get(this.props.resource, "metadata.name") && (!this.props.enableFileDrop || this.props.fileDropStatus === 'accepted')

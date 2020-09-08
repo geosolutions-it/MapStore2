@@ -7,7 +7,6 @@
  */
 
 const GeoStoreApi = require('../api/GeoStoreDAO');
-const {updateCurrentMapGroups} = require('./currentMap');
 const MAPS_LIST_LOADED = 'MAPS_LIST_LOADED';
 const MAPS_LIST_LOADING = 'MAPS_LIST_LOADING';
 const MAPS_LIST_LOAD_ERROR = 'MAPS_LIST_LOAD_ERROR';
@@ -23,8 +22,6 @@ const ATTRIBUTE_UPDATED = 'ATTRIBUTE_UPDATED';
 const THUMBNAIL_ERROR = 'THUMBNAIL_ERROR';
 const MAP_ERROR = 'MAP_ERROR';
 const SAVE_ALL = 'SAVE_ALL';
-const DISPLAY_METADATA_EDIT = 'DISPLAY_METADATA_EDIT';
-const RESET_UPDATING = 'RESET_UPDATING';
 const SAVING_MAP = 'SAVING_MAP';
 const PERMISSIONS_LIST_LOADING = 'PERMISSIONS_LIST_LOADING';
 const MAPS_SEARCH_TEXT_CHANGED = 'MAPS_SEARCH_TEXT_CHANGED';
@@ -51,6 +48,7 @@ const DETAILS_SAVING = 'DETAILS:DETAILS_SAVING';
 const NO_DETAILS_AVAILABLE = "NO_DETAILS_AVAILABLE";
 const FEATURED_MAPS_SET_ENABLED = "FEATURED_MAPS:SET_ENABLED";
 const SAVE_MAP_RESOURCE = "SAVE_MAP_RESOURCE";
+const RELOAD_MAPS = 'MAPS:RELOAD_MAPS';
 const INVALIDATE_FEATURED_MAPS = "FEATURED_MAPS:INVALIDATE";
 
 /**
@@ -378,35 +376,6 @@ function savingMap(metadata) {
 }
 
 /**
- * performed when want to display/hide the metadata editing window
- * @memberof actions.maps
- * @param  {boolean} displayMetadataEditValue true to display, false to hide
- * @return {action}                          type `DISPLAY_METADATA_EDIT`, with the arguments as they are named
- */
-function onDisplayMetadataEdit(displayMetadataEditValue) {
-    return {
-        type: DISPLAY_METADATA_EDIT,
-        displayMetadataEditValue
-    };
-}
-
-/**
- * load the available goups for a new permission rule.
- * @memberof actions.maps
- * @param  {object} user the current user
- * @return {thunk}     dispatches updateCurrentMapGroups or loadError
- */
-function loadAvailableGroups(user) {
-    return (dispatch) => {
-        GeoStoreApi.getAvailableGroups(user).then((response) => {
-            dispatch(updateCurrentMapGroups(response));
-        }).catch((e) => {
-            dispatch(loadError(e));
-        });
-    };
-}
-
-/**
  * updates an attribute for a given map
  * @memberof actions.maps
  * @param  {number} resourceId the id of the resource
@@ -446,12 +415,10 @@ function deleteMap(resourceId, options) {
  * @memberof actions.maps
  * @return {action}        type `UPDATE_DETAILS`
 */
-function updateDetails(detailsText, doBackup, originalDetails) {
+function updateDetails(detailsText) {
     return {
         type: UPDATE_DETAILS,
-        detailsText,
-        doBackup,
-        originalDetails
+        detailsText
     };
 }
 
@@ -539,6 +506,13 @@ const saveMapResource = (resource) => ({
     resource
 });
 /**
+ * Trigger maps reload
+ * @memberof actions.maps
+ */
+const reloadMaps = () => ({
+    type: RELOAD_MAPS
+});
+/**
  * Invalidate featured maps list
  * @memberof actions.maps
  */
@@ -579,8 +553,6 @@ module.exports = {
     THUMBNAIL_ERROR,
     PERMISSIONS_LIST_LOADING,
     SAVE_ALL,
-    DISPLAY_METADATA_EDIT,
-    RESET_UPDATING,
     MAP_ERROR,
     MAPS_SEARCH_TEXT_CHANGED,
     METADATA_CHANGED,
@@ -617,13 +589,12 @@ module.exports = {
     savingMap,
     thumbnailError,
     loadError,
-    loadAvailableGroups,
-    onDisplayMetadataEdit,
     mapError,
     mapsSearchTextChanged,
     updateAttribute,
     saveMapResource,
-    invalidateFeaturedMaps,
+    reloadMaps, RELOAD_MAPS,
+    invalidateFeaturedMaps, INVALIDATE_FEATURED_MAPS,
     showDetailsSheet, SHOW_DETAILS_SHEET,
     hideDetailsSheet, HIDE_DETAILS_SHEET
 };

@@ -31,7 +31,6 @@ import {scrollIntoViewId} from '../utils/DOMUtil';
 
 import featuredmaps from '../reducers/featuredmaps';
 import maptype from '../reducers/maptype';
-import currentMap from '../reducers/currentMap';
 
 const ToolTipedNavItem = tooltip(NavItem);
 
@@ -90,7 +89,7 @@ class FeaturedMaps extends React.Component {
                 fluid={this.props.fluid}
                 className={this.props.className}
                 title={<h3><Message msgId="manager.featuredMaps" /></h3>}
-                maps={items}
+                resources={items}
                 colProps={this.props.colProps}
                 version={this.props.version}
                 viewerUrl={(res) => this.context.router.history.push('/' + this.makeShareUrl(res).url)}
@@ -232,7 +231,6 @@ export default {
     },
     reducers: {
         featuredmaps,
-        maptype,
-        currentMap
+        maptype
     }
 };

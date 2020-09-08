@@ -10,7 +10,7 @@ const { MAPS_LIST_LOADING, FEATURED_MAPS_SET_ENABLED, INVALIDATE_FEATURED_MAPS }
 
 const {set} = require('../utils/ImmutableUtils');
 
-function dashboard(state = {}, action) {
+function featuredmaps(state = {}, action) {
     switch (action.type) {
     case MAPS_LIST_LOADING: {
         return {...state,
@@ -27,4 +27,4 @@ function dashboard(state = {}, action) {
         return state;
     }
 }
-module.exports = dashboard;
+module.exports = featuredmaps;

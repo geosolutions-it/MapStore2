@@ -21,7 +21,6 @@ const {
 const { mapInfoLoaded, MAP_SAVED, LOAD_MAP_INFO, MAP_CONFIG_LOADED } = require('../../actions/config');
 const {SHOW_NOTIFICATION} = require('../../actions/notifications');
 const {TOGGLE_CONTROL, SET_CONTROL_PROPERTY} = require('../../actions/controls');
-const {RESET_CURRENT_MAP} = require('../../actions/currentMap');
 const {CLOSE_FEATURE_GRID} = require('../../actions/featuregrid');
 const {loginSuccess, logout} = require('../../actions/security');
 
@@ -172,10 +171,9 @@ describe('maps Epics', () => {
         setTimeout( () => {
             try {
                 const actions = store.getActions();
-                expect(actions.length).toBe(3);
+                expect(actions.length).toBe(2);
                 expect(actions[0].type).toBe(CLOSE_DETAILS_PANEL);
                 expect(actions[1].type).toBe(TOGGLE_CONTROL);
-                expect(actions[2].type).toBe(RESET_CURRENT_MAP);
             } catch (e) {
                 done(e);
             }
@@ -198,8 +196,6 @@ describe('maps Epics', () => {
                     break;
                 case UPDATE_DETAILS:
                     expect(action.detailsText.indexOf(detailsText)).toNotBe(-1);
-                    expect(action.originalDetails.indexOf(detailsText)).toNotBe(-1);
-                    expect(action.doBackup).toBe(true);
                     break;
                 default:
                     expect(true).toBe(false);

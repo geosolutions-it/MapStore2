@@ -20,7 +20,6 @@ const {
     MAP_UPDATING, mapUpdating,
     DETAILS_LOADED, detailsLoaded,
     ATTRIBUTE_UPDATED, attributeUpdated,
-    DISPLAY_METADATA_EDIT, onDisplayMetadataEdit,
     THUMBNAIL_ERROR, thumbnailError,
     TOGGLE_DETAILS_EDITABILITY, toggleDetailsEditability,
     MAPS_SEARCH_TEXT_CHANGED, mapsSearchTextChanged,
@@ -120,14 +119,6 @@ describe('Test correctness of the maps actions', () => {
         expect(retval.type).toBe(THUMBNAIL_ERROR);
         expect(retval.resourceId).toBe(resourceId);
         expect(retval.error.status).toBe(error.status);
-    });
-
-    it('onDisplayMetadataEdit', () => {
-        let dispMetadataValue = true;
-        let retval = onDisplayMetadataEdit(dispMetadataValue);
-        expect(retval).toExist();
-        expect(retval.type).toBe(DISPLAY_METADATA_EDIT);
-        expect(retval.displayMetadataEditValue).toBe(dispMetadataValue);
     });
 
     it('mapsSearchTextChanged', () => {

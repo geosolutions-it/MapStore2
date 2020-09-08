@@ -6,19 +6,19 @@
  * LICENSE file in the root directory of this source tree.
  */
 import handleResourceData from './handleResourceData';
-import handleDetails from './handleDetails';
 import handlePermission from './handlePermission';
 import handleErrors from './handleErrors';
+import handleDetailsDownload from './handleDetailsDownload';
 
 import { compose, branch, renderNothing } from 'recompose';
 
 export default compose(
     branch(
-        ({ show, showReadOnlyDetailsSheet }) => !show && !showReadOnlyDetailsSheet,
+        ({ show }) => !show,
         renderNothing
     ),
     handleResourceData,
-    handleDetails,
+    handleDetailsDownload,
     handlePermission(),
     handleErrors
 );

@@ -9,6 +9,7 @@
 import React from 'react';
 import Spinner from 'react-spinkit';
 import ReactQuill from 'react-quill';
+import { isNil } from 'lodash';
 
 import ResizableModal from '../../../misc/ResizableModal';
 import Portal from '../../../misc/Portal';
@@ -17,9 +18,10 @@ import Message from '../../../I18N/Message';
 import 'react-quill/dist/quill.snow.css';
 
 export default ({
+    loading = false,
     show = false,
-    resource = {},
     readOnly = false,
+    title,
     detailsText,
     modules = {
         toolbar: [
@@ -38,16 +40,21 @@ export default ({
                 <ResizableModal size="lg"
                     showFullscreen
                     onClose={() => onClose()}
-                    title={<Message msgId="map.details.title" msgParams={{ name: resource.metadata?.name }} />}
-                    show
+                    title={<Message msgId="map.details.title" msgParams={{ name: title }} />}
+                    show={show}
                 >
                     <div className="ms-detail-body">
-                        {!detailsText ? <Spinner spinnerName="circle" noFadeIn overrideSpinnerClassName="spinner" /> : <div className="ql-editor" dangerouslySetInnerHTML={{ __html: detailsText || '' }} />}
+                        {loading ?
+                            <Spinner spinnerName="circle" noFadeIn overrideSpinnerClassName="spinner" /> :
+                            isNil(detailsText) ?
+                                <div className="ql-editor"><Message msgId="maps.feedback.noDetailsAvailable"/></div> :
+                                <div className="ql-editor" dangerouslySetInnerHTML={{ __html: detailsText || '' }}/>
+                        }
                     </div>
                 </ResizableModal>
             ) : (<ResizableModal
                 show={show}
-                title={<Message msgId="map.details.title" msgParams={{ name: resource.metadata?.name }} />}
+                title={<Message msgId="map.details.title" msgParams={{ name: title }} />}
                 bodyClassName="ms-modal-quill-container"
                 size="lg"
                 clickOutEnabled={false}
@@ -64,7 +71,7 @@ export default ({
                 <div id="ms-details-editor">
                     <ReactQuill
                         bounds={"#ms-details-editor"}
-                        value={detailsText === 'NODATA' ? '<p></p>' : detailsText}
+                        value={detailsText || '<p><br></p>'}
                         onChange={(details) => {
                             if (details && details !== '<p><br></p>') {
                                 onUpdate(details);
