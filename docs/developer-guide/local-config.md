@@ -115,6 +115,7 @@ It can contain:
 1. a defaultState valid for every mode
 1. a piece of state for each mode (mobile, desktop, embedded)
 
+<h4> Catalog Tool configuration </h4>
 Inside defaultState you can set default catalog services adding the following key
 ```
 "catalog": {
@@ -136,6 +137,9 @@ Inside defaultState you can set default catalog services adding the following ke
       },
       "Demo WMS Service": {
         "url": "https://demo.geo-solutions.it/geoserver/wms",
+        "layerOptions": {
+          "tileSize": 512
+          },
         "type": "wms",
         "title": "A title for Demo WMS Service",
         "autoload": false
@@ -165,6 +169,10 @@ Set `selectedService` value to one of the ID of the services object ("Demo CSW S
 <br>Be careful to use unique IDs
 <br>Future implementations will try to detect the type from the url.
 <br>newService is used internally as the starting object for an empty service.
+
+```
+For WMS service, set `layerOptions` value as an object and include `tileSize` to make requests with particular tileSize. For example for tileSizes of 512 by 512, set `tileSize` to 512.
+```
 
 <br>
 <h4> Measure Tool configuration </h4>
