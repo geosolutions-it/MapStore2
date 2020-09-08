@@ -91,4 +91,43 @@ describe("BookmarkList component", () => {
         expect(spyOnchange.calls[2].arguments[0].value.title).toBe("Bookmark 2");
 
     });
+
+    it('test BookmarkSelect, onLayerVisibilityLoad', () => {
+        const store = {dispatch: () => {}, subscribe: () => {}, getState: () => ({searchbookmarkconfig: {
+            selected: {title: "Bookmark 1"},
+            zoomOnSelect: true,
+            bookmarkSearchConfig: {
+                bookmarks: [{title: "Bookmark 1", layerVisibilityReload: true, options: {west: 1, east: 1, north: 1, south: 1}}, {title: "Bookmark 2"}]
+            }}})};
+
+        const spyOnchange = expect.spyOn(store, "dispatch");
+
+        ReactDOM.render(
+            <Provider store={store}>
+                <BookmarkSelect mapInitial={{map: {layer: "Test"}}}/>,
+            </Provider>,
+            document.getElementById("container"));
+
+        const cmp = document.getElementById('container');
+        expect(cmp).toBeTruthy();
+
+        const input = cmp.querySelector('input');
+        expect(input).toBeTruthy();
+
+        TestUtils.Simulate.change(input, { target: { value: 'Bookmark 1' } });
+        TestUtils.Simulate.keyDown(input, {keyCode: 9, key: 'Tab' });
+
+        let selectValue = cmp.querySelector('.Select-value-label');
+        expect(selectValue.innerText).toBe("Bookmark 1");
+        expect(spyOnchange).toHaveBeenCalled();
+        expect(spyOnchange.calls[0].arguments[0].type).toBe("SET_SEARCH_BOOKMARK_CONFIG");
+        expect(spyOnchange.calls[0].arguments[0].value).toBeTruthy();
+        expect(spyOnchange.calls[0].arguments[0].value.title).toBe("Bookmark 1");
+
+        expect(spyOnchange.calls[1].arguments[0].type).toBe("MAP_CONFIG_LOADED");
+        expect(spyOnchange.calls[1].arguments[0].config).toBeTruthy();
+        expect(spyOnchange.calls[1].arguments[0].config.map).toBeTruthy();
+        expect(spyOnchange.calls[1].arguments[0].config.map.layer).toEqual("Test");
+        expect(spyOnchange.calls[1].arguments[0].config.map.bookmark_search_config).toBeTruthy();
+    });
 });
