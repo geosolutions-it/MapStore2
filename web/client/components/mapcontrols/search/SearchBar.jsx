@@ -169,7 +169,7 @@ export default ({
                 }
                 {
                     activeTool === "bookmarkSearch" && showBookMarkSearchOption &&
-                        <BookmarkSelect/>
+                        <BookmarkSelect mapInitial={props.mapInitial}/>
                 }
                 <SearchBarToolbar
                     splitTools={false}
