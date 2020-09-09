@@ -697,6 +697,7 @@
             "addAsLayer": "Add as layer"
         },
         "search":{
+            "layerMustBeVisible": "The target layer is inactive",
             "decimal": "Decimal",
             "aeronautical": "Aeronautical",
             "changeSearchInputField": "Change the search tool",
