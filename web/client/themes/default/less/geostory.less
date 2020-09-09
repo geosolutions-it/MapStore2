@@ -627,6 +627,9 @@
                     &.ms-size-large .ms-media-map > div:not(.ms-media-caption) { height: @ms-story-size-height-large; }
                     &.ms-size-medium .ms-media-map > div:not(.ms-media-caption) { height: @ms-story-size-height-medium; }
                     &.ms-size-small .ms-media-map > div:not(.ms-media-caption) { height: @ms-story-size-height-small; }
+                    &.ms-size-large .ms-media-loader { height: @ms-story-size-height-large; }
+                    &.ms-size-medium .ms-media-loader { height: @ms-story-size-height-medium; }
+                    &.ms-size-small .ms-media-loader { height: @ms-story-size-height-small; }
                 }
                 .ms-content.ms-content-image {
                     &.ms-align-center,
@@ -645,6 +648,17 @@
                 }
                 .ms-content.ms-content-video {
                     width: 100%;
+
+                    .ms-media-loader {
+                        padding-top: 56.25%;
+
+                        & > div {
+                            position: absolute;
+                            top: 50%;
+                            left: 50%;
+                            transform: translate(-50%, -50%);
+                        } 
+                    }
                 }
                 .ms-content-toolbar {
                     padding-left: 0;
@@ -741,6 +755,9 @@
                     &.ms-size-large .ms-media-map > div:not(.ms-media-caption) { height: @ms-story-size-height-large; }
                     &.ms-size-medium .ms-media-map > div:not(.ms-media-caption) { height: @ms-story-size-height-medium; }
                     &.ms-size-small .ms-media-map > div:not(.ms-media-caption) { height: @ms-story-size-height-small; }
+                    &.ms-size-large .ms-media-loader { height: @ms-story-size-height-large; }
+                    &.ms-size-medium .ms-media-loader { height: @ms-story-size-height-medium; }
+                    &.ms-size-small .ms-media-loader { height: @ms-story-size-height-small; }
                 }
                 .ms-content.ms-content-image {
                     &.ms-align-center,
@@ -760,6 +777,17 @@
                 }
                 .ms-content.ms-content-video {
                     width: 100%;
+
+                    .ms-media-loader {
+                        padding-top: 56.25%;
+
+                        & > div {
+                            position: absolute;
+                            top: 50%;
+                            left: 50%;
+                            transform: translate(-50%, -50%);
+                        } 
+                    }
                 }
             }
         }

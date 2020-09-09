@@ -41,8 +41,7 @@ const Video = withResizeDetector(({
     fit,
     loop,
     volume = 1,
-    muted,
-    loaderComponent
+    muted
 }) => {
 
     const playing = play;
@@ -51,7 +50,6 @@ const Video = withResizeDetector(({
     const [loading, setLoading] = useState(play);
 
     const isCover = fit === 'cover';
-    const LoaderComponent = loaderComponent;
 
     useEffect(() => {
         if (!started && playing) {
@@ -157,8 +155,7 @@ const Video = withResizeDetector(({
                     setLoading(true);
                     onPlay(true);
                 }}>
-                {/* {loading && <Loader size={70}/>} */}
-                {loading && LoaderComponent && <LoaderComponent wrapperStyle={{paddingTop: "56.25%"}} childStyle={{position: "absolute", top: "50%", left: "50%", transition: "top -50%, left -50%"}} />}
+                {loading && <Loader size={70}/>}
                 {error && 'Error'}
                 {!(loading || error) && !playing &&
                     <Glyphicon

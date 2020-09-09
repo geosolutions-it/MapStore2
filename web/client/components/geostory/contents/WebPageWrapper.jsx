@@ -21,7 +21,7 @@ import { getConfigProp } from '../../../utils/ConfigUtils';
 import VisibilityContainer from '../common/VisibilityContainer';
 import Loader from '../../misc/Loader';
 
-const LoaderComponent = ({wrapperClassName}) => <div className={`ms-media-loader ${wrapperClassName}`}><Loader size={52}/></div>;
+const LoaderComponent = () => <div className="ms-media-loader"><Loader size={52}/></div>;
 
 export class WebPageWrapper extends React.PureComponent {
     static propTypes = {
@@ -31,9 +31,7 @@ export class WebPageWrapper extends React.PureComponent {
         src: PropTypes.string,
         id: PropTypes.string,
         debounceTime: PropTypes.number,
-        lazy: PropTypes.bool,
-        type: PropTypes.string,
-        sectionType: PropTypes.string
+        lazy: PropTypes.bool
     }
 
     static defaultProps = {
@@ -47,7 +45,7 @@ export class WebPageWrapper extends React.PureComponent {
     }
 
     render() {
-        const { onClose, editURL, type, sectionType } = this.props;
+        const { onClose, editURL } = this.props;
         const { url, error } = this.state;
         return (
             <React.Fragment>
@@ -87,8 +85,6 @@ export class WebPageWrapper extends React.PureComponent {
                 {this.props.lazy
                     ? <VisibilityContainer
                         key={this.props.id}
-                        type={type}
-                        sectionType={sectionType}
                         id={this.props.id}
                         debounceTime={this.props.debounceTime}
                         loading={this.state.loading}
