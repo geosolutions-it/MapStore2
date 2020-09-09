@@ -61,7 +61,7 @@ class AttributeFilter extends React.PureComponent {
     }
     handleChange = (e) => {
         const value = e.target.value;
-        this.props.onChange({value, attribute: this.props.column && this.props.column.name});
+        this.props.onChange({value, attribute: this.props.column && this.props.column.key});
     }
 }
 

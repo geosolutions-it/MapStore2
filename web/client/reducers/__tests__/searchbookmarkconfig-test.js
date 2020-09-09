@@ -26,7 +26,7 @@ describe('Test the searchbookmarkconfig reducer', () => {
             config: { version: 2, map: {layers: []}}};
 
         const state = searchbookmarkconfig({}, action);
-        expect(state.bookmarkSearchConfig).toBe(undefined);
+        expect(state.bookmarkSearchConfig).toEqual({});
     });
     it('reset searchbookmarkconfig state', () => {
         const state = searchbookmarkconfig(

@@ -34,6 +34,7 @@ class CoordinatesRow extends React.Component {
         isDraggableEnabled: PropTypes.bool,
         showLabels: PropTypes.bool, // Remove it
         showDraggable: PropTypes.bool,
+        showToolButtons: PropTypes.bool,
         removeVisible: PropTypes.bool,
         formatVisible: PropTypes.bool,
         removeEnabled: PropTypes.bool,
@@ -44,7 +45,8 @@ class CoordinatesRow extends React.Component {
         showLabels: false, // Remove it
         formatVisible: false,
         onMouseEnter: () => {},
-        onMouseLeave: () => {}
+        onMouseLeave: () => {},
+        showToolButtons: true
     };
 
     constructor(props) {
@@ -195,12 +197,13 @@ class CoordinatesRow extends React.Component {
                         />
                     </InputGroup>
                 </div>
-                <div key="tools">
+                {this.props.showToolButtons && <div key="tools">
                     <Toolbar
-                        btnGroupProps={{ className: 'tools' }}
-                        btnDefaultProps={{ className: 'square-button-md no-border'}}
+                        btnGroupProps={{className: 'tools'}}
+                        btnDefaultProps={{className: 'square-button-md no-border'}}
                         buttons={toolButtons}/>
                 </div>
+                }
             </div>
         );
     }
