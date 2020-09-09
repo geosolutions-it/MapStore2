@@ -56,7 +56,7 @@ const VisibilityContainer = ({
             {!loading
                 ? cloneElement(children, { inView })
                 : LoaderComponent
-                    ? <LoaderComponent style={{height: "500px"}} />
+                    ? <LoaderComponent />
                     : null}
         </div>
     );

@@ -7,6 +7,7 @@
  */
 import React, { useState, useEffect } from 'react';
 import ReactPlayer from 'react-player';
+import Loader from '../../misc/Loader';
 import { withResizeDetector } from 'react-resize-detector';
 import { Glyphicon } from 'react-bootstrap';
 import { Modes } from '../../../utils/GeoStoryUtils';
@@ -40,16 +41,15 @@ const Video = withResizeDetector(({
     fit,
     loop,
     volume = 1,
-    muted,
-    loaderComponent
+    muted
 }) => {
+
     const playing = play;
     const [started, setStarted] = useState(playing);
     const [error, setError] = useState();
     const [loading, setLoading] = useState(play);
 
     const isCover = fit === 'cover';
-    const LoaderComponent = loaderComponent;
 
     useEffect(() => {
         if (!started && playing) {
@@ -155,7 +155,7 @@ const Video = withResizeDetector(({
                     setLoading(true);
                     onPlay(true);
                 }}>
-                {loading && LoaderComponent && <LoaderComponent size={70} style={{height: "500px"}} />}
+                {loading && <Loader size={70}/>}
                 {error && 'Error'}
                 {!(loading || error) && !playing &&
                     <Glyphicon
@@ -219,8 +219,7 @@ const VideoMedia = ({
     muted,
     onPlay = () => {},
     mode,
-    containerInView = true,
-    loaderComponent
+    containerInView = true
 }) => {
 
     // ensure both container and content are visible
@@ -271,7 +270,6 @@ const VideoMedia = ({
                 fit={fit}
                 loop={loop}
                 muted={muted}
-                loaderComponent={loaderComponent}
             />
             {credits && <div className="ms-media-credits">
                 <small>

@@ -86,7 +86,7 @@ class Image extends Component {
                         fontFamily: `object-fit: ${fit}`,
                         cursor: enableFullscreen ? 'pointer' : 'default'
                     }}/>}
-                {(src && !this.props.status) && LoaderComponent && <LoaderComponent style={{height: "500px"}} />}
+                {(src && !this.props.status) && LoaderComponent && <LoaderComponent />}
                 {(this.props.status === 'error') && ErrorComponent && <ErrorComponent />}
                 {credits && <div className="ms-media-credits">
                     <small>
