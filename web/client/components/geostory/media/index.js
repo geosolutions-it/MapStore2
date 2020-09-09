@@ -23,7 +23,7 @@ export const typesMap = {
 };
 
 const ErrorComponent = () => <div className="ms-media-error"><Glyphicon glyph="exclamation-sign"/></div>;
-const LoaderComponent = () => <div className="ms-media-loader"><Loader size={52}/></div>;
+const LoaderComponent = ({style = {}}) => <div style={style} className="ms-media-loader"><Loader size={52}/></div>;
 
 /**
  * Media component renders different kind of media based on type or mediaType

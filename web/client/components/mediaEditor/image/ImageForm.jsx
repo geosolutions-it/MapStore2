@@ -8,7 +8,7 @@
 
 import React from 'react';
 import { ControlLabel, Form, FormControl, FormGroup } from 'react-bootstrap';
-import { compose, getContext, defaultProps, withHandlers, withStateHandlers} from 'recompose';
+import { compose, getContext, defaultProps, withHandlers, withStateHandlers, withProps, branch} from 'recompose';
 
 
 import LocaleUtils from '../../../utils/LocaleUtils';
@@ -16,6 +16,17 @@ import Message from '../../I18N/Message';
 import BorderLayout from '../../layout/BorderLayout';
 import Toolbar from '../../misc/toolbar/Toolbar';
 import withConfirm from '../../misc/withConfirm';
+
+function addImageDimensions(src, setPropertiesFunc) {
+    const img = new Image();
+    img.onload = () => {
+        setPropertiesFunc({
+            imgHeight: img.height,
+            imgWidth: img.width
+        });
+    };
+    img.src = src;
+}
 
 const form = [
     {
@@ -63,7 +74,8 @@ const form = [
 const enhance = compose(
     defaultProps({
         confirmTitle: <Message msgId = "mediaEditor.mediaform.confirmExitTitle"/>,
-        confirmContent: <Message msgId = "mediaEditor.mediaform.confirmExitContent"/>
+        confirmContent: <Message msgId = "mediaEditor.mediaform.confirmExitContent"/>,
+        addImageDimensionsFunc: addImageDimensions
     }),
     withStateHandlers(
         ({selectedItem = {}, editing}) => ({
@@ -71,8 +83,18 @@ const enhance = compose(
             confirmPredicate: false
         }),
         {
-            setProperties: () => (properties) => ({properties, confirmPredicate: true})
+            setProperties: (state) => (properties) => ({properties: {...state.properties, ...properties}, confirmPredicate: true})
         }),
+    // for retro-compatibility, try and support users whose image resources don't imgHeight and imgWidth
+    branch(({properties, editing}) => (editing && !properties.imgHeight && !properties.imgWidth),
+        withProps(({ properties, setProperties, addImageDimensionsFunc }) => {
+            addImageDimensionsFunc(properties.src, setProperties);
+            return {
+                properties,
+                confirmPredicate: false
+            };
+        })
+    ),
     withHandlers({
         onClick: ({setAddingMedia, setEditingMedia, editing}) => () => {
             editing && setEditingMedia(false) || setAddingMedia(false);
@@ -88,7 +110,8 @@ export default enhance(({
     onClick = () => {},
     setProperties = () => {},
     onSave = () => {},
-    messages
+    messages,
+    addImageDimensionsFunc
 }) => (
     <BorderLayout
         className="ms-imageForm"
@@ -117,7 +140,7 @@ export default enhance(({
                     }, {
                         glyph: "floppy-disk",
                         tooltipId: "mediaEditor.mediaPicker.save",
-                        disabled: !properties.src || !properties.title,
+                        disabled: !properties.src || !properties.title || !(properties.imgHeight && properties.imgWidth),
                         onClick: () => {
                             onSave(properties);
                         }
@@ -137,6 +160,9 @@ export default enhance(({
                         placeholder={LocaleUtils.getMessageById(messages, field.placeholder)}
                         value={properties[field.id] || ""}
                         onChange={(event) => {
+                            if (field.id === "src") {
+                                addImageDimensionsFunc(event.target.value, setProperties);
+                            }
                             setProperties({
                                 ...properties,
                                 [field.id]: event.target.value
