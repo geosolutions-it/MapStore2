@@ -814,37 +814,4 @@ describe("test the CoordinatesEditor Panel", () => {
         const invalidPolygon = buttons[0].getElementsByClassName('glyphicon-exclamation-mark');
         expect(invalidPolygon).toBeTruthy();
     });
-    it('CoordinatesEditor, coordinate fields disabled by default for annotation', () => {
-        const components = [{
-            lat: 10,
-            lon: 10
-        }, {
-            lat: 6,
-            lon: 6
-        }];
-
-        let editor = ReactDOM.render(
-            <CoordinatesEditor
-                {...testHandlers}
-                canEdit={false}
-                isMouseEnterEnabled
-                type="LineString"
-                format="decimal"
-                components={components}
-                renderer={"annotations"}
-            />, document.getElementById("container")
-        );
-        expect(editor).toExist();
-
-        const inputs = TestUtils.scryRenderedDOMComponentsWithTag(editor, "input");
-        const buttons = TestUtils.scryRenderedDOMComponentsWithTag(editor, "button");
-        const lat = inputs[0];
-        const lon = inputs[1];
-        const dragFirstRow = buttons[2];
-        const delFristRow = buttons[3];
-        expect(lat.disabled).toBe(true);
-        expect(lon.disabled).toBe(true);
-        expect(dragFirstRow.disabled).toBe(true);
-        expect(delFristRow.disabled).toBe(true);
-    });
 });

@@ -33,8 +33,7 @@ class AeronauticalCoordinateEditor extends React.Component {
         aeronauticalOptions: PropTypes.object,
         coordinate: PropTypes.string,
         onChange: PropTypes.func,
-        onKeyDown: PropTypes.func,
-        canEdit: PropTypes.bool
+        onKeyDown: PropTypes.func
     };
     static defaultProps = {
         coordinate: "lat",
@@ -46,8 +45,7 @@ class AeronauticalCoordinateEditor extends React.Component {
                 step: 0.0001
             }
         },
-        onKeyDown: () => {},
-        canEdit: true
+        onKeyDown: () => {}
     }
 
     onChange = (part, newValue) => {
@@ -137,7 +135,6 @@ class AeronauticalCoordinateEditor extends React.Component {
                         placeholder="d"
                         onChange={e => this.onChange("degrees", parseInt(e.target.value, 10))}
                         step={1}
-                        disabled={!this.props.canEdit}
                         max={this.props.maxDegrees}
                         min={-1}
                         onKeyDown={(event) => {
@@ -152,7 +149,6 @@ class AeronauticalCoordinateEditor extends React.Component {
                     <FormControl
                         key={this.props.coordinate + "minutes"}
                         placeholder={"m"}
-                        disabled={!this.props.canEdit}
                         value={this.props.minutes}
                         onChange={e => this.onChange("minutes", parseInt(e.target.value, 10))}
                         max={60}
@@ -171,7 +167,6 @@ class AeronauticalCoordinateEditor extends React.Component {
                         key={this.props.coordinate + "seconds"}
                         value={this.props.seconds}
                         placeholder="s"
-                        disabled={!this.props.canEdit}
                         onChange={e => this.onChange("seconds", parseFloat(e.target.value))}
                         step={stepSeconds}
                         max={60}
@@ -188,7 +183,6 @@ class AeronauticalCoordinateEditor extends React.Component {
 
                     <FormControl
                         componentClass="select" placeholder="select"
-                        disabled={!this.props.canEdit}
                         value={this.props.direction}
                         onChange={e => this.onChange("direction", e.target.value)}
                         style={{ minWidth: 45, paddingLeft: 4, paddingRight: 4, flex: "1 1 0%" }}>

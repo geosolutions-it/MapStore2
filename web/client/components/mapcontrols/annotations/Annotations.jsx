@@ -135,7 +135,6 @@ class Annotations extends React.Component {
         onSetErrorSymbol: PropTypes.func,
         onToggleVisibility: PropTypes.func,
         onEdit: PropTypes.func,
-        allowEdit: PropTypes.bool,
         symbolErrors: PropTypes.array,
         lineDashOptions: PropTypes.array,
         symbolList: PropTypes.array,
@@ -147,7 +146,6 @@ class Annotations extends React.Component {
         defaultShapeStrokeColor: PropTypes.string,
         defaultStyles: PropTypes.object,
         onLoadDefaultStyles: PropTypes.func,
-        onToggleGeometryEdit: PropTypes.func,
         textRotationStep: PropTypes.number
     };
 
@@ -165,9 +163,7 @@ class Annotations extends React.Component {
         onLoadAnnotations: () => {},
         annotations: [],
         maxZoom: 18,
-        onLoadDefaultStyles: () => {},
-        onToggleGeometryEdit: () => {},
-        allowEdit: true
+        onLoadDefaultStyles: () => {}
     };
     state = {
         selectFile: false
@@ -176,7 +172,6 @@ class Annotations extends React.Component {
     componentDidMount() {
         this.props.onLoadDefaultStyles(this.props.defaultShape, this.props.defaultShapeSize, this.props.defaultShapeFillColor, this.props.defaultShapeStrokeColor,
             this.props.symbolsPath);
-        this.props.onToggleGeometryEdit(this.props.allowEdit);
     }
 
     getConfig = () => {
@@ -366,7 +361,6 @@ class Annotations extends React.Component {
             defaultShapeStrokeColor={this.props.defaultShapeStrokeColor}
             defaultStyles={this.props.defaultStyles}
             textRotationStep={this.props.textRotationStep}
-            allowEdit={this.props.allowEdit}
         />;
     };
 

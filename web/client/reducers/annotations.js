@@ -21,7 +21,7 @@ const {REMOVE_ANNOTATION, CONFIRM_REMOVE_ANNOTATION, CANCEL_REMOVE_ANNOTATION, C
     UNSAVED_CHANGES, TOGGLE_GEOMETRY_MODAL, TOGGLE_CHANGES_MODAL, CHANGED_PROPERTIES, TOGGLE_STYLE_MODAL, UNSAVED_STYLE,
     ADD_TEXT, CHANGED_SELECTED, RESET_COORD_EDITOR, CHANGE_RADIUS, CHANGE_TEXT,
     ADD_NEW_FEATURE, SET_EDITING_FEATURE, SET_INVALID_SELECTED, TOGGLE_DELETE_FT_MODAL, CONFIRM_DELETE_FEATURE, HIGHLIGHT_POINT,
-    CHANGE_FORMAT, UPDATE_SYMBOLS, ERROR_SYMBOLS, SET_DEFAULT_STYLE, LOADING, CHANGE_GEOMETRY_TITLE, TOGGLE_GEOMETRY_EDIT
+    CHANGE_FORMAT, UPDATE_SYMBOLS, ERROR_SYMBOLS, SET_DEFAULT_STYLE, LOADING, CHANGE_GEOMETRY_TITLE
 } = require('../actions/annotations');
 
 const {validateCoordsArray, getAvailableStyler, convertGeoJSONToInternalModel, addIds, validateFeature,
@@ -623,9 +623,6 @@ function annotations(state = { validationErrors: {} }, action) {
                 clickPoint: {latlng: {lat: action.point.lat, lng: action.point.lon }},
                 showMarker: true
             });
-    }
-    case TOGGLE_GEOMETRY_EDIT: {
-        return {...state, editGeometry: action.canEdit};
     }
     case CHANGE_FORMAT: {
         return {...state, format: action.format};

@@ -44,8 +44,7 @@ const {
     setEditingFeature,
     setDefaultStyle,
     loading,
-    changeGeometryTitle,
-    toggleGeometryEdit
+    changeGeometryTitle
 } = require('../../actions/annotations');
 const {PURGE_MAPINFO_RESULTS} = require('../../actions/mapInfo');
 const {drawingFeatures, selectFeatures} = require('../../actions/draw');
@@ -1612,10 +1611,5 @@ describe('Test the annotations reducer', () => {
             selected: {properties: {id: '1', geometryTitle: ""}}}, changeGeometryTitle("New title"));
         expect(state.selected).toBeTruthy();
         expect(state.selected.properties.geometryTitle).toBe('New title');
-    });
-    it('Toggle edit geometry', ()=>{
-        const state = annotations({}, toggleGeometryEdit(true));
-        expect(state.editGeometry).toBeTruthy();
-        expect(state.editGeometry).toBe(true);
     });
 });

@@ -28,7 +28,6 @@ const FeaturesList = (props) => {
         onSetStyle,
         onStartDrawing,
         onAddText,
-        onToggleGeometryEdit,
         onStyleGeometry,
         styling,
         setTabValue
@@ -42,7 +41,6 @@ const FeaturesList = (props) => {
         type === "Text" && onAddText();
         onSetStyle(style);
         onStartDrawing();
-        onToggleGeometryEdit(true);
         setTabValue('coordinates');
     };
     return (

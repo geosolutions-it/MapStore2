@@ -45,7 +45,6 @@ const MeasureEditor = require('./MeasureEditor');
  * @prop {string} mapProjection crs of the map
  * @prop {string} isDraggable tells if the coordinate row is draggable
  * @prop {string} renderer flag to determine the rendering component
- * @prop {boolean} canEdit flag to check for edit permission
  *
 */
 class CoordinatesEditor extends React.Component {
@@ -72,8 +71,7 @@ class CoordinatesEditor extends React.Component {
         isDraggable: PropTypes.bool,
         isMouseEnterEnabled: PropTypes.bool,
         isMouseLeaveEnabled: PropTypes.bool,
-        renderer: PropTypes.string,
-        canEdit: PropTypes.bool
+        renderer: PropTypes.string
     };
 
     static contextTypes = {
@@ -109,8 +107,7 @@ class CoordinatesEditor extends React.Component {
         isMouseEnterEnabled: false,
         isMouseLeaveEnabled: false,
         properties: {},
-        type: "Point",
-        canEdit: true
+        type: "Point"
     };
 
     getValidationStateRadius = (radius) => {
@@ -127,7 +124,6 @@ class CoordinatesEditor extends React.Component {
                 <FormGroup validationState={this.getValidationStateRadius(this.props.properties.radius)}>
                     <ControlLabel><Message msgId="annotations.editor.radius"/></ControlLabel>
                     <MeasureEditor
-                        canEdit={this.props.canEdit}
                         placeholder="radius"
                         {...this.props.measureOptions}
                         value={this.props.properties.radius}
@@ -151,7 +147,7 @@ class CoordinatesEditor extends React.Component {
     }
 
     render() {
-        const {componentsValidation, type, canEdit} = this.props;
+        const {componentsValidation, type} = this.props;
         const actualComponents = [...this.props.components];
         const actualValidComponents = actualComponents.filter(validateCoords);
         const allValidComponents = actualValidComponents.length === actualComponents.length;
@@ -187,7 +183,7 @@ class CoordinatesEditor extends React.Component {
             {
                 glyph: 'plus',
                 tooltipId: 'annotations.editor.add',
-                visible: componentsValidation[type].add && componentsValidation[type].max ? this.props.components.length !== componentsValidation[type].max : canEdit,
+                visible: componentsValidation[type].add && componentsValidation[type].max ? this.props.components.length !== componentsValidation[type].max : true,
                 onClick: () => {
                     let tempComps = [...this.props.components];
                     tempComps = tempComps.concat([{lat: "", lon: ""}]);
@@ -245,14 +241,13 @@ class CoordinatesEditor extends React.Component {
                         aeronauticalOptions={this.props.aeronauticalOptions}
                         sortId={idx}
                         key={idx + " key"}
-                        canEdit={this.props.canEdit}
                         renderer={this.props.renderer}
                         isDraggable={this.props.isDraggable}
-                        isDraggableEnabled={this.props.canEdit && this.props.isDraggable && this[componentsValidation[type].validation]()}
+                        isDraggableEnabled={this.props.isDraggable && this[componentsValidation[type].validation]()}
                         showDraggable={this.props.isDraggable && !(this.props.type === "Point" || this.props.type === "Text" || this.props.type === "Circle")}
                         formatVisible={false}
                         removeVisible={componentsValidation[type].remove}
-                        removeEnabled={this.props.canEdit && this[componentsValidation[type].validation](this.props.components, componentsValidation[type].remove, idx)}
+                        removeEnabled={this[componentsValidation[type].validation](this.props.components, componentsValidation[type].remove, idx)}
                         onSubmit={this.change}
                         onMouseEnter={(val) => {
                             if (this.props.isMouseEnterEnabled || this.props.type === "LineString" || this.props.type === "Polygon" || this.props.type === "MultiPoint") {

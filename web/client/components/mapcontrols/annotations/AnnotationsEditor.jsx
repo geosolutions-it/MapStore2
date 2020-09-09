@@ -90,14 +90,12 @@ const {getComponents, coordToArray, validateCoords} = require('../../../utils/An
  * @prop {function} onResetCoordEditor triggered when the user goes back from the coordinate editor, it will open a dialog for unsaved changes
  * @prop {function} onZoom triggered when the user zooms to an annotation
  * @prop {function} onDownload triggered when the user exports
- * @prop {function} onToggleGeometryEdit triggered when the user selects edit geometry from toolbar
  * @prop {function} onChangeGeometryTitle triggered when the user changes geometry title in coordinate editor panel
  * @prop {function} onSelectFeature triggered when the user clicks on a geometry card
  * @prop {boolean} coordinateEditorEnabled triggered when the user zooms to an annotation
  * @prop {object} selected Feature containing the geometry and the properties used for the coordinated editor
  * @prop {object} aeronauticalOptions options for aeronautical format (seconds decimals and step)
  * @prop {number} maxZoom max zoome the for annotation (default 18)
- * @prop {boolean} canEdit current geometry edit permission
  * @prop {function} onDeleteFeature triggered when user click on trash icon of the coordinate editor
  * @prop {function} onUpdateSymbols triggered when user click on refresh icon of the symbols addon
  * @prop {function} onSetErrorSymbol set a flag in the state to say if the default symbols exists
@@ -112,7 +110,6 @@ const {getComponents, coordToArray, validateCoords} = require('../../../utils/An
  * @prop {string} defaultShapeSize default symbol shape size in px
  * @prop {object} defaultStyles object with default symbol styles
  * @prop {number} textRotationStep rotation step of text styler
- * @prop {boolean} allowEdit override geometry edit permission
  *
  * In addition, as the Identify viewer interface mandates, every feature attribute is mapped as a component property (in addition to the feature object).
  */
@@ -148,7 +145,6 @@ class AnnotationsEditor extends React.Component {
         onChangeRadius: PropTypes.func,
         onChangeText: PropTypes.func,
         onChangeGeometryTitle: PropTypes.func,
-        onToggleGeometryEdit: PropTypes.func,
         onCancelClose: PropTypes.func,
         onSetInvalidSelected: PropTypes.func,
         onDeleteGeometry: PropTypes.func,
@@ -207,9 +203,7 @@ class AnnotationsEditor extends React.Component {
         defaultShapeFillColor: PropTypes.string,
         defaultShapeStrokeColor: PropTypes.string,
         defaultStyles: PropTypes.object,
-        textRotationStep: PropTypes.number,
-        canEdit: PropTypes.bool,
-        allowEdit: PropTypes.bool
+        textRotationStep: PropTypes.number
     };
 
     static defaultProps = {
@@ -333,8 +327,7 @@ class AnnotationsEditor extends React.Component {
                                     } else {
                                         this.props.onResetCoordEditor();
                                         this.props.onCancelEdit();
-                                        // Reset edit mode and geometry editor tab
-                                        !this.props.allowEdit && this.props.onToggleGeometryEdit && this.props.onToggleGeometryEdit(false);
+                                        // Reset geometry editor tab
                                         this.setState({...this.state, tabValue: 'coordinates'});
                                     }
 
@@ -347,20 +340,10 @@ class AnnotationsEditor extends React.Component {
                                     this.setState({removing: this.props.id});
                                 }
                             }, {
-                                glyph: 'pencil',
-                                tooltipId: "annotations.enableEdit",
-                                visible: this.props.selected && !this.props.canEdit,
-                                onClick: ()=> this.props.onToggleGeometryEdit(true)
-                            }, {
                                 glyph: 'floppy-disk',
                                 tooltipId: "annotations.save",
-                                visible: this.props.canEdit || !this.props.selected,
                                 disabled: this.props.selected && this.props.selected.properties && !this.props.selected.properties.isValidFeature,
-                                onClick: () => {
-
-                                    !this.props.allowEdit && this.props.onToggleGeometryEdit && this.props.onToggleGeometryEdit(false);
-                                    this.save();
-                                }
+                                onClick: () => this.save()
                             },
                             {
                                 glyph: 'download',
@@ -452,7 +435,6 @@ class AnnotationsEditor extends React.Component {
                     onSelectFeature={this.props.onSelectFeature}
                     drawing={this.props.drawing}
                     onUnselectFeature={this.props.onResetCoordEditor}
-                    onToggleGeometryEdit={this.props.onToggleGeometryEdit}
                 />
                 }
             </div>
@@ -485,7 +467,6 @@ class AnnotationsEditor extends React.Component {
                 onConfirm={() => {
                     this.props.selected && this.props.onResetCoordEditor();
                     this.props.onCancelEdit(); this.props.onToggleUnsavedChangesModal();
-                    !this.props.allowEdit && this.props.onToggleGeometryEdit(false);
                 }}
                 confirmButtonBSStyle="default"
                 closeGlyph="1-close"
@@ -586,7 +567,6 @@ class AnnotationsEditor extends React.Component {
                             <Glyphicon glyph={glyph} style={{fontSize: 20, paddingRight: 8}}/>
                             <div style={{flex: 1}}>
                                 <FormControl
-                                    disabled={!this.props.canEdit}
                                     value={this.props.selected?.properties?.geometryTitle || label || this.props.selected?.properties?.id}
                                     name="text"
                                     placeholder="Enter geometry title"
@@ -602,7 +582,6 @@ class AnnotationsEditor extends React.Component {
                                 <FormGroup validationState={!this.props.selected?.properties.valueText ? "error" : null}>
                                     <ControlLabel><Message msgId="annotations.editor.text"/></ControlLabel>
                                     <FormControl
-                                        disabled={!this.props.canEdit}
                                         value={this.props.selected?.properties?.valueText || ''}
                                         name="text"
                                         placeholder="text value"
@@ -625,7 +604,6 @@ class AnnotationsEditor extends React.Component {
                         </div>}
                         <Nav bsStyle="tabs" activeKey={this.state.tabValue} justified>
                             <NavItem
-                                disabled={!this.props.canEdit}
                                 key="coordinates"
                                 eventKey="coordinates"
                                 onClick={() => {
@@ -635,7 +613,6 @@ class AnnotationsEditor extends React.Component {
                                 <Message msgId={"annotations.tabCoordinates"}/>
                             </NavItem>
                             <NavItem
-                                disabled={!this.props.canEdit}
                                 key="style"
                                 eventKey="style"
                                 onClick={() => {
@@ -648,7 +625,6 @@ class AnnotationsEditor extends React.Component {
                         <div style={{flex: 1, overflow: 'auto', paddingTop: 8}}>
                             {this.state.tabValue === 'coordinates' &&
                             <GeometryEditor
-                                canEdit={this.props.canEdit}
                                 options={this.props.config && this.props.config.geometryEditorOptions}
                                 drawing={this.props.drawing}
                                 aeronauticalOptions={this.props.aeronauticalOptions}

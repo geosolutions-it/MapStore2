@@ -29,13 +29,13 @@ describe('AeronauticalCoordinateEditor enhancer', () => {
         expect(elements.length).toBe(3);
     });
     it('AeronauticalCoordinateEditor rendering from annotation viewer with defaults', () => {
-        ReactDOM.render(<AeronauticalCoordinateEditor canEdit={false}/>, document.getElementById("container"));
+        ReactDOM.render(<AeronauticalCoordinateEditor/>, document.getElementById("container"));
         const container = document.getElementById('container');
         const elements = container.querySelectorAll('input');
         expect(elements.length).toBe(3);
-        expect(elements[0].disabled).toBe(true);
-        expect(elements[1].disabled).toBe(true);
-        expect(elements[2].disabled).toBe(true);
+        expect(elements[0].disabled).toBe(false);
+        expect(elements[1].disabled).toBe(false);
+        expect(elements[2].disabled).toBe(false);
     });
     it('AeronauticalCoordinateEditor rendering with 13.3333333333', () => {
         ReactDOM.render(<AeronauticalCoordinateEditor value={13.3333333333} />, document.getElementById("container"));

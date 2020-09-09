@@ -79,8 +79,7 @@ const {
     LOAD_DEFAULT_STYLES, loadDefaultStyles,
     LOADING, loading,
     TOGGLE_ANNOTATION_VISIBILITY, toggleVisibilityAnnotation,
-    CHANGE_GEOMETRY_TITLE, changeGeometryTitle,
-    TOGGLE_GEOMETRY_EDIT, toggleGeometryEdit
+    CHANGE_GEOMETRY_TITLE, changeGeometryTitle
 } = require('../annotations');
 
 describe('Test correctness of the annotations actions', () => {
@@ -382,11 +381,6 @@ describe('Test correctness of the annotations actions', () => {
         const result = toggleVisibilityAnnotation('1');
         expect(result.type).toBe(TOGGLE_ANNOTATION_VISIBILITY);
         expect(result.id).toBe('1');
-    });
-    it('toggleGeometryEdit', () => {
-        const result = toggleGeometryEdit(true);
-        expect(result.type).toBe(TOGGLE_GEOMETRY_EDIT);
-        expect(result.canEdit).toBe(true);
     });
     it('changeGeometryTitle ', () => {
         const result = changeGeometryTitle('New title');

@@ -37,16 +37,14 @@ class CoordinatesRow extends React.Component {
         removeVisible: PropTypes.bool,
         formatVisible: PropTypes.bool,
         removeEnabled: PropTypes.bool,
-        renderer: PropTypes.string,
-        canEdit: PropTypes.bool
+        renderer: PropTypes.string
     };
 
     static defaultProps = {
         showLabels: false, // Remove it
         formatVisible: false,
         onMouseEnter: () => {},
-        onMouseLeave: () => {},
-        canEdit: true
+        onMouseLeave: () => {}
     };
 
     constructor(props) {
@@ -86,7 +84,7 @@ class CoordinatesRow extends React.Component {
         const toolButtons = [
             {
                 visible: this.props.removeVisible,
-                disabled: !this.props.removeEnabled && !this.props.canEdit,
+                disabled: !this.props.removeEnabled,
                 glyph: 'trash',
                 onClick: () => {
                     this.props.onRemove(idx);
@@ -110,7 +108,7 @@ class CoordinatesRow extends React.Component {
                         text: <Message msgId="search.aeronautical"/>
                     }
                 ],
-                visible: this.props.canEdit && this.props.formatVisible,
+                visible: this.props.formatVisible,
                 Element: DropdownToolbarOptions
             },
             {
@@ -151,7 +149,6 @@ class CoordinatesRow extends React.Component {
                     <InputGroup>
                         <InputGroup.Addon><Message msgId="latitude"/></InputGroup.Addon>
                         <CoordinateEntry
-                            canEdit={this.props.canEdit}
                             format={this.props.format}
                             aeronauticalOptions={this.props.aeronauticalOptions}
                             coordinate="lat"
@@ -176,7 +173,6 @@ class CoordinatesRow extends React.Component {
                     <InputGroup>
                         <InputGroup.Addon><Message msgId="longitude"/></InputGroup.Addon>
                         <CoordinateEntry
-                            canEdit={this.props.canEdit}
                             format={this.props.format}
                             aeronauticalOptions={this.props.aeronauticalOptions}
                             coordinate="lon"

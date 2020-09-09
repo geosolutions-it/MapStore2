@@ -142,7 +142,6 @@ describe("test the AnnotationsEditor Panel", () => {
 
         const spySave = expect.spyOn(testHandlers, 'onSaveHandler');
         const spyCancel = expect.spyOn(testHandlers, 'onCancelHandler');
-        const spyOnToggleGeometryEdit = expect.spyOn(testHandlers, 'onToggleGeometryEditHandler');
 
         const viewer = ReactDOM.render(<AnnotationsEditor {...feature} {...actions}
             selected={null}
@@ -151,7 +150,6 @@ describe("test the AnnotationsEditor Panel", () => {
                 features: [{}]
             }}
             onSave={testHandlers.onSaveHandler}
-            onToggleGeometryEdit={testHandlers.onToggleGeometryEditHandler}
             onCancelEdit={testHandlers.onCancelHandler}/>, document.getElementById("container"));
         expect(viewer).toExist();
 
@@ -159,10 +157,8 @@ describe("test the AnnotationsEditor Panel", () => {
 
         expect(saveButton).toExist();
         TestUtils.Simulate.click(saveButton);
-
         expect(spySave.calls.length).toEqual(1);
         expect(spyCancel.calls.length).toEqual(0);
-        expect(spyOnToggleGeometryEdit.calls.length).toEqual(1);
     });
 
     it('test click cancel', () => {

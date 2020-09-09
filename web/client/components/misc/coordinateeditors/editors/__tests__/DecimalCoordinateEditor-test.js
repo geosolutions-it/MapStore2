@@ -33,7 +33,7 @@ describe('DecimalCoordinateEditor enhancer', () => {
         const container = document.getElementById('container');
         const elements = container.querySelectorAll('input');
         expect(elements.length).toBe(1);
-        expect(elements[0].disabled).toBe(true);
+        expect(elements[0].disabled).toBe(false);
     });
     it('Test DecimalCoordinateEditor onKeyDown with keyCode 69 "e" ', () => {
         ReactDOM.render( <DecimalCoordinateEditor value={19} />, document.getElementById("container"));
