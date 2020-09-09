@@ -1048,6 +1048,7 @@
             "edit": "Edit",
             "remove": "Delete",
             "save": "Save annotation",
+            "saveGeometry": "Save geometry",
             "cancel": "Cancel",
             "back": "Back to annotation",
             "applyStyle": "Apply Style",

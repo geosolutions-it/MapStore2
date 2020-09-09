@@ -1048,6 +1048,7 @@
             "edit": "Modifica",
             "remove": "Rimuovi",
             "save": "Salva",
+            "saveGeometry": "Salva la geometria",
             "cancel": "Annulla",
             "back": "Indietro",
             "applyStyle": "Applica stile",

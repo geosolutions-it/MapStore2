@@ -341,7 +341,7 @@ class AnnotationsEditor extends React.Component {
                                 }
                             }, {
                                 glyph: 'floppy-disk',
-                                tooltipId: "annotations.save",
+                                tooltipId: !isEmpty(this.props.selected) ? "annotations.saveGeometry" : "annotations.save",
                                 disabled: this.props.selected && this.props.selected.properties && !this.props.selected.properties.isValidFeature,
                                 onClick: () => this.save()
                             },
@@ -736,9 +736,10 @@ class AnnotationsEditor extends React.Component {
     save = () => {
         const errors = this.validate();
         if (Object.keys(errors).length === 0) {
-            this.props.selected && this.props.onAddNewFeature();
-            this.props.onSave(this.props.id, assign({}, this.props.editedFields),
-                this.props.editing.features, this.props.editing.style, this.props.editing.newFeature || false, this.props.editing.properties);
+            this.props.onError({});
+            this.props.selected ? this.props.onAddNewFeature() :
+                this.props.onSave(this.props.id, assign({}, this.props.editedFields),
+                    this.props.editing.features, this.props.editing.style, this.props.editing.newFeature || false, this.props.editing.properties);
         } else {
             this.props.onError(errors);
         }
