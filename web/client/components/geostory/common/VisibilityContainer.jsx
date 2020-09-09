@@ -9,6 +9,7 @@ import React, { useRef, useEffect, cloneElement } from 'react';
 import PropTypes from 'prop-types';
 import { useInView } from 'react-intersection-observer';
 import debounce from 'lodash/debounce';
+import { SectionTypes, MediaTypes, ContentTypes } from '../../../utils/GeoStoryUtils';
 
 /**
  * VisibilityContainer: mount the actual component only when in view
@@ -20,6 +21,8 @@ import debounce from 'lodash/debounce';
  */
 const VisibilityContainer = ({
     id,
+    type,
+    sectionType,
     onLoad,
     loading,
     debounceTime,
@@ -29,6 +32,15 @@ const VisibilityContainer = ({
     const  [ref, inView] = useInView();
     const updateVisibility = useRef(null);
     const LoaderComponent = loaderComponent;
+
+    let loaderWrapperClassName = "";
+    if ((sectionType === SectionTypes.PARAGRAPH || sectionType === SectionTypes.IMMERSIVE) && type === MediaTypes.MAP) {
+        loaderWrapperClassName = "ms-content.ms-content-map";
+    }
+
+    if ((sectionType === SectionTypes.PARAGRAPH || sectionType === SectionTypes.IMMERSIVE) && type === ContentTypes.WEBPAGE) {
+        loaderWrapperClassName = "ms-content.ms-content-webPage";
+    }
 
     useEffect(() => {
         updateVisibility.current = debounce((loadedId) => {
@@ -56,7 +68,7 @@ const VisibilityContainer = ({
             {!loading
                 ? cloneElement(children, { inView })
                 : LoaderComponent
-                    ? <LoaderComponent />
+                    ? <LoaderComponent wrapperClassName={loaderWrapperClassName} />
                     : null}
         </div>
     );

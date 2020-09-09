@@ -23,7 +23,7 @@ export const typesMap = {
 };
 
 const ErrorComponent = () => <div className="ms-media-error"><Glyphicon glyph="exclamation-sign"/></div>;
-const LoaderComponent = () => <div className="ms-media-loader"><Loader size={52}/></div>;
+const LoaderComponent = ({wrapperClassName, wrapperStyle = {}, childStyle = {}}) => <div className={`ms-media-loader ${wrapperClassName}`} style={wrapperStyle}><Loader style={childStyle} size={52}/></div>;
 
 /**
  * Media component renders different kind of media based on type or mediaType
@@ -33,7 +33,7 @@ const LoaderComponent = () => <div className="ms-media-loader"><Loader size={52}
  * @prop {string} type one of 'image' or 'map' (used when mediaType is equal to undefined)
  * @prop {number} debounceTime debounce time for lazy loading
  */
-const Media = ({ debounceTime, mediaViewer, ...props }) => {
+const Media = ({ debounceTime, mediaViewer, sectionType, ...props }) => {
     // store all ids inside an immersive section
     // in this way every media is loaded only when in view
     const [loading, onLoad] = useState({});
@@ -50,6 +50,8 @@ const Media = ({ debounceTime, mediaViewer, ...props }) => {
                 key={props.id}
                 id={props.id}
                 debounceTime={debounceTime}
+                sectionType={sectionType}
+                type={props.mediaType || props.type}
                 loading={isLoading}
                 onLoad={(id) => onLoad({ ...loading, [id]: false })}
                 loaderComponent={LoaderComponent}>
