@@ -697,6 +697,7 @@
             "addAsLayer": "Aggiungi come livello"
         },
         "search":{
+            "layerMustBeVisible": "Il livello di destinazione è inattivo",
             "decimal": "Decimali",
             "aeronautical": "Aeronautiche",
             "changeSearchInputField": "Cambia lo strumento di ricerca",

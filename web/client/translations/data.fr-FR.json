@@ -697,6 +697,7 @@
             "addAsLayer": "Ajouter comme couche"
         },
         "search": {
+            "layerMustBeVisible": "Le calque cible est inactif",
             "decimal": "Décimal",
             "aeronautical": "Aéronautique",
             "changeSearchInputField": "Changer l'outil de recherche",
