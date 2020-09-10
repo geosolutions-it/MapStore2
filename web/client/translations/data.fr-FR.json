@@ -2035,6 +2035,8 @@
             "contrastEnhancement": "Contrast enhancement",
             "placeholderInput": "Entrez une valeur",
             "placeholderEnterImageUrl": "Entrez l'URL de l'image",
+            "missingImageUrl": "URL d'image manquante",
+            "invalidImageUrl": "URL d'image incorrecte",
             "selectPlaceholder": "Sélectionnez la valeur",
             "noResultsSelectInput": "Aucun résultat",
             "channelAuto": "Auto",
