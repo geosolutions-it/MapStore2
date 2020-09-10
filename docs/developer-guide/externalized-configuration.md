@@ -2,9 +2,9 @@
 
 Most of the MapStore configuration files can be externalized using a **data directory**.
 
-Currently this functionality can only be enabled for projects, not for the main product.
+Currently this functionality can only be enabled for projects, not for the main product. For the main product the externalization support is limited to the [Database Setup](../database-setup) )
 
-This is useful if you have custom configurations that you don't want to overwrite when you deploy a new version of your MapStore project.
+Externalization of configurations is useful if you have custom configurations that you don't want to overwrite when you deploy a new version of your MapStore project.
 
 This is a list of backend configuration files that can be externalized in the data directory:
 
@@ -76,7 +76,7 @@ Dynamic files will always be written by the UI in the first location in the list
 
 ### Proxy
 
-This must be done in the WEB-INF web.xml file:
+This must be done in the `WEB-INF/web.xml` file:
 
 ```xml
 <context-param>
@@ -85,9 +85,9 @@ This must be done in the WEB-INF web.xml file:
 </context-param>
 ```
 
-## Logging
+### Logging
 
-This must be done in the WEB-INF web.xml file:
+This must be done in the `WEB-INF/web.xml` file:
 
 ```xml
 <context-param>
@@ -96,9 +96,9 @@ This must be done in the WEB-INF web.xml file:
 </context-param>
 ```
 
-## Database Connection
+### Database Connection
 
-This must be done in the geostore-datasource-ovr.properties file:
+This must be done in the `geostore-datasource-ovr.properties` file:
 
 ```properties
 geostoreDataSource.driverClassName=org.postgresql.Driver
@@ -126,15 +126,9 @@ So to externalize the configuration files you can simply change their URLs to th
 !!! note
     The configuration service utility can be used to load only allowed files (this is done for security reasons). Only json files can be allowed, and the extension is automatically appended.
     By default the following resources are allowed:
-    * localConfig.json
-    * pluginsConfig.json
-    * extensions.json
-    * config.json
-    * new.json
+    `localConfig.json`, `pluginsConfig.json`, `extensions.json`, `config.json`, `new.json`.
     The list of allowed resources can be changed, via the allowed.resources JVM environment variable:
-    ```sh
-    java -Dallowed.resources=localConfig,pluginsConfig,extensions,config,new ...
-    ```
+    `java -Dallowed.resources=localConfig,pluginsConfig,extensions,config,new ...`
 
 
 
