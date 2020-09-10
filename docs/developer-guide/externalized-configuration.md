@@ -134,31 +134,31 @@ So to externalize the configuration files you can simply change their URLs to th
 
 **You can externalize the following files to the data directory by adding the relative line in the `app.jsx`** :
 
-* Application (localConfig.json):
+* Application (`localConfig.json`):
 
 ```javascript
 ConfigUtils.setLocalConfigurationFile("rest/config/load/localConfig.json");
 ```
 
-* Static maps (new.json and config.json):
+* Static maps (`new.json` and `config.json`):
 
 ```javascript
 ConfigUtils.setConfigProp("configurationFolder", "rest/config/load/");
 ```
 
-* Extensions configuration (extensions.json):
+* Extensions configuration (`extensions.json`):
 
 ```javascript
 ConfigUtils.setConfigProp("extensionsRegistry", "rest/config/load/extensions.json");
 ```
 
-* Context Editor (pluginsConfig.json):
+* Context Editor (`pluginsConfig.json`):
 
 ```javascript
 ConfigUtils.setConfigProp("contextPluginsConfiguration", "rest/config/load/pluginsConfig.json");
 ```
 
-* Assets folder: (setting this will cause assets are loaded using a different service, /rest/config/loadasset.):
+* Assets folder: (setting this will cause assets are loaded using a different service, `/rest/config/loadasset.`):
 
 ```javascript
 ConfigUtils.setConfigProp("extensionsFolder", "rest/config/loadasset?resource=");
