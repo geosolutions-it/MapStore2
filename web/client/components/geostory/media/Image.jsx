@@ -42,8 +42,7 @@ class Image extends Component {
         loaderComponent: PropTypes.element,
         errorComponent: PropTypes.element,
         caption: PropTypes.string,
-        imgWidth: PropTypes.number,
-        imgHeight: PropTypes.number
+        loaderStyle: PropTypes.object
     };
 
     componentDidMount() {
@@ -68,13 +67,8 @@ class Image extends Component {
             showCaption,
             caption = description,
             credits,
-            imgWidth = 9,
-            imgHeight = 16
+            loaderStyle
         } = this.props;
-
-        // Calculate paddingTop for setting a proper aspect ratio. The default values for
-        // height and width are 9 and 16 respectively to give us 16:9 aspect ratio
-        const paddingTop = (imgHeight / imgWidth) * 100;
 
         const LoaderComponent = this.props.loaderComponent;
         const ErrorComponent = this.props.errorComponent;
@@ -95,7 +89,7 @@ class Image extends Component {
                         fontFamily: `object-fit: ${fit}`,
                         cursor: enableFullscreen ? 'pointer' : 'default'
                     }}/>}
-                {(src && !this.props.status) && LoaderComponent && <LoaderComponent style={{paddingTop: `${paddingTop}%`}} />}
+                {(src && !this.props.status) && LoaderComponent && <LoaderComponent style={{...loaderStyle}} />}
                 {(this.props.status === 'error') && ErrorComponent && <ErrorComponent />}
                 {credits && <div className="ms-media-credits">
                     <small>

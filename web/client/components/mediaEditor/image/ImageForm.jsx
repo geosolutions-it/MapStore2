@@ -8,7 +8,7 @@
 
 import React from 'react';
 import { ControlLabel, Form, FormControl, FormGroup } from 'react-bootstrap';
-import { compose, getContext, defaultProps, withHandlers, withStateHandlers, withProps, branch} from 'recompose';
+import { compose, getContext, defaultProps, withHandlers, withStateHandlers, lifecycle } from 'recompose';
 
 
 import LocaleUtils from '../../../utils/LocaleUtils';
@@ -17,13 +17,16 @@ import BorderLayout from '../../layout/BorderLayout';
 import Toolbar from '../../misc/toolbar/Toolbar';
 import withConfirm from '../../misc/withConfirm';
 
-function addImageDimensions(src, setPropertiesFunc) {
+function getImageDimensions(src, callback) {
     const img = new Image();
     img.onload = () => {
-        setPropertiesFunc({
-            imgHeight: img.height,
-            imgWidth: img.width
+        callback({
+            imgWidth: img.naturalWidth,
+            imgHeight: img.naturalHeight
         });
+    };
+    img.onerror = () => {
+        callback({});
     };
     img.src = src;
 }
@@ -75,7 +78,7 @@ const enhance = compose(
     defaultProps({
         confirmTitle: <Message msgId = "mediaEditor.mediaform.confirmExitTitle"/>,
         confirmContent: <Message msgId = "mediaEditor.mediaform.confirmExitContent"/>,
-        addImageDimensionsFunc: addImageDimensions
+        getImageDimensionsFunc: getImageDimensions
     }),
     withStateHandlers(
         ({selectedItem = {}, editing}) => ({
@@ -86,15 +89,17 @@ const enhance = compose(
             setProperties: (state) => (properties) => ({properties: {...state.properties, ...properties}, confirmPredicate: true})
         }),
     // for retro-compatibility, try and support users whose image resources don't imgHeight and imgWidth
-    branch(({properties, editing}) => (editing && !properties.imgHeight && !properties.imgWidth),
-        withProps(({ properties, setProperties, addImageDimensionsFunc }) => {
-            addImageDimensionsFunc(properties.src, setProperties);
-            return {
-                properties,
-                confirmPredicate: false
-            };
-        })
-    ),
+    lifecycle({
+        componentDidMount() {
+            const { editing, properties, getImageDimensionsFunc, onSave } = this.props;
+            if (editing && !properties.imgHeight && !properties.imgWidth) {
+                getImageDimensionsFunc(properties.src,
+                    (dimensions) =>
+                        onSave({ ...properties, ...dimensions })
+                );
+            }
+        }
+    }),
     withHandlers({
         onClick: ({setAddingMedia, setEditingMedia, editing}) => () => {
             editing && setEditingMedia(false) || setAddingMedia(false);
@@ -111,7 +116,7 @@ export default enhance(({
     setProperties = () => {},
     onSave = () => {},
     messages,
-    addImageDimensionsFunc
+    getImageDimensionsFunc
 }) => (
     <BorderLayout
         className="ms-imageForm"
@@ -140,9 +145,12 @@ export default enhance(({
                     }, {
                         glyph: "floppy-disk",
                         tooltipId: "mediaEditor.mediaPicker.save",
-                        disabled: !properties.src || !properties.title || !(properties.imgHeight && properties.imgWidth),
+                        disabled: !properties.src || !properties.title,
                         onClick: () => {
-                            onSave(properties);
+                            getImageDimensionsFunc(properties.src,
+                                (dimensions) =>
+                                    onSave({ ...properties, ...dimensions })
+                            );
                         }
                     }]} />
             </div>
@@ -160,9 +168,6 @@ export default enhance(({
                         placeholder={LocaleUtils.getMessageById(messages, field.placeholder)}
                         value={properties[field.id] || ""}
                         onChange={(event) => {
-                            if (field.id === "src") {
-                                addImageDimensionsFunc(event.target.value, setProperties);
-                            }
                             setProperties({
                                 ...properties,
                                 [field.id]: event.target.value

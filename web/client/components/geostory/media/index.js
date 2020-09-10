@@ -6,13 +6,20 @@
  * LICENSE file in the root directory of this source tree.
  */
 import React, { useState } from 'react';
+import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import { createSelector } from 'reselect';
+import find from 'lodash/find';
+
 import VisibilityContainer from '../common/VisibilityContainer';
 import { Glyphicon } from 'react-bootstrap';
 import image from './Image';
 import map from './Map';
 import video from './Video';
 import Loader from '../../misc/Loader';
+
+import { SectionTypes, MediaTypes } from '../../../utils/GeoStoryUtils';
+import { resourcesSelector } from '../../../selectors/geostory';
 
 export const Image = image;
 
@@ -43,6 +50,19 @@ const Media = ({ debounceTime, mediaViewer, ...props }) => {
 
     const MediaType = mediaViewer || typesMap[props.mediaType || props.type] || Image;
 
+    let loaderStyle = {};
+    const sectionType = props.sectionType;
+    const type = props.mediaType || props.type;
+    if ((sectionType === SectionTypes.PARAGRAPH || sectionType === SectionTypes.IMMERSIVE) &&
+    type === MediaTypes.IMAGE) {
+        const id = props.resourceId;
+        const resourceData = find(props.resources, { id }).data;
+        // Calculate paddingTop for setting a proper aspect ratio. The default values for
+        // height and width are 9 and 16 respectively to give us 16:9 aspect ratio
+        const paddingTop = ((resourceData?.imgHeight || 9) / (resourceData?.imgWidth || 16)) * 100;
+        loaderStyle = {paddingTop: `${paddingTop}%`};
+    }
+
     return props.lazy
         ? (
             <VisibilityContainer
@@ -52,11 +72,13 @@ const Media = ({ debounceTime, mediaViewer, ...props }) => {
                 debounceTime={debounceTime}
                 loading={isLoading}
                 onLoad={(id) => onLoad({ ...loading, [id]: false })}
-                loaderComponent={LoaderComponent}>
+                loaderComponent={LoaderComponent}
+                loaderStyle={loaderStyle}>
                 <MediaType
                     {...props}
                     type={props.mediaType || props.type}
                     loaderComponent={LoaderComponent}
+                    loaderStyle={loaderStyle}
                     errorComponent={ErrorComponent}/>
             </VisibilityContainer>
         )
@@ -85,4 +107,4 @@ Media.defaultProps = {
     type: ''
 };
 
-export default Media;
+export default connect(createSelector(resourcesSelector, (resources) => ({resources})))(Media);
