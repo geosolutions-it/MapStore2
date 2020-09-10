@@ -52,7 +52,8 @@ export default compose(
     mediaViewer,
     contentToolbar,
     inView,
-    sections = []
+    sections = [],
+    storyFonts
 }) => {
     const hideContent = get(focusedContent, "target.id") === contentId;
     const visibility = hideContent ?  'hidden' : 'visible';
@@ -128,6 +129,7 @@ export default compose(
                 bubblingTextEditing={bubblingTextEditing}
                 storyTheme={overlayStoryTheme}
                 sections={sections}
+                storyFonts={storyFonts}
             />
             {mode === Modes.EDIT && !hideContent && <AddBar
                 containerWidth={viewWidth}

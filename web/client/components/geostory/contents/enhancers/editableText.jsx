@@ -16,7 +16,8 @@ import { branch, compose, renderComponent, withHandlers, withProps, withState, l
 import {
     EMPTY_CONTENT,
     SectionTypes,
-    customEntityTransform } from "../../../../utils/GeoStoryUtils";
+    customEntityTransform,
+    DEFAULT_FONT_FAMILIES } from "../../../../utils/GeoStoryUtils";
 
 /**
  * HOC that adds WYSIWYG editor to a content. The editor will replace the component when activated, and it will be activated again when
@@ -70,64 +71,66 @@ export default compose(
                 }
             }),
             // default properties for editor
-            withProps(({ sections = [], placeholder, toolbarStyle = {}, className = "ms-text-editor"}) => ({
-                editorRef: ref => setTimeout(() => ref && ref.focus && ref.focus(), 100), // handle auto-focus on edit
-                stripPastedStyles: true,
-                placeholder,
-                toolbarStyle,
-                toolbar: {
-                    // [here](https://jpuri.github.io/react-draft-wysiwyg/#/docs) you can find some examples (hard to find them in the official draft-js doc)
-                    options: ['fontFamily', 'blockType', 'fontSize', 'inline', 'textAlign', 'colorPicker', 'list', 'link', 'remove'],
-                    inGeoStoryContext: true,
-                    fontFamily: {
-                        options: ['inherit', 'Arial', 'Georgia', 'Impact', 'Tahoma', 'Times New Roman', 'Verdana'],
-                        className: undefined,
-                        component: undefined,
-                        dropdownClassName: undefined
+            withProps(({ sections = [], storyFonts = [], placeholder, toolbarStyle = {}, className = "ms-text-editor"}) => {
+                const fonts = storyFonts.length > 0 ? storyFonts : DEFAULT_FONT_FAMILIES;
+                return ({
+                    editorRef: ref => setTimeout(() => ref && ref.focus && ref.focus(), 100), // handle auto-focus on edit
+                    stripPastedStyles: true,
+                    placeholder,
+                    toolbarStyle,
+                    toolbar: {
+                        // [here](https://jpuri.github.io/react-draft-wysiwyg/#/docs) you can find some examples (hard to find them in the official draft-js doc)
+                        options: ['fontFamily', 'blockType', 'fontSize', 'inline', 'textAlign', 'colorPicker', 'list', 'link', 'remove'],
+                        fontFamily: {
+                            options: fonts,
+                            className: undefined,
+                            component: undefined,
+                            dropdownClassName: undefined
+                        },
+                        link: {
+                            inDropdown: false,
+                            className: undefined,
+                            component: undefined,
+                            popupClassName: undefined,
+                            dropdownClassName: undefined,
+                            showOpenOptionOnHover: true,
+                            defaultTargetOption: '_self',
+                            options: ['link', 'unlink'],
+                            link: { icon: undefined, className: undefined },
+                            unlink: { icon: undefined, className: undefined },
+                            linkCallback: undefined,
+                            availableStorySections: [...sections]
+                        },
+                        blockType: {
+                            inDropdown: true,
+                            options: ['Normal', 'H1', 'H2', 'H3', 'H4', 'H5', 'H6', 'Blockquote', 'Code'],
+                            className: undefined,
+                            component: undefined,
+                            dropdownClassName: undefined
+                        },
+                        inline: {
+                            options: ['bold', 'italic', 'underline', 'strikethrough', 'monospace'],
+                            bold: { className: `${className}-toolbar-btn` },
+                            italic: { className: `${className}-toolbar-btn` },
+                            underline: { className: `${className}-toolbar-btn` },
+                            strikethrough: { className: `${className}-toolbar-btn` },
+                            code: { className: `${className}-toolbar-btn` }
+                        },
+                        textAlign: {
+                            left: { className: `${className}-toolbar-btn` },
+                            center: { className: `${className}-toolbar-btn` },
+                            right: { className: `${className}-toolbar-btn` },
+                            justify: { className: `${className}-toolbar-btn` }
+                        },
+                        colorPicker: { className: `${className}-toolbar-btn` },
+                        remove: { className: `${className}-toolbar-btn` },
+                        ...toolbar
                     },
-                    link: {
-                        inDropdown: false,
-                        className: undefined,
-                        component: undefined,
-                        popupClassName: undefined,
-                        dropdownClassName: undefined,
-                        showOpenOptionOnHover: true,
-                        defaultTargetOption: '_self',
-                        options: ['link', 'unlink'],
-                        link: { icon: undefined, className: undefined },
-                        unlink: { icon: undefined, className: undefined },
-                        linkCallback: undefined,
-                        availableStorySections: [...sections]
-                    },
-                    blockType: {
-                        inDropdown: true,
-                        options: ['Normal', 'H1', 'H2', 'H3', 'H4', 'H5', 'H6', 'Blockquote', 'Code'],
-                        className: undefined,
-                        component: undefined,
-                        dropdownClassName: undefined
-                    },
-                    inline: {
-                        options: ['bold', 'italic', 'underline', 'strikethrough', 'monospace'],
-                        bold: { className: `${className}-toolbar-btn` },
-                        italic: { className: `${className}-toolbar-btn` },
-                        underline: { className: `${className}-toolbar-btn` },
-                        strikethrough: { className: `${className}-toolbar-btn` },
-                        code: { className: `${className}-toolbar-btn` }
-                    },
-                    textAlign: {
-                        left: { className: `${className}-toolbar-btn` },
-                        center: { className: `${className}-toolbar-btn` },
-                        right: { className: `${className}-toolbar-btn` },
-                        justify: { className: `${className}-toolbar-btn` }
-                    },
-                    colorPicker: { className: `${className}-toolbar-btn` },
-                    remove: { className: `${className}-toolbar-btn` },
-                    ...toolbar
-                },
-                toolbarClassName: `${className}-toolbar`,
-                wrapperClassName: `${className}-wrapper`,
-                editorClassName: `${className}-main`
-            })),
+                    toolbarClassName: `${className}-toolbar`,
+                    wrapperClassName: `${className}-wrapper`,
+                    editorClassName: `${className}-main`
+                });
+            }),
             renderComponent(Editor)
         )
     )

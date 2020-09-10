@@ -12,6 +12,7 @@ const ReactDOM = require('react-dom');
 const IdentifyContainer = require('../IdentifyContainer');
 const TestUtils = require('react-dom/test-utils');
 const ConfigUtils = require('../../../../utils/ConfigUtils');
+const getFeatureButtons = require('../../../../plugins/identify/featureButtons');
 
 describe("test IdentifyContainer", () => {
     beforeEach((done) => {
@@ -235,6 +236,23 @@ describe("test IdentifyContainer", () => {
         expect(coordinateIcon.getAttribute('class')).toContain('glyphicon-point');
         expect(coordinateViewer.children[0].getAttribute('class')).toContain('coordinates-text');
         expect(toolbar.getAttribute('class')).toContain('btn-group');
+    });
+
+    it('test rendering of default feature toolbar buttons', () => {
+        const requests = [{reqId: 1}, {reqId: 2}];
+        const responses = [{layerMetadata: {title: "Layer 1"}}, {layerMetadata: {title: "Layer 2"}}];
+        ReactDOM.render(<IdentifyContainer
+            enabled
+            index={0}
+            requests={requests}
+            responses={responses}
+            getFeatureButtons={getFeatureButtons}
+            point={{latlng: {lat: 1, lng: 1}}}
+            showCoordinateEditor={false}
+        />, document.getElementById("container"));
+        let glyphIcons = document.querySelectorAll('.glyphicon');
+        expect(glyphIcons.length).toBe(4);
+        expect(glyphIcons.forEach(glyph => glyph.className) !== 'zoom-to').toBeTruthy();
     });
 
 });

@@ -5,7 +5,7 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import { get, isString, isNumber, findIndex, find, isObject, isArray, castArray } from "lodash";
+import { get, isString, isNumber, findIndex, find, isPlainObject, isArray, castArray, uniqBy } from "lodash";
 import { set, unset, arrayUpdate, compose,
     arrayDelete } from '../utils/ImmutableUtils';
 import { getEffectivePath, MediaTypes } from '../utils/GeoStoryUtils';
@@ -242,6 +242,13 @@ export default (state = INITIAL_STATE, action) => {
     case SET_CURRENT_STORY: {
         let defaultSettings = state.defaultSettings || {};
         let settings = action.story.settings || defaultSettings;
+        const existingFontFamilies = settings?.theme?.fontFamilies || [];
+
+        // make sure to add fonts loaded from GeoStory useEffect hook when setting the current story
+        const fontFamilies = state.currentStory?.settings?.theme?.fontFamilies;
+        if (fontFamilies && fontFamilies.length > 0) {
+            settings = set('theme.fontFamilies', uniqBy([...fontFamilies, ...existingFontFamilies], "family"), settings);
+        }
         return set('currentStory', {...action.story, settings}, state);
     }
     case SELECT_CARD: {
@@ -293,8 +300,14 @@ export default (state = INITIAL_STATE, action) => {
         let { element: newElement } = action;
         const path = getEffectivePath(`currentStory.${rawPath}`, state);
         const oldElement = get(state, path);
-        if (isObject(oldElement) && isObject(newElement) && mode === "merge") {
+
+        // NOTE: isObject vs isPlainObject are different
+        if (isPlainObject(oldElement) && isPlainObject(newElement) && mode === "merge") {
             newElement = { ...oldElement, ...newElement };
+        }
+
+        if (isArray(oldElement) && isArray(newElement) && mode === "merge") {
+            newElement = [ ...oldElement, ...newElement ];
         }
         return set(path, newElement, state);
     }

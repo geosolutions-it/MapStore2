@@ -52,7 +52,8 @@ export default ({
     remove = () => {},
     bubblingTextEditing = () => {},
     storyTheme,
-    sections = []
+    sections = [],
+    storyFonts
 }) =>
     (<div className={className}>
         {contents.reduce(( rendered = [], { id, ...props }) => {
@@ -73,6 +74,7 @@ export default ({
                     {...contentProps}
                     {...props}
                     storyTheme={storyTheme}
+                    storyFonts={storyFonts}
                     bubblingTextEditing={bubblingTextEditing}
                     tools={tools && tools[props.type]}
                     sections={sections} />)];

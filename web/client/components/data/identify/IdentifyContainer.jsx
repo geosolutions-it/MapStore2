@@ -65,6 +65,7 @@ module.exports = props => {
         onSubmitClickPoint,
         onChangeFormat,
         formatCoord,
+        loaded,
         validator = () => null
     } = props;
     const latlng = point && point.latlng || null;
@@ -121,6 +122,7 @@ module.exports = props => {
                             <LayerSelector
                                 responses={responses}
                                 index={index}
+                                loaded={loaded}
                                 setIndex={setIndex}
                                 missingResponses={missingResponses}
                                 emptyResponses={emptyResponses}/>

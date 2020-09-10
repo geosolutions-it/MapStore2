@@ -46,7 +46,8 @@ const Immersive = ({
     mediaViewer,
     contentToolbar,
     inView,
-    sections = []
+    sections = [],
+    storyFonts
 }) => {
     const hideContent = focusedContent && focusedContent.hideContent && (get(focusedContent, "target.id") === contentId);
     const visibility = hideContent ? 'hidden' : 'visible';
@@ -119,6 +120,7 @@ const Immersive = ({
             sectionType={sectionType}
             storyTheme={overlayStoryTheme}
             sections={sections}
+            storyFonts={storyFonts}
         />
         {mode === Modes.EDIT && !hideContent && <AddBar
             containerWidth={viewWidth}
