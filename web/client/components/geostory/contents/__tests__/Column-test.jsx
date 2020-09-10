@@ -13,8 +13,6 @@ import expect from 'expect';
 import Column from '../Column';
 import { ContentTypes, Modes, MediaTypes } from '../../../../utils/GeoStoryUtils';
 
-import Map from '../../../../components/geostory/media/Map';
-
 describe('Column component', () => {
     beforeEach((done) => {
         document.body.innerHTML = '<div id="container"></div>';
@@ -134,9 +132,8 @@ describe('Column component', () => {
         });
 
         it('should render map content with show caption tool using media description', () => {
-            const MediaViewer = () => <Map mapType="leaflet" />;
             // map with description
-            ReactDOM.render(<Column mode={Modes.EDIT} mediaViewer={MediaViewer} contents={[{
+            ReactDOM.render(<Column mode={Modes.EDIT} contents={[{
                 type: MediaTypes.MAP,
                 description: 'Description'
             }]} />, document.getElementById("container"));
