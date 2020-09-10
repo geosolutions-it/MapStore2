@@ -240,7 +240,8 @@ describe('Test catalog selectors', () => {
     });
     it('test tileSizeOptionsSelector defaults to array with 256', () => {
         const tileSizes = tileSizeOptionsSelector(state);
-        expect(tileSizes.length).toBe(1);
+        expect(tileSizes.length).toBe(2);
         expect(tileSizes[0]).toBe(256);
+        expect(tileSizes[0]).toBe(512);
     });
 });
