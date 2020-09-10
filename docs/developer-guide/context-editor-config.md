@@ -1,4 +1,4 @@
-# Configuration of Context Editor
+# Configuration for Context Editor
 
 Context editor plugins can be configured editing the `pluginsConfig.json` file.
 
