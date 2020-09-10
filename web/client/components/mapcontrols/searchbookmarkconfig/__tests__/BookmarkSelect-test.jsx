@@ -129,5 +129,8 @@ describe("BookmarkList component", () => {
         expect(spyOnchange.calls[1].arguments[0].config.map).toBeTruthy();
         expect(spyOnchange.calls[1].arguments[0].config.map.layer).toEqual("Test");
         expect(spyOnchange.calls[1].arguments[0].config.map.bookmark_search_config).toBeTruthy();
+        expect(spyOnchange.calls[1].arguments[0].zoomToExtent).toBeTruthy();
+        expect(spyOnchange.calls[1].arguments[0].zoomToExtent.bounds).toEqual([1, 1, 1, 1]);
+        expect(spyOnchange.calls[1].arguments[0].zoomToExtent.crs).toBe("EPSG:4326");
     });
 });
