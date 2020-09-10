@@ -155,9 +155,7 @@ export const fields = {
     image: ({
         label,
         value,
-        config: {
-            isValid
-        },
+        config: {},
         onChange
     }) => {
 
@@ -167,25 +165,25 @@ export const fields = {
         let [url, setUrl] = useState("");
 
         const onImgSourceChange = (event)=> {
-            const url = event.target.value;
-            setUrl(url);
+            const imageUrl = event.target.value;
+            setUrl(imageUrl);
             setLoadingShown(true);
             setIconShown(false);
             setImageShown(false);
-            onChange(url);
-        }
+            onChange(imageUrl);
+        };
 
         const onImgLoad = ()=> {
             setImageShown(true);
             setLoadingShown(false);
             setIconShown(false);
-        }
+        };
 
         const onImgError = ()=> {
             setImageShown(false);
             setLoadingShown(false);
             setIconShown(true);
-        }
+        };
 
         return (
             <PropertyField
@@ -207,10 +205,10 @@ export const fields = {
                         style={{ position: 'absolute', right: 4, top: 4, width: 22, height: 22, objectFit: 'contain' }}/>
                     <div
                         style={{ position: 'absolute', right: 8, top: 6}}
-                        className={iconShown ? "": "collapse"}>
+                        className={iconShown ? "" : "collapse"}>
                         <OverlayTrigger placement="top"
-                            overlay={<Tooltip><Message msgId={url.length == 0 ? "styleeditor.missingImageUrl" : "styleeditor.invalidImageUrl"} /></Tooltip>}>
-                            <Glyphicon glyph="exclamation-sign"></Glyphicon>
+                            overlay={<Tooltip><Message msgId={url.length === 0 ? "styleeditor.missingImageUrl" : "styleeditor.invalidImageUrl"} /></Tooltip>}>
+                            <Glyphicon glyph="exclamation-sign"/>
                         </OverlayTrigger>
                     </div>
                     <div
