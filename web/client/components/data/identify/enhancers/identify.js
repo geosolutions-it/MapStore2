@@ -8,7 +8,7 @@
 
 const {lifecycle, withHandlers, compose} = require('recompose');
 const {set} = require('../../../../utils/ImmutableUtils');
-const {isEqual, isNil, isNaN, isEmpty} = require('lodash');
+const {isNil, isNaN, isEmpty} = require('lodash');
 
 /**
  * Enhancer to enable set index only if Component has header
@@ -107,9 +107,7 @@ const identifyLifecycle = compose(
                 hideMarker = () => {},
                 purgeResults = () => {},
                 changeMousePointer = () => {},
-                setIndex,
-                enabled,
-                responses
+                enabled
             } = this.props;
             if (newProps.enabled && !enabled) {
                 changeMousePointer('pointer');
@@ -117,10 +115,6 @@ const identifyLifecycle = compose(
                 changeMousePointer('auto');
                 hideMarker();
                 purgeResults();
-            }
-            // reset current page on new requests set
-            if (setIndex && !isEqual(newProps.responses, responses)) {
-                setIndex(0);
             }
         }
     })
