@@ -78,7 +78,6 @@
                 "isNew": true,
                 "autoload": false
             },
-            "tileSizes": [256, 512],
             "selectedService": "gs_stable_csw",
             "services": {
               "gs_stable_csw": {
