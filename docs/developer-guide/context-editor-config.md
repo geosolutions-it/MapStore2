@@ -1,6 +1,6 @@
-# Configuration for Context Editor
+# Configuration of Application Context Manager
 
-Context editor plugin list can be configured editing the `pluginsConfig.json` file.
+The Application Context Manager can be configured editing the `pluginsConfig.json` file.
 
 The configuration file has this shape:
 
@@ -46,6 +46,7 @@ The configuration file has this shape:
 }
 ```
 
+The configuration contains the list of available plugins to display in the plugins selector.
 Each entry of `plugins` array is an object that describes the plugin, it's dependencies and it's properties.
 These are the properties allowed for the plugin entry object:
 
