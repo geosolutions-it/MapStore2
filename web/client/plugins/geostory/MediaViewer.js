@@ -19,6 +19,7 @@ import emptyState from '../../components/misc/enhancers/emptyState';
 import { resourcesSelector } from '../../selectors/geostory';
 import { SectionTypes } from '../../utils/GeoStoryUtils';
 import withMediaVisibility from '../../components/geostory/common/enhancers/withMediaVisibility';
+import autoMapType from '../../components/map/enhancers/autoMapType';
 
 const image = branch(
     ({resourceId}) => resourceId,
@@ -44,6 +45,7 @@ const map = compose(
         ({ resourceId }) => resourceId,
         connectMap,
     ),
+    autoMapType,
     withLocalMapState,
     withMapEditingAndLocalMapState
 )(withMediaVisibility(Map));

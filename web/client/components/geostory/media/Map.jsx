@@ -35,7 +35,8 @@ export default compose(
     height,
     size,
     showCaption,
-    caption: contentCaption
+    caption: contentCaption,
+    mapType
 }) => {
 
     const { layers = [], mapOptions = {}, description, ...m} = (map.data ? map.data : map);
@@ -105,6 +106,7 @@ export default compose(
             layers={layers}
             tools={isMapInfoControlActive ? ["popup"] : []}
             options={applyDefaults(updatedMapOptions)}
+            mapType={mapType}
         />
         {expandable && !editMap &&
         <Button

@@ -14,7 +14,6 @@ const withMediaVisibility = (MediaComponent) => {
     function WithMediaVisibility(props) {
         let loaderStyle = {};
         const sectionType = props.sectionType;
-
         if ((sectionType === SectionTypes.PARAGRAPH || sectionType === SectionTypes.IMMERSIVE) &&
         props.type === MediaTypes.IMAGE) {
             // Calculate paddingTop for setting a proper aspect ratio. The default values for
