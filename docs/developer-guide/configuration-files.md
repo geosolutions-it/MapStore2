@@ -37,4 +37,3 @@ Several configuration files (at development and / or run time) are available to 
 ## Externalize Configurations
 
 Typically configuration customization should stay outside the effective application installation directory to simplify future updates. Updates in fact are usually replacement of the old application file package with the newer one. Changes applied directly inside the application package may be so removed on every update. For this reason MapStore provides a externalization system for both the configuration systems. See [Externalize Configuration](../externalized-configurations) section to learn how to do this.
-
