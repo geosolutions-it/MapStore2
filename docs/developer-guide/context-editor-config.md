@@ -1,8 +1,8 @@
 # Configuration for Context Editor
 
-Context editor plugins can be configured editing the `pluginsConfig.json` file.
+Context editor plugin list can be configured editing the `pluginsConfig.json` file.
 
-The configuration has this shape:
+The configuration file has this shape:
 
 ```javascript
 {
@@ -46,8 +46,8 @@ The configuration has this shape:
 }
 ```
 
-Properties of plugin entry:
-**Base Properties**:
+Each entry of `plugins` array is an object that describes the plugin, it's dependencies and it's properties.
+These are the properties allowed for the plugin entry object:
 
 * `name`: `{string}` the name (ID) of the plugin
 * `title`: `{string}` the title string OR messageId (from localization file)
