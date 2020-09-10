@@ -2033,6 +2033,8 @@
             "contrastEnhancement": "Kontrastverbesserung",
             "placeholderInput": "Wert eingeben",
             "placeholderEnterImageUrl": "Bild-URL eingeben",
+            "missingImageUrl": "Fehlende Bild-URL",
+            "invalidImageUrl": "Ungültige Bild-URL",
             "selectPlaceholder": "Wert auswählen",
             "noResultsSelectInput": "Keine Ergebnisse",
             "channelAuto": "Auto",

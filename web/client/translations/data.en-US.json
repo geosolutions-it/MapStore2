@@ -2040,6 +2040,8 @@
             "contrastEnhancement": "Contrast enhancement",
             "placeholderInput": "Enter value",
             "placeholderEnterImageUrl": "Enter image url",
+            "missingImageUrl": "Missing image url",
+            "invalidImageUrl": "Invalid image url",
             "selectPlaceholder": "Select value",
             "noResultsSelectInput": "No results",
             "channelAuto": "Auto",

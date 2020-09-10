@@ -7,7 +7,7 @@
  */
 
 import React, { useRef, useState, useEffect } from 'react';
-import { FormGroup, FormControl as FormControlRB  } from 'react-bootstrap';
+import { OverlayTrigger, Glyphicon, Tooltip, FormGroup, FormControl as FormControlRB  } from 'react-bootstrap';
 import isObject from 'lodash/isObject';
 import omit from 'lodash/omit';
 import isNil from 'lodash/isNil';
@@ -161,19 +161,62 @@ export const fields = {
         onChange
     }) => {
 
-        const valid = !isValid || isValid({ value });
+        let [imageShown, setImageShown] = useState(false);
+        let [loadingShown, setLoadingShown] = useState(false);
+        let [iconShown, setIconShown] = useState(true);
+        let [url, setUrl] = useState("");
+
+        const onImgSourceChange = (event)=> {
+            const url = event.target.value;
+            setUrl(url);
+            setLoadingShown(true);
+            setIconShown(false);
+            setImageShown(false);
+            onChange(url);
+        }
+
+        const onImgLoad = ()=> {
+            setImageShown(true);
+            setLoadingShown(false);
+            setIconShown(false);
+        }
+
+        const onImgError = ()=> {
+            setImageShown(false);
+            setLoadingShown(false);
+            setIconShown(true);
+        }
+
         return (
             <PropertyField
                 label={label}
-                invalid={!valid}>
-                <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
-                    <FormGroup style={{ flex: 1 }}>
+                invalid={iconShown}>
+                <div style={{ position: 'relative' }}>
+                    <FormGroup>
                         <FormControl
+                            style={{paddingRight: 26}}
                             placeholder="styleeditor.placeholderEnterImageUrl"
                             value={value}
-                            onChange={event => onChange(event.target.value)}/>
+                            onChange={onImgSourceChange}/>
                     </FormGroup>
-                    <img src={value} style={{ width: 28, height: 28, objectFit: 'contain' }}/>
+                    <img
+                        className={imageShown ? "" : "collapse"}
+                        onLoad={onImgLoad}
+                        onError={onImgError}
+                        src={value}
+                        style={{ position: 'absolute', right: 4, top: 4, width: 22, height: 22, objectFit: 'contain' }}/>
+                    <div
+                        style={{ position: 'absolute', right: 8, top: 6}}
+                        className={iconShown ? "": "collapse"}>
+                        <OverlayTrigger placement="top"
+                            overlay={<Tooltip><Message msgId={url.length == 0 ? "styleeditor.missingImageUrl" : "styleeditor.invalidImageUrl"} /></Tooltip>}>
+                            <Glyphicon glyph="exclamation-sign"></Glyphicon>
+                        </OverlayTrigger>
+                    </div>
+                    <div
+                        style={{ position: 'absolute', right: 4, top: 4, width: 20, height: 20}}
+                        className={loadingShown ? "mapstore-small-size-loader" : "collapse"}>
+                    </div>
                 </div>
             </PropertyField>
         );
