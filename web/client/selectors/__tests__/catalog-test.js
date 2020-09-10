@@ -242,6 +242,6 @@ describe('Test catalog selectors', () => {
         const tileSizes = tileSizeOptionsSelector(state);
         expect(tileSizes.length).toBe(2);
         expect(tileSizes[0]).toBe(256);
-        expect(tileSizes[0]).toBe(512);
+        expect(tileSizes[1]).toBe(512);
     });
 });
