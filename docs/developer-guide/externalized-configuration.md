@@ -130,8 +130,6 @@ So to externalize the configuration files you can simply change their URLs to th
     The list of allowed resources can be changed, via the allowed.resources JVM environment variable:
     `java -Dallowed.resources=localConfig,pluginsConfig,extensions,config,new ...`
 
-
-
 **You can externalize the following files to the data directory by adding the relative line in the `app.jsx`** :
 
 * Application (`localConfig.json`):
@@ -170,6 +168,7 @@ ConfigUtils.setConfigProp("extensionsFolder", "rest/config/loadasset?resource=")
 ## Overriding front-end configuration
 
 Externalizing the whole `localConfig.json` file allows to keep your configurations during the various updates. Anyway keeping this long file in sync can become hard.
+
 For this reason, MapStore gives you the possibility to override only some specific properties of this big file and keep these changes separated from the application,
 allowing an easier updates.
 This is particularly useful for example when you have to change only a bunch of settings on a specific instance, and use the standard configuration for everything else.
