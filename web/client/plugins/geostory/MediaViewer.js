@@ -18,6 +18,7 @@ import connectMap, {withLocalMapState, withMapEditingAndLocalMapState} from '../
 import emptyState from '../../components/misc/enhancers/emptyState';
 import { resourcesSelector } from '../../selectors/geostory';
 import { SectionTypes } from '../../utils/GeoStoryUtils';
+import withMediaVisibility from '../../components/geostory/common/enhancers/withMediaVisibility';
 
 const image = branch(
     ({resourceId}) => resourceId,
@@ -36,7 +37,7 @@ const image = branch(
             glyph: "picture"
         })
     )
-)(Image);
+)(withMediaVisibility(Image));
 
 const map = compose(
     branch(
@@ -45,7 +46,7 @@ const map = compose(
     ),
     withLocalMapState,
     withMapEditingAndLocalMapState
-)(Map);
+)(withMediaVisibility(Map));
 
 const video = branch(
     ({resourceId}) => resourceId,
@@ -72,7 +73,7 @@ const video = branch(
             glyph: "play"
         })
     )
-)(Video);
+)(withMediaVisibility(Video));
 
 const mediaTypesMap = {
     image,
@@ -85,7 +86,7 @@ const MediaViewer = ({ type, ...props }) => {
     if (!Media) {
         return null;
     }
-    return <Media { ...props }/>;
+    return <Media type={type} { ...props }/>;
 };
 
 export default MediaViewer;

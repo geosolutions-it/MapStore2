@@ -6,20 +6,12 @@
  * LICENSE file in the root directory of this source tree.
  */
 import React, { useState } from 'react';
-import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { createSelector } from 'reselect';
-import find from 'lodash/find';
 
-import VisibilityContainer from '../common/VisibilityContainer';
-import { Glyphicon } from 'react-bootstrap';
 import image from './Image';
 import map from './Map';
 import video from './Video';
-import Loader from '../../misc/Loader';
 
-import { SectionTypes, MediaTypes } from '../../../utils/GeoStoryUtils';
-import { resourcesSelector } from '../../../selectors/geostory';
 
 export const Image = image;
 
@@ -29,9 +21,6 @@ export const typesMap = {
     video
 };
 
-const ErrorComponent = () => <div className="ms-media-error"><Glyphicon glyph="exclamation-sign"/></div>;
-const LoaderComponent = ({style = {}}) => <div style={style} className="ms-media-loader"><Loader size={52}/></div>;
-
 /**
  * Media component renders different kind of media based on type or mediaType
  * @prop {string} id unique id that represent the media
@@ -40,7 +29,7 @@ const LoaderComponent = ({style = {}}) => <div style={style} className="ms-media
  * @prop {string} type one of 'image' or 'map' (used when mediaType is equal to undefined)
  * @prop {number} debounceTime debounce time for lazy loading
  */
-const Media = ({ debounceTime, mediaViewer, ...props }) => {
+export const Media = ({ debounceTime, mediaViewer, ...props }) => {
     // store all ids inside an immersive section
     // in this way every media is loaded only when in view
     const [loading, onLoad] = useState({});
@@ -50,46 +39,15 @@ const Media = ({ debounceTime, mediaViewer, ...props }) => {
 
     const MediaType = mediaViewer || typesMap[props.mediaType || props.type] || Image;
 
-    let loaderStyle = {};
-    const sectionType = props.sectionType;
-    const type = props.mediaType || props.type;
-    if ((sectionType === SectionTypes.PARAGRAPH || sectionType === SectionTypes.IMMERSIVE) &&
-    type === MediaTypes.IMAGE) {
-        const id = props.resourceId;
-        const resourceData = find(props.resources, { id }).data;
-        // Calculate paddingTop for setting a proper aspect ratio. The default values for
-        // height and width are 9 and 16 respectively to give us 16:9 aspect ratio
-        const paddingTop = ((resourceData?.imgHeight || 9) / (resourceData?.imgWidth || 16)) * 100;
-        loaderStyle = {paddingTop: `${paddingTop}%`};
-    }
-
-    return props.lazy
-        ? (
-            <VisibilityContainer
-                // key needed for immersive background children
-                key={props.id}
-                id={props.id}
-                debounceTime={debounceTime}
-                loading={isLoading}
-                onLoad={(id) => onLoad({ ...loading, [id]: false })}
-                loaderComponent={LoaderComponent}
-                loaderStyle={loaderStyle}>
-                <MediaType
-                    {...props}
-                    type={props.mediaType || props.type}
-                    loaderComponent={LoaderComponent}
-                    loaderStyle={loaderStyle}
-                    errorComponent={ErrorComponent}/>
-            </VisibilityContainer>
-        )
-        : (
-            <MediaType
-                {...props}
-                key={props.id}
-                type={props.mediaType || props.type}
-                loaderComponent={LoaderComponent}
-                errorComponent={ErrorComponent}/>
-        );
+    return (
+        <MediaType
+            sectionType={props.sectionType}
+            debounceTime={debounceTime}
+            loading={loading}
+            isLoading={isLoading}
+            onLoad={onLoad}
+            {...props} />
+    );
 };
 
 Media.propTypes = {
@@ -107,4 +65,4 @@ Media.defaultProps = {
     type: ''
 };
 
-export default connect(createSelector(resourcesSelector, (resources) => ({resources})))(Media);
+export default Media;

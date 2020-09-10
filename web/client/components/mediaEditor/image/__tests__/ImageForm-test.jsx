@@ -29,17 +29,17 @@ describe('ImageForm component', () => {
     });
     it('expect to add height and width if not previosuly present', () => {
         const handlers = {
-            addImageDimensionsFunc: () => {}
+            getImageDimensionsFunc: () => {}
         };
-        let spy = expect.spyOn(handlers, "addImageDimensionsFunc");
+        let spy = expect.spyOn(handlers, "getImageDimensionsFunc");
         ReactDOM.render(<ImageForm editing selectedItem={{data: {src: ""}}} {...handlers} />, document.getElementById("container"));
         expect(spy.calls.length).toEqual(1);
     });
     it('expect that addImageDimensionsFunc will not be called if image dimensions already present', () => {
         const handlers = {
-            addImageDimensionsFunc: () => {}
+            getImageDimensionsFunc: () => {}
         };
-        let spy = expect.spyOn(handlers, "addImageDimensionsFunc");
+        let spy = expect.spyOn(handlers, "getImageDimensionsFunc");
         ReactDOM.render(<ImageForm editing selectedItem={{data: {imgHeight: 900, imgWidth: 900}}} {...handlers} />, document.getElementById("container"));
         expect(spy.calls.length).toEqual(0);
     });
