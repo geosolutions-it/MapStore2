@@ -62,7 +62,7 @@ describe("test the CoordinatesEditor Panel", () => {
 
         const spans = TestUtils.scryRenderedDOMComponentsWithTag(editor, "span");
         expect(spans).toExist();
-        expect(spans[0].innerText).toBe("annotations.editor.title.Point");
+        expect(spans[0].innerText).toNotBe("annotations.editor.title.Point");
 
         const exclamationMark = TestUtils.findRenderedDOMComponentWithClass(editor, "glyphicon-exclamation-mark");
         expect(exclamationMark).toExist();
@@ -113,7 +113,7 @@ describe("test the CoordinatesEditor Panel", () => {
 
         const spans = TestUtils.scryRenderedDOMComponentsWithTag(editor, "span");
         expect(spans).toExist();
-        expect(spans[0].innerText).toBe("annotations.editor.title.Point");
+        expect(spans[0].innerText).toNotBe("annotations.editor.title.Point");
 
         const inputs = TestUtils.scryRenderedDOMComponentsWithTag(editor, "input");
         expect(inputs[0].value).toBe("23.4");
@@ -523,10 +523,10 @@ describe("test the CoordinatesEditor Panel", () => {
         const spyOnChange = expect.spyOn(testHandlers, "onChange");
         const spyOnHighlightPoint = expect.spyOn(testHandlers, "onHighlightPoint");
         const spyOnSetInvalidSelected = expect.spyOn(testHandlers, "onSetInvalidSelected");
-        const spyOnChangeText = expect.spyOn(testHandlers, "onChangeText");
         const editor = ReactDOM.render(
             <CoordinatesEditor
                 {...testHandlers}
+                canEdit
                 isMouseEnterEnabled
                 isMouseLeaveEnabled
                 type="Text"
@@ -542,16 +542,14 @@ describe("test the CoordinatesEditor Panel", () => {
         const submits = TestUtils.scryRenderedDOMComponentsWithClass(editor, "glyphicon-ok");
         expect(submits).toExist();
         const submit = submits[0];
-        const inputText = inputs[0];
-        inputText.value = "myTextAnnotation";
-        const inputCoord = inputs[1];
+        const inputCoord = inputs[0];
         inputCoord.value = 15;
         TestUtils.Simulate.change(inputCoord);
         TestUtils.Simulate.click(submit);
         expect(spyOnHighlightPoint).toHaveBeenCalled();
         expect(spyOnHighlightPoint).toHaveBeenCalledWith({ lat: 15, lon: 10 });
+
         expect(spyOnChange).toHaveBeenCalled();
-        expect(spyOnChangeText).toNotHaveBeenCalled();
         expect(spyOnChange).toHaveBeenCalledWith([
             { lat: 15, lon: 10 }
         ], undefined, "myTextAnnotation", undefined);
@@ -564,49 +562,12 @@ describe("test the CoordinatesEditor Panel", () => {
         expect(spyOnSetInvalidSelected).toHaveBeenCalled();
         expect(spyOnSetInvalidSelected).toHaveBeenCalledWith("coords", [[10, "" ]]);
         expect(spyOnChange).toHaveBeenCalled();
-        expect(spyOnChangeText).toNotHaveBeenCalled();
         expect(spyOnChange).toHaveBeenCalledWith([
             { lat: "", lon: 10 }
         ], undefined, "myTextAnnotation", undefined);
     });
 
-    it('CoordinatesEditor as Text editor, valid input coordinate, changing text, isMouseLeaveEnabled=true', () => {
-        const components = [{
-            lat: 10,
-            lon: 10
-        }];
-        const spyOnChange = expect.spyOn(testHandlers, "onChange");
-        const spyOnHighlightPoint = expect.spyOn(testHandlers, "onHighlightPoint");
-        const spyOnSetInvalidSelected = expect.spyOn(testHandlers, "onSetInvalidSelected");
-        const spyOnChangeText = expect.spyOn(testHandlers, "onChangeText");
-        const editor = ReactDOM.render(
-            <CoordinatesEditor
-                {...testHandlers}
-                isMouseEnterEnabled
-                isMouseLeaveEnabled
-                type="Text"
-                format="decimal"
-                properties={{ valueText: "myTextAnnotation" }}
-                components={components}
-            />, document.getElementById("container")
-        );
-        expect(editor).toExist();
-
-        const inputs = TestUtils.scryRenderedDOMComponentsWithTag(editor, "input");
-        expect(inputs).toExist();
-        const inputText = inputs[0];
-        inputText.value = "my new Text Annotation";
-        TestUtils.Simulate.change(inputText);
-
-        expect(spyOnHighlightPoint).toNotHaveBeenCalled();
-        expect(spyOnSetInvalidSelected).toNotHaveBeenCalled();
-        expect(spyOnChange).toNotHaveBeenCalled();
-        expect(spyOnChangeText).toHaveBeenCalled();
-        expect(spyOnChangeText).toHaveBeenCalledWith("my new Text Annotation", [[10, 10]]);
-    });
-
-
-    it('CoordinatesEditor as Text editor, valid input coordinate, changing text, invalid point', () => {
+    it('CoordinatesEditor as Text editor, valid input coordinate, invalid point', () => {
         const components = [{
             lat: "",
             lon: ""
@@ -614,11 +575,11 @@ describe("test the CoordinatesEditor Panel", () => {
         const spyOnChange = expect.spyOn(testHandlers, "onChange");
         const spyOnHighlightPoint = expect.spyOn(testHandlers, "onHighlightPoint");
         const spyOnSetInvalidSelected = expect.spyOn(testHandlers, "onSetInvalidSelected");
-        const spyOnChangeText = expect.spyOn(testHandlers, "onChangeText");
         const editor = ReactDOM.render(
             <CoordinatesEditor
                 {...testHandlers}
                 isMouseEnterEnabled
+                canEdit
                 isMouseLeaveEnabled
                 type="Text"
                 format="decimal"
@@ -630,55 +591,16 @@ describe("test the CoordinatesEditor Panel", () => {
 
         const inputs = TestUtils.scryRenderedDOMComponentsWithTag(editor, "input");
         expect(inputs).toExist();
-        const inputText = inputs[0];
-        inputText.value = "my new Text Annotation";
-        TestUtils.Simulate.change(inputText);
-
-        expect(spyOnHighlightPoint).toNotHaveBeenCalled();
-        expect(spyOnSetInvalidSelected).toNotHaveBeenCalled();
-        expect(spyOnChange).toNotHaveBeenCalled();
-        expect(spyOnChangeText).toHaveBeenCalled();
-        expect(spyOnChangeText).toHaveBeenCalledWith("my new Text Annotation", [["", ""]]);
-    });
-
-
-    it('CoordinatesEditor as Text editor, valid input coordinate, changing with invalid text, invalid point', () => {
-        const components = [{
-            lat: "",
-            lon: ""
-        }];
-        const spyOnChange = expect.spyOn(testHandlers, "onChange");
-        const spyOnHighlightPoint = expect.spyOn(testHandlers, "onHighlightPoint");
-        const spyOnSetInvalidSelected = expect.spyOn(testHandlers, "onSetInvalidSelected");
-        const spyOnChangeText = expect.spyOn(testHandlers, "onChangeText");
-        const editor = ReactDOM.render(
-            <CoordinatesEditor
-                {...testHandlers}
-                isMouseEnterEnabled
-                isMouseLeaveEnabled
-                type="Text"
-                format="decimal"
-                properties={{ valueText: "myTextAnnotation" }}
-                components={components}
-            />, document.getElementById("container")
-        );
-        expect(editor).toExist();
-
-        const inputs = TestUtils.scryRenderedDOMComponentsWithTag(editor, "input");
-        expect(inputs).toExist();
-        const inputText = inputs[0];
-        inputText.value = "";
-        TestUtils.Simulate.change(inputText);
+        const inputLat = inputs[0];
+        inputLat.value = "";
+        TestUtils.Simulate.change(inputLat);
 
         const hamburgerMenus = TestUtils.scryRenderedDOMComponentsWithClass(editor, "glyphicon-menu-hamburger");
         expect(hamburgerMenus.length).toBe(0);
 
         expect(spyOnHighlightPoint).toNotHaveBeenCalled();
         expect(spyOnChange).toNotHaveBeenCalled();
-        expect(spyOnChangeText).toHaveBeenCalled();
-        expect(spyOnChangeText).toHaveBeenCalledWith("", [["", ""]]);
-        expect(spyOnSetInvalidSelected).toHaveBeenCalled();
-        expect(spyOnSetInvalidSelected).toHaveBeenCalledWith("text", [["", ""]]);
+        expect(spyOnSetInvalidSelected).toNotHaveBeenCalled();
     });
 
     it('CoordinatesEditor as LineString editor, valid input coordinate, mouse enter/leave', () => {
@@ -740,7 +662,7 @@ describe("test the CoordinatesEditor Panel", () => {
         );
         expect(editor).toExist();
 
-        let buttons = TestUtils.scryRenderedDOMComponentsWithTag(editor, "button");
+        let buttons = TestUtils.scryRenderedDOMComponentsWithClass(editor, "btn-default");
         let firstDelButton = buttons[4];
         TestUtils.Simulate.click(firstDelButton);
         expect(spyOnHighlightPoint).toHaveBeenCalled();
@@ -760,6 +682,7 @@ describe("test the CoordinatesEditor Panel", () => {
         const editor = ReactDOM.render(
             <CoordinatesEditor
                 {...testHandlers}
+                canEdit
                 isMouseEnterEnabled
                 isMouseLeaveEnabled
                 type="LineString"
@@ -770,8 +693,8 @@ describe("test the CoordinatesEditor Panel", () => {
         );
         expect(editor).toExist();
 
-        let buttons = TestUtils.scryRenderedDOMComponentsWithTag(editor, "button");
-        let firstDelButton = buttons[4];
+        let buttons = TestUtils.scryRenderedDOMComponentsWithClass(editor, "btn-default");
+        let firstDelButton = buttons[5];
         TestUtils.Simulate.click(firstDelButton);
         expect(spyOnHighlightPoint).toNotHaveBeenCalled();
         expect(firstDelButton.disabled).toBe(true);
@@ -808,7 +731,7 @@ describe("test the CoordinatesEditor Panel", () => {
         );
         expect(editor).toExist();
 
-        let buttons = TestUtils.scryRenderedDOMComponentsWithTag(editor, "button");
+        let buttons = TestUtils.scryRenderedDOMComponentsWithClass(editor, "btn-default");
         let firstDelButton = buttons[4];
         TestUtils.Simulate.click(firstDelButton);
         expect(spyOnSetInvalidSelected).toNotHaveBeenCalled();
@@ -817,7 +740,7 @@ describe("test the CoordinatesEditor Panel", () => {
         expect(spyOnHighlightPoint).toHaveBeenCalledWith({ lat: 8, lon: 8 });
     });
 
-    it('CoordinatesEditor as LineString, 4 rows, only invalid rows are not disabled', () => {
+    it('CoordinatesEditor as LineString, 4 rows, warning on invalid rows', () => {
         const components = [{
             lat: 5,
             lon: ""
@@ -846,15 +769,13 @@ describe("test the CoordinatesEditor Panel", () => {
         );
         expect(editor).toExist();
 
-        const buttons = TestUtils.scryRenderedDOMComponentsWithTag(editor, "button");
+        let buttons = TestUtils.scryRenderedDOMComponentsWithClass(editor, "btn-default");
 
         expect(buttons.length).toBe(15);
-        expect(buttons[4].disabled).toBe(false);
-        expect(buttons[7].disabled).toBe(true);
-        expect(buttons[10].disabled).toBe(true);
-        expect(buttons[13].disabled).toBe(false);
+        const invalidLineString = buttons[0].getElementsByClassName('glyphicon-exclamation-mark');
+        expect(invalidLineString).toBeTruthy();
     });
-    it('CoordinatesEditor as Polygon, 5 rows, only invalid rows are not disabled', () => {
+    it('CoordinatesEditor as Polygon, 5 rows, warning on invalid rows', () => {
         const components = [{
             lat: 5,
             lon: ""
@@ -888,13 +809,9 @@ describe("test the CoordinatesEditor Panel", () => {
 
         const hamburgerMenus = TestUtils.scryRenderedDOMComponentsWithClass(editor, "glyphicon-menu-hamburger");
         expect(hamburgerMenus.length).toBe(5);
-        const buttons = TestUtils.scryRenderedDOMComponentsWithTag(editor, "button");
+        let buttons = TestUtils.scryRenderedDOMComponentsWithClass(editor, "btn-default");
         expect(buttons.length).toBe(18);
-        expect(buttons[4].disabled).toBe(false);
-        expect(buttons[7].disabled).toBe(true);
-        expect(buttons[10].disabled).toBe(true);
-        expect(buttons[13].disabled).toBe(true);
-        expect(buttons[16].disabled).toBe(false);
+        const invalidPolygon = buttons[0].getElementsByClassName('glyphicon-exclamation-mark');
+        expect(invalidPolygon).toBeTruthy();
     });
-
 });

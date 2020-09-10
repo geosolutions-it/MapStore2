@@ -20,7 +20,7 @@ const {getAvailableStyler, getRelativeStyler, convertGeoJSONToInternalModel,
     createGeometryFromGeomFunction,
     updateAllStyles,
     fromLineStringToGeodesicLineString, isCompletePolygon,
-    getDashArrayFromStyle
+    getDashArrayFromStyle, getGeometryType, getGeometryGlyphInfo
 } = require('../AnnotationsUtils');
 
 const featureCollection = {
@@ -543,6 +543,32 @@ describe('Test the AnnotationsUtils', () => {
 
         textAnnot.components = [undefined, 4];
         expect(validateCircle(textAnnot)).toBe(false);
+    });
+    it('test getGeometryType', ()=>{
+        let geomFeature = {};
+        expect(getGeometryType(geomFeature)).toBeFalsy();
+
+        geomFeature = {...geomFeature, properties: {isCircle: true}};
+        expect(getGeometryType(geomFeature)).toBe('Circle');
+
+        geomFeature = {properties: {isText: true}};
+        expect(getGeometryType(geomFeature)).toBe('Text');
+
+        geomFeature = {geometry: {type: "Polygon"}};
+        expect(getGeometryType(geomFeature)).toBe('Polygon');
+    });
+    it('test getGeometryGlyphInfo', ()=>{
+        let point = '';
+        expect(getGeometryGlyphInfo().glyph).toBe('point');
+
+        point = 'LineString';
+        expect(getGeometryGlyphInfo(point).glyph).toBe('polyline');
+
+        point = 'Text';
+        expect(getGeometryGlyphInfo(point).glyph).toBe('font');
+
+        point = 'Circle';
+        expect(getGeometryGlyphInfo(point).glyph).toBe('1-circle');
     });
     it('test validateCoordinates defaults', () => {
         let components = [{lat: 4, lon: 4}];
