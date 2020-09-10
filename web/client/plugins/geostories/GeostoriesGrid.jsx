@@ -8,7 +8,7 @@
 
 const { compose, defaultProps, withHandlers } = require('recompose');
 const { deleteGeostory, reloadGeostories } = require('../../actions/geostories');
-const { updateAttribute, setFeaturedMapsLatestResource } = require('../../actions/maps'); // TODO: externalize
+const { updateAttribute, invalidateFeaturedMaps } = require('../../actions/maps'); // TODO: externalize
 const { userSelector } = require('../../selectors/security');
 const { createSelector } = require('reselect');
 const { connect } = require('react-redux');
@@ -21,16 +21,16 @@ const Grid = compose(
         onDelete: deleteGeostory,
         reloadGeostories,
         onShowSuccessNotification: () => success({ title: "success", message: "resources.successSaved" }),
-        setFeaturedMapsLatestResource,
+        invalidateFeaturedMaps,
         onUpdateAttribute: updateAttribute
     }),
     withHandlers({
-        onSaveSuccess: (props) => (resource) => {
+        onSaveSuccess: (props) => () => {
             if (props.reloadGeostories) {
                 props.reloadGeostories();
             }
-            if (props.setFeaturedMapsLatestResource) {
-                props.setFeaturedMapsLatestResource(resource);
+            if (props.invalidateFeaturedMaps) {
+                props.invalidateFeaturedMaps();
             }
             if (props.onShowSuccessNotification) {
                 props.onShowSuccessNotification();

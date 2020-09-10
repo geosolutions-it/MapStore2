@@ -29,7 +29,7 @@ module.exports = {
         BurgerMenuPlugin: require('../../plugins/BurgerMenu'),
         UndoPlugin: require('../../plugins/History'),
         RedoPlugin: require('../../plugins/History'),
-        MapsPlugin: require('../../plugins/Maps'),
+        MapsPlugin: require('../../plugins/Maps').default,
         MapSearchPlugin: require('../../plugins/MapSearch'),
         LanguagePlugin: require('../../plugins/Language'),
         ManagerPlugin: require('../../plugins/manager/Manager'),

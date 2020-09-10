@@ -6,52 +6,13 @@
 * This source code is licensed under the BSD-style license found in the
 * LICENSE file in the root directory of this source tree.
 */
-const Rx = require('rxjs');
-const { compose, branch, withState, withHandlers, defaultProps, mapPropsStream, createEventHandler } = require('recompose');
+const { compose, branch, withState, withHandlers, defaultProps, mapProps } = require('recompose');
 
-const handleSaveModal = require('../modals/enhancers/handleSaveModal');
+const handleSave = require('../modals/enhancers/handleSave').default;
+const handleSaveModal = require('../modals/enhancers/handleSaveModal').default;
 const handleResourceDownload = require('../modals/enhancers/handleResourceDownload');
-const { updateResource } = require('../../../api/persistence');
+const handleDetailsDownload = require('../modals/enhancers/handleDetailsDownload').default;
 
-const handleSave = mapPropsStream(props$ => {
-    const { handler: onSave, stream: saveEventStream$ } = createEventHandler();
-    const saveStream$ =
-        saveEventStream$
-            .withLatestFrom(props$)
-            .switchMap(([resource, props]) =>
-                updateResource(resource)
-                    .do(() => {
-                        if (props) {
-                            if (props.onClose) {
-                                props.onClose();
-                            }
-                            if (props.onSaveSuccess) {
-                                props.onSaveSuccess(resource);
-                            }
-                            if (props.onShowSuccessNotification) {
-                                props.onShowSuccessNotification();
-                            }
-                        }
-                    })
-                    .concat(Rx.Observable.of({ loading: false }))
-                    .startWith({ loading: true })
-                    .catch(e => {
-                        props.setErrors([...(props.errors || []), e]);
-                        return Rx.Observable.of({
-                            loading: false
-                        });
-                    })
-            );
-    return props$.combineLatest(
-        saveStream$.startWith({}),
-        (props, saveProps) => ({
-            ...props,
-            ...saveProps,
-            errors: props.errors,
-            onSave
-        })
-    );
-});
 /*
  * EditDialog
  * Automatically downloads missing data and manage resource changes. Manages save, triggering onSaveSuccess
@@ -69,9 +30,13 @@ const EditDialog = compose(
     }),
     branch(
         ({ resource }) => resource && resource.id,
-        compose(
-            handleSave,
-            handleSaveModal
+        branch(
+            ({ show }) => !show,
+            handleDetailsDownload,
+            compose(
+                handleSave,
+                handleSaveModal
+            )
         )
     )
 )(require('../modals/Save'));
@@ -85,6 +50,9 @@ const resourceGrid = compose(
     withState('resource', 'setResource'),
     withState('edit', 'setEdit', false),
     withState('errors', 'setErrors', ({errors = []}) => errors),
+    withState('showDetailsSheet', 'setShowDetailsSheet', false),
+    withState('loadingResource', 'setLoadingResource', false),
+    withState('loadedResource', 'setLoadedResource'),
     withHandlers({
         onEdit: ({ setEdit = () => { }, setResource = () => { } }) => (resource) => {
             if (resource) {
@@ -95,8 +63,29 @@ const resourceGrid = compose(
                 setEdit(false);
             }
 
+        },
+        onShowDetailsSheet: ({ setShowDetailsSheet = () => { }, setLoadingResource = () => { }, setResource = () => { }, loadedResource }) => (resource) => {
+            if (resource) {
+                const details = resource?.details || resource?.attributes?.details;
+                const detailsLoaded = loadedResource?.details || loadedResource?.attributes?.details;
+
+                if (resource?.id !== loadedResource?.id || details !== detailsLoaded) {
+                    setLoadingResource(true);
+                }
+
+                setResource(resource);
+                setShowDetailsSheet(true);
+            }
+        },
+        onHideDetailsSheet: ({ setShowDetailsSheet = () => { } }) => () => {
+            setShowDetailsSheet(false);
+        },
+        onResourceLoad: ({ setLoadedResource = () => { }, setLoadingResource = () => { } }) => (resource) => {
+            setLoadedResource(resource);
+            setLoadingResource(false);
         }
-    })
+    }),
+    mapProps(({loading, loadingResource, ...other}) => ({...other, loading: loading || loadingResource || false }))
 );
 
 module.exports = resourceGrid;

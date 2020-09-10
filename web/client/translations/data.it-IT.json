@@ -346,6 +346,7 @@
 		},
         "resources": {
             "successSaved": "Questa risorsa è stata salvata correttamente",
+            "savingError": "Si è verificato un errore durante il salvataggio della risorsa",
             "deleteConfirmTitle": "Sei sicuro",
             "deleteConfirmMessage": "Sei sicuro di voler eliminare questa risorsa?",
             "deleteConfirmButtonText": "Elimina",
