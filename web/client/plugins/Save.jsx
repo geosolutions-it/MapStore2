@@ -15,7 +15,7 @@ import {mapInfoSelector} from '../selectors/map';
 import { isLoggedIn } from '../selectors/security';
 import { createPlugin } from '../utils/PluginsUtils';
 import {toggleControl} from '../actions/controls';
-import {mapSaved as resetMapSaveError} from '../actions/config';
+import {resetMapSaveError} from '../actions/config';
 import SaveBaseDialog from './maps/MapSave';
 
 const showMapSaveSelector = state => state.controls && state.controls.mapSave && state.controls.mapSave.enabled;

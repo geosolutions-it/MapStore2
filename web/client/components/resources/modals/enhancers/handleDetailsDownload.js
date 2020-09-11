@@ -21,12 +21,12 @@ export default mapPropsStream(props$ => {
     return props$.combineLatest(
         props$
             .filter(({resource}) => resource && resource.id)
-            .distinctUntilChanged(({resource: res1}, {resource: res2}) => res1 === res2)
+            .distinctUntilChanged(({resource: res1}, {resource: res2}) => res1.id === res2.id)
             .switchMap(props => {
                 const details = props.resource.attributes?.details;
 
                 return getDetails(details).map(detailsText => {
-                    const resourceWithDetails = {...props.resource, detailsText};
+                    const resourceWithDetails = {...props.resource, loadedData: {...(props.resource.loadedData || {}), detailsText}};
 
                     if (props.onResourceLoad) {
                         props.onResourceLoad(resourceWithDetails);

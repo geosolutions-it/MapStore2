@@ -10,7 +10,7 @@ import { compose, withState, withHandlers, withProps } from 'recompose';
 
 export default compose(
     withState('showDetailsSheet', 'setShowDetailsSheet', false),
-    withState('detailsText', 'setDetailsText'),
+    withState('editorState', 'setEditorState'),
     withState('detailsBackup', 'setDetailsBackup'),
     withHandlers({
         onShowDetailsSheet: ({ setShowDetailsSheet = () => {} }) => () => setShowDetailsSheet(true),
@@ -19,6 +19,6 @@ export default compose(
     withProps(({linkedResources = {}, resource = {}}) => ({
         savedDetailsText: linkedResources?.details?.data === 'NODATA' ?
             undefined :
-            (linkedResources?.details?.data || resource.detailsText)
+            (linkedResources?.details?.data || resource.loadedData?.detailsText)
     }))
 );

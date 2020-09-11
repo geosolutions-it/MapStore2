@@ -70,6 +70,8 @@ class SaveModal extends React.Component {
         modalSize: PropTypes.string,
         enableDetails: PropTypes.bool,
         detailsComponent: PropTypes.element,
+        detailsEditor: PropTypes.string,
+        detailsEditorProps: PropTypes.object,
         // CALLBACKS
         onError: PropTypes.func,
         onUpdate: PropTypes.func,
@@ -172,9 +174,12 @@ class SaveModal extends React.Component {
                             nameFieldFilter={this.props.nameFieldFilter}
                             onUpdate={this.props.onUpdate} />
                         {this.props.enableDetails && <Details
+                            editor={this.props.detailsEditor}
+                            editorProps={this.props.detailsEditorProps}
                             loading={this.props.loading}
                             resource={this.props.resource}
                             linkedResources={this.props.linkedResources}
+                            onUpdateResource={this.props.onUpdate}
                             onUpdateLinkedResource={this.props.onUpdateLinkedResource}/>
                         }
                         {

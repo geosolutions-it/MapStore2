@@ -121,7 +121,7 @@ module.exports = ({
                 show={showDetailsSheet}
                 readOnly
                 title={resource?.name || resource?.metadata?.name}
-                detailsText={loadedResource?.detailsText}
+                detailsText={loadedResource?.loadedData?.detailsText}
                 onClose={onHideDetailsSheet}/>
         </Grid>
     );

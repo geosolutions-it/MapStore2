@@ -40,7 +40,7 @@ module.exports = {
         Dashboard: require('../plugins/Dashboard'),
         DashboardEditor: require('../plugins/DashboardEditor'),
         DashboardsPlugin: require('../plugins/Dashboards'),
-        DetailsPlugin: require('../plugins/Details'),
+        DetailsPlugin: require('../plugins/Details').default,
         DrawerMenuPlugin: require('../plugins/DrawerMenu'),
         ExpanderPlugin: require('../plugins/Expander'),
         FeatureEditorPlugin: require('../plugins/FeatureEditor').default,

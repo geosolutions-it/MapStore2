@@ -449,7 +449,9 @@
                 "delete": "Supprimer la fiche détaillée",
                 "titleUnsavedChanges": "Êtes-vous sûr de fermer sans enregistrer vos modifications ?",
                 "sureToClose": "Êtes-vous sûr de fermer sans enregistrer vos modifications ?",
-                "fieldsChanged": "Certains attributs ont été modifiés"
+                "fieldsChanged": "Certains attributs ont été modifiés",
+                "showAtStartup": "Afficher au démarrage",
+                "showAsModal": "Afficher comme modal"
             },
             "errors": {
                 "loading": {
