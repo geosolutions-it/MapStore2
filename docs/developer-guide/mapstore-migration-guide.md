@@ -5,7 +5,7 @@ Updating MapStore could mean:
 - updating an existing installation
 - updating a MapStore project created for a previous version
 
-To update an existing installation you usually have to do nothing except eventually to execute queries on your database to update the changes to the database schema. 
+To update an existing installation you usually have to do nothing except eventually to execute queries on your database to update the changes to the database schema.
 
 In case of a project it becomes a little more complicated, depending on the customization.
 
@@ -18,6 +18,42 @@ This is a list of things to check if you want to update from a previous version 
 - Some changes that may need to be ported could be present also in `pom.xml` files and in `configs` directory.
 - Optionally check also accessory files like `.eslinrc`, if you want to keep aligned with lint standards.
 - Follow the instructions below, in order, from your version to the one you want to update to.
+
+## Migration from 2020.02.00 to 2020.03.00
+
+### Eslint config
+
+Now eslint configuration is shared in a separate npm module. To update your custom project you have to remove the following files:
+
+- `.eslintignore`
+- `.eslintconfig`
+
+And add to `package.json` the following entry, in the root:
+
+```json
+        eslintConfig: {
+            "extends": [
+                "@mapstore/eslint-config-mapstore"
+            ],
+            parserOptions: {
+                babelOptions: {
+                    "configFile": "./MapStore2/build/babel.config.js"
+                }
+            }
+        },
+```
+
+If you have aproject that includes MapStore as a dependency, you can run `npm run updateDevDeps` to finalize the update. Otherwise make you sure to include:
+
+- devDependencies:
+  - add
+    - `"@mapstore/eslint-config-mapstore": "1.0.1",`
+    - `"@babel/eslint-parser": "7.11.5",`
+    - `"@babel/eslint-plugin": "7.11.5",`
+  - delete `babel-eslint`
+- dependencies:
+  - update `"eslint": "7.8.1"
+
 
 ## Migration from 2020.01.00 to 2020.02.00
 
