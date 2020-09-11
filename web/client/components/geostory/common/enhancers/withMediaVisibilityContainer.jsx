@@ -1,15 +1,24 @@
+/*
+ * Copyright 2020, GeoSolutions Sas.
+ * All rights reserved.
+ *
+ * This source code is licensed under the BSD-style license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
 import React from 'react';
 import { Glyphicon } from 'react-bootstrap';
 
 import Loader from '../../../misc/Loader';
 
-import VisibilityContainer from '../../common/VisibilityContainer';
+import VisibilityContainer from '../VisibilityContainer';
 import { SectionTypes, MediaTypes } from '../../../../utils/GeoStoryUtils';
 
-const ErrorComponent = () => <div className="ms-media-error"><Glyphicon glyph="exclamation-sign"/></div>;
-const LoaderComponent = ({style = {}}) => <div style={style} className="ms-media-loader"><Loader size={52}/></div>;
 
 const withMediaVisibility = (MediaComponent) => {
+
+    const ErrorComponent = () => <div className="ms-media-error"><Glyphicon glyph="exclamation-sign"/></div>;
+    const LoaderComponent = ({style = {}}) => <div style={style} className="ms-media-loader"><Loader size={52}/></div>;
 
     function WithMediaVisibility(props) {
         let loaderStyle = {};
