@@ -27,20 +27,4 @@ describe('ImageForm component', () => {
         expect(container.querySelector('.ms-imageForm')).toExist();
         expect(container.querySelectorAll('input').length).toBe(5);
     });
-    it('expect to add height and width if not previosuly present', () => {
-        const handlers = {
-            getImageDimensionsFunc: () => {}
-        };
-        let spy = expect.spyOn(handlers, "getImageDimensionsFunc");
-        ReactDOM.render(<ImageForm editing selectedItem={{data: {src: ""}}} {...handlers} />, document.getElementById("container"));
-        expect(spy.calls.length).toEqual(1);
-    });
-    it('expect that addImageDimensionsFunc will not be called if image dimensions already present', () => {
-        const handlers = {
-            getImageDimensionsFunc: () => {}
-        };
-        let spy = expect.spyOn(handlers, "getImageDimensionsFunc");
-        ReactDOM.render(<ImageForm editing selectedItem={{data: {imgHeight: 900, imgWidth: 900}}} {...handlers} />, document.getElementById("container"));
-        expect(spy.calls.length).toEqual(0);
-    });
 });

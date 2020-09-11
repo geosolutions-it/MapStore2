@@ -8,7 +8,7 @@
 
 import React from 'react';
 import { ControlLabel, Form, FormControl, FormGroup } from 'react-bootstrap';
-import { compose, getContext, defaultProps, withHandlers, withStateHandlers, lifecycle } from 'recompose';
+import { compose, getContext, defaultProps, withHandlers, withStateHandlers } from 'recompose';
 
 
 import LocaleUtils from '../../../utils/LocaleUtils';
@@ -88,18 +88,6 @@ const enhance = compose(
         {
             setProperties: (state) => (properties) => ({properties: {...state.properties, ...properties}, confirmPredicate: true})
         }),
-    // for retro-compatibility, try and support users whose image resources don't imgHeight and imgWidth
-    lifecycle({
-        componentDidMount() {
-            const { editing, properties, getImageDimensionsFunc, onSave } = this.props;
-            if (editing && !properties.imgHeight && !properties.imgWidth) {
-                getImageDimensionsFunc(properties.src,
-                    (dimensions) =>
-                        onSave({ ...properties, ...dimensions })
-                );
-            }
-        }
-    }),
     withHandlers({
         onClick: ({setAddingMedia, setEditingMedia, editing}) => () => {
             editing && setEditingMedia(false) || setAddingMedia(false);

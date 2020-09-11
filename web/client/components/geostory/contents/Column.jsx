@@ -42,7 +42,8 @@ export default ({
     bubblingTextEditing = () => {},
     expandable,
     mediaViewer,
-    contentToolbar
+    contentToolbar,
+    sectionType
 }) => (
     <Contents
         className="ms-column-contents"
@@ -57,6 +58,7 @@ export default ({
         viewWidth={viewWidth}
         viewHeight={viewHeight}
         bubblingTextEditing={bubblingTextEditing}
+        sectionType={sectionType}
         contentProps={{
             expandable,
             mediaViewer,
