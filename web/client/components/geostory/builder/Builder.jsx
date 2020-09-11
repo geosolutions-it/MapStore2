@@ -49,7 +49,8 @@ class Builder extends React.Component {
         onSelect: PropTypes.func,
         onRemove: PropTypes.func,
         onUpdate: PropTypes.func,
-        selected: PropTypes.string
+        selected: PropTypes.string,
+        storyFonts: PropTypes.array
     };
 
     static defaultProps = {
@@ -85,7 +86,8 @@ class Builder extends React.Component {
             onRemove,
             onSort,
             onUpdate,
-            onSelect
+            onSelect,
+            storyFonts
         } = this.props;
         const SettingsButton = isSettingsChanged ? WithConfirmButton : ToolbarButton;
         return (<BorderLayout
@@ -167,6 +169,7 @@ class Builder extends React.Component {
                 settings={settings}
                 onToggleSettings={onToggleSettings}
                 onUpdateSettings={onUpdateSettings}
+                storyFonts={storyFonts}
             />}
             {isToolbarEnabled && !isSettingsEnabled ? <SectionsPreview
                 currentPage={currentPage}

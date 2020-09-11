@@ -9,6 +9,7 @@ const PropTypes = require('prop-types');
 const React = require('react');
 const Message = require('../I18N/Message');
 const GridCard = require('../misc/GridCard');
+const FitIcon = require('../misc/FitIcon');
 const thumbUrl = require('../maps/style/default.jpg');
 const assign = require('object-assign');
 const ConfirmModal = require('../misc/ResizableModal');
@@ -28,6 +29,7 @@ class ResourceCard extends React.Component {
         onEditData: PropTypes.func,
         onDelete: PropTypes.func,
         onShare: PropTypes.func,
+        onShowDetailsSheet: PropTypes.func,
         onUpdateAttribute: PropTypes.func,
         tooltips: PropTypes.object
     };
@@ -58,6 +60,7 @@ class ResourceCard extends React.Component {
         onEdit: () => { },
         onEditData: () => { },
         onShare: () => { },
+        onShowDetailsSheet: () => { },
         onUpdateAttribute: () => { }
 
     };
@@ -151,8 +154,7 @@ class ResourceCard extends React.Component {
                 tooltipId: this.props.tooltips.showDetails,
                 onClick: evt => {
                     this.stopPropagate(evt);
-                    this.onEdit(this.props.resource, false);
-                    // TODO show details
+                    this.props.onShowDetailsSheet(this.props.resource);
                 }
             },
             {
@@ -173,6 +175,18 @@ class ResourceCard extends React.Component {
                     actions={availableAction} onClick={this.onClick}
                 >
                     <div className="map-thumb-description">{this.props.resource.description}</div>
+                    {this.props.resource.icon ?
+                        <div key="icon" style={{
+                            width: "20px",
+                            height: "20px",
+                            margin: "5px 10px",
+                            color: "white",
+                            position: "absolute",
+                            bottom: 0,
+                            left: 0
+                        }} >
+                            <FitIcon glyph={this.props.resource.icon} />
+                        </div> : null}
                 </GridCard>
                 <ConfirmModal
                     show={this.state ? this.state.displayDeleteDialog : false}

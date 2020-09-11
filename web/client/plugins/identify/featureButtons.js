@@ -31,7 +31,7 @@ module.exports = ({
             && !!currentFeature
             && currentFeature.length > 0
             // has at least 1 geometry
-            && currentFeature.reduce((hasGeometries, { geometry } = {}) => hasGeometries || !!geometry, false),
+            && currentFeature.reduce((hasGeometries, { geometry } = {}) => hasGeometries || !!geometry, false) || false,
         tooltipId: "identifyZoomToFeature",
         onClick: zoomToFeature
     }

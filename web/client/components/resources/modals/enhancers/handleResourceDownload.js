@@ -23,7 +23,7 @@ module.exports = mapPropsStream(props$ => {
                         resource
                     }))
                     .startWith({ loading: true, resource: false })
-                    .catch(e => Rx.Observable.of({ loading: false, errors: e }))
+                    .catch(e => Rx.Observable.of({ loading: false, errors: [e] }))
             )
             .startWith({}),
         (p1, p2) => ({

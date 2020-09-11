@@ -68,6 +68,8 @@ class SaveModal extends React.Component {
         linkedResources: PropTypes.object,
         style: PropTypes.object,
         modalSize: PropTypes.string,
+        enableDetails: PropTypes.bool,
+        detailsComponent: PropTypes.element,
         // CALLBACKS
         onError: PropTypes.func,
         onUpdate: PropTypes.func,
@@ -105,13 +107,15 @@ class SaveModal extends React.Component {
         onError: ()=> {},
         onUpdate: ()=> {},
         onUpdateLinkedResource: () => {},
+        onDeleteLinkedResource: () => {},
         onSave: ()=> {},
         disablePermission: false,
         availablePermissions: ["canRead", "canWrite"],
         availableGroups: [],
         canSave: true,
         user: {},
-        dialogClassName: ''
+        dialogClassName: '',
+        detailsComponent: require('./enhancers/handleDetails').default((require('./fragments/Details').default))
     };
     onCloseMapPropertiesModal = () => {
         this.props.onClose();
@@ -126,9 +130,10 @@ class SaveModal extends React.Component {
     */
     render() {
         const canEditPermission = !this.props.disablePermission && canEditResourcePermission(this.props.user, this.props.resource);
+        const Details = this.props.detailsComponent;
 
         return (<Portal key="saveDialog">
-            {<ResizableModal
+            <ResizableModal
                 loading={this.props.loading}
                 title={<Message msgId={this.props.title}/>}
                 show={this.props.show}
@@ -166,6 +171,12 @@ class SaveModal extends React.Component {
                             onError={this.props.onError}
                             nameFieldFilter={this.props.nameFieldFilter}
                             onUpdate={this.props.onUpdate} />
+                        {this.props.enableDetails && <Details
+                            loading={this.props.loading}
+                            resource={this.props.resource}
+                            linkedResources={this.props.linkedResources}
+                            onUpdateLinkedResource={this.props.onUpdateLinkedResource}/>
+                        }
                         {
                             !!canEditPermission &&  <PermissionEditor
                                 rules={this.props.rules}
@@ -175,7 +186,7 @@ class SaveModal extends React.Component {
                         }
                     </div>
                 </Grid>
-            </ResizableModal>}
+            </ResizableModal>
         </Portal>);
     }
     isValidForm = () => get(this.props.resource, "metadata.name") && (!this.props.enableFileDrop || this.props.fileDropStatus === 'accepted')

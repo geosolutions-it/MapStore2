@@ -19,7 +19,7 @@ export default (state = null, action) => {
     case SET_SEARCH_BOOKMARK_CONFIG:
         return {...state, [action.property]: action.value};
     case MAP_CONFIG_LOADED: {
-        const bookmarkSearchConfig = action.config.map.bookmark_search_config || action.config.map.bookmark_search_config;
+        const bookmarkSearchConfig = action.config.map.bookmark_search_config || {};
         return {...state, bookmarkSearchConfig};
     }
     case RESET_CONTROLS:

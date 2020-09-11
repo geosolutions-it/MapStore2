@@ -91,13 +91,13 @@ class DownloadDialog extends React.Component {
                     bsStyle="primary"
                     className="download-button"
                     disabled={!this.props.downloadOptions.selectedFormat || this.props.loading}
-                    onClick={this.handelExport}>
+                    onClick={this.handleExport}>
                     {this.renderIcon()} <Message msgId="wfsdownload.export" />
                 </Button>
             </div>
         </Dialog>);
     }
-    handelExport = () => {
+    handleExport = () => {
         const {url, filterObj, downloadOptions, defaultSrs, srsList, onExport} = this.props;
         const selectedSrs = downloadOptions && downloadOptions.selectedSrs || defaultSrs || (srsList[0] || {}).name;
         onExport(url, filterObj, assign({}, downloadOptions, {selectedSrs}));

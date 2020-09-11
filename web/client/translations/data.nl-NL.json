@@ -843,7 +843,7 @@
             "cancel": "Cancel",
             "back": "Back",
             "applyStyle": "Apply Style",
-            "addMarker": "Add a new geometry",
+            "addGeometry": "Add a new geometry",
             "styleGeometry": "Change style",
             "deleteGeometry": "Remove all annotation geometries",
             "removeannotation": "Do you want to remove the annotation with title: {title}?",

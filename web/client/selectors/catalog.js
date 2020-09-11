@@ -19,6 +19,9 @@ const selectedStaticServiceTypeSelector =
     (state) => get(state, `catalog.default.staticServices["${get(state, 'catalog.selectedService')}"].type`, "csw");
 const {projectionSelector} = require('./map');
 
+// Picks configured tile sizes from state, otherwise default is [256, 512]
+const tileSizeOptionsSelector = state => get(state, 'catalog.default.tileSizes', [256, 512]);
+
 module.exports = {
     groupSelector: (state) => get(state, "controls.metadataexplorer.group"),
     savingSelector: (state) => get(state, "catalog.saving"),
@@ -49,5 +52,6 @@ module.exports = {
     // information from the state needed to perform searches on catalog
     catalogSearchInfoSelector: createStructuredSelector({
         projection: projectionSelector
-    })
+    }),
+    tileSizeOptionsSelector
 };

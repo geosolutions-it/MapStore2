@@ -22,12 +22,13 @@ const Container = ({index, children}) => (<React.Fragment>{isArray(children) && 
  * Enhancer to enable set index only if Component has not header in viewerOptions props
  */
 const identifyIndex = compose(
-    withStateHandlers({indx: 0}, {
+    withStateHandlers({index: 0}, {
         setIndex: () => (index) => {
             return {index};
         }
     }),
     defaultProps({
+        index: 0,
         responses: []
     })
 );

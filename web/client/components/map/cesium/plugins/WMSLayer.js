@@ -99,7 +99,9 @@ function wmsToCesiumOptions(options) {
             format: isVectorFormat(options.format) && 'image/png' || options.format || 'image/png',
             transparent: options.transparent !== undefined ? options.transparent : true,
             opacity: opacity,
-            tiled: options.tiled !== undefined ? options.tiled : true
+            tiled: options.tiled !== undefined ? options.tiled : true,
+            width: options.tileSize || 256,
+            height: options.tileSize || 256
 
         }, assign(
             {},
@@ -157,7 +159,7 @@ const updateLayer = (layer, newOptions, oldOptions) => {
             const newOption = newOptions[key] === undefined ? newParams && newParams[key] : newOptions[key];
             return oldOption !== newOption;
         });
-    if (newParameters.length > 0 || newOptions.securityToken !== oldOptions.securityToken) {
+    if (newParameters.length > 0 || newOptions.securityToken !== oldOptions.securityToken || newOptions.tileSize !== oldOptions.tileSize) {
         return createLayer(newOptions);
     }
     return null;
