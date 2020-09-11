@@ -26,10 +26,10 @@ describe('map layout epics', () => {
                 expect(actions.length).toBe(1);
                 actions.map((action) => {
                     expect(action.type).toBe(UPDATE_MAP_LAYOUT);
-                    expect(action.layout).toEqual({ left: 600, right: 658, bottom: 30, transform: 'none', height: 'calc(100% - 30px)', boundingMapRect: {
+                    expect(action.layout).toEqual({ left: 600, right: 330, bottom: 30, transform: 'none', height: 'calc(100% - 30px)', boundingMapRect: {
+                        bottom: 30,
                         left: 600,
-                        right: 658,
-                        bottom: 30
+                        right: 330
                     }});
                 });
             } catch (e) {
@@ -44,7 +44,7 @@ describe('map layout epics', () => {
     it('tests layout with prop', (done) => {
         ConfigUtils.setConfigProp('mapLayout', {
             left: { sm: 300, md: 500, lg: 600 },
-            right: { md: 658 },
+            right: { md: 330 },
             bottom: { sm: 120 }
         });
         const epicResult = actions => {
@@ -53,10 +53,10 @@ describe('map layout epics', () => {
                 actions.map((action) => {
                     expect(action.type).toBe(UPDATE_MAP_LAYOUT);
                     expect(action.layout).toEqual({
-                        left: 600, right: 658, bottom: 120, transform: 'none', height: 'calc(100% - 120px)', boundingMapRect: {
+                        left: 600, right: 330, bottom: 120, transform: 'none', height: 'calc(100% - 120px)', boundingMapRect: {
+                            bottom: 120,
                             left: 600,
-                            right: 658,
-                            bottom: 120
+                            right: 330
                         }
                     });
                 });
@@ -151,10 +151,10 @@ describe('map layout epics', () => {
                 actions.map((action) => {
                     expect(action.type).toBe(UPDATE_MAP_LAYOUT);
                     expect(action.layout).toEqual({
-                        left: 0, right: 658, bottom: 30, transform: 'none', height: 'calc(100% - 30px)', boundingMapRect: {
+                        left: 0, right: 330, bottom: 30, transform: 'none', height: 'calc(100% - 30px)', boundingMapRect: {
+                            bottom: 30,
                             left: 0,
-                            right: 658,
-                            bottom: 30
+                            right: 330
                         }
                     });
                 });

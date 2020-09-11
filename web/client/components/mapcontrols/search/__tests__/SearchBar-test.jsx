@@ -454,7 +454,9 @@ describe("test the SearchBar", () => {
         expect(spyOnLayerVisibilityLoad.calls.length).toBe(1);
         expect(spyOnLayerVisibilityLoad.calls[0].arguments[0]).toEqual({map: {layers: "Tests", bookmark_search_config: {bookmarks: [{title: "Bookmark 1"}, {title: "Bookmark 2"}]}}});
         expect(spyOnLayerVisibilityLoad.calls[0].arguments[1]).toEqual(null);
-        expect(spyOnLayerVisibilityLoad.calls[0].arguments[2]).toEqual([5, 10, 20, 30]);
+        expect(spyOnLayerVisibilityLoad.calls[0].arguments[2]).toBeTruthy();
+        expect(spyOnLayerVisibilityLoad.calls[0].arguments[2].bounds).toEqual([ 5, 10, 20, 30 ]);
+        expect(spyOnLayerVisibilityLoad.calls[0].arguments[2].crs).toBe('EPSG:4326');
     });
     it('test searchByBookmark, load a bookmark with zoomToExtent', () => {
         const store = {dispatch: () => {}, subscribe: () => {}, getState: () => ({searchbookmarkconfig: {selected: {}}})};

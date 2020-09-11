@@ -39,7 +39,7 @@ export const BookmarkOptions = ({
                     ...mapInitial.map,
                     bookmark_search_config: bookmarkSearchConfig
                 }
-            }, null, [bbox.west, bbox.south, bbox.east, bbox.north]);
+            }, null, {bounds: [bbox.west, bbox.south, bbox.east, bbox.north], crs: mapInitial?.map?.center?.crs || "EPSG:4326"});
         } else if (bbox && !isEmpty(bbox)) {
             onZoomToExtent([bbox.west, bbox.south, bbox.east, bbox.north], "EPSG:4326");
         }
