@@ -123,6 +123,7 @@ pages:
       - Configuring plugins: 'developer-guide/plugins-documentation.md'
       - Map Configuration: 'developer-guide/maps-configuration.md'
       - Externalize Configuration: 'developer-guide/externalized-configuration.md'
+      - Configuration of Application Context Manager: 'developer-guide/context-editor-config.md'
     - Database Setup: 'developer-guide/database-setup.md'
     - Integrations:
       - users:
