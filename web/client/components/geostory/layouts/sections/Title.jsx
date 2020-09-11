@@ -51,11 +51,15 @@ export default compose(
     storyTheme,
     mediaViewer,
     contentToolbar,
-    inView
+    inView,
+    storyFonts
 }) => {
     const hideContent = get(focusedContent, "target.id") === contentId;
     const visibility = hideContent ?  'hidden' : 'visible';
     const expandableBackgroundClassName = expandableMedia && background && background.type === 'map' ? ' ms-expandable-background' : '';
+    const overlayStoryTheme = storyTheme?.overlay || {};
+    const generalStoryTheme = storyTheme?.general || {};
+
     return (
         <section
             ref={inViewRef}
@@ -97,7 +101,7 @@ export default compose(
                         height={height >= viewHeight
                             ? viewHeight
                             : height}
-                        storyTheme={storyTheme}
+                        storyTheme={generalStoryTheme}
                         mediaViewer={mediaViewer}
                         contentToolbar={contentToolbar}
                         inView={inView}
@@ -122,7 +126,8 @@ export default compose(
                 }}
                 focusedContent={focusedContent}
                 bubblingTextEditing={bubblingTextEditing}
-                storyTheme={storyTheme}
+                storyTheme={overlayStoryTheme}
+                storyFonts={storyFonts}
             />
             {mode === Modes.EDIT && !hideContent && <AddBar
                 containerWidth={viewWidth}
@@ -132,6 +137,13 @@ export default compose(
                     tooltipId: 'geostory.addTitleSection',
                     onClick: () => {
                         add('sections', id, SectionTypes.TITLE);
+                    }
+                },
+                {
+                    glyph: 'story-banner-section',
+                    tooltipId: 'geostory.addBannerSection',
+                    onClick: () => {
+                        add('sections', id, SectionTypes.BANNER);
                     }
                 },
                 {

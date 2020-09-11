@@ -233,7 +233,14 @@ describe('Test the MapUtils', () => {
 
             const groups = [
                 {expanded: true, id: 'Default', name: 'Default', title: 'Default', nodes: ['layer001', 'layer002']},
-                {expanded: false, id: 'custom', name: 'custom', title: 'custom',
+                {
+                    expanded: false,
+                    id: 'custom',
+                    name: 'custom',
+                    title: 'custom',
+                    description: 'custom-description',
+                    tooltipOptions: 'both',
+                    tooltipPlacement: 'right',
                     nodes: [{expanded: true, id: 'custom.nested001', name: 'nested001', title: 'nested001', nodes: ['layer003']}
                     ]}
             ];
@@ -256,15 +263,24 @@ describe('Test the MapUtils', () => {
                     groups: [{
                         id: 'Default',
                         title: 'Default',
-                        expanded: true
+                        expanded: true,
+                        description: undefined,
+                        tooltipOptions: undefined,
+                        tooltipPlacement: undefined
                     }, {
                         id: 'custom',
                         title: 'custom',
-                        expanded: false
+                        expanded: false,
+                        description: 'custom-description',
+                        tooltipOptions: 'both',
+                        tooltipPlacement: 'right'
                     }, {
                         id: 'custom.nested001',
                         title: 'nested001',
-                        expanded: true
+                        expanded: true,
+                        description: undefined,
+                        tooltipOptions: undefined,
+                        tooltipPlacement: undefined
                     }],
                     layers: [{
                         allowedSRS: {},
@@ -311,7 +327,8 @@ describe('Test the MapUtils', () => {
                         thematic: undefined,
                         tooltipOptions: undefined,
                         tooltipPlacement: undefined,
-                        legendOptions: undefined
+                        legendOptions: undefined,
+                        tileSize: undefined
                     },
                     {
                         allowedSRS: {},
@@ -358,7 +375,8 @@ describe('Test the MapUtils', () => {
                         thematic: undefined,
                         tooltipOptions: undefined,
                         tooltipPlacement: undefined,
-                        legendOptions: undefined
+                        legendOptions: undefined,
+                        tileSize: undefined
                     },
                     {
                         allowedSRS: {},
@@ -405,7 +423,8 @@ describe('Test the MapUtils', () => {
                         thematic: undefined,
                         tooltipOptions: undefined,
                         tooltipPlacement: undefined,
-                        legendOptions: undefined
+                        legendOptions: undefined,
+                        tileSize: undefined
                     },
                     {
                         allowedSRS: {},
@@ -452,7 +471,8 @@ describe('Test the MapUtils', () => {
                         thematic: undefined,
                         tooltipOptions: undefined,
                         tooltipPlacement: undefined,
-                        legendOptions: undefined
+                        legendOptions: undefined,
+                        tileSize: undefined
                     }],
                     mapOptions: {},
                     maxExtent: [-20037508.34, -20037508.34, 20037508.34, 20037508.34],
@@ -600,15 +620,24 @@ describe('Test the MapUtils', () => {
                     groups: [{
                         id: 'Default',
                         title: 'Default',
-                        expanded: true
+                        expanded: true,
+                        description: undefined,
+                        tooltipOptions: undefined,
+                        tooltipPlacement: undefined
                     }, {
                         id: 'custom',
                         title: 'custom',
-                        expanded: false
+                        expanded: false,
+                        description: undefined,
+                        tooltipOptions: undefined,
+                        tooltipPlacement: undefined
                     }, {
                         id: 'custom.nested001',
                         title: 'nested001',
-                        expanded: true
+                        expanded: true,
+                        description: undefined,
+                        tooltipOptions: undefined,
+                        tooltipPlacement: undefined
                     }],
                     layers: [{
                         allowedSRS: {},
@@ -655,7 +684,8 @@ describe('Test the MapUtils', () => {
                         thematic: undefined,
                         tooltipOptions: undefined,
                         tooltipPlacement: undefined,
-                        legendOptions: undefined
+                        legendOptions: undefined,
+                        tileSize: undefined
                     },
                     {
                         allowedSRS: {},
@@ -702,7 +732,8 @@ describe('Test the MapUtils', () => {
                         thematic: undefined,
                         tooltipOptions: undefined,
                         tooltipPlacement: undefined,
-                        legendOptions: undefined
+                        legendOptions: undefined,
+                        tileSize: undefined
                     },
                     {
                         allowedSRS: {},
@@ -749,7 +780,8 @@ describe('Test the MapUtils', () => {
                         thematic: undefined,
                         tooltipOptions: undefined,
                         tooltipPlacement: undefined,
-                        legendOptions: undefined
+                        legendOptions: undefined,
+                        tileSize: undefined
                     },
                     {
                         allowedSRS: {},
@@ -796,7 +828,8 @@ describe('Test the MapUtils', () => {
                         thematic: undefined,
                         tooltipOptions: undefined,
                         tooltipPlacement: undefined,
-                        legendOptions: undefined
+                        legendOptions: undefined,
+                        tileSize: undefined
                     },
                     {
                         allowedSRS: {},
@@ -843,7 +876,8 @@ describe('Test the MapUtils', () => {
                         thematic: undefined,
                         tooltipOptions: undefined,
                         tooltipPlacement: undefined,
-                        legendOptions: undefined
+                        legendOptions: undefined,
+                        tileSize: undefined
                     },
                     {
                         allowedSRS: {},
@@ -890,7 +924,8 @@ describe('Test the MapUtils', () => {
                         thematic: undefined,
                         tooltipOptions: undefined,
                         tooltipPlacement: undefined,
-                        legendOptions: undefined
+                        legendOptions: undefined,
+                        tileSize: undefined
                     }],
                     mapOptions: {},
                     maxExtent: [-20037508.34, -20037508.34, 20037508.34, 20037508.34],
@@ -1013,15 +1048,24 @@ describe('Test the MapUtils', () => {
                     groups: [{
                         id: 'Default',
                         title: 'Default',
-                        expanded: true
+                        expanded: true,
+                        description: undefined,
+                        tooltipOptions: undefined,
+                        tooltipPlacement: undefined
                     }, {
                         id: 'custom',
                         title: 'custom',
-                        expanded: false
+                        expanded: false,
+                        description: undefined,
+                        tooltipOptions: undefined,
+                        tooltipPlacement: undefined
                     }, {
                         id: 'custom.nested001',
                         title: 'nested001',
-                        expanded: true
+                        expanded: true,
+                        description: undefined,
+                        tooltipOptions: undefined,
+                        tooltipPlacement: undefined
                     }],
                     layers: [{
                         allowedSRS: {},
@@ -1068,6 +1112,7 @@ describe('Test the MapUtils', () => {
                         thematic: undefined,
                         tooltipOptions: undefined,
                         tooltipPlacement: undefined,
+                        tileSize: undefined,
                         legendOptions: { legendWidth: "", legendHeight: 40}
                     },
                     {
@@ -1115,7 +1160,8 @@ describe('Test the MapUtils', () => {
                         thematic: undefined,
                         tooltipOptions: undefined,
                         tooltipPlacement: undefined,
-                        legendOptions: undefined
+                        legendOptions: undefined,
+                        tileSize: undefined
                     },
                     {
                         allowedSRS: {},
@@ -1162,6 +1208,7 @@ describe('Test the MapUtils', () => {
                         thematic: undefined,
                         tooltipOptions: "both",
                         tooltipPlacement: "right",
+                        tileSize: undefined,
                         legendOptions: { legendWidth: 20, legendHeight: 40}
                     }],
                     mapOptions: {
@@ -1300,15 +1347,24 @@ describe('Test the MapUtils', () => {
                     groups: [{
                         id: 'Default',
                         title: 'Default',
-                        expanded: true
+                        expanded: true,
+                        description: undefined,
+                        tooltipOptions: undefined,
+                        tooltipPlacement: undefined
                     }, {
                         id: 'custom',
                         title: 'custom',
-                        expanded: false
+                        expanded: false,
+                        description: undefined,
+                        tooltipOptions: undefined,
+                        tooltipPlacement: undefined
                     }, {
                         id: 'custom.nested001',
                         title: 'nested001',
-                        expanded: true
+                        expanded: true,
+                        description: undefined,
+                        tooltipOptions: undefined,
+                        tooltipPlacement: undefined
                     }],
                     layers: [{
                         allowedSRS: {},
@@ -1354,6 +1410,7 @@ describe('Test the MapUtils', () => {
                         origin: undefined,
                         thematic: undefined,
                         tooltipOptions: undefined,
+                        tileSize: undefined,
                         tooltipPlacement: undefined, legendOptions: undefined
                     },
                     {
@@ -1400,6 +1457,7 @@ describe('Test the MapUtils', () => {
                         origin: undefined,
                         thematic: undefined,
                         tooltipOptions: undefined,
+                        tileSize: undefined,
                         tooltipPlacement: undefined, legendOptions: undefined
                     },
                     {
@@ -1446,6 +1504,7 @@ describe('Test the MapUtils', () => {
                         origin: undefined,
                         thematic: undefined,
                         tooltipOptions: undefined,
+                        tileSize: undefined,
                         tooltipPlacement: undefined, legendOptions: undefined
                     }],
                     mapOptions: {},
@@ -1629,15 +1688,31 @@ describe('Test the MapUtils', () => {
                         origin: undefined,
                         thematic: undefined,
                         tooltipOptions: undefined,
+                        tileSize: undefined,
                         tooltipPlacement: undefined, legendOptions: undefined,
                         params: {} } ],
                     groups: [ {
-                        id: 'Default', title: 'Default', expanded: true
+                        id: 'Default',
+                        title: 'Default',
+                        expanded: true,
+                        description: undefined,
+                        tooltipOptions: undefined,
+                        tooltipPlacement: undefined
                     }, {
-                        id: 'custom', title: 'custom', expanded: false
+                        id: 'custom',
+                        title: 'custom',
+                        expanded: false,
+                        description: undefined,
+                        tooltipOptions: undefined,
+                        tooltipPlacement: undefined
                     }, {
-                        id: 'custom.nested001', title: 'nested001', expanded: true
-                    } ],
+                        id: 'custom.nested001',
+                        title: 'nested001',
+                        expanded: true,
+                        description: undefined,
+                        tooltipOptions: undefined,
+                        tooltipPlacement: undefined
+                    }],
                     text_search_config: '', bookmark_search_config: {} }
             });
         });
@@ -1703,15 +1778,24 @@ describe('Test the MapUtils', () => {
                     groups: [{
                         id: 'Default',
                         title: 'Default',
-                        expanded: true
+                        expanded: true,
+                        description: undefined,
+                        tooltipOptions: undefined,
+                        tooltipPlacement: undefined
                     }, {
                         id: 'custom',
                         title: 'custom',
-                        expanded: false
+                        expanded: false,
+                        description: undefined,
+                        tooltipOptions: undefined,
+                        tooltipPlacement: undefined
                     }, {
                         id: 'custom.nested001',
                         title: 'nested001',
-                        expanded: true
+                        expanded: true,
+                        description: undefined,
+                        tooltipOptions: undefined,
+                        tooltipPlacement: undefined
                     }],
                     layers: [{
                         allowedSRS: {},
@@ -1758,7 +1842,8 @@ describe('Test the MapUtils', () => {
                         thematic: undefined,
                         tooltipOptions: undefined,
                         tooltipPlacement: undefined,
-                        legendOptions: undefined
+                        legendOptions: undefined,
+                        tileSize: undefined
                     }],
                     mapOptions: {},
                     maxExtent: [-20037508.34, -20037508.34, 20037508.34, 20037508.34],
@@ -1850,15 +1935,24 @@ describe('Test the MapUtils', () => {
                     groups: [{
                         id: 'Default',
                         title: 'Default',
-                        expanded: true
+                        expanded: true,
+                        description: undefined,
+                        tooltipOptions: undefined,
+                        tooltipPlacement: undefined
                     }, {
                         id: 'custom',
                         title: 'custom',
-                        expanded: false
+                        expanded: false,
+                        description: undefined,
+                        tooltipOptions: undefined,
+                        tooltipPlacement: undefined
                     }, {
                         id: 'custom.nested001',
                         title: 'nested001',
-                        expanded: true
+                        expanded: true,
+                        description: undefined,
+                        tooltipOptions: undefined,
+                        tooltipPlacement: undefined
                     }],
                     layers: [{
                         allowedSRS: {},
@@ -1905,7 +1999,8 @@ describe('Test the MapUtils', () => {
                         thematic: undefined,
                         tooltipOptions: undefined,
                         tooltipPlacement: undefined,
-                        legendOptions: undefined
+                        legendOptions: undefined,
+                        tileSize: undefined
                     }],
                     mapOptions: {},
                     maxExtent: [-20037508.34, -20037508.34, 20037508.34, 20037508.34],
@@ -2037,15 +2132,24 @@ describe('Test the MapUtils', () => {
                     groups: [{
                         id: 'Default',
                         title: 'Default',
-                        expanded: true
+                        expanded: true,
+                        description: undefined,
+                        tooltipOptions: undefined,
+                        tooltipPlacement: undefined
                     }, {
                         id: 'custom',
                         title: 'custom',
-                        expanded: false
+                        expanded: false,
+                        description: undefined,
+                        tooltipOptions: undefined,
+                        tooltipPlacement: undefined
                     }, {
                         id: 'custom.nested001',
                         title: 'nested001',
-                        expanded: true
+                        expanded: true,
+                        description: undefined,
+                        tooltipOptions: undefined,
+                        tooltipPlacement: undefined
                     }],
                     layers: [{
                         allowedSRS: {},
@@ -2092,7 +2196,8 @@ describe('Test the MapUtils', () => {
                         thematic: undefined,
                         tooltipOptions: undefined,
                         tooltipPlacement: undefined,
-                        legendOptions: undefined
+                        legendOptions: undefined,
+                        tileSize: undefined
                     },
                     {
                         allowedSRS: {},
@@ -2139,7 +2244,8 @@ describe('Test the MapUtils', () => {
                         thematic: undefined,
                         tooltipOptions: undefined,
                         tooltipPlacement: undefined,
-                        legendOptions: undefined
+                        legendOptions: undefined,
+                        tileSize: undefined
                     },
                     {
                         allowedSRS: {},
@@ -2186,7 +2292,8 @@ describe('Test the MapUtils', () => {
                         thematic: undefined,
                         tooltipOptions: undefined,
                         tooltipPlacement: undefined,
-                        legendOptions: undefined
+                        legendOptions: undefined,
+                        tileSize: undefined
                     },
                     {
                         allowedSRS: {},
@@ -2233,7 +2340,8 @@ describe('Test the MapUtils', () => {
                         thematic: undefined,
                         tooltipOptions: undefined,
                         tooltipPlacement: undefined,
-                        legendOptions: undefined
+                        legendOptions: undefined,
+                        tileSize: undefined
                     }],
                     mapOptions: {},
                     maxExtent: [-20037508.34, -20037508.34, 20037508.34, 20037508.34],
@@ -2702,18 +2810,17 @@ describe('Test the MapUtils', () => {
         expect(cfg.map.layers.length).toBe(7);
         expect(cfg.map.layers[0].id).toBe(cfg.map.backgrounds[0].id);
         expect(cfg.map.layers[0].group).toBe("background");
-        expect(cfg.map.layers[1].id).toBe("layer3");
-        expect(cfg.map.layers[1].group).toBe("group");
+        expect(cfg.map.layers[1].id).toNotBe("layer3");
+        expect(cfg.map.layers[1].id.length).toBe(36);
+        expect(cfg.map.layers[1].group).toBe("group2");
         expect(cfg.map.layers[2].id).toNotBe("layer2");
         expect(cfg.map.layers[2].id.length).toBe(36);
-        expect(cfg.map.layers[2].group).toBe("group2");
         expect(cfg.map.layers[3].id).toBe("layer1");
         expect(cfg.map.layers[3].group).toNotExist();
         expect(cfg.map.layers[4].id).toBe("layer2");
         expect(cfg.map.layers[4].group).toNotExist();
-        expect(cfg.map.layers[5].id).toNotBe("layer3");
-        expect(cfg.map.layers[5].id.length).toBe(36);
-        expect(cfg.map.layers[5].group).toNotExist();
+        expect(cfg.map.layers[5].id).toBe("layer3");
+        expect(cfg.map.layers[5].group).toBe("group");
         expect(cfg.map.layers[6].id).toBe("annotations");
         expect(cfg.map.projection).toBe(cfg1.map.projection);
         expect(cfg.map.units).toBe("m");
@@ -2722,7 +2829,7 @@ describe('Test the MapUtils', () => {
         expect(cfg.widgetsConfig.widgets[0].id).toNotBe("widget1");
         expect(cfg.widgetsConfig.widgets[0].id.length).toBe(36);
         expect(cfg.widgetsConfig.widgets[0].layer).toExist();
-        expect(cfg.widgetsConfig.widgets[0].layer.id).toBe(cfg.map.layers[2].id);
+        expect(cfg.widgetsConfig.widgets[0].layer.id).toBe(cfg.map.layers[1].id);
         expect(cfg.widgetsConfig.widgets[0].layer.group).toBe("group2");
         expect(cfg.widgetsConfig.collapsed).toExist();
 

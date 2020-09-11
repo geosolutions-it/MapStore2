@@ -181,6 +181,10 @@ export const navigableItemsSelectorCreator = ({withImmersiveSection = false, inc
             // include only the section
             return [...p, c];
         }
+        if (c.type === SectionTypes.BANNER && (includeAlways || visibleItems[c.id])) {
+            // include only the section
+            return [...p, c];
+        }
         if (c.type === SectionTypes.IMMERSIVE) {
             // include immersive sections || contents
             const allImmContents = c.contents && c.contents.reduce((pImm, column) => {
@@ -283,3 +287,9 @@ export const hasPendingChanges = (state = {}) => state?.geostory?.pendingChanges
  * @param {object} state application state
  */
 export const updateUrlOnScrollSelector = state => get(state, 'geostory.updateUrlOnScroll', false);
+
+/**
+ * Gets the currentStoryFonts that were loaded from config
+ * @param {object} state application state
+ */
+export const currentStoryFonts = state => get(state, "geostory.currentStory.settings.theme.fontFamilies", []);

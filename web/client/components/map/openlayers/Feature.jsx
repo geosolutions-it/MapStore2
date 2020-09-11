@@ -9,7 +9,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import axios from 'axios';
-import isEqual from 'lodash/isEqual';
+import {isEqual, isUndefined} from 'lodash';
 import find from 'lodash/find';
 import castArray from 'lodash/castArray';
 
@@ -67,7 +67,9 @@ export default class Feature extends React.Component {
         let canRender = false;
 
         if (props.type === "FeatureCollection") {
-            ftGeometry = { features: props.features };
+            // show/hide feature
+            const showHideFeature = !isUndefined(props.properties.visibility) ? props.properties.visibility : true;
+            ftGeometry = { features: showHideFeature ? props.features : [] };
             canRender = !!(props.features);
         } else {
             // if type is geometryCollection or a simple geometry, the data will be in geometry prop
@@ -97,6 +99,7 @@ export default class Feature extends React.Component {
 
             if (props.style && (props.style !== props.layerStyle)) {
                 this._feature.forEach((f) => {
+
                     let promises = [];
                     let geoJSONFeature = {};
                     if (props.type === "FeatureCollection") {

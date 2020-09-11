@@ -43,7 +43,8 @@ const SaveBaseDialog = compose(
         saveMap: saveMapResource
     }),
     withProps({
-        category: "MAP"
+        category: "MAP",
+        enableDetails: true
     }),
     getContext({
         router: PropTypes.object

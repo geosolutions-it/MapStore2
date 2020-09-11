@@ -6,39 +6,47 @@
  * LICENSE file in the root directory of this source tree.
 */
 
-import React from 'react';
-import { createPlugin } from '../utils/PluginsUtils';
+import React, {useEffect} from 'react';
 import { connect } from 'react-redux';
+
 import { createSelector } from 'reselect';
+import {Glyphicon, Button, MenuItem} from 'react-bootstrap';
+import { get, isNil } from 'lodash';
+
+import { createPlugin } from '../utils/PluginsUtils';
 import {getExtentFromViewport} from "../utils/CoordinatesUtils";
-import {Glyphicon, Button} from 'react-bootstrap';
 import ConfirmButton from '../components/buttons/ConfirmButton';
 import Dialog from '../components/misc/Dialog';
 import Message from './locale/Message';
-import {mapSelector} from '../selectors/map';
-import {toggleControl} from '../actions/controls';
-import {setSearchBookmarkConfig, resetBookmarkConfig, updateBookmark, filterBookmarks} from '../actions/searchbookmarkconfig';
 import BookmarkList from '../components/mapcontrols/searchbookmarkconfig/BookmarkList';
 import AddNewBookmark from '../components/mapcontrols/searchbookmarkconfig/AddNewBookmark';
-import searchbookmarkconfig from '../reducers/searchbookmarkconfig';
 
-/**
- * Bookmark search configuration Plugin. Allow to add and edit additional
- * bookmarks used by search by bookmark plugin. User has to
- * save the map to persist service changes.
- *
- * @class SearchByBookmarkPanel
- * @memberof plugins
- * @static
- *
- */
+import {toggleControl} from '../actions/controls';
+import {changeActiveSearchTool} from '../actions/search';
+import {setSearchBookmarkConfig, resetBookmarkConfig, updateBookmark, filterBookmarks} from '../actions/searchbookmarkconfig';
+import searchbookmarkconfig from '../reducers/searchbookmarkconfig';
+import {mapInfoSelector, mapSelector} from '../selectors/map';
+import {isLoggedIn, isAdminUserSelector} from '../selectors/security';
+
 const SearchByBookmarkPanel = (props) => {
     const { enabled, pages, page,
         onPropertyChange,
         bookmark,
         bookmarkSearchConfig = {},
-        editIdx
+        editIdx,
+        zoomOnSelect = true,
+        bookmarkEditing = "EDIT",
+        allowUser
     } = props;
+
+    useEffect(()=>{
+        onPropertyChange("zoomOnSelect", zoomOnSelect);
+        onPropertyChange("bookmarkEditing", bookmarkEditing);
+    }, [onPropertyChange]);
+
+    useEffect(()=>{
+        onPropertyChange("allowUser", allowUser);
+    }, [allowUser]);
 
     const onClose = () => {
         props.toggleControl("searchBookmarkConfig");
@@ -133,15 +141,62 @@ const SearchByBookmarkPanel = (props) => {
 
 };
 
-// Search by bookmark menu item for Search bar
-const searchMenuItem = (onClick, activeTool) => ({
-    active: activeTool === "bookmarkSearch",
-    onClick: () => onClick('bookmarkSearch'),
-    glyph: "bookmark",
-    text: <Message msgId="search.searchByBookmark"/>
+/**
+ * Check whether the user has required permission for bookmark feature
+ * @ignore
+ * @param {string} bookmarkEditing user role allowed
+ * @param {bool} loggedIn check if the user is logged into mapstore
+ * @param {bool} canEdit can user edit the map
+ * @param {number} id map id to check for new/existing map
+ * @param {bool} isAdmin logged user is an admin user
+ */
+const isAllowedUser = (
+    bookmarkEditing,
+    loggedIn,
+    {canEdit, id},
+    isAdmin) => {
+    const canEditMap = loggedIn && (canEdit || isNil(id));
+    return  (bookmarkEditing === "ALL"
+    || bookmarkEditing === "EDIT" && canEditMap
+    || bookmarkEditing === "ADMIN" && isAdmin);
+};
+
+/**
+ * Search by bookmark menu item for Search bar burgermenu
+ * @ignore
+ * @param {object} props Component props
+ * @param {bool} props.show enable/disable bookmark menu item
+ * @param {func} props.onClick toggle bookmark search
+ * @param {bool} props.active name of the active search tool
+ */
+const BookmarkMenuItem = connect(createSelector([
+    state => state?.search?.activeSearchTool || null,
+    state => state?.searchbookmarkconfig || {}
+], (searchTool, config, ) => ({
+    active: searchTool === "bookmarkSearch",
+    show: config?.allowUser || !!get(config, "bookmarkSearchConfig.bookmarks", []).length
+})), {
+    onClick: changeActiveSearchTool
+})(({show, onClick, active}) => {
+    return show ? (
+        <MenuItem active={active} onClick={() => {
+            onClick('bookmarkSearch');
+            document.dispatchEvent(new MouseEvent('click'));
+        }}>
+            <Glyphicon glyph={"bookmark"}/> <Message msgId="search.searchByBookmark"/>
+        </MenuItem>
+    ) : null;
 });
 
-// Search by bookmark config for settings(configuration) button in Search bar
+/**
+ * Search by bookmark config for settings(configuration) button in Search bar
+ * @ignore
+ * @memberof SearchByBookmark plugin
+ * @param {func} toggleConfig enable/disable bookmark config
+ * @param {bool} enabled bookmark config toggle status
+ * @param {string} activeTool name of the active search tool
+ * @return {object} Bookmark configuration for search setting
+ */
 const searchByBookmarkConfig = (toggleConfig, enabled, activeTool) => ({
     onClick: () => {
         if (!enabled) {
@@ -160,8 +215,11 @@ const searchByBookmarkConfig = (toggleConfig, enabled, activeTool) => ({
 const selector = createSelector([
     mapSelector,
     state => state.controls || {},
-    state => state.searchbookmarkconfig || {}
-], (map, controls, bookmarkconfig) => ({
+    state => state.searchbookmarkconfig || {},
+    isLoggedIn,
+    isAdminUserSelector,
+    mapInfoSelector
+], (map, controls, bookmarkconfig, loggedIn, isAdmin, mapInfo = {}) => ({
     bbox: map && map.bbox && getExtentFromViewport(map.bbox),
     enabled: controls.searchBookmarkConfig && controls.searchBookmarkConfig.enabled || false,
     pages: [BookmarkList, AddNewBookmark],
@@ -169,7 +227,8 @@ const selector = createSelector([
     bookmark: bookmarkconfig && bookmarkconfig.bookmark,
     bookmarkSearchConfig: bookmarkconfig && bookmarkconfig.bookmarkSearchConfig,
     editIdx: bookmarkconfig && bookmarkconfig.editIdx,
-    filter: bookmarkconfig && bookmarkconfig.filter
+    filter: bookmarkconfig && bookmarkconfig.filter,
+    allowUser: isAllowedUser(get(bookmarkconfig, "bookmarkEditing"), loggedIn, mapInfo, isAdmin)
 }));
 
 const SearchByBookmarkPlugin = connect(selector, {
@@ -179,14 +238,34 @@ const SearchByBookmarkPlugin = connect(selector, {
     updateBookmark,
     onFilter: filterBookmarks})(SearchByBookmarkPanel);
 
+/**
+ * Bookmark search configuration Plugin. Allow to add and edit additional
+ * bookmarks used by search by bookmark plugin. User has to
+ * save the map to persist service changes.
+ *
+ * @name SearchByBookmark
+ * @memberof plugins
+ * @class
+ * @param {bool} cfg.zoomOnSelect cfg.zoomOnSelect zooms to the extent on selecting a value from the bookmark drop down
+ * rather than clicking search icon
+ * @param {string} cfg.bookmarkEditing cfg.bookmarkEditing "ADMIN"|"EDIT"|"ALL" sets the user permission restriction
+ * for bookmark edit feature
+ * - "ADMIN": only admin can edit bookmarks
+ * - "EDIT": only users with edit permission on the current map can edit bookmarks
+ * - "ALL": everyone can edit bookmarks
+ * @example
+ * {
+ *     cfg: {
+ *         zoomOnSelect: true,
+ *         bookmarkEditing: "ADMIN"
+ *     }
+ * }
+ */
 export default createPlugin('SearchByBookmark', {
     component: SearchByBookmarkPlugin,
-    options: {
-        disablePluginIf: "{state('userrole') !== 'ADMIN' }" // Plugin should be visible only to admin users
-    },
     containers: {
         Search: {
-            menuItem: searchMenuItem,
+            menuItem: BookmarkMenuItem,
             bookmarkConfig: searchByBookmarkConfig
         }
     },

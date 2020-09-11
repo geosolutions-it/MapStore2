@@ -43,12 +43,20 @@ describe('Column component', () => {
     });
     describe('Column contents has proper toolbars', () => {
         it('text', () => {
-            // text content should contain only delete button
-            ReactDOM.render(<Column mode={Modes.EDIT} contents={[{ type: ContentTypes.TEXT, html: '<p id="TEST_HTML">something</p>' }]} />, document.getElementById("container"));
+            const size = () => ({id: 'size'});
+            const overrideTools =  {
+                [ContentTypes.TEXT]: [size(), 'remove']
+            };
+            // text content should contain only size and delete button
+            ReactDOM.render(<Column
+                mode={Modes.EDIT}
+                overrideTools={overrideTools}
+                contents={[{ type: ContentTypes.TEXT, html: '<p id="TEST_HTML">something</p>' }]} />, document.getElementById("container"));
             const textToolbar = document.querySelector('.ms-content-toolbar .btn-group');
             expect(textToolbar).toExist();
-            expect(textToolbar.querySelectorAll('button').length).toBe(1);
-            expect(textToolbar.querySelector('button .glyphicon-trash')).toExist(); // align tool
+            expect(textToolbar.querySelectorAll('button').length).toBe(2);
+            expect(textToolbar.querySelector('button .glyphicon-trash')).toExist(); // delete button
+            expect(textToolbar.querySelector('button .glyphicon-resize-horizontal')).toExist(); // resize button
         });
         it('media', () => {
             // media and image contents must have edit, resize and align tools

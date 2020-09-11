@@ -120,8 +120,8 @@
                 "tooltip": "Nota: este parámetro requiere configuraciones específicas en GeoServer"
             }
         },
-        "longitude": "Longitud",
-        "latitude": "Latitud",
+        "longitude": "Lon",
+        "latitude": "Lat",
         "notification": {
             "update": "Actualizar",
             "warning": "Aviso",
@@ -346,6 +346,7 @@
         },
         "resources": {
             "successSaved": "Este recurso se ha guardado correctamente",
+            "savingError": "Hubo un error al guardar el recurso",
             "deleteConfirmTitle": "¿Estás seguro?",
             "deleteConfirmMessage": "¿Estás seguro de que quieres eliminar este recurso?",
             "deleteConfirmButtonText": "Eliminar",
@@ -521,6 +522,7 @@
                 "title": "Refrescar el título",
                 "dimensions": "Refrescar las dimensiones"
             },
+            "layerInfoTooltip": "Actualizar el título y la descripción de la capa",
             "layerMetadata": {
                 "identifier": "Identificador",
                 "title": "Título",
@@ -650,6 +652,7 @@
         "identifyRevGeocodeCloseText": "Cerrar",
         "identifyRevGeocodeError": "Geocodificación imposible",
         "identifyEdit": "Editar",
+        "identifyLayerSelectNoResult": "No se encontraron capas",
         "getFeatureInfoError": {
             "title": "Ooops! Algo va mal",
             "text": "Un error se ha producido durante esta <b>GetFeatureInfo</b> petición"
@@ -695,6 +698,7 @@
             "addAsLayer": "Agregar como capa"
         },
         "search":{
+            "layerMustBeVisible": "La capa de destino está inactiva",
             "decimal": "Decimal",
             "aeronautical": "Aeronáutica",
             "changeSearchInputField": "Cambiar la herramienta de búsqueda",
@@ -1046,10 +1050,11 @@
             "edit": "Editar",
             "remove": "Borrar",
             "save": "Guardar",
+            "saveGeometry": "Guardar geometría",
             "cancel": "Cancelar",
             "back": "Espalda",
             "applyStyle": "Aplicar estilo",
-            "addMarker": "Agrega una geometría",
+            "addGeometry": "Agrega una geometría",
             "styleGeometry": "Cambia estilo",
             "deleteGeometry": "Eliminar todas las geometrías de anotación",
             "removeannotation": "Desea eliminar la anotación con título: {title}?",
@@ -1057,8 +1062,18 @@
             "confirm": "Confirmar",
             "title": "Anotaciones",
             "mandatory": "Campo obligatorio",
-            "emptygeometry": "Geometría no puede estar vacía",
             "add": "Nueva",
+            "emptygeometry": "Agregue al menos una geometría válida",
+            "empty": "Aún no hay anotaciones, haga clic en [+] para agregar anotaciones",
+            "geometries": "Geometrías",
+            "enableEdit": "Habilitar editar",
+            "zoomTo": "Zoom a la anotación",
+            "zoomToGeometry": "Zoom a geometría",
+            "removeGeometry": "Eliminar",
+            "hide": "Ocultar anotación",
+            "show": "Mostrar anotación",
+            "tabCoordinates": "Coordenadas",
+            "tabStyle": "Estilo",
             "filter": "Filtrar las anotaciones...",
             "titleUndoGeom": "La geometría ha cambiado",
             "undoGeom": "Estás seguro de salir sin guardar? (Perderá los cambios)",
@@ -1067,7 +1082,6 @@
             "deleteFeature": "Eliminar esta característica",
             "undoDeleteFeature": "Estás seguro de eliminar esta característica?",
             "undo": "Estás seguro de que quieres abandonar la sesión de edición de anotaciones?",
-            "zoomTo": "Zoom",
             "insertText": "Por favor inserte la anotación de texto",
             "downloadtooltip": "Descargar anotaciones",
             "downloadcurrenttooltip": "Descargar la anotación actual",
@@ -1125,12 +1139,13 @@
             "changePwd": "Cambiar la contraseña",
             "newPwd": "Nueva contraseña",
             "retypePwd": "Confirme la contraseña",
-            "passwordMinlenght": "La clave tiene que tener al menos {minSize} carácteres",
+            "passwordMinlenght": "La clave tiene que tener al menos {data} carácteres",
             "passwordCheckFail": "¡Las claves no coinciden!",
             "passwordInvalid": "Clave incorrecta",
             "username": "Nombre de usuario",
             "password": "Clave",
-            "passwordMessage": "La contraseña debe contener al menos 6 caracteres",
+            "passwordMessage": "La contraseña debe contener al menos 6 caracteres. Los valores válidos para las contraseñas incluyen números, letras mayúsculas o minúsculas y los siguientes caracteres especiales: !,@,#,$,%,&,*,_",
+            "passwordInvalidChar": "La contraseña no debe contener estos caracteres: {data}",
             "passwordChanged": "Clave actualizada",
             "passwordError": "Error en el cambio de clave",
             "signIn":"Login",
@@ -2053,6 +2068,7 @@
             "equalInterval": "Intervalo igual",
             "quantile": "Cuantil",
             "jenks": "Descansos naturales (Jenks)",
+            "standardDeviation": "Desviación estándar",
             "switchToTextareaEditor": "Cambiar al editor de textarea",
             "switchToVisualEditor": "Cambiar al editor visual",
             "alertForceTranslate": "Perderá todos los cambios agregados en el texto al cambiar al editor visual. ¿Está seguro de cambiar al modo editor de estilo visual?",
@@ -2070,7 +2086,12 @@
             "grayChannel": "Channel",
             "ruleClassification": "Clasificación",
             "ruleRaster": "Ráster",
-            "customInterval": "Custom Interval"
+            "customInterval": "Custom Interval",
+            "styleEmpty": "Este estilo no tiene reglas",
+            "incompleteClassification": "La clasificación es incompleta porque las entradas no están disponibles. Asegúrese de que todas las propiedades se proporcionan correctamente",
+            "emptyImageIconSymbolizer": "Falta la URL de la imagen en el estilo del icono",
+            "warningTextOrderTitle": "Advertencia",
+            "warningTextOrder": "El orden de la regla que contiene el estilo de texto no pudo coincidir con el orden de representación en el mapa. Este comportamiento está relacionado con algún motor de renderizado que dibuja la etiqueta sobre otras reglas"
         },
         "playback": {
             "settings": {
@@ -2230,6 +2251,7 @@
             "geostoreMap": "Mapas de MapStore",
             "loadingSpinner": "Cargando Historia",
             "addTitleSection": "Agregar sección de título",
+            "addBannerSection": "Agregar sección de párrafo",
             "addParagraphSection": "Agregar sección de párrafo",
             "addImmersiveSection": "Añadir sección inmersiva",
             "addMediaSection": "Agregar sección de multimedia",
@@ -2296,6 +2318,7 @@
                     "htmlTitlePlaceholder": "Insertar título",
                     "htmlPlaceholder": "insertar texto aquí...",
                     "titleTitle": "Sección de título",
+                    "titleBanner": "Sección de banner",
                     "titleParagraph": "Sección de párrafo",
                     "titleImmersive": "Sección inmersiva",
                     "titleImmersiveContent": "Contenido inmersivo",
@@ -2321,18 +2344,23 @@
                     "backConfirmNo": "No",
                     "backConfirmYes": "Si",
                     "save": "Guardar ajustes",
-                    "headerTitle": "Configuración de la historia",
+                    "storyTheme" : "Tema de la historia",
+                    "storyHeader" : "Encabezado de la historia",
                     "title": "Titulo",
                     "titlePlaceholder": "Ingrese título",
                     "logo": "Logo",
-                    "logoPlaceholder": "El logotipo no debe superar los 48 px de altura y se sugiere un ancho de 96 px. max 500kb",
+                    "logoPlaceholder": "Suelta la imagen de tu logotipo aquí o haz clic para seleccionar un archivo de imagen (los formatos admitidos son png y jpeg)",
                     "autoplay": "Auto-reproducción",
                     "enableAutoplay": "Habilitar reproducción automática",
                     "autoplayInterval": "Intervalo de reproducción automática (segundos)",
                     "autoplayIntervalPlaceholder": "Habilitar intervalo de reproducción automática",
                     "navbar": "Barra de navegación",
                     "showNavbar": "Mostrar barra de navegación",
-                    "theme": "Tema",
+                    "theme": "Tema predeterminado",
+                    "fontFamily": "Familia tipográfica",
+                    "webFontLoadError": "No se pudieron cargar algunas fuentes desde la configuración local",
+                    "fontSize": "Tamaño de fuente",
+                    "overlay": "Cubrir",
                     "templateTooltip":"Esta configuración le permite habilitar la función Identificar en el mapa definiendo un formato genérico para todas las capas. Es posible configurar un formato diferente para cada nivel usando el editor de mapas avanzado (icono de lápiz). Para obtener más información, consulte la <a href='https://mapstore.readthedocs.io/en/latest/user-guide/layer-settings/#templates' target='_blank'> guía del usuario </a>. Si una capa ha definido su propio formato de identificación, se utilizará en lugar del genérico establecido en el nivel del mapa."
                 }
             },
@@ -2823,6 +2851,27 @@
             },
             "deleteError": "Se produjo un error inesperado al eliminar el mapa",
             "updateError": "Se produjo un error inesperado al guardar el mapa"
+        },
+        "layerInfo": {
+            "title": "Actualizar títulos y descripciones de capas",
+            "noLayers": "No se encontraron capas",
+            "syncButton": "Sincronizar títulos y descripciones",
+            "selectAll": "Seleccionar todo",
+            "deselectAll": "Deseleccionar todo",
+            "updatingLayers": "Actualización de capas {updatedCount}/{totalCount}",
+            "tooltips": {
+                "syncSuccess": "El título y la descripción se actualizaron correctamente para esta capa",
+                "syncError": "No es posible actualizar el título y la descripción de esta capa. Puede verificar si todas las opciones de capa son correctas en el panel de configuración"
+            },
+            "syncingLayersSavingToServerError": {
+                "title": "Error al guardar el servidor",
+                "message": "Se produjo un error inesperado al guardar capas actualizadas en el servidor"
+            },
+            "syncingLayersGeneralError": {
+                "title": "General Error",
+                "message": "Se produjo un error inesperado durante la sincronización de capas. Probablemente hay un error en MapStore"
+            },
+            "layerType": "tipo: {type}"
         },
         "tutorial": {
             "title": "Tutorial",

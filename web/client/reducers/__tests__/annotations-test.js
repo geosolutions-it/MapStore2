@@ -41,7 +41,10 @@ const {
     toggleStyle,
     setStyle,
     updateSymbols,
-    setEditingFeature
+    setEditingFeature,
+    setDefaultStyle,
+    loading,
+    changeGeometryTitle
 } = require('../../actions/annotations');
 const {PURGE_MAPINFO_RESULTS} = require('../../actions/mapInfo');
 const {drawingFeatures, selectFeatures} = require('../../actions/draw');
@@ -162,18 +165,20 @@ describe('Test the annotations reducer', () => {
         expect(state.removing).toBe('1');
     });
     it('confirm remove annotation', () => {
-        const state = annotations({removing: '1'}, {
+        const state = annotations({removing: '1', editing: {features: [{properties: {id: 2}}]}}, {
             type: CONFIRM_REMOVE_ANNOTATION,
             id: '1'
         });
         expect(state.removing).toNotExist();
         expect(state.stylerType).toBe("");
+        expect(state.editing.features).toBeTruthy();
 
     });
     it('confirm remove annotation geometry', () => {
         const state = annotations({
             removing: '1',
             editing: {
+                features: [{properties: {id: '1'}}],
                 style: {
                     "Circle": {
                         imgGliph: "comment"
@@ -301,9 +306,10 @@ describe('Test the annotations reducer', () => {
     });
     it('remove annotation geometry', () => {
         const state = annotations({removing: null}, {
-            type: REMOVE_ANNOTATION_GEOMETRY
+            type: REMOVE_ANNOTATION_GEOMETRY,
+            id: '1'
         });
-        expect(state.removing).toBe('geometry');
+        expect(state.removing).toBe('1');
         expect(state.unsavedChanges).toBe(true);
     });
     it('toggle style off', () => {
@@ -1589,5 +1595,21 @@ describe('Test the annotations reducer', () => {
         expect(annotationsState.editing.features[0].style[2].filtering).toBe(false);
         expect(annotationsState.editing.features[1].style[1].filtering).toBe(false);
         expect(annotationsState.editing.features[1].style[2].filtering).toBe(false);
+    });
+    it('setDefaultStyle', () => {
+        const state = annotations({}, setDefaultStyle('POINT.symbol', {size: 64}));
+        expect(state.defaultStyles?.POINT?.symbol).toEqual({size: 64});
+    });
+    it('loading', () => {
+        const state = annotations({}, loading(true, 'loadingFlag'));
+        expect(state.loading).toBe(true);
+        expect(state.loadFlags).toEqual({loadingFlag: true});
+    });
+    it('Change geometry title', ()=>{
+        const state = annotations({
+            editing: {features: [{properties: {id: '1', geometryTitle: ""}}]},
+            selected: {properties: {id: '1', geometryTitle: ""}}}, changeGeometryTitle("New title"));
+        expect(state.selected).toBeTruthy();
+        expect(state.selected.properties.geometryTitle).toBe('New title');
     });
 });

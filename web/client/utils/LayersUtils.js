@@ -407,7 +407,13 @@ const LayersUtils = {
                 groups = mapState.groups.reduce((g, group) => {
                     let newGroups = g;
                     if (group.title) {
-                        newGroups = LayersUtils.deepChange(newGroups, group.id, 'title', group.title);
+                        const groupMetadata = {
+                            title: group.title,
+                            description: group.description,
+                            tooltipOptions: group.tooltipOptions,
+                            tooltipPlacement: group.tooltipPlacement
+                        };
+                        newGroups = LayersUtils.deepChange(newGroups, group.id, groupMetadata);
                     }
                     newGroups = LayersUtils.deepChange(newGroups, group.id, 'expanded', group.expanded);
                     return newGroups;
@@ -512,7 +518,8 @@ const LayersUtils = {
             thematic: layer.thematic,
             tooltipOptions: layer.tooltipOptions,
             tooltipPlacement: layer.tooltipPlacement,
-            legendOptions: layer.legendOptions
+            legendOptions: layer.legendOptions,
+            tileSize: layer.tileSize
         },
         layer.params ? { params: layer.params } : {},
         layer.credits ? { credits: layer.credits } : {},
@@ -662,7 +669,8 @@ const LayersUtils = {
             }
             : {};
     },
-    getWpsUrl
+    getWpsUrl,
+    getLayerTitle: ({title, name}, currentLocale = 'default') => title?.[currentLocale] || title?.default || title || name
 };
 
 module.exports = LayersUtils;

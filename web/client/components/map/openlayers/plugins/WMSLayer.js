@@ -166,7 +166,7 @@ const createLayer = (options, map) => {
         params: queryParameters,
         tileGrid: new TileGrid({
             extent: extent,
-            resolutions: MapUtils.getResolutions(),
+            resolutions: options.resolutions || MapUtils.getResolutions(),
             tileSize: options.tileSize ? options.tileSize : 256,
             origin: options.origin ? options.origin : [extent[0], extent[1]]
         })
@@ -218,6 +218,7 @@ const mustCreateNewLayer = (oldOptions, newOptions) => {
         || isVectorFormat(oldOptions.format) !== isVectorFormat(newOptions.format)
         || isVectorFormat(oldOptions.format) && isVectorFormat(newOptions.format) && oldOptions.format !== newOptions.format
         || oldOptions.localizedLayerStyles !== newOptions.localizedLayerStyles
+        || oldOptions.tileSize !== newOptions.tileSize
     );
 };
 
@@ -246,7 +247,7 @@ Layers.registerType('wms', {
             } else {
                 const tileGrid = new TileGrid({
                     extent: extent,
-                    resolutions: MapUtils.getResolutions(),
+                    resolutions: newOptions.resolutions || MapUtils.getResolutions(),
                     tileSize: newOptions.tileSize ? newOptions.tileSize : 256,
                     origin: newOptions.origin ? newOptions.origin : [extent[0], extent[1]]
                 });

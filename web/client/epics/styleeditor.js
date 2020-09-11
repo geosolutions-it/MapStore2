@@ -59,6 +59,7 @@ const {
 const { getSelectedLayer, layerSettingSelector } = require('../selectors/layers');
 const { generateTemporaryStyleId, generateStyleId, STYLE_OWNER_NAME, getNameParts } = require('../utils/StyleEditorUtils');
 const { initialSettingsSelector, originalSettingsSelector } = require('../selectors/controls');
+const { updateStyleService } = require('../api/StyleEditor');
 /*
  * Observable to get code of a style, it works only in edit status
  */
@@ -210,11 +211,12 @@ module.exports = {
                 const lastStyleService = styleServiceSelector(state);
 
                 return Rx.Observable
-                    .defer(() => lastStyleService.isStatic
-                        ? new Promise((resolve) => resolve(null))
-                        : StylesAPI.getStyleService({ baseUrl }))
+                    .defer(() => updateStyleService({
+                        baseUrl,
+                        styleService: lastStyleService
+                    }))
                     .switchMap((styleService) => {
-                        const initialAction = lastStyleService.isStatic ? [ ] : [ initStyleService(styleService) ];
+                        const initialAction = [ initStyleService(styleService) ];
                         return getLayerCapabilities(layer)
                             .switchMap((capabilities) => {
                                 const layerCapabilities = formatCapabitiliesOptions(capabilities);

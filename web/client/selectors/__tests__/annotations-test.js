@@ -33,7 +33,8 @@ const {
     aeronauticalOptionsSelector,
     annotationSelector,
     annotationsListSelector,
-    symbolListSelector
+    symbolListSelector,
+    editGeometrySelector
 } = require("../annotations");
 
 const state = {
@@ -610,5 +611,15 @@ describe('Test annotations selectors', () => {
                 current: true
             }
         }).mode).toBe('list');
+    });
+    it('editGeometrySelector', () => {
+        // Edit geometry
+        expect(editGeometrySelector({
+            annotations: {editGeometry: false}
+        })).toBe(false);
+        // Default edit geometry
+        expect(editGeometrySelector({
+            annotations: {}
+        })).toBe(true);
     });
 });

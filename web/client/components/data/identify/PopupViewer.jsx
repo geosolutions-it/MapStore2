@@ -11,11 +11,12 @@ import {defaultViewerHandlers, defaultViewerDefaultProps} from './enhancers/defa
 import { compose, defaultProps} from 'recompose';
 import {connect} from 'react-redux';
 import { createSelector} from 'reselect';
-import {indexSelector, responsesSelector, showEmptyMessageGFISelector, generalInfoFormatSelector, validResponsesSelector} from '../../../selectors/mapInfo';
+import {indexSelector, responsesSelector, requestsSelector, showEmptyMessageGFISelector, generalInfoFormatSelector, validResponsesSelector, isLoadedResponseSelector} from '../../../selectors/mapInfo';
 import {changePage} from '../../../actions/mapInfo';
 import Viewer from './DefaultViewer';
-import {isArray} from 'lodash';
+import {isArray, isUndefined} from 'lodash';
 import SwipeHeader from './SwipeHeader';
+const {isMouseMoveIdentifyActiveSelector: identifyFloatingTool } = require('../../../selectors/map');
 
 /**
  * Container that render only the selected result
@@ -41,16 +42,20 @@ const identifyIndex = compose(
 const selector = createSelector([
     responsesSelector,
     validResponsesSelector,
-    (state) => state.mapInfo && state.mapInfo.requests || [],
+    requestsSelector,
     generalInfoFormatSelector,
-    showEmptyMessageGFISelector],
-(responses, validResponses, requests, format, showEmptyMessageGFI) => ({
+    showEmptyMessageGFISelector,
+    identifyFloatingTool,
+    isLoadedResponseSelector],
+(responses, validResponses, requests, format, showEmptyMessageGFI, renderEmpty, loaded) => ({
     responses,
     validResponses,
     requests,
     format,
     showEmptyMessageGFI,
-    missingResponses: (requests || []).length - (responses || []).length
+    missingResponses: (requests || []).length - (responses || []).length,
+    renderEmpty,
+    loaded
 }));
 
 
@@ -64,5 +69,5 @@ export  default compose(
     identifyIndex,
     defaultViewerDefaultProps,
     defaultViewerHandlers,
-    loadingState(({responses}) => responses.length === 0)
+    loadingState(({loaded}) => isUndefined(loaded))
 )(Viewer);

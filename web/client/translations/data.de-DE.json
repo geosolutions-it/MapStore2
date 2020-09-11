@@ -120,8 +120,8 @@
                 "tooltip": "Opmerking: deze parameter vereist specifieke configuraties op GeoServer"
             }
         },
-        "longitude": "Länge",
-        "latitude": "Breite",
+        "longitude": "Lon",
+        "latitude": "Lat",
         "notification": {
             "update": "Aktualisierung",
             "warning": "Warnung",
@@ -346,6 +346,7 @@
         },
         "resources": {
             "successSaved": "Diese Ressource wurde korrekt gespeichert",
+            "savingError": "Beim Speichern der Ressource ist ein Fehler aufgetreten",
             "deleteConfirmTitle": "Bist du sicher",
             "deleteConfirmMessage": "Möchten Sie diese Ressource wirklich löschen?",
             "deleteConfirmButtonText": "Löschen",
@@ -521,6 +522,7 @@
                 "title": "Titel aktualisieren",
                 "dimensions": "Dimensionen aktualisieren"
             },
+            "layerInfoTooltip": "Aktualisieren Sie den Layertitel und die Beschreibung",
             "layerMetadata": {
                 "identifier": "Kennung",
                 "title": "Titel",
@@ -650,6 +652,7 @@
         "identifyRevGeocodeCloseText": "Schliessen",
         "identifyRevGeocodeError": "Konnte nicht geocodiert werden",
         "identifyEdit": "Bearbeiten",
+        "identifyLayerSelectNoResult": "Keine Schichten gefunden",
         "getFeatureInfoError": {
             "title": "Ooops! Etwas ist schiefgelaufen.",
             "text": "Ein Fehler ist während dieser <b>GetFeatureInfo</b> Anfrage aufgetreten"
@@ -695,6 +698,7 @@
             "addAsLayer": "Als Ebene hinzufügen"
         },
         "search":{
+            "layerMustBeVisible": "Die Zielschicht ist inaktiv",
             "decimal": "Dezimal",
             "aeronautical": "Luftfahrt",
             "changeSearchInputField": "Ändern Sie das Suchwerkzeug",
@@ -1046,10 +1050,11 @@
             "edit": "Bearbeiten",
             "remove": "Löschen",
             "save": "Speichern",
+            "saveGeometry": "Geometrie speichern",
             "cancel": "Abbrechen",
             "back": "Zurück",
             "applyStyle": "Stil anwenden",
-            "addMarker": "Fügen Sie eine Geometrie hinzu",
+            "addGeometry": "Fügen Sie eine Geometrie hinzu",
             "styleGeometry": "Stil ändern",
             "deleteGeometry": "Entfernen Sie alle Anmerkungsgeometrien",
             "removeannotation": "Möchten Sie die Anmerkung mit Titel entfernen: {title}?",
@@ -1057,8 +1062,18 @@
             "confirm": "Bestätigen",
             "title": "Notizen / Zeichnen",
             "mandatory": "Pflichtfeld",
-            "emptygeometry": "Geometrie kann nicht leer sein",
             "add": "Neue",
+            "emptygeometry": "Fügen Sie mindestens eine gültige Geometrie hinzu",
+            "empty": "Noch keine Anmerkungen, klicken Sie auf [+], um Anmerkungen hinzuzufügen",
+            "geometries": "Geometrien",
+            "enableEdit": "Bearbeiten aktivieren",
+            "zoomTo": "Zur Anmerkung zoomen",
+            "zoomToGeometry": "Auf Geometrie zoomen",
+            "removeGeometry": "Entfernen",
+            "hide": "Anmerkung ausblenden",
+            "show": "Anmerkung anzeigen",
+            "tabCoordinates": "Koordinaten",
+            "tabStyle": "Stil",
             "filter": "Notizen / Zeichnungen filtern...",
             "undo": "Sind Sie sicher, dass Sie die Annotationsbearbeitungssitzung aufgeben möchten?",
             "titleUndoGeom": "Die Geometrie hat sich geändert",
@@ -1077,7 +1092,6 @@
             "loadoverride": "Ersetzen Sie Anmerkungen",
             "loaderror": "Wählen Sie eine oder mehrere Anmerkungsdateien aus. (unterstützte Dateien: json)",
             "defaulttitle": "Bearbeiten Sie den Standardtitel",
-            "zoomTo": "Zoom",
             "field": {
                 "title": "Titel",
                 "description": "Beschreibung"
@@ -1125,12 +1139,13 @@
             "changePwd": "Passwort ändern",
             "newPwd": "Neues Passwort",
             "retypePwd": "Passwort wiederholen",
-            "passwordMinlenght": "Dein Passwort muss aus mindestens {minSize} Zeichen bestehen",
+            "passwordMinlenght": "Dein Passwort muss aus mindestens {data} Zeichen bestehen",
             "passwordCheckFail": "Passwörter sind nicht identisch!",
             "passwordInvalid": "Ungültiges Passwort",
             "username": "Benutzername",
             "password": "Passwort",
-            "passwordMessage": "Das Passwort muss aus mindestens 6 Zeichen bestehen",
+            "passwordMessage": "Das Passwort muss aus mindestens 6 Zeichen bestehen. Gültige Werte für Kennwörter sind Ziffern, Klein- oder Großbuchstaben und die folgenden Sonderzeichen: !,@,#,$,%,&,*,_",
+            "passwordInvalidChar": "Das Passwort darf diese Zeichen nicht enthalten: {data}",
             "passwordChanged": "Passwort geändert",
             "passwordError": "Fehler beim Ändern des Passworts",
             "signIn":"Anmelden",
@@ -2052,6 +2067,7 @@
             "equalInterval": "Gleiches Intervall",
             "quantile": "Quantil",
             "jenks": "Natürliche Pausen (Jenks)",
+            "standardDeviation": "Varianz",
             "switchToTextareaEditor": "Zum Textarea-Editor wechseln",
             "switchToVisualEditor": "Zum visuellen Editor wechseln",
             "alertForceTranslate": "Sie verlieren alle im Textaree hinzugefügten Änderungen, wenn Sie zum visuellen Editor wechseln. Sind Sie sicher, dass Sie zum visuellen Stil-Editor wechseln?",
@@ -2069,7 +2085,12 @@
             "grayChannel": "Channel",
             "ruleClassification": "Classification",
             "ruleRaster": "Raster",
-            "customInterval": "Custom Interval"
+            "customInterval": "Custom Interval",
+            "styleEmpty": "Dieser Stil hat keine Regeln",
+            "incompleteClassification": "Die Klassifizierung ist unvollständig, da die Einträge nicht verfügbar sind. Stellen Sie sicher, dass alle Eigenschaften korrekt bereitgestellt werden.",
+            "emptyImageIconSymbolizer": "Fehlende Bild-URL im Symbolstil",
+            "warningTextOrderTitle": "Warnung",
+            "warningTextOrder": "Die Reihenfolge der Regeln, die den Textstil enthalten, konnte nicht mit der Renderreihenfolge auf der Karte übereinstimmen. Dieses Verhalten hängt mit einigen Rendering-Engines zusammen, die Beschriftungen über andere Regeln ziehen"
         },
         "playback": {
             "settings": {
@@ -2229,6 +2250,7 @@
             "geostoreMap": "MapStore-Karten",
             "loadingSpinner": "Story wird geladen",
             "addTitleSection": "Titelabschnitt hinzufügen",
+            "addBannerSection": "Bannerbereich hinzufügen",
             "addParagraphSection": "Absatzabschnitt hinzufügen",
             "addImmersiveSection": "Immersive Section hinzufügen",
             "addMediaSection": "Medienabschnitt hinzufügen",
@@ -2295,6 +2317,7 @@
                     "htmlTitlePlaceholder": "Titel einfügen",
                     "htmlPlaceholder": "Text hier einfügen...",
                     "titleTitle": "Titelbereich",
+                    "titleBanner": "Banner-Bereich",
                     "titleParagraph": "Absatz Abschnitt",
                     "titleImmersiveContent": "Immersiver Inhalt",
                     "titleImmersive": "Immersive Section",
@@ -2320,18 +2343,23 @@
                     "backConfirmNo": "Nein",
                     "backConfirmYes": "Ja",
                     "save": "Einstellungen speichern",
-                    "headerTitle": "Story-Einstellungen",
+                    "storyTheme" : "Story-Thema",
+                    "storyHeader" : "Story-Header",
                     "title": "Titel",
                     "titlePlaceholder": "Titel eingeben",
                     "logo": "Logo",
-                    "logoPlaceholder": "Das Logo darf nicht höher als 48 px sein und es wird eine Breite von 96 px empfohlen. max 500kb",
+                    "logoPlaceholder": "Legen Sie Ihr Logo hier ab oder klicken Sie, um eine Bilddatei auszuwählen (unterstützte Formate sind PNG und JPEG).",
                     "autoplay": "Automatisches Abspielen",
                     "enableAutoplay": "Aktivieren Sie die automatische Wiedergabe",
                     "autoplayInterval": "Autoplay-Intervall (Sekunden)",
                     "autoplayIntervalPlaceholder": "Aktivieren Sie das Autoplay-Intervall",
                     "navbar": "Navigationsleiste",
                     "showNavbar": "Navigationsleiste anzeigen",
-                    "theme": "Thema",
+                    "theme": "Standardthema",
+                    "fontFamily": "Schriftfamilie",
+                    "webFontLoadError": "Fehler beim Laden einiger Schriftarten aus der lokalen Konfiguration",
+                    "fontSize": "Schriftgröße",
+                    "overlay": "Überlagerung",
                     "templateTooltip":"Mit dieser Einstellung können Sie die Identifizierungsfunktion auf der Karte aktivieren, indem Sie ein generisches Format für alle Ebenen definieren. Mit dem erweiterten Karteneditor (Stiftsymbol) kann für jede Ebene ein anderes Format konfiguriert werden. Weitere Informationen finden Sie im <a href='https://mapstore.readthedocs.io/en/latest/user-guide/layer-settings/#templates' target='_blank'> Benutzerhandbuch </a>. Wenn ein Layer sein eigenes Identifizierungsformat definiert hat, wird er anstelle des auf Kartenebene festgelegten generischen Formats verwendet."
                 }
             },
@@ -2822,6 +2850,27 @@
             },
             "deleteError": "Beim Löschen der Karte ist ein unerwarteter Fehler aufgetreten",
             "updateError": "Beim Speichern der Karte ist ein unerwarteter Fehler aufgetreten"
+        },
+        "layerInfo": {
+            "title": "Aktualisieren Sie die Titel und Beschreibungen der Ebenen",
+            "noLayers": "Keine Schichten gefunden",
+            "syncButton": "Titel und Beschreibungen synchronisieren",
+            "selectAll": "Wählen Sie Alle",
+            "deselectAll": "Alle abwählen",
+            "updatingLayers": "Aktualisieren von Layern {updatedCount}/{totalCount}",
+            "tooltips": {
+                "syncSuccess": "Titel und Beschreibung wurden für diese Ebene erfolgreich aktualisiert",
+                "syncError": "Es ist nicht möglich, den Titel und die Beschreibung dieser Ebene zu aktualisieren. Sie können im Einstellungsfeld überprüfen, ob alle Ebenenoptionen korrekt sind"
+            },
+            "syncingLayersSavingToServerError": {
+                "title": "Server-Speicherfehler",
+                "message": "Beim Speichern aktualisierter Layer auf dem Server ist ein unerwarteter Fehler aufgetreten"
+            },
+            "syncingLayersGeneralError": {
+                "title": "Allgemeiner Fehler",
+                "message": "Während der Ebenensynchronisierung ist ein unerwarteter Fehler aufgetreten. Es gibt wahrscheinlich einen Fehler im MapStore"
+            },
+            "layerType": "Typ: {type}"
         },
         "tutorial": {
             "title": "Anleitung",

@@ -5,11 +5,9 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
 */
+
 import Rx from 'rxjs';
-
-import { get, find} from 'lodash';
-
-
+import { get, find, reverse} from 'lodash';
 import uuid from 'uuid';
 import { LOCATION_CHANGE } from 'connected-react-router';
 import {
@@ -27,16 +25,19 @@ import { SET_CONTROL_PROPERTIES, SET_CONTROL_PROPERTY, TOGGLE_CONTROL } from '..
 
 import { closeFeatureGrid, updateFilter, toggleEditMode, CLOSE_FEATURE_GRID } from '../actions/featuregrid';
 import { QUERY_CREATE } from '../actions/wfsquery';
-import { CHANGE_MOUSE_POINTER, CLICK_ON_MAP, UNREGISTER_EVENT_LISTENER, CHANGE_MAP_VIEW, MOUSE_MOVE, zoomToPoint, changeMapView } from '../actions/map';
+import { CHANGE_MOUSE_POINTER, CLICK_ON_MAP, UNREGISTER_EVENT_LISTENER, CHANGE_MAP_VIEW, MOUSE_MOVE, zoomToPoint, changeMapView,
+    registerEventListener, unRegisterEventListener } from '../actions/map';
 import { browseData } from '../actions/layers';
 import { closeAnnotations } from '../actions/annotations';
 import { MAP_CONFIG_LOADED } from '../actions/config';
 import {addPopup, cleanPopups, removePopup, REMOVE_MAP_POPUP} from '../actions/mapPopups';
+import { cancelSelectedItem } from '../actions/search';
+const { SET_MAP_TRIGGER } = require('../actions/mapInfo');
 import { stopGetFeatureInfoSelector, identifyOptionsSelector,
     clickPointSelector, clickLayerSelector,
     isMapPopup, isHighlightEnabledSelector,
     itemIdSelector, overrideParamsSelector, filterNameListSelector,
-    currentEditFeatureQuerySelector } from '../selectors/mapInfo';
+    currentEditFeatureQuerySelector, mapTriggerSelector } from '../selectors/mapInfo';
 import { centerToMarkerSelector, queryableLayersSelector, queryableSelectedLayersSelector } from '../selectors/layers';
 import { modeSelector, getAttributeFilters, isFeatureGridOpen } from '../selectors/featuregrid';
 import { spatialFieldSelector } from '../selectors/queryform';
@@ -122,7 +123,8 @@ export default {
     getFeatureInfoOnFeatureInfoClick: (action$, { getState = () => { } }) =>
         action$.ofType(FEATURE_INFO_CLICK)
             .switchMap(({ point, filterNameList = [], overrideParams = {} }) => {
-                let queryableLayers = queryableLayersSelector(getState());
+                // Reverse - To query layer in same order as in TOC
+                let queryableLayers = reverse(queryableLayersSelector(getState()));
                 const queryableSelectedLayers = queryableSelectedLayersSelector(getState());
                 if (queryableSelectedLayers.length) {
                     queryableLayers = queryableSelectedLayers;
@@ -170,7 +172,7 @@ export default {
                                 .catch((e) => Rx.Observable.of(errorFeatureInfo(reqId, e.data || e.statusText || e.status, requestParams, lMetaData)))
                                 .startWith(newMapInfoRequest(reqId, param));
                         }
-                        return Rx.Observable.of(getVectorInfo(layer, request, metadata));
+                        return Rx.Observable.of(getVectorInfo(layer, request, metadata, queryableLayers));
                     });
                 // NOTE: multiSelection is inside the event
                 // TODO: move this flag in the application state
@@ -178,7 +180,6 @@ export default {
                     return out$;
                 }
                 return out$.startWith(purgeMapInfoResults());
-
             }),
     /**
      * if `clickLayer` is present, this means that `handleClickOnLayer` is true for the clicked layer, so the marker have to be hidden, because
@@ -223,7 +224,7 @@ export default {
         })
             .switchMap(({point, layer}) => {
                 const projection = projectionSelector(store.getState());
-                return Rx.Observable.of(featureInfoClick(updatePointWithGeometricFilter(point, projection), layer))
+                return Rx.Observable.of(featureInfoClick(updatePointWithGeometricFilter(point, projection), layer), cancelSelectedItem())
                     .merge(Rx.Observable.of(addPopup(uuid(),
                         { component: IDENTIFY_POPUP, maxWidth: 600, position: {  coordinates: point ? point.rawPos : []}}))
                         .filter(() => isMapPopup(store.getState()))
@@ -422,5 +423,15 @@ export default {
      */
     removeMapInfoMarkerOnRemoveMapPopupEpic: (action$, {getState}) =>
         action$.ofType(REMOVE_MAP_POPUP)
-            .switchMap(() => isMouseMoveIdentifyActiveSelector(getState()) ? Rx.Observable.of(hideMapinfoMarker()) : Rx.Observable.empty())
+            .switchMap(() => isMouseMoveIdentifyActiveSelector(getState()) ? Rx.Observable.of(hideMapinfoMarker()) : Rx.Observable.empty()),
+    /**
+    * Sets which trigger to use on the map
+    */
+    setMapTriggerEpic: (action$, store) =>
+        action$.ofType(SET_MAP_TRIGGER, MAP_CONFIG_LOADED)
+            .switchMap(() => {
+                return Rx.Observable.of(
+                    mapTriggerSelector(store.getState()) === 'hover' ? registerEventListener('mousemove', 'identifyFloatingTool') : unRegisterEventListener('mousemove', 'identifyFloatingTool')
+                );
+            })
 };

@@ -18,6 +18,7 @@
 @ms-story-font-size-h4: floor((@ms-story-font-size-base * 1.4));
 @ms-story-font-size-h5: @ms-story-font-size-base;
 @ms-story-font-size-h6: floor((@ms-story-font-size-base * 0.85));
+@ms-story-font-size-li: floor((@ms-story-font-size-base * 0.66));
 @ms-story-font-size-caption: 11px;
 @ms-story-size-full: 100%;
 @ms-story-size-large: 85%;
@@ -76,7 +77,8 @@
         }
     }
     .ms-cascade-story.ms-edit {
-        .ms-section-title, .ms-section-immersive {
+        .ms-section-title,
+        .ms-section-immersive {
             .ms-text-editor-active {
                 pointer-events: all;
             }
@@ -389,6 +391,9 @@
             top: 0;
             .shadow-soft();
         }
+        .add-bar-popover {
+            max-width: 500px;
+        }
         /*
         This class combines position sticky with height 0 and overflow-y visible
         to provide a fixed background inside the section.
@@ -509,7 +514,8 @@
             }
         }
 
-        &.ms-section-title {
+        &.ms-section-title,
+        &.ms-section-banner {
             .ms-content-body {
                 display: flex;
                 margin: auto;
@@ -963,6 +969,9 @@
                     h5 > div,
                     h6 > div,
                     p > div { margin: 0; }
+
+                    /* Bullet point size */
+                    ul > li > div > span { font-size: @ms-story-font-size-li; }
                 }
 
                 /* padding for the first child of content body of text content */
@@ -1105,7 +1114,8 @@
             }
 
             // foreground guidelines color for container size
-            &.ms-section-title {
+            &.ms-section-title,
+            &.ms-section-banner {
                 > .ms-content-toolbar {
                     border-top: 2px solid @ms-story-bg-guidelines;
                 }
@@ -1288,5 +1298,19 @@
 .ms-video {
     .audio_only_div {
         display: none;
+    }
+}
+
+.ms-font-select {
+    display: flex;
+    align-items: center;
+    margin: 4px 0;
+    min-height: @square-btn-medium-size;
+    & > div {
+        position: relative;
+        align-items: center;
+        flex: 1;
+        word-break: break-word;
+        padding: 0 4px;
     }
 }

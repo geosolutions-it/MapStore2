@@ -11,12 +11,12 @@ const resourceGrid = require('../../components/resources/enhancers/resourceGrid'
 const withShareTool = require('../../components/resources/enhancers/withShareTool').default;
 const Grid = compose(
     withHandlers({
-        onSaveSuccess: (props) => (resource) => {
+        onSaveSuccess: (props) => () => {
             if (props.reloadContexts) {
                 props.reloadContexts();
             }
-            if (props.setFeaturedMapsLatestResource) {
-                props.setFeaturedMapsLatestResource(resource);
+            if (props.invalidateFeaturedMaps) {
+                props.invalidateFeaturedMaps();
             }
         }
     }),

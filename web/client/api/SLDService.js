@@ -200,6 +200,12 @@ const API = {
             query: assign({}, mapParams(layer, params), { fullSLD: true })
         }));
     },
+    getCapabilitiesUrl: (layer) => {
+        const parts = urlParts(getLayerUrl(layer));
+        return url.format(assign(getUrl(parts), {
+            pathname: parts.applicationRootPath + "/rest/sldservice/capabilities.json"
+        }));
+    },
     /**
      * Returns a url to get a classification JSON, given a layer cfg object and a list
      * of classification parameters.
@@ -301,12 +307,23 @@ const API = {
      */
     readClassification: (classificationObj) => {
         validateClassification(classificationObj);
-        return castArray(classificationObj.Rules.Rule || []).map((rule) => ({
+        const rules = castArray(classificationObj.Rules.Rule || []);
+        return rules.map((rule, idx) => ({
             title: rule.Title,
             color: getRuleColor(rule),
             type: getGeometryType(rule),
-            min: getNumber([rule.Filter.And && (rule.Filter.And.PropertyIsGreaterThanOrEqualTo || rule.Filter.And.PropertyIsGreaterThan).Literal, rule.Filter.PropertyIsEqualTo && rule.Filter.PropertyIsEqualTo.Literal]),
-            max: getNumber([rule.Filter.And && (rule.Filter.And.PropertyIsLessThanOrEqualTo || rule.Filter.And.PropertyIsLessThan).Literal, rule.Filter.PropertyIsEqualTo && rule.Filter.PropertyIsEqualTo.Literal])
+            min: getNumber([
+                rule.Filter.And && (rule.Filter.And.PropertyIsGreaterThanOrEqualTo || rule.Filter.And.PropertyIsGreaterThan).Literal,
+                rule.Filter.PropertyIsEqualTo && rule.Filter.PropertyIsEqualTo.Literal,
+                // standard deviation
+                idx === rules.length - 1 && rule?.Filter?.PropertyIsGreaterThanOrEqualTo?.Literal
+            ]),
+            max: getNumber([
+                rule.Filter.And && (rule.Filter.And.PropertyIsLessThanOrEqualTo || rule.Filter.And.PropertyIsLessThan).Literal,
+                rule.Filter.PropertyIsEqualTo && rule.Filter.PropertyIsEqualTo.Literal,
+                // standard deviation
+                idx === 0 && rule?.Filter?.PropertyIsLessThan?.Literal
+            ])
         })) || [];
     },
     /**

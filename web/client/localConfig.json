@@ -64,7 +64,6 @@
             "multiGeometry": true,
             "validationErrors": {}
           },
-          "format": "decimal",
           "defaultTextAnnotation": "New"
         },
         "maptype": {
@@ -280,7 +279,7 @@
             },
             "FeedbackMask"
         ],
-        "desktop": [ "Details",
+        "desktop": ["Details",
           {
             "name": "Map",
             "cfg": {
@@ -306,7 +305,12 @@
                 }
               }
             }
-          }, "AutoMapUpdate", "HelpLink", "DrawerMenu", "Version", "Notifications", "BackgroundSelector", "Annotations",
+          }, "AutoMapUpdate", "HelpLink", "DrawerMenu", "Version", "Notifications", "BackgroundSelector", {
+            "name": "Annotations",
+            "cfg": {
+              "allowEdit": true
+            }
+          },
             {
               "name": "Share",
               "cfg": {

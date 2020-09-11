@@ -24,10 +24,20 @@ const STYLE_CIRCLE = {
     fillColor: '#ffffff',
     fillOpacity: 0.2
 };
-const STYLE_POINT = {
+const STYLE_POINT_MARKER = {
     iconGlyph: 'comment',
     iconShape: 'square',
     iconColor: 'blue'
+};
+const STYLE_POINT_SYMBOL = {
+    iconAnchor: [0.5, 0.5],
+    anchorXUnits: 'fraction',
+    anchorYUnits: 'fraction',
+    color: "#000000",
+    fillColor: "#000000",
+    opacity: 1,
+    size: 64,
+    fillOpacity: 1
 };
 const STYLE_TEXT = {
     fontStyle: 'normal',
@@ -63,9 +73,9 @@ const STYLE_POLYGON = {
 
 const DEFAULT_ANNOTATIONS_STYLES = {
     "Text": STYLE_TEXT,
-    "Point": STYLE_POINT,
+    "Point": STYLE_POINT_MARKER,
     "Circle": STYLE_CIRCLE,
-    "MultiPoint": STYLE_POINT,
+    "MultiPoint": STYLE_POINT_MARKER,
     "LineString": STYLE_LINE,
     "MultiLineString": STYLE_LINE,
     "Polygon": STYLE_POLYGON,
@@ -343,10 +353,43 @@ const AnnotationsUtils = {
     */
     DEFAULT_ANNOTATIONS_STYLES,
     STYLE_CIRCLE,
-    STYLE_POINT,
+    STYLE_POINT_MARKER,
+    STYLE_POINT_SYMBOL,
     STYLE_TEXT,
     STYLE_LINE,
     STYLE_POLYGON,
+    /**
+     * Converts any feature to a geometry type
+     * @param {object} feature
+     * @return {string} a geometry type
+     */
+    getGeometryType: (feature) => {
+        if (feature?.properties?.isCircle) {
+            return 'Circle';
+        }
+        if (feature?.properties?.isText) {
+            return 'Text';
+        }
+        return feature?.geometry?.type;
+    },
+    /**
+     * Converts any geometry type to a glyph
+     * @param {string} type of geometry
+     * @return {object} a glyph name and label
+     */
+    getGeometryGlyphInfo: (type = 'Point') => {
+        const glyphs = {
+            Point: {glyph: 'point', label: 'Point'},
+            MultiPoint: {glyph: 'point', label: 'Point'},
+            LineString: {glyph: 'polyline', label: 'Line'},
+            MultiLineString: {glyph: 'polyline', label: 'Line'},
+            Polygon: {glyph: 'polygon', label: 'Polygon'},
+            MultiPolygon: {glyph: 'polygon', label: 'Polygon'},
+            Text: {glyph: 'font', label: 'Text'},
+            Circle: {glyph: '1-circle', label: 'Circle'}
+        };
+        return glyphs[type];
+    },
     /**
     * it converts any geoJSONObject to an annotation
     * Mandatory elements: MUST be a geoJSON type Feature => properties with an ID and a title
