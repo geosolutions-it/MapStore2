@@ -698,6 +698,7 @@
             "addAsLayer": "Als Ebene hinzufügen"
         },
         "search":{
+            "layerMustBeVisible": "Die Zielschicht ist inaktiv",
             "decimal": "Dezimal",
             "aeronautical": "Luftfahrt",
             "changeSearchInputField": "Ändern Sie das Suchwerkzeug",
