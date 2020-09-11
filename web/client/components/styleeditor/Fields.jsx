@@ -57,15 +57,15 @@ export const fields = {
             const properties = value;
             return (
                 <>
-                <Fields
-                    properties={properties}
-                    params={blockConfig.omittedKeys ? omit(params, blockConfig.omittedKeys) : params}
-                    config={{
-                        disableAlpha: blockConfig.disableAlpha
-                    }}
-                    onChange={(values) => onChange({ ...state.current.value, ...values })}
-                />
-                <PropertyField divider/>
+                    <Fields
+                        properties={properties}
+                        params={blockConfig.omittedKeys ? omit(params, blockConfig.omittedKeys) : params}
+                        config={{
+                            disableAlpha: blockConfig.disableAlpha
+                        }}
+                        onChange={(values) => onChange({ ...state.current.value, ...values })}
+                    />
+                    <PropertyField divider/>
                 </>
             );
         }
@@ -328,44 +328,44 @@ export const fields = {
                     const contrastEnhancement = channelSelection[channelKey]?.contrastEnhancement;
                     return (
                         <>
-                        <Band
-                            key={channelKey}
-                            value={selectedBand}
-                            bands={bandOptions}
-                            label={'styleeditor.' + channelKey}
-                            enhancementType={contrastEnhancement?.enhancementType || 'none'}
-                            onChange={(key, newValue) => {
-                                if (key === 'band') {
-                                    return onChange({
-                                        contrastEnhancement: {},
-                                        channelSelection: {
-                                            ...value.channelSelection,
-                                            [channelKey]: {
-                                                ...value.channelSelection[channelKey],
-                                                sourceChannelName: newValue
-                                            }
-                                        }
-                                    });
-                                }
-                                if (key === 'enhancementType') {
-                                    return onChange({
-                                        contrastEnhancement: {},
-                                        channelSelection: {
-                                            ...value.channelSelection,
-                                            [channelKey]: {
-                                                ...value.channelSelection[channelKey],
-                                                contrastEnhancement: {
-                                                    ...channelSelection[channelKey].contrastEnhancement,
-                                                    enhancementType: newValue
+                            <Band
+                                key={channelKey}
+                                value={selectedBand}
+                                bands={bandOptions}
+                                label={'styleeditor.' + channelKey}
+                                enhancementType={contrastEnhancement?.enhancementType || 'none'}
+                                onChange={(key, newValue) => {
+                                    if (key === 'band') {
+                                        return onChange({
+                                            contrastEnhancement: {},
+                                            channelSelection: {
+                                                ...value.channelSelection,
+                                                [channelKey]: {
+                                                    ...value.channelSelection[channelKey],
+                                                    sourceChannelName: newValue
                                                 }
                                             }
-                                        }
-                                    });
-                                }
-                                return null;
-                            }}
-                        />
-                        <PropertyField key={channelKey + '-divider'} divider/>
+                                        });
+                                    }
+                                    if (key === 'enhancementType') {
+                                        return onChange({
+                                            contrastEnhancement: {},
+                                            channelSelection: {
+                                                ...value.channelSelection,
+                                                [channelKey]: {
+                                                    ...value.channelSelection[channelKey],
+                                                    contrastEnhancement: {
+                                                        ...channelSelection[channelKey].contrastEnhancement,
+                                                        enhancementType: newValue
+                                                    }
+                                                }
+                                            }
+                                        });
+                                    }
+                                    return null;
+                                }}
+                            />
+                            <PropertyField key={channelKey + '-divider'} divider/>
                         </>
                     );
                 });

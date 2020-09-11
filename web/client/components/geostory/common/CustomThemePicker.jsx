@@ -52,34 +52,34 @@ function CustomThemePicker({
 
     return (
         <>
-        <div className="ms-custom-theme-picker-field">
-            <div><Message msgId="geostory.customizeTheme.backgroundColorLabel"/></div>
-            <div>
-                <ColorSelector
-                    placement={placement}
-                    key={backgroundColor}
-                    onOpen={onOpen}
-                    color={backgroundColor}
-                    format={!disableBackgroundAlpha ? 'rgb' : 'hex'}
-                    disableAlpha={disableBackgroundAlpha}
-                    presetColors={[]}
-                    onChangeColor={(newBackgroundColor) => {
-                        const borderColor = tinycolor(newBackgroundColor).isLight()
-                            ? tinycolor(newBackgroundColor).darken(10).toHexString()
-                            : tinycolor(newBackgroundColor).lighten(15).toHexString();
-                        const readableTextColor = !disableTextColor && !themeStyle?.color && {
-                            color: tinycolor.mostReadable(newBackgroundColor, ['#000000', '#ffffff'], { includeFallbackColors: true }).toHexString()
-                        };
-                        onChange({
-                            ...themeStyle,
-                            backgroundColor: newBackgroundColor,
-                            borderColor,
-                            ...(!disableTextColor && readableTextColor)
-                        });
-                    }}/>
+            <div className="ms-custom-theme-picker-field">
+                <div><Message msgId="geostory.customizeTheme.backgroundColorLabel"/></div>
+                <div>
+                    <ColorSelector
+                        placement={placement}
+                        key={backgroundColor}
+                        onOpen={onOpen}
+                        color={backgroundColor}
+                        format={!disableBackgroundAlpha ? 'rgb' : 'hex'}
+                        disableAlpha={disableBackgroundAlpha}
+                        presetColors={[]}
+                        onChangeColor={(newBackgroundColor) => {
+                            const borderColor = tinycolor(newBackgroundColor).isLight()
+                                ? tinycolor(newBackgroundColor).darken(10).toHexString()
+                                : tinycolor(newBackgroundColor).lighten(15).toHexString();
+                            const readableTextColor = !disableTextColor && !themeStyle?.color && {
+                                color: tinycolor.mostReadable(newBackgroundColor, ['#000000', '#ffffff'], { includeFallbackColors: true }).toHexString()
+                            };
+                            onChange({
+                                ...themeStyle,
+                                backgroundColor: newBackgroundColor,
+                                borderColor,
+                                ...(!disableTextColor && readableTextColor)
+                            });
+                        }}/>
+                </div>
             </div>
-        </div>
-        {!disableTextColor &&
+            {!disableTextColor &&
         <div className="ms-custom-theme-picker-field">
             <div>
                 <div><Message msgId="geostory.customizeTheme.textColorLabel"/></div>
@@ -93,24 +93,24 @@ function CustomThemePicker({
                     placement="top"
                     content={
                         <>
-                        <HTML
-                            msgId="geostory.customizeTheme.alternativeTextColorPopover"
-                            msgParams={{
-                                color: mostReadableTextColor
-                            }}/>
-                        <Button
-                            bsSize="xs"
-                            bsStyle="primary"
-                            style={{
-                                margin: 'auto',
-                                display: 'block'
-                            }}
-                            onClick={() =>  {
-                                onChange({ ...themeStyle, color: mostReadableTextColor });
-                                trigger.current?.hide?.();
-                            }}>
-                            <Message msgId="geostory.customizeTheme.useAlternativeTextColor"/>
-                        </Button>
+                            <HTML
+                                msgId="geostory.customizeTheme.alternativeTextColorPopover"
+                                msgParams={{
+                                    color: mostReadableTextColor
+                                }}/>
+                            <Button
+                                bsSize="xs"
+                                bsStyle="primary"
+                                style={{
+                                    margin: 'auto',
+                                    display: 'block'
+                                }}
+                                onClick={() =>  {
+                                    onChange({ ...themeStyle, color: mostReadableTextColor });
+                                    trigger.current?.hide?.();
+                                }}>
+                                <Message msgId="geostory.customizeTheme.useAlternativeTextColor"/>
+                            </Button>
                         </>
                     }>
                     {mostReadableTextColor && <Button
@@ -137,7 +137,7 @@ function CustomThemePicker({
                     }}/>
             </div>
         </div>}
-        {!disableShadow &&
+            {!disableShadow &&
         <div className="ms-custom-theme-picker-field">
             <div><Message msgId="geostory.customizeTheme.shadowLabel"/></div>
             <div>
@@ -204,38 +204,38 @@ export function CustomThemePickerMenuItem({
 
     return (
         <>
-        {isActive ?
-            <div
-                className="ms-custom-theme-picker-menuitem-header">
-                <div><Message msgId="geostory.contentToolbar.customizeThemeLabel"/></div>
-                <Button
-                    tooltipId="geostory.contentToolbar.customizeThemeRemoveLabel"
-                    className="square-button-md no-border"
-                    onClick={(event) => {
-                        event.stopPropagation();
-                        handleUpdateTheme('');
-                    }}>
-                    <Glyphicon glyph="trash"/>
-                </Button>
-            </div>
-            : <>
-            <MenuItem
-                active={isActive}
-                onClick={() => handleUpdateTheme(value, themeStyle)}>
-                <Message msgId="geostory.contentToolbar.customizeThemeLabel"/>
-            </MenuItem>
-            </>}
-        {isActive &&
-        <div className="ms-custom-theme-picker-menuitem">
-            <CustomThemePicker
-                disableBackgroundAlpha={disableBackgroundAlpha}
-                disableTextColor={disableTextColor}
-                disableShadow={disableShadow}
-                themeStyle={themeStyle}
-                onChange={(newTheme) => handleUpdateTheme(value, newTheme)}
-                onOpen={onActive}
-            />
-        </div>}
+            {isActive ?
+                <div
+                    className="ms-custom-theme-picker-menuitem-header">
+                    <div><Message msgId="geostory.contentToolbar.customizeThemeLabel"/></div>
+                    <Button
+                        tooltipId="geostory.contentToolbar.customizeThemeRemoveLabel"
+                        className="square-button-md no-border"
+                        onClick={(event) => {
+                            event.stopPropagation();
+                            handleUpdateTheme('');
+                        }}>
+                        <Glyphicon glyph="trash"/>
+                    </Button>
+                </div>
+                : <>
+                    <MenuItem
+                        active={isActive}
+                        onClick={() => handleUpdateTheme(value, themeStyle)}>
+                        <Message msgId="geostory.contentToolbar.customizeThemeLabel"/>
+                    </MenuItem>
+                </>}
+            {isActive &&
+                <div className="ms-custom-theme-picker-menuitem">
+                    <CustomThemePicker
+                        disableBackgroundAlpha={disableBackgroundAlpha}
+                        disableTextColor={disableTextColor}
+                        disableShadow={disableShadow}
+                        themeStyle={themeStyle}
+                        onChange={(newTheme) => handleUpdateTheme(value, newTheme)}
+                        onOpen={onActive}
+                    />
+                </div>}
         </>
     );
 }

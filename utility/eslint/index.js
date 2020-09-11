@@ -1,6 +1,14 @@
 module.exports = {
-    "parser": "babel-eslint",          // https://github.com/babel/babel-eslint
+    "parser": "@babel/eslint-parser",          // https://github.com/babel/babel-eslint
+    "parserOptions": {
+        "ecmaVersion": 2020,
+        "sourceType": "module",
+        "ecmaFeatures": {
+            "jsx": true
+        }
+    },
     "plugins": [
+        "@babel",
         "no-only-tests",                 // https://github.com/levibuzolic/eslint-plugin-no-only-tests
         "react",                         // https://github.com/yannickcr/eslint-plugin-react
         "import"                         // https://github.com/benmosher/eslint-plugin-import
@@ -224,5 +232,5 @@ module.exports = {
             ]
         }]
     }
-}
+};
 

@@ -86,34 +86,34 @@ export default compose(
     // BaseMap component overrides the MapView id with map's id
     const mapView = (
         <>
-        <MapView
-            // force unmount to setup correct interactions
-            key={expandable ? 'overlay' : 'block'}
-            onMapViewChanges={onMapViewChanges}
-            eventHandlers={eventHandlers}
-            map={{
-                ...m,
-                id: `media-${id}`,
-                resize: width + '-' + height + '_' + size,
-                className: 'aaaa',
-                style: {
-                    // removed width and height from style and added to .less
-                    // to use different sizes in story sections
-                    cursor: isMapInfoControlActive ? 'pointer' : 'default'
-                }
-            }} // if map id is passed as number, the resource id, ol throws an error
-            layers={layers}
-            tools={isMapInfoControlActive ? ["popup"] : []}
-            options={applyDefaults(updatedMapOptions)}
-        />
-        {expandable && !editMap &&
-        <Button
-            className="ms-expand-media-button"
-            onClick={() => setActive(!active)}
-            tooltipId={active ? 'geostory.closeFullscreenMap' : 'geostory.showFullscreenMap'}
-            tooltipPosition="left">
-            <Glyphicon glyph={!active ? '1-full-screen' : '1-close'}/>
-        </Button>}
+            <MapView
+                // force unmount to setup correct interactions
+                key={expandable ? 'overlay' : 'block'}
+                onMapViewChanges={onMapViewChanges}
+                eventHandlers={eventHandlers}
+                map={{
+                    ...m,
+                    id: `media-${id}`,
+                    resize: width + '-' + height + '_' + size,
+                    className: 'aaaa',
+                    style: {
+                        // removed width and height from style and added to .less
+                        // to use different sizes in story sections
+                        cursor: isMapInfoControlActive ? 'pointer' : 'default'
+                    }
+                }} // if map id is passed as number, the resource id, ol throws an error
+                layers={layers}
+                tools={isMapInfoControlActive ? ["popup"] : []}
+                options={applyDefaults(updatedMapOptions)}
+            />
+            {expandable && !editMap &&
+            <Button
+                className="ms-expand-media-button"
+                onClick={() => setActive(!active)}
+                tooltipId={active ? 'geostory.closeFullscreenMap' : 'geostory.showFullscreenMap'}
+                tooltipPosition="left">
+                <Glyphicon glyph={!active ? '1-full-screen' : '1-close'}/>
+            </Button>}
         </>
     );
     return (<div
