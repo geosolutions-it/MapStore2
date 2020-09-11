@@ -51,7 +51,8 @@ const convertGeometryToGeoJSON = (feature, uom, measureValueStyle) => {
         type: 'Feature',
         geometry: {
             type: feature.geometry.type === 'LineString' ? 'MultiPoint' : feature.geometry.type,
-            coordinates: validateFeatureCoordinates(feature.geometry)
+            coordinates: validateFeatureCoordinates(feature.geometry),
+            textLabels: feature.geometry.textLabels
         },
         properties: {
             id: uuidv1(),

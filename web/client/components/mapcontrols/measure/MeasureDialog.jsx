@@ -50,11 +50,8 @@ class MeasureDialog extends React.Component {
         this.props.onClose(false);
     };
 
-    UNSAFE_componentWillMount() {
-        /* this is used to set up defaults instead of putting them in the initial state,
-         * beacuse in measurement state is updated when controls are updates
-        */
-        const {showCoordinateEditor, ...otherDefaultOptions} = this.props.defaultOptions;
+    initDefaultOptions = (defaultOptions) =>{
+        const {showCoordinateEditor, ...otherDefaultOptions} = defaultOptions;
         this.props.onMount(showCoordinateEditor || this.props.showCoordinateEditor);
         this.props.toggleMeasure({
             geomType: otherDefaultOptions.geomType || "LineString"
@@ -62,9 +59,16 @@ class MeasureDialog extends React.Component {
         this.props.onInit(otherDefaultOptions);
     }
 
+    UNSAFE_componentWillMount() {
+        /* this is used to set up defaults instead of putting them in the initial state,
+         * beacuse in measurement state is updated when controls are updates
+        */
+        this.initDefaultOptions(this.props.defaultOptions);
+    }
+
     componentDidUpdate(prevProps) {
         if (!isEqual(prevProps.defaultOptions, this.props.defaultOptions)) {
-            this.props.onInit(this.props.defaultOptions);
+            this.initDefaultOptions(this.props.defaultOptions);
         }
     }
 

@@ -27,6 +27,9 @@
         .Select-input > input {
             width: 100%!important;
         }
+        .Select-menu-outer{
+            z-index: 3;
+        }
     }
     .coordinates-row-container {
         flex: 1 1 auto;
@@ -48,6 +51,18 @@
                 flex: 1 1 0%;
                 padding: 4px 0px;
                 margin-right: 8px;
+                .form-group {
+                    .degrees, .minutes {
+                        min-width: 45px;
+                        flex: 1;
+                        display: flex;
+                    }
+                    .seconds {
+                        flex: 1;
+                        display: flex;
+                        min-width: 75px;
+                    }
+                }
             }
         }
     }

@@ -14,7 +14,7 @@ const Select = require('react-select').default;
 const tooltip = require('../../misc/enhancers/tooltip');
 const Glyphicon = tooltip(GlyphiconRB);
 const DropdownButton = tooltip(DropdownButtonRB);
-const {head, isNaN, get} = require('lodash');
+const {head, isNaN, get, isEmpty} = require('lodash');
 const LocaleUtils = require('../../../utils/LocaleUtils');
 const Toolbar = require('../../misc/toolbar/Toolbar');
 const draggableContainer = require('../../misc/enhancers/draggableContainer');
@@ -71,6 +71,7 @@ class CoordinatesEditor extends React.Component {
         isDraggable: PropTypes.bool,
         isMouseEnterEnabled: PropTypes.bool,
         isMouseLeaveEnabled: PropTypes.bool,
+        showLengthAndBearingLabel: PropTypes.bool,
         renderer: PropTypes.string
     };
 
@@ -146,7 +147,21 @@ class CoordinatesEditor extends React.Component {
         </div>);
     }
 
+    renderLabelTexts = (index, textValues) =>{
+        const {textLabels, featurePropValue} = textValues;
+        if (this.props.type === "Polygon") {
+            return !isEmpty(textLabels) && textLabels[index].text;
+        }
+        return index !== 0 ?
+            !isEmpty(textLabels) ? textLabels[index - 1].text :
+                !isEmpty(featurePropValue) && featurePropValue[0].formattedValue :
+            null;
+    }
+
     render() {
+        const feature = this.props.features[this.props.currentFeature || 0];
+        const textLabels = get(feature, "geometry.textLabels", []);
+        const featurePropValue = get(feature, "properties.values", []);
         const {componentsValidation, type} = this.props;
         const actualComponents = [...this.props.components];
         const actualValidComponents = actualComponents.filter(validateCoords);
@@ -236,7 +251,14 @@ class CoordinatesEditor extends React.Component {
                     </div>
                 }
                 <div className={"coordinates-row-container"}>
-                    {this.props.components.map((component, idx) => <CoordinatesRow
+                    {this.props.components.map((component, idx) =><>
+                        {this.props.showLengthAndBearingLabel && <div className={'label-texts'}>
+                            <span>
+                                {this.renderLabelTexts(idx, {textLabels, featurePropValue})}
+                            </span>
+                        </div>
+                        }
+                    <CoordinatesRow
                         format={this.props.format}
                         aeronauticalOptions={this.props.aeronauticalOptions}
                         sortId={idx}
@@ -293,7 +315,9 @@ class CoordinatesEditor extends React.Component {
                             } else if (this.props.properties.isValidFeature) {
                                 this.props.onSetInvalidSelected("coords", this.props.components.map(coordToArray));
                             }
-                        }}/>)}
+                        }}/>
+                        </>
+                    )}
                 </div>
                 {(!this.props.components || this.props.components.length === 0) &&
                     <div className="text-center" style={{padding: 15, paddingBottom: 30}}>
