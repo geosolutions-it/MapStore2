@@ -62,7 +62,6 @@ export default ({
             <CustomThemePicker
                 themeStyle={settings?.theme?.general}
                 placement="right"
-                disableLinkColorPicker
                 disableBackgroundAlpha
                 disableShadow
                 onChange={(general) => onUpdateSettings("theme", { ...settings?.theme, general })}/>
@@ -84,7 +83,6 @@ export default ({
                 <ControlLabel><Message msgId="geostory.builder.settings.overlay"/></ControlLabel>
             </div>
             <CustomThemePicker
-                disableLinkColorPicker
                 themeStyle={settings?.theme?.overlay}
                 placement="right"
                 onChange={(overlay) => onUpdateSettings("theme", { ...settings?.theme, overlay })}/>
@@ -96,10 +94,9 @@ export default ({
             <CustomThemePicker
                 disableBackgroundPicker
                 disableShadow
-                disableTextColor
-                themeStyle={settings?.theme?.general}
+                themeStyle={settings?.theme?.link}
                 placement="right"
-                onChange={(general) => onUpdateSettings("theme", { ...settings?.theme, general })}/>
+                onChange={(link) => onUpdateSettings("theme", { ...settings?.theme, link })}/>
         </FormGroup>
         <div>
             <h4><Message msgId="geostory.builder.settings.storyHeader"/></h4>

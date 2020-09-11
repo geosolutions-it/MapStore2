@@ -91,7 +91,7 @@ describe('Cascade component', () => {
     it('should apply custom links color on the story', () => {
         const COLOR = '#ffffff';
         const BACKGROUND_COLOR = '#000000';
-        ReactDOM.render(<Cascade {...STORY} theme={{general: { a: COLOR, color: COLOR, backgroundColor: BACKGROUND_COLOR }, overlay: {color: COLOR, backgroundColor: BACKGROUND_COLOR}}}/>, document.getElementById("container"));
+        ReactDOM.render(<Cascade {...STORY} theme={{link: { color: COLOR }, general: { color: COLOR, backgroundColor: BACKGROUND_COLOR }, overlay: {color: COLOR, backgroundColor: BACKGROUND_COLOR}}}/>, document.getElementById("container"));
         const container = document.getElementById('container');
 
         // We expect to have a class that we use to add custom color to hyperlinks

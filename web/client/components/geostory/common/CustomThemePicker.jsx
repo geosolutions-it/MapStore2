@@ -34,7 +34,6 @@ const Button = tooltip(ButtonRB);
 function CustomThemePicker({
     themeStyle,
     disableBackgroundPicker = false,
-    disableLinkColorPicker,
     disableBackgroundAlpha,
     disableTextColor,
     disableShadow,
@@ -46,7 +45,6 @@ function CustomThemePicker({
     const trigger = useRef();
     const backgroundColor = themeStyle?.backgroundColor;
     const color = themeStyle?.color;
-    const hyperlinksColor = themeStyle?.a;
 
     const mostReadableTextColor = !disableTextColor && backgroundColor && color
         && !tinycolor.isReadable(color, backgroundColor)
@@ -160,27 +158,6 @@ function CustomThemePicker({
                 />
             </div>
         </div>}
-        {!disableLinkColorPicker && (
-            <div className="ms-custom-theme-picker-field">
-                <div><Message msgId="Hyperlinks"/></div>
-                <div>
-                    <ColorSelector
-                        placement={placement}
-                        key={hyperlinksColor}
-                        onOpen={onOpen}
-                        color={hyperlinksColor}
-                        format="hex"
-                        disableAlpha
-                        presetColors={[]}
-                        onChangeColor={(newHyperlinksColor) => {
-                            onChange({
-                                ...themeStyle,
-                                a: newHyperlinksColor
-                            });
-                        }}/>
-                </div>
-            </div>
-        )}
         </>
     );
 }

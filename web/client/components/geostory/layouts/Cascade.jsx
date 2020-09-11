@@ -8,7 +8,6 @@
 import React from 'react';
 import ContainerDimensionsBase from 'react-container-dimensions';
 import {compose} from 'recompose';
-import Style from 'style-it';
 import { throttlePageUpdateEnhancer } from './sections/enhancers/updateCurrentPageEnhancer';
 
 import emptyState from '../../misc/enhancers/emptyState';
@@ -127,50 +126,61 @@ const Cascade = ({
             const sizeClassName = containerSize ? ` ms-${containerSize}` : '';
             const isMediaExpandable = containerSize === 'sm';
             const storyTheme = theme && isObject(theme) && theme || {};
-            return (
-                <Style>
-                    {`
-                        .ms-sections-hyperlinks a {
-                            color: ${storyTheme?.general?.a};
-                        }
-                    `}
-                    <div
-                        id="ms-sections-container"
-                        className={`ms-sections-container${sizeClassName} ms-sections-hyperlinks`}
-                        style={{
-                            ...storyTheme?.general,
-                            ...isContentFocused && { overflow: 'hidden' }
-                        }}>
-                        {
-                            sections.map(({ contents = [], id: sectionId, type: sectionType, cover }) => {
-                                return (
-                                    <Section
-                                        focusedContent={focusedContent}
-                                        onVisibilityChange={onVisibilityChange}
-                                        add={add}
-                                        editMedia={editMedia}
-                                        expandableMedia={isMediaExpandable}
-                                        editWebPage={editWebPage}
-                                        updateCurrentPage={updateCurrentPage}
-                                        update={update}
-                                        remove={remove}
-                                        key={sectionId}
-                                        id={sectionId}
-                                        viewHeight={height}
-                                        viewWidth={width}
-                                        type={sectionType}
-                                        mode={mode}
-                                        contents={contents}
-                                        cover={cover}
-                                        storyTheme={storyTheme}
-                                        mediaViewer={mediaViewer}
-                                        contentToolbar={contentToolbar}
-                                        storyFonts={storyFonts}
-                                    />
-                                );
-                            })
-                        }
-                    </div></Style>);
+            return (<div
+                id="ms-sections-container"
+                className={`ms-sections-container${sizeClassName} ms-sections-hyperlinks`}
+                style={{
+                    ...storyTheme?.general,
+                    ...isContentFocused && { overflow: 'hidden' }
+                }}>
+                {storyTheme?.link?.color && <style dangerouslySetInnerHTML={{__html: `
+        .ms-sections-hyperlinks .ms-text-editor-main a,
+        .ms-sections-hyperlinks .ms-text-wrapper a,
+        .ms-sections-hyperlinks .ms-text-editor-main a:link,
+        .ms-sections-hyperlinks .ms-text-wrapper a:link,
+        .ms-sections-hyperlinks .ms-text-editor-main a:visited,
+        .ms-sections-hyperlinks .ms-text-wrapper a:visited,
+        .ms-sections-hyperlinks .ms-text-editor-main a:active,
+        .ms-sections-hyperlinks .ms-text-wrapper a:active {
+            color: ${storyTheme.link.color};
+            opacity: 1;
+        }
+        .ms-sections-hyperlinks .ms-text-editor-main a:hover,
+        .ms-sections-hyperlinks .ms-text-wrapper a:hover {
+            color: ${storyTheme.link.color};
+            opacity: 0.75;
+        }
+    `}} />}
+                {
+                    sections.map(({ contents = [], id: sectionId, type: sectionType, cover }) => {
+                        return (
+                            <Section
+                                focusedContent={focusedContent}
+                                onVisibilityChange={onVisibilityChange}
+                                add={add}
+                                editMedia={editMedia}
+                                expandableMedia={isMediaExpandable}
+                                editWebPage={editWebPage}
+                                updateCurrentPage={updateCurrentPage}
+                                update={update}
+                                remove={remove}
+                                key={sectionId}
+                                id={sectionId}
+                                viewHeight={height}
+                                viewWidth={width}
+                                type={sectionType}
+                                mode={mode}
+                                contents={contents}
+                                cover={cover}
+                                storyTheme={storyTheme}
+                                mediaViewer={mediaViewer}
+                                contentToolbar={contentToolbar}
+                                storyFonts={storyFonts}
+                            />
+                        );
+                    })
+                }
+            </div>);
         }}
     </ContainerDimensions>
 </BorderLayout>);
