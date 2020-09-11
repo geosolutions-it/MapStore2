@@ -1,11 +1,11 @@
 # Banner Section
 **********************
 
-The Banner Section is a [Title Section](title-section.md) without the text content to create a banner in the story through the background content.
+The Banner Section is similar to the [Title Section](title-section.md) and it is useful to easily create a story banner without the title text content.
 
 <img src="../img/banner-section/banner-section.jpg" class="ms-docimage"/>
 
-By the background editing toolbar the user can:
+From the background editing toolbar the user can do the following actions:
 
 * Add a media content as a background opening the [Media Editor](media-editor-window.md) through the **Change media source** button <img src="../img/button/change-media.jpg" class="ms-docbutton"/> and choose between images, videos or maps. 
 
@@ -13,7 +13,7 @@ By the background editing toolbar the user can:
 
 * Remove the banner section through the **Remove** button <img src="../img/button/remove-button-banner.jpg" class="ms-docbutton"/>
 
-Once an image, a video or a map is added to the background the editing toolbar change to enabling different functionality depending on the content inserted: as is explained [here](title-section.md#images).
+Once the media content has been added as a background of the section, the editing toolbar changes to enable different functionality depending on the content inserted: as explained [here](title-section.md#images).
 
 Below is an example of an image added as background in the Banner Section:
  

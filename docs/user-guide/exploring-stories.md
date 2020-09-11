@@ -87,6 +87,6 @@ Through the **Advanced Options** it is possible include to the URL:
 
 <img src="../img/exploring-stories/share-page.jpg" class="ms-docimage"/>
 
-* The *scroll position* to share the story section that the admin is viewing at that time on the screen.
+* The *scroll position* provides a share URL of the current section visualized by the user.
 
 <img src="../img/exploring-stories/share_section.jpg" class="ms-docimage"/>
