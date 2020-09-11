@@ -10,6 +10,8 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import expect from 'expect';
 import Media from '../index';
+import withVisibility from '../../common/enhancers/withMediaVisibility';
+import Image from '../../../geostory/media/Image';
 import ReactTestUtils from 'react-dom/test-utils';
 
 describe('Media component', () => {
@@ -29,7 +31,7 @@ describe('Media component', () => {
                 id="scroll-container"
                 style={{ width: 512, height: 512, overflow: 'scroll' }}>
                 <div style={{ height: 1024 }}></div>
-                <Media debounceTime={DEBOUNCE_TIME}/>
+                <Media mediaViewer={withVisibility(Image)} debounceTime={DEBOUNCE_TIME}/>
             </div>,
             document.getElementById("container"));
         try {
@@ -61,7 +63,7 @@ describe('Media component', () => {
                 id="scroll-container"
                 style={{ width: 512, height: 512, overflow: 'scroll' }}>
                 <div style={{ height: 1024 }}></div>
-                <Media debounceTime={DEBOUNCE_TIME}/>
+                <Media mediaViewer={withVisibility(Image)} debounceTime={DEBOUNCE_TIME}/>
             </div>,
             document.getElementById("container"));
         try {
