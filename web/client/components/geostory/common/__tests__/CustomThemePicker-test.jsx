@@ -26,10 +26,10 @@ describe('CustomThemePicker component', () => {
         ReactDOM.render(<CustomThemePicker />, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelectorAll('.ms-custom-theme-picker-field');
-        expect(el.length).toBe(4);
+        expect(el.length).toBe(3);
     });
-    it('should disable text, link and shadow fields', () => {
-        ReactDOM.render(<CustomThemePicker disableLinkColorPicker disableTextColor disableShadow />, document.getElementById("container"));
+    it('should disable text and shadow fields', () => {
+        ReactDOM.render(<CustomThemePicker disableTextColor disableShadow />, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelectorAll('.ms-custom-theme-picker-field');
         expect(el.length).toBe(1);
@@ -100,32 +100,5 @@ describe('CustomThemePicker component', () => {
         const fieldNode = el[2];
         const switchSliderNode = fieldNode.querySelector('.mapstore-switch-btn input');
         ReactTestUtils.Simulate.change(switchSliderNode);
-    });
-    it('should change link color', (done) => {
-        const COLOR = '#000000';
-        ReactDOM.render(
-            <CustomThemePicker
-                onChange={(theme) => {
-                    expect(theme.backgroundColor).toBe(undefined);
-                    expect(theme.borderColor).toBe(undefined);
-                    expect(theme.color).toBe(undefined);
-                    expect(theme.a).toBe(COLOR);
-                    done();
-                }}
-            />, document.getElementById("container"));
-        const container = document.getElementById('container');
-        const el = container.querySelectorAll('.ms-custom-theme-picker-field');
-
-        // Link color picker is 4th element in the ColorThemePicker
-        const fieldNode = el[3];
-        const swatchNode = fieldNode.querySelector('.ms-color-picker-swatch');
-        expect(swatchNode).toBeTruthy();
-        ReactTestUtils.Simulate.click(swatchNode);
-        const sketchPickerNode = document.querySelector('.sketch-picker');
-        expect(sketchPickerNode).toBeTruthy();
-        const [sketchPickerHexInputNode] = sketchPickerNode.querySelectorAll('input');
-        ReactTestUtils.Simulate.change(sketchPickerHexInputNode, { target: { value: COLOR } });
-        const coverNode = document.querySelector('.ms-color-picker-cover');
-        ReactTestUtils.Simulate.click(coverNode);
     });
 });
