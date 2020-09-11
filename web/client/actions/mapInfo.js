@@ -32,6 +32,7 @@ const CHANGE_FORMAT = 'IDENTIFY:CHANGE_FORMAT';
 const TOGGLE_SHOW_COORD_EDITOR = 'IDENTIFY:TOGGLE_SHOW_COORD_EDITOR';
 const EDIT_LAYER_FEATURES = 'IDENTIFY:EDIT_LAYER_FEATURES';
 const SET_CURRENT_EDIT_FEATURE_QUERY = 'IDENTIFY:CURRENT_EDIT_FEATURE_QUERY';
+const SET_MAP_TRIGGER = 'IDENTIFY:SET_MAP_TRIGGER';
 
 const TOGGLE_EMPTY_MESSAGE_GFI = "IDENTIFY:TOGGLE_EMPTY_MESSAGE_GFI";
 const toggleEmptyMessageGFI = () => ({type: TOGGLE_EMPTY_MESSAGE_GFI});
@@ -100,12 +101,13 @@ function newMapInfoRequest(reqId, reqConfig) {
     };
 }
 
-function getVectorInfo(layer, request, metadata) {
+function getVectorInfo(layer, request, metadata, queryableLayers) {
     return {
         type: GET_VECTOR_INFO,
         layer,
         request,
-        metadata
+        metadata,
+        queryableLayers
     };
 }
 
@@ -267,6 +269,11 @@ const setCurrentEditFeatureQuery = (query) => ({
     query
 });
 
+const setMapTrigger = (trigger) => ({
+    type: SET_MAP_TRIGGER,
+    trigger
+});
+
 module.exports = {
     ERROR_FEATURE_INFO,
     EXCEPTIONS_FEATURE_INFO,
@@ -312,5 +319,6 @@ module.exports = {
     featureInfoClick,
     UPDATE_FEATURE_INFO_CLICK_POINT, updateFeatureInfoClickPoint,
     EDIT_LAYER_FEATURES, editLayerFeatures,
-    SET_CURRENT_EDIT_FEATURE_QUERY, setCurrentEditFeatureQuery
+    SET_CURRENT_EDIT_FEATURE_QUERY, setCurrentEditFeatureQuery,
+    SET_MAP_TRIGGER, setMapTrigger
 };

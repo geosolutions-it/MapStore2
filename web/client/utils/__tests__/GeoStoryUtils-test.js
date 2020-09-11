@@ -30,7 +30,9 @@ import {
     testRegex,
     isWebPageSection,
     getWebPageComponentHeight,
-    parseHashUrlScrollUpdate
+    parseHashUrlScrollUpdate,
+    createWebFontLoaderConfig,
+    extractFontNames
 } from "../GeoStoryUtils";
 
 describe("GeoStory Utils", () => {
@@ -402,71 +404,112 @@ describe("GeoStory Utils", () => {
         it('initial without shared', () => {
             const url = 'host/#/geostory/111';
             const hash = '#/geostory/111';
-            const storyId = '111';
+            const storyId = 111;
             const sectionId = '222';
-            expect(parseHashUrlScrollUpdate(url, hash, storyId, sectionId)).toBe('host/#/geostory/111/222');
+            expect(parseHashUrlScrollUpdate(url, hash, storyId, sectionId)).toBe('host/#/geostory/111/section/222');
         });
         it('initial without shared with slash after storyId', () => {
             const url = 'host/#/geostory/111/';
             const hash = '#/geostory/111/';
-            const storyId = '111';
+            const storyId = 111;
             const sectionId = '222';
-            expect(parseHashUrlScrollUpdate(url, hash, storyId, sectionId)).toBe('host/#/geostory/111/222');
+            expect(parseHashUrlScrollUpdate(url, hash, storyId, sectionId)).toBe('host/#/geostory/111/section/222');
         });
         it('initial with shared', () => {
             const url = 'host/#/geostory/shared/111';
             const hash = '#/geostory/shared/111';
-            const storyId = '111';
+            const storyId = 111;
             const sectionId = '222';
-            expect(parseHashUrlScrollUpdate(url, hash, storyId, sectionId)).toBe('host/#/geostory/shared/111/222');
+            expect(parseHashUrlScrollUpdate(url, hash, storyId, sectionId)).toBe('host/#/geostory/shared/111/section/222');
         });
         it('initial with shared with slash after storyId', () => {
             const url = 'host/#/geostory/shared/111/';
             const hash = '#/geostory/shared/111/';
-            const storyId = '111';
+            const storyId = 111;
             const sectionId = '222';
-            expect(parseHashUrlScrollUpdate(url, hash, storyId, sectionId)).toBe('host/#/geostory/shared/111/222');
+            expect(parseHashUrlScrollUpdate(url, hash, storyId, sectionId)).toBe('host/#/geostory/shared/111/section/222');
         });
         it('only sectionId is changed without columnId provided', () => {
-            const url = 'host/#/geostory/111/222';
-            const hash = '#/geostory/111/222';
-            const storyId = '111';
+            const url = 'host/#/geostory/111/section/222';
+            const hash = '#/geostory/111/section/222';
+            const storyId = 111;
             const newSectionId = '333';
-            expect(parseHashUrlScrollUpdate(url, hash, storyId, newSectionId)).toBe('host/#/geostory/111/333');
+            expect(parseHashUrlScrollUpdate(url, hash, storyId, newSectionId)).toBe('host/#/geostory/111/section/333');
         });
         it('changes to the new sectionId if previous sectionId and columnId are existed', () => {
-            const url = 'host/#/geostory/111/222/333';
-            const hash = '#/geostory/111/222/333';
-            const storyId = '111';
+            const url = 'host/#/geostory/111/section/222/column/333';
+            const hash = '#/geostory/111/section/222/column/333';
+            const storyId = 111;
             const newSectionId = '444';
-            expect(parseHashUrlScrollUpdate(url, hash, storyId, newSectionId)).toBe('host/#/geostory/111/444');
+            expect(parseHashUrlScrollUpdate(url, hash, storyId, newSectionId)).toBe('host/#/geostory/111/section/444');
         });
         it('adds new columnId whithout previous columnId existed', () => {
-            const url = 'host/#/geostory/111/222';
-            const hash = '#/geostory/111/222';
-            const storyId = '111';
+            const url = 'host/#/geostory/111/section/222';
+            const hash = '#/geostory/111/section/222';
+            const storyId = 111;
             const newColumnId = '333';
-            expect(parseHashUrlScrollUpdate(url, hash, storyId, null, newColumnId)).toBe('host/#/geostory/111/222/333');
+            expect(parseHashUrlScrollUpdate(url, hash, storyId, null, newColumnId)).toBe('host/#/geostory/111/section/222/column/333');
         });
         it('adds new columnId with previous columnId existed', () => {
-            const url = 'host/#/geostory/111/222/333';
-            const hash = '#/geostory/111/222/333';
-            const storyId = '111';
+            const url = 'host/#/geostory/111/section/222/column/333';
+            const hash = '#/geostory/111/section/222/column/333';
+            const storyId = 111;
             const newColumnId = '444';
-            expect(parseHashUrlScrollUpdate(url, hash, storyId, null, newColumnId)).toBe('host/#/geostory/111/222/444');
+            expect(parseHashUrlScrollUpdate(url, hash, storyId, null, newColumnId)).toBe('host/#/geostory/111/section/222/column/444');
         });
         it('returns url if new columnId without sectionId existing with shared', () => {
             const url = 'host/#/geostory/shared/111/';
             const hash = '#/geostory/shared/111/';
-            const storyId = '111';
+            const storyId = 111;
             const newColumnId = '444';
             expect(parseHashUrlScrollUpdate(url, hash, storyId, null, newColumnId)).toBe(url);
         });
-        it('returns url if no new sectionId or columnId', () => {
+        it('returns null if no new sectionId or columnId', () => {
             const url = 'host/#/geostory/shared/111/';
             const hash = '#/geostory/shared/111/';
-            const storyId = '111';
-            expect(parseHashUrlScrollUpdate(url, hash, storyId, null, null)).toBe(url);
+            const storyId = 111;
+            expect(parseHashUrlScrollUpdate(url, hash, storyId, null, null)).toBe(null);
         });
+    });
+
+    it('returns a config for webfontloader', () => {
+        const fontFamilyConf = [
+            {
+                family: "fam1",
+                src: "link-fam1"
+            },
+            {
+                family: "fam2",
+                src: "link-fam2"
+            },
+            {
+                family: "fam3",
+                safe: true
+            }
+        ];
+
+        const noop = () => {};
+
+        expect(createWebFontLoaderConfig(fontFamilyConf, noop, noop)).toEqual({
+            active: noop,
+            inactive: noop,
+            custom: {
+                families: ["fam1", "fam2"],
+                urls: ["link-fam1", "link-fam2"]
+            }
+        });
+    });
+    it('returns an array of font names', () => {
+        const fontFamilies = [
+            {
+                family: "fam1",
+                src: "link-fam1"
+            },
+            {
+                family: "fam2",
+                src: "link-fam2"
+            }
+        ];
+        expect(extractFontNames(fontFamilies)).toEqual(["fam1", "fam2"]);
     });
 });

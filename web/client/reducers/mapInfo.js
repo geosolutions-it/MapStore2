@@ -29,7 +29,8 @@ const {
     TOGGLE_EMPTY_MESSAGE_GFI,
     CHANGE_FORMAT,
     TOGGLE_SHOW_COORD_EDITOR,
-    SET_CURRENT_EDIT_FEATURE_QUERY
+    SET_CURRENT_EDIT_FEATURE_QUERY,
+    SET_MAP_TRIGGER
 } = require('../actions/mapInfo');
 const {
     MAP_CONFIG_LOADED
@@ -37,20 +38,83 @@ const {
 const {RESET_CONTROLS} = require('../actions/controls');
 
 const assign = require('object-assign');
-const {head} = require('lodash');
+const {findIndex, isUndefined} = require('lodash');
+const {getValidator} = require('../utils/MapInfoUtils');
 
+/**
+ * Identifies when to update a index when the display information trigger is click (GFI panel)
+ * @param {object} state current state of the reducer
+ * @param {array} responses the responses received so far
+ * @param {number} requestIndex index position of the current request
+ * @param {boolean} isVector type of the response received is vector or not
+ */
+const isIndexValid = (state, responses, requestIndex, isVector) => {
+    const {configuration, requests, queryableLayers, index} = state;
+    const {infoFormat} = configuration || {};
+
+    // Index when first response received is valid
+    const validResponse = getValidator(infoFormat)?.getValidResponses([responses[requestIndex]], true);
+    const inValidResponse = getValidator(infoFormat)?.getNoValidResponses(responses, true);
+    return ((isUndefined(index) && !!validResponse.length)
+        || (!isVector && requests.length === inValidResponse.filter(res=>res).length)
+        || (isVector && requests.length === 1 && queryableLayers.length === 1)
+    );
+};
+
+/**
+ * Handles responses based on the type ["data"|"exceptions","error","vector"] of the responses received
+ * @param {object} state current state of the reducer
+ * @param {object} action object of the current response
+ * @param {boolean} type type of the response received
+ */
 function receiveResponse(state, action, type) {
-    const request = head((state.requests || []).filter((req) => req.reqId === action.reqId));
-    if (request) {
-        const responses = state.responses || [];
-        return assign({}, state, {
-            responses: [...responses, {
+    const isVector = type === "vector";
+    const requestIndex = !isVector ? findIndex((state.requests || []), (req) => req.reqId === action.reqId) : findIndex((state.requests || []), (req) => !req.reqId);
+
+    if (requestIndex !== -1) {
+        // Filter un-queryable layer
+        if (["exceptions", "error"].includes(type)) {
+            const fltRequests = state.requests.filter((_, index)=> index !== requestIndex);
+            const fltResponses = state.responses.filter((_, index)=> index !== requestIndex);
+            return {
+                ...state, responses: fltResponses, requests: fltRequests
+            };
+        }
+
+        // Handle data and vector responses
+        const {configuration: config, requests} = state;
+        let responses = state.responses || [];
+        const isHover = (config?.trigger === "hover"); // Display info trigger
+
+        if (!isVector) {
+            const updateResponse = {
                 response: action[type],
                 queryParams: action.requestParams,
                 layerMetadata: action.layerMetadata,
                 layer: action.layer
-            }]
-        });
+            };
+            if (isHover) {
+                // Add response upon it is received
+                responses = [...responses, updateResponse];
+            } else {
+                // Add response in same order it was requested
+                responses[requestIndex] = updateResponse;
+            }
+        }
+
+        let indexObj;
+        if (isHover) {
+            indexObj = {loaded: true, index: 0};
+        } else if (!isHover && isIndexValid(state, responses, requestIndex, isVector)) {
+            indexObj = {loaded: true, index: requestIndex};
+        }
+
+        // Set responses and index as first response is received
+        return assign({}, state, {
+            ...(isVector && {requests}),
+            ...(!isUndefined(indexObj) && indexObj),
+            responses: [...responses]}
+        );
     }
     return state;
 }
@@ -206,10 +270,8 @@ function mapInfo(state = initState, action) {
         });
     }
     case PURGE_MAPINFO_RESULTS:
-        return assign({}, state, {
-            responses: [],
-            requests: []
-        });
+        const {index, loaded, ...others} = state;
+        return {...others, queryableLayers: [], responses: [], requests: [] };
     case LOAD_FEATURE_INFO: {
         return receiveResponse(state, action, 'data');
     }
@@ -314,21 +376,32 @@ function mapInfo(state = initState, action) {
             }
 
         );
-        const responses = state.responses || [];
-        return assign({}, state, {
-            requests: [...state.requests, {}],
-            responses: [...responses, {
-                response: {
-                    crs: null,
-                    features: intersected,
-                    totalFeatures: "unknown",
-                    type: "FeatureCollection"
-                },
-                queryParams: action.request,
-                layerMetadata: action.metadata,
-                format: 'JSON'
-            }]
-        });
+        let responses = state.responses || [];
+        const isHover = state?.configuration?.trigger === 'hover' || false;
+        const vectorResponse = {
+            response: {
+                crs: null,
+                features: intersected,
+                totalFeatures: "unknown",
+                type: "FeatureCollection"
+            },
+            queryParams: action.request,
+            layerMetadata: action.metadata,
+            format: 'JSON'
+        };
+
+        // Add response such that it doesn't replace other layer response's index
+        if (!isHover) {
+            responses[state.requests.length] = vectorResponse;
+        } else {
+            responses = [...responses, vectorResponse];
+        }
+        const requests = [...state.requests, {}];
+        return receiveResponse(assign({}, state, {
+            requests,
+            queryableLayers: action.queryableLayers,
+            responses: [...responses]
+        }), null, "vector");
     }
     case UPDATE_CENTER_TO_MARKER: {
         return assign({}, state, {
@@ -363,6 +436,15 @@ function mapInfo(state = initState, action) {
         return {
             ...state,
             currentEditFeatureQuery: action.query
+        };
+    }
+    case SET_MAP_TRIGGER: {
+        return {
+            ...state,
+            configuration: {
+                ...state.configuration,
+                trigger: action.trigger
+            }
         };
     }
     default:

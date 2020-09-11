@@ -17,17 +17,67 @@ To start developing the MapStore framework you have to:
 
 After a while (depending on the network bandwidth) the full set of dependencies and tools will be downloaded to the **node_modules** sub-folder.
 
-* start a development instance of the framework and example applications:
-
-`npm run examples`
-
-* or you can start a development instance **without the examples**:
+* start the development instance with:
 
 `npm start`
 
-Then point your preferred browser to [http://localhost:8081](http://localhost:8081).
+Then point your preferred browser to [http://localhost:8081](http://localhost:8081). By default the front-end works using the online dev server as back-end. This configuration is useful for a quick startup, but is not the suggested configuration if you want to develop.
+To learn how to connect the front-end dev server to a local back-end read the following instructions.
 
-The HomePage contains links to the available demo applications.
+### Connect Front-end to local back-end
+
+By default `npm start` uses the online dev server as a backend.
+This configuration needs to be changed to develop locally in order to access all the functionalities.
+
+To use a local back-end you have to:
+
+* **Remove auth configuration dedicated to GeoServer** from `localConfig.json --> authenticationRules` (it provides the MapStore/GeoServer integration for dev-server, that is not present in your local back-end)
+
+```diff
+"authenticationRules": [{
+        "urlPattern": ".*geostore.*",
+        "method": "bearer"
+      }, {
+        "urlPattern": ".*rest/config.*",
+        "method": "bearer"
+-      },
+-      {
+-        "urlPattern": "http(s)?\\:\\/\\/gs-stable\\.geo-solutions\\.it\\/geoserver/.*",
+-        "authkeyParamName": "authkey",
+-       "method": "authkey"
+    }],
+```
+
+* **Run the back-end locally**. See the [dedicated section in this page](#Back-end)
+
+* **Setup dev-server to use the local back-end**, applying this changes to `buildConfig.js` --> devServer configuration. (the configuration of the port and path depends on how you configured the local back-end.
+
+    ```javascript
+    devServer: {
+            proxy: {
+                '/rest/': {
+                    target: "http://localhost:8080/mapstore" // port 8080, mapstore path
+                },
+                '/proxy': {
+                    target: "http://localhost:8080/mapstore", // port 8080, mapstore path
+                    secure: false
+                }
+            }
+        },
+        // ...
+    ```
+
+* **re-run** `npm start`
+
+### Examples
+
+`npm start` doesn't run the examples by default (for dev performance reasons). If you want to  run in dev mode the application with also the examples you can run, instead of `npm start` the following command:
+
+```bash
+npm run examples
+```
+
+This command will compile and run both mapstore and examples, with the same live editing functionalities of `npm start`.
 
 ### Debugging the frontend
 
@@ -86,117 +136,53 @@ More information on frontend building tools and configuration is available [here
 
 ## Back-end
 
-By default `npm start` runs a dev server connected to the mapstore online demo as back-end.
+In order to have a full running MapStore in development environment, you need to run also the back-end java part locally. In this section you will find how to start the back-end and how to develop with it.
 
-### Using local backend
+### Defaults Users and Database
 
-If you want to use your own local test back-end you have to:
+Running MapStore back-end locally, on start-up you will find the following users:
 
+* `admin`, with ADMIN role and password `admin`
+* `user` with USER role with password `user`
+
+You can login as `admin` to set-up new users and access to all the features reserved to `ADMIN` users.
+
+The database used by default in this mode is H2 on disk. You can find the files of the database in the directory `webapps/mapstore/` starting from your execution context. Check how to set-up database in the dedicated section of the documentation.
+
+### Running Back-end
+
+When we say "running the back-end", in fact we say that we are running some sort of a whole instance of MapStore locally, that can be used as back-end for your front-end dev server, or for debugging of the back-end itself.
+
+#### Embedded tomcat
+
+MapStore is configured to use a tomcat maven plugin-in to build and run mapstore locally. To use it you have to:
+
+* make sure to run at least once `mvn install` in the root directory, to make `mapstore-backend` artifact available.
 * `cd web` directory
-* run `mvn jetty:run-war` - it makes run the mapstore back-end locally (port 8080), ìn memory db - By default 2 users
-  * `admin` password `admin`
-  * `user` with password `user`
+* run `mvn tomcat7:run-war`
 
-* Setup client to use the local back-end, apply this changes to `buildConfig.js` (at the devServer configuration)
+Your local back-end will now start at [http://localhost:8080/mapstore/](http://localhost:8080/mapstore/).
+If you want to change the port you can edit the dedicated entry in `web/pom.xml`, just remember to change also the dev-server proxy configuration on the front-end in the same way.
 
-```javascript
-devServer: {
-        proxy: {
-            '/rest/': {
-                target: "http://localhost:8080"
-            },
-            '/proxy': {
-                target: "http://localhost:8080",
-                secure: false
-            },
-            '/docs': { // this can be used when you run npm run doctest
-                target: "http://localhost:8081",
-                pathRewrite: { '/docs': '/mapstore/docs' }
-            }
-        }
-    },
-    // ...
-```
+#### Local tomcat instance
 
-* You have to run npm start to run mapstore client on port 8081, that is now connected to the local test back-end
-
-### Running local backend in tomcat 
-If you prefer, or if you have some problems with `mvn jetty:run-war`, you can run MapStore back-end in a tomcat instance instead of using Jetty. 
+If you prefer, or if you have some problems with `mvn tomcat7:run-war`, you can run MapStore back-end in a tomcat instance instead of using the embedded one.
 To do so, you can :
+
 * download a tomcat standalone [here](https://mapstore.readthedocs.io/en/latest/developer-guide/requirements/) and extract to a folder of your choice
 * To generate a war file that will be deployed on your tomcat server, go to the root of the Mapstore project that was git cloned and run `./build.sh`. This might take some time but at the end a war file named `mapstore.war` will be generated into the `web/target` folder.
 * Copy the `mapstore.war` and then head back to your tomcat folder. Look for a `webapps` folder and paste the `mapstore.war` file there.
 * To start tomcat server, go to the terminal, `cd` into the root of your tomcat extracted folder and run `./bin/startup.sh` ( unix systems) or `./bin/startup.bat` (Windows). The server will start on port `8080` and Mapstore will be running at `http://localhost:8080/mapstore`. For development purposes we're only interested in the backend that was started on the tomcat server along with Mapstore.
-* To point our development server when we eventually start it using `npm start` we need to make the following change to `build/buildConfig.js`
 
-```javascript
-devServer: {
-        proxy: {
-            '/rest/': {
-                target: "http://localhost:8080/mapstore"
-            },
-            '/proxy': {
-                target: "http://localhost:8080/mapstore",
-                secure: false
-            },
-            '/docs': { // this can be used when you run npm run doctest
-                target: "http://localhost:8081",
-                pathRewrite: { '/docs': '/mapstore/docs' }
-            }
-        }
-    },
-    // ...
-```
-* Finally, run the development server using `npm start`. The backend will now be pointed to the one tomcat is running.
+Even in this case you can connect your front-end to point to this instance of MapStore.
 
-You can even run geostore and http-proxy separately and debug them with your own IDE. See the documentation about them in their own repositories.
+### Debug
 
-if you want to change the default port for mapstore back-end you have to edit `pom.xml` in the root of the project:
+To run or debug the server side part of MapStore we suggest to run the back-end in tomcat (embedded or installed) and connect in remote debugging to it. This guide explains how to do it with Eclipse. This procedure has been tested with Eclipse Luna.
 
-```xml
-<!-- find the jetty-maven-plugin in pom.xml-->
-<plugin>
-    <groupId>org.eclipse.jetty</groupId>
-    <artifactId>jetty-maven-plugin</artifactId>
-    <version>9.2.11.v20150529</version>
-    <configuration>
-        <!-- add these lines -->
-        <httpConnector>
-            <port>9999</port> <!-- port 9999 or whatever you want -->
-        </httpConnector>
-        <!-- ^^ end of lines to add -->
-        <systemProperties>
-            <systemProperty>
-                <name>log4j.configuration</name>
-                <value>log4j-test.properties</value>
-            </systemProperty>
-        </systemProperties>
-    </configuration>
-</plugin>
-```
+### Enable Remote Debugging
 
-## Debug backend using mvn and eclipse
-
-To run or debug the server side part of MapStore we suggest to use jetty:run plugin.
-This guide explains how to do it with Eclipse. This procedure is tested with Eclipse Luna.
-
-### Simply Run the server side part
-
-you can simply run the server side part using `mvn jetty:run` command. To run the server side part only, run:
-
-```bash
-mvn jetty:run -Pserveronly
-```
-
-This will skip the javascript building phase, you can now connect the webpack proxy to the server side proxy and debug client side part using:
-
-```bash
-npm start
-```
-
-### Enable Remote Debugging with jetty:run
-
-Set the maven options as following :
+for embedded tomcat you can configure the following:
 
 ```bash
 # Linux
@@ -208,11 +194,13 @@ MAVEN_OPTS="-Xdebug -Xnoagent -Djava.compiler=NONE -Xrunjdwp:transport=dt_socket
 set MAVEN_OPTS=-Xdebug -Xnoagent -Djava.compiler=NONE -Xrunjdwp:transport=dt_socket,address=4000,server=y,suspend=n
 ```
 
-then run jetty
+then start tomcat
 
 ```bash
-mvn jetty:run -Pserveronly
+mvn tomcat7:run-war
 ```
+
+For your local tomcat, you can follow the standard procedure to debug with tomcat.
 
 ### Setup eclipse project
 

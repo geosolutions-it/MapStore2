@@ -47,7 +47,7 @@ const ContainerDimensions = emptyState(
                 }
             },
             {
-                glyph: 'story-title-section',
+                glyph: 'story-banner-section',
                 tooltipId: 'geostory.addBannerSection',
                 onClick: () => {
                     add('sections', 0, SectionTypes.BANNER);
@@ -115,7 +115,8 @@ const Cascade = ({
     getSize = defaultGetSize,
     theme = {},
     mediaViewer,
-    contentToolbar
+    contentToolbar,
+    storyFonts
 }) => (<BorderLayout  className={`ms-cascade-story ms-${mode}`}>
     <ContainerDimensions
         sections={sections}
@@ -156,6 +157,7 @@ const Cascade = ({
                                 storyTheme={storyTheme}
                                 mediaViewer={mediaViewer}
                                 contentToolbar={contentToolbar}
+                                storyFonts={storyFonts}
                             />
                         );
                     })

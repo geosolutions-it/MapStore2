@@ -85,7 +85,7 @@ describe('Test Feature', () => {
         const type = options.features.features[0].type;
         const properties = options.features.features[0].properties;
 
-        // create layers
+        // create layers with feature visible
         let layer = ReactDOM.render(
             <Feature
                 options={options}
@@ -100,8 +100,25 @@ describe('Test Feature', () => {
 
         expect(layer).toExist();
         // count layers
-        const count = container.getSource().getFeatures().length;
+        let count = container.getSource().getFeatures().length;
         expect(count).toBe(1);
+
+        // Create layer with feature hidden
+        layer = ReactDOM.render(
+            <Feature
+                options={options}
+                geometry={geometry}
+                type={"FeatureCollection"}
+                properties={{visibility: false}}
+                msId={msId}
+                container={container}
+                featuresCrs={"EPSG:4326"}
+                crs={"EPSG:4326"}
+            />, document.getElementById("container"));
+
+        expect(layer).toExist();
+        count = container.getSource().getFeatures().length;
+        expect(count).toBe(0);
     });
     it('adding a feature without a geometry', () => {
         var options = {

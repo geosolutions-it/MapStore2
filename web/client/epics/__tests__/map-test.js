@@ -8,7 +8,7 @@
 
 const expect = require('expect');
 
-const { resetLimitsOnInit, zoomToExtentEpic, checkMapPermissions, redirectUnauthorizedUserOnNewMap} = require('../map');
+const { resetLimitsOnInit, zoomToExtentEpic, checkMapPermissions, redirectUnauthorizedUserOnNewMap } = require('../map');
 const { CHANGE_MAP_LIMITS, changeMapCrs } = require('../../actions/map');
 
 const { LOAD_MAP_INFO, configureMap, configureError} = require('../../actions/config');

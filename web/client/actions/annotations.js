@@ -32,6 +32,7 @@ const CONFIRM_CLOSE_ANNOTATIONS = 'ANNOTATIONS:CONFIRM_CLOSE';
 const CANCEL_CLOSE_ANNOTATIONS = 'ANNOTATIONS:CANCEL_CLOSE';
 const START_DRAWING = 'ANNOTATIONS:START_DRAWING';
 const UNSAVED_CHANGES = 'ANNOTATIONS:UNSAVED_CHANGES';
+const TOGGLE_ANNOTATION_VISIBILITY = 'ANNOTATIONS:VISIBILITY';
 const TOGGLE_CHANGES_MODAL = 'ANNOTATIONS:TOGGLE_CHANGES_MODAL';
 const TOGGLE_GEOMETRY_MODAL = 'ANNOTATIONS:TOGGLE_GEOMETRY_MODAL';
 const CHANGED_PROPERTIES = 'ANNOTATIONS:CHANGED_PROPERTIES';
@@ -55,6 +56,7 @@ const ERROR_SYMBOLS = 'ANNOTATIONS:ERROR_SYMBOLS';
 const SET_DEFAULT_STYLE = 'ANNOTATIONS:SET_DEFAULT_STYLE';
 const LOAD_DEFAULT_STYLES = 'ANNOTATIONS:LOAD_DEFAULT_STYLES';
 const LOADING = 'ANNOTATIONS:LOADING';
+const CHANGE_GEOMETRY_TITLE = 'ANNOTATIONS:CHANGE_GEOMETRY_TITLE';
 
 const updateSymbols = (symbols = []) => ({
     type: UPDATE_SYMBOLS,
@@ -94,6 +96,7 @@ function toggleDeleteFtModal() {
         type: TOGGLE_DELETE_FT_MODAL
     };
 }
+
 function highlightPoint(point) {
     return {
         type: HIGHLIGHT_POINT,
@@ -154,6 +157,14 @@ function addText() {
         type: ADD_TEXT
     };
 }
+
+function toggleVisibilityAnnotation(id) {
+    return {
+        type: TOGGLE_ANNOTATION_VISIBILITY,
+        id
+    };
+}
+
 function changedProperties(field, value) {
     return {
         type: CHANGED_PROPERTIES,
@@ -167,15 +178,17 @@ function removeAnnotation(id) {
         id
     };
 }
-function removeAnnotationGeometry() {
+function removeAnnotationGeometry(id) {
     return {
-        type: REMOVE_ANNOTATION_GEOMETRY
+        type: REMOVE_ANNOTATION_GEOMETRY,
+        id
     };
 }
-function confirmRemoveAnnotation(id) {
+function confirmRemoveAnnotation(id, attribute) {
     return {
         type: CONFIRM_REMOVE_ANNOTATION,
-        id
+        id,
+        attribute
     };
 }
 function cancelRemoveAnnotation() {
@@ -358,6 +371,11 @@ const loadDefaultStyles = (shape, size, fillColor, strokeColor, symbolsPath) => 
     symbolsPath
 });
 
+const changeGeometryTitle = (title) => ({
+    type: CHANGE_GEOMETRY_TITLE,
+    title
+});
+
 const loading = (value, name = "loading") => ({
     type: LOADING,
     name,
@@ -390,6 +408,7 @@ module.exports = {
     START_DRAWING, startDrawing,
     UNSAVED_CHANGES, setUnsavedChanges,
     UNSAVED_STYLE, setUnsavedStyle,
+    TOGGLE_ANNOTATION_VISIBILITY, toggleVisibilityAnnotation,
     TOGGLE_CHANGES_MODAL, toggleUnsavedChangesModal,
     TOGGLE_STYLE_MODAL, toggleUnsavedStyleModal,
     CHANGED_PROPERTIES, changedProperties,
@@ -435,5 +454,6 @@ module.exports = {
     ERROR_SYMBOLS, setErrorSymbol,
     SET_DEFAULT_STYLE, setDefaultStyle,
     LOAD_DEFAULT_STYLES, loadDefaultStyles,
-    LOADING, loading
+    LOADING, loading,
+    CHANGE_GEOMETRY_TITLE, changeGeometryTitle
 };

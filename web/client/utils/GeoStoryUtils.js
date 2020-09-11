@@ -466,29 +466,77 @@ export const getWebPageComponentHeight = (size, viewHeight) => {
 
 export const parseHashUrlScrollUpdate = (url, hash = '', storyId, sectionId, columnId) => {
     const EMPTY = 'EMPTY';
+    if (!hash.includes(storyId)) {
+        return null;
+    }
     const storyIds = hash.substring(hash.indexOf(storyId)).split('/');
 
     if (sectionId && storyId) {
-        if (storyIds.length > 1 && storyIds[1]) {
-            if (storyIds.length === 3) {
-                return replace(url, `${storyIds[1]}/${storyIds[2]}`, `${sectionId}`);
+        if (storyIds.length > 1 && storyIds[2] && Number(storyIds[0]) === storyId) {
+            if (storyIds.length === 5) {
+                return replace(url, `${storyIds[2]}/column/${storyIds[4]}`, `${sectionId}`);
             }
-            return replace(url, `${storyIds[1]}`, `${sectionId}`);
+            return replace(url, `${storyIds[2]}`, `${sectionId}`);
         }
         if (hash.includes('shared')) {
-            return storyIds[1] !== '' ? `${url}/${sectionId}` : `${url}${sectionId}`;
+            return storyIds[1] !== '' ? `${url}/section/${sectionId}` : `${url}section/${sectionId}`;
         }
-        return storyIds[1] !== '' ? `${url}/${sectionId}` : `${url}${sectionId}`;
+        return storyIds[1] !== '' ? `${url}/section/${sectionId}` : `${url}section/${sectionId}`;
     } else if (!sectionId && columnId && isString(columnId) && columnId !== EMPTY) {
         if (storyIds.length > 1) {
-            if (hash.includes('shared') && !storyIds[1]) {
+            if (hash.includes('shared') && !storyIds[2]) {
                 return url;
             }
-            if (storyIds.length === 3) {
-                return replace(url, `${storyIds[2]}`, `${columnId}`);
+            if (storyIds.length === 5) {
+                return replace(url, `${storyIds[4]}`, `${columnId}`);
             }
-            return `${url}/${columnId}`;
+            return `${url}/column/${columnId}`;
         }
     }
-    return url;
+    return null;
 };
+
+/**
+ * Creates a configuration from localConfig object to be used by the webfontloader library
+ * @param {array} fontFamilies - font families configured from localConfig
+ * @param {function} activeCallback - call back function to run when fonts are successfully loaded
+ * @param {function} inactiveCallback - call back function to run when font loading fails
+ */
+export const createWebFontLoaderConfig = (fontFamilies, activeCallback, inactiveCallback) => {
+    const config = {
+        active: activeCallback,
+        inactive: inactiveCallback,
+        custom: {
+            families: [],
+            urls: []
+        }
+    };
+
+    // first filter out those without a src property
+    fontFamilies.filter((family) => !!family.src)
+        .forEach((family, i) => {
+            config.custom.families[i] = family.family;
+            config.custom.urls[i] = family.src;
+        });
+
+    return config;
+};
+
+/**
+ * Creates an array with just font family names from an object
+ * @param {array} fontFamilies - an array of font families i.e [{"name": "fontName", "src": "fontSrc"}]
+ * @return {array} - array of font family names
+ */
+export const extractFontNames = (fontFamilies) => {
+    return fontFamilies.map(family => family.family);
+};
+
+export const DEFAULT_FONT_FAMILIES = [
+    'inherit',
+    'Arial',
+    'Georgia',
+    'Impact',
+    'Tahoma',
+    'Times New Roman',
+    'Verdana'
+];

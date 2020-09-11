@@ -120,8 +120,8 @@
                 "tooltip": "Nota: questo parametro richiede configurazioni specifiche su GeoServer"
             }
         },
-        "longitude": "Longitudine",
-        "latitude": "Latitudine",
+        "longitude": "Lon",
+        "latitude": "Lat",
         "notification": {
             "update": "Aggiorna",
             "warning": "Attenzione",
@@ -521,6 +521,7 @@
                 "title": "Aggiorna il titolo del layer",
                 "dimensions": "Aggiorna le dimensioni aggiuntive"
             },
+            "layerInfoTooltip": "Aggiorna titolo e descrizione del livello",
             "layerMetadata": {
                 "identifier": "Identificativo",
                 "title": "Titolo",
@@ -650,6 +651,7 @@
         "identifyRevGeocodeCloseText": "Chiudi",
         "identifyRevGeocodeError": "Impossibile eseguire il geocoding",
         "identifyEdit": "Modifica",
+        "identifyLayerSelectNoResult": "Nessun livello trovato",
         "getFeatureInfoError": {
             "title": "Ooops! Qualcosa non va",
             "text": "Si è verificato un errore nel fare questa richiesta <b>GetFeatureInfo</b>"
@@ -1046,18 +1048,29 @@
             "edit": "Modifica",
             "remove": "Rimuovi",
             "save": "Salva",
+            "saveGeometry": "Salva la geometria",
             "cancel": "Annulla",
             "back": "Indietro",
             "applyStyle": "Applica stile",
-            "addMarker": "Aggiungi una geometria",
+            "addGeometry": "Aggiungi una geometria",
             "styleGeometry": "Cambia stile",
             "deleteGeometry": "Rimuovi tutte le feature",
             "removeannotation": "Vuoi rimuovere l'annotazione con titolo: {title}?",
             "removegeometry": "Vuoi rimuovere tutti i punti dell'annotazione?",
             "confirm": "Conferma",
             "mandatory": "Campo obbligatorio",
-            "emptygeometry": "La geometria non può essere vuota",
             "add": "Nuova",
+            "emptygeometry": "Aggiungi almeno una geometria valida",
+            "empty": "Nessuna annotazione ancora, fai clic su [+] per aggiungere annotazioni",
+            "geometries": "Geometrie",
+            "enableEdit": "Abilita modifica",
+            "tabCoordinates": "Coordinate",
+            "tabStyle": "Stile",
+            "zoomTo": "Zoom sull'annotazione",
+            "zoomToGeometry": "Zoom sulla geometria",
+            "removeGeometry": "Rimuovere",
+            "hide": "Nascondi annotazione",
+            "show": "Mostra annotazione",
             "filter": "Filtra le annotazioni...",
             "titleUndoGeom": "La geometria è cambiata",
             "undoGeom": "Sei sicuro di uscire senza salvare? (Perderai ogni modifica)",
@@ -1067,7 +1080,6 @@
             "cancelModalGeom": "Annulla",
             "undo": "Sei sicuro di voler abbandonare la modifica in corso?",
             "title": "Annotazioni",
-            "zoomTo": "Zoom",
             "insertText": "Inserisci il testo dell'annotatzione",
             "downloadtooltip": "Esporta annotazioni",
             "downloadcurrenttooltip": "Esporta annotazione corrente",
@@ -2072,7 +2084,12 @@
             "grayChannel": "Canale",
             "ruleClassification": "Classificazione",
             "ruleRaster": "Raster",
-            "customInterval": "Custom Interval"
+            "customInterval": "Custom Interval",
+            "styleEmpty": "Questo stile non è valido perchè vuoto",
+            "incompleteClassification": "La classificazione è incompleta perchè mancano i valori per le classi. Assicurati che tutte le proprietà dello stile sono corrette",
+            "emptyImageIconSymbolizer": "Immagine mancante nello stile icona",
+            "warningTextOrderTitle": "Attenzione",
+            "warningTextOrder": "L'ordine delle regole che contengono etichette potrebbe non corrispondere all'ordine di disegno sulla mappa. Questo comportamento è correlato ad alcuni motori di rendering che disegnano etichette sopra alle altre regole"
         },
         "playback": {
             "settings": {
@@ -2324,9 +2341,10 @@
                     "backConfirmBody": "Sicuro di chiudere il pannello senza salvare le tue modifiche?",
                     "backConfirmNo": "No",
                     "backConfirmYes": "Si",
-                    "logoPlaceholder": "Il logo non deve superare i 48 px di altezza ed è consigliata una larghezza di massimo 96 px. Limite di 500kb",
+                    "logoPlaceholder": "Trascina qui l'immagine del tuo logo o fai clic per selezionare un file immagine (i formati supportati sono png e jpeg)",
                     "save": "Salva impostazioni",
-                    "headerTitle": "Impostazioni della storia",
+                    "storyTheme" : "Tema della storia",
+                    "storyHeader" : "Intestazione della storia",
                     "title": "Titolo",
                     "titlePlaceholder": "Inserisci titolo",
                     "logo": "Logo",
@@ -2336,7 +2354,10 @@
                     "autoplayIntervalPlaceholder": "Abilita l'intervallo dell'autoplay",
                     "navbar": "Barra di navigazione",
                     "showNavbar": "Mostra barra di navigazione",
-                    "theme": "Tema",
+                    "theme": "Tema predefinito",
+                    "fontFamily": "Famiglia di font",
+                    "webFontLoadError": "Impossibile caricare alcuni caratteri dalla configurazione locale",
+                    "fontSize": "Dimensione del font",
                     "overlay": "Copertura",
                     "templateTooltip":"Questa impostazione consente di abilitare la funzione di Identify sulla mappa definendo un formato generico per tutti i layer. E' possibile configurare un formato differente per ogni singolo livello usando l'editor di mappa avanzato (icona matita). Per maggiori informazioni si consulti la <a href='https://mapstore.readthedocs.io/en/latest/user-guide/layer-settings/#templates' target='_blank'>guida utente</a>. Se un layer ha definito il proprio formato di Identify, questo esso verrà usato al posto di quello generico impostato a livello di mappa."
                 }
@@ -2828,6 +2849,27 @@
             },
             "deleteError": "Si è verificato un errore imprevisto durante l'eliminazione della mappa",
             "updateError": "Si è verificato un errore imprevisto durante il salvataggio della mappa"
+        },
+        "layerInfo": {
+            "title": "Aggiorna titoli e descrizioni dei livelli",
+            "noLayers": "Nessun livello trovato",
+            "syncButton": "Sincronizza titoli e descrizioni",
+            "selectAll": "Seleziona tutto",
+            "deselectAll": "Deselezionare tutto",
+            "updatingLayers": "Aggiornamento dei livelli {updatedCount}/{totalCount}",
+            "tooltips": {
+                "syncSuccess": "Titolo e descrizione sono stati aggiornati con successo per questo livello",
+                "syncError": "Non è possibile aggiornare il titolo e la descrizione di questo livello. È possibile verificare se tutte le opzioni di livello sono corrette nel pannello delle impostazioni"
+            },
+            "syncingLayersSavingToServerError": {
+                "title": "Errore di salvataggio del server",
+                "message": "Si è verificato un errore imprevisto durante il salvataggio dei livelli aggiornati sul server"
+            },
+            "syncingLayersGeneralError": {
+                "title": "Errore generale",
+                "message": "Si è verificato un errore imprevisto durante la sincronizzazione dei livelli. Probabilmente c'è un bug in MapStore"
+            },
+            "layerType": "tipo: {type}"
         },
         "tutorial": {
             "title": "Tutorial",

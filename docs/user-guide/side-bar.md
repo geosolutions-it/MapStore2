@@ -97,7 +97,7 @@ An example of search with `Aeronautical` coordinates as follows:
 
 In a map it is possible to have several overlapping layers. With the *Identify* tool the user can retrieve information on one or more overlapping layers at the same time in a certain point.
 
-If the user clicks on the map where one or more overlapping layers are present, the identify panel opens. The panel provides the layers information, therefore the user can navigate different layers information through the **Next** button <img src="../img/button/next.jpg" class="ms-docbutton"/> and **Previous** button <img src="../img/button/style_editor_back_button.jpg" class="ms-docbutton"/> present in the top right corner of the Identify panel.
+If the user clicks on the map where one or more overlapping layers are present, the identify panel opens. The panel provides the layers information, therefore the user can navigate different layers information from the **layer select** drop-down menu where the layer options have been sorted as in *TOC*.
 
 <img src="../img/side-bar/layers.jpg" class="ms-docimage"/>
 

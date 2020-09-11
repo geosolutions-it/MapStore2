@@ -656,6 +656,28 @@ describe('Get Map Resource By Category Epic', () => {
             });
         }))
     );
+    it('test getMapsResourcesByCategoryEpic with empty results string', (done) => {
+        const mock = new MockAdapter(axios);
+        mock.onGet().reply(200, {success: true, totalCount: 0, results: ""});
+        testEpic(addTimeoutEpic(getMapsResourcesByCategoryEpic), 3, getMapResourcesByCategory('MAP', 'test', {
+            baseUrl,
+            params: { start: 0, limit: 12 }
+        }), actions => {
+            expect(actions.length).toBe(3);
+            expect(actions[0].type).toBe(LOADING);
+            expect(actions[0].value).toBe(true);
+            expect(actions[0].name).toBe('loadingMaps');
+            expect(actions[1].type).toBe(MAPS_LIST_LOADED);
+            expect(actions[1].maps).toEqual({success: true, totalCount: 0, results: []});
+            expect(actions[1].params).toEqual(params);
+            expect(actions[1].searchText).toBe('test');
+            expect(actions[2].type).toBe(LOADING);
+            expect(actions[2].value).toBe(false);
+            expect(actions[2].name).toBe('loadingMaps');
+            mock.restore();
+            done();
+        });
+    });
     it('test getMapsResourcesByCategoryEpic with an error', (done) => {
         const mock = new MockAdapter(axios);
         mock.onPost().reply(404);
@@ -692,7 +714,7 @@ describe('Create and update flow using persistence api', () => {
         Persistence.setApi("geostore");
     });
     it('test create flow ', done => {
-        testEpic(addTimeoutEpic(mapSaveMapResourceEpic), 6, saveMapResource( {}), actions => {
+        testEpic(addTimeoutEpic(mapSaveMapResourceEpic), 6, saveMapResource({}), actions => {
             expect(actions.length).toBe(6);
             actions.map((action) => {
                 switch (action.type) {
@@ -747,6 +769,36 @@ describe('Create and update flow using persistence api', () => {
             });
             done();
         });
+    });
+    it('test thumbnail attribute is ignored', done => {
+        const attributeTestApi = {
+            ...api,
+            updateResourceAttribute: ({name}) => name === 'thumbnail' ? done(new Error('thumbnail update request was issued!')) : Rx.Observable.of(10)
+        };
+        Persistence.addApi('attributeTest', attributeTestApi);
+        Persistence.setApi('attributeTest');
+
+        testEpic(addTimeoutEpic(mapSaveMapResourceEpic), 6, saveMapResource({id: 10, metadata: {name: 'resource'}, attributes: {thumbnail: 'thumb', someAttribute: 'value'}}), actions => {
+            try {
+                expect(actions.length).toBe(6);
+                actions.map((action) => {
+                    switch (action.type) {
+                    case MAP_UPDATING:
+                    case TOGGLE_CONTROL:
+                    case MAP_SAVED:
+                    case SHOW_NOTIFICATION:
+                    case LOAD_MAP_INFO:
+                    case MAP_CONFIG_LOADED:
+                        break;
+                    default:
+                        expect(true).toBe(false);
+                    }
+                });
+                done();
+            } catch (e) {
+                done(e);
+            }
+        }, {});
     });
 
     it('test reloadMaps', function(done) {
