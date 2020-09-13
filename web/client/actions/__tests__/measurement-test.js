@@ -16,7 +16,6 @@ const {
     init, INIT,
     changeGeometry, CHANGED_GEOMETRY,
     changeCoordinates, CHANGE_COORDINATES,
-    addAnnotation, ADD_MEASURE_AS_ANNOTATION,
     updateMeasures, UPDATE_MEASURES
 } = require('../measurement');
 const feature = {type: "Feature", geometry: {
@@ -58,10 +57,12 @@ describe('Test correctness of measurement actions', () => {
 
     it('Test changeGeometry action creator', () => {
 
-        const retval = changeGeometry(feature);
+        const retval = changeGeometry([feature]);
         expect(retval).toExist();
         expect(retval.type).toBe(CHANGED_GEOMETRY);
-        expect(retval.feature.geometry.type).toBe("LineString");
+        expect(retval.features).toExist();
+        expect(retval.features.length).toBe(1);
+        expect(retval.features[0].geometry.type).toBe("LineString");
     });
     it('Test changeMeasurementState action creator', () => {
         const retval = changeMeasurementState(measureState);
@@ -82,30 +83,6 @@ describe('Test correctness of measurement actions', () => {
         expect(retval).toExist();
         expect(retval.type).toBe(CHANGE_FORMAT);
         expect(retval.format).toEqual(format);
-    });
-    it('Test addAnnotation action creator', () => {
-        const ft = {
-            type: "Feature",
-            gometry: {
-                type: "LineString",
-                coordinates: [[1, 2], [2, 5]]
-            },
-            properties: {}
-        };
-        const value = "4";
-        const uom = "km";
-        const measureTool = "LineString";
-        const retval = addAnnotation(
-            ft,
-            value,
-            uom,
-            measureTool);
-        expect(retval).toExist();
-        expect(retval.type).toBe(ADD_MEASURE_AS_ANNOTATION);
-        expect(retval.feature).toEqual(ft);
-        expect(retval.value).toEqual(value);
-        expect(retval.uom).toEqual(uom);
-        expect(retval.measureTool).toEqual(measureTool);
     });
     it('Test addAnnotation action creator', () => {
         const coordinates = [[1, 2], [2, 5]];

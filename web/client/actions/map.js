@@ -24,7 +24,10 @@ const INIT_MAP = 'INIT_MAP';
 const RESIZE_MAP = 'RESIZE_MAP';
 const CHANGE_MAP_LIMITS = 'CHANGE_MAP_LIMITS';
 const SET_MAP_RESOLUTIONS = 'SET_MAP_RESOLUTIONS';
-const CHECK_MAP_CHANGES = 'CHECK_MAP_CHANGES';
+const REGISTER_EVENT_LISTENER = 'REGISTER_EVENT_LISTENER';
+const UNREGISTER_EVENT_LISTENER = 'UNREGISTER_EVENT_LISTENER';
+const MOUSE_MOVE = 'MOUSE_MOVE';
+const MOUSE_OUT = 'MOUSE_OUT';
 
 function errorLoadingFont(err = {family: ""}) {
     return error({
@@ -181,10 +184,44 @@ function setMapResolutions(resolutions) {
     };
 }
 
-const checkMapChanges = (action, source) => ({
-    type: CHECK_MAP_CHANGES,
-    action,
-    source
+/**
+ * Add a tool to the list of event listeners for the map plugin.
+ * This can help to trigger actions only if some tool is effectively listen. Useful for
+ * events that are triggered frequently and so can slow down the application.
+ * @param {string} eventName the event name. One of ``pointermove`,
+ * @param {string} toolName an identifier for the tool
+ */
+const registerEventListener = (eventName, toolName) => ({
+    type: REGISTER_EVENT_LISTENER,
+    eventName,
+    toolName
+});
+
+/**
+ * Remove the listeners added using `registerEventListener` .
+ * @param {string} eventName the event name. One of ``pointermove`,
+ * @param {string} toolName an identifier for the tool
+ */
+const unRegisterEventListener = (eventName, toolName) => ({
+    type: UNREGISTER_EVENT_LISTENER,
+    eventName,
+    toolName
+});
+
+/**
+ * Triggered on mouse move. (only if some tool is registered on this event. See `registerEventListener`).
+ * @param {object} position the position of the mouse on the map.
+ */
+const mouseMove = (position) => ({
+    type: MOUSE_MOVE,
+    position
+});
+
+/**
+ * Triggered when the mouse goes out from the map
+ */
+const mouseOut = () => ({
+    type: MOUSE_OUT
 });
 
 /**
@@ -209,7 +246,10 @@ module.exports = {
     RESIZE_MAP,
     CHANGE_MAP_LIMITS,
     SET_MAP_RESOLUTIONS,
-    CHECK_MAP_CHANGES,
+    REGISTER_EVENT_LISTENER,
+    UNREGISTER_EVENT_LISTENER,
+    MOUSE_MOVE,
+    MOUSE_OUT,
     changeMapView,
     clickOnMap,
     changeMousePointer,
@@ -227,5 +267,8 @@ module.exports = {
     resizeMap,
     changeMapLimits,
     setMapResolutions,
-    checkMapChanges
+    registerEventListener,
+    unRegisterEventListener,
+    mouseMove,
+    mouseOut
 };

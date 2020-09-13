@@ -9,6 +9,7 @@
 const React = require('react');
 const Message = require('../../../../I18N/Message');
 const tooltip = require('../../../../misc/enhancers/tooltip');
+const { isObject } = require('lodash');
 
 const { Row, Col, Nav, NavItem: BSNavItem, Glyphicon } = require('react-bootstrap');
 const NavItem = tooltip(BSNavItem);
@@ -17,6 +18,7 @@ const NavItem = tooltip(BSNavItem);
  */
 module.exports = ({
     settings, element = {}, tabs = [], activeTab, width, groups,
+    isLocalizedLayerStylesEnabled,
     setActiveTab = () => { }, onUpdateParams = () => { }, onRetrieveLayerData = () => { }, realtimeUpdate, ...props} = {}) =>
     (<Row key="ms-toc-settings-navbar" className="ms-row-tab">
         <Col xs={12}>
@@ -43,6 +45,7 @@ module.exports = ({
                     nodeType={settings.nodeType}
                     settings={settings}
                     retrieveLayerData={onRetrieveLayerData}
-                    onChange={(key, value) => onUpdateParams({ [key]: value }, realtimeUpdate)} />
+                    isLocalizedLayerStylesEnabled={isLocalizedLayerStylesEnabled}
+                    onChange={(key, value) => isObject(key) ? onUpdateParams(key, realtimeUpdate) : onUpdateParams({ [key]: value }, realtimeUpdate)} />
             ))}</Col>
     </Row>);

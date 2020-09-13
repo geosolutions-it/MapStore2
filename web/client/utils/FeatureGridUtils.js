@@ -116,7 +116,7 @@ module.exports = {
             sortable,
             key: desc.name,
             width: columnSettings[desc.name] && columnSettings[desc.name].width || (defaultSize ? defaultSize : undefined),
-            name: desc.name,
+            name: columnSettings[desc.name] && columnSettings[desc.name].label || desc.name,
             resizable,
             editable,
             filterable,
@@ -132,14 +132,22 @@ module.exports = {
      * @param  {array} rows        Data rows
      * @return {array}             Array of the columns to use in react-data-grid, with proper event bindings.
      */
-    getToolColumns: (toolColumns = [], rowGetter = () => {}, describe, actionOpts) => toolColumns.map(tool => ({
-        ...tool,
-        events: tool.events && Object.keys(tool.events).reduce( (events, key) => ({
-            ...events,
-            [key]: (evt, opts) => tool.events[key](rowGetter(opts.rowIdx), opts, describe, actionOpts)
-        }), {})
-    })
-    ),
+    getToolColumns: (toolColumns = [], rowGetter = () => {}, describe, actionOpts, getFilterRenderer = () => {}) => {
+        const geometryProperty = findGeometryProperty(describe);
+
+        return toolColumns.map(tool => ({
+            ...tool,
+            events: tool.events && Object.keys(tool.events).reduce( (events, key) => ({
+                ...events,
+                [key]: (evt, opts) => tool.events[key](rowGetter(opts.rowIdx), opts, describe, actionOpts)
+            }), {}),
+            ...(tool.key === 'geometry' && geometryProperty ? {
+                filterRenderer: getFilterRenderer({...geometryProperty, localType: 'geometry'}, geometryProperty.name),
+                filterable: true,
+                geometryPropName: geometryProperty.name
+            } : {})
+        }));
+    },
     /**
      * Maps every grid event to a function that passes all the arguments, plus the rowgetter, describe and actionOpts passed
      * @param  {Object} [gridEvents={}] The functions to call
@@ -169,7 +177,7 @@ module.exports = {
                 logic: "AND",
                 index: 0
             }],
-            filterFields: !isNil(value)
+            filterFields: type === 'geometry' ? oldFilterObj.filterFields : !isNil(value)
                 ? upsertFilterField((oldFilterObj.filterFields || []), {attribute: attribute}, {
                     attribute,
                     rowId: Date.now(),
@@ -179,7 +187,10 @@ module.exports = {
                     value
 
                 })
-                : (oldFilterObj.filterFields || []).filter(field => field.attribute !== (attribute))
+                : (oldFilterObj.filterFields || []).filter(field => field.attribute !== (attribute)),
+            spatialField: type === 'geometry' ?
+                value :
+                oldFilterObj.spatialField
         };
     },
     toPage: ({startIndex = 0, maxFeatures = 1, totalFeatures = 0, resultSize} = {}) => ({
@@ -204,11 +215,11 @@ module.exports = {
         const needPages = (nPs[1] - nPs[0] + 1);
         let fts = get(result, "features", []);
         if (fts.length !== needPages * size) {
-            fts = fts.concat(fill(Array(needPages * size - fts.length), false));
+            fts = fts.concat(fill(Array(needPages * size - fts.length > 0 ? needPages * size - fts.length : fts.length ), false));
         }
         let oldPages = pages;
         let oldFeatures = features;
-        // Cached page should be less than the max of maxStoredPages or the number of page needed to fill the visible are of the grid
+        // Cached page should be less than the max of maxStoredPages or the number of page needed to fill the visible area of the grid
         const nSpaces = oldPages.length + needPages - Math.max(maxStoredPages, (endPage - startPage + 1));
         if (nSpaces > 0) {
             const firstRow = startPage * size;

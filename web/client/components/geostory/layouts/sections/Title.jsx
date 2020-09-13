@@ -48,12 +48,18 @@ export default compose(
     bubblingTextEditing = () => {},
     textEditorActiveClass = "",
     expandableMedia = false,
-    storyTheme
+    storyTheme,
+    mediaViewer,
+    contentToolbar,
+    inView,
+    storyFonts
 }) => {
-
     const hideContent = get(focusedContent, "target.id") === contentId;
     const visibility = hideContent ?  'hidden' : 'visible';
     const expandableBackgroundClassName = expandableMedia && background && background.type === 'map' ? ' ms-expandable-background' : '';
+    const overlayStoryTheme = storyTheme?.overlay || {};
+    const generalStoryTheme = storyTheme?.general || {};
+
     return (
         <section
             ref={inViewRef}
@@ -89,12 +95,16 @@ export default compose(
                         }}
                         tools={{
                             [MediaTypes.IMAGE]: ['editMedia', 'cover', 'fit', 'size', 'align', 'theme'],
-                            [MediaTypes.MAP]: ['editMedia', 'cover', 'editMap', 'size', 'align', 'theme']
+                            [MediaTypes.MAP]: ['editMedia', 'cover', 'editMap', 'size', 'align', 'theme'],
+                            [MediaTypes.VIDEO]: ['editMedia', 'cover', 'fit', 'size', 'align', 'theme', 'muted', 'autoplay', 'loop']
                         }}
                         height={height >= viewHeight
                             ? viewHeight
                             : height}
-                        storyTheme={storyTheme}
+                        storyTheme={generalStoryTheme}
+                        mediaViewer={mediaViewer}
+                        contentToolbar={contentToolbar}
+                        inView={inView}
                     />}
             </ContainerDimensions>
             <SectionContents
@@ -107,14 +117,17 @@ export default compose(
                 remove={remove}
                 sectionId={id}
                 contentProps={{
-                    contentWrapperStyle: cover ? { minHeight: viewHeight, visibility} : {visibility}
+                    contentWrapperStyle: cover ? { minHeight: viewHeight, visibility} : {visibility},
+                    mediaViewer,
+                    contentToolbar
                 }}
                 tools={{
                     [ContentTypes.TEXT]: ['size', 'align', 'theme', 'remove']
                 }}
                 focusedContent={focusedContent}
                 bubblingTextEditing={bubblingTextEditing}
-                storyTheme={storyTheme}
+                storyTheme={overlayStoryTheme}
+                storyFonts={storyFonts}
             />
             {mode === Modes.EDIT && !hideContent && <AddBar
                 containerWidth={viewWidth}
@@ -124,6 +137,13 @@ export default compose(
                     tooltipId: 'geostory.addTitleSection',
                     onClick: () => {
                         add('sections', id, SectionTypes.TITLE);
+                    }
+                },
+                {
+                    glyph: 'story-banner-section',
+                    tooltipId: 'geostory.addBannerSection',
+                    onClick: () => {
+                        add('sections', id, SectionTypes.BANNER);
                     }
                 },
                 {

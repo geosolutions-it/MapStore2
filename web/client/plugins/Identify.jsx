@@ -5,34 +5,35 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
+
+
 const React = require('react');
 const {Glyphicon} = require('react-bootstrap');
 const {connect} = require('react-redux');
 const { createSelector, createStructuredSelector} = require('reselect');
 const assign = require('object-assign');
+const {isUndefined} = require('lodash');
 
-const {mapSelector} = require('../selectors/map');
+const {mapSelector, isMouseMoveIdentifyActiveSelector} = require('../selectors/map');
 const {layersSelector} = require('../selectors/layers');
 const { mapTypeSelector, isCesium } = require('../selectors/maptype');
-
-const { generalInfoFormatSelector, clickPointSelector, indexSelector, responsesSelector, validResponsesSelector, showEmptyMessageGFISelector, isHighlightEnabledSelector, currentFeatureSelector, currentFeatureCrsSelector } = require('../selectors/mapInfo');
-
-
-const { hideMapinfoMarker, showMapinfoRevGeocode, hideMapinfoRevGeocode, clearWarning, toggleMapInfoState, changeMapInfoFormat, updateCenterToMarker, closeIdentify, purgeMapInfoResults, featureInfoClick, changeFormat, toggleShowCoordinateEditor, changePage, toggleHighlightFeature} = require('../actions/mapInfo');
-const { changeMousePointer, zoomToExtent} = require('../actions/map');
-
-
+const { generalInfoFormatSelector, clickPointSelector, indexSelector, responsesSelector, requestsSelector, validResponsesSelector, showEmptyMessageGFISelector, isHighlightEnabledSelector, currentFeatureSelector, currentFeatureCrsSelector, isLoadedResponseSelector } = require('../selectors/mapInfo');
+const { isEditingAllowedSelector } = require('../selectors/featuregrid');
 const {currentLocaleSelector} = require('../selectors/locale');
 const {mapLayoutValuesSelector} = require('../selectors/maplayout');
 
+const { hideMapinfoMarker, showMapinfoRevGeocode, hideMapinfoRevGeocode, clearWarning, toggleMapInfoState, changeMapInfoFormat, updateCenterToMarker, closeIdentify, purgeMapInfoResults, updateFeatureInfoClickPoint, changeFormat, toggleShowCoordinateEditor, changePage, toggleHighlightFeature, editLayerFeatures, setMapTrigger} = require('../actions/mapInfo');
+const { changeMousePointer, zoomToExtent } = require('../actions/map');
+
+const {getConfigProp} = require("../utils/ConfigUtils");
 const { compose, defaultProps } = require('recompose');
 const MapInfoUtils = require('../utils/MapInfoUtils');
 const loadingState = require('../components/misc/enhancers/loadingState');
 const {defaultViewerHandlers, defaultViewerDefaultProps} = require('../components/data/identify/enhancers/defaultViewer');
 const {identifyLifecycle} = require('../components/data/identify/enhancers/identify');
-const zoomToFeatureHandler = require('..//components/data/identify/enhancers/zoomToFeatureHandler');
+const zoomToFeatureHandler = require('../components/data/identify/enhancers/zoomToFeatureHandler');
 const getToolButtons = require('./identify/toolButtons');
-const getNavigationButtons = require('./identify/navigationButtons');
+const getFeatureButtons = require('./identify/featureButtons');
 const Message = require('./locale/Message');
 
 require('./identify/identify.css');
@@ -41,7 +42,7 @@ const selector = createStructuredSelector({
     enabled: (state) => state.mapInfo && state.mapInfo.enabled || state.controls && state.controls.info && state.controls.info.enabled || false,
     responses: responsesSelector,
     validResponses: validResponsesSelector,
-    requests: (state) => state.mapInfo && state.mapInfo.requests || [],
+    requests: requestsSelector,
     format: generalInfoFormatSelector,
     map: mapSelector,
     layers: layersSelector,
@@ -51,10 +52,12 @@ const selector = createStructuredSelector({
     warning: (state) => state.mapInfo && state.mapInfo.warning,
     currentLocale: currentLocaleSelector,
     dockStyle: state => mapLayoutValuesSelector(state, {height: true}),
-    formatCoord: (state) => state.mapInfo && state.mapInfo.formatCoord,
+    formatCoord: (state) => state.mapInfo && state.mapInfo.formatCoord || getConfigProp("defaultCoordinateFormat"),
     showCoordinateEditor: (state) => state.mapInfo && state.mapInfo.showCoordinateEditor,
     showEmptyMessageGFI: state => showEmptyMessageGFISelector(state),
-    isCesium
+    isEditingAllowed: isEditingAllowedSelector,
+    isCesium,
+    floatingIdentifyEnabled: (state) => isMouseMoveIdentifyActiveSelector(state)
 });
 // result panel
 
@@ -63,21 +66,18 @@ const selector = createStructuredSelector({
  */
 const identifyIndex = compose(
     connect(
-        createSelector(indexSelector, (index) => ({ index })),
+        createSelector(indexSelector, isLoadedResponseSelector, (index, loaded) => ({ index, loaded })),
         {
             setIndex: changePage
         }
-    ),
-    defaultProps({
-        index: 0
-    })
+    )
 )
 ;
 const DefaultViewer = compose(
     identifyIndex,
     defaultViewerDefaultProps,
     defaultViewerHandlers,
-    loadingState(({responses}) => responses.length === 0)
+    loadingState(({loaded}) => isUndefined(loaded))
 )(require('../components/data/identify/DefaultViewer'));
 
 
@@ -123,10 +123,12 @@ const identifyDefaultProps = defaultProps({
     showTabs: true,
     showCoords: true,
     showLayerTitle: true,
+    showMoreInfo: true,
+    showEdit: false,
     position: 'right',
     size: 660,
     getToolButtons,
-    getNavigationButtons,
+    getFeatureButtons,
     showFullscreen: false,
     validResponses: [],
     validator: MapInfoUtils.getValidator, // TODO: move all validation from the components to the selectors
@@ -161,6 +163,7 @@ const identifyDefaultProps = defaultProps({
  * @prop cfg.disableCenterToMarker {bool} disable zoom to marker action
  * @prop cfg.zIndex {number} component z index order
  * @prop cfg.showInMapPopup {boolean} if true show the identify as popup
+ * @prop cfg.showMoreInfo {boolean} if true shows the more info icon which allow user to show/hide Geocode viewer as popup (true by default)
  *
  * @example
  * {
@@ -182,7 +185,7 @@ const IdentifyPlugin = compose(
     connect(selector, {
         purgeResults: purgeMapInfoResults,
         closeIdentify,
-        onChangeClickPoint: featureInfoClick,
+        onSubmitClickPoint: updateFeatureInfoClickPoint,
         onToggleShowCoordinateEditor: toggleShowCoordinateEditor,
         onChangeFormat: changeFormat,
         changeMousePointer,
@@ -190,12 +193,13 @@ const IdentifyPlugin = compose(
         hideMarker: hideMapinfoMarker,
         showRevGeocode: showMapinfoRevGeocode,
         hideRevGeocode: hideMapinfoRevGeocode,
-        onEnableCenterToMarker: updateCenterToMarker.bind(null, 'enabled')
+        onEnableCenterToMarker: updateCenterToMarker.bind(null, 'enabled'),
+        onEdit: editLayerFeatures
     }, (stateProps, dispatchProps, ownProps) => ({
         ...ownProps,
         ...stateProps,
         ...dispatchProps,
-        enabled: stateProps.enabled && (stateProps.isCesium || !ownProps.showInMapPopup)
+        enabled: stateProps.enabled && (stateProps.isCesium || !ownProps.showInMapPopup) && !stateProps.floatingIdentifyEnabled
     })),
     // highlight support
     compose(
@@ -226,6 +230,12 @@ const FeatureInfoFormatSelector = connect((state) => ({
     onInfoFormatChange: changeMapInfoFormat
 })(require("../components/misc/FeatureInfoFormatSelector").default);
 
+const FeatureInfoTriggerSelector = connect((state) => ({
+    trigger: isMouseMoveIdentifyActiveSelector(state) ? 'hover' : 'click'
+}), {
+    onSetMapTrigger: setMapTrigger
+})(require("../components/misc/FeatureInfoTriggerSelector"));
+
 module.exports = {
     IdentifyPlugin: assign(IdentifyPlugin, {
         Toolbar: {
@@ -241,10 +251,11 @@ module.exports = {
             })
         },
         Settings: {
-            tool: <FeatureInfoFormatSelector
+            tool: [<FeatureInfoFormatSelector
                 key="featureinfoformat"
                 label={<Message msgId="infoFormatLbl" />
-                }/>,
+                }/>, <FeatureInfoTriggerSelector
+                key="featureinfotrigger" />],
             position: 3
         }
     }),

@@ -15,6 +15,7 @@ const { isPluginInContext } = require('./context');
 const { currentLocaleSelector } = require('./locale');
 const MapInfoUtils = require('../utils/MapInfoUtils');
 const {isCesium} = require('./maptype');
+const {isMouseMoveIdentifyActiveSelector: identifyFloatingTool } = require('../selectors/map');
 
 const {pluginsSelectorCreator} = require('./localConfig');
 /**
@@ -110,15 +111,21 @@ const indexSelector = (state = {}) => state && state.mapInfo && state.mapInfo.in
 
 const responsesSelector = state => state.mapInfo && state.mapInfo.responses || [];
 
+const requestsSelector = state => state?.mapInfo?.requests || [];
+
+const isLoadedResponseSelector = state => state?.mapInfo?.loaded;
+
 /**
  * Gets only the valid responses
  */
 const validResponsesSelector = createSelector(
+    requestsSelector,
     responsesSelector,
     generalInfoFormatSelector,
-    (responses, format) => {
+    identifyFloatingTool,
+    (requests, responses, format, renderEmpty) => {
         const validatorFormat = MapInfoUtils.getValidator(format);
-        return validatorFormat.getValidResponses(responses);
+        return requests.length === responses.length && validatorFormat.getValidResponses(responses, renderEmpty);
     });
 
 const currentResponseSelector = createSelector(
@@ -187,11 +194,21 @@ const clickedPointWithFeaturesSelector = createSelector(
 
 );
 
+const currentEditFeatureQuerySelector = state => state.mapInfo?.currentEditFeatureQuery;
+
+const mapTriggerSelector = state => {
+    if (state.mapInfo?.configuration?.trigger === undefined) {
+        return 'click';
+    }
+    return state.mapInfo.configuration.trigger;
+};
+
 
 module.exports = {
     isMapInfoOpen,
     indexSelector,
     responsesSelector,
+    requestsSelector,
     validResponsesSelector,
     currentFeatureSelector,
     currentFeatureCrsSelector,
@@ -209,5 +226,8 @@ module.exports = {
     itemIdSelector,
     overrideParamsSelector,
     filterNameListSelector,
-    isMapPopup
+    isMapPopup,
+    currentEditFeatureQuerySelector,
+    mapTriggerSelector,
+    isLoadedResponseSelector
 };

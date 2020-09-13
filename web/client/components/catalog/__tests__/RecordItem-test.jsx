@@ -163,17 +163,14 @@ describe('This test for RecordItem', () => {
         let actions = {
             onLayerAdd: () => {
 
-            },
-            onZoomToExtent: () => {
-
             }
+
         };
         let actionsSpy = expect.spyOn(actions, "onLayerAdd");
-        let actionsSpy2 = expect.spyOn(actions, "onZoomToExtent");
         const item = ReactDOM.render(<RecordItem
             record={sampleRecord3}
             onLayerAdd={actions.onLayerAdd}
-            onZoomToExtent={actions.onZoomToExtent}/>, document.getElementById("container"));
+        />, document.getElementById("container"));
         expect(item).toExist();
 
         const itemDom = ReactDOM.findDOMNode(item);
@@ -184,24 +181,20 @@ describe('This test for RecordItem', () => {
         expect(button).toExist();
         button.click();
         expect(actionsSpy.calls.length).toBe(1);
-        expect(actionsSpy2.calls.length).toBe(1);
         expect(actionsSpy.calls[0].arguments[0].format).toBe("image/png");
+        expect(actionsSpy.calls[0].arguments[1].zoomToLayer).toBeTruthy();
     });
     it('check WMTS resource format', () => {
         let actions = {
             onLayerAdd: () => {
 
-            },
-            onZoomToExtent: () => {
-
             }
         };
         let actionsSpy = expect.spyOn(actions, "onLayerAdd");
-        let actionsSpy2 = expect.spyOn(actions, "onZoomToExtent");
         const item = ReactDOM.render(<RecordItem
             record={{...sampleRecord3, format: "image/jpeg"}}
             onLayerAdd={actions.onLayerAdd}
-            onZoomToExtent={actions.onZoomToExtent} />, document.getElementById("container"));
+        />, document.getElementById("container"));
         expect(item).toExist();
 
         const itemDom = ReactDOM.findDOMNode(item);
@@ -212,9 +205,9 @@ describe('This test for RecordItem', () => {
         expect(button).toExist();
         button.click();
         expect(actionsSpy.calls.length).toBe(1);
-        expect(actionsSpy2.calls.length).toBe(1);
-        expect(actionsSpy.calls[0].arguments.length).toBe(1);
+        expect(actionsSpy.calls[0].arguments.length).toBe(2);
         expect(actionsSpy.calls[0].arguments[0].format).toBe("image/jpeg");
+        expect(actionsSpy.calls[0].arguments[1].zoomToLayer).toBeTruthy();
     });
     it('check esri resource', () => {
         let actions = {
@@ -245,17 +238,13 @@ describe('This test for RecordItem', () => {
         let actions = {
             onLayerAdd: () => {
 
-            },
-            onZoomToExtent: () => {
-
             }
         };
         let actionsSpy = expect.spyOn(actions, "onLayerAdd");
-        let actionsSpy2 = expect.spyOn(actions, "onZoomToExtent");
         const item = ReactDOM.render(<RecordItem
             record={sampleRecord}
             onLayerAdd={actions.onLayerAdd}
-            onZoomToExtent={actions.onZoomToExtent}/>, document.getElementById("container"));
+        />, document.getElementById("container"));
         expect(item).toExist();
 
         const itemDom = ReactDOM.findDOMNode(item);
@@ -266,7 +255,7 @@ describe('This test for RecordItem', () => {
         expect(button).toExist();
         button.click();
         expect(actionsSpy.calls.length).toBe(1);
-        expect(actionsSpy2.calls.length).toBe(1);
+        expect(actionsSpy.calls[0].arguments[1].zoomToLayer).toBeTruthy();
     });
 
     it('check event handlers with catalogUrl and csw service', () => {
@@ -292,8 +281,9 @@ describe('This test for RecordItem', () => {
         expect(button).toExist();
         button.click();
         expect(actionsSpy.calls.length).toBe(1);
-        expect(actionsSpy.calls[0].arguments.length).toBe(1);
+        expect(actionsSpy.calls[0].arguments.length).toBe(2);
         expect(actionsSpy.calls[0].arguments[0].catalogURL).toExist();
+        expect(actionsSpy.calls[0].arguments[1].zoomToLayer).toBeTruthy();
     });
 
     it('check event handlers with catalogUrl and wms service', () => {
@@ -319,8 +309,9 @@ describe('This test for RecordItem', () => {
         expect(button).toExist();
         button.click();
         expect(actionsSpy.calls.length).toBe(1);
-        expect(actionsSpy.calls[0].arguments.length).toBe(1);
+        expect(actionsSpy.calls[0].arguments.length).toBe(2);
         expect(actionsSpy.calls[0].arguments[0].catalogURL).toNotExist();
+        expect(actionsSpy.calls[0].arguments[1].zoomToLayer).toBeTruthy();
     });
     it('check wms default format', () => {
         let actions = {
@@ -345,9 +336,10 @@ describe('This test for RecordItem', () => {
         expect(button).toExist();
         button.click();
         expect(actionsSpy.calls.length).toBe(1);
-        expect(actionsSpy.calls[0].arguments.length).toBe(1);
+        expect(actionsSpy.calls[0].arguments.length).toBe(2);
         expect(actionsSpy.calls[0].arguments[0].catalogURL).toNotExist();
         expect(actionsSpy.calls[0].arguments[0].format).toBe('image/png');
+        expect(actionsSpy.calls[0].arguments[1].zoomToLayer).toBeTruthy();
     });
     it('check wms NOT default format', () => {
         let actions = {
@@ -372,9 +364,10 @@ describe('This test for RecordItem', () => {
         expect(button).toExist();
         button.click();
         expect(actionsSpy.calls.length).toBe(1);
-        expect(actionsSpy.calls[0].arguments.length).toBe(1);
+        expect(actionsSpy.calls[0].arguments.length).toBe(2);
         expect(actionsSpy.calls[0].arguments[0].catalogURL).toNotExist();
         expect(actionsSpy.calls[0].arguments[0].format).toBe('image/jpeg');
+        expect(actionsSpy.calls[0].arguments[1].zoomToLayer).toBeTruthy();
     });
     it('check auth params to be removed (WMS)', () => {
         const recordToClean = {
@@ -421,10 +414,11 @@ describe('This test for RecordItem', () => {
         expect(button).toExist();
         button.click();
         expect(actionsSpy.calls.length).toBe(1);
-        expect(actionsSpy.calls[0].arguments.length).toBe(1);
+        expect(actionsSpy.calls[0].arguments.length).toBe(2);
         expect(actionsSpy.calls[0].arguments[0].catalogURL).toNotExist();
         expect(actionsSpy.calls[0].arguments[0].params).toExist();
         expect(actionsSpy.calls[0].arguments[0].params.requiredParam).toBe("REQUIRED");
+        expect(actionsSpy.calls[0].arguments[1].zoomToLayer).toBeTruthy();
         expect(actionsSpy.calls[0].arguments[0].params["ms2-authkey"]).toNotExist("auth param is passed in params list but it shouldn't");
     });
     it('check auth params to be removed (WMTS)', () => {
@@ -472,7 +466,8 @@ describe('This test for RecordItem', () => {
         expect(button).toExist();
         button.click();
         expect(actionsSpy.calls.length).toBe(1);
-        expect(actionsSpy.calls[0].arguments.length).toBe(1);
+        expect(actionsSpy.calls[0].arguments.length).toBe(2);
+        expect(actionsSpy.calls[0].arguments[1].zoomToLayer).toBeTruthy();
         expect(actionsSpy.calls[0].arguments[0].catalogURL).toNotExist();
         expect(actionsSpy.calls[0].arguments[0].params).toExist();
         expect(actionsSpy.calls[0].arguments[0].params.requiredParam).toBe("REQUIRED");
@@ -505,7 +500,8 @@ describe('This test for RecordItem', () => {
         expect(button).toExist();
         button.click();
         expect(actionsSpy.calls.length).toBe(1);
-        expect(actionsSpy.calls[0].arguments.length).toBe(1);
+        expect(actionsSpy.calls[0].arguments.length).toBe(2);
+        expect(actionsSpy.calls[0].arguments[1].zoomToLayer).toBeTruthy();
         expect(actionsSpy.calls[0].arguments[0].extraProp).toBe('val1');
     });
 
@@ -535,7 +531,8 @@ describe('This test for RecordItem', () => {
         expect(button).toExist();
         button.click();
         expect(actionsSpy.calls.length).toBe(1);
-        expect(actionsSpy.calls[0].arguments.length).toBe(1);
+        expect(actionsSpy.calls[0].arguments.length).toBe(2);
+        expect(actionsSpy.calls[0].arguments[1].zoomToLayer).toBeTruthy();
         expect(actionsSpy.calls[0].arguments[0].extraProp).toBe('val1');
     });
 
@@ -601,9 +598,6 @@ describe('This test for RecordItem', () => {
     it('check add layer with bounding box', () => {
         let actions = {
             onLayerAdd: () => {
-
-            },
-            onZoomToExtent: () => {
 
             }
         };
@@ -852,5 +846,15 @@ describe('This test for RecordItem', () => {
         button.click();
         expect(actionsSpy.calls.length).toBe(1);
         expect(actionsSpy.calls[0].arguments[0].format).toBe(defaultFormat);
+    });
+    it('check description is wrapped in span', () => {
+        ReactDOM.render(<RecordItem record={sampleRecord}/>, document.getElementById("container"));
+
+        const recordItemDiv = document.getElementsByClassName('mapstore-side-card')[0];
+        expect(recordItemDiv).toExist();
+        const descDiv = recordItemDiv.getElementsByClassName('mapstore-side-card-desc')[0];
+        expect(descDiv).toExist();
+        expect(descDiv.hasChildNodes()).toBe(true);
+        expect(descDiv.firstElementChild.tagName).toBe('SPAN');
     });
 });

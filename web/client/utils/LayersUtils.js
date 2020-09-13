@@ -124,7 +124,22 @@ const getGroupNodes = (node) => {
     return [];
 };
 
-
+/**
+ * Gets title of nested groups from Default
+ * @param {string} id of group
+ * @param {array} groups groups of map
+ * @return {string} title of the group
+ */
+const getNestedGroupTitle = (id, groups = []) => {
+    return isArray(groups) && head(groups.map(group => {
+        const groupObj = group.id === id ? group : null;
+        if (groupObj) {
+            return groupObj.title;
+        }
+        const nodeObj = getNode(group.nodes, id);
+        return nodeObj ? nodeObj.title : null;
+    }));
+};
 /**
  * adds or update node property in a nested node
  * if propName is an object it overrides a whole group of options instead of one
@@ -160,6 +175,9 @@ const getSourceId = (layer = {}) => layer.capabilitiesURL || head(castArray(laye
 const extractTileMatrixFromSources = (sources, layer) => {
     if (!sources || !layer) {
         return {};
+    }
+    if (!isArray(layer.matrixIds) && isObject(layer.matrixIds)) {
+        layer.matrixIds = [...Object.keys(layer.matrixIds)];
     }
     const sourceId = getSourceId(layer);
     const matrixIds = layer.matrixIds && layer.matrixIds.reduce((a, mI) => {
@@ -256,7 +274,7 @@ const LayersUtils = {
     getSourceId,
     extractSourcesFromLayers,
     extractTileMatrixSetFromLayers,
-    getGroupByName: (groupName, groups) => {
+    getGroupByName: (groupName, groups = []) => {
         const result = head(groups.filter(g => g.name === groupName));
         return result || groups.reduce((prev, g) => prev || !!g.nodes && LayersUtils.getGroupByName(groupName, g.nodes), undefined);
     },
@@ -302,13 +320,12 @@ const LayersUtils = {
      * @return function that filter by group
      */
     belongsToGroup: (gid) => l => (l.group || "Default") === gid || (l.group || "").indexOf(`${gid}.`) === 0,
-    getLayersByGroup: (configLayers) => {
+    getLayersByGroup: (configLayers, configGroups) => {
         let i = 0;
         let mapLayers = configLayers.map((layer) => assign({}, layer, {storeIndex: i++}));
         let groupNames = mapLayers.reduce((groups, layer) => {
             return groups.indexOf(layer.group || 'Default') === -1 ? groups.concat([layer.group || 'Default']) : groups;
         }, []).filter((group) => group !== 'background').reverse();
-
         return groupNames.reduce((groups, names)=> {
             let name = names || 'Default';
             name.split('.').reduce((subGroups, groupName, idx, array)=> {
@@ -316,7 +333,8 @@ const LayersUtils = {
                 let group = getGroup(groupId, subGroups);
                 const addLayers = idx === array.length - 1;
                 if (!group) {
-                    group = createGroup(groupId, groupName, mapLayers, addLayers);
+                    const groupTitle = getNestedGroupTitle(groupId, configGroups);
+                    group = createGroup(groupId, groupTitle || groupName, mapLayers, addLayers);
                     subGroups.push(group);
                 } else if (addLayers) {
                     group.nodes = group.nodes.concat(getLayersId(groupId, mapLayers));
@@ -383,13 +401,19 @@ const LayersUtils = {
     },
     splitMapAndLayers: (mapState) => {
         if (mapState && isArray(mapState.layers)) {
-            let groups = LayersUtils.getLayersByGroup(mapState.layers);
+            let groups = LayersUtils.getLayersByGroup(mapState.layers, mapState.groups);
             // additional params from saved configuration
             if (isArray(mapState.groups)) {
                 groups = mapState.groups.reduce((g, group) => {
                     let newGroups = g;
                     if (group.title) {
-                        newGroups = LayersUtils.deepChange(newGroups, group.id, 'title', group.title);
+                        const groupMetadata = {
+                            title: group.title,
+                            description: group.description,
+                            tooltipOptions: group.tooltipOptions,
+                            tooltipPlacement: group.tooltipPlacement
+                        };
+                        newGroups = LayersUtils.deepChange(newGroups, group.id, groupMetadata);
                     }
                     newGroups = LayersUtils.deepChange(newGroups, group.id, 'expanded', group.expanded);
                     return newGroups;
@@ -493,10 +517,13 @@ const LayersUtils = {
             origin: layer.origin,
             thematic: layer.thematic,
             tooltipOptions: layer.tooltipOptions,
-            tooltipPlacement: layer.tooltipPlacement
+            tooltipPlacement: layer.tooltipPlacement,
+            legendOptions: layer.legendOptions,
+            tileSize: layer.tileSize
         },
         layer.params ? { params: layer.params } : {},
-        layer.credits ? { credits: layer.credits } : {});
+        layer.credits ? { credits: layer.credits } : {},
+        layer.localizedLayerStyles ? { localizedLayerStyles: layer.localizedLayerStyles } : {});
     },
     /**
     * default initial constant regex rule for searching for a /geoserver/ string in a url
@@ -580,6 +607,7 @@ const LayersUtils = {
     },
     getNode,
     getGroupNodes,
+    getNestedGroupTitle,
     deepChange,
     extractDataFromSources,
     extractTileMatrixFromSources,
@@ -641,7 +669,8 @@ const LayersUtils = {
             }
             : {};
     },
-    getWpsUrl
+    getWpsUrl,
+    getLayerTitle: ({title, name}, currentLocale = 'default') => title?.[currentLocale] || title?.default || title || name
 };
 
 module.exports = LayersUtils;

@@ -140,5 +140,4 @@ describe('test  Layer Properties General module component', () => {
         expect(labels.length).toBe(5);
         expect(labels[4].innerText).toBe("layerProperties.group");
     });
-
 });

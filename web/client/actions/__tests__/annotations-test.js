@@ -74,7 +74,12 @@ const {
     TOGGLE_DELETE_FT_MODAL, toggleDeleteFtModal,
     ADD_NEW_FEATURE, addNewFeature,
     LOAD_ANNOTATIONS, loadAnnotations,
-    UPDATE_SYMBOLS, updateSymbols
+    UPDATE_SYMBOLS, updateSymbols,
+    SET_DEFAULT_STYLE, setDefaultStyle,
+    LOAD_DEFAULT_STYLES, loadDefaultStyles,
+    LOADING, loading,
+    TOGGLE_ANNOTATION_VISIBILITY, toggleVisibilityAnnotation,
+    CHANGE_GEOMETRY_TITLE, changeGeometryTitle
 } = require('../annotations');
 
 describe('Test correctness of the annotations actions', () => {
@@ -159,9 +164,10 @@ describe('Test correctness of the annotations actions', () => {
         expect(result.format).toEqual(format);
     });
     it('confirm remove annotation', () => {
-        const result = confirmRemoveAnnotation('1');
+        const result = confirmRemoveAnnotation('1', 'geometry');
         expect(result.type).toEqual(CONFIRM_REMOVE_ANNOTATION);
         expect(result.id).toEqual('1');
+        expect(result.attribute).toEqual('geometry');
     });
     it('changedProperties', () => {
         const field = "desc";
@@ -250,8 +256,9 @@ describe('Test correctness of the annotations actions', () => {
     });
 
     it('remove annotation geometry', () => {
-        const result = removeAnnotationGeometry();
+        const result = removeAnnotationGeometry('1');
         expect(result.type).toEqual(REMOVE_ANNOTATION_GEOMETRY);
+        expect(result.id).toBe('1');
     });
 
     it('shows annotation', () => {
@@ -348,5 +355,36 @@ describe('Test correctness of the annotations actions', () => {
         expect(result.type).toEqual(LOAD_ANNOTATIONS);
         expect(result.features).toExist();
         expect(result.override).toBe(false);
+    });
+    it('setDefaultStyle', () => {
+        const result = setDefaultStyle('POINT.symbol', {size: 64});
+        expect(result.type).toBe(SET_DEFAULT_STYLE);
+        expect(result.path).toBe('POINT.symbol');
+        expect(result.style).toEqual({size: 64});
+    });
+    it('loadDefaultStyles', () => {
+        const result = loadDefaultStyles('circle', 64, '#0000FF', '#00FF00', '/path/to/symbols');
+        expect(result.type).toBe(LOAD_DEFAULT_STYLES);
+        expect(result.shape).toBe('circle');
+        expect(result.size).toBe(64);
+        expect(result.fillColor).toBe('#0000FF');
+        expect(result.strokeColor).toBe('#00FF00');
+        expect(result.symbolsPath).toBe('/path/to/symbols');
+    });
+    it('loading', () => {
+        const result = loading(true, 'loadingFlag');
+        expect(result.type).toBe(LOADING);
+        expect(result.value).toBe(true);
+        expect(result.name).toBe('loadingFlag');
+    });
+    it('toggleVisibilityAnnotation ', () => {
+        const result = toggleVisibilityAnnotation('1');
+        expect(result.type).toBe(TOGGLE_ANNOTATION_VISIBILITY);
+        expect(result.id).toBe('1');
+    });
+    it('changeGeometryTitle ', () => {
+        const result = changeGeometryTitle('New title');
+        expect(result.type).toBe(CHANGE_GEOMETRY_TITLE);
+        expect(result.title).toBe('New title');
     });
 });

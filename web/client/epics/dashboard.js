@@ -52,9 +52,6 @@ const {
     isLoggedIn
 } = require('../selectors/security');
 const {
-    cleanResource
-} = require('../utils/DashboardUtils');
-const {
     getEditingWidgetLayer,
     getEditingWidgetFilter
 } = require('../selectors/widgets');
@@ -144,7 +141,7 @@ module.exports = {
         ),
     filterAnonymousUsersForDashboard: (actions$, store) => actions$
         .ofType(CHECK_LOGGED_USER, LOGOUT)
-        .filter(() => pathnameSelector(store.getState()) === "/dashboard/")
+        .filter(() => pathnameSelector(store.getState()) === "/dashboard")
         .switchMap( ({}) => {
             return !isLoggedIn(store.getState()) ? Rx.Observable.of(dashboardLoadError({status: 403})) : Rx.Observable.empty();
         }),
@@ -187,7 +184,6 @@ module.exports = {
     // saving dashboard flow (both creation and update)
     saveDashboard: action$ => action$
         .ofType(SAVE_DASHBOARD)
-        .map(({resource}) => ({resource: cleanResource(resource)}))
         .exhaustMap(({resource} = {}) =>
             (!resource.id ? createResource(resource) : updateResource(resource))
                 .switchMap(rid => Rx.Observable.of(

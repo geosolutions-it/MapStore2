@@ -69,12 +69,19 @@ li.md-tabs__item:hover{
 }
 .ms-docimage, .md-typeset .ms-docimage{
     max-width: 700px;
-    display: block; 
-    margin-left: auto; 
-    margin-right: auto; 
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
     box-shadow: 4px 4px 4px #cccccc, -.5px -.5px 4px #cccccc;
     -moz-box-shadow: 4px 4px 4px #cccccc, -.5px -.5px 4px #cccccc;
     -moz-box-shadow: 4px 4px 4px #cccccc, -.5px -.5px 4px #cccccc;
+}
+
+.ms-doc-caption {
+    text-align: center;
+    font-style: italic;
+    font-size: 70%;
+
 }
 .ms-docbutton {
     vertical-align: middle;

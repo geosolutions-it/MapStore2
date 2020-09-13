@@ -98,6 +98,18 @@ describe('ContentToolbar component', () => {
         expect(buttons.length).toEqual(1);
         ReactTestUtils.Simulate.click(buttons[0]);
     });
+    it('should accept object tool', () => {
+        const filterOptions = ({ value }) => value !== 'full';
+        ReactDOM.render(<ContentToolbar
+            tools={[{ id: 'size', filterOptions }]}
+        />, document.getElementById('container'));
+        const buttons = document.getElementsByTagName('button');
+        expect(buttons).toBeTruthy();
+        expect(buttons.length).toEqual(1);
+        ReactTestUtils.Simulate.click(buttons[0]);
+        const menuItems = document.querySelectorAll('.dropdown-menu > li');
+        expect(menuItems.length).toBe(3);
+    });
     describe('tools', () => {
         // TODO: align, theme, size...
         it(`align`, (done) => {
@@ -150,7 +162,7 @@ describe('ContentToolbar component', () => {
             expect(list[3].innerText).toBe("geostory.contentToolbar.customizeThemeLabel");
             done();
         });
-        it(`remove`, (done) => {
+        it(`remove func`, (done) => {
             ReactDOM.render(<ContentToolbar
                 tools={["remove"]}
                 fit="contain"
@@ -182,6 +194,38 @@ describe('ContentToolbar component', () => {
             expect(buttons).toExist();
             expect(buttons.length).toEqual(1);
             ReactTestUtils.Simulate.click(buttons[0]);
+        });
+        it('showCaption', (done) => {
+            ReactDOM.render(<ContentToolbar
+                tools={["showCaption"]}
+                showCaption
+                caption="Caption"
+                update={(key, value) => {
+                    try {
+                        expect(key).toBe('showCaption');
+                        expect(value).toBe(false);
+                    } catch (e) {
+                        done(e);
+                    }
+                    done();
+                }}
+            />, document.getElementById("container"));
+            const buttons = document.getElementsByTagName('button');
+            expect(buttons).toBeTruthy();
+            expect(buttons.length).toBe(1);
+            ReactTestUtils.Simulate.click(buttons[0]);
+        });
+        it('showCaption disabled on edit map', () => {
+            ReactDOM.render(<ContentToolbar
+                tools={["showCaption"]}
+                editMap
+                showCaption
+                caption="Caption"
+            />, document.getElementById("container"));
+            const buttons = document.getElementsByTagName('button');
+            expect(buttons).toBeTruthy();
+            expect(buttons.length).toBe(1);
+            expect(buttons[0].disabled).toBe(true);
         });
     });
 

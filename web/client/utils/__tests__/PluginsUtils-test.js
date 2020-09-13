@@ -12,24 +12,11 @@ import expect from 'expect';
 import PluginsUtils from '../PluginsUtils';
 import assign from 'object-assign';
 import axios from '../../libs/ajax';
-import Rx from 'rxjs';
-import { ActionsObservable } from 'redux-observable';
+
 import MapSearchPlugin from '../../plugins/MapSearch';
 
-const epicTest = (epic, count, action, callback, state = {}) => {
-    const actions = new Rx.Subject();
-    const actions$ = new ActionsObservable(actions);
-    const store = { getState: () => state };
-    epic(actions$, store)
-        .take(count)
-        .toArray()
-        .subscribe(callback);
-    if (action.length) {
-        action.map(act => actions.next(act));
-    } else {
-        actions.next(action);
-    }
-};
+import { testEpic } from '../../epics/__tests__/epicTestUtils';
+
 
 const defaultState = () => {
     return {};
@@ -435,7 +422,7 @@ describe('PluginsUtils', () => {
         };
         const epics = PluginsUtils.combineEpics(plugins, appEpics);
         expect(typeof epics).toEqual('function');
-        epicTest(epics, 1, [{ type: 'TEST_ACTION1' }, { type: 'TEST_ACTION' }], actions => {
+        testEpic(epics, 1, [{ type: 'TEST_ACTION1' }, { type: 'TEST_ACTION' }], actions => {
             expect(actions.length).toBe(1);
             expect(actions[0].type).toBe("RESPONSE");
             done();
@@ -448,8 +435,12 @@ describe('PluginsUtils', () => {
         const appEpics = {
             appEpics: (actions$) => actions$.filter(a => a.type === 'TEST_ACTION').map(() => ({ type: "RESPONSE" }))
         };
-        const epics = PluginsUtils.combineEpics(plugins, appEpics, epic => (...args) => { counter++; return epic(...args); });
-        epicTest(epics, 1, [{ type: 'TEST_ACTION1' }, { type: 'TEST_ACTION' }], () => {
+        const epics = PluginsUtils.combineEpics(
+            plugins,
+            appEpics,
+            epic => (...args) => { counter++; return epic(...args); }
+        );
+        testEpic(epics, 1, [{ type: 'TEST_ACTION1' }, { type: 'TEST_ACTION' }], () => {
             expect(counter).toBe(1);
             done();
         });

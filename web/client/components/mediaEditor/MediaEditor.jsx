@@ -58,7 +58,6 @@ export default ({
                     onClick: () => {setMediaType("image"); },
                     disabled: saveState && saveState.addingMedia
                 }, {
-                    visible: false, // TODO RESTORE THIS when video is implemented
                     text: <Message msgId= "mediaEditor.videos"/>,
                     active: mediaType === "video",
                     bsStyle: mediaType === "video" ? "primary" : "default",
@@ -79,7 +78,7 @@ export default ({
                     disabled={saveState && saveState.addingMedia}
                     noResultsText="mediaEditor.mediaPicker.noResults"
                     placeholder="mediaEditor.mediaPicker.selectService"
-                    options={services.map(s => ({label: s.name, value: s.id}))}
+                    options={services.map(s => ({label: <Message msgId={s.name}/>, value: s.id}))}
                     onChange={setMediaService}
                     value={selectedService}
                     clearable={false}

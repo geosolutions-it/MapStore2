@@ -15,6 +15,9 @@ const MY_JSON = require('../../../../test-resources/wfs/museam.json');
 const L1 = { name: "L1", features: MY_JSON.features };
 const L2 = { name: "L2" };
 const W1 = { name: "TEST", "message": "M1" };
+const Annotations = {name: "Annotations", features: [{type: "FeatureCollection", properties: {title: "Annotation 1"},
+    features: [{type: "Feature", properties: {title: "Name1"},
+        geometry: {type: "Point", coordinates: [12.481312562873996, 41.89790148509894]}}]}]};
 
 describe('StylePanel component', () => {
     beforeEach((done) => {
@@ -30,9 +33,57 @@ describe('StylePanel component', () => {
         ReactDOM.render(<StylePanel layers={[L1, L2]} selected={L1} stylers={{"Point": <div></div>}}/>, document.getElementById("container"));
         const container = document.getElementById('container');
         expect(container.querySelector('h4')).toExist();
-        const checkBoxes = Array.slice(container.querySelectorAll('input[type=checkbox]'));
+        const checkBoxes = [].slice.call(container.querySelectorAll('input[type=checkbox]'));
         expect(checkBoxes.length).toBe(2);
         expect(checkBoxes.filter(e => e.checked).length).toBe(1);
+    });
+    it('StylePanel rendering with annotation layers', () => {
+        ReactDOM.render(<StylePanel layers={[Annotations]} selected={Annotations} stylers={{"Point": <div></div>}}/>, document.getElementById("container"));
+        const container = document.getElementById('container');
+        expect(container.querySelector('h4')).toExist();
+        const radioButtons = [].slice.call(container.querySelectorAll('input[type=radio]'));
+        const labels = [].slice.call(container.querySelectorAll('label'));
+        expect(radioButtons.length).toBe(2);
+        expect(radioButtons.filter(e => e.checked).length).toBe(1);
+        expect(labels[0].innerText).toContain("merge");
+        expect(radioButtons[0].checked).toBe(true);
+        expect(radioButtons[1].checked).toBe(false);
+        expect(labels[1].innerText).toContain("replace");
+    });
+    it('Test StylePanel for loadAnnotations to have been called on FINISH button click', (done) => {
+        const actions = {
+            onSuccess: () => {},
+            loadAnnotations: () => {}
+        };
+        const onSuccessCallBack = expect.spyOn(actions, 'onSuccess');
+        const loadAnnotationsCallBack = expect.spyOn(actions, 'loadAnnotations');
+
+        const onLayerAdded = () => {
+            expect(loadAnnotationsCallBack).toHaveBeenCalled();
+            expect(onSuccessCallBack).toHaveBeenCalled();
+            done();
+        };
+
+        const cmp = ReactDOM.render(
+            <StylePanel shapeStyle={{marker: true}} errors={[W1]} layers={[Annotations]} selected={Annotations} stylers={{ "Point": <div></div> }}
+                loadAnnotations={actions.loadAnnotations}
+                onLayerAdded={onLayerAdded}
+                onSuccess={actions.onSuccess} />, document.getElementById("container"));
+        expect(cmp).toExist();
+        let btn = document.querySelectorAll('button')[2];
+
+        // Merge annotation layer (by default)
+        ReactTestUtils.Simulate.click(btn); // <-- trigger event callback
+        expect(loadAnnotationsCallBack.calls[0].arguments[0]).toExist();
+        expect(loadAnnotationsCallBack.calls[0].arguments[1]).toBe(false);
+
+        // Replace annotation layer
+        const radioBtn = document.querySelectorAll('input[type=radio]')[1];
+        ReactTestUtils.Simulate.change(radioBtn); // Click replace annotation layer
+        expect(radioBtn.checked).toBe(true);
+        ReactTestUtils.Simulate.click(btn);
+        expect(loadAnnotationsCallBack.calls[1].arguments[0]).toExist();
+        expect(loadAnnotationsCallBack.calls[1].arguments[1]).toBe(true);
     });
     it('StylePanel rendering with errors', () => {
         ReactDOM.render(<StylePanel errors={[W1]} layers={[L1, L2]} selected={L1} stylers={{ "Point": <div></div> }} />, document.getElementById("container"));

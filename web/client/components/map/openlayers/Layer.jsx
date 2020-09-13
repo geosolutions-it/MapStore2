@@ -32,7 +32,8 @@ export default class OpenlayersLayer extends React.Component {
         onLayerLoad: PropTypes.func,
         position: PropTypes.number,
         observables: PropTypes.array,
-        securityToken: PropTypes.string
+        securityToken: PropTypes.string,
+        env: PropTypes.array
     };
 
     static defaultProps = {
@@ -49,7 +50,13 @@ export default class OpenlayersLayer extends React.Component {
         this.valid = true;
         this.tilestoload = 0;
         this.imagestoload = 0;
-        this.createLayer(this.props.type, this.props.options, this.props.position, this.props.securityToken);
+        this.createLayer(
+            this.props.type,
+            this.props.options,
+            this.props.position,
+            this.props.securityToken,
+            this.props.env
+        );
     }
 
     UNSAFE_componentWillReceiveProps(newProps) {
@@ -94,9 +101,9 @@ export default class OpenlayersLayer extends React.Component {
                 return child ? React.cloneElement(child, {container: layer, styleName: this.props.options && this.props.options.styleName}) : null;
             }) : null;
             return (
-                <>
+                <React.Fragment>
                     {children}
-                </>
+                </React.Fragment>
             );
         }
 
@@ -117,19 +124,20 @@ export default class OpenlayersLayer extends React.Component {
         }
     };
 
-    generateOpts = (options, position, srs, securityToken) => {
+    generateOpts = (options, position, srs, securityToken, env) => {
         return assign({}, options, isNumber(position) ? {zIndex: position} : null, {
             srs,
             onError: () => {
                 this.props.onCreationError(options);
             },
-            securityToken
+            securityToken,
+            env
         });
     };
 
-    createLayer = (type, options, position, securityToken) => {
+    createLayer = (type, options, position, securityToken, env) => {
         if (type) {
-            const layerOptions = this.generateOpts(options, position, CoordinatesUtils.normalizeSRS(this.props.srs), securityToken);
+            const layerOptions = this.generateOpts(options, position, CoordinatesUtils.normalizeSRS(this.props.srs), securityToken, env);
             this.layer = Layers.createLayer(type, layerOptions, this.props.map, this.props.mapId);
             const compatible = Layers.isCompatible(type, layerOptions);
             if (this.layer && !this.layer.detached) {
@@ -180,8 +188,8 @@ export default class OpenlayersLayer extends React.Component {
         const newLayer = Layers.updateLayer(
             this.props.type,
             this.layer,
-            this.generateOpts(newProps.options, newProps.position, newProps.projection, newProps.securityToken),
-            this.generateOpts(oldProps.options, oldProps.position, oldProps.projection, oldProps.securityToken),
+            this.generateOpts(newProps.options, newProps.position, newProps.projection, newProps.securityToken, newProps.env),
+            this.generateOpts(oldProps.options, oldProps.position, oldProps.projection, oldProps.securityToken, oldProps.env),
             this.props.map,
             this.props.mapId);
         if (newLayer) {
@@ -229,7 +237,7 @@ export default class OpenlayersLayer extends React.Component {
                 .subscribe({
                     next: (tileEvents) => {
                         const errors = tileEvents.filter(e => e.type === 'tileloaderror');
-                        if (errors.length > 0) {
+                        if (errors.length > 0 && (options && !options.hideErrors || !options)) {
                             this.props.onLayerLoad(options.id, {error: true});
                             this.props.onLayerError(options.id, tileEvents.length, errors.length);
                         } else {
@@ -274,7 +282,9 @@ export default class OpenlayersLayer extends React.Component {
                         const errors = imageEvents.filter(e => e.type === 'imageloaderror');
                         if (errors.length > 0) {
                             this.props.onLayerLoad(options.id, {error: true});
-                            this.props.onLayerError(options.id, imageEvents.length, errors.length);
+                            if (options && !options.hideErrors || !options) {
+                                this.props.onLayerError(options.id, imageEvents.length, errors.length);
+                            }
                         } else {
                             this.props.onLayerLoad(options.id);
                         }

@@ -38,6 +38,13 @@ export default class PopupSupport extends React.Component {
         popups: [],
         onPopupClose: () => {}
     }
+    componentWillMount() {
+        if (this.props.map) {
+            // This prevent the pointermove to be sent event when stopevent is active.
+            this.props.map.getContainer().querySelector('.leaflet-popup-pane').addEventListener('mousemove', this.stopPropagationOnMouseMove);
+            this.props.map.getContainer().querySelector('.leaflet-popup-pane').addEventListener('mouseenter', this.fireMouseOutEvent);
+        }
+    }
     componentDidMount() {
         if (this.props.map) {
             this.props.map.on('resize', this.updatePopup);
@@ -54,6 +61,8 @@ export default class PopupSupport extends React.Component {
         });
         if (this.props.map) {
             this.props.map.off('resize', this.updatePopup);
+            this.props.map.getContainer().removeEventListener('mousemove', this.stopPropagationOnMouseMove);
+            this.props.map.getContainer().removeEventListener('mouseenter', this.fireMouseOutEvent);
         }
     }
     renderPopups() {
@@ -105,7 +114,7 @@ export default class PopupSupport extends React.Component {
             container.setAttribute("style", `max-width: ${maxWidth}px; max-height: ${maxHeight}px`);
             Utils.append(container, content);
             // Always wrap the content in a div
-            const popup = L.popup({id, autoClose: false, closeOnClick: false, autoPan, maxWidth, maxHeight, className: "ms-leaflet-popup", offset}).setContent(container);
+            const popup = L.popup({id, autoClose: false, closeOnClick: false, autoPan, autoPanPadding: L.point(70, 70), maxWidth, maxHeight, className: "ms-leaflet-popup", offset}).setContent(container);
             popup.once('remove', this.popupClose);
             component && addMutationObserver(popup, container);
 
@@ -114,5 +123,11 @@ export default class PopupSupport extends React.Component {
             return { popup, ...options };
         });
         return this._popups;
+    }
+    stopPropagationOnMouseMove = (event) => {
+        event.stopPropagation();
+    }
+    fireMouseOutEvent = () => {
+        this.props.map.fireEvent('mouseout');
     }
 }

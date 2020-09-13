@@ -18,6 +18,7 @@ export const TEXT_SEARCH_NESTED_SERVICES_SELECTED = 'TEXT_SEARCH_NESTED_SERVICE_
 export const TEXT_SEARCH_ERROR = 'TEXT_SEARCH_ERROR';
 export const TEXT_SEARCH_CANCEL_ITEM = 'TEXT_SEARCH_CANCEL_ITEM';
 export const TEXT_SEARCH_ITEM_SELECTED = 'TEXT_SEARCH_ITEM_SELECTED';
+export const TEXT_SEARCH_SHOW_GFI = 'TEXT_SEARCH_SHOW_GFI';
 export const TEXT_SEARCH_SET_HIGHLIGHTED_FEATURE = 'TEXT_SEARCH_SET_HIGHLIGHTED_FEATURE';
 export const UPDATE_RESULTS_STYLE = 'UPDATE_RESULTS_STYLE';
 export const CHANGE_SEARCH_TOOL = 'CHANGE_SEARCH_TOOL';
@@ -194,6 +195,15 @@ export function selectSearchItem(item, mapConfig, resultsStyle) {
     };
 
 }
+
+/**
+ * Triggers zoomToExtent and GFI panel for an item
+ * @param {object} item target item
+ */
+export const showGFI = (item) => ({
+    type: TEXT_SEARCH_SHOW_GFI,
+    item
+});
 
 /**
  * Configures the search tool to perform sub-service queries. It will store the

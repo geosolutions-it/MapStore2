@@ -1,4 +1,4 @@
-const CONFIGPROVIDER = {
+export default {
     OpenStreetMap: {
         url: '//{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
         options: {
@@ -52,17 +52,109 @@ const CONFIGPROVIDER = {
             }
         }
     },
-    OpenTopoMap: {
-        url: '//{s}.tile.opentopomap.org/{z}/{x}/{y}.png',
+    OpenPtMap: {
+        url: 'http://openptmap.org/tiles/{z}/{x}/{y}.png',
         options: {
-            noCors: true,
+            maxZoom: 17,
+            attribution: 'Map data: &copy; <a href="http://www.openptmap.org">OpenPtMap</a> contributors'
+        }
+    },
+    OpenTopoMap: {
+        url: 'https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png',
+        options: {
+            maxZoom: 17,
+            attribution: 'Map data: {attribution.OpenStreetMap}, <a href="http://viewfinderpanoramas.org">SRTM</a> | Map style: &copy; <a href="https://opentopomap.org">OpenTopoMap</a> (<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC-BY-SA</a>)'
+        }
+    },
+    OpenRailwayMap: {
+        url: 'https://{s}.tiles.openrailwaymap.org/standard/{z}/{x}/{y}.png',
+        options: {
+            maxZoom: 19,
+            attribution: 'Map data: {attribution.OpenStreetMap} | Map style: &copy; <a href="https://www.OpenRailwayMap.org">OpenRailwayMap</a> (<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC-BY-SA</a>)'
+        }
+    },
+    OpenFireMap: {
+        url: 'http://openfiremap.org/hytiles/{z}/{x}/{y}.png',
+        options: {
+            maxZoom: 19,
+            attribution: 'Map data: {attribution.OpenStreetMap} | Map style: &copy; <a href="http://www.openfiremap.org">OpenFireMap</a> (<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC-BY-SA</a>)'
+        }
+    },
+    SafeCast: {
+        url: 'https://s3.amazonaws.com/te512.safecast.org/{z}/{x}/{y}.png',
+        options: {
             maxZoom: 16,
-            maxNativeZoom: 16,
-            attribution: 'Map data: {attribution.OpenStreetMap}, <a href="http://viewfinderpanoramas.org">SRTM</a> | Map style: &copy; <a href="https://opentopomap.org">OpenTopoMap</a> (<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC-BY-SA</a>)',
-            credits: {
-                text: 'Map data: OpenStreetMap contributors CC-BY-SA',
-                link: 'https://opentopomap.org'
+            attribution: 'Map data: {attribution.OpenStreetMap} | Map style: &copy; <a href="https://blog.safecast.org/about/">SafeCast</a> (<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC-BY-SA</a>)'
+        }
+    },
+    CyclOSM: {
+        url: 'https://dev.{s}.tile.openstreetmap.fr/cyclosm/{z}/{x}/{y}.png',
+        options: {
+            maxZoom: 20,
+            attribution: '<a href="https://github.com/cyclosm/cyclosm-cartocss-style/releases" title="CyclOSM - Open Bicycle render">CyclOSM</a> | Map data: {attribution.OpenStreetMap}'
+        }
+    },
+    OpenMapSurfer: {
+        url: 'https://maps.heigit.org/openmapsurfer/tiles/{variant}/webmercator/{z}/{x}/{y}.png',
+        options: {
+            maxZoom: 19,
+            variant: 'roads',
+            attribution: 'Imagery from <a href="http://giscience.uni-hd.de/">GIScience Research Group @ University of Heidelberg</a> | Map data '
+        },
+        variants: {
+            Roads: {
+                options: {
+                    variant: 'roads',
+                    attribution: '{attribution.OpenMapSurfer}{attribution.OpenStreetMap}'
+                }
+            },
+            Hybrid: {
+                options: {
+                    variant: 'hybrid',
+                    attribution: '{attribution.OpenMapSurfer}{attribution.OpenStreetMap}'
+                }
+            },
+            AdminBounds: {
+                options: {
+                    variant: 'adminb',
+                    maxZoom: 18,
+                    attribution: '{attribution.OpenMapSurfer}{attribution.OpenStreetMap}'
+                }
+            },
+            ContourLines: {
+                options: {
+                    variant: 'asterc',
+                    maxZoom: 18,
+                    minZoom: 13,
+                    attribution: '{attribution.OpenMapSurfer} <a href="https://lpdaac.usgs.gov/products/aster_policies">ASTER GDEM</a>'
+                }
+            },
+            Hillshade: {
+                options: {
+                    variant: 'asterh',
+                    maxZoom: 18,
+                    attribution: '{attribution.OpenMapSurfer} <a href="https://lpdaac.usgs.gov/products/aster_policies">ASTER GDEM</a>, <a href="http://srtm.csi.cgiar.org/">SRTM</a>'
+                }
+            },
+            ElementsAtRisk: {
+                options: {
+                    variant: 'elements_at_risk',
+                    attribution: '{attribution.OpenMapSurfer}{attribution.OpenStreetMap}'
+                }
             }
+        }
+    },
+    Hydda: {
+        url: 'https://{s}.tile.openstreetmap.se/hydda/{variant}/{z}/{x}/{y}.png',
+        options: {
+            maxZoom: 18,
+            variant: 'full',
+            attribution: 'Tiles courtesy of <a href="http://openstreetmap.se/" target="_blank">OpenStreetMap Sweden</a> &mdash; Map data {attribution.OpenStreetMap}'
+        },
+        variants: {
+            Full: 'full',
+            Base: 'base',
+            RoadsAndLabels: 'roads_and_labels'
         }
     },
     Thunderforest: {
@@ -94,48 +186,6 @@ const CONFIGPROVIDER = {
             },
             Landscape: 'landscape',
             Outdoors: 'outdoors'
-        }
-    },
-    OpenMapSurfer: {
-        url: 'http://openmapsurfer.uni-hd.de/tiles/{variant}/x={x}&y={y}&z={z}',
-        options: {
-            maxZoom: 20,
-            maxNativeZoom: 20,
-            variant: 'roads',
-            credits: {
-                text: 'MapQuest, Open Street Map and contributors, CC-BY-SA'
-            },
-            attribution: 'Imagery from <a href="http://giscience.uni-hd.de/">GIScience Research Group @ University of Heidelberg</a> &mdash; Map data {attribution.OpenStreetMap}'
-        },
-        variants: {
-            Roads: 'roads',
-            AdminBounds: {
-                options: {
-                    variant: 'adminb',
-                    maxZoom: 19,
-                    maxNativeZoom: 19
-                }
-            },
-            Grayscale: {
-                options: {
-                    variant: 'roadsg',
-                    maxZoom: 19,
-                    maxNativeZoom: 19
-                }
-            }
-        }
-    },
-    Hydda: {
-        url: 'http://{s}.tile.openstreetmap.se/hydda/{variant}/{z}/{x}/{y}.png',
-        options: {
-            maxNativeZoom: 18,
-            variant: 'full',
-            attribution: 'Tiles courtesy of <a href="http://openstreetmap.se/" target="_blank">OpenStreetMap Sweden</a> &mdash; Map data {attribution.OpenStreetMap}'
-        },
-        variants: {
-            Full: 'full',
-            Base: 'base',
-            RoadsAndLabels: 'roads_and_labels'
         }
     },
     MapQuestOpen: {
@@ -190,19 +240,15 @@ const CONFIGPROVIDER = {
         }
     },
     Stamen: {
-        url: '//stamen-tiles-{s}.a.ssl.fastly.net/{variant}/{z}/{x}/{y}.{ext}',
+        url: 'https://stamen-tiles-{s}.a.ssl.fastly.net/{variant}/{z}/{x}/{y}.{ext}',
         options: {
             attribution:
-                    'Map tiles by <a href="http://stamen.com">Stamen Design</a>, ' +
-                    '<a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> &mdash; ' +
-                    'Map data {attribution.OpenStreetMap}',
-            credits: {
-                text: 'Map tiles by Stamen Design, under CC BY 3.0. Data by OpenStreetMap, under CC BY SA'
-            },
-            subdomains: ['a', 'b', 'c', 'd'],
+                'Map tiles by <a href="http://stamen.com">Stamen Design</a>, ' +
+                '<a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> &mdash; ' +
+                'Map data {attribution.OpenStreetMap}',
+            subdomains: 'abcd',
             minZoom: 0,
             maxZoom: 20,
-            maxNativeZoom: 20,
             variant: 'toner',
             ext: 'png'
         },
@@ -214,43 +260,33 @@ const CONFIGPROVIDER = {
             TonerLabels: 'toner-labels',
             TonerLite: 'toner-lite',
             Watercolor: {
+                url: 'https://stamen-tiles-{s}.a.ssl.fastly.net/{variant}/{z}/{x}/{y}.{ext}',
                 options: {
                     variant: 'watercolor',
+                    ext: 'jpg',
                     minZoom: 1,
-                    maxZoom: 16,
-                    maxNativeZoom: 16
+                    maxZoom: 16
                 }
             },
             Terrain: {
                 options: {
                     variant: 'terrain',
-                    minZoom: 4,
-                    maxZoom: 18,
-                    maxNativeZoom: 18,
-                    bounds: [[22, -132], [70, -56]]
+                    minZoom: 0,
+                    maxZoom: 18
                 }
             },
             TerrainBackground: {
                 options: {
                     variant: 'terrain-background',
-                    minZoom: 4,
-                    maxZoom: 18,
-                    maxNativeZoom: 18,
-                    bounds: [[22, -132], [70, -56]]
+                    minZoom: 0,
+                    maxZoom: 18
                 }
             },
-            TopOSMRelief: {
+            TerrainLabels: {
                 options: {
-                    variant: 'toposm-color-relief',
-                    ext: 'jpg',
-                    bounds: [[22, -132], [51, -56]]
-                }
-            },
-            TopOSMFeatures: {
-                options: {
-                    variant: 'toposm-features',
-                    bounds: [[22, -132], [51, -56]],
-                    opacity: 0.9
+                    variant: 'terrain-labels',
+                    minZoom: 0,
+                    maxZoom: 18
                 }
             }
         }
@@ -805,4 +841,3 @@ const CONFIGPROVIDER = {
         }
     }
 };
-module.exports = CONFIGPROVIDER;

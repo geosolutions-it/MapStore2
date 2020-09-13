@@ -11,6 +11,7 @@ const DefaultFilter = require('./DefaultFilter');
 const StringFilter = require('./StringFilter');
 const NumberFilter = require('./NumberFilter');
 const DateTimeFilter = require('./DateTimeFilter').default;
+const GeometryFilter = require('./GeometryFilter').default;
 
 const types = {
     "defaultFilter": (type) => withProps(() =>({type: type}))(DefaultFilter),
@@ -19,12 +20,14 @@ const types = {
     "int": () => NumberFilter,
     "date": () => withProps(() =>({type: "date"}))(DateTimeFilter),
     "time": () => withProps(() =>({type: "time"}))(DateTimeFilter),
-    "date-time": () => withProps(() =>({type: "date-time"}))(DateTimeFilter)
+    "date-time": () => withProps(() =>({type: "date-time"}))(DateTimeFilter),
+    "geometry": () => GeometryFilter
 };
 module.exports = {
     getFilterRenderer: (type, props) => types[type] ? types[type](type, props) : types.defaultFilter(type, props),
     DefaultFilter,
     StringFilter,
     NumberFilter,
-    DateTimeFilter
+    DateTimeFilter,
+    GeometryFilter
 };

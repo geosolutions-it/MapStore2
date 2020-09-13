@@ -11,7 +11,7 @@ const Proj4js = require('proj4').default;
 const proj4 = Proj4js;
 const axios = require('../libs/ajax');
 const assign = require('object-assign');
-const {isArray, flattenDeep, chunk, cloneDeep, isNumber, slice, head, last} = require('lodash');
+const {isArray, isObject, isFunction, flattenDeep, chunk, cloneDeep, isNumber, slice, head, last} = require('lodash');
 const lineIntersect = require('@turf/line-intersect');
 const polygonToLinestring = require('@turf/polygon-to-linestring');
 const greatCircle = require('@turf/great-circle').default;
@@ -231,6 +231,15 @@ const getExtentFromNormalized = (bounds, projection) => {
             normalizedXExtent[3]
         ], projection, isIDL),
         isIDL};
+};
+
+const crsCodeTable = {
+    'wgs84': 4326,
+    'wgs1984': 4326,
+    'crs84': 4326,
+    'ogccrs84': 4326,
+    'lambert93': 2154,
+    'rgflambert93': 2154
 };
 
 /**
@@ -683,6 +692,26 @@ const CoordinatesUtils = {
     },
     getProjUrl,
     /**
+     * Get wider and valid extent in viewport
+     * @private
+     * @param bbox {object} viewport bbox
+     * @param bbox.bounds {object} bounds of bbox {minx, miny, maxx, maxy}
+     * @param bbox.crs {string} bbox crs
+     * @param dest {string} SRS of the returned extent
+     * @return {array} [ minx, miny, maxx, maxy ]
+     */
+    getExtentFromViewport: ({ bounds, crs } = {}, dest = 'EPSG:4326') => {
+        if (!bounds || !crs) return null;
+        const { extent } = CoordinatesUtils.getViewportGeometry(bounds, crs);
+        if (extent.length === 4) {
+            return CoordinatesUtils.reprojectBbox(extent, crs, dest);
+        }
+        const [ rightExtentWidth, leftExtentWidth ] = extent.map((bbox) => bbox[2] - bbox[0]);
+        return rightExtentWidth > leftExtentWidth
+            ? CoordinatesUtils.reprojectBbox(extent[0], crs, dest)
+            : CoordinatesUtils.reprojectBbox(extent[1], crs, dest);
+    },
+    /**
      * @param crs in the form EPSG:4326
      * @return {Object} a promise for fetching the proj4 definition
     */
@@ -844,6 +873,26 @@ const CoordinatesUtils = {
             crs: 'EPSG:4326'
         };
     },
+    calculateCircleRadiusFromPixel: (coordinatesFromPixelConverter, pixel = {}, center = [], pixelRadius, defaultRadius = 0.01) => {
+        const radiusA = isArray(center) ? center : [center.x, center.y];
+
+        if (isNumber(radiusA[0]) && !isNaN(radiusA[0]) &&
+            isNumber(radiusA[1]) && !isNaN(radiusA[1]) &&
+            isNumber(pixel.x) && !isNaN(pixel.x) &&
+            isNumber(pixel.y) && !isNaN(pixel.y)) {
+            const pixelCoords = isFunction(coordinatesFromPixelConverter) ? coordinatesFromPixelConverter([
+                pixel.x,
+                pixel.y >= pixelRadius ? pixel.y - pixelRadius : pixel.y + pixelRadius
+            ]) : null;
+            const radiusB = pixelCoords && (isArray(pixelCoords) ? pixelCoords : [pixelCoords.x, pixelCoords.y]);
+
+            return isArray(radiusB) ? Math.sqrt((radiusA[0] - radiusB[0]) * (radiusA[0] - radiusB[0]) +
+                (radiusA[1] - radiusB[1]) * (radiusA[1] - radiusB[1])) :
+                defaultRadius;
+        }
+
+        return defaultRadius;
+    },
     /**
      * choose to round or floor value incase of 0 fractional digits
      * @return {number} the rounded value or the original one
@@ -854,12 +903,84 @@ const CoordinatesUtils = {
         }
         return value;
     },
+    midpoint: (p1, p2, returnArray = false) => {
+        const pObj1 = isArray(p1) ? {x: p1[0], y: p1[1]} : p1;
+        const pObj2 = isArray(p2) ? {x: p2[0], y: p2[1]} : p2;
+        const result = {x: 0.5 * (pObj1.x + pObj2.x), y: 0.5 * (pObj1.y + pObj2.y)};
+
+        return returnArray ? [result.x, result.y] : result;
+    },
+    pointObjectToArray: p => isObject(p) && isNumber(p.x) && isNumber(p.y) ? [p.x, p.y] : p,
     getExtentFromNormalized,
     getPolygonFromExtent,
     isPointInsideExtent: (point = {lat: 1, lng: 1}, extent) => {
         return contains(getPolygonFromExtent(extent), toPoint([point.lng, point.lat]));
     },
-    isBboxCompatible: (extent1, extent2) => overlap(extent1, extent2) || contains(extent1, extent2) || contains(extent2, extent1)
+    isBboxCompatible: (extent1, extent2) => overlap(extent1, extent2) || contains(extent1, extent2) || contains(extent2, extent1),
+    extractCrsFromURN: (urnString) => {
+        if (urnString) {
+            const parts = urnString.split(':');
+
+            const validURN = parts[0] === 'urn' &&
+                (parts[1] === 'ogc' || parts[1] === 'x-ogc') &&
+                parts[2] === 'def' &&
+                parts[3] === 'crs' &&
+                (!!parts[4] || !!parts[6]);
+
+            if (validURN) {
+                const authority = parts[4];
+                const code = parts[6];
+
+                return authority ? `${authority}:${code}` : code;
+            }
+        }
+
+        return null;
+    },
+    crsCodeTable,
+    makeNumericEPSG: (epsg) => {
+        if (!epsg || epsg.slice(0, 5) !== 'EPSG:') {
+            return null;
+        }
+
+        const epsgCode = epsg.slice(5);
+        const epsgCodeNum = parseInt(epsgCode, 10);
+
+        if (epsgCodeNum >= 1024 && epsgCodeNum <= 32767) {
+            return epsg;
+        }
+
+        const epsgCodeNormalized = epsgCode.replace(' ', '').replace(':', '').toLowerCase();
+        const epsgCodeNewNum = crsCodeTable[epsgCodeNormalized];
+
+        if (epsgCodeNewNum >= 1024 && epsgCodeNewNum <= 32767) {
+            return `EPSG:${epsgCodeNewNum}`;
+        }
+
+        return null;
+    },
+    makeBboxFromOWS: (lcOWS, ucOWS) => {
+        let lc = [lcOWS[0], lcOWS[1]];
+        let uc = [ucOWS[0], ucOWS[1]];
+
+        // lower is actually upper?
+        if (lc[1] > uc[1]) {
+            const t = lc;
+            lc = uc;
+            uc = t;
+        }
+
+        // lower right upper left instead of lower left upper right?
+        if (lc[0] > uc[0]) {
+            const lcOld = lc.slice();
+            const ucOld = uc.slice();
+
+            lc = [ucOld[0], lcOld[1]];
+            uc = [lcOld[0], ucOld[1]];
+        }
+
+        return [lc[0], lc[1], uc[0], uc[1]];
+    }
 
 };
 

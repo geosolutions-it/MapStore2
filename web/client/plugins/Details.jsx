@@ -14,7 +14,6 @@ const Message = require('../components/I18N/Message');
 const {mapFromIdSelector} = require('../selectors/maps');
 const {mapIdSelector, mapInfoDetailsUriFromIdSelector} = require('../selectors/map');
 const {mapLayoutValuesSelector} = require('../selectors/maplayout');
-const {currentMapDetailsTextSelector} = require('../selectors/currentmap');
 const {openDetailsPanel, closeDetailsPanel} = require("../actions/maps");
 const {get} = require("lodash");
 
@@ -29,7 +28,7 @@ module.exports = {
         active: get(state, "controls.details.enabled"),
         map: mapFromIdSelector(state, mapIdSelector(state)),
         dockStyle: mapLayoutValuesSelector(state, {height: true}),
-        detailsText: currentMapDetailsTextSelector(state)
+        detailsText: state.maps.detailsText
     }), {
         onClose: closeDetailsPanel
     })(assign(require('../components/details/DetailsPanel'), {

@@ -8,7 +8,7 @@
 
 const {lifecycle, withHandlers, compose} = require('recompose');
 const {set} = require('../../../../utils/ImmutableUtils');
-const {isEqual, isNil} = require('lodash');
+const {isNil, isNaN} = require('lodash');
 
 /**
  * Enhancer to enable set index only if Component has header
@@ -33,18 +33,18 @@ const identifyHandlers = withHandlers({
         }
         return false;
     },
-    onClose: ({hideMarker = () => {}, purgeResults = () => {}, closeIdentify = () => {}}) => () => {
-        hideMarker();
+    onClose: ({purgeResults = () => {}, closeIdentify = () => {}}) => () => {
         purgeResults();
         closeIdentify();
     },
-    onChangeClickPoint: ({
-        onChangeClickPoint = () => {},
+    onSubmitClickPoint: ({
+        onSubmitClickPoint = () => {},
         point
-    }) => (coord, val) => {
-        let changedCoord = coord === "lat" ? "lat" : "lng";
-        let newPoint = set(`latlng.${changedCoord}`, !isNil(val) ? parseFloat(val) : 0, point);
-        onChangeClickPoint(newPoint);
+    }) => (val) => {
+        const lat = !isNil(val.lat) && !isNaN(val.lat) ? parseFloat(val.lat) : 0;
+        const lng = !isNil(val.lon) && !isNaN(val.lon) ? parseFloat(val.lon) : 0;
+        let newPoint = set('latlng.lng', lng, set('latlng.lat', lat, point));
+        onSubmitClickPoint(newPoint);
     },
     onChangeFormat: ({
         onChangeFormat = () => {}
@@ -96,9 +96,7 @@ const identifyLifecycle = compose(
                 hideMarker = () => {},
                 purgeResults = () => {},
                 changeMousePointer = () => {},
-                setIndex,
-                enabled,
-                responses
+                enabled
             } = this.props;
             if (newProps.enabled && !enabled) {
                 changeMousePointer('pointer');
@@ -106,10 +104,6 @@ const identifyLifecycle = compose(
                 changeMousePointer('auto');
                 hideMarker();
                 purgeResults();
-            }
-            // reset current page on new requests set
-            if (setIndex && !isEqual(newProps.responses, responses)) {
-                setIndex(0);
             }
         }
     })

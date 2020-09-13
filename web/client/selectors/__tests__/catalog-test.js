@@ -11,7 +11,6 @@ const {
     activeSelector,
     authkeyParamNameSelector,
     delayAutoSearchSelector,
-    formatsSelector,
     groupSelector,
     layerErrorSelector,
     loadingErrorSelector,
@@ -27,7 +26,8 @@ const {
     selectedServiceTypeSelector,
     selectedServiceSelector,
     servicesSelector,
-    serviceListOpenSelector
+    serviceListOpenSelector,
+    tileSizeOptionsSelector
 } = require("../catalog");
 
 const {set} = require('../../utils/ImmutableUtils');
@@ -169,11 +169,7 @@ describe('Test catalog selectors', () => {
         expect(retVal).toExist();
         expect(retVal.url).toBe(url);
     });
-    it('test formatsSelector', () => {
-        const retVal = formatsSelector(state);
-        expect(retVal).toExist();
-        expect(retVal.length).toBe(3);
-    });
+
     it('test loadingErrorSelector', () => {
         const retVal = loadingErrorSelector(state);
         expect(retVal).toBe(null);
@@ -242,5 +238,10 @@ describe('Test catalog selectors', () => {
         expect(delay).toExist();
         expect(delay).toBe(1234);
     });
-
+    it('test tileSizeOptionsSelector defaults to array with 256', () => {
+        const tileSizes = tileSizeOptionsSelector(state);
+        expect(tileSizes.length).toBe(2);
+        expect(tileSizes[0]).toBe(256);
+        expect(tileSizes[1]).toBe(512);
+    });
 });

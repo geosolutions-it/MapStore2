@@ -15,8 +15,11 @@ const {
     LOADING_STYLE,
     LOADED_STYLE,
     INIT_STYLE_SERVICE,
-    SET_EDIT_PERMISSION
+    SET_EDIT_PERMISSION,
+    UPDATE_EDITOR_METADATA
 } = require('../actions/styleeditor');
+
+const isString = require('lodash/isString');
 
 function styleeditor(state = {}, action) {
     switch (action.type) {
@@ -86,7 +89,9 @@ function styleeditor(state = {}, action) {
         };
     }
     case ERROR_STYLE: {
-        const message = action.error && action.error.statusText || '';
+        const message = action?.error?.statusText || action?.error?.message || '';
+        const messageIdParam = isString(action?.error?.messageId)
+            && { messageId: action.error.messageId };
         const position = message.match(/line\s([\d]+)|column\s([\d]+)|lineNumber:\s([\d]+)|columnNumber:\s([\d]+)/g);
         const errorInfo = position && position.length === 2 && position.reduce((info, pos) => {
             const splittedValues = pos.split(' ');
@@ -96,7 +101,7 @@ function styleeditor(state = {}, action) {
                 ...info,
                 [param]: value
             } || { ...info };
-        }, { message }) || { message };
+        }, { message, ...messageIdParam }) || { message, ...messageIdParam };
         return {
             ...state,
             loading: false,
@@ -107,6 +112,15 @@ function styleeditor(state = {}, action) {
                     status: action.error && action.error.status || 404,
                     ...errorInfo
                 }
+            }
+        };
+    }
+    case UPDATE_EDITOR_METADATA: {
+        return {
+            ...state,
+            metadata: {
+                ...state.metadata,
+                ...action.metadata
             }
         };
     }

@@ -456,6 +456,15 @@ describe('Test VectorStyle', () => {
         expect(isArray(olStyle)).toBe(false);
         expect(olStyle.getText()).toBe(textStyle.label);
     });
+    it('getTextStyle, with a rotation', () => {
+        const textStyle = {
+            textRotationDeg: 180
+        };
+        const olStyle = getTextStyle(textStyle);
+        expect(typeof olStyle).toBe("object");
+        expect(isArray(olStyle)).toBe(false);
+        expect(olStyle.getRotation()).toBe(Math.PI);
+    });
     it('getGeometryTrasformation, with marker style, no geometry', () => {
         const markerStyle = {
             iconGlyph: "comment",

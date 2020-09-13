@@ -16,7 +16,8 @@ import {
     extractOGCServicesReferences,
     esriToLayer,
     getRecordLinks,
-    recordToLayer
+    recordToLayer,
+    wfsToLayer
 } from '../../utils/CatalogUtils';
 import CoordinatesUtils from '../../utils/CoordinatesUtils';
 import HtmlRenderer from '../misc/HtmlRenderer';
@@ -28,11 +29,11 @@ import SideCard from '../misc/cardgrids/SideCard';
 import Toolbar from '../misc/toolbar/Toolbar';
 import tooltip from '../misc/enhancers/tooltip';
 const Button = tooltip(ButtonRB);
+import AddTMS from './buttons/AddTMS';
+import AddTileProvider from './buttons/AddTileProvider';
 
 import defaultThumb from './img/default.jpg';
 import defaultBackgroundThumbs from '../../plugins/background/DefaultThumbs';
-
-import BackgroundDialog from '../background/BackgroundDialog';
 
 class RecordItem extends React.Component {
     static propTypes = {
@@ -50,8 +51,6 @@ class RecordItem extends React.Component {
         onCopy: PropTypes.func,
         onError: PropTypes.func,
         onLayerAdd: PropTypes.func,
-        onAddBackground: PropTypes.func,
-        onZoomToExtent: PropTypes.func,
         record: PropTypes.object,
         showGetCapLinks: PropTypes.bool,
         zoomToLayer: PropTypes.bool,
@@ -60,11 +59,10 @@ class RecordItem extends React.Component {
         layers: PropTypes.array,
         onAdd: PropTypes.func,
         source: PropTypes.string,
-        modalParams: PropTypes.object,
         onAddBackgroundProperties: PropTypes.func,
-        onUpdateThumbnail: PropTypes.func,
         deletedId: PropTypes.string,
         clearModal: PropTypes.func,
+        service: PropTypes.service,
         showTemplate: PropTypes.bool,
         defaultFormat: PropTypes.string,
         formatOptions: PropTypes.array
@@ -74,7 +72,6 @@ class RecordItem extends React.Component {
         buttonSize: "small",
         crs: "EPSG:3857",
         currentLocale: 'en-US',
-        onUpdateThumbnail: () => {},
         onAddBackgroundProperties: () => {},
         hideThumbnail: false,
         hideIdentifier: false,
@@ -83,7 +80,6 @@ class RecordItem extends React.Component {
         onCopy: () => {},
         onError: () => {},
         onLayerAdd: () => {},
-        onZoomToExtent: () => {},
         onPropertiesChange: () => {},
         onLayerChange: () => {},
         clearModal: () => {},
@@ -141,10 +137,11 @@ class RecordItem extends React.Component {
             return null;
         }
         // let's extract the references we need
-        const {wms, wmts} = extractOGCServicesReferences(record);
+        const {wms, wmts, tms, wfs}  = extractOGCServicesReferences(record);
         // let's extract the esri
         const {esri} = extractEsriReferences(record);
         const background = record && record.background;
+        const tileProvider = record && record.type === "tileprovider" && record.provider;
 
         // let's create the buttons
         let buttons = [];
@@ -158,8 +155,7 @@ class RecordItem extends React.Component {
                     bsSize={this.props.buttonSize}
                     onClick={() => {
                         const layer = {...background, id: background.name, visibility: false};
-                        this.props.onLayerAdd(layer);
-                        this.props.onAddBackground(layer.id);
+                        this.props.onLayerAdd(layer, { background });
                     }}
                     key="addlayer">
                     <Glyphicon glyph="plus" />
@@ -177,15 +173,7 @@ class RecordItem extends React.Component {
                     onClick={() => {
                         const layer = this.makeLayer(type, wms || wmts, record.format && [record.format] || record.formats);
                         if (layer) {
-                            if (this.props.source === 'backgroundSelector') {
-                                this.props.onAddBackgroundProperties({
-                                    identifier: record.identifier,
-                                    editing: false,
-                                    layer
-                                }, true);
-                            } else {
-                                this.addLayer(layer);
-                            }
+                            this.addLayer(layer, {record});
                         }
                     }}
                     key={`add${type}layer`}>
@@ -208,6 +196,50 @@ class RecordItem extends React.Component {
                 </Button>
             );
         }
+        if (tms) {
+            buttons.push(
+                <AddTMS
+                    service={this.props.service}
+                    key="addTmsLayer"
+                    tooltipId="catalog.addToMap"
+                    className="square-button-md"
+                    bsStyle="primary"
+                    bsSize={this.props.buttonSize}
+                    addLayer={this.addLayer}
+                    record={this.props.record}>
+                    <Glyphicon glyph="plus" />
+                </AddTMS>
+            );
+        }
+        if ( wfs ) {
+            buttons.push(<Button
+                tooltipId="catalog.addToMap"
+                key="addWFSLayer"
+                className="square-button-md"
+                bsStyle="primary"
+                bsSize={this.props.buttonSize}
+                onClick={() => {
+                    this.addLayer(wfsToLayer(this.props.record, this.props.layerBaseConfig));
+                }}>
+                <Glyphicon glyph="plus" />
+            </Button>);
+        }
+        if (tileProvider) {
+            buttons.push(
+                <AddTileProvider
+                    key="addTileProviderLayer"
+                    service={this.props.service}
+                    tooltipId="catalog.addToMap"
+                    className="square-button-md"
+                    bsStyle="primary"
+                    bsSize={this.props.buttonSize}
+                    addLayer={this.addLayer}
+                    record={this.props.record}>
+                    <Glyphicon glyph="plus" />
+                </AddTileProvider>
+            );
+        }
+
         // create get capabilities links that will be used to share layers info
         if (this.props.showGetCapLinks) {
             let links = getRecordLinks(record);
@@ -232,34 +264,17 @@ class RecordItem extends React.Component {
             : record.metadataTemplate ? '' : (isArray(record.description) ? record.description.join(", ") : record.description);
     };
 
-    renderBackgroundDialog() {
-        return (
-            <BackgroundDialog
-                onClose={this.props.clearModal}
-                onSave={layer => {
-                    this.addLayer(layer);
-                    this.props.onAddBackground(layer.id);
-                }}
-                updateThumbnail={this.props.onUpdateThumbnail}
-                defaultFormat={this.props.defaultFormat}
-                formatOptions={this.props.formatOptions}
-                {...this.props.modalParams}
-            />
-        );
-    }
-
     render() {
         const record = this.props.record;
-        const {wms, wmts} = extractOGCServicesReferences(record);
+        const { wms, wmts, tms, wfs } = extractOGCServicesReferences(record);
         const {esri} = extractEsriReferences(record);
+        const tileProvider = record && record.type === "tileprovider" && record.provider;
         const background = record && record.background;
         const disabled = background && head((this.props.layers || []).filter(layer => layer.id === background.name ||
             layer.type === background.type && layer.source === background.source && layer.name === background.name));
         // the preview and toolbar width depends on the values defined in the theme (variable.less)
         // IMPORTANT: if those values are changed then these defaults also have to change
         return record ? (<div>
-            {this.props.modalParams && this.props.modalParams.identifier === record.identifier && !this.props.modalParams.editing ?
-                this.renderBackgroundDialog() : null}
             <SideCard
                 style={{transform: "none", opacity: disabled ? 0.4 : 1}}
                 fullText={this.state.fullText}
@@ -267,13 +282,13 @@ class RecordItem extends React.Component {
                     this.renderThumb(record && record.thumbnail ||
                         background && defaultBackgroundThumbs[background.source][background.name], record)}
                 title={record && this.getTitle(record.title)}
-                description={<div className ref={sideCardDesc => {
+                description={<span><div className ref={sideCardDesc => {
                     this.sideCardDesc = sideCardDesc;
-                }}>{this.renderDescription(record)}</div>}
+                }}>{this.renderDescription(record)}</div></span>}
                 caption={
                     <div>
                         {!this.props.hideIdentifier && <div className="identifier">{record && record.identifier}</div>}
-                        <div>{!wms && !wmts && !esri && !background && <small className="text-danger"><Message msgId="catalog.missingReference"/></small>}</div>
+                        <div>{!wms && !wmts && !esri && !background && !tms && !tileProvider && !wfs && <small className="text-danger"><Message msgId="catalog.missingReference"/></small>}</div>
                         {!this.props.hideExpand &&
                                 <div
                                     className="ms-ruler"
@@ -329,6 +344,8 @@ class RecordItem extends React.Component {
             return null;
         }
 
+        const localizedLayerStyles = this.props.service && this.props.service.localizedLayerStyles;
+
         return recordToLayer(
             this.props.record,
             type,
@@ -353,21 +370,29 @@ class RecordItem extends React.Component {
                         )
                     })
             },
-            this.props.layerBaseConfig
+            this.props.layerBaseConfig,
+            localizedLayerStyles
         );
     }
 
-    addLayer = (layer) => {
-        if (layer) {
-            this.props.onLayerAdd(layer);
-            if (this.props.record.boundingBox && this.props.zoomToLayer) {
-                let extent = this.props.record.boundingBox.extent;
-                let crs = this.props.record.boundingBox.crs;
-                this.props.onZoomToExtent(extent, crs);
+    addLayer = (layer, {background} = {}) => {
+        // TODO: extenralize this switch
+        if (this.props.source === 'backgroundSelector') {
+            if (background) {
+                // background
+                this.props.onLayerAdd({...layer, group: 'background'}, { source: this.props.source });
+                this.props.onAddBackground(layer.id);
+            } else {
+                this.props.onAddBackgroundProperties({
+                    editing: false,
+                    layer
+                }, true);
             }
+        } else {
+            const zoomToLayer = this.props.zoomToLayer;
+            this.props.onLayerAdd(layer, { zoomToLayer });
         }
     }
-
     /**
      * it manages visibility of expand button.
      * it checks if the width of descriptionRuler is higher than the width of the desc-section

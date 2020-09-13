@@ -7,7 +7,6 @@
  */
 
 import React from 'react';
-
 import Toolbar from '../../misc/toolbar/Toolbar';
 import ScrollMenu from './ScrollMenu';
 import Home from '../../../components/home/Home';
@@ -24,12 +23,14 @@ import isObject from 'lodash/isObject';
  * @prop {number} totalItems totalItems is the total number of sections present in the story
  * @prop {object} router router object in store contains location data
  * @prop {array} buttons array of buttons for Toolbar
+ * @prop {boolean} enableScrollOnLoad should scroll to the element after loading
+ * @prop {function} updateUrlOnScroll dispatches enableScrollOnLoad to the geostory reducer
  */
 export default ({
     settings,
     scrollTo = () => {},
     navigableItems = [],
-    currentPage, // current page progress (current page + 1/totPages),
+    currentPage = {}, // current page progress (current page + 1/totPages),
     totalItems = 1,
     currentPosition = 0,
     router,
@@ -37,17 +38,39 @@ export default ({
 }) => {
     const theme = settings?.theme?.general;
     const {
+        fontFamily,
         borderColor,
         color,
         backgroundColor
     } = isObject(theme) && theme || {};
+
+    const {
+        isTitleEnabled,
+        isLogoEnabled,
+        isNavbarEnabled
+    } = settings || {};
+    const isToolbarEnabled = buttons.length > 0;
+    const isHomeButtonEnabled = router &&
+        router.pathname &&
+        router.search &&
+        getQueryParams(router.search).showHome === 'true' &&
+        router.pathname.includes('/geostory/shared');
+    const isNavbarVisible = isNavbarEnabled && navigableItems?.length > 0;
+
+    const isVisible = isTitleEnabled
+        || isLogoEnabled
+        || isNavbarVisible
+        || isToolbarEnabled
+        || isHomeButtonEnabled;
+
     return (
         <div
             className="ms-geostory-navigation-bar"
             style={{
                 color,
                 backgroundColor,
-                ...(borderColor && { borderBottom: `1px solid ${borderColor}` })
+                ...(borderColor && { borderBottom: `1px solid ${borderColor}` }),
+                fontFamily
             }}>
             <div
                 className="progress-bar"
@@ -63,16 +86,12 @@ export default ({
                     }}
                 />
             </div>
-            <div className="ms-geostory-navigation-tools">
+            {isVisible && <div className="ms-geostory-navigation-tools">
 
                 <div className="ms-geostory-navigation-toolbar">
                     <Toolbar buttons={buttons} />
                     {
-                        router &&
-                        router.pathname &&
-                        router.search &&
-                        getQueryParams(router.search).showHome === 'true' &&
-                        router.pathname.includes('/geostory/shared') && (
+                        isHomeButtonEnabled && (
                             <Home
                                 bsStyle="default"
                                 className="square-button-md no-border"
@@ -83,7 +102,7 @@ export default ({
                     }
                 </div>
                 <div className="ms-geostory-navigation-elements">
-                    {navigableItems && navigableItems.length && settings && settings.isNavbarEnabled ?
+                    {isNavbarVisible ?
                         (<div className="ms-geostory-navigation-navigable-items">
                             <ScrollMenu
                                 items={navigableItems}
@@ -101,19 +120,19 @@ export default ({
                             />
                         </div>) : null}
                     <div className="ms-geostory-navigation-metadata">
-                        {settings && settings.isTitleEnabled &&
-                            <div className="ms-geostory-navigation-title">
+                        {isTitleEnabled &&
+                            <div className="ms-geostory-navigation-title" style={{fontSize: settings.storyTitleFontSize || "14px"}}>
                                 {settings.storyTitle}
                             </div>
                         }
-                        {settings && settings.isLogoEnabled &&
+                        {isLogoEnabled &&
                             <div className="ms-geostory-navigation-logo">
                                 <img src={settings.thumbnail && (settings.thumbnail.data || settings.thumbnail.url) || ""} height={32}/>
                             </div>
                         }
                     </div>
                 </div>
-            </div>
+            </div>}
         </div>
     );
 };

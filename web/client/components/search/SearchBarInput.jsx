@@ -30,9 +30,8 @@ const SearchBarInput = ({
     onSearch = () => {},
     onSearchTextChange = () => {},
     onCancelSelectedItem = () => {},
-    onPurgeResults = () => {},
-    messages = {}
-}) => {
+    onPurgeResults = () => {}
+}, context) => {
     const inputRef = React.useRef();
     const prevSelectedItemsLengthRef = React.useRef();
     const onBlurTimeout = React.useRef();
@@ -100,8 +99,8 @@ const SearchBarInput = ({
     });
 
     let actualPlaceholder = "search.addressSearch";
-    if (placeholder && messages) {
-        const placeholderLocMessage = LocaleUtils.getMessageById(messages, placeholderMsgId || placeholder);
+    if (!placeholder && context.messages) {
+        const placeholderLocMessage = LocaleUtils.getMessageById(context.messages, placeholderMsgId || actualPlaceholder);
         if (placeholderLocMessage) {
             actualPlaceholder = placeholderLocMessage;
         }

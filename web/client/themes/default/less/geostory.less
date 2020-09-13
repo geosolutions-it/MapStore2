@@ -6,6 +6,9 @@
 @ms-story-bg-guidelines: #0571b0; // background guidelines color
 @ms-story-fg-guidelines: #ca0020; // foreground guidelines color
 
+@ms-story-active-button-text: @ms2-color-text-primary;
+@ms-story-active-button-bg: lighten(@ms2-color-success, 15%);
+
 @ms-story-font-size-base: 21px;
 @ms-story-font-size-large: ceil(@ms-story-font-size-base * 1.5);
 @ms-story-font-size-small: ceil(@ms-story-font-size-base* 0.75);
@@ -15,11 +18,21 @@
 @ms-story-font-size-h4: floor((@ms-story-font-size-base * 1.4));
 @ms-story-font-size-h5: @ms-story-font-size-base;
 @ms-story-font-size-h6: floor((@ms-story-font-size-base * 0.85));
+@ms-story-font-size-li: floor((@ms-story-font-size-base * 0.66));
 @ms-story-font-size-caption: 11px;
 @ms-story-size-full: 100%;
 @ms-story-size-large: 85%;
 @ms-story-size-medium: 60%;
 @ms-story-size-small: 40%;
+
+@ms-story-size-height-large: 800px;
+@ms-story-size-height-medium: 575px;
+@ms-story-size-height-small: 350px;
+
+@ms-web-page-size-height-large: 1080px;
+@ms-web-page-size-height-medium: 900px;
+@ms-web-page-size-height-small: 720px;
+
 .ms-story-align-center { margin-left: auto; margin-right: auto; }
 /* mixin for align*/
 .ms-story-align-left { margin-left: 0; margin-right: auto; }
@@ -28,13 +41,15 @@
 .ms-story-color-contrast { color: contrast(@ms-story-bg); }
 .ms-story-color-no-contrast { color: @ms-story-bg; }
 
-
-.no-overflow {overflow: hidden !important;}
-
 /* TEXT EDITOR TODO: externalize */
 @import '~draft-js-inline-toolbar-plugin/lib/plugin.css';
 @import '~react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 
+
+// needed to assure the fontsize numbers to be correctly displayed (2 sided digits )
+.rdw-fontsize-dropdown {
+    min-width: 50px !important;
+}
 /* mixin for position sticky */
 .ms-position-sticky {
     position: -webkit-sticky;
@@ -62,7 +77,8 @@
         }
     }
     .ms-cascade-story.ms-edit {
-        .ms-section-title, .ms-section-immersive {
+        .ms-section-title,
+        .ms-section-immersive {
             .ms-text-editor-active {
                 pointer-events: all;
             }
@@ -81,11 +97,6 @@
     transform: translate(0, 0);
     .ms-geostory-settings {
         padding: 8px;
-        .ms-geostory-settings-logo{
-            position: relative;
-            display: block;
-        }
-
         .ms-geostory-settings-immersive-section {
             padding-left: 20px;
         }
@@ -373,15 +384,15 @@
         position: relative;
         z-index: 1;
         background-color: inherit;
-        + .ms-section {
-            border-top: 1px solid @ms-story-bg-grey;
-            border-color: inherit;
-        }
+
         & > div > .ms-content-toolbar {
             position: absolute;
             margin: 8px;
             top: 0;
             .shadow-soft();
+        }
+        .add-bar-popover {
+            max-width: 500px;
         }
         /*
         This class combines position sticky with height 0 and overflow-y visible
@@ -425,6 +436,12 @@
                 }
                 &.ms-dark {
                     background-color: contrast(@ms-story-bg);
+                }
+                .ms-media-credits {
+                    position: absolute;
+                    right: 0;
+                    bottom: 0;
+                    margin: 0 4px;
                 }
             }
         }
@@ -497,7 +514,8 @@
             }
         }
 
-        &.ms-section-title {
+        &.ms-section-title,
+        &.ms-section-banner {
             .ms-content-body {
                 display: flex;
                 margin: auto;
@@ -529,7 +547,7 @@
                     z-index: 2;
                     .shadow-soft();
                 }
-                
+
                 /*
                 content body needs to be aligned accordingly with the alignment of container,
                 this is needed in particular for size equal to large and short titles
@@ -599,11 +617,38 @@
                         width: 100%;
                     }
                 }
-                .ms-media-map {
-                    height: 350px;
-                    & > div {
-                        position: relative;
+                // change size of internal map
+                .ms-content.ms-content-map {
+                    width: 100%;
+                    .ms-media-map > div:not(.ms-media-caption) {
+                        width: 100%;
+                        height: 350px;
                     }
+                    &.ms-size-large .ms-media-map > div:not(.ms-media-caption) { height: @ms-story-size-height-large; }
+                    &.ms-size-medium .ms-media-map > div:not(.ms-media-caption) { height: @ms-story-size-height-medium; }
+                    &.ms-size-small .ms-media-map > div:not(.ms-media-caption) { height: @ms-story-size-height-small; }
+                }
+                .ms-content.ms-content-image {
+                    &.ms-align-center,
+                    &.ms-align-left,
+                    &.ms-align-right {
+                        margin-left: auto;
+                        margin-right: auto;
+                    }
+                }
+                .ms-content.ms-content-webPage {
+                    width: 100%;
+                    height: @ms-web-page-size-height-small;
+                    &.ms-size-large { height: @ms-web-page-size-height-large; }
+                    &.ms-size-medium { height: @ms-web-page-size-height-medium; }
+                    &.ms-size-small { height: @ms-web-page-size-height-small; }
+                }
+                .ms-content.ms-content-video {
+                    width: 100%;
+                }
+                .ms-content-toolbar {
+                    padding-left: 0;
+                    padding-right: 0;
                 }
             }
         }
@@ -680,21 +725,50 @@
                     right: 16px;
                 }
                 .ms-media-map {
-                    height: 350px;
-                    & > div {
-                        position: relative;
-                    }
                     .ms-expand-media-button {
                         margin: 0;
                         top: 20px;
                         right: 20px;
                     }
                 }
+                // change size of internal map
                 .ms-content.ms-content-map {
+                    width: 100%;
+                    .ms-media-map > div:not(.ms-media-caption) {
+                        width: 100%;
+                        height: 350px;
+                    }
+                    &.ms-size-large .ms-media-map > div:not(.ms-media-caption) { height: @ms-story-size-height-large; }
+                    &.ms-size-medium .ms-media-map > div:not(.ms-media-caption) { height: @ms-story-size-height-medium; }
+                    &.ms-size-small .ms-media-map > div:not(.ms-media-caption) { height: @ms-story-size-height-small; }
+                }
+                .ms-content.ms-content-image {
+                    &.ms-align-center,
+                    &.ms-align-left,
+                    &.ms-align-right {
+                        margin-left: auto;
+                        margin-right: auto;
+                    }
+                }
+
+                .ms-content.ms-content-webPage {
+                    width: 100%;
+                    height: @ms-web-page-size-height-small;
+                    &.ms-size-large { height: @ms-web-page-size-height-large; }
+                    &.ms-size-medium { height: @ms-web-page-size-height-medium; }
+                    &.ms-size-small { height: @ms-web-page-size-height-small; }
+                }
+                .ms-content.ms-content-video {
                     width: 100%;
                 }
             }
         }
+    }
+
+    // style for active button in toolbar
+    .ms-content-toolbar > .btn-group > span > .btn.active {
+        background-color: @ms-story-active-button-bg;
+        color: @ms-story-active-button-text;
     }
 
     ////////////
@@ -708,11 +782,75 @@
         we need to restore the possibility to interact with the content body
         using `pointer-events: auto;`
         */
-
-        .ms-webpage-wrapper > iframe {
-            border: none;
+        .ms-content-webPage {
+            position: relative;
             width: 100%;
-            min-height: 100%;
+            height: 100%;
+            .ms-content-body,
+            .ms-visibility-container,
+            .ms-webpage-wrapper,
+            .ms-webpage-wrapper > iframe {
+                position: relative;
+                width: 100%;
+                height: 100%;
+            }
+            .ms-webpage-wrapper > iframe {
+                border: none;
+            }
+            .ms-content-body {
+                display: flex;
+                flex-direction: column;
+            }
+            .ms-visibility-container {
+                flex: 1;
+            }
+        }
+
+        .ms-content-map {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            .ms-content-body,
+            .ms-visibility-container,
+            .ms-media-map,
+            .ms-media-map > div:not(.ms-media-caption)  {
+                position: relative;
+                width: 100%;
+                height: 100%;
+            }
+            .ms-content-body {
+                display: flex;
+                flex-direction: column;
+            }
+            .ms-visibility-container {
+                flex: 1;
+            }
+            canvas {
+                position: absolute;
+            }
+        }
+
+        .ms-content-video {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            .ms-content-body,
+            .ms-visibility-container,
+            .ms-media-video {
+                position: relative;
+                width: 100%;
+                height: 100%;
+            }
+            .ms-content-body {
+                display: flex;
+                flex-direction: column;
+            }
+            .ms-visibility-container {
+                flex: 1;
+            }
+            .ms-video {
+                position: absolute;
+            }
         }
 
         .ms-content-body > * {
@@ -817,7 +955,9 @@
                     h4 span { font-size: @ms-story-font-size-h4; }
                     h5 span { font-size: @ms-story-font-size-h5; }
                     h6 span { font-size: @ms-story-font-size-h6; }
-
+                    span > span {
+                        font-size: inherit;
+                    }
                     /*
                     headers and paragraph tags have a div children with `margin: 1em 0;`
                     this style increases the size of the text container and it's different from the plain html
@@ -829,12 +969,19 @@
                     h5 > div,
                     h6 > div,
                     p > div { margin: 0; }
+
+                    /* Bullet point size */
+                    ul > li > div > span { font-size: @ms-story-font-size-li; }
                 }
 
                 /* padding for the first child of content body of text content */
                 & > *:not(.ms-content-toolbar) {
                     padding: 16px;
                 }
+            }
+            code {
+                color: inherit;
+                background: #f1f1f1;
             }
         }
 
@@ -850,6 +997,9 @@
         &.ms-align-right { .ms-story-align-right(); }
     }
 
+    .ms-content-column {
+        .ms-content.ms-size-large { width: @ms-story-size-full; }
+    }
 
     //////////
     // MEDIA
@@ -872,38 +1022,47 @@
                 width: 100%;
                 height: 100%;
             }
-            .ms-media-credits {
-                transform: translate(0, -100%);
-                position: absolute;
-                right: 0;
-                max-width: ~"calc(50% - @{square-btn-medium-size})";
-                > small {
-                    display: block;
-                    margin: 4px;
-                    padding: 4px;
-                    background-color: fade(@ms-story-bg, 75%);
-                    color: contrast(@ms-story-bg);
-                    .shadow-soft();
-                    font-size: @ms-story-font-size-caption;
-                }
-            }
-            .ms-media-description {
-                border-left: 2px solid @ms-story-bg-grey;
-                border-color: inherit;
-                padding-left: 8px;
-                margin-top: 4px;
-                > small {
-                    padding: 8px 0;
-                    font-style: italic;
-                    font-size: @ms-story-font-size-caption;
-                }
-            }
         }
         &.ms-media-map {
+            & > div:not(.ms-media-caption) {
+                position: relative;
+                width: 100%;
+                height: 100%;
+            }
             .ol-zoom {
                 top: 50px;
                 left: 6px;
             }
+        }
+        &.ms-media-video {
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+    }
+
+    .ms-media-caption {
+        border-left: 2px solid @ms-story-bg-grey;
+        border-color: inherit;
+        padding-left: 8px;
+        margin-top: 4px;
+        > small {
+            padding: 8px 0;
+            font-style: italic;
+            font-size: @ms-story-font-size-caption;
+        }
+    }
+
+    .ms-media-credits {
+        text-align: right;
+        > small {
+            display: inline-block;
+            margin: 4px 0;
+            padding: 4px;
+            color: contrast(@ms-story-bg);
+            background-color: fade(@ms-story-bg, 75%);
+            .shadow-soft();
+            font-size: @ms-story-font-size-caption;
         }
     }
 
@@ -955,7 +1114,8 @@
             }
 
             // foreground guidelines color for container size
-            &.ms-section-title {
+            &.ms-section-title,
+            &.ms-section-banner {
                 > .ms-content-toolbar {
                     border-top: 2px solid @ms-story-bg-guidelines;
                 }
@@ -1036,9 +1196,12 @@
     height: 100%;
     padding: 4px;
     background-color: rgba(0, 0, 0, 0.25);
-    & > * {
+    & > *:not(button) {
         background-color: @ms-story-bg;
-    } 
+        position: relative;
+        width: 100%;
+        height: 100%;
+    }
 }
 
 .ms-custom-theme-picker-field {
@@ -1125,4 +1288,29 @@
     right: unset;
     bottom: 50px;
     left: 10px;
+}
+.ms-media-video {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+.ms-video {
+    .audio_only_div {
+        display: none;
+    }
+}
+
+.ms-font-select {
+    display: flex;
+    align-items: center;
+    margin: 4px 0;
+    min-height: @square-btn-medium-size;
+    & > div {
+        position: relative;
+        align-items: center;
+        flex: 1;
+        word-break: break-word;
+        padding: 0 4px;
+    }
 }

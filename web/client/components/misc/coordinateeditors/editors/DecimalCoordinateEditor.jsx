@@ -23,7 +23,8 @@ class DecimalCoordinateEditor extends React.Component {
         format: PropTypes.string,
         coordinate: PropTypes.string,
         onChange: PropTypes.func,
-        onKeyDown: PropTypes.func
+        onKeyDown: PropTypes.func,
+        onSubmit: PropTypes.func
     };
     static defaultProps = {
         format: "decimal",
@@ -65,7 +66,6 @@ class DecimalCoordinateEditor extends React.Component {
                     }}
                     onKeyDown={(event) => {
                         this.verifyOnKeyDownEvent(event);
-                        this.props.onKeyDown(event);
                     }}
                     step={1}
                     type="number"/>
@@ -82,7 +82,12 @@ class DecimalCoordinateEditor extends React.Component {
         if (event.keyCode === 69) {
             event.preventDefault();
         }
-    }
+        if (event.keyCode === 13) {
+            event.preventDefault();
+            event.stopPropagation();
+            this.props.onKeyDown();
+        }
+    };
 
     validateDecimalLon = (longitude) => {
         const min = this.props.constraints[this.props.format].lon.min;
@@ -93,7 +98,7 @@ class DecimalCoordinateEditor extends React.Component {
             return "error";
         }
         return null; // "success"
-    }
+    };
     validateDecimalLat = (latitude) => {
         const min = this.props.constraints[this.props.format].lat.min;
         const max = this.props.constraints[this.props.format].lat.max;

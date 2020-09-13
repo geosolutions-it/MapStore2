@@ -20,7 +20,7 @@
         <artifactId>commons-io</artifactId>
         <version>2.1</version>
     </dependency>
-    
+
     <!-- Spring -->
     <!-- https://mvnrepository.com/artifact/org.springframework/spring-webmvc -->
     <dependency>
@@ -75,6 +75,12 @@
         <artifactId>json-lib</artifactId>
         <version>2.4</version>
         <classifier>jdk15</classifier>
+    </dependency>
+    <!-- json-patch -->
+    <dependency>
+        <groupId>com.github.java-json-tools</groupId>
+        <artifactId>json-patch</artifactId>
+        <version>1.12</version>
     </dependency>
 
   </dependencies>
@@ -147,7 +153,7 @@
         <repository>
             <id>osgeo</id>
             <name>Open Source Geospatial Foundation Repository</name>
-            <url>http://download.osgeo.org/webdav/geotools/</url>
+            <url>https://repo.osgeo.org/repository/release/</url>
             <snapshots>
                 <enabled>true</enabled>
             </snapshots>

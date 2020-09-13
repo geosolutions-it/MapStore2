@@ -11,6 +11,7 @@ const Joyride = require('react-joyride').default;
 const I18N = require('../I18N/I18N');
 const assign = require('object-assign');
 const {head} = require('lodash');
+const Portal = require('../misc/Portal');
 
 require('react-joyride/lib/react-joyride-compiled.css');
 require('./style/tutorial.css');
@@ -45,35 +46,36 @@ const defaultIntroStyle = {
 
 class Tutorial extends React.Component {
     static propTypes = {
-        toggle: PropTypes.bool,
-        status: PropTypes.string,
-        preset: PropTypes.string,
-        presetList: PropTypes.object,
+        actions: PropTypes.object,
+        allowClicksThruHole: PropTypes.bool,
+        autoStart: PropTypes.bool,
+        defaultStep: PropTypes.object,
+        disableOverlay: PropTypes.bool,
+        holePadding: PropTypes.number,
         intro: PropTypes.bool,
         introPosition: PropTypes.number,
-        showCheckbox: PropTypes.bool,
-        defaultStep: PropTypes.object,
         introStyle: PropTypes.object,
-        tourAction: PropTypes.string,
-        stepIndex: PropTypes.number,
-        steps: PropTypes.array,
-        run: PropTypes.bool,
-        autoStart: PropTypes.bool,
         keyboardNavigation: PropTypes.bool,
+        preset: PropTypes.string,
+        presetList: PropTypes.object,
+        run: PropTypes.bool,
         resizeDebounce: PropTypes.bool,
         resizeDebounceDelay: PropTypes.number,
-        holePadding: PropTypes.number,
+        scrollIntoViewOptions: PropTypes.bool,
         scrollOffset: PropTypes.number,
-        scrollToSteps: PropTypes.bool,
         scrollToFirstStep: PropTypes.bool,
+        scrollToSteps: PropTypes.bool,
         showBackButton: PropTypes.bool,
+        showCheckbox: PropTypes.bool,
         showOverlay: PropTypes.bool,
-        allowClicksThruHole: PropTypes.bool,
         showSkipButton: PropTypes.bool,
         showStepsProgress: PropTypes.bool,
+        status: PropTypes.string,
+        steps: PropTypes.array,
+        stepIndex: PropTypes.number,
+        toggle: PropTypes.bool,
         tooltipOffset: PropTypes.number,
-        disableOverlay: PropTypes.bool,
-        actions: PropTypes.object
+        tourAction: PropTypes.string
     };
 
     static defaultProps = {
@@ -116,6 +118,9 @@ class Tutorial extends React.Component {
             onDisable: () => {},
             onReset: () => {},
             onClose: () => {}
+        },
+        scrollIntoViewOptions: {
+            block: "end"
         }
     };
 
@@ -166,6 +171,7 @@ class Tutorial extends React.Component {
 
     onTour = (tour) => {
         if (this.props.steps.length > 0 && tour && tour.type) {
+            document.querySelector(tour?.step?.selector)?.scrollIntoView(this.props.scrollIntoViewOptions);
             const type = tour.type.split(':');
             if (type[0] !== 'tooltip' && type[1] === 'before'
             || tour.action === 'start'
@@ -217,10 +223,12 @@ class Tutorial extends React.Component {
             joy = <div className="tutorial-joyride-placeholder" />;
         }
         return (
-            <div>
-                {joy}
-                <div id="intro-tutorial" className="tutorial-presentation-position" style={{top: this.props.introPosition}}></div>
-            </div>
+            <Portal>
+                <div>
+                    {joy}
+                    <div id="intro-tutorial" className="tutorial-presentation-position" style={{top: this.props.introPosition}}></div>
+                </div>
+            </Portal>
 
         );
     }

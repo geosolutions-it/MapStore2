@@ -135,6 +135,82 @@ export default class BackgroundDialog extends React.Component {
             </div>
         ) : null;
     }
+    renderSpecificTypeForm() {
+        if (this.props.layer.type === "wms") {
+            return (<React.Fragment>
+                <FormGroup controlId="formControlsSelect">
+                    <ControlLabel><Message msgId="layerProperties.format" /></ControlLabel>
+                    <Select
+                        onChange={event => this.setState({ format: event && event.value })}
+                        value={this.state.format || this.props.defaultFormat}
+                        clearable
+                        options={this.props.formatOptions}
+                    />
+                </FormGroup>
+                {this.renderStyleSelector()}
+                <Button>
+                    <div style={{ display: 'flex', alignItems: 'center' }}>
+                        <ControlLabel style={{ flex: 1 }}><Message msgId="backgroundDialog.additionalParameters" /></ControlLabel>
+                        <Button
+                            className="square-button-md"
+                            tooltipId="backgroundDialog.addAdditionalParameterTooltip"
+                            style={{ borderColor: 'transparent' }}
+                            onClick={() => {
+                                const cnt = Math.max(...(this.state.additionalParameters.length > 0 ?
+                                    this.state.additionalParameters.map(p => p.id) : [-1])) + 1;
+                                this.setState({
+                                    additionalParameters:
+                                        [...this.state.additionalParameters, { id: cnt, type: 'string', param: '', val: '' }]
+                                });
+                            }}>
+                            <Glyphicon glyph="plus" />
+                        </Button>
+                    </div>
+                    {this.state.additionalParameters.map((val) => (<div key={'val:' + val.id} style={{ display: 'flex', marginTop: 8 }}>
+                        <div style={{ display: 'flex', flex: 1, marginRight: 8 }}>
+                            <FormControl
+                                style={{ width: '50%', marginRight: 8, minWidth: 0 }}
+                                placeholder={LocaleUtils.getMessageById(this.context.messages, "backgroundDialog.parameter")}
+                                value={val.param}
+                                onChange={e => this.addAdditionalParameter(e.target.value, 'param', val.id, val.type)} />
+                            {val.type === 'boolean' ?
+                                <div style={{ width: '50%' }}>
+                                    <Select
+                                        onChange={e => this.addAdditionalParameter(e.value, 'val', val.id, val.type)}
+                                        clearable={false}
+                                        value={val.val}
+                                        options={this.props.booleanOptions} />
+                                </div> :
+                                <FormControl
+                                    style={{ width: '50%', minWidth: 0 }}
+                                    placeholder={LocaleUtils.getMessageById(this.context.messages, "backgroundDialog.value")}
+                                    value={val.val.toString()}
+                                    onChange={e => this.addAdditionalParameter(e.target.value, 'val', val.id, val.type)} />}
+                        </div>
+                        <Select
+                            style={{ flex: 1, width: 90 }}
+                            onChange={event => this.addAdditionalParameter(val.val, 'val', val.id, event.value)}
+                            clearable={false}
+                            value={val.type}
+                            options={this.props.parameterTypeOptions.map(({ label, ...other }) => ({
+                                ...other,
+                                label: LocaleUtils.getMessageById(this.context.messages, label)
+                            }))} />
+                        <Button
+                            onClick={() => this.setState({
+                                additionalParameters: this.state.additionalParameters.filter((aa) => val.id !== aa.id)
+                            })}
+                            tooltipId="backgroundDialog.removeAdditionalParameterTooltip"
+                            className="square-button-md"
+                            style={{ borderColor: 'transparent' }}>
+                            <Glyphicon glyph="trash" />
+                        </Button>
+                    </div>))}
+                </Button>
+            </React.Fragment>);
+        }
+        return null;
+    }
 
     render() {
         return (<ResizableModal
@@ -186,73 +262,7 @@ export default class BackgroundDialog extends React.Component {
                         placeholder={LocaleUtils.getMessageById(this.context.messages, "backgroundDialog.titlePlaceholder")}
                         onChange={event => this.setState({title: event.target.value})}/>
                 </FormGroup>
-                <FormGroup controlId="formControlsSelect">
-                    <ControlLabel><Message msgId="layerProperties.format"/></ControlLabel>
-                    <Select
-                        onChange={event => this.setState({format: event && event.value})}
-                        value={this.state.format || this.props.defaultFormat}
-                        clearable
-                        options={this.props.formatOptions}
-                    />
-                </FormGroup>
-                {this.renderStyleSelector()}
-                <FormGroup>
-                    <div style={{display: 'flex', alignItems: 'center'}}>
-                        <ControlLabel style={{flex: 1}}><Message msgId="backgroundDialog.additionalParameters"/></ControlLabel>
-                        <Button
-                            className="square-button-md"
-                            tooltipId="backgroundDialog.addAdditionalParameterTooltip"
-                            style={{borderColor: 'transparent'}}
-                            onClick={() => {
-                                const cnt = Math.max(...(this.state.additionalParameters.length > 0 ?
-                                    this.state.additionalParameters.map(p => p.id) : [-1])) + 1;
-                                this.setState({additionalParameters:
-                                    [...this.state.additionalParameters, {id: cnt, type: 'string', param: '', val: ''}]});
-                            }}>
-                            <Glyphicon glyph="plus"/>
-                        </Button>
-                    </div>
-                    {this.state.additionalParameters.map((val) => (<div key={'val:' + val.id} style={{display: 'flex', marginTop: 8}}>
-                        <div style={{display: 'flex', flex: 1, marginRight: 8}}>
-                            <FormControl
-                                style={{width: '50%', marginRight: 8, minWidth: 0}}
-                                placeholder={LocaleUtils.getMessageById(this.context.messages, "backgroundDialog.parameter")}
-                                value={val.param}
-                                onChange={e => this.addAdditionalParameter(e.target.value, 'param', val.id, val.type)}/>
-                            {val.type === 'boolean' ?
-                                <div style={{width: '50%'}}>
-                                    <Select
-                                        onChange={e => this.addAdditionalParameter(e.value, 'val', val.id, val.type)}
-                                        clearable={false}
-                                        value={val.val}
-                                        options={this.props.booleanOptions}/>
-                                </div> :
-                                <FormControl
-                                    style={{width: '50%', minWidth: 0}}
-                                    placeholder={LocaleUtils.getMessageById(this.context.messages, "backgroundDialog.value")}
-                                    value = {val.val.toString()}
-                                    onChange={e => this.addAdditionalParameter(e.target.value, 'val', val.id, val.type)}/>}
-                        </div>
-                        <Select
-                            style={{flex: 1, width: 90}}
-                            onChange={event => this.addAdditionalParameter(val.val, 'val', val.id, event.value)}
-                            clearable={false}
-                            value={val.type}
-                            options={this.props.parameterTypeOptions.map(({label, ...other}) => ({
-                                ...other,
-                                label: LocaleUtils.getMessageById(this.context.messages, label)
-                            }))}/>
-                        <Button
-                            onClick={() => this.setState({
-                                additionalParameters: this.state.additionalParameters.filter((aa) => val.id !== aa.id)
-                            })}
-                            tooltipId="backgroundDialog.removeAdditionalParameterTooltip"
-                            className="square-button-md"
-                            style={{borderColor: 'transparent'}}>
-                            <Glyphicon glyph="trash"/>
-                        </Button>
-                    </div>))}
-                </FormGroup>
+                {this.renderSpecificTypeForm()}
             </Form>}
         </ResizableModal>);
     }

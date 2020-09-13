@@ -13,6 +13,7 @@ const {isOpenlayers} = require('./maptype');
 const {isMapInfoOpen} = require('./mapInfo');
 const {head, get} = require('lodash');
 const assign = require('object-assign');
+const { getConfigProp } = require('../utils/ConfigUtils');
 
 const annotationsLayerSelector = createSelector([
     layersSelector
@@ -29,6 +30,7 @@ const showUnsavedGeometryModalSelector = (state) => get(state, "annotations.show
 const showDeleteFeatureModalSelector = (state) => get(state, "annotations.showDeleteFeatureModal", false);
 const closingSelector = (state) => !!get(state, "annotations.closing");
 const editingSelector = (state) => get(state, "annotations.editing");
+const editGeometrySelector = (state) => get(state, "annotations.editGeometry", true);
 const featureTypeSelector = (state) => get(state, "annotations.featureType");
 const coordinateEditorEnabledSelector = (state) => get(state, "annotations.coordinateEditorEnabled");
 const drawingSelector = (state) => !!get(state, "annotations.drawing");
@@ -46,13 +48,16 @@ const configSelector = (state) => get(state, "annotations.config", {});
 const symbolListSelector = (state) => get(state, "annotations.symbolList", []);
 const symbolErrorsSelector = (state) => get(state, "annotations.symbolErrors", []);
 const modeSelector = (state) => editingSelector(state) && 'editing' || annotationsLayerSelector(state) && currentSelector(state) && 'detail' || 'list';
+const defaultStylesSelector = state => state.annotations.defaultStyles;
+const loadingSelector = state => state.annotations.loading;
 
 const annotationsInfoSelector = (state) => (assign({}, {
     symbolErrors: symbolErrorsSelector(state),
     showEdit: isOpenlayers(state),
+    canEdit: editGeometrySelector(state),
     mouseHoverEvents: isMapInfoOpen(state),
     closing: closingSelector(state),
-    format: formatSelector(state),
+    format: formatSelector(state) || getConfigProp("defaultCoordinateFormat"),
     aeronauticalOptions: aeronauticalOptionsSelector(state),
     config: configSelector(state),
     drawing: drawingSelector(state),
@@ -100,7 +105,10 @@ const annotationsListSelector = createSelector([
     annotations: layer && layer.features || [],
     current: annotations.current || null,
     editing: info.editing,
-    filter: annotations.filter || ''
+    selected: info.selected,
+    filter: annotations.filter || '',
+    defaultStyles: annotations.defaultStyles,
+    loading: annotations.loading
 }, info.config ? {
     config: info.config
 } : { })));
@@ -140,5 +148,8 @@ module.exports = {
     formatSelector,
     errorsSelector,
     configSelector,
-    symbolListSelector
+    symbolListSelector,
+    defaultStylesSelector,
+    loadingSelector,
+    editGeometrySelector
 };

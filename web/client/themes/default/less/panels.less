@@ -9,6 +9,7 @@
             > div {
                 pointer-events: auto;
                 position: absolute !important;
+                transition: none !important; // See if it can be changes
             }
         }
     }
@@ -205,10 +206,16 @@
     }
 }
 
-#mapstore-print-panel, #measure-dialog, #mapstore-about, #share-panel-dialog {
+#mapstore-print-panel, #measure-dialog, #mapstore-about, #share-panel-dialog, #bookmark-panel-dialog {
     position: fixed;
     top: 0%;
     left: 20%;
+}
+
+
+#mapstore-about .modal-body {
+    max-height: ~"calc(100vh - 100px)";
+    overflow-y: auto;
 }
 
 #share-panel-dialog-modal {

@@ -113,6 +113,7 @@ export const getTextStyle = (style = {}, stroke = null, fill = null, feature) =>
     return isTextStyle(style) ? new Text({
         fill,
         offsetY: style.offsetY || -( 4 * Math.sqrt(style.fontSize)), // TODO improve this for high font values > 100px
+        rotation: style.textRotationDeg ? style.textRotationDeg / 180 * Math.PI : 0,
         textAlign: style.textAlign || "center",
         text: style.label || feature && feature.properties && feature.properties.valueText || "New",
         font: style.font || "Arial",
@@ -316,6 +317,9 @@ export const getStyle = (options, isDrawing = false, textValues = []) => {
             return getStyleParser(options.style.format).readStyle(response.data)
                 .then(style => olStyleParser.writeStyle(style));
         });
+    }
+    if (options.style && options.style.format === 'geostyler') {
+        return olStyleParser.writeStyle(options.style.styleObj);
     }
     const style = getStyleLegacy(options, isDrawing, textValues);
     if (options.asPromise) {

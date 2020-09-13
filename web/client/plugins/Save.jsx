@@ -20,6 +20,12 @@ import SaveBaseDialog from './maps/MapSave';
 
 const showMapSaveSelector = state => state.controls && state.controls.mapSave && state.controls.mapSave.enabled;
 
+/**
+ * Plugin for Save Map.Allows to re-save an existing map (using the persistence API). Note: creation of new Map is implemented by plugins.SaveAs
+ * @prop {boolean} [cfg.disablePermission=false] disable the permission selector in the tool. Can be used in context when permissions are not needed (resources are private only/using plugin with another API)
+ * @name Save
+ * @memberof plugins
+ */
 export default createPlugin('Save', {
     component: compose(
         connect(createSelector(

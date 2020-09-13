@@ -35,7 +35,6 @@ const scrollToHandler = (id, scrollTo) => (evt) => {
     scrollTo(id);
 };
 
-
 /**
  * Renders icon for the Section or content provided
  * @prop {object} props passed to this icon
@@ -48,6 +47,7 @@ const Icon = ({ type, src, thumbnail } = {}) => {
         text: 'sheet',
         image: 'picture',
         title: 'story-title-section',
+        banner: 'story-banner-section',
         paragraph: 'story-paragraph-section',
         immersive: 'story-immersive-section',
         media: 'story-media-section',
@@ -55,9 +55,10 @@ const Icon = ({ type, src, thumbnail } = {}) => {
         columnleft: 'align-left',
         columnright: 'align-right',
         columncenter: 'align-center',
-        webPage: 'story-webpage-section'
+        webPage: 'story-webpage-section',
+        video: 'play'
     };
-    const imgSrc = src || thumbnail;
+    const imgSrc = thumbnail || type === 'image' && src;
     return imgSrc ? <img src={imgSrc}/> : <Glyphicon glyph={glyphs[type] || 'picture'} />;
 };
 const ConnectedIcon = compose(

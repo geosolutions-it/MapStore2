@@ -106,7 +106,7 @@ class CreateNewMap extends React.Component {
                                 </Button>
                             }
                             {this.props.showNewDashboard ?
-                                <Button tooltipId="resources.dashboards.newDashboard" className="square-button" bsStyle="primary" onClick={() => { this.context.router.history.push("/dashboard/"); }}>
+                                <Button tooltipId="resources.dashboards.newDashboard" className="square-button" bsStyle="primary" onClick={() => { this.context.router.history.push("/dashboard"); }}>
                                     <Glyphicon glyph="add-dashboard" />
                                 </Button>
                                 : null}

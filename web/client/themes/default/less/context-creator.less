@@ -16,16 +16,25 @@
 }
 
 .configure-plugins-step-upload {
-    .alert-info {
+    .dropzone {
+        color: #31708f;
+        transition: 0.3s;
+        &:hover {
+            transform: scale(1.05);
+        }
         border-width: 1px;
         height: 200px;
-        width: 800px;
+        width: 400px;
         margin: auto;
         border-color: #ccc;
         border-radius: 3px;
         background-color: white;
+        .shadow-soft;
         cursor: pointer;
         font-size: 16px;
+    }
+    .active {
+        transform: scale(1.05);
     }
     .title-header {
         background-color: #078aa3;
@@ -40,8 +49,11 @@
             float: right;
         }
     }
+    .uploads-list {
+        margin-top: 15px;
+    }
     .uploading-file {
-        width: 800px;
+        width: 500px;
         margin: auto;
         height: 60px;
         padding: 20px;
@@ -62,6 +74,10 @@
         }
         .upload-error {
             float: right;
+        }
+        .upload-remove {
+            float: right;
+            cursor: pointer;
         }
     }
     height: 100%;
@@ -128,6 +144,19 @@
                 font-size: @square-btn-size;
                 margin: auto;
                 color: white;
+            }
+        }
+
+        .configure-map-templates-formaticon {
+            display: flex;
+            padding-left: 8px;
+            line-height: 30px;
+            margin-bottom: 10px;
+            font-size: 11px;
+
+            .glyphicon {
+                font-size: 22px;
+                margin-right: 2px;
             }
         }
     }

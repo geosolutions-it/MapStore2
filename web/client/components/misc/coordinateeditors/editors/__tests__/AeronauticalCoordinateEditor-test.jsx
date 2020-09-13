@@ -28,6 +28,15 @@ describe('AeronauticalCoordinateEditor enhancer', () => {
         const elements = container.querySelectorAll('input');
         expect(elements.length).toBe(3);
     });
+    it('AeronauticalCoordinateEditor rendering from annotation viewer with defaults', () => {
+        ReactDOM.render(<AeronauticalCoordinateEditor/>, document.getElementById("container"));
+        const container = document.getElementById('container');
+        const elements = container.querySelectorAll('input');
+        expect(elements.length).toBe(3);
+        expect(elements[0].disabled).toBe(false);
+        expect(elements[1].disabled).toBe(false);
+        expect(elements[2].disabled).toBe(false);
+    });
     it('AeronauticalCoordinateEditor rendering with 13.3333333333', () => {
         ReactDOM.render(<AeronauticalCoordinateEditor value={13.3333333333} />, document.getElementById("container"));
         const container = document.getElementById('container');
@@ -75,5 +84,24 @@ describe('AeronauticalCoordinateEditor enhancer', () => {
         expect(elements[0].value).toBe('180');
         expect(elements[1].value).toBe('0');
         expect(elements[2].value).toBe('0');
+    });
+    it('Test AeronauticalCoordinateEditor onKeyDown with enter ', () => {
+        ReactDOM.render( <AeronauticalCoordinateEditor coordinate="lon" value={10} />, document.getElementById("container"));
+        const container = document.getElementById('container');
+        const elements = container.querySelectorAll('input');
+        expect(elements.length).toBe(3);
+        expect(elements[0].value).toBe('10');
+        expect(elements[1].value).toBe('0');
+        expect(elements[2].value).toBe('0');
+
+        ReactTestUtils.Simulate.keyDown(elements[0], {
+            keyCode: 13,
+            preventDefault: () => {
+                expect(true).toBe(true);
+            },
+            stopPropagation: () => {
+                expect(true).toBe(true);
+            }
+        });
     });
 });

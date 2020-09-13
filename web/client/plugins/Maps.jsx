@@ -5,33 +5,40 @@
 * This source code is licensed under the BSD-style license found in the
 * LICENSE file in the root directory of this source tree.
 */
-const React = require('react');
-const PropTypes = require('prop-types');
-const assign = require('object-assign');
-const {connect} = require('react-redux');
-const { compose } = require('recompose');
-const ConfigUtils = require('../utils/ConfigUtils');
-const Message = require("../components/I18N/Message");
 
-const maptypeEpics = require('../epics/maptype');
-const mapsEpics = require('../epics/maps');
-const {mapTypeSelector} = require('../selectors/maptype');
-const {userRoleSelector} = require('../selectors/security');
-const { totalCountSelector } = require('../selectors/maps');
-const { isFeaturedMapsEnabled } = require('../selectors/featuredmaps');
-const emptyState = require('../components/misc/enhancers/emptyState');
-const {createSelector} = require('reselect');
+import React from 'react';
+import PropTypes from 'prop-types';
+import assign from 'object-assign';
+import {connect} from 'react-redux';
+import { compose } from 'recompose';
+import ConfigUtils from '../utils/ConfigUtils';
+import Message from "../components/I18N/Message";
 
-const MapsGrid = require('./maps/MapsGrid');
-const MetadataModal = require('./maps/MetadataModal');
-const EmptyMaps = require('./maps/EmptyMaps').default;
+import * as maptypeEpics from '../epics/maptype';
+import * as mapsEpics from '../epics/maps';
+import {mapTypeSelector} from '../selectors/maptype';
+import {userRoleSelector} from '../selectors/security';
+import {versionSelector} from '../selectors/version';
+import { totalCountSelector } from '../selectors/maps';
+import { isFeaturedMapsEnabled } from '../selectors/featuredmaps';
+import emptyState from '../components/misc/enhancers/emptyState';
+import {createSelector} from 'reselect';
 
-const {loadMaps, setShowMapDetails} = require('../actions/maps');
+import MapsGrid from './maps/MapsGrid';
+import PaginationToolbarBase from '../components/misc/PaginationToolbar';
+
+import EmptyMaps from './maps/EmptyMaps';
+
+import {loadMaps, setShowMapDetails} from '../actions/maps';
+
+import mapsReducer from '../reducers/maps';
+import maptype from '../reducers/maptype';
 
 const mapsCountSelector = createSelector(
     totalCountSelector,
     count => ({ count })
 );
+
 
 const PaginationToolbar = connect((state) => {
     if (!state.maps ) {
@@ -58,7 +65,7 @@ const PaginationToolbar = connect((state) => {
             dispatchProps.onSelect(ConfigUtils.getDefaults().geoStoreUrl, stateProps.searchText, {start, limit});
         }
     };
-})(require('../components/misc/PaginationToolbar'));
+})(PaginationToolbarBase);
 
 /**
  * Plugin for Maps resources
@@ -78,7 +85,9 @@ class Maps extends React.Component {
         searchText: PropTypes.string,
         mapsOptions: PropTypes.object,
         colProps: PropTypes.object,
-        fluid: PropTypes.bool
+        version: PropTypes.string,
+        fluid: PropTypes.bool,
+        showAPIShare: PropTypes.bool
     };
 
     static contextTypes = {
@@ -100,12 +109,13 @@ class Maps extends React.Component {
             md: 4,
             className: 'ms-map-card-col'
         },
-        maps: []
+        maps: [],
+        showAPIShare: true
     };
 
     render() {
         return (<MapsGrid
-            maps={this.props.maps}
+            resources={this.props.maps}
             fluid={this.props.fluid}
             title={this.props.title}
             colProps={this.props.colProps}
@@ -117,9 +127,9 @@ class Maps extends React.Component {
                 }
             }}
             getShareUrl={(map) => map.contextName ? `context/${map.contextName}/${map.id}` : `viewer/${this.props.mapType}/${map.id}`}
-            shareApi
+            shareApi={this.props.showAPIShare}
+            version={this.props.version}
             bottom={<PaginationToolbar />}
-            metadataModal={MetadataModal}
         />);
     }
 }
@@ -130,10 +140,12 @@ const mapsPluginSelector = createSelector([
     state => state.maps && state.maps.results ? state.maps.results : [],
     state => state.maps && state.maps.loading,
     isFeaturedMapsEnabled,
-    userRoleSelector
-], (mapType, searchText, maps, loading, featuredEnabled, role) => ({
+    userRoleSelector,
+    versionSelector
+], (mapType, searchText, maps, loading, featuredEnabled, role, version) => ({
     mapType,
     searchText,
+    version,
     maps: maps.map(map => ({...map, featuredEnabled: featuredEnabled && role === 'ADMIN'})),
     loading
 }));
@@ -152,7 +164,7 @@ const MapsPlugin = compose(
     )
 )(Maps);
 
-module.exports = {
+export default {
     MapsPlugin: assign(MapsPlugin, {
         NavMenu: {
             position: 2,
@@ -175,8 +187,7 @@ module.exports = {
         ...mapsEpics
     },
     reducers: {
-        maps: require('../reducers/maps'),
-        maptype: require('../reducers/maptype'),
-        currentMap: require('../reducers/currentMap')
+        maps: mapsReducer,
+        maptype
     }
 };

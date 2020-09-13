@@ -1,4 +1,4 @@
-const {isNil, get, head} = require('lodash');
+const {isNil, get, head, isArray, findIndex} = require('lodash');
 
 /**
  * Selects the featureType name of the query filterObject
@@ -73,7 +73,8 @@ module.exports = {
         const spatialField = get(state, 'query.filterObj.spatialField');
         const filterFields = get(state, 'query.filterObj.filterFields');
         return !!(filterFields && head(filterFields)
-        || spatialField && spatialField.method && spatialField.operation && spatialField.geometry
+        || spatialField && (spatialField.method && spatialField.operation && spatialField.geometry ||
+            isArray(spatialField) && findIndex(spatialField, field => field.method && field.operation && field.geometry) > -1)
         || crossLayerFilter && crossLayerFilter.collectGeometries && crossLayerFilter.operation);
     }
 };

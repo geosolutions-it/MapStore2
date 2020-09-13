@@ -77,7 +77,7 @@ describe("test the MeasureDialog", () => {
         expect(mc).toExist();
         const dom = ReactDOM.findDOMNode(mc);
         const btnGroups = dom.getElementsByClassName('btn-group');
-        expect(btnGroups.length).toBe(2);
+        expect(btnGroups.length).toBe(3);
 
         const dialog = document.getElementById('measure-dialog');
         expect(dialog).toNotExist();
@@ -117,7 +117,7 @@ describe("test the MeasureDialog", () => {
         expect(mc).toExist();
         const dom = ReactDOM.findDOMNode(mc);
         const btnGroups = dom.getElementsByClassName('btn-group');
-        expect(btnGroups.length).toBe(2);
+        expect(btnGroups.length).toBe(3);
 
         const dialog = document.getElementById('measure-dialog');
         expect(dialog).toNotExist();
@@ -127,6 +127,47 @@ describe("test the MeasureDialog", () => {
         expect(spyInit.calls.length).toBe(1);
         expect(spyInit).toHaveBeenCalledWith(defaultOptions);
     });
+
+    it('test render as modal with Bearing as default tool', () => {
+        let measurement = {};
+        const handlers = {
+            onMount: () => {},
+            onInit: () => {},
+            toggleMeasure: () => {}
+        };
+        let spyMount = expect.spyOn(handlers, "onMount");
+        let spyInit = expect.spyOn(handlers, "onInit");
+        let spyToggleMeasure = expect.spyOn(handlers, "toggleMeasure");
+
+        const defaultOptions = {
+            showAddAsAnnotation: true,
+            geomType: "Bearing",
+            bearingMeasureEnabled: true,
+            trueBearing: { measureTrueBearing: true, fractionDigits: 0}
+        };
+        const mc = ReactDOM.render(
+            <MeasureDialog
+                show
+                showCoordinateEditor={false}
+                defaultOptions={defaultOptions}
+                onMount={handlers.onMount}
+                onInit={handlers.onInit}
+                toggleMeasure={handlers.toggleMeasure}
+                measurement={measurement}/>, document.getElementById("container"));
+        expect(mc).toExist();
+        const dom = ReactDOM.findDOMNode(mc);
+        const btnGroups = dom.getElementsByClassName('btn-group');
+        expect(btnGroups.length).toBe(3);
+
+        const dialog = document.getElementById('measure-dialog');
+        expect(dialog).toExist();
+        expect(spyMount.calls.length).toBe(1);
+        expect(spyToggleMeasure.calls.length).toBe(1);
+        expect(spyToggleMeasure).toHaveBeenCalledWith({geomType: "Bearing"});
+        expect(spyInit.calls.length).toBe(1);
+        expect(spyInit).toHaveBeenCalledWith(defaultOptions);
+    });
+
     it('should trigger onInit if defaultOptions are updated', () => {
         const handler = {
             onInit: () => {}
@@ -148,5 +189,4 @@ describe("test the MeasureDialog", () => {
                 measurement={measurement}/>, document.getElementById("container"));
         expect(spyInit.calls.length).toBe(2);
     });
-
 });

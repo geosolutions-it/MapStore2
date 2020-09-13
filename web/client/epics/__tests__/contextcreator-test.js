@@ -17,7 +17,8 @@ import {
     uninstallPluginEpic,
     saveTemplateEpic,
     saveContextResource,
-    checkIfContextExists
+    checkIfContextExists,
+    editTemplateEpic
 } from '../contextcreator';
 import {
     editPlugin,
@@ -28,6 +29,8 @@ import {
     uploadPlugin,
     uninstallPlugin,
     saveTemplate,
+    saveNewContext,
+    editTemplate,
     SET_EDITED_PLUGIN,
     SET_EDITED_CFG,
     SET_CFG_ERROR,
@@ -42,9 +45,11 @@ import {
     SHOW_DIALOG,
     IS_VALID_CONTEXT_NAME,
     CONTEXT_NAME_CHECKED,
-    saveNewContext,
     LOAD_EXTENSIONS,
-    CONTEXT_SAVED
+    CONTEXT_SAVED,
+    SET_EDITED_TEMPLATE,
+    SET_PARSED_TEMPLATE,
+    SET_FILE_DROP_STATUS
 } from '../../actions/contextcreator';
 import {
     SHOW_NOTIFICATION
@@ -853,7 +858,6 @@ describe('contextcreator epics', () => {
             }
         }, done);
     });
-
     it('saveContextResource saves a context', (done) => {
         mockAxios.onPost().reply(200, "1");
         mockAxios.onGet().reply(200, {});
@@ -873,6 +877,53 @@ describe('contextcreator epics', () => {
                 }
             },
             map: {}
+        }, done);
+    });
+    it('editTemplateEpic with id', (done) => {
+        mockAxios.onGet().reply(200, 'data');
+        const startActions = [editTemplate(1)];
+        testEpic(editTemplateEpic, 6, startActions, actions => {
+            expect(actions.length).toBe(6);
+            expect(actions[0].type).toBe(LOADING);
+            expect(actions[1].type).toBe(SET_EDITED_TEMPLATE);
+            expect(actions[1].id).toBe(1);
+            expect(actions[2].type).toBe(SET_PARSED_TEMPLATE);
+            expect(actions[2].data).toBe('data');
+            expect(actions[2].format).toBe('json');
+            expect(actions[3].type).toBe(SET_FILE_DROP_STATUS);
+            expect(actions[3].status).toBe('accepted');
+            expect(actions[4].type).toBe(SHOW_DIALOG);
+            expect(actions[4].dialogName).toBe('uploadTemplate');
+            expect(actions[4].show).toBe(true);
+            expect(actions[5].type).toBe(LOADING);
+        }, {
+            contextcreator: {
+                newContext: {
+                    templates: [{
+                        id: 1,
+                        format: 'json'
+                    }]
+                }
+            }
+        }, done);
+    });
+    it('editTemplateEpic without id', (done) => {
+        const startActions = [editTemplate()];
+        testEpic(editTemplateEpic, 4, startActions, actions => {
+            expect(actions.length).toBe(4);
+            expect(actions[0].type).toBe(LOADING);
+            expect(actions[1].type).toBe(SET_EDITED_TEMPLATE);
+            expect(actions[1].id).toNotExist();
+            expect(actions[2].type).toBe(SHOW_DIALOG);
+            expect(actions[2].dialogName).toBe('uploadTemplate');
+            expect(actions[2].show).toBe(true);
+            expect(actions[3].type).toBe(LOADING);
+        }, {
+            contextcreator: {
+                newContext: {
+                    templates: []
+                }
+            }
         }, done);
     });
 });

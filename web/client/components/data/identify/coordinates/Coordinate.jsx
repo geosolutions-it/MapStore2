@@ -21,7 +21,7 @@ module.exports = ({
     coordinate = {},
     formatCoord,
     edit,
-    onChange = () => {},
+    onSubmit = () => {},
     onChangeFormat = () => {}
 }) =>
     edit ?
@@ -29,11 +29,11 @@ module.exports = ({
             removeVisible={false}
             formatCoord={formatCoord}
             coordinate={coordinate || {lat: "", lon: ""}}
-            onChange={onChange}
+            onSubmit={onSubmit}
             onChangeFormat={onChangeFormat}
         />)
         : (<Viewer
-            className="text-center"
+            className="coordinates-text"
             formatCoord={formatCoord}
             coordinate={coordinate || { lat: "", lon: "" }}
         />);

@@ -14,6 +14,8 @@ const Message = require('./locale/Message');
 const { onError, setLoading, setLayers, onSelectLayer, onLayerAdded, onLayerSkipped, updateBBox, onSuccess} = require('../actions/mapimport');
 const {zoomToExtent} = require('../actions/map');
 const {addLayer} = require('../actions/layers');
+const {loadAnnotations} = require('../actions/annotations');
+const {annotationsLayerSelector} = require('../selectors/annotations');
 const {toggleControl} = require('../actions/controls');
 
 const assign = require('object-assign');
@@ -47,7 +49,8 @@ module.exports = {
                     success: state.mapimport && state.mapimport.success || null,
                     errors: state.mapimport && state.mapimport.errors || null,
                     shapeStyle: state.style || {},
-                    mapType: mapTypeSelector(state)
+                    mapType: mapTypeSelector(state),
+                    annotationsLayer: annotationsLayerSelector(state)
                 }
             ), {
                 setLayers,
@@ -57,6 +60,7 @@ module.exports = {
                 onError,
                 onSuccess,
                 addLayer,
+                loadAnnotations,
                 onZoomSelected: zoomToExtent,
                 updateBBox,
                 setLoading,

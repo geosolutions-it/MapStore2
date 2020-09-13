@@ -124,6 +124,7 @@ describe('ConfigUtils', () => {
     });
     afterEach((done) => {
         document.body.innerHTML = '';
+        ConfigUtils.setConfigProp("configurationFolder", "");
         ConfigUtils.setLocalConfigurationFile("localConfig.json");
         setTimeout(done);
     });
@@ -210,6 +211,14 @@ describe('ConfigUtils', () => {
         expect(center.crs).toBe('EPSG:4326');
         expect(Math.round(center.x)).toBe(13);
         expect(Math.round(center.y)).toBe(39);
+    });
+
+    it('getConfigurationOptions uses configurationFolder as prefix of configuration files', () => {
+        ConfigUtils.setConfigProp("configurationFolder", "myfolder/");
+        const retval = ConfigUtils.getConfigurationOptions({});
+        expect(retval).toExist();
+        expect(retval.configUrl).toExist();
+        expect(retval.configUrl).toBe('myfolder/config.json');
     });
 
     it('getConfigurationOptions', () => {

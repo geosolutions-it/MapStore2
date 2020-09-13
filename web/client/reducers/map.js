@@ -10,13 +10,13 @@ var {CHANGE_MAP_VIEW, CHANGE_MOUSE_POINTER,
     CHANGE_ZOOM_LVL, CHANGE_MAP_CRS, CHANGE_MAP_SCALES, PAN_TO,
     CHANGE_MAP_STYLE, CHANGE_ROTATION, UPDATE_VERSION, ZOOM_TO_POINT,
     RESIZE_MAP, CHANGE_MAP_LIMITS, SET_MAP_RESOLUTIONS,
-    TOGGLE_UNSAVED_MAP_CHANGES_DIALOG} = require('../actions/map');
+    TOGGLE_UNSAVED_MAP_CHANGES_DIALOG, REGISTER_EVENT_LISTENER, UNREGISTER_EVENT_LISTENER} = require('../actions/map');
 
 var assign = require('object-assign');
 var MapUtils = require('../utils/MapUtils');
 var CoordinatesUtils = require('../utils/CoordinatesUtils');
 
-function mapConfig(state = null, action) {
+function mapConfig(state = {eventListeners: {}}, action) {
     switch (action.type) {
     case CHANGE_MAP_VIEW:
         const {type, ...params} = action;
@@ -112,6 +112,21 @@ function mapConfig(state = null, action) {
     }
     case TOGGLE_UNSAVED_MAP_CHANGES_DIALOG: {
         return assign({}, state, { showUnsavedMapChangesDialog: !(state && state.showUnsavedMapChangesDialog) });
+    }
+    case REGISTER_EVENT_LISTENER: {
+        return assign({}, state,
+            {eventListeners: assign({}, state.eventListeners || {},
+                {[action.eventName]: [...(state.eventListeners && state.eventListeners[action.eventName] || []), action.toolName]})});
+    }
+    case UNREGISTER_EVENT_LISTENER: {
+        let data = state;
+        if (state.eventListeners) {
+            const filteredEventNameTools = state.eventListeners[action.eventName].filter(tool => tool !== action.toolName) || [];
+            data = assign({}, state,
+                {eventListeners: assign({}, state.eventListeners,
+                    {[action.eventName]: filteredEventNameTools})});
+        }
+        return data;
     }
     default:
         return state;

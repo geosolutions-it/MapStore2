@@ -1,5 +1,6 @@
 web/client/dist/
 web/client/libs/Cesium
 web/client/libs/cesium-navigation
+web/client/test-resources/
 web/docs/
 web/client/mapstore/docs/

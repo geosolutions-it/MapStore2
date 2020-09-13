@@ -11,7 +11,7 @@ import {Observable} from 'rxjs';
 import { isEqual} from 'lodash';
 import uuidv1 from 'uuid/v1';
 import MapInfoViewer from '../MapInfoViewer';
-import {getFeatureInfo} from '../../../../epics/identify';
+import {getFeatureInfo} from '../../../../api/identify';
 
 import {
     getAvailableInfoFormatValues,
@@ -55,23 +55,23 @@ export const withIdentifyRequest  = mapPropsStream(props$ => {
                         point,
                         currentLocale: "en-US"});
                     const basePath = url;
-                    const requestParams = request;
+                    const queryParams = request;
                     const appParams = filterRequestParams(layer, includeOptions, excludeParams);
-                    const param = { ...appParams, ...requestParams };
+                    const param = { ...appParams, ...queryParams };
                     const reqId = uuidv1();
-                    return getFeatureInfo(basePath, param, false)
+                    return getFeatureInfo(basePath, param, layer)
                         .map((response) =>
                             response.data.exceptions
                                 ? ({
                                     reqId,
                                     exceptions: response.data.exceptions,
-                                    requestParams,
+                                    queryParams,
                                     layerMetadata: metadata
                                 })
                                 : ({
                                     data: response.data,
                                     reqId: reqId,
-                                    requestParams,
+                                    queryParams,
                                     layerMetadata: {
                                         ...metadata,
                                         features: response.features,
@@ -82,7 +82,7 @@ export const withIdentifyRequest  = mapPropsStream(props$ => {
                         .catch((e) => ({
                             error: e.data || e.statusText || e.status,
                             reqId,
-                            requestParams,
+                            queryParams,
                             layerMetadata: metadata
                         }))
                         .startWith(({
@@ -95,10 +95,10 @@ export const withIdentifyRequest  = mapPropsStream(props$ => {
                         const {reqId, request} = action;
                         return {requests: requests.concat({ reqId, request }), responses, validResponses};
                     }
-                    const {data, requestParams, layerMetadata} = action;
+                    const {data, queryParams, layerMetadata} = action;
                     const validator = getValidator(mapInfoFormat);
-                    const newResponses = responses.concat({response: data, requestParams, layerMetadata});
-                    const newValidResponses = validator.getValidResponses(newResponses);
+                    const newResponses = responses.concat({response: data, queryParams, layerMetadata});
+                    const newValidResponses = validator.getValidResponses(newResponses, true);
                     return {requests, validResponses: newValidResponses, responses: newResponses};
                 }, {requests: [], responses: [], validResponses: []});
         })
@@ -128,6 +128,7 @@ export const  withPopupSupport =  branch(({map: {mapInfoControl = false} = {}}) 
         withPropsOnChange(["mapInfo", "popups"], ({mapInfo, popups, options: {mapOptions: {mapInfoFormat = getDefaultInfoFormat()} = {}} = {}}) => {
             const {responses, requests, validResponses} = mapInfo;
             const component = () => (<MapInfoViewer
+                renderEmpty
                 responses={responses} requests={requests}
                 validResponses={validResponses}
                 format={mapInfoFormat} showEmptyMessageGFI missingResponses={(requests || []).length - (responses || []).length} />);

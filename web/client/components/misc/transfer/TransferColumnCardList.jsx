@@ -7,10 +7,12 @@
 */
 
 import React from 'react';
+import { Tooltip } from 'react-bootstrap';
 
 import SideCard from '../cardgrids/SideCard';
 import Toolbar from '../toolbar/Toolbar';
 import emptyState from '../enhancers/emptyState';
+import OverlayTrigger from '../OverlayTrigger';
 
 const TransferColumnCardList = ({
     items = [],
@@ -34,8 +36,8 @@ const TransferColumnCardList = ({
                 key={item.id || idx}
                 size={item.cardSize}
                 className={(item.className ? `${item.className} ` : ' ') + (idx === items.length - 1 ? 'ms2-transfer-lastcard' : '')}
-                selected={isSelected}
-                tools={item.tools && <Toolbar
+                selected={isSelected ?? item.selected}
+                tools={item.tools && item.tools.length > 0 ? <Toolbar
                     buttons={item.tools.map(tool => ({
                         ...tool,
                         className: 'square-button-md no-border',
@@ -45,9 +47,14 @@ const TransferColumnCardList = ({
                                 tool.onClick();
                             }
                         }
-                    }))}/>
+                    }))}/> : undefined
                 }
                 preview={item.preview}
+                description={item.showDescriptionTooltip && item.description ?
+                    <OverlayTrigger delayShow={item.descriptionTooltipDelay} placement="top" overlay={<Tooltip id={item.id}>{item.description}</Tooltip>}>
+                        <span>{item.description}</span>
+                    </OverlayTrigger> :
+                    item.description}
                 body={
                     <div className="ms2-transfer-body-container">
                         {item.component && <div

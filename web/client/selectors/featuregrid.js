@@ -13,6 +13,8 @@ const {currentLocaleSelector} = require('../selectors/locale');
 const {isSimpleGeomType} = require('../utils/MapUtils');
 const {toChangesMap} = require('../utils/FeatureGridUtils');
 const { layerDimensionSelectorCreator } = require('./dimension');
+const {userRoleSelector} = require('./security');
+const {isCesium} = require('./maptype');
 
 
 const getLayerById = getLayerFromId;
@@ -67,6 +69,9 @@ const hasChangesSelector = state => changesSelector(state) && changesSelector(st
 const hasNewFeaturesSelector = state => newFeaturesSelector(state) && newFeaturesSelector(state).length > 0;
 const getAttributeFilters = state => state && state.featuregrid && state.featuregrid.filters;
 const selectedLayerParamsSelector = state => get(getLayerById(state, selectedLayerIdSelector(state)), "params");
+const selectedLayerSelector = state => getLayerById(state, selectedLayerIdSelector(state));
+const editingAllowedRolesSelector = state => get(state, "featuregrid.editingAllowedRoles", ["ADMIN"]);
+const canEditSelector = state => state && state.featuregrid && state.featuregrid.canEdit;
 /**
  * selects featuregrid state
  * @name featuregrid
@@ -140,14 +145,14 @@ module.exports = {
     timeSyncActive: state => get(state, "featuregrid.timeSync", false),
     showPopoverSyncSelector: state => get(state, "featuregrid.showPopoverSync", true),
     isSavingSelector: state => state && state.featuregrid && state.featuregrid.saving,
-    editingAllowedRolesSelector: state => get(state, "featuregrid.editingAllowedRoles", ["ADMIN"]),
+    editingAllowedRolesSelector,
     isSavedSelector: state => state && state.featuregrid && state.featuregrid.saved,
     isDrawingSelector: state => state && state.featuregrid && state.featuregrid.drawing,
     geomTypeSelectedFeatureSelector,
     chartDisabledSelector,
     hasNewFeaturesOrChanges: state => hasNewFeaturesSelector(state) || hasChangesSelector(state),
     isSimpleGeomSelector: state => isSimpleGeomType(geomTypeSelectedFeatureSelector(state)),
-    canEditSelector: state => state && state.featuregrid && state.featuregrid.canEdit,
+    canEditSelector,
     /**
      * check if the feature geometry is supported for editing
      * @function
@@ -181,5 +186,13 @@ module.exports = {
             viewParams,
             cqlFilter
         };
-    }
+    },
+    isEditingAllowedSelector: state => {
+        const role = userRoleSelector(state);
+        const editingAllowedRoles = editingAllowedRolesSelector(state) || ['ADMIN'];
+        const canEdit = canEditSelector(state);
+
+        return (editingAllowedRoles.indexOf(role) !== -1 || canEdit) && !isCesium(state);
+    },
+    selectedLayerSelector
 };

@@ -9,11 +9,10 @@
 const React = require('react');
 const {createSelector} = require('reselect');
 
-const {creationError, changeMapView, clickOnMap} = require('../../actions/map');
+const {creationError, changeMapView, clickOnMap, mouseMove, mouseOut} = require('../../actions/map');
 const {removePopup} = require('../../actions/mapPopups');
 const {layerLoading, layerLoad, layerError} = require('../../actions/layers');
-const {changeMousePosition} = require('../../actions/mousePosition');
-const {changeMeasurementState, changeGeometry, resetGeometry, updateMeasures} = require('../../actions/measurement');
+const {changeMeasurementState, changeGeometry, resetGeometry, updateMeasures, setTextLabels} = require('../../actions/measurement');
 const {measurementSelector} = require('../../selectors/measurement');
 const {changeSelectionState} = require('../../actions/selection');
 const {changeLocateState, onLocateError} = require('../../actions/locate');
@@ -22,7 +21,7 @@ const {updateHighlighted} = require('../../actions/highlight');
 const {warning} = require('../../actions/notifications');
 const {connect} = require('react-redux');
 const assign = require('object-assign');
-const {projectionDefsSelector} = require('../../selectors/map');
+const {projectionDefsSelector, isMouseMoveActiveSelector} = require('../../selectors/map');
 
 const Empty = () => { return <span/>; };
 
@@ -32,19 +31,20 @@ module.exports = (mapType, actions) => {
 
     const LMap = connect((state) => ({
         projectionDefs: projectionDefsSelector(state),
-        mousePosition: state.mousePosition || {enabled: false}
+        mousePosition: isMouseMoveActiveSelector(state)
     }), assign({}, {
         onCreationError: creationError,
         onMapViewChanges: changeMapView,
         onClick: clickOnMap,
-        onMouseMove: changeMousePosition,
+        onMouseMove: mouseMove,
         onLayerLoading: layerLoading,
         onLayerLoad: layerLoad,
         onLayerError: layerError,
-        onWarning: warning
+        onWarning: warning,
+        onMouseOut: mouseOut
     }, actions), (stateProps, dispatchProps, ownProps) => {
         return assign({}, ownProps, stateProps, assign({}, dispatchProps, {
-            onMouseMove: stateProps.mousePosition.enabled ? dispatchProps.onMouseMove : () => {}
+            onMouseMove: stateProps.mousePosition ? dispatchProps.onMouseMove : () => {}
         }));
     })(components.LMap);
 
@@ -61,7 +61,8 @@ module.exports = (mapType, actions) => {
         changeMeasurementState,
         updateMeasures,
         resetGeometry,
-        changeGeometry
+        changeGeometry,
+        setTextLabels
     })(components.MeasurementSupport || Empty);
 
     const Locate = connect((state) => ({

@@ -17,7 +17,7 @@ import {mapOptionsToSaveSelector} from '../../selectors/mapsave';
 import handleSaveModal from '../../components/resources/modals/enhancers/handleSaveModal';
 import { userSelector } from '../../selectors/security';
 import {mapTypeSelector} from '../../selectors/maptype';
-import {textSearchConfigSelector} from '../../selectors/searchconfig';
+import {textSearchConfigSelector, bookmarkSearchConfigSelector} from '../../selectors/searchconfig';
 import {currentContextSelector, contextResourceSelector} from '../../selectors/context';
 import MapUtils from '../../utils/MapUtils';
 
@@ -30,19 +30,21 @@ const saveSelector = createSelector(
     backgroundListSelector,
     mapOptionsToSaveSelector,
     textSearchConfigSelector,
+    bookmarkSearchConfigSelector,
     mapSelector,
     mapTypeSelector,
     currentContextSelector,
     contextResourceSelector,
-    (user, loading, errors, layers, groups, backgrounds, additionalOptions, textSearchConfig, map, mapType, context, contextResource) =>
-        ({ user, loading, errors, layers, groups, backgrounds, additionalOptions, textSearchConfig, map, mapType, context, contextResource })
+    (user, loading, errors, layers, groups, backgrounds, additionalOptions, textSearchConfig, bookmarkSearchConfig, map, mapType, context, contextResource) =>
+        ({ user, loading, errors, layers, groups, backgrounds, additionalOptions, textSearchConfig, bookmarkSearchConfig, map, mapType, context, contextResource })
 );
 const SaveBaseDialog = compose(
     connect(saveSelector, {
         saveMap: saveMapResource
     }),
     withProps({
-        category: "MAP"
+        category: "MAP",
+        enableDetails: true
     }),
     getContext({
         router: PropTypes.object
@@ -52,9 +54,9 @@ const SaveBaseDialog = compose(
             onClose();
             onResetMapSaveError(); // reset errors when closing the modal
         },
-        onSave: ({map, layers, groups, backgrounds, textSearchConfig, additionalOptions, saveMap, isMapSaveAs, user, contextResource}) => resource => {
+        onSave: ({map, layers, groups, backgrounds, textSearchConfig, bookmarkSearchConfig, additionalOptions, saveMap, isMapSaveAs, user, contextResource}) => resource => {
             const mapData = MapUtils.saveMapConfiguration(map, layers, groups,
-                backgrounds, textSearchConfig, additionalOptions);
+                backgrounds, textSearchConfig, bookmarkSearchConfig, additionalOptions);
             const owner = {"owner": user && user.name || null};
             const {metadata, data, attributes, id, ...others} = resource;
             let updates;

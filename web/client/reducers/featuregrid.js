@@ -42,7 +42,8 @@ const {
     GRID_QUERY_RESULT,
     LOAD_MORE_FEATURES,
     SET_UP,
-    SET_TIME_SYNC
+    SET_TIME_SYNC,
+    ENABLE_GEOMETRY_FILTER
 } = require('../actions/featuregrid');
 const {
     FEATURE_TYPE_LOADED,
@@ -392,6 +393,9 @@ function featuregrid(state = emptyResultsState, action) {
     }
     case SET_TIME_SYNC: {
         return assign({}, state, {timeSync: action.value});
+    }
+    case ENABLE_GEOMETRY_FILTER: {
+        return assign({}, state, {geometryFilterEnabled: action.enable});
     }
     default:
         return state;

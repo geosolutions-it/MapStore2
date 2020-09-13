@@ -1,6 +1,13 @@
 const PropTypes = require('prop-types');
 const { editors } = require('react-data-grid');
 
+/**
+ * Base Class of attribute editor for FeatureGrid
+ *
+ * @name AttributeEditor
+ * @memberof components.data.featuregrid.editors
+ * @type {Object}
+ */
 class AttributeEditor extends editors.SimpleTextEditor {
     static propTypes = {
         onTemporaryChanges: PropTypes.func
@@ -9,17 +16,10 @@ class AttributeEditor extends editors.SimpleTextEditor {
         onTemporaryChanges: () => {}
     };
     componentDidMount() {
-        if (this.props.onTemporaryChanges) {
-            this.props.onTemporaryChanges(true);
-        }
+        this.props.onTemporaryChanges?.(true);
     }
     componentWillUnmount() {
-        // needs to be detouched.
-        // Otherwise this will trigger before other events out of the editors
-        // and so the tempChanges seems to be not present.
-        if (this.props.onTemporaryChanges) {
-            setTimeout( () => this.props.onTemporaryChanges(false), 500);
-        }
+        this.props.onTemporaryChanges?.(false);
     }
 }
 module.exports = AttributeEditor;

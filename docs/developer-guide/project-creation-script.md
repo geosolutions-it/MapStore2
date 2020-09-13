@@ -25,7 +25,7 @@ Finally, to create the project, use the following command:
 node ./createProject.js <projectType> <projectName> <projectVersion> <projectDescription> <gitRepositoryUrl> <outputFolder>
 ```
 
-All the arguments are mandatory:
+All the arguments except gitRepositoryUrl are mandatory:
 
 * **projectName**: short project name that will be used as the repository name on github, webapp path and name in package.json
 * **projectType**: type of project to create, currently two types of projects are supported:
@@ -69,3 +69,18 @@ In addition to static and templates, the following files from the root MapStore 
 * .eslintrc
 * .eslintignore
 * LICENSE.txt
+
+## Update MapStore2 version in a project
+
+To update MapStore2 version enter the MapStore2 folder and pull desired git version.
+If MapStore2 devDependencies have been changed you can manually update these in the project package.json file or run the script updateDevDeps
+```sh
+npm run updateDevDeps
+```
+The script will automatically copy the devDependencies from MapStore2 package.json to the project package.json file. All the project existing devDependencies will be overwritten.
+
+To sync MapStore2 dependencies just run npm install from project root folder.
+
+```sh
+npm install
+```

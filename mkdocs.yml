@@ -45,6 +45,12 @@ pages:
       - Overview: 'user-guide/managing-users-and-groups.md'
       - Managing Users: 'user-guide/managing-users.md'
       - Managing Groups: 'user-guide/managing-groups.md'
+    - Managing Contexts:
+      - Overview: 'user-guide/managing-contexts.md'
+      - Application Context: 'user-guide/application-context.md'
+      - Extension Library: 'user-guide/extension-library.md'
+      - Map Catalog: 'user-guide/map-catalog.md'
+      - Map Templates: 'user-guide/map-templates.md'
     - Resources Properties: 'user-guide/resources-properties.md'
     - Sharing Resources: 'user-guide/share.md'
     - Exploring Maps:
@@ -56,7 +62,7 @@ pages:
       - Widgets: 'user-guide/widgets.md'
       - Menu Bar: 'user-guide/menu-bar.md'
       - Printing a Map: 'user-guide/print.md'
-      - Import Files: 'user-guide/import.md'
+      - Importing and Exporting Files: 'user-guide/import.md'
       - Catalog Services: 'user-guide/catalog.md'
       - Performing Measurments: 'user-guide/measure.md'
       - Adding Annotations: 'user-guide/annotations.md'
@@ -68,7 +74,25 @@ pages:
       - Overview: 'user-guide/exploring-dashboards.md'
       - Adding widgets: 'user-guide/adding-widgets.md'
       - Connecting widgets: 'user-guide/connecting-widgets.md'
+    - Exploring Stories:
+      - Overview: 'user-guide/exploring-stories.md'
+      - Story Settings: 'user-guide/story-setting.md'
+      - Title Section: 'user-guide/title-section.md'
+      - Banner Section: 'user-guide/banner-section.md'
+      - Paragraph Section: 'user-guide/paragraph-section.md'
+      - Immersive Section: 'user-guide/immersive-section.md'
+      - Media Section: 'user-guide/media-section.md'
+      - Web Page section: 'user-guide/web-section.md'
+      - Text Editor Toolbar: 'user-guide/text-editor-toolbar.md'
+      - Image Toolbar: 'user-guide/content-image-toolbar.md'
+      - Video Toolbar: 'user-guide/content-video-toolbar.md'
+      - Map Toolbar: 'user-guide/content-map-toolbar.md'
+      - Web Page Toolbar: 'user-guide/content-web-toolbar.md'
+      - Media Editor: 'user-guide/media-editor-window.md'
+      - Configue the map: 'user-guide/configure-map.md'
+
   - Developer Guide:
+    - Requirements: 'developer-guide/requirements.md'
     - Quick Setup and Run: 'developer-guide/index.md'
     - Infrastructure: 'developer-guide/infrastructure-and-general-architecture.md'
     - Developing with MapStore:
@@ -78,10 +102,11 @@ pages:
       - Building and Deploying: 'developer-guide/building-and-deploying.md'
       - Front End Technologies: 'developer-guide/reactjs-and-redux-introduction.md'
       - Plugins architecture: 'developer-guide/plugins-architecture.md'
-
       - Internationalization: 'developer-guide/internationalization.md'
       - Custom dependencies: 'developer-guide/custom-dependencies.md'
       - Styling and theming: 'developer-guide/customize-theme.md'
+      - Application tutorial: 'developer-guide/application-tutorial.md'
+      - Working with Extensions: 'developer-guide/extensions.md'
       - FAQ: 'developer-guide/dev-faq.md'
     - Guidelines:
       - Code Conventions: 'developer-guide/code-conventions.md'
@@ -93,13 +118,13 @@ pages:
       - Writing Plugins: 'developer-guide/plugins-howto.md'
       - Writing Epics: 'developer-guide/writing-epics.md'
       - Writing Actions and Reducers: 'developer-guide/writing-actions-reducers.md'
-      - Implement User Sessions: 'developer-guide/user-sessions.md'
     - Configuration:
       - Configuration Files: 'developer-guide/configuration-files.md'
       - Application Configuration: 'developer-guide/local-config.md'
       - Configuring plugins: 'developer-guide/plugins-documentation.md'
       - Map Configuration: 'developer-guide/maps-configuration.md'
       - Externalize Configuration: 'developer-guide/externalized-configuration.md'
+      - Configuration of Application Context Manager: 'developer-guide/context-editor-config.md'
     - Database Setup: 'developer-guide/database-setup.md'
     - Integrations:
       - users:

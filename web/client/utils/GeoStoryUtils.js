@@ -20,6 +20,7 @@ import merge from "lodash/merge";
 import isString from "lodash/isString";
 import isObject from "lodash/isObject";
 import includes from "lodash/includes";
+import replace from 'lodash/replace';
 import uuid from 'uuid';
 
 export const EMPTY_CONTENT = "EMPTY_CONTENT";
@@ -31,7 +32,8 @@ export const StoryTypes = {
 export const SectionTypes = {
     TITLE: 'title',
     PARAGRAPH: 'paragraph',
-    IMMERSIVE: 'immersive'
+    IMMERSIVE: 'immersive',
+    BANNER: 'banner'
 };
 /**
  * Allowed contents
@@ -93,7 +95,13 @@ export const getClassNameFromProps = ({ theme = {}, align = 'center', size = 'fu
  * @prop {string} theme.value style key
  * @prop {string} theme[theme.value] a style object referred to the style key
  */
-export const getThemeStyleFromProps = ({ theme = {} }) => {
+export const getThemeStyleFromProps = ({ theme = {}, storyTheme }) => {
+    if (
+        theme === ''
+        || theme?.value === ''
+    ) {
+        return isObject(storyTheme) ? storyTheme : {};
+    }
     const styleKey = theme?.value;
     const style = theme?.[styleKey];
     return isObject(style) && style || {};
@@ -195,7 +203,7 @@ export const getDefaultSectionTemplate = (type, localize = v => v) => {
                     html: '',
                     size: 'large',
                     align: 'center',
-                    theme: 'bright',
+                    theme: '',
                     background: {
                         fit: 'cover',
                         size: 'full',
@@ -203,6 +211,21 @@ export const getDefaultSectionTemplate = (type, localize = v => v) => {
                     }
                 }
             ]
+        };
+    case SectionTypes.BANNER:
+        return {
+            id: uuid(),
+            type: SectionTypes.BANNER,
+            title: localize("geostory.builder.defaults.titleBanner"),
+            cover: false,
+            contents: [{
+                id: uuid(),
+                background: {
+                    fit: 'cover',
+                    size: 'full',
+                    align: 'center'
+                }
+            }]
         };
     case SectionTypes.PARAGRAPH:
         return {
@@ -242,7 +265,7 @@ export const getDefaultSectionTemplate = (type, localize = v => v) => {
                     contents: [{
                         id: uuid(),
                         type: ContentTypes.MEDIA,
-                        size: 'medium',
+                        size: 'large',
                         align: 'center'
                     }]
                 }
@@ -274,7 +297,7 @@ export const getDefaultSectionTemplate = (type, localize = v => v) => {
             type: ContentTypes.COLUMN,
             align: 'left',
             size: 'small',
-            theme: 'bright',
+            theme: '',
             title: localize("geostory.builder.defaults.titleImmersiveContent"),
             contents: [{
                 id: uuid(),
@@ -311,6 +334,15 @@ export const getDefaultSectionTemplate = (type, localize = v => v) => {
             type,
             title: localize("geostory.builder.defaults.titleWebPage"),
             size: 'medium',
+            align: 'center'
+        };
+    }
+    case ContentTypes.MEDIA: {
+        return {
+            id: uuid(),
+            type,
+            title: localize("geostory.builder.defaults.titleUnknown"),
+            size: 'large',
             align: 'center'
         };
     }
@@ -431,3 +463,80 @@ export const getWebPageComponentHeight = (size, viewHeight) => {
 
     return 0;
 };
+
+export const parseHashUrlScrollUpdate = (url, hash = '', storyId, sectionId, columnId) => {
+    const EMPTY = 'EMPTY';
+    if (!hash.includes(storyId)) {
+        return null;
+    }
+    const storyIds = hash.substring(hash.indexOf(storyId)).split('/');
+
+    if (sectionId && storyId) {
+        if (storyIds.length > 1 && storyIds[2] && Number(storyIds[0]) === storyId) {
+            if (storyIds.length === 5) {
+                return replace(url, `${storyIds[2]}/column/${storyIds[4]}`, `${sectionId}`);
+            }
+            return replace(url, `${storyIds[2]}`, `${sectionId}`);
+        }
+        if (hash.includes('shared')) {
+            return storyIds[1] !== '' ? `${url}/section/${sectionId}` : `${url}section/${sectionId}`;
+        }
+        return storyIds[1] !== '' ? `${url}/section/${sectionId}` : `${url}section/${sectionId}`;
+    } else if (!sectionId && columnId && isString(columnId) && columnId !== EMPTY) {
+        if (storyIds.length > 1) {
+            if (hash.includes('shared') && !storyIds[2]) {
+                return url;
+            }
+            if (storyIds.length === 5) {
+                return replace(url, `${storyIds[4]}`, `${columnId}`);
+            }
+            return `${url}/column/${columnId}`;
+        }
+    }
+    return null;
+};
+
+/**
+ * Creates a configuration from localConfig object to be used by the webfontloader library
+ * @param {array} fontFamilies - font families configured from localConfig
+ * @param {function} activeCallback - call back function to run when fonts are successfully loaded
+ * @param {function} inactiveCallback - call back function to run when font loading fails
+ */
+export const createWebFontLoaderConfig = (fontFamilies, activeCallback, inactiveCallback) => {
+    const config = {
+        active: activeCallback,
+        inactive: inactiveCallback,
+        custom: {
+            families: [],
+            urls: []
+        }
+    };
+
+    // first filter out those without a src property
+    fontFamilies.filter((family) => !!family.src)
+        .forEach((family, i) => {
+            config.custom.families[i] = family.family;
+            config.custom.urls[i] = family.src;
+        });
+
+    return config;
+};
+
+/**
+ * Creates an array with just font family names from an object
+ * @param {array} fontFamilies - an array of font families i.e [{"name": "fontName", "src": "fontSrc"}]
+ * @return {array} - array of font family names
+ */
+export const extractFontNames = (fontFamilies) => {
+    return fontFamilies.map(family => family.family);
+};
+
+export const DEFAULT_FONT_FAMILIES = [
+    'inherit',
+    'Arial',
+    'Georgia',
+    'Impact',
+    'Tahoma',
+    'Times New Roman',
+    'Verdana'
+];

@@ -2,6 +2,7 @@ const React = require('react');
 const ReactDOM = require('react-dom');
 const ReactTestUtils = require('react-dom/test-utils');
 const expect = require('expect');
+const {isEmpty} = require('lodash');
 const Editor = require('../Editor');
 describe('Identify Coordinate Editor component', () => {
     beforeEach((done) => {
@@ -21,14 +22,20 @@ describe('Identify Coordinate Editor component', () => {
     });
     it('Test Editor onChange correctly passed and argument mapping', () => {
         const actions = {
-            onChange: () => {}
+            onSubmit: () => {}
         };
-        const spyonChange = expect.spyOn(actions, 'onChange');
-        ReactDOM.render(<Editor onChange={actions.onChange} />, document.getElementById("container"));
-        ReactTestUtils.Simulate.change(document.querySelector('input'), { target: { value: 20} }); // <-- trigger event callback
+        const spyonChange = expect.spyOn(actions, 'onSubmit');
+        ReactDOM.render(<Editor onSubmit={actions.onSubmit} />, document.getElementById("container"));
+        const button = document.querySelector('span > button');
+        expect(button.disabled).toBe(true);
+        const latLonFields = document.querySelectorAll('input');
+        ReactTestUtils.Simulate.change(latLonFields[0], { target: { value: 20} }); // <-- trigger event callback
+        ReactTestUtils.Simulate.change(latLonFields[1], { target: { value: 10} }); // <-- trigger event callback
+        expect(button.disabled).toBe(false);
+        ReactTestUtils.Simulate.click(button); // <-- trigger event callback
         expect(spyonChange).toHaveBeenCalled();
-        expect(spyonChange.calls[0].arguments[0]).toBe('lat');
-        expect(spyonChange.calls[0].arguments[1]).toBe(20);
+        expect(isEmpty(spyonChange.calls[0].arguments[0])).toBe(false);
+        expect(spyonChange.calls[0].arguments[0]).toContain({lat: "20", lon: "10"});
     });
     it('Test Editor onChangeFormat correctly passed', () => {
         const actions = {

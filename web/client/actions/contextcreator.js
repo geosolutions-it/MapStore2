@@ -6,7 +6,11 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+export const INIT = 'CONTEXTCREATOR:INIT';
 export const SET_CREATION_STEP = 'CONTEXTCREATOR:SET_CREATION_STEP';
+export const SET_WAS_TUTORIAL_SHOWN = 'CONTEXTCREATOR:SET_WAS_TUTORIAL_SHOWN';
+export const SHOW_TUTORIAL = 'CONTEXTCREATOR:SHOW_TUTORIAL';
+export const SET_TUTORIAL_STEP = 'CONTEXTCREATOR:SET_TUTORIAL_STEP';
 export const MAP_VIEWER_LOAD = 'CONTEXTCREATOR:MAP_VIEWER_LOAD';
 export const MAP_VIEWER_LOADED = 'CONTEXTCREATOR:MAP_VIEWER_LOADED';
 export const MAP_VIEWER_RELOAD = 'CONTEXTCREATOR:MAP_VIEWER_RELOAD';
@@ -52,6 +56,8 @@ export const CONTEXT_SAVED = 'CONTEXTCREATOR:CONTEXT_SAVED';
 export const SAVE_CONTEXT = 'CONTEXTCREATOR:SAVE_CONTEXT';
 export const ENABLE_UPLOAD_PLUGIN = 'CONTEXTCREATOR:ENABLE_UPLOAD_PLUGIN';
 export const UPLOAD_PLUGIN = 'CONTEXTCREATOR:UPLOAD_PLUGIN';
+export const ADD_PLUGIN_TO_UPLOAD = 'CONTEXTCREATOR:ADD_PLUGIN_TO_UPLOAD';
+export const REMOVE_PLUGIN_TO_UPLOAD = 'CONTEXTCREATOR:REMOVE_PLUGIN_TO_UPLOAD';
 export const UPLOADING_PLUGIN = 'CONTEXTCREATOR:UPLOADING_PLUGIN';
 export const PLUGIN_UPLOADED = 'CONTEXTCREATOR:PLUGIN_UPLOADED';
 export const UPLOAD_PLUGIN_ERROR = 'CONTEXTCREATOR:UPLOAD_PLUGIN_ERROR';
@@ -61,9 +67,49 @@ export const PLUGIN_UNINSTALLED = 'CONTEXTCREATOR:PLUGIN_UNINSTALLED';
 export const UNINSTALL_PLUGIN_ERROR = 'CONTEXTCREATOR:UNINSTALL_PLUGIN_ERROR';
 export const BACK_TO_PAGE_SHOW_CONFIRMATION = 'CONTEXTCREATOR:BACK_TO_PAGE_SHOW_CONFIRMATION';
 export const LOAD_EXTENSIONS = 'CONTEXTCREATOR:LOAD_EXTENSIONS';
+export const CONTEXT_TUTORIALS = {
+    "general-settings": "contextcreator_generalsettings_tutorial",
+    "configure-map": "contextcreator_configuremap_tutorial",
+    "configure-plugins": "contextcreator_configureplugins_tutorial"
+};
+/**
+ * Merges initState into context creator state. Meant to be called on ContextCreator component mount
+ * @param {object} initState state to merge
+ */
+export const init = (initState) => ({
+    type: INIT,
+    initState
+});
 
 export const setCreationStep = (stepId) => ({
     type: SET_CREATION_STEP,
+    stepId
+});
+
+/**
+ * Set tutorial as shown, so that when the user goes back to that step the tutorial doesn't pop up again
+ * @param {string} stepId step id
+ */
+export const setWasTutorialShown = (stepId) => ({
+    type: SET_WAS_TUTORIAL_SHOWN,
+    stepId
+});
+
+/**
+ * Shows a tutorial for a step regardless of whether it's been shown earlier or not
+ * @param {string} stepId step id
+ */
+export const showTutorial = (stepId) => ({
+    type: SHOW_TUTORIAL,
+    stepId
+});
+
+/**
+ * Set tutorial step to inform components that specific tutorial props should be used (see tutorialEnhancer.js)
+ * @param {string} stepId step id
+ */
+export const setTutorialStep = (stepId) => ({
+    type: SET_TUTORIAL_STEP,
     stepId
 });
 
@@ -125,10 +171,11 @@ export const setSelectedTemplates = (ids) => ({
  * @param {string} fileName file name to display
  * @param {any} data template data
  */
-export const setParsedTemplate = (fileName, data) => ({
+export const setParsedTemplate = (fileName, data, format) => ({
     type: SET_PARSED_TEMPLATE,
     fileName,
-    data
+    data,
+    format
 });
 
 /**
@@ -407,6 +454,25 @@ export const enableUploadPlugin = (enable = false) => ({
 });
 
 /**
+ * Adds a new plugin to upload in the list.
+ * @param {array} files
+ */
+export const addPluginToUpload = (files) => ({
+    type: ADD_PLUGIN_TO_UPLOAD,
+    files
+});
+
+/**
+ * Removes a plugin from the upload list.
+ * @param {int} index
+ */
+export const removePluginToUpload = (index) => ({
+    type: REMOVE_PLUGIN_TO_UPLOAD,
+    index
+});
+
+
+/**
  * Starts the plugin upload workflow
  */
 export const uploadPlugin = (files) => ({
@@ -425,9 +491,10 @@ export const uninstallPlugin = (plugin) => ({
 /**
  * Receives upload error result
  */
-export const uploadPluginError = (files) => ({
+export const uploadPluginError = (files, error) => ({
     type: UPLOAD_PLUGIN_ERROR,
-    files
+    files,
+    error
 });
 
 /**

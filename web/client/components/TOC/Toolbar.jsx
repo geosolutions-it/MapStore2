@@ -58,7 +58,8 @@ class Toolbar extends React.Component {
             onDownload: () => {},
             onGetMetadataRecord: () => {},
             onHideLayerMetadata: () => {},
-            onShow: () => {}
+            onShow: () => {},
+            onLayerInfo: () => {}
         },
         maxDepth: 3,
         text: {
@@ -97,7 +98,8 @@ class Toolbar extends React.Component {
             },
             layerMetadataTooltip: '',
             layerMetadataPanelTitle: '',
-            layerFilter: ''
+            layerFilter: '',
+            layerInfoTooltip: ''
 
         },
         activateTool: {
@@ -112,10 +114,12 @@ class Toolbar extends React.Component {
             activateAddGroup: true,
             includeDeleteButtonInSettings: false,
             activateMetedataTool: true,
-            activateLayerFilterTool: true
+            activateLayerFilterTool: true,
+            activateLayerInfoTool: true
         },
         options: {
             modalOptions: {},
+            metadataOptions: {},
             settingsOptions: {}
         },
         style: {
@@ -194,6 +198,16 @@ class Toolbar extends React.Component {
                     transitionName="toc-toolbar-btn-transition"
                     transitionEnterTimeout={300}
                     transitionLeaveTimeout={300}>
+                    {this.props.activateTool.activateLayerInfoTool && status === 'DESELECT' ?
+                        <OverlayTrigger
+                            key="layerInfo"
+                            placement="top"
+                            overlay={<Tooltip id="toc-tooltip-layerInfo">{this.props.text.layerInfoTooltip}</Tooltip>}>
+                            <Button key="addLayer" bsStyle="primary" className="square-button-md" onClick={this.props.onToolsActions.onLayerInfo}>
+                                <Glyphicon glyph="layer-info" />
+                            </Button>
+                        </OverlayTrigger>
+                        : null}
                     {this.props.activateTool.activateAddLayer && (status === 'DESELECT' || status === 'GROUP') ?
                         <OverlayTrigger
                             key="addLayer"
@@ -303,7 +317,7 @@ class Toolbar extends React.Component {
                             </Button>
                         </OverlayTrigger>
                         : null}
-                    {this.props.activateTool.activateMetedataTool && (status === 'LAYER') && this.props.selectedLayers[0].catalogURL && !this.props.settings.expanded && !this.props.wfsdownload.expanded ?
+                    {this.props.activateTool.activateMetedataTool && (status === 'LAYER') && !this.props.settings.expanded && !this.props.wfsdownload.expanded ?
                         <OverlayTrigger
                             key="layerMetadata"
                             placement="top"
@@ -382,7 +396,7 @@ class Toolbar extends React.Component {
 
     showMetadata = () => {
         if (!this.props.layerMetadata.expanded) {
-            this.props.onToolsActions.onGetMetadataRecord();
+            this.props.onToolsActions.onGetMetadataRecord(this.props.options.metadataOptions);
         } else {
             this.props.onToolsActions.onHideLayerMetadata();
         }

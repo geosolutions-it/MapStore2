@@ -46,5 +46,21 @@ describe('Test the mousePosition reducer', () => {
         expect(state.crs).toExist();
         expect(state.crs).toBe('EPSG:900911');
     });
+    it('mouse move map event', () => {
+        const position = {lat: 100, lng: 200};
+        const action = {
+            type: 'MOUSE_MOVE',
+            position
+        };
+        const state = mousePosition({}, action);
+        expect(state).toEqual({position, mouseOut: false});
+    });
+    it('mouse out', () => {
+        const action = {
+            type: 'MOUSE_OUT'
+        };
+        const state = mousePosition({}, action);
+        expect(state).toEqual({mouseOut: true});
+    });
 
 });

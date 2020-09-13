@@ -41,17 +41,11 @@ class Feature extends React.Component {
         if (!isEqual(nextProps.properties, this.props.properties) ||
             !isEqual(nextProps.geometry, this.props.geometry) ||
             (nextProps.features !== this.props.features) ||
-            (nextProps.style !== this.props.style)) {
+            (nextProps.style !== this.props.style) ||
+            (nextProps.styleName !== this.props.styleName)) {
             this.removeLayer(nextProps);
             this.createLayer(nextProps);
         }
-    }
-
-    shouldComponentUpdate(nextProps) {
-        // TODO check if shallow comparison is enough properties and geometry
-        return !isEqual(nextProps.properties, this.props.properties) ||
-            !isEqual(nextProps.geometry, this.props.geometry) ||
-            (nextProps.features !== this.props.features);
     }
 
     componentWillUnmount() {
@@ -95,11 +89,11 @@ class Feature extends React.Component {
         const layer = geometryToLayer({
             type: props.type,
             geometry: props.geometry,
-            styleName: props.styleName,
             properties: props.properties,
             msId: props.msId
         }, {
-            style: styles
+            style: styles,
+            styleName: props.styleName
         });
         props.container.addLayer(layer);
         layer.on('click', (event) => {
@@ -113,6 +107,31 @@ class Feature extends React.Component {
                 }, this.props.options.handleClickOnLayer ? this.props.options.id : null);
             }
         });
+        if (!layer.setOpacity) {
+            layer.setOpacity = function(layerOpacity = 1) {
+                const originalStyle = this.originalStyle || this.options && this.options.style || this.options || {};
+                this.originalStyle = {...originalStyle}; // Create a copy because the options ore mutable;
+                const {
+                    opacity = 1,
+                    fillOpacity = 1,
+                    color,
+                    fillColor,
+                    radius,
+                    weight
+                } = originalStyle;
+                const style = {
+                    color,
+                    fillColor,
+                    radius,
+                    weight,
+                    opacity: opacity * layerOpacity,
+                    fillOpacity: fillOpacity * layerOpacity
+                };
+                if (layer.setStyle) {
+                    layer.setStyle(style);
+                }
+            };
+        }
         this._layers.push(layer);
     }
     /* it removes the layer from a container otherwise we would create and add more

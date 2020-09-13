@@ -14,15 +14,13 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.Arrays;
 import java.util.Optional;
 import java.util.Properties;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
-
 import javax.servlet.ServletContext;
-
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -33,9 +31,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
-
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.fge.jsonpatch.JsonPatch;
+import com.github.fge.jsonpatch.JsonPatchException;
 import it.geosolutions.mapstore.utils.ResourceUtils;
-import net.sf.json.JSONObject;
 
 /**
  * REST service for configuration files usage.
@@ -50,9 +50,12 @@ import net.sf.json.JSONObject;
  *    example: header.height=headerHeight,header.url=headerUrl
  *
  * The overrides technique allows to take some values to insert in the config json from a simple Java properties file.
+ * 
  */
 @Controller
 public class ConfigController {
+    private ObjectMapper jsonMapper = new ObjectMapper();
+    
     @ResponseStatus(value = HttpStatus.NOT_FOUND)
     public class ResourceNotFoundException extends RuntimeException {
         public ResourceNotFoundException(String message) {
@@ -68,7 +71,7 @@ public class ConfigController {
     }
     
     @Value("${datadir.location:}") private String dataDir = "";
-    @Value("${allowed.resources:localConfig,pluginsConfig,extensions}") private String allowedResources = "localConfig,pluginsConfig,extensions";
+    @Value("${allowed.resources:localConfig,pluginsConfig,extensions,config,new}") private String allowedResources = "localConfig,pluginsConfig,extensions,config,new";
     @Value("${overrides.mappings:}") private String mappings;
     @Value("${overrides.config:}") private String overrides = "";
     
@@ -79,13 +82,17 @@ public class ConfigController {
      * Loads the resource, from the configured location (datadir or web root).
      * Both locations are tested and the resource is returned from the first location found.
      * The resource name should be in the allowed.resources list.
+     * 
+     * It is also possible to store in datadir files in the json-patch format (with a .json.patch extension) 
+     * so that the final resource is built merging a static configuration with a patch.
+     * 
      * @param {String} resourceName name of the resource to load (e.g. localConfig)
      * @param {boolean} overrides apply overrides from the configured properties file (if any)
      */
     @RequestMapping(value="/load/{resource}", method = RequestMethod.GET)
     public @ResponseBody String loadResource(@PathVariable("resource") String resourceName, @RequestParam(value="overrides", defaultValue="true") boolean applyOverrides) throws IOException {
         if (isAllowed(resourceName)) {
-            return readResource(resourceName + ".json", applyOverrides);
+            return readResource(resourceName + ".json", applyOverrides, resourceName + ".json.patch");
         }
         throw new ResourceNotAllowedException("Resource is not allowed");
     }
@@ -97,24 +104,25 @@ public class ConfigController {
      */
     @RequestMapping(value="/loadasset", method = RequestMethod.GET)
     public @ResponseBody String loadAsset(@RequestParam("resource") String resourceName) throws IOException {
-		return readResource(resourceName, false);
+		return readResource(resourceName, false, "");
     }
     
-    private String readResource(String resourceName, boolean applyOverrides) throws IOException {
+    private String readResource(String resourceName, boolean applyOverrides, String patchName) throws IOException {
     	Optional<File> resource = ResourceUtils.findResource(dataDir, context, resourceName);
+    	Optional<File> resourcePatch = patchName.isEmpty() ? Optional.empty() : ResourceUtils.findResource(dataDir, context, patchName);
         if (!resource.isPresent()) {
             throw new ResourceNotFoundException(resourceName);
         }
-        return readResourceFromFile(resource.get(), applyOverrides);
+        return readResourceFromFile(resource.get(), applyOverrides, resourcePatch);
     }
 
-    private String readResourceFromFile(File file, boolean applyOverrides) throws IOException {
+    private String readResourceFromFile(File file, boolean applyOverrides, Optional<File> patch) throws IOException {
         
         try (Stream<String> stream =
                 Files.lines( Paths.get(file.getAbsolutePath()), StandardCharsets.UTF_8); ) {
             Properties props = readOverrides();
-            if (applyOverrides && !"".equals(mappings) && props != null) {
-                return resourceWithOverrides(stream, props);
+            if (applyOverrides && (!"".equals(mappings) && props != null || patch.isPresent())) {
+                return resourceWithPatch(stream, props, patch);
             }
             StringBuilder contentBuilder = new StringBuilder();
             stream.forEach(new Consumer<String>() {
@@ -128,14 +136,35 @@ public class ConfigController {
         
     }
 
-    private String resourceWithOverrides(Stream<String> stream, Properties props) {
-        JSONObject jsonObject = readJsonConfig(stream);
-        for(String mapping : mappings.split(",")) {
-            fillMapping(mapping, props, jsonObject);
+    private String resourceWithPatch(Stream<String> stream, Properties props, Optional<File> patch) throws IOException {
+        JsonNode jsonObject = readJsonConfig(stream);
+        if (patch.isPresent()) {
+            jsonObject = mergeJSON(jsonObject, jsonMapper.readValue(patch.get(), JsonPatch.class));
+        }
+        if (!"".equals(mappings) && props != null) {
+            for(String mapping : mappings.split(",")) {
+                jsonObject = fillMapping(mapping, props, jsonObject);
+            }
         }
         return jsonObject.toString();
     }
     
+    /**
+     * Applies the given patch to a JSON tree (orig)
+     * 
+     * @param orig
+     * @param patch
+     * @return
+     * @throws IOException
+     */
+    private JsonNode mergeJSON(JsonNode orig, JsonPatch patch) throws IOException {
+        try {
+            return patch.apply(orig);
+        } catch (JsonPatchException e) {
+            throw new IOException("Error applying patch", e);
+        }
+    }
+
     private Properties readOverrides() throws FileNotFoundException, IOException {
         if (!"".equals(overrides)) {
         	Optional<File> resource = ResourceUtils.findResource(dataDir, context, overrides);
@@ -150,7 +179,7 @@ public class ConfigController {
         return null;
     }
 
-    private JSONObject readJsonConfig(Stream<String> stream) {
+    private JsonNode readJsonConfig(Stream<String> stream) throws IOException {
         StringBuilder contentBuilder = new StringBuilder();
         stream.forEach(new Consumer<String>() {
             @Override
@@ -159,46 +188,31 @@ public class ConfigController {
             }
         });
         String json = contentBuilder.toString();
-        JSONObject jsonObject = JSONObject.fromObject( json );
+        JsonNode jsonObject = jsonMapper.readTree(json);
         return jsonObject;
     }
     
-    private void fillMapping(String mapping, Properties props, JSONObject jsonObject) {
+    private JsonNode fillMapping(String mapping, Properties props, JsonNode jsonObject) throws IOException {
         String[] parts = mapping.split("=");
         if (parts.length != 2 || parts[0].trim().isEmpty() || parts[1].trim().isEmpty()) {
-            // LOGGER.warn("Mapping incorrectly specified: " + mapping + ", ignoring");
+            return jsonObject;
         } else {
             String path = parts[0];
             String propName = parts[1];
             String value = props.getProperty(propName, "");
-            setJsonProperty(jsonObject, path.split("\\."), value);
+            return setJsonProperty(jsonObject, path.split("\\."), value);
         }
     }
     
-    private void setJsonProperty(JSONObject jsonObject, String[] path, String value) {
-        if(path.length == 0) {
-            return;
+    private JsonNode setJsonProperty(JsonNode jsonObject, String[] path, String value) throws IOException {
+        String propertyPath = "/" + StringUtils.join(path, "/");
+        JsonPatch patch = jsonMapper.readValue("[{\"op\":\"replace\",\"path\":\""+propertyPath+"\",\"value\":\""+value+"\"}]", JsonPatch.class);
+        try {
+            return mergeJSON(jsonObject, patch);
+        } catch(IOException e) {
+            // if the property cannot be set, we ignore it
+            return jsonObject;
         }
-        if(path.length == 1) {
-            if (jsonObject.containsKey(path[0])) {
-                jsonObject.replace(path[0], value);
-            }
-        } else {
-            String[] newPath = Arrays.copyOfRange(path, 1, path.length);
-            JSONObject rootObject = null;
-            if (jsonObject.containsKey(path[0])) {
-                if (jsonObject.get(path[0]) instanceof JSONObject) {
-                    rootObject = jsonObject.getJSONObject(path[0]);
-                } else {
-                    jsonObject.replace(path[0], new JSONObject());
-                    rootObject = jsonObject.getJSONObject(path[0]);
-                }
-            }
-            if (rootObject != null) {
-            	setJsonProperty(rootObject, newPath, value);
-            }
-        }
-        
     }
 
     private boolean isAllowed(String resourceName) {

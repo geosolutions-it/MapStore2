@@ -132,7 +132,9 @@ describe("test the Layer legend", () => {
             "format": "image/png"
         };
         const legendComponent = ReactDOM.render(<Legend layer={layer} />, document.getElementById("container"));
-        expect(legendComponent.props.legendOptions).toBe('forceLabels:on;fontSize:30');
+        expect(legendComponent.props.legendOptions).toBe('forceLabels:on');
+        expect(legendComponent.props.legendWidth).toBe(12);
+        expect(legendComponent.props.legendHeight).toBe(12);
         expect(legendComponent.props.scaleDependent).toBe(true);
     });
     it('test legend scaleDependent and legendOptions custom props', () => {
@@ -144,15 +146,23 @@ describe("test the Layer legend", () => {
             "name": "layer3",
             "format": "image/png"
         };
-        const legendOptionsCustom = 'forceLabels:on;fontSize:50';
+        const legendOptionsCustom = {
+            WMSLegendOptions: 'forceLabels:on;fontSize:50',
+            legendWidth: 20,
+            legendHeight: 30
+        };
         const scaleDependentCustom = false;
         const legendComponent = ReactDOM.render(
             <Legend
                 layer={layer}
-                legendOptions={legendOptionsCustom}
+                legendOptions={legendOptionsCustom.WMSLegendOptions}
+                legendWidth={legendOptionsCustom.legendWidth}
+                legendHeight={legendOptionsCustom.legendHeight}
                 scaleDependent={scaleDependentCustom}/>,
             document.getElementById("container"));
-        expect(legendComponent.props.legendOptions).toBe(legendOptionsCustom);
+        expect(legendComponent.props.legendOptions).toBe('forceLabels:on;fontSize:50');
+        expect(legendComponent.props.legendWidth).toBe(20);
+        expect(legendComponent.props.legendHeight).toBe(30);
         expect(legendComponent.props.scaleDependent).toBe(scaleDependentCustom);
     });
 });

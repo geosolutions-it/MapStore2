@@ -24,20 +24,23 @@ const {getLayerWFSCapabilities} = require('../observables/wfs');
 
 
 const DOWNLOAD_FORMATS_LOOKUP = {
-	        "gml3": "GML3.1",
-	        "GML2": "GML2",
-	        "application/vnd.google-earth.kml+xml": "KML",
-	        "OGR-CSV": "OGR-CSV",
-	        "OGR-FileGDB": "OGR-GeoDatabase",
-	        "OGR-GPKG": "OGR-GeoPackage",
-	        "OGR-KML": "OGR-KML",
-	        "OGR-MIF": "OGR-MIF",
-	        "OGR-TAB": "OGR-TAB",
-	        "SHAPE-ZIP": "Shapefile",
-	        "gml32": "GML3.2",
-	        "application/json": "GeoJSON",
-	        "csv": "CSV",
-	        "application/x-gpkg": "GeoPackage"
+    "gml3": "GML3.1",
+    "GML2": "GML2",
+    "DXF-ZIP": "DXF-ZIP",
+    "application/vnd.google-earth.kml+xml": "KML",
+    "OGR-CSV": "OGR-CSV",
+    "OGR-FileGDB": "OGR-GeoDatabase",
+    "OGR-GPKG": "OGR-GeoPackage",
+    "OGR-KML": "OGR-KML",
+    "OGR-MIF": "OGR-MIF",
+    "OGR-TAB": "OGR-TAB",
+    "SHAPE-ZIP": "Shapefile",
+    "gml32": "GML3.2",
+    "application/json": "GeoJSON",
+    "csv": "CSV",
+    "application/x-gpkg": "GeoPackage",
+    "excel": "excel",
+    "excel2007": "excel2007"
 };
 
 const hasOutputFormat = (data) => {

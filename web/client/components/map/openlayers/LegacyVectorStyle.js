@@ -6,6 +6,7 @@ import head from 'lodash/head';
 import trim from 'lodash/trim';
 import isString from 'lodash/isString';
 import isArray from 'lodash/isArray';
+import isNil from 'lodash/isNil';
 
 import assign from 'object-assign';
 
@@ -392,7 +393,21 @@ const getValidStyle = (geomType, options = { style: defaultStyles}, isDrawing, t
 };
 
 export function getStyle(options, isDrawing = false, textValues = []) {
-
+    if ((options.styleName && !options.overrideOLStyle)) {
+        return (feature) => {
+            if (options.styleName === "marker") {
+                const type = feature.getGeometry().getType();
+                switch (type) {
+                case "Point":
+                case "MultiPoint":
+                    return defaultOLStyles.marker(options);
+                default:
+                    break;
+                }
+            }
+            return defaultOLStyles[options.styleName](options);
+        };
+    }
     // this is causing max call stack size exceeded because it contains ol functions and it comes from the store
     // we suggest to remove this behaviour
     let style = options.nativeStyle;
@@ -430,12 +445,12 @@ export function getStyle(options, isDrawing = false, textValues = []) {
     if (!style && options.style) {
         style = {
             stroke: new Stroke( options.style.stroke ? options.style.stroke : {
-                color: colorToRgbaStr(options.style && options.style.color || "#0000FF", options.style.opacity || 1),
+                color: colorToRgbaStr(options.style && options.style.color || "#0000FF", isNil(options.style.opacity) ? 1 : options.style.opacity),
                 lineDash: options.style.highlight ? [10] : [0],
                 width: options.style.weight || 1
             }),
             fill: new Fill(options.style.fill ? options.style.fill : {
-                color: colorToRgbaStr(options.style && options.style.fillColor || "#0000FF", options.style.fillOpacity || 1)
+                color: colorToRgbaStr(options.style && options.style.fillColor || "#0000FF", isNil(options.style.fillOpacity) ? 1 : options.style.fillOpacity)
             })
         };
 
@@ -527,18 +542,6 @@ export function getStyle(options, isDrawing = false, textValues = []) {
     }
     // *************************************************************************
 
-    return (options.styleName && !options.overrideOLStyle) ? (feature) => {
-        if (options.styleName === "marker") {
-            type = feature.getGeometry().getType();
-            switch (type) {
-            case "Point":
-            case "MultiPoint":
-                return defaultOLStyles.marker(options);
-            default:
-                break;
-            }
-        }
-        return defaultOLStyles[options.styleName](options);
-    } : style || styleFunction;
+    return style || styleFunction;
 }
 

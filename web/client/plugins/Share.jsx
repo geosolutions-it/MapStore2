@@ -14,37 +14,18 @@ import Message from '../components/I18N/Message';
 import { toggleControl, setControlProperty } from '../actions/controls';
 import ConfigUtils from '../utils/ConfigUtils';
 import ShareUtils from '../utils/ShareUtils';
+import {getExtentFromViewport} from '../utils/CoordinatesUtils';
 import { versionSelector } from '../selectors/version';
 import * as shareEpics from '../epics/queryparams';
 import SharePanel from '../components/share/SharePanel';
 import { createSelector } from 'reselect';
 import { mapSelector } from '../selectors/map';
 import { currentContextSelector } from '../selectors/context';
-import { reprojectBbox, getViewportGeometry } from '../utils/CoordinatesUtils';
 import { get } from 'lodash';
 import controls from '../reducers/controls';
-
-/**
- * Get wider and valid extent in viewport
- * @private
- * @param bbox {object} viewport bbox
- * @param bbox.bounds {object} bounds of bbox {minx, miny, maxx, maxy}
- * @param bbox.crs {string} bbox crs
- * @param dest {string} SRS of the returned extent
- * @return {array} [ minx, miny, maxx, maxy ]
-*/
-const getExtentFromViewport = ({ bounds, crs } = {}, dest = 'EPSG:4326') => {
-    if (!bounds || !crs) return null;
-    const { extent } = getViewportGeometry(bounds, crs);
-    if (extent.length === 4) {
-        return reprojectBbox(extent, crs, dest);
-    }
-    const [ rightExtentWidth, leftExtentWidth ] = extent.map((bbox) => bbox[2] - bbox[0]);
-    return rightExtentWidth > leftExtentWidth
-        ? reprojectBbox(extent[0], crs, dest)
-        : reprojectBbox(extent[1], crs, dest);
-};
-
+import {featureInfoClick, changeFormat, hideMapinfoMarker} from '../actions/mapInfo';
+import { clickPointSelector} from '../selectors/mapInfo';
+import { updateUrlOnScrollSelector } from '../selectors/geostory';
 /**
  * Share Plugin allows to share the current URL (location.href) in some different ways.
  * You can share it on socials networks(facebook,twitter,google+,linkedin)
@@ -62,6 +43,7 @@ const getExtentFromViewport = ({ bounds, crs } = {}, dest = 'EPSG:4326') => {
  * @prop {function} [onClose] function to call on close window event.
  * @prop {function} [getCount] function used to get the count for social links.
  * @prop {object} [advancedSettings] show advanced settings (bbox param or home button) f.e {bbox: true, homeButton: true}
+ * @prop {boolean} []
  */
 
 const Share = connect(createSelector([
@@ -69,29 +51,41 @@ const Share = connect(createSelector([
     versionSelector,
     mapSelector,
     currentContextSelector,
-    state => get(state, 'controls.share.settings', {})
-], (isVisible, version, map, context, settings) => ({
+    state => get(state, 'controls.share.settings', {}),
+    (state) => state.mapInfo && state.mapInfo.formatCoord || ConfigUtils.getConfigProp("defaultCoordinateFormat"),
+    clickPointSelector,
+    updateUrlOnScrollSelector
+], (isVisible, version, map, context, settings, formatCoords, point, isScrollPosition) => ({
     isVisible,
     shareUrl: location.href,
     shareApiUrl: ShareUtils.getApiUrl(location.href),
     shareConfigUrl: ShareUtils.getConfigUrl(location.href, ConfigUtils.getConfigProp('geoStoreUrl')),
     version,
     bbox: isVisible && map && map.bbox && getExtentFromViewport(map.bbox),
+    center: map && map.center && ConfigUtils.getCenter(map.center),
+    zoom: map && map.zoom,
     showAPI: !context,
     embedOptions: {
         showTOCToggle: !context
     },
     settings,
     advancedSettings: {
-        bbox: true
-    }
+        bbox: true,
+        centerAndZoom: true
+    },
+    formatCoords: formatCoords,
+    point,
+    isScrollPosition
 })), {
     onClose: toggleControl.bind(null, 'share', null),
-    onUpdateSettings: setControlProperty.bind(null, 'share', 'settings')
+    hideMarker: hideMapinfoMarker,
+    onUpdateSettings: setControlProperty.bind(null, 'share', 'settings'),
+    onSubmitClickPoint: featureInfoClick,
+    onChangeFormat: changeFormat
 })(SharePanel);
 
 export const SharePlugin = assign(Share, {
-    disablePluginIf: "{state('router') && (state('router').endsWith('new') || state('router').includes('newgeostory'))}",
+    disablePluginIf: "{state('router') && (state('router').endsWith('new') || state('router').includes('newgeostory') || state('router').endsWith('dashboard'))}",
     BurgerMenu: {
         name: 'share',
         position: 1000,

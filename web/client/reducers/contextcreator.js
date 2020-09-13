@@ -9,12 +9,12 @@ import {get, omit, isObject, head, find, pick} from 'lodash';
 
 import ConfigUtils from '../utils/ConfigUtils';
 
-import {SET_CREATION_STEP, MAP_VIEWER_LOADED, SHOW_MAP_VIEWER_RELOAD_CONFIRM, SET_RESOURCE, UPDATE_TEMPLATE, IS_VALID_CONTEXT_NAME,
-    CONTEXT_NAME_CHECKED, CLEAR_CONTEXT_CREATOR, SET_FILTER_TEXT, SET_SELECTED_PLUGINS, SET_SELECTED_TEMPLATES, SET_PARSED_TEMPLATE,
-    SET_FILE_DROP_STATUS, SET_EDITED_TEMPLATE, SET_TEMPLATES, SET_EDITED_PLUGIN, CHANGE_PLUGINS_KEY, CHANGE_TEMPLATES_KEY, CHANGE_ATTRIBUTE,
-    LOADING, SHOW_DIALOG, SET_EDITED_CFG, UPDATE_EDITED_CFG, SET_VALIDATION_STATUS, SET_PARSED_CFG,
-    SET_CFG_ERROR, ENABLE_UPLOAD_PLUGIN, UPLOADING_PLUGIN, UPLOAD_PLUGIN_ERROR,
-    PLUGIN_UPLOADED, UNINSTALLING_PLUGIN, UNINSTALL_PLUGIN_ERROR, PLUGIN_UNINSTALLED,
+import {INIT, SET_CREATION_STEP, SET_WAS_TUTORIAL_SHOWN, SET_TUTORIAL_STEP, MAP_VIEWER_LOADED, SHOW_MAP_VIEWER_RELOAD_CONFIRM, SET_RESOURCE,
+    UPDATE_TEMPLATE, IS_VALID_CONTEXT_NAME, CONTEXT_NAME_CHECKED, CLEAR_CONTEXT_CREATOR, SET_FILTER_TEXT, SET_SELECTED_PLUGINS,
+    SET_SELECTED_TEMPLATES, SET_PARSED_TEMPLATE, SET_FILE_DROP_STATUS, SET_EDITED_TEMPLATE, SET_TEMPLATES, SET_EDITED_PLUGIN,
+    CHANGE_PLUGINS_KEY, CHANGE_TEMPLATES_KEY, CHANGE_ATTRIBUTE, LOADING, SHOW_DIALOG, SET_EDITED_CFG, UPDATE_EDITED_CFG,
+    SET_VALIDATION_STATUS, SET_PARSED_CFG, SET_CFG_ERROR, ENABLE_UPLOAD_PLUGIN, UPLOADING_PLUGIN, UPLOAD_PLUGIN_ERROR, ADD_PLUGIN_TO_UPLOAD,
+    REMOVE_PLUGIN_TO_UPLOAD, PLUGIN_UPLOADED, UNINSTALLING_PLUGIN, UNINSTALL_PLUGIN_ERROR, PLUGIN_UNINSTALLED,
     BACK_TO_PAGE_SHOW_CONFIRMATION} from "../actions/contextcreator";
 import {set} from '../utils/ImmutableUtils';
 
@@ -116,8 +116,20 @@ const makePluginTree = (plugins, localPluginsConfig) => {
 
 export default (state = {}, action) => {
     switch (action.type) {
+    case INIT: {
+        return {
+            ...state,
+            ...(action.initState || {})
+        };
+    }
     case SET_CREATION_STEP: {
         return set('stepId', action.stepId, state);
+    }
+    case SET_WAS_TUTORIAL_SHOWN: {
+        return set(`wasTutorialShown[${action.stepId}]`, true, state);
+    }
+    case SET_TUTORIAL_STEP: {
+        return set('tutorialStep', action.stepId, state);
     }
     case MAP_VIEWER_LOADED: {
         return set('mapViewerLoaded', action.status, state);
@@ -129,7 +141,22 @@ export default (state = {}, action) => {
         return {
             ...state,
             uploadPluginEnabled: action.enable,
-            uploadingPlugin: []
+            uploadingPlugin: [],
+            pluginsToUpload: [],
+            uploadResult: null
+        };
+    }
+    case ADD_PLUGIN_TO_UPLOAD: {
+        return {
+            ...state,
+            uploadResult: null,
+            pluginsToUpload: [...(state.pluginsToUpload || []), ...action.files]
+        };
+    }
+    case REMOVE_PLUGIN_TO_UPLOAD: {
+        return {
+            ...state,
+            pluginsToUpload: state.pluginsToUpload.filter((p, idx) => idx !== action.index)
         };
     }
     case UPLOADING_PLUGIN: {
@@ -138,13 +165,21 @@ export default (state = {}, action) => {
         return set('uploadingPlugin', [ ...(state.uploadingPlugin || []).filter(notUpdated), ...uploadingPlugin ], state);
     }
     case UPLOAD_PLUGIN_ERROR: {
-        return set('uploadingPlugin', action.files.map(f => ({name: f.file.name, uploading: false, error: f.error})), state);
+        return set('uploadResult', {
+            result: "error",
+            files: action.files,
+            error: action.error
+        }, state);
     }
     case PLUGIN_UPLOADED: {
         const plugins = action.plugins.map(makeNode);
         const notDuplicate = plugin => plugins.filter(p => p.name === plugin.name).length === 0;
         return {
             ...state,
+            pluginsToUpload: [],
+            uploadResult: {
+                result: "ok"
+            },
             plugins: [...(state.plugins || []).filter(notDuplicate), ...plugins]
         };
     }
@@ -196,24 +231,27 @@ export default (state = {}, action) => {
             };
         });
 
+        const contextCreatorPlugins = convertPlugins(allPlugins);
+        const pluginTemplates = findPlugin(contextCreatorPlugins, 'MapTemplates')?.pluginConfig?.cfg?.allowedTemplates;
+
         return set('initialEnabledPlugins', pluginsToEnable,
-            set('newContext', {
-                templates: (action.allTemplates || []).map(template => ({
-                    ...template,
-                    attributes: template.thumbnail ? {
-                        thumbnail: template.thumbnail
-                    } : undefined,
-                    enabled: templates.reduce((result, cur) => result || cur.id === template.id, false),
-                    selected: false
-                })),
-                ...otherData
-            }, set('plugins', convertPlugins(allPlugins), set('resource', resource, state))));
+            set('templates', (action.allTemplates || []).map(template => ({
+                ...template,
+                ...(template.thumbnail ? {thumbnail: decodeURIComponent(template.thumbnail)} : {}),
+                attributes: {
+                    ...(template.thumbnail ? {thumbnail: decodeURIComponent(template.thumbnail)} : {}),
+                    ...(template.format ? {format: template.format} : {})
+                },
+                enabled: (pluginTemplates || templates || []).reduce((result, cur) => result || cur.id === template.id, false),
+                selected: false
+            })),
+            set('newContext', otherData, set('plugins', contextCreatorPlugins, set('resource', resource, state)))));
     }
     case UPDATE_TEMPLATE: {
         const newResource = action.resource || {};
-        const templates = get(state, 'newContext.templates', []);
+        const templates = get(state, 'templates', []);
         const oldResource = find(templates, template => template.id === newResource.id);
-        return action.resource ? set('newContext.templates',
+        return action.resource ? set('templates',
             [...templates.filter(template => template.id !== newResource.id), {...newResource, ...pick(oldResource, 'enabled', 'selected')}],
             state) : state;
     }
@@ -238,22 +276,22 @@ export default (state = {}, action) => {
     }
     case SET_SELECTED_TEMPLATES: {
         const selectedTemplates = action.ids || [];
-        return set('newContext.templates', get(state, 'newContext.templates', []).map(template => ({
+        return set('templates', get(state, 'templates', []).map(template => ({
             ...template,
             selected: selectedTemplates.reduce((result, selectedTemplateId) => result || selectedTemplateId === template.id, false)
         })), state);
     }
     case SET_PARSED_TEMPLATE: {
-        return set('parsedTemplate', {fileName: action.fileName, data: action.data}, state);
+        return set('parsedTemplate', {fileName: action.fileName, data: action.data, format: action.format}, state);
     }
     case SET_FILE_DROP_STATUS: {
         return set('fileDropStatus', action.status, state);
     }
     case SET_EDITED_TEMPLATE: {
-        return set('editedTemplate', find(get(state, 'newContext.templates', []), template => template.id === action.id), state);
+        return set('editedTemplate', find(get(state, 'templates', []), template => template.id === action.id), state);
     }
     case SET_TEMPLATES: {
-        return set('newContext.templates', action.templates, state);
+        return set('templates', action.templates, state);
     }
     case SET_EDITED_PLUGIN: {
         return set('editedPlugin', action.pluginName, state);
@@ -262,8 +300,8 @@ export default (state = {}, action) => {
         return set('plugins', changePlugins(get(state, 'plugins', []), action.ids || [], action.key, action.value), state);
     }
     case CHANGE_TEMPLATES_KEY: {
-        return set('newContext.templates',
-            get(state, 'newContext.templates', []).map(
+        return set('templates',
+            get(state, 'templates', []).map(
                 template => ({
                     ...template,
                     [action.key]: (action.ids || []).reduce((result, cur) => result || cur === template.id, false) ?
@@ -276,7 +314,7 @@ export default (state = {}, action) => {
         const plugin = findPlugin(get(state, 'plugins', []), action.pluginName);
         return action.pluginName ?
             set('editedCfg', JSON.stringify({
-                cfg: get(plugin, 'pluginConfig.cfg', {}),
+                cfg: omit(get(plugin, 'pluginConfig.cfg', {}), ...(action.pluginName === 'MapTemplates' ? ['allowedTemplates'] : [])),
                 override: get(plugin, 'pluginConfig.override', {})
             }, null, 2), state) :
             state;
@@ -299,9 +337,7 @@ export default (state = {}, action) => {
             set(`newContext.${action.key}`, action.value, state);
     }
     case SHOW_DIALOG: {
-        return set('parsedTemplate', undefined,
-            set(`showDialog.${action.dialogName}`, action.show,
-                set(`showDialog.${action.dialogName}Payload`, action.payload, state)));
+        return set(`showDialog.${action.dialogName}`, action.show, set(`showDialog.${action.dialogName}Payload`, action.payload, state));
     }
     case LOADING: {
         // anyway sets loading to true

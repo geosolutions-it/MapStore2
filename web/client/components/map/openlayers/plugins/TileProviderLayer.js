@@ -42,3 +42,4 @@ Layers.registerType('tileprovider', {
         return new TileLayer(tileXYZToOpenlayersOptions(opt));
     }
 });
+

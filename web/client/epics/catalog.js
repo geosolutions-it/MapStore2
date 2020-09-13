@@ -7,7 +7,10 @@
 */
 
 import * as Rx from 'rxjs';
-import {head, isArray, isString, isObject, keys} from 'lodash';
+import axios from 'axios';
+import xpathlib from 'xpath';
+import { DOMParser } from 'xmldom';
+import { head, get, find, isArray, isString, isObject, keys, toPairs } from 'lodash';
 import {
     ADD_SERVICE,
     ADD_LAYERS_FROM_CATALOGS,
@@ -28,12 +31,12 @@ import {
     textSearch,
     changeSelectedService
 } from '../actions/catalog';
-import {showLayerMetadata, addLayer} from '../actions/layers';
-import {error, success} from '../actions/notifications';
-import {SET_CONTROL_PROPERTY, setControlProperties} from '../actions/controls';
-import {closeFeatureGrid} from '../actions/featuregrid';
-import {purgeMapInfoResults, hideMapinfoMarker} from '../actions/mapInfo';
-import {allowBackgroundsDeletion} from '../actions/backgroundselector';
+import { showLayerMetadata, addLayer } from '../actions/layers';
+import { error, success } from '../actions/notifications';
+import { SET_CONTROL_PROPERTY, setControlProperties } from '../actions/controls';
+import { closeFeatureGrid } from '../actions/featuregrid';
+import { purgeMapInfoResults, hideMapinfoMarker } from '../actions/mapInfo';
+import { allowBackgroundsDeletion } from '../actions/backgroundselector';
 import {
     authkeyParamNameSelector,
     delayAutoSearchSelector,
@@ -42,12 +45,13 @@ import {
     selectedServiceSelector,
     servicesSelector,
     selectedCatalogSelector,
-    searchOptionsSelector
+    searchOptionsSelector,
+    catalogSearchInfoSelector
 } from '../selectors/catalog';
-import {metadataSourceSelector} from '../selectors/backgroundselector';
-import {currentMessagesSelector} from "../selectors/locale";
-import {layersSelector, getSelectedLayer} from '../selectors/layers';
-import axios from '../libs/ajax';
+import { metadataSourceSelector } from '../selectors/backgroundselector';
+import { currentMessagesSelector } from "../selectors/locale";
+import { getSelectedLayer } from '../selectors/layers';
+
 import {
     buildSRSMap,
     esriToLayer,
@@ -57,6 +61,8 @@ import {
     recordToLayer
 } from '../utils/CatalogUtils';
 import CoordinatesUtils from '../utils/CoordinatesUtils';
+import LayersUtils from '../utils/LayersUtils';
+
 
 /**
     * Epics for CATALOG
@@ -72,9 +78,9 @@ export default (API) => ({
      */
     recordSearchEpic: (action$, store) =>
         action$.ofType(TEXT_SEARCH)
-            .switchMap(({format, url, startPosition, maxRecords, text, options}) => {
-                return Rx.Observable.defer( () =>
-                    API[format].textSearch(url, startPosition, maxRecords, text, options, layersSelector(store.getState()))
+            .switchMap(({ format, url, startPosition, maxRecords, text, options }) => {
+                return Rx.Observable.defer(() =>
+                    API[format].textSearch(url, startPosition, maxRecords, text, { options, ...catalogSearchInfoSelector(store.getState()) })
                 )
                     .switchMap((result) => {
                         if (result.error) {
@@ -100,31 +106,31 @@ export default (API) => ({
     */
     addLayersFromCatalogsEpic: (action$, store) =>
         action$.ofType(ADD_LAYERS_FROM_CATALOGS)
-            .filter(({layers, sources}) => isArray(layers) && isArray(sources) && layers.length && layers.length === sources.length)
+            .filter(({ layers, sources }) => isArray(layers) && isArray(sources) && layers.length && layers.length === sources.length)
             // maxRecords is 4 (by default), but there can be a possibility that the record desired is not among
             // the results. In that case a more detailed search with full record name can be helpful
-            .switchMap(({layers, sources, options, startPosition = 1, maxRecords = 4 }) => {
+            .switchMap(({ layers, sources, options, startPosition = 1, maxRecords = 4 }) => {
                 const state = store.getState();
                 const addLayerOptions = options || searchOptionsSelector(state);
                 const services = servicesSelector(state);
                 const actions = layers
                     .filter((l, i) => !!services[sources[i]]) // ignore wrong catalog name
                     .map((l, i) => {
-                        const {type: format, url} = services[sources[i]];
+                        const { type: format, url } = services[sources[i]];
                         const text = layers[i];
-                        return Rx.Observable.defer( () =>
-                            API[format].textSearch(url, startPosition, maxRecords, text, addLayerOptions).catch(() => ({results: []}))
-                        ).map(r => ({...r, format, url, text}));
+                        return Rx.Observable.defer(() =>
+                            API[format].textSearch(url, startPosition, maxRecords, text, addLayerOptions).catch(() => ({ results: [] }))
+                        ).map(r => ({ ...r, format, url, text }));
                     });
                 return Rx.Observable.forkJoin(actions)
                     .switchMap((results) => {
                         if (isArray(results) && results.length) {
                             return Rx.Observable.of(results.map(r => {
-                                const {format, url, text, ...result} = r;
+                                const { format, url, text, ...result } = r;
                                 const locales = currentMessagesSelector(state);
                                 const records = getCatalogRecords(format, result, addLayerOptions, locales) || [];
                                 const record = head(records.filter(rec => rec.identifier === text)); // exact match of text and record identifier
-                                const {wms, wmts} = extractOGCServicesReferences(record);
+                                const { wms, wmts } = extractOGCServicesReferences(record);
                                 let layer = {};
                                 const layerBaseConfig = {}; // DO WE NEED TO FETCH IT FROM STATE???
                                 const authkeyParamName = authkeyParamNameSelector(state);
@@ -149,7 +155,7 @@ export default (API) => ({
                                         removeParams: authkeyParamName
                                     }, layerBaseConfig);
                                 } else {
-                                    const {esri} = extractEsriReferences(record);
+                                    const { esri } = extractEsriReferences(record);
                                     if (esri) {
                                         layer = esriToLayer(record, layerBaseConfig);
                                     }
@@ -177,7 +183,7 @@ export default (API) => ({
                 }
                 return Rx.Observable.empty();
             })
-            .catch( () => {
+            .catch(() => {
                 return Rx.Observable.empty();
             }),
     /**
@@ -194,59 +200,27 @@ export default (API) => ({
             .switchMap(() => {
                 const state = store.getState();
                 const newService = newServiceSelector(state);
-                const services = servicesSelector(state);
-                const errorMessage = error({
-                    title: "notification.warning",
-                    message: "catalog.notification.errorServiceUrl",
-                    autoDismiss: 6,
-                    position: "tc"
-                });
-                const warningMessage = error({
-                    title: "notification.warning",
-                    message: "catalog.notification.warningAddCatalogService",
-                    autoDismiss: 6,
-                    position: "tc"
-                });
-                let notification = errorMessage;
-                let addNewService = null;
-                return Rx.Observable.fromPromise(
-                    axios.get(API[newService.type].parseUrl(newService.url))
-                        .then((result) => {
-                            if (newService.title === "" || newService.url === "") {
-                                notification = warningMessage;
-                            }
-                            if (result.error || result.data === "") {
-                                return {notification: errorMessage, addNewService};
-                            }
-                            if (newService.title !== "" && newService.url !== "") {
-                                notification = warningMessage;
-                                if (!services[newService.title] || services[newService.title] && newService.oldService === newService.title) {
-                                    notification = success({
-                                        title: "notification.success",
-                                        message: "catalog.notification.addCatalogService",
-                                        autoDismiss: 6,
-                                        position: "tc"
-                                    });
-                                    addNewService = addCatalogService(newService);
-                                } else {
-                                    notification = error({
-                                        title: "notification.warning",
-                                        message: "catalog.notification.duplicatedServiceTitle",
-                                        autoDismiss: 6,
-                                        position: "tc"
-                                    });
-                                }
-                            }
-                            return {notification, addNewService};
-                        }))
-                    .switchMap((actions) => {
-                        return actions.addNewService !== null ? Rx.Observable.of(actions.notification, actions.addNewService) : Rx.Observable.of(actions.notification);
+                return Rx.Observable.of(newService)
+                    // validate
+                    .switchMap((service) => API[service.type]?.validate?.(service) ?? ( Rx.Observable.of(service)))
+                    .switchMap((service) => API[service.type]?.testService?.(service) ?? (Rx.Observable.of(service)))
+                    .switchMap(() => {
+                        return Rx.Observable.of(
+                            addCatalogService(newService),
+                            success({
+                                title: "notification.success",
+                                message: "catalog.notification.addCatalogService",
+                                autoDismiss: 6,
+                                position: "tc"
+                            })
+                        );
                     })
                     .startWith(savingService(true))
-                    .catch(() => {
+                    .catch((e) => {
                         return Rx.Observable.of(error({
+                            exception: e,
                             title: "notification.warning",
-                            message: "catalog.notification.warningAddCatalogService",
+                            message: e.notification || "catalog.notification.warningAddCatalogService",
                             autoDismiss: 6,
                             position: "tc"
                         }));
@@ -286,27 +260,91 @@ export default (API) => ({
             }),
     getMetadataRecordById: (action$, store) =>
         action$.ofType(GET_METADATA_RECORD_BY_ID)
-            .switchMap(() => {
+            .switchMap(({metadataOptions = {}}) => {
                 const state = store.getState();
                 const layer = getSelectedLayer(state);
-                return Rx.Observable.fromPromise(
-                    API.csw.getRecordById(layer.catalogURL)
-                )
-                    .switchMap((action) => {
-                        if (action && action.error) {
-                            return Rx.Observable.of(error({
-                                title: "notification.warning",
-                                message: "toc.layerMetadata.notification.warnigGetMetadataRecordById",
-                                autoDismiss: 6,
-                                position: "tc"
-                            }), showLayerMetadata({}, false));
-                        }
-                        if (action && action.dc) {
-                            return Rx.Observable.of(
-                                showLayerMetadata(action.dc, false)
-                            );
-                        }
-                        return Rx.Observable.empty();
+
+                return Rx.Observable.defer(() => API.wms.getCapabilities(LayersUtils.getCapabilitiesUrl(layer)))
+                    .switchMap((caps) => {
+                        const layersXml = get(caps, 'capability.layer.layer', []);
+                        const metadataUrls = layersXml.length === 1 ? layersXml[0].metadataURL : find(layersXml, l => l.name === layer.name.split(':')[1]);
+                        const metadataUrl = get(find(metadataUrls, mUrl => isString(mUrl.type) &&
+                            mUrl.type.toLowerCase() === 'iso19115:2003' &&
+                            (mUrl.format === 'application/xml' || mUrl.format === 'text/xml')), 'onlineResource.href');
+                        const metadataUrlHTML = get(find(metadataUrls, mUrl => isString(mUrl.type) &&
+                            mUrl.type.toLowerCase() === 'iso19115:2003' &&
+                            mUrl.format === 'text/html'), 'onlineResource.href');
+                        const extractor = find(get(metadataOptions, 'extractors', []),
+                            ({properties, layersRegex}) => {
+                                const rxp = layersRegex ? new RegExp(layersRegex) : null;
+                                return isObject(properties) && (layersRegex ? rxp.test(layer.name) : true);
+                            }
+                        );
+                        const defaultMetadata = metadataUrlHTML ? {metadataUrl: metadataUrlHTML} : {};
+
+                        const cswDCFlow = Rx.Observable.defer(() => API.csw.getRecordById(layer.catalogURL))
+                            .switchMap((action) => {
+                                if (action && action.error) {
+                                    return Rx.Observable.of(error({
+                                        title: "notification.warning",
+                                        message: "toc.layerMetadata.notification.warnigGetMetadataRecordById",
+                                        autoDismiss: 6,
+                                        position: "tc"
+                                    }), showLayerMetadata(defaultMetadata, false));
+                                }
+                                if (action && action.dc) {
+                                    return Rx.Observable.of(
+                                        showLayerMetadata({...defaultMetadata, ...action.dc}, false)
+                                    );
+                                }
+                                return Rx.Observable.empty();
+                            });
+
+                        const metadataFlow = Rx.Observable.defer(() => axios.get(metadataUrl))
+                            .pluck('data')
+                            .map(metadataXml => new DOMParser().parseFromString(metadataXml))
+                            .map(metadataDoc => {
+                                const selectXpath = xpathlib.useNamespaces(metadataOptions.xmlNamespaces || {});
+
+                                const processProperties = (properties = {}, doc) => toPairs(properties).reduce((result, [propName, xpath]) => {
+                                    let finalProp;
+
+                                    if (isObject(xpath) &&
+                                        isString(xpath.xpath) &&
+                                        isObject(xpath.properties) &&
+                                        keys(xpath.properties).length > 0
+                                    ) {
+                                        const newDocs = selectXpath(xpath.xpath, doc);
+                                        finalProp = newDocs.map(newDoc => processProperties(xpath.properties, newDoc));
+
+                                        if (finalProp.length === 0) {
+                                            finalProp = null;
+                                        }
+                                    } else {
+                                        const selectedNodes = selectXpath(xpath, doc);
+
+                                        if (selectedNodes.length === 1) {
+                                            finalProp =  get(selectedNodes[0], 'nodeValue') ?? get(selectedNodes[0], 'childNodes[0].nodeValue');
+                                        } else if (selectedNodes.length > 1) {
+                                            finalProp = selectedNodes.map(selectedNode => get(selectedNode, 'childNodes[0].nodeValue'))
+                                                .filter(selectedNode => !!selectedNode);
+                                        }
+                                    }
+
+                                    return {
+                                        ...result,
+                                        ...(finalProp ? {[propName]: finalProp} : {})
+                                    };
+                                }, {});
+
+                                return processProperties(extractor.properties, metadataDoc);
+                            })
+                            .switchMap((result) => {
+                                return Rx.Observable.of(showLayerMetadata({...defaultMetadata, ...result}, false));
+                            });
+
+                        return metadataUrl && extractor ? metadataFlow :
+                            layer.catalogURL ? cswDCFlow : Rx.Observable.of(showLayerMetadata(defaultMetadata, false));
                     })
                     .startWith(
                         showLayerMetadata({}, true)
@@ -324,18 +362,18 @@ export default (API) => ({
              * it trigger search automatically after a delay, default is 1s
              * it uses layersSearch in favor of
              */
-    autoSearchEpic: (action$, {getState = () => {}} = {}) =>
+    autoSearchEpic: (action$, { getState = () => { } } = {}) =>
         action$.ofType(CHANGE_TEXT)
             .debounce(() => {
                 const state = getState();
                 const delay = delayAutoSearchSelector(state);
                 return Rx.Observable.timer(delay);
             })
-            .switchMap(({text}) => {
+            .switchMap(({ text }) => {
                 const state = getState();
                 const pageSize = pageSizeSelector(state);
-                const {type, url} = selectedCatalogSelector(state);
-                return Rx.Observable.of(textSearch({format: type, url, startPosition: 1, maxRecords: pageSize, text}));
+                const { type, url } = selectedCatalogSelector(state);
+                return Rx.Observable.of(textSearch({ format: type, url, startPosition: 1, maxRecords: pageSize, text }));
             }),
 
     catalogCloseEpic: (action$, store) =>

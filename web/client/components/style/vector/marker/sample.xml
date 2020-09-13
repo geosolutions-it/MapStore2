@@ -1,0 +1,7 @@
+<ogc:Function name="numberFormat">
+    <ogc:Literal>##.###</ogc:Literal><!-- default format -->
+    <ogc:PropertyName>ELEVATION</ogc:PropertyName><!-- property to format -->
+    <ogc:Function name="env"><!-- language get from env -->
+        <ogc:Literal>mapstore_locale</ogc:Literal><!-- the locale string env variable, e.g. env=mapstore_locale:de -->
+    </ogc:Function>
+</ogc:Function>

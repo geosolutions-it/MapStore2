@@ -7,7 +7,7 @@
  */
 
 import { Parser } from 'xml2js';
-import { keys, values, get, head, mapValues, uniqWith, findIndex, pick, has } from 'lodash';
+import { keys, values, get, head, mapValues, uniqWith, findIndex, pick, has, toPairs } from 'lodash';
 import uuidv1 from 'uuid/v1';
 
 import {
@@ -121,6 +121,31 @@ export const toMapConfig = (wmcString, generateLayersGroup = false) => {
             const msTagsExtractor = extractTags.bind(null, namespaces.ms.ns);
             const attrExtractor = extractAttributeValue.bind(null, '');
             const xlinkExtractor = extractAttributeValue.bind(null, namespaces.xlink.ns);
+
+            const parseAttribute = attribute => {
+                const {name, type} = pickAttributeValues(attribute, 'name', 'type');
+                let value;
+
+                switch (type) {
+                case 'number':
+                    value = parseFloat(attribute.charContent);
+                    break;
+                case 'object':
+                    value = JSON.parse(attribute.charContent);
+                    break;
+                case 'boolean':
+                    value = parseBoolean(attribute.charContent);
+                    break;
+                default:
+                    value = attribute.charContent;
+                }
+
+                return {
+                    name,
+                    type,
+                    value
+                };
+            };
 
             const viewContext = rootTagExtractor({root: [result]}, 'ViewContext'); // the root element
             const general = rootTagExtractor(viewContext, 'General'); // General element
@@ -276,8 +301,23 @@ export const toMapConfig = (wmcString, generateLayersGroup = false) => {
             };
             const zoom = parseFloat(get(msTagExtractor(globalExtensions, 'zoom'), 'charContent'));
 
+            const catalogServices = msTagExtractor(globalExtensions, 'CatalogServices');
+            const selectedService = attrExtractor(catalogServices, 'selectedService');
+            const services = msTagsExtractor(catalogServices, 'Service')
+                .map(catalogService => [attrExtractor(catalogService, 'serviceName'), msTagsExtractor(catalogService, 'Attribute')])
+                .reduce((resultObj, [serviceName, attributes]) => ({
+                    ...resultObj,
+                    [serviceName]: attributes.map(parseAttribute).reduce((resultServiceObj, {name, value}) => ({
+                        ...resultServiceObj,
+                        [name]: value
+                    }), {})
+                }), {});
+
             const msMapConfig = {
-                catalogServices: {},
+                catalogServices: catalogServices && {
+                    selectedService,
+                    services
+                },
                 map: {
                     maxExtent,
                     bbox: zoom ? undefined : bbox,
@@ -319,7 +359,7 @@ const layerTypeToService = {
  * @param {number} [newline='\n'] newline to pass to writeXML
  */
 export const toWMC = (
-    {map},
+    {map, catalogServices},
     {
         title = 'MapStore Context',
         abstract = 'This is a map exported from MapStore2.'
@@ -372,7 +412,36 @@ export const toWMC = (
                 expanded: group.expanded
             })
         }))
-    } : null, center && {
+    } : null, catalogServices && {
+        name: 'CatalogServices',
+        attributes: catalogServices.selectedService && objectToAttributes({
+            selectedService: catalogServices.selectedService
+        }),
+        children: toPairs(catalogServices.services).map(([serviceName, service]) => ({
+            name: 'Service',
+            xmlns: namespaces.ms,
+            attributes: objectToAttributes({
+                serviceName
+            }),
+            children: keys(service).filter(key =>
+                service[key] !== undefined && service[key] !== null &&
+                (typeof service[key] === 'string' ||
+                typeof service[key] === 'boolean' ||
+                typeof service[key] === 'number' ||
+                typeof service[key] === 'bigint' ||
+                typeof service[key] === 'object')).map(key => ({
+                name: 'Attribute',
+                xmlns: namespaces.ms,
+                attributes: objectToAttributes({
+                    name: key,
+                    type: typeof service[key]
+                }),
+                textContent: typeof service[key] === 'object' ?
+                    JSON.stringify(service[key]) :
+                    service[key].toString()
+            }))
+        }))
+    }, center && {
         name: 'center',
         attributes: objectToAttributes(center)
     }, zoom && {

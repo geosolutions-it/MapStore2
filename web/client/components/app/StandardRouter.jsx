@@ -17,10 +17,13 @@ import Localized from '../I18N/Localized';
 import Theme from '../theme/Theme';
 import {ErrorBoundary} from 'react-error-boundary';
 import ErrorBoundaryFallbackComponent from './ErrorFallBackComp';
+import assign from 'object-assign';
 
 const ThemeProvider = connect((state) => ({
     theme: state.theme?.selectedTheme?.id
-}))(Theme);
+}), {}, (stateProps, dispatchProps, ownProps) => {
+    return assign({}, stateProps, dispatchProps, ownProps);
+})(Theme);
 
 class StandardRouter extends React.Component {
     static propTypes = {
@@ -66,7 +69,13 @@ class StandardRouter extends React.Component {
                     {this.props.themeLoaded ? (<Localized messages={this.props.locale.messages} locale={this.props.locale.current} loadingError={this.props.locale.localeError}>
                         <ConnectedRouter history={history}>
                             <div className="error-container">
-                                <ErrorBoundary FallbackComponent={ ErrorBoundaryFallbackComponent}>
+                                <ErrorBoundary
+                                    onError={e => {
+                                        /* eslint-disable no-console */
+                                        console.error(e);
+                                        /* eslint-enable no-console */
+                                    }}
+                                    FallbackComponent={ ErrorBoundaryFallbackComponent}>
                                     {this.renderPages()}
                                 </ErrorBoundary>
                             </div>
@@ -86,7 +95,13 @@ class StandardRouter extends React.Component {
                 <Localized messages={this.props.locale.messages} locale={this.props.locale.current} loadingError={this.props.locale.localeError}>
                     <ConnectedRouter history={history}>
                         <div className="error-container">
-                            <ErrorBoundary FallbackComponent={ ErrorBoundaryFallbackComponent}>
+                            <ErrorBoundary
+                                onError={e => {
+                                    /* eslint-disable no-console */
+                                    console.error(e);
+                                    /* eslint-enable no-console */
+                                }}
+                                FallbackComponent={ ErrorBoundaryFallbackComponent}>
                                 {this.renderPages()}
                             </ErrorBoundary>
                         </div>

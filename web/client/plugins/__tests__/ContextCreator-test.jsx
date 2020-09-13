@@ -14,9 +14,9 @@ import ReactTestUtils from 'react-dom/test-utils';
 
 import expect from 'expect';
 import { getPluginForTest } from './pluginsTestUtils';
-import ContextCreator from '../ContextCreator';
+import ContextCreator, { contextCreatorSelector } from '../ContextCreator';
 
-describe('ContextCreator component', () => {
+describe('ContextCreator plugin', () => {
     beforeEach((done) => {
         document.body.innerHTML = '<div id="container"></div>';
         setTimeout(done);
@@ -47,7 +47,7 @@ describe('ContextCreator component', () => {
         ReactTestUtils.Simulate.click(button); // <-- trigger event callback
         // check destination path
         expect(actions.length).toBeGreaterThanOrEqualTo(1);
-        expect(actions[0].destLocation).toBe("/context-manager");
+        expect(actions[1].destLocation).toBe("/context-manager");
     });
     it('custom destination', () => {
         const plugins = [
@@ -69,6 +69,35 @@ describe('ContextCreator component', () => {
         ReactTestUtils.Simulate.click(button); // <-- trigger event callback
         // check customization of destination path
         expect(actions.length).toBeGreaterThanOrEqualTo(1);
-        expect(actions[0].destLocation).toBe("MY_DESTINATION");
+        expect(actions[1].destLocation).toBe("MY_DESTINATION");
+    });
+});
+describe('contextCreatorSelector', () => {
+    const ADMIN_LOGGED_STATE = {
+        security: {
+            user: {
+                attribute: [
+                ],
+                enabled: true,
+                groups: {
+                    group: [
+                        {
+                            description: 'description',
+                            enabled: true,
+                            groupName: 'everyone',
+                            id: 479
+                        }
+                    ]
+                },
+                id: 3,
+                name: 'admin',
+                role: 'ADMIN'
+            }
+        }
+    };
+    // MapTemplates
+    it('user is passed as prop to provide role and so API to use to SaveModal', () => {
+        const props = contextCreatorSelector(ADMIN_LOGGED_STATE);
+        expect(props.user).toBe(ADMIN_LOGGED_STATE.security.user);
     });
 });

@@ -28,7 +28,8 @@ class GeometryEditor extends React.Component {
         onChangeRadius: PropTypes.func,
         onSetInvalidSelected: PropTypes.func,
         aeronauticalOptions: PropTypes.object,
-        onChangeText: PropTypes.func
+        onChangeText: PropTypes.func,
+        renderer: PropTypes.string
     };
 
     static defaultProps = {
@@ -67,10 +68,12 @@ class GeometryEditor extends React.Component {
             onHighlightPoint={this.props.onHighlightPoint}
             onSetInvalidSelected={this.props.onSetInvalidSelected}
             onChangeText={this.props.onChangeText}
+            renderer={this.props.renderer}
             onChange={(components, radius, text, crs) => {
                 let coords = components.map(c => [c.lon, c.lat]);
                 this.props.onChange(coords, radius, text, crs);
             }}/>);
+
     }
 
 }

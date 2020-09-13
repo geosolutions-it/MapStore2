@@ -9,26 +9,15 @@ const expect = require('expect');
 const measurement = require('../measurement');
 const {
     toggleMeasurement,
-    changeMeasurementState,
     changeUom,
     changeCoordinates,
     changeFormatMeasurement,
     resetGeometry,
-    changeGeometry,
     updateMeasures,
     init
 } = require('../../actions/measurement');
 const {RESET_CONTROLS, setControlProperty} = require('../../actions/controls');
-const feature = {
-    type: "Feature",
-    geometry: {
-        coordinates: [[2, 2], [3, 3]],
-        type: "LineString"
-    },
-    properties: {
-        disabled: true
-    }
-};
+
 describe('Test the measurement reducer', () => {
 
     it('returns original state on unrecognized action', () => {
@@ -41,15 +30,6 @@ describe('Test the measurement reducer', () => {
         expect(state.lengthFormula).toBe("haversine");
     });
 
-    it('CHANGE_MEASUREMENT_TOOL previous geomType LineString', () => {
-        const state = measurement( {geomType: "LineString"}, toggleMeasurement({
-            geomType: "LineString"
-        }));
-        expect(state.geomType).toBe(null);
-        expect(state.lineMeasureEnabled).toBe(false);
-        expect(state.areaMeasureEnabled).toBe(false);
-        expect(state.bearingMeasureEnabled).toBe(false);
-    });
     it('RESET_GEOMETRY', () => {
         const state = measurement({feature: {}}, resetGeometry());
         expect(state.feature.properties.disabled).toBe(true);
@@ -76,28 +56,6 @@ describe('Test the measurement reducer', () => {
         expect(state.bearingMeasureEnabled).toBe(false);
     });
 
-    it('CHANGE_MEASUREMENT_STATE', () => {
-        let testAction = changeMeasurementState({
-            lineMeasureEnabled: true,
-            areaMeasureEnabled: false,
-            bearingMeasureEnabled: false,
-            geomType: "LineString",
-            point: 0,
-            len: 120205,
-            area: 0,
-            bearing: 0,
-            lenUnit: "m",
-            areaUnit: "sqm",
-            feature
-        });
-        let state = measurement( {feature}, testAction);
-        expect(state.lineMeasureEnabled).toBe(true);
-        expect(state.areaMeasureEnabled).toBe(false);
-        expect(state.bearingMeasureEnabled).toBe(false);
-        expect(state.geomType).toBe("LineString");
-        expect(state.len).toBe(120205);
-    });
-
     it('CHANGE_UOM', () => {
         let state = measurement( {showLabel: true}, changeUom("length", {label: "km", value: "km"}, {
             length: {unit: 'm', label: 'm'},
@@ -107,12 +65,6 @@ describe('Test the measurement reducer', () => {
         expect(state.uom.length.label).toBe("km");
         expect(state.updatedByUI).toBe(true);
 
-    });
-    it('CHANGED_GEOMETRY', () => {
-        let state = measurement( {feature: {}}, changeGeometry(feature));
-        expect(state.feature.geometry.coordinates.length).toBe(2);
-        expect(state.isDrawing).toBe(false);
-        expect(state.updatedByUI).toBe(false);
     });
     it('RESET_CONTROLS', () => {
         let state = measurement( {feature: {}, geomType: "Bearing", bearingMeasureEnabled: true}, {type: RESET_CONTROLS});

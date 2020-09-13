@@ -39,6 +39,7 @@ import './mapstore-ol-overrides.css';
 class OpenlayersMap extends React.Component {
     static propTypes = {
         id: PropTypes.string,
+        document: PropTypes.object,
         style: PropTypes.object,
         center: ConfigUtils.PropTypes.center,
         zoom: PropTypes.number.isRequired,
@@ -66,7 +67,8 @@ class OpenlayersMap extends React.Component {
         wpsBounds: PropTypes.object,
         onWarning: PropTypes.func,
         maxExtent: PropTypes.array,
-        limits: PropTypes.object
+        limits: PropTypes.object,
+        onMouseOut: PropTypes.func
     };
 
     static defaultProps = {
@@ -85,7 +87,8 @@ class OpenlayersMap extends React.Component {
         resize: 0,
         registerHooks: true,
         hookRegister: mapUtils,
-        interactive: true
+        interactive: true,
+        onMouseOut: () => {}
     };
 
     componentDidMount() {
@@ -135,7 +138,7 @@ class OpenlayersMap extends React.Component {
             attributionOptions: assign({
                 collapsible: false
             }, this.props.mapOptions.attribution && this.props.mapOptions.attribution.container ? {
-                target: document.querySelector(this.props.mapOptions.attribution.container)
+                target: this.getDocument().querySelector(this.props.mapOptions.attribution.container)
             } : {})
         }, this.props.mapOptions.controls));
 
@@ -144,7 +147,7 @@ class OpenlayersMap extends React.Component {
             controls: controls,
             interactions: interactions,
             maxTilesLoading: Infinity,
-            target: `${this.props.id}`,
+            target: this.getDocument().getElementById(this.props.id) || `${this.props.id}`,
             view: this.createView(center, Math.round(this.props.zoom), this.props.projection, this.props.mapOptions && this.props.mapOptions.view, this.props.limits)
         });
 
@@ -156,6 +159,10 @@ class OpenlayersMap extends React.Component {
         this.map.enableEventListener = (event) => {
             delete this.map.disabledListeners[event];
         };
+        // The timeout is needed to cover the delay we have for the throttled mouseMove event.
+        this.map.getViewport().addEventListener('mouseout', () => {
+            setTimeout(() => this.props.onMouseOut(), 150);
+        });
         // TODO support disableEventListener
         map.on('moveend', this.updateMapInfoState);
         map.on('singleclick', (event) => {
@@ -310,7 +317,7 @@ class OpenlayersMap extends React.Component {
 
     componentWillUnmount() {
         const attributionContainer = this.props.mapOptions.attribution && this.props.mapOptions.attribution.container
-            && document.querySelector(this.props.mapOptions.attribution.container);
+            && this.getDocument().querySelector(this.props.mapOptions.attribution.container);
         if (attributionContainer && attributionContainer.querySelector('.ol-attribution')) {
             try {
                 attributionContainer.removeChild(attributionContainer.querySelector('.ol-attribution'));
@@ -323,6 +330,9 @@ class OpenlayersMap extends React.Component {
             this.map.setTarget(null);
         }
     }
+    getDocument = () => {
+        return this.props.document || document;
+    };
     /**
      * Calculates resolutions accordingly with default algorithm in GeoWebCache.
      * See this: https://github.com/GeoWebCache/geowebcache/blob/5e913193ff50a61ef9dd63a87887189352fa6b21/geowebcache/core/src/main/java/org/geowebcache/grid/GridSetFactory.java#L196
@@ -455,6 +465,7 @@ class OpenlayersMap extends React.Component {
 
     mouseMoveEvent = (event) => {
         if (!event.dragging && event.coordinate) {
+            const getElevation = this.map.get('elevationLayer') && this.map.get('elevationLayer').get('getElevation');
             let pos = event.coordinate.slice();
             let coords = toLonLat(pos, this.props.projection);
             let tLng = coords[0] / 360 % 1 * 360;
@@ -471,7 +482,15 @@ class OpenlayersMap extends React.Component {
                 pixel: {
                     x: event.pixel[0],
                     y: event.pixel[1]
-                }
+                },
+                latlng: {
+                    lat: coords[1],
+                    lng: tLng,
+                    z: getElevation && getElevation(pos, event.pixel) || undefined
+                },
+                lat: coords[1],
+                lng: tLng,
+                rawPos: event.coordinate.slice()
             });
         }
     };

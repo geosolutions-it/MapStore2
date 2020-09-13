@@ -43,6 +43,7 @@ const toolButtons = {
     editMedia: ({editMap: disabled = false, path, editMedia = () => {} }) => ({
         // using normal ToolbarButton because this has no options
         glyph: "pencil",
+        "data-button": "pencil",
         visible: true,
         disabled,
         tooltipId: "geostory.contentToolbar.editMedia",
@@ -75,18 +76,71 @@ const toolButtons = {
         onClick: () => {
             editWebPage({path});
         }
+    }),
+    muted: ({ update, muted }) => ({
+        glyph: muted ? 'muted' : 'audio',
+        visible: true,
+        active: !muted,
+        tooltipId: muted ? 'geostory.contentToolbar.enableAudio' : 'geostory.contentToolbar.disableAudio',
+        onClick: () => {
+            update('muted', !muted);
+        }
+    }),
+    autoplay: ({ update, autoplay, fit }) => ({
+        glyph: 'play-circle',
+        visible: !!(fit !== 'cover'),
+        active: autoplay,
+        tooltipId: autoplay ? 'geostory.contentToolbar.disableAutoplay' : 'geostory.contentToolbar.enableAutoplay',
+        onClick: () => {
+            update('autoplay', !autoplay);
+        }
+    }),
+    loop: ({ update, loop, fit }) => ({
+        glyph: 'loop',
+        visible: !!(fit !== 'cover'),
+        active: loop,
+        tooltipId: loop ? 'geostory.contentToolbar.disableLoop' : 'geostory.contentToolbar.enableLoop',
+        onClick: () => {
+            update('loop', !loop);
+        }
+    }),
+    showCaption: ({ editMap: disabled = false, update, showCaption, caption, description }) => ({
+        glyph: 'caption',
+        visible: !!(caption || description),
+        disabled,
+        active: !!(showCaption && !disabled),
+        tooltipId: showCaption ? 'geostory.contentToolbar.hideCaption' : 'geostory.contentToolbar.showCaption',
+        onClick: () => {
+            update('showCaption', !showCaption);
+        }
     })
 };
 
 /**
  * Toolbar to update properties of content,
- * @prop {array} tools list of tool's names to display in the edit toolbar, available tools `size`, `align` and `theme`
+ * @prop {array} tools list of tool's names or object ({ id: 'toolName' }) to display in the edit toolbar, available tools `size`, `align` and `theme`
  * @prop {string} size one of `small`, `medium`, `large` and `full`
  * @prop {string} align one of `left`, `center` and `right`
  * @prop {string} theme one of `bright`, `bright-text`, `dark` and `dark-text`
  * @prop {string} fit one of `contain` and `cover`
+ * @prop {boolean} muted enable/disable muted property (video)
+ * @prop {boolean} autoplay enable/disable autoplay property (video)
+ * @prop {boolean} loop enable/disable loop property (video)
+ * @prop {boolean} showCaption show/hide caption under media content
  * @prop {function} update handler for select properties events, parameters (key, value)
  * @example
+ *
+ * // tools prop with string
+ * function Content({ children }) {
+ *  return <div className="test-toolbar"><ContentToolbar tools={[ 'size' ]}/>{children}</div>;
+ * }
+ *
+ * // tools prop with object entry to override default props
+ * function Content({ children }) {
+ *  const size = { id: 'size', pullRight: true }; // override pullRight props of size dropdown
+ *  return <div className="test-toolbar"><ContentToolbar tools={[ size ]}/>{children}</div>;
+ * }
+ *
  */
 export default function ContentToolbar({
     tools = [],
@@ -100,8 +154,8 @@ export default function ContentToolbar({
                     noTooltipWhenDisabled: true
                 }}
                 buttons={tools
-                    .filter((id) => toolButtons[id])
-                    .map(id => toolButtons[id](props))}/>
+                    .filter((tool) => tool?.id && toolButtons[tool.id] || toolButtons[tool])
+                    .map(tool => tool?.id && toolButtons[tool.id]({ ...props, ...tool }) || toolButtons[tool](props))}/>
         </div>
     );
 }

@@ -6,11 +6,11 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-var Layers = require('../../../../utils/cesium/Layers');
-var Cesium = require('../../../../libs/cesium');
-var TileProvider = require('../../../../utils/TileConfigProvider');
-var ConfigUtils = require('../../../../utils/ConfigUtils');
-const ProxyUtils = require('../../../../utils/ProxyUtils');
+import Layers from '../../../../utils/cesium/Layers';
+import Cesium from '../../../../libs/cesium';
+import TileProvider from '../../../../utils/TileConfigProvider';
+import ConfigUtils from '../../../../utils/ConfigUtils';
+import ProxyUtils from '../../../../utils/ProxyUtils';
 
 function splitUrl(originalUrl) {
     let url = originalUrl;

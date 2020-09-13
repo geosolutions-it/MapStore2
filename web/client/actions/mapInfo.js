@@ -22,6 +22,7 @@ const GET_VECTOR_INFO = 'GET_VECTOR_INFO';
 const NO_QUERYABLE_LAYERS = 'NO_QUERYABLE_LAYERS';
 const CLEAR_WARNING = 'CLEAR_WARNING';
 const FEATURE_INFO_CLICK = 'FEATURE_INFO_CLICK';
+const UPDATE_FEATURE_INFO_CLICK_POINT  = 'IDENTIFY:UPDATE_FEATURE_INFO_CLICK_POINT';
 const TOGGLE_HIGHLIGHT_FEATURE = "IDENTIFY:TOGGLE_HIGHLIGHT_FEATURE";
 const TOGGLE_MAPINFO_STATE = 'TOGGLE_MAPINFO_STATE';
 const UPDATE_CENTER_TO_MARKER = 'UPDATE_CENTER_TO_MARKER';
@@ -29,6 +30,9 @@ const CHANGE_PAGE = 'IDENTIFY:CHANGE_PAGE';
 const CLOSE_IDENTIFY = 'IDENTIFY:CLOSE_IDENTIFY';
 const CHANGE_FORMAT = 'IDENTIFY:CHANGE_FORMAT';
 const TOGGLE_SHOW_COORD_EDITOR = 'IDENTIFY:TOGGLE_SHOW_COORD_EDITOR';
+const EDIT_LAYER_FEATURES = 'IDENTIFY:EDIT_LAYER_FEATURES';
+const SET_CURRENT_EDIT_FEATURE_QUERY = 'IDENTIFY:CURRENT_EDIT_FEATURE_QUERY';
+const SET_MAP_TRIGGER = 'IDENTIFY:SET_MAP_TRIGGER';
 
 const TOGGLE_EMPTY_MESSAGE_GFI = "IDENTIFY:TOGGLE_EMPTY_MESSAGE_GFI";
 const toggleEmptyMessageGFI = () => ({type: TOGGLE_EMPTY_MESSAGE_GFI});
@@ -37,13 +41,14 @@ const toggleEmptyMessageGFI = () => ({type: TOGGLE_EMPTY_MESSAGE_GFI});
  * Private
  * @return a LOAD_FEATURE_INFO action with the response data to a wms GetFeatureInfo
  */
-function loadFeatureInfo(reqId, data, rParams, lMetaData) {
+function loadFeatureInfo(reqId, data, rParams, lMetaData, layer) {
     return {
         type: LOAD_FEATURE_INFO,
         data: data,
         reqId: reqId,
         requestParams: rParams,
-        layerMetadata: lMetaData
+        layerMetadata: lMetaData,
+        layer
     };
 }
 
@@ -96,12 +101,13 @@ function newMapInfoRequest(reqId, reqConfig) {
     };
 }
 
-function getVectorInfo(layer, request, metadata) {
+function getVectorInfo(layer, request, metadata, queryableLayers) {
     return {
         type: GET_VECTOR_INFO,
         layer,
         request,
-        metadata
+        metadata,
+        queryableLayers
     };
 }
 
@@ -205,6 +211,13 @@ function featureInfoClick(point, layer, filterNameList = [], overrideParams = {}
     };
 }
 
+function updateFeatureInfoClickPoint(point) {
+    return {
+        type: UPDATE_FEATURE_INFO_CLICK_POINT,
+        point
+    };
+}
+
 function toggleHighlightFeature(enabled) {
     return {
         type: TOGGLE_HIGHLIGHT_FEATURE,
@@ -244,6 +257,21 @@ const changeFormat = (format) => ({
 const toggleShowCoordinateEditor = (showCoordinateEditor) => ({
     type: TOGGLE_SHOW_COORD_EDITOR,
     showCoordinateEditor
+});
+
+const editLayerFeatures = (layer) => ({
+    type: EDIT_LAYER_FEATURES,
+    layer
+});
+
+const setCurrentEditFeatureQuery = (query) => ({
+    type: SET_CURRENT_EDIT_FEATURE_QUERY,
+    query
+});
+
+const setMapTrigger = (trigger) => ({
+    type: SET_MAP_TRIGGER,
+    trigger
 });
 
 module.exports = {
@@ -288,5 +316,9 @@ module.exports = {
     loadFeatureInfo,
     toggleMapInfoState,
     updateCenterToMarker,
-    featureInfoClick
+    featureInfoClick,
+    UPDATE_FEATURE_INFO_CLICK_POINT, updateFeatureInfoClickPoint,
+    EDIT_LAYER_FEATURES, editLayerFeatures,
+    SET_CURRENT_EDIT_FEATURE_QUERY, setCurrentEditFeatureQuery,
+    SET_MAP_TRIGGER, setMapTrigger
 };

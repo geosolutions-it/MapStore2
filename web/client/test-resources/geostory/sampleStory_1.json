@@ -81,6 +81,19 @@
           "html": "<p>this is some html content</p>"
         }
       ]
+    },
+    {
+      "type": "banner",
+      "id": "SomeID_banner",
+      "title": "Abstract",
+      "contents": [{
+        "id": "SomeID2_banner",
+        "background": {
+            "fit": "cover",
+            "size": "full",
+            "align": "center"
+        }
+      }]
     }
   ]
 }

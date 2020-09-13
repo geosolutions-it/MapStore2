@@ -94,7 +94,20 @@
     <link rel="stylesheet" href="https://cesiumjs.org/releases/1.17/Build/Cesium/Widgets/widgets.css" />
     <script src="libs/cesium-navigation/cesium-navigation.js"></script>
     <link rel="stylesheet" href="libs/cesium-navigation/cesium-navigation.css" />
-
+    <script type="text/javascript" src="https://unpkg.com/bowser@2.7.0/es5.js"></script>
+    <script type="text/javascript">
+        var browserInfo = bowser.getParser(window.navigator.userAgent);
+        var isValidBrowser = browserInfo.satisfies({
+            "edge": ">1",
+            "chrome": ">1",
+            "safari": ">1",
+            "firefox": ">1"
+        });
+        if (!isValidBrowser) {
+            window.location.href = "unsupportedBrowser.html"
+            document.querySelector("container").style.display = "none";
+        }
+    </script>
 </head>
     <body>
         <div id="container">

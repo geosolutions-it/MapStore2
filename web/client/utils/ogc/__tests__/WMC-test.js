@@ -17,7 +17,35 @@ describe('WMC tests', () => {
         axios.get('base/web/client/test-resources/wmc/context.wmc').then(response => toMapConfig(response.data)).then(config => {
             expect(config).toExist();
             expect(config.version).toBe(2);
-            expect(config.catalogServices).toEqual({});
+            expect(config.catalogServices).toExist();
+            expect(config.catalogServices.selectedService).toBe('testservice');
+            expect(config.catalogServices.services).toEqual({
+                "Demo CSW Service": {
+                    autoload: true,
+                    title: "Demo CSW Service",
+                    type: "csw",
+                    url: "https://testserver/csw",
+                    oldService: "old_service"
+                },
+                "testservices": {
+                    autoload: false,
+                    type: "csw",
+                    url: "https://testserver/testservice/csw",
+                    title: "testservice",
+                    showAdvancedSettings: true,
+                    showTemplate: true,
+                    metadataTemplate: "<p>${description}</p>",
+                    format: "image/jpeg",
+                    jsObject: {
+                        parameter1: "value<>",
+                        parameter2: 1,
+                        parameter3: {
+                            parameter4: 2
+                        },
+                        parameter6: null
+                    }
+                }
+            });
             expect(config.map).toExist();
             expect(config.map.maxExtent).toEqual([-1, 1, -1, 1]);
             expect(config.map.projection).toBe('EPSG:3857');
@@ -126,7 +154,7 @@ describe('WMC tests', () => {
         axios.get('base/web/client/test-resources/wmc/context-no-groups.wmc').then(response => toMapConfig(response.data, true)).then(config => {
             expect(config).toExist();
             expect(config.version).toBe(2);
-            expect(config.catalogServices).toEqual({});
+            expect(config.catalogServices).toNotExist();
             expect(config.map).toExist();
             expect(config.map.maxExtent).toEqual([-1, 1, -1, 1]);
             expect(config.map.projection).toBe('EPSG:3857');
@@ -210,7 +238,7 @@ describe('WMC tests', () => {
         axios.get('base/web/client/test-resources/wmc/context-no-backgrounds.wmc').then(response => toMapConfig(response.data)).then(config => {
             expect(config).toExist();
             expect(config.version).toBe(2);
-            expect(config.catalogServices).toEqual({});
+            expect(config.catalogServices).toNotExist();
             expect(config.map).toExist();
             expect(config.map.maxExtent).toEqual([-1, 1, -1, 1]);
             expect(config.map.projection).toBe('EPSG:3857');

@@ -42,11 +42,18 @@ const Immersive = ({
     bubblingTextEditing = () => {},
     textEditorActiveClass = "",
     expandableMedia = false,
-    storyTheme
+    storyTheme,
+    mediaViewer,
+    contentToolbar,
+    inView,
+    storyFonts
 }) => {
     const hideContent = focusedContent && focusedContent.hideContent && (get(focusedContent, "target.id") === contentId);
     const visibility = hideContent ? 'hidden' : 'visible';
     const expandableBackgroundClassName = expandableMedia && background && background.type === 'map' ? ' ms-expandable-background' : '';
+    const overlayStoryTheme = storyTheme?.overlay || {};
+    const generalStoryTheme = storyTheme?.general || {};
+
     return (<section
         className={`ms-section ms-section-immersive${expandableBackgroundClassName}`}
         id={id}
@@ -58,7 +65,8 @@ const Immersive = ({
             disableToolbarPortal
             tools={{
                 [MediaTypes.IMAGE]: ['editMedia', 'fit', 'size', 'align', 'theme'],
-                [MediaTypes.MAP]: ['editMedia', 'editMap', 'size', 'align', 'theme']
+                [MediaTypes.MAP]: ['editMedia', 'editMap', 'size', 'align', 'theme'],
+                [MediaTypes.VIDEO]: ['editMedia', 'fit', 'size', 'align', 'theme', 'muted', 'autoplay', 'loop']
             }}
             // selector used by sticky polyfill to detect scroll events
             scrollContainerSelector="#ms-sections-container"
@@ -79,7 +87,10 @@ const Immersive = ({
                 background: `url(${pattern})`,
                 backgroundSize: '600px auto'
             }}
-            storyTheme={storyTheme}/>
+            storyTheme={generalStoryTheme}
+            mediaViewer={mediaViewer}
+            contentToolbar={contentToolbar}
+            inView={inView}/>
         <SectionContents
             tools={{
                 [ContentTypes.COLUMN]: ['size', 'align', 'theme']
@@ -99,12 +110,15 @@ const Immersive = ({
             contentProps={{
                 onVisibilityChange,
                 contentWrapperStyle: { minHeight: viewHeight, visibility },
-                expandable: expandableMedia
+                expandable: expandableMedia,
+                mediaViewer,
+                contentToolbar
             }}
             focusedContent={focusedContent}
             bubblingTextEditing={bubblingTextEditing}
             sectionType={sectionType}
-            storyTheme={storyTheme}
+            storyTheme={overlayStoryTheme}
+            storyFonts={storyFonts}
         />
         {mode === Modes.EDIT && !hideContent && <AddBar
             containerWidth={viewWidth}
@@ -114,6 +128,13 @@ const Immersive = ({
                 tooltipId: 'geostory.addTitleSection',
                 onClick: () => {
                     add('sections', id, SectionTypes.TITLE);
+                }
+            },
+            {
+                glyph: 'story-banner-section',
+                tooltipId: 'geostory.addBannerSection',
+                onClick: () => {
+                    add('sections', id, SectionTypes.BANNER);
                 }
             },
             {

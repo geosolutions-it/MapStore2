@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no">
+        <title>MapStore Unsupported Browser</title>
+        <style>
+            body {
+                margin: 0;
+            }
+            #container {
+                font-family: 'Raleway', sans-serif;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                position: absolute;
+                height: 100%;
+                width: 100%;
+                justify-content: center;
+            }
+        </style>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway" type='text/css'>
+    </head>
+    <body>
+        <div id="container">
+            <!-- assure the two images path are fetching correctly the sources -->
+            <img src="assets/img/MapStore2.png" alt="Mapstore2 Logo">
+            <h2 class="browserUnsupported">Current Browser is not supported</h2>
+            <p class="description">These are the ones we support</p>
+            <img src="assets/img/main-desktop-browser-logos.jpg" width="300" alt="Supported Browser (Chrome, Firefox, Safari, Edge)">
+        </div>
+        <script>
+            switch(navigator.language) {
+                case "en-US": case "en": {
+                    document.querySelector(".browserUnsupported").innerHTML = "Current Browser is not supported";
+                    document.querySelector(".description").innerHTML = "These are the ones we support";
+                    break;
+                }
+                case "it-IT": case "it": {
+                    document.querySelector(".browserUnsupported").innerHTML = "Il tuo browser non è supportato";
+                    document.querySelector(".description").innerHTML = "Questi sono i browser supportati";
+                    break;
+                }
+                case "fr-FR": case "fr": {
+                    document.querySelector(".browserUnsupported").innerHTML = "Le navigateur actuel n'est pas pris en charge";
+                    document.querySelector(".description").innerHTML = "Ce sont ceux que nous soutenons";
+                    break;
+                }
+                case "de-DE": case "de": {
+                    document.querySelector(".browserUnsupported").innerHTML = "Der aktuelle Browser wird nicht unterstützt";
+                    document.querySelector(".description").innerHTML = "Dies sind diejenigen, die wir unterstützen";
+                    break;
+                }
+                case "es-ES": case "es": {
+                    document.querySelector(".browserUnsupported").innerHTML = "El navegador actual no es compatible";
+                    document.querySelector(".description").innerHTML = "Estos son los que apoyamos";
+                    break;
+                }
+            }
+            console.log(window)
+        </script>
+    </body>
+</html>

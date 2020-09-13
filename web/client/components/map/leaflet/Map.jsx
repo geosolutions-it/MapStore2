@@ -21,6 +21,7 @@ require('./SingleClick');
 class LeafletMap extends React.Component {
     static propTypes = {
         id: PropTypes.string,
+        document: PropTypes.object,
         center: ConfigUtils.PropTypes.center,
         zoom: PropTypes.number.isRequired,
         mapStateSource: ConfigUtils.PropTypes.mapStateSource,
@@ -44,7 +45,8 @@ class LeafletMap extends React.Component {
         interactive: PropTypes.bool,
         resolutions: PropTypes.array,
         hookRegister: PropTypes.object,
-        onCreationError: PropTypes.func
+        onCreationError: PropTypes.func,
+        onMouseOut: PropTypes.func
     };
 
     static defaultProps = {
@@ -69,7 +71,8 @@ class LeafletMap extends React.Component {
         hookRegister: mapUtils,
         style: {},
         interactive: true,
-        resolutions: mapUtils.getGoogleMercatorResolutions(0, 23)
+        resolutions: mapUtils.getGoogleMercatorResolutions(0, 23),
+        onMouseOut: () => {}
     };
 
     state = { };
@@ -87,7 +90,6 @@ class LeafletMap extends React.Component {
             this.zoomOffset = Math.round(Math.log2(ratio));
         }
     }
-
     componentDidMount() {
         const {limits = {}} = this.props;
         const maxBounds = limits.restrictedExtent && limits.crs && CoordinatesUtils.reprojectBbox(limits.restrictedExtent, limits.crs, "EPSG:4326");
@@ -108,7 +110,7 @@ class LeafletMap extends React.Component {
             maxZoom: limits && limits.maxZoom || 23
         }, this.props.mapOptions, this.crs ? {crs: this.crs} : {});
 
-        const map = L.map(this.props.id, assign({ zoomControl: false }, mapOptions) ).setView([this.props.center.y, this.props.center.x],
+        const map = L.map(this.getDocument().getElementById(this.props.id), assign({ zoomControl: false }, mapOptions) ).setView([this.props.center.y, this.props.center.x],
             Math.round(this.props.zoom));
 
         this.map = map;
@@ -121,10 +123,11 @@ class LeafletMap extends React.Component {
 
         this.attribution = L.control.attribution();
         this.attribution.addTo(this.map);
+        const mapDocument = this.getDocument();
         if (this.props.mapOptions.attribution && this.props.mapOptions.attribution.container) {
-            document.querySelector(this.props.mapOptions.attribution.container).appendChild(this.attribution.getContainer());
-            if (document.querySelector('.leaflet-control-container .leaflet-control-attribution')) {
-                document.querySelector('.leaflet-control-container .leaflet-control-attribution').parentNode.removeChild(document.querySelector('.leaflet-control-container .leaflet-control-attribution'));
+            mapDocument.querySelector(this.props.mapOptions.attribution.container).appendChild(this.attribution.getContainer());
+            if (mapDocument.querySelector('.leaflet-control-container .leaflet-control-attribution')) {
+                mapDocument.querySelector('.leaflet-control-container .leaflet-control-attribution').parentNode.removeChild(mapDocument.querySelector('.leaflet-control-container .leaflet-control-attribution'));
             }
         }
 
@@ -159,6 +162,10 @@ class LeafletMap extends React.Component {
             if (this.props.onRightClick) {
                 this.props.onRightClick(event.containerPoint);
             }
+        });
+        // The timeout is needed to cover the delay we have for the throttled mouseMove event.
+        this.map.on('mouseout', () => {
+            setTimeout(() => this.props.onMouseOut(), 150);
         });
 
         this.updateMapInfoState();
@@ -209,8 +216,13 @@ class LeafletMap extends React.Component {
                 });
 
                 event.layer.on('tileloadstart ', () => { event.layer._ms2LoadingTileCount++; });
-                event.layer.on('tileerror', (errorEvent) => { event.layer.layerErrorStream$.next(errorEvent); });
-
+                if (event.layer.options && !event.layer.options.hideErrors || !event.layer.options) {
+                    event.layer.on('tileerror', (errorEvent) => { event.layer.layerErrorStream$.next(errorEvent); });
+                }
+                // WFS data
+                event.layer.on('loaderror', (error) => {
+                    this.props.onLayerError(error.target.layerId);
+                });
             }
         });
 
@@ -273,7 +285,8 @@ class LeafletMap extends React.Component {
     }
 
     componentWillUnmount() {
-        const attributionContainer = this.props.mapOptions.attribution && this.props.mapOptions.attribution.container && document.querySelector(this.props.mapOptions.attribution.container);
+        const mapDocument = this.getDocument();
+        const attributionContainer = this.props.mapOptions.attribution && this.props.mapOptions.attribution.container && mapDocument.querySelector(this.props.mapOptions.attribution.container);
         if (attributionContainer && this.attribution.getContainer() && attributionContainer.querySelector('.leaflet-control-attribution')) {
             try {
                 attributionContainer.removeChild(this.attribution.getContainer());
@@ -292,6 +305,10 @@ class LeafletMap extends React.Component {
         this.map.remove();
         this.map = undefined;
     }
+
+    getDocument = () => {
+        return this.props.document || document;
+    };
 
     getResolutions = () => {
         return this.props.resolutions;
@@ -396,7 +413,13 @@ class LeafletMap extends React.Component {
             pixel: {
                 x: event.containerPoint.x,
                 y: event.containerPoint.x
-            }
+            },
+            latlng: {
+                lat: event.latlng.lat,
+                lng: event.latlng.lng,
+                z: this.elevationLayer && this.elevationLayer.getElevation(event.latlng, event.containerPoint) || undefined
+            },
+            rawPos: [event.latlng.lat, event.latlng.lng]
         });
     };
 

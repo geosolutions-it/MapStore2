@@ -18,16 +18,27 @@ function degToDms(deg) {
     return "" + d + "° " + m + "' " + s + "'' ";
 }
 
-function getFormattedBearingValue(azimuth = 0) {
-    var bearing = "";
-    if (azimuth >= 0 && azimuth < 90) {
-        bearing = "N " + degToDms(azimuth) + "E";
-    } else if (azimuth > 90 && azimuth <= 180) {
-        bearing = "S " + degToDms(180.0 - azimuth) + "E";
-    } else if (azimuth > 180 && azimuth < 270) {
-        bearing = "S " + degToDms(azimuth - 180.0 ) + "W";
-    } else if (azimuth >= 270 && azimuth <= 360) {
-        bearing = "N " + degToDms(360 - azimuth ) + "W";
+function getFormattedBearingValue(azimuth = 0, {measureTrueBearing = false, fractionDigits =  0} = {}) {
+    let bearing = "";
+    if (!measureTrueBearing) {
+        if (azimuth >= 0 && azimuth < 90) {
+            bearing = "N " + degToDms(azimuth) + "E";
+        } else if (azimuth > 90 && azimuth <= 180) {
+            bearing = "S " + degToDms(180.0 - azimuth) + "E";
+        } else if (azimuth > 180 && azimuth < 270) {
+            bearing = "S " + degToDms(azimuth - 180.0 ) + "W";
+        } else if (azimuth >= 270 && azimuth <= 360) {
+            bearing = "N " + degToDms(360 - azimuth ) + "W";
+        }
+    } else {
+        let prefix = "";
+        if (azimuth >= 0 && azimuth < 10) {
+            prefix = "00";
+        } else if (azimuth > 10 && azimuth < 100) {
+            prefix = "0";
+        }
+        const adjValue = fractionDigits > 0  ? azimuth.toFixed(fractionDigits) : Math.floor(azimuth);
+        bearing =  prefix + adjValue + "° " + "T";
     }
 
     return bearing;

@@ -76,16 +76,18 @@ const StyleList = ({
             size="sm"
             onItemClick={({ name }) => onSelect({ style: defaultStyle === name ? '' : name }, true)}
             items={availableStyles
-                .filter(({name = '', title = '', _abstract = ''}) => !filterText
+                .filter(({name = '', title = '', _abstract = '', metadata = {} }) => !filterText
                     || filterText && (
                         name.indexOf(filterText) !== -1
+                        || metadata?.title?.indexOf(filterText) !== -1
+                        || metadata?.description?.indexOf(filterText) !== -1
                         || title.indexOf(filterText) !== -1
                         || _abstract.indexOf(filterText) !== -1
                     ))
                 .map(style => ({
                     ...style,
-                    title: style.label || style.title || style.name,
-                    description: style._abstract,
+                    title: style?.metadata?.title || style.label || style.title || style.name,
+                    description: style?.metadata?.description || style._abstract,
                     selected: enabledStyle === style.name,
                     preview: style.format &&
                             <SVGPreview

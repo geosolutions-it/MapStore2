@@ -70,19 +70,16 @@ describe("test identify enhancers", () => {
         const Component = identifyLifecycle(({onClose = () => {}}) => <div id="test-component" onClick={() => onClose()}></div>);
         const testHandlers = {
             closeIdentify: () => {},
-            purgeResults: () => {},
-            hideMarker: () => {}
+            purgeResults: () => {}
         };
         const spyCloseIdentify = expect.spyOn(testHandlers, 'closeIdentify');
         const spyPurgeResults = expect.spyOn(testHandlers, 'purgeResults');
-        const spyHideMarker = expect.spyOn(testHandlers, 'hideMarker');
         ReactDOM.render(
             <Component
                 enabled
                 responses={[{}]}
                 closeIdentify={testHandlers.closeIdentify}
-                purgeResults={testHandlers.purgeResults}
-                hideMarker={testHandlers.hideMarker}/>,
+                purgeResults={testHandlers.purgeResults}/>,
             document.getElementById("container")
         );
 
@@ -90,7 +87,6 @@ describe("test identify enhancers", () => {
         TestUtils.Simulate.click(testComponent);
         expect(spyCloseIdentify).toHaveBeenCalled();
         expect(spyPurgeResults).toHaveBeenCalled();
-        expect(spyHideMarker).toHaveBeenCalled();
     });
     it("test reset on unmount", () => {
         const Component = identifyLifecycle(({ onClose = () => { } }) => <div id="test-component" onClick={() => onClose()}></div>);
@@ -145,12 +141,12 @@ describe("test identify enhancers", () => {
         TestUtils.Simulate.click(testComponent);
         expect(spyChangeFormat).toHaveBeenCalled();
     });
-    it("test identifyLifecycle onChangeClickPoint", () => {
+    it("test identifyLifecycle onSubmitClickPoint", () => {
         const testHandlers = {
-            onChangeClickPoint: () => {}
+            onSubmitClickPoint: () => {}
         };
-        const spyOnChangeClickPoint = expect.spyOn(testHandlers, 'onChangeClickPoint');
-        const Component = identifyLifecycle(({onChangeClickPoint = () => {}}) => <div id="test-component" onClick={() => onChangeClickPoint("lat", "4")}></div>);
+        const spyOnSubmitClickPoint = expect.spyOn(testHandlers, 'onSubmitClickPoint');
+        const Component = identifyLifecycle(({onSubmitClickPoint = () => {}}) => <div id="test-component" onClick={() => onSubmitClickPoint({lat: "4", lon: "4"})}></div>);
         ReactDOM.render(
             <Component
                 enabled
@@ -158,14 +154,12 @@ describe("test identify enhancers", () => {
                 enabledCoordEditorButton
                 formatCoord="decimal"
                 responses={[{}]}
-                onChangeClickPoint={testHandlers.onChangeClickPoint}
+                onSubmitClickPoint={testHandlers.onSubmitClickPoint}
             />,
             document.getElementById("container")
         );
         const testComponent = document.getElementById('test-component');
         TestUtils.Simulate.click(testComponent);
-        expect(spyOnChangeClickPoint).toHaveBeenCalled();
+        expect(spyOnSubmitClickPoint).toHaveBeenCalled();
     });
-
-
 });

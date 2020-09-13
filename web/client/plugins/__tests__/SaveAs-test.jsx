@@ -58,5 +58,17 @@ describe('MapSave Plugins (MapSave, MapSaveAs)', () => {
             ReactDOM.render(<Plugin />, document.getElementById("container"));
             expect(document.getElementsByClassName('modal-fixed').length).toBe(1);
         });
+        describe('integrations', () => {
+            it('disablePermission options hides the permission (compatibility with system that do not use GeoStore)', () => {
+                const storeState = stateMocker(DUMMY_ACTION, toggleControl('mapSaveAs', 'enabled'));
+                const { Plugin } = getPluginForTest(MapSaveAs, storeState);
+                ReactDOM.render(<Plugin disablePermission />, document.getElementById("container"));
+                expect(document.querySelector('.modal-fixed')).toBeTruthy();
+                expect(document.querySelector('.permissions-table')).toBeFalsy();
+                ReactDOM.render(<Plugin />, document.getElementById("container"));
+                expect(document.querySelector('.modal-fixed')).toBeTruthy();
+                expect(document.querySelector('.permissions-table')).toBeTruthy();
+            });
+        });
     });
 });

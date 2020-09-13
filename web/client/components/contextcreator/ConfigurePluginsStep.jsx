@@ -9,7 +9,7 @@
 import React from 'react';
 import {compose, withState, lifecycle, getContext} from 'recompose';
 import {get} from 'lodash';
-import {Glyphicon, Button} from 'react-bootstrap';
+import {Glyphicon, Button, Tooltip, OverlayTrigger, Alert} from 'react-bootstrap';
 import {Controlled as Codemirror} from 'react-codemirror2';
 import 'codemirror/lib/codemirror.css';
 import 'codemirror/mode/javascript/javascript';
@@ -19,15 +19,17 @@ import ResizableModal from '../misc/ResizableModal';
 import ToolbarButton from '../misc/toolbar/ToolbarButton';
 import Message from '../I18N/Message';
 import ConfigureMapTemplates from './ConfigureMapTemplates';
+import tutorialEnhancer from './enhancers/tutorialEnhancer';
 
 import Dropzone from 'react-dropzone';
 import Spinner from "react-spinkit";
 
-import JSZip from 'jszip';
-import FileUtils from '../../utils/FileUtils';
 import LocaleUtils from '../../utils/LocaleUtils';
 import PropTypes from 'prop-types';
 import ConfirmModal from '../resources/modals/ConfirmModal';
+
+import {ERROR, checkZipBundle} from '../../utils/ExtensionsUtils';
+import Modal from "../misc/Modal";
 
 const getEnabledTools = (plugin, isMandatory, editedPlugin, documentationBaseURL, onEditPlugin,
     onShowDialog, changePluginsKey) => {
@@ -89,7 +91,8 @@ const getAvailableTools = (plugin, onShowDialog) => {
  * @param {object} cfgError object describing current cfg editing error
  * @param {function} setEditor editor instance setter
  * @param {string} documentationBaseURL base url for plugin documentation
- * @param {boolean} showMapTemplatesConfig
+ * @param {boolean} showDescriptionTooltip show a tooltip when hovering over plugin's description
+ * @param {number} descriptionTooltipDelay description tooltip show delay
  * @param {function} onEditPlugin edit plugin configuration callback
  * @param {function} onEnablePlugins enable plugins callback
  * @param {function} onDisablePlugins disable plugins callback
@@ -101,8 +104,8 @@ const getAvailableTools = (plugin, onShowDialog) => {
  * @param {boolean} processChildren if true this function will recursively convert the children
  * @param {boolean} parentIsEnabled true if 'enabled' property of parent plugin object is true
  */
-const pluginsToItems = (editedPlugin, editedCfg, cfgError, setEditor, documentationBaseURL, onEditPlugin,
-    onEnablePlugins, onDisablePlugins, onUpdateCfg, onShowDialog, changePluginsKey, isRoot, plugins = [],
+const pluginsToItems = (editedPlugin, editedCfg, cfgError, setEditor, documentationBaseURL, showDescriptionTooltip, descriptionTooltipDelay,
+    onEditPlugin, onEnablePlugins, onDisablePlugins, onUpdateCfg, onShowDialog, changePluginsKey, isRoot, plugins = [],
     processChildren, parentIsEnabled) =>
     plugins.filter(plugin => !plugin.hidden).map(plugin => {
         const enableTools = (isRoot || parentIsEnabled);
@@ -112,6 +115,8 @@ const pluginsToItems = (editedPlugin, editedCfg, cfgError, setEditor, documentat
             title: plugin.title || plugin.label || plugin.name,
             cardSize: 'sm',
             description: plugin.description || 'plugin name: ' + plugin.name,
+            showDescriptionTooltip,
+            descriptionTooltipDelay,
             mandatory: isMandatory,
             className: !isRoot && parentIsEnabled && !plugin.enabled ? 'plugin-card-disabled' : '',
             tools: enableTools ? (plugin.enabled ? getEnabledTools(plugin, isMandatory, editedPlugin, documentationBaseURL, onEditPlugin,
@@ -158,23 +163,85 @@ const pluginsToItems = (editedPlugin, editedCfg, cfgError, setEditor, documentat
                     {plugin.glyph ? <Glyphicon key="icon" glyph={plugin.glyph} /> : <Glyphicon key="icon" glyph="plug" />}
                 </React.Fragment>),
             children: processChildren &&
-                pluginsToItems(editedPlugin, editedCfg, cfgError, setEditor, documentationBaseURL, onEditPlugin,
-                    onEnablePlugins, onDisablePlugins, onUpdateCfg, onShowDialog, changePluginsKey, false, plugin.children,
-                    true, plugin.enabled) || []
+                pluginsToItems(editedPlugin, editedCfg, cfgError, setEditor, documentationBaseURL, showDescriptionTooltip,
+                    descriptionTooltipDelay, onEditPlugin, onEnablePlugins, onDisablePlugins, onUpdateCfg, onShowDialog,
+                    changePluginsKey, false, plugin.children, true, plugin.enabled) || []
         };
     });
 
 const pickIds = items => items && items.map(item => item.id);
 const ignoreMandatory = items => items && items.filter(item => !item.mandatory);
 
+const renderPluginError = (error) => {
+    const tooltip = (<Tooltip>
+        {error.message}
+    </Tooltip>);
+    return (
+        <OverlayTrigger placement="top" overlay={tooltip}>
+            <Glyphicon glyph="warning-sign"/>
+        </OverlayTrigger>
+    );
+};
 
-const renderUploading = (plugin) => {
-    const uploadingStatus = plugin.error ? <Glyphicon glyph="remove" />
-        : (plugin.uploading ? <Spinner spinnerName = "circle" noFadeIn overrideSpinnerClassName = "spinner" /> : <Glyphicon glyph="ok"/>);
-    return <div className="uploading-file">{uploadingStatus}<span className="plugin-name">{plugin.name}</span><span className="upload-error">{plugin.error && plugin.error.message || ""}</span></div>;
+const renderPluginsToUpload = (plugin, onRemove = () => {}) => {
+    const uploadingStatus = plugin.error ? <Glyphicon glyph="remove" /> : <Glyphicon glyph="ok"/>;
+    return (<div className="uploading-file">
+        {uploadingStatus}<span className="plugin-name">{plugin.name}</span>
+        <span className="upload-remove" onClick={onRemove}><Glyphicon glyph="trash" /></span>
+        <span className="upload-error">{plugin.error && renderPluginError(plugin.error)}</span>
+    </div>);
+};
+
+const renderUploadModal = ({
+    toUpload,
+    onClose,
+    onUpload,
+    onInstall,
+    onRemove,
+    isUploading,
+    uploadStatus
+}) => {
+    return (<Modal
+        show>
+        <Modal.Header key="dialogHeader">
+            <Modal.Title><Message msgId="contextCreator.configurePlugins.uploadTitle" /></Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+            {isUploading ? <Spinner/> : <div className="configure-plugins-step-upload">
+                <Dropzone
+                    key="dropzone"
+                    rejectClassName="dropzone-danger"
+                    className="dropzone"
+                    activeClassName="active"
+                    onDrop={onUpload}>
+                    <div style={{
+                        display: "flex",
+                        alignItems: "center",
+                        width: "100%",
+                        height: "100%",
+                        justifyContent: "center"
+                    }}>
+                        <span style={{
+                            textAlign: "center"
+                        }}>
+                            <Message msgId="contextCreator.configurePlugins.uploadLabel"/>
+                        </span>
+                    </div>
+                </Dropzone>
+                <div className="uploads-list">{toUpload.map((plugin, idx) => renderPluginsToUpload(plugin, () => onRemove(idx)))}</div>
+                {uploadStatus && uploadStatus.result === "error" && <Alert bsStyle="danger"><Message msgId="contextCreator.configurePlugins.uploadError"/>{uploadStatus.error.message}</Alert>}
+                {uploadStatus && uploadStatus.result === "ok" && <Alert bsStyle="info"><Message msgId="contextCreator.configurePlugins.uploadOk"/></Alert>}
+            </div>}
+        </Modal.Body>
+        <Modal.Footer>
+            <Button onClick={onClose}><Message msgId="contextCreator.configurePlugins.cancelUpload"/></Button>
+            <Button bsStyle="primary" onClick={onInstall} disabled={toUpload.filter(f => !f.error).length === 0}><Message msgId="contextCreator.configurePlugins.install"/></Button>
+        </Modal.Footer>
+    </Modal>);
 };
 
 const configurePluginsStep = ({
+    user,
     loading,
     loadFlags,
     allPlugins = [],
@@ -189,14 +256,19 @@ const configurePluginsStep = ({
     availablePluginsFilterPlaceholder = "contextCreator.configurePlugins.pluginsFilterPlaceholder",
     enabledPluginsFilterPlaceholder = "contextCreator.configurePlugins.pluginsFilterPlaceholder",
     documentationBaseURL,
+    showDescriptionTooltip = true,
+    descriptionTooltipDelay = 600,
     uploadEnabled = false,
+    pluginsToUpload = [],
     uploading = [],
+    uploadResult,
     showDialog = {},
     mapTemplates,
     availableTemplatesFilterText,
     enabledTemplatesFilterText,
     availableTemplatesFilterPlaceholder,
     enabledTemplatesFilterPlaceholder,
+    disablePluginSort = false,
     onFilterAvailablePlugins = () => {},
     onFilterEnabledPlugins = () => {},
     onEditPlugin = () => {},
@@ -208,7 +280,8 @@ const configurePluginsStep = ({
     setEditor = () => {},
     onEnableUpload = () => {},
     onUpload = () => {},
-    onUploadError = () => {},
+    onAddUpload = () => {},
+    onRemoveUpload = () => {},
     onShowDialog = () => {},
     onRemovePlugin = () => {},
     onSaveTemplate,
@@ -222,77 +295,42 @@ const configurePluginsStep = ({
     setFileDropStatus,
     messages = {}
 }) => {
-
+    const uploadErrors = {
+        [ERROR.WRONG_FORMAT]: "contextCreator.configurePlugins.uploadWrongFileFormatError",
+        [ERROR.MISSING_INDEX]: "contextCreator.configurePlugins.uploadMissingIndexError",
+        [ERROR.MALFORMED_INDEX]: "contextCreator.configurePlugins.uploadParseError",
+        [ERROR.MISSING_PLUGIN]: "contextCreator.configurePlugins.uploadMissingPluginError",
+        [ERROR.MISSING_BUNDLE]: "contextCreator.configurePlugins.uploadMissingBundleError",
+        [ERROR.TOO_MANY_BUNDLES]: "contextCreator.configurePlugins.uploadTooManyBundlesError",
+        [ERROR.ALREADY_INSTALLED]: "contextCreator.configurePlugins.uploadAlreadyInstalledError"
+    };
     const checkUpload = (files) => {
         Promise.all(files.map(file => {
-            return FileUtils.readZip(file).then((buffer) => {
-                var zip = new JSZip();
-                return zip.loadAsync(buffer);
-            }).then((zip) => {
-                if (zip.files["index.json"]) {
-                    return zip.files["index.json"].async("text").then((json) => {
-                        try {
-                            const index = JSON.parse(json);
-                            if (index.plugins && index.plugins[0].name) {
-                                return { name: index.plugins[0].name, file };
-                            }
-                        } catch (e) {
-                            throw new Error(LocaleUtils.getMessageById(messages, "contextCreator.configurePlugins.uploadParseError"));
-                        }
-                        throw new Error(LocaleUtils.getMessageById(messages, "contextCreator.configurePlugins.uploadMissingFileError"));
-                    }).catch(e => {
-                        throw e;
-                    });
-                }
-                throw new Error(LocaleUtils.getMessageById(messages, "contextCreator.configurePlugins.uploadMissingFileError"));
-            }).catch(e => {
-                throw e;
+            return checkZipBundle(file, allPlugins.map(p => p.name)).catch(e => {
+                throw new Error(LocaleUtils.getMessageById(messages, uploadErrors[e]));
             });
         })).then((namedFiles) => {
-            onUpload(namedFiles);
+            onAddUpload(namedFiles);
         }).catch(e => {
-            onUploadError(files.map(f => ({file: f, error: e})));
+            onAddUpload(files.map(f => ({name: f.name, file: f, error: e})));
         });
     };
-
+    const installUploads = () => {
+        const uploads = pluginsToUpload.filter(f => !f.error);
+        onUpload(uploads);
+    };
     const selectedPlugins = allPlugins.filter(plugin => plugin.selected);
     const availablePlugins = allPlugins.filter(plugin => !plugin.enabled);
     const enabledPlugins = allPlugins.filter(plugin => plugin.enabled);
 
     const pluginsToItemsFunc = pluginsToItems.bind(null, editedPlugin, editedCfg, cfgError, setEditor, documentationBaseURL,
+        showDescriptionTooltip, descriptionTooltipDelay,
         onEditPlugin, onEnablePlugins, onDisablePlugins, onUpdateCfg, onShowDialog, changePluginsKey, true);
 
     const selectedItems = pluginsToItemsFunc(selectedPlugins, false);
     const availableItems = pluginsToItemsFunc(availablePlugins, true);
     const enabledItems = pluginsToItemsFunc(enabledPlugins, true);
-    if (uploadEnabled) {
-        return (<div className="configure-plugins-step-upload">
-            <div className="title-header"><Message msgId="contextCreator.configurePlugins.uploadTitle" /><Glyphicon glyph="1-close" style={{ cursor: "pointer" }} onClick={(e) => {
-                e.stopPropagation();
-                onEnableUpload(false);
-            }} /></div>
-            <Dropzone
-                key="dropzone"
-                rejectClassName="alert-danger"
-                className="alert alert-info"
-                onDrop={checkUpload}>
-                <div style={{
-                    display: "flex",
-                    alignItems: "center",
-                    width: "100%",
-                    height: "100%",
-                    justifyContent: "center"
-                }}>
-                    <span style={{
-                        textAlign: "center"
-                    }}>
-                        <Message msgId="contextCreator.configurePlugins.uploadLabel"/>
-                    </span>
-                </div>
-            </Dropzone>
-            {uploading.map(plugin => renderUploading(plugin))}
-        </div>);
-    }
+
     return (
         <div className="configure-plugins-step">
             <Transfer
@@ -337,6 +375,10 @@ const configurePluginsStep = ({
                     'left'
                 }
                 sortStrategy={items => {
+                    if (disablePluginSort) {
+                        return items;
+                    }
+
                     const recursiveSort = curItems => curItems && curItems.map(item => ({...item, children: recursiveSort(item.children)}))
                         .sort((x, y) => x.title < y.title ? -1 : 1);
                     return recursiveSort(items);
@@ -351,6 +393,7 @@ const configurePluginsStep = ({
                 onSelect={items => setSelectedPlugins(pickIds(ignoreMandatory(items)))}
                 onTransfer={(items, direction) => (direction === 'right' ? onEnablePlugins : onDisablePlugins)(pickIds(ignoreMandatory(items)))}/>
             <ResizableModal
+                loading={loading && loadFlags.templateDataLoading}
                 showFullscreen
                 title={<Message msgId="contextCreator.configureTemplates.title"/>}
                 show={showDialog.mapTemplatesConfig}
@@ -359,6 +402,7 @@ const configurePluginsStep = ({
                 size="lg"
                 onClose={() => onShowDialog('mapTemplatesConfig', false)}>
                 <ConfigureMapTemplates
+                    user={user}
                     loading={loading}
                     loadFlags={loadFlags}
                     mapTemplates={mapTemplates}
@@ -384,6 +428,15 @@ const configurePluginsStep = ({
             <ConfirmModal onClose={onShowDialog.bind(null, 'confirmRemovePlugin', false)} onConfirm={onRemovePlugin.bind(null, showDialog.confirmRemovePluginPayload)} show={showDialog.confirmRemovePlugin} buttonSize="large">
                 <Message msgId="contextCreator.configurePlugins.confirmRemovePlugin"/>
             </ConfirmModal>
+            {uploadEnabled && renderUploadModal({
+                toUpload: pluginsToUpload,
+                onClose: () => onEnableUpload(false),
+                onUpload: checkUpload,
+                onInstall: installUploads,
+                onRemove: onRemoveUpload,
+                isUploading: uploading.filter(u => u.uploading).length > 0,
+                uploadStatus: uploadResult
+            })}
         </div>
     );
 };
@@ -408,5 +461,6 @@ export default compose(
                 }
             }
         }
-    })
+    }),
+    tutorialEnhancer('configureplugins-initial')
 )(configurePluginsStep);
