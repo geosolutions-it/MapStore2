@@ -43,6 +43,7 @@ export default ({
     expandable,
     mediaViewer,
     contentToolbar,
+    sectionType,
     overrideTools,
     storyFonts
 }) => (
@@ -59,6 +60,7 @@ export default ({
         viewWidth={viewWidth}
         viewHeight={viewHeight}
         bubblingTextEditing={bubblingTextEditing}
+        sectionType={sectionType}
         contentProps={{
             expandable,
             mediaViewer,
