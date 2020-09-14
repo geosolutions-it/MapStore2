@@ -15,6 +15,7 @@ const { isPluginInContext } = require('./context');
 const { currentLocaleSelector } = require('./locale');
 const MapInfoUtils = require('../utils/MapInfoUtils');
 const {isCesium} = require('./maptype');
+const {isMouseMoveIdentifyActiveSelector: identifyFloatingTool } = require('../selectors/map');
 
 const {pluginsSelectorCreator} = require('./localConfig');
 /**
@@ -112,6 +113,8 @@ const responsesSelector = state => state.mapInfo && state.mapInfo.responses || [
 
 const requestsSelector = state => state?.mapInfo?.requests || [];
 
+const isLoadedResponseSelector = state => state?.mapInfo?.loaded;
+
 /**
  * Gets only the valid responses
  */
@@ -119,9 +122,10 @@ const validResponsesSelector = createSelector(
     requestsSelector,
     responsesSelector,
     generalInfoFormatSelector,
-    (requests, responses, format) => {
+    identifyFloatingTool,
+    (requests, responses, format, renderEmpty) => {
         const validatorFormat = MapInfoUtils.getValidator(format);
-        return requests.length === responses.length && validatorFormat.getValidResponses(responses);
+        return requests.length === responses.length && validatorFormat.getValidResponses(responses, renderEmpty);
     });
 
 const currentResponseSelector = createSelector(
@@ -224,5 +228,6 @@ module.exports = {
     filterNameListSelector,
     isMapPopup,
     currentEditFeatureQuerySelector,
-    mapTriggerSelector
+    mapTriggerSelector,
+    isLoadedResponseSelector
 };

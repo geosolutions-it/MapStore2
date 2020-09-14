@@ -118,7 +118,7 @@ const ogcDateField = (attribute, operator, value, nsplaceholder) => {
 
 const ogcListField = (attribute, operator, value, nsplaceholder) => {
     let fieldFilter;
-    if (isNil(value)) {
+    if (!isNil(value)) {
         fieldFilter =
             ogcComparisonOperators[operator](nsplaceholder,
                 propertyTagReference[nsplaceholder].startTag +

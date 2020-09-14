@@ -111,6 +111,10 @@ const getInitialActions = (options) => {
 /**
  * MapStore2 JavaScript API. Allows embedding MapStore2 functionalities into
  * a standard HTML page.
+ *
+ * ATTENTION: As of July 2020 a number of MapStore2 plugins (i.e. TOC layer settings, Identify) use react-dock for providing
+ * Dock panel functionality, that assumes that we use the whole window, so the panels won't show up at all or will
+ * not be constrained within the container.
  * @class
  */
 const MapStore2 = {

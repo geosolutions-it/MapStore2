@@ -43,6 +43,8 @@ export default ({
     expandable,
     mediaViewer,
     contentToolbar,
+    sectionType,
+    overrideTools,
     storyFonts
 }) => (
     <Contents
@@ -58,6 +60,7 @@ export default ({
         viewWidth={viewWidth}
         viewHeight={viewHeight}
         bubblingTextEditing={bubblingTextEditing}
+        sectionType={sectionType}
         contentProps={{
             expandable,
             mediaViewer,
@@ -69,7 +72,8 @@ export default ({
             [MediaTypes.IMAGE]: ['editMedia', size(), 'showCaption', 'remove'],
             [MediaTypes.MAP]: ['editMedia', 'editMap', size(true), 'showCaption', 'remove'],
             [ContentTypes.WEBPAGE]: ['editURL', size(true), 'remove'],
-            [MediaTypes.VIDEO]: ['editMedia', 'muted', 'autoplay', 'loop', 'showCaption', 'remove']
+            [MediaTypes.VIDEO]: ['editMedia', 'muted', 'autoplay', 'loop', 'showCaption', 'remove'],
+            ...overrideTools
         }}
         addButtons={[{
             glyph: 'sheet',

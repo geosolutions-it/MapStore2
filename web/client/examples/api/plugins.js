@@ -29,7 +29,7 @@ module.exports = {
         BurgerMenuPlugin: require('../../plugins/BurgerMenu'),
         UndoPlugin: require('../../plugins/History'),
         RedoPlugin: require('../../plugins/History'),
-        MapsPlugin: require('../../plugins/Maps'),
+        MapsPlugin: require('../../plugins/Maps').default,
         MapSearchPlugin: require('../../plugins/MapSearch'),
         LanguagePlugin: require('../../plugins/Language'),
         ManagerPlugin: require('../../plugins/manager/Manager'),
@@ -40,7 +40,8 @@ module.exports = {
         TOCPlugin: require('../../plugins/TOC'),
         BackgroundSelectorPlugin: require('../../plugins/BackgroundSelector'),
         MeasurePlugin: require('../../plugins/Measure'),
-        TOCItemsSettingsPlugin: require('../../plugins/TOCItemsSettings')
+        TOCItemsSettingsPlugin: require('../../plugins/TOCItemsSettings'),
+        IdentifyPlugin: require('../../plugins/Identify')
     },
     requires: {
         ReactSwipe: require('react-swipeable-views').default,

@@ -19,9 +19,10 @@ In order to create a new story, the user can click on the **New StoryMap** butto
 
 The Story content is organized in Sections, that can be added with the <img src="../img/button/add-section.jpg" class="ms-docbutton"/> button in the *Container* area. In particular, the user can add to the story the following kind of sections:
 
-<img src="../img/exploring-stories/sections.jpg" class="ms-docimage"/>
+<img src="../img/exploring-stories/sections.jpg" class="ms-docimage" width="400px"/>
 
 * [Title Section](title-section.md)
+* [Banner Section](banner-section.md)
 * [Paragraph Section](paragraph-section.md)
 * [Immersive Section](immersive-section.md)
 * [Media Section](media-section.md)
@@ -78,6 +79,14 @@ Inside the **Social** section, social links like Facebook, Twitter and LinkedIn 
 
 <img src="../img/exploring-stories/share-social.jpg" class="ms-docimage" width="400px"/>
 
-Through the **Advanced Options** it is possible to include an Home button to allow the possibility to brings the user to the MapStore Home Page: that button will be automatically included in view mode inside the story top bar just beside the navigation bar.
+Through the **Advanced Options** it is possible include to the URL:
+
+<img src="../img/exploring-stories/share_options.jpg" class="ms-docimage" width="400px"/>
+
+* The *Home button* to allow the possibility to bring the user to the MapStore Home Page: that button will be automatically included in view mode inside the story top bar just beside the navigation bar.
 
 <img src="../img/exploring-stories/share-page.jpg" class="ms-docimage"/>
+
+* The *scroll position* provides a share URL of the current section visualized by the user.
+
+<img src="../img/exploring-stories/share_section.jpg" class="ms-docimage"/>

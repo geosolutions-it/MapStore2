@@ -53,7 +53,7 @@ const GeoStory = ({
 
     useEffect(() => {
         if (storyFonts.length > 0) {
-            const storyFontsSrc = storyFonts.filter(({ src }) => src && !document?.head.querySelector(`link[href='${src}']`));
+            const storyFontsSrc = storyFonts.filter(({ src }) => src && !document.head.querySelector(`link[href='${src}']`));
             if (storyFontsSrc.length > 0) {
                 webFont.load(createWebFontLoaderConfig(
                     storyFonts,

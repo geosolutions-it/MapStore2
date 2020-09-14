@@ -13,7 +13,7 @@ const { userSelector } = require('../../selectors/security');
 const { widgetsConfig } = require('../../selectors/widgets');
 const { isShowSaveOpen, dashboardResource, isDashboardLoading, getDashboardSaveErrors } = require('../../selectors/dashboard');
 const { saveDashboard, triggerSave } = require('../../actions/dashboard');
-const handleSaveModal = require('../../components/resources/modals/enhancers/handleSaveModal');
+const handleSaveModal = require('../../components/resources/modals/enhancers/handleSaveModal').default;
 
 /**
  * Save dialog component enhanced for dashboard

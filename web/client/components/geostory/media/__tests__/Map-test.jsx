@@ -47,22 +47,15 @@ describe('Map component', () => {
         expect(document.body.children[1].getAttribute('class')).toBe('ms-expanded-media-container');
     });
     it('should use cursor pointer with active map info control', () => {
-        const mockStore = { subscribe: () => {}, getState: () => ({
-            maptype: {
-                mapType: 'openlayers'
-            }
-        }) };
         const MAP = {
             layers: [],
             mapInfoControl: true
         };
-
         ReactDOM.render(
-            <Provider store={mockStore}>
-                <Map
-                    id="map"
-                    map={MAP} />
-            </Provider>,
+            <Map
+                id="map"
+                mapType="openlayers"
+                map={MAP} />,
             document.getElementById("container"));
 
         const container = document.getElementById('container');

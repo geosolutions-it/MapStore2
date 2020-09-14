@@ -23,7 +23,7 @@
         "Forbidden": "Forbidden",
         "annotations": {
             "add": "Mới",
-            "addMarker": "Thêm một hình mới",
+            "addGeometry": "Thêm một hình mới",
             "applyStyle": "Áp dụng kiểu",
             "back": "Trở lại",
             "cancel": "Hủy bỏ",

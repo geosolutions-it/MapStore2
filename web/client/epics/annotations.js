@@ -27,14 +27,14 @@ const {updateAnnotationGeometry, setStyle, toggleStyle, cleanHighlight, toggleAd
     SET_STYLE, RESTORE_STYLE, HIGHLIGHT, CLEAN_HIGHLIGHT, CONFIRM_CLOSE_ANNOTATIONS, START_DRAWING,
     CANCEL_CLOSE_TEXT, SAVE_TEXT, DOWNLOAD, LOAD_ANNOTATIONS, CHANGED_SELECTED, RESET_COORD_EDITOR, CHANGE_RADIUS,
     ADD_NEW_FEATURE, SET_EDITING_FEATURE, CHANGE_TEXT, NEW_ANNOTATION, TOGGLE_STYLE, CONFIRM_DELETE_FEATURE, OPEN_EDITOR,
-    LOAD_DEFAULT_STYLES
+    TOGGLE_ANNOTATION_VISIBILITY, LOAD_DEFAULT_STYLES
 } = require('../actions/annotations');
 
 const uuidv1 = require('uuid/v1');
 const {FEATURES_SELECTED, GEOMETRY_CHANGED, DRAWING_FEATURE} = require('../actions/draw');
 const {PURGE_MAPINFO_RESULTS} = require('../actions/mapInfo');
 
-const {head, findIndex, castArray, isArray, find, values} = require('lodash');
+const {head, findIndex, castArray, isArray, find, isUndefined, values} = require('lodash');
 const assign = require('object-assign');
 const {annotationsLayerSelector, multiGeometrySelector, symbolErrorsSelector} = require('../selectors/annotations');
 const {normalizeAnnotation, removeDuplicate, validateCoordsArray, getStartEndPointsForLinestring, DEFAULT_ANNOTATIONS_STYLES,
@@ -243,7 +243,7 @@ module.exports = (viewer) => ({
         }),
     removeAnnotationEpic: (action$, store) => action$.ofType(CONFIRM_REMOVE_ANNOTATION)
         .switchMap((action) => {
-            if (action.id === 'geometry') {
+            if (action.attribute === 'geometry') {
                 let state = store.getState();
                 const feature = state.annotations.editing;
                 const drawing = state.annotations.drawing;
@@ -261,7 +261,7 @@ module.exports = (viewer) => ({
 
                 return Rx.Observable.from([
                     changeDrawingStatus("replace", store.getState().annotations.featureType, "annotations", [store.getState().annotations.editing], {}),
-                    changeDrawingStatus("drawOrEdit", type, "annotations", [feature], drawOptions, assign({}, feature.style, {highlight: false}))
+                    changeDrawingStatus("drawOrEdit", CONFIRM_REMOVE_ANNOTATION, "annotations", [feature], drawOptions, assign({}, feature.style, {highlight: false}))
                 ]);
             }
             const newFeatures = annotationsLayerSelector(store.getState()).features.filter(f => f.properties.id !== action.id);
@@ -413,6 +413,16 @@ module.exports = (viewer) => ({
                                 highlight: true
                             }))
                         })) || []
+                    }) : f)
+                })
+            );
+        }),
+    showHideAnnotationEpic: (action$, store) => action$.ofType(TOGGLE_ANNOTATION_VISIBILITY)
+        .switchMap((action) => {
+            return Rx.Observable.of(
+                updateNode('annotations', 'layer', {
+                    features: annotationsLayerSelector(store.getState()).features.map(f => f.properties.id === action.id ? assign({}, f, {
+                        properties: {...f.properties, visibility: !isUndefined(f.properties.visibility) ? !f.properties.visibility : false}
                     }) : f)
                 })
             );
@@ -669,7 +679,6 @@ module.exports = (viewer) => ({
             if (selected.properties.isText) {
                 method = "Text";
             }
-
             const action = changeDrawingStatus("drawOrEdit", method, "annotations", [feature], {
                 featureProjection: "EPSG:4326",
                 stopAfterDrawing: !multiGeometry,

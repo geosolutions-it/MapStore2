@@ -218,6 +218,7 @@ const mustCreateNewLayer = (oldOptions, newOptions) => {
         || isVectorFormat(oldOptions.format) !== isVectorFormat(newOptions.format)
         || isVectorFormat(oldOptions.format) && isVectorFormat(newOptions.format) && oldOptions.format !== newOptions.format
         || oldOptions.localizedLayerStyles !== newOptions.localizedLayerStyles
+        || oldOptions.tileSize !== newOptions.tileSize
     );
 };
 

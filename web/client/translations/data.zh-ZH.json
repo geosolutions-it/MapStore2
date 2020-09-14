@@ -854,7 +854,7 @@
             "cancel": "取消",
             "back": "返回",
             "applyStyle": "Apply Style",
-            "addMarker": "在地图上添加一个新点",
+            "addGeometry": "在地图上添加一个新点",
             "styleGeometry": "为点选择不同的风格",
             "deleteGeometry": "Remove all annotation geometries",
             "removeannotation": "Do you want to remove the annotation with title: {title}?",

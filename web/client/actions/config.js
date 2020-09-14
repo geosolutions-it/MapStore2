@@ -97,7 +97,7 @@ function loadMapInfo(mapId) {
 
 const mapSaveError = error => ({type: MAP_SAVE_ERROR, error});
 
-const mapSaved = () => ({type: MAP_SAVED});
+const mapSaved = (resourceId) => ({type: MAP_SAVED, resourceId});
 
 module.exports = {
     LOAD_NEW_MAP,

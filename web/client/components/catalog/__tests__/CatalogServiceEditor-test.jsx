@@ -56,6 +56,7 @@ describe('Test CatalogServiceEditor', () => {
                 showAdvancedSettings: true,
                 format: "image/png8"
             }}
+            layerOptions={{tileSize: 256}}
         />, document.getElementById("container"));
 
         const formatFormGroups = [...document.querySelectorAll('.form-group')].filter(fg => {
@@ -68,6 +69,38 @@ describe('Test CatalogServiceEditor', () => {
         expect(formatSelect.textContent).toBe('image/png8');
         // expect(formatSelect.props.options).toEqual(formatOptions); TODO: test properties are passed to select
     });
+    it('test WMS layer tileSize', () => {
+        ReactDOM.render(<CatalogServiceEditor
+            services={{
+                "csw": {
+                    type: "csw",
+                    url: "url",
+                    title: "csw",
+                    format: "image/png8"
+                }
+            }}
+            selectedService="csw"
+            mode="edit"
+            service={{
+                url: "url",
+                type: "csw",
+                title: "csw",
+                oldService: "csw",
+                showAdvancedSettings: true,
+                format: "image/png8"
+            }}
+            layerOptions={{tileSize: 256}}
+        />, document.getElementById("container"));
+
+        const wmstileSizeFormGroups = [...document.querySelectorAll('.form-group')].filter(fg => {
+            const labels = [...fg.querySelectorAll('label')];
+            return labels.length === 1 && labels[0].textContent === 'WMS Layer tile size';
+        });
+        expect(wmstileSizeFormGroups.length).toBe(1);
+        const tileSizeSelect = wmstileSizeFormGroups[0].querySelector('.Select-value-label');
+        expect(tileSizeSelect).toExist();
+        expect(tileSizeSelect.textContent).toBe("256x256");
+    });
     it('test localized layer styles option enabled and switched off for WMS service', () => {
         ReactDOM.render(<CatalogServiceEditor
             formatOptions={[{
@@ -76,6 +109,7 @@ describe('Test CatalogServiceEditor', () => {
             }]}
             service={givenWmsService}
             isLocalizedLayerStylesEnabled
+            layerOptions={{tileSize: 256}}
         />, document.getElementById("container"));
 
         const isLocalizedLayerStylesOption = document.querySelector('[data-qa="service-lacalized-layer-styles-option"]');
@@ -90,6 +124,7 @@ describe('Test CatalogServiceEditor', () => {
             }]}
             service={{...givenWmsService, localizedLayerStyles: true}}
             isLocalizedLayerStylesEnabled
+            layerOptions={{tileSize: 256}}
         />, document.getElementById("container"));
 
         const isLocalizedLayerStylesOption = document.querySelector('[data-qa="service-lacalized-layer-styles-option"]');
@@ -103,6 +138,7 @@ describe('Test CatalogServiceEditor', () => {
                 value: "image/jpeg"
             }]}
             service={givenWmsService}
+            layerOptions={{tileSize: 256}}
         />, document.getElementById("container"));
 
         const isLocalizedLayerStylesOption = document.querySelector('[data-qa="service-lacalized-layer-styles-option"]');
