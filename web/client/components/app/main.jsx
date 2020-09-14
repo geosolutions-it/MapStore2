@@ -10,10 +10,10 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import LocaleUtils from '../../utils/LocaleUtils';
-import store from '../../stores/store';
-import App from './App';
+import StandardStore from '../../stores/StandardStore';
+import StandardApp from './StandardApp';
 
-const main = (config = {}) => {
+const main = (config = {}, Component) => {
 
     const startApp = () => {
 
@@ -24,19 +24,17 @@ const main = (config = {}) => {
             },
             appReducers = {},
             appEpics = {},
-            plugins = {},
-            storeOpts = {},
             rootReducerFunc
         } = config;
 
-        const appStore = store.bind(null,
+        const appStore = StandardStore.bind(null, {
             initialState,
             appReducers,
             appEpics,
-            plugins,
-            storeOpts,
             rootReducerFunc
-        );
+        });
+
+        const App = Component ? Component : StandardApp;
 
         ReactDOM.render(
             <App { ...config } appStore={appStore}/>,

@@ -9,7 +9,10 @@ const expect = require('expect');
 const PropTypes = require('prop-types');
 const React = require('react');
 const ReactDOM = require('react-dom');
-const StandardApp = require('../StandardApp');
+const StandardApp = require('../StandardApp').default;
+const withExtensions = require('../withExtensions').default;
+
+const StandardAppWithExtensions = withExtensions(StandardApp);
 
 const ConfigUtils = require('../../../utils/ConfigUtils');
 const {LOAD_EXTENSIONS, PLUGIN_UNINSTALLED} = require('../../../actions/contextcreator');
@@ -290,9 +293,10 @@ describe('StandardApp', () => {
         const MyApp = ({plugins}) => {
             expect(plugins.MyPlugin).toExist();
             done();
+            return null;
         };
 
-        const app = ReactDOM.render(<StandardApp appComponent={MyApp} appStore={store} enableExtensions />, document.getElementById("container"));
+        const app = ReactDOM.render(<StandardAppWithExtensions appComponent={MyApp} appStore={store} enableExtensions />, document.getElementById("container"));
         expect(app).toExist();
     });
 
@@ -308,7 +312,7 @@ describe('StandardApp', () => {
             }
         });
 
-        const app = ReactDOM.render(<StandardApp appStore={store} enableExtensions />, document.getElementById("container"));
+        const app = ReactDOM.render(<StandardAppWithExtensions appStore={store} enableExtensions />, document.getElementById("container"));
         expect(app).toExist();
         setTimeout(() => {
             expect(mockAxios.history.get.length).toBe(2);
@@ -329,7 +333,7 @@ describe('StandardApp', () => {
         });
 
 
-        const app = ReactDOM.render(<StandardApp appStore={store} enableExtensions={false} />, document.getElementById("container"));
+        const app = ReactDOM.render(<StandardAppWithExtensions appStore={store} enableExtensions={false} />, document.getElementById("container"));
         expect(app).toExist();
         setTimeout(() => {
             expect(mockAxios.history.get.length).toBe(1);
@@ -354,7 +358,7 @@ describe('StandardApp', () => {
             }
         });
 
-        const app = ReactDOM.render(<StandardApp appStore={store} enableExtensions/>, document.getElementById("container"));
+        const app = ReactDOM.render(<StandardAppWithExtensions appStore={store} enableExtensions/>, document.getElementById("container"));
         expect(app).toExist();
         setTimeout(() => {
             expect(mockAxios.history.get.length).toBe(3);
@@ -397,7 +401,7 @@ describe('StandardApp', () => {
             expect(plugins.MyPlugin).toNotExist();
             done();
         };
-        ReactDOM.render(<StandardApp appStore={store} appComponent={MyApp} enableExtensions/>, document.getElementById("container"));
+        ReactDOM.render(<StandardAppWithExtensions appStore={store} appComponent={MyApp} enableExtensions/>, document.getElementById("container"));
     });
     it('extensions assets are loaded from external folder if configured', (done) => {
         ConfigUtils.setConfigProp("extensionsFolder", "myfolder/");
@@ -422,7 +426,7 @@ describe('StandardApp', () => {
         });
         ConfigUtils.setConfigProp("persisted.reduxStore", store());
 
-        const app = ReactDOM.render(<StandardApp appStore={store} enableExtensions />, document.getElementById("container"));
+        const app = ReactDOM.render(<StandardAppWithExtensions appStore={store} enableExtensions />, document.getElementById("container"));
         expect(app).toExist();
         setTimeout(() => {
             expect(mockAxios.history.get.length).toBe(3);
