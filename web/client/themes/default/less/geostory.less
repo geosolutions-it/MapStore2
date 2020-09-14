@@ -76,7 +76,8 @@
         }
     }
     .ms-cascade-story.ms-edit {
-        .ms-section-title, .ms-section-immersive {
+        .ms-section-title,
+        .ms-section-immersive {
             .ms-text-editor-active {
                 pointer-events: all;
             }
@@ -389,6 +390,9 @@
             top: 0;
             .shadow-soft();
         }
+        .add-bar-popover {
+            max-width: 500px;
+        }
         /*
         This class combines position sticky with height 0 and overflow-y visible
         to provide a fixed background inside the section.
@@ -509,7 +513,8 @@
             }
         }
 
-        &.ms-section-title {
+        &.ms-section-title,
+        &.ms-section-banner {
             .ms-content-body {
                 display: flex;
                 margin: auto;
@@ -1105,7 +1110,8 @@
             }
 
             // foreground guidelines color for container size
-            &.ms-section-title {
+            &.ms-section-title,
+            &.ms-section-banner {
                 > .ms-content-toolbar {
                     border-top: 2px solid @ms-story-bg-guidelines;
                 }

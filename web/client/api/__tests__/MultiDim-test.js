@@ -7,7 +7,7 @@
  */
 
 const expect = require('expect');
-const { describeDomains, getHistogram, getDomainValues } = require('../MultiDim');
+const { describeDomains, getHistogram, getDomainValues, getMultidimURL } = require('../MultiDim');
 
 describe('MultiDim API', () => {
     it('describeDomains', (done) => {
@@ -68,5 +68,15 @@ describe('MultiDim API', () => {
                 },
                 error => done(error)
             );
+    });
+    it('getMultidimURL', () => {
+        const TESTS_RESULTS = [
+            ["https://something.int/geoserver/wms", "https://something.int/geoserver/gwc/service/wmts"],
+            ["https://something.int/geoserver/ows", "https://something.int/geoserver/gwc/service/wmts"],
+            ["https://wms.something.int/geoserver/wms", "https://wms.something.int/geoserver/gwc/service/wmts"]
+        ];
+        TESTS_RESULTS.forEach( ([url, result]) => {
+            expect(getMultidimURL({url})).toBe(result); // check for #4875
+        });
     });
 });

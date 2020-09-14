@@ -43,7 +43,7 @@ const GeoStory = ({
 );
 
 const storyThemeSelector = (state) => {
-    return settingsSelector(state)?.theme?.general || {};
+    return settingsSelector(state)?.theme || {};
 };
 
 /**

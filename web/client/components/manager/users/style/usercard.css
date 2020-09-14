@@ -1,7 +1,7 @@
 .user-thumb, .group-thumb {
     max-width: 100%;
     overflow: hidden;
-    height: 180px;
+    height: 200px;
     font-size: 12px;
     cursor: auto;
 }
@@ -15,20 +15,36 @@
 .user-data-container {
     display: flex;
     width: 100%;
+    height: 132px;
+}
+.user-card-info-container {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    padding: 5px 10px 0 10px;
+    width: 0;
+}
+.user-card-rolegroups-container {
+    display: flex;
+    min-height: 72px;
+    padding-top: 3px;
 }
 .user-thumb .role-containter{
     width: 50px;
+    margin-right: 20px
 }
 .user-thumb .avatar-containter{
     width: 50px;
 }
 .user-thumb  .groups-container {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
     white-space: nowrap;
     overflow: hidden;
 }
 .user-thumb  .groups-container .groups-list{
     width: 100%;
-    max-height: 100px;
     overflow-y: auto;
     overflow-x: hidden;
 }
@@ -38,16 +54,14 @@
     text-overflow: ellipsis;
 }
 .group-thumb .group-thumb-description {
-    /* ellipsis for description */
-    display: block; /* Fallback for non-webkit */
-    display: -webkit-box;
-    magin: 0 auto;
-    height: 75px; /* font-size * webkit-line-clamp + padding */
     font-size: 12px;
-    -webkit-line-clamp: 5;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-    text-overflow: ellipsis;
     text-align: justify;
-    /* end ellipsis for description */
-    }
+    min-height: 72px;
+    display: flex;
+    flex-direction: column;
+    padding-top: 3px;
+}
+.group-thumb .group-thumb-description .group-thumb-description-content {
+    overflow: auto;
+    word-wrap: break-word;
+}
