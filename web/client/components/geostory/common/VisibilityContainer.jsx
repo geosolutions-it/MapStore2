@@ -24,7 +24,8 @@ const VisibilityContainer = ({
     loading,
     debounceTime,
     children,
-    loaderComponent
+    loaderComponent,
+    loaderStyle
 }) => {
     const  [ref, inView] = useInView();
     const updateVisibility = useRef(null);
@@ -56,7 +57,7 @@ const VisibilityContainer = ({
             {!loading
                 ? cloneElement(children, { inView })
                 : LoaderComponent
-                    ? <LoaderComponent />
+                    ? <LoaderComponent style={{ ...loaderStyle }} />
                     : null}
         </div>
     );
