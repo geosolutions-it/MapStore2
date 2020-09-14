@@ -35,6 +35,7 @@ const selector = (state) => {
         areaMeasureEnabled: state.measurement && state.measurement.areaMeasureEnabled,
         areaMeasureValueEnabled: !isOpenlayers(state),
         bearingMeasureEnabled: state.measurement && state.measurement.bearingMeasureEnabled,
+        showLengthAndBearingLabel: state.measurement && state.measurement.showLengthAndBearingLabel,
         bearingMeasureValueEnabled: !isOpenlayers(state),
         isCoordinateEditorEnabled: isCoordinateEditorEnabledSelector(state),
         showCoordinateEditor: showCoordinateEditorSelector(state),
@@ -61,6 +62,7 @@ const toggleMeasureTool = toggleControl.bind(null, 'measure', null);
  * @prop {object} defaultOptions: these are the options used to initialize the state of the Measure plugin, defaulti is {}
  * @prop {boolean} defaultOptions.showCoordinateEditor: if true, tells the component to render the CoordinateEditor in a side panel otherwise it will render a modal without it, default is false
  * @prop {boolean} defaultOptions.showAddAsAnnotation: if true, shows the button addAsAnnotation in the toolbar
+ * @prop {boolean} defaultOptions.showLengthAndBearingLabel: if true, shows the length and bearing data in the map as segment label and also in measurement panel
  * @prop {object} defaultOptions.trueBearing: allows measurement configuration of angular distance from true north to the object. ISO Spec (https://www.sis.se/api/document/preview/905247/)
  * @prop {boolean} defaultOptions.trueBearing.measureTrueBearing: if true, displays the measurement in true bearing (000° T).
  * @prop {integer} defaultOptions.trueBearing.fractionDigits: Value denotes the fractional digit to used for the representation of true bearing.

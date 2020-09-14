@@ -79,6 +79,7 @@ class MeasureComponent extends React.Component {
         defaultOptions: PropTypes.object,
         onAddAnnotation: PropTypes.func,
         showAddAsAnnotation: PropTypes.bool,
+        showLengthAndBearingLabel: PropTypes.bool,
         showAddAsLayer: PropTypes.bool,
         showFeatureSelector: PropTypes.bool,
         useSingleFeature: PropTypes.bool,
@@ -131,6 +132,7 @@ class MeasureComponent extends React.Component {
         showExportToGeoJSON: true,
         showCoordinateEditor: false,
         isCoordinateEditorEnabled: true,
+        showLengthAndBearingLabel: false,
         withReset: true,
         lineGlyph: "1-measure-lenght",
         areaGlyph: "1-measure-area",
@@ -408,6 +410,7 @@ class MeasureComponent extends React.Component {
                                 items={[]}
                                 isDraggable
                                 type={this.props.geomType}
+                                showLengthAndBearingLabel={this.props.showLengthAndBearingLabel}
                                 components={!this.props.useSingleFeature && geomType.indexOf('polygon') !== -1 ? dropRight(coords) : coords}/>
                         </Row> :
                         <Row>

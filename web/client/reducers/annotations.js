@@ -21,7 +21,7 @@ const {REMOVE_ANNOTATION, CONFIRM_REMOVE_ANNOTATION, CANCEL_REMOVE_ANNOTATION, C
     UNSAVED_CHANGES, TOGGLE_GEOMETRY_MODAL, TOGGLE_CHANGES_MODAL, CHANGED_PROPERTIES, TOGGLE_STYLE_MODAL, UNSAVED_STYLE,
     ADD_TEXT, CHANGED_SELECTED, RESET_COORD_EDITOR, CHANGE_RADIUS, CHANGE_TEXT,
     ADD_NEW_FEATURE, SET_EDITING_FEATURE, SET_INVALID_SELECTED, TOGGLE_DELETE_FT_MODAL, CONFIRM_DELETE_FEATURE, HIGHLIGHT_POINT,
-    CHANGE_FORMAT, UPDATE_SYMBOLS, ERROR_SYMBOLS, SET_DEFAULT_STYLE, LOADING
+    CHANGE_FORMAT, UPDATE_SYMBOLS, ERROR_SYMBOLS, SET_DEFAULT_STYLE, LOADING, CHANGE_GEOMETRY_TITLE
 } = require('../actions/annotations');
 
 const {validateCoordsArray, getAvailableStyler, convertGeoJSONToInternalModel, addIds, validateFeature,
@@ -362,8 +362,7 @@ function annotations(state = { validationErrors: {} }, action) {
         });
     }
     case TOGGLE_DELETE_FT_MODAL: {
-        let newState = set("showDeleteFeatureModal", !state.showDeleteFeatureModal, state);
-        return newState;
+        return set("showDeleteFeatureModal", !state.showDeleteFeatureModal, state);
     }
     case CONFIRM_DELETE_FEATURE: {
         let newState = set("editing.features", state.editing.features.filter(f => f.properties.id !== state.selected.properties.id), state);
@@ -393,7 +392,7 @@ function annotations(state = { validationErrors: {} }, action) {
 
     case REMOVE_ANNOTATION_GEOMETRY:
         return assign({}, state, {
-            removing: 'geometry',
+            removing: action.id,
             unsavedChanges: true
         });
     case EDIT_ANNOTATION: {
@@ -430,17 +429,28 @@ function annotations(state = { validationErrors: {} }, action) {
             originalStyle: null
         });
     case CONFIRM_REMOVE_ANNOTATION:
+        const features = state.editing.features.filter(feature=> feature.properties.id !== action.id);
+        const delSelectedFeature = state?.selected?.properties?.id === action.id || false;
         return assign({}, state, {
             removing: null,
             stylerType: "",
             current: null,
+            ...(delSelectedFeature && {selected: null}),
             editing: state.editing ? assign({}, state.editing, {
-                features: [],
+                features,
                 style: {
                     type: state.featureType
                 }
             }) : null
         });
+    case CHANGE_GEOMETRY_TITLE: {
+        let newState = state;
+        const ftIndex = findIndex(state.editing.features, (f) => f.properties.id === state.selected.properties.id);
+        const editingFt = set("properties.geometryTitle", action.title, state.editing.features[ftIndex]);
+        const selectedFt = set("properties.geometryTitle", action.title, state.selected);
+        newState = set(`editing.features[${ftIndex}]`, editingFt, newState);
+        return {...newState, selected: selectedFt};
+    }
     case CANCEL_REMOVE_ANNOTATION:
         return assign({}, state, {
             removing: null

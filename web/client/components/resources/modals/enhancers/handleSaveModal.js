@@ -5,16 +5,20 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const handleResourceData = require('./handleResourceData');
-const handlePermission = require('./handlePermission');
-const handleErrors = require('./handleErrors');
-const { compose, branch, renderNothing} = require('recompose');
-module.exports = compose(
+import handleResourceData from './handleResourceData';
+import handlePermission from './handlePermission';
+import handleErrors from './handleErrors';
+import handleDetailsDownload from './handleDetailsDownload';
+
+import { compose, branch, renderNothing } from 'recompose';
+
+export default compose(
     branch(
         ({ show }) => !show,
         renderNothing
     ),
     handleResourceData,
+    handleDetailsDownload,
     handlePermission(),
     handleErrors
 );

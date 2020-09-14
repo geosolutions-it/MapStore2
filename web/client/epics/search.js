@@ -38,7 +38,7 @@ import {
 } from '../actions/search';
 
 import CoordinatesUtils from '../utils/CoordinatesUtils';
-import {defaultIconStyle, showGFIForService} from '../utils/SearchUtils';
+import {defaultIconStyle, showGFIForService, layerIsVisibleForGFI} from '../utils/SearchUtils';
 import {generateTemplateString} from '../utils/TemplateUtils';
 
 import {API} from '../api/searchText';
@@ -152,7 +152,7 @@ export const searchItemSelected = (action$, store) =>
                             }
                             return [
                                 ...(forceVisibility && layerObj ? [changeLayerProperties(layerObj.id, {visibility: true})] : []),
-                                featureInfoClick({ latlng }, typeName, filterNameList, overrideParams, itemId),
+                                ...(!item.__SERVICE__.openFeatureInfoButtonEnabled ? [featureInfoClick({ latlng }, typeName, filterNameList, overrideParams, itemId)] : []),
                                 showMapinfoMarker(),
                                 ...actions
                             ];
@@ -200,7 +200,7 @@ export const textSearchShowGFIEpic = (action$, store) =>
             const latlng = { lng: coord[0], lat: coord[1] };
 
             return !!coord &&
-                showGFIForService(layerObj, item?.__SERVICE__) ?
+                showGFIForService(item?.__SERVICE__) && layerIsVisibleForGFI(layerObj, item?.__SERVICE__) ?
                 Rx.Observable.of(
                     ...(item?.__SERVICE__?.forceSearchLayerVisibility && layerObj ? [changeLayerProperties(layerObj.id, {visibility: true})] : []),
                     featureInfoClick({ latlng }, typeName, [typeName], { [typeName]: { info_format: "application/json" } }, item.id),

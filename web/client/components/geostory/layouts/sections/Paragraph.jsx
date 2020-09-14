@@ -38,6 +38,7 @@ export default ({
     mediaViewer,
     contentToolbar,
     sections = [],
+    sectionType,
     storyFonts
 }) => (
     <section
@@ -57,6 +58,7 @@ export default ({
             sectionId={id}
             viewWidth={viewWidth}
             viewHeight={viewHeight}
+            sectionType={sectionType}
             contentProps={{
                 expandable: expandableMedia,
                 mediaViewer,
