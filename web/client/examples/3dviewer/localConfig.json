@@ -1,8 +1,0 @@
-{
-	"proxyUrl": {
-		"url": "/mapstore/proxy/?url=",
-		"useCORS": ["http://nominatim.openstreetmap.org"]
-	},
-	"geoStoreUrl": "/mapstore/rest/geostore/",
-	"bingApiKey": "AnPVX7vx5Qydc2F7gtwyNffWEi22yogqI62AzkGDu16goDilS5Z-BdkjOlnCDxJD"
-}
