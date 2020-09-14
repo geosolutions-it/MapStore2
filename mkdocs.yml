@@ -78,6 +78,7 @@ pages:
       - Overview: 'user-guide/exploring-stories.md'
       - Story Settings: 'user-guide/story-setting.md'
       - Title Section: 'user-guide/title-section.md'
+      - Banner Section: 'user-guide/banner-section.md'
       - Paragraph Section: 'user-guide/paragraph-section.md'
       - Immersive Section: 'user-guide/immersive-section.md'
       - Media Section: 'user-guide/media-section.md'
