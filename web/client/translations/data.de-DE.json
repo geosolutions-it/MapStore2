@@ -116,8 +116,8 @@
               "legendPreview": "Vorschau"
             },
             "enableLocalizedLayerStyles": {
-                "label": "Schakel gelokaliseerde stijl in",
-                "tooltip": "Opmerking: deze parameter vereist specifieke configuraties op GeoServer"
+                "label": "Lokalisierten Stil aktivieren",
+                "tooltip": "Hinweis: Diese Einstellung benötigt spezifische Konfigurationen im GeoServer"
             }
         },
         "longitude": "Länge",
@@ -1283,8 +1283,8 @@
             },
             "backgroundAlreadyAdded": "Zur Hintergrundauswahl hinzugefügt",
             "enableLocalizedLayerStyles": {
-                "label": "Schakel gelokaliseerde stijlen in",
-                "tooltip": "Opmerking: deze parameter vereist specifieke configuraties op GeoServer"
+                "label": "Lokalisierten Stil aktivieren",
+                "tooltip": "Hinweis: Diese Einstellung benötigt spezifische Konfigurationen im GeoServer"
             }
         },
         "uploader": {
