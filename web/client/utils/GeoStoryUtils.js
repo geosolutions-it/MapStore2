@@ -22,6 +22,7 @@ import isObject from "lodash/isObject";
 import includes from "lodash/includes";
 import replace from 'lodash/replace';
 import uuid from 'uuid';
+import { Entity } from 'draft-js';
 
 export const EMPTY_CONTENT = "EMPTY_CONTENT";
 // Allowed StoryTypes
@@ -496,35 +497,75 @@ export const parseHashUrlScrollUpdate = (url, hash = '', storyId, sectionId, col
     return null;
 };
 
+// customGetEntityId is a utility function used by html-to-draftjs library in order
+// to create anhor tag chunks
+export const customGetEntityId = (node) => {
+    let entityId = undefined;
+    if (
+        node instanceof HTMLAnchorElement
+    ) {
+        const entityConfig = {};
+        if (node.dataset && node.dataset.mention !== undefined) {
+            entityConfig.url = node.href;
+            entityConfig.text = node.innerHTML;
+            entityConfig.value = node.dataset.value;
+            entityId = Entity.__create(
+                'MENTION',
+                'IMMUTABLE',
+                entityConfig,
+            );
+        } else {
+            entityConfig.url = node.getAttribute ? node.getAttribute('href') || node.href : node.href;
+            entityConfig.title = node.innerHTML;
+            entityConfig.targetOption = node.target;
+            const interactionType = node.getAttribute && node.getAttribute('data-geostory-interaction-type');
+            const interactionParams = node.getAttribute && node.getAttribute('data-geostory-interaction-params');
+
+            const attributes = {
+                type: interactionType,
+                params: interactionParams
+            };
+
+            entityConfig.attributes = attributes;
+            entityId = Entity.__create(
+                'LINK',
+                'MUTABLE',
+                entityConfig,
+            );
+        }
+    }
+    return entityId;
+};
+
+// customEntityTransform is a utility function used by draftjs-to-html inorder to create html from
+// entities in draftjs
 export const customEntityTransform = (entity, text) => {
     if (entity.type === 'MENTION') {
-        return "<a href=\"".concat(entity.data.url, "\" class=\"wysiwyg-mention\" data-mention data-value=\"").concat(entity.data.value, "\">").concat(text, "</a>");
+        return `< href="${entity.data.url}" class="wysiwyg-mention" data-mention data-value="${entity.data.value}">${text}</a>`;
     }
 
     if (entity.type === 'LINK') {
         const targetOption = entity.data.targetOption || '_self';
-        const dataInteraction = entity.data.geoStorySection;
+        const attributes = entity.data.attributes;
 
-        // uuid v4 pattern
-        const uuidPattern = /^[0-9A-F]{8}-[0-9A-F]{4}-[4][0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$/i;
-        if (dataInteraction && testRegex(dataInteraction, uuidPattern)) {
-            return "<a data-geostory-interaction=\"".concat(entity.data.geoStorySection, "\"").concat(`onclick="__geostory_interaction(type='scrollTo', '${entity.data.geoStorySection}')"`).concat(">").concat(text, "</a>");
+        if (attributes && attributes.type === "scrollTo") {
+            return `<a data-geostory-interaction-type="${attributes.type}" data-geostory-interaction-params="${attributes.params}" onclick="__geostory_interaction(type='scrollTo', '${attributes.params}')">${text}</a>`;
         }
-        return "<a href=\"".concat(entity.data.url, "\" target=\"").concat(targetOption, "\">").concat(text, "</a>");
+        return `<a href="${entity.data.url}" target="${targetOption}"></a>`;
     }
 
     if (entity.type === 'IMAGE') {
         const alignment = entity.data.alignment;
 
         if (alignment && alignment.length) {
-            return "<div style=\"text-align:".concat(alignment, ";\"><img src=\"").concat(entity.data.src, "\" alt=\"").concat(entity.data.alt, "\" style=\"height: ").concat(entity.data.height, ";width: ").concat(entity.data.width, "\"/></div>");
+            return `<div style="text-align:'${alignment};'"><img src="${entity.data.src}" alt="${entity.data.alt}" style="height:'${entity.data.height}', width: '${entity.data.width}'" /></div>`;
         }
 
-        return "<img src=\"".concat(entity.data.src, "\" alt=\"").concat(entity.data.alt, "\" style=\"height: ").concat(entity.data.height, ";width: ").concat(entity.data.width, "\"/>");
+        return `<img src="${entity.data.src}" alt="${entity.data.alt}" style="height:'${entity.data.height}', width: '${entity.data.width}'" />`;
     }
 
     if (entity.type === 'EMBEDDED_LINK') {
-        return "<iframe width=\"".concat(entity.data.width, "\" height=\"").concat(entity.data.height, "\" src=\"").concat(entity.data.src, "\" frameBorder=\"0\"></iframe>");
+        return `<iframe width="${entity.data.width}" height="${entity.data.height}" src="${entity.data.src}" frameBorder="0"></iframe>`;
     }
     return text;
 };

@@ -5,19 +5,25 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
+import React from 'react';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 
 import { ContentState, EditorState, Modifier, RichUtils, convertToRaw } from 'draft-js';
 import draftToHtml from 'draftjs-to-html';
-import htmlToDraft from 'html-to-draftjs';
-import { Editor } from 'react-draft-wysiwyg';
+import htmlToDraft from '@geosolutions/html-to-draftjs';
+// import { Editor } from 'react-draft-wysiwyg';
+import { Editor } from '@geosolutions/react-draft-wysiwyg';
 import { branch, compose, renderComponent, withHandlers, withProps, withState, lifecycle } from "recompose";
 
 import {
     EMPTY_CONTENT,
     SectionTypes,
+    customGetEntityId,
     customEntityTransform,
     DEFAULT_FONT_FAMILIES } from "../../../../utils/GeoStoryUtils";
+
+import LayoutComponent from '../EditorCustomizations/CustomEditorLink';
+import getLinkDecorator from '../EditorCustomizations/getLinkDecorator';
 
 /**
  * HOC that adds WYSIWYG editor to a content. The editor will replace the component when activated, and it will be activated again when
@@ -37,7 +43,7 @@ export default compose(
                 setContentEditing(false);
                 bubblingTextEditing(false);
             } else {
-                const contentBlock = htmlToDraft(html);
+                const contentBlock = htmlToDraft(html, null, customGetEntityId);
                 let contentState = ContentState.createFromBlockArray(contentBlock.contentBlocks);
                 let editorState = EditorState.createWithContent(contentState);
                 // Updating blockType for TITLES when opening an empty text editor
@@ -90,7 +96,7 @@ export default compose(
                         link: {
                             inDropdown: false,
                             className: undefined,
-                            component: undefined,
+                            component: (props) => <LayoutComponent {...props} availableStorySections={[...sections]} />,
                             popupClassName: undefined,
                             dropdownClassName: undefined,
                             showOpenOptionOnHover: true,
@@ -99,7 +105,7 @@ export default compose(
                             link: { icon: undefined, className: undefined },
                             unlink: { icon: undefined, className: undefined },
                             linkCallback: undefined,
-                            availableStorySections: [...sections]
+                            getLinkDecorator
                         },
                         blockType: {
                             inDropdown: true,
