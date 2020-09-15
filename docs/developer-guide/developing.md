@@ -48,7 +48,7 @@ To use a local back-end you have to:
     }],
 ```
 
-* **Run the back-end locally**. See the [dedicated section in this page](#Back-end)
+* **Run the back-end locally**. See the [dedicated section in this page](#back-end)
 
 * **Setup dev-server to use the local back-end**, applying this changes to `buildConfig.js` --> devServer configuration. (the configuration of the port and path depends on how you configured the local back-end.
 
