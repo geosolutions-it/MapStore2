@@ -7,7 +7,7 @@ import {
     Dropdown,
     DropdownOption,
     stopPropagation,
-    getFirstIcon } from '@geosolutions/react-draft-wysiwyg';
+    getFirstIcon } from 'react-draft-wysiwyg';
 
 const EXTERNAL_LINK = "External Link";
 
@@ -56,7 +56,7 @@ class MSLinkOptions extends Component {
                             value={section.id}
                             key={section.id}
                         >
-                            {section.title}
+                            {section.title || section.contents[0].title || section.contents[0].id}
                         </DropdownOption>
                     ))}
                 </Dropdown>

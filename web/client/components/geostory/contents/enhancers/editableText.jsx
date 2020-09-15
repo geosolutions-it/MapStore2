@@ -75,8 +75,31 @@ export default compose(
                     toggleEditing(false);
                 }
             }),
+            withProps(({ sections = []}) => {
+                // flatten out the story sections adding to them columns as if they were also sections such that
+                // both sections and columns can be scrolled to
+                const availableStorySections = sections.reduce((availableSections, section) => {
+                    const s = [];
+                    s.push(section);
+                    if (section.type === 'paragraph' || section.type === 'immersive') {
+                        const contents = section.contents;
+                        contents.forEach((c) => {
+                            if (c.type === 'column') {
+                                s.push(c);
+                            }
+                        });
+                    }
+
+                    return [...availableSections, ...s];
+
+                }, []);
+                return {
+                    availableStorySections
+                };
+
+            }),
             // default properties for editor
-            withProps(({ sections = [], storyFonts = [], placeholder, toolbarStyle = {}, className = "ms-text-editor"}) => {
+            withProps(({ availableStorySections = [], storyFonts = [], placeholder, toolbarStyle = {}, className = "ms-text-editor"}) => {
                 const fonts = storyFonts.length > 0 ? storyFonts : DEFAULT_FONT_FAMILIES;
                 return ({
                     editorRef: ref => setTimeout(() => ref && ref.focus && ref.focus(), 100), // handle auto-focus on edit
@@ -95,7 +118,7 @@ export default compose(
                         link: {
                             inDropdown: false,
                             className: undefined,
-                            component: (props) => <LayoutComponent {...props} availableStorySections={[...sections]} />,
+                            component: (props) => <LayoutComponent {...props} availableStorySections={availableStorySections} />,
                             popupClassName: undefined,
                             dropdownClassName: undefined,
                             showOpenOptionOnHover: true,
