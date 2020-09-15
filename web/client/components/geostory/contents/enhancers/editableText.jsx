@@ -10,9 +10,8 @@ import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 
 import { ContentState, EditorState, Modifier, RichUtils, convertToRaw } from 'draft-js';
 import draftToHtml from 'draftjs-to-html';
-import htmlToDraft from '@geosolutions/html-to-draftjs';
-// import { Editor } from 'react-draft-wysiwyg';
-import { Editor } from '@geosolutions/react-draft-wysiwyg';
+import htmlToDraft from 'html-to-draftjs';
+import { Editor } from 'react-draft-wysiwyg';
 import { branch, compose, renderComponent, withHandlers, withProps, withState, lifecycle } from "recompose";
 
 import {
