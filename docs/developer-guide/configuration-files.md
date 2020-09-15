@@ -21,7 +21,7 @@ They are located in `web/src/main/resources` and they will be copied in  `MapSto
 
 Except `mapstore.properties`, all these files are simply overrides of original configuration files coming from the included sub-applications part of the back-end. In `WEB-INF/classes` you will find also some other useful files coming from the original application:
 
-* `spring-security.xml`: Provide the security settings and configurations. It can be configured to set-up [LDAP integration](../ldap.md). (usually in a custom application).
+* `spring-security.xml`: Provide the security settings and configurations. It can be configured to set-up [LDAP integration](integrations/users/ldap.md). (usually in a custom application).
 
 
 ## Front-end Configurations Files
@@ -32,7 +32,7 @@ Several configuration files (at development and / or run time) are available to 
 
 * `localConfig.json`: Dedicated to the application configuration. Defines all general settings of the front-end part, with all the plugins for all the pages. See [Application Configuration](../local-config) for more information.
 * `new.json` Can be customized to set-up the inital new map, setting the backgrounds, initial position .. See [Maps configuration](../maps-configuration) for more information.
-* `pluginsConfig.json`: Allows to configure the context editor plugins list. See [Context Editor Configuration](context-editor-config) for more information.
+* `pluginsConfig.json`: Allows to configure the context editor plugins list. See [Context Editor Configuration](context-editor-config.md) for more information.
 
 ## Externalize Configurations
 
