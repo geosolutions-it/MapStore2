@@ -52,20 +52,20 @@ To use a local back-end you have to:
 
 * **Setup dev-server to use the local back-end**, applying this changes to `buildConfig.js` --> devServer configuration. (the configuration of the port and path depends on how you configured the local back-end.
 
-    ```javascript
-    devServer: {
-            proxy: {
-                '/rest/': {
-                    target: "http://localhost:8080/mapstore" // port 8080, mapstore path
-                },
-                '/proxy': {
-                    target: "http://localhost:8080/mapstore", // port 8080, mapstore path
-                    secure: false
-                }
+```javascript
+devServer: {
+        proxy: {
+            '/rest/': {
+                target: "http://localhost:8080/mapstore" // port 8080, mapstore path
+            },
+            '/proxy': {
+                target: "http://localhost:8080/mapstore", // port 8080, mapstore path
+                secure: false
             }
-        },
-        // ...
-    ```
+        }
+    },
+    // ...
+```
 
 * **re-run** `npm start`
 
