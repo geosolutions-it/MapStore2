@@ -30,7 +30,8 @@ export default ({
     viewHeight,
     expandableMedia,
     mediaViewer,
-    contentToolbar
+    contentToolbar,
+    sectionType
 }) => (
     <section
         className="ms-section ms-section-paragraph"
@@ -49,6 +50,7 @@ export default ({
             sectionId={id}
             viewWidth={viewWidth}
             viewHeight={viewHeight}
+            sectionType={sectionType}
             contentProps={{
                 expandable: expandableMedia,
                 mediaViewer,
