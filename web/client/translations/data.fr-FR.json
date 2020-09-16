@@ -1085,7 +1085,7 @@
             "insertText": "Veuillez insérer l'annotation de texte",
             "downloadtooltip": "Télécharger les annotations",
             "downloadcurrenttooltip": "Télécharger l'annotation courante",
-            "downloadError": "Erreur d'exportation",
+            "downloadError": "Erreur d'export",
             "loadtooltip": "Importer des annotations",
             "loadtitle": "Importer des annotations",
             "selectfiletext": "Déposez votre fichier ici ou cliquez pour sélectionner le fichier d'annotations à importer. (fichiers supportés : JSON)",
@@ -1289,7 +1289,7 @@
             },
             "errors": {
                 "fileNotSupported": "Fichier non pris en charge",
-                "unknownError": "il y a eu une erreur inconnue lors de l'importation",
+                "unknownError": "il y a eu une erreur inconnue lors de l'import",
                 "projectionNotSupported": "La projection du/des fichier(s) que vous essayez d'importer n'est pas prise en charge"
             }
         },
@@ -1297,7 +1297,7 @@
             "title": "Exporter la carte",
             "exportPanel": {
                 "title": "<p><h4>Sélectionnez votre format</h4></p>",
-                "exportButtonLabel": "Exportation"
+                "exportButtonLabel": "Export"
             },
             "formats": {
                 "mapstore2": {
@@ -1310,8 +1310,8 @@
                     "note": "<p><small><i><strong>note</strong>: le format WMC prend en charge <strong>uniquement les couches WMS</strong></i></small></p>"
                 }
             },
-            "errorTitle": "Échec de l'exportation de la carte",
-            "wmcNoLayersError": "Au moins une couche WMS est nécessaire pour exporter vers WMC, zéro trouvée"
+            "errorTitle": "Échec de l'export de la carte",
+            "wmcNoLayersError": "Au moins une couche WMS est nécessaire pour exporter vers WMC, aucune trouvée"
         },
         "catalog": {
             "start": "Date de début ",
