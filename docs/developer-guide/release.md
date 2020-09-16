@@ -17,6 +17,7 @@ Add an entry in the changelog like this:
 
 ```
 Replacing:
+
  -  replacing `2018.02.00` with branch name
  - with current release tag name `v2018.02.00`
  - `%222018.02.00%22` with the name of the milestone (`%22` are `"` in the URL to generate a filter like `milestone:"2018.02.00"`)
