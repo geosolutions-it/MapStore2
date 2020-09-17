@@ -8,24 +8,11 @@
 const expect = require('expect');
 
 const {
-    resourceSelector,
     searchTextSelector,
     isFeaturedMapsEnabled
 } = require('../featuredmaps');
 
 describe('featuredMaps selectors', () => {
-    it('test resourceSelector selector', () => {
-        const state = {
-            featuredmaps: {
-                latestResource: {
-                    resourceId: '01'
-                }
-            }
-        };
-        expect(resourceSelector(state)).toBe(state.featuredmaps.latestResource);
-
-        expect(resourceSelector()).toEqual({});
-    });
     it('test searchTextSelector', () => {
 
         const state = {

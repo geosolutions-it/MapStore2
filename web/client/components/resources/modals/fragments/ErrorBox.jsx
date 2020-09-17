@@ -17,7 +17,7 @@ const DEFAULT_MESSAGES = {
 
 const Message = require('../../../I18N/Message');
 const { Row } = require('react-bootstrap');
-const errorString = err => typeof err === 'string' ? err : err.statusText;
+const errorString = err => typeof err === 'string' ? err : (err.statusText || err.message);
 const errorCode = err => typeof err === 'string' ? err : err.status;
 const errorData = err => typeof err === 'string' ? undefined : err;
 const errorMessage = error => {

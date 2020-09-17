@@ -63,55 +63,97 @@
             }
         }
     }
-}
-
-#share-container {
     .coordinateRow {
         .coordinate {
+            width: 100%;
+            display: flex;
+            flex: 1 1 0%;
+            justify-content: space-between;
+            flex-wrap: wrap;
             .input-group {
                 .input-group-addon {
                     min-width: 45px;
                 }
-                .form-group {
+                flex: 1 1 0%;
+                padding: 4px 0px;
+                margin-right: 8px;
+                .form-group{
                     width: 100%;
                     position: relative;
                     display: flex;
                     input#intl-numeric{
                         float: unset;
                     }
-                }
-                .direction-select {
-                    width: 45px
+                    .minutes, .degrees {
+                        min-width: 45px;
+                        flex: 1;
+                        display: flex;
+                    }
+                    .seconds {
+                        display: flex;
+                        flex: 1;
+                        min-width: 75px;
+                    }
+                    .direction-select{
+                        min-width: 45px;
+                    }
                 }
             }
         }
     }
 }
 
-#share-container, #identify-container {
+#share-container {
+    .coordinateRow.aeronautical{
+        .coordinate{
+            flex-direction: column;
+            .form-group .degrees, .minutes, .seconds {
+                flex: 1;
+            }
+        }
+    }
     .coordinateRow {
         .coordinate {
-            width: 100%;
             display: flex;
-            flex: 1;
+            flex: 1 1 0%;
             justify-content: space-between;
             flex-wrap: wrap;
             .input-group {
-                flex: 1;
+                flex: 1 1 0%;
                 padding: 4px 0;
                 margin-right: 8px;
+                .form-group{
+                    input#intl-numeric{
+                        float: unset;
+                    }
+                    .minutes, .degrees {
+                        min-width: 45px;
+                        flex: 1;
+                        display: flex;
+                    }
+                    .seconds {
+                        display: flex;
+                        flex: 1;
+                        min-width: 75px;
+                    }
+                    .direction-select{
+                        min-width: 45px;
+                    }
+                }
             }
-            .degrees, .minutes {
-                display: flex;
-                flex: 1;
-                min-width: 45px;
-            }
-            .seconds {
-                display: flex;
-                flex: 1;
-                min-width: 75px;
-            }
+
         }
+    }
+    .coordinateRow.aeronautical.coord-editor.row {
+        border: none !important;
+        margin: unset !important;
+        padding: unset !important;
+    }
+    .coordinateRow.decimal.coord-editor.row {
+        border: none !important;
+        margin: unset !important;
+        padding: unset !important;
+
     }
 }
 

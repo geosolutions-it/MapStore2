@@ -172,7 +172,7 @@ module.exports = ({
             tooltipId="featuregrid.toolbar.syncOnMap"
             disabled={disableToolbar}
             active={isSyncActive}
-            visible={mode === "VIEW" && showSyncOnMapButton}
+            visible={showSyncOnMapButton}
             onClick={events.sync}
             glyph="map-filter"
             renderPopover={syncPopover.showPopoverSync}

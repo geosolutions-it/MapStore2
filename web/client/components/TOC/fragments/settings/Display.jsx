@@ -147,6 +147,18 @@ module.exports = class extends React.Component {
                                 }}/>
                         </FormGroup>
                     </Col>
+                    <Col xs={12}>
+                        <FormGroup>
+                            <ControlLabel><Message msgId="WMS Layer tile size" /></ControlLabel>
+                            <DropdownList
+                                key="wsm-layersize-dropdown"
+                                data={[256, 512]}
+                                value={this.props.element && this.props.element.tileSize || 256}
+                                onChange={(value) => {
+                                    this.props.onChange("tileSize", value);
+                                }}/>
+                        </FormGroup>
+                    </Col>
                 </Row>}
 
                 <Row>

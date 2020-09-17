@@ -110,7 +110,6 @@ class DefaultGroup extends React.Component {
                 {this.props.children}
             </GroupChildren>
         );
-
         if (this.props.node.showComponent && !this.props.node.hide) {
             return (
                 <Node className={(this.props.isDragging || this.props.node.placeholder ? "is-placeholder " : "") + "toc-default-group toc-group-" + this.props.level + selected + error} sortableStyle={this.props.sortableStyle} style={this.props.style} type="group" {...other}>

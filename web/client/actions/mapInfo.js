@@ -101,12 +101,13 @@ function newMapInfoRequest(reqId, reqConfig) {
     };
 }
 
-function getVectorInfo(layer, request, metadata) {
+function getVectorInfo(layer, request, metadata, queryableLayers) {
     return {
         type: GET_VECTOR_INFO,
         layer,
         request,
-        metadata
+        metadata,
+        queryableLayers
     };
 }
 

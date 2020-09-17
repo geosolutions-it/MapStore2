@@ -622,6 +622,28 @@ describe('Openlayers layer', () => {
         map.getLayers().item(0).getSource().refresh();
     });
 
+    it('test wms custom resolutions', () => {
+        var options = {
+            "type": "wms",
+            "visibility": true,
+            "name": "nurc:Arc_Sample",
+            "group": "Meteo",
+            "format": "image/png",
+            "singleTile": false,
+            "resolutions": [100, 10, 3, 2, 1],
+            "url": "http://sample.server/geoserver/wms"
+        };
+        // create layers
+        var layer = ReactDOM.render(
+            <OpenlayersLayer type="wms"
+                options={options} map={map} />, document.getElementById("container"));
+
+        expect(layer).toExist();
+        // count layers
+        expect(map.getLayers().getLength()).toBe(1);
+        expect(map.getLayers().item(0).getSource().tileGrid.getResolutions().length).toBe(5);
+    });
+
     it('creates a wmts layer for openlayers map', () => {
         var options = {
             "type": "wmts",

@@ -102,7 +102,42 @@ To distribute your extension so that it can be uploaded to a running MapStore in
 * an `index.json` file that describes the extension, an example follows
 * optionally, a translations folder with localized message files used by the extension (in one or more languages of your choice)
 
-You will find both the `index.json` file and a sample translation folder in `build/extensions/bundle`.
+...note: You will find both the `index.json` file and a sample translation folder in `build/extensions/bundle`.
+
+```text
+my-extension.zip
+|── index.js
+├── index.json
+└── translations
+    └── data.en_EN.json
+```
+
+#### index.json
+
+The `index.json file should contain all the information about the extension:
+
+* An `id` that identifies the extension
+* A `version` to show in UI. Semantic versioning is suggested.
+* `title` and `description` to display in UI, mnemonic hints for the administrator
+* `plugins` the list of plugins that it adds to the application, with all the data useful for the context manager. Format of the JSON object for plugins is suggested [here](https://github.com/georchestra/mapstore2-georchestra/issues/15#issuecomment-564974270)
+
+```json
+{
+    "id": "a_unique_extension_identifier",
+    "version": "1.0.0",
+    "title": "the title of the description",
+    "description": "a description of the extension",
+    "plugins": [{
+         "name": "MYPlugin",
+         "title": "extensions.a_unique_extension_identifier.title",
+         "description": "",
+         "defaultConfig": {},
+         "...": "..."
+    }]
+}
+```
+
+`plugins` section contains the plugins defined in the extension, and it is needed to be configured in the context-editor. See [Context Editor Configuration](context-editor-config.md)
 
 ### Installing Extensions
 

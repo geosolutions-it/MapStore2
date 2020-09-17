@@ -30,7 +30,9 @@ import {
     testRegex,
     isWebPageSection,
     getWebPageComponentHeight,
-    parseHashUrlScrollUpdate
+    parseHashUrlScrollUpdate,
+    createWebFontLoaderConfig,
+    extractFontNames
 } from "../GeoStoryUtils";
 
 describe("GeoStory Utils", () => {
@@ -468,5 +470,46 @@ describe("GeoStory Utils", () => {
             const storyId = 111;
             expect(parseHashUrlScrollUpdate(url, hash, storyId, null, null)).toBe(null);
         });
+    });
+
+    it('returns a config for webfontloader', () => {
+        const fontFamilyConf = [
+            {
+                family: "fam1",
+                src: "link-fam1"
+            },
+            {
+                family: "fam2",
+                src: "link-fam2"
+            },
+            {
+                family: "fam3",
+                safe: true
+            }
+        ];
+
+        const noop = () => {};
+
+        expect(createWebFontLoaderConfig(fontFamilyConf, noop, noop)).toEqual({
+            active: noop,
+            inactive: noop,
+            custom: {
+                families: ["fam1", "fam2"],
+                urls: ["link-fam1", "link-fam2"]
+            }
+        });
+    });
+    it('returns an array of font names', () => {
+        const fontFamilies = [
+            {
+                family: "fam1",
+                src: "link-fam1"
+            },
+            {
+                family: "fam2",
+                src: "link-fam2"
+            }
+        ];
+        expect(extractFontNames(fontFamilies)).toEqual(["fam1", "fam2"]);
     });
 });

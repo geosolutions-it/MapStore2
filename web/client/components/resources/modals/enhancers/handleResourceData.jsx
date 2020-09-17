@@ -38,7 +38,8 @@ module.exports = compose(
                     description: resource.description
                 },
                 createdAt: resource.creation,
-                modifiedAt: resource.lastUpdate
+                modifiedAt: resource.lastUpdate,
+                detailsText: resource.detailsText
             }
 
         }),

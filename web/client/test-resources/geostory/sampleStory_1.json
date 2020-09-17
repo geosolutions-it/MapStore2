@@ -78,7 +78,7 @@
           "id": "SomeID",
           "type": "text",
           "background": {},
-          "html": "<p>this is some html content</p>"
+          "html": "<p>this is some <a>html</a> content</p>"
         }
       ]
     },

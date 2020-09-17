@@ -41,7 +41,8 @@ class Image extends Component {
         status: PropTypes.string,
         loaderComponent: PropTypes.element,
         errorComponent: PropTypes.element,
-        caption: PropTypes.string
+        caption: PropTypes.string,
+        loaderStyle: PropTypes.object
     };
 
     componentDidMount() {
@@ -65,11 +66,13 @@ class Image extends Component {
             description,
             showCaption,
             caption = description,
-            credits
+            credits,
+            loaderStyle
         } = this.props;
 
         const LoaderComponent = this.props.loaderComponent;
         const ErrorComponent = this.props.errorComponent;
+
         return (
             <div
                 id={id}
@@ -86,7 +89,7 @@ class Image extends Component {
                         fontFamily: `object-fit: ${fit}`,
                         cursor: enableFullscreen ? 'pointer' : 'default'
                     }}/>}
-                {(src && !this.props.status) && LoaderComponent && <LoaderComponent />}
+                {(src && !this.props.status) && LoaderComponent && <LoaderComponent style={{...loaderStyle}} />}
                 {(this.props.status === 'error') && ErrorComponent && <ErrorComponent />}
                 {credits && <div className="ms-media-credits">
                     <small>

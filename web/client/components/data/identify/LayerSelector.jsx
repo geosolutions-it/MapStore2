@@ -13,7 +13,7 @@ import {isEmpty} from 'lodash';
 import localizedProps from '../../misc/enhancers/localizedProps';
 const SelectLocalized = localizedProps(['placeholder', 'clearValueText', 'noResultsText'])(Select);
 
-const LayerSelector = ({ responses = [], index = 0, setIndex, missingResponses = 0, emptyResponses = false }) => {
+const LayerSelector = ({ responses = [], index = 0, loaded, setIndex, missingResponses = 0, emptyResponses = false }) => {
     const selectProps = {clearable: false, isSearchable: true};
     const [options, setOptions] = useState([]);
     const [title, setTitle] = useState("");
@@ -25,8 +25,8 @@ const LayerSelector = ({ responses = [], index = 0, setIndex, missingResponses =
     }, [responses]);
 
     useEffect(()=>{
-        setTitle(responses[index]?.layerMetadata?.title || "");
-    }, [responses, index]);
+        loaded && setTitle(responses[index]?.layerMetadata?.title || "");
+    }, [responses, index, loaded]);
 
     const onChange = (event) => {
         const idx = event?.idx || 0;

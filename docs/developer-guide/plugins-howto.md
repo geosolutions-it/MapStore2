@@ -578,6 +578,7 @@ We can change containers relation like this:
 This will force the plugin system to choose Container1 instead of Container3, and will override the name property.
 
 There is also a set of options to (dynamically) add/exclude containers:
+
  * **showIn**: can be used to add a plugin to a container or more than one, in addition to the default one (it is an array of container plugin names)
  * **hideFrom**: can be used to exclude a plugin from a given container or more than one (it is an array of container plugin names)
  * **doNotHide**: can be used to show a plugin in the root container, in addition to the default one
@@ -665,7 +666,7 @@ export const SamplePlugin = assign(SampleComponent, {
 
 With this configuration the sample plugin will be shown in both Container and ContainerOther plugins (they have the same priority, so both are picked).
 
-We can change this using showIn or hideFrom in localConfig.json:
+We can change this using `showIn` or `hideFrom` in `localConfig.json`:
 #### localConfig.json
 ```javascript
 {

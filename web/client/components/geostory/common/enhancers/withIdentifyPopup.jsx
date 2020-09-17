@@ -98,7 +98,7 @@ export const withIdentifyRequest  = mapPropsStream(props$ => {
                     const {data, queryParams, layerMetadata} = action;
                     const validator = getValidator(mapInfoFormat);
                     const newResponses = responses.concat({response: data, queryParams, layerMetadata});
-                    const newValidResponses = validator.getValidResponses(newResponses);
+                    const newValidResponses = validator.getValidResponses(newResponses, true);
                     return {requests, validResponses: newValidResponses, responses: newResponses};
                 }, {requests: [], responses: [], validResponses: []});
         })
@@ -128,6 +128,7 @@ export const  withPopupSupport =  branch(({map: {mapInfoControl = false} = {}}) 
         withPropsOnChange(["mapInfo", "popups"], ({mapInfo, popups, options: {mapOptions: {mapInfoFormat = getDefaultInfoFormat()} = {}} = {}}) => {
             const {responses, requests, validResponses} = mapInfo;
             const component = () => (<MapInfoViewer
+                renderEmpty
                 responses={responses} requests={requests}
                 validResponses={validResponses}
                 format={mapInfoFormat} showEmptyMessageGFI missingResponses={(requests || []).length - (responses || []).length} />);

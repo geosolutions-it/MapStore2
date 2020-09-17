@@ -30,8 +30,8 @@ const {resultSelector, serviceListOpenSelector, newServiceSelector,
     newServiceTypeSelector, selectedServiceTypeSelector, searchOptionsSelector, servicesSelector,
     servicesSelectorWithBackgrounds, loadingErrorSelector, selectedServiceSelector,
     modeSelector, layerErrorSelector, activeSelector, savingSelector, authkeyParamNameSelector,
-    searchTextSelector, groupSelector, pageSizeSelector, loadingSelector, selectedServiceLayerOptionsSelector
-} = require("../selectors/catalog");
+    searchTextSelector, groupSelector, pageSizeSelector, loadingSelector, selectedServiceLayerOptionsSelector,
+    tileSizeOptionsSelector } = require("../selectors/catalog");
 const {projectionSelector} = require('../selectors/map');
 const {isLocalizedLayerStylesEnabledSelector} = require('../selectors/localizedLayerStyles');
 
@@ -67,6 +67,7 @@ const metadataExplorerSelector = createStructuredSelector({
     selectedFormat: selectedServiceTypeSelector,
     options: searchOptionsSelector,
     layerOptions: selectedServiceLayerOptionsSelector,
+    tileSizeOptions: tileSizeOptionsSelector,
     currentLocale: currentLocaleSelector,
     locales: currentMessagesSelector,
     pageSize: pageSizeSelector,
