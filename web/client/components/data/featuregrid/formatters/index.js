@@ -7,9 +7,15 @@
 */
 const React = require('react');
 const {isNil} = require('lodash');
+const NumberFormat = require('../../../I18N/Number');
 
 module.exports = {
-    getFormatter: (desc) => desc.localType === 'boolean' ?
-        ({value} = {}) => !isNil(value) ? <span>{value.toString()}</span> : null :
-        null
+    getFormatter: (desc) => {
+        if (desc.localType === 'boolean') {
+            return ({value} = {}) => !isNil(value) ? <span>{value.toString()}</span> : null;
+        } else if (['int', 'number'].includes(desc.localType)) {
+            return ({value} = {}) => !isNil(value) ? <NumberFormat value={value} /> : null;
+        }
+        return null;
+    }
 };

@@ -86,7 +86,7 @@ class DecimalCoordinateEditor extends React.Component {
         if (event.keyCode === 13) {
             event.preventDefault();
             event.stopPropagation();
-            this.props.onKeyDown();
+            this.props.onKeyDown(event);
         }
     };
 

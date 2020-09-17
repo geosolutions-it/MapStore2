@@ -84,7 +84,7 @@ export default class NumberEditor extends React.Component {
                 borderColor: 'red'
             }}
             value={this.state.inputText}
-            ref={this.inputRef}
+            ref={(input)=>{this.inputRef = input;}}
             type="number"
             min={this.props.minValue}
             max={this.props.maxValue}

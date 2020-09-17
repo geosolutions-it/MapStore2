@@ -1,7 +1,7 @@
 
 #identify-container {
     .degrees, .minutes {
-        width: auto !important;
+        width: auto;
     }
 
     .layer-select-row{
@@ -43,7 +43,7 @@
             width: 100%;
             position: relative;
             & .seconds {
-                flex: unset !important;
+                flex: unset;
             }
         }
     }
@@ -52,8 +52,12 @@
             .input-group {
                 .form-group {
                     display: flex;
-                    input#intl-numeric{
-                        float: unset;
+                    .react-numeric-input{
+                        width: 100%;
+                        font-size: 12px;
+                        input#intl-numeric{
+                            float: unset;
+                        }
                     }
                 }
             }
@@ -139,7 +143,7 @@
     background-color: transparent !important;
 
     input {
-        font-size: 12px !important;
+        font-size: 12px;
         font-family: Menlo, Monaco, Consolas, Courier New, monospace;
     }
     .col-md-4 {

@@ -160,7 +160,7 @@ class GeometryDetails extends React.Component {
                     id={"queryform_bbox_" + name}
                     step={this.getStep(this.props.zoom)}
                     defaultValue={this.roundValue(value, 1000000)}
-                    onChange={(evt) => this.onUpdateBBOX(evt.target.value, name)}/>
+                    onChange={(val) => this.onUpdateBBOX(val, name)}/>
             </div>
         );
     };

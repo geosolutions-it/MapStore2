@@ -42,7 +42,7 @@ class Font extends React.Component {
     };
 
     onChangeSize = (val) => {
-        this.props.onChangeSize(parseFloat(val));
+        this.props.onChangeSize(parseInt(val, 10));
     };
 
     render() {
@@ -59,7 +59,7 @@ class Font extends React.Component {
                             selected={this.props.family}/>
                     </Col>
                     <Col xs={3}>
-                        <IntlNumberFormControl ref="size" type="number" value={this.props.size} onChange={this.onChangeSize}/>
+                        <IntlNumberFormControl ref="size" type="number" value={this.props.size} min={0} precision={0} onChange={this.onChangeSize}/>
                     </Col>
                     <Col xs={2}>
                         <Button bsStyle="primary" bsSize="small" active={this.props.bold} onClick={this.toggleBold}><Glyphicon glyph="bold"/></Button>

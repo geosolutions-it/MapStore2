@@ -114,7 +114,7 @@ module.exports = ({
                 disabled={!fixedStep}
                 componentClass="input"
                 type="number"
-                style={{ maxWidth: 120 }}
+                style={{input: {maxWidth: 120}}}
                 value={timeStep}
                 onChange={(val = "") => onValidInteger(
                     val,

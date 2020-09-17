@@ -17,6 +17,7 @@ class IntlNumberFormControl extends React.Component {
         value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
         defaultValue: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
         onChange: PropTypes.func,
+        className: PropTypes.string,
         step: PropTypes.number,
         locale: PropTypes.string,
         disabled: PropTypes.bool,
@@ -43,6 +44,13 @@ class IntlNumberFormControl extends React.Component {
                 onChange={(val) => {
                     val === null ? this.props.onChange("") : this.props.onChange(val.toString());
                 }}
+                onBlur={e=>{
+                    if (onBlur) {
+                        e.target.value = this.parse(e.target.value);
+                        onBlur(e);
+                    }
+                }}
+                disabled={disabled || false}
                 parse={this.parse}
                 onKeyPress={e => {
                     const allow = e.key.match(/^[a-zA-Z]*$/);
