@@ -14,7 +14,7 @@ module.exports = {
         if (desc.localType === 'boolean') {
             return ({value} = {}) => !isNil(value) ? <span>{value.toString()}</span> : null;
         } else if (['int', 'number'].includes(desc.localType)) {
-            return ({value} = {}) => !isNil(value) ? <NumberFormat value={value} /> : null;
+            return ({value} = {}) => !isNil(value) ? <NumberFormat value={value} numberParams={{maximumFractionDigits: 17}}/> : null;
         }
         return null;
     }

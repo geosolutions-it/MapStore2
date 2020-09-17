@@ -17,7 +17,6 @@ class IntlNumberFormControl extends React.Component {
         value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
         defaultValue: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
         onChange: PropTypes.func,
-        className: PropTypes.string,
         step: PropTypes.number,
         locale: PropTypes.string,
         disabled: PropTypes.bool,

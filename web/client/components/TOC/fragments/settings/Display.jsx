@@ -218,7 +218,6 @@ module.exports = class extends React.Component {
                                     max={1000}
                                     onChange={(val)=> this.onChange("legendWidth", val)}
                                     onKeyPress={(e)=> e.key === "-" && e.preventDefault()}
-                                    allowNegative={false}
                                     onBlur={this.onBlur}
                                 />
                             </FormGroup>
@@ -234,7 +233,6 @@ module.exports = class extends React.Component {
                                     max={1000}
                                     onChange={(val)=> this.onChange("legendHeight", val)}
                                     onKeyPress={(e)=> e.key === "-" && e.preventDefault()}
-                                    allowNegative={false}
                                     onBlur={this.onBlur}
                                 />
                             </FormGroup>

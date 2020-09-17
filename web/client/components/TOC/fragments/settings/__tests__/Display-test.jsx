@@ -166,15 +166,12 @@ describe('test Layer Properties Display module component', () => {
         // With valid values
         legendWidth.value = 20;
         ReactTestUtils.Simulate.change(legendWidth);
-        ReactTestUtils.Simulate.blur(legendWidth);
         expect(spy).toHaveBeenCalled();
         expect(spy.calls[0].arguments[0]).toEqual({ legendOptions: { legendWidth: 20, legendHeight: 15 } });
 
         legendHeight.value = 20;
         ReactTestUtils.Simulate.change(legendHeight);
-        ReactTestUtils.Simulate.blur(legendHeight);
         expect(spy).toHaveBeenCalled();
-
         expect(spy.calls[1].arguments[0]).toEqual({ legendOptions: { legendWidth: 20, legendHeight: 20 } });
         expect(spy.calls.length).toBe(2);
 
@@ -186,12 +183,10 @@ describe('test Layer Properties Display module component', () => {
         // With Invalid values
         legendWidth.value = 1.2;
         ReactTestUtils.Simulate.change(legendWidth);
-        ReactTestUtils.Simulate.blur(legendWidth);
         expect(spy).toHaveBeenCalled();
         expect(spy.calls[2].arguments[0]).toEqual({ legendOptions: { legendWidth: 1, legendHeight: 20 } });
         legendHeight.value = 25.2;
         ReactTestUtils.Simulate.change(legendHeight);
-        ReactTestUtils.Simulate.blur(legendHeight);
         expect(spy).toHaveBeenCalled();
         expect(spy.calls[3].arguments[0]).toEqual({ legendOptions: { legendWidth: 1, legendHeight: 25 } });
         expect(spy.calls.length).toBe(4);
