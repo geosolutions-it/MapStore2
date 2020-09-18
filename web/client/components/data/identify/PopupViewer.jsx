@@ -11,7 +11,7 @@ import {defaultViewerHandlers, defaultViewerDefaultProps} from './enhancers/defa
 import { compose, defaultProps} from 'recompose';
 import {connect} from 'react-redux';
 import { createSelector} from 'reselect';
-import {indexSelector, responsesSelector, requestsSelector, showEmptyMessageGFISelector, featureInfoClickFormatSelector, identifyGfiTypeSelector, validResponsesSelector, isLoadedResponseSelector} from '../../../selectors/mapInfo';
+import {indexSelector, responsesSelector, requestsSelector, showEmptyMessageGFISelector, generalInfoFormatSelector, validResponsesSelector, isLoadedResponseSelector} from '../../../selectors/mapInfo';
 import {changePage} from '../../../actions/mapInfo';
 import Viewer from './DefaultViewer';
 import {isArray, isUndefined} from 'lodash';
@@ -43,27 +43,23 @@ const selector = createSelector([
     responsesSelector,
     validResponsesSelector,
     requestsSelector,
-    featureInfoClickFormatSelector,
-    identifyGfiTypeSelector,
+    generalInfoFormatSelector,
     showEmptyMessageGFISelector,
     identifyFloatingTool,
-    isLoadedResponseSelector,
-    state => state?.mapInfo?.warning],
-(responses, validResponses, requests, format, gfiType, showEmptyMessageGFI, renderEmpty, loaded, warning) => ({
+    isLoadedResponseSelector],
+(responses, validResponses, requests, format, showEmptyMessageGFI, renderEmpty, loaded) => ({
     responses,
     validResponses,
     requests,
     format,
-    gfiType,
     showEmptyMessageGFI,
     missingResponses: (requests || []).length - (responses || []).length,
     renderEmpty,
-    loaded: warning === 'NO_QUERYABLE_LAYERS' || loaded,
-    noQueryableLayers: warning === 'NO_QUERYABLE_LAYERS'
+    loaded
 }));
 
 
-export default compose(
+export  default compose(
     connect(selector),
     defaultProps({
         responses: [],

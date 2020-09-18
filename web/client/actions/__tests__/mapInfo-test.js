@@ -35,7 +35,7 @@ var {
     SET_MAP_TRIGGER, setMapTrigger
 } = require('../mapInfo');
 
-describe('Test correctness of the mapInfo actions', () => {
+describe('Test correctness of the map actions', () => {
 
     it('gets vector info', () => {
         const retval = getVectorInfo('layer', 'request', 'metadata');
@@ -75,10 +75,9 @@ describe('Test correctness of the mapInfo actions', () => {
     });
 
     it('change mapInfo format', () => {
-        const retval = changeMapInfoFormat('featureInfo', 'testFormat');
+        const retval = changeMapInfoFormat('testFormat');
 
         expect(retval.type).toBe(CHANGE_MAPINFO_FORMAT);
-        expect(retval.gfiType).toBe('featureInfo');
         expect(retval.infoFormat).toBe('testFormat');
     });
 

@@ -510,7 +510,6 @@ const LayersUtils = {
             handleClickOnLayer: layer.handleClickOnLayer || false,
             queryable: layer.queryable,
             featureInfo: layer.featureInfo,
-            mapTip: layer.mapTip,
             catalogURL: layer.catalogURL,
             capabilitiesURL: layer.capabilitiesURL,
             useForElevation: layer.useForElevation || false,

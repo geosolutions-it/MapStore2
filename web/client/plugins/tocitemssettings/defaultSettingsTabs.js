@@ -113,14 +113,11 @@ const formatCards = {
         )
     }
 };
-import GFICmp from '../../components/TOC/fragments/settings/GFI';
+import FeatureInfoCmp from '../../components/TOC/fragments/settings/FeatureInfo';
 const FeatureInfo = defaultProps({
     formatCards,
     defaultInfoFormat: MapInfoUtils.getAvailableInfoFormat()
-})(GFICmp);
-const MapTip = defaultProps({
-    settingName: 'mapTip'
-})(FeatureInfo);
+})(FeatureInfoCmp);
 
 const configuredPlugins = {};
 
@@ -203,7 +200,7 @@ export const getStyleTabPlugin = ({ settings, items = [], loadedPlugins, onToggl
     return {};
 };
 
-export default ({ showFeatureInfoTab = true, showMapTipTab = false, loadedPlugins, items, onToggleStyleEditor, ...props }) => {
+export default ({ showFeatureInfoTab = true, loadedPlugins, items, onToggleStyleEditor, ...props }) => {
 
     return [
         {
@@ -244,22 +241,6 @@ export default ({ showFeatureInfoTab = true, showMapTipTab = false, loadedPlugin
                     tooltipId: 'layerProperties.editCustomFormat',
                     visible: !props.showEditor && props.element && props.element.featureInfo && props.element.featureInfo.format === 'TEMPLATE' || false,
                     onClick: () => props.onShowEditor && props.onShowEditor(!props.showEditor)
-                }
-            ]
-        },
-        {
-            id: 'maptip',
-            titleId: 'layerProperties.mapTip',
-            tooltipId: 'layerProperties.mapTip',
-            glyph: '1-map',
-            visible: showMapTipTab && isLayerNode(props) && isWMS(props) && !props.element?.mapTip?.viewer,
-            Component: MapTip,
-            toolbar: [
-                {
-                    glyph: 'pencil',
-                    tooltipId: 'layerProperties.editCustomFormat',
-                    visible: !props.showEditor && props.element?.mapTip?.format === 'TEMPLATE' || false,
-                    onClick: () => props.onShowEditor?.(!props.showEditor)
                 }
             ]
         },

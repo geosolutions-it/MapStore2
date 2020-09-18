@@ -25,7 +25,7 @@ module.exports = {
      * @param {string} viewer
      * @return {object} an object with `request`, containing request paarams, `metadata` with some info about the layer and the request, and `url` to send the request to.
      */
-    buildRequest: (layer, { sizeBBox, map = {}, point, currentLocale, params: defaultParams, maxItems = 10, env } = {}, infoFormat, viewer, gfiOptions = {}) => {
+    buildRequest: (layer, { sizeBBox, map = {}, point, currentLocale, params: defaultParams, maxItems = 10, env } = {}, infoFormat, viewer, featureInfo) => {
         /* In order to create a valid feature info request
          * we create a bbox of 101x101 pixel that wrap the point.
          * center point is re-projected then is built a box of 101x101pixel around it
@@ -80,8 +80,7 @@ module.exports = {
                 title: isObject(layer.title) ? layer.title[currentLocale] || layer.title.default : layer.title,
                 regex: layer.featureInfoRegex,
                 viewer,
-                featureInfo: gfiOptions.featureInfo,
-                mapTip: gfiOptions.mapTip
+                featureInfo
             },
             url: getLayerUrl(layer).replace(/[?].*$/g, '')
         };

@@ -19,7 +19,7 @@ import {updateSettingsLifecycle} from "../components/TOC/enhancers/tocItemsSetti
 import TOCItemsSettings from '../components/TOC/TOCItemsSettings';
 import defaultSettingsTabs from './tocitemssettings/defaultSettingsTabs';
 import { initialSettingsSelector, originalSettingsSelector, activeTabSettingsSelector } from '../selectors/controls';
-import {layerSettingSelector, groupsSelector, elementSelector} from '../selectors/layers';
+import {layerSettingSelector, layersSelector, groupsSelector, elementSelector} from '../selectors/layers';
 import {mapLayoutValuesSelector} from '../selectors/maplayout';
 import {currentLocaleSelector, currentLocaleLanguageSelector} from '../selectors/locale';
 import {isAdminUserSelector} from '../selectors/security';
@@ -29,6 +29,7 @@ import {toggleStyleEditor} from '../actions/styleeditor';
 
 const tocItemsSettingsSelector = createSelector([
     layerSettingSelector,
+    layersSelector,
     groupsSelector,
     currentLocaleSelector,
     currentLocaleLanguageSelector,
@@ -39,7 +40,7 @@ const tocItemsSettingsSelector = createSelector([
     activeTabSettingsSelector,
     elementSelector,
     isLocalizedLayerStylesEnabledSelector
-], (settings, groups, currentLocale, currentLocaleLanguage, dockStyle, isAdmin, initialSettings, originalSettings, activeTab, element, isLocalizedLayerStylesEnabled) => ({
+], (settings, layers, groups, currentLocale, currentLocaleLanguage, dockStyle, isAdmin, initialSettings, originalSettings, activeTab, element, isLocalizedLayerStylesEnabled) => ({
     settings,
     element,
     groups,

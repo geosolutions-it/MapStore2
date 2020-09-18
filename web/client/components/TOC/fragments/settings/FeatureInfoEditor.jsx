@@ -39,15 +39,13 @@ class FeatureInfoEditor extends React.Component {
         element: PropTypes.object,
         onChange: PropTypes.func,
         onShowEditor: PropTypes.func,
-        enableIFrameModule: PropTypes.bool,
-        settingName: PropTypes.string
+        enableIFrameModule: PropTypes.bool
     };
 
     static defaultProps = {
         showEditor: false,
         element: {},
         enableIFrameModule: false,
-        settingName: 'featureInfo',
         onChange: () => {},
         onShowEditor: () => {}
     };
@@ -58,7 +56,7 @@ class FeatureInfoEditor extends React.Component {
 
     UNSAFE_componentWillMount() {
         this.setState({
-            template: this.props.element?.[this.props.settingName]?.template || ' '
+            template: this.props.element && this.props.element.featureInfo && this.props.element.featureInfo.template || ' '
         });
     }
 
@@ -99,8 +97,8 @@ class FeatureInfoEditor extends React.Component {
 
     close = () => {
         this.props.onShowEditor(!this.props.showEditor);
-        this.props.onChange(this.props.settingName, {
-            ...(this.props.element?.[this.props.settingName] || {}),
+        this.props.onChange('featureInfo', {
+            ...(this.props.element && this.props.element.featureInfo || {}),
             template: this.state.template
         });
     };
