@@ -18,7 +18,8 @@ import {
     featureInfoClick, updateCenterToMarker, purgeMapInfoResults,
     exceptionsFeatureInfo, loadFeatureInfo, errorFeatureInfo,
     noQueryableLayers, newMapInfoRequest, getVectorInfo,
-    showMapinfoMarker, hideMapinfoMarker, setCurrentEditFeatureQuery
+    showMapinfoMarker, hideMapinfoMarker, setCurrentEditFeatureQuery,
+    clearWarning
 } from '../actions/mapInfo';
 
 import { SET_CONTROL_PROPERTIES, SET_CONTROL_PROPERTY, TOGGLE_CONTROL } from '../actions/controls';
@@ -37,7 +38,8 @@ import { stopGetFeatureInfoSelector, identifyOptionsSelector,
     clickPointSelector, clickLayerSelector,
     isMapPopup, isHighlightEnabledSelector,
     itemIdSelector, overrideParamsSelector, filterNameListSelector,
-    currentEditFeatureQuerySelector, mapTriggerSelector } from '../selectors/mapInfo';
+    currentEditFeatureQuerySelector, mapTriggerSelector,
+    identifyGfiTypeSelector, mapTipActiveLayerIdSelector} from '../selectors/mapInfo';
 import { centerToMarkerSelector, queryableLayersSelector, queryableSelectedLayersSelector } from '../selectors/layers';
 import { modeSelector, getAttributeFilters, isFeatureGridOpen } from '../selectors/featuregrid';
 import { spatialFieldSelector } from '../selectors/queryform';
@@ -123,12 +125,20 @@ export default {
     getFeatureInfoOnFeatureInfoClick: (action$, { getState = () => { } }) =>
         action$.ofType(FEATURE_INFO_CLICK)
             .switchMap(({ point, filterNameList = [], overrideParams = {} }) => {
+                const gfiType = identifyGfiTypeSelector(getState());
+                const mapTipActiveLayerId = mapTipActiveLayerIdSelector(getState());
+
                 // Reverse - To query layer in same order as in TOC
                 let queryableLayers = reverse(queryableLayersSelector(getState()));
                 const queryableSelectedLayers = queryableSelectedLayersSelector(getState());
                 if (queryableSelectedLayers.length) {
                     queryableLayers = queryableSelectedLayers;
                 }
+
+                if (gfiType === 'mapTip') {
+                    queryableLayers = queryableLayers.filter(l => l.id === mapTipActiveLayerId);
+                }
+
                 if (queryableLayers.length === 0) {
                     return Rx.Observable.of(purgeMapInfoResults(), noQueryableLayers());
                 }
@@ -146,7 +156,7 @@ export default {
                 })))
                     .mergeMap(layer => {
                         let env = localizedLayerStylesEnvSelector(getState());
-                        let { url, request, metadata } = MapInfoUtils.buildIdentifyRequest(layer, {...identifyOptionsSelector(getState()), env});
+                        let { url, request, metadata } = MapInfoUtils.buildIdentifyRequest(layer, {...identifyOptionsSelector(getState()), env, gfiType });
                         // request override
                         if (itemIdSelector(getState()) && overrideParamsSelector(getState())) {
                             request = {...request, ...overrideParamsSelector(getState())[layer.name]};
@@ -179,7 +189,7 @@ export default {
                 if (point && point.modifiers && point.modifiers.ctrl === true && point.multiSelection) {
                     return out$;
                 }
-                return out$.startWith(purgeMapInfoResults());
+                return out$.startWith(purgeMapInfoResults(), clearWarning());
             }),
     /**
      * if `clickLayer` is present, this means that `handleClickOnLayer` is true for the clicked layer, so the marker have to be hidden, because

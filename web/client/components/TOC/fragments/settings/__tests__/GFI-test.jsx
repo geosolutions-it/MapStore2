@@ -8,7 +8,7 @@
 const React = require('react');
 const expect = require('expect');
 const ReactDOM = require('react-dom');
-const FeatureInfo = require('../FeatureInfo');
+const GFI = require('../GFI');
 const MapInfoUtils = require('../../../../../utils/MapInfoUtils');
 const defaultInfoFormat = MapInfoUtils.getAvailableInfoFormat();
 const TestUtils = require('react-dom/test-utils');
@@ -53,7 +53,7 @@ describe("test FeatureInfo", () => {
     });
 
     it('test rendering', () => {
-        ReactDOM.render(<FeatureInfo formatCards={formatCards} defaultInfoFormat={defaultInfoFormat} />, document.getElementById("container"));
+        ReactDOM.render(<GFI formatCards={formatCards} defaultInfoFormat={defaultInfoFormat} />, document.getElementById("container"));
         const testComponent = document.getElementsByClassName('test-preview');
         expect(testComponent.length).toBe(4);
         const modalEditor = document.getElementsByClassName('ms-resizable-modal');
@@ -62,7 +62,7 @@ describe("test FeatureInfo", () => {
     });
 
     it('test changes on click', done => {
-        ReactDOM.render(<FeatureInfo onChange={(key, value) => {
+        ReactDOM.render(<GFI onChange={(key, value) => {
             expect(key).toBe('featureInfo');
             expect(value.format).toBe('TEXT');
             done();

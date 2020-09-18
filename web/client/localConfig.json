@@ -327,7 +327,8 @@
                     "viewerOptions": {
                         "container": "{context.ReactSwipe}"
                     },
-                    "showEdit": true
+                    "showEdit": true,
+                    "enableMapTipFormat": true
                 },
                 "override": {
                   "Toolbar": {
@@ -376,7 +377,12 @@
             },
             "FilterLayer",
             "AddGroup",
-            "TOCItemsSettings",
+            {
+              "name": "TOCItemsSettings",
+              "cfg": {
+                "showMapTipTab": true
+              }
+            },
             "Tutorial", "MapFooter", {
                 "name": "Measure",
                 "cfg": {

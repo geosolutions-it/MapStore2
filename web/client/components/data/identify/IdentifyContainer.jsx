@@ -38,6 +38,7 @@ module.exports = props => {
         index,
         viewerOptions = {},
         format,
+        gfiType,
         dock = true,
         position,
         size,
@@ -163,6 +164,7 @@ module.exports = props => {
                 <Viewer
                     index={index}
                     setIndex={setIndex}
+                    gfiType={gfiType}
                     format={format}
                     missingResponses={missingResponses}
                     responses={responses}
