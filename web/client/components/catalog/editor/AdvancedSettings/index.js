@@ -20,10 +20,10 @@ const getPanel = (type) => {
     switch (type) {
     case "tms":
         return TMSAdvancedEditor;
+    case "wmts":
     case "wfs":
         return CommonAdvancedSettings;
     case "wms":
-    case "wmts":
     case "csw":
         return RasterAdvancedSettings;
     default:

@@ -7,35 +7,23 @@
  */
 
 const GeoStoreApi = require('../api/GeoStoreDAO');
-const {updateCurrentMapPermissions, updateCurrentMapGroups} = require('./currentMap');
-const ConfigUtils = require('../utils/ConfigUtils');
-const {userGroupSecuritySelector, userSelector} = require('../selectors/security');
-const {currentMapDetailsChangedSelector} = require('../selectors/currentmap');
-const {resetCurrentMap} = require('./currentMap');
-const {findIndex, isNil} = require('lodash');
 const MAPS_LIST_LOADED = 'MAPS_LIST_LOADED';
 const MAPS_LIST_LOADING = 'MAPS_LIST_LOADING';
 const MAPS_LIST_LOAD_ERROR = 'MAPS_LIST_LOAD_ERROR';
 const MAPS_GET_MAP_RESOURCES_BY_CATEGORY = 'MAPS_GET_MAP_RESOURCES_BY_CATEGORY';
 const MAPS_LOAD_MAP = 'MAPS_LOAD_MAP';
 const MAP_UPDATING = 'MAP_UPDATING';
-const MAP_METADATA_UPDATED = 'MAP_METADATA_UPDATED';
 const MAP_UPDATED = 'MAP_UPDATED';
 const MAP_CREATED = 'MAP_CREATED';
 const MAP_DELETING = 'MAP_DELETING';
 const MAP_DELETED = 'MAP_DELETED';
 const MAP_SAVED = 'MAP_SAVED';
 const ATTRIBUTE_UPDATED = 'ATTRIBUTE_UPDATED';
-const PERMISSIONS_UPDATED = 'PERMISSIONS_UPDATED';
 const THUMBNAIL_ERROR = 'THUMBNAIL_ERROR';
 const MAP_ERROR = 'MAP_ERROR';
 const SAVE_ALL = 'SAVE_ALL';
-const DISPLAY_METADATA_EDIT = 'DISPLAY_METADATA_EDIT';
-const RESET_UPDATING = 'RESET_UPDATING';
 const SAVING_MAP = 'SAVING_MAP';
-const SAVE_MAP = 'SAVE_MAP';
 const PERMISSIONS_LIST_LOADING = 'PERMISSIONS_LIST_LOADING';
-const PERMISSIONS_LIST_LOADED = 'PERMISSIONS_LIST_LOADED';
 const MAPS_SEARCH_TEXT_CHANGED = 'MAPS_SEARCH_TEXT_CHANGED';
 const SEARCH_FILTER_CHANGED = 'MAPS:SEARCH_FILTER_CHANGED';
 const SET_SEARCH_FILTER = 'MAPS:SET_SEARCH_FILTER';
@@ -44,19 +32,13 @@ const LOAD_CONTEXTS = 'MAPS:LOAD_CONTEXTS';
 const SET_CONTEXTS = 'MAPS:SET_CONTEXTS';
 const LOADING = 'MAPS:LOADING';
 const METADATA_CHANGED = 'METADATA_CHANGED';
-const TOGGLE_DETAILS_SHEET = 'MAPS:TOGGLE_DETAILS_SHEET';
-const TOGGLE_GROUP_PROPERTIES = 'MAPS:TOGGLE_GROUP_PROPERTIES';
-const TOGGLE_UNSAVED_CHANGES = 'MAPS:TOGGLE_UNSAVED_CHANGES';
+const SHOW_DETAILS_SHEET = 'MAPS:SHOW_DETAILS_SHEET';
+const HIDE_DETAILS_SHEET = 'MAPS:HIDE_DETAILS_SHEET';
 const UPDATE_DETAILS = 'MAPS:UPDATE_DETAILS';
-const SAVE_DETAILS = 'MAPS:SAVE_DETAILS';
-const DELETE_DETAILS = 'MAPS:DELETE_DETAILS';
-const SET_DETAILS_CHANGED = 'MAPS:SET_DETAILS_CHANGED';
 const SHOW_DETAILS = 'MAPS:SHOW_DETAILS';
 const SAVE_RESOURCE_DETAILS = 'MAPS:SAVE_RESOURCE_DETAILS';
 const DO_NOTHING = 'MAPS:DO_NOTHING';
 const DELETE_MAP = 'MAPS:DELETE_MAP';
-const BACK_DETAILS = 'MAPS:BACK_DETAILS';
-const UNDO_DETAILS = 'MAPS:UNDO_DETAILS';
 const SET_UNSAVED_CHANGES = 'MAPS:SET_UNSAVED_CHANGES';
 const OPEN_DETAILS_PANEL = 'DETAILS:OPEN_DETAILS_PANEL';
 const CLOSE_DETAILS_PANEL = 'DETAILS:CLOSE_DETAILS_PANEL';
@@ -66,9 +48,8 @@ const DETAILS_SAVING = 'DETAILS:DETAILS_SAVING';
 const NO_DETAILS_AVAILABLE = "NO_DETAILS_AVAILABLE";
 const FEATURED_MAPS_SET_ENABLED = "FEATURED_MAPS:SET_ENABLED";
 const SAVE_MAP_RESOURCE = "SAVE_MAP_RESOURCE";
-const FEATURED_MAPS_SET_LATEST_RESOURCE = "FEATURED_MAPS:SET_LATEST_RESOURCE";
-
-const { success } = require('./notifications');
+const RELOAD_MAPS = 'MAPS:RELOAD_MAPS';
+const INVALIDATE_FEATURED_MAPS = "FEATURED_MAPS:INVALIDATE";
 
 /**
  * saves details section in the resurce map on geostore
@@ -298,43 +279,6 @@ function toggleDetailsEditability() {
 }
 
 /**
- * When metadata of a map are updated
- * @memberof actions.maps
- * @param  {number} resourceId     the id of the resourceId
- * @param  {string} newName        the new name of the map
- * @param  {string} newDescription the new description of the map
- * @param  {string} result         the result, can be "success"
- * @param  {object} [error]          an error, if any
- * @return {action}                of type `MAP_METADATA_UPDATED` with the arguments as they are named
- */
-function mapMetadataUpdated(resourceId, newName, newDescription, result, error) {
-    return {
-        type: MAP_METADATA_UPDATED,
-        resourceId,
-        newName,
-        newDescription,
-        result,
-        error
-    };
-}
-
-/**
- * When permission of a map are updated
- * @memberof actions.maps
- *
- * @param  {number} resourceId the id of the resourceId
- * @param  {object} [error]      error, if any
- * @return {action}            `PERMISSIONS_UPDATED` with the arguments as they are named
- */
-function permissionsUpdated(resourceId, error) {
-    return {
-        type: PERMISSIONS_UPDATED,
-        resourceId,
-        error
-    };
-}
-
-/**
  * When a map delete action have been performed
  * @memberof actions.maps
  * @param  {number} resourceId the identifier of the deleted map
@@ -419,20 +363,6 @@ function mapError(resourceId, error) {
 }
 
 /**
- * Performed when a map has been saved
- * @memberof actions.maps
- * @param  {object} map        The map
- * @param  {number} resourceId the identifier of the new map
- * @return {action}            type `SAVE_MAP`, with the arguments as they are named
- */
-function saveMap(map, resourceId) {
-    return {
-        type: SAVE_MAP,
-        resourceId,
-        map
-    };
-}
-/**
  * Performed before start saving a new map
  * @memberof actions.maps
  * @param {object} metadata
@@ -442,145 +372,6 @@ function savingMap(metadata) {
     return {
         type: SAVING_MAP,
         metadata
-    };
-}
-
-/**
- * performed when want to display/hide the metadata editing window
- * @memberof actions.maps
- * @param  {boolean} displayMetadataEditValue true to display, false to hide
- * @return {action}                          type `DISPLAY_METADATA_EDIT`, with the arguments as they are named
- */
-function onDisplayMetadataEdit(displayMetadataEditValue) {
-    return {
-        type: DISPLAY_METADATA_EDIT,
-        displayMetadataEditValue
-    };
-}
-/**
- * resets the updating status for a resource
- * @memberof actions.maps
- * @param {number} resourceId the id of the resource
- */
-function resetUpdating(resourceId) {
-    return {
-        type: RESET_UPDATING,
-        resourceId
-    };
-}
-/**
- * When the permission list is loading
- * @memberof actions.maps
- * @param  {number} mapId the id of the resource
- * @return {action}       type `PERMISSIONS_LIST_LOADING`, with the arguments as they are named
- */
-function permissionsLoading(mapId) {
-    return {
-        type: PERMISSIONS_LIST_LOADING,
-        mapId
-    };
-}
-
-/**
- * When the permission list has been loaded
- * @memberof actions.maps
- * @param  {array} permissions  the permission
- * @param  {number} mapId       the id of the resource
- * @return {action}             type `PERMISSIONS_LIST_LOADED`, with the arguments as they are named
- */
-function permissionsLoaded(permissions, mapId) {
-    return {
-        type: PERMISSIONS_LIST_LOADED,
-        permissions,
-        mapId
-    };
-}
-
-
-/**
- * perform permission load for a mapId
- * @memberof actions.maps
- * @param  {number} mapId the id of the map for the permission
- * @return {thunk}       dispatches permissionsLoaded, updateCurrentMapPermissions or loadError
- */
-function loadPermissions(mapId) {
-    if (!mapId) {
-        return {
-            type: 'NONE'
-        };
-    }
-    return (dispatch) => {
-        dispatch(permissionsLoading(mapId));
-        GeoStoreApi.getPermissions(mapId, {}).then((response) => {
-            dispatch(permissionsLoaded(response, mapId));
-            dispatch(updateCurrentMapPermissions(response));
-        }).catch(() => {
-            dispatch(permissionsLoaded(null, mapId));
-        });
-    };
-}
-
-/**
- * load the available goups for a new permission rule.
- * @memberof actions.maps
- * @param  {object} user the current user
- * @return {thunk}     dispatches updateCurrentMapGroups or loadError
- */
-function loadAvailableGroups(user) {
-    return (dispatch) => {
-        GeoStoreApi.getAvailableGroups(user).then((response) => {
-            dispatch(updateCurrentMapGroups(response));
-        }).catch((e) => {
-            dispatch(loadError(e));
-        });
-    };
-}
-
-/**
- * updates metadata for a map
- * @memberof actions.maps
- * @param  {number} resourceId     the id of the map to updates
- * @param  {string} newName        the new name for the map
- * @param  {string} newDescription the new description for the map
- * @param  {action} [onReset]        an action to dispatch after save, if present, to reset the current map
- * @param  {object} [options]        the request options, if any
- * @return {thunk}  updates metadata and diepatches mapMetadataUpdated, onReset action (argument), resetCurrentMap or thumbnailError
- */
-function updateMapMetadata(resourceId, newName, newDescription, onReset, options) {
-    return (dispatch) => {
-        GeoStoreApi.putResourceMetadata(resourceId, newName, newDescription, options).then(() => {
-            dispatch(mapMetadataUpdated(resourceId, newName, newDescription, "success"));
-            dispatch(success({ title: "success", message: "resources.successSaved" }));
-            if (onReset) {
-                dispatch(onReset);
-                dispatch(onDisplayMetadataEdit(false));
-                dispatch(resetCurrentMap());
-            }
-        }).catch((e) => {
-            dispatch(mapError(resourceId, e));
-        });
-    };
-}
-
-/**
- * updates permissions for the given map.
- * @memberof actions.maps
- * @param  {number} resourceId    the identifier of the map
- * @param  {object} securityRules the new securityRules
- * @return {thunk} performs updateResourcePermissions and dispatch permissionsUpdated or thumbnailError
- */
-function updatePermissions(resourceId, securityRules) {
-    if (!securityRules || !securityRules.SecurityRuleList || !securityRules.SecurityRuleList.SecurityRule) {
-        return {
-            type: "NONE"
-        };
-    }
-    return (dispatch) => {
-        GeoStoreApi.updateResourcePermissions(resourceId, securityRules).then(() => {
-            dispatch(permissionsUpdated(resourceId, "success"));
-        }).catch((e) => {
-            dispatch(thumbnailError(resourceId, e));
-        });
     };
 }
 
@@ -605,131 +396,6 @@ function updateAttribute(resourceId, name, value, type, options) {
 }
 
 /**
- * Creates the thumbnail for the map.
- * @memberof actions.maps
- * @param  {object} map               the map
- * @param  {object} metadataMap       the map metadataMap
- * @param  {string} nameThumbnail     the name for the thumbnail
- * @param  {string} dataThumbnail     the data to save for the thumbnail
- * @param  {string} categoryThumbnail the category for the thumbnails
- * @param  {number} resourceIdMap     the resourceId of the map
- * @param  {action} [onSuccess]       the action to dispatch on success
- * @param  {action} [onReset]         the action to dispatch on reset
- * @param  {object} [options]         options for the request
- * @return {thunk}                   perform the thumb creation and dispatch proper actions
- */
-function createThumbnail(map, metadataMap, nameThumbnail, dataThumbnail, categoryThumbnail, resourceIdMap, onSuccess, onReset, options) {
-    return (dispatch, getState) => {
-        let metadata = {
-            name: nameThumbnail
-        };
-        let state = getState();
-        return GeoStoreApi.createResource(metadata, dataThumbnail, categoryThumbnail, options).then((response) => {
-            let groups = userGroupSecuritySelector(state);
-            let index = findIndex(groups, function(g) { return g.groupName === "everyone"; });
-            let group;
-            if (index < 0 && groups && groups.groupName === "everyone") {
-                group = groups;
-            } else {
-                group = groups[index];
-            }
-            let user = userSelector(state);
-            let userPermission = {
-                canRead: true,
-                canWrite: true
-            };
-            let groupPermission = {
-                canRead: true,
-                canWrite: false
-            };
-            dispatch(updatePermissions(response.data, groupPermission, group, userPermission, user, options)); // UPDATE resource permissions
-            const thumbnailUrl = ConfigUtils.getDefaults().geoStoreUrl + "data/" + response.data + "/raw?decode=datauri";
-            dispatch(updateAttribute(resourceIdMap, "thumbnail", thumbnailUrl, "STRING", options)); // UPDATE resource map with new attribute
-            if (onSuccess) {
-                dispatch(onSuccess);
-            }
-            if (onReset) {
-                dispatch(onReset);
-                dispatch(resetCurrentMap());
-            }
-            dispatch(saveMap(map, resourceIdMap));
-            dispatch(thumbnailError(resourceIdMap, null));
-        }).catch((e) => {
-            dispatch(thumbnailError(resourceIdMap, e));
-        });
-    };
-}
-
-/**
- * Save all the metadata and thumbnail, if needed.
- * @memberof actions.maps
- * @param  {object} map               the map object
- * @param  {object} metadataMap       metadata for the map
- * @param  {string} nameThumbnail     the name for the thumbnail
- * @param  {string} dataThumbnail     the data to save for the thumbnail
- * @param  {string} categoryThumbnail the category for the thumbnails
- * @param  {number} resourceIdMap     the id of the map
- * @param  {object} [options]         options for the request
- * @return {thunk}                    perform the update and dispatch proper actions
- */
-function saveAll(map, metadataMap, nameThumbnail, dataThumbnail, categoryThumbnail, resourceIdMap, options) {
-    return (dispatch, getState) => {
-        dispatch(mapUpdating(resourceIdMap));
-        dispatch(updatePermissions(resourceIdMap));
-        const detailsChanged = currentMapDetailsChangedSelector(getState());
-        if (detailsChanged) {
-            dispatch(saveResourceDetails());
-        }
-        if (!isNil(dataThumbnail) && !isNil(metadataMap)) {
-            dispatch(createThumbnail(map, metadataMap, nameThumbnail, dataThumbnail, categoryThumbnail, resourceIdMap,
-                updateMapMetadata(resourceIdMap, metadataMap.name, metadataMap.description, !detailsChanged ? onDisplayMetadataEdit(false) : null, options), null, options, detailsChanged));
-        } else if (!isNil(dataThumbnail)) {
-            dispatch(createThumbnail(map, metadataMap, nameThumbnail, dataThumbnail, categoryThumbnail, resourceIdMap, null, !detailsChanged ? onDisplayMetadataEdit(false) : null, options));
-        } else if (!isNil(metadataMap)) {
-            dispatch(updateMapMetadata(resourceIdMap, metadataMap.name, metadataMap.description, !detailsChanged ? onDisplayMetadataEdit(false) : null, options));
-        }
-        if (isNil(dataThumbnail) && isNil(metadataMap) && !detailsChanged) {
-            dispatch(resetUpdating(resourceIdMap));
-        }
-    };
-}
-
-/**
- * Deletes a thumbnail.
- * @memberof actions.maps
- * @param  {number} resourceId    the id of the thumbnail
- * @param  {number} resourceIdMap the id of the map
- * @param  {object} [options]       options for the request, if any
- * @return {thunk}               performs thumbnail cancellation
- */
-function deleteThumbnail(resourceId, resourceIdMap, options, reset) {
-    return (dispatch) => {
-        dispatch(mapUpdating(resourceIdMap));
-        GeoStoreApi.deleteResource(resourceId, options).then(() => {
-            if (resourceIdMap) {
-                dispatch(updateAttribute(resourceIdMap, "thumbnail", "NODATA", "STRING", options));
-                if (reset) {
-                    dispatch(resetUpdating(resourceIdMap));
-                }
-            }
-        }).catch((e) => {
-            // Even if is not possible to delete the Thumbnail from geostore -> reset the attribute in order to display the default thumbnail
-            if (e.status === 403) {
-                if (resourceIdMap) {
-                    dispatch(updateAttribute(resourceIdMap, "thumbnail", "NODATA", "STRING", options));
-                }
-                dispatch(onDisplayMetadataEdit(false));
-                dispatch(resetCurrentMap());
-                dispatch(thumbnailError(resourceIdMap, null));
-            } else {
-                dispatch(onDisplayMetadataEdit(true));
-                dispatch(thumbnailError(resourceIdMap, e));
-            }
-        });
-    };
-}
-
-/**
  * Deletes a map.
  * @memberof actions.maps
  * @param  {number} resourceId the id of the resource to delete
@@ -745,106 +411,17 @@ function deleteMap(resourceId, options) {
 }
 
 /**
- * Toggles details modal
- * @memberof actions.maps
- * @return {action}        type `TOGGLE_DETAILS_SHEET`
-*/
-function toggleDetailsSheet(detailsSheetReadOnly) {
-    return {
-        type: TOGGLE_DETAILS_SHEET,
-        detailsSheetReadOnly
-    };
-}
-/**
- * Toggles groups properties section
- * @memberof actions.maps
- * @return {action}        type `TOGGLE_GROUP_PROPERTIES`
-*/
-function toggleGroupProperties() {
-    return {
-        type: TOGGLE_GROUP_PROPERTIES
-    };
-}
-/**
- * Toggles unsaved changes modal
- * @memberof actions.maps
- * @return {action}        type `TOGGLE_UNSAVED_CHANGES`
-*/
-function toggleUnsavedChanges() {
-    return {
-        type: TOGGLE_UNSAVED_CHANGES
-    };
-}
-/**
  * updates details section
  * @memberof actions.maps
  * @return {action}        type `UPDATE_DETAILS`
 */
-function updateDetails(detailsText, doBackup, originalDetails) {
+function updateDetails(detailsText) {
     return {
         type: UPDATE_DETAILS,
-        detailsText,
-        doBackup,
-        originalDetails
-    };
-}
-
-/**
- * saves details section in the map state
- * @memberof actions.maps
- * @prop {string} detailsText string generated from html
- * @return {action}        type `SAVE_DETAILS`
-*/
-function saveDetails(detailsText) {
-    return {
-        type: SAVE_DETAILS,
         detailsText
     };
 }
 
-/**
- * deletes details section in the map state
- * @memberof actions.maps
- * @return {action}        type `DELETE_DETAILS`
-*/
-function deleteDetails() {
-    return {
-        type: DELETE_DETAILS
-    };
-}
-/**
- * set unsaved changes in the current map state, type `SET_DETAILS_CHANGED`
- * @memberof actions.maps
- * @prop {boolean} detailsChanged flag used to trigger the opening of the unsavedChangesModal
- * @return {action}        type `SET_DETAILS_CHANGED`
-*/
-function setDetailsChanged(detailsChanged) {
-    return {
-        type: SET_DETAILS_CHANGED,
-        detailsChanged
-    };
-}
-/**
- * back details
- * @memberof actions.maps
- * @return {action}        type `BACK_DETAILS`
-*/
-function backDetails(backupDetails) {
-    return {
-        type: BACK_DETAILS,
-        backupDetails
-    };
-}
-/**
- * undo details
- * @memberof actions.maps
- * @return {action}        type `UNDO_DETAILS`
-*/
-function undoDetails() {
-    return {
-        type: UNDO_DETAILS
-    };
-}
 /**
  * setUnsavedChanged
  * @memberof actions.maps
@@ -929,13 +506,32 @@ const saveMapResource = (resource) => ({
     resource
 });
 /**
- * Set the latestResource prop of featuredmaps
+ * Trigger maps reload
  * @memberof actions.maps
- * @param {boolean} enabled the `enabled` flag
  */
-const setFeaturedMapsLatestResource = (resource) => ({
-    type: FEATURED_MAPS_SET_LATEST_RESOURCE,
-    resource
+const reloadMaps = () => ({
+    type: RELOAD_MAPS
+});
+/**
+ * Invalidate featured maps list
+ * @memberof actions.maps
+ */
+const invalidateFeaturedMaps = () => ({
+    type: INVALIDATE_FEATURED_MAPS
+});
+/**
+ * Shows the read only details sheet
+ * @memberof actions.maps
+ */
+const showDetailsSheet = () => ({
+    type: SHOW_DETAILS_SHEET
+});
+/**
+ * Hides the read only details sheet
+ * @memberof actions.maps
+ */
+const hideDetailsSheet = () => ({
+    type: HIDE_DETAILS_SHEET
 });
 
 /**
@@ -948,37 +544,22 @@ module.exports = {
     MAPS_LIST_LOAD_ERROR,
     MAP_CREATED,
     MAP_UPDATING,
-    MAP_METADATA_UPDATED,
     MAP_UPDATED,
     MAP_DELETED,
     MAP_DELETING,
     MAP_SAVED,
     ATTRIBUTE_UPDATED,
-    PERMISSIONS_UPDATED,
-    SAVE_MAP,
     SAVING_MAP,
     THUMBNAIL_ERROR,
     PERMISSIONS_LIST_LOADING,
-    PERMISSIONS_LIST_LOADED,
     SAVE_ALL,
-    DISPLAY_METADATA_EDIT,
-    RESET_UPDATING,
     MAP_ERROR,
     MAPS_SEARCH_TEXT_CHANGED,
     METADATA_CHANGED,
     NO_DETAILS_AVAILABLE,
     SAVE_MAP_RESOURCE,
-    FEATURED_MAPS_SET_LATEST_RESOURCE,
-    toggleDetailsSheet, TOGGLE_DETAILS_SHEET,
-    toggleGroupProperties, TOGGLE_GROUP_PROPERTIES,
-    toggleUnsavedChanges, TOGGLE_UNSAVED_CHANGES,
     updateDetails, UPDATE_DETAILS,
-    saveDetails, SAVE_DETAILS,
-    deleteDetails, DELETE_DETAILS,
-    setDetailsChanged, SET_DETAILS_CHANGED,
     saveResourceDetails, SAVE_RESOURCE_DETAILS,
-    backDetails, BACK_DETAILS,
-    undoDetails, UNDO_DETAILS,
     doNothing, DO_NOTHING,
     setUnsavedChanged, SET_UNSAVED_CHANGES,
     openDetailsPanel, OPEN_DETAILS_PANEL,
@@ -1003,28 +584,17 @@ module.exports = {
     mapCreated,
     mapDeleted,
     mapDeleting,
-    updateMapMetadata,
-    mapMetadataUpdated,
-    deleteThumbnail,
-    createThumbnail,
     mapUpdating,
-    updatePermissions,
-    permissionsUpdated,
-    permissionsLoading,
-    permissionsLoaded,
     attributeUpdated,
     savingMap,
-    saveMap,
     thumbnailError,
     loadError,
-    loadPermissions,
-    loadAvailableGroups,
-    saveAll,
-    onDisplayMetadataEdit,
-    resetUpdating,
     mapError,
     mapsSearchTextChanged,
     updateAttribute,
     saveMapResource,
-    setFeaturedMapsLatestResource
+    reloadMaps, RELOAD_MAPS,
+    invalidateFeaturedMaps, INVALIDATE_FEATURED_MAPS,
+    showDetailsSheet, SHOW_DETAILS_SHEET,
+    hideDetailsSheet, HIDE_DETAILS_SHEET
 };

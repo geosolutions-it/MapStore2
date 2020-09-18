@@ -899,7 +899,7 @@
             "cancel": "Odustani",
             "back": "Natrag",
             "applyStyle": "Primijeni stil",
-            "addMarker": "Dodaj novu oznaku na karti",
+            "addGeometry": "Dodaj novu oznaku na karti",
             "styleGeometry": "Odaberi različiti stil za točke",
             "deleteGeometry": "Ukloni geometrije pribilješki",
             "removeannotation": "Želite li ukloniti pribilješku sa naslovom: {title}?",

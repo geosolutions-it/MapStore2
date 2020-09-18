@@ -7,7 +7,6 @@
  */
 const {connect} = require('react-redux');
 const { createSelector } = require('reselect');
-import autoMapType from '../../map/enhancers/autoMapType';
 import mapType from '../../map/enhancers/mapType';
 import autoResize from '../../map/enhancers/autoResize';
 import getProjectionDefs from '../../map/enhancers/getProjectionDefs';
@@ -33,7 +32,6 @@ const withCurrentMapLocation = compose(
 export default compose(
     onMapViewChanges,
     autoResize(0),
-    autoMapType,
     mapType,
     withCurrentMapLocation,
     withoutLocationLayer,

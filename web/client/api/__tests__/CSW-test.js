@@ -43,10 +43,17 @@ describe('Test correctness of the CSW APIs', () => {
                 expect(rec0.dc).toExist();
                 expect(rec0.dc.URI).toExist();
                 expect(rec0.dc.URI[0]);
+                expect(rec0.boundingBox).toExist();
+                expect(rec0.boundingBox.crs).toBe('EPSG:4326');
+                expect(rec0.boundingBox.extent).toEqual([45.542, 11.874, 46.026, 12.718]);
                 let uri = rec0.dc.URI[0];
                 expect(uri.name).toExist();
                 expect(uri.value).toExist();
                 expect(uri.description).toExist();
+                let rec1 = result.records[1];
+                expect(rec1.boundingBox).toExist();
+                expect(rec1.boundingBox.crs).toBe('EPSG:4326');
+                expect(rec1.boundingBox.extent).toEqual([12.002717999999996, 45.760718, 12.429282000000002, 46.187282]);
                 done();
             } catch (ex) {
                 done(ex);

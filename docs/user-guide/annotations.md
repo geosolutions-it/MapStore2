@@ -24,7 +24,7 @@ In order to add a new annotation:
 
 <img src="../img/annotations/annotation_form_filled.jpg" class="ms-docimage"  style="max-width:500px;"/>
 
-* **Click** on <img src="../img/button/annotation-draw.jpg" class="ms-docbutton" /> to define the annotation geometry and position. You have to select the annotation type first, then to draw it on the map.
+* **Click** on the geometry icon to define the annotation geometry and position. You have to select the annotation type first, then to draw it on the map.
 
 <img src="../img/annotations/annotations_types.jpg" class="ms-docimage" style="max-width:500px;"/>
 
@@ -46,11 +46,15 @@ Invalid vertices are notified with a red exclamation point icon.
 
 <img src="../img/annotations/invalid_vertex.jpg" class="ms-docimage" style="max-width:500px;" />
 
-* **Click** the *Change Style* <img src="../img/button/change_style_icon.jpg" class="ms-docbutton" /> button (optional) to manage the annotation style (see the next paragraph).
+* **Click** the *Style* tab of the annotation viewer (optional) to manage the annotation style (see the next paragraph).
 
-* **Click** on *Save* <img src="../img/button/save_button.jpg" class="ms-docbutton" />.
+* **Click** on *Zoom* <img src="../img/button/zoom-feature.jpg" class="ms-docbutton" /> to zoom to the geometry of the annotation.
 
-* **Click** on *Save* <img src="../img/button/save_button.jpg" class="ms-docbutton" /> on the main form.
+* **Click** on *Delete* <img src="../img/button/delete_white_button.jpg" class="ms-docbutton" /> to delete the geometry of the annotation.
+
+* **Click** on *Save* <img src="../img/button/save_button.jpg" class="ms-docbutton" /> to save the geometry information.
+
+* **Click** on *Save* <img src="../img/button/save_button.jpg" class="ms-docbutton" /> on the main form to save annotation information.
 
 The annotations layer will be added to the TOC and the annotation will be visible in the annotations list as in the figure below.
 
@@ -59,7 +63,7 @@ The annotations layer will be added to the TOC and the annotation will be visibl
 Styling Annotations
 -------------------
 
-Based on which type of annotation was chosen, [MapStore](https://mapstore.geo-solutions.it/mapstore/#/) allows you to customize the annotation style through a powerful editor. It is accessible from the <img src="../img/button/annotation-draw.jpg" class="ms-docbutton" /> button of the annotation toolbar. During the style editing a preview placed on top of the styler form shows a preview of the edited style.
+Based on which type of annotation was chosen, [MapStore](https://mapstore.geo-solutions.it/mapstore/#/) allows you to customize the annotation style through a powerful editor. It is accessible from the *Style* tab of the annotation viewer. During the style editing a preview placed on top of the styler form shows a preview of the edited style.
 
 <img src="../img/annotations/annotations_toolbar.jpg" class="ms-docimage" style="max-width:500px;"/>
 
@@ -114,17 +118,17 @@ Click on <img src="../img/button/apply_button.jpg" class="ms-docbutton"/> to app
 Managing Annotations
 --------------------
 
-You can manage anytime your annotations through the *Annotation Toolbar*. Click on some annotation to display it.
+You can manage anytime your annotations through the *Annotation Viewer*. Click on some annotation to display it.
 
 <img src="../img/annotations/annotation_toolbar.jpg" class="ms-docimage" style="max-width:500px;"/>
 
-* You can edit you annotations by clicking the <img src="../img/button/edit_button.jpg" class="ms-docbutton" /> button, it allows you to change the geometry and/or the information related to the annotations. See the gif below to better understand how:
+* You can edit your annotations by clicking the geometry card from list of geometries of the annotation. It allows you to change the geometry and/or the information related to the annotations. See the gif below to better understand how:
 
 <img src="../img/annotations/editing_annotations.gif" class="ms-docimage" style="max-width:700px;" />
 
 * The <img src="../img/button/zoom_button.jpg" class="ms-docbutton" /> button allow the map to zoom on the annotation.
 
-* To delete the annotation use the <img src="../img/button/delete_button.jpg" class="ms-docbutton" /> button.
+* The <img src="../img/button/eyeon.jpg" class="ms-docbutton" /> button allow the user to show/hide the annotation on the map.
 
 * Annotations can be also download in `json` format and reused in other maps. Using <img src="../img/button/download_annotation_button.jpg" class="ms-docbutton" /> button you will be able to export your annotation in the `Annotation.json` file and download it.
 
