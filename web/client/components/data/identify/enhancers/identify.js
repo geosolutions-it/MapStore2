@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const {lifecycle, withHandlers, compose} = require('recompose');
+const {lifecycle, withHandlers, mapProps, compose} = require('recompose');
 const {set} = require('../../../../utils/ImmutableUtils');
 const {isNil, isNaN} = require('lodash');
 
@@ -64,13 +64,19 @@ const identifyHandlers = withHandlers({
  */
 const identifyLifecycle = compose(
     identifyHandlers,
+    mapProps(({enableMapTipFormat, enableMapTipFormatState, mouseMoveIdentifyActive, ...props}) => ({
+        ...props,
+        enableMapTipFormat: enableMapTipFormatState ?? enableMapTipFormat
+    })),
     lifecycle({
-        componentDidMount() {
+        componentDidMount(prevProps) {
             const {
                 enabled,
                 changeMousePointer = () => {},
                 disableCenterToMarker,
-                onEnableCenterToMarker = () => {}
+                onEnableCenterToMarker = () => {},
+                enableMapTipFormat = false,
+                setEnableMapTipFormat = () => {}
             } = this.props;
 
             if (enabled) {
@@ -79,6 +85,10 @@ const identifyLifecycle = compose(
 
             if (!disableCenterToMarker) {
                 onEnableCenterToMarker();
+            }
+
+            if (prevProps?.enableMapTipFormat !== enableMapTipFormat) {
+                setEnableMapTipFormat(enableMapTipFormat);
             }
         },
         componentWillUnmount() {

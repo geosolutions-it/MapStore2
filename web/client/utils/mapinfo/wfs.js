@@ -26,7 +26,7 @@ const assign = require('object-assign');
  * @param {string} viewer
  * @return {object} an object with `request`, containing request params, `metadata` with some info about the layer and the request, and `url` to send the request to.
  */
-const buildRequest = (layer, { map = {}, point, currentLocale, params, maxItems = 10 } = {}, infoFormat, viewer, featureInfo) => {
+const buildRequest = (layer, { map = {}, point, currentLocale, params, maxItems = 10 } = {}, infoFormat, viewer, gfiOptions = {}) => {
     /* In order to create a valid feature info request
      * we create a bbox of 101x101 pixel that wrap the point.
      * center point is re-projected then is built a box of 101x101pixel around it
@@ -49,7 +49,8 @@ const buildRequest = (layer, { map = {}, point, currentLocale, params, maxItems 
             title: isObject(layer.title) ? layer.title[currentLocale] || layer.title.default : layer.title,
             regex: layer.featureInfoRegex,
             viewer,
-            featureInfo
+            featureInfo: gfiOptions.featureInfo,
+            mapTip: gfiOptions.mapTip
         },
         url: getLayerUrl(layer).replace(/[?].*$/g, '')
     };

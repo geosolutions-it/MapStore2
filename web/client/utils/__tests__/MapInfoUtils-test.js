@@ -19,7 +19,7 @@ var {
     setViewer,
     getLabelFromValue,
     getDefaultInfoFormatValueFromLayer,
-    getLayerFeatureInfo,
+    getLayerGfiOptions,
     filterRequestParams
 } = require('../MapInfoUtils');
 
@@ -540,10 +540,11 @@ describe('MapInfoUtils', () => {
         expect(htmlFormat).toBe('text/html');
     });
 
-    it('getLayerFeatureInfo', () => {
-        expect(getLayerFeatureInfo()).toEqual({});
-        expect(getLayerFeatureInfo({})).toEqual({});
-        expect(getLayerFeatureInfo({featureInfo: {format: 'TEXT'}})).toEqual({format: 'TEXT'});
+    it('getLayerGfiOption', () => {
+        expect(getLayerGfiOptions()).toEqual({featureInfo: undefined, mapTip: undefined});
+        expect(getLayerGfiOptions({})).toEqual({featureInfo: undefined, mapTip: undefined});
+        expect(getLayerGfiOptions({id: 'layerId', name: 'layerName', featureInfo: {format: 'TEXT'}})).toEqual({featureInfo: {format: 'TEXT'}, mapTip: undefined});
+        expect(getLayerGfiOptions({id: 'layerId', name: 'layerName', featureInfo: {format: 'TEXT'}, mapTip: {format: 'HTML'}})).toEqual({featureInfo: {format: 'TEXT'}, mapTip: {format: 'HTML'}});
     });
 
     it('filterRequestParams', () => {

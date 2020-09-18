@@ -17,7 +17,7 @@ const SimpleRowViewer = (props) => {
     return <div>{['name', 'description'].map((key) => <span key={key}>{key}:{props[key]}</span>)}</div>;
 };
 
-describe('Identity Viewers', () => {
+describe('Identify viewers', () => {
     beforeEach((done) => {
         document.body.innerHTML = '<div id="container"></div>';
         setTimeout(done);
@@ -88,11 +88,41 @@ describe('Identity Viewers', () => {
         expect(cmpDom.innerText.indexOf('This is my viewer: 1') !== -1).toBe(true);
     });
 
-    it('test JSONViewer with TEMPLATE', () => {
+    it('test JSONViewer with TEMPLATE and gfiType=featureInfo', () => {
         const cmp = ReactDOM.render(
             <JSONViewer
+                gfiType="featureInfo"
                 layer={{
                     featureInfo: {
+                        format: 'TEMPLATE',
+                        template: '<p id="my-template">the property name is ${ properties.name }</p>'
+                    }
+                }}
+                response={{
+                    features: [{
+                        id: 1,
+                        properties: {
+                            name: 'myname',
+                            description: 'mydescription'
+                        }
+                    }]
+                }} />, document.getElementById("container"));
+        expect(cmp).toExist();
+
+        const cmpDom = ReactDOM.findDOMNode(cmp);
+        expect(cmpDom).toExist();
+
+        const templateDOM = document.getElementById('my-template');
+        expect(templateDOM.innerHTML).toBe('the property name is myname');
+
+    });
+
+    it('test JSONViewer with TEMPLATE and gfiType=mapTip', () => {
+        const cmp = ReactDOM.render(
+            <JSONViewer
+                gfiType="mapTip"
+                layer={{
+                    mapTip: {
                         format: 'TEMPLATE',
                         template: '<p id="my-template">the property name is ${ properties.name }</p>'
                     }
@@ -119,6 +149,7 @@ describe('Identity Viewers', () => {
     it('test JSONViewer with TEMPLATE and missing properties', () => {
         const cmp = ReactDOM.render(
             <JSONViewer
+                gfiType="featureInfo"
                 layer={{
                     featureInfo: {
                         format: 'TEMPLATE',
@@ -147,6 +178,7 @@ describe('Identity Viewers', () => {
     it('test JSONViewer with TEMPLATE with tag inside variable', () => {
         ReactDOM.render(
             <JSONViewer
+                gfiType="featureInfo"
                 layer={{
                     featureInfo: {
                         format: 'TEMPLATE',
@@ -168,6 +200,7 @@ describe('Identity Viewers', () => {
 
         ReactDOM.render(
             <JSONViewer
+                gfiType="featureInfo"
                 layer={{
                     featureInfo: {
                         format: 'TEMPLATE',
@@ -191,6 +224,7 @@ describe('Identity Viewers', () => {
     it('test JSONViewer with TEMPLATE multiple features', () => {
         const cmp = ReactDOM.render(
             <JSONViewer
+                gfiType="featureInfo"
                 layer={{
                     featureInfo: {
                         format: 'TEMPLATE',
@@ -226,6 +260,7 @@ describe('Identity Viewers', () => {
         // when template is missing, undefined or equal to <p><br></p> response is displayed in PROPERTIES format
         ReactDOM.render(
             <JSONViewer
+                gfiType="featureInfo"
                 layer={{
                     featureInfo: {
                         format: 'TEMPLATE'
@@ -246,6 +281,7 @@ describe('Identity Viewers', () => {
 
         ReactDOM.render(
             <JSONViewer
+                gfiType="featureInfo"
                 layer={{
                     featureInfo: {
                         format: 'TEMPLATE',
@@ -268,6 +304,7 @@ describe('Identity Viewers', () => {
         // <p><br></p> is the value of react-quill when empty
         ReactDOM.render(
             <JSONViewer
+                gfiType="featureInfo"
                 layer={{
                     featureInfo: {
                         format: 'TEMPLATE',

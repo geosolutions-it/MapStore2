@@ -6,7 +6,7 @@
 * LICENSE file in the root directory of this source tree.
 */
 
-const { get, omit, isArray } = require('lodash');
+const { get, omit, isArray, isString } = require('lodash');
 
 const { createSelector, createStructuredSelector } = require('reselect');
 
@@ -53,7 +53,18 @@ const isMapInfoOpen = createSelector(
  * @param  {object} state the state
  * @return {string}       the maptype in the state
  */
-const generalInfoFormatSelector = (state) => get(state, "mapInfo.configuration.infoFormat", "text/plain");
+const generalInfoFormatObjectSelector = (state) => {
+    const infoFormat = state?.mapInfo?.configuration?.infoFormat ?? {};
+    return isString(infoFormat) ? {featureInfo: infoFormat} : infoFormat;
+};
+const createInfoFormatSelector = gfiType => createSelector(generalInfoFormatObjectSelector, infoFormat => infoFormat[gfiType] || "text/plain");
+const generalInfoFormatSelector = createInfoFormatSelector('featureInfo');
+const mapTipFormatSelector = createInfoFormatSelector('mapTip');
+const mapTipFormatEnabledSelector = state => state?.mapInfo?.enableMapTipFormat;
+const featureInfoClickFormatSelector = createSelector(generalInfoFormatSelector, mapTipFormatSelector, mapTipFormatEnabledSelector, identifyFloatingTool,
+    (infoFormat, mapTipFormat, mapTipFormatEnabled, mouseMoveIdentifyActive) => mapTipFormatEnabled && mouseMoveIdentifyActive ? mapTipFormat : infoFormat);
+const identifyGfiTypeSelector = createSelector(identifyFloatingTool, mapTipFormatEnabledSelector, (mouseMoveIdentifyActive, mapTipFormatEnabled) => mouseMoveIdentifyActive && mapTipFormatEnabled ? 'mapTip' : 'featureInfo');
+const mapTipActiveLayerIdSelector = state => state?.mapInfo?.configuration?.mapTipActiveLayerId;
 const showEmptyMessageGFISelector = (state) => get(state, "mapInfo.configuration.showEmptyMessageGFI", true);
 const mapInfoConfigurationSelector = (state) => get(state, "mapInfo.configuration", {});
 
@@ -99,7 +110,7 @@ const stopGetFeatureInfoSelector = createSelector(
  * Defines the general options of the identifyTool to build the request
  */
 const identifyOptionsSelector = createStructuredSelector({
-    format: generalInfoFormatSelector,
+    format: featureInfoClickFormatSelector,
     map: mapSelector,
     point: clickPointSelector,
     currentLocale: currentLocaleSelector
@@ -217,7 +228,13 @@ module.exports = {
     identifyOptionsSelector,
     clickPointSelector,
     clickLayerSelector,
+    generalInfoFormatObjectSelector,
     generalInfoFormatSelector,
+    mapTipFormatSelector,
+    mapTipFormatEnabledSelector,
+    featureInfoClickFormatSelector,
+    identifyGfiTypeSelector,
+    mapTipActiveLayerIdSelector,
     mapInfoRequestsSelector,
     stopGetFeatureInfoSelector,
     showEmptyMessageGFISelector,

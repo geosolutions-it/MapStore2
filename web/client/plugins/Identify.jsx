@@ -17,12 +17,12 @@ const {isUndefined} = require('lodash');
 const {mapSelector, isMouseMoveIdentifyActiveSelector} = require('../selectors/map');
 const {layersSelector} = require('../selectors/layers');
 const { mapTypeSelector, isCesium } = require('../selectors/maptype');
-const { generalInfoFormatSelector, clickPointSelector, indexSelector, responsesSelector, requestsSelector, validResponsesSelector, showEmptyMessageGFISelector, isHighlightEnabledSelector, currentFeatureSelector, currentFeatureCrsSelector, isLoadedResponseSelector } = require('../selectors/mapInfo');
+const { featureInfoClickFormatSelector, identifyGfiTypeSelector, generalInfoFormatSelector, mapTipFormatSelector, clickPointSelector, indexSelector, responsesSelector, requestsSelector, validResponsesSelector, showEmptyMessageGFISelector, isHighlightEnabledSelector, currentFeatureSelector, currentFeatureCrsSelector, isLoadedResponseSelector, mapTipFormatEnabledSelector } = require('../selectors/mapInfo');
 const { isEditingAllowedSelector } = require('../selectors/featuregrid');
 const {currentLocaleSelector} = require('../selectors/locale');
 const {mapLayoutValuesSelector} = require('../selectors/maplayout');
 
-const { hideMapinfoMarker, showMapinfoRevGeocode, hideMapinfoRevGeocode, clearWarning, toggleMapInfoState, changeMapInfoFormat, updateCenterToMarker, closeIdentify, purgeMapInfoResults, updateFeatureInfoClickPoint, changeFormat, toggleShowCoordinateEditor, changePage, toggleHighlightFeature, editLayerFeatures, setMapTrigger} = require('../actions/mapInfo');
+const { hideMapinfoMarker, showMapinfoRevGeocode, hideMapinfoRevGeocode, clearWarning, toggleMapInfoState, changeMapInfoFormat, updateCenterToMarker, closeIdentify, purgeMapInfoResults, updateFeatureInfoClickPoint, changeFormat, toggleShowCoordinateEditor, changePage, toggleHighlightFeature, editLayerFeatures, setMapTrigger, setEnableMapTipFormat} = require('../actions/mapInfo');
 const { changeMousePointer, zoomToExtent } = require('../actions/map');
 
 const {getConfigProp} = require("../utils/ConfigUtils");
@@ -43,7 +43,7 @@ const selector = createStructuredSelector({
     responses: responsesSelector,
     validResponses: validResponsesSelector,
     requests: requestsSelector,
-    format: generalInfoFormatSelector,
+    format: featureInfoClickFormatSelector,
     map: mapSelector,
     layers: layersSelector,
     point: clickPointSelector,
@@ -57,7 +57,9 @@ const selector = createStructuredSelector({
     showEmptyMessageGFI: state => showEmptyMessageGFISelector(state),
     isEditingAllowed: isEditingAllowedSelector,
     isCesium,
-    floatingIdentifyEnabled: (state) => isMouseMoveIdentifyActiveSelector(state)
+    floatingIdentifyEnabled: (state) => isMouseMoveIdentifyActiveSelector(state),
+    enableMapTipFormatState: mapTipFormatEnabledSelector,
+    gfiType: identifyGfiTypeSelector
 });
 // result panel
 
@@ -194,12 +196,14 @@ const IdentifyPlugin = compose(
         showRevGeocode: showMapinfoRevGeocode,
         hideRevGeocode: hideMapinfoRevGeocode,
         onEnableCenterToMarker: updateCenterToMarker.bind(null, 'enabled'),
-        onEdit: editLayerFeatures
+        onEdit: editLayerFeatures,
+        setEnableMapTipFormat
     }, (stateProps, dispatchProps, ownProps) => ({
         ...ownProps,
         ...stateProps,
         ...dispatchProps,
-        enabled: stateProps.enabled && (stateProps.isCesium || !ownProps.showInMapPopup) && !stateProps.floatingIdentifyEnabled
+        enabled: stateProps.enabled && (stateProps.isCesium || !ownProps.showInMapPopup) && !stateProps.floatingIdentifyEnabled,
+        warning: !stateProps.floatingIdentifyEnabled && stateProps.warning
     })),
     // highlight support
     compose(
@@ -227,7 +231,13 @@ const IdentifyPlugin = compose(
 const FeatureInfoFormatSelector = connect((state) => ({
     infoFormat: generalInfoFormatSelector(state)
 }), {
-    onInfoFormatChange: changeMapInfoFormat
+    onInfoFormatChange: changeMapInfoFormat.bind(null, 'featureInfo')
+})(require("../components/misc/FeatureInfoFormatSelector").default);
+
+const MapTipFormatSelector = connect((state) => ({
+    infoFormat: mapTipFormatSelector(state)
+}), {
+    onInfoFormatChange: changeMapInfoFormat.bind(null, 'mapTip')
 })(require("../components/misc/FeatureInfoFormatSelector").default);
 
 const FeatureInfoTriggerSelector = connect((state) => ({
@@ -250,14 +260,18 @@ module.exports = {
                 active: !!(state.mapInfo && state.mapInfo.enabled)
             })
         },
-        Settings: {
+        Settings: (config = {}) => ({
             tool: [<FeatureInfoFormatSelector
                 key="featureinfoformat"
                 label={<Message msgId="infoFormatLbl" />
-                }/>, <FeatureInfoTriggerSelector
+                }/>, ...[
+                    config.cfg?.enableMapTipFormat ? [<MapTipFormatSelector
+                        key="maptipformat"
+                        label={<Message msgId="mapTipFormatLbl" />}/>] : []
+            ], <FeatureInfoTriggerSelector
                 key="featureinfotrigger" />],
             position: 3
-        }
+        })
     }),
     reducers: {mapInfo: require('../reducers/mapInfo')},
     epics: require('../epics/identify').default
