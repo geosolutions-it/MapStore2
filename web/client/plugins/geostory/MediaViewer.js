@@ -14,7 +14,7 @@ import find from 'lodash/find';
 import Image from '../../components/geostory/media/Image';
 import Map from '../../components/geostory/media/Map';
 import Video from '../../components/geostory/media/Video';
-import connectMap, {withLocalMapState, withMapEditingAndLocalMapState} from '../../components/geostory/common/enhancers/map';
+import connectMap, {withLocalMapState, withFocusedContentMap, withMapEditingAndLocalMapState} from '../../components/geostory/common/enhancers/map';
 import emptyState from '../../components/misc/enhancers/emptyState';
 import { resourcesSelector } from '../../selectors/geostory';
 import { SectionTypes } from '../../utils/GeoStoryUtils';
@@ -44,6 +44,7 @@ const map = compose(
     branch(
         ({ resourceId }) => resourceId,
         connectMap,
+        withFocusedContentMap,
     ),
     autoMapType,
     withLocalMapState,

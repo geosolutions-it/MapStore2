@@ -153,7 +153,7 @@ export const withLocationClickInEdit = branch(({editMap, map: {mapLocationsEnabl
     )
 );
 
-export const withLocationClick = branch(({editMap, map: {mapLocationsEnabled = false} = {}}) => mapLocationsEnabled && !editMap,
+export const withLocationClick = branch(({editMap, map: { mapLocationsEnabled = false } = {}}) => mapLocationsEnabled && !editMap,
     compose(
         withStateHandlers(({'popups': []}), {
             onClick: (_state, { map, layers }) => (point) =>  {

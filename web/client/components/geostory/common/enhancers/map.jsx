@@ -53,8 +53,8 @@ export default compose(
 export const withFocusedContentMap = compose(
     connect(createSelector(getCurrentFocusedContentEl, (focusedEl = {}) => ({focusedEl }))), // Map connection and update withFocusedMap
     withProps(
-        ({ focusedEl: {resourceId, map, currentMapLocation = ""} = {}}) => {
-            return { map: map || {},  resourceId, disableReset: !map, currentMapLocation};
+        ({ focusedEl: {resourceId, map, currentMapLocation = "", mapInfoControlTrack = false } = {}}) => {
+            return { map: map || {},  resourceId, disableReset: !map, currentMapLocation, mapInfoControlTrack};
         }
     ));
 /**
