@@ -17,6 +17,7 @@ import { branch, compose, renderComponent, withHandlers, withProps, withState, l
 import {
     EMPTY_CONTENT,
     SectionTypes,
+    ContentTypes,
     customGetEntityId,
     customEntityTransform,
     DEFAULT_FONT_FAMILIES } from "../../../../utils/GeoStoryUtils";
@@ -81,10 +82,10 @@ export default compose(
                 const availableStorySections = sections.reduce((availableSections, section) => {
                     const s = [];
                     s.push(section);
-                    if (section.type === 'paragraph' || section.type === 'immersive') {
+                    if (section.type === SectionTypes.PARAGRAPH || section.type === SectionTypes.IMMERSIVE) {
                         const contents = section.contents;
                         contents.forEach((c) => {
-                            if (c.type === 'column') {
+                            if (c.type === ContentTypes.COLUMN) {
                                 s.push(c);
                             }
                         });
