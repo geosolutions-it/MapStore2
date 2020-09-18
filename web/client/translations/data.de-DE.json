@@ -80,7 +80,6 @@
             "groupProperties": "Gruppeneigenschaften",
             "featureInfo": "Feature Info",
             "featureInfoFormatLbl": "Identifiziere das Antwortformat",
-            "mapTip": "GFI Tooltip",
             "legenderror": "Legende ist nicht verfügbar",
             "editCustomFormat": "Bearbeiten Sie das benutzerdefinierte Format",
             "exampleOfResponse": "Beispiel",
@@ -517,8 +516,6 @@
             "epsgNotSupported": "KBS {epsg} wird für das Zoomen auf den Layer nicht unterstützt",
             "filterIconEnabled": "Ebenenfilter deaktivieren",
             "filterIconDisabled": "Ebenenfilter aktivieren",
-            "mapTipActivate": "Aktivieren Sie die Ebene für MapTip",
-            "mapTipDeactivate": "Deaktivieren Sie die Ebene für MapTip",
             "refreshOptions": {
                 "bbox": "BBOX aktualisieren",
                 "search": "Suchoptionen aktualisieren",
@@ -668,7 +665,6 @@
             "redoBtnTooltip": "Gehe vorwärts"
         },
         "infoFormatLbl": "Identifiziere das Antwortformat",
-        "mapTipFormatLbl": "Format des GFI-Tooltips",
         "infoTriggerLabel": "Auslöseereignis für Identifizieren",
         "click": "Click",
         "hover": "Hover",

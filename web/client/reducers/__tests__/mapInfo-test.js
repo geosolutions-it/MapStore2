@@ -220,32 +220,14 @@ describe('Test the mapInfo reducer', () => {
         expect(state.enabled).toBe(false);
     });
 
-    it('change mapinfo format with featureInfo', () => {
-        let state = mapInfo({}, {type: 'CHANGE_MAPINFO_FORMAT', gfiType: 'featureInfo', infoFormat: "testFormat"});
+    it('change mapinfo format', () => {
+        let state = mapInfo({}, {type: 'CHANGE_MAPINFO_FORMAT', infoFormat: "testFormat"});
         expect(state).toExist();
-        expect(state.configuration.infoFormat).toEqual({featureInfo: 'testFormat'});
+        expect(state.configuration.infoFormat).toBe("testFormat");
 
-        state = mapInfo({configuration: {infoFormat: {featureInfo: 'oldFormat'}}}, {type: 'CHANGE_MAPINFO_FORMAT', gfiType: 'featureInfo', infoFormat: "newFormat"});
+        state = mapInfo({configuration: {infoFormat: 'oldFormat'}}, {type: 'CHANGE_MAPINFO_FORMAT', infoFormat: "newFormat"});
         expect(state).toExist();
-        expect(state.configuration.infoFormat).toEqual({featureInfo: 'newFormat'});
-
-        state = mapInfo({configuration: {infoFormat: 'oldFormat'}}, {type: 'CHANGE_MAPINFO_FORMAT', gfiType: 'featureInfo', infoFormat: "newFormat"});
-        expect(state).toExist();
-        expect(state.configuration.infoFormat).toEqual({featureInfo: 'newFormat'});
-    });
-
-    it('change mapinfo format with mapTip', () => {
-        let state = mapInfo({}, {type: 'CHANGE_MAPINFO_FORMAT', gfiType: 'mapTip', infoFormat: "testFormat"});
-        expect(state).toExist();
-        expect(state.configuration.infoFormat).toEqual({mapTip: 'testFormat'});
-
-        state = mapInfo({configuration: {infoFormat: {mapTip: 'oldFormat'}}}, {type: 'CHANGE_MAPINFO_FORMAT', gfiType: 'mapTip', infoFormat: "newFormat"});
-        expect(state).toExist();
-        expect(state.configuration.infoFormat).toEqual({mapTip: 'newFormat'});
-
-        state = mapInfo({configuration: {infoFormat: 'oldFormat'}}, {type: 'CHANGE_MAPINFO_FORMAT', gfiType: 'mapTip', infoFormat: "newFormat"});
-        expect(state).toExist();
-        expect(state.configuration.infoFormat).toEqual({featureInfo: 'oldFormat', mapTip: 'newFormat'});
+        expect(state.configuration.infoFormat).toBe('newFormat');
     });
 
     it('show reverese geocode', () => {

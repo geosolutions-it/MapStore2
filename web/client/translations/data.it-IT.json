@@ -80,7 +80,6 @@
             "groupProperties": "Proprietà del gruppo",
             "featureInfo": "Feature Info",
             "featureInfoFormatLbl": "Formato risposta interrogazioni su mappa",
-            "mapTip": "Descrizione comando GFI",
             "legenderror": "Legenda non disponibile",
             "editCustomFormat": "Edita formato",
             "exampleOfResponse": "Esempio",
@@ -517,8 +516,6 @@
             "epsgNotSupported": "CRS {epsg} non supportato per zoom al layer",
             "filterIconEnabled": "Disattiva il filtro",
             "filterIconDisabled": "Attiva il filtro",
-            "mapTipActivate": "Attiva il livello per MapTip",
-            "mapTipDeactivate": "Disattiva il layer per MapTip",
             "refreshOptions": {
                 "bbox": "Aggiorna area di zoom",
                 "search": "Aggiorna opzioni di ricerca",
@@ -668,7 +665,6 @@
             "redoBtnTooltip": "Vai avanti"
         },
         "infoFormatLbl": "Formato risposte interrogazioni su mappa",
-        "mapTipFormatLbl": "Formato della descrizione comando di GFI",
         "infoTriggerLabel": "Evento trigger interrogazioni su mappa",
         "click": "Click",
         "hover": "Hover",

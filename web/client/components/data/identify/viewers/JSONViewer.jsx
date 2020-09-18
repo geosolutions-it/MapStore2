@@ -14,9 +14,9 @@ const Viewers = {
     PROPERTIES: require('./PropertiesViewer')
 };
 
-module.exports = shouldUpdate((props, nextProps) => nextProps.response !== props.response || nextProps.gfiType !== props.gfiType)(
+module.exports = shouldUpdate((props, nextProps) => nextProps.response !== props.response)(
     props => {
-        const type = props.layer?.[props.gfiType]?.format && (props.layer[props.gfiType].template && props.layer[props.gfiType].template !== '<p><br></p>') && props.layer[props.gfiType].format || 'PROPERTIES';
+        const type = props.layer && props.layer.featureInfo && props.layer.featureInfo.format && (props.layer.featureInfo.template && props.layer.featureInfo.template !== '<p><br></p>') && props.layer.featureInfo.format || 'PROPERTIES';
         const Viewer = Viewers[type] || Viewers.PROPERTIES;
         return <Viewer {...props}/>;
     }

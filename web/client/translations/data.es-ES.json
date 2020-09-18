@@ -80,7 +80,6 @@
             "groupProperties": "Propiedades del grupo",
             "featureInfo": "Información de la capa",
             "featureInfoFormatLbl": "Identificar el formato de respuesta",
-            "mapTip": "Descripción emergente de GFI",
             "legenderror": "La leyenda no está disponible",
             "editCustomFormat": "Editar formato personalizado",
             "exampleOfResponse": "Ejemplo",
@@ -517,8 +516,6 @@
             "epsgNotSupported": "CRS {epsg} no es compatible con el zoom a la capa",
             "filterIconEnabled": "Deshabilitar filtro de capa",
             "filterIconDisabled": "Habilitar filtro de capa",
-            "mapTipActivate": "Activar capa para MapTip",
-            "mapTipDeactivate": "Desactivar capa para MapTip",
             "refreshOptions": {
                 "bbox": "Refrescar BBOX",
                 "search": "Refrescar las opciones de búsqueda",
@@ -668,7 +665,6 @@
             "redoBtnTooltip": "Ir hacia adelante"
         },
         "infoFormatLbl": "Identificar el formato de respuesta",
-        "mapTipFormatLbl": "Formato de la descripción emergente de GFI",
         "infoTriggerLabel": "Evento desencadenante para identificar",
         "click": "Click",
         "hover": "Hover",

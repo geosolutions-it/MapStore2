@@ -63,34 +63,26 @@ const MapInfoUtils = {
     /**
      * @return {string} the info format value from layer, otherwise the info format in settings
      */
-    getDefaultInfoFormatValueFromLayer: (layer, props) => {
-        const gfiType = props.gfiType || 'featureInfo';
-        const layerFormat = layer[gfiType]?.format;
-
-        return layerFormat
-            && INFO_FORMATS[layerFormat]
+    getDefaultInfoFormatValueFromLayer: (layer, props) =>
+        layer.featureInfo
+            && layer.featureInfo.format
+            && INFO_FORMATS[layer.featureInfo.format]
             || props.format
-            || MapInfoUtils.getDefaultInfoFormatValue();
-    },
-    getLayerGfiViewer(layer, options) {
-        const gfiType = options.gfiType || 'featureInfo';
-
-        if (layer[gfiType]
-            && layer[gfiType].viewer) {
-            return layer[gfiType].viewer;
+            || MapInfoUtils.getDefaultInfoFormatValue(),
+    getLayerFeatureInfoViewer(layer) {
+        if (layer.featureInfo
+            && layer.featureInfo.viewer) {
+            return layer.featureInfo.viewer;
         }
         return {};
     },
     /**
-     * returns gfi options of layer
+     * returns feature info options of layer
      * @param layer {object} layer object
      * @return {object} feature info options
      */
-    getLayerGfiOptions(layer) {
-        return {
-            featureInfo: layer?.featureInfo,
-            mapTip: layer?.mapTip
-        };
+    getLayerFeatureInfo(layer) {
+        return layer && layer.featureInfo && {...layer.featureInfo} || {};
     },
     clickedPointToGeoJson(clickedPoint) {
         if (!clickedPoint) {
@@ -147,9 +139,9 @@ const MapInfoUtils = {
     buildIdentifyRequest(layer, options) {
         if (MapInfoUtils.services[layer.type]) {
             let infoFormat = MapInfoUtils.getDefaultInfoFormatValueFromLayer(layer, options);
-            let viewer = MapInfoUtils.getLayerGfiViewer(layer, options);
-            const gfiOptions = MapInfoUtils.getLayerGfiOptions(layer);
-            return MapInfoUtils.services[layer.type].buildRequest(layer, options, infoFormat, viewer, gfiOptions);
+            let viewer = MapInfoUtils.getLayerFeatureInfoViewer(layer);
+            const featureInfo = MapInfoUtils.getLayerFeatureInfo(layer);
+            return MapInfoUtils.services[layer.type].buildRequest(layer, options, infoFormat, viewer, featureInfo);
         }
         return {};
     },

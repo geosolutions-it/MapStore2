@@ -28,16 +28,14 @@ module.exports = class extends React.Component {
         element: PropTypes.object,
         defaultInfoFormat: PropTypes.object,
         onChange: PropTypes.func,
-        formatCards: PropTypes.object,
-        settingName: PropTypes.string
+        formatCards: PropTypes.object
     };
 
     static defaultProps = {
         element: {},
         defaultInfoFormat: [],
         onChange: () => {},
-        formatCards: {},
-        settingName: 'featureInfo'
+        formatCards: {}
     };
 
     getInfoFormat = (infoFormats) => {
@@ -51,7 +49,7 @@ module.exports = class extends React.Component {
                     description: this.props.formatCards[infoFormat] && this.props.formatCards[infoFormat].descId && <Message msgId={this.props.formatCards[infoFormat].descId}/> || '',
                     size: 'sm'
                 },
-                body: Body && <Body settingName={this.props.settingName} template={this.props.element[this.props.settingName]?.template || ''} {...this.props}/> || null
+                body: Body && <Body template={this.props.element.featureInfo && this.props.element.featureInfo.template || ''} {...this.props}/> || null
             };
         });
     }
@@ -63,14 +61,14 @@ module.exports = class extends React.Component {
             <span>
                 <Accordion
                     fillContainer
-                    activePanel={this.props.element[this.props.settingName]?.format}
+                    activePanel={this.props.element.featureInfo && this.props.element.featureInfo.format}
                     panels={data}
                     onSelect={value => {
-                        const isEqualFormat = this.props.element[this.props.settingName]?.format && value === this.props.element[this.props.settingName].format;
-                        this.props.onChange(this.props.settingName, {
-                            ...(this.props.element?.[this.props.settingName] || {}),
+                        const isEqualFormat = this.props.element.featureInfo && this.props.element.featureInfo.format && value === this.props.element.featureInfo.format;
+                        this.props.onChange("featureInfo", {
+                            ...(this.props.element && this.props.element.featureInfo || {}),
                             format: !isEqualFormat ? value : '',
-                            viewer: this.props.element[this.props.settingName] ? this.props.element[this.props.settingName].viewer : undefined
+                            viewer: this.props.element.featureInfo ? this.props.element.featureInfo.viewer : undefined
                         });
                     }}/>
             </span>
