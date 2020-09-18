@@ -16,9 +16,9 @@ export default compose(
         onShowDetailsSheet: ({ setShowDetailsSheet = () => {} }) => () => setShowDetailsSheet(true),
         onHideDetailsSheet: ({ setShowDetailsSheet = () => {} }) => () => setShowDetailsSheet(false)
     }),
-    withProps(({linkedResources = {}, resource = {}}) => ({
+    withProps(({linkedResources = {}}) => ({
         savedDetailsText: linkedResources?.details?.data === 'NODATA' ?
             undefined :
-            (linkedResources?.details?.data || resource.loadedData?.detailsText)
+            linkedResources?.details?.data
     }))
 );

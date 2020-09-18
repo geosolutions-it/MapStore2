@@ -26,15 +26,22 @@ export default mapPropsStream(props$ => {
                 const details = props.resource.attributes?.details;
 
                 return getDetails(details).map(detailsText => {
-                    const resourceWithDetails = {...props.resource, loadedData: {...(props.resource.loadedData || {}), detailsText}};
+                    const linkedResources = {
+                        ...(props.linkedResources || {}),
+                        details: {
+                            category: 'DETAILS',
+                            data: detailsText 
+                        }
+                    };
 
                     if (props.onResourceLoad) {
-                        props.onResourceLoad(resourceWithDetails);
+                        props.onResourceLoad(props.resource, linkedResources);
                     }
 
                     return {
                         loading: false,
-                        resource: resourceWithDetails
+                        resource: props.resource,
+                        linkedResources
                     };
                 })
                     .catch(e => Rx.Observable.of({ loading: false, errors: [e] }))

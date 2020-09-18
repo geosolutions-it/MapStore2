@@ -18,7 +18,9 @@ const ConfirmDialog = require('../ConfirmModal');
  */
 module.exports = compose(
     withStateHandlers(
-        ({resource = {}}) => {
+        ({resource = {}, linkedResources = {}}) => {
+            console.log('resource', resource, 'linkedResources', linkedResources);
+
             const detailsSettingsString = resource.detailsSettings || resource.attributes?.detailsSettings;
             let detailsSettings = {};
 
@@ -56,8 +58,8 @@ module.exports = compose(
                     },
                     createdAt: resource.creation,
                     modifiedAt: resource.lastUpdate,
-                    loadedData: resource.loadedData
-                }
+                },
+                linkedResources
             };
         },
         {
@@ -107,7 +109,7 @@ module.exports = compose(
             category,
             linkedResources,
             data,
-            ...omit(resource, 'loadedData'),
+            ...resource,
             attributes: {
                 ...resource.attributes,
                 ...additionalAttributes
