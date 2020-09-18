@@ -9,7 +9,7 @@
 const expect = require('expect');
 const { LOCATION_CHANGE } = require('connected-react-router');
 const { ZOOM_TO_POINT, clickOnMap, CHANGE_MAP_VIEW, UNREGISTER_EVENT_LISTENER, REGISTER_EVENT_LISTENER} = require('../../actions/map');
-const { FEATURE_INFO_CLICK, UPDATE_CENTER_TO_MARKER, PURGE_MAPINFO_RESULTS, NEW_MAPINFO_REQUEST, LOAD_FEATURE_INFO, NO_QUERYABLE_LAYERS, ERROR_FEATURE_INFO, EXCEPTIONS_FEATURE_INFO, SHOW_MAPINFO_MARKER, HIDE_MAPINFO_MARKER, GET_VECTOR_INFO, SET_CURRENT_EDIT_FEATURE_QUERY, loadFeatureInfo, featureInfoClick, closeIdentify, toggleHighlightFeature, editLayerFeatures, updateFeatureInfoClickPoint, purgeMapInfoResults } = require('../../actions/mapInfo');
+const { FEATURE_INFO_CLICK, UPDATE_CENTER_TO_MARKER, PURGE_MAPINFO_RESULTS, NEW_MAPINFO_REQUEST, LOAD_FEATURE_INFO, NO_QUERYABLE_LAYERS, ERROR_FEATURE_INFO, EXCEPTIONS_FEATURE_INFO, SHOW_MAPINFO_MARKER, HIDE_MAPINFO_MARKER, GET_VECTOR_INFO, SET_CURRENT_EDIT_FEATURE_QUERY, CLEAR_WARNING, loadFeatureInfo, featureInfoClick, closeIdentify, toggleHighlightFeature, editLayerFeatures, updateFeatureInfoClickPoint, purgeMapInfoResults } = require('../../actions/mapInfo');
 const { REMOVE_MAP_POPUP } = require('../../actions/mapPopups');
 const { TEXT_SEARCH_CANCEL_ITEM } = require('../../actions/search');
 const {
@@ -102,29 +102,31 @@ describe('identify Epics', () => {
             }
         };
         const sentActions = [featureInfoClick({ latlng: { lat: 36.95, lng: -79.84 } })];
-        const NUM_ACTIONS = 5;
+        const NUM_ACTIONS = 6;
         testEpic(getFeatureInfoOnFeatureInfoClick, NUM_ACTIONS, sentActions, (actions) => {
             try {
-                expect(actions.length).toBe(5);
-                const [a0, a1, a2, a3, a4] = actions;
+                expect(actions.length).toBe(6);
+                const [a0, a1, a2, a3, a4, a5] = actions;
                 expect(a0).toExist();
                 expect(a0.type).toBe(PURGE_MAPINFO_RESULTS);
                 expect(a1).toExist();
-                expect(a1.type).toBe(NEW_MAPINFO_REQUEST);
-                expect(a1.reqId).toExist();
-                expect(a1.request).toExist();
-                expect(a2).toExist();
+                expect(a1.type).toBe(CLEAR_WARNING);
+                expect(a1).toExist();
                 expect(a2.type).toBe(NEW_MAPINFO_REQUEST);
                 expect(a2.reqId).toExist();
                 expect(a2.request).toExist();
                 expect(a3).toExist();
-                expect(a3.type).toBe(LOAD_FEATURE_INFO);
-                expect(a3.data).toExist();
-                expect(a3.requestParams).toExist();
+                expect(a3.type).toBe(NEW_MAPINFO_REQUEST);
                 expect(a3.reqId).toExist();
-                expect(a3.layerMetadata.title).toBe(state.layers.flat[a3.requestParams.id === "TEST" ? 0 : 1].title);
+                expect(a3.request).toExist();
                 expect(a4).toExist();
+                expect(a4.type).toBe(LOAD_FEATURE_INFO);
+                expect(a4.data).toExist();
+                expect(a4.requestParams).toExist();
+                expect(a4.reqId).toExist();
                 expect(a4.layerMetadata.title).toBe(state.layers.flat[a4.requestParams.id === "TEST" ? 0 : 1].title);
+                expect(a5).toExist();
+                expect(a5.layerMetadata.title).toBe(state.layers.flat[a5.requestParams.id === "TEST" ? 0 : 1].title);
                 done();
             } catch (ex) {
                 done(ex);
@@ -159,24 +161,26 @@ describe('identify Epics', () => {
             }
         };
         const sentActions = [featureInfoClick({ latlng: { lat: 36.95, lng: -79.84 } }, "TEST", ["TEST"], {"TEST": {cql_filter: "id>1"}}, "province_view.5")];
-        testEpic(getFeatureInfoOnFeatureInfoClick, 3, sentActions, ([a0, a1, a2]) => {
+        testEpic(getFeatureInfoOnFeatureInfoClick, 4, sentActions, ([a0, a1, a2, a3]) => {
             try {
                 expect(a0).toExist();
                 expect(a0.type).toBe(PURGE_MAPINFO_RESULTS);
                 expect(a1).toExist();
-                expect(a1.type).toBe(NEW_MAPINFO_REQUEST);
-                expect(a1.reqId).toExist();
-                expect(a1.request).toExist();
-                expect(a1.request.cql_filter).toExist();
-                expect(a1.request.cql_filter).toBe("id>1");
+                expect(a1.type).toBe(CLEAR_WARNING);
                 expect(a2).toExist();
-                expect(a2.type).toBe(LOAD_FEATURE_INFO);
-                expect(a2.data).toExist();
-                expect(a2.data.features).toExist();
-                expect(a2.data.features.length).toBe(1);
-                expect(a2.requestParams).toExist();
+                expect(a2.type).toBe(NEW_MAPINFO_REQUEST);
                 expect(a2.reqId).toExist();
-                expect(a2.layerMetadata.title).toBe(state.layers.flat[0].title);
+                expect(a2.request).toExist();
+                expect(a2.request.cql_filter).toExist();
+                expect(a2.request.cql_filter).toBe("id>1");
+                expect(a3).toExist();
+                expect(a3.type).toBe(LOAD_FEATURE_INFO);
+                expect(a3.data).toExist();
+                expect(a3.data.features).toExist();
+                expect(a3.data.features.length).toBe(1);
+                expect(a3.requestParams).toExist();
+                expect(a3.reqId).toExist();
+                expect(a3.layerMetadata.title).toBe(state.layers.flat[0].title);
                 done();
             } catch (ex) {
                 done(ex);
@@ -255,22 +259,24 @@ describe('identify Epics', () => {
             }
         };
         const sentActions = [featureInfoClick({ latlng: { lat: 36.95, lng: -79.84 } })];
-        testEpic(getFeatureInfoOnFeatureInfoClick, 3, sentActions, ([a0, a1, a2]) => {
+        testEpic(getFeatureInfoOnFeatureInfoClick, 4, sentActions, ([a0, a1, a2, a3]) => {
             try {
                 expect(a0).toExist();
                 expect(a0.type).toBe(PURGE_MAPINFO_RESULTS);
                 expect(a1).toExist();
-                expect(a1.type).toBe(NEW_MAPINFO_REQUEST);
-                expect(a1.reqId).toExist();
-                expect(a1.request).toExist();
+                expect(a1.type).toBe(CLEAR_WARNING);
                 expect(a2).toExist();
-                expect(a2.type).toBe(ERROR_FEATURE_INFO);
-                expect(a2).toExist();
-                expect(a2.type).toBe(ERROR_FEATURE_INFO);
-                expect(a2.error).toExist();
+                expect(a2.type).toBe(NEW_MAPINFO_REQUEST);
                 expect(a2.reqId).toExist();
-                expect(a2.requestParams).toExist();
-                expect(a2.layerMetadata.title).toBe(state.layers.flat[0].title);
+                expect(a2.request).toExist();
+                expect(a3).toExist();
+                expect(a3.type).toBe(ERROR_FEATURE_INFO);
+                expect(a3).toExist();
+                expect(a3.type).toBe(ERROR_FEATURE_INFO);
+                expect(a3.error).toExist();
+                expect(a3.reqId).toExist();
+                expect(a3.requestParams).toExist();
+                expect(a3.layerMetadata.title).toBe(state.layers.flat[0].title);
                 done();
             } catch (ex) {
                 done(ex);
@@ -296,20 +302,22 @@ describe('identify Epics', () => {
             }
         };
         const sentActions = [featureInfoClick({ latlng: { lat: 36.95, lng: -79.84 } })];
-        testEpic(getFeatureInfoOnFeatureInfoClick, 3, sentActions, ([a0, a1, a2]) => {
+        testEpic(getFeatureInfoOnFeatureInfoClick, 4, sentActions, ([a0, a1, a2, a3]) => {
             try {
                 expect(a0).toExist();
                 expect(a0.type).toBe(PURGE_MAPINFO_RESULTS);
                 expect(a1).toExist();
-                expect(a1.type).toBe(NEW_MAPINFO_REQUEST);
-                expect(a1.reqId).toExist();
-                expect(a1.request).toExist();
+                expect(a1.type).toBe(CLEAR_WARNING);
                 expect(a2).toExist();
-                expect(a2.type).toBe(EXCEPTIONS_FEATURE_INFO);
-                expect(a2.exceptions).toExist();
+                expect(a2.type).toBe(NEW_MAPINFO_REQUEST);
                 expect(a2.reqId).toExist();
-                expect(a2.requestParams).toExist();
-                expect(a2.layerMetadata.title).toBe(state.layers.flat[0].title);
+                expect(a2.request).toExist();
+                expect(a3).toExist();
+                expect(a3.type).toBe(EXCEPTIONS_FEATURE_INFO);
+                expect(a3.exceptions).toExist();
+                expect(a3.reqId).toExist();
+                expect(a3.requestParams).toExist();
+                expect(a3.layerMetadata.title).toBe(state.layers.flat[0].title);
                 done();
             } catch (ex) {
                 done(ex);
@@ -355,17 +363,19 @@ describe('identify Epics', () => {
             layers: LAYERS
         };
         const sentActions = [featureInfoClick({ latlng: { lat: 36.95, lng: -79.84 } })];
-        testEpic(getFeatureInfoOnFeatureInfoClick, 4, sentActions, ([a0, a1, a2, a3]) => {
+        testEpic(getFeatureInfoOnFeatureInfoClick, 5, sentActions, ([a0, a1, a2, a3, a4]) => {
             try {
                 expect(a0).toExist();
                 expect(a0.type).toBe(PURGE_MAPINFO_RESULTS);
                 expect(a1).toExist();
-                expect(a1.type).toBe(GET_VECTOR_INFO);
-                expect(a2.type).toBe(NEW_MAPINFO_REQUEST);
-                expect(a2.reqId).toExist();
-                expect(a2.request).toExist();
-                expect(a3).toExist();
-                expect(a3.type).toBe(LOAD_FEATURE_INFO);
+                expect(a1.type).toBe(CLEAR_WARNING);
+                expect(a2).toExist();
+                expect(a2.type).toBe(GET_VECTOR_INFO);
+                expect(a3.type).toBe(NEW_MAPINFO_REQUEST);
+                expect(a3.reqId).toExist();
+                expect(a3.request).toExist();
+                expect(a4).toExist();
+                expect(a4.type).toBe(LOAD_FEATURE_INFO);
                 done();
             } catch (ex) {
                 done(ex);
@@ -392,20 +402,22 @@ describe('identify Epics', () => {
             }
         };
         const sentActions = [featureInfoClick({ latlng: { lat: 36.95, lng: -79.84 } })];
-        testEpic(getFeatureInfoOnFeatureInfoClick, 3, sentActions, ([a0, a1, a2]) => {
+        testEpic(getFeatureInfoOnFeatureInfoClick, 4, sentActions, ([a0, a1, a2, a3]) => {
             try {
                 expect(a0).toExist();
                 expect(a0.type).toBe(PURGE_MAPINFO_RESULTS);
                 expect(a1).toExist();
-                expect(a1.type).toBe(NEW_MAPINFO_REQUEST);
-                expect(a1.reqId).toExist();
-                expect(a1.request).toExist();
+                expect(a1.type).toBe(CLEAR_WARNING);
                 expect(a2).toExist();
-                expect(a2.type).toBe(LOAD_FEATURE_INFO);
-                expect(a2.data).toExist();
-                expect(a2.requestParams).toExist();
+                expect(a2.type).toBe(NEW_MAPINFO_REQUEST);
                 expect(a2.reqId).toExist();
-                expect(a2.layerMetadata.title).toBe(state.layers.flat[0].title);
+                expect(a2.request).toExist();
+                expect(a3).toExist();
+                expect(a3.type).toBe(LOAD_FEATURE_INFO);
+                expect(a3.data).toExist();
+                expect(a3.requestParams).toExist();
+                expect(a3.reqId).toExist();
+                expect(a3.layerMetadata.title).toBe(state.layers.flat[0].title);
                 done();
             } catch (ex) {
                 done(ex);

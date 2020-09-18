@@ -13,12 +13,13 @@ const HTML = require('../../../components/I18N/HTML');
 const Message = require('../../../components/I18N/Message');
 const {Alert, Panel, Accordion} = require('react-bootstrap');
 const ViewerPage = require('./viewers/ViewerPage');
-const {isEmpty} = require('lodash');
+const {isNil, isEmpty} = require('lodash');
 const {getFormatForResponse} = require('../../../utils/IdentifyUtils');
 
 class DefaultViewer extends React.Component {
     static propTypes = {
         format: PropTypes.string,
+        gfiType: PropTypes.string,
         collapsible: PropTypes.bool,
         requests: PropTypes.array,
         responses: PropTypes.array,
@@ -37,7 +38,8 @@ class DefaultViewer extends React.Component {
         setIndex: PropTypes.func,
         showEmptyMessageGFI: PropTypes.bool,
         renderEmpty: PropTypes.bool,
-        loaded: PropTypes.bool
+        loaded: PropTypes.bool,
+        noQueryableLayers: PropTypes.bool
     };
 
     static defaultProps = {
@@ -54,12 +56,14 @@ class DefaultViewer extends React.Component {
             position: "relative",
             marginBottom: 0
         },
+        gfiType: 'featureInfo',
         containerProps: {},
         showEmptyMessageGFI: true,
         renderEmpty: false,
         onNext: () => {},
         onPrevious: () => {},
-        setIndex: () => {}
+        setIndex: () => {},
+        noQueryableLayers: false
     };
 
     shouldComponentUpdate(nextProps) {
@@ -72,7 +76,7 @@ class DefaultViewer extends React.Component {
     getResponseProperties = () => {
         const validator = this.props.validator(this.props.format);
         const responses = this.props.responses.map(res => res === undefined ? {} : res); // Replace any undefined responses
-        const validResponses = this.props.renderEmpty ? validator.getValidResponses(responses, this.props.renderEmpty) : responses;
+        const validResponses = (this.props.renderEmpty ? validator.getValidResponses(responses, this.props.renderEmpty) : responses).filter(res => !isNil(res.response)); // empty response is invalid
         const invalidResponses = validator.getNoValidResponses(this.props.responses);
         const emptyResponses = this.props.requests.length === invalidResponses.length;
         const currResponse = this.getCurrentResponse(validResponses[this.props.index]);
@@ -126,7 +130,7 @@ class DefaultViewer extends React.Component {
 
     renderEmptyPages = () => {
         const {emptyResponses} = this.getResponseProperties();
-        if (this.props.missingResponses === 0 && emptyResponses) {
+        if (this.props.noQueryableLayers || this.props.missingResponses === 0 && emptyResponses) {
             return (
                 <Alert bsStyle={"danger"}>
                     <h4><HTML msgId="noFeatureInfo"/></h4>
@@ -161,6 +165,7 @@ class DefaultViewer extends React.Component {
                 style={this.props.style}>
                 <ViewerPage
                     response={response}
+                    gfiType={this.props.gfiType}
                     format={format}
                     viewers={customViewer || this.props.viewers}
                     layer={layerMetadata}/>
@@ -173,7 +178,7 @@ class DefaultViewer extends React.Component {
         const {currResponse, emptyResponses} = this.getResponseProperties();
         return (
             <div className="mapstore-identify-viewer">
-                {!emptyResponses ?
+                {!this.props.noQueryableLayers && !emptyResponses ?
                     <>
                         <Container {...this.props.containerProps}
                             onChangeIndex={(index) => {

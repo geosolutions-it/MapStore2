@@ -33,6 +33,8 @@ const TOGGLE_SHOW_COORD_EDITOR = 'IDENTIFY:TOGGLE_SHOW_COORD_EDITOR';
 const EDIT_LAYER_FEATURES = 'IDENTIFY:EDIT_LAYER_FEATURES';
 const SET_CURRENT_EDIT_FEATURE_QUERY = 'IDENTIFY:CURRENT_EDIT_FEATURE_QUERY';
 const SET_MAP_TRIGGER = 'IDENTIFY:SET_MAP_TRIGGER';
+const SET_ENABLE_MAP_TIP_FORMAT = 'IDENTIFY:SET_ENABLE_MAP_TIP_FORMAT';
+const SET_MAP_TIP_ACTIVE_LAYER_ID = 'IDENTIFY:SET_MAP_TIP_ACTIVE_LAYER_ID';
 
 const TOGGLE_EMPTY_MESSAGE_GFI = "IDENTIFY:TOGGLE_EMPTY_MESSAGE_GFI";
 const toggleEmptyMessageGFI = () => ({type: TOGGLE_EMPTY_MESSAGE_GFI});
@@ -126,6 +128,7 @@ function purgeMapInfoResults() {
 
 /**
  * Set a new format for GetFeatureInfo request.
+ * @param gfiType {string} 'featureInfo' or 'mapTip'
  * @param mimeType {string} correct value are:
  *   - "text/plain"
  *   - "text/html"
@@ -134,9 +137,10 @@ function purgeMapInfoResults() {
  *   - "application/vnd.ogc.gml"
  *   - "application/vnd.ogc.gml/3.1.1"
  */
-function changeMapInfoFormat(mimeType) {
+function changeMapInfoFormat(gfiType, mimeType) {
     return {
         type: CHANGE_MAPINFO_FORMAT,
+        gfiType,
         infoFormat: mimeType
     };
 }
@@ -274,6 +278,16 @@ const setMapTrigger = (trigger) => ({
     trigger
 });
 
+const setEnableMapTipFormat = (enable) => ({
+    type: SET_ENABLE_MAP_TIP_FORMAT,
+    enable
+});
+
+const setMapTipActiveLayerId = (layerId) => ({
+    type: SET_MAP_TIP_ACTIVE_LAYER_ID,
+    layerId
+});
+
 module.exports = {
     ERROR_FEATURE_INFO,
     EXCEPTIONS_FEATURE_INFO,
@@ -320,5 +334,7 @@ module.exports = {
     UPDATE_FEATURE_INFO_CLICK_POINT, updateFeatureInfoClickPoint,
     EDIT_LAYER_FEATURES, editLayerFeatures,
     SET_CURRENT_EDIT_FEATURE_QUERY, setCurrentEditFeatureQuery,
-    SET_MAP_TRIGGER, setMapTrigger
+    SET_MAP_TRIGGER, setMapTrigger,
+    SET_ENABLE_MAP_TIP_FORMAT, setEnableMapTipFormat,
+    SET_MAP_TIP_ACTIVE_LAYER_ID, setMapTipActiveLayerId
 };

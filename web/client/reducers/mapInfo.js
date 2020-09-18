@@ -30,7 +30,9 @@ const {
     CHANGE_FORMAT,
     TOGGLE_SHOW_COORD_EDITOR,
     SET_CURRENT_EDIT_FEATURE_QUERY,
-    SET_MAP_TRIGGER
+    SET_MAP_TRIGGER,
+    SET_ENABLE_MAP_TIP_FORMAT,
+    SET_MAP_TIP_ACTIVE_LAYER_ID
 } = require('../actions/mapInfo');
 const {
     MAP_CONFIG_LOADED
@@ -38,7 +40,7 @@ const {
 const {RESET_CONTROLS} = require('../actions/controls');
 
 const assign = require('object-assign');
-const {findIndex, isUndefined} = require('lodash');
+const {findIndex, isUndefined, isString} = require('lodash');
 const {getValidator} = require('../utils/MapInfoUtils');
 
 /**
@@ -291,10 +293,16 @@ function mapInfo(state = initState, action) {
         });
     }
     case CHANGE_MAPINFO_FORMAT: {
+        const stateInfoFormat = state.configuration?.infoFormat;
+        const infoFormat = isString(stateInfoFormat) ? {featureInfo: stateInfoFormat} : stateInfoFormat;
+
         return {...state,
             configuration: {
                 ...state.configuration,
-                infoFormat: action.infoFormat
+                infoFormat: {
+                    ...(infoFormat || {}),
+                    [action.gfiType]: action.infoFormat
+                }
             }
         };
     }
@@ -444,6 +452,21 @@ function mapInfo(state = initState, action) {
             configuration: {
                 ...state.configuration,
                 trigger: action.trigger
+            }
+        };
+    }
+    case SET_ENABLE_MAP_TIP_FORMAT: {
+        return {
+            ...state,
+            enableMapTipFormat: action.enable
+        };
+    }
+    case SET_MAP_TIP_ACTIVE_LAYER_ID: {
+        return {
+            ...state,
+            configuration: {
+                ...state.configuration,
+                mapTipActiveLayerId: action.layerId
             }
         };
     }

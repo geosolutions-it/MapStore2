@@ -80,6 +80,7 @@
             "groupProperties": "Propriétés du groupe",
             "featureInfo": "Informations attributaires de l'objet",
             "featureInfoFormatLbl": "Information, format de la réponse",
+            "mapTip": "Info-bulle GFI",
             "legenderror": "La légende n'est pas disponible",
             "editCustomFormat": "Modifier le format personnalisé",
             "exampleOfResponse": "Exemple",
@@ -516,6 +517,8 @@
             "epsgNotSupported": "CRS {epsg} non pris en charge pour le zoom sur la couche",
             "filterIconEnabled": "Désactiver le filtre de couche",
             "filterIconDisabled": "Activer le filtre de couche",
+            "mapTipActivate": "Activer la couche pour MapTip",
+            "mapTipDeactivate": "Désactiver le calque pour MapTip",
             "refreshOptions": {
                 "bbox": "Mettre à jour la BBOX",
                 "search": "Mettre à jour les options de recherche",
@@ -665,6 +668,7 @@
             "redoBtnTooltip": "Aller en avant"
         },
         "infoFormatLbl": "Format de la fiche d'information",
+        "mapTipFormatLbl": "Format de l'info-bulle GFI",
         "infoTriggerLabel": "Événement déclencheur de l'affichage de la fiche d'information",
         "click": "au clic sur l'objet",
         "hover": "au survol de l'objet",

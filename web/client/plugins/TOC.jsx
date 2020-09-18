@@ -20,12 +20,13 @@ const {changeLayerProperties, changeGroupProperties, toggleNode, contextNode,
 const {openQueryBuilder} = require("../actions/layerFilter");
 const {getLayerCapabilities} = require('../actions/layerCapabilities');
 const {zoomToExtent} = require('../actions/map');
+const {setMapTipActiveLayerId} = require('../actions/mapInfo');
 const {error} = require('../actions/notifications');
 const {groupsSelector, layersSelector, selectedNodesSelector, layerFilterSelector, layerSettingSelector, layerMetadataSelector, wfsDownloadSelector} = require('../selectors/layers');
 const {mapSelector, mapNameSelector} = require('../selectors/map');
 const {currentLocaleSelector, currentLocaleLanguageSelector} = require("../selectors/locale");
 const {widgetBuilderAvailable} = require('../selectors/controls');
-const {generalInfoFormatSelector} = require("../selectors/mapInfo");
+const {generalInfoFormatSelector, mapTipActiveLayerIdSelector, mapTipFormatEnabledSelector} = require("../selectors/mapInfo");
 const {userSelector} = require('../selectors/security');
 const {isLocalizedLayerStylesEnabledSelector} = require('../selectors/localizedLayerStyles');
 
@@ -91,8 +92,10 @@ const tocSelector = createSelector(
         generalInfoFormatSelector,
         isCesium,
         userSelector,
-        isLocalizedLayerStylesEnabledSelector
-    ], (enabled, groups, settings, layerMetadata, wfsdownload, map, currentLocale, currentLocaleLanguage, selectedNodes, filterText, layers, mapName, catalogActive, activateWidgetTool, generalInfoFormat, isCesiumActive, user, isLocalizedLayerStylesEnabled) => ({
+        isLocalizedLayerStylesEnabledSelector,
+        mapTipFormatEnabledSelector,
+        mapTipActiveLayerIdSelector
+    ], (enabled, groups, settings, layerMetadata, wfsdownload, map, currentLocale, currentLocaleLanguage, selectedNodes, filterText, layers, mapName, catalogActive, activateWidgetTool, generalInfoFormat, isCesiumActive, user, isLocalizedLayerStylesEnabled, mapTipFormatEnabled, mapTipActiveLayerId) => ({
         enabled,
         groups,
         settings,
@@ -137,7 +140,9 @@ const tocSelector = createSelector(
         catalogActive,
         activateWidgetTool,
         user,
-        isLocalizedLayerStylesEnabled
+        isLocalizedLayerStylesEnabled,
+        mapTipActiveLayerId,
+        mapTipFormatEnabled
     })
 );
 
@@ -232,7 +237,9 @@ class LayerTree extends React.Component {
         layerNodeComponent: PropTypes.func,
         groupNodeComponent: PropTypes.func,
         isLocalizedLayerStylesEnabled: PropTypes.bool,
-        onLayerInfo: PropTypes.func
+        onLayerInfo: PropTypes.func,
+        mapTipActiveLayerId: PropTypes.string,
+        changeMapTipActiveLayer: PropTypes.func
     };
 
     static contextTypes = {
@@ -343,6 +350,8 @@ class LayerTree extends React.Component {
         return (
             <LayerNode
                 {...this.props.layerOptions}
+                mapTipActiveLayerId={this.props.mapTipActiveLayerId}
+                changeMapTipActiveLayer={this.props.changeMapTipActiveLayer}
                 titleTooltip={this.props.activateTitleTooltip}
                 showFullTitleOnExpand={this.props.showFullTitleOnExpand}
                 onToggle={this.props.onToggleLayer}
@@ -818,8 +827,19 @@ const TOCPlugin = connect(tocSelector, {
     hideLayerMetadata,
     onNewWidget: () => createWidget(),
     refreshLayerVersion,
-    onLayerInfo: setControlProperty.bind(null, 'layerinfo', 'enabled', true, false)
-})(compose(
+    onLayerInfo: setControlProperty.bind(null, 'layerinfo', 'enabled', true, false),
+    changeMapTipActiveLayer: setMapTipActiveLayerId
+}, (stateProps, dispatchProps, ownProps) => ({
+    ...ownProps,
+    ...stateProps,
+    ...dispatchProps,
+    layerOptions: {
+        ...(ownProps.layerOptions || {}),
+        ...(stateProps.layerOptions || {}),
+        ...(dispatchProps.layerOptions || {}),
+        showMapTipActiveButton: stateProps.mapTipFormatEnabled || false
+    }
+}))(compose(
     securityEnhancer,
     checkPluginsEnhancer
 )(LayerTree));

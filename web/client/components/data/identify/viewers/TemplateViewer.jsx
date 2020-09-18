@@ -11,11 +11,11 @@ const {template} = require('lodash');
 const TemplateUtils = require('../../../../utils/TemplateUtils');
 const HtmlRenderer = require('../../../misc/HtmlRenderer');
 
-module.exports = ({layer = {}, response}) => (
+module.exports = ({layer = {}, gfiType, response}) => (
     <div className="ms-template-viewer">
         {response.features.map((feature, i) =>
             <div key={i}>
-                <HtmlRenderer html={template(TemplateUtils.getCleanTemplate(layer.featureInfo && layer.featureInfo.template || '', feature, /\$\{.*?\}/g, 2, 1))(feature)}/>
+                <HtmlRenderer html={template(TemplateUtils.getCleanTemplate(layer[gfiType]?.template || '', feature, /\$\{.*?\}/g, 2, 1))(feature)}/>
             </div>
         )}
     </div>

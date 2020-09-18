@@ -59,7 +59,10 @@ class DefaultLayer extends React.Component {
         isDraggable: PropTypes.bool,
         isDragging: PropTypes.bool,
         isOver: PropTypes.bool,
-        language: PropTypes.string
+        language: PropTypes.string,
+        showMapTipActiveButton: PropTypes.bool,
+        mapTipActiveLayerId: PropTypes.string,
+        changeMapTipActiveLayer: PropTypes.func
     };
 
     static defaultProps = {
@@ -85,7 +88,9 @@ class DefaultLayer extends React.Component {
         hideOpacityTooltip: false,
         connectDragPreview: (x) => x,
         connectDragSource: (x) => x,
-        connectDropTarget: (x) => x
+        connectDropTarget: (x) => x,
+        showMapTipActiveButton: false,
+        changeMapTipActiveLayer: () => {}
     };
 
     getTitle = (layer) => {
@@ -133,6 +138,17 @@ class DefaultLayer extends React.Component {
                 propertiesChangeHandler={this.props.propertiesChangeHandler} />);
     }
 
+    renderMapTipActive = () => {
+        const active = this.props.node.id === this.props.mapTipActiveLayerId;
+
+        return this.props.showMapTipActiveButton && this.props.node.loadingError !== 'Error' ?
+            (<LayersTool key="maptipactivecheck"
+                tooltip={active ? "toc.mapTipDeactivate" : "toc.mapTipActivate"}
+                node={this.props.node}
+                glyph={active ? 'star' : 'star-empty'}
+                onClick={node => this.props.changeMapTipActiveLayer(active ? undefined : node.id)}/>) : null;
+    }
+
     renderToolsLegend = (isEmpty) => {
         return this.props.node.loadingError === 'Error' || isEmpty ?
             null
@@ -161,6 +177,7 @@ class DefaultLayer extends React.Component {
             <div className="toc-default-layer-head">
                 {grab}
                 {this.renderVisibility()}
+                {this.renderMapTipActive()}
                 <ToggleFilter node={this.props.node} propertiesChangeHandler={this.props.propertiesChangeHandler}/>
                 <Title
                     tooltipOptions={this.props.tooltipOptions}

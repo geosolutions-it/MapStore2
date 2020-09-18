@@ -80,6 +80,7 @@
             "groupProperties": "Group properties",
             "featureInfo": "Feature Info",
             "featureInfoFormatLbl": "Identify response format",
+            "mapTip": "GFI Tooltip",
             "legenderror": "Legend is not available",
             "editCustomFormat": "Edit custom format",
             "exampleOfResponse": "Example",
@@ -516,6 +517,8 @@
             "epsgNotSupported": "CRS {epsg} not supported for zoom to layer",
             "filterIconEnabled": "Disable layer filter",
             "filterIconDisabled": "Enable layer filter",
+            "mapTipActivate": "Activate layer for MapTip",
+            "mapTipDeactivate": "Deactivate layer for MapTip",
             "refreshOptions": {
                 "bbox": "Update BBOX",
                 "search": "Update search options",
@@ -665,6 +668,7 @@
             "redoBtnTooltip": "Go forward"
         },
         "infoFormatLbl": "Information sheet format",
+        "mapTipFormatLbl": "GFI Tooltip format",
         "infoTriggerLabel": "Trigger event for the display of the information sheet",
         "click": "On click on the feature",
         "hover": "Hover the feature",
