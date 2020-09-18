@@ -245,4 +245,21 @@ describe('feedbackMask Epics', () => {
 
         testEpic(redirectUnauthorizedUserOnNewLoadError, 1, configureError({status: 403}), epicResponse, initState);
     });
+    it('should navigate to homepage when user made some changes to new dashboard, and prompt appears', (done) => {
+        const epicResponse = (actions) => {
+            expect(actions.length).toBe(1);
+            expect(actions[0].type).toBe('@@router/CALL_HISTORY_METHOD');
+            done();
+        };
+
+        const initState = {
+            router: {
+                location: {
+                    pathname: '/dashboard'
+                }
+            }
+        };
+
+        testEpic(redirectUnauthorizedUserOnNewLoadError, 1, configureError({status: 403}), epicResponse, initState);
+    });
 });

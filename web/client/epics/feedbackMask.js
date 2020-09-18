@@ -184,7 +184,7 @@ const feedbackMaskPromptLogin = (action$, store) => // TODO: separate login requ
             const pathname = pathnameSelector(store.getState());
             return action.error
                 && action.error.status === 403
-                && pathname.indexOf("new") === -1; // new map and geostory has different handling (see redirectUnauthorizedUserOnNewLoadError, TODO: uniform different behaviour)
+                && pathname.indexOf("new") === -1 && !(pathname.match(/dashboard/) !== null && pathname.match(/dashboard\/[0-9]+/) === null); // new map geostory and dashboard has different handling (see redirectUnauthorizedUserOnNewLoadError, TODO: uniform different behaviour)
         })
         .filter(() => !isLoggedIn(store.getState()) && !isSharedStory(store.getState()))
         .exhaustMap(
@@ -199,10 +199,12 @@ const feedbackMaskPromptLogin = (action$, store) => // TODO: separate login requ
         );
 
 const redirectUnauthorizedUserOnNewLoadError = (action$, { getState = () => {}}) =>
-    action$.ofType(MAP_CONFIG_LOAD_ERROR, LOAD_GEOSTORY_ERROR)
+    action$.ofType(MAP_CONFIG_LOAD_ERROR, LOAD_GEOSTORY_ERROR, DASHBOARD_LOAD_ERROR)
         .filter((action) => action.error &&
             action.error.status === 403 &&
-            pathnameSelector(getState()).indexOf("new") !== -1)
+            (pathnameSelector(getState()).indexOf("new") !== -1 ||
+             pathnameSelector(getState()).match(/dashboard\/[0-9]+/) === null &&
+             pathnameSelector(getState()).match(/dashboard/) !== null))
         .filter(() => !isLoggedIn(getState()))
         .switchMap(() => Rx.Observable.of(push('/'))); // go to home page
 
