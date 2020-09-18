@@ -326,6 +326,7 @@ describe("GeoStory Utils", () => {
         const merged = {
             zoomControl: true,
             mapInfoControl: false,
+            mapLocationsEnabled: false,
             mapOptions: {
                 scrollWheelZoom: false,
                 interactions: {

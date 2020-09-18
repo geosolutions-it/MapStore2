@@ -31,7 +31,7 @@ describe('Controls component', () => {
     });
 
     it('rendering Controls comp with defaults', () => {
-        ReactDOM.render(<Controls />, document.getElementById("container"));
+        ReactDOM.render(<Controls map={{layers: []}} />, document.getElementById("container"));
         doCommonTests(document);
     });
     it('rendering Controls comp and triggering zoomControl update', () => {
@@ -43,12 +43,12 @@ describe('Controls component', () => {
         const newZoomStatus = !oldZoomStatus;
         ReactDOM.render(
             <Controls
-                map={{zoomControl: oldZoomStatus}}
+                map={{layers: [], zoomControl: oldZoomStatus}}
                 onChangeMap={actions.onChangeMap}
             />, document.getElementById("container"));
         doCommonTests(document);
         const checkboxes = document.querySelectorAll("input[type=checkbox]");
-        expect(checkboxes.length).toBe(3);
+        expect(checkboxes.length).toBe(4);
         ReactTestUtils.Simulate.change(checkboxes[0]);
         expect(spyChangeMap).toHaveBeenCalled();
         expect(spyChangeMap.calls.length).toBe(2);
@@ -64,12 +64,12 @@ describe('Controls component', () => {
         const newDragPanStatus = !dragPan;
         ReactDOM.render(
             <Controls
-                map={{mapOptions: {interactions: {dragPan}}}}
+                map={{layers: [], mapOptions: {interactions: {dragPan}}}}
                 onChangeMap={actions.onChangeMap}
             />, document.getElementById("container"));
         doCommonTests(document);
         const checkboxes = document.querySelectorAll("input[type=checkbox]");
-        expect(checkboxes.length).toBe(3);
+        expect(checkboxes.length).toBe(4);
         ReactTestUtils.Simulate.change(checkboxes[1]);
         expect(spyChangeMap).toHaveBeenCalled();
         expect(spyChangeMap.calls.length).toBe(1);
@@ -83,12 +83,12 @@ describe('Controls component', () => {
         const oldZoomStatus = true;
         ReactDOM.render(
             <Controls
-                map={{zoomControl: oldZoomStatus}}
+                map={{zoomControl: oldZoomStatus, layers: []}}
                 onChangeMap={actions.onChangeMap}
             />, document.getElementById("container"));
         doCommonTests(document);
         const checkboxes = document.querySelectorAll("input[type=checkbox]");
-        expect(checkboxes.length).toBe(3);
+        expect(checkboxes.length).toBe(4);
         ReactTestUtils.Simulate.change(checkboxes[2]);
         expect(spyChangeMap).toHaveBeenCalled();
         expect(spyChangeMap.calls.length).toBe(1);
