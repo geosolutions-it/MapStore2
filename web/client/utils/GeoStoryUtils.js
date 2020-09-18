@@ -520,11 +520,16 @@ export const customGetEntityId = (node) => {
             entityConfig.targetOption = node.target;
             const interactionType = node.getAttribute && node.getAttribute('data-geostory-interaction-type');
             const interactionParams = node.getAttribute && node.getAttribute('data-geostory-interaction-params');
+            const interactionName = node.getAttribute && node.getAttribute('data-geostory-interaction-name');
 
-            const attributes = {
-                type: interactionType,
-                params: interactionParams
-            };
+            let attributes = {};
+
+            if (interactionName && interactionParams && interactionType) {
+                attributes['data-geostory-interaction-type'] = interactionType;
+                attributes['data-geostory-interaction-params'] = interactionParams;
+                attributes['data-geostory-interaction-name'] = interactionName;
+
+            }
 
             entityConfig.attributes = attributes;
             entityId = Entity.__create(
@@ -548,10 +553,10 @@ export const customEntityTransform = (entity, text) => {
         const targetOption = entity.data.targetOption || '_self';
         const attributes = entity.data.attributes;
 
-        if (attributes && attributes.type === "scrollTo") {
-            return `<a data-geostory-interaction-type="${attributes.type}" data-geostory-interaction-params="${attributes.params}" onclick="__geostory_interaction(type='scrollTo', '${attributes.params}')">${text}</a>`;
+        if (attributes && attributes['data-geostory-interaction-type']) {
+            return `<a data-geostory-interaction-name="${attributes['data-geostory-interaction-name']}" data-geostory-interaction-type="${attributes['data-geostory-interaction-type']}" data-geostory-interaction-params="${attributes['data-geostory-interaction-params']}" onclick="__geostory_interaction(type='scrollTo', '${attributes['data-geostory-interaction-params']}')">${text}</a>`;
         }
-        return `<a href="${entity.data.url}" target="${targetOption}"></a>`;
+        return `<a href="${entity.data.url}" target="${targetOption}">${text}</a>`;
     }
 
     if (entity.type === 'IMAGE') {

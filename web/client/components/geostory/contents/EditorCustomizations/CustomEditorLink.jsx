@@ -53,7 +53,7 @@ class MSLinkOptions extends Component {
                     {availableStorySections && availableStorySections.map(section => (
                         <DropdownOption
                             active={section.id === currentSelectOption}
-                            value={section.id}
+                            value={{value: section.id, label: section.title || section.contents[0].title || section.contents[0].id}}
                             key={section.id}
                         >
                             {section.title || section.contents[0].title || section.contents[0].id}
@@ -88,12 +88,8 @@ class LayoutComponent extends Component {
       showModal: false,
       linkTarget: '',
       linkTitle: '',
-      attributes: {
-          type: '',
-          params: ''
-      },
+      attributes: {},
       linkTargetOption: this.props.config.defaultTargetOption,
-      showExternalLinkOptions: false,
       currentSelectOption: 'Select link target'
   };
 
@@ -103,12 +99,8 @@ class LayoutComponent extends Component {
               showModal: false,
               linkTarget: '',
               linkTitle: '',
-              attributes: {
-                  type: '',
-                  params: ''
-              },
+              attributes: {},
               linkTargetOption: this.props.config.defaultTargetOption,
-              showExternalLinkOptions: false,
               currentSelectOption: 'Select link target'
           });
       }
@@ -132,25 +124,20 @@ class LayoutComponent extends Component {
   };
 
   onSelectionChange = (option) => {
-      // always begin reset the showExternalLinkOptions state
-      this.setState({ showExternalLinkOptions: false });
-      if (option === EXTERNAL_LINK) {
+      if (option.value === EXTERNAL_LINK) {
           this.setState({
               linkTarget: '',
-              attributes: {
-                  type: '',
-                  params: ''
-              },
-              showExternalLinkOptions: true,
-              currentSelectOption: option });
+              attributes: {},
+              currentSelectOption: option.label });
       } else {
           this.setState({
-              linkTarget: option,
+              linkTarget: option.value,
               attributes: {
-                  type: 'scrollTo',
-                  params: `${option}`
+                  'data-geostory-interaction-type': 'scrollTo',
+                  'data-geostory-interaction-params': `${option.value}`,
+                  'data-geostory-interaction-name': option.label
               },
-              currentSelectOption: option });
+              currentSelectOption: option.label });
       }
   }
 
@@ -173,15 +160,21 @@ class LayoutComponent extends Component {
       } = this.props;
       const { linkTargetOption } = this.state;
       onExpandEvent();
+      let currentOption = 'Select link target';
+      if (link?.target && link.target.length > 0) {
+          currentOption = EXTERNAL_LINK;
+      }
+
+      if (link?.attributes['data-geostory-interaction-name']) {
+          currentOption = link.attributes['data-geostory-interaction-name'];
+      }
       this.setState({
           showModal: true,
           linkTarget: (link && link.target) || '',
           linkTargetOption: (link && link.targetOption) || linkTargetOption,
           linkTitle: (link && link.title) || selectionText,
-          attributes: {
-              type: '',
-              params: ''
-          }
+          attributes: (link && link.attributes) || {},
+          currentSelectOption: currentOption
       });
   };
 
@@ -192,15 +185,22 @@ class LayoutComponent extends Component {
       } = this.props;
       const { linkTargetOption } = this.state;
       doExpand();
+      let currentOption = 'Select link target';
+      if (link?.target && link.target.length > 0) {
+          currentOption = EXTERNAL_LINK;
+      }
+
+      if (link?.attributes['data-geostory-interaction-name']) {
+          currentOption = link.attributes['data-geostory-interaction-name'];
+      }
+
       this.setState({
           showModal: true,
           linkTarget: link && link.target,
           linkTargetOption: (link && link.targetOption) || linkTargetOption,
           linkTitle: (link && link.title) || selectionText,
-          attributes: {
-              type: '',
-              params: ''
-          }
+          attributes: (link && link.attributes) || {},
+          currentSelectOption: currentOption
       });
   };
 
@@ -215,7 +215,6 @@ class LayoutComponent extends Component {
           linkTitle,
           linkTarget,
           linkTargetOption,
-          showExternalLinkOptions,
           currentSelectOption } = this.state;
       return (
           <div
@@ -241,7 +240,7 @@ class LayoutComponent extends Component {
                   currentSelectOption={currentSelectOption}
                   onSelectionChange={this.onSelectionChange}
                   availableStorySections={availableStorySections} />
-              {showExternalLinkOptions && (
+              {currentSelectOption === EXTERNAL_LINK && (
           <>
             <input
                 id="linkTarget"
