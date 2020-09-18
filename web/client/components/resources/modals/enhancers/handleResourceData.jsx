@@ -7,7 +7,7 @@
  */
 const React = require('react');
 const { compose, withStateHandlers, withState, branch, withHandlers, renderComponent} = require('recompose');
-const {omit, isString} = require('lodash');
+const {isString} = require('lodash');
 const {set} = require('../../../../utils/ImmutableUtils');
 const Message = require('../../../I18N/Message');
 const ConfirmDialog = require('../ConfirmModal');
@@ -19,8 +19,6 @@ const ConfirmDialog = require('../ConfirmModal');
 module.exports = compose(
     withStateHandlers(
         ({resource = {}, linkedResources = {}}) => {
-            console.log('resource', resource, 'linkedResources', linkedResources);
-
             const detailsSettingsString = resource.detailsSettings || resource.attributes?.detailsSettings;
             let detailsSettings = {};
 
@@ -57,7 +55,7 @@ module.exports = compose(
                         description: resource.description
                     },
                     createdAt: resource.creation,
-                    modifiedAt: resource.lastUpdate,
+                    modifiedAt: resource.lastUpdate
                 },
                 linkedResources
             };
