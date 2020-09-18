@@ -143,10 +143,12 @@
         border-bottom: none;
         height: auto;
     }
-    .mapstore-annotations-panel-card-description p{
+    .mapstore-annotations-panel-card-description {
         margin: 5px 0 0;
         text-overflow: ellipsis;
-        width: 100px;
+        width: 150px;
+        white-space: nowrap;
+        overflow: hidden;
     }
 }
 
@@ -326,6 +328,7 @@
                     white-space: nowrap;
                     text-overflow: ellipsis;
                     overflow-x: hidden;
+                    width: 150px;
                 }
 
                 > * * {
@@ -719,4 +722,13 @@
     align-items: center;
     font-weight: 600;
     padding: 10px;
+}
+
+.marker-container{
+    .marker-icon, .marker-shape {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        padding: 4px 0;
+    }
 }
