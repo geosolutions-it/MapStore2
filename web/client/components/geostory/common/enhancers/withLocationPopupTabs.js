@@ -1,5 +1,3 @@
-import React from 'react';
-
 /*
  * Copyright 2020, GeoSolutions Sas.
  * All rights reserved.
@@ -7,11 +5,11 @@ import React from 'react';
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
+import React from 'react';
 import { compose, withProps } from 'recompose';
 import Text from '../../contents/Text';
 
 import withControllableState from '../../../misc/enhancers/withControllableState';
-
 
 const withDefaultTabs = withProps((props) => ({
     tabs: props.tabs || [{
