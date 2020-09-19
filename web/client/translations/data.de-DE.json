@@ -2384,7 +2384,8 @@
                 "topRight": "Oben rechts",
                 "bottomLeft": "Unten links",
                 "bottomRight": "Unten rechts",
-                "identify": "Identifiziere"
+                "identify": "Identifiziere",
+                "locations": "Standorte"
             },
             "webPageCreator": {
                 "title": "Website",

@@ -111,7 +111,7 @@ export const Controls = ({
                 }}/>}
         </FormGroup>
         <FormGroup>
-            <ControlLabel>Locations</ControlLabel>
+            <ControlLabel><Message msgId="geostory.mapEditor.locations"/></ControlLabel>
             <div className="ms-geostory-map-controls-switch-add">
                 {options.mapLocationsEnabled && (
                     <GeneralButton id="add-location" onClick={

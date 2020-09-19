@@ -2064,7 +2064,8 @@
         "topLeft": "Vasen yläkulma",
         "topRight": "Oikea yläkulma",
         "bottomLeft": "Vasen alakulma",
-        "bottomRight": "Oikea alakulma"
+        "bottomRight": "Oikea alakulma",
+        "locations": "Sijainnit"
       },
       "webPageCreator": {
         "title": "Verkkosivu",

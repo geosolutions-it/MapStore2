@@ -2385,7 +2385,8 @@
                 "topRight": "Angolo in alto a destra",
                 "bottomLeft": "Angolo in basso a sinistra",
                 "bottomRight": "Angolo in basso a destra",
-                "identify": "Identify"
+                "identify": "Identify",
+                "locations": "Posizioni"
             },
             "webPageCreator": {
                 "title": "Pagina web",

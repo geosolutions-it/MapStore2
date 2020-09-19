@@ -2396,7 +2396,9 @@
                 "topRight": "Top Right",
                 "bottomLeft": "Bottom Left",
                 "bottomRight": "Bottom Right",
-                "identify": "Identify"
+                "identify": "Identify",
+                "locations": "Locations"
+
             },
             "webPageCreator": {
                 "title": "Web page",

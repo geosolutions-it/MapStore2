@@ -2386,7 +2386,8 @@
                 "topRight": "En haut à droite",
                 "bottomLeft": "En bas à gauche",
                 "bottomRight": "En bas à droite",
-                "identify": "Information"
+                "identify": "Information",
+                "locations": "Emplacements"
             },
             "webPageCreator": {
                 "title": "Page Web",
