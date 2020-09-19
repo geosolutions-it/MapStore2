@@ -22,7 +22,7 @@ const LocationItemEditable = (props) => {
                     : onChange("currentMapLocation", locationId);
             }}
             className={`ms-geostory-map-locations-item ${active && "ms-geostory-map-locations-item-active"}`}>
-            <TitleEditable title={locationName} onUpdate={(name) => {
+            <TitleEditable disabled={!active} title={locationName} onUpdate={(name) => {
                 const path = `layers[{"id": "locations"}].features[{"id": "locFeatureCollection"}].features[{"id": "${locationId}"}].properties.locationName`;
                 onChangeMap(path, name);
             }} />

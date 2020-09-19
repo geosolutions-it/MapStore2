@@ -10,9 +10,9 @@ import React from 'react';
 const {Button} = require('react-bootstrap');
 
 const GeneralButton = props => {
-    const { onClick, className, children } = props;
+    const { id, onClick, className, children } = props;
     return (
-        <Button className={className} onClick={onClick}>
+        <Button id={id} className={className} onClick={onClick}>
             {children}
         </Button>
     );

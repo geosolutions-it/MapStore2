@@ -114,7 +114,7 @@ export const Controls = ({
             <ControlLabel>Locations</ControlLabel>
             <div className="ms-geostory-map-controls-switch-add">
                 {options.mapLocationsEnabled && (
-                    <GeneralButton onClick={
+                    <GeneralButton id="add-location" onClick={
                         () => {
                             const id = uuid();
                             const locationFeature = {

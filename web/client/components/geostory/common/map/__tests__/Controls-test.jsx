@@ -94,4 +94,45 @@ describe('Controls component', () => {
         expect(spyChangeMap.calls.length).toBe(1);
         expect(spyChangeMap.calls[0].arguments).toEqual(['mapInfoControl', true]);
     });
+    it('rendering Controls comp and triggering mapLocationsEnabled update', () => {
+        const actions = {
+            onChangeMap: () => {}
+        };
+        const spyChangeMap = expect.spyOn(actions, 'onChangeMap');
+        const oldZoomStatus = true;
+        ReactDOM.render(
+            <Controls
+                map={{zoomControl: oldZoomStatus, layers: []}}
+                onChangeMap={actions.onChangeMap}
+            />, document.getElementById("container"));
+        doCommonTests(document);
+        const checkboxes = document.querySelectorAll("input[type=checkbox]");
+        expect(checkboxes.length).toBe(4);
+        ReactTestUtils.Simulate.change(checkboxes[3]);
+        expect(spyChangeMap).toHaveBeenCalled();
+        expect(spyChangeMap.calls.length).toBe(1);
+        expect(spyChangeMap.calls[0].arguments).toEqual(['mapLocationsEnabled', true]);
+    });
+    it('should show locations add button when mapLocationsEnabled is true', () => {
+        ReactDOM.render(
+            <Controls
+                map={{ layers: [], mapLocationsEnabled: true }}
+            />, document.getElementById("container"));
+        doCommonTests(document);
+        const locationAdd = document.getElementById('add-location');
+        const locationList = document.querySelector('.ms-geostory-map-locations');
+        expect(locationAdd).toExist();
+        expect(locationList).toExist();
+    });
+    it('should not show locations add button when mapLocations is not enabled', () => {
+        ReactDOM.render(
+            <Controls
+                map={{ layers: [] }}
+            />, document.getElementById("container"));
+        doCommonTests(document);
+        const locationAdd = document.getElementById('add-location');
+        const locationList = document.querySelector('.ms-geostory-map-locations');
+        expect(locationAdd).toNotExist();
+        expect(locationList).toNotExist();
+    });
 });

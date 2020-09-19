@@ -21,10 +21,12 @@ const manageUpdates = compose(
 const TitleEditable = manageUpdates(({
     text,
     className = "ms-story-title-editable",
+    disabled = false,
     onUpdate = () =>  {},
     setText = () => {}} = {}
 ) => {
     return (<ContentEditable
+        disabled={disabled}
         className={className}
         html={text}
         onClick={evt => {
