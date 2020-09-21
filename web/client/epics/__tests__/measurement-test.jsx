@@ -106,6 +106,12 @@ describe('measurement epics', () => {
                 expect(actions[0].type).toBe("TOGGLE_CONTROL");
                 expect(actions[1].type).toBe("ANNOTATIONS:NEW");
                 expect(actions[2].type).toBe("ANNOTATIONS:SET_EDITING_FEATURE");
+                expect(actions[2].feature.features).toBeTruthy();
+                expect(actions[2].feature.features.length).toBe(4);
+                expect(actions[2].feature.features[0].geometry.type).toBe("LineString");
+                expect(actions[2].feature.features[1].geometry.type).toBe("Point");
+                expect(actions[2].feature.features[2].geometry.type).toBe("Point");
+                expect(actions[2].feature.features[3].geometry.type).toBe("Point");
                 done();
             }, null);
     });
@@ -152,6 +158,7 @@ describe('measurement epics', () => {
                 const innerFeatures = resultFeatures[0].features;
                 expect(innerFeatures.length).toBe(4);
                 expect(innerFeatures[0].geometry).toExist();
+                expect(innerFeatures[0].geometry.type).toBe('LineString');
                 expect(innerFeatures[0].geometry.textLabels).toExist();
                 expect(innerFeatures[0].geometry.textLabels[0].text).toBe("2,937,911.16 m | 061.17° T");
                 expect(innerFeatures[0].geometry.textLabels[1].text).toBe("1,837,281.12 m | 140.72° T");
