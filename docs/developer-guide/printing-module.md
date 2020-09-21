@@ -11,7 +11,7 @@ Because MapStore doesn't include the printing module by default, to use it you n
 
 ### Building from the Source
 
-If you want to include the printing module in your MapStore, building the source code you have to add the profile `printing` (profiles are the 2nd argument of the `build.sh` script, after the version):
+If you want to include the printing module in your MapStore, by building the source code, you have to add the profile `printing` (profiles can be added as 2nd argument of the `build.sh` script, after the version that is the 1st. If you have more then one profile, you can add them separated by `,`):
 
 ```bash
 ./build.sh [version_identifier] printing
