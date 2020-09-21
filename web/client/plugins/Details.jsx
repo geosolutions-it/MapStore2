@@ -89,7 +89,8 @@ export default createPlugin('Details', {
         Toolbar: {
             name: 'details',
             position: 2,
-            priority: 4,
+            priority: 0,
+            tooltip: <Message msgId="details.title" />,
             alwaysVisible: true,
             doNotHide: true,
             icon: <Glyphicon glyph="sheet"/>,
