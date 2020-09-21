@@ -7,7 +7,7 @@ The **printing module** of MapStore is a back-end service **not included  by def
 
 ## Including the printing module in MapStore
 
-Because MapStore doesn't include the printing module by default, to use it you need to build rom the source a `MapStore.war` that includes it or add the missing files to an existing `MapStore.war`
+Because MapStore doesn't include the printing module by default, to use it you need to build rom the source a `MapStore.war` that includes it or add the missing files to an existing MapStore deployed.
 
 ### Building from the Source
 
@@ -21,7 +21,7 @@ MapStore projects also allow to use the `printing` profile to include this modul
 
 ### Adding to an existing MapStore
 
-It is also possible to build only the printing extension as a zip (to be unzipped on your deployed MapStore, inside the `WEB-INF/lib` directory). running `mvn clean install -Pprintingbundle`
+It is also possible to build only the printing extension as a zip (to be unzipped on your deployed MapStore inside `webapps/mapstore` directory) running `mvn clean install -Pprintingbundle`
 The zip bundle will be in `printing/target/mapstore-printing.zip`.
 
 ## Configuring the print
