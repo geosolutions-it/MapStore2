@@ -125,6 +125,7 @@ export default ({
                 <div><Message msgId="geostory.builder.settings.fontSize"/></div>
                 <div>
                     <Select
+                        disabled={!settings.isTitleEnabled}
                         value={settings.storyTitleFontSize}
                         onChange={event => onUpdateSettings("storyTitleFontSize", event.value)}
                         options={storyTitleFontSizes}
