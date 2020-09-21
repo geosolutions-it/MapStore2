@@ -99,7 +99,7 @@ proxy_set_header X-Forwarded-Proto https;
 
 #### Forcing PRINT_BASE_URL of printing module
 
-Sometimes you do not have access to the . For or MapStore printing module provides a system variable `PRINT_BASE_URL` that you can set to force the URLs returned by `info.json` to be resolved from this.
+If, for any reason, you can not modify the proxy configuration, MapStore printing module provides a system variable `PRINT_BASE_URL` that you can set to force the URLs returned by `info.json` to be resolved from it.
 
 A useful trick can be to set as a relative URL (relative to MapStore) to make it work in any context (only for MapStore).
 
