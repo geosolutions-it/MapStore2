@@ -17,7 +17,7 @@ If you want to include the printing module in your MapStore, building the source
 ./build.sh [version_identifier] printing
 ```
 
-Also MapStore projects allow to use the `printing` profile to include this module.
+MapStore projects also allow to use the `printing` profile to include this module. So you can use the same `printing` profile to build your custom MapStore project including the printing module.
 
 ### Adding to an existing MapStore
 
