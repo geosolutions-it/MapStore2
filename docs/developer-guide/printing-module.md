@@ -3,7 +3,7 @@
 The **printing module** of MapStore is a back-end service **not included  by default in the release package** that allows to create a printable PDF from the current map.
 
 !!! note
-    The **printing module** is required by the **Print plugin** of MapStore, so if you want to have the Print plugin working in you application, you have to include also the printing module in your MapStore installation.
+    The **printing module** is required by the **Print plugin** of MapStore, so if you want to have the Print plugin working in your application, you have to include also the printing module in your MapStore installation.
 
 ## Including the printing module in MapStore
 
