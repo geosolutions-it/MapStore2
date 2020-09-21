@@ -50,12 +50,16 @@ function getLinkComponent(config) {
         const { url, targetOption, attributes } = contentState.getEntity(entityKey).getData();
         const { showPopOver } = this.state;
 
-        if (attributes && attributes.type === "scrollTo") {
+        if (attributes && attributes['data-geostory-interaction-type']) {
             return (
                 <span
                     className="rdw-link-decorator-wrapper"
                 >
-                    <a data-geostory-interaction-type={attributes.type} data-geostory-interaction-params={attributes.params}>{children}</a>
+                    <a
+                        data-geostory-interaction-type={attributes['data-geostory-interaction-type']}
+                        data-geostory-interaction-params={attributes['data-geostory-interaction-params']}>
+                        {children}
+                    </a>
                 </span>
             );
         }

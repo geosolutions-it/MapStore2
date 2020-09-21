@@ -22,8 +22,8 @@ import {
     customEntityTransform,
     DEFAULT_FONT_FAMILIES } from "../../../../utils/GeoStoryUtils";
 
-import LayoutComponent from '../editorCustomizations/CustomEditorLink';
-import getLinkDecorator from '../editorCustomizations/getLinkDecorator';
+import LayoutComponent from '../texteditor/CustomEditorLink';
+import getLinkDecorator from '../texteditor/getLinkDecorator';
 
 /**
  * HOC that adds WYSIWYG editor to a content. The editor will replace the component when activated, and it will be activated again when
