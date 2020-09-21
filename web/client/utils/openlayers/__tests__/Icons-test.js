@@ -63,6 +63,7 @@ describe('Icons openlayers styles', () => {
         expect(highlightStyle).toExist();
         const highlightStyleIcon = highlightStyle.getImage();
         expect(highlightStyleIcon).toExist();
+        expect(highlightStyleIcon.anchor_).toEqual([0.5, 122]);
     });
     it('test standard getIcon iconUrl, no shadow, no highlight', () => {
         const getIcon = Icons.standard.getIcon;
@@ -91,7 +92,7 @@ describe('Icons openlayers styles', () => {
     });
     it('test standard getIcon iconUrl, yes shadow, yes highlight', () => {
         const getIcon = Icons.standard.getIcon;
-        const options = {
+        let options = {
             style: {
                 iconAnchor: [0.5, 0.5],
                 anchorXUnits: "fraction",
@@ -104,7 +105,7 @@ describe('Icons openlayers styles', () => {
                 highlight: true
             }
         };
-        const styles = getIcon(options);
+        let styles = getIcon(options);
         expect(styles).toExist();
         expect(styles.length).toBe(3);
         const icon = styles[1];
@@ -115,16 +116,39 @@ describe('Icons openlayers styles', () => {
         expect(iconImage.getOrigin()).toEqual([0, 0]);
         expect(iconImage.getRotation()).toEqual(1);
         expect(iconImage.getSize()).toEqual([14, 14]);
-        const highlightStyle = styles[2];
+        let highlightStyle = styles[2];
         expect(highlightStyle).toExist();
-        const highlightStyleIcon = highlightStyle.getImage();
+        let highlightStyleIcon = highlightStyle.getImage();
         expect(highlightStyleIcon).toExist();
+        expect(highlightStyleIcon.anchor_).toEqual([0.5, 56]);
         const shadowStyle = styles[0];
         expect(shadowStyle).toExist();
         const shadowStyleImage = shadowStyle.getImage();
         expect(shadowStyleImage).toExist();
         expect(shadowStyleImage.getAnchor()).toEqual([12, 41]);
         expect(new RegExp("/assets/img.png").test(shadowStyleImage.getSrc())).toEqual(true);
+
+        // Icon style size as integer
+        options = {
+            style: {
+                iconAnchor: [0.5, 0.5],
+                anchorXUnits: "fraction",
+                anchorYUnits: "fraction",
+                rotation: 1,
+                size: 36,
+                anchorOrigin: "top-left",
+                iconUrl: "/assets/img.png",
+                shadowUrl: "/assets/img.png",
+                highlight: true
+            }
+        };
+        styles = getIcon(options);
+        expect(styles).toExist();
+        highlightStyle = styles[2];
+        expect(highlightStyle).toExist();
+        highlightStyleIcon = highlightStyle.getImage();
+        expect(highlightStyleIcon).toExist();
+        expect(highlightStyleIcon.anchor_).toEqual([0.5, 63]);
     });
     it('test standard getIcon iconUrl, anchor pixel', () => {
         const getIcon = Icons.standard.getIcon;
