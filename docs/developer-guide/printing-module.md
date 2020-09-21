@@ -7,7 +7,7 @@ The **printing module** of MapStore is a back-end service **not included  by def
 
 ## Including the printing module in MapStore
 
-Because MapStore doesn't include the printing module by default, to use it you need to build rom the source a `MapStore.war` that includes it or add the missing files to an existing MapStore deployed.
+Because MapStore doesn't include the printing module by default, to use it you need to build from the source a `MapStore.war` that includes it or add the missing files to an existing MapStore deployed.
 
 ### Building from the Source
 
