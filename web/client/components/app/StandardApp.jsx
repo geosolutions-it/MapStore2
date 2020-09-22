@@ -21,8 +21,6 @@ import ConfigUtils from '../../utils/ConfigUtils';
 import LocaleUtils from '../../utils/LocaleUtils';
 import PluginsUtils from '../../utils/PluginsUtils';
 
-import ErrorFallBackComp from './ErrorFallBackComp';
-
 import url from 'url';
 const urlQuery = url.parse(window.location.href, true).query;
 
@@ -75,8 +73,7 @@ class StandardApp extends React.Component {
         appStore: () => ({dispatch: () => {}, getState: () => ({}), subscribe: () => {}}),
         appComponent: () => <span/>,
         onStoreInit: () => {},
-        loaderComponent: DefaultAppLoaderComponent,
-        errorFallbackComponent: ErrorFallBackComp
+        loaderComponent: DefaultAppLoaderComponent
     };
 
     state = {
@@ -144,13 +141,11 @@ class StandardApp extends React.Component {
         const {appStore, initialActions, appComponent, mode, ...other} = this.props;
         const App = dragDropContext(html5Backend)(this.props.appComponent);
         const Loader = this.props.loaderComponent;
-        const ErrorFallback = this.props.errorFallbackComponent;
         return this.state.initialized
             ? <Provider store={this.store}>
                 <App
                     {...other}
                     plugins={{ ...PluginsUtils.getPlugins(plugins), requires }}
-                    errorFallbackComponent={ErrorFallback}
                 />
             </Provider>
             : <Loader />;
