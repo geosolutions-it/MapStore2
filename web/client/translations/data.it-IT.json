@@ -449,7 +449,9 @@
                 "delete": "Elimina dettagli",
                 "titleUnsavedChanges": "Sicuro di chiudere senza salvare?",
                 "sureToClose": "Sicuro di chiudere senza salvare?",
-                "fieldsChanged": "Alcuni dati sono cambiati"
+                "fieldsChanged": "Alcuni dati sono cambiati",
+                "showAtStartup": "Mostra all'avvio",
+                "showAsModal": "Mostra come modale"
             },
             "errors": {
                 "loading": {
@@ -697,7 +699,7 @@
             "resetTooltip": "Rimuovi Misurazioni",
             "addAsLayer": "Aggiungi come livello"
         },
-        "search":{
+        "search": {
             "layerMustBeVisible": "Il livello di destinazione è inattivo",
             "decimal": "Decimali",
             "aeronautical": "Aeronautiche",

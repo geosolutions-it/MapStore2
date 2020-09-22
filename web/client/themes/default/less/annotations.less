@@ -143,10 +143,12 @@
         border-bottom: none;
         height: auto;
     }
-    .mapstore-annotations-panel-card-description p{
+    .mapstore-annotations-panel-card-description {
         margin: 5px 0 0;
         text-overflow: ellipsis;
-        width: 100px;
+        width: 150px;
+        white-space: nowrap;
+        overflow: hidden;
     }
 }
 
@@ -382,10 +384,14 @@
         width: 100%;
         height: 100%;
         flex-direction: column;
-        .ms-style-manager {
+        .tab-container{
+            flex: 1;
+            padding-top: 8px;
             position: relative;
             overflow-y: auto;
             overflow-x: hidden;
+        }
+        .ms-style-manager {
             .Select *{
                 font-size: inherit !important;
             }
@@ -706,11 +712,6 @@
 
 .modal-dialog-container{
     border: none;
-}
-
-.ms-style-manager {
-    position: absolute;
-    width: 100%;
 }
 
 .label-texts {

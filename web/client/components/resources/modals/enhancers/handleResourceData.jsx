@@ -7,6 +7,7 @@
  */
 const React = require('react');
 const { compose, withStateHandlers, withState, branch, withHandlers, renderComponent} = require('recompose');
+const {isString} = require('lodash');
 const {set} = require('../../../../utils/ImmutableUtils');
 const Message = require('../../../I18N/Message');
 const ConfirmDialog = require('../ConfirmModal');
@@ -17,32 +18,48 @@ const ConfirmDialog = require('../ConfirmModal');
  */
 module.exports = compose(
     withStateHandlers(
-        ({resource = {}}) => ({
-            originalData: resource,
-            metadata: {
-                name: resource.name,
-                description: resource.description
-            },
-            attributes: {
-                ...resource.attributes,
-                context: resource.context || resource.attributes && resource.attributes.context
-            },
-            resource: {
-                id: resource.id,
-                attributes: {
-                    ...resource.attributes,
-                    context: resource.context || resource.attributes && resource.attributes.context
-                },
+        ({resource = {}, linkedResources = {}}) => {
+            const detailsSettingsString = resource.detailsSettings || resource.attributes?.detailsSettings;
+            let detailsSettings = {};
+
+            if (isString(detailsSettingsString)) {
+                try {
+                    detailsSettings = JSON.parse(detailsSettingsString);
+                } catch (e) {
+                    detailsSettings = {};
+                }
+            } else {
+                detailsSettings = detailsSettingsString || {};
+            }
+
+            return {
+                originalData: resource,
                 metadata: {
                     name: resource.name,
                     description: resource.description
                 },
-                createdAt: resource.creation,
-                modifiedAt: resource.lastUpdate,
-                detailsText: resource.detailsText
-            }
-
-        }),
+                attributes: {
+                    ...resource.attributes,
+                    context: resource.context || resource.attributes && resource.attributes.context,
+                    detailsSettings
+                },
+                resource: {
+                    id: resource.id,
+                    attributes: {
+                        ...resource.attributes,
+                        context: resource.context || resource.attributes && resource.attributes.context,
+                        detailsSettings
+                    },
+                    metadata: {
+                        name: resource.name,
+                        description: resource.description
+                    },
+                    createdAt: resource.creation,
+                    modifiedAt: resource.lastUpdate
+                },
+                linkedResources
+            };
+        },
         {
             onUpdate: ({resource}) => (key, value) => ({
                 hasChanges: true,

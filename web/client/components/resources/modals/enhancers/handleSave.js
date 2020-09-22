@@ -9,7 +9,7 @@
 import Rx from 'rxjs';
 import { mapPropsStream, createEventHandler } from 'recompose';
 
-import { updateResource } from '../../../../api/persistence';
+import { updateResource, updateResourceAttribute } from '../../../../api/persistence';
 
 export default mapPropsStream(props$ => {
     const { handler: onSave, stream: saveEventStream$ } = createEventHandler();
@@ -18,6 +18,11 @@ export default mapPropsStream(props$ => {
             .withLatestFrom(props$)
             .switchMap(([resource, props]) =>
                 updateResource(resource)
+                    .flatMap(rid => resource.category === 'MAP' ? updateResourceAttribute({
+                        id: rid,
+                        name: 'detailsSettings',
+                        value: JSON.stringify(resource.attributes?.detailsSettings || {})
+                    }) : Rx.Observable.of(rid))
                     .do(() => {
                         if (props) {
                             if (props.onClose) {

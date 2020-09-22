@@ -5,7 +5,7 @@ The background selector, located in the bottom left corner of the *Viewer*, allo
 
 <img src="../img/background/background.jpg" class="ms-docimage"/>
 
-By clicking on the background selector several miniatures will be displayed. Those miniatures can be selected in order to switch from a background to another (the map backgrounds set by default in MapStore are *Open Street Map*, *NASAGIBS*, *OpenTopoMap*, *Sentinel 2* and the *Empty Background*). 
+By clicking on the background selector several miniatures will be displayed. Those miniatures can be selected in order to switch from a background to another (the map backgrounds set by default in MapStore are *Open Street Map*, *NASAGIBS*, *OpenTopoMap*, *Sentinel 2* and the *Empty Background*).
 
 <img src="../img/background/bck-available.jpg" class="ms-docimage" style="max-width:500px;"/>
 
@@ -22,7 +22,7 @@ A new background can be added through the <img src="../img/button/+++.jpg" class
 <img src="../img/background/bck-catalog.jpg" class="ms-docimage" style="max-width:500px;"/>
 
 !!! warning
-    *Default Backgrounds* service is available only accessing the [Catalog](catalog.md) from the background selector, but if you add a new Remote Service from there, it will be available also accessing [Catalog](catalog.md) from [Buger Menu](burger-menu.md) or from [TOC](toc.md). *Default Backgrounds* represent a list of backgrounds that can be configured from MapStore's configuration files (more information about that can be found in Developer Guide's [Map Configuration](../developer-guide/maps-configuration.md) section).
+    *Default Backgrounds* service is available only accessing the [Catalog](catalog.md) from the background selector, but if you add a new Remote Service from there, it will be available also accessing [Catalog](catalog.md) from [Buger Menu](menu-bar.md#burger-menu) or from [TOC](toc.md). *Default Backgrounds* represent a list of backgrounds that can be configured from MapStore's configuration files (more information about that can be found in Developer Guide's [Map Configuration](../developer-guide/maps-configuration.md) section).
 
 From the [Catalog](catalog.md) the user can choose the layers to add to the list of backgrounds:
 
@@ -34,7 +34,7 @@ As soon as a layer is selected, the **Add New Background** window opens:
 
 In particular, from this window, the user can perform the following operations:
 
-* Add a **Thumbnail** choosing the desired local file by clicking on image preview area, or simply with the drag and drop function 
+* Add a **Thumbnail** choosing the desired local file by clicking on image preview area, or simply with the drag and drop function
 
 * Set the **Title**
 
