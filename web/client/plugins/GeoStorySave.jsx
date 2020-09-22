@@ -72,7 +72,10 @@ export const GeoStorySave = createPlugin('GeoStorySave', {
             saveDialogSelector,
             resourceSelector,
             (showSave, resource) => ({ show: showSave === "save", resource })
-        ))
+        )),
+        withProps(({resource}) => ({
+            isNewResource: !resource?.id
+        }))
     )(SaveBaseDialog),
     reducers: { geostory },
     containers: {
@@ -104,7 +107,10 @@ export const GeoStorySaveAs = createPlugin('GeoStorySaveAs', {
         connect(createSelector(
             saveDialogSelector,
             (showSave) => ({ show: showSave === "saveAs" })
-        ))
+        )),
+        withProps({
+            isNewResource: true
+        })
     )(SaveBaseDialog),
     reducers: { geostory },
     containers: {
