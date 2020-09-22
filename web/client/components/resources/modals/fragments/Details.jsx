@@ -11,6 +11,7 @@ import { isNil } from 'lodash';
 
 import DetailsRowBase from './DetailsRow';
 import DetailsSheet from './DetailsSheet';
+import Editors from './editors';
 
 import handleDetailsRow from '../enhancers/handleDetailsRow';
 
@@ -19,47 +20,57 @@ const DetailsRow = handleDetailsRow(DetailsRowBase);
 export default ({
     loading,
     resource = {},
-    detailsText,
+    editor = 'DraftJSEditor',
+    editorProps = {},
+    editorState,
     savedDetailsText,
     detailsBackup,
     showDetailsSheet,
-    setDetailsText = () => {},
+    setEditorState = () => {},
     setDetailsBackup = () => {},
+    onUpdateResource = () => {},
     onUpdateLinkedResource = () => {},
     onShowDetailsSheet = () => {},
     onHideDetailsSheet = () => {}
-}) => (
-    <>
-        <DetailsRow
-            loading={loading || resource.saving}
-            detailsText={savedDetailsText}
-            detailsBackup={detailsBackup}
-            editDetailsDisabled={!isNil(resource.canEdit) && !resource.canEdit}
-            canUndo={!!detailsBackup}
-            onUndo={() => {
-                onUpdateLinkedResource('details', detailsBackup, 'DETAILS');
-                setDetailsBackup();
-            }}
-            onUpdate={setDetailsText}
-            onShowDetailsSheet={onShowDetailsSheet}
-            onDelete={() => {
-                setDetailsBackup(savedDetailsText);
-                onUpdateLinkedResource('details', 'NODATA', 'DETAILS');
-            }}/>
-        <DetailsSheet
-            loading={loading}
-            show={showDetailsSheet}
-            title={resource.metadata?.name}
-            detailsText={detailsText}
-            onClose={() => {
-                onHideDetailsSheet();
-                setDetailsText(savedDetailsText);
-            }}
-            onSave={text => {
-                onHideDetailsSheet();
-                setDetailsBackup();
-                onUpdateLinkedResource('details', text, 'DETAILS');
-            }}
-            onUpdate={setDetailsText}/>
-    </>
-);
+}) => {
+    const {component: Editor, editorStateToDetailsText, detailsTextToEditorState, containerBodyClass} = Editors[editor];
+
+    return (
+        <>
+            <DetailsRow
+                loading={loading || resource.saving}
+                detailsText={savedDetailsText}
+                detailsBackup={detailsBackup}
+                editDetailsDisabled={!isNil(resource.canEdit) && !resource.canEdit}
+                settings={resource.attributes?.detailsSettings}
+                canUndo={!!detailsBackup}
+                onUndo={() => {
+                    onUpdateLinkedResource('details', detailsBackup, 'DETAILS');
+                    setDetailsBackup();
+                }}
+                onUpdate={detailsText => setEditorState(detailsTextToEditorState(detailsText))}
+                onUpdateResource={onUpdateResource}
+                onShowDetailsSheet={onShowDetailsSheet}
+                onDelete={() => {
+                    setDetailsBackup(savedDetailsText);
+                    onUpdateLinkedResource('details', 'NODATA', 'DETAILS');
+                }}/>
+            <DetailsSheet
+                loading={loading}
+                show={showDetailsSheet}
+                title={resource.metadata?.name}
+                detailsText={editorState}
+                bodyClassName={containerBodyClass}
+                onClose={() => {
+                    onHideDetailsSheet();
+                }}
+                onSave={editorText => {
+                    onHideDetailsSheet();
+                    setDetailsBackup();
+                    onUpdateLinkedResource('details', editorStateToDetailsText(editorText), 'DETAILS');
+                }}>
+                <Editor {...editorProps} editorState={editorState} onUpdateEditorState={setEditorState}/>
+            </DetailsSheet>
+        </>
+    );
+};

@@ -449,7 +449,9 @@
                 "delete": "Löschen Sie das Detailblatt",
                 "titleUnsavedChanges": "Sind Sie sicher, dass Sie schließen wollen, ohne Ihre Änderungen zu speichern?",
                 "sureToClose": "Sind Sie sicher, dass Sie schließen wollen, ohne Ihre Änderungen zu speichern?",
-                "fieldsChanged": "Einige Felder wurden geändert"
+                "fieldsChanged": "Einige Felder wurden geändert",
+                "showAtStartup": "Beim Start anzeigen",
+                "showAsModal": "Als modal anzeigen"
             },
             "errors": {
                 "loading": {

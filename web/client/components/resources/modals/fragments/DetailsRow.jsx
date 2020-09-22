@@ -20,12 +20,14 @@ export default ({
     showPreview = false,
     editDetailsDisabled,
     detailsText,
+    settings = {},
     canUndo = false,
     onShowPreview = () => {},
     onHidePreview = () => {},
     onUndo = () => {},
     onShowDetailsSheet = () => {},
     onUpdate = () => {},
+    onUpdateResource = () => {},
     onDelete = () => {}
 }) => {
     return (
@@ -74,6 +76,18 @@ export default ({
                                                 onUpdate(detailsText);
                                             },
                                             disabled: loading
+                                        }, {
+                                            glyph: 'new-window',
+                                            tooltipId: 'map.details.showAsModal',
+                                            visible: !!detailsText,
+                                            bsStyle: settings.showAsModal ? 'success' : 'default',
+                                            onClick: () => onUpdateResource('attributes.detailsSettings.showAsModal', !settings.showAsModal)
+                                        }, {
+                                            glyph: 'pushpin',
+                                            tooltipId: 'map.details.showAtStartup',
+                                            visible: !!detailsText,
+                                            bsStyle: settings.showAtStartup ? 'success' : 'default',
+                                            onClick: () => onUpdateResource('attributes.detailsSettings.showAtStartup', !settings.showAtStartup)
                                         }, {
                                             glyph: 'trash',
                                             tooltipId: "map.details.delete",

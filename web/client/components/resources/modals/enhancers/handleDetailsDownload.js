@@ -21,20 +21,27 @@ export default mapPropsStream(props$ => {
     return props$.combineLatest(
         props$
             .filter(({resource}) => resource && resource.id)
-            .distinctUntilChanged(({resource: res1}, {resource: res2}) => res1 === res2)
+            .distinctUntilChanged(({resource: res1}, {resource: res2}) => res1.id === res2.id)
             .switchMap(props => {
                 const details = props.resource.attributes?.details;
 
                 return getDetails(details).map(detailsText => {
-                    const resourceWithDetails = {...props.resource, detailsText};
+                    const linkedResources = {
+                        ...(props.linkedResources || {}),
+                        details: {
+                            category: 'DETAILS',
+                            data: detailsText
+                        }
+                    };
 
                     if (props.onResourceLoad) {
-                        props.onResourceLoad(resourceWithDetails);
+                        props.onResourceLoad(props.resource, linkedResources);
                     }
 
                     return {
                         loading: false,
-                        resource: resourceWithDetails
+                        resource: props.resource,
+                        linkedResources
                     };
                 })
                     .catch(e => Rx.Observable.of({ loading: false, errors: [e] }))

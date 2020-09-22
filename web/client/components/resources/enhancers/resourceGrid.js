@@ -80,8 +80,8 @@ const resourceGrid = compose(
         onHideDetailsSheet: ({ setShowDetailsSheet = () => { } }) => () => {
             setShowDetailsSheet(false);
         },
-        onResourceLoad: ({ setLoadedResource = () => { }, setLoadingResource = () => { } }) => (resource) => {
-            setLoadedResource(resource);
+        onResourceLoad: ({ setLoadedResource = () => { }, setLoadingResource = () => { } }) => (resource, linkedResources) => {
+            setLoadedResource({...resource, linkedResources});
             setLoadingResource(false);
         }
     }),

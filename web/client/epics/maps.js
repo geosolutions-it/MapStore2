@@ -12,7 +12,7 @@ import {push} from 'connected-react-router';
 import {basicError, basicSuccess} from '../utils/NotificationUtils';
 import GeoStoreApi from '../api/GeoStoreDAO';
 import { MAP_INFO_LOADED, MAP_SAVED, mapSaveError, mapSaved, loadMapInfo, configureMap } from '../actions/config';
-import { get, isArray, isEqual, find, pick, omit, keys, zip } from 'lodash';
+import { get, isArray, isEqual, isObject, isNil, find, pick, omit, keys, zip, mapValues } from 'lodash';
 import {
     MAPS_GET_MAP_RESOURCES_BY_CATEGORY,
     DELETE_MAP, OPEN_DETAILS_PANEL, MAPS_LOAD_MAP,
@@ -23,7 +23,7 @@ import {
     detailsLoaded,
     getMapResourcesByCategory,
     mapUpdating, savingMap, mapCreated, loadMaps, loadContexts, setContexts, setSearchFilter, loading,
-    invalidateFeaturedMaps
+    invalidateFeaturedMaps, openDetailsPanel
 } from '../actions/maps';
 import { DASHBOARD_DELETED } from '../actions/dashboards';
 import { closeFeatureGrid } from '../actions/featuregrid';
@@ -311,16 +311,15 @@ export const fetchDataForDetailsPanel = (action$, store) =>
             return Rx.Observable.fromPromise(GeoStoreApi.getData(detailsId)
                 .then(data => data))
                 .switchMap((details) => {
-                    return Rx.Observable.from( [
+                    return Rx.Observable.of(
                         closeFeatureGrid(),
-                        updateDetails(details, true, details
-                        )]
+                        updateDetails(details)
                     );
                 }).startWith(toggleControl("details", "enabled"))
                 .catch(() => {
                     return Rx.Observable.of(
                         basicError({message: "maps.feedback.errorFetchingDetailsOfMap"}),
-                        updateDetails(NO_DETAILS_AVAILABLE, true, NO_DETAILS_AVAILABLE)
+                        updateDetails(NO_DETAILS_AVAILABLE)
                     );
                 });
         });
@@ -343,11 +342,22 @@ export const storeDetailsInfoEpic = (action$, store) =>
                 )
                     .switchMap((attributes) => {
                         let details = find(attributes, {name: 'details'});
+                        const detailsSettingsAttribute = find(attributes, {name: 'detailsSettings'});
+                        let detailsSettings = {};
+
                         if (!details || details.value === EMPTY_RESOURCE_VALUE) {
                             return Rx.Observable.empty();
                         }
+
+                        try {
+                            detailsSettings = JSON.parse(detailsSettingsAttribute.value);
+                        } catch (e) {
+                            detailsSettings = {};
+                        }
+
                         return Rx.Observable.of(
-                            detailsLoaded(mapId, details.value)
+                            detailsLoaded(mapId, details.value, detailsSettings),
+                            ...(detailsSettings.showAtStartup ? [openDetailsPanel()] : [])
                         );
                     });
         });
@@ -357,10 +367,23 @@ export const storeDetailsInfoEpic = (action$, store) =>
 export const mapSaveMapResourceEpic = (action$, store) =>
     action$.ofType(SAVE_MAP_RESOURCE)
         .exhaustMap(({resource}) => {
+            // convert to json if attribute is an object
+            const attributesFixed = mapValues(resource.attributes, attr => {
+                if (isObject(attr)) {
+                    let json = null;
+                    try {
+                        json = JSON.stringify(attr);
+                    } catch (e) {
+                        json = null;
+                    }
+                    return json;
+                }
+                return attr;
+            });
             // filter out invalid attributes
             // thumbnails and details are handled separately(linked resources)
-            const validAttributesNames = keys(resource.attributes)
-                .filter(attrName => attrName !== 'thumbnail' && attrName !== 'details' && resource.attributes[attrName] !== undefined && resource.attributes[attrName] !== null);
+            const validAttributesNames = keys(attributesFixed)
+                .filter(attrName => attrName !== 'thumbnail' && attrName !== 'details' && !isNil(attributesFixed[attrName]));
             return Rx.Observable.forkJoin(
                 (() => {
                     // get a context information using the id in the attribute
@@ -373,7 +396,7 @@ export const mapSaveMapResourceEpic = (action$, store) =>
                     Rx.Observable.forkJoin(validAttributesNames.map(attrName => updateResourceAttribute({
                         id: rid,
                         name: attrName,
-                        value: resource.attributes[attrName]
+                        value: attributesFixed[attrName]
                     }))) : Rx.Observable.of([])).switchMap(() =>
                     Rx.Observable.from([
                         ...(resource.id ? [loadMapInfo(rid)] : []),
