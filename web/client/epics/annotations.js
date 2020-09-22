@@ -740,7 +740,7 @@ module.exports = (viewer) => ({
                                 setErrorSymbol(symbolErrors.concat(['loading_symbol' + shape])),
                                 setDefaultStyle('POINT.symbol', {
                                     ...defaultSymbolStyle,
-                                    symbolUrlCustomized: require('../assets/symbols/symbolMissing.svg'),
+                                    symbolUrlCustomized: require('../product/assets/symbols/symbolMissing.svg'),
                                     symbolUrl: symbolsPath + shape + ".svg",
                                     shape
                                 })
