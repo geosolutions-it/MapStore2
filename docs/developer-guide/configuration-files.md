@@ -26,7 +26,7 @@ Except `mapstore.properties`, all these files are simply overrides of original c
 
 ## Front-end Configurations Files
 
-They are JSON files that will be loaded via HTTP from the client, keeping most of the framework working also in an html-only context (when used with different back-ends or no-backend).
+They are JSON files that will be loaded via HTTP from the client, keeping most of the framework working also in an html-only context (when used with different back-ends or no-backend). These JSON files are located in `web/client` directory and they will be copied in the root of the war file.
 
 Several configuration files (at development and / or run time) are available to configure all the different aspects of an application.
 
