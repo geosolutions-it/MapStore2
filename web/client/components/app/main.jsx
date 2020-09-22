@@ -18,6 +18,7 @@ const main = (config = {}, Component) => {
     const startApp = () => {
 
         const {
+            targetId = 'container',
             initialState = {
                 defaultState: {},
                 mobile: {}
@@ -38,7 +39,7 @@ const main = (config = {}, Component) => {
 
         ReactDOM.render(
             <App { ...config } appStore={appStore}/>,
-            document.getElementById('container')
+            document.getElementById(targetId)
         );
     };
 
