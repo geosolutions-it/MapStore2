@@ -12,6 +12,11 @@ PRGDIR=`pwd`
 EXECUTABLE=shutdown.sh
 CATALINA_HOME="$PRGDIR"
 
+export JAVA_HOME="$PRGDIR/jre/linux"
+export JRE_HOME="$PRGDIR/jre/linux"
+chmod +x jre/linux/bin/*
+
+
 if [ ! -x "$CATALINA_HOME"/bin/"$EXECUTABLE" ]; then
   echo "Cannot find $PRGDIR/$EXECUTABLE"
   echo "The file is absent or does not have execute permission"

@@ -632,7 +632,7 @@ class AnnotationsEditor extends React.Component {
                                 <Message msgId={"annotations.tabStyle"}/>
                             </NavItem>
                         </Nav>
-                        <div style={{flex: 1, overflow: 'auto', paddingTop: 8}}>
+                        <div className={'tab-container'}>
                             {this.state.tabValue === 'coordinates' &&
                             <GeometryEditor
                                 options={this.props.config && this.props.config.geometryEditorOptions}

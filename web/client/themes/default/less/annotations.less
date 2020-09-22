@@ -385,10 +385,14 @@
         width: 100%;
         height: 100%;
         flex-direction: column;
-        .ms-style-manager {
+        .tab-container{
+            flex: 1;
+            padding-top: 8px;
             position: relative;
             overflow-y: auto;
             overflow-x: hidden;
+        }
+        .ms-style-manager {
             .Select *{
                 font-size: inherit !important;
             }
@@ -709,11 +713,6 @@
 
 .modal-dialog-container{
     border: none;
-}
-
-.ms-style-manager {
-    position: absolute;
-    width: 100%;
 }
 
 .label-texts {
