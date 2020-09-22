@@ -75,53 +75,26 @@ In particular:
 
 ## Index of main npm scripts
 
-* download dependencies and init developer environment
-
-`npm install`
-
-* start development instance
-
-`npm start`
-
-* start development instance with examples
-
-`npm run examples`
-
-* run test suite once
-
-`npm test`
-
-* run continuous test suite running
-
-`npm run continuoustest`
-
-* run single build / bundling
-
-`npm run compile`
-
-* run ESLint checks
-
-`npm run lint`
-
-* run tests from Maven
-
-`npm run mvntest`
-
-* build for travis
-
-`npm run travis`
+| Command                  | Description                                                  |
+|--------------------------|--------------------------------------------------------------|
+| `npm install`            | download dependencies and init developer environment         |
+| `npm start`              | start development instance                                   |
+| `npm run examples`       | start development instance with examples                     |
+| `npm run compile`        | run single build / bundling                                  |
+| `npm test`               | run test suite once                                          |
+| `npm run continuoustest` | run continuous test suite running (useful during developing) |
+| `npm run lint`           | run ESLint checks                                            |
+| `npm run mvntest`        | run tests from Maven                                         |
+| `npm run travis`         | run the test build used for travis                           |
 
 ## Including the printing engine in your build
 
-The [MapStore printing engine](https://github.com/geosolutions-it/mapfish-print/wiki) is not included in official builds by default.
+The [printing module](printing-module.md) is not included in official builds by default.
 
-To build your own version of MapStore with the printing module included, you can enable the
-**printing** profile:
+To build your own version of MapStore with the this module, you can use the **printing** profile running the build script:
 
-`./build.sh [version_identifier] printing`
+```sh
+./build.sh [version_identifier] printing
+```
 
-It is also possible to build only the printing extension as a zip (to be unzipped on your deployed MapStore). To do that:
-
-`mvn clean install -Pprintingbundle`
-
-The zip bundle will be in printing/target/mapstore-printing.zip.
+For more information or troubleshooting about the printing module you can see the [dedicated section](printing-module.md)
