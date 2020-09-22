@@ -88,20 +88,18 @@
 @select-item-padding-vertical:      2px;
 
 @react-select-path: "~react-select/less/";
-#container {
-    // imports
-    @import "@{react-select-path}control.less";
-    @import "@{react-select-path}menu.less";
-    @import "@{react-select-path}mixins.less";
-    @import "@{react-select-path}multi.less";
-    @import "@{react-select-path}spinner.less";
 
-    .Select {
-        * {
-            font-size: @font-size-base;
-        }
-        &.Select--multi .Select-value {
-            margin-top: 3px;
-        }
+@import "@{react-select-path}control.less";
+@import "@{react-select-path}menu.less";
+@import "@{react-select-path}mixins.less";
+@import "@{react-select-path}multi.less";
+@import "@{react-select-path}spinner.less";
+
+.Select {
+    * {
+        font-size: @font-size-base;
+    }
+    &.Select--multi .Select-value {
+        margin-top: 3px;
     }
 }
