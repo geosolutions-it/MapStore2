@@ -8,6 +8,7 @@
 import expect from 'expect';
 import React from 'react';
 import ReactDOM from 'react-dom';
+import TestUtils from 'react-dom/test-utils';
 
 import {GeoStorySave, GeoStorySaveAs} from '../GeoStorySave';
 import { getPluginForTest } from './pluginsTestUtils';
@@ -53,6 +54,17 @@ describe('GeoStorySave Plugins (GeoStorySave, GeoStorySaveAs)', () => {
             ReactDOM.render(<Plugin />, document.getElementById("container"));
             expect(document.getElementsByClassName('modal-fixed').length).toBe(1);
         });
+        it('title is editable when no resource provided', () => {
+            const { Plugin } = getPluginForTest(GeoStorySave, stateMocker(DUMMY_ACTION, setControl(Controls.SHOW_SAVE, "save")));
+            ReactDOM.render(<Plugin />, document.getElementById("container"));
+            const modal = document.getElementsByClassName('modal-fixed')[0];
+            expect(modal).toExist();
+            const inputEl = modal.getElementsByTagName('input')[1];
+            expect(inputEl).toExist();
+            inputEl.value = 'f';
+            TestUtils.Simulate.change(inputEl);
+            expect(inputEl.value).toBe('f');
+        });
     });
     describe('GeoStorySaveAs', () => {
         const DUMMY_ACTION = { type: "DUMMY_ACTION" };
@@ -79,6 +91,17 @@ describe('GeoStorySave Plugins (GeoStorySave, GeoStorySaveAs)', () => {
             const { Plugin } = getPluginForTest(GeoStorySaveAs, stateMocker(DUMMY_ACTION, setControl(Controls.SHOW_SAVE, "saveAs")));
             ReactDOM.render(<Plugin />, document.getElementById("container"));
             expect(document.getElementsByClassName('modal-fixed').length).toBe(1);
+        });
+        it('title is editable', () => {
+            const { Plugin } = getPluginForTest(GeoStorySaveAs, stateMocker(DUMMY_ACTION, setControl(Controls.SHOW_SAVE, "saveAs")));
+            ReactDOM.render(<Plugin />, document.getElementById("container"));
+            const modal = document.getElementsByClassName('modal-fixed')[0];
+            expect(modal).toExist();
+            const inputEl = modal.getElementsByTagName('input')[1];
+            expect(inputEl).toExist();
+            inputEl.value = 'f';
+            TestUtils.Simulate.change(inputEl);
+            expect(inputEl.value).toBe('f');
         });
     });
 });
