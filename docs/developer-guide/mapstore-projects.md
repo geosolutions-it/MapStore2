@@ -24,7 +24,7 @@ feel to your project, in particular:
 ConfigUtils.setConfigProp('translationsPath', ['./MapStore2/web/client/translations', './translations']);
 
 ```
- * **Use your own configuration file** for plugins and other configurations. You can copy the original `localConfig.json` in the root of the project and confiure the application to load it (instead of the default one, locatedl in `MapStore2/web/client/localConfig.json`).
+ * **Use your own configuration file** for plugins and other configurations. You can copy the original `localConfig.json` in the root of the project and configure the application to load it (instead of the default one, located in `MapStore2/web/client/localConfig.json`).
 
 ```javascript
 ConfigUtils.setLocalConfigurationFile('localConfig.json');
