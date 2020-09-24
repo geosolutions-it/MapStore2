@@ -328,6 +328,7 @@
                     white-space: nowrap;
                     text-overflow: ellipsis;
                     overflow-x: hidden;
+                    width: 150px;
                 }
 
                 > * * {
@@ -720,4 +721,13 @@
     align-items: center;
     font-weight: 600;
     padding: 10px;
+}
+
+.marker-container{
+    .marker-icon, .marker-shape {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        padding: 4px 0;
+    }
 }

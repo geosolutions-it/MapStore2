@@ -79,7 +79,8 @@ const {
     LOAD_DEFAULT_STYLES, loadDefaultStyles,
     LOADING, loading,
     TOGGLE_ANNOTATION_VISIBILITY, toggleVisibilityAnnotation,
-    CHANGE_GEOMETRY_TITLE, changeGeometryTitle
+    CHANGE_GEOMETRY_TITLE, changeGeometryTitle,
+    FILTER_MARKER, filterMarker
 } = require('../annotations');
 
 describe('Test correctness of the annotations actions', () => {
@@ -386,5 +387,10 @@ describe('Test correctness of the annotations actions', () => {
         const result = changeGeometryTitle('New title');
         expect(result.type).toBe(CHANGE_GEOMETRY_TITLE);
         expect(result.title).toBe('New title');
+    });
+    it('filterMarker ', () => {
+        const result = filterMarker('glass');
+        expect(result.type).toBe(FILTER_MARKER);
+        expect(result.filter).toBe('glass');
     });
 });
