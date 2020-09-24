@@ -10,9 +10,9 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 
-// For displaying  UI configuration
+// TODO: UI configuration in TOC
 const MapSwipeSettingsPanel = () => {
-    return (<div id="ms-swipe">Panel settings</div>);
+    return (<div />);
 };
 
 export default connect(null, {})(MapSwipeSettingsPanel);
